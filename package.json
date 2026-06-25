@@ -19,6 +19,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "free:doctor": "npx tsx scripts/free-ingest-smoke.mjs",
+    "galileo:plan": "tsx scripts/galileo-plan.ts",
     "eval:prompts": "npx promptfoo@latest eval -c eval/promptfoo/promptfooconfig.yaml",
     "db:generate": "npm run db:generate --workspace=packages/db",
     "db:push": "npm run db:push --workspace=packages/db",
