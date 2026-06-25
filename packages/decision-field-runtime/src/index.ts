@@ -12,6 +12,7 @@ export * from "./card-claim.js";
 export * from "./source-race.js";
 export * from "./field-stress.js";
 export * from "./decision-permission-gradient.js";
+export * from "./decision-authority-gate.js";
 export * from "./card-prosecution-trace.js";
 export * from "./missed-observation.js";
 export * from "./over-observation.js";

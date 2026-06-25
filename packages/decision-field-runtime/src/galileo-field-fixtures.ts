@@ -133,3 +133,20 @@ export const field001WithoutRoleInput: DecisionFieldInput = {
   frameId: "field-001-no-role",
   facts: FIELD_001_FACTS.filter((f) => f.factType !== "route_rate" && f.factType !== "target_share"),
 };
+
+/**
+ * Authority-gate proof: the SAME scenario, but declared as live, readiness-cleared, public-authorized.
+ * This is the only way the card may reach the WATCH its evidence licenses — proving the default FIXTURE
+ * run is held at INFO_ONLY by the data-mode gate, not by the evidence. (Illustrative inputs only — this
+ * fixture asserts the GATE's behavior; it does not make any real data live.)
+ */
+export const field001LiveAuthorizedInput: DecisionFieldInput = {
+  ...field001Input,
+  frameId: "field-001-live",
+  authority: {
+    dataMode: "LIVE_REAL",
+    modelAuthority: "PUBLIC_ALLOWED",
+    readinessAuthorized: true,
+    publicationAuthority: "PUBLIC",
+  },
+};

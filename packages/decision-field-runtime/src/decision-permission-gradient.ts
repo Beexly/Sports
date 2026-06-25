@@ -49,6 +49,27 @@ export function tradabilityActionability(status: TradabilityStatus): number {
   }
 }
 
+/**
+ * The strongest a card may be from its tradability tier alone. EXECUTABLE_SHADOW is shadow-executable —
+ * it can support an ACTION, but never an unrestricted PUBLIC_ACTION on its own (that needs a proven,
+ * live-executed tier that does not exist yet). This is meet-ed into the card's final strength so a
+ * shadow tradability of "1 actionability" can never drive a card to PUBLIC_ACTION.
+ */
+export function tradabilityStrengthCeiling(status: TradabilityStatus): MaxPermittedStrength {
+  switch (status) {
+    case "EXECUTABLE_SHADOW":
+      return "ACTION";
+    case "WATCHLIST":
+      return "WATCH";
+    case "THEORETICAL_ONLY":
+      return "WAIT";
+    case "RESEARCH_ONLY":
+    case "FRICTION_KILLED":
+    case "DATA_QUALITY_FAIL":
+      return "INFO_ONLY";
+  }
+}
+
 /** Multiplicative conjunction of necessary gates → a strength bucket. Any zero ⇒ INFO_ONLY. */
 export function computePermissionGradient(i: PermissionInputs): PermissionGradient {
   const factors: Record<keyof PermissionInputs, number> = {

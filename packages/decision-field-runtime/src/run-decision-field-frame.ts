@@ -35,11 +35,18 @@ import {
   STAT_CONTRACTS,
   auditRequiredStats,
   strengthMin,
+  rankOf,
 } from "./decision-state-stat-contract.js";
 import { type CardClaim, claim, cardStrengthFromClaims } from "./card-claim.js";
 import { type FieldStress, computeFieldStress } from "./field-stress.js";
 import { buildSourceRaces, detectContradictionSignals } from "./source-race.js";
-import { computePermissionGradient, tradabilityActionability } from "./decision-permission-gradient.js";
+import { computePermissionGradient, tradabilityActionability, tradabilityStrengthCeiling } from "./decision-permission-gradient.js";
+import {
+  type AuthorityContext,
+  DEFAULT_AUTHORITY,
+  authorityCeiling,
+  isPublicSafe,
+} from "./decision-authority-gate.js";
 import { prosecuteCard } from "./card-prosecution-trace.js";
 import { type MissedObservation, detectMissedObservations } from "./missed-observation.js";
 import { detectOverObservations } from "./over-observation.js";
@@ -95,6 +102,8 @@ export interface DecisionFieldInput {
   readonly facts: readonly TemporalFact[];
   readonly subjects: readonly SubjectInput[];
   readonly regimeInputs: RegimeInputs;
+  /** Where the data came from + what the model/publication is authorized to do. Defaults fail-closed to FIXTURE. */
+  readonly authority?: AuthorityContext;
 }
 
 const ROLE_TYPES: readonly FactType[] = ["route_rate", "snap_share", "target_share", "carry_share"];
@@ -105,6 +114,8 @@ const entityOf = (f: TemporalFact): string => f.entityIds[0]?.id ?? "_";
 
 export function runDecisionFieldFrame(input: DecisionFieldInput): DecisionFieldFrame {
   const { facts, decisionTime, frameId } = input;
+  const authority = input.authority ?? DEFAULT_AUTHORITY;
+  const authorityCeil = authorityCeiling(authority);
 
   // ── Light cone: partition facts (fail-closed). ─────────────────────────────
   const pit = pointInTimeFacts(facts, decisionTime);
@@ -264,8 +275,12 @@ export function runDecisionFieldFrame(input: DecisionFieldInput): DecisionFieldF
       permittedStrength: permittedBeforeProsecution,
     });
 
-    // Final strength = lattice meet of every gate.
-    const finalStrength = [claimStrength, statAudit.maxStrength, permission.bucket, prosecution.strengthCap].reduce((a, b) => strengthMin(a, b));
+    // Pre-authority strength = lattice meet of every EVIDENCE gate (incl. tradability tier ceiling, so
+    // EXECUTABLE_SHADOW can't drive PUBLIC_ACTION). The authority gate (data mode / model / publication /
+    // readiness) is then meet-ed on top — fixtures cap at INFO_ONLY, shadow at WATCH, public needs live.
+    const tradeCeil = tradabilityStrengthCeiling(trad.status);
+    const preAuthorityStrength = [claimStrength, statAudit.maxStrength, permission.bucket, prosecution.strengthCap, tradeCeil].reduce((a, b) => strengthMin(a, b));
+    const finalStrength = strengthMin(preAuthorityStrength, authorityCeil);
 
     decisionCandidates.push({
       entityId: s.entityId,
@@ -290,8 +305,11 @@ export function runDecisionFieldFrame(input: DecisionFieldInput): DecisionFieldF
     };
     autopsyHooks.push(autopsyHook);
 
-    // Suppress or emit.
-    if (prosecution.anyFail || finalStrength === "INFO_ONLY") {
+    // Suppress only when there is NO evidential basis (failed prosecution, or the evidence itself caps at
+    // INFO_ONLY). A card whose evidence supports more but is held down by the AUTHORITY gate (e.g. fixture
+    // data) is still emitted — as an honest INFO_ONLY, admin-only, non-public card — so the reasoning is
+    // visible without ever implying it's live or actionable.
+    if (prosecution.anyFail || preAuthorityStrength === "INFO_ONLY") {
       suppressedCards.push({
         entityId: s.entityId,
         decisionState: s.decisionState,
@@ -307,6 +325,8 @@ export function runDecisionFieldFrame(input: DecisionFieldInput): DecisionFieldF
         decisionTime,
         subject: s,
         finalStrength,
+        preAuthorityStrength,
+        authority,
         claims,
         prosecution,
         statAudit,
@@ -438,6 +458,8 @@ interface BuildCardArgs {
   readonly decisionTime: string;
   readonly subject: SubjectInput;
   readonly finalStrength: MaxPermittedStrength;
+  readonly preAuthorityStrength: MaxPermittedStrength;
+  readonly authority: AuthorityContext;
   readonly claims: readonly CardClaim[];
   readonly prosecution: ReturnType<typeof prosecuteCard>;
   readonly statAudit: ReturnType<typeof auditRequiredStats>;
@@ -476,12 +498,15 @@ function buildCard(a: BuildCardArgs): DecisionCard {
     whyNot,
     receiptRef: `receipt:${a.frameId}:${s.entityId}`,
     maxPermittedStrength: a.finalStrength,
-    publicSafe: s.rightsClearedForPublic && a.finalStrength !== "INFO_ONLY",
-    personalizationRequired: !s.rightsClearedForPublic,
+    // Public-safe is the conjunction of EVERY public gate (live data, readiness, public-authorized model
+    // + publication, rights). Fixture/shadow data is never public-safe, regardless of rights.
+    publicSafe: isPublicSafe(a.authority, a.finalStrength, s.rightsClearedForPublic),
+    personalizationRequired: !s.rightsClearedForPublic || a.authority.dataMode !== "LIVE_REAL",
     confidenceLabel,
     evidenceClass,
     lightConeStatus,
-    routeTo: routeFor(s.decisionState),
+    // An authority-capped INFO_ONLY card (e.g. fixture data) is admin-only — it never reaches a public surface.
+    routeTo: a.finalStrength === "INFO_ONLY" ? "ADMIN_ONLY" : routeFor(s.decisionState),
     decisionTime: a.decisionTime,
     ...(s.lockTime ? { lockTime: s.lockTime } : {}),
     sourceCount: a.sourceCount,
@@ -529,6 +554,11 @@ function strengthToAction(strength: MaxPermittedStrength): string {
 }
 
 function buildWhyNot(a: BuildCardArgs): string {
+  // If the AUTHORITY gate (not the evidence) is what's holding the card down, say so plainly.
+  if (rankOf(a.finalStrength) < rankOf(a.preAuthorityStrength) && a.authority.dataMode !== "LIVE_REAL") {
+    const mode = a.authority.dataMode === "FIXTURE" ? "an illustrative fixture" : "shadow (real but unpublished) data";
+    return `Why not stronger? This is running on ${mode}, so it stays at ${a.finalStrength.toLowerCase().replace(/_/g, " ")} — it can't go further until it's on live, readiness-cleared inputs.`;
+  }
   if (!a.hasFantasySnapshot && a.statAudit.missingGroups.includes("fantasy_belief_snapshot")) {
     return "Why not add aggressively now? The role is clearly rising and the market is starting to move, but we don't yet have a fantasy projection snapshot to prove the fantasy market is actually behind — and this rhymes with a past box-score trap. So: watch, not add.";
   }
@@ -553,7 +583,8 @@ const GROUP_LABELS: Readonly<Record<string, string>> = {
 /** Tie the strength cap to exactly what we'd need to acquire to go stronger. */
 function buildUpgrade(a: BuildCardArgs): CardUpgrade {
   const dataNeeded = a.statAudit.missingGroups.map((g) => GROUP_LABELS[g] ?? g);
-  const requiresLiveData = a.finalStrength === "INFO_ONLY" || a.statAudit.missingGroups.length > 0;
+  // Live data is required to go stronger whenever we're not already on live inputs, or a fact is missing.
+  const requiresLiveData = a.authority.dataMode !== "LIVE_REAL" || a.statAudit.missingGroups.length > 0;
   const reason =
     dataNeeded.length > 0
       ? `Capped at ${a.finalStrength.toLowerCase()} because we don't have ${dataNeeded.join(" and ")} yet.`

@@ -11,6 +11,7 @@ import {
   runDecisionFieldFrame,
   field001Input,
   field001WithoutRoleInput,
+  field001LiveAuthorizedInput,
   assertBoundedAutonomy,
   type AutonomousAction,
   type OperatingPlan,
@@ -45,11 +46,21 @@ describe("Field 001 — the heartbeat runs end to end", () => {
     expect(frame.fieldStress[0]!.absorbed).toBe(false);
   });
 
-  it("caps the card at WATCH (not an ADD) — the stat contract + ghost bind it", () => {
+  it("FIXTURE data is capped at INFO_ONLY by the authority gate — admin-only, never public", () => {
     const card = frame.emittedCards[0]!;
-    expect(card.maxPermittedStrength).toBe("WATCH");
+    expect(card.maxPermittedStrength).toBe("INFO_ONLY"); // fixture mode caps here, regardless of evidence
+    expect(card.decisionState).toBe("ROLE_UP_FANTASY_LATE");
+    expect(card.routeTo).toBe("ADMIN_ONLY");
+    expect(card.publicSafe).toBe(false);
+  });
+
+  it("the SAME scenario on LIVE, readiness-cleared, public-authorized inputs reaches WATCH — proving the gate, not the evidence, bound the fixture", () => {
+    const live = runDecisionFieldFrame(field001LiveAuthorizedInput);
+    const card = live.emittedCards[0]!;
+    expect(card.maxPermittedStrength).toBe("WATCH"); // the evidence licenses WATCH; the gate no longer caps below it
     expect(card.decisionState).toBe("ROLE_UP_FANTASY_LATE");
     expect(card.routeTo).toBe("GAMEPLAN");
+    expect(card.publicSafe).toBe(true);
   });
 
   it("claim-bounds the card: role SUPPORTED, fantasy-late BLOCKED", () => {
@@ -68,12 +79,12 @@ describe("Field 001 — the heartbeat runs end to end", () => {
     expect(ghost.verdict).toBe("WARN");
   });
 
-  it("the card front answers all five questions, including Why-not", () => {
+  it("the card front answers all five questions, including a data-mode Why-not", () => {
     const card = frame.emittedCards[0]!;
     expect(card.whatChanged.length).toBeGreaterThan(0);
     expect(card.whatItMeans.length).toBeGreaterThan(0);
-    expect(card.whatToDo.toLowerCase()).toContain("watch");
-    expect(card.whyNot.toLowerCase()).toContain("watch");
+    expect(card.whatToDo.toLowerCase()).toContain("awareness"); // INFO_ONLY: nothing to do yet
+    expect(card.whyNot.toLowerCase()).toContain("fixture"); // the gate, named plainly
     expect(card.receiptRef).toBe("receipt:field-001:player:dell");
     expect(card.proofDrawer.whyNot.length).toBeGreaterThan(0);
     expect(card.proofDrawer.sourceRaceSummary).toContain("the_odds_api");
