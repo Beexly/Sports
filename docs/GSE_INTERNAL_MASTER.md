@@ -5,7 +5,7 @@
 > and engagement surface, with what each consumes and produces and whether it is live or roadmap.
 > It may contain internal vocabulary, exact weight ranges, and revenue internals — keep it private.
 
-**Model version:** `v5.0.0` · **GSE Score version:** `g1.0.0` · **Date:** 2026-06-22
+**Model version:** `v5.0.0` · **GSE Score version:** `g1.0.0` · **Date:** 2026-06-22 · **Updated:** 2026-06-25 (see §18)
 
 ### Status taxonomy (used throughout — no loose "live")
 | Label | Meaning |
@@ -24,7 +24,7 @@
 ---
 
 ## Table of contents
-§0 Executive summary · §1 The GSE PRICE Method & GSE Score · §2 Data ingestion & sources · §3 Prediction/scoring engine · §4 Pipeline, workers & workflows · §5 Proof, calibration & integrity · §6 Player & team intelligence (StatKing) · §7 Market intelligence · §8 News, signals & the agent council · §9 Monetization & revenue · §10 Engagement, growth & content · §11 Operator cockpit & Agent OS · §12 Governance, safety & trust · §13 Surface map (pages + APIs) · §14 Data model & types · §15 The one ladder · §16 Live-now vs. roadmap · §17 Multi-sport posture
+§0 Executive summary · §1 The GSE PRICE Method & GSE Score · §2 Data ingestion & sources · §3 Prediction/scoring engine · §4 Pipeline, workers & workflows · §5 Proof, calibration & integrity · §6 Player & team intelligence (StatKing) · §7 Market intelligence · §8 News, signals & the agent council · §9 Monetization & revenue · §10 Engagement, growth & content · §11 Operator cockpit & Agent OS · §12 Governance, safety & trust · §13 Surface map (pages + APIs) · §14 Data model & types · §15 The one ladder · §16 Live-now vs. roadmap · §17 Multi-sport posture · §18 Integration, the Decision Genome spine & the 2026-06-25 verification ledger
 
 ---
 
@@ -319,6 +319,118 @@ The **PROVEN** rung (≥100 settled + published calibration) is the *same* thres
 ## §17 Multi-sport posture
 
 NFL is the live, fully-instrumented sport (odds + nflverse depth). The Odds API already provides odds for 7 sports, so the core pick engine generalizes; the **player/team intelligence depth is NFL-specific** today. `/mlb`, `/nhl`, `/gsn` are stubs; `lib/lahman/` (MLB historical) and `lib/moneypuck/` (NHL advanced) are early, source-gated footholds. Expansion is a data-depth and rights problem, not an engine rewrite.
+
+---
+
+## §18 Integration, the Decision Genome spine & the 2026-06-25 verification ledger
+
+This section records the consolidation of the scattered session/Codex branches into one
+verified, deployable line, the research integration that reframes GSE around a pre-result
+truth protocol, and the adversarial verification pass. Branch: `claude/stoic-dirac-20h11q`
+(`main` is a strict ancestor → a clean PR with no force-push). Nothing here flips a publish
+gate; `canPublishProjections`/`priced` stay shadow.
+
+### 18.1 Consolidation — one verified deployable line
+A read-only reconciliation found `origin/main` had been force-updated with **45 commits** of
+independent **Proven-edge + Advanced-Systems** work (CLV proof receipts, commit-reveal slates,
+Integrity Ledger, Public Claim Compiler, Signal Lineage, Market Memory, Source Reliability,
+No-Bet Adversary, Proof Graph) that the engine branch lacked. Resolution (owner-approved):
+**base the integration on `main`** and merge the rest in, so nothing is orphaned.
+
+| Line merged | Tip | Brings |
+|---|---|---|
+| `main` (base) | `5687b411` | Proven-edge + Advanced Systems |
+| `codex/intelligence-core` | `30f8c455` | engine slices A1→B5 (ladder reducer, settled-game heartbeat, replay-harness, feature-store, player-rate posteriors/shrinkage, **market-anchored reconciliation** [conserves team yards/TDs, fantasy derived], Tweedie baseline + ACI + Clark-West, earned-weight ensemble, conformal intervals) + the keystone backtest + the Newton/Tweedie anti-divergence fix + the nflverse currency guard |
+| `claude/sweet-fermi-sk9gws` | `9198f20f` | fantasy-launch polish |
+
+One add/add conflict (`apps/web/lib/cache/public-read-model-policy.ts`) was resolved to main's
+wired version (it backs the Integrity-Ledger evidence chain). Branch archaeology over ~80
+branches found the rest superseded; the only genuinely valuable un-integrated work is captured as
+post-launch recovery items (see `docs/ops/LAUNCH_BACKLOG_2026-06-24.md`): a full DFS-optimizer
+subsystem (`claude/laughing-wozniak-gyryjx`), the Galaxy Dynasty gamification surface
+(`codex/galaxy-dynasty-studio-rescue-v2`, 157 commits behind — a parallel track), and a partial
+`lib/gse/` decision-intelligence layer.
+
+### 18.2 Keystone backtest — the honest frontier verdict (unchanged)
+2021–2025, **18,344 out-of-sample player-weeks** (current data incl. 2025): model **MAE 5.3087
+vs naive 4.9064 → beats naive = false** (Clark-West t≈18.8, but the gate correctly withholds
+because the model's error is *higher*). The projection engine does **not** beat naive
+points-persistence yet, so projections stay `priced=false`/shadow. That discipline is the moat;
+the backtest is now an ablation harness for the real ML work (regularization, orthogonal
+role/game-script features, proper CV).
+
+### 18.3 Research integration — the Decision Genome & Epistemic Alpha spine
+The *GSE/GSN Master Research* package's central ask — reframe GSE around a **Decision Genome**
+(the atomic object behind every play/pass/wait/suppress/publish/quarantine/pricing decision) and
+an **Epistemic Alpha** ledger (*was the confidence deserved before the outcome?*) — is implemented
+as a pure, fully-tested TypeScript spine that **composes** existing primitives
+(`compilePublicClaim`, `scanForBannedPhrases`, the agent registry) rather than rebuilding them.
+`apps/web/lib/decision-genome/` (+ an ADMIN-gated `/api/decision-genome` that runs it end-to-end
+on illustrative fixtures). **97 tests.** Build order A–I + dark-corner engines:
+
+| Module | Role | Status |
+|---|---|---|
+| `claim-lang.ts` | Typed claims with proof obligations; public/perf claims delegate to the Public Claim Compiler | **LIVE (lib)** |
+| `decision-genome.ts` | The atomic object + 10 genome layers (time/market/evidence/model/agents/user/compliance/proof/learning) | **LIVE (lib)** |
+| `knowability.ts` | Point-in-time kernel — leakage after decision-lock is a checkable violation (fail-safe) | **LIVE (lib)** |
+| `candidate-ledger.ts` | CandidateDenominatorLedger — tracks every candidate, kills survivorship bias | **LIVE (lib)** |
+| `aperture.ts` | ApertureStateMachine — Signal/Shadow/Wait/Pass/Quarantine; refusal as a product | **LIVE (lib)** |
+| `agent-court.ts` | SCOUT/TAL/AVA/BOBBY/SARAH/JARVIS stake Brier-scored falsifiable claims; no new autonomy | **LIVE (lib)** |
+| `decision-replay.ts` | Recompute from frozen inputs; divergence = drift | **LIVE (lib)** |
+| `proof-card.ts` | Draft-only, banned-phrase-scanned, human-gated; built only from settled genomes | **DRAFT-ONLY** |
+| `epistemic-alpha.ts` | Scores timing/truth/uncertainty/restraint/availability/proof | **LIVE (lib)** |
+| `conformal.ts` | ConformalDecisionGate — the principled basis for `model.refused` | **LIVE (lib)** |
+| `market-physics.ts` | Market Physics Engine — temperature/pressure/gravity/viscosity/entropy/friction/toxicity | **LIVE (lib)** |
+| `claim-independence.ts` | ClaimIndependenceIndex — collapses echoes so source-count can't inflate | **LIVE (lib)** |
+| `rumor-quarantine.ts` | RumorQuarantine — known/reported/rumored/contradicted/expired/unsafe; fail-safe to quarantine | **LIVE (lib)** |
+
+Acceptance invariants enforced in code + tests: no fabricated data, no public claim without the
+proof gate, no confidence without calibration context, agents draft/escalate only, no leakage
+across decision-lock, `ProofState.priced` typed `false`. North star: *GSE is the proof layer for
+sports decisions — what was known, what changed, what deserved confidence, and what should have
+been left alone.*
+
+### 18.4 No-stale-data, enforced on real upstream age
+The ingestion freshness gate was a tautology — it validated our *fetch clock*
+(`new Date()`), never the upstream odds age, so a cached/stale board passed. `NormalizedOdds` now
+carries the bookmaker's own `last_update`; `DataNormalizer.freshGameIds()` validates freshness
+**per game** (a fresh game can't mask a stale one), `process-sport` drops stale games and fails
+the job only on a fully dead feed. The "no stale data" non-negotiable is now enforced on real
+data age. (`packages/data-ingestion/src/normalizer.ts`, `packages/ingestion-pipeline/src/process-sport.ts`.)
+
+### 18.5 Adversarial bug-hunt — 8 real correctness bugs found and fixed
+A 24-agent hunt across the 7 highest-stakes subsystems — each candidate required to survive **two
+independent refutation attempts** — found 8 real bugs (incl. two in this session's own new work;
+the self-audit lens worked). All fixed with regression tests:
+
+| # | Severity | Bug | Fix |
+|---|---|---|---|
+| 1 | **High** | Settlement graded SPREAD/TOTAL against the *drifted* `pick.line` — a published WIN at −3.5 could settle as a LOSS at a refreshed −7, contradicting its own CLV verdict | Grade against the frozen `clvLockLine` (`settle-sport.ts`) |
+| 2 | **High** | Proof-of-record Merkle root + `totalSettled` silently capped at 500 while `/proof` claims "over ALL settled picks" — the oldest picks fell out of the committed denominator | Commit over the COMPLETE set (lightweight no-odds query, no cap) + true count; enrich only displayed rows (`load-proof-of-record.ts`) |
+| 3 | **High** | Banned-phrase gate missed smart apostrophes/fancy hyphens — "can't lose" (U+2019) sailed through the only public-copy chokepoint | Unicode-normalize before matching (`trust-claims.ts`) |
+| 4 | **High** | Upstream-freshness gate used a single global max (this session's own §18.4 fix) — a stale game passed if any book anywhere was fresh | Per-game freshness (`normalizer.ts`) |
+| 5 | **High** | Out-of-order Stripe webhooks (delete then a delayed active snapshot) reactivated a cancelled subscription — premium re-granted for free | Terminal cancelled-by-delete rows are never resurrected; genuine resubscribes still sync (`webhooks/stripe/route.ts`) |
+| 6 | **Medium** | `modelVsMarketPp` compared confidence to fair *home* prob for every pick (wrong for away/spread/total) | Moneyline-only, correct side, else null (`load-proof-of-record.ts`) |
+| 7 | **High** | Decision-genome aperture ignored `evidence.rightsCleared` (this session's own spine) — an uncleared evidence snapshot could reach Signal | Quarantine terminally (`aperture.ts`) |
+| 8 | **Low** | A banned-phrase doc-note claimed a temporal-idiom carve-out the library scanner never performs | Corrected the note to match the safe, conservative behavior |
+
+### 18.6 Verification ledger (green gate)
+typecheck (all workspaces, strict + `noUncheckedIndexedAccess`) · lint (`max-warnings=0`) ·
+**~6,892 tests** (web ~6,165 + data-ingestion 111 + ingestion-pipeline 45 + prediction-engine 540
++ types 31) · keystone backtest reproduces 5.31 vs 4.91 · production build (exit 0, full route
+table) · guardrails (trust-gate / model-freeze / draft-only / claude-api / secret-scan /
+eval-contracts). Defense-in-depth hardening also landed this pass: `DEV_FAKE_ADMIN` is now
+NODE_ENV-gated in all three spots; `.gitignore` ignores real `.env.*` (templates kept); the
+Stripe webhook returns a generic signature error and acks an idempotency-race P2002 with 200; an
+unmapped price-ID now alerts before failing closed to FREE.
+
+### 18.7 Owner-gated remainder (config, not code)
+Live Stripe Fantasy prices + secret key + webhook registration; confirm `PRICING_PHASE=FOUNDING`
+and prod `NEXT_PUBLIC_APP_URL`; TikTok domain-verification file (privacy/terms pages exist).
+Preview → production are owner-gated. Projections stay shadow until a backtest beats the baseline.
+Documented follow-up: ~9 read-only intelligence boards still fetch nflverse directly and bypass
+the merge-aware loader (doesn't bite until the 2025 season kicks off, Sept 2026). Full record:
+`docs/ops/INTEGRATION_LAUNCH_2026-06-24.md` + `docs/ops/LAUNCH_BACKLOG_2026-06-24.md`.
 
 ---
 
