@@ -67,7 +67,11 @@ const Q = Number(arg("q") ?? 0.1);
 const MIN_SAMPLE = Number(arg("min-sample") ?? 30);
 
 function hourFloorIso(ms: number): string {
-  return new Date(Math.floor(ms / 3_600_000) * 3_600_000).toISOString();
+  // The Odds API historical `date` wants ISO8601 WITHOUT milliseconds (…:00:00Z),
+  // else it returns 422 INVALID_HISTORICAL_TIMESTAMP.
+  return new Date(Math.floor(ms / 3_600_000) * 3_600_000)
+    .toISOString()
+    .replace(/\.\d{3}Z$/, "Z");
 }
 
 interface ScheduledGame {
