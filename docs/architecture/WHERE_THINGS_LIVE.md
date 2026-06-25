@@ -19,6 +19,7 @@ impossible to get lost, and impossible to flip a safety gate by accident.
 | **Public page / IA** | `apps/web/app/*` (homepage carries Today; `/edge`, `/gameplan`, `/learn`, `/proof/*`), nav in `apps/web/components/ui/nav.tsx` | `public-copy-scan-strong.test.ts` (add new pages to `SCAN_TARGETS`) |
 | **Proof drawer** | `apps/web/components/decision/decision-card-drawer.tsx`; data via the runtime `proofDrawer` on each card | `copy-hygiene.test.ts` |
 | **Galileo output / atlas** | `packages/galileo-week/src/atlas-builder.ts`, `week-runner.ts`, `week-plan.ts`; CLI `scripts/galileo-plan.ts` | `packages/galileo-week/src/__tests__/*`; run `npm run galileo:plan` |
+| **Owner intelligence panel** | `apps/web/lib/cockpit/product-intelligence.ts` (pure view-model) + `apps/web/app/cockpit/product-intelligence/page.tsx` (owner-gated render); add the route to NAV in `app/cockpit/layout.tsx` | `cockpit-product-intelligence.test.ts` + `cockpit-nav-coverage` / `cockpit-page-a11y` / `cockpit-lib-docstrings` |
 | **Readiness gate** | `packages/prediction-engine` `getReadinessGates`; live-data guard `apps/web/lib/integrations/projections.ts` (`isLiveProjections`, `getLiveProjectionsMeta`) | no-demo-as-live tests |
 | **Entitlements / paywall** | `apps/web/lib/entitlements.ts` (server-side, fail-closed FREE) | entitlement tests |
 | **Pricing** | `apps/web/lib/pricing/pricing-phases.ts` (single source of truth) | pricing tests |

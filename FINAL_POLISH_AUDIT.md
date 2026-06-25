@@ -15,6 +15,7 @@ fail-closed decision-state stat matrix. No new architecture — hardening, clari
 | **P1 — premium UX** | `upgrade: { cappedAt, reason, dataNeeded, requiresLiveData }` added to every card; "Why not stronger?" section in the drawer ties a missing fact to a concrete unlock. Public "scar memory" leak on `/proof/memory` replaced with "What we learned." Drawer links to the learning loop. |
 | **P2 — Galileo dry-run** | `npm run galileo:plan` — `$0`, no network, no key read, refuses LIVE. Prices the acquisition stack, checks key presence, previews all 8 atlases. |
 | **P3 — NFL data depth** | `decision-state-matrix.ts`: 14 decision states × required/optional facts × free/paid source × legal floor × max-strength-if-missing × blocked surface, plus a provider-unlock map. 12 new tests, all green. `docs/data/DECISION_STATE_STAT_MATRIX.md`. |
+| **P4 — owner panel** | `/cockpit/product-intelligence` (owner-gated, fixtures): the FDR-disciplined Conscience ledger, the Galileo-Week acquisition signal (buy / stop buying), and scar utility. Pure Prisma-free `lib/cockpit/product-intelligence.ts`. New view-model test + all cockpit contracts (nav-coverage, a11y, routes, lib-header/docstrings, stub-safety) green. |
 | **Tooling** | `build:verify:local`, `typecheck:app`, `guard:decision-surfaces` scripts. |
 | **Docs** | This audit · `docs/architecture/WHERE_THINGS_LIVE.md` · `docs/build/PRODUCTION_BUILD_READINESS.md`. |
 
