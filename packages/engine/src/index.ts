@@ -37,3 +37,9 @@ export * from "./einstein/market-autopsy.js";
 export * from "./einstein/self-disproof-court.js";
 
 export * from "./einstein/belief-transition.js";
+
+// Discovery Layer — autonomous market-science lab
+export * from "./discovery/epistemic-compression.js";
+export * from "./discovery/market-law-miner.js";
+export * from "./discovery/theory-tournament.js";
+export * from "./discovery/belief-state-transition.js";
