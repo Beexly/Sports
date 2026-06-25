@@ -54,3 +54,11 @@ export * from "./discovery/expected-discovery-yield.js";
 export * from "./discovery/sensor-placement.js";
 export * from "./discovery/counterfactual-market-theater.js";
 export * from "./discovery/scientific-discovery-council.js";
+
+// Fantasy Discovery Layer — Galaxy Fantasy Reality Twin (additive, shadow-only)
+export * from "./fantasy/fantasy-role-state-vector.js";
+export * from "./fantasy/fantasy-light-cone.js";
+export * from "./fantasy/role-mass-transfer-engine.js";
+export * from "./fantasy/fantasy-conservation-engine.js";
+export * from "./fantasy/fantasy-absorption-half-life.js";
+export * from "./fantasy/fantasy-format-relativity.js";
