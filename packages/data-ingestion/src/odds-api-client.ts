@@ -29,6 +29,19 @@ export interface OddsApiFetchResult<T> {
   usedRequests: number;
 }
 
+/**
+ * Envelope returned by the historical odds endpoint. `data` is the slate at `timestamp`
+ * (the nearest snapshot the API has to the requested time); `previous_timestamp` /
+ * `next_timestamp` let a caller walk the movement series. Historical calls cost 10x a
+ * current-odds call (markets × regions × 10) — budget accordingly.
+ */
+export interface HistoricalOddsSnapshot {
+  readonly timestamp: string;
+  readonly previous_timestamp: string | null;
+  readonly next_timestamp: string | null;
+  readonly data: OddsApiEvent[];
+}
+
 interface OddsApiRetryOptions {
   readonly maxRetries?: number;
   readonly baseDelayMs?: number;
@@ -206,6 +219,25 @@ export class OddsApiClient {
   ): Promise<OddsApiFetchResult<OddsApiEvent[]>> {
     return this.fetch<OddsApiEvent[]>(`/sports/${sportKey}/events`, {
       dateFormat: "iso",
+    });
+  }
+
+  /**
+   * Historical odds snapshot of the whole slate at (or nearest to) `isoTimestamp`.
+   * Used to reconstruct opening->closing line movement for CLV analysis. Costs 10x a
+   * current-odds request (markets × regions × 10). Available on paid plans only.
+   */
+  async getHistoricalOdds(
+    sportKey: SupportedSportKey,
+    markets: Market[],
+    isoTimestamp: string
+  ): Promise<OddsApiFetchResult<HistoricalOddsSnapshot>> {
+    return this.fetch<HistoricalOddsSnapshot>(`/historical/sports/${sportKey}/odds`, {
+      regions: ODDS_REGION,
+      markets: markets.join(","),
+      oddsFormat: ODDS_FORMAT,
+      dateFormat: "iso",
+      date: isoTimestamp,
     });
   }
 }
