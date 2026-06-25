@@ -3,6 +3,8 @@ import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { TradeAnalyzer } from "@/components/fantasy/trade-analyzer";
 import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -21,7 +23,10 @@ const LIVE_NOTE =
   "Live graded pool — real players with model-derived projections. Trade values, fairness, and the lean are computed from real grades.";
 
 export default async function TradePage() {
-  const pool = await resolveToolPoolAsync();
+  const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
+  // Server-side paywall enforcement (CLAUDE.md rule 3): a FREE viewer never receives the
+  // paid rows of the live pool — only the trial subset crosses to the client.
+  const gatedPool = poolForViewer(pool, viewer.canUseFantasyFull);
   return (
     <FantasyShell
       eyebrow="Trade Analyzer"
@@ -31,7 +36,7 @@ export default async function TradePage() {
       note={pool ? LIVE_NOTE : ILLUSTRATIVE_NOTE}
       wide
     >
-      <TradeAnalyzer pool={pool} />
+      <TradeAnalyzer pool={gatedPool} />
     </FantasyShell>
   );
 }

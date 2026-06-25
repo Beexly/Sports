@@ -60,14 +60,22 @@ describe("community calibration tournament", () => {
   });
 
   it("rejects late, pending, and invalid probability submissions", () => {
-    const board = buildCommunityCalibrationTournament([
-      submission("ok", "p1", "Player One", 0.7, 1),
-      submission("late", "p1", "Player One", 0.7, 1, {
-        submittedAt: "2026-09-06T17:05:00.000Z",
-      }),
-      { ...submission("pending", "p2", "Player Two", 0.55, 1), outcome: null },
-      submission("bad-prob", "p3", "Player Three", 1.2, 1),
-    ]);
+    // minEligibleSubmissions: 1 isolates this test to its purpose (input filtering);
+    // without it the default-25 eligibility threshold would (correctly) drop the lone
+    // valid submission from the board. (Previously this passed only because the
+    // threshold was capped at 1 by a Math.min bug; see the threshold regression test.)
+    const board = buildCommunityCalibrationTournament(
+      [
+        submission("ok", "p1", "Player One", 0.7, 1),
+        submission("late", "p1", "Player One", 0.7, 1, {
+          submittedAt: "2026-09-06T17:05:00.000Z",
+        }),
+        { ...submission("pending", "p2", "Player Two", 0.55, 1), outcome: null },
+        submission("bad-prob", "p3", "Player Three", 1.2, 1),
+      ],
+      new Date("2026-09-08T00:00:00.000Z"),
+      { minEligibleSubmissions: 1 }
+    );
 
     expect(board.acceptedSubmissions).toBe(1);
     expect(board.rejectedSubmissions).toBe(3);

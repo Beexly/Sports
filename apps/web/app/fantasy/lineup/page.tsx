@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -18,7 +20,10 @@ export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs 
 
 export default async function LineupPage() {
   // Live graded pool when projections are on; otherwise undefined → illustrative.
-  const pool = await resolveToolPoolAsync();
+  const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
+  // Server-side paywall enforcement (CLAUDE.md rule 3): a FREE viewer never receives the
+  // paid rows of the live pool — only the trial subset crosses to the client.
+  const gatedPool = poolForViewer(pool, viewer.canUseFantasyFull);
   return (
     <FantasyShell
       eyebrow="Start-Sit Helper"
@@ -30,7 +35,7 @@ export default async function LineupPage() {
         : "Illustrative roster and projections. Optimization, leverage, and the floor/ceiling band are computed live from the sample pool."}
       wide
     >
-      <LineupOptimizer pool={pool} />
+      <LineupOptimizer pool={gatedPool} />
     </FantasyShell>
   );
 }

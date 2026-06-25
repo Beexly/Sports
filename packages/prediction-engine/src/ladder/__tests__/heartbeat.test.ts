@@ -70,6 +70,33 @@ describe("fanoutGameSettledHeartbeat", () => {
     expect(result.newLadderEvents).toHaveLength(2);
   });
 
+  it("counts settled samples per game — a second distinct game advances the counter", () => {
+    // Regression: the PROOF guard used to be `!hasProofStage(priorLedger)`, which is
+    // true only for the FIRST game ever; every later GAME_SETTLED then recorded its
+    // PROOF stage but emitted no settled-sample event, freezing settledSamples at 1
+    // and stalling rung/projection unlocks. Each distinct game must increment it.
+    const first = fanoutGameSettledHeartbeat({ event: heartbeat });
+
+    const secondGame: GameSettledEvent = {
+      ...heartbeat,
+      id: "game-settled-2024-02",
+      idempotencyKey: "nfl-2024-week-02-buf-mia",
+      gameId: "2024_02_MIA_BUF",
+      week: 2,
+    };
+    const second = fanoutGameSettledHeartbeat({
+      event: secondGame,
+      priorLedger: first.ledger,
+      priorLadderEvents: first.ladderEvents,
+    });
+
+    // The second game emits its own settled-sample events (one per track) and the
+    // cumulative counter advances to 2 — the frozen-after-game-1 bug is gone.
+    expect(second.newLadderEvents.map((e) => e.payload.track).sort()).toEqual(["betting", "fantasy"]);
+    expect(second.newLadderEvents).toHaveLength(2);
+    expect(second.ladderState.settledSamples.canonical).toEqual({ fantasy: 2, betting: 2 });
+  });
+
   it("does not create a second sample event when only PROOF was already processed", () => {
     const first = fanoutGameSettledHeartbeat({ event: heartbeat });
     const proofOnlyLedger = first.ledger.filter((entry) => entry.stage === "PROOF");

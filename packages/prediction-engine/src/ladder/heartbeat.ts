@@ -43,7 +43,12 @@ export function fanoutGameSettledHeartbeat(input: GameSettledFanoutInput): GameS
     newLedgerEntries.push(stageLedgerEntry(input.event, stage));
     processedKeys.add(idempotencyKey);
 
-    if (stage === "PROOF" && !hasProofStage(priorLedger)) {
+    // Emit the settled-sample increment once per game's PROOF stage. The
+    // per-event idempotencyKey check above already prevents re-processing THIS
+    // event's PROOF; the count must advance for every distinct settled game, so
+    // it must NOT be gated on whether any prior game reached PROOF (that froze
+    // settledSamples after the first game and stalled rung/projection unlocks).
+    if (stage === "PROOF") {
       const stateBeforeProof = reduceLadder([...priorLadderEvents, ...newLadderEvents]);
       newLadderEvents.push(...settledSampleEvents(input.event, stateBeforeProof));
     }
@@ -95,10 +100,6 @@ function settledSampleEvents(event: GameSettledEvent, stateBeforeProof: LadderSt
 
 function stageIdempotencyKey(event: GameSettledEvent, stage: GameSettledStage): string {
   return `${event.idempotencyKey}:${stage}`;
-}
-
-function hasProofStage(ledger: readonly GameSettledFanoutLedgerEntry[]): boolean {
-  return ledger.some((entry) => entry.stage === "PROOF");
 }
 
 function sortedLedger(entries: readonly GameSettledFanoutLedgerEntry[]): readonly GameSettledFanoutLedgerEntry[] {

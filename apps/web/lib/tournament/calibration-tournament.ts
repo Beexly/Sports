@@ -164,7 +164,7 @@ export function buildCommunityCalibrationTournament(
     .map(([participantId, rows]) =>
       buildRow(participantId, names.get(participantId) ?? participantId, rows)
     )
-    .filter((row) => row.sampleSize >= Math.min(1, minEligibleSubmissions))
+    .filter((row) => row.sampleSize >= Math.max(1, minEligibleSubmissions))
     .sort(
       (a, b) =>
         a.brierScore - b.brierScore ||
