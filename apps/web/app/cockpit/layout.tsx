@@ -73,6 +73,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
   {
     section: "Ops",
     items: [
+      { href: "/cockpit/product-intelligence", label: "Product Intelligence", hint: "Conscience · acquisition · scar" },
       { href: "/cockpit/integrity", label: "Integrity", hint: "Built/Wired/Proven/Public-safe ledger" },
       { href: "/cockpit/api-costs", label: "API Costs", hint: "Claude budget monitor" },
       { href: "/cockpit/synthetic-monitoring", label: "Synthetic Monitoring", hint: "Production probes" },
