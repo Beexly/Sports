@@ -43,3 +43,8 @@ export * from "./discovery/epistemic-compression.js";
 export * from "./discovery/market-law-miner.js";
 export * from "./discovery/theory-tournament.js";
 export * from "./discovery/belief-state-transition.js";
+export * from "./discovery/causal-representation-foundry.js";
+export * from "./discovery/inverse-bookmaker-mind.js";
+export * from "./discovery/market-dark-matter.js";
+export * from "./discovery/belief-geodesic.js";
+export * from "./discovery/phase-transition-detector.js";
