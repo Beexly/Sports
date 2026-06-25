@@ -78,20 +78,21 @@ const TEAM_NAME: Record<string, string> = {
   WAS: "Washington Commanders",
 };
 
-interface Bet { line: number; actual: number; under: 0 | 1 | null; }
+interface Bet { line: number; actual: number; under: 0 | 1 | null; favDog: "FAV" | "DOG" | null; }
 
 async function main(): Promise<void> {
   console.log(`\nRUSHING-YARDS UNDER deep dive — pooled ${SEASONS.join("+")} wks ${WEEKS[0]}-${WEEKS.at(-1)} (cached, $0)\n`);
 
-  // settle maps per season
-  const settle = new Map<string, number>(); // `${season}|${normName}|${week}` -> rushing_yards
+  // settle maps per season: name+week -> { rushing_yards, team }
+  const settle = new Map<string, { ry: number; team: string }>();
   for (const s of SEASONS) {
     let r: Response | null = null;
     for (const u of STATS_URLS(s)) { const x = await fetch(u); if (x.ok) { r = x; break; } }
     if (!r) { console.error(`stats ${s} not reachable`); process.exit(2); }
     const { header, rows } = parseCsv(await r.text());
     const ni = header.indexOf("player_display_name"), wi = header.indexOf("week"), ry = header.indexOf("rushing_yards");
-    for (const row of rows) { const nm = row[ni], wk = Number(row[wi]); if (!nm || !Number.isFinite(wk)) continue; settle.set(`${s}|${normName(nm)}|${wk}`, Number(row[ry] ?? 0) || 0); }
+    const ti = header.indexOf("team") >= 0 ? header.indexOf("team") : header.indexOf("recent_team");
+    for (const row of rows) { const nm = row[ni], wk = Number(row[wi]); if (!nm || !Number.isFinite(wk)) continue; settle.set(`${s}|${normName(nm)}|${wk}`, { ry: Number(row[ry] ?? 0) || 0, team: ti >= 0 ? (row[ti] ?? "") : "" }); }
   }
 
   // schedule
@@ -108,6 +109,7 @@ async function main(): Promise<void> {
     const ms = Date.parse(`${day}T${time}:00-05:00`); if (!Number.isFinite(ms)) continue;
     const closeIso = hourFloorIso(ms - CLOSE_OFFSET_H * 3_600_000);
     const home = row[gc("home_team")] ?? "", away = row[gc("away_team")] ?? "";
+    const spread = Number(row[gc("spread_line")]); // home-perspective closing spread
     const p = join(CACHE_DIR, `odds_${away}_${home}_${closeIso}`.replace(/[:.\/ ]/g, "-") + ".json");
     if (!existsSync(p)) { missing++; continue; }
     games++;
@@ -119,9 +121,15 @@ async function main(): Promise<void> {
     }
     for (const [player, pts] of linesByPlayer) {
       if (pts.length < 2) continue; const line = median(pts); if (line == null) continue;
-      const actual = settle.get(`${season}|${normName(player)}|${week}`);
-      if (actual === undefined) continue;
-      bets.push({ line, actual, under: actual === line ? null : (actual < line ? 1 : 0) });
+      const rec = settle.get(`${season}|${normName(player)}|${week}`);
+      if (rec === undefined) continue;
+      // Favored/underdog of the player's team (home perspective: spread<0 => home favored).
+      let favDog: "FAV" | "DOG" | null = null;
+      if (Number.isFinite(spread) && spread !== 0 && rec.team) {
+        if (rec.team === home) favDog = spread < 0 ? "FAV" : "DOG";
+        else if (rec.team === away) favDog = spread > 0 ? "FAV" : "DOG";
+      }
+      bets.push({ line, actual: rec.ry, under: rec.ry === line ? null : (rec.ry < line ? 1 : 0), favDog });
     }
   }
   const settled = bets.filter((b) => b.under !== null);
@@ -152,6 +160,15 @@ async function main(): Promise<void> {
   console.log(`\nFDR over ${fdr.length} adequately-sampled buckets (q=0.10):`);
   const discMap = new Map(disc.results.map((r) => [r.key, r]));
   for (const [label] of buckets) { const d = discMap.get(label); if (d) console.log(`  ${label.padEnd(22)} q=${d.qValue.toFixed(3)}  discovery=${d.discovery}`); }
+
+  console.log("\nBy game script (theory: underdog RBs get abandoned trailing → stronger UNDER):");
+  const withFD = settled.filter((b) => b.favDog !== null);
+  console.log(`  (classifiable by spread: ${withFD.length} of ${settled.length} lines)`);
+  report("UNDERDOG team RB", withFD.filter((b) => b.favDog === "DOG"));
+  report("FAVORED team RB", withFD.filter((b) => b.favDog === "FAV"));
+  console.log("  Cross with high lines (≥50) — the over-bet stars:");
+  report("DOG & line ≥ 50", withFD.filter((b) => b.favDog === "DOG" && b.line >= 50));
+  report("FAV & line ≥ 50", withFD.filter((b) => b.favDog === "FAV" && b.line >= 50));
 
   console.log("\n— Read —");
   console.log("  A high-line bucket that clears 52.4% with FDR significance is a sharper, more");

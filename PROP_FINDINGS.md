@@ -59,8 +59,11 @@ replicated, FDR-significant, and theory-consistent.
   strong but n=144 is moderate; rush-prop limits are lower than main markets. Bet the subset,
   shop for −110 or better, and size small.
 - **What sharpens it further:** forward-test 2026 as it plays; line-shop (the median close
-  used here understates a best-line strategy); confirm real limits; and test refinements
-  (favored-team RBs, specific books) under the same FDR discipline before trusting them.
+  used here understates a best-line strategy); confirm real limits. A game-script refinement
+  (underdog vs favored RB) was tested and **refuted** — favored RBs under 55.1% vs underdog
+  53.2%, the opposite of the "abandon the run when trailing" theory, and both within noise of
+  each other. The bias is uniform across game script; it is driven by **line magnitude**, not
+  who's favored. (Honest null on that refinement — the high-line subset remains the edge.)
 
 ## Why this matters for the platform
 
