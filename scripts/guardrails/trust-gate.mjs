@@ -110,6 +110,11 @@ const WHITELIST_PATHS = new Set([
   "apps/web/lib/pick-explainer/policy.ts",
   // Content-safety lexicon: contains the banned phrases as detection terms.
   "apps/web/lib/safety/content-safety.ts",
+  // Decision-field prosecutor lexicon: the Product prosecutor's certainty-language
+  // guard lists the banned phrases AS detection terms (same rationale as
+  // content-safety.ts / pick-explainer/policy.ts above). It is internal logic that
+  // REJECTS this language in cards — not public copy.
+  "packages/decision-field-runtime/src/card-prosecution-trace.ts",
   "packages/db/prisma/seed.ts",
 ]);
 
