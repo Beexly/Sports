@@ -1,9 +1,12 @@
-# CLV Findings — NFL early-season totals drift to the UNDER
+# CLV Findings — a real signal that did NOT survive settlement (the discipline working)
 
-*Generated 2026-06-25 from real The Odds API historical line-movement data. Method:
-`scripts/backtest/clv-feasibility.ts` (open→close consensus, one-sample Student-t per
-rule, Benjamini-Hochberg FDR at q=0.10). This is the honest output of the proof engine —
-published whether the answer is yes or no.*
+*Generated 2026-06-25 from real The Odds API historical line-movement data + free
+nflverse scores. This is the honest output of the proof engine — published whether the
+answer is yes or no. **Bottom line up front: we found a statistically real CLV signal
+(line drifts to the under), got a 58.8% in-sample settlement rate, then DISPROVED it as
+a profitable edge with an out-of-sample seasonality check — and caught a data bug that
+was inflating the number along the way. No edge to stake. That self-correction is the
+product.***
 
 ## The question
 
@@ -39,30 +42,55 @@ high, and the number is bet down toward the under as the close forms.
 collapsed out-of-sample (2021/2022). Without the replication test we would have "discovered"
 a fake edge. We dropped it.
 
-## What this does and does NOT mean — read this part
+## Step 2 — settlement: does the CLV convert to profit? (`clv-under-settlement.ts`)
 
-**It IS:** a genuine, replicated CLV signal. Beating the close is the ESTABLISHED-rung
-criterion, and these unders beat the close on average across three seasons.
+Bet the UNDER at the **opening** total, settle against the actual game total (cached
+snapshots + nflverse scores, zero new credits):
 
-**It is NOT (yet) proven profit.** Three honest caveats gate any reliance:
+| | UNDER at OPEN | UNDER at CLOSE (same games) |
+|---|---|---|
+| 2021–2023 wks 1–4, pooled | **58.8%** (n=182, p=0.018, 95% CI 51.5–65.7) | **57.3%** (n=185, p=0.047) |
 
-1. **CLV ≠ win rate.** +0.25–0.46 points of *total* CLV is a *leading* indicator. Whether
-   betting unders at the open actually **settles** ≥52.4% (the −110 break-even) is a
-   separate test we have **not** run. That validation is the next step.
-2. **Early-season only.** All three tests are weeks 1–4, when totals are softest. The signal
-   may be early-season-specific; it must be tested on mid/late-season slates.
-3. **Opening-line liquidity.** "Open" here is ≈5 days out, where real NFL-total betting limits
-   are low. The drift is real, but how much money can actually be placed at the opening number
-   is a practical constraint on exploitability.
+58.8% clears break-even — but the **close also hit 57.3%** on the same games. That is the
+tell: most of the win rate is "unders won in 2021–2023," not a beat-the-close timing edge.
+The pure open-vs-close gain is only ~1.5 points. Time to test it out of sample.
 
-## Next steps (pre-registered, before any reliance)
+## Step 3 — seasonality, out of sample: the edge does NOT survive (`under-seasonality-probe.ts`)
 
-1. **CLV→profit validation:** does "under at the open" hit ≥52.4% vs the closing total, and
-   does it settle profitably net of vig? (Uses the same snapshots + final scores.)
-2. **Seasonality:** re-run on weeks 5–18 to test whether the drift is early-season-only.
-3. **Liquidity reality check:** how far from the open can the number still be had at usable limits?
-4. Feed confirmed CLV samples into the `closing-line-forecaster` walk-forward to see if a
-   *model* (not just a fixed rule) sharpens the entry.
+UNDER at the **close**, every nflverse regular-season game **1999–2025** (free data),
+after excluding unplayed future games (a data bug initially inflated this by 61 phantom
+2026 "under" wins — caught and fixed):
+
+| Week bucket | n | under rate | significant? |
+|---|---|---|---|
+| **weeks 1–4** | 1,650 | **51.1%** | no (p=0.375) — **below 52.4%** |
+| weeks 5–9 | 1,861 | 48.7% | no |
+| weeks 10+ | 3,357 | 51.2% | no |
+
+Only **5 of the last 12 seasons** had weeks-1–4 unders clear 52.4% (2016: 44.4%, 2020:
+41.9%, 2025: 50.0%). **The 2021–2023 window was simply under-heavy.** Over 27 seasons,
+early-season unders settle at a coin-flip 51.1% — under the −110 break-even.
+
+## Verdict — read this part
+
+- **The CLV microstructure signal is real:** NFL totals do drift toward the under from open
+  to close (replicated 3/3 seasons). That part stands.
+- **It does NOT convert to a profitable, repeatable edge.** The strong 2021–2023 settlement
+  was a lucky sample; the 27-season early-season under rate is ~51%, below break-even and not
+  significant. **Do not stake on it.**
+- **This is the platform working exactly as designed.** Twenty minutes separated "58.8%, we
+  found an edge!" from "no — out-of-sample it's a coin flip, and one number was a data bug."
+  An honest "no edge" is the deliverable. The win rate we refuse to fake is worth more than
+  any equation.
+
+## What this proves about the method
+
+The closing line is efficient (confirmed again). The only durable opportunity, if any, is
+CLV *timing* against a closing line we can forecast — which is why the
+`closing-line-forecaster` exists. But timing CLV only pays if the close is an efficient,
+beatable target AND the drift exceeds vig + the limit you can actually bet at the open.
+Future candidates run through this same gauntlet: pre-register → FDR → out-of-sample
+replication → **settlement** → seasonality/robustness → liquidity. Most will die here. Good.
 
 ## Provenance
 
