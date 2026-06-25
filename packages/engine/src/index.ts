@@ -3,3 +3,5 @@
 export * from "./market-physics/market-surface.js";
 export * from "./market-physics/coherence.js";
 export * from "./market-physics/alt-line-curvature.js";
+export * from "./market-physics/edge-ledger.js";
+export * from "./market-physics/expression-router.js";
