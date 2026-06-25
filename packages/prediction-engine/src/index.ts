@@ -84,6 +84,26 @@ export type {
   ClvAtThreshold,
   WalkForwardOptions,
 } from "./closing-line-forecaster.js";
+// Nightly discovery (Charter Move #2) — bounded pre-registered candidate family +
+// an engine that PROPOSES promotions/demotions/recalibrations under BH-FDR and
+// cross-night confirmation. Structurally PROPOSED-only: no apply path, owner-gated.
+export {
+  CANDIDATE_REGISTRY,
+  MAX_FAMILY_SIZE,
+  candidateById,
+  assertBoundedFamily,
+} from "./candidate-registry.js";
+export type { SignalCandidate, CandidateFamily } from "./candidate-registry.js";
+export { runDiscoveryNight, assertAllProposed } from "./discovery-engine.js";
+export type {
+  CandidateNightResult,
+  DiscoveryProposal,
+  DiscoveryProposalKind,
+  DiscoveryProposalStatus,
+  DiscoveryProposalEvidence,
+  DiscoveryNightInput,
+  DiscoveryNightReport,
+} from "./discovery-engine.js";
 // CLV capture — derive the closing line from the timestamped odds history and
 // grade a pick's lock-time line/price against it. Pure; the settlement pipeline
 // supplies real rows and persists the graded result.

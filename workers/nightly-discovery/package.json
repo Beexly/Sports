@@ -1,0 +1,14 @@
+{
+  "name": "@sports/worker-nightly-discovery",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dry-run": "tsx src/dry-run.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^22.5.5",
+    "tsx": "^4.19.1"
+  }
+}
