@@ -34,6 +34,11 @@ const SCAN_TARGETS = [
   "app/promotions/page.tsx",
   "app/brief/page.tsx",
   "app/blog/page.tsx",
+  // Decision OS public surfaces (Phase 2).
+  "app/edge/page.tsx",
+  "app/gameplan/page.tsx",
+  "app/learn/page.tsx",
+  "app/proof/memory/page.tsx",
 ];
 
 describe("Strong public-copy scan — registry-driven", () => {

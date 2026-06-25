@@ -99,9 +99,9 @@ export default async function FantasyHubPage({
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-ink-300">
                 Galaxy Fantasy is being rebuilt around the same rule as the picks product:
-                if the data is not real, the advice stays locked. You can connect your real
+                if the data is not real, the advice stays off. You can connect your real
                 league roster now; projection-driven recommendations open only after the
-                live data layer clears.
+                live data layer clears. We never change your roster.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link href="/fantasy/connect" className="btn btn-primary">
@@ -121,8 +121,8 @@ export default async function FantasyHubPage({
               </p>
               <dl className="mt-5 grid grid-cols-3 gap-3">
                 <ReadinessMetric label="Roster" value="sync" />
-                <ReadinessMetric label="Projections" value="gated" />
-                <ReadinessMetric label="Actions" value="no-write" />
+                <ReadinessMetric label="Projections" value="needs live data" />
+                <ReadinessMetric label="Actions" value="read-only" />
               </dl>
               <p className="mt-4 text-sm leading-6 text-ink-300">
                 This page no longer presents fictional player pools as the primary product.

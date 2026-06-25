@@ -7,69 +7,63 @@ type NavLink = { label: string; href: string };
 // A section is either a flat list of links (no toggle) or a collapsible group.
 type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<NavLink> };
 
-// Mirrors the desktop IA exactly: Board, Players (one lab), Intelligence,
-// Fantasy & Daily, plus the standalone Beat and Proof doors. Players' deep
-// views are in-page lenses (not nav items), so they are not duplicated here.
-// Proof is its own door (the /calibration hub gathers every proof surface).
-// Internal surfaces (Studio, Airwave) are not linked.
+// Mirrors the desktop Decision OS IA: Edge · My Gameplan · Learn · Proof (the logo carries Home/Today).
+// Every prior surface is re-homed here, none deleted. Public labels only (Galaxy Twin → Live Market Map).
 const SECTIONS: readonly Section[] = [
   {
-    heading: "Board",
+    heading: "Today",
+    links: [{ label: "What needs attention today", href: "/" }],
+  },
+  {
+    heading: "Edge",
     collapsible: true,
     links: [
       { label: "Today's Board", href: "/board" },
       { label: "The House: NFL hub", href: "/house" },
+      { label: "Players Lab", href: "/players" },
+      { label: "Live Market Map", href: "/observatory" },
+      { label: "Props & Pick'em", href: "/fantasy/props" },
       { label: "Mission Control", href: "/today" },
       { label: "Daily Briefing", href: "/gsn" },
     ],
   },
   {
-    heading: "Players",
-    links: [{ label: "Player Lab: every player, every signal", href: "/players" }],
-  },
-  {
-    heading: "Intelligence",
+    heading: "My Gameplan",
     collapsible: true,
     links: [
-      { label: "Intelligence Engines", href: "/intelligence/engines" },
-      { label: "Galaxy Twin: market map", href: "/observatory" },
-    ],
-  },
-  {
-    heading: "Fantasy & Daily",
-    collapsible: true,
-    links: [
-      { label: "All fantasy & daily tools", href: "/fantasy" },
+      { label: "All fantasy tools", href: "/fantasy" },
       { label: "Draft Assistant", href: "/fantasy/draft" },
-      { label: "Best Ball", href: "/fantasy/bestball" },
       { label: "Start-Sit Helper", href: "/fantasy/lineup" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers" },
       { label: "Trade Analyzer", href: "/fantasy/trade" },
-      { label: "All-in-One Optimizer", href: "/optimizer" },
+      { label: "Best Ball", href: "/fantasy/bestball" },
       { label: "DFS Suite", href: "/fantasy/dfs" },
-      { label: "Pick'em Edge", href: "/fantasy/props" },
+      { label: "All-in-One Optimizer", href: "/optimizer" },
     ],
   },
   {
-    heading: "GSN",
+    heading: "Learn",
     collapsible: true,
     links: [
-      { label: "The Beat: cinematic broadcast", href: "/the-beat" },
-      { label: "The Studio: production desk", href: "/fantasy/studio" },
-      { label: "The Academy: learn the signal", href: "/academy" },
+      { label: "How we read it", href: "/intelligence" },
+      { label: "Every engine", href: "/intelligence/engines" },
+      { label: "How we read metrics", href: "/intelligence/metrics" },
+      { label: "Stories: The Beat", href: "/the-beat" },
+      { label: "The Studio", href: "/fantasy/studio" },
+      { label: "The Academy", href: "/academy" },
     ],
   },
   {
     heading: "Proof",
     collapsible: true,
     links: [
-      { label: "The Proof Room", href: "/calibration" },
-      { label: "Calibration Report", href: "/performance" },
-      { label: "Closing Line Value", href: "/clv" },
-      { label: "Trust Ledger: pick receipts", href: "/ledger" },
-      { label: "Proof of Record", href: "/proof" },
+      { label: "Track record", href: "/calibration" },
+      { label: "Calibration report", href: "/performance" },
+      { label: "Closing line value", href: "/clv" },
+      { label: "Trust ledger", href: "/ledger" },
+      { label: "Proof of record", href: "/proof" },
       { label: "Accountability", href: "/accountability" },
-      { label: "How we read metrics", href: "/intelligence/metrics" },
+      { label: "What we learned", href: "/proof/memory" },
       { label: "CLV Tracker: track your bets", href: "/track" },
     ],
   },

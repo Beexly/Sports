@@ -17,6 +17,8 @@ import { Reveal } from "@/components/motion/reveal";
 import { WorldSection } from "@/components/world/world-section";
 import { SignalFragmentField } from "@/components/world/signal-fragment-field";
 import { NoBetGateChapter } from "@/components/world/no-bet-gate";
+import { TodayFeed } from "@/components/decision/today-feed";
+import { getPreviewDecisions } from "@/lib/decision-ui/fixtures";
 import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { loadNflverseUsagePulse } from "@/lib/nflverse/usage-pulse";
@@ -117,6 +119,26 @@ export default async function HomePage(): Promise<JSX.Element> {
             </p>
           </div>
         </section>
+
+        {/* ── TODAY · the daily decision feed (illustrative preview) ──── */}
+        {(() => {
+          const { cards, regime } = getPreviewDecisions();
+          return (
+            <section id="today" className="border-b border-mineral bg-void/20 px-4 py-16 sm:px-6 lg:px-8">
+              <div className="mx-auto flex max-w-7xl flex-col gap-6">
+                <div className="max-w-2xl">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Today</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-ion-white sm:text-3xl">What needs attention today.</h2>
+                  <p className="mt-2 text-ion-1">
+                    A preview of the daily decision feed — what changed, what it means, what to do, why not the obvious
+                    move, and where the receipt is. The live feed arrives with live data.
+                  </p>
+                </div>
+                <TodayFeed cards={cards} regime={regime} />
+              </div>
+            </section>
+          );
+        })()}
 
         {/* ── SIGNAL MAP · the command console of four doors ──────────── */}
         <section id="doors" className="border-b border-mineral bg-void/30 px-4 py-16 sm:px-6 sm:py-20 lg:px-8">

@@ -4,71 +4,77 @@ import { auth } from "@/lib/auth";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 
-// Four doors, not ten. The 2026 IA condenses every public surface into four
-// primary doors — Board, Players, Intelligence, Fantasy & Daily — plus two
-// prominent standalone links (The Beat, Proof). Players is a single direct link
-// to one immaculate lab (its deep views are in-page lenses, not nav items).
-// Proof is pulled OUT of Intelligence into its own door so credibility is a
-// global anchor, not a sub-menu. Right-side utilities (Live Board, Pricing,
-// account) stay out of the door count. The bar reads like an instrument, not a
-// sitemap. Internal surfaces (Studio, Airwave) remain deliberately unlinked.
+// Decision OS IA: four doors — Edge · My Gameplan · Learn · Proof. The logo carries Home, where the
+// daily "Today" decision feed lives. Every prior surface is RE-HOMED here, none deleted: Edge holds the
+// betting/markets surfaces (Board, House, Players Lab, Live Market Map, props); My Gameplan holds the
+// season-long + daily fantasy tools; Learn holds how-we-read-it + Stories + Academy; Proof holds the
+// receipts, calibration, and the scar memory ("What we learned"). Internal engine names never appear
+// here — public labels only (e.g. Galaxy Twin → "Live Market Map").
 type NavItem = { label: string; href: string; desc: string };
 type NavGroup = { heading?: string; items: readonly NavItem[] };
 
-// Board ▾ — the daily decision surfaces. What do I do today?
-const BOARD_MENU: readonly NavGroup[] = [
+// Edge ▾ — the markets workspace. What's worth a play, and what to pass.
+const EDGE_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "Today's Board", href: "/board", desc: "Today's picks, scored and ranked" },
+      { label: "Today's Board", href: "/board", desc: "Today's reads, scored and ranked" },
       { label: "The House", href: "/house", desc: "NFL hub — odds, picks & matchups" },
+      { label: "Players Lab", href: "/players", desc: "One surface, every player, every signal" },
+      { label: "Live Market Map", href: "/observatory", desc: "Line moves and the best number, live" },
+      { label: "Props & Pick'em", href: "/fantasy/props", desc: "Prop and pick'em line edges, graded" },
       { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },
-      { label: "Daily Briefing", href: "/gsn", desc: "Our daily briefing format — live feed coming soon" },
+      { label: "Daily Briefing", href: "/gsn", desc: "Our daily briefing format" },
     ],
   },
 ];
 
-// Intelligence ▾ — the engine room. How we think. (Proof + Academy moved out.)
-const INTELLIGENCE_MENU: readonly NavGroup[] = [
+// My Gameplan ▾ — the season-long + daily fantasy tools.
+const GAMEPLAN_MENU: readonly NavGroup[] = [
   {
+    heading: "Season-long",
     items: [
-      { label: "Intelligence Engines", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
-      { label: "Galaxy Twin", href: "/observatory", desc: "Live market map: line moves and best prices" },
-    ],
-  },
-];
-
-// GSN ▾ — Galaxy Sports Network, the media + studio arm. The broadcast, the
-// production desk, and the school. (How-we-read-metrics now lives under Proof.)
-const GSN_MENU: readonly NavGroup[] = [
-  {
-    items: [
-      { label: "The Beat", href: "/the-beat", desc: "The cinematic broadcast, scored at the source" },
-      { label: "The Studio", href: "/fantasy/studio", desc: "Inside the production desk, where the broadcast is built" },
-      { label: "The Academy", href: "/academy", desc: "Learn the signal. Train on the process, step by step" },
-    ],
-  },
-];
-
-// Fantasy & Daily ▾ — the tools. Season-long managers and daily lineups in one
-// door. Condensed to the live, hand-in-hand tools; secondary surfaces live on
-// the /fantasy hub.
-const FANTASY_DAILY_MENU: readonly NavGroup[] = [
-  {
-    heading: "Fantasy",
-    items: [
-      { label: "Draft Assistant", href: "/fantasy/draft", desc: "Draft tiers, player values & live pick guidance" },
-      { label: "Best Ball", href: "/fantasy/bestball", desc: "Draft-only roster construction: ceiling, stacks & bye structure" },
+      { label: "Draft Assistant", href: "/fantasy/draft", desc: "Draft tiers, values & live pick guidance" },
       { label: "Start-Sit Helper", href: "/fantasy/lineup", desc: "Start or sit: floor vs. ceiling, explained" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Who to add and what to bid, with the why" },
       { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Is the trade fair? Value and win-now read" },
+      { label: "Best Ball", href: "/fantasy/bestball", desc: "Ceiling, stacks & bye structure" },
     ],
   },
   {
     heading: "Daily",
     items: [
+      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Lineup builder for cash & tournaments" },
       { label: "All-in-One Optimizer", href: "/optimizer", desc: "Draft, lineups & daily in one workspace" },
-      { label: "DFS Suite", href: "/fantasy/dfs", desc: "Lineup builder for cash games & tournaments" },
-      { label: "Pick'em Edge", href: "/fantasy/props", desc: "Underdog & PrizePicks line edges, graded" },
+      { label: "All fantasy tools", href: "/fantasy", desc: "The full Gameplan hub" },
+    ],
+  },
+];
+
+// Learn ▾ — how we read it, the stories, and the school.
+const LEARN_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "How we read it", href: "/intelligence", desc: "The glass box — why the engine reads a game the way it does" },
+      { label: "Every engine", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
+      { label: "How we read metrics", href: "/intelligence/metrics", desc: "What the numbers mean, plainly" },
+      { label: "Stories", href: "/the-beat", desc: "The cinematic broadcast, scored at the source" },
+      { label: "The Studio", href: "/fantasy/studio", desc: "Inside the production desk" },
+      { label: "The Academy", href: "/academy", desc: "Train on the process, step by step" },
+    ],
+  },
+];
+
+// Proof ▾ — the receipts, the track record, and what we learned.
+const PROOF_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "Track record", href: "/calibration", desc: "Calibration, CLV, and the public ledger" },
+      { label: "Calibration report", href: "/performance", desc: "How honest the confidence is" },
+      { label: "Closing line value", href: "/clv", desc: "Did we beat the close?" },
+      { label: "Trust ledger", href: "/ledger", desc: "Tamper-evident pick receipts" },
+      { label: "Proof of record", href: "/proof", desc: "Merkle-hashed, no silent edits" },
+      { label: "Accountability", href: "/accountability", desc: "Loss autopsies, in public" },
+      { label: "What we learned", href: "/proof/memory", desc: "Traps we're avoiding, and where we got sharper" },
     ],
   },
 ];
@@ -114,17 +120,10 @@ export async function Nav() {
           <BrandLockup />
 
           <nav className="nav-links" aria-label="Primary">
-            <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
-            <Link href="/players" title="The Lab: one surface, every player, every signal">
-              The Lab
-            </Link>
-            <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
-            <NavMenu label="Fantasy & Daily" href="/fantasy" groups={FANTASY_DAILY_MENU} />
-            <NavMenu label="GSN" href="/the-beat" groups={GSN_MENU} />
-
-            <Link href="/calibration" title="The Proof Room: calibration, CLV, and the public ledger">
-              Proof
-            </Link>
+            <NavMenu label="Edge" href="/edge" groups={EDGE_MENU} />
+            <NavMenu label="My Gameplan" href="/gameplan" groups={GAMEPLAN_MENU} />
+            <NavMenu label="Learn" href="/learn" groups={LEARN_MENU} />
+            <NavMenu label="Proof" href="/calibration" groups={PROOF_MENU} />
           </nav>
         </div>
 

@@ -12,6 +12,13 @@ const nextConfig = {
     "@sports/prediction-engine",
     "@sports/data-ingestion",
     "@sports/ingestion-pipeline",
+    // Decision Field Organism (Phase 2 UX) — pure TS packages consumed server-side
+    // to render fixture DecisionCards. Engine + data-intelligence are transitive
+    // deps of the runtime/factory, so they must transpile too.
+    "@sports/engine",
+    "@sports/data-intelligence",
+    "@sports/decision-field-runtime",
+    "@sports/decision-factory",
   ],
   experimental: {
     serverComponentsExternalPackages: ["@prisma/client"],
@@ -46,6 +53,13 @@ const nextConfig = {
   },
   images: {
     domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
+  },
+  async redirects() {
+    // Decision OS IA aliases. No existing deep route is moved or deleted — these
+    // only add friendly aliases for the new doors.
+    return [
+      { source: "/my-gameplan", destination: "/gameplan", permanent: false },
+    ];
   },
   async headers() {
     return [
