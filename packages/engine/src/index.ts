@@ -8,3 +8,7 @@ export * from "./market-physics/expression-router.js";
 export * from "./market-physics/book-dna.js";
 export * from "./market-physics/shock-absorption.js";
 export * from "./market-physics/role-state.js";
+export * from "./galileo/market-twin.js";
+export * from "./galileo/incoherence-residual.js";
+export * from "./galileo/counterfactual-line-oracle.js";
+export * from "./galileo/edge-immune-system.js";
