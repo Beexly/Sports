@@ -53,13 +53,12 @@ const BASE = [
 const RECENCY = ["recencyPoints", "trendPoints"];
 const SHARES = ["targetShare", "carryShare"];
 const FPOE = ["oppFpoe"];
+const VEGAS = ["vegasImpliedTotal"];
 
 const GROUPS: ReadonlyArray<{ name: string; ids: readonly string[] }> = [
   { name: "G0 base (control)", ids: BASE },
-  { name: "G1 +recency", ids: [...BASE, ...RECENCY] },
-  { name: "G2 +usage-share", ids: [...BASE, ...SHARES] },
-  { name: "G3 +opp-FPOE", ids: [...BASE, ...FPOE] },
-  { name: "G4 +all", ids: [...BASE, ...RECENCY, ...SHARES, ...FPOE] },
+  { name: "G5 +vegas-probe", ids: [...BASE, ...VEGAS] },
+  { name: "G6 +all+vegas", ids: [...BASE, ...RECENCY, ...SHARES, ...FPOE, ...VEGAS] },
 ];
 
 const TARGET_SHARE_PRIOR: Record<string, number> = { WR: 0.18, TE: 0.13, RB: 0.11, QB: 0.0 };
@@ -116,6 +115,35 @@ async function fetchSeason(season: number): Promise<Array<Record<string, string>
   return [];
 }
 
+// nflverse games (all seasons) → (season|team|week) -> Vegas implied team total.
+// LEAKAGE-RISK PROBE: spread_line/total_line are CLOSING lines (incorporate late info such as
+// inactives/weather), so this measures whether the Vegas implied total carries SIGNAL — it is NOT
+// an honest gate-flip feature (that needs a pre-kickoff snapshot via the paid historical Odds API).
+// nflverse convention: spread_line > 0 means the HOME team is favored by that many points, so
+//   home implied total = (total + spread)/2,  away implied total = (total - spread)/2.
+async function fetchScheduleImpliedTotals(): Promise<Map<string, number>> {
+  const url = "https://github.com/nflverse/nflverse-data/releases/download/games/games.csv";
+  const map = new Map<string, number>();
+  try {
+    const res = await fetch(url);
+    if (!res.ok) { console.warn("  schedules: not reachable"); return map; }
+    const rows = parseCsv(await res.text());
+    for (const r of rows) {
+      const season = num(r, "season");
+      const week = num(r, "week");
+      const home = str(r, "home_team");
+      const away = str(r, "away_team");
+      const total = num(r, "total_line");
+      const spread = num(r, "spread_line");
+      if (!season || !week || !home || !away || total === 0) continue;
+      map.set(`${season}|${home}|${week}`, (total + spread) / 2);
+      map.set(`${season}|${away}|${week}`, (total - spread) / 2);
+    }
+    console.log(`  schedules: ${map.size} team-week implied totals (CLOSING-line probe)`);
+  } catch { console.warn("  schedules: fetch failed"); }
+  return map;
+}
+
 function num(row: Record<string, string>, ...keys: string[]): number {
   for (const k of keys) { const v = row[k]; if (v !== undefined && v !== "") { const n = Number(v); if (Number.isFinite(n)) return n; } }
   return 0;
@@ -154,7 +182,7 @@ function toWeekRow(r: Record<string, string>): WeekRow | null {
 function mean(xs: number[]): number { return xs.length === 0 ? 0 : xs.reduce((a, b) => a + b, 0) / xs.length; }
 
 // ---- sample build with orthogonal features (leakage-safe) ---------------
-function buildSamples(rows: WeekRow[]): TweedieProjectionSample[] {
+function buildSamples(rows: WeekRow[], vegas: Map<string, number>): TweedieProjectionSample[] {
   // team-week opportunity totals (for usage shares)
   const teamTargets = new Map<string, number>(); // season|team|week
   const teamCarries = new Map<string, number>();
@@ -235,6 +263,8 @@ function buildSamples(rows: WeekRow[]): TweedieProjectionSample[] {
           targetShare,
           carryShare,
           oppFpoe,
+          // same-week Vegas implied team total (known pre-game; CLOSING-line probe — see fetch note)
+          vegasImpliedTotal: vegas.get(`${w.season}|${w.team}|${w.week}`) ?? 0,
         },
       });
     }
@@ -251,8 +281,9 @@ async function main(): Promise<void> {
   }
   if (raw.length === 0) { console.error("\nNo data fetched (network / nflverse).\n"); process.exit(2); }
 
-  const samples = buildSamples(raw);
-  console.log(`Built ${samples.length} leakage-safe samples (>= ${MIN_PRIOR_GAMES} prior games).\n`);
+  const vegas = await fetchScheduleImpliedTotals();
+  const samples = buildSamples(raw, vegas);
+  console.log(`Built ${samples.length} samples (>= ${MIN_PRIOR_GAMES} prior games); ${[...vegas.keys()].length} team-week Vegas totals.\n`);
 
   const opts = { rounds: 8, learningRate: 0.2, minTrainWeeks: 4, purgeWeeks: 1, embargoWeeks: 1 };
   type Row = { name: string; feats: number; modelMae: number; naiveMae: number; marginPct: number; t: number; beats: boolean };
