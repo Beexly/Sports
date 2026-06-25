@@ -27,6 +27,17 @@ describe("Fantasy Autopsy", () => {
     const r = fantasyAutopsy({ ...base, knowableAtDecision: false, outcomeFantasyPoints: 0.9 });
     expect(r.verdict).toBe("lucky_win");
   });
+  // --- audit regressions ---
+  it("a sound process that loses BEYOND its variance band still emits NO lesson (process over outcome)", () => {
+    const r = fantasyAutopsy({ ...base, expectedFantasyPoints: 0.6, varianceBand: 0.15, outcomeFantasyPoints: 0.40 }); // delta -0.20, outside 0.15
+    expect(r.verdict).toBe("deserved_loss");
+    expect(r.emitsLesson).toBe(false); // a single week can never move a weight
+  });
+  it("a FADE of a fairly-priced asset is NOT a sound process (fade needs genuine overpricing)", () => {
+    // role 0.50 vs market 0.48 → gap +0.02 (not overpriced); fading it is not direction-sound.
+    const r = fantasyAutopsy({ action: "SIT", roleImpliedValue: 0.5, marketBeliefAtDecision: 0.48, knowableAtDecision: true, ghostMatched: false, expectedFantasyPoints: 0.5, outcomeFantasyPoints: 0.7, varianceBand: 0.2 });
+    expect(r.soundProcess).toBe(false);
+  });
 });
 
 describe("Fantasy Experiment Governor", () => {

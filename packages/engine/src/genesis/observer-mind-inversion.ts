@@ -58,13 +58,15 @@ export function invertObserverMind(s: ObserverSignal): InvertedMind {
   const bias: ObserverBias =
     stale ? "stale" : nameAnchored ? "name_value_anchored" : gap <= -0.1 ? "underreacting" : gap >= 0.1 ? "overreacting" : "balanced";
   const confidence = Number((s.dataQuality * (stale ? 0.6 : 1)).toFixed(3));
+  const impliedRoleState = Number(Math.max(0, Math.min(1, s.normalizedValue)).toFixed(4));
   return {
     observer: s.observer,
-    impliedRoleState: Number(Math.max(0, Math.min(1, s.normalizedValue)).toFixed(4)),
+    impliedRoleState,
     policyAssumption: POLICY[s.observer],
     bias,
     observerLagMin: s.staleAsOfMin ?? null,
     confidence,
-    note: `Implies role ${s.normalizedValue.toFixed(2)} vs fair ${s.referenceValue.toFixed(2)} → ${bias}. Policy: ${POLICY[s.observer]}.`,
+    // Report the clamped implied role so the note never disagrees with the structured field.
+    note: `Implies role ${impliedRoleState.toFixed(2)} vs fair ${s.referenceValue.toFixed(2)} → ${bias}. Policy: ${POLICY[s.observer]}.`,
   };
 }

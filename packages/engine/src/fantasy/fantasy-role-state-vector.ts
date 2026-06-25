@@ -88,8 +88,11 @@ export interface RoleProductionDivergence {
 export function roleVsProduction(roleQuality: number, normalizedProduction: number, opts: { threshold?: number } = {}): RoleProductionDivergence {
   const t = opts.threshold ?? 0.25;
   const divergence = Number((roleQuality - normalizedProduction).toFixed(4));
+  // The "aligned" band scales with the threshold so a caller-supplied threshold below 0.1 can't make
+  // the aligned band wider than the signal band (which would mislabel tiny gaps as strong signals).
+  const alignedBand = Math.min(0.1, 0.4 * t);
   const signal: RoleProductionSignal =
-    divergence >= t ? "silent_breakout" : divergence <= -t ? "box_score_fraud" : Math.abs(divergence) < 0.1 ? "aligned" : "neutral";
+    divergence >= t ? "silent_breakout" : divergence <= -t ? "box_score_fraud" : Math.abs(divergence) < alignedBand ? "aligned" : "neutral";
   return {
     divergence,
     signal,

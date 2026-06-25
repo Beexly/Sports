@@ -44,6 +44,13 @@ describe("Unknown-Unknown Scout", () => {
     ];
     expect(scoutUnknowns(obs)).toHaveLength(0);
   });
+  // --- audit regression: high novelty must not buy past the hallucination/proof governance guard ---
+  it("does not propose a maxed-novelty residual that carries high hallucination risk and proof gap", () => {
+    const obs: ResidualObservation[] = [
+      { id: "rx", label: "shiny", surface: "dfs", residual: 1, explainedByExistingConcept: false, distanceFromOntology: 1, recurrence: 1, crossSurface: 1, decisionLeverageGain: 1, complexity: 1, hallucinationRisk: 1, proofGap: 1 },
+    ];
+    expect(scoutUnknowns(obs)).toHaveLength(0);
+  });
 });
 
 describe("Mutant Hypothesis Generator", () => {
@@ -61,6 +68,13 @@ describe("Mutant Hypothesis Generator", () => {
     const mutants = generateMutants(concepts, { viabilityThreshold: 0.45 });
     expect(mutants[0]!.parents).toEqual(["rmt", "dog"]); // highest-fitness overlapping pair
     expect(mutants.every((m) => m.viability >= 0.45)).toBe(true);
+  });
+  // --- audit regression: two perfect-fitness parents with NO shared surface are not viable ---
+  it("a disjoint pair of perfect parents stays below the default viability threshold", () => {
+    const a = { id: "a", name: "A", mechanism: "x", surfaces: ["betting"], fitness: 1 };
+    const b = { id: "b", name: "B", mechanism: "y", surfaces: ["dynasty"], fitness: 1 };
+    expect(crossbreed(a, b).viability).toBeLessThan(0.3); // no interaction surface → not viable
+    expect(generateMutants([a, b])).toHaveLength(0); // dropped by the default 0.3 threshold
   });
 });
 

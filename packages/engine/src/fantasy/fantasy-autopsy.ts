@@ -39,7 +39,10 @@ export interface FantasyAutopsyResult {
 export function fantasyAutopsy(i: FantasyAutopsyInput): FantasyAutopsyResult {
   const gap = i.roleImpliedValue - i.marketBeliefAtDecision;
   const wasUnderpriced = gap > 0.05;
-  const directionSound = BUY_TYPES.has(i.action) ? wasUnderpriced : FADE_TYPES.has(i.action) ? !wasUnderpriced : Math.abs(gap) <= 0.12;
+  const wasOverpriced = gap < -0.05;
+  // A buy is sound only when genuinely underpriced; a fade only when genuinely OVERpriced (role
+  // below market). The fade test must be symmetric to the buy test — not merely "not underpriced".
+  const directionSound = BUY_TYPES.has(i.action) ? wasUnderpriced : FADE_TYPES.has(i.action) ? wasOverpriced : Math.abs(gap) <= 0.12;
   const soundProcess = i.knowableAtDecision && !i.ghostMatched && directionSound;
 
   const outcomeDelta = Number((i.outcomeFantasyPoints - i.expectedFantasyPoints).toFixed(4));
@@ -52,7 +55,10 @@ export function fantasyAutopsy(i: FantasyAutopsyInput): FantasyAutopsyResult {
   else if (!soundProcess && outcomeDelta >= 0) verdict = "lucky_win"; // unsound process bailed out by variance — lesson
   else verdict = "process_error";
 
-  const emitsLesson = verdict === "lucky_win" || verdict === "deserved_loss" || verdict === "process_error";
+  // Lessons come ONLY from an UNSOUND process. A sound process that loses — even outside its
+  // variance band — emits no lesson: a single week can never move a weight (process over outcome,
+  // symmetric with deserved_win on the upside). Outcome never overturns a sound process verdict.
+  const emitsLesson = verdict === "lucky_win" || verdict === "process_error";
   return {
     verdict, soundProcess, outcomeDelta, withinVariance, emitsLesson,
     note: verdict === "unlucky_loss"
@@ -62,7 +68,7 @@ export function fantasyAutopsy(i: FantasyAutopsyInput): FantasyAutopsyResult {
         : verdict === "lucky_win"
           ? "Unsound process rescued by variance — emit a lesson; do not repeat."
           : verdict === "deserved_loss"
-            ? "Outcome fell outside the variance band — the role read was likely wrong; emit a lesson."
+            ? "Sound process, loss beyond the variance band — a tail loss, NOT a lesson (process over outcome)."
             : "Unsound process and bad outcome — emit a lesson.",
   };
 }

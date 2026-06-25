@@ -73,15 +73,19 @@ describe("D. A candidate resembling a prior TD-spike trap is downgraded despite 
 
 // ── E. Scarcity curvature: the same add is PASS shallow, ADD deep, AGGRESSIVE in superflex. ──────
 describe("E. Scarcity curvature makes the same player a different decision by context", () => {
-  it("action impact rises from shallow to deep to a superflex-scarce context", () => {
+  it("scarcity rises shallow→deep, and the superflex multiplier sharpens the SAME QB vs 1-QB", () => {
     const shallow = computeScarcityCurvature({ position: "RB", format: "ppr", playerRank: 30, replacementRank: 34, benchDepth: 7, waiverPoolQuality: 0.8, byeWeekPressure: 0.1, playoffContext: 0.2 });
     const deep = computeScarcityCurvature({ position: "RB", format: "ppr", playerRank: 30, replacementRank: 48, benchDepth: 3, waiverPoolQuality: 0.2, byeWeekPressure: 0.4, playoffContext: 0.6 });
-    const superflex = computeScarcityCurvature({ position: "QB", format: "superflex", playerRank: 12, replacementRank: 26, benchDepth: 3, waiverPoolQuality: 0.2, byeWeekPressure: 0.4, playoffContext: 0.7 });
-    expect(deep.actionImpact).toBeGreaterThan(shallow.actionImpact);
-    expect(superflex.actionImpact).toBeGreaterThan(shallow.actionImpact);
-    // …while the DFS leg is neutral/fade due to ownership, not scarcity.
-    const dfs = assessContestField({ projectedOwnership: 0.3, fairOwnership: 0.28, salaryRelief: 0.3, publicStackTendency: 0.3, fieldSize: 50_000, lateNewsRisk: 0.1 });
-    expect(dfs.chalkType).toBe("neutral");
+    // actionImpact saturates at the 1.0 clamp; assert on the UNCLAMPED replacementCliff so a real regression is caught.
+    expect(deep.replacementCliff).toBeGreaterThan(shallow.replacementCliff);
+    expect(deep.actionImpact).toBeGreaterThanOrEqual(shallow.actionImpact);
+    // The superflex-specific steepness multiplier must make the SAME QB scarcer than in a 1-QB format
+    // (comparing against shallow would pass even if the multiplier were deleted — this does not).
+    const qb = { position: "QB" as const, playerRank: 12, replacementRank: 26, benchDepth: 3, waiverPoolQuality: 0.2, byeWeekPressure: 0.4, playoffContext: 0.7 };
+    expect(computeScarcityCurvature({ ...qb, format: "superflex" }).replacementCliff)
+      .toBeGreaterThan(computeScarcityCurvature({ ...qb, format: "ppr" }).replacementCliff);
+    // …while the DFS leg is neutral due to ownership, not scarcity.
+    expect(assessContestField({ projectedOwnership: 0.3, fairOwnership: 0.28, salaryRelief: 0.3, publicStackTendency: 0.3, fieldSize: 50_000, lateNewsRisk: 0.1 }).chalkType).toBe("neutral");
   });
 });
 

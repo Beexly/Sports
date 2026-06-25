@@ -68,8 +68,9 @@ export function redistributeRoleMass(vacated: VacatedRole, inheritors: readonly 
     return ws.map((w) => (sum > 0 ? (vac * retained * w) / sum : 0));
   };
 
+  const passLean = Math.max(0, Math.min(1, context.passLean));
   const tgt = alloc(vacated.targets, "pass");
-  const car = alloc(vacated.carries * (1 - 0.3 * context.passLean), "rush"); // pass scripts slightly suppress vacated carries
+  const car = alloc(vacated.carries * (1 - 0.3 * passLean), "rush"); // pass scripts slightly suppress vacated carries (passLean clamped to [0,1])
   const rz = alloc(vacated.redZoneTouches, "redZone");
   const gl = alloc(vacated.goalLineTouches, "redZone");
   const ay = alloc(vacated.airYards, "deep");
@@ -90,9 +91,12 @@ export function redistributeRoleMass(vacated: VacatedRole, inheritors: readonly 
   });
 
   const top = base.slice().sort((a, b) => b.valuableShare - a.valuableShare)[0];
+  // Only crown a valuable-core inheritor when one actually captured valuable mass; if every share is
+  // zero (a pure-checkdown vacancy, or no fit), do not mislabel an arbitrary inheritor as "the edge".
+  const hasValuableCore = top !== undefined && top.valuableShare > 0;
   const allocations = base.map((a) => ({
     ...a,
-    note: top && a.id === top.id
+    note: hasValuableCore && a.id === top.id
       ? "Inherits the valuable (RZ/GL/air-yard/first-read) core of the role — the real edge."
       : "Inherits volume, but not the valuable core — beware the over-credited-backup trap.",
   }));

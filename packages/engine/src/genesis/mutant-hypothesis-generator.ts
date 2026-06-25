@@ -36,8 +36,9 @@ export function crossbreed(a: ParentConcept, b: ParentConcept): MutantHypothesis
   const shared = overlap(a.surfaces, b.surfaces);
   const union = new Set([...a.surfaces, ...b.surfaces]).size;
   const noveltyEstimate = Number(Math.min(1, union / 8).toFixed(4));
-  // Viability needs fit parents AND interaction surface; pure novelty with no overlap is not viable.
-  const overlapBonus = shared.length === 0 ? 0.3 : Math.min(1, 0.5 + 0.25 * shared.length);
+  // Viability needs fit parents AND interaction surface; pure novelty with no overlap is not viable
+  // — even two perfect parents must stay below the default viability threshold (0.3) when disjoint.
+  const overlapBonus = shared.length === 0 ? 0.25 : Math.min(1, 0.5 + 0.25 * shared.length);
   const viability = Number((((a.fitness + b.fitness) / 2) * overlapBonus).toFixed(4));
   return {
     id: `mutant:${a.id}__${b.id}`,

@@ -64,7 +64,11 @@ describe("C. A vacated role splits; the valuable core is identified, the backup 
     ];
     const r = redistributeRoleMass(vacated, inheritors, { passLean: 0.5, teamLevelLeakage: 0.2 });
     expect(r.allocations).toHaveLength(3);
-    expect(r.allocations.filter((a) => a.note.includes("valuable (RZ")).length).toBe(1);
+    // Non-tautological: the labeled valuable-core inheritor must be the one with the max valuableShare
+    // (a mere count is always 1 by construction and would not catch a mis-ranking).
+    const labeled = r.allocations.find((a) => a.note.includes("valuable (RZ"));
+    const topByShare = [...r.allocations].sort((a, b) => b.valuableShare - a.valuableShare)[0];
+    expect(labeled!.id).toBe(topByShare!.id);
     // Public overreacts to the early-down back; with real uncertainty the add should be disciplined.
     const waiver = recommendWaiver({ futureRoleValue: 0.6, scarcity: 0.6, rosterNeed: 0.7, playoffUtility: 0.6, acquisitionProbability: 0.8, faabCost: 0.2, dropCost: 0.05, uncertaintyPenalty: 0.35 });
     expect(waiver.action).toBe("DISCIPLINED_FAAB"); // a split-role backup is a disciplined add, not an aggressive smash
@@ -74,8 +78,8 @@ describe("C. A vacated role splits; the valuable core is identified, the backup 
 // ── D. DFS salary lag — the same play flips on ownership. ─────────────────────────────────────────
 describe("D. A stale-salary play is OVERWEIGHT under-owned, FADE when ownership explodes", () => {
   const stale: DFSInputs = { ceilingProjection: 0.8, roleCertainty: 0.8, salary: 0.4, projectedPoints: 0.7, projectedOwnership: 0.08, fairOwnership: 0.25, correlationValue: 0.5, contestType: "gpp", duplicationRisk: 0.1, lateNewsRisk: 0.1, fragility: 0.1 };
-  it("over-weights when ownership lags the role", () => {
-    expect(["OVERWEIGHT", "TOURNAMENT_ONLY"]).toContain(evaluateDFS(stale).action);
+  it("routes a gpp, high-ceiling, under-owned play to TOURNAMENT_ONLY", () => {
+    expect(evaluateDFS(stale).action).toBe("TOURNAMENT_ONLY"); // pinned: gpp branch is deterministic for this fixture
   });
   it("fades when ownership explodes past the role's fair share", () => {
     expect(evaluateDFS({ ...stale, projectedOwnership: 0.5, ceilingProjection: 0.5 }).action).toBe("FADE");

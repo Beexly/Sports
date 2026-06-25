@@ -40,10 +40,11 @@ export const STANDARD_PHASE_THRESHOLDS: Readonly<Record<string, readonly Decisio
 
 /** Detect whether a metric crossed a named decision boundary between two readings. */
 export function detectDecisionPhaseTransition(i: DecisionPhaseInput): DecisionPhaseResult {
-  const lo = Math.min(i.previous, i.current);
-  const hi = Math.max(i.previous, i.current);
   const direction = i.current > i.previous ? "up" : i.current < i.previous ? "down" : "none";
-  const crossedAll = i.thresholds.filter((t) => t.at > lo && t.at <= hi);
+  // A threshold is crossed iff previous and current sit on opposite sides of it — inclusive of an
+  // exact landing on the boundary (sign 0). Sign-based detection fixes the down-move/exact-boundary
+  // off-by-one that a half-open (lo, hi] interval introduced.
+  const crossedAll = i.thresholds.filter((t) => Math.sign(i.previous - t.at) !== Math.sign(i.current - t.at));
   // A jump across several boundaries lands in the destination phase: the highest crossed on an
   // up-move, the lowest crossed on a down-move.
   const crossed = crossedAll.length === 0 ? null

@@ -54,7 +54,9 @@ function noveltyScore(o: ResidualObservation): number {
 export function scoutUnknowns(observations: readonly ResidualObservation[], opts: { noveltyThreshold?: number } = {}): NoveltyProposal[] {
   const threshold = opts.noveltyThreshold ?? 0.35;
   return observations
-    .filter((o) => !o.explainedByExistingConcept)
+    // Governance hard-stop: never propose a concept off a residual with high hallucination risk or a
+    // large proof gap, no matter how novel — a high novelty score must not buy past these guards.
+    .filter((o) => !o.explainedByExistingConcept && o.hallucinationRisk < 0.6 && o.proofGap < 0.8)
     .map((o) => ({ o, score: noveltyScore(o) }))
     .filter((x) => x.score >= threshold)
     .map(({ o, score }) => ({

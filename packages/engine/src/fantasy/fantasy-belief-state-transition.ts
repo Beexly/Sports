@@ -43,7 +43,7 @@ export interface FantasyBeliefStateInput {
   readonly dfsSalaryBelief: number;
   readonly dfsOwnershipBelief: number;
   readonly managerCrowdBelief: number;
-  /** External truth signal (sportsbook prop-implied), if available. */
+  /** External truth signal (sportsbook prop-implied), if available — corroborates role-implied truth. */
   readonly sportsbookImpliedBelief?: number;
   // Movement.
   readonly expectedMovement: number;
@@ -72,7 +72,10 @@ export function assembleFantasyTransition(input: FantasyBeliefStateInput, opts: 
   const threshold = opts.actionableThreshold ?? 0.12;
   const surfaces = [input.platformProjectionBelief, input.analystRankBelief, input.dfsSalaryBelief, input.dfsOwnershipBelief, input.managerCrowdBelief];
   const marketBelief = surfaces.reduce((a, b) => a + b, 0) / surfaces.length;
-  const valueGap = Number((input.roleImpliedValue - marketBelief).toFixed(4));
+  // The sportsbook prop is an EXTERNAL truth signal, not a crowd surface: when present it corroborates
+  // the role-implied truth, so the value gap is measured against a blended truth estimate.
+  const truth = input.sportsbookImpliedBelief != null ? 0.7 * input.roleImpliedValue + 0.3 * input.sportsbookImpliedBelief : input.roleImpliedValue;
+  const valueGap = Number((truth - marketBelief).toFixed(4));
   const direction: FantasyDirection = valueGap >= threshold ? "underpriced" : valueGap <= -threshold ? "overpriced" : "fair";
 
   const reasons: string[] = [];

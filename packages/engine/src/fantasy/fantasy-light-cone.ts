@@ -45,7 +45,14 @@ export function evaluateFantasyLightCone(q: FantasyLightConeQuery): FantasyLight
   if (![decision, lock, known].every(Number.isFinite)) {
     return { status: "SOURCE_UNCLEAR", knowableAtDecision: false, actionableBeforeLock: false, contaminationBoundary: null, reason: "Missing/unparseable timestamps — cannot certify knowability." };
   }
-  const contaminating = (q.usedDataTimestamps ?? []).find((t) => Number.isFinite(ms(t)) && ms(t) > decision);
+  const used = q.usedDataTimestamps ?? [];
+  // Fail CLOSED: an unparseable used-data timestamp cannot be certified to predate the decision, so
+  // it must NOT slip through as INSIDE — treat it as un-certifiable, not as clean.
+  const unparseable = used.find((t) => !Number.isFinite(ms(t)));
+  if (unparseable !== undefined) {
+    return { status: "SOURCE_UNCLEAR", knowableAtDecision: false, actionableBeforeLock: false, contaminationBoundary: unparseable, reason: `Used data timestamp "${unparseable}" is unparseable — cannot certify it predates the decision; fail closed.` };
+  }
+  const contaminating = used.find((t) => ms(t) > decision);
   if (contaminating) {
     return { status: "CONTAMINATED", knowableAtDecision: false, actionableBeforeLock: false, contaminationBoundary: contaminating, reason: `Used data at ${contaminating} postdates the decision — hindsight leakage.` };
   }

@@ -70,15 +70,18 @@ export function runFantasyDiscoveryCycle(input: FantasyCouncilInput): FantasyCou
   const tournament = runTournament(ghostAdjusted);
   roleLog.Prosecutor = `Buried ${tournament.buried.length} theories (fitness ≤ 0, leakage, or ghost-resemblance).`;
 
-  // Statistician: classify each theory's compression status.
+  // Statistician: classify each theory's compression status. Key by entrant.id — the SAME id the
+  // tournament ranks/buries by — so theoryStatuses[winner.id] joins correctly even when the
+  // CompetingTheory.id differs from its entrant.id.
   const theoryStatuses: Record<string, TheoryStatus> = {};
-  for (const t of input.theories) theoryStatuses[t.id] = scoreTheoryValue(t.evidence).status;
+  for (const t of input.theories) theoryStatuses[t.entrant.id] = scoreTheoryValue(t.evidence).status;
   roleLog.Statistician = `Classified theories: ${Object.entries(theoryStatuses).map(([k, v]) => `${k}=${v}`).join(", ")}.`;
 
-  // Experimentalist + Instrumentalist: cheapest/highest-yield falsifying study.
+  // Experimentalist + Instrumentalist: highest Expected-Discovery-Yield falsifier (yield already nets
+  // cost, so the top-yield study — not the literally cheapest — is the one to run first).
   const rankedExp = rankFantasyExperiments(input.experiments);
   const cheapestExperiment = rankedExp[0] ?? null;
-  roleLog.Experimentalist = cheapestExperiment ? `Cheapest falsifier: ${cheapestExperiment.id} (yield ${cheapestExperiment.yield}).` : "No experiment available.";
+  roleLog.Experimentalist = cheapestExperiment ? `Highest-yield falsifier: ${cheapestExperiment.id} (yield ${cheapestExperiment.yield}).` : "No experiment available.";
   roleLog.Instrumentalist = "Flagged required fantasy sensors via Expected Discovery Yield ranking.";
 
   // Economist: is the winner actionable before its lock, net of friction/cost?

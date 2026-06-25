@@ -36,7 +36,9 @@ export function computeBRI(i: BRIInput, opts: { underThreshold?: number; overThr
   const under = opts.underThreshold ?? 0.7;
   const over = opts.overThreshold ?? 1.3;
   const expectedSafe = Math.max(0.05, Math.abs(i.causallyExpectedBeliefMove));
-  const bri = Number((i.observedBeliefMove / expectedSafe).toFixed(4));
+  // BRI is a MAGNITUDE ratio. Use |observed| so a large move in the WRONG direction reads as an
+  // over/abnormal reaction, never as an "underreaction" (which would mislabel it a buy signal).
+  const bri = Number((Math.abs(i.observedBeliefMove) / expectedSafe).toFixed(4));
 
   let classification: BRIClass;
   if ((i.volatilityOfMove ?? 0) >= 0.6) classification = "CHAOTIC";

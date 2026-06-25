@@ -35,6 +35,13 @@ describe("Decision Phase Transition", () => {
   it("reports no crossing when the metric stays in its phase", () => {
     expect(detectDecisionPhaseTransition({ metric: "route_rate", previous: 0.8, current: 0.85, thresholds: [{ at: 0.9, crossingLabel: "stable_role" }] }).crossed).toBe(false);
   });
+  // --- audit regression: down-moves and exact-boundary landings ---
+  it("a down-move that lands exactly on the committee boundary reports committee, not a higher tier", () => {
+    const r = detectStandardPhaseTransition("snap_share", 0.9, 0.42); // falls onto the 0.42 committee edge
+    expect(r.crossed).toBe(true);
+    expect(r.direction).toBe("down");
+    expect(r.crossingLabel).toBe("committee");
+  });
 });
 
 describe("Belief Refractive Index", () => {
@@ -46,6 +53,12 @@ describe("Belief Refractive Index", () => {
   });
   it("classifies an unstable move as chaotic", () => {
     expect(computeBRI({ observer: "dfs_ownership", shockType: "late_news", observedBeliefMove: 0.3, causallyExpectedBeliefMove: 0.3, volatilityOfMove: 0.8 }).classification).toBe("CHAOTIC");
+  });
+  // --- audit regression: a large WRONG-direction move must never read as an underreaction/buy ---
+  it("a violent move opposite to the causal expectation is an overreaction, not a buy signal", () => {
+    const r = computeBRI({ observer: "public", shockType: "panic", observedBeliefMove: -5, causallyExpectedBeliefMove: 1 });
+    expect(r.bri).toBeGreaterThan(0); // magnitude ratio, never negative
+    expect(r.classification).toBe("OVERREACTION");
   });
 });
 

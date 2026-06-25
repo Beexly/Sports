@@ -30,10 +30,14 @@ export interface GhostCandidate {
 /** Similarity (0..1) between two equal-length 0..1 feature vectors = 1 − mean absolute difference. */
 export function featureSimilarity(a: readonly number[], b: readonly number[]): number {
   const n = Math.min(a.length, b.length);
-  if (n === 0) return 0;
+  const m = Math.max(a.length, b.length);
+  if (m === 0) return 0;
   let sum = 0;
   for (let i = 0; i < n; i++) sum += Math.abs(a[i]! - b[i]!);
-  return Number((1 - sum / n).toFixed(4));
+  // Unmatched trailing components count as full distance (1.0 each) and the average is over the
+  // LONGER vector, so a short candidate can no longer inflate its similarity to a longer centroid.
+  sum += m - n;
+  return Number((1 - sum / m).toFixed(4));
 }
 
 /** Penalty a candidate inherits from resembling a specific ghost cluster. */

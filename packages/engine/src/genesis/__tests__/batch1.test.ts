@@ -90,4 +90,8 @@ describe("Ghost Similarity Physics", () => {
   it("does not suppress a structurally different candidate", () => {
     expect(assessGhostSimilarity({ features: [0.2, 0.8, 0.7, 0.1], marketFamily: "wr_rec" }, [cluster]).suppressed).toBe(false);
   });
+  // --- audit regression: a short candidate must not inflate similarity to a longer centroid ---
+  it("a length-mismatched (shorter) candidate cannot score full similarity", () => {
+    expect(featureSimilarity([0.9], [0.9, 0.0, 0.0])).toBeLessThan(1); // unmatched dims count as full distance
+  });
 });

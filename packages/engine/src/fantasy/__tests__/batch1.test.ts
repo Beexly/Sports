@@ -47,6 +47,11 @@ describe("Fantasy Light Cone", () => {
     const v = evaluateFantasyLightCone({ ...base, decisionTime: "2026-01-05T09:00:00Z" });
     expect(v.status).toBe("OUTSIDE_LIGHT_CONE");
   });
+  // --- audit regression: an unparseable used-data timestamp must fail CLOSED, not slip through ---
+  it("fails closed on an unparseable used-data timestamp (does not return INSIDE)", () => {
+    const v = evaluateFantasyLightCone({ ...base, decisionTime: "2026-01-06T10:00:00Z", usedDataTimestamps: ["not-a-date"] });
+    expect(v.status).toBe("SOURCE_UNCLEAR");
+  });
 });
 
 describe("Role Mass Transfer", () => {
@@ -61,7 +66,10 @@ describe("Role Mass Transfer", () => {
     const totalTargets = r.allocations.reduce((s, a) => s + a.inheritedTargets, 0);
     expect(totalTargets).toBeCloseTo(0.25 * 0.8, 2); // 80% retained on-roster
     expect(r.leakage).toBe(0.2);
-    expect(r.allocations.filter((a) => a.note.includes("valuable (RZ")).length).toBe(1);
+    // The labeled valuable-core inheritor must be the actual max-valuable-share one (not just a count of 1).
+    const labeled = r.allocations.find((a) => a.note.includes("valuable (RZ"));
+    const topByShare = [...r.allocations].sort((a, b) => b.valuableShare - a.valuableShare)[0];
+    expect(labeled!.id).toBe(topByShare!.id);
   });
 });
 
