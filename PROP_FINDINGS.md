@@ -19,6 +19,9 @@ real stat, and FDR-tested over/under bias vs the 52.4% (−110) break-even.
   Sign flipped out-of-sample. Pure noise. Dropped.
 - **Receiving yards:** mild under both years (52.0%, 51.5%) but never significant and below
   break-even — efficient enough. No edge.
+- **Receptions:** tested across all three seasons (wks 1–4) — 2023 leaned slightly OVER
+  (50.7%), 2024/2025 leaned UNDER (53.1%, 53.9%). Direction not stable; pooled ~52.1%, below
+  break-even. The over-bias is specific to rushing YARDS, not catches. No reliable edge.
 
 ## What survived — rushing-yards UNDER (3-season replication)
 
