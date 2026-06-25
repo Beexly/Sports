@@ -26,3 +26,7 @@ export * from "./galileo/narrative-gravity.js";
 export * from "./einstein/observer-frame.js";
 export * from "./einstein/information-light-cone.js";
 export * from "./einstein/flesh-state-vector.js";
+export * from "./einstein/shock-calculus.js";
+export * from "./einstein/conservation-law.js";
+export * from "./einstein/book-genome.js";
+export * from "./einstein/regime-topology.js";
