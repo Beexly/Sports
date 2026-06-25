@@ -8,6 +8,9 @@ node_modules/
 out/
 build/
 dist/
+# ...but docs/build/ is documentation, not build output — keep it tracked.
+!docs/build/
+!docs/build/**
 
 # Environment variables — ignore ALL .env* (real secrets land in .env.production,
 # .env.staging, etc. per the deploy flow); re-include only the committed templates.
