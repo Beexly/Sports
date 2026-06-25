@@ -27,6 +27,8 @@ const STATE_VIEW: Readonly<Record<DecisionState, DecisionStatusView>> = {
   TRAP: { label: "Looks like a trap", tone: "bad", plainCopy: "This rhymes with a mistake we've made before." },
   WATCHLIST: { label: "Watching", tone: "neutral", plainCopy: "On the radar; not yet a move." },
   NEEDS_LIVE_DATA: { label: "Needs live data", tone: "neutral", plainCopy: "We can't responsibly call this without live inputs." },
+  DFS_SALARY_LAG: { label: "Salary hasn't caught up", tone: "good", plainCopy: "The role grew faster than the DFS price did." },
+  OWNERSHIP_OVERREACTION: { label: "Crowd's piling in", tone: "neutral", plainCopy: "Projected ownership is running ahead of the actual edge." },
 };
 
 export function statusForState(state: DecisionState): DecisionStatusView {

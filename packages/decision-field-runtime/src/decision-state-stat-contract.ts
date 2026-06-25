@@ -10,21 +10,11 @@
  */
 
 import type { FactType, LegalVerdict } from "@sports/data-intelligence";
+import type { DecisionState } from "./decision-state.js";
 
-/** The decision-state grammar shared across betting, fantasy, DFS, best ball (Phase 0 subset + forward-compat). */
-export type DecisionState =
-  | "ACTIONABLE"
-  | "ROLE_UP_FANTASY_LATE"
-  | "GOOD_IDEA_BAD_PRICE"
-  | "PUBLIC_OVERREACTION"
-  | "ROLE_MASS_MISALLOCATED"
-  | "DATA_CONFLICT"
-  | "NEEDS_CONFIRMATION"
-  | "TOO_LATE"
-  | "PASS"
-  | "TRAP"
-  | "WATCHLIST"
-  | "NEEDS_LIVE_DATA";
+// The decision-state grammar is canonical in ./decision-state.ts — the single source of truth.
+// Re-exported here so existing importers of this module keep resolving the same type.
+export type { DecisionState };
 
 /** The permission ladder — how strong a public expression a card is allowed to make. */
 export type MaxPermittedStrength =
@@ -143,6 +133,27 @@ export const STAT_CONTRACTS: Readonly<Record<DecisionState, DecisionStateStatCon
     optionalStrengtheners: [],
     minimumRightsStatus: ["FREE_OPEN", "FREE_CAUTION", "LICENSED"],
     publicLanguageLimits: ["surface the disagreement; do not resolve it as fact"],
+  },
+  DFS_SALARY_LAG: {
+    decisionState: "DFS_SALARY_LAG",
+    requiredGroups: [
+      { label: "role_delta", anyOf: ["route_rate", "snap_share", "target_share", "carry_share"], capIfMissing: "INFO_ONLY" },
+      { label: "dfs_pricing", anyOf: ["dfs_salary", "dfs_slate"], capIfMissing: "INFO_ONLY" },
+    ],
+    optionalStrengtheners: ["ownership_projection", "platform_projection", "injury_report"],
+    // DFS salary/slate is a licensed/paid feed — the contract may credit a PAID_REQUIRED fact.
+    minimumRightsStatus: ["FREE_OPEN", "FREE_CAUTION", "LICENSED", "PAID_REQUIRED"],
+    publicLanguageLimits: ["no certainty language", "requires a licensed salary feed"],
+  },
+  OWNERSHIP_OVERREACTION: {
+    decisionState: "OWNERSHIP_OVERREACTION",
+    requiredGroups: [
+      { label: "ownership_signal", anyOf: ["ownership_projection", "actual_ownership"], capIfMissing: "INFO_ONLY" },
+      { label: "reality_check", anyOf: ["snap_share", "route_rate", "target_share", "injury_report"], capIfMissing: "WATCH" },
+    ],
+    optionalStrengtheners: ["dfs_salary", "player_prop"],
+    minimumRightsStatus: ["FREE_OPEN", "FREE_CAUTION", "LICENSED", "PAID_REQUIRED"],
+    publicLanguageLimits: ["no certainty language"],
   },
   // States whose Phase-0 contract is intentionally minimal (hardened in Phase 1).
   ACTIONABLE: minimalContract("ACTIONABLE"),

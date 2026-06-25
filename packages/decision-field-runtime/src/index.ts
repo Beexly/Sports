@@ -6,6 +6,7 @@
 // Conscience snapshot. Every organ it calls is a tested function in @sports/engine or
 // @sports/data-intelligence. Additive, fixture-safe: no keys, no network, no live gate, propose-only.
 
+export * from "./decision-state.js";
 export * from "./decision-state-stat-contract.js";
 export * from "./card-claim.js";
 export * from "./source-race.js";

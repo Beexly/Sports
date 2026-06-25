@@ -1,87 +1,217 @@
 /**
- * NFL STAT UNIVERSE — Decision-State Stat Matrix.
+ * NFL STAT UNIVERSE — fact supply graph + per-state acquisition view.
  *
- * The deepest expression of "data-hungry without being data-chaotic": for EVERY decision state, exactly
- * which facts are required, which strengthen it, the free vs paid source, the legal floor, the strongest
- * card it can be when the primary fact is missing, and which surface goes dark without it — plus a
- * provider-unlock map (which source unlocks which fact). This is the demand-and-supply spec that turns a
- * missing stat into a concrete owner acquisition decision. Pure data; aligns with the clearance engine.
+ * This is the SUPPLY side, and it consumes the canonical grammar — there is no second taxonomy here.
+ * The decision states and their required facts come from `@sports/decision-field-runtime`
+ * (`DecisionState` + `STAT_CONTRACTS`). This module answers one question the evidence contract does not:
+ * for each required fact, is there a REAL, rights-cleared way to obtain it, and how far along is it
+ * (catalogued → adapter built → shadow → validated → live)?
+ *
+ * Honesty rules (a provider's marketing must never unlock a fact):
+ *   • A fact is only "available" if a verified endpoint or a tested derivation supplies it.
+ *   • CATALOGUED ≠ LIVE. Nothing here is LIVE yet — the ingestion pipeline isn't wired.
+ *   • `route_rate` is DERIVED and not yet built: base nflverse ships snaps/targets, not route rate;
+ *     participation/route data is share-alike-licensed and excluded from ingestion.
+ *   • `betting_splits` has NO supplier: The Odds API's catalog does not document a splits endpoint.
+ *   • Weekly/historical injury data is distinct from a real-time game-day inactive feed.
+ *   • Forbidden sources (DO_NOT_USE / RIGHTS_REVIEW) supply nothing and never appear in the graph.
+ *
+ * Pure data + pure functions; no network, no keys, no ingestion.
  */
 
-import type { FactType, LegalVerdict } from "@sports/data-intelligence";
-import type { MaxPermittedStrength } from "@sports/decision-field-runtime";
+import type { FactType, LegalVerdict, LatencyClass } from "@sports/data-intelligence";
+import {
+  type DecisionState,
+  type MaxPermittedStrength,
+  ALL_DECISION_STATES,
+  STAT_CONTRACTS,
+} from "@sports/decision-field-runtime";
 import { SOURCES, isForbiddenForProduction } from "./stat-definition.js";
 
-/** The matrix covers the runtime decision states PLUS the market/DFS/fantasy states the product needs. */
-export type DecisionStateKey =
-  | "ROLE_UP_FANTASY_LATE"
-  | "GOOD_IDEA_BAD_PRICE"
-  | "PUBLIC_OVERREACTION"
-  | "ROLE_MASS_MISALLOCATED"
-  | "DATA_CONFLICT"
-  | "TOO_LATE"
-  | "NEEDS_LIVE_DATA"
-  | "TRAP"
-  | "WATCHLIST"
-  | "ACTIONABLE"
-  | "DFS_SALARY_LAG"
-  | "OWNERSHIP_OVERREACTION"
-  | "PLAYER_PROP_MARKET_LAG"
-  | "INJURY_SOURCE_CONFLICT";
+// ── Fact supply path: per fact, per endpoint capability (the reviewer's FactSupplyPath). ──────────
 
-export interface DecisionStateContract {
-  readonly state: DecisionStateKey;
-  readonly requiredFacts: readonly FactType[];
-  readonly optionalFacts: readonly FactType[];
-  readonly freeSource: string | null;
-  readonly paidSource: string | null;
-  readonly legalFloor: readonly LegalVerdict[];
-  /** The strongest a card may be if a required fact is missing. */
-  readonly maxStrengthIfMissing: MaxPermittedStrength;
-  readonly blockedSurfaceIfMissing: readonly string[];
-  readonly publicLanguageLimits: readonly string[];
-}
+export type FactSupplyMode = "DIRECT" | "DERIVED";
 
-const FREE: readonly LegalVerdict[] = ["FREE_OPEN", "FREE_CAUTION", "LICENSED"];
-const PAID: readonly LegalVerdict[] = ["FREE_OPEN", "FREE_CAUTION", "LICENSED", "PAID_REQUIRED"];
+/** How far a supply path is from actually feeding production. CATALOGUED is the weakest; LIVE the only one that feeds a real card. */
+export type SupplyActivation = "CATALOGUED" | "ADAPTER_BUILT" | "INGESTING_SHADOW" | "VALIDATED" | "LIVE";
 
-export const DECISION_STATE_MATRIX: Readonly<Record<DecisionStateKey, DecisionStateContract>> = {
-  ROLE_UP_FANTASY_LATE: { state: "ROLE_UP_FANTASY_LATE", requiredFacts: ["route_rate", "platform_projection"], optionalFacts: ["target_share", "add_drop_velocity", "player_prop", "injury_report"], freeSource: "nflverse", paidSource: "fantasydata", legalFloor: PAID, maxStrengthIfMissing: "WATCH", blockedSurfaceIfMissing: ["gameplan", "today"], publicLanguageLimits: ["name the role source"] },
-  GOOD_IDEA_BAD_PRICE: { state: "GOOD_IDEA_BAD_PRICE", requiredFacts: ["snap_share", "player_prop"], optionalFacts: ["odds_history", "closing_line"], freeSource: "nflverse", paidSource: "the_odds_api", legalFloor: PAID, maxStrengthIfMissing: "WATCH", blockedSurfaceIfMissing: ["edge"], publicLanguageLimits: ["name the price that kills it"] },
-  PUBLIC_OVERREACTION: { state: "PUBLIC_OVERREACTION", requiredFacts: ["betting_splits", "snap_share"], optionalFacts: ["player_prop", "roster_pct"], freeSource: "nflverse", paidSource: "the_odds_api", legalFloor: PAID, maxStrengthIfMissing: "WATCH", blockedSurfaceIfMissing: ["edge", "today"], publicLanguageLimits: [] },
-  ROLE_MASS_MISALLOCATED: { state: "ROLE_MASS_MISALLOCATED", requiredFacts: ["snap_share", "carry_share"], optionalFacts: ["target_share", "air_yards"], freeSource: "nflverse", paidSource: null, legalFloor: FREE, maxStrengthIfMissing: "INFO_ONLY", blockedSurfaceIfMissing: ["gameplan"], publicLanguageLimits: [] },
-  DATA_CONFLICT: { state: "DATA_CONFLICT", requiredFacts: ["injury_report", "practice_status"], optionalFacts: ["snap_share"], freeSource: "nflverse", paidSource: null, legalFloor: FREE, maxStrengthIfMissing: "INFO_ONLY", blockedSurfaceIfMissing: ["today"], publicLanguageLimits: ["surface the disagreement; don't resolve it as fact"] },
-  TOO_LATE: { state: "TOO_LATE", requiredFacts: ["closing_line", "odds_history"], optionalFacts: [], freeSource: null, paidSource: "the_odds_api", legalFloor: PAID, maxStrengthIfMissing: "INFO_ONLY", blockedSurfaceIfMissing: ["edge"], publicLanguageLimits: [] },
-  NEEDS_LIVE_DATA: { state: "NEEDS_LIVE_DATA", requiredFacts: [], optionalFacts: [], freeSource: null, paidSource: null, legalFloor: FREE, maxStrengthIfMissing: "INFO_ONLY", blockedSurfaceIfMissing: ["today", "edge", "gameplan"], publicLanguageLimits: ["say plainly it needs live data"] },
-  TRAP: { state: "TRAP", requiredFacts: ["snap_share"], optionalFacts: ["route_rate"], freeSource: "nflverse", paidSource: null, legalFloor: FREE, maxStrengthIfMissing: "INFO_ONLY", blockedSurfaceIfMissing: ["today"], publicLanguageLimits: [] },
-  WATCHLIST: { state: "WATCHLIST", requiredFacts: ["snap_share"], optionalFacts: ["player_prop"], freeSource: "nflverse", paidSource: null, legalFloor: FREE, maxStrengthIfMissing: "WATCH", blockedSurfaceIfMissing: ["today"], publicLanguageLimits: [] },
-  ACTIONABLE: { state: "ACTIONABLE", requiredFacts: ["snap_share", "player_prop"], optionalFacts: ["odds_history", "injury_report"], freeSource: "nflverse", paidSource: "the_odds_api", legalFloor: PAID, maxStrengthIfMissing: "WATCH", blockedSurfaceIfMissing: ["today", "edge"], publicLanguageLimits: ["no certainty language"] },
-  DFS_SALARY_LAG: { state: "DFS_SALARY_LAG", requiredFacts: ["dfs_salary", "route_rate"], optionalFacts: ["ownership_projection", "dfs_slate"], freeSource: null, paidSource: "fantasydata", legalFloor: ["LICENSED", "PAID_REQUIRED"], maxStrengthIfMissing: "INFO_ONLY", blockedSurfaceIfMissing: ["gameplan_dfs"], publicLanguageLimits: ["requires a licensed salary feed"] },
-  OWNERSHIP_OVERREACTION: { state: "OWNERSHIP_OVERREACTION", requiredFacts: ["ownership_projection", "snap_share"], optionalFacts: ["actual_ownership", "dfs_salary"], freeSource: null, paidSource: "fantasydata", legalFloor: ["LICENSED", "PAID_REQUIRED"], maxStrengthIfMissing: "WATCH", blockedSurfaceIfMissing: ["gameplan_dfs"], publicLanguageLimits: [] },
-  PLAYER_PROP_MARKET_LAG: { state: "PLAYER_PROP_MARKET_LAG", requiredFacts: ["player_prop", "odds_history", "snap_share"], optionalFacts: ["alt_prop", "target_share"], freeSource: "nflverse", paidSource: "the_odds_api", legalFloor: PAID, maxStrengthIfMissing: "WATCH", blockedSurfaceIfMissing: ["edge"], publicLanguageLimits: ["needs timestamped book snapshots"] },
-  INJURY_SOURCE_CONFLICT: { state: "INJURY_SOURCE_CONFLICT", requiredFacts: ["injury_report", "practice_status"], optionalFacts: ["depth_chart", "inactive_status"], freeSource: "nflverse", paidSource: null, legalFloor: FREE, maxStrengthIfMissing: "INFO_ONLY", blockedSurfaceIfMissing: ["today"], publicLanguageLimits: ["surface the disagreement; don't resolve it as fact"] },
+/** Whether the data is contractually available to us right now. */
+export type ContractStatus = "OPEN" | "TRIAL" | "LICENSED_ACTIVE" | "NOT_ACQUIRED";
+
+export const ACTIVATION_ORDER: Readonly<Record<SupplyActivation, number>> = {
+  CATALOGUED: 0,
+  ADAPTER_BUILT: 1,
+  INGESTING_SHADOW: 2,
+  VALIDATED: 3,
+  LIVE: 4,
 };
 
-/** Which facts each provider unlocks for production. A forbidden source unlocks NOTHING. */
-export const PROVIDER_UNLOCKS: Readonly<Record<string, readonly FactType[]>> = {
-  nflverse: ["play_by_play", "snap_share", "route_rate", "target_share", "carry_share", "air_yards", "red_zone_touch", "injury_report", "practice_status", "depth_chart", "inactive_status"],
-  nws: ["weather"],
-  sleeper: ["add_drop_velocity", "roster_pct", "start_pct"],
-  yahoo_oauth: ["league_settings", "roster_pct"],
-  the_odds_api: ["player_prop", "spread", "total", "moneyline", "odds_history", "alt_prop", "closing_line", "betting_splits"],
-  sportsgameodds: ["player_prop", "spread", "total", "moneyline", "odds_history", "alt_prop", "closing_line"],
-  fantasydata: ["platform_projection", "adp", "roster_pct", "start_pct", "dfs_salary", "dfs_slate", "ownership_projection", "injury_report"],
-  sportsdataio: ["platform_projection", "adp", "dfs_salary", "dfs_slate", "ownership_projection"],
-  sportradar: ["play_by_play", "snap_share", "route_rate"],
-  draftkings_unofficial: [], // forbidden — unlocks nothing for production
-  pfr_scrape: [], // rights-review — unlocks nothing for production
-};
-
-/** Which production-usable sources can unlock a given fact. */
-export function sourcesUnlocking(fact: FactType): string[] {
-  return Object.entries(PROVIDER_UNLOCKS)
-    .filter(([sourceId, facts]) => facts.includes(fact) && !(SOURCES[sourceId] && isForbiddenForProduction(SOURCES[sourceId]!)))
-    .map(([sourceId]) => sourceId);
+export interface FactSupplyPath {
+  readonly factType: FactType;
+  readonly sourceId: string;
+  readonly endpointId: string;
+  readonly mode: FactSupplyMode;
+  readonly activation: SupplyActivation;
+  readonly cadence: string;
+  readonly historyDepth: string;
+  readonly latencyClass: LatencyClass;
+  readonly legalStatus: LegalVerdict;
+  readonly contractStatus: ContractStatus;
+  /** If DERIVED, how it would be computed (and whether that derivation exists yet). */
+  readonly derivation?: string;
+  /** Evidence that the endpoint/derivation is real (a doc ref, a test, a dossier). */
+  readonly evidenceRef?: string;
+  readonly note?: string;
 }
 
-export const ALL_DECISION_STATES: readonly DecisionStateKey[] = Object.keys(DECISION_STATE_MATRIX) as DecisionStateKey[];
+/**
+ * The honest supply graph. Everything is CATALOGUED (nothing wired live yet). Forbidden sources are
+ * absent by construction. Marketing claims are not entries here — only verifiable endpoints/derivations.
+ */
+export const FACT_SUPPLY_GRAPH: readonly FactSupplyPath[] = [
+  // ── Football reality — nflverse open data (DIRECT, catalogued, not yet wired). ──
+  { factType: "snap_share", sourceId: "nflverse", endpointId: "nflverse:snap_counts", mode: "DIRECT", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 2012", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN", evidenceRef: "nflverse snap_counts release" },
+  { factType: "target_share", sourceId: "nflverse", endpointId: "nflverse:player_stats", mode: "DERIVED", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 1999", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN", derivation: "targets / team_pass_attempts (computed from weekly player stats)" },
+  { factType: "carry_share", sourceId: "nflverse", endpointId: "nflverse:player_stats", mode: "DERIVED", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 1999", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN", derivation: "carries / team_rush_attempts" },
+  { factType: "air_yards", sourceId: "nflverse", endpointId: "nflverse:player_stats", mode: "DIRECT", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 2006", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN" },
+  { factType: "red_zone_touch", sourceId: "nflverse", endpointId: "nflverse:pbp", mode: "DERIVED", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 1999", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN", derivation: "filter pbp to yardline_100 <= 20, count touches" },
+  // route_rate is the honesty case: NOT in base nflverse, derivation not built, source is license-excluded.
+  { factType: "route_rate", sourceId: "nflverse", endpointId: "nflverse:participation", mode: "DERIVED", activation: "CATALOGUED", cadence: "weekly", historyDepth: "n/a (not ingested)", latencyClass: "weekly", legalStatus: "FREE_CAUTION", contractStatus: "NOT_ACQUIRED", derivation: "routes_run / team_dropbacks from participation/NGS — NOT in base nflverse and NOT yet built", note: "Participation/route data is share-alike-licensed and excluded from ingestion; do NOT treat route_rate as available until the derivation is built and rights-cleared." },
+  // Injury — weekly/historical, explicitly NOT a real-time game-day feed.
+  { factType: "injury_report", sourceId: "nflverse", endpointId: "nflverse:injuries", mode: "DIRECT", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 2009", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN", note: "Weekly practice-report status — historical/weekly, not a real-time game-day inactive feed." },
+  { factType: "practice_status", sourceId: "nflverse", endpointId: "nflverse:injuries", mode: "DIRECT", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 2009", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN" },
+  { factType: "depth_chart", sourceId: "nflverse", endpointId: "nflverse:depth_charts", mode: "DIRECT", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 2001", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN" },
+  // Real-time game-day inactives are a DIFFERENT fact than the weekly report — no free real-time feed.
+  { factType: "inactive_status", sourceId: "nflverse", endpointId: "nflverse:rosters", mode: "DIRECT", activation: "CATALOGUED", cadence: "weekly", historyDepth: "since 2002", latencyClass: "weekly", legalStatus: "FREE_OPEN", contractStatus: "OPEN", note: "Weekly roster file — NOT a ~90-minutes-before-kickoff real-time inactive feed; that requires a real-time source." },
+  { factType: "weather", sourceId: "nws", endpointId: "nws:forecast", mode: "DIRECT", activation: "CATALOGUED", cadence: "hourly", historyDepth: "forecast", latencyClass: "near-real-time", legalStatus: "FREE_OPEN", contractStatus: "OPEN" },
+
+  // ── Fantasy crowd — Sleeper / Yahoo (free, consented). ──
+  { factType: "add_drop_velocity", sourceId: "sleeper", endpointId: "sleeper:trending", mode: "DIRECT", activation: "CATALOGUED", cadence: "intraday", historyDepth: "rolling", latencyClass: "near-real-time", legalStatus: "FREE_CAUTION", contractStatus: "OPEN" },
+  { factType: "roster_pct", sourceId: "sleeper", endpointId: "sleeper:players", mode: "DERIVED", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "FREE_CAUTION", contractStatus: "OPEN" },
+  { factType: "start_pct", sourceId: "sleeper", endpointId: "sleeper:players", mode: "DERIVED", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "FREE_CAUTION", contractStatus: "OPEN" },
+  { factType: "roster_pct", sourceId: "yahoo_oauth", endpointId: "yahoo:league/rosters", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "FREE_CAUTION", contractStatus: "NOT_ACQUIRED", note: "Per-user data — requires that user's OAuth consent." },
+
+  // ── Market — licensed feeds, key NOT acquired (NOT_ACQUIRED, not live). ──
+  { factType: "player_prop", sourceId: "the_odds_api", endpointId: "oddsapi:event-odds/player_props", mode: "DIRECT", activation: "CATALOGUED", cadence: "intraday", historyDepth: "current", latencyClass: "near-real-time", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED", evidenceRef: "The Odds API player-props market list" },
+  { factType: "spread", sourceId: "the_odds_api", endpointId: "oddsapi:odds/spreads", mode: "DIRECT", activation: "CATALOGUED", cadence: "intraday", historyDepth: "current", latencyClass: "near-real-time", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "total", sourceId: "the_odds_api", endpointId: "oddsapi:odds/totals", mode: "DIRECT", activation: "CATALOGUED", cadence: "intraday", historyDepth: "current", latencyClass: "near-real-time", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "moneyline", sourceId: "the_odds_api", endpointId: "oddsapi:odds/h2h", mode: "DIRECT", activation: "CATALOGUED", cadence: "intraday", historyDepth: "current", latencyClass: "near-real-time", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "alt_prop", sourceId: "the_odds_api", endpointId: "oddsapi:event-odds/alternate", mode: "DIRECT", activation: "CATALOGUED", cadence: "intraday", historyDepth: "current", latencyClass: "near-real-time", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "odds_history", sourceId: "the_odds_api", endpointId: "oddsapi:historical", mode: "DIRECT", activation: "CATALOGUED", cadence: "snapshot", historyDepth: "since 2020 (paid tier)", latencyClass: "historical", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED", evidenceRef: "The Odds API historical endpoint (paid tier)" },
+  { factType: "closing_line", sourceId: "the_odds_api", endpointId: "oddsapi:historical", mode: "DERIVED", activation: "CATALOGUED", cadence: "snapshot", historyDepth: "since 2020", latencyClass: "historical", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED", derivation: "last pre-kickoff snapshot from odds_history" },
+  // Second market observer (book-lag triangulation).
+  { factType: "player_prop", sourceId: "sportsgameodds", endpointId: "sgo:odds/player_props", mode: "DIRECT", activation: "CATALOGUED", cadence: "intraday", historyDepth: "current", latencyClass: "near-real-time", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "odds_history", sourceId: "sportsgameodds", endpointId: "sgo:odds/history", mode: "DIRECT", activation: "CATALOGUED", cadence: "snapshot", historyDepth: "current-season", latencyClass: "historical", legalStatus: "LICENSED", contractStatus: "NOT_ACQUIRED" },
+  // NOTE: betting_splits has NO supply path — The Odds API's catalog does not document a public-splits
+  // endpoint. Until a verified endpoint/contract exists, no source unlocks betting_splits.
+
+  // ── Fantasy projections / DFS — paid, not acquired. ──
+  { factType: "platform_projection", sourceId: "fantasydata", endpointId: "fantasydata:projections", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "PAID_REQUIRED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "adp", sourceId: "fantasydata", endpointId: "fantasydata:adp", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "PAID_REQUIRED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "dfs_salary", sourceId: "fantasydata", endpointId: "fantasydata:dfs/slates", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "PAID_REQUIRED", contractStatus: "NOT_ACQUIRED", evidenceRef: "FantasyData DFS slates endpoint" },
+  { factType: "dfs_slate", sourceId: "fantasydata", endpointId: "fantasydata:dfs/slates", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "PAID_REQUIRED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "ownership_projection", sourceId: "fantasydata", endpointId: "fantasydata:dfs/ownership", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "PAID_REQUIRED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "platform_projection", sourceId: "sportsdataio", endpointId: "sportsdataio:projections", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "PAID_REQUIRED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "dfs_salary", sourceId: "sportsdataio", endpointId: "sportsdataio:dfs", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "PAID_REQUIRED", contractStatus: "NOT_ACQUIRED" },
+  { factType: "ownership_projection", sourceId: "sportsdataio", endpointId: "sportsdataio:dfs", mode: "DIRECT", activation: "CATALOGUED", cadence: "daily", historyDepth: "current", latencyClass: "daily", legalStatus: "PAID_REQUIRED", contractStatus: "NOT_ACQUIRED" },
+];
+
+// ── Supply queries (used by the per-state acquisition view). ──────────────────────────────────────
+
+/** A supply path is usable for production only if its source is not forbidden (DO_NOT_USE / RIGHTS_REVIEW). */
+function pathIsProductionUsable(p: FactSupplyPath): boolean {
+  const src = SOURCES[p.sourceId];
+  return !!src && !isForbiddenForProduction(src);
+}
+
+/** Every production-usable supply path for a fact (forbidden sources are excluded). */
+export function supplyPathsFor(fact: FactType): FactSupplyPath[] {
+  return FACT_SUPPLY_GRAPH.filter((p) => p.factType === fact && pathIsProductionUsable(p));
+}
+
+/** Distinct production-usable sources that can supply a fact. */
+export function sourcesSupplying(fact: FactType): string[] {
+  return [...new Set(supplyPathsFor(fact).map((p) => p.sourceId))];
+}
+
+/** The strongest activation any production path has reached for a fact (or null if none). */
+export function bestActivation(fact: FactType): SupplyActivation | null {
+  const paths = supplyPathsFor(fact);
+  if (paths.length === 0) return null;
+  return paths.reduce<SupplyActivation>(
+    (best, p) => (ACTIVATION_ORDER[p.activation] > ACTIVATION_ORDER[best] ? p.activation : best),
+    "CATALOGUED",
+  );
+}
+
+/** Is a fact actually LIVE (a wired, validated, production feed)? Honest default today: false for all. */
+export function isFactLive(fact: FactType): boolean {
+  return supplyPathsFor(fact).some((p) => p.activation === "LIVE");
+}
+
+// ── Per-state acquisition view: ask the supply graph about the CANONICAL contract's required facts. ──
+
+export interface RequiredGroupSupply {
+  readonly label: string;
+  readonly anyOf: readonly FactType[];
+  /** At least one fact in the group has a production-usable supplier (any activation). */
+  readonly catalogued: boolean;
+  /** At least one fact in the group is LIVE. */
+  readonly live: boolean;
+  readonly bestActivation: SupplyActivation | null;
+  readonly suppliers: readonly string[];
+}
+
+export interface StateAcquisitionView {
+  readonly decisionState: DecisionState;
+  readonly requiredGroups: readonly RequiredGroupSupply[];
+  /** Every required group has at least a catalogued, non-forbidden supplier. */
+  readonly catalogueReady: boolean;
+  /** Every required group has a LIVE supplier (today: false — nothing is wired live). */
+  readonly liveReady: boolean;
+  /** The strongest a card may be if its required groups are NOT all satisfiable from supply. */
+  readonly maxStrengthIfUnsupplied: MaxPermittedStrength;
+  readonly note: string;
+}
+
+/** Build the acquisition view for a state by asking the supply graph about its CANONICAL required facts. */
+export function acquisitionViewFor(state: DecisionState): StateAcquisitionView {
+  const contract = STAT_CONTRACTS[state];
+  const requiredGroups: RequiredGroupSupply[] = contract.requiredGroups.map((g) => {
+    const suppliers = [...new Set(g.anyOf.flatMap((f) => sourcesSupplying(f)))];
+    const acts = g.anyOf.map((f) => bestActivation(f)).filter((a): a is SupplyActivation => a !== null);
+    const best = acts.length > 0 ? acts.reduce((b, a) => (ACTIVATION_ORDER[a] > ACTIVATION_ORDER[b] ? a : b)) : null;
+    return {
+      label: g.label,
+      anyOf: g.anyOf,
+      catalogued: suppliers.length > 0,
+      live: g.anyOf.some((f) => isFactLive(f)),
+      bestActivation: best,
+      suppliers,
+    };
+  });
+  const catalogueReady = requiredGroups.every((g) => g.catalogued);
+  const liveReady = requiredGroups.every((g) => g.live);
+  // The weakest required group's cap is the ceiling when supply is missing.
+  const maxStrengthIfUnsupplied = contract.requiredGroups.reduce<MaxPermittedStrength>(
+    (acc, g) => (acc === "INFO_ONLY" ? acc : g.capIfMissing),
+    "PUBLIC_ACTION",
+  );
+  return {
+    decisionState: state,
+    requiredGroups,
+    catalogueReady,
+    liveReady,
+    maxStrengthIfUnsupplied,
+    note: liveReady
+      ? "Every required fact has a live supplier."
+      : catalogueReady
+        ? "Every required fact is catalogued, but none is wired live yet — cards stay capped until a path reaches LIVE."
+        : "At least one required fact has no production-usable supplier — acquisition needed.",
+  };
+}
+
+/** The acquisition view for every canonical decision state (keyed by the single source of truth). */
+export const DECISION_STATE_ACQUISITION: Readonly<Record<DecisionState, StateAcquisitionView>> = Object.fromEntries(
+  ALL_DECISION_STATES.map((s) => [s, acquisitionViewFor(s)]),
+) as Record<DecisionState, StateAcquisitionView>;

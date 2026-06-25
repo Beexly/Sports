@@ -409,6 +409,8 @@ function routeFor(state: DecisionState): RouteTo {
   switch (state) {
     case "ROLE_UP_FANTASY_LATE":
     case "ROLE_MASS_MISALLOCATED":
+    case "DFS_SALARY_LAG":
+    case "OWNERSHIP_OVERREACTION":
       return "GAMEPLAN";
     case "GOOD_IDEA_BAD_PRICE":
     case "PUBLIC_OVERREACTION":

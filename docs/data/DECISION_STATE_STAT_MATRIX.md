@@ -1,75 +1,70 @@
-# Decision-State Stat Matrix
+# Decision-State Grammar, Evidence Contract & Supply Graph
 
-**Source of truth:** `packages/nfl-stat-universe/src/decision-state-matrix.ts`
-**Tests:** `packages/nfl-stat-universe/src/__tests__/decision-state-matrix.test.ts`
+**One grammar (canonical):** `packages/decision-field-runtime/src/decision-state.ts` — `DecisionState` +
+`ALL_DECISION_STATES`. There is no second taxonomy.
+**Evidence contract:** `packages/decision-field-runtime/src/decision-state-stat-contract.ts` —
+`STAT_CONTRACTS` (per state, `requiredGroups` with `anyOf` + `capIfMissing`).
+**Supply graph:** `packages/nfl-stat-universe/src/decision-state-matrix.ts` — `FACT_SUPPLY_GRAPH` +
+`DECISION_STATE_ACQUISITION`.
+**Tests:** `packages/nfl-stat-universe/src/__tests__/decision-state-matrix.test.ts`.
 
-This is the demand-and-supply spec. For **every** decision state the product can be in, it declares
-exactly which facts are *required*, which *strengthen* it, the *free* vs *paid* source that supplies
-them, the *legal floor*, the **strongest card the state may become when a required fact is missing**,
-and which surfaces go dark without it. It turns a missing stat into a concrete owner acquisition
-decision — data-hungry without being data-chaotic.
+## Three layers, one source of truth
 
-It is **pure data**. No network, no keys, no ingestion. It aligns with the scraping-clearance registry
-(`apps/web/lib/scraping/source-rights-registry.ts`) and reuses the mesh's `FactType`/`LegalVerdict` and
-the runtime's `MaxPermittedStrength`.
+1. **Grammar** — the canonical `DecisionState` union (the single enumerable witness `ALL_DECISION_STATES`).
+   Every layer consumes this and nothing else; a compile-time guard proves the union and the array agree.
+2. **Evidence contract** (`STAT_CONTRACTS`) — for each state, which fact *groups* are required. A group is
+   satisfied if **any** of its facts is creditable (`anyOf`); an unsatisfied group caps the card at
+   `capIfMissing`. This is what the runtime enforces.
+3. **Supply graph** (`FACT_SUPPLY_GRAPH`) — for each fact, the real ways to obtain it. The acquisition
+   view (`DECISION_STATE_ACQUISITION`) asks the supply graph whether each *canonical* required fact is
+   actually available. It does **not** redefine required facts — it reads them from `STAT_CONTRACTS`.
 
-## Invariants (enforced by tests — fail-closed)
+## The canonical states
 
-1. **All 14 states have a complete contract** with a non-empty legal floor.
-2. **No forbidden source** (`DO_NOT_USE` / `RIGHTS_REVIEW`) is ever named as a free or paid source.
-3. **Missing required data can never reach an action card.** Every `maxStrengthIfMissing` ranks strictly
-   below `ACTION` — the strongest a state may be while a required fact is absent.
-4. **Every required fact is unlockable by at least one production-usable source** (no dead-end demand).
-5. **Forbidden sources unlock nothing.** `PROVIDER_UNLOCKS` for `draftkings_unofficial` and `pfr_scrape`
-   is empty; `sourcesUnlocking()` never returns a forbidden source.
-6. **Fantasy-late, DFS, and market-lag are gated on their snapshot:** fantasy-late caps at `WATCH`
-   without a `platform_projection`; DFS caps at `INFO_ONLY` without a licensed `dfs_salary` feed;
-   market-lag requires timestamped `odds_history`.
+`ACTIONABLE`, `ROLE_UP_FANTASY_LATE`, `GOOD_IDEA_BAD_PRICE`, `PUBLIC_OVERREACTION`,
+`ROLE_MASS_MISALLOCATED`, `DATA_CONFLICT`, `NEEDS_CONFIRMATION`, `TOO_LATE`, `PASS`, `TRAP`, `WATCHLIST`,
+`NEEDS_LIVE_DATA`, `DFS_SALARY_LAG`, `OWNERSHIP_OVERREACTION`.
 
-## The 14 decision states
+Deliberate set decisions: `NEEDS_CONFIRMATION` and `PASS` are **kept**. The two genuinely DFS-specific
+states (`DFS_SALARY_LAG`, `OWNERSHIP_OVERREACTION`) were **added** to the canonical union (with real
+`STAT_CONTRACTS`). A prior prototype's `INJURY_SOURCE_CONFLICT` folds into `DATA_CONFLICT` and a
+prop/market lag folds into `GOOD_IDEA_BAD_PRICE` / `TOO_LATE` — they are not separate states.
 
-| State | Required facts | Free source | Paid source | Legal floor | Max if missing | Goes dark |
-|---|---|---|---|---|---|---|
-| `ROLE_UP_FANTASY_LATE` | route_rate, platform_projection | nflverse | fantasydata | LICENSED→PAID | **WATCH** | gameplan, today |
-| `GOOD_IDEA_BAD_PRICE` | snap_share, player_prop | nflverse | the_odds_api | LICENSED→PAID | WATCH | edge |
-| `PUBLIC_OVERREACTION` | betting_splits, snap_share | nflverse | the_odds_api | LICENSED→PAID | WATCH | edge, today |
-| `ROLE_MASS_MISALLOCATED` | snap_share, carry_share | nflverse | — | FREE | INFO_ONLY | gameplan |
-| `DATA_CONFLICT` | injury_report, practice_status | nflverse | — | FREE | INFO_ONLY | today |
-| `TOO_LATE` | closing_line, odds_history | — | the_odds_api | LICENSED→PAID | INFO_ONLY | edge |
-| `NEEDS_LIVE_DATA` | — | — | — | FREE | INFO_ONLY | today, edge, gameplan |
-| `TRAP` | snap_share | nflverse | — | FREE | INFO_ONLY | today |
-| `WATCHLIST` | snap_share | nflverse | — | FREE | WATCH | today |
-| `ACTIONABLE` | snap_share, player_prop | nflverse | the_odds_api | LICENSED→PAID | WATCH | today, edge |
-| `DFS_SALARY_LAG` | dfs_salary, route_rate | — | fantasydata | LICENSED, PAID | **INFO_ONLY** | gameplan_dfs |
-| `OWNERSHIP_OVERREACTION` | ownership_projection, snap_share | — | fantasydata | LICENSED, PAID | WATCH | gameplan_dfs |
-| `PLAYER_PROP_MARKET_LAG` | player_prop, odds_history, snap_share | nflverse | the_odds_api | LICENSED→PAID | WATCH | edge |
-| `INJURY_SOURCE_CONFLICT` | injury_report, practice_status | nflverse | — | FREE | INFO_ONLY | today |
+## FactSupplyPath — capability per fact, per endpoint
 
-*"Legal floor" `LICENSED→PAID` means the lane spans `FREE_OPEN`/`FREE_CAUTION`/`LICENSED` and tops out
-at `PAID_REQUIRED`; `FREE` means no paid acquisition is needed.*
+Each entry in `FACT_SUPPLY_GRAPH` is one verified way to get one fact:
 
-## Provider-unlock map
+| Field | Meaning |
+|---|---|
+| `factType` / `sourceId` / `endpointId` | the fact and the specific endpoint that supplies it |
+| `mode` | `DIRECT` (the source ships it) or `DERIVED` (we compute it — `derivation` says how) |
+| `activation` | `CATALOGUED → ADAPTER_BUILT → INGESTING_SHADOW → VALIDATED → LIVE`. **CATALOGUED ≠ LIVE.** |
+| `cadence` / `historyDepth` / `latencyClass` | how often, how far back, how fresh |
+| `legalStatus` / `contractStatus` | rights lane + whether we've actually acquired it (`NOT_ACQUIRED` ≠ available) |
+| `derivation` / `evidenceRef` | the formula (if derived) and the proof the endpoint/derivation is real |
 
-Which facts each provider unlocks **for production**. A forbidden lane unlocks nothing.
+**A provider's marketing never unlocks a fact** — only a verified endpoint or a tested derivation does.
 
-| Provider | Legal status | Unlocks |
-|---|---|---|
-| `nflverse` | FREE_OPEN | play_by_play, snap_share, route_rate, target_share, carry_share, air_yards, red_zone_touch, injury_report, practice_status, depth_chart, inactive_status |
-| `nws` | FREE_OPEN | weather |
-| `sleeper` | FREE_CAUTION | add_drop_velocity, roster_pct, start_pct |
-| `yahoo_oauth` | FREE_CAUTION | league_settings, roster_pct |
-| `the_odds_api` | LICENSED | player_prop, spread, total, moneyline, odds_history, alt_prop, closing_line, betting_splits |
-| `sportsgameodds` | LICENSED | player_prop, spread, total, moneyline, odds_history, alt_prop, closing_line |
-| `fantasydata` | PAID_REQUIRED | platform_projection, adp, roster_pct, start_pct, dfs_salary, dfs_slate, ownership_projection, injury_report |
-| `sportsdataio` | PAID_REQUIRED | platform_projection, adp, dfs_salary, dfs_slate, ownership_projection |
-| `sportradar` | PAID_REQUIRED | play_by_play, snap_share, route_rate |
-| `draftkings_unofficial` | **DO_NOT_USE** | *(nothing — forbidden)* |
-| `pfr_scrape` | **RIGHTS_REVIEW** | *(nothing — rights review required)* |
+## Honesty invariants (enforced by tests)
+
+- **Nothing is LIVE.** Every path is `CATALOGUED`; no state is `liveReady`. The pipeline isn't wired —
+  the graph says so plainly rather than implying live coverage.
+- **`route_rate` is not falsely available.** Base nflverse ships snaps/targets, **not** route rate. The
+  only path is `DERIVED`, `NOT_ACQUIRED`, with the derivation unbuilt and the participation source
+  share-alike-licensed and excluded from ingestion.
+- **`betting_splits` has no supplier.** The Odds API catalog documents no public-splits endpoint, so no
+  source unlocks it (the old, false `the_odds_api → betting_splits` mapping is removed).
+- **Weekly ≠ real-time.** `injury_report` is a weekly practice report; `inactive_status` from the weekly
+  roster file is **not** a ~90-minutes-to-kickoff real-time inactive feed.
+- **DFS pricing is paid + unacquired.** `dfs_salary` is supplied only by licensed feeds (FantasyData /
+  SportsDataIO), all `PAID_REQUIRED` and `NOT_ACQUIRED`.
+- **Forbidden sources supply nothing** — `DO_NOT_USE` / `RIGHTS_REVIEW` sources never appear in the graph.
 
 ## How to extend
 
-- **Add a decision state:** add the key to `DecisionStateKey`, add a contract to `DECISION_STATE_MATRIX`,
-  and update the count assertion in the test. Keep `maxStrengthIfMissing` strictly below `ACTION`.
-- **Add a provider:** register it in `SOURCES` (`stat-definition.ts`), then add its `PROVIDER_UNLOCKS`
-  entry. If its `legalStatus` is `DO_NOT_USE`/`RIGHTS_REVIEW`, its entry **must** be empty `[]`.
-- **Never** name a forbidden source as a free/paid source — the test will reject it.
+- **Add a decision state:** add it to `DecisionState` *and* `ALL_DECISION_STATES` (the compile guard
+  forces both), add a `STAT_CONTRACTS` entry, and `routeFor` + the public `STATE_VIEW` mapping. The
+  acquisition view and exhaustiveness tests update automatically.
+- **Claim a fact is available:** add a `FactSupplyPath` with a real `endpointId` and `evidenceRef`. To
+  call it usable in production, raise `activation` toward `LIVE` *as the adapter is actually built and
+  validated* — not before.
