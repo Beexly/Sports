@@ -24,7 +24,7 @@
 ---
 
 ## Table of contents
-§0 Executive summary · §1 The GSE PRICE Method & GSE Score · §2 Data ingestion & sources · §3 Prediction/scoring engine · §4 Pipeline, workers & workflows · §5 Proof, calibration & integrity · §6 Player & team intelligence (StatKing) · §7 Market intelligence · §8 News, signals & the agent council · §9 Monetization & revenue · §10 Engagement, growth & content · §11 Operator cockpit & Agent OS · §12 Governance, safety & trust · §13 Surface map (pages + APIs) · §14 Data model & types · §15 The one ladder · §16 Live-now vs. roadmap · §17 Multi-sport posture · §18 Integration, the Decision Genome spine & the 2026-06-25 verification ledger
+§0 Executive summary · §1 The GSE PRICE Method & GSE Score · §2 Data ingestion & sources · §3 Prediction/scoring engine · §4 Pipeline, workers & workflows · §5 Proof, calibration & integrity · §6 Player & team intelligence (StatKing) · §7 Market intelligence · §8 News, signals & the agent council · §9 Monetization & revenue · §10 Engagement, growth & content · §11 Operator cockpit & Agent OS · §12 Governance, safety & trust · §13 Surface map (pages + APIs) · §14 Data model & types · §15 The one ladder · §16 Live-now vs. roadmap · §17 Multi-sport posture · §18 Integration, the Decision Genome spine & the 2026-06-25 verification + launch ledger
 
 ---
 
@@ -322,7 +322,7 @@ NFL is the live, fully-instrumented sport (odds + nflverse depth). The Odds API 
 
 ---
 
-## §18 Integration, the Decision Genome spine & the 2026-06-25 verification ledger
+## §18 Integration, the Decision Genome spine & the 2026-06-25 verification + launch ledger
 
 This section records the consolidation of the scattered session/Codex branches into one
 verified, deployable line, the research integration that reframes GSE around a pre-result
@@ -431,6 +431,51 @@ Preview → production are owner-gated. Projections stay shadow until a backtest
 Documented follow-up: ~9 read-only intelligence boards still fetch nflverse directly and bypass
 the merge-aware loader (doesn't bite until the 2025 season kicks off, Sept 2026). Full record:
 `docs/ops/INTEGRATION_LAUNCH_2026-06-24.md` + `docs/ops/LAUNCH_BACKLOG_2026-06-24.md`.
+
+### 18.8 Launch execution — branch → PR → preview (2026-06-25)
+Taking the verified-green line from "green" to "live." The green gate was **re-verified from a
+clean install** this session: typecheck (all workspaces) · lint (`max-warnings=0`) · **6,892
+tests** (web 6,165 + data-ingestion 111 + ingestion-pipeline 45 + prediction-engine 541 + types
+31) · keystone backtest **18,344 OOS, MAE 5.3087 vs naive 4.9064, beats naive = false,
+priced = false** · build (exit 0, 194/194) · guardrails. *Env reproduction notes for the next
+runner:* Prisma's engine downloader is reset by the egress proxy — fetch the `debian-openssl-3.0.x`
+engines via `curl` and point Prisma at them; the gate needs `DATABASE_URL=stub` (the literal
+sentinel `@sports/db` keys on, **not** a fake URL — a real-looking URL engages the live client and
+two DB-integration tests fail).
+
+**PR #53** `claude/stoic-dirac-20h11q → main` — the launch consolidation. CI green; **not merged**
+(owner-gated for production). A **Vercel preview** auto-deploys via the GitHub integration; it sits
+behind Vercel deployment-protection (SSO), so every path 302s to the auth wall — runtime smoke is
+owner-only. Route code verified from source: `/api/decision-genome` returns **403 without ADMIN**;
+checkout (`/api/subscriptions/checkout`) returns a clean **503** when Stripe is unconfigured.
+**Phase 3 readiness** (`check-deploy-readiness.mjs`): 17 env vars + live Stripe remain owner-gated
+(a session-local run can't see Vercel "Sensitive" secrets — authoritative check runs in the Vercel
+build).
+
+**Phase 5 backlog progress (one gate-green PR each, → the launch line):**
+- **#2 secret-scan CI no-op → fixed (PR #54).** The §18.6 secret-scan gate scanned the *empty* git
+  stage in CI (always passed on 0 files). Added an `--all` (full-tree, `git ls-files`) mode + a
+  dedicated `secret-scan` CI job; the composite `guardrails` now scans `--all` too. Regression
+  tests + a planted-key negative test. Scans 2,686 tracked files clean.
+- **Codex review on #53 → 4 verified findings fixed (PR #55),** each with a regression test:
+  *P1* — fantasy SSR pages (`/fantasy/lineup`, `/waivers`, `/trade`) served the **live pool
+  ungated**, a server-side paywall gap (latent under shadow projections, live the moment
+  `PROJECTIONS_PROVIDER` is on); now gated via `poolForViewer()` like draft/optimizer.
+  *P1* — the settled-game heartbeat counted the PROOF stage **globally**, freezing `settledSamples`
+  after the first game (stalling rung/projection unlocks); now per game.
+  *P2* — `guard:nflverse-currency` ran an unpinned `tsx`; **`tsx` declared as a locked
+  devDependency**, invoke the local binary.
+  *P2* — the calibration-tournament eligibility threshold was defeated by `Math.min(1, …)` →
+  `Math.max`.
+- **#1 cache-policy wiring — DEFERRED (owner-confirmed).** Not the mechanical wire-up the backlog
+  implied: the public proof pages are `force-dynamic` *by necessity* because the shared `<Nav>` is
+  a server component that reads the session (`auth()`), so a page-level `revalidate` is void. The
+  real fix caches the **data loaders** (`unstable_cache` with the policy's TTL + cache-tag) — a
+  deliberate staleness/perf design pass, its own ticket.
+
+Doctrine held throughout: no publish gate flipped, projections stay shadow, no secrets in code, no
+force-push, `main` untouched (PR only). Production (merge → main + Vercel prod) remains gated on the
+§18.7 owner config + preview approval.
 
 ---
 
