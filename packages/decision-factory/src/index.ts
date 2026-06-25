@@ -9,4 +9,5 @@ export * from "./compiler-trace.js";
 export * from "./product-intelligence-loop.js";
 export * from "./compression-metrics.js";
 export * from "./regime-profile.js";
+export * from "./intelligence-ledger.js";
 export * from "./fixtures.js";

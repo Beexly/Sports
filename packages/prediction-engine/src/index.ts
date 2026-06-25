@@ -112,6 +112,18 @@ export type {
   DiscoveryNightInput,
   DiscoveryNightReport,
 } from "./discovery-engine.js";
+// Multiple-testing discipline — Benjamini-Hochberg FDR control + cross-night confirmation.
+// The shared statistical primitive behind the nightly discovery engine; also consumed by the
+// organism-level Intelligence Ledger so "we improved" claims survive multiple testing.
+export { benjaminiHochberg, meetsCrossNightConfirmation } from "./multiple-testing.js";
+export type {
+  PValueEntry,
+  BenjaminiHochbergResult,
+  BenjaminiHochbergSummary,
+  NightlyObservation,
+  CrossNightOptions,
+  CrossNightConfirmation,
+} from "./multiple-testing.js";
 // CLV capture — derive the closing line from the timestamped odds history and
 // grade a pick's lock-time line/price against it. Pure; the settlement pipeline
 // supplies real rows and persists the graded result.
