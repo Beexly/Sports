@@ -31,8 +31,18 @@ import { median } from "../../packages/prediction-engine/src/clv-feasibility.js"
 import { benjaminiHochberg, type PValueEntry } from "../../packages/prediction-engine/src/multiple-testing.js";
 
 const GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv";
-const STATS_URL = (season: number) =>
-  `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${season}.csv`;
+// nflverse moved/renamed the weekly-stats asset across seasons; try known locations.
+const STATS_URLS = (season: number) => [
+  `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${season}.csv`,
+  `https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_${season}.csv`,
+];
+async function fetchStats(season: number): Promise<Response | null> {
+  for (const u of STATS_URLS(season)) {
+    const r = await fetch(u);
+    if (r.ok) return r;
+  }
+  return null;
+}
 const SPORT = "americanfootball_nfl" as const;
 const BREAK_EVEN = 0.524;
 const CLOSE_OFFSET_H = 1.5;
@@ -142,8 +152,8 @@ async function main(): Promise<void> {
   console.log(`markets=${MARKETS.join(",")}  close≈T-${CLOSE_OFFSET_H}h  region=us\n`);
 
   // 1) settle map: normName|week → stat columns
-  const statsRes = await fetch(STATS_URL(SEASON));
-  if (!statsRes.ok) { console.error(`player_stats_${SEASON}.csv not reachable (${statsRes.status})`); process.exit(2); }
+  const statsRes = await fetchStats(SEASON);
+  if (!statsRes) { console.error(`player stats for ${SEASON} not reachable at any known nflverse URL`); process.exit(2); }
   const { header: sh, rows: srows } = parseCsvRows(await statsRes.text());
   const sc = (n: string) => sh.indexOf(n);
   const ciName = sc("player_display_name"), ciWeek = sc("week");

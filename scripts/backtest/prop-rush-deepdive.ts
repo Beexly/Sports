@@ -21,11 +21,14 @@ import { benjaminiHochberg, type PValueEntry } from "../../packages/prediction-e
 import type { HistoricalEventOddsSnapshot } from "../../packages/data-ingestion/src/odds-api-client.js";
 
 const GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv";
-const STATS_URL = (s: number) => `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${s}.csv`;
+const STATS_URLS = (s: number) => [
+  `https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_${s}.csv`,
+  `https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_${s}.csv`,
+];
 const CACHE_DIR = process.env["PROP_CACHE_DIR"] ?? join(process.env["TMPDIR"] ?? "/tmp", "prop-efficiency-cache");
 const BREAK_EVEN = 0.524;
 const CLOSE_OFFSET_H = 1.5;
-const SEASONS = [2023, 2024];
+const SEASONS = [2023, 2024, 2025];
 const WEEKS = [1, 2, 3, 4, 5, 6, 7, 8];
 
 function hourFloorIso(ms: number): string {
@@ -83,7 +86,9 @@ async function main(): Promise<void> {
   // settle maps per season
   const settle = new Map<string, number>(); // `${season}|${normName}|${week}` -> rushing_yards
   for (const s of SEASONS) {
-    const r = await fetch(STATS_URL(s)); if (!r.ok) { console.error(`stats ${s} ${r.status}`); process.exit(2); }
+    let r: Response | null = null;
+    for (const u of STATS_URLS(s)) { const x = await fetch(u); if (x.ok) { r = x; break; } }
+    if (!r) { console.error(`stats ${s} not reachable`); process.exit(2); }
     const { header, rows } = parseCsv(await r.text());
     const ni = header.indexOf("player_display_name"), wi = header.indexOf("week"), ry = header.indexOf("rushing_yards");
     for (const row of rows) { const nm = row[ni], wk = Number(row[wi]); if (!nm || !Number.isFinite(wk)) continue; settle.set(`${s}|${normName(nm)}|${wk}`, Number(row[ry] ?? 0) || 0); }
