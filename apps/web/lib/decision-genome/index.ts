@@ -31,6 +31,11 @@ export * from "./decision-replay";
 export * from "./proof-card";
 // I — EpistemicAlphaLedger
 export * from "./epistemic-alpha";
+// Dark-corner engines (extend the spine's inputs with principled measures)
+export * from "./conformal"; // ConformalDecisionGate / RefusalEngine
+export * from "./market-physics"; // Market Physics Engine
+export * from "./claim-independence"; // ClaimIndependenceIndex
+export * from "./rumor-quarantine"; // RumorQuarantine
 // Fixtures (sample genomes for tests/storybook/demos)
 export { allFixtures, signalGenome, passGenome, quarantineGenome } from "./fixtures";
 export * as decisionGenomeFixtures from "./fixtures";

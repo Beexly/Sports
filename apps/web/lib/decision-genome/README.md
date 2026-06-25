@@ -33,6 +33,15 @@ market, evidence, model, agents, user, compliance, proof, and learning.
 `fixtures.ts` provides a consistent Signal / Pass / Quarantine genome; `index.ts` is the
 public surface.
 
+## Dark-corner engines (make the genome's inputs principled, not hand-set)
+
+| Module | Purpose |
+|---|---|
+| `conformal.ts` | ConformalDecisionGate — abstain unless the conformal interval clears the decision boundary; the principled basis for `model.refused`. |
+| `market-physics.ts` | Market Physics Engine — temperature/pressure/gravity/viscosity/entropy/friction/toxicity from book quotes; a `safeToActOn` read. |
+| `claim-independence.ts` | ClaimIndependenceIndex — collapses echoes (shared origin / citation / near-identical text) so source-count can't inflate `evidence.independentSources`. |
+| `rumor-quarantine.ts` | RumorQuarantine — classifies a claim known/reported/rumored/contradicted/expired/unsafe; feeds `evidence.rumorQuarantined`. Fail-safe: when in doubt, quarantine. |
+
 ## Acceptance invariants (enforced by code + tests)
 
 - **No fabricated data** — a proof card can only be built from a *settled* genome.
