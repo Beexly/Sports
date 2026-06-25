@@ -37,7 +37,8 @@ import {
   strengthMin,
   rankOf,
 } from "./decision-state-stat-contract.js";
-import { type CardClaim, claim, cardStrengthFromClaims } from "./card-claim.js";
+import { type CardClaim, cardStrengthFromClaims } from "./card-claim.js";
+import { type CompiledNarrative, STATE_COMPILERS } from "./state-compilers.js";
 import { type FieldStress, computeFieldStress } from "./field-stress.js";
 import { buildSourceRaces, detectContradictionSignals } from "./source-race.js";
 import { computePermissionGradient, tradabilityActionability, tradabilityStrengthCeiling } from "./decision-permission-gradient.js";
@@ -180,31 +181,19 @@ export function runDecisionFieldFrame(input: DecisionFieldInput): DecisionFieldF
     const totalGroups = contract.requiredGroups.length;
     const requiredStatCompleteness = totalGroups > 0 ? (totalGroups - statAudit.missingGroups.length) / totalGroups : 1;
 
-    // Claims.
-    const hasRoleFact = ROLE_TYPES.some((t) => creditableTypes.has(t));
-    const hasMarketFact = MARKET_TYPES.some((t) => creditableTypes.has(t));
+    // Claims + narrative — STATE-SPECIFIC. The conductor no longer hardcodes one story; it asks the
+    // compiler for THIS decision state to build its own claims and public copy.
     const hasFantasySnapshot = FANTASY_SNAPSHOT_TYPES.some((t) => creditableTypes.has(t));
-    const claims: CardClaim[] = [
-      claim(
-        "role",
-        "ROLE",
-        `${s.subjectLabel}'s role is rising.`,
-        !hasRoleFact ? "BLOCKED" : role.signal === "box_score_fraud" ? "CONFLICTED" : "SUPPORTED",
-        true,
-      ),
-    ];
-    if (hasMarketFact) {
-      claims.push(claim("market", "MARKET", "The market is starting to move.", s.marketAlreadyCaughtUp ? "INFERRED" : "SUPPORTED", false));
-    }
-    claims.push(
-      claim(
-        "fantasy_late",
-        "FANTASY",
-        "The fantasy market is late.",
-        hasFantasySnapshot ? (hasContradiction ? "SUPPORTED" : "INFERRED") : "BLOCKED",
-        false,
-      ),
-    );
+    const compiler = STATE_COMPILERS[s.decisionState];
+    const compileCtx = {
+      subjectLabel: s.subjectLabel,
+      creditableTypes,
+      roleSignal: role.signal,
+      hasContradiction,
+      marketAlreadyCaughtUp: s.marketAlreadyCaughtUp,
+    };
+    const claims: readonly CardClaim[] = compiler.detectClaims(compileCtx);
+    const narrative = compiler.buildNarrative(compileCtx);
     const claimStrength = cardStrengthFromClaims(claims);
 
     // Permission gradient (fail-closed conjunction).
@@ -233,15 +222,16 @@ export function runDecisionFieldFrame(input: DecisionFieldInput): DecisionFieldF
     });
     fieldStress.push(stress);
 
-    // Detected change + contributing facts + source rent.
-    if (hasRoleFact) {
+    // Detected change + contributing facts + source rent. The change reports the fact ACTUALLY observed
+    // for this state (not always route_rate).
+    if (narrative.observedFact) {
       detectedChanges.push({
-        id: `chg:${s.entityId}:role`,
+        id: `chg:${s.entityId}:${narrative.changeKind}`,
         entityId: s.entityId,
-        factType: "route_rate",
-        kind: "role_change",
+        factType: narrative.observedFact,
+        kind: narrative.changeKind,
         magnitude: s.realityDelta,
-        note: `${s.subjectLabel}'s role rose; production/market not yet aligned.`,
+        note: narrative.whatChanged,
       });
     }
     const relevantTypes = new Set<FactType>([...contract.requiredGroups.flatMap((g) => [...g.anyOf]), ...contract.optionalStrengtheners]);
@@ -327,6 +317,7 @@ export function runDecisionFieldFrame(input: DecisionFieldInput): DecisionFieldF
         finalStrength,
         preAuthorityStrength,
         authority,
+        narrative,
         claims,
         prosecution,
         statAudit,
@@ -460,6 +451,7 @@ interface BuildCardArgs {
   readonly finalStrength: MaxPermittedStrength;
   readonly preAuthorityStrength: MaxPermittedStrength;
   readonly authority: AuthorityContext;
+  readonly narrative: CompiledNarrative;
   readonly claims: readonly CardClaim[];
   readonly prosecution: ReturnType<typeof prosecuteCard>;
   readonly statAudit: ReturnType<typeof auditRequiredStats>;
@@ -488,12 +480,12 @@ function buildCard(a: BuildCardArgs): DecisionCard {
 
   return {
     id: `card:${a.frameId}:${s.entityId}`,
-    title: `${s.subjectLabel}: role rising`,
+    title: a.narrative.title,
     subject: s.subjectLabel,
     context: `${s.decisionState} — ${a.regimeTag} regime`,
     decisionState: s.decisionState,
-    whatChanged: `${s.subjectLabel}'s role stepped up (routes/targets), ahead of production and the fantasy market.`,
-    whatItMeans: "The job got bigger before the points — a role-up that the fantasy market hasn't priced.",
+    whatChanged: a.narrative.whatChanged,
+    whatItMeans: a.narrative.whatItMeans,
     whatToDo,
     whyNot,
     receiptRef: `receipt:${a.frameId}:${s.entityId}`,
@@ -518,16 +510,19 @@ function buildCard(a: BuildCardArgs): DecisionCard {
     claims: a.claims,
     prosecution: a.prosecution,
     proofDrawer: {
-      whatChanged: `${s.subjectLabel}'s route/target share rose at ${a.decisionTime}.`,
-      whatTheMarketDid: s.marketAlreadyCaughtUp ? "The prop started to move — the market is catching up." : "The prop has not yet moved to match the role.",
+      whatChanged: `${a.narrative.whatChanged} (observed at ${a.decisionTime}).`,
+      whatTheMarketDid: s.marketAlreadyCaughtUp ? "The market has started to move — it's catching up." : "The market has not yet moved to match.",
       whatFantasyDid: a.hasFantasySnapshot ? "The fantasy projection has not kept pace." : "We have no timestamped fantasy projection snapshot to cite.",
-      whatTheCrowdDid: "Sleeper add/drop is still quiet — the crowd hasn't reacted.",
+      whatTheCrowdDid: "The crowd (adds/drops, splits) is still quiet.",
       whyNot,
       redFlags: a.prosecution.downgradeReasons,
       dataUsed: a.claims.map((c) => `${c.claimType}: ${c.proofStatus}`),
       sourceRaceSummary: a.winnerLine,
       requiredStatStatus: a.statAudit.note,
-      whatWouldChangeOurMind: a.hasFantasySnapshot ? "A market move that fully prices the role would make this TOO_LATE." : "A timestamped fantasy projection confirming the lag would upgrade this from watch to add.",
+      whatWouldChangeOurMind:
+        a.authority.dataMode !== "LIVE_REAL"
+          ? "Live, readiness-cleared inputs would let this move past info-only."
+          : "More confirming evidence (the missing required facts) would let this go stronger.",
       receiptRefs: [`receipt:${a.frameId}:${s.entityId}`],
       rightsStatus: s.rightsClearedForPublic ? "cleared (public)" : "personalized only",
       lightConeStatus,
