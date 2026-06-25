@@ -25,7 +25,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Stripe webhook signature verification failed: ${message}`);
-    return NextResponse.json({ error: `Webhook error: ${message}` }, { status: 400 });
+    // Don't echo verifier internals (timestamp/signing detail) back to the caller.
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   // Idempotency: skip already-processed events
@@ -38,8 +39,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     await handleStripeEvent(event);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error(`Error handling Stripe event ${event.type}: ${message}`);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
 
-    // Record processed event
+  // Record the processed event. A concurrent delivery of the SAME event id can land
+  // between the findUnique check above and here → a unique-constraint violation on
+  // stripeEventId is benign (the event is handled, and the syncs are idempotent), so
+  // ack 200 rather than 500-ing into a Stripe retry storm at launch traffic.
+  try {
     await db.webhookEvent.create({
       data: {
         stripeEventId: event.id,
@@ -48,12 +58,26 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
     });
   } catch (err) {
+    if (isStripeEventIdConflict(err)) {
+      return NextResponse.json({ received: true, skipped: true });
+    }
     const message = err instanceof Error ? err.message : "Unknown error";
-    console.error(`Error handling Stripe event ${event.type}: ${message}`);
+    console.error(`Failed to record Stripe event ${event.id}: ${message}`);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });
+}
+
+/** True only for a Prisma P2002 unique-constraint violation on the stripeEventId column. */
+function isStripeEventIdConflict(err: unknown): boolean {
+  if (!err || typeof err !== "object") return false;
+  const e = err as { code?: unknown; meta?: { target?: unknown } };
+  if (e.code !== "P2002") return false;
+  const target = e.meta?.target;
+  if (Array.isArray(target)) return target.includes("stripeEventId");
+  if (typeof target === "string") return target.includes("stripeEventId");
+  return true; // P2002 with no target detail — the only unique key on this table is stripeEventId
 }
 
 async function handleStripeEvent(event: Stripe.Event): Promise<void> {
@@ -151,6 +175,33 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
       ? stripeSubscription.customer
       : stripeSubscription.customer.id;
 
+  // Out-of-order guard. `customer.subscription.deleted` is TERMINAL, but Stripe does not
+  // guarantee delivery order — a delayed `customer.subscription.updated` carrying an older
+  // active snapshot can arrive AFTER the delete. Never let it resurrect a subscription we
+  // have already recorded as cancelled-by-delete (same id) — that would re-grant premium
+  // for free. A genuine resubscribe is a new subscription id (and/or comes via checkout),
+  // so it is unaffected.
+  const incomingStatus = mapStripeStatus(stripeSubscription.status);
+  if (incomingStatus !== "CANCELED") {
+    const existing = await db.subscription
+      .findUnique({
+        where: { stripeCustomerId: customerId },
+        select: { status: true, canceledAt: true, stripeSubscriptionId: true },
+      })
+      .catch(() => null);
+    if (
+      existing &&
+      existing.status === "CANCELED" &&
+      existing.canceledAt != null &&
+      existing.stripeSubscriptionId === stripeSubscription.id
+    ) {
+      console.warn(
+        `[stripe] ignoring out-of-order reactivation of cancelled subscription ${stripeSubscription.id} for customer ${customerId}`,
+      );
+      return;
+    }
+  }
+
   const priceId = stripeSubscription.items.data[0]?.price.id;
   const tier = getTierFromPriceId(priceId);
   const status = mapStripeStatus(stripeSubscription.status);
@@ -226,7 +277,7 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   }
 }
 
-function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELITE" {
+function getTierFromPriceId(priceId: string | undefined): "FREE" | "FANTASY" | "PRO" | "ELITE" {
   if (!priceId) return "FREE";
   const eliteIds = [
     process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"],
@@ -238,8 +289,20 @@ function getTierFromPriceId(priceId: string | undefined): "FREE" | "PRO" | "ELIT
     process.env["STRIPE_PRO_ANNUAL_PRICE_ID"],
     process.env["STRIPE_PRO_PRICE_ID"], // legacy single-interval
   ];
+  const fantasyIds = [
+    process.env["STRIPE_FANTASY_MONTHLY_PRICE_ID"],
+    process.env["STRIPE_FANTASY_ANNUAL_PRICE_ID"],
+  ];
   if (eliteIds.includes(priceId)) return "ELITE";
   if (proIds.includes(priceId)) return "PRO";
+  if (fantasyIds.includes(priceId)) return "FANTASY";
+  // A real, non-empty priceId that matches NO configured tier means the webhook
+  // process is missing/typo'd a STRIPE_*_PRICE_ID. We fail closed to FREE for
+  // fraud-safety, but it must be loud — otherwise a paying customer is silently
+  // written tier=FREE. Surface it for alerting rather than swallowing it.
+  console.error(
+    `[stripe] unmapped priceId ${priceId} — defaulting to FREE; check the webhook env's STRIPE_*_PRICE_ID values`,
+  );
   return "FREE";
 }
 

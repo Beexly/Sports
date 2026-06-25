@@ -130,6 +130,66 @@ describe("DataNormalizer", () => {
     });
   });
 
+  describe("validateOddsFreshness (real upstream age, not the local clock)", () => {
+    it("carries the bookmaker's own last_update onto each normalized odd", () => {
+      const odds = normalizer.normalizeOdds([mockEvent], new Date());
+      expect(odds.length).toBeGreaterThan(0);
+      for (const o of odds) {
+        expect(o.bookmakerLastUpdate).toBeInstanceOf(Date);
+        expect(Number.isFinite(o.bookmakerLastUpdate.getTime())).toBe(true);
+      }
+    });
+
+    it("is fresh when the upstream last_update is recent", () => {
+      const odds = normalizer.normalizeOdds([mockEvent], new Date()); // mock last_update = now
+      expect(normalizer.validateOddsFreshness(odds)).toBe(true);
+    });
+
+    it("catches a STALE feed even when we just fetched it (the tautology fix)", () => {
+      const staleEvent = {
+        ...mockEvent,
+        bookmakers: mockEvent.bookmakers.map((b) => ({
+          ...b,
+          last_update: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3h old
+        })),
+      };
+      // We fetched "now", so validateFreshness(now) would pass — but the data is stale.
+      const odds = normalizer.normalizeOdds([staleEvent], new Date());
+      expect(normalizer.validateFreshness(new Date())).toBe(true);
+      expect(normalizer.validateOddsFreshness(odds)).toBe(false);
+    });
+
+    it("is vacuously fresh for an empty odds set", () => {
+      expect(normalizer.validateOddsFreshness([])).toBe(true);
+    });
+
+    it("fails safe when odds exist but carry no parseable upstream timestamp", () => {
+      const odds = normalizer.normalizeOdds([mockEvent], new Date());
+      const corrupted = odds.map((o) => ({ ...o, bookmakerLastUpdate: new Date("not-a-date") }));
+      expect(normalizer.validateOddsFreshness(corrupted)).toBe(false);
+    });
+
+    it("decides freshness PER GAME — a fresh game cannot mask a stale one", () => {
+      const now = Date.now();
+      const fresh = normalizer.normalizeOdds([{ ...mockEvent, id: "fresh-game" }], new Date());
+      const staleEvent = {
+        ...mockEvent,
+        id: "stale-game",
+        bookmakers: mockEvent.bookmakers.map((b) => ({
+          ...b,
+          last_update: new Date(now - 3 * 60 * 60 * 1000).toISOString(), // 3h old
+        })),
+      };
+      const stale = normalizer.normalizeOdds([staleEvent], new Date());
+
+      const freshIds = normalizer.freshGameIds([...fresh, ...stale]);
+      expect(freshIds.has("fresh-game")).toBe(true);
+      expect(freshIds.has("stale-game")).toBe(false); // would have leaked under a global max
+      // The feed is still "live" overall (>=1 fresh game), so the job is not failed wholesale.
+      expect(normalizer.validateOddsFreshness([...fresh, ...stale])).toBe(true);
+    });
+  });
+
   describe("normalizeScores", () => {
     it("normalizes completed scores correctly", () => {
       const scores = normalizer.normalizeScores([

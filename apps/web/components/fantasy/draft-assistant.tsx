@@ -20,6 +20,8 @@ import {
 } from "@/lib/fantasy/draft";
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
+import { FantasyUpsell } from "@/components/fantasy/fantasy-upsell";
+import { FREE_BOARD_DEPTH } from "@/lib/fantasy/free-trial";
 
 type Filter = Pos | "ALL";
 
@@ -27,11 +29,18 @@ const LEVEL_HEX: Record<ScarcityLevel, string> = { critical: BRAND_COLORS.ionMag
 const ADP_HEX: Record<AdpLabel, string> = { steal: BRAND_COLORS.orbitalCyan, value: BRAND_COLORS.softUltraviolet, "on-time": "#9fb3c8", reach: BRAND_COLORS.ionMagenta, none: "#6b7785" };
 
 /**
- * @param pool When provided, the LIVE graded pool resolved server-side (real
- * players, real grades). When omitted, the tool runs on the illustrative default
- * (the demo, unchanged). VOR/tier baselines are computed against this universe.
+ * Free trial: show the top of the board + one recommendation. The full board and the
+ * full recommendation set are part of the paid Fantasy suite (a real trial, not a lock).
+ * The trial is enforced SERVER-SIDE — a FREE viewer is handed only the trial subset of a
+ * live pool (see `poolForViewer`); this client cap is the matching presentation.
+ *
+ * @param pool When provided, the (viewer-gated) graded pool resolved server-side. When
+ * omitted, the tool runs on the illustrative default. VOR/tier baselines are computed
+ * against this universe.
+ * @param canUseFantasyFull Server-provided entitlement. Defaults FALSE (fail-closed): a
+ * caller that forgets it gets the capped trial board, never the full paid suite.
  */
-export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
+export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
   const universe = useMemo(() => pool ?? PLAYERS, [pool]);
   const [mine, setMine] = useState<Set<string>>(new Set());
   const [gone, setGone] = useState<Set<string>>(new Set());
@@ -43,7 +52,7 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
 
   const myPlayers = useMemo(() => [...mine].map((id) => playerById(id, universe)!).filter(Boolean), [mine, universe]);
   const available = useMemo(() => universe.filter((p) => !mine.has(p.id) && !gone.has(p.id)), [mine, gone, universe]);
-  const recs = useMemo(() => recommend(available, myPlayers, 4, universe), [available, myPlayers, universe]);
+  const recs = useMemo(() => recommend(available, myPlayers, canUseFantasyFull ? 4 : 1, universe), [available, myPlayers, universe, canUseFantasyFull]);
   const needs = useMemo(() => rosterNeeds(myPlayers), [myPlayers]);
   const scarcity = useMemo(() => positionalScarcity(available, universe), [available, universe]);
   const runs = useMemo(
@@ -55,6 +64,10 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
   const board = useMemo(
     () => available.filter((p) => filter === "ALL" || p.pos === filter).sort((a, b) => vor(b, universe) - vor(a, universe)),
     [available, filter, universe],
+  );
+  const boardCapped = useMemo(
+    () => (canUseFantasyFull ? board : board.slice(0, FREE_BOARD_DEPTH)),
+    [board, canUseFantasyFull],
   );
 
   const draftMine = (id: string) => { setMine((s) => new Set(s).add(id)); setOrder((o) => [...o, id]); };
@@ -137,9 +150,9 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
               <span>Player</span><span className="text-right">VOR · Tier{adp.size > 0 ? " · ADP" : ""}</span><span className="text-right">Action</span>
             </div>
             <div className="max-h-[60vh] overflow-y-auto">
-              {board.length === 0 ? (
+              {boardCapped.length === 0 ? (
                 <p className="px-4 py-6 text-sm text-ink-400">No players left at this filter.</p>
-              ) : board.map((pl) => {
+              ) : boardCapped.map((pl) => {
                 const c = POS_HEX[pl.pos];
                 const av = adp.size > 0 ? valueVsAdp(pl, adp, currentPick) : null;
                 return (
@@ -166,12 +179,18 @@ export function DraftAssistant({ pool }: { pool?: readonly Player[] } = {}) {
                   </div>
                 );
               })}
+              {!canUseFantasyFull && board.length > FREE_BOARD_DEPTH && (
+                <p className="border-t px-4 py-3 text-center text-xs text-ink-400" style={{ borderColor: BRAND_COLORS.steelGray }}>
+                  Top {FREE_BOARD_DEPTH} shown — the full board is in the Fantasy suite.
+                </p>
+              )}
             </div>
           </div>
         </div>
 
         {/* ── Brain: recommendation + scarcity + my roster ── */}
         <div className="space-y-4">
+          {!canUseFantasyFull && <FantasyUpsell />}
           {/* recommendation */}
           <div className="surface-card relative overflow-hidden p-5" aria-live="polite">
             <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl" style={{ background: `${BRAND_COLORS.orbitalCyan}1f` }} />

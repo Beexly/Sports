@@ -87,10 +87,12 @@ const realAuth = nextAuth.auth as () => Promise<Session | null>;
  * When DEV_FAKE_ADMIN=true, every auth() call returns a synthetic ADMIN
  * session. This is the launch-night escape hatch — it lets the operator
  * open /dashboard and /cockpit without OAuth or a real Postgres session
- * table. NEVER set this in production.
+ * table. NEVER set this in production — and even if it leaks into a prod
+ * env, the NODE_ENV !== "production" hard-gate below makes it inert
+ * (defense-in-depth, mirroring entitlements.ts).
  */
 export const auth: () => Promise<Session | null> = async () => {
-  if (process.env["DEV_FAKE_ADMIN"] === "true") {
+  if (process.env["NODE_ENV"] !== "production" && process.env["DEV_FAKE_ADMIN"] === "true") {
     return {
       user: {
         id: "dev-admin",
@@ -133,4 +135,5 @@ declare module "next-auth" {
   }
 }
 
-export const DEV_FAKE_ADMIN = process.env["DEV_FAKE_ADMIN"] === "true";
+export const DEV_FAKE_ADMIN =
+  process.env["NODE_ENV"] !== "production" && process.env["DEV_FAKE_ADMIN"] === "true";

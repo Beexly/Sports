@@ -32,9 +32,10 @@
     "guard:model-freeze": "node scripts/guardrails/model-freeze.mjs",
     "guard:draft-only": "node scripts/guardrails/draft-only.mjs",
     "guard:claude-api": "node scripts/guardrails/claude-api-usage.mjs",
-    "guard:secrets": "node scripts/guardrails/secret-scan.mjs",
+    "guard:secrets": "node scripts/guardrails/secret-scan.mjs --all",
+    "guard:nflverse-currency": "tsx scripts/check-nflverse-currency.ts",
     "prepare": "node scripts/setup-git-hooks.mjs",
-    "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/guardrails/secret-scan.mjs && node scripts/eval-contracts.mjs",
+    "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/guardrails/secret-scan.mjs --all && node scripts/eval-contracts.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "snapshots:regen": "node scripts/regenerate-launch-snapshots.mjs",
     "resource-intel:generate": "npx tsx scripts/generate-resource-intelligence.mjs",
@@ -73,6 +74,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
+    "tsx": "^4.22.4",
     "typescript": "^5.4.5"
   },
   "engines": {

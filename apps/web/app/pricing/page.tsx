@@ -83,6 +83,18 @@ const ELITE_FEATURES = [
   { label: "The Academy + public verified record", included: true },
 ] as const;
 
+const FANTASY_FEATURES = [
+  { label: "Draft Assistant + Best Ball — on real, cleared data", included: true },
+  { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
+  { label: "Bye-week fragility + roster-construction guidance", included: true },
+  { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
+  { label: "Every pick, free + the public verified record", included: true },
+  { label: "The Academy — full training floor", included: true },
+  { label: "Betting depth: factor trail & line movement (Pro)", included: false },
+  { label: "Trend Lab + Parlay MRI (Pro)", included: false },
+  { label: "Real-time alerts (Elite)", included: false },
+] as const;
+
 const PLANS: PlanView[] = [
   {
     id: "FREE",
@@ -95,6 +107,18 @@ const PLANS: PlanView[] = [
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],
+  },
+  {
+    id: "FANTASY",
+    name: "Fantasy",
+    monthly: phase.fantasy.monthly,
+    annual: phase.fantasy.annual,
+    annualSavingsPct: annualSavingsPct(phase.fantasy),
+    annualMonthly: annualMonthlyEquivalent(phase.fantasy),
+    description: "The fantasy suite: the Draft Assistant and Best Ball board on real, cleared data — roster construction, stacks, and bye structure, with the reasoning.",
+    badge: "Draft season",
+    cta: "Subscribe to Fantasy",
+    features: [...FANTASY_FEATURES],
   },
   {
     id: "PRO",
@@ -137,12 +161,19 @@ const COMPARISON_FEATURES = [
   "CLV Ledger + staking toolkit",
   "The Academy",
   "Public verified record",
+  "Fantasy draft + best-ball suite",
 ] as const;
 
-const COMPARISON_CELLS: Record<"FREE" | "PRO" | "ELITE", (string | boolean)[]> = {
-  FREE: ["2", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true],
-  PRO: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true],
-  ELITE: ["Unlimited", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true],
+// Fantasy mirrors Free on the betting columns (it adds no betting depth) and unlocks
+// the fantasy suite — so the table tells the honest "Free + the fantasy suite" story.
+// "Signals per day" is "All" for every tier: picks were de-paywalled (dailyPickLimit is
+// null for all — ENTITLEMENT_REMAP_SPEC), so the cell must not advertise a per-day cap
+// the server doesn't enforce. The paid line differentiates on depth/tools/alerts.
+const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | boolean)[]> = {
+  FREE: ["All", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true, "Trial"],
+  FANTASY: ["All", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true, true],
+  PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
+  ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
 };
 
 // ─────────────────────────────────────────────
@@ -361,7 +392,7 @@ export default function PricingPage() {
                       ].join(" ")}
                     >
                       <td className="px-4 py-3 text-ion-2">{feature}</td>
-                      {(["FREE", "PRO", "ELITE"] as const).map((planId) => {
+                      {(["FREE", "FANTASY", "PRO", "ELITE"] as const).map((planId) => {
                         const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (
                           <td key={planId} className="px-4 py-3 text-center">

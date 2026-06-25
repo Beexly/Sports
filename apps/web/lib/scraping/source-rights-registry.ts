@@ -207,6 +207,49 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "commercial_display_allowed=false until licensed. Treat as fallback only; rate-limit aggressively.",
   },
 
+  {
+    source_id: "sleeper-api",
+    source_name: "Sleeper API",
+    source_url: "https://api.sleeper.app",
+    terms_url: "https://docs.sleeper.com/",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "approved_public_logged_off",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    // Conservative: the docs require attribution for trending data and contain no
+    // explicit COMMERCIAL-display/redistribution grant. We use Sleeper for internal
+    // derived analytics + cached facts (with attribution); raw commercial display
+    // stays gated until the ToS is confirmed (see unlock_condition).
+    commercial_display_allowed: false,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Player movement data via the Sleeper API.",
+    personal_data_risk: "none",
+    copyright_expression_risk: "none",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-06-22",
+    reviewed_by: "internal",
+    evidence_urls: ["https://docs.sleeper.com/"],
+    unlock_condition:
+      "Confirm Sleeper's Terms permit commercial DISPLAY/redistribution of player + trending " +
+      "data, then set commercial_display_allowed=true. Until then: internal derived analytics " +
+      "and cached facts only, with attribution.",
+    vendor_contact: null,
+    notes:
+      "Free, no-key, read-only public API. Facts only: player metadata, injury status, current " +
+      "team, and trending add/drop counts (the unique free ownership signal). Cache the ~5MB " +
+      "all-players payload at most once/day per the docs; attribution is required for trending. " +
+      "FIRM RULE: never logos/headshots, and never the SOLE basis of a paid feature — the paid " +
+      "draft/best-ball value derives from the nflverse graded pool + user-CSV ADP; Sleeper is " +
+      "enrichment. The older source-registry marks this commercialUse:false — honored here.",
+  },
+
   // ── Approved: licensed API ───────────────────────────────────────────────────
   {
     source_id: "the-odds-api",

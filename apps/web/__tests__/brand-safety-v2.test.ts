@@ -105,6 +105,31 @@ describe("BS-040 — secret-scan pre-commit hook", () => {
     expect(pkg.scripts["guard:secrets"]).toContain("secret-scan.mjs");
     expect(pkg.scripts["prepare"]).toContain("setup-git-hooks.mjs");
   });
+
+  // --- --all mode: the CI gate must scan the whole tree, not the empty stage ---
+  // Regression for the launch-backlog finding "secret-scan is a no-op in CI"
+  // (it scanned `git diff --cached`, which is empty in CI → always passed on 0 files).
+
+  it("--all scans every tracked file, not just the staged set", () => {
+    const r = runScan(["--all"]);
+    expect(r.status).toBe(0);
+    const m = r.stdout.match(/scanned (\d+) file\(s\) \[all-tracked\]/);
+    expect(m).not.toBeNull();
+    // The whole tree is hundreds+ of files — proving CI no longer scans 0.
+    expect(Number(m![1])).toBeGreaterThan(100);
+  });
+
+  it("CI has a dedicated secret-scan job that runs --all (gate has teeth)", () => {
+    const ci = read(".github/workflows/ci.yml");
+    expect(ci).toMatch(/secret-scan:/);
+    expect(ci).toContain("scripts/guardrails/secret-scan.mjs --all");
+  });
+
+  it("the composite guardrails script runs secret-scan in --all mode", () => {
+    const pkg = JSON.parse(read("package.json"));
+    expect(pkg.scripts["guardrails"]).toContain("secret-scan.mjs --all");
+    expect(pkg.scripts["guard:secrets"]).toContain("--all");
+  });
 });
 
 describe("BS-021 / BS-024 — user-driven tools stay (owner decision 2026-06-21)", () => {

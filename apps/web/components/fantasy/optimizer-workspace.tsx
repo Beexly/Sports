@@ -24,12 +24,17 @@ const TABS: { key: Tab; label: string; blurb: string }[] = [
 ];
 
 /**
- * @param pool When provided, the LIVE graded pool resolved server-side — threaded
- * into the season Start/Sit and Draft tools (real players). DFS uses its own
+ * @param pool When provided, the (already viewer-gated) graded pool resolved
+ * server-side — threaded into the season Start/Sit and Draft tools. DFS uses its own
  * licensed slate seam, so it's intentionally left on its own gate. When omitted,
  * every tab runs on the illustrative default (unchanged).
+ * @param canUseFantasyFull Server-provided entitlement. Defaults FALSE (fail-closed):
+ * a caller that forgets it gets the capped trial board, never the full paid suite.
  */
-export function OptimizerWorkspace({ pool }: { pool?: readonly Player[] } = {}) {
+export function OptimizerWorkspace({
+  pool,
+  canUseFantasyFull = false,
+}: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
   const [tab, setTab] = useState<Tab>("dfs");
   const active = TABS.find((t) => t.key === tab)!;
 
@@ -68,7 +73,7 @@ export function OptimizerWorkspace({ pool }: { pool?: readonly Player[] } = {}) 
             </p>
             <Link href="/fantasy/draft" className="text-xs font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>Open full page →</Link>
           </div>
-          <DraftAssistant pool={pool} />
+          <DraftAssistant pool={pool} canUseFantasyFull={canUseFantasyFull} />
         </div>
       )}
     </div>

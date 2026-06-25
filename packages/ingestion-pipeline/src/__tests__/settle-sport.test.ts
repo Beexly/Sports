@@ -134,6 +134,44 @@ describe("settleSport", () => {
     mocks.snapshotUpdateMany.mockResolvedValue({ count: 1 });
   });
 
+  it("grades SPREAD/TOTAL against the LOCKED line, not the drifted live line", async () => {
+    // Pick was published+receipted at -3.5 but pick.line drifted to -7 on a later refresh.
+    mocks.gameFindUnique.mockResolvedValue(
+      dbGame([pendingPick({ line: -7, selection: "Chiefs -7.0", clvLockLine: -3.5 })])
+    );
+
+    await settleSport(SPORT, "key", gates());
+
+    // Settlement must grade against the frozen -3.5, never the drifted -7.
+    expect(mocks.calculatePickResult).toHaveBeenCalledWith(
+      "SPREAD",
+      "Chiefs -7.0",
+      -3.5,
+      "Chiefs",
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    );
+  });
+
+  it("falls back to pick.line when a legacy row has no clvLockLine", async () => {
+    mocks.gameFindUnique.mockResolvedValue(
+      dbGame([pendingPick({ line: -4.5, clvLockLine: null })])
+    );
+
+    await settleSport(SPORT, "key", gates());
+
+    expect(mocks.calculatePickResult).toHaveBeenCalledWith(
+      "SPREAD",
+      expect.anything(),
+      -4.5,
+      "Chiefs",
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    );
+  });
+
   it("settles pending picks on completed games and reports counts", async () => {
     mocks.gameFindUnique.mockResolvedValue(
       dbGame([pendingPick({ id: "pick-1" }), pendingPick({ id: "pick-2" })])

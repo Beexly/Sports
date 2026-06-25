@@ -86,25 +86,30 @@ async function buildLiveSlate(): Promise<TwinSlate | null> {
   const now = new Date();
   // Cross-reference the live board so galaxy nodes carry real posture:
   // published picks light cyan, gated rows dim magenta, live games pulse.
-  const board = await loadBoardState().catch(() => null);
+  const horizon = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 4);
+
+  // The board read and the game/odds/picks read are independent — run them in
+  // parallel to halve the loader's tail latency (pure latency win, no behavior change).
+  const [board, rows] = await Promise.all([
+    loadBoardState().catch(() => null),
+    db.game.findMany({
+      where: { commenceTime: { gte: now, lte: horizon }, status: "SCHEDULED" },
+      include: {
+        sport: true,
+        odds: true,
+        picks: { orderBy: { generatedAt: "desc" }, take: 1 },
+      },
+      orderBy: { commenceTime: "asc" },
+      take: 40,
+    }),
+  ]);
+
   const boardByGame = new Map<string, { status: "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY"; gateReason: string | null }>();
   if (board) {
     for (const r of [...board.data.scoringNow, ...board.data.publishedToday, ...board.data.gatedTodayRows]) {
       if (!boardByGame.has(r.gameId)) boardByGame.set(r.gameId, { status: r.status, gateReason: r.gateReason });
     }
   }
-  const horizon = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 4);
-
-  const rows = await db.game.findMany({
-    where: { commenceTime: { gte: now, lte: horizon }, status: "SCHEDULED" },
-    include: {
-      sport: true,
-      odds: true,
-      picks: { orderBy: { generatedAt: "desc" }, take: 1 },
-    },
-    orderBy: { commenceTime: "asc" },
-    take: 40,
-  });
 
   // Map each game to a partial TwinGame (positions assigned per-league below).
   type PartialGame = Omit<TwinGame, "pos"> & { league: TwinLeague };

@@ -136,10 +136,17 @@ export async function settleSport(
         }
 
         for (const pick of game.picks) {
+          // Grade against the LOCKED line (the number we published, receipted, and
+          // CLV-graded the pick at) — NOT pick.line, which can drift on every refresh
+          // cycle while the pick is PENDING. Grading SPREAD/TOTAL against a drifted line
+          // would settle a published WIN as a LOSS and contradict the CLV verdict (which
+          // already uses clvLockLine below). Fall back to pick.line only for legacy rows
+          // with no lock. (MONEYLINE ignores the line entirely.)
+          const gradingLine = pick.clvLockLine ?? pick.line;
           const result = calculatePickResult(
             pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
             pick.selection,
-            pick.line,
+            gradingLine,
             game.homeTeamName,
             score.homeScore,
             score.awayScore,

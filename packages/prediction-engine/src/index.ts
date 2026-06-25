@@ -197,6 +197,118 @@ export type {
 export { projectPlayerSeason, backtestProjections } from "./player-projection.js";
 export type { PlayerSeasonLine, PlayerProjection, ProjectionBacktest } from "./player-projection.js";
 
+export {
+  DEFAULT_PLAYER_RATE_SHRINKAGE_K,
+  playerRateShrinkageWeight,
+  buildEmpiricalBayesRatePrior,
+  estimateBetaBinomialRatePosterior,
+  estimateNormalNormalRatePosterior,
+} from "./player-rate-posteriors.js";
+export type {
+  PlayerRatePosteriorFamily,
+  PlayerRatePrior,
+  EmpiricalBayesRateObservation,
+  EmpiricalBayesPriorOptions,
+  BetaBinomialPosteriorInput,
+  NormalNormalPosteriorInput,
+  PlayerRatePosterior,
+} from "./player-rate-posteriors.js";
+export {
+  DEFAULT_MARKET_ANCHOR_ASSUMPTIONS,
+  decomposeMarketAnchor,
+  reconcileMarketAnchoredPlayers,
+} from "./market-anchored-reconciliation.js";
+export type {
+  MarketAnchorTeamSide,
+  MarketAnchorAssumptions,
+  MarketAnchorInput,
+  TeamVolumeAnchor,
+  MarketAnchoredPlayerInput,
+  MarketAnchoredPlayerProjection,
+  MarketAnchorConservationCheck,
+  MarketAnchoredReconciliation,
+} from "./market-anchored-reconciliation.js";
+export {
+  DEFAULT_GAME_SCRIPT_ASSUMPTIONS,
+  buildVegasWinProbabilityPath,
+  projectGameScript,
+} from "./game-script.js";
+export type {
+  GameScriptSide,
+  GameScriptCheckpoint,
+  PaceLabel,
+  ScriptLabel,
+  GameScriptAssumptions,
+  TeamScriptInput,
+  GameScriptInput,
+  WinProbabilityPathPoint,
+  TeamGameScriptProjection,
+  GameScriptProjection,
+} from "./game-script.js";
+export {
+  DEFAULT_AVAILABILITY_COX_COEFFICIENTS,
+  buildKaplanMeierReturnCurve,
+  coxAvailabilityMultiplier,
+  projectAvailabilityRole,
+} from "./availability-role-tenure.js";
+export type {
+  AvailabilityStatus,
+  PracticeStatus,
+  ReturnSpellObservation,
+  KaplanMeierReturnPoint,
+  RoleTenureObservation,
+  AvailabilityCoxCoefficients,
+  AvailabilityRoleInput,
+  RoleTenureProjection,
+  AvailabilityRoleProjection,
+} from "./availability-role-tenure.js";
+export {
+  tweedieDeviance,
+  fitTweedieBaseline,
+  predictTweedieFantasyPoints,
+  buildTemporalProjectionSplits,
+  clarkWestTest,
+  runTweedieBaselineBacktest,
+  adaptiveConformalIntervals,
+} from "./tweedie-baseline.js";
+export type {
+  TweedieProjectionSample,
+  TweedieBaselineOptions,
+  TweedieStump,
+  TweedieBaselineModel,
+  TemporalProjectionSplit,
+  ProjectionSplitOptions,
+  ClarkWestSample,
+  ClarkWestReport,
+  TweedieBacktestReport,
+  AciObservation,
+  AciInterval,
+} from "./tweedie-baseline.js";
+export {
+  boundedAbsoluteLoss,
+  updateHedgeWeights,
+  runEarnedWeightEnsembleBacktest,
+} from "./earned-weight-ensemble.js";
+export type {
+  EnsemblePredictionSample,
+  EarnedWeightEnsembleOptions,
+  EarnedWeightPrediction,
+  EarnedWeightPromotionGate,
+  EarnedWeightEnsembleReport,
+} from "./earned-weight-ensemble.js";
+export {
+  buildRollingConformalWindows,
+  runRollingMondrianConformal,
+} from "./conformal-intervals.js";
+export type {
+  ConformalProjectionSample,
+  RollingConformalOptions,
+  RollingConformalWindow,
+  MondrianConformalInterval,
+  PositionCoverage,
+  RollingConformalReport,
+} from "./conformal-intervals.js";
+
 // Elo independent-model backtest: results-only win probabilities, calibrated and
 // comparable to the market baseline. Measurement only; not wired into scoring.
 export { eloBacktest } from "./elo-backtest.js";
@@ -269,3 +381,22 @@ export type {
   DecisionStump,
   TrainingSample,
 } from "./ml-estimator.js";
+
+export { reduceLadder, RUNG_REQUIREMENTS } from "./ladder/reduce.js";
+export { fanoutGameSettledHeartbeat } from "./ladder/heartbeat.js";
+export type { GameSettledFanoutInput, GameSettledFanoutResult } from "./ladder/heartbeat.js";
+export {
+  nflverseSchedulesToReplayGames,
+  replayHistoricalWeek,
+  buildPurgedEmbargoedSplits,
+  runMarketTotalReplayBacktest,
+} from "./replay-harness.js";
+export type {
+  NflverseScheduleRow,
+  ReplayGame,
+  HistoricalWeekTarget,
+  HistoricalWeekReplay,
+  ReplaySplitOptions,
+  WalkForwardSplit,
+  ReplayBacktestReport,
+} from "./replay-harness.js";

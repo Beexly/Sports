@@ -57,6 +57,7 @@ const FANTASY_DAILY_MENU: readonly NavGroup[] = [
     heading: "Fantasy",
     items: [
       { label: "Draft Assistant", href: "/fantasy/draft", desc: "Draft tiers, player values & live pick guidance" },
+      { label: "Best Ball", href: "/fantasy/bestball", desc: "Draft-only roster construction: ceiling, stacks & bye structure" },
       { label: "Start-Sit Helper", href: "/fantasy/lineup", desc: "Start or sit: floor vs. ceiling, explained" },
       { label: "Waiver & FAAB", href: "/fantasy/waivers", desc: "Who to add and what to bid, with the why" },
       { label: "Trade Analyzer", href: "/fantasy/trade", desc: "Is the trade fair? Value and win-now read" },

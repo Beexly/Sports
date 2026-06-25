@@ -11,7 +11,7 @@ import type { NormalizedOdds } from "@sports/types";
 const FETCHED = new Date("2026-04-15T17:00:00Z");
 
 function odd(game: string, bookmaker: string, market: NormalizedOdds["market"], homePrice = -110): NormalizedOdds {
-  return { gameExternalId: game, bookmaker, market, homePrice, awayPrice: -110, fetchedAt: FETCHED };
+  return { gameExternalId: game, bookmaker, market, homePrice, awayPrice: -110, fetchedAt: FETCHED, bookmakerLastUpdate: FETCHED };
 }
 
 function result(odds: NormalizedOdds[], healthy = true, error?: string): OddsProviderResult {

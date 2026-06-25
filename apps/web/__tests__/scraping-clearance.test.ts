@@ -55,6 +55,20 @@ describe("Source rights registry — registry shape", () => {
     expect(entry!.derived_analytics_allowed).toBe(true);
   });
 
+  it("sleeper-api is approved_public_logged_off — facts/enrichment only, display gated", () => {
+    const entry = getSourceRightsEntry("sleeper-api");
+    expect(entry).toBeDefined();
+    expect(entry!.status).toBe("approved_public_logged_off");
+    expect(entry!.automation_allowed).toBe(true);
+    expect(entry!.public_logged_off_allowed).toBe(true);
+    expect(entry!.commercial_display_allowed).toBe(false); // gated until ToS confirmed
+    expect(entry!.storage_allowed).toBe(true);
+    expect(entry!.derived_analytics_allowed).toBe(true);
+    expect(entry!.model_training_allowed).toBe(false);
+    expect(entry!.attribution_required).toBe(true);
+    expect(entry!.unlock_condition).toBeTruthy();
+  });
+
   it("the-odds-api is approved_api with commercial rights", () => {
     const entry = getSourceRightsEntry("the-odds-api");
     expect(entry).toBeDefined();
@@ -349,6 +363,55 @@ describe("PROOF 4 — espn-public-api: approved public logged-off fact extractio
     });
     expect(result.allowed).toBe(true);
     expect(result.blocks).toHaveLength(0);
+  });
+});
+
+// ─── PROOF 4b: Sleeper clears for analytics; display + training gated ────────
+
+describe("PROOF 4b — sleeper-api: public fact extraction, display/training gated", () => {
+  it("clears public_logged_off_fact_extract for derived_analytics + storage", () => {
+    const result = checkClearance({
+      source_id: "sleeper-api",
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["derived_analytics", "storage"],
+    });
+    expect(result.allowed).toBe(true);
+    expect(result.blocks).toHaveLength(0);
+    expect(result.rightsSnapshot!.status).toBe("approved_public_logged_off");
+  });
+
+  it("blocks commercial_display until the ToS is confirmed", () => {
+    const result = checkClearance({
+      source_id: "sleeper-api",
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["commercial_display"],
+    });
+    expect(result.allowed).toBe(false);
+    expect(result.blocks.some((b) => b.code === "COMMERCIAL_DISPLAY_NOT_ALLOWED")).toBe(true);
+  });
+
+  it("blocks model_training", () => {
+    const result = checkClearance({
+      source_id: "sleeper-api",
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["model_training"],
+    });
+    expect(result.allowed).toBe(false);
+    expect(result.blocks.some((b) => b.code === "MODEL_TRAINING_NOT_ALLOWED")).toBe(true);
+  });
+
+  it("warns that attribution is required", () => {
+    const result = checkClearance({
+      source_id: "sleeper-api",
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["derived_analytics"],
+    });
+    expect(result.allowed).toBe(true);
+    expect(result.warnings.some((w) => w.includes("Attribution required"))).toBe(true);
   });
 });
 

@@ -281,7 +281,7 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
     evidence: "NONE",
     visibility: "INTERNAL",
     lastReviewedAt: LAST_REVIEW,
-    reviewNote: "Sports-betting slang for a 'guaranteed' pick (a lock, lock of the day). Scanner uses word boundaries to avoid matching 'block', 'unlock', 'clock', and blanks the legitimate TEMPORAL idiom ('at lock', 'lock time', 'lock→close' — when the line locks/closes) before testing. Claim forms ('a lock', 'it's a lock') still fail.",
+    reviewNote: "Sports-betting slang for a 'guaranteed' pick (a lock, lock of the day). This library scanner uses word boundaries to avoid matching 'block', 'unlock', 'clock', but is deliberately CONSERVATIVE: it does NOT carve out the temporal idiom ('at lock', 'lock time'), so that copy is also flagged — phrase line-locking timing with the safeReplacement or 'line close' instead. (The CI trust-gate guardrail blanks the temporal idiom; the public-copy gate intentionally does not, since over-blocking is safe and under-blocking is not.) Claim forms ('a lock', 'it's a lock') fail as intended.",
     safeReplacement: "high-confidence pick",
   },
   {
@@ -449,13 +449,17 @@ export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
 
   for (const claim of getBannedClaims()) {
     const phrase = claim.copy;
-    const useWordBoundary = !phrase.includes(" ") && phrase.length <= 6;
+    // Match on a Unicode-normalized form so a phrase typed with smart quotes / fancy
+    // hyphens (Word, Google Docs, macOS auto-correct) cannot slip the gate. e.g.
+    // "can't lose" (U+2019) must hit the same as "can't lose" (U+0027).
+    const normPhrase = normalizeForScan(phrase);
+    const useWordBoundary = !normPhrase.includes(" ") && normPhrase.length <= 6;
     const pattern = useWordBoundary
-      ? new RegExp(`\\b${escapeRegex(phrase)}\\b`, "i")
-      : new RegExp(escapeRegex(phrase), "i");
+      ? new RegExp(`\\b${escapeRegex(normPhrase)}\\b`, "i")
+      : new RegExp(escapeRegex(normPhrase), "i");
 
     lines.forEach((line, idx) => {
-      if (pattern.test(line)) {
+      if (pattern.test(normalizeForScan(line))) {
         hits.push({
           phrase,
           claimId: claim.id,
@@ -467,6 +471,12 @@ export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
   }
 
   return hits;
+}
+
+/** Fold typographic apostrophes (U+2018/U+2019) and hyphens (U+2011/U+2013/U+2014) to
+ *  their ASCII forms so banned-phrase matching is robust to smart-quote editors. */
+function normalizeForScan(s: string): string {
+  return s.replace(/[‘’]/g, "'").replace(/[‑–—]/g, "-");
 }
 
 function escapeRegex(s: string): string {

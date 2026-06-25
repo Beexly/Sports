@@ -170,6 +170,28 @@ jobs:
         run: node scripts/guardrails/draft-only.mjs
 
   # --------------------------------------------------------------
+  # 5b. Secret-scan — full-tree credential gate. The pre-commit hook
+  #     scans the staged set; CI must scan EVERY tracked file (--all)
+  #     so a secret already committed is caught, not just one being
+  #     newly staged. Pure node + git, so no install step is needed.
+  # --------------------------------------------------------------
+  secret-scan:
+    name: Secret scan (full tree)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Run secret-scan guardrail (all tracked files)
+        run: node scripts/guardrails/secret-scan.mjs --all
+
+  # --------------------------------------------------------------
   # 6. Composite guardrails job — convenience target for local + branch
   #    protection rules.
   # --------------------------------------------------------------

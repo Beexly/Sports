@@ -105,6 +105,22 @@ describe("nflverse Data Adapter", () => {
       }
     });
 
+    it("falls back to the stats_player_week asset when the legacy name 404s (current seasons)", async () => {
+      // nflverse renamed the asset after 2024, so 2025+ only resolves under stats_player_week.
+      const urlAwareFetcher = async (url: string) => {
+        if (url.includes("stats_player_week_2025.csv")) {
+          return { ok: true, status: 200, text: async () => SAMPLE_PLAYER_STATS_CSV };
+        }
+        return { ok: false, status: 404, text: async () => "Not Found" };
+      };
+      const result = await fetchNflversePlayerStats(2025, urlAwareFetcher);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.data).toHaveLength(2);
+        expect(result.season).toBe(2025);
+      }
+    });
+
     it("includes attribution on every result", async () => {
       const result = await fetchNflversePlayerStats(2025, mockTextFetcher(SAMPLE_PLAYER_STATS_CSV));
       if (result.ok) {

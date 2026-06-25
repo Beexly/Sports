@@ -51,6 +51,8 @@ export interface PricingPhase {
     /** Minimum closing-line-value beat-close rate (0–1). 0.524 = the vig break-even line. */
     readonly minBeatCloseRate: number | null;
   };
+  /** The fantasy-only tier — cheaper entry below Pro; its value is the fantasy suite. */
+  readonly fantasy: TierPrice;
   readonly pro: TierPrice;
   readonly elite: TierPrice;
   /** The added value that must SHIP before advancing to this phase (no fabricated value). */
@@ -73,6 +75,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
       requiresPublishedCalibration: false,
       minBeatCloseRate: null,
     },
+    fantasy: { monthly: 4.99, annual: 49 },
     pro: { monthly: 14.99, annual: 99 },
     elite: { monthly: 24.99, annual: 179 },
     addedValue:
@@ -89,6 +92,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
       requiresPublishedCalibration: true,
       minBeatCloseRate: null,
     },
+    fantasy: { monthly: 6.99, annual: 59 },
     pro: { monthly: 19.99, annual: 149 },
     elite: { monthly: 29.99, annual: 229 },
     addedValue:
@@ -105,6 +109,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
       requiresPublishedCalibration: true,
       minBeatCloseRate: 0.524,
     },
+    fantasy: { monthly: 8.99, annual: 79 },
     pro: { monthly: 29.99, annual: 219 },
     elite: { monthly: 49.99, annual: 349 },
     addedValue:
@@ -121,6 +126,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
       requiresPublishedCalibration: true,
       minBeatCloseRate: 0.55,
     },
+    fantasy: { monthly: 9.99, annual: 89 },
     pro: { monthly: 39.99, annual: 299 },
     elite: { monthly: 69.99, annual: 499 },
     addedValue:

@@ -41,7 +41,8 @@ const ROUTES: ReadonlyArray<{
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
   // Daily intelligence surfaces
   { path: "/board", priority: 0.8, changeFrequency: "daily" },
-  { path: "/brief", priority: 0.8, changeFrequency: "daily" },
+  // NOTE: /brief is intentionally omitted — it is robots-disallowed + noindex
+  // (internal surface). A sitemap must never advertise a blocked URL.
   { path: "/today", priority: 0.7, changeFrequency: "daily" },
   { path: "/track", priority: 0.6, changeFrequency: "daily" },
   { path: "/trends", priority: 0.6, changeFrequency: "daily" },

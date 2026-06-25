@@ -84,10 +84,14 @@ export const NFLVERSE_CATALOG = {
     file: (s) => `snap_counts_${s}.csv`,
   }),
   ngs: ds({
-    key: "ngs", tag: "nextgen_stats", grain: "player-week", since: 2016, seasonal: true,
+    key: "ngs", tag: "nextgen_stats", grain: "player-week", since: 2016, seasonal: false,
     description: "Next Gen Stats (variant: passing | receiving | rushing): separation, cushion, time-to-throw, air yards, speed.",
     unlocks: "Tracking-derived talent signals not in any box score (e.g. receiver separation).",
-    file: (s, v = "receiving") => `ngs_${s}_${v}.csv.gz`,
+    // Combined all-seasons asset. The per-season `ngs_<season>_<variant>.csv.gz` 404s for the current
+    // season (verified live 2026-06: ngs_2025_* missing), but the combined `ngs_<variant>.csv.gz`
+    // includes it (2016->2025). Consumers filter by season via resolveActiveSeason, so this keeps NGS
+    // current without per-season 404s.
+    file: (_s, v = "receiving") => `ngs_${v}.csv.gz`,
   }),
   pfr_advstats: ds({
     key: "pfr_advstats", tag: "pfr_advstats", grain: "player-week", since: 2018, seasonal: true,
@@ -383,7 +387,52 @@ export async function fetchNflverseText(key: NflverseDatasetKey, season: number,
   return decodeDatasetText(res);
 }
 
+// The legacy combined `player_stats/player_stats.csv.gz` lags the newest season(s): nflverse ships
+// the latest weekly offensive stats only as per-season `stats_player/stats_player_week_<season>.csv`
+// after the 2024 rename. To stay current through the requested season we merge those per-season files
+// in (offensive REG/POST rows only, matching the combined file's scope). Best-effort by design: a
+// per-season file that is missing/unreachable is skipped, so the result is never worse than the
+// combined asset alone.
+const PLAYER_STATS_OFFENSE_POSITIONS = new Set(["QB", "RB", "WR", "TE", "FB"]);
+
+function maxSeasonIn(table: CsvTable): number {
+  let max = 0;
+  for (const row of table.records) {
+    const value = Number(row["season"]);
+    if (Number.isFinite(value) && value > max) max = value;
+  }
+  return max;
+}
+
+async function fetchPerSeasonPlayerStatsWeek(season: number): Promise<CsvTable | null> {
+  const url = `${NFLVERSE_BASE}/stats_player/stats_player_week_${season}.csv`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const table = parseCsv(await decodeDatasetText(res));
+    const records = table.records.filter((row) => {
+      const position = (row["position"] ?? "").toUpperCase();
+      const seasonType = (row["season_type"] ?? "REG").toUpperCase();
+      return PLAYER_STATS_OFFENSE_POSITIONS.has(position) && (seasonType === "REG" || seasonType.startsWith("POST"));
+    });
+    return { header: table.header, records };
+  } catch {
+    return null;
+  }
+}
+
 /** Fetch + parse a dataset asset into row records. */
 export async function fetchNflverse(key: NflverseDatasetKey, season: number, variant?: string): Promise<CsvTable> {
-  return parseCsv(await fetchNflverseText(key, season, variant));
+  const table = parseCsv(await fetchNflverseText(key, season, variant));
+  if (key !== "player_stats_week" || !Number.isFinite(season)) return table;
+
+  const covered = maxSeasonIn(table);
+  if (season <= covered) return table;
+
+  const records = [...table.records];
+  for (let extraSeason = covered + 1; extraSeason <= season; extraSeason++) {
+    const perSeason = await fetchPerSeasonPlayerStatsWeek(extraSeason);
+    if (perSeason && perSeason.records.length > 0) records.push(...perSeason.records);
+  }
+  return { header: table.header, records };
 }

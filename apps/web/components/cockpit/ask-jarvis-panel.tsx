@@ -184,7 +184,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
                   <p className="mt-2 text-[9px] text-ion-3/50">
                     Select a question to query Jarvis
                   </p>
-                  <p className="mt-0.5 text-[9px] text-ion-3/30">
+                  <p className="mt-0.5 text-[9px] text-ion-3">
                     All answers derived from live operator state
                   </p>
                 </div>

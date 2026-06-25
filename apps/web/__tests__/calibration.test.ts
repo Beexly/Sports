@@ -1,8 +1,11 @@
 import { describe, it, expect } from "vitest";
 import {
+  buildProjectionPreGameCommit,
+  buildProjectionSelfPublishingArtifact,
   computeCalibration,
   computeCalibrationProposals,
   computeDiscrimination,
+  type ProjectionCalibrationInput,
 } from "@/lib/calibration/compute";
 
 describe("computeCalibration", () => {
@@ -142,5 +145,117 @@ describe("computeCalibrationProposals", () => {
 
     expect(proposals).toHaveLength(1);
     expect(proposals[0]?.kind).toBe("CONFIDENCE_SHIFT");
+  });
+});
+
+describe("buildProjectionSelfPublishingArtifact", () => {
+  const rows: ProjectionCalibrationInput[] = [
+    {
+      id: "wr-1",
+      position: "WR",
+      predictedFantasyPoints: 14,
+      actualFantasyPoints: 15,
+      intervalLower: 12,
+      intervalUpper: 17,
+      marketFantasyPoints: 10,
+      preGameCommittedAt: "2026-09-10T16:00:00.000Z",
+      settledAt: "2026-09-11T05:00:00.000Z",
+      modelWinProbability: 0.78,
+      marketWinProbability: 0.52,
+      outcome: 1,
+    },
+    {
+      id: "rb-1",
+      position: "RB",
+      predictedFantasyPoints: 9,
+      actualFantasyPoints: 8,
+      intervalLower: 6,
+      intervalUpper: 11,
+      marketFantasyPoints: 13,
+      preGameCommittedAt: "2026-09-10T16:00:00.000Z",
+      settledAt: "2026-09-11T05:00:00.000Z",
+      modelWinProbability: 0.28,
+      marketWinProbability: 0.5,
+      outcome: 0,
+    },
+    {
+      id: "wr-2",
+      position: "WR",
+      predictedFantasyPoints: 17,
+      actualFantasyPoints: 18,
+      intervalLower: 15,
+      intervalUpper: 20,
+      marketFantasyPoints: 14,
+      preGameCommittedAt: "2026-09-10T16:00:00.000Z",
+      settledAt: "2026-09-11T05:00:00.000Z",
+      modelWinProbability: 0.74,
+      marketWinProbability: 0.54,
+      outcome: 1,
+    },
+    {
+      id: "qb-1",
+      position: "QB",
+      predictedFantasyPoints: 11,
+      actualFantasyPoints: 12,
+      intervalLower: 9,
+      intervalUpper: 13,
+      marketFantasyPoints: 16,
+      preGameCommittedAt: "2026-09-10T16:00:00.000Z",
+      settledAt: "2026-09-11T05:00:00.000Z",
+      modelWinProbability: 0.32,
+      marketWinProbability: 0.49,
+      outcome: 0,
+    },
+  ];
+
+  it("builds draft-only public artifact data and criteria without flipping publish flags", () => {
+    const artifact = buildProjectionSelfPublishingArtifact(rows, {
+      generatedAt: "2026-09-12T00:00:00.000Z",
+      criteria: { minSampleSize: 4, minRankCorrelation: 0.9 },
+    });
+
+    expect(artifact.status).toBe("DRAFT_ONLY");
+    expect(artifact.preGameCommit.status).toBe("DRAFT_ONLY");
+    expect(artifact.sampleSize).toBe(4);
+    expect(artifact.overallModelMae).toBe(1);
+    expect(artifact.overallMarketMae).toBeGreaterThan(artifact.overallModelMae ?? 0);
+    expect(artifact.intervalCoverage).toBe(1);
+    expect(artifact.rankCorrelation).toBe(1);
+    expect(artifact.scores.brierScore).toBeLessThan(artifact.scores.marketBrierScore ?? 1);
+    expect(artifact.scores.logLoss).toBeLessThan(artifact.scores.marketLogLoss ?? 1);
+    expect(artifact.scores.crps).toBeLessThan(artifact.scores.marketCrps ?? 1);
+    expect(artifact.canPublishProjections).toMatchObject({
+      criterionId: "canPublishProjections",
+      status: "DRAFT_ONLY",
+      eligibleIfOwnerApproves: true,
+      failedCriteria: [],
+    });
+  });
+
+  it("is deterministic for the same pre-game projection set", () => {
+    const commit = buildProjectionPreGameCommit(rows, "2026-09-10T16:00:00.000Z");
+    const shuffled = buildProjectionPreGameCommit([...rows].reverse(), "2026-09-10T16:00:00.000Z");
+    expect(commit.fingerprint).toBe(shuffled.fingerprint);
+    expect(commit.id).toBe(shuffled.id);
+  });
+
+  it("fails closed when pre-game commits are missing", () => {
+    const artifact = buildProjectionSelfPublishingArtifact(
+      [{ ...rows[0]!, preGameCommittedAt: null }],
+      {
+        generatedAt: "2026-09-12T00:00:00.000Z",
+        criteria: {
+          minSampleSize: 1,
+          minIntervalCoverage: 0,
+          minRankCorrelation: 0,
+          requireBetterBrierThanMarket: false,
+          requireBetterCrpsThanMarket: false,
+          requireBetterLogLossThanMarket: false,
+        },
+      }
+    );
+
+    expect(artifact.canPublishProjections.eligibleIfOwnerApproves).toBe(false);
+    expect(artifact.canPublishProjections.failedCriteria).toContain("pre-game-commit");
   });
 });

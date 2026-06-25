@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildOpportunityTransfer,
+  buildRoleTransitionModel,
   buildUsageRates,
   loadOpportunityTransfer,
   type OpportunityTransferRow,
@@ -42,6 +43,12 @@ const STATS_ROWS = [
   // Workhorse Rb: real carries (15/game)
   "2024,REG,9,Workhorse Rb,2,16",
   "2024,REG,10,Workhorse Rb,4,14",
+  "2024,REG,8,Backup Bob,1,0",
+  "2024,REG,9,Backup Bob,4,0",
+  "2024,REG,10,Backup Bob,8,0",
+  "2024,REG,11,Backup Bob,12,0",
+  "2024,REG,9,Slot Sam,2,0",
+  "2024,REG,10,Slot Sam,1,0",
   // Ghost Player: no recent usage
   "2024,REG,10,Ghost Player,0,0",
   // a prior season row that must be ignored
@@ -53,6 +60,13 @@ function rowFor(rows: readonly OpportunityTransferRow[], name: string): Opportun
 }
 
 describe("opportunity-transfer builder", () => {
+  it("builds shrunk Markov role transitions from weekly usage states", () => {
+    const model = buildRoleTransitionModel(parseStats(STATS_ROWS), 2024);
+    expect(model.rotation.lead.observed).toBe(1);
+    expect(model.rotation.lead.shrinkWeight).toBeGreaterThan(0);
+    expect(model.rotation.lead.probability).toBeGreaterThan(model.reserve.lead.probability);
+  });
+
   it("quantifies vacated targets+carries and names the next man up", () => {
     const usage = buildUsageRates(parseStats(STATS_ROWS), 2024);
     const depth: DepthChartRow[] = [
@@ -69,8 +83,28 @@ describe("opportunity-transfer builder", () => {
     expect(r.vacatedTargets).toBe(8); // (9+7)/2
     expect(r.vacatedCarries).toBe(0);
     expect(r.beneficiary).toBe("Backup Bob"); // next man up, not the OUT player
+    expect(r.outPlayerRoleState).toBe("rotation");
+    expect(r.redistribution[0]!.playerName).toBe("Backup Bob");
+    expect(r.redistribution[0]!.redistributedTargets).toBe(8);
+    expect(r.beneficiaryTransitionToLeadProb).toBeGreaterThan(0);
     expect(r.confidence).toBe("high"); // 8 vacated ≥ threshold
     expect(r.note).toContain("Backup Bob");
+  });
+
+  it("redistributes vacated usage across role-transition candidates", () => {
+    const usage = buildUsageRates(parseStats(STATS_ROWS), 2024);
+    const transitionModel = buildRoleTransitionModel(parseStats(STATS_ROWS), 2024);
+    const depth: DepthChartRow[] = [
+      depthRow({ playerName: "Star Starter", depthOrder: 1 }),
+      depthRow({ playerName: "Backup Bob", depthOrder: 2 }),
+      depthRow({ playerName: "Slot Sam", depthOrder: 3 }),
+    ];
+    const rows = buildOpportunityTransfer([injury({})], depth, usage, transitionModel);
+    const r = rows[0]!;
+    expect(r.redistribution.map((c) => c.playerName)).toEqual(["Backup Bob", "Slot Sam"]);
+    expect(r.redistribution[0]!.share).toBeGreaterThan(r.redistribution[1]!.share);
+    expect(r.redistribution.reduce((sum, c) => sum + c.redistributedTargets, 0)).toBe(r.vacatedTargets);
+    expect(r.redistribution.reduce((sum, c) => sum + c.redistributedCarries, 0)).toBe(r.vacatedCarries);
   });
 
   it("returns no transfer rows when there are no injuries (no fabrication)", () => {

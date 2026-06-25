@@ -84,6 +84,96 @@ export interface CalibrationReport {
   readonly note: string;
 }
 
+export interface ProjectionCalibrationInput {
+  readonly id: string;
+  readonly position: string;
+  readonly predictedFantasyPoints: number;
+  readonly actualFantasyPoints: number;
+  readonly intervalLower: number;
+  readonly intervalUpper: number;
+  readonly marketFantasyPoints: number;
+  readonly preGameCommittedAt?: string | null;
+  readonly settledAt?: string | null;
+  readonly modelWinProbability?: number | null;
+  readonly marketWinProbability?: number | null;
+  readonly outcome?: 0 | 1 | null;
+  readonly modelStdDev?: number | null;
+  readonly marketStdDev?: number | null;
+}
+
+export interface ProjectionPreGameCommit {
+  readonly id: string;
+  readonly status: "DRAFT_ONLY";
+  readonly createdAt: string;
+  readonly sampleSize: number;
+  readonly fingerprint: string;
+}
+
+export interface PositionProjectionCalibration {
+  readonly position: string;
+  readonly sampleSize: number;
+  readonly modelMae: number;
+  readonly marketMae: number;
+  readonly modelMaeEdge: number;
+  readonly intervalCoverage: number;
+  readonly coveredCount: number;
+}
+
+export interface ProjectionCalibrationScores {
+  readonly brierScore: number | null;
+  readonly marketBrierScore: number | null;
+  readonly logLoss: number | null;
+  readonly marketLogLoss: number | null;
+  readonly crps: number | null;
+  readonly marketCrps: number | null;
+}
+
+export interface CanPublishProjectionsCriteria {
+  readonly minSampleSize: number;
+  readonly maxModelMaeToMarketRatio: number;
+  readonly minIntervalCoverage: number;
+  readonly minRankCorrelation: number;
+  readonly requireBetterCrpsThanMarket: boolean;
+  readonly requireBetterBrierThanMarket: boolean;
+  readonly requireBetterLogLossThanMarket: boolean;
+}
+
+export interface CanPublishProjectionsDraftResult {
+  readonly criterionId: "canPublishProjections";
+  readonly status: "DRAFT_ONLY";
+  readonly eligibleIfOwnerApproves: boolean;
+  readonly failedCriteria: readonly string[];
+  readonly note: string;
+}
+
+export interface PublicProjectionArtifactRow {
+  readonly id: string;
+  readonly position: string;
+  readonly predictedFantasyPoints: number;
+  readonly actualFantasyPoints: number;
+  readonly marketFantasyPoints: number;
+  readonly intervalLower: number;
+  readonly intervalUpper: number;
+  readonly covered: boolean;
+  readonly modelAbsoluteError: number;
+  readonly marketAbsoluteError: number;
+}
+
+export interface PublicProjectionCalibrationArtifact {
+  readonly status: "DRAFT_ONLY";
+  readonly generatedAt: string;
+  readonly preGameCommit: ProjectionPreGameCommit;
+  readonly sampleSize: number;
+  readonly maeByPosition: readonly PositionProjectionCalibration[];
+  readonly overallModelMae: number | null;
+  readonly overallMarketMae: number | null;
+  readonly intervalCoverage: number | null;
+  readonly rankCorrelation: number | null;
+  readonly scores: ProjectionCalibrationScores;
+  readonly canPublishProjections: CanPublishProjectionsDraftResult;
+  readonly rows: readonly PublicProjectionArtifactRow[];
+}
+
 const BUCKETS = [
   { label: "50-59", min: 50, max: 59 },
   { label: "60-69", min: 60, max: 69 },
@@ -100,10 +190,24 @@ const PROPOSAL_DELTA = 0.12;
 const MIN_DISCRIMINATION_SAMPLE = 20;
 // Tolerance band (win-rate units) for calling the trend flat vs. directional.
 const DISCRIMINATION_EPSILON = 0.02;
+const NORMAL_90_Z = 1.6448536269514722;
+const DEFAULT_PROJECTION_PUBLISH_CRITERIA: CanPublishProjectionsCriteria = {
+  minSampleSize: 50,
+  maxModelMaeToMarketRatio: 0.999,
+  minIntervalCoverage: 0.8,
+  minRankCorrelation: 0.2,
+  requireBetterCrpsThanMarket: true,
+  requireBetterBrierThanMarket: true,
+  requireBetterLogLossThanMarket: true,
+};
 
 function round(value: number, digits = 3): number {
   const scale = 10 ** digits;
   return Math.round(value * scale) / scale;
+}
+
+function finiteNumber(value: number | null | undefined): value is number {
+  return typeof value === "number" && Number.isFinite(value);
 }
 
 function expectedFromConfidence(confidence: number): number {
@@ -277,6 +381,302 @@ export function computeDiscrimination(
     spread,
     monotonic,
     note,
+  };
+}
+
+function stableHash(input: string): string {
+  let hash = 2166136261;
+  for (let i = 0; i < input.length; i++) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+function projectionFingerprintRows(samples: readonly ProjectionCalibrationInput[]): string {
+  return [...samples]
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map((row) =>
+      [
+        row.id,
+        row.position,
+        round(row.predictedFantasyPoints, 4),
+        round(row.intervalLower, 4),
+        round(row.intervalUpper, 4),
+        round(row.marketFantasyPoints, 4),
+        row.preGameCommittedAt ?? "",
+      ].join("|")
+    )
+    .join("\n");
+}
+
+export function buildProjectionPreGameCommit(
+  samples: readonly ProjectionCalibrationInput[] = [],
+  createdAt: string | Date = new Date()
+): ProjectionPreGameCommit {
+  const fingerprint = stableHash(projectionFingerprintRows(samples));
+  return {
+    id: `projection-commit-${fingerprint}`,
+    status: "DRAFT_ONLY",
+    createdAt: typeof createdAt === "string" ? createdAt : createdAt.toISOString(),
+    sampleSize: samples.length,
+    fingerprint,
+  };
+}
+
+function ranks(values: readonly number[]): number[] {
+  const sorted = values
+    .map((value, index) => ({ value, index }))
+    .sort((a, b) => a.value - b.value);
+  const output = new Array(values.length).fill(0);
+  let start = 0;
+  while (start < sorted.length) {
+    let end = start;
+    while (end + 1 < sorted.length && sorted[end + 1]!.value === sorted[start]!.value) end += 1;
+    const averageRank = (start + end + 2) / 2;
+    for (let i = start; i <= end; i++) output[sorted[i]!.index] = averageRank;
+    start = end + 1;
+  }
+  return output;
+}
+
+function spearmanRankCorrelation(
+  rows: readonly Pick<ProjectionCalibrationInput, "predictedFantasyPoints" | "actualFantasyPoints">[]
+): number | null {
+  if (rows.length < 2) return null;
+  const predictedRanks = ranks(rows.map((row) => row.predictedFantasyPoints));
+  const actualRanks = ranks(rows.map((row) => row.actualFantasyPoints));
+  const predMean = predictedRanks.reduce((sum, value) => sum + value, 0) / predictedRanks.length;
+  const actualMean = actualRanks.reduce((sum, value) => sum + value, 0) / actualRanks.length;
+  let numerator = 0;
+  let predDenom = 0;
+  let actualDenom = 0;
+  for (let i = 0; i < rows.length; i++) {
+    const pred = predictedRanks[i]! - predMean;
+    const actual = actualRanks[i]! - actualMean;
+    numerator += pred * actual;
+    predDenom += pred ** 2;
+    actualDenom += actual ** 2;
+  }
+  if (predDenom === 0 || actualDenom === 0) return null;
+  return round(numerator / Math.sqrt(predDenom * actualDenom));
+}
+
+function clampProbability(value: number): number {
+  return Math.max(0.001, Math.min(0.999, value));
+}
+
+function logLoss(probability: number, outcome: 0 | 1): number {
+  const p = clampProbability(probability);
+  return outcome === 1 ? -Math.log(p) : -Math.log(1 - p);
+}
+
+function erf(value: number): number {
+  const sign = value < 0 ? -1 : 1;
+  const x = Math.abs(value);
+  const t = 1 / (1 + 0.3275911 * x);
+  const y =
+    1 -
+    (((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t +
+      0.254829592) *
+      t *
+      Math.exp(-x * x));
+  return sign * y;
+}
+
+function normalPdf(value: number): number {
+  return Math.exp(-0.5 * value ** 2) / Math.sqrt(2 * Math.PI);
+}
+
+function normalCdf(value: number): number {
+  return 0.5 * (1 + erf(value / Math.SQRT2));
+}
+
+function stdDevFromInterval(row: ProjectionCalibrationInput): number {
+  if (finiteNumber(row.modelStdDev) && row.modelStdDev > 0) return row.modelStdDev;
+  const intervalWidth = row.intervalUpper - row.intervalLower;
+  if (intervalWidth > 0) return Math.max(0.1, intervalWidth / (2 * NORMAL_90_Z));
+  return Math.max(1, Math.abs(row.predictedFantasyPoints) * 0.25);
+}
+
+function marketStdDev(row: ProjectionCalibrationInput): number {
+  if (finiteNumber(row.marketStdDev) && row.marketStdDev > 0) return row.marketStdDev;
+  return stdDevFromInterval(row);
+}
+
+function normalCrps(mean: number, stdev: number, actual: number): number {
+  const sigma = Math.max(0.1, stdev);
+  const z = (actual - mean) / sigma;
+  const score = sigma * (z * (2 * normalCdf(z) - 1) + 2 * normalPdf(z) - 1 / Math.sqrt(Math.PI));
+  return Math.max(0, score);
+}
+
+function mean(values: readonly number[]): number | null {
+  return values.length === 0 ? null : round(values.reduce((sum, value) => sum + value, 0) / values.length);
+}
+
+function isPreGameCommitted(row: ProjectionCalibrationInput): boolean {
+  if (!row.preGameCommittedAt) return false;
+  if (!row.settledAt) return true;
+  return new Date(row.preGameCommittedAt).getTime() < new Date(row.settledAt).getTime();
+}
+
+export function buildProjectionSelfPublishingArtifact(
+  input: readonly ProjectionCalibrationInput[] = [],
+  options: {
+    readonly generatedAt?: string | Date;
+    readonly criteria?: Partial<CanPublishProjectionsCriteria>;
+  } = {}
+): PublicProjectionCalibrationArtifact {
+  const criteria: CanPublishProjectionsCriteria = {
+    ...DEFAULT_PROJECTION_PUBLISH_CRITERIA,
+    ...options.criteria,
+  };
+  const generatedAt =
+    options.generatedAt === undefined
+      ? new Date().toISOString()
+      : typeof options.generatedAt === "string"
+        ? options.generatedAt
+        : options.generatedAt.toISOString();
+  const settled = input.filter(
+    (row) =>
+      finiteNumber(row.predictedFantasyPoints) &&
+      finiteNumber(row.actualFantasyPoints) &&
+      finiteNumber(row.intervalLower) &&
+      finiteNumber(row.intervalUpper) &&
+      finiteNumber(row.marketFantasyPoints)
+  );
+  const rows: PublicProjectionArtifactRow[] = settled.map((row) => {
+    const modelAbsoluteError = Math.abs(row.predictedFantasyPoints - row.actualFantasyPoints);
+    const marketAbsoluteError = Math.abs(row.marketFantasyPoints - row.actualFantasyPoints);
+    return {
+      id: row.id,
+      position: row.position,
+      predictedFantasyPoints: round(row.predictedFantasyPoints),
+      actualFantasyPoints: round(row.actualFantasyPoints),
+      marketFantasyPoints: round(row.marketFantasyPoints),
+      intervalLower: round(row.intervalLower),
+      intervalUpper: round(row.intervalUpper),
+      covered: row.actualFantasyPoints >= row.intervalLower && row.actualFantasyPoints <= row.intervalUpper,
+      modelAbsoluteError: round(modelAbsoluteError),
+      marketAbsoluteError: round(marketAbsoluteError),
+    };
+  });
+
+  const byPosition = new Map<string, PublicProjectionArtifactRow[]>();
+  for (const row of rows) {
+    const bucket = byPosition.get(row.position) ?? [];
+    bucket.push(row);
+    byPosition.set(row.position, bucket);
+  }
+  const maeByPosition = [...byPosition.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([position, positionRows]) => {
+      const modelMae = mean(positionRows.map((row) => row.modelAbsoluteError)) ?? 0;
+      const marketMae = mean(positionRows.map((row) => row.marketAbsoluteError)) ?? 0;
+      const coveredCount = positionRows.filter((row) => row.covered).length;
+      return {
+        position,
+        sampleSize: positionRows.length,
+        modelMae,
+        marketMae,
+        modelMaeEdge: round(marketMae - modelMae),
+        intervalCoverage: round(coveredCount / positionRows.length),
+        coveredCount,
+      };
+    });
+
+  const probabilityRows = settled.filter(
+    (row): row is ProjectionCalibrationInput & {
+      readonly modelWinProbability: number;
+      readonly marketWinProbability: number;
+      readonly outcome: 0 | 1;
+    } =>
+      finiteNumber(row.modelWinProbability) &&
+      finiteNumber(row.marketWinProbability) &&
+      (row.outcome === 0 || row.outcome === 1)
+  );
+  const modelBrier = mean(
+    probabilityRows.map((row) => (clampProbability(row.modelWinProbability) - row.outcome) ** 2)
+  );
+  const marketBrier = mean(
+    probabilityRows.map((row) => (clampProbability(row.marketWinProbability) - row.outcome) ** 2)
+  );
+  const modelLogLoss = mean(probabilityRows.map((row) => logLoss(row.modelWinProbability, row.outcome)));
+  const marketLogLoss = mean(probabilityRows.map((row) => logLoss(row.marketWinProbability, row.outcome)));
+  const modelCrps = mean(
+    settled.map((row) => normalCrps(row.predictedFantasyPoints, stdDevFromInterval(row), row.actualFantasyPoints))
+  );
+  const marketCrps = mean(
+    settled.map((row) => normalCrps(row.marketFantasyPoints, marketStdDev(row), row.actualFantasyPoints))
+  );
+  const overallModelMae = mean(rows.map((row) => row.modelAbsoluteError));
+  const overallMarketMae = mean(rows.map((row) => row.marketAbsoluteError));
+  const covered = rows.filter((row) => row.covered).length;
+  const intervalCoverage = rows.length === 0 ? null : round(covered / rows.length);
+  const rankCorrelation = spearmanRankCorrelation(settled);
+
+  const failedCriteria: string[] = [];
+  if (settled.length < criteria.minSampleSize) failedCriteria.push("min-sample-size");
+  if (!settled.every(isPreGameCommitted)) failedCriteria.push("pre-game-commit");
+  if (
+    overallModelMae === null ||
+    overallMarketMae === null ||
+    overallModelMae >= overallMarketMae * criteria.maxModelMaeToMarketRatio
+  ) {
+    failedCriteria.push("model-mae-vs-market");
+  }
+  if (intervalCoverage === null || intervalCoverage < criteria.minIntervalCoverage) {
+    failedCriteria.push("interval-coverage");
+  }
+  if (rankCorrelation === null || rankCorrelation < criteria.minRankCorrelation) {
+    failedCriteria.push("rank-correlation");
+  }
+  if (criteria.requireBetterCrpsThanMarket && (modelCrps === null || marketCrps === null || modelCrps >= marketCrps)) {
+    failedCriteria.push("crps-vs-market");
+  }
+  if (
+    criteria.requireBetterBrierThanMarket &&
+    (modelBrier === null || marketBrier === null || modelBrier >= marketBrier)
+  ) {
+    failedCriteria.push("brier-vs-market");
+  }
+  if (
+    criteria.requireBetterLogLossThanMarket &&
+    (modelLogLoss === null || marketLogLoss === null || modelLogLoss >= marketLogLoss)
+  ) {
+    failedCriteria.push("log-loss-vs-market");
+  }
+
+  return {
+    status: "DRAFT_ONLY",
+    generatedAt,
+    preGameCommit: buildProjectionPreGameCommit(settled, generatedAt),
+    sampleSize: settled.length,
+    maeByPosition,
+    overallModelMae,
+    overallMarketMae,
+    intervalCoverage,
+    rankCorrelation,
+    scores: {
+      brierScore: modelBrier,
+      marketBrierScore: marketBrier,
+      logLoss: modelLogLoss,
+      marketLogLoss,
+      crps: modelCrps,
+      marketCrps,
+    },
+    canPublishProjections: {
+      criterionId: "canPublishProjections",
+      status: "DRAFT_ONLY",
+      eligibleIfOwnerApproves: failedCriteria.length === 0,
+      failedCriteria,
+      note:
+        failedCriteria.length === 0
+          ? "Draft criteria are satisfied; owner approval and a separate gate flip are still required."
+          : "Draft criteria are not satisfied; keep projections shadow-only.",
+    },
+    rows,
   };
 }
 

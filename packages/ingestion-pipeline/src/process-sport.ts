@@ -143,7 +143,17 @@ export async function processSport(
     }
 
     const normalizedGames = normalizer.normalizeGames(events);
-    const normalizedOdds = normalizer.normalizeOdds(events, fetchedAt);
+    const normalizedOddsRaw = normalizer.normalizeOdds(events, fetchedAt);
+
+    // Real freshness gate: validate the UPSTREAM odds age (per-bookmaker last_update),
+    // not just our local fetch clock. Decided PER GAME — drop games whose own odds are
+    // stale (so one fresh game can't mask a stale one), and stop the whole job only if the
+    // entire feed is stale (dead/cached board). A fetchedAt check alone cannot catch this.
+    const freshGameIds = normalizer.freshGameIds(normalizedOddsRaw);
+    if (normalizedOddsRaw.length > 0 && freshGameIds.size === 0) {
+      throw new Error("Upstream odds are stale: no game has a fresh bookmaker update");
+    }
+    const normalizedOdds = normalizedOddsRaw.filter((o) => freshGameIds.has(o.gameExternalId));
 
     const sportRecord = await db.sport.upsert({
       where: { key: sport.key },

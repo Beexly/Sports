@@ -135,6 +135,23 @@ describe("Banned-phrase scanner", () => {
       )
     ).toEqual([]);
   });
+
+  it("catches phrases typed with smart quotes / fancy hyphens (cannot slip the gate)", () => {
+    // U+2019 curly apostrophe — the default from Word / Google Docs / macOS.
+    expect(scanForBannedPhrases("You can’t lose with this play.").some((h) => h.claimId === "banned.cant-lose")).toBe(true);
+    // U+2011 non-breaking hyphen and U+2013 en-dash forms of risk-free.
+    expect(scanForBannedPhrases("totally risk‑free pick").some((h) => h.claimId === "banned.risk-free")).toBe(true);
+    expect(scanForBannedPhrases("a risk–free angle").some((h) => h.claimId === "banned.risk-free")).toBe(true);
+    // Straight-apostrophe form still flagged (no regression).
+    expect(scanForBannedPhrases("you can't lose").some((h) => h.claimId === "banned.cant-lose")).toBe(true);
+  });
+
+  it("flags the certainty term 'lock' conservatively in every context (over-block is safe)", () => {
+    expect(scanForBannedPhrases("this is a lock").some((h) => h.claimId === "banned.lock")).toBe(true);
+    expect(scanForBannedPhrases("see the line at lock").some((h) => h.claimId === "banned.lock")).toBe(true);
+    // Word-boundary still spares 'block'/'unlock'/'clock'.
+    expect(scanForBannedPhrases("the matchup is a roadblock to unlock").some((h) => h.claimId === "banned.lock")).toBe(false);
+  });
 });
 
 // ── Public exports needed by other tests and helpers ──────────────────────
