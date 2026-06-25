@@ -122,7 +122,7 @@ async function fetchSeason(season: number): Promise<Array<Record<string, string>
 // nflverse convention: spread_line > 0 means the HOME team is favored by that many points, so
 //   home implied total = (total + spread)/2,  away implied total = (total - spread)/2.
 async function fetchScheduleImpliedTotals(): Promise<Map<string, number>> {
-  const url = "https://github.com/nflverse/nflverse-data/releases/download/games/games.csv";
+  const url = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv";
   const map = new Map<string, number>();
   try {
     const res = await fetch(url);
