@@ -35,3 +35,5 @@ export * from "./einstein/negative-discovery-ledger.js";
 export * from "./einstein/experiment-allocation.js";
 export * from "./einstein/market-autopsy.js";
 export * from "./einstein/self-disproof-court.js";
+
+export * from "./einstein/belief-transition.js";
