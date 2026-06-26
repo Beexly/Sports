@@ -63,6 +63,9 @@ const DOCS = [
   "docs/product/GSE_MEANING_COMPILER.md",
   "docs/competitive/SCORES24_TO_GSE_INVARIANTS.md",
   "docs/frontier-night/MEANING_INTEGRITY_AUDIT.md",
+  // Public Observer Ledger (Addendum III)
+  "docs/product/PUBLIC_OBSERVER_LEDGER.md",
+  "docs/data-kingdom/GSE_DATA_API_ROADMAP.md",
 ];
 
 describe("Docs — public-copy banned-phrase scan", () => {
