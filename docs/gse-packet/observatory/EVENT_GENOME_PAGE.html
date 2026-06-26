@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GSE — the living anatomy of a match</title>
+<!--
+  THE EVENT GENOME PAGE — GSE's rights-safe answer to the Scores24 match page.
+  Canonical engine: packages/decision-field-runtime/src/{universal-event-genome,event-genome-fixtures,
+  match-derived-stats,trend-passport,prediction-court,market-bloom}.ts — this page MIRRORS those over the
+  SAME fixtures. Static · offline · NO network · NO live data · NO affiliate links · fixture-watermarked.
+  Scores24 shows a betting page; GSE shows the truth architecture underneath the game. Not advice.
+-->
+<style>
+  :root{--cyan:#00E5FF;--uv:#7B61FF;--magenta:#FF38C7;--amber:#A855F7;--blue:#2A6BFF;--gold:#FFC857;--green:#34d39a;--gray:#5f7398;
+    --bg0:#05070B;--glass:rgba(13,17,23,.55);--card:rgba(13,17,23,.72);--line:rgba(0,229,255,.16);--line2:rgba(123,97,255,.22);
+    --txt:#F5F7FF;--muted:#8aa4ca;--faint:#46587b;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg0);color:var(--txt);font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5}
+  body{position:relative;min-height:100vh;background:radial-gradient(1100px 640px at 20% 8%,rgba(40,120,200,.10),transparent 60%),radial-gradient(900px 560px at 88% 86%,rgba(123,97,255,.10),transparent 60%),var(--bg0)}
+  .wrap{max-width:1180px;margin:0 auto;padding:30px 20px 70px}
+  h1,h2,h3{font-family:"Exo 2",system-ui,sans-serif;font-weight:700}
+  .mono{font-family:"Exo 2",ui-monospace,Menlo,monospace;letter-spacing:.03em}
+  .brand{display:flex;align-items:center;gap:12px}
+  .mark{width:36px;height:36px;border-radius:10px;flex:none;background:radial-gradient(circle at 50% 38%,rgba(0,229,255,.95),rgba(123,97,255,.55) 64%,transparent);box-shadow:0 0 26px rgba(0,229,255,.5)}
+  .brand h1{font-size:19px;background:linear-gradient(90deg,#00E5FF,#FF38C7,#7B61FF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .brand .sub{font-size:9px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-top:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .chip{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:4px 11px}
+  .chip.fix{color:var(--uv);border-color:var(--line2)}
+  /* sport switcher */
+  .sports{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .sport{cursor:pointer;border:1px solid var(--line);border-radius:11px;padding:10px 16px;background:var(--card);transition:.2s}
+  .sport.on{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(0,229,255,.3)}
+  .sport .lg{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+  .sport .sc{font-family:"Exo 2";font-size:15px;margin-top:2px}
+  /* tabs */
+  .tabs{display:flex;gap:4px;margin-top:18px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .tab{cursor:pointer;font-family:"Exo 2";font-size:11px;letter-spacing:.04em;padding:7px 12px;border-radius:8px;color:var(--muted);text-transform:uppercase;transition:.2s}
+  .tab:hover{color:var(--txt)}.tab.on{color:#02121a;background:var(--cyan)}
+  .panel{margin-top:18px}
+  .hide{display:none}
+  /* generic cards */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:780px){.grid{grid-template-columns:1fr}}
+  .c{background:var(--glass);border:1px solid var(--line);border-radius:13px;padding:14px 16px;backdrop-filter:blur(8px)}
+  .c .h{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .kv{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:3px 0;border-bottom:1px solid rgba(0,229,255,.05)}
+  .kv .k{color:var(--muted)}.kv .v{font-family:"Exo 2";color:var(--txt)}
+  /* stat passports */
+  .pp{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:0;overflow:hidden}
+  .pp .top{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;cursor:pointer}
+  .pp .num{font-family:"Exo 2";font-size:22px;color:var(--cyan);min-width:64px}
+  .pp .nm{font-size:13.5px}.pp .du{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .badge{font-family:"Exo 2";font-size:9px;letter-spacing:.05em;padding:3px 7px;border-radius:6px;text-transform:uppercase;white-space:nowrap}
+  .badge.EXPERIMENTAL{color:var(--amber);background:rgba(168,85,247,.14)}.badge.CANDIDATE{color:var(--faint);background:rgba(70,88,123,.2)}
+  .pp .body{display:none;border-top:1px solid var(--line);padding:11px 14px;font-size:12px}
+  .pp.open .body{display:block}
+  .pp .row{padding:3px 0;color:var(--muted)}.pp .row b{color:var(--txt)}.pp .row.fail b{color:var(--magenta)}
+  /* timeline */
+  .tl{display:flex;flex-direction:column;gap:8px}
+  .ev{display:flex;gap:12px;align-items:baseline;font-size:13px;border-left:2px solid var(--line2);padding-left:12px}
+  .ev .m{font-family:"Exo 2";color:var(--cyan);min-width:42px}
+  .ev .goal{color:var(--gold)}
+  /* authority ladder */
+  .lad{display:flex;flex-direction:column;gap:5px}
+  .lr{display:grid;grid-template-columns:22px 1fr 110px;gap:9px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+  .lr.bind{border-color:var(--magenta);box-shadow:0 0 0 1px rgba(255,56,199,.3)}
+  .lr .n{font-family:"Exo 2";color:var(--faint);text-align:center}.lr.bind .n{color:var(--magenta)}
+  .lr .ce{font-family:"Exo 2";font-size:11px;text-align:right;color:var(--gray)}
+  /* result pills */
+  .pill{font-family:"Exo 2";font-size:10px;padding:2px 8px;border-radius:12px}
+  .pill.WIN{color:var(--green);background:rgba(52,211,154,.14)}.pill.LOSS{color:var(--magenta);background:rgba(255,56,199,.12)}
+  .pill.UNKNOWN{color:var(--faint);background:rgba(70,88,123,.2)}
+  .note{color:var(--muted);font-size:13px;margin-bottom:10px}
+  .stamp{margin-top:26px;text-align:center;color:var(--faint);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+  .stamp b{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><div class="mark"></div><div><h1>GSE · EVENT GENOME</h1><div class="sub">the living anatomy of a match</div></div></div>
+    <div class="chips">
+      <span class="chip fix">fixture · offline · not advice</span>
+      <span class="chip">no live data · no affiliate links · no spend</span>
+      <span class="chip" id="brand">Scores24 shows a betting page — GSE shows what the data is allowed to mean</span>
+    </div>
+    <div class="sports" id="sports"></div>
+    <div class="tabs" id="tabs"></div>
+  </header>
+  <div id="panel" class="panel"></div>
+  <div class="stamp"><b>GSE Event Genome</b> · every stat has a passport · every prediction on trial · every market has a lifecycle · every claim has an authority ceiling · fixture · not advice</div>
+</div>
+
+<script>
+(function(){
+  // ── mirror of engine fixtures + computed values (pinned by the package tests) ──
+  const DATA = {
+    soccer: {
+      label:"FIFA World Cup · MetLife", score:"Ecuador 2 – 1 Germany", status:"ENDED",
+      meta:[["Venue","MetLife Stadium"],["Weather","27°C · 42% · 5.3m/s"],["Referee","Tori Penso"],["Possession","Ecuador 39% / Germany 61%"],["xG","Ecuador 1.99 / Germany 0.97"],["Expected pts","2.04 / 0.74"]],
+      timeline:[["2'","Germany — Sané goal (assist Wirtz)","goal"],["9'","Ecuador — Angulo goal (assist Vite)","goal"],["43'","Ecuador — Hincapié yellow",""],["47'","Penalty cancelled (VAR)",""],["77'","Ecuador — Plata goal (assist Rodríguez)","goal"],["89'","Ecuador — Plata yellow",""]],
+      stats:[
+        ["0.16","Chance Density","how clinical the chances were","EXPERIMENTAL","Σ xG / Σ shots","Treats all shots equally; n=1.","Clinical-ness of chances."],
+        ["+28.2","Possession Mirage Index","ball without threat","EXPERIMENTAL","poss% − xGshare% (dominant)","Possession can be a tactic; n=1.","Fade the sterile, ball-dominant side."],
+        ["610","Sterile Possession Index","passes per xG (dominant)","EXPERIMENTAL","passes / xG","Style-dependent; n=1.","Lots of passing, little end product."],
+        ["0.99","xG Justice Score","did the result match the chances","EXPERIMENTAL","align(xG margin, score margin)","Provider xG variance; n=1.","Lucky/unlucky result flag."],
+        ["0.68","Expected Points Justice","were the points deserved","EXPERIMENTAL","1 − |result − xP|/3","Model-on-model; n=1.","Deserved vs fluky points."],
+        ["1.91","Goalkeeper Swing","saves + xG prevented","EXPERIMENTAL","saves + xGP (home GK)","xGP variance; n=1.","Save props & clean-sheet context."],
+        ["0.29","Good Pass Value","value of passing the favorite","EXPERIMENTAL","market implied − xG share (fav)","Raw implied prob; needs settled history.","Quantifies restraint on a mispriced fav."],
+        ["+0.48","Underdog Deservedness","did the underdog deserve it","EXPERIMENTAL","xG share − implied prob (dog)","Raw implied prob; n=1.","Keep (earned) vs fade (fluky) the dog."],
+        ["0.2","Stat Meaning Confidence","how much to trust these today","EXPERIMENTAL","low on n=1; grows with sample","Low by design — one match.","Caps how much any stat drives a call."]
+      ],
+      trends:[
+        ["Germany has won recently","last 7 Germany games","7/7","0.47","WATCH"],
+        ["Ecuador has drawn at the half recently","last 7 Ecuador games","6/7","0.47","INFO_ONLY"]
+      ],
+      trials:[
+        ["Total goals","Under 3","WIN","DESERVED_WIN","good process"],
+        ["Corners","Over 9.5","LOSS","FAIR_LOSS","thin evidence"],
+        ["Cards","Under 3.5","LOSS","FAIR_LOSS","thin evidence"],
+        ["Team total","Germany Under 2.5","WIN","DESERVED_WIN","good process"],
+        ["Match result","Ecuador (overclaimed)","WIN","LUCKY_WIN","AUTHORITY TOO STRONG — claim exceeded its ceiling"]
+      ],
+      markets:[["Match result","MATURE","7 books · settled context"],["Corners over 9.5","THIN","2 books · watch only"],["Ecuador handicap","STALE","1 book · 50m old · no action"],["Germany TT under 2.5","CAUGHT_UP","edge priced in · likely too late"]],
+      autopsy:"Germany owned the ball (61%) but Ecuador owned the chances (xG 1.99 vs 0.97) — a textbook possession mirage. The result was deserved (xG Justice 0.99). The market priced Germany as a heavy favorite; the underdog out-created its price (+0.48). Lesson: ball-dominance is not threat. One match — meaning confidence stays 0.2."
+    },
+    baseball:{
+      label:"MLB · 25.06.26", score:"Royals 2 @ Rays 13", status:"ENDED",
+      meta:[["Starters","Seymour (TB) / Lugo (KC)"],["Hits","Rays 16 / Royals 5"],["Errors","Rays 0 / Royals 2"],["Result","Rays win"]],
+      timeline:[["5th","Rays 3-run inning",""],["7th","Rays 4-run inning",""]],
+      stats:[], trends:[["Under 9.5 runs recently (Tampa Bay games)","last 9 TB games","8/9","0.47","WATCH"],["Over 7.5 runs recently (Kansas City games)","last 9 KC games","8/9","0.47","WATCH"]],
+      trials:[["Moneyline","Tampa Bay Rays","WIN","DESERVED_WIN","good process"]],
+      markets:[["Moneyline","MATURE","6 books"],["Run total","BROADENING","growing"]],
+      autopsy:"The two run-total trends point opposite ways (TB Under vs KC Over) on the same game — a contradiction the trend passports surface rather than hide. Small samples (8–9) → fragility 0.47. Not independent evidence."
+    },
+    football:{
+      label:"CFL · upcoming", score:"Argonauts @ Roughriders", status:"UPCOMING",
+      meta:[["Spread","SSK -3.5"],["Total","58.5"],["Moneyline","SSK 1.62 / TOR 2.35"],["PPG","SSK 27.4 / TOR 24.1"]],
+      timeline:[],
+      stats:[], trends:[["Under 58.5 points recently (Saskatchewan games)","last 11 SSK games","10/11","0.42","WATCH"],["Saskatchewan led at the half recently","last 8 SSK games","7/8","0.47","INFO_ONLY"]],
+      trials:[["Total points","Under 58.5","UNKNOWN","PENDING","good process — settles at kickoff"]],
+      markets:[["Total points","MATURE","5 books"],["Spread","MATURE","5 books"]],
+      autopsy:"Upcoming — the prediction trial is PENDING and will be graded at kickoff. Two Saskatchewan trends overlap (same team) and are flagged correlated; the first-half trend has no market line, so it is INFO_ONLY (cannot price)."
+    }
+  };
+  const AUTHORITY = [["1","Rights","public","PUBLIC_ACTION",false],["2","Temporal","fresh","PUBLIC_ACTION",false],["3","Source reality","FIXTURE","INFO_ONLY",true],["4","Evidence","present","WATCH",false],["5","Local expression","action-capable","ACTION",false],["6","Model maturity","unproven","WATCH",false],["7","Entitlement","public","PUBLIC_ACTION",false],["8","Owner action","held","WATCH",false]];
+  const TABS = ["Overview","Worldline","Prediction Trial","Match Genome","Market Lifecycle","Passports","Odds","Proof","Autopsy"];
+
+  let sport = "soccer", tab = "Overview";
+  const $=id=>document.getElementById(id);
+
+  function renderSports(){
+    $('sports').innerHTML = Object.entries(DATA).map(([k,d])=>
+      `<div class="sport ${k===sport?'on':''}" data-s="${k}"><div class="lg">${d.label} · ${d.status}</div><div class="sc">${d.sc||d.score}</div></div>`).join('');
+    document.querySelectorAll('[data-s]').forEach(e=>e.addEventListener('click',()=>{sport=e.dataset.s;tab="Overview";render();}));
+  }
+  function renderTabs(){
+    $('tabs').innerHTML = TABS.map(t=>`<div class="tab ${t===tab?'on':''}" data-t="${t}">${t}</div>`).join('');
+    document.querySelectorAll('[data-t]').forEach(e=>e.addEventListener('click',()=>{tab=e.dataset.t;render();}));
+  }
+  function kv(arr){return arr.map(([k,v])=>`<div class="kv"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');}
+
+  function renderPanel(){
+    const d = DATA[sport];
+    let html="";
+    if(tab==="Overview"){
+      html=`<div class="grid"><div class="c"><div class="h">${d.label} · ${d.status}</div><div style="font-family:'Exo 2';font-size:20px;margin-bottom:8px">${d.score}</div>${kv(d.meta)}</div>
+        <div class="c"><div class="h">What GSE adds that a scoreboard doesn't</div><div class="note">Every number below can explain where it came from, what it knows, what it can't prove, and what decision it changes. Tap a passport.</div>${kv([["Stat passports",d.stats.length||"see Passports tab"],["Trends on trial",d.trends.length],["Predictions on trial",d.trials.length],["Market lifecycles",d.markets.length],["Authority ceiling","INFO_ONLY (fixture)"]])}</div></div>`;
+    } else if(tab==="Worldline"){
+      html=`<div class="c"><div class="h">Worldline — what happened, when it was knowable</div>${d.timeline.length?`<div class="tl">${d.timeline.map(([m,t,c])=>`<div class="ev"><span class="m ${c}">${m}</span><span>${t}</span></div>`).join('')}</div>`:'<div class="note">Upcoming — no timeline yet. The worldline fills in as the event unfolds.</div>'}</div>`;
+    } else if(tab==="Prediction Trial"){
+      html=`<div class="c"><div class="h">Prediction Court — process graded apart from outcome</div><div class="note">A win can have bad process; a loss can have good process; a claim louder than its ceiling fails regardless. No fixture trial is a public performance claim.</div>
+        ${d.trials.map(([mk,sel,res,og,pg])=>`<div class="kv"><span class="k">${mk} — ${sel}</span><span class="v"><span class="pill ${res}">${res}</span> · ${og} · <span style="color:var(--muted)">${pg}</span></span></div>`).join('')}</div>`;
+    } else if(tab==="Match Genome"){
+      html=`<div class="c"><div class="h">Match Genome — the structured event object</div>${kv(d.meta)}<div class="note" style="margin-top:10px">Adapter: ${sport} · period schema present · fixtureWatermarked. Sport-specific data degrades gracefully (no fixture renders live).</div></div>`;
+    } else if(tab==="Market Lifecycle"){
+      html=`<div class="c"><div class="h">Market Bloom — every market's life</div><div class="note">UNBORN → OPENED → THIN → BROADENING → MATURE → MOVING → CAUGHT_UP → STALE → CLOSED. A young/thin market is watch-only; stale/caught-up suppress action.</div>
+        ${d.markets.map(([m,st,nt])=>`<div class="kv"><span class="k">${m}</span><span class="v"><span class="pill ${st==='CAUGHT_UP'||st==='STALE'?'LOSS':'UNKNOWN'}">${st}</span> · <span style="color:var(--muted)">${nt}</span></span></div>`).join('')}</div>`;
+    } else if(tab==="Passports"){
+      const stats = d.stats.length?d.stats:[];
+      const trendCards = d.trends.map(([claim,scope,hit,frag,ceil])=>({num:hit,nm:claim,du:scope+' · fragility '+frag+' · ceiling '+ceil,status:ceil==='INFO_ONLY'?'CANDIDATE':'EXPERIMENTAL',formula:'hit rate over a small sample',weak:'Small sample → fragile; not independent evidence.',du2:'Can WATCH a market; never an action alone.'}));
+      html = `<div class="note">Stat & trend passports — tap to open the genealogy. On fixture data none can exceed EXPERIMENTAL.</div><div class="grid">`+
+        stats.map(([num,nm,du,status,formula,weak,du2])=>ppCard(num,nm,du,status,formula,weak,du2)).join('')+
+        trendCards.map(t=>ppCard(t.num,t.nm,t.du,t.status,t.formula,t.weak,t.du2)).join('')+`</div>`;
+      if(!stats.length && !trendCards.length) html=`<div class="c"><div class="note">Derived stat passports are built for soccer in this fixture; ${sport} shows trend passports.</div></div>`;
+    } else if(tab==="Odds"){
+      html=`<div class="c"><div class="h">Odds — fixture prices (no affiliate links)</div>${kv(d.meta.filter(m=>/odds|total|spread|moneyline|tt/i.test(m[0])||/[0-9]\.[0-9]/.test(String(m[1]))))}<div class="note" style="margin-top:8px">Prices are illustrative fixtures. GSE never surfaces an affiliate link unless the owner configures it, and never claims an offer is current without verification.</div></div>`;
+    } else if(tab==="Proof"){
+      html=`<div class="c"><div class="h">Authority Flight Record — what GSE is allowed to say</div><div class="note">Requested: PUBLIC_ACTION · Permitted: <b style="color:var(--gold)">INFO_ONLY</b>. The binding layer is <b style="color:var(--magenta)">Source reality</b> (fixture). To say more: activate the live data source.</div>
+        <div class="lad">${AUTHORITY.map(([n,nm,st,ce,bind])=>`<div class="lr ${bind?'bind':''}"><div class="n">${n}</div><div>${nm} <span style="color:var(--faint);font-size:11px">· ${st}</span></div><div class="ce">${ce}</div></div>`).join('')}</div></div>`;
+    } else if(tab==="Autopsy"){
+      html=`<div class="c"><div class="h">Autopsy — what GSE learned</div><div class="note" style="font-size:14px;color:var(--txt)">${d.autopsy}</div><div class="note">One result moves no model weight; this is written to the Learning Ledger, gated by sample + calibration.</div></div>`;
+    }
+    $('panel').innerHTML = html;
+    document.querySelectorAll('.pp .top').forEach(t=>t.addEventListener('click',()=>t.parentElement.classList.toggle('open')));
+  }
+  function ppCard(num,nm,du,status,formula,weak,du2){
+    return `<div class="pp"><div class="top"><div class="num">${num}</div><div style="flex:1"><div class="nm">${nm}</div><div class="du">${du}</div></div><span class="badge ${status}">${status}</span></div>
+      <div class="body"><div class="row">formula: <b>${formula}</b></div><div class="row fail">fails when: <b>${weak}</b></div><div class="row">decision-use: <b>${du2}</b></div><div class="row">status: <b>${status}</b> · fixture-computed, cannot validate here</div></div></div>`;
+  }
+  function render(){ renderSports(); renderTabs(); renderPanel(); }
+  render();
+})();
+</script>
+</body>
+</html>
