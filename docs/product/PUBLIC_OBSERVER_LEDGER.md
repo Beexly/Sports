@@ -137,6 +137,11 @@ rights-gated highlight cards. Everything is fixture-watermarked and capped at `I
 
 ## Invariants (machine-checked)
 
+> All seven are proven by `__tests__/public-observer-conservation.theorem.test.ts` — the **Sixth-Ledger
+> Conservation Theorem**, a sibling of the authority-tensor and Meaning-Compiler conservation theorems.
+> Its keystone (T4): every authority cap the compiler records on a public-observer claim *is*
+> `composeAuthority`'s meet — the sixth ledger composes the canonical engine, it never forks it.
+
 1. A public-observer record without a capture time cannot be built.
 2. `canSettle` is `false` and `authorityImpact` is `PUBLIC_OBSERVER_ONLY` — structurally, not by policy.
 3. A compiled public-observer claim caps at `INFO_ONLY` on fixtures.
