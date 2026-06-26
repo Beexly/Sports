@@ -45,6 +45,15 @@ function serialize(value: unknown, seen: Set<object>): string {
   }
 
   if (t === "object") {
+    // Only PLAIN data objects are serializable. A Map/Set/class instance has no own enumerable
+    // string keys (or carries hidden state), so it would otherwise serialize to a silent, wrong "{}".
+    // Refuse it loudly — a receipt must never hash a value it cannot faithfully represent.
+    const proto = Object.getPrototypeOf(value);
+    if (proto !== Object.prototype && proto !== null) {
+      throw new Error(
+        "canonicalize: only plain objects, arrays, and Dates are serializable (got a non-plain object such as a Map, Set, or class instance)",
+      );
+    }
     const obj = value as Record<string, unknown>;
     if (seen.has(obj)) throw new Error("canonicalize: circular structure detected");
     seen.add(obj);

@@ -5,6 +5,8 @@ import {
   maxCalibrationErrorFromPoints,
   betaPosteriorCalibration,
   reliabilityLabel,
+  regularizedIncompleteBeta,
+  betaQuantile,
   MIN_SAMPLES_FOR_GOOD,
   MIN_SAMPLES_FOR_EXCELLENT,
   type CalibrationOutcomeSample,
@@ -70,5 +72,41 @@ describe("betaPosteriorCalibration", () => {
     const r = betaPosteriorCalibration({ successes: 999, trials: 10 });
     expect(r.posteriorAlpha).toBe(1 + 10);
     expect(() => betaPosteriorCalibration({ priorAlpha: 0, successes: 1, trials: 2 })).toThrow();
+  });
+
+  it("uses an EXACT Beta credible interval (not a normal approximation)", () => {
+    // Beta(71,31): the exact equal-tailed 95% interval is ≈ [0.604, 0.779]; a normal approximation
+    // would be symmetric about the mean (0.696) and noticeably off in the tails.
+    const r = betaPosteriorCalibration({ successes: 70, trials: 100 });
+    expect(r.credibleIntervalLow).toBeCloseTo(0.604, 2);
+    expect(r.credibleIntervalHigh).toBeCloseTo(0.779, 2);
+    expect(r.credibleIntervalLow).toBeLessThan(r.posteriorMean);
+    expect(r.posteriorMean).toBeLessThan(r.credibleIntervalHigh);
+  });
+});
+
+describe("incomplete-beta primitives", () => {
+  it("regularizedIncompleteBeta matches the uniform CDF for Beta(1,1)", () => {
+    // I_x(1,1) = x exactly (the uniform distribution).
+    expect(regularizedIncompleteBeta(0.3, 1, 1)).toBeCloseTo(0.3, 6);
+    expect(regularizedIncompleteBeta(0.75, 1, 1)).toBeCloseTo(0.75, 6);
+    expect(regularizedIncompleteBeta(0, 5, 5)).toBe(0);
+    expect(regularizedIncompleteBeta(1, 5, 5)).toBe(1);
+  });
+
+  it("is monotonically increasing in x", () => {
+    let prev = -1;
+    for (let x = 0; x <= 1.0001; x += 0.1) {
+      const v = regularizedIncompleteBeta(Math.min(1, x), 3, 7);
+      expect(v).toBeGreaterThanOrEqual(prev);
+      prev = v;
+    }
+  });
+
+  it("betaQuantile inverts the CDF (median of a symmetric Beta is 0.5)", () => {
+    expect(betaQuantile(0.5, 5, 5)).toBeCloseTo(0.5, 4);
+    expect(betaQuantile(0.5, 1, 1)).toBeCloseTo(0.5, 4);
+    // round-trip: CDF(quantile(p)) ≈ p
+    expect(regularizedIncompleteBeta(betaQuantile(0.9, 4, 6), 4, 6)).toBeCloseTo(0.9, 4);
   });
 });

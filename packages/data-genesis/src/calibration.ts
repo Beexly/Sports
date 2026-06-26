@@ -73,6 +73,84 @@ function binIndex(p: number, bins: number): number {
   return i === bins ? bins - 1 : i; // p === 1 lands in the last bin
 }
 
+// ───────────────────────── exact Beta credible interval ─────────────────────────
+// The Beta-Binomial posterior over a hit rate is Beta(a,b). A normal approximation to its interval is
+// inaccurate exactly where a calibration gate operates — small samples and means near the boundary. So
+// we invert the real distribution: the regularized incomplete beta I_x(a,b) (Lanczos logΓ + the
+// Numerical-Recipes continued fraction) gives the CDF, and bisection inverts it for a quantile. Pure,
+// deterministic, no dependencies.
+
+function logGamma(x: number): number {
+  const c = [
+    0.9999999999998099, 676.5203681218851, -1259.1392167224028, 771.3234287776531,
+    -176.6150291621406, 12.507343278686905, -0.13857109526572012, 9.984369578019572e-6,
+    1.5056327351493116e-7,
+  ];
+  if (x < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * x)) - logGamma(1 - x);
+  const xx = x - 1;
+  const t = xx + 7.5;
+  let a = c[0]!;
+  for (let i = 1; i < 9; i++) a += c[i]! / (xx + i);
+  return 0.5 * Math.log(2 * Math.PI) + (xx + 0.5) * Math.log(t) - t + Math.log(a);
+}
+
+function betacf(x: number, a: number, b: number): number {
+  const MAXIT = 200;
+  const EPS = 3e-12;
+  const FPMIN = 1e-300;
+  const qab = a + b;
+  const qap = a + 1;
+  const qam = a - 1;
+  let c = 1;
+  let d = 1 - (qab * x) / qap;
+  if (Math.abs(d) < FPMIN) d = FPMIN;
+  d = 1 / d;
+  let h = d;
+  for (let m = 1; m <= MAXIT; m++) {
+    const m2 = 2 * m;
+    let aa = (m * (b - m) * x) / ((qam + m2) * (a + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c;
+    if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    h *= d * c;
+    aa = (-(a + m) * (qab + m) * x) / ((a + m2) * (qap + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c;
+    if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    const del = d * c;
+    h *= del;
+    if (Math.abs(del - 1) < EPS) break;
+  }
+  return h;
+}
+
+/** The regularized incomplete beta function I_x(a,b) — the CDF of Beta(a,b). */
+export function regularizedIncompleteBeta(x: number, a: number, b: number): number {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const bt = Math.exp(logGamma(a + b) - logGamma(a) - logGamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  if (x < (a + 1) / (a + b + 2)) return (bt * betacf(x, a, b)) / a;
+  return 1 - (bt * betacf(1 - x, b, a)) / b;
+}
+
+/** The p-quantile of Beta(a,b) via bisection on its CDF. */
+export function betaQuantile(p: number, a: number, b: number): number {
+  if (p <= 0) return 0;
+  if (p >= 1) return 1;
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 100; i++) {
+    const mid = (lo + hi) / 2;
+    if (regularizedIncompleteBeta(mid, a, b) < p) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
 /**
  * Reliability label from ECE + sample count. Small samples are capped: below the "good" threshold the
  * label is always `needs_improvement`; "excellent" additionally requires a large sample.
@@ -181,10 +259,9 @@ export function betaPosteriorCalibration(args: BetaPosteriorArgs): BayesianCalib
   const a = posteriorAlpha;
   const b = posteriorBeta;
   const posteriorMean = a / (a + b);
-  const variance = (a * b) / ((a + b) ** 2 * (a + b + 1));
-  const sd = Math.sqrt(variance);
-  const credibleIntervalLow = round(clamp01(posteriorMean - 1.96 * sd));
-  const credibleIntervalHigh = round(clamp01(posteriorMean + 1.96 * sd));
+  // Exact 95% equal-tailed credible interval from the Beta posterior (not a normal approximation).
+  const credibleIntervalLow = round(clamp01(betaQuantile(0.025, a, b)));
+  const credibleIntervalHigh = round(clamp01(betaQuantile(0.975, a, b)));
 
   return {
     priorAlpha,

@@ -70,10 +70,13 @@ high-confidence, weakly-doubted signal **cannot** promote.
 
 A probabilistic signal earns influence only once its forecasts match observed frequencies, on **real
 binary outcomes** (pushes/voids excluded upstream). `buildCalibrationCurve` produces a reliability
-curve; `betaPosteriorCalibration` gives a Bayesian posterior over a hit rate. The label is honest about
-sample size: a small sample can never be `excellent`, and below a floor it can never exceed `good`.
-Promotion of a high-confidence or probabilistic signal requires calibration evidence that clears both a
-minimum-sample and a maximum-ECE threshold.
+curve; `betaPosteriorCalibration` gives a Bayesian posterior over a hit rate. Its 95% credible interval
+is **exact** — computed by inverting the regularized incomplete beta function (Lanczos logΓ + a
+continued-fraction `betacf` + bisection), not a normal approximation that misleads at the small samples
+and near-boundary rates a calibration gate actually sees. The label is honest about sample size: a small
+sample can never be `excellent`, and below a floor it can never exceed `good`. Promotion of a
+high-confidence or probabilistic signal requires calibration evidence that clears both a minimum-sample
+and a maximum-ECE threshold.
 
 ## How this aligns with CLV / EV / proof-of-record
 
@@ -100,6 +103,12 @@ exists, belongs to the signal, and is applied; doubt coverage meets the threshol
 overconfident; calibration evidence exists and clears the sample/ECE gates where required; and the
 license scope permits the intended use. A signal that fails returns its `failures` — it is never
 silently dropped and never half-promoted.
+
+This law is machine-checked. The **Genesis Promotion Conservation Theorem**
+(`__tests__/genesis-conservation.theorem.test.ts`) runs an adversarial grid through `promoteSignal` and
+proves, for every input, that its verdict and exact failure set equal an *independent* re-derivation of
+every gate — the keystone proof that the engine has one door and no parallel path. It is a sibling of
+the authority-tensor, meaning-conservation, and sixth-ledger conservation theorems.
 
 ## What is shadow-only today
 

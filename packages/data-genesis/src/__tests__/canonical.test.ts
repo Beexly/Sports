@@ -37,6 +37,17 @@ describe("canonicalize — stable, deterministic serialization", () => {
     expect(() => canonicalize([undefined])).toThrow(); // undefined as an array element
   });
 
+  it("refuses non-plain objects (Map/Set/class instances) rather than silently emitting {}", () => {
+    expect(() => canonicalize(new Map([["a", 1]]))).toThrow(/non-plain|plain objects/);
+    expect(() => canonicalize(new Set([1, 2]))).toThrow(/non-plain|plain objects/);
+    class Widget { x = 1; }
+    expect(() => canonicalize(new Widget())).toThrow(/non-plain|plain objects/);
+    // a null-prototype bag of data is still plain data and is allowed
+    const bag = Object.create(null) as Record<string, unknown>;
+    bag.a = 1;
+    expect(canonicalize(bag)).toBe('{"a":1}');
+  });
+
   it("throws on circular structures", () => {
     const o: Record<string, unknown> = { a: 1 };
     o.self = o;
