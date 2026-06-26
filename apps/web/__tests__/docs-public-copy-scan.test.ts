@@ -59,6 +59,9 @@ const DOCS = [
   "docs/launch/scores24-leverage-to-gse-revenue.md",
   "docs/frontier-night/ADVERSARIAL_AUDIT.md",
   "docs/frontier-night/OVERNIGHT_OWNER_BRIEF.md",
+  // Meaning Compiler (Addendum II)
+  "docs/product/GSE_MEANING_COMPILER.md",
+  "docs/competitive/SCORES24_TO_GSE_INVARIANTS.md",
 ];
 
 describe("Docs — public-copy banned-phrase scan", () => {
