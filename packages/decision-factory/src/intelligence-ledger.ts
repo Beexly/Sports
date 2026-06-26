@@ -1,15 +1,17 @@
 /**
  * DECISION FACTORY — Intelligence Ledger (the organism-level Conscience).
  *
- * The card factory measures a card; the Conscience measures the ORGANISM: is it becoming better at
- * turning reality into deserved decisions over time? Seven ledgers — Detection, Refusal, Scar, Source
- * Rent, Compression, Product Clarity, Theory Health — each a trend over cycles.
+ * The card factory measures a card; the Conscience measures the ORGANISM over time. Seven ledgers —
+ * Detection, Refusal, Scar, Source Rent, Compression, Product Clarity, Theory Health.
  *
- * The frontier discipline: a Conscience must not p-hack its own "we improved" claims. Every ledger's
- * improvement is a one-sample t-test on its per-cycle deltas (reusing the engine's `studentTTwoSidedP`),
- * and the seven p-values are corrected together with Benjamini-Hochberg FDR (`benjaminiHochberg`). A
- * ledger only reads as "improving" if its trend is positive AND it survives FDR — so a lucky last-cycle
- * uptick on a noisy metric is NOT declared a discovery. Pure + deterministic.
+ * Statistical discipline (hardened): a Conscience must not overclaim. It does NOT label fixture or
+ * thin-sample trends "genuinely improving". A ledger only reaches VALIDATED_IMPROVING on LIVE data with
+ * ≥ `minPeriods` independent periods, a positive trend that (a) survives Benjamini-Hochberg FDR, (b)
+ * clears an effect-size floor, and (c) is directionally consistent across a discovery AND a confirmation
+ * window. Variance is estimated with a lag-1 Newey-West (HAC) correction for serial dependence; ZERO
+ * observed variance is treated as undefined (no fabricated significance — the old t=50 is gone). Repeated
+ * looks spend alpha (`priorLooks` tightens q). On fixtures, the report is explicitly FIXTURE_TREND /
+ * UNVALIDATED. Pure + deterministic.
  */
 
 import { benjaminiHochberg, studentTTwoSidedP, type PValueEntry } from "@sports/prediction-engine";
@@ -17,70 +19,88 @@ import { ecologyCensus, type TheoryOrganism } from "@sports/engine";
 
 export interface LedgerSample {
   readonly cycleId: string;
-  // Detection
-  readonly detectionValue: number; // meaningful_change × time_advantage × decision_relevance
-  // Refusal
+  readonly detectionValue: number;
   readonly trapAvoidanceValue: number;
   readonly falseSuppressionCost: number;
-  // Scar
   readonly trueTrapSuppressions: number;
   readonly falseBlocks: number;
   readonly ghostSuppressions: number;
-  // Source Rent
   readonly decisionLeverageCreated: number;
   readonly falseConfidenceCost: number;
   readonly sourceCost: number;
-  // Compression
   readonly cardDecisionLeverage: number;
   readonly factVolumeCostNoise: number;
-  // Product Clarity
   readonly decisionLeverageDisplayed: number;
   readonly cognitiveLoad: number;
-  // Theory ecology census input
   readonly theories: readonly TheoryOrganism[];
 }
 
 export type LedgerName =
-  | "detection"
-  | "refusal"
-  | "scar"
-  | "sourceRent"
-  | "compression"
-  | "productClarity"
-  | "theoryHealth";
+  | "detection" | "refusal" | "scar" | "sourceRent" | "compression" | "productClarity" | "theoryHealth";
+
+export type TrendDirection = "UP" | "FLAT" | "DOWN";
+
+export type LedgerStatus =
+  | "INSUFFICIENT_SAMPLE" // too few periods, or zero/undefined variance — can't say anything
+  | "FIXTURE_TREND" // computed on fixture data — illustrative only, never a validated claim
+  | "FLAT_OR_REGRESSING"
+  | "UPWARD_UNVALIDATED" // up, but fails FDR / effect floor / confirmation
+  | "VALIDATED_IMPROVING"; // the only status that licenses "improving"
 
 export interface LedgerResult {
   readonly ledger: LedgerName;
   readonly latest: number;
   readonly meanDelta: number;
+  readonly effectSize: number; // standardized per-step effect (meanDelta / HAC sd)
+  readonly ci95Lower: number;
+  readonly ci95Upper: number;
   readonly pValue: number;
   readonly qValue: number;
-  readonly n: number;
-  /** True only if the trend is positive AND it survives FDR correction. */
+  readonly n: number; // number of periods (deltas)
+  readonly trendDirection: TrendDirection;
+  readonly status: LedgerStatus;
+  /** True ONLY when status === VALIDATED_IMPROVING. False on all fixture/thin-sample data. */
   readonly improving: boolean;
   readonly note: string;
 }
 
 export interface IntelligenceLedgerReport {
   readonly ledgers: Readonly<Record<LedgerName, LedgerResult>>;
-  /** Sum of improvements that survived FDR minus those that regressed — the honest delta. */
-  readonly intelligenceDelta: number;
+  readonly dataMode: "FIXTURE" | "LIVE";
+  /** Ledgers that reached VALIDATED_IMPROVING (0 on fixtures). */
+  readonly validatedImprovingCount: number;
+  /** Ledgers merely trending up (not validated) — the honest fixture signal. */
+  readonly upwardTrendCount: number;
+  /** Back-compat alias of validatedImprovingCount. */
   readonly improvingCount: number;
+  /** Normalized aggregate of VALIDATED ledgers' standardized effects (unit-consistent, bounded). 0 if none. */
+  readonly intelligenceDelta: number;
   readonly fdrQ: number;
+  readonly effectiveQ: number;
+  readonly validated: boolean;
   readonly note: string;
+}
+
+export interface LedgerOptions {
+  readonly q?: number;
+  readonly dataMode?: "FIXTURE" | "LIVE";
+  readonly minPeriods?: number;
+  readonly effectFloor?: number;
+  readonly priorLooks?: number;
 }
 
 const EPS = 1e-9;
 
-/** Per-ledger scalar metric for one cycle. */
+/** Per-ledger scalar metric for one cycle. Scar penalizes falseBlocks (precision-aware, not just hit count). */
 function metricSeries(samples: readonly LedgerSample[]): Record<LedgerName, number[]> {
   const series: Record<LedgerName, number[]> = {
     detection: [], refusal: [], scar: [], sourceRent: [], compression: [], productClarity: [], theoryHealth: [],
   };
   for (const s of samples) {
     series.detection.push(s.detectionValue);
-    series.refusal.push(s.trapAvoidanceValue - s.falseSuppressionCost); // RefusalAlpha
-    series.scar.push(s.trueTrapSuppressions / Math.max(1, s.ghostSuppressions)); // ScarHitRate
+    series.refusal.push(s.trapAvoidanceValue - s.falseSuppressionCost);
+    // Scar NET utility: real trap suppressions, PENALIZED by false blocks, per ghost suppression.
+    series.scar.push((s.trueTrapSuppressions - s.falseBlocks) / Math.max(1, s.ghostSuppressions));
     series.sourceRent.push(s.decisionLeverageCreated - s.falseConfidenceCost - s.sourceCost);
     series.compression.push(s.cardDecisionLeverage / Math.max(EPS, s.factVolumeCostNoise));
     series.productClarity.push(s.decisionLeverageDisplayed / Math.max(EPS, s.cognitiveLoad));
@@ -91,73 +111,173 @@ function metricSeries(samples: readonly LedgerSample[]): Record<LedgerName, numb
   return series;
 }
 
-/** One-sample t-test on the first-differences: is the metric trending up beyond noise? */
-function trendTest(metric: readonly number[]): { meanDelta: number; t: number; df: number; p: number } {
-  const deltas: number[] = [];
-  for (let i = 1; i < metric.length; i++) deltas.push(metric[i]! - metric[i - 1]!);
-  const m = deltas.length;
-  if (m < 2) return { meanDelta: 0, t: 0, df: 0, p: 1 };
-  const mean = deltas.reduce((a, b) => a + b, 0) / m;
-  const variance = deltas.reduce((a, b) => a + (b - mean) ** 2, 0) / (m - 1);
-  const sd = Math.sqrt(variance);
-  const t = sd < EPS ? (Math.abs(mean) < EPS ? 0 : Math.sign(mean) * 50) : mean / (sd / Math.sqrt(m));
-  const df = m - 1;
-  return { meanDelta: Number(mean.toFixed(6)), t, df, p: studentTTwoSidedP(t, df) };
+function firstDiffs(metric: readonly number[]): number[] {
+  const d: number[] = [];
+  for (let i = 1; i < metric.length; i++) d.push(metric[i]! - metric[i - 1]!);
+  return d;
+}
+
+function mean(xs: readonly number[]): number {
+  return xs.length === 0 ? 0 : xs.reduce((a, b) => a + b, 0) / xs.length;
+}
+
+interface TrendStats {
+  readonly meanDelta: number;
+  readonly hacSd: number; // Newey-West (lag-1) standard deviation of the deltas
+  readonly effectSize: number;
+  readonly se: number;
+  readonly t: number;
+  readonly df: number;
+  readonly p: number;
+  readonly degenerate: boolean; // < 2 periods or zero/undefined variance
+  readonly m: number;
 }
 
 /**
- * Build the seven-ledger Conscience report from a time-ordered series of cycle samples, applying
- * Benjamini-Hochberg FDR across the seven improvement tests at level `q`.
+ * One-sample trend test on the first-differences with a lag-1 Newey-West (HAC) variance to account for
+ * serial dependence. Zero observed variance → degenerate (NO fabricated t-statistic).
  */
-export function buildIntelligenceLedger(samples: readonly LedgerSample[], q = 0.1): IntelligenceLedgerReport {
+function trendTest(deltas: readonly number[]): TrendStats {
+  const m = deltas.length;
+  if (m < 2) return { meanDelta: 0, hacSd: 0, effectSize: 0, se: 0, t: 0, df: 0, p: 1, degenerate: true, m };
+  const mu = mean(deltas);
+  const gamma0 = deltas.reduce((a, b) => a + (b - mu) ** 2, 0) / (m - 1);
+  let gamma1 = 0;
+  for (let i = 1; i < m; i++) gamma1 += (deltas[i]! - mu) * (deltas[i - 1]! - mu);
+  gamma1 /= m - 1;
+  // Newey-West with bandwidth L=1: σ² = γ0 + 2(1 - 1/2)γ1 = γ0 + γ1; guard a negative estimate.
+  let nwVar = gamma0 + gamma1;
+  if (!(nwVar > 0)) nwVar = gamma0;
+  const hacSd = Math.sqrt(Math.max(0, nwVar));
+  if (hacSd < EPS) {
+    // Zero/undefined variability — cannot establish significance. (Was: t = ±50. Removed.)
+    return { meanDelta: Number(mu.toFixed(6)), hacSd: 0, effectSize: 0, se: 0, t: 0, df: m - 1, p: 1, degenerate: true, m };
+  }
+  const se = hacSd / Math.sqrt(m);
+  const t = mu / se;
+  return {
+    meanDelta: Number(mu.toFixed(6)),
+    hacSd,
+    effectSize: Number((mu / hacSd).toFixed(4)),
+    se,
+    t,
+    df: m - 1,
+    p: studentTTwoSidedP(t, m - 1),
+    degenerate: false,
+    m,
+  };
+}
+
+/** Directionally consistent across a discovery window AND a held-out confirmation window. */
+function confirmationConsistent(deltas: readonly number[]): boolean {
+  const m = deltas.length;
+  if (m < 4) return false;
+  const half = Math.floor(m / 2);
+  return mean(deltas.slice(0, half)) > 0 && mean(deltas.slice(half)) > 0;
+}
+
+export function buildIntelligenceLedger(samples: readonly LedgerSample[], opts: LedgerOptions = {}): IntelligenceLedgerReport {
+  const q = opts.q ?? 0.1;
+  const dataMode = opts.dataMode ?? "FIXTURE"; // fail-closed: unproven data is a fixture trend
+  const minPeriods = opts.minPeriods ?? 8;
+  const effectFloor = opts.effectFloor ?? 0.2;
+  const priorLooks = Math.max(0, opts.priorLooks ?? 0);
+  // Sequential-monitoring discipline: each prior look spends alpha (Bonferroni across looks).
+  const effectiveQ = q / (priorLooks + 1);
+
   const series = metricSeries(samples);
   const names = Object.keys(series) as LedgerName[];
-
-  const tests = names.map((name) => {
+  const computed = names.map((name) => {
     const metric = series[name];
-    const tt = trendTest(metric);
-    return { name, metric, ...tt };
+    const deltas = firstDiffs(metric);
+    return { name, metric, deltas, stats: trendTest(deltas) };
   });
 
-  // FDR-correct the seven improvement p-values together.
-  const entries: PValueEntry[] = tests.map((x) => ({ key: x.name, pValue: x.p }));
-  const bh = benjaminiHochberg(entries, q);
+  const entries: PValueEntry[] = computed.map((x) => ({ key: x.name, pValue: x.stats.p }));
+  const bh = benjaminiHochberg(entries, effectiveQ);
   const bhByKey = new Map(bh.results.map((r) => [r.key, r]));
 
   const ledgers = {} as Record<LedgerName, LedgerResult>;
-  let intelligenceDelta = 0;
-  let improvingCount = 0;
-  for (const x of tests) {
+  let validatedImprovingCount = 0;
+  let upwardTrendCount = 0;
+  let normalizedAgg = 0;
+
+  for (const x of computed) {
     const bhr = bhByKey.get(x.name)!;
-    // Improving only if the trend is UP and the discovery survives FDR (can't p-hack a noisy uptick).
-    const improving = x.meanDelta > 0 && bhr.discovery;
-    if (improving) {
-      improvingCount += 1;
-      intelligenceDelta += x.meanDelta;
-    } else if (x.meanDelta < 0 && bhr.discovery) {
-      intelligenceDelta += x.meanDelta; // a real regression counts against us
+    const s = x.stats;
+    const trendDirection: TrendDirection = s.meanDelta > EPS ? "UP" : s.meanDelta < -EPS ? "DOWN" : "FLAT";
+    if (trendDirection === "UP") upwardTrendCount += 1;
+
+    let status: LedgerStatus;
+    if (dataMode !== "LIVE") {
+      status = trendDirection === "UP" ? "FIXTURE_TREND" : "FLAT_OR_REGRESSING";
+    } else if (s.degenerate || s.m < minPeriods) {
+      status = "INSUFFICIENT_SAMPLE";
+    } else if (trendDirection !== "UP") {
+      status = "FLAT_OR_REGRESSING";
+    } else {
+      const passes = bhr.discovery && Math.abs(s.effectSize) >= effectFloor && confirmationConsistent(x.deltas);
+      status = passes ? "VALIDATED_IMPROVING" : "UPWARD_UNVALIDATED";
     }
+
+    const improving = status === "VALIDATED_IMPROVING";
+    if (improving) {
+      validatedImprovingCount += 1;
+      normalizedAgg += Math.tanh(s.effectSize); // unit-consistent, bounded
+    }
+
+    const ci95Lower = Number((s.meanDelta - 1.96 * s.se).toFixed(4));
+    const ci95Upper = Number((s.meanDelta + 1.96 * s.se).toFixed(4));
+
     ledgers[x.name] = {
       ledger: x.name,
       latest: Number((x.metric[x.metric.length - 1] ?? 0).toFixed(4)),
-      meanDelta: x.meanDelta,
-      pValue: Number(x.p.toFixed(4)),
+      meanDelta: s.meanDelta,
+      effectSize: s.effectSize,
+      ci95Lower,
+      ci95Upper,
+      pValue: Number(s.p.toFixed(4)),
       qValue: Number(bhr.qValue.toFixed(4)),
-      n: x.metric.length,
+      n: s.m,
+      trendDirection,
+      status,
       improving,
-      note: improving
-        ? `Improving — trend +${x.meanDelta}/cycle survives FDR (q=${bhr.qValue.toFixed(3)}).`
-        : x.meanDelta > 0
-          ? `Up last, but the trend does NOT survive FDR — not a real improvement (no p-hacking).`
-          : "Flat or regressing.",
+      note: statusNote(status, s, dataMode),
     };
   }
 
+  const intelligenceDelta = Number((validatedImprovingCount > 0 ? normalizedAgg / names.length : 0).toFixed(4));
+  const validated = validatedImprovingCount > 0;
+  const note =
+    dataMode !== "LIVE"
+      ? `FIXTURE TREND — ${upwardTrendCount}/7 ledgers trending up; 0 validated. UNVALIDATED until a LIVE sample of ≥${minPeriods} periods.`
+      : `${validatedImprovingCount}/7 ledgers VALIDATED improving (BH-FDR effective q=${effectiveQ.toFixed(3)}, ≥${minPeriods} periods, effect ≥ ${effectFloor}, confirmation window).`;
+
   return {
     ledgers,
-    intelligenceDelta: Number(intelligenceDelta.toFixed(4)),
-    improvingCount,
+    dataMode,
+    validatedImprovingCount,
+    upwardTrendCount,
+    improvingCount: validatedImprovingCount,
+    intelligenceDelta,
     fdrQ: q,
-    note: `${improvingCount}/7 ledgers genuinely improving under BH-FDR (q=${q}); IntelligenceDelta ${intelligenceDelta.toFixed(3)}.`,
+    effectiveQ: Number(effectiveQ.toFixed(4)),
+    validated,
+    note,
   };
+}
+
+function statusNote(status: LedgerStatus, s: TrendStats, dataMode: "FIXTURE" | "LIVE"): string {
+  switch (status) {
+    case "VALIDATED_IMPROVING":
+      return `Validated improving — +${s.meanDelta}/period (effect ${s.effectSize}), survives FDR + confirmation.`;
+    case "UPWARD_UNVALIDATED":
+      return `Up (+${s.meanDelta}/period) but does NOT clear FDR / effect floor / confirmation — not a validated claim.`;
+    case "FIXTURE_TREND":
+      return `Upward fixture trend (+${s.meanDelta}/period) — illustrative only, not validated (${dataMode} data).`;
+    case "INSUFFICIENT_SAMPLE":
+      return s.degenerate ? "Insufficient/zero-variance sample — undefined." : `Insufficient sample (${s.m} periods).`;
+    case "FLAT_OR_REGRESSING":
+      return "Flat or regressing.";
+  }
 }

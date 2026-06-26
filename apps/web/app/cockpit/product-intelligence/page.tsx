@@ -5,7 +5,7 @@ import { getProductIntelligence } from "@/lib/cockpit/product-intelligence";
  * Cockpit · Product Intelligence (owner-only, fixtures).
  *
  * The operator's window into the organism reasoning about itself: the FDR-disciplined Conscience
- * (which intelligences are genuinely improving), the Galileo-Week acquisition signal (buy / stop
+ * (which intelligences are trending up — validated only on a live sample), the acquisition signal (buy / stop
  * buying), and scar utility (what a settled card taught — or didn't). Gated by the cockpit layout's
  * ADMIN check; not public, not indexable. Internal engine names are allowed on this surface.
  */
@@ -40,12 +40,13 @@ export default function ProductIntelligencePage() {
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-ion-white">Conscience · Intelligence Ledger</h2>
           <span className={LABEL}>
-            {ledger.improvingCount}/{ledgers.length} improving · FDR q={ledger.fdrQ}
+            {ledger.upwardTrendCount}/{ledgers.length} trending up · {ledger.validated ? `${ledger.improvingCount} validated` : "UNVALIDATED (fixture)"}
           </span>
         </div>
         <p className="mt-1 text-xs text-ion-3">
-          One-sample trend test per intelligence, corrected with Benjamini–Hochberg. A claim of
-          &ldquo;we got smarter&rdquo; only counts if it survives the correction — no p-hacking.
+          Newey–West trend test per intelligence, FDR-corrected, with an effect-size floor and a
+          confirmation window. On fixture data nothing is &ldquo;validated&rdquo; — these are illustrative
+          upward trends, not a proven &ldquo;we got smarter&rdquo; claim.
         </p>
         <ul className="mt-4 flex flex-col divide-y divide-titanium/20">
           {ledgers.map((l) => (
@@ -56,12 +57,14 @@ export default function ProductIntelligencePage() {
                 <span className="font-mono text-xs text-ion-3">q={l.qValue.toFixed(3)}</span>
                 <span
                   className={`rounded-md px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest ${
-                    l.improving
+                    l.status === "VALIDATED_IMPROVING"
                       ? "bg-orbital-cyan/10 text-orbital-cyan"
-                      : "bg-yellow-900/40 text-yellow-300"
+                      : l.trendDirection === "UP"
+                        ? "bg-amber-900/30 text-amber-300"
+                        : "bg-titanium/20 text-ion-3"
                   }`}
                 >
-                  {l.improving ? "improving" : "flat / unproven"}
+                  {l.status === "VALIDATED_IMPROVING" ? "validated" : l.trendDirection === "UP" ? "fixture trend" : "flat"}
                 </span>
               </span>
             </li>

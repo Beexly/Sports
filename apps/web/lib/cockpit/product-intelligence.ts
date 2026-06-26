@@ -2,7 +2,7 @@
  * Owner Product-Intelligence view-model (fixtures, Prisma-free).
  *
  * The cockpit panel that lets the operator see the organism thinking about ITSELF: the FDR-disciplined
- * Conscience (which of seven intelligences are genuinely improving, post-Benjamini-Hochberg), the
+ * Conscience (which of seven intelligences are trending up — validated only on a live sample), the
  * Galileo-Week acquisition signal (what to buy / stop buying), and scar utility (a bad-process card
  * becomes a remembered ghost; an unlucky loss teaches nothing). Pure derivation over package fixtures —
  * no DB, no network, no keys, no spend. Internal engine names are allowed here (owner-only surface).

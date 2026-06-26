@@ -90,14 +90,20 @@ export function buildWeekAtlas(w: WeekInputs): WeekIntelligenceAtlas {
     note: `${trapsAvoided.length} trap(s) filed as ghosts; ${processHeld.length} sound process held (no overreaction).`,
   };
 
-  // 6. Intelligence Delta.
+  // 6. Intelligence Delta. Fixtures by default — a FIXTURE TREND, never a validated "improving" claim.
   const ledger = buildIntelligenceLedger(w.ledgerSamples);
   const improvingLedgers = Object.values(ledger.ledgers).filter((l) => l.improving).map((l) => l.ledger);
+  const upTrending = Object.values(ledger.ledgers).filter((l) => l.trendDirection === "UP").map((l) => l.ledger);
   const intelligenceDelta: IntelligenceDeltaAtlas = {
     improvingCount: ledger.improvingCount,
+    upwardTrendCount: ledger.upwardTrendCount,
     intelligenceDelta: ledger.intelligenceDelta,
     improvingLedgers,
-    note: `${ledger.improvingCount}/7 ledgers genuinely improving under BH-FDR; delta ${ledger.intelligenceDelta}.`,
+    dataMode: ledger.dataMode,
+    validated: ledger.validated,
+    note: ledger.validated
+      ? `${ledger.improvingCount}/7 ledgers VALIDATED improving under BH-FDR.`
+      : `FIXTURE TREND — ${upTrending.length}/7 trending up; 0 validated (UNVALIDATED until a live sample).`,
   };
 
   // 7. Missed Observation (what to buy).

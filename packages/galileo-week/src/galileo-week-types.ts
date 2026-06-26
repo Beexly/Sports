@@ -41,9 +41,14 @@ export interface ScarAtlas {
 }
 
 export interface IntelligenceDeltaAtlas {
+  /** VALIDATED-improving ledgers (0 on fixtures — nothing is validated without a live sample). */
   readonly improvingCount: number;
+  /** Ledgers merely trending up (the honest fixture signal). */
+  readonly upwardTrendCount: number;
   readonly intelligenceDelta: number;
   readonly improvingLedgers: readonly string[];
+  readonly dataMode: "FIXTURE" | "LIVE";
+  readonly validated: boolean;
   readonly note: string;
 }
 

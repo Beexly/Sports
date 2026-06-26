@@ -10,12 +10,18 @@ import { getProductIntelligence } from "@/lib/cockpit/product-intelligence";
 describe("getProductIntelligence (fixtures)", () => {
   const view = getProductIntelligence();
 
-  it("reports all 7 intelligence ledgers with an FDR q and an improving count", () => {
+  it("reports all 7 intelligence ledgers honestly — a FIXTURE TREND, nothing validated", () => {
     expect(Object.keys(view.ledger.ledgers).length).toBe(7);
     expect(view.ledger.fdrQ).toBeGreaterThan(0);
-    expect(view.ledger.improvingCount).toBeGreaterThanOrEqual(1);
-    // Detection improves on a genuine upward trend in the fixture series.
-    expect(view.ledger.ledgers.detection.improving).toBe(true);
+    // On fixtures the Conscience must NOT claim validated improvement.
+    expect(view.ledger.dataMode).toBe("FIXTURE");
+    expect(view.ledger.validated).toBe(false);
+    expect(view.ledger.improvingCount).toBe(0);
+    expect(view.ledger.upwardTrendCount).toBeGreaterThanOrEqual(1);
+    // Detection trends up but is explicitly not validated.
+    expect(view.ledger.ledgers.detection.trendDirection).toBe("UP");
+    expect(view.ledger.ledgers.detection.status).toBe("FIXTURE_TREND");
+    expect(view.ledger.ledgers.detection.improving).toBe(false);
   });
 
   it("exposes all 8 Galileo atlases + a public moment, and never runs LIVE", () => {

@@ -56,8 +56,13 @@ describe("Galileo Week — PREVIEW builds all eight atlases", () => {
     expect(atlas.scar.processHeld.some((p) => p.verdict === "unlucky_loss")).toBe(true);
   });
 
-  it("intelligence delta survives FDR; missed/over observation guide acquisition", () => {
-    expect(atlas.intelligenceDelta.improvingCount).toBeGreaterThanOrEqual(1);
+  it("intelligence delta is an honest FIXTURE TREND (nothing validated); missed/over observation guide acquisition", () => {
+    // On fixtures the Conscience must NOT claim validated improvement — only an upward trend.
+    expect(atlas.intelligenceDelta.dataMode).toBe("FIXTURE");
+    expect(atlas.intelligenceDelta.validated).toBe(false);
+    expect(atlas.intelligenceDelta.improvingCount).toBe(0);
+    expect(atlas.intelligenceDelta.upwardTrendCount).toBeGreaterThanOrEqual(1);
+    expect(atlas.intelligenceDelta.note).toMatch(/FIXTURE TREND|UNVALIDATED/);
     expect(atlas.missedObservation.toBuy.length).toBeGreaterThan(0);
     expect(atlas.overObservation.toStopBuying.length).toBeGreaterThan(0);
   });
