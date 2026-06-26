@@ -23,6 +23,7 @@
     "guard:decision-surfaces": "tsc --noEmit -p packages/decision-field-runtime/tsconfig.json && tsc --noEmit -p packages/decision-factory/tsconfig.json && tsc --noEmit -p packages/nfl-stat-universe/tsconfig.json && tsc --noEmit -p packages/autonomy/tsconfig.json && tsc --noEmit -p packages/galileo-week/tsconfig.json",
     "free:doctor": "npx tsx scripts/free-ingest-smoke.mjs",
     "galileo:plan": "tsx scripts/galileo-plan.ts",
+    "odds:plan": "tsx scripts/odds-plan.ts",
     "eval:prompts": "npx promptfoo@latest eval -c eval/promptfoo/promptfooconfig.yaml",
     "db:generate": "npm run db:generate --workspace=packages/db",
     "db:push": "npm run db:push --workspace=packages/db",
