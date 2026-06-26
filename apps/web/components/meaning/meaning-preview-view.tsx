@@ -16,6 +16,7 @@ import {
   PIPELINE,
   type MeaningPreview,
   type MeaningView,
+  type ObserverArena,
 } from "@/lib/meaning/meaning-preview";
 import type { ClaimObject, Lens } from "@sports/decision-field-runtime";
 
@@ -97,6 +98,142 @@ function LensCard({ l }: { l: Lens }) {
   );
 }
 
+function lagLabel(v: number | null): string {
+  return v == null ? "unknown" : `${v >= 0 ? "+" : ""}${v}s`;
+}
+
+function pct(v: number): string {
+  return `${Math.round(v * 100)}%`;
+}
+
+const ENTITY_STATUS_CLASS: Record<string, string> = {
+  CANONICAL: "bg-emerald-500/15 text-emerald-300",
+  CROSS_VERIFIED: "bg-emerald-500/15 text-emerald-300",
+  ALIAS_ONLY: "bg-nebula-purple/15 text-nebula-purple",
+  DISCOVERED: "bg-amber-500/15 text-amber-300",
+  CONFLICTED: "bg-rose-500/15 text-rose-400",
+  RETIRED: "bg-mineral text-ion-1",
+};
+
+/** The Public Observer Arena — the Chronos clock chain, the entity ladder, and rights-gated highlights. */
+function ObserverArenaPanels({ observer }: { observer: ObserverArena }): JSX.Element {
+  const { lag, clockChain, stats, entities, highlights } = observer;
+  return (
+    <div className="flex flex-col gap-3">
+      <Panel className="border-nebula-purple/40">
+        <p className="text-[13px] text-ion">
+          SerpApi / Google Sports is <span className="font-semibold text-ion-white">one observer in the arena</span> — it
+          records what dominant discovery systems <span className="italic">show the public</span>, never official truth. It
+          cannot settle an event, price a market, or trigger an action. Everything below is{" "}
+          <span className="font-mono text-orbital-cyan">public DISPLAY truth</span>, fixture-only.
+        </p>
+      </Panel>
+
+      <Panel title="Public Consensus Lag — the Chronos clock chain (observability only; never an edge)">
+        <div className="flex flex-wrap items-stretch gap-1.5">
+          {clockChain.map((s, i) => (
+            <div key={s.key} className="flex items-center gap-1.5">
+              <div className="min-w-[120px] rounded-lg border border-mineral bg-carbon px-3 py-2">
+                <p className="text-[12px] text-ion-white">{s.label}</p>
+                <p className="mt-1 font-mono text-[11px] text-orbital-cyan">{s.clockSec == null ? "—" : `${s.clockSec}s`}</p>
+              </div>
+              {i < clockChain.length - 1 ? <span className="font-mono text-ion-1">→</span> : null}
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          <div className="rounded-lg border border-mineral bg-eclipse/60 p-3">
+            <p className="font-mono text-[10px] uppercase tracking-wide text-ion-1">public consensus lag</p>
+            <p className="text-lg font-semibold text-ion-white">{lagLabel(lag.publicConsensusLag)}</p>
+            <p className="text-[11px] text-ion-1">public shown − official source</p>
+          </div>
+          <div className="rounded-lg border border-mineral bg-eclipse/60 p-3">
+            <p className="font-mono text-[10px] uppercase tracking-wide text-ion-1">public scoreboard delay</p>
+            <p className="text-lg font-semibold text-ion-white">{lagLabel(lag.publicScoreboardDelay)}</p>
+            <p className="text-[11px] text-ion-1">public shown − event itself</p>
+          </div>
+          <div className="rounded-lg border border-mineral bg-eclipse/60 p-3">
+            <p className="font-mono text-[10px] uppercase tracking-wide text-ion-1">GSE vs public</p>
+            <p className="text-lg font-semibold text-ion-white">{lagLabel(lag.gseVsPublicLag)}</p>
+            <p className="text-[11px] text-ion-1">GSE compiled − public shown</p>
+          </div>
+        </div>
+        <p className="mt-2 text-[11.5px] text-ion-1">
+          canImplyEdge: <span className="font-mono text-rose-400">false</span> · canCreateAction:{" "}
+          <span className="font-mono text-rose-400">false</span> — lag is a clock fact, not a betting signal.
+        </p>
+      </Panel>
+
+      {stats.length > 0 ? (
+        <Panel title="Observer visibility — how rich the public result is (a display measure, not a quality verdict)">
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            {stats.map((s) => (
+              <div key={s.observerId} className="rounded-xl border border-mineral bg-eclipse/60 p-4">
+                <p className="text-[14px] font-semibold text-ion-white">{s.subject}</p>
+                <span className="mt-1 inline-block rounded-md bg-nebula-purple/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-nebula-purple">
+                  {s.resultType} · ceiling {s.authorityCeiling}
+                </span>
+                <div className="mt-2">
+                  <Row k="Google visibility index" v={pct(s.visibility)} vClass="text-orbital-cyan" />
+                  <Row k="knowledge-graph coverage" v={pct(s.kgCoverage)} vClass="text-orbital-cyan" />
+                  <Row k="SERP sports confidence" v={pct(s.confidence)} vClass="text-orbital-cyan" />
+                  <Row k="can settle the event" v="never" vClass="text-rose-400" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      ) : null}
+
+      <Panel title="Entity Passports — a kgmid anchors identity, not current truth (the ladder to CANONICAL)">
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {entities.map((e) => (
+            <div key={e.gseEntityId} className="rounded-xl border border-mineral bg-eclipse/60 p-3.5">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[14px] font-semibold text-ion-white">{e.canonicalName}</p>
+                <span className={`rounded-md px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-wide ${ENTITY_STATUS_CLASS[e.status] ?? "bg-mineral text-ion-1"}`}>
+                  {e.status}
+                </span>
+              </div>
+              <p className="mt-0.5 text-[11px] text-ion-1">{e.entityType.toLowerCase()} · {e.sport ?? "—"}</p>
+              <div className="mt-2">
+                <Row k="kgmid" v={<span className="font-mono text-[11px]">{e.googleKgmid ?? "—"}</span>} />
+                <Row k="confidence" v={pct(e.confidence)} vClass={e.confidence >= 0.9 ? "text-emerald-300" : "text-amber-300"} />
+                <Row k="rights" v={e.rightsStatus} vClass="text-ion-1" />
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-2 text-[11.5px] text-ion-1">
+          A Google kgmid creates a <span className="font-mono text-amber-300">DISCOVERED</span> candidate; a provider id
+          advances it to <span className="font-mono text-nebula-purple">ALIAS_ONLY</span>; only cross-verification against an
+          official name reaches <span className="font-mono text-emerald-300">CANONICAL</span>.
+        </p>
+      </Panel>
+
+      <Panel title="Highlights — discovery is never ownership (gates closed until rights clear)">
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          {highlights.map((h) => (
+            <div key={h.highlightId} className="rounded-xl border border-mineral bg-eclipse/60 p-4">
+              <p className="text-[14px] font-semibold text-ion-white">{h.title}</p>
+              <span className="mt-1 inline-block rounded-md bg-amber-500/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-amber-300">
+                rights: {h.rightsStatus}
+              </span>
+              <div className="mt-2">
+                <Row k="display allowed" v={h.displayAllowed ? "yes" : "no"} vClass={h.displayAllowed ? "text-emerald-300" : "text-rose-400"} />
+                <Row k="embed allowed" v={h.embedAllowed ? "yes" : "no"} vClass={h.embedAllowed ? "text-emerald-300" : "text-rose-400"} />
+                <Row k="thumbnail reusable" v={h.thumbnailReusable ? "yes" : "no"} vClass={h.thumbnailReusable ? "text-emerald-300" : "text-rose-400"} />
+                <Row k="public-safe asset" v={h.publicSafe ? "yes" : "no"} vClass={h.publicSafe ? "text-emerald-300" : "text-rose-400"} />
+              </div>
+              <p className="mt-2 border-t border-mineral pt-2 text-[12px] text-ion-1">{h.notes}</p>
+            </div>
+          ))}
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
 export function MeaningPreviewView({ preview, view }: { preview: MeaningPreview; view: MeaningView }): JSX.Element {
   return (
     <div className="flex flex-col gap-6">
@@ -152,7 +289,9 @@ export function MeaningPreviewView({ preview, view }: { preview: MeaningPreview;
         variant="dark"
       />
 
-      {view === "lenses" ? (
+      {view === "observers" ? (
+        <ObserverArenaPanels observer={preview.observer} />
+      ) : view === "lenses" ? (
         <div className="grid gap-3 lg:grid-cols-2">
           {preview.lenses.map((l) => (
             <LensCard key={l.key} l={l} />
