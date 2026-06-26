@@ -20,3 +20,4 @@ export * from "./acquisition-governor.js";
 export * from "./api-budget-planner.js";
 export * from "./source-dossier.js";
 export * from "./source-mesh-fixtures.js";
+export * from "./bonus-passport.js";
