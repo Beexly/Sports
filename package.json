@@ -24,6 +24,7 @@
     "free:doctor": "npx tsx scripts/free-ingest-smoke.mjs",
     "galileo:plan": "tsx scripts/galileo-plan.ts",
     "odds:plan": "tsx scripts/odds-plan.ts",
+    "meaning:audit": "tsx scripts/meaning-audit.ts",
     "eval:prompts": "npx promptfoo@latest eval -c eval/promptfoo/promptfooconfig.yaml",
     "db:generate": "npm run db:generate --workspace=packages/db",
     "db:push": "npm run db:push --workspace=packages/db",
