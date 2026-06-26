@@ -5,7 +5,7 @@
 > and engagement surface, with what each consumes and produces and whether it is live or roadmap.
 > It may contain internal vocabulary, exact weight ranges, and revenue internals — keep it private.
 
-**Model version:** `v5.0.0` · **GSE Score version:** `g1.0.0` · **Date:** 2026-06-22 · **Updated:** 2026-06-25 (see §18)
+**Model version:** `v5.0.0` · **GSE Score version:** `g1.0.0` · **Date:** 2026-06-22 · **Updated:** 2026-06-26 (see §19)
 
 ### Status taxonomy (used throughout — no loose "live")
 | Label | Meaning |
@@ -24,7 +24,7 @@
 ---
 
 ## Table of contents
-§0 Executive summary · §1 The GSE PRICE Method & GSE Score · §2 Data ingestion & sources · §3 Prediction/scoring engine · §4 Pipeline, workers & workflows · §5 Proof, calibration & integrity · §6 Player & team intelligence (StatKing) · §7 Market intelligence · §8 News, signals & the agent council · §9 Monetization & revenue · §10 Engagement, growth & content · §11 Operator cockpit & Agent OS · §12 Governance, safety & trust · §13 Surface map (pages + APIs) · §14 Data model & types · §15 The one ladder · §16 Live-now vs. roadmap · §17 Multi-sport posture · §18 Integration, the Decision Genome spine & the 2026-06-25 verification + launch ledger
+§0 Executive summary · §1 The GSE PRICE Method & GSE Score · §2 Data ingestion & sources · §3 Prediction/scoring engine · §4 Pipeline, workers & workflows · §5 Proof, calibration & integrity · §6 Player & team intelligence (StatKing) · §7 Market intelligence · §8 News, signals & the agent council · §9 Monetization & revenue · §10 Engagement, growth & content · §11 Operator cockpit & Agent OS · §12 Governance, safety & trust · §13 Surface map (pages + APIs) · §14 Data model & types · §15 The one ladder · §16 Live-now vs. roadmap · §17 Multi-sport posture · §18 Integration, the Decision Genome spine & the 2026-06-25 verification + launch ledger · §19 The Frontier Institution — Meaning Compiler, Public Observer Ledger & Data Genesis Engine (2026-06-26)
 
 ---
 
@@ -476,6 +476,169 @@ build).
 Doctrine held throughout: no publish gate flipped, projections stay shadow, no secrets in code, no
 force-push, `main` untouched (PR only). Production (merge → main + Vercel prod) remains gated on the
 §18.7 owner config + preview approval.
+
+---
+
+## §19 The Frontier Institution — Meaning Compiler, Public Observer Ledger & Data Genesis Engine
+
+> **Branch provenance.** Everything in §19 was built on the frontier branch
+> `claude/keen-ptolemy-t38f1g` (≈90+ commits ahead of `main`; `main` untouched, no merge, no deploy).
+> It is **additive, shadow/fixture-only, and CI-green per checkpoint.** Nothing here flips a publish
+> gate, bumps `MODEL_VERSION` (frozen `v5.1.0`), touches the live scoring path, reads a key, hits a
+> live/paid API, or scrapes a source. On fixture data every authority ceiling binds at `INFO_ONLY`.
+> This section is the record of *what was built*; the code lives on the frontier branch, not yet on
+> `research/proven-edge`.
+
+### 19.0 The frame — from page factory to a compiler for meaning
+
+The §18 line proved GSE could *launch*. §19 answers the deeper ask: make GSE **first-of-its-kind**, not
+a better picks page. The throughline across three movements is a single shift of frame — **GSE does not
+build pages; GSE governs meaning.** Every sports object becomes a typed claim that passes through one
+law, and the institution's strongest statement is *"this cannot yet be shown,"* said precisely and
+provably. Three new packages/lib-layers were added — the **Meaning Compiler** (a universal claim
+grammar), the **Public Observer Ledger** (a sixth ledger for public-display truth), and the **Data
+Genesis Engine** (a law layer for synthetic intelligence) — each with a machine-checked *conservation
+theorem* in the lineage of the existing authority-tensor theorem.
+
+### 19.1 The GSE Frontier Institution (N1–N9) — multi-sport decision-state surface
+
+A proof-governed page factory where every match, **trend**, **bonus**, prediction, stat, and market
+carries source status, rights status, authority status, freshness, decision-use, weakness, a receipt,
+and an autopsy path. Category: *Sports Decision-State Infrastructure*; enemy: *fake certainty*. Proof
+cases: **Ecuador 2–Germany 1** (soccer), **Rays 13–Royals 2** (MLB), **Roughriders–Argonauts** (CFL).
+Built by **reuse** of the §18 engine (no parallel grammar). (`packages/decision-field-runtime/src/*`,
+`packages/data-intelligence/src/*`, fixture-only Next routes under `apps/web/app/{matches,trends,bonuses,tools}/preview`.)
+
+| # | Module | Brings | Status |
+|---|---|---|---|
+| N1 | `universal-event-genome.ts` + soccer/baseball/football-CFL adapters + `event-genome-fixtures.ts` + `match-derived-stats.ts` | multi-sport core (period schema, score state, status, fixture watermark); 20 soccer derived stats each with a reused passport | **R&D / FIXTURE** |
+| N2 | `trend-passport.ts` | `TrendPassport` (sampleSize, fragility, overfitRisk, correlated-trends, knownAt, ceiling, falsifier) + `TrendTrial` | **R&D / FIXTURE** |
+| N3 | `prediction-court.ts` | `PredictionTrial` — process ≠ outcome grading; one result never upgrades authority | **R&D / FIXTURE** |
+| N4 | `data-intelligence/bonus-passport.ts` | `BonusPassport` + `BookmakerRatingPassport` (jurisdiction, rollover, lastVerifiedAt, legality, affiliate-config, RG disclaimer); no live affiliate link unless owner-configured | **R&D / FIXTURE** |
+| N5 | `route-authority-registry.ts`, `market-bloom.ts` (9 stages), `authority-flight-record.ts`, `slip-mri.ts`, `watchlist-alerts.ts` | every route → an authority verdict; parlay = risk diagnosis, never "best parlay"; every alert has reason + proof | **R&D / FIXTURE** |
+| N6 | offline `observatory/EVENT_GENOME_PAGE.html` (Chromium render-verified) + Next preview routes | the vertical slice — multi-sport tabs × inner faculties, fixture-watermarked, no live affiliate CTA | **FIXTURE** |
+| N7 | `scripts/odds-plan.ts` + `odds:plan` + `data-intelligence/{source-value-score,data-cost-governor,odds-api-economics}.ts` | odds-credit intelligence (endpoint economics, modes, JSON; no network/keys; capped historical-prop) | **R&D** |
+| N8 | `docs/{frontier-night,competitive,product,data-kingdom,launch}/*` | institution architecture + Scores24 business-machine teardown (12-system map) + product/data/brand/launch docs | **DOC** |
+| N9 | `frontier-night/ADVERSARIAL_AUDIT.md` + `OVERNIGHT_OWNER_BRIEF.md` | skeptic audit ×2 + the 24+10 owner questions + verdict | **DOC** |
+
+### 19.2 The Meaning Compiler — the Einstein frame (`packages/decision-field-runtime/src/meaning/*`)
+
+The leap from modules to a **company-as-compiler**: every sports object — match/derived stat, trend,
+prediction, odds price, market state, bonus, bookmaker rating, API provider, resource, web evidence,
+alert, decision card — lifts into one typed **`ClaimObject`** (seven anatomical organs: source / rights
+/ time / semantic / decision / authority / memory) and passes through one ordered, **downgrade-only**
+pipeline: *raw observation → source passport → rights envelope → time envelope → semantic meaning →
+decision effect → authority ceiling → public expression → autopsy hook → memory update.*
+
+**The design law — No Parallel Systems.** The compiler owns **no** authority math, knowability math,
+strength lattice, status lifecycle, or route vocabulary; it *composes* the canonical engines
+(`composeAuthority`, `knowableAt`, `strengthMin`, `clampStatus`, `isForbidden`, `projectToLedgers`). The
+keystone **Conservation Theorem** (`meaning/__tests__/meaning-conservation.theorem.test.ts`) proves all
+eight laws — Authority, Lineage, Time/no-future-leakage, Rights, Fixture-ceiling, Evidence,
+Monotonic-downgrade, and **No-Parallel-Systems** (every downgrade the compiler emits is reproducible by
+re-invoking its named engine with the recorded inputs).
+
+| Module | Role | Status |
+|---|---|---|
+| `meaning/claim-object.ts` | the 17-member `ObjectType`, the 7 envelopes, the lifecycle, `publicExpression` (computed meet, never assigned), `RightsEnvelope` defined in-package | **R&D / lib** |
+| `meaning/meaning-compiler.ts` | `compileClaimObject` (the downgrade-only pipeline) + `explainClaim` (the 10-question core law) | **R&D / lib** |
+| `meaning/morphology-adapters.ts` | the lossless lifts (stat/trend/prediction/odds/market/bonus/provider/web-evidence/alert/public-observer → ClaimObject) | **R&D / lib** |
+| `meaning/meaning-lenses.ts` | eight Galileo lenses (Source Race · Market Lifecycle · Trend Fragility · Prediction Trial · Bonus Integrity · Web Evidence · Authority Flight Recorder · Autopsy Memory) — pure projections | **R&D / lib** |
+| `meaning/page-factory-contract.ts` | `validatePageRender` composing the route-authority registry (render-time enforcement, no new enums) | **R&D / lib** |
+| `apps/web/lib/meaning/rights-snapshot-to-envelope.ts` | the app→package rights-boundary adapter (the package never imports apps/web) | **LIB** |
+| `apps/web/app/meaning/preview` + `components/meaning/meaning-preview-view.tsx` | instrument-grade dark `/meaning/preview` route (robots noindex, DB-free, INFO_ONLY-capped) | **FIXTURE** |
+| `docs/gse-packet/observatory/MEANING_COMPILER.html` | cinematic offline observatory (Chromium render-verified; 0 offsite requests) | **FIXTURE** |
+| `scripts/meaning-audit.ts` + `meaning:audit` | runnable 10-invariant integrity check — verdict **CLEAN** at 61 compiled objects, all INFO_ONLY, 1 visible refusal | **TOOL** |
+| `docs/product/GSE_MEANING_COMPILER.md`, `docs/competitive/SCORES24_TO_GSE_INVARIANTS.md`, `docs/frontier-night/MEANING_INTEGRITY_AUDIT.md` | spec + competitor-invariant map + the 10-question audit (×2) | **DOC** |
+
+### 19.3 Data Intelligence Mesh — Public Observer additions (`packages/data-intelligence/src/*`)
+
+- **`serpapi-google-sports.ts`** — a no-network, no-key parser for the SerpApi Google Sports payload
+  (spotlight / standings / athlete / kgmid / highlight extractors; query recipes capped at `WATCH`,
+  `FIXTURE_ONLY`, owner-gated; deterministic cost model; allowed-use validator that forbids settlement /
+  production-truth / betting-trigger). **R&D / FIXTURE.**
+- **`entity-graph.ts`** — identity resolution on Google's `kgmid` (built atop `entity-spine`): the ladder
+  `DISCOVERED → ALIAS_ONLY → CROSS_VERIFIED → CANONICAL` (+ `CONFLICTED`/`RETIRED`); a kgmid creates a
+  candidate (confidence 0.4), aliases resolve **only** with sport/league context, ambiguity is refused,
+  conflicts are flagged (never auto-merged), and only cross-verification reaches canonical. **R&D / lib.**
+- **`public-observer-providers.ts`** — the **Provider Trial Court** verdicts, by *role* not just cost
+  (≈21 providers). Machine-checked invariants: a public observer can never settle; a discovery-only
+  source can never be LIVE; sportsbook execution APIs are `DO_NOT_USE_FOR_EXECUTION`; **no provider may
+  execute**; every LIVE-capable provider must declare a fact-supply path. **R&D / governance.**
+
+### 19.4 The Public Observer Ledger — the sixth ledger (Addendum III)
+
+Next to the five ledgers (Reality, Belief, Decision, Authority, Learning), a **sixth** records exactly
+one thing: **what dominant discovery systems SHOW the public** (Google's sports one-box, SERP snippets,
+score widgets, standings one-boxes, knowledge-graph entities, highlight carousels). This is **public
+DISPLAY truth** — never official truth, never settlement, never a price, never a trigger. SerpApi /
+Google Sports is framed as **one observer in the Observer Arena**, alongside the official feed, the
+market, and GSE. (`packages/decision-field-runtime/src/{public-observer-ledger,highlight-passport,public-consensus-lag}.ts`.)
+
+| Sub-instrument | Role | Status |
+|---|---|---|
+| `public-observer-ledger.ts` | `PublicObserverRecord` (`canSettle:false`, `authorityImpact:PUBLIC_OBSERVER_ONLY`, ceiling `WATCH`; requires a capture time or it throws); `PUBLIC_OBSERVER_RIGHTS` = permission_required / derived-use-only / owner-approval-required; compiles to a `PUBLIC_OBSERVER_RESULT` ClaimObject capped at INFO_ONLY | **R&D / FIXTURE** |
+| `public-consensus-lag.ts` | the **Chronos clock chain** (event → official source → market → public observer → GSE) and the lag family (`publicConsensusLag`, `publicScoreboardDelay`, …) — stamped `canImplyEdge:false`, `canCreateAction:false`; a missing clock is `null`, never a fabricated 0; + `googleVisibilityIndex` / `knowledgeGraphCoverage` / `serpSportsConfidence` | **R&D / FIXTURE** |
+| `highlight-passport.ts` | rights-gated video highlight — gates closed by default; on `UNKNOWN` rights non-displayable / non-embeddable / non-reusable / non-public. **Discovery is never ownership.** | **R&D / FIXTURE** |
+| `/meaning/preview?view=observers` | the Public Observer Arena panels (Chronos chain, visibility cards marked "can settle: never", the entity ladder built live from the fixture kgmids, rights-gated highlights) | **FIXTURE** |
+| `docs/product/PUBLIC_OBSERVER_LEDGER.md`, `docs/data-kingdom/GSE_DATA_API_ROADMAP.md` | the sixth-ledger spec (7 machine-checked invariants) + a future read-only **meaning API** contract (no public API exists yet; envelope-complete, authority-capped, no bet/settle/price/execute endpoints) | **DOC** |
+
+**The Sixth-Ledger Conservation Theorem** (`__tests__/public-observer-conservation.theorem.test.ts`, 17
+proofs) shows the public observer lives under the *same* authority law with no escape hatch: T1
+Containment (every record compiles to INFO_ONLY), T2 No-settlement (structural + via the guarantee), T3
+Bounded ceiling (≤ WATCH), **T4 Keystone** (the cap the compiler records *is* `composeAuthority`'s meet —
+the ledger composes the engine, never forks it), T5 Chronos inertia (across a clock sweep, lag can never
+imply an edge or action), T6 lag-is-arithmetic, T7 visibility stats bounded + reproducible.
+
+### 19.5 The Data Genesis Engine — the law layer for synthetic intelligence (`packages/data-genesis/`)
+
+A new, dependency-light, lower-level package: **a generated / inferred / modeled / AI-assisted signal
+may not become operational truth until it carries a receipt, structured doubt, meta-doubt, calibration
+evidence where applicable, and passes one narrow promotion gate.** It makes the system *stricter, not
+louder*. prediction-engine depends on data-genesis (never the reverse).
+
+| Module | Role | Status |
+|---|---|---|
+| `brands.ts` | template-literal branded ids (`signal:`/`receipt:`/`doubt:`/`meta:`/`curve:`/`calibration:`/`promotion:`) + validators + prefixing constructors | **lib** |
+| `canonical.ts` | stable sorted-key serialization (Date→ISO; rejects undefined/fn/symbol/bigint/non-finite, **non-plain objects** like Map/Set/class instances, and cycles) so receipt hashes never drift | **lib** |
+| `receipt.ts` | `GenesisReceipt` with an **injected** hash fn (proof-of-record discipline); deterministic input/transformation/output hashing; `receiptIntegrity` flag | **lib** |
+| `signal.ts` | `SyntheticSignal` ([0,1]-validated confidence/uncertainty, explicit `validationStatus`, **born draft, never born promoted**) | **lib** |
+| `doubt.ts` / `meta-doubt.ts` | `StructuredDoubt` (licensing + model_leakage block by default unless mitigated; critical blocks until resolved) and **MetaDoubt** (the anti-fake-rigor layer: coverage score + overconfidence flag) | **lib** |
+| `calibration.ts` | `CalibrationCurveResult` + Beta-Binomial posterior with an **exact** credible interval (regularized incomplete beta + bisection, not a normal approximation); small samples can never be "excellent" | **lib** |
+| `promotion.ts` | `promoteSignal` — the **only** path to `PromotedSignal` (the single `as PromotedSignal` in the codebase); `Promotable` / `WithMetaDoubt` / `Calibrated` utilities; returns explicit failures, never half-promotes | **lib** |
+| `prediction-engine/src/data-genesis-adapter.ts` | **shadow** wrappers for `EdgeAssessment` / `ClvGrade` / `reliabilityCurve` / `PickSignalSnapshot` → receipted signals (reuses prediction-engine's calibration math); exported from the barrel, **NOT wired into live scoring** | **R&D / SHADOW** |
+| `docs/strategy/DATA_GENESIS_ENGINE.md` | the founder-grade spec (proof-bearing signal · promotion gate · calibration before influence · shadow until proven · future activation path, owner-gated) | **DOC** |
+
+**The Genesis Promotion Conservation Theorem** (`__tests__/genesis-conservation.theorem.test.ts`, 16
+proofs) runs an adversarial grid through `promoteSignal` and proves, for every input, that its verdict
+and exact failure set equal an *independent* re-derivation of every gate — the keystone *one-door /
+no-parallel-path* law (exercises all ten failure codes; confirms determinism + no-forgery). A **Da Vinci
+quality pass** sharpened it: the exact Beta interval, the hardened canonical guard, and this theorem.
+
+### 19.6 Verification ledger & doctrine held
+
+- **Tests green per checkpoint** (run from each package dir, mirroring CI `--workspaces`):
+  decision-field-runtime **280** · data-intelligence **90** · data-genesis **76** · prediction-engine
+  **639** (incl. the new adapter suite). `meaning:audit` verdict **CLEAN** (61 objects, all INFO_ONLY).
+- **Typecheck clean** for every new package (`tsc --noEmit` per package). The full `apps/web` typecheck
+  is `ENVIRONMENT_BLOCKED` in-sandbox (Prisma client not generated) — pre-existing, resolves on CI.
+- **Guardrails green:** trust-gate (1249 files, no banned phrases), model-freeze (`v5.1.0` unchanged),
+  draft-only, claude-api-usage, secret-scan (3110 files), eval-contracts (34).
+- **CI confirmed green** on the Addendum III + Sixth-Ledger-theorem commits; the Data Genesis commit's
+  run was verified locally end-to-end (lockfile committed so `npm ci` resolves the new workspace).
+- **Doctrine held throughout:** branch-only, `main` untouched, no merge/deploy/spend/secret-read, no
+  live/paid API, no network in tests, the package never imports apps/web, fixture-watermarked
+  (everything caps at INFO_ONLY), deterministic (no `Date.now`/`Math.random`/`new Date()`), no competing
+  DecisionState/authority grammar (compose only), no Scores24 scrape/copy/derive, no Google scrape, no
+  `priced=true`, no public-performance gate, no entitlement/trust/brand weakening, no
+  lock/guarantee/sure-thing/risk-free language. **`MODEL_VERSION` not bumped; no public claim changed;
+  no live pick behavior changed.**
+
+> **Net.** Three conservation theorems now stand beside the original authority-tensor theorem
+> (Meaning-Compiler · Sixth-Ledger · Genesis-Promotion), each proving a different organ of the
+> institution cannot escape its own law. The frontier branch is the proof that GSE's category is not
+> "better picks" but *governed meaning* — the data only ever means what its source, rights, time,
+> authority, doubt, and calibration permit, and the system says so, out loud, with a receipt.
 
 ---
 
