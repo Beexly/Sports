@@ -43,6 +43,50 @@ downgrade-only pipeline. The page is the rendering; the compiler is the company.
 Verdict on the upgrade: **READY_FOR_FRONTIER_PREVIEW.** Detail in `MEANING_INTEGRITY_AUDIT.md`
 (two passes, two in-pass fixes, no envelope violation). The original N1–N9 brief follows.
 
+## SerpApi / Google Sports Public Observer Leverage (Addendum III — the sixth ledger)
+
+The night's third movement added a **sixth ledger** (next to Reality, Belief, Decision, Authority,
+Learning): the **Public Observer Ledger**. It records what dominant discovery systems — Google's sports
+one-box, SERP snippets, score widgets, standings one-boxes, knowledge-graph entities, highlight
+carousels — *show the public*. This is **public DISPLAY truth**, never official truth. SerpApi / Google
+Sports is treated as **one observer in the arena**, never a source of truth. Spec:
+`PUBLIC_OBSERVER_LEDGER.md`.
+
+1. **What is SerpApi to GSE?** One observer — it records what the public is shown, not what is true. Every
+   record is born `canSettle: false`, `authorityImpact: PUBLIC_OBSERVER_ONLY`, ceiling `WATCH`, and (on
+   fixtures) compiles to `INFO_ONLY`. It can inform a *watch*, never an action, a price, or a settlement.
+2. **Where is the leverage, then?** Three places the public view is genuinely useful: **entity discovery**
+   (Google's kgmid is a strong identity anchor), **latency** (how late the public scoreboard is), and
+   **coverage/visibility** (how richly an event is presented publicly). All derived signals — never imported facts.
+3. **How does the latency instrument work?** The **Chronos clock chain** records five clocks for one event
+   (event → official source → market → public observer → GSE) and derives the lag family. The fixture
+   shows the public scoreboard `+10s` behind the event and `+8s` behind the official source. It is stamped
+   `canImplyEdge: false` / `canCreateAction: false` — a clock fact, not a betting signal.
+4. **How does the entity bridge stay honest?** A kgmid creates a `DISCOVERED` candidate (confidence `0.4`);
+   a provider id advances it to `ALIAS_ONLY`; only cross-verification against an official name reaches
+   `CANONICAL`. Aliases resolve only with sport/league context, and an ambiguous alias is refused, not guessed.
+5. **What about highlights and media rights?** Discovery is never ownership. A `HighlightPassport` keeps
+   every gate closed by default; on `UNKNOWN` rights it is non-displayable, non-embeddable, non-reusable,
+   non-public — link review only. Nothing third-party is re-published.
+6. **What did we NOT do?** No Google scraping, no key, no network, no settlement use, no production-truth
+   use, no rights-cleared-media assumption, no betting trigger. The adapter lives in the package; the
+   package never imports the app.
+7. **How are the providers classified?** A **Provider Trial Court** verdict (machine-checked): SerpApi =
+   Public Observer / Entity Discovery / Latency (not official truth); public-api lists = Discovery Source
+   Only (never LIVE directly); Cloudbet = `DO_NOT_USE_FOR_EXECUTION`. Enforced rule: no provider executes.
+8. **Where does the owner see it?** `/meaning/preview?view=observers` renders all three sub-instruments
+   from fixtures — the Chronos chain, the visibility cards (each "can settle: never"), the entity ladder,
+   and the rights-gated highlights — all watermarked, all `INFO_ONLY`.
+9. **What does this unlock commercially?** A future read-only **meaning API** (`GSE_DATA_API_ROADMAP.md`):
+   `/v1/events/{id}/chronos`, `/v1/public-observer-records`, `/v1/entities/{id}/passport`, etc. — each
+   envelope-complete and authority-capped. No public API exists yet; the contract is fixed first.
+10. **What must remain held?** Any live capture, any rights promotion, any provider going LIVE — all
+    owner + legal gated. The public observer can never out-rank the canonical engines, by construction.
+
+Verdict on the sixth ledger: **READY_FOR_FRONTIER_PREVIEW.** Seven machine-checked invariants
+(`PUBLIC_OBSERVER_LEDGER.md`); data-intelligence + decision-field-runtime suites green; no envelope
+constraint touched. The original N1–N9 brief follows.
+
 ## What shipped tonight (N1–N9)
 
 The first visible slice of the GSE institution: a proof-governed answer to a match page where every
