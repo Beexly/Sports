@@ -41,3 +41,6 @@ export * from "./galileo-field-fixtures.js";
 export * from "./meaning/claim-object.js";
 export * from "./meaning/meaning-compiler.js";
 export * from "./meaning/morphology-adapters.js";
+export * from "./meaning/meaning-fixtures.js";
+export * from "./meaning/meaning-lenses.js";
+export * from "./meaning/page-factory-contract.js";
