@@ -37,3 +37,6 @@ export * from "./operating-plan.js";
 export * from "./decision-field-frame.js";
 export * from "./run-decision-field-frame.js";
 export * from "./galileo-field-fixtures.js";
+// ── The Meaning Compiler (Addendum II): everything is a ClaimObject ──
+export * from "./meaning/claim-object.js";
+export * from "./meaning/meaning-compiler.js";
