@@ -56,7 +56,6 @@ const LEARN_MENU: readonly NavGroup[] = [
     items: [
       { label: "How we read it", href: "/intelligence", desc: "The glass box — why the engine reads a game the way it does" },
       { label: "Every engine", href: "/intelligence/engines", desc: "Every engine we run, in one place" },
-      { label: "How we read metrics", href: "/intelligence/metrics", desc: "What the numbers mean, plainly" },
       { label: "Stories", href: "/the-beat", desc: "The cinematic broadcast, scored at the source" },
       { label: "The Studio", href: "/fantasy/studio", desc: "Inside the production desk" },
       { label: "The Academy", href: "/academy", desc: "Train on the process, step by step" },
@@ -69,8 +68,6 @@ const PROOF_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "Track record", href: "/calibration", desc: "Calibration, CLV, and the public ledger" },
-      { label: "Calibration report", href: "/performance", desc: "How honest the confidence is" },
-      { label: "Closing line value", href: "/clv", desc: "Did we beat the close?" },
       { label: "Trust ledger", href: "/ledger", desc: "Tamper-evident pick receipts" },
       { label: "Proof of record", href: "/proof", desc: "Merkle-hashed, no silent edits" },
       { label: "Accountability", href: "/accountability", desc: "Loss autopsies, in public" },

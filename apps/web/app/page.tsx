@@ -130,7 +130,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Today</p>
                   <h2 className="mt-2 text-2xl font-semibold text-ion-white sm:text-3xl">What needs attention today.</h2>
                   <p className="mt-2 text-ion-1">
-                    A preview of the daily decision feed — what changed, what it means, what to do, why not the obvious
+                    A preview of the daily decision feed: what changed, what it means, what to do, why not the obvious
                     move, and where the receipt is. The live feed arrives with live data.
                   </p>
                 </div>
