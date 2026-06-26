@@ -22,6 +22,7 @@ import type { MarketBloomRecord } from "../market-bloom.js";
 import type { OddsExample } from "../universal-event-genome.js";
 import type { WatchlistAlert } from "../watchlist-alerts.js";
 import type { BonusPassport, BookmakerRatingPassport, SourceGenome } from "@sports/data-intelligence";
+import type { PublicObserverRecord } from "../public-observer-ledger.js";
 import type {
   ClaimObjectInput,
   RightsEnvelope,
@@ -505,6 +506,56 @@ export function webEvidenceToClaimObject(args: {
     requestedExpression: "WATCH",
     autopsyHook: { settlesWhen: "on rights review", gradingProtocol: "was the evidence promotable", hasTrial: false, autopsyRef: null },
     memoryWrite: { ledger: "BELIEF", metricKey: args.url, writesOnSettle: false, note: "web evidence" },
+  };
+}
+
+/**
+ * A public observer record → PUBLIC_OBSERVER_RESULT. The highest-discovery, lowest-authority class:
+ * rights are permission_required and the public clock is source-unclear, so the compiler caps it to
+ * INFO_ONLY (and it can never settle). High identity/latency value, near-zero direct decision value.
+ */
+export function publicObserverToClaimObject(r: PublicObserverRecord): ClaimObjectInput {
+  return {
+    objectType: "PUBLIC_OBSERVER_RESULT",
+    subject: r.subject,
+    sport: r.sport,
+    eventId: r.eventId,
+    payloadRef: `public-observer:${r.observerId}`,
+    sourceLineage: { ...lineageFromRefs([r.sourceId], "WEB_EVIDENCE", r.providerName, [`public-observer:${r.observerId}`]), legalVerdict: r.rightsEnvelope.legalVerdict },
+    rights: r.rightsEnvelope,
+    time: fixtureTime(r.observedAtLabel, { capturedAtLabel: r.capturedAtLabel, knowability: "SOURCE_UNCLEAR" }),
+    semantic: {
+      plainText: `${r.publicTitle ?? r.subject}${r.publicStatus ? ` · ${r.publicStatus}` : ""}`,
+      definition: `what ${r.providerName} is showing the public`,
+      formula: null,
+      units: null,
+      interpretation: "public display truth — what the public sees, not official truth",
+      decisionMeaning: "discovery + identity + latency; never settlement",
+      factClass: null,
+      factType: null,
+      falsifier: "an official/licensed source disagreeing",
+      sampleFragility: null,
+      contextDependence: `${r.engine}${r.location ? ` · ${r.location}` : ""}`,
+    },
+    decision: {
+      possibleActions: [],
+      currentDecisionState: "DATA_CONFLICT",
+      decisionUse: "public visibility, entity resolution, and public-consensus-lag — never a settlement or an action",
+      suppressesAction: true,
+      whatWouldChangeDecision: "cross-verification by an official/licensed source",
+      creditableFactTypes: [],
+    },
+    risk: {
+      legalRisk: "MEDIUM", dataQualityRisk: "MEDIUM", modelRisk: "LOW", bettingComplianceRisk: "LOW",
+      userHarmRisk: "LOW", overclaimRisk: "HIGH", affiliateConflictRisk: "NONE",
+      weakness: "public display is not official truth; it can lag reality and the market",
+      whatWouldInvalidate: "an official source showing a different state",
+      riskFlags: ["public observer", "not official", `${r.kgmids.length} kgmid(s)`, `${r.highlights.length} highlight(s)`],
+    },
+    authorityVector: fixtureVector(r.authorityCeiling),
+    requestedExpression: "WATCH",
+    autopsyHook: { settlesWhen: "on cross-verification", gradingProtocol: "compare the public display against the official source (public-consensus-lag)", hasTrial: false, autopsyRef: `public-observer:${r.observerId}` },
+    memoryWrite: { ledger: "BELIEF", metricKey: r.observerId, writesOnSettle: false, note: "public observer — what the public was shown" },
   };
 }
 

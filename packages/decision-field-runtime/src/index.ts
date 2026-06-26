@@ -44,3 +44,7 @@ export * from "./meaning/morphology-adapters.js";
 export * from "./meaning/meaning-fixtures.js";
 export * from "./meaning/meaning-lenses.js";
 export * from "./meaning/page-factory-contract.js";
+// ── The Public Observer Ledger (Addendum III): what the public is shown ──
+export * from "./public-observer-ledger.js";
+export * from "./highlight-passport.js";
+export * from "./public-consensus-lag.js";

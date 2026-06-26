@@ -22,3 +22,6 @@ export * from "./source-dossier.js";
 export * from "./source-mesh-fixtures.js";
 export * from "./bonus-passport.js";
 export * from "./odds-api-economics.js";
+// ── Public Observer (Addendum III): SerpApi Google Sports + Entity Graph ──
+export * from "./serpapi-google-sports.js";
+export * from "./entity-graph.js";

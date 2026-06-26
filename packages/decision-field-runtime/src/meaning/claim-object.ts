@@ -47,11 +47,16 @@ export type ObjectType =
   | "WEB_EVIDENCE"
   | "ALERT"
   | "DECISION_CARD"
-  | "SOURCE_LINEAGE";
+  | "SOURCE_LINEAGE"
+  // The Public Observer Ledger (Addendum III): what dominant discovery systems SHOW the public.
+  | "PUBLIC_OBSERVER_RESULT"
+  | "HIGHLIGHT"
+  | "ENTITY_PASSPORT";
 
 export const ALL_OBJECT_TYPES: readonly ObjectType[] = [
   "MATCH_STAT", "DERIVED_STAT", "TREND", "PREDICTION", "ODDS_PRICE", "MARKET_STATE", "BONUS",
   "BOOKMAKER_RATING", "API_PROVIDER", "RESOURCE", "WEB_EVIDENCE", "ALERT", "DECISION_CARD", "SOURCE_LINEAGE",
+  "PUBLIC_OBSERVER_RESULT", "HIGHLIGHT", "ENTITY_PASSPORT",
 ];
 
 export function isObjectType(x: string): x is ObjectType {

@@ -18,7 +18,9 @@ import {
   sourceGenomeToClaimObject,
   alertToClaimObject,
   webEvidenceToClaimObject,
+  publicObserverToClaimObject,
 } from "./morphology-adapters.js";
+import { buildAllPublicObserverRecords } from "../public-observer-ledger.js";
 import type { RightsEnvelope } from "./claim-object.js";
 import { EVENT_GENOME_FIXTURES } from "../event-genome-fixtures.js";
 import { matchDerivedStats } from "../match-derived-stats.js";
@@ -58,6 +60,9 @@ export function compileAllFixtures(): readonly ClaimObject[] {
   // A forbidden source — so the corpus visibly demonstrates a REFUSAL (DO_NOT_USE), not just a cap.
   // The institution's strongest claim is "this cannot be shown"; it must be visible, not implied.
   out.push(compileClaimObject(sourceGenomeToClaimObject(GENOME_FORBIDDEN)));
+
+  // Public Observer records — what dominant discovery systems SHOW the public (one observer, not truth).
+  for (const r of buildAllPublicObserverRecords()) out.push(compileClaimObject(publicObserverToClaimObject(r)));
   out.push(
     compileClaimObject(
       webEvidenceToClaimObject({
