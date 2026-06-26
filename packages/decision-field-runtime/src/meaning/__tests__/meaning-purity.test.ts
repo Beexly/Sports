@@ -7,8 +7,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
-// Resolved from the repo root (vitest runs there); avoids import.meta so the package tsc stays happy.
-const meaningDir = resolve(process.cwd(), "packages/decision-field-runtime/src/meaning");
+// Resolve relative to THIS test file (not process.cwd) — CI runs each workspace's vitest with cwd set to
+// the package dir, so a cwd-relative path doubles and breaks. __dirname is cwd-independent and tsc-safe.
+const meaningDir = resolve(__dirname, "..");
 const BANNED = /\bDate\.now\b|\bMath\.random\b|\bnew Date\(|\bfetch\(|\bprocess\.env\b|\bsetTimeout\b/;
 
 describe("meaning/* is pure and deterministic", () => {
