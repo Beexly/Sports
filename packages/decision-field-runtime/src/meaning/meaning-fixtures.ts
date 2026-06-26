@@ -26,7 +26,7 @@ import { buildAllTrendPassports } from "../trend-passport.js";
 import { buildAllPredictionTrials } from "../prediction-court.js";
 import { buildAllMarketBloomRecords } from "../market-bloom.js";
 import { buildFixtureAlerts } from "../watchlist-alerts.js";
-import { buildAllBonusPassports, GENOME_ODDS_API } from "@sports/data-intelligence";
+import { buildAllBonusPassports, GENOME_ODDS_API, GENOME_FORBIDDEN } from "@sports/data-intelligence";
 import type { ObjectType } from "./claim-object.js";
 
 const WEB_EVIDENCE_RIGHTS: RightsEnvelope = {
@@ -55,6 +55,9 @@ export function compileAllFixtures(): readonly ClaimObject[] {
   // Money + provider + web evidence.
   for (const b of buildAllBonusPassports()) out.push(compileClaimObject(bonusPassportToClaimObject(b)));
   out.push(compileClaimObject(sourceGenomeToClaimObject(GENOME_ODDS_API)));
+  // A forbidden source — so the corpus visibly demonstrates a REFUSAL (DO_NOT_USE), not just a cap.
+  // The institution's strongest claim is "this cannot be shown"; it must be visible, not implied.
+  out.push(compileClaimObject(sourceGenomeToClaimObject(GENOME_FORBIDDEN)));
   out.push(
     compileClaimObject(
       webEvidenceToClaimObject({

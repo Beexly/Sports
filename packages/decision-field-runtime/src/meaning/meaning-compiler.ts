@@ -159,6 +159,13 @@ function buildExplanation(
   downgrades: readonly ClaimDowngrade[],
   lifecycle: ClaimLifecycle,
 ): ClaimExplanation {
+  // A claim refused by rights/time is bound by THAT engine, not the authority layer — say so plainly,
+  // rather than report only the (downstream) authority cap from the flight record.
+  const refusal = downgrades.find((d) => d.cappedTo === "DO_NOT_USE");
+  const authorityStory =
+    refused && refusal
+      ? `Refused at the ${refusal.stage} layer (${refusal.engine}): ${refusal.reason}.`
+      : `${flightRecord.whyNot} ${flightRecord.whatWouldUpgrade}`;
   return {
     whatAmI: `${input.objectType.replace(/_/g, " ").toLowerCase()}: ${input.semantic.plainText}`,
     whereFrom: input.sourceLineage.providerName
@@ -168,7 +175,7 @@ function buildExplanation(
     allowedToMean: refused ? "nothing — this claim is refused (DO_NOT_USE)" : `at most ${publicExpression}`,
     decisionItChanges: input.decision.decisionUse,
     weaknesses: input.risk.weakness,
-    authorityStory: `${flightRecord.whyNot} ${flightRecord.whatWouldUpgrade}`,
+    authorityStory,
     afterResult: `${input.autopsyHook.settlesWhen} — ${input.autopsyHook.gradingProtocol}`,
     canBeShownPublicly: !refused, // a fixture CAN be shown (watermarked); a refusal cannot
     whatWouldStrengthen: flightRecord.whatWouldUpgrade,

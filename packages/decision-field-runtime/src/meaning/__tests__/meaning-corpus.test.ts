@@ -28,6 +28,15 @@ describe("compiled corpus — cross-domain, nothing escapes the compiler", () =>
     }
   });
 
+  it("visibly REFUSES at least one object — the institution can say 'this cannot be shown'", () => {
+    const refused = corpus.filter((c) => c.lifecycle === "DO_NOT_USE");
+    expect(refused.length).toBeGreaterThanOrEqual(1);
+    for (const c of refused) {
+      expect(c.explain.canBeShownPublicly).toBe(false);
+      expect(c.explain.authorityStory).toMatch(/refused/i);
+    }
+  });
+
   it("spans many object types (one grammar for the whole institution)", () => {
     const byType = compiledFixturesByType();
     const present = Object.keys(byType);

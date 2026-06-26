@@ -115,6 +115,8 @@ describe("compileClaimObject — downgrades each name their engine", () => {
     expect(c.publicSafe).toBe(false);
     expect(c.explain.downgrades.some((d) => d.stage === "rights" && d.engine === "isForbidden" && d.cappedTo === "DO_NOT_USE")).toBe(true);
     expect(c.explain.canBeShownPublicly).toBe(false);
+    // the explanation names the REFUSING engine, not just the downstream authority cap
+    expect(c.explain.authorityStory).toMatch(/refused at the rights layer.*isForbidden/i);
   });
 
   it("a future fact is refused via knowableAt (no future leakage)", () => {

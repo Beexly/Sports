@@ -3,6 +3,46 @@
 **Branch:** `claude/keen-ptolemy-t38f1g` (main untouched). **Envelope:** fixture/preview only, no spend,
 no secrets, no live API, no Scores24 as a data source. **Verdict:** see the end.
 
+---
+
+## Meaning Compiler Upgrade (Addendum II — the Einstein frame)
+
+The night's second movement answered the deeper ask: GSE is not a page system, it is a **compiler for
+sports meaning**. Every object now lifts into one typed `ClaimObject` and passes through one governed,
+downgrade-only pipeline. The page is the rendering; the compiler is the company.
+
+1. **What changed in the architecture?** One universal `ClaimObject` (seven organs) + one
+   `compileClaimObject` pipeline now govern every kind of sports object. The compiler owns no math — it
+   composes the canonical engines (`composeAuthority`, `knowableAt`, `strengthMin`, `clampStatus`,
+   `isForbidden`), proven by the machine-checked **No-Parallel-Systems** keystone theorem.
+2. **What now compiles through `ClaimObject`?** Stats, derived stats, trends, predictions, odds prices,
+   market states, bonuses, bookmaker ratings, API providers, web evidence, alerts, decision cards — 12
+   adapters, a 59-object compiled corpus across three sports.
+3. **What pages are merely renderers?** `/meaning/preview` renders only compiled ClaimObjects;
+   `validatePageRender` enforces (at render time) the route registry's declared gates. The N6
+   `/matches/preview` route is the named follow-up to route through the compiler too.
+4. **What objects remain outside the compiler?** The N6 match-preview surface still renders raw
+   passports — but those passports are *consistency-proven* against the compiler (same authority
+   lattice). Nothing public is anatomically incomplete.
+5. **What is safer than before?** The institution now *visibly refuses* a forbidden source
+   (`DO_NOT_USE`) and *explains* the refusal by its engine; web evidence cannot become fact; competitor
+   research caps at INFO_ONLY; every cap is reproducible by its named engine.
+6. **What is more intelligent than before?** Eight Galileo lenses (instruments, not dashboards) read one
+   corpus; the Authority Flight Recorder states, per object, exactly what GSE was allowed to say and
+   which layer bound it.
+7. **What is more monetizable than before?** The category is now legible: "GSE shows what the data is
+   allowed to mean" is a bigger claim than "better predictions" — and the page factory can scale on the
+   compiler, not on hand-built pages (`SCORES24_TO_GSE_INVARIANTS.md`).
+8. **What is harder to copy?** The whole moat is the governed grammar: a fake-certainty competitor would
+   have to dismantle its funnel to adopt a compiler that refuses to overclaim.
+9. **What must remain held?** Live data, live affiliate links, any gate flip — all still owner-gated.
+   The compiler is fixture-only; every ceiling is INFO_ONLY until the live data source is activated.
+10. **What is the next coding move?** Route `/matches/preview` through the compiler; the live-phase
+    field-level native refactor (once ceilings vary); a CI drift test for the observatory.
+
+Verdict on the upgrade: **READY_FOR_FRONTIER_PREVIEW.** Detail in `MEANING_INTEGRITY_AUDIT.md`
+(two passes, two in-pass fixes, no envelope violation). The original N1–N9 brief follows.
+
 ## What shipped tonight (N1–N9)
 
 The first visible slice of the GSE institution: a proof-governed answer to a match page where every

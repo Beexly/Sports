@@ -62,6 +62,7 @@ const DOCS = [
   // Meaning Compiler (Addendum II)
   "docs/product/GSE_MEANING_COMPILER.md",
   "docs/competitive/SCORES24_TO_GSE_INVARIANTS.md",
+  "docs/frontier-night/MEANING_INTEGRITY_AUDIT.md",
 ];
 
 describe("Docs — public-copy banned-phrase scan", () => {
