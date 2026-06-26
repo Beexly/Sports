@@ -42,6 +42,21 @@ const DOCS = [
   "docs/adr/001-public-performance-policy.md",
   "docs/adr/002-jarvis-synthesizer.md",
   "CONTRIBUTING.md",
+  // Frontier-night Event Genome product specs (each anchored to a shipped engine module).
+  "docs/product/MATCH_GENOME_SYSTEM.md",
+  "docs/product/STAT_PASSPORTS.md",
+  "docs/product/TREND_PASSPORTS.md",
+  "docs/product/PREDICTION_COURT.md",
+  "docs/product/MARKET_BLOOM.md",
+  "docs/product/AUTHORITY_FLIGHT_RECORD.md",
+  "docs/product/SLIP_MRI.md",
+  "docs/product/MY_MATCHES_AND_ALERTS.md",
+  "docs/product/SEO_ROUTE_FACTORY.md",
+  "docs/product/BONUS_OFFER_INTEGRITY.md",
+  "docs/competitive/SCORES24_BUSINESS_MACHINE_TEARDOWN.md",
+  "docs/frontier-night/01_GSE_INSTITUTION_ARCHITECTURE.md",
+  "docs/data-kingdom/odds-credit.md",
+  "docs/launch/scores24-leverage-to-gse-revenue.md",
 ];
 
 describe("Docs — public-copy banned-phrase scan", () => {
