@@ -1,5 +1,5 @@
 {
-  "name": "@sports/prediction-engine",
+  "name": "@sports/data-genesis",
   "version": "1.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -8,10 +8,6 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@sports/types": "*",
-    "@sports/data-genesis": "*"
   },
   "devDependencies": {
     "typescript": "^5.4.5",

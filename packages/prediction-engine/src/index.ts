@@ -471,6 +471,16 @@ export type {
 export { reduceLadder, RUNG_REQUIREMENTS } from "./ladder/reduce.js";
 export { fanoutGameSettledHeartbeat } from "./ladder/heartbeat.js";
 export type { GameSettledFanoutInput, GameSettledFanoutResult } from "./ladder/heartbeat.js";
+// Data Genesis adapter — SHADOW infrastructure that wraps derived engine outputs (edge, CLV,
+// calibration, signal snapshots) into receipted SyntheticSignals for the @sports/data-genesis
+// promotion law. NOT wired into live scoring; building a signal is inert until explicitly promoted.
+export {
+  edgeAssessmentToSyntheticSignal,
+  clvGradeToSyntheticSignal,
+  calibrationCurveToGenesisResult,
+  pickSignalSnapshotToGenesisReceipt,
+} from "./data-genesis-adapter.js";
+export type { GenesisAdapterContext } from "./data-genesis-adapter.js";
 export {
   nflverseSchedulesToReplayGames,
   replayHistoricalWeek,
