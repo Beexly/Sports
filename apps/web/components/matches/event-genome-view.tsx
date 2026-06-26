@@ -328,6 +328,44 @@ function Autopsy({ p }: { p: EventGenomePreview }) {
   );
 }
 
+function Compiler({ p }: { p: EventGenomePreview }) {
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-sm text-ink-1">
+        Every object on this page is also routed through the GSE Meaning Compiler — one grammar for the whole institution.
+        Each compiles to a <span className="font-mono">ClaimObject</span> whose permitted expression is the meet of its
+        engines; on fixture data that meet is <span className="font-mono">INFO_ONLY</span>, and the trail names every cap.
+      </p>
+      <div className="grid gap-3 md:grid-cols-2">
+        {p.compiled.map((c) => (
+          <div key={c.claimObjectId} className="rounded-xl border border-paper-border bg-paper-raised p-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-wide text-ink-2">{c.objectType.replace(/_/g, " ").toLowerCase()}</p>
+                <p className="text-sm font-medium text-ink">{c.subject}</p>
+              </div>
+              <StrengthChip strength={c.publicExpression} />
+            </div>
+            <p className="mt-1.5 text-xs text-ink-2">
+              binds at {c.authority.composition.bindingLayers.join(", ") || "—"} · {c.sourceLineage.providerName ?? c.sourceLineage.sourceKind}
+            </p>
+            {c.explain.downgrades.length > 0 ? (
+              <p className="text-xs text-ink-2">
+                trail: {c.explain.downgrades.map((d) => `${d.engine}→${d.cappedTo}`).join(" · ")}
+              </p>
+            ) : (
+              <p className="text-xs text-emerald-700">cleared at this lifecycle</p>
+            )}
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-ink-2">
+        {p.compiled.length} objects compiled · all fixture-watermarked · nothing on this page escapes the grammar.
+      </p>
+    </div>
+  );
+}
+
 const PANELS: Record<GenomeView, (props: { p: EventGenomePreview }) => JSX.Element> = {
   overview: Overview,
   worldline: Worldline,
@@ -336,6 +374,7 @@ const PANELS: Record<GenomeView, (props: { p: EventGenomePreview }) => JSX.Eleme
   market: Market,
   passports: Passports,
   odds: Odds,
+  compiler: Compiler,
   proof: Proof,
   autopsy: Autopsy,
 };

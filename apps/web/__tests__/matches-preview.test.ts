@@ -22,9 +22,10 @@ import {
 const repoRoot = resolve(__dirname, "..");
 
 describe("Event Genome preview — engine-driven, honest on fixtures", () => {
-  it("covers all three proof fixtures with nine views", () => {
+  it("covers all three proof fixtures with ten views (incl. the Compiler view)", () => {
     expect(PREVIEW_SLUGS).toEqual(["ecuador-germany", "rays-royals", "roughriders-argonauts"]);
-    expect(GENOME_VIEWS).toHaveLength(9);
+    expect(GENOME_VIEWS).toHaveLength(10);
+    expect(GENOME_VIEWS.map((v) => v.value)).toContain("compiler");
   });
 
   for (const slug of PREVIEW_SLUGS) {
@@ -41,6 +42,13 @@ describe("Event Genome preview — engine-driven, honest on fixtures", () => {
       for (const m of p.markets) expect(m.eventId).toBe(p.genome.eventId);
       // no fixture trial may ever be a public performance claim
       for (const t of p.trials) expect(t.countsAsPublicPerformance).toBe(false);
+      // Integrity Audit Q1: every object on this page is ALSO routed through the Meaning Compiler
+      expect(p.compiled.length).toBeGreaterThan(0);
+      for (const c of p.compiled) {
+        expect(c.fixtureWatermarked).toBe(true);
+        expect(c.publicExpression).toBe("INFO_ONLY");
+        expect(c.publicSafe).toBe(false);
+      }
     });
   }
 

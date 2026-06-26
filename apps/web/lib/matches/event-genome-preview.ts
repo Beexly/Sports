@@ -24,6 +24,14 @@ import {
   type AuthorityFlightRecord,
   FIXTURE_AUTHORITY,
   type MaxPermittedStrength,
+  // Meaning Compiler — route the match's own objects through the one grammar (Integrity Audit Q1).
+  compileClaimObject,
+  type ClaimObject,
+  matchStatToClaimObject,
+  trendToClaimObject,
+  predictionTrialToClaimObject,
+  oddsPriceToClaimObject,
+  marketBloomToClaimObject,
 } from "@sports/decision-field-runtime";
 
 /** The three proof fixtures, addressed by their public URL slug. */
@@ -51,6 +59,7 @@ export const GENOME_VIEWS = [
   { value: "market", label: "Market Lifecycle" },
   { value: "passports", label: "Passports" },
   { value: "odds", label: "Odds" },
+  { value: "compiler", label: "Compiler" },
   { value: "proof", label: "Proof" },
   { value: "autopsy", label: "Autopsy" },
 ] as const;
@@ -72,6 +81,8 @@ export interface EventGenomePreview {
   readonly flightRecord: AuthorityFlightRecord;
   /** The meet across every authority layer — INFO_ONLY for fixtures, by construction. */
   readonly authorityCeiling: MaxPermittedStrength;
+  /** This match's own objects, routed through the Meaning Compiler (one grammar, Integrity Audit Q1). */
+  readonly compiled: readonly ClaimObject[];
 }
 
 /**
@@ -91,14 +102,30 @@ export function buildEventGenomePreview(slug: PreviewSlug): EventGenomePreview {
     receiptRefs: [`event-genome:${id}`],
   });
 
+  const derivedStats = matchDerivedStats(genome);
+  const trends = buildAllTrendPassports().filter((t) => t.eventId === id);
+  const trials = buildAllPredictionTrials().filter((t) => t.matchId === id);
+  const markets = buildAllMarketBloomRecords().filter((m) => m.eventId === id);
+
+  // Route every one of this match's objects through the ONE grammar — the page renders raw passports for
+  // legibility AND compiles them, so nothing visible escapes the ClaimObject (Meaning Integrity Audit Q1).
+  const compiled: ClaimObject[] = [
+    ...derivedStats.map((s) => compileClaimObject(matchStatToClaimObject(s, id, genome.sport))),
+    ...trends.map((t) => compileClaimObject(trendToClaimObject(t))),
+    ...trials.map((t) => compileClaimObject(predictionTrialToClaimObject(t))),
+    ...markets.map((m) => compileClaimObject(marketBloomToClaimObject(m))),
+    ...genome.odds.map((o) => compileClaimObject(oddsPriceToClaimObject(o, id, genome.sport))),
+  ];
+
   return {
     slug,
     genome,
-    derivedStats: matchDerivedStats(genome),
-    trends: buildAllTrendPassports().filter((t) => t.eventId === id),
-    trials: buildAllPredictionTrials().filter((t) => t.matchId === id),
-    markets: buildAllMarketBloomRecords().filter((m) => m.eventId === id),
+    derivedStats,
+    trends,
+    trials,
+    markets,
     flightRecord,
     authorityCeiling: flightRecord.permittedExpression,
+    compiled,
   };
 }

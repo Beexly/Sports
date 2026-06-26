@@ -9,7 +9,7 @@ and a disposition — **FIXED** (patched this pass), **ACCEPTED** (a deliberate,
 
 | # | Question | Verdict | Disposition |
 |---|---|---|---|
-| 1 | Did every visible object compile through `ClaimObject`? | The `/meaning/preview` surface renders ONLY compiled ClaimObjects. The older `/matches/preview` (N6) still renders raw passports. | **ACCEPTED** — `/meaning/preview` is the compiled surface; unifying the N6 route is a named follow-up. The passports it renders are themselves consistency-proven against the compiler (M11). |
+| 1 | Did every visible object compile through `ClaimObject`? | Both surfaces now do: `/meaning/preview` renders compiled ClaimObjects, and `/matches/preview` gained a **Compiler view** that routes every one of the match's objects (stats, trends, trials, markets, odds) through `compileClaimObject` — so nothing visible escapes the grammar. | **FIXED** — the N6 route's `buildEventGenomePreview` now also compiles its objects; a test asserts all compiled claims are fixture-watermarked + INFO_ONLY. |
 | 2 | Did any page invent meaning outside the compiler? | No — both surfaces render engine output; `/meaning/preview` only renders `compileClaimObject` results. | **ACCEPTED-CLEAN** |
 | 3 | Did any object lack source / time / rights / authority? | No — the seven envelopes are type-required; `validateClaimObject` re-checks. | **ACCEPTED-CLEAN** |
 | 4 | Did any fixture look live? | No — `fixtureWatermarked` is DERIVED from `sourceReality`; the whole corpus is watermarked. | **ACCEPTED-CLEAN** |
@@ -46,7 +46,6 @@ institution's strongest claim ("this cannot be shown") was invisible. Added a fo
 
 ## Residual (carried to the live phase)
 
-- Unify the N6 `/matches/preview` route to render through `ClaimObject` (Q1).
 - The field-level native refactor once ceilings vary off fixtures (S6).
 - A CI drift test diffing the observatory's embedded values against `compileAllFixtures()` (S5 hardening).
 
