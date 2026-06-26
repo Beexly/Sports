@@ -15,3 +15,4 @@ export * from "./audit.js";
 export * from "./provider-portfolio.js";
 export * from "./ingestion-cadence-planner.js";
 export * from "./decision-state-matrix.js";
+export * from "./acquisition-plan.js";
