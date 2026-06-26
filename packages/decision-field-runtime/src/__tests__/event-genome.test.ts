@@ -131,4 +131,32 @@ describe("20 soccer derived stats — every stat has a passport", () => {
     expect(val("xg_justice_score")).toBe(0.99);
     expect(val("stat_meaning_confidence")).toBe(0.2);
   });
+
+  // FULL GOLDEN SNAPSHOT — every one of the 20 derived stats, not just the headline four (closes the
+  // adversarial audit's deferred item P2). Any change to a stat's math fails here before it can ship.
+  it("matches the full golden snapshot of all 20 derived stats", () => {
+    const snapshot: Record<string, number | null> = Object.fromEntries(stats.map((s) => [s.key, s.value]));
+    expect(snapshot).toEqual({
+      chance_density: 0.164,
+      possession_mirage_index: 28.2,
+      sterile_possession_index: 533,
+      dangerous_attack_yield: 0.0308,
+      pass_to_threat_yield: 3.57,
+      xg_justice_score: 0.99,
+      expected_points_justice: 0.68,
+      set_piece_pressure_index: 0.43,
+      discipline_friction_index: 33,
+      goalkeeper_swing: 1.91,
+      big_chance_conversion_pressure: 0.5,
+      rotation_risk_index: 0.45,
+      elimination_pressure_index: 0.4,
+      trend_fragility_score: 1,
+      prediction_process_score: 1,
+      good_pass_value: 0.29,
+      observer_disagreement_index: 0.29,
+      match_state_volatility: 0.4,
+      underdog_deservedness_score: 0.48,
+      stat_meaning_confidence: 0.2,
+    });
+  });
 });

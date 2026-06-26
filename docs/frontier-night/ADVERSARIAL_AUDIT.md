@@ -29,7 +29,7 @@ ceremony?*
 | ID | Finding | Severity | Disposition |
 |---|---|---|---|
 | P1 | Every fixture caps at `INFO_ONLY` ("FYI"). A user only ever sees "FYI" — is that useful? | Med | **ACCEPTED** — the product is the *explanation*, not the call. The Flight Record shows precisely which layer binds and what would lift it. On live data the ceiling rises; the cap is the fixture envelope, by design. |
-| P2 | Stat tests assert structure (passport/weakness) but not the correctness of the math. | Med | **FIXED (partial)** — H1's golden anchors now pin four headline stat values; broader golden coverage of all 20 is **DEFERRED** to the live phase. |
+| P2 | Stat tests assert structure (passport/weakness) but not the correctness of the math. | Med | **FIXED** — H1's golden anchors pin the four headline values, and a full golden snapshot now pins all 20 derived-stat values; any math change fails before it can ship. |
 | P3 | Is the differentiation real or rhetorical? Could Scores24 copy it? | Med | **ACCEPTED** — the moat is structural: their revenue depends on fake certainty (confident tips, parlay pushes, "best book" funnels). Each is a place where the honest answer reduces conversion, so they cannot adopt it without dismantling the funnel. Documented in the business-machine teardown. |
 | P4 | The HTML offline page and the Next routes are two renderers — do they agree? | Low | **ACCEPTED-CLEAN** — both consume the same canonical engine fixtures; the golden anchors (H1) pin the values both cite. |
 | P5 | The Slip MRI could still be read as parlay encouragement. | Med | **ACCEPTED-CLEAN** — the strongest possible verdict is `PROCEED_WITH_CAUTION`; any unsupported/correlated/duplicated leg forces `PASS`; a responsible-gaming warning is always attached; tests enforce the ceiling. |
@@ -44,7 +44,6 @@ ceremony?*
 
 ## Residual risk (carried to the live phase)
 
-- Golden coverage of all 20 derived stats, not just the four headline values (P2).
 - Verification of the live ingestion path once keys + owner approval exist (P7).
 - A drift test that diffs the offline HTML's embedded values against the engine at CI time (H1 hardening).
 
