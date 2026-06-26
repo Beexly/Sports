@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GSE Stat Foundry — the Passport, not the number</title>
+<!--
+  THE STAT FOUNDRY · Stat Passports. Canonical engine: packages/decision-field-runtime/src/stat-foundry.ts
+  (this page MIRRORS its genomes + computed values over the SAME fixture; a test pins the values).
+  Static · offline · NO network · NO secrets · NO live data · fixture-watermarked.
+  A competitor gives a number. GSE gives the number's genealogy, limits, and EARNED authority.
+  On fixture data no statistic may exceed EXPERIMENTAL — settled-n is 0, the publish gate is HELD.
+-->
+<style>
+  :root{--cyan:#00E5FF;--uv:#7B61FF;--magenta:#FF38C7;--amber:#A855F7;--blue:#2A6BFF;--gold:#FFC857;--green:#34d39a;
+    --bg0:#05070B;--glass:rgba(13,17,23,.55);--card:rgba(13,17,23,.72);--line:rgba(0,229,255,.16);--line2:rgba(123,97,255,.22);
+    --txt:#F5F7FF;--muted:#8aa4ca;--faint:#46587b;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg0);color:var(--txt);font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5}
+  body{position:relative;min-height:100vh;background:radial-gradient(1100px 640px at 20% 8%,rgba(40,120,200,.10),transparent 60%),radial-gradient(900px 560px at 88% 86%,rgba(123,97,255,.11),transparent 60%),var(--bg0)}
+  .wrap{max-width:1160px;margin:0 auto;padding:34px 22px 70px}
+  .mono{font-family:"Exo 2",ui-monospace,Menlo,monospace;letter-spacing:.03em}
+  h1,h2,h3{font-family:"Exo 2",system-ui,sans-serif;font-weight:700}
+  .brand{display:flex;align-items:center;gap:13px}
+  .mark{width:40px;height:40px;border-radius:11px;flex:none;background:radial-gradient(circle at 50% 38%,rgba(0,229,255,.95),rgba(123,97,255,.55) 64%,transparent);box-shadow:0 0 30px rgba(0,229,255,.5)}
+  .brand h1{font-size:22px;background:linear-gradient(90deg,#00E5FF,#FF38C7,#7B61FF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .brand .sub{font-size:10px;letter-spacing:.32em;color:var(--cyan);text-transform:uppercase;margin-top:3px}
+  .lede{color:var(--muted);max-width:780px;font-size:14.5px;margin-top:14px}.lede b{color:var(--txt)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .chip.fix{color:var(--uv);border-color:var(--line2)}
+  /* lifecycle */
+  .life{margin-top:22px;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .life .t{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .pipe{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+  .stage{font-family:"Exo 2";font-size:11px;letter-spacing:.04em;padding:6px 12px;border-radius:8px;border:1px solid var(--line);color:var(--muted);background:var(--card)}
+  .stage.reach{color:var(--cyan);border-color:rgba(0,229,255,.4)}
+  .stage.wall{color:var(--uv);border-color:var(--line2)}
+  .arrow{color:var(--faint);padding:0 8px}
+  .life .rule{margin-top:12px;font-size:12.5px;color:var(--muted)}.life .rule b{color:var(--gold)}
+  /* passport grid */
+  .grid{margin-top:20px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(max-width:840px){.grid{grid-template-columns:1fr}}
+  .pp{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:0;overflow:hidden;backdrop-filter:blur(8px)}
+  .pp .top{padding:15px 17px;cursor:pointer;display:flex;align-items:flex-start;gap:12px}
+  .pp .top:hover{background:rgba(0,229,255,.04)}
+  .pp .num{font-family:"Exo 2";font-size:30px;line-height:1;color:var(--cyan);min-width:90px}
+  .pp .num.nd{color:var(--faint);font-size:18px;padding-top:6px}
+  .pp .hd{flex:1}
+  .pp .nm{font-family:"Exo 2";font-size:15px}
+  .pp .q{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .pp .unit{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+  .badge{font-family:"Exo 2";font-size:9.5px;letter-spacing:.06em;padding:3px 8px;border-radius:6px;text-transform:uppercase;white-space:nowrap}
+  .badge.EXPERIMENTAL{color:var(--amber);background:rgba(168,85,247,.14)}
+  .badge.CANDIDATE{color:var(--faint);background:rgba(70,88,123,.2);border:1px solid var(--line)}
+  .pp .body{display:none;border-top:1px solid var(--line);padding:14px 17px;background:var(--card);font-size:12.5px}
+  .pp.open .body{display:block}
+  .row{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:5px 0;border-bottom:1px solid rgba(0,229,255,.05)}
+  .row .k{color:var(--faint);text-transform:uppercase;letter-spacing:.05em;font-size:10.5px}
+  .row .v{color:var(--txt)}.row .v.mono{font-family:"Exo 2";color:var(--cyan);font-size:12px}
+  .row .v.fail{color:var(--magenta)}.row .v.fal{color:var(--gold)}
+  .caret{color:var(--faint);font-size:12px;margin-left:auto}
+  .ledgers{margin-top:24px;background:var(--glass);border:1px solid var(--line2);border-radius:14px;padding:16px 18px}
+  .ledgers .t{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .lrow{display:flex;gap:10px;flex-wrap:wrap}
+  .lg{flex:1;min-width:150px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--card)}
+  .lg .n{font-family:"Exo 2";font-size:12px;color:var(--cyan)}.lg .d{font-size:11.5px;color:var(--muted);margin-top:4px}
+  .stamp{margin-top:26px;text-align:center;color:var(--faint);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><div class="mark"></div>
+      <div><h1>GSE STAT FOUNDRY</h1><div class="sub">the passport, not the number</div></div>
+    </div>
+    <p class="lede">Every other provider hands you a number. GSE hands you the number's <b>genealogy</b>:
+      what it measures, how it's computed, where the data came from, where it fails, the test that would
+      falsify it, which decisions it changes, and the authority it has actually <b>earned</b>. Statistics
+      here are living hypotheses — they are born as candidates, must pass falsification and out-of-sample
+      confirmation, and can be promoted, downgraded, or retired. <b>Tap any passport to open it.</b></p>
+    <div class="chips">
+      <span class="chip fix">fixture · offline · not advice</span>
+      <span class="chip">no network · no live data · no spend</span>
+      <span class="chip">engine: stat-foundry.ts</span>
+    </div>
+  </header>
+
+  <div class="life">
+    <div class="t">The stat lifecycle — earned, never asserted</div>
+    <div class="pipe">
+      <span class="stage reach">CANDIDATE</span><span class="arrow">→</span>
+      <span class="stage reach">EXPERIMENTAL</span><span class="arrow">→</span>
+      <span class="stage wall">▟ VALIDATED</span><span class="arrow">→</span>
+      <span class="stage wall">▟ OFFICIAL</span>
+      <span class="arrow" style="margin-left:14px">·</span>
+      <span class="stage">DEGRADED</span><span class="arrow">/</span><span class="stage">RETIRED</span>
+    </div>
+    <div class="rule">▟ <b>The wall:</b> on fixture data a statistic can never pass EXPERIMENTAL. VALIDATED
+      requires an out-of-sample confirmation sample; OFFICIAL requires owner promotion. Settled-n is 0 and
+      the publish gate is HELD — so every passport below is capped at EXPERIMENTAL or CANDIDATE, by construction.</div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="ledgers">
+    <div class="t">The five canonical ledgers — one object, five views</div>
+    <div class="lrow">
+      <div class="lg"><div class="n">1 · Reality</div><div class="d">what happened / is believed true</div></div>
+      <div class="lg"><div class="n">2 · Belief</div><div class="d">what each observer believed, when</div></div>
+      <div class="lg"><div class="n">3 · Decision</div><div class="d">what was rational, and why</div></div>
+      <div class="lg"><div class="n">4 · Authority</div><div class="d">what GSE was permitted to say</div></div>
+      <div class="lg"><div class="n">5 · Learning</div><div class="d">what it deserved, what to build next</div></div>
+    </div>
+  </div>
+
+  <div class="stamp">GSE Stat Foundry · fixture passports · every number carries its genealogy and its earned authority · EXPERIMENTAL · not advice</div>
+</div>
+
+<script>
+(function(){
+  // mirror of stat-foundry.ts flagship genomes + computed fixture values (pinned by stat-foundry.test.ts)
+  const STATS=[
+    {num:'0.12',unit:'snap-probability',name:'Decision Boundary Distance',q:'How small a change flips the decision?',status:'EXPERIMENTAL',
+     formula:'ρ = min ‖δ‖ s.t. a*(X+δ) ≠ a*(X); here 1 − x* on the WR1-snap axis',
+     origin:'PARALLAX fork · nflverse role facts (fixture)',uncert:'grid sweep @0.01 (deterministic)',
+     knownAt:'WR1 status knowable at T; else undefined (refuse)',fail:'single-axis only; ignores correlated conditions',
+     fal:'If moving the axis by ρ does NOT flip the read (or a smaller move does), ρ is wrong.',
+     dec:'WATCHLIST · ROLE_UP · PASS'},
+    {num:'0.12',unit:'fraction [0,1]',name:'Counterfactual Robustness Radius',q:'How many plausible worlds keep the decision?',status:'EXPERIMENTAL',
+     formula:'fraction of the intervention axis on which a*(X) is unchanged',
+     origin:'PARALLAX fork sweep (fixture)',uncert:'grid coverage (deterministic)',
+     knownAt:'WR1 status knowable at T',fail:'single-axis proxy; uniform prior over the axis',
+     fal:'If a high-radius decision flips under a small in-range perturbation, the radius is wrong.',
+     dec:'WATCHLIST · PASS · ROLE_UP'},
+    {num:'−2',unit:'ticks',name:'Observer Lag Vector',q:'Which observer reacted first, which late?',status:'EXPERIMENTAL',
+     formula:'L_o = t_observed − t_reality_change (BOOK/FANTASY/CROWD −2, GSE 0)',
+     origin:'observer beliefs + reality timestamps (fixture)',uncert:'exact tick differences',
+     knownAt:'each observer update + reality-change timestamp',fail:'depends on faithful point-in-time capture',
+     fal:'If a negative-lag observer actually updated AFTER the reality change, the timestamps are wrong.',
+     dec:'PROP_MARKET_LAG · PUBLIC_OVERREACTION · GOOD_IDEA_BAD_PRICE'},
+    {num:'1.0',unit:'fraction [0,1]',name:'Belief Independence Score',q:'Independent evidence, or copies of one origin?',status:'EXPERIMENTAL',
+     formula:'distinct evidence origins / number of observers (4/4 here)',
+     origin:'observer source labels (fixture)',uncert:'set cardinality (exact)',
+     knownAt:'each observer\'s evidence origin',fail:'coarse origin labels; no upstream-provenance graph yet',
+     fal:'If distinct-source observers share an upstream origin, the score is overstated.',
+     dec:'PUBLIC_OVERREACTION · DATA_CONFLICT'},
+    {num:'≈0',unit:'target-share residual',name:'Opportunity Transfer Matrix',q:'When a role changes, where does opportunity go?',status:'EXPERIMENTAL',
+     formula:'ΔO_j = O_vacated · w_j, Σw=1 — conserves team target mass (residual < 1e-9)',
+     origin:'PARALLAX redistribution (fixture priors)',uncert:'conservation check',
+     knownAt:'WR1 status knowable at T',fail:'redistribution weights are priors, not estimated; ignores game-script',
+     fal:'If redistributed shares don\'t sum to the pre-fork team total, the matrix is invalid.',
+     dec:'ROLE_UP · ROLE_MASS_MISALLOCATED · DFS_SALARY_LAG'},
+    {num:'1',unit:'lattice rungs',name:'Authority Margin',q:'How far from the next thing we may say?',status:'EXPERIMENTAL',
+     formula:'rungs from compose(v).ceiling to the next strength; binding layer = blocker',
+     origin:'AuthorityVector meet (fixture context)',uncert:'lattice meet (exact)',
+     knownAt:'the eight authority layers\' operational reality',fail:'reports only the immediate next rung',
+     fal:'If lifting every named blocking layer does NOT raise the ceiling, the margin is wrong.',
+     dec:'WATCHLIST · NEEDS_LIVE_DATA · ACTIONABLE',extra:'ceiling INFO_ONLY · blocked by SOURCE_REALITY'},
+    {num:'needs data',nd:true,unit:'decisions',name:'Refusal Alpha',q:'How much value did our refusals preserve?',status:'CANDIDATE',
+     formula:'RA = avoided_bad − valuable_decisions_falsely_suppressed',
+     origin:'settled outcomes for acted AND refused decisions',uncert:'count (needs interval at scale)',
+     knownAt:'settled outcomes — not earnable on fixtures',fail:'needs settled data; selection bias in what we refuse',
+     fal:'If suppressed decisions would have won at a rate ≥ acted ones, refusal alpha is negative.',
+     dec:'PASS · TRAP · NEEDS_LIVE_DATA'},
+    {num:'needs data',nd:true,unit:'time',name:'Action Half-Life',q:'How long until half the value decays?',status:'CANDIDATE',
+     formula:'t s.t. E[value(t)] = 0.5·value(0), by decision type',
+     origin:'time-resolved realized value of past decisions',uncert:'survival / half-life fit',
+     knownAt:'time-resolved realized value',fail:'needs settled value-decay curves per decision type',
+     fal:'If realized value at the predicted half-life is far from 50%, the decay model is wrong.',
+     dec:'GOOD_IDEA_BAD_PRICE · TOO_LATE'},
+    {num:'needs data',nd:true,unit:'utility',name:'Source Marginal Value',q:'What is one source worth, by ablation?',status:'CANDIDATE',
+     formula:'E[ΔU+ΔR+ΔP+ΔM] − C − L − K (approx. Shapley at scale)',
+     origin:'decisions computed with and without each source',uncert:'ablation / Shapley',
+     knownAt:'live multi-source decisions',fail:'needs live multi-source decisions to ablate',
+     fal:'If removing a "high-value" source doesn\'t degrade decisions/refusals, its value is overstated.',
+     dec:'DATA_CONFLICT · NEEDS_LIVE_DATA'},
+    {num:'needs data',nd:true,unit:'lifecycle state',name:'Market Bloom & Maturity',q:'Where is this market in its lifecycle?',status:'CANDIDATE',
+     formula:'UNBORN→OPENED→THIN→BROADENING→MATURE→MOVING→CAUGHT_UP→STALE→CLOSED',
+     origin:'time-series of book prices/limits',uncert:'state classifier',
+     knownAt:'time-series of book prices/limits',fail:'needs live timestamped book snapshots',
+     fal:'If a market labeled MATURE shows opening-width spreads, the classifier is wrong.',
+     dec:'GOOD_IDEA_BAD_PRICE · TOO_LATE · PROP_MARKET_LAG'},
+  ];
+  const row=(k,v,cls)=>'<div class="row"><div class="k">'+k+'</div><div class="v '+(cls||'')+'">'+v+'</div></div>';
+  document.getElementById('grid').innerHTML=STATS.map((s,i)=>
+    '<div class="pp" data-i="'+i+'"><div class="top">'+
+      '<div class="num'+(s.nd?' nd':'')+'">'+s.num+'</div>'+
+      '<div class="hd"><div class="nm">'+s.name+'</div><div class="q">'+s.q+'</div><div class="unit">'+s.unit+'</div></div>'+
+      '<span class="badge '+s.status+'">'+s.status+'</span><span class="caret">▾</span></div>'+
+      '<div class="body">'+
+        row('measures',s.q)+
+        row('formula',s.formula,'mono')+
+        (s.extra?row('computed',s.extra,'mono'):'')+
+        row('data origin',s.origin)+
+        row('known-at',s.knownAt)+
+        row('uncertainty',s.uncert)+
+        row('fails when',s.fail,'fail')+
+        row('falsifier',s.fal,'fal')+
+        row('decisions',s.dec)+
+        row('status','<b>'+s.status+'</b> — '+(s.nd?'awaiting live/settled data':'fixture-computed; capped here, cannot validate')) +
+      '</div></div>').join('');
+  document.querySelectorAll('.pp .top').forEach(t=>t.addEventListener('click',()=>t.parentElement.classList.toggle('open')));
+})();
+</script>
+</body>
+</html>
