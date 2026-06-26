@@ -13,6 +13,7 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const ROOT = resolve(process.cwd());
 
@@ -71,8 +72,11 @@ const GUARANTEED_DISCLAIMER_ALLOW = new Set([
 ]);
 
 const BANNED_PHRASES = [
-  { phrase: "lock", wordBoundary: true, claim: "banned.lock", allowFiles: LOCK_TECHNICAL_ALLOW },
-  { phrase: "guaranteed", wordBoundary: false, claim: "banned.guaranteed-outcome", allowFiles: GUARANTEED_DISCLAIMER_ALLOW },
+  // lock + guaranteed are NOT whole-file-exempt. In their allowlisted files we blank the SAFE technical
+  // / disclaimer CONTEXTS (below) and then still test — so a promotional "lock" / "guaranteed" in the
+  // same file is still caught. (See scanText.)
+  { phrase: "lock", wordBoundary: true, claim: "banned.lock" },
+  { phrase: "guaranteed", wordBoundary: false, claim: "banned.guaranteed-outcome" },
   { phrase: "sure thing", wordBoundary: false, claim: "banned.sure-thing" },
   { phrase: "risk-free", wordBoundary: false, claim: "banned.risk-free" },
   { phrase: "risk free", wordBoundary: false, claim: "banned.risk-free-2" },
@@ -147,6 +151,19 @@ const WHITELIST_PATHS = new Set([
 const LOCK_SAFE_CONTEXT =
   /\b(?:at|before|by|after|until|since|the)\s+lock\b|\block\s*(?:time\b|→|->|→)/gi;
 
+// In the LOCK_TECHNICAL_ALLOW files, "lock" is a DOMAIN term (the moment a line/waiver/contest locks,
+// the CLV "lock it in now" decision). We do not deny-by-default there; instead we flag ONLY a clearly
+// PROMOTIONAL / betting-slang use of "lock" — exactly what must never appear even in internal code.
+// "today's guaranteed lock" / "lock of the day" / "lock alert" → caught. "LOCK_NOW" / "lockTime" /
+// "${q.lock} lock at ${q.lockTime}" → not promotional → allowed. (Regression-tested.)
+const LOCK_PROMOTIONAL =
+  /\b(?:today'?s|tonight'?s|free|best|biggest|huge|monster|guaranteed|sure|easy|premium|vip|gold|platinum|cash|winning)\s+lock\b|\block\s+of\s+the\s+(?:day|week|night|year)\b|\block\s+(?:alert|pick|play)s?\b/i;
+
+// "guaranteed" is safe ONLY inside an explicit negative disclaimer. Blanked in GUARANTEED_DISCLAIMER_ALLOW
+// files; a promotional "guaranteed winner/profit" matches none of these and still fails.
+const GUARANTEED_DISCLAIMER_CONTEXT =
+  /\b(?:no|not|never|nothing(?:\s+is)?|isn't|aren't|cannot\s+be)\s+(?:\w+\s+){0,3}guaranteed\b|\bno\s+guarantee\b/gi;
+
 const WHITELIST_PREFIXES = [
   "apps/web/lib/compliance-scanner/",
   "apps/web/lib/studio/templates/",
@@ -215,20 +232,35 @@ function lineIsCommentOnly(line) {
   return false;
 }
 
-function scanText(text, relPath) {
+export function scanText(text, relPath) {
   const hits = [];
   const lines = text.split(/\r?\n/);
   const relNorm = relPath.split(sep).join("/");
   for (const entry of BANNED_PHRASES) {
-    // Per-rule file exemption (BS-023): skip this phrase for its allowlisted
-    // files only; every other banned phrase still applies to those files.
+    // Whole-file exemption (BS-023, sharp/smart money only): skip this phrase for its allowlisted
+    // files; every other banned phrase still applies. lock + guaranteed are NOT whole-file-exempt —
+    // they are handled by CONTEXT-blanking below, so a promotional hit in the same file still fails.
     if (entry.allowFiles && entry.allowFiles.has(relNorm)) continue;
     const re = buildRegex(entry);
     for (let i = 0; i < lines.length; i++) {
       if (lineIsCommentOnly(lines[i])) continue;
-      // For the "lock" slang ban, blank the legitimate temporal idioms first;
-      // a residual standalone "lock" (e.g. "a lock", "lock of the day") still hits.
-      const subject = entry.claim === "banned.lock" ? lines[i].replace(LOCK_SAFE_CONTEXT, " ") : lines[i];
+
+      // lock in a trusted internal file: flag ONLY a promotional/slang use; the domain term is allowed.
+      if (entry.claim === "banned.lock" && LOCK_TECHNICAL_ALLOW.has(relNorm)) {
+        if (LOCK_PROMOTIONAL.test(lines[i])) {
+          hits.push({ line: i + 1, snippet: lines[i].trim().slice(0, 200), claim: entry.claim, phrase: entry.phrase });
+        }
+        continue;
+      }
+
+      // Otherwise blank legitimate technical/temporal/disclaimer CONTEXTS, then test the residual. A
+      // standalone promotional "lock"/"guaranteed" survives the blanking and still hits.
+      let subject = lines[i];
+      if (entry.claim === "banned.lock") {
+        subject = subject.replace(LOCK_SAFE_CONTEXT, " ");
+      } else if (entry.claim === "banned.guaranteed-outcome" && GUARANTEED_DISCLAIMER_ALLOW.has(relNorm)) {
+        subject = subject.replace(GUARANTEED_DISCLAIMER_CONTEXT, " ");
+      }
       if (re.test(subject)) {
         hits.push({
           line: i + 1,
@@ -285,7 +317,11 @@ async function main() {
   process.exit(1);
 }
 
-main().catch((err) => {
-  console.error("[trust-gate] unexpected error:", err);
-  process.exit(2);
-});
+// Only scan the filesystem when run directly (node trust-gate.mjs) — not when imported by a test.
+const invokedDirectly = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (invokedDirectly) {
+  main().catch((err) => {
+    console.error("[trust-gate] unexpected error:", err);
+    process.exit(2);
+  });
+}
