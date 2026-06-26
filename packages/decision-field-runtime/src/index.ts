@@ -40,3 +40,4 @@ export * from "./galileo-field-fixtures.js";
 // ── The Meaning Compiler (Addendum II): everything is a ClaimObject ──
 export * from "./meaning/claim-object.js";
 export * from "./meaning/meaning-compiler.js";
+export * from "./meaning/morphology-adapters.js";
