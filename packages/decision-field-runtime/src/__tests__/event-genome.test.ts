@@ -119,4 +119,16 @@ describe("20 soccer derived stats — every stat has a passport", () => {
     const c = stats.find((s) => s.key === "stat_meaning_confidence");
     expect(c!.value!).toBeLessThanOrEqual(0.3);
   });
+
+  // GOLDEN ANCHOR — the exact headline values the proof artifacts publish (the offline
+  // EVENT_GENOME_PAGE.html and docs/product/*). Pinning them here means a proof page can never
+  // silently drift from the engine: change the math and this test fails before any doc can lie.
+  it("publishes the exact headline values the proof artifacts cite (anti-drift)", () => {
+    const val = (k: string) => stats.find((s) => s.key === k)!.value;
+    expect(stats).toHaveLength(20);
+    expect(val("possession_mirage_index")).toBe(28.2);
+    expect(val("underdog_deservedness_score")).toBe(0.48);
+    expect(val("xg_justice_score")).toBe(0.99);
+    expect(val("stat_meaning_confidence")).toBe(0.2);
+  });
 });

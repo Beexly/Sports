@@ -97,7 +97,7 @@
   // ── mirror of engine fixtures + computed values (pinned by the package tests) ──
   const DATA = {
     soccer: {
-      label:"FIFA World Cup · MetLife", score:"Ecuador 2 – 1 Germany", status:"ENDED",
+      label:"FIFA World Cup · MetLife", score:"Ecuador 2 – 1 Germany", status:"ENDED", statsTotal:20,
       meta:[["Venue","MetLife Stadium"],["Weather","27°C · 42% · 5.3m/s"],["Referee","Tori Penso"],["Possession","Ecuador 39% / Germany 61%"],["xG","Ecuador 1.99 / Germany 0.97"],["Expected pts","2.04 / 0.74"]],
       timeline:[["2'","Germany — Sané goal (assist Wirtz)","goal"],["9'","Ecuador — Angulo goal (assist Vite)","goal"],["43'","Ecuador — Hincapié yellow",""],["47'","Penalty cancelled (VAR)",""],["77'","Ecuador — Plata goal (assist Rodríguez)","goal"],["89'","Ecuador — Plata yellow",""]],
       stats:[
@@ -166,7 +166,7 @@
     let html="";
     if(tab==="Overview"){
       html=`<div class="grid"><div class="c"><div class="h">${d.label} · ${d.status}</div><div style="font-family:'Exo 2';font-size:20px;margin-bottom:8px">${d.score}</div>${kv(d.meta)}</div>
-        <div class="c"><div class="h">What GSE adds that a scoreboard doesn't</div><div class="note">Every number below can explain where it came from, what it knows, what it can't prove, and what decision it changes. Tap a passport.</div>${kv([["Stat passports",d.stats.length||"see Passports tab"],["Trends on trial",d.trends.length],["Predictions on trial",d.trials.length],["Market lifecycles",d.markets.length],["Authority ceiling","INFO_ONLY (fixture)"]])}</div></div>`;
+        <div class="c"><div class="h">What GSE adds that a scoreboard doesn't</div><div class="note">Every number below can explain where it came from, what it knows, what it can't prove, and what decision it changes. Tap a passport.</div>${kv([["Stat passports",d.stats.length?(d.stats.length+(d.statsTotal?" shown · "+d.statsTotal+" in engine":"")):"see Passports tab"],["Trends on trial",d.trends.length],["Predictions on trial",d.trials.length],["Market lifecycles",d.markets.length],["Authority ceiling","INFO_ONLY (fixture)"]])}</div></div>`;
     } else if(tab==="Worldline"){
       html=`<div class="c"><div class="h">Worldline — what happened, when it was knowable</div>${d.timeline.length?`<div class="tl">${d.timeline.map(([m,t,c])=>`<div class="ev"><span class="m ${c}">${m}</span><span>${t}</span></div>`).join('')}</div>`:'<div class="note">Upcoming — no timeline yet. The worldline fills in as the event unfolds.</div>'}</div>`;
     } else if(tab==="Prediction Trial"){

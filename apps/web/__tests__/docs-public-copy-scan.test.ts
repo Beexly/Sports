@@ -57,6 +57,8 @@ const DOCS = [
   "docs/frontier-night/01_GSE_INSTITUTION_ARCHITECTURE.md",
   "docs/data-kingdom/odds-credit.md",
   "docs/launch/scores24-leverage-to-gse-revenue.md",
+  "docs/frontier-night/ADVERSARIAL_AUDIT.md",
+  "docs/frontier-night/OVERNIGHT_OWNER_BRIEF.md",
 ];
 
 describe("Docs — public-copy banned-phrase scan", () => {
