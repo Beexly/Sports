@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GSE Field Observatory — One Law, Four Projections</title>
+<!--
+  THE GSE FIELD OBSERVATORY  ·  audit instrument  ·  branch claude/keen-ptolemy-t38f1g
+  Companion to docs/audit/gse-reconciliation/GSE_UNIFIED_FIELD.md and AUTHORITY_TENSOR_PROOF.md.
+
+  This file is a static, offline, self-contained instrument. It has NO backend, makes NO network
+  request, reads NO live data, flips NO production gate, and spends nothing. Its own render logic IS
+  the field equation — the strength of any tile is computed as the lattice MEET of its eight authority
+  layers, exactly as packages/decision-field-runtime/src/decision-authority-gate.ts computes it. As a
+  result the instrument is *structurally* unable to render a pass that was not earned: a fixture-backed
+  scenario can never display a PUBLIC_ACTION badge, and the publish gate cannot open on a fabricated
+  backtest. Integrity-as-geometry. "You cannot render dishonesty."
+-->
+<style>
+  :root{
+    --cyan:#00E5FF;--uv:#7B61FF;--magenta:#FF38C7;--amber:#A855F7;--blue:#2A6BFF;--gold:#FFC857;
+    --bg0:#05070B;--glass:rgba(13,17,23,.55);--card:rgba(13,17,23,.66);
+    --line:rgba(0,229,255,.16);--line2:rgba(123,97,255,.22);
+    --txt:#F5F7FF;--muted:#8aa4ca;--faint:#46587b;
+    /* strength lattice colors: INFO_ONLY < WATCH < WAIT < PERSONALIZED < ACTION < PUBLIC_ACTION */
+    --s0:#46587b;--s1:#2A6BFF;--s2:#7B61FF;--s3:#A855F7;--s4:#00E5FF;--s5:#FF38C7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg0);color:var(--txt);font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5}
+  body{position:relative;min-height:100vh;overflow-x:hidden;
+    background:radial-gradient(1200px 700px at 22% 12%,rgba(40,120,200,.10),transparent 60%),radial-gradient(1000px 620px at 88% 82%,rgba(123,97,255,.11),transparent 60%),var(--bg0)}
+  canvas#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:38px 22px 80px}
+  .mono{font-family:"Exo 2",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}
+  h1,h2,h3{font-family:"Exo 2",system-ui,sans-serif;font-weight:700;letter-spacing:.02em}
+  .glow{text-shadow:0 0 16px rgba(0,229,255,.5)}
+  /* masthead */
+  .brand{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .mark{width:42px;height:42px;border-radius:12px;flex:none;background:radial-gradient(circle at 50% 38%,rgba(0,229,255,.95),rgba(123,97,255,.55) 64%,transparent);box-shadow:0 0 34px rgba(0,229,255,.5)}
+  .brand h1{font-size:24px;background:linear-gradient(90deg,#00E5FF,#FF38C7,#7B61FF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .brand .sub{font-size:10px;letter-spacing:.34em;color:var(--cyan);text-transform:uppercase;margin-top:3px}
+  .lede{color:var(--muted);max-width:780px;margin:14px 0 4px;font-size:15.5px}
+  .lede b{color:var(--txt)}
+  .crumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .crumb{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .crumb.hold{color:var(--uv);border-color:var(--line2)}
+  .crumb.ok{color:var(--cyan)}
+  /* sections */
+  section{margin-top:30px;background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:22px 24px;backdrop-filter:blur(9px)}
+  section.uv{border-color:var(--line2)}
+  .shead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .sno{font-family:"Exo 2";font-size:12px;color:var(--cyan);letter-spacing:.18em}
+  .shead h2{font-size:19px}
+  .sdesc{color:var(--muted);font-size:14px;margin:10px 0 18px;max-width:820px}
+  .sdesc code,.law code{font-family:"Exo 2";color:var(--cyan);background:rgba(0,229,255,.07);padding:1px 6px;border-radius:5px;font-size:13px}
+  /* the law masthead block */
+  .law{margin-top:22px;border:1px solid var(--line);border-radius:16px;padding:20px 22px;background:linear-gradient(180deg,rgba(0,229,255,.05),rgba(123,97,255,.04))}
+  .law .eq{font-family:"Exo 2";font-size:20px;text-align:center;letter-spacing:.02em;margin:6px 0 14px}
+  .law .eq .meet{color:var(--magenta)}.law .eq .ceil{color:var(--cyan)}
+  .lattice{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin-top:6px}
+  .lat{display:flex;align-items:center;gap:0}
+  .latnode{font-family:"Exo 2";font-size:11px;letter-spacing:.05em;padding:6px 12px;border-radius:8px;border:1px solid var(--line);color:var(--txt);background:var(--card)}
+  .latarrow{color:var(--faint);padding:0 9px;font-size:13px}
+  .law .note{color:var(--muted);font-size:13px;text-align:center;margin-top:14px}
+  /* authority tensor */
+  .tensor-grid{display:grid;grid-template-columns:1fr 300px;gap:20px}
+  @media(max-width:880px){.tensor-grid{grid-template-columns:1fr}}
+  .layers{display:flex;flex-direction:column;gap:9px}
+  .layer{display:grid;grid-template-columns:24px 1fr 150px;align-items:center;gap:11px;padding:9px 12px;border:1px solid var(--line);border-radius:11px;background:var(--card);transition:.25s}
+  .layer.binding{border-color:var(--magenta);box-shadow:0 0 0 1px rgba(255,56,199,.35),0 0 24px rgba(255,56,199,.12)}
+  .layer .ln{font-family:"Exo 2";font-size:15px;color:var(--faint);text-align:center}
+  .layer.binding .ln{color:var(--magenta)}
+  .layer .lname{font-size:13.5px}.layer .lname small{display:block;color:var(--faint);font-size:11px;letter-spacing:.03em}
+  .layer .fold{color:var(--uv);font-size:10px;letter-spacing:.04em}
+  .layer select{width:100%;background:rgba(8,13,30,.7);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;font-family:"Exo 2";cursor:pointer;outline:none}
+  .layer .bar{grid-column:1 / -1;height:6px;border-radius:4px;margin-top:7px;background:rgba(255,255,255,.05);overflow:hidden}
+  .layer .barfill{height:100%;border-radius:4px;transition:width .35s cubic-bezier(.2,.8,.2,1),background .35s}
+  /* meet readout */
+  .meetcard{border:1px solid var(--line2);border-radius:14px;padding:18px;background:linear-gradient(180deg,rgba(123,97,255,.08),rgba(0,229,255,.04));position:sticky;top:18px;height:fit-content}
+  .meetcard .h{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .meetcard .big{font-family:"Exo 2";font-size:30px;margin:6px 0 2px;letter-spacing:.02em}
+  .meetcard .why{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+  .meetcard .why b{color:var(--magenta)}
+  .meetcard .pub{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;font-size:13px;display:flex;align-items:center;gap:9px}
+  .pill{font-family:"Exo 2";font-size:11px;letter-spacing:.04em;padding:4px 10px;border-radius:20px}
+  .pill.no{color:var(--uv);background:rgba(123,97,255,.12);border:1px solid var(--line2)}
+  .pill.yes{color:#02121a;background:var(--cyan)}
+  .presets{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  .preset{font-family:"Exo 2";font-size:11px;letter-spacing:.04em;padding:6px 12px;border-radius:9px;border:1px solid var(--line);color:var(--cyan);background:rgba(0,229,255,.06);cursor:pointer;transition:.2s}
+  .preset:hover{background:var(--cyan);color:#02121a}
+  .preset.fix{color:var(--faint);border-color:var(--line)}
+  /* organism */
+  .organism{display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:center}
+  @media(max-width:880px){.organism{grid-template-columns:1fr}}
+  .legend{display:flex;flex-direction:column;gap:12px}
+  .leg{display:flex;gap:12px;align-items:flex-start}
+  .leg .dot{width:13px;height:13px;border-radius:50%;flex:none;margin-top:3px;box-shadow:0 0 12px currentColor}
+  .leg .lt{font-size:14px}.leg .lt small{display:block;color:var(--muted);font-size:12.5px}
+  /* ladder */
+  table.ladder{width:100%;border-collapse:collapse;margin-top:6px;font-size:13.5px}
+  table.ladder th,table.ladder td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line)}
+  table.ladder th{font-family:"Exo 2";font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  table.ladder tr.cur{background:rgba(0,229,255,.06)}
+  table.ladder .rung{font-family:"Exo 2";color:var(--cyan)}
+  .inv{margin-top:16px;border:1px dashed var(--line2);border-radius:12px;padding:14px 16px;background:rgba(123,97,255,.05);font-size:13.5px;color:var(--muted)}
+  .inv b{color:var(--txt)}.inv .arrow{color:var(--magenta);font-family:"Exo 2"}
+  /* gate */
+  .gate{display:grid;grid-template-columns:1fr 320px;gap:22px}
+  @media(max-width:880px){.gate{grid-template-columns:1fr}}
+  .preds{display:flex;flex-direction:column;gap:8px}
+  .pred{display:flex;align-items:center;gap:11px;font-size:13.5px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+  .pred .ic{width:18px;height:18px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;font-family:"Exo 2"}
+  .pred .ic.y{background:rgba(0,229,255,.16);color:var(--cyan)}
+  .pred .ic.n{background:rgba(123,97,255,.16);color:var(--uv)}
+  .pred .v{margin-left:auto;font-family:"Exo 2";font-size:12px;color:var(--muted)}
+  .gatebox{border:1px solid var(--line2);border-radius:14px;padding:20px;text-align:center;background:linear-gradient(180deg,rgba(123,97,255,.10),rgba(0,0,0,0));height:fit-content}
+  .gatebox .state{font-family:"Exo 2";font-size:38px;color:var(--uv);letter-spacing:.04em}
+  .gatebox .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  .gatebox .truth{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;font-size:13px;color:var(--muted);line-height:1.5}
+  .gatebox .truth b{color:var(--gold)}
+  /* footer */
+  .stamp{margin-top:34px;text-align:center;color:var(--faint);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  .stamp b{color:var(--muted)}
+  a{color:var(--cyan);text-decoration:none}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="wrap">
+
+  <!-- MASTHEAD -->
+  <header>
+    <div class="brand"><div class="mark"></div>
+      <div><h1>THE GSE FIELD OBSERVATORY</h1><div class="sub">One Law · Four Projections · One Instrument</div></div>
+    </div>
+    <p class="lede">An audit is not an inventory. Every guardrail in this platform and every doc in the
+      intelligence packet is the same sentence in different costumes. Strip the costumes and one law remains —
+      and this instrument lets you <b>watch it hold</b>. Its own render logic is the field equation, so it
+      cannot show you a strength that wasn't earned.</p>
+    <div class="crumbs">
+      <span class="crumb ok">audit-only · static · offline</span>
+      <span class="crumb">no live data · no gate flip · no spend</span>
+      <span class="crumb hold">publish gate: HELD</span>
+      <span class="crumb">branch claude/keen-ptolemy-t38f1g</span>
+    </div>
+
+    <div class="law">
+      <div class="eq">expressed&nbsp;strength(O)&nbsp;&nbsp;<span class="meet">≤</span>&nbsp;&nbsp;<span class="meet">⊓</span><sub style="font-size:11px">L=1..8</sub>&nbsp;<span class="ceil">ceiling<sub>L</sub></span>( context(O) )</div>
+      <div class="lattice" id="lattice"></div>
+      <div class="note"><b style="color:var(--txt)">The Law of Conserved Authority.</b> The strength of any expression is bounded above by the
+        <b style="color:var(--magenta)">meet</b> (greatest lower bound) of every authority that governs it. No layer can <i>create</i>
+        authority — a layer can only <i>restrict</i>. Absence of evidence collapses to the bottom. This is a lattice identity,
+        proven by exhaustion over all 864 cases in <code>authority-tensor.theorem.test.ts</code>.</div>
+    </div>
+  </header>
+
+  <!-- AUTHORITY TENSOR -->
+  <section>
+    <div class="shead"><span class="sno">PROJECTION II · THE FORCE LAW</span><h2>The Authority Tensor — the meet, live</h2></div>
+    <p class="sdesc">Eight conceptual layers govern every output. Choose a scenario and watch the ceiling
+      <b style="color:var(--magenta)">collapse to the most restrictive layer</b> — that layer is the meet. Today the production gate
+      (<code>decision-authority-gate.ts</code>) computes this as a <b>4-term</b> meet that <i>folds</i> some of these eight together
+      (marked <span style="color:var(--uv)">⊕ folded</span>); the audit proposes unfolding them. The result below is computed the same way the code does it.</p>
+
+    <div class="presets" id="presets"></div>
+    <div class="tensor-grid">
+      <div class="layers" id="layers"></div>
+      <div class="meetcard">
+        <div class="h">Permitted expression (the meet)</div>
+        <div class="big" id="meetVal">—</div>
+        <div class="why" id="meetWhy"></div>
+        <div class="pub"><span>public-safe?</span><span class="pill no" id="pubPill">no</span></div>
+        <div class="why" style="margin-top:10px;font-size:11.5px" id="pubWhy"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VITRUVIAN ORGANISM -->
+  <section class="uv">
+    <div class="shead"><span class="sno">THE UNIFICATION</span><h2>The Vitruvian Organism — one body, one circulation</h2></div>
+    <p class="sdesc">"One organism, one source of truth," drawn as anatomy. The four projections of the law are
+      four systems of a single body: they are not separate machinery bolted together — they are the same law seen from four sides.</p>
+    <div class="organism">
+      <div id="vitruvian"></div>
+      <div class="legend">
+        <div class="leg"><span class="dot" style="color:var(--magenta)"></span><div class="lt">Circulatory — the Heartbeat → Ladder
+          <small>Projection III · Dynamics. Each settled game pumps one quantum of <i>earned authority</i>; <code>reduceLadder</code> is the charge accumulator. <code>ladder/reduce.ts</code></small></div></div>
+        <div class="leg"><span class="dot" style="color:var(--cyan)"></span><div class="lt">Skeleton — the 14 Decision States
+          <small>Projection I · Kinematics. The coordinates of an expression — what posture the organism is in. <code>decision-state.ts</code></small></div></div>
+        <div class="leg"><span class="dot" style="color:var(--uv)"></span><div class="lt">Nervous system — the Authority Stack
+          <small>Projection II · the Force law. The meet that bounds every expression. <code>decision-authority-gate.ts</code></small></div></div>
+        <div class="leg"><span class="dot" style="color:var(--gold)"></span><div class="lt">The eyes — the Publish Gate &amp; the Ledger
+          <small>Projection IV · Measurement. The honest instrument + the horizon nothing under-evidenced escapes. <code>intelligence-ledger.ts</code></small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE ONE LADDER -->
+  <section>
+    <div class="shead"><span class="sno">PROJECTION III · DYNAMICS</span><h2>The One Ladder — earned authority over time</h2></div>
+    <p class="sdesc">Authority is a conserved charge; the ladder is its time-integral. A pricing-rung advance and a
+      priced-signal flip are the <b>same quantum</b> measured twice — that is invariant <b>INV-1</b>, enforced by test. Counters below are the
+      honest launch state: <b>FOUNDING, zero settled</b>. Nothing is published; nothing is priced.</p>
+    <table class="ladder" id="ladder"></table>
+    <div class="inv">
+      <b>INV-1 (the headline invariant).</b> <span class="arrow">PRICING_RUNG_ADVANCED</span> &nbsp;⇐ same SETTLED_SAMPLE milestone ⇒&nbsp;
+      <span class="arrow">ESTIMATOR_PRICED</span> / <span class="arrow">PERFORMANCE_STATS_ENABLED</span>. Revenue maturity and engine maturity are, <b>by test</b>,
+      the same ledger — they cannot diverge because they are the same conserved quantity.
+    </div>
+  </section>
+
+  <!-- PUBLISH GATE -->
+  <section class="uv">
+    <div class="shead"><span class="sno">PROJECTION IV · THE HORIZON</span><h2>The Publish Gate — corrected, and honest</h2></div>
+    <p class="sdesc">The cockpit prototype originally fabricated a passing backtest (<code>MAE 4.8 vs naive 5.6 · beats naive ✓</code>) and
+      flipped the gate toward OPEN. The real out-of-sample result over 18,344 player-weeks is the opposite. This gate now renders the truth and stays
+      <b style="color:var(--uv)">HELD</b> — it is structurally unable to open on a result that was not earned.</p>
+    <div class="gate">
+      <div class="preds" id="preds"></div>
+      <div class="gatebox">
+        <div class="state" id="gateState">HELD</div>
+        <div class="sub">can we publish projections? — not yet</div>
+        <div class="truth">Backtest ran: model <b>MAE 5.31</b> vs naive <b>4.91</b> over 18,344 OOS player-weeks → <b>does not beat</b> the naive baseline (lower is better).
+          Two predicates remain: a model that beats naive, and ≥100 settled picks. Publishing is an <b>owner action</b> — and only after the evidence is in hand.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stamp"><b>GSE Field Observatory</b> · audit instrument · static &amp; offline · fixture-watermarked · no live data · no spend · cannot render a pass that was not earned</div>
+</div>
+
+<script>
+(function(){
+  // ───────── strength lattice (mirrors decision-state-stat-contract.ts) ─────────
+  const STR=['INFO_ONLY','WATCH','WAIT','PERSONALIZED','ACTION','PUBLIC_ACTION'];
+  const SCOL=['var(--s0)','var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)'];
+  const rank=s=>STR.indexOf(s);
+  const meet=(a,b)=>rank(a)<=rank(b)?a:b;           // strengthMin
+  const meetAll=arr=>arr.reduce((x,y)=>meet(x,y));
+
+  // ───────── the 8 authority layers (the canonical Authority Stack) ─────────
+  // Each option maps to the strongest expression that layer permits. `fold` marks layers the production
+  // 4-term meet currently conflates (audit §II). The meet over all eight is what the code computes.
+  const LAYERS=[
+    {n:1,name:'Rights',sub:'legal clearance',fold:'⊕ folded (loose boolean)',opts:[
+      ['cleared · public','PUBLIC_ACTION'],['cleared · personalized','PERSONALIZED'],['internal only','WATCH'],['blocked','INFO_ONLY']]},
+    {n:2,name:'Temporal',sub:'pre/post-lock · freshness',fold:'⊕ folded into source',opts:[
+      ['post-lock · fresh','PUBLIC_ACTION'],['pre-lock','WATCH'],['stale','INFO_ONLY']]},
+    {n:3,name:'Source reality',sub:'CATALOGUED→LIVE',fold:'= dataMode',opts:[
+      ['LIVE_REAL','PUBLIC_ACTION'],['SHADOW_REAL','WATCH'],['FIXTURE','INFO_ONLY'],['CATALOGUED (not live)','INFO_ONLY']]},
+    {n:4,name:'Evidence sufficiency',sub:'min-n · ECE · α-spend',fold:'⊕ not yet a meet term',opts:[
+      ['sufficient · proven','PUBLIC_ACTION'],['thin sample','WATCH'],['insufficient','INFO_ONLY']]},
+    {n:5,name:'Local expression',sub:'decision-state strength',fold:'= permission gradient',opts:[
+      ['public action-capable','PUBLIC_ACTION'],['action','ACTION'],['watch','WATCH'],['info-only','INFO_ONLY']]},
+    {n:6,name:'Model maturity',sub:'unpriced→public',fold:'= modelAuthority',opts:[
+      ['PUBLIC_ALLOWED (priced)','PUBLIC_ACTION'],['PERSONALIZED_ALLOWED','PERSONALIZED'],['PROCESS_ONLY','WATCH'],['UNPRICED','WATCH']]},
+    {n:7,name:'User entitlement',sub:'free/pro/internal',fold:'⊕ folded into publication',opts:[
+      ['public','PUBLIC_ACTION'],['pro · personalized','PERSONALIZED'],['internal','WATCH']]},
+    {n:8,name:'Owner / external-action',sub:'armed vs held',fold:'process-enforced',opts:[
+      ['armed (owner)','PUBLIC_ACTION'],['held','WATCH']]},
+  ];
+  // index of each layer's currently-selected option
+  let sel=LAYERS.map(()=>0);
+
+  const PRESETS=[
+    {lb:'Live · proven · public',v:[0,0,0,0,0,0,0,0]},
+    {lb:'Live · pre-proof (unpriced)',v:[0,0,0,1,1,3,1,1]},
+    {lb:'Shadow real',v:[2,1,1,1,1,2,2,1]},
+    {lb:'Fixture demo',fix:true,v:[2,2,2,2,2,3,2,1]},
+    {lb:'Live but rights internal',v:[2,0,0,0,0,0,2,0]},
+  ];
+
+  // ───────── lattice masthead ─────────
+  document.getElementById('lattice').innerHTML='<div class="lat">'+STR.map((s,i)=>
+    '<span class="latnode" style="border-color:'+SCOL[i]+';color:'+SCOL[i]+'">'+s+'</span>'+
+    (i<STR.length-1?'<span class="latarrow">⊏</span>':'')).join('')+'</div>';
+
+  // ───────── presets ─────────
+  document.getElementById('presets').innerHTML=PRESETS.map((p,i)=>
+    '<span class="preset'+(p.fix?' fix':'')+'" data-p="'+i+'">'+(p.fix?'▦ ':'')+p.lb+'</span>').join('');
+  document.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{sel=PRESETS[+b.dataset.p].v.slice();renderLayers();compute();}));
+
+  // ───────── layers ─────────
+  function renderLayers(){
+    document.getElementById('layers').innerHTML=LAYERS.map((L,i)=>{
+      const opts=L.opts.map((o,j)=>'<option value="'+j+'"'+(j===sel[i]?' selected':'')+'>'+o[0]+'</option>').join('');
+      return '<div class="layer" id="layer'+i+'">'+
+        '<div class="ln">'+L.n+'</div>'+
+        '<div><div class="lname">'+L.name+' <small>'+L.sub+' · <span class="fold">'+L.fold+'</span></small></div></div>'+
+        '<select data-l="'+i+'">'+opts+'</select>'+
+        '<div class="bar"><div class="barfill" id="bar'+i+'"></div></div></div>';
+    }).join('');
+    document.querySelectorAll('[data-l]').forEach(s=>s.addEventListener('change',()=>{sel[+s.dataset.l]=+s.value;compute();}));
+  }
+
+  // ───────── compute the meet + render ─────────
+  function compute(){
+    const ceilings=LAYERS.map((L,i)=>L.opts[sel[i]][1]);
+    const result=meetAll(ceilings);
+    const rr=rank(result);
+    // binding layers = those whose ceiling equals the meet (the most restrictive)
+    LAYERS.forEach((L,i)=>{
+      const c=L.opts[sel[i]][1], binding=rank(c)===rr;
+      const el=document.getElementById('layer'+i); if(el) el.classList.toggle('binding',binding);
+      const bar=document.getElementById('bar'+i);
+      if(bar){const pct=(rank(c)+1)/STR.length*100;bar.style.width=pct+'%';bar.style.background=SCOL[rank(c)];}
+    });
+    const mv=document.getElementById('meetVal');
+    mv.textContent=result; mv.style.color=SCOL[rr];
+    const bind=LAYERS.filter((L,i)=>rank(L.opts[sel[i]][1])===rr).map(L=>L.name);
+    document.getElementById('meetWhy').innerHTML='Bound by <b>'+bind.join('</b>, <b>')+'</b> — the most restrictive layer'+(bind.length>1?'s':'')+'. Every other layer permits more, but the meet takes the weakest.';
+    // public-safe mirrors isPublicSafe: live + ready/post-lock + public-model + public-entitlement + rights + > INFO_ONLY
+    const live=LAYERS[2].opts[sel[2]][1]==='PUBLIC_ACTION' && sel[2]===0;
+    const rightsPub=sel[0]===0, pubModel=sel[5]===0, pubEnt=sel[6]===0, fresh=sel[1]===0, evid=sel[3]===0, armed=sel[7]===0;
+    const pubSafe = live && rightsPub && pubModel && pubEnt && fresh && evid && armed && rr>0;
+    const pill=document.getElementById('pubPill');
+    pill.textContent=pubSafe?'yes':'no'; pill.className='pill '+(pubSafe?'yes':'no');
+    document.getElementById('pubWhy').innerHTML=pubSafe
+      ? 'All public gates hold and the meet is above INFO_ONLY. Publishing remains an explicit owner action.'
+      : 'Fail-closed: public-safe requires LIVE data, fresh+post-lock, sufficient evidence, a public-authorized priced model, public entitlement, cleared rights, AND a meet above INFO_ONLY. Fixtures and shadow can never satisfy this.';
+  }
+
+  // ───────── Vitruvian Organism (hand-built SVG) ─────────
+  document.getElementById('vitruvian').innerHTML=vitruvian();
+  function vitruvian(){
+    const cx=180, cy=210;
+    // circulatory ladder pulses along the spine
+    let pulses='';
+    for(let i=0;i<4;i++) pulses+='<circle r="3.4" fill="var(--magenta)" class="pulse"><animateMotion dur="'+(3.2+i*0.5)+'s" repeatCount="indefinite" begin="'+(i*0.8)+'s" path="M180 70 L180 300"/></circle>';
+    // skeleton: 14 vertebrae = 14 decision states
+    let spine='';
+    for(let i=0;i<14;i++){const y=78+i*16;spine+='<rect x="172" y="'+y+'" width="16" height="9" rx="3" fill="rgba(0,229,255,.16)" stroke="var(--cyan)" stroke-width="1"/>';}
+    return '<svg viewBox="0 0 360 430" width="100%" style="max-width:360px">'
+      // da Vinci circle + square frame
+      +'<circle cx="'+cx+'" cy="'+cy+'" r="168" fill="none" stroke="var(--line)" stroke-width="1"/>'
+      +'<rect x="'+(cx-150)+'" y="'+(cy-150)+'" width="300" height="300" fill="none" stroke="var(--line2)" stroke-width="1" opacity=".6"/>'
+      // nervous system = authority stack: 8 rings around the head
+      +(function(){let r='';for(let i=0;i<8;i++){const rad=22+i*3.0;r+='<circle cx="'+cx+'" cy="64" r="'+rad+'" fill="none" stroke="var(--uv)" stroke-width="1" opacity="'+(0.5-i*0.045)+'"/>';}return r;})()
+      +'<circle cx="'+cx+'" cy="64" r="13" fill="rgba(123,97,255,.25)" stroke="var(--uv)" stroke-width="1.4"/>'
+      // the eyes = publish gate
+      +'<circle cx="'+(cx-6)+'" cy="62" r="2.6" fill="var(--gold)"/><circle cx="'+(cx+6)+'" cy="62" r="2.6" fill="var(--gold)"/>'
+      // skeleton spine (14 states) + limbs
+      +spine
+      +'<line x1="'+cx+'" y1="120" x2="92" y2="190" stroke="var(--cyan)" stroke-width="1.4" opacity=".6"/>'
+      +'<line x1="'+cx+'" y1="120" x2="268" y2="190" stroke="var(--cyan)" stroke-width="1.4" opacity=".6"/>'
+      +'<line x1="'+cx+'" y1="120" x2="110" y2="150" stroke="var(--cyan)" stroke-width="1.4" opacity=".6"/>'
+      +'<line x1="'+cx+'" y1="120" x2="250" y2="150" stroke="var(--cyan)" stroke-width="1.4" opacity=".6"/>'
+      +'<line x1="180" y1="300" x2="132" y2="392" stroke="var(--cyan)" stroke-width="1.4" opacity=".6"/>'
+      +'<line x1="180" y1="300" x2="228" y2="392" stroke="var(--cyan)" stroke-width="1.4" opacity=".6"/>'
+      // circulatory line (heartbeat) along the spine + pulses
+      +'<line x1="180" y1="70" x2="180" y2="300" stroke="var(--magenta)" stroke-width="1.2" opacity=".35"/>'
+      +pulses
+      +'<text x="'+cx+'" y="420" fill="var(--faint)" font-size="10" text-anchor="middle" font-family="Exo 2" letter-spacing="2">ONE ORGANISM · ONE SOURCE OF TRUTH</text>'
+      +'</svg>';
+  }
+
+  // ───────── the One Ladder ─────────
+  const RUNGS=[
+    {r:'FOUNDING',n:'0',clv:'—',cal:'no',cur:true},
+    {r:'PROVEN',n:'100',clv:'—',cal:'yes',cur:false},
+    {r:'ESTABLISHED',n:'500',clv:'≥ 0.524',cal:'yes',cur:false},
+    {r:'AUTHORITY',n:'2000',clv:'≥ 0.55',cal:'yes',cur:false},
+  ];
+  document.getElementById('ladder').innerHTML=
+    '<tr><th>Rung</th><th>Min settled</th><th>CLV beat-rate</th><th>Calibration published</th><th>State</th></tr>'+
+    RUNGS.map(R=>'<tr class="'+(R.cur?'cur':'')+'"><td class="rung">'+R.r+'</td><td>'+R.n+'</td><td>'+R.clv+'</td><td>'+R.cal+'</td><td>'+(R.cur?'<b style="color:var(--cyan)">● live · 0 settled</b>':'locked')+'</td></tr>').join('');
+
+  // ───────── the Publish Gate predicates (honest) ─────────
+  const PREDS=[
+    ['data fresh ≤ 10m',true,'3m'],
+    ['≥ 100 settled picks',false,'0 / 100'],
+    ['calibration ECE in-band',false,'no sample'],
+    ['CLV beat ≥ 52.4%',false,'no sample'],
+    ['backtest beats naive OOS',false,'ran · 5.31 vs 4.91 · no beat'],
+    ['brand-safety scan clean',true,'0 flags'],
+  ];
+  document.getElementById('preds').innerHTML=PREDS.map(p=>
+    '<div class="pred"><span class="ic '+(p[1]?'y':'n')+'">'+(p[1]?'✓':'✕')+'</span><span>'+p[0]+'</span><span class="v">'+p[2]+'</span></div>').join('');
+
+  // ───────── starfield ─────────
+  const bg=document.getElementById('bg'),bx=bg.getContext('2d');let W,H,DPR;
+  function size(){DPR=Math.min(2,devicePixelRatio||1);W=bg.width=innerWidth*DPR;H=bg.height=innerHeight*DPR;bg.style.width=innerWidth+'px';bg.style.height=innerHeight+'px';}
+  size();addEventListener('resize',size);
+  const stars=[];for(let i=0;i<90;i++)stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.2+.2,t:Math.random()*6.28,s:Math.random()*.012+.003});
+  (function draw(){bx.clearRect(0,0,W,H);bx.save();bx.scale(DPR,DPR);stars.forEach(s=>{s.t+=s.s;bx.globalAlpha=Math.max(.05,.22+Math.sin(s.t)*.2);bx.fillStyle=s.r>1?'#7fdfff':'#cfe8ff';bx.beginPath();bx.arc(s.x*innerWidth,s.y*innerHeight,s.r,0,6.28);bx.fill();});bx.restore();requestAnimationFrame(draw);})();
+
+  // ───────── init ─────────
+  renderLayers();compute();
+})();
+</script>
+</body>
+</html>

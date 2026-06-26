@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Galaxy Sports Edge — The Bridge</title>
+<!--
+  INTEGRITY CORRECTION (audit: GSE Unified Field, branch claude/keen-ptolemy-t38f1g).
+  The original prototype fabricated a passing backtest: clicking "Run the backtest" set
+  w.out = 'model MAE 4.8 vs naive 5.6 · beats naive ✓' and flipped the publish-gate
+  predicate gatePreds[4].ok = true — a manufactured success the real backtest never earned.
+  The real out-of-sample result is MAE 5.31 vs naive 4.91 over 18,344 player-weeks: the model
+  does NOT beat the naive baseline (lower MAE is better). This file now reports the truth, the
+  backtest predicate stays UNMET, and the publish gate stays HELD. The instrument is structurally
+  unable to render a pass that was not earned. "You cannot render dishonesty" — integrity-as-geometry.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--cyan:#00E5FF;--uv:#7B61FF;--magenta:#FF38C7;--amber:#A855F7;--green:#2A6BFF;--red:#FF38C7;
+    --bg0:#05070B;--glass:rgba(13,17,23,.5);--card:rgba(13,17,23,.62);--line:rgba(0,229,255,.14);--line2:rgba(123,97,255,.2);
+    --txt:#F5F7FF;--muted:#8aa4ca;--faint:#46587b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--txt);font-family:"Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-size:15px}
+  #app{position:fixed;inset:0;display:grid;grid-template-rows:54px 38px 1fr auto;background:radial-gradient(1100px 640px at 26% 24%,rgba(40,120,200,.08),transparent 60%),radial-gradient(900px 560px at 86% 76%,rgba(123,97,255,.09),transparent 60%),var(--bg0)}
+  canvas#bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+  .mono{font-family:"Exo 2",sans-serif;letter-spacing:.06em}.glow{text-shadow:0 0 13px rgba(0,229,255,.5)}.up{text-transform:uppercase}
+  .ok{color:var(--green)}.warn{color:var(--amber)}.hold{color:var(--uv)}.bad{color:var(--red)}
+  /* top */
+  #top{z-index:7;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:10px}.mark{width:28px;height:28px;border-radius:8px;background:radial-gradient(circle at 50% 40%,rgba(0,229,255,.95),rgba(123,97,255,.5) 70%,transparent);box-shadow:0 0 20px rgba(0,229,255,.5)}
+  .brand h1{font-family:"Exo 2";font-size:13px;font-weight:700;letter-spacing:.16em;background:linear-gradient(90deg,#00E5FF,#FF38C7,#7B61FF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.brand .sub{font-size:8px;letter-spacing:.3em;color:var(--cyan)}
+  #tabs{display:flex;gap:5px}.tab{font-family:"Exo 2";font-size:10.5px;letter-spacing:.08em;padding:6px 13px;border-radius:8px;cursor:pointer;color:var(--muted);text-transform:uppercase;transition:.2s}.tab:hover{color:var(--txt)}.tab.on{color:#02121a;background:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.4)}
+  #topr{display:flex;align-items:center;gap:13px;font-size:12px;color:var(--muted)}
+  .kbtn{font-family:"Exo 2";font-size:10px;letter-spacing:.06em;border:1px solid var(--line);border-radius:7px;padding:5px 10px;cursor:pointer;color:var(--cyan)}.kbtn:hover{background:rgba(0,229,255,.1)}
+  #clock{font-family:"Exo 2";color:var(--cyan);letter-spacing:.08em}
+  /* scope + gate bar */
+  #scope{z-index:7;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid var(--line);background:rgba(6,10,24,.4);font-size:12px}
+  .svar{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--muted)}.svar b{font-family:"Exo 2";color:var(--cyan);font-size:11px}.svar:hover b{text-shadow:0 0 10px var(--cyan)}
+  #gatechip{margin-left:auto;display:flex;align-items:center;gap:9px;cursor:pointer;padding:4px 12px;border-radius:8px;border:1px solid var(--line);transition:.2s}
+  #gatechip:hover{background:rgba(0,229,255,.06)}
+  #gatechip .lab{font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  #gatechip .state{font-family:"Exo 2";font-size:12px;letter-spacing:.06em}
+  /* views */
+  #main{z-index:5;overflow:hidden;position:relative}.view{position:absolute;inset:0;padding:14px 20px;overflow:auto;display:none}.view.on{display:block}
+  .view::-webkit-scrollbar,#qlist::-webkit-scrollbar,.lane::-webkit-scrollbar,#drawer::-webkit-scrollbar{width:6px}.view::-webkit-scrollbar-thumb,#qlist::-webkit-scrollbar-thumb,.lane::-webkit-scrollbar-thumb,#drawer::-webkit-scrollbar-thumb{background:rgba(0,229,255,.2);border-radius:4px}
+  .panel{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:13px 15px;backdrop-filter:blur(8px)}.panel.uv{border-color:var(--line2)}
+  .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.ph .t{font-size:11px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}.ph .v{font-size:11px;color:var(--cyan)}
+  /* bridge grid */
+  #bridge{display:grid;grid-template-columns:330px 1fr 300px;gap:15px;height:100%}.col{display:flex;flex-direction:column;gap:14px;min-height:0}
+  /* publish gate tile */
+  #gate{border:1px solid var(--line)}
+  #gate .big{font-family:"Exo 2";font-size:26px;font-weight:700;letter-spacing:.04em}
+  #gate .sub{font-size:12px;color:var(--muted);margin-top:2px}
+  .preds{margin-top:11px;display:flex;flex-direction:column;gap:6px}
+  .pred{display:flex;align-items:center;gap:9px;font-size:13px}.pred .ic{width:16px;text-align:center;font-family:Orbitron;font-size:13px}.pred .vv{margin-left:auto;font-family:Orbitron;font-size:12px;color:var(--muted)}
+  #gate .need{margin-top:11px;font-size:12px;color:var(--amber);line-height:1.4;border-top:1px solid var(--line);padding-top:9px}
+  #gate .need b{color:var(--cyan)}
+  /* runnable queue */
+  #queue{flex:1;display:flex;flex-direction:column;min-height:0}#qlist{overflow:auto;flex:1;display:flex;flex-direction:column;gap:10px;padding-right:4px}
+  .wf{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px 14px;cursor:pointer;transition:.2s}.wf:hover{border-color:rgba(0,229,255,.4);transform:translateX(2px)}
+  .wf.crit{border-left:3px solid var(--red)}.wf.high{border-left:3px solid var(--amber)}.wf.med{border-left:3px solid var(--cyan)}.wf.low{border-left:3px solid var(--faint)}
+  .wf .ti{font-size:15px;font-weight:600}.wf .meta{font-size:10.5px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+  .steps{display:flex;gap:4px;margin-top:9px;flex-wrap:wrap}.step{font-size:9.5px;letter-spacing:.03em;padding:3px 8px;border-radius:6px;border:1px solid var(--line);color:var(--muted);background:rgba(20,30,60,.3);white-space:nowrap}
+  .step.done{color:var(--green);border-color:rgba(61,255,168,.4)}.step.active{color:#02121a;background:var(--cyan);border-color:var(--cyan)}.step.err{color:var(--red);border-color:rgba(255,81,105,.4)}
+  .wf .foot{display:flex;align-items:center;justify-content:space-between;margin-top:9px}.wf .lr{font-size:10.5px;color:var(--faint)}.wf .lr b{color:var(--green)}
+  .run{font-family:Orbitron;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:7px 13px;border-radius:8px;cursor:pointer;border:1px solid var(--line);color:var(--cyan);background:rgba(0,229,255,.07);transition:.2s}.run:hover{background:var(--cyan);color:#02121a}.run.appr{color:var(--amber);border-color:rgba(255,176,46,.4);background:rgba(255,176,46,.08)}.run.lock{color:var(--faint);border-color:var(--line)}
+  /* feed + agents */
+  .agents{display:flex;flex-direction:column;gap:7px}.agent{display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:9px;cursor:pointer;border:1px solid transparent}.agent:hover{border-color:var(--line);background:rgba(16,26,52,.5)}
+  .agent .ring{width:11px;height:11px;border-radius:50%;box-shadow:0 0 12px currentColor;flex:none}.agent .nm{font-family:Orbitron;font-size:11px}.agent .dp{font-size:10px;color:var(--muted);text-transform:uppercase}.agent .cnt{margin-left:auto;font-family:Orbitron;font-size:12px}
+  #feed{overflow:hidden;flex:1;mask-image:linear-gradient(180deg,#000 82%,transparent)}.fe{display:flex;gap:7px;padding:5px 0;font-size:11.5px;border-bottom:1px solid rgba(0,229,255,.06)}.fe i{color:var(--faint);font-family:Orbitron;font-size:9px;min-width:34px}
+  .tag{font-size:8.5px;letter-spacing:.06em;padding:2px 5px;border-radius:5px;text-transform:uppercase}.tag.cy{color:var(--cyan);background:rgba(0,229,255,.1)}.tag.uvx{color:var(--uv);background:rgba(123,97,255,.12)}.tag.am{color:var(--amber);background:rgba(255,176,46,.12)}.tag.gn{color:var(--green);background:rgba(61,255,168,.1)}.tag.rd{color:var(--red);background:rgba(255,81,105,.1)}
+  /* node-detail drawer */
+  #drawer{position:fixed;top:0;right:-460px;width:440px;height:100%;background:rgba(7,11,26,.96);border-left:1px solid var(--line);z-index:20;transition:right .3s cubic-bezier(.2,.8,.2,1);overflow:auto;padding:18px 20px;backdrop-filter:blur(12px)}
+  #drawer.on{right:0;box-shadow:-30px 0 70px rgba(0,0,0,.6)}
+  #drawer h2{font-family:Orbitron;font-size:16px;font-weight:700}#drawer .dx{position:absolute;top:16px;right:18px;cursor:pointer;color:var(--muted);font-size:18px}
+  .dsec{margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--card)}
+  .dsec .h{font-size:10px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;margin-bottom:7px}
+  .kv{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}.kv span:first-child{color:var(--muted)}
+  .dout{font-family:Orbitron;font-size:13px;color:var(--green);line-height:1.5}
+  .exrow{display:flex;align-items:center;gap:9px;font-size:12px;padding:5px 0;border-bottom:1px solid rgba(0,229,255,.06);cursor:pointer}.exrow:hover{color:var(--cyan)}.exrow .s{font-family:Orbitron;font-size:9px;padding:1px 6px;border-radius:4px}
+  .drun{margin-top:14px;display:flex;gap:9px}.drun .b{flex:1;text-align:center;font-family:Orbitron;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:10px;border-radius:9px;cursor:pointer;border:1px solid var(--line);color:var(--cyan);background:rgba(0,229,255,.08)}.drun .b:hover{background:var(--cyan);color:#02121a}
+  /* graph view */
+  #gview{height:100%}#graph{width:100%;height:100%}.gpacket{filter:drop-shadow(0 0 4px currentColor)}
+  /* lifecycle board */
+  #board{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;height:100%}.lane{background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:11px;display:flex;flex-direction:column;gap:8px;overflow:auto}.lane h3{font-family:Orbitron;font-size:11px;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between}.lane h3 .c{color:var(--cyan)}
+  .sig{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:8px;padding:8px 10px;font-size:12.5px;cursor:pointer;transition:.2s}.sig:hover{border-color:rgba(0,229,255,.4)}.sig .d{font-size:9.5px;color:var(--faint);text-transform:uppercase;margin-top:2px}.sig .gate{font-size:10px;color:var(--amber);margin-top:4px}
+  /* observe */
+  #obs{display:grid;grid-template-columns:1fr 1fr;gap:13px}.ocard{background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.ocard canvas{width:100%;height:60px;margin-top:6px}.ocard .val{font-family:Orbitron;font-size:22px}.anno{font-size:11px;color:var(--uv);margin-top:6px}
+  /* command */
+  #cmd{z-index:7;border-top:1px solid var(--line);background:rgba(6,10,24,.6);padding:8px 20px 10px}
+  .cmrow{display:flex;align-items:center;gap:9px;margin-bottom:7px;flex-wrap:wrap;font-size:11px}
+  .sel{font-family:Orbitron;font-size:10.5px;color:var(--cyan);background:rgba(0,229,255,.08);border:1px solid var(--line);border-radius:7px;padding:5px 10px;cursor:pointer}
+  .perm{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid var(--line);color:var(--muted)}.perm.y{color:var(--green);border-color:rgba(61,255,168,.3)}.perm.n{color:var(--faint)}
+  .know{margin-left:auto;font-size:9.5px;color:var(--uv);text-transform:uppercase}
+  .cminput{display:flex;align-items:center;gap:10px;background:rgba(8,13,30,.7);border:1px solid var(--line);border-radius:22px;padding:8px 15px}.cminput .p{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}.cminput input{flex:1;background:transparent;border:0;outline:0;color:var(--txt);font-family:Rajdhani;font-size:15px}.cminput input::placeholder{color:var(--faint)}.cminput .go{font-family:Orbitron;font-size:10px;letter-spacing:.08em;color:var(--cyan);border:1px solid var(--line);padding:6px 12px;border-radius:15px;cursor:pointer;text-transform:uppercase}
+  /* command palette */
+  #pal{position:fixed;inset:0;z-index:30;background:rgba(2,4,12,.6);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding-top:12vh}
+  #pal.on{display:flex}
+  .palbox{width:min(620px,90vw);background:rgba(9,14,30,.98);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(0,229,255,.15)}
+  .palin{display:flex;align-items:center;gap:11px;padding:15px 18px;border-bottom:1px solid var(--line)}.palin input{flex:1;background:transparent;border:0;outline:0;color:var(--txt);font-size:18px;font-family:Rajdhani}.palin .k{font-family:Orbitron;font-size:14px;color:var(--cyan)}
+  #pallist{max-height:50vh;overflow:auto}
+  .palrow{display:flex;align-items:center;gap:12px;padding:11px 18px;cursor:pointer;border-bottom:1px solid rgba(0,229,255,.05)}.palrow.sel,.palrow:hover{background:rgba(0,229,255,.08)}
+  .palrow .g{font-size:14px;width:20px;text-align:center}.palrow .lb{font-size:15px}.palrow .rs{margin-left:auto;font-size:11px;color:var(--amber)}.palrow .cat{font-size:9px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+  .stamp{position:fixed;right:9px;bottom:2px;font-size:9px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase;z-index:9}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="bg"></canvas>
+  <div id="top">
+    <div class="brand"><div class="mark"></div><div><h1>GALAXY<span style="color:var(--cyan)">·</span>SPORTS<span style="color:var(--uv)">·</span>EDGE</h1><div class="sub mono">THE BRIDGE</div></div></div>
+    <div id="tabs"><div class="tab on" data-v="bridge">Bridge</div><div class="tab" data-v="flows">Flows</div><div class="tab" data-v="graph">Graph</div><div class="tab" data-v="life">Lifecycle</div><div class="tab" data-v="obs">Observe</div></div>
+    <div id="topr"><span class="kbtn" id="kbtn">Ctrl K command</span><span id="clock">00:00:00</span></div>
+  </div>
+  <div id="scope">
+    <span class="svar" data-s="sport">scope <b id="sv-sport">NFL</b> ▾</span>
+    <span class="svar" data-s="week">week <b id="sv-week">6</b> ▾</span>
+    <span class="svar" data-s="model">model <b id="sv-model">v5.1.0</b> ▾</span>
+    <span style="color:var(--faint);font-size:11px">· re-scopes every panel</span>
+    <div id="gatechip"><span class="lab">publish gate</span><span class="state" id="gatestate">HELD</span></div>
+  </div>
+
+  <div id="main">
+    <!-- BRIDGE -->
+    <div class="view on" id="v-bridge"><div id="bridge">
+      <div class="col">
+        <div class="panel" id="gate"><div class="ph"><span class="t">publish gate · authority</span><span class="v" id="gx-when">held 4d</span></div>
+          <div class="big" id="gx-state">HELD</div><div class="sub" id="gx-sub">can we publish projections? — not yet</div>
+          <div class="preds" id="gx-preds"></div><div class="need" id="gx-need"></div></div>
+        <div class="panel uv" style="flex:1;display:flex;flex-direction:column;min-height:0"><div class="ph"><span class="t">agent OS</span><span class="v" style="color:var(--uv)">draft-only</span></div><div class="agents" id="agrail"></div></div>
+      </div>
+      <div class="col"><div class="panel" id="queue"><div class="ph"><span class="t" style="font-size:13px;color:var(--txt)">what needs you now · cost of delay</span><span class="v" id="q-n"></span></div><div id="qlist"></div></div></div>
+      <div class="col"><div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:0"><div class="ph"><span class="t">intelligence feed</span><span class="v">streaming</span></div><div id="feed"></div></div></div>
+    </div></div>
+    <!-- FLOWS -->
+    <div class="view" id="v-flows"><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:13px" id="flowgrid"></div></div>
+    <!-- GRAPH -->
+    <div class="view" id="v-graph"><div id="gview"><svg id="graph" viewBox="0 0 1000 540" preserveAspectRatio="xMidYMid meet"></svg></div></div>
+    <!-- LIFECYCLE -->
+    <div class="view" id="v-life"><div id="board"></div></div>
+    <!-- OBSERVE -->
+    <div class="view" id="v-obs"><div id="obs"></div></div>
+  </div>
+
+  <div id="cmd">
+    <div class="cmrow"><span class="sel" id="agentsel">◆ JARVIS ▾</span><span class="perm y">read odds ✓</span><span class="perm y">read nflverse ✓</span><span class="perm n">write picks 🔒 gated</span><span class="perm n">send external 🔒 draft-only</span><span class="know">◇ #master-dossier · #atlas</span></div>
+    <div class="cminput"><span class="p"></span><input id="cmd-in" placeholder="command — Ctrl K for palette · try: /run-backtest · /go-live · status" autocomplete="off"><span class="go mono" id="cmd-go">transmit</span></div>
+  </div>
+  <div class="stamp">design prototype · representative data · integrity-corrected · backtest does not beat naive (MAE 5.31 vs 4.91) · gate HELD</div>
+</div>
+
+<div id="drawer"><span class="dx" id="dx">✕</span><div id="drawer-body"></div></div>
+
+<div id="pal"><div class="palbox"><div class="palin"><span class="k">Ctrl K</span><input id="palinput" placeholder="command or search — every row shows its gate"><span style="font-size:11px;color:var(--faint)">↑↓ ⏎</span></div><div id="pallist"></div></div></div>
+
+<script>
+(function(){
+  // ---------- data ----------
+  const agents=[
+    {id:'jarvis',nm:'JARVIS',dp:'command',col:'#00E5FF'},{id:'sarah',nm:'SARAH',dp:'sports intel',col:'#00E5FF'},
+    {id:'scout',nm:'SCOUT',dp:'data',col:'#2A6BFF'},{id:'tal',nm:'TAL',dp:'results',col:'#A855F7'},
+    {id:'ava',nm:'AVA',dp:'quality',col:'#7B61FF'},{id:'bobby',nm:'BOBBY',dp:'growth',col:'#FF38C7'},{id:'audit',nm:'AUDIT',dp:'governance',col:'#FF38C7'}];
+  const A=Object.fromEntries(agents.map(a=>[a.id,a]));
+  const io={jarvis:['all outputs','attention queue'],sarah:['odds, nflverse','ScoredPick[]'],scout:['14 sources','features, metrics'],tal:['settled scores','CLV, calibration'],ava:['surfaces, tickets','trust verdict'],bobby:['funnel events','campaigns (draft)'],audit:['claims, signals','ALLOW / BLOCK']};
+  let wf=[
+    {id:1,nm:'Run the backtest',dept:'tal',pri:'crit',cod:98,trigger:'manual',inputs:{seasons:'2021–23',baseline:'naive persistence',sample:'18,344 OOS player-weeks',cv:'purged + embargoed'},steps:['fetch nflverse','build samples','walk-forward CV','clark-west','report'],status:'idle',step:0,gate:'ok',ex:[],out:''},
+    {id:2,nm:'Go live: Fantasy $49 tier',dept:'bobby',pri:'crit',cod:95,trigger:'owner',inputs:{price:'$49/yr',flag:'PROJECTIONS_PROVIDER'},steps:['create stripe price','set env','smoke test','flip launch'],status:'idle',step:0,gate:'lock',gatewhy:'owner must arm · live money',ex:[],out:''},
+    {id:3,nm:'Settle + grade slate',dept:'tal',pri:'med',cod:55,trigger:'scheduled',inputs:{scores:'final',lines:'open'},steps:['fetch scores','match','grade CLV','update ladder'],status:'success',step:4,gate:'ok',ex:[{t:'2h ago',s:'ok',r:'CLV beat 6/9'},{t:'yesterday',s:'ok',r:'CLV beat 5/8'}],out:'CLV beat 6/9 · ladder 63/100'},
+    {id:4,nm:'Refresh odds',dept:'scout',pri:'med',cod:48,trigger:'cron 30m',inputs:{books:'7',sports:'7'},steps:['fetch','normalize','upsert','score'],status:'running',step:2,gate:'ok',ex:[{t:'30m ago',s:'ok',r:'7/7 fresh'}],out:''},
+    {id:5,nm:'Gate leaky readiness endpoints',dept:'audit',pri:'high',cod:66,trigger:'manual',inputs:{routes:'6 unauth'},steps:['identify','add ADMIN gate','test','commit'],status:'idle',step:0,gate:'ok',ex:[],out:''},
+    {id:6,nm:'Verify conformal fix',dept:'sarah',pri:'high',cod:60,trigger:'manual',inputs:{branch:'codex/intelligence-core'},steps:['typecheck','lint','vitest','build','guardrails'],status:'idle',step:0,gate:'ok',ex:[],out:''},
+    {id:7,nm:'Publish projections',dept:'sarah',pri:'high',cod:70,trigger:'gated',inputs:{flag:'canPublishProjections'},steps:['backtest pass','calibration proposal','model-freeze','flip flag'],status:'idle',step:0,gate:'lock',gatewhy:'backtest not run · ECE unproven',ex:[],out:''},
+    {id:8,nm:'Open slate-night simulator',dept:'tal',pri:'low',cod:30,trigger:'manual',inputs:{frozen:'wk5 real night'},steps:['freeze night','inject disaster','run pipeline','verify gates'],status:'idle',step:0,gate:'ok',ex:[],out:''},
+  ];
+  const signals=[
+    {nm:'Pick confidence (13-comp)',stage:'Priced',dept:'sarah'},{nm:'Market read · Shin/consensus',stage:'Priced',dept:'sarah'},
+    {nm:'CLV proof',stage:'Published',dept:'tal'},{nm:'Fantasy $49 tier',stage:'Published',dept:'bobby'},
+    {nm:'StatKing player intel',stage:'Verified',dept:'scout',next:'needs: priced-feature backtest + Model Court'},
+    {nm:'Calibration · isotonic',stage:'Verified',dept:'tal',next:'needs: ≥100 settled (now 63)'},
+    {nm:'Weekly projection model',stage:'Draft',dept:'sarah',next:'needs: historical backtest beats naive'},
+    {nm:'Independent edge · Elo/EPA',stage:'Draft',dept:'scout',next:'needs: shadow OOS beat vs market'},
+    {nm:'Public track record',stage:'Draft',dept:'audit',next:'needs: PROVEN rung (≥100 + calibration)'},
+    {nm:'Multi-sport · MLB/NHL',stage:'Draft',dept:'scout',next:'needs: rights + data depth'}];
+  const STAGES=['Draft','Verified','Priced','Published','Proven'];
+  const STCOL={Draft:'#5f7398',Verified:'#7B61FF',Priced:'#00E5FF',Published:'#2A6BFF',Proven:'#A855F7'};
+  let gatePreds=[
+    {k:'data fresh ≤ 10m',ok:true,v:'3m'},{k:'≥ 100 settled picks',ok:false,v:'63/100'},{k:'calibration ECE in-band',ok:true,v:'0.05'},
+    {k:'CLV beat ≥ 52.4%',ok:true,v:'53.1%'},{k:'backtest passed OOS',ok:false,v:'not run'},{k:'brand-safety scan clean',ok:true,v:'0 flags'}];
+
+  // ---------- background ----------
+  const bg=document.getElementById('bg'),bx=bg.getContext('2d');let W,H,DPR;
+  function size(){DPR=Math.min(2,devicePixelRatio||1);W=bg.width=innerWidth*DPR;H=bg.height=innerHeight*DPR;bg.style.width=innerWidth+'px';bg.style.height=innerHeight+'px';}
+  size();addEventListener('resize',size);const stars=[];for(let i=0;i<110;i++)stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.2+.2,t:Math.random()*6.28,s:Math.random()*.014+.004});
+  function bgd(){bx.clearRect(0,0,W,H);bx.save();bx.scale(DPR,DPR);stars.forEach(s=>{s.t+=s.s;bx.globalAlpha=Math.max(.04,.22+Math.sin(s.t)*.2);bx.fillStyle=s.r>1?'#7fdfff':'#cfe8ff';bx.beginPath();bx.arc(s.x*innerWidth,s.y*innerHeight,s.r,0,6.28);bx.fill();});bx.globalAlpha=1;bx.restore();requestAnimationFrame(bgd);}requestAnimationFrame(bgd);
+
+  // ---------- publish gate ----------
+  function gateOpen(){return gatePreds.every(p=>p.ok);}
+  function renderGate(){
+    const open=gateOpen();const st=open?'OPEN':'HELD';
+    document.getElementById('gatestate').textContent=st;document.getElementById('gatestate').className='state '+(open?'ok':'hold');
+    document.getElementById('gx-state').textContent=st;document.getElementById('gx-state').className='big '+(open?'ok':'hold');
+    document.getElementById('gx-sub').textContent=open?'cleared to publish — evidence in hand':'can we publish projections? — not yet';
+    document.getElementById('gx-preds').innerHTML=gatePreds.map(p=>'<div class="pred"><span class="ic '+(p.ok?'ok':'bad')+'">'+(p.ok?'✓':'✕')+'</span><span>'+p.k+'</span><span class="vv">'+p.v+'</span></div>').join('');
+    const blockers=gatePreds.filter(p=>!p.ok);
+    document.getElementById('gx-need').innerHTML=open?'All predicates pass. Publishing is an <b>owner action</b> — arm it in Ctrl K.':'Blocked by: <b>'+blockers.map(b=>b.k).join('</b>, <b>')+'</b>. To open: the model must <b>beat the naive baseline out-of-sample</b> (it does not yet — MAE 5.31 vs 4.91), and settled picks must reach 100.';
+  }
+
+  // ---------- queue ----------
+  function wfCard(w){const steps=w.steps.map((s,i)=>{let c='step';if(w.status==='success'||i<w.step)c+=' done';if(w.status==='running'&&i===w.step)c+=' active';if(w.status==='error'&&i===w.step)c+=' err';return '<span class="'+c+'">'+s+'</span>';}).join('');
+    const lr=w.gate==='lock'?'<span class="lr" style="color:var(--amber)">🔒 '+(w.gatewhy||'gated')+'</span>':'<span class="lr">last: <b>'+(w.ex[0]?w.ex[0].t:'never')+'</b>'+(w.out?' · '+w.out:'')+'</span>';
+    const btn=w.status==='running'?'<span class="run">running…</span>':w.gate==='lock'?'<span class="run lock" data-run="'+w.id+'">arm ›</span>':'<span class="run" data-run="'+w.id+'">'+(w.status==='success'?'re-run':'run')+' ›</span>';
+    return '<div class="wf '+w.pri+'" data-card="'+w.id+'"><div class="ti">'+w.nm+'</div><div class="meta">'+A[w.dept].nm+' · '+w.pri+' · cod '+w.cod+' · '+w.trigger+'</div><div class="steps">'+steps+'</div><div class="foot">'+lr+btn+'</div></div>';}
+  function renderQueue(){const list=wf.filter(w=>w.status!=='success').sort((a,b)=>b.cod-a.cod);
+    document.getElementById('qlist').innerHTML=list.map(wfCard).join('');document.getElementById('q-n').textContent=list.length+' open';bindCards(document.getElementById('qlist'));renderRail();}
+  function renderFlows(){document.getElementById('flowgrid').innerHTML=wf.slice().sort((a,b)=>b.cod-a.cod).map(wfCard).join('');bindCards(document.getElementById('flowgrid'));}
+  function bindCards(scope){scope.querySelectorAll('[data-card]').forEach(c=>c.addEventListener('click',()=>openDrawer(+c.dataset.card)));
+    scope.querySelectorAll('[data-run]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();runWf(+b.dataset.run);}));}
+
+  function runWf(id){const w=wf.find(x=>x.id===id);if(!w||w.status==='running')return;
+    if(w.gate==='lock'){pushFeed('rd','GATE','🔒 '+w.nm.toLowerCase()+' — '+(w.gatewhy||'gated')+'. Arm via owner in Ctrl K.');flashGate();return;}
+    w.status='running';w.step=0;refresh();pushFeed('cy',A[w.dept].nm,'▶ '+w.nm.toLowerCase());
+    const iv=setInterval(()=>{w.step++;refresh();if(w.step>=w.steps.length){clearInterval(iv);w.status='success';
+      w.out=w.id===1?'model MAE 5.31 vs naive 4.91 · does NOT beat naive ✗':w.id===6?'green · 0 errors':w.id===5?'6 routes ADMIN-gated':w.id===8?'all gates fired on injected disaster ✓':'done';
+      w.ex.unshift({t:'just now',s:'ok',r:w.out});refresh();pushFeed('gn',A[w.dept].nm,'✓ '+w.nm.toLowerCase()+' · '+w.out);
+      if(w.id===1){gatePreds[4].ok=false;gatePreds[4].v='ran · 5.31 vs 4.91 · no beat';renderGate();pushFeed('rd','GATE','backtest ran — model does NOT beat naive OOS (MAE 5.31 vs 4.91). Predicate stays UNMET; gate remains HELD. You cannot render a pass that was not earned.');}
+      if(w.id===5){pushFeed('uvx','AUDIT','disclosure closed · 6 routes gated');}
+    }},740);}
+  function refresh(){if(cur==='bridge')renderQueue();if(cur==='flows')renderFlows();if(drawerId)openDrawer(drawerId,true);}
+  function flashGate(){const c=document.getElementById('gatechip');c.style.borderColor='var(--red)';setTimeout(()=>c.style.borderColor='',600);}
+
+  // ---------- node-detail drawer (n8n NDV) ----------
+  let drawerId=null;
+  function openDrawer(id,keep){const w=wf.find(x=>x.id===id);if(!w)return;drawerId=id;
+    const inputs=Object.entries(w.inputs).map(([k,v])=>'<div class="kv"><span>'+k+'</span><span>'+v+'</span></div>').join('');
+    const steps=w.steps.map((s,i)=>{let c='step';if(w.status==='success'||i<w.step)c+=' done';if(w.status==='running'&&i===w.step)c+=' active';return '<span class="'+c+'">'+(i+1)+'· '+s+'</span>';}).join(' ');
+    const ex=w.ex.length?w.ex.map(e=>'<div class="exrow"><span class="s" style="background:rgba(61,255,168,.15);color:var(--green)">'+e.s+'</span><span>'+e.t+'</span><span style="margin-left:auto;color:var(--muted)">'+e.r+'</span></div>').join(''):'<div style="color:var(--faint);font-size:12px">no runs yet</div>';
+    const out=w.out?'<div class="dout">'+w.out+'</div>':'<div style="color:var(--faint);font-size:12px">runs to produce output</div>';
+    const armed=w.gate==='lock';
+    document.getElementById('drawer-body').innerHTML='<h2 style="color:'+A[w.dept].col+'">'+w.nm+'</h2><div style="font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-top:3px">'+A[w.dept].nm+' · trigger: '+w.trigger+' · cod '+w.cod+'</div>'+
+      '<div class="dsec"><div class="h">① inputs</div>'+inputs+'</div>'+
+      '<div class="dsec"><div class="h">② params · steps'+(w.status==='running'?' (running '+(w.step+1)+'/'+w.steps.length+')':'')+'</div><div class="steps">'+steps+'</div>'+(armed?'<div style="font-size:12px;color:var(--amber);margin-top:9px">🔒 '+w.gatewhy+'</div>':'')+'</div>'+
+      '<div class="dsec"><div class="h">③ output</div>'+out+'</div>'+
+      '<div class="dsec"><div class="h">execution history</div>'+ex+'</div>'+
+      '<div class="drun">'+(armed?'<span class="b" style="color:var(--amber);border-color:rgba(255,176,46,.4)" data-drun="'+w.id+'">arm &amp; run</span>':'<span class="b" data-drun="'+w.id+'">'+(w.status==='success'?'re-run':'run')+'</span>')+'<span class="b" data-rerun="'+w.id+'">re-run from step ▾</span></div>';
+    document.getElementById('drawer').classList.add('on');
+    document.querySelectorAll('[data-drun]').forEach(b=>b.addEventListener('click',()=>{if(armed){pushFeed('am','OWNER','armed · '+w.nm.toLowerCase());w.gate='ok';}runWf(w.id);}));
+    document.querySelectorAll('[data-rerun]').forEach(b=>b.addEventListener('click',()=>{w.status='idle';w.step=Math.max(0,w.steps.length-2);runWf(w.id);}));
+  }
+  document.getElementById('dx').addEventListener('click',()=>{document.getElementById('drawer').classList.remove('on');drawerId=null;});
+
+  // ---------- agent rail ----------
+  function renderRail(){document.getElementById('agrail').innerHTML=agents.filter(a=>a.id!=='jarvis').map(a=>{const c=wf.filter(w=>w.dept===a.id&&w.status!=='success').length;return '<div class="agent" data-ag="'+a.id+'" style="color:'+a.col+'"><span class="ring"></span><div><div class="nm">'+a.nm+'</div><div class="dp">'+a.dp+'</div></div><span class="cnt" style="color:'+(c?a.col:'var(--faint)')+'">'+c+'</span></div>';}).join('');
+    document.querySelectorAll('[data-ag]').forEach(n=>n.addEventListener('click',()=>{show('graph');}));}
+
+  // ---------- agent graph (langflow + animated packets) ----------
+  function renderGraph(){const g=document.getElementById('graph');const pos={scout:[40,230],sarah:[330,120],audit:[330,360],tal:[640,120],ava:[640,300],bobby:[640,440],jarvis:[850,230]};
+    const edges=[['scout','sarah','47 odds'],['sarah','audit','12 picks'],['audit','tal','9 cleared'],['sarah','tal','factors'],['tal','jarvis','CLV'],['ava','jarvis','trust'],['bobby','jarvis','growth'],['audit','jarvis','3 blocked']];
+    let defs='',paths='',nodes='',packets='';
+    edges.forEach(([a,b,lb],i)=>{const p=pos[a],q=pos[b];const x1=p[0]+150,y1=p[1]+30,x2=q[0],y2=q[1]+30;const mx=(x1+x2)/2;const d='M'+x1+' '+y1+' C '+mx+' '+y1+', '+mx+' '+y2+', '+x2+' '+y2;const blocked=lb.indexOf('blocked')>=0;const col=blocked?'#FF38C7':'#00E5FF';
+      paths+='<path id="e'+i+'" d="'+d+'" fill="none" stroke="'+col+'" stroke-opacity=".22" stroke-width="1.5"/>';
+      paths+='<text x="'+mx+'" y="'+((y1+y2)/2-6)+'" fill="'+(blocked?'#FF38C7':'#8aa4ca')+'" font-size="10" text-anchor="middle" font-family="Inter">'+lb+'</text>';
+      packets+='<circle r="4" fill="'+col+'" class="gpacket" style="color:'+col+'"><animateMotion dur="'+(2.4+i*0.3)+'s" repeatCount="indefinite" '+(blocked?'keyPoints="0;0.5;0.5" keyTimes="0;0.7;1" calcMode="linear"':'')+'><mpath href="#e'+i+'"/></animateMotion></circle>';
+    });
+    agents.forEach(a=>{const p=pos[a.id];const w=a.id==='jarvis'?150:150;nodes+='<g style="cursor:pointer" onclick="window.__trace&&window.__trace(\''+a.id+'\')"><rect x="'+p[0]+'" y="'+p[1]+'" width="'+w+'" height="60" rx="10" fill="rgba(13,17,23,.92)" stroke="'+a.col+'" stroke-width="1.2"/>'+
+      '<circle cx="'+(p[0]+15)+'" cy="'+(p[1]+17)+'" r="4.5" fill="'+a.col+'"/><text x="'+(p[0]+27)+'" y="'+(p[1]+21)+'" fill="'+a.col+'" font-family="Exo 2" font-size="12" font-weight="700">'+a.nm+'</text>'+
+      '<text x="'+(p[0]+12)+'" y="'+(p[1]+38)+'" fill="#8aa4ca" font-size="9.5" font-family="Inter">in '+io[a.id][0]+'</text>'+
+      '<text x="'+(p[0]+12)+'" y="'+(p[1]+52)+'" fill="#00E5FF" font-size="9.5" font-family="Inter">out '+io[a.id][1]+'</text></g>';});
+    g.innerHTML=defs+paths+nodes+packets;}
+  window.__trace=function(id){pushFeed('cy',A[id].nm,'trace · in:['+io[id][0]+'] → out:['+io[id][1]+'] · evidence logged · '+(id==='audit'?'3 picks blocked (thin evidence)':'priced=false until OOS proof'));};
+
+  // ---------- lifecycle board (dify gated) ----------
+  function renderBoard(){const b=document.getElementById('board');b.innerHTML=STAGES.map(s=>{const items=signals.filter(x=>x.stage===s);return '<div class="lane"><h3>'+s+' <span class="c" style="color:'+STCOL[s]+'">'+items.length+'</span></h3>'+(items.length?items.map(it=>'<div class="sig" style="border-left-color:'+A[it.dept].col+'" title="'+(it.next||'')+'">'+it.nm+'<div class="d">'+A[it.dept].nm+'</div>'+(it.next?'<div class="gate">⛉ '+it.next+'</div>':'')+'</div>').join(''):'<div style="color:var(--faint);font-size:11.5px;padding:6px 2px">'+(s==='Proven'?'earned by ≥100 settled + published calibration':'—')+'</div>')+'</div>';}).join('');}
+
+  // ---------- observe (grafana) ----------
+  let split=false;
+  function renderObs(){const sigs=[{k:'calibration ECE',v:'0.05',d:'in-band',a:'v5.1 shipped'},{k:'CLV capture',v:'6/9',d:'this slate'},{k:'data freshness',v:'3m',d:'7/7 sources'},{k:'revenue conversion',v:'2.1%',d:'founding'}];
+    document.getElementById('obs').innerHTML=sigs.map((s,i)=>'<div class="ocard"><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">'+s.k+' · '+document.getElementById('sv-sport').textContent+' wk'+document.getElementById('sv-week').textContent+'</span><span style="font-size:10px;color:var(--cyan);cursor:pointer" onclick="window.__split&&window.__split()">split ⇆</span></div><div class="val glow">'+s.v+'</div><canvas id="oc'+i+'"></canvas>'+(s.a?'<div class="anno">⌖ '+s.a+(split?' · vs last week':'')+'</div>':'')+'</div>').join('');
+    sigs.forEach((s,i)=>{const c=document.getElementById('oc'+i);if(!c)return;const w=c.width=c.clientWidth*2,h=c.height=120,x=c.getContext('2d');x.scale(2,2);const W2=c.clientWidth;const d=Array.from({length:30},(_,j)=>40+Math.sin(j/3+i)*15+Math.random()*8);x.beginPath();d.forEach((v,j)=>{const px=j/(d.length-1)*W2,py=60-(v-40)/30*44;j?x.lineTo(px,py):x.moveTo(px,py);});x.strokeStyle='#00E5FF';x.lineWidth=1.5;x.stroke();
+      if(split){x.beginPath();d.forEach((v,j)=>{const px=j/(d.length-1)*W2,py=60-((v*.85)-40)/30*44;j?x.lineTo(px,py):x.moveTo(px,py);});x.strokeStyle='rgba(123,97,255,.7)';x.setLineDash([3,3]);x.stroke();x.setLineDash([]);}});}
+  window.__split=function(){split=!split;renderObs();pushFeed('cy','SYS','split-view '+(split?'on · this week vs last (dashed)':'off'));};
+
+  // ---------- feed ----------
+  const feed=document.getElementById('feed');const ev=[['cy','SARAH','priced slate · 24 picks · top GSE 88'],['uvx','AUDIT','3 picks blocked · thin evidence'],['cy','SCOUT','nflverse refresh · 7/7 fresh'],['am','TAL','CLV captured · beat close 6/9'],['gn','BOBBY','founding signup +1 · MRR $1.2k']];
+  function clk(){const d=new Date();return [d.getHours(),d.getMinutes(),d.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');}
+  function pushFeed(t,who,txt){const e=document.createElement('div');e.className='fe';e.innerHTML='<i>'+clk().slice(3)+'</i><div><span class="tag '+t+'">'+who+'</span> '+txt+'</div>';feed.prepend(e);while(feed.children.length>10)feed.lastChild.remove();}
+  ev.forEach(e=>pushFeed(e[0],e[1],e[2]));setInterval(()=>{const e=ev[Math.floor(Math.random()*ev.length)];pushFeed(e[0],e[1],e[2]);},3400);
+  setInterval(()=>document.getElementById('clock').textContent=clk(),1000);
+
+  // ---------- views ----------
+  let cur='bridge';function show(v){cur=v;document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.getElementById('v-'+v).classList.add('on');document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
+    if(v==='bridge'){renderQueue();renderGate();}if(v==='flows')renderFlows();if(v==='graph')renderGraph();if(v==='life')renderBoard();if(v==='obs')renderObs();}
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>show(t.dataset.v)));
+  document.getElementById('gatechip').addEventListener('click',()=>{show('bridge');document.getElementById('gate').animate([{boxShadow:'0 0 0 2px var(--cyan)'},{boxShadow:'none'}],{duration:800});});
+
+  // ---------- scope variables ----------
+  const scopes={sport:['NFL','MLB','NHL'],week:['4','5','6','7'],model:['v5.0.0','v5.1.0']};
+  document.querySelectorAll('.svar').forEach(s=>s.addEventListener('click',()=>{const k=s.dataset.s;const arr=scopes[k];const el=document.getElementById('sv-'+k);const i=(arr.indexOf(el.textContent)+1)%arr.length;el.textContent=arr[i];pushFeed('cy','SCOPE','re-scoped '+k+' → '+arr[i]+' · all panels updated');if(cur==='obs')renderObs();}));
+
+  // ---------- command palette (open-webui capability surface) ----------
+  const pal=document.getElementById('pal'),palinput=document.getElementById('palinput'),pallist=document.getElementById('pallist');
+  const cmds=[
+    {lb:'Run the backtest',cat:'flow',gate:'ok',act:()=>runWf(1)},{lb:'Go live: Fantasy $49 tier',cat:'flow',gate:'lock',rs:'owner must arm · live money',act:()=>runWf(2)},
+    {lb:'Publish projections',cat:'gate',gate:'lock',rs:'backtest not run · ECE unproven',act:()=>runWf(7)},{lb:'Gate leaky endpoints',cat:'flow',gate:'ok',act:()=>runWf(5)},
+    {lb:'Verify conformal fix',cat:'flow',gate:'ok',act:()=>runWf(6)},{lb:'Settle + grade slate',cat:'flow',gate:'ok',act:()=>runWf(3)},
+    {lb:'Open slate-night simulator',cat:'flow',gate:'ok',act:()=>runWf(8)},{lb:'Go to Graph (agent map)',cat:'nav',gate:'ok',act:()=>show('graph')},
+    {lb:'Go to Lifecycle board',cat:'nav',gate:'ok',act:()=>show('life')},{lb:'Go to Observe (telemetry)',cat:'nav',gate:'ok',act:()=>show('obs')},
+    {lb:'Scope: sport →',cat:'scope',gate:'ok',act:()=>document.querySelector('[data-s=sport]').click()},{lb:'Status report',cat:'ask',gate:'ok',act:()=>respond('status')}];
+  let palSel=0,palFiltered=cmds;
+  function renderPal(){const q=palinput.value.toLowerCase();palFiltered=cmds.filter(c=>c.lb.toLowerCase().includes(q));if(palSel>=palFiltered.length)palSel=0;
+    pallist.innerHTML=palFiltered.map((c,i)=>'<div class="palrow'+(i===palSel?' sel':'')+'" data-i="'+i+'"><span class="g">'+(c.gate==='lock'?'🔒':'<span style="color:var(--green)">✓</span>')+'</span><span class="lb">'+c.lb+'</span>'+(c.rs?'<span class="rs">'+c.rs+'</span>':'<span class="cat">'+c.cat+'</span>')+'</div>').join('');
+    pallist.querySelectorAll('[data-i]').forEach(r=>r.addEventListener('click',()=>{palSel=+r.dataset.i;runPal();}));}
+  function openPal(){pal.classList.add('on');palinput.value='';palSel=0;renderPal();setTimeout(()=>palinput.focus(),50);}
+  function closePal(){pal.classList.remove('on');}
+  function runPal(){const c=palFiltered[palSel];if(!c)return;closePal();if(c.gate==='lock'){pushFeed('rd','GATE','🔒 '+c.lb.toLowerCase()+' — '+c.rs+'. Path to arm: complete the predicate, then owner arms.');flashGate();}c.act();}
+  document.getElementById('kbtn').addEventListener('click',openPal);
+  palinput.addEventListener('input',renderPal);
+  document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();pal.classList.contains('on')?closePal():openPal();}
+    if(pal.classList.contains('on')){if(e.key==='Escape')closePal();if(e.key==='ArrowDown'){e.preventDefault();palSel=Math.min(palFiltered.length-1,palSel+1);renderPal();}if(e.key==='ArrowUp'){e.preventDefault();palSel=Math.max(0,palSel-1);renderPal();}if(e.key==='Enter')runPal();}});
+  pal.addEventListener('click',e=>{if(e.target===pal)closePal();});
+
+  // ---------- command bar ----------
+  let activeAgent='JARVIS';
+  document.getElementById('agentsel').addEventListener('click',()=>{const n=agents.map(a=>a.nm);activeAgent=n[(n.indexOf(activeAgent)+1)%n.length];document.getElementById('agentsel').textContent='◆ '+activeAgent+' ▾';});
+  const inp=document.getElementById('cmd-in');
+  function respond(q){q=(q||'').toLowerCase().replace(/^\//,'');let r='acknowledged — routing to '+activeAgent+'.';
+    if(/run.?backtest|backtest/.test(q)){runWf(1);return;}if(/go.?live|stripe|launch/.test(q)){runWf(2);return;}if(/gate|endpoint/.test(q)){runWf(5);return;}if(/simulat/.test(q)){runWf(8);return;}
+    if(/status|health/.test(q))r='publish gate HELD · blocked by settled 63/100 + backtest · '+wf.filter(w=>w.status!=='success').length+' workflows open · 7 agents online.';
+    else if(/chang|diff/.test(q))r='SCOUT refreshed 7 sources · SARAH re-priced 24 · AUDIT blocked 3 (thin evidence) · sealed merkle root.';
+    else if(/publish|gate/.test(q))r='publish gate: 4/6 predicates pass. The backtest has run and the model does NOT yet beat naive OOS (MAE 5.31 vs 4.91), so two predicates remain: a model that beats naive, and 37 more settled picks.';
+    pushFeed('cy',activeAgent,r);}
+  function go(){const v=inp.value.trim();if(!v)return;pushFeed('uvx','YOU',v);inp.value='';setTimeout(()=>respond(v),360);}
+  document.getElementById('cmd-go').addEventListener('click',go);inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+
+  show('bridge');renderGate();
+})();
+</script>
+</body>
+</html>
