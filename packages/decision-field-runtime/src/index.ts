@@ -20,6 +20,8 @@ export * from "./five-ledgers.js";
 export * from "./universal-event-genome.js";
 export * from "./event-genome-fixtures.js";
 export * from "./match-derived-stats.js";
+export * from "./trend-passport.js";
+export * from "./prediction-court.js";
 export * from "./state-compilers.js";
 export * from "./card-prosecution-trace.js";
 export * from "./missed-observation.js";
