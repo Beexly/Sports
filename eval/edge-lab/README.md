@@ -4,32 +4,45 @@ Real, runnable machinery for measuring whether GSE picks have an edge. No
 simulation, no self-grading. Run the checks yourself:
 
 ```bash
-node eval/edge-lab/smoke.mjs   # 13 known-answer checks, all PASS
+node eval/edge-lab/smoke.mjs            # 13 metric checks, all PASS
+node eval/edge-lab/clv-report.smoke.mjs # 7 CLV-aggregation checks, all PASS
 ```
 
-## What's here (REAL — verified by smoke.mjs)
-- `metrics.mjs` — Brier, log loss, ECE (calibration), implied prob, proportional
-  de-vig, and **CLV** (closing line value) on fair probabilities. Every function
-  is checked against a hand-computed expected value.
-- `sealed-split.mjs` — a season-based train / validation / **sealed-vault** split.
-  The 2024 vault throws if you read it more than once — peeking becomes an error,
-  not a silent overfit. This is the real version of "sealed 2024 vault."
+## Get your REAL CLV track record (the actual number)
 
-## What's NOT here yet (the honest gap — needs your data, not more code)
-To produce **real NFL numbers** instead of unit checks, two inputs must be wired:
-1. **GSE settled picks** with their model probability at bet time
-   (already in the DB via the pick lifecycle / `prediction-engine`).
-2. **Historical closing lines** — from The Odds API historical endpoint
-   ([verified](https://the-odds-api.com/historical-odds-data/): the $30/mo "20K"
-   plan includes historical odds; historical calls cost 10× credits). This is the
-   "grow from what we have" step — you already pay for the Odds API.
+Your schema already grades CLV at settlement (`Pick.clvValue`, `Pick.clvVerdict`),
+so the real edge number is a straight read from the DB — no Odds API backfill
+needed for picks that already settled. In your environment (with `DATABASE_URL`):
 
-Feed those two in and `meanClv()` / `brierScore()` / `expectedCalibrationError()`
-report whether GSE beats the closing line out-of-sample. That number — measured on
-the sealed 2024 vault, once — is the real answer to "do we have an edge."
+```bash
+npx tsx eval/edge-lab/run-clv-report.ts
+```
 
-## Why this exists
-Built to contrast with status docs that *claim* a backtest. Here the harness runs
-and prints PASS/FAIL you can read. Provenance: lead surfaced by external research
-(The Odds API historical), **verified** before building (the arXiv "58.5%" claim
-from the same batch was checked and found fabricated, so it was discarded).
+It prints mean CLV, beat-close rate, and (only if a real `modelProb` exists)
+Brier/ECE — per season and overall — over settled, non-bootstrap, graded picks.
+If there are none yet, it says so honestly. **It never fabricates a number.**
+
+## Files
+- `metrics.mjs` — Brier, log loss, ECE, implied prob, proportional de-vig, CLV.
+  Every function checked against a hand-computed value in `smoke.mjs`.
+- `sealed-split.mjs` — season train/val/**sealed-vault** split; the 2024 vault
+  throws on a second read so peeking is an error, not a silent overfit.
+- `clv-report.mjs` — pure aggregation of graded picks → CLV track record, with
+  honest sample-adequacy gating (PROVEN rung = n ≥ 100) and a refusal to compute
+  Brier/ECE without a real `modelProb`.
+- `run-clv-report.ts` — the DB runner (Prisma `@sports/db`) that feeds real rows
+  into `clv-report.mjs`.
+
+## Honest status
+- The **machinery is real and verified here** (20 checks pass).
+- The **live CLV number** comes from `run-clv-report.ts` against your DB. Pre-launch
+  the honest result is likely "insufficient sample (n < 100)" — that is the truth,
+  and the track record grows as live picks settle.
+- A **2024 historical backtest** (picks that never existed in 2024) additionally
+  requires retro-generating picks on historical odds — that's the separate Odds API
+  historical step ([verified $30/mo plan includes historical odds](https://the-odds-api.com/historical-odds-data/)).
+
+## Provenance
+Built from the one **verified** lead in external research (Odds API historical).
+The arXiv "XGBoost 58.5% NFL" claim from the same batch was checked, found
+fabricated (the paper is a survey, not that result), and discarded.
