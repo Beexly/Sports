@@ -270,6 +270,19 @@ describe("validation hardening — oversized inputs (A5)", () => {
   });
 });
 
+describe("store concurrency (per-file write lock)", () => {
+  it("does not lose leads under concurrent record() calls", async () => {
+    const store = createWaitlistStore(tmpStorePath("concurrency"));
+    const lead = (n: number) => {
+      const r = validateWaitlistLead({ ...VALID_LEAD, email: `user${n}@example.com` });
+      if (!r.success) throw new Error("fixture invalid");
+      return r.data;
+    };
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8].map((n) => store.record(lead(n))));
+    expect(await store.list()).toHaveLength(8);
+  });
+});
+
 describe("store selector (A1)", () => {
   it("selectWaitlistStore returns a working store at the configured path", async () => {
     const p = tmpStorePath("selector");

@@ -55,6 +55,23 @@ function defaultStorePath(): string {
   );
 }
 
+// Serialize read-modify-write per file so concurrent submissions in one process
+// can't clobber each other (the local fallback has no DB-level concurrency; the
+// gated DB store will get real row-level guarantees — see pr3-durable-storage-plan).
+const fileWriteLocks = new Map<string, Promise<unknown>>();
+function withFileLock<T>(filePath: string, fn: () => Promise<T>): Promise<T> {
+  const prev = fileWriteLocks.get(filePath) ?? Promise.resolve();
+  const next = prev.then(fn, fn);
+  fileWriteLocks.set(
+    filePath,
+    next.then(
+      () => undefined,
+      () => undefined,
+    ),
+  );
+  return next;
+}
+
 export function createWaitlistStore(filePath: string = defaultStorePath()): WaitlistStore {
   async function readAll(): Promise<StoredWaitlistLead[]> {
     try {
@@ -68,31 +85,33 @@ export function createWaitlistStore(filePath: string = defaultStorePath()): Wait
   }
 
   async function record(lead: WaitlistLeadInput): Promise<RecordResult> {
-    const email = lead.email.trim().toLowerCase();
-    const all = await readAll();
-    if (all.some((existing) => existing.email === email)) {
-      return { stored: false, duplicate: true };
-    }
-    const entry: StoredWaitlistLead = {
-      email,
-      fullName: lead.fullName,
-      role: lead.role,
-      sportInterests: lead.sportInterests,
-      currentStack: lead.currentStack,
-      weakestProcess: lead.weakestProcess,
-      consent: true,
-      createdAt: new Date().toISOString(),
-      utmSource: lead.utmSource,
-      utmCampaign: lead.utmCampaign,
-      referrer: lead.referrer,
-      path: lead.path,
-      copyVersion: lead.copyVersion,
-      reviewStatus: "QUEUED",
-    };
-    all.push(entry);
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, JSON.stringify(all, null, 2), "utf8");
-    return { stored: true, duplicate: false };
+    return withFileLock(filePath, async () => {
+      const email = lead.email.trim().toLowerCase();
+      const all = await readAll();
+      if (all.some((existing) => existing.email === email)) {
+        return { stored: false, duplicate: true };
+      }
+      const entry: StoredWaitlistLead = {
+        email,
+        fullName: lead.fullName,
+        role: lead.role,
+        sportInterests: lead.sportInterests,
+        currentStack: lead.currentStack,
+        weakestProcess: lead.weakestProcess,
+        consent: true,
+        createdAt: new Date().toISOString(),
+        utmSource: lead.utmSource,
+        utmCampaign: lead.utmCampaign,
+        referrer: lead.referrer,
+        path: lead.path,
+        copyVersion: lead.copyVersion,
+        reviewStatus: "QUEUED",
+      };
+      all.push(entry);
+      await fs.mkdir(path.dirname(filePath), { recursive: true });
+      await fs.writeFile(filePath, JSON.stringify(all, null, 2), "utf8");
+      return { stored: true, duplicate: false };
+    });
   }
 
   async function list(): Promise<StoredWaitlistLead[]> {
