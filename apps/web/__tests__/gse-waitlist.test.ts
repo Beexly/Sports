@@ -284,6 +284,20 @@ describe("email drafts — no-claim scan (QA no-claim)", () => {
   }
 });
 
+describe("research brief drafts — no-claim scan (QA no-claim)", () => {
+  const briefFiles = ["research-brief-template.md", "research-brief-rest-travel.md"];
+  for (const file of briefFiles) {
+    it(`${file} passes the compliance scanner with 0 block flags`, () => {
+      const text = readFileSync(
+        path.resolve(__dirname, "..", "..", "..", "docs", "gse", file),
+        "utf8",
+      );
+      const guard = runNoClaimGuard(text);
+      expect(guard.ok, `blocked in ${file} -> ${JSON.stringify(guard.flags)}`).toBe(true);
+    });
+  }
+});
+
 describe("form a11y — required-field semantics", () => {
   it("marks the email and consent gates aria-required", () => {
     render(createElement(WaitlistForm));

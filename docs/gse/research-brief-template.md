@@ -32,7 +32,7 @@ No level may include outcome guarantees or predictive superiority claims.
 - Market condition sensitivity
 
 ## No-bet / decision-hygiene framing
-- Always include: "This is educational/decision process support, not a betting guarantee."
+- Always include: "This is educational decision-process support — not betting advice, and not a promise of outcomes."
 - Document at least one decision rule that can be falsified.
 
 ## Review status
