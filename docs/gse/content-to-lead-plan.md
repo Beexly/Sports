@@ -10,6 +10,11 @@ decision-hygiene / calibration / research / waitlist only.
 > outcome, or sportsbook/affiliate wording. No auto-post. The owner approves each
 > post before it leaves the building.
 
+> **Canonical source + CI scan:** these drafts now live as typed constants in
+> `apps/web/lib/gse/content-drafts.ts` and are scanned by the real compliance
+> scanner in `apps/web/__tests__/gse-waitlist.test.ts` (every string must pass
+> `runNoClaimGuard` with 0 block flags). The list below mirrors that module.
+
 ## A. 15 no-claim social post drafts
 
 1. We publish our model's honest scorecard — including where it loses. On the last
@@ -50,7 +55,7 @@ decision-hygiene / calibration / research / waitlist only.
 2. Rest and travel spots — quantifying short-week and cross-country effects with
    uncertainty bands.
 3. Weather-sensitive markets — wind/precipitation on totals, stated as ranges.
-4. Closing-line value as a *process* metric (explicitly not a profit claim).
+4. Closing-line value as a *process* metric — a discipline signal, not an outcome promise.
 5. Pace and possessions — why totals need tempo, not just averages.
 6. Opponent adjustment — strength-of-schedule done honestly.
 7. Sample-size discipline — how few games is too few to say anything.

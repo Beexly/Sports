@@ -19,6 +19,11 @@ import {
   BACKTEST_TRUTH,
 } from "@/lib/gse/waitlist-copy";
 import { track, isAnalyticsEvent } from "@/lib/analytics/events";
+import {
+  ALL_CONTENT_DRAFT_STRINGS,
+  SOCIAL_POST_DRAFTS,
+  RESEARCH_BRIEF_TOPICS,
+} from "@/lib/gse/content-drafts";
 import { POST } from "@/app/api/waitlist/route";
 
 const VALID_LEAD = {
@@ -281,6 +286,26 @@ describe("form a11y — error association (A6)", () => {
     const emailInput = screen.getByLabelText(WAITLIST_COPY.fields.email);
     await waitFor(() => expect(emailInput.getAttribute("aria-invalid")).toBe("true"));
     expect(emailInput.getAttribute("aria-describedby")).toBe("wl-email-error");
+  });
+});
+
+describe("content drafts — CI no-claim scan (D19/D20)", () => {
+  it("has 15 social drafts + 10 brief topics", () => {
+    expect(SOCIAL_POST_DRAFTS).toHaveLength(15);
+    expect(RESEARCH_BRIEF_TOPICS).toHaveLength(10);
+  });
+
+  it("every content draft passes the platform compliance scanner (0 block flags)", () => {
+    for (const text of ALL_CONTENT_DRAFT_STRINGS) {
+      const guard = runNoClaimGuard(text);
+      expect(guard.ok, `blocked: "${text}" -> ${JSON.stringify(guard.flags)}`).toBe(true);
+    }
+  });
+
+  it("every content draft is free of positive performance claims", () => {
+    for (const text of ALL_CONTENT_DRAFT_STRINGS) {
+      expect(hasNoPerformanceClaim(text), `claim in: "${text}"`).toBe(true);
+    }
   });
 });
 
