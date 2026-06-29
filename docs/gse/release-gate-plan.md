@@ -18,6 +18,13 @@ could ever be made public — and the owner approvals required at each step.
 | Backtest-truth scan | assert `BACKTEST_TRUTH.beatsNaive === false`; page contains "10,301" + "does not beat naive" | true |
 | Build | `npm run build --workspace=apps/web` | exit 0 |
 
+**Current status (2026-06-29):** typecheck ✅0, lint ✅0, targeted tests ✅ (waitlist 49/49),
+guardrails ✅6/6, no-claim scan ✅ (copy + 50 content posts + assembled page + emails +
+briefs, 0 block flags), backtest-truth scan ✅ (`beatsNaive===false`; page carries
+"10,301" + "does not beat naive"). Build (`npm run build`) and the Vercel preview build
+are ✅ (the Level-2A preview reached READY). Every automated gate item is currently GREEN;
+the remaining gates below are the human/owner ones.
+
 ## 2. Waitlist smoke tests (pre-public, local/staging)
 
 1. `GET /waitlist` renders the no-claim copy + transparency line + form.

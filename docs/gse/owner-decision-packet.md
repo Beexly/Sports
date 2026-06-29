@@ -1,15 +1,22 @@
 # GSE — Owner Decision Packet
 
-**Prepared:** 2026-06-29 · Repo C:/Users/Garrett/Sports · branch `codex/galaxy-dynasty-studio-rescue-v2`.
+**Prepared:** 2026-06-29 · Repo C:/Users/Garrett/Sports · branch `claude/gse-no-claim-waitlist`
+(clean, off current `main`; 4 commits pushed earlier at Level 2A + 8 more local-only;
+**12 ahead / 0 behind** origin/main).
 **Purpose:** one page that tells Garrett exactly what's done locally, what's not
 public, and which decisions only he can make.
 
 ## 1. What is locally committed (and nothing more)
 
-- Commit `3cf92cf5` — `feat(gse): add local no-claim waitlist` (22 files, +1807/−1).
-- A second local commit (pending this run) adds the PR3/release/content **planning
-  docs** under `docs/gse/` — markdown only, no code/behavior change.
-- Both are **local commits on a feature branch. Not pushed. Not deployed.**
+- The full no-claim waitlist + hardening, across 12 commits on `claude/gse-no-claim-waitlist`
+  (the original 4 were pushed at Level 2A; the latest 8 are **local-only, not pushed**):
+  page/form/route, file store (+write lock), **PR3 DB-store logic** (injected delegate,
+  tested; **no schema/migration**), no-op analytics, honeypot + submit-timing anti-bot,
+  full a11y, no-claim CI over copy + **50 content posts** + page + emails + research briefs,
+  backtest drift guard, and all planning docs.
+- Validation green throughout: typecheck 0, lint 0, waitlist 49/49, guardrails 6/6.
+- **Local commits on a feature branch. Not pushed beyond the earlier Level-2A push. Not
+  deployed. No schema migration applied.**
 
 ## 2. What is NOT public (current reality)
 
