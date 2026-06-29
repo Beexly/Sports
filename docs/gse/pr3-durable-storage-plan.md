@@ -68,10 +68,20 @@ export function selectWaitlistStore(): WaitlistStore { /* file store; DB when WA
 ```
 
 `apps/web/app/api/waitlist/route.ts` already calls `selectWaitlistStore()` and depends
-only on `record()`. So PR3's remaining work is narrowed to: (a) add the `WaitlistLead`
-model + migration (§2/§4), (b) implement `createDbWaitlistStore(): WaitlistStore`, and
-(c) flip the one commented branch in `selectWaitlistStore()` on `WAITLIST_STORAGE=db`.
-No call-site changes; fully reversible by the env flag.
+only on `record()`. The DB store LOGIC is also **already implemented + unit-tested**:
+`apps/web/lib/gse/waitlist-store-db.ts` exports `createDbWaitlistStore(delegate)` against
+a small injected `WaitlistLeadDelegate` (Prisma-compatible: `findUnique`/`create`/
+`findMany`), with dedup, the P2002 unique-race path, and file/DB parity — all tested in
+`gse-waitlist.test.ts` with an in-memory fake (no DB, no schema change).
+
+So PR3's remaining (owner-run) work is narrowed to: (a) add the `WaitlistLead` model +
+migration (§2/§4 + `pr3-migration-runbook.md`); (b) `db:generate`; (c) in
+`selectWaitlistStore()`, when `WAITLIST_STORAGE=db`, return
+`createDbWaitlistStore(db.waitlistLead)` (the generated Prisma delegate satisfies
+`WaitlistLeadDelegate` structurally). No call-site changes; fully reversible by the env
+flag. **Why this wiring isn't done here:** on this deploy-target repo (`migrate-in-build`)
+adding the model/migration auto-applies on a future deploy, and the DB target can't be
+verified locally — so the model + migration apply stay owner-gated.
 
 ## 4. Migration plan (owner-run, local first)
 

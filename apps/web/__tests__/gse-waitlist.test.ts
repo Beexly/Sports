@@ -13,6 +13,12 @@ import {
 } from "@/lib/gse/waitlist-validation";
 import { createWaitlistStore, selectWaitlistStore } from "@/lib/gse/waitlist-store";
 import {
+  createDbWaitlistStore,
+  type WaitlistLeadRow,
+  type WaitlistLeadDelegate,
+  type CreateWaitlistLeadData,
+} from "@/lib/gse/waitlist-store-db";
+import {
   WAITLIST_COPY,
   ALL_WAITLIST_COPY_STRINGS,
   BACKTEST_TRANSPARENCY,
@@ -322,6 +328,79 @@ describe("store concurrency (per-file write lock)", () => {
     };
     await Promise.all([1, 2, 3, 4, 5, 6, 7, 8].map((n) => store.record(lead(n))));
     expect(await store.list()).toHaveLength(8);
+  });
+});
+
+// In-memory fake of the WaitlistLead Prisma delegate (enforces the unique email
+// index, including the P2002 race). Lets us unit-test the PR3 DB store LOGIC with no
+// database, no schema change, no migration.
+function makeFakeDelegate(opts?: { forceRaceOnCreate?: boolean }): WaitlistLeadDelegate & {
+  rows: WaitlistLeadRow[];
+} {
+  const rows: WaitlistLeadRow[] = [];
+  return {
+    rows,
+    async findUnique({ where: { email } }) {
+      if (opts?.forceRaceOnCreate) return null; // pretend the row isn't there yet
+      return rows.find((r) => r.email === email && r.deletedAt === null) ?? null;
+    },
+    async create({ data }: { data: CreateWaitlistLeadData }) {
+      if (rows.some((r) => r.email === data.email)) {
+        throw Object.assign(new Error("Unique constraint failed"), { code: "P2002" });
+      }
+      const row: WaitlistLeadRow = {
+        ...data,
+        reviewStatus: "QUEUED",
+        createdAt: new Date(),
+        deletedAt: null,
+      };
+      rows.push(row);
+      return row;
+    },
+    async findMany() {
+      return rows.filter((r) => r.deletedAt === null);
+    },
+  };
+}
+
+describe("PR3 DB store logic (fake delegate; no DB)", () => {
+  it("records + de-duplicates by email — same contract as the file store", async () => {
+    const store = createDbWaitlistStore(makeFakeDelegate());
+    const v = validateWaitlistLead(VALID_LEAD);
+    expect(v.success).toBe(true);
+    if (!v.success) return;
+
+    expect(await store.record(v.data)).toEqual({ stored: true, duplicate: false });
+    expect(await store.record(v.data)).toEqual({ stored: false, duplicate: true });
+    const all = await store.list();
+    expect(all).toHaveLength(1);
+    expect(all[0]?.email).toBe("jordan@example.com");
+    expect(all[0]?.reviewStatus).toBe("QUEUED");
+  });
+
+  it("treats a unique-constraint race (P2002) as a safe duplicate, not a throw", async () => {
+    const store = createDbWaitlistStore(makeFakeDelegate({ forceRaceOnCreate: true }));
+    const v = validateWaitlistLead(VALID_LEAD);
+    if (!v.success) return;
+    // First insert succeeds; the second sees findUnique=null (race) then create P2002.
+    await store.record(v.data);
+    expect(await store.record(v.data)).toEqual({ stored: false, duplicate: true });
+  });
+
+  it("file store and DB store agree on the record() result sequence (parity)", async () => {
+    const file = createWaitlistStore(tmpStorePath("parity"));
+    const db = createDbWaitlistStore(makeFakeDelegate());
+    const lead = (n: number) => {
+      const r = validateWaitlistLead({ ...VALID_LEAD, email: `p${n}@example.com` });
+      if (!r.success) throw new Error("fixture invalid");
+      return r.data;
+    };
+    for (const n of [1, 1, 2]) {
+      const a = await file.record(lead(n));
+      const b = await db.record(lead(n));
+      expect(a).toEqual(b);
+    }
+    expect((await file.list()).length).toBe((await db.list()).length);
   });
 });
 
