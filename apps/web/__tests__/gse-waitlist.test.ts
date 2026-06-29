@@ -366,7 +366,7 @@ describe("form a11y — error association (A6)", () => {
 
 describe("content drafts — CI no-claim scan (D19/D20)", () => {
   it("has 15 social drafts + 10 brief topics", () => {
-    expect(SOCIAL_POST_DRAFTS).toHaveLength(15);
+    expect(SOCIAL_POST_DRAFTS).toHaveLength(25);
     expect(RESEARCH_BRIEF_TOPICS).toHaveLength(10);
   });
 

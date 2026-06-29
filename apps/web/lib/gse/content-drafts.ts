@@ -32,6 +32,16 @@ export const SOCIAL_POST_DRAFTS: readonly string[] = [
   "Research we're working through: injury context vs. market reaction, rest and travel spots, weather-sensitive totals. Education, not advice.",
   "Your weakest decision moment is usually emotional, not analytical. We help you build the rule that protects you from yourself.",
   "We'd rather earn trust slowly than rent attention loudly. If that resonates, the founding waitlist is open.",
+  "Variance is not a verdict. A few losses don't mean the process broke — and a few wins don't mean it works. Sample size decides.",
+  "We log every decision before the result is known. After, we grade the decision, not the outcome. That's the only honest scoreboard.",
+  "If you can't explain why you made a call in one sentence a stranger would understand, the call wasn't ready.",
+  "Source quality beats source quantity. One reliable, timely input you understand is worth ten you don't.",
+  "The market is usually right. Our job isn't to feel smarter than it — it's to know exactly when and why we'd disagree, and to write it down first.",
+  "Confidence should be a range, not a flag. 'Lean, with these caveats' is more honest than a checkmark.",
+  "We delete more ideas than we keep. A process that never says 'no bet' isn't a process.",
+  "Uncertainty bands are a feature, not an apology. We'd rather show the range than fake a point.",
+  "Trust is built in the boring middle: the same checklist, every day, recorded, reviewed. No fireworks.",
+  "Read the model where it's weak, not just where it's strong. The honest gaps are the most useful part.",
 ];
 
 /** 10 research-brief topics (education; no outcome guarantees). */

@@ -11,11 +11,12 @@ decision-hygiene / calibration / research / waitlist only.
 > post before it leaves the building.
 
 > **Canonical source + CI scan:** these drafts now live as typed constants in
-> `apps/web/lib/gse/content-drafts.ts` and are scanned by the real compliance
-> scanner in `apps/web/__tests__/gse-waitlist.test.ts` (every string must pass
-> `runNoClaimGuard` with 0 block flags). The list below mirrors that module.
+> `apps/web/lib/gse/content-drafts.ts` (currently **25** social posts) and are scanned
+> by the real compliance scanner in `apps/web/__tests__/gse-waitlist.test.ts` (every
+> string must pass `runNoClaimGuard` with 0 block flags). A representative subset is
+> shown below; the module is canonical.
 
-## A. 15 no-claim social post drafts
+## A. No-claim social post drafts (representative subset of 25)
 
 1. We publish our model's honest scorecard — including where it loses. On the last
    out-of-sample test (10,301 plays) it did not beat a simple baseline. That's not a
