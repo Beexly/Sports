@@ -3,7 +3,7 @@ import { promises as fs, readFileSync } from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { createElement } from "react";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { WaitlistForm } from "@/components/gsn/waitlist-form";
 
 import {
@@ -11,7 +11,7 @@ import {
   runNoClaimGuard,
   hasNoPerformanceClaim,
 } from "@/lib/gse/waitlist-validation";
-import { createWaitlistStore } from "@/lib/gse/waitlist-store";
+import { createWaitlistStore, selectWaitlistStore } from "@/lib/gse/waitlist-store";
 import {
   WAITLIST_COPY,
   ALL_WAITLIST_COPY_STRINGS,
@@ -229,5 +229,86 @@ describe("waitlist page (source-level)", () => {
     expect(pageSource).toMatch(/index:\s*false/);
     expect(pageSource).toContain("WaitlistForm");
     expect(pageSource).toContain("BACKTEST_TRANSPARENCY");
+  });
+});
+
+describe("validation hardening — oversized inputs (A5)", () => {
+  it("rejects an over-long name (>120)", () => {
+    const r = validateWaitlistLead({ ...VALID_LEAD, fullName: "x".repeat(121) });
+    expect(r.success).toBe(false);
+    if (!r.success) expect(r.errors.fullName).toBeTruthy();
+  });
+
+  it("rejects an over-long free-text field (>2000)", () => {
+    const r = validateWaitlistLead({ ...VALID_LEAD, currentStack: "x".repeat(2001) });
+    expect(r.success).toBe(false);
+  });
+});
+
+describe("store selector (A1)", () => {
+  it("selectWaitlistStore returns a working store at the configured path", async () => {
+    const p = tmpStorePath("selector");
+    process.env.GSE_WAITLIST_STORE_PATH = p;
+    const store = selectWaitlistStore();
+    const v = validateWaitlistLead(VALID_LEAD);
+    expect(v.success).toBe(true);
+    if (v.success) {
+      await store.record(v.data);
+      expect(await store.list()).toHaveLength(1);
+    }
+  });
+});
+
+describe("waitlist form wiring (source-level: A2 + A7)", () => {
+  const formSource = readFileSync(
+    path.resolve(__dirname, "..", "components", "gsn", "waitlist-form.tsx"),
+    "utf8",
+  );
+  it("fires waitlist_viewed on mount via useEffect", () => {
+    expect(formSource).toMatch(/useEffect\(/);
+    expect(formSource).toContain('track("waitlist_viewed")');
+  });
+  it("includes an off-screen honeypot field", () => {
+    expect(formSource).toContain("honeypot");
+    expect(formSource).toContain("aria-hidden");
+  });
+});
+
+describe("form a11y — error association (A6)", () => {
+  it("sets aria-invalid + aria-describedby on a field after a failed submit", async () => {
+    render(createElement(WaitlistForm));
+    fireEvent.click(screen.getByRole("button", { name: WAITLIST_COPY.submitLabel }));
+    const emailInput = screen.getByLabelText(WAITLIST_COPY.fields.email);
+    await waitFor(() => expect(emailInput.getAttribute("aria-invalid")).toBe("true"));
+    expect(emailInput.getAttribute("aria-describedby")).toBe("wl-email-error");
+  });
+});
+
+describe("honeypot anti-spam (route: A7)", () => {
+  function request(body: unknown): Request {
+    return new Request("http://localhost/api/waitlist", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  }
+
+  it("silently drops a submission with the honeypot filled (stores nothing)", async () => {
+    const p = tmpStorePath("honeypot");
+    process.env.GSE_WAITLIST_STORE_PATH = p;
+    const res = await POST(request({ ...VALID_LEAD, website: "http://spam.example" }));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true, status: "queued" });
+    const store = createWaitlistStore(p);
+    expect(await store.list()).toHaveLength(0);
+  });
+
+  it("stores normally when the honeypot is empty", async () => {
+    const p = tmpStorePath("honeypot-empty");
+    process.env.GSE_WAITLIST_STORE_PATH = p;
+    const res = await POST(request({ ...VALID_LEAD, website: "" }));
+    expect(await res.json()).toEqual({ ok: true, status: "queued" });
+    const store = createWaitlistStore(p);
+    expect(await store.list()).toHaveLength(1);
   });
 });

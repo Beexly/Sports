@@ -119,3 +119,34 @@ Leave the local-file fallback in place. When the owner approves, implement the
 interface refactor + model + migration in a dedicated PR3 branch, validate locally
 (generate + migrate against local Postgres + the parity tests), and stop before any
 deploy/push.
+
+## Appendix — local store file schema (current fallback)
+
+The fallback writes a JSON **array** of `StoredWaitlistLead` objects to the
+gitignored `.gse-local/waitlist-leads.json` (override `GSE_WAITLIST_STORE_PATH`).
+Review it with `node scripts/gse-waitlist-list.mjs`. One element:
+
+```json
+{
+  "email": "jordan@example.com",
+  "fullName": "Jordan Rivers",
+  "role": "operator",
+  "sportInterests": ["NFL"],
+  "currentStack": null,
+  "weakestProcess": null,
+  "consent": true,
+  "createdAt": "2026-06-29T20:00:00.000Z",
+  "utmSource": null,
+  "utmCampaign": null,
+  "referrer": null,
+  "path": "/waitlist",
+  "copyVersion": "2026-06-29.1",
+  "reviewStatus": "QUEUED"
+}
+```
+
+Migration mapping to the `WaitlistLead` model: `path` → `sourcePath`,
+`createdAt` (string) → `DateTime`, `consent` → `consent` + a `consentAt` derived
+from `createdAt` if not separately captured. Dedup key: lowercased `email`
+(matches the model's `@unique`). The migration script (owner-run) can import this
+array into the table; until then it is the source of truth for captured leads.

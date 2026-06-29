@@ -7,9 +7,13 @@
  * `@/lib/gse/waitlist-copy`, validates with the shared zod schema, and posts to
  * the local `/api/waitlist` handler. Analytics calls are the no-op `track()`.
  * No pricing, no Stripe, no external send.
+ *
+ * Hardening: fires `waitlist_viewed` on mount (funnel), associates field errors
+ * for screen readers (aria-invalid/aria-describedby), and includes an off-screen
+ * honeypot field that the server uses to silently drop bots.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { track } from "@/lib/analytics/events";
 import {
   WAITLIST_COPY,
@@ -25,6 +29,9 @@ import {
 
 type Status = "idle" | "submitting" | "done" | "error";
 
+const INPUT_CLASS =
+  "mt-1 w-full rounded-md border border-white/15 bg-transparent px-3 py-2";
+
 export function WaitlistForm(): JSX.Element {
   const [started, setStarted] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -34,8 +41,14 @@ export function WaitlistForm(): JSX.Element {
   const [currentStack, setCurrentStack] = useState("");
   const [weakestProcess, setWeakestProcess] = useState("");
   const [consent, setConsent] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Fire the (no-op) viewed event once on mount — completes the funnel.
+  useEffect(() => {
+    track("waitlist_viewed");
+  }, []);
 
   function markStarted(): void {
     if (!started) {
@@ -51,9 +64,26 @@ export function WaitlistForm(): JSX.Element {
     );
   }
 
+  // a11y helpers: wire aria-invalid + aria-describedby to the error node.
+  function errorId(field: string): string {
+    return `wl-${field}-error`;
+  }
+  function ariaFor(field: string): { "aria-invalid"?: true; "aria-describedby"?: string } {
+    return errors[field]
+      ? { "aria-invalid": true, "aria-describedby": errorId(field) }
+      : {};
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     setErrors({});
+
+    // Honeypot: a real user never fills this off-screen field. Silently succeed
+    // without sending anything.
+    if (honeypot.trim() !== "") {
+      setStatus("done");
+      return;
+    }
 
     const payload = {
       fullName,
@@ -81,7 +111,7 @@ export function WaitlistForm(): JSX.Element {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(local.data),
+        body: JSON.stringify({ ...local.data, website: honeypot }),
       });
       const data: { ok?: boolean; errors?: Record<string, string> } = await res
         .json()
@@ -121,10 +151,15 @@ export function WaitlistForm(): JSX.Element {
             markStarted();
             setFullName(e.target.value);
           }}
-          className="mt-1 w-full rounded-md border border-white/15 bg-transparent px-3 py-2"
+          className={INPUT_CLASS}
           autoComplete="name"
+          {...ariaFor("fullName")}
         />
-        {errors.fullName && <p className="mt-1 text-sm text-red-400">{errors.fullName}</p>}
+        {errors.fullName && (
+          <p id={errorId("fullName")} className="mt-1 text-sm text-red-400">
+            {errors.fullName}
+          </p>
+        )}
       </div>
 
       <div>
@@ -139,10 +174,15 @@ export function WaitlistForm(): JSX.Element {
             markStarted();
             setEmail(e.target.value);
           }}
-          className="mt-1 w-full rounded-md border border-white/15 bg-transparent px-3 py-2"
+          className={INPUT_CLASS}
           autoComplete="email"
+          {...ariaFor("email")}
         />
-        {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
+        {errors.email && (
+          <p id={errorId("email")} className="mt-1 text-sm text-red-400">
+            {errors.email}
+          </p>
+        )}
       </div>
 
       <div>
@@ -156,7 +196,8 @@ export function WaitlistForm(): JSX.Element {
             markStarted();
             setRole(e.target.value as WaitlistRole | "");
           }}
-          className="mt-1 w-full rounded-md border border-white/15 bg-transparent px-3 py-2"
+          className={INPUT_CLASS}
+          {...ariaFor("role")}
         >
           <option value="">Select…</option>
           {WAITLIST_ROLES.map((r) => (
@@ -165,10 +206,14 @@ export function WaitlistForm(): JSX.Element {
             </option>
           ))}
         </select>
-        {errors.role && <p className="mt-1 text-sm text-red-400">{errors.role}</p>}
+        {errors.role && (
+          <p id={errorId("role")} className="mt-1 text-sm text-red-400">
+            {errors.role}
+          </p>
+        )}
       </div>
 
-      <fieldset>
+      <fieldset {...ariaFor("sportInterests")}>
         <legend className="text-sm font-medium">{WAITLIST_COPY.fields.sportInterests}</legend>
         <div className="mt-2 flex flex-wrap gap-3">
           {WAITLIST_SPORT_OPTIONS.map((sport) => (
@@ -183,7 +228,9 @@ export function WaitlistForm(): JSX.Element {
           ))}
         </div>
         {errors.sportInterests && (
-          <p className="mt-1 text-sm text-red-400">{errors.sportInterests}</p>
+          <p id={errorId("sportInterests")} className="mt-1 text-sm text-red-400">
+            {errors.sportInterests}
+          </p>
         )}
       </fieldset>
 
@@ -196,7 +243,7 @@ export function WaitlistForm(): JSX.Element {
           value={currentStack}
           onChange={(e) => setCurrentStack(e.target.value)}
           rows={2}
-          className="mt-1 w-full rounded-md border border-white/15 bg-transparent px-3 py-2"
+          className={INPUT_CLASS}
         />
       </div>
 
@@ -209,7 +256,20 @@ export function WaitlistForm(): JSX.Element {
           value={weakestProcess}
           onChange={(e) => setWeakestProcess(e.target.value)}
           rows={2}
-          className="mt-1 w-full rounded-md border border-white/15 bg-transparent px-3 py-2"
+          className={INPUT_CLASS}
+        />
+      </div>
+
+      {/* Honeypot — off-screen, not for humans. Bots that fill it are dropped. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}>
+        <label htmlFor="wl-website">Company website</label>
+        <input
+          id="wl-website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
         />
       </div>
 
@@ -222,10 +282,15 @@ export function WaitlistForm(): JSX.Element {
             setConsent(e.target.checked);
           }}
           className="mt-1"
+          {...ariaFor("consent")}
         />
         <span>{WAITLIST_COPY.consentLabel}</span>
       </label>
-      {errors.consent && <p className="text-sm text-red-400">{errors.consent}</p>}
+      {errors.consent && (
+        <p id={errorId("consent")} className="text-sm text-red-400">
+          {errors.consent}
+        </p>
+      )}
 
       {errors._form && <p className="text-sm text-red-400">{errors._form}</p>}
 

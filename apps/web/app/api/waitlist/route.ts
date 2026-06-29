@@ -10,10 +10,17 @@
 
 import { NextResponse } from "next/server";
 import { validateWaitlistLead } from "@/lib/gse/waitlist-validation";
-import { createWaitlistStore } from "@/lib/gse/waitlist-store";
+import { selectWaitlistStore } from "@/lib/gse/waitlist-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/** True when the off-screen honeypot field was filled (bot signal). */
+function isHoneypotTripped(body: unknown): boolean {
+  if (typeof body !== "object" || body === null) return false;
+  const website = (body as { website?: unknown }).website;
+  return typeof website === "string" && website.trim() !== "";
+}
 
 export async function POST(request: Request): Promise<NextResponse> {
   let body: unknown;
@@ -21,6 +28,11 @@ export async function POST(request: Request): Promise<NextResponse> {
     body = await request.json();
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  // Honeypot: silently accept and drop bots. Normal-looking response, store nothing.
+  if (isHoneypotTripped(body)) {
+    return NextResponse.json({ ok: true, status: "queued" }, { status: 200 });
   }
 
   const result = validateWaitlistLead(body);
@@ -37,7 +49,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   try {
-    const store = createWaitlistStore();
+    const store = selectWaitlistStore();
     const { duplicate } = await store.record(result.data);
     return NextResponse.json(
       { ok: true, status: duplicate ? "already_queued" : "queued" },

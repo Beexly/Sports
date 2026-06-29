@@ -101,3 +101,14 @@ export function createWaitlistStore(filePath: string = defaultStorePath()): Wait
 
   return { filePath, record, list };
 }
+
+/**
+ * Choose the active waitlist store. Today this is always the local-file fallback.
+ * It is the single switch point for the gated `WaitlistLead` DB store (see
+ * `docs/gse/pr3-durable-storage-plan.md`): when that lands, branch here on
+ * `WAITLIST_STORAGE=db` — no call site changes.
+ */
+export function selectWaitlistStore(): WaitlistStore {
+  // if (process.env.WAITLIST_STORAGE === "db") return createDbWaitlistStore(); // gated
+  return createWaitlistStore();
+}
