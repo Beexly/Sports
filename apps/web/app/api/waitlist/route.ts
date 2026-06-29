@@ -22,6 +22,21 @@ function isHoneypotTripped(body: unknown): boolean {
   return typeof website === "string" && website.trim() !== "";
 }
 
+/**
+ * True when the form was submitted implausibly fast after render (bot signal). The
+ * client sends `renderedAt` (ms epoch at mount); a human takes well over this to fill
+ * name/email/role/sport/consent. Lenient: a missing/!finite value is NOT treated as a
+ * bot, so the honeypot remains the primary gate.
+ */
+const MIN_SUBMIT_MS = 1500;
+function isTooFast(body: unknown): boolean {
+  if (typeof body !== "object" || body === null) return false;
+  const renderedAt = (body as { renderedAt?: unknown }).renderedAt;
+  if (typeof renderedAt !== "number" || !Number.isFinite(renderedAt)) return false;
+  const elapsed = Date.now() - renderedAt;
+  return elapsed >= 0 && elapsed < MIN_SUBMIT_MS;
+}
+
 export async function POST(request: Request): Promise<NextResponse> {
   let body: unknown;
   try {
@@ -30,8 +45,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ ok: false, error: "Invalid JSON body" }, { status: 400 });
   }
 
-  // Honeypot: silently accept and drop bots. Normal-looking response, store nothing.
-  if (isHoneypotTripped(body)) {
+  // Anti-bot: silently accept and drop honeypot hits or implausibly-fast submits.
+  // Normal-looking response, store nothing.
+  if (isHoneypotTripped(body) || isTooFast(body)) {
     return NextResponse.json({ ok: true, status: "queued" }, { status: 200 });
   }
 

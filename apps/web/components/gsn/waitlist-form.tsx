@@ -42,6 +42,7 @@ export function WaitlistForm(): JSX.Element {
   const [weakestProcess, setWeakestProcess] = useState("");
   const [consent, setConsent] = useState(false);
   const [honeypot, setHoneypot] = useState("");
+  const [renderedAt] = useState(() => Date.now());
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -111,7 +112,7 @@ export function WaitlistForm(): JSX.Element {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...local.data, website: honeypot }),
+        body: JSON.stringify({ ...local.data, website: honeypot, renderedAt }),
       });
       const data: { ok?: boolean; errors?: Record<string, string> } = await res
         .json()
@@ -139,6 +140,22 @@ export function WaitlistForm(): JSX.Element {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+      {Object.keys(errors).filter((k) => k !== "_form").length > 0 && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="rounded-md border border-red-700/40 bg-red-950/20 p-3 text-sm text-red-300"
+        >
+          <p className="font-medium">Please fix the following:</p>
+          <ul className="mt-1 list-disc pl-5">
+            {Object.entries(errors)
+              .filter(([k]) => k !== "_form")
+              .map(([field, msg]) => (
+                <li key={field}>{msg}</li>
+              ))}
+          </ul>
+        </div>
+      )}
       <div>
         <label htmlFor="wl-name" className="block text-sm font-medium">
           {WAITLIST_COPY.fields.fullName}
@@ -199,6 +216,7 @@ export function WaitlistForm(): JSX.Element {
             setRole(e.target.value as WaitlistRole | "");
           }}
           className={INPUT_CLASS}
+          aria-required={true}
           {...ariaFor("role")}
         >
           <option value="">Select…</option>

@@ -42,6 +42,16 @@ export const SOCIAL_POST_DRAFTS: readonly string[] = [
   "Uncertainty bands are a feature, not an apology. We'd rather show the range than fake a point.",
   "Trust is built in the boring middle: the same checklist, every day, recorded, reviewed. No fireworks.",
   "Read the model where it's weak, not just where it's strong. The honest gaps are the most useful part.",
+  "A model is a hypothesis with a memory. We write down what we expect, then let the results argue back.",
+  "We separate 'interesting' from 'actionable.' Most signals are interesting. Very few change a decision.",
+  "Discipline is choosing the boring, repeatable read over the exciting one-off. The boring read compounds.",
+  "Process notes beat hot takes. A take ages in a day; a documented method gets better every week.",
+  "We don't hide the misses. The miss log is where the next improvement actually comes from.",
+  "Numbers without provenance are decoration. Every figure we use can point back to where it came from.",
+  "Overconfidence is the most expensive habit in sports decisions. Calibration is the cheapest fix.",
+  "We grade ourselves on whether the process was sound, not whether the ball bounced our way.",
+  "If a method only works when you squint, it doesn't work. We keep the tests honest and the bar visible.",
+  "The goal isn't to be loud about being right. It's to be quiet, consistent, and easy to audit.",
 ];
 
 /** 10 research-brief topics (education; no outcome guarantees). */

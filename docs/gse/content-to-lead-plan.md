@@ -11,7 +11,7 @@ decision-hygiene / calibration / research / waitlist only.
 > post before it leaves the building.
 
 > **Canonical source + CI scan:** these drafts now live as typed constants in
-> `apps/web/lib/gse/content-drafts.ts` (currently **25** social posts) and are scanned
+> `apps/web/lib/gse/content-drafts.ts` (currently **35** social posts) and are scanned
 > by the real compliance scanner in `apps/web/__tests__/gse-waitlist.test.ts` (every
 > string must pass `runNoClaimGuard` with 0 block flags). A representative subset is
 > shown below; the module is canonical.

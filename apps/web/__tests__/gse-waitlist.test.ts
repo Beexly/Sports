@@ -290,6 +290,39 @@ describe("form a11y — required-field semantics", () => {
     const email = screen.getByLabelText(WAITLIST_COPY.fields.email);
     expect(email.getAttribute("aria-required")).toBe("true");
   });
+
+  it("shows an error summary (role=alert) after a failed submit", async () => {
+    render(createElement(WaitlistForm));
+    fireEvent.click(screen.getByRole("button", { name: WAITLIST_COPY.submitLabel }));
+    await waitFor(() => expect(screen.getByText("Please fix the following:")).toBeTruthy());
+    expect(screen.getAllByRole("alert").length).toBeGreaterThan(0);
+  });
+});
+
+describe("submit-timing anti-bot guard (route)", () => {
+  function req(body: unknown): Request {
+    return new Request("http://localhost/api/waitlist", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  }
+
+  it("silently drops an implausibly fast submit (renderedAt = now)", async () => {
+    const p = tmpStorePath("timing-fast");
+    process.env.GSE_WAITLIST_STORE_PATH = p;
+    const res = await POST(req({ ...VALID_LEAD, renderedAt: Date.now() }));
+    expect(await res.json()).toEqual({ ok: true, status: "queued" });
+    expect(await createWaitlistStore(p).list()).toHaveLength(0);
+  });
+
+  it("accepts a normal-paced submit (renderedAt well in the past)", async () => {
+    const p = tmpStorePath("timing-slow");
+    process.env.GSE_WAITLIST_STORE_PATH = p;
+    const res = await POST(req({ ...VALID_LEAD, renderedAt: Date.now() - 5000 }));
+    expect(await res.json()).toEqual({ ok: true, status: "queued" });
+    expect(await createWaitlistStore(p).list()).toHaveLength(1);
+  });
 });
 
 describe("waitlist page (source-level)", () => {
@@ -445,7 +478,7 @@ describe("form a11y — error association (A6)", () => {
 
 describe("content drafts — CI no-claim scan (D19/D20)", () => {
   it("has 15 social drafts + 10 brief topics", () => {
-    expect(SOCIAL_POST_DRAFTS).toHaveLength(25);
+    expect(SOCIAL_POST_DRAFTS).toHaveLength(35);
     expect(RESEARCH_BRIEF_TOPICS).toHaveLength(10);
   });
 
