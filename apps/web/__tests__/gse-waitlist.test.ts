@@ -244,6 +244,48 @@ describe("waitlist page — render-level no-claim + backtest truth (C18)", () =>
   });
 });
 
+describe("backtest truth — code/doc drift guard (QA backtest)", () => {
+  const docPath = path.resolve(__dirname, "..", "..", "..", "docs", "gse", "backtest-transparency.md");
+  const doc = readFileSync(docPath, "utf8");
+
+  it("the code constant matches the documented figures", () => {
+    expect(BACKTEST_TRUTH.samples).toBe(10_301);
+    expect(BACKTEST_TRUTH.modelMae).toBe(5.18);
+    expect(BACKTEST_TRUTH.naiveMae).toBe(4.9999);
+    expect(BACKTEST_TRUTH.beatsNaive).toBe(false);
+  });
+
+  it("the transparency doc still carries the honest figures (no silent spin)", () => {
+    expect(doc).toContain("10,301");
+    expect(doc).toContain("5.180");
+    expect(doc).toContain("4.9999");
+    expect(doc.toLowerCase()).toContain("beats naive");
+    expect(doc.toLowerCase()).toContain("false");
+  });
+});
+
+describe("email drafts — no-claim scan (QA no-claim)", () => {
+  const emailFiles = ["confirmation-email.md", "follow-up-sequence.md"];
+  for (const file of emailFiles) {
+    it(`${file} passes the compliance scanner with 0 block flags`, () => {
+      const text = readFileSync(
+        path.resolve(__dirname, "..", "..", "..", "docs", "gse", file),
+        "utf8",
+      );
+      const guard = runNoClaimGuard(text);
+      expect(guard.ok, `blocked in ${file} -> ${JSON.stringify(guard.flags)}`).toBe(true);
+    });
+  }
+});
+
+describe("form a11y — required-field semantics", () => {
+  it("marks the email and consent gates aria-required", () => {
+    render(createElement(WaitlistForm));
+    const email = screen.getByLabelText(WAITLIST_COPY.fields.email);
+    expect(email.getAttribute("aria-required")).toBe("true");
+  });
+});
+
 describe("waitlist page (source-level)", () => {
   const pageSource = readFileSync(
     path.resolve(__dirname, "..", "app", "waitlist", "page.tsx"),

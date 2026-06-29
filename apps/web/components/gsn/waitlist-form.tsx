@@ -153,6 +153,7 @@ export function WaitlistForm(): JSX.Element {
           }}
           className={INPUT_CLASS}
           autoComplete="name"
+          aria-required={true}
           {...ariaFor("fullName")}
         />
         {errors.fullName && (
@@ -176,6 +177,7 @@ export function WaitlistForm(): JSX.Element {
           }}
           className={INPUT_CLASS}
           autoComplete="email"
+          aria-required={true}
           {...ariaFor("email")}
         />
         {errors.email && (
@@ -282,6 +284,7 @@ export function WaitlistForm(): JSX.Element {
             setConsent(e.target.checked);
           }}
           className="mt-1"
+          aria-required={true}
           {...ariaFor("consent")}
         />
         <span>{WAITLIST_COPY.consentLabel}</span>
@@ -292,7 +295,11 @@ export function WaitlistForm(): JSX.Element {
         </p>
       )}
 
-      {errors._form && <p className="text-sm text-red-400">{errors._form}</p>}
+      {errors._form && (
+        <p role="alert" className="text-sm text-red-400">
+          {errors._form}
+        </p>
+      )}
 
       <button
         type="submit"

@@ -7,7 +7,7 @@ Hi {{first_name}},
 
 Just confirming your waitlist request was captured. We are reviewing fit for the decision-audit lane.
 
-We do not provide guaranteed outcomes. The lane is process-focused and trust-first.
+We do not promise outcomes. The lane is process-focused and trust-first.
 
 Reply with one word ("go") and your priority sport if you want to fast-track review.
 
@@ -36,6 +36,6 @@ You will receive one of three outcomes:
 2) Additional intake needed
 3) Declined for this cycle
 
-All outcomes are process-led; no performance guarantees are attached to this lane.
+All outcomes are process-led; no performance promises are attached to this lane.
 
 Owner gate reminder: only send after explicit approval and do not add any ROI language.
