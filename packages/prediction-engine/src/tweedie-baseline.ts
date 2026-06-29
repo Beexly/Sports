@@ -88,11 +88,28 @@ export function tweedieDeviance(actual: number, predictedMean: number, power = 1
 
 function candidateThresholds(values: readonly number[]): readonly number[] {
   const sorted = Array.from(new Set(values.filter(Number.isFinite))).sort((a, b) => a - b);
+  if (sorted.length <= 1) return [];
+  if (sorted.length <= 32) {
+    const thresholds: number[] = [];
+    for (let i = 1; i < sorted.length; i++) thresholds.push((sorted[i - 1]! + sorted[i]!) / 2);
+    return thresholds;
+  }
+  // Quantile breakpoints keep stump search tractable on real backtests (11k+ samples).
+  const maxThresholds = 15;
   const thresholds: number[] = [];
-  for (let i = 1; i < sorted.length; i++) thresholds.push((sorted[i - 1]! + sorted[i]!) / 2);
+  for (let i = 1; i <= maxThresholds; i++) {
+    const idx = Math.floor((i * sorted.length) / (maxThresholds + 1));
+    if (idx > 0 && idx < sorted.length) thresholds.push((sorted[idx - 1]! + sorted[idx]!) / 2);
+  }
   return thresholds;
 }
 
+// HONESTY NOTE (truth-in-labeling, per review): this baseline currently boosts
+// regression stumps on squared error of log1p(actual) — a Tweedie-FLAVORED shadow
+// scaffold, NOT a fitted Tweedie GLM. `tweedieDeviance()` above is exported for
+// evaluation; wiring it into the boosting gradient (true Tweedie optimization) is a
+// [DATA] follow-up. Until then, no public surface may describe this as a fitted
+// Tweedie model. Output stays priced=false / status "shadow".
 export function fitTweedieBaseline(
   samples: readonly TweedieProjectionSample[],
   options: TweedieBaselineOptions = {},
@@ -207,13 +224,22 @@ export function runTweedieBaselineBacktest(
   options: ProjectionSplitOptions & TweedieBaselineOptions = {},
 ): TweedieBacktestReport {
   const folds = buildTemporalProjectionSplits(samples, options);
-  const scored: ClarkWestSample[] = folds.flatMap((fold) => {
+  const verbose = samples.length > 1000;
+  const scored: ClarkWestSample[] = [];
+  folds.forEach((fold, index) => {
+    if (verbose && (index === 0 || (index + 1) % 5 === 0 || index === folds.length - 1)) {
+      console.error(
+        `  fold ${index + 1}/${folds.length}: train=${fold.trainSamples.length} test=${fold.testSamples.length}`,
+      );
+    }
     const model = fitTweedieBaseline(fold.trainSamples, options);
-    return fold.testSamples.map((sample) => ({
-      actual: sample.actualFantasyPoints,
-      modelPrediction: predictTweedieFantasyPoints(model, sample.features),
-      marketPrediction: sample.marketBaselineFantasyPoints,
-    }));
+    for (const sample of fold.testSamples) {
+      scored.push({
+        actual: sample.actualFantasyPoints,
+        modelPrediction: predictTweedieFantasyPoints(model, sample.features),
+        marketPrediction: sample.marketBaselineFantasyPoints,
+      });
+    }
   });
   return { sampleSize: scored.length, folds: folds.length, clarkWest: clarkWestTest(scored), priced: false, status: "shadow" };
 }

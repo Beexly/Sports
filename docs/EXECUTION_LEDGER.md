@@ -333,3 +333,14 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - DECISIONS: Treat the audit as confirmation that the branch is code-ready behind gates, not a live-readiness approval; unresolved work remains human/data/infra/schema ratification.
 - NEXT: Push audit commit and stop.
 - BLOCKED-ON-HUMAN: same as FINAL: merge/deploy, schema application, infra provisioning, real-data model promotion, pricing/publication flips, and live money remain `[OWNER]/[INFRA]/[DATA]/[SCHEMA]`.
+
+## 2026-06-29T00:35:00Z - VERIFY (local gate + real-data backtest)
+
+- WHAT: Re-ran the full local gate on `codex/intelligence-core`; committed pending conformal finite-sample fix, Tweedie honesty note, quantile-threshold performance guard for large backtests, and the nflverse player-projection backtest driver; executed the real-data OOS backtest on seasons 2021–2023.
+- FILES: `packages/prediction-engine/src/conformal-intervals.ts`, `packages/prediction-engine/src/tweedie-aci.ts`, `packages/prediction-engine/src/tweedie-baseline.ts`, `scripts/backtest/player-projection-backtest.ts`, `scripts/backtest/README.md`, `GSE_LIVE_STATUS_FULL.md`, `docs/EXECUTION_LEDGER.md`
+- GATE: `@sports/prediction-engine` Vitest passed 51 files / 514 tests; web Vitest passed 427 files / 5,855 tests; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+- BACKTEST: 11,164 leakage-safe samples built; 41 walk-forward folds; 10,301 OOS scored samples; model MAE 5.447 vs naive-baseline MAE 4.9999; `beats NAIVE = false` (Clark-West t=12.20, n=10,301). Honest read: Tweedie-flavored shadow scaffold does not yet beat naive persistence on real nflverse data; keep `priced=false`; no `canPublishProjections` flip.
+- FLAG: no runtime gate changed; backtest and fixes remain shadow / priced=false / draft-only.
+- DECISIONS: Treat VERIFY as evidence that the branch is built and gated, but model promotion remains blocked until OOS signal beats naive (and later market) baselines with tuned features/coefficients `[DATA]`.
+- NEXT: Owner ratification per `docs/CLAUDE_HANDOFF.md`; tune model/features before any promotion; Stripe revenue punch-list independent of engine flip.
+- BLOCKED-ON-HUMAN: merge/deploy, schema application, infra provisioning, model tuning/promotion, pricing/publication flips, and live money remain `[OWNER]/[INFRA]/[DATA]/[SCHEMA]`.

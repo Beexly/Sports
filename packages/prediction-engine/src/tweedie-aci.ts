@@ -22,7 +22,9 @@ function round4(value: number): number {
 function quantile(values: readonly number[], probability: number): number {
   if (values.length === 0) return 0;
   const sorted = [...values].sort((a, b) => a - b);
-  const index = Math.min(sorted.length - 1, Math.ceil(probability * sorted.length) - 1);
+  // Split-conformal finite-sample correction: ceil((n+1)(1-alpha))-th order
+  // statistic, not ceil(n(1-alpha)) — the latter under-covers on small samples.
+  const index = Math.min(sorted.length - 1, Math.ceil(probability * (sorted.length + 1)) - 1);
   return sorted[Math.max(0, index)]!;
 }
 

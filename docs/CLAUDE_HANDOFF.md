@@ -6,9 +6,11 @@ Branch: `codex/intelligence-core`
 
 Worktree: `C:\Users\Garrett\Sports-intelligence-core`
 
-Status: all checklist slices through F3 are built, locally committed, and pushed. FINAL handoff is committed at `1f2e8dd4`; the audit follow-up confirms the branch state and adds `docs/INTELLIGENCE_CORE_AUDIT.md`.
+Status: all checklist slices through F3 are built, locally committed, and pushed. FINAL handoff is committed at `1f2e8dd4`; the audit follow-up confirms the branch state and adds `docs/INTELLIGENCE_CORE_AUDIT.md`. Local VERIFY (2026-06-29) re-ran gate + real nflverse backtest on uncommitted conformal/backtest fixes.
 
-Final gate result: repo `typecheck` passed; repo `lint` passed; full web Vitest passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+Final gate result (2026-06-29 VERIFY): prediction-engine Vitest 514 passed; web Vitest 5,855 passed; repo `build` passed with existing Sentry/OpenTelemetry, stub-Prisma, and edge-runtime warnings; trust/model-freeze/draft-only passed.
+
+Real-data backtest (2021–2023, 10,301 OOS samples): model MAE 5.447 vs naive 4.9999; `beats NAIVE = false`. Engine stays `priced=false`; no publication flip.
 
 ## Branch State By Slice
 
@@ -68,7 +70,7 @@ Final gate result: repo `typecheck` passed; repo `lint` passed; full web Vitest 
 1. Review `docs/EXECUTION_LEDGER.md`, `docs/DECISIONS_TO_RATIFY.md`, `docs/PHASE0_COST_SLICES.md`, `docs/INTELLIGENCE_CORE_AUDIT.md`, and this handoff before touching deployment or production settings.
 2. Ratify or decline the `[SCHEMA]` migration path for `LadderEvent` and choose the target database environment.
 3. Provision or defer the `[INFRA]` seams for R2/DuckDB feature-store and fetch-store persistence, then wire only the reviewed implementations.
-4. Load real historical projection/outcome rows into the replay harness and produce purged/embargoed out-of-sample Clark-West reports before any promotion.
+4. Tune the Tweedie-flavored baseline (true deviance gradient, feature engineering, per-position k) until OOS Clark-West beats naive persistence on real nflverse data — VERIFY run showed `beats NAIVE = false` (MAE 5.447 vs 4.9999).
 5. Decide which owner-gated surfaces remain hidden or become enabled after minimum samples: public calibration observatory, model parliament, replay provenance, tournament, and expanded coverage-map claims.
 
 ## Stop Condition
