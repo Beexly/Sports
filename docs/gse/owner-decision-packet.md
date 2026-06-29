@@ -59,3 +59,12 @@ Hold at the committed local checkpoint (Decision B) unless you want durable stor
 in which case approve gate 1 and I'll build the migration in a local PR3 branch and
 stop before deploy. Everything needed to decide is in `pr3-durable-storage-plan.md`,
 `pr3-analytics-provider-plan.md`, and `release-gate-plan.md`.
+
+## 7. PR-open prep (ready)
+
+`docs/gse/pr-open-prep.md` is a ready-to-use PR package (title, paste-ready body, gh
+command + web URL, pre-merge checklist, do-NOT-merge-to-prod warnings). **Note:** the
+remote branch is 9 commits behind local — a COMPLETE PR needs an owner-approved
+**re-push** (`git push origin claude/gse-no-claim-waitlist`) first; this agent did not
+push. Opening the PR / its preview is Level-2A; **merging to `main` is a production
+deploy (Level 3) and is not approved.**
