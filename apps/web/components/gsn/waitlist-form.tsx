@@ -13,7 +13,7 @@
  * honeypot field that the server uses to silently drop bots.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics/events";
 import {
   WAITLIST_COPY,
@@ -45,11 +45,21 @@ export function WaitlistForm(): JSX.Element {
   const [renderedAt] = useState(() => Date.now());
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   // Fire the (no-op) viewed event once on mount — completes the funnel.
   useEffect(() => {
     track("waitlist_viewed");
   }, []);
+
+  // a11y: when field errors appear, move focus to the summary so screen readers
+  // announce it and keyboard users land at the list of what to fix.
+  const fieldErrorCount = Object.keys(errors).filter((k) => k !== "_form").length;
+  useEffect(() => {
+    if (fieldErrorCount > 0) {
+      errorSummaryRef.current?.focus();
+    }
+  }, [fieldErrorCount, errors]);
 
   function markStarted(): void {
     if (!started) {
@@ -140,11 +150,13 @@ export function WaitlistForm(): JSX.Element {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-      {Object.keys(errors).filter((k) => k !== "_form").length > 0 && (
+      {fieldErrorCount > 0 && (
         <div
+          ref={errorSummaryRef}
+          tabIndex={-1}
           role="alert"
           aria-live="assertive"
-          className="rounded-md border border-red-700/40 bg-red-950/20 p-3 text-sm text-red-300"
+          className="rounded-md border border-red-700/40 bg-red-950/20 p-3 text-sm text-red-300 outline-none"
         >
           <p className="font-medium">Please fix the following:</p>
           <ul className="mt-1 list-disc pl-5">
@@ -322,6 +334,7 @@ export function WaitlistForm(): JSX.Element {
       <button
         type="submit"
         disabled={status === "submitting"}
+        aria-busy={status === "submitting"}
         className="rounded-md border border-white/20 px-4 py-2 font-medium disabled:opacity-60"
       >
         {status === "submitting" ? "Submitting…" : WAITLIST_COPY.submitLabel}

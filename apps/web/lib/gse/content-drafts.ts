@@ -52,6 +52,21 @@ export const SOCIAL_POST_DRAFTS: readonly string[] = [
   "We grade ourselves on whether the process was sound, not whether the ball bounced our way.",
   "If a method only works when you squint, it doesn't work. We keep the tests honest and the bar visible.",
   "The goal isn't to be loud about being right. It's to be quiet, consistent, and easy to audit.",
+  "A good process survives a bad week. If one cold stretch makes you abandon it, it was never a process — it was a mood.",
+  "We treat 'I don't know' as a finding, not a failure. Naming the gap is the first honest step.",
+  "Stop grading on results you couldn't control. Grade on inputs you could: the read, the discipline, the record.",
+  "The cheapest improvement in sports decisions is writing things down before kickoff. Memory edits itself; the note doesn't.",
+  "Consensus isn't a conspiracy. When everyone agrees, the interesting question is what they're all assuming.",
+  "We publish our limits next to our work. A method without stated limits is a sales pitch.",
+  "Slow is smooth and smooth is repeatable. The flashy read you can't repeat tomorrow isn't worth much.",
+  "Two analysts, same data, different reads — that's normal. The point is that each can show their work.",
+  "We don't chase yesterday's outlier. One wild result is a story; a stable pattern is something to study.",
+  "Discipline means the boring 'no' as often as the exciting 'yes.' The 'no's quietly protect the record.",
+  "Every confident take should come with the question that would change your mind. If there isn't one, it's faith, not analysis.",
+  "We measure ourselves on calibration: when we say 'lean,' does the world behave like a lean? That's the only honest test.",
+  "Provenance over polish. We'd rather show a plain number you can trace than a pretty one you can't.",
+  "The model is a tool, not an oracle. We read it, weigh it, and keep the final call human and documented.",
+  "Trust compounds quietly. No single post earns it — the audit trail does, one honest entry at a time.",
 ];
 
 /** 10 research-brief topics (education; no outcome guarantees). */

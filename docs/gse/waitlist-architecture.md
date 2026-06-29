@@ -22,12 +22,13 @@ or makes a performance claim.
 | File | Role |
 |---|---|
 | `apps/web/app/waitlist/page.tsx` | server page; renders no-claim copy + backtest transparency + form; `robots: noindex` |
-| `apps/web/components/gsn/waitlist-form.tsx` | client form; consent gate; honeypot; a11y (aria-invalid/describedby/required, role=alert); no-op `track()` |
-| `apps/web/app/api/waitlist/route.ts` | `POST` handler; honeypot drop; validate; consent gate; store; **no send/external**; `runtime=nodejs`, `dynamic=force-dynamic` |
+| `apps/web/components/gsn/waitlist-form.tsx` | client form; consent gate; honeypot + `renderedAt` timing; a11y (aria-invalid/describedby/required, error-summary role=alert with focus-on-error, aria-busy); no-op `track()` |
+| `apps/web/app/api/waitlist/route.ts` | `POST` handler; anti-bot (honeypot + too-fast `renderedAt`) silent drop; validate; consent gate; store via `selectWaitlistStore()`; **no send/external**; `runtime=nodejs`, `dynamic=force-dynamic` |
 | `apps/web/lib/gse/waitlist-copy.ts` | single source of no-claim copy + `BACKTEST_TRUTH` + `BACKTEST_TRANSPARENCY` |
 | `apps/web/lib/gse/waitlist-validation.ts` | zod schema, `validateWaitlistLead`, `runNoClaimGuard` (reuses compliance scanner), `hasNoPerformanceClaim` |
 | `apps/web/lib/gse/waitlist-store.ts` | `WaitlistStore` interface, `createWaitlistStore` (local-file, dedupe, per-file write lock), `selectWaitlistStore` (PR3 switch point) |
-| `apps/web/lib/gse/content-drafts.ts` | canonical no-claim social/brief drafts (CI-scanned) |
+| `apps/web/lib/gse/waitlist-store-db.ts` | PR3 durable-store LOGIC: `createDbWaitlistStore(delegate)` against an injected Prisma-compatible `WaitlistLeadDelegate` (dedup, P2002 race, soft-delete). Tested with a fake; **no schema/migration** (owner-gated) |
+| `apps/web/lib/gse/content-drafts.ts` | canonical no-claim social/brief drafts (CI-scanned, 50 posts + 10 brief topics) |
 | `apps/web/lib/analytics/events.ts` | typed no-op event registry (`track()` inert until a provider is wired) |
 | `scripts/gse-waitlist-list.mjs` | local read-only review of captured leads |
 

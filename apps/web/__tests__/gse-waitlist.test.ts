@@ -337,6 +337,29 @@ describe("submit-timing anti-bot guard (route)", () => {
     expect(await res.json()).toEqual({ ok: true, status: "queued" });
     expect(await createWaitlistStore(p).list()).toHaveLength(1);
   });
+
+  // Edge cases — the timing guard is lenient by design (honeypot is the primary gate),
+  // so anything it can't trust is allowed through rather than dropped.
+  it("does not drop a future renderedAt (clock skew → negative elapsed)", async () => {
+    const p = tmpStorePath("timing-future");
+    process.env.GSE_WAITLIST_STORE_PATH = p;
+    await POST(req({ ...VALID_LEAD, renderedAt: Date.now() + 100_000 }));
+    expect(await createWaitlistStore(p).list()).toHaveLength(1);
+  });
+
+  it("does not drop a non-numeric renderedAt", async () => {
+    const p = tmpStorePath("timing-nan");
+    process.env.GSE_WAITLIST_STORE_PATH = p;
+    await POST(req({ ...VALID_LEAD, renderedAt: "not-a-number" }));
+    expect(await createWaitlistStore(p).list()).toHaveLength(1);
+  });
+
+  it("accepts a submit exactly at the threshold (>= 1500ms is allowed)", async () => {
+    const p = tmpStorePath("timing-boundary");
+    process.env.GSE_WAITLIST_STORE_PATH = p;
+    await POST(req({ ...VALID_LEAD, renderedAt: Date.now() - 1500 }));
+    expect(await createWaitlistStore(p).list()).toHaveLength(1);
+  });
 });
 
 describe("waitlist page (source-level)", () => {
@@ -492,7 +515,7 @@ describe("form a11y — error association (A6)", () => {
 
 describe("content drafts — CI no-claim scan (D19/D20)", () => {
   it("has 15 social drafts + 10 brief topics", () => {
-    expect(SOCIAL_POST_DRAFTS).toHaveLength(35);
+    expect(SOCIAL_POST_DRAFTS).toHaveLength(50);
     expect(RESEARCH_BRIEF_TOPICS).toHaveLength(10);
   });
 
