@@ -25,6 +25,7 @@ import {
   RESEARCH_BRIEF_TOPICS,
 } from "@/lib/gse/content-drafts";
 import { POST } from "@/app/api/waitlist/route";
+import WaitlistPage from "@/app/waitlist/page";
 
 const VALID_LEAD = {
   fullName: "Jordan Rivers",
@@ -221,6 +222,25 @@ describe("waitlist form renders (DOM)", () => {
     expect(
       screen.getByRole("button", { name: WAITLIST_COPY.submitLabel }),
     ).toBeTruthy();
+  });
+});
+
+describe("waitlist page — render-level no-claim + backtest truth (C18)", () => {
+  it("renders the honest backtest truth in the DOM", () => {
+    const { container } = render(createElement(WaitlistPage));
+    const text = container.textContent ?? "";
+    expect(text).toContain("10,301");
+    expect(text.toLowerCase()).toContain("does not beat naive");
+  });
+
+  it("the fully assembled page text is no-claim (scanner + perf check)", () => {
+    const { container } = render(createElement(WaitlistPage));
+    const text = container.textContent ?? "";
+    const guard = runNoClaimGuard(text);
+    expect(guard.ok, `assembled page blocked -> ${JSON.stringify(guard.flags)}`).toBe(true);
+    expect(hasNoPerformanceClaim(text)).toBe(true);
+    // never any pricing/Stripe on the public-safe page
+    expect(/\$\d|\bstripe\b|\bpricing\b/i.test(text)).toBe(false);
   });
 });
 

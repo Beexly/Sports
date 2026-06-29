@@ -54,21 +54,24 @@ Field parity check vs `StoredWaitlistLead`: email, fullName, role, sportInterest
 currentStack, weakestProcess, consent, createdAt, utmSource, utmCampaign, referrer,
 path→`sourcePath`, copyVersion, reviewStatus. All preserved.
 
-## 3. Storage interface (so PR2 and PR3 share one contract)
+## 3. Storage interface (so PR2 and PR3 share one contract) — **DONE in PR2**
 
-Refactor `waitlist-store.ts` to an interface so the file store and the DB store are
-interchangeable behind a flag — no behavior change at the call site (`route.ts`):
+This seam already shipped in the PR2 hardening pass — PR3 does NOT need to refactor it:
 
 ```ts
+// apps/web/lib/gse/waitlist-store.ts (already present)
 export interface WaitlistStore {
   record(lead: WaitlistLeadInput): Promise<{ stored: boolean; duplicate: boolean }>;
   list(): Promise<StoredWaitlistLead[]>;
 }
-// selectWaitlistStore(): file store by default; DB store when WAITLIST_STORAGE=db
+export function selectWaitlistStore(): WaitlistStore { /* file store; DB when WAITLIST_STORAGE=db */ }
 ```
 
-`route.ts` already depends only on `record()` — the swap is a one-line factory
-change, fully reversible.
+`apps/web/app/api/waitlist/route.ts` already calls `selectWaitlistStore()` and depends
+only on `record()`. So PR3's remaining work is narrowed to: (a) add the `WaitlistLead`
+model + migration (§2/§4), (b) implement `createDbWaitlistStore(): WaitlistStore`, and
+(c) flip the one commented branch in `selectWaitlistStore()` on `WAITLIST_STORAGE=db`.
+No call-site changes; fully reversible by the env flag.
 
 ## 4. Migration plan (owner-run, local first)
 
