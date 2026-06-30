@@ -176,8 +176,16 @@ export function evaluatePromotionForPublish(
     });
   }
 
-  // Scan headline + summary for banned hype language using the trust-claim registry.
-  const combinedCopy = `${promo.headline}\n${promo.offerSummary}`;
+  // Scan all public-facing copy for banned hype language using the trust-claim
+  // registry. disclosureText, responsibleGamingText and offerCategory also reach
+  // the public payload, so they are scanned alongside headline + offerSummary.
+  const combinedCopy = [
+    promo.headline,
+    promo.offerSummary,
+    promo.disclosureText,
+    promo.responsibleGamingText,
+    promo.offerCategory,
+  ].join("\n");
   const hypeHits = scanForBannedPhrases(combinedCopy);
   if (hypeHits.length > 0) {
     blockers.push({
