@@ -7,6 +7,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { formatDate } from "@/lib/utils";
+import { guardPublicContent, guardPublicExcerpt } from "@/lib/blog/public-guard";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -90,18 +91,18 @@ export default async function BlogPostPage({
             <div className="prose prose-invert prose-sm max-w-none">
               {/* Always show excerpt */}
               <div className="text-ion-1 leading-relaxed whitespace-pre-line">
-                {post.excerpt}
+                {guardPublicExcerpt(post.excerpt)}
               </div>
 
               {showFullContent ? (
                 <div className="text-ion-1 leading-relaxed whitespace-pre-line mt-4">
-                  {post.content}
+                  {guardPublicContent(post.content)}
                 </div>
               ) : (
                 <div className="relative mt-8">
                   {/* Blur overlay for locked content */}
                   <div className="text-ion-2 leading-relaxed whitespace-pre-line blur-sm select-none pointer-events-none line-clamp-3">
-                    {post.content.slice(0, 300)}...
+                    {guardPublicContent(post.content).slice(0, 300)}...
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-obsidian/80 to-obsidian">
                     <div className="text-center p-6 bg-carbon border border-titanium rounded-2xl max-w-sm">

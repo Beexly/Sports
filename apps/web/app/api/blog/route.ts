@@ -4,6 +4,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { bootstrapGateResponse, getReadinessGates } from "@sports/prediction-engine";
 import type { PublicBlogPost } from "@sports/types";
+import { guardPublicContent, guardPublicExcerpt } from "@/lib/blog/public-guard";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
@@ -43,11 +44,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       id: post.id,
       title: post.title,
       slug: post.slug,
-      excerpt: post.excerpt,
+      excerpt: guardPublicExcerpt(post.excerpt),
       // PAYWALL: full content only for paid subscribers. Keyed off paid-tier
       // membership (not canSeePremiumPicks, which is now true for all tiers since
       // picks are free — ENTITLEMENT_REMAP_SPEC.md). Blog gating preserved as-is.
-      content: entitlements.tier !== "FREE" ? post.content : null,
+      content: entitlements.tier !== "FREE" ? guardPublicContent(post.content) : null,
       sport: post.sport,
       tags: post.tags,
       seoTitle: post.seoTitle,
@@ -89,6 +90,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const publicPosts: PublicBlogPost[] = posts.map((p) => ({
     ...p,
+    excerpt: guardPublicExcerpt(p.excerpt),
     content: null, // Never return full content in list view
     publishedAt: p.publishedAt?.toISOString() ?? null,
   }));
