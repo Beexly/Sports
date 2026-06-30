@@ -40,7 +40,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 export default function StatsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <nav className="border-b border-mineral bg-eclipse/60 sticky top-0 z-20 backdrop-blur-sm">
+      <nav aria-label="Stats sections" className="border-b border-mineral bg-eclipse/60 sticky top-0 z-20 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl overflow-x-auto">
           <div className="flex min-w-max px-4 sm:px-6 lg:px-8">
             {NAV.map(({ label, href }) => (
