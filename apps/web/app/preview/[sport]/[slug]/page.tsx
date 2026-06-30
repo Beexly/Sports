@@ -49,7 +49,16 @@ async function loadGameForSlug(sport: string, slug: string) {
       take: 500,
       include: {
         picks: {
-          where: { isPublished: true },
+          where: {
+            isPublished: true,
+            isBootstrap: false, // never expose bootstrap-era picks publicly (mirrors /api/picks)
+            // Production seed-row exclusion (defense-in-depth) — drop dev seed
+            // rows tagged modelVersion="v5.0.0-seed" only in production; no-op in
+            // dev/test. Mirrors excludeSeedInProd in app/api/picks/route.ts.
+            ...(process.env.NODE_ENV === "production"
+              ? { NOT: { modelVersion: "v5.0.0-seed" } }
+              : {}),
+          },
           orderBy: { confidence: "desc" },
           take: 1,
         },
