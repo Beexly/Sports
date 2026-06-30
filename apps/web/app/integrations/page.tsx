@@ -208,13 +208,13 @@ export default async function IntegrationsPage(): Promise<JSX.Element> {
               <table className="w-full min-w-[980px] text-left text-sm">
                 <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                   <tr>
-                    <th className="px-4 py-3">Source</th>
-                    <th className="px-4 py-3">Cost</th>
-                    <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">Proof</th>
-                    <th className="px-4 py-3">Grain</th>
-                    <th className="px-4 py-3">Use</th>
-                    <th className="px-4 py-3">Boundary</th>
+                    <th scope="col" className="px-4 py-3">Source</th>
+                    <th scope="col" className="px-4 py-3">Cost</th>
+                    <th scope="col" className="px-4 py-3">Status</th>
+                    <th scope="col" className="px-4 py-3">Proof</th>
+                    <th scope="col" className="px-4 py-3">Grain</th>
+                    <th scope="col" className="px-4 py-3">Use</th>
+                    <th scope="col" className="px-4 py-3">Boundary</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-mineral bg-carbon">

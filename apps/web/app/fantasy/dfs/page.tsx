@@ -62,10 +62,10 @@ export default async function DfsSuitePage() {
               <table className="w-full min-w-[560px] text-left text-sm">
                 <thead>
                   <tr className="font-mono text-[10px] uppercase tracking-widest text-ion-2">
-                    <th className="py-1.5 pr-4 font-medium">Player</th>
-                    <th className="py-1.5 pr-4 font-medium">Team</th>
-                    <th className="py-1.5 pr-4 font-medium">Pos</th>
-                    <th className="py-1.5 font-medium">Salary</th>
+                    <th scope="col" className="py-1.5 pr-4 font-medium">Player</th>
+                    <th scope="col" className="py-1.5 pr-4 font-medium">Team</th>
+                    <th scope="col" className="py-1.5 pr-4 font-medium">Pos</th>
+                    <th scope="col" className="py-1.5 font-medium">Salary</th>
                   </tr>
                 </thead>
                 <tbody className="text-ion-1">

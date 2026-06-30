@@ -78,12 +78,12 @@ export default async function WeatherPage(): Promise<JSX.Element> {
               <table className="w-full min-w-[640px] text-left text-sm">
                 <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                   <tr>
-                    <th className="px-4 py-3">Team</th>
-                    <th className="px-4 py-3">Stadium</th>
-                    <th className="px-4 py-3">Temp</th>
-                    <th className="px-4 py-3">Wind</th>
-                    <th className="px-4 py-3">Precip</th>
-                    <th className="px-4 py-3">Conditions</th>
+                    <th scope="col" className="px-4 py-3">Team</th>
+                    <th scope="col" className="px-4 py-3">Stadium</th>
+                    <th scope="col" className="px-4 py-3">Temp</th>
+                    <th scope="col" className="px-4 py-3">Wind</th>
+                    <th scope="col" className="px-4 py-3">Precip</th>
+                    <th scope="col" className="px-4 py-3">Conditions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-mineral bg-carbon">

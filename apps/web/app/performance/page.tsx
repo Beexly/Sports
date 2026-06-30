@@ -385,25 +385,25 @@ export default async function PerformancePage() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-mineral text-left">
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Period
                           </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Sport
                           </th>
-                          <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Type
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             W
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             L
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             P
                           </th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
                             Win%
                           </th>
                         </tr>

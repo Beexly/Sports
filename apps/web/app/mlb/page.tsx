@@ -84,17 +84,17 @@ export default async function MlbPage(): Promise<JSX.Element> {
               <table className="w-full min-w-[760px] text-left text-sm">
                 <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                   <tr>
-                    <th className="px-4 py-3">#</th>
-                    <th className="px-4 py-3">Team</th>
-                    <th className="px-4 py-3">Lg</th>
-                    <th className="px-4 py-3">W</th>
-                    <th className="px-4 py-3">L</th>
-                    <th className="px-4 py-3">R</th>
-                    <th className="px-4 py-3">RA</th>
-                    <th className="px-4 py-3">Diff</th>
-                    <th className="px-4 py-3">Win%</th>
-                    <th className="px-4 py-3">Pyth%</th>
-                    <th className="px-4 py-3">Luck</th>
+                    <th scope="col" className="px-4 py-3">#</th>
+                    <th scope="col" className="px-4 py-3">Team</th>
+                    <th scope="col" className="px-4 py-3">Lg</th>
+                    <th scope="col" className="px-4 py-3">W</th>
+                    <th scope="col" className="px-4 py-3">L</th>
+                    <th scope="col" className="px-4 py-3">R</th>
+                    <th scope="col" className="px-4 py-3">RA</th>
+                    <th scope="col" className="px-4 py-3">Diff</th>
+                    <th scope="col" className="px-4 py-3">Win%</th>
+                    <th scope="col" className="px-4 py-3">Pyth%</th>
+                    <th scope="col" className="px-4 py-3">Luck</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-mineral bg-carbon">
