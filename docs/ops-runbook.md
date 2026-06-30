@@ -32,6 +32,44 @@ npm start
 # Workers: node workers/content-publishing/index.js
 ```
 
+> **UPDATE 2026-06-30:** The self-hosted `npm start` + standalone-worker model
+> documented above describes one deployment topology, but it is NOT how the
+> platform currently runs in production. The following four corrections are each
+> verified against the current code in this repo; the historical text is left in
+> place for reference.
+>
+> 1. **Production deploy.** Prod runs on **Vercel** (`vercel.json` →
+>    `"framework": "nextjs"`), not a long-lived `npm start` process plus a
+>    standalone Node worker. The prod refresh/settlement cadence is governed by
+>    **daily Vercel crons**, not the documented `*/30 * * * *`. Per `vercel.json`
+>    `crons`: `/api/cron/refresh-odds` runs `0 10 * * *` and
+>    `/api/cron/settle-picks` runs `0 7 * * *` (both daily). The 30-minute
+>    `setInterval` (`REFRESH_INTERVAL_MS = 30 * 60 * 1000` in
+>    `workers/data-refresh/src/index.ts`) applies ONLY to the optional
+>    standalone long-running worker, not to the deployed Vercel cron path.
+>
+> 2. **Worker run command.** `node workers/data-refresh/index.js` is wrong —
+>    no such file exists. The canonical entry is the npm script
+>    `workers:refresh` → `node workers/data-refresh/dist/index.js` (run after a
+>    build), per `package.json`. The TypeScript source lives at
+>    `workers/data-refresh/src/index.ts` (run directly with `ts-node src/index.ts`
+>    during development). The same pattern holds for `workers:picks` and
+>    `workers:content`.
+>
+> 3. **Health checks.** `GET /api/health`
+>    (`apps/web/app/api/health/route.ts`) checks ONLY two things: the database
+>    (`SELECT 1` via `db.$queryRaw`) and the last **SUCCESS** ingestion run.
+>    There is **no Redis connectivity check** in the health route — the "Redis
+>    connectivity" probe listed below under *Health Checks* is **stale**.
+>
+> 4. **Alerts.** The "no ingestion run in > 2 hours → critical alert" line below
+>    is **stale**. Staleness is now governed by the shared Refresh SLA:
+>    `apps/web/lib/data-reliability/refresh-sla.ts` defines
+>    `REFRESH_STALE_AFTER_MINUTES = 240` (4h, the `/api/health` 503 trigger) and
+>    `REFRESH_WARN_AFTER_MINUTES = 120` (2h warn). The 2h boundary is now a WARN,
+>    not a hard critical; the 503/critical threshold is 4h. The old hard-coded 2h
+>    magic number caused false 503s once the cadence relaxed to a daily cron.
+
 ## Background Workers
 
 ### Data Refresh Worker
