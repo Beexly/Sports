@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { loadStudioDashboard } from "@/lib/studio/load";
-import { StudioWorkspace, studioWorkspaceProps } from "./studio-workspace";
+import { StudioWorkspace } from "./studio-workspace";
+import { studioWorkspaceProps } from "./studio-props";
 
 export const dynamic = "force-dynamic";
 
