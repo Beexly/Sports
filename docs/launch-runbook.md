@@ -303,6 +303,21 @@ in this order during a launch:
 | `npm run jarvis:diff -- --against FILE` | Diff current vs saved state, exits non-zero on regression | After flipping a gate |
 | `npm run guardrails` | All three guardrail scripts (trust-gate, model-freeze, draft-only) | Before merging a model change |
 
+> **UPDATE 2026-06-30:** The `npm run guardrails` row above undercounts the
+> enforcement surface. Per `package.json`, the `guardrails` script now runs
+> **SIX** checks, not three. The exact chain is:
+> `trust-gate && model-freeze && draft-only && claude-api-usage && secret-scan --all && eval-contracts`
+> (i.e. `node scripts/guardrails/trust-gate.mjs && … model-freeze.mjs && …
+> draft-only.mjs && … claude-api-usage.mjs && … secret-scan.mjs --all && node
+> scripts/eval-contracts.mjs`). The parenthetical "(trust-gate, model-freeze,
+> draft-only)" is stale — add `claude-api-usage`, `secret-scan --all`, and
+> `eval-contracts`. Note also that the matching CI list in `§2` /
+> `.github/workflows/ci.yml` has dedicated jobs for `trust-gate`,
+> `model-freeze`, `draft-only`, and `secret-scan`, but **no** dedicated
+> `claude-api-usage` or `eval-contracts` job — those two run only inside the
+> composite `guardrails` job, so the per-job CI list omits the claude-api and
+> eval-contracts guardrails the composite now enforces.
+
 Each script's source lives in `scripts/`. Each one is single-file,
 dependency-free, and has a `__tests__/*-script.test.ts` pinning its
 source-level invariants.
