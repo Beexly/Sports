@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkWaitlistGate } from "@/lib/waitlist/access-gate";
 
 /**
  * Middleware for route protection.
@@ -9,6 +10,10 @@ import { NextRequest, NextResponse } from "next/server";
  *
  * Admin routes are protected at both middleware level (basic check) and page level
  * (full auth + role check).
+ *
+ * Waitlist gate: /waitlist and /waitlist/* are optionally protected by Basic Auth
+ * when GSE_WAITLIST_GATE_ENABLED=true.  Credentials live in server-side env vars
+ * only and are never exposed to the client.
  */
 
 // Routes that require authentication (redirect to signin if no cookie)
@@ -24,6 +29,28 @@ const AUTH_COOKIE_NAMES = [
 
 export function middleware(req: NextRequest): NextResponse {
   const { pathname } = req.nextUrl;
+
+  // ── Waitlist Basic Auth gate ──────────────────────────────────────────────
+  // Protects /waitlist and /waitlist/* only.
+  // Active only when GSE_WAITLIST_GATE_ENABLED=true.
+  // Returns 401 + WWW-Authenticate + Cache-Control: no-store on denial.
+  const isWaitlistPath =
+    pathname === "/waitlist" || pathname.startsWith("/waitlist/");
+
+  if (isWaitlistPath) {
+    const authHeader = req.headers.get("authorization");
+    const result = checkWaitlistGate(authHeader);
+
+    if (!result.allowed) {
+      return new NextResponse("Access restricted", {
+        status: 401,
+        headers: {
+          "WWW-Authenticate": 'Basic realm="GSE Waitlist", charset="UTF-8"',
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+  }
 
   // NOTE: the old FANTASY_PUBLIC_TOOLS_ENABLED middleware gate is gone.
   // It bounced every /fantasy/* tool back to the hub ("tabs not connected"),
