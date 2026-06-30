@@ -564,7 +564,7 @@ export default async function CockpitOverview() {
         </p>
       )}
 
-      <nav className="flex flex-wrap gap-2 text-xs">
+      <nav aria-label="Cockpit cross-links" className="flex flex-wrap gap-2 text-xs">
         <Link
           href="/cockpit/history"
           className="rounded-lg border border-titanium/40 px-3 py-2 text-ion-2 hover:border-titanium/70 hover:bg-carbon/60"
