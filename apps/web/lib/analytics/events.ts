@@ -30,7 +30,16 @@ export type AnalyticsEvent =
   | "elite_feature_view"
   | "operator_waitlist_join"
   | "cancellation_start"
-  | "cancellation_reason_submit";
+  | "cancellation_reason_submit"
+  // GSE founding-waitlist funnel (PR2, no-claim lane). NO-OP like the rest.
+  | "waitlist_viewed"
+  | "waitlist_started"
+  | "waitlist_submitted"
+  | "waitlist_consent_blocked"
+  | "audit_offer_clicked"
+  | "transparency_read"
+  | "research_brief_clicked"
+  | "claim_gate_hit";
 
 /** What each event means and why it matters — the documented contract. */
 export const ANALYTICS_EVENTS: Readonly<Record<AnalyticsEvent, string>> = {
@@ -54,6 +63,14 @@ export const ANALYTICS_EVENTS: Readonly<Record<AnalyticsEvent, string>> = {
   operator_waitlist_join: "Visitor joined the Operator waitlist — demand signal for the top tier.",
   cancellation_start: "Member began cancellation — churn early-warning.",
   cancellation_reason_submit: "Member submitted a cancellation reason — churn-cause data.",
+  waitlist_viewed: "Visitor reached the founding-waitlist page — top of the no-claim lead funnel.",
+  waitlist_started: "Visitor began the waitlist form — intent signal.",
+  waitlist_submitted: "Visitor submitted a valid, consented waitlist lead.",
+  waitlist_consent_blocked: "Submission blocked because consent was not given — consent-gate signal.",
+  audit_offer_clicked: "Visitor clicked the decision-audit offer — interest in the audit lane.",
+  transparency_read: "Visitor read the backtest-truth/transparency section — trust engagement.",
+  research_brief_clicked: "Visitor clicked into the research-brief lane — research intent.",
+  claim_gate_hit: "Draft copy was blocked by the compliance scanner — no-claim guard signal.",
 };
 
 export interface AnalyticsContext {
