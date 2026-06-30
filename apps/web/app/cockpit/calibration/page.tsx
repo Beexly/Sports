@@ -174,10 +174,10 @@ export default async function CockpitCalibrationPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="text-[10px] uppercase tracking-widest text-ion-3">
-                <th className="py-1 pr-4 font-medium">Confidence band</th>
-                <th className="py-1 pr-4 font-medium">Settled (n)</th>
-                <th className="py-1 pr-4 font-medium">Realized win rate</th>
-                <th className="py-1 font-medium">Read</th>
+                <th scope="col" className="py-1 pr-4 font-medium">Confidence band</th>
+                <th scope="col" className="py-1 pr-4 font-medium">Settled (n)</th>
+                <th scope="col" className="py-1 pr-4 font-medium">Realized win rate</th>
+                <th scope="col" className="py-1 font-medium">Read</th>
               </tr>
             </thead>
             <tbody className="text-ion-1">

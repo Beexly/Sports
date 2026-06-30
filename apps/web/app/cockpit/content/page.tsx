@@ -169,15 +169,15 @@ export default async function CockpitContentPage() {
             <table className="w-full min-w-[800px] text-left text-xs">
               <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
                 <tr>
-                  <th className="py-2 pr-3">Title</th>
-                  <th className="py-2 pr-3">Type</th>
-                  <th className="py-2 pr-3">Status</th>
-                  <th className="py-2 pr-3">Coverage</th>
-                  <th className="py-2 pr-3">Compliance</th>
-                  <th className="py-2 pr-3">RG</th>
-                  <th className="py-2 pr-3">Disclosure</th>
-                  <th className="py-2 pr-3">Perf gate</th>
-                  <th className="py-2 pr-3">Readiness</th>
+                  <th scope="col" className="py-2 pr-3">Title</th>
+                  <th scope="col" className="py-2 pr-3">Type</th>
+                  <th scope="col" className="py-2 pr-3">Status</th>
+                  <th scope="col" className="py-2 pr-3">Coverage</th>
+                  <th scope="col" className="py-2 pr-3">Compliance</th>
+                  <th scope="col" className="py-2 pr-3">RG</th>
+                  <th scope="col" className="py-2 pr-3">Disclosure</th>
+                  <th scope="col" className="py-2 pr-3">Perf gate</th>
+                  <th scope="col" className="py-2 pr-3">Readiness</th>
                 </tr>
               </thead>
               <tbody>
@@ -222,14 +222,14 @@ export default async function CockpitContentPage() {
         <table className="w-full text-left text-xs">
           <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
-              <th className="py-2 pr-3">Template</th>
-              <th className="py-2 pr-3">Type</th>
-              <th className="py-2 pr-3">Required sources</th>
-              <th className="py-2 pr-3">Gate</th>
-              <th className="py-2 pr-3">RG?</th>
-              <th className="py-2 pr-3">Disclosure?</th>
-              <th className="py-2 pr-3">Visibility</th>
-              <th className="py-2 pr-3">Owner</th>
+              <th scope="col" className="py-2 pr-3">Template</th>
+              <th scope="col" className="py-2 pr-3">Type</th>
+              <th scope="col" className="py-2 pr-3">Required sources</th>
+              <th scope="col" className="py-2 pr-3">Gate</th>
+              <th scope="col" className="py-2 pr-3">RG?</th>
+              <th scope="col" className="py-2 pr-3">Disclosure?</th>
+              <th scope="col" className="py-2 pr-3">Visibility</th>
+              <th scope="col" className="py-2 pr-3">Owner</th>
             </tr>
           </thead>
           <tbody>
@@ -256,11 +256,11 @@ export default async function CockpitContentPage() {
         <table className="w-full text-left text-xs">
           <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
-              <th className="py-2 pr-3">Kind</th>
-              <th className="py-2 pr-3">Required sources</th>
-              <th className="py-2 pr-3">Gate?</th>
-              <th className="py-2 pr-3">Promo?</th>
-              <th className="py-2 pr-3">RG note?</th>
+              <th scope="col" className="py-2 pr-3">Kind</th>
+              <th scope="col" className="py-2 pr-3">Required sources</th>
+              <th scope="col" className="py-2 pr-3">Gate?</th>
+              <th scope="col" className="py-2 pr-3">Promo?</th>
+              <th scope="col" className="py-2 pr-3">RG note?</th>
             </tr>
           </thead>
           <tbody>
@@ -290,11 +290,11 @@ export default async function CockpitContentPage() {
           <table className="w-full text-left text-xs">
             <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
               <tr>
-                <th className="py-2 pr-3">Title</th>
-                <th className="py-2 pr-3">Channel</th>
-                <th className="py-2 pr-3">QA</th>
-                <th className="py-2 pr-3">Compliance</th>
-                <th className="py-2 pr-3">Approved?</th>
+                <th scope="col" className="py-2 pr-3">Title</th>
+                <th scope="col" className="py-2 pr-3">Channel</th>
+                <th scope="col" className="py-2 pr-3">QA</th>
+                <th scope="col" className="py-2 pr-3">Compliance</th>
+                <th scope="col" className="py-2 pr-3">Approved?</th>
               </tr>
             </thead>
             <tbody>

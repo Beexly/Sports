@@ -468,26 +468,26 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         <table className="w-full min-w-[1200px] text-[11px]">
           <thead className="border-b border-titanium/40 bg-obsidian/50 text-left text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
-              <th className="px-3 py-2">Generated</th>
-              <th className="px-3 py-2">Game</th>
-              <th className="px-3 py-2">Sport</th>
-              <th className="px-3 py-2">Type</th>
-              <th className="px-3 py-2">Selection</th>
-              <th className="px-3 py-2">Line</th>
-              <th className="px-3 py-2">Conf</th>
-              <th className="px-3 py-2">Grade</th>
-              <th className="px-3 py-2">Risk</th>
-              <th className="px-3 py-2">Model</th>
-              <th className="px-3 py-2">Books</th>
-              <th className="px-3 py-2">Edge</th>
-              <th className="px-3 py-2">Consensus</th>
-              <th className="px-3 py-2">Result</th>
-              <th className="px-3 py-2">Settled</th>
-              <th className="px-3 py-2">Flags</th>
-              <th className="px-3 py-2">Public</th>
-              <th className="px-3 py-2">Learning</th>
-              <th className="px-3 py-2">Snapshot</th>
-              <th className="px-3 py-2">Exclusion reasons</th>
+              <th scope="col" className="px-3 py-2">Generated</th>
+              <th scope="col" className="px-3 py-2">Game</th>
+              <th scope="col" className="px-3 py-2">Sport</th>
+              <th scope="col" className="px-3 py-2">Type</th>
+              <th scope="col" className="px-3 py-2">Selection</th>
+              <th scope="col" className="px-3 py-2">Line</th>
+              <th scope="col" className="px-3 py-2">Conf</th>
+              <th scope="col" className="px-3 py-2">Grade</th>
+              <th scope="col" className="px-3 py-2">Risk</th>
+              <th scope="col" className="px-3 py-2">Model</th>
+              <th scope="col" className="px-3 py-2">Books</th>
+              <th scope="col" className="px-3 py-2">Edge</th>
+              <th scope="col" className="px-3 py-2">Consensus</th>
+              <th scope="col" className="px-3 py-2">Result</th>
+              <th scope="col" className="px-3 py-2">Settled</th>
+              <th scope="col" className="px-3 py-2">Flags</th>
+              <th scope="col" className="px-3 py-2">Public</th>
+              <th scope="col" className="px-3 py-2">Learning</th>
+              <th scope="col" className="px-3 py-2">Snapshot</th>
+              <th scope="col" className="px-3 py-2">Exclusion reasons</th>
             </tr>
           </thead>
           <tbody>

@@ -60,17 +60,17 @@ export default async function JarvisTrendPage() {
         <table className="w-full min-w-[900px] text-[11px]">
           <thead className="border-b border-titanium/40 bg-obsidian/50 text-left text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
-              <th className="px-3 py-2">Assessed at</th>
-              <th className="px-3 py-2">Launch status</th>
-              <th className="px-3 py-2">Public surface</th>
-              <th className="px-3 py-2">Ingestion</th>
-              <th className="px-3 py-2">Settlement</th>
-              <th className="px-3 py-2">Canonical</th>
-              <th className="px-3 py-2">Signal</th>
-              <th className="px-3 py-2">Safety</th>
-              <th className="px-3 py-2">Missing phase</th>
-              <th className="px-3 py-2">Missing config</th>
-              <th className="px-3 py-2">Actions</th>
+              <th scope="col" className="px-3 py-2">Assessed at</th>
+              <th scope="col" className="px-3 py-2">Launch status</th>
+              <th scope="col" className="px-3 py-2">Public surface</th>
+              <th scope="col" className="px-3 py-2">Ingestion</th>
+              <th scope="col" className="px-3 py-2">Settlement</th>
+              <th scope="col" className="px-3 py-2">Canonical</th>
+              <th scope="col" className="px-3 py-2">Signal</th>
+              <th scope="col" className="px-3 py-2">Safety</th>
+              <th scope="col" className="px-3 py-2">Missing phase</th>
+              <th scope="col" className="px-3 py-2">Missing config</th>
+              <th scope="col" className="px-3 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
