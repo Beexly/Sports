@@ -99,8 +99,11 @@ describe("no-lookahead: feature assembly excludes/refuses post-kickoff fields", 
     const features = assemblePreGameFeatures(cleanRow);
     const picksA = scoreHistoricalGame(features);
 
-    // Re-run with an utterly different (hypothetical) outcome embedded — but it can
-    // only ever reach SETTLEMENT, never scoring.
+    // Deterministic re-run on the IDENTICAL pre-game features — scoring carries no
+    // hidden state, so the picks must be byte-identical. (The actual flip-invariance
+    // — that swapping the final score cannot change the scored pick — is proven by
+    // the dedicated lookahead-invariance test added this run, and by the settlement
+    // divergence asserted just below.)
     const picksB = scoreHistoricalGame(features);
 
     expect(picksA.map((p) => `${p.pickType}:${p.selection}:${p.confidence}`)).toEqual(
