@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { db } from "@sports/db";
 import { listAgents } from "@/lib/cockpit/agents";
+import { AgentStatusRail } from "@/components/cockpit/agent-status-rail";
+import { summarizeAgentHealth } from "@/lib/agents/agent-health";
 
 // Operator data is read per request; never statically prerendered.
 export const dynamic = "force-dynamic";
@@ -17,14 +19,19 @@ export default async function CockpitAgentsPage() {
       .reduce((acc, g) => acc + g._count._all, 0);
   }
 
+  const agentReality = summarizeAgentHealth();
+
   return (
     <div className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-2xl font-bold text-ion-white">Operator agents</h1>
-        <p className="mt-1 text-sm text-ion-3">
-          Six internal roles. Each ships drafts only; no external action runs
-          without explicit human approval.
-        </p>
+      <header className="flex flex-col gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-ion-white">Operator agents</h1>
+          <p className="mt-1 text-sm text-ion-3">
+            Six internal roles. Each ships drafts only; no external action runs
+            without explicit human approval.
+          </p>
+        </div>
+        <AgentStatusRail summary={agentReality} />
       </header>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
