@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 function windClass(mph: number | null): string {
   if (mph === null) return "text-ion-2";
   if (mph >= 20) return "text-alert";
-  if (mph >= 12) return "text-amber-300";
+  if (mph >= 12) return "text-caution";
   return "text-ion";
 }
 

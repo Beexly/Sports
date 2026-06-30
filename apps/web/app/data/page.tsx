@@ -15,8 +15,8 @@ const VERDICT_STYLE: Record<LegalVerdict, { label: string; className: string }> 
   cleared: { label: "Cleared", className: "border-orbital-cyan/40 text-orbital-cyan" },
   "cleared-with-attribution": { label: "Cleared · attribute", className: "border-orbital-cyan/40 text-orbital-cyan" },
   licensed: { label: "Licensed", className: "border-orbital-cyan/40 text-orbital-cyan" },
-  "use-with-caution": { label: "Use with caution", className: "border-amber-400/40 text-amber-300" },
-  "paid-required": { label: "Paid plan required", className: "border-amber-400/40 text-amber-300" },
+  "use-with-caution": { label: "Use with caution", className: "border-caution/40 text-caution" },
+  "paid-required": { label: "Paid plan required", className: "border-caution/40 text-caution" },
   forbidden: { label: "Refused", className: "border-alert/50 text-alert" },
 };
 
