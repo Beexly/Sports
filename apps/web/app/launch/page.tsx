@@ -100,12 +100,12 @@ export default function LaunchPage() {
                   ))}
                 </ul>
               </div>
-              <div className="surface-card p-5" style={{ boxShadow: "inset 0 0 0 1px #E0A80033" }}>
-                <p className="text-xs uppercase tracking-[0.16em]" style={{ color: "#E0A800" }}>Preview / coming</p>
+              <div className="surface-card p-5" style={{ boxShadow: "inset 0 0 0 1px rgba(255,180,84,0.2)" }}>
+                <p className="text-xs uppercase tracking-[0.16em] text-caution">Preview / coming</p>
                 <ul className="mt-3 space-y-2">
                   {PREVIEW.map((r) => (
                     <li key={r} className="flex gap-2 text-sm text-ink-300">
-                      <span aria-hidden style={{ color: "#E0A800" }}>○</span><span>{r}</span>
+                      <span aria-hidden className="text-caution">○</span><span>{r}</span>
                     </li>
                   ))}
                 </ul>
