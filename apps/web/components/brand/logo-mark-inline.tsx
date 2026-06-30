@@ -43,6 +43,7 @@ export function LogoMarkInline({
       height={size}
       viewBox="0 0 64 64"
       fill="none"
+      aria-hidden="true"
       className={`${className}${kinetic ? " logo-mark-kinetic" : ""}`.trim()}
       style={{
         animation: pulse ? "logo-mark-pulse 2.4s ease-in-out infinite" : undefined,
