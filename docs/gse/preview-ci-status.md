@@ -4,14 +4,16 @@
 (`prj_ZAFYsTbVviP2iiSZdzQcloZVHkBL`, team `team_VvPIx69THeXYfjeG71taqnPo`).
 
 ## Push → CI result
-The push of `56a069e5` triggered a Vercel deployment for branch
-`claude/gse-no-claim-waitlist`:
+Two pushes on this branch each triggered a preview deployment that the project's own
+*Ignored Build Step* CANCELED — both tip commits were **docs-only**, a benign intentional
+skip, not a build failure:
+- **Deployment `dpl_C1scCXG1BReNnhdWEvyQxr3womMy`** · commit `9e7aa3f6` (finish-line docs,
+  this run) · **state = CANCELED** · **target = null (preview, NOT production)**.
 - **Deployment `dpl_AXZMAtozLUxiaKS8oNhLFuqEv6Rq`** · commit `56a069e5` · **state =
-  CANCELED** · **target = null (preview, NOT production)**.
+  CANCELED** · **target = null (preview)**.
 - **Cancellation reason (build log):** *"The Deployment has been canceled as a result of
-  running the command defined in the 'Ignored Build Step' setting."* — i.e. the project's
-  own skip-build rule decided not to rebuild. The recent tip commits were **docs-only**, so
-  this is a **benign, intentional skip**, not a build failure.
+  running the command defined in the 'Ignored Build Step' setting."* — the project's
+  skip-build rule decided not to rebuild for docs-only changes.
 
 ## Last READY preview (caveat)
 - **Deployment `dpl_6MnfjEU2sbtLuTPxoJmp27V9nwYC`** · commit `c6dd911f` · **state = READY**

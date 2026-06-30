@@ -6,7 +6,7 @@ the PR will reflect the complete validated feature (no re-push needed).
 
 ## Open it (one click)
 - **URL:** https://github.com/Beexly/Sports/pull/new/claude/gse-no-claim-waitlist
-- **Base:** `main` · **Head:** `claude/gse-no-claim-waitlist` @ `56a069e5`
+- **Base:** `main` · **Head:** `claude/gse-no-claim-waitlist` @ `9e7aa3f6` (18 ahead of `main`)
 - Open as **Draft** (recommended). **Do NOT merge** (merge to `main` = production deploy).
 - (Or authenticate `gh auth login`, then: `gh pr create --draft --base main --head
   claude/gse-no-claim-waitlist --title "feat(gse): local no-claim founding waitlist"
