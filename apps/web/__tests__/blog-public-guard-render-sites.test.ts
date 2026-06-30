@@ -15,10 +15,32 @@ describe("public blog read sites route through the no-claim guard", () => {
     expect(blogIndex).toContain("guardPublicExcerpt(post.excerpt)");
   });
 
+  it("guards the card title (h2) on the public blog index", () => {
+    // Regression guard for D2: the public <h2> card heading must run the raw
+    // title through guardPublicTitle, not render post.title raw.
+    expect(blogIndex).toContain("guardPublicTitle(post.title)");
+  });
+
   it("guards BOTH excerpt and content on the public blog detail page", () => {
     expect(blogDetail).toContain('from "@/lib/blog/public-guard"');
     expect(blogDetail).toContain("guardPublicExcerpt(post.excerpt)");
     expect(blogDetail).toContain("guardPublicContent(post.content)");
+  });
+
+  it("guards the visible title (h1) on the public blog detail page", () => {
+    // Regression guard for D1: the public <h1> must run the raw title through
+    // guardPublicTitle — this is the exact path the no-claim leak slipped on.
+    expect(blogDetail).toContain("guardPublicTitle(post.title)");
+  });
+
+  it("guards the title/SEO paths in the blog detail generateMetadata (OG/<title>/meta)", () => {
+    // Regression guard for D1: generateMetadata must not emit a raw seoTitle/title
+    // or raw seoDescription/excerpt into the metadata that becomes OG/<title>/meta.
+    expect(blogDetail).toContain("generateMetadata");
+    expect(blogDetail).toContain("guardPublicTitle(post.seoTitle ?? post.title)");
+    // The description path is guarded too (seoDescription via guardPublicTitle,
+    // excerpt fallback via guardPublicExcerpt) — assert no raw seoTitle/title leaks.
+    expect(blogDetail).not.toContain("title: post.seoTitle ?? post.title");
   });
 
   it("guards excerpt and content on the public blog API route", () => {
