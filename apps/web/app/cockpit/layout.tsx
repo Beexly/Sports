@@ -4,6 +4,7 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { Footer } from "@/components/ui/footer";
 import { CockpitNav, type CockpitNavGroup } from "@/components/cockpit/cockpit-nav";
+import { CockpitCommandPalette } from "@/components/cockpit/cockpit-command-palette";
 
 /**
  * Cockpit layout — admin-only, internal-only.
@@ -152,6 +153,8 @@ export default async function CockpitLayout({
 
         <main className="min-w-0 flex-1">{children}</main>
       </div>
+
+      <CockpitCommandPalette />
 
       <Footer />
     </div>
