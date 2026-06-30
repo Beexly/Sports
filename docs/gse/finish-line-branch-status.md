@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded — this branch is now MERGED into `main` as PR #57 (commit `6084550c`); it is no longer "N ahead of main." The prod DB is LIVE and `/api/performance` returns real data (397 settled picks). The ahead/behind counts below are historical.
+
 # GSE Finish-Line — Branch / Commit Status
 
 **As of:** 2026-06-29 (finish-line run) · Repo `C:\Users\Garrett\Sports`

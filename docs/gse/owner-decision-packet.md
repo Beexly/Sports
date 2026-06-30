@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded — the waitlist branch was opened and MERGED into `main` as PR #57 (commit `6084550c`); the prod DB is LIVE and `/api/performance` returns real data (397 settled picks). The "local-only / not pushed / not deployed" framing below is historical. (Note: the PR3 *schema/migration* follow-up is a separate item and remains owner-gated.)
+
 # GSE — Owner Decision Packet
 
 **Prepared:** 2026-06-29 · Repo C:/Users/Garrett/Sports · branch `claude/gse-no-claim-waitlist`

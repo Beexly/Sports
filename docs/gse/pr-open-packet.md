@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded — this PR was opened and MERGED as PR #57 into `main` (commit `6084550c`); the prod DB is LIVE and `/api/performance` returns real data (397 settled picks). The "ready to open / do NOT merge / production untouched" framing below is historical.
+
 # GSE — One-Click PR Packet (branch fully pushed; ready to open)
 
 `gh` is not authenticated, so the PR can't be opened programmatically. Everything to

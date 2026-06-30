@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded — this work is no longer "local-only / N ahead of main": it is MERGED into `main` as PR #57 (commit `6084550c`), the prod DB is LIVE, and `/api/performance` returns real data (397 settled picks). The local-only / owner-gated framing below is historical.
+
 # GSE Waitlist — Local Completion Status
 
 **As of:** 2026-06-29 · branch `claude/gse-no-claim-waitlist` (12 ahead / 0 behind
