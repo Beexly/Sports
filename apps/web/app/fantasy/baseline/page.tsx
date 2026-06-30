@@ -26,10 +26,10 @@ const STATUS_LABEL: Record<FantasyBaselineStatus, string> = {
 };
 
 const STATUS_TONE: Record<FantasyBaselineStatus, string> = {
-  "live-proof": "border-emerald-500/30 bg-emerald-950/25 text-emerald-200",
-  "csv-import-ready": "border-cyan-500/30 bg-cyan-950/25 text-cyan-200",
-  "gated-data": "border-yellow-500/30 bg-yellow-950/25 text-yellow-200",
-  "content-ready": "border-violet-500/30 bg-violet-950/25 text-violet-200",
+  "live-proof": "border-verify/30 bg-verify/10 text-verify",
+  "csv-import-ready": "border-ion-blue/30 bg-ion-blue/10 text-ion-blue",
+  "gated-data": "border-caution/30 bg-caution/10 text-caution",
+  "content-ready": "border-ultraviolet/30 bg-ultraviolet/10 text-ultraviolet",
   "manual-community": "border-titanium bg-carbon/70 text-ion-1",
 };
 
