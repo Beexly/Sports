@@ -179,6 +179,25 @@ export default async function PerformancePage() {
   const computedAt = latestComputedAt(summaries);
   const modelVersion = latestModelVersion(summaries);
 
+  // Minimum-sample floor (honesty guard) — mirrors /api/performance. The
+  // canExposePerformanceStats gate is a binary "publish stats at all" switch; it
+  // does NOT floor a THIN sample. winRatePct returns null only at zero decided
+  // picks, so a single settled pick would otherwise render "100%". Below the
+  // floor (MIN_SETTLED_PICKS_FOR_LEARNING, default 100) WITHHOLD every published
+  // rate — never fabricate one. Counts stay visible (they're factual); only the
+  // derived rate is suppressed, and the renderers already show STAT_PLACEHOLDER
+  // for a null rate. Above the floor, behavior is unchanged.
+  const minSettledFloor = Math.max(1, gates.minSettledPicksForLearning);
+  const insufficientSample = overall.totalPicks < minSettledFloor;
+  // Floor-aware win-rate: same allow-listed winRatePct helper, withheld below
+  // the floor. The raw ratio is never recomputed inline here; winRatePct is the
+  // only sanctioned path (this surface is policy-pinned to that helper).
+  const flooredWinRate = (wins: number, losses: number): number | null =>
+    insufficientSample ? null : winRatePct(wins, losses);
+  // overall.winRate is already winRatePct(overall.wins, overall.losses); withhold
+  // it below the floor so the headline never publishes a thin-sample rate.
+  const publishedOverallWinRate = insufficientSample ? null : overall.winRate;
+
   const SPORT_DISPLAY_NAMES: Record<string, string> = {
     nfl: "NFL",
     nba: "NBA",
@@ -290,10 +309,10 @@ export default async function PerformancePage() {
                   <div className="grid grid-cols-2 divide-x divide-mineral/60 sm:grid-cols-4">
                     <OverallStat
                       label="Win Rate"
-                      value={formatPercent(overall.winRate)}
+                      value={formatPercent(publishedOverallWinRate)}
                       accent={
-                        overall.winRate !== null
-                          ? winRateToneClass(overall.winRate)
+                        publishedOverallWinRate !== null
+                          ? winRateToneClass(publishedOverallWinRate)
                           : "text-ion-2"
                       }
                       large
@@ -349,7 +368,7 @@ export default async function PerformancePage() {
                           losses={l}
                           pushes={p}
                           totalPicks={total}
-                          winRate={winRatePct(w, l)}
+                          winRate={flooredWinRate(w, l)}
                         />
                       );
                     })}
@@ -391,7 +410,7 @@ export default async function PerformancePage() {
                       </thead>
                       <tbody>
                         {recentSummaries.slice(0, 30).map((s, i) => {
-                          const wr = winRatePct(s.wins, s.losses);
+                          const wr = flooredWinRate(s.wins, s.losses);
                           return (
                             <tr
                               key={s.id}
