@@ -68,3 +68,13 @@ remote branch is 9 commits behind local — a COMPLETE PR needs an owner-approve
 **re-push** (`git push origin claude/gse-no-claim-waitlist`) first; this agent did not
 push. Opening the PR / its preview is Level-2A; **merging to `main` is a production
 deploy (Level 3) and is not approved.**
+
+## 8. PR3 build artifacts (prepared; gated)
+
+`docs/gse/pr3-build-artifacts.md` holds the complete ready-to-apply PR3 package (exact
+`WaitlistLead` model, canonical migration SQL, delegate wiring, sacred invariants, a
+10-step owner-run dry-run sim, rollback/retry). The permission gate blocked editing the
+canonical `schema.prisma` without approval, so nothing was staged. **To let the agent
+stage Artifacts 1+3 on a local branch (still no migrate / no push), the phrase is:**
+**"approve PR3 schema build — local only, no migrate, no push."** The owner alone runs
+`prisma migrate dev` against a verified-local DB, and any push/deploy.
