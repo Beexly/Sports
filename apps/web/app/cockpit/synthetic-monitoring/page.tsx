@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StatusTile } from "@/components/cockpit/status-tile";
 import {
   loadSyntheticMonitoringDashboardFromDisk,
   type SyntheticCheck,
@@ -47,12 +48,21 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
         </p>
       </header>
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Metric label="Runner" value={dashboard.runnerStatus} />
         <Metric label="Environment" value={dashboard.activeEnvironment} />
         <Metric label="Last run" value={formatDate(dashboard.lastRunIso)} />
         <Metric label="Passing" value={String(dashboard.summary.passing)} />
         <Metric label="Pending" value={String(dashboard.summary.pending)} />
+        <Metric label="Warn" value={String(dashboard.summary.warn)} />
+        <Metric label="Failing" value={String(dashboard.summary.failing)} />
+        <StatusTile
+          label="Open issues"
+          value={String(dashboard.issues.length)}
+          tone={dashboard.issues.length > 0 ? "warn" : "neutral"}
+          caption="auto-filed"
+          href="/docs/ops/issue-queue.md"
+        />
       </section>
 
       <section className="grid gap-4">
