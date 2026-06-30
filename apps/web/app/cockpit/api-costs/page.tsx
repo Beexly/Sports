@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BudgetOverrideControl } from "./budget-override-control";
+import { StatusTile } from "@/components/cockpit/status-tile";
 import {
   loadClaudeApiCostsDashboard,
   type ClaudeApiCostSurfaceSummary,
@@ -43,9 +44,21 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
       </header>
 
       <section className="grid gap-3 sm:grid-cols-3">
-        <Metric label="Month spend" value={formatUsd(dashboard.totalSpentUsd)} />
-        <Metric label="Monthly budget" value={formatUsd(dashboard.totalBudgetUsd)} />
-        <Metric label="Generated" value={new Date(dashboard.generatedAtIso).toLocaleString("en-US")} />
+        <StatusTile
+          label="Month spend"
+          value={formatUsd(dashboard.totalSpentUsd)}
+          tone={dashboard.totalSpentUsd <= dashboard.totalBudgetUsd ? "good" : "info"}
+        />
+        <StatusTile
+          label="Monthly budget"
+          value={formatUsd(dashboard.totalBudgetUsd)}
+          tone="neutral"
+        />
+        <StatusTile
+          label="Generated"
+          value={new Date(dashboard.generatedAtIso).toLocaleString("en-US")}
+          tone="neutral"
+        />
       </section>
 
       <section className="overflow-hidden rounded-lg border border-titanium/40 bg-obsidian/60">
@@ -103,15 +116,6 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
           </div>
         )}
       </section>
-    </div>
-  );
-}
-
-function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
-  return (
-    <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-ion-white">{value}</p>
     </div>
   );
 }
