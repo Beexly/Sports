@@ -718,6 +718,8 @@ function AttentionFirstHero({
       <section
         data-testid="attention-first-hero"
         data-attention-empty="true"
+        role="region"
+        aria-label="What needs you now"
         className="relative overflow-hidden rounded-3xl border border-accent-900/30 bg-carbon/80 px-6 py-5"
       >
         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-3">
@@ -750,6 +752,8 @@ function AttentionFirstHero({
   return (
     <section
       data-testid="attention-first-hero"
+      role="region"
+      aria-label="What needs you now"
       className={["relative overflow-hidden rounded-3xl border px-6 py-5", urgencyTone].join(" ")}
     >
       <div className="mb-3 flex flex-wrap items-center gap-2">
