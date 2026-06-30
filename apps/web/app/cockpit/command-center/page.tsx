@@ -2,6 +2,7 @@ import Link from "next/link";
 import { loadCommandCenterFeed } from "@/lib/command-center/feed";
 import type {
   AttentionUrgency,
+  CommandCenterFeed,
   CommandCenterLane,
   DataMode,
   OwnerAttentionItem,
@@ -88,6 +89,15 @@ export default async function CommandCenterPage() {
           <CountCell label="Low / FYI" value={feed.counts.low} />
         </div>
       </header>
+
+      {/* ── Always-on health / telemetry strip ─────────────────────────────
+           A Grafana-style strip that is ALWAYS visible (even on the all-clear
+           path), built only from signals the feed already computes: overall
+           posture, the feed-level data mode, and each source lane's honest
+           data-mode + item count. No new data source — these are the same
+           readiness/source-health signals the lanes section renders in full
+           below; the strip just keeps them glanceable at the top. */}
+      <HealthStrip feed={feed} />
 
       {!feed.success && feed.error && (
         <section className="rounded-xl border border-red-900 bg-red-950/30 p-4 text-sm text-red-300">
@@ -198,6 +208,100 @@ function CountCell({
         {value}
       </p>
     </div>
+  );
+}
+
+/** Brand-tone color for a health state. */
+type HealthTone = "good" | "warn" | "bad" | "neutral";
+
+const HEALTH_TONE_STYLES: Record<HealthTone, string> = {
+  good: "border-accent-800/50 bg-accent-950/20 text-accent-400",
+  warn: "border-yellow-900/50 bg-yellow-950/20 text-yellow-300",
+  bad: "border-red-900/60 bg-red-950/20 text-red-300",
+  neutral: "border-titanium/40 bg-obsidian/50 text-ion-2",
+};
+
+/** Map a lane's honest data mode to a brand-tone health state. */
+function dataModeTone(mode: DataMode): HealthTone {
+  return mode === "live" ? "good" : mode === "labeled_fallback" ? "warn" : "bad";
+}
+
+function HealthChip({
+  label,
+  state,
+  tone,
+  detail,
+}: {
+  label: string;
+  state: string;
+  tone: HealthTone;
+  detail?: string;
+}) {
+  return (
+    <div
+      role="status"
+      aria-label={`${label}: ${state}`}
+      className={["rounded-xl border px-3 py-2", HEALTH_TONE_STYLES[tone]].join(" ")}
+    >
+      <p className="font-mono text-[8px] font-bold uppercase tracking-[0.16em] opacity-80">
+        {label}
+      </p>
+      <p className="mt-1 font-mono text-[11px] font-semibold uppercase tracking-widest">
+        {state}
+      </p>
+      {detail && <p className="mt-0.5 text-[9px] leading-snug opacity-70">{detail}</p>}
+    </div>
+  );
+}
+
+/**
+ * Always-on health/telemetry strip — Grafana-style at-a-glance state, composed
+ * only from signals the feed already produces. Never fabricates: the lane tiles
+ * inherit each lane's declared data mode (live / labeled fallback / unavailable),
+ * so a fallback strip reads honestly amber/red rather than fake-green.
+ */
+function HealthStrip({ feed }: { feed: CommandCenterFeed }) {
+  const postureTone: HealthTone =
+    feed.overallColor === "GREEN" ? "good" : feed.overallColor === "RED" ? "bad" : "warn";
+  const feedModeTone: HealthTone =
+    feed.dataMode === "live" ? "good" : feed.dataMode === "unavailable" ? "bad" : "warn";
+
+  return (
+    <section
+      data-testid="command-center-health-strip"
+      aria-label="System health telemetry"
+      className="rounded-2xl border border-titanium/40 bg-carbon/80 p-4"
+    >
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+          System health · always-on
+        </h2>
+        <span className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+          Jarvis {feed.jarvisVersion}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+        <HealthChip
+          label="Posture"
+          state={feed.overallColor}
+          tone={postureTone}
+        />
+        <HealthChip
+          label="Feed mode"
+          state={feed.dataMode.replace(/_/g, " ")}
+          tone={feedModeTone}
+        />
+        {feed.lanes.map((lane) => (
+          <HealthChip
+            key={lane.key}
+            label={lane.label}
+            state={lane.dataMode.replace(/_/g, " ")}
+            tone={dataModeTone(lane.dataMode)}
+            detail={`${lane.itemCount} item${lane.itemCount === 1 ? "" : "s"}`}
+          />
+        ))}
+      </div>
+    </section>
   );
 }
 
