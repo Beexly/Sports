@@ -152,6 +152,20 @@ export async function CalibrationPanel() {
       ? publishableBuckets.reduce((s, b) => s + b.observedWinRate * b.sampleSize, 0) / decided
       : 0;
 
+  // Discrimination's low/high readout is computed at a LOWER floor than the
+  // publish floor (MIN_DISCRIMINATION_SAMPLE=20 < MIN_PUBLISH_BUCKET_SAMPLE=30):
+  // the trend direction is a softer signal, so a 20–29-pick bucket legitimately
+  // counts toward the verdict. But its observed win-rate NUMBER is still below
+  // the publish floor — the same rate the ReliabilityRow withholds as "n/30".
+  // Gate the per-bucket % readout on the SAME `sufficientSample` flag (looked up
+  // by the discrimination labels) so a sub-30 bucket never publishes a concrete
+  // win-rate here while it reads "collecting" two rows down.
+  const bucketBySufficient = (label: string | null): boolean =>
+    label !== null &&
+    (data.buckets.find((b) => b.label === label)?.sufficientSample ?? false);
+  const discriminationRatesPublishable =
+    bucketBySufficient(d.lowestBucketLabel) && bucketBySufficient(d.highestBucketLabel);
+
   return (
     <section
       data-testid="calibration-panel"
@@ -181,7 +195,8 @@ export async function CalibrationPanel() {
             {meta.label}
           </p>
           <p className="mt-2 text-sm leading-relaxed text-ion-1">{d.note}</p>
-          {d.spread !== null &&
+          {discriminationRatesPublishable &&
+            d.spread !== null &&
             d.lowestBucketWinRate !== null &&
             d.highestBucketWinRate !== null && (
               <div className="mt-4 flex items-center gap-3 text-xs text-ion-1">
