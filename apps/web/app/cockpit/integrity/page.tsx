@@ -8,6 +8,73 @@ import {
 } from "@/lib/platform/integrity-ledger";
 
 /**
+ * Draft → Verified → Priced → Published → Proven — the Dify-style lifecycle
+ * rollup, computed honestly from the SAME ledger states already on the page.
+ * Each stage strictly requires the one before it (a monotonic ladder), so a
+ * system counts at exactly its furthest earned stage and nothing is inflated:
+ *
+ *   Draft     — code exists           (builtStatus = YES)
+ *   Verified  — wired into runtime     (+ wiredStatus = YES)
+ *   Priced    — cleared toward public  (+ publicSafeStatus ≠ NO)
+ *   Published — genuinely public-live  (+ publicSafeStatus = YES, no blocking gate)
+ *   Proven    — earned against evidence(+ provenStatus = YES)
+ *
+ * Proven stays empty unless a system is all the way through — never fabricated.
+ */
+const LIFECYCLE_STAGES = [
+  "Draft",
+  "Verified",
+  "Priced",
+  "Published",
+  "Proven",
+] as const;
+type LifecycleStage = (typeof LIFECYCLE_STAGES)[number];
+
+/** The furthest lifecycle stage a single system has honestly earned, or null (pre-Draft). */
+function lifecycleStageOf(s: SystemEntry): LifecycleStage | null {
+  if (s.builtStatus !== "YES") return null;
+  if (s.wiredStatus !== "YES") return "Draft";
+  if (s.publicSafeStatus === "NO") return "Verified";
+  // Public-safe is at least PARTIAL → "Priced" (cleared toward a public/commercial
+  // surface). It is only "Published" when fully public-safe with no owner gate
+  // still holding it back — a staged gate means it is not actually live.
+  const published = s.publicSafeStatus === "YES" && (s.ownerGate == null || s.ownerGate.trim() === "");
+  if (!published) return "Priced";
+  if (s.provenStatus !== "YES") return "Published";
+  return "Proven";
+}
+
+function rollupLifecycle(systems: readonly SystemEntry[]): {
+  counts: Record<LifecycleStage, number>;
+  preDraft: number;
+  total: number;
+  dominant: LifecycleStage | null;
+} {
+  const counts: Record<LifecycleStage, number> = {
+    Draft: 0,
+    Verified: 0,
+    Priced: 0,
+    Published: 0,
+    Proven: 0,
+  };
+  let preDraft = 0;
+  for (const s of systems) {
+    const stage = lifecycleStageOf(s);
+    if (stage == null) preDraft += 1;
+    else counts[stage] += 1;
+  }
+  let dominant: LifecycleStage | null = null;
+  let max = 0;
+  for (const stage of LIFECYCLE_STAGES) {
+    if (counts[stage] > max) {
+      max = counts[stage];
+      dominant = stage;
+    }
+  }
+  return { counts, preDraft, total: systems.length, dominant };
+}
+
+/**
  * Integrity Ledger cockpit — the command-truth surface. Every critical system, by
  * category, with its honest Built / Wired / Proven / Public-Safe state, owner gate,
  * evidence, failure mode, and next action. No simulated green: badges render exactly
@@ -77,10 +144,63 @@ function SystemRow({ s }: { s: SystemEntry }) {
   );
 }
 
+function LifecycleRollupTile({ systems }: { systems: readonly SystemEntry[] }) {
+  const { counts, preDraft, total, dominant } = rollupLifecycle(systems);
+
+  const STAGE_TONE: Record<LifecycleStage, string> = {
+    Draft: "border-titanium bg-carbon/60 text-ion-2",
+    Verified: "border-ultraviolet/30 bg-obsidian/50 text-ion-1",
+    Priced: "border-amber-900 bg-amber-950/30 text-amber-300",
+    Published: "border-orbital-cyan/40 bg-accent-950/20 text-accent-400",
+    Proven: "border-green-900 bg-green-950/40 text-green-300",
+  };
+
+  return (
+    <section
+      data-testid="lifecycle-rollup"
+      aria-label="Draft to Proven lifecycle rollup"
+      className="rounded-xl border border-titanium bg-carbon/40 p-4"
+    >
+      <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+          Lifecycle · Draft → Proven
+        </h2>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-ion-3">
+          {dominant ? `Most systems: ${dominant}` : "No systems drafted"}
+        </span>
+      </div>
+      <p className="mb-3 text-[11px] text-ion-3">
+        Each system counts at its furthest earned stage. Proven stays empty unless a
+        system is wired, public-safe, gate-free, and proven against evidence — no simulation.
+      </p>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+        {LIFECYCLE_STAGES.map((stage) => (
+          <div
+            key={stage}
+            data-testid={`lifecycle-stage-${stage}`}
+            className={`rounded-lg border px-3 py-2 ${STAGE_TONE[stage]}`}
+          >
+            <p className="font-mono text-[8px] font-bold uppercase tracking-[0.16em] opacity-80">
+              {stage}
+            </p>
+            <p className="mt-1 font-mono text-2xl font-semibold tabular-nums leading-none">
+              {counts[stage]}
+            </p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-[10px] text-ion-3">
+        {total} systems · {counts.Proven} proven · {preDraft} pre-draft (code not yet built).
+      </p>
+    </section>
+  );
+}
+
 export default function CockpitIntegrityPage() {
   const groups = ledgerByCategory();
   const violations = auditLedger();
-  const total = groups.reduce((n, g) => n + g.systems.length, 0);
+  const allSystems = groups.flatMap((g) => g.systems);
+  const total = allSystems.length;
 
   return (
     <div className="flex flex-col gap-5">
@@ -104,6 +224,8 @@ export default function CockpitIntegrityPage() {
           ? "Public-safe rule holds across every system: nothing claims public-safe without proof or an explaining owner gate."
           : `${violations.length} public-safe rule violation(s): ${violations.map((v) => v.id).join(", ")}`}
       </div>
+
+      <LifecycleRollupTile systems={allSystems} />
 
       {groups.map((g) => (
         <section key={g.category} className="flex flex-col gap-2">
