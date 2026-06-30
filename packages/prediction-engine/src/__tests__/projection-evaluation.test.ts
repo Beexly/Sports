@@ -83,3 +83,83 @@ describe("clarkWestTest — fail-closed boundaries", () => {
     expect(clarkWestTest(samples)).toEqual(clarkWestTest(samples));
   });
 });
+
+// ============================================================
+// Load-bearing gate proofs for clarkWestTest().
+//
+// The earlier modelFavoringSample() helper yields a CONSTANT adjusted value
+// (~288 for every row) → variance 0 → tStatistic 0 for ALL n, so it can NEVER
+// open the gate. That makes the "n=20 floor" test above pass for the wrong
+// reason (deleting `n >= 30` from source would not break it).
+//
+// These cases build NON-degenerate variance (actual/predicted vary per row) so
+// the gate genuinely OPENS, then isolate each closing predicate by changing only
+// one thing at a time:
+//   - n>=30 floor          (beatGenerator @ 30 vs @ 29)
+//   - tStatistic > 1.64    (nearMissTGenerator @ 30)
+// ============================================================
+
+// Model is consistently CLOSER to actual than the market, with VARYING gaps so
+// the adjusted series has real variance. modelError cycles {-0.5, 0, 0.5};
+// marketError cycles 3.0..6.2. Truncating n is the ONLY thing that flips the gate.
+function beatGenerator(n: number): ClarkWestSample[] {
+  return Array.from({ length: n }, (_, i) => {
+    const actual = 20 + (i % 7);
+    const modelErr = ((i % 3) - 1) * 0.5;
+    const marketErr = 3 + (i % 5) * 0.8;
+    return {
+      actual,
+      modelPrediction: actual - modelErr,
+      marketPrediction: actual - marketErr,
+    };
+  });
+}
+
+// n>=30, mean>0, modelMae<marketMae, but ONE dominant outlier among otherwise
+// tiny-edge rows holds tStatistic just BELOW 1.64 (~1.07) — isolates that clause.
+function nearMissTGenerator(n: number): ClarkWestSample[] {
+  return Array.from({ length: n }, (_, i) => {
+    const actual = 20;
+    const { m, d } = i === 0 ? { m: 10, d: 1 } : { m: 2, d: 1.9 };
+    return {
+      actual,
+      modelPrediction: actual - d,
+      marketPrediction: actual - m,
+    };
+  });
+}
+
+describe("clarkWestTest — gate predicates are individually load-bearing", () => {
+  it("OPENS the gate (beatsMarket=true) when all four predicates hold at n>=30", () => {
+    const r = clarkWestTest(beatGenerator(30));
+    // The suite's first true case — proves a regression hardcoding `false`
+    // would be caught.
+    expect(r.sampleSize).toBe(30);
+    expect(r.adjustedMean).toBeGreaterThan(0);
+    expect(r.tStatistic).toBeGreaterThan(1.64);
+    expect(r.modelMae).toBeLessThan(r.marketMae);
+    expect(r.beatsMarket).toBe(true);
+  });
+
+  it("n>=30 floor is load-bearing: the SAME generator at n=29 closes the gate", () => {
+    const r = clarkWestTest(beatGenerator(29));
+    expect(r.sampleSize).toBe(29);
+    // Every OTHER predicate still passes at 29 — only the n floor differs, so a
+    // dropped `n >= 30` in source would let this through and break the test.
+    expect(r.adjustedMean).toBeGreaterThan(0);
+    expect(r.tStatistic).toBeGreaterThan(1.64);
+    expect(r.modelMae).toBeLessThan(r.marketMae);
+    expect(r.beatsMarket).toBe(false);
+  });
+
+  it("tStatistic>1.64 clause is load-bearing: n>=30, mean>0, modelMae<marketMae, but tStat just below 1.64 closes the gate", () => {
+    const r = clarkWestTest(nearMissTGenerator(30));
+    expect(r.sampleSize).toBe(30);
+    expect(r.adjustedMean).toBeGreaterThan(0);
+    expect(r.modelMae).toBeLessThan(r.marketMae);
+    // The ONLY failing predicate is the t-statistic threshold.
+    expect(r.tStatistic).toBeLessThan(1.64);
+    expect(r.tStatistic).toBeGreaterThan(0);
+    expect(r.beatsMarket).toBe(false);
+  });
+});
