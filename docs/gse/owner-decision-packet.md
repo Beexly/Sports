@@ -78,3 +78,14 @@ canonical `schema.prisma` without approval, so nothing was staged. **To let the 
 stage Artifacts 1+3 on a local branch (still no migrate / no push), the phrase is:**
 **"approve PR3 schema build — local only, no migrate, no push."** The owner alone runs
 `prisma migrate dev` against a verified-local DB, and any push/deploy.
+
+## 9. PR3 formal safety layer (LEVEL 1; added 2026-06-29)
+
+`docs/gse/pr3-tlaps-runbook.md` adds a TLA+ model of the 10-step runbook with the six
+sacred invariants encoded as safety properties, plus a TLAPS proof (`Spec => []SacredInv`)
+in `docs/gse/formal/PR3Waitlist.tla`. The identical transition relation was exhaustively
+re-verified by `docs/gse/formal/pr3_runbook_check.py` — **21 reachable states, 8/8
+invariants hold, exit 0 (GREEN)**. This pass re-verified parity against current source
+(**gate intact**: no `WaitlistLead` in `schema.prisma`; `selectWaitlistStore` db-branch
+still commented) and added **artifacts only** — no schema, no migrate, no push, no other
+lane. The go-phrase in §8 is unchanged.

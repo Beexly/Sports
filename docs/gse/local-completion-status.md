@@ -22,6 +22,7 @@ This is the honest line between what is **100% done locally** and what is **owne
 | Backtest integrity | `BACKTEST_TRUTH` code↔doc drift guard; "beats naive = false" surfaced | unit |
 | Analytics | typed **no-op** registry (inert until a provider is wired) | unit |
 | Tooling/docs | review CLI; architecture, PR3 plan + runbook, release-gate, owner-decision, content plan | n/a |
+| Formal safety | **TLA+ PR3 runbook model + 6 sacred invariants + TLAPS proof** (`docs/gse/formal/`, `pr3-tlaps-runbook.md`); exhaustive checker | 21 states · 8/8 green |
 
 ## 🔒 Owner-gated (NOT done autonomously — by design)
 
