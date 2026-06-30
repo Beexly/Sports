@@ -7,6 +7,9 @@ interface CalibrationCurvePoint {
   readonly expectedWinRate: number;
   readonly observedWinRate: number;
   readonly sampleSize: number;
+  /** Only plot a bucket once it clears the publish floor (30+ settled picks) —
+   * a 2-pick bucket reading "100%" must never appear on the curve. */
+  readonly sufficientSample: boolean;
 }
 
 interface CalibrationCurveProps {
@@ -46,7 +49,10 @@ export function CalibrationCurve({
 }: CalibrationCurveProps): JSX.Element {
   const ref = useRef<SVGSVGElement | null>(null);
   const [visible, setVisible] = useState(false);
-  const actualPoints = points.filter((point) => point.sampleSize > 0);
+  // Plot only buckets that clear the min-sample publish floor; a thin bucket's
+  // observed rate is an unsupported claim, so it stays off the curve (the empty
+  // state then shows the honest "N/30 settled" collecting view).
+  const actualPoints = points.filter((point) => point.sufficientSample);
   const path = useMemo(() => buildPath(actualPoints), [actualPoints]);
 
   useEffect(() => {

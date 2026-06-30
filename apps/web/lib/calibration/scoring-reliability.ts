@@ -27,7 +27,10 @@ function round(value: number, digits = 4): number {
 }
 
 function pointFromBucket(bucket: CalibrationBucket): ReliabilityDiagramPoint | null {
-  if (bucket.sampleSize <= 0) return null;
+  // Min-sample publish floor: a bucket below it (e.g. 2 settled picks at "100%")
+  // is an unsupported observed rate, so it is excluded from the public reliability
+  // diagram entirely — and from the ECE / max-gap aggregates derived from it.
+  if (bucket.sampleSize <= 0 || !bucket.sufficientSample) return null;
   return {
     absoluteGap: round(Math.abs(bucket.delta)),
     brierScore: bucket.brierScore,

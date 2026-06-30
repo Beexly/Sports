@@ -117,6 +117,7 @@ export default async function CalibrationProofRoomPage() {
             observedWinRate: b.observedWinRate,
             sampleSize: b.sampleSize,
             delta: b.delta,
+            sufficientSample: b.sufficientSample,
           }))}
           sampleSize={report.sampleSize}
           brierScore={report.brierScore}

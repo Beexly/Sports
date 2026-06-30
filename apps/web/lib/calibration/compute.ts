@@ -40,6 +40,14 @@ export interface CalibrationBucket {
   readonly expectedWinRate: number;
   readonly delta: number;
   readonly brierScore: number;
+  /**
+   * True once the bucket has enough settled picks to PUBLISH its observed win
+   * rate on a public surface. `observedWinRate` is always computed for internal
+   * use (proposals, discrimination, Brier), but a thin bucket — e.g. 2 settled
+   * picks reading "100%" — must never render a win-rate number to users. Every
+   * public renderer gates on this flag; see MIN_PUBLISH_BUCKET_SAMPLE.
+   */
+  readonly sufficientSample: boolean;
 }
 
 /**
@@ -183,6 +191,11 @@ const BUCKETS = [
 ] as const;
 
 const MIN_BUCKET_SAMPLE = 30;
+// Minimum settled picks before a bucket's observed win rate may be PUBLISHED on a
+// public surface. Same floor as the /api/performance min-sample guard: a bucket
+// below it is still computed (proposals/discrimination use observedWinRate), but
+// renderers must withhold the percentage so a 2-pick "100%" never reaches users.
+const MIN_PUBLISH_BUCKET_SAMPLE = 30;
 const PROPOSAL_DELTA = 0.12;
 // Discrimination needs less sample than a weight-change proposal: it is a
 // directional ranking signal, not a basis for altering the model. A bucket
@@ -253,6 +266,7 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
         expectedWinRate: round((bucket.min + bucket.max) / 200),
         delta: 0,
         brierScore: 0,
+        sufficientSample: false,
       });
       continue;
     }
@@ -275,6 +289,7 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
       expectedWinRate: round(expected),
       delta: round(observed - expected),
       brierScore: round(brier),
+      sufficientSample: rows.length >= MIN_PUBLISH_BUCKET_SAMPLE,
     });
   }
 
