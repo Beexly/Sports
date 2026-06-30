@@ -19,6 +19,8 @@ import { scanForBannedPhrases } from "@/lib/trust-claims";
 const REREVIEW_PLACEHOLDER =
   "This Journal entry is being re-reviewed before publication and is temporarily unavailable.";
 
+const TITLE_PLACEHOLDER = "Model Journal entry";
+
 export function guardPublicJournalBody(markdown: string): {
   readonly safe: boolean;
   readonly body: string;
@@ -28,4 +30,19 @@ export function guardPublicJournalBody(markdown: string): {
     return { safe: true, body: markdown };
   }
   return { safe: false, body: REREVIEW_PLACEHOLDER };
+}
+
+/**
+ * Fail-safe no-claim guard for public Model Journal titles.
+ *
+ * The CMS `title` is emitted to RSS, sitemap, OG/<title>, and <h1> without the
+ * banned-phrase scan that bodies already get. This runs the same scanner at
+ * read time and, on ANY hit, returns a calm placeholder rather than echoing the
+ * offending text. When clean, the title passes through byte-for-byte.
+ */
+export function guardPublicJournalTitle(title: string): string {
+  if (scanForBannedPhrases(title).length === 0) {
+    return title;
+  }
+  return TITLE_PLACEHOLDER;
 }

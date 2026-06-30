@@ -1,5 +1,5 @@
 import { db, type ModelJournalEntryStatus } from "@sports/db";
-import { guardPublicJournalBody } from "@/lib/journal/public-guard";
+import { guardPublicJournalBody, guardPublicJournalTitle } from "@/lib/journal/public-guard";
 
 export interface JournalEntryListItem {
   readonly id: string;
@@ -123,7 +123,7 @@ function toPublicEntry(row: {
     id: row.id,
     isoWeek: row.isoWeek,
     isoYear: row.isoYear,
-    title: row.title,
+    title: guardPublicJournalTitle(row.title),
     slug: row.slug,
     bodyMarkdown: guarded.body,
     coldOpen: firstParagraph(guarded.body),

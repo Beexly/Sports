@@ -22,6 +22,24 @@ const EXCERPT_PLACEHOLDER =
 const CONTENT_PLACEHOLDER =
   "This analysis is temporarily unavailable while it is re-reviewed.";
 
+const TITLE_PLACEHOLDER = "Model analysis";
+
+/**
+ * Fail-safe no-claim guard for public Blog titles and SEO fields.
+ *
+ * `BlogPost.title`, `.seoTitle`, and `.seoDescription` reach the public payload
+ * (OG/<title>, list cards, /api/blog) without the banned-phrase scan that the
+ * excerpt and content already get. This runs the same scanner at read time and,
+ * on ANY hit, returns a calm placeholder rather than echoing offending text.
+ * When clean, the value passes through byte-for-byte.
+ */
+export function guardPublicTitle(value: string): string {
+  if (scanForBannedPhrases(value).length === 0) {
+    return value;
+  }
+  return TITLE_PLACEHOLDER;
+}
+
 export function guardPublicExcerpt(excerpt: string): string {
   if (scanForBannedPhrases(excerpt).length === 0) {
     return excerpt;
