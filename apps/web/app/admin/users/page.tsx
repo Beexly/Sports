@@ -1,6 +1,16 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { db } from "@sports/db";
+import { db, type Prisma } from "@sports/db";
+
+const adminUsersQuery = {
+  include: {
+    subscription: {
+      select: { tier: true, status: true, currentPeriodEnd: true },
+    },
+  },
+  orderBy: { createdAt: "desc" },
+  take: 100,
+} satisfies Prisma.UserFindManyArgs;
 
 export default async function AdminUsersPage() {
   const session = await auth();
@@ -8,15 +18,11 @@ export default async function AdminUsersPage() {
     redirect("/");
   }
 
-  const users = await db.user.findMany({
-    include: {
-      subscription: {
-        select: { tier: true, status: true, currentPeriodEnd: true },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 100,
-  });
+  const users = await db.user
+    .findMany(adminUsersQuery)
+    // Fail-open: a transient DB error degrades to the page's existing
+    // "No users yet." empty state instead of crashing the admin app.
+    .catch(() => [] as Prisma.UserGetPayload<typeof adminUsersQuery>[]);
 
   return (
     <div className="min-h-screen bg-obsidian p-8">

@@ -1,7 +1,22 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { db } from "@sports/db";
+import { db, type Prisma } from "@sports/db";
 import { formatDate } from "@/lib/utils";
+
+const adminPostsQuery = {
+  orderBy: { createdAt: "desc" },
+  take: 50,
+  select: {
+    id: true,
+    title: true,
+    slug: true,
+    sport: true,
+    status: true,
+    isFeatured: true,
+    publishedAt: true,
+    createdAt: true,
+  },
+} satisfies Prisma.BlogPostFindManyArgs;
 
 export default async function AdminPostsPage() {
   const session = await auth();
@@ -9,20 +24,11 @@ export default async function AdminPostsPage() {
     redirect("/");
   }
 
-  const posts = await db.blogPost.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 50,
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      sport: true,
-      status: true,
-      isFeatured: true,
-      publishedAt: true,
-      createdAt: true,
-    },
-  });
+  const posts = await db.blogPost
+    .findMany(adminPostsQuery)
+    // Fail-open: a transient DB error degrades to the page's existing
+    // "No posts yet…" empty state instead of crashing the admin app.
+    .catch(() => [] as Prisma.BlogPostGetPayload<typeof adminPostsQuery>[]);
 
   return (
     <div className="min-h-screen bg-obsidian p-8">
