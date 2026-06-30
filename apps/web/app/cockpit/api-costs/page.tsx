@@ -73,14 +73,14 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
           <table className="min-w-full divide-y divide-titanium/30 text-sm">
             <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
               <tr>
-                <th className="px-4 py-3">Surface</th>
-                <th className="px-4 py-3">Spend</th>
-                <th className="px-4 py-3">Budget</th>
-                <th className="px-4 py-3">Used</th>
-                <th className="px-4 py-3">Calls</th>
-                <th className="px-4 py-3">Errors</th>
-                <th className="px-4 py-3">State</th>
-                <th className="px-4 py-3">Override</th>
+                <th scope="col" className="px-4 py-3">Surface</th>
+                <th scope="col" className="px-4 py-3">Spend</th>
+                <th scope="col" className="px-4 py-3">Budget</th>
+                <th scope="col" className="px-4 py-3">Used</th>
+                <th scope="col" className="px-4 py-3">Calls</th>
+                <th scope="col" className="px-4 py-3">Errors</th>
+                <th scope="col" className="px-4 py-3">State</th>
+                <th scope="col" className="px-4 py-3">Override</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-titanium/30">
