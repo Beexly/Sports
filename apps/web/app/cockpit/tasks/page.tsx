@@ -17,10 +17,14 @@ const STATUS_GROUPS: ReadonlyArray<{
 ];
 
 export default async function CockpitTasksPage() {
-  const tasks = await db.cockpitTask.findMany({
-    orderBy: [{ priority: "desc" }, { updatedAt: "desc" }],
-    take: 200,
-  });
+  const tasks = await db.cockpitTask
+    .findMany({
+      orderBy: [{ priority: "desc" }, { updatedAt: "desc" }],
+      take: 200,
+    })
+    // Fail-open: a transient DB blip degrades to clean empty status groups
+    // ("No items.") instead of the cockpit error banner.
+    .catch(() => [] as Awaited<ReturnType<typeof db.cockpitTask.findMany>>);
 
   return (
     <div className="flex flex-col gap-6">
