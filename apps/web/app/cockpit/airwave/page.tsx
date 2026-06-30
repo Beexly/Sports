@@ -171,8 +171,8 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             <table className="w-full text-left text-xs">
               <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
                 <tr>
-                  <th className="px-3 py-2">Contract check</th>
-                  <th className="px-3 py-2">Value</th>
+                  <th scope="col" className="px-3 py-2">Contract check</th>
+                  <th scope="col" className="px-3 py-2">Value</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-titanium/30">
@@ -237,9 +237,9 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             <table className="w-full text-left text-xs">
               <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
                 <tr>
-                  <th className="px-3 py-2">Column</th>
-                  <th className="px-3 py-2">Purpose</th>
-                  <th className="px-3 py-2">Req</th>
+                  <th scope="col" className="px-3 py-2">Column</th>
+                  <th scope="col" className="px-3 py-2">Purpose</th>
+                  <th scope="col" className="px-3 py-2">Req</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-titanium/30">
@@ -302,11 +302,11 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           <table className="min-w-[920px] w-full text-left text-xs">
             <thead>
               <tr className="border-b border-titanium/40 text-ion-3">
-                <th className="py-2 pr-3 font-medium">Aired</th>
-                <th className="py-2 pr-3 font-medium">Pundit</th>
-                <th className="py-2 pr-3 font-medium">Claim (paraphrased)</th>
-                <th className="py-2 pr-3 font-medium">Proposed</th>
-                <th className="py-2 pr-3 font-medium">Source ref (internal)</th>
+                <th scope="col" className="py-2 pr-3 font-medium">Aired</th>
+                <th scope="col" className="py-2 pr-3 font-medium">Pundit</th>
+                <th scope="col" className="py-2 pr-3 font-medium">Claim (paraphrased)</th>
+                <th scope="col" className="py-2 pr-3 font-medium">Proposed</th>
+                <th scope="col" className="py-2 pr-3 font-medium">Source ref (internal)</th>
               </tr>
             </thead>
             <tbody>
@@ -366,13 +366,13 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           <table className="w-full text-left text-xs">
             <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
               <tr>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Claim (paraphrased)</th>
-                <th className="px-3 py-2">Sport / Entity</th>
-                <th className="px-3 py-2">Type</th>
-                <th className="px-3 py-2">GSE</th>
-                <th className="px-3 py-2">GSN</th>
-                <th className="px-3 py-2">Public safe</th>
+                <th scope="col" className="px-3 py-2">Status</th>
+                <th scope="col" className="px-3 py-2">Claim (paraphrased)</th>
+                <th scope="col" className="px-3 py-2">Sport / Entity</th>
+                <th scope="col" className="px-3 py-2">Type</th>
+                <th scope="col" className="px-3 py-2">GSE</th>
+                <th scope="col" className="px-3 py-2">GSN</th>
+                <th scope="col" className="px-3 py-2">Public safe</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-titanium/30">
