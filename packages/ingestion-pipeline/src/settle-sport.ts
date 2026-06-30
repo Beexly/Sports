@@ -35,6 +35,7 @@ import {
   calculatePickResult,
   deriveClosingSnapshotFromOdds,
   gradePickClv,
+  selectGradingLine,
 } from "@sports/prediction-engine";
 import type { ReadinessGates, PickKind } from "@sports/prediction-engine";
 import { recordPickSettlementSnapshot } from "./settlement-snapshots.js";
@@ -142,7 +143,7 @@ export async function settleSport(
           // would settle a published WIN as a LOSS and contradict the CLV verdict (which
           // already uses clvLockLine below). Fall back to pick.line only for legacy rows
           // with no lock. (MONEYLINE ignores the line entirely.)
-          const gradingLine = pick.clvLockLine ?? pick.line;
+          const gradingLine = selectGradingLine(pick);
           const result = calculatePickResult(
             pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
             pick.selection,

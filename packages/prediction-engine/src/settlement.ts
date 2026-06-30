@@ -78,3 +78,19 @@ export function calculatePickResult(
 
   return "PUSH";
 }
+
+/**
+ * Select the line to GRADE a SPREAD/TOTAL pick against (the no-drift rule).
+ *
+ * Grade against the LOCKED line we published and CLV-graded the pick at, NOT
+ * `line`, which can drift on every refresh cycle while the pick is PENDING.
+ * Fall back to `line` only for legacy rows with no lock. Uses `??` so a
+ * genuine `clvLockLine` of 0 (a pick'em / even total) is honored and does NOT
+ * fall through to `line` — only null/undefined does.
+ */
+export function selectGradingLine(pick: {
+  clvLockLine: number | null;
+  line: number;
+}): number {
+  return pick.clvLockLine ?? pick.line;
+}

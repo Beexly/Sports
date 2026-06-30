@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculatePickResult } from "../settlement.js";
+import { calculatePickResult, selectGradingLine } from "../settlement.js";
 
 const NFL = "americanfootball_nfl";
 const MLS = "soccer_usa_mls";
@@ -195,5 +195,26 @@ describe("calculatePickResult — away name contains home name (no mis-settle)",
     // home line = +1.5; homeMargin = -1; homeCoverMargin = -1 + 1.5 = 0.5 > 0 → home covered
     // away pick → !homeCovered → LOSS. With `.includes` this flipped to WIN.
     expect(calculatePickResult("SPREAD", AWAY_SEL_SPREAD, 1.5, HOME, 2, 3, "icehockey_nhl")).toBe("LOSS");
+  });
+});
+
+// ============================================================
+// selectGradingLine — the no-drift rule
+// ============================================================
+
+describe("selectGradingLine", () => {
+  it("returns the locked line when clvLockLine is present", () => {
+    // Grade against the published lock, not the (drifted) live line.
+    expect(selectGradingLine({ clvLockLine: -3.5, line: -2.5 })).toBe(-3.5);
+  });
+
+  it("falls back to line when clvLockLine is null (legacy/unlocked rows)", () => {
+    expect(selectGradingLine({ clvLockLine: null, line: 7 })).toBe(7);
+  });
+
+  it("honors a genuine clvLockLine of 0 — ?? does NOT fall through on 0", () => {
+    // A pick'em spread or even total locks at 0; `??` only falls through on
+    // null/undefined, so 0 must be returned, not the (different) live line.
+    expect(selectGradingLine({ clvLockLine: 0, line: 1.5 })).toBe(0);
   });
 });
