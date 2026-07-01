@@ -34,7 +34,8 @@ const RESPONSIBLE_LINKS = [
   { label: "Set limits", href: "/responsible-play" },
   { label: "Variance guide", href: "/responsible-play#variance" },
   { label: `Help: ${HELPLINE.shortLabel}`, href: HELPLINE.href },
-  { label: "Terms and Privacy", href: "/terms" },
+  { label: "Terms", href: "/terms" },
+  { label: "Privacy", href: "/privacy" },
 ] as const;
 
 // Beyond the NFL: the other sports data hubs plus the data-sourcing record.

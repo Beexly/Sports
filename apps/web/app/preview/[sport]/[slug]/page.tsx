@@ -170,35 +170,35 @@ export default async function PreviewPage({ params }: Props) {
 
       <Nav />
 
-      <main className="max-w-3xl mx-auto px-4 py-12 space-y-8">
+      <main id="main-content" className="max-w-3xl mx-auto px-4 py-12 space-y-8">
         {/* Header */}
         <header className="space-y-2">
-          <p className="text-sm uppercase tracking-wide text-muted-foreground">
+          <p className="text-sm uppercase tracking-wide text-ion-2">
             {sport.toUpperCase()} · {formattedDate}
           </p>
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold text-ion-white">
             {game.awayTeamName} vs {game.homeTeamName}
           </h1>
-          <p className="text-muted-foreground">{formattedTime}</p>
+          <p className="text-ion-2">{formattedTime}</p>
         </header>
 
         {/* Model lean */}
         {pick ? (
-          <section className="rounded-lg border p-6 space-y-2">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+          <section className="rounded-lg border border-mineral p-6 space-y-2">
+            <p className="text-xs uppercase tracking-wide text-ion-2">
               Model Lean
             </p>
             <p className="text-2xl font-semibold">{pick.selection}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-ion-2">
               {pick.pickType} · Confidence {pick.confidence}/100
             </p>
             {pick.reasoningShort && (
-              <p className="text-sm mt-2 text-foreground">{pick.reasoningShort}</p>
+              <p className="text-sm mt-2 text-ion-white">{pick.reasoningShort}</p>
             )}
           </section>
         ) : (
-          <section className="rounded-lg border p-6">
-            <p className="text-sm text-muted-foreground">
+          <section className="rounded-lg border border-mineral p-6">
+            <p className="text-sm text-ion-2">
               Model pick not yet available for this matchup. Check back closer to
               game time.
             </p>
@@ -210,16 +210,16 @@ export default async function PreviewPage({ params }: Props) {
           <h2 className="font-semibold text-lg">Matchup Details</h2>
           <dl className="text-sm space-y-1.5">
             <div className="flex gap-2">
-              <dt className="text-muted-foreground w-28 shrink-0">Away</dt>
+              <dt className="text-ion-2 w-28 shrink-0">Away</dt>
               <dd>{game.awayTeamName}</dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-muted-foreground w-28 shrink-0">Home</dt>
+              <dt className="text-ion-2 w-28 shrink-0">Home</dt>
               <dd>{game.homeTeamName}</dd>
             </div>
             {game.openingSpread != null && (
               <div className="flex gap-2">
-                <dt className="text-muted-foreground w-28 shrink-0">
+                <dt className="text-ion-2 w-28 shrink-0">
                   Opening spread
                 </dt>
                 <dd>
@@ -230,7 +230,7 @@ export default async function PreviewPage({ params }: Props) {
             )}
             {game.openingTotal != null && (
               <div className="flex gap-2">
-                <dt className="text-muted-foreground w-28 shrink-0">
+                <dt className="text-ion-2 w-28 shrink-0">
                   Total (O/U)
                 </dt>
                 <dd>{game.openingTotal}</dd>
@@ -239,7 +239,7 @@ export default async function PreviewPage({ params }: Props) {
             {game.lineMovementSpread != null &&
               game.lineMovementSpread !== 0 && (
                 <div className="flex gap-2">
-                  <dt className="text-muted-foreground w-28 shrink-0">
+                  <dt className="text-ion-2 w-28 shrink-0">
                     Line movement
                   </dt>
                   <dd>
@@ -252,7 +252,7 @@ export default async function PreviewPage({ params }: Props) {
         </section>
 
         {/* Legal */}
-        <p className="text-xs text-muted-foreground border-t pt-4">
+        <p className="text-xs text-ion-2 border-t border-mineral pt-4">
           All model reads are generated from real bookmaker odds data. Not
           financial or gambling advice. Past model performance does not guarantee
           future results.

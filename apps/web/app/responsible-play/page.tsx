@@ -39,9 +39,9 @@ export default function ResponsiblePlayPage() {
     <div className="flex min-h-screen flex-col">
       <Nav />
 
-      <main className="flex-1">
-        {/* Hero */}
-        <section className="border-b border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1">
+        {/* Hero — also the #variance target for the footer "Variance guide" link. */}
+        <section id="variance" className="border-b border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Responsible play</p>
             <h1 className="mt-3 font-display text-display-xl text-balance text-white">
