@@ -188,8 +188,8 @@ export default async function PerformancePage() {
   // Minimum-sample floor (honesty guard) — mirrors /api/performance. The
   // canExposePerformanceStats gate is a binary "publish stats at all" switch; it
   // does NOT floor a THIN sample. winRatePct returns null only at zero decided
-  // picks, so a single settled pick would otherwise render "100%". Below the
-  // floor (MIN_SETTLED_PICKS_FOR_LEARNING, default 100) WITHHOLD every published
+  // picks, so a single settled pick would otherwise render a raw single-sample
+  // rate. Below the floor (MIN_SETTLED_PICKS_FOR_LEARNING, default 100) WITHHOLD every published
   // rate — never fabricate one. Counts stay visible (they're factual); only the
   // derived rate is suppressed, and the renderers already show STAT_PLACEHOLDER
   // for a null rate. Above the floor, behavior is unchanged.

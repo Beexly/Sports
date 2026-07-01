@@ -77,7 +77,7 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   const expectedLeft = `${Math.round(bucket.expectedWinRate * 100)}%`;
   const empty = bucket.sampleSize === 0;
   // Min-sample floor: a bucket below the publish threshold must NEVER show a
-  // win-rate number — a 2-pick bucket reading "100%" is an unsupported claim.
+  // win-rate number — a 2-pick bucket reading a raw single-sample rate is an unsupported claim.
   // Withhold the observed bar, the percentage, and the CI; show only the
   // sample-progress so the reader sees it is still collecting.
   const publishable = bucket.sufficientSample;
