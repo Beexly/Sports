@@ -293,9 +293,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Error state */}
           {fetchError && (
-            <div className="rounded-xl border border-red-800/60 bg-red-950/40 p-6 text-center">
-              <p className="text-sm font-medium text-red-400">{fetchError}</p>
-              <p className="mt-1 text-xs text-red-500/70">
+            <div className="rounded-xl border border-alert/40 bg-alert/10 p-6 text-center">
+              <p className="text-sm font-medium text-alert">{fetchError}</p>
+              <p className="mt-1 text-xs text-alert/70">
                 Please refresh the page or try again shortly.
               </p>
             </div>
