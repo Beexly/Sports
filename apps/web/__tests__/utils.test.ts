@@ -57,22 +57,24 @@ describe("truncate", () => {
 });
 
 describe("confidenceLabel", () => {
+  // Colors are GSE design tokens, not raw Tailwind green/blue/yellow — the
+  // casino palette is banned on trust surfaces and fails contrast on dark.
   it("returns Strong for 80+", () => {
     const result = confidenceLabel(80);
     expect(result.label).toBe("Strong");
-    expect(result.color).toContain("green");
+    expect(result.color).toBe("text-verify");
   });
 
   it("returns Good for 70-79", () => {
     const result = confidenceLabel(75);
     expect(result.label).toBe("Good");
-    expect(result.color).toContain("blue");
+    expect(result.color).toBe("text-orbital-cyan");
   });
 
   it("returns Moderate for 60-69", () => {
     const result = confidenceLabel(65);
     expect(result.label).toBe("Moderate");
-    expect(result.color).toContain("yellow");
+    expect(result.color).toBe("text-caution");
   });
 
   it("returns Lean for below 60", () => {

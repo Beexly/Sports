@@ -25,11 +25,34 @@ export const SIGNAL_BAD_CLASS = "text-rose-700" as const;
 export const SIGNAL_NEUTRAL_CLASS = "text-ink-1" as const;
 export const SIGNAL_MUTED_CLASS = "text-ink-2" as const;
 
+// Dark-surface (cosmic) analogs. The paper greens/reds above (emerald-700 /
+// rose-700) are darkened for white backgrounds and drop to ~2:1 on eclipse/
+// carbon. The semantic tokens `verify` (#5FD9A3) and `alert` (#FF6470) are the
+// AA-on-dark pair; neutral falls back to text-ion-1. Row tints use a 10% wash of
+// the same tokens instead of the bright bg-emerald-50 / bg-rose-50 pastels,
+// which read as glaring bars on a dark table.
+export const SIGNAL_GOOD_CLASS_DARK = "text-verify" as const;
+export const SIGNAL_BAD_CLASS_DARK = "text-alert" as const;
+export const SIGNAL_NEUTRAL_CLASS_DARK = "text-ion-1" as const;
+
 /** Tri-state direction a signal can carry on a data surface. */
 export type SignalTone = "good" | "bad" | "neutral";
 
-/** Map a tone to its paper-safe text class. */
-export function toneClass(tone: SignalTone): string {
+/** Which data surface a tone renders on. Defaults to the light "paper" surface. */
+export type ToneVariant = "paper" | "dark";
+
+/** Map a tone to its surface-safe text class. */
+export function toneClass(tone: SignalTone, variant: ToneVariant = "paper"): string {
+  if (variant === "dark") {
+    switch (tone) {
+      case "good":
+        return SIGNAL_GOOD_CLASS_DARK;
+      case "bad":
+        return SIGNAL_BAD_CLASS_DARK;
+      default:
+        return SIGNAL_NEUTRAL_CLASS_DARK;
+    }
+  }
   switch (tone) {
     case "good":
       return SIGNAL_GOOD_CLASS;
@@ -41,7 +64,17 @@ export function toneClass(tone: SignalTone): string {
 }
 
 /** Subtle row-tint background classes for an accented row (e.g. a top signal). */
-export function toneRowClass(tone: SignalTone): string {
+export function toneRowClass(tone: SignalTone, variant: ToneVariant = "paper"): string {
+  if (variant === "dark") {
+    switch (tone) {
+      case "good":
+        return "bg-verify/10";
+      case "bad":
+        return "bg-alert/10";
+      default:
+        return "";
+    }
+  }
   switch (tone) {
     case "good":
       return "bg-emerald-50";
@@ -62,8 +95,8 @@ export function buySellTone(signal: BuySellSignal): SignalTone {
   return "neutral";
 }
 
-export function buySellClass(signal: BuySellSignal): string {
-  return toneClass(buySellTone(signal));
+export function buySellClass(signal: BuySellSignal, variant: ToneVariant = "paper"): string {
+  return toneClass(buySellTone(signal), variant);
 }
 
 export const BUY_SELL_LABEL: Record<BuySellSignal, string> = {
@@ -86,8 +119,8 @@ export function consensusTone(signal: ConsensusSignal): SignalTone {
   return signal === "agree" ? "good" : "neutral";
 }
 
-export function consensusClass(signal: ConsensusSignal): string {
-  return toneClass(consensusTone(signal));
+export function consensusClass(signal: ConsensusSignal, variant: ToneVariant = "paper"): string {
+  return toneClass(consensusTone(signal), variant);
 }
 
 export const CONSENSUS_LABEL: Record<ConsensusSignal, string> = {
@@ -106,8 +139,8 @@ export function confidenceTone(level: ConfidenceLevel): SignalTone {
   return "neutral";
 }
 
-export function confidenceClass(level: ConfidenceLevel): string {
-  return toneClass(confidenceTone(level));
+export function confidenceClass(level: ConfidenceLevel, variant: ToneVariant = "paper"): string {
+  return toneClass(confidenceTone(level), variant);
 }
 
 export const CONFIDENCE_LABEL: Record<ConfidenceLevel, string> = {
@@ -126,8 +159,8 @@ export function liftTone(lift: number | null, deadband = 0.02): SignalTone {
   return "neutral";
 }
 
-export function liftClass(lift: number | null, deadband = 0.02): string {
-  return toneClass(liftTone(lift, deadband));
+export function liftClass(lift: number | null, deadband = 0.02, variant: ToneVariant = "paper"): string {
+  return toneClass(liftTone(lift, deadband), variant);
 }
 
 // ── Hit-rate vs the coin flip (0..1) ──────────────────────────────────────────
@@ -140,8 +173,8 @@ export function hitRateTone(rate: number | null, upper = 0.55, lower = 0.45): Si
   return "neutral";
 }
 
-export function hitRateClass(rate: number | null, upper = 0.55, lower = 0.45): string {
-  return toneClass(hitRateTone(rate, upper, lower));
+export function hitRateClass(rate: number | null, upper = 0.55, lower = 0.45, variant: ToneVariant = "paper"): string {
+  return toneClass(hitRateTone(rate, upper, lower), variant);
 }
 
 // ── Generic signed value (deltas, z-gaps, +/- columns) ────────────────────────
@@ -154,8 +187,8 @@ export function signedTone(value: number | null, invert = false): SignalTone {
   return positiveIsGood ? "bad" : "good";
 }
 
-export function signedClass(value: number | null, invert = false): string {
-  return toneClass(signedTone(value, invert));
+export function signedClass(value: number | null, invert = false, variant: ToneVariant = "paper"): string {
+  return toneClass(signedTone(value, invert), variant);
 }
 
 /** Format a number with a leading sign for +/- columns. */

@@ -49,7 +49,7 @@ export default async function PromotionsPage({
     <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="mb-8 max-w-3xl">
             <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-brand-400">

@@ -143,7 +143,7 @@ export default async function LossDetailPage({
   return (
     <div className="min-h-screen bg-carbon text-ion">
       <Nav />
-      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <article className="flex flex-col gap-8">
         <header className="flex flex-col gap-3">
           <Link href="/performance/losses" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">

@@ -67,6 +67,13 @@ export interface JarvisIngestionInput {
   readonly lastWasSuccess: boolean | null;
   /** Recent ingestion failure count (last 24h). */
   readonly recentFailureCount: number;
+  /**
+   * errorMessage from the most recent FAILED ingestion run, if any. Surfaced in
+   * the safety warning so the operator sees WHY ingestion is failing (e.g. "The
+   * Odds API error: 429" = quota exhausted, "Upstream odds are stale" = sparse
+   * slate) instead of a generic "investigate the data adapter."
+   */
+  readonly lastFailureReason?: string | null;
 }
 
 export interface JarvisSettlementInput {
@@ -387,8 +394,10 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
     input.ingestion.recentFailureCount >= 3 &&
     classifyIngestion(input.ingestion, input.now) !== "GREEN"
   ) {
+    const reason = input.ingestion.lastFailureReason?.trim();
+    const reasonSuffix = reason ? ` Last error: ${reason.slice(0, 160)}` : "";
     safety.push(
-      `Ingestion has ${input.ingestion.recentFailureCount} recent failures — investigate the data adapter before public claims.`
+      `Ingestion has ${input.ingestion.recentFailureCount} recent failures — investigate the data adapter before public claims.${reasonSuffix}`
     );
   }
   // Calibration activation is an audited MODEL_VERSION step, not a rollout flag.

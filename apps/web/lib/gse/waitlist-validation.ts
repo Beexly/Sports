@@ -17,6 +17,7 @@ import {
   getRulesForTemplate,
   type ComplianceRule,
 } from "@/lib/compliance-scanner/rules";
+import { normalizeForComplianceScan } from "@/lib/compliance-scanner/normalize";
 
 export const WAITLIST_ROLES = ["operator", "analyst", "founder", "bettor"] as const;
 export type WaitlistRole = (typeof WAITLIST_ROLES)[number];
@@ -105,8 +106,11 @@ export function runNoClaimGuard(
   templateKind = "GSE_WAITLIST",
 ): NoClaimGuardResult {
   const flags: NoClaimFlag[] = [];
+  // Collapse soft line-wraps before scanning so a banned phrase split across a
+  // newline can't slip the gate (defense in depth, matching the read-time guard).
+  const scanTarget = normalizeForComplianceScan(text);
   for (const rule of getRulesForTemplate(templateKind)) {
-    if (statelessPattern(rule.pattern).test(text)) {
+    if (statelessPattern(rule.pattern).test(scanTarget)) {
       flags.push({ id: rule.id, message: rule.message, severity: rule.severity });
     }
   }

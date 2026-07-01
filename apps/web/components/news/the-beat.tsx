@@ -37,6 +37,14 @@ export function TheBeat() {
 
   return (
     <div className="space-y-5">
+      {/* Illustrative-sample marker, unmistakable at the point of display so a
+          sample card is never read as a live report from a real source. */}
+      <span
+        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+        style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
+      >
+        Sample feed · fictional sources
+      </span>
       {/* tier legend / filter */}
       <div className="surface-card flex flex-wrap items-center gap-3 p-4">
         <span className="text-[10px] uppercase tracking-[0.18em] text-ink-600">Source tier</span>

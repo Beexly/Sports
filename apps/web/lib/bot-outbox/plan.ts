@@ -12,6 +12,7 @@ import {
   type DiscordEmbed,
 } from "@/lib/discord-bot/templates";
 import { getRulesForTemplate } from "@/lib/compliance-scanner/rules";
+import { normalizeForComplianceScan } from "@/lib/compliance-scanner/normalize";
 
 export type BotOutboxChannel = "TWITTER" | "DISCORD";
 
@@ -141,10 +142,15 @@ function buildBlockedItem(params: {
 }
 
 function scanBotCopyForBlock(content: string): boolean {
+  // Collapse soft line-wraps before scanning so a banned phrase split across a
+  // newline can't slip the pre-post gate (defense in depth, matching the
+  // read-time guard). Bot copy joins fields/threads with "\n", so a phrase can
+  // straddle two joined segments.
+  const scanTarget = normalizeForComplianceScan(content);
   return getRulesForTemplate("BOT_OUTBOX").some((rule) => {
     if (rule.severity !== "block") return false;
     const pattern = new RegExp(rule.pattern.source, rule.pattern.flags.replace("g", ""));
-    return pattern.test(content);
+    return pattern.test(scanTarget);
   });
 }
 

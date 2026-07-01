@@ -90,7 +90,7 @@ export default async function FantasyHubPage({
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
             <div>

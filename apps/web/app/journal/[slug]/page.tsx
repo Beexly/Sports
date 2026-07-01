@@ -7,6 +7,7 @@ import { loadPublicJournalEntry, type PublicJournalEntry } from "@/lib/journal/l
 import { formatDate } from "@/lib/utils";
 import { BRAND_NAME } from "@/lib/brand";
 import { SITE_URL } from "@/lib/seo/sports-jsonld";
+import { jsonLdScript } from "@/lib/seo/json-ld";
 
 export const revalidate = 300;
 
@@ -147,10 +148,10 @@ export default async function JournalEntryPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(articleJsonLd) }}
       />
       <Nav />
-      <main className="min-h-screen bg-obsidian">
+      <main id="main-content" className="min-h-screen bg-obsidian">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
           <Link href="/journal" className="text-sm text-ion-3 transition-colors hover:text-ion-1">
             Back to Model Journal

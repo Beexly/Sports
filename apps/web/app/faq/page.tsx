@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
+import { jsonLdScript } from "@/lib/seo/json-ld";
 
 /**
  * /faq — Standalone FAQ landing page with FAQPage JSON-LD.
@@ -34,7 +35,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal with its full factor trail attached. Free plan gets one signal a day. Pro and Elite unlock every signal with the reasoning behind each one.",
+        a: "A sports intelligence platform. Galaxy Sports Edge ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick — the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
       },
       {
         q: "How is this different from a tout service?",
@@ -80,7 +81,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What does Free get?",
-        a: "One signal per day — the highest-Edge-Index signal of the slate. The matchup and pick type are visible; the confidence rating and factor trail are gated to Pro and Elite.",
+        a: "Every pick, free — the matchup and pick type on every signal, plus the Edge Index, the open verified record, and the full Academy. The confidence rating and the full factor trail are gated to Pro and Elite.",
       },
       {
         q: "What does Pro get?",
@@ -163,10 +164,10 @@ export default function FaqPage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(faqJsonLd) }}
       />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">FAQ</p>

@@ -11,6 +11,7 @@ import {
   type RuleLayer,
   type RuleSeverity,
 } from "@/lib/compliance-scanner/rules";
+import { normalizeForComplianceScan } from "@/lib/compliance-scanner/normalize";
 import {
   STUDIO_TEMPLATES,
   type ClaudePrompt,
@@ -165,8 +166,12 @@ export function scanStudioContent(
   ];
   const flags: StudioComplianceFlag[] = [];
 
+  // Collapse soft line-wraps before scanning so a banned phrase split across a
+  // newline can't slip the gate (defense in depth, matching the read-time guard).
+  const scanTarget = normalizeForComplianceScan(content);
+
   for (const rule of rules) {
-    const match = regexForScan(rule.pattern).exec(content);
+    const match = regexForScan(rule.pattern).exec(scanTarget);
     if (!match) continue;
     flags.push({
       id: rule.id,

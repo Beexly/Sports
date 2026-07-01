@@ -49,8 +49,10 @@ export function confidenceLabel(confidence: number): {
   label: string;
   color: string;
 } {
-  if (confidence >= 80) return { label: "Strong", color: "text-green-600" };
-  if (confidence >= 70) return { label: "Good", color: "text-blue-600" };
-  if (confidence >= 60) return { label: "Moderate", color: "text-yellow-600" };
-  return { label: "Lean", color: "text-gray-500" };
+  // Design-system tokens (dark-safe, on-brand) rather than raw Tailwind
+  // green/blue/yellow — avoids the casino palette on any surface this is wired to.
+  if (confidence >= 80) return { label: "Strong", color: "text-verify" };
+  if (confidence >= 70) return { label: "Good", color: "text-orbital-cyan" };
+  if (confidence >= 60) return { label: "Moderate", color: "text-caution" };
+  return { label: "Lean", color: "text-ion-2" };
 }

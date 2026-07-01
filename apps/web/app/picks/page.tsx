@@ -187,7 +187,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
 
-      <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
 
           {demoActive && (
@@ -293,9 +293,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Error state */}
           {fetchError && (
-            <div className="rounded-xl border border-red-800/60 bg-red-950/40 p-6 text-center">
-              <p className="text-sm font-medium text-red-400">{fetchError}</p>
-              <p className="mt-1 text-xs text-red-500/70">
+            <div className="rounded-xl border border-alert/40 bg-alert/10 p-6 text-center">
+              <p className="text-sm font-medium text-alert">{fetchError}</p>
+              <p className="mt-1 text-xs text-alert/70">
                 Please refresh the page or try again shortly.
               </p>
             </div>
@@ -458,9 +458,9 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {record && (
           <div className="rounded-lg border border-titanium bg-carbon px-3 py-2">
             <span className="mr-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-ion-2">{record.period}</span>
-            <span className="text-xs font-bold text-green-400">{record.wins}W</span>
+            <span className="text-xs font-bold text-orbital-cyan">{record.wins}W</span>
             <span className="mx-1 text-xs text-ion-3">/</span>
-            <span className="text-xs font-bold text-red-400">{record.losses}L</span>
+            <span className="text-xs font-bold text-alert">{record.losses}L</span>
             {record.pushes > 0 && (
               <>
                 <span className="mx-1 text-xs text-ion-3">/</span>
@@ -473,8 +473,8 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {/* Last updated */}
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-100">Updated {lastUpdated}</span>
+            <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(0,229,255,0.6)]" aria-hidden="true" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>
           </div>
         )}
       </div>

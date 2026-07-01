@@ -48,7 +48,7 @@ export default function AcademyPage() {
       <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
           <GeneratedPlate assetId="academy-path" className="-z-20 opacity-60" />

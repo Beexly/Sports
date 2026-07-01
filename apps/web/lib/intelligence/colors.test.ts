@@ -3,6 +3,9 @@ import {
   SIGNAL_GOOD_CLASS,
   SIGNAL_BAD_CLASS,
   SIGNAL_NEUTRAL_CLASS,
+  SIGNAL_GOOD_CLASS_DARK,
+  SIGNAL_BAD_CLASS_DARK,
+  SIGNAL_NEUTRAL_CLASS_DARK,
   toneClass,
   toneRowClass,
   buySellTone,
@@ -48,6 +51,37 @@ describe("toneRowClass", () => {
     expect(toneRowClass("good")).toBe("bg-emerald-50");
     expect(toneRowClass("bad")).toBe("bg-rose-50");
     expect(toneRowClass("neutral")).toBe("");
+  });
+});
+
+describe("dark variant (cosmic surface)", () => {
+  it("maps tones to the AA-on-dark tokens, not the paper greens/reds", () => {
+    expect(toneClass("good", "dark")).toBe(SIGNAL_GOOD_CLASS_DARK); // text-verify
+    expect(toneClass("bad", "dark")).toBe(SIGNAL_BAD_CLASS_DARK); // text-alert
+    expect(toneClass("neutral", "dark")).toBe(SIGNAL_NEUTRAL_CLASS_DARK); // text-ion-1
+    // The dark tokens must NOT be the paper emerald/rose (~2:1 on eclipse).
+    expect(toneClass("good", "dark")).not.toBe(SIGNAL_GOOD_CLASS);
+    expect(toneClass("bad", "dark")).not.toBe(SIGNAL_BAD_CLASS);
+  });
+
+  it("row tint uses a token wash, not the bright bg-emerald-50/bg-rose-50 pastels", () => {
+    expect(toneRowClass("good", "dark")).toBe("bg-verify/10");
+    expect(toneRowClass("bad", "dark")).toBe("bg-alert/10");
+    expect(toneRowClass("neutral", "dark")).toBe("");
+  });
+
+  it("defaults to the paper surface when no variant is passed (backward compat)", () => {
+    expect(toneClass("good")).toBe(SIGNAL_GOOD_CLASS);
+    expect(toneRowClass("good")).toBe("bg-emerald-50");
+  });
+
+  it("wrapper helpers thread the variant through to the dark tokens", () => {
+    expect(buySellClass("buy", "dark")).toBe(SIGNAL_GOOD_CLASS_DARK);
+    expect(consensusClass("agree", "dark")).toBe(SIGNAL_GOOD_CLASS_DARK);
+    expect(confidenceClass("low", "dark")).toBe(SIGNAL_BAD_CLASS_DARK);
+    expect(liftClass(0.5, 0.02, "dark")).toBe(SIGNAL_GOOD_CLASS_DARK);
+    expect(hitRateClass(0.9, 0.55, 0.45, "dark")).toBe(SIGNAL_GOOD_CLASS_DARK);
+    expect(signedClass(-1.2, false, "dark")).toBe(SIGNAL_BAD_CLASS_DARK);
   });
 });
 

@@ -61,7 +61,7 @@ export async function loadBotOutboxDrafts(
       include: { game: { include: { sport: { select: { name: true } } } } },
       orderBy: { generatedAt: "desc" },
       take: limitPerKind,
-    }),
+    }).catch(() => []),
     db.pick.findMany({
       where: {
         isPublished: true,
@@ -73,7 +73,7 @@ export async function loadBotOutboxDrafts(
       include: { game: { include: { sport: { select: { name: true } } } } },
       orderBy: { settledAt: "desc" },
       take: limitPerKind,
-    }),
+    }).catch(() => []),
     db.gateDecision.findMany({
       where: {
         status: "GATED",
@@ -83,7 +83,7 @@ export async function loadBotOutboxDrafts(
       include: { game: { include: { sport: { select: { name: true } } } } },
       orderBy: { evaluatedAt: "desc" },
       take: limitPerKind,
-    }),
+    }).catch(() => []),
   ]);
 
   const items = [

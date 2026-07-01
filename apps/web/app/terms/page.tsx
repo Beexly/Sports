@@ -19,7 +19,7 @@ export default function TermsPage() {
     <div className="flex min-h-screen flex-col">
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="px-4 py-20 sm:px-6 lg:px-8">
           <article className="prose-content mx-auto max-w-3xl">
             <p className="eyebrow">Legal</p>

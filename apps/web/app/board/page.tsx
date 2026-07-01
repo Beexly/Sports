@@ -54,7 +54,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
       <GeneratedPlate assetId="board-command" className="-z-10 opacity-20" />
       <Nav />
       <SignalRoomAtmosphere mode="ambient" />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         {dbUnreachable && (
           <div className="flex flex-col gap-2 border border-alert/40 bg-alert/10 px-4 py-3 text-sm text-ion-1 sm:flex-row sm:items-center">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-alert">

@@ -143,7 +143,7 @@ export default function IntelligencePage() {
       <Atmosphere />
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero — the interactive engine itself, full-screen intro */}
         <section className="relative isolate min-h-screen overflow-hidden">
           <GeneratedPlate assetId="intelligence-deepsignal" className="-z-20 opacity-60" />

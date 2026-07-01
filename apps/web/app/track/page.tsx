@@ -24,7 +24,7 @@ export default async function TrackPage() {
       <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
         <Atmosphere />
         <Nav />
-        <main className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 sm:px-6">
+        <main id="main-content" className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 sm:px-6">
           <div className="text-center">
             <p className="eyebrow justify-center" style={{ color: BRAND_COLORS.softUltraviolet }}>
               CLV Tracker

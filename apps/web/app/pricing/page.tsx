@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { jsonLdScript } from "@/lib/seo/json-ld";
 import { PricingPlans, type PlanView } from "@/components/pricing/pricing-plans";
 import {
   getCurrentPricingPhase,
@@ -103,7 +104,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "The discipline, sampled: one signal a day, the public record, and the full Academy.",
+    description: "The discipline, sampled: every pick free, the public record, and the full Academy.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],
@@ -226,10 +227,10 @@ export default function PricingPage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(faqJsonLd) }}
       />
 
-      <main className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
+      <main id="main-content" className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
         <ShootingStars />
         <div
           aria-hidden="true"

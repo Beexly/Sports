@@ -5,15 +5,18 @@ import type { ReactNode } from "react";
 import { toneClass, toneRowClass, type SignalTone } from "@/lib/intelligence/colors";
 
 /**
- * Generic, typed, dependency-light data table for the LIGHT "paper" data
- * surfaces. Every board page hand-rolled its own table (sticky header, zebra
- * rows, right-aligned numerics, source-error empty state); this is the shared
- * one they should all use.
+ * Generic, typed, dependency-light data table.
+ *
+ * Two surfaces via the `variant` prop:
+ *   - "paper" (default): the LIGHT data surface (text-ink on white). All text is
+ *     AA on paper (text-ink / ink-1 / ink-2 only).
+ *   - "dark": the cosmic surface (ion tokens on eclipse/carbon). Use this when the
+ *     table sits on a dark page (e.g. the Player Lab) so identifier cells rendered
+ *     with on-dark tokens are not white-on-white (the 1.07:1 failure this fixes).
  *
  * Design intent (FantasyPros / PFF / Stathead): the data is the hero, chrome is
  * quiet, density is generous (py-3.5), numerics are tabular mono and
- * right-aligned, sort/filter are strong and obvious. All text is AA on paper
- * (text-ink / ink-1 / ink-2 only — never the dark failing ion-2/ion-3 grays).
+ * right-aligned, sort/filter are strong and obvious.
  */
 
 export type ColumnAlign = "left" | "right" | "center";
@@ -53,6 +56,8 @@ export interface FilterOption {
   label: string;
 }
 
+export type DataTableVariant = "paper" | "dark";
+
 export interface DataTableProps<Row> {
   columns: ReadonlyArray<Column<Row>>;
   rows: ReadonlyArray<Row>;
@@ -84,7 +89,78 @@ export interface DataTableProps<Row> {
   className?: string;
   /** min-width for the scrollable table (keeps columns from crushing). */
   minWidth?: number;
+  /**
+   * Surface theme. "paper" (default) = light data surface. "dark" = the cosmic
+   * surface (ion tokens on eclipse/carbon) — use when the table sits on a dark
+   * page so cells are not rendered white-on-white.
+   */
+  variant?: DataTableVariant;
 }
+
+// ── Surface tokens by variant ────────────────────────────────────────────────
+
+interface SurfaceTokens {
+  shell: string;
+  panel: string;
+  input: string;
+  headBg: string;
+  headBorder: string;
+  headText: string;
+  headStrong: string;
+  text: string;
+  muted: string;
+  rowBorder: string;
+  zebra: string;
+  raised: string;
+  rowHover: string;
+  active: string;
+  hoverText: string;
+  glyphMuted: string;
+  ring: string;
+}
+
+const SURFACE: Record<DataTableVariant, SurfaceTokens> = {
+  paper: {
+    shell: "border-paper-border bg-paper-raised",
+    panel: "border-paper-border bg-paper",
+    input:
+      "border-paper-border bg-paper-raised text-ink placeholder:text-ink-2 focus:border-ink-1 focus:ring-ink-1/20",
+    headBg: "bg-paper-sunken",
+    headBorder: "border-paper-border",
+    headText: "text-ink-2",
+    headStrong: "text-ink-1",
+    text: "text-ink",
+    muted: "text-ink-2",
+    rowBorder: "border-paper-border/70",
+    zebra: "bg-paper-sunken/60",
+    raised: "bg-paper-raised",
+    rowHover: "hover:bg-paper-sunken",
+    active: "text-ink",
+    hoverText: "hover:text-ink",
+    glyphMuted: "text-ink-2/50",
+    ring: "focus:ring-ink-1/20",
+  },
+  dark: {
+    shell: "border-mineral bg-eclipse",
+    panel: "border-mineral bg-carbon",
+    input:
+      "border-mineral bg-eclipse text-ion-white placeholder:text-ion-2 focus:border-orbital-cyan focus:ring-orbital-cyan/25",
+    headBg: "bg-carbon",
+    headBorder: "border-mineral",
+    headText: "text-ion-2",
+    headStrong: "text-ion-1",
+    text: "text-ion-white",
+    muted: "text-ion-2",
+    rowBorder: "border-mineral/70",
+    zebra: "bg-carbon/40",
+    raised: "bg-eclipse",
+    rowHover: "hover:bg-eclipse/60",
+    active: "text-orbital-cyan",
+    hoverText: "hover:text-orbital-cyan",
+    glyphMuted: "text-ion-2/50",
+    ring: "focus:ring-orbital-cyan/25",
+  },
+};
 
 // ── Pure helpers (exported for unit testing) ─────────────────────────────────
 
@@ -182,9 +258,19 @@ function alignClass(align: ColumnAlign | undefined): string {
   return "text-left";
 }
 
-function SortGlyph({ active, dir }: { active: boolean; dir: SortDir }): JSX.Element {
-  if (!active) return <span className="ml-1 text-ink-2/50">↕</span>;
-  return <span className="ml-1 text-ink">{dir === "asc" ? "▲" : "▼"}</span>;
+function SortGlyph({
+  active,
+  dir,
+  mutedClass,
+  activeClass,
+}: {
+  active: boolean;
+  dir: SortDir;
+  mutedClass: string;
+  activeClass: string;
+}): JSX.Element {
+  if (!active) return <span className={`ml-1 ${mutedClass}`}>↕</span>;
+  return <span className={`ml-1 ${activeClass}`}>{dir === "asc" ? "▲" : "▼"}</span>;
 }
 
 export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
@@ -204,7 +290,10 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
     showRank = false,
     className = "",
     minWidth,
+    variant = "paper",
   } = props;
+
+  const t = SURFACE[variant];
 
   const [sort, setSort] = useState<SortState | null>(initialSort);
   const [query, setQuery] = useState("");
@@ -224,9 +313,9 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
   const tableStyle = minWidth ? { minWidth: `${minWidth}px` } : undefined;
 
   return (
-    <div className={`overflow-hidden rounded-ds-md border border-paper-border bg-paper-raised ${className}`}>
+    <div className={`overflow-hidden rounded-ds-md border ${t.shell} ${className}`}>
       {hasFilters ? (
-        <div className="flex flex-col gap-3 border-b border-paper-border bg-paper px-4 py-3 sm:flex-row sm:items-center">
+        <div className={`flex flex-col gap-3 border-b ${t.panel} px-4 py-3 sm:flex-row sm:items-center`}>
           {searchable ? (
             <label className="flex flex-1 items-center gap-2">
               <span className="sr-only">Filter rows</span>
@@ -235,17 +324,17 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="min-h-[36px] w-full rounded-ds-sm border border-paper-border bg-paper-raised px-3 text-sm text-ink placeholder:text-ink-2 focus:border-ink-1 focus:outline-none focus:ring-2 focus:ring-ink-1/20"
+                className={`min-h-[36px] w-full rounded-ds-sm border px-3 text-sm focus:outline-none focus:ring-2 ${t.input}`}
               />
             </label>
           ) : null}
           {enumFilter ? (
-            <label className="flex items-center gap-2 text-xs font-medium text-ink-1">
+            <label className={`flex items-center gap-2 text-xs font-medium ${t.headStrong}`}>
               <span>{enumFilter.label}</span>
               <select
                 value={enumValue}
                 onChange={(e) => setEnumValue(e.target.value)}
-                className="min-h-[36px] rounded-ds-sm border border-paper-border bg-paper-raised px-2 text-sm text-ink focus:border-ink-1 focus:outline-none focus:ring-2 focus:ring-ink-1/20"
+                className={`min-h-[36px] rounded-ds-sm border px-2 text-sm focus:outline-none focus:ring-2 ${t.input}`}
               >
                 <option value="all">All</option>
                 {enumFilter.options.map((opt) => (
@@ -256,7 +345,7 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
               </select>
             </label>
           ) : null}
-          <span className="text-xs tabular-nums text-ink-2">
+          <span className={`text-xs tabular-nums ${t.muted}`}>
             {visibleRows.length} {visibleRows.length === 1 ? "row" : "rows"}
           </span>
         </div>
@@ -264,12 +353,12 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm" style={tableStyle}>
-          <thead className="sticky top-0 z-10 bg-paper-sunken">
-            <tr className="border-b border-paper-border">
+          <thead className={`sticky top-0 z-10 ${t.headBg}`}>
+            <tr className={`border-b ${t.headBorder}`}>
               {showRank ? (
                 <th
                   scope="col"
-                  className="px-4 py-3 text-right font-mono text-xs font-semibold uppercase tracking-wider text-ink-2"
+                  className={`px-4 py-3 text-right font-mono text-xs font-semibold uppercase tracking-wider ${t.headText}`}
                 >
                   #
                 </th>
@@ -286,18 +375,23 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                     aria-sort={
                       active ? (sort?.dir === "asc" ? "ascending" : "descending") : undefined
                     }
-                    className={`px-4 py-3 font-mono text-xs font-semibold uppercase tracking-wider text-ink-1 ${align}`}
+                    className={`px-4 py-3 font-mono text-xs font-semibold uppercase tracking-wider ${t.headStrong} ${align}`}
                   >
                     {sortable ? (
                       <button
                         type="button"
                         onClick={() => setSort((cur) => nextSort(cur, col.key))}
-                        className={`inline-flex items-center gap-0.5 rounded-ds-xs hover:text-ink focus:outline-none focus:ring-2 focus:ring-ink-1/20 ${
+                        className={`inline-flex items-center gap-0.5 rounded-ds-xs ${t.hoverText} focus:outline-none focus:ring-2 ${t.ring} ${
                           align === "text-right" ? "flex-row-reverse" : ""
-                        } ${active ? "text-ink" : ""}`}
+                        } ${active ? t.active : ""}`}
                       >
                         <span>{col.label}</span>
-                        <SortGlyph active={active} dir={sort?.dir ?? "desc"} />
+                        <SortGlyph
+                          active={active}
+                          dir={sort?.dir ?? "desc"}
+                          mutedClass={t.glyphMuted}
+                          activeClass={t.active}
+                        />
                       </button>
                     ) : (
                       <span>{col.label}</span>
@@ -314,23 +408,23 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                   colSpan={columns.length + (showRank ? 1 : 0)}
                   className="px-4 py-10 text-center"
                 >
-                  <p className="text-sm font-medium text-ink">{emptyTitle}</p>
-                  {emptyHint ? <p className="mt-1 text-xs text-ink-2">{emptyHint}</p> : null}
+                  <p className={`text-sm font-medium ${t.text}`}>{emptyTitle}</p>
+                  {emptyHint ? <p className={`mt-1 text-xs ${t.muted}`}>{emptyHint}</p> : null}
                 </td>
               </tr>
             ) : (
               visibleRows.map((row, i) => {
                 const tone = rowTone?.(row) ?? null;
-                const tint = tone ? toneRowClass(tone) : "";
-                const zebra = i % 2 === 1 ? "bg-paper-sunken/60" : "bg-paper-raised";
+                const tint = tone ? toneRowClass(tone, variant) : "";
+                const zebra = i % 2 === 1 ? t.zebra : t.raised;
                 return (
                   <tr
                     key={rowKey(row, i)}
                     title={rowTitle?.(row)}
-                    className={`border-b border-paper-border/70 last:border-0 ${tint || zebra} hover:bg-paper-sunken`}
+                    className={`border-b ${t.rowBorder} last:border-0 ${tint || zebra} ${t.rowHover}`}
                   >
                     {showRank ? (
-                      <td className="px-4 py-3.5 text-right font-mono text-xs tabular-nums text-ink-2">
+                      <td className={`px-4 py-3.5 text-right font-mono text-xs tabular-nums ${t.muted}`}>
                         {i + 1}
                       </td>
                     ) : null}
@@ -340,11 +434,11 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
                       const numericClass = isNumeric ? "font-mono tabular-nums" : "";
                       const content = col.render
                         ? col.render(row, i)
-                        : defaultCell((row as Record<string, unknown>)[col.key]);
+                        : defaultCell((row as Record<string, unknown>)[col.key], t.muted);
                       return (
                         <td
                           key={col.key}
-                          className={`px-4 py-3.5 text-sm text-ink ${align} ${numericClass}`}
+                          className={`px-4 py-3.5 text-sm ${t.text} ${align} ${numericClass}`}
                         >
                           {content}
                         </td>
@@ -361,8 +455,8 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
   );
 }
 
-function defaultCell(value: unknown): ReactNode {
-  if (value == null) return <span className="text-ink-2">—</span>;
+function defaultCell(value: unknown, mutedClass = "text-ink-2"): ReactNode {
+  if (value == null) return <span className={mutedClass}>—</span>;
   return String(value);
 }
 

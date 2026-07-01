@@ -1,8 +1,25 @@
 import Link from "next/link";
 import type { StatKingPlayer } from "@/lib/statking/product";
+import { Nav } from "@/components/ui/nav";
+import { Footer } from "@/components/ui/footer";
 
 export function Shell({ title, eyebrow, children }: { title: string; eyebrow?: string; children: React.ReactNode }) {
-  return <main className="min-h-screen bg-carbon px-6 py-10 text-ion"><div className="mx-auto max-w-7xl"><p className="font-mono text-xs uppercase tracking-[0.2em] text-orbital-cyan">{eyebrow ?? "StatKing"}</p><h1 className="mt-2 text-4xl font-bold text-ion-white">{title}</h1><div className="mt-8 space-y-8">{children}</div></div></main>;
+  // Wrap the stats surface in the site chrome. Without Nav + Footer every /stats
+  // page was a dead-end (no way back into the app) and shipped without the footer's
+  // risk-disclosure/helpline — an orphaned, chrome-less tree on a trust-first product.
+  return (
+    <div className="flex min-h-screen flex-col bg-carbon">
+      <Nav />
+      <main id="main-content" className="flex-1 px-6 py-10 text-ion">
+        <div className="mx-auto max-w-7xl">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-orbital-cyan">{eyebrow ?? "StatKing"}</p>
+          <h1 className="mt-2 text-4xl font-bold text-ion-white">{title}</h1>
+          <div className="mt-8 space-y-8">{children}</div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
 }
 export function Cards({ items }: { items: Array<{label:string; value:string|number; note?:string}> }) { return <div className="grid gap-4 md:grid-cols-4">{items.map(i=><div key={i.label} className="border border-mineral bg-eclipse p-4"><p className="text-xs uppercase tracking-wide text-ion-2">{i.label}</p><p className="mt-2 text-3xl font-semibold text-ion-white">{i.value}</p>{i.note?<p className="mt-2 text-sm text-ion-1">{i.note}</p>:null}</div>)}</div>; }
 export function Badge({ children, tone="neutral" }: { children: React.ReactNode; tone?: "good"|"warn"|"bad"|"neutral" }) { const c={good:"border-orbital-cyan text-orbital-cyan",warn:"border-caution text-caution",bad:"border-alert text-alert",neutral:"border-mineral text-ion-1"}[tone]; return <span className={`inline-flex rounded border px-2 py-1 text-xs ${c}`}>{children}</span>; }

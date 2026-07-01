@@ -182,7 +182,11 @@ export default async function HomePage(): Promise<JSX.Element> {
             Right now ·{" "}
             <span className="text-orbital-cyan">{cleared} cleared</span> ·{" "}
             <span className="text-plasma">{gated} gated</span> ·{" "}
-            calibrated on <span className="text-ion-white">{settled} settled picks</span> ·{" "}
+            {settled > 0 ? (
+              <>calibrated on <span className="text-ion-white">{settled} settled picks</span> ·{" "}</>
+            ) : (
+              <>calibration sample building ·{" "}</>
+            )}
             <Link href="/accountability" className="text-orbital-cyan underline-offset-4 hover:text-ion-white hover:underline">
               see the receipts
             </Link>

@@ -181,7 +181,7 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <div className="mb-6 flex items-center justify-between">
             <div>
@@ -195,7 +195,7 @@ export default async function DashboardPage() {
                 <span
                   data-testid="dashboard-sample-mode"
                   aria-label="Sample mode — picks are deterministic samples, not live data"
-                  className="rounded-md bg-yellow-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300"
+                  className="rounded-md bg-caution/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution"
                   title="Stub mode + demo samples — picks shown are deterministic samples, not live model output."
                 >
                   Sample mode
@@ -327,12 +327,12 @@ function SampleDataBanner() {
       data-testid="sample-data-banner"
       role="status"
       aria-live="polite"
-      className="mb-4 flex items-start gap-3 rounded-xl border border-yellow-900 bg-yellow-950/30 p-3 text-xs"
+      className="mb-4 flex items-start gap-3 rounded-xl border border-caution/40 bg-caution/10 p-3 text-xs"
     >
-      <span className="mt-0.5 rounded-md bg-yellow-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">
+      <span className="mt-0.5 rounded-md bg-caution/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
         Sample data
       </span>
-      <p className="flex-1 text-yellow-200/90 leading-relaxed">
+      <p className="flex-1 text-caution/90 leading-relaxed">
         These picks are deterministic samples shown while live ingestion is
         being wired up. They never settle, they never count toward a
         verified record, and no win-rate claim is published from them.
@@ -397,7 +397,7 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
           <span
             data-testid="edge-score"
             aria-label={`Edge score ${pick.edgeScore.toFixed(1)}`}
-            className="rounded bg-emerald-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-300"
+            className="rounded bg-verify/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-verify"
           >
             +{pick.edgeScore.toFixed(1)} edge
           </span>
@@ -412,8 +412,8 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
 
 function GradeBadge({ grade }: { grade: string }) {
   const styles: Record<string, string> = {
-    A: "bg-green-900/40 text-green-300",
-    B: "bg-blue-900/40 text-blue-300",
+    A: "bg-verify/15 text-verify",
+    B: "bg-orbital-cyan/15 text-orbital-cyan",
     C: "bg-titanium text-ion-2",
   };
   return (
@@ -440,7 +440,7 @@ function StatCard({
   return (
     <div className="rounded-xl border border-titanium bg-carbon/60 p-4">
       <p className="text-xs text-ion-3">{label}</p>
-      <p className={`mt-1 text-2xl font-bold ${highlight ? "text-green-400" : "text-white"}`}>{value}</p>
+      <p className={`mt-1 text-2xl font-bold ${highlight ? "text-orbital-cyan" : "text-white"}`}>{value}</p>
     </div>
   );
 }

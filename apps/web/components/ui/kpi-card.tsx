@@ -47,7 +47,10 @@ export function KpiCard({
   className = "",
 }: KpiCardProps): JSX.Element {
   const v = VARIANTS[variant];
-  const valueColor = tone ? toneClass(tone) : v.value;
+  // Tone must follow the surface: on dark, toneClass(tone) alone would emit the
+  // paper emerald-700/rose-700 (~2:1 on eclipse). Passing `variant` keeps the
+  // toned value AA on whichever surface the card renders.
+  const valueColor = tone ? toneClass(tone, variant) : v.value;
   return (
     <div className={`rounded-ds-md border p-5 ${v.wrap} ${className}`}>
       <p className={`font-mono text-xs font-semibold uppercase tracking-[0.14em] ${v.label}`}>

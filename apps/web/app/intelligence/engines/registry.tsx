@@ -231,7 +231,7 @@ const QB_FORWARD_ENGINE = engine({
       term: "The edge — agreement, not an average",
       definition: (
         <>
-          When both priors land in the same tier we read a <span className="text-orbital-cyan-on-light">clean</span>{" "}
+          When both priors land in the same tier we read a <span className="text-orbital-cyan">clean</span>{" "}
           forward signal; when they diverge it&apos;s a second look. We surface the disagreement, we don&apos;t average
           it away.
         </>
@@ -265,7 +265,7 @@ const RUSHING_CONTACT_ENGINE = engine({
       definition: (
         <>
           Yards after contact per carry isolates elusiveness and power. It&apos;s blocking-independent, so a{" "}
-          <span className="text-orbital-cyan-on-light">high</span> figure is the back doing the work himself.
+          <span className="text-orbital-cyan">high</span> figure is the back doing the work himself.
         </>
       ),
     },
@@ -278,7 +278,7 @@ const RUSHING_CONTACT_ENGINE = engine({
       term: "The divergence — who's driving the yards",
       definition: (
         <>
-          Elite <span className="text-orbital-cyan-on-light">YAC</span> behind thin YBC is a back winning on his own —
+          Elite <span className="text-orbital-cyan">YAC</span> behind thin YBC is a back winning on his own —
           a second, independent estimator to triangulate against Next Gen RYOE. We surface the split, we don&apos;t
           average it away.
         </>
@@ -315,7 +315,7 @@ const ROUTE_RATE_ENGINE = engine({
       term: "Breakout — high TPRR on low routes",
       definition: (
         <>
-          A <span className="text-orbital-cyan-on-light">high</span> target rate on a small route sample is the
+          A <span className="text-orbital-cyan">high</span> target rate on a small route sample is the
           breakout signal: efficient when used, with room for the volume to follow.
         </>
       ),
@@ -505,7 +505,7 @@ const WAIVER_TRENDS_ENGINE = engine({
   description: (
     <>
       League-wide waiver MOMENTUM from the Sleeper API — how many fantasy leagues are adding and dropping each NFL player
-      over the lookback window. Ownership velocity: <span className="font-semibold text-ink">what the market is doing, not advice.</span>
+      over the lookback window. Ownership velocity: <span className="font-semibold text-ion-white">what the market is doing, not advice.</span>
     </>
   ),
   api: "/api/intelligence/sleeper-trending",

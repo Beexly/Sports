@@ -114,6 +114,30 @@ describe("isotonicCalibration (PAVA)", () => {
     expect(m.points).toHaveLength(1);
     expect(m.predict(0.65)).toBe(0.5);
   });
+
+  it("computes the TRUE isotonic fit, not a greedy singleton stream (PAVA regression)", () => {
+    // Per-forecast groups: 0.3→{0,0}=0.0, 0.5→{0,1}=0.5, 0.7→{0,1}=0.5. Those
+    // group means (0.0, 0.5, 0.5) are already non-decreasing, so the correct
+    // (SSE-minimising) isotonic fit does NO pooling → predict(0.5)=0.5 and
+    // predict(0.7)=0.5. The prior greedy singleton-stream returned 0.333 and 1.0
+    // here — a monotone but provably non-optimal map. Pre-pooling each forecast
+    // into its observed rate BEFORE the adjacent-violators merge is what fixes it.
+    const m = isotonicCalibration([
+      { p: 0.3, y: 0 },
+      { p: 0.3, y: 0 },
+      { p: 0.5, y: 0 },
+      { p: 0.5, y: 1 },
+      { p: 0.7, y: 0 },
+      { p: 0.7, y: 1 },
+    ]);
+    expect(m.predict(0.5)).toBeCloseTo(0.5, 4);
+    expect(m.predict(0.7)).toBeCloseTo(0.5, 4);
+    // …and the calibrated map remains non-decreasing.
+    const cal = m.points.map((pt) => pt.calibrated);
+    for (let i = 1; i < cal.length; i++) {
+      expect(cal[i]!).toBeGreaterThanOrEqual(cal[i - 1]!);
+    }
+  });
 });
 
 describe("reliabilityCurve", () => {

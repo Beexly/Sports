@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function WaitlistPage(): JSX.Element {
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12">
+    <main id="main-content" className="mx-auto max-w-2xl px-4 py-12">
       <p className="text-sm uppercase tracking-wide text-white/60">{WAITLIST_COPY.eyebrow}</p>
       <h1 className="mt-2 text-3xl font-semibold">{WAITLIST_COPY.headline}</h1>
       <p className="mt-2 text-lg text-white/80">{WAITLIST_COPY.subhead}</p>
