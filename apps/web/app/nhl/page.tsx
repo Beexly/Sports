@@ -12,6 +12,16 @@ export const metadata: Metadata = {
   description:
     "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
   alternates: { canonical: "/nhl" },
+  openGraph: {
+    title: "NHL Expected Goals — MoneyPuck (free advanced stats)",
+    description:
+      "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
+  },
+  twitter: {
+    title: "NHL Expected Goals — MoneyPuck (free advanced stats)",
+    description:
+      "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
+  },
 };
 
 function signed(value: number): string {
@@ -42,7 +52,8 @@ export default async function NhlPage(): Promise<JSX.Element> {
               non-NFL sport wired through our legal source registry. Real advanced stats, not a pick.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/api/moneypuck/nhl" className="btn-primary min-h-11 px-5 py-3">JSON</Link>
+              <Link href="/board" className="btn-primary min-h-11 px-5 py-3">See today&apos;s board</Link>
+              <Link href="/api/moneypuck/nhl" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">View as JSON</Link>
               <Link href="/data" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">How we source data</Link>
             </div>
           </div>
