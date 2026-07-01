@@ -23,6 +23,12 @@ export const metadata: Metadata = {
   description:
     "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
   alternates: { canonical: "/performance" },
+  openGraph: {
+    title: "Calibration Report — Settled-Pick Audit Trail",
+    description:
+      "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
+    url: "/performance",
+  },
 };
 
 // Types

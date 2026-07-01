@@ -122,11 +122,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: preview.metadata.description,
       url: preview.metadata.canonical,
       type: "article",
+      images: ["/opengraph-image"],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: preview.metadata.title,
       description: preview.metadata.description,
+      images: ["/opengraph-image"],
     },
   };
 }
