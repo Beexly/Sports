@@ -21,11 +21,23 @@ const REREVIEW_PLACEHOLDER =
 
 const TITLE_PLACEHOLDER = "Model Journal entry";
 
+/**
+ * Collapse soft line-wraps into spaces before scanning. `scanForBannedPhrases`
+ * splits on newlines and tests each physical line independently, so a banned
+ * phrase hard-wrapped across a newline (e.g. "...a sure\nthing...") would slip
+ * the scan even though markdown renders the soft wrap as one continuous claim to
+ * the reader. Joining single newlines — but NOT blank-line paragraph breaks —
+ * reproduces what the reader sees, so an editor line-wrap can't evade the guard.
+ */
+function collapseSoftWraps(text: string): string {
+  return text.replace(/\r\n/g, "\n").replace(/([^\n])\n(?!\n)/g, "$1 ");
+}
+
 export function guardPublicJournalBody(markdown: string): {
   readonly safe: boolean;
   readonly body: string;
 } {
-  const hits = scanForBannedPhrases(markdown);
+  const hits = scanForBannedPhrases(collapseSoftWraps(markdown));
   if (hits.length === 0) {
     return { safe: true, body: markdown };
   }
@@ -41,7 +53,7 @@ export function guardPublicJournalBody(markdown: string): {
  * offending text. When clean, the title passes through byte-for-byte.
  */
 export function guardPublicJournalTitle(title: string): string {
-  if (scanForBannedPhrases(title).length === 0) {
+  if (scanForBannedPhrases(collapseSoftWraps(title)).length === 0) {
     return title;
   }
   return TITLE_PLACEHOLDER;

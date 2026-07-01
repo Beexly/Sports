@@ -18,7 +18,12 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     include: ["**/*.test.{ts,tsx}"],
     exclude: ["node_modules", ".next"],
-    testTimeout: 30_000,
+    // 60s, not 30s: the first test to import a heavy shared package (e.g.
+    // @sports/prediction-engine) pays a one-time cold Vite transform that alone
+    // is ~12s, and under full-suite CPU contention (the guardrail subprocess
+    // tests saturate cores) that can tip a trivial import past a 30s ceiling and
+    // flake. 60s clears the cold-transform edge without masking a real hang.
+    testTimeout: 60_000,
     server: {
       deps: {
         // Inline next-auth so Vite transforms it and resolves its internal bare

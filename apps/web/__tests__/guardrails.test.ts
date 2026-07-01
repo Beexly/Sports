@@ -13,7 +13,16 @@ import { existsSync, readFileSync } from "node:fs";
  */
 
 const REPO_ROOT = resolve(__dirname, "..", "..", "..");
-const GUARD_TIMEOUT_MS = 120_000;
+// spawnSync blocks the vitest worker thread synchronously, so vitest's own
+// testTimeout can't interrupt it — this ceiling is what actually bounds each
+// guard. Standalone the guards finish well under a minute, but when the full
+// suite runs them concurrently the CPU contention can push a single guard past
+// 2 minutes; a 120s ceiling then kills the child and the test fails spuriously.
+// 5 minutes gives headroom under load without weakening the guard: it still runs
+// to completion and must exit 0. The per-test vitest timeout below is set just
+// above this so the spawn ceiling (which yields a clean assertion) trips first.
+const GUARD_TIMEOUT_MS = 300_000;
+const GUARD_TEST_TIMEOUT_MS = 330_000;
 
 function runGuard(relativePath: string): {
   status: number;
@@ -48,7 +57,7 @@ describe("Phase 9 guardrails", () => {
       );
     }
     expect(r.stdout).toMatch(/\[trust-gate\] OK/);
-  });
+  }, GUARD_TEST_TIMEOUT_MS);
 
   it("trust-gate documents source-contract exceptions for scanner/template definitions", () => {
     const src = readFileSync(resolve(REPO_ROOT, "scripts/guardrails/trust-gate.mjs"), "utf8");
@@ -82,7 +91,7 @@ describe("Phase 9 guardrails", () => {
       );
     }
     expect(r.stdout).toMatch(/\[draft-only\] OK/);
-  });
+  }, GUARD_TEST_TIMEOUT_MS);
 
   it("claude-api-usage exits 0 with direct calls limited to approved paths", () => {
     const r = runGuard("scripts/guardrails/claude-api-usage.mjs");
@@ -92,5 +101,5 @@ describe("Phase 9 guardrails", () => {
       );
     }
     expect(r.stdout).toMatch(/\[claude-api-usage\] OK/);
-  });
+  }, GUARD_TEST_TIMEOUT_MS);
 });
