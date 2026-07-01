@@ -43,10 +43,16 @@ describe("programmatic SEO engine (matchup previews)", () => {
     expect(ld.startDate).toBe("2026-01-15T00:30:00Z");
   });
 
-  it("emits a 3-level BreadcrumbList", () => {
+  it("emits a BreadcrumbList whose positions all have distinct URLs (Picks → matchup)", () => {
     const bc = buildBreadcrumbJsonLd(input);
     expect(bc["@type"]).toBe("BreadcrumbList");
-    expect((bc.itemListElement as unknown[]).length).toBe(3);
+    const items = bc.itemListElement as { position: number; item: string }[];
+    expect(items.length).toBe(2);
+    // Every position must resolve to a DISTINCT URL — a duplicate consecutive URL
+    // is an invalid breadcrumb trail that search engines drop.
+    const urls = items.map((it) => it.item);
+    expect(new Set(urls).size).toBe(urls.length);
+    expect(items.map((it) => it.position)).toEqual([1, 2]);
   });
 
   it("emits FAQPage JSON-LD, or null when empty", () => {
