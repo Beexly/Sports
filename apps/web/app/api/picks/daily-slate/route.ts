@@ -65,9 +65,31 @@ export async function GET() {
     .catch(() => 0);
 
   const samples = demoActive ? getSamplePicks() : [];
-  const totalGames = new Set(samples.map((p) => p.gameId)).size;
-  const freePickCount = samples.filter((p) => p.tier === "FREE").length;
-  const premiumPickCount = totalPicks - freePickCount;
+  let totalGames: number;
+  let freePickCount: number;
+  if (demoActive) {
+    totalGames = new Set(samples.map((p) => p.gameId)).size;
+    freePickCount = samples.filter((p) => p.tier === "FREE").length;
+  } else {
+    // Production: derive the counts from the REAL DB, not the (empty) demo array.
+    // Deriving totalGames/free/premium from `samples` in prod published a
+    // self-contradictory "Games Today: 0" next to a non-zero Total Picks and
+    // mislabelled every FREE-tier pick as premium (premium = total − 0).
+    const baseWhere = {
+      isPublished: true,
+      result: "PENDING" as const,
+      isBootstrap: false,
+      game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+    };
+    freePickCount = await db.pick
+      .count({ where: { ...baseWhere, tier: "FREE" } })
+      .catch(() => 0);
+    const distinctGames = await db.pick
+      .findMany({ where: baseWhere, select: { gameId: true }, distinct: ["gameId"] })
+      .catch(() => [] as { gameId: string }[]);
+    totalGames = distinctGames.length;
+  }
+  const premiumPickCount = Math.max(0, totalPicks - freePickCount);
 
   // Sport breakdown
   const sportCount = new Map<string, number>();

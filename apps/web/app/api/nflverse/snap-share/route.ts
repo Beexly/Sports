@@ -8,5 +8,5 @@ export async function GET(): Promise<NextResponse> {
   const denied = await requirePremiumApi();
   if (denied) return denied;
   const data = await loadNflverseSnapShare();
-  return NextResponse.json({ success: true, data });
+  return NextResponse.json({ success: data.status !== "source-error", data });
 }

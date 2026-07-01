@@ -88,8 +88,12 @@ export class DataNormalizer {
               ...base,
               market: "SPREADS",
               spread: home?.point,
-              homeSpreadPrice: home?.price,
-              awaySpreadPrice: away?.price,
+              // Sanitize the PRICES the same way h2h does — a leaked decimal
+              // price (e.g. 1.91 when oddsFormat=american) otherwise flows raw
+              // into implied-probability math and fabricates a spurious edge.
+              // `spread` above is a POINT (e.g. -3.5), not a price — left as-is.
+              homeSpreadPrice: this.sanitizeAmericanPrice(home?.price),
+              awaySpreadPrice: this.sanitizeAmericanPrice(away?.price),
             });
           } else if (market.key === "totals") {
             const over = market.outcomes.find((o) => o.name === "Over");
@@ -98,8 +102,9 @@ export class DataNormalizer {
               ...base,
               market: "TOTALS",
               total: over?.point ?? under?.point,
-              overPrice: over?.price,
-              underPrice: under?.price,
+              // Sanitize the PRICES (see SPREADS note); `total` is a POINT.
+              overPrice: this.sanitizeAmericanPrice(over?.price),
+              underPrice: this.sanitizeAmericanPrice(under?.price),
             });
           }
         }
