@@ -45,6 +45,7 @@ const nextConfig = {
     return config;
   },
   images: {
+    formats: ["image/avif", "image/webp"],
     domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
   },
   async headers() {
