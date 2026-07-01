@@ -4,6 +4,7 @@ import {
   type RuleLayer,
   type RuleSeverity,
 } from "@/lib/compliance-scanner/rules";
+import { normalizeForComplianceScan } from "@/lib/compliance-scanner/normalize";
 
 export type JournalComplianceStatus = "green" | "yellow" | "red";
 
@@ -41,8 +42,12 @@ function scanRule(rule: ComplianceRule, content: string): JournalComplianceFlag 
 }
 
 export function scanModelJournalMarkdown(content: string): JournalComplianceScanResult {
+  // Collapse soft line-wraps before scanning so a banned phrase split across a
+  // newline (e.g. "a sure\nthing") can't slip the gate — Markdown renders the
+  // wrap as one continuous claim. Mirrors the read-time public-journal guard.
+  const scanTarget = normalizeForComplianceScan(content);
   const flags = getRulesForTemplate("MODEL_JOURNAL")
-    .map((rule) => scanRule(rule, content))
+    .map((rule) => scanRule(rule, scanTarget))
     .filter((flag): flag is JournalComplianceFlag => flag !== null);
 
   const hasBlock = flags.some((flag) => flag.severity === "block");
