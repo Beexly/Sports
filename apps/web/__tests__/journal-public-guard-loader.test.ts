@@ -69,6 +69,25 @@ describe("loadPublicJournalEntries — public-guard wiring", () => {
     expect(scanForBannedPhrases(entry.coldOpen)).toHaveLength(0);
   });
 
+  it("reads time from the GUARDED body — a redacted entry must not report the suppressed body's length", async () => {
+    // A long body that trips the guard: without sourcing read-time from the
+    // guarded body, the public 'min read' badge + JSON-LD timeRequired would
+    // reflect the ~2000-word original and leak the suppressed content's length.
+    const longBanned = "This one is a guaranteed profit. " + "word ".repeat(2000);
+    expect(scanForBannedPhrases(longBanned).length).toBeGreaterThan(0);
+
+    mocks.journalFindMany.mockResolvedValue([row({ bodyMarkdown: longBanned })]);
+
+    const entries = await loadPublicJournalEntries();
+    const entry = entries[0]!;
+
+    // body redacted to the short placeholder…
+    expect(entry.bodyMarkdown).toBe(CALM_PLACEHOLDER);
+    // …and read-time reflects the VISIBLE placeholder (1 min), not the ~2000-word
+    // original (which would compute to ~9).
+    expect(entry.readTimeMinutes).toBe(1);
+  });
+
   it("passes a clean entry through unchanged", async () => {
     const cleanBody = [
       "# Week 14 Notes",

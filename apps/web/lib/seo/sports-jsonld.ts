@@ -82,12 +82,14 @@ export function buildSportsEventJsonLd(input: MatchupPreviewInput): Record<strin
 }
 
 export function buildBreadcrumbJsonLd(input: MatchupPreviewInput): Record<string, unknown> {
+  // A BreadcrumbList must be a hierarchical path of DISTINCT URLs. /preview/{sport}
+  // 404s and per-sport /{sport} pages don't exist for every sport, so there is no
+  // universally-safe distinct URL for a sport crumb — pointing it at /picks (as a
+  // prior version did) produced two consecutive positions with the SAME /picks URL,
+  // an invalid trail search engines drop. Collapse to a clean two-level
+  // Picks → matchup path so every position resolves to a distinct URL.
   const items = [
     { name: "Picks", path: "/picks" },
-    // Sport crumb → the always-indexable /picks hub. /preview/{sport} has no
-    // index page (404 on every matchup crumb), and per-sport /{sport} pages
-    // don't exist for all sports, so /picks is the only universally-safe target.
-    { name: input.sport.toUpperCase(), path: "/picks" },
     { name: `${input.awayTeam} vs ${input.homeTeam}`, path: matchupPath(input.sport, input.awayTeam, input.homeTeam) },
   ];
   return {

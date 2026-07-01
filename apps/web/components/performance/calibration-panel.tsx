@@ -194,7 +194,17 @@ export async function CalibrationPanel() {
             <span aria-hidden="true">{meta.glyph}</span>
             {meta.label}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-ion-1">{d.note}</p>
+          {/* d.note embeds concrete low/high bucket win-rate %s on improving/
+              inverted trends, but those buckets can sit in the 20–29 discrimination
+              window — below the 30-pick publish floor. Withhold the rate-bearing
+              note in that case (the verdict headline above still conveys direction);
+              render it verbatim otherwise (flat/insufficient notes carry no rates). */}
+          <p className="mt-2 text-sm leading-relaxed text-ion-1">
+            {discriminationRatesPublishable ||
+            (d.trend !== "improving" && d.trend !== "inverted")
+              ? d.note
+              : "Higher-confidence picks are separating from lower-confidence ones, but each bucket is still below the publish threshold — concrete win rates are withheld until they clear it."}
+          </p>
           {discriminationRatesPublishable &&
             d.spread !== null &&
             d.lowestBucketWinRate !== null &&
@@ -227,10 +237,18 @@ export async function CalibrationPanel() {
         </div>
       </div>
 
-      {/* The honest band — Wilson interval + reliability + limitation flags. */}
-      <div className="px-6 pb-6">
-        <HonestBand observedRate={overallObserved} sampleSize={data.sampleSize} />
-      </div>
+      {/* The honest band — Wilson interval + reliability + limitation flags.
+          Back the band with `decided` (the sample behind overallObserved — only
+          publishable ≥30 buckets), NOT data.sampleSize (all settled picks), so the
+          95% interval and its "over N settled picks" caption match the rate. And
+          withhold the band entirely when nothing is publishable (decided === 0):
+          otherwise overallObserved defaults to 0 and the panel would publish a
+          fabricated "0% win rate, High reliability". */}
+      {decided > 0 && (
+        <div className="px-6 pb-6">
+          <HonestBand observedRate={overallObserved} sampleSize={decided} />
+        </div>
+      )}
 
       {/* Brier score footer. */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-titanium px-6 py-4">

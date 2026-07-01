@@ -127,7 +127,11 @@ function toPublicEntry(row: {
     slug: row.slug,
     bodyMarkdown: guarded.body,
     coldOpen: firstParagraph(guarded.body),
-    readTimeMinutes: readTimeMinutes(row.bodyMarkdown),
+    // Read time must reflect the VISIBLE body. When the no-claim guard redacts a
+    // body to the short placeholder, computing this from the original row would
+    // publish a wrong "min read" / JSON-LD timeRequired and leak the suppressed
+    // body's length. Source it from guarded.body so it matches what readers see.
+    readTimeMinutes: readTimeMinutes(guarded.body),
     referencedPickIds: row.referencedPickIds,
     referencedAutopsyIds: row.referencedAutopsyIds,
     modelVersion: row.modelVersion,
