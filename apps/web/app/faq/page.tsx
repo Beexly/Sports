@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
+import { jsonLdScript } from "@/lib/seo/json-ld";
 
 /**
  * /faq — Standalone FAQ landing page with FAQPage JSON-LD.
@@ -163,7 +164,7 @@ export default function FaqPage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(faqJsonLd) }}
       />
 
       <main className="flex-1">

@@ -10,6 +10,7 @@
  */
 
 import type { Metadata } from "next";
+import { jsonLdScript } from "@/lib/seo/json-ld";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { db } from "@sports/db";
@@ -163,7 +164,7 @@ export default async function PreviewPage({ params }: Props) {
           key={i}
           id={`jsonld-preview-${i}`}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(block) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(block) }}
         />
       ))}
 

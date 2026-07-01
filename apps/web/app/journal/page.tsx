@@ -7,6 +7,7 @@ import { loadPublicJournalEntries, type PublicJournalEntry } from "@/lib/journal
 import { formatDate } from "@/lib/utils";
 import { BRAND_COLORS } from "@/lib/brand";
 import { SITE_URL } from "@/lib/seo/sports-jsonld";
+import { jsonLdScript } from "@/lib/seo/json-ld";
 
 const JOURNAL_DESCRIPTION =
   "Weekly research notes on settled picks, gated slates, factor behavior, and model-version changes from Galaxy Sports Edge.";
@@ -61,7 +62,7 @@ export default async function JournalPage(): Promise<JSX.Element> {
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(blogJsonLd) }}
       />
       <Nav />
       <main className="flex-1">

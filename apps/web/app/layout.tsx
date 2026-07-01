@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import { jsonLdScript } from "@/lib/seo/json-ld";
 import {
   Exo_2,
   Instrument_Serif,
@@ -210,13 +211,13 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationJsonLd),
+            __html: jsonLdScript(organizationJsonLd),
           }}
         />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteJsonLd),
+            __html: jsonLdScript(websiteJsonLd),
           }}
         />
       </head>
