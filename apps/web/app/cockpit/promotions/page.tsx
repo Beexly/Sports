@@ -76,13 +76,13 @@ export default async function CockpitPromotionsPage() {
         <table className="w-full text-left text-xs">
           <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
-              <th className="py-2 pr-3">Operator</th>
-              <th className="py-2 pr-3">Headline</th>
-              <th className="py-2 pr-3">Status</th>
-              <th className="py-2 pr-3">Compliance</th>
-              <th className="py-2 pr-3">States</th>
-              <th className="py-2 pr-3">Publishable?</th>
-              <th className="py-2 pr-3">Blockers</th>
+              <th scope="col" className="py-2 pr-3">Operator</th>
+              <th scope="col" className="py-2 pr-3">Headline</th>
+              <th scope="col" className="py-2 pr-3">Status</th>
+              <th scope="col" className="py-2 pr-3">Compliance</th>
+              <th scope="col" className="py-2 pr-3">States</th>
+              <th scope="col" className="py-2 pr-3">Publishable?</th>
+              <th scope="col" className="py-2 pr-3">Blockers</th>
             </tr>
           </thead>
           <tbody>

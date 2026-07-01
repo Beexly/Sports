@@ -83,12 +83,27 @@ export async function loadSourceLiveEvidence({
     return sourceEvidenceCache.value;
   }
 
-  const [readinessResult, usageResult, trendResult, birthdayResult] = await Promise.allSettled([
-    loadNflverseTrendReadiness({ timeoutMs }),
-    loadNflverseUsagePulse({ timeoutMs }),
-    loadQbAgeRbTrendReport({ timeoutMs }),
-    loadBirthdayUsageTrendReport({ timeoutMs }),
-  ]);
+  // Load sequentially, NOT concurrently. Each nflverse loader pulls a large
+  // "all seasons" dataset into memory; running all four at once made peak memory
+  // the SUM of every dataset, which OOM-killed the serverless instance (observed
+  // on /fantasy, /nflverse, /api/sources/catalog — "instance ran out of memory").
+  // Because the crash happened before the 15-minute cache below could populate,
+  // every cold start re-OOMed. Sequential loading caps peak memory at the largest
+  // single dataset and lets each be GC'd before the next — trading a little
+  // cold-start latency (rare; results are cached 15m) for not crashing. Each is
+  // settled individually so one failure never rejects the whole batch (preserving
+  // the previous Promise.allSettled semantics exactly).
+  const settle = async <T>(load: () => Promise<T>): Promise<PromiseSettledResult<T>> => {
+    try {
+      return { status: "fulfilled", value: await load() };
+    } catch (reason) {
+      return { status: "rejected", reason };
+    }
+  };
+  const readinessResult = await settle(() => loadNflverseTrendReadiness({ timeoutMs }));
+  const usageResult = await settle(() => loadNflverseUsagePulse({ timeoutMs }));
+  const trendResult = await settle(() => loadQbAgeRbTrendReport({ timeoutMs }));
+  const birthdayResult = await settle(() => loadBirthdayUsageTrendReport({ timeoutMs }));
 
   const errors: string[] = [];
   if (readinessResult.status === "rejected") errors.push(`readiness: ${errorMessage(readinessResult.reason)}`);

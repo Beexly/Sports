@@ -22,6 +22,8 @@ import { buildLiveMemoryStatus, type MemoryStatus } from "@/lib/jarvis/intellige
 import { buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { buildJarvisOperatingAssessment, type JarvisOperatingAssessment } from "@/lib/jarvis/jarvis-operating-assessment";
 import { summarizeAgentHealth } from "@/lib/agents/agent-health";
+import { loadCommandCenterFeed } from "@/lib/command-center/feed";
+import type { OwnerAttentionItem } from "@/lib/command-center/types";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
 
@@ -87,6 +89,14 @@ export default async function CockpitOverview() {
   const operatingAssessment = buildJarvisOperatingAssessment();
   const agentReality = summarizeAgentHealth();
 
+  // Attention-first lead: reuse the Command Center's existing ranked owner-attention
+  // queue (same Jarvis synthesis, same trust gates) so the overview opens with "what
+  // needs you now" instead of making the owner hunt. loadCommandCenterFeed never
+  // throws — on synthesis failure it returns an empty, labeled feed, so the hero
+  // simply doesn't render and the rest of the deck is untouched.
+  const commandFeed = await loadCommandCenterFeed();
+  const topAttention = commandFeed.attention.slice(0, 2);
+
   const ownerSummary: OwnerSummary | null =
     jarvis
       ? buildOwnerSummary({
@@ -109,6 +119,14 @@ export default async function CockpitOverview() {
           className="absolute -top-16 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-orbital-cyan/[0.07] blur-3xl"
         />
       </div>
+
+      {/* ── ATTENTION-FIRST HERO — "what needs you now" ────────────────────
+           Leads the overview with the single highest-ranked owner-attention
+           item (and a runner-up), drawn straight from the Command Center's
+           existing ranked queue. Real score, real reason, real deep-link — no
+           new data. When the queue is clear it renders a calm "all-clear" line
+           instead of a blocker, so the deck still opens decisively. */}
+      <AttentionFirstHero items={topAttention} total={commandFeed.counts.attentionTotal} />
 
       {/* ── MISSION CONTROL HEADER ─────────────────────────────────────── */}
       <header
@@ -546,7 +564,7 @@ export default async function CockpitOverview() {
         </p>
       )}
 
-      <nav className="flex flex-wrap gap-2 text-xs">
+      <nav aria-label="Cockpit cross-links" className="flex flex-wrap gap-2 text-xs">
         <Link
           href="/cockpit/history"
           className="rounded-lg border border-titanium/40 px-3 py-2 text-ion-2 hover:border-titanium/70 hover:bg-carbon/60"
@@ -677,6 +695,150 @@ function QuickStat({
       </p>
       <p className="mt-0.5 text-[11px] text-ion-3">{sub}</p>
     </div>
+  );
+}
+
+// ─── Attention-first hero ────────────────────────────────────────────────────
+
+// The overview's lead element: surfaces the top ranked owner-attention item so
+// the deck opens with "what needs you now." Reuses the Command Center's existing
+// ranking (score + scoreExplanation + recommendedAction + deep-link). Calm when
+// the queue is clear — never manufactures urgency it can't back with a signal.
+function AttentionFirstHero({
+  items,
+  total,
+}: {
+  items: readonly OwnerAttentionItem[];
+  total: number;
+}) {
+  const lead = items[0];
+
+  if (!lead) {
+    return (
+      <section
+        data-testid="attention-first-hero"
+        data-attention-empty="true"
+        role="region"
+        aria-label="What needs you now"
+        className="relative overflow-hidden rounded-3xl border border-accent-900/30 bg-carbon/80 px-6 py-5"
+      >
+        <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-3">
+          What needs you now
+        </p>
+        <p className="mt-2 text-lg font-medium text-ion-white/95">
+          Queue clear — nothing is waiting on a decision.
+        </p>
+        <p className="mt-1 text-[12px] text-ion-2">
+          We detect. You decide. Hold the cadence — the deck below is reference, not a to-do.
+        </p>
+      </section>
+    );
+  }
+
+  const urgencyTone =
+    lead.urgency === "CRITICAL"
+      ? "border-red-900/70 bg-red-950/20 shadow-glow-plasma"
+      : lead.urgency === "HIGH"
+        ? "border-yellow-900/60 bg-yellow-950/10"
+        : "border-accent-900/40 bg-carbon/80";
+  const urgencyPill =
+    lead.urgency === "CRITICAL"
+      ? "bg-red-950/50 text-red-300 border-red-900/60"
+      : lead.urgency === "HIGH"
+        ? "bg-yellow-950/50 text-yellow-300 border-yellow-900/50"
+        : "bg-obsidian/70 text-ion-2 border-titanium/40";
+  const runnerUp = items[1];
+
+  return (
+    <section
+      data-testid="attention-first-hero"
+      role="region"
+      aria-label="What needs you now"
+      className={["relative overflow-hidden rounded-3xl border px-6 py-5", urgencyTone].join(" ")}
+    >
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        {lead.urgency === "CRITICAL" && (
+          <span className="relative h-2 w-2 flex-shrink-0">
+            <span className="absolute inset-0 animate-live-pulse rounded-full bg-red-400" />
+            <span className="absolute inset-0 rounded-full bg-red-400" />
+          </span>
+        )}
+        <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-3">
+          What needs you now
+        </p>
+        <span className="ml-auto font-mono text-[10px] text-ion-3">
+          {total} in queue
+        </span>
+      </div>
+
+      <div className="flex flex-wrap items-start gap-3">
+        <span
+          className={[
+            "mt-0.5 flex-shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest",
+            urgencyPill,
+          ].join(" ")}
+        >
+          {lead.urgency}
+        </span>
+        <span
+          data-testid="attention-hero-score"
+          className="mt-0.5 hidden flex-shrink-0 font-mono text-lg tabular-nums text-ion-white sm:block"
+          aria-label={`Attention score ${lead.score}`}
+        >
+          {lead.score}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-lg font-medium leading-snug text-ion-white/95 sm:text-xl">
+            {lead.title}
+          </p>
+          <p className="mt-1 text-[13px] leading-snug text-ion-2">{lead.detail}</p>
+          <p className="mt-2 text-[12px] text-ion-1">
+            <span className="text-ion-2">Do:</span> {lead.recommendedAction}
+          </p>
+          <p className="mt-0.5 text-[10px] text-ion-3/70">{lead.scoreExplanation}</p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {lead.link && (
+              <Link
+                href={lead.link}
+                className="rounded-lg border border-accent-800/50 bg-accent-950/30 px-3 py-1.5 text-[11px] font-semibold text-accent-400 transition-colors hover:border-accent-700 hover:bg-accent-950/50"
+              >
+                Act on it →
+              </Link>
+            )}
+            <Link
+              href="/cockpit/command-center"
+              prefetch={false}
+              className="rounded-lg border border-titanium/40 px-3 py-1.5 text-[11px] text-ion-2 hover:border-titanium/70 hover:bg-carbon/60"
+            >
+              Full ranked queue →
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {runnerUp && (
+        <div className="mt-4 border-t border-titanium/30 pt-3">
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
+            Next up
+          </p>
+          {runnerUp.link ? (
+            <Link
+              href={runnerUp.link}
+              className="mt-1 flex items-center gap-2 text-[12px] text-ion-2 transition-colors hover:text-ion-1"
+            >
+              <span className="font-mono tabular-nums text-ion-3">{runnerUp.score}</span>
+              <span className="truncate">{runnerUp.title}</span>
+              <span className="text-ion-3/60">→</span>
+            </Link>
+          ) : (
+            <p className="mt-1 flex items-center gap-2 text-[12px] text-ion-2">
+              <span className="font-mono tabular-nums text-ion-3">{runnerUp.score}</span>
+              <span className="truncate">{runnerUp.title}</span>
+            </p>
+          )}
+        </div>
+      )}
+    </section>
   );
 }
 

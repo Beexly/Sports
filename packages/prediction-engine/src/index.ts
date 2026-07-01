@@ -21,8 +21,28 @@ export {
   computeScheduleStressScore,
 } from "./game-context.js";
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
-export { calculatePickResult } from "./settlement.js";
+export { calculatePickResult, selectGradingLine } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// Historical backfill settlement engine — re-run the FROZEN model on past games
+// using ONLY pre-game data, then settle vs the known result (no-lookahead by design).
+export {
+  assemblePreGameFeatures,
+  extractSettlementFacts,
+  buildHistoricalOddsInput,
+  scoreHistoricalGame,
+  settleHistoricalPick,
+  replayAndSettleGame,
+  backfillPickKey,
+  LookaheadLeakError,
+  POST_KICKOFF_FIELDS,
+} from "./historical-replay.js";
+export type {
+  RawScheduleRow,
+  PreGameFeatures,
+  SettlementFacts,
+  SettledHistoricalPick,
+  PostKickoffField,
+} from "./historical-replay.js";
 // Closing-Line Value — sharp-grade credibility metric (pure; not yet surfaced publicly)
 export {
   computeSpreadClv,

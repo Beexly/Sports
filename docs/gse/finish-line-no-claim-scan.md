@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded on the deploy status only — this branch is now MERGED into `main` as PR #57 (commit `6084550c`) and the prod DB is LIVE (`/api/performance` returns real data, 397 settled picks). The no-claim verdict still holds; the "production untouched (`main`@`9e739b38`); only protected previews" line is historical.
+
 # GSE Finish-Line — No-Claim / No-Gate Scan
 
 **As of:** 2026-06-29 · Branch `claude/gse-no-claim-waitlist` @ `56a069e5`

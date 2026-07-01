@@ -12,6 +12,16 @@ export const metadata: Metadata = {
   description:
     "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
   alternates: { canonical: "/nhl" },
+  openGraph: {
+    title: "NHL Expected Goals — MoneyPuck (free advanced stats)",
+    description:
+      "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
+  },
+  twitter: {
+    title: "NHL Expected Goals — MoneyPuck (free advanced stats)",
+    description:
+      "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
+  },
 };
 
 function signed(value: number): string {
@@ -42,7 +52,8 @@ export default async function NhlPage(): Promise<JSX.Element> {
               non-NFL sport wired through our legal source registry. Real advanced stats, not a pick.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/api/moneypuck/nhl" className="btn-primary min-h-11 px-5 py-3">JSON</Link>
+              <Link href="/board" className="btn-primary min-h-11 px-5 py-3">See today&apos;s board</Link>
+              <Link href="/api/moneypuck/nhl" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">View as JSON</Link>
               <Link href="/data" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">How we source data</Link>
             </div>
           </div>
@@ -81,16 +92,16 @@ export default async function NhlPage(): Promise<JSX.Element> {
                 <table className="w-full min-w-[760px] text-left text-sm">
                   <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
-                      <th className="px-4 py-3">#</th>
-                      <th className="px-4 py-3">Player</th>
-                      <th className="px-4 py-3">Tm</th>
-                      <th className="px-4 py-3">Pos</th>
-                      <th className="px-4 py-3">GP</th>
-                      <th className="px-4 py-3">xG</th>
-                      <th className="px-4 py-3">G</th>
-                      <th className="px-4 py-3">G–xG</th>
-                      <th className="px-4 py-3">Pts</th>
-                      <th className="px-4 py-3">Shots</th>
+                      <th scope="col" className="px-4 py-3">#</th>
+                      <th scope="col" className="px-4 py-3">Player</th>
+                      <th scope="col" className="px-4 py-3">Tm</th>
+                      <th scope="col" className="px-4 py-3">Pos</th>
+                      <th scope="col" className="px-4 py-3">GP</th>
+                      <th scope="col" className="px-4 py-3">xG</th>
+                      <th scope="col" className="px-4 py-3">G</th>
+                      <th scope="col" className="px-4 py-3">G–xG</th>
+                      <th scope="col" className="px-4 py-3">Pts</th>
+                      <th scope="col" className="px-4 py-3">Shots</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-mineral bg-carbon">
@@ -126,13 +137,13 @@ export default async function NhlPage(): Promise<JSX.Element> {
                   <table className="w-full min-w-[560px] text-left text-sm">
                     <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                       <tr>
-                        <th className="px-4 py-3">#</th>
-                        <th className="px-4 py-3">Goalie</th>
-                        <th className="px-4 py-3">Tm</th>
-                        <th className="px-4 py-3">GP</th>
-                        <th className="px-4 py-3">xGA</th>
-                        <th className="px-4 py-3">GA</th>
-                        <th className="px-4 py-3">GSAx</th>
+                        <th scope="col" className="px-4 py-3">#</th>
+                        <th scope="col" className="px-4 py-3">Goalie</th>
+                        <th scope="col" className="px-4 py-3">Tm</th>
+                        <th scope="col" className="px-4 py-3">GP</th>
+                        <th scope="col" className="px-4 py-3">xGA</th>
+                        <th scope="col" className="px-4 py-3">GA</th>
+                        <th scope="col" className="px-4 py-3">GSAx</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-mineral bg-carbon">

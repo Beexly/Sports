@@ -4,6 +4,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { bootstrapGateResponse, getReadinessGates } from "@sports/prediction-engine";
 import type { PublicBlogPost } from "@sports/types";
+import { guardPublicContent, guardPublicExcerpt, guardPublicTitle } from "@/lib/blog/public-guard";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
@@ -41,17 +42,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     const publicPost: PublicBlogPost = {
       id: post.id,
-      title: post.title,
+      title: guardPublicTitle(post.title),
       slug: post.slug,
-      excerpt: post.excerpt,
+      excerpt: guardPublicExcerpt(post.excerpt),
       // PAYWALL: full content only for paid subscribers. Keyed off paid-tier
       // membership (not canSeePremiumPicks, which is now true for all tiers since
       // picks are free — ENTITLEMENT_REMAP_SPEC.md). Blog gating preserved as-is.
-      content: entitlements.tier !== "FREE" ? post.content : null,
+      content: entitlements.tier !== "FREE" ? guardPublicContent(post.content) : null,
       sport: post.sport,
       tags: post.tags,
-      seoTitle: post.seoTitle,
-      seoDescription: post.seoDescription,
+      seoTitle: post.seoTitle === null ? null : guardPublicTitle(post.seoTitle),
+      seoDescription: post.seoDescription === null ? null : guardPublicTitle(post.seoDescription),
       publishedAt: post.publishedAt?.toISOString() ?? null,
       isFeatured: post.isFeatured,
     };
@@ -89,6 +90,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const publicPosts: PublicBlogPost[] = posts.map((p) => ({
     ...p,
+    title: guardPublicTitle(p.title),
+    excerpt: guardPublicExcerpt(p.excerpt),
+    seoTitle: p.seoTitle === null ? null : guardPublicTitle(p.seoTitle),
+    seoDescription: p.seoDescription === null ? null : guardPublicTitle(p.seoDescription),
     content: null, // Never return full content in list view
     publishedAt: p.publishedAt?.toISOString() ?? null,
   }));

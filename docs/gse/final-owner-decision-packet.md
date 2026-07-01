@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded — PR #57 (`claude/gse-no-claim-waitlist`) is MERGED into `main` (commit `6084550c`) and the prod DB is LIVE (Neon paid, scale-to-zero disabled); `/api/performance` returns real data (397 settled picks). The "production untouched / decisions pending" framing below is historical.
+
 # GSE — Final Owner Decision Packet
 
 **As of:** 2026-06-29 · Branch `claude/gse-no-claim-waitlist` @ `9e7aa3f6` (pushed, in

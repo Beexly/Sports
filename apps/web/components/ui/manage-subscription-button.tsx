@@ -32,6 +32,7 @@ export function ManageSubscriptionButton() {
       <button
         type="button"
         disabled={loading}
+        aria-busy={loading}
         onClick={handleClick}
         className="w-full rounded-xl border border-titanium bg-titanium py-2.5 text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium disabled:cursor-not-allowed disabled:opacity-60"
       >

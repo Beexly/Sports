@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded on status — this work is MERGED into `main` as PR #57 (commit `6084550c`); the prod DB is LIVE and `/api/performance` returns real data (397 settled picks). The "GREEN (local-only) / no deploy/push" status line below is historical.
+
 # GSE PR2 — Local Waitlist + No-Op Analytics (Implementation Report)
 
 **Status:** GREEN (local-only). Implemented per `docs/gse/pr2-waitlist-implementation-readiness.md`.

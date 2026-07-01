@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 function windClass(mph: number | null): string {
   if (mph === null) return "text-ion-2";
   if (mph >= 20) return "text-alert";
-  if (mph >= 12) return "text-amber-300";
+  if (mph >= 12) return "text-caution";
   return "text-ion";
 }
 
@@ -40,7 +40,8 @@ export default async function WeatherPage(): Promise<JSX.Element> {
               Real conditions, not a pick.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/api/weather/game" className="btn-primary min-h-11 px-5 py-3">JSON</Link>
+              <Link href="/board" className="btn-primary min-h-11 px-5 py-3">See today&apos;s board</Link>
+              <Link href="/api/weather/game" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">View as JSON</Link>
               <Link href="/data" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">How we source data</Link>
             </div>
           </div>
@@ -78,12 +79,12 @@ export default async function WeatherPage(): Promise<JSX.Element> {
               <table className="w-full min-w-[640px] text-left text-sm">
                 <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                   <tr>
-                    <th className="px-4 py-3">Team</th>
-                    <th className="px-4 py-3">Stadium</th>
-                    <th className="px-4 py-3">Temp</th>
-                    <th className="px-4 py-3">Wind</th>
-                    <th className="px-4 py-3">Precip</th>
-                    <th className="px-4 py-3">Conditions</th>
+                    <th scope="col" className="px-4 py-3">Team</th>
+                    <th scope="col" className="px-4 py-3">Stadium</th>
+                    <th scope="col" className="px-4 py-3">Temp</th>
+                    <th scope="col" className="px-4 py-3">Wind</th>
+                    <th scope="col" className="px-4 py-3">Precip</th>
+                    <th scope="col" className="px-4 py-3">Conditions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-mineral bg-carbon">

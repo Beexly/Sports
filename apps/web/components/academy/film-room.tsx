@@ -11,6 +11,7 @@
  */
 
 import { useState } from "react";
+import Image from "next/image";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const uv = BRAND_COLORS.softUltraviolet;
@@ -91,8 +92,7 @@ export function FilmRoom() {
                   className="group relative block aspect-video w-full overflow-hidden text-left"
                   aria-label={`Play ${e.ep} — ${e.title}`}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={KEY_ART} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                  <Image src={KEY_ART} alt="" fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-105" />
                   <span
                     aria-hidden
                     className="absolute inset-0 flex items-center justify-center"

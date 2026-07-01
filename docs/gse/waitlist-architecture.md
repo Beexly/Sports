@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded on deploy status — this waitlist is MERGED into `main` as PR #57 (commit `6084550c`) and the prod DB is LIVE (`/api/performance` returns real data, 397 settled picks). The "Everything here is local-only; nothing deploys" line below is historical; the architecture itself is unchanged.
+
 # GSE Waitlist — As-Built Architecture
 
 The shipped local no-claim founding-waitlist (PR2). Reference for reviewers and for

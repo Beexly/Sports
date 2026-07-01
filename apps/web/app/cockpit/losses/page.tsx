@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { db } from "@sports/db";
+import { StatusTile } from "@/components/cockpit/status-tile";
 
 interface CockpitLossRow {
   readonly id: string;
@@ -52,6 +53,14 @@ function statusClass(status: string): string {
 export default async function CockpitLossesPage(): Promise<JSX.Element> {
   const rows = await loadRows();
 
+  // Lifecycle rollup derived from rows already loaded — no extra query.
+  const lifecycle = { DRAFT: 0, PEER_REVIEW: 0, PUBLISHED: 0, RETRACTED: 0 };
+  for (const r of rows) {
+    if (r.status in lifecycle) {
+      lifecycle[r.status as keyof typeof lifecycle] += 1;
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-2">
@@ -64,6 +73,12 @@ export default async function CockpitLossesPage(): Promise<JSX.Element> {
         <p className="text-sm text-ion-2">
           Read-only authoring queue for drafts, reviews, and published public Loss Room entries.
         </p>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatusTile label="Draft" value={String(lifecycle.DRAFT)} tone="neutral" />
+          <StatusTile label="Peer review" value={String(lifecycle.PEER_REVIEW)} tone="neutral" />
+          <StatusTile label="Published" value={String(lifecycle.PUBLISHED)} tone="info" />
+          <StatusTile label="Retracted" value={String(lifecycle.RETRACTED)} tone="neutral" />
+        </div>
       </header>
 
       {rows.length === 0 ? (

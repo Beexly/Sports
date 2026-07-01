@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { formatDate } from "@/lib/utils";
+import { guardPublicExcerpt, guardPublicTitle } from "@/lib/blog/public-guard";
 
 export const metadata: Metadata = {
   title: "From the desk — Sports market analysis from Galaxy Sports Edge",
@@ -96,11 +97,11 @@ export default async function BlogPage() {
                       </div>
                       <Link href={`/blog/${post.slug}`}>
                         <h2 className="text-xl font-semibold text-white hover:text-brand-400 transition-colors mb-2 line-clamp-2">
-                          {post.title}
+                          {guardPublicTitle(post.title)}
                         </h2>
                       </Link>
                       <p className="text-ion-2 text-sm line-clamp-2 mb-3">
-                        {post.excerpt}
+                        {guardPublicExcerpt(post.excerpt)}
                       </p>
                       <div className="flex items-center gap-3 text-xs text-ion-3">
                         {post.publishedAt && (

@@ -76,18 +76,23 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   const observedWidth = `${Math.round(bucket.observedWinRate * 100)}%`;
   const expectedLeft = `${Math.round(bucket.expectedWinRate * 100)}%`;
   const empty = bucket.sampleSize === 0;
+  // Min-sample floor: a bucket below the publish threshold must NEVER show a
+  // win-rate number — a 2-pick bucket reading a raw single-sample rate is an unsupported claim.
+  // Withhold the observed bar, the percentage, and the CI; show only the
+  // sample-progress so the reader sees it is still collecting.
+  const publishable = bucket.sufficientSample;
   // Per-bucket honesty: deciles of a modest settled set are SMALL samples, so each
   // observed rate carries a wide 95% band. Show it rather than imply false precision.
-  const ci = empty
-    ? null
-    : wilsonInterval(Math.round(bucket.observedWinRate * bucket.sampleSize), bucket.sampleSize);
+  const ci = publishable
+    ? wilsonInterval(Math.round(bucket.observedWinRate * bucket.sampleSize), bucket.sampleSize)
+    : null;
   return (
     <div className="flex items-center gap-3 py-2" data-testid="reliability-row">
       <span className={`w-14 shrink-0 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}>
         {bucket.label}
       </span>
       <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-titanium">
-        {!empty && (
+        {publishable && (
           <div
             className="h-full rounded-full bg-gradient-to-r from-accent-500 to-accent-400 transition-all"
             style={{ width: observedWidth }}
@@ -103,7 +108,7 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
       <span
         className={`w-14 shrink-0 text-right text-xs font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}
       >
-        {empty ? STAT_PLACEHOLDER : formatRatioAsPercent(bucket.observedWinRate)}
+        {publishable ? formatRatioAsPercent(bucket.observedWinRate) : STAT_PLACEHOLDER}
       </span>
       <span
         className={`hidden w-28 shrink-0 text-right text-[11px] text-ion-2 sm:inline-block ${NUMERIC_TEXT_CLASS}`}
@@ -113,7 +118,11 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
       <span
         className={`w-16 shrink-0 text-right text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}
       >
-        {empty ? "no data" : `n=${formatCount(bucket.sampleSize)}`}
+        {empty
+          ? "no data"
+          : publishable
+            ? `n=${formatCount(bucket.sampleSize)}`
+            : `${formatCount(bucket.sampleSize)}/30`}
       </span>
     </div>
   );
@@ -133,12 +142,29 @@ export async function CalibrationPanel() {
   const meta = VERDICT_META[d.trend];
   const collecting = data.isCollecting || data.sampleSize === 0;
 
-  // Overall observed rate = bucket rates weighted by bucket sample size.
-  const decided = data.buckets.reduce((s, b) => s + b.sampleSize, 0);
+  // Overall observed rate = bucket rates weighted by bucket sample size. Only
+  // buckets that clear the publish floor contribute, so a thin sub-30 bucket
+  // never leaks an unsupported win rate into the headline / HonestBand.
+  const publishableBuckets = data.buckets.filter((b) => b.sufficientSample);
+  const decided = publishableBuckets.reduce((s, b) => s + b.sampleSize, 0);
   const overallObserved =
     decided > 0
-      ? data.buckets.reduce((s, b) => s + b.observedWinRate * b.sampleSize, 0) / decided
+      ? publishableBuckets.reduce((s, b) => s + b.observedWinRate * b.sampleSize, 0) / decided
       : 0;
+
+  // Discrimination's low/high readout is computed at a LOWER floor than the
+  // publish floor (MIN_DISCRIMINATION_SAMPLE=20 < MIN_PUBLISH_BUCKET_SAMPLE=30):
+  // the trend direction is a softer signal, so a 20–29-pick bucket legitimately
+  // counts toward the verdict. But its observed win-rate NUMBER is still below
+  // the publish floor — the same rate the ReliabilityRow withholds as "n/30".
+  // Gate the per-bucket % readout on the SAME `sufficientSample` flag (looked up
+  // by the discrimination labels) so a sub-30 bucket never publishes a concrete
+  // win-rate here while it reads "collecting" two rows down.
+  const bucketBySufficient = (label: string | null): boolean =>
+    label !== null &&
+    (data.buckets.find((b) => b.label === label)?.sufficientSample ?? false);
+  const discriminationRatesPublishable =
+    bucketBySufficient(d.lowestBucketLabel) && bucketBySufficient(d.highestBucketLabel);
 
   return (
     <section
@@ -169,7 +195,8 @@ export async function CalibrationPanel() {
             {meta.label}
           </p>
           <p className="mt-2 text-sm leading-relaxed text-ion-1">{d.note}</p>
-          {d.spread !== null &&
+          {discriminationRatesPublishable &&
+            d.spread !== null &&
             d.lowestBucketWinRate !== null &&
             d.highestBucketWinRate !== null && (
               <div className="mt-4 flex items-center gap-3 text-xs text-ion-1">

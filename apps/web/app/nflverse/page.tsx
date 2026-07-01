@@ -150,17 +150,17 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 <table className="w-full min-w-[1080px] text-left text-sm">
                   <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
-                      <th className="px-4 py-3">Player</th>
-                      <th className="px-4 py-3">Team</th>
-                      <th className="px-4 py-3">Opp</th>
-                      <th className="px-4 py-3">Oppty</th>
-                      <th className="px-4 py-3">Tgt</th>
-                      <th className="px-4 py-3">Car</th>
-                      <th className="px-4 py-3">Tgt share</th>
-                      <th className="px-4 py-3">Air share</th>
-                      <th className="px-4 py-3">WOPR</th>
-                      <th className="px-4 py-3">PPR</th>
-                      <th className="px-4 py-3">Age</th>
+                      <th scope="col" className="px-4 py-3">Player</th>
+                      <th scope="col" className="px-4 py-3">Team</th>
+                      <th scope="col" className="px-4 py-3">Opp</th>
+                      <th scope="col" className="px-4 py-3">Oppty</th>
+                      <th scope="col" className="px-4 py-3">Tgt</th>
+                      <th scope="col" className="px-4 py-3">Car</th>
+                      <th scope="col" className="px-4 py-3">Tgt share</th>
+                      <th scope="col" className="px-4 py-3">Air share</th>
+                      <th scope="col" className="px-4 py-3">WOPR</th>
+                      <th scope="col" className="px-4 py-3">PPR</th>
+                      <th scope="col" className="px-4 py-3">Age</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-mineral bg-carbon">
@@ -207,12 +207,12 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 <table className="w-full min-w-[760px] text-left text-sm">
                   <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
-                      <th className="px-4 py-3">Team</th>
-                      <th className="px-4 py-3">QB</th>
-                      <th className="px-4 py-3">Age bucket</th>
-                      <th className="px-4 py-3">Attempts</th>
-                      <th className="px-4 py-3">RB targets</th>
-                      <th className="px-4 py-3">RB target share</th>
+                      <th scope="col" className="px-4 py-3">Team</th>
+                      <th scope="col" className="px-4 py-3">QB</th>
+                      <th scope="col" className="px-4 py-3">Age bucket</th>
+                      <th scope="col" className="px-4 py-3">Attempts</th>
+                      <th scope="col" className="px-4 py-3">RB targets</th>
+                      <th scope="col" className="px-4 py-3">RB target share</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-mineral bg-carbon">
@@ -282,13 +282,13 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 <table className="w-full min-w-[760px] text-left text-sm">
                   <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
-                      <th className="px-4 py-3">Cohort</th>
-                      <th className="px-4 py-3">n</th>
-                      <th className="px-4 py-3">RB tgt share</th>
-                      <th className="px-4 py-3">Field</th>
-                      <th className="px-4 py-3">Delta</th>
-                      <th className="px-4 py-3">p-value</th>
-                      <th className="px-4 py-3">Gate</th>
+                      <th scope="col" className="px-4 py-3">Cohort</th>
+                      <th scope="col" className="px-4 py-3">n</th>
+                      <th scope="col" className="px-4 py-3">RB tgt share</th>
+                      <th scope="col" className="px-4 py-3">Field</th>
+                      <th scope="col" className="px-4 py-3">Delta</th>
+                      <th scope="col" className="px-4 py-3">p-value</th>
+                      <th scope="col" className="px-4 py-3">Gate</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-mineral bg-carbon">
@@ -390,13 +390,13 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 <table className="w-full min-w-[820px] text-left text-sm">
                   <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
-                      <th className="px-4 py-3">Check</th>
-                      <th className="px-4 py-3">n</th>
-                      <th className="px-4 py-3">Field n</th>
-                      <th className="px-4 py-3">Mean</th>
-                      <th className="px-4 py-3">Delta</th>
-                      <th className="px-4 py-3">p-value</th>
-                      <th className="px-4 py-3">Gate</th>
+                      <th scope="col" className="px-4 py-3">Check</th>
+                      <th scope="col" className="px-4 py-3">n</th>
+                      <th scope="col" className="px-4 py-3">Field n</th>
+                      <th scope="col" className="px-4 py-3">Mean</th>
+                      <th scope="col" className="px-4 py-3">Delta</th>
+                      <th scope="col" className="px-4 py-3">p-value</th>
+                      <th scope="col" className="px-4 py-3">Gate</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-mineral bg-carbon">

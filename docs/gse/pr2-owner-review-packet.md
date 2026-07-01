@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded — this work was committed, pushed, and MERGED into `main` as PR #57 (commit `6084550c`); the prod DB is LIVE and `/api/performance` returns real data (397 settled picks). The "Not committed. Not pushed. Not deployed." status below is historical.
+
 # GSE PR2 — Owner Review Packet (Local No-Claim Waitlist)
 
 **Prepared:** 2026-06-29 14:41:49 -05:00

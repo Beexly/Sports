@@ -1,17 +1,24 @@
 import Link from "next/link";
-import { db } from "@sports/db";
+import { db, type Prisma } from "@sports/db";
 import { AGENTS } from "@/lib/cockpit/agents";
 
 // Operator data is read per request; never statically prerendered.
 export const dynamic = "force-dynamic";
 
+const reviewQueueQuery = {
+  where: { status: { in: ["NEEDS_REVIEW", "BLOCKED"] } },
+  orderBy: [{ priority: "desc" }, { updatedAt: "asc" }],
+  take: 100,
+  include: { decisions: { orderBy: { createdAt: "desc" }, take: 1 } },
+} satisfies Prisma.CockpitTaskFindManyArgs;
+
 export default async function CockpitReviewPage() {
-  const items = await db.cockpitTask.findMany({
-    where: { status: { in: ["NEEDS_REVIEW", "BLOCKED"] } },
-    orderBy: [{ priority: "desc" }, { updatedAt: "asc" }],
-    take: 100,
-    include: { decisions: { orderBy: { createdAt: "desc" }, take: 1 } },
-  });
+  const items = await db.cockpitTask
+    .findMany(reviewQueueQuery)
+    // Fail-open: a transient DB blip degrades to the existing "Nothing in
+    // review" empty state instead of tripping cockpit/error.tsx. GetPayload
+    // keeps task.decisions typed through the included relation.
+    .catch(() => [] as Prisma.CockpitTaskGetPayload<typeof reviewQueueQuery>[]);
 
   return (
     <div className="flex flex-col gap-6">

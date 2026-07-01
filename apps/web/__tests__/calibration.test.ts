@@ -53,6 +53,7 @@ describe("computeDiscrimination", () => {
     expectedWinRate: (confidenceMin + confidenceMax) / 200,
     delta: 0,
     brierScore: 0,
+    sufficientSample: sampleSize >= 30,
   });
 
   it("reports insufficient-data with fewer than two populated buckets", () => {
@@ -124,6 +125,7 @@ describe("computeCalibrationProposals", () => {
           expectedWinRate: 0.75,
           delta: -0.35,
           brierScore: 0.28,
+          sufficientSample: false,
         },
       ])
     ).toEqual([]);
@@ -140,6 +142,7 @@ describe("computeCalibrationProposals", () => {
         expectedWinRate: 0.74,
         delta: -0.22,
         brierScore: 0.24,
+        sufficientSample: true,
       },
     ]);
 

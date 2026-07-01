@@ -1,3 +1,5 @@
+> **UPDATE 2026-06-30:** Superseded — the PR was opened and MERGED into `main` as PR #57 (commit `6084550c`); no re-push is pending. The prod DB is LIVE and `/api/performance` returns real data (397 settled picks). The "ready to open / re-push before a complete PR / agent did not push" framing below is historical.
+
 # GSE — PR Open Prep (ready-to-use package)
 
 Everything needed to open the PR in one action — **without** this agent pushing,

@@ -14,6 +14,35 @@ import { db as prisma } from "@sports/db";
 import type { OddsMarket } from "@prisma/client";
 
 // ============================================================
+// ATS cover grading (pure)
+// ============================================================
+
+/** Against-the-spread result for both sides of a settled game. */
+export interface AtsCover {
+  readonly homeAts: "WIN" | "LOSS" | "PUSH";
+  readonly awayAts: "WIN" | "LOSS" | "PUSH";
+}
+
+/**
+ * Grade an against-the-spread cover from the home-perspective spread.
+ *
+ * `spread` is from home's perspective (negative = home favored). Home covers
+ * when the cover margin (actualMargin + spread) clears 0; the half-point band
+ * (|coverMargin| < 0.5) is a PUSH. Pure: callers gate the `spread !== null`
+ * case and keep the default-PUSH behavior for a missing spread.
+ */
+export function gradeAtsCover(actualMargin: number, spread: number): AtsCover {
+  const coverMargin = actualMargin + spread; // home covers if > 0 (spread is negative for fav)
+  if (Math.abs(coverMargin) < 0.5) {
+    return { homeAts: "PUSH", awayAts: "PUSH" };
+  }
+  if (coverMargin > 0) {
+    return { homeAts: "WIN", awayAts: "LOSS" };
+  }
+  return { homeAts: "LOSS", awayAts: "WIN" };
+}
+
+// ============================================================
 // Opening line tracking
 // ============================================================
 
@@ -480,17 +509,9 @@ export async function settleGameLogs(input: SettledGameInput): Promise<void> {
 
   if (spread !== null) {
     const actualMargin = homeScore - awayScore; // positive = home won
-    const coverMargin = actualMargin + spread;  // home covers if > 0 (spread is negative for fav)
-    if (Math.abs(coverMargin) < 0.5) {
-      homeAts = "PUSH";
-      awayAts = "PUSH";
-    } else if (coverMargin > 0) {
-      homeAts = "WIN";
-      awayAts = "LOSS";
-    } else {
-      homeAts = "LOSS";
-      awayAts = "WIN";
-    }
+    const ats = gradeAtsCover(actualMargin, spread);
+    homeAts = ats.homeAts;
+    awayAts = ats.awayAts;
   }
 
   // Upsert TeamGameLog for both teams using the @@unique([gameId, teamName]) constraint.

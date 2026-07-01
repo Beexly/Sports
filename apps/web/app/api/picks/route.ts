@@ -75,35 +75,46 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       : {}),
   };
 
-  const picks = await db.pick.findMany({
-    where: {
-      isPublished: true,
-      isBootstrap: false, // never expose bootstrap-era picks publicly
-      ...excludeSeedInProd, // prod-only: drop dev seed rows (no-op in dev/test)
-      generatedAt: {
-        gte: startOfDay(targetDate),
-        lte: endOfDay(targetDate),
+  // Fail OPEN on a DB error — a transient blip on the primary query must not
+  // black out a fresh surface. The sibling count below already falls back, and
+  // the stale-check fails open too; an unwrapped throw here would 500 the public
+  // endpoint instead of honestly returning the bootstrap/collecting state. So on
+  // a primary-query failure, collapse to the same dark/"collecting" 503 the
+  // bootstrap gate returns rather than leaking a stack trace.
+  const picks = await db.pick
+    .findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false, // never expose bootstrap-era picks publicly
+        ...excludeSeedInProd, // prod-only: drop dev seed rows (no-op in dev/test)
+        generatedAt: {
+          gte: startOfDay(targetDate),
+          lte: endOfDay(targetDate),
+        },
+        // Server-side tier gate
+        ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
+        // Optional grade filter (only useful for PRO+ who can see premium)
+        ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
+        game: gameFilter,
       },
-      // Server-side tier gate
-      ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
-      // Optional grade filter (only useful for PRO+ who can see premium)
-      ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
-      game: gameFilter,
-    },
-    include: {
-      game: {
-        include: {
-          sport: { select: { name: true, key: true } },
+      include: {
+        game: {
+          include: {
+            sport: { select: { name: true, key: true } },
+          },
         },
       },
-    },
-    orderBy: [
-      { isFeatured: "desc" },
-      { confidence: "desc" },
-      { generatedAt: "desc" },
-    ],
-    take: entitlements.dailyPickLimit ?? 200,
-  });
+      orderBy: [
+        { isFeatured: "desc" },
+        { confidence: "desc" },
+        { generatedAt: "desc" },
+      ],
+      take: entitlements.dailyPickLimit ?? 200,
+    })
+    .catch(() => null);
+  if (picks === null) {
+    return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
+  }
 
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the

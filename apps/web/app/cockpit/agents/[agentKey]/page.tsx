@@ -21,11 +21,15 @@ export default async function CockpitAgentDetail({
   }
   const agent = getAgent(params.agentKey);
 
-  const tasks = await db.cockpitTask.findMany({
-    where: { assignedAgent: agent.key },
-    orderBy: [{ priority: "desc" }, { updatedAt: "desc" }],
-    take: 50,
-  });
+  const tasks = await db.cockpitTask
+    .findMany({
+      where: { assignedAgent: agent.key },
+      orderBy: [{ priority: "desc" }, { updatedAt: "desc" }],
+      take: 50,
+    })
+    // Fail-open: a transient DB blip degrades to the existing "0 tasks" badge
+    // + "No tasks assigned … yet." copy instead of crashing this agent page.
+    .catch(() => [] as Awaited<ReturnType<typeof db.cockpitTask.findMany>>);
 
   return (
     <div className="flex flex-col gap-6">

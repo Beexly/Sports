@@ -58,12 +58,12 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
             <table className="min-w-full divide-y divide-titanium/30 text-sm">
               <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
                 <tr>
-                  <th className="px-4 py-3">State</th>
-                  <th className="px-4 py-3">Channel</th>
-                  <th className="px-4 py-3">Event</th>
-                  <th className="px-4 py-3">Game</th>
-                  <th className="px-4 py-3">Draft</th>
-                  <th className="px-4 py-3">Key</th>
+                  <th scope="col" className="px-4 py-3">State</th>
+                  <th scope="col" className="px-4 py-3">Channel</th>
+                  <th scope="col" className="px-4 py-3">Event</th>
+                  <th scope="col" className="px-4 py-3">Game</th>
+                  <th scope="col" className="px-4 py-3">Draft</th>
+                  <th scope="col" className="px-4 py-3">Key</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-titanium/30">

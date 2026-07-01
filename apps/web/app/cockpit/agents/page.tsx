@@ -1,15 +1,23 @@
 import Link from "next/link";
 import { db } from "@sports/db";
 import { listAgents } from "@/lib/cockpit/agents";
+import { AgentStatusRail } from "@/components/cockpit/agent-status-rail";
+import { StatusTile } from "@/components/cockpit/status-tile";
+import { summarizeAgentHealth } from "@/lib/agents/agent-health";
 
 // Operator data is read per request; never statically prerendered.
 export const dynamic = "force-dynamic";
 
 export default async function CockpitAgentsPage() {
-  const byAgent = await db.cockpitTask.groupBy({
+  const groupByPromise = db.cockpitTask.groupBy({
     by: ["assignedAgent", "status"],
     _count: { _all: true },
   });
+  type AgentGroup = Awaited<typeof groupByPromise>[number];
+  // Fail-open: a transient DB blip degrades to all-zero counts instead of
+  // crashing the operator agents page; countFor's .filter/.reduce are safe
+  // on an empty array.
+  const byAgent = await groupByPromise.catch(() => [] as AgentGroup[]);
 
   function countFor(key: string, status?: string): number {
     return byAgent
@@ -17,14 +25,19 @@ export default async function CockpitAgentsPage() {
       .reduce((acc, g) => acc + g._count._all, 0);
   }
 
+  const agentReality = summarizeAgentHealth();
+
   return (
     <div className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-2xl font-bold text-ion-white">Operator agents</h1>
-        <p className="mt-1 text-sm text-ion-3">
-          Six internal roles. Each ships drafts only; no external action runs
-          without explicit human approval.
-        </p>
+      <header className="flex flex-col gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-ion-white">Operator agents</h1>
+          <p className="mt-1 text-sm text-ion-3">
+            Six internal roles. Each ships drafts only; no external action runs
+            without explicit human approval.
+          </p>
+        </div>
+        <AgentStatusRail summary={agentReality} />
       </header>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -52,22 +65,17 @@ export default async function CockpitAgentsPage() {
             <p className="text-sm leading-relaxed text-ion-2">{agent.responsibility}</p>
 
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-lg bg-obsidian/70 py-2">
-                <p className="text-[10px] uppercase text-ion-3">Open</p>
-                <p className="text-base font-bold text-ion-white">{countFor(agent.key)}</p>
-              </div>
-              <div className="rounded-lg bg-yellow-900/20 py-2">
-                <p className="text-[10px] uppercase text-yellow-400">Review</p>
-                <p className="text-base font-bold text-yellow-300">
-                  {countFor(agent.key, "NEEDS_REVIEW")}
-                </p>
-              </div>
-              <div className="rounded-lg bg-red-900/20 py-2">
-                <p className="text-[10px] uppercase text-red-400">Blocked</p>
-                <p className="text-base font-bold text-red-300">
-                  {countFor(agent.key, "BLOCKED")}
-                </p>
-              </div>
+              <StatusTile label="Open" value={String(countFor(agent.key))} tone="neutral" />
+              <StatusTile
+                label="Review"
+                value={String(countFor(agent.key, "NEEDS_REVIEW"))}
+                tone="warn"
+              />
+              <StatusTile
+                label="Blocked"
+                value={String(countFor(agent.key, "BLOCKED"))}
+                tone="bad"
+              />
             </div>
 
             <details className="text-xs text-ion-3">

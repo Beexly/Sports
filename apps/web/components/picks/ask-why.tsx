@@ -90,6 +90,7 @@ export function AskWhy({ pickId }: { pickId: string }) {
             type="button"
             onClick={() => void ask(register)}
             disabled={state === "loading"}
+            aria-busy={state === "loading"}
             className="w-fit rounded-full border border-ion-blue/40 bg-ion-blue/10 px-3 py-1 text-[11px] font-medium tracking-wide text-ion-blue transition hover:bg-ion-blue/20 disabled:opacity-60"
           >
             {state === "loading" ? "Reading the factors…" : "Ask the model why"}

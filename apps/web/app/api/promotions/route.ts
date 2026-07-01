@@ -29,14 +29,19 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   // Pre-filter at the DB layer for indexable fields. Compliance / disclosure
   // gating happens in the response builder to keep the rule in one place.
-  const rows = await db.promotion.findMany({
-    where: {
-      status: "ACTIVE",
-      complianceStatus: "APPROVED",
-    },
-    orderBy: { updatedAt: "desc" },
-    take: 100,
-  });
+  const rows = await db.promotion
+    .findMany({
+      where: {
+        status: "ACTIVE",
+        complianceStatus: "APPROVED",
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 100,
+    })
+    // Fail-open: a transient DB error degrades to an honest "no offers right
+    // now" 200 (buildPublicPromotionsResponse returns success on []), instead
+    // of throwing a 500 out of this read-only public route.
+    .catch(() => [] as Awaited<ReturnType<typeof db.promotion.findMany>>);
 
   const payload = buildPublicPromotionsResponse(rows, { state });
 

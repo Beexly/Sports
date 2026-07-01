@@ -76,6 +76,7 @@ const SECTIONS: readonly Section[] = [
   {
     heading: "More",
     links: [
+      { label: "Sign in", href: "/auth/signin" },
       { label: "Pricing", href: "/pricing" },
       { label: "Dashboard", href: "/dashboard" },
     ],

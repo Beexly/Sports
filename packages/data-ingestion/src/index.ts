@@ -20,7 +20,9 @@ export {
   getAtsForm,
   getHeadToHeadForm,
   settleGameLogs,
+  gradeAtsCover,
 } from "./context-enrichment.js";
+export type { AtsCover } from "./context-enrichment.js";
 export {
   getTeamScoringRecords,
   getLeagueAverageScored,

@@ -84,7 +84,10 @@ export function buildSportsEventJsonLd(input: MatchupPreviewInput): Record<strin
 export function buildBreadcrumbJsonLd(input: MatchupPreviewInput): Record<string, unknown> {
   const items = [
     { name: "Picks", path: "/picks" },
-    { name: input.sport.toUpperCase(), path: `/preview/${slugify(input.sport)}` },
+    // Sport crumb → the always-indexable /picks hub. /preview/{sport} has no
+    // index page (404 on every matchup crumb), and per-sport /{sport} pages
+    // don't exist for all sports, so /picks is the only universally-safe target.
+    { name: input.sport.toUpperCase(), path: "/picks" },
     { name: `${input.awayTeam} vs ${input.homeTeam}`, path: matchupPath(input.sport, input.awayTeam, input.homeTeam) },
   ];
   return {

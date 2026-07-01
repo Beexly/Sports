@@ -31,7 +31,7 @@ import {
 
 type AnyArgs = Record<string, unknown> | undefined;
 
-function isStubDbUrl(url: string | undefined): boolean {
+export function isStubDbUrl(url: string | undefined): boolean {
   if (!url) return true;
   const trimmed = url.trim();
   if (trimmed === "") return true;

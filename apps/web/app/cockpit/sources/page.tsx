@@ -287,13 +287,13 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           <table className="min-w-[980px] divide-y divide-titanium/30 text-left text-sm">
             <thead className="bg-eclipse/50 text-[11px] uppercase tracking-wider text-ion-3">
               <tr>
-                <th className="px-4 py-3">Source</th>
-                <th className="px-4 py-3">Cost</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Proof</th>
-                <th className="px-4 py-3">Grain</th>
-                <th className="px-4 py-3">Unlocks</th>
-                <th className="px-4 py-3">Operator action</th>
+                <th scope="col" className="px-4 py-3">Source</th>
+                <th scope="col" className="px-4 py-3">Cost</th>
+                <th scope="col" className="px-4 py-3">Status</th>
+                <th scope="col" className="px-4 py-3">Proof</th>
+                <th scope="col" className="px-4 py-3">Grain</th>
+                <th scope="col" className="px-4 py-3">Unlocks</th>
+                <th scope="col" className="px-4 py-3">Operator action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-titanium/30">
@@ -362,14 +362,14 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           <table className="min-w-[860px] divide-y divide-titanium/30 text-left text-sm">
             <thead className="bg-eclipse/50 text-[11px] uppercase tracking-wider text-ion-3">
               <tr>
-                <th className="px-4 py-3">Source</th>
-                <th className="px-4 py-3">Jurisdiction</th>
-                <th className="px-4 py-3">Rights status</th>
-                <th className="px-4 py-3">Auto</th>
-                <th className="px-4 py-3">Display</th>
-                <th className="px-4 py-3">Store</th>
-                <th className="px-4 py-3">Train</th>
-                <th className="px-4 py-3">Unlock / action</th>
+                <th scope="col" className="px-4 py-3">Source</th>
+                <th scope="col" className="px-4 py-3">Jurisdiction</th>
+                <th scope="col" className="px-4 py-3">Rights status</th>
+                <th scope="col" className="px-4 py-3">Auto</th>
+                <th scope="col" className="px-4 py-3">Display</th>
+                <th scope="col" className="px-4 py-3">Store</th>
+                <th scope="col" className="px-4 py-3">Train</th>
+                <th scope="col" className="px-4 py-3">Unlock / action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-titanium/30">

@@ -22,6 +22,9 @@ export interface ProofBucket {
   readonly observedWinRate: number;
   readonly sampleSize: number;
   readonly delta: number;
+  /** True once the band clears the publish floor (30+ settled picks); below it,
+   * its observed win rate is withheld (a 2-pick "100%" is not a claim we publish). */
+  readonly sufficientSample: boolean;
 }
 
 export interface ProofExplorerProps {
@@ -73,6 +76,7 @@ export function ProofExplorer({
               expectedWinRate: b.expectedWinRate,
               observedWinRate: b.observedWinRate,
               sampleSize: b.sampleSize,
+              sufficientSample: b.sufficientSample,
             }))}
             sampleSize={sampleSize}
           />
@@ -131,7 +135,7 @@ export function ProofExplorer({
             </div>
 
             <div role="status" aria-live="polite">
-            {active && active.sampleSize > 0 ? (
+            {active && active.sufficientSample ? (
               <div className="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
                 <Stat label="Observed" value={pct(active.observedWinRate)} tone="text-orbital-cyan" />
                 <Stat label="Expected" value={pct(active.expectedWinRate)} tone="text-ultraviolet" />
@@ -141,6 +145,11 @@ export function ProofExplorer({
                   tone={active.delta >= 0 ? "text-verify" : "text-plasma"}
                 />
               </div>
+            ) : active && active.sampleSize > 0 ? (
+              <p className="mt-3 rounded-ds-md border border-mineral bg-carbon/50 px-3 py-3 text-xs text-ion-2">
+                {active.sampleSize}/30 settled in this band — building a publishable rate. We don&apos;t
+                show a win rate until a band clears 30 settled picks.
+              </p>
             ) : (
               <p className="mt-3 rounded-ds-md border border-mineral bg-carbon/50 px-3 py-3 text-xs text-ion-2">
                 No settled picks in this band yet. Bands populate as the record grows.

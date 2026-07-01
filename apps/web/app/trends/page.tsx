@@ -168,11 +168,11 @@ export default async function TrendsPage(): Promise<JSX.Element> {
             <table className="w-full min-w-[860px] text-left text-sm">
               <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                 <tr>
-                  <th className="px-4 py-3">Dataset</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Rows</th>
-                  <th className="px-4 py-3">Scope</th>
-                  <th className="px-4 py-3">Unlocks</th>
+                  <th scope="col" className="px-4 py-3">Dataset</th>
+                  <th scope="col" className="px-4 py-3">Status</th>
+                  <th scope="col" className="px-4 py-3">Rows</th>
+                  <th scope="col" className="px-4 py-3">Scope</th>
+                  <th scope="col" className="px-4 py-3">Unlocks</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-mineral bg-carbon">
@@ -237,13 +237,13 @@ export default async function TrendsPage(): Promise<JSX.Element> {
             <table className="w-full min-w-[760px] text-left text-sm">
               <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                 <tr>
-                  <th className="px-4 py-3">Cohort</th>
-                  <th className="px-4 py-3">n</th>
-                  <th className="px-4 py-3">Mean</th>
-                  <th className="px-4 py-3">Field</th>
-                  <th className="px-4 py-3">Lift</th>
-                  <th className="px-4 py-3">p-value</th>
-                  <th className="px-4 py-3">Gate</th>
+                  <th scope="col" className="px-4 py-3">Cohort</th>
+                  <th scope="col" className="px-4 py-3">n</th>
+                  <th scope="col" className="px-4 py-3">Mean</th>
+                  <th scope="col" className="px-4 py-3">Field</th>
+                  <th scope="col" className="px-4 py-3">Lift</th>
+                  <th scope="col" className="px-4 py-3">p-value</th>
+                  <th scope="col" className="px-4 py-3">Gate</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-mineral bg-carbon">
@@ -312,13 +312,13 @@ export default async function TrendsPage(): Promise<JSX.Element> {
             <table className="w-full min-w-[760px] text-left text-sm">
               <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                 <tr>
-                  <th className="px-4 py-3">Check</th>
-                  <th className="px-4 py-3">n</th>
-                  <th className="px-4 py-3">Field n</th>
-                  <th className="px-4 py-3">Mean</th>
-                  <th className="px-4 py-3">Delta</th>
-                  <th className="px-4 py-3">p-value</th>
-                  <th className="px-4 py-3">Gate</th>
+                  <th scope="col" className="px-4 py-3">Check</th>
+                  <th scope="col" className="px-4 py-3">n</th>
+                  <th scope="col" className="px-4 py-3">Field n</th>
+                  <th scope="col" className="px-4 py-3">Mean</th>
+                  <th scope="col" className="px-4 py-3">Delta</th>
+                  <th scope="col" className="px-4 py-3">p-value</th>
+                  <th scope="col" className="px-4 py-3">Gate</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-mineral bg-carbon">
@@ -363,12 +363,12 @@ export default async function TrendsPage(): Promise<JSX.Element> {
                 <table className="w-full min-w-[760px] text-left text-sm">
                   <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
-                      <th className="px-4 py-3">Cohort</th>
-                      <th className="px-4 py-3">n</th>
-                      <th className="px-4 py-3">Mean</th>
-                      <th className="px-4 py-3">Baseline</th>
-                      <th className="px-4 py-3">Delta</th>
-                      <th className="px-4 py-3">p-value</th>
+                      <th scope="col" className="px-4 py-3">Cohort</th>
+                      <th scope="col" className="px-4 py-3">n</th>
+                      <th scope="col" className="px-4 py-3">Mean</th>
+                      <th scope="col" className="px-4 py-3">Baseline</th>
+                      <th scope="col" className="px-4 py-3">Delta</th>
+                      <th scope="col" className="px-4 py-3">p-value</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-mineral">

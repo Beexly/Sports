@@ -74,6 +74,7 @@ export function SubscribeButton({ tier, label, variant, interval = "month" }: Pr
       <button
         type="button"
         disabled={loading}
+        aria-busy={loading}
         onClick={handleClick}
         className={variant === "primary" ? PRIMARY_CLASSES : GHOST_CLASSES}
       >

@@ -1,7 +1,17 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { db } from "@sports/db";
+import { db, type Prisma } from "@sports/db";
 import { formatDateTime } from "@/lib/utils";
+
+const adminPicksQuery = {
+  include: {
+    game: {
+      include: { sport: { select: { name: true } } },
+    },
+  },
+  orderBy: { generatedAt: "desc" },
+  take: 100,
+} satisfies Prisma.PickFindManyArgs;
 
 export default async function AdminPicksPage() {
   const session = await auth();
@@ -9,15 +19,11 @@ export default async function AdminPicksPage() {
     redirect("/");
   }
 
-  const picks = await db.pick.findMany({
-    include: {
-      game: {
-        include: { sport: { select: { name: true } } },
-      },
-    },
-    orderBy: { generatedAt: "desc" },
-    take: 100,
-  });
+  const picks = await db.pick
+    .findMany(adminPicksQuery)
+    // Fail-open: a transient DB error degrades to the page's existing
+    // "No picks yet…" empty state instead of crashing the admin app.
+    .catch(() => [] as Prisma.PickGetPayload<typeof adminPicksQuery>[]);
 
   return (
     <div className="min-h-screen bg-obsidian p-8">

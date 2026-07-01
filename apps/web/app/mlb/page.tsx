@@ -46,7 +46,8 @@ export default async function MlbPage(): Promise<JSX.Element> {
               failover so one outage never drops the feed. Real stats, not a pick.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/api/mlb/teams" className="btn-primary min-h-11 px-5 py-3">JSON</Link>
+              <Link href="/board" className="btn-primary min-h-11 px-5 py-3">See today&apos;s board</Link>
+              <Link href="/api/mlb/teams" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">View as JSON</Link>
               <Link href="/data" className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white">How we source data</Link>
             </div>
           </div>
@@ -84,17 +85,17 @@ export default async function MlbPage(): Promise<JSX.Element> {
               <table className="w-full min-w-[760px] text-left text-sm">
                 <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                   <tr>
-                    <th className="px-4 py-3">#</th>
-                    <th className="px-4 py-3">Team</th>
-                    <th className="px-4 py-3">Lg</th>
-                    <th className="px-4 py-3">W</th>
-                    <th className="px-4 py-3">L</th>
-                    <th className="px-4 py-3">R</th>
-                    <th className="px-4 py-3">RA</th>
-                    <th className="px-4 py-3">Diff</th>
-                    <th className="px-4 py-3">Win%</th>
-                    <th className="px-4 py-3">Pyth%</th>
-                    <th className="px-4 py-3">Luck</th>
+                    <th scope="col" className="px-4 py-3">#</th>
+                    <th scope="col" className="px-4 py-3">Team</th>
+                    <th scope="col" className="px-4 py-3">Lg</th>
+                    <th scope="col" className="px-4 py-3">W</th>
+                    <th scope="col" className="px-4 py-3">L</th>
+                    <th scope="col" className="px-4 py-3">R</th>
+                    <th scope="col" className="px-4 py-3">RA</th>
+                    <th scope="col" className="px-4 py-3">Diff</th>
+                    <th scope="col" className="px-4 py-3">Win%</th>
+                    <th scope="col" className="px-4 py-3">Pyth%</th>
+                    <th scope="col" className="px-4 py-3">Luck</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-mineral bg-carbon">
