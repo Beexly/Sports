@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   description:
     "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
   alternates: { canonical: "/board" },
+  openGraph: {
+    title: "Today's Board - Galaxy Sports Edge",
+    description:
+      "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
+  },
 };
 
 // Reads live board state per request; never statically prerendered.
@@ -86,12 +91,23 @@ export default async function BoardPage(): Promise<JSX.Element> {
             </div>
             <div className="flex min-w-0 flex-col gap-3 sm:items-end">
               <BoardHealthBadge meta={stateResult.meta} />
-              <Link
-                href="/methodology"
-                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
-              >
-                Read methodology
-              </Link>
+              <div className="flex flex-wrap gap-3 sm:justify-end">
+                <Link href="/pricing" className="btn btn-primary min-h-11 px-5 py-3">
+                  See what Pro unlocks
+                </Link>
+                <Link
+                  href="/accountability"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
+                >
+                  See the receipts
+                </Link>
+                <Link
+                  href="/methodology"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
+                >
+                  Read methodology
+                </Link>
+              </div>
             </div>
           </div>
         </section>
