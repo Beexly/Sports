@@ -38,7 +38,7 @@ export default function GlobalError({
         <LogoMarkInline size={400} pulse className="opacity-[0.04]" />
       </div>
 
-      <div className="relative z-10 max-w-xl rounded-2xl border border-red-900 bg-red-950/30 p-8 text-center">
+      <div className="relative z-10 max-w-xl rounded-2xl border border-alert/30 bg-alert/10 p-8 text-center">
         <div className="mb-5 flex justify-center">
           <LogoMarkInline size={40} pulse glow />
         </div>
@@ -46,23 +46,23 @@ export default function GlobalError({
         <h1 className="text-xl font-bold text-white">
           Something broke on my side.
         </h1>
-        <p className="mt-2 text-sm text-red-200">
+        <p className="mt-2 text-sm text-ion-1">
           The page hit a runtime error. Hit retry, or head home — the
           observatory has the trace either way.
         </p>
-        <pre className="mt-3 overflow-x-auto rounded-lg bg-red-950/60 p-3 text-[11px] text-red-100">
+        <pre className="mt-3 overflow-x-auto rounded-lg bg-carbon/70 p-3 text-[11px] text-ion-2">
           {visibleDetail}
         </pre>
         <div className="mt-5 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => reset()}
-            className="rounded-lg bg-red-900/60 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800"
+            className="rounded-lg bg-alert/20 px-4 py-2 text-sm font-semibold text-white hover:bg-alert/30"
           >
             Retry
           </button>
           <Link
             href="/"
-            className="rounded-lg border border-red-900 px-4 py-2 text-sm text-red-200 hover:bg-red-950/40"
+            className="rounded-lg border border-alert/30 px-4 py-2 text-sm text-ion-1 hover:bg-alert/10"
           >
             Home
           </Link>
