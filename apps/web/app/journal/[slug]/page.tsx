@@ -5,6 +5,8 @@ import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { loadPublicJournalEntry, type PublicJournalEntry } from "@/lib/journal/load";
 import { formatDate } from "@/lib/utils";
+import { BRAND_NAME } from "@/lib/brand";
+import { SITE_URL } from "@/lib/seo/sports-jsonld";
 
 export const revalidate = 300;
 
@@ -16,10 +18,24 @@ export async function generateMetadata({
   const entry = await loadPublicJournalEntry(params.slug);
   if (!entry) return { title: "Journal entry not found" };
 
+  const summary = entry.coldOpen.slice(0, 155);
   return {
     title: `${entry.title} - Model Journal`,
-    description: entry.coldOpen.slice(0, 155),
+    description: summary,
     alternates: { canonical: `/journal/${entry.slug}` },
+    openGraph: {
+      type: "article",
+      title: entry.title,
+      description: summary,
+      url: `/journal/${entry.slug}`,
+      publishedTime: entry.publishedAt,
+      images: ["/opengraph-image"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: entry.title,
+      description: summary,
+    },
   };
 }
 
@@ -113,8 +129,26 @@ export default async function JournalEntryPage({
   const entry = await loadPublicJournalEntry(params.slug);
   if (!entry) notFound();
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: entry.title,
+    description: entry.coldOpen,
+    datePublished: entry.publishedAt,
+    dateModified: entry.publishedAt,
+    url: `${SITE_URL}/journal/${entry.slug}`,
+    mainEntityOfPage: `${SITE_URL}/journal/${entry.slug}`,
+    timeRequired: `PT${entry.readTimeMinutes}M`,
+    author: { "@type": "Organization", name: BRAND_NAME },
+    publisher: { "@type": "Organization", name: BRAND_NAME },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Nav />
       <main className="min-h-screen bg-obsidian">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
