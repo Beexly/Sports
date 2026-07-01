@@ -6,12 +6,12 @@ import { KpiCard } from "@/components/ui/kpi-card";
 import { SourceError } from "@/components/ui/source-error";
 import {
   formatSigned,
-  hitRateClass,
+  hitRateClass as hitRateClassBase,
   hitRateTone,
-  liftClass,
+  liftClass as liftClassBase,
   liftTone,
-  signedClass,
-  toneClass,
+  signedClass as signedClassBase,
+  toneClass as toneClassBase,
   type SignalTone,
 } from "@/lib/intelligence/colors";
 
@@ -51,16 +51,26 @@ import type { SleeperTrending, TrendingRow } from "@/lib/integrations/sleeper";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
+// This view paints on the DARK page (/intelligence/engines is bg-carbon). The
+// shared color helpers default to the light "paper" surface, so we bind them to
+// the dark variant once here and call the aliases everywhere below. Keeps every
+// tone/lift/hit-rate class AA on carbon/eclipse instead of the paper greens/reds
+// (emerald-700/rose-700) that drop to ~2:1 on dark.
+const tcd = (tone: SignalTone): string => toneClassBase(tone, "dark");
+const scd = (value: number | null, invert = false): string => signedClassBase(value, invert, "dark");
+const hcd = (rate: number | null): string => hitRateClassBase(rate, 0.55, 0.45, "dark");
+const lcd = (lift: number | null): string => liftClassBase(lift, 0.02, "dark");
+
 function Note({ children }: { children: ReactNode }): JSX.Element {
-  return <p className="px-1 font-mono text-xs leading-5 text-ink-2">{children}</p>;
+  return <p className="px-1 font-mono text-xs leading-5 text-ion-2">{children}</p>;
 }
 
 function SubHead({ kicker, title, note }: { kicker: string; title: string; note?: ReactNode }): JSX.Element {
   return (
     <div className="flex flex-col gap-1">
-      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan-on-light">{kicker}</p>
-      <h2 className="text-xl font-semibold text-ink">{title}</h2>
-      {note ? <p className="mt-1 max-w-3xl text-sm leading-6 text-ink-1">{note}</p> : null}
+      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-orbital-cyan">{kicker}</p>
+      <h2 className="text-xl font-semibold text-ion-white">{title}</h2>
+      {note ? <p className="mt-1 max-w-3xl text-sm leading-6 text-ion-1">{note}</p> : null}
     </div>
   );
 }
@@ -98,21 +108,21 @@ function gradeTone(g: number): SignalTone {
 
 function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; rows: readonly PlayerProfile[] }): JSX.Element {
   return (
-    <section className="rounded-ds-md border border-paper-border bg-paper-raised p-5">
-      <p className={`font-mono text-xs font-semibold uppercase tracking-[0.16em] ${toneClass(tone)}`}>{title}</p>
+    <section className="rounded-ds-md border border-mineral bg-eclipse p-5">
+      <p className={`font-mono text-xs font-semibold uppercase tracking-[0.16em] ${tcd(tone)}`}>{title}</p>
       <div className="mt-3 space-y-2.5">
         {rows.length === 0 ? (
-          <p className="text-sm text-ink-2">None flagged this week.</p>
+          <p className="text-sm text-ion-2">None flagged this week.</p>
         ) : (
           rows.map((p) => (
-            <div key={p.playerId} className="border-l border-paper-border pl-3">
+            <div key={p.playerId} className="border-l border-mineral pl-3">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-ink">{p.name}</span>
-                <span className="font-mono text-xs text-ink-2">
+                <span className="text-sm font-semibold text-ion-white">{p.name}</span>
+                <span className="font-mono text-xs text-ion-2">
                   {p.position} · {p.team} · grade {p.processGrade}
                 </span>
               </div>
-              <p className="mt-0.5 text-xs leading-5 text-ink-1">{p.note}</p>
+              <p className="mt-0.5 text-xs leading-5 text-ion-1">{p.note}</p>
             </div>
           ))
         )}
@@ -124,15 +134,15 @@ function MovesCard({ title, tone, rows }: { title: string; tone: SignalTone; row
 function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
   const isQb = pos === "QB";
   const cols: Column<PlayerProfile>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     {
       key: "processGrade",
       label: "Process",
       align: "right",
       numeric: true,
       tooltip: "position-aware composite of the predictive anchors",
-      render: (r) => <span className={`font-semibold ${toneClass(gradeTone(r.processGrade))}`}>{r.processGrade}</span>,
+      render: (r) => <span className={`font-semibold ${tcd(gradeTone(r.processGrade))}`}>{r.processGrade}</span>,
     },
     {
       key: "productionPct",
@@ -149,7 +159,7 @@ function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
       numeric: true,
       tooltip: "combined EPA per play",
       sortValue: (r) => r.epaPerPlay,
-      render: (r) => <span className={signedClass(r.epaPerPlay)}>{formatSigned(r.epaPerPlay, 2)}</span>,
+      render: (r) => <span className={scd(r.epaPerPlay)}>{formatSigned(r.epaPerPlay, 2)}</span>,
     },
   ];
   if (isQb) {
@@ -168,14 +178,14 @@ function playerColumns(pos: ModelPosition): Column<PlayerProfile>[] {
     label: "The read",
     tooltip: "process vs production",
     sortValue: (r) => r.signal,
-    render: (r) => <span className={`font-mono text-xs ${toneClass(processTone(r.signal))}`}>{PROCESS_SIGNAL_LABEL[r.signal]}</span>,
+    render: (r) => <span className={`font-mono text-xs ${tcd(processTone(r.signal))}`}>{PROCESS_SIGNAL_LABEL[r.signal]}</span>,
   });
   return cols;
 }
 
 function PlayerModelView({ model }: { model: PlayerModel }): JSX.Element {
   if (model.status === "source-error") {
-    return <SourceError reason={model.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={model.error ?? "UNKNOWN"} />;
   }
   return (
     <div className="flex flex-col gap-6">
@@ -194,6 +204,7 @@ function PlayerModelView({ model }: { model: PlayerModel }): JSX.Element {
           <div key={pos} className="flex flex-col gap-3">
             <SubHead kicker={pos} title={`${pos} process grades`} />
             <DataTable
+              variant="dark"
               rows={rows}
               columns={playerColumns(pos)}
               rowKey={(r) => r.playerId}
@@ -228,12 +239,12 @@ function xfpReadTone(r: ExpectedPointsRow): SignalTone {
 
 function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
   if (f.status === "source-error") {
-    return <SourceError reason={f.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={f.error ?? "UNKNOWN"} />;
   }
   const columns: Column<ExpectedPointsRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
     { key: "games", label: "G", align: "right", numeric: true, tooltip: "games", render: (r) => r.games },
     { key: "xfpTotal", label: "xFP", align: "right", numeric: true, tooltip: "expected PPR points, total", render: (r) => r.xfpTotal.toFixed(1) },
     { key: "xfpPerGame", label: "xFP/g", align: "right", numeric: true, tooltip: "expected PPR points per game", render: (r) => r.xfpPerGame.toFixed(1) },
@@ -246,7 +257,7 @@ function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
       tooltip: "actual minus expected (luck/efficiency)",
       sortValue: (r) => r.diff,
       // actual over expected = hot (bad / sell), under = cold/coming (good / buy)
-      render: (r) => <span className={signedClass(r.diff)}>{formatSigned(r.diff, 1)}</span>,
+      render: (r) => <span className={scd(r.diff)}>{formatSigned(r.diff, 1)}</span>,
     },
     { key: "xfpPct", label: "xFP%", align: "right", numeric: true, tooltip: "expected-points percentile within position", render: (r) => r.xfpPct.toFixed(0) },
     { key: "prodPct", label: "Prod%", align: "right", numeric: true, tooltip: "actual-points percentile within position", render: (r) => r.prodPct.toFixed(0) },
@@ -254,7 +265,7 @@ function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
       key: "signal",
       label: "The read",
       sortValue: (r) => r.signal,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(xfpReadTone(r))}`}>{xfpReadLabel(r)}</span>,
+      render: (r) => <span className={`font-mono text-xs ${tcd(xfpReadTone(r))}`}>{xfpReadLabel(r)}</span>,
     },
   ];
   return (
@@ -265,6 +276,7 @@ function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
         note={f.note}
       />
       <DataTable
+              variant="dark"
         rows={f.rows}
         columns={columns}
         rowKey={(r) => r.playerId}
@@ -298,11 +310,11 @@ function qbReadTone(r: QbForwardRow): SignalTone {
 
 function QbForwardView({ f }: { f: QbForward }): JSX.Element {
   if (f.status === "source-error") {
-    return <SourceError reason={f.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={f.error ?? "UNKNOWN"} />;
   }
   const columns: Column<QbForwardRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     { key: "games", label: "G", align: "right", numeric: true, tooltip: "games", render: (r) => r.games },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "pass attempts", render: (r) => r.attempts },
     { key: "dakota", label: "DAKOTA", align: "right", numeric: true, tooltip: "DAKOTA EPA + CPOE composite", render: (r) => r.dakota.toFixed(3) },
@@ -315,7 +327,7 @@ function QbForwardView({ f }: { f: QbForward }): JSX.Element {
       key: "read",
       label: "The read",
       sortable: false,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(qbReadTone(r))}`}>{qbReadLabel(r)}</span>,
+      render: (r) => <span className={`font-mono text-xs ${tcd(qbReadTone(r))}`}>{qbReadLabel(r)}</span>,
     },
   ];
   return (
@@ -326,6 +338,7 @@ function QbForwardView({ f }: { f: QbForward }): JSX.Element {
         note={f.note}
       />
       <DataTable
+              variant="dark"
         rows={f.rows}
         columns={columns}
         rowKey={(r) => r.playerId}
@@ -365,11 +378,11 @@ function rcYacTone(r: RushingContactRow): SignalTone {
 
 function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
   if (f.status === "source-error") {
-    return <SourceError reason={f.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={f.error ?? "UNKNOWN"} />;
   }
   const columns: Column<RushingContactRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "rushing attempts", render: (r) => r.attempts },
     {
       key: "yacPerAtt",
@@ -377,7 +390,7 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
       align: "right",
       numeric: true,
       tooltip: "yards after contact per attempt — the back's own talent",
-      render: (r) => <span className={toneClass(rcYacTone(r))}>{r.yacPerAtt.toFixed(2)}</span>,
+      render: (r) => <span className={tcd(rcYacTone(r))}>{r.yacPerAtt.toFixed(2)}</span>,
     },
     { key: "ybcPerAtt", label: "YBC/att", align: "right", numeric: true, tooltip: "yards before contact per attempt — the line/scheme", render: (r) => r.ybcPerAtt.toFixed(2) },
     { key: "brokenTackles", label: "Brk", align: "right", numeric: true, tooltip: "broken tackles, total", render: (r) => r.brokenTackles },
@@ -387,7 +400,7 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
       key: "read",
       label: "The read",
       sortable: false,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(rcReadTone(r))}`}>{rcReadLabel(r)}</span>,
+      render: (r) => <span className={`font-mono text-xs ${tcd(rcReadTone(r))}`}>{rcReadLabel(r)}</span>,
     },
   ];
   return (
@@ -398,6 +411,7 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
         note={f.note}
       />
       <DataTable
+              variant="dark"
         rows={f.rows}
         columns={columns}
         rowKey={(r) => r.playerId}
@@ -426,12 +440,12 @@ function routeTone(s: RouteRateSignal): SignalTone {
 
 function RouteRateView({ rr }: { rr: RouteRate }): JSX.Element {
   if (rr.status === "source-error") {
-    return <SourceError reason={rr.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={rr.error ?? "UNKNOWN"} />;
   }
   const columns: Column<RouteRateRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
     { key: "routes", label: "Routes", align: "right", numeric: true, tooltip: "approximate routes run (proxy)", render: (r) => r.routes },
     { key: "targets", label: "Tgt", align: "right", numeric: true, render: (r) => r.targets },
     { key: "tprr", label: "TPRR", align: "right", numeric: true, tooltip: "targets per route run (proxy)", render: (r) => r.tprr.toFixed(3) },
@@ -440,7 +454,7 @@ function RouteRateView({ rr }: { rr: RouteRate }): JSX.Element {
       key: "signal",
       label: "The read",
       sortValue: (r) => r.signal,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(routeTone(r.signal))}`}>{ROUTE_SIGNAL_LABEL[r.signal]}</span>,
+      render: (r) => <span className={`font-mono text-xs ${tcd(routeTone(r.signal))}`}>{ROUTE_SIGNAL_LABEL[r.signal]}</span>,
     },
   ];
   return (
@@ -451,6 +465,7 @@ function RouteRateView({ rr }: { rr: RouteRate }): JSX.Element {
         note={rr.note}
       />
       <DataTable
+              variant="dark"
         rows={rr.rows}
         columns={columns}
         rowKey={(r) => r.playerId}
@@ -481,12 +496,12 @@ function scoringTone(s: ScoringZoneSignal): SignalTone {
 
 function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
   if (z.status === "source-error") {
-    return <SourceError reason={z.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={z.error ?? "UNKNOWN"} />;
   }
   const columns: Column<ScoringZoneRow>[] = [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
     { key: "rzCarries", label: "RZ Car", align: "right", numeric: true, tooltip: "red-zone carries (inside the 20)", render: (r) => r.rzCarries },
     { key: "rzTargets", label: "RZ Tgt", align: "right", numeric: true, tooltip: "red-zone targets (inside the 20)", render: (r) => r.rzTargets },
     { key: "inside5", label: "In-5", align: "right", numeric: true, tooltip: "carries + targets inside the 5", render: (r) => r.inside5 },
@@ -498,7 +513,7 @@ function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
       key: "signal",
       label: "The read",
       sortValue: (r) => r.signal,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(scoringTone(r.signal))}`}>{SCORING_SIGNAL_LABEL[r.signal]}</span>,
+      render: (r) => <span className={`font-mono text-xs ${tcd(scoringTone(r.signal))}`}>{SCORING_SIGNAL_LABEL[r.signal]}</span>,
     },
   ];
   return (
@@ -509,6 +524,7 @@ function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
         note={z.note}
       />
       <DataTable
+              variant="dark"
         rows={z.rows}
         columns={columns}
         rowKey={(r) => r.playerId}
@@ -532,24 +548,24 @@ function ScoringZoneView({ z }: { z: ScoringZone }): JSX.Element {
 
 function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
   if (t.status === "source-error") {
-    return <SourceError reason={t.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={t.error ?? "UNKNOWN"} />;
   }
   const columns: Column<TeamEnvironmentRow>[] = [
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ink">{r.team}</span> },
-    { key: "offEpaPerPlay", label: "Off EPA", align: "right", numeric: true, tooltip: "offensive EPA per play (neutral script, early down)", sortValue: (r) => r.offEpaPerPlay, render: (r) => <span className={signedClass(r.offEpaPerPlay)}>{formatSigned(r.offEpaPerPlay, 3)}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono font-semibold text-ion-white">{r.team}</span> },
+    { key: "offEpaPerPlay", label: "Off EPA", align: "right", numeric: true, tooltip: "offensive EPA per play (neutral script, early down)", sortValue: (r) => r.offEpaPerPlay, render: (r) => <span className={scd(r.offEpaPerPlay)}>{formatSigned(r.offEpaPerPlay, 3)}</span> },
     { key: "offEpaPct", label: "Off%ile", align: "right", numeric: true, tooltip: "within-league offensive EPA percentile", sortValue: (r) => r.offEpaPct, render: (r) => pct(r.offEpaPct) },
     { key: "offSuccessRate", label: "Off SR", align: "right", numeric: true, tooltip: "offensive success rate", sortValue: (r) => r.offSuccessRate, render: (r) => pct(r.offSuccessRate) },
-    { key: "defEpaPerPlay", label: "Def EPA", align: "right", numeric: true, tooltip: "defensive EPA per play (lower is better)", sortValue: (r) => r.defEpaPerPlay, render: (r) => <span className={signedClass(-r.defEpaPerPlay)}>{formatSigned(r.defEpaPerPlay, 3)}</span> },
+    { key: "defEpaPerPlay", label: "Def EPA", align: "right", numeric: true, tooltip: "defensive EPA per play (lower is better)", sortValue: (r) => r.defEpaPerPlay, render: (r) => <span className={scd(-r.defEpaPerPlay)}>{formatSigned(r.defEpaPerPlay, 3)}</span> },
     { key: "defEpaPct", label: "Def%ile", align: "right", numeric: true, tooltip: "within-league defensive EPA percentile (EPA inverted)", sortValue: (r) => r.defEpaPct, render: (r) => pct(r.defEpaPct) },
     { key: "defSuccessRate", label: "Def SR", align: "right", numeric: true, tooltip: "defensive success rate (lower is better)", sortValue: (r) => r.defSuccessRate, render: (r) => pct(r.defSuccessRate) },
-    { key: "proe", label: "PROE", align: "right", numeric: true, tooltip: "PROE — pass rate over expected", sortValue: (r) => r.proe, render: (r) => <span className={signedClass(r.proe)}>{formatSigned(r.proe, 1)}%</span> },
+    { key: "proe", label: "PROE", align: "right", numeric: true, tooltip: "PROE — pass rate over expected", sortValue: (r) => r.proe, render: (r) => <span className={scd(r.proe)}>{formatSigned(r.proe, 1)}%</span> },
     { key: "noHuddleRate", label: "Pace", align: "right", numeric: true, tooltip: "no-huddle rate — pace proxy", sortValue: (r) => r.noHuddleRate, render: (r) => pct(r.noHuddleRate) },
     {
       key: "read",
       label: "The read",
       sortable: false,
       render: (r) => (
-        <span className={`font-mono text-xs ${signedClass(r.offEpaPerPlay)}`}>
+        <span className={`font-mono text-xs ${scd(r.offEpaPerPlay)}`}>
           {r.offEpaPerPlay > 0 ? "Buy offense" : r.offEpaPerPlay < 0 ? "Fade offense" : "Neutral"}
         </span>
       ),
@@ -563,6 +579,7 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
         note={t.note}
       />
       <DataTable
+              variant="dark"
         rows={t.rows}
         columns={columns}
         rowKey={(r) => r.team}
@@ -592,20 +609,20 @@ function transferTone(c: TransferConfidence): SignalTone {
 
 function OpportunityTransferView({ transfer }: { transfer: OpportunityTransfer }): JSX.Element {
   if (transfer.status === "source-error") {
-    return <SourceError reason={transfer.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={transfer.error ?? "UNKNOWN"} />;
   }
   const columns: Column<OpportunityTransferRow>[] = [
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
-    { key: "outPlayer", label: "Out (vacating)", render: (r) => <span className="font-semibold text-ink">{r.outPlayer}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
+    { key: "outPlayer", label: "Out (vacating)", render: (r) => <span className="font-semibold text-ion-white">{r.outPlayer}</span> },
     { key: "vacatedTargets", label: "Vac Tgt", align: "right", numeric: true, tooltip: "trailing per-game targets the role vacates", render: (r) => r.vacatedTargets.toFixed(1) },
     { key: "vacatedCarries", label: "Vac Car", align: "right", numeric: true, tooltip: "trailing per-game carries the role vacates", render: (r) => r.vacatedCarries.toFixed(1) },
-    { key: "beneficiary", label: "Beneficiary", render: (r) => <span className="text-ink">{r.beneficiary ?? "—"}</span> },
+    { key: "beneficiary", label: "Beneficiary", render: (r) => <span className="text-ion-white">{r.beneficiary ?? "—"}</span> },
     {
       key: "confidence",
       label: "Confidence",
       sortValue: (r) => r.confidence,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(transferTone(r.confidence))}`}>{TRANSFER_CONFIDENCE_LABEL[r.confidence]}</span>,
+      render: (r) => <span className={`font-mono text-xs ${tcd(transferTone(r.confidence))}`}>{TRANSFER_CONFIDENCE_LABEL[r.confidence]}</span>,
     },
   ];
   return (
@@ -616,6 +633,7 @@ function OpportunityTransferView({ transfer }: { transfer: OpportunityTransfer }
         note={transfer.note}
       />
       <DataTable
+              variant="dark"
         rows={transfer.rows}
         columns={columns}
         rowKey={(r) => `${r.team}-${r.position}-${r.outPlayer}`}
@@ -652,26 +670,26 @@ function prob(p: number): string {
 function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
   if (c.status === "source-error") {
     return (
-      <SourceError reason={c.note}>
-        <p className="font-mono text-xs leading-5 text-ink-2">{c.error ?? "UNKNOWN"}</p>
+      <SourceError variant="dark" reason={c.note}>
+        <p className="font-mono text-xs leading-5 text-ion-2">{c.error ?? "UNKNOWN"}</p>
       </SourceError>
     );
   }
   const columns: Column<ClvBacktestRow>[] = [
     { key: "season", label: "Season", align: "right", numeric: true, render: (r) => r.season },
     { key: "week", label: "Wk", align: "right", numeric: true, render: (r) => r.week },
-    { key: "game", label: "Game", render: (r) => <span className="font-semibold text-ink">{r.game}</span> },
-    { key: "market", label: "Market", render: (r) => <span className="font-mono text-ink-1">{r.market}</span> },
-    { key: "side", label: "Side", render: (r) => <span className="font-mono text-ink">{r.side}</span> },
+    { key: "game", label: "Game", render: (r) => <span className="font-semibold text-ion-white">{r.game}</span> },
+    { key: "market", label: "Market", render: (r) => <span className="font-mono text-ion-1">{r.market}</span> },
+    { key: "side", label: "Side", render: (r) => <span className="font-mono text-ion-white">{r.side}</span> },
     { key: "modelProb", label: "Model", align: "right", numeric: true, tooltip: "model implied probability for the side taken", sortValue: (r) => r.modelProb, render: (r) => prob(r.modelProb) },
     { key: "closingProb", label: "Close", align: "right", numeric: true, tooltip: "implied probability from the closing line", sortValue: (r) => r.closingProb, render: (r) => prob(r.closingProb) },
-    { key: "clv", label: "CLV", align: "right", numeric: true, tooltip: "probability points beaten vs the close", sortValue: (r) => r.clv, render: (r) => <span className={toneClass(clvTone(r.clv))}>{formatSigned(r.clv, 4)}</span> },
-    { key: "covered", label: "Covered", align: "center", tooltip: "did the side actually cover/win?", sortValue: (r) => (r.covered ? 1 : 0), render: (r) => <span className="font-mono text-ink-1">{r.covered ? "Yes" : "—"}</span> },
+    { key: "clv", label: "CLV", align: "right", numeric: true, tooltip: "probability points beaten vs the close", sortValue: (r) => r.clv, render: (r) => <span className={tcd(clvTone(r.clv))}>{formatSigned(r.clv, 4)}</span> },
+    { key: "covered", label: "Covered", align: "center", tooltip: "did the side actually cover/win?", sortValue: (r) => (r.covered ? 1 : 0), render: (r) => <span className="font-mono text-ion-1">{r.covered ? "Yes" : "—"}</span> },
     {
       key: "read",
       label: "The read",
       sortable: false,
-      render: (r) => <span className={`font-mono text-xs ${toneClass(clvTone(r.clv))}`}>{clvRead(r.clv)}</span>,
+      render: (r) => <span className={`font-mono text-xs ${tcd(clvTone(r.clv))}`}>{clvRead(r.clv)}</span>,
     },
   ];
   return (
@@ -682,6 +700,7 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
         note={c.note}
       />
       <DataTable
+              variant="dark"
         rows={c.rows}
         columns={columns}
         rowKey={(r) => `${r.season}-${r.week}-${r.game}-${r.market}`}
@@ -704,23 +723,23 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
 function trendColumns(kind: "adds" | "drops"): Column<TrendingRow>[] {
   const isAdds = kind === "adds";
   return [
-    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ink">{r.name}</span> },
-    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ink-1">{r.position}</span> },
-    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ink-1">{r.team}</span> },
+    { key: "name", label: "Player", render: (r) => <span className="font-semibold text-ion-white">{r.name}</span> },
+    { key: "position", label: "Pos", render: (r) => <span className="font-mono text-ion-1">{r.position}</span> },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
     {
       key: "count",
       label: isAdds ? "Adds" : "Drops",
       align: "right",
       numeric: true,
       tooltip: isAdds ? "leagues adding over the window" : "leagues dropping over the window",
-      render: (r) => <span className={isAdds ? "text-emerald-700 font-semibold" : "text-rose-700 font-semibold"}>{r.count.toLocaleString()}</span>,
+      render: (r) => <span className={`font-semibold ${isAdds ? tcd("good") : tcd("bad")}`}>{r.count.toLocaleString()}</span>,
     },
   ];
 }
 
 function WaiverTrendsView({ t }: { t: SleeperTrending }): JSX.Element {
   if (t.status === "source-error") {
-    return <SourceError reason={t.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={t.error ?? "UNKNOWN"} />;
   }
   return (
     <div className="flex flex-col gap-6">
@@ -729,6 +748,7 @@ function WaiverTrendsView({ t }: { t: SleeperTrending }): JSX.Element {
         <div className="flex flex-col gap-3">
           <SubHead kicker="Trending adds" title="Who the market is buying" />
           <DataTable
+              variant="dark"
             rows={t.adds}
             columns={trendColumns("adds")}
             rowKey={(r) => r.playerId}
@@ -741,6 +761,7 @@ function WaiverTrendsView({ t }: { t: SleeperTrending }): JSX.Element {
         <div className="flex flex-col gap-3">
           <SubHead kicker="Trending drops" title="Who the market is dumping" />
           <DataTable
+              variant="dark"
             rows={t.drops}
             columns={trendColumns("drops")}
             rowKey={(r) => r.playerId}
@@ -762,7 +783,7 @@ function WaiverTrendsView({ t }: { t: SleeperTrending }): JSX.Element {
 
 function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
   return [
-    { key: "label", label: "Group", render: (r) => <span className="font-semibold text-ink">{r.label}</span> },
+    { key: "label", label: "Group", render: (r) => <span className="font-semibold text-ion-white">{r.label}</span> },
     { key: "n", label: "N", align: "right", numeric: true, tooltip: "paired players", render: (r) => r.n },
     { key: "gradeCorr", label: "Grade ρ", align: "right", numeric: true, tooltip: "rank corr: grade → future production", sortValue: (r) => r.gradeCorr, render: (r) => corr(r.gradeCorr) },
     { key: "baselineCorr", label: "Baseline ρ", align: "right", numeric: true, tooltip: "rank corr: past production → future production", sortValue: (r) => r.baselineCorr, render: (r) => corr(r.baselineCorr) },
@@ -773,7 +794,7 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       numeric: true,
       tooltip: "grade rho minus baseline rho",
       sortValue: (r) => r.lift,
-      render: (r) => <span className={liftClass(r.lift)}>{r.lift == null ? "—" : formatSigned(r.lift, 2)}</span>,
+      render: (r) => <span className={lcd(r.lift)}>{r.lift == null ? "—" : formatSigned(r.lift, 2)}</span>,
     },
     {
       key: "buyLowHitRate",
@@ -783,9 +804,9 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       tooltip: "fraction of buy-low calls whose per-game rose",
       sortValue: (r) => r.buyLowHitRate,
       render: (r) => (
-        <span className={hitRateClass(r.buyLowHitRate)}>
+        <span className={hcd(r.buyLowHitRate)}>
           {pctNullable(r.buyLowHitRate)}
-          <span className="ml-1 text-xs text-ink-2">n={r.buyLowN}</span>
+          <span className="ml-1 text-xs text-ion-2">n={r.buyLowN}</span>
         </span>
       ),
     },
@@ -797,9 +818,9 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       tooltip: "fraction of sell-high calls whose per-game fell",
       sortValue: (r) => r.sellHighHitRate,
       render: (r) => (
-        <span className={hitRateClass(r.sellHighHitRate)}>
+        <span className={hcd(r.sellHighHitRate)}>
           {pctNullable(r.sellHighHitRate)}
-          <span className="ml-1 text-xs text-ink-2">n={r.sellHighN}</span>
+          <span className="ml-1 text-xs text-ion-2">n={r.sellHighN}</span>
         </span>
       ),
     },
@@ -819,6 +840,7 @@ function ProofTable({
   ];
   return (
     <DataTable
+              variant="dark"
       rows={rows}
       columns={proofColumns()}
       rowKey={(r) => r.label}
@@ -829,23 +851,26 @@ function ProofTable({
 
 function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
   if (p.status === "source-error") {
-    return <SourceError reason={p.error ?? "UNKNOWN"} />;
+    return <SourceError variant="dark" reason={p.error ?? "UNKNOWN"} />;
   }
   return (
     <div className="flex flex-col gap-6">
       <section className="grid gap-4 sm:grid-cols-3">
         <KpiCard
+          variant="dark"
           label="Grade ρ (overall)"
           value={corr(p.overall.gradeCorr)}
           sublabel={`vs ${corr(p.overall.baselineCorr)} past-production baseline`}
         />
         <KpiCard
+          variant="dark"
           label="Lift over the past"
           value={p.overall.lift == null ? "—" : formatSigned(p.overall.lift, 2)}
           tone={liftTone(p.overall.lift)}
           sublabel={`${p.sampleSize} players · ${p.season}`}
         />
         <KpiCard
+          variant="dark"
           label="Sell-high hit-rate"
           value={pctNullable(p.overall.sellHighHitRate)}
           tone={hitRateTone(p.overall.sellHighHitRate)}
@@ -934,7 +959,7 @@ export function EngineView({ engine, data }: EngineViewProps): JSX.Element {
     case "proof":
       return <ProofView p={data as PredictivenessProof} />;
     default:
-      return <SourceError reason={`Unknown engine "${engine}".`} />;
+      return <SourceError variant="dark" reason={`Unknown engine "${engine}".`} />;
   }
 }
 

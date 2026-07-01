@@ -85,6 +85,16 @@ const TABLE_TOKENS = {
     dfsAgreeCheck: "border-paper-border text-ink-2",
     rushRead: "text-ink-1",
     consensusRead: "text-ink-1",
+    // Directional tone text (good/bad/warn), paper-darkened for AA on white.
+    good: "text-emerald-700",
+    bad: "text-rose-700",
+    warn: "text-amber-700",
+    // Status badges (border + text), paper palette.
+    badgeOut: "border-rose-300 text-rose-700",
+    badgeDoubtful: "border-amber-300 text-amber-700",
+    badgeQuestionable: "border-sky-300 text-sky-700",
+    badgeAgree: "border-emerald-300 text-emerald-700",
+    badgeDisagree: "border-rose-300 text-rose-700",
   },
   dark: {
     playerName: "text-ion-white",
@@ -100,6 +110,17 @@ const TABLE_TOKENS = {
     dfsAgreeCheck: "border-mineral text-ion-2",
     rushRead: "text-ion-1",
     consensusRead: "text-ion-1",
+    // Directional tone text — semantic tokens that clear AA on eclipse/carbon
+    // (emerald-700/rose-700/amber-700 drop to ~2:1 on dark and read as mud).
+    good: "text-verify",
+    bad: "text-alert",
+    warn: "text-caution",
+    // Status badges (border + text), cosmic tokens with a 50% border wash.
+    badgeOut: "border-alert/50 text-alert",
+    badgeDoubtful: "border-caution/50 text-caution",
+    badgeQuestionable: "border-orbital-cyan/50 text-orbital-cyan",
+    badgeAgree: "border-verify/50 text-verify",
+    badgeDisagree: "border-alert/50 text-alert",
   },
 } as const;
 
@@ -135,7 +156,7 @@ function playerCell(name: string, tok: Tok, position?: string): ReactNode {
 /** Tone a signed numeric value (good/bad/neutral). */
 function signedCell(value: number, tok: Tok, digits = 1, invert = false): ReactNode {
   const tone = signedTone(value, invert);
-  const cls = tone === "good" ? "text-emerald-700" : tone === "bad" ? "text-rose-700" : tok.signedNeutral;
+  const cls = tone === "good" ? tok.good : tone === "bad" ? tok.bad : tok.signedNeutral;
   return <span className={`font-semibold ${cls}`}>{formatSigned(value, digits)}</span>;
 }
 
@@ -217,7 +238,7 @@ function opportunityColumns(tok: Tok): ReadonlyArray<Column<ReceivingOpportunity
       sortValue: (r) => OPP_SIGNAL_LABEL[r.signal],
       render: (r) => {
         const tone = oppTone(r.signal);
-        const cls = tone === "good" ? "text-emerald-700" : tone === "bad" ? "text-rose-700" : tok.signedNeutral;
+        const cls = tone === "good" ? tok.good : tone === "bad" ? tok.bad : tok.signedNeutral;
         return <span className={`font-semibold ${cls}`}>{OPP_SIGNAL_LABEL[r.signal]}</span>;
       },
     },
@@ -292,7 +313,7 @@ function qbPressureColumns(tok: Tok): ReadonlyArray<Column<QbPressureRow>> {
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
     { key: "games", label: "G", align: "right", numeric: true },
-    { key: "pressurePct", label: "Pressure%", align: "right", numeric: true, render: (r) => <span className="font-semibold text-rose-700">{fmtPercent(r.pressurePct)}</span> },
+    { key: "pressurePct", label: "Pressure%", align: "right", numeric: true, render: (r) => <span className={`font-semibold ${tok.bad}`}>{fmtPercent(r.pressurePct)}</span> },
     { key: "badThrowPct", label: "Bad throw%", align: "right", numeric: true, render: (r) => fmtPercent(r.badThrowPct) },
     { key: "sacks", label: "Sacks", align: "right", numeric: true },
     { key: "blitzesFaced", label: "Blitzes", align: "right", numeric: true },
@@ -306,9 +327,9 @@ function qbPressureColumns(tok: Tok): ReadonlyArray<Column<QbPressureRow>> {
         const s = protectionStress(r);
         const cls =
           s.band === "high"
-            ? "font-semibold text-rose-700"
+            ? `font-semibold ${tok.bad}`
             : s.band === "moderate"
-              ? "text-amber-700"
+              ? tok.warn
               : tok.protStressLow;
         return <span className={cls}>{s.index}</span>;
       },
@@ -322,7 +343,7 @@ function coverageColumns(tok: Tok): ReadonlyArray<Column<CoverageRow>> {
     { key: "targets", label: "Tgt", align: "right", numeric: true },
     { key: "completionPct", label: "Cmp%", align: "right", numeric: true, render: (r) => fmtPercent(r.completionPct) },
     { key: "yardsPerTarget", label: "Yd/Tgt", align: "right", numeric: true, render: (r) => r.yardsPerTarget.toFixed(1) },
-    { key: "passerRatingAllowed", label: "Rating allowed", align: "right", numeric: true, render: (r) => <span className="font-semibold text-emerald-700">{r.passerRatingAllowed.toFixed(1)}</span> },
+    { key: "passerRatingAllowed", label: "Rating allowed", align: "right", numeric: true, render: (r) => <span className={`font-semibold ${tok.good}`}>{r.passerRatingAllowed.toFixed(1)}</span> },
     { key: "missedTacklePct", label: "Miss tkl%", align: "right", numeric: true, render: (r) => fmtPercent(r.missedTacklePct) },
   ];
 }
@@ -383,7 +404,7 @@ function consensusColumns(tok: Tok): ReadonlyArray<Column<QbConsensusRow>> {
       sortValue: (r) => DIVERGENCE_LABEL[r.divergence],
       render: (r) => {
         const tone = divergenceTone(r.divergence);
-        const cls = tone === "good" ? "text-emerald-700" : tok.consensusRead;
+        const cls = tone === "good" ? tok.good : tok.consensusRead;
         return <span className={`font-semibold ${cls}`}>{DIVERGENCE_LABEL[r.divergence]}</span>;
       },
     },
@@ -393,7 +414,7 @@ function consensusColumns(tok: Tok): ReadonlyArray<Column<QbConsensusRow>> {
 // ── EDGE ──────────────────────────────────────────────────────────────────────
 
 function edgeColumns(tok: Tok, tone: "buy" | "sell"): ReadonlyArray<Column<EdgeSignalRow>> {
-  const gapCls = tone === "buy" ? "text-emerald-700" : "text-rose-700";
+  const gapCls = tone === "buy" ? tok.good : tok.bad;
   return [
     { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok, r.position) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
@@ -414,9 +435,9 @@ function edgeColumns(tok: Tok, tone: "buy" | "sell"): ReadonlyArray<Column<EdgeS
 
 function injuryStatusBadge(r: InjuryRow, tok: Tok): ReactNode {
   const cls: Record<ReportStatus, string> = {
-    Out: "border-rose-300 text-rose-700",
-    Doubtful: "border-amber-300 text-amber-700",
-    Questionable: "border-sky-300 text-sky-700",
+    Out: tok.badgeOut,
+    Doubtful: tok.badgeDoubtful,
+    Questionable: tok.badgeQuestionable,
     Other: tok.injuryOther,
   };
   return (
@@ -443,7 +464,7 @@ function marketColumns(tok: Tok): ReadonlyArray<Column<SleeperTrendingPlayer>> {
     { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
     { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
     { key: "position", label: "Pos" },
-    { key: "injuryStatus", label: "Status", sortValue: (r) => r.injuryStatus, render: (r) => (r.injuryStatus ? <span className="text-amber-700">{r.injuryStatus}</span> : "—") },
+    { key: "injuryStatus", label: "Status", sortValue: (r) => r.injuryStatus, render: (r) => (r.injuryStatus ? <span className={tok.warn}>{r.injuryStatus}</span> : "—") },
     { key: "count", label: "Moves", align: "right", numeric: true, render: (r) => fmtNumber(r.count) },
   ];
 }
@@ -453,9 +474,9 @@ function marketColumns(tok: Tok): ReadonlyArray<Column<SleeperTrendingPlayer>> {
 function dfsColumns(tok: Tok): ReadonlyArray<Column<DfsSalaryRow>> {
   const agreementCell = (r: DfsSalaryRow): ReactNode => {
     const cls: Record<DfsSalaryRow["agreement"], string> = {
-      agree: "border-emerald-300 text-emerald-700",
+      agree: tok.badgeAgree,
       single: tok.dfsAgreeCheck,
-      disagree: "border-rose-300 text-rose-700",
+      disagree: tok.badgeDisagree,
     };
     const text = r.agreement === "disagree" ? `±$${fmtNumber(r.spread)}` : r.agreement;
     return <span className={`rounded-ds-sm border px-2 py-0.5 font-mono text-xs uppercase tracking-wide ${cls[r.agreement]}`}>{text}</span>;
@@ -734,7 +755,7 @@ function resolveBinding(section: SectionData, tok: Tok): SectionBinding {
 
 // ── Section + view rendering (CLIENT) ─────────────────────────────────────────
 
-function SectionBlock({ section, tok }: { section: SectionData; tok: Tok }): JSX.Element {
+function SectionBlock({ section, tok, variant }: { section: SectionData; tok: Tok; variant: "paper" | "dark" }): JSX.Element {
   const binding = resolveBinding(section, tok);
   const enumOptions: ReadonlyArray<EnumOption> | undefined = section.enumOptions;
   const enumFilter =
@@ -775,6 +796,7 @@ function SectionBlock({ section, tok }: { section: SectionData; tok: Tok }): JSX
         minWidth={section.minWidth}
         emptyTitle={section.emptyTitle}
         emptyHint={section.emptyHint}
+        variant={variant}
       />
 
       {section.footnote ? (
@@ -805,7 +827,7 @@ export function PlayerLabTable({ sections, variant = "paper" }: PlayerLabTablePr
   return (
     <>
       {sections.map((s) => (
-        <SectionBlock key={s.id} section={s} tok={tok} />
+        <SectionBlock key={s.id} section={s} tok={tok} variant={variant} />
       ))}
     </>
   );

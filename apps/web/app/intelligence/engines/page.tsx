@@ -149,6 +149,7 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
   } catch (error) {
     body = (
       <SourceError
+        variant="dark"
         reason={`This engine could not load. ${error instanceof Error ? error.message : "UNKNOWN"}`}
       />
     );

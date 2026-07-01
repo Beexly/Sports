@@ -158,6 +158,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
 
         {loadError || !result || result.status === "source-error" ? (
           <SourceError
+            variant="dark"
             reason={
               loadError
                 ? `This view could not load. ${loadError}`
