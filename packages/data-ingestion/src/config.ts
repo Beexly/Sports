@@ -103,8 +103,26 @@ export const PRIORITY_BOOKMAKERS = [
   "mybookieag",
 ];
 
-// Data freshness threshold (ms) — reject data older than this
-export const FRESHNESS_THRESHOLD_MS = 60 * 60 * 1000; // 1 hour
+// Data freshness threshold (ms) — a game whose bookmaker odds are older than
+// this is dropped as stale; if EVERY game is stale the whole run is rejected
+// ("Upstream odds are stale") and no picks are generated.
+//
+// Was a hard 1h. That silently starved the board: the deployed Vercel
+// `refresh-odds` cron runs ONCE daily at 10:00 UTC (6am ET) — ~13h before MLB
+// first pitch — so bookmaker `last_update` timestamps are routinely >1h old at
+// fetch time. Every game got dropped → 0 picks, every day. This 1h value also
+// contradicted the platform's own shared Refresh SLA, which already declares 4h
+// the staleness line for the daily cron (REFRESH_STALE_AFTER_MINUTES, see
+// refresh-sla.ts). Aligned here so the odds gate and the SLA speak with one
+// voice, and exposed as ODDS_FRESHNESS_MAX_HOURS so the freshness-vs-availability
+// trade is an explicit owner knob, not a buried constant.
+//
+// TRUST NOTE: this is the maximum age of a published pregame line. Keep it tight
+// enough that a genuinely dead/cached board is still rejected; the honest fix for
+// consistently-fresh picks is to fetch closer to game time (more cron cycles),
+// not to widen this indefinitely.
+export const FRESHNESS_THRESHOLD_MS =
+  (Number(process.env["ODDS_FRESHNESS_MAX_HOURS"]) || 4) * 60 * 60 * 1000;
 
 // Upstream request timeout (ms) — a hung Odds API call must never block the
 // ingestion/settlement cron. Comfortably above normal latency (<1s) while

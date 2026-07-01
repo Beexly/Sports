@@ -119,13 +119,13 @@ describe("DataNormalizer", () => {
       expect(normalizer.validateFreshness(now)).toBe(true);
     });
 
-    it("returns false for stale data (> 1 hour old)", () => {
-      const staleDate = new Date(Date.now() - 2 * 60 * 60 * 1000); // 2 hours ago
+    it("returns false for stale data (older than the freshness threshold)", () => {
+      const staleDate = new Date(Date.now() - 5 * 60 * 60 * 1000); // 5h ago — past the 4h gate
       expect(normalizer.validateFreshness(staleDate)).toBe(false);
     });
 
     it("returns true for data just under the threshold", () => {
-      const slightlyOld = new Date(Date.now() - 59 * 60 * 1000); // 59 min ago
+      const slightlyOld = new Date(Date.now() - 239 * 60 * 1000); // 3h59m — just under 4h
       expect(normalizer.validateFreshness(slightlyOld)).toBe(true);
     });
   });
@@ -150,7 +150,7 @@ describe("DataNormalizer", () => {
         ...mockEvent,
         bookmakers: mockEvent.bookmakers.map((b) => ({
           ...b,
-          last_update: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3h old
+          last_update: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5h old (past 4h gate)
         })),
       };
       // We fetched "now", so validateFreshness(now) would pass — but the data is stale.
@@ -177,7 +177,7 @@ describe("DataNormalizer", () => {
         id: "stale-game",
         bookmakers: mockEvent.bookmakers.map((b) => ({
           ...b,
-          last_update: new Date(now - 3 * 60 * 60 * 1000).toISOString(), // 3h old
+          last_update: new Date(now - 5 * 60 * 60 * 1000).toISOString(), // 5h old (past 4h gate)
         })),
       };
       const stale = normalizer.normalizeOdds([staleEvent], new Date());

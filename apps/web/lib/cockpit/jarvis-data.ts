@@ -68,6 +68,7 @@ export async function loadJarvisAssessment(): Promise<{
     lastSuccessIngestion,
     lastIngestionAny,
     recentFailureCount,
+    lastFailedRun,
     lastSettlement,
     settledIn24h,
     canonicalSettledCount,
@@ -101,6 +102,13 @@ export async function loadJarvisAssessment(): Promise<{
     db.ingestionRun
       .count({ where: { status: "FAILED", startedAt: { gte: settlementSince } } })
       .catch(() => 0),
+    db.ingestionRun
+      .findFirst({
+        where: { status: "FAILED" },
+        orderBy: { startedAt: "desc" },
+        select: { errorMessage: true },
+      })
+      .catch(() => null),
     db.pick
       .findFirst({
         where: { settledAt: { not: null } },
@@ -174,6 +182,7 @@ export async function loadJarvisAssessment(): Promise<{
       lastSuccessAt: lastSuccessIngestion?.completedAt ?? null,
       lastWasSuccess: lastIngestionAny?.status === "SUCCESS",
       recentFailureCount,
+      lastFailureReason: lastFailedRun?.errorMessage ?? null,
     },
     settlement: {
       lastSettlementAt: lastSettlement?.settledAt ?? null,
