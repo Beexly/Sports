@@ -39,7 +39,7 @@ export default function FantasyBaselinePage(): JSX.Element {
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">

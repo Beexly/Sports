@@ -54,7 +54,7 @@ export default async function BlogPage() {
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-obsidian">
+      <main id="main-content" className="min-h-screen bg-obsidian">
         <div className="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300 mb-2">

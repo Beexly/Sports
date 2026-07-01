@@ -58,7 +58,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
       <div className="relative isolate min-h-screen bg-carbon text-ion">
         <GeneratedPlate assetId="trends-field" className="-z-10 opacity-20" />
         <Nav />
-        <main className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
+        <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
           <section>
             <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
               Find the edges before they become consensus.
@@ -93,7 +93,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
     <div className="relative isolate min-h-screen bg-carbon text-ion">
       <GeneratedPlate assetId="trends-field" className="-z-10 opacity-20" />
       <Nav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
           <div>
             <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">

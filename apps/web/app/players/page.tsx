@@ -123,7 +123,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
     <div className="relative isolate min-h-screen bg-carbon text-ion-white">
       <GeneratedPlate assetId="players-constellation" className="-z-10 opacity-20" />
       <Nav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <PageHero
           eyebrow={view.eyebrow}
           title={view.title}

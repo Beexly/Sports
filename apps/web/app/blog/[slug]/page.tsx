@@ -59,7 +59,7 @@ export default async function BlogPostPage({
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-obsidian">
+      <main id="main-content" className="min-h-screen bg-obsidian">
         <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6">
           {/* Back link */}
           <Link href="/blog" className="text-ion-3 hover:text-ion-1 text-sm transition-colors mb-8 inline-flex items-center gap-1">

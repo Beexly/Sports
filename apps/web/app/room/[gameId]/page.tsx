@@ -24,7 +24,7 @@ export default async function GameRoomPage({
   return (
     <div className="min-h-screen bg-obsidian text-ion-white">
       <Nav />
-      <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
         <header className="border-b border-titanium pb-8">
           <Link href="/board" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
             Today&apos;s Board

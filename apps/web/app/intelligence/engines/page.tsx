@@ -157,7 +157,7 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
   return (
     <div className="min-h-screen bg-carbon text-ion-white">
       <Nav />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <PageHero
           eyebrow="Intelligence engines"
           title={active.title}

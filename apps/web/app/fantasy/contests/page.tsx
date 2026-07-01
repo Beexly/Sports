@@ -41,7 +41,7 @@ export default function ContestBaySealedPage() {
     <div className="flex min-h-screen flex-col" style={{ background: BRAND_COLORS.obsidianBlack }}>
       <Nav />
 
-      <main className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-28 text-center">
+      <main id="main-content" className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-28 text-center">
         {/* atmosphere */}
         <div aria-hidden className="gse-vignette" />
         <div aria-hidden className="gse-grain" />

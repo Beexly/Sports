@@ -93,7 +93,7 @@ export default async function CalibrationProofRoomPage() {
       <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
       <Nav />
 
-      <main className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
         <header className="gw-nebula-deep -mx-4 rounded-ds-lg border-b border-mineral px-4 pb-10 pt-6 sm:-mx-6 sm:px-6">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-orbital-cyan">
             The Proof Room · Galaxy Calibration

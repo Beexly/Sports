@@ -78,7 +78,7 @@ export default function MethodologyPage(): JSX.Element {
   return (
     <div className="flex min-h-screen w-full flex-col overflow-x-hidden" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden">
           <div aria-hidden="true" className="absolute inset-0 -z-20">

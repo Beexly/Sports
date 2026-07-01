@@ -167,7 +167,7 @@ export default function FaqPage() {
         dangerouslySetInnerHTML={{ __html: jsonLdScript(faqJsonLd) }}
       />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">FAQ</p>

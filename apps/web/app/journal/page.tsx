@@ -65,7 +65,7 @@ export default async function JournalPage(): Promise<JSX.Element> {
         dangerouslySetInnerHTML={{ __html: jsonLdScript(blogJsonLd) }}
       />
       <Nav />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero */}
         <section className="relative isolate overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
           <div

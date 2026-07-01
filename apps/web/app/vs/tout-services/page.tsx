@@ -33,7 +33,7 @@ export default function VsToutServicesPage() {
     <div className="flex min-h-screen flex-col">
       <Nav />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* HERO */}
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">

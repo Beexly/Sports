@@ -40,7 +40,7 @@ export default async function BriefStub() {
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-obsidian">
       <GeneratedPlate assetId="brief-horizon" className="-z-10 opacity-25" />
-      <main className="mx-auto max-w-3xl px-4 py-12">
+      <main id="main-content" className="mx-auto max-w-3xl px-4 py-12">
         <h1 className="text-2xl font-bold text-white">Daily brief</h1>
         <p className="mt-2 text-sm text-ion-2">
           The daily brief composer is being rebuilt. Verified picks will

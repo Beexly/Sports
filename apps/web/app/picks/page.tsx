@@ -187,7 +187,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
 
-      <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
 
           {demoActive && (

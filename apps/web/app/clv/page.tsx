@@ -35,7 +35,7 @@ export default async function ClvPage() {
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-carbon">
       <Nav />
-      <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
           {/* Hero */}
           <div className="mb-10">
