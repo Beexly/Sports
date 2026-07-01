@@ -19,6 +19,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   forceNoBetIfStale: false,
   pickCount: vi.fn<(args?: unknown) => Promise<number>>(),
+  // The route's non-demo path also derives totalGames via
+  // db.pick.findMany({ distinct: ["gameId"] }); the mock must be shape-complete
+  // or the route throws synchronously ("findMany is not a function") before its
+  // own .catch() can engage.
+  pickFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
   isStubMode: vi.fn<() => boolean>(),
@@ -28,7 +33,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
-    pick: { count: mocks.pickCount },
+    pick: { count: mocks.pickCount, findMany: mocks.pickFindMany },
     ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
   },
   isStubMode: mocks.isStubMode,
@@ -66,6 +71,7 @@ describe("/api/picks/daily-slate — stale-data kill switch", () => {
     // Non-demo, non-stub: the route's normal "real data" path. The count is the
     // only DB read; give it a non-zero value so suppression is observable.
     mocks.pickCount.mockReset().mockResolvedValue(3);
+    mocks.pickFindMany.mockReset().mockResolvedValue([]);
     mocks.ingestionRunFindFirst.mockReset();
     mocks.isStubMode.mockReset().mockReturnValue(false);
     mocks.isDemoPicksEnabled.mockReset().mockReturnValue(false);

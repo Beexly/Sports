@@ -1,12 +1,12 @@
 /**
  * Source registry + illustrative wire.
  *
- * NATIONAL_INSIDERS is an INTERNAL reliability seed — real public reporters whose
+ * NATIONAL_INSIDERS is an INTERNAL reliability seed: real public reporters whose
  * tier weight the scoring model uses. It is NOT rendered as endorsements or
  * attributed reports on any public surface (only its COUNT is ever surfaced). The
  * per-team beat roster is a set of slots that populate from licensed/official
  * feeds when ingestion is switched on (founder-gated). The DEMO_WIRE below is
- * fully FICTIONAL — sources, players, and reports alike — so no fabricated report
+ * fully FICTIONAL (sources, players, and reports alike), so no fabricated report
  * is ever attributed to a real journalist; it exists only to demonstrate scoring.
  */
 
@@ -15,7 +15,7 @@ import type { NewsItem, Tier } from "./impact";
 export type Insider = { readonly name: string; readonly outlet: string; readonly tier: Tier };
 
 /**
- * Real, public national NFL insiders — an INTERNAL reliability seed for the
+ * Real, public national NFL insiders: an INTERNAL reliability seed for the
  * Insider tier, used for tier weighting + counts only. These names are NEVER
  * rendered on a public surface as an endorsement or an attributed report.
  */
@@ -47,7 +47,7 @@ export const NFL_TEAMS: readonly string[] = [
 export const TEAM_BEATS: readonly TeamBeat[] = NFL_TEAMS.map((team) => ({ team, market: team, slots: 3 }));
 
 /**
- * Illustrative wire — FICTIONAL sources, players, and reports; real signal types.
+ * Illustrative wire: FICTIONAL sources, players, and reports; real signal types.
  * Every `source` here is invented (never a real journalist), so no fabricated
  * report is attributed to a real person. Explicit per-item `tier` drives scoring,
  * so these display names carry no reliability meaning on their own.
