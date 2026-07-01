@@ -104,7 +104,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "The discipline, sampled: one signal a day, the public record, and the full Academy.",
+    description: "The discipline, sampled: every pick free, the public record, and the full Academy.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],

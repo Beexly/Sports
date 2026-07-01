@@ -458,9 +458,9 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {record && (
           <div className="rounded-lg border border-titanium bg-carbon px-3 py-2">
             <span className="mr-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-ion-2">{record.period}</span>
-            <span className="text-xs font-bold text-green-400">{record.wins}W</span>
+            <span className="text-xs font-bold text-orbital-cyan">{record.wins}W</span>
             <span className="mx-1 text-xs text-ion-3">/</span>
-            <span className="text-xs font-bold text-red-400">{record.losses}L</span>
+            <span className="text-xs font-bold text-alert">{record.losses}L</span>
             {record.pushes > 0 && (
               <>
                 <span className="mx-1 text-xs text-ion-3">/</span>
@@ -473,8 +473,8 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {/* Last updated */}
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-100">Updated {lastUpdated}</span>
+            <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(0,229,255,0.6)]" aria-hidden="true" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>
           </div>
         )}
       </div>
