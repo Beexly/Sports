@@ -103,7 +103,12 @@ describe("resource-intelligence: full-dump ledger (verified source)", () => {
 
   it("dump is present and matches the verified SHA-256", () => {
     expect(present, "verified dump must be committed").toBe(true);
-    const sha = createHash("sha256").update(readFileSync(DUMP_PATH)).digest("hex");
+    // Hash the LF-normalised bytes so the pin is stable across platforms. git
+    // checks the file out with CRLF on Windows (core.autocrlf) but LF on Linux/CI,
+    // and DUMP_SHA is the LF hash. Normalising here verifies the exact same
+    // content on every machine instead of failing on Windows line endings.
+    const lf = readFileSync(DUMP_PATH, "utf8").replace(/\r\n/g, "\n");
+    const sha = createHash("sha256").update(lf, "utf8").digest("hex");
     expect(sha).toBe(DUMP_SHA);
   });
 
