@@ -35,7 +35,7 @@
  * entirely (null), never counted as 0-unit returns.
  */
 
-import { bcaMeanCi, studentizedMeanCi, americanToDecimalOdds } from "@sports/prediction-engine";
+import { bcaMeanCi, studentizedMeanCi, empiricalBernsteinMeanCi, americanToDecimalOdds } from "@sports/prediction-engine";
 
 export type PickResultLike = "WIN" | "LOSS" | "PUSH" | "VOID" | "PENDING";
 
@@ -88,6 +88,17 @@ export interface PublicRoiPolicy {
    * the nominal 2.5% budget at n>=25 (see module doc).
    */
   readonly clearsProfit: boolean;
+  /**
+   * WORST-CASE tier (empirical-Bernstein, Maurer-Pontil 2009): the only leg
+   * with a FINITE-SAMPLE guarantee — no asymptotics, no resampling, valid
+   * because per-bet returns are bounded by construction (loss = -1 stake,
+   * win = decimalOdds-1). Deliberately much wider than the bootstrap bands.
+   * clearsProfitWorstCase = its 95% lower bound clears 0 too: the strongest
+   * profit statement the platform can make. ADDITIVE — does not change
+   * clearsProfit semantics.
+   */
+  readonly roiCiLowWorstCase: number | null;
+  readonly clearsProfitWorstCase: boolean;
   readonly publicMessage: string;
   readonly operatorMessage: string;
   readonly minimumRequirements: readonly string[];
@@ -128,6 +139,17 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
     round2(ci.low) > 0 &&
     round2(ciStud.low) > 0;
 
+  // WORST-CASE tier: empirical-Bernstein (finite-sample, closed-form, no
+  // resampling). Valid here because per-bet returns are bounded by construction
+  // (loss = -1 stake, win = decimalOdds-1); range defaults to the observed
+  // support of the sealed ledger — the exact support of the record the claim is
+  // about. Much wider than the bootstrap bands by design. ADDITIVE: it never
+  // changes clearsProfit; it only enables the stronger statement when it holds.
+  const ciBern = n >= 2 ? empiricalBernsteinMeanCi(input.returns) : null;
+  const roiCiLowWorstCase = ciBern && Number.isFinite(ciBern.low) ? round2(ciBern.low) : null;
+  const clearsProfitWorstCase =
+    clearsProfit && ciBern != null && Number.isFinite(ciBern.low) && round2(ciBern.low) > 0;
+
   const minimumRequirements: string[] = [];
   if (blockers.includes("GATE_OFF_PERFORMANCE_STATS")) {
     minimumRequirements.push("Open the performance gate (PERFORMANCE_STATS_ENABLED=true) after canonical history accumulates.");
@@ -156,7 +178,8 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
       `ROI publishable. n=${n} roi=${signed(roiPerBet)}u ` +
       `BCa=[${signed(roiCiLow)},${signed(roiCiHigh)}]u ` +
       `stud=[${signed(roiCiLowStudentized)},${signed(roiCiHighStudentized)}]u ` +
-      `clearsProfit(both)=${clearsProfit}; min=${minGraded}.`;
+      `bernLow=${signed(roiCiLowWorstCase)}u ` +
+      `clearsProfit(both)=${clearsProfit} worstCase=${clearsProfitWorstCase}; min=${minGraded}.`;
   } else {
     publicMessage =
       "The units/ROI record is still accruing. It opens once enough priced picks have settled. " +
@@ -178,6 +201,8 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
     roiCiLowStudentized: allowed ? roiCiLowStudentized : null,
     roiCiHighStudentized: allowed ? roiCiHighStudentized : null,
     clearsProfit: allowed ? clearsProfit : false,
+    roiCiLowWorstCase: allowed ? roiCiLowWorstCase : null,
+    clearsProfitWorstCase: allowed ? clearsProfitWorstCase : false,
     publicMessage,
     operatorMessage,
     minimumRequirements,

@@ -23,7 +23,7 @@
  * fitting complex M-estimators, which a performance ledger does not do).
  */
 
-export type CiMethod = "percentile" | "bca" | "studentized";
+export type CiMethod = "percentile" | "bca" | "studentized" | "empirical-bernstein";
 
 export interface PerformanceCi {
   readonly point: number; // observed mean (ROI / units per bet)
@@ -467,4 +467,73 @@ export function studentizedMeanCi(
   opts: { alpha?: number; resamples?: number; seed?: number } = {},
 ): PerformanceCi | null {
   return studentizedCi(returns, meanStatistic, { ...opts, standardError: meanStandardError });
+}
+
+/**
+ * EMPIRICAL-BERNSTEIN worst-case CI for the MEAN (Maurer & Pontil 2009, thm 4)
+ * — the third, NON-BOOTSTRAP leg of the interval stack, and the only one with a
+ * FINITE-SAMPLE guarantee (no asymptotics at all).
+ *
+ * Why it is legitimately applicable to a bet ledger where generic concentration
+ * bounds are not: per-bet unit returns are BOUNDED BY CONSTRUCTION — a loss is
+ * exactly -1 stake, a win pays decimalOdds-1, both known per pick — so the
+ * bounded-support assumption is a fact of the data, not a modeling choice. For
+ * i.i.d. X in a range of width R, with probability >= 1-delta:
+ *
+ *   |mean - mu| <= sqrt(2·s²·ln(2/delta)/n) + 7·R·ln(2/delta)/(3(n-1))
+ *
+ * (s² the unbiased sample variance; two-sided at alpha uses delta = alpha/2 per
+ * side.) The bound is deliberately CONSERVATIVE (wider than BCa/studentized) —
+ * that is its role: a profit claim that clears even this band holds under
+ * worst-case finite-sample assumptions, with zero resampling and therefore zero
+ * Monte-Carlo error. Deterministic by construction (no RNG).
+ *
+ * `range` defaults to the observed support width of the sealed ledger (the
+ * exact support of the record the claim is about); a caller wanting a stricter
+ * prior bound (e.g. the max decimal payout offered) can inject it.
+ */
+export function empiricalBernsteinMeanCi(
+  returns: readonly number[],
+  opts: { alpha?: number; range?: number } = {},
+): PerformanceCi | null {
+  const alpha = opts.alpha ?? 0.05;
+  const n = returns.length;
+  if (n < 2 || !returns.every(Number.isFinite) || !(alpha > 0 && alpha < 1)) return null;
+
+  const point = mean(returns);
+  let lo = returns[0]!;
+  let hi = returns[0]!;
+  let ss = 0;
+  for (const x of returns) {
+    if (x < lo) lo = x;
+    if (x > hi) hi = x;
+    ss += (x - point) * (x - point);
+  }
+  const s2 = ss / (n - 1);
+  const range = opts.range ?? hi - lo;
+  if (!(range >= 0) || !Number.isFinite(range)) return null;
+
+  // Zero spread -> the honest interval is a point.
+  if (range === 0 || s2 === 0) {
+    return {
+      point, low: point, high: point, alpha, n, resamples: 0, seed: 0,
+      method: "empirical-bernstein", z0: 0, acceleration: 0,
+    };
+  }
+
+  const logTerm = Math.log(4 / alpha); // ln(2/(alpha/2)) per side, two-sided
+  const width = Math.sqrt((2 * s2 * logTerm) / n) + (7 * range * logTerm) / (3 * (n - 1));
+
+  return {
+    point,
+    low: point - width,
+    high: point + width,
+    alpha,
+    n,
+    resamples: 0, // no resampling: the bound is closed-form
+    seed: 0,
+    method: "empirical-bernstein",
+    z0: 0,
+    acceleration: 0,
+  };
 }

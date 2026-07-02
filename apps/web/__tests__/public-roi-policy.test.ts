@@ -139,6 +139,32 @@ describe("evaluatePublicRoiPolicy", () => {
     }
   });
 
+  it("WORST-CASE tier (empirical-Bernstein): additive, strictly stricter, fires only on strong records", () => {
+    // Strong 400/200 record: corroborated profit AND clears the finite-sample
+    // worst-case bound -> the strongest statement the platform can make.
+    const strong = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: canonicalWins(400, 200) });
+    expect(strong.clearsProfit).toBe(true);
+    expect(strong.roiCiLowWorstCase).not.toBeNull();
+    expect(strong.clearsProfitWorstCase).toBe(true);
+    // The worst-case lower bound is strictly below the bootstrap lower bounds
+    // (it is the widest band) — pin the ordering so a refactor can't invert it.
+    expect(strong.roiCiLowWorstCase!).toBeLessThan(strong.roiCiLow!);
+
+    // Modest 120/90: bootstrap-corroborated profit may hold, but the worst-case
+    // tier must be at most as permissive (subset property of the tiers).
+    const modest = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: canonicalWins(120, 90) });
+    if (modest.clearsProfitWorstCase) expect(modest.clearsProfit).toBe(true);
+
+    // Thin 53/47: neither tier fires.
+    const thin = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: canonicalWins(53, 47) });
+    expect(thin.clearsProfitWorstCase).toBe(false);
+
+    // Gated -> both null/false.
+    const gated = evaluatePublicRoiPolicy({ canExposePerformanceStats: false, minGradedForPublic: 25, returns: canonicalWins(400, 200) });
+    expect(gated.roiCiLowWorstCase).toBeNull();
+    expect(gated.clearsProfitWorstCase).toBe(false);
+  });
+
   it("gate/display consistency: a profit claim never displays a '+0.00' lower bound", () => {
     // The gate evaluates ROUNDED bounds, so whenever clearsProfit is true the
     // displayed 2-decimal lower bounds are visibly positive.

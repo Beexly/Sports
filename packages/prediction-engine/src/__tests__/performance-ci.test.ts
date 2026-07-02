@@ -4,6 +4,7 @@ import {
   percentileMeanCi,
   studentizedMeanCi,
   studentizedCi,
+  empiricalBernsteinMeanCi,
   jackknifeStandardError,
   meanStatistic,
   normalCdf,
@@ -104,6 +105,33 @@ describe("bcaMeanCi", () => {
     const symmetric = [...Array(50).fill(1), ...Array(50).fill(-1)];
     const ci = bcaMeanCi(symmetric, { resamples: 8000, seed: 13 })!;
     expect(Math.abs(ci.z0)).toBeLessThan(0.05);
+  });
+
+  it("empiricalBernsteinMeanCi: finite-sample worst-case band — wider than studentized, contains the mean, deterministic, refuses bad input", () => {
+    // 400 wins at -110 (+0.909...) / 200 losses: strong record, n=600.
+    const strong = [...Array(400).fill(100 / 110), ...Array(200).fill(-1)];
+    const bern = empiricalBernsteinMeanCi(strong)!;
+    const stud = studentizedMeanCi(strong, { resamples: 3000, seed: 1 })!;
+    expect(bern.method).toBe("empirical-bernstein");
+    expect(bern.low).toBeLessThan(bern.point);
+    expect(bern.high).toBeGreaterThan(bern.point);
+    // Conservative by design: strictly wider than the second-order bootstrap band.
+    expect(bern.high - bern.low).toBeGreaterThan(stud.high - stud.low);
+    // Deterministic: closed form, no RNG.
+    expect(empiricalBernsteinMeanCi(strong)!.low).toBe(bern.low);
+    // A strong 600-pick record STILL clears 0 even under the worst-case bound —
+    // the tier is conservative, not impossible (Maurer-Pontil width ~0.14 here).
+    expect(bern.low).toBeGreaterThan(0);
+    // A thin 53/47 record must NOT clear the worst-case bound.
+    const thin = [...Array(53).fill(100 / 110), ...Array(47).fill(-1)];
+    expect(empiricalBernsteinMeanCi(thin)!.low).toBeLessThan(0);
+    // Guards: too little data, non-finite, bad alpha, zero spread -> point.
+    expect(empiricalBernsteinMeanCi([1], {})).toBeNull();
+    expect(empiricalBernsteinMeanCi([1, NaN], {})).toBeNull();
+    expect(empiricalBernsteinMeanCi([1, 2], { alpha: 0 })).toBeNull();
+    const flat = empiricalBernsteinMeanCi([2, 2, 2], {})!;
+    expect(flat.low).toBe(2);
+    expect(flat.high).toBe(2);
   });
 
   it("refuses invalid options instead of fabricating intervals (hostile-quant fix)", () => {

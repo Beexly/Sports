@@ -216,7 +216,7 @@ export type {
 // counterpart to the Wilson interval (which only covers binomial win rate).
 // Deterministic/seeded so a public performance band is reproducible from the
 // sealed ledger by anyone. Honest uncertainty for the public loss ledger.
-export { bcaCi, percentileCi, bcaMeanCi, percentileMeanCi, studentizedCi, studentizedMeanCi, jackknifeStandardError, meanStandardError, meanStatistic, normalCdf, normalQuantile } from "./performance-ci.js";
+export { bcaCi, percentileCi, bcaMeanCi, percentileMeanCi, studentizedCi, studentizedMeanCi, empiricalBernsteinMeanCi, jackknifeStandardError, meanStandardError, meanStatistic, normalCdf, normalQuantile } from "./performance-ci.js";
 export type { PerformanceCi, CiMethod, Statistic } from "./performance-ci.js";
 
 // Player season projection (recency+games-weighted, regressed) and its
