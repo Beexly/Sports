@@ -161,6 +161,24 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
       selection: pick.selection,
       line: pick.line,
+      // Opening -> current movement, the Pro-tier market read. Only SPREAD and
+      // TOTAL carry a comparable opening line (enrichment captures it at first
+      // ingestion); MONEYLINE and games without a captured open return null,
+      // as does any viewer without the entitlement.
+      lineMovement:
+        entitlements.canSeeLineMovement
+          ? (() => {
+              const opening =
+                pick.pickType === "SPREAD"
+                  ? pick.game.openingSpread
+                  : pick.pickType === "TOTAL"
+                    ? pick.game.openingTotal
+                    : null;
+              return opening !== null && opening !== undefined
+                ? { opening, current: pick.line }
+                : null;
+            })()
+          : null,
       // Gated fields. FREE-tier picks are the public free sample — they carry
       // their confidence score (the owner's "2 free picks with confidence"
       // decision). Premium picks are never returned to FREE viewers (tier filter

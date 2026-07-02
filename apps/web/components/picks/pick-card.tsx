@@ -116,6 +116,9 @@ export function PickCard({
             Line: {pick.line > 0 ? "+" : ""}{pick.line}
           </p>
         )}
+        {pick.lineMovement && (
+          <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} />
+        )}
       </div>
 
       {/* Scores row: confidence + edge + risk */}
@@ -438,6 +441,57 @@ function ConfidenceBadge({
     >
       {confidence}%
     </span>
+  );
+}
+
+/**
+ * Format opening -> current movement honestly per market type. TOTAL lines are
+ * side-free, so the full open/now pair is shown. SPREAD lines are stored in
+ * HOME-team perspective (see the selection-box comment above), so asserting
+ * "opened -6.5, now -7.5" next to an away-side selection would read wrong;
+ * spreads show movement magnitude only, with the home-perspective pair in the
+ * tooltip for anyone who wants the raw numbers.
+ */
+export function formatLineMovement(
+  movement: { opening: number; current: number },
+  pickType: "SPREAD" | "MONEYLINE" | "TOTAL",
+): { label: string; title: string; moved: boolean } {
+  const delta = movement.current - movement.opening;
+  const magnitude = Math.round(Math.abs(delta) * 10) / 10;
+  const title = `Opening line ${movement.opening} · current ${movement.current} (home-team perspective)`;
+  if (magnitude < 0.05) {
+    return { label: "Unmoved since open", title, moved: false };
+  }
+  if (pickType === "TOTAL") {
+    return {
+      label: `Opened ${movement.opening} · now ${movement.current}`,
+      title,
+      moved: true,
+    };
+  }
+  return { label: `Moved ${magnitude} since open`, title, moved: true };
+}
+
+function LineMovementChip({
+  movement,
+  pickType,
+}: {
+  movement: { opening: number; current: number };
+  pickType: "SPREAD" | "MONEYLINE" | "TOTAL";
+}) {
+  const { label, title, moved } = formatLineMovement(movement, pickType);
+  return (
+    <p
+      className={`mt-1 inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[11px] ${
+        moved
+          ? "border-plasma/40 bg-plasma/10 text-plasma"
+          : "border-titanium text-ion-2"
+      }`}
+      title={title}
+    >
+      <span aria-hidden>{moved ? "⇄" : "·"}</span>
+      {label}
+    </p>
   );
 }
 

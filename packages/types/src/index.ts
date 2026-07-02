@@ -541,6 +541,13 @@ export interface PublicPick {
   pickType: PickType;
   selection: string;
   line: number;
+  /**
+   * Opening -> current line movement for SPREAD/TOTAL picks, from the game's
+   * first-ingestion opening line. Gated by canSeeLineMovement (Pro+): the API
+   * returns null for viewers without the entitlement, and for MONEYLINE picks
+   * or games with no captured opening line.
+   */
+  lineMovement?: { opening: number; current: number } | null;
 
   // Gated by subscription
   confidence: number | null;         // null for FREE
