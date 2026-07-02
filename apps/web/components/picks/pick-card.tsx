@@ -449,12 +449,15 @@ function ConfidenceBadge({
       </span>
     );
   }
+  // Uncalibrated fallback: render the raw heuristic as a SCORE ("72/100"), not
+  // a percent — "%" reads as a win probability, which this number is not
+  // (audit fix; the aria-label already honestly said "out of 100").
   return (
     <span
       className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(confidence)}`}
       aria-label={`Model confidence: ${confidence} out of 100`}
     >
-      {confidence}%
+      {confidence}/100
     </span>
   );
 }

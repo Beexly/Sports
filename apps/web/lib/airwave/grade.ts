@@ -13,6 +13,7 @@
  * never technically "wrong".
  */
 
+import { wilsonInterval } from "@sports/prediction-engine";
 import type {
   ConfidenceBand,
   Pundit,
@@ -96,6 +97,15 @@ export function scorecardFor(pundit: Pundit, allClaims: readonly PunditClaim[]):
   const decided = t.hits + t.misses;
   const falsifiableRate = graded === 0 ? 0 : (t.hits + t.misses + t.pushes) / graded;
   const hitRate = decided === 0 ? null : t.hits / decided;
+  // Wilson 95% band on the decided-call hit rate — computed here (pure, server)
+  // so the display can never show a small-n rate without its uncertainty.
+  const hitRateBandPct =
+    hitRate === null
+      ? null
+      : (() => {
+          const w = wilsonInterval(hitRate, decided);
+          return { low: Math.round(w.low * 100), high: Math.round(w.high * 100) };
+        })();
   const accountabilityIndex = t.stake === 0 ? 0 : Math.round((t.credit / t.stake) * 100);
 
   return {
@@ -112,6 +122,7 @@ export function scorecardFor(pundit: Pundit, allClaims: readonly PunditClaim[]):
     pending: t.pending,
     falsifiableRate,
     hitRate,
+    hitRateBandPct,
     accountabilityIndex,
     calibrationNote: calibrationNote(accountabilityIndex, falsifiableRate, graded),
   };

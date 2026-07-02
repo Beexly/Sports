@@ -34,12 +34,14 @@ export default function VerifyPage({
           Verify any pick yourself.
         </h1>
         <p className="mt-3 text-sm leading-6 text-ion-1">
-          Before kickoff, every pick is frozen into a receipt: the side, the
-          line, the price, the scores we claimed, and the moment it was
-          frozen, all stamped with a SHA-256 hash. The receipt is never
-          rewritten. Paste a hash below and the server re-computes the hash
-          from the stored record, live. If anything had been edited after the
-          fact, the hashes would not match, and this page would say so in red.
+          Before kickoff, each published pick with a full market quote is
+          frozen into a receipt: the side, the line, the price, the scores we
+          claimed, and the moment it was frozen, all stamped with a SHA-256
+          hash. The receipt is never rewritten. Paste a hash below and the
+          server re-computes the hash from the stored record, live. If
+          anything had been edited after the fact, the hashes would not
+          match, and this page would say so in red. A pick without a receipt
+          carries no verified claim — we don&apos;t grade what we didn&apos;t seal.
         </p>
         <p className="mt-2 text-xs leading-5 text-ion-2">
           Receipts for games that have not started verify as sealed: you can
