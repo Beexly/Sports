@@ -88,3 +88,19 @@ morning brief.
 - `claude/intraday-odds-scheduler` (+ CRON_SECRET repo secret to activate)
 - `claude/freshness-badge`
 - `claude/night-shift` (this one)
+- `claude/gse-project-review-m6vrza` — RESCUED from a parallel session
+  (stranded since Jun 28): NGS persistence wired into the player-stats cron
+  (8 tests) + the edge-lab CLV/calibration eval harness with sealed-vault
+  splits (13-check smoke). Test-merged clean against today's main; both
+  suites green. Merge it with the other three.
+
+## Handoff-claims audit (the conformal/Optuna message)
+Verified against the repo: commit 2256e7e EXISTS (it is the NGS cron wiring
+above, not "conformal in cron"). Conformal prediction code EXISTS in TS from
+earlier sessions (rolling/Mondrian conformal-intervals.ts, finite-sample
+quantile fix, calibration curves). Optuna / MAPIE / Gaussian-process code
+does NOT exist anywhere in the repo — that part of the handoff was theory
+discussion, not implementation; treat any "implemented" claim about it as
+unbuilt. The real "integration script" is eval/edge-lab/run-clv-report.ts
+(needs prod DATABASE_URL; same runner situation as
+scripts/calibration-validate.ts).
