@@ -212,6 +212,13 @@ export type {
   ReliabilityBin,
 } from "./probability-calibration.js";
 
+// Performance CIs for CONTINUOUS returns (ROI/units) — the BCa bootstrap
+// counterpart to the Wilson interval (which only covers binomial win rate).
+// Deterministic/seeded so a public performance band is reproducible from the
+// sealed ledger by anyone. Honest uncertainty for the public loss ledger.
+export { bcaCi, percentileCi, bcaMeanCi, percentileMeanCi, meanStatistic, normalCdf, normalQuantile } from "./performance-ci.js";
+export type { PerformanceCi, CiMethod, Statistic } from "./performance-ci.js";
+
 // Player season projection (recency+games-weighted, regressed) and its
 // honest backtest vs a carry-forward baseline. Forecasts; surfaced with their
 // measured error, not auto-published.
