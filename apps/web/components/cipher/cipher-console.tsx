@@ -27,7 +27,7 @@ export function CipherConsole({ state, codename, week, shardCount }: Props) {
     if (state === "live") {
       console.log("%c◬ THE GLASS BOX CIPHER", head);
       console.log(
-        `%cChapter ${week} — "${codename}" is LIVE. %c${shardCount} shards%c are hidden across the site.\nInspect what others only read. Assemble them in order, then bring the key to %c/cipher%c.`,
+        `%cChapter ${week}: "${codename}" is LIVE. %c${shardCount} shards%c are hidden across the site.\nInspect what others only read. Assemble them in order, then bring the key to %c/cipher%c.`,
         body, accent, body, accent, body,
       );
     } else {

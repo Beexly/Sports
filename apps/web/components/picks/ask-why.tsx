@@ -47,7 +47,7 @@ export function AskWhy({ pickId }: { pickId: string }) {
         setState("error");
       }
     } catch {
-      setText("Network error — try again.");
+      setText("Network error. Try again.");
       setState("error");
     }
   }

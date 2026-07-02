@@ -77,6 +77,11 @@ export function Reveal({
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
   const [reduced, setReduced] = useState(false);
+  // Whether the hidden pre-animation state may be applied at all. Stays false
+  // through SSR and hydration so the server-painted HTML — including the
+  // homepage LCP <h1> — is fully visible without JavaScript. Only content
+  // below the viewport arms the entrance once JS is actually running.
+  const [armed, setArmed] = useState(false);
 
   // Detect reduced-motion once on mount. We treat any change after mount as a
   // no-op since IntersectionObserver setup would race the media query listener.
@@ -96,6 +101,17 @@ export function Reveal({
       setVisible(true);
       return;
     }
+    // Never hide content the visitor can already see. The server HTML paints
+    // at full opacity (LCP-safe), so anything within the viewport at mount
+    // stays put instead of blinking off and fading back in; the cinematic
+    // scroll reveal is reserved for content still below the fold.
+    const rect = node.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView) {
+      setVisible(true);
+      if (!replay) return;
+    }
+    setArmed(true);
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -113,7 +129,7 @@ export function Reveal({
     return () => observer.disconnect();
   }, [threshold, replay, reduced]);
 
-  const style: CSSProperties = reduced
+  const style: CSSProperties = reduced || !armed
     ? {}
     : {
         opacity: visible ? 1 : 0,

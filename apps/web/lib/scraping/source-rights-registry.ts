@@ -134,7 +134,7 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     evidence_urls: ["https://github.com/nflverse/nflverse-data/blob/master/LICENSE"],
     unlock_condition: null,
     vendor_contact: null,
-    notes: "CC-BY-4.0 — attribution required in all outputs, no share-alike. (The one exception, nflverse FTN charting/participation data, is CC-BY-SA-4.0 and is not ingested here.)",
+    notes: "CC-BY-4.0: attribution required in all outputs, no share-alike. (The one exception, nflverse FTN charting/participation data, is CC-BY-SA-4.0 and is not ingested here.)",
   },
 
   {
@@ -164,11 +164,11 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     evidence_urls: ["https://open-meteo.com/en/terms", "https://open-meteo.com/en/license"],
     unlock_condition:
       "Free path for a commercial product: the underlying data is CC-BY-4.0 (commercial use OK with " +
-      "attribution). The HOSTED free API tier is non-commercial / fair-use only — for production either " +
+      "attribution). The HOSTED free API tier is non-commercial / fair-use only. For production either " +
       "self-host the open data or take Open-Meteo's commercial tier. Verify endpoint schemas live before building the adapter.",
     vendor_contact: "https://open-meteo.com",
     notes:
-      "Free, no key, no sign-up. Game-time weather (wind/precip/temp) for outdoor venues — a free quality " +
+      "Free, no key, no sign-up. Game-time weather (wind/precip/temp) for outdoor venues, a free quality " +
       "input for totals/passing models. Facts only (no copyrighted expression). Attribution required.",
   },
 
@@ -245,9 +245,9 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "Free, no-key, read-only public API. Facts only: player metadata, injury status, current " +
       "team, and trending add/drop counts (the unique free ownership signal). Cache the ~5MB " +
       "all-players payload at most once/day per the docs; attribution is required for trending. " +
-      "FIRM RULE: never logos/headshots, and never the SOLE basis of a paid feature — the paid " +
+      "FIRM RULE: never logos/headshots, and never the SOLE basis of a paid feature. The paid " +
       "draft/best-ball value derives from the nflverse graded pool + user-CSV ADP; Sleeper is " +
-      "enrichment. The older source-registry marks this commercialUse:false — honored here.",
+      "enrichment. The older source-registry marks this commercialUse:false, honored here.",
   },
 
   // ── Approved: licensed API ───────────────────────────────────────────────────
@@ -317,7 +317,7 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     notes:
       "ToS §4.2 explicitly forbids 'automated programs to interact with the Site and its Services'. " +
       "Any use beyond personal use requires Company consent. Commercial use requires prior written permission. " +
-      "Upstream data source unknown — may relay Sportradar/Stats Perform (secondary liability risk). " +
+      "Upstream data source unknown. It may relay Sportradar/Stats Perform (secondary liability risk). " +
       "Manual UX research, feature taxonomy, field taxonomy, and competitor analysis are ALLOWED. " +
       "Outreach via support@scores24.live or personal-data@scores24.live required before any automation.",
   },
@@ -359,7 +359,7 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "PL Terms of Use (Intellectual Property Rights section) explicitly prohibit: (1) commercial use " +
       "of Website/App data, (2) creating a database from downloaded material, (3) redistribution without " +
       "prior written approval. UK database right (sui generis) applies even to factual compilations. " +
-      "Adapter built (lib/data-sources/free-adapters/fpl.ts) and gated — DO NOT ingest until written " +
+      "Adapter built (lib/data-sources/free-adapters/fpl.ts) and gated. DO NOT ingest until written " +
       "consent obtained or a licensed alternative source is used. EPL is not yet a core Sport type; " +
       "adding it is gated on this clearance.",
   },
@@ -434,15 +434,15 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "or derived analytics.",
     vendor_contact: "https://www.fantasyguru.com",
     notes:
-      "Owner-directed evaluation of Jeff Mans' weekly show as its own source — SiriusXM corporate " +
+      "Owner-directed evaluation of Jeff Mans' weekly show as its own source. SiriusXM corporate " +
       "licensing is PARKED per owner and is NOT this entry; SiriusXM-distributed content stays under " +
       "siriusxm-streaming. This entry covers ONLY the openly syndicated podcast feed (Podbean host; " +
       "ELITE+ Podcast Network / FantasyGuru). The show's picks and analysis are proprietary " +
-      "predictions — data-rules forbid extracting them as inputs, so the value lane is pundit-claim " +
+      "predictions. Data-rules forbid extracting them as inputs, so the value lane is pundit-claim " +
       "ACCOUNTABILITY (paraphrased claim, pundit, date), which the Airwave source policy already " +
       "allows manually at LOW risk for podcast_rss. Automated capture/transcription stays OFF until " +
       "the questionnaire and license land. Episode metadata (titles, dates) are facts; audio is " +
-      "copyrighted expression — hence high expression risk. Contact via fantasyguru.com.",
+      "copyrighted expression, hence high expression risk. Contact via fantasyguru.com.",
   },
   {
     source_id: "collegefootballdata",
@@ -475,14 +475,14 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     ],
     unlock_condition:
       "Obtain a free CFBD API key (https://collegefootballdata.com/key) AND confirm the Terms & " +
-      "Conditions permit our commercial use — the terms page is JS-rendered and was NOT machine-" +
-      "verifiable, so it needs a human/legal read. Free tier = 1,000 calls/mo; paid tiers ($1–$30/mo) " +
+      "Conditions permit our commercial use. The terms page is JS-rendered and was NOT machine-" +
+      "verifiable, so it needs a human/legal read. Free tier = 1,000 calls/mo; paid tiers ($1-$30/mo) " +
       "raise the limit. On confirmation: flip status → approved_api, enable automation/storage/derived " +
       "flags, and verify each endpoint's real schema live before building the adapter (no guessed columns).",
     vendor_contact: "https://collegefootballdata.com/key",
     notes:
       "Intended use: the QB college→NFL scheme-transition signal (college passing/scheme FACTS only), " +
-      "feeding projection/feature work — never any proprietary ratings or outputs. CFBD is a freemium " +
+      "feeding projection/feature work, never any proprietary ratings or outputs. CFBD is a freemium " +
       "API (free key required, Bearer token; cfbfastR is the MIT R wrapper). Its stated philosophy is " +
       "'free and open data,' but commercial terms are not machine-verified, so ALL flags stay false and " +
       "ingestion is BLOCKED until a key + terms-confirmation land. No schema is guessed: the adapter is " +

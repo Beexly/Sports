@@ -51,8 +51,8 @@ export function PerformanceBootstrapState({
         </p>
 
         <p className="mt-3 text-sm leading-relaxed text-ion-1">
-          Bootstrap-era picks — those generated before canonical history was
-          enabled — are stored for internal validation but are{" "}
+          Bootstrap-era picks, those generated before canonical history was
+          enabled, are stored for internal validation but are{" "}
           <strong className="text-ion-white">never</strong> counted in public
           performance numbers. We do this on purpose so the first numbers you
           see represent the live engine, not warm-up data.

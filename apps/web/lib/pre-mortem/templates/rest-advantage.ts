@@ -18,6 +18,6 @@ export const restAdvantageTemplate: FailureModeTemplate = {
   },
 
   generateBullet: (_snapshot, _pick, game) => {
-    return `If rest advantage flips — ${game.homeTeamShort} catches a same-day travel issue, or ${game.awayTeamShort}'s fatigue projection updates downward, or a late starter scratch reshuffles the picture — our edge on this pick evaporates.`;
+    return `If rest advantage flips (${game.homeTeamShort} catches a same-day travel issue, or ${game.awayTeamShort}'s fatigue projection updates downward, or a late starter scratch reshuffles the picture), our edge on this pick evaporates.`;
   },
 };

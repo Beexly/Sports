@@ -151,12 +151,12 @@ export function computeVitals(legs: readonly ParlayLeg[]): ParlayVitals {
   const suggestions: string[] = [];
   for (const c of correlated) {
     suggestions.push(
-      `${c.legs.map((l) => `“${l.label}”`).join(" and ")} share ${c.label}. The book prices that correlation; treating them as independent overstates your odds — consider dropping one.`,
+      `${c.legs.map((l) => `“${l.label}”`).join(" and ")} share ${c.label}. The book prices that correlation; treating them as independent overstates your odds. Consider dropping one.`,
     );
   }
   if (ev < 0) {
     suggestions.push(
-      `Expected value is ${(ev * 100).toFixed(1)}% per $1. The headline payout is mostly the vig compounding across ${count} legs — a payout illusion.`,
+      `Expected value is ${(ev * 100).toFixed(1)}% per $1. The headline payout is mostly the vig compounding across ${count} legs: a payout illusion.`,
     );
   }
   const longshot = legs.filter((l) => l.winProb < 0.4).sort((a, b) => a.winProb - b.winProb)[0];
@@ -168,7 +168,7 @@ export function computeVitals(legs: readonly ParlayLeg[]): ParlayVitals {
     );
   }
   if (!suggestions.length) {
-    suggestions.push("This ticket is structurally balanced — no hidden correlation, positive expected value, survivable leg count.");
+    suggestions.push("This ticket is structurally balanced: no hidden correlation, positive expected value, survivable leg count.");
   }
 
   return {

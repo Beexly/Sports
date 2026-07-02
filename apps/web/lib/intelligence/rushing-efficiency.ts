@@ -59,21 +59,21 @@ function round(value: number, d = 2): number {
 
 function readFor(ryoePct: number, volPct: number, ryoePerAtt: number, pctStackedBox: number): { read: RushingRead; note: string } {
   const earned = pctStackedBox >= STACKED_BOX_HIGH && ryoePerAtt > 0
-    ? " He's earning it against loaded boxes — that efficiency is real, not schemed."
+    ? " He's earning it against loaded boxes, so that efficiency is real, not schemed."
     : ryoePerAtt > 0 && pctStackedBox < STACKED_BOX_HIGH
-      ? " Light boxes are helping the efficiency — expect some regression."
+      ? " Light boxes are helping the efficiency, so expect some regression."
       : "";
 
   if (ryoePct >= HIGH && volPct >= HIGH) {
-    return { read: "bell-cow", note: `Elite on both — efficient AND heavily used. The safest backfield asset.${earned}` };
+    return { read: "bell-cow", note: `Elite on both: efficient AND heavily used. The safest backfield asset.${earned}` };
   }
   if (ryoePct >= HIGH && volPct < HIGH) {
-    return { read: "buy-low", note: `Efficient on limited work — the breakout is a bigger role, not better play. Buy-low if the touches come.${earned}` };
+    return { read: "buy-low", note: `Efficient on limited work. The breakout is a bigger role, not better play. Buy-low if the touches come.${earned}` };
   }
   if (volPct >= HIGH && ryoePct < HIGH) {
-    return { read: "volume-dependent", note: "Carried by volume, not efficiency — a floor play that lives on touches; ceiling needs a script or a long score." };
+    return { read: "volume-dependent", note: "Carried by volume, not efficiency: a floor play that lives on touches; ceiling needs a script or a long score." };
   }
-  return { read: "limited", note: "Neither volume nor efficiency stands out yet — bench/deep-league profile until the role changes." };
+  return { read: "limited", note: "Neither volume nor efficiency stands out yet: bench/deep-league profile until the role changes." };
 }
 
 /** Build rushing-efficiency rows from Next Gen rushing lines. Pure. */

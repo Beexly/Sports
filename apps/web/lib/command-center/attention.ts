@@ -166,7 +166,7 @@ export function collectAttentionSignals(
       decisionType: "SAFETY",
       factors: { costOfDelay: 0.95, severity: 0.95, reversibility: 0.2, ownerEffort: 0.45, sourceConfidence: 1 },
       urgencyFloor: "CRITICAL",
-      recommendedAction: "Resolve before any public exposure — this gates launch safety.",
+      recommendedAction: "Resolve before any public exposure. This gates launch safety.",
       link: "/cockpit",
     });
   }
@@ -259,7 +259,7 @@ export function collectAttentionSignals(
       decisionType: "ROUTINE",
       factors: { costOfDelay: 0.2, severity: 0.25, reversibility: 0.95, ownerEffort: 0.3, sourceConfidence: 0.7 },
       urgencyFloor: "LOW",
-      recommendedAction: "No action required — informational.",
+      recommendedAction: "No action required. Informational.",
       link: null,
     });
   }

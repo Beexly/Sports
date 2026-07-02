@@ -1,7 +1,7 @@
 import { Shell, Cards, Badge, DataTable, StatusRibbon, SectionHeader } from "../_components";
 import { loadOwnedSignals } from "@/lib/statking/product";
 export const metadata = {
-  title: "Suggest a Source — Help Grow the Atlas",
+  title: "Suggest a Source: Help Grow the Atlas",
   description: "Suggest a data source for lawful evaluation and rights review.",
   alternates: { canonical: "/stats/source-suggest" },
 };

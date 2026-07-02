@@ -33,12 +33,12 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: `Proof of Record — ${BRAND_NAME}`,
+  title: `Proof of Record · ${BRAND_NAME}`,
   description:
     "Every settled pick carries a tamper-evident Merkle hash stamped at generation time. The record can't be edited after the fact without the hash changing. This page shows the verifiable trail.",
   alternates: { canonical: "/proof" },
   openGraph: {
-    title: `Proof of Record — ${BRAND_NAME}`,
+    title: `Proof of Record · ${BRAND_NAME}`,
     description:
       "Merkle-hash trail for every settled pick. Generated-at vs settled-at, no-after-the-fact-editing guarantee, consensus/divergence read where multi-book data supports it.",
     url: "/proof",
@@ -119,7 +119,7 @@ export default async function ProofOfRecordPage() {
               The record can&apos;t be rewritten.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              Every pick is hashed at generation time using a Merkle tree —
+              Every pick is hashed at generation time using a Merkle tree,
               the same tamper-evident commitment scheme used in public proof-of-
               liabilities systems. Once settled, the leaf hash is fixed. Edit
               the pick and the hash changes. Anyone with the raw records can
@@ -159,7 +159,7 @@ export default async function ProofOfRecordPage() {
               <div className="flex flex-col gap-1">
                 <dt className="font-semibold text-ion-white">Inclusion proof</dt>
                 <dd className="text-ion-1 leading-6">
-                  Each pick carries a Merkle path — the minimum set of sibling
+                  Each pick carries a Merkle path: the minimum set of sibling
                   hashes needed to re-derive the root from just that leaf. You
                   can verify any pick was in the committed set without trusting
                   us.
@@ -219,7 +219,7 @@ export default async function ProofOfRecordPage() {
               </p>
               <p className="mt-3 text-sm leading-6 text-ion-1">
                 No canonical settled picks exist yet. This page will populate
-                automatically once picks move from pending to settled — every
+                automatically once picks move from pending to settled. Every
                 outcome, win or loss, appears here with its hash and trail.
                 Nothing is hidden once it settles.
               </p>
@@ -246,7 +246,7 @@ export default async function ProofOfRecordPage() {
                       Settled pick ledger
                     </h2>
                     <p className="mt-1 text-[11px] text-ion-2">
-                      Every outcome included — wins, losses, pushes, voids. None
+                      Every outcome included: wins, losses, pushes, voids. None
                       quietly removed. Each row carries its Merkle leaf index and
                       the hashed committed payload.
                     </p>
@@ -271,7 +271,7 @@ export default async function ProofOfRecordPage() {
                     (settled-at descending, id ascending as tiebreaker). The
                     committed payload is the SHA-256 hash of id + pick type +
                     selection + line + confidence + model version +
-                    generated-at — the fields locked at creation. The consensus
+                    generated-at: the fields locked at creation. The consensus
                     read comes from captured multi-book H2H odds; it is market
                     description, not a model claim.
                   </p>
@@ -287,10 +287,10 @@ export default async function ProofOfRecordPage() {
             </h2>
             <ul className="flex flex-col gap-2 text-sm leading-6 text-ion-1">
               {[
-                "Each pick's committed fields are hashed at generation time — before the game is played.",
+                "Each pick's committed fields are hashed at generation time, before the game is played.",
                 "The hash covers id, pick type, selection, line, confidence score, model version, and the exact generated-at timestamp.",
                 "The Merkle root over all settled picks is published on this page. Anyone can re-derive it.",
-                "If any pick were altered retroactively — changing the confidence or selection — the leaf hash would change, breaking the root.",
+                "If any pick were altered retroactively, changing the confidence or selection, the leaf hash would change, breaking the root.",
                 "Bootstrap-era picks and seed data are excluded from the committed set by design.",
               ].map((line) => (
                 <li key={line} className="flex items-start gap-3">

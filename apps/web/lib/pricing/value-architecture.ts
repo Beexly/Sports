@@ -56,7 +56,7 @@ export interface ValueTier {
 export const POSITIONING =
   "Galaxy is a sports-intelligence operating system: it helps you understand what " +
   "matters today, why it matters, what changed, what the market is doing, what the " +
-  "model believes, how confident it is, when the data is too noisy — and when the " +
+  "model believes, how confident it is, when the data is too noisy, and when the " +
   "smartest decision is No-Bet.";
 
 /** The emotional value — what the customer feels. Protected, not pressured. */
@@ -76,13 +76,13 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     ctaLabel: "Preview the system",
     price: { monthly: 0, annual: 0, note: "free forever" },
     unlocks: [
-      "How Galaxy works — the methodology preview",
+      "How Galaxy works: the methodology preview",
       "Glossary and education (how to read confidence, movement, and No-Bet)",
       "Responsible-gaming framing, up front",
       "Every pick, free - no daily limit, with the open verified record",
       "Honest, calibrated confidence on every pick",
-      "No-Bet examples — when passing is the smarter call",
-      "Public proof snippets — the receipts behind the claims",
+      "No-Bet examples: when passing is the smarter call",
+      "Public proof snippets: the receipts behind the claims",
       "Plain-English explainers for every major feature",
     ],
     gated: [
@@ -104,14 +104,14 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     ctaLabel: "Read the board",
     price: { monthly: founding.pro.monthly, annual: founding.pro.annual, note: "founding rate, locked for life" },
     unlocks: [
-      "Today's full daily board — every signal, risk, and No-Bet call",
+      "Today's full daily board: every signal, risk, and No-Bet call",
       "Core signal detail and the factor trail behind it",
-      "Confidence reasoning — how strong, stable, and supported a signal is",
+      "Confidence reasoning: how strong, stable, and supported a signal is",
       "Board filters",
       "Recent edge history",
       "Full No-Bet reasoning (volatility, staleness, overpricing)",
       "Proof ledger access",
-      "Parlay MRI — where a parlay is fragile, not just its payout",
+      "Parlay MRI: where a parlay is fragile, not just its payout",
       "Basic alerts where available",
     ],
     gated: [
@@ -122,7 +122,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
       "Premium Academy and briefings",
     ],
     whyNextTier:
-      "Elite adds the market BEHIND the board — Galaxy Twin, deeper movement, calibration, and CLV — so you read the market, not just the slate.",
+      "Elite adds the market BEHIND the board (Galaxy Twin, deeper movement, calibration, and CLV) so you read the market, not just the slate.",
   },
   {
     id: "ELITE",
@@ -135,17 +135,17 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     price: { monthly: founding.elite.monthly, annual: founding.elite.annual, note: "founding rate, locked for life" },
     unlocks: [
       "Everything in Pro",
-      "Galaxy Twin / Edge Map — the live market and signal environment, visualized",
+      "Galaxy Twin / Edge Map: the live market and signal environment, visualized",
       "Deeper market-movement context and Market Gravity",
       "Sharper props intelligence where the data supports it",
       "Advanced filters and saved watchlists",
-      "Calibration reports — how confidence has matched real outcomes",
+      "Calibration reports: how confidence has matched real outcomes",
       "Closing-line-value (CLV) tracking where available",
       "Premium Academy modules and briefings",
       "Richer alerts",
     ],
     gated: [
-      "Operator workflow tools — exports, scenario analysis, automation, exposure tracking",
+      "Operator workflow tools: exports, scenario analysis, automation, exposure tracking",
     ],
     // Operator is hidden from public surfaces (owner decision); Elite is the top
     // public tier, so it does not tease a higher tier.
@@ -161,7 +161,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
     // internal planning; not shown on /pricing and not a billable tier.
     status: "hidden",
     ctaLabel: "Join the waitlist",
-    price: { monthly: 79, annual: 699, note: "target pricing — waitlist; launches when the workflow infrastructure is real" },
+    price: { monthly: 79, annual: 699, note: "target pricing: waitlist; launches when the workflow infrastructure is real" },
     unlocks: [
       "Exports and board history",
       "Scenario analysis",

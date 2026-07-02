@@ -29,7 +29,7 @@ export const fanExplainerTemplate: StudioTemplate = {
       pattern: /\bgalaxy iq\b/i,
       severity: "warn",
       message:
-        "Fan explainer template usually doesn't reference Galaxy IQ — keep the surface platform-agnostic for sharing.",
+        "Fan explainer template usually doesn't reference Galaxy IQ. Keep the surface platform-agnostic for sharing.",
     },
   ],
 

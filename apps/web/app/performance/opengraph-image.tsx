@@ -12,7 +12,7 @@ import { BRAND_NAME } from "@/lib/brand";
  */
 
 export const runtime = "edge";
-export const alt = `${BRAND_NAME} — graded in public`;
+export const alt = `${BRAND_NAME} · graded in public`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -110,7 +110,7 @@ export default async function Image() {
             maxWidth: 940,
           }}
         >
-          Calibrated confidence, Brier-scored against real outcomes — and every loss posted, never deleted.
+          Calibrated confidence, Brier-scored against real outcomes, and every loss posted, never deleted.
         </div>
 
         {/* Footer principle */}

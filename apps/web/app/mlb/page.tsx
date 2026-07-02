@@ -8,7 +8,7 @@ import { loadLahmanMlbTeams, type MlbTeamRow } from "@/lib/lahman/mlb-teams";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "MLB Run Differential & Pythagorean Wins — Lahman (free)",
+  title: "MLB Run Differential & Pythagorean Wins: Lahman (free)",
   description:
     "Read-only MLB team-season run differential and Pythagorean win expectation from the Lahman Baseball Database (CC-BY-SA). The third sport wired through our legal source registry, with multi-host failover. Not a betting pick.",
   alternates: { canonical: "/mlb" },

@@ -16,9 +16,9 @@ import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const MODES: { key: Mode; label: string; blurb: string }[] = [
-  { key: "cash", label: "Cash", blurb: "Maximise projection — the safest median." },
-  { key: "gpp", label: "GPP", blurb: "Maximise ceiling — win the tournament." },
-  { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership — the edge." },
+  { key: "cash", label: "Cash", blurb: "Maximise projection: the safest median." },
+  { key: "gpp", label: "GPP", blurb: "Maximise ceiling: win the tournament." },
+  { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership: the edge." },
 ];
 
 export function DfsOptimizer() {
@@ -72,7 +72,7 @@ export function DfsOptimizer() {
           </span>
           <p className="text-xs text-ion-1">
             These are <strong className="text-ion-white">fictional players</strong> with illustrative
-            numbers — by design, so no fake stats ever attach to a real athlete. To optimize the
+            numbers, by design, so no fake stats ever attach to a real athlete. To optimize the
             real slate today: export the player CSV from DraftKings and import it below ⤵
           </p>
         </div>
@@ -152,12 +152,12 @@ export function DfsOptimizer() {
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-1 px-4 py-2.5 text-[11px] text-ion-1">
                   <span>Total ownership <strong className="text-ion-white">{m.totalOwn}%</strong></span>
                   <span>Leverage <strong style={{ color: BRAND_COLORS.ionMagenta }}>{m.leverageScore}</strong></span>
-                  <span>Floor–ceiling <strong className="text-ion-white">{m.floor}–{m.ceiling}</strong></span>
+                  <span>Floor-ceiling <strong className="text-ion-white">{m.floor}-{m.ceiling}</strong></span>
                 </div>
               </div>
             );
           })}
-          {!result?.lineups.length && <div className="surface-card p-6 text-sm text-ion-1">No lineup fits the constraints — loosen your locks or excludes.</div>}
+          {!result?.lineups.length && <div className="surface-card p-6 text-sm text-ion-1">No lineup fits the constraints. Loosen your locks or excludes.</div>}
         </div>
 
         {/* exposure + pool */}

@@ -35,7 +35,7 @@ export default function PrivacyPage() {
               When you create an account, we collect your name, email address,
               and (if you sign in with Google) your Google profile image. When
               you subscribe, our payment processor (Stripe) collects payment
-              details directly — we never see or store your card number.
+              details directly. We never see or store your card number.
             </Para>
             <Para>
               We log standard request data (IP address, user agent, referrer)
@@ -70,7 +70,7 @@ export default function PrivacyPage() {
             </Para>
             <Para>
               If you are a California, EU, or UK resident, you have additional
-              rights — including the right to access, correct, or export the
+              rights, including the right to access, correct, or export the
               personal data we hold about you. Email {" "}
               <a
                 href={`mailto:${LEGAL_EMAIL}`}

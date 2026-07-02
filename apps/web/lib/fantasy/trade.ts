@@ -56,16 +56,16 @@ export function evaluateTrade(
   const reasons: string[] = [];
   reasons.push(
     fairness === "fair"
-      ? `Within a fair band — values land ${Math.abs(delta)} apart (${(ratio * 100).toFixed(0)}%).`
+      ? `Within a fair band: values land ${Math.abs(delta)} apart (${(ratio * 100).toFixed(0)}%).`
       : fairness === "you win"
         ? `You come out ahead by ${delta} points of value.`
-        : `You give up ${Math.abs(delta)} points of value — push for more.`,
+        : `You give up ${Math.abs(delta)} points of value. Push for more.`,
   );
   if (consolidating && bestGet) reasons.push(`Consolidation: ${give.length}-for-${get.length} into ${bestGet.name} upgrades your starting lineup at the cost of depth.`);
-  if (!consolidating && get.length > give.length) reasons.push("Adds bodies — useful for a bye-week crunch or an injury-thin bench.");
+  if (!consolidating && get.length > give.length) reasons.push("Adds bodies, useful for a bye-week crunch or an injury-thin bench.");
   if (bestGet && bestGive && tradeValue(bestGet, pool) > tradeValue(bestGive, pool)) reasons.push(`Wins the headliner: ${bestGet.name} is the best player in the deal.`);
   const riskIn = get.filter((p) => p.injury !== "healthy" || p.trend === "down");
-  if (riskIn.length) reasons.push(`Buying risk: ${riskIn.map((p) => p.name).join(", ")} carry a tag or a cooling arrow — that's the discount.`);
+  if (riskIn.length) reasons.push(`Buying risk: ${riskIn.map((p) => p.name).join(", ")} carry a tag or a cooling arrow. That's the discount.`);
 
   return { giveValue, getValue, delta, ratio, fairness, lean, bestGet, reasons };
 }

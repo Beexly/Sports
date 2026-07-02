@@ -31,7 +31,7 @@ export function TierGatePanel({
 
   return (
     <section
-      aria-label={`${surface} — for ${need} members only`}
+      aria-label={`${surface}: for ${need} members only`}
       className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border p-10 sm:p-14"
       style={{
         borderColor: `${hex}40`,

@@ -194,9 +194,9 @@ export default async function DashboardPage() {
               {demoActive && (
                 <span
                   data-testid="dashboard-sample-mode"
-                  aria-label="Sample mode — picks are deterministic samples, not live data"
+                  aria-label="Sample mode: picks are deterministic samples, not live data"
                   className="rounded-md bg-caution/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution"
-                  title="Stub mode + demo samples — picks shown are deterministic samples, not live model output."
+                  title="Stub mode + demo samples: picks shown are deterministic samples, not live model output."
                 >
                   Sample mode
                 </span>

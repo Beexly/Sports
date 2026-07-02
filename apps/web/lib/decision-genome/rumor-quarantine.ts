@@ -46,7 +46,7 @@ export function classifyRumor(input: RumorInput): RumorVerdict {
     reason,
   });
 
-  if (!input.rightsCleared) return verdict("unsafe", "Rights not cleared — unsafe to use.");
+  if (!input.rightsCleared) return verdict("unsafe", "Rights not cleared. Unsafe to use.");
   if (input.contradicted) return verdict("contradicted", "A more-authoritative source contradicts this claim.");
   if (input.ageMinutes > input.ttlMinutes) return verdict("expired", `Claim is ${input.ageMinutes}m old (TTL ${input.ttlMinutes}m).`);
 
@@ -55,7 +55,7 @@ export function classifyRumor(input: RumorInput): RumorVerdict {
     return verdict("reported", `Tier-${input.sourceTier === "tier1" ? "1" : "2"} source with ${input.independentCorroborations} independent corroborations.`);
   }
   if (input.sourceTier === "rumor" || input.sourceTier === "unknown") {
-    return verdict("rumored", "Rumor/unknown-tier source — quarantine until corroborated.");
+    return verdict("rumored", "Rumor/unknown-tier source: quarantine until corroborated.");
   }
   return verdict("rumored", `Insufficient corroboration (${input.independentCorroborations}) for a tier-${input.sourceTier} claim.`);
 }

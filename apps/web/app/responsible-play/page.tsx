@@ -15,7 +15,7 @@ const RESOURCES = [
   {
     name: "National Council on Problem Gambling",
     href: "https://www.ncpgambling.org/",
-    body: "Free confidential helpline, chat, and text — 24/7, all 50 US states.",
+    body: "Free confidential helpline, chat, and text: 24/7, all 50 US states.",
   },
   {
     name: "GamTalk",
@@ -49,7 +49,7 @@ export default function ResponsiblePlayPage() {
             </h1>
             <p className="mt-5 text-lg text-ink-300">
               {BRAND_NAME} is an informational service. Outcomes are never
-              certain — no model eliminates variance. Wager only what you
+              certain. No model eliminates variance. Wager only what you
               can afford to lose, and stop immediately if it stops feeling
               like a hobby.
             </p>
@@ -84,10 +84,10 @@ export default function ResponsiblePlayPage() {
             <p className="eyebrow" style={{ color: BRAND_COLORS.softUltraviolet }}>The Bias Mirror</p>
             <h2 className="mt-3 font-display text-display-lg text-white">A private check on how you decide.</h2>
             <p className="mt-4 max-w-2xl text-ink-300">
-              Most products exploit bias. This one reflects it back — privately. Rate a few honest
+              Most products exploit bias. This one reflects it back, privately. Rate a few honest
               tendencies and the Mirror surfaces the patterns worth watching, your real strengths,
-              and calm, protective moves. It&apos;s computed on your device from your own answers —
-              nothing is sent or stored.
+              and calm, protective moves. It&apos;s computed on your device from your own answers.
+              Nothing is sent or stored.
             </p>
             <div className="mt-9">
               <BiasMirror />

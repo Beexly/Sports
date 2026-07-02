@@ -19,12 +19,12 @@ import type { PickType, PickTier } from "@sports/types";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
-  title: "Calibration Report — Settled-Pick Audit Trail",
+  title: "Calibration Report: Settled-Pick Audit Trail",
   description:
     "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
   alternates: { canonical: "/performance" },
   openGraph: {
-    title: "Calibration Report — Settled-Pick Audit Trail",
+    title: "Calibration Report: Settled-Pick Audit Trail",
     description:
       "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
     url: "/performance",
@@ -228,7 +228,7 @@ export default async function PerformancePage() {
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-ion-1">
               Every settled canonical pick is included. Bootstrap-era picks
-              are excluded by design — they don&apos;t get to inflate the
+              are excluded by design. They don&apos;t get to inflate the
               record.
             </p>
             <p className="mt-3 text-xs text-ion-3">

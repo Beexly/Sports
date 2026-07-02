@@ -141,10 +141,10 @@ export function buildExpectedPoints(records: readonly CsvRecord[], activeSeason:
         signal,
         note:
           signal === "buy-low"
-            ? "Expected points outrun actual — the usage says the production is coming. Buy-low before it corrects."
+            ? "Expected points outrun actual. The usage says the production is coming. Buy-low before it corrects."
             : signal === "sell-high"
-              ? "Actual points outrun expected — running hot on conversion luck. Sell-high before it regresses."
-              : "Actual tracks expected — the points are earned by the opportunity.",
+              ? "Actual points outrun expected. Running hot on conversion luck. Sell-high before it regresses."
+              : "Actual tracks expected. The points are earned by the opportunity.",
       });
     });
   }
@@ -188,7 +188,7 @@ export async function loadExpectedPoints({
         sourceRows: records.length,
         rows,
         canPublishProjections: false,
-        note: "Expected fantasy points from ffverse ff_opportunity — what a player's real usage should have produced. We surface expected-vs-actual as buy-low / sell-high. The opportunity backbone, not a point projection.",
+        note: "Expected fantasy points from ffverse ff_opportunity: what a player's real usage should have produced. We surface expected-vs-actual as buy-low / sell-high. The opportunity backbone, not a point projection.",
         sourceUrl: url,
         error: null,
       };

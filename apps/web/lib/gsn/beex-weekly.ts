@@ -47,9 +47,9 @@ export type BeexWeeklyEpisode = {
 };
 
 const toneVoiceNote: Record<TransmissionSegment["tone"], string> = {
-  ion: "Steady and confident — this is the part we're sure of.",
-  anomaly: "Lean in, slow down — we're warning people off something here.",
-  deep: "Thoughtful, almost off-script — thinking out loud with the listener.",
+  ion: "Steady and confident. This is the part we're sure of.",
+  anomaly: "Lean in, slow down. We're warning people off something here.",
+  deep: "Thoughtful, almost off-script, thinking out loud with the listener.",
 };
 
 /**
@@ -78,12 +78,12 @@ export function draftBeexWeekly(
       autoPublish: false,
     },
     cold_open: [
-      `It's Beex. This is the weekly — ${opts.weekLabel}.`,
+      `It's Beex. This is the weekly: ${opts.weekLabel}.`,
       "Same rule as always: we read the whole board before we say a word, and if the math says sit, we sit.",
     ],
     segments,
     sign_off: [
-      "That's the week. Everything we said tonight is on the record — graded, timestamped, public.",
+      "That's the week. Everything we said tonight is on the record: graded, timestamped, public.",
       "We detect. You decide.",
     ],
   };

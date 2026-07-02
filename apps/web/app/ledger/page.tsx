@@ -125,7 +125,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
             </Reveal>
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                The ledger preserves the original signal snapshot next to the outcome — and commits
+                The ledger preserves the original signal snapshot next to the outcome, and commits
                 a tamper-evident root at lock time. Bootstrap-era and synthetic seed records are
                 excluded.
               </p>
@@ -149,7 +149,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
             <Reveal delay={90}>
               <p className="mt-3 max-w-2xl text-ink-300">
                 Every published pick is a Merkle leaf; we commit the root at lock time. Anyone can
-                recompute it and verify a pick was in the set — and that no loss was quietly turned
+                recompute it and verify a pick was in the set, and that no loss was quietly turned
                 into a win. Toggle the tamper to see the commitment break.
               </p>
             </Reveal>

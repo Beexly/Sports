@@ -112,8 +112,8 @@ const PLAYER_MODEL_ENGINE = engine({
   title: "The process grade behind every player.",
   description: (
     <>
-      One canonical profile per player, mined from the full nflverse advanced field set — EPA efficiency, opportunity
-      (WOPR, target share), and volume — combined into a position-aware <em>process grade</em>. We compare it to actual
+      One canonical profile per player, mined from the full nflverse advanced field set: EPA efficiency, opportunity
+      (WOPR, target share), and volume, combined into a position-aware <em>process grade</em>. We compare it to actual
       production and surface the gap: where the inputs say more is coming (<span className="text-emerald-700 font-semibold">buy-low</span>)
       or running hot (<span className="text-rose-700 font-semibold">sell-high</span>). The data layer that drives the tools. Not a pick.
     </>
@@ -122,7 +122,7 @@ const PLAYER_MODEL_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "Process grade — the composite",
+      term: "Process grade: the composite",
       definition: (
         <>
           The within-position percentile of each predictive anchor, averaged. QBs are graded on EPA/play + DAKOTA +
@@ -132,7 +132,7 @@ const PLAYER_MODEL_ENGINE = engine({
       ),
     },
     {
-      term: "Buy-low — inputs say more is coming",
+      term: "Buy-low: inputs say more is coming",
       definition: (
         <>
           When the <span className="text-emerald-700 font-semibold">process</span> grade sits well above the actual
@@ -141,7 +141,7 @@ const PLAYER_MODEL_ENGINE = engine({
       ),
     },
     {
-      term: "Sell-high — running hot",
+      term: "Sell-high: running hot",
       definition: (
         <>
           When <span className="text-rose-700 font-semibold">production</span> outruns the process grade, the player
@@ -162,10 +162,10 @@ const EXPECTED_POINTS_ENGINE = engine({
   slug: "expected-points",
   group: "Cross-position core",
   label: "Expected Points (xFP)",
-  title: "Expected Fantasy Points — the opportunity backbone",
+  title: "Expected Fantasy Points: the opportunity backbone",
   description: (
     <>
-      What a player&apos;s real usage <em>should</em> have produced — expected points from the carries, targets, air
+      What a player&apos;s real usage <em>should</em> have produced: expected points from the carries, targets, air
       yards, and field position he actually saw, independent of whether the ball bounced his way.
     </>
   ),
@@ -173,12 +173,12 @@ const EXPECTED_POINTS_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "xFP — expected, not actual",
+      term: "xFP: expected, not actual",
       definition:
         "ffverse's ff_opportunity models the fantasy points a usage profile should yield. Expected points persist far better than actual points, which swing on touchdown luck.",
     },
     {
-      term: "Buy-low — expected outruns actual",
+      term: "Buy-low: expected outruns actual",
       definition: (
         <>
           When the <span className="text-emerald-700 font-semibold">expected</span> percentile sits well above the
@@ -187,7 +187,7 @@ const EXPECTED_POINTS_ENGINE = engine({
       ),
     },
     {
-      term: "Sell-high — actual outruns expected",
+      term: "Sell-high: actual outruns expected",
       definition: (
         <>
           When <span className="text-rose-700 font-semibold">actual</span> outruns expected, the player is running hot
@@ -207,28 +207,28 @@ const QB_FORWARD_ENGINE = engine({
   slug: "qb-forward",
   group: "Quarterback",
   label: "QB Forward Prior",
-  title: "QB Forward Prior — DAKOTA & ANY/A",
+  title: "QB Forward Prior: DAKOTA & ANY/A",
   description: (
     <>
       The most forward-looking QB reads: DAKOTA (EPA+CPOE composite) and Adjusted Net Yards per Attempt, with the
-      agreement between them surfaced — not averaged away.
+      agreement between them surfaced, not averaged away.
     </>
   ),
   api: "/api/intelligence/qb-forward",
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "DAKOTA — EPA + CPOE composite",
+      term: "DAKOTA: EPA + CPOE composite",
       definition:
         "nflverse's adjusted EPA + accuracy composite, tuned to predict next-year adjusted EPA/play. The closest public “forward” QB number.",
     },
     {
-      term: "ANY/A — adjusted net yards per attempt",
+      term: "ANY/A: adjusted net yards per attempt",
       definition:
         "The classic efficiency yardstick, built transparently from raw box columns. A genuinely different forward lens than the composite.",
     },
     {
-      term: "The edge — agreement, not an average",
+      term: "The edge: agreement, not an average",
       definition: (
         <>
           When both priors land in the same tier we read a <span className="text-orbital-cyan">clean</span>{" "}
@@ -249,11 +249,11 @@ const RUSHING_CONTACT_ENGINE = engine({
   slug: "rushing-contact",
   group: "Running back",
   label: "Rushing Contact",
-  title: "Rushing Contact — YAC vs YBC per carry",
+  title: "Rushing Contact: YAC vs YBC per carry",
   description: (
     <>
-      PFR advanced charting splits each carry into yards <em>after</em> contact — the back&apos;s own elusiveness and
-      power — and yards <em>before</em> contact, the line and scheme term. An independent estimator to triangulate
+      PFR advanced charting splits each carry into yards <em>after</em> contact, the back&apos;s own elusiveness and
+      power, and yards <em>before</em> contact, the line and scheme term. An independent estimator to triangulate
       against Next Gen RYOE.
     </>
   ),
@@ -261,7 +261,7 @@ const RUSHING_CONTACT_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "YAC/att — the back's own talent",
+      term: "YAC/att: the back's own talent",
       definition: (
         <>
           Yards after contact per carry isolates elusiveness and power. It&apos;s blocking-independent, so a{" "}
@@ -270,15 +270,15 @@ const RUSHING_CONTACT_ENGINE = engine({
       ),
     },
     {
-      term: "YBC/att — the line and scheme",
+      term: "YBC/att: the line and scheme",
       definition:
         "Yards before contact per carry is the room the offensive line and design hand him. High YBC with modest YAC reads as a line-aided profile.",
     },
     {
-      term: "The divergence — who's driving the yards",
+      term: "The divergence: who's driving the yards",
       definition: (
         <>
-          Elite <span className="text-orbital-cyan">YAC</span> behind thin YBC is a back winning on his own —
+          Elite <span className="text-orbital-cyan">YAC</span> behind thin YBC is a back winning on his own:
           a second, independent estimator to triangulate against Next Gen RYOE. We surface the split, we don&apos;t
           average it away.
         </>
@@ -296,10 +296,10 @@ const ROUTE_RATE_ENGINE = engine({
   slug: "route-rate",
   group: "Receiver",
   label: "Route Rate (TPRR)",
-  title: "Route Rate — targets per route run (proxy)",
+  title: "Route Rate: targets per route run (proxy)",
   description: (
     <>
-      A snaps&times;dropbacks proxy for targets per route run — high TPRR on low routes is the breakout signal; empty
+      A snaps&times;dropbacks proxy for targets per route run: high TPRR on low routes is the breakout signal; empty
       volume is the fade. Labelled a proxy (true routes are PFF-gated).
     </>
   ),
@@ -307,12 +307,12 @@ const ROUTE_RATE_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "TPRR — targets per route run (proxy)",
+      term: "TPRR: targets per route run (proxy)",
       definition:
-        "A snaps × dropbacks proxy for how often a receiver is targeted on the routes he runs. Labelled a proxy — true routes are PFF-gated.",
+        "A snaps × dropbacks proxy for how often a receiver is targeted on the routes he runs. Labelled a proxy: true routes are PFF-gated.",
     },
     {
-      term: "Breakout — high TPRR on low routes",
+      term: "Breakout: high TPRR on low routes",
       definition: (
         <>
           A <span className="text-orbital-cyan">high</span> target rate on a small route sample is the
@@ -321,9 +321,9 @@ const ROUTE_RATE_ENGINE = engine({
       ),
     },
     {
-      term: "Fade — empty volume",
+      term: "Fade: empty volume",
       definition:
-        "Plenty of routes but a thin target rate is the fade — on the field without earning looks. Steady sits in between.",
+        "Plenty of routes but a thin target rate is the fade: on the field without earning looks. Steady sits in between.",
     },
   ],
   load: loadRouteRate,
@@ -337,10 +337,10 @@ const SCORING_ZONE_ENGINE = engine({
   slug: "scoring-zone",
   group: "Running back",
   label: "Scoring-Zone Equity",
-  title: "Scoring-Zone Equity — TD equity from opportunity",
+  title: "Scoring-Zone Equity: TD equity from opportunity",
   description: (
     <>
-      Red-zone and goal-line opportunity share, with the TD rate regressed toward the positional mean — TD equity from
+      Red-zone and goal-line opportunity share, with the TD rate regressed toward the positional mean: TD equity from
       sticky opportunity, not noisy past touchdowns.
     </>
   ),
@@ -348,17 +348,17 @@ const SCORING_ZONE_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "RZ share — sticky opportunity",
+      term: "RZ share: sticky opportunity",
       definition:
         "The player's share of his team's red-zone and goal-line carries and targets. Scoring-zone opportunity is sticky and predictive; past touchdowns are noisy.",
     },
     {
-      term: "xTD rate — regressed to the mean",
+      term: "xTD rate: regressed to the mean",
       definition:
-        "TD rate per scoring-zone opportunity, regressed toward the positional mean — TD equity from the looks he owns, not the touchdowns that already bounced his way.",
+        "TD rate per scoring-zone opportunity, regressed toward the positional mean: TD equity from the looks he owns, not the touchdowns that already bounced his way.",
     },
     {
-      term: "Buy / Sell — equity vs results",
+      term: "Buy / Sell: equity vs results",
       definition: (
         <>
           Heavy <span className="text-emerald-700 font-semibold">scoring-zone share</span> with light actual TDs is a
@@ -379,10 +379,10 @@ const TEAM_ENVIRONMENT_ENGINE = engine({
   slug: "team",
   group: "Team & market",
   label: "Team Environment",
-  title: "Team Environment — EPA, PROE & pace",
+  title: "Team Environment: EPA, PROE & pace",
   description: (
     <>
-      Neutral-script offensive and defensive EPA per play, success rate, PROE (pass rate over expected), and pace — the
+      Neutral-script offensive and defensive EPA per play, success rate, PROE (pass rate over expected), and pace: the
       top-down team prior every player share sits in front of.
     </>
   ),
@@ -390,19 +390,19 @@ const TEAM_ENVIRONMENT_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "EPA/play — neutral-script efficiency",
+      term: "EPA/play: neutral-script efficiency",
       definition:
         "Offensive and defensive expected points added per play, taken on early downs in neutral game scripts to strip out garbage time and score effects. The cleanest top-down efficiency read.",
     },
     {
-      term: "PROE — pass rate over expected",
+      term: "PROE: pass rate over expected",
       definition:
         "How much more (or less) a team passes than the down-distance-score situation expects. Positive PROE is a pass-leaning environment that lifts receivers and the passing game.",
     },
     {
-      term: "Pace — the volume multiplier",
+      term: "Pace: the volume multiplier",
       definition:
-        "No-huddle rate as a pace proxy. A fast, pass-leaning, efficient offense is the environment every player share sits in front of — buy the offense it points to.",
+        "No-huddle rate as a pace proxy. A fast, pass-leaning, efficient offense is the environment every player share sits in front of. Buy the offense it points to.",
     },
   ],
   load: loadTeamEnvironment,
@@ -416,10 +416,10 @@ const OPPORTUNITY_TRANSFER_ENGINE = engine({
   slug: "opportunity-transfer",
   group: "Team & market",
   label: "Opportunity Transfer",
-  title: "Opportunity Transfer — who inherits the vacated role",
+  title: "Opportunity Transfer: who inherits the vacated role",
   description: (
     <>
-      When a player is OUT, we quantify the targets and carries his role vacates and rank the most likely beneficiary —
+      When a player is OUT, we quantify the targets and carries his role vacates and rank the most likely beneficiary:
       the waiver predictive core.
     </>
   ),
@@ -427,17 +427,17 @@ const OPPORTUNITY_TRANSFER_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "Vacated touches — what the role leaves behind",
+      term: "Vacated touches: what the role leaves behind",
       definition:
         "When a player is OUT, his trailing per-game targets and carries become available volume. We quantify exactly how much opportunity the role vacates.",
     },
     {
-      term: "Beneficiary — who inherits it",
+      term: "Beneficiary: who inherits it",
       definition:
-        "From the depth chart and trailing usage, the player most likely to absorb the vacated touches — the waiver predictive core, before the box score confirms it.",
+        "From the depth chart and trailing usage, the player most likely to absorb the vacated touches: the waiver predictive core, before the box score confirms it.",
     },
     {
-      term: "Confidence — how clean the read is",
+      term: "Confidence: how clean the read is",
       definition: (
         <>
           <span className="text-emerald-700 font-semibold">High</span> when the depth chart and usage agree on one
@@ -458,10 +458,10 @@ const CLV_ENGINE = engine({
   slug: "clv",
   group: "Team & market",
   label: "CLV Calibration",
-  title: "CLV Calibration — proving the method",
+  title: "CLV Calibration: proving the method",
   description: (
     <>
-      An <strong>illustrative baseline model</strong> backtested against nflverse closing lines — a demonstration of how
+      An <strong>illustrative baseline model</strong> backtested against nflverse closing lines: a demonstration of how
       closing-line value is computed and graded, not our pick engine&apos;s record (that stays gated until it can be
       honestly published). Self-grading, never a bet; forward odds stay gated.
     </>
@@ -470,7 +470,7 @@ const CLV_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "CLV — closing line value",
+      term: "CLV: closing line value",
       definition:
         "The probability points the model's number beats the closing line on the side it took. Beating the close is the single best leading indicator of a sound process.",
     },
@@ -484,8 +484,8 @@ const CLV_ENGINE = engine({
       definition: (
         <>
           A backtest against nflverse schedules: did the model <span className="text-emerald-700 font-semibold">beat
-          the close</span> or <span className="text-rose-700 font-semibold">trail</span> it? Forward odds stay gated —
-          this grades the engine, it does not place a wager.
+          the close</span> or <span className="text-rose-700 font-semibold">trail</span> it? Forward odds stay gated.
+          This grades the engine, it does not place a wager.
         </>
       ),
     },
@@ -501,10 +501,10 @@ const WAIVER_TRENDS_ENGINE = engine({
   slug: "waiver-trends",
   group: "Team & market",
   label: "Waiver Trends",
-  title: "Waiver Trends — what the market is doing",
+  title: "Waiver Trends: what the market is doing",
   description: (
     <>
-      League-wide waiver MOMENTUM from the Sleeper API — how many fantasy leagues are adding and dropping each NFL player
+      League-wide waiver MOMENTUM from the Sleeper API: how many fantasy leagues are adding and dropping each NFL player
       over the lookback window. Ownership velocity: <span className="font-semibold text-ion-white">what the market is doing, not advice.</span>
     </>
   ),
@@ -512,7 +512,7 @@ const WAIVER_TRENDS_ENGINE = engine({
   sourceIds: ["sleeper"],
   explainer: [
     {
-      term: "Adds — ownership rising",
+      term: "Adds: ownership rising",
       definition: (
         <>
           The count of Sleeper leagues that <span className="text-emerald-700 font-semibold">added</span> the player
@@ -521,7 +521,7 @@ const WAIVER_TRENDS_ENGINE = engine({
       ),
     },
     {
-      term: "Drops — ownership falling",
+      term: "Drops: ownership falling",
       definition: (
         <>
           The count of leagues that <span className="text-rose-700 font-semibold">dropped</span> the player. Falling
@@ -532,7 +532,7 @@ const WAIVER_TRENDS_ENGINE = engine({
     {
       term: "Descriptive, not advice",
       definition:
-        "This is the crowd's behavior measured directly — market sentiment. We surface it; we don't turn it into a pick or a projection.",
+        "This is the crowd's behavior measured directly: market sentiment. We surface it; we don't turn it into a pick or a projection.",
     },
   ],
   load: loadSleeperTrending,
@@ -550,7 +550,7 @@ const PROOF_ENGINE = engine({
   description: (
     <>
       Anyone can publish a rating. We backtest ours. Build the process grade on the first half of the season, then
-      measure how well it ranks <em>second-half</em> production — against the obvious baseline, past production predicting
+      measure how well it ranks <em>second-half</em> production, against the obvious baseline: past production predicting
       future production. If the grade adds lift, it carries forward signal.
     </>
   ),
@@ -558,12 +558,12 @@ const PROOF_ENGINE = engine({
   sourceIds: ["nflverse"],
   explainer: [
     {
-      term: "Grade ρ — does the grade rank the future?",
+      term: "Grade ρ: does the grade rank the future?",
       definition:
         "Spearman rank correlation between the first-half process grade and second-half production, within position. Higher is better.",
     },
     {
-      term: "Lift — does it beat the past?",
+      term: "Lift: does it beat the past?",
       definition: (
         <>
           Grade ρ minus baseline ρ (past production → future production).{" "}
@@ -573,7 +573,7 @@ const PROOF_ENGINE = engine({
       ),
     },
     {
-      term: "Call hit-rate — were buy/sell right?",
+      term: "Call hit-rate: were buy/sell right?",
       definition: (
         <>
           Of first-half buy-lows, how many <span className="text-emerald-700 font-semibold">rose</span>; of

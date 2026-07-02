@@ -289,13 +289,13 @@ export function LeagueTwinGalaxy() {
               <Enc label="VOR" v={`${focused.vor}`} />
             </div>
             <p className="mt-3 text-[11px]" style={{ color: SHOCK_HEX[focused.shock] }}>
-              {focused.eclipsed ? `Eclipse — on bye week ${twin.currentWeek}. ` : ""}{focused.shockNote}
+              {focused.eclipsed ? `Eclipse: on bye week ${twin.currentWeek}. ` : ""}{focused.shockNote}
             </p>
           </div>
         )}
 
         <div className="surface-card p-3">
-          <p className="mb-2 px-1 text-[10px] uppercase tracking-wider text-ink-600">Roster — select to focus</p>
+          <p className="mb-2 px-1 text-[10px] uppercase tracking-wider text-ink-600">Roster · select to focus</p>
           <div className="max-h-[26vh] space-y-0.5 overflow-y-auto">
             {twin.nodes.map((n) => {
               const active = n.player.id === focusId;

@@ -109,7 +109,7 @@ export function PlayerLensRail({
           href="/trends"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-orbital-cyan hover:text-ion-white"
         >
-          Trend Lab — trends that pass a real statistical test
+          Trend Lab: trends that pass a real statistical test
           <span aria-hidden>→</span>
         </Link>
       </div>

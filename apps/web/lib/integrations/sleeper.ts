@@ -294,7 +294,7 @@ export async function loadSleeperTrending({
       drops,
       sourceUrl,
       attribution,
-      note: "League-wide waiver MOMENTUM from the Sleeper API — the add/drop velocity across fantasy leagues over the lookback window. This is what the market is DOING (ownership velocity), not advice. Names resolved from Sleeper's player map; unknown ids are skipped, never invented.",
+      note: "League-wide waiver MOMENTUM from the Sleeper API: the add/drop velocity across fantasy leagues over the lookback window. This is what the market is DOING (ownership velocity), not advice. Names resolved from Sleeper's player map; unknown ids are skipped, never invented.",
       error: null,
     };
   } catch (error) {

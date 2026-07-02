@@ -80,16 +80,16 @@ export function percentileRanks(values: readonly number[]): number[] {
 
 function divergenceFor(qbrPct: number | null, cpoePct: number | null): { divergence: Divergence; note: string } {
   if (qbrPct == null || cpoePct == null) {
-    return { divergence: "single-source", note: "Only one estimator qualifies this QB — read it as a single view, not a consensus." };
+    return { divergence: "single-source", note: "Only one estimator qualifies this QB, so read it as a single view, not a consensus." };
   }
   const diff = qbrPct - cpoePct;
   if (Math.abs(diff) <= DIVERGENCE_THRESHOLD) {
-    return { divergence: "aligned", note: "Both independent views agree on the tier — higher confidence in the read." };
+    return { divergence: "aligned", note: "Both independent views agree on the tier: higher confidence in the read." };
   }
   if (diff > 0) {
-    return { divergence: "results-over-accuracy", note: "Produces more (QBR) than raw accuracy (CPOE) implies — mobility, big plays, or situation are carrying value the accuracy view misses." };
+    return { divergence: "results-over-accuracy", note: "Produces more (QBR) than raw accuracy (CPOE) implies. Mobility, big plays, or situation are carrying value the accuracy view misses." };
   }
-  return { divergence: "accuracy-over-results", note: "More accurate (CPOE) than results (QBR) show — a supporting-cast or finishing gap may be capping the output." };
+  return { divergence: "accuracy-over-results", note: "More accurate (CPOE) than results (QBR) show. A supporting-cast or finishing gap may be capping the output." };
 }
 
 /** Build the consensus rows from the two estimator pools. Pure. */
@@ -170,7 +170,7 @@ export async function loadQbConsensus({
     note:
       qbrOk && ngsOk
         ? "Two independent QB-quality estimators (ESPN QBR + Next Gen CPOE) triangulated. Disagreement is surfaced, not averaged away. Context, not a pick."
-        : `Only the ${qbrOk ? "QBR" : "CPOE"} estimator is live right now — these are single-source reads, not a consensus.`,
+        : `Only the ${qbrOk ? "QBR" : "CPOE"} estimator is live right now, so these are single-source reads, not a consensus.`,
     error: null,
   };
 }

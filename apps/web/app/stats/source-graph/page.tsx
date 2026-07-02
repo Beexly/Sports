@@ -1,7 +1,7 @@
 import { Shell, Cards, DataTable, BarChart, StatusRibbon } from "../_components";
 import { loadSources, loadSourceTargets } from "@/lib/statking/product";
 export const metadata = {
-  title: "Source Graph — Where StatKing Data Comes From",
+  title: "Source Graph: Where StatKing Data Comes From",
   description: "The candidate source graph and lineage behind StatKing intelligence.",
   alternates: { canonical: "/stats/source-graph" },
 };

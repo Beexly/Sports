@@ -69,7 +69,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
     name: "Founding",
     order: 0,
     trigger:
-      "Bootstrap — no public track record yet. The lowest price GSE will ever offer.",
+      "Bootstrap: no public track record yet. The lowest price GSE will ever offer.",
     triggerMetrics: {
       minCanonicalSettledPicks: null,
       requiresPublishedCalibration: false,
@@ -96,7 +96,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
     pro: { monthly: 19.99, annual: 149 },
     elite: { monthly: 29.99, annual: 229 },
     addedValue:
-      "The public calibration report and verified settled record go live — the number now exists and is defensible.",
+      "The public calibration report and verified settled record go live. The number now exists and is defensible.",
   },
   {
     id: "ESTABLISHED",
@@ -120,7 +120,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
     name: "Authority",
     order: 3,
     trigger:
-      "Multi-season verified positive ROI and category authority — pricing power earned, not claimed.",
+      "Multi-season verified positive ROI and category authority: pricing power earned, not claimed.",
     triggerMetrics: {
       minCanonicalSettledPicks: 2000,
       requiresPublishedCalibration: true,

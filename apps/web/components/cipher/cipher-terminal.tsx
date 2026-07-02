@@ -64,7 +64,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
       });
       const data = await res.json();
       if (res.status === 429) {
-        setResult({ kind: "error", message: data.error ?? "Too many attempts — try again shortly." });
+        setResult({ kind: "error", message: data.error ?? "Too many attempts. Try again shortly." });
       } else if (data.ok && data.correct) {
         setResult({ kind: "win", reward: data.reward as Reward, message: data.message });
       } else if (data.correct === false) {
@@ -73,7 +73,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
         setResult({ kind: "error", message: data.error ?? "Something went wrong." });
       }
     } catch {
-      setResult({ kind: "error", message: "Network error — try again." });
+      setResult({ kind: "error", message: "Network error. Try again." });
     } finally {
       setBusy(false);
     }

@@ -1,7 +1,7 @@
 import { Shell, Cards, DataTable, ScoreRing, InsightCard, SectionHeader, StatusRibbon } from "../_components";
 import { loadBacktests } from "@/lib/statking/product";
 export const metadata = {
-  title: "Proof & Backtests — How StatKing Is Validated",
+  title: "Proof & Backtests: How StatKing Is Validated",
   description: "Backtests, metric reliability, and the honest proof layer behind StatKing metrics.",
   alternates: { canonical: "/stats/proof" },
 };
@@ -23,14 +23,14 @@ export default function Page() {
       </div>
       <InsightCard
         eyebrow="How StatKing Validates Its Work"
-        headline="Predictions are logged, settled, and checked — once live data flows"
-        body="The proof archive is currently empty because no live predictions have been stored yet. This changes the moment real data ingestion goes active. Every pick will be archived with the model version, input data snapshot, and outcome — making the calibration score auditable."
+        headline="Predictions are logged, settled, and checked once live data flows"
+        body="The proof archive is currently empty because no live predictions have been stored yet. This changes the moment real data ingestion goes active. Every pick will be archived with the model version, input data snapshot, and outcome, making the calibration score auditable."
         tone="warn"
       />
       <div>
         <SectionHeader eyebrow={b.runs.length + " runs recorded"} title="Backtest Archive" />
         {b.runs.length === 0 ? (
-          <p className="text-sm text-ion-1 py-6 px-4 border border-mineral bg-eclipse/40 text-center">No backtest runs in snapshot — will populate with live prediction data.</p>
+          <p className="text-sm text-ion-1 py-6 px-4 border border-mineral bg-eclipse/40 text-center">No backtest runs in snapshot. This will populate with live prediction data.</p>
         ) : (
           <DataTable
             rows={b.runs.map((r: Record<string, unknown>) => ({

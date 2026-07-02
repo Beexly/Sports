@@ -5,7 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { SURFACES } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "The Vault — Every Published Pick, Reasoning Attached",
+  title: "The Vault: Every Published Pick, Reasoning Attached",
   description:
     "The published-pick archive opens once enough canonical results have settled. Methodology and gates are live now. No curated highlights, no scrubbed losses.",
   alternates: { canonical: "/vault" },
@@ -34,7 +34,7 @@ export default function VaultPage() {
               <p className="text-sm leading-relaxed text-ink-300">
                 The Vault opens once enough canonical picks have settled to
                 render a calibrated record. No Vault gets published on a
-                handful of games — selective history is exactly what this
+                handful of games. Selective history is exactly what this
                 product is built to avoid.
               </p>
               <div className="mt-2 flex flex-wrap gap-3">

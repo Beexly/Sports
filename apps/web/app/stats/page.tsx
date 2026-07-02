@@ -4,7 +4,7 @@ import { loadSummary, loadActiveMetricManifest, rankPlayers } from "@/lib/statki
 import { glossaryEntry } from "@/lib/glossary";
 
 export const metadata = {
-  title: "Galaxy StatKing — NFL Player & Team Intelligence",
+  title: "Galaxy StatKing: NFL Player & Team Intelligence",
   description: "A rights-gated NFL stat intelligence system: players, teams, media signal, sources, and the proof behind every metric.",
   alternates: { canonical: "/stats" },
 };
@@ -40,7 +40,7 @@ export default function Page() {
 
   return (
     <Shell title="Galaxy StatKing" eyebrow="NFL intelligence">
-      <StatusRibbon status="fixture" label="Snapshot data — fixture-backed, not a live feed" />
+      <StatusRibbon status="fixture" label="Snapshot data: fixture-backed, not a live feed" />
 
       <div className="border border-mineral bg-eclipse p-6 flex flex-col sm:flex-row items-start gap-8">
         <div className="shrink-0">
@@ -51,7 +51,7 @@ export default function Page() {
             <p className="text-xs uppercase tracking-[0.2em] text-ion-2">Overall rating</p>
             <p className="mt-1 text-2xl font-bold text-ion-white">King Standard: 61 / 100</p>
             <p className="mt-1 text-sm text-ion-1">
-              Autonomous foundation — real sources, rights-gated, fixture-backed
+              Autonomous foundation: real sources, rights-gated, fixture-backed
             </p>
           </div>
           <div className="space-y-2.5">
@@ -99,8 +99,8 @@ export default function Page() {
 
       <InsightCard
         eyebrow="King Standard · 61 / 100"
-        headline="Autonomous foundation — not yet finished King of Stats"
-        body="Source trust is seeded. Coverage is sample-level. Freshness is fixture-backed. Proof archive is empty — no live predictions yet. 61 is an honest score for a real, working foundation. 90+ requires live feeds, licenses, and settled picks."
+        headline="Autonomous foundation, not yet finished King of Stats"
+        body="Source trust is seeded. Coverage is sample-level. Freshness is fixture-backed. Proof archive is empty: no live predictions yet. 61 is an honest score for a real, working foundation. 90+ requires live feeds, licenses, and settled picks."
         tone="warn"
       />
 

@@ -120,7 +120,7 @@ export function ToutComparison() {
         </div>
 
         <p className="tout-footnote">
-          No specific competitor named here — this is the category contrast.
+          No specific competitor named here. This is the category contrast.
           If you&apos;ve been around the picks industry, you know the pattern.
           Galaxy Sports Edge is built to do the opposite of it.
         </p>

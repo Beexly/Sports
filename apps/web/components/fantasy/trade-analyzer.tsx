@@ -78,7 +78,7 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
 
       {/* pool */}
       <div className="surface-card p-4">
-        <p className="mb-2 text-xs uppercase tracking-[0.18em] text-ink-500">Player pool — add to a side</p>
+        <p className="mb-2 text-xs uppercase tracking-[0.18em] text-ink-500">Player pool · add to a side</p>
         <div className="max-h-[40vh] space-y-0.5 overflow-y-auto">
           {sortedPool.map((p) => {
             const used = give.includes(p.id) || get.includes(p.id);

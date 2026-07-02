@@ -71,7 +71,7 @@ export const METRIC_COVERAGE: readonly MetricCoverageEntry[] = [
       "their methodology is closed.",
     weCompute:
       "Solve epa ≈ leagueMean + offense + defense by iterative coordinate descent over open " +
-      "play-by-play, re-centred each pass — a transparent, reproducible opponent adjustment.",
+      "play-by-play, re-centred each pass: a transparent, reproducible opponent adjustment.",
     attribution: "Data from nflverse (https://github.com/nflverse), CC-BY-4.0",
   },
 ];

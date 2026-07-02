@@ -7,7 +7,7 @@ import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Best Ball — Galaxy Fantasy",
+  title: "Best Ball · Galaxy Fantasy",
   description:
     "A glass-box best-ball draft board: roster ceiling and spike upside, QB-to-catcher stack correlation, bye fragility, and a next-pick recommender tuned for draft-only formats.",
   alternates: { canonical: "/fantasy/bestball" },
@@ -30,10 +30,10 @@ export default async function BestBallPage() {
       eyebrow="Best Ball"
       accent={BRAND_COLORS.orbitalCyan}
       title={<>Draft for the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>spike</span>, build the stack.</>}
-      intro="Best ball is won at the draft: no waivers, no start/sit — the optimal lineup is banked for you every week. So the engine grades what actually matters — weekly ceiling, QB-to-catcher correlation, and bye structure — and tells you what your roster needs next, and why."
+      intro="Best ball is won at the draft: no waivers, no start/sit: the optimal lineup is banked for you every week. So the engine grades what actually matters (weekly ceiling, QB-to-catcher correlation, and bye structure) and tells you what your roster needs next, and why."
       note={pool
-        ? "Live graded pool — real players with model-derived projections. Ceiling, stack, and structure are computed from real grades."
-        : "Illustrative player universe — fictional players, illustrative projections. Ceiling, stack, and structure are computed live from this sample pool."}
+        ? "Live graded pool: real players with model-derived projections. Ceiling, stack, and structure are computed from real grades."
+        : "Illustrative player universe: fictional players, illustrative projections. Ceiling, stack, and structure are computed live from this sample pool."}
       wide
     >
       <BestBallBoard pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />

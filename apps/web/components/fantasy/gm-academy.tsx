@@ -177,7 +177,7 @@ function Reference({ track }: { track: Track | "All" }) {
       {showInjury && (
         <div className="surface-card p-6">
           <h3 className="font-display text-xl text-white">The Injury Decoder</h3>
-          <p className="mt-1 text-sm text-ink-400">What a designation actually means. Educational, generic — not medical advice.</p>
+          <p className="mt-1 text-sm text-ink-400">What a designation actually means. Educational, generic. Not medical advice.</p>
           <div className="mt-4 space-y-2.5">
             {INJURY_DECODER.map((e) => (
               <div key={e.injury} className="rounded-lg border p-4" style={{ borderColor: BRAND_COLORS.steelGray }}>

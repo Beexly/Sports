@@ -33,7 +33,7 @@ const PROVIDERS: readonly ProviderDef[] = [
   { key: "avatar-tts", name: "Nova avatar / TTS vendor", category: "avatar-tts", envVar: "AVATAR_TTS_VENDOR", unlocks: "Licensed avatar + voice rendering for Galaxy Studios", note: "A consented/licensed virtual-presenter vendor. Until set, Nova is a stylized brand mark only." },
   { key: "odds", name: "Live odds feed", category: "odds", envVar: "THE_ODDS_API_KEY", unlocks: "Real lines and closing-line value on the public board", note: "The Odds API key (already part of the platform's data layer)." },
   { key: "pickem-lines", name: "Pick'em lines feed", category: "pickem", envVar: "PICKEM_LINES_PROVIDER", unlocks: "Live Underdog / DK Pick6 / PrizePicks line ingestion for the Pick'em Edge", note: "A licensed pick'em-lines feed (obtained under agreement, never scraped). Until set, the Pick'em Edge runs on illustrative lines." },
-  { key: "dfs", name: "DFS slate feed", category: "dfs", envVar: "DFS_PROVIDER", unlocks: "Live DFS salaries + projections + ownership for the optimizer", note: "A licensed DFS slate feed (contracted provider — never the forbidden DK hidden endpoint). Until set, the optimizer runs on the illustrative slate." },
+  { key: "dfs", name: "DFS slate feed", category: "dfs", envVar: "DFS_PROVIDER", unlocks: "Live DFS salaries + projections + ownership for the optimizer", note: "A licensed DFS slate feed (contracted provider, never the forbidden DK hidden endpoint). Until set, the optimizer runs on the illustrative slate." },
 ];
 
 /** Status of every external provider, given an environment. */

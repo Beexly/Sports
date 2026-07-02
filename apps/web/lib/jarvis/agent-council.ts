@@ -125,7 +125,7 @@ export const GUARDRAILS: readonly string[] = [
   "No agent may override METER on model selection or cost-discipline decisions.",
   "No agent may override JARVIS on routing decisions.",
   "No agent may override the Owner on final approval for any externally visible action.",
-  "No agent may take any external action — externalActionsAllowed is always false.",
+  "No agent may take any external action: externalActionsAllowed is always false.",
 ];
 
 // ─── Council roster ───────────────────────────────────────────────────────────
@@ -936,7 +936,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
     charter:
-      "Perform sandboxed browser actions — navigate, scrape, screenshot — only on " +
+      "Perform sandboxed browser actions (navigate, scrape, screenshot) only on " +
       "pre-approved domains under strict human oversight.",
     currentTruth:
       "Seat is designed only. No browser automation layer exists in this repo.",
@@ -945,7 +945,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
       "Document the approved-domain sandbox design",
     ],
     forbiddenActions: [
-      "Execute any browser action — capability is not wired",
+      "Execute any browser action: capability is not wired",
       "Store credentials in automation scripts",
     ],
     allowedInputs: ["owner-approved domain list", "scraping clearance results"],
@@ -1039,7 +1039,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     authorityTier: 0,
     isRegisteredCockpitAgent: false,
     charter:
-      "Chain operator workflows — ingestion → scoring → routing → content draft → settlement — " +
+      "Chain operator workflows (ingestion → scoring → routing → content draft → settlement) " +
       "on schedule, pausing at every human checkpoint gate.",
     currentTruth:
       "Seat is designed only. BullMQ jobs run independently; no cross-job workflow " +
@@ -1497,7 +1497,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
         id: "prism-ascend-template",
         parentSeatId: "stat-rd-lead",
         name: "ASCEND Standing Subagent Template",
-        purpose: "Standing improvement loop — continuously proposes GSE score experiments for PRISM + AUDIT review",
+        purpose: "Standing improvement loop: continuously proposes GSE score experiments for PRISM + AUDIT review",
         authorityTier: 0,
         allowedInputs: ["calibration metrics", "backtest results", "feature gap analyses"],
         allowedOutputs: ["scored improvement experiments draft"],

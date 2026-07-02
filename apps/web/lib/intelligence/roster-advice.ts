@@ -76,8 +76,8 @@ export function addTargets(
       addScore: addScore(p),
       reason:
         p.signal === "buy-low"
-          ? `Process grade ${p.processGrade} vs production ${p.productionPct} — the inputs say more is coming. Add before the room catches on.`
-          : `Process grade ${p.processGrade}${p.signal === "sell-high" ? " — productive but running hot; add only if you need the floor now." : " — earned, startable role."}`,
+          ? `Process grade ${p.processGrade} vs production ${p.productionPct}: the inputs say more is coming. Add before the room catches on.`
+          : `Process grade ${p.processGrade}${p.signal === "sell-high" ? ": productive but running hot; add only if you need the floor now." : ": earned, startable role."}`,
     }))
     .sort((a, b) => b.addScore - a.addScore)
     .slice(0, limit);
@@ -103,8 +103,8 @@ export function dropCandidates(
       signal: p.signal,
       reason:
         p.signal === "sell-high"
-          ? `Production is outrunning a ${p.processGrade} process grade — sell the name while the value is high.`
-          : `Weak process grade (${p.processGrade}) — a cut/upgrade candidate if you need the roster spot.`,
+          ? `Production is outrunning a ${p.processGrade} process grade. Sell the name while the value is high.`
+          : `Weak process grade (${p.processGrade}): a cut/upgrade candidate if you need the roster spot.`,
     }))
     // weakest first; sell-high gets a small nudge up the drop/trade list
     .sort((a, b) => (a.processGrade - SIGNAL_BONUS[a.signal] * -1) - (b.processGrade - SIGNAL_BONUS[b.signal] * -1))
@@ -121,10 +121,10 @@ export function classifyRoster(profiles: readonly PlayerProfile[], rostered: rea
       const read: RosterRead =
         p.signal === "buy-low" ? "buy-more" : p.signal === "sell-high" ? "sell-high" : p.processGrade >= 55 ? "ride" : "hold";
       const reason =
-        read === "buy-more" ? "Underowned relative to his process — buy more / start with confidence."
-        : read === "sell-high" ? "Hot relative to his process — explore selling at peak value."
-        : read === "ride" ? "Process and production aligned and strong — ride it."
-        : "Fringe process grade — hold, but be ready to upgrade.";
+        read === "buy-more" ? "Underowned relative to his process. Buy more / start with confidence."
+        : read === "sell-high" ? "Hot relative to his process. Explore selling at peak value."
+        : read === "ride" ? "Process and production aligned and strong. Ride it."
+        : "Fringe process grade: hold, but be ready to upgrade.";
       return { name: p.name, team: p.team, position: p.position, processGrade: p.processGrade, read, reason };
     })
     .filter((r): r is RosterPlayerRead => r !== null);

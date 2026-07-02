@@ -77,26 +77,26 @@ function freshnessFor(signal: SignalType, minutesAgo: number): number {
 
 function actionFor(item: NewsItem, fantasyDelta: number, reliability: number): string {
   const who = item.player ?? item.team;
-  if (reliability < 0.4) return `Hold — single ${item.tier.toLowerCase()} source; wait for a second report before acting on ${who}.`;
+  if (reliability < 0.4) return `Hold: single ${item.tier.toLowerCase()} source; wait for a second report before acting on ${who}.`;
   switch (item.signal) {
     case "injury-out":
-      return `Pivot off ${who}. The backup is the speculative add — get there before your league.`;
+      return `Pivot off ${who}. The backup is the speculative add. Get there before your league.`;
     case "injury-return":
       return `${who} back in play; re-slot and discount the contingency you were holding.`;
     case "role-up":
-      return `Buy-low window on ${who} closing — claim or start before the number moves.`;
+      return `Buy-low window on ${who} closing; claim or start before the number moves.`;
     case "role-down":
       return `Fade ${who} this week; the touches are leaking elsewhere.`;
     case "suspension":
-      return `${who} out multi-week — drop in redraft, the next man up is the real add.`;
+      return `${who} out multi-week: drop in redraft, the next man up is the real add.`;
     case "trade":
       return `New context for ${who}; revalue on the new offense before the market resets.`;
     case "scheme":
-      return `Scheme change reshapes ${who}'s usage — see Scheme Intelligence for the cascade.`;
+      return `Scheme change reshapes ${who}'s usage; see Scheme Intelligence for the cascade.`;
     case "weather":
       return `Game-script risk on ${who}; lean the floor, fade the ceiling.`;
     case "depth-chart":
-      return `${who} climbing the chart — a snap-count story worth a speculative stash.`;
+      return `${who} climbing the chart: a snap-count story worth a speculative stash.`;
   }
 }
 

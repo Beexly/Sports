@@ -18,6 +18,6 @@ export const venueFormTemplate: FailureModeTemplate = {
   },
 
   generateBullet: (_snapshot, _pick, _game) => {
-    return `If the venue-form signal is weaker than the sample size suggests — fewer than 8 recent meaningful games at this venue, or distribution skewed by one outlier — we overweighted this factor.`;
+    return `If the venue-form signal is weaker than the sample size suggests (fewer than 8 recent meaningful games at this venue, or distribution skewed by one outlier), we overweighted this factor.`;
   },
 };

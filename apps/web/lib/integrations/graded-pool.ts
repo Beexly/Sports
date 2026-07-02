@@ -215,7 +215,7 @@ const NFLVERSE_ATTRIBUTION = "Data via nflverse (CC-BY-4.0)";
 /** Build a live ProjectionsProvider from an already-loaded graded pool. Pure. */
 export function buildGradedProvider(pool: readonly Player[], fetchedAt?: string): ProjectionsProvider {
   return {
-    name: "Graded — nflverse process model",
+    name: "Graded · nflverse process model",
     live: true,
     fetchedAt,
     attribution: NFLVERSE_ATTRIBUTION,

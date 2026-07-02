@@ -27,7 +27,7 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
     }
     const missing = validateSlate(r.players);
     const warn = [...r.warnings];
-    if (missing.length) warn.push(`Roster gaps — ${missing.join("; ")}. The optimizer may not fill every slot.`);
+    if (missing.length) warn.push(`Roster gaps: ${missing.join("; ")}. The optimizer may not fill every slot.`);
     setStatus({ ok: true, msg: `Imported ${r.players.length} players. Projections & ownership are modeled from DK's averages.`, warnings: warn.slice(0, 4) });
     onImport(r.players);
   };
@@ -82,7 +82,7 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
             </div>
           )}
           <p className="text-[10px] leading-relaxed text-ink-600">
-            No login, no scraping — this reads only the CSV you provide. The export carries real players, positions,
+            No login, no scraping. This reads only the CSV you provide. The export carries real players, positions,
             salaries, teams, and DK&apos;s average points; projections, floor/ceiling, and ownership are modeled here and
             replaced when a licensed projection source is wired behind the founder gate.
           </p>

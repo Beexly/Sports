@@ -59,7 +59,7 @@ export default function PlayersError({
           </h1>
           <p className="mt-2 text-sm text-ion-1">
             This page threw a runtime error. Hit retry, or jump back to the
-            Player Lab overview — the observatory has the trace either way.
+            Player Lab overview. The observatory has the trace either way.
           </p>
           <pre className="mt-3 overflow-x-auto rounded-lg bg-carbon/70 p-3 text-[11px] text-ion-2">
             {visibleDetail}

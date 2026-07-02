@@ -83,7 +83,7 @@ For EXPLAIN_FOR_MY_LENS, reframe through the lens provided.`;
  * the runtime fills with game-specific data.
  */
 export const REFUSAL_TEMPLATES: Record<RefusalKind, string> = {
-  EVIDENCE_THIN: `Evidence on this game is currently {{grade}} — {{bootstrapSharePct}}% of the
+  EVIDENCE_THIN: `Evidence on this game is currently {{grade}}: {{bootstrapSharePct}}% of the
 signals are still bootstrap. The model does not commit to specific reads
 when evidence is below grade C.
 
@@ -128,7 +128,7 @@ That's the version of "performance" we believe.`,
   GAME_NOT_IN_CONTEXT: `That game isn't in the current context window. Open the game's room directly
 at /room/{{gameId}} and the Model Court there will have its full evidence.`,
 
-  PERSONAL_ADVICE: `The model doesn't give personal betting advice — bet sizing, bankroll
+  PERSONAL_ADVICE: `The model doesn't give personal betting advice: bet sizing, bankroll
 calls, hedge decisions. Those depend on inputs we don't have.
 
 What we can show you for this game:

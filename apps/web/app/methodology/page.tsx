@@ -54,19 +54,19 @@ const CHANGELOG = [
 const MARKET_READS = [
   {
     title: "The market's real price",
-    body: "Every book's latest two-sided quote, de-vigged and taken to a median across books — the market's opinion with the margin stripped out. What the books actually think, not what they charge.",
+    body: "Every book's latest two-sided quote, de-vigged and taken to a median across books: the market's opinion with the margin stripped out. What the books actually think, not what they charge.",
     href: "/observatory",
     cta: "See the fair board",
   },
   {
     title: "The best of it",
-    body: "The line shop finds the best available price for each side across the books we capture — the same line-shopping edge the pros use, shown as plain transparency. Shop the number; it's your money.",
+    body: "The line shop finds the best available price for each side across the books we capture: the same line-shopping edge the pros use, shown as plain transparency. Shop the number; it's your money.",
     href: "/observatory",
     cta: "Open the line shop",
   },
   {
     title: "Did we beat the close?",
-    body: "Closing line value grades whether the price we locked beat where the market closed — the sharp-credible leading indicator of a real edge, and the one number tout services never show. Published under the same gate as the win rate.",
+    body: "Closing line value grades whether the price we locked beat where the market closed: the sharp-credible leading indicator of a real edge, and the one number tout services never show. Published under the same gate as the win rate.",
     href: "/clv",
     cta: "See our CLV",
   },
@@ -162,10 +162,10 @@ export default function MethodologyPage(): JSX.Element {
                 Reading the market
               </p>
               <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
-                What the market thinks — and whether we beat it.
+                What the market thinks, and whether we beat it.
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
-                Three reads, all built from odds we actually capture — never a
+                Three reads, all built from odds we actually capture, never a
                 projection dressed up as a market.
               </p>
             </Reveal>

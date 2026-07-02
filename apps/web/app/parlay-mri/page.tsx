@@ -12,7 +12,7 @@ import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 
 export const metadata: Metadata = {
-  title: "Parlay MRI — The Portfolio Surgeon",
+  title: "Parlay MRI: The Portfolio Surgeon",
   description:
     "See a parlay's genome: per-leg risk, survivability, expected value, the compounded house edge, and hidden same-game correlation. Toggle legs and watch the math move. Risk made legible.",
   alternates: { canonical: "/parlay-mri" },
@@ -38,7 +38,7 @@ export default async function ParlayMriPage() {
           <TierGatePanel
             need="PRO"
             surface="The Parlay MRI"
-            blurb="Per-leg survivability, compounded house edge, hidden same-game correlation — the full genome of any parlay, with legs you can toggle live. This is the portfolio surgeon, and it operates for Pro members."
+            blurb="Per-leg survivability, compounded house edge, hidden same-game correlation: the full genome of any parlay, with legs you can toggle live. This is the portfolio surgeon, and it operates for Pro members."
           />
         </main>
         <Footer />
@@ -85,7 +85,7 @@ export default async function ParlayMriPage() {
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
                 Most apps sell you the payout. We show you the genome. Every leg carries risk;
-                the ticket as a whole has vitals you can read — survivability, expected value,
+                the ticket as a whole has vitals you can read: survivability, expected value,
                 the house edge compounding across legs, and the same-game correlation the book
                 already priced. Operate on it and watch the math move.
               </p>
@@ -125,8 +125,8 @@ export default async function ParlayMriPage() {
               </p>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ink-300">
                 The whole industry hypes the longshot ticket. We&apos;d rather make its fragility
-                legible. This tool runs on illustrative legs and transparent math you can check —
-                its job is to teach how parlay structure changes the odds, so the smartest move is
+                legible. This tool runs on illustrative legs and transparent math you can check.
+                Its job is to teach how parlay structure changes the odds, so the smartest move is
                 often the one you don&apos;t make.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">

@@ -29,7 +29,7 @@ const LAYERS: readonly MirageLayer[] = [
     id: "pressure",
     step: "Layer 1",
     title: "Public pressure",
-    body: "Four of five dollars are on the same side. The story is loud — and the price has been bending toward the noise all day.",
+    body: "Four of five dollars are on the same side. The story is loud, and the price has been bending toward the noise all day.",
     tone: "heat",
   },
   {
@@ -50,7 +50,7 @@ const LAYERS: readonly MirageLayer[] = [
     id: "verdict",
     step: "Layer 4",
     title: "Gate verdict",
-    body: "Distorted price, decayed value, unverified context. The gate closes — and the pass is logged with its reasons.",
+    body: "Distorted price, decayed value, unverified context. The gate closes, and the pass is logged with its reasons.",
     tone: "alert",
   },
 ] as const;
@@ -78,7 +78,7 @@ export function MarketMirageChapter(): JSX.Element {
       <div className="relative overflow-hidden rounded-ds-lg border border-mineral bg-void p-6 sm:p-8">
         <div aria-hidden className="gw-starfield" />
         <p className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">
-          Illustrative scenario — no real game, no real odds
+          Illustrative scenario · no real game, no real odds
         </p>
         <div
           className="gw-mirage-layer relative mt-6"
@@ -102,7 +102,7 @@ export function MarketMirageChapter(): JSX.Element {
             <p className="gw-text-glow-alert font-mono text-xs uppercase tracking-[0.22em] text-alert">Mirage collapsed</p>
             <p className="mt-2 max-w-sm text-sm leading-6 text-ion">
               What looked like consensus was distortion. The edge was never the
-              pick — it was knowing what not to trust.
+              pick. It was knowing what not to trust.
             </p>
           </div>
         ) : null}

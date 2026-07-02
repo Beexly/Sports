@@ -60,7 +60,7 @@ export function wilsonInterval(successes: number, n: number, z: number = Z_95): 
 
 /** Format a Wilson interval as a percentage band, e.g. "48.1–71.9%". */
 export function formatWilsonPct(ci: WilsonInterval, decimals = 1): string {
-  return `${(ci.low * 100).toFixed(decimals)}–${(ci.high * 100).toFixed(decimals)}%`;
+  return `${(ci.low * 100).toFixed(decimals)}-${(ci.high * 100).toFixed(decimals)}%`;
 }
 
 /**

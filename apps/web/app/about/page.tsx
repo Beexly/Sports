@@ -6,7 +6,7 @@ import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `${BRAND_NAME} — ${BRAND_TAGLINE}. The story, the model, the operating principles.`,
+  description: `${BRAND_NAME}: ${BRAND_TAGLINE}. The story, the model, the operating principles.`,
   alternates: { canonical: "/about" },
 };
 
@@ -21,19 +21,19 @@ const PRINCIPLES = [
     eyebrow: "02 · Reasoning is published",
     title: "If the work can't be shown, it doesn't ship.",
     body:
-      "Each pick exposes its factor breakdown — consensus, market depth, line movement, intelligence layers, and the calibrated confidence the model assigned. You see the inputs. You decide what to do with them.",
+      "Each pick exposes its factor breakdown: consensus, market depth, line movement, intelligence layers, and the calibrated confidence the model assigned. You see the inputs. You decide what to do with them.",
   },
   {
     eyebrow: "03 · Outcomes are uncertain",
     title: "Perspective, not certainty.",
     body:
-      "No certainty theater. No guarantees. A signal with a 64% calibrated confidence still loses 36 out of 100 times. Every public surface is designed around that reality — variance is described, not hidden.",
+      "No certainty theater. No guarantees. A signal with a 64% calibrated confidence still loses 36 out of 100 times. Every public surface is designed around that reality. Variance is described, not hidden.",
   },
   {
     eyebrow: "04 · Trust is earned slowly",
     title: "Performance stats stay gated until they're honest.",
     body:
-      "The public win-rate readout doesn't appear until enough settled picks exist to make it statistically meaningful. Until then, the Performance page says \"Collecting.\" Patience over noise — that's the standard.",
+      "The public win-rate readout doesn't appear until enough settled picks exist to make it statistically meaningful. Until then, the Performance page says \"Collecting.\" Patience over noise. That's the standard.",
   },
 ];
 
@@ -54,7 +54,7 @@ export default function AboutPage() {
               {BRAND_NAME} exists because the sports picks industry runs on a
               quiet trick: tout services publish their wins, scrub their
               losses, and price their access against a record you can&apos;t
-              verify. {BRAND_NAME} is the opposite — a system that shows its
+              verify. {BRAND_NAME} is the opposite: a system that shows its
               work on every pick and refuses to publish a win-rate it
               can&apos;t honestly back.
             </p>
@@ -66,7 +66,7 @@ export default function AboutPage() {
               get published.
             </p>
             <p className="mt-5 max-w-2xl text-sm font-mono uppercase tracking-widest text-accent-300">
-              — The {BRAND_NAME} team
+              - The {BRAND_NAME} team
             </p>
           </div>
         </section>
@@ -103,7 +103,7 @@ export default function AboutPage() {
             </h2>
             <p className="mt-5 text-base text-ink-300">
               Press, partnerships, product feedback, or you just want to argue
-              about a line — write to{" "}
+              about a line, write to{" "}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
                 className="font-mono text-accent-300 underline-offset-4 hover:underline"

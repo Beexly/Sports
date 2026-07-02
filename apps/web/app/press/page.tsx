@@ -5,7 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: `Press Kit — Quote-Ready Soundbites & Brand Facts`,
+  title: `Press Kit: Quote-Ready Soundbites & Brand Facts`,
   description: `Press kit, ready-to-quote soundbites, and media availability for ${BRAND_NAME}. ${BRAND_TAGLINE}`,
   alternates: { canonical: "/press" },
 };
@@ -19,7 +19,7 @@ const FACTS = [
 ];
 
 const SOUNDBITES = [
-  "Galaxy Sports Edge publishes a calibrated, fully-reasoned signal — not a tout.",
+  "Galaxy Sports Edge publishes a calibrated, fully-reasoned signal, not a tout.",
   "Outcomes are uncertain. Variance is described, not hidden.",
   "Every pick traces back to a real market line. No synthetic numbers.",
   "Performance stats stay gated until the data can honestly support them.",

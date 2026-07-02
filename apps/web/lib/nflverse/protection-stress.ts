@@ -38,7 +38,7 @@ export function protectionStress(row: Pick<QbPressureRow, "pressurePct" | "sacks
 }
 
 export const PROTECTION_STRESS_TOOLTIP =
-  "Protection Stress (0–100): 0.7×pressure share + 0.3×sacks/game. Matchup stress on the pocket — conflates O-line, scheme, and the QB's own time-to-throw, so read it with the sack column.";
+  "Protection Stress (0-100): 0.7×pressure share + 0.3×sacks/game. Matchup stress on the pocket. It conflates O-line, scheme, and the QB's own time-to-throw, so read it with the sack column.";
 
 function clamp01(x: number): number {
   return Math.max(0, Math.min(1, x));

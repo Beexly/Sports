@@ -41,7 +41,7 @@ const NODES: readonly TwinNode[] = [
     reading:
       "Model probability and market price disagree by enough to matter, and every input is fresh. A window like this is the only thing that can become a published row.",
     inputs: ["Priced odds across books", "Fresh injury confirmation", "Model probability", "Line history"],
-    verdict: "Candidate signal — still has to clear every gate before publication.",
+    verdict: "Candidate signal. It still has to clear every gate before publication.",
   },
   {
     id: "public-heat",
@@ -50,7 +50,7 @@ const NODES: readonly TwinNode[] = [
     x: 30,
     y: 22,
     reading:
-      "Heavy one-sided public pressure has bent the line away from value. What looks like consensus is distortion — the price already ate the story.",
+      "Heavy one-sided public pressure has bent the line away from value. What looks like consensus is distortion: the price already ate the story.",
     inputs: ["Public-side concentration", "Line drift vs. open", "Media amplification"],
     verdict: "Distortion, not signal. The system reads it and stands aside.",
   },
@@ -63,7 +63,7 @@ const NODES: readonly TwinNode[] = [
     reading:
       "A key availability question is unresolved. Incomplete context caps confidence no matter how good the price looks.",
     inputs: ["Unconfirmed injury report", "Rotation uncertainty", "Stale beat coverage"],
-    verdict: "Held for review — caution until the inputs are real enough to defend.",
+    verdict: "Held for review: caution until the inputs are real enough to defend.",
   },
   {
     id: "gated",
@@ -72,7 +72,7 @@ const NODES: readonly TwinNode[] = [
     x: 56,
     y: 74,
     reading:
-      "An input failed a trust check — stale line, missing freshness, or model conflict. The gate closes and the pass is logged like any other decision.",
+      "An input failed a trust check: stale line, missing freshness, or model conflict. The gate closes and the pass is logged like any other decision.",
     inputs: ["Freshness check failed", "Price below threshold", "Model disagreement"],
     verdict: "Gate closed. No-Bet is a recorded output, not an absence.",
   },
@@ -83,7 +83,7 @@ const NODES: readonly TwinNode[] = [
     x: 84,
     y: 58,
     reading:
-      "Market and model agree. An efficient price is a healthy reading — it just isn't an edge. Most of the slate lives here, and that's the honest shape of a market.",
+      "Market and model agree. An efficient price is a healthy reading. It just isn't an edge. Most of the slate lives here, and that's the honest shape of a market.",
     inputs: ["Price ≈ model probability", "Stable line", "No pressure imbalance"],
     verdict: "No action. Watching costs nothing; forcing a read costs plenty.",
   },
@@ -168,7 +168,7 @@ export function GalaxyTwinPreview(): JSX.Element {
         <div
           className="relative aspect-[10/7] w-full"
           role="group"
-          aria-label="Galaxy Twin schematic — select a market state to read it. Arrow keys move between states."
+          aria-label="Galaxy Twin schematic. Select a market state to read it. Arrow keys move between states."
           onKeyDown={onGroupKeyDown}
         >
           {NODES.map((node) => {
@@ -211,7 +211,7 @@ export function GalaxyTwinPreview(): JSX.Element {
         {/* semantic legend — the color system, taught in place */}
         <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-mineral/60 bg-void/80 px-4 py-2.5 backdrop-blur-sm">
           <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">
-            Illustrative system schematic — not live market data
+            Illustrative system schematic · not live market data
           </p>
           <ul aria-hidden className="hidden items-center gap-3 font-mono text-[9px] uppercase tracking-[0.14em] sm:flex">
             <li className="flex items-center gap-1.5 text-orbital-cyan"><span className="h-1.5 w-1.5 rounded-full bg-orbital-cyan" />signal</li>

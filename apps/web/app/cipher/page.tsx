@@ -10,9 +10,9 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "The Glass Box Cipher — A Weekly Hunt",
+  title: "The Glass Box Cipher: A Weekly Hunt",
   description:
-    "A weekly hidden puzzle inside Galaxy Sports Edge. Find the shards scattered across the site, assemble the key, and win a free week of Elite. Open Mon 11:59am–Thu 6:59pm ET.",
+    "A weekly hidden puzzle inside Galaxy Sports Edge. Find the shards scattered across the site, assemble the key, and win a free week of Elite. Open Mon 11:59am-Thu 6:59pm ET.",
   alternates: { canonical: "/cipher" },
 };
 
@@ -20,17 +20,17 @@ const RULES = [
   {
     n: "01",
     title: "The window",
-    body: "Each chapter is live only Monday 11:59am → Thursday 6:59pm ET — the quiet stretch between slates. Sealed the rest of the week.",
+    body: "Each chapter is live only Monday 11:59am → Thursday 6:59pm ET, the quiet stretch between slates. Sealed the rest of the week.",
   },
   {
     n: "02",
     title: "The shards",
-    body: "Every chapter scatters short tokens across different rooms of the site. They exist only on the live site this week — no bot can hand them to you. You have to look.",
+    body: "Every chapter scatters short tokens across different rooms of the site. They exist only on the live site this week. No bot can hand them to you. You have to look.",
   },
   {
     n: "03",
     title: "The key",
-    body: "Recover each shard, assemble them in order (lowercase, no spaces), and submit. One correct key wins a free week of Elite — first solve per visitor.",
+    body: "Recover each shard, assemble them in order (lowercase, no spaces), and submit. One correct key wins a free week of Elite, first solve per visitor.",
   },
 ];
 
@@ -83,7 +83,7 @@ export default function CipherPage() {
             <Reveal delay={170}>
               <p className="mx-auto mt-5 max-w-2xl text-lg text-ink-300">
                 Every week the engine hides a secret in plain sight. Read deeper than
-                everyone else, assemble the key, and a week of Elite is yours. No luck —
+                everyone else, assemble the key, and a week of Elite is yours. No luck,
                 just attention.
               </p>
             </Reveal>
@@ -151,7 +151,7 @@ export default function CipherPage() {
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ink-500">
                 Rewards are issued as single-use codes or claim references and fulfilled by our
-                team — never automatically charged or granted. One reward per visitor per chapter.
+                team, never automatically charged or granted. One reward per visitor per chapter.
                 This is a skill puzzle, not a game of chance; no purchase is required to play.
               </p>
             </Reveal>

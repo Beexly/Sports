@@ -89,20 +89,20 @@ const QUARANTINE_RULES: readonly Rule[] = [
 // ─── Owner-review signals (gated, never auto-promoted) ───────────────────────────
 
 const OWNER_REVIEW_RULES: readonly Rule[] = [
-  { re: /\bscrap(e|er|ers|ing)\b/, label: "scraping tool — clearance gate required" },
-  { re: /\bcrawl(er|ers|ing)?\b|\bspider\b/, label: "crawler — clearance gate required" },
-  { re: /\b(rss|atom)\b/, label: "RSS/feed ingestion candidate — source-provider review" },
-  { re: /\byoutube\b/, label: "YouTube ingestion candidate — ToS/source review" },
-  { re: /\bpodcast\b/, label: "podcast ingestion candidate — source review" },
-  { re: /\breddit\b/, label: "Reddit ingestion candidate — source review" },
-  { re: /\b(nfl|nba|mlb|nhl|soccer|football|sportsbook|odds|betting|fixtures?|standings?)\b/, label: "sports-data source — StatKing/source-provider review" },
-  { re: /\bdataset\b/, label: "dataset — license review required" },
-  { re: /\b(api|feed)s?\b/, label: "third-party API/feed — license + terms review" },
+  { re: /\bscrap(e|er|ers|ing)\b/, label: "scraping tool: clearance gate required" },
+  { re: /\bcrawl(er|ers|ing)?\b|\bspider\b/, label: "crawler: clearance gate required" },
+  { re: /\b(rss|atom)\b/, label: "RSS/feed ingestion candidate: source-provider review" },
+  { re: /\byoutube\b/, label: "YouTube ingestion candidate: ToS/source review" },
+  { re: /\bpodcast\b/, label: "podcast ingestion candidate: source review" },
+  { re: /\breddit\b/, label: "Reddit ingestion candidate: source review" },
+  { re: /\b(nfl|nba|mlb|nhl|soccer|football|sportsbook|odds|betting|fixtures?|standings?)\b/, label: "sports-data source: StatKing/source-provider review" },
+  { re: /\bdataset\b/, label: "dataset: license review required" },
+  { re: /\b(api|feed)s?\b/, label: "third-party API/feed: license + terms review" },
   // Legal-gray dual-use tools: real use, but needs a human/legal call.
-  { re: /\badblock|ad-?block/, label: "adblock (legal-gray) — owner review" },
-  { re: /\bdeobfuscat/, label: "deobfuscator (dual-use) — owner review" },
-  { re: /\btemp(orary)? mail|disposable email/, label: "disposable email (gray) — owner review" },
-  { re: /\bosint\b/, label: "OSINT (dual-use) — owner review" },
+  { re: /\badblock|ad-?block/, label: "adblock (legal-gray): owner review" },
+  { re: /\bdeobfuscat/, label: "deobfuscator (dual-use): owner review" },
+  { re: /\btemp(orary)? mail|disposable email/, label: "disposable email (gray): owner review" },
+  { re: /\bosint\b/, label: "OSINT (dual-use): owner review" },
 ];
 
 // ─── Curated approved-direct allowlist (safe, high-value) ────────────────────────
@@ -248,12 +248,12 @@ export function classifyEntry(entry: RawResourceEntry): Classification {
       riskTier: "low",
       category,
       gateRequired: false,
-      reasons: [`safe operational category (${category}) — cleared of rights gate; vet specifics at adoption`],
+      reasons: [`safe operational category (${category}): cleared of rights gate; vet specifics at adoption`],
     };
   }
 
   // 6. Remaining safe but unrecognized / not-yet-relevant (system tweaks, uncategorized) → reference.
-  return { disposition: "approved_internal_reference", riskTier: "none", category, gateRequired: false, reasons: ["safe — reference only"] };
+  return { disposition: "approved_internal_reference", riskTier: "none", category, gateRequired: false, reasons: ["safe, reference only"] };
 }
 
 /** Build a ClassifiedResource from one representative entry (after dedupe merge). */

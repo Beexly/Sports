@@ -95,6 +95,7 @@ export function AgentFleet({ className }: { className?: string }) {
 
     let raf = 0;
     let time = 0;
+    let onScreen = true;
 
     const draw = () => {
       ctx.clearRect(0, 0, w, h);

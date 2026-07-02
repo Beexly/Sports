@@ -5,9 +5,9 @@ import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Scheme Intelligence — Galaxy Fantasy",
+  title: "Scheme Intelligence · Galaxy Fantasy",
   description:
-    "How one coaching or scheme change cascades through a whole offense — the gainers, the faders, the projection delta, the reasoning, and the confidence from the source's reliability tier.",
+    "How one coaching or scheme change cascades through a whole offense: the gainers, the faders, the projection delta, the reasoning, and the confidence from the source's reliability tier.",
   alternates: { canonical: "/fantasy/scheme" },
 };
 
@@ -17,7 +17,7 @@ export default function SchemePage() {
       eyebrow="Scheme Intelligence"
       accent={BRAND_COLORS.orbitalCyan}
       title={<>One change. The whole <span className="gse-editorial" style={{ fontSize: "1.08em" }}>ripple</span>.</>}
-      intro="A new coordinator doesn't move one player — it re-prices an entire offense. Pick a coaching or scheme change and see the full cascade: who gains, who fades, by how much, and why — weighted by how reliable the source is, on the same tiering The Beat uses for breaking news."
+      intro="A new coordinator doesn't move one player; it re-prices an entire offense. Pick a coaching or scheme change and see the full cascade: who gains, who fades, by how much, and why, weighted by how reliable the source is, on the same tiering The Beat uses for breaking news."
       note={`${ILLUSTRATIVE_NOTE} Scenarios are illustrative coaching changes; reliability tiers mirror The Beat.`}
       wide
     >

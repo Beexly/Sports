@@ -22,7 +22,7 @@ const NOISE: readonly { text: string; tone: "heat" | "caution" | "raw"; drift: s
 
 const STRUCTURED: readonly { label: string; value: string }[] = [
   { label: "Priced input", value: "odds normalized across books" },
-  { label: "Availability", value: "injury status — confirmed only" },
+  { label: "Availability", value: "injury status, confirmed only" },
   { label: "Line history", value: "open → now, with timestamps" },
   { label: "Model read", value: "probability + disagreement width" },
   { label: "Public pressure", value: "measured, not retold" },
@@ -82,7 +82,7 @@ export function SignalFragmentField(): JSX.Element {
           ))}
         </dl>
         <p className="mt-4 text-xs leading-5 text-ion-1">
-          Same game, same day — one version argues, the other is structured,
+          Same game, same day: one version argues, the other is structured,
           timestamped, and accountable.
         </p>
       </div>

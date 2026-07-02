@@ -104,9 +104,9 @@ interface PositionBaseline {
 
 function signalFor(oppPct: number, prodPct: number): { signal: OppSignal; note: string } {
   const gap = oppPct - prodPct;
-  if (gap >= DIVERGENCE) return { signal: "buy-low", note: "Opportunity outruns production — the role is bigger than the box score. A positive-regression / buy-low target." };
-  if (gap <= -DIVERGENCE) return { signal: "sell-high", note: "Production outruns opportunity — efficiency/TD-dependent and prone to regress. A sell-high / fade candidate." };
-  return { signal: "stable", note: "Opportunity and production are in line — the output is earned by the role." };
+  if (gap >= DIVERGENCE) return { signal: "buy-low", note: "Opportunity outruns production. The role is bigger than the box score. A positive-regression / buy-low target." };
+  if (gap <= -DIVERGENCE) return { signal: "sell-high", note: "Production outruns opportunity: efficiency/TD-dependent and prone to regress. A sell-high / fade candidate." };
+  return { signal: "stable", note: "Opportunity and production are in line. The output is earned by the role." };
 }
 
 function buildPositionBaselines(qualified: readonly (readonly [string, Agg])[]): Map<string, PositionBaseline> {

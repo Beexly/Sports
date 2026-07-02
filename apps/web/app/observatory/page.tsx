@@ -22,7 +22,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Edge Map — Live Market Intelligence by Sport, Slate, Matchup",
+  title: "Edge Map: Live Market Intelligence by Sport, Slate, Matchup",
   description:
     "Real-time line movement, sharp/public splits, and market depth across every active matchup. The same view the model is reading from. Opens after the readiness gate clears.",
   alternates: { canonical: "/observatory" },
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 const PREVIEW: ReadonlyArray<{ readonly title: string; readonly body: string; readonly accent: string }> = [
   {
     title: "Line movement",
-    body: "How each market drifts from open to close — the path of the price, not just the snapshot, so a late move doesn't slip past you.",
+    body: "How each market drifts from open to close: the path of the price, not just the snapshot, so a late move doesn't slip past you.",
     accent: BRAND_COLORS.orbitalCyan,
   },
   {
@@ -51,7 +51,7 @@ const PREVIEW: ReadonlyArray<{ readonly title: string; readonly body: string; re
   },
   {
     title: "Market depth",
-    body: "How many books have a market and how tightly they agree — a transparency signal you can weigh for yourself.",
+    body: "How many books have a market and how tightly they agree: a transparency signal you can weigh for yourself.",
     accent: BRAND_COLORS.ionMagenta,
   },
 ];
@@ -94,14 +94,14 @@ export default async function ObservatoryPage() {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-4 max-w-3xl font-display text-display-xl text-balance text-white">
-                The market, visualized — the way the model reads it.
+                The market, visualized the way the model reads it.
               </h1>
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-xl text-lg text-ink-300">
                 {SURFACES.observatory.blurb} When the readiness gate opens, the Edge
                 Map streams line movement, sharp/public splits, and market depth
-                across every active matchup — the same view the engine reads from.
+                across every active matchup: the same view the engine reads from.
               </p>
             </Reveal>
             <Reveal delay={260}>
@@ -137,21 +137,21 @@ export default async function ObservatoryPage() {
                 confidence as you scrub the slate&apos;s timeline. Click a system to open
                 its read.{" "}
                 {live ? (
-                  <>This is today&apos;s <strong className="text-ink-200">live slate</strong> — real
+                  <>This is today&apos;s <strong className="text-ink-200">live slate</strong>: real
                   games and the metrics the engine produces; encodings without a wired data
                   source stay dark rather than guess.</>
                 ) : (
-                  <>This preview runs on <strong className="text-ink-200">illustrative data</strong> —
-                  when the readiness gate opens, it streams the live slate.</>
+                  <>This preview runs on <strong className="text-ink-200">illustrative data</strong>.
+                  When the readiness gate opens, it streams the live slate.</>
                 )}
               </p>
             </Reveal>
             <Reveal delay={200}>
               <dl className="mt-6 grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
                 {[
-                  { k: "Brightness", v: "how much signal a game has — brighter means more for the model to read." },
-                  { k: "Halo", v: "uncertainty — a wider halo means the read is shakier." },
-                  { k: "Wobble", v: "disagreement — the model's own signals pull against each other." },
+                  { k: "Brightness", v: "how much signal a game has. Brighter means more for the model to read." },
+                  { k: "Halo", v: "uncertainty. A wider halo means the read is shakier." },
+                  { k: "Wobble", v: "disagreement. The model's own signals pull against each other." },
                   { k: "Ring", v: "our confidence in the read, firming up toward kickoff." },
                 ].map(({ k, v }) => (
                   <div key={k} className="flex gap-2">

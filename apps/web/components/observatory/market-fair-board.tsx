@@ -32,7 +32,7 @@ function GravityBadge({ gravity }: { gravity: MarketGravity }) {
   return (
     <span
       data-testid="gravity-badge"
-      title="Market Gravity Index (0–100): conviction × book agreement × coverage. Measures how hard the market pulls — not whether it's right."
+      title="Market Gravity Index (0-100): conviction × book agreement × coverage. Measures how hard the market pulls, not whether it's right."
       className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${tone} ${NUMERIC_TEXT_CLASS}`}
     >
       Gravity {gravity.index}
@@ -67,11 +67,11 @@ export async function MarketFairBoard() {
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-titanium px-6 py-4">
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
-            Market fair board — vig removed
+            Market fair board: vig removed
           </h2>
           <p className="mt-1 text-[11px] text-ion-2">
             What the books are charging, margin stripped (Shin de-vig, median
-            across books). The market&apos;s opinion — not ours.
+            across books). The market&apos;s opinion, not ours.
           </p>
         </div>
         <span className={`text-[11px] uppercase tracking-widest text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
@@ -84,8 +84,8 @@ export async function MarketFairBoard() {
       {board.rows.length === 0 ? (
         <p className="px-6 py-8 text-sm text-ion-1">
           No upcoming game carries a two-sided quote from at least two books in
-          the capture window. The board renders only from real captured odds —
-          it stays empty rather than inventing a market.
+          the capture window. The board renders only from real captured odds.
+          It stays empty rather than inventing a market.
         </p>
       ) : (
         <ul className="divide-y divide-titanium/60">
@@ -154,8 +154,8 @@ export async function MarketFairBoard() {
 
       <div className="border-t border-titanium px-6 py-3">
         <p className="text-[11px] leading-relaxed text-ion-2">
-          Drift = fair-price movement across the capture window (earliest vs latest quote per book, vig removed) — the direction an edge bleeds, and the pp/hr rate is how fast (the Line Death Clock). The cloud under each game is one dot per book — the market&apos;s real spread of belief, not a simulated variance. De-vigged prices describe the market, not the outcome. They are not
-          picks, projections, or advice — the engine&apos;s own reads live on
+          Drift = fair-price movement across the capture window (earliest vs latest quote per book, vig removed): the direction an edge bleeds, and the pp/hr rate is how fast (the Line Death Clock). The cloud under each game is one dot per book, the market&apos;s real spread of belief, not a simulated variance. De-vigged prices describe the market, not the outcome. They are not
+          picks, projections, or advice. The engine&apos;s own reads live on
           the board and carry their full evidence trail.
         </p>
       </div>

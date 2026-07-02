@@ -292,7 +292,7 @@ export function SignalPreviewQueue() {
           }}
         >
           Every signal cycles SCORING → GATED or PUBLISHED. The Signal Feed only
-          opens once the readiness gate clears — and the gate stays closed when
+          opens once the readiness gate clears, and the gate stays closed when
           the slate doesn&apos;t earn it.
         </p>
         <a

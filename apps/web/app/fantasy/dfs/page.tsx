@@ -6,7 +6,7 @@ import { loadDfsSalaries } from "@/lib/dfs/salaries";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "DFS Suite — Salary Board + Optimizer — Galaxy Fantasy",
+  title: "DFS Suite: Salary Board + Optimizer · Galaxy Fantasy",
   description:
     "DFS salaries and the glass-box optimizer in one room: reconciled DraftKings salaries feed cash, GPP, and leverage objectives with QB stacking, locks/fades, and real exposure control.",
   alternates: { canonical: "/fantasy/dfs" },
@@ -32,7 +32,7 @@ export default async function DfsSuitePage() {
       eyebrow="DFS Suite · Salary Board + Optimizer"
       accent={BRAND_COLORS.orbitalCyan}
       title={<>Solve the slate. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
-      intro="Salaries and the optimizer live in one room because they're one decision. The board shows what the field costs; the optimizer turns it into cash, GPP, or leverage lineups — QB stacking, locks and fades, unique portfolios with real exposure control. Every lineup ships with its salary, stack, field-ownership, and a leverage score."
+      intro="Salaries and the optimizer live in one room because they're one decision. The board shows what the field costs; the optimizer turns it into cash, GPP, or leverage lineups: QB stacking, locks and fades, unique portfolios with real exposure control. Every lineup ships with its salary, stack, field-ownership, and a leverage score."
       note="Illustrative classic-format sample pool drives the optimizer until a licensed salary feed is connected. Salary-cap optimization, stacking, exposure, and leverage are computed live in your browser."
       wide
     >
@@ -54,7 +54,7 @@ export default async function DfsSuitePage() {
         {live ? (
           <>
             <p className="mt-1 text-sm text-ion-1">
-              Reconciled across providers — a salary is trusted when feeds agree; disagreement is
+              Reconciled across providers. A salary is trusted when feeds agree; disagreement is
               flagged ({dfs!.discrepancies} flagged). Top of the slate below; the optimizer prices
               the full board.
             </p>
@@ -83,7 +83,7 @@ export default async function DfsSuitePage() {
           </>
         ) : (
           <p className="mt-2 text-sm text-ion-1">
-            No licensed salary feed is connected right now, so no real salaries are shown — the
+            No licensed salary feed is connected right now, so no real salaries are shown. The
             board lights up the moment one is.{" "}
             <Link href="/integrations" className="text-orbital-cyan underline-offset-4 hover:underline">
               Data status →

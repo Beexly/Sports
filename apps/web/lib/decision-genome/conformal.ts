@@ -66,18 +66,18 @@ export function conformalDecision(
   const { boundary, minMargin, minCalibrationHealth, maxIntervalWidth } = config;
 
   if (input.calibrationHealth < minCalibrationHealth) {
-    return { abstain: true, side: null, margin: 0, reason: `Calibration health ${input.calibrationHealth.toFixed(2)} below ${minCalibrationHealth} — abstain.` };
+    return { abstain: true, side: null, margin: 0, reason: `Calibration health ${input.calibrationHealth.toFixed(2)} below ${minCalibrationHealth}. Abstain.` };
   }
   if (width > maxIntervalWidth) {
-    return { abstain: true, side: null, margin: 0, reason: `Conformal interval width ${width.toFixed(2)} exceeds ${maxIntervalWidth} — too uncertain to act.` };
+    return { abstain: true, side: null, margin: 0, reason: `Conformal interval width ${width.toFixed(2)} exceeds ${maxIntervalWidth}. Too uncertain to act.` };
   }
   if (low > boundary + minMargin) {
-    return { abstain: false, side: "over", margin: low - boundary, reason: `Interval [${low.toFixed(2)}, ${high.toFixed(2)}] clears the boundary above — over.` };
+    return { abstain: false, side: "over", margin: low - boundary, reason: `Interval [${low.toFixed(2)}, ${high.toFixed(2)}] clears the boundary above: over.` };
   }
   if (high < boundary - minMargin) {
-    return { abstain: false, side: "under", margin: boundary - high, reason: `Interval [${low.toFixed(2)}, ${high.toFixed(2)}] clears the boundary below — under.` };
+    return { abstain: false, side: "under", margin: boundary - high, reason: `Interval [${low.toFixed(2)}, ${high.toFixed(2)}] clears the boundary below: under.` };
   }
-  return { abstain: true, side: null, margin: -(Math.min(boundary - low, high - boundary)), reason: `Interval straddles/hugs the boundary ${boundary} — no confident side, abstain.` };
+  return { abstain: true, side: null, margin: -(Math.min(boundary - low, high - boundary)), reason: `Interval straddles/hugs the boundary ${boundary}. No confident side, abstain.` };
 }
 
 /** Convenience: does this input force a refusal? (feeds ModelState.refused honestly). */

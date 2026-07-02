@@ -97,7 +97,7 @@ export function optimize(roster: readonly Player[]): Optimized {
 export function startReason(call: StartCall): string {
   const v = volatility(call.player);
   const band = v > 0.5 ? "boom/bust" : v > 0.3 ? "balanced" : "steady";
-  if (call.verdict === "anchor") return `Anchor — ${call.leverage} pts clear of your bench; ${band}.`;
-  if (call.verdict === "start") return `Start — ${call.leverage} pts over the next option; ${band}.`;
-  return `Close call — only ${call.leverage} pts over the bench. Lean ${band === "steady" ? "for the floor" : "for the ceiling"}.`;
+  if (call.verdict === "anchor") return `Anchor: ${call.leverage} pts clear of your bench; ${band}.`;
+  if (call.verdict === "start") return `Start: ${call.leverage} pts over the next option; ${band}.`;
+  return `Close call: only ${call.leverage} pts over the bench. Lean ${band === "steady" ? "for the floor" : "for the ceiling"}.`;
 }

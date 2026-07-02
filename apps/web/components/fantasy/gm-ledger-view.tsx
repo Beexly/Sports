@@ -74,7 +74,7 @@ export function GmLedgerView({ data }: { data: GmLedger }) {
         <p className="text-xs uppercase tracking-[0.18em] text-ink-500">Tamper-evident commitment</p>
         <p className="mt-2 text-sm text-ink-300">
           All {data.decisions.length} decisions are leaves of a SHA-256 Merkle tree. The root is published
-          before outcomes — so the record can be proven, not edited.
+          before outcomes, so the record can be proven, not edited.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div className="rounded-lg border p-3" style={{ borderColor: BRAND_COLORS.steelGray }}>
@@ -93,7 +93,7 @@ export function GmLedgerView({ data }: { data: GmLedger }) {
             <p className="mt-1 text-xs text-ink-300">Rewrite {data.tamper.changedId}&apos;s rationale →</p>
             <p className="mt-1 font-mono text-xs text-ink-500">{data.tamper.recomputedRootShort}</p>
             <p className="mt-1 text-xs" style={{ color: BRAND_COLORS.ionMagenta }}>
-              {data.tamper.matches ? "matches (bad)" : "✓ root breaks — tamper caught"}
+              {data.tamper.matches ? "matches (bad)" : "✓ root breaks: tamper caught"}
             </p>
           </div>
         </div>
@@ -106,7 +106,7 @@ export function GmLedgerView({ data }: { data: GmLedger }) {
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-300">
           A &quot;bad beat&quot; is a decision you&apos;d make again; &quot;got lucky&quot; is one you shouldn&apos;t. Most managers
           grade themselves on the result and learn the wrong lesson. The GM Ledger commits the reasoning first,
-          then grades the call against what was knowable — so your rating reflects how you decide, and the
+          then grades the call against what was knowable, so your rating reflects how you decide, and the
           Academy drills the patterns the ledger says you keep getting wrong.
         </p>
         <a href="/fantasy/academy" className="mt-4 inline-flex items-center gap-1 text-sm font-medium" style={{ color: BRAND_COLORS.softUltraviolet }}>
@@ -159,11 +159,11 @@ function DecisionRow({ d }: { d: GmDecision }) {
         <p className="text-ink-400"><span className="text-ink-600">Knowable at commit:</span> {d.infoAtCommit}</p>
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-[11px]">
-        <span style={{ color: phex }}>Process: {d.process} — <span className="text-ink-400">{d.processReason}</span></span>
+        <span style={{ color: phex }}>Process: {d.process} · <span className="text-ink-400">{d.processReason}</span></span>
       </div>
       <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-1 text-[11px]">
         <span className="text-ink-500">Confidence <strong className="text-white">{d.confidence}</strong></span>
-        <span className="text-ink-500">Outcome <strong style={{ color: d.outcome === "hit" ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{d.outcome}</strong> — {d.outcomeNote}</span>
+        <span className="text-ink-500">Outcome <strong style={{ color: d.outcome === "hit" ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{d.outcome}</strong> · {d.outcomeNote}</span>
       </div>
     </div>
   );

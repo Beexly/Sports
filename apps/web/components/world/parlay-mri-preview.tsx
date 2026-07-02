@@ -16,10 +16,10 @@ import { useState } from "react";
 import Link from "next/link";
 
 const LEGS = [
-  { id: "A", label: "Leg A — a favorite to win", p: 0.72, correlated: false },
-  { id: "B", label: "Leg B — same game: its star scores", p: 0.6, correlated: true },
-  { id: "C", label: "Leg C — same game: the total goes over", p: 0.55, correlated: true },
-  { id: "D", label: "Leg D — a late-night underdog prop", p: 0.5, correlated: false },
+  { id: "A", label: "Leg A: a favorite to win", p: 0.72, correlated: false },
+  { id: "B", label: "Leg B: same game, its star scores", p: 0.6, correlated: true },
+  { id: "C", label: "Leg C: same game, the total goes over", p: 0.55, correlated: true },
+  { id: "D", label: "Leg D: a late-night underdog prop", p: 0.5, correlated: false },
 ] as const;
 
 const SURVIVAL = LEGS.reduce((acc, leg) => acc * leg.p, 1);
@@ -71,7 +71,7 @@ export function ParlayMriPreview(): JSX.Element {
                     </div>
                     <p className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-[0.14em]">
                       <span className={bound ? "text-plasma" : "text-ion-2"}>
-                        {bound ? "correlated — shares failure with its game" : "independent leg"}
+                        {bound ? "correlated · shares failure with its game" : "independent leg"}
                       </span>
                       <span className="text-ion-1">slip survival ≈ {pct}%</span>
                     </p>
@@ -89,7 +89,7 @@ export function ParlayMriPreview(): JSX.Element {
               <span className="font-numerals font-semibold text-ion-white">
                 ≈{Math.round(SURVIVAL * 100)}%
               </span>{" "}
-              survival — before correlation. Legs B and C live in the same game:
+              survival before correlation. Legs B and C live in the same game:
               one bad quarter can break both at once. The slip is more fragile
               than any leg admits.
             </p>
@@ -114,15 +114,15 @@ export function ParlayMriPreview(): JSX.Element {
         <ul className="mt-6 space-y-2 text-sm text-ion">
           <li className="flex items-center gap-2">
             <span aria-hidden className="h-1 w-1 rounded-full bg-plasma" />
-            Correlation clusters — legs that fail together
+            Correlation clusters: legs that fail together
           </li>
           <li className="flex items-center gap-2">
             <span aria-hidden className="h-1 w-1 rounded-full bg-caution" />
-            Volatility stack — variance multiplies, it never averages
+            Volatility stack: variance multiplies, it never averages
           </li>
           <li className="flex items-center gap-2">
             <span aria-hidden className="h-1 w-1 rounded-full bg-orbital-cyan" />
-            Survival curve — the honest number under the payout
+            Survival curve: the honest number under the payout
           </li>
         </ul>
         <Link

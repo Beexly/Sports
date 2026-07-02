@@ -175,10 +175,10 @@ export function buildPlayerModel(records: readonly CsvRecord[], activeSeason: nu
       const signal: ProcessSignal = gap >= DIVERGENCE ? "buy-low" : gap <= -DIVERGENCE ? "sell-high" : "in-line";
       const note =
         signal === "buy-low"
-          ? "Process grade outruns the box score — the underlying inputs say the production is coming. Acquire before the market reprices."
+          ? "Process grade outruns the box score. The underlying inputs say the production is coming. Acquire before the market reprices."
           : signal === "sell-high"
-            ? "Production outruns the process grade — it's running hotter than the inputs support. Sell into the value."
-            : "Process and production are aligned — the output is earned by the inputs.";
+            ? "Production outruns the process grade. It's running hotter than the inputs support. Sell into the value."
+            : "Process and production are aligned. The output is earned by the inputs.";
 
       profiles.push({
         playerId: p.id,
@@ -238,7 +238,7 @@ export async function loadPlayerModel({
       metricsPerPlayer: 10,
       profiles,
       canPublishProjections: false,
-      note: "One canonical advanced profile per player — EPA efficiency, opportunity, and volume combined into a position-aware process grade, with the process-vs-production gap surfaced (buy-low / sell-high). The data layer that drives the tools. Context, not a point projection.",
+      note: "One canonical advanced profile per player: EPA efficiency, opportunity, and volume combined into a position-aware process grade, with the process-vs-production gap surfaced (buy-low / sell-high). The data layer that drives the tools. Context, not a point projection.",
       sourceUrl: url,
       error: null,
     };

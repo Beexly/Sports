@@ -25,7 +25,7 @@ const TRAIL = [
   {
     stamp: "T+4h · caveat",
     title: "Caveat flagged",
-    body: "A late availability change landed after publication. The row was annotated in place — never silently edited.",
+    body: "A late availability change landed after publication. The row was annotated in place, never silently edited.",
     marker: "bg-caution",
   },
   {
@@ -66,7 +66,7 @@ export function DecisionAutopsyPreview(): JSX.Element {
 
       <ol className="relative space-y-0 border-l border-mineral pl-6">
         <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.2em] text-ion-2">
-          Anatomy of a settled decision — illustrative trail
+          Anatomy of a settled decision · illustrative trail
         </p>
         {TRAIL.map((item) => (
           <li key={item.title} className="relative pb-6 last:pb-0">

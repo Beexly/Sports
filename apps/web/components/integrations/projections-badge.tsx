@@ -34,10 +34,10 @@ export function ProjectionsBadge() {
       {live ? (
         <span className="text-ink-500">
           {fresh ? `· ${fresh}` : ""}
-          {meta.attribution ? ` · ${meta.attribution}` : " — licensed source wired"}
+          {meta.attribution ? ` · ${meta.attribution}` : " · licensed source wired"}
         </span>
       ) : (
-        <span className="text-ink-500">— a licensed source is founder-gated</span>
+        <span className="text-ink-500">· a licensed source is founder-gated</span>
       )}
       <Link href="/integrations" className="underline" style={{ color: BRAND_COLORS.softUltraviolet }}>Data status →</Link>
     </div>

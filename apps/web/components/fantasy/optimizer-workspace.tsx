@@ -18,9 +18,9 @@ import type { Player } from "@/lib/fantasy/players";
 type Tab = "dfs" | "startsit" | "draft";
 
 const TABS: { key: Tab; label: string; blurb: string }[] = [
-  { key: "dfs", label: "Classic DFS", blurb: "Build cash / GPP / leverage lineups against the slate — locks, fades, exposure, stacking." },
-  { key: "startsit", label: "Start / Sit", blurb: "Season-long lineup by floor, median, and ceiling — who to start and why." },
-  { key: "draft", label: "Draft", blurb: "Live draft board — tiers, value over replacement, positional scarcity, run alerts." },
+  { key: "dfs", label: "Classic DFS", blurb: "Build cash / GPP / leverage lineups against the slate: locks, fades, exposure, stacking." },
+  { key: "startsit", label: "Start / Sit", blurb: "Season-long lineup by floor, median, and ceiling: who to start and why." },
+  { key: "draft", label: "Draft", blurb: "Live draft board: tiers, value over replacement, positional scarcity, run alerts." },
 ];
 
 /**
@@ -68,8 +68,8 @@ export function OptimizerWorkspace({
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs text-ink-400">
-              Live draft board — tiers, value over replacement, positional scarcity, run alerts, and your
-              own ADP overlay. {pool ? "Live graded pool — real players." : "Illustrative pool until a licensed projections feed is connected."}
+              Live draft board: tiers, value over replacement, positional scarcity, run alerts, and your
+              own ADP overlay. {pool ? "Live graded pool: real players." : "Illustrative pool until a licensed projections feed is connected."}
             </p>
             <Link href="/fantasy/draft" className="text-xs font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>Open full page →</Link>
           </div>

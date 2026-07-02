@@ -54,10 +54,10 @@ export type LeagueTwin = {
 const POS_BAND: Record<Pos, number> = { QB: 3.4, RB: 6.2, WR: 8.6, TE: 5.0 };
 
 function shockFor(p: Player): { shock: Shock; note: string } {
-  if (p.injury === "out") return { shock: "critical", note: "Ruled out — a dark star this week; cover the hole." };
-  if (p.injury === "questionable") return { shock: "caution", note: "Questionable tag — queue a contingency before lock-time." };
-  if (p.trend === "down") return { shock: "caution", note: "Role trending down — usage is leaking elsewhere." };
-  if (p.trend === "up") return { shock: "positive", note: "Ascending — brightness climbing week over week." };
+  if (p.injury === "out") return { shock: "critical", note: "Ruled out. A dark star this week; cover the hole." };
+  if (p.injury === "questionable") return { shock: "caution", note: "Questionable tag: queue a contingency before lock-time." };
+  if (p.trend === "down") return { shock: "caution", note: "Role trending down. Usage is leaking elsewhere." };
+  if (p.trend === "up") return { shock: "positive", note: "Ascending: brightness climbing week over week." };
   return { shock: "none", note: "Stable." };
 }
 

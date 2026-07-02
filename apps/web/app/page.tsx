@@ -142,7 +142,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               <DoorCard
                 index={2}
                 label="The Lab"
-                decides="Who to trust this week, across every signal in one surface."
+                decides="Who to trust this week, with every signal in one place."
                 stat={nflRows > 0 ? `${nflRows.toLocaleString()} live player rows` : "Intake warming up"}
                 action="Open the lab"
                 href="/players"
@@ -175,7 +175,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           className="gw-grid-field"
           eyebrow="Signal vs noise"
           title="Same market. Two completely different readings."
-          lede="The inputs that reach you arrive as argument. Takes, steam, rumor, stale numbers. The engine takes the same inputs and structures them into something accountable."
+          lede="Takes, steam, rumor, stale numbers: what reaches you arrives as argument. The engine starts from the same inputs and structures them into something accountable."
         >
           <SignalFragmentField />
           <p className="mt-10 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">
@@ -199,7 +199,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           id="gate"
           eyebrow="The No-Bet Gate"
           title={<>No-Bet is not absence. It is <span className="gw-chrome-ice">intelligence</span>.</>}
-          lede="The edge is not the pick. The edge is knowing what not to trust. Restraint is a first-class output of this system, logged with reasons like any other decision."
+          lede="The edge is not the pick. The edge is knowing what not to trust. Restraint is a decision this system makes on purpose, logged with reasons like any other."
           tone="deep"
         >
           <NoBetGateChapter />

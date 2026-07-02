@@ -94,10 +94,10 @@ export function readProp(prop: Prop): PropRead {
   const dir = side === "over" ? "above" : "below";
   const note =
     edge >= 0.5
-      ? `Strong ${side.toUpperCase()} — our model lands ${Math.abs(gap)} ${dir} the line.`
+      ? `Strong ${side.toUpperCase()}: our model lands ${Math.abs(gap)} ${dir} the line.`
       : edge >= 0.28
-        ? `Lean ${side.toUpperCase()} — ${Math.round(pSide * 100)}% to hit on our number.`
-        : `Near coin-flip — only ${Math.round(pSide * 100)}%; skip unless the alt pays.`;
+        ? `Lean ${side.toUpperCase()}: ${Math.round(pSide * 100)}% to hit on our number.`
+        : `Near coin-flip: only ${Math.round(pSide * 100)}%; skip unless the alt pays.`;
 
   return { prop, pOver, side, pSide, edge, bestAlt, note };
 }
@@ -148,4 +148,4 @@ export const PROPS: readonly Prop[] = [
 ];
 
 export const PROPS_DISCLAIMER =
-  "Illustrative lines and model projections. We advise on third-party pick'em lines — we do not operate a pick'em product. Live line ingestion is founder-gated.";
+  "Illustrative lines and model projections. We advise on third-party pick'em lines. We do not operate a pick'em product. Live line ingestion is founder-gated.";

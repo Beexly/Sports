@@ -8,9 +8,9 @@ import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Trade Analyzer — Galaxy Fantasy",
+  title: "Trade Analyzer · Galaxy Fantasy",
   description:
-    "Value both sides of any trade on VOR, projection, trend, and injury risk — with fairness, a win-now vs. depth lean, consolidation detection, and the reasoning behind the verdict.",
+    "Value both sides of any trade on VOR, projection, trend, and injury risk, with fairness, a win-now vs. depth lean, consolidation detection, and the reasoning behind the verdict.",
   alternates: { canonical: "/fantasy/trade" },
 };
 
@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse load (pbp / graded pool) needs headroom beyond the default
 
 const LIVE_NOTE =
-  "Live graded pool — real players with model-derived projections. Trade values, fairness, and the lean are computed from real grades.";
+  "Live graded pool: real players with model-derived projections. Trade values, fairness, and the lean are computed from real grades.";
 
 export default async function TradePage() {
   const [pool, viewer] = await Promise.all([resolveToolPoolAsync(), getViewerEntitlements()]);
@@ -32,7 +32,7 @@ export default async function TradePage() {
       eyebrow="Trade Analyzer"
       accent={BRAND_COLORS.softUltraviolet}
       title={<>Know who <span className="gse-editorial" style={{ fontSize: "1.08em" }}>wins</span> the deal.</>}
-      intro="Build both sides and the analyzer prices each on value over replacement, projection, trend, and injury risk — then tells you the part that matters: is it fair, does it consolidate your roster into a starter, are you buying risk at a discount, and which side wins the headliner."
+      intro="Build both sides and the analyzer prices each on value over replacement, projection, trend, and injury risk, then tells you the part that matters: is it fair, does it consolidate your roster into a starter, are you buying risk at a discount, and which side wins the headliner."
       note={pool ? LIVE_NOTE : ILLUSTRATIVE_NOTE}
       wide
     >

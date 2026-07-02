@@ -37,9 +37,9 @@ type Discrimination = CalibrationData["discrimination"];
 // the coin-flip baseline for a binary outcome, so under it is meaningfully sharp.
 function brierRead(brier: number | null): string {
   if (brier === null) return "Not enough settled picks yet.";
-  if (brier <= 0.18) return "Sharp — confidence tracks outcomes closely.";
-  if (brier <= 0.25) return "Better than a coin flip — calibration is holding.";
-  return "Above the coin-flip baseline — calibration needs work.";
+  if (brier <= 0.18) return "Sharp. Confidence tracks outcomes closely.";
+  if (brier <= 0.25) return "Better than a coin flip. Calibration is holding.";
+  return "Above the coin-flip baseline. Calibration needs work.";
 }
 
 const VERDICT_META: Record<
@@ -53,7 +53,7 @@ const VERDICT_META: Record<
     glyph: "▲",
   },
   inverted: {
-    label: "Higher confidence is winning less — under review",
+    label: "Higher confidence is winning less. Under review",
     tone: "text-alert",
     ring: "border-alert/40 bg-alert/5",
     glyph: "▼",
@@ -203,7 +203,7 @@ export async function CalibrationPanel() {
             {discriminationRatesPublishable ||
             (d.trend !== "improving" && d.trend !== "inverted")
               ? d.note
-              : "Higher-confidence picks are separating from lower-confidence ones, but each bucket is still below the publish threshold — concrete win rates are withheld until they clear it."}
+              : "Higher-confidence picks are separating from lower-confidence ones, but each bucket is still below the publish threshold, so concrete win rates are withheld until they clear it."}
           </p>
           {discriminationRatesPublishable &&
             d.spread !== null &&
@@ -263,7 +263,7 @@ export async function CalibrationPanel() {
 
       <div className="border-t border-titanium px-6 py-3">
         <p className="text-[11px] leading-relaxed text-ion-2">
-          {data.publicMessage} Calibration is evidence only — it never auto-adjusts
+          {data.publicMessage} Calibration is evidence only. It never auto-adjusts
           the model. Past performance does not guarantee future results.
         </p>
       </div>

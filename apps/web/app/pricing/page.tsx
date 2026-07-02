@@ -28,12 +28,12 @@ import { getFeature } from "@/lib/pricing/feature-gates";
 const phase = getCurrentPricingPhase();
 
 export const metadata: Metadata = {
-  title: "Pricing — Founding-Member Rates, Locked For Life",
+  title: "Pricing: Founding-Member Rates, Locked For Life",
   description:
-    "Free, honest picks and the most transparent verified record in the game. Pro and Elite are for the tools, depth, analytics, and alerts - founding-member pricing, the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
+    "Free, honest picks and the most transparent verified record in the game. Pro and Elite are for the tools, depth, analytics, and alerts. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
   alternates: { canonical: "/pricing" },
   openGraph: {
-    title: `Pricing — ${BRAND_NAME}`,
+    title: `Pricing · ${BRAND_NAME}`,
     description:
       "Founding-member pricing, locked for life. Monthly or annual, with a 3-day money-back window.",
   },
@@ -44,11 +44,11 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 const FREE_FEATURES = [
-  { label: "Every pick, free - honest labels & the open verified record", included: true },
+  { label: "Every pick, free: honest labels & the open verified record", included: true },
   { label: "Edge Index on every signal", included: true },
   { label: "Game matchup info + pick type", included: true },
   { label: "Public verified record & calibration", included: true },
-  { label: "The Academy — full training floor", included: true },
+  { label: "The Academy: full training floor", included: true },
   { label: "Confidence on the full board (Pro)", included: false },
   { label: "Factor trail & evidence audit (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
@@ -58,39 +58,39 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   { label: "The Academy + public verified record", included: true },
-  { label: "Every signal, every day — all 7 sports", included: true },
+  { label: "Every signal, every day: all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
   { label: "Full factor trail & reasoning", included: true },
-  { label: "Evidence audit — full forensic detail", included: true },
+  { label: "Evidence audit: full forensic detail", included: true },
   { label: "Ask the model why, on any pick", included: true },
   { label: "Line-movement intel", included: true },
-  { label: "Trend Lab — full cohort workbench", included: true },
-  { label: "Parlay MRI — the portfolio surgeon", included: true },
+  { label: "Trend Lab: full cohort workbench", included: true },
+  { label: "Parlay MRI: the portfolio surgeon", included: true },
   { label: "Real-time alerts (Elite)", included: false },
   { label: "CLV Ledger + staking toolkit (Elite)", included: false },
 ] as const;
 
 const ELITE_FEATURES = [
   { label: "Real-time email + push alerts on every signal", included: true },
-  { label: "CLV Ledger — your glass-box bet tracker", included: true },
-  { label: "Staking calculator — Kelly-aware sizing", included: true },
+  { label: "CLV Ledger: your glass-box bet tracker", included: true },
+  { label: "Staking calculator: Kelly-aware sizing", included: true },
   { label: "First access to new intelligence surfaces", included: true },
-  { label: "Every signal, every day — all 7 sports", included: true },
+  { label: "Every signal, every day: all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
   { label: "Full factor trail & evidence audit", included: true },
   { label: "Ask the model why + line-movement intel", included: true },
-  { label: "Trend Lab — full cohort workbench", included: true },
-  { label: "Parlay MRI — the portfolio surgeon", included: true },
+  { label: "Trend Lab: full cohort workbench", included: true },
+  { label: "Parlay MRI: the portfolio surgeon", included: true },
   { label: "The Academy + public verified record", included: true },
 ] as const;
 
 const FANTASY_FEATURES = [
-  { label: "Draft Assistant + Best Ball — on real, cleared data", included: true },
+  { label: "Draft Assistant + Best Ball, on real, cleared data", included: true },
   { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
   { label: "Bye-week fragility + roster-construction guidance", included: true },
   { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
   { label: "Every pick, free + the public verified record", included: true },
-  { label: "The Academy — full training floor", included: true },
+  { label: "The Academy: full training floor", included: true },
   { label: "Betting depth: factor trail & line movement (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
   { label: "Real-time alerts (Elite)", included: false },
@@ -116,7 +116,7 @@ const PLANS: PlanView[] = [
     annual: phase.fantasy.annual,
     annualSavingsPct: annualSavingsPct(phase.fantasy),
     annualMonthly: annualMonthlyEquivalent(phase.fantasy),
-    description: "The fantasy suite: the Draft Assistant and Best Ball board on real, cleared data — roster construction, stacks, and bye structure, with the reasoning.",
+    description: "The fantasy suite: the Draft Assistant and Best Ball board on real, cleared data. Roster construction, stacks, and bye structure, with the reasoning.",
     badge: "Draft season",
     cta: "Subscribe to Fantasy",
     features: [...FANTASY_FEATURES],
@@ -184,11 +184,11 @@ const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | b
 const FAQ = [
   {
     q: "Is there a free trial on Pro or Elite?",
-    a: "No free trial — but every paid plan has a 3-day money-back window. Cancel any time from your dashboard.",
+    a: "No free trial, but every paid plan has a 3-day money-back window. Cancel any time from your dashboard.",
   },
   {
     q: "What is founding-member pricing?",
-    a: "We are pre-track-record, so the launch cohort gets the lowest price we will ever offer — and it is locked for the life of your subscription. When prices rise for new members as the verified record grows, yours never does.",
+    a: "We're pre-track-record, so the launch cohort gets the lowest price we'll ever offer, locked for the life of your subscription. When prices rise for new members as the verified record grows, yours never does.",
   },
   {
     q: "How is this different from a tout service?",
@@ -196,7 +196,7 @@ const FAQ = [
   },
   {
     q: "Why is the Performance page empty right now?",
-    a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to make the published number statistically defensible. Patience over noise — that's the standard.",
+    a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to make the published number statistically defensible. Patience over noise. That's the standard.",
   },
   {
     q: "Which sports are covered?",
@@ -254,7 +254,7 @@ export default function PricingPage() {
             </Reveal>
             <Reveal delay={180}>
               <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
-                Start free. Back us before the record exists and your price never moves —
+                Start free. Back us before the record exists and your price never moves,
                 even as it rises for everyone who joins later.
               </p>
             </Reveal>
@@ -272,7 +272,7 @@ export default function PricingPage() {
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Why each step up</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
-              Each plan is a different job — and you can see exactly what the next tier adds before you pay for it.
+              Each plan is a different job, and you can see exactly what the next tier adds before you pay for it.
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {VALUE_TIERS.filter((t) => t.status === "live").map((t) => (
@@ -317,7 +317,7 @@ export default function PricingPage() {
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Where each tier takes you</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
-              Every gate below is enforced on the server — walk up to any door and the seal tells
+              Every gate below is enforced on the server. Walk up to any door and the seal tells
               you exactly which tier opens it.
             </p>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -334,8 +334,8 @@ export default function PricingPage() {
                 tier="Pro"
                 hex={BRAND_COLORS.ionMagenta}
                 doors={[
-                  { label: "Trend Lab — cohort workbench", href: "/trends" },
-                  { label: "Parlay MRI — portfolio surgeon", href: "/parlay-mri" },
+                  { label: "Trend Lab: cohort workbench", href: "/trends" },
+                  { label: "Parlay MRI: portfolio surgeon", href: "/parlay-mri" },
                   { label: "Factor trail on every pick", href: "/picks" },
                 ]}
               />

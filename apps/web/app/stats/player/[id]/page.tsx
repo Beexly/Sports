@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Shell, Cards, DataTable, Badge, ScoreRing, BarChart, StatusRibbon, InsightCard } from "../../_components";
 import { getPlayer, loadWeeklyStats, loadComps, loadArchetypes } from "@/lib/statking/product";
 export const metadata = {
-  title: "Player Profile — StatKing Metrics & Lineage",
+  title: "Player Profile: StatKing Metrics & Lineage",
   description: "A full StatKing metric profile with source lineage and data-confidence for an NFL player.",
   alternates: { canonical: "/stats/players" },
 };
@@ -72,7 +72,7 @@ export default function Page({ params }: { params: { id: string } }) {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Weekly Trend</h2>
         {weeks.length === 0 ? (
-          <p className="text-sm text-ion-1 py-4 border border-mineral bg-eclipse/40 px-4">No weekly data in fixture snapshot — will populate when live ingestion is active.</p>
+          <p className="text-sm text-ion-1 py-4 border border-mineral bg-eclipse/40 px-4">No weekly data in fixture snapshot. This will populate when live ingestion is active.</p>
         ) : (
           <DataTable
             rows={weeks.slice(-8).map(w => ({
@@ -89,7 +89,7 @@ export default function Page({ params }: { params: { id: string } }) {
       <div>
         <h2 className="text-2xl font-semibold text-ion-white mb-4">Similar Players</h2>
         {comps.length === 0 ? (
-          <p className="text-sm text-ion-1 py-4 border border-mineral bg-eclipse/40 px-4">No weekly data in fixture snapshot — will populate when live ingestion is active.</p>
+          <p className="text-sm text-ion-1 py-4 border border-mineral bg-eclipse/40 px-4">No weekly data in fixture snapshot. This will populate when live ingestion is active.</p>
         ) : (
           <DataTable
             rows={comps.map((c: Record<string, unknown>) => ({

@@ -142,7 +142,7 @@ export function EnterGate() {
 
         <p className="mt-6 max-w-md text-base text-ink-300 sm:text-lg">
           Most products hand you a pick and ask for trust. Step inside and watch the
-          machine reason — every read, graded and recorded.
+          machine reason: every read, graded and recorded.
         </p>
 
         <button

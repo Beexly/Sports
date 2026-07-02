@@ -136,12 +136,12 @@ export function buildDailyBriefDraft(input: {
   const { slate } = input;
   const isoDate = slate.briefDate.toISOString().slice(0, 10);
   const lines: string[] = [
-    `# Daily slate brief — ${isoDate}`,
+    `# Daily slate brief: ${isoDate}`,
     "",
     `Tonight's slate has ${slate.gameCount} scheduled games on the board.`,
     slate.publishedPickCount > 0
       ? `Picks published so far: ${slate.publishedPickCount}.`
-      : `No picks published yet — the engine refuses to fabricate when source coverage is incomplete.`,
+      : `No picks published yet. The engine refuses to fabricate when source coverage is incomplete.`,
   ];
 
   if (slate.dataQualityWarnings.length > 0) {
@@ -238,7 +238,7 @@ export function buildMethodologyEducationDraft(input: {
       lines.push("# Why data freshness matters");
       lines.push("");
       lines.push(
-        "Sports lines move. The model assigns each piece of evidence — odds, schedule, injury notes — a freshness budget. When evidence ages past its budget, downstream artifacts switch to HOLD or BLOCKED rather than ship a stale claim."
+        "Sports lines move. The model assigns each piece of evidence (odds, schedule, injury notes) a freshness budget. When evidence ages past its budget, downstream artifacts switch to HOLD or BLOCKED rather than ship a stale claim."
       );
       break;
     case "CONFIDENCE":
@@ -312,7 +312,7 @@ export function buildWeeklyRecapDraft(input: {
     );
     if (summary.bootstrapExcluded) {
       lines.push(
-        "Bootstrap-era picks are excluded by design — their data quality is uncalibrated."
+        "Bootstrap-era picks are excluded by design. Their data quality is uncalibrated."
       );
     }
     lines.push(
@@ -357,7 +357,7 @@ export function buildPerformanceTransparencyDraft(
   if (!input.performanceGateOn) {
     lines.push("");
     lines.push(
-      "The performance gate is currently OFF — this draft is held until canonical performance data exists."
+      "The performance gate is currently OFF. This draft is held until canonical performance data exists."
     );
   } else {
     lines.push("");

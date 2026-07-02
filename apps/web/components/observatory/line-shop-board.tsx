@@ -55,11 +55,11 @@ export async function LineShopBoard() {
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-titanium px-6 py-4">
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
-            Line shop — best available price
+            Line shop: best available price
           </h2>
           <p className="mt-1 text-[11px] text-ion-2">
             Where the price is best right now, per side, across the books we
-            capture. Shop the number — it&apos;s your money.
+            capture. Shop the number. It&apos;s your money.
           </p>
         </div>
         <span className={`text-[11px] uppercase tracking-widest text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
@@ -72,7 +72,7 @@ export async function LineShopBoard() {
       {board.rows.length === 0 ? (
         <p className="px-6 py-8 text-sm text-ion-1">
           No upcoming game carries a real quote from at least two books in the
-          capture window. The shop renders only from captured odds — it stays
+          capture window. The shop renders only from captured odds. It stays
           empty rather than inventing a price.
         </p>
       ) : (
@@ -109,7 +109,7 @@ export async function LineShopBoard() {
       <div className="border-t border-titanium px-6 py-3">
         <p className="text-[11px] leading-relaxed text-ion-2">
           The best price shown is each book&apos;s latest captured quote for that
-          side — a transparency read, not a pick and not a prompt to bet both
+          side: a transparency read, not a pick and not a prompt to bet both
           sides. Prices move; confirm at the book before you act.
         </p>
       </div>

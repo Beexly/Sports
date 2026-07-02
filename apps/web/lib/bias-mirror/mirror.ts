@@ -28,8 +28,8 @@ export const DIMENSIONS: readonly BiasDimension[] = [
     key: "chase",
     label: "Loss chasing",
     prompt: "After a loss, I quickly place another bet to win it back.",
-    pattern: "Your answers show elevated chase risk — the urge to recover a loss right away.",
-    strength: "You don't chase losses — the hardest discipline, and you have it.",
+    pattern: "Your answers show elevated chase risk: the urge to recover a loss right away.",
+    strength: "You don't chase losses. That's the hardest discipline, and you have it.",
     guidance: "Set a hard stop after a loss: no same-session re-bet. The recovery bet is the most expensive one.",
   },
   {

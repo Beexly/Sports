@@ -389,10 +389,10 @@ function RushingContactView({ f }: { f: RushingContact }): JSX.Element {
       label: "YAC/att",
       align: "right",
       numeric: true,
-      tooltip: "yards after contact per attempt — the back's own talent",
+      tooltip: "yards after contact per attempt: the back's own talent",
       render: (r) => <span className={tcd(rcYacTone(r))}>{r.yacPerAtt.toFixed(2)}</span>,
     },
-    { key: "ybcPerAtt", label: "YBC/att", align: "right", numeric: true, tooltip: "yards before contact per attempt — the line/scheme", render: (r) => r.ybcPerAtt.toFixed(2) },
+    { key: "ybcPerAtt", label: "YBC/att", align: "right", numeric: true, tooltip: "yards before contact per attempt: the line/scheme", render: (r) => r.ybcPerAtt.toFixed(2) },
     { key: "brokenTackles", label: "Brk", align: "right", numeric: true, tooltip: "broken tackles, total", render: (r) => r.brokenTackles },
     { key: "brokenPerAtt", label: "Brk/att", align: "right", numeric: true, tooltip: "broken tackles per attempt", render: (r) => r.brokenPerAtt.toFixed(3) },
     { key: "yacPct", label: "YAC%", align: "right", numeric: true, tooltip: "YAC/att percentile within the qualified pool", render: (r) => r.yacPct.toFixed(0) },
@@ -558,8 +558,8 @@ function TeamEnvironmentView({ t }: { t: TeamEnvironment }): JSX.Element {
     { key: "defEpaPerPlay", label: "Def EPA", align: "right", numeric: true, tooltip: "defensive EPA per play (lower is better)", sortValue: (r) => r.defEpaPerPlay, render: (r) => <span className={scd(-r.defEpaPerPlay)}>{formatSigned(r.defEpaPerPlay, 3)}</span> },
     { key: "defEpaPct", label: "Def%ile", align: "right", numeric: true, tooltip: "within-league defensive EPA percentile (EPA inverted)", sortValue: (r) => r.defEpaPct, render: (r) => pct(r.defEpaPct) },
     { key: "defSuccessRate", label: "Def SR", align: "right", numeric: true, tooltip: "defensive success rate (lower is better)", sortValue: (r) => r.defSuccessRate, render: (r) => pct(r.defSuccessRate) },
-    { key: "proe", label: "PROE", align: "right", numeric: true, tooltip: "PROE — pass rate over expected", sortValue: (r) => r.proe, render: (r) => <span className={scd(r.proe)}>{formatSigned(r.proe, 1)}%</span> },
-    { key: "noHuddleRate", label: "Pace", align: "right", numeric: true, tooltip: "no-huddle rate — pace proxy", sortValue: (r) => r.noHuddleRate, render: (r) => pct(r.noHuddleRate) },
+    { key: "proe", label: "PROE", align: "right", numeric: true, tooltip: "PROE: pass rate over expected", sortValue: (r) => r.proe, render: (r) => <span className={scd(r.proe)}>{formatSigned(r.proe, 1)}%</span> },
+    { key: "noHuddleRate", label: "Pace", align: "right", numeric: true, tooltip: "no-huddle rate: pace proxy", sortValue: (r) => r.noHuddleRate, render: (r) => pct(r.noHuddleRate) },
     {
       key: "read",
       label: "The read",
@@ -695,7 +695,7 @@ function ClvView({ c }: { c: ClvBacktest }): JSX.Element {
   return (
     <div className="flex flex-col gap-4">
       <SubHead
-        kicker={`Illustrative CLV self-grade${c.seasonTo ? ` · ${c.seasonFrom}–${c.seasonTo}` : ""} · ${c.gamesGraded} games graded`}
+        kicker={`Illustrative CLV self-grade${c.seasonTo ? ` · ${c.seasonFrom}-${c.seasonTo}` : ""} · ${c.gamesGraded} games graded`}
         title="Did the illustrative model beat the close?"
         note={c.note}
       />
@@ -880,7 +880,7 @@ function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
 
       <div className="flex flex-col gap-3">
         <SubHead
-          kicker={`${p.season} · trained on weeks ${p.trainWeeks[0]}–${p.trainWeeks[p.trainWeeks.length - 1]} · tested on weeks ${p.testWeeks[0]}–${p.testWeeks[p.testWeeks.length - 1]}`}
+          kicker={`${p.season} · trained on weeks ${p.trainWeeks[0]}-${p.trainWeeks[p.trainWeeks.length - 1]} · tested on weeks ${p.testWeeks[0]}-${p.testWeeks[p.testWeeks.length - 1]}`}
           title="The backtest, by position"
           note={p.verdict}
         />
@@ -913,7 +913,7 @@ function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
           <ProofTable overall={p.stacked} byPosition={p.stackedByPosition} />
           <Note>
             Each train→test pair is normalized within its own seasons (percentiles per pair), then the pairs are
-            pooled — never re-ranked across seasons. Out-of-sample throughout; where it beats the baseline (positive
+            pooled, never re-ranked across seasons. Out-of-sample throughout; where it beats the baseline (positive
             lift), that is the strongest evidence the grade carries forward signal.
           </Note>
         </div>

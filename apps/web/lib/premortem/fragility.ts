@@ -32,7 +32,7 @@ export interface FragilityScore {
 }
 
 const WEAKNESS =
-  "Structural only: counts how thin the pick's basis was at scoring — " +
+  "Structural only: counts how thin the pick's basis was at scoring, " +
   "not variance, opponent quality, or outcome probability.";
 
 const ATS_SAMPLE_FLOOR = 10;

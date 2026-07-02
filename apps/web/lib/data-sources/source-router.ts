@@ -80,7 +80,7 @@ export const PLATFORM_SOURCES: readonly PlatformSource[] = [
     sports: ["nfl"],
     needs: ["scores", "results", "schedules", "player_stats", "team_stats", "play_by_play", "depth_charts", "injuries"],
     registrySourceId: "nflverse",
-    note: "CC-BY open dataset, already wired. Deep NFL facts at zero marginal cost — the free spine for NFL stats.",
+    note: "CC-BY open dataset, already wired. Deep NFL facts at zero marginal cost: the free spine for NFL stats.",
   },
   {
     id: "espn-public-api",
@@ -102,7 +102,7 @@ export const PLATFORM_SOURCES: readonly PlatformSource[] = [
     sports: ["nfl", "ncaaf", "nba", "ncaab", "mlb", "nhl", "mls"],
     needs: ["weather"],
     registrySourceId: "open-meteo",
-    note: "Free, no key, no sign-up (CC-BY 4.0). Game-time weather for outdoor venues — a free quality input for totals/passing models.",
+    note: "Free, no key, no sign-up (CC-BY 4.0). Game-time weather for outdoor venues: a free quality input for totals/passing models.",
   },
 
   // ── Cleared + licensed (already paid; use after free) ────────────────────────
@@ -115,7 +115,7 @@ export const PLATFORM_SOURCES: readonly PlatformSource[] = [
     sports: ["nfl", "ncaaf", "nba", "ncaab", "mlb", "nhl", "mls"],
     needs: ["odds", "scores", "results"],
     registrySourceId: "the-odds-api",
-    note: "Licensed + wired (THE_ODDS_API_KEY). Free tier 500 credits/mo — in-season gated. Primary cleared ODDS source; free odds candidates are still gated.",
+    note: "Licensed + wired (THE_ODDS_API_KEY). Free tier 500 credits/mo, in-season gated. Primary cleared ODDS source; free odds candidates are still gated.",
   },
 
   // ── Gated free candidates (free, but not yet cleared) ────────────────────────
@@ -183,7 +183,7 @@ export const PLATFORM_SOURCES: readonly PlatformSource[] = [
     sports: ["nfl", "ncaaf"],
     needs: ["scores", "team_stats", "standings", "schedules", "odds"],
     registrySourceId: null,
-    note: "Free 1,000–2,000/day. Unverified breadth — verify before production.",
+    note: "Free 1,000-2,000/day. Unverified breadth. Verify before production.",
   },
   {
     id: "sports-game-data",

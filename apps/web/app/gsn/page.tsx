@@ -9,9 +9,9 @@ import { SAMPLE_TRANSMISSION } from "@/lib/gsn/transmission";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "GSN — Galaxy Sports Network",
+  title: "GSN · Galaxy Sports Network",
   description:
-    "Not a blog — a daily intelligence transmission. The whole slate read as a mission-control briefing: Galaxy Brief, Market Mirages, Roster Shocks, Coaching Edges, and Line-Movement Autopsies.",
+    "Not a blog, a daily intelligence transmission. The whole slate read as a mission-control briefing: Galaxy Brief, Market Mirages, Roster Shocks, Coaching Edges, and Line-Movement Autopsies.",
   alternates: { canonical: "/gsn" },
 };
 
@@ -43,13 +43,13 @@ export default function GSNPage() {
                 className="mt-5 font-display text-balance text-white"
                 style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}
               >
-                GSN — the{" "}
+                GSN: the{" "}
                 <span className="gse-editorial" style={{ fontSize: "1.08em" }}>transmission</span>, not the blog.
               </h1>
             </Reveal>
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                Every day the engine reads the whole board and files an intelligence briefing —
+                Every day the engine reads the whole board and files an intelligence briefing:
                 the mirages the crowd is walking into, the roster shocks re-pricing the slate, the
                 coaching edges the market underweights, and last night&apos;s autopsies. Content
                 becomes an event.
@@ -79,7 +79,7 @@ export default function GSNPage() {
               </p>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ink-300">
                 The sample above shows the format. Live daily transmissions are generated from the
-                real slate once it&apos;s wired behind the readiness gate — every segment will link
+                real slate once it&apos;s wired behind the readiness gate. Every segment will link
                 straight into the live object it describes, so the story and the data are the same
                 thing.
               </p>

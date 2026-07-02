@@ -120,7 +120,7 @@ export function evaluateContentCompliance(
 
   if (input.contentType === "MODEL_ACCOUNTABILITY_NOTE") {
     notes.push(
-      "Calibration / model accountability drafts default to INTERNAL visibility — public promotion requires a deliberate operator decision."
+      "Calibration / model accountability drafts default to INTERNAL visibility. Public promotion requires a deliberate operator decision."
     );
   }
 

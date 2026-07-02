@@ -75,8 +75,8 @@ export function evaluatePublicPerformancePolicy(
     eligibleForRate > 0
       ? Math.round((input.canonicalWins / eligibleForRate) * 1000) / 10
       : null;
-  const record = `${input.canonicalWins}W–${input.canonicalLosses}L${
-    input.canonicalPushes > 0 ? `–${input.canonicalPushes}P` : ""
+  const record = `${input.canonicalWins}W-${input.canonicalLosses}L${
+    input.canonicalPushes > 0 ? `-${input.canonicalPushes}P` : ""
   }`;
 
   const allowed = blockers.length === 0;

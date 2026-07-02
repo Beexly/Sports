@@ -1,7 +1,7 @@
 import { Shell, Cards, StatusRibbon, HeroStat, InsightCard, SectionHeader } from "../_components";
 import { loadArchetypes, loadPlayers } from "@/lib/statking/product";
 export const metadata = {
-  title: "Watchlist — Your Tracked Players",
+  title: "Watchlist: Your Tracked Players",
   description: "Track players and surface their StatKing signals in one place.",
   alternates: { canonical: "/stats/watchlist" },
 };
@@ -23,7 +23,7 @@ export default function Page() {
       <InsightCard
         eyebrow="What is the Watchlist?"
         headline="Players the system flags as hidden opportunities right now"
-        body="Sorted by Hidden Value Score — players with strong underlying metrics (usage, efficiency, archetype fit) before the broader market reprices them. Saving a personal watchlist is an owner-gated account feature. This view always shows the system's top hidden-value picks."
+        body="Sorted by Hidden Value Score: players with strong underlying metrics (usage, efficiency, archetype fit) before the broader market reprices them. Saving a personal watchlist is an owner-gated account feature. This view always shows the system's top hidden-value picks."
         tone="neutral"
       />
       <div className="grid gap-4 md:grid-cols-2">

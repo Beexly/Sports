@@ -1,7 +1,7 @@
 import { Shell, Cards, DataTable, StatusRibbon, BarChart, InsightCard, SectionHeader } from "../_components";
 import { loadTeams } from "@/lib/statking/product";
 export const metadata = {
-  title: "Trenches — Line Play & Pressure Context",
+  title: "Trenches: Line Play & Pressure Context",
   description: "Line-play and pressure context that shapes player opportunity.",
   alternates: { canonical: "/stats/trenches" },
 };
@@ -19,8 +19,8 @@ export default function Page() {
       ]} />
       <InsightCard
         eyebrow="About Trenches Data"
-        headline="Snap-level OL/DL data is license-gated — here's the honest proxy"
-        body="Direct snap-level charting (NGS, PFF grades) requires licensing we don't hold yet. Protection Proxy = team offensive environment scaled to line-performance signal. Pressure Proxy = team defensive environment. These are real team-level signals, not fabricated — just not yet drill-down line grades."
+        headline="Snap-level OL/DL data is license-gated. Here's the honest proxy"
+        body="Direct snap-level charting (NGS, PFF grades) requires licensing we don't hold yet. Protection Proxy = team offensive environment scaled to line-performance signal. Pressure Proxy = team defensive environment. These are real team-level signals, not fabricated, just not yet drill-down line grades."
         tone="warn"
       />
       <SectionHeader title="Teams by Protection Score" eyebrow="Proxy ranking" />

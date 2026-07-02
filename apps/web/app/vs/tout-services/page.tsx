@@ -16,13 +16,13 @@ import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title:
-    "Galaxy Sports Edge vs. Tout Services — Transparent Picks With Reasoning Attached",
+    "Galaxy Sports Edge vs. Tout Services: Transparent Picks With Reasoning Attached",
   description:
-    "Tout services publish curated wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and refuses to show a win-rate it can't honestly back. Here's the category contrast — no competitor named.",
+    "Tout services publish curated wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and refuses to show a win-rate it can't honestly back. Here's the category contrast, no competitor named.",
   alternates: { canonical: "/vs/tout-services" },
   openGraph: {
     title:
-      "Galaxy Sports Edge vs. Tout Services — The Category Contrast",
+      "Galaxy Sports Edge vs. Tout Services: The Category Contrast",
     description:
       "An anti-tout sports model: every pick shows its work, losses are counted, and the public win-rate stays gated until it can be backed.",
   },
@@ -64,7 +64,7 @@ export default function VsToutServicesPage() {
             </h2>
             <p className="mt-5 text-base text-ink-300">
               When evaluating a sports picks service, these are the four
-              signals to look for. Three or more, and it&apos;s a tout —
+              signals to look for. Three or more, and it&apos;s a tout,
               regardless of how the marketing sounds.
             </p>
 
@@ -102,7 +102,7 @@ export default function VsToutServicesPage() {
               <p>
                 Sports markets are uncertain. A model with a 64% calibrated
                 confidence on a single signal still loses 36 of 100 times.
-                That is not a flaw — that is the math. Any service that hides
+                That is not a flaw. That is the math. Any service that hides
                 this is selling certainty it cannot deliver.
               </p>
               <p>
@@ -137,8 +137,8 @@ export default function VsToutServicesPage() {
               Ask a tout for their closing line value. Watch the silence.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-ink-300">
-              A win streak is a screenshot. Closing line value — whether the price
-              you locked beat where the market actually closed — is the one number
+              A win streak is a screenshot. Closing line value, whether the price
+              you locked beat where the market actually closed, is the one number
               the sharps respect and the touts never publish, because it can&apos;t
               be cherry-picked. It&apos;s the leading indicator that an edge is real
               before a single game settles. We publish ours under the same gate as
@@ -191,7 +191,7 @@ const WATCHLIST = [
   {
     number: "01",
     title: "They publish a win-rate from day one.",
-    body: "Any service that quotes a percentage in the first weeks of operating is either making it up or computing it on a sample too small to mean anything. A statistically defensible number takes at least 100 settled signals — usually more. Ask to see the canonical settled history that produced it. They won't have it.",
+    body: "Any service that quotes a percentage in the first weeks of operating is either making it up or computing it on a sample too small to mean anything. A statistically defensible number takes at least 100 settled signals, usually more. Ask to see the canonical settled history that produced it. They won't have it.",
   },
   {
     number: "02",

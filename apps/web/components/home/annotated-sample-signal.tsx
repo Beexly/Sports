@@ -13,11 +13,11 @@
 const CALLOUTS_LEFT = [
   {
     label: "01 · Sport + matchup code",
-    body: "Every signal is keyed to a specific sport, slate, and matchup. The code is the audit handle — every factor in the trail ties back to it.",
+    body: "Every signal is keyed to a specific sport, slate, and matchup. The code is the audit handle: every factor in the trail ties back to it.",
   },
   {
     label: "02 · Grade chip",
-    body: "Eclipse Gate is the rarest grade — only signals where every gate cleared by a wide margin. Strong / Solid / Lean are the rest of the ladder. Never used as a promise.",
+    body: "Eclipse Gate is the rarest grade: only signals where every gate cleared by a wide margin. Strong / Solid / Lean are the rest of the ladder. Never used as a promise.",
   },
   {
     label: "03 · Selection + line",
@@ -32,7 +32,7 @@ const CALLOUTS_RIGHT = [
   },
   {
     label: "05 · Confidence rating",
-    body: "A calibrated 0–100 Edge Index. Not a probability the pick wins — a measure of how much the market is offering vs. what the model thinks the matchup is worth.",
+    body: "A calibrated 0-100 Edge Index. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth.",
   },
   {
     label: "06 · Variance line",

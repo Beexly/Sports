@@ -108,7 +108,7 @@ export function SignalCourtroom({ brief }: { brief: CourtroomBrief }) {
       {/* Three panels */}
       <div className="relative mt-7 grid gap-5 lg:grid-cols-3">
         {/* Prosecution */}
-        <section className="surface-lifted p-5" aria-label="Prosecution — evidence for">
+        <section className="surface-lifted p-5" aria-label="Prosecution: evidence for">
           <header className="flex items-center gap-2">
             <span aria-hidden className="h-2 w-2 rounded-full" style={{ background: cyan, boxShadow: `0 0 10px ${cyan}` }} />
             <h4 className="text-xs font-bold uppercase tracking-[0.16em]" style={{ color: cyan }}>Prosecution</h4>
@@ -118,7 +118,7 @@ export function SignalCourtroom({ brief }: { brief: CourtroomBrief }) {
         </section>
 
         {/* Defense */}
-        <section className="surface-lifted p-5" aria-label="Defense — counter-evidence">
+        <section className="surface-lifted p-5" aria-label="Defense: counter-evidence">
           <header className="flex items-center gap-2">
             <span aria-hidden className="h-2 w-2 rounded-full" style={{ background: mag, boxShadow: `0 0 10px ${mag}` }} />
             <h4 className="text-xs font-bold uppercase tracking-[0.16em]" style={{ color: mag }}>Defense</h4>
@@ -128,7 +128,7 @@ export function SignalCourtroom({ brief }: { brief: CourtroomBrief }) {
         </section>
 
         {/* Judge */}
-        <section className="surface-lifted p-5" aria-label="Judge — verdict and falsifiers">
+        <section className="surface-lifted p-5" aria-label="Judge: verdict and falsifiers">
           <header className="flex items-center gap-2">
             <span aria-hidden className="h-2 w-2 rounded-full" style={{ background: uv, boxShadow: `0 0 10px ${uv}` }} />
             <h4 className="text-xs font-bold uppercase tracking-[0.16em]" style={{ color: uv }}>Judge</h4>

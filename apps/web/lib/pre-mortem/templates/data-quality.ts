@@ -24,6 +24,6 @@ export const dataQualityTemplate: FailureModeTemplate = {
   },
 
   generateBullet: (_snapshot, _pick, _game) => {
-    return `If data quality drops below grade B between publish and game time — a feed lag, a missing late update, or a source quality flag — we should be considered to have published prematurely.`;
+    return `If data quality drops below grade B between publish and game time (a feed lag, a missing late update, or a source quality flag), we should be considered to have published prematurely.`;
   },
 };

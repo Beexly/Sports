@@ -22,7 +22,7 @@ const GATE_REASONS = [
   },
   {
     title: "Model disagreement",
-    body: "When our own models split wide, that width is information — and the information says wait.",
+    body: "When our own models split wide, that width is information, and the information says wait.",
     tone: "text-ultraviolet",
   },
   {
@@ -58,7 +58,7 @@ export function NoBetGateChapter(): JSX.Element {
         <p className="mt-4 max-w-xl text-sm leading-7 text-ion-1">
           Most products treat an empty board as a failure to hide. Galaxy treats
           it as the system working. Every held row is a decision with reasons
-          attached — recorded, public, and accountable, exactly like a
+          attached: recorded, public, and accountable, exactly like a
           published one.
         </p>
         <dl className="mt-7 grid gap-4 sm:grid-cols-2">

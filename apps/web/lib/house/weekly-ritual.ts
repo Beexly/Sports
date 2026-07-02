@@ -21,7 +21,7 @@ export const WEEKLY_RITUAL: readonly RitualBeat[] = [
   { dayIndex: 2, day: "Tue", beat: "Injury watch · the accountability pass", surface: "performance/losses (autopsies land here)" },
   { dayIndex: 3, day: "Wed", beat: "Opening market read", surface: "observatory fair board" },
   { dayIndex: 4, day: "Thu", beat: "First edge board", surface: "picks board" },
-  { dayIndex: 5, day: "Fri", beat: "The human read", surface: "journal (drafts Saturday — standing law, keep)" },
+  { dayIndex: 5, day: "Fri", beat: "The human read", surface: "journal (drafts Saturday: standing law, keep)" },
   { dayIndex: 6, day: "Sat", beat: "Fantasy help · Parlay MRI", surface: "fantasy tools + parlay-mri" },
   { dayIndex: 0, day: "Sun", beat: "Game day", surface: "the-beat / live surfaces" },
   { dayIndex: 1, day: "Mon", beat: "Final slate closeout", surface: "journal (night close)" },

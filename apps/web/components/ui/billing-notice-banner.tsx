@@ -18,7 +18,7 @@ export function BillingNoticeBanner({ notice }: { notice: BillingNotice }): JSX.
 
   switch (notice.kind) {
     case "PAST_DUE_IN_GRACE":
-      headline = "Payment issue — your card needs attention";
+      headline = "Payment issue: your card needs attention";
       detail = notice.graceEndsAt
         ? `Your last ${tierLabel} payment didn't go through. You keep full access while we retry, until ${formatDeadline(notice.graceEndsAt)}. Update your card to keep your membership uninterrupted.`
         : `Your last ${tierLabel} payment didn't go through. Update your card to keep your membership uninterrupted.`;
@@ -26,7 +26,7 @@ export function BillingNoticeBanner({ notice }: { notice: BillingNotice }): JSX.
     case "PAST_DUE_EXPIRED":
       headline = `Your ${tierLabel} access is paused`;
       detail =
-        "We couldn't collect payment and the grace window has ended. Update your card to restore full access — your history and settings are untouched.";
+        "We couldn't collect payment and the grace window has ended. Update your card to restore full access. Your history and settings are untouched.";
       break;
     case "INCOMPLETE":
       headline = "Finish setting up your payment";

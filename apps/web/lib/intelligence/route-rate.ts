@@ -215,18 +215,18 @@ function signalFor(tprrPct: number, routePct: number): { signal: RouteRateSignal
   if (tprrPct >= HIGH_TPRR_PCT && routePct <= LOW_ROUTE_PCT) {
     return {
       signal: "breakout",
-      note: `Efficient on limited route volume — high target-per-route on few routes. The role is the only cap; a breakout / buy if the snaps come. ${proxy}`,
+      note: `Efficient on limited route volume: high target-per-route on few routes. The role is the only cap; a breakout / buy if the snaps come. ${proxy}`,
     };
   }
   if (tprrPct <= LOW_TPRR_PCT && routePct >= HIGH_ROUTE_PCT) {
     return {
       signal: "fade",
-      note: `Empty volume — lots of routes, few targets per route. The offense runs him out but doesn't look his way; a fade. ${proxy}`,
+      note: `Empty volume: lots of routes, few targets per route. The offense runs him out but doesn't look his way; a fade. ${proxy}`,
     };
   }
   return {
     signal: "steady",
-    note: `Target rate and route volume are in line — usage is what the role implies. ${proxy}`,
+    note: `Target rate and route volume are in line. Usage is what the role implies. ${proxy}`,
   };
 }
 

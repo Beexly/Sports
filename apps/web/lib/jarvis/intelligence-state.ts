@@ -142,7 +142,7 @@ const OPERATING_LOOP: readonly OperatingPhasePosture[] = [
     status: "WIRED",
     truth:
       "OwnerSummary derives posture color, department health, and performance policy " +
-      "deterministically — no model calls.",
+      "deterministically, with no model calls.",
   },
   {
     phase: "DECIDE",
@@ -228,7 +228,7 @@ export function buildMemoryStatus(): MemoryStatus {
     nextAction:
       "Wire an episodic memory store that captures owner decisions with timestamps, " +
       "source references, review state, and recall metadata per JARVIS_MEMORY_PROTOCOL.md. " +
-      "Postgres first — vector/mem0 is retrieval-only, never the source of truth.",
+      "Postgres first: vector/mem0 is retrieval-only, never the source of truth.",
     lastWritten: null,
     lastRecalled: null,
     candidatesAwaitingApproval: null,

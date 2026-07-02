@@ -70,7 +70,7 @@ export function composePreMortem(input: ComposeInput): PreMortemContent {
   let warning: string | null = null;
   if (bullets.length < MIN_BULLETS_FOR_HEALTHY) {
     const factorWord = bullets.length === 1 ? "factor" : "factors";
-    warning = `Pre-mortem coverage thin — only ${bullets.length} ${factorWord} above contribution threshold.`;
+    warning = `Pre-mortem coverage thin: only ${bullets.length} ${factorWord} above contribution threshold.`;
   }
 
   return {

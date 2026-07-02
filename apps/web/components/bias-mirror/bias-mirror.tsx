@@ -141,7 +141,7 @@ export function BiasMirror() {
             ))}
           </ul>
           <p className="mt-4 border-t pt-3 text-[11px] leading-relaxed text-ink-500" style={{ borderColor: BRAND_COLORS.steelGray }}>
-            🔒 Private by design — this reflection is computed on your device from your own
+            🔒 Private by design. This reflection is computed on your device from your own
             answers. Nothing is sent, saved, or tied to your account.
           </p>
         </div>

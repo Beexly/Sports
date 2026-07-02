@@ -108,7 +108,7 @@ export function rollupClv(pairs: readonly ClvPair[]): ClvRollup {
       beatCloseCount: 0,
       beatCloseRate: 0,
       calibration: { meanModelProb: 0, meanClosingProb: 0, stdevClv: 0 },
-      note: "No gradeable pairs — empty self-grade rather than a fabricated CLV.",
+      note: "No gradeable pairs: empty self-grade rather than a fabricated CLV.",
     };
   }
   const sum = (xs: readonly number[]): number => xs.reduce((s, v) => s + v, 0);
@@ -121,10 +121,10 @@ export function rollupClv(pairs: readonly ClvPair[]): ClvRollup {
 
   const note =
     meanClv > 0
-      ? "Model beat the close on average — positive CLV is the cleanest evidence of real edge. Self-grade, not a pick."
+      ? "Model beat the close on average. Positive CLV is the cleanest evidence of real edge. Self-grade, not a pick."
       : meanClv < 0
-        ? "Model trailed the close on average — negative CLV says the edge isn't there yet. Self-grade, not a pick."
-        : "Model matched the close on average — no demonstrated edge. Self-grade, not a pick.";
+        ? "Model trailed the close on average. Negative CLV says the edge isn't there yet. Self-grade, not a pick."
+        : "Model matched the close on average, no demonstrated edge. Self-grade, not a pick.";
 
   return {
     count,
@@ -338,7 +338,7 @@ export async function loadClvBacktest({
       total,
       rows,
       canPublishProjections: false,
-      note: "Backtest CLV self-grade: a simple, transparent model edge graded against the CLOSING spread & total from nflverse schedules over completed games. CLV is how we keep ourselves honest. Self-grade, not a pick — no bets, no live odds.",
+      note: "Backtest CLV self-grade: a simple, transparent model edge graded against the CLOSING spread & total from nflverse schedules over completed games. CLV is how we keep ourselves honest. Self-grade, not a pick: no bets, no live odds.",
       sourceUrl: url,
       error: null,
     };

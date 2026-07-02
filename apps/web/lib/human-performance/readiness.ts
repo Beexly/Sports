@@ -18,9 +18,9 @@ export const BIOMECH_READINESS: readonly BiomechCapability[] = [
   { capability: "Gait / change-of-direction proxies", status: "not-built", rightsCleared: false, note: "Future-facing; depends on the movement pipeline above." },
   { capability: "Video player tracking & spacing", status: "r&d", rightsCleared: false, note: "Open trackers exist (per-repo license verification required); broadcast footage cannot be ingested wholesale." },
   { capability: "Accel / decel & workload proxies", status: "not-built", rightsCleared: false, note: "No rights-clean source today; would be modeled + clearly tiered if added." },
-  { capability: "Return-to-play uncertainty modeling", status: "not-built", rightsCleared: false, note: "Would express uncertainty only — never a medical prognosis." },
+  { capability: "Return-to-play uncertainty modeling", status: "not-built", rightsCleared: false, note: "Would express uncertainty only, never a medical prognosis." },
   { capability: "Vendor athlete load/medical (Kitman/Zone7/Catapult/VALD)", status: "admin-only", rightsCleared: false, note: "Proprietary, club-licensed athlete data. Partnership-gated, never scraped, never public." },
-  { capability: "3D digital-twin rendering (three.js / Babylon, MIT/Apache)", status: "r&d", rightsCleared: true, note: "Visualization only on permissive licenses — implies no data we don't have." },
+  { capability: "3D digital-twin rendering (three.js / Babylon, MIT/Apache)", status: "r&d", rightsCleared: true, note: "Visualization only on permissive licenses. It implies no data we don't have." },
 ];
 
 export interface BiomechReadinessReport {
@@ -37,6 +37,6 @@ export function loadBiomechReadiness(): BiomechReadinessReport {
     capabilities: BIOMECH_READINESS,
     liveCount,
     note:
-      "Movement/biomechanics modeling is reported honestly by capability state. Nothing here makes a public claim about a player's body. Live signals require cleared video rights, a permissive license, and validation — until then each capability reads not-built / R&D / admin-only.",
+      "Movement/biomechanics modeling is reported honestly by capability state. Nothing here makes a public claim about a player's body. Live signals require cleared video rights, a permissive license, and validation. Until then each capability reads not-built / R&D / admin-only.",
   };
 }

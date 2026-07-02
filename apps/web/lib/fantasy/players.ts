@@ -58,7 +58,7 @@ export const PLAYERS: readonly Player[] = [
   p("rb-victor-pine", "Victor Pine", "RB", "NYJ", 12, 96, 30, 188, 0.26, 0.5, "Deep stash", "up", "healthy", "Camp riser; pure speculative add, no standalone value yet."),
 
   // ── WR ──
-  p("wr-julian-roe", "Julian Roe", "WR", "MIA", 6, 308, 210, 372, 0.84, 0.86, "Alpha WR1", "up", "healthy", "Target hog in a pass-first scheme; elite floor and ceiling — a true cornerstone."),
+  p("wr-julian-roe", "Julian Roe", "WR", "MIA", 6, 308, 210, 372, 0.84, 0.86, "Alpha WR1", "up", "healthy", "Target hog in a pass-first scheme; elite floor and ceiling. A true cornerstone."),
   p("wr-deshawn-kemp", "DeShawn Kemp", "WR", "CIN", 12, 290, 190, 360, 0.8, 0.78, "WR1", "flat", "healthy", "Volume + red-zone role; rock-steady WR1 production week to week."),
   p("wr-emory-banks", "Emory Banks", "WR", "LAR", 6, 268, 150, 350, 0.74, 0.82, "Vertical WR1", "up", "questionable", "Big-play profile; a hamstring tweak adds week-1 risk to a high ceiling."),
   p("wr-rashad-lin", "Rashad Lin", "WR", "BUF", 7, 248, 160, 318, 0.7, 0.8, "Slot WR1", "up", "healthy", "Slot volume with a great quarterback; PPR-stable, league-winning upside."),
@@ -157,4 +157,4 @@ export function playerById(id: string, pool: readonly Player[] = PLAYERS): Playe
 }
 
 export const ILLUSTRATIVE_NOTE =
-  "Illustrative player universe — fictional players, illustrative projections. A demonstration of the intelligence, not live data.";
+  "Illustrative player universe: fictional players, illustrative projections. A demonstration of the intelligence, not live data.";
