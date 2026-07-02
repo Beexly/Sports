@@ -71,10 +71,20 @@ ingestion code fill the board? The 6:00 AM ET cron answers it.
 ## The one number to watch this week
 
 The calibration table shows the **80-89 confidence band winning 29.5%**
-(n=61) — high-confidence picks running badly cold. Once data flows, this is
-the next real engineering target: the audited calibration validation
-(docs/path-to-70.md §7). It is the difference between a site with picks and a
-site with an edge. Claude's queue has it next.
+(n=61) — high-confidence picks running badly cold. This is the next real
+engineering target, and the tooling for it is ALREADY BUILT and ready to run:
+
+    npx tsx scripts/calibration-validate.ts
+
+(read-only; needs DATABASE_URL pointed at prod — Copilot can run it with the
+Vercel env value). You have 167 eligible picks, above the 100 floor. It prints
+a hard PASS/FAIL verdict on whether the calibrator genuinely beats raw
+confidence out-of-sample. PASS unlocks the audited MODEL_VERSION activation
+sequence (docs/path-to-70.md §7 steps 3-5, your call); FAIL means keep
+collecting and do not activate. Either answer is progress — it converts the
+29.5% embarrassment into a measured engineering problem. Note: this verdict is
+only trustworthy because the PAVA implementation bug was fixed this week; on
+the old code it could have approved a broken calibrator.
 
 ## Overnight ledger (what shipped while you slept)
 - Scheduler upgraded to 6 intraday passes + pushed (`claude/intraday-odds-scheduler`)
