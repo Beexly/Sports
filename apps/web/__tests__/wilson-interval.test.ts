@@ -55,6 +55,6 @@ describe("Wilson score interval", () => {
 
   it("formats a readable percentage band", () => {
     const ci = wilsonInterval(60, 100)!;
-    expect(formatWilsonPct(ci)).toMatch(/^50\.\d–69\.\d%$/);
+    expect(formatWilsonPct(ci)).toMatch(/^50\.\d-69\.\d%$/);
   });
 });
