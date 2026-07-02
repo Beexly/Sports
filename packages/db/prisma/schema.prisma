@@ -145,6 +145,11 @@ model CommerceCharge {
   chargeCode  String   @unique
   userId      String
   tier        String
+  // The live Stripe subscription id this crypto grant replaced (if any),
+  // recorded durably so that even a webhook REPLAY after a crash between the
+  // DB commit and the Stripe cancel can still recover and cancel it — without
+  // this, the "never double-billed" guarantee has a hole on exactly that path.
+  stripeSubToCancel String?
   processedAt DateTime @default(now())
 
   @@index([userId])

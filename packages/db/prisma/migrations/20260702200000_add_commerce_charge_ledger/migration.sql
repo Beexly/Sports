@@ -9,6 +9,7 @@ CREATE TABLE "commerce_charges" (
     "chargeCode" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "tier" TEXT NOT NULL,
+    "stripeSubToCancel" TEXT,
     "processedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "commerce_charges_pkey" PRIMARY KEY ("id")

@@ -86,9 +86,13 @@ export async function getUserEntitlements(userId: string): Promise<Entitlements>
       const code =
         typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
       if (code === "P2021" || code === "P2022") {
-        console.warn(
-          `[entitlements] failing closed to FREE on schema-lag (${code}) — a migration is likely ` +
-            "mid-deploy; this should self-resolve once it applies.",
+        // ERROR, not warn: if this is a brief migration window it self-heals,
+        // but if the migration never applied (wrong DB, dropped column) this is
+        // a SILENT total entitlement outage — every paying user reads FREE — and
+        // must page someone, not hide in warn-level noise.
+        console.error(
+          `[entitlements] failing closed to FREE on schema mismatch (${code}). If this persists ` +
+            "past a deploy, a migration did not apply — this is a launch-blocking incident.",
         );
       }
       return getEntitlements("FREE");

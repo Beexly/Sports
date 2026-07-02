@@ -92,30 +92,44 @@ export async function POST(request: Request) {
     try {
       result = await db.$transaction(
         async (tx) => {
-          try {
-            await tx.commerceCharge.create({
-              data: { chargeCode: grant.chargeCode, userId: grant.userId, tier: grant.tier },
-            });
-          } catch (err) {
-            if ((err as { code?: string }).code === "P2002") {
-              return { granted: false, priorStripeSubId: null }; // replay: no-op
-            }
-            throw err;
-          }
-
+          // Read the row FIRST so we know what Stripe sub (if any) this grant
+          // replaces, and can record it durably in the ledger below.
           const existing = await tx.subscription.findUnique({
             where: { userId: grant.userId },
             select: { currentPeriodEnd: true, stripeSubscriptionId: true, paymentProvider: true },
           });
+          const priorStripeSubId =
+            existing?.paymentProvider === "STRIPE" ? existing.stripeSubscriptionId ?? null : null;
+
+          try {
+            await tx.commerceCharge.create({
+              data: {
+                chargeCode: grant.chargeCode,
+                userId: grant.userId,
+                tier: grant.tier,
+                // Durable so a replay after a crash-before-cancel can recover it.
+                stripeSubToCancel: priorStripeSubId,
+              },
+            });
+          } catch (err) {
+            if ((err as { code?: string }).code === "P2002") {
+              // Replay: grant nothing, but recover the sub-to-cancel from the
+              // original ledger row so a crash-orphaned Stripe sub still gets
+              // cancelled below (the cancel is idempotent).
+              const prior = await tx.commerceCharge.findUnique({
+                where: { chargeCode: grant.chargeCode },
+                select: { stripeSubToCancel: true },
+              });
+              return { granted: false, priorStripeSubId: prior?.stripeSubToCancel ?? null };
+            }
+            throw err;
+          }
+
           const base =
             existing?.currentPeriodEnd && existing.currentPeriodEnd.getTime() > now.getTime()
               ? existing.currentPeriodEnd
               : now;
           const end = new Date(base.getTime() + CRYPTO_PASS_DAYS * 24 * 60 * 60 * 1000);
-          // A LIVE Stripe sub still attached to this row must be cancelled once
-          // the crypto rail takes over (done after commit, best-effort).
-          const priorStripeSubId =
-            existing?.paymentProvider === "STRIPE" ? existing.stripeSubscriptionId ?? null : null;
 
           await tx.subscription.upsert({
             where: { userId: grant.userId },
@@ -158,9 +172,10 @@ export async function POST(request: Request) {
   }
 
   // Stop the orphaned card rail: cancel the Stripe subscription the crypto pass
-  // just replaced, so the customer is never double-billed. Best-effort but
-  // LOUD on failure — a silent failure here is exactly the double-bill bug.
-  if (result.granted && result.priorStripeSubId) {
+  // replaced, so the customer is never double-billed. This runs whenever a
+  // sub-to-cancel is known — including on a REPLAY that recovered it from the
+  // ledger, which is how a crash between commit and cancel is repaired.
+  if (result.priorStripeSubId) {
     try {
       await stripe.subscriptions.cancel(result.priorStripeSubId);
       console.warn(
@@ -168,11 +183,21 @@ export async function POST(request: Request) {
           "(replaced by crypto pass).",
       );
     } catch (err) {
-      console.error(
-        `[commerce] URGENT — failed to cancel Stripe sub ${result.priorStripeSubId} for user ` +
-          `${grant.userId} after crypto grant; customer may be double-billed. Cancel manually. ` +
-          `Error: ${err instanceof Error ? err.message : String(err)}`,
-      );
+      // Already cancelled / gone is the desired end state, not an incident —
+      // don't cry wolf and bury the genuine failures.
+      const code = (err as { code?: string }).code;
+      if (code === "resource_missing") {
+        console.warn(
+          `[commerce] Stripe sub ${result.priorStripeSubId} already gone for user ${grant.userId} ` +
+            "(nothing to cancel).",
+        );
+      } else {
+        console.error(
+          `[commerce] URGENT — failed to cancel Stripe sub ${result.priorStripeSubId} for user ` +
+            `${grant.userId} after crypto grant; customer may be double-billed. Cancel manually. ` +
+            `Error: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
     }
   }
 
