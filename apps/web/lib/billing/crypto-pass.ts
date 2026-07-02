@@ -66,11 +66,12 @@ export function verifyCommerceSignature(
 
 /**
  * Extract the grant instruction from a Commerce webhook event. Returns null
- * for anything that must NOT grant access: wrong event type (pending,
- * failed, created, delayed), missing/invalid metadata, unknown tier. The two
- * grant-worthy events are charge:confirmed (paid inside the window) and
- * charge:resolved (a delayed payment Commerce later resolved as completed) —
- * an underpaid or dropped charge never unlocks a tier.
+ * for anything that must NOT grant access: any event type other than
+ * charge:confirmed (created/pending/failed/delayed/resolved), missing/invalid
+ * metadata, unknown tier. charge:confirmed is the ONLY auto-grant: it means a
+ * full payment landed inside the window. charge:resolved is deliberately NOT
+ * grant-worthy here (it fires for merchant-resolved under/over payments too),
+ * so it is routed to manual review by the webhook, never auto-granted.
  */
 export function grantFromCommerceEvent(event: unknown): {
   chargeCode: string;
@@ -82,7 +83,7 @@ export function grantFromCommerceEvent(event: unknown): {
     type?: unknown;
     data?: { code?: unknown; metadata?: { userId?: unknown; tier?: unknown } };
   };
-  if (e.type !== "charge:confirmed" && e.type !== "charge:resolved") return null;
+  if (e.type !== "charge:confirmed") return null;
   const code = e.data?.code;
   const userId = e.data?.metadata?.userId;
   const tier = e.data?.metadata?.tier;

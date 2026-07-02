@@ -107,12 +107,8 @@ describe("grantFromCommerceEvent (grant on confirmed ONLY)", () => {
     }
   });
 
-  it("grants on charge:resolved (a delayed payment Commerce later completed)", () => {
-    expect(grantFromCommerceEvent({ ...confirmed, type: "charge:resolved" })).toEqual({
-      chargeCode: "CHARGE1",
-      userId: "user_1",
-      tier: "PRO",
-    });
+  it("does NOT auto-grant on charge:resolved (merchant-resolved under/over payments route to manual review)", () => {
+    expect(grantFromCommerceEvent({ ...confirmed, type: "charge:resolved" })).toBeNull();
   });
 
   it("refuses incomplete or invalid metadata (no guessing on money)", () => {

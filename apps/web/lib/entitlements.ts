@@ -30,7 +30,17 @@ export const PAST_DUE_GRACE_DAYS = 7;
 function isDatabaseUnreachable(error: unknown): boolean {
   const code = typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
   const message = error instanceof Error ? error.message : String(error);
-  return code === "P1001" || message.includes("Can't reach database server");
+  // Fail CLOSED (treat as FREE) not just when the DB is unreachable (P1001),
+  // but also on a schema-lag error during a deploy window: new code that reads
+  // a column/table the migration has not applied yet (P2022 column missing,
+  // P2021 table missing) must degrade to FREE, never 500 the whole site's
+  // authenticated surface. Migrations still lead code; this is the safety net.
+  return (
+    code === "P1001" ||
+    code === "P2021" ||
+    code === "P2022" ||
+    message.includes("Can't reach database server")
+  );
 }
 
 export async function getUserEntitlements(userId: string): Promise<Entitlements> {
@@ -73,6 +83,14 @@ export async function getUserEntitlements(userId: string): Promise<Entitlements>
     });
   } catch (error) {
     if (isDatabaseUnreachable(error)) {
+      const code =
+        typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
+      if (code === "P2021" || code === "P2022") {
+        console.warn(
+          `[entitlements] failing closed to FREE on schema-lag (${code}) — a migration is likely ` +
+            "mid-deploy; this should self-resolve once it applies.",
+        );
+      }
       return getEntitlements("FREE");
     }
     throw error;

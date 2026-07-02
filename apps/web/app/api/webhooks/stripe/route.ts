@@ -255,6 +255,14 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   const updateData = {
     stripeSubscriptionId: stripeSubscription.id,
     stripePriceId: priceId,
+    // Reclaim the row for the Stripe lifecycle. A returning customer whose row
+    // was a (now-expired) crypto pass must be flipped back to STRIPE, or the
+    // provider-guarded deleted/payment_failed handlers and the crypto-expiry
+    // gate would keep governing a Stripe-managed subscription and silently
+    // drop cancellations, refunds, and dunning. The crypto guard above ensures
+    // this only runs once the pass has expired, so it never steals a live pass.
+    paymentProvider: "STRIPE" as const,
+    externalChargeId: null,
     tier,
     status,
     currentPeriodStart: periodStart,
