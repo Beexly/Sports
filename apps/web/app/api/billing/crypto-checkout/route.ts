@@ -21,6 +21,27 @@ export const dynamic = "force-dynamic";
 
 const COMMERCE_CHARGES_URL = "https://api.commerce.coinbase.com/charges";
 
+// Per-user rate limit (in-memory token bucket, same pattern as
+// api/cipher/verify): charge creation hits Coinbase's API and mints real
+// payment intents — a signed-in user must not be able to spam it.
+const WINDOW_MS = 10 * 60 * 1000;
+const MAX_ATTEMPTS = 5;
+const buckets = new Map<string, { count: number; resetAt: number }>();
+
+function rateLimited(key: string): { limited: boolean; retryAfterSec: number } {
+  const now = Date.now();
+  const b = buckets.get(key);
+  if (!b || now >= b.resetAt) {
+    buckets.set(key, { count: 1, resetAt: now + WINDOW_MS });
+    return { limited: false, retryAfterSec: 0 };
+  }
+  if (b.count >= MAX_ATTEMPTS) {
+    return { limited: true, retryAfterSec: Math.ceil((b.resetAt - now) / 1000) };
+  }
+  b.count += 1;
+  return { limited: false, retryAfterSec: 0 };
+}
+
 export async function POST(request: Request) {
   if (!cryptoPaymentsEnabled()) {
     return NextResponse.json(
@@ -35,6 +56,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Sign in first." }, { status: 401 });
   }
 
+  const limit = rateLimited(userId);
+  if (limit.limited) {
+    return NextResponse.json(
+      { error: "Too many checkout attempts. Try again shortly." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
+
   const body = (await request.json().catch(() => null)) as { tier?: unknown } | null;
   const tier = body?.tier;
   if (!isCryptoPassTier(tier)) {
@@ -44,22 +73,42 @@ export async function POST(request: Request) {
     );
   }
 
-  // An active card subscription already covers this user; a crypto pass on
-  // top would double-charge them for nothing.
+  // Double-buy guard, in both directions:
+  //   - Stripe rows: ACTIVE, TRIALING, or PAST_DUE (dunning may still recover)
+  //     card subscriptions block a crypto purchase — a pass on top would
+  //     double-charge them, and a dying card sub interleaving with a fresh
+  //     pass is exactly the clobber scenario the webhooks guard against.
+  //   - Crypto rows: an unexpired pass blocks a SECOND pass until the final
+  //     30 days, when the renewal window opens (the webhook extends from the
+  //     current end, so renewing early never loses days).
   const existing = await db.subscription
-    .findUnique({ where: { userId }, select: { status: true, currentPeriodEnd: true, tier: true } })
+    .findUnique({
+      where: { userId },
+      select: { status: true, currentPeriodEnd: true, tier: true, paymentProvider: true },
+    })
     .catch(() => null);
-  if (
-    existing &&
-    existing.status === "ACTIVE" &&
-    existing.tier !== "FREE" &&
-    existing.currentPeriodEnd &&
-    existing.currentPeriodEnd.getTime() > Date.now()
-  ) {
-    return NextResponse.json(
-      { error: "You already have an active subscription." },
-      { status: 409 },
-    );
+  if (existing && existing.tier !== "FREE") {
+    const RENEWAL_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+    const periodEndMs = existing.currentPeriodEnd?.getTime() ?? 0;
+    if (existing.paymentProvider === "COINBASE_COMMERCE") {
+      if (periodEndMs > Date.now() + RENEWAL_WINDOW_MS) {
+        return NextResponse.json(
+          {
+            error:
+              "Your crypto pass is active. Renewal opens in its final 30 days, and renewing then adds a full year on top.",
+          },
+          { status: 409 },
+        );
+      }
+    } else if (["ACTIVE", "TRIALING", "PAST_DUE"].includes(existing.status)) {
+      return NextResponse.json(
+        {
+          error:
+            "You already have a card subscription. Manage it from your dashboard before buying a crypto pass.",
+        },
+        { status: 409 },
+      );
+    }
   }
 
   const usd = cryptoPassPriceUsd(tier);

@@ -92,8 +92,10 @@ model Subscription {
   // Which rail granted the current entitlement. Crypto passes are fixed-term
   // (no auto-renew); Stripe stays the default for card subscriptions.
   paymentProvider      PaymentProvider    @default(STRIPE)
-  // Provider-external charge id (e.g. Coinbase Commerce charge code) — the
-  // idempotency key for crypto grants; a replayed webhook can never re-grant.
+  // Provider-external charge id (e.g. Coinbase Commerce charge code) of the
+  // LATEST crypto grant, for display/support. Idempotency itself lives in the
+  // append-only CommerceCharge ledger (insert-before-grant), not here — this
+  // column is overwritten by each new grant.
   externalChargeId     String?            @unique
   tier                 SubscriptionTier   @default(FREE)
   status               SubscriptionStatus @default(ACTIVE)
@@ -129,6 +131,24 @@ model WebhookEvent {
 
   @@index([stripeEventId])
   @@map("webhook_events")
+}
+
+// Append-only ledger of processed Coinbase Commerce charges — the idempotency
+// spine for crypto passes. The webhook INSERTS here BEFORE granting; the
+// unique chargeCode turns a replayed confirmed event into a P2002, which is
+// acknowledged as a duplicate without re-granting or extending anything.
+// Unlike a flag on the mutable Subscription row, this record can never be
+// overwritten by a later grant, so a second DISTINCT payment extends the pass
+// instead of silently vanishing.
+model CommerceCharge {
+  id          String   @id @default(cuid())
+  chargeCode  String   @unique
+  userId      String
+  tier        String
+  processedAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("commerce_charges")
 }
 
 // ============================================================

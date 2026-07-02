@@ -67,8 +67,10 @@ export function verifyCommerceSignature(
 /**
  * Extract the grant instruction from a Commerce webhook event. Returns null
  * for anything that must NOT grant access: wrong event type (pending,
- * failed), missing/invalid metadata, unknown tier. Grant-on-confirmed-only
- * is the hard rule — an underpaid or dropped charge never unlocks a tier.
+ * failed, created, delayed), missing/invalid metadata, unknown tier. The two
+ * grant-worthy events are charge:confirmed (paid inside the window) and
+ * charge:resolved (a delayed payment Commerce later resolved as completed) —
+ * an underpaid or dropped charge never unlocks a tier.
  */
 export function grantFromCommerceEvent(event: unknown): {
   chargeCode: string;
@@ -80,7 +82,7 @@ export function grantFromCommerceEvent(event: unknown): {
     type?: unknown;
     data?: { code?: unknown; metadata?: { userId?: unknown; tier?: unknown } };
   };
-  if (e.type !== "charge:confirmed") return null;
+  if (e.type !== "charge:confirmed" && e.type !== "charge:resolved") return null;
   const code = e.data?.code;
   const userId = e.data?.metadata?.userId;
   const tier = e.data?.metadata?.tier;

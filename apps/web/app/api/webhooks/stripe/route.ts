@@ -105,7 +105,10 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
       await db.subscription.updateMany({
-        where: { stripeSubscriptionId: subscription.id },
+        // Provider guard: this event is definitionally about a Stripe-managed
+        // row. A user whose row became a crypto pass (COINBASE_COMMERCE) must
+        // never have that pass wiped by their OLD card subscription dying.
+        where: { stripeSubscriptionId: subscription.id, paymentProvider: "STRIPE" },
         data: {
           status: "CANCELED",
           tier: "FREE",
@@ -148,15 +151,21 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       if (invoice.subscription) {
         // Stamp the first failure only — retries must not slide the
         // grace window that entitlements compute from pastDueSince.
+        // Provider-guarded: dunning is Stripe-only machinery and must never
+        // touch a row that has since become a crypto pass.
         await db.subscription.updateMany({
           where: {
             stripeSubscriptionId: invoice.subscription as string,
+            paymentProvider: "STRIPE",
             pastDueSince: null,
           },
           data: { pastDueSince: new Date() },
         });
         await db.subscription.updateMany({
-          where: { stripeSubscriptionId: invoice.subscription as string },
+          where: {
+            stripeSubscriptionId: invoice.subscription as string,
+            paymentProvider: "STRIPE",
+          },
           data: { status: "PAST_DUE" },
         });
       }
@@ -174,6 +183,28 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     typeof stripeSubscription.customer === "string"
       ? stripeSubscription.customer
       : stripeSubscription.customer.id;
+
+  // Crypto-pass guard: if this customer's row is an UNEXPIRED crypto pass,
+  // no Stripe lifecycle event may overwrite it — they paid real money for
+  // that pass and Stripe knows nothing about it. Log the conflict and stop.
+  // (Once the pass expires, Stripe events may manage the row again.)
+  const cryptoRow = await db.subscription
+    .findUnique({
+      where: { stripeCustomerId: customerId },
+      select: { paymentProvider: true, currentPeriodEnd: true },
+    })
+    .catch(() => null);
+  if (
+    cryptoRow?.paymentProvider === "COINBASE_COMMERCE" &&
+    cryptoRow.currentPeriodEnd &&
+    cryptoRow.currentPeriodEnd.getTime() > Date.now()
+  ) {
+    console.warn(
+      `[stripe] refusing to overwrite unexpired crypto pass for customer ${customerId} ` +
+        `(subscription ${stripeSubscription.id}); pass runs to ${cryptoRow.currentPeriodEnd.toISOString()}`,
+    );
+    return;
+  }
 
   // Out-of-order guard. `customer.subscription.deleted` is TERMINAL, but Stripe does not
   // guarantee delivery order — a delayed `customer.subscription.updated` carrying an older

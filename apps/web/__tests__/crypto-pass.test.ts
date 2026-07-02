@@ -101,10 +101,18 @@ describe("grantFromCommerceEvent (grant on confirmed ONLY)", () => {
     });
   });
 
-  it("refuses pending/failed/created events regardless of metadata", () => {
+  it("refuses pending/failed/created/delayed events regardless of metadata", () => {
     for (const type of ["charge:created", "charge:pending", "charge:failed", "charge:delayed"]) {
       expect(grantFromCommerceEvent({ ...confirmed, type })).toBeNull();
     }
+  });
+
+  it("grants on charge:resolved (a delayed payment Commerce later completed)", () => {
+    expect(grantFromCommerceEvent({ ...confirmed, type: "charge:resolved" })).toEqual({
+      chargeCode: "CHARGE1",
+      userId: "user_1",
+      tier: "PRO",
+    });
   });
 
   it("refuses incomplete or invalid metadata (no guessing on money)", () => {

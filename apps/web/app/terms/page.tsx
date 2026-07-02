@@ -68,12 +68,22 @@ export default function TermsPage() {
 
             <Heading>5. Subscriptions and billing</Heading>
             <Para>
-              Paid plans renew automatically on the interval you select
+              Card plans renew automatically on the interval you select
               (monthly or annual) until canceled. You can cancel from your
               account dashboard at any time. Cancellation takes effect at the
               end of the current billing period; we do not pro-rate refunds for
               partial periods. We may offer occasional refunds at our
               discretion within the period stated at checkout.
+            </Para>
+            <Para>
+              Crypto passes are different by nature: one payment through
+              Coinbase Commerce buys a fixed term (shown at checkout) with no
+              auto-renewal and no card on file. Because on-chain payments are
+              final once confirmed, crypto passes are not covered by the
+              card-plan money-back window. Any refund of a crypto payment is
+              handled manually, at our discretion, and at the current value of
+              the original payment. Your pass ends on its stated date unless
+              you buy another; we do not charge you again automatically.
             </Para>
 
             <Heading>6. Acceptable use</Heading>

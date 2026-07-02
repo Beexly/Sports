@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { db } from "@sports/db";
 import {
   getStripePriceId,
   getOrCreateStripeCustomer,
@@ -22,6 +23,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const parsed = CheckoutSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
+  }
+
+  // Crypto-pass guard (the reverse of the crypto checkout's card guard): a
+  // card signup while an unexpired crypto pass exists would eventually hand
+  // the row to Stripe's lifecycle and silently discard the months they
+  // already paid for. Refuse with the honest reason.
+  const existing = await db.subscription
+    .findUnique({
+      where: { userId: session.user.id },
+      select: { paymentProvider: true, currentPeriodEnd: true, tier: true },
+    })
+    .catch(() => null);
+  if (
+    existing?.paymentProvider === "COINBASE_COMMERCE" &&
+    existing.tier !== "FREE" &&
+    existing.currentPeriodEnd &&
+    existing.currentPeriodEnd.getTime() > Date.now()
+  ) {
+    return NextResponse.json(
+      {
+        error: `Your crypto pass is active until ${existing.currentPeriodEnd.toISOString().slice(0, 10)}. Card billing can start after it ends, so you never lose time you already paid for.`,
+      },
+      { status: 409 },
+    );
   }
 
   const { tier, interval } = parsed.data;
