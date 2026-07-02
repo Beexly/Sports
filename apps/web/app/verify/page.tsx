@@ -6,19 +6,22 @@ import { VerifyConsole } from "@/components/trust-ledger/verify-console";
 export const metadata: Metadata = {
   title: "Verify a Pick · Tamper-Evident Proof of Record",
   description:
-    "Every pick is frozen into a SHA-256 receipt before kickoff and never rewritten. Paste a receipt hash and check the commitment yourself: the integrity check runs live against the stored record.",
+    "Picks are committed to tamper-evident SHA-256 receipts before kickoff and never rewritten. Paste a receipt hash and check the commitment yourself: the integrity check runs live against the stored record.",
   alternates: { canonical: "/verify" },
 };
 
 export default function VerifyPage({
   searchParams,
 }: {
-  searchParams: { hash?: string };
+  searchParams: { hash?: string | string[] };
 }) {
   // Deep-link support: pick cards link here with their receipt hash so the
-  // check runs on arrival. Validated again client- and server-side.
-  const initialHash = /^[0-9a-f]{64}$/.test(searchParams.hash?.toLowerCase() ?? "")
-    ? searchParams.hash!.toLowerCase()
+  // check runs on arrival. A duplicated ?hash= makes Next hand us string[],
+  // so normalize to a single value before validating (repeated params must
+  // not 500 the page).
+  const raw = Array.isArray(searchParams.hash) ? searchParams.hash[0] : searchParams.hash;
+  const initialHash = /^[0-9a-f]{64}$/.test(raw?.toLowerCase() ?? "")
+    ? raw!.toLowerCase()
     : "";
   return (
     <div className="flex min-h-screen flex-col bg-obsidian text-ion-white">

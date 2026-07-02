@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { db } from "@sports/db";
-import { hashLeaf } from "@sports/prediction-engine";
+import { hashLeaf, parseCanonicalPayload } from "@sports/prediction-engine";
 
 /**
  * Public Proof-of-Record verification — the skeptic's endpoint.
@@ -36,8 +36,12 @@ export async function GET(request: Request) {
     );
   }
 
-  const receipt = await db.pickProofReceipt
-    .findFirst({
+  // Separate "not found" from "database unreachable": a DB outage must NOT be
+  // reported as "no receipt matches that hash" on an honesty surface — that
+  // would be a false claim of non-existence. Outage -> 503, absence -> found:false.
+  let receipt;
+  try {
+    receipt = await db.pickProofReceipt.findFirst({
       where: { contentHash: hash },
       include: {
         pick: {
@@ -54,8 +58,13 @@ export async function GET(request: Request) {
           },
         },
       },
-    })
-    .catch(() => null);
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "The verifier is temporarily unavailable. This is not a verdict; try again shortly." },
+      { status: 503 },
+    );
+  }
 
   if (!receipt) {
     return NextResponse.json({ found: false });
@@ -65,7 +74,28 @@ export async function GET(request: Request) {
   // frozen commitment. A mismatch means the stored record was altered after
   // minting — the exact thing the receipt exists to expose.
   const recomputed = hashLeaf(sha256Hex, { id: receipt.pickId, payload: receipt.payload });
-  const verified = recomputed === receipt.contentHash;
+  const hashIntact = recomputed === receipt.contentHash;
+
+  // Display MUST come from the hashed payload, not the sibling DB columns, or
+  // the tamper check would not cover what the user sees. We parse the payload
+  // and additionally cross-check the columns against it: any drift beyond
+  // rounding tolerance is itself tampering and flips the verdict to failed.
+  const p = parseCanonicalPayload(receipt.payload);
+  const num = (s: string | undefined): number | null =>
+    s == null || s === "none" ? null : Number.isFinite(Number(s)) ? Number(s) : null;
+  const columnsMatchPayload =
+    approxEq(receipt.line, num(p["line"]), 1e-4) &&
+    approxEq(receipt.entryOdds, num(p["entryOdds"]), 0.5) &&
+    approxEq(receipt.marketFairProb, num(p["marketFairProb"]), 1e-6) &&
+    approxEq(receipt.confidence, num(p["confidence"]), 0.5) &&
+    approxEq(receipt.edgeScore, num(p["edgeScore"]), 1e-4) &&
+    approxEq(receipt.modelProb, num(p["modelProb"]), 1e-6) &&
+    receipt.modelVersion === (p["modelVersion"] ?? receipt.modelVersion);
+  const verified = hashIntact && columnsMatchPayload;
+
+  // Everything below is sourced from the parsed payload (hash-covered).
+  const frozenAt = p["asOf"] ?? receipt.asOf.toISOString();
+  const modelVersion = p["modelVersion"] ?? receipt.modelVersion;
 
   const game = receipt.pick?.game ?? null;
   const kickedOff = game ? game.commenceTime.getTime() <= Date.now() : false;
@@ -77,8 +107,8 @@ export async function GET(request: Request) {
       found: true,
       verified,
       sealed: true,
-      frozenAt: receipt.asOf.toISOString(),
-      modelVersion: receipt.modelVersion,
+      frozenAt,
+      modelVersion,
       note:
         "Receipt verified and sealed. The committed fields open automatically at kickoff; the freeze time above proves the commitment predates the game.",
     });
@@ -88,8 +118,8 @@ export async function GET(request: Request) {
     found: true,
     verified,
     sealed: false,
-    frozenAt: receipt.asOf.toISOString(),
-    modelVersion: receipt.modelVersion,
+    frozenAt,
+    modelVersion,
     result: receipt.pick?.result ?? "UNKNOWN",
     game: game
       ? {
@@ -99,14 +129,21 @@ export async function GET(request: Request) {
         }
       : null,
     committed: {
-      line: receipt.line,
-      entryOdds: receipt.entryOdds,
-      marketFairProb: receipt.marketFairProb,
-      confidence: receipt.confidence,
-      edgeScore: receipt.edgeScore,
-      modelProb: receipt.modelProb,
+      line: num(p["line"]),
+      entryOdds: num(p["entryOdds"]),
+      marketFairProb: num(p["marketFairProb"]),
+      confidence: num(p["confidence"]),
+      edgeScore: num(p["edgeScore"]),
+      modelProb: num(p["modelProb"]),
     },
     payload: receipt.payload,
     contentHash: receipt.contentHash,
   });
+}
+
+/** True if both are null, or both finite and within tolerance. */
+function approxEq(a: number | null, b: number | null, tol: number): boolean {
+  if (a == null && b == null) return true;
+  if (a == null || b == null) return false;
+  return Math.abs(a - b) <= tol;
 }

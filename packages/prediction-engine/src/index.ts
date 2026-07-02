@@ -123,6 +123,7 @@ export {
   inclusionProof,
   verifyInclusion,
   canonicalPickPayload,
+  parseCanonicalPayload,
 } from "./proof-of-record.js";
 export type { HashFn, PickRecord, MerkleSibling, MerkleProof } from "./proof-of-record.js";
 // Pre-result proof receipt — freeze + verify a tamper-evident per-pick claim.
