@@ -18,6 +18,7 @@ import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/playe
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
+import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // Vercel cron caps at 5 min
@@ -33,13 +34,24 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 
   // Players first (creates the Player rows), then the satellites concurrently —
-  // injuries resolve playerId against the players just upserted.
+  // injuries resolve playerId against the players just upserted. Next Gen Stats
+  // (separation, CPOE, RYOE — free CC-BY-4.0 aggregates) persist alongside, one
+  // pass per variant; previously the ingester existed but nothing invoked it.
   const stats = await ingestPlayerWeeklyStats(season);
-  const [snaps, injuries, depth] = await Promise.all([
+  const [snaps, injuries, depth, ngsPassing, ngsReceiving, ngsRushing] = await Promise.all([
     ingestSnapCounts(season),
     ingestInjuries(season),
     ingestDepthCharts(season),
+    ingestNextGenStats(season, "passing"),
+    ingestNextGenStats(season, "receiving"),
+    ingestNextGenStats(season, "rushing"),
   ]);
-  const success = [stats, snaps, injuries, depth].every((r) => r.status === "ok");
-  return NextResponse.json({ success, season, stats, snaps, injuries, depth }, { status: success ? 200 : 502 });
+  const ngs = { passing: ngsPassing, receiving: ngsReceiving, rushing: ngsRushing };
+  const success = [stats, snaps, injuries, depth, ngsPassing, ngsReceiving, ngsRushing].every(
+    (r) => r.status === "ok",
+  );
+  return NextResponse.json(
+    { success, season, stats, snaps, injuries, depth, ngs },
+    { status: success ? 200 : 502 },
+  );
 }
