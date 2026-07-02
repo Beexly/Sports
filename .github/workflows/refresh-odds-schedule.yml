@@ -1,0 +1,45 @@
+name: Refresh odds (intraday)
+
+# Vercel Hobby crons run once daily, but pregame lines move all day. This
+# scheduler hits the same authenticated cron route the Vercel job uses, several
+# times a day, so published picks are always priced off recent lines and the
+# freshness gate can eventually be tightened from 12h back toward 4h.
+#
+# Setup (one time): repo Settings -> Secrets and variables -> Actions ->
+# New repository secret -> name CRON_SECRET, value = the same CRON_SECRET as
+# Vercel production. Rotating it means updating both places.
+
+on:
+  schedule:
+    # UTC. Covers US slate rhythm: morning lines, afternoon moves, pre-first-pitch,
+    # and an evening pass for late games. (Vercel's own 10:00 UTC cron still runs.)
+    - cron: "0 14 * * *"   # 10:00 AM ET - morning line moves
+    - cron: "0 18 * * *"   # 2:00 PM ET  - afternoon sharpening
+    - cron: "0 22 * * *"   # 6:00 PM ET  - pre-first-pitch refresh
+    - cron: "30 23 * * *"  # 7:30 PM ET  - evening slate final pass
+  workflow_dispatch: {}    # manual "Run workflow" button for testing
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Trigger refresh-odds
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET:-}" ]; then
+            echo "CRON_SECRET repo secret is not set; skipping (add it in repo Settings -> Secrets -> Actions)."
+            exit 0
+          fi
+          response=$(curl -sS -w "\n%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "https://www.galaxysportsedge.com/api/cron/refresh-odds")
+          body=$(echo "$response" | head -n -1)
+          code=$(echo "$response" | tail -n 1)
+          echo "HTTP ${code}"
+          echo "${body}"
+          # The route returns 200 with ok:false when a sport is legitimately
+          # quiet/stale; only transport/auth failures should fail the job.
+          [ "${code}" = "200" ]
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
