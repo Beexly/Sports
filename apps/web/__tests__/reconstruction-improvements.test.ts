@@ -179,3 +179,39 @@ describe("crossValidatedFidelity (out-of-sample R2, the number the gate should t
     expect(cv.fidelity).toBeLessThanOrEqual(1);
   });
 });
+
+describe("graduationVerdict (the un-fudgeable promote/reject rule)", () => {
+  it("graduates only when sample, skill, coverage, and confidence all pass", async () => {
+    const { graduationVerdict } = await import("@/lib/reconstruction/calibration-eval");
+    const good = {
+      n: 400,
+      rmse: 0.3,
+      meanAbsError: 0.25,
+      empiricalCoverage: 0.79,
+      nominalCoverage: 0.8,
+      standardizedErrorRms: 1.02,
+      meetsRmseTarget: true,
+    };
+    expect(graduationVerdict(good, 0.15)).toEqual({ graduates: true, reasons: [] });
+  });
+
+  it("rejects with plain-language reasons for every failed criterion", async () => {
+    const { graduationVerdict } = await import("@/lib/reconstruction/calibration-eval");
+    const bad = {
+      n: 50, // too small
+      rmse: 1.5,
+      meanAbsError: 1.2,
+      empiricalCoverage: 0.6, // dishonest vs nominal 0.8
+      nominalCoverage: 0.8,
+      standardizedErrorRms: 1.9, // overconfident
+      meetsRmseTarget: false,
+    };
+    const v = graduationVerdict(bad, -0.05); // negative skill
+    expect(v.graduates).toBe(false);
+    expect(v.reasons.length).toBe(4);
+    expect(v.reasons.join(" ")).toMatch(/sample too small/);
+    expect(v.reasons.join(" ")).toMatch(/no measured skill/);
+    expect(v.reasons.join(" ")).toMatch(/coverage dishonest/);
+    expect(v.reasons.join(" ")).toMatch(/overconfident/);
+  });
+});

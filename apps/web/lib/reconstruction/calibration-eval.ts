@@ -159,3 +159,56 @@ export function calibrationReport(pairs: readonly TruthPair[]): CalibrationRepor
     meetsRmseTarget: rmse <= TARGET_RMSE_YARDS,
   };
 }
+
+/**
+ * The graduation rule as ONE executable function — the dump's "self-falsify
+ * if delta<0 reject" made real. A reconstruction feature may only graduate
+ * from inert R&D toward scoring when, measured on a held-out truth set:
+ *   1. it beats the naive baseline (skillScore > 0) — otherwise it adds noise;
+ *   2. its intervals are honest (empirical coverage within tolerance of
+ *      nominal, standardized error not wildly overconfident);
+ *   3. the sample is big enough to mean anything.
+ * Every reason for rejection is returned in plain language, so a failed
+ * graduation is a diagnosis, not a mystery. This function DECIDES nothing by
+ * itself — edge-lab runs it and the founder gates the promotion; it just makes
+ * the criteria un-fudgeable.
+ */
+export interface GraduationVerdict {
+  readonly graduates: boolean;
+  readonly reasons: readonly string[]; // empty when graduating
+}
+
+export function graduationVerdict(
+  report: CalibrationReport,
+  skill: number,
+  opts: { minN?: number; coverageTolerance?: number; maxStandardizedError?: number } = {},
+): GraduationVerdict {
+  const minN = opts.minN ?? 200;
+  const covTol = opts.coverageTolerance ?? 0.07;
+  const maxZ = opts.maxStandardizedError ?? 1.25;
+  const reasons: string[] = [];
+
+  if (!(report.n >= minN)) {
+    reasons.push(`sample too small: n=${report.n} < ${minN}`);
+  }
+  if (!(skill > 0)) {
+    reasons.push(
+      `no measured skill over the baseline (skillScore=${Number.isFinite(skill) ? skill.toFixed(3) : "NaN"}); the feature adds noise, not signal`,
+    );
+  }
+  if (
+    !Number.isFinite(report.empiricalCoverage) ||
+    Math.abs(report.empiricalCoverage - report.nominalCoverage) > covTol
+  ) {
+    reasons.push(
+      `interval coverage dishonest: empirical ${report.empiricalCoverage.toFixed(3)} vs nominal ${report.nominalCoverage.toFixed(3)} (tolerance ${covTol})`,
+    );
+  }
+  if (!(report.standardizedErrorRms <= maxZ)) {
+    reasons.push(
+      `overconfident intervals: standardized error ${report.standardizedErrorRms.toFixed(3)} > ${maxZ}`,
+    );
+  }
+
+  return { graduates: reasons.length === 0, reasons };
+}
