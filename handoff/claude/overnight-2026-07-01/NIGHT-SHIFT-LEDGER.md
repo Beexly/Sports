@@ -52,6 +52,20 @@ That is recursion with brakes. The blueprint's version is recursion without
 brakes, on a betting product, with invented numbers. Ours compounds; theirs
 explodes.
 
+## Late additions (same branch, post-ledger)
+6. `feat(news)`: LIVE RSS WIRE for The Beat — the first real crawler lane
+   (owner-whitelisted feeds via NEWS_RSS_FEEDS, headlines only, conservative
+   signal classifier, dark-by-default, 10 tests). The fictional sample now
+   only renders when unconfigured, with the marker swapping to real source
+   attribution when live.
+7. `docs`: 60-DAY-FORECAST.md — good/bad/ugly per phase with mitigations +
+   revenue impact, weekly Monday refresh ritual.
+8. `feat(trust)`: PUBLIC /verify — cryptographic proof-of-record. Paste a
+   receipt hash, the server re-hashes the stored record live; pre-kickoff
+   receipts verify as sealed; tampering would show an unhideable red state.
+9. `feat(trust)`: receipt hash on every pick card, deep-linked to /verify
+   with auto-check on arrival. The skeptic's loop is one click.
+
 ## Shipped tonight on this branch (each validated + pushed)
 1. `feat(ingestion)`: dynamic time-to-game freshness gate (8 tests)
 2. `feat(ops)`: Telegram ingestion-failure alerts (3 tests)
