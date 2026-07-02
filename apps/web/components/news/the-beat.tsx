@@ -124,10 +124,13 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
 
                 <p className="mt-1.5 text-sm font-medium text-white">{r.item.headline}</p>
 
-                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]">
+                <div
+                  className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]"
+                  title="These are the impact engine's read of the report (source tier, signal magnitude, freshness), not measured line or projection movement."
+                >
                   <span className="rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.06)", color: "#c8d2dd" }}>{signalLabel(r.item.signal)}</span>
-                  <span className="text-ink-500">Fantasy <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
-                  <span className="text-ink-500">Market <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
+                  <span className="text-ink-500">{isLive ? "Est. fantasy" : "Fantasy"} <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
+                  <span className="text-ink-500">{isLive ? "Est. market" : "Market"} <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
                   <span className="text-ink-500">Reliability <strong className="text-white">{Math.round(r.reliability * 100)}%</strong></span>
                 </div>
 

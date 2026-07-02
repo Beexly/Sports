@@ -179,9 +179,10 @@ export default function MethodologyPage(): JSX.Element {
                 <p className="mt-2 text-sm leading-6 text-ink-300">
                   Freshness is decided game by game, not for the feed as a
                   whole, so one fresh game can never smuggle a stale one onto
-                  the board. The closer a game is to starting, the fresher its
-                  lines must be: lineups, injuries, and late market moves
-                  change prices fastest in the final hours.
+                  the board. Every game&apos;s lines must clear a hard maximum
+                  age before its pick can publish, and that ceiling can tighten
+                  as kickoff nears, when lineups, injuries, and late market
+                  moves change prices fastest.
                 </p>
               </article>
               <article className="surface-card p-6">
