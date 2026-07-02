@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   evaluatePublicRoiPolicy,
+  loadPublicRoiPolicy,
   unitsForPick,
 } from "@/lib/performance/public-roi-policy";
 
@@ -163,6 +164,50 @@ describe("evaluatePublicRoiPolicy", () => {
     const gated = evaluatePublicRoiPolicy({ canExposePerformanceStats: false, minGradedForPublic: 25, returns: canonicalWins(400, 200) });
     expect(gated.roiCiLowWorstCase).toBeNull();
     expect(gated.clearsProfitWorstCase).toBe(false);
+  });
+
+  it("K11 ANYTIME tier: additive evidence beside the bands, never part of the gate", () => {
+    // Strong 400/200 record: the sequential test should also have rejected
+    // no-edge, and the public message earns the continuous-checking sentence.
+    const strong = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: canonicalWins(400, 200) });
+    expect(strong.anytimeEvidence).not.toBeNull();
+    expect(strong.anytimeEvidence!.everSignificant).toBe(true);
+    expect(strong.anytimeEvidence!.firstSignificantAtN).not.toBeNull();
+    expect(strong.anytimeEvidence!.lowerBound).toBeGreaterThanOrEqual(-1);
+    expect(strong.publicMessage).toContain("checked continuously");
+
+    // Thin 53/47 in a REALISTIC (interleaved) settlement order: no sequential
+    // rejection, no sentence — and the clearsProfit gate is UNCHANGED by the
+    // tier's existence. (Order matters to the sequential tier by design: the
+    // wins-first canonicalWins fixture would present a fictitious 53-0 opening
+    // streak, which IS legitimately overwhelming sequential evidence — a
+    // ~1e-15 event under true break-even — so an interleaved fixture is the
+    // honest analog of a real ledger here.)
+    const win = unitsForPick("WIN", -110) as number;
+    const interleavedThin: number[] = [];
+    for (let i = 0; i < 100; i++) interleavedThin.push(i % 2 === 0 && interleavedThin.filter((x) => x > 0).length < 53 ? win : -1);
+    // pad to exactly 53 wins / 47 losses
+    while (interleavedThin.filter((x) => x > 0).length < 53) interleavedThin[interleavedThin.lastIndexOf(-1)] = win;
+    const thin = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: interleavedThin });
+    expect(thin.anytimeEvidence).not.toBeNull();
+    expect(thin.anytimeEvidence!.everSignificant).toBe(false);
+    expect(thin.publicMessage).not.toContain("checked continuously");
+    expect(thin.clearsProfit).toBe(false);
+
+    // Gated -> null, like every other tier.
+    const gated = evaluatePublicRoiPolicy({ canExposePerformanceStats: false, minGradedForPublic: 25, returns: canonicalWins(400, 200) });
+    expect(gated.anytimeEvidence).toBeNull();
+  });
+
+  it("K11 ORDER REGRESSION: the loader sorts by settledAt ascending (sequential validity is earned at the data layer)", async () => {
+    const findMany = vi.fn().mockResolvedValue([]);
+    await loadPublicRoiPolicy(
+      { pick: { findMany } },
+      { canExposePerformanceStats: true, minGradedForPublic: 25 },
+    );
+    expect(findMany).toHaveBeenCalledTimes(1);
+    const args = findMany.mock.calls[0]![0] as { orderBy?: Record<string, unknown> };
+    expect(args.orderBy).toEqual({ settledAt: "asc" });
   });
 
   it("gate/display consistency: a profit claim never displays a '+0.00' lower bound", () => {

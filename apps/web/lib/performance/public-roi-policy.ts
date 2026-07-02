@@ -35,7 +35,7 @@
  * entirely (null), never counted as 0-unit returns.
  */
 
-import { bcaMeanCi, studentizedMeanCi, empiricalBernsteinMeanCi, americanToDecimalOdds } from "@sports/prediction-engine";
+import { bcaMeanCi, studentizedMeanCi, empiricalBernsteinMeanCi, anytimeValidLedger, americanToDecimalOdds } from "@sports/prediction-engine";
 
 export type PickResultLike = "WIN" | "LOSS" | "PUSH" | "VOID" | "PENDING";
 
@@ -99,6 +99,28 @@ export interface PublicRoiPolicy {
    */
   readonly roiCiLowWorstCase: number | null;
   readonly clearsProfitWorstCase: boolean;
+  /**
+   * ANYTIME-VALID evidence tier (K11, e-process / Ville's inequality): a
+   * sequential test of H0 "no edge" that stays valid under CONTINUOUS
+   * monitoring — checking it after every settled pick cannot inflate the
+   * false-positive rate (proven by an adversarial-optional-stopping
+   * Monte-Carlo in the engine's test suite). ADDITIVE context beside the
+   * fixed-sample bands; deliberately NOT a fourth leg of the clearsProfit
+   * AND-gate — folding an instant-of-a-sequential-process statistic into a
+   * fixed-sample boolean would reintroduce the exact peeking fragility this
+   * tier exists to eliminate. REQUIRES the returns array in settlement order
+   * (the loader sorts by settledAt ascending for exactly this reason).
+   * Null when gated or when the ledger is empty.
+   */
+  readonly anytimeEvidence: {
+    /** ln of the cumulative e-value against H0: mean <= 0. */
+    readonly logEValue: number;
+    /** Has the Ville threshold (e-value >= 1/alpha) EVER been crossed? */
+    readonly everSignificant: boolean;
+    readonly firstSignificantAtN: number | null;
+    /** Anytime-valid lower bound on the true mean (units/bet), rounded. */
+    readonly lowerBound: number;
+  } | null;
   readonly publicMessage: string;
   readonly operatorMessage: string;
   readonly minimumRequirements: readonly string[];
@@ -150,6 +172,19 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
   const clearsProfitWorstCase =
     clearsProfit && ciBern != null && Number.isFinite(ciBern.low) && round2(ciBern.low) > 0;
 
+  // K11 anytime-valid tier: order-sensitive, so input.returns MUST arrive in
+  // settlement order (loadPublicRoiPolicy sorts by settledAt asc). Additive
+  // context only — never part of the clearsProfit gate (see field doc).
+  const anytime = n >= 1 ? anytimeValidLedger(input.returns) : null;
+  const anytimeEvidence = anytime
+    ? {
+        logEValue: anytime.current.logEValue,
+        everSignificant: anytime.everRejected,
+        firstSignificantAtN: anytime.firstRejectedAt,
+        lowerBound: round2(anytime.lowerBound),
+      }
+    : null;
+
   const minimumRequirements: string[] = [];
   if (blockers.includes("GATE_OFF_PERFORMANCE_STATS")) {
     minimumRequirements.push("Open the performance gate (PERFORMANCE_STATS_ENABLED=true) after canonical history accumulates.");
@@ -165,6 +200,14 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
     // (saying "includes break-even" there would contradict the displayed band);
     // and genuinely includes-break-even.
     const uncorroborated = !clearsProfit && roiCiLow != null && roiCiLow > 0;
+    // The anytime sentence is added ONLY when the fixed-sample gate AND the
+    // sequential test agree — the strongest statement the platform can make
+    // without mixing "not yet claiming profit" with "no-edge rejected" (a
+    // technically-coherent but publicly-confusing combination kept operator-only).
+    const anytimeSentence =
+      clearsProfit && anytimeEvidence?.everSignificant
+        ? ` This record has also been checked continuously — after every settled pick since pick ${anytimeEvidence.firstSignificantAtN} — using a sequential test built so that repeated checking cannot by itself make results look significant by chance.`
+        : "";
     publicMessage =
       `${signed(roiPerBet)} units per bet over ${n} settled picks ` +
       `(95% CI ${signed(roiCiLow)} to ${signed(roiCiHigh)} units). ` +
@@ -173,13 +216,19 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
         : uncorroborated
           ? "The primary interval clears break-even, but our stricter cross-check can't yet bound the downside at this sample size, so we don't yet claim a settled profit. "
           : "That range still includes break-even, so we don't yet claim a settled profit. ") +
-      "Past results are a record, not a promise of future returns.";
+      "Past results are a record, not a promise of future returns." +
+      anytimeSentence;
     operatorMessage =
       `ROI publishable. n=${n} roi=${signed(roiPerBet)}u ` +
       `BCa=[${signed(roiCiLow)},${signed(roiCiHigh)}]u ` +
       `stud=[${signed(roiCiLowStudentized)},${signed(roiCiHighStudentized)}]u ` +
       `bernLow=${signed(roiCiLowWorstCase)}u ` +
-      `clearsProfit(both)=${clearsProfit} worstCase=${clearsProfitWorstCase}; min=${minGraded}.`;
+      `clearsProfit(both)=${clearsProfit} worstCase=${clearsProfitWorstCase}; min=${minGraded}. ` +
+      (anytimeEvidence
+        ? `anytime: logE=${anytimeEvidence.logEValue.toFixed(2)} everSig=${anytimeEvidence.everSignificant} ` +
+          `firstSigN=${anytimeEvidence.firstSignificantAtN ?? "n/a"} lowerBound=${signed(anytimeEvidence.lowerBound)}u ` +
+          `(H0: mu<=0, Ville-valid under continuous monitoring).`
+        : "anytime: n/a.");
   } else {
     publicMessage =
       "The units/ROI record is still accruing. It opens once enough priced picks have settled. " +
@@ -203,6 +252,7 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
     clearsProfit: allowed ? clearsProfit : false,
     roiCiLowWorstCase: allowed ? roiCiLowWorstCase : null,
     clearsProfitWorstCase: allowed ? clearsProfitWorstCase : false,
+    anytimeEvidence: allowed ? anytimeEvidence : null,
     publicMessage,
     operatorMessage,
     minimumRequirements,
@@ -216,6 +266,7 @@ export interface LoadableRoiClient {
     findMany: (args: {
       where: Record<string, unknown>;
       select: Record<string, unknown>;
+      orderBy: Record<string, unknown>;
     }) => Promise<Array<{ result: string; proofReceipt: { entryOdds: number } | null }>>;
   };
 }
@@ -241,6 +292,12 @@ export async function loadPublicRoiPolicy(
       result: { in: ["WIN", "LOSS", "PUSH", "VOID"] },
     },
     select: { result: true, proofReceipt: { select: { entryOdds: true } } },
+    // SETTLEMENT ORDER IS LOAD-BEARING (K11): the anytime-valid evidence tier
+    // is a sequential statistic — without an explicit sort, Prisma/Postgres
+    // return rows in unspecified order and the anytime guarantee would be
+    // mathematically proven in the engine yet silently unearned here. The
+    // fixed-sample bands (BCa/studentized/Bernstein) are order-free either way.
+    orderBy: { settledAt: "asc" },
   });
 
   const returns: number[] = [];
