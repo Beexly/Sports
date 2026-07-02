@@ -30,6 +30,13 @@ const buckets = new Map<string, { count: number; resetAt: number }>();
 
 function rateLimited(key: string): { limited: boolean; retryAfterSec: number } {
   const now = Date.now();
+  // Opportunistic eviction: without this the in-memory Map grows unbounded over
+  // a long-lived instance (one entry per distinct user, forever). Prune expired
+  // windows when the map gets large. (Per-instance limiter; a shared store would
+  // make it global — noted in the go-live checklist.)
+  if (buckets.size > 10000) {
+    for (const [k, v] of buckets) if (now >= v.resetAt) buckets.delete(k);
+  }
   const b = buckets.get(key);
   if (!b || now >= b.resetAt) {
     buckets.set(key, { count: 1, resetAt: now + WINDOW_MS });
