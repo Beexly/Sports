@@ -41,3 +41,22 @@ and the model tightens. The two paths compound; they never compete.
   functions, no I/O, fully unit-tested.
 - Consumers read features, never raw estimates without their provenance.
 - Reality Ladder: every feature is [PROPOSED] until edge-lab promotes it.
+
+## Ornament to kernel: "improve not remove"
+
+A synthesis dump wrapped several ideas in category-theory/geometry costume.
+Rather than park them, each was read for its real mathematical kernel and the
+honest version built (all pure, tested, inert until edge-lab promotes):
+
+| Dump construct | Real kernel, shipped |
+|---|---|
+| Barbour-OU flows | `recencyWeightedObservation` — form drifts and mean-reverts, so recent weeks get exponentially more weight (half-life), then the existing shrinkage IS the reversion |
+| Exchangeable occlusion graphs | `fitStratifiedShrinkage` — borrow strength from the role/peer group (a thin-sample player shrinks toward the WR prior, not the league), with a global fallback for thin strata |
+| Sasaki/Stein belief manifold | `standardizedErrorRms` — error measured in units of each estimate's own uncertainty (~1.0 = honest intervals; >1 overconfident); rewards knowing WHEN it is unsure |
+| Epistemic-alpha α=(I−H)/frame | `skillScore` — measured MSE lift over a baseline (1 − MSE_model/MSE_base); the number that decides if a feature graduates, computed not asserted |
+
+Still genuinely parked (real but higher-effort R&D, named honestly rather than
+faked): persistent-homology residual-multimodality detection (would flag play
+types the model handles as distinct clusters) and a covariate "monad" for
+composable feature provenance. These need more than the aggregate data on hand;
+they are shelved with what they would measure, not dismissed.

@@ -1,4 +1,5 @@
 import type { ReconstructedFeature } from "./provenance";
+import { normalQuantile } from "./separation-reconstruct";
 
 /**
  * Calibration harness — the honest scoreboard for the reconstruction engine.
@@ -30,6 +31,7 @@ export interface CalibrationReport {
   readonly meanAbsError: number;
   readonly empiricalCoverage: number; // fraction of truths inside their interval
   readonly nominalCoverage: number; // 1 - mean(alpha)
+  readonly standardizedErrorRms: number; // ~1.0 = honest intervals; >1 overconfident
   readonly meetsRmseTarget: boolean;
 }
 
@@ -81,6 +83,53 @@ export function reconstructionRmse(pairs: readonly TruthPair[]): number {
   return Math.sqrt(sse / pairs.length);
 }
 
+/**
+ * Standardized-error RMS (the honest kernel inside "Sasaki/Stein belief
+ * manifold"): the natural geometry on a set of beliefs is not Euclidean — a
+ * miss should be measured in units of the estimate's OWN uncertainty. We
+ * recover each prediction's sd from its interval (halfWidth / z_alpha) and
+ * report the RMS of z = (value − actual)/sd. A well-calibrated engine scores
+ * ~1.0; >1 means overconfident (intervals too tight), <1 too timid. This
+ * rewards a model that knows WHEN it is unsure, which raw RMSE cannot see.
+ */
+export function standardizedErrorRms(pairs: readonly TruthPair[]): number {
+  let sz2 = 0;
+  let n = 0;
+  for (const p of pairs) {
+    const z = normalQuantile(1 - p.predicted.alpha / 2);
+    const halfWidth = (p.predicted.interval[1] - p.predicted.interval[0]) / 2;
+    const sd = halfWidth / z;
+    if (!(sd > 0)) continue; // a degenerate (zero-width) interval is unscorable
+    sz2 += ((p.predicted.value - p.actual) / sd) ** 2;
+    n += 1;
+  }
+  return n === 0 ? Number.NaN : Math.sqrt(sz2 / n);
+}
+
+/**
+ * Skill score vs a baseline (the HONEST version of the dump's epistemic-alpha
+ * α=(I−H)/frame). Instead of a fabricated information formula, we MEASURE how
+ * much the reconstruction beats a naive baseline (e.g. the receiver's flat
+ * tendency) in mean-squared error: 1 − MSE(model)/MSE(baseline). >0 means the
+ * play-context reconstruction genuinely adds skill; ≤0 means it does not earn
+ * its place and stays inert. This is the number that decides whether a feature
+ * graduates — computed, never asserted.
+ */
+export function skillScore(
+  pairs: readonly TruthPair[],
+  baseline: readonly number[],
+): number {
+  if (pairs.length === 0 || baseline.length !== pairs.length) return Number.NaN;
+  let mseModel = 0;
+  let mseBase = 0;
+  for (let i = 0; i < pairs.length; i++) {
+    mseModel += (pairs[i]!.predicted.value - pairs[i]!.actual) ** 2;
+    mseBase += (baseline[i]! - pairs[i]!.actual) ** 2;
+  }
+  if (mseBase <= 0) return Number.NaN; // baseline already perfect — lift undefined
+  return 1 - mseModel / mseBase;
+}
+
 export function calibrationReport(pairs: readonly TruthPair[]): CalibrationReport {
   const n = pairs.length;
   if (n === 0) {
@@ -90,6 +139,7 @@ export function calibrationReport(pairs: readonly TruthPair[]): CalibrationRepor
       meanAbsError: Number.NaN,
       empiricalCoverage: Number.NaN,
       nominalCoverage: Number.NaN,
+      standardizedErrorRms: Number.NaN,
       meetsRmseTarget: false,
     };
   }
@@ -105,6 +155,7 @@ export function calibrationReport(pairs: readonly TruthPair[]): CalibrationRepor
     meanAbsError: mae,
     empiricalCoverage: inside / n,
     nominalCoverage: nominal,
+    standardizedErrorRms: standardizedErrorRms(pairs),
     meetsRmseTarget: rmse <= TARGET_RMSE_YARDS,
   };
 }
