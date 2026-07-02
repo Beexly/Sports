@@ -182,6 +182,21 @@ export function PickCard({
         )}
       </div>
 
+      {/* Tamper-evident receipt: frozen before kickoff, verifiable by anyone. */}
+      {pick.receiptHash && (
+        <Link
+          href={`/verify?hash=${pick.receiptHash}`}
+          className="group flex items-center gap-1.5 font-mono text-[10px] text-ion-2 transition-colors hover:text-orbital-cyan"
+          title="This pick was frozen into a SHA-256 receipt before kickoff. Click to verify it was never edited."
+        >
+          <span aria-hidden>⛓</span>
+          Receipt {pick.receiptHash.slice(0, 10)}…
+          <span className="underline decoration-dotted underline-offset-2 group-hover:decoration-solid">
+            verify
+          </span>
+        </Link>
+      )}
+
       {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
       <div className="flex items-center justify-stretch sm:justify-end">
         {pick.isAuditAvailable ? (

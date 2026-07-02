@@ -10,7 +10,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "/verify" },
 };
 
-export default function VerifyPage() {
+export default function VerifyPage({
+  searchParams,
+}: {
+  searchParams: { hash?: string };
+}) {
+  // Deep-link support: pick cards link here with their receipt hash so the
+  // check runs on arrival. Validated again client- and server-side.
+  const initialHash = /^[0-9a-f]{64}$/.test(searchParams.hash?.toLowerCase() ?? "")
+    ? searchParams.hash!.toLowerCase()
+    : "";
   return (
     <div className="flex min-h-screen flex-col bg-obsidian text-ion-white">
       <Nav />
@@ -35,7 +44,7 @@ export default function VerifyPage() {
           open automatically once the game begins.
         </p>
         <div className="mt-8">
-          <VerifyConsole />
+          <VerifyConsole initialHash={initialHash} />
         </div>
       </main>
       <Footer />

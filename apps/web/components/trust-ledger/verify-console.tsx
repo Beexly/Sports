@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * VerifyConsole — the interactive half of /verify. Takes a receipt hash,
@@ -31,13 +31,13 @@ type VerifyResponse = {
   contentHash?: string;
 };
 
-export function VerifyConsole() {
-  const [hash, setHash] = useState("");
+export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
+  const [hash, setHash] = useState(initialHash);
   const [state, setState] = useState<"idle" | "loading" | "done">("idle");
   const [res, setRes] = useState<VerifyResponse | null>(null);
 
-  async function check() {
-    const trimmed = hash.trim().toLowerCase();
+  const check = useCallback(async (value: string) => {
+    const trimmed = value.trim().toLowerCase();
     if (!/^[0-9a-f]{64}$/.test(trimmed)) {
       setRes({ found: false, error: "A receipt hash is 64 hex characters." });
       setState("done");
@@ -51,7 +51,13 @@ export function VerifyConsole() {
       setRes({ found: false, error: "Could not reach the verifier. Try again." });
     }
     setState("done");
-  }
+  }, []);
+
+  // Deep links from pick cards arrive with the hash pre-filled: run the
+  // check on arrival so "click receipt -> see verdict" is one step.
+  useEffect(() => {
+    if (initialHash) void check(initialHash);
+  }, [initialHash, check]);
 
   return (
     <div className="space-y-5">
@@ -69,7 +75,7 @@ export function VerifyConsole() {
         </label>
         <button
           type="button"
-          onClick={check}
+          onClick={() => void check(hash)}
           disabled={state === "loading"}
           className="btn-primary min-h-[44px] px-6 font-semibold disabled:opacity-60"
         >

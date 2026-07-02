@@ -574,6 +574,13 @@ export interface PublicPick {
   generatedAt: string;
   dataFreshnessAt: string | null;
   result: PickResult;
+  /**
+   * SHA-256 content hash of the pick's tamper-evident pre-kickoff receipt.
+   * Always public (a hash reveals nothing; publishing it early is how
+   * commitments work) — paste it at /verify to check integrity. Null for
+   * sample rows or picks minted before the receipt spine existed.
+   */
+  receiptHash?: string | null;
 }
 
 // ============================================================

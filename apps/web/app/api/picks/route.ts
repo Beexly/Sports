@@ -103,6 +103,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             sport: { select: { name: true, key: true } },
           },
         },
+        // The public proof-of-record pointer: a hash reveals nothing, and
+        // publishing it pre-kickoff is exactly how a commitment works.
+        proofReceipt: { select: { contentHash: true } },
       },
       orderBy: [
         { isFeatured: "desc" },
@@ -209,6 +212,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       generatedAt: pick.generatedAt.toISOString(),
       dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
       result: pick.result as PickResult,
+      receiptHash: pick.proofReceipt?.contentHash ?? null,
     };
   });
 
