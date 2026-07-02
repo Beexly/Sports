@@ -216,7 +216,12 @@ export interface OddsApiMarket {
 export interface OddsApiBookmaker {
   key: string;
   title: string;
-  last_update: string;
+  /**
+   * Optional in practice: real payloads have arrived without the
+   * bookmaker-level timestamp. Consumers must fall back to the market-level
+   * `last_update` (also upstream truth) before treating a row as unparseable.
+   */
+  last_update?: string;
   markets: OddsApiMarket[];
 }
 

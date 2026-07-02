@@ -27,10 +27,14 @@ export function BrandLockup({
     >
       <span className="brand-emblem">
         <Image
-          src="/brand/gse-emblem.png"
+          // The pre-sized 180px emblem downsamples much crisper than the full
+          // raster re-encoded to 40px; quality=100 stops the optimizer from
+          // muddying the chrome gloss at this tiny render size.
+          src="/brand/gse-emblem-180.png"
           alt=""
           width={40}
           height={40}
+          quality={100}
           priority
           className="brand-emblem-img"
         />

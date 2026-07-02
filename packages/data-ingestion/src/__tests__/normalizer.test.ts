@@ -169,6 +169,44 @@ describe("DataNormalizer", () => {
       expect(normalizer.validateOddsFreshness(corrupted)).toBe(false);
     });
 
+    it("falls back to the market-level last_update when the bookmaker-level one is missing", () => {
+      // Real payloads have arrived WITHOUT bookmaker.last_update. Without the
+      // market-level fallback every row parsed as Invalid Date, every game was
+      // dropped as "not provably fresh", and a LIVE slate failed wholesale with
+      // "Upstream odds are stale".
+      const noBookmakerTimestamp = {
+        ...mockEvent,
+        id: "no-bk-ts",
+        bookmakers: mockEvent.bookmakers.map((b) => {
+          const { last_update: _dropped, ...rest } = b;
+          return rest; // markets keep their own fresh last_update
+        }),
+      };
+      const odds = normalizer.normalizeOdds([noBookmakerTimestamp], new Date());
+      expect(odds.length).toBeGreaterThan(0);
+      for (const o of odds) {
+        expect(Number.isFinite(o.bookmakerLastUpdate.getTime())).toBe(true);
+      }
+      expect(normalizer.validateOddsFreshness(odds)).toBe(true);
+      expect(normalizer.freshGameIds(odds).has("no-bk-ts")).toBe(true);
+    });
+
+    it("freshnessDiagnostics reports threshold, counts, unparseable rows, and newest age", () => {
+      const odds = normalizer.normalizeOdds([mockEvent], new Date());
+      const d = normalizer.freshnessDiagnostics(odds);
+      expect(d.thresholdHours).toBeGreaterThan(0);
+      expect(d.rows).toBe(odds.length);
+      expect(d.games).toBe(1);
+      expect(d.unparseableRows).toBe(0);
+      expect(d.newestAgeMinutes).not.toBeNull();
+      expect(d.newestAgeMinutes as number).toBeLessThanOrEqual(1);
+
+      const corrupted = odds.map((o) => ({ ...o, bookmakerLastUpdate: new Date("not-a-date") }));
+      const dc = normalizer.freshnessDiagnostics(corrupted);
+      expect(dc.unparseableRows).toBe(corrupted.length);
+      expect(dc.newestAgeMinutes).toBeNull();
+    });
+
     it("decides freshness PER GAME — a fresh game cannot mask a stale one", () => {
       const now = Date.now();
       const fresh = normalizer.normalizeOdds([{ ...mockEvent, id: "fresh-game" }], new Date());
