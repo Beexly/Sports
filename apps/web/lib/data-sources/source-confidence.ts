@@ -12,6 +12,15 @@ import type { SourceRightsStatus } from "@/lib/scraping/source-rights-registry";
  * Invariant: `noFakeLiveData` is always true. We never present unverified or stale
  * third-party data as live; an unproven source lowers confidence, it does not get
  * dressed up as fresh.
+ *
+ * Relationship to the other two source-scoring modules (deliberately NOT merged —
+ * each answers a different question):
+ *   - This module: per-SOURCE-TYPE static/structural trust (rights + wiring +
+ *     cost); time-invariant; rendered on /cockpit/sources.
+ *   - lib/source-intelligence/index.ts — per-ARTIFACT (pick/promo/brief)
+ *     freshness gate over ephemeral evidence lists.
+ *   - lib/sources/source-reliability.ts — per-source rolling OPERATIONAL
+ *     telemetry score (uptime/freshness/agreement/schema/latency).
  */
 
 export type ConfidenceLevel = "high" | "medium" | "low" | "unknown";

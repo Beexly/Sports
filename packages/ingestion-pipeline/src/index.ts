@@ -19,3 +19,5 @@ export type {
   RefreshOddsOptions,
 } from "./refresh-odds.js";
 export { notifyOwner, ownerAlertsConfigured } from "./owner-alert.js";
+export { freezeSlateCommitments } from "./freeze-slate-commitments.js";
+export type { SlateFreezeResult } from "./freeze-slate-commitments.js";
