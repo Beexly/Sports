@@ -18,6 +18,13 @@ export interface CovariateModel {
   readonly ridge: number; // regularization used at fit time
   readonly residualSd: number; // spread of what the model still cannot explain
   readonly fittedRows: number; // 0 = never fitted, coefficients are inert
+  /**
+   * Fit quality as R² against the calibration truth set (0..1, clamped). The
+   * honest "fidelity" a trust gate reads: a model fitted on a thin or
+   * unrepresentative truth set has low R² and must NOT be trusted to emit a
+   * per-play number. Computed from the data, never asserted.
+   */
+  readonly fidelity: number;
 }
 
 /** An inert model: zero effect, honest wide residual, "not calibrated". */
@@ -27,6 +34,7 @@ export function inertModel(featureCount: number): CovariateModel {
     ridge: 0,
     residualSd: Number.POSITIVE_INFINITY, // unknown until fitted
     fittedRows: 0,
+    fidelity: 0,
   };
 }
 
@@ -77,19 +85,27 @@ export function fitCovariateModel(
   if (!beta) return inertModel(p);
 
   // Residual spread the model still cannot explain — the honest interval width.
+  // Also accumulate total spread (SST) around the target mean to score fidelity.
+  const targetMean = targets.reduce((s, t) => s + t, 0) / m;
   let sse = 0;
+  let sst = 0;
   for (let r = 0; r < m; r++) {
     let pred = 0;
     const row = rows[r]!;
     for (let i = 0; i < p; i++) pred += row[i]! * beta[i]!;
     sse += (targets[r]! - pred) ** 2;
+    sst += (targets[r]! - targetMean) ** 2;
   }
   const dof = Math.max(1, m - p);
+  // Fidelity = R² clamped to 0..1. If the targets have no spread (sst≈0) the
+  // fit explains nothing meaningful, so fidelity is 0, not a misleading 1.
+  const fidelity = sst > 1e-12 ? Math.max(0, Math.min(1, 1 - sse / sst)) : 0;
   return {
     coefficients: beta,
     ridge,
     residualSd: Math.sqrt(sse / dof),
     fittedRows: m,
+    fidelity,
   };
 }
 

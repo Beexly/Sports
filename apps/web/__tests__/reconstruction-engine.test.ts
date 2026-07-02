@@ -77,12 +77,26 @@ describe("reconstructSeparation provenance discipline", () => {
   });
 
   it("calibrated: applies the play adjustment and widens the interval by residual", () => {
-    const model = { coefficients: [0.5, -0.3], ridge: 1e-6, residualSd: 0.6, fittedRows: 200 };
+    const model = { coefficients: [0.5, -0.3], ridge: 1e-6, residualSd: 0.6, fittedRows: 200, fidelity: 0.4 };
     const f = reconstructSeparation({ tendency, features: [1, 2], model });
     // value = 3.0 + (0.5*1 - 0.3*2) = 3.0 - 0.1 = 2.9
     expect(f.value).toBeCloseTo(2.9, 6);
     expect(f.provenance.calibrated).toBe(true);
     expect(f.provenance.method).toBe("covariate-adjusted");
+  });
+
+  it("fidelity gate: a fitted-but-weak model falls back to the honest tendency", () => {
+    const weak = { coefficients: [0.5, -0.3], ridge: 1e-6, residualSd: 0.6, fittedRows: 200, fidelity: 0.02 };
+    const f = reconstructSeparation({ tendency, features: [1, 2], model: weak });
+    expect(f.value).toBeCloseTo(3.0, 6); // tendency, not the adjusted 2.9
+    expect(f.provenance.calibrated).toBe(false);
+    expect(f.provenance.method).toBe("empirical-bayes-shrinkage");
+  });
+
+  it("fidelity gate: too few calibration rows also falls back", () => {
+    const thin = { coefficients: [0.5, -0.3], ridge: 1e-6, residualSd: 0.6, fittedRows: 10, fidelity: 0.9 };
+    const f = reconstructSeparation({ tendency, features: [1, 2], model: thin });
+    expect(f.provenance.calibrated).toBe(false);
   });
 });
 

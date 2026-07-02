@@ -1,5 +1,6 @@
 import type { ShrunkEstimate } from "./empirical-bayes";
 import { applyCovariateModel, type CovariateModel } from "./covariate-model";
+import { reconstructionTrustworthy, type FidelityGateOptions } from "./fidelity-gate";
 import {
   makeProvenance,
   reconstructed,
@@ -24,6 +25,7 @@ export interface SeparationReconstructInput {
   readonly features: readonly number[]; // play covariates, model's feature order
   readonly model: CovariateModel;
   readonly alpha?: number; // interval level; default 0.2 -> 80% interval
+  readonly gate?: FidelityGateOptions; // trust thresholds for the covariate layer
 }
 
 export function reconstructSeparation(
@@ -31,7 +33,10 @@ export function reconstructSeparation(
 ): ReconstructedFeature {
   const alpha = input.alpha ?? 0.2;
   const z = normalQuantile(1 - alpha / 2);
-  const calibrated = input.model.fittedRows > 0;
+  // Calibrated only when the model is fitted AND clears the fidelity gate:
+  // "n > threshold and fidelity high enough". A fitted-but-weak model is not
+  // trusted to emit a per-play number; it falls back to the honest tendency.
+  const calibrated = reconstructionTrustworthy(input.model, input.gate);
 
   if (!calibrated) {
     // Honest fallback: the player's typical separation, not a play claim.
