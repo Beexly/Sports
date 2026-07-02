@@ -9,7 +9,13 @@
  */
 
 import { useMemo, useState } from "react";
-import { rankWireCorroborated, signalLabel, TIER_WEIGHT, type Tier } from "@/lib/news/impact";
+import {
+  rankWireCorroborated,
+  signalLabel,
+  TIER_WEIGHT,
+  type NewsItem,
+  type Tier,
+} from "@/lib/news/impact";
 import { DEMO_WIRE } from "@/lib/news/wire";
 import { BRAND_COLORS } from "@/lib/brand";
 
@@ -25,10 +31,19 @@ const TIERS: Tier[] = ["Insider", "Beat", "Verified", "Aggregator", "Unconfirmed
 
 const ago = (m: number) => (m < 60 ? `${m}m ago` : `${Math.round(m / 60)}h ago`);
 
-export function TheBeat() {
-  const ranked = useMemo(() => rankWireCorroborated(DEMO_WIRE), []);
+export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
+  // Live RSS wire when the owner has whitelisted feeds (NEWS_RSS_FEEDS);
+  // otherwise the clearly-labeled fictional sample. The two states are
+  // visually unmistakable: sample shows the fictional-sources marker, live
+  // shows the real-source attribution instead.
+  const isLive = liveWire !== null;
+  const wire = liveWire ?? DEMO_WIRE;
+  const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
   const [tierFilter, setTierFilter] = useState<Tier | "All">("All");
-  const teams = useMemo(() => ["All", ...Array.from(new Set(DEMO_WIRE.map((i) => i.team))).sort()], []);
+  const teams = useMemo(
+    () => ["All", ...Array.from(new Set(wire.map((i) => i.team))).sort()],
+    [wire],
+  );
   const [team, setTeam] = useState("All");
 
   const shown = ranked.filter(
@@ -37,14 +52,24 @@ export function TheBeat() {
 
   return (
     <div className="space-y-5">
-      {/* Illustrative-sample marker, unmistakable at the point of display so a
-          sample card is never read as a live report from a real source. */}
-      <span
-        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
-        style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
-      >
-        Sample feed · fictional sources
-      </span>
+      {/* Provenance marker, unmistakable at the point of display: a sample
+          card is never read as live, and a live card names its feed sources. */}
+      {isLive ? (
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.orbitalCyan}1c`, color: BRAND_COLORS.orbitalCyan }}
+        >
+          Live wire · headlines via public feeds ·{" "}
+          {Array.from(new Set(wire.map((i) => i.source))).join(", ") || "no items in window"}
+        </span>
+      ) : (
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
+        >
+          Sample feed · fictional sources
+        </span>
+      )}
       {/* tier legend / filter */}
       <div className="surface-card flex flex-wrap items-center gap-3 p-4">
         <span className="text-[10px] uppercase tracking-[0.18em] text-ink-600">Source tier</span>
