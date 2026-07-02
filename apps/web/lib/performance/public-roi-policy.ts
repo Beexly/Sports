@@ -8,9 +8,18 @@
  * else: gate-until-defensible, canonical only, and we only CLAIM profit when the
  * 95% LOWER bound clears break-even (0 units) — the point estimate alone
  * overclaims exactly the way a tout would.
+ *
+ * DOUBLE-METHOD CORROBORATION. BCa and the studentized bootstrap-t are two
+ * INDEPENDENT second-order-accurate interval methods (they correct different
+ * terms of the same expansion: BCa adjusts quantiles on the statistic's scale;
+ * bootstrap-t inverts a pivot on a studentized scale). A profit claim is only
+ * made when BOTH lower bounds clear break-even — strictly more conservative than
+ * either alone, and a costly, reproducible signal of honesty: a skeptic can
+ * re-derive both bands from the same seeded ledger and check that two different
+ * methods agree before we ever say "profit."
  */
 
-import { bcaMeanCi, americanToDecimalOdds } from "@sports/prediction-engine";
+import { bcaMeanCi, studentizedMeanCi, americanToDecimalOdds } from "@sports/prediction-engine";
 
 export type PickResultLike = "WIN" | "LOSS" | "PUSH" | "VOID" | "PENDING";
 
@@ -45,7 +54,13 @@ export interface PublicRoiPolicy {
   /** 95% BCa lower/upper bound on units per bet (2 decimals). Null when gated. */
   readonly roiCiLow: number | null;
   readonly roiCiHigh: number | null;
-  /** True only when the 95% BCa lower bound clears 0 units — an honest profit claim. */
+  /** 95% studentized (bootstrap-t) lower/upper bound — the independent cross-check. Null when gated. */
+  readonly roiCiLowStudentized: number | null;
+  readonly roiCiHighStudentized: number | null;
+  /**
+   * True only when BOTH the BCa and the studentized 95% lower bounds clear 0
+   * units — a profit claim corroborated by two independent second-order methods.
+   */
   readonly clearsProfit: boolean;
   readonly publicMessage: string;
   readonly operatorMessage: string;
@@ -65,10 +80,14 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
   const primary = blockers[0] ?? null;
 
   const ci = n >= 2 ? bcaMeanCi(input.returns) : null;
+  const ciStud = n >= 2 ? studentizedMeanCi(input.returns) : null;
   const roiPerBet = ci ? round2(ci.point) : null;
   const roiCiLow = ci ? round2(ci.low) : null;
   const roiCiHigh = ci ? round2(ci.high) : null;
-  const clearsProfit = ci ? ci.low > 0 : false;
+  const roiCiLowStudentized = ciStud ? round2(ciStud.low) : null;
+  const roiCiHighStudentized = ciStud ? round2(ciStud.high) : null;
+  // Profit claim requires BOTH independent methods' lower bounds to clear 0.
+  const clearsProfit = ci != null && ciStud != null && ci.low > 0 && ciStud.low > 0;
 
   const minimumRequirements: string[] = [];
   if (blockers.includes("GATE_OFF_PERFORMANCE_STATS")) {
@@ -85,12 +104,14 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
       `${signed(roiPerBet)} units per bet over ${n} settled picks ` +
       `(95% CI ${signed(roiCiLow)} to ${signed(roiCiHigh)} units). ` +
       (clearsProfit
-        ? "The lower bound clears break-even. "
+        ? "The lower bound clears break-even under two independent interval methods. "
         : "That range still includes break-even, so we don't yet claim a settled profit. ") +
       "Past results are a record, not a promise of future returns.";
     operatorMessage =
       `ROI publishable. n=${n} roi=${signed(roiPerBet)}u ` +
-      `CI=[${signed(roiCiLow)},${signed(roiCiHigh)}]u clearsProfit=${clearsProfit}; min=${minGraded}.`;
+      `BCa=[${signed(roiCiLow)},${signed(roiCiHigh)}]u ` +
+      `stud=[${signed(roiCiLowStudentized)},${signed(roiCiHighStudentized)}]u ` +
+      `clearsProfit(both)=${clearsProfit}; min=${minGraded}.`;
   } else {
     publicMessage =
       "The units/ROI record is still accruing. It opens once enough priced picks have settled. " +
@@ -109,6 +130,8 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
     roiPerBet: allowed ? roiPerBet : null,
     roiCiLow: allowed ? roiCiLow : null,
     roiCiHigh: allowed ? roiCiHigh : null,
+    roiCiLowStudentized: allowed ? roiCiLowStudentized : null,
+    roiCiHighStudentized: allowed ? roiCiHighStudentized : null,
     clearsProfit: allowed ? clearsProfit : false,
     publicMessage,
     operatorMessage,

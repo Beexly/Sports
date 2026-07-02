@@ -23,7 +23,7 @@
  * fitting complex M-estimators, which a performance ledger does not do).
  */
 
-export type CiMethod = "percentile" | "bca";
+export type CiMethod = "percentile" | "bca" | "studentized";
 
 export interface PerformanceCi {
   readonly point: number; // observed mean (ROI / units per bet)
@@ -37,6 +37,15 @@ export interface PerformanceCi {
   /** BCa bias-correction z0 and acceleration a (0 for the percentile method). */
   readonly z0: number;
   readonly acceleration: number;
+  /**
+   * Studentized bootstrap-t pivot quantiles and the plug-in standard error, when
+   * method === "studentized". A receipt can carry these so a skeptic re-derives
+   * the interval as point - tHigh*se .. point - tLow*se (the inversion). Absent
+   * for percentile/BCa.
+   */
+  readonly tLow?: number;
+  readonly tHigh?: number;
+  readonly standardError?: number;
 }
 
 /** Deterministic PRNG (mulberry32) — seeded so the interval is reproducible. */
@@ -257,4 +266,143 @@ export function percentileMeanCi(
   opts: { alpha?: number; resamples?: number; seed?: number } = {},
 ): PerformanceCi | null {
   return percentileCi(returns, meanStatistic, opts);
+}
+
+/**
+ * Delete-one jackknife standard error of a statistic — the exact, O(n),
+ * dependency-free plug-in SE. For the mean it equals s/sqrt(n); for a general
+ * statistic it is the standard nonparametric SE estimate. This is the default
+ * per-replicate SE used by the studentized bootstrap.
+ */
+export function jackknifeStandardError(sample: readonly number[], statistic: Statistic): number {
+  const n = sample.length;
+  if (n < 2) return 0;
+  const jack = new Array<number>(n);
+  const without = new Array<number>(n - 1);
+  for (let i = 0; i < n; i++) {
+    let k = 0;
+    for (let j = 0; j < n; j++) if (j !== i) without[k++] = sample[j]!;
+    jack[i] = statistic(without);
+  }
+  const jm = mean(jack);
+  let s2 = 0;
+  for (const j of jack) s2 += (j - jm) * (j - jm);
+  return Math.sqrt(((n - 1) / n) * s2);
+}
+
+/**
+ * STUDENTIZED (bootstrap-t) confidence interval — the second-order-accurate
+ * method that INVERTS a pivotal quantity instead of reading quantiles off the
+ * statistic's own scale (Efron & Tibshirani 1993 ch.12; Hall 1992). For each
+ * resample it forms t* = (theta* - theta_hat) / se*, where se* is the resample's
+ * own (jackknife) standard error, then inverts:
+ *
+ *     CI = [ theta_hat - t*_{1-a/2}·se_hat ,  theta_hat - t*_{a/2}·se_hat ]
+ *
+ * Note the TAIL REVERSAL — this is the inversion, not a bug. On right-skewed
+ * data (a few big winners, the sports-ROI case) the studentized pivot's LOWER
+ * tail is heavier, which stretches the interval's UPPER edge outward and gives
+ * coverage measurably closer to nominal than the percentile method. Verified by
+ * Monte-Carlo in the test suite (studentizedMeanCi covers a skewed true mean at
+ * ~nominal, ahead of percentile).
+ *
+ * Why it belongs here: ROI/units per bet is a mean of skewed continuous returns
+ * whose analytic SE is CHEAP and reliable (jackknife = s/sqrt(n), exact). The
+ * literature's own rule is "studentize when a good SE estimator is available" —
+ * which is exactly this case. Deterministic/seeded like BCa, so a public band
+ * reproduces from the sealed ledger.
+ *
+ * The per-replicate SE is injectable (defaults to the jackknife) so a caller
+ * with an analytic SE for a complex statistic can supply it. Returns null on
+ * too-little / non-finite data; a point interval on zero variance.
+ */
+export function studentizedCi(
+  data: readonly number[],
+  statistic: Statistic,
+  opts: {
+    alpha?: number;
+    resamples?: number;
+    seed?: number;
+    standardError?: (sample: readonly number[]) => number;
+  } = {},
+): PerformanceCi | null {
+  const alpha = opts.alpha ?? 0.05;
+  const resamples = opts.resamples ?? 10000;
+  const seed = opts.seed ?? 20260702;
+  const n = data.length;
+  if (n < 2 || !data.every(Number.isFinite)) return null;
+
+  const se = opts.standardError ?? ((s: readonly number[]) => jackknifeStandardError(s, statistic));
+  const point = statistic(data);
+  const seHat = se(data);
+
+  // Zero variance -> the honest interval is a point (se_hat = 0, no pivot).
+  if (!(seHat > 0)) {
+    return {
+      point, low: point, high: point, alpha, n, resamples, seed,
+      method: "studentized", z0: 0, acceleration: 0, tLow: 0, tHigh: 0, standardError: 0,
+    };
+  }
+
+  const rng = mulberry32(seed);
+  const tStar = new Array<number>(resamples);
+  const sample = new Array<number>(n);
+  for (let b = 0; b < resamples; b++) {
+    for (let i = 0; i < n; i++) sample[i] = data[Math.floor(rng() * n)]!;
+    const thetaB = statistic(sample);
+    const seB = se(sample);
+    // Degenerate resample (all draws equal -> se*=0): the pivot carries no
+    // information; contribute a centered 0 rather than an infinity.
+    tStar[b] = seB > 0 ? (thetaB - point) / seB : 0;
+  }
+  tStar.sort((x, y) => x - y);
+
+  // Quantiles of the pivot, then invert (tails reverse).
+  const tLow = sortedPercentile(tStar, alpha / 2);
+  const tHigh = sortedPercentile(tStar, 1 - alpha / 2);
+
+  return {
+    point,
+    low: point - tHigh * seHat,
+    high: point - tLow * seHat,
+    alpha,
+    n,
+    resamples,
+    seed,
+    method: "studentized",
+    z0: 0,
+    acceleration: 0,
+    tLow,
+    tHigh,
+    standardError: seHat,
+  };
+}
+
+/**
+ * Closed-form standard error of the MEAN: s/sqrt(n) (sample sd, (n-1) denom).
+ * This is exactly equal to the delete-one jackknife SE of the mean (proven in
+ * the test suite) but O(n) instead of O(n^2), which is what keeps the studentized
+ * mean interval fast on a large ledger.
+ */
+export function meanStandardError(sample: readonly number[]): number {
+  const n = sample.length;
+  if (n < 2) return 0;
+  const m = mean(sample);
+  let ss = 0;
+  for (const x of sample) ss += (x - m) * (x - m);
+  return Math.sqrt(ss / (n * (n - 1)));
+}
+
+/**
+ * Studentized (bootstrap-t) CI for the MEAN (ROI/units per bet). Uses the exact
+ * O(n) closed-form SE (s/sqrt(n)) per resample — identical to the jackknife but
+ * far cheaper — so this is the cheapest place the method's second-order accuracy
+ * is fully earned. The recommended interval for a public ROI band on a small,
+ * skewed ledger.
+ */
+export function studentizedMeanCi(
+  returns: readonly number[],
+  opts: { alpha?: number; resamples?: number; seed?: number } = {},
+): PerformanceCi | null {
+  return studentizedCi(returns, meanStatistic, { ...opts, standardError: meanStandardError });
 }

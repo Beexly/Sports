@@ -56,20 +56,50 @@ describe("evaluatePublicRoiPolicy", () => {
     expect(p.publicMessage).toMatch(/includes break-even/);
   });
 
-  it("claims profit only when the BCa lower bound clears break-even (strong record)", () => {
-    // A clearly-winning record over a big sample: lower bound should clear 0.
+  it("claims profit only when BOTH methods' lower bounds clear break-even (strong record)", () => {
+    // A clearly-winning record over a big sample: both the BCa and studentized
+    // lower bounds should clear 0, so the corroborated profit claim holds.
     const p = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: canonicalWins(400, 200) });
     expect(p.canExposeRoi).toBe(true);
     expect(p.clearsProfit).toBe(true);
     expect(p.roiCiLow!).toBeGreaterThan(0);
-    expect(p.publicMessage).toMatch(/clears break-even/);
+    expect(p.roiCiLowStudentized!).toBeGreaterThan(0); // the independent cross-check agrees
+    expect(p.publicMessage).toMatch(/two independent interval methods/);
   });
 
-  it("is deterministic: same returns -> identical published band", () => {
+  it("surfaces the studentized cross-check band alongside the BCa band", () => {
+    const p = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: canonicalWins(120, 90) });
+    expect(p.canExposeRoi).toBe(true);
+    expect(Number.isFinite(p.roiCiLowStudentized!)).toBe(true);
+    expect(Number.isFinite(p.roiCiHighStudentized!)).toBe(true);
+    // Both second-order methods should agree closely on a large, well-behaved
+    // sample (same point, comparable width) — a sanity check on corroboration.
+    expect(p.roiCiHighStudentized!).toBeGreaterThan(p.roiCiLowStudentized!);
+    expect(p.operatorMessage).toMatch(/stud=\[/);
+  });
+
+  it("is HONEST under corroboration: BCa-only optimism does not by itself claim profit", () => {
+    // clearsProfit is the AND of two methods, so it can never be true unless the
+    // studentized lower bound also clears 0. Assert the field is exactly that AND.
+    const p = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: canonicalWins(53, 47) });
+    const bothClear = p.roiCiLow! > 0 && p.roiCiLowStudentized! > 0;
+    expect(p.clearsProfit).toBe(bothClear);
+    expect(p.clearsProfit).toBe(false);
+  });
+
+  it("gates the studentized band too (null when not allowed)", () => {
+    const p = evaluatePublicRoiPolicy({ canExposePerformanceStats: false, minGradedForPublic: 25, returns: canonicalWins(60, 40) });
+    expect(p.roiCiLowStudentized).toBeNull();
+    expect(p.roiCiHighStudentized).toBeNull();
+  });
+
+  it("is deterministic: same returns -> identical published bands (both methods)", () => {
     const returns = canonicalWins(120, 90);
     const a = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns });
     const b = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns });
     expect(a.roiCiLow).toBe(b.roiCiLow);
     expect(a.roiCiHigh).toBe(b.roiCiHigh);
+    expect(a.roiCiLowStudentized).toBe(b.roiCiLowStudentized);
+    expect(a.roiCiHighStudentized).toBe(b.roiCiHighStudentized);
   });
 });
