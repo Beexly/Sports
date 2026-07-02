@@ -83,5 +83,11 @@ describe("/api/verify GET", () => {
     mocks.findFirst.mockResolvedValue(receipt({ line: -4.5 }, new Date("2020-01-01T00:00:00Z")));
     const body = await (await call(CONTENT_HASH)).json();
     expect(body.verified).toBe(false);
+    // On a failed check the tamper-suspect committed fields are withheld — the
+    // route never presents a possibly-altered number as fact.
+    expect(body.committed).toBeNull();
+    // ...but the raw payload + hash are still returned so a skeptic can recompute.
+    expect(body.payload).toBe(PAYLOAD);
+    expect(body.contentHash).toBe(CONTENT_HASH);
   });
 });

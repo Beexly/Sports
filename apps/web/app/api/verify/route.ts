@@ -128,14 +128,21 @@ export async function GET(request: Request) {
           commenceTime: game.commenceTime.toISOString(),
         }
       : null,
-    committed: {
-      line: num(p["line"]),
-      entryOdds: num(p["entryOdds"]),
-      marketFairProb: num(p["marketFairProb"]),
-      confidence: num(p["confidence"]),
-      edgeScore: num(p["edgeScore"]),
-      modelProb: num(p["modelProb"]),
-    },
+    // The committed financial fields are presented as FACT only when the
+    // integrity check passed. On a failed check the values are tamper-suspect,
+    // so we withhold them (verified:false + the raw payload/hash below let a
+    // skeptic recompute for themselves) rather than surface a number that may
+    // have been altered.
+    committed: verified
+      ? {
+          line: num(p["line"]),
+          entryOdds: num(p["entryOdds"]),
+          marketFairProb: num(p["marketFairProb"]),
+          confidence: num(p["confidence"]),
+          edgeScore: num(p["edgeScore"]),
+          modelProb: num(p["modelProb"]),
+        }
+      : null,
     payload: receipt.payload,
     contentHash: receipt.contentHash,
   });

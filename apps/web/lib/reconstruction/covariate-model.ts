@@ -137,7 +137,9 @@ function solveLinearSystem(a: number[][], b: number[]): number[] | null {
  * The in-sample fidelity reported by fitCovariateModel flatters the model: it
  * is scored on the same rows it was fitted to. k-fold cross-validation scores
  * every row by a model that never saw it, which is the number the trust gate
- * should believe. Deterministic fold assignment (i mod k) — reproducible, no
+ * should believe. BOTH sides of the R2 are out-of-sample: the model prediction
+ * AND the null-model baseline (the per-fold TRAIN mean, not the global mean),
+ * so nothing peeks at the held-out targets. Deterministic fold assignment (i mod k) — reproducible, no
  * randomness, and fine for rows without temporal ordering. (For time-ordered
  * calibration data, pre-sort rows chronologically and this becomes a blocked
  * CV, which is the correct sports discipline.)
@@ -153,7 +155,6 @@ export function crossValidatedFidelity(
 ): number {
   const m = rows.length;
   if (m !== targets.length || m < k * 2) return 0;
-  const meanAll = targets.reduce((s, t) => s + t, 0) / m;
   let sse = 0;
   let sst = 0;
   for (let fold = 0; fold < k; fold++) {
@@ -168,10 +169,15 @@ export function crossValidatedFidelity(
       }
     }
     const model = fitCovariateModel(trainRows, trainTargets, ridge);
+    // The SST baseline (null model) must ALSO be out-of-sample: use the TRAIN
+    // mean of this fold, not the global mean. Otherwise the baseline peeks at
+    // the held-out targets and the R2 is optimistically inflated. Now both the
+    // model AND the baseline are evaluated on rows they never saw.
+    const trainMean = trainTargets.reduce((s, t) => s + t, 0) / trainTargets.length;
     for (const i of testIdx) {
       const pred = applyCovariateModel(rows[i]!, model);
       sse += (targets[i]! - pred) ** 2;
-      sst += (targets[i]! - meanAll) ** 2;
+      sst += (targets[i]! - trainMean) ** 2;
     }
   }
   return sst > 1e-12 ? Math.max(0, Math.min(1, 1 - sse / sst)) : 0;
