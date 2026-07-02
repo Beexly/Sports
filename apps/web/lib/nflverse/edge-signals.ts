@@ -263,7 +263,7 @@ export async function loadNflverseEdgeSignals({
       sellHigh,
       canPublishPicks: false,
       blockReason:
-        "Edge Signals fuse real NGS tracking data with real production to flag regression-to-mean candidates. This is a research lens on settled, historical data — not a projection, betting pick, or significant trend.",
+        "Edge Signals fuse real NGS tracking data with real production to flag regression-to-mean candidates. This is a research lens on settled, historical data, not a projection, betting pick, or significant trend.",
       sourceUrls: { playerStats: playerStatsUrl, ngsReceiving: ngsUrl },
       error: null,
     };

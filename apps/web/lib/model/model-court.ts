@@ -59,7 +59,7 @@ export function tryModelChange(p: ModelChangeProposal): CourtRuling {
   if (!Number.isFinite(p.oosSampleSize) || p.oosSampleSize < minOos) {
     blockers.push(`out-of-sample sample too small (${p.oosSampleSize} < ${minOos})`);
   }
-  if (p.calibrationRegressed) blockers.push("calibration regressed in shadow — automatic hold");
+  if (p.calibrationRegressed) blockers.push("calibration regressed in shadow: automatic hold");
   if (!p.ownerApproved) blockers.push("owner approval required for a model-version change");
 
   return {

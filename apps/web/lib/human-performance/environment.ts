@@ -86,7 +86,7 @@ export const DEFAULT_FACTOR_WEIGHTS: Readonly<Record<string, number>> = {
 };
 
 const SURFACE_NOTE =
-  "Surface score follows published NFL/NFLPA field-safety research (synthetic turf has shown higher lower-limb injury rates than natural grass). Derived from the venue's documented surface — not a claim about any player.";
+  "Surface score follows published NFL/NFLPA field-safety research (synthetic turf has shown higher lower-limb injury rates than natural grass). Derived from the venue's documented surface, not a claim about any player.";
 const CLIMATE_NOTE =
   "Climate score reflects environmental control: a fixed dome or retractable roof is climate-controllable; open-air venues are weather-exposed. Derived from the venue's documented roof type.";
 
@@ -144,13 +144,13 @@ export function loadEnvironmentScore({
   const factors: Record<string, EnvironmentFactor> = {
     surfaceQuality: {
       value: venue.surface === "grass" ? 85 : 60,
-      source: `Public record — ${venue.venue} surface (${venue.surface})`,
+      source: `Public record: ${venue.venue} surface (${venue.surface})`,
       tier,
       asOf,
     },
     climateContext: {
       value: venue.controlledRoof ? 90 : 70,
-      source: `Public record — ${venue.venue} roof (${venue.controlledRoof ? "controlled" : "open-air"})`,
+      source: `Public record: ${venue.venue} roof (${venue.controlledRoof ? "controlled" : "open-air"})`,
       tier,
       asOf,
     },
@@ -167,6 +167,6 @@ export function loadEnvironmentScore({
     presentFactorCount,
     note:
       `${SURFACE_NOTE} ${CLIMATE_NOTE} ` +
-      "Training-staff, weight-room, nutrition, facility, travel, and coaching-continuity factors require a manually-curated NFLPA report-card snapshot (public, attributed) entered behind the founder gate — until then they are absent, and the score reflects only the venue factors above.",
+      "Training-staff, weight-room, nutrition, facility, travel, and coaching-continuity factors require a manually-curated NFLPA report-card snapshot (public, attributed) entered behind the founder gate. Until then they are absent, and the score reflects only the venue factors above.",
   };
 }

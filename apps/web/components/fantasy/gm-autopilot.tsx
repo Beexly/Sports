@@ -95,7 +95,7 @@ export function GmAutopilot() {
         </div>
 
         {actions.length === 0 ? (
-          <div className="surface-card p-6 text-sm text-ink-400">Manual mode — nothing is queued. Dial up to L1 to see the Autopilot&apos;s reads.</div>
+          <div className="surface-card p-6 text-sm text-ink-400">Manual mode: nothing is queued. Dial up to L1 to see the Autopilot&apos;s reads.</div>
         ) : (
           <div className="space-y-2.5">
             {actions.map((a) => {
@@ -117,7 +117,7 @@ export function GmAutopilot() {
                   <div className="mt-3 flex items-center gap-2">
                     {d ? (
                       <span className="text-xs font-semibold" style={{ color: d === "approved" ? BRAND_COLORS.orbitalCyan : "#9fb3c8" }}>
-                        {d === "approved" ? "✓ Approved — queued to your GM Ledger" : "Skipped"}
+                        {d === "approved" ? "✓ Approved: queued to your GM Ledger" : "Skipped"}
                       </span>
                     ) : (
                       <>

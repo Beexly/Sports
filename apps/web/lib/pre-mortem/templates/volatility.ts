@@ -19,6 +19,6 @@ export const volatilityTemplate: FailureModeTemplate = {
   },
 
   generateBullet: (_snapshot, _pick, _game) => {
-    return `If volatility spikes — this market normally moves under a certain band and is now moving outside it — our read is unstable and the publish was on the edge.`;
+    return `If volatility spikes (this market normally moves under a certain band and is now moving outside it), our read is unstable and the publish was on the edge.`;
   },
 };

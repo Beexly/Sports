@@ -427,7 +427,7 @@ const AIRWAVE_SOURCE_POLICIES: readonly AirwaveSourcePolicy[] = [
     operatorAction:
       "Founder listens live on a personally-owned subscription. Notes claims manually. Imports via CSV/TSV using the spreadsheet contract. Legal acknowledgement required before notes feed public-facing outputs.",
     complianceNote:
-      "Founder-owned listening of a subscription service. No scraping, no credential sharing, no DRM bypass, no automated recording. Notes are personal observation — paraphrase before any publication.",
+      "Founder-owned listening of a subscription service. No scraping, no credential sharing, no DRM bypass, no automated recording. Notes are personal observation. Paraphrase before any publication.",
     riskLevel: "MEDIUM",
     proofSource:
       "Personal subscription ownership; Airwave legal gate (AIRWAVE_SIRIUSXM_LEGAL_ACK required).",
@@ -544,7 +544,7 @@ export function canSourceBecomeActive(
   const reasons: string[] = [];
 
   if (!gates.airwaveEnabled) {
-    reasons.push("AIRWAVE_ENABLED is not set — master switch is off.");
+    reasons.push("AIRWAVE_ENABLED is not set: master switch is off.");
   }
 
   if (policy.requiresLegalAck && !gates.siriusxmLegalAck) {

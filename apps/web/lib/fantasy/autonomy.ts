@@ -34,9 +34,9 @@ export type LevelSpec = {
 
 export const LEVELS: readonly LevelSpec[] = [
   { level: 0, key: "manual", name: "Manual", blurb: "We show the board; you run everything.", weDo: "Surface the data and the reads.", youDo: "Make and submit every move.", approval: "manual", founderGated: false },
-  { level: 1, key: "advisor", name: "Advisor", blurb: "Suggestions for waivers, start/sit, and trades — you execute.", weDo: "Rank the moves with the why.", youDo: "Decide and submit in your league app.", approval: "advisory", founderGated: false },
+  { level: 1, key: "advisor", name: "Advisor", blurb: "Suggestions for waivers, start/sit, and trades. You execute.", weDo: "Rank the moves with the why.", youDo: "Decide and submit in your league app.", approval: "advisory", founderGated: false },
   { level: 2, key: "copilot", name: "Co-pilot", blurb: "We draft the moves and queue them; you one-tap approve before the deadline.", weDo: "Set the lineup, queue waiver claims with bids.", youDo: "Review and approve each action.", approval: "per-action", founderGated: true },
-  { level: 3, key: "autopilot", name: "Autopilot", blurb: "We queue and submit unless you veto within your window — every action explained and ledgered.", weDo: "Execute to your strategy after a veto window.", youDo: "Veto anything you don't like; the rest runs.", approval: "veto-window", founderGated: true },
+  { level: 3, key: "autopilot", name: "Autopilot", blurb: "We queue and submit unless you veto within your window. Every action explained and ledgered.", weDo: "Execute to your strategy after a veto window.", youDo: "Veto anything you don't like; the rest runs.", approval: "veto-window", founderGated: true },
   { level: 4, key: "remote", name: "Full remote GM", blurb: "We run the team end-to-end to your strategy and constraints; you get a weekly GM report.", weDo: "Manage waivers, lineups, and trade exploration.", youDo: "Set strategy; read the weekly report.", approval: "report-only", founderGated: true },
 ];
 
@@ -76,7 +76,7 @@ function waiverActions(): ProposedAction[] {
   return waiverTargets().slice(0, 2).map((r, i) => ({
     id: `act-waiver-${i}`,
     type: "waiver" as const,
-    title: `Claim ${r.player.name} — ${r.tier}`,
+    title: `Claim ${r.player.name} · ${r.tier}`,
     detail: `Bid ~$${bidDollars(r, 100)} of a $100 FAAB budget.`,
     rationale: r.reason,
     confidence: r.tier === "Priority" ? 0.85 : r.tier === "Target" ? 0.7 : 0.5,
@@ -122,10 +122,10 @@ export function proposeActions(level: AutonomyLevel): ProposedAction[] {
 export function executionNotice(level: AutonomyLevel): string {
   const spec = levelSpec(level);
   switch (spec.approval) {
-    case "manual": return "Nothing is queued — you run the team.";
+    case "manual": return "Nothing is queued. You run the team.";
     case "advisory": return "These are suggestions. You submit them in your league app.";
     case "per-action": return "Each action waits for your one-tap approval before anything is submitted.";
-    case "veto-window": return "Actions submit after your veto window unless you stop them — and only once live execution is enabled for your account.";
+    case "veto-window": return "Actions submit after your veto window unless you stop them, and only once live execution is enabled for your account.";
     case "report-only": return "We'd manage end-to-end to your strategy; live execution stays gated behind your consent and compliance review.";
   }
 }

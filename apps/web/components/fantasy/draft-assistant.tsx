@@ -141,7 +141,7 @@ export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: rea
                 <button type="button" onClick={clearAdp} className="text-[11px] text-ink-500 hover:text-white">clear</button>
               </>
             ) : (
-              <span className="text-[10px] text-ink-600">Bring your own ADP — we don&apos;t scrape it from the books that publish it. <span className="text-ink-500">name,adp</span></span>
+              <span className="text-[10px] text-ink-600">Bring your own ADP. We don&apos;t scrape it from the books that publish it. <span className="text-ink-500">name,adp</span></span>
             )}
           </div>
 
@@ -181,7 +181,7 @@ export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: rea
               })}
               {!canUseFantasyFull && board.length > FREE_BOARD_DEPTH && (
                 <p className="border-t px-4 py-3 text-center text-xs text-ink-400" style={{ borderColor: BRAND_COLORS.steelGray }}>
-                  Top {FREE_BOARD_DEPTH} shown — the full board is in the Fantasy suite.
+                  Top {FREE_BOARD_DEPTH} shown. The full board is in the Fantasy suite.
                 </p>
               )}
             </div>
@@ -194,7 +194,7 @@ export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: rea
           {/* recommendation */}
           <div className="surface-card relative overflow-hidden p-5" aria-live="polite">
             <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl" style={{ background: `${BRAND_COLORS.orbitalCyan}1f` }} />
-            <p className="text-xs uppercase tracking-[0.16em]" style={{ color: BRAND_COLORS.orbitalCyan }}>On the clock — recommended · pick {currentPick}</p>
+            <p className="text-xs uppercase tracking-[0.16em]" style={{ color: BRAND_COLORS.orbitalCyan }}>On the clock · recommended · pick {currentPick}</p>
             {recs.length === 0 ? (
               <p className="mt-3 text-sm text-ink-400">Draft board is empty.</p>
             ) : (

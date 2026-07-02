@@ -62,7 +62,7 @@ export function buildCockpitSummary(ledger: ResourceLedger, topN = 25): Resource
     nextDecisions.push(`Triage ${ownerReview} owner-review items (sports/RSS/YouTube/podcast/API) through the source-provider + clearance gate before any use.`);
   }
   if (quarantine > 0) {
-    nextDecisions.push(`Keep ${quarantine} quarantined resources hard-blocked — no exceptions, no automation, no claims.`);
+    nextDecisions.push(`Keep ${quarantine} quarantined resources hard-blocked: no exceptions, no automation, no claims.`);
   }
 
   return {

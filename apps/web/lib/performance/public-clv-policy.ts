@@ -109,7 +109,7 @@ export function evaluatePublicClvPolicy(
   if (allowed) {
     publicMessage =
       `Beat the close on ${beatCloseRatePct}% of ${input.gradedSampleSize} graded picks ` +
-      `(95% CI ${beatCloseCiLowPct}–${beatCloseCiHighPct}%). ` +
+      `(95% CI ${beatCloseCiLowPct}-${beatCloseCiHighPct}%). ` +
       (clearsBreakEven
         ? `The lower bound clears the 52.4% break-even line. `
         : `That range still includes the 52.4% break-even line, so we don't yet claim a settled edge. `) +

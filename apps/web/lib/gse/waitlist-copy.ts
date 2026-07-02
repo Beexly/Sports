@@ -33,7 +33,7 @@ export const BACKTEST_TRANSPARENCY =
   "Honest status: on the most recent out-of-sample test (10,301 samples), the model's " +
   "average error (MAE ~5.18) did not beat a simple naive baseline (MAE ~5.00). " +
   "The model does not beat naive on this tested setup. We show this openly. " +
-  "No outcome is promised — this lane is about decision process, not predictions.";
+  "No outcome is promised. This lane is about decision process, not predictions.";
 
 export const WAITLIST_ROLE_LABELS = {
   operator: "Operator",
@@ -52,7 +52,7 @@ export const WAITLIST_COPY = {
   headline: "Founding Decision-Process Lane",
   subhead: "For operators who want clarity first, not hype.",
   body: [
-    "A documented process audit, source-quality checks, and decision discipline — built for people who want to understand their own decisions.",
+    "A documented process audit, source-quality checks, and decision discipline, built for people who want to understand their own decisions.",
     "No promised outcomes. No predictions sold as certainty. This is process work, not a tip service.",
     "Current model status is shown openly, including where it underperforms.",
     "Founding members get a process-audit packet and a research-brief lane, reviewed by a human before anything is sent.",
@@ -61,7 +61,7 @@ export const WAITLIST_COPY = {
     "I'm opting in to occasional, non-promotional process updates and research notes. I can unsubscribe from non-essential messages anytime.",
   submitLabel: "Join the founding waitlist",
   thankYou:
-    "Thanks — your waitlist slot is captured. You're queued for founder review and will get the next opening note. Nothing is sent without explicit review.",
+    "Thanks. Your waitlist slot is captured. You're queued for founder review and will get the next opening note. Nothing is sent without explicit review.",
   // Field labels kept here so the form and tests share one source.
   fields: {
     fullName: "Full name",

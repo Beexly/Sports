@@ -60,6 +60,15 @@ vi.mock("@sports/data-ingestion", () => ({
     freshGameIds: mocks.freshGameIds,
     normalizeGames: mocks.normalizeGames,
     normalizeOdds: mocks.normalizeOdds,
+    // The stale rejection path now embeds freshnessDiagnostics() output in its
+    // error; the mock must be shape-complete or the TypeError masks the throw.
+    freshnessDiagnostics: () => ({
+      thresholdHours: 4,
+      rows: 1,
+      games: 1,
+      unparseableRows: 0,
+      newestAgeMinutes: 999,
+    }),
   })),
   MARKETS: ["h2h", "spreads", "totals"],
   enrichGameContext: mocks.enrichGameContext,

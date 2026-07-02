@@ -32,7 +32,7 @@ describe("Kinetic logo signature", () => {
   it("renders the official chrome emblem + signal-fade wordmark in the lockup", () => {
     const lockup = read("components/brand/brand-lockup.tsx");
     // Official emblem asset (Brand Bible v1.0), not the retired hand-built SVG.
-    expect(lockup).toContain("/brand/gse-emblem.png");
+    expect(lockup).toContain("/brand/gse-emblem-180.png");
     expect(lockup).toContain("brand-wordmark-text");
     // Wordmark filled with the signature signal fade.
     expect(css).toContain(".brand-wordmark-text");

@@ -52,7 +52,7 @@ export function AcademySimulator() {
           <span aria-hidden>◆</span> {rank.name}
         </p>
         <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-ink-300">
-          You were scored on the quality of your decisions — not whether they won. Restraint counted,
+          You were scored on the quality of your decisions, not whether they won. Restraint counted,
           lucky wins didn&apos;t. That&apos;s the only track record worth building.
         </p>
 
@@ -108,7 +108,7 @@ export function AcademySimulator() {
       {/* choices */}
       {!picked && (
         <div className="mt-6">
-          <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ink-500">Your call — decide before you see the result</p>
+          <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ink-500">Your call: decide before you see the result</p>
           <div className="grid grid-cols-3 gap-3">
             {CHOICES.map((c) => (
               <button

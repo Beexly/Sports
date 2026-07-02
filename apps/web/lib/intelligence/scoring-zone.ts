@@ -147,16 +147,16 @@ function signalFor(sharePct: number, tdRatePct: number): { signal: ScoringZoneSi
   if (gap >= DIVERGENCE)
     return {
       signal: "buy",
-      note: "High scoring-zone opportunity share, low TD conversion so far — the role is feeding him the looks and the scores are due to regress up. Buy the equity before the box score catches up.",
+      note: "High scoring-zone opportunity share, low TD conversion so far. The role is feeding him the looks and the scores are due to regress up. Buy the equity before the box score catches up.",
     };
   if (gap <= -DIVERGENCE)
     return {
       signal: "sell",
-      note: "TDs are outrunning the scoring-zone opportunity — the output is borrowed from conversion luck on a thin role. Sell into the touchdowns before they regress.",
+      note: "TDs are outrunning the scoring-zone opportunity. The output is borrowed from conversion luck on a thin role. Sell into the touchdowns before they regress.",
     };
   return {
     signal: "in-line",
-    note: "Touchdown output tracks the scoring-zone opportunity — the scores are earned by the role.",
+    note: "Touchdown output tracks the scoring-zone opportunity. The scores are earned by the role.",
   };
 }
 

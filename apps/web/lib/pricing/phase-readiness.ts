@@ -60,7 +60,7 @@ export function evaluatePhaseAdvance(
       eligible: false,
       met: [],
       unmet: [],
-      rationale: `${current.name} is the top rung of the ladder — no further price increase is named.`,
+      rationale: `${current.name} is the top rung of the ladder. No further price increase is named.`,
     };
   }
 
@@ -88,7 +88,7 @@ export function evaluatePhaseAdvance(
   const eligible = unmet.length === 0;
   const rationale = eligible
     ? `Proof milestone for ${next.name} is met. Advancing is a deliberate operator action ` +
-      `(set PRICING_PHASE=${next.id}) — and only after the added value ships: ${next.addedValue}`
+      `(set PRICING_PHASE=${next.id}), and only after the added value ships: ${next.addedValue}`
     : `Not yet eligible for ${next.name}. Still needed: ${unmet.join("; ")}.`;
 
   return {

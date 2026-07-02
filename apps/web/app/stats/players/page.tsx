@@ -4,7 +4,7 @@ import { FilterBar } from "../_client";
 import { rankPlayers, loadPlayers } from "@/lib/statking/product";
 import { glossaryEntry } from "@/lib/glossary";
 export const metadata = {
-  title: "Player Database — Every Tracked NFL Player",
+  title: "Player Database: Every Tracked NFL Player",
   description: "Browse the full StatKing player universe with usage, efficiency, role, and fantasy edge.",
   alternates: { canonical: "/stats/players" },
 };
@@ -63,7 +63,7 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
         </div>
       </dl>
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Sorted by Galaxy Index — top {filtered.slice(0, 50).length} players</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Sorted by Galaxy Index · top {filtered.slice(0, 50).length} players</p>
         <div className="grid gap-2">
           {filtered.slice(0, 50).map(p => {
             const gpiPct = Math.min(100, Math.max(0, (Number(p.galaxy_player_index ?? 0) / 100) * 100));

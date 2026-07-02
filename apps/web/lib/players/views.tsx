@@ -195,7 +195,7 @@ async function loadProductionView(): Promise<ViewResult> {
       eyebrow: "Season leaders",
       title: "Who is producing, who is heating up",
       blurb: `Ranked by PPR per game${lab.throughWeek ? ` over the first ${lab.throughWeek} weeks` : ""}. 5g is last-5 form; Δ is recent form minus season pace. Filter by position.`,
-      footnote: "Settled, historical PPR — not a projection. Boom ≥ 20 PPR, bust ≤ 10 PPR per game.",
+      footnote: "Settled, historical PPR, not a projection. Boom ≥ 20 PPR, bust ≤ 10 PPR per game.",
       rows: allLeaders,
       enumOptions: POS_OPTIONS,
       showRank: true,
@@ -207,7 +207,7 @@ async function loadProductionView(): Promise<ViewResult> {
       eyebrow: "Defense vs position",
       title: "Softest matchups, by position",
       blurb: "PPR opportunity allowed per game, ranked across qualifying defenses within each position. Rank 1 allows the most. Use the position toggle to focus RB, WR, or TE.",
-      footnote: "What actually happened on the field — settled, not a projection. Rank is within the selected position.",
+      footnote: "What actually happened on the field: settled, not a projection. Rank is within the selected position.",
       rows: allDefense,
       enumOptions: POS_OPTIONS,
       minWidth: 460,
@@ -244,7 +244,7 @@ async function loadSnapsView(): Promise<ViewResult> {
         eyebrow: "Snap share",
         title: "Workload before box score",
         blurb: "Share of team offensive snaps a player is on the field for, averaged across the season. Filter by position.",
-        footnote: "Snap share is the cleanest leading indicator of opportunity — it moves before targets and production do.",
+        footnote: "Snap share is the cleanest leading indicator of opportunity: it moves before targets and production do.",
         rows,
         enumOptions: POS_OPTIONS,
         showRank: true,
@@ -268,7 +268,7 @@ async function loadOpportunityView(): Promise<ViewResult> {
       eyebrow: `Opportunity leaders${o.throughWeek ? ` · ${o.season} through week ${o.throughWeek}` : ""}`,
       title: "Who's earning the looks",
       blurb: o.note,
-      footnote: "WOPR = 1.5·target share + 0.7·air-yards share (mean per game). The read compares opportunity vs production percentiles — weight this, not the box score.",
+      footnote: "WOPR = 1.5·target share + 0.7·air-yards share (mean per game). The read compares opportunity vs production percentiles. Weight this, not the box score.",
       rows: o.rows,
       enumOptions: distinctOptions(o.rows, (r) => r.position),
       showRank: true,
@@ -335,7 +335,7 @@ async function loadNextGenView(): Promise<ViewResult> {
         kind: "nextgen-rushing",
         eyebrow: "Rushing · tracking",
         title: "Who beats the blocking",
-        blurb: "Rush yards over expected per attempt — production above what the blocking and box gave them.",
+        blurb: "Rush yards over expected per attempt: production above what the blocking and box gave them.",
         rows: ngs.rushing,
         showRank: true,
         minWidth: 760,
@@ -401,7 +401,7 @@ async function loadCombineView(): Promise<ViewResult> {
         kind: "combine",
         eyebrow: `Class of ${c.latestYear ?? ""}`,
         title: "Fastest 40 in the latest class",
-        blurb: "Athletic-trait scouting priors — forty, vertical, broad jump, three-cone, shuttle. Filter by position.",
+        blurb: "Athletic-trait scouting priors: forty, vertical, broad jump, three-cone, shuttle. Filter by position.",
         rows: c.latestClass,
         showRank: true,
         minWidth: 760,
@@ -448,9 +448,9 @@ async function loadQbrView(): Promise<ViewResult> {
       id: "consensus",
       kind: "qbr-consensus",
       eyebrow: "Consensus · two independent lenses",
-      title: "Where the estimators agree — and where they don't",
+      title: "Where the estimators agree, and where they don't",
       blurb: consensus.note,
-      footnote: `Two independent estimators, each as a within-pool percentile. We surface disagreement (results vs accuracy) instead of averaging it into false precision.${!consensus.sources.ngs ? " CPOE feed unavailable — single-source reads only." : ""}`,
+      footnote: `Two independent estimators, each as a within-pool percentile. We surface disagreement (results vs accuracy) instead of averaging it into false precision.${!consensus.sources.ngs ? " CPOE feed unavailable; single-source reads only." : ""}`,
       rows: consensus.rows,
       showRank: true,
       minWidth: 720,
@@ -581,7 +581,7 @@ async function loadDfsView(): Promise<ViewResult> {
     const reason =
       dfs.status === "source-error"
         ? "Feeds are configured but none returned a slate right now."
-        : "No DraftKings salaries shown — no licensed feed is connected.";
+        : "No DraftKings salaries shown; no licensed feed is connected.";
     return {
       status: "source-error",
       error: (
@@ -626,30 +626,30 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     eyebrow: "Production Lab",
     title: "Who is producing, who is heating up, who is easy to score on.",
     description:
-      "Season leaders, last-5 recent form, and positional defense ranks — all computed from real nflverse player-week rows. Settled, historical facts, not forecasts.",
+      "Season leaders, last-5 recent form, and positional defense ranks, all computed from real nflverse player-week rows. Settled, historical facts, not forecasts.",
     explainer: [
       {
         term: "PPR/G & 5g",
         definition: "Per-game PPR over the season, and over the last 5 games. Δ = recent form minus season pace.",
-        weakness: "Averages hide volatility — a 15 PPR/G can be 15-15-15 or 30-0-15. Read with Boom/Bust.",
+        weakness: "Averages hide volatility: a 15 PPR/G can be 15-15-15 or 30-0-15. Read with Boom/Bust.",
         decisionUse: "Roster and start/sit context. Not a projection of next week.",
       },
       {
         term: "Boom% / Bust%",
-        definition: "Share of games at or above a startable ceiling (≥20) and at or below a floor (≤10) — the real distribution.",
+        definition: "Share of games at or above a startable ceiling (≥20) and at or below a floor (≤10): the real distribution.",
         weakness: "Thresholds are PPR-format choices, not laws; small samples make these rates jumpy.",
         decisionUse: "Volatility read for lineup risk. Pair with the Stab grade before trusting it.",
       },
       {
         term: "Stab",
-        definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6.",
-        weakness: "Sample-size only — it does not model variance, opponent quality, or role changes.",
+        definition: "Stat Stability Grade: ● 10+ games, ◐ 6-9, ○ under 6.",
+        weakness: "Sample-size only; it does not model variance, opponent quality, or role changes.",
         decisionUse: "A gate on every other column: thin grade, thin trust.",
       },
       {
         term: "WOPR & target share",
-        definition: "Season averages of the weekly weighted opportunity rating (1.5·target share + 0.7·air-yards share) and team target share — the role behind the points.",
-        weakness: "Season averages lag role changes — a trade or injury redraws the role faster than the average moves.",
+        definition: "Season averages of the weekly weighted opportunity rating (1.5·target share + 0.7·air-yards share) and team target share: the role behind the points.",
+        weakness: "Season averages lag role changes: a trade or injury redraws the role faster than the average moves.",
         decisionUse: "Opportunity context: whether production is backed by role, or running ahead of it.",
       },
     ],
@@ -663,11 +663,11 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     eyebrow: "Snap share",
     title: "Workload before box score.",
     description:
-      "The share of his team's offensive snaps a player is on the field for, averaged across the season — the cleanest leading indicator of opportunity. Real, settled workload from nflverse.",
+      "The share of his team's offensive snaps a player is on the field for, averaged across the season: the cleanest leading indicator of opportunity. Real, settled workload from nflverse.",
     explainer: [
       { term: "Snap %", definition: "Average share of team offensive snaps the player is on the field for." },
-      { term: "Why it leads", definition: "Snap share moves before targets and production do — opportunity precedes the box score." },
-      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6. Sample-size only." },
+      { term: "Why it leads", definition: "Snap share moves before targets and production do; opportunity precedes the box score." },
+      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6-9, ○ under 6. Sample-size only." },
     ],
     jsonHref: "/api/nflverse/snap-share",
     load: loadSnapsView,
@@ -679,7 +679,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     eyebrow: "Receiving opportunity",
     title: "Opportunity comes before production.",
     description:
-      "We read WOPR (target + air-yards share), aDOT, and RACR from real nflverse play-by-play, then flag where opportunity and production disagree — that gap is the edge. Not a pick.",
+      "We read WOPR (target + air-yards share), aDOT, and RACR from real nflverse play-by-play, then flag where opportunity and production disagree; that gap is the edge. Not a pick.",
     explainer: [
       { term: "WOPR", definition: "1.5·target share + 0.7·air-yards share. The single best summary of a receiver's role; it leads fantasy points." },
       { term: "aDOT & RACR", definition: "Depth of target, and yards earned per air yard. Together they separate volume from efficiency." },
@@ -698,8 +698,8 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       "Player-tracking data from nflverse: how open a receiver gets (separation, YAC over expected), how accurate a QB is vs expectation (CPOE) and how fast he throws, and yards a back earns over the blocking (RYOE).",
     explainer: [
       { term: "Separation / Cushion", definition: "Yards of space at the catch point, and pre-snap cushion the defense gives." },
-      { term: "CPOE", definition: "Completion percentage over expected given throw difficulty — accuracy, not just results." },
-      { term: "RYOE/att", definition: "Rush yards over expected per attempt — production above what the blocking and box gave." },
+      { term: "CPOE", definition: "Completion percentage over expected given throw difficulty: accuracy, not just results." },
+      { term: "RYOE/att", definition: "Rush yards over expected per attempt: production above what the blocking and box gave." },
     ],
     jsonHref: "/api/nflverse/next-gen-stats",
     load: loadNextGenView,
@@ -714,7 +714,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       "PFR advanced charting from nflverse: how often each quarterback is pressured and how he throws under it, and which defenders in coverage are actually throwable. Context for a read, not a pick.",
     explainer: [
       { term: "Pressure%", definition: "Share of dropbacks a quarterback is pressured (season mean). Bad-throw% and sacks show how it cashes out." },
-      { term: "Prot stress", definition: "Protection Stress Index (0–100): 0.7×pressure share + 0.3×sacks/game. Pocket disruption — conflates O-line, scheme, and the QB’s own time-to-throw, so read it with the sack column." },
+      { term: "Prot stress", definition: "Protection Stress Index (0-100): 0.7×pressure share + 0.3×sacks/game. Pocket disruption. It conflates O-line, scheme, and the QB’s own time-to-throw, so read it with the sack column." },
       { term: "Rating allowed", definition: "Passer rating allowed in coverage, target-weighted. Lower = a defender you can't throw at." },
     ],
     jsonHref: "/api/nflverse/pressure-coverage",
@@ -727,10 +727,10 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     eyebrow: "Combine · athletic testing",
     title: "The traits, before the tape.",
     description:
-      "NFL Combine measurements from nflverse — forty, vertical, broad jump, three-cone, shuttle, bench. Scouting priors: real athletic traits to weigh against production, not proof of anything.",
+      "NFL Combine measurements from nflverse: forty, vertical, broad jump, three-cone, shuttle, bench. Scouting priors: real athletic traits to weigh against production, not proof of anything.",
     explainer: [
-      { term: "40 / shuttle / 3-cone", definition: "Straight-line speed and change-of-direction tests — the core athletic battery." },
-      { term: "Priors, not proof", definition: "Treat these as scouting priors to weigh against production — they don't decide anything alone." },
+      { term: "40 / shuttle / 3-cone", definition: "Straight-line speed and change-of-direction tests: the core athletic battery." },
+      { term: "Priors, not proof", definition: "Treat these as scouting priors to weigh against production; they don't decide anything alone." },
     ],
     jsonHref: "/api/nflverse/combine",
     load: loadCombineView,
@@ -742,9 +742,9 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     eyebrow: "Total QBR",
     title: "A second opinion on the quarterback.",
     description:
-      "ESPN's Total QBR (0–100), play-weighted across the season, via nflverse — one independent estimate to triangulate against CPOE (Next Gen) and pressure (PFR). When lenses agree, you trust the read more.",
+      "ESPN's Total QBR (0-100), play-weighted across the season, via nflverse: one independent estimate to triangulate against CPOE (Next Gen) and pressure (PFR). When lenses agree, you trust the read more.",
     explainer: [
-      { term: "Total QBR", definition: "ESPN's play-weighted 0–100 quarterback rating. Results/EPA-weighted." },
+      { term: "Total QBR", definition: "ESPN's play-weighted 0-100 quarterback rating. Results/EPA-weighted." },
       { term: "Consensus", definition: "QBR and CPOE as within-pool percentiles. We surface disagreement (results vs accuracy) rather than averaging it away." },
     ],
     jsonHref: "/api/nflverse/qbr",
@@ -759,10 +759,10 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     description:
       "We standardize a receiver's tracking signal (separation, YAC over expected, air-yards share) and compare it to actual PPR production. Underlying hotter than the box score = buy-low; output outrunning it = sell-high.",
     explainer: [
-      { term: "Underlying z", definition: "Standardized tracking signal — separation, YAC over expected, air-yards share — across the qualified pool." },
+      { term: "Underlying z", definition: "Standardized tracking signal (separation, YAC over expected, air-yards share) across the qualified pool." },
       { term: "Production z", definition: "Standardized actual PPR production across the same pool." },
       { term: "Gap", definition: "Underlying z minus production z. Positive = buy-low (regression up); negative = sell-high (regression risk)." },
-      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6–9, ○ under 6. Sample-size only — thin samples are where edge signals mislead most." },
+      { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6-9, ○ under 6. Sample-size only; thin samples are where edge signals mislead most." },
     ],
     jsonHref: "/api/nflverse/edge-signals",
     load: loadEdgeView,
@@ -774,10 +774,10 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     eyebrow: "Injury report",
     title: "Who is actually available.",
     description:
-      "The official, team-submitted injury designations (Out / Doubtful / Questionable) and practice status for the latest week. Availability is the single highest-value non-market driver of outcomes — reported facts as published.",
+      "The official, team-submitted injury designations (Out / Doubtful / Questionable) and practice status for the latest week. Availability is the single highest-value non-market driver of outcomes: reported facts as published.",
     explainer: [
       { term: "Out / Doubtful / Questionable", definition: "The official game-status designation a team submitted for the player." },
-      { term: "Practice status", definition: "Did Not Participate / Limited / Full — the practice signal behind the designation." },
+      { term: "Practice status", definition: "Did Not Participate / Limited / Full: the practice signal behind the designation." },
     ],
     jsonHref: "/api/nflverse/injuries",
     load: loadInjuriesView,
@@ -789,10 +789,10 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     eyebrow: "Market signal",
     title: "What the crowd is doing right now.",
     description:
-      "Live add/drop activity across Sleeper fantasy leagues over a rolling window — real crowd behavior, useful as a sentiment and breaking-news tell. Not our projection or a betting pick.",
+      "Live add/drop activity across Sleeper fantasy leagues over a rolling window: real crowd behavior, useful as a sentiment and breaking-news tell. Not our projection or a betting pick.",
     explainer: [
       { term: "Moves", definition: "How many Sleeper leagues added or dropped the player in the window." },
-      { term: "What it is", definition: "Crowd sentiment and a breaking-news tell — not a projection. The first non-nflverse feed in the registry." },
+      { term: "What it is", definition: "Crowd sentiment and a breaking-news tell, not a projection. The first non-nflverse feed in the registry." },
     ],
     jsonHref: "/api/sleeper/market-signal",
     load: loadMarketView,
@@ -802,9 +802,9 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     label: "DFS",
     tabTooltip: "DraftKings salaries (licensed, cross-checked)",
     eyebrow: "DFS salaries",
-    title: "DraftKings salaries — licensed, and cross-checked.",
+    title: "DraftKings salaries: licensed, and cross-checked.",
     description:
-      "We do not scrape DraftKings (their Terms prohibit it). DK salaries flow through licensed DFS providers, pulled from multiple feeds and reconciled — trusted when feeds agree, flagged when they disagree.",
+      "We do not scrape DraftKings (their Terms prohibit it). DK salaries flow through licensed DFS providers, pulled from multiple feeds and reconciled: trusted when feeds agree, flagged when they disagree.",
     explainer: [
       { term: "Feeds", definition: "How many licensed providers reported a salary for the player." },
       { term: "Check", definition: "agree = feeds within tolerance; single = one source; disagree = mismatch flagged with the spread." },

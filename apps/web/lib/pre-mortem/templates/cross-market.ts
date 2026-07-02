@@ -18,6 +18,6 @@ export const crossMarketTemplate: FailureModeTemplate = {
   },
 
   generateBullet: (_snapshot, _pick, _game) => {
-    return `If the alt-line market — totals, alternate spreads, player props — disagrees more sharply with our pick than it did at publish, we missed something the alt market saw and the primary line we took is the wrong read.`;
+    return `If the alt-line market (totals, alternate spreads, player props) disagrees more sharply with our pick than it did at publish, we missed something the alt market saw and the primary line we took is the wrong read.`;
   },
 };

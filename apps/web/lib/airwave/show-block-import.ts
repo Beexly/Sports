@@ -73,13 +73,13 @@ export const SHOW_BLOCK_CSV_CONTRACT: readonly ShowBlockCsvColumn[] = [
   {
     column: "fantasy_focus",
     required: false,
-    description: "true or false — whether the show focuses on fantasy sports.",
+    description: "true or false: whether the show focuses on fantasy sports.",
     example: "true",
   },
   {
     column: "betting_relevance",
     required: false,
-    description: "true or false — whether the show covers betting lines.",
+    description: "true or false: whether the show covers betting lines.",
     example: "false",
   },
   {
@@ -92,7 +92,7 @@ export const SHOW_BLOCK_CSV_CONTRACT: readonly ShowBlockCsvColumn[] = [
   {
     column: "manual_review_required",
     required: false,
-    description: "true or false — whether operator review is required.",
+    description: "true or false: whether operator review is required.",
     example: "true",
   },
   {

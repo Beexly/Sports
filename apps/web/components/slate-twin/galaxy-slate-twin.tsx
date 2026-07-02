@@ -1070,7 +1070,7 @@ function Inspector({ game, timeIndex, illustrative, marketIndex, onMarket }: { g
             <span
               className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
               style={{ color: DRIFT_HEX, border: `1px solid ${DRIFT_HEX}55`, background: `${DRIFT_HEX}12` }}
-              title="No-vig fair price shifted ≥ 1.5pp within the capture window — the market is moving"
+              title="No-vig fair price shifted ≥ 1.5pp within the capture window. The market is moving"
             >
               market moving
             </span>
@@ -1079,7 +1079,7 @@ function Inspector({ game, timeIndex, illustrative, marketIndex, onMarket }: { g
             <span
               className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
               style={{ color: ARGUED_HEX, border: `1px solid ${ARGUED_HEX}55`, background: `${ARGUED_HEX}12` }}
-              title="Book spread of no-vig fair price ≥ 4pp — the books haven&apos;t agreed on a number"
+              title="Book spread of no-vig fair price ≥ 4pp. The books haven&apos;t agreed on a number"
             >
               books argued
             </span>
@@ -1260,10 +1260,10 @@ function Manifest({ games: allGames, selectedId, onSelect, league }: { games: re
                     <span aria-label="has impact event" title="Impact event" style={{ color: BRAND_COLORS.ionMagenta }}>!</span>
                   )}
                   {g.driftState === "moving" && (
-                    <span aria-label="market moving" title="Market moving — fair price shifted ≥ 1.5pp in window" style={{ color: DRIFT_HEX, fontSize: "10px" }}>↑</span>
+                    <span aria-label="market moving" title="Market moving: fair price shifted ≥ 1.5pp in window" style={{ color: DRIFT_HEX, fontSize: "10px" }}>↑</span>
                   )}
                   {g.disagreementState === "argued" && (
-                    <span aria-label="books argued" title="Books argued — no-vig spread ≥ 4pp" style={{ color: ARGUED_HEX, fontSize: "10px" }}>≠</span>
+                    <span aria-label="books argued" title="Books argued: no-vig spread ≥ 4pp" style={{ color: ARGUED_HEX, fontSize: "10px" }}>≠</span>
                   )}
                   <span className="font-mono text-[11px] uppercase tracking-wider" style={{ color }}>{g.verdict}</span>
                 </span>

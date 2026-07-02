@@ -22,6 +22,20 @@ describe("homepage doctrine hero", () => {
     expect(layout).toMatch(/JetBrains_Mono/);
     expect(layout).toMatch(/Instrument_Serif/);
     for (const cssVar of [
+      "--f-display",
+      "--f-body",
+      "--f-numerals",
+      "--f-editorial",
+    ]) {
+      expect(layout).toContain(`variable: "${cssVar}"`);
+    }
+    // Each family is fetched exactly once: --f-arch and --f-mono are aliases
+    // of their canonical vars in design-tokens.css, not second font loads.
+    expect(layout.match(/Exo_2\(/g)).toHaveLength(1);
+    expect(layout.match(/JetBrains_Mono\(/g)).toHaveLength(1);
+    expect(tokens).toMatch(/--f-arch: var\(--f-display\)/);
+    expect(tokens).toMatch(/--f-mono: var\(--f-numerals\)/);
+    for (const cssVar of [
       "--f-arch",
       "--f-display",
       "--f-body",
@@ -29,7 +43,6 @@ describe("homepage doctrine hero", () => {
       "--f-numerals",
       "--f-editorial",
     ]) {
-      expect(layout).toContain(`variable: "${cssVar}"`);
       expect(tailwind).toContain(`var(${cssVar})`);
     }
     expect(tokens).not.toMatch(/fonts\.googleapis\.com/);

@@ -8,7 +8,7 @@ import { BRAND_NAME } from "@/lib/brand";
  */
 
 export const runtime = "edge";
-export const alt = `${BRAND_NAME} — Galaxy Fantasy: Draft & Best Ball on real, cleared data`;
+export const alt = `${BRAND_NAME} · Galaxy Fantasy: Draft & Best Ball on real, cleared data`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -95,7 +95,7 @@ export default async function Image() {
             maxWidth: 940,
           }}
         >
-          Roster ceiling, QB stacks, bye structure — with the reasoning. No fabricated projections.
+          Roster ceiling, QB stacks, bye structure, with the reasoning. No fabricated projections.
         </div>
 
         <div

@@ -90,7 +90,7 @@ export function buildMarketMemory(input: MarketMemoryInput): MarketMemory {
   const note =
     `Since you locked, the line moved ${Math.abs(lockToCurrentFavorable)} pts ` +
     `${favorableSinceLock ? "in your favor" : lockToCurrentFavorable < 0 ? "against you" : "not at all"}; ${clvWord}.` +
-    (mayUseSharpLanguage ? "" : " (Market behavior only — not attributed to sharp/public money.)");
+    (mayUseSharpLanguage ? "" : " (Market behavior only, not attributed to sharp/public money.)");
 
   return {
     openToCloseFavorable,

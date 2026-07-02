@@ -42,7 +42,7 @@ export function PageExplainer({ explainer }: { explainer: PageExplainer }) {
         className="explainer-launcher group fixed bottom-5 left-5 z-[60] inline-flex rounded-full p-[1.5px]"
         style={{ backgroundImage: "var(--signal-fade)" }}
         aria-haspopup="dialog"
-        aria-label={`${explainer.title} — guided walkthrough, ${explainer.durationLabel}`}
+        aria-label={`${explainer.title}: guided walkthrough, ${explainer.durationLabel}`}
       >
         <span className="inline-flex items-center gap-2.5 rounded-full bg-obsidian/95 px-3 py-2 backdrop-blur-sm transition-colors group-hover:bg-eclipse sm:px-4 sm:py-2.5">
           <NovaMark size={24} />

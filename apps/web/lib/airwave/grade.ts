@@ -77,9 +77,9 @@ function applyClaim(t: Tally, claim: PunditClaim): void {
 }
 
 function calibrationNote(index: number, falsifiableRate: number, graded: number): string {
-  if (graded === 0) return "No settled calls yet — nothing to grade.";
-  if (falsifiableRate < 0.34) return "Trades mostly in un-checkable takes — little here can be held to an outcome.";
-  if (index >= 75) return "Makes checkable calls and lands them — earns the airtime.";
+  if (graded === 0) return "No settled calls yet. Nothing to grade.";
+  if (falsifiableRate < 0.34) return "Trades mostly in un-checkable takes. Little here can be held to an outcome.";
+  if (index >= 75) return "Makes checkable calls and lands them. That earns the airtime.";
   if (index >= 55) return "Calls are checkable and more right than not.";
   if (index >= 40) return "On the record, but the calls are closer to a coin flip than the volume suggests.";
   return "Confident on air, but the checkable calls have not held up.";

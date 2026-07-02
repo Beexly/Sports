@@ -1,7 +1,7 @@
 import { Shell, Cards, DataTable, StatusRibbon, SectionHeader, InsightCard } from "../_components";
 import { loadOwnedSignals, playerNameMap } from "@/lib/statking/product";
 export const metadata = {
-  title: "Scouting — First-Party Player Notes",
+  title: "Scouting: First-Party Player Notes",
   description: "First-party scouting notes and owned signals, clearly labeled and rights-clean.",
   alternates: { canonical: "/stats/scouting" },
 };
@@ -21,13 +21,13 @@ export default function Page() {
       ]} />
       <InsightCard
         eyebrow="First-Party Scouting"
-        headline="We author these — no third-party copyright concerns"
+        headline="We author these: no third-party copyright concerns"
         body="All notes on this page are first-party: authored by us, rights-clean, display-approved. They represent observations about player roles, usage patterns, and opportunity signals."
         tone="good"
       />
       {shown.length === 0 ? (
         <p className="text-sm text-ion-1 py-6 px-4 border border-mineral bg-eclipse/40 text-center">
-          No public scouting notes yet — first-party notes will appear here when authored and approved for display.
+          No public scouting notes yet. First-party notes will appear here when authored and approved for display.
         </p>
       ) : (
         <>

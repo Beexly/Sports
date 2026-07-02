@@ -116,7 +116,7 @@ export async function loadNflverseQbr({
       leaders: leaders.slice(0, TOP_N),
       canPublishProjections: false,
       blockReason:
-        "ESPN Total QBR is a real, published QB-quality metric (play-weighted to the season). It is one independent estimate to triangulate against CPOE and pressure — not a projection or a pick.",
+        "ESPN Total QBR is a real, published QB-quality metric (play-weighted to the season). It is one independent estimate to triangulate against CPOE and pressure, not a projection or a pick.",
       sourceUrl: url,
       error: null,
     };

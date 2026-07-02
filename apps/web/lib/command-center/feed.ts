@@ -105,7 +105,7 @@ export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
       ],
       attention: [],
       narrative: {
-        headline: "Synthesis unavailable — investigate the DB connection and workers.",
+        headline: "Synthesis unavailable. Investigate the DB connection and workers.",
         whatChanged: [`Jarvis synthesis failed: ${message}`],
         whatsBlocked: ["The Command Center cannot rank attention without live synthesis."],
         needsYou: ["Restore the data layer, then reload."],
@@ -158,7 +158,7 @@ export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
   const derivedMode: DataMode = dbReachable ? "live" : "labeled_fallback";
   const derivedReason = dbReachable
     ? null
-    : "Database unreachable (stub or outage) — synthesized from empty fallbacks, not live state.";
+    : "Database unreachable (stub or outage). Synthesized from empty fallbacks, not live state.";
 
   const lanes: CommandCenterLane[] = [
     {
@@ -198,7 +198,7 @@ export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
       dataMode: dbReachable ? "live" : "labeled_fallback",
       fallbackReason: dbReachable
         ? null
-        : "Database unreachable (stub or outage) — pick count shown as zero, not fabricated.",
+        : "Database unreachable (stub or outage). Pick count shown as zero, not fabricated.",
       itemCount: todayPickCount,
     },
   ];

@@ -22,20 +22,20 @@ import { BRAND_NAME } from "@/lib/brand";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
-  title: `Accountability — ${BRAND_NAME}`,
+  title: `Accountability · ${BRAND_NAME}`,
   description:
     "We grade ourselves in public. Losses get autopsies. The model is versioned and every version is logged. Nothing is hidden to make the record look cleaner.",
   alternates: { canonical: "/accountability" },
   openGraph: {
-    title: `Accountability — ${BRAND_NAME}`,
+    title: `Accountability · ${BRAND_NAME}`,
     description:
-      "Public accountability page. Loss autopsies, calibration report, and the model changelog — all linked here. No cherry-picking.",
+      "Public accountability page. Loss autopsies, calibration report, and the model changelog, all linked here. No cherry-picking.",
     url: "/accountability",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: `Accountability — ${BRAND_NAME}`,
+    title: `Accountability · ${BRAND_NAME}`,
     description:
       "Losses get autopsies. The model is versioned. The record is public.",
   },
@@ -93,7 +93,7 @@ export default function AccountabilityPage() {
           <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
             Losses get autopsies. The model is versioned. Every gate flip and
             calibration update is logged with a date. Nothing is quietly removed
-            to make the record look cleaner — if a pick lost, it stays in the
+            to make the record look cleaner. If a pick lost, it stays in the
             ledger and it gets a post-mortem when review is complete.
           </p>
           <p className="mt-3 text-sm text-ion-2">
@@ -115,7 +115,7 @@ export default function AccountabilityPage() {
           <AccountabilityCard
             eyebrow="Calibration report"
             title="Honest Band"
-            body="The calibration report includes every settled canonical pick. Bootstrap-era picks are excluded by design — they do not get to inflate the record. Win rate stays gated until enough settled history exists to publish a number that is honest."
+            body="The calibration report includes every settled canonical pick. Bootstrap-era picks are excluded by design: they do not get to inflate the record. Win rate stays gated until enough settled history exists to publish a number that is honest."
             href="/performance"
             linkLabel="View Calibration Report"
           />
@@ -123,7 +123,7 @@ export default function AccountabilityPage() {
           <AccountabilityCard
             eyebrow="Closing line value"
             title="Beat the close"
-            body="The sharp-credible leading indicator of edge: whether the price we locked beat where the market closed — the one number tout services never show. Published under the same gate as the win rate, with no number shown before it can be honestly backed."
+            body="The sharp-credible leading indicator of edge: whether the price we locked beat where the market closed. It is the one number tout services never show. Published under the same gate as the win rate, with no number shown before it can be honestly backed."
             href="/clv"
             linkLabel="See our CLV"
           />
@@ -131,7 +131,7 @@ export default function AccountabilityPage() {
           <AccountabilityCard
             eyebrow="Model changelog"
             title="Ship log"
-            body="Every model version, gate flip, and calibration update is logged publicly with a date and a reason. The changelog is how the record stays readable over time — not just a snapshot of where things stand today."
+            body="Every model version, gate flip, and calibration update is logged publicly with a date and a reason. The changelog is how the record stays readable over time, not just a snapshot of where things stand today."
             href="/changelog"
             linkLabel="Read the Changelog"
           />
@@ -182,10 +182,10 @@ export default function AccountabilityPage() {
           </h2>
           <ul className="flex flex-col gap-2 text-sm leading-6 text-ion-1">
             {[
-              "No pick is removed from the ledger once settled — wins and losses stay.",
+              "No pick is removed from the ledger once settled: wins and losses stay.",
               "Bootstrap-era picks are excluded from the win-rate denominator and labelled as such.",
-              "Post-mortems are written by the operator, not generated — they go through review before publishing.",
-              "Model versions are semantic and auditable — every settled pick carries the version that produced it.",
+              "Post-mortems are written by the operator, not generated; they go through review before publishing.",
+              "Model versions are semantic and auditable: every settled pick carries the version that produced it.",
               "The calibration gate does not open until the settled sample is large enough to publish a number that is honest.",
             ].map((line) => (
               <li key={line} className="flex items-start gap-3">

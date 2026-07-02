@@ -1,7 +1,7 @@
 import { Shell, Cards, Badge, DataTable, BarChart, StatusRibbon } from "../../_components";
 import { loadMediaItems } from "@/lib/statking/product";
 export const metadata = {
-  title: "Trending — What's Moving in NFL Media",
+  title: "Trending: What's Moving in NFL Media",
   description: "The players and teams gaining media attention right now.",
   alternates: { canonical: "/stats/media/trending" },
 };
@@ -30,7 +30,7 @@ export default function Page() {
         The players and teams gaining media attention right now, ranked by source trust.
       </p>
       <div className="space-y-3">
-        <Badge tone="warn">Metadata only — headlines and mentions, not full content.</Badge>
+        <Badge tone="warn">Metadata only: headlines and mentions, not full content.</Badge>
       </div>
       <div className="border border-mineral bg-eclipse p-4">
         <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Most Mentioned Players</p>

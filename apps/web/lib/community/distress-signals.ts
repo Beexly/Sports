@@ -62,7 +62,7 @@ export const DISTRESS_RESOURCES: readonly DistressResource[] = [
   {
     name: "National Council on Problem Gambling",
     href: "https://www.ncpgambling.org/",
-    body: "Free confidential helpline, chat, and text — 24/7, all 50 US states.",
+    body: "Free confidential helpline, chat, and text: 24/7, all 50 US states.",
   },
   {
     name: "GamTalk",
@@ -283,9 +283,9 @@ export function detectDistressSignals(text: string): readonly DistressSignal[] {
 
 const KIND_MESSAGE: Record<DistressKind, string> = {
   CHASING:
-    "Hey — stepping back can be the smartest play. If this one's feeling urgent, that's worth noticing. Resources below if you want them.",
+    "Hey, stepping back can be the smartest play. If this one's feeling urgent, that's worth noticing. Resources below if you want them.",
   PANIC:
-    "This sounds tough. Pausing is a real option. There's no shame in walking away — support is available whenever you want it.",
+    "This sounds tough. Pausing is a real option. There's no shame in walking away. Support is available whenever you want it.",
   RENT_MONEY:
     "A quick note: if these funds are needed elsewhere, please step back. Free, confidential support is available 24/7.",
 };

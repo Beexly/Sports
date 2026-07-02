@@ -25,7 +25,7 @@ export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
         <p className="text-sm text-ink-300">No pick&apos;em lines are connected right now.</p>
         <p className="mx-auto mt-2 max-w-md text-[11px] leading-relaxed text-ink-500">
           The Pick&apos;em Edge reads a licensed lines feed (obtained under agreement, never scraped). Until
-          one is connected it shows the illustrative slate — never fabricated live lines.
+          one is connected it shows the illustrative slate, never fabricated live lines.
         </p>
       </div>
     );
@@ -55,7 +55,7 @@ export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
       <div className="lg:sticky lg:top-24 self-start">
         <div className="surface-card p-5">
           <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Power-Play entry</p>
-          <p className="mt-1 text-xs text-ink-400">Add 2–6 legs. Every leg must hit. We show your true odds and EV.</p>
+          <p className="mt-1 text-xs text-ink-400">Add 2-6 legs. Every leg must hit. We show your true odds and EV.</p>
 
           {entryReads.length === 0 && (
             <p className="mt-5 text-sm text-ink-500">Tap a prop's <span style={{ color: BRAND_COLORS.orbitalCyan }}>+</span> to build an entry.</p>
@@ -83,11 +83,11 @@ export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
               </div>
               <p className="mt-3 text-center text-xs">
                 <span className="rounded-full px-3 py-1 font-semibold uppercase tracking-wider" style={{ background: ev.verdict === "+EV" ? `${BRAND_COLORS.orbitalCyan}1f` : ev.verdict === "thin" ? "rgba(255,255,255,0.07)" : `${BRAND_COLORS.ionMagenta}1f`, color: ev.verdict === "+EV" ? BRAND_COLORS.orbitalCyan : ev.verdict === "thin" ? BRAND_COLORS.ionWhite : BRAND_COLORS.ionMagenta }}>
-                  {ev.verdict === "+EV" ? "Positive expected value" : ev.verdict === "thin" ? "Thin — near break-even" : "Negative EV — the book wins this one"}
+                  {ev.verdict === "+EV" ? "Positive expected value" : ev.verdict === "thin" ? "Thin: near break-even" : "Negative EV: the book wins this one"}
                 </span>
               </p>
               <p className="mt-3 text-[10px] leading-relaxed text-ink-600">
-                Combined probability is the product of each leg on our recommended side — the reason big entries rarely pay. We surface the math the slip hides.
+                Combined probability is the product of each leg on our recommended side, the reason big entries rarely pay. We surface the math the slip hides.
               </p>
             </div>
           )}

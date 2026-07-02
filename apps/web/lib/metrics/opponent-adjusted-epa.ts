@@ -56,7 +56,7 @@ function provenance(computedAt: string): StatProvenance {
       "offenses faced (lower = a better defense).",
     weakness:
       "Additive (no interaction terms), unweighted by play leverage/garbage-time, and assumes a " +
-      "balanced-enough schedule to be identifiable — early-season samples are noisy. A derived signal, " +
+      "balanced-enough schedule to be identifiable; early-season samples are noisy. A derived signal, " +
       "not a play-level projection.",
     computedAt,
   };

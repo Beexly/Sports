@@ -111,7 +111,7 @@ export function ProofOfRecord({ demo }: { demo: ProofDemo }) {
             <p className="mt-1.5 break-all font-mono text-sm" style={{ color: matches ? okColor : badColor }}>{recomputedRoot}</p>
             <p className="mt-3 flex items-center gap-2 text-sm font-semibold" style={{ color: matches ? okColor : badColor }}>
               <span aria-hidden>{matches ? "✓" : "✗"}</span>
-              {matches ? "Matches the published commitment — untampered." : "Does not match — the tamper is detected."}
+              {matches ? "Matches the published commitment. Untampered." : "Does not match. The tamper is detected."}
             </p>
             {tampered && (
               <p className="mt-2 text-xs leading-relaxed text-ink-400">
@@ -133,7 +133,7 @@ export function ProofOfRecord({ demo }: { demo: ProofDemo }) {
             </ul>
             <p className="mt-2.5 flex items-center gap-2 text-sm font-semibold" style={{ color: demo.proof.verified ? okColor : badColor }}>
               <span aria-hidden>{demo.proof.verified ? "✓" : "✗"}</span>
-              {demo.proof.verified ? "Folds up to the published root — proven in the set." : "Proof failed."}
+              {demo.proof.verified ? "Folds up to the published root. Proven in the set." : "Proof failed."}
             </p>
           </div>
         </div>

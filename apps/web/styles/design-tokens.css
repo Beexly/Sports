@@ -226,7 +226,7 @@
 
   /* ── Type families ───────────────────────────────────── */
   /* Exo 2 — official Galaxy Sports Edge display face (Brand Bible §3). */
-  --f-arch: "Exo 2", "Eurostile", "Rajdhani", system-ui, sans-serif;
+  --f-arch: var(--f-display); /* alias — same font, avoids duplicate Google Fonts request */
   --f-display: "Exo 2", "Rajdhani", "Space Grotesk", system-ui, sans-serif;
   --f-display-tech: "Space Grotesk", "Neue Montreal", system-ui, sans-serif;
   --f-body: "Geist", "Inter", system-ui, -apple-system, sans-serif;

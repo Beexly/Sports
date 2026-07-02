@@ -132,9 +132,9 @@ export function deriveSourceConfidence(input: DeriveSourceConfidenceInput): Sour
   const uncertainty = invert(weakest);
 
   const limitations: string[] = [];
-  if (rights === "low" || rights === "unknown") limitations.push("Automation rights not confirmed — gate before any use.");
-  if (license === "low" || license === "unknown") limitations.push("License terms unverified — confirm before commercial display.");
-  if (freshness === "low" || freshness === "unknown") limitations.push("Freshness unproven — validate timestamps before treating as live.");
+  if (rights === "low" || rights === "unknown") limitations.push("Automation rights not confirmed. Gate before any use.");
+  if (license === "low" || license === "unknown") limitations.push("License terms unverified. Confirm before commercial display.");
+  if (freshness === "low" || freshness === "unknown") limitations.push("Freshness unproven. Validate timestamps before treating as live.");
   if (input.providerWired === false) limitations.push("Live provider check currently failing.");
   if (ownerApproval) limitations.push("Owner/legal approval required before activation.");
 

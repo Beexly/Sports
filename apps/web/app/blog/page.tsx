@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/utils";
 import { guardPublicExcerpt, guardPublicTitle } from "@/lib/blog/public-guard";
 
 export const metadata: Metadata = {
-  title: "From the desk — Sports market analysis from Galaxy Sports Edge",
+  title: "From the desk · Sports market analysis from Galaxy Sports Edge",
   description:
     "Pre-game reads, line-movement breakdowns, and methodology notes from the Galaxy Sports Edge desk. Every post tied back to the live board.",
   alternates: { canonical: "/blog" },
@@ -62,8 +62,8 @@ export default async function BlogPage() {
             </p>
             <h1 className="text-4xl font-bold text-white mb-4">Market notes & methodology reads.</h1>
             <p className="text-ion-2 text-lg">
-              Pre-game reads, line-movement breakdowns, and methodology notes
-              — every post tied back to the live board.
+              Pre-game reads, line-movement breakdowns, and methodology notes.
+              Every post tied back to the live board.
             </p>
           </div>
 
@@ -71,7 +71,7 @@ export default async function BlogPage() {
             <div className="text-center py-20">
               <p className="text-ion-3 text-lg">
                 Posts arrive once the board opens. The first reads will cover
-                methodology — how a signal gets scored, gated, and shipped.
+                methodology: how a signal gets scored, gated, and shipped.
               </p>
             </div>
           ) : (

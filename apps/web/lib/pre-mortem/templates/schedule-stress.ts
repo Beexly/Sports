@@ -25,6 +25,6 @@ export const scheduleStressTemplate: FailureModeTemplate = {
     // mode is "their density was lower than we read."
     const sideRef = pick.side === "HOME" ? game.homeTeamShort : game.awayTeamShort;
 
-    return `If schedule density on ${sideRef} misread — they may be more fatigued than the factor reads after a late-night travel or roster-cycling situation — the line we took is too steep.`;
+    return `If schedule density on ${sideRef} misread (they may be more fatigued than the factor reads after a late-night travel or roster-cycling situation), the line we took is too steep.`;
   },
 };

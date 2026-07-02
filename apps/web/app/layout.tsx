@@ -22,18 +22,13 @@ import { SentientShell } from "@/components/motion/sentient-shell";
 import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 
 // Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3):
-// geometric, futuristic, uppercase for impact. Drives both the heavy archetype
-// slams (--f-arch) and the standard headlines (--f-display).
-const archFont = Exo_2({
-  subsets: ["latin"],
-  weight: ["700", "800", "900"],
-  variable: "--f-arch",
-  display: "swap",
-});
-
+// geometric, futuristic, uppercase for impact. Loaded ONCE (weights 500-900);
+// it drives the standard headlines (--f-display) directly, and the heavy
+// archetype slams via the `--f-arch: var(--f-display)` alias in
+// styles/design-tokens.css — same font, no duplicate Google Fonts load.
 const displayFont = Exo_2({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["500", "600", "700", "800", "900"],
   variable: "--f-display",
   display: "swap",
 });
@@ -46,12 +41,8 @@ const bodyFont = Inter({
   display: "swap",
 });
 
-const monoFont = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--f-mono",
-  display: "swap",
-});
-
+// JetBrains Mono — loaded ONCE for the numerals role; the mono role rides the
+// `--f-mono: var(--f-numerals)` alias in styles/design-tokens.css.
 const numeralsFont = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--f-numerals",
@@ -77,7 +68,9 @@ export const viewport: Viewport = {
  *
  * Fonts are loaded through next/font and bound directly to the design-system
  * CSS variables consumed by `styles/design-tokens.css` and Tailwind:
- *   --f-arch, --f-display, --f-body, --f-mono, --f-numerals, --f-editorial.
+ *   --f-display, --f-body, --f-numerals, --f-editorial (loaded here);
+ *   --f-arch and --f-mono are aliases in design-tokens.css so each family is
+ *   fetched exactly once.
  *
  * SEO foundation:
  *  - Per-page <title>/<description> override the defaults below via each
@@ -126,7 +119,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: `${BRAND_NAME} — ${BRAND_TAGLINE}`,
+        alt: `${BRAND_NAME} · ${BRAND_TAGLINE}`,
       },
     ],
   },
@@ -195,10 +188,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const fontVariables = [
-    archFont.variable,
     displayFont.variable,
     bodyFont.variable,
-    monoFont.variable,
     numeralsFont.variable,
     editorialFont.variable,
   ].join(" ");

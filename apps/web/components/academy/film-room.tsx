@@ -31,7 +31,7 @@ interface Episode {
 const EPISODES: readonly Episode[] = [
   { ep: "EP 01", title: "How to read a line like a price", minutes: "≈4 min", src: null },
   { ep: "EP 02", title: "The vig, de-vigging, and 52.4%", minutes: "≈5 min", src: null },
-  { ep: "EP 03", title: "CLV — the only honest scoreboard", minutes: "≈5 min", src: null },
+  { ep: "EP 03", title: "CLV: the only honest scoreboard", minutes: "≈5 min", src: null },
   { ep: "EP 04", title: "Key numbers and the half-points that matter", minutes: "≈4 min", src: null },
   { ep: "EP 05", title: "Bankroll: survival is the strategy", minutes: "≈4 min", src: null },
   { ep: "EP 06", title: "Steam, openers, and reading limits", minutes: "≈5 min", src: null },
@@ -51,7 +51,7 @@ export function FilmRoom() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={KEY_ART}
-          alt="The Film Room — a screening room in deep space"
+          alt="The Film Room: a screening room in deep space"
           className="block h-44 w-full object-cover sm:h-56"
           loading="lazy"
         />
@@ -90,7 +90,7 @@ export function FilmRoom() {
                   type="button"
                   onClick={() => setPlaying(e.ep)}
                   className="group relative block aspect-video w-full overflow-hidden text-left"
-                  aria-label={`Play ${e.ep} — ${e.title}`}
+                  aria-label={`Play ${e.ep}: ${e.title}`}
                 >
                   <Image src={KEY_ART} alt="" fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-105" />
                   <span
@@ -115,7 +115,7 @@ export function FilmRoom() {
               </div>
             </div>
           ) : (
-            <div key={e.ep} className="surface-card relative overflow-hidden p-5" aria-label={`${e.ep} — in production`}>
+            <div key={e.ep} className="surface-card relative overflow-hidden p-5" aria-label={`${e.ep}: in production`}>
               <div
                 aria-hidden
                 className="absolute inset-x-0 top-0 h-24 animate-pulse opacity-20"

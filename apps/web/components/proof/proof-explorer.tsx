@@ -147,7 +147,7 @@ export function ProofExplorer({
               </div>
             ) : active && active.sampleSize > 0 ? (
               <p className="mt-3 rounded-ds-md border border-mineral bg-carbon/50 px-3 py-3 text-xs text-ion-2">
-                {active.sampleSize}/30 settled in this band — building a publishable rate. We don&apos;t
+                {active.sampleSize}/30 settled in this band, building a publishable rate. We don&apos;t
                 show a win rate until a band clears 30 settled picks.
               </p>
             ) : (

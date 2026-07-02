@@ -156,7 +156,7 @@ export async function loadNflverseSnapShare({
         leaders: buildLeaders(records),
         canPublishProjections: false,
         blockReason:
-          "Snap share is real, settled workload from nflverse — the share of team offensive snaps a player was on the field for. It is historical opportunity, not a projection or a betting pick.",
+          "Snap share is real, settled workload from nflverse: the share of team offensive snaps a player was on the field for. It is historical opportunity, not a projection or a betting pick.",
         sourceUrl: url,
         error: null,
       };

@@ -12,9 +12,9 @@ import {
 import { glossaryEntry } from "@/lib/glossary";
 
 export const metadata: Metadata = {
-  title: "Closing Line Value — Did We Beat the Close?",
+  title: "Closing Line Value: Did We Beat the Close?",
   description:
-    "Closing line value (CLV) is the sharp-credible leading indicator of a real edge — and the one benchmark tout services and AI prediction sites almost never publish. We publish it under the same gate-until-defensible discipline as the public win rate.",
+    "Closing line value (CLV) is the sharp-credible leading indicator of a real edge, and the one benchmark tout services and AI prediction sites almost never publish. We publish it under the same gate-until-defensible discipline as the public win rate.",
   alternates: { canonical: "/clv" },
 };
 
@@ -57,7 +57,7 @@ export default async function ClvPage() {
             <div className="space-y-4 text-sm leading-relaxed text-ion-1">
               <p>
                 A win rate tells you what already happened. Closing line value
-                tells you whether you were <em>right to be in</em> — the strongest
+                tells you whether you were <em>right to be in</em>. It is the strongest
                 leading indicator that an edge is real, because the closing line is
                 the market&apos;s most efficient estimate. Beat it consistently and
                 profit tends to follow; lose to it and even a lucky run erodes.
@@ -92,7 +92,7 @@ export default async function ClvPage() {
             </h2>
             <p className="mt-1.5 text-sm text-ion-1">
               The CLV Tracker logs your bets, settles them against the closing line,
-              and shows whether <em>you</em> beat the close — your real scoreboard,
+              and shows whether <em>you</em> beat the close: your real scoreboard,
               stored in your browser. The same metric we hold ourselves to.
             </p>
             <Link
@@ -159,7 +159,7 @@ function ClvGatedState({
       <div className="mb-4 flex items-center gap-2">
         <span className="h-2 w-2 rounded-full bg-caution animate-live-pulse" />
         <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
-          CLV report — accruing
+          CLV report: accruing
         </h2>
       </div>
       <p className="text-sm leading-relaxed text-ion-1">{message}</p>
@@ -178,8 +178,8 @@ function ClvGatedState({
         </div>
       </div>
       <p className="mt-4 text-xs text-ion-3">
-        No beat-close rate is shown until the sample is large enough to be honest —
-        the same discipline as the public win rate.
+        No beat-close rate is shown until the sample is large enough to be honest.
+        It's the same discipline as the public win rate.
       </p>
     </section>
   );
@@ -204,7 +204,7 @@ function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
           {policy.beatCloseCiLowPct != null && (
             <div className="mt-4 flex flex-col items-center gap-2">
               <p className="font-mono text-xs tabular-nums text-ion-3">
-                95% confidence interval: {policy.beatCloseCiLowPct}%–{policy.beatCloseCiHighPct}%
+                95% confidence interval: {policy.beatCloseCiLowPct}%-{policy.beatCloseCiHighPct}%
               </p>
               <span
                 className={
@@ -215,7 +215,7 @@ function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
               >
                 {policy.clearsBreakEven
                   ? "Lower bound clears the 52.4% break-even line"
-                  : "Range still includes 52.4% break-even — no settled-edge claim yet"}
+                  : "Range still includes 52.4% break-even. No settled-edge claim yet"}
               </span>
             </div>
           )}

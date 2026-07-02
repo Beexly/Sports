@@ -8,14 +8,14 @@ import { HumanPerformancePanel } from "@/components/human/human-performance-pane
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Human Performance — Confidence, Not Claims",
+  title: "Human Performance: Confidence, Not Claims",
   description:
-    "A confidence-band layer that turns public human-performance signals — venue surface, weather, official injury designations — into better questions about uncertainty. It never claims a player's body, never trusts a video-game number, and only ever widens the band or moves a read to watchlist / no-bet.",
+    "A confidence-band layer that turns public human-performance signals (venue surface, weather, official injury designations) into better questions about uncertainty. It never claims a player's body, never trusts a video-game number, and only ever widens the band or moves a read to watchlist / no-bet.",
   alternates: { canonical: "/human" },
 };
 
 const RULES: readonly string[] = [
-  "Never claims a player's medical state — only \"availability uncertain per public report.\"",
+  "Never claims a player's medical state, only \"availability uncertain per public report.\"",
   "Only ever WIDENS uncertainty or downgrades to watchlist / no-bet. Never manufactures confidence.",
   "Public data only: official injury designations, public weather, public venue facts.",
   "Video-game ratings are priors (weight-capped ≤ 5%), never truth.",
@@ -54,7 +54,7 @@ export default function HumanPage(): JSX.Element {
               <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-300">
                 This layer makes the edge <em>more honest about uncertainty</em>, not more confident. It reads
                 the venue&apos;s surface and roof, the game-day weather, and the official injury designation,
-                and turns them into a band that can only widen — plus a clear verdict: play, watchlist, or
+                and turns them into a band that can only widen, plus a clear verdict: play, watchlist, or
                 no-bet. It never asserts a body and never trusts a video-game rating.
               </p>
             </Reveal>

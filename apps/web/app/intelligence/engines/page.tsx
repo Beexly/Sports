@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse loads (scoring-zone / team / proof) need headroom
 
 export const metadata: Metadata = {
-  title: "Intelligence Engines — the advanced-data layer, browsable",
+  title: "Intelligence Engines: the advanced-data layer, browsable",
   description:
     "Every advanced-data engine GSE runs in one browsable surface: QB, RB, WR/TE, team, and cross-position signals mined from cleared nflverse data, each read for the predictive edge, each a live glass-box API with an honest empty state.",
   alternates: { canonical: "/intelligence/engines" },
@@ -56,14 +56,14 @@ const MORE_ENGINES: readonly MoreEngine[] = [
   },
   {
     name: "QB Consensus",
-    summary: "ESPN QBR (results) vs Next Gen CPOE (accuracy), triangulated — disagreement surfaced, not averaged.",
+    summary: "ESPN QBR (results) vs Next Gen CPOE (accuracy), triangulated. Disagreement surfaced, not averaged.",
     api: "/api/intelligence/qb-consensus",
     apiLabel: "JSON",
     board: "/players/qbr",
   },
   {
     name: "Rushing Efficiency",
-    summary: "RYOE/att vs volume with stacked-box context — bell-cow / buy-low / volume-dependent.",
+    summary: "RYOE/att vs volume with stacked-box context: bell-cow / buy-low / volume-dependent.",
     api: "/api/intelligence/rushing-efficiency",
     apiLabel: "JSON",
     board: "/players/opportunity",

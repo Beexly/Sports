@@ -20,9 +20,9 @@ const BOARD_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "Today's Board", href: "/board", desc: "Today's picks, scored and ranked" },
-      { label: "The House", href: "/house", desc: "NFL hub — odds, picks & matchups" },
+      { label: "The House", href: "/house", desc: "NFL hub: odds, picks & matchups" },
       { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },
-      { label: "Daily Briefing", href: "/gsn", desc: "Our daily briefing format — live feed coming soon" },
+      { label: "Daily Briefing", href: "/gsn", desc: "The daily rundown · live feed coming soon" },
     ],
   },
 ];
@@ -115,7 +115,7 @@ export async function Nav() {
 
           <nav className="nav-links" aria-label="Primary">
             <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
-            <Link href="/players" title="The Lab: one surface, every player, every signal">
+            <Link href="/players" title="The Lab: every player, every signal, one place">
               The Lab
             </Link>
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />

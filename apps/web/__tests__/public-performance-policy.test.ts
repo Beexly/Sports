@@ -23,7 +23,7 @@ describe("evaluatePublicPerformancePolicy", () => {
     expect(p.blockers).toHaveLength(0);
     expect(p.publicWinRate).toBe(57.9); // 55 / (55+40) → 57.9%
     // Record uses the en-dash separator the policy ships today.
-    expect(p.publicRecord).toBe("55W–40L–5P");
+    expect(p.publicRecord).toBe("55W-40L-5P");
   });
 
   it("blocks when readiness gate is off", () => {

@@ -184,7 +184,7 @@ export function SleeperConnect() {
             <p className="text-xs" style={{ color: BRAND_COLORS.softUltraviolet }}>League imported (read-only).</p>
             <p className="mt-1 text-[11px] leading-relaxed text-ink-400">
               Live lineup, waiver, and trade recommendations on these real players activate when the licensed
-              projections source is wired behind the founder gate. The GM Autopilot then drives this roster —
+              projections source is wired behind the founder gate. The GM Autopilot then drives this roster:
               still proposal-only, with every move explained, ledgered, and human-approved.
             </p>
             <a href="/fantasy/autopilot" className="mt-2 inline-block text-sm font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>See how the Autopilot would drive it →</a>
@@ -263,7 +263,7 @@ function ConnectorMatrix() {
       <p className="text-xs uppercase tracking-[0.18em] text-ink-500">What else can I connect?</p>
       <p className="mt-1 text-[11px] leading-relaxed text-ink-400">
         The honest matrix. Sleeper syncs today; everything else is shown with its real legal status. We
-        never scrape closed platforms or use unofficial private-cookie endpoints — when something can't be
+        never scrape closed platforms or use unofficial private-cookie endpoints. When something can't be
         synced, we say so and explain why.
       </p>
       <div className="mt-4 space-y-4">

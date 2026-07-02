@@ -18,16 +18,16 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "The Airwave Ledger — Pundits, On the Record",
+  title: "The Airwave Ledger: Pundits, On the Record",
   description:
-    "Sports takes, held to an outcome. The Airwave Ledger turns what pundits say on air into a paraphrased, timestamped, graded record — the same glass-box standard the engine holds itself to. Illustrative personas until founded.",
+    "Sports takes, held to an outcome. The Airwave Ledger turns what pundits say on air into a paraphrased, timestamped, graded record, the same glass-box standard the engine holds itself to. Illustrative personas until founded.",
   alternates: { canonical: "/airwave" },
 };
 
 const STEPS = [
-  { n: "01", t: "Capture the take", b: "A take airs on a show, a podcast, or a stream. We log what was claimed — a paraphrase, never the raw audio, never a verbatim quote." },
+  { n: "01", t: "Capture the take", b: "A take airs on a show, a podcast, or a stream. We log what was claimed: a paraphrase, never the raw audio, never a verbatim quote." },
   { n: "02", t: "Reduce to a claim", b: "Each take becomes a structured row: the subject, the side, how emphatic the language was, and whether it is even checkable against an outcome." },
-  { n: "03", t: "Grade it like our own", b: "When the game settles, the claim is graded Hit / Miss / Push — and a vague take is marked Unfalsifiable, scoring nothing. The same standard we grade ourselves by." },
+  { n: "03", t: "Grade it like our own", b: "When the game settles, the claim is graded Hit / Miss / Push, and a vague take is marked Unfalsifiable, scoring nothing. The same standard we grade ourselves by." },
 ];
 
 export default async function AirwavePage() {
@@ -69,7 +69,7 @@ export default async function AirwavePage() {
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
                 Sports television and radio run on confidence with no receipt. The Airwave Ledger
-                gives the take a receipt — a paraphrased claim, the moment it aired, the outcome,
+                gives the take a receipt: a paraphrased claim, the moment it aired, the outcome,
                 and a running accountability index. Being loud is not the same as being right, and
                 a take too vague to check earns no credit at all.
               </p>
@@ -168,17 +168,17 @@ export default async function AirwavePage() {
               <div className="surface-card p-5">
                 <p className="text-xs uppercase tracking-[0.16em] text-ink-500">How to read this</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink-300">
-                  The board above is <strong className="text-ink-100">illustrative</strong> — the
+                  The board above is <strong className="text-ink-100">illustrative</strong>. The
                   personas are fictional and the matchups are generic, so nothing here is a claim
                   about a living person. The method is the real thing: a take is paraphrased,
                   timestamped, and graded against what actually happened. Live capture of named
                   shows, and any public scorecard tied to a real person, are held behind a founder
-                  gate and a legal review — never on by default, and never an audio archive.
+                  gate and a legal review: never on by default, and never an audio archive.
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-ink-400">
                   The accountability index rewards making checkable calls and landing them. Emphatic
                   calls carry more weight than hedges, and un-checkable hot takes can never earn
-                  credit — so volume without conviction trends toward zero, by design.
+                  credit, so volume without conviction trends toward zero, by design.
                 </p>
               </div>
               <div className="mt-6 flex flex-wrap justify-center gap-3">

@@ -75,7 +75,7 @@ export interface SleeperLeagueResult {
 }
 
 const GATED_NOTE =
-  "Roster imported read-only. Live lineup, waiver, and trade recommendations on these real players activate when the licensed projections source is wired behind the founder gate — never faked.";
+  "Roster imported read-only. Live lineup, waiver, and trade recommendations on these real players activate when the licensed projections source is wired behind the founder gate, never faked.";
 
 // The ~5MB player map rarely changes; Sleeper asks callers not to pull it more
 // than once a day. Cache it server-side and share it across all users/requests.

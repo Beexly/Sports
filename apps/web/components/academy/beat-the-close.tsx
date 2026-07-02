@@ -66,7 +66,7 @@ const ROUNDS: readonly Round[] = [
       { intel: "Steam: VECTOR -6.5 → -7.5 across the market in minutes", move: -1.0 },
       { intel: "Two more books follow to -7.5", move: 0 },
       { intel: "Buyback: sharp money takes the +7.5 hook", move: +0.5 },
-      { intel: "Weather system trending over the dome — no factor", move: 0 },
+      { intel: "Weather system trending over the dome: no factor", move: 0 },
     ],
     closeDrift: +0.5,
   },
@@ -75,7 +75,7 @@ const ROUNDS: readonly Round[] = [
     matchup: "ONYX @ PULSE",
     open: -2.5,
     ticks: [
-      { intel: "Quiet board — limits still low", move: 0 },
+      { intel: "Quiet board, limits still low", move: 0 },
       { intel: "ONYX road fade chatter on the feeds (narrative only)", move: 0 },
       { intel: "Limits rise; first real money lands on PULSE", move: -0.5 },
       { intel: "Market crosses the key number to -3", move: -0.5 },
@@ -87,7 +87,7 @@ const ROUNDS: readonly Round[] = [
     matchup: "CINDER @ APEX",
     open: -9.5,
     ticks: [
-      { intel: "APEX rotation rumors — nothing confirmed", move: +0.5 },
+      { intel: "APEX rotation rumors, nothing confirmed", move: +0.5 },
       { intel: "Rumors denied by the room; line snaps back", move: -0.5 },
       { intel: "Public piles on APEX at 78%", move: -0.5 },
       { intel: "Sharp buyback on CINDER +10.5 at full limits", move: +1.0 },
@@ -100,7 +100,7 @@ const ROUNDS: readonly Round[] = [
     open: -4.5,
     ticks: [
       { intel: "RIDGE's edge protector questionable on the report", move: -0.5 },
-      { intel: "Market shrugs — limits doubled, number holds", move: 0 },
+      { intel: "Market shrugs: limits doubled, number holds", move: 0 },
       { intel: "Respected origination on QUASAR confirmed", move: -0.5 },
       { intel: "Late public wave on QUASAR", move: -0.5 },
     ],
@@ -112,7 +112,7 @@ const ROUNDS: readonly Round[] = [
     open: -1.5,
     ticks: [
       { intel: "Coin-flip board, both rooms healthy", move: 0 },
-      { intel: "Sharp split — respected money on BOTH sides at different numbers", move: +0.5 },
+      { intel: "Sharp split: respected money on BOTH sides at different numbers", move: +0.5 },
       { intel: "Market drifts back through pick'em territory", move: +1.0 },
       { intel: "Total board frozen at several shops (uncertainty signal)", move: +0.5 },
     ],
@@ -171,9 +171,9 @@ function grade(round: Round, action: "TAKE" | "PASS", locked: number | null): Ro
     const points = totalMove <= -0.5 ? 2 : totalMove >= 0.5 ? 0 : 1;
     const read =
       points === 2
-        ? "Correct restraint — the number only got worse. Passing was the +EV move."
+        ? "Correct restraint. The number only got worse, and passing was the +EV move."
         : points === 0
-          ? "The market came TO you and you let it pass — entries that improve are gifts."
+          ? "The market came TO you and you let it pass. Entries that improve are gifts."
           : "Flat market. A pass costs nothing here.";
     return { matchup: round.matchup, action, locked: null, close, clv: 0, points, read };
   }
@@ -182,10 +182,10 @@ function grade(round: Round, action: "TAKE" | "PASS", locked: number | null): Ro
   const points = beat >= 1 ? 5 : beat >= 0.5 ? 4 : beat === 0 ? 2 : beat <= -1 ? 0 : 1;
   const read =
     beat >= 0.5
-      ? `Beat the close by ${beat.toFixed(1)} — you priced it before the market finished agreeing.`
+      ? `Beat the close by ${beat.toFixed(1)}. You priced it before the market finished agreeing.`
       : beat === 0
         ? "Matched the close. No edge surrendered, none gained."
-        : `Lost ${Math.abs(beat).toFixed(1)} to the close — you paid for information that was already in the price.`;
+        : `Lost ${Math.abs(beat).toFixed(1)} to the close. You paid for information that was already in the price.`;
   return { matchup: round.matchup, action, locked, close, clv: beat, points, read };
 }
 
@@ -299,7 +299,7 @@ export function BeatTheClose() {
           </h3>
           <p className="max-w-2xl text-sm leading-relaxed text-ink-300">
             A line opens. Intel lands, the number moves. <strong className="text-white">TAKE</strong>{" "}
-            it whenever you like — or <strong className="text-white">PASS</strong>. At the close,
+            it whenever you like, or <strong className="text-white">PASS</strong>. At the close,
             one grade: did your number beat it? No wins, no losses. Only price.
           </p>
           <div className="flex items-center gap-5">
@@ -376,7 +376,7 @@ export function BeatTheClose() {
               className="rounded-full border px-6 py-3 text-sm font-semibold text-ink-200 transition-colors hover:text-white"
               style={{ borderColor: `${uv}55` }}
             >
-              PASS — no bet
+              PASS · no bet
             </button>
           </div>
           <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.24em] text-ink-500">

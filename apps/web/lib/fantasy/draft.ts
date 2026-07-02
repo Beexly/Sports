@@ -75,12 +75,12 @@ export function recommend(available: readonly Player[], roster: readonly Player[
     const reasons: string[] = [];
     const v = vor(player, universe);
     if (need >= 1.2) reasons.push(`Fills your biggest need at ${player.pos}.`);
-    else if (need <= 0.7) reasons.push(`Depth/luxury — you've covered ${player.pos}.`);
-    if (cliff > 1) reasons.push(`Last player in Tier ${tier(player, universe)} at ${player.pos} — a cliff after this.`);
+    else if (need <= 0.7) reasons.push(`Depth/luxury: you've covered ${player.pos}.`);
+    if (cliff > 1) reasons.push(`Last player in Tier ${tier(player, universe)} at ${player.pos}, a cliff after this.`);
     reasons.push(`Value over replacement: ${v >= 0 ? "+" : ""}${v}.`);
-    if (byeN >= 2) reasons.push(`Bye stack risk — you'd have ${byeN + 1} starters on Week ${player.bye}.`);
+    if (byeN >= 2) reasons.push(`Bye stack risk: you'd have ${byeN + 1} starters on Week ${player.bye}.`);
     if (player.injury !== "healthy") reasons.push(`Injury flag: ${player.injury}.`);
-    if (player.trend !== "flat") reasons.push(`Trend ${player.trend === "up" ? "↑" : "↓"} — ${player.role}.`);
+    if (player.trend !== "flat") reasons.push(`Trend ${player.trend === "up" ? "↑" : "↓"} · ${player.role}.`);
 
     return { player, score, reasons };
   });
@@ -145,7 +145,7 @@ export function detectRuns(recentPositions: readonly Pos[], window = 5, threshol
       pos,
       count: counts[pos],
       window: slice.length,
-      message: `${pos} run — ${counts[pos]} of the last ${slice.length} picks. The tier may break; draft ${pos} now or pivot to value.`,
+      message: `${pos} run: ${counts[pos]} of the last ${slice.length} picks. The tier may break; draft ${pos} now or pivot to value.`,
     }))
     .sort((a, b) => b.count - a.count);
 }

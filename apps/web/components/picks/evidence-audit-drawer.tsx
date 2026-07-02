@@ -359,7 +359,7 @@ function DetailedAudit({
 
       {audit.isBootstrap && (
         <div className="rounded-md border border-ultraviolet/40 bg-ultraviolet/5 px-3 py-2 text-[11px] text-ultraviolet-glow">
-          Bootstrap-mode pick — recorded for review, not part of canonical
+          Bootstrap-mode pick: recorded for review, not part of canonical
           performance history.
         </div>
       )}
@@ -402,7 +402,7 @@ function DetailedAudit({
 
       {audit.deathClock && (
         <section data-testid="death-clock">
-          <SectionHeader title="Death clock — market since publish" />
+          <SectionHeader title="Death clock: market since publish" />
           <dl className="mt-3 space-y-2 text-xs">
             <Row
               k="Published"
@@ -417,7 +417,7 @@ function DetailedAudit({
               k="Movement"
               v={
                 audit.deathClock.direction === "flat"
-                  ? "flat — the market hasn't moved"
+                  ? "flat, the market hasn't moved"
                   : `${audit.deathClock.delta > 0 ? "+" : ""}${audit.deathClock.delta} ${audit.deathClock.direction === "toward_pick" ? "toward this pick" : "against this pick"} · ${audit.deathClock.ratePerHour}/h`
               }
             />
@@ -427,7 +427,7 @@ function DetailedAudit({
             />
           </dl>
           <p className="mt-2 text-[10px] leading-relaxed text-ink-400">
-            Price movement only — what the books charge now vs when this pick
+            Price movement only: what the books charge now vs when this pick
             was published. Median across books; describes the market, not the
             outcome.
           </p>
@@ -657,7 +657,7 @@ function FragilityPanel({ fragility }: { fragility: FragilityView | null }) {
   if (!fragility) return null;
   return (
     <section data-testid="fragility-score">
-      <SectionHeader title="Fragility score — structural" />
+      <SectionHeader title="Fragility score: structural" />
       <div className="mt-3 flex items-baseline gap-3">
         <span className="font-numerals text-2xl font-semibold tabular-nums text-white">
           {fragility.score}

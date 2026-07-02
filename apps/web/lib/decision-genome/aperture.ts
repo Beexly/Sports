@@ -98,7 +98,7 @@ export function evaluateAperture(
 
   // ── Model refusal → PASS (restraint is the decision). ──
   if (model.refused) {
-    downgrade("pass", "refusal-gate", "Model abstained (conformal refusal) — no action is the edge.");
+    downgrade("pass", "refusal-gate", "Model abstained (conformal refusal). No action is the edge.");
   }
 
   const edge = computeEdge(model, market);
@@ -112,32 +112,32 @@ export function evaluateAperture(
 
   // ── Availability gate: theatrical edge → WAIT (may become reachable). ──
   if (!market.userAvailable) {
-    downgrade("wait", "availability-gate", "Number is not user-reachable (limits/jurisdiction/delay) — edge is theatrical for now.");
+    downgrade("wait", "availability-gate", "Number is not user-reachable (limits/jurisdiction/delay). Edge is theatrical for now.");
   }
 
   // ── Truth gate: thin/stale/conflicting evidence → SHADOW. ──
   if (evidence.conflict) {
-    downgrade("shadow", "truth-gate", "Sources materially conflict — not clean enough to act.");
+    downgrade("shadow", "truth-gate", "Sources materially conflict. Not clean enough to act.");
   }
   if (evidence.independentSources < thresholds.minIndependentSources) {
     downgrade("shadow", "truth-gate", `Only ${evidence.independentSources} independent source(s); need ${thresholds.minIndependentSources}.`);
   }
   if (evidence.freshnessAgeMinutes != null && evidence.freshnessAgeMinutes > thresholds.maxFreshnessMinutes) {
-    downgrade("wait", "time-gate", `Evidence is ${evidence.freshnessAgeMinutes}m old (max ${thresholds.maxFreshnessMinutes}m) — refresh before acting.`);
+    downgrade("wait", "time-gate", `Evidence is ${evidence.freshnessAgeMinutes}m old (max ${thresholds.maxFreshnessMinutes}m). Refresh before acting.`);
   }
 
   // ── Uncertainty gate: low calibration / wide band → SHADOW. ──
   const bandWidth = model.uncertaintyBand.high - model.uncertaintyBand.low;
   if (model.calibrationHealth < thresholds.minCalibrationHealth) {
-    downgrade("shadow", "uncertainty-gate", `Calibration health ${model.calibrationHealth.toFixed(2)} below ${thresholds.minCalibrationHealth} — confidence not yet trustworthy.`);
+    downgrade("shadow", "uncertainty-gate", `Calibration health ${model.calibrationHealth.toFixed(2)} below ${thresholds.minCalibrationHealth}. Confidence not yet trustworthy.`);
   }
   if (bandWidth > thresholds.maxUncertaintyWidth) {
-    downgrade("shadow", "uncertainty-gate", `Uncertainty band width ${bandWidth.toFixed(2)} exceeds ${thresholds.maxUncertaintyWidth} — too wide to act.`);
+    downgrade("shadow", "uncertainty-gate", `Uncertainty band width ${bandWidth.toFixed(2)} exceeds ${thresholds.maxUncertaintyWidth}. Too wide to act.`);
   }
 
   // ── Protection gate: RG risk blocks a public-actionable Signal (still allowed as Shadow). ──
   if (compliance.responsibleGamingRisk) {
-    downgrade("shadow", "protection-gate", "Responsible-gaming risk flag — held to shadow, not surfaced as action.");
+    downgrade("shadow", "protection-gate", "Responsible-gaming risk flag: held to shadow, not surfaced as action.");
   }
 
   if (state === "signal") {

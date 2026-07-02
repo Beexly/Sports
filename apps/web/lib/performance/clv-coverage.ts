@@ -76,7 +76,7 @@ export function evaluateClvCoverage(input: ClvCoverageInput): ClvCoverage {
       health: "NO_DATA",
       invariantHolds: false,
       operatorMessage:
-        "No settled, played, canonical picks yet — CLV coverage is not measurable until picks settle against real games.",
+        "No settled, played, canonical picks yet. CLV coverage is not measurable until picks settle against real games.",
       remediation: [],
     };
   }
@@ -91,7 +91,7 @@ export function evaluateClvCoverage(input: ClvCoverageInput): ClvCoverage {
 
   const operatorMessage = invariantHolds
     ? `CLV invariant holds: all ${settledEligible} settled picks were graded against the close (100%).`
-    : `CLV coverage ${coverageRatePct}% — ${uncovered} of ${settledEligible} settled picks have NO closing-line grade. ` +
+    : `CLV coverage ${coverageRatePct}%: ${uncovered} of ${settledEligible} settled picks have NO closing-line grade. ` +
       `The beat-close rate is being computed over a partial sample until this reaches 100%.`;
 
   const remediation = invariantHolds

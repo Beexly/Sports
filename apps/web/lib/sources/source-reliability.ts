@@ -69,7 +69,7 @@ export function scoreSourceReliability(input: SourceReliabilityInput): SourceRel
       score: 0,
       tier: "SUSPENDED",
       confidencePenalty: 1,
-      flags: [`rights ${input.rightsStatus} — unusable`],
+      flags: [`rights ${input.rightsStatus}: unusable`],
       usableForPublicClaims: false,
     };
   }
@@ -102,7 +102,7 @@ export function scoreSourceReliability(input: SourceReliabilityInput): SourceRel
   if (!input.schemaStable) flags.push("schema changed");
   if (input.agreementRate < 0.8) flags.push("disagrees with other sources");
   if (input.settlementLossesAttributed > 0) flags.push(`${input.settlementLossesAttributed} settlement loss(es) attributed`);
-  if (!RIGHTS_OK.has(input.rightsStatus)) flags.push(`rights ${input.rightsStatus} — not public-usable`);
+  if (!RIGHTS_OK.has(input.rightsStatus)) flags.push(`rights ${input.rightsStatus}: not public-usable`);
 
   const tier: ReliabilityTier =
     score >= 80 ? "HIGH" : score >= 50 ? "MEDIUM" : score >= 20 ? "LOW" : "SUSPENDED";

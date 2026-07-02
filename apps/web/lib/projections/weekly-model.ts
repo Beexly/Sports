@@ -119,7 +119,7 @@ function projectOne(anchor: PlayerWeeklyAnchors, env: MatchupEnvironment): Weekl
       point: 0,
       floor: 0,
       ceiling: 0,
-      drivers: ["Ruled OUT — projected to 0 (no fabricated production)."],
+      drivers: ["Ruled OUT: projected to 0 (no fabricated production)."],
     };
   }
 
@@ -182,7 +182,7 @@ function provenance(computedAt: string): StatProvenance {
       "documented multipliers for process grade, opponent-adjusted defense faced, and game environment " +
       "(implied total, home/away, rest). Availability only widens the band; an official Out zeroes it.",
     weakness:
-      "v1 is a transparent composition, NOT yet backtested — ships gated (canPublishProjections:false). " +
+      "v1 is a transparent composition, NOT yet backtested. Ships gated (canPublishProjections:false). " +
       "Adjustment caps are modelling choices; no player-vs-player matchup interaction; the opponent term " +
       "needs phase-correct (pass/rush) defAdj from the caller. Calibration (MAE/Brier) gates go-live.",
     computedAt,

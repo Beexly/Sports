@@ -101,7 +101,7 @@ function restraintAlpha(g: DecisionGenome): AlphaScore {
   const restrainedAperture: readonly ApertureState[] = ["pass", "wait", "shadow", "quarantine"];
   const isRestrained = restrainedTypes.has(g.decisionType) || restrainedAperture.includes(g.aperture);
   if (!isRestrained) {
-    return { dimension: "restraint", score: 0.5, basis: "action taken — restraint not exercised (neutral)" };
+    return { dimension: "restraint", score: 0.5, basis: "action taken, restraint not exercised (neutral)" };
   }
   // A graded saved-loss makes restraint provably valuable.
   if (g.proof.savedLoss != null) {
@@ -123,7 +123,7 @@ function availabilityAlpha(g: DecisionGenome): AlphaScore {
 function proofAlpha(g: DecisionGenome): AlphaScore {
   const { clv, brier } = g.proof;
   if (clv == null && brier == null) {
-    return { dimension: "proof", score: null, basis: "not settled — proof alpha pending" };
+    return { dimension: "proof", score: null, basis: "not settled: proof alpha pending" };
   }
   const clvScore = clv == null ? null : clamp01(0.5 + clv * 10); // ±5% CLV spans the range
   const brierScoreNorm = brier == null ? null : clamp01(1 - brier); // brier 0 → 1, 1 → 0

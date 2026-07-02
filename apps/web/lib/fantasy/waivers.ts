@@ -48,7 +48,7 @@ export function waiverTargets(universe: readonly Player[] = activePlayerPool()):
     const ratio = s / max;
     const tier: FaabTier = ratio > 0.85 ? "Priority" : ratio > 0.62 ? "Target" : ratio > 0.42 ? "Speculative" : "Dart";
     const reason =
-      p.trend === "up" && p.usage > 0.4 ? "Role and usage both trending up — the highest-conviction add."
+      p.trend === "up" && p.usage > 0.4 ? "Role and usage both trending up: the highest-conviction add."
       : p.trend === "up" ? "Ascending arrow; get ahead of the breakout."
       : p.injury !== "healthy" ? `Upside add gated by a ${p.injury} tag.`
       : p.usage > 0.45 ? "Standalone snaps now; matchup-proof flex."

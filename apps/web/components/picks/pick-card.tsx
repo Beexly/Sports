@@ -227,13 +227,13 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
             <IntelChip label="H2H +" positive />
           )}
           {breakdown.headToHeadScore !== undefined && breakdown.headToHeadScore < 0 && (
-            <IntelChip label="H2H –" positive={false} />
+            <IntelChip label="H2H -" positive={false} />
           )}
           {breakdown.venueFormScore !== undefined && breakdown.venueFormScore > 0 && (
             <IntelChip label="Venue +" positive />
           )}
           {breakdown.venueFormScore !== undefined && breakdown.venueFormScore < 0 && (
-            <IntelChip label="Venue –" positive={false} />
+            <IntelChip label="Venue -" positive={false} />
           )}
           {breakdown.crossMarketScore !== undefined && breakdown.crossMarketScore > 0 && (
             <IntelChip label="Markets align" positive />
@@ -480,7 +480,7 @@ function LockedValue({ label }: { label: string }) {
   return (
     <Link
       href="/pricing"
-      aria-label={`${label} unlocks on Pro — see pricing`}
+      aria-label={`${label} unlocks on Pro. See pricing`}
       className="flex items-center gap-1 text-xs text-ion-1 transition-colors hover:text-plasma"
     >
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">

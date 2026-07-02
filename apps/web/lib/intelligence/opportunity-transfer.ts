@@ -366,13 +366,13 @@ export function buildOpportunityTransfer(
     let note: string;
     if (!hasUsage && !beneficiary) {
       confidence = "low";
-      note = `${inj.playerName} is OUT, but we measured no recent target/carry usage and found no identifiable backup on the depth chart — no transfer to project.`;
+      note = `${inj.playerName} is OUT, but we measured no recent target/carry usage and found no identifiable backup on the depth chart, so there is no transfer to project.`;
     } else if (!hasUsage) {
       confidence = "low";
-      note = `${inj.playerName} is OUT, but his recent target/carry footprint is negligible — the vacated opportunity is small, so any transfer is marginal.`;
+      note = `${inj.playerName} is OUT, but his recent target/carry footprint is negligible. The vacated opportunity is small, so any transfer is marginal.`;
     } else if (!beneficiary) {
       confidence = "medium";
-      note = `${inj.playerName} (OUT) vacates ${round(totalVacated)} targets+carries per game, but no same-position backup is listed on the depth chart — the opportunity is open but the beneficiary is unclear.`;
+      note = `${inj.playerName} (OUT) vacates ${round(totalVacated)} targets+carries per game, but no same-position backup is listed on the depth chart. The opportunity is open but the beneficiary is unclear.`;
     } else {
       // Strong, clean signal: real vacated volume AND a named next man up.
       const share = redistribution[0]?.share ?? 0;
@@ -446,7 +446,7 @@ export async function loadOpportunityTransfer({
     sourceRows: injury.sourceRows + depth.sourceRows + stats.records.length,
     rows,
     canPublishProjections: false,
-    note: "Vacated-role opportunity transfer: when a starter is OUT, the targets + carries his role commanded transfer through shrunk Markov role-state transitions to the next men up. No injuries means no transfer rows — we never fabricate a cascade. Context, not a point projection.",
+    note: "Vacated-role opportunity transfer: when a starter is OUT, the targets + carries his role commanded transfer through shrunk Markov role-state transitions to the next men up. No injuries means no transfer rows. We never fabricate a cascade. Context, not a point projection.",
     sourceUrl: statsUrl,
     error: null,
   };

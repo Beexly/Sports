@@ -11,9 +11,9 @@ import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 import { glossaryEntry } from "@/lib/glossary";
 
 export const metadata: Metadata = {
-  title: "CLV Tracker — Your Glass-Box Bet Ledger",
+  title: "CLV Tracker: Your Glass-Box Bet Ledger",
   description:
-    "Log your bets, settle them with the closing line, and track the metric that actually predicts edge: Closing Line Value — plus ROI and calibration. Stored locally; nothing leaves your device.",
+    "Log your bets, settle them with the closing line, and track the metric that actually predicts edge: Closing Line Value, plus ROI and calibration. Stored locally; nothing leaves your device.",
   alternates: { canonical: "/track" },
 };
 
@@ -39,7 +39,7 @@ export default async function TrackPage() {
           <TierGatePanel
             need="ELITE"
             surface="The CLV Ledger + Staking Toolkit"
-            blurb="The glass-box bet ledger, closing-line settlement, ROI and calibration readouts, and the Kelly-aware staking calculator — the professional toolkit, reserved for Elite members."
+            blurb="The glass-box bet ledger, closing-line settlement, ROI and calibration readouts, and the Kelly-aware staking calculator: the professional toolkit, reserved for Elite members."
           />
         </main>
         <Footer />
@@ -65,7 +65,7 @@ export default async function TrackPage() {
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-lg text-ink-300">
-                Your record is mostly variance over any human-sized sample. Closing Line Value isn't — beating the
+                Your record is mostly variance over any human-sized sample. Closing Line Value isn't. Beating the
                 close consistently is the strongest public proof you have an edge. Log your bets, settle them with the
                 closing price, and watch your real scoreboard. It lives in your browser; nothing leaves your device.
               </p>
@@ -84,7 +84,7 @@ export default async function TrackPage() {
             <StakingCalculator />
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ion-2">
-                A personal record keeper — no books, no money, no advice. CLV is computed from the closing odds you
+                A personal record keeper: no books, no money, no advice. CLV is computed from the closing odds you
                 enter for each exact selection. See how we hold ourselves to the same metric on our public{" "}
                 <a href="/clv" style={{ color: BRAND_COLORS.softUltraviolet }}>CLV report</a>, or learn the why in the{" "}
                 <a href="/fantasy/academy" style={{ color: BRAND_COLORS.softUltraviolet }}>Academy&apos;s Market track</a>.

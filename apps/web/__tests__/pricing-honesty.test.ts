@@ -46,8 +46,8 @@ describe("public pricing honesty", () => {
     const picks = readRepoFile("apps/web/app/picks/page.tsx");
     expect(faq).toContain(`$${FOUNDING.pro.monthly}/month`);
     expect(faq).toContain(`$${FOUNDING.elite.monthly}/month`);
-    expect(picks).toContain(`Upgrade to Pro / $${FOUNDING.pro.monthly}/mo`);
-    expect(picks).toContain(`Upgrade to Elite / $${FOUNDING.elite.monthly}/mo`);
+    expect(picks).toContain(`Upgrade to Pro · $${FOUNDING.pro.monthly}/mo`);
+    expect(picks).toContain(`Upgrade to Elite · $${FOUNDING.elite.monthly}/mo`);
   });
 
   it("retires weekly billing from every public pricing surface", () => {

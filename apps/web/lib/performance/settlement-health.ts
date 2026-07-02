@@ -62,7 +62,7 @@ export function evaluateSettlementHealth(input: SettlementHealthInput): Settleme
       health: "NO_DATA",
       clean: false,
       operatorMessage:
-        "No commenced, published picks yet — settlement health is not measurable until games start.",
+        "No commenced, published picks yet. Settlement health is not measurable until games start.",
       remediation: [],
     };
   }
@@ -77,13 +77,13 @@ export function evaluateSettlementHealth(input: SettlementHealthInput): Settleme
   const operatorMessage = clean
     ? `Settlement is keeping up: 0 of ${commencedTotal} commenced picks are overdue (grace ${graceHours}h).`
     : `${overduePending} of ${commencedTotal} commenced picks are still PENDING more than ${graceHours}h after kickoff. ` +
-      `Settlement is falling behind — these picks will never get a CLV record (or a public outcome) until they settle.`;
+      `Settlement is falling behind. These picks will never get a CLV record (or a public outcome) until they settle.`;
 
   const remediation = clean
     ? []
     : [
         "Settlement or score ingestion is likely failing. Check the settle-picks cron/worker and the scores feed for these games.",
-        "Each overdue pick is a played game with no recorded result — it both starves CLV coverage and shows a blank outcome on the public record.",
+        "Each overdue pick is a played game with no recorded result: it both starves CLV coverage and shows a blank outcome on the public record.",
         "Settle these picks (or void genuinely cancelled games) before treating the beat-close rate or the track record as complete.",
       ];
 

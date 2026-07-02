@@ -126,14 +126,14 @@ export function summarizeComparison(
   if (result.coverage === "COMPLETE" && result.called.length === 1) {
     const calledFactor = result.called[0];
     return calledFactor
-      ? `Pre-mortem called it — the ${friendlyFactorName(calledFactor)} bullet matched the actual cause.`
+      ? `Pre-mortem called it: the ${friendlyFactorName(calledFactor)} bullet matched the actual cause.`
       : "Pre-mortem coverage marked complete, but no matching factor was recorded.";
   }
   if (result.coverage === "COMPLETE" && result.called.length > 1) {
     const names = result.called.map(friendlyFactorName).join(" and ");
-    return `Pre-mortem called it — ${names} bullets both matched the actual cause.`;
+    return `Pre-mortem called it: ${names} bullets both matched the actual cause.`;
   }
   // INCOMPLETE
   const missedCause = result.missed[0] ?? "OTHER";
-  return `Pre-mortem missed — the actual cause (${missedCause}) was not in any bullet. Coverage gap to address.`;
+  return `Pre-mortem missed: the actual cause (${missedCause}) was not in any bullet. Coverage gap to address.`;
 }

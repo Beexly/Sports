@@ -24,7 +24,7 @@ import { SignalRule } from "@/components/motion/signal-rule";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "The Academy — Tracks, Live Fire, and Beat the Close",
+  title: "The Academy: Tracks, Live Fire, and Beat the Close",
   description:
     "A real curriculum: tracks and modules with saved progress and mastery, interactive courses with graded quizzes, a live-fire decision simulator, the Beat the Close training game, and the GM Academy. Train process, calibration, and restraint.",
   alternates: { canonical: "/academy" },
@@ -39,7 +39,7 @@ const WINGS = [
   { id: "courses", label: "Course Floor", desc: "Interactive lessons + graded quizzes", hex: cyan },
   { id: "live-fire", label: "Live Fire", desc: "Decide blind, graded on process", hex: mag },
   { id: "beat-the-close", label: "Beat the Close", desc: "The line-trading arcade", hex: uv },
-  { id: "film-room", label: "Film Room", desc: "Filmed lessons — in production", hex: "#8b93a8" },
+  { id: "film-room", label: "Film Room", desc: "Filmed lessons, in production", hex: "#8b93a8" },
 ] as const;
 
 export default function AcademyPage() {
@@ -128,7 +128,7 @@ export default function AcademyPage() {
                   How should we explain things?
                 </p>
                 <p className="mt-1 text-sm text-ion-1">
-                  Set your register — every &ldquo;ask the model why&rdquo; across
+                  Set your register. Every &ldquo;ask the model why&rdquo; across
                   Galaxy meets you here. New to this? Choose &ldquo;Teach me.&rdquo;
                 </p>
                 <div className="mt-4">
@@ -190,10 +190,10 @@ export default function AcademyPage() {
             <Reveal>
               <p className="eyebrow text-ion-2">film room</p>
               <h2 className="mt-3 font-display text-3xl font-semibold text-white">
-                The filmed curriculum — in production.
+                The filmed curriculum, in production.
               </h2>
               <p className="mt-3 max-w-2xl text-ion-1">
-                Six episodes pairing with the course floor — the real production order, no
+                Six episodes pairing with the course floor: the real production order, no
                 placeholders. Every lesson is already trainable above.
               </p>
             </Reveal>
@@ -211,10 +211,10 @@ export default function AcademyPage() {
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-sm leading-relaxed text-ion-2">
                 Training content is illustrative and educational. Every floor rewards calibration
-                and restraint, never streaks — the same standard the engine holds itself to.
+                and restraint, never streaks. It's the same standard the engine holds itself to.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Link href="/fantasy/academy" className="btn btn-ghost">GM Academy — fantasy drills</Link>
+                <Link href="/fantasy/academy" className="btn btn-ghost">GM Academy: fantasy drills</Link>
                 <Link href="/intelligence" className="btn btn-ghost">Inside the engine</Link>
                 <Link href="/parlay-mri" className="btn btn-ghost">Parlay MRI</Link>
               </div>

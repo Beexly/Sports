@@ -61,17 +61,17 @@ export const CIPHER_CHAPTERS: readonly CipherChapter[] = [
     week: 1,
     codename: "First Light",
     brief:
-      "The engine recorded three fragments the instant the field came alive — scattered across the glass box, one to a room. Recover all three, assemble them in order, and you hold the key. The box rewards those who look past the surface.",
+      "The engine recorded three fragments the instant the field came alive, scattered across the glass box, one to a room. Recover all three, assemble them in order, and you hold the key. The box rewards those who look past the surface.",
     transmission: [
-      "▶ TRANSMISSION 001 — origin trace recovered.",
+      "▶ TRANSMISSION 001: origin trace recovered.",
       "Three shards broke loose at first light. Each settled in a different room.",
-      "Inspect what most people only read. The engine even talks — open the console.",
+      "Inspect what most people only read. The engine even talks: open the console.",
       "Assemble shard 01 · 02 · 03 in order, lowercase, no spaces. Bring it back before the window seals.",
     ],
     shards: [
-      { id: "01", label: "Vela", page: "intelligence", where: "Inside the engine — where the signal converges.", color: CYAN, value: "VELA" },
-      { id: "02", label: "Carrier", page: "methodology", where: "Among the published method — read past the words.", color: MAGENTA, value: "7C9" },
-      { id: "03", label: "Dusk", page: "observatory", where: "Out in the observatory — the last light of the day.", color: UV, value: "DUSK" },
+      { id: "01", label: "Vela", page: "intelligence", where: "Inside the engine, where the signal converges.", color: CYAN, value: "VELA" },
+      { id: "02", label: "Carrier", page: "methodology", where: "Among the published method. Read past the words.", color: MAGENTA, value: "7C9" },
+      { id: "03", label: "Dusk", page: "observatory", where: "Out in the observatory: the last light of the day.", color: UV, value: "DUSK" },
     ],
     // sha256("vela7c9dusk")
     answerHash: "3b8d4f7cf32452faf60dab4346c256d47a0eb2ffbbde67e2b2055c73f7b27ea2",
@@ -82,8 +82,8 @@ export const CIPHER_CHAPTERS: readonly CipherChapter[] = [
     week: 2,
     codename: "The Close",
     brief:
-      "Sealed until the field opens it. Chapter Two begins where the first ended — at the number the market settles on.",
-    transmission: ["▶ TRANSMISSION 002 — sealed."],
+      "Sealed until the field opens it. Chapter Two begins where the first ended: at the number the market settles on.",
+    transmission: ["▶ TRANSMISSION 002: sealed."],
     shards: [],
     answerHash: "e26191ddfef51967c2b2fcc12c6505c0ba610bc07750c0949ecb65274ccc93d8",
     answerLength: 11,

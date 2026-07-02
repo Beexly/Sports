@@ -10,9 +10,9 @@ import { buildBriefing } from "@/lib/cockpit/mission-control";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Mission Control — What Matters Now",
+  title: "Mission Control: What Matters Now",
   description:
-    "One glance across the whole platform: breaking news, the scheme move re-pricing an offense, your roster's risk, the sharpest DFS and pick'em edges, and your CLV discipline — prioritized and actionable.",
+    "One glance across the whole platform: breaking news, the scheme move re-pricing an offense, your roster's risk, the sharpest DFS and pick'em edges, and your CLV discipline, prioritized and actionable.",
   alternates: { canonical: "/today" },
 };
 
@@ -37,7 +37,7 @@ export default function TodayPage() {
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-lg text-ion-1">
-                The whole platform, prioritized into one glance — across betting and fantasy. The engine ranks what
+                The whole platform, prioritized into one glance, across betting and fantasy. The engine ranks what
                 deserves your attention this minute and links you straight to the move.
               </p>
             </Reveal>

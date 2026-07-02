@@ -44,12 +44,12 @@ export function SimulationCloud() {
     >
       <div className="border-b border-titanium px-6 py-4">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
-          Simulation cloud — the shape of an outcome
+          Simulation cloud: the shape of an outcome
         </h2>
         <p className="mt-1 text-[11px] text-ion-2">
           A win probability is one number. The real outcome is a cloud. Set two
           expected scoring-event rates (goals / scoring drives) and watch the distribution of final margins.
-          Illustrative — transparent Poisson math, not a game projection.
+          Illustrative: transparent Poisson math, not a game projection.
         </p>
       </div>
 
@@ -128,8 +128,8 @@ export function SimulationCloud() {
 
       <div className="border-t border-titanium px-6 py-3">
         <p className="text-[11px] leading-relaxed text-ion-2">
-          Illustrative model on transparent Poisson math. It teaches variance —
-          it is not a pick, projection, or live game read.
+          Illustrative model on transparent Poisson math. It teaches variance.
+          It is not a pick, projection, or live game read.
         </p>
       </div>
     </section>

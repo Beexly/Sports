@@ -43,7 +43,7 @@ export function ScoringReliabilityPanel({
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-titanium px-6 py-4">
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
-            Scoring rules — reliability diagram
+            Scoring rules: reliability diagram
           </h2>
           <p className="mt-1 text-[11px] text-ion-2">
             Brier score, expected calibration error, and bucket reliability from settled canonical picks.

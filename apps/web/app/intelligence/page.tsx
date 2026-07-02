@@ -18,7 +18,7 @@ import { BRAND_COLORS, CLOSING_LINE } from "@/lib/brand";
 
 const TICKER_PHRASES = [
   "Math you can read",
-  "See the reasoning — not just the number",
+  "See the reasoning, not just the number",
   "Independent referees, judged on their own",
   "Edge lives in the disagreement",
   "Graded against the close",
@@ -28,7 +28,7 @@ const TICKER_PHRASES = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: "Inside the Signal — How the Intelligence Works",
+  title: "Inside the Signal: How the Intelligence Works",
   description:
     "A look inside the glass box: independent referees, consensus and divergence, calibrated edge, and a tamper-evident record. Methodology, not promises.",
   alternates: { canonical: "/intelligence" },
@@ -53,7 +53,7 @@ const CHAIN: ReadonlyArray<{
   {
     step: "01",
     title: "Independent referees",
-    body: "Several estimates score each game without looking at the sportsbook's price — a sharp exchange, a structured model, the wider market. Different lenses, judged on their own.",
+    body: "Several estimates score each game without looking at the sportsbook's price: a sharp exchange, a structured model, the wider market. Different lenses, judged on their own.",
     accent: BRAND_COLORS.orbitalCyan,
   },
   {
@@ -71,13 +71,13 @@ const CHAIN: ReadonlyArray<{
   {
     step: "04",
     title: "Graded against the close",
-    body: "Every signal carries an expected closing-line value and is graded against where the market actually settles — because beating the close is the claim worth making.",
+    body: "Every signal carries an expected closing-line value and is graded against where the market actually settles, because beating the close is the claim worth making.",
     accent: BRAND_COLORS.ionMagenta,
   },
   {
     step: "05",
     title: "It audits itself",
-    body: "The model watches its own calibration over time and raises a flag when accuracy drifts — so the system notices it is slipping before you do.",
+    body: "The model watches its own calibration over time and raises a flag when accuracy drifts, so the system notices it is slipping before you do.",
     accent: BRAND_COLORS.softUltraviolet,
   },
   {
@@ -191,7 +191,7 @@ export default function IntelligencePage() {
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-300">
                 Most products hand you a pick and ask for trust. We show the work
                 behind every one: the confidence score, the factors that drove it,
-                and how the market has moved — each signal graded and recorded, so
+                and how the market has moved. Each signal is graded and recorded, so
                 you can check it instead of just taking it.
               </p>
             </Reveal>
@@ -229,7 +229,7 @@ export default function IntelligencePage() {
                 <p className="mt-5 text-ink-300">
                   Independent referees each price the game on their own. When they
                   converge, that&apos;s confidence. When they agree the market is
-                  wrong in the same direction — that&apos;s the signal worth
+                  wrong in the same direction, that&apos;s the signal worth
                   surfacing, with the reasoning attached.
                 </p>
               </Reveal>
@@ -273,8 +273,8 @@ export default function IntelligencePage() {
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-ink-300">
-                No lonely confidence number. The engine argues the case against itself —
-                evidence, counter-evidence, and the falsifier that would break it — then
+                No lonely confidence number. The engine argues the case against itself:
+                evidence, counter-evidence, and the falsifier that would break it. Then it
                 returns a verdict, including the honest verdict of <em>no-bet</em>.
               </p>
             </Reveal>
@@ -289,17 +289,17 @@ export default function IntelligencePage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
-                Not one engine — a council
+                Not one engine. A council
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h2 id="warroom-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
-                Watch the verdict change — and see which agent moved it.
+                Watch the verdict change, and see which agent moved it.
               </h2>
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-ink-300">
-                Behind every read is a council of specialist agents — each with one job and an
+                Behind every read is a council of specialist agents, each with one job and an
                 escalation threshold. When the recommendation changes, you can trace exactly
                 which agent escalated and why. No opaque black box.
               </p>
@@ -326,7 +326,7 @@ export default function IntelligencePage() {
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-ink-300">
                 A win is not proof and a loss is not failure. Every settled signal is
-                graded on the square it actually lands in — so a lucky win gets flagged and
+                graded on the square it actually lands in, so a lucky win gets flagged and
                 a correct read that lost gets respected.
               </p>
             </Reveal>

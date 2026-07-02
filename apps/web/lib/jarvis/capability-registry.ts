@@ -241,7 +241,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     status: "DRAFT_ONLY",
     mission:
       "Guard against misleading public claims, premature performance exposure, " +
-      "and unsafe public communications. Jarvis is the risk sensor — all claims require human sign-off.",
+      "and unsafe public communications. Jarvis is the risk sensor; all claims require human sign-off.",
     currentTruth:
       "Jarvis assessment runs safety checks on every cockpit load. " +
       "Safety warnings immediately surface to the decision queue. " +
@@ -449,7 +449,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     status: "NOT_WIRED",
     mission:
       "Provide a governed tool bus so agents can call APIs, search the web, " +
-      "query databases, and invoke external services safely — with rate limits, " +
+      "query databases, and invoke external services safely, with rate limits, " +
       "logging, and owner approval for new tool connections.",
     currentTruth:
       "MCP (Model Context Protocol) architecture is referenced in the model lane policy " +
@@ -537,7 +537,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     ownerMode: "NOT_WIRED",
     proofSource: null,
     riskLevel: "HIGH",
-    nextAction: "NOT YET — wire MCP tool bus first. Browser control comes after tool routing.",
+    nextAction: "NOT YET: wire MCP tool bus first. Browser control comes after tool routing.",
     requiresHumanApproval: true,
     canAnswer: false,
     canRecommend: false,
@@ -569,7 +569,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     ownerMode: "NOT_WIRED",
     proofSource: null,
     riskLevel: "MEDIUM",
-    nextAction: "NOT YET — wire Ask Jarvis console fully first. Voice layer is Phase 4+.",
+    nextAction: "NOT YET: wire Ask Jarvis console fully first. Voice layer is Phase 4+.",
     requiresHumanApproval: true,
     canAnswer: false,
     canRecommend: false,

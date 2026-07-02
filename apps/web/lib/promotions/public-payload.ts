@@ -46,7 +46,7 @@ export interface PublicPromotionsResponse {
 const PUBLIC_NOTICE =
   "Sportsbook promotions shown here are listed for informational purposes. " +
   "Terms apply at the operator. 21+ where applicable. If you or someone you know " +
-  "has a gambling problem, help is available — 1-800-GAMBLER.";
+  "has a gambling problem, help is available: 1-800-GAMBLER.";
 
 /**
  * Convert a raw Promotion row into the public payload shape, *only* if it

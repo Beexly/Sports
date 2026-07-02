@@ -81,7 +81,7 @@ export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
         <div className="lg:sticky lg:top-24 self-start">
           <div className="surface-card p-5">
             <p className="text-xs uppercase tracking-[0.18em] text-ink-500">Drop candidates</p>
-            <p className="mt-1 text-xs text-ink-400">The weakest rostered value — the spot you&apos;d clear for a target.</p>
+            <p className="mt-1 text-xs text-ink-400">The weakest rostered value: the spot you&apos;d clear for a target.</p>
             <ul className="mt-4 space-y-2">
               {drops.map((p) => {
                 const phex = POS_HEX[p.pos];
@@ -96,7 +96,7 @@ export function WaiverBoard({ pool }: { pool?: readonly Player[] } = {}) {
               })}
             </ul>
             <p className="mt-4 text-[10px] leading-relaxed text-ink-600">
-              Drop value is the floor of your bench, not last week&apos;s box score — a down-trending name with name
+              Drop value is the floor of your bench, not last week&apos;s box score. A down-trending name with name
               value is often the right cut.
             </p>
           </div>

@@ -50,7 +50,7 @@ export function buildProofCard(genome: DecisionGenome): ProofCardResult {
   }
   const settled = genome.proof.clv != null || genome.proof.brier != null || genome.proof.savedLoss != null;
   if (!settled) {
-    return { ok: false, card: null, reason: "Decision has not settled — no proof to show (no fabricated numbers)." };
+    return { ok: false, card: null, reason: "Decision has not settled, so there is no proof to show (no fabricated numbers)." };
   }
 
   const drafted = draftCopy(genome);
@@ -92,7 +92,7 @@ function draftCopy(g: DecisionGenome): DraftedCopy | null {
     return {
       kind: "beat-close",
       headline: "Beat the closing line",
-      body: `On a model-version ${g.model.modelVersion} decision, the price moved our way by ${(p.clv * 100).toFixed(1)}% vs the close — measured, not claimed.`,
+      body: `On a model-version ${g.model.modelVersion} decision, the price moved our way by ${(p.clv * 100).toFixed(1)}% vs the close. Measured, not claimed.`,
     };
   }
   if (p.savedLoss != null && p.savedLoss > 0 && (g.decisionType === "pass" || g.decisionType === "suppress" || g.aperture === "pass")) {
@@ -105,7 +105,7 @@ function draftCopy(g: DecisionGenome): DraftedCopy | null {
   if (g.model.refused && p.savedLoss != null && p.savedLoss >= 0) {
     return {
       kind: "correct-refusal",
-      headline: "We refused — and that was right",
+      headline: "We refused, and that was right",
       body: `Uncertainty was too wide to act (calibration health ${g.model.calibrationHealth.toFixed(2)}). The refusal held up after the outcome.`,
     };
   }

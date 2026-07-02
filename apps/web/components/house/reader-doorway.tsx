@@ -95,7 +95,7 @@ export function ReaderDoorway() {
         className="mt-3 min-h-5 text-xs uppercase tracking-wider text-ion-2"
       >
         {saved
-          ? "Saved on this device — explanations across Galaxy will meet you there."
+          ? "Saved on this device. Explanations across Galaxy will meet you there."
           : "Stored on this device only. Change it any time, anywhere it appears."}
       </p>
     </div>

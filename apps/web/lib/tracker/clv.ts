@@ -191,7 +191,7 @@ export function calibration(bets: readonly Bet[]): CalBucket[] {
   return buckets
     .filter((bk) => bk.bets.length > 0)
     .map((bk) => ({
-      label: `${Math.round(bk.lo * 100)}–${Math.round(bk.hi * 100)}%`,
+      label: `${Math.round(bk.lo * 100)}-${Math.round(bk.hi * 100)}%`,
       predicted: Math.round((bk.bets.reduce((s, b) => s + impliedProb(b.odds), 0) / bk.bets.length) * 100),
       actual: Math.round((bk.bets.filter((b) => b.result === "win").length / bk.bets.length) * 100),
       n: bk.bets.length,

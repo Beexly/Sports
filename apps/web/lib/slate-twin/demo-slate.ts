@@ -178,7 +178,7 @@ const DEMO_BASE = {
       verdict: "WATCHLIST",
       markets: [m("Spread", 1.1, 0.6), m("Total", 1.6, 0.7), m("Moneyline", 2.0, 0.55)],
       confidence: [0.46, 0.5, 0.55, 0.52, 0.44, 0.5, 0.52, 0.52],
-      note: "A late lineup question keeps the edge fragile — one shock breaks it.",
+      note: "A late lineup question keeps the edge fragile: one shock breaks it.",
       pos: [6.7, 3.1, -3.8],
     },
     {

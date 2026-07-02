@@ -106,7 +106,7 @@ export function rollupAnchorClv(results: readonly AnchorClvResult[]): AnchorClvR
       beatAnchorRate: 0,
       softCloseRate: 0,
       meanDivergence: 0,
-      note: "No anchor-graded picks yet — empty rather than a fabricated anchor CLV.",
+      note: "No anchor-graded picks yet: empty rather than a fabricated anchor CLV.",
     };
   }
   const sum = (xs: number[]) => xs.reduce((s, v) => s + v, 0);
@@ -117,10 +117,10 @@ export function rollupAnchorClv(results: readonly AnchorClvResult[]): AnchorClvR
 
   const note =
     softCloseRate > 0.25
-      ? "Our consensus close often diverges from the sharp anchor — grade against the anchor, not ourselves."
+      ? "Our consensus close often diverges from the sharp anchor. Grade against the anchor, not ourselves."
       : meanClvVsAnchor > 0
-        ? "Beat the sharp third-party close on average — the skeptic-proof CLV signal."
-        : "Did not beat the sharp third-party close on average — no demonstrated edge vs the anchor.";
+        ? "Beat the sharp third-party close on average, the skeptic-proof CLV signal."
+        : "Did not beat the sharp third-party close on average: no demonstrated edge vs the anchor.";
 
   return {
     count,

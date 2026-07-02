@@ -61,7 +61,7 @@ export function evaluateAgentRun(record: AgentRunRecord): ContractRuling {
 
   // Agents cannot self-approve or self-reject — those are human verdicts.
   if (record.reviewStatus === "approved" || record.reviewStatus === "rejected") {
-    violations.push("review status cannot be self-set to approved/rejected — that is a human verdict");
+    violations.push("review status cannot be self-set to approved/rejected: that is a human verdict");
   }
 
   // Honest uncertainty is mandatory.

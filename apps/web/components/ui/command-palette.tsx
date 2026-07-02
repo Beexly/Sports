@@ -125,7 +125,7 @@ export function CommandPalette() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={onInputKey}
-            placeholder="Jump to anything — board, fantasy, tracker…"
+            placeholder="Jump to anything: board, fantasy, tracker…"
             className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-ink-600"
             aria-label="Search commands"
           />

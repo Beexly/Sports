@@ -151,7 +151,7 @@ export function composeBrief(input: ComposeBriefInput): ComposedBrief {
   ).length;
   const slateText =
     picks.length === 0
-      ? "No picks cleared the gate today. A quiet board is a position, not a failure — the no-bet engine held."
+      ? "No picks cleared the gate today. A quiet board is a position, not a failure: the no-bet engine held."
       : `${picks.length} pick${picks.length === 1 ? "" : "s"} cleared the gate (${sportLine}). ` +
         `${topGrades} graded STRONG or better · ${premium} premium-tier.`;
 
@@ -162,14 +162,14 @@ export function composeBrief(input: ComposeBriefInput): ComposedBrief {
   const settledText =
     settled.length === 0
       ? "Nothing settled since the last brief."
-      : `Settled ${settled.length}: ${wins}W–${losses}L${pushes ? `–${pushes}P` : ""}.`;
+      : `Settled ${settled.length}: ${wins}W-${losses}L${pushes ? `-${pushes}P` : ""}.`;
 
   // ── Content ideas — only angles the data actually supports ───────
   const ideas: string[] = [];
   const sharpest = [...picks].sort((a, b) => b.edgeScore - a.edgeScore)[0];
   if (sharpest && sharpest.edgeScore > 0) {
     ideas.push(
-      `Factor-trail walkthrough: ${sharpest.selection} (${sharpest.sport}) — today's highest edge score (${Math.round(sharpest.edgeScore)}).`,
+      `Factor-trail walkthrough: ${sharpest.selection} (${sharpest.sport}): today's highest edge score (${Math.round(sharpest.edgeScore)}).`,
     );
   }
   if (lineMoves[0]) {
@@ -186,7 +186,7 @@ export function composeBrief(input: ComposeBriefInput): ComposedBrief {
   if (!input.memory) {
     memorySectionBody = "Memory section not loaded.";
   } else if (!input.memory.storeConnected) {
-    memorySectionBody = "Memory store not connected — memory section unavailable.";
+    memorySectionBody = "Memory store not connected: memory section unavailable.";
   } else {
     const parts: string[] = [];
     if (input.memory.newConfirmed.length > 0) {

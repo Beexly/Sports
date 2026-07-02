@@ -37,7 +37,7 @@ export interface MarketCalibrationReport {
 
 const BASELINE_NOTE =
   "Calibration of the de-vigged CLOSING moneyline (the market's forecast) vs actual home wins. " +
-  "This is the efficient-market baseline the platform model must beat — not yet the model's own calibration.";
+  "This is the efficient-market baseline the platform model must beat, not yet the model's own calibration.";
 
 export async function loadMarketCalibrationBacktest(): Promise<MarketCalibrationReport> {
   const generatedAt = new Date().toISOString();

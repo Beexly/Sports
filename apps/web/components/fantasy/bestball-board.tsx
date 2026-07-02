@@ -120,7 +120,7 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
               <button type="button" onClick={clearAdp} className="text-[11px] text-ink-500 hover:text-white">clear</button>
             </>
           ) : (
-            <span className="text-[10px] text-ink-600">Bring your own ADP — we don&apos;t scrape it from the books that publish it. <span className="text-ink-500">name,adp</span></span>
+            <span className="text-[10px] text-ink-600">Bring your own ADP. We don&apos;t scrape it from the books that publish it. <span className="text-ink-500">name,adp</span></span>
           )}
         </div>
 
@@ -160,7 +160,7 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
             })}
             {!canUseFantasyFull && board.length > FREE_BOARD_DEPTH && (
               <p className="border-t px-4 py-3 text-center text-xs text-ink-400" style={{ borderColor: BRAND_COLORS.steelGray }}>
-                Top {FREE_BOARD_DEPTH} shown — the full board is in the Fantasy suite.
+                Top {FREE_BOARD_DEPTH} shown. The full board is in the Fantasy suite.
               </p>
             )}
           </div>
@@ -240,7 +240,7 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
                 <span className="inline-block h-2 w-2 shrink-0 rounded-full" style={{ background: STATUS_HEX[s.status] }} title={s.status} />
                 <span className="w-14 shrink-0 font-mono text-[11px] text-ink-500">{s.have}/{s.target}</span>
                 <span className="flex-1 text-[11px]" style={{ color: s.status === "short" ? BRAND_COLORS.ionMagenta : "var(--ink-400,#8a96a3)" }}>
-                  {s.status === "short" ? "still short of target" : s.status === "heavy" ? "over target — depth" : "at target"}
+                  {s.status === "short" ? "still short of target" : s.status === "heavy" ? "over target: depth" : "at target"}
                 </span>
               </div>
             ))}
@@ -251,11 +251,11 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
         {evalr.byeRisks.length > 0 && (
           <div className="surface-card p-5">
             <p className="mb-2 text-xs uppercase tracking-[0.16em]" style={{ color: BRAND_COLORS.ionMagenta }}>Bye fragility</p>
-            <p className="mb-2 text-[11px] text-ink-500">Best ball has no waivers — these weeks you can&apos;t field a full lineup at a position:</p>
+            <p className="mb-2 text-[11px] text-ink-500">Best ball has no waivers. These weeks you can&apos;t field a full lineup at a position:</p>
             <ul className="space-y-1">
               {evalr.byeRisks.map((r) => (
                 <li key={`${r.week}-${r.pos}`} className="text-xs text-ink-300">
-                  Week {r.week}: {r.onBye} {r.pos} on bye — only {r.available} left, need {r.starters}.
+                  Week {r.week}: {r.onBye} {r.pos} on bye. Only {r.available} left, need {r.starters}.
                 </li>
               ))}
             </ul>

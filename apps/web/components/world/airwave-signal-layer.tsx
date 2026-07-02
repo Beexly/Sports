@@ -18,7 +18,7 @@ const STAGES = [
     title: "On-air noise",
     tone: "text-plasma",
     border: "border-plasma/30",
-    body: "“This team is unbeatable at home, I'm telling you, nobody wants that matchup…” — confident, loud, unaccountable.",
+    body: "“This team is unbeatable at home, I'm telling you, nobody wants that matchup…” Confident, loud, unaccountable.",
     meta: "permissioned transcript · illustrative quote",
   },
   {
@@ -43,14 +43,14 @@ const STAGES = [
     tone: "text-caution",
     border: "border-caution/30",
     body: "A human confirms the paraphrase is fair and the tags are right before anything is graded or published.",
-    meta: "no auto-publish — ever",
+    meta: "no auto-publish, ever",
   },
   {
     n: "S5",
     title: "GSE evidence candidate",
     tone: "text-orbital-cyan",
     border: "border-orbital-cyan/30",
-    body: "If the claim is testable, it becomes a checkable hypothesis against priced markets — same gates as any signal.",
+    body: "If the claim is testable, it becomes a checkable hypothesis against priced markets: same gates as any signal.",
     meta: "the engine audits the take",
   },
   {
@@ -93,7 +93,7 @@ export function AirwaveSignalLayer(): JSX.Element {
       <div className="mt-14 flex flex-col gap-4 rounded-ds-md border border-mineral bg-carbon p-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-2xl text-sm leading-6 text-ion-1">
           Workflow shown end-to-end; stage content is illustrative. No live
-          broadcast capture is wired — transcripts enter the system only with
+          broadcast capture is wired. Transcripts enter the system only with
           permission, and a human review gate sits before anything public.
         </p>
         <div className="flex shrink-0 flex-wrap gap-x-6 gap-y-2">

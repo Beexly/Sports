@@ -86,7 +86,7 @@ export function buildNoBetAdversary(input: AdversaryInput): NoBetVerdict {
   // Volatile line.
   if (Math.abs(input.lineMovementPoints) > maxMove) {
     const severity: Severity = Math.abs(input.lineMovementPoints) > maxMove * 2 ? "HIGH" : "MEDIUM";
-    add("VOLATILE_LINE", severity, `The line moved ${input.lineMovementPoints} pts — the market is still discovering the number.`);
+    add("VOLATILE_LINE", severity, `The line moved ${input.lineMovementPoints} pts; the market is still discovering the number.`);
   }
 
   if (input.injuryUncertain) {
@@ -99,7 +99,7 @@ export function buildNoBetAdversary(input: AdversaryInput): NoBetVerdict {
 
   if (input.confidence < weakBelow) {
     const severity: Severity = input.confidence < weakBelow - 10 ? "MEDIUM" : "LOW";
-    add("WEAK_CONFIDENCE_BAND", severity, `Confidence is ${input.confidence} — below the ${weakBelow} band where we lead with a pick.`);
+    add("WEAK_CONFIDENCE_BAND", severity, `Confidence is ${input.confidence}, below the ${weakBelow} band where we lead with a pick.`);
   }
 
   if (input.missingKeySource) {
@@ -132,8 +132,8 @@ export function buildNoBetAdversary(input: AdversaryInput): NoBetVerdict {
     recommendation === "NO_BET"
       ? `No-Bet: ${strongest ? strongest.factor.replace(/_/g, " ").toLowerCase() : "serious opposition"} is too strong to publish a pick.`
       : recommendation === "WATCHLIST"
-        ? "Watchlist: real opposition exists — track it rather than lead with a pick."
-        : "No serious opposition surfaced — the case against is weak.";
+        ? "Watchlist: real opposition exists. Track it rather than lead with a pick."
+        : "No serious opposition surfaced; the case against is weak.";
 
   return { cases, strongestFactor: strongest?.factor ?? null, recommendation, summary };
 }

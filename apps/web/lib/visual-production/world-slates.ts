@@ -25,9 +25,9 @@ export const WORLD_SLATE: readonly VisualAsset[] = [
   {
     id: "home-hero-cosmos",
     surface: "/ (homepage hero background)",
-    title: "Galaxy — the intelligence cosmos",
+    title: "Galaxy: the intelligence cosmos",
     productTruth: "Galaxy is a sports-intelligence operating system; the home hero sets the cinematic, observatory mood.",
-    metaphor: "A slow, deep-space field of drifting light and faint constellation lattices — calm, precise, vast.",
+    metaphor: "A slow, deep-space field of drifting light and faint constellation lattices: calm, precise, vast.",
     mediaKind: "motion",
     provider: "higgsfield",
     prompt:
@@ -35,7 +35,7 @@ export const WORLD_SLATE: readonly VisualAsset[] = [
       "soft-ultraviolet accents, faint geometric constellation lattice, volumetric depth, ultra-clean, premium, " +
       "abstract, no subjects",
     negativePrompt: NEGATIVE_PROMPT_FLOOR,
-    overlayPlan: "App renders the headline, value prop, CTAs, and the Daily Intelligence strip on top — all truth is app-rendered.",
+    overlayPlan: "App renders the headline, value prop, CTAs, and the Daily Intelligence strip on top. All truth is app-rendered.",
     complianceNotes: "Abstract only. No betting/sportsbook imagery, no text, no hype symbols. Responsible-gaming + claims stay app-rendered.",
     rightsNotes: "Fully synthetic abstract atmosphere. No logos, teams, players, or broadcast references.",
     reducedMotionFallback: "Static CSS radial-gradient cosmos (already shipped) with the same color tokens; no motion.",
@@ -52,7 +52,7 @@ export const WORLD_SLATE: readonly VisualAsset[] = [
     surface: "/observatory (Galaxy Twin backdrop)",
     title: "The slate as a living market field",
     productTruth: "Observatory visualizes market state/volatility; the backdrop should feel like a living field, with all data app-rendered.",
-    metaphor: "A gravitational field of soft currents — pressure and drift implied by motion, never by numbers.",
+    metaphor: "A gravitational field of soft currents: pressure and drift implied by motion, never by numbers.",
     mediaKind: "motion",
     provider: "higgsfield",
     prompt:
@@ -76,7 +76,7 @@ export const WORLD_SLATE: readonly VisualAsset[] = [
     surface: "/no-bet (No-Bet hero still)",
     title: "The discipline of the pass",
     productTruth: "No-Bet frames restraint as intelligence; the visual should feel calm and deliberate, not exciting.",
-    metaphor: "A single held breath — stillness, a paused current, quiet over noise.",
+    metaphor: "A single held breath: stillness, a paused current, quiet over noise.",
     mediaKind: "still",
     provider: "higgsfield",
     prompt:
@@ -86,7 +86,7 @@ export const WORLD_SLATE: readonly VisualAsset[] = [
     overlayPlan: "App renders the No-Bet reasoning, missing-info, what-would-change, and responsible-gaming note.",
     complianceNotes: "Calm tone by design (anti-hype). No action-urging imagery. Responsible-gaming language app-rendered.",
     rightsNotes: "Synthetic abstract; nothing licensed.",
-    reducedMotionFallback: "It's a still — no motion concern; serve a compressed static image with the gradient fallback.",
+    reducedMotionFallback: "It's a still, no motion concern; serve a compressed static image with the gradient fallback.",
     mobileCropPlan: "Horizon holds at upper third; copy sits below.",
     plannedReuseCount: 4,
     reusePlan: "No-Bet hero + Market Mirage caution cards + Academy 'why No-Bet' + social.",
@@ -98,9 +98,9 @@ export const WORLD_SLATE: readonly VisualAsset[] = [
   {
     id: "academy-pathlight",
     surface: "/academy (learning-path header)",
-    title: "Pathlight — learning as a route",
+    title: "Pathlight: learning as a route",
     productTruth: "Academy teaches decision quality; the header should feel like a guided path, not a casino.",
-    metaphor: "A line of light tracing a path through soft dark — progress, guidance, clarity.",
+    metaphor: "A line of light tracing a path through soft dark: progress, guidance, clarity.",
     mediaKind: "still",
     provider: "code-native",
     prompt: "(code-native) animated SVG path of light — no generation needed at this worthiness.",

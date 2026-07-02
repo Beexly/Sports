@@ -64,7 +64,7 @@ export function auditSignalLineage(factors: readonly SignalFactor[]): LineageVer
     }
     // Only Tier 1/2 evidence may back a claim.
     if (f.sourceTier > 2) {
-      violations.push(`${f.key}: active at Tier ${f.sourceTier} — only Tier 1/2 may back a claim`);
+      violations.push(`${f.key}: active at Tier ${f.sourceTier}; only Tier 1/2 may back a claim`);
     }
     // Rights-blocked sources may not be active.
     if (RIGHTS_BLOCKED.has(f.rightsStatus)) {

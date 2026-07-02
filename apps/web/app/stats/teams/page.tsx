@@ -1,7 +1,7 @@
 import { Shell, Cards, DataTable, BarChart, StatusRibbon, HeroStat, InsightCard, SectionHeader } from "../_components";
 import { loadTeams } from "@/lib/statking/product";
 export const metadata = {
-  title: "Team Environments — Pace, Offense & Defense",
+  title: "Team Environments: Pace, Offense & Defense",
   description: "Team environment metrics: pace, offensive and defensive context, and fantasy environment.",
   alternates: { canonical: "/stats/teams" },
 };
@@ -22,7 +22,7 @@ export default function Page() {
       ]} />
       <InsightCard
         eyebrow="Why Team Environment Matters"
-        headline="A player's ceiling is set by their team context — not just their talent"
+        headline="A player's ceiling is set by their team context, not just their talent"
         body="High offensive environment = more play-calling volume and pass-friendly looks. High fantasy environment = historical correlation with skill-player targets and opportunity. Use these to separate players stuck in bad systems from those with a real path to production."
         tone="neutral"
       />

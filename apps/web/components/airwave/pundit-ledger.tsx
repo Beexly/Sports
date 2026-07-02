@@ -85,7 +85,7 @@ export function PunditLedger({
       {/* Leaderboard */}
       <div>
         <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ink-500">
-          Accountability board — {scorecards.length} on the record
+          Accountability board · {scorecards.length} on the record
         </p>
         <ul className="flex flex-col gap-2" role="tablist" aria-label="Pundit accountability board">
           {scorecards.map((card) => {
@@ -163,7 +163,7 @@ export function PunditLedger({
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-ink-100">{c.assertion}</p>
                 <p className="mt-1.5 text-xs text-ink-400">
-                  <span className="text-ink-500">Outcome — </span>{c.outcomeNote}
+                  <span className="text-ink-500">Outcome: </span>{c.outcomeNote}
                 </p>
               </li>
             );

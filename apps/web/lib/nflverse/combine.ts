@@ -117,7 +117,7 @@ export async function loadNflverseCombine({
       fastestForty,
       canPublishProjections: false,
       blockReason:
-        "Combine measurements are real athletic-testing facts from nflverse. They are scouting priors — not a projection, ranking, or betting pick.",
+        "Combine measurements are real athletic-testing facts from nflverse. They are scouting priors, not a projection, ranking, or betting pick.",
       sourceUrl: url,
       error: null,
     };

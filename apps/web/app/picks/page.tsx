@@ -11,9 +11,9 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Today's Board - Sports Picks With Reasoning Attached",
+  title: "Today's Board: Sports Picks With Reasoning Attached",
   description:
-    "Live sports signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater — just the reasoning.",
+    "Signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater, just the reasoning.",
   alternates: { canonical: "/picks" },
 };
 
@@ -327,9 +327,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 The board is live. Public picks are still gated.
               </h3>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
-                Galaxy Sports Edge is ingesting odds and settlement history
-                before publishing customer-facing picks. This keeps the record
-                clean and keeps weak signals off the board.
+                We&apos;re building up odds and settlement history before we
+                publish picks. That keeps the record clean and weak signals
+                off the board.
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
@@ -370,7 +370,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <h3 className="text-base font-semibold text-white">No signals published for this date</h3>
               <p className="mt-2 text-sm text-ion-3">
                 We only publish when the stack earns it. Some slates don&apos;t
-                clear the gates — that&apos;s the point.
+                clear the gates. That&apos;s the point.
               </p>
             </div>
           )}
@@ -394,7 +394,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
               <p className="text-sm font-semibold text-blue-200">
-                Every pick is free - no daily limit, with the open verified record.
+                Every pick is free: no daily limit, with the open verified record.
               </p>
               <p className="mt-1 text-xs text-blue-400/70">
                 Pro adds the confidence score, the full factor trail, and line movement behind each one.
@@ -404,7 +404,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 href="/pricing"
                 className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
-                Upgrade to Pro / $14.99/mo
+                Upgrade to Pro · $14.99/mo
               </Link>
             </div>
           )}
@@ -415,7 +415,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <p className="text-xs text-purple-400">
                 Want real-time email and push alerts on every signal?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
-                  Upgrade to Elite / $24.99/mo
+                  Upgrade to Elite · $24.99/mo
                 </Link>
               </p>
             </div>
@@ -531,8 +531,8 @@ function PaywallBanner({
 }) {
   const headline =
     hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > 2
-      ? `${totalAvailableToday} picks published today - create a free account to see them all`
-      : "You're on Free - every pick, free, with the open verified record";
+      ? `${totalAvailableToday} picks published today. Create a free account to see them all.`
+      : "You're on Free: every pick, free, with the open verified record.";
   return (
     <div
       data-testid="paywall-banner"

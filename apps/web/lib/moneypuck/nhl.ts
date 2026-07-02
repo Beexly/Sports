@@ -216,7 +216,7 @@ export async function loadMoneyPuckNhl({
       goalies: buildGoalies(goalieRecords),
       teams: buildTeams(teamRecords),
       canPublishPicks: false,
-      note: "NHL expected-goals leaders from MoneyPuck (all situations, regular season). Real advanced stats — context, not a betting pick.",
+      note: "NHL expected-goals leaders from MoneyPuck (all situations, regular season). Real advanced stats: context, not a betting pick.",
       attribution,
       sourceUrls: { skaters: sUrl, goalies: gUrl, teams: tUrl },
       error: null,

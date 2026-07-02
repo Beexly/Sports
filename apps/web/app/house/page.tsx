@@ -14,9 +14,9 @@ import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "The NFL House — Football Is Better When You Have a Room",
+  title: "The NFL House: Football Is Better When You Have a Room",
   description:
-    "We turn NFL data, market movement, fantasy decisions, and game-day chaos into clear human reads — and we built rooms where every kind of fan belongs. Come for clarity. Stay because it feels like home.",
+    "We turn NFL data, market movement, fantasy decisions, and game-day chaos into clear human reads, and we built rooms where every kind of fan belongs. Come for clarity. Stay because it feels like home.",
   alternates: { canonical: "/house" },
 };
 
@@ -48,7 +48,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     href: "/board",
     whose: "For the reader who wants the number",
     promise:
-      "The live decision surface — published rows, gated rows, and the discipline of No-Bet. Bring the number, not the ego.",
+      "The live decision surface: published rows, gated rows, and the discipline of No-Bet. Bring the number, not the ego.",
     accent: BRAND_COLORS.orbitalCyan,
     live: "board",
   },
@@ -57,7 +57,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     href: "/observatory",
     whose: "For the one who wants to see the whole board",
     promise:
-      "The slate as a living market map — where the pressure is, where the gravity bends, where the edges open.",
+      "The slate as a living market map: where the pressure is, where the gravity bends, where the edges open.",
     accent: BRAND_COLORS.softUltraviolet,
     live: "observatory",
   },
@@ -66,14 +66,14 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     href: "/academy",
     whose: "For the fan who wants to see the game deeper",
     promise:
-      "Pressure, coverage, pace, protection — learn to watch like an analyst. Graded on decision quality, not bravado.",
+      "Pressure, coverage, pace, protection: learn to watch like an analyst. Graded on decision quality, not bravado.",
     accent: BRAND_COLORS.softUltraviolet,
     live: "academy",
   },
   {
     name: "Fantasy 101",
     href: "/fantasy",
-    whose: "For anyone learning the league — for themselves or someone they love",
+    whose: "For anyone learning the league, for themselves or someone they love",
     promise:
       "Start/sit, waivers, and trades in plain language. Ask the basic question. Nobody gets cooked in this room.",
     accent: BRAND_COLORS.ionMagenta,
@@ -92,7 +92,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     href: "/the-beat",
     whose: "For the ten-minute Sunday prep",
     promise:
-      "Scores, stories, what changed — the casual surface. Long week? This is the room with the comfortable chair.",
+      "Scores, stories, what changed: the casual surface. Long week? This is the room with the comfortable chair.",
     accent: BRAND_COLORS.orbitalCyan,
   },
 ];
@@ -192,7 +192,7 @@ export default async function NflHousePage() {
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 We turn NFL data, market movement, fantasy decisions, and game-day
-                chaos into clear human reads. The math is the same in every room —
+                chaos into clear human reads. The math is the same in every room;
                 the doorway is yours. Come for clarity. Stay because it feels like
                 home.
               </p>
@@ -299,7 +299,7 @@ export default async function NflHousePage() {
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-ion-1">
                 The engine never changes. The explanation meets you where you
-                are — pick a register and every &ldquo;ask the model why&rdquo;
+                are. Pick a register and every &ldquo;ask the model why&rdquo;
                 across the site honors it.
               </p>
             </Reveal>
@@ -329,7 +329,7 @@ export default async function NflHousePage() {
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-ion-1">
                 An NFL week is a ritual, not a feed. This is how we move through
-                it — and when each room matters most.
+                it, and when each room matters most.
               </p>
             </Reveal>
             <Stagger className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -395,8 +395,8 @@ export default async function NflHousePage() {
                   Live rooms open when we can protect them.
                 </h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-ion-1">
-                  A real game-day room — watching together, reacting together,
-                  asking &ldquo;what just happened?&rdquo; together — is coming.
+                  A real game-day room, watching together, reacting together,
+                  asking &ldquo;what just happened?&rdquo; together, is coming.
                   We open that door only after the safeguards are real: human
                   moderation, privacy review, and a culture that protects
                   beginners. We don&apos;t open rooms we can&apos;t keep safe.

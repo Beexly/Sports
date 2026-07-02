@@ -80,7 +80,7 @@ export const CASCADE: {
       verdict: "PLAY",
       changed: "injury",
       narration:
-        "Injury Freshness escalates — a projected starter is downgraded to questionable. The read isn't broken yet, but the input upstream of the edge just moved.",
+        "Injury Freshness escalates: a projected starter is downgraded to questionable. The read isn't broken yet, but the input upstream of the edge just moved.",
       overrides: { injury: { level: "alert", label: "Questionable" } },
     },
     {
@@ -96,7 +96,7 @@ export const CASCADE: {
       verdict: "WATCHLIST",
       changed: "public",
       narration:
-        "Public Bias spikes — tickets surge on the favourite. Some of the value may already be priced; the crowd is bending the market.",
+        "Public Bias spikes: tickets surge on the favourite. Some of the value may already be priced; the crowd is bending the market.",
       overrides: { public: { level: "elevated", label: "Heavy on fav" } },
     },
     {
@@ -104,8 +104,8 @@ export const CASCADE: {
       verdict: "WATCHLIST",
       changed: "responsible",
       narration:
-        "Responsible Decision holds the line: the edge is real but fragile. The council settles at WATCHLIST until the status confirms — not a downgrade to silence, not a push to play.",
-      overrides: { responsible: { level: "watching", label: "Fragile — hold" } },
+        "Responsible Decision holds the line: the edge is real but fragile. The council settles at WATCHLIST until the status confirms. Not a downgrade to silence, not a push to play.",
+      overrides: { responsible: { level: "watching", label: "Fragile · hold" } },
     },
   ],
 };

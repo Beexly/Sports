@@ -25,9 +25,15 @@ export interface GeneratedPlateProps {
   readonly still?: string;
   readonly motion?: string;
   readonly className?: string;
+  /**
+   * Load the still eagerly. Set this ONLY for a plate that paints the first
+   * viewport (e.g. the homepage hero) so the LCP background is not lazy-gated;
+   * everything below the fold keeps the lazy default.
+   */
+  readonly eager?: boolean;
 }
 
-export function GeneratedPlate({ assetId, gradient, still, motion, className }: GeneratedPlateProps) {
+export function GeneratedPlate({ assetId, gradient, still, motion, className, eager = false }: GeneratedPlateProps) {
   const resolved = assetId ? getPlate(assetId) : undefined;
   const bg = gradient ?? resolved?.gradient ?? "transparent";
   const stillSrc = still ?? resolved?.still;
@@ -48,7 +54,7 @@ export function GeneratedPlate({ assetId, gradient, still, motion, className }: 
       <div className="absolute inset-0" style={{ background: bg }} />
       {stillSrc && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={stillSrc} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90" loading="lazy" decoding="async" />
+        <img src={stillSrc} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90" loading={eager ? "eager" : "lazy"} decoding="async" />
       )}
       {motionSrc && motionOk && (
         <video

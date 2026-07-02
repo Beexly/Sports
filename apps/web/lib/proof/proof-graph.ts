@@ -85,7 +85,7 @@ export function buildProofGraph(input: ProofGraphInput): ProofGraph {
       kind: "autopsy",
       label: "Loss autopsy",
       present: hasAutopsy,
-      detail: input.pickLost ? (input.autopsy ? input.autopsy.id : "REQUIRED — pick lost") : "n/a (pick did not lose)",
+      detail: input.pickLost ? (input.autopsy ? input.autopsy.id : "REQUIRED: pick lost") : "n/a (pick did not lose)",
       verified: null,
     },
   ];
@@ -111,7 +111,7 @@ export function buildProofGraph(input: ProofGraphInput): ProofGraph {
       (input.pickLost ? " → loss autopsy." : ".")
     : auditable
       ? "Auditable pre-result chain; awaiting settlement/CLV" + (input.pickLost && !hasAutopsy ? " and a loss autopsy." : ".")
-      : `Not yet auditable — missing: ${missing.join(", ")}.`;
+      : `Not yet auditable. Missing: ${missing.join(", ")}.`;
 
   return { nodes, auditable, complete, missing, summary };
 }

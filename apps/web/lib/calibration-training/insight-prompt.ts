@@ -20,8 +20,8 @@ calibration pattern. Examples:
 "You were well-calibrated on NFL spreads this week but 12% overconfident on
 MLB totals."
 
-"Your confidence on Pro picks tracked the actual win rate almost exactly —
-that's calibration."
+"Your confidence on Pro picks tracked the actual win rate almost exactly.
+That's calibration."
 
 "You were under-confident across the board this week; the picks you rated
 at 65% hit at 72%."

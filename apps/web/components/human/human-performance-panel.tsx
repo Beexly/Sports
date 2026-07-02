@@ -166,7 +166,7 @@ function AvailabilityCard() {
         <button type="button" onClick={assess} disabled={busy || !player.trim()} className="btn btn-primary ml-auto text-xs disabled:opacity-50">{busy ? "Assessing…" : "Assess availability"}</button>
       </div>
 
-      {res?.status === "source-error" && <p className="mt-4 text-sm" style={{ color: BRAND_COLORS.ionMagenta }}>The public injury feed is unavailable right now — no fabricated read.</p>}
+      {res?.status === "source-error" && <p className="mt-4 text-sm" style={{ color: BRAND_COLORS.ionMagenta }}>The public injury feed is unavailable right now. No fabricated read.</p>}
 
       {m && b && (
         <div className="mt-4 space-y-3">

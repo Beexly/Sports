@@ -21,11 +21,11 @@ import {
  */
 
 const FLAG_COPY: Record<LimitationFlag, string> = {
-  small_sample: "Small sample — fewer than 30 settled cases behind this band.",
+  small_sample: "Small sample: fewer than 30 settled cases behind this band.",
   low_evidence: "Evidence health was low when these picks scored.",
   stale_data: "Source data was older than 24 hours at read time.",
   regime_shift: "Conditions look unlike the model's training window.",
-  wide_interval: "The band is wide — read the range, not the midpoint.",
+  wide_interval: "The band is wide. Read the range, not the midpoint.",
 };
 
 const RELIABILITY_COPY: Record<ReliabilityTier, { label: string; read: string; tone: string }> = {
@@ -36,7 +36,7 @@ const RELIABILITY_COPY: Record<ReliabilityTier, { label: string; read: string; t
   },
   moderate: {
     label: "Moderate reliability",
-    read: "The band is informative — mind its width before leaning on it.",
+    read: "The band is informative. Mind its width before leaning on it.",
     tone: "text-ion-white",
   },
   low: {
@@ -74,7 +74,7 @@ export function HonestBand({ observedRate, sampleSize }: HonestBandProps) {
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
-          The honest band — 95% interval, not a point claim
+          The honest band: 95% interval, not a point claim
         </p>
         <span
           className={`text-[11px] font-semibold uppercase tracking-widest ${meta.tone}`}
@@ -88,11 +88,11 @@ export function HonestBand({ observedRate, sampleSize }: HonestBandProps) {
       ) : (
         <>
           <p className={`mt-3 text-sm text-ion ${NUMERIC_TEXT_CLASS}`}>
-            {formatRatioAsPercent(d.intervalLow)} —{" "}
+            {formatRatioAsPercent(d.intervalLow)} ·{" "}
             <span className="font-semibold text-ion-white">
               {formatRatioAsPercent(d.probability)}
             </span>{" "}
-            — {formatRatioAsPercent(d.intervalHigh)}
+            · {formatRatioAsPercent(d.intervalHigh)}
             <span className="ml-2 text-xs text-ion-2">
               over {formatCount(sampleSize)} settled picks
             </span>

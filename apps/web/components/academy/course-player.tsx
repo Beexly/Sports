@@ -249,7 +249,7 @@ function Question({
               type="button"
               disabled={answered}
               aria-pressed={isChosen}
-              aria-label={showState ? `${o.label} — ${o.correct ? "correct" : "incorrect"}` : o.label}
+              aria-label={showState ? `${o.label}: ${o.correct ? "correct" : "incorrect"}` : o.label}
               onClick={() => onPick(o.id)}
               className="rounded-lg border px-3.5 py-2.5 text-left text-sm transition-colors"
               style={{

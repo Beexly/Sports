@@ -18,7 +18,7 @@ import { jsonLdScript } from "@/lib/seo/json-ld";
  */
 
 export const metadata: Metadata = {
-  title: "FAQ — Common questions about Galaxy Sports Edge",
+  title: "FAQ: Common questions about Galaxy Sports Edge",
   description:
     "Plain answers about how the model scores signals, why the Calibration Report is gated, what Pro and Elite get, and how this is different from a tout service.",
   alternates: { canonical: "/faq" },
@@ -35,11 +35,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick — the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
+        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick: the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
       },
       {
         q: "How is this different from a tout service?",
-        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail — consensus, line movement, market depth, freshness, intelligence layers — and holds back a public win-rate until enough canonical settled signals exist to support one honestly. The page reads \"Collecting\" until that's true. Patience over noise.",
+        a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail (consensus, line movement, market depth, freshness, intelligence layers) and holds back a public win-rate until enough canonical settled signals exist to support one honestly. The page reads \"Collecting\" until that's true. Patience over noise.",
       },
       {
         q: "Which sports are covered?",
@@ -47,7 +47,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What's the philosophy behind it?",
-        a: "One model, one standard. Galaxy Sports Edge was built because the sports picks industry runs on a quiet trick — services that publish their wins and scrub their losses. The opposite approach: show the work on every pick, gate the win-rate readout until it's statistically defensible, and let the data do the talking.",
+        a: "One model, one standard. Galaxy Sports Edge was built because the sports picks industry runs on a quiet trick: services that publish their wins and scrub their losses. The opposite approach: show the work on every pick, gate the win-rate readout until it's statistically defensible, and let the data do the talking.",
       },
     ],
   },
@@ -56,11 +56,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "Why is the Performance page empty?",
-        a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to publish a number that's statistically defensible. Could be 100 settled signals, could be 500. Whatever it takes for the number to be honest. The page says \"Collecting\" until then — that's the whole point of the design.",
+        a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to publish a number that's statistically defensible. Could be 100 settled signals, could be 500. Whatever it takes for the number to be honest. The page says \"Collecting\" until then. That's the whole point of the design.",
       },
       {
         q: "What's the Edge Index?",
-        a: "A calibrated 0–100 confidence rating on every signal. Not a probability the pick wins — a measure of how much the market is offering vs. what the model thinks the matchup is worth. A 71 Edge Index still loses ~29 times in 100. Variance is described, not hidden.",
+        a: "A calibrated 0-100 confidence rating on every signal. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth. A 71 Edge Index still loses ~29 times in 100. Variance is described, not hidden.",
       },
       {
         q: "What's Eclipse Gate?",
@@ -68,11 +68,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Can I see the factor trail on every signal?",
-        a: "Yes — that's the whole product. Every published signal exposes its full factor breakdown: which books, what line movement, market depth, freshness, public lean, intelligence layers. You read what the model read.",
+        a: "Yes, that's the whole product. Every published signal exposes its full factor breakdown: which books, what line movement, market depth, freshness, public lean, intelligence layers. You read what the model read.",
       },
       {
         q: "Does the model ever stay quiet?",
-        a: "Often. The four readiness gates exist specifically to keep weak signals off the customer surface. If a slate doesn't earn confidence, nothing publishes. The opposite of a tout service that always has a pick of the day.",
+        a: "Often. The four readiness gates exist specifically to keep weak signals off the board. If a slate doesn't earn confidence, nothing publishes. The opposite of a tout service that always has a pick of the day.",
       },
     ],
   },
@@ -81,7 +81,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What does Free get?",
-        a: "Every pick, free — the matchup and pick type on every signal, plus the Edge Index, the open verified record, and the full Academy. The confidence rating and the full factor trail are gated to Pro and Elite.",
+        a: "Every pick, free: the matchup and pick type on every signal, plus the Edge Index, the open verified record, and the full Academy. The confidence rating and the full factor trail are gated to Pro and Elite.",
       },
       {
         q: "What does Pro get?",
@@ -93,11 +93,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Is there a refund window?",
-        a: "No free trial — but every paid plan has a 3-day money-back window. Cancel any time from your dashboard — no questions.",
+        a: "No free trial, but every paid plan has a 3-day money-back window. Cancel any time from your dashboard, no questions.",
       },
       {
         q: "Will pricing change?",
-        a: "Free stays free. Pro is $14.99/month, Elite is $24.99/month — founding-member rates locked for the life of your subscription. As the verified record grows and prices rise for new members, yours never does.",
+        a: "Free stays free. Pro is $14.99/month, Elite is $24.99/month. Founding-member rates locked for the life of your subscription. As the verified record grows and prices rise for new members, yours never does.",
       },
     ],
   },
@@ -106,11 +106,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "How do I sign up?",
-        a: "Google OAuth. Click \"Sign in,\" use your Google account, and you're in. Email-based sign-in is coming.",
+        a: "With your Google account. Click \"Sign in\" and you're in. Email-based sign-in is coming.",
       },
       {
         q: "Where can I see my subscription?",
-        a: "Your dashboard has a Manage Billing button that opens the Stripe customer portal. Update card, change tier, cancel, download invoices — all from there.",
+        a: "Your dashboard has a Manage Billing button that opens the Stripe customer portal. Update card, change tier, cancel, download invoices, all from there.",
       },
       {
         q: "What data do you store about me?",
@@ -118,7 +118,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "How do I delete my account?",
-        a: "Email hq@galaxysportsedge.com from the address on the account and the deletion will be processed. The privacy page documents the full process.",
+        a: "Email hq@galaxysportsedge.com from the address on the account and we'll process the deletion. The privacy page documents the full process.",
       },
     ],
   },
@@ -131,11 +131,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Should I bet every signal?",
-        a: "No. Treat every signal as one input in a disciplined process — never the decision itself. Set limits before emotion enters. The signal tells you what the model sees; you decide what to do with that.",
+        a: "No. Treat every signal as one input in a disciplined process, never the decision itself. Set limits before emotion enters. The signal tells you what the model sees; you decide what to do with that.",
       },
       {
         q: "What does the model say when it loses?",
-        a: "The same thing it says when it wins: here are the factors that drove the read. Every settled signal — win or loss — gets logged with its full factor trail. The Vault is the receipt.",
+        a: "The same thing it says when it wins: here are the factors that drove the read. Every settled signal, win or loss, gets logged with its full factor trail. The Vault is the receipt.",
       },
     ],
   },
@@ -184,7 +184,7 @@ export default function FaqPage() {
               >
                 hq@galaxysportsedge.com
               </a>{" "}
-              — it&apos;ll get added.
+              and it&apos;ll get added.
             </p>
           </div>
         </section>

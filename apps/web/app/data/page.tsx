@@ -5,7 +5,7 @@ import { Nav } from "@/components/ui/nav";
 import { clearedSources, forbiddenSources, type LegalSource, type LegalVerdict } from "@sports/data-ingestion";
 
 export const metadata: Metadata = {
-  title: "How We Source Data — Legally, Transparently",
+  title: "How We Source Data: Legally, Transparently",
   description:
     "Galaxy Sports Edge ingests only openly-licensed or licensed data, with attribution, and publicly refuses sources whose terms forbid it. Here is the full registry: what we use, what we won't touch, and why.",
   alternates: { canonical: "/data" },
@@ -40,7 +40,7 @@ export default function DataSourcingPage(): JSX.Element {
             terms, attribution, and a legal verdict. Ingestion code checks that registry before it
             fetches a single row, so a source whose terms forbid commercial or automated use cannot
             be wired into the product. We prefer openly-licensed aggregators over scraping, we
-            attribute what requires it, and we publish what we refuse to touch — and why.
+            attribute what requires it, and we publish what we refuse to touch, and why.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link href="/api/legal/sources" className="btn-primary min-h-11 px-5 py-3">
@@ -81,7 +81,7 @@ export default function DataSourcingPage(): JSX.Element {
         <section>
           <h2 className="text-2xl font-semibold text-ion-white">Sources we refuse to touch</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">
-            Technically reachable, legally off-limits for a commercial product — or requiring spend
+            Technically reachable, legally off-limits for a commercial product, or requiring spend
             we have not committed. We name them so the boundary is auditable, not implied.
           </p>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -96,10 +96,10 @@ export default function DataSourcingPage(): JSX.Element {
           <ul className="mt-4 grid gap-2 text-sm leading-6 text-ion-1 md:grid-cols-2">
             <li>Prefer open-licensed aggregators over scraping.</li>
             <li>Read the actual license/ToS, not the marketing page.</li>
-            <li>Respect robots.txt and anti-automation clauses — accessible is not permitted.</li>
+            <li>Respect robots.txt and anti-automation clauses: accessible is not permitted.</li>
             <li>Attribute every source whose license requires it.</li>
             <li>Cache politely, rate-limit ourselves, never re-expose a licensed feed.</li>
-            <li>No fabricated data — every datapoint traces to a real source row.</li>
+            <li>No fabricated data: every datapoint traces to a real source row.</li>
           </ul>
         </section>
       </main>

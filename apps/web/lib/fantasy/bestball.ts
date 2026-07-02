@@ -222,8 +222,8 @@ export function rosterNeedsNext(
     const v = vor(player, universe);
     const reasons: string[] = [];
     if (have < target) reasons.push(`Adds to a thin ${player.pos} room (have ${have} of target ${target}).`);
-    else reasons.push(`Depth/luxury — your ${player.pos} room is at target (${have}/${target}).`);
-    if (buildsStack) reasons.push(`Builds a stack with your ${player.team} core — correlated spike weeks.`);
+    else reasons.push(`Depth/luxury: your ${player.pos} room is at target (${have}/${target}).`);
+    if (buildsStack) reasons.push(`Builds a stack with your ${player.team} core: correlated spike weeks.`);
     reasons.push(`Value over replacement: ${v >= 0 ? "+" : ""}${v}.`);
     if (vol >= 0.5) reasons.push(`High-ceiling spike-week upside.`);
     if (player.injury !== "healthy") reasons.push(`Injury flag: ${player.injury}.`);

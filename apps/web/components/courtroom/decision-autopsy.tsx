@@ -23,7 +23,7 @@ const CELLS: readonly Cell[] = [
     verdict: "Earned",
     process: "good",
     outcome: "good",
-    body: "Right read, right result. The standard — not the highlight reel.",
+    body: "Right read, right result. The standard, not the highlight reel.",
   },
   {
     key: "respected",
@@ -37,7 +37,7 @@ const CELLS: readonly Cell[] = [
     verdict: "Lucky",
     process: "bad",
     outcome: "good",
-    body: "Wrong read, right result. The most dangerous square — we flag it, never frame it.",
+    body: "Wrong read, right result. The most dangerous square: we flag it, never frame it.",
   },
   {
     key: "corrected",

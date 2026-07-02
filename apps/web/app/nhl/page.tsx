@@ -8,17 +8,17 @@ import { loadMoneyPuckNhl, type NhlSkaterRow } from "@/lib/moneypuck/nhl";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "NHL Expected Goals — MoneyPuck (free advanced stats)",
+  title: "NHL Expected Goals: MoneyPuck (free advanced stats)",
   description:
     "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
   alternates: { canonical: "/nhl" },
   openGraph: {
-    title: "NHL Expected Goals — MoneyPuck (free advanced stats)",
+    title: "NHL Expected Goals: MoneyPuck (free advanced stats)",
     description:
       "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
   },
   twitter: {
-    title: "NHL Expected Goals — MoneyPuck (free advanced stats)",
+    title: "NHL Expected Goals: MoneyPuck (free advanced stats)",
     description:
       "Read-only NHL expected-goals leaders from MoneyPuck: xG, goals over expected, and on-ice share. The first non-NFL sport wired through our legal source registry. Not a betting pick.",
   },
@@ -47,7 +47,7 @@ export default async function NhlPage(): Promise<JSX.Element> {
               Hockey, by the chances created.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              NHL expected-goals leaders from MoneyPuck &mdash; xG measures the quality of chances a
+              NHL expected-goals leaders from MoneyPuck. xG measures the quality of chances a
               skater generates; goals-over-expected splits finishing from luck. This is the first
               non-NFL sport wired through our legal source registry. Real advanced stats, not a pick.
             </p>
@@ -99,7 +99,7 @@ export default async function NhlPage(): Promise<JSX.Element> {
                       <th scope="col" className="px-4 py-3">GP</th>
                       <th scope="col" className="px-4 py-3">xG</th>
                       <th scope="col" className="px-4 py-3">G</th>
-                      <th scope="col" className="px-4 py-3">G–xG</th>
+                      <th scope="col" className="px-4 py-3">G-xG</th>
                       <th scope="col" className="px-4 py-3">Pts</th>
                       <th scope="col" className="px-4 py-3">Shots</th>
                     </tr>
@@ -123,7 +123,7 @@ export default async function NhlPage(): Promise<JSX.Element> {
                 </table>
               </div>
               <p className="px-5 py-3 font-mono text-[10px] leading-5 text-ion-2">
-                G–xG = goals minus expected goals (positive = finishing above the chances created).
+                G-xG = goals minus expected goals (positive = finishing above the chances created).
               </p>
             </section>
 

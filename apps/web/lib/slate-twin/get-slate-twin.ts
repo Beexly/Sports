@@ -184,7 +184,7 @@ async function buildLiveSlate(): Promise<TwinSlate | null> {
       markets,
       // No per-step history exists → hold the current value across the axis.
       confidence: Array.from({ length: TLEN }, () => conf01),
-      note: (pick?.reasoning ?? "").trim().slice(0, 160) || "Tracked game — no qualifying signal yet.",
+      note: (pick?.reasoning ?? "").trim().slice(0, 160) || "Tracked game: no qualifying signal yet.",
       ...(oddsPath ? { oddsPath } : {}),
       ...(boardByGame.has(row.id)
         ? { boardStatus: boardByGame.get(row.id)!.status, gateReason: boardByGame.get(row.id)!.gateReason }
@@ -223,7 +223,7 @@ async function buildLiveSlate(): Promise<TwinSlate | null> {
     timeline: TIMELINE,
     games,
     dataNote:
-      "Live slate shows real games with the metrics the engine produces today — verdict, " +
+      "Live slate shows real games with the metrics the engine produces today: verdict, " +
       "confidence, bookmaker consensus, market depth, and opening→current line movement. " +
       "Public/sharp ticket splits, per-step confidence history, and injury impact-events " +
       "aren't instrumented yet, so those encodings are omitted rather than estimated.",

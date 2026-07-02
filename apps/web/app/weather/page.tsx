@@ -7,9 +7,9 @@ import { loadNflGameWeather, type VenueWeather } from "@/lib/weather/game-weathe
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Game Weather — Outdoor NFL Venues (NWS, public domain)",
+  title: "Game Weather: Outdoor NFL Venues (NWS, public domain)",
   description:
-    "Live current conditions at outdoor NFL stadiums from the US National Weather Service. Wind and precipitation move passing and kicking — real environment data, not a betting pick.",
+    "Live current conditions at outdoor NFL stadiums from the US National Weather Service. Wind and precipitation move passing and kicking. Real environment data, not a betting pick.",
   alternates: { canonical: "/weather" },
 };
 
@@ -35,7 +35,7 @@ export default async function WeatherPage(): Promise<JSX.Element> {
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
               Current hourly conditions at every outdoor NFL venue, from the US National Weather
-              Service (a public-domain government feed — free to use, no scraping). Wind over
+              Service (a public-domain government feed: free to use, no scraping). Wind over
               ~15&nbsp;mph and precipitation are the environment signals that move totals and kicking.
               Real conditions, not a pick.
             </p>

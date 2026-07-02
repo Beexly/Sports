@@ -191,6 +191,8 @@ export function InteractiveGalaxy() {
     const reduced = prefersReducedMotion();
     let disposed = false;
     let frame = 0;
+    let running = false;
+    let inView = true;
     const startedAt = performance.now();
 
     let dpr = 1;
@@ -216,8 +218,9 @@ export function InteractiveGalaxy() {
       const rect = mount.getBoundingClientRect();
       widthCss = Math.max(1, rect.width);
       heightCss = Math.max(1, rect.height);
-      // Up to 3× DPR for crisp rendering on high-density displays.
-      dpr = Math.min(window.devicePixelRatio || 1, 3);
+      // DPR capped at 2× — crisp on high-density displays without paying the
+      // ~2.25× pixel cost of 3× panels for a decorative background.
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(widthCss * dpr);
       canvas.height = Math.round(heightCss * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -489,21 +492,55 @@ export function InteractiveGalaxy() {
       ctx.arc(pulseX, pulseY, 1.4, 0, Math.PI * 2);
       ctx.fill();
 
-      if (!reduced && !disposed) {
+      if (!reduced && !disposed && running) {
         frame = window.requestAnimationFrame(draw);
       }
     };
     drawFrame = draw;
 
+    // Pause the loop while the tab is hidden or the canvas is off-screen —
+    // same frame, zero work when nobody can see it.
+    const stopLoop = () => {
+      running = false;
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    };
+    const startLoop = () => {
+      if (reduced || disposed || running) return;
+      running = true;
+      frame = window.requestAnimationFrame(draw);
+    };
+    const onVisibility = () => {
+      if (document.hidden) stopLoop();
+      else if (inView) startLoop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              inView = entries[0]?.isIntersecting ?? true;
+              if (inView && !document.hidden) startLoop();
+              else stopLoop();
+            },
+            { threshold: 0 },
+          )
+        : null;
+    io?.observe(mount);
+
     if (reduced) {
       draw(performance.now());
     } else {
-      frame = window.requestAnimationFrame(draw);
+      startLoop();
     }
 
     return () => {
       disposed = true;
-      if (frame) window.cancelAnimationFrame(frame);
+      stopLoop();
+      document.removeEventListener("visibilitychange", onVisibility);
+      io?.disconnect();
       observer.disconnect();
       pointerTarget.removeEventListener("pointermove", onPointerMove);
       pointerTarget.removeEventListener("pointerleave", onPointerLeave);

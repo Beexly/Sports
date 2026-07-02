@@ -114,7 +114,7 @@ export function ParlayGenome() {
                   <Gene label="Line value" value={l.lineValue} color={BRAND_COLORS.orbitalCyan} />
                 </div>
                 <p className="mt-2 text-[10px] uppercase tracking-wider" style={{ color: on ? BRAND_COLORS.orbitalCyan : "var(--ion-3,#6b7785)" }}>
-                  {on ? "In ticket — tap to remove" : "Removed — tap to add"}
+                  {on ? "In ticket · tap to remove" : "Removed · tap to add"}
                 </p>
               </button>
             );
@@ -139,7 +139,7 @@ export function ParlayGenome() {
             <Vital label="Headline payout" value={`${vitals.payoutDecimal ? vitals.payoutDecimal.toFixed(2) : "0"}×`} sub={`${decimalToAmerican(vitals.payoutDecimal)} American`} color={BRAND_COLORS.ionWhite} />
             <Vital label="Fair payout" value={`${vitals.fairPayoutDecimal ? vitals.fairPayoutDecimal.toFixed(2) : "0"}×`} sub="zero-vig break-even" color={BRAND_COLORS.softUltraviolet} />
             <Vital label="House edge" value={pct(vitals.houseEdge)} sub="compounded across legs" color={BRAND_COLORS.ionMagenta} />
-            <Vital label="Dependency Coefficient" value={vitals.count ? vitals.dependencyCoefficient.toFixed(2) : "—"} sub={vitals.correlated.length ? `${vitals.correlated.length} same-game tie${vitals.correlated.length > 1 ? "s" : ""} — structural, not statistical` : "every leg independent"} color={vitals.correlated.length ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan} />
+            <Vital label="Dependency Coefficient" value={vitals.count ? vitals.dependencyCoefficient.toFixed(2) : "—"} sub={vitals.correlated.length ? `${vitals.correlated.length} same-game tie${vitals.correlated.length > 1 ? "s" : ""}: structural, not statistical` : "every leg independent"} color={vitals.correlated.length ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan} />
           </div>
         </div>
 
@@ -159,7 +159,7 @@ export function ParlayGenome() {
               <p className="text-[11px] uppercase tracking-wider text-ink-500">If you played these as singles instead</p>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-300">
                 Average expected value <strong className="text-white">{(single.avgEv * 100).toFixed(1)}%</strong> per leg, and a{" "}
-                <strong className="text-white">{pct(single.someReturn)}</strong> chance at least one returns — versus a{" "}
+                <strong className="text-white">{pct(single.someReturn)}</strong> chance at least one returns, versus a{" "}
                 <strong style={{ color: BRAND_COLORS.ionMagenta }}>{pct(1 - vitals.survivability)}</strong> chance the parlay returns nothing.
                 The multiplied payout is the multiplied risk.
               </p>

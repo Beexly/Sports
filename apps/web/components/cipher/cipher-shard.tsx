@@ -22,7 +22,7 @@ export function CipherShard({ page }: { page: ShardPage }) {
       aria-hidden="true"
       data-glassbox-cipher={`shard-${shard.id}`}
       data-frequency={shard.value}
-      title="◬ Glass Box Cipher — a shard rests here"
+      title="◬ Glass Box Cipher: a shard rests here"
       className="fixed bottom-3 right-3 z-[2] select-none font-mono text-[11px] leading-none"
       style={{ color: shard.color, opacity: 0.22 }}
     >

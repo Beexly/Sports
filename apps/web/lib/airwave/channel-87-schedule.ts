@@ -105,7 +105,7 @@ export function validateShowBlock(block: ShowBlock): string[] {
   }
   if (!isWithinChannel87Window(block.startHour)) {
     errors.push(
-      `Show start hour ${block.startHour} is outside the 05:00–23:00 CT capture window.`,
+      `Show start hour ${block.startHour} is outside the 05:00-23:00 CT capture window.`,
     );
   }
   if (block.rightsStatus === "HELD" || block.rightsStatus === "LEGAL_REVIEW_REQUIRED") {

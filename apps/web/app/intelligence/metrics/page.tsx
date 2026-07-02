@@ -12,7 +12,7 @@ import {
 import { coverageMapUiData, type CoverageMapUiData } from "@/lib/metrics/coverage-map";
 
 export const metadata: Metadata = {
-  title: "How We Read the Numbers — Metric Methodology",
+  title: "How We Read the Numbers: Metric Methodology",
   description:
     "The glass box on every signal the engine uses: what each metric is, how we read it, how it's commonly misread, and how that makes us different. Stable, predictive inputs vs. noisy outputs that regress.",
   alternates: { canonical: "/intelligence/metrics" },
@@ -131,8 +131,8 @@ export default function MetricsMethodologyPage(): JSX.Element {
             How we read the numbers.
           </h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-ion-1">
-            Most products show you stats. The edge is in reading them. We separate <span className="text-orbital-cyan">anchors</span> —
-            stable, predictive inputs like opportunity, volume, accuracy, and quality of contact — from <span className="text-plasma">noisy</span> outputs
+            Most products show you stats. The edge is in reading them. We separate <span className="text-orbital-cyan">anchors</span>,
+            stable, predictive inputs like opportunity, volume, accuracy, and quality of contact, from <span className="text-plasma">noisy</span> outputs
             like efficiency, results, and touchdown rate that regress to the mean. An accurate projection leans on the anchors
             and treats the noise as a sample, not a skill. Here&apos;s every signal we use, and exactly how we read it.
           </p>
@@ -157,7 +157,7 @@ export default function MetricsMethodologyPage(): JSX.Element {
         <section className="border border-mineral bg-eclipse p-5">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">The doctrine</p>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-ion-1">
-            When two independent signals disagree, we surface the gap — we don&apos;t average it into false precision.
+            When two independent signals disagree, we surface the gap. We don&apos;t average it into false precision.
             Opportunity that outruns production is a buy-low; production that outruns opportunity is a sell-high. That
             single discipline, applied across every position and sport, is how we keep projections honest and close to accurate.
           </p>

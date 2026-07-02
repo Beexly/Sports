@@ -120,13 +120,13 @@ export function computeAvailabilityModifier(input: AvailabilityInputs): HumanAva
       weight: W_INJURY * injF,
       tier: "official",
       note: isOut
-        ? `Official OUT designation${input.primaryInjury ? ` (${input.primaryInjury})` : ""} — player-dependent reads go to no-bet.`
-        : `Official ${input.injuryStatus} designation${input.primaryInjury ? ` (${input.primaryInjury})` : ""} per public report — availability uncertain, band widened.`,
+        ? `Official OUT designation${input.primaryInjury ? ` (${input.primaryInjury})` : ""}. Player-dependent reads go to no-bet.`
+        : `Official ${input.injuryStatus} designation${input.primaryInjury ? ` (${input.primaryInjury})` : ""} per public report: availability uncertain, band widened.`,
     });
   }
 
   const workF = workloadFactor(input.daysRest);
-  if (workF > 0) drivers.push({ key: "workloadFatigue", weight: W_WORKLOAD * workF, tier: "official", note: `${input.daysRest} days since last game — short-rest workload.` });
+  if (workF > 0) drivers.push({ key: "workloadFatigue", weight: W_WORKLOAD * workF, tier: "official", note: `${input.daysRest} days since last game: short-rest workload.` });
 
   const weatherF = weatherFactor(input);
   if (weatherF > 0) drivers.push({ key: "surfaceWeatherStress", weight: W_WEATHER * weatherF, tier: "official", note: `Open-air conditions (wind/precip/temp) raise variance${input.surface ? ` on ${input.surface}` : ""}.` });
@@ -134,10 +134,10 @@ export function computeAvailabilityModifier(input: AvailabilityInputs): HumanAva
   const roleF = clamp01(input.roleVolatility ?? 0);
   if (roleF > 0) drivers.push({ key: "roleVolatility", weight: W_ROLE * roleF, tier: "inferred", note: "Depth-chart / role-change risk." });
 
-  if (input.marketMovedOnNews) drivers.push({ key: "marketMoveAfterNews", weight: W_MARKET, tier: "modeled", note: "A betting line moved on the news — public corroboration the change matters." });
+  if (input.marketMovedOnNews) drivers.push({ key: "marketMoveAfterNews", weight: W_MARKET, tier: "modeled", note: "A betting line moved on the news: public corroboration the change matters." });
 
   const conflict = Boolean(input.conflictingSources);
-  if (conflict) drivers.push({ key: "conflictingSourcePenalty", weight: W_CONFLICT, tier: "inferred", note: "Public reports disagree — we widen and surface the conflict rather than average it." });
+  if (conflict) drivers.push({ key: "conflictingSourcePenalty", weight: W_CONFLICT, tier: "inferred", note: "Public reports disagree. We widen and surface the conflict rather than average it." });
 
   const raw = drivers.reduce((sum, d) => sum + d.weight, 0);
   const bandWidenPct = Math.max(0, Math.min(MAX_BAND_WIDEN, raw));
@@ -187,7 +187,7 @@ export function availabilityOutputBehavior(
       ? "An official OUT removes player-dependent reads from play."
       : pct > 0
         ? `These public signals widen the confidence band by ~${pct}%.`
-        : "Conditions are clear — no band widening from this layer.";
+        : "Conditions are clear: no band widening from this layer.";
 
   const whatCouldBreak =
     m.recommendation === "no-bet"

@@ -11,7 +11,7 @@ import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Methodology - Deterministic Scoring, Open Framework",
+  title: "Methodology: Deterministic Scoring, Open Framework",
   description:
     "How Galaxy Sports Edge reads the board, scores the math, and gates the slate without publishing proprietary weights or constants.",
   alternates: { canonical: "/methodology" },
@@ -54,19 +54,19 @@ const CHANGELOG = [
 const MARKET_READS = [
   {
     title: "The market's real price",
-    body: "Every book's latest two-sided quote, de-vigged and taken to a median across books — the market's opinion with the margin stripped out. What the books actually think, not what they charge.",
+    body: "Every book's latest two-sided quote, de-vigged and taken to a median across books: the market's opinion with the margin stripped out. What the books actually think, not what they charge.",
     href: "/observatory",
     cta: "See the fair board",
   },
   {
     title: "The best of it",
-    body: "The line shop finds the best available price for each side across the books we capture — the same line-shopping edge the pros use, shown as plain transparency. Shop the number; it's your money.",
+    body: "The line shop finds the best available price for each side across the books we capture: the same line-shopping edge the pros use, shown as plain transparency. Shop the number; it's your money.",
     href: "/observatory",
     cta: "Open the line shop",
   },
   {
     title: "Did we beat the close?",
-    body: "Closing line value grades whether the price we locked beat where the market closed — the sharp-credible leading indicator of a real edge, and the one number tout services never show. Published under the same gate as the win rate.",
+    body: "Closing line value grades whether the price we locked beat where the market closed: the leading indicator of a real edge that sharp bettors trust, and the one number tout services never show. Published under the same gate as the win rate.",
     href: "/clv",
     cta: "See our CLV",
   },
@@ -162,10 +162,10 @@ export default function MethodologyPage(): JSX.Element {
                 Reading the market
               </p>
               <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
-                What the market thinks — and whether we beat it.
+                What the market thinks, and whether we beat it.
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
-                Three reads, all built from odds we actually capture — never a
+                Three reads, all built from odds we actually capture, never a
                 projection dressed up as a market.
               </p>
             </Reveal>
@@ -227,7 +227,7 @@ export default function MethodologyPage(): JSX.Element {
               <h2 className="font-display text-3xl text-white sm:text-4xl">See the framework on today&apos;s board.</h2>
               <p className="text-sm leading-6 text-ink-300">
                 The public board shows every published pick and every free Edge Index.
-                Pro keeps the detailed factor breakdown.
+                Pro unlocks the detailed factor breakdown.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link href="/board" className="btn btn-primary">

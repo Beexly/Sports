@@ -54,7 +54,7 @@ export function SubscribeButton({ tier, label, variant, interval = "month" }: Pr
       if (!res.ok || !data.url) {
         setError(
           data.error ??
-            "Checkout didn't open. Try again — if it sticks, contact hq@galaxysportsedge.com.",
+            "Checkout didn't open. Try again. If it sticks, contact hq@galaxysportsedge.com.",
         );
         return;
       }

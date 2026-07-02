@@ -66,7 +66,7 @@ export function BetTracker() {
         <Metric label="Brier" value={`${p.brier}`} />
       </div>
       <p className="-mt-3 text-[11px] text-ink-600">
-        <strong style={{ color: BRAND_COLORS.softUltraviolet }}>Beat close</strong> — how often you got a better number than the market closed at — is the leading indicator. The record follows the CLV, not the other way around.
+        <strong style={{ color: BRAND_COLORS.softUltraviolet }}>Beat close</strong>, how often you got a better number than the market closed at, is the leading indicator. The record follows the CLV, not the other way around.
       </p>
 
       {/* add bet */}
@@ -102,7 +102,7 @@ export function BetTracker() {
       {/* calibration */}
       {cal.length > 0 && (
         <div className="surface-card p-5">
-          <p className="mb-3 text-xs uppercase tracking-[0.18em] text-ink-500">Calibration — predicted vs. actual win rate</p>
+          <p className="mb-3 text-xs uppercase tracking-[0.18em] text-ink-500">Calibration: predicted vs. actual win rate</p>
           <div className="space-y-2">
             {cal.map((c) => (
               <div key={c.label} className="flex items-center gap-2 text-xs">

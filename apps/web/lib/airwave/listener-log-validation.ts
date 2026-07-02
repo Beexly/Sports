@@ -35,7 +35,7 @@ export function validateClaimBatch(input: readonly string[]): BatchValidation {
     return {
       ok: false,
       error: "too-many-claims",
-      detail: `Max ${MAX_BATCH_CLAIMS} claims per filing — file the rest in a second batch.`,
+      detail: `Max ${MAX_BATCH_CLAIMS} claims per filing. File the rest in a second batch.`,
     };
   }
   const tooLong = claims.find((c) => c.length > MAX_CLAIM_LENGTH);
@@ -43,7 +43,7 @@ export function validateClaimBatch(input: readonly string[]): BatchValidation {
     return {
       ok: false,
       error: "claim-too-long",
-      detail: "Each line must be a short paraphrase in your own words — not a transcript.",
+      detail: "Each line must be a short paraphrase in your own words, not a transcript.",
     };
   }
   const timestamped = claims.filter((c) => TRANSCRIPT_TIMESTAMP_RE.test(c));
@@ -53,7 +53,7 @@ export function validateClaimBatch(input: readonly string[]): BatchValidation {
       error: "transcript-detected",
       detail:
         "Lines with timestamps look like a pasted transcript. The legal lane is paraphrase " +
-        "only — your words, no recordings, no transcripts (SiriusXM §9(l)).",
+        "only: your words, no recordings, no transcripts (SiriusXM §9(l)).",
     };
   }
   return { ok: true, claims };

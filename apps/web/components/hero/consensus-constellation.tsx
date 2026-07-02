@@ -238,6 +238,8 @@ export function ConsensusConstellation() {
 
     let raf = 0;
     let disposed = false;
+    let running = false;
+    let inView = true;
     const start = performance.now();
     let camAz = 0;
 
@@ -260,15 +262,49 @@ export function ConsensusConstellation() {
       core.scale.set(pulse, pulse, 1);
 
       composer.render();
-      if (!reduced) raf = requestAnimationFrame(frame);
+      if (!reduced && running) raf = requestAnimationFrame(frame);
     };
 
+    // Pause the render loop while the tab is hidden or the canvas is
+    // off-screen; resume where it left off when it is watchable again.
+    const stopLoop = () => {
+      running = false;
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+    const startLoop = () => {
+      if (reduced || disposed || running) return;
+      running = true;
+      raf = requestAnimationFrame(frame);
+    };
+    const onVisibility = () => {
+      if (document.hidden) stopLoop();
+      else if (inView) startLoop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              inView = entries[0]?.isIntersecting ?? true;
+              if (inView && !document.hidden) startLoop();
+              else stopLoop();
+            },
+            { threshold: 0 },
+          )
+        : null;
+    io?.observe(mount);
+
     if (reduced) frame(performance.now());
-    else raf = requestAnimationFrame(frame);
+    else startLoop();
 
     return () => {
       disposed = true;
-      if (raf) cancelAnimationFrame(raf);
+      stopLoop();
+      document.removeEventListener("visibilitychange", onVisibility);
+      io?.disconnect();
       ro.disconnect();
       pointerTarget.removeEventListener("pointermove", onMove);
       geo.dispose();

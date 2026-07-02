@@ -1,8 +1,8 @@
 import { Shell, SectionHeader, DataTable } from "../_components";
 import { askStatKing } from "@/lib/statking/product";
 export const metadata = {
-  title: "Ask StatKing — Grounded NFL Stat Answers",
-  description: "Ask about players, teams, usage, and matchups and get answers backed by source lineage — never fabricated.",
+  title: "Ask StatKing: Grounded NFL Stat Answers",
+  description: "Ask about players, teams, usage, and matchups and get answers backed by source lineage, never fabricated.",
   alternates: { canonical: "/stats/ask" },
 };
 const TEMPLATES = [

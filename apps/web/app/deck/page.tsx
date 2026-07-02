@@ -14,7 +14,7 @@ import { getPlate } from "@/lib/visual-production/asset-manifest";
 export const metadata: Metadata = {
   title: "The Command Deck",
   description:
-    "A single operator's intelligence command deck — the owner watching an entire company run itself. Galaxy Sports Edge.",
+    "A single operator's intelligence command deck: the owner watching an entire company run itself. Galaxy Sports Edge.",
   alternates: { canonical: "/deck" },
 };
 
@@ -86,7 +86,7 @@ export default function DeckPage(): JSX.Element {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-ion-1">
               A single operator's intelligence command deck. The company breathes
-              here — every agent, every signal, every decision. You don't manage
+              here: every agent, every signal, every decision. You don't manage
               the noise. You watch the machine manage it.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -198,7 +198,7 @@ export default function DeckPage(): JSX.Element {
                 .
               </h2>
               <p className="mt-5 max-w-lg text-base leading-7 text-ion-1">
-                The intelligence doesn't just process — it communicates. Every
+                The intelligence doesn't just process. It communicates. Every
                 signal is narrated, every contradiction explained, every gate
                 decision reasoned. You don't read a dashboard. You have a
                 conversation with the system.

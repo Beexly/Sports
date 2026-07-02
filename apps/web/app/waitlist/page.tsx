@@ -11,7 +11,7 @@ import { WaitlistForm } from "@/components/gsn/waitlist-form";
 import { WAITLIST_COPY, BACKTEST_TRANSPARENCY } from "@/lib/gse/waitlist-copy";
 
 export const metadata: Metadata = {
-  title: "Founding Decision-Process Lane — GSE",
+  title: "Founding Decision-Process Lane · GSE",
   description: WAITLIST_COPY.subhead,
   robots: { index: false, follow: false },
 };

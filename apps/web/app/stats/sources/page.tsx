@@ -2,7 +2,7 @@ import { Shell, Cards, DataTable, InsightCard, SectionHeader, StatusRibbon } fro
 import { FilterBar } from "../_client";
 import { loadSources } from "@/lib/statking/product";
 export const metadata = {
-  title: "Source Universe — Tracked Data Sources",
+  title: "Source Universe: Tracked Data Sources",
   description: "Every tracked data source with its rights status and activation state.",
   alternates: { canonical: "/stats/sources" },
 };

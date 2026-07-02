@@ -26,12 +26,12 @@ function headlineFor(input: NarrativeInput, needsYouCount: number): string {
   if (input.overallColor === "RED") {
     return needsYouCount > 0
       ? `${needsYouCount} blocking item${needsYouCount === 1 ? "" : "s"} need you before anything ships.`
-      : "A blocker is active — clear it before exposure.";
+      : "A blocker is active. Clear it before exposure.";
   }
   if (needsYouCount > 0) {
     return `${needsYouCount} decision${needsYouCount === 1 ? "" : "s"} await you; the rest is holding steady.`;
   }
-  return "No decisions are waiting — the deck is steady. Hold the cadence.";
+  return "No decisions are waiting. The deck is steady. Hold the cadence.";
 }
 
 export function buildOperatingNarrative(input: NarrativeInput): OperatingNarrative {
@@ -47,7 +47,7 @@ export function buildOperatingNarrative(input: NarrativeInput): OperatingNarrati
   const whatChanged: string[] = [
     `Launch posture: ${input.launchStatus.replace(/_/g, " ").toLowerCase()} (${input.overallColor}).`,
     `Readiness: ${input.gatesOpen}/${input.gatesTotal} progression gates open.`,
-    `Public picks gate is ${input.publicGateOpen ? "OPEN" : "closed"} — ${input.todayPickCount} pick${input.todayPickCount === 1 ? "" : "s"} generated today.`,
+    `Public picks gate is ${input.publicGateOpen ? "OPEN" : "closed"}. ${input.todayPickCount} pick${input.todayPickCount === 1 ? "" : "s"} generated today.`,
   ];
 
   // Cap the narrative lists so the memo stays scannable; the full queue lives
@@ -66,7 +66,7 @@ export function buildOperatingNarrative(input: NarrativeInput): OperatingNarrati
     whatsBlocked:
       blocked.length > 0
         ? cap(blocked, 5)
-        : ["Nothing is blocked — no safety or critical items active."],
+        : ["Nothing is blocked. No safety or critical items active."],
     needsYou: needsYouLines,
     canWait:
       canWait.length > 0

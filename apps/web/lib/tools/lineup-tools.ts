@@ -79,6 +79,6 @@ export async function compareLineup(season: number, playerIds: readonly string[]
     season,
     picks,
     missing,
-    note: "Start/sit + trade tiers derived from the central Galaxy Index — the same score every tool reads, so they never contradict.",
+    note: "Start/sit + trade tiers derived from the central Galaxy Index: the same score every tool reads, so they never contradict.",
   };
 }

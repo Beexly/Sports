@@ -69,7 +69,7 @@ export function CostOfNoiseCalculator(): JSX.Element {
     if (shopping > 0)
       workflow.push({ label: "Today's Board", href: "/board", why: "see line movement and price context before accepting a number" });
     if (noBet > 0)
-      workflow.push({ label: "The Academy", href: "/academy", why: "train the pass — get graded on restraint, not action" });
+      workflow.push({ label: "The Academy", href: "/academy", why: "train the pass and get graded on restraint, not action" });
     workflow.push({ label: "Calibration Report", href: "/performance", why: "judge any process, ours included, by its public receipts" });
 
     return { leakage, exposedStake, discipline, band, workflow, weeklyTurnover };
@@ -200,14 +200,14 @@ export function CostOfNoiseCalculator(): JSX.Element {
                 <Link href={step.href} className="font-semibold text-ion-white underline-offset-4 hover:text-orbital-cyan hover:underline">
                   {step.label}
                 </Link>{" "}
-                — {step.why}
+                · {step.why}
               </li>
             ))}
           </ul>
         </div>
 
         <p className="mt-auto pt-6 text-xs leading-5 text-ion-2">
-          Directional education from your stated habits — not a financial
+          Directional education from your stated habits. Not a financial
           projection, not a profit estimate, and not advice to bet more. The
           cheapest improvement in any process is a better pass.
         </p>

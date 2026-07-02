@@ -53,9 +53,9 @@ const LIVE_FIRST = [
 
 type ToolStatus = "live" | "partly live" | "gated";
 const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
-  ["Optimizer — DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
+  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
   ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the illustrative pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
-  ["Human Performance", "Public confidence-band layer — venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
+  ["Human Performance", "Public confidence-band layer: venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
   ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context.", "/fantasy/waivers", "gated"],
   ["Trade Analyzer", "Needs live player values and roster context.", "/fantasy/trade", "gated"],
   ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing.", "/fantasy/props", "gated"],
@@ -213,7 +213,7 @@ export default async function FantasyHubPage({
                 <h2 className="font-display text-3xl font-semibold text-white">Every tool, with its honest status</h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-ink-300">
                   One directory, no dead ends. Each tool links straight through and shows whether it&apos;s
-                  live, partly live, or gated on a real data feed — never a design delay, never a fictional input.
+                  live, partly live, or gated on a real data feed. Never a design delay, never a fictional input.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-sm font-semibold">

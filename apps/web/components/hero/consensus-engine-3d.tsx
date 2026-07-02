@@ -327,6 +327,8 @@ export function ConsensusEngine3D() {
     const proj = new THREE.Vector3();
     const world = new THREE.Vector3();
     let raf = 0, disposed = false;
+    let running = false;
+    let inView = true;
     const start = performance.now();
 
     const project = (p: V3): { x: number; y: number; vis: boolean } => {
@@ -390,14 +392,49 @@ export function ConsensusEngine3D() {
       coreLabel.style.opacity = cs.vis ? "1" : "0";
 
       composer.render();
-      if (!reduced) raf = requestAnimationFrame(frame);
+      if (!reduced && running) raf = requestAnimationFrame(frame);
     };
+
+    // Pause the render loop while the tab is hidden or the canvas is
+    // off-screen; resume where it left off when it is watchable again.
+    const stopLoop = () => {
+      running = false;
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+    const startLoop = () => {
+      if (reduced || disposed || running) return;
+      running = true;
+      raf = requestAnimationFrame(frame);
+    };
+    const onVisibility = () => {
+      if (document.hidden) stopLoop();
+      else if (inView) startLoop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              inView = entries[0]?.isIntersecting ?? true;
+              if (inView && !document.hidden) startLoop();
+              else stopLoop();
+            },
+            { threshold: 0 },
+          )
+        : null;
+    io?.observe(mount);
+
     if (reduced) frame(performance.now());
-    else raf = requestAnimationFrame(frame);
+    else startLoop();
 
     return () => {
       disposed = true;
-      if (raf) cancelAnimationFrame(raf);
+      stopLoop();
+      document.removeEventListener("visibilitychange", onVisibility);
+      io?.disconnect();
       ro.disconnect();
       mount.removeEventListener("pointermove", onMove);
       mount.removeEventListener("pointerleave", onLeave);

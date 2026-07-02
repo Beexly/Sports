@@ -17,7 +17,7 @@ import { BRAND_COLORS } from "@/lib/brand";
  */
 
 export const metadata: Metadata = {
-  title: "Contests — Galaxy Sports Edge",
+  title: "Contests · Galaxy Sports Edge",
   description: "The Contest Bay is under construction. Something competitive is coming.",
   alternates: { canonical: "/fantasy/contests" },
 };
@@ -113,8 +113,8 @@ export default function ContestBaySealedPage() {
             behind this door.
           </h1>
           <p className="mt-5 max-w-xl text-balance text-ink-300">
-            The Contest Bay is under construction. The brief stays classified until launch —
-            when this door opens, it opens with receipts.
+            The Contest Bay is under construction. The brief stays classified until launch.
+            When this door opens, it opens with receipts.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
