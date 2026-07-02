@@ -113,12 +113,14 @@ export function normalQuantile(p: number): number {
  * A statistic of a sample: the mean (ROI/units) is the common case, but this is
  * deliberately general. A CONFOUND-ADJUSTED edge — a regression coefficient of
  * outcome on signal after controlling for game volatility/strength — is also a
- * Statistic, and it plugs straight in. That generality is the bridge to the
- * robust M-estimation toolkit (Newton with Levenberg-Marquardt / dogleg /
- * Steihaug-CG safeguards, and Hessian-based influence functions): those are the
- * machinery for FITTING such a statistic on ill-conditioned sports data and for
- * approximating its jackknife influence at scale. The BCa scaffold here consumes
- * whatever statistic that machinery produces.
+ * Statistic, and it plugs straight in.
+ *
+ * NOTE: this file ships NO optimizer. It only computes the injected statistic
+ * (the mean, exactly) and its delete-one jackknife. When the injected statistic
+ * is itself an expensive M-estimator fit on ill-conditioned data, the FITTING
+ * (Newton with Levenberg-Marquardt / dogleg / Steihaug-CG safeguards, and
+ * Hessian-based influence for scale) belongs in the caller / a future module —
+ * it is a documented roadmap, not code that lives here.
  */
 export type Statistic = (sample: readonly number[]) => number;
 
