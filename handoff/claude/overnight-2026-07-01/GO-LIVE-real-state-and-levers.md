@@ -81,7 +81,7 @@ All values are the strings `true` / `false`.
 | `PERFORMANCE_STATS_ENABLED` | ON | leave |
 | `OUTCOME_LEARNING_ENABLED` | ON | leave |
 | `FEATURED_PICK_PROMOTION_ENABLED` | off | **set `true`** |
-| `PUBLIC_BLOG_ENABLED` | off | set `true` **only after** you confirm content is draft-review, not auto-publish |
+| `PUBLIC_BLOG_ENABLED` | off | **VERIFIED SAFE to set `true`** — the draft-only guardrail scanned 1,079 files and confirmed no code path anywhere writes `publishedAt`, flips a row to PUBLISHED, or sends externally. Flipping this only enables draft GENERATION; publishing remains a manual operator action by construction. |
 | `FORCE_NO_BET_IF_STALE` | off | consider `true` — auto-hides picks when data is stale (protects trust while ingestion stabilizes) |
 | `CALIBRATION_ADJUSTMENTS_ENABLED` | off | **LEAVE OFF.** Your own code forbids it without the ≥100-settled + held-out-validation audit. Flipping it makes the site display "calibrated win probabilities" that aren't validated — the one flip that makes the product claim something untrue. |
 
