@@ -92,7 +92,7 @@ describe("fitStratifiedShrinkage (exchangeability kernel: borrow from peers)", (
 describe("standardizedErrorRms (belief-manifold kernel: error in units of confidence)", () => {
   function pair(pred: number, actual: number, halfWidth: number): TruthPair {
     return {
-      predicted: reconstructed(pred, [pred - halfWidth, pred + halfWidth], 0.2, makeProvenance("covariate-adjusted", ["t"], true)),
+      predicted: reconstructed(pred, [pred - halfWidth, pred + halfWidth], 0.2, makeProvenance("covariate-adjusted", ["calibration:truth"], true)),
       actual,
     };
   }
@@ -107,7 +107,7 @@ describe("standardizedErrorRms (belief-manifold kernel: error in units of confid
     const sd = 0.5;
     const p = standardizedErrorRms([
       {
-        predicted: reconstructed(3, [3 - z * sd, 3 + z * sd], 0.2, makeProvenance("covariate-adjusted", ["t"], true)),
+        predicted: reconstructed(3, [3 - z * sd, 3 + z * sd], 0.2, makeProvenance("covariate-adjusted", ["calibration:truth"], true)),
         actual: 3 + sd,
       },
     ]);
@@ -118,7 +118,7 @@ describe("standardizedErrorRms (belief-manifold kernel: error in units of confid
 describe("skillScore (honest epistemic-alpha: measured lift over a baseline)", () => {
   function pair(pred: number, actual: number): TruthPair {
     return {
-      predicted: reconstructed(pred, [pred - 1, pred + 1], 0.2, makeProvenance("covariate-adjusted", ["t"], true)),
+      predicted: reconstructed(pred, [pred - 1, pred + 1], 0.2, makeProvenance("covariate-adjusted", ["calibration:truth"], true)),
       actual,
     };
   }
@@ -211,7 +211,40 @@ describe("graduationVerdict (the un-fudgeable promote/reject rule)", () => {
     expect(v.reasons.length).toBe(4);
     expect(v.reasons.join(" ")).toMatch(/sample too small/);
     expect(v.reasons.join(" ")).toMatch(/no measured skill/);
-    expect(v.reasons.join(" ")).toMatch(/coverage dishonest/);
+    expect(v.reasons.join(" ")).toMatch(/under-cover/);
     expect(v.reasons.join(" ")).toMatch(/overconfident/);
+  });
+
+  it("says 'skill undefined', NOT 'adds noise', when the baseline is perfect (NaN skill)", async () => {
+    const { graduationVerdict } = await import("@/lib/reconstruction/calibration-eval");
+    const rep = {
+      n: 400, rmse: 0.3, meanAbsError: 0.25, empiricalCoverage: 0.79,
+      nominalCoverage: 0.8, standardizedErrorRms: 1.0, meetsRmseTarget: true,
+    };
+    const v = graduationVerdict(rep, Number.NaN);
+    expect(v.graduates).toBe(false);
+    expect(v.reasons.join(" ")).toMatch(/skill undefined/);
+    expect(v.reasons.join(" ")).not.toMatch(/adds noise/);
+  });
+
+  it("accepts a TIMID (over-covering) model — only overconfidence is punished", async () => {
+    const { graduationVerdict } = await import("@/lib/reconstruction/calibration-eval");
+    // Over-covers (0.95 > nominal 0.8) and low standardized error (0.7): too
+    // cautious, but honest. The one-sided gates must let it graduate.
+    const timid = {
+      n: 400, rmse: 0.3, meanAbsError: 0.25, empiricalCoverage: 0.95,
+      nominalCoverage: 0.8, standardizedErrorRms: 0.7, meetsRmseTarget: true,
+    };
+    expect(graduationVerdict(timid, 0.15).graduates).toBe(true);
+  });
+});
+
+describe("makeProvenance enforces the cleared-source doctrine at runtime", () => {
+  it("throws on a forbidden input namespace (raw frames / Big Data Bowl)", async () => {
+    const { makeProvenance } = await import("@/lib/reconstruction/provenance");
+    expect(() => makeProvenance("covariate-adjusted", ["bigdatabowl:raw-frames"], true)).toThrow(
+      /not a cleared source/,
+    );
+    expect(() => makeProvenance("empirical-bayes-shrinkage", ["nflverse:ngs"], false)).not.toThrow();
   });
 });

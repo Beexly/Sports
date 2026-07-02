@@ -191,17 +191,25 @@ export function graduationVerdict(
   if (!(report.n >= minN)) {
     reasons.push(`sample too small: n=${report.n} < ${minN}`);
   }
-  if (!(skill > 0)) {
+  if (!Number.isFinite(skill)) {
+    // Undefined lift (e.g. a perfect baseline) is not the same accusation as
+    // "adds noise" — say what is actually true.
+    reasons.push("skill undefined (baseline already perfect or degenerate); cannot certify lift");
+  } else if (!(skill > 0)) {
     reasons.push(
-      `no measured skill over the baseline (skillScore=${Number.isFinite(skill) ? skill.toFixed(3) : "NaN"}); the feature adds noise, not signal`,
+      `no measured skill over the baseline (skillScore=${skill.toFixed(3)}); the feature adds noise, not signal`,
     );
   }
+  // Coverage gate is ONE-SIDED on purpose, to agree with the standardized-error
+  // gate below: overconfidence (under-covering / too-tight intervals) is the
+  // sin on a trust surface; timidity (over-covering) is acceptable, just
+  // conservative. Both gates now punish only overconfidence.
   if (
     !Number.isFinite(report.empiricalCoverage) ||
-    Math.abs(report.empiricalCoverage - report.nominalCoverage) > covTol
+    report.empiricalCoverage < report.nominalCoverage - covTol
   ) {
     reasons.push(
-      `interval coverage dishonest: empirical ${report.empiricalCoverage.toFixed(3)} vs nominal ${report.nominalCoverage.toFixed(3)} (tolerance ${covTol})`,
+      `intervals under-cover (overconfident): empirical ${report.empiricalCoverage.toFixed(3)} < nominal ${report.nominalCoverage.toFixed(3)} - ${covTol}`,
     );
   }
   if (!(report.standardizedErrorRms <= maxZ)) {
