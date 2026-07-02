@@ -1,133 +1,114 @@
-# Edge Angles — the aggressive, legal, proprietary catalog (2026-07-02)
+# The Legible-Error Doctrine — GSE's aggressive, legal edge theory (v2, 2026-07-02)
 
-Garrett: push limits, find what nobody has, exploit ERRORS in others' systems
-for advantage, use wording as leverage, chase every 0.5%. 110% legal.
+Not a list of tips. A theory of where edge comes from, and why ours compounds
+into something nobody can copy. 110% legal, maximally aggressive.
 
-Here is the reframe that unlocks all of it: **"aggressive and legal" means
-exploiting other people's ERRORS and INEFFICIENCIES, not breaching their
-access.** The sportsbooks, the beat writers, the leagues, and the competitors
-all make systematic, documented mistakes. Reading and modeling those mistakes
-from public information is not just legal — it is the definition of edge. You
-do not need to break a lock when the market keeps leaving money on the table in
-plain sight.
+## The unifying theory
+Every legal edge is a place where someone's **error, bias, or slowness is
+LEGIBLE in public information.** You never break a lock. You read the mistakes
+the market, the media, and the leagues leave lying in the open, and you model
+them before anyone else bothers to. Three consequences fall out of this:
 
-## The one tripwire (named once, then we move on)
-Exploiting a SECURITY or ACCESS-CONTROL error — an exposed API key, a leaked
-internal endpoint, a misconfigured server that hands you data you were never
-authorized to see — is CFAA territory (Van Buren: "exceeding authorized
-access"). "They left it open" is not authorization. Everything below exploits
-errors in how others PRICE, WORD, or MODEL public information — never errors in
-how they SECURE it. That single line keeps us 110% legal while being ruthless.
+1. The edge is not the data — it's the READING. Everyone can see the injury
+   report; almost nobody decodes that "questionable" means different things for
+   different coaches. Legibility is a skill, and skill is proprietary.
+2. The deepest edges are REFLEXIVE — the ones where GSE itself becomes part of
+   the system it measures (our published line, our footprint, our proof
+   history). Those cannot be copied because a rival does not have OUR past.
+3. Edges compound by AGGREGATION, not by magic. Ten legible errors, each worth
+   0.5%, fused by a calibrated model only we have, is the real number.
 
-## Tier 1 — Errors in book PRICING (the richest vein, mostly buildable now)
+The one boundary (stated once): we exploit errors in how others PRICE, WORD,
+and MODEL public info — never errors in how they SECURE it. "They left it open"
+is not authorization (Van Buren / CFAA). Everything below stays inside that
+line and is still ruthless.
 
-### A. Same-game-parlay correlation mispricing — the deepest structural error
-Books price SGP legs as if independent (or with crude correlation haircuts).
-Correlated outcomes (QB passing yards + WR receiving yards; team total + star
-scorer) are therefore systematically MISPRICED. This is a documented, standing
-error in book pricing engines. Our Parlay MRI already targets it; the edge is
-to quantify the correlation from real joint distributions and surface where the
-book's implied independence is wrong. Proprietary, legal (we publish analysis,
-not bets), and the single highest-value quant angle. BUILDABLE — deepen the MRI.
+## Layer 1 — Read their PRICING errors
+- **Correlation blindness (SGP).** Books price same-game parlay legs near-
+  independent; correlated outcomes are structurally mispriced. Model the joint
+  distribution; surface where their implied independence is wrong. Deepest quant
+  edge. (Deepen Parlay MRI.)
+- **Promo-desk EV leaks.** Boosts are sometimes +EV because a human mis-set
+  them. Scan every boost against our fair value. (Small build, big pull.)
+- **Retail lag as a clock.** Retail books trail sharp consensus by a measurable
+  window; publish WHERE a book is off-consensus in real time. The lag is the
+  error. (Runs on odds we ingest.)
+- **The hold map.** Lowest-vig path to any position; most sites never surface
+  which market is cheapest to beat.
 
-### B. Positive-EV promo/boost detection — books' promo desks make EV errors
-Books push odds boosts and profit boosts that are sometimes genuinely +EV
-because the promo desk mis-set them relative to fair value. Surfacing +EV boosts
-is a whole popular content genre and a legal exploit of THEIR error. We already
-compute fair value (Shin devig); wiring a boost-EV scanner on top is a small
-build with outsized acquisition value. BUILDABLE.
+## Layer 2 — Read their WORDING (language as leverage)
+- **The hedge lexicon.** "Expected to play" / "targeting a return" / "not ruled
+  out" map to different real play rates; the market treats them as equal.
+  Proprietary NLP that decodes graded public language into calibrated
+  probability.
+- **Coachspeak decoder.** Press-conference language ("day-to-day," "we'll see
+  how he responds") carries predictive content. NLP on public transcripts →
+  play/usage probability. Deeper than the beat-writer layer.
+- **Designation-gaming detector.** Some franchises strategically use injury
+  designations (a known, named behavior). Model WHICH teams game the report and
+  by how much — a per-team behavioral decoder ring on a signal everyone else
+  reads flat.
+- **Our own vocabulary as legal armor.** "Illustrative / estimated /
+  reconstructed / model's read" is what lets us publish MORE while staying
+  honest. Disciplined language is offensive, not just defensive.
 
-### C. Stale / slow retail-line detection — the lag IS the error
-Retail books trail sharp consensus by measurable windows. With our multi-source
-odds we can detect, in real time, where a specific book is N points off
-consensus — legal information (we report the discrepancy, we don't place the
-bet). Turn it into a "line-lag radar." Exploits the retail books' own slowness.
-BUILDABLE on the odds we already ingest (deeper with a second odds vendor).
+## Layer 3 — Read their BIASES (fade the predictable human)
+- **Tout-consensus fade.** The public "expert picks" ecosystem is itself a
+  signal; when the touts pile one side, the line shades and value goes the
+  other way. Build a consensus tracker from public pick sites and fade the
+  crowd of experts. (Exploits the error of the loudest, not the sharpest.)
+- **Recency-bias fade.** Public overreacts to the last game; fade where the
+  line moved on narrative, not fundamentals.
+- **Primetime / national-TV shade.** Public loves overs and favorites under the
+  lights; books shade accordingly. The shade IS the exploitable error.
+- **Key-number discipline.** 3 and 7 in the NFL are load-bearing; retail
+  underweights them, sharps don't. Buy/sell around key numbers with documented
+  value.
 
-### D. Cross-book vig/hold arbitrage — the cheapest market to beat
-Hold varies wildly by book and market type; some alt-lines and props carry far
-lower hold. Identifying the lowest-hold path to a given position is legal edge
-intelligence competitors rarely surface. BUILDABLE.
+## Layer 4 — MANUFACTURE objects nobody has (proprietary by construction)
+- **Reconstruction outputs.** Trajectory-derived features from cleared
+  aggregates. IP by construction (built).
+- **Counterfactual injury worlds.** Use the engine to simulate "if this player
+  is OUT" and generate proprietary injury-impact deltas nobody else publishes.
+- **Injury-cascade graph.** One injury re-distributes snaps across a whole
+  depth chart and shifts the team total. Graph-propagate a single event through
+  the roster — a network model of one piece of news.
+- **The ghost line that predicts the line.** Publish OUR independent fair number
+  BEFORE the market settles, then track how often the close converges to us.
+  When it does, provably, that is predictive power you can SEE — the most viral,
+  most defensible marketing object in sports betting, and no competitor can fake
+  a convergence record they don't have.
 
-### E. The Book Accuracy Scoreboard — turn their errors into our marketing
-Nobody publishes a rigorous, ongoing "which book is sharpest / slowest / most
-often off-consensus" scoreboard. It's legal (public odds), viral, SEO gold, and
-it weaponizes the books' OWN inconsistencies into GSE content that cites itself.
-First-mover proprietary object. BUILDABLE.
+## Layer 5 — REFLEXIVE edges (we become the signal — uncopyable)
+- **GSE market footprint.** As we grow, our published picks move retail
+  behavior, which moves lines (Soros reflexivity). Measure our own footprint;
+  early it's proof-of-influence (marketing), later it's a tradable signal.
+- **Time-stamped proof history.** A monopoly on our OWN past: receipts + slate
+  Merkle roots. A rival cannot copy a pre-committed record they never made.
+- **Adversarial self-disclosure.** Publish our losses and misses more
+  aggressively than anyone — provable honesty about failure is the ultimate
+  trust signal AND a moat, because competitors will never show their losses.
+- **The public calibration curve.** Not "we said 70%" but an ongoing,
+  cryptographic, public reliability diagram. Nobody publishes theirs because
+  nobody else is calibrated. Being auditable is the flex.
 
-## Tier 2 — Errors in WORDING (language as leverage, proprietary NLP)
+## Cross-domain transplants (the creative frontier)
+- **Market-microstructure from finance:** treat Kalshi/exchange order books
+  like an equity book — detect informed-flow signatures (sweeps, large resting
+  orders) that precede line moves.
+- **Epidemiology / diffusion:** model how fast an injury rumor propagates
+  book-to-book (the diffusion curve) and trade the LAG.
+- **Sharp-action reconstruction:** when a book drops limits AND moves off
+  consensus, sharp money hit it — reconstruct that private signal from public
+  odds + limit changes.
+- **Inverse weather nowcasting:** a sharp total drop with no reported news may
+  be the market pricing a forecast update early — detect the "silent" move and
+  reverse-infer the cause.
 
-### F. The beat-writer confidence lexicon — decode the hedge
-Beat writers use graded language that maps to real outcome probabilities:
-"expected to play" vs "should play" vs "targeting a return" vs "not ruled out"
-carry different historical play rates. Building a lexicon that decodes hedged
-public reporting into calibrated probabilities is proprietary NLP on public
-text — "wording as leverage" literally. The error we exploit: the market treats
-these as roughly equal; they are not. BUILDABLE (extends the RSS wire; the
-classifier already exists, the graded lexicon is the upgrade).
-
-### G. Injury-designation decoding, per team — the noise is decodable
-"Questionable" has a historical play rate that DIFFERS BY TEAM AND COACH (some
-staffs over-report, some under-report). The official designation is a noisy
-signal with a team-specific decoder ring. Modeling per-team designation→play
-rates from public injury reports + actives is a real, legal, proprietary edge.
-The error: everyone treats "Questionable" as one number. BUILDABLE with the
-injury intake.
-
-### H. Our OWN wording as legal armor — the inverse leverage
-The precise words "illustrative," "estimated," "reconstructed," "model's read,"
-"not measured" are what let us SURFACE more while staying honest and legal (and
-they're already load-bearing in the codebase). Disciplined language is a legal
-weapon for US: it expands what we can publish without a claim we can't back.
-ALREADY IN USE — keep extending the vocabulary deliberately.
-
-## Tier 3 — Data nobody models (legal, tedious, proprietary by assembly)
-
-### I. Officiating crew tendencies — the totals-blind spot
-Referee/umpire crews have measurable tendencies (penalty rates, over/under lean,
-home bias, strike-zone size) computable from public box scores + assignments.
-Assignments post before lines fully adjust → a timing edge when a
-whistle-happy or tight-zone crew is named. Most sites ignore it. The error:
-books and public underweight crew identity. BUILDABLE once assignment feeds are
-sourced (see Div-B research).
-
-### J. Coaching fingerprints — tendencies from play-by-play
-4th-down aggression, pace, timeout discipline, pass rate over expected — a
-coach-fingerprint database from public play-by-play that few assemble rigorously.
-Feeds game-script and total models. BUILDABLE on nflverse pbp.
-
-### K. Microclimate stadium models — beyond generic weather
-Specific stadiums have known wind-swirl and cold patterns generic forecasts
-miss. Public weather + stadium geometry → a proprietary park-adjusted signal.
-The error: generic weather models are stadium-blind. BUILDABLE with the weather
-intake + a stadium factor table.
-
-### L. The aggregation super-signal — the compounding proprietary object
-None of I/J/K wins alone. Fused by our calibrated model into ONE composite that
-no competitor has assembled, they compound. This is the least glamorous and most
-defensible proprietary object: not a magic source, ten legal ones weighted by a
-model only we have. This is where the 0.5%-per-angle actually accumulates into a
-number that matters.
-
-## Tier 4 — First-mover proprietary monopolies (legal by construction)
-
-### M. Reconstruction-engine outputs — IP by construction (already built).
-### N. Time-stamped proof history — a monopoly on our OWN past; nobody can
-   copy a pre-committed record they don't have (receipts + slate roots).
-### O. "Verified by GSE" as a B2B2C service to other cappers (Whop/Discord) —
-   we're the only one who can cryptographically certify someone else's record.
-
-## Where the 0.5%s actually live (build order)
-1. SGP correlation (A) + boost-EV scanner (B) — biggest quant edge, both
-   buildable on what exists. Exploit book pricing errors directly.
-2. Beat-writer lexicon (F) + injury decoder (G) — proprietary NLP on public
-   text, "wording as leverage," extends the wire.
-3. Book Accuracy Scoreboard (E) + line-lag radar (C) — turn their errors into
-   viral, self-citing content (acquisition + SEO).
-4. Officiating (I) + coaching (J) + microclimate (K) → the aggregation
-   super-signal (L) — the compounding proprietary composite.
-
-Every one of these is 110% legal because it reads and models PUBLIC information
-and OTHERS' PRICING/WORDING ERRORS — never their access controls, never
-restricted data, never a fabricated number. That is the aggressive lane, and
-it is wide open.
+## Why ours specifically compounds
+The market-reading edges (Layers 1-3) are rentable — anyone sharp can find
+them. Our MOAT is that we run them through Layers 4-5: every read feeds a
+calibrated model only we have, gets frozen into a proof history only we own, and
+(eventually) moves a market we're measuring. That loop — read error → model it →
+prove it → become the signal — is the machine. The 0.5%s are the fuel; the loop
+is the engine.
