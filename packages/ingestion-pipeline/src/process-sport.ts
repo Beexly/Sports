@@ -151,7 +151,15 @@ export async function processSport(
     // entire feed is stale (dead/cached board). A fetchedAt check alone cannot catch this.
     const freshGameIds = normalizer.freshGameIds(normalizedOddsRaw);
     if (normalizedOddsRaw.length > 0 && freshGameIds.size === 0) {
-      throw new Error("Upstream odds are stale: no game has a fresh bookmaker update");
+      // Self-diagnosing rejection: distinguish "env threshold not effective" vs
+      // "payload shape drift (unparseable last_update)" vs "genuinely old lines"
+      // from the error alone, without a redeploy-and-add-logging cycle.
+      const d = normalizer.freshnessDiagnostics(normalizedOddsRaw);
+      throw new Error(
+        "Upstream odds are stale: no game has a fresh bookmaker update " +
+          `(threshold=${d.thresholdHours}h, rows=${d.rows}, games=${d.games}, ` +
+          `unparseableTimestamps=${d.unparseableRows}, newestUpdateAgeMin=${d.newestAgeMinutes ?? "none"})`
+      );
     }
     const normalizedOdds = normalizedOddsRaw.filter((o) => freshGameIds.has(o.gameExternalId));
 

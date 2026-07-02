@@ -57,7 +57,13 @@ export class DataNormalizer {
           > & Partial<NormalizedOdds> = {
             gameExternalId: event.id,
             bookmaker: bookmaker.key,
-            bookmakerLastUpdate: new Date(bookmaker.last_update),
+            // Bookmaker-level last_update, falling back to the market-level one.
+            // Both are UPSTREAM timestamps (never the local clock, preserving the
+            // anti-tautology freshness design); some payloads omit the bookmaker-
+            // level field, and without the fallback every row parsed as Invalid
+            // Date -> every game dropped as "not provably fresh" -> the whole run
+            // failed "Upstream odds are stale" even on a live slate.
+            bookmakerLastUpdate: new Date(bookmaker.last_update ?? market.last_update),
             market: this.mapMarket(market.key),
             fetchedAt,
           };
@@ -153,6 +159,44 @@ export class DataNormalizer {
   validateOddsFreshness(odds: readonly NormalizedOdds[]): boolean {
     if (odds.length === 0) return true;
     return this.freshGameIds(odds).size > 0;
+  }
+
+  /**
+   * Why did (or would) the freshness gate reject this feed? Pure observability:
+   * the threshold in effect at runtime, row/game counts, how many rows carried
+   * an unparseable upstream timestamp, and the age of the newest parseable one.
+   * Callers embed this in the "Upstream odds are stale" error so a failing prod
+   * run is self-diagnosing (env-var not effective vs. shape drift vs. genuinely
+   * old lines) instead of a bare one-liner.
+   */
+  freshnessDiagnostics(odds: readonly NormalizedOdds[]): {
+    thresholdHours: number;
+    rows: number;
+    games: number;
+    unparseableRows: number;
+    newestAgeMinutes: number | null;
+  } {
+    const games = new Set<string>();
+    let unparseableRows = 0;
+    let newest = Number.NEGATIVE_INFINITY;
+    for (const o of odds) {
+      games.add(o.gameExternalId);
+      const t = o.bookmakerLastUpdate.getTime();
+      if (!Number.isFinite(t)) {
+        unparseableRows++;
+        continue;
+      }
+      if (t > newest) newest = t;
+    }
+    return {
+      thresholdHours: FRESHNESS_THRESHOLD_MS / (60 * 60 * 1000),
+      rows: odds.length,
+      games: games.size,
+      unparseableRows,
+      newestAgeMinutes: Number.isFinite(newest)
+        ? Math.round((Date.now() - newest) / 60_000)
+        : null,
+    };
   }
 
   normalizeScores(
