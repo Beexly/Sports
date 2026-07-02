@@ -10,13 +10,29 @@
  * overclaims exactly the way a tout would.
  *
  * DOUBLE-METHOD CORROBORATION. BCa and the studentized bootstrap-t are two
- * INDEPENDENT second-order-accurate interval methods (they correct different
- * terms of the same expansion: BCa adjusts quantiles on the statistic's scale;
- * bootstrap-t inverts a pivot on a studentized scale). A profit claim is only
- * made when BOTH lower bounds clear break-even — strictly more conservative than
- * either alone, and a costly, reproducible signal of honesty: a skeptic can
- * re-derive both bands from the same seeded ledger and check that two different
- * methods agree before we ever say "profit."
+ * METHODOLOGICALLY DISTINCT second-order interval constructions (BCa adjusts
+ * quantiles on the statistic's scale; bootstrap-t inverts a pivot on a
+ * studentized scale), evaluated on a COMMON seeded resample set (common random
+ * numbers). Sharing the resample stream is deliberate: it removes Monte-Carlo
+ * noise from the method comparison and keeps both bands reproducible from one
+ * (ledger, seed) pair — the corroboration guards against METHOD error, while
+ * Monte-Carlo error is controlled by B=10000. A profit claim is only made when
+ * BOTH lower bounds clear break-even — strictly more conservative than either
+ * alone, and reproducible by any skeptic from the sealed ledger.
+ *
+ * WHY THE SECOND METHOD IS LOAD-BEARING (measured, not asserted): a 2026-07-02
+ * Monte-Carlo on the shipped functions with sports-shaped return mixtures
+ * (handoff/claude/overnight-2026-07-01/coverage-sim-sports-shaped.mjs, NSIM=600
+ * per cell, B=1000) found BCa alone under-covers at n=25 on skewed ledgers
+ * (92.2-93.7% realized vs 95% nominal) while studentized covered >=95.0% in
+ * every cell; on a break-even-true ledger the AND-gate's false-profit rate was
+ * 2.33% at n=25 (within the 2.5% one-sided budget) vs 3.00% for BCa alone.
+ * Below n~100, do not weaken this gate to BCa-only.
+ *
+ * CONVENTIONS (pinned so a competitor can't pin them for us): pushes/voids are
+ * settled 0-unit bets — included in n and in the mean (conservative: zeros drag
+ * a positive mean toward 0). PENDING picks are NOT settled and are excluded
+ * entirely (null), never counted as 0-unit returns.
  */
 
 import { bcaMeanCi, studentizedMeanCi, americanToDecimalOdds } from "@sports/prediction-engine";
@@ -26,10 +42,14 @@ export type PickResultLike = "WIN" | "LOSS" | "PUSH" | "VOID" | "PENDING";
 /**
  * Realized units for one settled pick at a 1-unit flat stake, using the actual
  * American entry price. WIN pays the decimal profit; LOSS loses the stake;
- * PUSH/VOID/PENDING are 0 (no action). No entry price -> null (excluded).
+ * PUSH/VOID are settled 0-unit bets (no action). PENDING is UNRESOLVED — it has
+ * no realized return, so it is excluded (null), never counted as a settled 0:
+ * counting it would inflate n past the publication gate and inject variance-
+ * shrinking zeros into the CI.
  */
 export function unitsForPick(result: PickResultLike, americanEntryOdds: number | null | undefined): number | null {
-  if (result === "PUSH" || result === "VOID" || result === "PENDING") return 0;
+  if (result === "PENDING") return null;
+  if (result === "PUSH" || result === "VOID") return 0;
   if (americanEntryOdds == null || !Number.isFinite(americanEntryOdds) || americanEntryOdds === 0) return null;
   if (result === "WIN") return americanToDecimalOdds(americanEntryOdds) - 1;
   return -1; // LOSS
@@ -54,12 +74,18 @@ export interface PublicRoiPolicy {
   /** 95% BCa lower/upper bound on units per bet (2 decimals). Null when gated. */
   readonly roiCiLow: number | null;
   readonly roiCiHigh: number | null;
-  /** 95% studentized (bootstrap-t) lower/upper bound — the independent cross-check. Null when gated. */
+  /**
+   * 95% studentized (bootstrap-t) lower/upper bound — the methodologically
+   * distinct cross-check. Null when gated, and null when the bound is honestly
+   * non-finite (lopsided ledger: bootstrap-t cannot bound that side).
+   */
   readonly roiCiLowStudentized: number | null;
   readonly roiCiHighStudentized: number | null;
   /**
-   * True only when BOTH the BCa and the studentized 95% lower bounds clear 0
-   * units — a profit claim corroborated by two independent second-order methods.
+   * True only when BOTH the BCa and the studentized 95% lower bounds (rounded,
+   * finite) clear 0 units — a profit claim corroborated by two distinct
+   * second-order constructions. Measured to hold the false-claim rate within
+   * the nominal 2.5% budget at n>=25 (see module doc).
    */
   readonly clearsProfit: boolean;
   readonly publicMessage: string;
@@ -84,10 +110,23 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
   const roiPerBet = ci ? round2(ci.point) : null;
   const roiCiLow = ci ? round2(ci.low) : null;
   const roiCiHigh = ci ? round2(ci.high) : null;
-  const roiCiLowStudentized = ciStud ? round2(ciStud.low) : null;
-  const roiCiHighStudentized = ciStud ? round2(ciStud.high) : null;
-  // Profit claim requires BOTH independent methods' lower bounds to clear 0.
-  const clearsProfit = ci != null && ciStud != null && ci.low > 0 && ciStud.low > 0;
+  // On heavily lopsided ledgers a studentized bound is honestly +/-Infinity
+  // ("bootstrap-t cannot bound this side from this ledger"). Surface null
+  // rather than an unserializable/absurd Infinity; the gate below treats a
+  // non-finite lower bound as NOT clearing profit.
+  const roiCiLowStudentized = ciStud && Number.isFinite(ciStud.low) ? round2(ciStud.low) : null;
+  const roiCiHighStudentized = ciStud && Number.isFinite(ciStud.high) ? round2(ciStud.high) : null;
+  // Profit claim requires BOTH methods' lower bounds to clear 0 — evaluated on
+  // the ROUNDED values so the gate can never assert "clears break-even" while
+  // the display shows "+0.00" (rounded gating is strictly MORE conservative, so
+  // the subset property vs the old BCa-only gate is preserved). A non-finite
+  // studentized bound fails the gate by construction.
+  const clearsProfit =
+    ci != null &&
+    ciStud != null &&
+    Number.isFinite(ciStud.low) &&
+    round2(ci.low) > 0 &&
+    round2(ciStud.low) > 0;
 
   const minimumRequirements: string[] = [];
   if (blockers.includes("GATE_OFF_PERFORMANCE_STATS")) {
@@ -100,12 +139,18 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
   let publicMessage: string;
   let operatorMessage: string;
   if (allowed) {
+    // Three honest states: corroborated profit; primary-positive-but-uncorroborated
+    // (saying "includes break-even" there would contradict the displayed band);
+    // and genuinely includes-break-even.
+    const uncorroborated = !clearsProfit && roiCiLow != null && roiCiLow > 0;
     publicMessage =
       `${signed(roiPerBet)} units per bet over ${n} settled picks ` +
       `(95% CI ${signed(roiCiLow)} to ${signed(roiCiHigh)} units). ` +
       (clearsProfit
-        ? "The lower bound clears break-even under two independent interval methods. "
-        : "That range still includes break-even, so we don't yet claim a settled profit. ") +
+        ? "The lower bound clears break-even under two distinct interval methods (BCa and bootstrap-t), recomputable from the same sealed ledger. "
+        : uncorroborated
+          ? "The primary interval clears break-even, but our stricter cross-check can't yet bound the downside at this sample size, so we don't yet claim a settled profit. "
+          : "That range still includes break-even, so we don't yet claim a settled profit. ") +
       "Past results are a record, not a promise of future returns.";
     operatorMessage =
       `ROI publishable. n=${n} roi=${signed(roiPerBet)}u ` +
@@ -191,6 +236,6 @@ function round2(x: number): number {
 }
 
 function signed(x: number | null): string {
-  if (x == null) return "n/a";
+  if (x == null || !Number.isFinite(x)) return "n/a"; // never print "Infinity"
   return x >= 0 ? `+${x.toFixed(2)}` : x.toFixed(2);
 }

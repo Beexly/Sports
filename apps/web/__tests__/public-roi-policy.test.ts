@@ -16,11 +16,17 @@ describe("unitsForPick", () => {
     expect(unitsForPick("WIN", 100)).toBeCloseTo(1, 6);
     expect(unitsForPick("WIN", 150)).toBeCloseTo(1.5, 6);
   });
-  it("loses the stake on a loss, zero on no-action", () => {
+  it("loses the stake on a loss, zero on settled no-action", () => {
     expect(unitsForPick("LOSS", -110)).toBe(-1);
     expect(unitsForPick("PUSH", -110)).toBe(0);
     expect(unitsForPick("VOID", 200)).toBe(0);
-    expect(unitsForPick("PENDING", -110)).toBe(0);
+  });
+
+  it("EXCLUDES PENDING entirely — an unresolved bet is not a settled 0 (hostile-quant fix)", () => {
+    // Counting PENDING as 0 would inflate n past the publication gate and
+    // inject variance-shrinking zeros into the CI via any future caller.
+    expect(unitsForPick("PENDING", -110)).toBeNull();
+    expect(unitsForPick("PENDING", null)).toBeNull();
   });
   it("excludes a pick with no usable entry price", () => {
     expect(unitsForPick("WIN", null)).toBeNull();
@@ -64,7 +70,7 @@ describe("evaluatePublicRoiPolicy", () => {
     expect(p.clearsProfit).toBe(true);
     expect(p.roiCiLow!).toBeGreaterThan(0);
     expect(p.roiCiLowStudentized!).toBeGreaterThan(0); // the independent cross-check agrees
-    expect(p.publicMessage).toMatch(/two independent interval methods/);
+    expect(p.publicMessage).toMatch(/two distinct interval methods/);
   });
 
   it("surfaces the studentized cross-check band alongside the BCa band", () => {
@@ -101,5 +107,44 @@ describe("evaluatePublicRoiPolicy", () => {
     expect(a.roiCiHigh).toBe(b.roiCiHigh);
     expect(a.roiCiLowStudentized).toBe(b.roiCiLowStudentized);
     expect(a.roiCiHighStudentized).toBe(b.roiCiHighStudentized);
+  });
+
+  it("LOPSIDED-LEDGER GUARD (hostile-quant HIGH finding): 24W/1L at the n=25 gate cannot claim profit", () => {
+    // A hot opening record right at minGraded: ~36% of bootstrap-t resamples are
+    // all-win degenerates, so the studentized lower bound is honestly -Infinity
+    // ("cannot bound the downside from this ledger"). The policy must surface
+    // null (never an Infinity, never a fabricated finite bound) and the profit
+    // gate must NOT fire even though the BCa lower bound alone clears 0.
+    const hot = [...Array(24).fill(unitsForPick("WIN", -110) as number), -1];
+    const p = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: hot });
+    expect(p.canExposeRoi).toBe(true);
+    expect(p.roiCiLowStudentized).toBeNull(); // non-finite bound surfaced as null
+    expect(p.clearsProfit).toBe(false); // the gate held
+    expect(p.operatorMessage).toContain("stud=[n/a"); // never prints "Infinity"
+    expect(p.publicMessage).toMatch(/includes break-even|don't yet claim/);
+  });
+
+  it("FREEZE the subset property: clearsProfit implies the BCa-only gate would also have claimed", () => {
+    // The corroboration gate must remain strictly conservative vs BCa-alone —
+    // it may only remove claims, never add them. Grid over ledger shapes.
+    const grids: Array<[number, number]> = [
+      [400, 200], [120, 90], [53, 47], [30, 10], [24, 1], [200, 100], [60, 40],
+    ];
+    for (const [w, l] of grids) {
+      const returns = [...Array(w).fill(unitsForPick("WIN", -110) as number), ...Array(l).fill(-1)];
+      const p = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns });
+      if (p.clearsProfit) {
+        expect(p.roiCiLow!).toBeGreaterThan(0); // BCa lower bound (rounded) must clear too
+      }
+    }
+  });
+
+  it("gate/display consistency: a profit claim never displays a '+0.00' lower bound", () => {
+    // The gate evaluates ROUNDED bounds, so whenever clearsProfit is true the
+    // displayed 2-decimal lower bounds are visibly positive.
+    const p = evaluatePublicRoiPolicy({ canExposePerformanceStats: true, minGradedForPublic: 25, returns: canonicalWins(400, 200) });
+    expect(p.clearsProfit).toBe(true);
+    expect(p.roiCiLow!).toBeGreaterThanOrEqual(0.01);
+    expect(p.roiCiLowStudentized!).toBeGreaterThanOrEqual(0.01);
   });
 });

@@ -95,6 +95,26 @@ describe("bcaMeanCi", () => {
     expect(flat.low).toBe(2);
     expect(flat.high).toBe(2);
   });
+
+  it("z0 uses the MID-P tie correction: ~0 on a symmetric discrete ledger (hostile-quant fix)", () => {
+    // 50/50 +/-1: the resample mean lands ON the point (0) for a non-trivial
+    // mass of replicates. Strict '<' counting assigned all that tied mass to
+    // 'not below', biasing z0 negative and both bounds down. Mid-p counting
+    // (below + equal/2) makes z0 ~0 for this symmetric case, as it must be.
+    const symmetric = [...Array(50).fill(1), ...Array(50).fill(-1)];
+    const ci = bcaMeanCi(symmetric, { resamples: 8000, seed: 13 })!;
+    expect(Math.abs(ci.z0)).toBeLessThan(0.05);
+  });
+
+  it("refuses invalid options instead of fabricating intervals (hostile-quant fix)", () => {
+    const data = [1, 2, 3, 4, 5];
+    expect(bcaMeanCi(data, { resamples: 0 })).toBeNull(); // was: fake point interval
+    expect(percentileMeanCi(data, { resamples: 0 })).toBeNull(); // was: NaN bounds
+    expect(studentizedMeanCi(data, { resamples: 0 })).toBeNull();
+    expect(percentileMeanCi(data, { alpha: -0.1 })).toBeNull(); // was: NaN bounds
+    expect(bcaMeanCi(data, { alpha: 1.5 })).toBeNull();
+    expect(studentizedMeanCi(data, { alpha: 0 })).toBeNull();
+  });
 });
 
 describe("studentizedMeanCi (bootstrap-t, second-order accurate)", () => {
@@ -155,6 +175,37 @@ describe("studentizedMeanCi (bootstrap-t, second-order accurate)", () => {
     expect(flat.low).toBe(2);
     expect(flat.high).toBe(2);
     expect(flat.standardError).toBe(0);
+  });
+
+  it("REGRESSION (hostile-quant finding): lopsided 24W/1L ledger cannot fabricate a finite lower bound", () => {
+    // ~36% of resamples exclude the single loss -> all-win degenerate resamples.
+    // Those are the pivot's UPPER tail (theta* above the point with se*=0), i.e.
+    // properly +Infinity. The old t*=0 imputation teleported that tail to the
+    // center and produced a "95% lower bound" EQUAL to the observed mean of 25
+    // bets — a fabricated-certain bound feeding the public profit gate. With the
+    // signed-infinity fix the lower bound is honestly -Infinity ("bootstrap-t
+    // cannot bound the downside from this ledger") and disclosed.
+    const lopsided = [...Array(24).fill(0.909), -1];
+    const ci = studentizedMeanCi(lopsided, { resamples: 6000, seed: 20260702 })!;
+    expect(ci.degenerateResamples!).toBeGreaterThan(6000 * 0.25); // the regime is real
+    expect(ci.low).toBe(Number.NEGATIVE_INFINITY); // NOT a fake finite bound
+    expect(ci.low).not.toBe(ci.point); // the old bug's exact signature
+    expect(Number.isFinite(ci.high)).toBe(true); // the bounded side stays bounded
+  });
+
+  it("mirror lopsided 1W/24L: the UPPER bound is honestly unbounded, lower stays finite", () => {
+    const lopsided = [4.0, ...Array(24).fill(-1)];
+    const ci = studentizedMeanCi(lopsided, { resamples: 6000, seed: 20260702 })!;
+    expect(ci.high).toBe(Number.POSITIVE_INFINITY);
+    expect(Number.isFinite(ci.low)).toBe(true);
+  });
+
+  it("realistic mixed ledgers have ~zero degenerate resamples (the fix changes nothing there)", () => {
+    const mixed = [...Array(55).fill(1), ...Array(45).fill(-1)];
+    const ci = studentizedMeanCi(mixed, { resamples: 4000, seed: 1 })!;
+    expect(ci.degenerateResamples).toBe(0);
+    expect(Number.isFinite(ci.low)).toBe(true);
+    expect(Number.isFinite(ci.high)).toBe(true);
   });
 
   it("supports an injected analytic SE (the method is SE-agnostic)", () => {

@@ -41,11 +41,22 @@ export interface PerformanceCi {
    * Studentized bootstrap-t pivot quantiles and the plug-in standard error, when
    * method === "studentized". A receipt can carry these so a skeptic re-derives
    * the interval as point - tHigh*se .. point - tLow*se (the inversion). Absent
-   * for percentile/BCa.
+   * for percentile/BCa. NOTE: on heavily lopsided ledgers a bound can be
+   * +/-Infinity — the honest "bootstrap-t cannot bound this side from this
+   * ledger" answer (see degenerateResamples).
    */
   readonly tLow?: number;
   readonly tHigh?: number;
   readonly standardError?: number;
+  /**
+   * Count of degenerate resamples (all draws identical -> se* = 0). These are a
+   * CENSORED TAIL of the pivot distribution, not noise: an all-modal-value
+   * resample puts theta* at an extreme with se* = 0, i.e. the pivot is properly
+   * +/-Infinity. They are assigned signed infinite pivots so a heavy degenerate
+   * fraction honestly widens (or unbounds) the interval instead of silently
+   * narrowing it. Disclosed on the receipt so a skeptic sees the regime.
+   */
+  readonly degenerateResamples?: number;
 }
 
 /** Deterministic PRNG (mulberry32) — seeded so the interval is reproducible. */
@@ -66,14 +77,35 @@ function mean(xs: readonly number[]): number {
   return s / xs.length;
 }
 
-/** Linear-interpolated percentile of a SORTED array; p in [0,1]. */
+/**
+ * Linear-interpolated percentile of a SORTED array; p in [0,1]. Convention:
+ * Hyndman-Fan type 7 (numpy default, R type 7) — idx = p*(n-1) with linear
+ * interpolation between adjacent order statistics. Equal neighbors (including
+ * equal infinities) short-circuit so interpolation never produces Inf-Inf NaNs.
+ */
 function sortedPercentile(sorted: readonly number[], p: number): number {
   if (sorted.length === 1) return sorted[0]!;
   const idx = p * (sorted.length - 1);
   const lo = Math.floor(idx);
   const hi = Math.ceil(idx);
   if (lo === hi) return sorted[lo]!;
+  // Equal neighbors (ties, or two same-sign infinities): interpolation would be
+  // a no-op or an Inf-Inf NaN — return the shared value directly.
+  if (sorted[lo]! === sorted[hi]!) return sorted[lo]!;
   return sorted[lo]! + (idx - lo) * (sorted[hi]! - sorted[lo]!);
+}
+
+/**
+ * Comparator safe for +/-Infinity: (a, b) => a - b returns NaN for two
+ * same-sign infinities, which is unspecified behavior for Array#sort.
+ */
+function ascending(a: number, b: number): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/** Shared option validation: bad resamples/alpha -> the CI is refused (null). */
+function validCiOptions(alpha: number, resamples: number): boolean {
+  return Number.isInteger(resamples) && resamples >= 1 && alpha > 0 && alpha < 1;
 }
 
 /** Error function via Abramowitz-Stegun 7.1.26 (|err| < 1.5e-7). */
@@ -169,7 +201,7 @@ export function bcaCi(
   const resamples = opts.resamples ?? 10000;
   const seed = opts.seed ?? 20260702; // FIXED default -> reproducible/auditable
   const n = data.length;
-  if (n < 2 || !data.every(Number.isFinite)) return null;
+  if (n < 2 || !data.every(Number.isFinite) || !validCiOptions(alpha, resamples)) return null;
 
   const point = statistic(data);
   const reps = bootstrapStatistic(data, statistic, resamples, seed);
@@ -179,10 +211,17 @@ export function bcaCi(
     return { point, low: point, high: point, alpha, n, resamples, seed, method: "bca", z0: 0, acceleration: 0 };
   }
 
-  // Bias correction z0 = Phi^-1( fraction of bootstrap stats < observed ).
+  // Bias correction z0 = Phi^-1( P(theta* <= theta_hat) ), with the MID-P tie
+  // correction (below + equal/2): sports ledgers are near-two-point discrete, so
+  // a non-trivial mass of replicates EQUALS the point exactly; counting ties as
+  // wholly "not below" (strict <) biases z0 negative and drags both bounds down.
   let below = 0;
-  for (const r of reps) if (r < point) below++;
-  const frac = Math.min(1 - 1e-9, Math.max(1e-9, below / resamples));
+  let equal = 0;
+  for (const r of reps) {
+    if (r < point) below++;
+    else if (r === point) equal++;
+  }
+  const frac = Math.min(1 - 1e-9, Math.max(1e-9, (below + 0.5 * equal) / resamples));
   const z0 = normalQuantile(frac);
 
   // Acceleration a from delete-one jackknife influence (exact for any statistic).
@@ -236,7 +275,7 @@ export function percentileCi(
   const resamples = opts.resamples ?? 10000;
   const seed = opts.seed ?? 20260702;
   const n = data.length;
-  if (n < 2 || !data.every(Number.isFinite)) return null;
+  if (n < 2 || !data.every(Number.isFinite) || !validCiOptions(alpha, resamples)) return null;
   const reps = bootstrapStatistic(data, statistic, resamples, seed);
   return {
     point: statistic(data),
@@ -330,32 +369,54 @@ export function studentizedCi(
   const resamples = opts.resamples ?? 10000;
   const seed = opts.seed ?? 20260702;
   const n = data.length;
-  if (n < 2 || !data.every(Number.isFinite)) return null;
+  if (n < 2 || !data.every(Number.isFinite) || !validCiOptions(alpha, resamples)) return null;
 
   const se = opts.standardError ?? ((s: readonly number[]) => jackknifeStandardError(s, statistic));
   const point = statistic(data);
   const seHat = se(data);
 
-  // Zero variance -> the honest interval is a point (se_hat = 0, no pivot).
-  if (!(seHat > 0)) {
+  // Degeneracy TOLERANCE, not exact zero: a resample of 25 identical +0.909...
+  // returns (a -110 win at 1 unit) has a floating-point-accumulation SD of
+  // ~1e-16, not 0 — an exact-zero check would miss it and divide by FP noise,
+  // producing an absurd ~1e15 pivot instead of the honest infinity. Any real
+  // mixed resample of bet returns has SD orders of magnitude above this.
+  const seTol = 1e-9 * (1 + Math.abs(point));
+
+  // Zero variance -> the honest interval is a point (se_hat ~ 0, no pivot).
+  if (!(seHat > seTol)) {
     return {
       point, low: point, high: point, alpha, n, resamples, seed,
       method: "studentized", z0: 0, acceleration: 0, tLow: 0, tHigh: 0, standardError: 0,
+      degenerateResamples: 0,
     };
   }
 
   const rng = mulberry32(seed);
   const tStar = new Array<number>(resamples);
   const sample = new Array<number>(n);
+  let degenerateResamples = 0;
   for (let b = 0; b < resamples; b++) {
     for (let i = 0; i < n; i++) sample[i] = data[Math.floor(rng() * n)]!;
     const thetaB = statistic(sample);
     const seB = se(sample);
-    // Degenerate resample (all draws equal -> se*=0): the pivot carries no
-    // information; contribute a centered 0 rather than an infinity.
-    tStar[b] = seB > 0 ? (thetaB - point) / seB : 0;
+    if (seB > seTol) {
+      tStar[b] = (thetaB - point) / seB;
+    } else {
+      // Degenerate resample (all draws identical -> se* ~ 0). This is NOT
+      // information-free: an all-modal-value resample puts theta* at an EXTREME
+      // of the resample distribution with zero spread — the pivot is properly
+      // +/-Infinity, the heaviest point of one tail. Imputing 0 would teleport
+      // that tail to the center and silently narrow the interval (an
+      // overconfident published bound on lopsided ledgers). Assign the signed
+      // infinity; if enough mass lands in a tail, the corresponding bound is
+      // honestly infinite: "bootstrap-t cannot bound this side from this
+      // ledger." Only theta* at the point (within tolerance) is null info.
+      degenerateResamples++;
+      const diff = thetaB - point;
+      tStar[b] = Math.abs(diff) <= seTol ? 0 : diff > 0 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+    }
   }
-  tStar.sort((x, y) => x - y);
+  tStar.sort(ascending); // (a-b) comparator NaNs on same-sign infinities
 
   // Quantiles of the pivot, then invert (tails reverse).
   const tLow = sortedPercentile(tStar, alpha / 2);
@@ -375,6 +436,7 @@ export function studentizedCi(
     tLow,
     tHigh,
     standardError: seHat,
+    degenerateResamples,
   };
 }
 
