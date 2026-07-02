@@ -130,3 +130,66 @@ function solveLinearSystem(a: number[][], b: number[]): number[] | null {
   }
   return M.map((row, i) => row[n]! / row[i]!);
 }
+
+/**
+ * Cross-validated fidelity — the honest, out-of-sample R².
+ *
+ * The in-sample fidelity reported by fitCovariateModel flatters the model: it
+ * is scored on the same rows it was fitted to. k-fold cross-validation scores
+ * every row by a model that never saw it, which is the number the trust gate
+ * should believe. Deterministic fold assignment (i mod k) — reproducible, no
+ * randomness, and fine for rows without temporal ordering. (For time-ordered
+ * calibration data, pre-sort rows chronologically and this becomes a blocked
+ * CV, which is the correct sports discipline.)
+ *
+ * Too-thin data (fewer than 2 rows per fold) returns 0: an unmeasurable fit
+ * is an untrusted fit, never an optimistic one.
+ */
+export function crossValidatedFidelity(
+  rows: readonly (readonly number[])[],
+  targets: readonly number[],
+  ridge = 1e-3,
+  k = 5,
+): number {
+  const m = rows.length;
+  if (m !== targets.length || m < k * 2) return 0;
+  const meanAll = targets.reduce((s, t) => s + t, 0) / m;
+  let sse = 0;
+  let sst = 0;
+  for (let fold = 0; fold < k; fold++) {
+    const trainRows: (readonly number[])[] = [];
+    const trainTargets: number[] = [];
+    const testIdx: number[] = [];
+    for (let i = 0; i < m; i++) {
+      if (i % k === fold) testIdx.push(i);
+      else {
+        trainRows.push(rows[i]!);
+        trainTargets.push(targets[i]!);
+      }
+    }
+    const model = fitCovariateModel(trainRows, trainTargets, ridge);
+    for (const i of testIdx) {
+      const pred = applyCovariateModel(rows[i]!, model);
+      sse += (targets[i]! - pred) ** 2;
+      sst += (targets[i]! - meanAll) ** 2;
+    }
+  }
+  return sst > 1e-12 ? Math.max(0, Math.min(1, 1 - sse / sst)) : 0;
+}
+
+/**
+ * The honest fit: coefficients from ALL the data (best point estimates), but
+ * fidelity stamped from k-fold cross-validation (the number the trust gate
+ * reads). This is what production calibration should call — in-sample R²
+ * stays available on fitCovariateModel for diagnostics, but it must never be
+ * the number that unlocks per-play claims.
+ */
+export function fitCovariateModelCV(
+  rows: readonly (readonly number[])[],
+  targets: readonly number[],
+  ridge = 1e-3,
+  k = 5,
+): CovariateModel {
+  const full = fitCovariateModel(rows, targets, ridge);
+  return { ...full, fidelity: crossValidatedFidelity(rows, targets, ridge, k) };
+}

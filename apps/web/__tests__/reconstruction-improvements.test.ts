@@ -135,3 +135,47 @@ describe("skillScore (honest epistemic-alpha: measured lift over a baseline)", (
     expect(Number.isNaN(skillScore([pair(3, 3)], [3]))).toBe(true); // baseline perfect -> undefined
   });
 });
+
+describe("crossValidatedFidelity (out-of-sample R2, the number the gate should trust)", () => {
+  it("scores high on genuinely linear data and ~0 on pure noise", async () => {
+    const { crossValidatedFidelity } = await import("@/lib/reconstruction/covariate-model");
+    const rows: number[][] = [];
+    const clean: number[] = [];
+    const noise: number[] = [];
+    // Deterministic pseudo-noise (no Math.random in tests): a fixed irrational stride.
+    for (let i = 0; i < 50; i++) {
+      const x1 = (i % 10) - 5;
+      const x2 = ((i * 7) % 10) - 5;
+      rows.push([x1, x2]);
+      clean.push(0.5 * x1 - 0.3 * x2);
+      noise.push(((i * 997) % 101) / 101 - 0.5); // structureless w.r.t. x1/x2
+    }
+    expect(crossValidatedFidelity(rows, clean)).toBeGreaterThan(0.9);
+    expect(crossValidatedFidelity(rows, noise)).toBeLessThan(0.3);
+  });
+
+  it("returns 0 (untrusted) when the sample is too thin to cross-validate", async () => {
+    const { crossValidatedFidelity } = await import("@/lib/reconstruction/covariate-model");
+    expect(crossValidatedFidelity([[1], [2]], [1, 2])).toBe(0);
+  });
+
+  it("fitCovariateModelCV keeps full-data coefficients but stamps CV fidelity", async () => {
+    const { fitCovariateModel, fitCovariateModelCV } = await import(
+      "@/lib/reconstruction/covariate-model"
+    );
+    const rows: number[][] = [];
+    const targets: number[] = [];
+    for (let i = 0; i < 40; i++) {
+      const x = (i % 8) - 4;
+      rows.push([x]);
+      targets.push(0.7 * x);
+    }
+    const inSample = fitCovariateModel(rows, targets, 1e-6);
+    const cv = fitCovariateModelCV(rows, targets, 1e-6);
+    expect(cv.coefficients[0]!).toBeCloseTo(inSample.coefficients[0]!, 6);
+    // CV fidelity is measured out-of-sample; on clean data it stays high but
+    // must never EXCEED what the data supports.
+    expect(cv.fidelity).toBeGreaterThan(0.9);
+    expect(cv.fidelity).toBeLessThanOrEqual(1);
+  });
+});
