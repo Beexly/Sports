@@ -7,7 +7,7 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { TheBeat } from "@/components/news/the-beat";
 import { GalaxyBroadcast } from "@/components/news/galaxy-broadcast";
 import { buildBroadcast } from "@/lib/fantasy/host";
-import { WIRE_DISCLAIMER } from "@/lib/news/wire";
+import { WIRE_DISCLAIMER, WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
 import { fetchLiveWire } from "@/lib/news/rss";
 import { BRAND_COLORS } from "@/lib/brand";
 
@@ -96,7 +96,9 @@ export default async function TheBeatPage() {
               <TheBeat liveWire={liveWire} />
             </div>
             <Reveal delay={120}>
-              <p className="mt-6 text-xs leading-relaxed text-ion-2">{WIRE_DISCLAIMER}</p>
+              <p className="mt-6 text-xs leading-relaxed text-ion-2">
+                {liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
+              </p>
             </Reveal>
           </div>
         </section>
