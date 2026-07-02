@@ -45,15 +45,15 @@ column cross-check + fail-closed. This is the evidence the engine is real.
 - LOW prose overreach in performance-ci header -> clarified NO optimizer ships
   in that file (this commit).
 
-## REMAINING — honest, NOT done (specs, ranked)
-1. [HIGH] No automated test for coinbase-commerce webhook route (the money
-   logic). Spec: mock db.$transaction + commerceCharge.create P2002 +
-   stripe.subscriptions.cancel; cover first-grant-cancels-prior-sub, replay
-   recovers+cancels from ledger, two distinct charges each add a year,
-   resolved/delayed->review, confirmed-missing-metadata->loud no-grant. The
-   logic is VERIFIED-by-reading + adversarially reviewed 3x, but not unit-tested.
-2. [MED] No automated test for /verify route (tamper/sealed/open/DB-error/dup
-   hash) — currently verified by reasoning only.
+## REMAINING — honest, ranked
+1. [DONE] Crypto webhook route now has 6 route-level tests (real HMAC, mocked
+   tx+Stripe): bad sig; delayed/resolved->review; missing-metadata->no-grant;
+   first-grant-cancels-prior-Stripe-sub; and the crash-window REPLAY recovering
+   stripeSubToCancel from the ledger. Commit 5876b515 (crypto branch).
+2. [DONE] /verify route now has 5 route-level tests incl. the column-drift
+   tamper case (finding #9 PROVEN) + sealed/open. Commit d1defe2d. The DB-outage
+   ->503 path is a bare try/catch (code-reviewed); not asserted due to a vitest
+   spy-throw harness quirk, documented in the test.
 3. [MED] Reconstruction UNCALIBRATED tendency is built+tested but wired into no
    live surface. Spec: show EB-shrunk separation tendency + interval on a
    player view, gated by reconstructionTrustworthy().
