@@ -18,3 +18,4 @@ export type {
   RefreshOddsSportResult,
   RefreshOddsOptions,
 } from "./refresh-odds.js";
+export { notifyOwner, ownerAlertsConfigured } from "./owner-alert.js";

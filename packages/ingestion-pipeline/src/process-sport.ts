@@ -46,6 +46,7 @@ function sha256Hex(input: string): string {
 }
 import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
+import { notifyOwner } from "./owner-alert.js";
 
 export interface SportConfig {
   key: SupportedSportKey;
@@ -533,6 +534,11 @@ export async function processSport(
       where: { id: run.id },
       data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
     });
+    // Push the failure to the owner's phone (free Telegram bot; no-op until
+    // TELEGRAM_BOT_TOKEN/CHAT_ID are set; never throws, never blocks).
+    await notifyOwner(
+      `GSE ingestion FAILED\nsport: ${sport.key}\n${message}`,
+    );
     return { sport: sport.key, status: "failed", games: 0, picks: 0, error: message };
   }
 }
