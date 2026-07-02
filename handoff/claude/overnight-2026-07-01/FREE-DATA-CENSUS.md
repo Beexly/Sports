@@ -116,3 +116,38 @@ candidates intake). The tool is never the legal question; the TARGET is.
 Every one of these enters through the gated candidates file, gets a live-terms
 verification, and lands in the rights registry before a single byte flows.
 That's how the moat stays a moat.
+
+---
+
+## Appendix: named repos/datasets from the owner's research sweep (triaged)
+
+Rule of the lane: everything below is **offline R&D only** (backtests,
+calibration research, feature prototyping) until a per-item license check
+promotes it. Nothing here touches live picks without that.
+
+**Worth pulling for R&D:**
+- `Jensen-holm/statcast-era-pitches` (HF) — consolidated Statcast pitch data;
+  faster start than raw Savant pulls for MLB feature prototyping
+- `dcayton/nba_tracking_data_15_16` (HF) — the old SportVU tracking dump;
+  useful for player-movement feature research, stale for live signal
+- `statsbomb/open-data` (GitHub) — soccer event data; research license only
+  (registry already marks product use forbidden)
+- `sportsdataverse/*` (cfbfastR, hoopR, wehoop, worldfootballR) — already a
+  gated candidate; the college unlock
+- `josedv82/public_sport_science_datasets` — curated index of sport-science
+  sets (load management/injury research angle for availability signals)
+- `eddwebster/football_analytics` — meta-index; mine it for sources to feed
+  THIS census, not data itself
+
+**Interesting, wrong decade for us:**
+- Roboflow `sports` (CV keypoint tracking), `OpenSportsLab/SoccerNet-GAR`,
+  `sportsvision/soccer-qa-4b` — computer-vision/video understanding; real
+  research, zero near-term pick value for a market-signals product
+- `ruslanmv/sports-trends-models`, `its-zion-18/sports-text-dataset` — small/
+  unmaintained; skip
+
+**Crawler tooling (the target decides legality, never the tool):**
+Crawl4AI, Firecrawl, ScrapeGraphAI, SiteOne — all fine OSS. Any use goes
+through the candidates intake pointed ONLY at cleared sources (RSS, official
+feeds), robots.txt-respecting, rate-limited. Bookmaker sites and paywalled
+stats remain off-limits regardless of tool.
