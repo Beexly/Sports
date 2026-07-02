@@ -57,6 +57,21 @@ export interface PerformanceCi {
    * narrowing it. Disclosed on the receipt so a skeptic sees the regime.
    */
   readonly degenerateResamples?: number;
+  /**
+   * Skewness (Fisher-Pearson g1) of the studentized pivot distribution t*
+   * itself — a DIAGNOSTIC, not a certification. Near 0 = the pivot is close to
+   * symmetric, the regime where the second-order theory motivating bootstrap-t
+   * applies most cleanly; large magnitude = the quantile inversion leans on a
+   * skewed pivot and the second-order-accuracy claim is weaker for this ledger.
+   * It does NOT mean the interval is wrong (BCa and empirical-Bernstein remain
+   * valid cross-checks), and no pass/fail threshold is asserted. ABSENT
+   * (undefined) whenever any degenerate (infinite) pivots exist — a skewness
+   * computed over only the finite subset would silently drop exactly the
+   * asymmetric tail being diagnosed, overclaiming symmetry precisely where the
+   * pivot is least trustworthy (the same bug class as imputing t*=0, fixed in
+   * this file once already).
+   */
+  readonly tStarSkewness?: number;
 }
 
 /** Deterministic PRNG (mulberry32) — seeded so the interval is reproducible. */
@@ -101,6 +116,31 @@ function sortedPercentile(sorted: readonly number[], p: number): number {
  */
 function ascending(a: number, b: number): number {
   return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/**
+ * Sample skewness, Fisher-Pearson g1 = m3 / m2^1.5 (moment estimator). The
+ * bias-corrected G1 variant differs by sqrt(n(n-1))/(n-2), within ~1e-4 of 1 at
+ * the resample counts used here (thousands), so g1 is preferred as the simplest
+ * formula a skeptic can reproduce by hand from the receipt. Returns 0 for a
+ * zero-variance sample (skewness of a constant is undefined; 0 is the honest
+ * "no asymmetry evidence" answer for a degenerate spread).
+ */
+function sampleSkewness(xs: readonly number[]): number {
+  const n = xs.length;
+  if (n < 3) return 0;
+  const m = mean(xs);
+  let m2 = 0;
+  let m3 = 0;
+  for (const x of xs) {
+    const d = x - m;
+    m2 += d * d;
+    m3 += d * d * d;
+  }
+  m2 /= n;
+  m3 /= n;
+  if (!(m2 > 0)) return 0;
+  return m3 / Math.pow(m2, 1.5);
 }
 
 /** Shared option validation: bad resamples/alpha -> the CI is refused (null). */
@@ -418,6 +458,12 @@ export function studentizedCi(
   }
   tStar.sort(ascending); // (a-b) comparator NaNs on same-sign infinities
 
+  // Pivot-symmetry diagnostic (skewness is order-independent, so computing on
+  // the sorted array is identical). Withheld entirely when any infinite pivots
+  // exist — see the tStarSkewness field doc for why a finite-subset skewness
+  // would be the same silent-overclaim bug class this file already fixed once.
+  const tStarSkewness = degenerateResamples === 0 ? sampleSkewness(tStar) : undefined;
+
   // Quantiles of the pivot, then invert (tails reverse).
   const tLow = sortedPercentile(tStar, alpha / 2);
   const tHigh = sortedPercentile(tStar, 1 - alpha / 2);
@@ -437,6 +483,7 @@ export function studentizedCi(
     tHigh,
     standardError: seHat,
     degenerateResamples,
+    ...(tStarSkewness !== undefined ? { tStarSkewness } : {}),
   };
 }
 

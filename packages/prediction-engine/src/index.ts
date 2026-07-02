@@ -218,6 +218,12 @@ export type {
 // sealed ledger by anyone. Honest uncertainty for the public loss ledger.
 export { bcaCi, percentileCi, bcaMeanCi, percentileMeanCi, studentizedCi, studentizedMeanCi, empiricalBernsteinMeanCi, jackknifeStandardError, meanStandardError, meanStatistic, normalCdf, normalQuantile } from "./performance-ci.js";
 export type { PerformanceCi, CiMethod, Statistic } from "./performance-ci.js";
+export { bcaCoverageSelfAudit, studentizedCoverageSelfAudit } from "./coverage-self-audit.js";
+export type { CoverageSelfAuditResult, CoverageSelfAuditOptions, CoverageVerdict } from "./coverage-self-audit.js";
+export { anytimeValidLedger } from "./anytime-ledger.js";
+export type { AnytimeLedgerResult, AnytimeLedgerPoint, AnytimeLedgerOptions } from "./anytime-ledger.js";
+export { decomposeClv, informationScore } from "./clv-decomposition.js";
+export type { ClvDecompositionItem, ClvDecompositionResult } from "./clv-decomposition.js";
 
 // Player season projection (recency+games-weighted, regressed) and its
 // honest backtest vs a carry-forward baseline. Forecasts; surfaced with their
