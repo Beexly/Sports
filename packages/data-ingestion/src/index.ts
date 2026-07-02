@@ -80,3 +80,9 @@ export {
   type LegalSource,
 } from "./source-registry.js";
 export * from "./config.js";
+export {
+  freshnessMode,
+  dynamicFreshnessThresholdMs,
+  resolveFreshnessThresholdMs,
+  type FreshnessMode,
+} from "./freshness-schedule.js";

@@ -149,7 +149,12 @@ export async function processSport(
     // not just our local fetch clock. Decided PER GAME — drop games whose own odds are
     // stale (so one fresh game can't mask a stale one), and stop the whole job only if the
     // entire feed is stale (dead/cached board). A fetchedAt check alone cannot catch this.
-    const freshGameIds = normalizer.freshGameIds(normalizedOddsRaw);
+    // Time-to-game map enables the dynamic freshness gate (near-start games
+    // demand fresher lines); under the default fixed mode it changes nothing.
+    const commenceTimeByGame = new Map(
+      normalizedGames.map((g) => [g.externalId, g.commenceTime]),
+    );
+    const freshGameIds = normalizer.freshGameIds(normalizedOddsRaw, { commenceTimeByGame });
     if (normalizedOddsRaw.length > 0 && freshGameIds.size === 0) {
       // Self-diagnosing rejection: distinguish "env threshold not effective" vs
       // "payload shape drift (unparseable last_update)" vs "genuinely old lines"
