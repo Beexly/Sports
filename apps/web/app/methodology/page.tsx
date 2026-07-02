@@ -154,6 +154,59 @@ export default function MethodologyPage(): JSX.Element {
 
         <MethodologySection />
 
+        {/* Line freshness — the discipline competitors can't fake */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                Line freshness
+              </p>
+              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+                A pick is only as honest as the line behind it.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+                Every pick is priced against real bookmaker quotes, and every
+                quote carries its own timestamp. Before anything reaches the
+                board, a freshness gate checks the age of each game&apos;s
+                lines. A game whose lines are too old gets dropped, no matter
+                how good the math looks: an edge computed on a dead line is not
+                an edge, it&apos;s a mirage.
+              </p>
+            </Reveal>
+            <Stagger className="mt-8 grid gap-5 md:grid-cols-3" step={100}>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">Checked per game</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  Freshness is decided game by game, not for the feed as a
+                  whole, so one fresh game can never smuggle a stale one onto
+                  the board. The closer a game is to starting, the fresher its
+                  lines must be: lineups, injuries, and late market moves
+                  change prices fastest in the final hours.
+                </p>
+              </article>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">Shown, not claimed</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  The board shows the age of the freshest line behind
+                  today&apos;s picks, computed from the bookmaker&apos;s own
+                  timestamp. When the data is older, the badge says so in
+                  plain sight. No timestamp, no badge: the site never invents
+                  an &quot;updated just now.&quot;
+                </p>
+              </article>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">A quiet board is a position</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  When lines are stale or coverage is thin, the system
+                  publishes nothing rather than something it can&apos;t stand
+                  behind. Zero picks on a given day means the gate held, and
+                  that discipline is the product.
+                </p>
+              </article>
+            </Stagger>
+          </div>
+        </section>
+
         {/* Reading the market — and grading ourselves */}
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
