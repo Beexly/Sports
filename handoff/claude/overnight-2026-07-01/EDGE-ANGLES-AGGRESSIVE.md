@@ -37,6 +37,12 @@ line and is still ruthless.
   which market is cheapest to beat.
 
 ## Layer 2 — Read their WORDING (language as leverage)
+> SOURCING DISCIPLINE (audit-added, binds all of Layer 2 and the tout-consensus
+> fade in Layer 3): these edges consume beat-writer text, press conferences, and
+> public pick sites. That text is only usable via LICENSED feeds or genuinely
+> terms-silent/permissive sources — NOT by scraping sites whose ToS forbid it
+> (the same rule the Loophole doc and the sources registry enforce). Any of
+> these that would require ToS-violating scraping is [COUNSEL-GATED], not free.
 - **The hedge lexicon.** "Expected to play" / "targeting a return" / "not ruled
   out" map to different real play rates; the market treats them as equal.
   Proprietary NLP that decodes graded public language into calibrated
@@ -89,8 +95,9 @@ line and is still ruthless.
   aggressively than anyone — provable honesty about failure is the ultimate
   trust signal AND a moat, because competitors will never show their losses.
 - **The public calibration curve.** Not "we said 70%" but an ongoing,
-  cryptographic, public reliability diagram. Nobody publishes theirs because
-  nobody else is calibrated. Being auditable is the flex.
+  cryptographic, public reliability diagram. The defensible claim (audit-checked)
+  is that nobody publishes a cryptographically-verifiable public reliability
+  diagram — NOT the false "nobody else is calibrated." Being auditable is the flex.
 
 ## Cross-domain transplants (the creative frontier)
 - **Market-microstructure from finance:** treat Kalshi/exchange order books

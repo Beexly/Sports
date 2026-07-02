@@ -33,7 +33,7 @@ engine for the public ledger, alongside the existing Wilson interval:
   the trust-doctrine upgrade the transcript did not stress.
 - **General over any statistic** (`bcaCi(data, statistic)`), not just the mean —
   see the correction below for WHY that generality matters.
-- 11 tests: known normal values, brackets the point, DETERMINISM (same seed ->
+- 9 tests: known normal values, brackets the point, DETERMINISM (same seed ->
   identical interval), the HONEST result (a 55/100 even-odds record has a lower
   bound below break-even -> cannot yet claim profit), material skew correction,
   and the general-statistic path. Typecheck clean.
@@ -69,7 +69,7 @@ issue was that a chunk of it was Phase-2 tooling, not Phase-1 — and that is a
 sequencing note, not a flaw.
 
 ## Build state
-performance-ci.ts + 11 tests, typecheck clean (engine + web), exported from
+performance-ci.ts + 9 tests, typecheck clean (engine + web), exported from
 @sports/prediction-engine. Ready to wire into the public loss ledger surface:
 win rate -> Wilson band, ROI/units -> BCa band, both reproducible and receipt-
 anchorable.

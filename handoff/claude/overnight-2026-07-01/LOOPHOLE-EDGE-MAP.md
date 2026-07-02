@@ -45,20 +45,27 @@ tedium is a moat. Legal, free, and produces data literally no rival has.
 Action: pilot a FOIA request program for 2-3 target CFB programs; measure what
 comes back before scaling.
 
-### 3. The ADS-B Travel Loophole — LEGAL PHYSICS NOBODY MODELS
+### 3. The ADS-B Travel Signal — LEGAL, TEDIOUS, effect size UNPROVEN
 Aircraft transponders broadcast position in the clear; the FAA data is public.
 Tail-number → team charter mapping yields a travel-and-fatigue signal built
-from free, legal data. (Caveat: some COMMERCIAL ADS-B aggregators impose their
-own terms — use the public broadcast / a permissively-licensed feed, and cite
-the published travel-fatigue effect sizes rather than inventing them.) This is
-a real edge because it's public + tedious + few bother.
+from free, legal data. HONEST STATUS (audit-corrected): this is neither novel
+nor established-profitable — travel/rest effects are studied and the marginal
+edge may be too small to matter once the market already prices rest. Do NOT
+present it as an unexploited edge. Before building: find the PUBLISHED
+travel-fatigue effect sizes and confirm they clear the market's existing
+adjustment; if they don't, drop it. Caveat also: some COMMERCIAL ADS-B
+aggregators impose their own terms — use the public broadcast / a
+permissively-licensed feed. Verdict: [PROPOSED, effect-size unverified].
 
 ### 4. The Terms-Silent Endpoint Loophole — MAP IT (A1 research)
 Some public JSON endpoints carry NO assented terms (true browsewrap, no
 notice). Facts pulled from those are the cleanest legal position (Feist +
-hiQ + Van Buren limit copyright and CFAA exposure). The move: prefer
-terms-silent or permissive sources; extract FACTS not expression; attribute;
-respect robots/rate limits as evidence of good faith. This is legal edge, not
+hiQ + Van Buren limit copyright and CFAA exposure). IMPORTANT (audit-corrected):
+hiQ limited CFAA exposure but hiQ ultimately LOST on the contract/ToS breach
+claim — so hiQ does NOT bless scraping generally; it only narrows the CRIMINAL
+(CFAA) risk, leaving the CONTRACT risk fully live. That is why the move is:
+prefer terms-silent or permissive sources; extract FACTS not expression;
+attribute; respect robots/rate limits as evidence of good faith. This is legal edge, not
 enforcement edge — the distinction is whether you're taking facts from an open
 door or forcing a locked one.
 
