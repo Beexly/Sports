@@ -84,9 +84,17 @@ model VerificationToken {
 model Subscription {
   id                   String             @id @default(cuid())
   userId               String             @unique
-  stripeCustomerId     String             @unique
+  // Optional since crypto passes (2026-07): a subscriber has EITHER a Stripe
+  // identity or a provider-external charge, never necessarily both.
+  stripeCustomerId     String?            @unique
   stripeSubscriptionId String?            @unique
   stripePriceId        String?
+  // Which rail granted the current entitlement. Crypto passes are fixed-term
+  // (no auto-renew); Stripe stays the default for card subscriptions.
+  paymentProvider      PaymentProvider    @default(STRIPE)
+  // Provider-external charge id (e.g. Coinbase Commerce charge code) — the
+  // idempotency key for crypto grants; a replayed webhook can never re-grant.
+  externalChargeId     String?            @unique
   tier                 SubscriptionTier   @default(FREE)
   status               SubscriptionStatus @default(ACTIVE)
   currentPeriodStart   DateTime?
@@ -748,6 +756,13 @@ enum SubscriptionTier {
   FANTASY
   PRO
   ELITE
+}
+
+// Which payment rail granted the subscription. STRIPE = card auto-renew;
+// COINBASE_COMMERCE = crypto fixed-term pass (no auto-renew by design).
+enum PaymentProvider {
+  STRIPE
+  COINBASE_COMMERCE
 }
 
 enum SubscriptionStatus {
