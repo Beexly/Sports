@@ -1,7 +1,7 @@
 import { Shell, Cards, Badge, BarChart, StatusRibbon, InsightCard } from "../_components";
 import { comparePlayers } from "@/lib/statking/product";
 export const metadata = {
-  title: "Player Compare — Side-by-Side NFL Metrics",
+  title: "Player Compare: Side-by-Side NFL Metrics",
   description: "Compare any two players across usage, efficiency, role, volatility, and fantasy value.",
   alternates: { canonical: "/stats/compare" },
 };
@@ -56,7 +56,7 @@ export default function Page({ searchParams }: { searchParams?: { a?: string; b?
       </div>
       <InsightCard
         eyebrow="Key Insights"
-        headline={c.a.name + " vs " + c.b.name + " — Side-by-Side"}
+        headline={c.a.name + " vs " + c.b.name + ": Side-by-Side"}
         body={insightBody || "No category data available for this comparison."}
       />
     </Shell>

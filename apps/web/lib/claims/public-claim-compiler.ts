@@ -123,7 +123,7 @@ export function compilePublicClaim(ctx: ClaimContext): CompiledClaim {
     } else if (ctx.clvCoverageRatePct < HEALTHY_COVERAGE_PCT) {
       blockers.push({
         code: "INCOMPLETE_COVERAGE",
-        message: `CLV coverage ${ctx.clvCoverageRatePct}% (need ≥${HEALTHY_COVERAGE_PCT}%) — rate is survivorship-biased.`,
+        message: `CLV coverage ${ctx.clvCoverageRatePct}% (need ≥${HEALTHY_COVERAGE_PCT}%): rate is survivorship-biased.`,
       });
       requirements.push(`Raise CLV coverage to ≥${HEALTHY_COVERAGE_PCT}%.`);
     }

@@ -216,6 +216,8 @@ export function LeagueTwinGalaxy() {
     // animate
     let raf = 0;
     let t = 0;
+    let running = false;
+    let inView = true;
     const tick = () => {
       t += 0.016;
       if (!reduced) root.rotation.y += 0.0016;
@@ -227,12 +229,48 @@ export function LeagueTwinGalaxy() {
         }
       }
       composer.render();
+      if (running) raf = requestAnimationFrame(tick);
+    };
+
+    // Pause the render loop while the tab is hidden or the galaxy is
+    // off-screen; resume where it left off when it is watchable again.
+    const stopLoop = () => {
+      running = false;
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+    const startLoop = () => {
+      if (running) return;
+      running = true;
       raf = requestAnimationFrame(tick);
     };
-    tick();
+    const onVisibility = () => {
+      if (document.hidden) stopLoop();
+      else if (inView) startLoop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              inView = entries[0]?.isIntersecting ?? true;
+              if (inView && !document.hidden) startLoop();
+              else stopLoop();
+            },
+            { threshold: 0 },
+          )
+        : null;
+    io?.observe(mount);
+
+    tick(); // immediate first frame so the canvas never flashes empty
+    startLoop();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stopLoop();
+      document.removeEventListener("visibilitychange", onVisibility);
+      io?.disconnect();
       ro.disconnect();
       renderer.domElement.removeEventListener("click", onClick);
       scene.traverse((obj: InstanceType<typeof THREE.Object3D>) => {

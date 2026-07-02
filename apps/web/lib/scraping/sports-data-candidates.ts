@@ -72,7 +72,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     id: "fpl",
     name: "Fantasy Premier League API",
     homepage: "https://fantasy.premierleague.com/api/bootstrap-static/",
-    coverage: "English Premier League FACTS: 20 teams (played/W/D/L/points/position), 380 fixtures (gameweek, scores, results, kickoff), 800+ players' factual season stats (minutes, goals, assists, clean sheets, cards, starts). Schema verified live 2026-06-15. We extract FACTS ONLY — never FPL's proprietary strength/ICT/form/expected-points metrics.",
+    coverage: "English Premier League FACTS: 20 teams (played/W/D/L/points/position), 380 fixtures (gameweek, scores, results, kickoff), 800+ players' factual season stats (minutes, goals, assists, clean sheets, cards, starts). Schema verified live 2026-06-15. We extract FACTS ONLY, never FPL's proprietary strength/ICT/form/expected-points metrics.",
     accessModel: "free_no_key",
     freeTier: "No key. Public JSON endpoints (bootstrap-static, fixtures). Be polite: cache + low request rate.",
     keyRequired: false,
@@ -104,7 +104,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: true,
     registrySourceId: "collegefootballdata",
     verificationSteps: STANDARD_STEPS,
-    notes: "Highest-priority free CFB stats source. Already a vendor_candidate in the rights registry; terms page is JS-rendered and needs a human/legal read before flipping flags. OWNER-APPROVED to start gated work: terms-read checklist (docs/legal/VENDOR_QUESTIONNAIRE_CFBD.md) + adapter scaffold against a verified schema — ingestion stays blocked until terms clear.",
+    notes: "Highest-priority free CFB stats source. Already a vendor_candidate in the rights registry; terms page is JS-rendered and needs a human/legal read before flipping flags. OWNER-APPROVED to start gated work: terms-read checklist (docs/legal/VENDOR_QUESTIONNAIRE_CFBD.md) + adapter scaffold against a verified schema. Ingestion stays blocked until terms clear.",
   },
   {
     id: "henrygd-ncaa",
@@ -121,7 +121,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: false,
     registrySourceId: null,
     verificationSteps: STANDARD_STEPS,
-    notes: "Useful no-key fallback. Derived from NCAA.com — confirm the redistribution posture of NCAA.com-sourced facts and prefer self-hosting before any reliance. OWNER-APPROVED as the FREE-FIRST primary for NCAA facts (cost-policy tier free_unlimited): exhaust this before spending on any paid source; self-host to drop the public-demo rate cap.",
+    notes: "Useful no-key fallback. Derived from NCAA.com, so confirm the redistribution posture of NCAA.com-sourced facts and prefer self-hosting before any reliance. OWNER-APPROVED as the FREE-FIRST primary for NCAA facts (cost-policy tier free_unlimited): exhaust this before spending on any paid source; self-host to drop the public-demo rate cap.",
   },
   {
     id: "balldontlie-ncaaf",
@@ -138,7 +138,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: false,
     registrySourceId: null,
     verificationSteps: STANDARD_STEPS,
-    notes: "Good roster/identity supplement, not a main engine. Owner labeled an inbound key 'balldontlie' but a screenshot showed a StoryStats key — see the storystats candidate; confirm which key maps to which provider.",
+    notes: "Good roster/identity supplement, not a main engine. Owner labeled an inbound key 'balldontlie' but a screenshot showed a StoryStats key. See the storystats candidate; confirm which key maps to which provider.",
   },
   {
     id: "highlightly",
@@ -172,7 +172,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: false,
     registrySourceId: null,
     verificationSteps: STANDARD_STEPS,
-    notes: "Secondary source — validate CFB depth before relying on it.",
+    notes: "Secondary source: validate CFB depth before relying on it.",
   },
   {
     id: "bigballs",
@@ -189,7 +189,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: false,
     registrySourceId: null,
     verificationSteps: STANDARD_STEPS,
-    notes: "Promising but unverified — confirm coverage depth and terms before production.",
+    notes: "Promising but unverified: confirm coverage depth and terms before production.",
   },
   {
     id: "the-odds-api-ncaaf",
@@ -206,7 +206,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: true,
     registrySourceId: "the-odds-api",
     verificationSteps: STANDARD_STEPS,
-    notes: "Provider already approved_api in the rights registry and wired via THE_ODDS_API_KEY. OWNER-APPROVED: americanfootball_ncaaf is ALREADY active in SUPPORTED_SPORTS (every refresh iterates it), so CFB odds ride the existing license at no new integration cost. Cost caveat: the free tier is 500 credits/mo across all sports — recommend gating refreshes to in-season sports to conserve credits.",
+    notes: "Provider already approved_api in the rights registry and wired via THE_ODDS_API_KEY. OWNER-APPROVED: americanfootball_ncaaf is ALREADY active in SUPPORTED_SPORTS (every refresh iterates it), so CFB odds ride the existing license at no new integration cost. Cost caveat: the free tier is 500 credits/mo across all sports, so recommend gating refreshes to in-season sports to conserve credits.",
   },
   {
     id: "therundown",
@@ -257,7 +257,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: false,
     registrySourceId: null,
     verificationSteps: STANDARD_STEPS,
-    notes: "Evaluation only — confirm whether a durable free tier exists before counting on it.",
+    notes: "Evaluation only: confirm whether a durable free tier exists before counting on it.",
   },
   {
     id: "sports-game-data",
@@ -274,7 +274,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: false,
     registrySourceId: null,
     verificationSteps: STANDARD_STEPS,
-    notes: "10-minute update frequency — validate against the no-stale-data rule for any live use.",
+    notes: "10-minute update frequency: validate against the no-stale-data rule for any live use.",
   },
   {
     id: "sportsdataio-cfb",
@@ -282,7 +282,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     homepage: "https://sportsdata.io",
     coverage: "D1 FBS scores, stats, odds, projections, news, images, rosters, depth charts, line movement, live scores, in-play odds, fantasy stats, final stats.",
     accessModel: "free_trial",
-    freeTier: "Free-trial key; strong commercial feed — do NOT assume free production use.",
+    freeTier: "Free-trial key; strong commercial feed. Do NOT assume free production use.",
     keyRequired: true,
     apiKeyEnvVar: "SPORTSDATAIO_API_KEY",
     priority: "high",
@@ -342,7 +342,7 @@ export const SPORTS_DATA_CANDIDATES: readonly SportsDataCandidate[] = [
     inMainRegistry: false,
     registrySourceId: null,
     verificationSteps: STANDARD_STEPS,
-    notes: "Experimental only — marketplace APIs vary heavily in quality, legality, uptime, and freshness. Each listing needs its own rights review.",
+    notes: "Experimental only: marketplace APIs vary heavily in quality, legality, uptime, and freshness. Each listing needs its own rights review.",
   },
   {
     id: "storystats",

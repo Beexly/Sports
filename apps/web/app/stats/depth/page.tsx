@@ -1,7 +1,7 @@
 import { Shell, Cards, DataTable, StatusRibbon, InsightCard, SectionHeader } from "../_components";
 import { loadDepthChart, playerNameMap } from "@/lib/statking/product";
 export const metadata = {
-  title: "Depth Charts — Role & Opportunity by Team",
+  title: "Depth Charts: Role & Opportunity by Team",
   description: "Team depth charts mapped to StatKing role and opportunity signals.",
   alternates: { canonical: "/stats/depth" },
 };

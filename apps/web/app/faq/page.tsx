@@ -35,7 +35,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge ingests live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick: the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
+        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick: the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
       },
       {
         q: "How is this different from a tout service?",
@@ -72,7 +72,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Does the model ever stay quiet?",
-        a: "Often. The four readiness gates exist specifically to keep weak signals off the customer surface. If a slate doesn't earn confidence, nothing publishes. The opposite of a tout service that always has a pick of the day.",
+        a: "Often. The four readiness gates exist specifically to keep weak signals off the board. If a slate doesn't earn confidence, nothing publishes. The opposite of a tout service that always has a pick of the day.",
       },
     ],
   },
@@ -106,7 +106,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "How do I sign up?",
-        a: "Google OAuth. Click \"Sign in,\" use your Google account, and you're in. Email-based sign-in is coming.",
+        a: "With your Google account. Click \"Sign in\" and you're in. Email-based sign-in is coming.",
       },
       {
         q: "Where can I see my subscription?",
@@ -118,7 +118,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "How do I delete my account?",
-        a: "Email hq@galaxysportsedge.com from the address on the account and the deletion will be processed. The privacy page documents the full process.",
+        a: "Email hq@galaxysportsedge.com from the address on the account and we'll process the deletion. The privacy page documents the full process.",
       },
     ],
   },

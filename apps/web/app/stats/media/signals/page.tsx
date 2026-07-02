@@ -1,7 +1,7 @@
 import { Shell, Cards, Badge, DataTable, StatusRibbon, InsightCard } from "../../_components";
 import { loadMediaItems } from "@/lib/statking/product";
 export const metadata = {
-  title: "Media Signals — Cross-Source Player Buzz",
+  title: "Media Signals: Cross-Source Player Buzz",
   description: "Cross-source media signal candidates surfaced for review.",
   alternates: { canonical: "/stats/media/signals" },
 };
@@ -19,7 +19,7 @@ export default function Page() {
         { label: "Rights", value: "metadata-only" }
       ]} />
       <p className="text-ion-1">
-        Where the same player or topic is surfacing across platforms — the cross-source agreement that makes a media signal worth a look.
+        Where the same player or topic is surfacing across platforms: the cross-source agreement that makes a media signal worth a look.
       </p>
       <div className="space-y-3">
         <Badge tone="warn">Metadata only; article bodies and transcripts are never extracted.</Badge>

@@ -193,7 +193,7 @@ export function AgentFleet({ className }: { className?: string }) {
       // Under reduced motion the scene is static: draw a single frame and stop
       // re-arming, instead of clearing + redrawing (and the O(n^2) connection
       // pass) every frame forever, including offscreen and in hidden tabs.
-      if (!reduced && !document.hidden) {
+      if (!reduced && !document.hidden && onScreen) {
         raf = requestAnimationFrame(draw);
       }
     };
@@ -205,11 +205,29 @@ export function AgentFleet({ className }: { className?: string }) {
       if (document.hidden) {
         if (raf) cancelAnimationFrame(raf);
         raf = 0;
-      } else if (!reduced) {
+      } else if (!reduced && onScreen && !raf) {
         raf = requestAnimationFrame(draw);
       }
     };
     document.addEventListener("visibilitychange", onVisibility);
+
+    // Pause when the canvas scrolls off-screen; resume when it returns.
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              onScreen = entries[0]?.isIntersecting ?? true;
+              if (!onScreen) {
+                if (raf) cancelAnimationFrame(raf);
+                raf = 0;
+              } else if (!reduced && !document.hidden && !raf) {
+                raf = requestAnimationFrame(draw);
+              }
+            },
+            { threshold: 0 },
+          )
+        : null;
+    io?.observe(canvas);
 
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
@@ -219,6 +237,7 @@ export function AgentFleet({ className }: { className?: string }) {
       canvas.removeEventListener("mousemove", onMove);
       canvas.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("visibilitychange", onVisibility);
+      io?.disconnect();
       ro.disconnect();
     };
   }, []);

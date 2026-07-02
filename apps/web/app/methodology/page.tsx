@@ -11,7 +11,7 @@ import { CipherConsoleMount } from "@/components/cipher/cipher-console-mount";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Methodology - Deterministic Scoring, Open Framework",
+  title: "Methodology: Deterministic Scoring, Open Framework",
   description:
     "How Galaxy Sports Edge reads the board, scores the math, and gates the slate without publishing proprietary weights or constants.",
   alternates: { canonical: "/methodology" },
@@ -66,7 +66,7 @@ const MARKET_READS = [
   },
   {
     title: "Did we beat the close?",
-    body: "Closing line value grades whether the price we locked beat where the market closed: the sharp-credible leading indicator of a real edge, and the one number tout services never show. Published under the same gate as the win rate.",
+    body: "Closing line value grades whether the price we locked beat where the market closed: the leading indicator of a real edge that sharp bettors trust, and the one number tout services never show. Published under the same gate as the win rate.",
     href: "/clv",
     cta: "See our CLV",
   },
@@ -227,7 +227,7 @@ export default function MethodologyPage(): JSX.Element {
               <h2 className="font-display text-3xl text-white sm:text-4xl">See the framework on today&apos;s board.</h2>
               <p className="text-sm leading-6 text-ink-300">
                 The public board shows every published pick and every free Edge Index.
-                Pro keeps the detailed factor breakdown.
+                Pro unlocks the detailed factor breakdown.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link href="/board" className="btn btn-primary">

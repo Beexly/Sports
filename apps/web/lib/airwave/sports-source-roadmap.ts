@@ -70,11 +70,11 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
       "Maps 1:1 onto GSE/GSN launch-gate workflow. Install in Claude Code.",
     currentStatus: "READY_TO_EVALUATE",
     nextAction: "Install as Claude Code plugin. Use /ship and /review on GSE launch branch.",
-    risk: "None — MIT, 43k★, very active.",
+    risk: "None: MIT, 43k★, very active.",
     fitsGse: true,
     fitsGsn: true,
     maintained: true,
-    notes: "Priority 1 install. No code reuse needed — skill/plugin only.",
+    notes: "Priority 1 install. No code reuse needed: skill/plugin only.",
   },
   {
     id: "pm-skills",
@@ -85,11 +85,11 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     licenseId: "MIT",
     useCaseSummary:
       "68 PM skills including pm-ai-shipping (/ship-check, /document-app, /security-audit-static, /derive-tests). " +
-      "Purpose-built for 'AI-built app that needs to be made reviewable before launch' — exactly GSE and Lumera.",
+      "Purpose-built for 'AI-built app that needs to be made reviewable before launch': exactly GSE and Lumera.",
     currentStatus: "READY_TO_EVALUATE",
     nextAction:
       "Install in Claude Code. Run /document-app against GSE repo to produce architecture/permissions/secrets docs.",
-    risk: "None — MIT, 12k★, v2.0.0 Jun 2026.",
+    risk: "None: MIT, 12k★, v2.0.0 Jun 2026.",
     fitsGse: true,
     fitsGsn: true,
     maintained: true,
@@ -109,7 +109,7 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     currentStatus: "READY_TO_EVALUATE",
     nextAction:
       "Install as Claude Code skill. Use for market research, line movement context, and GSN trend research.",
-    risk: "Low — MIT, 25k★. Bring-your-own-keys. Treat as research, not redistribution.",
+    risk: "Low: MIT, 25k★. Bring-your-own-keys. Treat as research, not redistribution.",
     fitsGse: true,
     fitsGsn: true,
     maintained: true,
@@ -155,7 +155,7 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     nextAction:
       "Study the CI-driven predict-and-publish architecture. Lift the structure, not the code. " +
       "No license = no direct code reuse. Contact author if code reuse is desired.",
-    risk: "Medium. No open-source license — no right to reuse code directly. Architecture reference only.",
+    risk: "Medium. No open-source license, so no right to reuse code directly. Architecture reference only.",
     fitsGse: true,
     fitsGsn: false,
     maintained: false,
@@ -177,7 +177,7 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     nextAction:
       "If GSE adds a data warehouse or analytical layer, evaluate clausherther/nfl-dbt as the " +
       "transformation layer. SQL models are a blueprint for Prisma/Postgres models even without dbt.",
-    risk: "Low. Apache-2.0 — safe to adopt and modify. Moderate maintenance.",
+    risk: "Low. Apache-2.0: safe to adopt and modify. Moderate maintenance.",
     fitsGse: true,
     fitsGsn: false,
     maintained: true,
@@ -197,12 +197,12 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     currentStatus: "REFERENCE_FILED",
     nextAction:
       "Treat as the methodology reference for GSE's confidence score design. " +
-      "R-based, so methodology transfer only — not code reuse.",
+      "R-based, so methodology transfer only, not code reuse.",
     risk: "None. CC0 = public domain. Copy anything.",
     fitsGse: true,
     fitsGsn: false,
     maintained: true,
-    notes: "CC0 — the cleanest possible reference license.",
+    notes: "CC0: the cleanest possible reference license.",
   },
   {
     id: "sprig-dashboard-espn",
@@ -220,7 +220,7 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
       "Extract and adapt the ESPN public API integration as a resilience fallback for GSE. " +
       "The Odds API is the primary odds source; ESPN covers scores/standings when The Odds API is down. " +
       "Prevents the 4-day silent staleness outage pattern.",
-    risk: "Low. MIT license. ESPN public API has no key requirement — ToS is permissive for this usage pattern.",
+    risk: "Low. MIT license. ESPN public API has no key requirement, and ToS is permissive for this usage pattern.",
     fitsGse: true,
     fitsGsn: false,
     maintained: true,
@@ -240,7 +240,7 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     currentStatus: "FUTURE_CONSIDERATION",
     nextAction: "Revisit at AUTHORITY milestone when GSE has multi-season ROI and tracking data access.",
     risk:
-      "Low-medium. MPL-2.0 is file-level copyleft — usable but modified files must be open-sourced. " +
+      "Low-medium. MPL-2.0 is file-level copyleft: usable but modified files must be open-sourced. " +
       "Overkill for current GSE stage.",
     fitsGse: true,
     fitsGsn: false,
@@ -349,7 +349,7 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
     repo: "https://scores24.live",
     domain: "GSE",
     licensePosture: "REFERENCE_ONLY",
-    licenseId: "All rights reserved — ToS §4.2 prohibits automated access without consent",
+    licenseId: "All rights reserved: ToS §4.2 prohibits automated access without consent",
     useCaseSummary:
       "Consumer sports scores/odds aggregator. Estonian company (Kiito OÜ). " +
       "ToS §4.2 explicitly forbids 'automated programs to interact with the Site'. " +
@@ -364,14 +364,14 @@ export const SPORTS_SOURCE_ROADMAP: readonly SportsSourceEntry[] = [
       "Until then use ESPN public API or The Odds API as alternatives for data.",
     risk:
       "MEDIUM. Automation without written consent violates ToS §4.2. Commercial use requires " +
-      "prior written permission. Upstream data provider unknown — potential secondary liability " +
+      "prior written permission. Upstream data provider unknown: potential secondary liability " +
       "if they relay Sportradar or Stats Perform data. Manual research carries no legal risk.",
     fitsGse: true,
     fitsGsn: false,
     maintained: true,
     notes:
       "Reclassified from EXCLUDED_PERMANENT to PERMISSION_REQUIRED per 2026-06-11 scraping " +
-      "rights framework review. Not excluded — has a viable unlock path via Kiito OÜ outreach. " +
+      "rights framework review. Not excluded: has a viable unlock path via Kiito OÜ outreach. " +
       "Manual UX/competitor analysis allowed. See source-rights-registry.ts (source_id: scores24-live).",
   },
 ];

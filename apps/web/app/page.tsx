@@ -65,6 +65,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               gradient={heroPlate.gradient}
               still={heroPlate.still}
               motion={heroPlate.motion}
+              eager
             />
           )}
           <div aria-hidden="true" className="absolute inset-0 -z-20">

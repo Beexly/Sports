@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Shell, Cards, Badge, DataTable, StatusRibbon, BarChart, SectionHeader } from "../_components";
 import { loadPlayers } from "@/lib/statking/product";
 export const metadata = {
-  title: "Player Status & Movement — Injuries, Roles & Trends",
-  description: "Current injury/role status mapped to fantasy impact, plus the players whose usage, role, or trend is moving most — one place for what changed.",
+  title: "Player Status & Movement: Injuries, Roles & Trends",
+  description: "Current injury/role status mapped to fantasy impact, plus the players whose usage, role, or trend is moving most: one place for what changed.",
   alternates: { canonical: "/stats/injuries" },
 };
 export default function Page() {
@@ -59,7 +59,7 @@ export default function Page() {
 
       <h2 className="mt-2 text-2xl font-semibold text-ion-white">Movement watch</h2>
       <p className="text-ion-1">
-        The players whose role, usage, or trend is moving most — the changes worth acting on before the market catches up.
+        The players whose role, usage, or trend is moving most: the changes worth acting on before the market catches up.
       </p>
       <Badge tone="warn">Real-time email &amp; push delivery is an Elite feature and owner-gated; this is the underlying signal layer.</Badge>
       <SectionHeader eyebrow="Top 15 by trend score" title="Usage & Trend Risers" />

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Shell, Cards, DataTable, BarChart, StatusRibbon } from "../_components";
 import { loadMediaItems } from "@/lib/statking/product";
 export const metadata = {
-  title: "Media Intelligence — Player & Team Mentions",
+  title: "Media Intelligence: Player & Team Mentions",
   description: "A rights-aware media signal layer: where players and teams are discussed, and why it matters.",
   alternates: { canonical: "/stats/media" },
 };
@@ -52,7 +52,7 @@ export default function Page({ searchParams }: { searchParams?: { platform?: str
           { label: "Avg trust", value: avgTrust },
           { label: "Needs activation", value: needsActivation },
         ]} />
-        <p className="text-ion-1">{label} mentions — titles, sources, and detected players only (metadata-level, rights-aware).</p>
+        <p className="text-ion-1">{label} mentions: titles, sources, and detected players only (metadata-level, rights-aware).</p>
         <div>
           <h2 className="text-2xl font-semibold text-ion-white mb-4">{label}</h2>
           <DataTable

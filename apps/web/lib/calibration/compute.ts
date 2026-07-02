@@ -375,15 +375,15 @@ export function computeDiscrimination(
     trend === "improving"
       ? `Observed win rate rises from ${Math.round(low.observedWinRate * 100)}% (${low.label}) to ` +
         `${Math.round(high.observedWinRate * 100)}% (${high.label}) across ${populated.length} buckets` +
-        `${monotonic ? "" : " (with a local dip)"} — confidence is ranking picks correctly. ` +
+        `${monotonic ? "" : " (with a local dip)"}. Confidence is ranking picks correctly. ` +
         "For spread/total markets, absolute win rates near 50% are expected by construction; " +
         "rank quality is the calibration signal that matters."
       : trend === "inverted"
         ? `Observed win rate FALLS from ${Math.round(low.observedWinRate * 100)}% (${low.label}) to ` +
-          `${Math.round(high.observedWinRate * 100)}% (${high.label}) — higher confidence is winning ` +
+          `${Math.round(high.observedWinRate * 100)}% (${high.label}). Higher confidence is winning ` +
           "less often. Treat as a red flag for the scoring weights before promoting confidence to users."
         : `Observed win rate is essentially flat from ${low.label} to ${high.label} ` +
-          `(spread ${spread >= 0 ? "+" : ""}${Math.round(spread * 100)} pts) — confidence is not yet ` +
+          `(spread ${spread >= 0 ? "+" : ""}${Math.round(spread * 100)} pts). Confidence is not yet ` +
           "discriminating between stronger and weaker picks.";
 
   return {

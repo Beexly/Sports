@@ -173,7 +173,7 @@ function buildLaneState(args: {
   const reasons: string[] = [];
 
   if (!args.gates.airwaveEnabled) {
-    reasons.push("AIRWAVE_ENABLED is off — master switch holds all lanes.");
+    reasons.push("AIRWAVE_ENABLED is off: master switch holds all lanes.");
   }
   if (!args.configured) {
     reasons.push("Lane is not configured. No config keys are set.");

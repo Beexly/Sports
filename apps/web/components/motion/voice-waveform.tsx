@@ -42,6 +42,8 @@ export function VoiceWaveform({ className }: { className?: string }) {
 
     let raf = 0;
     let time = 0;
+    let running = false;
+    let inView = true;
 
     const draw = () => {
       ctx.clearRect(0, 0, w, h);
@@ -93,15 +95,49 @@ export function VoiceWaveform({ className }: { className?: string }) {
       ctx.arc(cx, cy, 3 * dpr, 0, Math.PI * 2);
       ctx.fill();
 
-      raf = requestAnimationFrame(draw);
+      if (running) raf = requestAnimationFrame(draw);
     };
 
-    raf = requestAnimationFrame(draw);
+    // Pause the loop while the tab is hidden or the canvas is off-screen;
+    // resume (same frame) when it is watchable again.
+    const stopLoop = () => {
+      running = false;
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+    const startLoop = () => {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(draw);
+    };
+    const onVisibility = () => {
+      if (document.hidden) stopLoop();
+      else if (inView) startLoop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              inView = entries[0]?.isIntersecting ?? true;
+              if (inView && !document.hidden) startLoop();
+              else stopLoop();
+            },
+            { threshold: 0 },
+          )
+        : null;
+    io?.observe(canvas);
+
+    startLoop();
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stopLoop();
+      document.removeEventListener("visibilitychange", onVisibility);
+      io?.disconnect();
       ro.disconnect();
     };
   }, []);

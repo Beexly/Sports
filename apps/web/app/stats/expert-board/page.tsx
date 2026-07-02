@@ -1,7 +1,7 @@
 import { Shell, Cards, DataTable, Badge, StatusRibbon, InsightCard, SectionHeader } from "../_components";
 import { loadExpertRegistry } from "@/lib/statking/product";
 export const metadata = {
-  title: "Expert Board — Tracked Analyst Signals",
+  title: "Expert Board: Tracked Analyst Signals",
   description: "A rights-respecting view of tracked expert and analyst signals across the league.",
   alternates: { canonical: "/stats/expert-board" },
 };
@@ -10,7 +10,7 @@ export default function Page() {
 
   return (
     <Shell title="Expert Board">
-      <StatusRibbon status="blocked" label="Expert signals — rights-gated pending partnerships" />
+      <StatusRibbon status="blocked" label="Expert signals: rights-gated pending partnerships" />
       <Cards items={[
         { label: "Experts", value: experts.length },
         { label: "Signal rights", value: "gated" },
@@ -19,7 +19,7 @@ export default function Page() {
       ]} />
       <InsightCard
         eyebrow="Why This Page Is Gated"
-        headline="Expert predictions are copyrighted — we need permission before automating"
+        headline="Expert predictions are copyrighted, so we need permission before automating"
         body="Fantasy analysts like beat reporters own their predictions. Automated aggregation without a license or partnership agreement violates their rights. We're building outreach to analysts for data-sharing arrangements. Until then, signals are tracked in the registry but not displayed or processed."
         tone="bad"
       />

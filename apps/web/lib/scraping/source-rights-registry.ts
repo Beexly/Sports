@@ -521,9 +521,9 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     notes:
       "Customer Agreement (2025-06-05) §9(d): personal, non-commercial use only; " +
       "§9(l) AI Matters: no scraping/extraction, and Services data may not be used to " +
-      "create/train/improve ANY AI service — a paid subscription does NOT unlock automation. " +
+      "create/train/improve ANY AI service. A paid subscription does NOT unlock automation. " +
       "ONLY legal lane without a license: a human listens on their own subscription and manually " +
-      "logs short factual claims (pundit, claim, date) into Airwave intake — facts with " +
+      "logs short factual claims (pundit, claim, date) into Airwave intake: facts with " +
       "attribution, no recordings, no transcripts, no automated capture.",
   },
 
@@ -557,14 +557,14 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "Step 1: locate the show's OFFICIAL public distribution endpoints (podcast RSS, " +
       "YouTube channel) and record them in evidence_urls. Step 2: counsel review of the " +
       "host platform's terms (YouTube ToS restricts automated access; an official podcast " +
-      "RSS feed's episode METADATA may qualify for approved_public_logged_off — facts only). " +
+      "RSS feed's episode METADATA may qualify for approved_public_logged_off, facts only). " +
       "Step 3: best path is direct permission from Jeff Mans / the show's outlet, which " +
       "unlocks deeper integration and is likely attainable for an independent show.",
     vendor_contact: null,
     notes:
       "Owner-flagged candidate (POLISH_BACKLOG #6) as the licensable alternative to " +
       "SiriusXM corporate (parked per owner). Episode CONTENT is copyrighted expression: " +
-      "the only lane today is the same manual listener log as SiriusXM — a human listens " +
+      "the only lane today is the same manual listener log as SiriusXM: a human listens " +
       "to the public show and manually logs short factual claims (pundit, claim, date) " +
       "into Airwave intake. No recordings, no transcripts, no automated capture until " +
       "the unlock condition is met.",

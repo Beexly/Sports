@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Shell, Cards, DataTable, BarChart, StatusRibbon, SectionHeader } from "../_components";
 import { loadComps, playerNameMap } from "@/lib/statking/product";
 export const metadata = {
-  title: "Player Comps — Statistical Similarity Scores",
+  title: "Player Comps: Statistical Similarity Scores",
   description: "Find a player's closest statistical comparables by shared usage and production features.",
   alternates: { canonical: "/stats/comps" },
 };
@@ -22,7 +22,7 @@ export default function Page() {
         { label: "Method", value: "shared-feature score" }
       ]} />
       <p className="text-ion-1">
-        Each player's closest statistical neighbor, scored on shared usage and production features — a fast way to frame an unknown by a known.
+        Each player's closest statistical neighbor, scored on shared usage and production features: a fast way to frame an unknown by a known.
       </p>
       <SectionHeader eyebrow="By statistical similarity" title="Top Player Comparisons" />
       <div className="grid gap-4 md:grid-cols-2">

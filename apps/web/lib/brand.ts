@@ -132,7 +132,7 @@ export const SURFACES = {
     label: "The Airwave Ledger",
     tagline: "Pundits, on the record.",
     blurb:
-      "On-air sports takes turned into a paraphrased, timestamped, graded record — the same glass-box standard the engine holds itself to.",
+      "On-air sports takes turned into a paraphrased, timestamped, graded record: the same glass-box standard the engine holds itself to.",
     route: "/airwave",
   },
   marketGravity: {

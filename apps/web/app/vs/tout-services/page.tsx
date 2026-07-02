@@ -196,7 +196,7 @@ const WATCHLIST = [
   {
     number: "02",
     title: "Losses disappear from the timeline.",
-    body: "Watch their feed for a week. Note every confident pick. Check back after the games settle. If the wins are still pinned and the losses are nowhere to be found — that's the trick. The math only works if every signal is counted, win or lose.",
+    body: "Watch their feed for a week. Note every confident pick. Check back after the games settle. If the wins are still pinned and the losses are nowhere to be found, that's the trick. The math only works if every signal is counted, win or lose.",
   },
   {
     number: "03",
