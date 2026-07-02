@@ -1,4 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import ws from "ws";
 import {
   getSamplePicks,
   isDemoPicksEnabled,
@@ -194,6 +197,35 @@ function buildClient(): PrismaClient {
       globalForPrisma.prismaStubMode = true;
     }
     return makeStubClient();
+  }
+
+  // Neon serverless HTTP/WebSocket driver (opt-in via NEON_SERVERLESS_DRIVER=true).
+  // Raw TCP to Neon's pooler flakes on serverless cold starts (the recurring
+  // "Can't reach database server at ...neon.tech:5432" cluster in prod). The
+  // serverless driver speaks Neon's protocol over WebSockets, which tolerates
+  // cold starts far better. Ships dark: default path below is byte-identical
+  // until the flag is set, and any adapter failure falls back to the default
+  // driver with a loud warning instead of taking the app down.
+  if (process.env["NEON_SERVERLESS_DRIVER"] === "true") {
+    try {
+      if (!neonConfig.webSocketConstructor && typeof WebSocket === "undefined") {
+        // Node runtimes without a global WebSocket need one for Neon's Pool.
+        neonConfig.webSocketConstructor = ws as unknown as typeof WebSocket;
+      }
+      const pool = new NeonPool({ connectionString: url });
+      const adapter = new PrismaNeon(pool);
+      return new PrismaClient({
+        adapter,
+        log: process.env["NODE_ENV"] === "development" ? ["error", "warn"] : ["error"],
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[@sports/db] NEON_SERVERLESS_DRIVER=true but the serverless adapter " +
+          `failed to initialize (${err instanceof Error ? err.message : String(err)}); ` +
+          "falling back to the default pg driver.",
+      );
+    }
   }
 
   return new PrismaClient({
