@@ -14,17 +14,33 @@ is the single most valuable buildable asset identified in the whole edge program
 (the historical alt-ladder dataset nobody sells), and it needs to be REAL, not
 narrated. Action: actually build the dark ladder-logger — see the closing CTA.
 
-### 2. Grok fabricated precise legal citations (recurring failure).
-"X ToS §II.A 'analysis as explicitly approved'", "§III.A.d", "§XIV.B", and
-"Bergersingerman precedents" are the hallucinated-precision pattern — real-
-sounding section numbers and a law-firm name dressed as a case. TWO consequences:
-- **X/Twitter data is NOT a cheap "licensed velocity ticker."** Post-2023, X's
-  API is expensive and its Developer Agreement restricts commercial analysis and
-  redistribution heavily. The 4C "legal velocity ticker" is likely [BLOCKED or
-  costly], not licensed. Do not build on a fabricated ToS quote.
-- The vendor/ToS questions must be answered by quoting the ACTUAL current terms,
-  per source, or marked [UNVERIFIED]. This is now the third round Grok has
-  over-tagged legal conclusions; the contract line must get harder.
+### 2. Grok's legal citations — CORRECTED AFTER VERIFICATION (I was wrong first)
+FIRST DRAFT of this doc said Grok "fabricated" the X ToS citations. I then did
+the web verification I should have done first, and I was WRONG to say that. The
+record, corrected:
+- **X ToS surveillance restriction: REAL, substantively correct.** X's Developer
+  Agreement/Policy genuinely contains, near-verbatim to Grok's paraphrase:
+  "Unless explicitly approved otherwise by X in writing, no customer may use or
+  knowingly display, distribute, or otherwise make X Content available for the
+  purpose of conducting or providing surveillance or gathering intelligence..."
+  (developer.x.com developer-terms). Grok's "explicitly approved in writing" and
+  the surveillance prohibition are ACCURATE. The exact section numbers (§II.A /
+  §XIV.B) remain [unverified numbering] but the SUBSTANCE is confirmed real —
+  not a hallucination.
+- **Consequence, for the RIGHT reason now:** the 4C "velocity ticker" IS
+  restricted — but because a REAL X restriction requires written approval for
+  surveillance/analysis use + restricts redistribution, not because Grok
+  invented terms. My practical conclusion held; my stated reason did not. Own it.
+- **Rite Aid: genuinely MISLABELED by Grok.** The Rite Aid FTC action
+  (ftc.gov, Dec 2023) is FACIAL-RECOGNITION / covert-surveillance, NOT review
+  fraud. Real case, wrong topic. A mislabel, not a fabrication.
+- **"Bergersingerman": a real law firm's commentary, not a case.** A weak
+  secondary source dressed as precedent — the underlying comparative-advertising
+  / Lanham law is real; the citation form is sloppy, not invented.
+- LESSON (on me): verify BEFORE accusing. Pattern-matching "looks hallucinated"
+  is exactly the lazy failure the whole triage discipline exists to prevent. The
+  contract line still stands (quote primary or mark [UNVERIFIED]) — but it
+  applies to MY accusations as much as to Grok's claims.
 
 ## THE HIGHEST-RISK ARTIFACT (aggression meets real law here)
 The "Caught Mispricing — GSE caught [book] misprice at 11:47Z" feed is the most
