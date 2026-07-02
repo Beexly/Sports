@@ -11,12 +11,15 @@ name: Refresh odds (intraday)
 
 on:
   schedule:
-    # UTC. Covers US slate rhythm: morning lines, afternoon moves, pre-first-pitch,
-    # and an evening pass for late games. (Vercel's own 10:00 UTC cron still runs.)
-    - cron: "0 14 * * *"   # 10:00 AM ET - morning line moves
-    - cron: "0 18 * * *"   # 2:00 PM ET  - afternoon sharpening
-    - cron: "0 22 * * *"   # 6:00 PM ET  - pre-first-pitch refresh
-    - cron: "30 23 * * *"  # 7:30 PM ET  - evening slate final pass
+    # UTC. Six intraday passes covering the US slate rhythm, on top of Vercel's
+    # own 10:00 UTC (6am ET) cron. With lines never more than ~2-3h old at any
+    # publish moment, ODDS_FRESHNESS_MAX_HOURS can be tightened from 12 toward 4.
+    - cron: "0 13 * * *"   # 9:00 AM ET  - overnight/morning line moves
+    - cron: "0 15 * * *"   # 11:00 AM ET - late-morning sharpening
+    - cron: "0 17 * * *"   # 1:00 PM ET  - afternoon slates go live
+    - cron: "0 19 * * *"   # 3:00 PM ET  - pre-evening positioning
+    - cron: "0 21 * * *"   # 5:00 PM ET  - lineups posted, sharp money lands
+    - cron: "30 23 * * *"  # 7:30 PM ET  - first-pitch final pass
   workflow_dispatch: {}    # manual "Run workflow" button for testing
 
 jobs:
