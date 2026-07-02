@@ -186,7 +186,7 @@ const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | b
 const FAQ = [
   {
     q: "Is there a free trial on Pro or Elite?",
-    a: "No free trial, but every paid plan has a 3-day money-back window. Cancel any time from your dashboard.",
+    a: "No free trial, but every card plan has a 3-day money-back window. Cancel any time from your dashboard. Crypto passes are fixed-term and final once confirmed on-chain.",
   },
   {
     q: "What is founding-member pricing?",
@@ -463,10 +463,11 @@ export default function PricingPage() {
               <h2 className="mt-2 text-xl font-bold text-white">Annual passes, paid in crypto.</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
                 One payment through Coinbase Commerce buys a full year at the same
-                founding-member price. Crypto passes are fixed-term: no card on file,
-                no auto-renew, and a reminder before your year ends. Crypto payments
-                are final once confirmed on-chain; refunds are handled manually and
-                at current value, so read the plan details first.
+                founding-member price. Crypto passes are fixed-term: no card on file
+                and no auto-renew. Your pass runs a full year, then simply ends, and
+                you can buy another whenever you like. Unlike our card plans, crypto
+                payments are final once confirmed on-chain, and any refund is handled
+                manually at current value, so read the plan details before you pay.
               </p>
               <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                 <CryptoPassButton tier="PRO" />
@@ -477,8 +478,9 @@ export default function PricingPage() {
 
           {/* Refund note */}
           <p className="mt-12 text-center text-xs text-ion-2">
-            No free trial. Every paid plan has a 3-day money-back window. Cancel any time
-            from your dashboard. Prices shown are founding-member rates.
+            No free trial. Every card plan has a 3-day money-back window; crypto passes
+            are final (see Pay with crypto). Cancel any time from your dashboard. Prices
+            shown are founding-member rates.
           </p>
         </div>
       </main>

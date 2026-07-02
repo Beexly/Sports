@@ -53,7 +53,18 @@ export async function getUserEntitlements(userId: string): Promise<Entitlements>
       where: {
         userId,
         OR: [
-          { status: { in: ["ACTIVE", "TRIALING"] } },
+          {
+            status: { in: ["ACTIVE", "TRIALING"] },
+            // Crypto passes are fixed-term with NO renewal webhook or cron to
+            // flip them out of ACTIVE, so their expiry is enforced here at read
+            // time. Stripe rows keep webhook-driven expiry (their
+            // currentPeriodEnd can legitimately lag), so gate only the crypto
+            // provider on the period end.
+            OR: [
+              { paymentProvider: { not: "COINBASE_COMMERCE" } },
+              { currentPeriodEnd: { gt: new Date() } },
+            ],
+          },
           // Failed payment in dunning: keep access through the grace window.
           { status: "PAST_DUE", pastDueSince: { gte: graceCutoff } },
         ],
