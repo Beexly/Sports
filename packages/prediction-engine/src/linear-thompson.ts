@@ -286,6 +286,16 @@ export function updateLinTs(
     const rowI = A[i]!;
     for (let j = 0; j < d; j++) rowI[j] = rowI[j]! + xi * context[j]!;
   }
+  // Self-audit finding: finite context/reward can still OVERFLOW A or b to
+  // Infinity (e.g. a 1e200 context makes x·x^T non-finite; a 1e308 reward
+  // overflows b), which would silently corrupt the state and make every later
+  // selectAction/thetaEstimate return null/NaN. Reject the update instead —
+  // the caller keeps its prior valid state.
+  for (let i = 0; i < d; i++) {
+    if (!Number.isFinite(b[i]!)) return null;
+    const rowI = A[i]!;
+    for (let j = 0; j < d; j++) if (!Number.isFinite(rowI[j]!)) return null;
+  }
   return {
     dim: state.dim,
     lambda: state.lambda,
@@ -306,5 +316,10 @@ export function thetaEstimate(state: LinTsState): number[] | null {
   if (!state) return null;
   const L = cholesky(state.A);
   if (!L) return null;
-  return solvePosteriorMean(L, state.b).map((t) => round(t));
+  // Round FIRST, then guard: even a finite posterior mean can overflow the
+  // display-rounding (round(1e308) = 1e308*1e6/1e6 = Infinity) from an extreme
+  // reward. The honest guarantee is a finite estimate OR null — never NaN/Infinity.
+  const rounded = solvePosteriorMean(L, state.b).map((t) => round(t));
+  if (!rounded.every((t) => Number.isFinite(t))) return null;
+  return rounded;
 }

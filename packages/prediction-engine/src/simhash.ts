@@ -133,7 +133,10 @@ export function signature(model: SimhashModel, vector: readonly number[]): Simha
     if (!Number.isFinite(x)) return null;
     normSq += x * x;
   }
-  if (normSq === 0) return null;
+  // Reject zero vector AND overflow: finite entries can still overflow normSq to
+  // Infinity (e.g. 1e200^2), which would silently make magnitudes NaN
+  // (|dot|/Infinity). Self-audit finding — return null, not a garbage signature.
+  if (!Number.isFinite(normSq) || normSq === 0) return null;
   const norm = Math.sqrt(normSq);
   let sig = 0n;
   const magnitudes = new Array<number>(model.bits);

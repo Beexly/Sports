@@ -211,3 +211,20 @@ describe("immutability", () => {
     expect(next.step).toBe(state.step + 1);
   });
 });
+
+describe("linear-thompson — self-audit: overflow is refused, state stays valid", () => {
+  it("updateLinTs rejects a context that overflows A (Infinity), preserving prior state", () => {
+    const s = createLinTsState(2, { seed: 1 })!;
+    expect(updateLinTs(s, [1e200, 1e200], 1)).toBeNull(); // x·x^T overflows -> refuse
+    // prior state still usable
+    expect(selectAction(s, [[1, 0], [0, 1]])).not.toBeNull();
+  });
+  it("updateLinTs rejects a reward that overflows b, and thetaEstimate never returns NaN", () => {
+    let s = createLinTsState(2, { seed: 1 })!;
+    s = updateLinTs(s, [1, 0], 1e308)!;      // b[0] = 1e308 (finite, accepted)
+    expect(updateLinTs(s, [1, 0], 1e308)).toBeNull(); // would push b to Infinity -> refuse
+    // thetaEstimate never leaks NaN/Infinity: a finite estimate OR an honest null.
+    const theta = thetaEstimate(s);
+    expect(theta === null || theta.every((t) => Number.isFinite(t))).toBe(true);
+  });
+});

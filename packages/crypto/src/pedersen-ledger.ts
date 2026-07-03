@@ -158,10 +158,23 @@ export function aggregateCommitments(commitments: readonly Commitment[]): Commit
   }
 }
 
-/** Open (verify) a commitment against a claimed (value, blinding). */
+/**
+ * Open (verify) a commitment against a claimed (value, blinding). Compares the
+ * decoded POINTS, not the raw hex strings: a valid commitment presented in a
+ * non-canonical-but-equivalent encoding (e.g. uppercase hex, as some stores /
+ * display layers emit) decodes to the same point and MUST still open. Self-audit
+ * finding — raw `===` string-compared and false-negatived such inputs. Malformed
+ * hex → false (never throws). verifyLedgerAggregate already canonicalized via
+ * fromHex/toHex; this brings openCommitment to the same robustness.
+ */
 export function openCommitment(commitment: Commitment, value: bigint, blinding: bigint): boolean {
   const recomputed = commit(value, blinding);
-  return recomputed !== null && recomputed === commitment;
+  if (recomputed === null) return false;
+  try {
+    return Point.fromHex(commitment).equals(Point.fromHex(recomputed));
+  } catch {
+    return false;
+  }
 }
 
 /**

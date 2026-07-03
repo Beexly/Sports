@@ -131,3 +131,14 @@ describe("secp256k1 Pedersen — ledger aggregate (sealed-slate payoff)", () => 
     expect(verifyLedgerAggregate([], 0n, 0n)).toBe(false);
   });
 });
+
+describe("secp256k1 Pedersen — self-audit: openCommitment is encoding-canonical", () => {
+  it("opens a valid commitment presented in UPPERCASE hex (point compare, not string ===)", () => {
+    const c = commit(1234n, 99n)!;
+    expect(openCommitment(c, 1234n, 99n)).toBe(true);
+    expect(openCommitment(c.toUpperCase(), 1234n, 99n)).toBe(true); // was a false-negative
+    // still rejects a wrong opening and malformed hex
+    expect(openCommitment(c, 1235n, 99n)).toBe(false);
+    expect(openCommitment("nothex", 1234n, 99n)).toBe(false);
+  });
+});

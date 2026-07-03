@@ -344,3 +344,13 @@ describe("degenerate refusals", () => {
     expect(hits.length).toBeLessThanOrEqual(3);
   });
 });
+
+describe("simhash — self-audit: overflow returns null, not a garbage signature", () => {
+  it("rejects a finite vector whose normSq overflows to Infinity", () => {
+    const m = buildSimhashModel(2, 8, 3)!;
+    // 1e200 is finite but 1e200^2 = 1e400 = Infinity -> magnitudes would be NaN.
+    expect(signature(m, [1e200, 1e200])).toBeNull();
+    // a normal vector still works
+    expect(signature(m, [1, 2])).not.toBeNull();
+  });
+});
