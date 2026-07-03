@@ -5,8 +5,9 @@ Updated: 2026-07-03.
 Branch:
 - `codex/fable-nfl-evidence-integration`
 
-Commit hash:
-- recorded in the final Codex response after commit creation.
+Status:
+- This second-level report is extended by `docs/fable/CODEX_THIRD_PASS_REPORT.md` and `docs/fable/master/MASTER_FINAL_REPORT.md`.
+- The earlier broad typecheck failure is superseded by `docs/fable/master/TYPECHECK_DECISION.md`; the full workspace typecheck now passes.
 
 Added beyond original plan:
 - claim-to-evidence ledger
@@ -23,13 +24,23 @@ Added beyond original plan:
 - no-cost CI workflow
 - GitHub PR/issue package
 
+Third-pass additions:
+- AWS decision engine
+- AWS decision-engine evidence schema
+- plugin-to-repo crosswalk
+- governed AWS audit
+- expanded AWS service decision matrix
+- AWS show-teeth strategy
+- master audit state
+- GitHub publication path
+
 Commands run:
 - `npm run fable:evidence`
 - `npm run fable:claims`
 - `npm run fable:sources`
 - `npm run fable:aws-gates`
 - `npm run fable:demo`
-- `npm run test --workspace=apps/web -- lib/fable/evidence/evidence-harness.test.ts lib/fable/docs-claims.test.ts lib/fable/aws-gates.test.ts lib/fable/claim-scanner.test.ts`
+- targeted FABLE web tests
 - `npm run test --workspace=packages/prediction-engine`
 - `npm run test --workspace=packages/data-ingestion`
 - `npm run typecheck --workspaces --if-present`
@@ -44,16 +55,17 @@ Tests passed:
 - `npm run fable:sources`: passed.
 - `npm run fable:aws-gates`: passed.
 - `npm run fable:demo`: passed.
-- targeted FABLE web tests: 4 files / 11 tests passed.
+- targeted FABLE web tests: 9 files / 33 tests passed.
 - prediction-engine tests: 71 files / 738 tests passed.
 - data-ingestion tests: 16 files / 131 tests passed.
-- `npm run guard:trust`: passed after scanner detection literals were encoded.
-- `npm run guard:secrets`: passed after staging; scanned 3051 tracked files and found no secrets.
+- full workspace typecheck: passed.
+- `npm run guard:trust`: passed, scanned 1103 files.
+- `npm run guard:secrets`: passed after final staging, scanned 3063 tracked files and found no secrets.
 - `git diff --check`: passed.
 
-Tests failed:
-- `npm run typecheck --workspaces --if-present` still fails in `@sports/web` because imported `packages/prediction-engine/src/pedersen-ledger.ts` and `packages/prediction-engine/src/simhash.ts` use BigInt literals while the web TypeScript target is below ES2020.
+Blocked:
 - `gh auth status` fails because GitHub CLI is unauthenticated; live issue/PR creation is blocked.
+- `actionlint` is unavailable on this host; workflow YAML was manually inspected.
 
 Unsupported claims found:
 - see `docs/fable/evidence/UNSUPPORTED_CLAIMS.md`.
@@ -86,7 +98,6 @@ Top 10 edge candidates:
 - market-open forensic report
 
 Top 10 blockers:
-- broad workspace typecheck failure
 - no measured model gain
 - no legal review marker
 - no AWS account approval
@@ -96,8 +107,9 @@ Top 10 blockers:
 - no live public-data demo
 - no MC Dropout runtime approval
 - no full OneNote claim extractor
+- no GitHub CLI auth
 
-What is visible on GitHub:
+What is visible locally:
 - root README FABLE link
 - `docs/fable/INDEX.md`
 - evidence ledger and validators
@@ -111,7 +123,7 @@ Claude must verify:
 - commit hash
 - ledger coverage
 - docs scanner results
-- workflow syntax
+- workflow syntax if `actionlint` is installed
 - whether GitHub auth exists before issue creation
 
 Owner decisions needed:

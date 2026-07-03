@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { buildFableSourceRegistry } from "../source-registry";
 import {
   validateAwsGateDefaults,
+  validateAwsDecisionEngineDefaults,
   validateClaimLedger,
   validateFableSourceRegistryEntries,
   validateGithubVisibility,
@@ -57,6 +58,7 @@ describe("FABLE evidence harness", () => {
   it("validates source registry and AWS default gates", () => {
     expect(validateFableSourceRegistryEntries(buildFableSourceRegistry()).ok).toBe(true);
     expect(validateAwsGateDefaults().ok).toBe(true);
+    expect(validateAwsDecisionEngineDefaults().ok).toBe(true);
   });
 
   it("validates GitHub navigation paths", () => {

@@ -3,8 +3,15 @@
 Branch:
 - `codex/fable-nfl-evidence-integration`
 
+Status:
+- Extended by `docs/fable/CODEX_THIRD_PASS_REPORT.md`.
+- Master handoff is now `docs/fable/master/MASTER_FINAL_REPORT.md`.
+- The previous workspace typecheck failure is resolved; see `docs/fable/master/TYPECHECK_DECISION.md`.
+
 Changed areas:
 - `apps/web/lib/fable/evidence/*`
+- `apps/web/lib/fable/aws-decision-engine.ts`
+- `apps/web/lib/fable/aws-decision-engine.test.ts`
 - `scripts/fable-*.ts`
 - `docs/fable/evidence/*`
 - `docs/fable/demo/*`
@@ -14,6 +21,7 @@ Changed areas:
 - `docs/fable/red-team/*`
 - `docs/fable/validation/*`
 - `docs/fable/github/*`
+- `docs/fable/master/*`
 - `schemas/fable/*`
 - `.github/workflows/fable-evidence.yml`
 - `package.json`
@@ -21,12 +29,11 @@ Changed areas:
 Tests to run:
 - `npm run fable:evidence`
 - `npm run fable:demo`
-- `npm run test --workspace=apps/web -- lib/fable/evidence/evidence-harness.test.ts lib/fable/docs-claims.test.ts lib/fable/aws-gates.test.ts`
+- `npm run fable:aws-gates`
+- `npm run test --workspace=apps/web -- lib/fable/evidence/evidence-harness.test.ts lib/fable/docs-claims.test.ts lib/fable/aws-gates.test.ts lib/fable/aws-decision-engine.test.ts`
+- `npm run typecheck --workspaces --if-present`
 - `npm run guard:secrets`
 - `npm run guard:trust`
-
-Known failure:
-- Workspace typecheck previously failed because `apps/web` targets below ES2020 while importing BigInt-literal prediction-engine files.
 
 Unsupported claims:
 - See `docs/fable/evidence/UNSUPPORTED_CLAIMS.md`.
@@ -57,7 +64,7 @@ Red-team status:
 
 Do not trust yet:
 - model gain
-- broad legal clearance
+- broad legal approval
 - live AWS setup
 - paid labeling
 - public demo freshness

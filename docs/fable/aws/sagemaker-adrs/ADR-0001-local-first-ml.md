@@ -17,3 +17,7 @@ Repo impact: keeps tests local.
 Rollback path: remove local experiment branch.
 
 Owner approval needed: yes for cloud ML.
+
+Level mapping: Level 0/1 only.
+
+Adoption trigger: versioned model artifact, approved data manifest, and owner-approved cost ceiling.

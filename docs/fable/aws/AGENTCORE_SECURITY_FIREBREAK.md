@@ -8,20 +8,29 @@ Global rules:
 - no external-source automation by default
 - no publishing authority by default
 - no restricted-source retrieval
+- no secret-reading authority by default
+- no production write authority by default
+- no secrets in memory
+- no model-edge claims without measured evidence
 - all tool use logged
 - owner approval required for any write outside docs/evidence lanes
 
-Agents:
-- JARVIS / CIO
-- TAL / data reliability
-- SCOUT / model/picks
-- Legal/source-risk sentinel
-- Calibration auditor
-- Market forensic agent
-- Content/briefing agent
-- Partner-demo agent
-- Revenue/pricing agent
-- GitHub triage agent
+Agent tiers:
+- JARVIS / CIO: Tier 0-1 only until owner approval.
+- TAL / data reliability: Tier 0-1 only; source changes require legal/source owner review.
+- SCOUT / model/picks: Tier 0-1 only; model runtime requires owner approval.
+- Legal/source-risk sentinel: Tier 0 only.
+- Calibration auditor: Tier 0-1 only; promotion requires owner approval.
+- Market forensic agent: Tier 0-1 only; live mode remains disabled by default.
+- Content/briefing agent: Tier 0 only; publishing requires owner approval.
+- Partner-demo agent: Tier 0-1 only; partner data requires legal/partner approval.
+- Revenue/pricing agent: Tier 0 only; billing changes prohibited.
+- GitHub triage agent: Tier 0 only unless GitHub auth and owner approval exist.
+
+Permission source of truth:
+- `docs/fable/aws/AGENT_TOOL_PERMISSION_MATRIX.md`
+- `docs/fable/aws/AGENT_EVALUATION_RUBRICS.md`
+- `apps/web/lib/fable/aws-decision-engine.ts`
 
 Rollback:
 - disable env gate

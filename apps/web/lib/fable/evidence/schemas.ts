@@ -78,6 +78,30 @@ export const AwsGateConfigSchema = z.object({
   FABLE_AWS_MAX_MONTHLY_COST_USD: z.literal("0"),
 });
 
+export const AwsDecisionEngineEvaluationSchema = z.object({
+  actionTier: z.enum([
+    "tier0_local_only",
+    "tier1_local_validation",
+    "tier2_read_only_discovery",
+    "tier3_reversible_change",
+    "tier4_cost_impacting_change",
+    "tier5_destructive_production_security",
+  ]),
+  blastRadius: z.enum(["low", "medium", "high", "critical"]),
+  costRisk: z.enum(["low", "medium", "high", "critical"]),
+  iamRisk: z.enum(["low", "medium", "high", "critical"]),
+  dataRightsRisk: z.enum(["low", "medium", "high", "critical"]),
+  productionRisk: z.enum(["low", "medium", "high", "critical"]),
+  reversibility: z.enum(["easy", "planned", "hard", "destructive"]),
+  approvalRequired: z.boolean(),
+  allowed: z.boolean(),
+  allowedByDefault: z.boolean(),
+  requiredDryRunCommand: z.boolean(),
+  requiredRollbackField: z.boolean(),
+  requiredOwnerDecision: z.boolean(),
+  blockers: z.array(z.string()),
+});
+
 export const ForensicReportInputSchema = z.object({
   fixture_id: z.string().min(1),
   source_id: z.string().min(1),

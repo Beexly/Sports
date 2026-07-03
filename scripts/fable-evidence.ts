@@ -5,6 +5,7 @@ import { scanUnsupportedFableClaims } from "../apps/web/lib/fable/claim-scanner"
 import { buildFableSourceRegistry } from "../apps/web/lib/fable/source-registry";
 import {
   validateAwsGateDefaults,
+  validateAwsDecisionEngineDefaults,
   validateClaimLedger,
   validateFableSourceRegistryEntries,
   validateGithubVisibility,
@@ -59,7 +60,7 @@ function validateVisibility(): readonly EvidenceValidationIssue[] {
 }
 
 function validateAws(): readonly EvidenceValidationIssue[] {
-  return validateAwsGateDefaults().issues;
+  return [...validateAwsGateDefaults().issues, ...validateAwsDecisionEngineDefaults().issues];
 }
 
 function runMode(mode: string): readonly EvidenceValidationIssue[] {

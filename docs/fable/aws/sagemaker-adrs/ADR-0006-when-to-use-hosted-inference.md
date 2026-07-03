@@ -15,3 +15,13 @@ Why not now:
 Rollback path: local batch inference.
 
 Owner approval needed: yes.
+
+Additional gates:
+- budget and alarm are approved
+- endpoint IAM and network access are scoped
+- monitoring and rollback are ready before traffic
+
+Rollback detail:
+- route traffic back to local/current inference
+- disable endpoint
+- preserve prediction and monitoring logs

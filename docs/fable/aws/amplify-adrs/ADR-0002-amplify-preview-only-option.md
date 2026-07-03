@@ -1,6 +1,6 @@
 # ADR-0002: Amplify Preview-Only Option
 
-Decision: possible later spike.
+Decision: preview-only spike later.
 
 Value:
 - branch previews
@@ -13,6 +13,14 @@ Blocked until:
 - env var review
 - SSR compatibility test
 - source rights review for displayed data
+- GitHub auth or manual branch connection approval
+- rollback path preserving current host
 
 Rollback:
 - delete preview app after export of logs.
+
+Hard limits:
+- no domain
+- no production traffic
+- no service role creation by Codex
+- no secret value copy by Codex

@@ -1,49 +1,79 @@
 # Public Data Forensic Report
 
-Fixture identity:
+Updated: 2026-07-03
+
+Fixture path:
+- `docs/fable/demo/fixture-public-forensic.json`
+
+Command:
+
+```bash
+npm run fable:demo
+```
+
+Exact fixture identity:
 - `fixture-nfl-public-001`
 
-Data source:
-- Fixture-only record using the `nflverse` source id.
+Exact output from the verified command:
 
-Source freshness:
-- Fixture value: 42 minutes.
-- This is not a live feed freshness claim.
+```json
+{
+  "fixture_id": "fixture-nfl-public-001",
+  "gse_flags": [
+    "model-market probability disagreement",
+    "public event timing changed after market open",
+    "depth chart instability requires review"
+  ],
+  "probability_delta": 0.11,
+  "uncertainty_flag": true,
+  "would_not_claim": [
+    "betting edge",
+    "prediction superiority",
+    "live market accuracy",
+    "official tracking-data equivalence"
+  ]
+}
+```
 
-Derived features:
-- injury timing delta
-- depth chart instability
-- source freshness minutes
+Probability delta definition:
+- `abs(current_model_probability - market_open_probability)`.
+- Fixture values: `abs(0.59 - 0.48) = 0.11`.
 
-Model disagreement or uncertainty:
-- Market-open probability: 0.48.
-- Current model probability: 0.59.
-- Fixture probability delta: 0.11.
-- GSE would flag model-market probability disagreement.
+Why fixture-only matters:
+- no scraping
+- no network
+- no proprietary data
+- no keys
+- no paid provider calls
+- reproducible in CI/local tests
 
-Calibration caveat:
-- No calibration improvement is claimed.
-- This fixture does not estimate Brier, ECE, or hit rate.
+What the demo proves:
+- the checked-in fixture parses
+- the local forensic demo computes the expected probability delta
+- the output carries uncertainty and explicit non-claims
+- public event timing and depth-chart instability can be represented as review flags
 
-Drift or segment caveat:
-- The fixture does not have enough sample size for segment drift.
+What the demo does not prove:
+- live market accuracy
+- model improvement
+- data rights for any live source
+- live feed freshness
+- official tracking-data equivalence
+- production deployment
 
-Market movement caveat:
-- The fixture approximates market-open versus current-model disagreement.
-- It does not verify live book movement.
+Falsification:
+- change the fixture probabilities and the delta must change deterministically
+- remove required fixture fields and schema parsing must fail
+- add live-source claims without evidence and `npm run fable:claims` should fail
 
-What GSE would flag:
-- Model-market probability disagreement.
-- Public event timing changed after market open.
-- Depth chart instability requires review.
+Live-public mode would require:
+- `GSE_FABLE_LIVE_PUBLIC_DEMO_ENABLED=true`
+- approved public source list
+- source-rights registry entry
+- no secrets in logs
+- network-safe fetch policy
+- replayable command output
+- owner approval
 
-What GSE would not claim:
-- Betting edge.
-- Prediction superiority.
-- Live market accuracy.
-- Official tracking-data equivalence.
-
-Why this is safe:
-- It is checked-in fixture data.
-- It uses a source id already present in the rights registry.
-- It does not scrape, store, or redistribute live third-party data.
+Current live-public setting:
+- `GSE_FABLE_LIVE_PUBLIC_DEMO_ENABLED=false`

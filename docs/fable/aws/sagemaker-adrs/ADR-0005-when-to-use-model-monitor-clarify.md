@@ -13,3 +13,10 @@ Why not now:
 Rollback path: local PSI/KL/chi-square and safe segment parity reports.
 
 Owner approval needed: yes.
+
+Additional gates:
+- monitored baselines exist
+- fairness/explainability questions are owner-approved
+- report access controls are documented
+
+Reject now because no hosted inference or recurring AWS prediction stream exists.

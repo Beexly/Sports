@@ -15,5 +15,20 @@ The following claims are explicitly downgraded.
 | production-ready | false as a broad claim | No deployment, source-rights, data, and typecheck evidence supports this. |
 | AWS deployed | false | No AWS account mutation or deploy occurred. |
 | official NGS | unsupported without source-specific evidence | nflverse/NGS-related repo surfaces exist, but official licensed tracking status must not be inferred. |
+| full leverage complete | unsupported | AWS service leverage is scored and gated, not live-complete. |
+| Ground Truth Plus integrated | false for this repo | Local workflow pattern only; no AWS provider configured. |
 
 The scanner allows these phrases only when clearly marked historical, unverified, unsupported, blocked, false, or tied to an evidence id.
+
+## OneNote And Historical Prompt Claims
+
+These exact historical phrases are downgraded:
+
+- unsupported historical claim: `legal cleared`
+- unsupported historical claim: `superior edge`
+- unsupported historical claim: `parity+`
+- unsupported historical claim: `.5+ gain`
+- false historical claim for this repo: `Ground Truth Plus integrated`
+- false broad-status claim until all checks pass: `green cycles`
+- unsupported historical claim: `official NGS-like parity`
+- unsupported historical claim: `full leverage complete`

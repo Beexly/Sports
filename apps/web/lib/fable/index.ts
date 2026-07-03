@@ -1,4 +1,5 @@
 export * from "./aws-gates";
+export * from "./aws-decision-engine";
 export * from "./claim-scanner";
 export * from "./drift";
 export * from "./evidence/forensic-demo";

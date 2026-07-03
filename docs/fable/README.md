@@ -9,7 +9,7 @@ This system is a repo-native evidence machine for FABLE/NFL and AWS research. It
 What is proven:
 - Source status can be adapted from the existing rights registry.
 - FABLE uncertainty, labeling, drift, parity, AWS gate, and evidence harness primitives have targeted tests.
-- AWS deploy and paid-resource gates default off.
+- AWS deploy, paid-resource, and decision-engine gates default off for risky AWS action.
 - GitHub navigation exists from the root README into this folder.
 
 What is not proven:
@@ -42,4 +42,4 @@ Current scope:
 Nothing in this folder changes provider accounts, deploys infrastructure, creates paid labeling jobs, or grants rights beyond the existing registry.
 
 Navigation:
-Root README -> `docs/fable/README.md` -> `docs/fable/INDEX.md` -> `docs/fable/evidence/EVIDENCE_INDEX.md` -> `docs/fable/CODEX_SECOND_LEVEL_REPORT.md`.
+Root README -> `docs/fable/README.md` -> `docs/fable/INDEX.md` -> `docs/fable/evidence/EVIDENCE_INDEX.md` -> `docs/fable/master/MASTER_FINAL_REPORT.md`.

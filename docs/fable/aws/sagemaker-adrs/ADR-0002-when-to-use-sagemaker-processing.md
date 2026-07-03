@@ -15,3 +15,13 @@ Do not use now:
 Rollback path: run local script on fixture/replay data.
 
 Owner approval needed: yes.
+
+Additional gates:
+- scoped IAM role and deletion path exist
+- dry-run artifact exists
+- source rights allow AWS processing
+
+Reject when:
+- local scripts are sufficient
+- source rights are unknown
+- no reproducible dataset manifest exists

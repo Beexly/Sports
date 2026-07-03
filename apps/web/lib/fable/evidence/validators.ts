@@ -1,6 +1,11 @@
 import { validateAwsCostAndDeployGates } from "../aws-gates";
+import { evaluateAwsDecision } from "../aws-decision-engine";
 import type { FableSourceRegistryEntry } from "../source-registry";
-import { ClaimEvidenceLedgerSchema, type ClaimEvidenceLedger } from "./schemas";
+import {
+  AwsDecisionEngineEvaluationSchema,
+  ClaimEvidenceLedgerSchema,
+  type ClaimEvidenceLedger,
+} from "./schemas";
 
 export type EvidenceValidationIssue = {
   readonly code: string;
@@ -109,6 +114,32 @@ export function validateAwsGateDefaults(): EvidenceValidationReport {
   if (paid.allowed) issues.push(error("aws-paid-default", "aws.paid", "Paid resources must default off."));
   if (!paid.blockers.includes("Estimated monthly cost exceeds FABLE_AWS_MAX_MONTHLY_COST_USD.")) {
     issues.push(error("aws-spend-ceiling", "aws.cost", "Missing spend ceiling must block paid estimates."));
+  }
+
+  return report(issues);
+}
+
+export function validateAwsDecisionEngineDefaults(): EvidenceValidationReport {
+  const deploy = evaluateAwsDecision({ action: "deploy", mutatesAwsAccount: true });
+  const paid = evaluateAwsDecision({ action: "paid_model_call", usesPaidService: true });
+  const dns = evaluateAwsDecision({ action: "dns_or_production_change", touchesDns: true });
+  const docs = evaluateAwsDecision({ action: "local_docs" });
+  const issues: EvidenceValidationIssue[] = [];
+
+  [deploy, paid, dns, docs].forEach((decision, index) => {
+    const parsed = AwsDecisionEngineEvaluationSchema.safeParse(decision);
+    if (!parsed.success) {
+      issues.push(error("aws-decision-schema", `aws.decision.${index}`, parsed.error.message));
+    }
+  });
+
+  if (deploy.allowed) issues.push(error("aws-decision-deploy", "aws.decision.deploy", "Deploy must be blocked by default."));
+  if (paid.allowed) issues.push(error("aws-decision-paid", "aws.decision.paid", "Paid model calls must be blocked by default."));
+  if (dns.blastRadius !== "critical" || dns.allowed) {
+    issues.push(error("aws-decision-dns", "aws.decision.dns", "Production DNS changes must be critical and blocked."));
+  }
+  if (!docs.allowed || !docs.allowedByDefault) {
+    issues.push(error("aws-decision-docs", "aws.decision.docs", "Local docs-only changes must be allowed by default."));
   }
 
   return report(issues);

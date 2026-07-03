@@ -1,16 +1,59 @@
 # AWS Service Scorecard
 
-| Service | Fit | Current repo status | Gate |
-| --- | --- | --- | --- |
-| Amplify Hosting | Possible fit for preview hosting of the Next.js app | No app configured | Owner must approve deploy target and cost cap |
-| Bedrock AgentCore | Possible future agent runtime/control plane | Docs only | Requires agent threat model, spend policy, and tool allowlist |
-| SageMaker Pipelines/Model Registry | Possible future MLOps ladder | Existing models are local/package code, not SageMaker artifacts | Requires ML runtime decision and model artifact policy |
-| SageMaker Model Cards | Good documentation pattern | Not configured | Can be mirrored in docs before AWS use |
-| AWS Clean Rooms | Possible partner collaboration pattern | No partner data or collaboration configured | Requires partner, contract, and query controls |
-| S3 | Possible storage for approved artifacts | Not configured | Must inherit source storage rights |
-| CloudWatch | Useful if deployed | Not configured | Only after deployment approval |
+Updated: 2026-07-03
 
-Official source notes:
-- Amplify supports server-side rendered Next.js apps, including Next.js 15, according to AWS Amplify Hosting docs.
-- SageMaker Model Registry catalogs model versions, metadata, approval status, lineage, and deployment stages.
-- AWS Clean Rooms is for secure collaboration without revealing underlying data to one another.
+Default decision posture: reject for now, monitor, or no-cost spike. "Adopt later" requires evidence and owner approval. "Adopt now" is not used in this repo because no live AWS account mutation, billing approval, or deployment approval exists.
+
+| Service | Use case | Current repo fit | Minimum useful implementation | No-cost spike path | Cost risk | IAM/security risk | Data/legal risk | Ops complexity | Provider coupling risk | Partner credibility value | Rejection criteria | Adoption trigger | Decision |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Amplify | Preview hosting for app/demo surfaces | partial | branch preview only | docs skeleton and build review | medium | medium | low | medium | medium | medium | current host is cheaper or SSR mismatch | approved preview need | preview-only spike later |
+| CloudFront | CDN edge for static/demo assets | low | distribution in front of approved origin | architecture ADR only | medium | medium | low | medium | medium | medium | no deployed AWS origin | approved AWS hosting path | monitor |
+| Route 53 | DNS | low | hosted zone and controlled records | none beyond runbook | low | high | low | high | medium | low | DNS not owner-approved | explicit DNS migration approval | reject for now |
+| WAF | Public app protection | low | managed rule set on approved edge | threat model only | medium | medium | low | medium | medium | medium | no AWS edge path | production AWS edge approved | monitor |
+| Shield | DDoS posture | low | standard coverage via AWS edge | docs only | low-to-high | medium | low | medium | medium | low | no AWS public edge | AWS edge approved | monitor |
+| Cognito | Auth | low | separate auth tenant and migration plan | compare current auth only | medium | high | medium | high | high | medium | current auth is adequate | owner chooses AWS auth | reject for now |
+| API Gateway | API front door | low | one read-only API behind local equivalent | OpenAPI review | medium | medium | low | medium | medium | medium | Next routes are sufficient | AWS backend service exists | monitor |
+| Lambda | Serverless jobs/APIs | partial | isolated read-only worker | local handler test | medium | medium | medium | medium | medium | medium | existing workers suffice | approved AWS worker lane | no-cost spike |
+| AppSync | Graph API | low | schema and resolver plan | schema-only ADR | medium | high | medium | high | high | medium | no mobile/offline GraphQL need | partner app needs GraphQL | reject for now |
+| DynamoDB | Low-latency state | low | one non-critical table design | local schema doc | medium | medium | medium | medium | medium | low | Postgres already fits | scale pattern proves need | monitor |
+| Aurora Serverless | Relational AWS DB | low | migration plan and rollback | cost/latency comparison | high | high | high | high | high | medium | Neon/Postgres path remains enough | enterprise AWS requirement | reject for now |
+| S3 | Evidence/artifact storage | partial | approved artifacts bucket design | local manifest only | medium | medium | high | medium | medium | high | source storage rights unknown | rights-cleared artifacts | no-cost spike |
+| Glue | ETL catalog | low | crawler/job design | schema docs only | medium | high | high | high | medium | medium | no S3 data lake | approved lakehouse | monitor |
+| Athena | Query approved lake data | low | query over rights-cleared S3 | SQL examples only | medium | medium | high | medium | medium | medium | no approved S3 dataset | rights-cleared lake exists | monitor |
+| Lake Formation | Data lake permissions | low | permission model | access model doc | medium | high | high | high | high | high | no shared lake | partner/enterprise data lake | monitor |
+| SageMaker AI | MLOps/training | partial | local artifacts shaped for future jobs | artifact schema only | high | high | high | high | high | high | no mature model artifacts | owner-approved ML runtime | adopt later |
+| SageMaker Pipelines | MLOps workflow | low | pipeline definition after artifacts | ADR only | high | high | high | high | high | high | no repeatable training process | recurring training exists | monitor |
+| SageMaker Model Registry | Model governance | partial | registry-shaped local model cards | local model-card docs | medium | medium | medium | medium | medium | high | no versioned artifacts | versioned model artifacts | adopt later |
+| SageMaker Feature Store | Feature governance | low | feature group schema | local feature schema | high | high | high | high | high | high | feature volume too small | stable features and data rights | monitor |
+| SageMaker Model Monitor | Drift monitoring | partial | map local drift reports to monitor concepts | local drift reports | medium | medium | medium | medium | medium | high | no recurring hosted inference | production predictions exist | adopt later |
+| SageMaker Clarify | Bias/explainability | partial | local parity and report mapping | parity report only | medium | medium | medium | medium | medium | high | no approved sensitive attributes | fairness review process exists | adopt later |
+| SageMaker Ground Truth | Labeling | partial | local labeling manifest only | cost simulator | high | medium | high | medium | medium | medium | no owner-approved labeling budget | approved labeling project | monitor |
+| Bedrock | Agent/model calls | low | model router with zero paid calls | docs/router only | high | medium | medium | medium | medium | high | no spend approval | owner-approved eval budget | monitor |
+| Bedrock Knowledge Bases | Retrieval | low | source-approved retrieval plan | local index plan | high | high | high | high | high | high | rights or storage unknown | approved corpus and budget | monitor |
+| Bedrock Guardrails | Agent safety | partial | local policy mirror | rubric docs | medium | medium | medium | medium | medium | high | no Bedrock agents | approved Bedrock agent eval | monitor |
+| Bedrock AgentCore | Agent runtime/governance | partial | firebreak and tool matrix | docs only | high | high | high | high | high | high | no agent approval | explicit agent pilot | no-cost design spike |
+| OpenSearch | Search/vector retrieval | low | index design over approved corpus | local schema doc | high | high | high | high | high | medium | no search scale need | approved retrieval scale | monitor |
+| Neptune | Graph DB | low | graph schema only | local graph model | high | high | medium | high | high | medium | existing graph is enough | graph scale proven | reject for now |
+| Timestream | Time-series store | low | metric schema only | local time-series doc | medium | medium | medium | medium | medium | low | Postgres/flat files suffice | high-volume time-series | monitor |
+| QuickSight | BI dashboards | low | read-only report over approved data | static report only | medium | medium | high | medium | medium | medium | no approved warehouse | owner asks for AWS BI | monitor |
+| CloudWatch | Monitoring | partial | metrics/logs for approved AWS app | local metric map | medium | medium | low | medium | medium | medium | no AWS deployment | AWS workload approved | adopt later |
+| CloudTrail | Audit trail | high if AWS is used | org/account trail | checklist only | low | high | low | medium | low | high | no AWS account path | any AWS account use | adopt later |
+| Cost Explorer | Cost analysis | high if AWS is used | read-only cost review | template only | low | medium | low | low | low | medium | no AWS spend | any AWS spend | adopt later |
+| Budgets | Spend guard | high if AWS is used | budget and alert policy | template only | low | medium | low | low | low | high | no AWS spend | any paid AWS approval | adopt later |
+| IAM Access Analyzer | IAM review | high if AWS is used | analyzer findings review | policy checklist | low | medium | low | medium | low | high | no AWS IAM changes | any IAM work | adopt later |
+| KMS | Encryption keys | medium | key policy for approved data | key policy template | medium | high | high | high | medium | high | no AWS data stored | approved AWS storage | monitor |
+| Secrets Manager | Secrets | medium | secret naming/rotation plan | docs only | medium | high | medium | medium | medium | medium | Vercel/local env sufficient | AWS runtime needs secrets | monitor |
+| GuardDuty | Threat detection | medium if AWS account exists | account detector | checklist only | medium | medium | low | medium | medium | medium | no AWS workloads | AWS account becomes active | monitor |
+| Security Hub | Security posture | medium if AWS account exists | standards aggregation | checklist only | medium | medium | low | medium | medium | medium | no AWS workloads | multi-service AWS use | monitor |
+| Macie | Sensitive-data discovery | medium if S3 data exists | S3 discovery over approved bucket | data classification doc | medium | medium | high | medium | medium | high | no S3 data | approved sensitive data storage | monitor |
+| AWS Config | Resource compliance | medium if AWS account exists | rules for approved resources | policy docs | medium | medium | low | medium | medium | medium | no AWS resources | AWS resources approved | monitor |
+| Clean Rooms | Partner collaboration | partial | synthetic schema and allowed queries | current synthetic demo | medium | high | high | high | high | high | no partner/contract | partner + legal review | adopt later |
+| Clean Rooms ML | Partner ML collaboration | low | future privacy-preserving ML plan | no-code concept only | high | high | high | high | high | high | no partner/data/legal basis | mature clean-room partnership | monitor |
+| Entity Resolution | Partner/user matching | low | synthetic matching threat model | docs only | high | high | critical | high | high | medium | identity rights unknown | explicit legal basis | reject for now |
+| Data Exchange | External data procurement | low | provider diligence checklist | docs only | medium | medium | high | medium | medium | medium | no provider contract | approved data purchase | monitor |
+
+Source notes:
+- Amplify SSR/Next.js fit is tracked in `docs/fable/aws/AWS_AMPLIFY_INVESTIGATION.md`.
+- Bedrock/AgentCore fit is tracked in `docs/fable/aws/AWS_MODEL_LEVERAGE_MAP.md` and `docs/fable/aws/AGENTCORE_SECURITY_FIREBREAK.md`.
+- SageMaker fit is tracked in `docs/fable/aws/AWS_SAGEMAKER_MLOPS_PLAN.md`.
+- Clean Rooms fit is tracked in `docs/fable/aws/AWS_CLEAN_ROOMS_PARTNERSHIP_PLAN.md`.

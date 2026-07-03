@@ -1,10 +1,48 @@
 # Synthetic Partner Schemas
 
-| Partner | GSE contributes | Partner contributes | Raw data cannot expose | Aggregated insight | Threshold | Allowed join | Disallowed join | Value | Legal review |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| media/content | topic tags | content engagement buckets | user identities | content demand by segment | 50 rows | week + topic | user id | editorial planning | needed |
-| DFS/fantasy | role volatility | contest cohort buckets | lineup identities | role risk by slate type | 100 rows | slate + position | account id | product UX | needed |
-| sportsbook/operator | uncertainty buckets | market movement aggregates | bettors | disagreement by game | 100 rows | game + time bucket | user/bet id | risk education | needed |
-| team/training | public availability flags | anonymized training buckets | athlete identity | availability pattern | 20 rows | week + position | player id | workload planning | needed |
-| data-provider | source reliability score | feed latency buckets | proprietary feed rows | latency/error class | 50 rows | source class + time | raw row id | SLA design | needed |
-| community/user cohort | explanation tags | anonymized feedback | user identity | explanation usefulness | 50 rows | tag + week | email/account id | education | needed |
+No real partner data is represented here.
+
+## GSE Table
+
+- fixture_id
+- public_event_type
+- event_timestamp
+- model_uncertainty_bucket
+- source_freshness_bucket
+- role_shock_bucket
+- data_quality_bucket
+
+## Media / Content Partner Table
+
+- fixture_id
+- content_segment
+- aggregate_impressions_bucket
+- aggregate_engagement_rate
+
+## DFS / Fantasy Partner Table
+
+- fixture_id
+- roster_segment
+- aggregate_roster_change_rate
+- aggregate_entry_count_bucket
+
+## Sportsbook / Operator Partner Table
+
+- fixture_id
+- market_segment
+- aggregate_movement_bucket
+- aggregate_handle_bucket
+
+## Sports Data Provider Table
+
+- fixture_id
+- coverage_segment
+- aggregate_latency_bucket
+- aggregate_completeness_rate
+
+## Required Shared Constraints
+
+- no user identifiers
+- no raw row-level partner records
+- no export below privacy threshold
+- allowed aggregate outputs only

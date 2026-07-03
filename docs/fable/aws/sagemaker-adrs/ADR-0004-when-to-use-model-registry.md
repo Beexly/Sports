@@ -13,3 +13,10 @@ Why not now:
 Rollback path: local model card and commit hash.
 
 Owner approval needed: yes.
+
+Additional gates:
+- replay metrics and lineage are attached
+- model card exists locally first
+- promotion/demotion workflow is documented
+
+Reject now because no SageMaker model artifact exists.

@@ -20,6 +20,11 @@ Core evidence:
 - `docs/fable/CLAUDE_HANDOFF.md`
 - `docs/fable/CODEX_FINAL_REPORT.md`
 - `docs/fable/CODEX_SECOND_LEVEL_REPORT.md`
+- `docs/fable/CODEX_THIRD_PASS_REPORT.md`
+- `docs/fable/master/AUDIT_STATE.md`
+- `docs/fable/master/TYPECHECK_DECISION.md`
+- `docs/fable/master/GITHUB_PUBLICATION_PATH.md`
+- `docs/fable/master/MASTER_FINAL_REPORT.md`
 
 AWS evidence:
 - `docs/fable/aws/README.md`
@@ -29,7 +34,12 @@ AWS evidence:
 - `docs/fable/aws/AWS_MODEL_LEVERAGE_MAP.md`
 - `docs/fable/aws/AWS_MODEL_ROUTER_DESIGN.md`
 - `docs/fable/aws/AWS_MODEL_EVALUATION_PLAN.md`
+- `docs/fable/aws/AWS_PLUGIN_TO_REPO_CROSSWALK.md`
+- `docs/fable/aws/AWS_PLUGIN_GOVERNED_AUDIT.md`
+- `docs/fable/aws/AWS_SHOW_TEETH_STRATEGY.md`
 - `docs/fable/aws/AGENTCORE_SECURITY_FIREBREAK.md`
+- `docs/fable/aws/AGENT_TOOL_PERMISSION_MATRIX.md`
+- `docs/fable/aws/AGENT_EVALUATION_RUBRICS.md`
 - `docs/fable/aws/AWS_COST_SECURITY_GATES.md`
 - `docs/fable/aws/AWS_IMPLEMENTATION_SPIKES.md`
 - `docs/fable/aws/AWS_FINAL_REPORT.md`

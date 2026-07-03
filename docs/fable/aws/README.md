@@ -21,10 +21,16 @@ Official AWS references used:
 - Bedrock AgentCore pricing: https://aws.amazon.com/bedrock/agentcore/pricing/
 - SageMaker Model Registry: https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry.html
 - SageMaker Pipelines: https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines.html
+- SageMaker Model Monitor: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html
+- SageMaker Clarify: https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-configure-processing-jobs.html
 - AWS Clean Rooms overview: https://docs.aws.amazon.com/clean-rooms/latest/userguide/what-is.html
 - AWS sports/NFL: https://aws.amazon.com/sports/nfl/
 
 Second-level AWS docs:
+- `AWS_PLUGIN_TO_REPO_CROSSWALK.md`
+- `AWS_PLUGIN_GOVERNED_AUDIT.md`
+- `AWS_SHOW_TEETH_STRATEGY.md`
+- `AWS_SERVICE_SCORECARD.md`
 - `AWS_MODEL_LEVERAGE_MAP.md`
 - `AWS_MODEL_ROUTER_DESIGN.md`
 - `AWS_MODEL_EVALUATION_PLAN.md`
