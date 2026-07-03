@@ -69,6 +69,26 @@ describe("secp256k1 Pedersen — commit / open / homomorphism", () => {
     expect(addCommitments("not-hex", "also-bad")).toBeNull();
     expect(aggregateCommitments(["bad"])).toBeNull();
   });
+
+  it("HOSTILE REGRESSION: commit(0,0) returns null instead of throwing (identity has no hex encoding)", () => {
+    // The identity point's toHex() throws "bad point: ZERO"; commit(0,0) = O.
+    // Legal-but-degenerate input (a -1 loss with a zero blinding) must not crash.
+    expect(() => commit(0n, 0n)).not.toThrow();
+    expect(commit(0n, 0n)).toBeNull();
+    // value 0 with a real (nonzero) blinding is still a valid commitment:
+    expect(commit(0n, 123n)).not.toBeNull();
+  });
+
+  it("HOSTILE REGRESSION: a ledger whose commitments sum to the identity yields null, not a throw", () => {
+    // C(5,7) + C(-5 mod n, -7 mod n) = O. aggregateCommitments must return null
+    // (verifyLedgerAggregate then reports false) rather than crashing on toHex.
+    const c1 = commit(5n, 7n)!;
+    const c2 = commit(CURVE_ORDER - 5n, CURVE_ORDER - 7n)!;
+    expect(() => aggregateCommitments([c1, c2])).not.toThrow();
+    expect(aggregateCommitments([c1, c2])).toBeNull();
+    expect(() => addCommitments(c1, c2)).not.toThrow();
+    expect(addCommitments(c1, c2)).toBeNull();
+  });
 });
 
 describe("secp256k1 Pedersen — ledger aggregate (sealed-slate payoff)", () => {

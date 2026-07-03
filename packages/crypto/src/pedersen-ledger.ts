@@ -113,18 +113,35 @@ export function verifyGroup(): boolean {
   return deriveH().equals(h);
 }
 
+/**
+ * Serialize a point to compressed hex, or null for the IDENTITY. The identity
+ * (point at infinity) has no compressed encoding — @noble's `toHex()` throws
+ * "bad point: ZERO". The identity commitment C(0,0) is legal group-theoretically
+ * but unpublishable in the hex format `Commitment` promises, and it only arises
+ * from all-zero input (value 0 AND blinding 0) that a real CSPRNG blinding makes
+ * unreachable (P[r ≡ 0] = 2^-256). Returning null keeps the module's
+ * never-throw-on-data contract. (A whole ledger whose commitments sum to the
+ * identity — total value ≡ 0 AND total blinding ≡ 0 mod n — is the same
+ * measure-zero edge and likewise yields null, so verifyLedgerAggregate reports
+ * false for it rather than crashing.)
+ */
+function pointToCommitment(p: Pt): Commitment | null {
+  if (p.equals(Point.ZERO)) return null;
+  return p.toHex();
+}
+
 /** Commit to a non-negative integer value with a blinding in [0, n). null on refused input. */
 export function commit(value: bigint, blinding: bigint): Commitment | null {
   if (typeof value !== "bigint" || typeof blinding !== "bigint") return null;
   if (value < 0n || blinding < 0n) return null;
   if (blinding >= CURVE_ORDER) return null; // a blinding >= n is a caller bug (must be uniform in [0,n))
-  return mul(PEDERSEN_G, value).add(mul(PEDERSEN_H, blinding)).toHex();
+  return pointToCommitment(mul(PEDERSEN_G, value).add(mul(PEDERSEN_H, blinding)));
 }
 
-/** Homomorphic addition: C(v1,r1) + C(v2,r2) = C(v1+v2, r1+r2). null on malformed hex. */
+/** Homomorphic addition: C(v1,r1) + C(v2,r2) = C(v1+v2, r1+r2). null on malformed hex or identity sum. */
 export function addCommitments(c1: Commitment, c2: Commitment): Commitment | null {
   try {
-    return Point.fromHex(c1).add(Point.fromHex(c2)).toHex();
+    return pointToCommitment(Point.fromHex(c1).add(Point.fromHex(c2)));
   } catch {
     return null;
   }
@@ -135,7 +152,7 @@ export function aggregateCommitments(commitments: readonly Commitment[]): Commit
   try {
     let acc: Pt = Point.ZERO;
     for (const c of commitments) acc = acc.add(Point.fromHex(c));
-    return acc.toHex();
+    return pointToCommitment(acc);
   } catch {
     return null;
   }
