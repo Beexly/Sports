@@ -52,6 +52,8 @@ Verification log:
 - `gh auth status`
   - Failed because GitHub CLI is not logged into any host.
   - Result: issue bodies and PR-ready notes are written in docs instead of live GitHub issue/PR creation.
+- `git push -u origin codex/fable-nfl-evidence-integration`
+  - Passed: branch pushed and GitHub returned `https://github.com/Beexly/Sports/pull/new/codex/fable-nfl-evidence-integration`.
 
 AWS safety:
 - No AWS account mutation was performed.

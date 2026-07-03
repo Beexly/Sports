@@ -18,7 +18,7 @@ Implemented in this pass:
 - added AWS show-teeth strategy
 - sharpened Amplify, AgentCore, SageMaker, and Clean Rooms decisions
 - hardened fixture-only forensic demo docs
-- documented GitHub publication blocker and manual commands
+- documented GitHub publication state and PR/issue auth blocker
 - fixed full workspace typecheck by raising `apps/web` target to ES2020 and clearing generated build-info cache
 
 Verification:
@@ -37,10 +37,11 @@ Verification:
 - `actionlint .github/workflows/fable-evidence.yml`: unavailable; command not installed, workflow YAML manually inspected
 
 GitHub:
-- branch not pushed; no remote head found for `codex/fable-nfl-evidence-integration`
+- branch pushed to `origin/codex/fable-nfl-evidence-integration`
+- GitHub PR URL offered: `https://github.com/Beexly/Sports/pull/new/codex/fable-nfl-evidence-integration`
 - PR not created
 - issues not created
-- blocker: `gh auth status` reports no logged-in GitHub hosts
+- blocker: `gh auth status` reports no logged-in GitHub hosts for PR/issue creation
 
 AWS safety:
 - live AWS commands run: no

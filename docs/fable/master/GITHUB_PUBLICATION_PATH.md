@@ -5,17 +5,26 @@ Updated: 2026-07-03
 ## Current State
 
 - Branch: `codex/fable-nfl-evidence-integration`
-- Branch pushed: no; `git ls-remote --heads origin codex/fable-nfl-evidence-integration` returned no remote head.
+- Branch pushed: yes; `git push -u origin codex/fable-nfl-evidence-integration` created the remote branch.
+- Pull request URL offered by GitHub: `https://github.com/Beexly/Sports/pull/new/codex/fable-nfl-evidence-integration`
 - PR created: no.
 - Issues created: no.
-- Blocker: GitHub CLI is not authenticated.
+- Blocker: GitHub CLI is not authenticated for PR/issue creation.
 
 ## Verified Commands
 
 ```bash
 git branch -vv
 git ls-remote --heads origin codex/fable-nfl-evidence-integration
+git push -u origin codex/fable-nfl-evidence-integration
 gh auth status
+```
+
+Push result:
+
+```text
+codex/fable-nfl-evidence-integration -> codex/fable-nfl-evidence-integration
+branch 'codex/fable-nfl-evidence-integration' set up to track 'origin/codex/fable-nfl-evidence-integration'
 ```
 
 `gh auth status` result:
@@ -28,7 +37,6 @@ You are not logged into any GitHub hosts. To log in, run: gh auth login
 
 ```bash
 gh auth login
-git push -u origin codex/fable-nfl-evidence-integration
 gh pr create --base main --head codex/fable-nfl-evidence-integration --title "feat(fable): add evidence and AWS guardrails" --body-file docs/fable/github/PR_BODY_FABLE_EVIDENCE.md
 ```
 

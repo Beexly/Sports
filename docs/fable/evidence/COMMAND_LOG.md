@@ -170,3 +170,11 @@ npm run typecheck --workspaces --if-present
 ```
 
 Result: passed.
+
+Publication command:
+
+```powershell
+$env:GIT_TERMINAL_PROMPT='0'; $env:GCM_INTERACTIVE='Never'; git push -u origin codex/fable-nfl-evidence-integration
+```
+
+Result: passed. The branch was created at `origin/codex/fable-nfl-evidence-integration`, and GitHub returned `https://github.com/Beexly/Sports/pull/new/codex/fable-nfl-evidence-integration`.

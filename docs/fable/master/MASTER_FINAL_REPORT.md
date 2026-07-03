@@ -36,7 +36,7 @@ Updated: 2026-07-03
 - Bedrock/AgentCore decision: design/firebreak only; no paid model calls
 - SageMaker decision: Level 0/1 only until artifacts, rights, budget, and owner approval exist
 - Clean Rooms decision: synthetic partner demo only; no partnership claimed
-- GitHub publication: blocked by CLI auth; manual commands documented
+- GitHub publication: branch pushed; PR/issues blocked by CLI auth and manual commands documented
 
 ## Verification
 
@@ -65,7 +65,7 @@ Updated: 2026-07-03
 
 ## Owner Decisions Needed
 
-- GitHub auth and publication.
+- GitHub auth for PR and issue creation.
 - AWS account/profile/region for any future read-only discovery.
 - Cost ceiling and budget alarms before paid AWS.
 - Legal/source marker before cloud storage or partner sharing.
