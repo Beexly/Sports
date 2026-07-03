@@ -41,6 +41,19 @@ export {
   type NflverseDatasetKey,
   type NflverseGrain,
 } from "./nflverse-source.js";
+// Next Gen Stats typed access (SEP/CUSH/xYAC receiving, RYOE/efficiency rushing) —
+// CC-BY-4.0 via nflverse; dark/additive; avg_separation is the reconstruction
+// engine's calibration ground truth. See docs/data/ngs-legal-leverage.md.
+export {
+  parseNgsReceiving,
+  parseNgsRushing,
+  filterNgs,
+  ngsReceivingToSeparationTruth,
+  NGS_FULL_SEASON_WEEK,
+  type NgsReceivingRow,
+  type NgsRushingRow,
+  type SeparationTruth,
+} from "./nflverse-ngs.js";
 export {
   NFLVERSE_TREND_PLANS,
   getNflverseTrendPlan,
