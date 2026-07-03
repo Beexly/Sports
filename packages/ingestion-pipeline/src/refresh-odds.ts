@@ -32,7 +32,7 @@ import { createHash } from "node:crypto";
 import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "./process-sport.js";
-import { freezeSlateCommitments } from "./freeze-slate-commitments.js";
+import { freezeSlateCommitments, type SlateFreezeResult } from "./freeze-slate-commitments.js";
 
 /** Production SHA-256 HashFn for the proof spine — matches process-sport.ts. */
 function sha256Hex(input: string): string {
@@ -57,6 +57,13 @@ export interface RefreshOddsResult {
   readonly totalCount: number;
   /** Per-sport outcomes, in processing order. */
   readonly results: RefreshOddsSportResult[];
+  /**
+   * Slate-commitment freeze outcomes (COMMIT/SKIP + reason per sport + day).
+   * Surfaced so a structurally never-committing slate class is VISIBLE in the
+   * cron response instead of scrolling past in logs (hostile-review fix —
+   * silently discarded results are how the primetime gap would have hidden).
+   */
+  readonly freeze: SlateFreezeResult[];
 }
 
 /** Error thrown when an explicit `sport` key matches no supported sport. */
@@ -137,8 +144,9 @@ export async function refreshOdds(
   // one immutable pre-kickoff Merkle root per sport + UTC day. Strictly
   // non-fatal: the odds refresh's outcome must never hinge on the freeze pass
   // (freezeSlateCommitments also catches per-sport failures internally).
+  let freeze: SlateFreezeResult[] = [];
   try {
-    await freezeSlateCommitments(
+    freeze = await freezeSlateCommitments(
       sportsToProcess.map((sport) => sport.key),
       new Date(),
       sha256Hex,
@@ -160,5 +168,6 @@ export async function refreshOdds(
     okCount,
     totalCount: results.length,
     results,
+    freeze,
   };
 }
