@@ -10,6 +10,7 @@ Implemented:
 - AWS plugin-to-repo crosswalk and governed audit.
 - AWS show-teeth strategy for lawful, falsifiable leverage.
 - AWS model leverage map, model router design, model evaluation plan, AgentCore firebreak, tool permission matrix, evaluation rubrics, SageMaker/Amplify ADRs, and synthetic Clean Rooms partner demo docs.
+- Personal AWS learning bridge under `docs/personal/aws/`, with public-safe proof templates, badge-to-GSE crosswalk, portfolio case study, learning-to-repo actions, and schema-backed evidence boundaries.
 
 Service decisions:
 - Amplify: preview-only spike later; no migration or deploy.
@@ -44,3 +45,22 @@ Caveats:
 - No AWS secrets were added.
 - No paid AWS dependencies or services were used.
 - Official AWS docs were used only for research/design notes and are linked in `docs/fable/aws/README.md`.
+
+## Personal AWS Learning Feed
+
+The personal learning feed improves AWS judgment in the repo without importing private learning records.
+
+What it improves:
+- better service-fit decisions.
+- safer IAM and cost gates.
+- stronger AWS vocabulary for partners.
+- better no-cost spike design.
+- more credible portfolio narrative.
+- clearer separation between learning, code, and live cloud.
+
+What it does not prove:
+- AWS account access.
+- badge completion unless owner-approved proof exists.
+- live AWS readiness.
+- deployed infrastructure.
+- paid-resource approval.

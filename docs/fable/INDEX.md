@@ -25,6 +25,14 @@ Core evidence:
 - `docs/fable/master/TYPECHECK_DECISION.md`
 - `docs/fable/master/GITHUB_PUBLICATION_PATH.md`
 - `docs/fable/master/MASTER_FINAL_REPORT.md`
+- `docs/fable/master/AWS_LEARNING_BRIDGE_REPORT.md`
+
+Personal AWS learning:
+- `docs/personal/aws/README.md`
+- `docs/personal/aws/AWS_TO_GSE_CROSSWALK.md`
+- `docs/personal/aws/AWS_LEARNING_TO_REPO_ACTIONS.md`
+- `docs/personal/aws/AWS_PORTFOLIO_CASE_STUDY.md`
+- `schemas/fable/personal-learning-evidence.schema.json`
 
 AWS evidence:
 - `docs/fable/aws/README.md`
@@ -37,6 +45,18 @@ AWS evidence:
 - `docs/fable/aws/AWS_PLUGIN_TO_REPO_CROSSWALK.md`
 - `docs/fable/aws/AWS_PLUGIN_GOVERNED_AUDIT.md`
 - `docs/fable/aws/AWS_SHOW_TEETH_STRATEGY.md`
+- `docs/fable/aws/AWS_OPERATING_INTELLIGENCE_MATRIX.md`
+- `docs/fable/aws/AWS_NO_COST_WORKFLOW_BLUEPRINTS.md`
+- `docs/fable/aws/AWS_AGENT_LAB_PLAYBOOK.md`
+- `docs/fable/aws/AWS_METRICS_AND_MATRICES.md`
+- `docs/fable/aws/AWS_FREE_LEARNING_OPERATING_SYSTEM.md`
+- `docs/fable/aws/AWS_INCUMBENT_PRESSURE_SYSTEM.md`
+- `docs/fable/aws/AWS_MICRO_EDGE_FACTORY.md`
+- `docs/fable/aws/AWS_LOCAL_DATA_FACTORY.md`
+- `docs/fable/aws/AWS_LOCAL_APP_BLUEPRINTS.md`
+- `docs/fable/aws/AWS_MACHINE_LADDER.md`
+- `docs/fable/aws/AWS_TECHNIQUE_LEDGER.md`
+- `docs/fable/aws/AWS_OPERATING_INTELLIGENCE_RUNBOOK.md`
 - `docs/fable/aws/AGENTCORE_SECURITY_FIREBREAK.md`
 - `docs/fable/aws/AGENT_TOOL_PERMISSION_MATRIX.md`
 - `docs/fable/aws/AGENT_EVALUATION_RUBRICS.md`

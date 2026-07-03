@@ -43,3 +43,9 @@ Nothing in this folder changes provider accounts, deploys infrastructure, create
 
 Navigation:
 Root README -> `docs/fable/README.md` -> `docs/fable/INDEX.md` -> `docs/fable/evidence/EVIDENCE_INDEX.md` -> `docs/fable/master/MASTER_FINAL_REPORT.md`.
+
+Personal AWS learning bridge:
+- Public-safe learning proof lives under `docs/personal/aws/`.
+- Learning evidence validates through `schemas/fable/personal-learning-evidence.schema.json`.
+- Badge/course proof is not public evidence until owner-approved.
+- The bridge improves AWS service-fit, cost, IAM, agent, and partner architecture judgment without touching AWS accounts.

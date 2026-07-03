@@ -15,9 +15,14 @@ Hard boundary:
 - No claim that AWS is already configured.
 
 Official AWS references used:
+- AWS Well-Architected pillars: https://docs.aws.amazon.com/wellarchitected/latest/framework/the-pillars-of-the-framework.html
+- AWS Budgets: https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html
+- AWS Cost Anomaly Detection: https://docs.aws.amazon.com/cost-management/latest/userguide/manage-ad.html
+- IAM Access Analyzer policy validation: https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-policy-validation.html
 - Amplify Next.js SSR support: https://docs.aws.amazon.com/amplify/latest/userguide/ssr-amplify-support.html
 - Amplify SSR deployment: https://docs.aws.amazon.com/amplify/latest/userguide/server-side-rendering-amplify.html
 - Bedrock AgentCore overview: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/what-is-bedrock-agentcore.html
+- Bedrock AgentCore policy: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy.html
 - Bedrock AgentCore pricing: https://aws.amazon.com/bedrock/agentcore/pricing/
 - SageMaker Model Registry: https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry.html
 - SageMaker Pipelines: https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines.html
@@ -30,6 +35,18 @@ Second-level AWS docs:
 - `AWS_PLUGIN_TO_REPO_CROSSWALK.md`
 - `AWS_PLUGIN_GOVERNED_AUDIT.md`
 - `AWS_SHOW_TEETH_STRATEGY.md`
+- `AWS_OPERATING_INTELLIGENCE_MATRIX.md`
+- `AWS_NO_COST_WORKFLOW_BLUEPRINTS.md`
+- `AWS_AGENT_LAB_PLAYBOOK.md`
+- `AWS_METRICS_AND_MATRICES.md`
+- `AWS_FREE_LEARNING_OPERATING_SYSTEM.md`
+- `AWS_INCUMBENT_PRESSURE_SYSTEM.md`
+- `AWS_MICRO_EDGE_FACTORY.md`
+- `AWS_LOCAL_DATA_FACTORY.md`
+- `AWS_LOCAL_APP_BLUEPRINTS.md`
+- `AWS_MACHINE_LADDER.md`
+- `AWS_TECHNIQUE_LEDGER.md`
+- `AWS_OPERATING_INTELLIGENCE_RUNBOOK.md`
 - `AWS_SERVICE_SCORECARD.md`
 - `AWS_MODEL_LEVERAGE_MAP.md`
 - `AWS_MODEL_ROUTER_DESIGN.md`

@@ -34,3 +34,26 @@ Owner decisions before Level 3+:
 - source/data-rights marker.
 - IAM role owner.
 - rollback owner.
+
+## Personal AWS Learning Feed
+
+SageMaker learning improves the MLOps ladder by making local artifacts more AWS-shaped before any paid service exists.
+
+Learning effects:
+- model registry learning improves local model-card and approval-status design.
+- pipelines learning improves repeatable replay/runbook language.
+- model monitor learning improves drift-baseline vocabulary.
+- Clarify learning improves parity and explainability report shape.
+- training/processing learning improves rejection criteria for hosted jobs.
+
+No-cost repo actions:
+- maintain local model cards and artifact manifests.
+- keep Level 0/1 as the only supported levels until owner approvals exist.
+- map local drift and calibration outputs to future monitor concepts without creating monitors.
+
+Still not claimed:
+- no SageMaker training job.
+- no processing job.
+- no endpoint.
+- no feature group.
+- no registry entry in AWS.

@@ -39,3 +39,22 @@ Decision:
 - Rejection for now: full migration, backend migration, DNS move, service role creation, and env copy.
 - Adoption trigger: owner requests an AWS-hosted partner/demo preview, GitHub auth is available, cost ceiling is approved, and rollback keeps current hosting untouched.
 - Rollback: delete the preview app if one is ever created; do not alter current production host or DNS.
+
+## Personal AWS Learning Feed
+
+Amplify learning improves the quality of the preview-only spike:
+- clearer distinction between branch preview and production hosting.
+- better Next.js SSR compatibility questions.
+- better environment-variable handling without printing secrets.
+- stronger rollback language for deleting a preview app.
+- better explanation of why DNS and backend migration remain blocked.
+
+No-cost learning artifact:
+- `docs/personal/aws/AWS_LEARNING_TO_REPO_ACTIONS.md` tracks the Amplify preview mock.
+
+Still blocked:
+- live Amplify app creation.
+- GitHub connection.
+- service role creation.
+- env copy.
+- DNS changes.

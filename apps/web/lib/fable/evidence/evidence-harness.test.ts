@@ -8,6 +8,7 @@ import {
   validateClaimLedger,
   validateFableSourceRegistryEntries,
   validateGithubVisibility,
+  validatePersonalLearningEvidence,
 } from "./validators";
 import { buildForensicDemoReport } from "./forensic-demo";
 
@@ -67,6 +68,37 @@ describe("FABLE evidence harness", () => {
     const result = validateGithubVisibility(index, readme);
 
     expect(result.ok).toBe(true);
+  });
+
+  it("validates personal learning evidence boundaries", () => {
+    const checkedIn = validatePersonalLearningEvidence(
+      readJson("docs/personal/aws/personal-learning-evidence.example.json")
+    );
+    const unsafePublicLink = validatePersonalLearningEvidence({
+      evidence: [
+        {
+          completion_status: "in_progress",
+          course_or_badge_name: "AWS Educate S3",
+          date_completed: null,
+          gse_relevance: "storage judgment",
+          learning_provider: "AWS Educate",
+          no_paid_resource_confirmed: true,
+          no_secrets_confirmed: true,
+          owner_approved_for_public_use: false,
+          proof_link_or_path: "https://example.com/badge",
+          proof_type: "public_badge_url",
+          public_safe: true,
+          repo_action: "update no-cost S3 mock plan",
+        },
+      ],
+      generated_at: "2026-07-03T00:00:00.000Z",
+      schema_version: "fable-personal-learning-evidence-v1",
+      scope_note: "test",
+    });
+
+    expect(checkedIn.ok).toBe(true);
+    expect(unsafePublicLink.ok).toBe(false);
+    expect(unsafePublicLink.issues.map((issue) => issue.code)).toContain("personal-learning-owner-approval");
   });
 
   it("builds the fixture-only forensic demo report", () => {

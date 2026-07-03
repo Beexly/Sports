@@ -5,6 +5,8 @@ import {
   AwsDecisionEngineEvaluationSchema,
   ClaimEvidenceLedgerSchema,
   type ClaimEvidenceLedger,
+  PersonalLearningEvidenceLedgerSchema,
+  type PersonalLearningEvidenceLedger,
 } from "./schemas";
 
 export type EvidenceValidationIssue = {
@@ -141,6 +143,44 @@ export function validateAwsDecisionEngineDefaults(): EvidenceValidationReport {
   if (!docs.allowed || !docs.allowedByDefault) {
     issues.push(error("aws-decision-docs", "aws.decision.docs", "Local docs-only changes must be allowed by default."));
   }
+
+  return report(issues);
+}
+
+export function validatePersonalLearningEvidence(raw: unknown): EvidenceValidationReport {
+  const parsed = PersonalLearningEvidenceLedgerSchema.safeParse(raw);
+  if (!parsed.success) {
+    return report([
+      error("personal-learning-schema", "docs/personal/aws/personal-learning-evidence.example.json", parsed.error.message),
+    ]);
+  }
+
+  return validateParsedPersonalLearningEvidence(parsed.data);
+}
+
+function validateParsedPersonalLearningEvidence(
+  ledger: PersonalLearningEvidenceLedger
+): EvidenceValidationReport {
+  const issues: EvidenceValidationIssue[] = [];
+
+  ledger.evidence.forEach((item, index) => {
+    const path = `personal_learning_evidence.${index}.${item.course_or_badge_name}`;
+    const proofIsPublicUrl =
+      item.proof_link_or_path.startsWith("https://") || item.proof_link_or_path.startsWith("http://");
+
+    if (item.owner_approved_for_public_use && !item.public_safe) {
+      issues.push(error("personal-learning-public-safe", path, "Owner-approved proof must be marked public_safe."));
+    }
+    if (item.owner_approved_for_public_use && !item.no_secrets_confirmed) {
+      issues.push(error("personal-learning-secrets", path, "Owner-approved proof must confirm no secrets."));
+    }
+    if (item.owner_approved_for_public_use && !item.no_paid_resource_confirmed) {
+      issues.push(error("personal-learning-paid", path, "Owner-approved proof must confirm no paid resource use."));
+    }
+    if (!item.owner_approved_for_public_use && (item.proof_type === "public_badge_url" || proofIsPublicUrl)) {
+      issues.push(error("personal-learning-owner-approval", path, "Public proof links require owner approval."));
+    }
+  });
 
   return report(issues);
 }

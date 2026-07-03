@@ -38,6 +38,8 @@
     "fable:claims": "tsx scripts/fable-evidence.ts claims",
     "fable:aws-gates": "tsx scripts/fable-evidence.ts aws-gates",
     "fable:sources": "tsx scripts/fable-evidence.ts sources",
+    "fable:learning": "tsx scripts/fable-evidence.ts learning",
+    "fable:aws-intel": "tsx scripts/fable-aws-operating-intelligence.ts",
     "fable:demo": "tsx scripts/fable-demo-forensic-report.ts",
     "prepare": "node scripts/setup-git-hooks.mjs",
     "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/guardrails/secret-scan.mjs --all && node scripts/eval-contracts.mjs",

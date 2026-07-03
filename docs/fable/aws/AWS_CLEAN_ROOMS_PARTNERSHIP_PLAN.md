@@ -32,3 +32,26 @@ Required before any live Clean Rooms work:
 - aggregation thresholds
 - export policy
 - owner approval and cost ceiling
+
+## Personal AWS Learning Feed
+
+Clean Rooms learning improves partner credibility by making the repo's collaboration story more precise without claiming a partner exists.
+
+Learning effects:
+- better explanation of analysis rules and aggregate-only joins.
+- better privacy-threshold vocabulary.
+- better disallowed-query examples.
+- better partner pitch language around no raw data exchange.
+- better rejection of identity matching or row-level exports.
+
+No-cost repo actions:
+- keep synthetic schemas in `docs/fable/aws/clean-rooms-demo/`.
+- keep allowed and disallowed query examples public-safe.
+- prepare partner discussion notes without uploading data.
+
+Still blocked:
+- live collaboration.
+- partner data.
+- analysis rule creation.
+- exports.
+- identity resolution.

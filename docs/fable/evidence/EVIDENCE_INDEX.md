@@ -24,6 +24,13 @@ Schema contracts:
 - `schemas/fable/aws-gate-config.schema.json`
 - `schemas/fable/forensic-report-input.schema.json`
 - `schemas/fable/forensic-report-output.schema.json`
+- `schemas/fable/personal-learning-evidence.schema.json`
+
+Personal AWS learning evidence:
+- `docs/personal/aws/README.md`
+- `docs/personal/aws/personal-learning-evidence.example.json`
+- `docs/personal/aws/AWS_TO_GSE_CROSSWALK.md`
+- `docs/personal/aws/AWS_PORTFOLIO_CASE_STUDY.md`
 
 GitHub navigation path:
 - `README.md`

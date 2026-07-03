@@ -73,3 +73,41 @@ This is a lawful leverage plan, not marketing copy. The goal is to find small, t
 ## Falsification Strategy
 
 Every candidate must define a baseline, a split, a sample window, and a kill rule. If the effect disappears out-of-sample, conflicts with source rights, or requires paid infrastructure before local proof, it is rejected or held.
+
+## Personal AWS Learning Feed
+
+The learning feed makes this strategy sharper by improving what gets rejected, not by inflating claims.
+
+Learning effects:
+- storage learning improves artifact and data-retention skepticism.
+- compute learning improves whether a replay belongs on local hardware, serverless, or managed training later.
+- networking learning improves blast-radius language for partner demos.
+- Cloud Operations learning improves monitoring and cost kill rules.
+- IAM learning improves agent and data-access boundaries.
+- Clean Rooms learning improves partner-safe aggregate hypotheses.
+
+No-cost output:
+- each learning item should produce one local artifact, one rejection criterion, or one safer owner-decision gate.
+
+Still not allowed:
+- using learning proof to claim model edge.
+- using badge proof to claim live AWS readiness.
+- using partner architecture docs to imply a partner exists.
+
+## Incumbent Pressure Addendum
+
+New operating docs:
+- `docs/fable/aws/AWS_INCUMBENT_PRESSURE_SYSTEM.md`
+- `docs/fable/aws/AWS_MICRO_EDGE_FACTORY.md`
+- `docs/fable/aws/AWS_LOCAL_DATA_FACTORY.md`
+- `docs/fable/aws/AWS_LOCAL_APP_BLUEPRINTS.md`
+- `docs/fable/aws/AWS_MACHINE_LADDER.md`
+- `docs/fable/aws/AWS_TECHNIQUE_LEDGER.md`
+
+Pressure posture:
+- be faster at falsifying ideas.
+- be more explicit about source rights.
+- show no-action intelligence, not only prediction attempts.
+- make agent refusal visible.
+- turn AWS learning into local artifacts before spend.
+- keep rejected ideas visible as evidence of discipline.

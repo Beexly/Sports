@@ -57,3 +57,19 @@ Source notes:
 - Bedrock/AgentCore fit is tracked in `docs/fable/aws/AWS_MODEL_LEVERAGE_MAP.md` and `docs/fable/aws/AGENTCORE_SECURITY_FIREBREAK.md`.
 - SageMaker fit is tracked in `docs/fable/aws/AWS_SAGEMAKER_MLOPS_PLAN.md`.
 - Clean Rooms fit is tracked in `docs/fable/aws/AWS_CLEAN_ROOMS_PARTNERSHIP_PLAN.md`.
+
+## Personal AWS Learning Feed
+
+Garrett's AWS learning path improves this scorecard only as public-safe evidence and architecture judgment. It is not account proof and does not authorize AWS actions.
+
+Learning effects:
+- AWS Educate storage, compute, networking, and database learning sharpens service-fit decisions before any migration.
+- Cloud Operations and cost learning improves the scorecard's cost-risk and rejection criteria.
+- Cloud Practitioner learning gives partner-safe vocabulary for explaining why a service is held, rejected, or kept as a no-cost spike.
+- IAM/security learning improves least-privilege language and wildcard rejection criteria.
+- Amplify, Bedrock/AgentCore, SageMaker, and Clean Rooms learning maps directly to the existing service rows without proving live configuration.
+
+Required evidence path:
+- learning proof starts in `docs/personal/aws/`
+- safe schema is `schemas/fable/personal-learning-evidence.schema.json`
+- GSE impact mapping is `docs/personal/aws/AWS_TO_GSE_CROSSWALK.md`

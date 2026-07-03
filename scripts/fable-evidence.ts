@@ -9,6 +9,7 @@ import {
   validateClaimLedger,
   validateFableSourceRegistryEntries,
   validateGithubVisibility,
+  validatePersonalLearningEvidence,
   type EvidenceValidationIssue,
 } from "../apps/web/lib/fable/evidence/validators";
 
@@ -63,12 +64,17 @@ function validateAws(): readonly EvidenceValidationIssue[] {
   return [...validateAwsGateDefaults().issues, ...validateAwsDecisionEngineDefaults().issues];
 }
 
+function validateLearning(): readonly EvidenceValidationIssue[] {
+  return validatePersonalLearningEvidence(readJson("docs/personal/aws/personal-learning-evidence.example.json")).issues;
+}
+
 function runMode(mode: string): readonly EvidenceValidationIssue[] {
   if (mode === "claims") return validateClaims();
   if (mode === "sources") return validateSources();
   if (mode === "aws-gates") return validateAws();
+  if (mode === "learning") return validateLearning();
   if (mode === "visibility") return validateVisibility();
-  return [...validateClaims(), ...validateSources(), ...validateAws(), ...validateVisibility()];
+  return [...validateClaims(), ...validateSources(), ...validateAws(), ...validateLearning(), ...validateVisibility()];
 }
 
 const mode = process.argv[2] ?? "all";
