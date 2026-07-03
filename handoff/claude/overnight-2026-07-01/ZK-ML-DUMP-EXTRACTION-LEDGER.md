@@ -299,3 +299,41 @@ folding; nothing further to extract from them.
 Incidental repo note from the check: a git remote named `server` exists with no
 URL (fetch errors harmlessly). Owner may want to `git remote remove server` —
 not done autonomously since it's repo config.
+
+---
+
+## WAVE 4 (2026-07-02, third dump): zkSNARK applications list
+
+A one-paragraph dump: the standard zkSNARK deployment map (Zcash shielded
+transactions, zk-rollups, WorldID identity, voting, proof of reserves,
+verifiable ML/compute) — **accurate** — plus one more stub.
+
+**The load-bearing extraction — `[VERIFIED + roadmap anchor]`: proof of
+reserves.** This is the single item on that list that maps directly onto GSE,
+and the lineage already runs through our shipped code: `proof-of-record.ts`'s
+own header says it was *adapted from the proof-of-liabilities /
+proof-of-solvency Merkle pattern (olalonde/\*)*. Proof of reserves is the
+closest DEPLOYED real-world analog of the future sealed-slate proof: an
+exchange proves an aggregate property (solvency) over a committed set of
+individual records without revealing them; GSE would prove an aggregate
+track-record property over the committed pick set without revealing sealed
+pre-kickoff picks. Two consequences, both ledgered: (1) **design anchor** — the
+sealed-slate aggregate proof should be framed and built as "proof-of-reserves
+for predictions" (Merkle commitment layer shipped; the ZK aggregate layer is
+the Cluster-C Nova roadmap); (2) **prior-art discipline** — this is one more
+reason GSE must never claim "first cryptographic/verifiable track record"
+(proof-of-reserves + Betstamp/provably-fair prior art; consistent with the
+standing GIPS-inspired-never-GIPS-compliant rule).
+
+**Verifiable ML/compute** — `[ROADMAP]`, already covered in spirit by the
+model-pre-registration / calibration-commitment line: proving "this published
+number came from this committed model" is the commitment layer today, a
+verifiable-inference circuit in the maximal future. Zcash / rollups / WorldID /
+voting: accurate entries with no GSE surface; noted, not actionable.
+
+**The stub (`zkSNARK(app) { prove(privateData); verify(public); } // locked`)
+— verified by execution: it is a SYNTAX ERROR.** `node --check` rejects it at
+the opening brace (bare identifier-call followed by a block is not a function
+declaration in JS/TS). "// locked" and "Executed" are attached to code that
+does not parse. `[REFUTED-by-execution]` — consistent with the wave-1/wave-3
+stub family; the salvageable ideas from that family already shipped.
