@@ -13,6 +13,13 @@ non-negotiable rules.
 > off by default. See `docs/calibration-proposals/FROZEN.md` and
 > `scripts/guardrails/*` for the enforcement surface.
 
+## FABLE/NFL evidence layer
+
+The repo-visible FABLE/NFL evidence layer lives in `docs/fable/`. Start with
+`docs/fable/README.md`, `docs/fable/CODEX_FINAL_REPORT.md`, and
+`docs/fable/aws/AWS_FINAL_REPORT.md`. The corresponding pure TypeScript
+primitives live in `apps/web/lib/fable/`.
+
 ## Local turn-on (cockpit-ready in ~10 minutes)
 
 These steps stand the app up on `localhost:3000` with seeded cockpit data and
