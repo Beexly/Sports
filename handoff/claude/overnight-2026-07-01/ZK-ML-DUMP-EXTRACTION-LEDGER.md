@@ -540,4 +540,31 @@ blinding-0 separately, never together). Fixed with a shared `pointToCommitment`
 identity guard on commit/add/aggregate, two regression tests pinning both paths.
 This is why an 8-wave self-audit fleet was then run — one finder per shipped
 module, each required to reproduce bugs by execution, each serious finding
-independently re-verified. (Results integrated in the following commits.)
+independently re-verified.
+
+**Self-audit OUTCOME (Opus, executed the Fable handoff; commits ac369699 +
+16fa3f6b):** the fleet was stopped early to save credit tokens, but its finder
+agents had already written ~12 untracked probe files into `src/__tests__`
+(which vitest then ran). Those were triaged BY EXECUTION, findings harvested,
+probes deleted:
+- **CORRELATION (ac369699):** the anytime-valid tiers assume de-correlated
+  input; measured H0 false-positive inflates under same-game correlation
+  (calibration-sequence 0.12–0.25; anytime-ledger 0.11 at 3 perfectly-correlated
+  markets/game). Caveats + regression tests added; loader de-correlation is the
+  owner-gated proper fix. (Detailed above? no — this is the new disclosure.)
+- **1 FALSE POSITIVE, correctly NOT "fixed":** `anytime-attack2`'s "lowerBound
+  never exceeds observed mean" is a wrong invariant — an anytime-valid bound is
+  a path-supremum rejection and legitimately can sit above the final sample mean
+  (verified `rejects(L−ε)=true`, `rejects(L+0.05)=false` on 3 sampled cases).
+- **4 REAL silent-wrong-answer / robustness bugs (16fa3f6b),** all on
+  extreme-but-finite input (unreachable in GSE; dark modules; but the
+  never-silent-wrong contract applies): simhash `signature()` normSq overflow →
+  NaN magnitudes (now null); LinTS `updateLinTs()` A/b overflow → silent state
+  corruption (now refuse + preserve prior state); LinTS `thetaEstimate()`
+  `round(1e308)=Infinity` after a finite mean (now guards after rounding →
+  finite-or-null); crypto `openCommitment()` raw-hex `===` false-negatived a
+  valid uppercase commitment (now decoded-point compare). Regression tests
+  codify all four. Post-fix: engine 71 files / 738 tests, crypto 13, apps/web
+  tsc all green.
+- **Process lesson:** stopping a workflow does NOT delete files its agents
+  already wrote — always `git status` for leftover probe files after a stop.
