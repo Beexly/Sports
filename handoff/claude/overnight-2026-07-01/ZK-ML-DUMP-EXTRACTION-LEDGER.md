@@ -137,9 +137,15 @@ bound) was computed from the sealed ledger **without revealing the ledger.***
 | Technique | Tag | Honest leverage |
 |---|---|---|
 | **SnarkPack** (Groth16 aggregation via GIPA/MIPP; O(log k) proofs; the dump relays ~8s prove / ~33ms verify at 8192 proofs — figures from the SnarkPack literature (Gailly–Maller–Nitulescu 2021), **not verified here**) | `[ROADMAP]` | *If* GSE ever generates one ZK proof per pick, SnarkPack folds a whole slate into one succinct proof. The reported numbers *suggest* the path is fast enough to be practical — useful for de-risking the "should we ever build ZK?" decision, pending verification the day it matters. |
-| **Halo2 + IPA accumulation** (transparent, no trusted setup, recursive) | `[ROADMAP-preferred]` | The **better** fit than SnarkPack for GSE: no trusted-setup ceremony (a trust-brand liability we must never take on lightly), and native **incremental** accumulation matches a ledger that grows one settled pick at a time. If ZK is ever built, this is the recommended architecture. |
+| **Halo2 + IPA accumulation** (transparent, no trusted setup, recursive) | `[ROADMAP]` (superseded as preferred by Nova, below) | Better than SnarkPack for GSE (no ceremony; incremental). Was this ledger's preferred path until the wave-3 Nova dump — see the Nova row for why folding fits GSE's shape even better. Still the right toolbox for complex single-circuit proving. |
 | **IPA polynomial commitment** (Pedersen vector commit, log-d folding) | `[ROADMAP]` | The commitment scheme under Halo2. Correct as described. |
 | **Halo2 accumulation layer / accumulator circuit** (λ-linear MultiOpenProof folding) | `[ROADMAP]` | The recursion mechanism. Correct. Only meaningful once base per-pick circuits exist. |
+| **Nova folding / IVC** (Kothapalli–Setty–Tzialla, CRYPTO 2022, ePrint 2021/370; `microsoft/Nova` Rust crate) | `[ROADMAP-preferred]` | **The wave-3 upgrade, and the best architectural fit found in any dump so far:** GSE's anytime e-process is *literally IVC-shaped* — the state `z_i` is the (log-wealth, running-moment) tuple and each settled pick applies one deterministic step `z_{i+1} = F(z_i, pick_i)`. Nova folds two relaxed-R1CS instances into one per step with **constant recursion overhead** (~2 group scalar-muls in-circuit, no per-step SNARK, no FFTs), **no trusted setup** (transparent — the property a trust brand must not compromise), and a final succinct Spartan proof. If sealed-ledger proofs ("this published bound was computed by N honest applications of F from the committed z_0") are ever built, THIS is the named statement and architecture. |
+| **Nova security landmines** (must-know before any adoption) | `[ROADMAP]` | Two sourced cautions ledgered so future-us cannot step on them: (1) the original 2-cycle-of-curves implementation had a **soundness bug** (ePrint 2023/969 — forged proofs for infeasibly long computations); fixed in current `microsoft/Nova` — adopt only the patched implementation and re-check at adoption time. (2) **IVC proofs are malleable** — a valid proof can be reshaped for a related statement; any GSE use must context-bind the proof (tie it to the slate root / commitmentId, which our `calibration-commitment.ts` fields already carry). |
+| **Sangria** (Nova-style folding for PLONKish: relaxed PLONK + slack vector) / **HyperNova** (CCS) / **NeutronNova** (zero-check folding, zkVM-oriented) | `[ROADMAP]` | The variant map if the base circuits ever want custom gates/lookups instead of R1CS. Correct as described; nothing to choose until a circuit exists. |
+| **Plonky2/Plonky3** (TurboPLONK + FRI + Goldilocks 64-bit field; ~170ms recursion per the Plonky2 announcement — literature figure, **not verified here**) | `[ROADMAP]` | The transparent FRI-recursion family. Relevant if GSE ever wants STARK-style proofs with no pairings at all; otherwise Nova's folding is the tighter fit for the sequential-ledger shape. |
+| **FRI** (RS-codeword Merkle commit + random-linear-combo folding rounds + query consistency; transparent, log²-size proofs) vs **KZG** (pairing PCS, O(1) proofs/verify, **trusted SRS**) | `[ROADMAP]` | The PCS tradeoff, correctly stated by the dump. GSE's standing call: prefer the **transparent** family (FRI/IPA/Nova) — a trusted-setup ceremony is a trust-brand liability we must never take on lightly; KZG only as an optional final-compression layer if a partner integration ever demands O(1) on-chain verification. |
+| **Incremental fold API for `anytime-ledger.ts`** (an `O(1)`-per-pick `foldPick(state, return)` mirroring the IVC step, instead of full-array replay) | `[BUILDABLE-future]` | The one engineering idea this wave suggests for TODAY's codebase. Deliberately NOT built: the closed-form replay is O(n), deterministic, and instant at any realistic ledger size, and a second code path is a divergence risk with zero present consumer. Trigger to build: a live, continuously-updating public ledger surface (per-request replay becoming measurable) — at which point the incremental state also becomes the literal Nova `z_i`. |
 
 **The honest bottom line for Cluster C:** we do **not** build a ZK prover now — we
 have no "reveal the ledger" problem yet (the ledger's *contents* are already public
@@ -247,3 +253,49 @@ its own gate. Post-fix state, all counted from actual runs: engine suite **69
 files / 714 tests green**, engine + apps/web typechecks clean. Every number in
 this document traces to an executed run, the repo, or is explicitly attributed
 to unverified external literature.
+
+---
+
+## WAVE 3 (2026-07-02, second dump): Nova/IVC survey + new Grok snippets
+
+**The survey half is the real content** — an accurate, well-sourced Nova
+explainer (folding schemes, relaxed R1CS, IVC, `microsoft/Nova`, the 2023/969
+soundness fix, malleability, HyperNova/NeutronNova/Sangria, Plonky2/FRI/KZG/RS
+one-liners). Extraction landed above as the **Cluster C upgrade**: Nova is now
+the `[ROADMAP-preferred]` sealed-ledger architecture (the anytime e-process is
+literally IVC-shaped), with both security landmines ledgered, the variant map
+recorded, the FRI-vs-KZG transparency call made explicit, and one
+`[BUILDABLE-future]` engineering idea (incremental fold API) tagged with its
+build trigger. The two IVC diagrams in the dump are the standard zkresear.ch
+"Nova-based zkVM" figures — accurate illustrations of base/intermediate-node
+folding; nothing further to extract from them.
+
+**The snippet half, verified BY EXECUTION (scratchpad run, 2026-07-02):**
+
+- `villeEProcess` — ran verbatim. Output `GSE-ZK:0.6426:alpha0.05, valid:true`.
+  Probes: the "bound" is **constant in n** (0.642629 at n=4, n=100, n=10,000
+  with the mean held fixed) — a confidence radius must shrink ~1/√n and an
+  e-process bound must depend on the trajectory; this is `1.96·√(mean)`, a
+  category error. On an all-loss ledger it returns **`NaN` with `valid:true`**
+  — the attached "executed proof" comment is false by construction (executing a
+  template literal is not a proof; the validity flag is unconditional). Same
+  family as wave 1's `zkCalibrationReceipt`; the receipt-structure idea was
+  already salvaged into `calibration-commitment.ts` with PROVEN bounds. Nothing
+  new to extract. `[REFUTED-by-execution; salvage already shipped]`
+- `haloLookupOpt` / `novaFold` / `plonkyNovaHybrid` / the "NovaX/AetherForge"
+  cascade — string-concat stubs with hardcoded `valid:true` and asserted
+  latencies ("3ms", "sub-ms", "170ms", "0.66s"); the latency numbers are
+  recognizable literature figures relayed without measurement (Plonky2
+  announcement, Groth16 verify) — attributed as such, not adopted as facts.
+  The `novaFold` TS sketch is directionally correct about relaxed-R1CS linear
+  combination but is not runnable code. `[REFUTED-as-code; concepts covered by
+  the Cluster C rows above]`
+- **"Beexly commit posted / repo diff ready" — verified FALSE against the
+  remote:** `git fetch` + branch listing shows the only update in the window is
+  our own `claude/night-shift` push (`eb05b78d`). No external branch, commit,
+  or diff exists. This is the checkable-claim standard working as intended:
+  named claim, executed check, recorded verdict.
+
+Incidental repo note from the check: a git remote named `server` exists with no
+URL (fetch errors harmlessly). Owner may want to `git remote remove server` —
+not done autonomously since it's repo config.
