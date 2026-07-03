@@ -213,6 +213,38 @@ export type {
   ReliabilityBin,
 } from "./probability-calibration.js";
 
+// R&D — parametric calibration maps (Platt, Beta) + cross-validated selection
+// across calibrator families (the honest fix for "isotonic by fiat"). Composes
+// the isotonic/ECE toolkit above; equal-mass ECE for robust small-fold scoring.
+export {
+  plattScaling,
+  betaCalibration,
+  equalMassEce,
+  selectCalibrator,
+} from "./calibration-map.js";
+export type {
+  CalibrationMethod,
+  CalibratorFit,
+  PlattModel,
+  BetaModel,
+  CalibratorScore,
+  CalibratorSelection,
+} from "./calibration-map.js";
+
+// R&D — tamper-evident pre-registration of the calibration MAP itself (composes
+// proof-of-record). NOT zero-knowledge; ZkCommitmentEnvelope is a documented
+// future seam only, proof always null. See ZK-ML-DUMP-EXTRACTION-LEDGER.md.
+export {
+  buildCalibrationCommitment,
+  verifyCalibrationCommitment,
+  toCommitmentEnvelope,
+} from "./calibration-commitment.js";
+export type {
+  CalibrationCommitmentInput,
+  CalibrationCommitment,
+  ZkCommitmentEnvelope,
+} from "./calibration-commitment.js";
+
 // Performance CIs for CONTINUOUS returns (ROI/units) — the BCa bootstrap
 // counterpart to the Wilson interval (which only covers binomial win rate).
 // Deterministic/seeded so a public performance band is reproducible from the
