@@ -23,10 +23,10 @@
  *   exposed a `{ commitment, bound, proof, publicInputsHash }` interface labeled
  *   "ZK" — but it only checked a SHA-256 string's shape, i.e. a tamper-evident
  *   commitment we ALREADY have via Merkle, NOT zero knowledge. We keep that
- *   interface as a documented FUTURE seam (`ZkCommitmentEnvelope`) and fill only
+ *   interface as a documented FUTURE seam (`CommitmentEnvelope`) and fill only
  *   the parts that are real (the commitment). `proof` stays null. We do NOT call
- *   this ZK. Shipping a SHA-256 stub labeled "ZK proof" would be the exact
- *   overclaim the moat forbids.
+ *   this ZK — not in claims and not in exported symbol names. Shipping a SHA-256
+ *   stub labeled "ZK proof" would be the exact overclaim the moat forbids.
  *
  * Composes through proof-of-record.ts (hashLeaf + canonicalPickPayload) so it uses
  * the SAME Merkle-leaf hashing as every other GSE commitment. Deterministic; the
@@ -36,7 +36,19 @@
 
 import { hashLeaf, canonicalPickPayload, type HashFn } from "./proof-of-record.js";
 
-/** Domain-separation tag so a calibration commitment can never collide with a pick leaf. */
+/**
+ * Type tag committed as an ordinary payload field. Honest scope (hostile-review
+ * correction): this is NOT hash-level domain separation — it lives inside the
+ * payload, so on its own it would not stop a crafted cross-type collision. What
+ * actually prevents collision with a pick leaf is the conjunction of (a) the
+ * delimiter rejection below, which makes every committed payload parse to
+ * exactly one field map, (b) the field-key sets differing between the two
+ * payload types (a pick payload has pickId/gameId/...; this one has
+ * commitmentType/paramsHash/...), and (c) the "calib:" commitmentId prefix vs
+ * cuid pickIds in hashLeaf's id slot. A hash-prefix domain parameter on
+ * hashLeaf itself is the stronger future refactor (shared primitive; not
+ * changed unilaterally here).
+ */
 const COMMITMENT_TYPE = "calibration-map@v1";
 
 export interface CalibrationCommitmentInput {
@@ -51,7 +63,13 @@ export interface CalibrationCommitmentInput {
    * collides with the payload delimiters.
    */
   readonly paramsCanonical: string;
-  /** The claimed ECE the caller measured for this map (0..1), on `sampleSize` settled picks. */
+  /**
+   * The claimed ECE the caller measured for this map (0..1), on `sampleSize`
+   * settled picks. COMMITMENT RESOLUTION: committed rounded to 6 decimals, so
+   * two values differing only past 1e-6 hash identically — tamper-evidence is
+   * to 6-digit resolution by design (same for anytimeLowerBound). An ECE
+   * difference below 1e-6 is far under any decision threshold in this codebase.
+   */
   readonly claimedEce: number;
   /** Number of settled samples the ECE was measured on (positive integer). */
   readonly sampleSize: number;
@@ -80,15 +98,16 @@ export interface CalibrationCommitment {
 }
 
 /**
- * FUTURE seam ONLY — the interface a real zero-knowledge proof would fill.
- * Today `proof` is ALWAYS null: this envelope carries the tamper-evident
- * commitment (contentHash) and, optionally, the published bound. A later Halo2/IPA
- * circuit could populate `proof` to attest the bound was computed from a SEALED
- * ledger without revealing it (see the extraction ledger, Cluster C). Until such a
- * circuit exists and is verified, `proof` MUST stay null and nothing here may be
- * described as "ZK". This type exists so that day is a drop-in, not a refactor.
+ * Envelope for a published commitment + bound. The `proof` slot is a FUTURE
+ * seam only — a later succinct-proof circuit (e.g. Halo2/IPA; see the
+ * extraction ledger, Cluster C) could populate it to attest the bound was
+ * computed from a SEALED ledger without revealing it. Today `proof` is
+ * hard-typed null: this envelope is a tamper-evident commitment, NOT a
+ * zero-knowledge proof, and nothing that ships may describe it as one.
+ * (Deliberately named CommitmentEnvelope — not "Zk-" anything — so the
+ * shipping symbol cannot be misread as an existing ZK capability.)
  */
-export interface ZkCommitmentEnvelope {
+export interface CommitmentEnvelope {
   /** The tamper-evident commitment (= CalibrationCommitment.contentHash). REAL today. */
   readonly commitment: string;
   /** The published bound this commitment stands behind, or null. REAL today. */
@@ -101,6 +120,19 @@ export interface ZkCommitmentEnvelope {
 
 function isNonEmptyString(v: unknown): v is string {
   return typeof v === "string" && v.length > 0;
+}
+
+/**
+ * A string is committable only if it cannot forge payload structure. The
+ * canonical payload joins "key=value" pairs with "|", so a value containing
+ * "|" or "=" lets a committer craft TWO different field sets with the SAME
+ * contentHash (hostile-review HIGH: method "platt|ledgerRoot=evil" forged a
+ * different (method, ledgerRoot) pair that verified). Committable strings are
+ * rejected outright rather than escaped — every legitimate value here
+ * (semver, method name, ISO timestamp, hex root) is delimiter-free.
+ */
+function isCommittableString(v: unknown): v is string {
+  return isNonEmptyString(v) && !v.includes("|") && !v.includes("=");
 }
 function round(value: number, digits = 6): number {
   const s = 10 ** digits;
@@ -115,16 +147,19 @@ export function buildCalibrationCommitment(
   input: CalibrationCommitmentInput,
   hash: HashFn,
 ): CalibrationCommitment | null {
-  if (!isNonEmptyString(input.modelVersion)) return null;
-  if (!isNonEmptyString(input.method)) return null;
+  // Delimiter-bearing strings are REFUSED (see isCommittableString) — they can
+  // forge a second field set with the same hash. paramsCanonical is exempt: it
+  // is committed only via its hash, never embedded in the payload.
+  if (!isCommittableString(input.modelVersion)) return null;
+  if (!isCommittableString(input.method)) return null;
   if (!isNonEmptyString(input.paramsCanonical)) return null;
-  if (!isNonEmptyString(input.committedAt)) return null;
+  if (!isCommittableString(input.committedAt)) return null;
   if (!Number.isFinite(input.claimedEce) || input.claimedEce < 0 || input.claimedEce > 1) return null;
   if (!Number.isInteger(input.sampleSize) || input.sampleSize <= 0) return null;
   const lb = input.anytimeLowerBound ?? null;
   if (lb !== null && !Number.isFinite(lb)) return null;
   const ledgerRoot = input.ledgerRoot ?? null;
-  if (ledgerRoot !== null && !isNonEmptyString(ledgerRoot)) return null;
+  if (ledgerRoot !== null && !isCommittableString(ledgerRoot)) return null;
 
   const paramsHash = hash(input.paramsCanonical);
 
@@ -172,7 +207,7 @@ export function verifyCalibrationCommitment(receipt: CalibrationCommitment, hash
 export function toCommitmentEnvelope(
   receipt: CalibrationCommitment,
   bound: number | null = receipt.fields.anytimeLowerBound ?? null,
-): ZkCommitmentEnvelope {
+): CommitmentEnvelope {
   const ledgerRoot = receipt.fields.ledgerRoot ?? null;
   return {
     commitment: receipt.contentHash,

@@ -76,6 +76,19 @@ describe("buildCalibrationCommitment / verify", () => {
     expect(buildCalibrationCommitment({ ...base, paramsCanonical: "" }, sha256)).toBeNull();
     expect(buildCalibrationCommitment({ ...base, anytimeLowerBound: Infinity }, sha256)).toBeNull();
   });
+
+  it("HOSTILE REGRESSION: refuses delimiter-bearing strings that could forge a second field set", () => {
+    // Pre-fix, method 'platt|ledgerRoot=evil' produced a payload that parsed to a
+    // DIFFERENT (method, ledgerRoot) pair with the SAME contentHash — a working
+    // commitment forgery. All committed strings now reject '|' and '='.
+    expect(buildCalibrationCommitment({ ...base, method: "platt|ledgerRoot=evil" }, sha256)).toBeNull();
+    expect(buildCalibrationCommitment({ ...base, method: "a=b" }, sha256)).toBeNull();
+    expect(buildCalibrationCommitment({ ...base, modelVersion: "v5|x=1" }, sha256)).toBeNull();
+    expect(buildCalibrationCommitment({ ...base, committedAt: "2026|z=0" }, sha256)).toBeNull();
+    expect(buildCalibrationCommitment({ ...base, ledgerRoot: "root|q=r" }, sha256)).toBeNull();
+    // paramsCanonical is exempt by design (committed via its hash, never embedded):
+    expect(buildCalibrationCommitment({ ...base, paramsCanonical: "platt:a=1|b=2" }, sha256)).not.toBeNull();
+  });
 });
 
 describe("toCommitmentEnvelope (future ZK seam — proof stays null)", () => {

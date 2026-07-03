@@ -25,7 +25,6 @@
 
 import {
   isotonicCalibration,
-  expectedCalibrationError,
   type CalibrationSample,
 } from "./probability-calibration.js";
 
@@ -129,7 +128,15 @@ function solveLinear(A: readonly (readonly number[])[], b: readonly number[]): n
  * Fit weights w minimizing regularized cross-entropy for design rows `X` and
  * soft targets `t` in [0,1]. Ridge (lambda) on all but the last (intercept)
  * coefficient stabilizes fits under separation. Deterministic; no RNG.
- * Returns null if the normal equations are singular at every step.
+ *
+ * REFUSES non-convergence: on (near-)separated data with hard 0/1 targets the
+ * optimum is at infinity — without this guard the loop exhausts maxIter and
+ * hands back divergent garbage-magnitude weights with no signal (found by
+ * hostile review: a one-outlier separated fixture returned coefficients of
+ * magnitude ~1e7 as a "successful" fit). Steps are damped to a max-norm of
+ * MAX_STEP per iteration so recoverable fits still converge; if the final
+ * iteration's step is still above CONVERGED_TOL, the fit did not converge and
+ * we return null — an honest refusal instead of a fabricated map.
  */
 function fitLogisticIRLS(
   X: readonly (readonly number[])[],
@@ -140,8 +147,11 @@ function fitLogisticIRLS(
 ): number[] | null {
   const n = X.length;
   if (n === 0) return null;
+  const MAX_STEP = 10; // per-iteration max |step| component (damping, not a bound on w)
+  const CONVERGED_TOL = 1e-4; // a final step larger than this = did not converge
   const d = X[0]!.length;
   let w = new Array<number>(d).fill(0);
+  let lastMaxDelta = Infinity;
   for (let iter = 0; iter < maxIter; iter++) {
     // Gradient g (d) and Hessian H (d×d).
     const g = new Array<number>(d).fill(0);
@@ -164,15 +174,23 @@ function fitLogisticIRLS(
       H[a]![a] = H[a]![a]! + lambda;
     }
     const step = solveLinear(H, g);
-    if (!step) return w.every((v) => Number.isFinite(v)) ? w : null;
-    let maxDelta = 0;
-    for (let a = 0; a < d; a++) {
-      w[a] = w[a]! - step[a]!;
-      maxDelta = Math.max(maxDelta, Math.abs(step[a]!));
-    }
+    if (!step) return null; // singular normal equations — refuse rather than guess
+    // Damping: scale the whole step down when its largest component exceeds MAX_STEP.
+    let stepMax = 0;
+    for (let a = 0; a < d; a++) stepMax = Math.max(stepMax, Math.abs(step[a]!));
+    const damp = stepMax > MAX_STEP ? MAX_STEP / stepMax : 1;
+    for (let a = 0; a < d; a++) w[a] = w[a]! - damp * step[a]!;
     if (!w.every((v) => Number.isFinite(v))) return null;
-    if (maxDelta < tol) break;
+    lastMaxDelta = stepMax * damp;
+    if (lastMaxDelta < tol) break;
   }
+  if (lastMaxDelta > CONVERGED_TOL) return null; // unconverged (e.g. separation) — refuse
+  // Saturation refusal: on (near-)separated data the damped walk can "converge"
+  // numerically at a huge-coefficient step function (the gradient dies into the
+  // 1e-9 Hessian floor). No genuine probability-calibration relationship needs
+  // slopes anywhere near this scale — |w| beyond MAX_COEF is separation, not fit.
+  const MAX_COEF = 50;
+  for (const v of w) if (Math.abs(v) > MAX_COEF) return null;
   return w;
 }
 
@@ -250,8 +268,14 @@ export interface BetaModel extends CalibratorFit {
  * Beta calibration (Kull et al. 2017): a 3-parameter map that subsumes the
  * identity and is more flexible than Platt for binary forecasts (it can bend the
  * curve near both 0 and 1 independently). Fit as logistic regression on features
- * [ln p, −ln(1−p), 1]; monotonicity requires a,b ≥ 0, enforced by Kull's refit
- * rule (drop a violating feature and refit) rather than by clamping a fitted line.
+ * [ln p, −ln(1−p), 1]. Monotonicity requires a,b ≥ 0: a single violating
+ * coefficient triggers a drop-that-feature refit (per Kull 2017 / the betacal
+ * reference implementation); if the REFIT coefficient is itself negative — a
+ * genuinely non-monotone forecast/outcome relationship, e.g. a flat-then-
+ * decreasing truth (hostile-review construction) — we fall back to the
+ * intercept-only base-rate map instead of returning a decreasing "calibration".
+ * (The both-negative and refit-negative fallbacks are OUR conservative
+ * extension, not part of Kull's prescription.)
  */
 export function betaCalibration(samples: readonly CalibrationSample[]): BetaModel | null {
   const n = samples.length;
@@ -263,6 +287,12 @@ export function betaCalibration(samples: readonly CalibrationSample[]): BetaMode
   const s1 = samples.map((s) => Math.log(clampUnit(s.p))); // ln p
   const s2 = samples.map((s) => -Math.log(1 - clampUnit(s.p))); // −ln(1−p)
 
+  // Intercept-only fallback: the base-rate map (monotone-trivially, never wrong-signed).
+  const interceptOnly = (): [number, number, number] => {
+    const baseRate = clampUnit(nPos / n);
+    return [0, 0, Math.log(baseRate / (1 - baseRate))];
+  };
+
   // Full 3-feature fit: coeffs [a, b, c].
   const Xfull: number[][] = samples.map((_, i) => [s1[i]!, s2[i]!, 1]);
   const wf = fitLogisticIRLS(Xfull, t);
@@ -271,27 +301,18 @@ export function betaCalibration(samples: readonly CalibrationSample[]): BetaMode
   let b = wf[1]!;
   let c = wf[2]!;
 
-  // Enforce a,b ≥ 0 via Kull's refit rule.
+  // Enforce a,b ≥ 0. Any refit whose surviving coefficient is ALSO negative
+  // collapses to the intercept-only map (never return a decreasing map).
   if (a < 0 && b < 0) {
-    a = 0;
-    b = 0;
-    // Intercept-only logistic: c = logit(base rate).
-    const base = clampUnit(nPos / n);
-    c = Math.log(base / (1 - base));
+    [a, b, c] = interceptOnly();
   } else if (a < 0) {
-    a = 0;
-    const Xr: number[][] = samples.map((_, i) => [s2[i]!, 1]);
-    const wr = fitLogisticIRLS(Xr, t);
+    const wr = fitLogisticIRLS(samples.map((_, i) => [s2[i]!, 1]), t);
     if (!wr) return null;
-    b = wr[0]!;
-    c = wr[1]!;
+    [a, b, c] = wr[0]! < 0 ? interceptOnly() : [0, wr[0]!, wr[1]!];
   } else if (b < 0) {
-    b = 0;
-    const Xr: number[][] = samples.map((_, i) => [s1[i]!, 1]);
-    const wr = fitLogisticIRLS(Xr, t);
+    const wr = fitLogisticIRLS(samples.map((_, i) => [s1[i]!, 1]), t);
     if (!wr) return null;
-    a = wr[0]!;
-    c = wr[1]!;
+    [a, b, c] = wr[0]! < 0 ? interceptOnly() : [wr[0]!, 0, wr[1]!];
   }
   if (![a, b, c].every(Number.isFinite)) return null;
 
@@ -335,25 +356,59 @@ function isotonicFit(samples: readonly CalibrationSample[]): CalibratorFit | nul
  * sparse or clustered — an equal-width bin can be empty or hold a single point in
  * the tails and inject noise. Used for out-of-sample model selection below, and
  * exported because it is independently useful.
+ *
+ * ORDER-INVARIANT BY CONSTRUCTION (hostile-review fix): identical forecasts are
+ * pre-pooled into one weighted group (same phase-1 as isotonicCalibration) and a
+ * tie group is NEVER split across a bin boundary — a stable sort otherwise leaks
+ * the caller's input order into the estimate whenever forecasts tie (the norm for
+ * quantized odds-derived probabilities), making the same multiset score
+ * differently across orderings. Bins are closed greedily at the ≈n/k cumulative-
+ * mass targets over whole groups.
+ *
+ * SMALL-SAMPLE FLOOR: k is capped so each bin averages ≥ MIN_PER_BIN samples —
+ * singleton bins degenerate to mean|p−y|, which maximally punishes a sharp,
+ * perfectly calibrated forecaster. With very small n this collapses toward k=1
+ * (overall |meanForecast − meanOutcome|), the only honest binned statement left.
  */
 export function equalMassEce(samples: readonly CalibrationSample[], bins = 10): number {
   const n = samples.length;
   if (n === 0) return 0;
+  const MIN_PER_BIN = 5;
+  // Phase 1 — pool identical forecasts into weighted groups (order-invariant).
   const sorted = [...samples].sort((a, b) => a.p - b.p);
-  const k = Math.max(1, Math.min(bins, n));
+  type Group = { p: number; weight: number; ySum: number };
+  const groups: Group[] = [];
+  for (const s of sorted) {
+    const last = groups[groups.length - 1];
+    if (last && last.p === s.p) {
+      last.weight += 1;
+      last.ySum += s.y;
+    } else {
+      groups.push({ p: s.p, weight: 1, ySum: s.y });
+    }
+  }
+  const k = Math.max(1, Math.min(bins, groups.length, Math.floor(n / MIN_PER_BIN) || 1));
+  // Phase 2 — greedy whole-group bins closed at cumulative-mass targets.
   let ece = 0;
-  for (let bin = 0; bin < k; bin++) {
-    const start = Math.floor((bin * n) / k);
-    const end = Math.floor(((bin + 1) * n) / k);
-    const count = end - start;
-    if (count <= 0) continue;
+  let g = 0;
+  let filled = 0;
+  for (let bin = 0; bin < k && g < groups.length; bin++) {
+    const target = Math.floor(((bin + 1) * n) / k);
+    let weight = 0;
     let fSum = 0;
     let ySum = 0;
-    for (let i = start; i < end; i++) {
-      fSum += sorted[i]!.p;
-      ySum += sorted[i]!.y;
+    // Always take at least one group; keep taking whole groups until the
+    // cumulative count reaches this bin's target (last bin sweeps the rest).
+    while (g < groups.length && (weight === 0 || filled + weight < target || bin === k - 1)) {
+      const grp = groups[g]!;
+      weight += grp.weight;
+      fSum += grp.p * grp.weight;
+      ySum += grp.ySum;
+      g += 1;
+      if (bin === k - 1 && g >= groups.length) break;
     }
-    ece += (count / n) * Math.abs(fSum / count - ySum / count);
+    filled += weight;
+    if (weight > 0) ece += (weight / n) * Math.abs(fSum / weight - ySum / weight);
   }
   return round(ece, 6);
 }
@@ -375,6 +430,13 @@ export interface CalibratorSelection {
   readonly scores: readonly CalibratorScore[];
   /** OOF equal-mass ECE of the RAW (uncalibrated) forecasts — the bar to beat. */
   readonly rawOofEce: number;
+  /**
+   * The noise bar: the 90th percentile of the best-family ECE "gain" observed on
+   * `nullSims` parametric-bootstrap replicas where the raw forecasts are TRUE
+   * (y ~ Bernoulli(p)). A real family must beat raw by MORE than this (and than
+   * minEceGain) — otherwise its win is indistinguishable from selection noise.
+   */
+  readonly nullGainMargin: number;
   /** The recommended family, refit on ALL data (null when recommended === "identity"). */
   readonly model: CalibratorFit | null;
   readonly sampleSize: number;
@@ -396,50 +458,24 @@ function fitFamily(method: CalibrationMethod, samples: readonly CalibrationSampl
 }
 
 /**
- * Choose a calibrator family by k-fold, OUT-OF-SAMPLE ECE — the honest fix for
- * "isotonic by fiat". For each family we fit on the training folds and score the
- * held-out fold, so an overfit map is penalized where it actually matters (data it
- * did not see). The winner is refit on all data. If no family beats the raw
- * forecasts' OOF ECE, we recommend "identity" (apply nothing) rather than ship a
- * map that does not earn its place.
- *
- * Returns null below a floor where CV is not meaningful. Fully deterministic given
- * `seed` (fold shuffle) — the same ledger always selects the same calibrator.
+ * One full CV pass: per-family pooled out-of-fold ECE + the raw bar.
+ * Shared by the real-data selection and the parametric-bootstrap null below.
  */
-export function selectCalibrator(
+function crossValidatedScores(
   samples: readonly CalibrationSample[],
-  opts: {
-    readonly folds?: number;
-    readonly seed?: number;
-    readonly bins?: number;
-    readonly minSample?: number;
-    /**
-     * Absolute OOF-ECE improvement over raw a family must clear to be recommended
-     * (else "identity"). Default 0 = "any improvement wins". Finite-sample ECE is
-     * biased upward, so on near-calibrated data a map can win by noise; a
-     * production policy should set this to a margin measured from fold-to-fold ECE
-     * variance rather than a guessed constant (which is why the default is 0, not
-     * an invented threshold).
-     */
-    readonly minEceGain?: number;
-  } = {},
-): CalibratorSelection | null {
-  const folds = opts.folds ?? 5;
-  const seed = opts.seed ?? 0x5eed;
-  const bins = opts.bins ?? 10;
-  const minSample = opts.minSample ?? 40;
-  const minEceGain = opts.minEceGain ?? 0;
+  folds: number,
+  seed: number,
+  bins: number,
+): { rawOofEce: number; scores: CalibratorScore[] } {
   const n = samples.length;
-  if (n < Math.max(minSample, 2 * folds)) return null;
-  if (!samples.every((s) => Number.isFinite(s.p) && (s.y === 0 || s.y === 1))) return null;
-
   const perm = seededPermutation(n, seed);
   const foldOf = new Array<number>(n);
   for (let rank = 0; rank < n; rank++) foldOf[perm[rank]!] = rank % folds;
 
-  // Raw (identity) out-of-fold ECE: pool the held-out RAW samples across folds.
-  // For the identity map the held-out prediction IS the raw forecast, so pooling
-  // all folds equals scoring the whole sample once — computed that way here.
+  // Raw (identity) out-of-fold ECE: for the identity map the held-out prediction
+  // IS the raw forecast, so pooling held-out raw samples across folds is the whole
+  // sample — and equalMassEce is order-invariant (tie pre-pooling), so scoring the
+  // sample once is EXACTLY the pooled-fold score, not merely approximately.
   const rawOofEce = equalMassEce(samples, bins);
 
   const scores: CalibratorScore[] = FAMILIES.map((method) => {
@@ -460,16 +496,89 @@ export function selectCalibrator(
     if (anyFoldFailed || pooled.length === 0) return { method, oofEce: null };
     return { method, oofEce: equalMassEce(pooled, bins) };
   });
+  return { rawOofEce, scores };
+}
 
-  // Winner = lowest OOF ECE that also beats raw; else identity.
+function bestGain(rawOofEce: number, scores: readonly CalibratorScore[]): { best: CalibratorScore | null; gain: number } {
   let best: CalibratorScore | null = null;
   for (const s of scores) {
     if (s.oofEce === null) continue;
     if (best === null || s.oofEce < best.oofEce!) best = s;
   }
-  const beatsRaw = best !== null && best.oofEce! < rawOofEce - minEceGain;
+  return { best, gain: best ? rawOofEce - best.oofEce! : 0 };
+}
+
+/**
+ * Choose a calibrator family by k-fold, OUT-OF-SAMPLE ECE — the honest fix for
+ * "isotonic by fiat". For each family we fit on the training folds and score the
+ * held-out fold, so an overfit map is penalized where it actually matters (data it
+ * did not see). The winner is refit on all data. If no family beats the raw
+ * forecasts' OOF ECE, we recommend "identity" (apply nothing).
+ *
+ * THE NOISE BAR (hostile-review fix): finite-sample binned ECE is biased upward
+ * more for dispersed raw forecasts than for the compressed predictions a fitted
+ * map produces, so at a zero margin a map "wins" on PERFECTLY calibrated data
+ * most of the time (measured 70–88% across n=40..200 before this fix). The
+ * selection therefore calibrates its own bar: `nullSims` parametric-bootstrap
+ * replicas redraw y ~ Bernoulli(p) — the world where raw is TRUE — run the
+ * identical CV pipeline, and record the best-family "gain" that pure selection
+ * noise produces. The real gain must exceed the 90th percentile of those null
+ * gains (and any explicit minEceGain). No invented constant: the bar is measured
+ * from the caller's own forecast distribution at the caller's own n.
+ *
+ * Returns null below a floor where CV is not meaningful. Fully deterministic given
+ * `seed` (fold shuffle + null replica outcomes).
+ */
+export function selectCalibrator(
+  samples: readonly CalibrationSample[],
+  opts: {
+    readonly folds?: number;
+    readonly seed?: number;
+    readonly bins?: number;
+    readonly minSample?: number;
+    /** Extra absolute OOF-ECE improvement required ON TOP of the measured noise bar. Default 0. */
+    readonly minEceGain?: number;
+    /**
+     * Parametric-bootstrap replicas used to measure the noise bar. Default 16.
+     * 0 disables the noise bar (raw comparison only — the pre-fix behavior; use
+     * only in tests or when the caller supplies its own minEceGain).
+     */
+    readonly nullSims?: number;
+  } = {},
+): CalibratorSelection | null {
+  const folds = opts.folds ?? 5;
+  const seed = opts.seed ?? 0x5eed;
+  const bins = opts.bins ?? 10;
+  const minSample = opts.minSample ?? 40;
+  const minEceGain = opts.minEceGain ?? 0;
+  const nullSims = opts.nullSims ?? 16;
+  const n = samples.length;
+  if (!Number.isInteger(folds) || folds < 2) return null; // folds=0 → NaN fold ids; fractional folds silently drop samples
+  if (!Number.isInteger(nullSims) || nullSims < 0) return null;
+  if (n < Math.max(minSample, 2 * folds)) return null;
+  if (!samples.every((s) => Number.isFinite(s.p) && (s.y === 0 || s.y === 1))) return null;
+
+  const { rawOofEce, scores } = crossValidatedScores(samples, folds, seed, bins);
+  const { best, gain } = bestGain(rawOofEce, scores);
+
+  // Noise bar: what "gain" does the best family show when raw is TRUE?
+  let nullGainMargin = 0;
+  if (nullSims > 0) {
+    const gains: number[] = [];
+    for (let b = 0; b < nullSims; b++) {
+      const rand = mulberry32((seed ^ 0x9e3779b9) + 7919 * (b + 1));
+      const replica: CalibrationSample[] = samples.map((s) => ({ p: s.p, y: rand() < s.p ? 1 : 0 }));
+      const cv = crossValidatedScores(replica, folds, seed, bins);
+      gains.push(Math.max(0, bestGain(cv.rawOofEce, cv.scores).gain));
+    }
+    gains.sort((a, b2) => a - b2);
+    nullGainMargin = gains[Math.min(gains.length - 1, Math.ceil(0.9 * gains.length) - 1)] ?? 0;
+  }
+
+  const requiredGain = Math.max(minEceGain, nullGainMargin);
+  const beatsRaw = best !== null && gain > requiredGain;
   const recommended: CalibrationMethod | "identity" = beatsRaw ? best!.method : "identity";
   const model = beatsRaw ? fitFamily(best!.method, samples) : null;
 
-  return { recommended, scores, rawOofEce, model, sampleSize: n, folds, seed };
+  return { recommended, scores, rawOofEce, nullGainMargin, model, sampleSize: n, folds, seed };
 }

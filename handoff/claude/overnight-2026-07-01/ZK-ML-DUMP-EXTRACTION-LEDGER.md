@@ -53,9 +53,9 @@ today and strengthens the core claim. That was the miss; this ledger corrects it
 | **Brier score + Murphy decomposition** (reliability / resolution / uncertainty) | `[VERIFIED-existing]` | Already shipped + tested (`brierDecomposition`). | `probability-calibration.ts` |
 | **Log-loss** | `[VERIFIED-existing]` | Already shipped in the eval harness. | `eval/edge-lab/metrics.mjs` |
 | **Isotonic regression / PAVA** monotone calibration map | `[VERIFIED-existing]` | Correct two-phase PAVA already shipped (Codex-P2 regression-tested), applied via self-suppressing `buildCalibrator`. | `probability-calibration.ts` + `calibration-apply.ts` |
-| **Platt scaling** (logistic map on logit(p), Platt-1999 target smoothing) | `[BUILT]` | The smooth, low-variance alternative isotonic lacked — **proven by execution**: on seeded overconfident data (true shrink 0.5) it recovered a=0.507 and beat isotonic out-of-sample (OOF ECE 0.021 vs 0.057). Exactly the small-n regime GSE is in. | `calibration-map.ts` (this pass) |
-| **Beta calibration** (Kull-2017: sigmoid(a·ln p − b·ln(1−p) + c), a,b ≥ 0 via refit rule) | `[BUILT]` | More flexible than Platt near both endpoints; won on well-calibrated seeded data (OOF 0.0196). Third family in the selector. | `calibration-map.ts` |
-| **Cross-validated calibrator selection** (k-fold, held-out equal-mass ECE, identity fallback) | `[BUILT]` | The honest fix for "isotonic by fiat": the calibrator family must WIN on data it did not see, or nothing is applied. Deterministic (seeded folds). | `calibration-map.ts` `selectCalibrator` |
+| **Platt scaling** (logistic map on logit(p), Platt-1999 target smoothing) | `[BUILT]` | The smooth, low-variance alternative isotonic lacked — **measured**: on seeded overconfident data (true shrink 0.5, n=800) it recovered a=0.507368 and beat isotonic out-of-sample (OOF ECE 0.021021 vs 0.065139) — the regime where parametric maps are expected to help most (a small-n advantage is expected but was not separately demonstrated at small n here). | `calibration-map.ts` (this pass) |
+| **Beta calibration** (Kull-2017: sigmoid(a·ln p − b·ln(1−p) + c); single-violation refit per Kull, plus OUR conservative intercept-only fallback for double/refit violations) | `[BUILT]` | More flexible than Platt near both endpoints; the third family in the selector. Hostile-review hardened: a non-monotone truth now collapses to the base-rate map (was a decreasing "calibration"), and (near-)separated data is refused instead of returning saturated step coefficients. | `calibration-map.ts` |
+| **Cross-validated calibrator selection** (k-fold, held-out equal-mass ECE, identity fallback, measured noise bar) | `[BUILT]` | The honest fix for "isotonic by fiat": the family must beat raw on unseen data by MORE than the noise bar — the 90th-pct "gain" that 16 parametric-bootstrap replicas (y~Bern(p), raw true) show from pure selection noise. Hostile-measured: without the bar, a map "won" on perfectly calibrated data 70–88% of the time; with it, 2.5–17.5% across n=40..200 (≈ the 10% design rate). Deterministic. | `calibration-map.ts` `selectCalibrator` |
 | **Temperature scaling** (single-param logit scale) | `[BUILDABLE-future]` | Designed for multi-class neural logits. GSE's win/loss is **binary**, where temperature scaling ≈ a constrained Platt — so it collapses to the Platt case. Documented; not a separate build. | note only |
 | **Dirichlet calibration** (multi-class simplex map) | `[ROADMAP]` | Only bites when GSE outputs a **multi-class** distribution (e.g. exact-score buckets, multi-way markets). Binary markets do not need it. Revisit if/when a categorical market ships. | note only |
 | **MC-Dropout uncertainty + temperature/ECE calibration of it** | `[ROADMAP]` | Only relevant if GSE fields a **neural** model and wants epistemic uncertainty bands. Current engine is not neural. Documented as the calibration path for that future. | note only |
@@ -80,15 +80,13 @@ of the engine.
 
 | Technique | Tag | GSE leverage |
 |---|---|---|
-| **SimHash** (random-hyperplane angular LSH) | `[BUILDABLE-future]` | Fast approximate "most similar player / most similar game / closest historical comp" over a feature vector, in sub-linear time. A real product surface (comp-finder, "games like this one") that today would be an O(n) scan. |
-| **Multi-probe LSH / bit-flip probing** (inverse-magnitude priority) | `[BUILDABLE-future]` | The memory-efficient variant — fewer hash tables, probe neighboring buckets. Inverse-projection-magnitude bit priority is the correct, training-free heuristic (dump's own conclusion; it is right). |
-| **MinHash** (Jaccard-set LSH) | `[REFERENCE]` | For set-similarity (e.g. overlapping-signal sets between picks). Niche; noted. |
-| **Thompson Sampling / contextual bandits** | `[BUILDABLE-future]` | Any explore/exploit decision GSE makes (which promo to show, which model variant to A/B) is a bandit. Linear TS is the right first tool (dump's own recommendation, correct: linear beats neural on simplicity/stability until data proves otherwise). |
+| **SimHash** (random-hyperplane angular LSH) + **multi-probe** (inverse-magnitude bit priority) | `[BUILT]` | Fast approximate "closest historical comp / games like this one" over a feature vector — built as `simhash.ts` (dark, engine-only, seeded hyperplanes, bigint signatures capped at 64 bits). **Measured**: bit-disagreement matched the θ/π collision law within 0.0009 at θ=π/4 (400 pairs); multi-probe querying at 8 probes strictly beat exact-bucket recall on a seeded corpus. The inverse-projection-magnitude probe priority is the dump's (correct) training-free heuristic. |
+| **MinHash** (Jaccard-set LSH) | `[REFERENCE]` | For set-similarity (e.g. overlapping-signal sets between picks). Niche; noted, not built. |
+| **Thompson Sampling / contextual bandits (LINEAR)** | `[BUILT]` | The principled explore/exploit primitive, built as `linear-thompson.ts` (dark; Bayesian linear posterior + Cholesky sampling, seeded; MUST NOT gate real-money actions without its own founder-approved policy — stated in the module header). **Measured**: on a seeded 5-arm linear bandit over 2000 steps it earned 1213.9 vs 511.4 for uniform-random (oracle ceiling 1240 → cumulative regret 26.1) and converged to the best arm 96.8% of the last 500 pulls. Linear over neural is the dump's own (correct) recommendation. |
 
-**Verdict:** genuine, transferable, non-ZK leverage — but no consumer surface is
-wired today, so it does not ship this pass. Flagged `[BUILDABLE-future]` with named
-consumers (comp-finder, "games like this", promo bandit) so it is a queued build,
-not a dismissal.
+**Verdict:** genuine, transferable, non-ZK leverage — built dark this pass with
+named future consumers (comp-finder, "games like this", allocation decisions).
+Wiring any of it to a product surface is its own future step.
 
 ---
 
@@ -127,15 +125,18 @@ bound) was computed from the sealed ledger **without revealing the ledger.***
    Merkle roots**, not a zero-knowledge proof. Shipping it *labeled* "ZK" is the
    exact overclaim the moat forbids (a fabrication gets us dismissed). **But the
    `ZKReceipt` API boundary — `{ commitment, bound, proof, publicInputsHash }` — is
-   a clean, correct drop-in point for a future real proof.** Salvage: keep the
-   interface as the documented seam; implement the honest commitment behind it;
-   never call it ZK until a real circuit fills it.
+   a clean, correct drop-in point for a future real proof.** Salvage: the
+   interface ships as `CommitmentEnvelope` (deliberately NOT "Zk"-named, per the
+   hostile claims audit — a shipping symbol must not connote a capability that
+   does not exist) with `proof` hard-typed `null`; the JSDoc names Halo2/IPA as
+   what would fill it. Nothing that ships claims to be zero-knowledge; "ZK"
+   appears in code only inside comments describing what the FUTURE seam is for.
 
 **Aggregation techniques (real; roadmap):**
 
 | Technique | Tag | Honest leverage |
 |---|---|---|
-| **SnarkPack** (Groth16 aggregation via GIPA/MIPP, O(log k), ~33ms verify / 8192 proofs, reuses Powers-of-Tau) | `[ROADMAP]` | *If* GSE ever generates one ZK proof per pick, SnarkPack folds a whole slate into one succinct proof. The concrete numbers are the real 0.1%: they prove the path is **fast enough to be practical** — de-risks the "should we ever build ZK?" decision. |
+| **SnarkPack** (Groth16 aggregation via GIPA/MIPP; O(log k) proofs; the dump relays ~8s prove / ~33ms verify at 8192 proofs — figures from the SnarkPack literature (Gailly–Maller–Nitulescu 2021), **not verified here**) | `[ROADMAP]` | *If* GSE ever generates one ZK proof per pick, SnarkPack folds a whole slate into one succinct proof. The reported numbers *suggest* the path is fast enough to be practical — useful for de-risking the "should we ever build ZK?" decision, pending verification the day it matters. |
 | **Halo2 + IPA accumulation** (transparent, no trusted setup, recursive) | `[ROADMAP-preferred]` | The **better** fit than SnarkPack for GSE: no trusted-setup ceremony (a trust-brand liability we must never take on lightly), and native **incremental** accumulation matches a ledger that grows one settled pick at a time. If ZK is ever built, this is the recommended architecture. |
 | **IPA polynomial commitment** (Pedersen vector commit, log-d folding) | `[ROADMAP]` | The commitment scheme under Halo2. Correct as described. |
 | **Halo2 accumulation layer / accumulator circuit** (λ-linear MultiOpenProof folding) | `[ROADMAP]` | The recursion mechanism. Correct. Only meaningful once base per-pick circuits exist. |
@@ -154,8 +155,12 @@ document Halo2/IPA as the named path for the day we want *sealed-ledger* proofs
 > tuning", "Strassen-based MSM", "GLV endomorphism / decomposition / Babai
 > rounding", "GLS curve construction / selection / 4-GLV", "BLS12-381 / BN254 /
 > BN462 / BN448 parameters + pairing optimizations (cyclotomic squaring, torus
-> compression, Frobenius, optimal ate)", "LLL / BKZ / pruning / progressive /
-> adaptive / Chen-Nguyen / Gaussian heuristic / Minkowski", "sieving / LSH-sieve".
+> compression, Frobenius automorphisms, **Tate pairing and its variants — ate,
+> optimal ate, eta, Weil** — optimal ate being the practical one), "**embedding
+> degree constraints** (MOV/FR resistance: k must be large enough that DLP in
+> F_{q^k} matches the target security; k=12 for the BLS/BN families)", "LLL /
+> BKZ / pruning / progressive / adaptive / Chen-Nguyen / Gaussian heuristic /
+> Minkowski", "sieving / LSH-sieve".
 
 **All of this is accurate cryptographic engineering.** It is also, uniformly, the
 *inside* of the Cluster-C prover — how to make MSMs and scalar multiplications fast
@@ -192,26 +197,53 @@ dump: real math, no leverage, named as such rather than pretended into relevance
 
 ## What shipped from this dump (see the code, not this prose)
 
-- `packages/prediction-engine/src/calibration-map.ts` (+ 12-test suite) — Platt
-  scaling, Beta calibration, equal-mass ECE, and `selectCalibrator` (k-fold
-  out-of-sample selection across isotonic/Platt/Beta with an identity fallback and
-  an optional `minEceGain` margin). Deterministic (seeded folds, IRLS fits, no
-  RNG in the maps). **Proven by execution, numbers pinned in the tests:** Platt
+- `packages/prediction-engine/src/calibration-map.ts` (+ 18-test suite) — Platt
+  scaling, Beta calibration, order-invariant tie-pooled equal-mass ECE, and
+  `selectCalibrator` (k-fold out-of-sample selection across isotonic/Platt/Beta
+  with an identity fallback and a MEASURED parametric-bootstrap noise bar).
+  Deterministic (seeded folds, IRLS fits, no RNG in the maps). **Measured, values
+  recorded in test comments with the load-bearing ones asserted:** Platt
   recovered a known 0.5 overconfidence shrink as a=0.507368; on that data OOF ECE
-  was raw 0.100 → isotonic 0.0574 / Platt 0.0210 / Beta 0.0294 → Platt selected.
-  **[Cluster A]**
-- `packages/prediction-engine/src/calibration-commitment.ts` (+ 9-test suite) —
+  was raw 0.100 → isotonic 0.065139 / Platt 0.021021 / Beta 0.029394, noise bar
+  0.015326 → Platt selected. **[Cluster A]**
+- `packages/prediction-engine/src/calibration-commitment.ts` (+ 10-test suite) —
   the honest salvage of BOTH dump code blocks: `buildCalibrationCommitment` binds
   (modelVersion, method, paramsHash, claimedEce, sampleSize, committedAt, optional
   anytime lower bound + ledger root) through the existing `hashLeaf`/
   `canonicalPickPayload`; `verifyCalibrationCommitment` catches any tamper
-  including a swapped calibration map; `ZkCommitmentEnvelope` preserves the
-  draft's `{commitment, bound, proof, publicInputsHash}` seam with `proof`
-  hard-typed `null`. **NOT labeled ZK anywhere.** **[Cluster C salvage]**
+  including a swapped calibration map; `CommitmentEnvelope` preserves the draft's
+  `{commitment, bound, proof, publicInputsHash}` seam with `proof` hard-typed
+  `null`. No shipped claim or exported symbol presents this as zero-knowledge;
+  "ZK" appears only in comments describing the future seam. **[Cluster C salvage]**
+- `packages/prediction-engine/src/calibration-sequence.ts` (+ 9-test suite) —
+  anytime-valid calibration monitoring: a Ville e-process on the stated-probability
+  residuals (two-sided mixture + per-region bin layer). **Proven by
+  adversarial-peeking Monte-Carlo:** FP 0.0225 vs the 0.05 budget (2000 ledgers ×
+  300 picks); detects an 8pp overconfidence drift 71.75% of the time (direction
+  right on 100% of trips, median detection at pick 239/500); localizes a regional
+  drift to the correct probability bin 98.3% of the time; matches a hand-computed
+  3-observation recursion to 8 decimals. **[Cluster A × K11 fusion]**
+- `packages/prediction-engine/src/simhash.ts` (+ 19-test suite) and
+  `packages/prediction-engine/src/linear-thompson.ts` (+ 10-test suite) — the
+  Cluster-B extractions (see that table for the measured numbers). **[Cluster B]**
 - The pre-existing measurement toolkit (`probability-calibration.ts`,
   `calibration-apply.ts`, `/api/calibration`) was **verified against the dump's
   specs** rather than rebuilt. **[Cluster A, VERIFIED-existing]**
 
+**Hostile verification round (3 lenses, executed constructions):** a hostile
+quant, a hostile cryptographer, and a claims auditor attacked the first-wave
+modules. Real findings, all fixed and regression-tested: a commitment
+delimiter-injection forgery (HIGH — crafted `method` string forged a second
+field set with the same hash; committed strings now reject `|`/`=`); a
+non-monotone Beta refit escape (HIGH — now collapses to the base-rate map); tie
+order-leakage in equal-mass ECE (HIGH — now pre-pooled and order-invariant);
+silent IRLS divergence on separation (now refuses via convergence + saturation
+guards); a zero-margin selector recommending maps on calibrated data 70–88% of
+the time (now 2.5–17.5% via the measured noise bar); folds validation; plus the
+doc/claims corrections reflected throughout this ledger.
+
 Everything dark/additive; no live flag flipped; no public claim shipped without
-its own gate. Engine suite green post-build (66 files / 669 tests + the new 21),
-typecheck clean. All observed numbers in tests came from actual runs.
+its own gate. Post-fix state, all counted from actual runs: engine suite **69
+files / 714 tests green**, engine + apps/web typechecks clean. Every number in
+this document traces to an executed run, the repo, or is explicitly attributed
+to unverified external literature.

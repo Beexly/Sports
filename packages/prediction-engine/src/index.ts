@@ -231,8 +231,25 @@ export type {
   CalibratorSelection,
 } from "./calibration-map.js";
 
+// R&D — linear Thompson sampling contextual bandit (2026-07-02 ZK/ML dump,
+// extraction ledger Cluster B). Dark, NOT wired: the future explore/exploit
+// primitive for allocation decisions (content variants, estimator trials).
+// Must NEVER gate a real-money action without its own founder-approved policy.
+export {
+  createLinTsState,
+  selectAction,
+  updateLinTs,
+  thetaEstimate,
+  MAX_LIN_TS_DIM,
+} from "./linear-thompson.js";
+export type {
+  LinTsOptions,
+  LinTsState,
+  LinTsDecision,
+} from "./linear-thompson.js";
+
 // R&D — tamper-evident pre-registration of the calibration MAP itself (composes
-// proof-of-record). NOT zero-knowledge; ZkCommitmentEnvelope is a documented
+// proof-of-record). NOT zero-knowledge; CommitmentEnvelope is a documented
 // future seam only, proof always null. See ZK-ML-DUMP-EXTRACTION-LEDGER.md.
 export {
   buildCalibrationCommitment,
@@ -242,8 +259,21 @@ export {
 export type {
   CalibrationCommitmentInput,
   CalibrationCommitment,
-  ZkCommitmentEnvelope,
+  CommitmentEnvelope,
 } from "./calibration-commitment.js";
+
+// R&D — anytime-valid CALIBRATION monitoring (the profit ledger's sibling):
+// a Ville e-process testing "the stated probabilities are honest" continuously,
+// two-sided (over/under-confidence) with a per-region bin layer. Dark, unwired;
+// order-sensitive (settlement order required). Proven by adversarial-peeking MC.
+export { anytimeCalibrationMonitor } from "./calibration-sequence.js";
+export type {
+  CalibrationSequenceSample,
+  CalibrationSequencePoint,
+  CalibrationSequenceResult,
+  CalibrationSequenceOptions,
+  CalibrationBinDiagnostic,
+} from "./calibration-sequence.js";
 
 // Performance CIs for CONTINUOUS returns (ROI/units) — the BCa bootstrap
 // counterpart to the Wilson interval (which only covers binomial win rate).
@@ -467,3 +497,23 @@ export type {
   WalkForwardSplit,
   ReplayBacktestReport,
 } from "./replay-harness.js";
+
+// R&D — SimHash (random-hyperplane LSH, Charikar) angular-similarity signatures
+// with inverse-magnitude multi-probe querying. Dark, NOT wired into live scoring:
+// the approximate-nearest-neighbor primitive for future "closest historical comp /
+// games like this one" surfaces. See ZK-ML-DUMP-EXTRACTION-LEDGER.md, Cluster B.
+export {
+  buildSimhashModel,
+  signature,
+  hammingDistance,
+  estimatedCosine,
+  multiProbeSignatures,
+  buildSimhashIndex,
+  querySimhashIndex,
+} from "./simhash.js";
+export type {
+  SimhashModel,
+  SimhashSignature,
+  SimhashIndex,
+  SimhashQueryOptions,
+} from "./simhash.js";
