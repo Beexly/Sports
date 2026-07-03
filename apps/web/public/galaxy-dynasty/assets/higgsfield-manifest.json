@@ -1,0 +1,24 @@
+{
+  "name": "Galaxy Dynasty Rookie Plaza HIGGSFIELD manifest",
+  "generatedAt": "2026-07-03T23:27:49.309Z",
+  "source": "Original in-repo procedural GLB kit generated from scripts/galaxy-dynasty/generate-city-kit.mjs",
+  "license": "Project-owned original mesh data; no external GTA clone assets or code copied.",
+  "runtime": {
+    "format": "glb",
+    "renderer": "three",
+    "lighting": "dynamic-emissive-bloom-fog-tone-mapped",
+    "streaming": {
+      "clusterTriangleBudget": 128,
+      "maxInitialMemoryMb": 18,
+      "culling": "distance-priority Object3D visibility budget",
+      "compressionDecision": "uncompressed local kit now; Draco or Meshopt reserved for larger imported packs"
+    }
+  },
+  "assets": [
+    {
+      "id": "rookie-plaza-city-kit",
+      "url": "/galaxy-dynasty/assets/rookie-plaza-city-kit.glb",
+      "purpose": "walkable plaza, streets, gates, NPC silhouettes, vehicles, Beat Wall"
+    }
+  ]
+}
