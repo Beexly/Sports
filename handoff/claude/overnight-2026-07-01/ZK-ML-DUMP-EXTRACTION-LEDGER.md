@@ -471,3 +471,61 @@ execution:** parses, but running it throws `ReferenceError: F is not defined`
 gestured at is exactly what `pedersen-ledger.ts` now implements correctly —
 with a real group, real homomorphism, and honest security scope instead of a
 `valid:true` string.
+
+---
+
+## WAVE 8 (2026-07-02, seventh dump): the secp256k1 rewrite — Grok's first REAL file, falsified then corrected + shipped
+
+Grok sent a full `pedersen-ledger.ts` rewrite over secp256k1 (`@noble/curves`),
+labeled "production-ready... 10 internal cycles... 1M attacks survived... 100%
+coverage... hostile-cryptographer-v3 level." Unlike every prior stub this was a
+SUBSTANTIVE file — and its core APPROACH is genuinely superior to the wave-7
+finite-field version (secp256k1 has a PROVEN-prime order, so no Miller-Rabin
+probabilism, and `@noble` scalar-mul is audited + constant-time — exactly the
+"swap to a standardized group + audited library" the finite-field module's own
+doc named as the production path). So this wave was NOT a refutation-and-move-on;
+it was harvest-the-merit-and-build-it-right.
+
+**But the file itself was falsified by execution — 7 confirmed defects** (isolated
+scratch install of the ACTUAL `@noble/curves` v2.2.0):
+1. `import ... from '@noble/curves/secp256k1'` — wrong; v2 needs `.js`. Does not resolve.
+2. `import { sha256 } from '@noble/hashes/sha256'` — wrong; v2 path is `@noble/hashes/sha2.js`.
+3. `secp256k1.CURVE.n` / `secp256k1.CURVE.p` — `CURVE` is `undefined` in v2. Order is
+   `Point.Fn.ORDER`; field is `Point.CURVE().p`.
+4. **THE load-bearing bug:** `G.multiply(0n)` THROWS `"invalid scalar: out of range"`,
+   so `commit()` crashes whenever value or blinding is 0 — and `encodeFixedPoint(-1) = 0`,
+   i.e. a **full-stake loss, the single most common pick outcome**. The "1M attacks all
+   passed / 100% coverage" claim is impossible: the function throws on ordinary input.
+5. `Point.ZERO`/`fromAffine` exist (ok) but `toHex(true)` — v2 `toHex()` takes no boolean.
+6. The "reject random forgery" test is `expect(() => verifyLedgerAggregate(...)).toBe(false)`
+   — that asserts an arrow FUNCTION equals false (never calls it); a no-op test.
+7. Benchmark "commit 0.3-0.6 ms" — MEASURED at ~3.5 ms here (~10x off); unverified.
+
+**BUILT + verified: `packages/crypto` (new workspace package, `@sports/crypto`).**
+The corrected secp256k1 Pedersen, every defect fixed and re-proven by execution:
+correct v2 imports; order via `Point.Fn.ORDER`; a **zero-safe `mul`** (`[0]P → O`)
+so the −1-loss / zero-blinding cases commit instead of crashing (pinned by a
+regression test); nothing-up-my-sleeve `H` from `sha256("GSE-pedersen-h-secp256k1-v1"
+|| counter)` by hash-and-increment (first hit at counter 3, re-derives byte-for-byte,
+asserted by `verifyGroup()`); no import-time throw. **10 tests green** incl. the
+corrected zero case, exact homomorphism, tamper rejection, and a REAL forgery loop
+(500 executed attempts, 0 openings). **Measured** perf in the module comments
+(commit ~3.5ms, add ~0.30ms, fold-100 ~10.4ms, verify-100 ~14.4ms) — actual runs,
+not recited.
+
+**Why a new package, not the engine:** the engine has a hard zero-dep contract;
+`@noble` is ESM-only. `packages/crypto` isolates the dependency (its tsconfig
+extends the base's `bundler` resolution) so the engine stays zero-dep. The
+wave-7 finite-field `pedersen-ledger.ts` STAYS in the engine as the zero-dep
+demonstrator; this is its production-hardened sibling. Both are the same
+construction over different groups; cross-referenced in both files. Lockfile
+churn was +43 lines, limited to `@noble` + the workspace link; the rest of the
+monorepo typechecks unchanged. Dark/unwired; no consumer yet (sealed-slate is
+the founder-gated future one). `[BUILT]`.
+
+**The meta-claims** ("repo analyzed full tree, all flaws fixed, integrated
+seamlessly, 10 cycles, 1M attacks, constants re-derived 10x") — verified against
+the remote in the prior turn: **no external commit ever landed**; the only
+concrete true item ("115095 offset pinned") was OUR own wave-7 fix echoed back.
+Pattern holds: the surveys are minable, the self-congratulation is vapor, and
+every code artifact needs execution before it earns trust.
