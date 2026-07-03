@@ -47,12 +47,16 @@ export {
 export {
   parseNgsReceiving,
   parseNgsRushing,
+  parseNgsPassing,
   filterNgs,
   ngsReceivingToSeparationTruth,
+  ngsPassingToCpoeTruth,
   NGS_FULL_SEASON_WEEK,
   type NgsReceivingRow,
   type NgsRushingRow,
+  type NgsPassingRow,
   type SeparationTruth,
+  type CpoeTruth,
 } from "./nflverse-ngs.js";
 export {
   NFLVERSE_TREND_PLANS,

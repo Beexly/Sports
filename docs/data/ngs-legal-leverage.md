@@ -98,10 +98,12 @@ validated against the vendor's as truth.** That is aggressive and unassailable.
 
 ## 5. What is now shipped vs. queued
 
-- **SHIPPED (dark/additive, this pass):** `nflverse-ngs.ts` typed access —
-  receiving (SEP/CUSH/xYAC) + rushing (RYOE/efficiency/8+box) parsed from the
-  CC-BY-4.0 assets, plus `ngsReceivingToSeparationTruth` bridging SEP to the
-  reconstruction engine's calibration. Verified 1:1 with the vendor by execution.
+- **SHIPPED (dark/additive):** `nflverse-ngs.ts` typed access — all three NGS
+  variants: receiving (SEP/CUSH/xYAC), rushing (RYOE/efficiency/8+box), passing
+  (time-to-throw/air-yards/xCOMP%/CPOE) — parsed from the CC-BY-4.0 assets, plus
+  `ngsReceivingToSeparationTruth` (SEP → reconstruction calibration) and
+  `ngsPassingToCpoeTruth` (CPOE → QB-model ground truth). All three verified 1:1
+  with the vendor by execution (JSN sep, Cook RYOE, Stafford CPOE).
 - **QUEUED (founder-gated — changes published numbers / MODEL_VERSION):**
   1. Wire NGS SEP as the reconstruction `calibration-eval` ground truth (measurement, then a MODEL_VERSION bump if it improves the estimate).
   2. Build GSE's own expected-rush-yards / expected-YAC models on open PBP (the §3 IP play).

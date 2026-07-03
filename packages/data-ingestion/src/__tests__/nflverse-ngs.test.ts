@@ -3,9 +3,20 @@ import { parseCsv } from "../nflverse-source.js";
 import {
   parseNgsReceiving,
   parseNgsRushing,
+  parseNgsPassing,
   filterNgs,
   ngsReceivingToSeparationTruth,
+  ngsPassingToCpoeTruth,
 } from "../nflverse-ngs.js";
+
+// Passing fixture — exact header + verified live values (Stafford 2025 wk0
+// matches nextgenstats.nfl.com: TT 2.8, xCOMP% 63.5, CPOE +1.5, RATE 109.2).
+const PASSING_CSV = [
+  "season,season_type,week,player_display_name,player_position,team_abbr,avg_time_to_throw,avg_completed_air_yards,avg_intended_air_yards,avg_air_yards_differential,aggressiveness,max_completed_air_distance,avg_air_yards_to_sticks,attempts,pass_yards,pass_touchdowns,interceptions,passer_rating,completions,completion_percentage,expected_completion_percentage,completion_percentage_above_expectation,avg_air_distance,max_air_distance,player_gsis_id,player_first_name,player_last_name,player_jersey_number,player_short_name",
+  "2025,REG,0,Matthew Stafford,QB,LAR,2.79925252525253,7.3,9.1,-1.8,18.6,58.4,1,597,4707,46,8,109.195281965382,388,65,63.5154773869347,1.47614740368508,29,62,00-0026498,Matthew,Stafford,9,M.Stafford",
+  "2025,REG,0,Drake Maye,QB,NE,2.97,7.4,9.1,-1.7,17.3,56.4,0.2,492,4394,31,8,113.5,354,72,62.8,9.1,30,60,00-0039163,Drake,Maye,10,D.Maye",
+  "2025,REG,0,Low Volume QB,QB,XXX,2.8,5,7,-2,15,50,-1,100,700,4,2,90,60,60,63,-3,25,55,00-0000001,Low,QB,1,L.QB",
+].join("\n");
 
 // Fixtures use the EXACT header + values verified live against the real nflverse
 // release assets on 2026-07-03 (values match nextgenstats.nfl.com to the decimal).
@@ -49,6 +60,29 @@ describe("parseNgsRushing", () => {
     expect(cook.rushYards).toBe(1621);
     expect(cook.eightPlusBoxPct).toBeCloseTo(30.42, 2);
     expect(cook.ryoePerAtt).toBeCloseTo(1.17, 2);
+  });
+});
+
+describe("parseNgsPassing", () => {
+  it("parses xCOMP% and CPOE (the QB moat metrics) with real column names", () => {
+    const rows = parseNgsPassing(parseCsv(PASSING_CSV));
+    const st = rows.find((r) => r.player === "Matthew Stafford")!;
+    expect(st.cpoe).toBeCloseTo(1.4761, 4); // matches site's +1.5
+    expect(st.expectedCompletionPct).toBeCloseTo(63.5155, 4);
+    expect(st.avgTimeToThrow).toBeCloseTo(2.7993, 4);
+    expect(st.passYards).toBe(4707);
+    expect(st.passerRating).toBeCloseTo(109.2, 1);
+    const maye = rows.find((r) => r.player === "Drake Maye")!;
+    expect(maye.cpoe).toBeCloseTo(9.1, 2); // the season's best CPOE
+  });
+});
+
+describe("ngsPassingToCpoeTruth", () => {
+  it("keeps volume QBs, drops the sub-135-attempt row", () => {
+    const rows = parseNgsPassing(parseCsv(PASSING_CSV));
+    const truth = ngsPassingToCpoeTruth(rows, 135);
+    expect(truth.map((t) => t.player).sort()).toEqual(["Drake Maye", "Matthew Stafford"]);
+    expect(truth.find((t) => t.player === "Drake Maye")!.cpoe).toBeCloseTo(9.1, 2);
   });
 });
 
