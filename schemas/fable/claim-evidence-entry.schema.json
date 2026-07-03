@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/claim-evidence-entry.schema.json",
+  "type": "object",
+  "required": [
+    "claim_id",
+    "exact_claim_text",
+    "source_file_or_prompt_section",
+    "claim_type",
+    "status",
+    "evidence_files",
+    "evidence_line_or_test_path",
+    "command_proving_it",
+    "test_result",
+    "data_source_used",
+    "legal_source_risk",
+    "cost_risk",
+    "security_risk",
+    "owner_decision_needed",
+    "next_action"
+  ],
+  "properties": {
+    "claim_id": { "type": "string" },
+    "exact_claim_text": { "type": "string" },
+    "source_file_or_prompt_section": { "type": "string" },
+    "claim_type": { "type": "string" },
+    "status": { "type": "string" },
+    "evidence_files": { "type": "array", "items": { "type": "string" } },
+    "evidence_line_or_test_path": { "type": "string" },
+    "command_proving_it": { "type": "string" },
+    "test_result": { "type": "string" },
+    "data_source_used": { "type": "string" },
+    "legal_source_risk": { "type": "string" },
+    "cost_risk": { "type": "string" },
+    "security_risk": { "type": "string" },
+    "owner_decision_needed": { "type": "boolean" },
+    "next_action": { "type": "string" }
+  }
+}

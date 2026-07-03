@@ -18,3 +18,12 @@ Current high-value allowed lane:
 Current blocked or conditional lanes:
 - Sources with permission requirements, technical controls, or manual-only status cannot be automated.
 - Broadcast or pundit content is manual claim-accountability work unless a written license exists.
+
+Machine-readable schema:
+- `schemas/fable/source-registry-entry.schema.json`
+
+Executable validation:
+
+```bash
+npm run fable:sources
+```

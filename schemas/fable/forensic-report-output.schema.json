@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/forensic-report-output.schema.json",
+  "type": "object",
+  "required": ["fixture_id", "probability_delta", "uncertainty_flag", "gse_flags", "would_not_claim"],
+  "properties": {
+    "fixture_id": { "type": "string" },
+    "probability_delta": { "type": "number" },
+    "uncertainty_flag": { "type": "boolean" },
+    "gse_flags": { "type": "array", "items": { "type": "string" } },
+    "would_not_claim": { "type": "array", "items": { "type": "string" } }
+  }
+}

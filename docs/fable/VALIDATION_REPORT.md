@@ -13,6 +13,12 @@ Validation scope:
 - Safe football segment parity blocking.
 - AWS deploy and paid-resource gate defaults.
 - Unsupported claim scanning for FABLE docs.
+- Claim/evidence ledger schema validation.
+- GitHub navigation validation.
+- Fixture-only forensic demo reproduction.
 
 Known caveat:
 - Passing local tests do not prove live data freshness, provider rights, paid AWS setup, or production operations.
+
+Repeatable protocol:
+- `docs/fable/validation/VALIDATION_PROTOCOL.md`

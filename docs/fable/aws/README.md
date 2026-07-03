@@ -23,3 +23,14 @@ Official AWS references used:
 - SageMaker Pipelines: https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines.html
 - AWS Clean Rooms overview: https://docs.aws.amazon.com/clean-rooms/latest/userguide/what-is.html
 - AWS sports/NFL: https://aws.amazon.com/sports/nfl/
+
+Second-level AWS docs:
+- `AWS_MODEL_LEVERAGE_MAP.md`
+- `AWS_MODEL_ROUTER_DESIGN.md`
+- `AWS_MODEL_EVALUATION_PLAN.md`
+- `AGENTCORE_SECURITY_FIREBREAK.md`
+- `AGENT_TOOL_PERMISSION_MATRIX.md`
+- `AGENT_EVALUATION_RUBRICS.md`
+- `sagemaker-adrs/`
+- `amplify-adrs/`
+- `clean-rooms-demo/`

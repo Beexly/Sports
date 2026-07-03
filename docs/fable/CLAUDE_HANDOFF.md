@@ -10,6 +10,9 @@ Primary read order:
 4. `docs/fable/aws/README.md`
 5. `docs/fable/CODEX_FINAL_REPORT.md`
 6. `docs/fable/aws/AWS_FINAL_REPORT.md`
+7. `docs/fable/CODEX_SECOND_LEVEL_REPORT.md`
+8. `docs/fable/CLAUDE_SECOND_LEVEL_HANDOFF.md`
+9. `docs/fable/evidence/CLAIM_EVIDENCE_LEDGER.md`
 
 Rules for the next agent:
 - Do not move source rights out of the existing registry.
@@ -17,3 +20,4 @@ Rules for the next agent:
 - Do not activate paid resources.
 - Do not touch the untracked scratch files unless the owner explicitly asks.
 - Update final reports with exact command output if more verification is run.
+- Run `npm run fable:evidence` before trusting second-level claims.

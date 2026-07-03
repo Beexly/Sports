@@ -1,0 +1,293 @@
+{
+  "schema_version": "fable-claim-evidence-ledger-v1",
+  "generated_at": "2026-07-03T00:00:00.000Z",
+  "scope_note": "Second-level seed ledger covering the prompt/addendum's named high-risk claims, current FABLE docs, code primitives, and command evidence. The scanner blocks new unsupported terms outside allowed context.",
+  "claims": [
+    {
+      "claim_id": "CE-LEGAL-001",
+      "exact_claim_text": "nflverse is an approved source lane with attribution required.",
+      "source_file_or_prompt_section": "docs/fable/DATA_LEGAL_BOUNDARIES.md",
+      "claim_type": "legal/data-source claim",
+      "status": "proven",
+      "evidence_files": [
+        "apps/web/lib/scraping/source-rights-registry.ts",
+        "apps/web/lib/fable/source-registry.ts",
+        "apps/web/lib/fable/source-registry.test.ts"
+      ],
+      "evidence_line_or_test_path": "apps/web/lib/fable/source-registry.test.ts",
+      "command_proving_it": "npm run test --workspace=apps/web -- lib/fable/source-registry.test.ts",
+      "test_result": "passed in targeted FABLE suite",
+      "data_source_used": "source rights registry",
+      "legal_source_risk": "low",
+      "cost_risk": "none",
+      "security_risk": "none",
+      "owner_decision_needed": false,
+      "legal_review_marker": "source-rights-registry evidence",
+      "next_action": "Keep registry review dates current."
+    },
+    {
+      "claim_id": "CE-LEGAL-002",
+      "exact_claim_text": "OneNote/prompt language said legal cleared.",
+      "source_file_or_prompt_section": "FOLLOW-UP ADDENDUM / OneNote claim examples",
+      "claim_type": "legal/data-source claim",
+      "status": "unsupported",
+      "evidence_files": [
+        "docs/fable/evidence/UNSUPPORTED_CLAIMS.md"
+      ],
+      "evidence_line_or_test_path": "docs/fable/evidence/UNSUPPORTED_CLAIMS.md",
+      "command_proving_it": "npm run fable:claims",
+      "test_result": "blocked unless marked unsupported or tied to source-rights evidence",
+      "data_source_used": "prompt addendum",
+      "legal_source_risk": "high",
+      "cost_risk": "none",
+      "security_risk": "none",
+      "owner_decision_needed": true,
+      "next_action": "Legal review would be required before any cleared-language claim."
+    },
+    {
+      "claim_id": "CE-MODEL-001",
+      "exact_claim_text": ".5+ gain or .5+ Brier/ECE gain exists.",
+      "source_file_or_prompt_section": "FOLLOW-UP ADDENDUM / prior prompt claim examples",
+      "claim_type": "model-performance claim",
+      "status": "unsupported",
+      "evidence_files": [
+        "docs/fable/MODEL_CALIBRATION.md",
+        "docs/fable/evidence/UNSUPPORTED_CLAIMS.md"
+      ],
+      "evidence_line_or_test_path": "docs/fable/evidence/UNSUPPORTED_CLAIMS.md",
+      "command_proving_it": "npm run fable:claims",
+      "test_result": "claim scanner blocks unsupported gain language",
+      "data_source_used": "none",
+      "legal_source_risk": "none",
+      "cost_risk": "none",
+      "security_risk": "none",
+      "owner_decision_needed": false,
+      "next_action": "Run repo-data replay with baseline, split, leakage check, and confidence interval."
+    },
+    {
+      "claim_id": "CE-AWS-001",
+      "exact_claim_text": "AWS paid and deploy paths default off.",
+      "source_file_or_prompt_section": "apps/web/lib/fable/aws-gates.ts",
+      "claim_type": "AWS cost claim",
+      "status": "proven",
+      "evidence_files": [
+        "apps/web/lib/fable/aws-gates.ts",
+        "apps/web/lib/fable/aws-gates.test.ts",
+        "apps/web/lib/fable/evidence/validators.ts"
+      ],
+      "evidence_line_or_test_path": "apps/web/lib/fable/aws-gates.test.ts",
+      "command_proving_it": "npm run test --workspace=apps/web -- lib/fable/aws-gates.test.ts",
+      "test_result": "passed in targeted FABLE suite",
+      "data_source_used": "local env-gate contract",
+      "legal_source_risk": "none",
+      "cost_risk": "low",
+      "security_risk": "low",
+      "owner_decision_needed": false,
+      "next_action": "Keep deploy and paid-resource gates default off."
+    },
+    {
+      "claim_id": "CE-AWS-002",
+      "exact_claim_text": "AWS deployed or AWS resources are live.",
+      "source_file_or_prompt_section": "FOLLOW-UP ADDENDUM unsupported language list",
+      "claim_type": "AWS capability claim",
+      "status": "false",
+      "evidence_files": [
+        "docs/fable/aws/AWS_REPO_REALITY_MAP.md",
+        "docs/fable/aws/AWS_FINAL_REPORT.md"
+      ],
+      "evidence_line_or_test_path": "docs/fable/aws/AWS_REPO_REALITY_MAP.md",
+      "command_proving_it": "git status --short --branch",
+      "test_result": "local files only; no AWS account mutation",
+      "data_source_used": "repo state",
+      "legal_source_risk": "none",
+      "cost_risk": "low",
+      "security_risk": "medium",
+      "owner_decision_needed": true,
+      "next_action": "Owner approval, budget cap, credentials, and release-control record required before any live AWS work."
+    },
+    {
+      "claim_id": "CE-AWS-003",
+      "exact_claim_text": "Ground Truth configured or Ground Truth Plus is active.",
+      "source_file_or_prompt_section": "FOLLOW-UP ADDENDUM unsupported language list",
+      "claim_type": "labeling/Ground Truth claim",
+      "status": "false",
+      "evidence_files": [
+        "docs/fable/aws/AWS_LABELING_REALITY_CHECK.md",
+        "apps/web/lib/fable/labeling.ts"
+      ],
+      "evidence_line_or_test_path": "apps/web/lib/fable/labeling.test.ts",
+      "command_proving_it": "npm run test --workspace=apps/web -- lib/fable/labeling.test.ts",
+      "test_result": "local manifest only",
+      "data_source_used": "local labeling schema",
+      "legal_source_risk": "medium",
+      "cost_risk": "high",
+      "security_risk": "medium",
+      "owner_decision_needed": true,
+      "next_action": "Treat AWS labeling as research-only until owner approval and source rights review."
+    },
+    {
+      "claim_id": "CE-METRIC-001",
+      "exact_claim_text": "NFL metric derivations are anchored to existing nflverse and metrics modules.",
+      "source_file_or_prompt_section": "docs/fable/METRIC_DERIVATIONS.md",
+      "claim_type": "NFL metric derivation claim",
+      "status": "partially proven",
+      "evidence_files": [
+        "apps/web/lib/nflverse",
+        "apps/web/lib/metrics",
+        "packages/data-ingestion/src/nflverse-source.test.ts"
+      ],
+      "evidence_line_or_test_path": "packages/data-ingestion/src/nflverse-source.test.ts",
+      "command_proving_it": "npm run test --workspace=packages/data-ingestion",
+      "test_result": "passed: 16 files, 131 tests",
+      "data_source_used": "repo modules and package tests",
+      "legal_source_risk": "low",
+      "cost_risk": "none",
+      "security_risk": "none",
+      "owner_decision_needed": false,
+      "next_action": "Add per-metric derivation rows with exact formulas and sample windows."
+    },
+    {
+      "claim_id": "CE-CAL-001",
+      "exact_claim_text": "Calibration surfaces and drift monitor exist in prediction-engine.",
+      "source_file_or_prompt_section": "docs/fable/MODEL_CALIBRATION.md",
+      "claim_type": "calibration claim",
+      "status": "proven",
+      "evidence_files": [
+        "packages/prediction-engine/src/probability-calibration.ts",
+        "packages/prediction-engine/src/calibration-map.ts",
+        "packages/prediction-engine/src/calibration-drift.ts"
+      ],
+      "evidence_line_or_test_path": "packages/prediction-engine/src/__tests__/calibration-drift.test.ts",
+      "command_proving_it": "npm run test --workspace=packages/prediction-engine",
+      "test_result": "passed: 71 files, 738 tests",
+      "data_source_used": "prediction-engine tests",
+      "legal_source_risk": "none",
+      "cost_risk": "none",
+      "security_risk": "none",
+      "owner_decision_needed": false,
+      "next_action": "Tie future improvement claims to replay reports."
+    },
+    {
+      "claim_id": "CE-DRIFT-001",
+      "exact_claim_text": "FABLE computes PSI, KL divergence, chi-square drift, and safe football segment parity.",
+      "source_file_or_prompt_section": "apps/web/lib/fable/drift.ts",
+      "claim_type": "drift/bias claim",
+      "status": "proven",
+      "evidence_files": [
+        "apps/web/lib/fable/drift.ts",
+        "apps/web/lib/fable/drift.test.ts"
+      ],
+      "evidence_line_or_test_path": "apps/web/lib/fable/drift.test.ts",
+      "command_proving_it": "npm run test --workspace=apps/web -- lib/fable/drift.test.ts",
+      "test_result": "passed in targeted FABLE suite",
+      "data_source_used": "synthetic test distributions",
+      "legal_source_risk": "none",
+      "cost_risk": "none",
+      "security_risk": "none",
+      "owner_decision_needed": false,
+      "next_action": "Connect to replay windows after approved data selection."
+    },
+    {
+      "claim_id": "CE-ACTIVE-001",
+      "exact_claim_text": "FABLE ranks active-learning candidates by least confidence, margin, and entropy.",
+      "source_file_or_prompt_section": "apps/web/lib/fable/uncertainty.ts",
+      "claim_type": "active learning claim",
+      "status": "proven",
+      "evidence_files": [
+        "apps/web/lib/fable/uncertainty.ts",
+        "apps/web/lib/fable/uncertainty.test.ts"
+      ],
+      "evidence_line_or_test_path": "apps/web/lib/fable/uncertainty.test.ts",
+      "command_proving_it": "npm run test --workspace=apps/web -- lib/fable/uncertainty.test.ts",
+      "test_result": "passed in targeted FABLE suite",
+      "data_source_used": "synthetic probability fixtures",
+      "legal_source_risk": "none",
+      "cost_risk": "none",
+      "security_risk": "none",
+      "owner_decision_needed": false,
+      "next_action": "Wire to a local review queue only after owner approval."
+    },
+    {
+      "claim_id": "CE-MCDROP-001",
+      "exact_claim_text": "MC Dropout uncertainty is implemented.",
+      "source_file_or_prompt_section": "original FABLE/AWS plan",
+      "claim_type": "MC Dropout/uncertainty claim",
+      "status": "blocked",
+      "evidence_files": [
+        "docs/fable/UNCERTAINTY_AND_ACTIVE_LEARNING.md",
+        "docs/fable/evidence/BLOCKERS.md"
+      ],
+      "evidence_line_or_test_path": "docs/fable/evidence/BLOCKERS.md",
+      "command_proving_it": "rg -n \"MC Dropout\" docs/fable apps/web/lib/fable",
+      "test_result": "documented as blocked without ML runtime approval",
+      "data_source_used": "repo docs",
+      "legal_source_risk": "none",
+      "cost_risk": "medium",
+      "security_risk": "low",
+      "owner_decision_needed": true,
+      "next_action": "Owner must approve ML runtime before implementation."
+    },
+    {
+      "claim_id": "CE-READY-001",
+      "exact_claim_text": "The system is production-ready or has green tests.",
+      "source_file_or_prompt_section": "FOLLOW-UP ADDENDUM unsupported language list",
+      "claim_type": "production-readiness claim",
+      "status": "false",
+      "evidence_files": [
+        "docs/fable/CODEX_FINAL_REPORT.md",
+        "docs/fable/evidence/COMMAND_LOG.md"
+      ],
+      "evidence_line_or_test_path": "docs/fable/CODEX_FINAL_REPORT.md",
+      "command_proving_it": "npm run typecheck --workspaces --if-present",
+      "test_result": "failed on existing apps/web BigInt target issue",
+      "data_source_used": "command output",
+      "legal_source_risk": "none",
+      "cost_risk": "none",
+      "security_risk": "low",
+      "owner_decision_needed": false,
+      "next_action": "Fix or isolate app type target issue before broad readiness claims."
+    },
+    {
+      "claim_id": "CE-GITHUB-001",
+      "exact_claim_text": "FABLE evidence is visible and navigable from GitHub.",
+      "source_file_or_prompt_section": "README.md and docs/fable/INDEX.md",
+      "claim_type": "GitHub visibility claim",
+      "status": "proven",
+      "evidence_files": [
+        "README.md",
+        "docs/fable/README.md",
+        "docs/fable/INDEX.md",
+        "docs/fable/evidence/EVIDENCE_INDEX.md"
+      ],
+      "evidence_line_or_test_path": "apps/web/lib/fable/evidence/evidence-harness.test.ts",
+      "command_proving_it": "npm run fable:evidence",
+      "test_result": "visibility validator requires root and index links",
+      "data_source_used": "repo docs",
+      "legal_source_risk": "none",
+      "cost_risk": "none",
+      "security_risk": "none",
+      "owner_decision_needed": false,
+      "next_action": "Keep new second-level docs linked from INDEX."
+    },
+    {
+      "claim_id": "CE-COMP-001",
+      "exact_claim_text": "The repo has a superior edge or parity+ versus incumbents.",
+      "source_file_or_prompt_section": "FOLLOW-UP ADDENDUM unsupported language list",
+      "claim_type": "competitive edge claim",
+      "status": "unsupported",
+      "evidence_files": [
+        "docs/fable/competitive/WHAT_WE_CAN_PROVE.md",
+        "docs/fable/competitive/WHAT_WE_CANNOT_CLAIM.md"
+      ],
+      "evidence_line_or_test_path": "docs/fable/competitive/INCUMBENT_PRESSURE_TEST.md",
+      "command_proving_it": "npm run fable:claims",
+      "test_result": "unsupported competitive language is blocked unless marked historical or unsupported",
+      "data_source_used": "prompt addendum",
+      "legal_source_risk": "medium",
+      "cost_risk": "unknown",
+      "security_risk": "none",
+      "owner_decision_needed": true,
+      "next_action": "Earn this through reproducible validation and lawful source posture."
+    }
+  ]
+}
