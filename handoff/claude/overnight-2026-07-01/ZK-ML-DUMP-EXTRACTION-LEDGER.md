@@ -145,7 +145,7 @@ bound) was computed from the sealed ledger **without revealing the ledger.***
 | **Sangria** (Nova-style folding for PLONKish: relaxed PLONK + slack vector) / **HyperNova** (CCS) / **NeutronNova** (zero-check folding, zkVM-oriented) | `[ROADMAP]` | The variant map if the base circuits ever want custom gates/lookups instead of R1CS. Correct as described; nothing to choose until a circuit exists. |
 | **Plonky2/Plonky3** (TurboPLONK + FRI + Goldilocks 64-bit field; ~170ms recursion per the Plonky2 announcement — literature figure, **not verified here**) | `[ROADMAP]` | The transparent FRI-recursion family. Relevant if GSE ever wants STARK-style proofs with no pairings at all; otherwise Nova's folding is the tighter fit for the sequential-ledger shape. |
 | **FRI** (RS-codeword Merkle commit + random-linear-combo folding rounds + query consistency; transparent, log²-size proofs) vs **KZG** (pairing PCS, O(1) proofs/verify, **trusted SRS**) | `[ROADMAP]` | The PCS tradeoff, correctly stated by the dump. GSE's standing call: prefer the **transparent** family (FRI/IPA/Nova) — a trusted-setup ceremony is a trust-brand liability we must never take on lightly; KZG only as an optional final-compression layer if a partner integration ever demands O(1) on-chain verification. |
-| **Incremental fold API for `anytime-ledger.ts`** (an `O(1)`-per-pick `foldPick(state, return)` mirroring the IVC step, instead of full-array replay) | `[BUILDABLE-future]` | The one engineering idea this wave suggests for TODAY's codebase. Deliberately NOT built: the closed-form replay is O(n), deterministic, and instant at any realistic ledger size, and a second code path is a divergence risk with zero present consumer. Trigger to build: a live, continuously-updating public ledger surface (per-request replay becoming measurable) — at which point the incremental state also becomes the literal Nova `z_i`. |
+| **Incremental fold API for `anytime-ledger.ts`** (`initAnytimeFold` / `foldAnytimePick` — O(1) per pick, immutable, the literal IVC step) | `[BUILT]` (wave 5 — owner pulled the trigger by forwarding the build-now demand) | Divergence-proof by construction: the batch replay and the fold route through ONE shared private stepper, and an exact-equality suite pins it (`===` on the log-e-value trajectory across 200 seeded mixed-odds ledgers + a 20,000-pick stream; the original adversarial-peeking MC suite passes unchanged post-refactor, proving the extraction altered nothing). `range` is REQUIRED in the fold API — forcing the theorem-clean a-priori choice the batch API only urges. Honest scope: headline test only; the inverted lowerBound stays batch-only (needs full-history replays per candidate null). |
 
 **The honest bottom line for Cluster C:** we do **not** build a ZK prover now — we
 have no "reveal the ledger" problem yet (the ledger's *contents* are already public
@@ -337,3 +337,39 @@ the opening brace (bare identifier-call followed by a block is not a function
 declaration in JS/TS). "// locked" and "Executed" are attached to code that
 does not parse. `[REFUTED-by-execution]` — consistent with the wave-1/wave-3
 stub family; the salvageable ideas from that family already shipped.
+
+---
+
+## WAVE 5 (2026-07-02, fourth dump): the echo + the trigger
+
+**Most of wave 5 is this ledger's own wave-3/wave-4 content round-tripped
+through Grok** (the IVC framing, "proof-of-reserves for predictions", the
+patched-Nova and context-binding cautions, the variant map — all lifted from
+our pushed commits, restated back as instructions). No new extraction from
+those paragraphs; already ledgered. The one real difference: the echo converts
+our `[BUILDABLE-future]`-with-trigger foldPick entry into "build immediately"
+— and the OWNER forwarding that is the trigger being pulled. So it was built
+(see the updated `[BUILT]` row in Cluster C): `initAnytimeFold` /
+`foldAnytimePick` in `anytime-ledger.ts`, O(1)/immutable, one shared stepper
+with the batch replay, exact-equality proven. Engine now 70 files / 720 tests.
+
+**Genuinely new survey rows (accurate, filed):**
+
+| Item | Tag | Verdict |
+|---|---|---|
+| **NeutronNova** (zero-check folding via sum-check; experimental in `microsoft/Nova`) | `[ROADMAP]` | Real. But the dump's "preferred for live ledger depth in foldPick" is the framing trap again: NeutronNova targets **lookup-heavy / zkVM relations**; GSE's step F is a tiny arithmetic recursion, so plain Nova remains the named fit. Noted as the variant to revisit only if the step circuit ever grows zkVM-shaped. |
+| **Sum-check protocol + optimizations** (log-round multilinear sum proof; batching, parallel prover) | `[REFERENCE]` | Accurate as literature; the machinery inside NeutronNova. No GSE action. |
+| **FRI soundness sketch** (per-round query failure ≥ 1−(1−δ)^q; transparency from hashes + random oracle) | `[REFERENCE]` | Accurate as a sketch (full soundness analysis is subtler — proximity gaps/batching); the transparency point is the load-bearing one and is already why the ledger prefers the no-ceremony family. |
+| **STARK-vs-SNARK sizes** ("SNARK 0.6KB, Plonky2 43KB") | `[REFERENCE, corrected]` | Directionally right, one number off: Groth16 proofs are ~0.2KB (≈192–256 bytes; "0.6KB" is closer to PLONK/KZG-family proofs). Plonky2 ~43KB matches its announcement. All literature figures, unverified here. |
+
+**The "fixed + improved" stub (`sealedSlateProof`) — three claims, three
+executed verdicts:** (1) "node --check green" — **TRUE**, honestly conceded:
+Node ≥22.6 type-stripping parses the TS annotations (wave-4's stub failed even
+this bar; this one clears it). (2) "// tested" — **FALSE**: running it throws
+`ReferenceError: sha256 is not defined`; the console.log never executed.
+(3) The design — **REFUTED by probe**: with sha256 supplied, the commitment is
+IDENTICAL under a slate-root swap and `valid:true` on the tampered root — the
+root is concatenated OUTSIDE the hash, i.e. decoration, not binding, and
+`valid` is still unconditional. `calibration-commitment.ts` (shipped, wave 1)
+binds the root INSIDE the hashed payload and fails verification on any tamper
+— the salvage this stub keeps re-proposing already exists, done right.

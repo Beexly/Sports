@@ -125,6 +125,39 @@ export interface AnytimeLedgerOptions {
 const CAP = 0.5;
 
 /**
+ * The single-step wealth update — THE shared stepper. Both the batch replay
+ * below and the O(1) fold API (initAnytimeFold/foldAnytimePick) route every
+ * observation through this one function, so the two can never diverge: the
+ * incremental trajectory is the batch trajectory by construction, not by
+ * parallel implementation (and the equivalence is additionally pinned by
+ * exact-equality tests). Smoothing priors: one unit of prior mass at y0 for
+ * the mean (first bet ~0 — burn-in) and 1/4 (max variance of a [0,1]
+ * variable) for the variance — POWER choices only; validity holds for ANY
+ * predictable lambda in [0, CAP/y0].
+ */
+interface WealthAcc {
+  readonly sumY: number;
+  readonly sumSq: number; // sum of (Y_i - muHat_{i-1})^2
+  readonly seen: number;
+  readonly logK: number;
+}
+
+function stepWealth(acc: WealthAcc, y: number, y0: number, capLambda: number): WealthAcc {
+  const muHat = (y0 + acc.sumY) / (acc.seen + 1);
+  const varHat = (0.25 + acc.sumSq) / (acc.seen + 1);
+  const rawLambda = (muHat - y0) / (varHat + 1e-9);
+  const lambda = Math.min(Math.max(rawLambda, 0), capLambda);
+  const factor = 1 + lambda * (y - y0);
+  // factor >= 1 - CAP > 0 by the cap; guard anyway for float dust.
+  return {
+    sumY: acc.sumY + y,
+    sumSq: acc.sumSq + (y - muHat) * (y - muHat),
+    seen: acc.seen + 1,
+    logK: acc.logK + Math.log(Math.max(factor, 1e-12)),
+  };
+}
+
+/**
  * One full deterministic replay of the betting e-process against null mean y0
  * (rescaled units). Returns per-step log wealth. Predictability: lambda for
  * step i uses only observations 0..i-1 (plus fixed smoothing priors).
@@ -134,26 +167,10 @@ function replayLogWealth(ys: readonly number[], y0: number): number[] {
   // 1 - lambda*y0 >= 1 - CAP > 0. y0 > 0 is guaranteed by the nullMean guard.
   const capLambda = CAP / Math.max(y0, 1e-12);
   const logs = new Array<number>(ys.length);
-  // Smoothing priors: one unit of prior mass at y0 for the mean (so the first
-  // bet is ~0 — burn-in) and 1/4 (the max variance of a [0,1] variable) for
-  // the variance. These are smoothing choices affecting POWER only; validity
-  // holds for ANY predictable lambda in [0, CAP/y0].
-  let sumY = 0;
-  let sumSq = 0; // sum of (Y_i - muHat_{i-1})^2
-  let logK = 0;
+  let acc: WealthAcc = { sumY: 0, sumSq: 0, seen: 0, logK: 0 };
   for (let i = 0; i < ys.length; i++) {
-    const tPrev = i;
-    const muHat = (y0 + sumY) / (tPrev + 1);
-    const varHat = (0.25 + sumSq) / (tPrev + 1);
-    const rawLambda = (muHat - y0) / (varHat + 1e-9);
-    const lambda = Math.min(Math.max(rawLambda, 0), capLambda);
-    const y = ys[i]!;
-    const factor = 1 + lambda * (y - y0);
-    // factor >= 1 - CAP > 0 by the cap; guard anyway for float dust.
-    logK += Math.log(Math.max(factor, 1e-12));
-    logs[i] = logK;
-    sumSq += (y - muHat) * (y - muHat);
-    sumY += y;
+    acc = stepWealth(acc, ys[i]!, y0, capLambda);
+    logs[i] = acc.logK;
   }
   return logs;
 }
@@ -258,5 +275,116 @@ export function anytimeValidLedger(
     everRejected,
     firstRejectedAt,
     lowerBound,
+  };
+}
+
+// ============================================================
+// O(1) incremental fold — the IVC-shaped API
+// ============================================================
+
+/**
+ * Streaming state for the anytime-valid test: the literal `z_i` of the
+ * IVC framing (extraction ledger, waves 3/5) — each settled pick applies one
+ * deterministic step z_{i+1} = F(z_i, pick_i) in O(1). Built when the owner
+ * pulled the [BUILDABLE-future] trigger; divergence from the batch replay is
+ * impossible BY CONSTRUCTION (both route through the same private stepper)
+ * and additionally pinned by exact-equality tests.
+ *
+ * Honest scope: the fold tracks the HEADLINE test against the configured null
+ * (logEValue / everRejected / firstRejectedAt / cumulativeMean). The inverted
+ * lowerBound needs full-history replays per candidate null and remains
+ * batch-only — call anytimeValidLedger for it. `range` is REQUIRED here (no
+ * observed-max default is possible when data arrives one pick at a time) —
+ * which forces the theorem-clean a-priori choice the batch API only urges.
+ */
+export interface AnytimeFoldState {
+  readonly alpha: number;
+  readonly range: number;
+  readonly nullMean: number;
+  /** Settled picks folded so far. */
+  readonly t: number;
+  /** Running sum of returns, original units (cumulativeMean = sumReturns / t). */
+  readonly sumReturns: number;
+  /** ln(K_t) against H0: mean <= nullMean. */
+  readonly logEValue: number;
+  /** K_t >= 1/alpha at the CURRENT point. */
+  readonly crossedThreshold: boolean;
+  /** Threshold crossed at ANY folded point — the anytime-valid rejection. */
+  readonly everRejected: boolean;
+  readonly firstRejectedAt: number | null;
+  /** Internal wealth accumulators (exposed so the state is fully replayable/auditable). */
+  readonly sumY: number;
+  readonly sumSq: number;
+}
+
+export interface AnytimeFoldOptions {
+  readonly alpha?: number; // default 0.05
+  /** REQUIRED: fixed a-priori upper bound on a single win's return. */
+  readonly range: number;
+  readonly nullMean?: number; // default 0
+}
+
+/** Start an empty fold state. Returns null on refused options. */
+export function initAnytimeFold(opts: AnytimeFoldOptions): AnytimeFoldState | null {
+  const alpha = opts.alpha ?? 0.05;
+  const nullMean = opts.nullMean ?? 0;
+  const range = opts.range;
+  if (!(alpha > 0 && alpha < 1)) return null;
+  if (!Number.isFinite(range) || !(range > 0)) return null;
+  if (!Number.isFinite(nullMean) || nullMean <= -1 || nullMean >= range) return null;
+  return {
+    alpha,
+    range,
+    nullMean,
+    t: 0,
+    sumReturns: 0,
+    logEValue: 0,
+    crossedThreshold: false,
+    everRejected: false,
+    firstRejectedAt: null,
+    sumY: 0,
+    sumSq: 0,
+  };
+}
+
+/**
+ * Fold ONE settled pick's return (original units) into the state. O(1);
+ * immutable (returns a new state, never mutates the input). Returns null on a
+ * refused observation (non-finite, below the -1 stake floor, above the
+ * a-priori range) — the caller decides whether that is a data bug or a
+ * mis-configured range; the state it holds remains valid either way.
+ */
+export function foldAnytimePick(state: AnytimeFoldState, x: number): AnytimeFoldState | null {
+  if (!Number.isFinite(x)) return null;
+  if (x < -1 - 1e-9) return null;
+  if (x > state.range + 1e-9) return null;
+
+  const scale = state.range + 1;
+  const y = Math.min(Math.max((x + 1) / scale, 0), 1);
+  const y0 = (state.nullMean + 1) / scale;
+  const capLambda = CAP / Math.max(y0, 1e-12);
+
+  const next = stepWealth(
+    { sumY: state.sumY, sumSq: state.sumSq, seen: state.t, logK: state.logEValue },
+    y,
+    y0,
+    capLambda,
+  );
+
+  const crossed = next.logK >= Math.log(1 / state.alpha);
+  const firstRejectedAt =
+    state.firstRejectedAt !== null ? state.firstRejectedAt : crossed ? state.t + 1 : null;
+  return {
+    alpha: state.alpha,
+    range: state.range,
+    nullMean: state.nullMean,
+    t: state.t + 1,
+    sumReturns: state.sumReturns + x,
+    logEValue: next.logK,
+    crossedThreshold: crossed,
+    everRejected: state.everRejected || crossed,
+    firstRejectedAt,
+    sumY: next.sumY,
+    sumSq: next.sumSq,
   };
 }
