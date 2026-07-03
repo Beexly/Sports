@@ -381,7 +381,9 @@ describe("coverage is provably near-nominal across regimes (skew / heavy tail / 
     let studCov = 0;
     let bcaCov = 0;
     for (let s = 0; s < NSIM; s++) {
-      const data = Array.from({ length: N }, () => Math.pow(gen(), -1 / 4));
+      // 1-u (not u): mulberry32 CAN emit exactly 0, and 0^(-1/4) = Infinity
+      // would crash a reseed; 1-u is identically distributed and never 0 here.
+      const data = Array.from({ length: N }, () => Math.pow(1 - gen(), -1 / 4));
       const stud = studentizedMeanCi(data, { resamples: B, seed: 2000 + s })!;
       const bca = bcaMeanCi(data, { resamples: B, seed: 2000 + s })!;
       if (stud.low <= TRUE_MU && TRUE_MU <= stud.high) studCov++;
@@ -389,11 +391,12 @@ describe("coverage is provably near-nominal across regimes (skew / heavy tail / 
     }
     const studRate = studCov / NSIM;
     const bcaRate = bcaCov / NSIM;
-    // Observed (deterministic, recorded from the actual run): stud=0.9225,
-    // bca=0.8725. Heavy tails degrade everything (the Edgeworth series
+    // Observed (deterministic, recorded from the actual run): stud=0.9350,
+    // bca=0.8875. Heavy tails degrade everything (the Edgeworth series
     // converges slowly); the proof is that studentized stays NEAR nominal and
     // does not collapse, and remains at least as good as BCa — the reason it
-    // exists. Floors sit ~2 SE (1.4pp at these rates) below the observed values.
+    // exists. Floors sit ~4 SE below the observed values (SE at these rates:
+    // stud sqrt(.935*.065/400)~1.2pp, bca sqrt(.8875*.1125/400)~1.6pp).
     expect(studRate).toBeGreaterThan(0.88);
     expect(bcaRate).toBeGreaterThan(0.82);
     expect(studRate).toBeGreaterThanOrEqual(bcaRate);

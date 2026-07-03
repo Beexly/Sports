@@ -128,7 +128,10 @@ function ascending(a: number, b: number): number {
  */
 function sampleSkewness(xs: readonly number[]): number {
   const n = xs.length;
-  if (n < 3) return 0;
+  // n<3 or zero spread: skewness is UNDEFINED, not zero — returning 0 would
+  // read as "evidence of symmetry" from a sample that cannot evidence
+  // anything (hostile-review fix). NaN here maps to an absent field upstream.
+  if (n < 3) return NaN;
   const m = mean(xs);
   let m2 = 0;
   let m3 = 0;
@@ -139,7 +142,7 @@ function sampleSkewness(xs: readonly number[]): number {
   }
   m2 /= n;
   m3 /= n;
-  if (!(m2 > 0)) return 0;
+  if (!(m2 > 0)) return NaN;
   return m3 / Math.pow(m2, 1.5);
 }
 
@@ -462,7 +465,10 @@ export function studentizedCi(
   // the sorted array is identical). Withheld entirely when any infinite pivots
   // exist — see the tStarSkewness field doc for why a finite-subset skewness
   // would be the same silent-overclaim bug class this file already fixed once.
-  const tStarSkewness = degenerateResamples === 0 ? sampleSkewness(tStar) : undefined;
+  // Also withheld (NaN -> undefined) when the pivot set is too small or has
+  // zero spread — skewness is undefined there, and 0 would overclaim symmetry.
+  const rawSkew = degenerateResamples === 0 ? sampleSkewness(tStar) : NaN;
+  const tStarSkewness = Number.isFinite(rawSkew) ? rawSkew : undefined;
 
   // Quantiles of the pivot, then invert (tails reverse).
   const tLow = sortedPercentile(tStar, alpha / 2);

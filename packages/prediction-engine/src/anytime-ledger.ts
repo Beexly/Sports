@@ -33,9 +33,20 @@
  *    source rather than reconstructing them from memory.
  *  - The lower confidence bound inverts the same family: L_t = the largest
  *    null mean m whose betting test has ALREADY rejected (K_t(m) >= 1/alpha
- *    at some point up to t), found by bracket + bisection over m. By the same
- *    Ville argument applied to each m, P(exists t: L_t > true mean) <= alpha —
- *    a confidence SEQUENCE, valid at every t simultaneously.
+ *    at some point up to t), found by bracket + bisection over m. HONEST
+ *    SCOPE OF THE PROOF: Ville gives EXACT per-m validity (P(reject the true
+ *    mean) <= alpha for each fixed m); lifting that to the supremum L_t
+ *    additionally needs rejects(m) to be downward-monotone in m, which the
+ *    m-adaptive plug-in schedule does not come with a theorem for. What IS
+ *    guaranteed by construction: the reported bound is always a
+ *    CERTIFIED-REJECTED m (every assignment paths through rejects()), and the
+ *    grid scan breaks at the first non-rejected point, so any monotonicity
+ *    wobble causes understatement, never overstatement. Monotonicity itself
+ *    is empirically verified (hostile-review probe: zero non-monotone islands
+ *    over 600 ledgers x 241-point m-grids across four worlds) and the bound's
+ *    validity is Monte-Carlo-tested in the suite (violations 0.0325 vs the
+ *    0.05 budget). A theorem-clean upgrade (fixed-lambda mixture, provably
+ *    monotone) is documented as future work.
  *
  * DETERMINISM — STRONGER THAN SEEDED. No RNG anywhere: the whole object is a
  * closed-form function of the ORDERED ledger. Any two parties recompute
@@ -88,7 +99,17 @@ export interface AnytimeLedgerResult {
 
 export interface AnytimeLedgerOptions {
   readonly alpha?: number; // default 0.05
-  /** A priori upper bound on a single win's return. Default: max(1, observed max). */
+  /**
+   * Upper bound on a single win's return. PASS A FIXED A-PRIORI VALUE in
+   * production (e.g. the platform's max publishable odds): the observed-max
+   * default makes every bet depend on the full array through the rescaling,
+   * which is a strict predictability leak — the Ville licensing is exact only
+   * for a range fixed before the data. The leak is second-order (a
+   * hostile-review probe measured identical 0.020 false-positive rates for
+   * fixed, final-observed, and live-recomputed ranges over 400 mixed-odds
+   * break-even ledgers) and vanishes entirely while all wins stay <= the
+   * default's initial value, but theorem-clean callers inject the constant.
+   */
   readonly range?: number;
   /** The null mean being tested (original units). Default 0 = "no edge". */
   readonly nullMean?: number;

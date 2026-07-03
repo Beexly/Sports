@@ -41,13 +41,17 @@ describe("coverage self-audit (K2)", () => {
     expect(a).toEqual(b);
   });
 
-  it("different seeds actually consume the outer RNG (results differ)", () => {
+  it("different seeds actually consume the outer RNG (the resample draws differ)", () => {
+    // Hostile-review fix: asserting only the echoed seed field was vacuous (it
+    // would pass even if the RNG were dead). Assert instead that the two runs'
+    // COVERED COUNTS differ — covered = realizedCoverage * (outer - nullBands)
+    // is a pure function of the actual resample draws, so differing counts
+    // prove the seed reaches the RNG. (Verified at these two fixed seeds; a
+    // coincidental tie would be a legitimate reason to pick different seeds,
+    // not to weaken the assertion.)
     const a = studentizedCoverageSelfAudit(exp25, { outerResamples: 60, innerResamples: 300, seed: 1 })!;
     const b = studentizedCoverageSelfAudit(exp25, { outerResamples: 60, innerResamples: 300, seed: 2 })!;
-    // Realized coverage may coincide by chance at coarse resolution, but the
-    // full result objects (which include the seed) must differ, and typically
-    // the rates do too — assert on the pair.
-    expect(a.seed).not.toBe(b.seed);
+    expect(a.realizedCoverage).not.toBe(b.realizedCoverage);
   });
 
   it("pins the SELF framing: targetMean is exactly the ledger's own mean", () => {

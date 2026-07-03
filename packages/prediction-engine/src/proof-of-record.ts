@@ -64,6 +64,20 @@ export function merkleRoot(records: readonly PickRecord[], hash: HashFn): string
   return layer[0]!;
 }
 
+/**
+ * Merkle root from ALREADY-HASHED leaves (a receipt's contentHash IS its leaf
+ * — see hashLeaf/buildPickProofReceipt). Lets a verifier that only holds the
+ * public leaf fingerprints re-fold the committed root and PROVE a displayed
+ * receipt list matches the commitment, instead of trusting a DB relation.
+ * Leaf ORDER must match the committed order (pickId ascending at freeze time).
+ */
+export function merkleRootFromLeafHashes(leafHashes: readonly string[], hash: HashFn): string {
+  if (leafHashes.length === 0) return hash("");
+  let layer: string[] = [...leafHashes];
+  while (layer.length > 1) layer = parentLayer(layer, hash);
+  return layer[0]!;
+}
+
 /** Build an inclusion proof for the record at `index`. */
 export function inclusionProof(records: readonly PickRecord[], index: number, hash: HashFn): MerkleProof {
   if (index < 0 || index >= records.length) {

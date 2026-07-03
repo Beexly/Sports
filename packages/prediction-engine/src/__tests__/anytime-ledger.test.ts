@@ -67,6 +67,71 @@ describe("anytimeValidLedger (K11) — unit behavior", () => {
     expect(res.lowerBound).toBeLessThanOrEqual(res.current.cumulativeMean);
   });
 
+  it("RECURSION PIN: a 3-observation ledger matches an independent straight-line computation", () => {
+    // Hostile-review fix: the MC proof runs THROUGH the same recursion it
+    // certifies, so an off-by-one in the predictable stats could hide inside
+    // it. This fixture recomputes the exact same three steps as STRAIGHT-LINE
+    // arithmetic (no loop, no shared code) and pins the module against it.
+    // Fixture: [WIN, LOSS, WIN] at -110, default range = max(1, 0.909..) = 1.
+    const returns = [WIN, -1, WIN];
+    const scale = 2; // range + 1
+    const y = returns.map((x) => (x + 1) / scale); // [0.9545.., 0, 0.9545..]
+    const y0 = 0.5; // (0 + 1) / 2
+    const CAP_OVER_Y0 = 0.5 / y0; // 1
+
+    // Step 1: muHat = (y0 + 0)/1 = 0.5, varHat = 0.25/1 -> rawLambda = 0 -> factor 1.
+    const log1 = Math.log(1);
+    // Predictable updates AFTER step 1:
+    const sumSq1 = (y[0]! - 0.5) ** 2;
+    const sumY1 = y[0]!;
+    // Step 2: muHat = (0.5 + sumY1)/2, varHat = (0.25 + sumSq1)/2.
+    const mu2 = (y0 + sumY1) / 2;
+    const var2 = (0.25 + sumSq1) / 2;
+    const lambda2 = Math.min(Math.max((mu2 - y0) / (var2 + 1e-9), 0), CAP_OVER_Y0);
+    const factor2 = 1 + lambda2 * (y[1]! - y0);
+    const log2 = log1 + Math.log(Math.max(factor2, 1e-12));
+    // Predictable updates AFTER step 2:
+    const sumSq2 = sumSq1 + (y[1]! - mu2) ** 2;
+    const sumY2 = sumY1 + y[1]!;
+    // Step 3: muHat = (0.5 + sumY2)/3, varHat = (0.25 + sumSq2)/3.
+    const mu3 = (y0 + sumY2) / 3;
+    const var3 = (0.25 + sumSq2) / 3;
+    const lambda3 = Math.min(Math.max((mu3 - y0) / (var3 + 1e-9), 0), CAP_OVER_Y0);
+    const factor3 = 1 + lambda3 * (y[2]! - y0);
+    const log3 = log2 + Math.log(Math.max(factor3, 1e-12));
+
+    const res = anytimeValidLedger(returns, { computeLowerBound: false })!;
+    expect(res.points[0]!.logEValue).toBeCloseTo(log1, 12);
+    expect(res.points[1]!.logEValue).toBeCloseTo(log2, 12);
+    expect(res.points[2]!.logEValue).toBeCloseTo(log3, 12);
+    // The first bet MUST be zero (burn-in: muHat starts at y0) — if an
+    // off-by-one let Y_1 leak into lambda_1, this exact equality breaks.
+    expect(res.points[0]!.logEValue).toBe(0);
+  });
+
+  it("MIXED-ODDS validity: break-even ledgers with +400 longshots stay within the Ville budget (fixed a-priori range)", () => {
+    // Exercises the range > 1 path the -110-only MCs never touch. Mix: 75%
+    // -110 bets at their exact break-even probability, 25% +400 bets at
+    // theirs (p = 1/5 -> mean exactly 0). Fixed a-priori range = 4.
+    const WIN400 = 4;
+    const P400 = 1 / (1 + WIN400);
+    const NSIM = 600;
+    const N_MAX = 300;
+    const gen = mulberry32(606060);
+    let falseRejections = 0;
+    for (let s = 0; s < NSIM; s++) {
+      const ledger = Array.from({ length: N_MAX }, () =>
+        gen() < 0.75 ? (gen() < P_BREAKEVEN ? WIN : -1) : gen() < P400 ? WIN400 : -1,
+      );
+      const res = anytimeValidLedger(ledger, { range: 4, computeLowerBound: false })!;
+      if (res.everRejected) falseRejections++;
+    }
+    const fpr = falseRejections / NSIM;
+    // alpha + 3*SE at NSIM=600: 0.05 + 3*sqrt(.05*.95/600) ~ 0.0767.
+    // OBSERVED (deterministic, from the actual run): fpr = 0.0150.
+    expect(fpr).toBeLessThanOrEqual(0.0767);
+  });
+
   it("e-value bookkeeping: eValue = exp(logEValue), threshold crossing consistent with alpha", () => {
     const gen = mulberry32(21);
     const ledger = Array.from({ length: 120 }, () => (gen() < 0.65 ? WIN : -1));

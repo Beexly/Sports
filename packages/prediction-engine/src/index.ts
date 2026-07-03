@@ -120,6 +120,7 @@ export type { ReadinessGates } from "./readiness.js";
 export {
   hashLeaf,
   merkleRoot,
+  merkleRootFromLeafHashes,
   inclusionProof,
   verifyInclusion,
   canonicalPickPayload,
