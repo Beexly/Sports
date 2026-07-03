@@ -50,7 +50,7 @@ export default async function CockpitAgentsPage() {
             <header className="flex items-start justify-between gap-3">
               <div>
                 <h2 className="text-lg font-bold text-ion-white">{agent.displayName}</h2>
-                <p className="text-[10px] uppercase tracking-widest text-ion-3">
+                <p className="text-label uppercase tracking-widest text-ion-3">
                   {agent.key}
                 </p>
               </div>
@@ -84,7 +84,7 @@ export default async function CockpitAgentsPage() {
                 {agent.safeActions.map((s) => (
                   <li key={s}>{s}</li>
                 ))}
-                <li className="text-yellow-500">External actions: {agent.externalActions}</li>
+                <li className="text-caution">External actions: {agent.externalActions}</li>
               </ul>
             </details>
           </article>

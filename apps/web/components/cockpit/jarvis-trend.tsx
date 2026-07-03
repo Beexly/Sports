@@ -17,11 +17,14 @@ import type { JarvisHistorySnapshot } from "@/lib/cockpit/jarvis-history";
  */
 
 const STATUS_TONE: Record<string, string> = {
-  LAUNCH_READY: "bg-green-700 text-green-100",
-  LAUNCH_READY_PENDING_EXTERNAL_CONFIG: "bg-yellow-700 text-yellow-100",
-  NOT_READY_DATA: "bg-red-700 text-red-100",
-  NOT_READY_VALIDATION: "bg-orange-700 text-orange-100",
-  NOT_READY_SAFETY: "bg-red-800 text-red-100",
+  LAUNCH_READY: "bg-verify/20 text-verify",
+  LAUNCH_READY_PENDING_EXTERNAL_CONFIG: "bg-caution/20 text-caution",
+  NOT_READY_DATA: "bg-alert/20 text-alert",
+  // Distinct from the other two failure reasons (orange vs. red in the original) —
+  // uses caution-deep rather than alert so a validation gap still reads as
+  // "fix and retry," not the same hard-block red as a data/safety failure.
+  NOT_READY_VALIDATION: "bg-caution-deep/20 text-caution-deep",
+  NOT_READY_SAFETY: "bg-alert/30 text-alert",
   UNKNOWN: "bg-titanium/40 text-ion-1",
 };
 
@@ -45,7 +48,7 @@ export function JarvisTrend({ snapshots, className }: JarvisTrendProps) {
     return (
       <div
         data-testid="jarvis-trend-empty"
-        className={["text-[10px] text-ion-3", className ?? ""].join(" ")}
+        className={["text-label text-ion-3", className ?? ""].join(" ")}
       >
         No trend data yet
       </div>
@@ -65,7 +68,7 @@ export function JarvisTrend({ snapshots, className }: JarvisTrendProps) {
           key={`${s.assessedAt}-${i}`}
           title={`${s.assessedAt} — ${s.launchStatus}`}
           className={[
-            "rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest",
+            "rounded px-1.5 py-0.5 text-micro font-bold uppercase tracking-widest",
             STATUS_TONE[s.launchStatus] ?? STATUS_TONE["UNKNOWN"]!,
           ].join(" ")}
         >

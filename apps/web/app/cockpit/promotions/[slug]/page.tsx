@@ -41,16 +41,16 @@ export default async function CockpitPromotionDetail({
         </h2>
         <p className="text-sm">
           {verdict.publishable ? (
-            <span className="text-green-400">PUBLISHABLE</span>
+            <span className="text-verify">PUBLISHABLE</span>
           ) : (
-            <span className="text-yellow-400">NOT PUBLISHABLE</span>
+            <span className="text-caution">NOT PUBLISHABLE</span>
           )}
         </p>
         {verdict.blockers.length > 0 && (
           <ul className="mt-3 space-y-1 text-xs text-ion-2">
             {verdict.blockers.map((b) => (
               <li key={b.code}>
-                <span className="font-semibold text-yellow-400">{b.code}</span>{" "}
+                <span className="font-semibold text-caution">{b.code}</span>{" "}
                 — {b.message}{" "}
                 <span className="text-ion-3">
                   ({b.reviewable ? "reviewable" : "hard block"})
@@ -119,7 +119,7 @@ export default async function CockpitPromotionDetail({
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-titanium/40 bg-eclipse/40 p-3">
-      <p className="text-[10px] uppercase tracking-widest text-ion-3">
+      <p className="text-label uppercase tracking-widest text-ion-3">
         {label}
       </p>
       <p className="text-sm text-ion-white">{value}</p>

@@ -16,7 +16,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export type CockpitCommand = {
   label: string;
@@ -134,18 +133,18 @@ export function CockpitCommandPalette() {
         aria-label="Open cockpit command palette"
         className="fixed bottom-5 right-5 z-[90] flex items-center gap-2 rounded-full px-3.5 py-2 font-mono text-xs font-medium shadow-lg transition-transform hover:-translate-y-0.5"
         style={{
-          background: "rgba(5,7,11,0.85)",
-          border: `1px solid ${BRAND_COLORS.steelGray}`,
-          color: "#c8d2dd",
+          background: "color-mix(in srgb, var(--void) 85%, transparent)",
+          border: "1px solid var(--titanium)",
+          color: "var(--ion-2)",
           backdropFilter: "blur(8px)",
         }}
       >
-        <span aria-hidden style={{ color: BRAND_COLORS.orbitalCyan }}>
+        <span aria-hidden style={{ color: "var(--orbital-cyan)" }}>
           ⌘
         </span>
         <span className="hidden sm:inline">Cockpit jump…</span>
         <kbd
-          className="rounded px-1 py-0.5 text-[10px]"
+          className="rounded px-1 py-0.5 text-label"
           style={{ background: "rgba(255,255,255,0.06)" }}
         >
           ⌘K
@@ -185,9 +184,9 @@ export function CockpitCommandPalette() {
       >
         <div
           className="flex items-center gap-3 border-b px-4 py-3"
-          style={{ borderColor: BRAND_COLORS.steelGray }}
+          style={{ borderColor: "var(--titanium)" }}
         >
-          <span aria-hidden style={{ color: BRAND_COLORS.orbitalCyan }}>
+          <span aria-hidden style={{ color: "var(--orbital-cyan)" }}>
             ⌘
           </span>
           <input
@@ -200,7 +199,7 @@ export function CockpitCommandPalette() {
             aria-label="Search cockpit commands"
           />
           <kbd
-            className="rounded px-1.5 py-0.5 text-[10px] text-ion-3"
+            className="rounded px-1.5 py-0.5 text-label text-ion-3"
             style={{ background: "rgba(255,255,255,0.06)" }}
           >
             esc
@@ -213,7 +212,7 @@ export function CockpitCommandPalette() {
           )}
           {groups.map((g) => (
             <div key={g.name} className="mb-1">
-              <p className="px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">
+              <p className="px-3 py-1 font-mono text-label uppercase tracking-label text-ion-3">
                 {g.name}
               </p>
               {g.items.map(({ c, i }) => (
@@ -225,13 +224,15 @@ export function CockpitCommandPalette() {
                   className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm"
                   style={{
                     background:
-                      active === i ? `${BRAND_COLORS.orbitalCyan}14` : "transparent",
-                    color: active === i ? "#fff" : "#c8d2dd",
+                      active === i
+                        ? "color-mix(in srgb, var(--orbital-cyan) 8%, transparent)"
+                        : "transparent",
+                    color: active === i ? "var(--ion-white)" : "var(--ion-2)",
                   }}
                 >
                   <span className="flex-1 truncate">{c.label}</span>
                   {active === i && (
-                    <span aria-hidden style={{ color: BRAND_COLORS.orbitalCyan }}>
+                    <span aria-hidden style={{ color: "var(--orbital-cyan)" }}>
                       ↵
                     </span>
                   )}

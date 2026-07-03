@@ -47,7 +47,7 @@ export function MissionControlHow(): JSX.Element {
     >
       <div aria-hidden className="absolute inset-x-0 top-0 h-1 bg-signal-fade" />
       <div className="flex items-center gap-2.5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">How this works</p>
+        <p className="font-mono text-label uppercase tracking-label text-ion-2">How this works</p>
         <span aria-hidden className="h-px flex-1" style={{ backgroundImage: "var(--signal-fade)", opacity: 0.4 }} />
       </div>
       <ol className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -58,7 +58,7 @@ export function MissionControlHow(): JSX.Element {
             </span>
             <div className="min-w-0">
               <p className="flex items-center gap-2">
-                <span className="font-mono text-[10px] tabular-nums text-ion-2">{b.k}</span>
+                <span className="font-mono text-label tabular-nums text-ion-2">{b.k}</span>
                 <span className="text-sm font-semibold text-ion-white">{b.label}</span>
               </p>
               <p className="mt-1 text-xs leading-5 text-ion-1">{b.line}</p>

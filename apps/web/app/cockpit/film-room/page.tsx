@@ -26,7 +26,7 @@ export default async function FilmRoomPage() {
   return (
     <div className="min-h-screen bg-obsidian/60 px-4 py-10 sm:px-6 lg:px-8 text-ion-1">
       <div className="mx-auto max-w-5xl">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300">Cockpit · Visual Production</p>
+        <p className="font-mono text-label uppercase tracking-label text-cyan-300">Cockpit · Visual Production</p>
         <h1 className="mt-1.5 text-3xl font-bold text-ion-white">Film Room</h1>
         <p className="mt-2 max-w-2xl text-sm text-ion-2">
           Generate atmosphere. Render truth. Paid generation is blocked by default — every claim, stat, label, and
@@ -35,11 +35,11 @@ export default async function FilmRoomPage() {
         </p>
 
         {/* Master spend gate */}
-        <div className={`mt-6 rounded-xl border p-4 text-sm ${masterReady ? "border-amber-700/50 bg-amber-950/20" : "border-titanium/40 bg-eclipse/40"}`}>
+        <div className={`mt-6 rounded-xl border p-4 text-sm ${masterReady ? "border-caution/50 bg-caution/10" : "border-titanium/40 bg-eclipse/40"}`}>
           <p className="font-semibold text-ion-white">Master spend gate</p>
           <ul className="mt-2 space-y-1 text-xs">
-            <li>HIGGSFIELD_GENERATION_ENABLED: <span className={genEnabled ? "text-amber-300" : "text-verify"}>{genEnabled ? "ON" : "off (blocked)"}</span></li>
-            <li>OWNER_VISUAL_SPEND_APPROVED: <span className={spendApproved ? "text-amber-300" : "text-verify"}>{spendApproved ? "ON" : "off (blocked)"}</span></li>
+            <li>HIGGSFIELD_GENERATION_ENABLED: <span className={genEnabled ? "text-caution" : "text-verify"}>{genEnabled ? "ON" : "off (blocked)"}</span></li>
+            <li>OWNER_VISUAL_SPEND_APPROVED: <span className={spendApproved ? "text-caution" : "text-verify"}>{spendApproved ? "ON" : "off (blocked)"}</span></li>
           </ul>
           <p className="mt-2 text-xs text-ion-2">
             {masterReady
@@ -60,10 +60,10 @@ export default async function FilmRoomPage() {
                     <p className="text-xs text-ion-3">{a.surface} · {a.provider} · {a.mediaKind}</p>
                   </div>
                   <div className="text-right">
-                    <span className="rounded-full border border-titanium/40 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-ion-1">
+                    <span className="rounded-full border border-titanium/40 px-2 py-0.5 text-label font-mono uppercase tracking-wide text-ion-1">
                       score {a.priorityScore} · {decision.band.replace(/_/g, " ")}
                     </span>
-                    <p className={`mt-1 text-[11px] font-semibold ${decision.allowed ? "text-amber-300" : "text-verify"}`}>
+                    <p className={`mt-1 text-label-lg font-semibold ${decision.allowed ? "text-caution" : "text-verify"}`}>
                       {decision.allowed ? "CLEARED to generate" : "blocked"}
                     </p>
                   </div>

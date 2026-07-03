@@ -1,10 +1,14 @@
 /*
  * Galaxy Sports Edge — global styles.
  *
- * Imports the canonical design tokens (mirror of `design-system/colors_and_type.css`)
- * first so every Tailwind utility and every inline `var(--token)` resolves from a
- * single source. Component-level utilities below compose those tokens; never
- * redefine a color or a font here.
+ * Imports the canonical design tokens first (styles/design-tokens.css — mirrored
+ * into tailwind.config.ts) so every Tailwind utility and every inline
+ * `var(--token)` resolves from a single source. Component-level utilities below
+ * compose those tokens; never redefine a color or a font here.
+ *
+ * `design-system/colors_and_type.css` at the repo root is a HISTORICAL,
+ * superseded snapshot — it is not imported here and must not be used as a
+ * reference; see the header comment in that file.
  */
 @import "../styles/design-tokens.css";
 @import "../styles/pickpilot-kit.css";
@@ -174,6 +178,26 @@
     @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
     background: var(--titanium);
     color: var(--ion);
+  }
+
+  /* Cockpit severity/status chips — the ONLY sanctioned tone combinations for
+   * cockpit status badges. Names what lib/cockpit/status-styles.ts already
+   * computes from verify/caution/alert/ion-blue, so new call sites reach for
+   * one class instead of hand-rolling raw stock Tailwind palette colors
+   * (yellow, red, emerald, rose, cyan, etc.), which is how the cockpit's
+   * status colors drifted into 3-4 different hue families per severity role.
+   */
+  .cockpit-chip-ready {
+    @apply bg-verify/10 text-verify ring-1 ring-inset ring-verify/40;
+  }
+  .cockpit-chip-warn {
+    @apply bg-caution/10 text-caution ring-1 ring-inset ring-caution/40;
+  }
+  .cockpit-chip-danger {
+    @apply bg-alert/10 text-alert ring-1 ring-inset ring-alert/40;
+  }
+  .cockpit-chip-info {
+    @apply bg-ion-blue/10 text-ion-blue ring-1 ring-inset ring-ion-blue/40;
   }
 }
 

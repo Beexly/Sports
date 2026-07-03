@@ -30,7 +30,16 @@ export type BriefingCard = {
   readonly accent: string;
 };
 
-const HEX = { cyan: "#00E5FF", magenta: "#FF38C7", uv: "#7B61FF", amber: "#E0A800", white: "#F5F7FF" };
+// CSS var references (not raw hex) so these track the design tokens in
+// styles/design-tokens.css automatically. `amber` previously hardcoded a
+// one-off #E0A800 that matched no token; --caution (#FFB454) is the real one.
+const HEX = {
+  cyan: "var(--orbital-cyan)",
+  magenta: "var(--plasma)",
+  uv: "var(--ultraviolet)",
+  amber: "var(--caution)",
+  white: "var(--ion-white)",
+};
 
 /** Compose the prioritized, cross-product briefing from the live engines. */
 export function buildBriefing(): BriefingCard[] {

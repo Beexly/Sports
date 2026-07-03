@@ -57,8 +57,8 @@ export default async function JarvisTrendPage() {
         data-testid="jarvis-trend-table"
         className="overflow-x-auto rounded-2xl border border-titanium/40 bg-eclipse/40"
       >
-        <table className="w-full min-w-[900px] text-[11px]">
-          <thead className="border-b border-titanium/40 bg-obsidian/50 text-left text-[10px] uppercase tracking-widest text-ion-3">
+        <table className="w-full min-w-[900px] text-label-lg">
+          <thead className="border-b border-titanium/40 bg-obsidian/50 text-left text-label uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="px-3 py-2">Assessed at</th>
               <th scope="col" className="px-3 py-2">Launch status</th>
@@ -105,7 +105,7 @@ export default async function JarvisTrendPage() {
         </table>
       </section>
 
-      <p className="text-[10px] text-ion-3">
+      <p className="text-label text-ion-3">
         The buffer is process-local. After a server restart the trend starts
         empty. For long-term audit, pair with{" "}
         <code className="rounded bg-obsidian/70 px-1">serializeJarvisAudit()</code>{" "}

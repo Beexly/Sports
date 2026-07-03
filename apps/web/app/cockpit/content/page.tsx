@@ -148,12 +148,12 @@ export default async function CockpitContentPage() {
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Draft queue · Phase 8 content engine
         </h2>
-        <p className="mb-3 text-[11px] text-ion-3">
+        <p className="mb-3 text-label-lg text-ion-3">
           Performance gate is currently{" "}
           {gates.canExposePerformanceStats ? (
-            <span className="text-green-400">ON</span>
+            <span className="text-verify">ON</span>
           ) : (
-            <span className="text-yellow-400">OFF</span>
+            <span className="text-caution">OFF</span>
           )}
           . Drafts that depend on the gate cannot be approved for public
           visibility while it is OFF.
@@ -167,7 +167,7 @@ export default async function CockpitContentPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px] text-left text-xs">
-              <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+              <thead className="border-b border-titanium/40 text-label uppercase tracking-widest text-ion-3">
                 <tr>
                   <th scope="col" className="py-2 pr-3">Title</th>
                   <th scope="col" className="py-2 pr-3">Type</th>
@@ -192,7 +192,7 @@ export default async function CockpitContentPage() {
                     <td className="py-2 pr-3">{d.affiliateDisclosureIncluded ? "yes" : "—"}</td>
                     <td className="py-2 pr-3">{d.performanceGateStatus}</td>
                     <td className="py-2 pr-3">
-                      <span data-testid={`content-readiness-${d.slug}`} className={d.verdict.readiness === "READY_FOR_REVIEW" ? "text-green-400" : d.verdict.readiness === "BLOCKED" ? "text-red-400" : "text-yellow-400"}>
+                      <span data-testid={`content-readiness-${d.slug}`} className={d.verdict.readiness === "READY_FOR_REVIEW" ? "text-verify" : d.verdict.readiness === "BLOCKED" ? "text-alert" : "text-caution"}>
                         {d.verdict.readiness}
                       </span>
                     </td>
@@ -203,7 +203,7 @@ export default async function CockpitContentPage() {
           </div>
         )}
         {drafts.length > 0 && (
-          <ul data-testid="content-blockers-list" className="mt-4 space-y-2 text-[11px] text-ion-2">
+          <ul data-testid="content-blockers-list" className="mt-4 space-y-2 text-label-lg text-ion-2">
             {drafts.map((d) => (
               <li key={`blockers-${d.id}`}>
                 <span className="font-semibold text-ion-1">{d.title}</span>
@@ -220,7 +220,7 @@ export default async function CockpitContentPage() {
           Templates the engine is allowed to emit
         </h2>
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+          <thead className="border-b border-titanium/40 text-label uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="py-2 pr-3">Template</th>
               <th scope="col" className="py-2 pr-3">Type</th>
@@ -254,7 +254,7 @@ export default async function CockpitContentPage() {
           Legacy content policy
         </h2>
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+          <thead className="border-b border-titanium/40 text-label uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="py-2 pr-3">Kind</th>
               <th scope="col" className="py-2 pr-3">Required sources</th>
@@ -288,7 +288,7 @@ export default async function CockpitContentPage() {
           <p className="text-xs text-ion-3">No legacy media items.</p>
         ) : (
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+            <thead className="border-b border-titanium/40 text-label uppercase tracking-widest text-ion-3">
               <tr>
                 <th scope="col" className="py-2 pr-3">Title</th>
                 <th scope="col" className="py-2 pr-3">Channel</th>
@@ -312,7 +312,7 @@ export default async function CockpitContentPage() {
         )}
       </section>
 
-      <p data-testid="content-no-publish-banner" className="rounded-lg border border-yellow-900/40 bg-yellow-900/10 p-3 text-xs text-yellow-200">
+      <p data-testid="content-no-publish-banner" className="rounded-lg border border-caution/40 bg-caution/10 p-3 text-xs text-caution">
         Internal calibration only. No auto-publish. No auto-send. No automated betting.
         Approval is an internal sign-off; surfacing a draft on the public
         blog still requires a deliberate, audited operator action outside

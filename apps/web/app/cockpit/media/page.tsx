@@ -25,12 +25,12 @@ type LegacyMediaResult =
   | { readonly status: "unreachable"; readonly rowCount: "UNKNOWN"; readonly items: readonly LegacyMediaItem[] };
 
 const STATUS_TONE: Record<MediaLaneStatus, string> = {
-  ready: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  "draft-only": "border-cyan-500/30 bg-cyan-950/30 text-cyan-200",
-  "db-dependent": "border-blue-500/30 bg-blue-950/30 text-blue-200",
-  "founder-gated": "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  blocked: "border-red-500/30 bg-red-950/30 text-red-200",
-  "manual-export": "border-violet-500/30 bg-violet-950/30 text-violet-200",
+  ready: "border-verify/30 bg-verify/10 text-verify",
+  "draft-only": "border-ion-blue/30 bg-ion-blue/10 text-ion-blue",
+  "db-dependent": "border-ion-blue-deep/30 bg-ion-blue-deep/10 text-ion-blue-deep",
+  "founder-gated": "border-caution/30 bg-caution/10 text-caution",
+  blocked: "border-alert/30 bg-alert/10 text-alert",
+  "manual-export": "border-ultraviolet/30 bg-ultraviolet/10 text-ultraviolet",
 };
 
 async function loadLegacyMediaItems(): Promise<LegacyMediaResult> {
@@ -77,7 +77,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-300">
+            <p className="text-label font-semibold uppercase tracking-widest text-violet-300">
               Media intelligence
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Media Operating Room</h1>
@@ -106,7 +106,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
 
       <p
         data-testid="media-no-publish-banner"
-        className="rounded-lg border border-yellow-900/40 bg-yellow-950/20 p-4 text-xs leading-relaxed text-yellow-200"
+        className="rounded-lg border border-caution/40 bg-caution/10 p-4 text-xs leading-relaxed text-caution"
       >
         Draft-only. No auto-publish. No social posting. No user communications. No automated
         betting. `scheduledFor` is metadata only; no worker reads it to publish.
@@ -158,9 +158,9 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
             </dl>
           </section>
 
-          <section className="rounded-2xl border border-red-900/50 bg-red-950/20 p-5">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-red-300">Hard boundary</h2>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-red-100/80">
+          <section className="rounded-2xl border border-alert/50 bg-alert/10 p-5">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-alert">Hard boundary</h2>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-alert/80">
               <li>No external publishing path from Media.</li>
               <li>No social posting API from Studio.</li>
               <li>No fabricated beat reports or sourced claims.</li>
@@ -184,7 +184,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
           </div>
           <span
             data-testid="media-db-status"
-            className={legacy.status === "reachable" ? "rounded border border-emerald-500/30 bg-emerald-950/30 px-2 py-1 text-xs text-emerald-200" : "rounded border border-yellow-500/30 bg-yellow-950/30 px-2 py-1 text-xs text-yellow-200"}
+            className={legacy.status === "reachable" ? "rounded border border-verify/30 bg-verify/10 px-2 py-1 text-xs text-verify" : "rounded border border-caution/30 bg-caution/10 px-2 py-1 text-xs text-caution"}
           >
             {legacy.status === "reachable" ? `${legacy.rowCount} rows` : "UNKNOWN (no DB reachable)"}
           </span>
@@ -212,12 +212,12 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
                 <header className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="text-sm font-semibold text-ion-white">{item.briefTitle}</h3>
-                    <p className="mt-0.5 text-[11px] text-ion-3">
+                    <p className="mt-0.5 text-label-lg text-ion-3">
                       channel: <code className="rounded bg-obsidian/70 px-1 text-ion-1">{item.channel}</code>
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <span className="rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1">
+                    <span className="rounded-full bg-obsidian/70 px-2 py-0.5 text-label font-semibold text-ion-1">
                       QA: {item.qaStatus}
                     </span>
                     <span className={complianceClass(item.complianceStatus)}>
@@ -228,7 +228,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
                 <p className="mt-3 line-clamp-3 text-xs leading-relaxed text-ion-2">
                   {item.briefBody}
                 </p>
-                <footer className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-ion-3">
+                <footer className="mt-3 flex flex-wrap items-center justify-between gap-2 text-label-lg text-ion-3">
                   <span>{item.approved ? "Approved / ready for editor" : "Draft / unapproved"}</span>
                   {item.scheduledFor ? <span>scheduled metadata: {item.scheduledFor.toUTCString()}</span> : null}
                 </footer>
@@ -244,7 +244,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
 function Metric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
+      <p className="text-label-lg uppercase tracking-wider text-ion-3">{label}</p>
       <p className="mt-2 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
       <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
     </div>
@@ -268,7 +268,7 @@ function LaneCard({ lane }: { lane: MediaLane }): JSX.Element {
           <h3 className="text-sm font-semibold text-ion-white">{lane.name}</h3>
           <p className="mt-1 text-xs text-ion-3">{lane.source}</p>
         </div>
-        <span className={`rounded border px-2 py-1 text-[11px] ${STATUS_TONE[lane.status]}`}>
+        <span className={`rounded border px-2 py-1 text-label-lg ${STATUS_TONE[lane.status]}`}>
           {statusLabel(lane.status)}
         </span>
       </div>
@@ -279,7 +279,7 @@ function LaneCard({ lane }: { lane: MediaLane }): JSX.Element {
         </div>
         <div>
           <dt className="text-ion-3">Gate</dt>
-          <dd className="mt-1 font-mono text-[11px] text-ion-2">{lane.gate}</dd>
+          <dd className="mt-1 font-mono text-label-lg text-ion-2">{lane.gate}</dd>
         </div>
         <div>
           <dt className="text-ion-3">Operator action</dt>
@@ -295,13 +295,13 @@ function LaneCard({ lane }: { lane: MediaLane }): JSX.Element {
 
 function complianceClass(status: string): string {
   if (status === "CLEAR") {
-    return "rounded-full bg-green-900/40 px-2 py-0.5 text-[10px] font-semibold text-green-200";
+    return "rounded-full bg-verify/10 px-2 py-0.5 text-label font-semibold text-verify";
   }
   if (status === "REVIEW_REQUIRED") {
-    return "rounded-full bg-yellow-900/40 px-2 py-0.5 text-[10px] font-semibold text-yellow-200";
+    return "rounded-full bg-caution/10 px-2 py-0.5 text-label font-semibold text-caution";
   }
   if (status === "HOLD") {
-    return "rounded-full bg-red-900/40 px-2 py-0.5 text-[10px] font-semibold text-red-200";
+    return "rounded-full bg-alert/10 px-2 py-0.5 text-label font-semibold text-alert";
   }
-  return "rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1";
+  return "rounded-full bg-obsidian/70 px-2 py-0.5 text-label font-semibold text-ion-1";
 }

@@ -66,14 +66,14 @@ export default async function CockpitTasksPage() {
                         >
                           {t.title}
                         </Link>
-                        <span className="shrink-0 rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1">
+                        <span className="shrink-0 rounded-full bg-obsidian/70 px-2 py-0.5 text-label font-semibold text-ion-1">
                           {t.status}
                         </span>
                       </div>
-                      <p className="mt-1 text-[11px] text-ion-3">
+                      <p className="mt-1 text-label-lg text-ion-3">
                         {AGENTS[t.assignedAgent].displayName} · priority {t.priority} · {t.riskLevel}
                         {t.complianceStatus !== "NOT_APPLICABLE" && (
-                          <span className="ml-2 rounded bg-yellow-900/30 px-1.5 py-0.5 text-[10px] font-semibold text-yellow-300">
+                          <span className="ml-2 rounded bg-caution/10 px-1.5 py-0.5 text-label font-semibold text-caution">
                             {t.complianceStatus}
                           </span>
                         )}

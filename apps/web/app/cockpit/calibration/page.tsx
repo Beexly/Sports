@@ -119,7 +119,7 @@ export default async function CockpitCalibrationPage() {
       <h1 className="text-2xl font-bold text-ion-white">Calibration</h1>
       <p
         data-testid="internal-only-banner"
-        className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"
+        className="rounded-lg border border-caution/40 bg-caution/10 px-4 py-2 text-xs text-caution"
       >
         Internal calibration only. No auto-publish. No auto-send. No automated betting.
       </p>
@@ -128,7 +128,7 @@ export default async function CockpitCalibrationPage() {
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Market baseline — the bar to beat
         </h2>
-        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+        <p className="mb-3 text-label-lg leading-relaxed text-ion-2">
           The betting market&apos;s closing line, scored against real outcomes. It&apos;s
           well-calibrated, so this is the bar our own model has to beat — it is{" "}
           <strong className="text-ion-1">not</strong> our model&apos;s calibration (that needs
@@ -140,7 +140,7 @@ export default async function CockpitCalibrationPage() {
           <BaselineStat label="Games scored" value={MARKET_BASELINE.games.toLocaleString()} sub="settled · both closes" />
           <BaselineStat label="Home-win rate" value={`${MARKET_BASELINE.homeWinRate}%`} sub="base rate" />
         </div>
-        <p className="mt-3 text-[10px] text-ion-3">
+        <p className="mt-3 text-label text-ion-3">
           {MARKET_BASELINE.window} · de-vig proportional · computed {MARKET_BASELINE.computedOn} via{" "}
           <span className="font-mono">scripts/run-historical-calibration.mjs</span> (read-only) — re-run to refresh.
         </p>
@@ -174,7 +174,7 @@ export default async function CockpitCalibrationPage() {
           <>
           <table className="w-full text-left">
             <thead>
-              <tr className="text-[10px] uppercase tracking-widest text-ion-3">
+              <tr className="text-label uppercase tracking-widest text-ion-3">
                 <th scope="col" className="py-1 pr-4 font-medium">Confidence band</th>
                 <th scope="col" className="py-1 pr-4 font-medium">Settled (n)</th>
                 <th scope="col" className="py-1 pr-4 font-medium">Realized win rate</th>
@@ -211,7 +211,7 @@ export default async function CockpitCalibrationPage() {
               const withinBand = drift !== null && Math.abs(drift) <= 5;
               return (
                 <div key={b.label} className="flex items-center gap-3">
-                  <span className="w-16 shrink-0 font-mono text-[10px] text-ion-3">{b.label}</span>
+                  <span className="w-16 shrink-0 font-mono text-label text-ion-3">{b.label}</span>
                   <div
                     className="relative h-2.5 flex-1 overflow-hidden rounded-sm bg-eclipse/40"
                     role="img"
@@ -223,7 +223,7 @@ export default async function CockpitCalibrationPage() {
                   >
                     {b.winRate === null ? null : (
                       <span
-                        className={`absolute inset-y-0 left-0 rounded-sm ${withinBand ? "bg-orbital-cyan/70" : "bg-amber-500/70"}`}
+                        className={`absolute inset-y-0 left-0 rounded-sm ${withinBand ? "bg-orbital-cyan/70" : "bg-caution/70"}`}
                         style={{ width: `${Math.min(100, Math.max(0, b.winRate))}%` }}
                       />
                     )}
@@ -233,7 +233,7 @@ export default async function CockpitCalibrationPage() {
                       style={{ left: `${Math.min(100, Math.max(0, mid))}%` }}
                     />
                   </div>
-                  <span className="w-12 shrink-0 text-right font-mono text-[10px] text-ion-2">
+                  <span className="w-12 shrink-0 text-right font-mono text-label text-ion-2">
                     {b.winRate === null ? "—" : `${b.winRate.toFixed(0)}%`}
                   </span>
                 </div>
@@ -248,7 +248,7 @@ export default async function CockpitCalibrationPage() {
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Path to a proven 70% tier — activation readiness
         </h2>
-        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+        <p className="mb-3 text-label-lg leading-relaxed text-ion-2">
           Calibration converts the confidence score into a win probability, but only once there are
           enough <strong className="text-ion-1">learning-eligible</strong> settled picks to fit on and
           the fit actually improves calibration. Until then, confidence is shown uncalibrated. See{" "}
@@ -276,12 +276,12 @@ export default async function CockpitCalibrationPage() {
             sub="not a green light"
           />
         </div>
-        <p className="mt-3 text-[10px] text-ion-3">
+        <p className="mt-3 text-label text-ion-3">
           {calibrator.isActive
             ? "Sample floor cleared and the in-sample fit improves — run a held-out/offline validation, then do the audited MODEL_VERSION activation. The ECE above is in-sample and is not, by itself, sufficient."
             : `Inactive: ${calibrator.inactiveReason || "awaiting eligible sample"}. Activation is a deliberate, audited MODEL_VERSION step — never an automatic env flip.`}
         </p>
-        <p className="mt-3 text-[11px] leading-relaxed text-ion-2">
+        <p className="mt-3 text-label-lg leading-relaxed text-ion-2">
           The conviction (&ldquo;70%&rdquo;) tier then requires a calibrated win probability of at least
           65% <em>and</em> at or above the pick&apos;s price-specific break-even (a −200 favorite needs
           ~66.7%), an independent SPEAK edge, and a closing-line-value beat-rate of at least 50% over a
@@ -331,9 +331,9 @@ export default async function CockpitCalibrationPage() {
 function BaselineStat({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
     <div className="rounded-xl border border-titanium/40 bg-obsidian/40 p-3">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
+      <p className="font-mono text-micro uppercase tracking-label text-ion-3">{label}</p>
       <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-ion-white">{value}</p>
-      <p className="mt-0.5 text-[10px] text-ion-3">{sub}</p>
+      <p className="mt-0.5 text-label text-ion-3">{sub}</p>
     </div>
   );
 }

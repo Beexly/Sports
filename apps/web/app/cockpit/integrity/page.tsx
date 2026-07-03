@@ -22,15 +22,15 @@ import {
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 const STAGE_TONE: Record<StageStatus, string> = {
-  YES: "border-green-900 bg-green-950/40 text-green-300",
-  PARTIAL: "border-amber-900 bg-amber-950/40 text-amber-300",
+  YES: "border-verify/40 bg-verify/10 text-verify",
+  PARTIAL: "border-caution/40 bg-caution/10 text-caution",
   NO: "border-titanium bg-carbon/60 text-ion-3",
 };
 
 function StageBadge({ label, status }: { label: string; status: StageStatus }) {
   return (
     <span
-      className={`rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${STAGE_TONE[status]}`}
+      className={`rounded-md border px-2 py-0.5 text-label font-bold uppercase tracking-wider ${STAGE_TONE[status]}`}
       title={`${label}: ${status}`}
     >
       {label} {status === "YES" ? "✓" : status === "PARTIAL" ? "~" : "—"}
@@ -50,7 +50,7 @@ function SystemRow({ s }: { s: SystemEntry }) {
           <StageBadge label="Proven" status={s.provenStatus} />
           <StageBadge label="Public-safe" status={s.publicSafeStatus} />
           {!publicSafeOk && (
-            <span className="rounded-md border border-red-900 bg-red-950/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-300">
+            <span className="rounded-md border border-alert/40 bg-alert/10 px-2 py-0.5 text-label font-bold uppercase tracking-wider text-alert">
               rule violation
             </span>
           )}
@@ -58,12 +58,12 @@ function SystemRow({ s }: { s: SystemEntry }) {
       </div>
 
       {s.ownerGate && (
-        <p className="mt-2 text-[11px] text-amber-300/90">
+        <p className="mt-2 text-label-lg text-caution">
           <span className="font-semibold uppercase tracking-wider">Owner gate:</span> {s.ownerGate}
         </p>
       )}
 
-      <div className="mt-2 grid grid-cols-1 gap-1 text-[11px] text-ion-3 sm:grid-cols-2">
+      <div className="mt-2 grid grid-cols-1 gap-1 text-label-lg text-ion-3 sm:grid-cols-2">
         <p>
           <span className="text-ion-2">Failure mode:</span> {s.failureMode}
         </p>
@@ -72,7 +72,7 @@ function SystemRow({ s }: { s: SystemEntry }) {
         </p>
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px] text-ion-3">
+      <div className="mt-2 flex flex-wrap items-center gap-2 text-label text-ion-3">
         <span>{s.lastVerifiedAt ? `Verified ${s.lastVerifiedAt}` : "Not verified yet"}</span>
         {s.evidenceRefs.length > 0 && (
           <span className="truncate">· evidence: {s.evidenceRefs.join(", ")}</span>
@@ -88,9 +88,9 @@ function LifecycleRollupTile({ systems }: { systems: readonly SystemEntry[] }) {
   const STAGE_TONE: Record<LifecycleStage, string> = {
     Draft: "border-titanium bg-carbon/60 text-ion-2",
     Verified: "border-ultraviolet/30 bg-obsidian/50 text-ion-1",
-    Priced: "border-amber-900 bg-amber-950/30 text-amber-300",
+    Priced: "border-caution/30 bg-caution/10 text-caution",
     Published: "border-orbital-cyan/40 bg-accent-950/20 text-accent-400",
-    Proven: "border-green-900 bg-green-950/40 text-green-300",
+    Proven: "border-verify/40 bg-verify/10 text-verify",
   };
 
   return (
@@ -103,11 +103,11 @@ function LifecycleRollupTile({ systems }: { systems: readonly SystemEntry[] }) {
         <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
           Lifecycle · Draft → Proven
         </h2>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-ion-3">
+        <span className="font-mono text-label uppercase tracking-widest text-ion-3">
           {dominant ? `Most systems: ${dominant}` : "No systems drafted"}
         </span>
       </div>
-      <p className="mb-3 text-[11px] text-ion-3">
+      <p className="mb-3 text-label-lg text-ion-3">
         Each system counts at its furthest earned stage. Proven stays empty unless a
         system is wired, public-safe, gate-free, and proven against evidence — no simulation.
       </p>
@@ -118,7 +118,7 @@ function LifecycleRollupTile({ systems }: { systems: readonly SystemEntry[] }) {
             data-testid={`lifecycle-stage-${stage}`}
             className={`rounded-lg border px-3 py-2 ${STAGE_TONE[stage]}`}
           >
-            <p className="font-mono text-[8px] font-bold uppercase tracking-[0.16em] opacity-80">
+            <p className="font-mono text-micro-xs font-bold uppercase tracking-label opacity-80">
               {stage}
             </p>
             <p className="mt-1 font-mono text-2xl font-semibold tabular-nums leading-none">
@@ -127,7 +127,7 @@ function LifecycleRollupTile({ systems }: { systems: readonly SystemEntry[] }) {
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[10px] text-ion-3">
+      <p className="mt-3 text-label text-ion-3">
         {total} systems · {counts.Proven} proven · {preDraft} pre-draft (code not yet built).
       </p>
     </section>
@@ -154,8 +154,8 @@ export default function CockpitIntegrityPage() {
       <div
         className={`rounded-lg border px-4 py-2 text-xs ${
           violations.length === 0
-            ? "border-green-900 bg-green-950/30 text-green-200"
-            : "border-red-900 bg-red-950/30 text-red-200"
+            ? "border-verify/30 bg-verify/10 text-verify"
+            : "border-alert/30 bg-alert/10 text-alert"
         }`}
       >
         {violations.length === 0

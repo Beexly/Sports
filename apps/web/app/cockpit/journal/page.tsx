@@ -6,11 +6,11 @@ export const dynamic = "force-dynamic";
 function statusClass(status: string): string {
   switch (status) {
     case "PUBLISHED":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "RETRACTED":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "REVIEW_PENDING":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
@@ -28,31 +28,31 @@ function JournalEntryRow({ entry }: { readonly entry: JournalEntryListItem }): J
     <article className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-ion-3">
+          <p className="text-label font-semibold uppercase tracking-wide text-ion-3">
             Week {entry.isoWeek}, {entry.isoYear} - {entry.modelVersion}
           </p>
           <h3 className="mt-1 text-sm font-semibold text-ion-white">{entry.title}</h3>
         </div>
-        <span className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClass(entry.status)}`}>
+        <span className={`rounded-md border px-2 py-1 text-label font-semibold uppercase tracking-wide ${statusClass(entry.status)}`}>
           {entry.status.replace(/_/g, " ")}
         </span>
       </div>
 
       <dl className="mt-4 grid gap-3 text-xs text-ion-2 sm:grid-cols-4">
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Drafted</dt>
+          <dt className="text-label uppercase tracking-wide text-ion-3">Drafted</dt>
           <dd className="mt-1">{formatDate(entry.draftedAt)}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Words</dt>
+          <dt className="text-label uppercase tracking-wide text-ion-3">Words</dt>
           <dd className="mt-1">{entry.wordCount}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Picks</dt>
+          <dt className="text-label uppercase tracking-wide text-ion-3">Picks</dt>
           <dd className="mt-1">{entry.referencedPickCount}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ion-3">Autopsies</dt>
+          <dt className="text-label uppercase tracking-wide text-ion-3">Autopsies</dt>
           <dd className="mt-1">{entry.referencedAutopsyCount}</dd>
         </div>
       </dl>
@@ -90,7 +90,7 @@ function JournalSection({
     <section className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-ion-white">{title}</h2>
-        <span className="text-[10px] uppercase tracking-wide text-ion-3">
+        <span className="text-label uppercase tracking-wide text-ion-3">
           {entries.length} entries
         </span>
       </div>
@@ -115,7 +115,7 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
     <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+          <p className="text-label font-semibold uppercase tracking-widest text-yellow-300">
             Model Journal
           </p>
           <h1 className="mt-1 text-2xl font-bold text-ion-white">Operator Workspace</h1>
@@ -132,7 +132,7 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
             Create draft
           </Link>
           <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3 text-sm">
-            <p className="text-[10px] uppercase tracking-wide text-ion-3">Next publish</p>
+            <p className="text-label uppercase tracking-wide text-ion-3">Next publish</p>
             <p className="mt-1 font-semibold text-ion-white">{data.nextPublishLabel}</p>
           </div>
         </div>

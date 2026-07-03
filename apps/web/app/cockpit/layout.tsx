@@ -100,7 +100,7 @@ export default async function CockpitLayout({
   if (session.user.role !== "ADMIN") {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-obsidian/60 px-6 text-center">
-        <p className="rounded-md bg-yellow-900/40 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-yellow-300">
+        <p className="rounded-md bg-caution/10 px-3 py-1 font-mono text-label font-bold uppercase tracking-widest text-caution">
           Cockpit · Operators only
         </p>
         <h1 className="text-2xl font-bold text-ion-white">This flight deck needs an operator badge.</h1>
@@ -122,7 +122,7 @@ export default async function CockpitLayout({
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <span
-              className="rounded-md bg-yellow-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300"
+              className="rounded-md bg-caution/10 px-2 py-0.5 text-label font-bold uppercase tracking-widest text-caution"
               aria-label="Internal operator surface"
             >
               Cockpit · Internal
@@ -130,7 +130,7 @@ export default async function CockpitLayout({
             <span className="text-sm text-ion-3">Sports Intelligence OS</span>
             {!adminEmailsConfigured && (
               <span
-                className="rounded-md border border-amber-700/60 bg-amber-900/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-300"
+                className="rounded-md border border-caution-deep/60 bg-caution/10 px-2 py-0.5 text-label font-bold uppercase tracking-widest text-caution-deep"
                 title="This deployment has no ADMIN_EMAILS env var — operator access relies on DB roles only. Set it in Vercel."
               >
                 ADMIN_EMAILS unset

@@ -156,20 +156,20 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       {stubMode && (
         <aside
           data-testid="history-stub-mode-banner"
-          className="rounded-xl border border-yellow-900/60 bg-yellow-950/30 p-4 text-sm text-yellow-200"
+          className="rounded-xl border border-caution/60 bg-caution/10 p-4 text-sm text-caution"
         >
           <p className="font-semibold">Stub mode active — no DB connected.</p>
-          <p className="mt-1 text-xs text-yellow-300/80">
+          <p className="mt-1 text-xs text-caution/80">
             Counts and rows below will all be zero. Set{" "}
-            <code className="rounded bg-yellow-950/50 px-1 py-0.5 font-mono text-[10px] text-yellow-100">
+            <code className="rounded bg-caution/15 px-1 py-0.5 font-mono text-label text-caution">
               DATABASE_URL
             </code>{" "}
             to a live Postgres connection (see{" "}
-            <code className="rounded bg-yellow-950/50 px-1 py-0.5 font-mono text-[10px] text-yellow-100">
+            <code className="rounded bg-caution/15 px-1 py-0.5 font-mono text-label text-caution">
               .env.example
             </code>
             ) and restart the server. Raw operational counts are at{" "}
-            <Link href="/admin/dashboard" className="underline hover:text-yellow-100">
+            <Link href="/admin/dashboard" className="underline hover:text-caution">
               /admin/dashboard
             </Link>
             .
@@ -184,7 +184,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
             eligibility, settlement, and snapshot coverage. Use the{" "}
             <span className="text-ion-1">Source</span> filter to isolate
             seed-data picks ({" "}
-            <code className="rounded bg-obsidian/70 px-1 py-0.5 text-[10px]">
+            <code className="rounded bg-obsidian/70 px-1 py-0.5 text-label">
               modelVersion = v5.0.0-seed
             </code>
             ). Eligibility rules are deterministic — see{" "}
@@ -207,7 +207,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
           >
             Export CSV (current filters)
           </a>
-          <span className="text-[10px] uppercase tracking-widest text-ion-3">
+          <span className="text-label uppercase tracking-widest text-ion-3">
             Admin only — do not share the export URL
           </span>
         </div>
@@ -220,15 +220,15 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       >
         <div className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-6">
           <Stat label="Showing" value={String(visibleCount)} />
-          <Stat label="Public-eligible" value={String(eligibleCount)} accent="text-green-400" />
+          <Stat label="Public-eligible" value={String(eligibleCount)} accent="text-verify" />
           <Stat label="Learning-eligible" value={String(learningCount)} accent="text-brand-400" />
           <Stat label="With snapshot" value={String(snapshotCount)} accent="text-ion-1" />
           <Stat label="Wins / Losses" value={`${byResult.WIN} / ${byResult.LOSS}`} />
           <Stat label="Push / Void / Pend" value={`${byResult.PUSH} / ${byResult.VOID} / ${byResult.PENDING}`} accent="text-ion-2" />
         </div>
-        <p className="mt-3 text-[11px] text-ion-3">
+        <p className="mt-3 text-label-lg text-ion-3">
           Performance gate is currently{" "}
-          <span className={gates.canExposePerformanceStats ? "text-green-400" : "text-yellow-300"}>
+          <span className={gates.canExposePerformanceStats ? "text-verify" : "text-caution"}>
             {gates.canExposePerformanceStats ? "OPEN" : "CLOSED"}
           </span>
           . Eligibility above is computed against the live gate.
@@ -252,7 +252,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
           const readyForGate =
             gates.canExposePerformanceStats === false && gap === 0 && settled > 0;
           return (
-            <div className="mt-3 space-y-3 text-[11px] text-ion-1">
+            <div className="mt-3 space-y-3 text-label-lg text-ion-1">
               <ChecklistRow
                 ok={gates.canPersistCanonicalHistory}
                 label="Canonical history enabled"
@@ -274,7 +274,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 detail={gates.isBootstrapMode ? "Still writing isBootstrap=true picks" : "All new picks canonical"}
               />
               <div className="rounded bg-obsidian/50 px-3 py-2">
-                <div className="flex items-center justify-between text-[10px] uppercase tracking-widest text-ion-3">
+                <div className="flex items-center justify-between text-label uppercase tracking-widest text-ion-3">
                   <span>Progress to sample minimum</span>
                   <span>{pct}%</span>
                 </div>
@@ -286,7 +286,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 </div>
               </div>
               {readyForGate && (
-                <p className="rounded border border-green-700/40 bg-green-900/20 px-3 py-2 text-green-300">
+                <p className="rounded border border-verify/40 bg-verify/10 px-3 py-2 text-verify">
                   Ready: sample meets minimum and bootstrap is off. Operator
                   may flip <code className="rounded bg-eclipse/70 px-1">PERFORMANCE_STATS_ENABLED=true</code>{" "}
                   when comfortable. The gate flip is the only operator
@@ -301,7 +301,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 </p>
               )}
               {gates.canExposePerformanceStats && (
-                <p className="rounded border border-yellow-700/40 bg-yellow-900/20 px-3 py-2 text-yellow-300">
+                <p className="rounded border border-caution/40 bg-caution/10 px-3 py-2 text-caution">
                   Performance gate is already OPEN. Monitor canonical
                   history; if the ratio above drops below the minimum,
                   flip the gate closed to hold back customer claims.
@@ -316,7 +316,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
       <nav
         data-testid="history-filters"
         aria-label="Pick ledger filters"
-        className="flex flex-wrap items-center gap-2 text-[11px]"
+        className="flex flex-wrap items-center gap-2 text-label-lg"
       >
         <div role="group" aria-label="Filter by result" className="flex flex-wrap items-center gap-2">
           <span className="text-ion-3">Result:</span>
@@ -465,8 +465,8 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         data-testid="history-ledger"
         className="overflow-x-auto rounded-2xl border border-titanium/40 bg-eclipse/40"
       >
-        <table className="w-full min-w-[1200px] text-[11px]">
-          <thead className="border-b border-titanium/40 bg-obsidian/50 text-left text-[10px] uppercase tracking-widest text-ion-3">
+        <table className="w-full min-w-[1200px] text-label-lg">
+          <thead className="border-b border-titanium/40 bg-obsidian/50 text-left text-label uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="px-3 py-2">Generated</th>
               <th scope="col" className="px-3 py-2">Game</th>
@@ -529,7 +529,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                       ? p.settledAt.toISOString().replace("T", " ").slice(0, 16)
                       : <span className="text-ion-3">—</span>}
                   </td>
-                  <td className="px-3 py-2 text-[10px]">
+                  <td className="px-3 py-2 text-label">
                     {p.isBootstrap && <Flag tone="yellow">bootstrap</Flag>}
                     {!p.isPublished && <Flag tone="gray">internal</Flag>}
                     {p.isFeatured && <Flag tone="brand">featured</Flag>}
@@ -543,12 +543,12 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                   </td>
                   <td className="px-3 py-2">
                     {row.hasSnapshot ? (
-                      <span className="text-green-400">yes</span>
+                      <span className="text-verify">yes</span>
                     ) : (
                       <span className="text-ion-3">none</span>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-[10px] text-ion-2">
+                  <td className="px-3 py-2 text-label text-ion-2">
                     {eligibility.exclusionReasons.length === 0
                       ? <span className="text-ion-3">—</span>
                       : eligibility.exclusionReasons.join("; ")}
@@ -560,7 +560,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         </table>
       </section>
 
-      <p className="text-[10px] text-ion-3">
+      <p className="text-label text-ion-3">
         Sourced live from <code className="rounded bg-obsidian/70 px-1">db.pick</code> and{" "}
         <code className="rounded bg-obsidian/70 px-1">db.pickSignalSnapshot</code>. No data is fabricated;
         missing fields render as <span className="text-ion-3">—</span>.
@@ -574,7 +574,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
 function Stat({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-widest text-ion-3">{label}</p>
+      <p className="text-label uppercase tracking-widest text-ion-3">{label}</p>
       <p className={["mt-0.5 text-lg font-bold", accent ?? "text-ion-white"].join(" ")}>{value}</p>
     </div>
   );
@@ -582,16 +582,16 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
 
 function ResultBadge({ result }: { result: string }) {
   const tone: Record<string, string> = {
-    WIN: "bg-green-900/40 text-green-300",
-    LOSS: "bg-red-900/40 text-red-300",
+    WIN: "bg-verify/15 text-verify",
+    LOSS: "bg-alert/15 text-alert",
     PUSH: "bg-obsidian/70 text-ion-1",
-    VOID: "bg-orange-900/40 text-orange-300",
-    PENDING: "bg-yellow-900/30 text-yellow-300",
+    VOID: "bg-ion-blue/15 text-ion-blue",
+    PENDING: "bg-caution/15 text-caution",
   };
   return (
     <span
       className={[
-        "rounded px-1.5 py-0.5 text-[10px] font-semibold",
+        "rounded px-1.5 py-0.5 text-label font-semibold",
         tone[result] ?? "bg-obsidian/70 text-ion-2",
       ].join(" ")}
     >
@@ -602,13 +602,13 @@ function ResultBadge({ result }: { result: string }) {
 
 function Flag({ tone, children }: { tone: "yellow" | "gray" | "brand" | "green"; children: React.ReactNode }) {
   const cls: Record<typeof tone, string> = {
-    yellow: "bg-yellow-900/40 text-yellow-300",
+    yellow: "bg-caution/15 text-caution",
     gray: "bg-obsidian/70 text-ion-2",
     brand: "bg-brand-900/40 text-brand-300",
-    green: "bg-green-900/40 text-green-300",
+    green: "bg-verify/15 text-verify",
   };
   return (
-    <span className={["mr-1 inline-block rounded px-1 py-0.5 text-[9px] font-semibold uppercase", cls[tone]].join(" ")}>
+    <span className={["mr-1 inline-block rounded px-1 py-0.5 text-micro font-semibold uppercase", cls[tone]].join(" ")}>
       {children}
     </span>
   );
@@ -616,8 +616,8 @@ function Flag({ tone, children }: { tone: "yellow" | "gray" | "brand" | "green";
 
 function Yes({ value }: { value: boolean }) {
   return value ? (
-    <span className="rounded bg-green-900/40 px-1.5 py-0.5 text-[10px] font-semibold text-green-300">YES</span>
+    <span className="rounded bg-verify/15 px-1.5 py-0.5 text-label font-semibold text-verify">YES</span>
   ) : (
-    <span className="rounded bg-obsidian/70 px-1.5 py-0.5 text-[10px] font-semibold text-ion-2">NO</span>
+    <span className="rounded bg-obsidian/70 px-1.5 py-0.5 text-label font-semibold text-ion-2">NO</span>
   );
 }

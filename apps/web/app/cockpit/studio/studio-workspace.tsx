@@ -28,13 +28,13 @@ function statusClass(status: string): string {
   switch (status) {
     case "READY":
     case "green":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "GATED":
     case "yellow":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "THIN":
     case "red":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
@@ -122,7 +122,7 @@ export function StudioWorkspace({
         <aside className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-sm font-semibold text-ion-white">Games</h2>
-            <span className="text-[10px] uppercase tracking-wide text-ion-3">
+            <span className="text-label uppercase tracking-wide text-ion-3">
               {games.length} loaded
             </span>
           </div>
@@ -147,7 +147,7 @@ export function StudioWorkspace({
                       }`}
                     >
                       <p className="text-sm font-medium text-ion-white">{game.matchup}</p>
-                      <p className="mt-1 text-[11px] text-ion-3">
+                      <p className="mt-1 text-label-lg text-ion-3">
                         {game.sport} - {formatTime(game.commenceTime)}
                       </p>
                     </Link>
@@ -167,7 +167,7 @@ export function StudioWorkspace({
               </p>
             </div>
             {selectedNode ? (
-              <span className="rounded-md border border-titanium/40 px-2 py-1 text-[10px] uppercase tracking-wide text-ion-2">
+              <span className="rounded-md border border-titanium/40 px-2 py-1 text-label uppercase tracking-wide text-ion-2">
                 {selectedNode.matchup}
               </span>
             ) : null}
@@ -188,24 +188,24 @@ export function StudioWorkspace({
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h3 className="text-sm font-semibold text-ion-white">{draft.templateName}</h3>
-                      <p className="mt-1 text-[11px] text-ion-3">
+                      <p className="mt-1 text-label-lg text-ion-3">
                         {draft.templateKind.replace(/_/g, " ")}
                       </p>
                     </div>
-                    <span className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClass(activeDraft.gateState)}`}>
+                    <span className={`rounded-md border px-2 py-1 text-label font-semibold uppercase tracking-wide ${statusClass(activeDraft.gateState)}`}>
                       {activeDraft.gateState}
                     </span>
                   </div>
 
                   {draft.refusalReason ? (
-                    <p className="mt-4 rounded-md border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-200">
+                    <p className="mt-4 rounded-md border border-alert/30 bg-alert/10 p-3 text-xs text-alert">
                       {draft.refusalReason}
                     </p>
                   ) : (
                     <div className="mt-4 flex flex-col gap-3">
                       <div className="flex items-center justify-between gap-3">
                         <div className="rounded-md border border-titanium/40 bg-obsidian/60 px-3 py-2">
-                          <p className="text-[10px] uppercase tracking-wide text-ion-3">
+                          <p className="text-label uppercase tracking-wide text-ion-3">
                             Citations
                           </p>
                           <p className="mt-1 text-xs text-ion-1">{activeDraft.citations.length}</p>
@@ -226,7 +226,7 @@ export function StudioWorkspace({
                       </div>
 
                       {generation.status === "error" ? (
-                        <p className="rounded-md border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-200">
+                        <p className="rounded-md border border-alert/30 bg-alert/10 p-3 text-xs text-alert">
                           {generation.message}
                         </p>
                       ) : null}
@@ -234,10 +234,10 @@ export function StudioWorkspace({
                       {generatedDraft?.body ? (
                         <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3">
                           <div className="flex items-center justify-between gap-2">
-                            <p className="text-[10px] uppercase tracking-wide text-ion-3">
+                            <p className="text-label uppercase tracking-wide text-ion-3">
                               Draft Preview
                             </p>
-                            <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClass(generatedDraft.compliance.status)}`}>
+                            <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-label font-semibold uppercase tracking-wide ${statusClass(generatedDraft.compliance.status)}`}>
                               {generatedDraft.compliance.publicReady ? (
                                 <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                               ) : (
@@ -252,7 +252,7 @@ export function StudioWorkspace({
                           {generatedDraft.compliance.flags.length > 0 ? (
                             <ul className="mt-3 flex flex-col gap-2">
                               {generatedDraft.compliance.flags.map((flag) => (
-                                <li key={flag.id} className="text-xs text-amber-200">
+                                <li key={flag.id} className="text-xs text-caution">
                                   {flag.message}
                                 </li>
                               ))}
@@ -294,19 +294,19 @@ export function StudioWorkspace({
           {selectedNode ? (
             <div className="mt-4 flex flex-col gap-3 text-sm">
               <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3">
-                <p className="text-[10px] uppercase tracking-wide text-ion-3">Evidence</p>
+                <p className="text-label uppercase tracking-wide text-ion-3">Evidence</p>
                 <p className="mt-1 text-ion-1">
                   {selectedNode.evidenceScore}/100 - {selectedNode.evidenceStatus}
                 </p>
               </div>
               <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3">
-                <p className="text-[10px] uppercase tracking-wide text-ion-3">Market Pulse</p>
+                <p className="text-label uppercase tracking-wide text-ion-3">Market Pulse</p>
                 <p className="mt-1 text-ion-1">
                   Edge Index {selectedNode.edgeIndex ?? "N/A"}
                 </p>
               </div>
               <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-3">
-                <p className="text-[10px] uppercase tracking-wide text-ion-3">Export</p>
+                <p className="text-label uppercase tracking-wide text-ion-3">Export</p>
                 <p className="mt-1 text-xs text-ion-3">
                   Copy and markdown save controls unlock after generation and scanner review.
                   External publishing is intentionally absent.

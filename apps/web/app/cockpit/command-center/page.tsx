@@ -25,16 +25,16 @@ import type {
 export const dynamic = "force-dynamic";
 
 const URGENCY_STYLES: Record<AttentionUrgency, string> = {
-  CRITICAL: "bg-red-950/50 text-red-300 border-red-900/60",
-  HIGH: "bg-yellow-950/50 text-yellow-300 border-yellow-900/50",
+  CRITICAL: "bg-alert/10 text-alert border-alert/60",
+  HIGH: "bg-caution/10 text-caution border-caution/50",
   NORMAL: "bg-obsidian/70 text-ion-2 border-titanium/40",
   LOW: "bg-obsidian/50 text-ion-3 border-titanium/30",
 };
 
 const DATA_MODE_STYLES: Record<DataMode, string> = {
   live: "border-accent-800/50 bg-accent-950/30 text-accent-400",
-  labeled_fallback: "border-yellow-900/50 bg-yellow-950/20 text-yellow-300",
-  unavailable: "border-red-900/60 bg-red-950/20 text-red-300",
+  labeled_fallback: "border-caution/50 bg-caution/10 text-caution",
+  unavailable: "border-alert/60 bg-alert/10 text-alert",
 };
 
 export default async function CommandCenterPage() {
@@ -42,7 +42,7 @@ export default async function CommandCenterPage() {
 
   const shell =
     feed.overallColor === "RED"
-      ? "border-red-900/60 shadow-glow-plasma"
+      ? "border-alert/60 shadow-glow-plasma"
       : feed.overallColor === "GREEN"
         ? "border-accent-900/40"
         : "border-titanium/60";
@@ -57,22 +57,22 @@ export default async function CommandCenterPage() {
               <span className="absolute inset-0 animate-live-pulse rounded-full bg-accent-500" />
               <span className="absolute inset-0 rounded-full bg-accent-500" />
             </span>
-            <h1 className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">
+            <h1 className="font-mono text-micro uppercase tracking-label text-ion-3">
               Command Center · ranked owner attention
             </h1>
           </div>
           <div className="ml-auto flex flex-wrap items-center gap-2">
             <span
               data-testid="no-fake-live-data-badge"
-              className="rounded border border-accent-800/40 bg-accent-950/20 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-accent-400"
+              className="rounded border border-accent-800/40 bg-accent-950/20 px-2 py-0.5 font-mono text-micro uppercase tracking-widest text-accent-400"
               title="The feed never presents fallback or sample content as live data."
             >
               noFakeLiveData
             </span>
-            <span className="rounded bg-obsidian/80 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ion-2">
+            <span className="rounded bg-obsidian/80 px-2 py-0.5 font-mono text-micro uppercase tracking-widest text-ion-2">
               feed: {feed.dataMode.replace(/_/g, " ")}
             </span>
-            <span className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+            <span className="font-mono text-micro uppercase tracking-widest text-ion-3">
               Jarvis {feed.jarvisVersion}
             </span>
           </div>
@@ -100,10 +100,10 @@ export default async function CommandCenterPage() {
       <HealthStrip feed={feed} />
 
       {!feed.success && feed.error && (
-        <section className="rounded-xl border border-red-900 bg-red-950/30 p-4 text-sm text-red-300">
+        <section className="rounded-xl border border-alert/60 bg-alert/10 p-4 text-sm text-alert">
           <p className="font-semibold">Synthesis unavailable.</p>
-          <p className="mt-1 text-red-400/80">{feed.error}</p>
-          <p className="mt-2 text-xs text-red-400/60">
+          <p className="mt-1 text-alert/80">{feed.error}</p>
+          <p className="mt-2 text-xs text-alert/60">
             The surface still renders. Check the DB connection and worker logs.
           </p>
         </section>
@@ -132,7 +132,7 @@ export default async function CommandCenterPage() {
           <h2 className="text-xs font-bold uppercase tracking-widest text-ion-2">
             Owner attention — ranked
           </h2>
-          <span className="font-mono text-[10px] text-ion-3">
+          <span className="font-mono text-label text-ion-3">
             {feed.counts.attentionTotal} item{feed.counts.attentionTotal === 1 ? "" : "s"}
           </span>
         </div>
@@ -154,7 +154,7 @@ export default async function CommandCenterPage() {
         <h2 className="mb-1 text-xs font-bold uppercase tracking-widest text-ion-2">
           Source lanes
         </h2>
-        <p className="mb-4 text-[11px] text-ion-3">
+        <p className="mb-4 text-label-lg text-ion-3">
           Every lane declares how its data was sourced. Fallbacks are labeled — never shown as live.
         </p>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -164,7 +164,7 @@ export default async function CommandCenterPage() {
         </div>
       </section>
 
-      <p data-testid="command-center-generated-at" className="text-[10px] uppercase tracking-widest text-ion-3">
+      <p data-testid="command-center-generated-at" className="text-label uppercase tracking-widest text-ion-3">
         Generated {new Date(feed.generatedAt).toLocaleString()} · Jarvis {feed.jarvisVersion} ·{" "}
         <Link href="/cockpit/command-center" prefetch={false} className="text-brand-400 hover:text-brand-300">
           refresh
@@ -197,13 +197,13 @@ function CountCell({
 }) {
   const valueClass =
     accent === "red" && value > 0
-      ? "text-rose-300"
+      ? "text-alert"
       : accent === "amber" && value > 0
-        ? "text-amber-300"
+        ? "text-caution"
         : "text-ion-white";
   return (
     <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
+      <p className="font-mono text-micro uppercase tracking-label text-ion-3">{label}</p>
       <p className={["mt-1 font-mono text-2xl font-semibold tabular-nums", valueClass].join(" ")}>
         {value}
       </p>
@@ -216,8 +216,8 @@ type HealthTone = "good" | "warn" | "bad" | "neutral";
 
 const HEALTH_TONE_STYLES: Record<HealthTone, string> = {
   good: "border-accent-800/50 bg-accent-950/20 text-accent-400",
-  warn: "border-yellow-900/50 bg-yellow-950/20 text-yellow-300",
-  bad: "border-red-900/60 bg-red-950/20 text-red-300",
+  warn: "border-caution/50 bg-caution/10 text-caution",
+  bad: "border-alert/60 bg-alert/10 text-alert",
   neutral: "border-titanium/40 bg-obsidian/50 text-ion-2",
 };
 
@@ -243,13 +243,13 @@ function HealthChip({
       aria-label={`${label}: ${state}`}
       className={["rounded-xl border px-3 py-2", HEALTH_TONE_STYLES[tone]].join(" ")}
     >
-      <p className="font-mono text-[8px] font-bold uppercase tracking-[0.16em] opacity-80">
+      <p className="font-mono text-micro-xs font-bold uppercase tracking-label opacity-80">
         {label}
       </p>
-      <p className="mt-1 font-mono text-[11px] font-semibold uppercase tracking-widest">
+      <p className="mt-1 font-mono text-label-lg font-semibold uppercase tracking-widest">
         {state}
       </p>
-      {detail && <p className="mt-0.5 text-[9px] leading-snug opacity-70">{detail}</p>}
+      {detail && <p className="mt-0.5 text-micro leading-snug opacity-70">{detail}</p>}
     </div>
   );
 }
@@ -273,10 +273,10 @@ function HealthStrip({ feed }: { feed: CommandCenterFeed }) {
       className="rounded-2xl border border-titanium/40 bg-carbon/80 p-4"
     >
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-[10px] font-bold uppercase tracking-widest text-ion-2">
+        <h2 className="text-label font-bold uppercase tracking-widest text-ion-2">
           System health · always-on
         </h2>
-        <span className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
+        <span className="font-mono text-micro uppercase tracking-widest text-ion-3">
           Jarvis {feed.jarvisVersion}
         </span>
       </div>
@@ -316,15 +316,15 @@ function NarrativeBlock({
 }) {
   const titleClass =
     tone === "red"
-      ? "text-rose-300"
+      ? "text-alert"
       : tone === "amber"
-        ? "text-amber-300"
+        ? "text-caution"
         : tone === "dim"
           ? "text-ion-3"
           : "text-ion-2";
   return (
     <div className="rounded-xl border border-titanium/40 bg-obsidian/40 p-3">
-      <p className={["mb-2 text-[10px] font-bold uppercase tracking-widest", titleClass].join(" ")}>
+      <p className={["mb-2 text-label font-bold uppercase tracking-widest", titleClass].join(" ")}>
         {title}
       </p>
       <ul className="space-y-1 text-[12px] leading-snug text-ion-1">
@@ -344,7 +344,7 @@ function AttentionRow({ item }: { item: OwnerAttentionItem }) {
     <div className="flex items-start gap-3 px-5 py-3 transition-colors hover:bg-titanium/10">
       <span
         className={[
-          "mt-0.5 flex-shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest",
+          "mt-0.5 flex-shrink-0 rounded border px-1.5 py-0.5 text-label font-bold uppercase tracking-widest",
           URGENCY_STYLES[item.urgency],
         ].join(" ")}
       >
@@ -356,18 +356,18 @@ function AttentionRow({ item }: { item: OwnerAttentionItem }) {
       <div className="min-w-0 flex-1">
         <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-ion-white">
           {item.title}
-          <span className="rounded bg-obsidian/70 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-ion-3">
+          <span className="rounded bg-obsidian/70 px-1.5 py-0.5 font-mono text-micro uppercase tracking-widest text-ion-3">
             {item.decisionType.replace(/_/g, " ").toLowerCase()}
           </span>
         </p>
         <p className="mt-0.5 text-[12px] leading-snug text-ion-2">{item.detail}</p>
-        <p className="mt-1 text-[11px] text-ion-3">
+        <p className="mt-1 text-label-lg text-ion-3">
           <span className="text-ion-2">Do:</span> {item.recommendedAction}
         </p>
-        <p className="mt-0.5 text-[10px] text-ion-3/70">{item.scoreExplanation}</p>
+        <p className="mt-0.5 text-label text-ion-3/70">{item.scoreExplanation}</p>
       </div>
       {item.link && (
-        <span className="mt-0.5 flex-shrink-0 self-center text-[11px] text-ion-3/40">→</span>
+        <span className="mt-0.5 flex-shrink-0 self-center text-label-lg text-ion-3/40">→</span>
       )}
     </div>
   );
@@ -388,10 +388,10 @@ function LaneCard({ lane }: { lane: CommandCenterLane }) {
   return (
     <div className="rounded-xl border border-titanium/40 bg-obsidian/50 p-3">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[11px] font-semibold text-ion-1">{lane.label}</p>
+        <p className="text-label-lg font-semibold text-ion-1">{lane.label}</p>
         <span
           className={[
-            "rounded border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest",
+            "rounded border px-1.5 py-0.5 text-micro-xs font-bold uppercase tracking-widest",
             DATA_MODE_STYLES[lane.dataMode],
           ].join(" ")}
         >
@@ -402,7 +402,7 @@ function LaneCard({ lane }: { lane: CommandCenterLane }) {
         {lane.itemCount}
       </p>
       {lane.fallbackReason && (
-        <p className="mt-1 text-[10px] leading-snug text-yellow-300/80">{lane.fallbackReason}</p>
+        <p className="mt-1 text-label leading-snug text-caution/80">{lane.fallbackReason}</p>
       )}
     </div>
   );

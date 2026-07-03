@@ -6,6 +6,10 @@ const src = readFileSync(
   resolve(__dirname, "..", "components/cockpit/jarvis-assessment-panel.tsx"),
   "utf8"
 );
+const statusStylesSrc = readFileSync(
+  resolve(__dirname, "..", "lib/cockpit/status-styles.ts"),
+  "utf8"
+);
 
 describe("JarvisAssessmentPanel — contract", () => {
   it("exports the component and props type", () => {
@@ -36,7 +40,15 @@ describe("JarvisAssessmentPanel — contract", () => {
     expect(src).toMatch(/data-testid="jarvis-launch-status"/);
   });
 
-  it("color-codes every JarvisLaunchStatus and JarvisHealth value", () => {
+  it("delegates color-coding to the shared status-styles module", () => {
+    // launchStatusStyle()/healthTone() used to be reimplemented locally here;
+    // they now live once in lib/cockpit/status-styles.ts so the cockpit's
+    // visual language stays consistent across pages. The panel just imports
+    // and calls them.
+    expect(src).toMatch(/import\s+\{[^}]*\blaunchStatusStyle\b[^}]*\bhealthTone\b[^}]*\}\s+from\s+["']@\/lib\/cockpit\/status-styles["']/);
+  });
+
+  it("status-styles color-codes every JarvisLaunchStatus and JarvisHealth value", () => {
     for (const status of [
       "LAUNCH_READY",
       "LAUNCH_READY_PENDING_EXTERNAL_CONFIG",
@@ -45,10 +57,10 @@ describe("JarvisAssessmentPanel — contract", () => {
       "NOT_READY_SAFETY",
       "UNKNOWN",
     ]) {
-      expect(src).toContain(status);
+      expect(statusStylesSrc).toContain(status);
     }
     for (const health of ["GREEN", "AMBER", "RED", "UNKNOWN"]) {
-      expect(src).toContain(`"${health}"`);
+      expect(statusStylesSrc).toContain(`"${health}"`);
     }
   });
 

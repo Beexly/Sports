@@ -35,8 +35,8 @@ export interface StatusTileProps {
 
 const TONE_STYLES: Record<StatusTone, string> = {
   good: "border-accent-800/50 bg-accent-950/20 text-accent-400",
-  warn: "border-yellow-900/50 bg-yellow-950/20 text-yellow-300",
-  bad: "border-red-900/60 bg-red-950/20 text-red-300",
+  warn: "border-caution/50 bg-caution/20 text-caution",
+  bad: "border-alert/60 bg-alert/20 text-alert",
   info: "border-ultraviolet/30 bg-obsidian/50 text-ion-1",
   neutral: "border-titanium/40 bg-obsidian/50 text-ion-2",
 };
@@ -54,11 +54,11 @@ export function StatusTile({
   const inner = (
     <>
       <div className="flex items-center justify-between gap-2">
-        <p className="font-mono text-[8px] font-bold uppercase tracking-[0.16em] opacity-80">
+        <p className="font-mono text-micro-xs font-bold uppercase tracking-label opacity-80">
           {label}
         </p>
         {interactive && (
-          <span aria-hidden="true" className="text-[11px] opacity-60">
+          <span aria-hidden="true" className="text-label-lg opacity-60">
             →
           </span>
         )}
@@ -67,7 +67,7 @@ export function StatusTile({
         {value}
       </p>
       {caption && (
-        <p className="mt-1 text-[10px] leading-snug text-ion-3">{caption}</p>
+        <p className="mt-1 text-label leading-snug text-ion-3">{caption}</p>
       )}
     </>
   );

@@ -13,7 +13,6 @@ import {
   personalizeBriefing, loadPrefs, savePrefs, ALL_SPORTS, DEFAULT_PREFS,
   type Preferences, type Focus, type Experience,
 } from "@/lib/prefs/preferences";
-import { BRAND_COLORS } from "@/lib/brand";
 
 const FOCUS_LABEL: Record<Focus, string> = { betting: "Betting", fantasy: "Fantasy", both: "Betting + Fantasy" };
 
@@ -33,7 +32,7 @@ export function PersonalizedBriefing({ cards }: { cards: BriefingCard[] }) {
 
       {prefs && !editing && (
         <div className="flex items-center gap-2 text-xs text-ion-2">
-          <span>Personalized for <strong style={{ color: BRAND_COLORS.orbitalCyan }}>{FOCUS_LABEL[prefs.focus]}</strong> · {prefs.sports.join(", ") || "all sports"}</span>
+          <span>Personalized for <strong style={{ color: "var(--orbital-cyan)" }}>{FOCUS_LABEL[prefs.focus]}</strong> · {prefs.sports.join(", ") || "all sports"}</span>
           <button type="button" onClick={() => setEditing(true)} className="underline hover:text-ion-white">edit</button>
         </div>
       )}
@@ -52,7 +51,7 @@ function Intake({ initial, onSave, onCancel }: { initial: Preferences; onSave: (
 
   return (
     <div className="surface-card p-6">
-      <p className="text-xs uppercase tracking-[0.18em]" style={{ color: BRAND_COLORS.orbitalCyan }}>Make it yours · 15 seconds</p>
+      <p className="text-xs uppercase tracking-label" style={{ color: "var(--orbital-cyan)" }}>Make it yours · 15 seconds</p>
       <h3 className="mt-2 font-display text-xl text-ion-white">Tune Mission Control to you.</h3>
 
       <div className="mt-5 space-y-4">
@@ -82,7 +81,7 @@ function Intake({ initial, onSave, onCancel }: { initial: Preferences; onSave: (
       <div className="mt-6 flex items-center gap-3">
         <button type="button" onClick={() => onSave({ focus, sports, experience })} className="btn btn-primary">Save & personalize</button>
         {onCancel && <button type="button" onClick={onCancel} className="btn btn-ghost btn-sm">Cancel</button>}
-        <span className="ml-auto text-[10px] text-ink-600">Stored on your device only.</span>
+        <span className="ml-auto text-label text-ink-600">Stored on your device only.</span>
       </div>
     </div>
   );
@@ -105,9 +104,9 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
       aria-pressed={active}
       className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
       style={{
-        background: active ? BRAND_COLORS.orbitalCyan : "rgba(255,255,255,0.05)",
-        color: active ? BRAND_COLORS.obsidianBlack : "#c8d2dd",
-        border: `1px solid ${active ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.steelGray}`,
+        background: active ? "var(--orbital-cyan)" : "rgba(255,255,255,0.05)",
+        color: active ? "var(--void)" : "var(--ion-2)",
+        border: `1px solid var(${active ? "--orbital-cyan" : "--titanium"})`,
       }}
     >
       {children}

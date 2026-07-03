@@ -24,35 +24,35 @@ const HEALTH: Record<Health, { word: string; read: string; accent: string; glow:
   CRITICAL: {
     word: "Critical",
     read: "Blockers need you first.",
-    accent: "#fb7185", // rose-400
-    glow: "rgba(244,63,94,0.28)",
-    ring: "border-rose-400/40",
-    chip: "border-rose-400/40 bg-rose-500/10 text-rose-200",
+    accent: "var(--alert)", // token: alert (was rose-400 #fb7185)
+    glow: "color-mix(in srgb, var(--alert) 28%, transparent)",
+    ring: "border-alert/40",
+    chip: "border-alert/40 bg-alert/10 text-alert",
   },
   CAUTION: {
     word: "Caution",
     read: "Running clean — capacity is still being wired.",
-    accent: "#fbbf24", // amber-400
-    glow: "rgba(251,191,36,0.22)",
-    ring: "border-amber-400/40",
-    chip: "border-amber-400/40 bg-amber-500/10 text-amber-200",
+    accent: "var(--caution)", // token: caution (was amber-400 #fbbf24)
+    glow: "color-mix(in srgb, var(--caution) 22%, transparent)",
+    ring: "border-caution/40",
+    chip: "border-caution/40 bg-caution/10 text-caution",
   },
   UNKNOWN: {
     word: "Standby",
     read: "Awaiting a live signal.",
-    accent: "#22d3ee", // cyan-400 / orbital
-    glow: "rgba(34,211,238,0.20)",
-    ring: "border-cyan-400/40",
-    chip: "border-cyan-400/40 bg-cyan-500/10 text-cyan-200",
+    accent: "var(--ion-blue)", // token: ion-blue — standby/neutral signal (was cyan-400 #22d3ee)
+    glow: "color-mix(in srgb, var(--ion-blue) 20%, transparent)",
+    ring: "border-ion-blue/40",
+    chip: "border-ion-blue/40 bg-ion-blue/10 text-ion-blue",
   },
 };
 
 function PulseStat({ label, value, sub, hot }: { label: string; value: number; sub: string; hot?: boolean }) {
   return (
     <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4 transition-colors hover:border-titanium/70">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
-      <p className={`mt-1 font-mono text-3xl font-semibold tabular-nums ${hot ? "text-amber-300" : "text-ion-white"}`}>{value}</p>
-      <p className="mt-0.5 text-[11px] text-ion-3">{sub}</p>
+      <p className="font-mono text-micro uppercase tracking-label text-ion-3">{label}</p>
+      <p className={`mt-1 font-mono text-3xl font-semibold tabular-nums ${hot ? "text-caution" : "text-ion-white"}`}>{value}</p>
+      <p className="mt-0.5 text-label-lg text-ion-3">{sub}</p>
     </div>
   );
 }
@@ -61,8 +61,8 @@ function Lane({ title, items, empty, dot }: { title: string; items: readonly str
   return (
     <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4">
       <div className="mb-2 flex items-center justify-between">
-        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{title}</p>
-        <span className="flex items-center gap-1.5 font-mono text-[10px] text-ion-2">
+        <p className="font-mono text-micro uppercase tracking-label text-ion-3">{title}</p>
+        <span className="flex items-center gap-1.5 font-mono text-label text-ion-2">
           <span className="h-1.5 w-1.5 rounded-full" style={{ background: dot }} />
           {items.length}
         </span>
@@ -127,13 +127,13 @@ export function CockpitPulse({
             <span className="relative h-4 w-4 rounded-full" style={{ background: h.accent, boxShadow: `0 0 18px ${h.accent}` }} />
           </div>
           <div>
-            <p className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.22em] text-ion-3">
+            <p className="flex items-center gap-2 font-mono text-micro uppercase tracking-label text-ion-3">
               <span className="h-1.5 w-1.5 rounded-full bg-current animate-pulse" style={{ color: h.accent }} />
               Company pulse
             </p>
             <h2 className="mt-1 text-2xl font-semibold text-ion-white">{h.word}</h2>
             <p className="mt-1 max-w-xs text-sm text-ion-2">{h.read}</p>
-            <span className={`mt-2 inline-block rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest ${h.chip}`}>
+            <span className={`mt-2 inline-block rounded-full border px-2.5 py-0.5 font-mono text-label uppercase tracking-widest ${h.chip}`}>
               {assessment.companyHealth}
             </span>
           </div>
@@ -150,18 +150,18 @@ export function CockpitPulse({
 
       {/* ── Owner / Claude / risk lanes ──────────────────────── */}
       <div className="relative mt-5 grid gap-4 lg:grid-cols-3">
-        <Lane title="Owner decisions" items={assessment.ownerDecisions} empty="No owner decisions queued." dot="#fbbf24" />
-        <Lane title="Claude review" items={assessment.claudeReview} empty="No Claude review items queued." dot="#22d3ee" />
+        <Lane title="Owner decisions" items={assessment.ownerDecisions} empty="No owner decisions queued." dot="var(--caution)" />
+        <Lane title="Claude review" items={assessment.claudeReview} empty="No Claude review items queued." dot="var(--ion-blue)" />
         <Lane title="Top risks" items={assessment.topRisks} empty="No critical runtime risks." dot={h.accent} />
       </div>
 
       {/* ── Next + honest gate strip ─────────────────────────── */}
       <div className="relative mt-5 rounded-2xl border border-titanium/30 bg-obsidian/30 p-4">
         <p className="text-sm text-ion-1">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-ion-3">Next&nbsp;·&nbsp;</span>
+          <span className="font-mono text-label uppercase tracking-widest text-ion-3">Next&nbsp;·&nbsp;</span>
           {assessment.nextBestAction}
         </p>
-        <div className="mt-3 grid gap-x-6 gap-y-1.5 text-[11px] text-ion-2 sm:grid-cols-2">
+        <div className="mt-3 grid gap-x-6 gap-y-1.5 text-label-lg text-ion-2 sm:grid-cols-2">
           {gates.map((g) => (
             <p key={g.k}>
               <span className="font-semibold text-ion-white">{g.k}:</span> {g.v}

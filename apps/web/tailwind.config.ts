@@ -127,6 +127,10 @@ const config: Config = {
         // Components written under prior brands use `brand-*` and `accent-*`.
         // The scales below resolve to the new tokens automatically, so the
         // whole app inherits Galaxy Sports Edge without a refactor.
+        // NOTE: brand.500 (#FF3BC7) is a 1-bit near-duplicate of plasma/
+        // ion-magenta (#FF38C7). Left as-is here — brand-500 has a wide,
+        // app-wide blast radius outside the cockpit scope of this pass — but
+        // it should be repointed to #FF38C7 in a dedicated, visually-QA'd pass.
         brand: {
           50:  "#FFE3F6",
           100: "#FFB8E8",
@@ -161,6 +165,13 @@ const config: Config = {
           1:    "#3A4356",     // secondary — 9.34:1 on paper
           2:    "#5B6678",     // muted meta — 5.47:1 on paper
           // ── legacy DARK ramp (unchanged) — ink-50..ink-1000 ──
+          // FROZEN pre-rebrand snapshot — do not reach for these in new work;
+          // use ion-white/ion/ion-1/ion-2/ion-3 instead. ink-200 and ink-300
+          // are an exact duplicate of each other AND of ion.1 (#AEB7D2).
+          // ink-400 (#5E6878) and ink-500 (#3D4555) are the OLD ion-2/ion-3
+          // values that design-tokens.css documents as WCAG AA FAILURES
+          // (3.36:1 and 1.97:1) — they were deliberately replaced there, but
+          // this numeric ramp still exposes the failing hex under new names.
           50:   "#F5F7FF",
           100:  "#D5DDE9",
           200:  "#AEB7D2",
@@ -203,24 +214,26 @@ const config: Config = {
         "display-lg":  ["clamp(2rem, 5vw, 3rem)", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
         eyebrow:    ["12px", { lineHeight: "1.3", letterSpacing: "0.08em" }], // floor bumped 11→12px
         "eyebrow-lg": ["13px", { lineHeight: "1.3", letterSpacing: "0.08em" }],
+        // Sub-eyebrow micro-label scale — mirrors --t-label/--t-micro-* in
+        // design-tokens.css. Names the 8/9/10/11px sizes the cockpit already
+        // reaches for via arbitrary text-[Npx] utilities hundreds of times.
+        label:      ["10px", { lineHeight: "1.3" }],
+        "label-lg": ["11px", { lineHeight: "1.3" }],
+        micro:      ["9px",  { lineHeight: "1.3" }],
+        "micro-xs": ["8px",  { lineHeight: "1.3" }],
       },
       letterSpacing: {
         tightest: "-0.04em",
+        // Consolidates the cockpit's 0.16em/0.18em/0.2em/0.22em near-duplicate
+        // uppercase-label tracking values into one — mirrors --ls-label.
+        label: "0.18em",
       },
+      // NOTE: the numeric ds-1..ds-30 spacing scale that used to live here was
+      // removed as dead config — confirmed zero usages of p-ds-*/m-ds-*/gap-ds-*/
+      // etc. across the whole app. The ds-xs/ds-sm/ds-md/ds-lg RADIUS scale
+      // below is a different story — it's live (66 rounded-ds-* usages
+      // app-wide) and stays.
       spacing: {
-        "ds-1": "4px",
-        "ds-2": "8px",
-        "ds-3": "12px",
-        "ds-4": "16px",
-        "ds-5": "20px",
-        "ds-6": "24px",
-        "ds-8": "32px",
-        "ds-10": "40px",
-        "ds-12": "48px",
-        "ds-16": "64px",
-        "ds-20": "80px",
-        "ds-24": "96px",
-        "ds-30": "120px",
         18: "4.5rem",
         22: "5.5rem",
         30: "7.5rem",
@@ -232,13 +245,16 @@ const config: Config = {
         "ds-lg":  "14px",
         "2.5xl":  "1.25rem",
       },
+      // Numerically identical to --glow-* in styles/design-tokens.css — this
+      // config used to disagree with the CSS vars (different blur/alpha, and
+      // in glow-ion-blue/glow-uv even a different color) for the same name.
       boxShadow: {
-        "glow-plasma":  "0 0 40px -8px rgba(255, 59, 199, 0.45)",
-        "glow-ion-blue":"0 0 36px -8px rgba(42, 107, 255, 0.42)",
-        "glow-uv":      "0 0 32px -6px rgba(123, 97, 255, 0.38)",
-        "glow-cyan":    "0 0 32px -6px rgba(0, 229, 255, 0.40)",
+        "glow-plasma":  "0 0 48px -8px rgba(255, 56, 199, 0.58)",
+        "glow-ion-blue":"0 0 42px -8px rgba(0, 229, 255, 0.52)",
+        "glow-uv":      "0 0 46px -6px rgba(123, 97, 255, 0.58)",
+        "glow-cyan":    "0 0 36px -8px rgba(111, 217, 255, 0.40)",
         "glow-lime":    "0 0 32px -8px rgba(212, 255, 61, 0.40)",
-        "glow-soft":    "0 0 80px -20px rgba(0, 229, 255, 0.18)",
+        "glow-soft":    "0 0 80px -20px rgba(255, 56, 199, 0.18)",
         glass:
           "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 12px 32px -8px rgba(0,0,0,0.6)",
         pop:

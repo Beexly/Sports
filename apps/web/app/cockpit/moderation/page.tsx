@@ -89,9 +89,9 @@ async function loadAppeals(): Promise<AppealRow[] | null> {
 function reportStatusClass(status: ModerationReportStatus): string {
   switch (status) {
     case "ESCALATED":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "UNDER_REVIEW":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "OPEN":
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
@@ -101,17 +101,17 @@ function reportStatusClass(status: ModerationReportStatus): string {
 function appealStatusClass(status: ModerationAppealStatus): string {
   switch (status) {
     case "UNDER_REVIEW":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "PENDING":
     default:
-      return "border-blue-500/40 bg-blue-500/10 text-blue-300";
+      return "border-ion-blue/40 bg-ion-blue/10 text-ion-blue";
   }
 }
 
 function slaClass(deadline: Date): string {
   const hoursLeft = (deadline.getTime() - Date.now()) / 3_600_000;
-  if (hoursLeft < 24) return "text-rose-400";
-  if (hoursLeft < 72) return "text-amber-400";
+  if (hoursLeft < 24) return "text-alert";
+  if (hoursLeft < 72) return "text-caution";
   return "text-ion-2";
 }
 
@@ -142,7 +142,7 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
         {dbUnavailable && (
           <p
             data-testid="moderation-db-unavailable"
-            className="rounded-md border border-amber-700/40 bg-amber-900/20 px-3 py-2 text-xs text-amber-300"
+            className="rounded-md border border-caution/40 bg-caution/10 px-3 py-2 text-xs text-caution"
           >
             Database unavailable. Showing structure only — no live data.
           </p>
@@ -179,19 +179,19 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-3">
+                    <div className="flex flex-wrap items-center gap-2 text-label uppercase tracking-wide text-ion-3">
                       <span>{r.surface.replace(/_/g, " ")}</span>
                       <span>{r.createdAt.toISOString().slice(0, 10)}</span>
                     </div>
                     <p className="mt-1 text-sm font-medium text-ion-1">
                       {r.reason.replace(/_/g, " ")}
                     </p>
-                    <p className="mt-0.5 text-[11px] text-ion-3">
+                    <p className="mt-0.5 text-label-lg text-ion-3">
                       target: {r.targetUserId} · report id: {r.id.slice(0, 8)}…
                     </p>
                   </div>
                   <span
-                    className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${reportStatusClass(r.status)}`}
+                    className={`rounded-md border px-2 py-1 text-label font-semibold uppercase tracking-wide ${reportStatusClass(r.status)}`}
                   >
                     {r.status.replace(/_/g, " ")}
                   </span>
@@ -235,19 +235,19 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-3">
+                    <div className="flex flex-wrap items-center gap-2 text-label uppercase tracking-wide text-ion-3">
                       <span>{a.actionKind}</span>
                       <span>filed {a.createdAt.toISOString().slice(0, 10)}</span>
                     </div>
                     <p className="mt-1 text-sm font-medium text-ion-1">
                       Appellant: {a.appellantId}
                     </p>
-                    <p className={`mt-0.5 text-[11px] ${slaClass(a.slaDeadline)}`}>
+                    <p className={`mt-0.5 text-label-lg ${slaClass(a.slaDeadline)}`}>
                       SLA deadline: {a.slaDeadline.toISOString().slice(0, 10)}
                     </p>
                   </div>
                   <span
-                    className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${appealStatusClass(a.status)}`}
+                    className={`rounded-md border px-2 py-1 text-label font-semibold uppercase tracking-wide ${appealStatusClass(a.status)}`}
                   >
                     {a.status.replace(/_/g, " ")}
                   </span>
@@ -279,19 +279,19 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
                 <p className="text-sm font-semibold text-ion-white">{entry.action}</p>
                 <p className="mt-0.5 text-xs text-ion-3">{entry.description}</p>
                 {entry.expiryLabel && (
-                  <p className="mt-0.5 text-[11px] text-ion-3">
+                  <p className="mt-0.5 text-label-lg text-ion-3">
                     Expires: {entry.expiryLabel}
                   </p>
                 )}
               </div>
               <div className="flex items-center gap-2">
                 {entry.appealable && (
-                  <span className="rounded bg-blue-900/30 px-1.5 py-0.5 text-[10px] font-semibold text-blue-300">
+                  <span className="rounded bg-ion-blue/10 px-1.5 py-0.5 text-label font-semibold text-ion-blue">
                     appealable
                   </span>
                 )}
                 {entry.straightToBan && (
-                  <span className="rounded bg-rose-900/30 px-1.5 py-0.5 text-[10px] font-semibold text-rose-300">
+                  <span className="rounded bg-alert/10 px-1.5 py-0.5 text-label font-semibold text-alert">
                     straight-to-ban
                   </span>
                 )}

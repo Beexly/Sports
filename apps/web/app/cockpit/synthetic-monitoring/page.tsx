@@ -10,16 +10,16 @@ import {
 export const dynamic = "force-dynamic";
 
 const STATUS_STYLES: Readonly<Record<SyntheticCheckStatus, string>> = {
-  passing: "border-emerald-500/30 bg-emerald-950/40 text-emerald-200",
-  warn: "border-yellow-500/30 bg-yellow-950/40 text-yellow-200",
-  failing: "border-red-500/30 bg-red-950/50 text-red-200",
+  passing: "border-verify/30 bg-verify/10 text-verify",
+  warn: "border-caution/30 bg-caution/10 text-caution",
+  failing: "border-alert/30 bg-alert/10 text-alert",
   pending: "border-titanium/40 bg-eclipse/70 text-ion-2",
 };
 
 const SEVERITY_STYLES: Readonly<Record<SyntheticSeverity, string>> = {
-  P1: "text-red-300",
-  P2: "text-yellow-300",
-  P3: "text-sky-300",
+  P1: "text-alert",
+  P2: "text-caution",
+  P3: "text-ion-blue",
 };
 
 export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Element> {
@@ -30,7 +30,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-label font-semibold uppercase tracking-widest text-yellow-300">
               Synthetic Monitoring
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Production Verification Runner</h1>
@@ -71,7 +71,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
             <div className="border-b border-titanium/40 px-4 py-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-sm font-semibold text-ion-white">{category.name}</h2>
-                <p className="text-[11px] uppercase tracking-wider text-ion-3">
+                <p className="text-label-lg uppercase tracking-wider text-ion-3">
                   {category.checks.length} checks
                 </p>
               </div>
@@ -148,7 +148,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
 function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
+      <p className="text-label-lg uppercase tracking-wider text-ion-3">{label}</p>
       <p className="mt-2 truncate text-xl font-semibold text-ion-white">{value}</p>
     </div>
   );
@@ -159,7 +159,7 @@ function CheckRow({ check }: { readonly check: SyntheticCheck }): JSX.Element {
     <div className="grid gap-3 px-4 py-3 lg:grid-cols-[110px_1fr_128px_160px] lg:items-center">
       <div>
         <p className="font-mono text-xs font-semibold text-ion-1">{check.id}</p>
-        <p className={`mt-1 text-[11px] font-semibold ${SEVERITY_STYLES[check.severity]}`}>
+        <p className={`mt-1 text-label-lg font-semibold ${SEVERITY_STYLES[check.severity]}`}>
           {check.severity}
         </p>
       </div>
@@ -168,13 +168,13 @@ function CheckRow({ check }: { readonly check: SyntheticCheck }): JSX.Element {
         <p className="mt-1 text-xs text-ion-3">{check.detail}</p>
       </div>
       <div>
-        <span className={`inline-flex rounded-full border px-2 py-1 text-[11px] ${STATUS_STYLES[check.status]}`}>
+        <span className={`inline-flex rounded-full border px-2 py-1 text-label-lg ${STATUS_STYLES[check.status]}`}>
           {check.status}
         </span>
       </div>
       <div>
         <Sparkline history={check.history} />
-        <p className="mt-1 text-[11px] text-ion-3">{formatDate(check.lastRunIso)}</p>
+        <p className="mt-1 text-label-lg text-ion-3">{formatDate(check.lastRunIso)}</p>
       </div>
     </div>
   );
@@ -204,9 +204,9 @@ function ConfigRow({ label, value }: { readonly label: string; readonly value: s
 }
 
 function sparkColor(status: SyntheticCheckStatus): string {
-  if (status === "passing") return "bg-emerald-500";
-  if (status === "warn") return "bg-yellow-400";
-  if (status === "failing") return "bg-red-500";
+  if (status === "passing") return "bg-verify";
+  if (status === "warn") return "bg-caution";
+  if (status === "failing") return "bg-alert";
   return "bg-titanium/40";
 }
 

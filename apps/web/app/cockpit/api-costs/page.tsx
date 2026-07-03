@@ -10,11 +10,11 @@ import type { ClaudeBudgetStatus } from "@/lib/claude-api/cost-monitor";
 export const dynamic = "force-dynamic";
 
 const STATUS_STYLES: Readonly<Record<ClaudeBudgetStatus, string>> = {
-  green: "border-emerald-500/30 bg-emerald-950/40 text-emerald-200",
-  yellow: "border-yellow-500/30 bg-yellow-950/40 text-yellow-200",
-  orange: "border-orange-500/30 bg-orange-950/40 text-orange-200",
-  red: "border-red-500/30 bg-red-950/40 text-red-200",
-  hard_cap: "border-red-400/50 bg-red-950 text-red-100",
+  green: "border-verify/30 bg-verify/15 text-verify",
+  yellow: "border-caution/30 bg-caution/15 text-caution",
+  orange: "border-caution-deep/40 bg-caution-deep/20 text-caution-deep",
+  red: "border-alert/30 bg-alert/15 text-alert",
+  hard_cap: "border-alert/70 bg-alert/30 text-alert",
 };
 
 export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
@@ -25,7 +25,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-label font-semibold uppercase tracking-widest text-yellow-300">
               Claude API Costs
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Generation Budget Monitor</h1>
@@ -71,7 +71,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-titanium/30 text-sm">
-            <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
+            <thead className="bg-eclipse/50 text-left text-label-lg uppercase tracking-wider text-ion-3">
               <tr>
                 <th scope="col" className="px-4 py-3">Surface</th>
                 <th scope="col" className="px-4 py-3">Spend</th>
@@ -131,7 +131,7 @@ function SurfaceRow({ surface }: { readonly surface: ClaudeApiCostSurfaceSummary
       <td className="whitespace-nowrap px-4 py-3">{surface.callCount}</td>
       <td className="whitespace-nowrap px-4 py-3">{surface.errorCount}</td>
       <td className="whitespace-nowrap px-4 py-3">
-        <span className={`inline-flex rounded-full border px-2 py-1 text-[11px] ${STATUS_STYLES[surface.status]}`}>
+        <span className={`inline-flex rounded-full border px-2 py-1 text-label-lg ${STATUS_STYLES[surface.status]}`}>
           {surface.overrideActive ? "override" : surface.requestAllowed ? surface.status : "blocked"}
         </span>
       </td>

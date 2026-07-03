@@ -101,7 +101,7 @@ export default async function CockpitBriefPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-baseline justify-between">
         <h1 className="text-2xl font-bold text-ion-white">Daily brief</h1>
-        <span className="rounded-full border border-yellow-900 bg-yellow-950/40 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-yellow-200">
+        <span className="rounded-full border border-caution/40 bg-caution/10 px-3 py-1 font-mono text-label uppercase tracking-widest text-caution">
           {brief.status} · internal only
         </span>
       </div>
@@ -146,7 +146,7 @@ export default async function CockpitBriefPage() {
             {brief.manualReview.items.map((t) => (
               <li key={t.title} className="flex items-center justify-between py-1.5">
                 <span className="text-ion-1">{t.title}</span>
-                <span className="font-mono text-[10px] uppercase text-ion-3">
+                <span className="font-mono text-label uppercase text-ion-3">
                   {t.assignedAgent} · p{t.priority}
                 </span>
               </li>
@@ -158,7 +158,7 @@ export default async function CockpitBriefPage() {
         </section>
       )}
 
-      <p className="text-[11px] text-ion-3">{brief.responsibleGamingText}</p>
+      <p className="text-label-lg text-ion-3">{brief.responsibleGamingText}</p>
 
       <Link
         href="/cockpit"

@@ -61,11 +61,11 @@ export default async function CockpitAgentDetail({
                 >
                   {t.title}
                 </Link>
-                <p className="mt-0.5 text-[11px] text-ion-3">
+                <p className="mt-0.5 text-label-lg text-ion-3">
                   source: {t.source} · priority {t.priority} · {t.riskLevel}
                 </p>
               </div>
-              <span className="shrink-0 rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1">
+              <span className="shrink-0 rounded-full bg-obsidian/70 px-2 py-0.5 text-label font-semibold text-ion-1">
                 {t.status}
               </span>
             </li>

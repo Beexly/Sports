@@ -16,27 +16,27 @@ import type { ClaimCandidateOperatorStatus } from "@/lib/airwave/claim-extractio
 export const dynamic = "force-dynamic";
 
 const STATUS_TONE: Record<AirwaveLaneStatus, string> = {
-  open: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  held: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
+  open: "border-verify/30 bg-verify/10 text-verify",
+  held: "border-caution/30 bg-caution/10 text-caution",
   "missing-config": "border-titanium/40 bg-eclipse/60 text-ion-1",
-  "legal-hold": "border-red-500/30 bg-red-950/30 text-red-200",
-  "manual-review": "border-violet-500/30 bg-violet-950/30 text-violet-200",
+  "legal-hold": "border-alert/30 bg-alert/10 text-alert",
+  "manual-review": "border-caution-deep/30 bg-caution-deep/10 text-caution-deep",
 };
 
 const VERDICT_TONE: Record<ClaimVerdict, string> = {
-  HIT: "text-cyan-300",
-  MISS: "text-pink-400",
-  PUSH: "text-violet-300",
+  HIT: "text-verify",
+  MISS: "text-alert",
+  PUSH: "text-ion-blue",
   UNFALSIFIABLE: "text-ion-2",
-  PENDING: "text-yellow-300",
+  PENDING: "text-caution",
 };
 
 const INTAKE_TONE: Record<AirwaveIntakeStatus, string> = {
   "not-configured": "border-titanium/40 bg-eclipse/60 text-ion-1",
-  unreachable: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  "invalid-contract": "border-red-500/30 bg-red-950/30 text-red-200",
-  held: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  "review-ready": "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
+  unreachable: "border-caution/30 bg-caution/10 text-caution",
+  "invalid-contract": "border-alert/30 bg-alert/10 text-alert",
+  held: "border-caution/30 bg-caution/10 text-caution",
+  "review-ready": "border-verify/30 bg-verify/10 text-verify",
 };
 
 function statusLabel(status: AirwaveLaneStatus): string {
@@ -70,7 +70,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-cyan-300">
+            <p className="text-label font-semibold uppercase tracking-widest text-cyan-300">
               Broadcast intelligence
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Airwave Control Room</h1>
@@ -117,7 +117,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
 
       <p
         data-testid="internal-only-banner"
-        className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"
+        className="rounded-lg border border-caution/50 bg-caution/10 px-4 py-2 text-xs text-caution"
       >
         Internal review only. No auto-publish. No auto-send. No automated betting. Captured
         context is data, never an instruction. Do not archive audio or expose verbatim
@@ -145,7 +145,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               reveal the file path, or publish anything.
             </p>
           </div>
-          <span className={`rounded border px-2 py-1 text-[11px] ${INTAKE_TONE[intake.source.status]}`}>
+          <span className={`rounded border px-2 py-1 text-label-lg ${INTAKE_TONE[intake.source.status]}`}>
             {intake.source.status}
           </span>
         </div>
@@ -169,7 +169,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           </div>
           <div className="overflow-hidden rounded-xl border border-titanium/40">
             <table className="w-full text-left text-xs">
-              <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
+              <thead className="bg-obsidian/60 text-label uppercase tracking-widest text-ion-3">
                 <tr>
                   <th scope="col" className="px-3 py-2">Contract check</th>
                   <th scope="col" className="px-3 py-2">Value</th>
@@ -178,19 +178,19 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               <tbody className="divide-y divide-titanium/30">
                 <tr>
                   <td className="px-3 py-2 text-ion-3">Required columns</td>
-                  <td className="px-3 py-2 font-mono text-[11px] text-ion-1">
+                  <td className="px-3 py-2 font-mono text-label-lg text-ion-1">
                     {intake.contract.requiredColumns.join(", ")}
                   </td>
                 </tr>
                 <tr>
                   <td className="px-3 py-2 text-ion-3">Present columns</td>
-                  <td className="px-3 py-2 font-mono text-[11px] text-ion-1">
+                  <td className="px-3 py-2 font-mono text-label-lg text-ion-1">
                     {intake.contract.presentColumns.length > 0 ? intake.contract.presentColumns.join(", ") : "UNKNOWN"}
                   </td>
                 </tr>
                 <tr>
                   <td className="px-3 py-2 text-ion-3">Missing required</td>
-                  <td className="px-3 py-2 font-mono text-[11px] text-ion-1">
+                  <td className="px-3 py-2 font-mono text-label-lg text-ion-1">
                     {intake.contract.missingRequiredColumns.length > 0 ? intake.contract.missingRequiredColumns.join(", ") : "none"}
                   </td>
                 </tr>
@@ -212,7 +212,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
                 draft review, not public publishing.
               </p>
             </div>
-            <div className="rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-[11px] text-ion-2">
+            <div className="rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-label-lg text-ion-2">
               master: <span className="text-ion-white">{String(control.env.enabled)}</span>
               <span className="mx-2 text-ion-3">/</span>
               legal ack: <span className="text-ion-white">{String(control.env.siriusxmLegalAck)}</span>
@@ -235,7 +235,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           </p>
           <div className="mt-4 overflow-hidden rounded-xl border border-titanium/40">
             <table className="w-full text-left text-xs">
-              <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
+              <thead className="bg-obsidian/60 text-label uppercase tracking-widest text-ion-3">
                 <tr>
                   <th scope="col" className="px-3 py-2">Column</th>
                   <th scope="col" className="px-3 py-2">Purpose</th>
@@ -245,7 +245,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               <tbody className="divide-y divide-titanium/30">
                 {control.spreadsheetContract.map((field) => (
                   <tr key={field.column} className="align-top">
-                    <td className="px-3 py-2 font-mono text-[11px] text-cyan-300">{field.column}</td>
+                    <td className="px-3 py-2 font-mono text-label-lg text-cyan-300">{field.column}</td>
                     <td className="px-3 py-2 text-ion-2">{field.purpose}</td>
                     <td className="px-3 py-2 text-ion-3">{field.required ? "yes" : "no"}</td>
                   </tr>
@@ -257,11 +257,11 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[0.8fr_1.2fr]">
-        <div className="rounded-2xl border border-red-900/50 bg-red-950/20 p-5">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-red-300">
+        <div className="rounded-2xl border border-alert/50 bg-alert/10 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-alert">
             Do-not-automate boundary
           </h2>
-          <ul className="mt-4 space-y-3 text-sm leading-6 text-red-100/80">
+          <ul className="mt-4 space-y-3 text-sm leading-6 text-alert">
             <li>No raw audio archive.</li>
             <li>No verbatim transcript text on public surfaces.</li>
             <li>No satellite-radio automation without explicit legal acknowledgement.</li>
@@ -279,7 +279,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               <div key={adapter.kind} className="rounded-lg border border-titanium/40 bg-obsidian/70 p-3">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm font-semibold text-ion-white">{adapter.label}</p>
-                  <span className={adapter.held ? "text-xs font-semibold text-yellow-300" : "text-xs font-semibold text-emerald-300"}>
+                  <span className={adapter.held ? "text-xs font-semibold text-caution" : "text-xs font-semibold text-verify"}>
                     {adapter.held ? "held" : "open"}
                   </span>
                 </div>
@@ -312,7 +312,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             <tbody>
               {DEMO_CLAIMS.map((claim) => (
                 <tr key={claim.id} className="border-b border-titanium/40 align-top">
-                  <td className="py-2 pr-3 font-mono text-[11px] text-ion-2">
+                  <td className="py-2 pr-3 font-mono text-label-lg text-ion-2">
                     {claim.airedAt.slice(0, 16).replace("T", " ")}
                   </td>
                   <td className="py-2 pr-3 text-ion-1">{punditName(claim.punditId)}</td>
@@ -325,7 +325,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
                   <td className={`py-2 pr-3 font-semibold ${VERDICT_TONE[claim.verdict]}`}>
                     {claim.verdict}
                   </td>
-                  <td className="py-2 pr-3 font-mono text-[10px] text-ion-3">
+                  <td className="py-2 pr-3 font-mono text-label text-ion-3">
                     {claim.sourceClipRef}
                   </td>
                 </tr>
@@ -364,7 +364,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
         </div>
         <div className="mt-4 overflow-hidden rounded-xl border border-titanium/40">
           <table className="w-full text-left text-xs">
-            <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
+            <thead className="bg-obsidian/60 text-label uppercase tracking-widest text-ion-3">
               <tr>
                 <th scope="col" className="px-3 py-2">Status</th>
                 <th scope="col" className="px-3 py-2">Claim (paraphrased)</th>
@@ -426,10 +426,10 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           </div>
           <span
             data-testid="ch87-lane-status"
-            className={`rounded border px-2 py-1 text-[11px] ${
+            className={`rounded border px-2 py-1 text-label-lg ${
               intelligence.operatorSurface.legalAckGranted
-                ? "border-emerald-500/30 bg-emerald-950/30 text-emerald-200"
-                : "border-yellow-500/30 bg-yellow-950/30 text-yellow-200"
+                ? "border-verify/30 bg-verify/10 text-verify"
+                : "border-caution/30 bg-caution/10 text-caution"
             }`}
           >
             CH87 {intelligence.operatorSurface.ch87LaneStatus.toLowerCase().replace(/_/g, "-")}
@@ -456,7 +456,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               <Fact label="Schedule shows" value={String(intelligence.channel87Summary.totalShows)} />
               <Fact label="Sample blocks" value={String(intelligence.channel87Summary.sampleOnlyShows)} />
             </dl>
-            <p className="mt-3 text-xs leading-5 text-yellow-200/70">
+            <p className="mt-3 text-xs leading-5 text-caution/70">
               {intelligence.channel87Summary.operatorNote}
             </p>
           </div>
@@ -466,7 +466,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             <h3 className="text-sm font-semibold text-ion-white">GSE / GSN Output Readiness</h3>
             <div className="mt-3 grid gap-4 sm:grid-cols-2">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-3">GSE</p>
+                <p className="text-label font-semibold uppercase tracking-widest text-ion-3">GSE</p>
                 <dl className="mt-2 grid gap-2 text-xs">
                   <Fact label="Pick evidence" value={intelligence.gseOutputReadiness.pickEvidenceCandidates ? "READY" : "HELD"} />
                   <Fact label="Injury alerts" value={intelligence.gseOutputReadiness.injuryAlerts ? "READY" : "HELD"} />
@@ -475,7 +475,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
                 </dl>
               </div>
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-3">GSN</p>
+                <p className="text-label font-semibold uppercase tracking-widest text-ion-3">GSN</p>
                 <dl className="mt-2 grid gap-2 text-xs">
                   <Fact label="Show briefs" value={intelligence.gsnOutputReadiness.showBriefs ? "READY" : "HELD"} />
                   <Fact label="Segment ideas" value={intelligence.gsnOutputReadiness.segmentIdeas ? "READY" : "HELD"} />
@@ -541,7 +541,7 @@ function formatCount(value: number | "UNKNOWN"): string {
 function Metric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
+      <p className="text-label-lg uppercase tracking-wider text-ion-3">{label}</p>
       <p className="mt-2 font-numerals text-2xl font-semibold text-ion-white">{value}</p>
       <p className="mt-1 text-xs leading-5 text-ion-3">{detail}</p>
     </div>
@@ -552,28 +552,28 @@ function Fact({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="flex items-center justify-between gap-3 rounded-lg border border-titanium/40 bg-black/20 px-3 py-2">
       <dt className="text-ion-3">{label}</dt>
-      <dd className="font-mono text-[11px] text-ion-1">{value}</dd>
+      <dd className="font-mono text-label-lg text-ion-1">{value}</dd>
     </div>
   );
 }
 
 const REVIEW_STATUS_TONE: Record<string, string> = {
   DRAFT: "border-titanium/40 bg-eclipse/60 text-ion-2",
-  REVIEW: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  APPROVED: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  REJECTED: "border-red-500/30 bg-red-950/30 text-red-200",
-  SETTLED: "border-cyan-500/30 bg-cyan-950/30 text-cyan-200",
+  REVIEW: "border-caution/30 bg-caution/10 text-caution",
+  APPROVED: "border-verify/30 bg-verify/10 text-verify",
+  REJECTED: "border-alert/30 bg-alert/10 text-alert",
+  SETTLED: "border-ion-blue/30 bg-ion-blue/10 text-ion-blue",
 };
 
 const INTAKE_MODE_TONE: Record<string, string> = {
   OFF: "border-titanium/40 bg-eclipse/60 text-ion-2",
-  DRY_RUN: "border-blue-500/30 bg-blue-950/30 text-blue-200",
-  MANUAL_IMPORT_READY: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  MANUAL_IMPORT_HELD: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  LOCAL_LISTENER_DESIGNED: "border-blue-500/30 bg-blue-950/30 text-blue-200",
-  LOCAL_LISTENER_HELD: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  LOCAL_LISTENER_READY: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  ACTIVE: "border-emerald-400/50 bg-emerald-900/30 text-emerald-100",
+  DRY_RUN: "border-ion-blue/30 bg-ion-blue/10 text-ion-blue",
+  MANUAL_IMPORT_READY: "border-verify/30 bg-verify/10 text-verify",
+  MANUAL_IMPORT_HELD: "border-caution/30 bg-caution/10 text-caution",
+  LOCAL_LISTENER_DESIGNED: "border-ion-blue/30 bg-ion-blue/10 text-ion-blue",
+  LOCAL_LISTENER_HELD: "border-caution/30 bg-caution/10 text-caution",
+  LOCAL_LISTENER_READY: "border-verify/30 bg-verify/10 text-verify",
+  ACTIVE: "border-verify/50 bg-verify/20 text-verify",
 };
 
 function IntakeLaneCard({ lane }: { lane: IntakeLaneState }): JSX.Element {
@@ -582,14 +582,14 @@ function IntakeLaneCard({ lane }: { lane: IntakeLaneState }): JSX.Element {
     <article className="rounded-xl border border-titanium/40 bg-obsidian/70 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h3 className="text-sm font-semibold text-ion-white">{lane.label}</h3>
-        <span className={`rounded border px-2 py-1 text-[11px] ${tone}`}>
+        <span className={`rounded border px-2 py-1 text-label-lg ${tone}`}>
           {lane.mode.toLowerCase().replace(/_/g, "-")}
         </span>
       </div>
       {lane.blockedReasons.length > 0 && (
         <ul className="mt-3 space-y-1">
           {lane.blockedReasons.map((reason, i) => (
-            <li key={i} className="text-xs leading-5 text-yellow-200/70">
+            <li key={i} className="text-xs leading-5 text-caution/70">
               {reason}
             </li>
           ))}
@@ -608,7 +608,7 @@ function LaneCard({ lane }: { lane: AirwaveInputLane }): JSX.Element {
           <h3 className="text-sm font-semibold text-ion-white">{lane.name}</h3>
           <p className="mt-1 text-xs text-ion-3">{lane.source}</p>
         </div>
-        <span className={`rounded border px-2 py-1 text-[11px] ${STATUS_TONE[lane.status]}`}>
+        <span className={`rounded border px-2 py-1 text-label-lg ${STATUS_TONE[lane.status]}`}>
           {statusLabel(lane.status)}
         </span>
       </div>
@@ -627,7 +627,7 @@ function LaneCard({ lane }: { lane: AirwaveInputLane }): JSX.Element {
         </div>
         <div>
           <dt className="text-ion-3">Env slots</dt>
-          <dd className="mt-1 font-mono text-[11px] text-ion-3">{lane.envVars.join(", ")}</dd>
+          <dd className="mt-1 font-mono text-label-lg text-ion-3">{lane.envVars.join(", ")}</dd>
         </div>
       </dl>
       <p className="mt-3 rounded-lg border border-titanium/40 bg-black/20 px-3 py-2 text-xs leading-5 text-ion-3">

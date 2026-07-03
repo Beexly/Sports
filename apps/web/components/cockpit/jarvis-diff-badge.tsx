@@ -53,7 +53,7 @@ export function JarvisDiffBadge({ recent, className }: JarvisDiffBadgeProps) {
       <span
         data-testid="jarvis-diff-badge"
         data-state="unchanged"
-        className={["text-[10px] text-ion-3", className ?? ""].join(" ")}
+        className={["text-label text-ion-3", className ?? ""].join(" ")}
       >
         no change since last assessment
       </span>
@@ -65,7 +65,7 @@ export function JarvisDiffBadge({ recent, className }: JarvisDiffBadgeProps) {
       data-testid="jarvis-diff-badge"
       data-state="changed"
       className={[
-        "rounded-full bg-yellow-900/40 px-2 py-0.5 text-[10px] font-semibold text-yellow-300",
+        "rounded-full bg-caution/20 px-2 py-0.5 text-label font-semibold text-caution",
         className ?? "",
       ].join(" ")}
       title={changes.join("\n")}

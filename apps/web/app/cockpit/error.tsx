@@ -34,7 +34,7 @@ export default function CockpitError({
         {error.message}
       </pre>
       {error.digest && (
-        <p className="text-[10px] uppercase tracking-widest text-alert">
+        <p className="text-label uppercase tracking-widest text-alert">
           digest: {error.digest}
         </p>
       )}

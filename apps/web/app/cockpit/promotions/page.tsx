@@ -74,7 +74,7 @@ export default async function CockpitPromotionsPage() {
         </div>
       ) : (
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
+          <thead className="border-b border-titanium/40 text-label uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="py-2 pr-3">Operator</th>
               <th scope="col" className="py-2 pr-3">Headline</th>
@@ -111,9 +111,9 @@ export default async function CockpitPromotionsPage() {
                   </td>
                   <td className="py-2 pr-3">
                     {verdict.publishable ? (
-                      <span className="text-green-400">YES</span>
+                      <span className="text-verify">YES</span>
                     ) : (
-                      <span className="text-yellow-400">NO</span>
+                      <span className="text-caution">NO</span>
                     )}
                   </td>
                   <td className="py-2 pr-3 text-ion-3">
@@ -134,7 +134,7 @@ export default async function CockpitPromotionsPage() {
 function CountCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-lg border border-titanium/40 bg-eclipse/40 p-3">
-      <p className="text-[10px] uppercase tracking-widest text-ion-3">
+      <p className="text-label uppercase tracking-widest text-ion-3">
         {label}
       </p>
       <p className="text-xl font-bold text-ion-white">{value}</p>

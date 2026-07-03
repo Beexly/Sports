@@ -30,6 +30,10 @@ const panelSrc = readFileSync(
   resolve(repoRoot, "components/cockpit/jarvis-assessment-panel.tsx"),
   "utf8",
 );
+const statusStylesSrc = readFileSync(
+  resolve(repoRoot, "lib/cockpit/status-styles.ts"),
+  "utf8",
+);
 
 const SURFACES = [
   "publicSurfaceStatus",
@@ -103,11 +107,18 @@ describe("Jarvis health-tile coverage", () => {
     }
   });
 
+  it("panel uses the shared healthTone() from lib/cockpit/status-styles", () => {
+    // healthTone() moved to the shared status-styles module so the cockpit's
+    // visual language stays consistent across pages (jarvis-assessment-panel
+    // no longer reimplements its own copy) — the panel imports it.
+    expect(panelSrc).toMatch(/import\s+\{[^}]*\bhealthTone\b[^}]*\}\s+from\s+["']@\/lib\/cockpit\/status-styles["']/);
+  });
+
   it("healthTone() covers GREEN/AMBER/RED/UNKNOWN exhaustively", () => {
     // The four JarvisHealth states must all map to a tone class.
-    expect(panelSrc).toMatch(/case\s+"GREEN"/);
-    expect(panelSrc).toMatch(/case\s+"AMBER"/);
-    expect(panelSrc).toMatch(/case\s+"RED"/);
-    expect(panelSrc).toMatch(/case\s+"UNKNOWN"|default:/);
+    expect(statusStylesSrc).toMatch(/case\s+"GREEN"/);
+    expect(statusStylesSrc).toMatch(/case\s+"AMBER"/);
+    expect(statusStylesSrc).toMatch(/case\s+"RED"/);
+    expect(statusStylesSrc).toMatch(/case\s+"UNKNOWN"|default:/);
   });
 });

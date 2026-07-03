@@ -167,9 +167,9 @@ function toMemoryRow(r: {
 // ── Styling helpers ───────────────────────────────────────────────────────────
 
 function confidenceClass(c: number): string {
-  if (c >= 80) return "text-green-400";
-  if (c >= 50) return "text-amber-400";
-  return "text-rose-400";
+  if (c >= 80) return "text-verify";
+  if (c >= 50) return "text-caution";
+  return "text-alert";
 }
 
 function sensitivityClass(s: string): string {
@@ -178,7 +178,7 @@ function sensitivityClass(s: string): string {
     case "legal":
     case "hr":
     case "spend":
-      return "bg-rose-900/30 text-rose-300";
+      return "bg-alert/10 text-alert";
     default:
       return "bg-obsidian/70 text-ion-2";
   }
@@ -187,13 +187,13 @@ function sensitivityClass(s: string): string {
 function stateClass(state: string): string {
   switch (state) {
     case "confirmed":
-      return "border-green-500/40 bg-green-500/10 text-green-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "candidate":
-      return "border-blue-500/40 bg-blue-500/10 text-blue-300";
+      return "border-ion-blue/40 bg-ion-blue/10 text-ion-blue";
     case "conflicted":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "stale":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
@@ -213,7 +213,7 @@ function MemoryCard({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           {/* Meta line */}
-          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-3">
+          <div className="flex flex-wrap items-center gap-2 text-label uppercase tracking-wide text-ion-3">
             <span>{row.memory_type.replace(/_/g, " ")}</span>
             <span>·</span>
             <span>{row.scope}</span>
@@ -228,25 +228,25 @@ function MemoryCard({
           <p className="mt-0.5 text-xs text-ion-2">{row.summary}</p>
 
           {/* Source */}
-          <p className="mt-1 text-[11px] text-ion-3">
+          <p className="mt-1 text-label-lg text-ion-3">
             Source: {row.source_type}
             {row.source_ref ? ` — ${row.source_ref}` : " — no source ref"}
           </p>
 
           {/* Confidence + sensitivity + tags */}
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className={`text-[11px] font-medium ${confidenceClass(row.confidence)}`}>
+            <span className={`text-label-lg font-medium ${confidenceClass(row.confidence)}`}>
               Confidence: {row.confidence}%
             </span>
             <span
-              className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${sensitivityClass(row.sensitivity)}`}
+              className={`rounded px-1.5 py-0.5 text-label font-semibold ${sensitivityClass(row.sensitivity)}`}
             >
               {row.sensitivity}
             </span>
             {row.tags.slice(0, 4).map((t) => (
               <span
                 key={t}
-                className="rounded bg-obsidian/70 px-1.5 py-0.5 text-[10px] text-ion-2"
+                className="rounded bg-obsidian/70 px-1.5 py-0.5 text-label text-ion-2"
               >
                 {t}
               </span>
@@ -256,7 +256,7 @@ function MemoryCard({
 
         {/* State badge */}
         <span
-          className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${stateClass(row.memory_state)}`}
+          className={`rounded-md border px-2 py-1 text-label font-semibold uppercase tracking-wide ${stateClass(row.memory_state)}`}
         >
           {row.memory_state.replace(/_/g, " ")}
         </span>
@@ -269,7 +269,7 @@ function MemoryCard({
             <input type="hidden" name="id" value={row.id} />
             <button
               type="submit"
-              className="rounded-md border border-green-700/40 bg-green-900/20 px-3 py-1 text-[11px] font-semibold text-green-300 hover:bg-green-900/40"
+              className="rounded-md border border-verify/40 bg-verify/10 px-3 py-1 text-label-lg font-semibold text-verify hover:bg-verify/20"
             >
               Confirm
             </button>
@@ -278,7 +278,7 @@ function MemoryCard({
             <input type="hidden" name="id" value={row.id} />
             <button
               type="submit"
-              className="rounded-md border border-rose-700/40 bg-rose-900/20 px-3 py-1 text-[11px] font-semibold text-rose-300 hover:bg-rose-900/40"
+              className="rounded-md border border-alert/40 bg-alert/10 px-3 py-1 text-label-lg font-semibold text-alert hover:bg-alert/20"
             >
               Reject
             </button>
@@ -321,7 +321,7 @@ export default async function CockpitMemoryPage(): Promise<JSX.Element> {
         {dbUnavailable && (
           <p
             data-testid="memory-db-unavailable"
-            className="rounded-md border border-amber-700/40 bg-amber-900/20 px-3 py-2 text-xs text-amber-300"
+            className="rounded-md border border-caution/40 bg-caution/10 px-3 py-2 text-xs text-caution"
           >
             Memory store unavailable. Showing structure only — no live data.
           </p>

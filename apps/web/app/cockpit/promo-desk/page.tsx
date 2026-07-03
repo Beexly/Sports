@@ -11,14 +11,14 @@ export const dynamic = "force-dynamic";
 function classBadge(operatorClass: OperatorClass): string {
   switch (operatorClass) {
     case "APPROVED_PARTNER":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "KNOWN_NOT_PARTNERED":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "DEMO":
-      return "border-sky-500/40 bg-sky-500/10 text-sky-300";
+      return "border-ion-blue/40 bg-ion-blue/10 text-ion-blue";
     case "BLOCKED":
     default:
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
   }
 }
 
@@ -51,7 +51,7 @@ export default function PromoDeskPage(): JSX.Element {
       </section>
 
       {summary.publishablePartners === 0 && (
-        <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
+        <div className="rounded-lg border border-caution/30 bg-caution/5 p-4 text-sm text-caution">
           <strong>No publishable partners.</strong> Public promotions remain in the empty state until an APPROVED_PARTNER row is added by code review.
         </div>
       )}
@@ -71,7 +71,7 @@ export default function PromoDeskPage(): JSX.Element {
 function SummaryCard({ label, value }: { label: string; value: number }): JSX.Element {
   return (
     <div className="flex flex-col gap-1 rounded-lg border border-titanium/40 bg-obsidian/50 p-3">
-      <span className="text-[10px] uppercase tracking-wide text-ion-3">{label}</span>
+      <span className="text-label uppercase tracking-wide text-ion-3">{label}</span>
       <span className="text-xl font-bold text-ion-white">{value}</span>
     </div>
   );
@@ -83,22 +83,22 @@ function OperatorRow({ entry }: { entry: OperatorRegistryEntry }): JSX.Element {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <span className="text-sm font-semibold text-ion-white">{entry.displayName}</span>
-          <code className="rounded bg-eclipse/70 px-1.5 py-0.5 text-[10px] text-ion-2">
+          <code className="rounded bg-eclipse/70 px-1.5 py-0.5 text-label text-ion-2">
             {entry.key}
           </code>
         </div>
-        <span className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${classBadge(entry.operatorClass)}`}>
+        <span className={`rounded-md border px-2 py-0.5 text-label font-semibold uppercase tracking-wide ${classBadge(entry.operatorClass)}`}>
           {entry.operatorClass.replace(/_/g, " ")}
         </span>
       </div>
-      <div className="flex flex-wrap gap-4 text-[11px] text-ion-2">
+      <div className="flex flex-wrap gap-4 text-label-lg text-ion-2">
         <span>jurisdiction: <strong className="text-ion-1">{entry.jurisdiction}</strong></span>
         <span>states: <strong className="text-ion-1">{entry.licensedStates.length || "-"}</strong></span>
         <span>real: <strong className="text-ion-1">{entry.isReal ? "yes" : "no"}</strong></span>
         <span>reviewed: <strong className="text-ion-1">{entry.reviewedAt}</strong></span>
       </div>
       {entry.blockedReason && (
-        <p className="rounded border border-rose-500/30 bg-rose-500/5 p-2 text-[11px] text-rose-200">
+        <p className="rounded border border-alert/30 bg-alert/5 p-2 text-label-lg text-alert">
           Blocked: {entry.blockedReason}
         </p>
       )}

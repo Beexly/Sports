@@ -29,7 +29,7 @@ export default async function CockpitTaskDetail({
         <h1 className="mt-1 text-2xl font-bold text-ion-white">{task.title}</h1>
         <p className="mt-1 text-xs text-ion-3">
           Assigned to <strong className="text-ion-1">{agent.displayName}</strong> ·
-          source <code className="rounded bg-obsidian/70 px-1 text-[10px] text-ion-1">{task.source}</code>
+          source <code className="rounded bg-obsidian/70 px-1 text-label text-ion-1">{task.source}</code>
         </p>
       </header>
 
@@ -69,7 +69,7 @@ export default async function CockpitTaskDetail({
             ))}
           </ul>
         )}
-        <p className="mt-3 text-[11px] text-ion-3">
+        <p className="mt-3 text-label-lg text-ion-3">
           Transitions are applied via the API at <code className="rounded bg-obsidian/70 px-1">PATCH /api/cockpit/tasks/{task.id}</code>. The
           service refuses any move outside this allow-list and writes a CockpitDecision row on success.
         </p>
@@ -86,10 +86,10 @@ export default async function CockpitTaskDetail({
             {task.decisions.map((d) => (
               <li key={d.id}>
                 <div className="flex items-baseline gap-3">
-                  <span className="rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1">
+                  <span className="rounded-full bg-obsidian/70 px-2 py-0.5 text-label font-semibold text-ion-1">
                     → {d.toStatus}
                   </span>
-                  <time className="text-[11px] text-ion-3">
+                  <time className="text-label-lg text-ion-3">
                     {d.createdAt.toUTCString()}
                   </time>
                 </div>
@@ -109,7 +109,7 @@ export default async function CockpitTaskDetail({
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[10px] uppercase tracking-widest text-ion-3">{label}</dt>
+      <dt className="text-label uppercase tracking-widest text-ion-3">{label}</dt>
       <dd className="mt-0.5 text-sm font-semibold text-ion-1">{value}</dd>
     </div>
   );

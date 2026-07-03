@@ -19,7 +19,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-label font-semibold uppercase tracking-widest text-yellow-300">
               Bot Outbox
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Draft Event Planner</h1>
@@ -56,7 +56,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-titanium/30 text-sm">
-              <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
+              <thead className="bg-eclipse/50 text-left text-label-lg uppercase tracking-wider text-ion-3">
                 <tr>
                   <th scope="col" className="px-4 py-3">State</th>
                   <th scope="col" className="px-4 py-3">Channel</th>
@@ -82,7 +82,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
 function Metric({ label, value }: { readonly label: string; readonly value: string }): JSX.Element {
   return (
     <div className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
-      <p className="text-[11px] uppercase tracking-wider text-ion-3">{label}</p>
+      <p className="text-label-lg uppercase tracking-wider text-ion-3">{label}</p>
       <p className="mt-2 text-xl font-semibold text-ion-white">{value}</p>
     </div>
   );
@@ -97,15 +97,15 @@ function OutboxRow({ item }: { readonly item: PlannedBotOutboxItem }): JSX.Eleme
         <span
           className={
             item.shouldPost
-              ? "rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-1 text-[11px] text-emerald-200"
-              : "rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-[11px] text-amber-200"
+              ? "rounded-full border border-verify/40 bg-verify/10 px-2 py-1 text-label-lg text-verify"
+              : "rounded-full border border-caution/40 bg-caution/10 px-2 py-1 text-label-lg text-caution"
           }
         >
           {item.shouldPost ? "ready" : item.blockedReason}
         </span>
       </td>
       <td className="whitespace-nowrap px-4 py-3">
-        <span className={`rounded-md border px-2 py-1 text-[11px] ${CHANNEL_STYLES[item.channel]}`}>
+        <span className={`rounded-md border px-2 py-1 text-label-lg ${CHANNEL_STYLES[item.channel]}`}>
           {item.channel}
         </span>
       </td>
@@ -118,7 +118,7 @@ function OutboxRow({ item }: { readonly item: PlannedBotOutboxItem }): JSX.Eleme
       <td className="max-w-xl px-4 py-3 text-xs leading-5 text-ion-2">
         <span className="line-clamp-4 whitespace-pre-line">{preview}</span>
       </td>
-      <td className="max-w-xs break-all px-4 py-3 text-[11px] text-ion-3">
+      <td className="max-w-xs break-all px-4 py-3 text-label-lg text-ion-3">
         {item.idempotencyKey}
       </td>
     </tr>

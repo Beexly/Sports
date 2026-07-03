@@ -196,23 +196,23 @@ export function JournalNewForm(): JSX.Element {
         {evidence ? (
           <dl className="mt-3 grid grid-cols-2 gap-3 text-xs text-ion-2 sm:grid-cols-5">
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Settled</dt>
+              <dt className="text-label uppercase tracking-wide text-ion-3">Settled</dt>
               <dd className="mt-1 text-ion-white">{evidence.counts.settledPicks}</dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Wins</dt>
+              <dt className="text-label uppercase tracking-wide text-ion-3">Wins</dt>
               <dd className="mt-1 text-ion-white">{evidence.counts.wins}</dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Losses</dt>
+              <dt className="text-label uppercase tracking-wide text-ion-3">Losses</dt>
               <dd className="mt-1 text-ion-white">{evidence.counts.losses}</dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Pushes</dt>
+              <dt className="text-label uppercase tracking-wide text-ion-3">Pushes</dt>
               <dd className="mt-1 text-ion-white">{evidence.counts.pushes}</dd>
             </div>
             <div>
-              <dt className="text-[10px] uppercase tracking-wide text-ion-3">Autopsies</dt>
+              <dt className="text-label uppercase tracking-wide text-ion-3">Autopsies</dt>
               <dd className="mt-1 text-ion-white">{evidence.counts.publicLossAutopsies}</dd>
             </div>
           </dl>
@@ -220,7 +220,7 @@ export function JournalNewForm(): JSX.Element {
 
         {evidence && evidence.picks.length > 0 ? (
           <div className="mt-4">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-ion-3">
+            <p className="text-label font-semibold uppercase tracking-wide text-ion-3">
               Settled pick references
             </p>
             <ul className="mt-2 grid gap-2">
@@ -233,7 +233,7 @@ export function JournalNewForm(): JSX.Element {
                   <p className="mt-1 text-ion-2">
                     {pick.selection} - confidence {pick.confidence} - edge {pick.edgeScore.toFixed(1)}
                   </p>
-                  <p className="mt-1 font-mono text-[10px] text-ion-3">{pick.id}</p>
+                  <p className="mt-1 font-mono text-label text-ion-3">{pick.id}</p>
                 </li>
               ))}
             </ul>
@@ -242,7 +242,7 @@ export function JournalNewForm(): JSX.Element {
 
         {evidence && evidence.lossAutopsies.length > 0 ? (
           <div className="mt-4">
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-ion-3">
+            <p className="text-label font-semibold uppercase tracking-wide text-ion-3">
               Public loss autopsies
             </p>
             <ul className="mt-2 grid gap-2">
@@ -252,7 +252,7 @@ export function JournalNewForm(): JSX.Element {
                     <span className="font-semibold text-ion-1">{autopsy.headline}</span>
                     <span className="text-ion-3">{autopsy.rootCause}</span>
                   </div>
-                  <p className="mt-1 font-mono text-[10px] text-ion-3">
+                  <p className="mt-1 font-mono text-label text-ion-3">
                     {autopsy.id} - pick {autopsy.pickId}
                   </p>
                 </li>
@@ -262,14 +262,14 @@ export function JournalNewForm(): JSX.Element {
         ) : null}
 
         {evidenceError ? (
-          <p className="mt-3 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+          <p className="mt-3 rounded-lg border border-alert/40 bg-alert/10 px-3 py-2 text-xs text-alert">
             {evidenceError}
           </p>
         ) : null}
       </section>
 
       {error ? (
-        <p className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
+        <p className="rounded-lg border border-alert/40 bg-alert/10 px-3 py-2 text-sm text-alert">
           {error}
         </p>
       ) : null}

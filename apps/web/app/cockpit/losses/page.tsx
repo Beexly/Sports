@@ -39,11 +39,11 @@ async function loadRows(): Promise<CockpitLossRow[]> {
 function statusClass(status: string): string {
   switch (status) {
     case "PUBLISHED":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "PEER_REVIEW":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "RETRACTED":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "DRAFT":
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
@@ -91,7 +91,7 @@ export default async function CockpitLossesPage(): Promise<JSX.Element> {
             <li key={row.id} className="rounded-lg border border-titanium/40 bg-obsidian/50 p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide text-ion-3">
+                  <div className="flex flex-wrap items-center gap-2 text-label uppercase tracking-wide text-ion-3">
                     <span>{row.rootCause.replace(/_/g, " ")}</span>
                     <span>{row.authoredAt.toISOString().slice(0, 10)}</span>
                     <span>{row.isPublic ? "public" : "internal"}</span>
@@ -101,7 +101,7 @@ export default async function CockpitLossesPage(): Promise<JSX.Element> {
                     {row.matchup} by {row.authorEmail}
                   </p>
                 </div>
-                <span className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusClass(row.status)}`}>
+                <span className={`rounded-md border px-2 py-1 text-label font-semibold uppercase tracking-wide ${statusClass(row.status)}`}>
                   {row.status.replace(/_/g, " ")}
                 </span>
               </div>

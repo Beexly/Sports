@@ -86,7 +86,7 @@ export function ListenerLogForm() {
           className="rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-2 text-sm leading-6 text-ion-white placeholder:text-ion-3 focus:border-cyan-700 focus:outline-none"
         />
       </label>
-      <p className="text-[11px] leading-relaxed text-ion-3">
+      <p className="text-label-lg leading-relaxed text-ion-3">
         Legal lane only: you listened on your own subscription and write each take in your
         own words. No recordings, no transcripts, no verbatim quotes — SiriusXM&apos;s terms
         forbid using their content to train tools, so timestamped/transcript lines are
@@ -103,7 +103,7 @@ export function ListenerLogForm() {
             : `File ${lines.length || ""} take${lines.length === 1 ? "" : "s"} for review`}
         </button>
         {msg && (
-          <span className={`text-xs ${state === "ok" ? "text-cyan-300" : "text-red-400"}`}>{msg}</span>
+          <span className={`text-xs ${state === "ok" ? "text-verify" : "text-alert"}`}>{msg}</span>
         )}
       </div>
     </form>

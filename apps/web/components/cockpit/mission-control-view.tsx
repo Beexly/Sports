@@ -28,8 +28,8 @@ function Card({ card, featured }: { card: BriefingCard; featured?: boolean }) {
     >
       <span aria-hidden className="absolute inset-x-0 top-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${card.accent}, transparent)` }} />
       <div className="flex items-center justify-between">
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: card.accent }}>{card.eyebrow}</span>
-        <span className="flex items-center gap-1.5 text-[10px] text-ink-600">
+        <span className="font-mono text-label uppercase tracking-label" style={{ color: card.accent }}>{card.eyebrow}</span>
+        <span className="flex items-center gap-1.5 text-label text-ink-600">
           <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: card.accent }} />
           P{card.priority}
         </span>

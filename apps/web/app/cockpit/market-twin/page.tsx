@@ -23,20 +23,20 @@ const POSTURE_META: Readonly<
 > = {
   READY_TO_SCORE: {
     label: "Ready to score",
-    chip: "border-emerald-500/40 bg-emerald-500/10 text-emerald-300",
-    dot: "bg-emerald-400",
+    chip: "border-verify/40 bg-verify/10 text-verify",
+    dot: "bg-verify",
     blurb: "5+ books agree and the read is fresh (under 2h) — stable enough to run the model against.",
   },
   CONFLICT: {
     label: "Conflict",
-    chip: "border-rose-500/40 bg-rose-500/10 text-rose-300",
-    dot: "bg-rose-400",
+    chip: "border-alert/40 bg-alert/10 text-alert",
+    dot: "bg-alert",
     blurb: "The line has swung 3+ points — the market disagrees with itself. Let it settle first.",
   },
   WATCH_ONLY: {
     label: "Watch only",
-    chip: "border-amber-500/40 bg-amber-500/10 text-amber-300",
-    dot: "bg-amber-400",
+    chip: "border-caution/40 bg-caution/10 text-caution",
+    dot: "bg-caution",
     blurb: "Some market data, but not enough book coverage or freshness to trust yet.",
   },
   QUIET: {
@@ -143,7 +143,7 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
 
       {/* Legend = explanation + live counts in one bucket */}
       <section className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4">
-        <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">
+        <p className="mb-3 font-mono text-label uppercase tracking-label text-ion-3">
           How to read this
         </p>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -155,7 +155,7 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
                   {POSTURE_META[p].label}
                   <span className="ml-2 font-mono tabular-nums text-ion-3">{counts[p]}</span>
                 </p>
-                <p className="mt-0.5 text-[11px] leading-snug text-ion-2">{POSTURE_META[p].blurb}</p>
+                <p className="mt-0.5 text-label-lg leading-snug text-ion-2">{POSTURE_META[p].blurb}</p>
               </div>
             </div>
           ))}
@@ -176,15 +176,15 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] uppercase tracking-wide text-ion-3">
+                    <span className="font-mono text-label uppercase tracking-wide text-ion-3">
                       {row.sport}
                     </span>
-                    <span className="text-[10px] text-ion-3">· starts {fromNow(row.commenceTime)}</span>
+                    <span className="text-label text-ion-3">· starts {fromNow(row.commenceTime)}</span>
                   </div>
                   <h2 className="text-base font-semibold text-ion-white">{row.matchup}</h2>
                 </div>
                 <span
-                  className={`rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${POSTURE_META[row.posture].chip}`}
+                  className={`rounded-md border px-2 py-1 text-label font-semibold uppercase tracking-wide ${POSTURE_META[row.posture].chip}`}
                 >
                   {POSTURE_META[row.posture].label}
                 </span>
@@ -215,7 +215,7 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="font-mono text-[10px] uppercase tracking-wide text-ion-3">{label}</span>
+      <span className="font-mono text-label uppercase tracking-wide text-ion-3">{label}</span>
       <span className="text-sm font-medium text-ion-1">{value}</span>
     </div>
   );

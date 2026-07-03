@@ -16,7 +16,7 @@ export default async function CockpitStudioPage({
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-label font-semibold uppercase tracking-widest text-yellow-300">
               Galaxy Studio
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Creator Asset Workspace</h1>
