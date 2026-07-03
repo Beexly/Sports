@@ -275,6 +275,28 @@ export type {
   CalibrationBinDiagnostic,
 } from "./calibration-sequence.js";
 
+// R&D — Pedersen homomorphic commitments (the ADDITIVE layer Merkle lacks:
+// verify a published aggregate against per-pick commitments without opening the
+// picks). Dark, unwired; ADDITIVE to the SHA-256 Merkle layer, never a
+// replacement (classical DLOG only, NOT post-quantum). Group verified by
+// execution. See ZK-ML-DUMP-EXTRACTION-LEDGER.md wave 7.
+export {
+  commit,
+  openCommitment,
+  addCommitments,
+  aggregateCommitments,
+  commitLedger,
+  verifyLedgerAggregate,
+  verifyGroup,
+  encodeFixedPoint,
+  DEFAULT_PEDERSEN_GROUP,
+  PEDERSEN_P,
+  PEDERSEN_Q,
+  PEDERSEN_G,
+  PEDERSEN_H,
+} from "./pedersen-ledger.js";
+export type { PedersenGroup, PedersenCommitment, LedgerCommitmentResult } from "./pedersen-ledger.js";
+
 // Performance CIs for CONTINUOUS returns (ROI/units) — the BCa bootstrap
 // counterpart to the Wilson interval (which only covers binomial win rate).
 // Deterministic/seeded so a public performance band is reproducible from the
