@@ -172,3 +172,38 @@ describe("anytimeCalibrationMonitor — recursion, determinism, refusals", () =>
     expect(r.bins[3]!.binEnd).toBe(1);
   });
 });
+
+describe("anytimeCalibrationMonitor — the correlation limitation is REAL and codified", () => {
+  // Self-audit finding: the anytime-valid guarantee assumes each residual is a
+  // martingale difference (E[y_t|F_{t-1}] = p_t). Same-game correlation violates
+  // that and inflates the false-positive rate. This test PINS the limitation so a
+  // future change cannot quietly assume correlation is safe. Honest marginals in
+  // both arms (E[y|p]=p), so the gap is attributable to correlation alone.
+  // Full probe (1500x300): independent 0.017; copula rho=0.4 0.118, rho=0.7 0.245;
+  // duplicated 0.252. Here at 400 sims we assert the DIRECTION and rough magnitude.
+  it("independent picks stay valid but PERFECTLY-CORRELATED (duplicated) picks blow past alpha", () => {
+    const NSIM = 400;
+    const drawIndep = (seed: number): CalibrationSequenceSample[] => {
+      const rand = mulberry32(seed);
+      const out: CalibrationSequenceSample[] = [];
+      for (let i = 0; i < 300; i++) { const p = 0.3 + 0.5 * rand(); out.push({ p, y: rand() < p ? 1 : 0 }); }
+      return out;
+    };
+    const drawDuplicated = (seed: number): CalibrationSequenceSample[] => {
+      const rand = mulberry32(seed);
+      const out: CalibrationSequenceSample[] = [];
+      for (let i = 0; i < 150; i++) { const p = 0.3 + 0.5 * rand(); const y = (rand() < p ? 1 : 0) as 0 | 1; out.push({ p, y }, { p, y }); }
+      return out;
+    };
+    let fpIndep = 0;
+    let fpDup = 0;
+    for (let s = 0; s < NSIM; s++) {
+      if (anytimeCalibrationMonitor(drawIndep(70000 + s))!.everTripped) fpIndep++;
+      if (anytimeCalibrationMonitor(drawDuplicated(80000 + s))!.everTripped) fpDup++;
+    }
+    // Independent arm honors the budget (with a generous MC margin).
+    expect(fpIndep / NSIM).toBeLessThan(0.05);
+    // Correlated arm demonstrably violates it — the caveat is real, not theoretical.
+    expect(fpDup / NSIM).toBeGreaterThan(0.12);
+  }, 60_000);
+});

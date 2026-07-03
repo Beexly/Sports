@@ -190,6 +190,19 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
   // ledgers — hostile-review finding, measured negligible but theorem-dirty).
   // 20 units covers +2000 American; a return above it disables the tier
   // honestly (null) rather than quietly bending the guarantee.
+  //
+  // ⚠ CORRELATION ASSUMPTION (self-audit 2026-07-03, measured): the Ville α-budget
+  // assumes returns are not correlated with earlier settled picks. GSE publishes
+  // multiple markets per game (see the settledAt tie note below), so this input
+  // can carry same-game correlation. Measured H0 false-positive inflates from
+  // 0.004 (i.i.d.) to ~0.11 only under 3 PERFECTLY-correlated markets/game (2/game
+  // and partial ρ=0.5 stay ≤0.05). The PUBLIC "checked continuously" sentence
+  // below is therefore strictly valid only for a de-correlated ledger. PROPER FIX
+  // (owner-gated — it changes a published number + the DB query): have
+  // loadPublicRoiPolicy pass at most ONE pick per game into this tier. Until then
+  // the operator message discloses the assumption and the sentence stays gated
+  // behind clearsProfit (a conservative magnitude gate that blunts the residual
+  // risk). See anytime-ledger.ts CORRELATION CAVEAT for the numbers.
   const anytime = n >= 1 ? anytimeValidLedger(input.returns, { range: ANYTIME_RANGE_UNITS }) : null;
   const anytimeEvidence = anytime
     ? {
@@ -242,7 +255,8 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
       (anytimeEvidence
         ? `anytime: logE=${anytimeEvidence.logEValue.toFixed(2)} everSig=${anytimeEvidence.everSignificant} ` +
           `firstSigN=${anytimeEvidence.firstSignificantAtN ?? "n/a"} lowerBound=${signed(anytimeEvidence.lowerBound)}u ` +
-          `(H0: mu<=0, Ville-valid under continuous monitoring).`
+          `(H0: mu<=0, Ville-valid under continuous monitoring; assumes de-correlated returns — ` +
+          `same-game multi-market correlation inflates FP, measured up to ~0.11 at 3 correlated picks/game vs 0.05).`
         : "anytime: n/a.");
   } else {
     publicMessage =

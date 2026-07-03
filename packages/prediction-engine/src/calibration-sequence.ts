@@ -17,6 +17,23 @@
  * stopping, exactly like the profit ledger's test. No RNG anywhere; any two
  * parties replay the identical trajectory from the settled ledger.
  *
+ * ⚠ THE INDEPENDENCE CONDITION — THE ONE WAY THIS GUARANTEE BREAKS (measured,
+ * not hand-waved): the martingale-difference step above requires E[y_t | F_{t-1}]
+ * = p_t given EVERYTHING earlier — i.e. the stated p_t already accounts for any
+ * correlation with earlier settled picks. Sports picks violate this by default:
+ * the spread, total, and moneyline on ONE game share the game's outcome, so once
+ * an earlier correlated pick settles, a later one's conditional mean is no longer
+ * its marginal p_t. Under that correlation the false-positive rate INFLATES far
+ * past α. Measured on THIS module (1500 sims × 300 picks, honest marginals so the
+ * inflation is correlation ALONE): independent picks FP 0.017 (valid); a
+ * mixture-copula at ρ=0.4 → 0.118; ρ=0.7 → 0.245; perfectly duplicated same-game
+ * picks → 0.252 — roughly 2.4–5× the 0.05 budget. INPUT DISCIPLINE for a VALID
+ * test: feed at most ONE pick per game (or per correlated cluster) in settlement
+ * order; a trip on a correlated multi-market ledger is NOT an α-level event. This
+ * is the calibration-side twin of the same-game caveat in anytime-ledger.ts, and
+ * any public "checked continuously" sentence must carry the one-pick-per-game
+ * condition. (`_probe-calseq` numbers pinned in the test suite.)
+ *
  * TWO-SIDEDNESS: drift has a direction. M⁺ bets λ ≥ 0 (wins landing ABOVE
  * stated probability = UNDERconfidence); M⁻ bets the other side (outcomes
  * falling SHORT of stated probability = OVERconfidence — the dangerous

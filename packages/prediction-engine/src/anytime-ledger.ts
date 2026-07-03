@@ -57,6 +57,19 @@
  * MUST pass returns in settlement order. Do not shuffle; do not feed it a
  * query without an ORDER BY.
  *
+ * ⚠ CORRELATION CAVEAT — the one way the α guarantee weakens (MEASURED, self-audit
+ * 2026-07-03): Ville validity needs E[return_t | F_{t-1}] ≤ nullMean given the
+ * past — i.e. returns not already correlated with earlier settled picks. Multiple
+ * markets on ONE game (spread/total/moneyline) share the game outcome and violate
+ * this. Measured H0 false-positive (2000 sims × 300 break-even picks): i.i.d.
+ * 0.004; a mixture-copula at ρ=0.5 and 2-perfectly-correlated-markets/game both
+ * stay ≤ 0.05 (0.036); but 3 PERFECTLY-correlated markets/game inflates to 0.11,
+ * ~2× the 0.05 budget. So the guarantee is robust to light/partial correlation
+ * and breaks only under strong same-game clustering. For a strictly-valid PUBLIC
+ * claim, feed at most ONE pick per game. (The calibration-side twin,
+ * calibration-sequence.ts, is more fragile — up to 5× — because its per-residual
+ * signal has no magnitude gate to lean on.)
+ *
  * The claims above are not merely asserted: the test suite runs an
  * adversarial-peeking Monte-Carlo (worst-case stopping over 2000 simulated
  * break-even ledgers) and confirms the false-positive rate stays within the
