@@ -128,6 +128,15 @@ export interface PublicRoiPolicy {
 
 const MIN_GRADED_DEFAULT = 25;
 
+/**
+ * Fixed a-priori win-return bound for the anytime-valid tier (units at 1-unit
+ * stake): 20 = a +2000 American winner. Fixed BEFORE seeing the data so the
+ * e-process's betting schedule never depends on future observations (the
+ * Ville licensing requires it); Kelly-style betting is scale-adaptive, so a
+ * generous bound costs almost no power.
+ */
+const ANYTIME_RANGE_UNITS = 20;
+
 export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiPolicy {
   const minGraded = Math.max(1, input.minGradedForPublic > 0 ? input.minGradedForPublic : MIN_GRADED_DEFAULT);
   const n = input.returns.length;
@@ -173,9 +182,15 @@ export function evaluatePublicRoiPolicy(input: PublicRoiPolicyInput): PublicRoiP
     clearsProfit && ciBern != null && Number.isFinite(ciBern.low) && round2(ciBern.low) > 0;
 
   // K11 anytime-valid tier: order-sensitive, so input.returns MUST arrive in
-  // settlement order (loadPublicRoiPolicy sorts by settledAt asc). Additive
-  // context only — never part of the clearsProfit gate (see field doc).
-  const anytime = n >= 1 ? anytimeValidLedger(input.returns) : null;
+  // settlement order (loadPublicRoiPolicy sorts by settledAt asc, id asc).
+  // Additive context only — never part of the clearsProfit gate (see field
+  // doc). The range is a FIXED a-priori constant, not the observed max: a
+  // data-derived range would make every bet depend on the full array (a
+  // predictability leak that voids the literal Ville licensing on mixed-odds
+  // ledgers — hostile-review finding, measured negligible but theorem-dirty).
+  // 20 units covers +2000 American; a return above it disables the tier
+  // honestly (null) rather than quietly bending the guarantee.
+  const anytime = n >= 1 ? anytimeValidLedger(input.returns, { range: ANYTIME_RANGE_UNITS }) : null;
   const anytimeEvidence = anytime
     ? {
         logEValue: anytime.current.logEValue,
@@ -266,7 +281,7 @@ export interface LoadableRoiClient {
     findMany: (args: {
       where: Record<string, unknown>;
       select: Record<string, unknown>;
-      orderBy: Record<string, unknown>;
+      orderBy: Array<Record<string, unknown>>;
     }) => Promise<Array<{ result: string; proofReceipt: { entryOdds: number } | null }>>;
   };
 }
@@ -295,9 +310,12 @@ export async function loadPublicRoiPolicy(
     // SETTLEMENT ORDER IS LOAD-BEARING (K11): the anytime-valid evidence tier
     // is a sequential statistic — without an explicit sort, Prisma/Postgres
     // return rows in unspecified order and the anytime guarantee would be
-    // mathematically proven in the engine yet silently unearned here. The
-    // fixed-sample bands (BCa/studentized/Bernstein) are order-free either way.
-    orderBy: { settledAt: "asc" },
+    // mathematically proven in the engine yet silently unearned here. The id
+    // tiebreaker makes the sort a TOTAL order: settle-sport stamps one shared
+    // settledAt per game, so multi-pick games tie systematically and a
+    // one-key sort would publish load-dependent anytime numbers (breaking the
+    // bit-reproducibility promise). The fixed-sample bands are order-free.
+    orderBy: [{ settledAt: "asc" }, { id: "asc" }],
   });
 
   const returns: number[] = [];

@@ -206,8 +206,11 @@ describe("evaluatePublicRoiPolicy", () => {
       { canExposePerformanceStats: true, minGradedForPublic: 25 },
     );
     expect(findMany).toHaveBeenCalledTimes(1);
-    const args = findMany.mock.calls[0]![0] as { orderBy?: Record<string, unknown> };
-    expect(args.orderBy).toEqual({ settledAt: "asc" });
+    const args = findMany.mock.calls[0]![0] as { orderBy?: unknown };
+    // TOTAL order: settledAt is stamped once per GAME (settle-sport), so
+    // multi-pick games tie systematically — the id tiebreaker is what makes
+    // the published anytime numbers bit-reproducible across loads.
+    expect(args.orderBy).toEqual([{ settledAt: "asc" }, { id: "asc" }]);
   });
 
   it("gate/display consistency: a profit claim never displays a '+0.00' lower bound", () => {
