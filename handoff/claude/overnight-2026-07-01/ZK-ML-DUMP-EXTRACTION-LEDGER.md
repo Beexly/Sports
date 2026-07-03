@@ -373,3 +373,38 @@ root is concatenated OUTSIDE the hash, i.e. decoration, not binding, and
 `valid` is still unconditional. `calibration-commitment.ts` (shipped, wave 1)
 binds the root INSIDE the hashed payload and fails verification on any tamper
 — the salvage this stub keeps re-proposing already exists, done right.
+
+---
+
+## WAVE 6 (2026-07-02, fifth dump): Plonky2 / Poseidon / AIR internals
+
+Prover-internals depth for the Cluster-C roadmap. The survey side **keeps
+verifying**: the dump's central S-box claim — x⁷ is the right Poseidon S-box —
+was checked by OUR OWN computation, not taken on faith: for Goldilocks
+p = 2⁶⁴ − 2³² + 1, gcd(3, p−1) = 3 and gcd(5, p−1) = 5 (x³, x⁵ are NOT
+permutations of the field) while **gcd(7, p−1) = 1** — x⁷ is the minimal
+odd-power permutation. `[VERIFIED-by-computation]`. The stub family is
+unchanged: the representative `plonkyOpt() {...} // locked` is a syntax error
+(`node --check` rejects it), same as wave 4. `[REFUTED-by-execution]`.
+
+**The one extraction that touches GSE TODAY — the hash fork-in-the-road,
+`[DECISION, recorded]`:** Poseidon exists because SHA-256 is brutally expensive
+INSIDE arithmetic circuits; it only wins there. GSE's Merkle layer
+(`proof-hash.ts`) uses SHA-256 — and that remains the RIGHT choice today for a
+trust brand, precisely because any outsider can re-verify our receipts and
+roots with any standard sha256 tool on earth; Poseidon would make public
+verifiability harder while buying nothing (we have no circuits). The fork: IF
+the Nova/circuit day comes, the in-circuit commitment layer migrates to (or
+dual-commits with) an arithmetic-friendly hash. Standing constraint for that
+day, ledgered now: **Poseidon round constants MUST come from the reference
+generation script, never reconstructed from memory** — hand-written constants
+are exactly the confident-fabrication trap the doctrine forbids.
+
+| Item | Tag | Verdict |
+|---|---|---|
+| **Plonky2 optimization stack** (Goldilocks field, TurboPLONK custom gates, FRI blowup/query tuning, parallel proving) | `[REFERENCE]` | Accurate knobs list. "40x faster arithmetic" and "170ms recursion" are literature/announcement figures, **unverified here** (same attribution treatment as SnarkPack/Plonky2 numbers in prior waves). |
+| **Poseidon parameters** (8 full / 22 partial rounds, width 12, x⁷ S-box, rate) | `[REFERENCE, S-box claim verified]` | Matches Plonky2's published Goldilocks Poseidon configuration; x⁷ minimality proven above by computation. Security-level claims not re-derived. |
+| **StarkEx S-box framing** ("finance circuits") | `[REFERENCE, loose]` | The x⁷-style low-degree design point is real; the StarkEx-specific framing is marketing-adjacent and carries no GSE action beyond what the Poseidon rows already say. |
+| **STARK AIR constraints / low-degree tests / STARK security (ROM + hash CR, post-quantum, transparent)** | `[REFERENCE]` | Accurate one-liners; the transparency + post-quantum point reinforces (does not change) the ledger's standing no-ceremony preference. |
+| **PLONK / Plonkish arithmetization / gate constraints** (selector·(a·b−c)=0 etc.) | `[REFERENCE]` | Accurate; the arithmetization vocabulary for the roadmap's base circuits, when they exist. |
+| **Halo2 zero-knowledge via blinding** ("perfect ZK under random oracle") | `[REFERENCE, wording caution]` | Blinding-based ZK is real; "perfect ZK" is loose phrasing — GSE must never inherit marketing adjectives into its own claims (the moat's data-and-method rule applies to crypto claims too). |
