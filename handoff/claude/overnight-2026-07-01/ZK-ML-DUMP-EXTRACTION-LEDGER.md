@@ -529,3 +529,15 @@ the remote in the prior turn: **no external commit ever landed**; the only
 concrete true item ("115095 offset pinned") was OUR own wave-7 fix echoed back.
 Pattern holds: the surveys are minable, the self-congratulation is vapor, and
 every code artifact needs execution before it earns trust.
+
+**Self-found HIGH after ship (fixed, fe89dd7f):** re-reading the committed
+secp256k1 module, the IDENTITY point has no compressed encoding — `@noble`
+`toHex()` throws `"bad point: ZERO"`. So `commit(0n, 0n)` (a −1 loss with a zero
+blinding) and any ledger whose commitments sum to the identity THREW instead of
+returning null — a violation of the module's own never-throw-on-data contract
+that BOTH the hostile-crypto agent and I missed (the agent tested value-0 and
+blinding-0 separately, never together). Fixed with a shared `pointToCommitment`
+identity guard on commit/add/aggregate, two regression tests pinning both paths.
+This is why an 8-wave self-audit fleet was then run — one finder per shipped
+module, each required to reproduce bugs by execution, each serious finding
+independently re-verified. (Results integrated in the following commits.)
