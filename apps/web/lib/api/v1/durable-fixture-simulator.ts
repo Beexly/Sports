@@ -80,6 +80,21 @@ function countFor(counts: ApiV1DurableFixtureTableCounts, table: ApiV1DurableAda
   return counts[table];
 }
 
+function validateTableCounts(
+  operationId: string,
+  side: "before" | "after",
+  counts: ApiV1DurableFixtureTableCounts
+): readonly string[] {
+  const blockers: string[] = [];
+  for (const table of TABLES) {
+    const value = countFor(counts, table);
+    if (!Number.isSafeInteger(value) || value < 0) {
+      blockers.push(`${operationId} ${side}.${table} must be a non-negative safe integer.`);
+    }
+  }
+  return blockers;
+}
+
 function unchangedTables(
   before: ApiV1DurableFixtureTableCounts,
   after: ApiV1DurableFixtureTableCounts,
@@ -120,6 +135,11 @@ function validateOperationAgainstPlan(
 ): ApiV1DurableFixtureSimulationCase {
   const blockers: string[] = [];
   const observations: string[] = [];
+
+  blockers.push(
+    ...validateTableCounts(fixtureOperation.id, "before", fixtureOperation.before),
+    ...validateTableCounts(fixtureOperation.id, "after", fixtureOperation.after)
+  );
 
   if (!sameSequence(fixtureOperation.observedReads, plan.reads)) {
     blockers.push(`${fixtureOperation.id} observed reads do not match the dormant operation plan.`);

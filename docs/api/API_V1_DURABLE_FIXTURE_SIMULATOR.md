@@ -15,6 +15,7 @@ The simulator does not execute storage. It validates that a synthetic operation 
 - read-only behavior
 - table-count changes
 - rollback leakage
+- invalid or missing table counts
 - route, database, and provider boundaries
 
 ## Fixture Boundary
@@ -42,6 +43,8 @@ The first fixture covers:
 | `record-quota-and-audit-rollback` | `rolled_back` | Rollback order follows the dormant contract and table counts do not leak. |
 
 `apps/web/__fixtures__/api-v1/durable-fixture-edge-cases.json` adds synthetic coverage for suspended consumer resolution, expired key resolution, quota-exhaustion denial, and malformed-audit rollback.
+
+`apps/web/__fixtures__/api-v1/durable-fixture-hostile-invalid.json` is a negative-control fixture. It must fail simulation because it includes read-only mutation, audit over-append, quota-row deletion, and a missing table count.
 
 ## Report
 

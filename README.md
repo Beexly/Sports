@@ -2,10 +2,10 @@
 
 [![CI](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml/badge.svg)](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml)
 
-Production-grade sports picks platform with real data ingestion, AI-assisted
-prediction ranking, subscription paywalls, content generation, and an
-internal operator cockpit. See `CLAUDE.md` for the full system overview and
-non-negotiable rules.
+Sports picks platform with real data ingestion, AI-assisted prediction
+ranking, subscription paywalls, content generation, and an internal operator
+cockpit. See `CLAUDE.md` for the full system overview and non-negotiable
+rules.
 
 > **Current mode: internal calibration only.** No auto-publish. No auto-send.
 > No external posting. No automated betting. The platform's `ContentDraft`
@@ -19,6 +19,15 @@ The repo-visible FABLE/NFL evidence layer lives in `docs/fable/`. Start with
 `docs/fable/README.md`, `docs/fable/CODEX_FINAL_REPORT.md`, and
 `docs/fable/aws/AWS_FINAL_REPORT.md`. The corresponding pure TypeScript
 primitives live in `apps/web/lib/fable/`.
+
+## API v1 shadow stack
+
+The API v1 durability work is shadow/proposal-only. Start with
+`docs/api/API_V1_STACK_HANDOFF.md`, `docs/api/API_V1_STACK_PR_INDEX.md`, and
+`docs/api/API_V1_REVIEWER_MERGE_CHECKLIST.md`. The boundary guard is
+`scripts/guardrails/api-v1-boundary.mjs`, and it blocks accidental live API v1
+routes, Prisma models, migrations, env vars, database imports, provider calls,
+and network calls until an owner-approved promotion exists.
 
 ## Local turn-on (cockpit-ready in ~10 minutes)
 

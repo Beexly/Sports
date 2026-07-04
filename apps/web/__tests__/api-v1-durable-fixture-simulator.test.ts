@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import edgeFixture from "@/__fixtures__/api-v1/durable-fixture-edge-cases.json";
 import fixture from "@/__fixtures__/api-v1/durable-fixture-simulator.json";
+import hostileInvalidFixture from "@/__fixtures__/api-v1/durable-fixture-hostile-invalid.json";
 import {
   API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE,
   simulateApiV1DurableFixtureScenario,
@@ -16,6 +17,7 @@ const apiV1RouteTree = path.join(repoRoot, "apps/web/app/api/v1");
 
 const scenario = fixture as ApiV1DurableFixtureScenario;
 const edgeScenario = edgeFixture as ApiV1DurableFixtureScenario;
+const hostileInvalidScenario = hostileInvalidFixture as unknown as ApiV1DurableFixtureScenario;
 
 describe("API v1 durable fixture simulator", () => {
   it("replays the local synthetic fixture against the dormant operation plans", () => {
@@ -64,6 +66,34 @@ describe("API v1 durable fixture simulator", () => {
       "append-malformed-audit-chain-rollback",
     ]);
     expect(report.cases.every((entry) => entry.passed)).toBe(true);
+  });
+
+  it("rejects hostile invalid fixtures instead of normalizing unsafe side effects", () => {
+    const report = simulateApiV1DurableFixtureScenario(hostileInvalidScenario);
+
+    expect(report.passed).toBe(false);
+    expect(report.fixtureId).toBe("api-v1-durable-hostile-invalid-synthetic-v1");
+    expect(report.operationCount).toBe(4);
+    expect(report.cases.map((entry) => entry.passed)).toEqual([false, false, false, false]);
+    expect(report.cases.find((entry) => entry.id === "read-only-side-effect-hostile")?.blockers).toEqual(
+      expect.arrayContaining([
+        "read-only-side-effect-hostile changed table counts during a read-only operation.",
+        "read-only-side-effect-hostile changed a table that is not declared as a write table.",
+      ])
+    );
+    expect(report.cases.find((entry) => entry.id === "audit-append-batches-two-events-hostile")?.blockers).toEqual(
+      expect.arrayContaining(["audit-append-batches-two-events-hostile must append exactly one audit event."])
+    );
+    expect(report.cases.find((entry) => entry.id === "quota-audit-deletes-quota-row-hostile")?.blockers).toEqual(
+      expect.arrayContaining([
+        "quota-audit-deletes-quota-row-hostile must not delete quota rows while recording quota and audit.",
+      ])
+    );
+    expect(report.cases.find((entry) => entry.id === "missing-table-count-hostile")?.blockers).toEqual(
+      expect.arrayContaining([
+        "missing-table-count-hostile after.api_v1_quota_months must be a non-negative safe integer.",
+      ])
+    );
   });
 
   it("detects read/write drift against the dormant interface", () => {

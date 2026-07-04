@@ -33,14 +33,28 @@ Status: copy-paste-ready PR map only. GitHub CLI auth is required before live PR
    - PR body: `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN_PR_BODY.md`
 
 8. `codex/api-v1-rd-polish-guards`
-   - Commit: current branch after this slice is committed
+   - Commit: `9789a040`
    - Summary:
      - adds API v1 boundary guard and npm script
      - adds edge-case durable fixtures
      - adds markdown report renderer and tracked rendered report
      - adds stack handoff and PR index
 
-## Current R&D Polish PR Body
+9. `codex/api-v1-autonomous-polish-hardening`
+   - Commit: current branch after this slice is committed
+   - PR body: `docs/api/API_V1_AUTONOMOUS_POLISH_PR_BODY.md`
+   - Summary:
+     - adds hostile invalid fixture rejection coverage
+     - adds runtime table-count shape validation to the simulator
+     - adds reviewer merge checklist
+     - adds README stack navigation
+     - adds a focused CI API v1 boundary job
+
+## Current Autonomous Polish PR Body
+
+Use `docs/api/API_V1_AUTONOMOUS_POLISH_PR_BODY.md` for the current branch.
+
+## Previous R&D Polish PR Body
 
 ### Summary
 

@@ -30,7 +30,8 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | 5 | `codex/api-v1-durable-fixture-simulator` | `63c950f4` | Replays local synthetic fixture traces against the dormant interface. |
 | 6 | `codex/api-v1-durable-fixture-report-archive` | `f286054d` | Archives fixture and harness evidence with `livePromotionAllowed=false`. |
 | 7 | `codex/api-v1-disposable-db-rehearsal-plan` | `fcee1716` | Adds plan-only disposable DB rehearsal checklist and validator. |
-| 8 | `codex/api-v1-rd-polish-guards` | current branch | Adds boundary guard, edge fixtures, rendered report, and this handoff. |
+| 8 | `codex/api-v1-rd-polish-guards` | `9789a040` | Adds boundary guard, edge fixtures, rendered report, and this handoff. |
+| 9 | `codex/api-v1-autonomous-polish-hardening` | current branch after this slice is committed | Adds hostile invalid fixture coverage, reviewer merge checklist, README navigation, and focused CI guard wiring. |
 
 ## Key Code Surfaces
 
@@ -52,8 +53,10 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | --- | --- |
 | `apps/web/__fixtures__/api-v1/durable-fixture-simulator.json` | Canonical local synthetic happy-path durable trace. |
 | `apps/web/__fixtures__/api-v1/durable-fixture-edge-cases.json` | Suspended, expired, quota-exhausted, and malformed-audit synthetic trace. |
+| `apps/web/__fixtures__/api-v1/durable-fixture-hostile-invalid.json` | Deliberately invalid negative-control trace that must fail simulation. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json` | Machine-readable archive with `livePromotionAllowed=false`. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md` | Rendered human-readable archive. |
+| `docs/api/API_V1_REVIEWER_MERGE_CHECKLIST.md` | Reviewer checklist and stop-sign list for stacked PR review. |
 
 ## Focused Tests
 
@@ -76,6 +79,7 @@ git diff --check
 ```
 
 `npm.cmd run guardrails` now includes `scripts/guardrails/api-v1-boundary.mjs`.
+`.github/workflows/ci.yml` also includes a focused `api-v1-boundary` job so CI can fail fast on accidental live API v1 surfaces.
 
 ## PR Creation State
 
@@ -89,6 +93,7 @@ Copy-paste PR bodies are tracked per slice:
 - `docs/api/API_V1_DURABLE_FIXTURE_SIMULATOR_PR_BODY.md`
 - `docs/api/API_V1_DURABLE_FIXTURE_REPORT_PR_BODY.md`
 - `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN_PR_BODY.md`
+- `docs/api/API_V1_AUTONOMOUS_POLISH_PR_BODY.md`
 - `docs/api/API_V1_STACK_PR_INDEX.md`
 
 ## Remaining Approval Gate
