@@ -64,4 +64,4 @@ git diff --check
 
 ## Next Promotion Slice
 
-The dormant durable adapter interface now lives in `docs/api/API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE.md`. The next safe slice is a route-free durable adapter simulation over local JSON fixtures. It should replay the dormant operation plans and emit conformance reports without adding Prisma schema edits, migrations, live route exposure, secrets, provider calls, or database execution.
+The dormant durable adapter interface lives in `docs/api/API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE.md`, and the route-free durable fixture simulator lives in `docs/api/API_V1_DURABLE_FIXTURE_SIMULATOR.md`. The next safe slice is a fixture-report archive and promotion checklist without Prisma schema edits, migrations, live route exposure, secrets, provider calls, or database execution.

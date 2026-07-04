@@ -2,6 +2,7 @@ export * from "./audit-ledger";
 export * from "./api-key";
 export * from "./consumer-registry";
 export * from "./dormant-durable-adapter-interface";
+export * from "./durable-fixture-simulator";
 export * from "./durable-adapter-harness";
 export * from "./envelope";
 export * from "./openapi";

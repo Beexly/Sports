@@ -93,4 +93,4 @@ git diff --check
 
 ## Next Promotion Slice
 
-The next safe slice is a route-free durable adapter simulation over repository fixtures. It should replay the dormant interface operation plans against JSON fixtures, emit conformance reports, and still avoid Prisma schema edits, migrations, routes, env vars, credentials, provider calls, and database execution.
+The route-free durable fixture simulator now lives in `docs/api/API_V1_DURABLE_FIXTURE_SIMULATOR.md`. The next safe slice is a fixture-report archive and promotion checklist that records simulator output as tracked artifacts and compares it against the durable harness, still without adding live routes, Prisma schema edits, migrations, env vars, credentials, provider calls, or database execution.

@@ -33,4 +33,4 @@ git diff --check
 
 ## Follow-Up
 
-The dormant durable adapter interface now lives in `docs/api/API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE.md`. The next slice should build a route-free durable adapter simulation over local JSON fixtures without adding schema, migrations, live routes, secrets, provider calls, or DB execution.
+The dormant durable adapter interface lives in `docs/api/API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE.md`, and the route-free durable fixture simulator lives in `docs/api/API_V1_DURABLE_FIXTURE_SIMULATOR.md`. The next slice should add a fixture-report archive and promotion checklist without adding schema, migrations, live routes, secrets, provider calls, or DB execution.

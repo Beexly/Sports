@@ -37,4 +37,4 @@ git diff --check
 
 ## Follow-Up
 
-The next slice should build a route-free durable adapter simulation over local JSON fixtures. It should replay the dormant operation plans and emit conformance reports without adding Prisma schema, migrations, live routes, env vars, secrets, provider calls, or DB execution.
+The route-free durable fixture simulator now lives in `docs/api/API_V1_DURABLE_FIXTURE_SIMULATOR.md`. The next slice should add a fixture-report archive and promotion checklist that records simulator output as tracked artifacts and compares it against the durable harness, still without adding live routes, schema edits, migrations, env vars, credentials, provider calls, or database execution.
