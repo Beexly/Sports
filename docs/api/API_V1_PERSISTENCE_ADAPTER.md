@@ -23,6 +23,7 @@ The API v1 consumer registry and audit ledger now have a persistence boundary th
 | `apps/web/lib/api/v1/dormant-durable-adapter-interface.ts` | Maps planned durable operations to proposed table names and validates that the interface stays dormant and non-executable. |
 | `apps/web/lib/api/v1/durable-fixture-simulator.ts` | Replays local synthetic operation fixtures against the dormant interface and reports drift without executing storage. |
 | `apps/web/lib/api/v1/durable-fixture-report.ts` | Builds a deterministic tracked report archive and promotion checklist from fixture replay plus harness conformance output. |
+| `apps/web/lib/api/v1/durable-rehearsal-plan.ts` | Defines a plan-only disposable database rehearsal checklist and validator; it does not execute database work. |
 | `apps/web/__fixtures__/api-v1/durable-fixture-simulator.json` | First local synthetic trace for consumer resolution, consumer upsert, audit append, quota/audit commit, and quota/audit rollback. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json` | Tracked shadow evidence archive with `livePromotionAllowed=false`. |
 | `apps/web/__tests__/api-v1-persistence.test.ts` | Proves atomic quota/audit behavior, denied-event behavior, registry visibility, hash-chain continuity, and promotion-plan blockers. |
@@ -31,6 +32,7 @@ The API v1 consumer registry and audit ledger now have a persistence boundary th
 | `apps/web/__tests__/api-v1-dormant-durable-adapter-interface.test.ts` | Proves the dormant durable interface maps to proposed tables, blocks live boundaries, and keeps dry runs non-executable. |
 | `apps/web/__tests__/api-v1-durable-fixture-simulator.test.ts` | Proves fixture replay catches read/write drift, rollback leakage, bad rollback order, and live-boundary violations. |
 | `apps/web/__tests__/api-v1-durable-fixture-report.test.ts` | Proves the tracked archive matches the deterministic builder and keeps live promotion blocked. |
+| `apps/web/__tests__/api-v1-durable-rehearsal-plan.test.ts` | Proves the disposable database rehearsal plan stays plan-only and blocks executable DB work. |
 
 ## Adapter Contract
 
@@ -87,10 +89,14 @@ See `docs/api/API_V1_DURABLE_FIXTURE_SIMULATOR.md`. The simulator replays a loca
 
 See `docs/api/API_V1_DURABLE_FIXTURE_REPORT.md`. The archive compares the simulator and mocked transaction harness output, records checklist evidence, and keeps `livePromotionAllowed=false`.
 
+## Disposable Database Rehearsal Plan
+
+See `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`. The plan defines owner approval, disposable target proof, future migration review, synthetic seeding, conformance, fixture comparison, rollback, and post-rollback verification. It remains plan-only.
+
 ## Verification
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-durable-fixture-report.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-rehearsal-plan.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails

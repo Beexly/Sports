@@ -33,6 +33,7 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/lib/api/v1/dormant-durable-adapter-interface.ts` | Maps future durable operations to proposed table names while staying route-free, env-free, SQL-free, and non-executable. |
 | `apps/web/lib/api/v1/durable-fixture-simulator.ts` | Replays local synthetic operation fixtures against the dormant durable interface without storage execution. |
 | `apps/web/lib/api/v1/durable-fixture-report.ts` | Builds a deterministic tracked report archive and promotion checklist from fixture replay plus harness conformance output. |
+| `apps/web/lib/api/v1/durable-rehearsal-plan.ts` | Defines the plan-only disposable database rehearsal checklist and validator. |
 | `apps/web/__fixtures__/api-v1/durable-fixture-simulator.json` | Local synthetic durable trace covering read-only, commit, and rollback cases. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json` | Local tracked shadow evidence archive; live promotion remains false. |
 | `apps/web/__tests__/api-v1-shadow-seam.test.ts` | Focused Vitest coverage for the seam. |
@@ -43,6 +44,7 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/__tests__/api-v1-dormant-durable-adapter-interface.test.ts` | Focused Vitest coverage for table mapping, non-executable dry runs, and no-live-surface blockers. |
 | `apps/web/__tests__/api-v1-durable-fixture-simulator.test.ts` | Focused Vitest coverage for fixture replay, operation drift, rollback leakage, and boundary blockers. |
 | `apps/web/__tests__/api-v1-durable-fixture-report.test.ts` | Focused Vitest coverage for tracked archive parity, checklist behavior, and live-promotion blockers. |
+| `apps/web/__tests__/api-v1-durable-rehearsal-plan.test.ts` | Focused Vitest coverage for rehearsal plan-only boundaries and rollback evidence requirements. |
 
 ## Shadow Endpoints
 
@@ -93,13 +95,14 @@ A future live API route should not be added until all of these are true:
 - future durable adapter interfaces must map operations to the proposed tables and remain dormant before fixture simulation or database work
 - future durable fixture reports must stay synthetic and route-free before any disposable database rehearsal is considered
 - future report archives must keep live promotion false until owner approval, migration review, rollback rehearsal, and route review exist
+- future disposable database rehearsals must remain blocked until the owner approves a disposable target and scope
 
 ## Verification Commands
 
 Run before promoting or merging this slice:
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-durable-fixture-report.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-rehearsal-plan.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails

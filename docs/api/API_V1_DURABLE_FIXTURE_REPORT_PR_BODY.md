@@ -35,4 +35,4 @@ git diff --check
 
 ## Follow-Up
 
-The next slice should add a disposable-database rehearsal plan as documentation and local contract only, without adding schema edits, migrations, live routes, env vars, credentials, provider calls, or database execution.
+The disposable-database rehearsal plan now lives in `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`. No database-adjacent implementation should proceed until the owner approves a disposable target and rehearsal scope.

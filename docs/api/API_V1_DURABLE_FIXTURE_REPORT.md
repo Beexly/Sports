@@ -55,4 +55,4 @@ git diff --check
 
 ## Next Promotion Slice
 
-The next safe slice is a disposable-database rehearsal plan, still documentation and local contract only. It should define the commands, expected row counts, rollback evidence, and owner approval gate for a future non-production database rehearsal without adding Prisma schema edits, migrations, routes, env vars, credentials, provider calls, or database execution.
+The disposable-database rehearsal plan now lives in `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`. No database-adjacent implementation should proceed until the owner explicitly approves a disposable target and rehearsal scope. Without that approval, safe follow-up is limited to documentation, checklist hardening, or additional synthetic fixtures.

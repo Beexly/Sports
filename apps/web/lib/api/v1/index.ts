@@ -4,6 +4,7 @@ export * from "./consumer-registry";
 export * from "./dormant-durable-adapter-interface";
 export * from "./durable-fixture-simulator";
 export * from "./durable-fixture-report";
+export * from "./durable-rehearsal-plan";
 export * from "./durable-adapter-harness";
 export * from "./envelope";
 export * from "./openapi";
