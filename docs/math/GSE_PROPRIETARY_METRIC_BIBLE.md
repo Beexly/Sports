@@ -55,6 +55,10 @@ Root package exports:
 - `GSE_PROPRIETARY_METRIC_BIRTH_CERTIFICATES`
 - `proprietaryMetricBirthCertificate`
 - `requireProprietaryMetricBirthCertificate`
+- `GSE_PROPRIETARY_METRIC_ASSETS`
+- `proprietaryMetricAsset`
+- `requireProprietaryMetricAsset`
+- `evaluateMetricGraduation`
 - `dataReliabilityIndex`
 - `gseMarketGravityIndex`
 - `expectedCompletionGse`
@@ -258,6 +262,58 @@ Public grades:
 
 No metric leaves `SHADOW` without model card, source card, validation card, and drift card.
 
+## Metric Asset And Graduation Layer
+
+Implemented from the competitive/product attack-map prompt:
+
+- `packages/prediction-engine/src/metrics/core/metric-asset.ts`
+- `packages/prediction-engine/src/metrics/core/metric-graduation.ts`
+- `packages/prediction-engine/src/metrics/__tests__/metric-asset-graduation.test.ts`
+
+Every Slice 1 metric now has a `GseMetricAsset` wrapper with:
+
+- birth certificate
+- source-rights envelopes
+- model card status
+- validation report status
+- drift card status
+- API exposure level
+- licensing status
+- evidence references
+
+Default Slice 1 asset cards are deliberately conservative:
+
+- `apiExposure: INTERNAL`
+- `licensingStatus: NOT_READY`
+- `modelCard.status: MISSING`
+- `validationReport.status: MISSING`
+- `driftCard.status: MISSING`
+- source rights allow modeling as an internal requirement but block derived/raw API exposure until a real source-rights envelope is attached
+
+Graduation statuses:
+
+- `BLOCKED_SOURCE_RIGHTS`
+- `BLOCKED_MODEL_CARD`
+- `BLOCKED_SAMPLE`
+- `BLOCKED_VALIDATION`
+- `BLOCKED_DRIFT`
+- `REVIEW_READY`
+- `APPROVED_FOR_CONTENT`
+- `APPROVED_FOR_API`
+
+Graduation rules now enforced in pure TypeScript:
+
+- missing source-rights envelope blocks
+- source with `mayUseForModeling=false` blocks all graduation
+- API exposure blocks when any source has `mayExposeDerived=false`
+- sample size below threshold blocks
+- missing model card blocks
+- validation status other than `PASS` blocks
+- missing or severe drift blocks
+- `SHADOW` metrics can reach content aggregate approval only after gates pass
+- `SHADOW` metrics cannot be exposed through API routes
+- full API exposure requires all gates and a non-shadow approved metric asset
+
 ## Metric Asset Backlog
 
 Build in this order for proprietary football metrics:
@@ -280,16 +336,14 @@ Build in this order for proprietary football metrics:
 
 Product/governance backlog from the doctrine and competitive map:
 
-1. `GseMetricAsset` wrapper around each metric with source-rights envelope, model card, validation report, drift card, API exposure, and licensing status.
-2. Source Rights Layer for allowed use, validation-only use, display rights, storage rights, training rights, derived exposure, and raw API exposure.
-3. Payload Rights Engine so every public/API field can prove it is allowed before exposure.
-4. Metric Graduation Engine: `SHADOW` -> `BACKTESTING` -> `REVIEW_READY` -> `APPROVED_FOR_CONTENT` -> `APPROVED_FOR_API`.
-5. Market Intelligence v2: stale-line risk, consensus fragility, move quality, book dispersion, market mirage, and playable window.
-6. No-Bet/Decision Intelligence: no-bet strength, refusal reasons, calibration sufficiency, model disagreement, volatility pressure, and responsible-gaming warnings.
-7. Evidence API contracts: board, game evidence, calibration summary, slate intelligence, player expected metrics, and signed webhooks.
-8. Content claim governance: evidence refs, risk level, disclosure status, responsible-gaming status, publish status, and manual review.
-9. Model-card/drift-card generation for every promoted metric.
-10. API security spine: auth, scopes, field-level rights filtering, rate limits, response envelopes, request IDs, usage logs, signed webhooks, and OpenAPI.
+1. Source Rights Layer for allowed use, validation-only use, display rights, storage rights, training rights, derived exposure, and raw API exposure.
+2. Payload Rights Engine so every public/API field can prove it is allowed before exposure.
+3. Market Intelligence v2: stale-line risk, consensus fragility, move quality, book dispersion, market mirage, and playable window.
+4. No-Bet/Decision Intelligence: no-bet strength, refusal reasons, calibration sufficiency, model disagreement, volatility pressure, and responsible-gaming warnings.
+5. Evidence API contracts: board, game evidence, calibration summary, slate intelligence, player expected metrics, and signed webhooks.
+6. Content claim governance: evidence refs, risk level, disclosure status, responsible-gaming status, publish status, and manual review.
+7. Model-card/drift-card generation for every promoted metric.
+8. API security spine: auth, scopes, field-level rights filtering, rate limits, response envelopes, request IDs, usage logs, signed webhooks, and OpenAPI.
 
 Competitive positioning encoded by the backlog:
 
@@ -315,12 +369,13 @@ Recorded run on 2026-07-04:
 
 | Command | Result |
 | --- | --- |
-| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/data-reliability-index.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/expected-completion.test.ts src/metrics/__tests__/gse-signal-score.test.ts` | PASS - 5 files, 13 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/data-reliability-index.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/expected-completion.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 6 files, 19 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 1 file, 6 tests. |
 | `npm run typecheck --workspace=packages/prediction-engine` | PASS. |
-| `npm run test --workspace=packages/prediction-engine` | PASS - 80 files, 767 tests. |
+| `npm run test --workspace=packages/prediction-engine` | PASS - 81 files, 773 tests. |
 | `npm run typecheck` | PASS on earlier full root run. Final rerun reached web/crypto/data-ingestion/db/ingestion-pipeline/prediction-engine/types before the wrapper timed; all four remaining worker typechecks were then run individually and passed. |
 | `npm run lint` | PASS. |
-| `npm run guardrails` | PASS - trust-gate, model-freeze, draft-only, Claude API usage, secret scan, eval contracts. |
+| `npm run guardrails` | PASS - trust-gate, model-freeze, draft-only, Claude API usage, secret scan, eval contracts. Latest scan covered 1137 trust-gate files and 3142 tracked files for secrets. |
 | `npm run test --workspaces --if-present` | COMPLETE PACKAGE SUMMARIES LOGGED - web 500 files/6658 tests, crypto 1/13, data-ingestion 16/131, ingestion-pipeline 6/60, prediction-engine 80/767, types 1/31. The MCP wrapper still hit its 300s capture limit before returning process status, so this row is log-evidence rather than a clean wrapper exit. |
 | `npm run test --workspace=packages/types` | PASS - 1 file, 31 tests. |
 | `git diff --check` | PASS. |
@@ -339,12 +394,14 @@ Pure LOC review for new source files:
 | `market-gravity-index.ts` | 98 |
 | `expected-completion.ts` | 110 |
 | `gse-signal-score.ts` | 113 |
+| `metric-asset.ts` | 105 |
+| `metric-graduation.ts` | 80 |
 
 ## Next Slice Recommendation
 
-Next slice should build `GseMetricAsset` and graduation controls before adding many more formulas. The useful shape is:
+Next slice should build the concrete Source Rights Layer and Payload Rights Engine that feed the metric asset cards:
 
-1. Add metric asset metadata with source-rights, validation, drift, model-card, API exposure, and licensing status.
-2. Wrap the four Slice 1 metrics in asset cards without changing their math.
-3. Add a graduation decision function that blocks API/full public exposure unless source rights, model card, validation report, drift card, calibration status, and tests are present.
-4. Then implement Receiver Difficulty Index and Expected YAC on the same foundation.
+1. Add source-rights envelopes for nflverse, open football sources, odds inputs, and benchmark-only sources.
+2. Add payload-rights evaluation for metric API fields.
+3. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
+4. Then implement Receiver Difficulty Index and Expected YAC on the same governed foundation.

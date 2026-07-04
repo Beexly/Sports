@@ -12,6 +12,30 @@ export {
   metricBirthCertificate,
   requireMetricBirthCertificate,
 } from "./metric-birth-certificate.js";
+export type {
+  GseMetricAsset,
+  GseModelCard,
+  MetricApiExposure,
+  MetricDriftCard,
+  MetricDriftCardStatus,
+  MetricEvidenceStatus,
+  MetricLicensingStatus,
+  MetricValidationMeasure,
+  MetricValidationReport,
+  MetricValidationReportStatus,
+  SourceRightsEnvelope,
+} from "./metric-asset.js";
+export {
+  GSE_METRIC_ASSETS,
+  metricAsset,
+  requireMetricAsset,
+} from "./metric-asset.js";
+export type {
+  MetricGraduationDecision,
+  MetricGraduationInput,
+  MetricGraduationStatus,
+} from "./metric-graduation.js";
+export { evaluateMetricGraduation } from "./metric-graduation.js";
 export {
   clamp,
   clamp01,

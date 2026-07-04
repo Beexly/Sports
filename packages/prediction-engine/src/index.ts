@@ -500,6 +500,24 @@ export type {
   MetricPublicExposure as ProprietaryMetricPublicExposure,
   MetricValidationMethod as ProprietaryMetricValidationMethod,
 } from "./metrics/core/metric-birth-certificate.js";
+export {
+  GSE_METRIC_ASSETS as GSE_PROPRIETARY_METRIC_ASSETS,
+  evaluateMetricGraduation,
+  metricAsset as proprietaryMetricAsset,
+  requireMetricAsset as requireProprietaryMetricAsset,
+} from "./metrics/core/index.js";
+export type {
+  GseMetricAsset as ProprietaryMetricAsset,
+  GseModelCard as ProprietaryModelCard,
+  MetricApiExposure as ProprietaryMetricApiExposure,
+  MetricDriftCard as ProprietaryMetricDriftCard,
+  MetricGraduationDecision as ProprietaryMetricGraduationDecision,
+  MetricGraduationInput as ProprietaryMetricGraduationInput,
+  MetricGraduationStatus as ProprietaryMetricGraduationStatus,
+  MetricLicensingStatus as ProprietaryMetricLicensingStatus,
+  MetricValidationReport as ProprietaryMetricValidationReport,
+  SourceRightsEnvelope as ProprietarySourceRightsEnvelope,
+} from "./metrics/core/index.js";
 export { dataReliabilityIndex } from "./metrics/source/data-reliability-index.js";
 export type {
   DataReliabilityGrade,
