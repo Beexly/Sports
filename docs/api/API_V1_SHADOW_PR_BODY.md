@@ -1,0 +1,36 @@
+# PR: Add API v1 Shadow Seam
+
+## Summary
+
+Adds a route-free API v1 shadow contract for GSE evidence, signal, metric, and partner-safe payloads. The slice is intentionally pure TypeScript and does not expose a live API route.
+
+## Changes
+
+- Added API key parser/hash utility with fail-closed handling for missing, malformed, invalid-scheme, and conflicting credentials.
+- Added scope registry and endpoint contracts for the first four API v1 surfaces.
+- Added payload rights evaluation wired to the existing FABLE source registry adapter.
+- Added deterministic success/error envelopes.
+- Added shadow gateway that combines registered consumer, key hash, active state, origin, scopes, and source-rights gates.
+- Added OpenAPI 3.1 draft builder with `x-gse-shadow-only` and `x-gse-live-routes-exposed=false`.
+- Added Vitest coverage proving the contract remains route-free and fail-closed.
+
+## Safety Notes
+
+- No live `apps/web/app/api/v1` route was created.
+- No API key secret, env var, database table, provider integration, or billing hook was added.
+- Raw API keys are not stored by the seam; tests assert the hash does not contain the raw key.
+- Source-rights checks block limited, unknown, blocked, personal-data, and raw-payload cases.
+
+## Suggested Verification
+
+```bash
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts
+npm.cmd run typecheck
+npm.cmd run lint
+npm.cmd run guardrails
+git diff --check
+```
+
+## Follow-Up
+
+The next slice should add a persisted consumer registry design and audit ledger before any route handler is considered.
