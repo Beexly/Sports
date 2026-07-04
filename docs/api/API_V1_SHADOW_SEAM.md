@@ -27,8 +27,10 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/lib/api/v1/openapi.ts` | Builds a route-free OpenAPI 3.1 draft with `x-gse-shadow-only` markers. |
 | `apps/web/lib/api/v1/consumer-registry.ts` | Validates local shadow consumer records, revocation, rotation, scope, origin, expiry, and quota state before persistence exists. |
 | `apps/web/lib/api/v1/audit-ledger.ts` | Creates and verifies a local hash-chained audit event ledger for API decisions. |
+| `apps/web/lib/api/v1/persistence.ts` | Provides a local shadow persistence adapter and promotion-plan gates without adding a database or route. |
 | `apps/web/__tests__/api-v1-shadow-seam.test.ts` | Focused Vitest coverage for the seam. |
 | `apps/web/__tests__/api-v1-consumer-registry.test.ts` | Focused Vitest coverage for consumer registry and audit-ledger behavior. |
+| `apps/web/__tests__/api-v1-persistence.test.ts` | Focused Vitest coverage for persistence adapter semantics and promotion blockers. |
 
 ## Shadow Endpoints
 
@@ -73,13 +75,14 @@ A future live API route should not be added until all of these are true:
 - expiry fails closed
 - rotation warnings are explicit
 - audit events are hash chained and tamper-evident
+- quota decrement and audit append happen together inside the persistence adapter
 
 ## Verification Commands
 
 Run before promoting or merging this slice:
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails

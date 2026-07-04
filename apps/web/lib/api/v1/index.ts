@@ -4,6 +4,7 @@ export * from "./consumer-registry";
 export * from "./envelope";
 export * from "./openapi";
 export * from "./payload-rights";
+export * from "./persistence";
 export * from "./scopes";
 export * from "./shadow-gateway";
 export * from "./types";

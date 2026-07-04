@@ -15,6 +15,7 @@ Adds a route-free API v1 shadow contract for GSE evidence, signal, metric, and p
 - Added Vitest coverage proving the contract remains route-free and fail-closed.
 - Added shadow consumer registry validation for revocation, rotation, quota, expiry, origins, duplicate keys, and no-live-approval invariants.
 - Added hash-chained API audit ledger for allow/deny/record events.
+- Added local shadow persistence adapter with atomic quota/audit semantics and promotion-plan blockers.
 
 ## Safety Notes
 
@@ -24,11 +25,12 @@ Adds a route-free API v1 shadow contract for GSE evidence, signal, metric, and p
 - Source-rights checks block limited, unknown, blocked, personal-data, and raw-payload cases.
 - Consumer registry is local-only and does not create a database table, secret, route, partner record, or billing path.
 - Audit ledger is pure and in-memory; persistence remains a future additive layer.
+- Persistence adapter is memory-only and blocks live database storage, raw keys, non-atomic quota/audit writes, route exposure, and denied-payload leakage in promotion plans.
 
 ## Suggested Verification
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails
@@ -37,4 +39,4 @@ git diff --check
 
 ## Follow-Up
 
-The next slice should add a persistence adapter design for these contracts before any route handler is considered.
+The next slice should add a database schema proposal plus migration rollback plan, still without applying a migration or exposing a route.
