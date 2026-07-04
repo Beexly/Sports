@@ -1,6 +1,6 @@
 # Galaxy Dynasty Verification Status
 
-Updated: 2026-07-03
+Updated: 2026-07-04
 Branch: `codex/galaxy-dynasty-v2-autonomous`
 
 ## Current Playable Slice
@@ -8,6 +8,7 @@ Branch: `codex/galaxy-dynasty-v2-autonomous`
 - Route: `/galaxy-dynasty`
 - Room snapshot API: `/api/galaxy/rookie-plaza`
 - Runtime: direct Three.js inside the existing Next app
+- Physics: `@dimforge/rapier3d-compat` local rigid-body props
 - Asset contract: `apps/web/public/galaxy-dynasty/assets/higgsfield-manifest.json`
 - GLB kit: `apps/web/public/galaxy-dynasty/assets/rookie-plaza-city-kit.glb`
 - Smoke driver: `scripts/galaxy-dynasty-smoke.mjs`
@@ -22,6 +23,7 @@ Branch: `codex/galaxy-dynasty-v2-autonomous`
 - `GALAXY_DYNASTY_URL=http://127.0.0.1:3094 node scripts/galaxy-dynasty-smoke.mjs`
 - `npm run build --workspace=apps/web`
 - `npm run guard:trust`
+- `npm run guard:secrets`
 
 ## QA Evidence
 
@@ -32,6 +34,8 @@ Branch: `codex/galaxy-dynasty-v2-autonomous`
 - Build exit: `reports/game-qa/web-build.exit`
 - Trust gate log: `reports/game-qa/trust-gate.log`
 - Trust gate exit: `reports/game-qa/trust-gate.exit`
+- Secret scan log: `reports/game-qa/secret-scan.log`
+- Secret scan exit: `reports/game-qa/secret-scan.exit`
 - Review/debug gate: `reports/game-qa/GALAXY_DYNASTY_V2_REPORT.md`
 
 ## Dependency Decision
@@ -44,6 +48,12 @@ Chosen now:
 - Three.js GLB loading via `GLTFLoader`.
 - Three.js post-processing via `EffectComposer`, `UnrealBloomPass`, and `OutputPass`.
 - Next in-memory live room snapshot for `/api/galaxy/rookie-plaza`.
+- Rapier-compatible local rigid bodies for Chaos-style moving props.
+- Three `Points` particle field for Niagara-style Beat Wall VFX.
+- WebAudio layered oscillator/filter synth for MetaSounds-style Beat Wall pulses.
+- World Partition equivalent: distance-loaded campus chunks.
+- Nanite equivalent: instanced GLB/runtime chunks with projected pixel-size LOD and frustum/distance culling.
+- PCG equivalent: deterministic instanced campus props and route dressing.
 
 Not added in this green slice:
 

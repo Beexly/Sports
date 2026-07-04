@@ -21,6 +21,10 @@ async function exerciseDesktop(browser) {
     const canvas = document.querySelector("canvas");
     return Boolean(canvas && canvas.width > 0 && canvas.height > 0);
   });
+  await page.waitForFunction(() => {
+    const status = document.querySelector('[aria-label="Galaxy engine status"]');
+    return Boolean(status?.textContent?.includes("Rapier 5 bodies"));
+  });
   await page.keyboard.down("KeyW");
   await page.keyboard.down("ShiftLeft");
   await page.waitForTimeout(350);
@@ -31,12 +35,14 @@ async function exerciseDesktop(browser) {
   const room = await page.request.get(`${baseUrl}/api/galaxy/rookie-plaza`);
   if (!room.ok()) throw new Error(`rookie plaza room API returned ${room.status()}`);
   const roomJson = await room.json();
+  const engineStatus = await page.locator('[aria-label="Galaxy engine status"]').textContent();
   await page.screenshot({ path: path.join(outputDir, "galaxy-dynasty-desktop.png"), fullPage: true });
   await page.close();
   return {
     viewport: "desktop",
     roomTick: roomJson.serverTick,
     beatBpm: roomJson.beatWall?.bpm,
+    engineStatus,
   };
 }
 

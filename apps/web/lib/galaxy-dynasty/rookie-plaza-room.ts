@@ -18,6 +18,13 @@ export interface RookiePlazaSnapshot {
     readonly bpm: number;
     readonly intensity: number;
   };
+  readonly engine: {
+    readonly streaming: "world-partition-local";
+    readonly physics: "rapier-local";
+    readonly vfx: "three-particles";
+    readonly audio: "webaudio-metasynth";
+    readonly pcg: "instanced-campus-props";
+  };
 }
 
 interface RookiePlazaRoomStore {
@@ -55,6 +62,13 @@ export function getRookiePlazaSnapshot(now = Date.now()): RookiePlazaSnapshot {
       source: "broadcast-wall",
       bpm: 92 + (store.tick % 16),
       intensity: Number((0.62 + (store.tick % 5) * 0.06).toFixed(2)),
+    },
+    engine: {
+      streaming: "world-partition-local",
+      physics: "rapier-local",
+      vfx: "three-particles",
+      audio: "webaudio-metasynth",
+      pcg: "instanced-campus-props",
     },
   };
 }

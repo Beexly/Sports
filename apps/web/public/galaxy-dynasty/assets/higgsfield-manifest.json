@@ -1,16 +1,31 @@
 {
   "name": "Galaxy Dynasty Rookie Plaza HIGGSFIELD manifest",
-  "generatedAt": "2026-07-03T23:27:49.309Z",
+  "generatedAt": "2026-07-04T01:00:19.609Z",
   "source": "Original in-repo procedural GLB kit generated from scripts/galaxy-dynasty/generate-city-kit.mjs",
   "license": "Project-owned original mesh data; no external GTA clone assets or code copied.",
   "runtime": {
     "format": "glb",
     "renderer": "three",
-    "lighting": "dynamic-emissive-bloom-fog-tone-mapped",
+    "lighting": "dynamic-emissive-bloom-fog-tone-mapped-lumen-style",
+    "ue5InspiredSystems": [
+      "world-partition-distance-streaming",
+      "nanite-style-cluster-dag-and-pixel-lod",
+      "rapier-chaos-style-rigid-body-props",
+      "niagara-style-three-particles",
+      "metasounds-style-webaudio-synth",
+      "pcg-instanced-campus-props-and-routes"
+    ],
     "streaming": {
       "clusterTriangleBudget": 128,
-      "maxInitialMemoryMb": 18,
-      "culling": "distance-priority Object3D visibility budget",
+      "maxInitialMemoryMb": 24,
+      "culling": "distance-priority Object3D visibility plus camera frustum checks",
+      "lod": "projected pixel-size high/low instanced cluster switching",
+      "worldPartitionChunks": [
+        "north-academy",
+        "east-blacktop",
+        "south-vault",
+        "west-depths"
+      ],
       "compressionDecision": "uncompressed local kit now; Draco or Meshopt reserved for larger imported packs"
     }
   },

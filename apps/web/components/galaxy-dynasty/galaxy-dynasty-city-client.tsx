@@ -9,6 +9,7 @@ import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import type { RookiePlazaSnapshot } from "@/lib/galaxy-dynasty/rookie-plaza-room";
+import type { RigidBody, World as RapierWorld } from "@dimforge/rapier3d-compat";
 
 type DistrictId = "plaza" | "beat" | "blacktop" | "depths" | "vault";
 type ThreeGroup = InstanceType<typeof THREE.Group>;
@@ -31,9 +32,46 @@ interface TouchVector {
   readonly y: number;
 }
 
+interface CampusChunk {
+  readonly id: string;
+  readonly center: ThreeVector3;
+  readonly radius: number;
+  readonly root: ThreeGroup;
+  readonly highDetail: ThreeObject3D;
+  readonly lowDetail: ThreeObject3D;
+  loaded: boolean;
+}
+
+interface StreamingStats {
+  readonly loaded: number;
+  readonly highDetail: number;
+  readonly total: number;
+}
+
+interface ParticleField {
+  readonly points: InstanceType<typeof THREE.Points>;
+  readonly positions: Float32Array;
+  readonly velocities: Float32Array;
+}
+
+interface PhysicsLink {
+  readonly mesh: ThreeObject3D;
+  readonly body: RigidBody;
+}
+
+interface PhysicsBridge {
+  readonly world: RapierWorld;
+  readonly links: readonly PhysicsLink[];
+  step: (delta: number, elapsed: number) => void;
+  dispose: () => void;
+}
+
 interface GalaxyWorld {
+  readonly scene: ThreeScene;
   readonly city: ThreeGroup;
   readonly neon: readonly ThreeMaterial[];
+  readonly chunks: readonly CampusChunk[];
+  readonly particles: ParticleField;
   assetRoot: ThreeGroup | null;
 }
 
@@ -41,7 +79,7 @@ const CITY_KIT_ASSET = {
   id: "rookie-plaza-city-kit",
   url: "/galaxy-dynasty/assets/rookie-plaza-city-kit.glb",
   license: "original-repo-generated",
-  memoryBudgetMb: 18,
+  memoryBudgetMb: 24,
   clusterBudget: 128,
 } as const;
 
@@ -64,6 +102,7 @@ export function GalaxyDynastyCityClient() {
   const [speedLabel, setSpeedLabel] = useState("Walk");
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [roomStatus, setRoomStatus] = useState("Room sync pending");
+  const [engineStatus, setEngineStatus] = useState("Streaming boot");
 
   useEffect(() => {
     const coarse = window.matchMedia("(pointer: coarse)");
@@ -135,6 +174,18 @@ export function GalaxyDynastyCityClient() {
 
     const clock = new THREE.Clock();
     let frameId = 0;
+    let disposed = false;
+    let physicsBridge: PhysicsBridge | null = null;
+    let nextEngineHudAt = 0;
+
+    void createRapierPhysics(scene).then((bridge) => {
+      if (disposed) {
+        bridge.dispose();
+        return;
+      }
+      physicsBridge = bridge;
+      setEngineStatus("Rapier motion online");
+    });
 
     const onKeyDown = (event: KeyboardEvent) => {
       keysRef.current.add(event.code);
@@ -163,11 +214,20 @@ export function GalaxyDynastyCityClient() {
       updatePlayer(player, playerState, keysRef.current, touchVectorRef.current, delta);
       keepInsideCity(player.position);
       updateCamera(camera, player, playerState.facing, delta);
-      updateCity(world, player.position, clock.elapsedTime);
+      const streamingStats = updateCity(world, player.position, camera, clock.elapsedTime);
+      physicsBridge?.step(delta, clock.elapsedTime);
       const nearest = findNearestDistrict(player.position);
       setNearestDistrict((current) => (current.id === nearest.id ? current : nearest));
       const joystickMoving = Math.hypot(touchVectorRef.current.x, touchVectorRef.current.y) > 0.12;
       setSpeedLabel(keysRef.current.has("ShiftLeft") || keysRef.current.has("ShiftRight") ? "Sprint" : joystickMoving ? "Move" : "Walk");
+      if (clock.elapsedTime >= nextEngineHudAt) {
+        nextEngineHudAt = clock.elapsedTime + 0.5;
+        setEngineStatus(
+          `Chunks ${streamingStats.loaded}/${streamingStats.total} · LOD ${streamingStats.highDetail} high · Rapier ${
+            physicsBridge?.links.length ?? 0
+          } bodies`,
+        );
+      }
       composer.render();
       frameId = window.requestAnimationFrame(animate);
     };
@@ -175,10 +235,12 @@ export function GalaxyDynastyCityClient() {
     frameId = window.requestAnimationFrame(animate);
 
     return () => {
+      disposed = true;
       window.cancelAnimationFrame(frameId);
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
       window.removeEventListener("resize", onResize);
+      physicsBridge?.dispose();
       composer.dispose();
       renderer.dispose();
       mount.removeChild(renderer.domElement);
@@ -197,6 +259,9 @@ export function GalaxyDynastyCityClient() {
           {!touchEnabled && <span>Space jump</span>}
           <span>E pulse</span>
           <span style={styles.roomChip}>{roomStatus}</span>
+          <span aria-label="Galaxy engine status" style={styles.roomChip}>
+            {engineStatus}
+          </span>
         </div>
       </div>
       <div style={{ ...styles.minimap, ...(touchEnabled ? styles.minimapMobile : undefined) }} aria-label="District minimap">
@@ -343,8 +408,167 @@ function buildGalaxyCity(scene: ThreeScene): GalaxyWorld {
   addNpcCrowd(city);
   addVehicles(city);
   addBeatTower(city);
+  const chunks = createCampusChunks();
+  const particles = createParticleField();
+  scene.add(particles.points);
 
-  return { city, neon: [cyan, gold], assetRoot: null };
+  return { scene, city, neon: [cyan, gold], chunks, particles, assetRoot: null };
+}
+
+function createCampusChunks(): readonly CampusChunk[] {
+  const specs = [
+    ["north-academy", 0, -34, 0x00e5ff],
+    ["east-blacktop", 34, -6, 0xf4c95d],
+    ["south-vault", 10, 35, 0x7a5cff],
+    ["west-depths", -34, 11, 0xff2dd6],
+  ] as const;
+  return specs.map(([id, x, z, color], index) => createCampusChunk(id, new THREE.Vector3(x, 0, z), color, index));
+}
+
+function createCampusChunk(id: string, center: ThreeVector3, color: number, seed: number): CampusChunk {
+  const root = new THREE.Group();
+  root.name = `WorldPartition_${id}`;
+  root.position.copy(center);
+  root.userData.clusterNode = { id, childIds: [`${id}:props`, `${id}:routes`, `${id}:signals`], clusterBudget: CITY_KIT_ASSET.clusterBudget };
+
+  const platformMaterial = new THREE.MeshStandardMaterial({ color: 0x151d28, roughness: 0.74, metalness: 0.14 });
+  const platform = new THREE.Mesh(new THREE.BoxGeometry(17, 0.16, 14), platformMaterial);
+  platform.position.y = -0.04;
+  platform.receiveShadow = true;
+  root.add(platform);
+
+  const highMaterial = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.34, roughness: 0.32, metalness: 0.42 });
+  const lowMaterial = new THREE.MeshStandardMaterial({ color: 0x263247, emissive: color, emissiveIntensity: 0.12, roughness: 0.8 });
+  const highDetail = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.34, 3), highMaterial, 18);
+  const lowDetail = new THREE.InstancedMesh(new THREE.BoxGeometry(0.62, 0.62, 0.62), lowMaterial, 18);
+  highDetail.name = `NaniteHigh_${id}`;
+  lowDetail.name = `NaniteLow_${id}`;
+
+  const routeMaterial = new THREE.MeshStandardMaterial({ color: 0xf4c95d, emissive: 0xf4c95d, emissiveIntensity: 0.34 });
+  for (let i = 0; i < 18; i += 1) {
+    const angle = seed + i * 1.618;
+    const radius = 3.5 + ((i * 7 + seed) % 5);
+    const x = Math.cos(angle) * radius;
+    const z = Math.sin(angle) * radius * 0.75;
+    const y = 0.42 + ((i + seed) % 4) * 0.18;
+    const scale = 0.5 + ((i + seed) % 5) * 0.12;
+    const matrix = new THREE.Matrix4().compose(new THREE.Vector3(x, y, z), new THREE.Quaternion(), new THREE.Vector3(scale, scale, scale));
+    highDetail.setMatrixAt(i, matrix);
+    lowDetail.setMatrixAt(i, matrix);
+    if (i % 6 === 0) {
+      const route = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.05, 6.6), routeMaterial);
+      route.position.set(x * 0.5, 0.12, z * 0.5);
+      route.rotation.y = angle;
+      root.add(route);
+    }
+  }
+  highDetail.instanceMatrix.needsUpdate = true;
+  lowDetail.instanceMatrix.needsUpdate = true;
+  root.add(highDetail, lowDetail);
+
+  const districtLink = DISTRICTS[seed % DISTRICTS.length]?.position.clone().sub(center) ?? DISTRICTS[0].position.clone().sub(center);
+  const road = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.05, Math.max(8, districtLink.length() * 0.44)), routeMaterial);
+  road.position.set(-districtLink.x * 0.22, 0.1, -districtLink.z * 0.22);
+  road.rotation.y = Math.atan2(districtLink.x, districtLink.z);
+  root.add(road);
+
+  return {
+    id,
+    center,
+    radius: 34,
+    root,
+    highDetail,
+    lowDetail,
+    loaded: false,
+  };
+}
+
+function createParticleField(): ParticleField {
+  const count = 260;
+  const positions = new Float32Array(count * 3);
+  const velocities = new Float32Array(count * 3);
+  for (let i = 0; i < count; i += 1) {
+    const radius = 1.6 + (i % 19) * 0.08;
+    const angle = i * 2.39996;
+    positions[i * 3] = -13 + Math.cos(angle) * radius;
+    positions[i * 3 + 1] = 1.2 + (i % 11) * 0.18;
+    positions[i * 3 + 2] = -4 + Math.sin(angle) * radius;
+    velocities[i * 3] = Math.cos(angle) * 0.08;
+    velocities[i * 3 + 1] = 0.18 + (i % 5) * 0.018;
+    velocities[i * 3 + 2] = Math.sin(angle) * 0.08;
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  const material = new THREE.PointsMaterial({
+    color: 0x00e5ff,
+    size: 0.08,
+    transparent: true,
+    opacity: 0.78,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const points = new THREE.Points(geometry, material);
+  points.name = "NiagaraStyle_BeatParticles";
+  return { points, positions, velocities };
+}
+
+async function createRapierPhysics(scene: ThreeScene): Promise<PhysicsBridge> {
+  const RAPIER = await import("@dimforge/rapier3d-compat");
+  await RAPIER.init();
+  const physicsWorld = new RAPIER.World({ x: 0, y: -9.81, z: 0 });
+  physicsWorld.createCollider(RAPIER.ColliderDesc.cuboid(22, 0.1, 22).setTranslation(0, -0.12, 0));
+  physicsWorld.createCollider(RAPIER.ColliderDesc.cuboid(0.1, 2, 22).setTranslation(-22, 1, 0));
+  physicsWorld.createCollider(RAPIER.ColliderDesc.cuboid(0.1, 2, 22).setTranslation(22, 1, 0));
+  physicsWorld.createCollider(RAPIER.ColliderDesc.cuboid(22, 2, 0.1).setTranslation(0, 1, -22));
+  physicsWorld.createCollider(RAPIER.ColliderDesc.cuboid(22, 2, 0.1).setTranslation(0, 1, 22));
+
+  const material = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x00e5ff, emissiveIntensity: 0.44, roughness: 0.42 });
+  const links: PhysicsLink[] = [];
+  const startingPositions = [
+    [-3.8, 2.2, -2.8],
+    [3.6, 2.6, -3.1],
+    [-2.5, 2.9, 3.2],
+    [4.2, 3.1, 3.8],
+    [0.6, 3.4, -6.2],
+  ] as const;
+
+  for (const [index, position] of startingPositions.entries()) {
+    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(0.32, 2), material.clone());
+    mesh.name = `RapierSignalBody_${index}`;
+    mesh.castShadow = true;
+    mesh.position.set(position[0], position[1], position[2]);
+    scene.add(mesh);
+    const body = physicsWorld.createRigidBody(
+      RAPIER.RigidBodyDesc.dynamic()
+        .setTranslation(position[0], position[1], position[2])
+        .setLinvel((index % 2 === 0 ? 0.8 : -0.7) + index * 0.04, 0.4, 0.5 - index * 0.08),
+    );
+    physicsWorld.createCollider(RAPIER.ColliderDesc.ball(0.32), body);
+    links.push({ mesh, body });
+  }
+
+  return {
+    world: physicsWorld,
+    links,
+    step(delta: number, elapsed: number) {
+      physicsWorld.timestep = THREE.MathUtils.clamp(delta, 1 / 120, 1 / 30);
+      physicsWorld.step();
+      for (const [index, link] of links.entries()) {
+        const translation = link.body.translation();
+        if (translation.y < 0.32 || Math.abs(translation.x) > 20 || Math.abs(translation.z) > 20) {
+          const resetX = -4 + index * 2;
+          link.body.setTranslation({ x: resetX, y: 2.4 + index * 0.28, z: -2 + Math.sin(elapsed + index) * 3 }, true);
+          link.body.setLinvel({ x: index % 2 === 0 ? 0.7 : -0.7, y: 0.6, z: 0.32 }, true);
+        }
+        const next = link.body.translation();
+        link.mesh.position.set(next.x, next.y, next.z);
+      }
+    },
+    dispose() {
+      for (const link of links) scene.remove(link.mesh);
+      physicsWorld.free();
+    },
+  };
 }
 
 function addRoad(group: ThreeGroup, x: number, z: number, width: number, depth: number, rotation: number) {
@@ -620,8 +844,10 @@ function updateCamera(camera: ThreePerspectiveCamera, player: ThreeGroup, facing
   camera.lookAt(lookTarget);
 }
 
-function updateCity(world: GalaxyWorld, playerPosition: ThreeVector3, elapsed: number) {
+function updateCity(world: GalaxyWorld, playerPosition: ThreeVector3, camera: ThreePerspectiveCamera, elapsed: number): StreamingStats {
   const activeCity = world.assetRoot ?? world.city;
+  const streamingStats = updateWorldPartition(world, playerPosition, camera);
+  updateParticleField(world.particles, elapsed);
   activeCity.traverse((object: ThreeObject3D) => {
     const streamRadius = typeof object.userData.streamRadius === "number" ? object.userData.streamRadius : 44;
     object.visible = object.position.distanceTo(playerPosition) < streamRadius || object.name.includes("Floor");
@@ -636,6 +862,69 @@ function updateCity(world: GalaxyWorld, playerPosition: ThreeVector3, elapsed: n
     }
   });
   activeCity.position.x = THREE.MathUtils.clamp(-playerPosition.x * 0.015, -0.18, 0.18);
+  return streamingStats;
+}
+
+function updateWorldPartition(world: GalaxyWorld, playerPosition: ThreeVector3, camera: ThreePerspectiveCamera): StreamingStats {
+  camera.updateMatrixWorld();
+  const projection = new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+  const frustum = new THREE.Frustum().setFromProjectionMatrix(projection);
+  let loaded = 0;
+  let highDetail = 0;
+
+  for (const chunk of world.chunks) {
+    const distance = chunk.center.distanceTo(playerPosition);
+    const shouldLoad = distance < chunk.radius * 1.65;
+    if (shouldLoad && !chunk.loaded) {
+      world.scene.add(chunk.root);
+      chunk.loaded = true;
+    } else if (!shouldLoad && chunk.loaded) {
+      world.scene.remove(chunk.root);
+      chunk.loaded = false;
+    }
+    if (!chunk.loaded) continue;
+
+    loaded += 1;
+    const visible = frustum.intersectsSphere(new THREE.Sphere(chunk.center, chunk.radius));
+    chunk.root.visible = visible;
+    const pixelSize = estimateProjectedPixelSize(camera, chunk.center, chunk.radius);
+    const useHighDetail = visible && pixelSize > 42;
+    chunk.highDetail.visible = useHighDetail;
+    chunk.lowDetail.visible = visible && !useHighDetail;
+    if (useHighDetail) highDetail += 1;
+  }
+
+  return { loaded, highDetail, total: world.chunks.length };
+}
+
+function estimateProjectedPixelSize(camera: ThreePerspectiveCamera, center: ThreeVector3, radius: number) {
+  const distance = Math.max(1, camera.position.distanceTo(center));
+  const verticalFov = THREE.MathUtils.degToRad(camera.fov);
+  return (radius / distance) * (window.innerHeight / Math.tan(verticalFov / 2));
+}
+
+function updateParticleField(field: ParticleField, elapsed: number) {
+  for (let i = 0; i < field.positions.length / 3; i += 1) {
+    const offset = i * 3;
+    const x = field.positions[offset] ?? -13;
+    const y = field.positions[offset + 1] ?? 1.2;
+    const z = field.positions[offset + 2] ?? -4;
+    field.positions[offset] = x + (field.velocities[offset] ?? 0) * 0.016;
+    field.positions[offset + 1] = y + Math.sin(elapsed * 2.4 + i) * 0.0015 + (field.velocities[offset + 1] ?? 0) * 0.002;
+    field.positions[offset + 2] = z + (field.velocities[offset + 2] ?? 0) * 0.016;
+
+    const dx = (field.positions[offset] ?? -13) + 13;
+    const dz = (field.positions[offset + 2] ?? -4) + 4;
+    if (Math.hypot(dx, dz) > 3.6 || (field.positions[offset + 1] ?? 0) > 4.2) {
+      const angle = i * 2.39996 + elapsed * 0.18;
+      const radius = 1.2 + (i % 17) * 0.09;
+      field.positions[offset] = -13 + Math.cos(angle) * radius;
+      field.positions[offset + 1] = 1.1 + (i % 9) * 0.14;
+      field.positions[offset + 2] = -4 + Math.sin(angle) * radius;
+    }
+  }
+  const position = field.points.geometry.getAttribute("position");
+  if (position instanceof THREE.BufferAttribute) position.needsUpdate = true;
 }
 
 async function hydrateGalaxyAssets(scene: ThreeScene, world: GalaxyWorld) {
@@ -685,17 +974,31 @@ function playBeatPulse(audioContextRef: MutableRefObject<AudioContext | null>, i
   if (!AudioContextCtor) return;
   const context = audioContextRef.current ?? new AudioContextCtor();
   audioContextRef.current = context;
+  if (context.state === "suspended") void context.resume();
+
+  const master = context.createGain();
+  const filter = context.createBiquadFilter();
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(520 + intensity * 760, context.currentTime);
+  filter.frequency.exponentialRampToValueAtTime(160 + intensity * 280, context.currentTime + 0.32);
+  master.gain.setValueAtTime(0.0001, context.currentTime);
+  master.gain.exponentialRampToValueAtTime(0.06 + intensity * 0.07, context.currentTime + 0.025);
+  master.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.34);
+  filter.connect(master);
+  master.connect(context.destination);
+
   const oscillator = context.createOscillator();
-  const gain = context.createGain();
   oscillator.type = "sawtooth";
   oscillator.frequency.value = 110 + intensity * 280;
-  gain.gain.setValueAtTime(0.0001, context.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.03 + intensity * 0.07, context.currentTime + 0.03);
-  gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.22);
-  oscillator.connect(gain);
-  gain.connect(context.destination);
+  const sub = context.createOscillator();
+  sub.type = "sine";
+  sub.frequency.value = 48 + intensity * 40;
+  oscillator.connect(filter);
+  sub.connect(filter);
   oscillator.start();
-  oscillator.stop(context.currentTime + 0.24);
+  sub.start(context.currentTime + 0.015);
+  oscillator.stop(context.currentTime + 0.26);
+  sub.stop(context.currentTime + 0.34);
 }
 
 const styles: Record<string, CSSProperties> = {

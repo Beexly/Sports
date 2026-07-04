@@ -1,6 +1,6 @@
 # Galaxy Dynasty Full Game Gap Audit
 
-Updated: 2026-07-03
+Updated: 2026-07-04
 
 ## Placeholder Closures In This Pass
 
@@ -9,6 +9,7 @@ Updated: 2026-07-03
 - Touch joystick now has a visible knob state, mobile-only detection, and movement input.
 - Beat Broadcast Wall now has WebAudio interaction, pulse rings, waveform bars, emissive animation, and selectable HUD controls.
 - Babylon and Phaser are not part of this slice; Three.js is the locked runtime for the playable route.
+- UE5-inspired placeholders are now represented with web-native equivalents: streamed campus chunks, Rapier rigid bodies, Three particles, WebAudio synth, and deterministic PCG props/routes.
 
 ## GTA-Feel Targets Now Represented
 
@@ -32,6 +33,12 @@ Updated: 2026-07-03
 - Distance-priority object visibility as the first Nanite-style culling layer.
 - Manifest cluster budget of 128 triangles per future import chunk.
 - Dynamic emissive materials, tone mapping, fog, moon/hemi lights, point lights, and bloom as the current Lumen-style web lighting stack.
+- World Partition equivalent: north/east/south/west campus chunks load and unload by player distance.
+- Pixel LOD equivalent: chunk high/low instanced meshes switch by projected screen size and frustum visibility.
+- Chaos equivalent: Rapier dynamic props bounce inside fixed plaza boundaries.
+- Niagara equivalent: Beat Wall particle field animates in Three.js points.
+- MetaSounds equivalent: Beat pulses use layered oscillators, filter sweep, and gain envelope.
+- PCG equivalent: deterministic instanced chunk props and route markings generate from seeds.
 
 ## Honest Remaining Gaps
 
@@ -40,3 +47,4 @@ Updated: 2026-07-03
 - Full Colyseus WebSocket multiplayer needs a standalone server process and deployment target.
 - Vehicle driving, ragdoll physics, Rapier collision bodies, multi-map streaming, quest persistence, and NPC AI remain Phase 2+.
 - Licensed external model packs were not imported because no license-clean pack was already present in the branch and the referenced GTA clone has no root license to copy from.
+- Literal GPU Nanite cluster rasterization and Lumen GI are not available in browser Three.js; this branch implements practical web analogs and records that boundary explicitly.

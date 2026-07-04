@@ -9,6 +9,13 @@ describe("Galaxy Dynasty Rookie Plaza room", () => {
     expect(first.roomId).toBe("rookie-plaza");
     expect(first.connectedPlayers).toBe(1);
     expect(first.routes.some((route) => route.id === "beat" && route.status === "active")).toBe(true);
+    expect(first.engine).toEqual({
+      streaming: "world-partition-local",
+      physics: "rapier-local",
+      vfx: "three-particles",
+      audio: "webaudio-metasynth",
+      pcg: "instanced-campus-props",
+    });
     expect(second.serverTick).toBeGreaterThan(first.serverTick);
     expect(second.beatWall.bpm).toBeGreaterThanOrEqual(92);
   });
