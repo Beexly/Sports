@@ -10,6 +10,8 @@ Starting branch: `codex/media-revenue-studio`
 
 Starting implementation commit: `21eaad4c feat(web): add media revenue studio foundation`
 
+Closeout audit commit: `73b79a8c chore: complete commercial intelligence closeout audit`
+
 Primary closeout rule: this audit improves repo-visible truth without creating live publishing, live AWS, live API customers, affiliate tracking, paid-service calls, dependency churn, or unsupported claims.
 
 ## Executive Result
