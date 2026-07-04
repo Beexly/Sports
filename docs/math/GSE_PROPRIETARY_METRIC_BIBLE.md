@@ -42,6 +42,8 @@ Core grammar:
 - `packages/prediction-engine/src/metrics/core/math.ts`
 - `packages/prediction-engine/src/metrics/core/shrinkage.ts`
 - `packages/prediction-engine/src/metrics/core/validation.ts`
+- `packages/prediction-engine/src/metrics/core/source-rights.ts`
+- `packages/prediction-engine/src/metrics/core/payload-rights.ts`
 
 First grounded metrics:
 
@@ -59,6 +61,11 @@ Root package exports:
 - `proprietaryMetricAsset`
 - `requireProprietaryMetricAsset`
 - `evaluateMetricGraduation`
+- `GSE_PROPRIETARY_METRIC_SOURCE_RIGHTS_POLICIES`
+- `evaluateProprietaryMetricSourceRights`
+- `evaluateProprietaryMetricPayloadRights`
+- `proprietaryMetricSourceRightsPolicy`
+- `proprietarySourceRightsEnvelopeFromPolicy`
 - `dataReliabilityIndex`
 - `gseMarketGravityIndex`
 - `expectedCompletionGse`
@@ -314,6 +321,42 @@ Graduation rules now enforced in pure TypeScript:
 - `SHADOW` metrics cannot be exposed through API routes
 - full API exposure requires all gates and a non-shadow approved metric asset
 
+## Source Rights And Payload Rights Layer
+
+Implemented from the competitive/product attack-map prompt:
+
+- `packages/prediction-engine/src/metrics/core/source-rights.ts`
+- `packages/prediction-engine/src/metrics/core/payload-rights.ts`
+- `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`
+
+The metric package now has pure source-policy primitives that mirror, but do not import from, the web registry in `apps/web/lib/scraping/source-rights-registry.ts`.
+
+Initial policies:
+
+| Source | Registry status | Modeling | Validation | Derived API | Raw API | Attribution |
+| --- | --- | --- | --- | --- | --- | --- |
+| `nflverse` | `approved_open_license` | allowed | allowed | allowed | blocked by default | required |
+| `the-odds-api` | `approved_api` | blocked | allowed | allowed | blocked | not required by current registry entry |
+
+The boundary is deliberate:
+
+- `nflverse` can train, validate, and support derived metrics with attribution.
+- The Odds API can support derived market intelligence where the payload does not expose raw provider values.
+- The Odds API remains blocked for model training because the current web registry sets `model_training_allowed: false`.
+- Raw odds fields, protected weights, and unknown-source fields fail closed for API payloads.
+- Public drivers and aggregate derived scores are allowed only when every referenced source permits the requested exposure.
+
+Payload field kinds:
+
+- `DERIVED_METRIC`
+- `PUBLIC_DRIVER`
+- `AGGREGATE_SUMMARY`
+- `RAW_SOURCE_VALUE`
+- `PROTECTED_WEIGHT`
+- `PROVIDER_IDENTIFIER`
+
+This layer is not a legal clearance claim. It is a code-level policy gate that encodes the current repo evidence and blocks unsafe exposure until a stronger source-rights record exists.
+
 ## Metric Asset Backlog
 
 Build in this order for proprietary football metrics:
@@ -336,14 +379,13 @@ Build in this order for proprietary football metrics:
 
 Product/governance backlog from the doctrine and competitive map:
 
-1. Source Rights Layer for allowed use, validation-only use, display rights, storage rights, training rights, derived exposure, and raw API exposure.
-2. Payload Rights Engine so every public/API field can prove it is allowed before exposure.
+1. Wire `apps/web` source-rights registry entries into metric source-policy generation instead of maintaining a mirrored package policy table by hand.
+2. Model-card/drift-card generation for every promoted metric.
 3. Market Intelligence v2: stale-line risk, consensus fragility, move quality, book dispersion, market mirage, and playable window.
 4. No-Bet/Decision Intelligence: no-bet strength, refusal reasons, calibration sufficiency, model disagreement, volatility pressure, and responsible-gaming warnings.
 5. Evidence API contracts: board, game evidence, calibration summary, slate intelligence, player expected metrics, and signed webhooks.
 6. Content claim governance: evidence refs, risk level, disclosure status, responsible-gaming status, publish status, and manual review.
-7. Model-card/drift-card generation for every promoted metric.
-8. API security spine: auth, scopes, field-level rights filtering, rate limits, response envelopes, request IDs, usage logs, signed webhooks, and OpenAPI.
+7. API security spine: auth, scopes, field-level rights filtering, rate limits, response envelopes, request IDs, usage logs, signed webhooks, and OpenAPI.
 
 Competitive positioning encoded by the backlog:
 
@@ -369,14 +411,19 @@ Recorded run on 2026-07-04:
 
 | Command | Result |
 | --- | --- |
-| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/data-reliability-index.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/expected-completion.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 6 files, 19 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/data-reliability-index.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/expected-completion.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 7 files, 25 tests. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 1 file, 6 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 1 file, 6 tests. |
 | `npm run typecheck --workspace=packages/prediction-engine` | PASS. |
-| `npm run test --workspace=packages/prediction-engine` | PASS - 81 files, 773 tests. |
-| `npm run typecheck` | PASS on earlier full root run. Final rerun reached web/crypto/data-ingestion/db/ingestion-pipeline/prediction-engine/types before the wrapper timed; all four remaining worker typechecks were then run individually and passed. |
-| `npm run lint` | PASS. |
-| `npm run guardrails` | PASS - trust-gate, model-freeze, draft-only, Claude API usage, secret scan, eval contracts. Latest scan covered 1137 trust-gate files and 3142 tracked files for secrets. |
-| `npm run test --workspaces --if-present` | COMPLETE PACKAGE SUMMARIES LOGGED - web 500 files/6658 tests, crypto 1/13, data-ingestion 16/131, ingestion-pipeline 6/60, prediction-engine 80/767, types 1/31. The MCP wrapper still hit its 300s capture limit before returning process status, so this row is log-evidence rather than a clean wrapper exit. |
+| `npm run test --workspace=packages/prediction-engine` | PASS - 82 files, 779 tests. |
+| `npm run typecheck --workspaces --if-present` | PASS - web, crypto, data-ingestion, db, ingestion-pipeline, prediction-engine, types, and all four worker packages. |
+| `npm run lint --workspaces --if-present` | PASS - web lint completed with `--max-warnings=0`. |
+| `npm run guardrails` | PASS - trust-gate, model-freeze, draft-only, Claude API usage, secret scan, eval contracts. Latest scan covered 1139 trust-gate files and 3145 tracked files for secrets. |
+| `npm run test --workspaces --if-present` | WRAPPER TIMEOUT - the single workspace wrapper exceeded the 300s MCP capture ceiling before returning output. It was decomposed into package runs below. |
+| `npm run test --workspace=apps/web` split into five 100-file chunks with `--reporter=dot` | PASS - 500 files, 6658 tests. |
+| `npm run test --workspace=packages/crypto` | PASS - 1 file, 13 tests. |
+| `npm run test --workspace=packages/data-ingestion` | PASS - 16 files, 131 tests. |
+| `npm run test --workspace=packages/ingestion-pipeline` | PASS - 6 files, 60 tests. |
 | `npm run test --workspace=packages/types` | PASS - 1 file, 31 tests. |
 | `git diff --check` | PASS. |
 | OMO TypeScript no-excuse checker | NOT COMPLETED - host has no `bun`; `npm exec tsx` fallback found `tsx` but the plugin-local checker could not resolve its `typescript` package from the plugin directory. Repo typecheck/lint/tests were used as enforceable gates. |
@@ -396,12 +443,17 @@ Pure LOC review for new source files:
 | `gse-signal-score.ts` | 113 |
 | `metric-asset.ts` | 105 |
 | `metric-graduation.ts` | 80 |
+| `source-rights.ts` | 205 |
+| `payload-rights.ts` | 110 |
+| `metric-source-payload-rights.test.ts` | 112 |
+
+`source-rights.ts` is in the 200-250 warning band. Keep the next expansion split by responsibility: move policy data to a fixture/policy table file before adding more sources.
 
 ## Next Slice Recommendation
 
-Next slice should build the concrete Source Rights Layer and Payload Rights Engine that feed the metric asset cards:
+Next slice should build on the concrete Source Rights Layer and Payload Rights Engine added in this pass:
 
-1. Add source-rights envelopes for nflverse, open football sources, odds inputs, and benchmark-only sources.
-2. Add payload-rights evaluation for metric API fields.
-3. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
+1. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
+2. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
+3. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
 4. Then implement Receiver Difficulty Index and Expected YAC on the same governed foundation.

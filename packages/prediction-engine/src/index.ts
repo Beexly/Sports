@@ -502,9 +502,14 @@ export type {
 } from "./metrics/core/metric-birth-certificate.js";
 export {
   GSE_METRIC_ASSETS as GSE_PROPRIETARY_METRIC_ASSETS,
+  GSE_METRIC_SOURCE_RIGHTS_POLICIES as GSE_PROPRIETARY_METRIC_SOURCE_RIGHTS_POLICIES,
   evaluateMetricGraduation,
+  evaluateMetricPayloadRights as evaluateProprietaryMetricPayloadRights,
+  evaluateMetricSourceRights as evaluateProprietaryMetricSourceRights,
   metricAsset as proprietaryMetricAsset,
+  metricSourceRightsPolicy as proprietaryMetricSourceRightsPolicy,
   requireMetricAsset as requireProprietaryMetricAsset,
+  sourceRightsEnvelopeFromPolicy as proprietarySourceRightsEnvelopeFromPolicy,
 } from "./metrics/core/index.js";
 export type {
   GseMetricAsset as ProprietaryMetricAsset,
@@ -515,6 +520,16 @@ export type {
   MetricGraduationInput as ProprietaryMetricGraduationInput,
   MetricGraduationStatus as ProprietaryMetricGraduationStatus,
   MetricLicensingStatus as ProprietaryMetricLicensingStatus,
+  MetricPayloadExposure as ProprietaryMetricPayloadExposure,
+  MetricPayloadField as ProprietaryMetricPayloadField,
+  MetricPayloadFieldKind as ProprietaryMetricPayloadFieldKind,
+  MetricPayloadRightsDecision as ProprietaryMetricPayloadRightsDecision,
+  MetricPayloadRightsInput as ProprietaryMetricPayloadRightsInput,
+  MetricSourceRightsDecision as ProprietaryMetricSourceRightsDecision,
+  MetricSourceRightsInput as ProprietaryMetricSourceRightsInput,
+  MetricSourceRightsPolicy as ProprietaryMetricSourceRightsPolicy,
+  MetricSourceRightsStatus as ProprietaryMetricSourceRightsStatus,
+  MetricSourceRightsUse as ProprietaryMetricSourceRightsUse,
   MetricValidationReport as ProprietaryMetricValidationReport,
   SourceRightsEnvelope as ProprietarySourceRightsEnvelope,
 } from "./metrics/core/index.js";

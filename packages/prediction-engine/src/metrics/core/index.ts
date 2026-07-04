@@ -31,6 +31,29 @@ export {
   requireMetricAsset,
 } from "./metric-asset.js";
 export type {
+  MetricPayloadExposure,
+  MetricPayloadField,
+  MetricPayloadFieldKind,
+  MetricPayloadRightsDecision,
+  MetricPayloadRightsInput,
+} from "./payload-rights.js";
+export { evaluateMetricPayloadRights } from "./payload-rights.js";
+export type {
+  MetricSourceAttributionPolicy,
+  MetricSourceRightsDecision,
+  MetricSourceRightsInput,
+  MetricSourceRightsPermissionSet,
+  MetricSourceRightsPolicy,
+  MetricSourceRightsStatus,
+  MetricSourceRightsUse,
+} from "./source-rights.js";
+export {
+  evaluateMetricSourceRights,
+  GSE_METRIC_SOURCE_RIGHTS_POLICIES,
+  metricSourceRightsPolicy,
+  sourceRightsEnvelopeFromPolicy,
+} from "./source-rights.js";
+export type {
   MetricGraduationDecision,
   MetricGraduationInput,
   MetricGraduationStatus,
