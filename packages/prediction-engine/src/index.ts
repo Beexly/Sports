@@ -489,6 +489,41 @@ export type {
   NoBetStrengthResult,
 } from "./gse-score/no-bet-strength.js";
 export {
+  GSE_METRIC_BIRTH_CERTIFICATES as GSE_PROPRIETARY_METRIC_BIRTH_CERTIFICATES,
+  metricBirthCertificate as proprietaryMetricBirthCertificate,
+  requireMetricBirthCertificate as requireProprietaryMetricBirthCertificate,
+} from "./metrics/core/metric-birth-certificate.js";
+export type {
+  GseFormulaClass as ProprietaryFormulaClass,
+  GseMetricBirthCertificate as ProprietaryMetricBirthCertificate,
+  GseMetricFamily as ProprietaryMetricFamily,
+  MetricPublicExposure as ProprietaryMetricPublicExposure,
+  MetricValidationMethod as ProprietaryMetricValidationMethod,
+} from "./metrics/core/metric-birth-certificate.js";
+export { dataReliabilityIndex } from "./metrics/source/data-reliability-index.js";
+export type {
+  DataReliabilityGrade,
+  DataReliabilityIndex,
+  DataReliabilityInput,
+} from "./metrics/source/data-reliability-index.js";
+export { marketGravityIndex as gseMarketGravityIndex } from "./metrics/market/market-gravity-index.js";
+export type {
+  MarketGravityIndex as GseMarketGravityIndex,
+  MarketGravityInput as GseMarketGravityInput,
+  MarketGravitySignal as GseMarketGravitySignal,
+} from "./metrics/market/market-gravity-index.js";
+export { expectedCompletionGse } from "./metrics/passing/expected-completion.js";
+export type {
+  ExpectedCompletionInput,
+  ExpectedCompletionMetric,
+} from "./metrics/passing/expected-completion.js";
+export { gseSignalScore } from "./metrics/decision/gse-signal-score.js";
+export type {
+  GseSignalGrade,
+  GseSignalScore,
+  GseSignalScoreInput,
+} from "./metrics/decision/gse-signal-score.js";
+export {
   GSE_NFL_METRIC_BIRTH_CERTIFICATES,
   metricBirthCertificate,
 } from "./nfl/metric-birth-certificate.js";
