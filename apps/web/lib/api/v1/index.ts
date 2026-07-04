@@ -11,6 +11,7 @@ export * from "./envelope";
 export * from "./openapi";
 export * from "./payload-rights";
 export * from "./persistence";
+export * from "./promotion-readiness";
 export * from "./scopes";
 export * from "./schema-proposal";
 export * from "./shadow-gateway";

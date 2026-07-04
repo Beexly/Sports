@@ -41,7 +41,7 @@ Status: copy-paste-ready PR map only. GitHub CLI auth is required before live PR
      - adds stack handoff and PR index
 
 9. `codex/api-v1-autonomous-polish-hardening`
-   - Commit: current branch after this slice is committed
+   - Commit: `6d7601e6`
    - PR body: `docs/api/API_V1_AUTONOMOUS_POLISH_PR_BODY.md`
    - Summary:
      - adds hostile invalid fixture rejection coverage
@@ -51,7 +51,20 @@ Status: copy-paste-ready PR map only. GitHub CLI auth is required before live PR
      - adds a focused CI API v1 boundary job
      - adds `docs/api/API_V1_AUTONOMOUS_POLISH_VERIFICATION_LOG.md`
 
-## Current Autonomous Polish PR Body
+10. `codex/api-v1-promotion-readiness-matrix`
+   - Commit: current branch after this slice is committed
+   - PR body: `docs/api/API_V1_PROMOTION_READINESS_PR_BODY.md`
+   - Summary:
+     - adds local-only promotion readiness gate matrix
+     - separates shadow evidence, repo boundary, and owner approval gates
+     - keeps live promotion disabled in every state
+     - documents expected current status as `owner_approval_required`
+
+## Current Promotion Readiness PR Body
+
+Use `docs/api/API_V1_PROMOTION_READINESS_PR_BODY.md` for the current branch.
+
+## Previous Autonomous Polish PR Body
 
 Use `docs/api/API_V1_AUTONOMOUS_POLISH_PR_BODY.md` for the current branch.
 

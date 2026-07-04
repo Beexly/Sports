@@ -31,7 +31,8 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | 6 | `codex/api-v1-durable-fixture-report-archive` | `f286054d` | Archives fixture and harness evidence with `livePromotionAllowed=false`. |
 | 7 | `codex/api-v1-disposable-db-rehearsal-plan` | `fcee1716` | Adds plan-only disposable DB rehearsal checklist and validator. |
 | 8 | `codex/api-v1-rd-polish-guards` | `9789a040` | Adds boundary guard, edge fixtures, rendered report, and this handoff. |
-| 9 | `codex/api-v1-autonomous-polish-hardening` | current branch after this slice is committed | Adds hostile invalid fixture coverage, reviewer merge checklist, README navigation, and focused CI guard wiring. |
+| 9 | `codex/api-v1-autonomous-polish-hardening` | `6d7601e6` | Adds hostile invalid fixture coverage, reviewer merge checklist, README navigation, focused CI guard wiring, and verification log. |
+| 10 | `codex/api-v1-promotion-readiness-matrix` | current branch after this slice is committed | Adds local-only promotion readiness gate matrix. |
 
 ## Key Code Surfaces
 
@@ -45,6 +46,7 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | `apps/web/lib/api/v1/durable-fixture-report.ts` | Deterministic report archive builder. |
 | `apps/web/lib/api/v1/durable-fixture-report-renderer.ts` | Markdown renderer for the tracked fixture report. |
 | `apps/web/lib/api/v1/durable-rehearsal-plan.ts` | Plan-only disposable DB rehearsal checklist and validator. |
+| `apps/web/lib/api/v1/promotion-readiness.ts` | Local-only gate matrix separating shadow evidence, repo boundaries, and owner approvals. |
 | `scripts/guardrails/api-v1-boundary.mjs` | Repo guard that blocks accidental API v1 live surfaces. |
 
 ## Tracked Evidence
@@ -58,13 +60,14 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md` | Rendered human-readable archive. |
 | `docs/api/API_V1_REVIEWER_MERGE_CHECKLIST.md` | Reviewer checklist and stop-sign list for stacked PR review. |
 | `docs/api/API_V1_AUTONOMOUS_POLISH_VERIFICATION_LOG.md` | Exact local verification commands, outcomes, caveats, and GitHub auth blocker. |
+| `docs/api/API_V1_PROMOTION_READINESS_MATRIX.md` | Promotion-readiness matrix contract and expected current state. |
 
 ## Focused Tests
 
 Run:
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-boundary-guard.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-adapter-harness.test.ts api-v1-db-schema-proposal.test.ts api-v1-persistence.test.ts api-v1-consumer-registry.test.ts api-v1-shadow-seam.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-promotion-readiness.test.ts api-v1-boundary-guard.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-adapter-harness.test.ts api-v1-db-schema-proposal.test.ts api-v1-persistence.test.ts api-v1-consumer-registry.test.ts api-v1-shadow-seam.test.ts
 ```
 
 ## Full Verification
@@ -95,6 +98,7 @@ Copy-paste PR bodies are tracked per slice:
 - `docs/api/API_V1_DURABLE_FIXTURE_REPORT_PR_BODY.md`
 - `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN_PR_BODY.md`
 - `docs/api/API_V1_AUTONOMOUS_POLISH_PR_BODY.md`
+- `docs/api/API_V1_PROMOTION_READINESS_PR_BODY.md`
 - `docs/api/API_V1_STACK_PR_INDEX.md`
 
 ## Remaining Approval Gate

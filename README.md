@@ -24,7 +24,8 @@ primitives live in `apps/web/lib/fable/`.
 
 The API v1 durability work is shadow/proposal-only. Start with
 `docs/api/API_V1_STACK_HANDOFF.md`, `docs/api/API_V1_STACK_PR_INDEX.md`, and
-`docs/api/API_V1_REVIEWER_MERGE_CHECKLIST.md`. The boundary guard is
+`docs/api/API_V1_REVIEWER_MERGE_CHECKLIST.md`. The local readiness matrix is
+`docs/api/API_V1_PROMOTION_READINESS_MATRIX.md`. The boundary guard is
 `scripts/guardrails/api-v1-boundary.mjs`, and it blocks accidental live API v1
 routes, Prisma models, migrations, env vars, database imports, provider calls,
 and network calls until an owner-approved promotion exists.
