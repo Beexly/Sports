@@ -83,4 +83,4 @@ git diff --check
 
 ## Next Promotion Slice
 
-The next safe slice is a fixture-report archive and promotion checklist. It should persist generated simulator reports as tracked markdown or JSON artifacts, compare them against the harness conformance suite, and still avoid live routes, Prisma schema edits, migrations, env vars, credentials, provider calls, and database execution.
+The fixture-report archive and promotion checklist now live in `docs/api/API_V1_DURABLE_FIXTURE_REPORT.md`. The next safe slice is a disposable-database rehearsal plan, still documentation and local contract only, without live routes, Prisma schema edits, migrations, env vars, credentials, provider calls, or database execution.

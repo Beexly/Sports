@@ -35,4 +35,4 @@ git diff --check
 
 ## Follow-Up
 
-The next slice should add a fixture-report archive and promotion checklist that records simulator output as tracked artifacts and compares it against the durable harness, still without adding live routes, schema edits, migrations, env vars, credentials, provider calls, or database execution.
+The fixture-report archive and promotion checklist now live in `docs/api/API_V1_DURABLE_FIXTURE_REPORT.md`. The next slice should add a disposable-database rehearsal plan as documentation and local contract only, without adding live routes, schema edits, migrations, env vars, credentials, provider calls, or database execution.
