@@ -488,6 +488,56 @@ export type {
   NoBetStrengthInput,
   NoBetStrengthResult,
 } from "./gse-score/no-bet-strength.js";
+export {
+  GSE_NFL_METRIC_BIRTH_CERTIFICATES,
+  metricBirthCertificate,
+} from "./nfl/metric-birth-certificate.js";
+export type {
+  GseMetricBirthCertificate,
+  GseMetricFamily,
+  MetricPublicExposure,
+} from "./nfl/metric-birth-certificate.js";
+export {
+  clamp as metricClamp,
+  clamp01 as metricClamp01,
+  normalizeClamped as metricNormalizeClamped,
+  sigmoid as metricSigmoid,
+  sortedDrivers as metricSortedDrivers,
+  sourcePoliciesAllowed,
+  uncertaintyFromEvidence,
+  weightedMean as metricWeightedMean,
+} from "./nfl/metric-core.js";
+export type {
+  MetricDirection,
+  MetricDriver,
+  MetricLifecycleStatus,
+  MetricSourcePolicy,
+  MetricSourceStatus,
+  MetricUncertaintyBand,
+} from "./nfl/metric-core.js";
+export { gseExpectedCompletion } from "./nfl/expected-completion.js";
+export type { GseExpectedCompletion, GseExpectedCompletionInput } from "./nfl/expected-completion.js";
+export { gseReceiverDifficulty } from "./nfl/receiver-difficulty.js";
+export type { GseReceiverDifficulty, GseReceiverDifficultyInput } from "./nfl/receiver-difficulty.js";
+export { gseExpectedYac } from "./nfl/expected-yac.js";
+export type { GseExpectedYac, GseExpectedYacInput } from "./nfl/expected-yac.js";
+export { gseRushEnvironment } from "./nfl/rush-environment.js";
+export type { GseRushEnvironment, GseRushEnvironmentInput } from "./nfl/rush-environment.js";
+export { gseQbBurden } from "./nfl/qb-burden.js";
+export type { GseQbBurden, GseQbBurdenInput } from "./nfl/qb-burden.js";
+export { gseRoleVolatility } from "./nfl/role-volatility.js";
+export type { GseRoleVolatility, GseRoleVolatilityInput } from "./nfl/role-volatility.js";
+export {
+  populationStabilityIndex,
+  evaluateMetricDrift,
+} from "./nfl/metric-drift.js";
+export type { MetricDriftInput, MetricDriftResult, MetricDriftStatus } from "./nfl/metric-drift.js";
+export { validateGseMetric } from "./nfl/metric-validation.js";
+export type {
+  GseMetricValidationInput,
+  GseMetricValidationResult,
+  GseMetricValidationStatus,
+} from "./nfl/metric-validation.js";
 // Universal signal ledger — the persistent "weight everything" accumulation layer
 // that bridges stored ledger rows to the composer (NOT wired into the live score).
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
