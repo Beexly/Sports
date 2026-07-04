@@ -72,4 +72,4 @@ git diff --check
 - No owner approval exists for live API use.
 - No partner, billing, secret, or credential path exists.
 
-The next supporting artifact is `docs/api/API_V1_DURABLE_ADAPTER_HARNESS.md`, which adds a local conformance harness and mocked transaction boundary without changing any of these blockers.
+The next supporting artifacts are `docs/api/API_V1_DURABLE_ADAPTER_HARNESS.md` and `docs/api/API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE.md`. They add a local conformance harness, mocked transaction boundary, and table-mapped dormant interface without changing any of these blockers.

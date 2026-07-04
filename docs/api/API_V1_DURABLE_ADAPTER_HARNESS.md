@@ -64,4 +64,4 @@ git diff --check
 
 ## Next Promotion Slice
 
-The next safe slice is a dormant durable adapter interface draft that maps the mocked transaction operations to the proposed Prisma table names. It should still avoid Prisma schema edits, migrations, live route exposure, secrets, and provider calls.
+The dormant durable adapter interface now lives in `docs/api/API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE.md`. The next safe slice is a route-free durable adapter simulation over local JSON fixtures. It should replay the dormant operation plans and emit conformance reports without adding Prisma schema edits, migrations, live route exposure, secrets, provider calls, or database execution.

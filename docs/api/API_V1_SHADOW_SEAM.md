@@ -30,11 +30,13 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/lib/api/v1/persistence.ts` | Provides a local shadow persistence adapter and promotion-plan gates without adding a database or route. |
 | `apps/web/lib/api/v1/schema-proposal.ts` | Provides proposal-only durable table drafts and rollback validation without editing Prisma or migrations. |
 | `apps/web/lib/api/v1/durable-adapter-harness.ts` | Provides a reusable adapter conformance suite and mocked transaction boundary. |
+| `apps/web/lib/api/v1/dormant-durable-adapter-interface.ts` | Maps future durable operations to proposed table names while staying route-free, env-free, SQL-free, and non-executable. |
 | `apps/web/__tests__/api-v1-shadow-seam.test.ts` | Focused Vitest coverage for the seam. |
 | `apps/web/__tests__/api-v1-consumer-registry.test.ts` | Focused Vitest coverage for consumer registry and audit-ledger behavior. |
 | `apps/web/__tests__/api-v1-persistence.test.ts` | Focused Vitest coverage for persistence adapter semantics and promotion blockers. |
 | `apps/web/__tests__/api-v1-db-schema-proposal.test.ts` | Focused Vitest coverage for the schema-proposal boundary. |
 | `apps/web/__tests__/api-v1-durable-adapter-harness.test.ts` | Focused Vitest coverage for adapter conformance and rollback behavior. |
+| `apps/web/__tests__/api-v1-dormant-durable-adapter-interface.test.ts` | Focused Vitest coverage for table mapping, non-executable dry runs, and no-live-surface blockers. |
 
 ## Shadow Endpoints
 
@@ -82,13 +84,14 @@ A future live API route should not be added until all of these are true:
 - quota decrement and audit append happen together inside the persistence adapter
 - future durable tables are proposal-only and have a rollback plan before any migration exists
 - future durable adapters must pass the local conformance harness before real storage is considered
+- future durable adapter interfaces must map operations to the proposed tables and remain dormant before fixture simulation or database work
 
 ## Verification Commands
 
 Run before promoting or merging this slice:
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts api-v1-dormant-durable-adapter-interface.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails

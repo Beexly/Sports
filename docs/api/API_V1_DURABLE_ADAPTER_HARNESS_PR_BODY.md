@@ -33,4 +33,4 @@ git diff --check
 
 ## Follow-Up
 
-The next slice should draft a dormant durable adapter interface that maps these mocked operations to the proposed Prisma table names without adding schema, migrations, live routes, secrets, or DB execution.
+The dormant durable adapter interface now lives in `docs/api/API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE.md`. The next slice should build a route-free durable adapter simulation over local JSON fixtures without adding schema, migrations, live routes, secrets, provider calls, or DB execution.
