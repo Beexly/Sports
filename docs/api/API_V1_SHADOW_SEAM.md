@@ -25,7 +25,10 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/lib/api/v1/envelope.ts` | Produces deterministic shadow response envelopes with `ok`, `data`, `errors`, and metadata. |
 | `apps/web/lib/api/v1/shadow-gateway.ts` | Single gateway that combines auth, registered consumer, origin, scopes, and payload rights. |
 | `apps/web/lib/api/v1/openapi.ts` | Builds a route-free OpenAPI 3.1 draft with `x-gse-shadow-only` markers. |
+| `apps/web/lib/api/v1/consumer-registry.ts` | Validates local shadow consumer records, revocation, rotation, scope, origin, expiry, and quota state before persistence exists. |
+| `apps/web/lib/api/v1/audit-ledger.ts` | Creates and verifies a local hash-chained audit event ledger for API decisions. |
 | `apps/web/__tests__/api-v1-shadow-seam.test.ts` | Focused Vitest coverage for the seam. |
+| `apps/web/__tests__/api-v1-consumer-registry.test.ts` | Focused Vitest coverage for consumer registry and audit-ledger behavior. |
 
 ## Shadow Endpoints
 
@@ -57,12 +60,26 @@ A future live API route should not be added until all of these are true:
 6. Route tests prove denied responses never include protected payload data.
 7. Guardrails pass with the route tree present.
 
+## Consumer Registry Follow-On
+
+`consumer-registry.ts` and `audit-ledger.ts` are the local contract for the next promotion step. They still do not create persistence. They prove the shape and invariants a future store must preserve:
+
+- no raw API key material in consumer records
+- unique `keyId` and `keyHash`
+- revoked and suspended consumers inactive by rule
+- no wildcard origins
+- live approval forbidden in shadow records
+- quota exhaustion fails closed
+- expiry fails closed
+- rotation warnings are explicit
+- audit events are hash chained and tamper-evident
+
 ## Verification Commands
 
 Run before promoting or merging this slice:
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails

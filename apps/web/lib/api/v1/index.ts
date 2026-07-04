@@ -1,4 +1,6 @@
+export * from "./audit-ledger";
 export * from "./api-key";
+export * from "./consumer-registry";
 export * from "./envelope";
 export * from "./openapi";
 export * from "./payload-rights";

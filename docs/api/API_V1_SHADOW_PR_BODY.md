@@ -13,6 +13,8 @@ Adds a route-free API v1 shadow contract for GSE evidence, signal, metric, and p
 - Added shadow gateway that combines registered consumer, key hash, active state, origin, scopes, and source-rights gates.
 - Added OpenAPI 3.1 draft builder with `x-gse-shadow-only` and `x-gse-live-routes-exposed=false`.
 - Added Vitest coverage proving the contract remains route-free and fail-closed.
+- Added shadow consumer registry validation for revocation, rotation, quota, expiry, origins, duplicate keys, and no-live-approval invariants.
+- Added hash-chained API audit ledger for allow/deny/record events.
 
 ## Safety Notes
 
@@ -20,11 +22,13 @@ Adds a route-free API v1 shadow contract for GSE evidence, signal, metric, and p
 - No API key secret, env var, database table, provider integration, or billing hook was added.
 - Raw API keys are not stored by the seam; tests assert the hash does not contain the raw key.
 - Source-rights checks block limited, unknown, blocked, personal-data, and raw-payload cases.
+- Consumer registry is local-only and does not create a database table, secret, route, partner record, or billing path.
+- Audit ledger is pure and in-memory; persistence remains a future additive layer.
 
 ## Suggested Verification
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails
@@ -33,4 +37,4 @@ git diff --check
 
 ## Follow-Up
 
-The next slice should add a persisted consumer registry design and audit ledger before any route handler is considered.
+The next slice should add a persistence adapter design for these contracts before any route handler is considered.
