@@ -33,9 +33,13 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/lib/api/v1/dormant-durable-adapter-interface.ts` | Maps future durable operations to proposed table names while staying route-free, env-free, SQL-free, and non-executable. |
 | `apps/web/lib/api/v1/durable-fixture-simulator.ts` | Replays local synthetic operation fixtures against the dormant durable interface without storage execution. |
 | `apps/web/lib/api/v1/durable-fixture-report.ts` | Builds a deterministic tracked report archive and promotion checklist from fixture replay plus harness conformance output. |
+| `apps/web/lib/api/v1/durable-fixture-report-renderer.ts` | Renders the tracked fixture report archive to markdown. |
 | `apps/web/lib/api/v1/durable-rehearsal-plan.ts` | Defines the plan-only disposable database rehearsal checklist and validator. |
 | `apps/web/__fixtures__/api-v1/durable-fixture-simulator.json` | Local synthetic durable trace covering read-only, commit, and rollback cases. |
+| `apps/web/__fixtures__/api-v1/durable-fixture-edge-cases.json` | Local synthetic edge-case trace for suspended, expired, quota-exhausted, and malformed-audit cases. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json` | Local tracked shadow evidence archive; live promotion remains false. |
+| `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md` | Human-readable rendering of the tracked shadow evidence archive. |
+| `scripts/guardrails/api-v1-boundary.mjs` | Boundary guard wired into `npm.cmd run guardrails`. |
 | `apps/web/__tests__/api-v1-shadow-seam.test.ts` | Focused Vitest coverage for the seam. |
 | `apps/web/__tests__/api-v1-consumer-registry.test.ts` | Focused Vitest coverage for consumer registry and audit-ledger behavior. |
 | `apps/web/__tests__/api-v1-persistence.test.ts` | Focused Vitest coverage for persistence adapter semantics and promotion blockers. |
@@ -45,6 +49,7 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/__tests__/api-v1-durable-fixture-simulator.test.ts` | Focused Vitest coverage for fixture replay, operation drift, rollback leakage, and boundary blockers. |
 | `apps/web/__tests__/api-v1-durable-fixture-report.test.ts` | Focused Vitest coverage for tracked archive parity, checklist behavior, and live-promotion blockers. |
 | `apps/web/__tests__/api-v1-durable-rehearsal-plan.test.ts` | Focused Vitest coverage for rehearsal plan-only boundaries and rollback evidence requirements. |
+| `apps/web/__tests__/api-v1-boundary-guard.test.ts` | Focused Vitest coverage for the API v1 boundary guard. |
 
 ## Shadow Endpoints
 

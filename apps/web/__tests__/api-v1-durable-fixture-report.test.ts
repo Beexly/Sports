@@ -8,6 +8,7 @@ import {
   createApiV1MockTransactionalPersistenceStore,
   hashApiV1Key,
   parseApiV1Credential,
+  renderApiV1DurableFixtureReportMarkdown,
   runApiV1DurableAdapterConformanceSuite,
   simulateApiV1DurableFixtureScenario,
   type ApiV1DurableAdapterConformanceFixture,
@@ -18,7 +19,9 @@ import {
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const archivePath = path.join(repoRoot, "docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json");
+const archiveMarkdownPath = path.join(repoRoot, "docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md");
 const sourcePath = path.join(repoRoot, "apps/web/lib/api/v1/durable-fixture-report.ts");
+const rendererSourcePath = path.join(repoRoot, "apps/web/lib/api/v1/durable-fixture-report-renderer.ts");
 const RAW_KEY = "gse_v1_shadow_ABCDEFGHIJKLMNOP";
 const OTHER_KEY = "gse_v1_shadow_QRSTUVWXYZabcdef";
 const NOW = "2026-07-04T00:00:00.000Z";
@@ -99,6 +102,14 @@ describe("API v1 durable fixture report archive", () => {
     expect(tracked).toEqual(archive);
   });
 
+  it("renders markdown that matches the tracked readable archive", () => {
+    const archive = buildArchive();
+    const rendered = renderApiV1DurableFixtureReportMarkdown(archive);
+    const tracked = fs.readFileSync(archiveMarkdownPath, "utf8");
+
+    expect(tracked).toBe(rendered);
+  });
+
   it("turns blocked when simulator or conformance evidence fails", () => {
     const archive = buildApiV1DurableFixtureReportArchive({
       conformanceReport: {
@@ -147,7 +158,7 @@ describe("API v1 durable fixture report archive", () => {
   });
 
   it("keeps the report builder free of live-storage and network hooks", () => {
-    const source = fs.readFileSync(sourcePath, "utf8");
+    const source = `${fs.readFileSync(sourcePath, "utf8")}\n${fs.readFileSync(rendererSourcePath, "utf8")}`;
 
     expect(source).not.toContain("@prisma/client");
     expect(source).not.toContain("packages/db");

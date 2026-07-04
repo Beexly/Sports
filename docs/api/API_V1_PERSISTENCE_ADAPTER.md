@@ -23,9 +23,13 @@ The API v1 consumer registry and audit ledger now have a persistence boundary th
 | `apps/web/lib/api/v1/dormant-durable-adapter-interface.ts` | Maps planned durable operations to proposed table names and validates that the interface stays dormant and non-executable. |
 | `apps/web/lib/api/v1/durable-fixture-simulator.ts` | Replays local synthetic operation fixtures against the dormant interface and reports drift without executing storage. |
 | `apps/web/lib/api/v1/durable-fixture-report.ts` | Builds a deterministic tracked report archive and promotion checklist from fixture replay plus harness conformance output. |
+| `apps/web/lib/api/v1/durable-fixture-report-renderer.ts` | Renders the tracked fixture report archive to markdown and is tested for exact parity. |
 | `apps/web/lib/api/v1/durable-rehearsal-plan.ts` | Defines a plan-only disposable database rehearsal checklist and validator; it does not execute database work. |
 | `apps/web/__fixtures__/api-v1/durable-fixture-simulator.json` | First local synthetic trace for consumer resolution, consumer upsert, audit append, quota/audit commit, and quota/audit rollback. |
+| `apps/web/__fixtures__/api-v1/durable-fixture-edge-cases.json` | Edge synthetic trace for suspended, expired, quota-exhausted, and malformed-audit cases. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json` | Tracked shadow evidence archive with `livePromotionAllowed=false`. |
+| `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md` | Human-readable rendering of the tracked archive. |
+| `scripts/guardrails/api-v1-boundary.mjs` | Guardrail that blocks accidental route, schema, migration, env, DB import, env read, or network call surfaces. |
 | `apps/web/__tests__/api-v1-persistence.test.ts` | Proves atomic quota/audit behavior, denied-event behavior, registry visibility, hash-chain continuity, and promotion-plan blockers. |
 | `apps/web/__tests__/api-v1-db-schema-proposal.test.ts` | Proves the schema proposal stays proposal-only and does not mutate Prisma, routes, migrations, env vars, or key-storage rules. |
 | `apps/web/__tests__/api-v1-durable-adapter-harness.test.ts` | Proves memory and mocked transaction adapters conform, and rollback does not leak staged writes. |

@@ -4,7 +4,7 @@ Status: tracked shadow evidence only. This slice does not add a database adapter
 
 ## Purpose
 
-The API v1 durable fixture simulator now has a deterministic report archive and promotion checklist. The canonical builder is `apps/web/lib/api/v1/durable-fixture-report.ts`, and the tracked archive is `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json`.
+The API v1 durable fixture simulator now has a deterministic report archive and promotion checklist. The canonical builder is `apps/web/lib/api/v1/durable-fixture-report.ts`, the markdown renderer is `apps/web/lib/api/v1/durable-fixture-report-renderer.ts`, and the tracked archives are `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json` and `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md`.
 
 The archive compares:
 

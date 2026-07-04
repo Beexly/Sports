@@ -41,6 +41,8 @@ The first fixture covers:
 | `record-quota-and-audit-commit` | `committed` | Quota and audit writes follow the dormant commit order. |
 | `record-quota-and-audit-rollback` | `rolled_back` | Rollback order follows the dormant contract and table counts do not leak. |
 
+`apps/web/__fixtures__/api-v1/durable-fixture-edge-cases.json` adds synthetic coverage for suspended consumer resolution, expired key resolution, quota-exhaustion denial, and malformed-audit rollback.
+
 ## Report
 
 `simulateApiV1DurableFixtureScenario()` returns:

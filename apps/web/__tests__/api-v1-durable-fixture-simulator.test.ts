@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
+import edgeFixture from "@/__fixtures__/api-v1/durable-fixture-edge-cases.json";
 import fixture from "@/__fixtures__/api-v1/durable-fixture-simulator.json";
 import {
   API_V1_DORMANT_DURABLE_ADAPTER_INTERFACE,
@@ -14,6 +15,7 @@ const sourcePath = path.join(repoRoot, "apps/web/lib/api/v1/durable-fixture-simu
 const apiV1RouteTree = path.join(repoRoot, "apps/web/app/api/v1");
 
 const scenario = fixture as ApiV1DurableFixtureScenario;
+const edgeScenario = edgeFixture as ApiV1DurableFixtureScenario;
 
 describe("API v1 durable fixture simulator", () => {
   it("replays the local synthetic fixture against the dormant operation plans", () => {
@@ -47,6 +49,21 @@ describe("API v1 durable fixture simulator", () => {
       source: "local_synthetic_fixture",
     });
     expect(fs.existsSync(apiV1RouteTree)).toBe(false);
+  });
+
+  it("replays edge-case fixtures for suspended, expired, quota-exhausted, and malformed-audit cases", () => {
+    const report = simulateApiV1DurableFixtureScenario(edgeScenario);
+
+    expect(report.passed).toBe(true);
+    expect(report.fixtureId).toBe("api-v1-durable-edge-synthetic-v1");
+    expect(report.operationCount).toBe(4);
+    expect(report.cases.map((entry) => entry.id)).toEqual([
+      "resolve-suspended-consumer",
+      "resolve-expired-key",
+      "record-quota-exhaustion-denial",
+      "append-malformed-audit-chain-rollback",
+    ]);
+    expect(report.cases.every((entry) => entry.passed)).toBe(true);
   });
 
   it("detects read/write drift against the dormant interface", () => {
