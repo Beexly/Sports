@@ -9,6 +9,7 @@ Adds a focused hardening pass for the local-only API v1 shadow stack:
 - reviewer merge checklist
 - top-level stack navigation
 - explicit CI job for the API v1 boundary guard
+- repo-visible verification log
 
 ## Safety Notes
 
@@ -23,6 +24,8 @@ Adds a focused hardening pass for the local-only API v1 shadow stack:
 - No billing or partner-account action.
 
 ## Verification
+
+See `docs/api/API_V1_AUTONOMOUS_POLISH_VERIFICATION_LOG.md` for the exact local run log.
 
 ```bash
 npm.cmd run test --workspace=apps/web -- api-v1-boundary-guard.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-adapter-harness.test.ts api-v1-db-schema-proposal.test.ts api-v1-persistence.test.ts api-v1-consumer-registry.test.ts api-v1-shadow-seam.test.ts

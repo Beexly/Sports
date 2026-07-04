@@ -49,6 +49,7 @@ Status: copy-paste-ready PR map only. GitHub CLI auth is required before live PR
      - adds reviewer merge checklist
      - adds README stack navigation
      - adds a focused CI API v1 boundary job
+     - adds `docs/api/API_V1_AUTONOMOUS_POLISH_VERIFICATION_LOG.md`
 
 ## Current Autonomous Polish PR Body
 

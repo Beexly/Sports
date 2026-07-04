@@ -57,6 +57,7 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json` | Machine-readable archive with `livePromotionAllowed=false`. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md` | Rendered human-readable archive. |
 | `docs/api/API_V1_REVIEWER_MERGE_CHECKLIST.md` | Reviewer checklist and stop-sign list for stacked PR review. |
+| `docs/api/API_V1_AUTONOMOUS_POLISH_VERIFICATION_LOG.md` | Exact local verification commands, outcomes, caveats, and GitHub auth blocker. |
 
 ## Focused Tests
 
