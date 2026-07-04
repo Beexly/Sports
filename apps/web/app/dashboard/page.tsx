@@ -164,13 +164,11 @@ export default async function DashboardPage() {
     performanceVisible &&
     performancePolicy.publicWinRate !== null &&
     performancePolicy.publicWinRate >= 55;
-  // Wilson 95% band under the headline rate — the point estimate never travels
-  // without its uncertainty (audit fix: unbanded dashboard win rate).
   const winRateWilson =
     performanceVisible && performancePolicy.publicWinRate !== null
       ? wilsonInterval(canonicalWins, canonicalWins + canonicalLosses)
       : null;
-  const winRateSubtext = winRateWilson ? `95% band ${formatWilsonPct(winRateWilson, 0)}` : null;
+  const winRateSubtext = winRateWilson ? `Wilson band ${formatWilsonPct(winRateWilson, 0)}` : null;
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">

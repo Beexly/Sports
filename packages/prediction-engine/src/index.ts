@@ -448,6 +448,46 @@ export type { TeamGameEfficiency, TeamRating, OpponentAdjustOptions } from "./op
 // plus attributed contributions for interpretation/narration.
 export { compositeScore } from "./composite-score.js";
 export type { WeightedSignal, SignalContribution, CompositeScore, CompositeScoreOptions } from "./composite-score.js";
+export { assessCalibrationContract } from "./gse-score/calibration-contract.js";
+export type {
+  CalibrationContractInput,
+  CalibrationContractResult,
+  CalibrationContractStatus,
+} from "./gse-score/calibration-contract.js";
+export { evaluateFeatureContract } from "./gse-score/feature-contract.js";
+export type {
+  FeatureContractDriver,
+  FeatureContractInput,
+  FeatureContractResult,
+  FeatureContractStatus,
+  FeatureSourcePolicy,
+  FeatureSourceStatus,
+  GseFeatureValue,
+} from "./gse-score/feature-contract.js";
+export { computeGseActionScore } from "./gse-score/gse-action-score.js";
+export type {
+  GseActionDecision,
+  GseActionDriver,
+  GseActionScoreInput,
+  GseActionScoreResult,
+} from "./gse-score/gse-action-score.js";
+export { aggregateModelParliament } from "./gse-score/model-parliament.js";
+export type {
+  ModelParliamentDriver,
+  ModelParliamentInput,
+  ModelParliamentResult,
+  ModelParliamentStatus,
+  ModelVote,
+} from "./gse-score/model-parliament.js";
+export { computeNoBetStrength } from "./gse-score/no-bet-strength.js";
+export type {
+  NoBetDecision,
+  NoBetDriver,
+  NoBetRiskFactor,
+  NoBetRiskInput,
+  NoBetStrengthInput,
+  NoBetStrengthResult,
+} from "./gse-score/no-bet-strength.js";
 // Universal signal ledger — the persistent "weight everything" accumulation layer
 // that bridges stored ledger rows to the composer (NOT wired into the live score).
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
