@@ -19,9 +19,11 @@ The API v1 seam now has a local consumer-registry contract that future persisten
 | `apps/web/lib/api/v1/audit-ledger.ts` | Builds an append-only hash-chain ledger for API allow, deny, quota, registration, revocation, rotation, and scope events. |
 | `apps/web/lib/api/v1/persistence.ts` | Defines the local shadow persistence boundary future durable stores must match. |
 | `apps/web/lib/api/v1/schema-proposal.ts` | Defines proposal-only durable table shapes and rollback validation without mutating Prisma. |
+| `apps/web/lib/api/v1/durable-adapter-harness.ts` | Defines the conformance suite future durable adapters must pass before live storage is considered. |
 | `apps/web/__tests__/api-v1-consumer-registry.test.ts` | Proves registry validation, revocation, rotation, quota, gateway conversion, and audit tamper detection. |
 | `apps/web/__tests__/api-v1-persistence.test.ts` | Proves quota/audit write semantics and promotion-plan blockers. |
 | `apps/web/__tests__/api-v1-db-schema-proposal.test.ts` | Proves the durable schema proposal remains route-free, migration-free, env-free, and raw-key-free. |
+| `apps/web/__tests__/api-v1-durable-adapter-harness.test.ts` | Proves memory and mocked transaction stores conform to quota/audit behavior. |
 
 ## Consumer Record Invariants
 
@@ -55,4 +57,4 @@ Before a live route is added:
 6. Add route tests proving denied responses never return protected payload data.
 7. Keep OpenAPI generation in CI and mark live endpoints only when routes exist.
 
-See `docs/api/API_V1_PERSISTENCE_ADAPTER.md` for the local adapter contract and `docs/api/API_V1_DATABASE_SCHEMA_PROPOSAL.md` for the proposal-only durable schema.
+See `docs/api/API_V1_PERSISTENCE_ADAPTER.md` for the local adapter contract, `docs/api/API_V1_DATABASE_SCHEMA_PROPOSAL.md` for the proposal-only durable schema, and `docs/api/API_V1_DURABLE_ADAPTER_HARNESS.md` for the local conformance harness.

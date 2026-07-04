@@ -1,6 +1,7 @@
 export * from "./audit-ledger";
 export * from "./api-key";
 export * from "./consumer-registry";
+export * from "./durable-adapter-harness";
 export * from "./envelope";
 export * from "./openapi";
 export * from "./payload-rights";

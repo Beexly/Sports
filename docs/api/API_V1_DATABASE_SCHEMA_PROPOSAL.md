@@ -71,3 +71,5 @@ git diff --check
 - No rollback rehearsal has been run against a disposable database.
 - No owner approval exists for live API use.
 - No partner, billing, secret, or credential path exists.
+
+The next supporting artifact is `docs/api/API_V1_DURABLE_ADAPTER_HARNESS.md`, which adds a local conformance harness and mocked transaction boundary without changing any of these blockers.

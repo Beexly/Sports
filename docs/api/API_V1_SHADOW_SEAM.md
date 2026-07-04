@@ -29,10 +29,12 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/lib/api/v1/audit-ledger.ts` | Creates and verifies a local hash-chained audit event ledger for API decisions. |
 | `apps/web/lib/api/v1/persistence.ts` | Provides a local shadow persistence adapter and promotion-plan gates without adding a database or route. |
 | `apps/web/lib/api/v1/schema-proposal.ts` | Provides proposal-only durable table drafts and rollback validation without editing Prisma or migrations. |
+| `apps/web/lib/api/v1/durable-adapter-harness.ts` | Provides a reusable adapter conformance suite and mocked transaction boundary. |
 | `apps/web/__tests__/api-v1-shadow-seam.test.ts` | Focused Vitest coverage for the seam. |
 | `apps/web/__tests__/api-v1-consumer-registry.test.ts` | Focused Vitest coverage for consumer registry and audit-ledger behavior. |
 | `apps/web/__tests__/api-v1-persistence.test.ts` | Focused Vitest coverage for persistence adapter semantics and promotion blockers. |
 | `apps/web/__tests__/api-v1-db-schema-proposal.test.ts` | Focused Vitest coverage for the schema-proposal boundary. |
+| `apps/web/__tests__/api-v1-durable-adapter-harness.test.ts` | Focused Vitest coverage for adapter conformance and rollback behavior. |
 
 ## Shadow Endpoints
 
@@ -79,13 +81,14 @@ A future live API route should not be added until all of these are true:
 - audit events are hash chained and tamper-evident
 - quota decrement and audit append happen together inside the persistence adapter
 - future durable tables are proposal-only and have a rollback plan before any migration exists
+- future durable adapters must pass the local conformance harness before real storage is considered
 
 ## Verification Commands
 
 Run before promoting or merging this slice:
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails

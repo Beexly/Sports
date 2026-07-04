@@ -32,4 +32,4 @@ git diff --check
 
 ## Follow-Up
 
-The next slice should add a durable adapter interface test harness that can run against both the in-memory shadow store and a mocked transaction boundary. It still should not expose a route or run a migration.
+The durable adapter harness now lives in `docs/api/API_V1_DURABLE_ADAPTER_HARNESS.md`. The next slice should draft a dormant durable adapter interface that maps these mocked operations to the proposed Prisma table names without adding schema, migrations, live routes, secrets, or DB execution.
