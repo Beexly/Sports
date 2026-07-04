@@ -6,6 +6,13 @@ This policy governs GSE, GSN, founder-led posts, sponsor mentions, affiliate men
 
 ## Blocked Claim Patterns
 
+Explicit prompt checks:
+
+- No "lock".
+- No "guaranteed".
+- No "risk free" or "risk-free".
+- No copyrighted footage assumption.
+
 Do not use:
 
 - "lock"

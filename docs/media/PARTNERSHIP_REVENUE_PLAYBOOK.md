@@ -6,6 +6,14 @@ This playbook is a manual outreach and review framework. It does not create live
 
 ## Partner Categories
 
+Prompt label aliases:
+
+- Sports data/API tools are the Sports data / API tools category.
+- Sportsbook/DFS/betting partners are the Sportsbook / DFS / betting partners category.
+- Cloud/AI/dev tools are the Cloud / AI / dev tools category.
+- Sports cards/collectibles are the Sports cards / collectibles category.
+- Local/regional sponsors are the Local / regional sponsors category.
+
 | Category | Why it fits GSE | Content angle | Revenue model | Compliance risk | First outreach angle | Example offer |
 | --- | --- | --- | --- | --- | --- | --- |
 | Creator tools | Helps content workflow | "Tools used to turn one idea into ten assets" | affiliate, sponsor | Low to medium | workflow proof and honest review | disclosed tool review |

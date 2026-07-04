@@ -87,6 +87,10 @@ GSN is the later media/network umbrella. It can house broader board meeting, pod
 14. Documentation Layer - this folder
 15. Tests - `apps/web/__tests__/media-revenue-*.test.ts`, `media-kit-page.test.ts`, `partners-page.test.ts`
 
+## Audit And Handoff
+
+The Codex implementation audit and Claude-visible handoff lives at `docs/media/CODEX_MEDIA_REVENUE_STUDIO_AUDIT.md`.
+
 ## Claim Safety Principles
 
 - No fabricated stats.

@@ -6,6 +6,8 @@ Status: operating plan only. No platform accounts, provider integrations, auto-p
 
 ## First 30 Days
 
+Prompt label: First 30 days.
+
 Minimum weekly cadence:
 
 - 2 long YouTube videos/week

@@ -21,6 +21,10 @@ Each pillar must be evidence-first, platform-aware, and commercial without becom
 
 ## Pillar Rules
 
+- Prompt label aliases:
+  - Betting Psychology / Decision Discipline is the Decision Psychology pillar.
+  - GSE Lab / Building the Engine is the GSE Lab pillar.
+  - Weekly GSE Board Meeting is the Board Meeting pillar.
 - Every pillar must map to a repo evidence surface or a clear draft-only plan.
 - Every sponsor or affiliate mention requires disclosure.
 - Every betting-related post must stay analytical or educational.
