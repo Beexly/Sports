@@ -11,6 +11,7 @@ Branch: `codex/galaxy-dynasty-v2-autonomous`
 - Physics: `@dimforge/rapier3d-compat` local rigid-body props
 - Asset contract: `apps/web/public/galaxy-dynasty/assets/higgsfield-manifest.json`
 - GLB kit: `apps/web/public/galaxy-dynasty/assets/rookie-plaza-city-kit.glb`
+- Priority chunk GLBs: `apps/web/public/galaxy-dynasty/assets/chunks/*.glb`
 - Smoke driver: `scripts/galaxy-dynasty-smoke.mjs`
 
 ## Green Checks So Far
@@ -52,7 +53,8 @@ Chosen now:
 - Three `Points` particle field for Niagara-style Beat Wall VFX.
 - WebAudio layered oscillator/filter synth for MetaSounds-style Beat Wall pulses.
 - World Partition equivalent: distance-loaded campus chunks.
-- Nanite equivalent: instanced GLB/runtime chunks with projected pixel-size LOD and frustum/distance culling.
+- Nanite equivalent: priority async GLB chunk loading, instanced fallback chunks, projected pixel-size LOD, frustum/distance culling, and a 48 MB virtual memory budget shown in the HUD.
+- Lumen equivalent: tunable bloom/post/fog settings, five screen-probe-style point lights, and an SDF/surface-cache shader field tied to player position.
 - PCG equivalent: deterministic instanced campus props and route dressing.
 
 Not added in this green slice:

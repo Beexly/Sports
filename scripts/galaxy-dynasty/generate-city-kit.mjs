@@ -27,6 +27,31 @@ globalThis.FileReader = NodeFileReader;
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "../..");
 const outputDir = path.join(repoRoot, "apps", "web", "public", "galaxy-dynasty", "assets");
+const chunkOutputDir = path.join(outputDir, "chunks");
+
+const lumenSettings = {
+  giQuality: 0.78,
+  reflectionQuality: 0.58,
+  surfaceCacheResolution: 64,
+  screenProbeCount: 5,
+  finalGatherRays: 24,
+  traceDistance: 52,
+  temporalBlend: 0.86,
+  bloomStrength: 0.52,
+  bloomRadius: 0.36,
+  bloomThreshold: 0.22,
+  sdfSteps: 28,
+};
+
+const naniteStreaming = {
+  clusterTriangleBudget: 128,
+  virtualMemoryBudgetMb: 48,
+  chunkMemoryBudgetMb: 4,
+  maxAsyncChunkLoads: 2,
+  pixelErrorThreshold: 38,
+  rNaniteMaxPixelsPerEdge: 42,
+  rNaniteStreamingNumInitialRootPages: 4,
+};
 
 const districts = [
   { label: "Rookie Plaza", x: 0, z: -10, color: 0xf4c95d },
@@ -34,6 +59,13 @@ const districts = [
   { label: "Blacktop", x: 14, z: -2, color: 0xf4c95d },
   { label: "Depths", x: -9, z: 12, color: 0xff2dd6 },
   { label: "Vault", x: 12, z: 13, color: 0x7a5cff },
+];
+
+const chunkSpecs = [
+  { id: "north-academy", x: 0, z: -34, color: 0x00e5ff, seed: 0 },
+  { id: "east-blacktop", x: 34, z: -6, color: 0xf4c95d, seed: 1 },
+  { id: "south-vault", x: 10, z: 35, color: 0x7a5cff, seed: 2 },
+  { id: "west-depths", x: -34, z: 11, color: 0xff2dd6, seed: 3 },
 ];
 
 function material(name, color, emissive = 0x000000, intensity = 0) {
@@ -115,6 +147,67 @@ function addVehicle(group, x, z, rotationY) {
   group.add(car);
 }
 
+function createStreamingChunk(spec) {
+  const chunk = new THREE.Group();
+  chunk.name = `GD_WorldPartition_${spec.id}`;
+  chunk.userData = {
+    clusterNode: {
+      id: spec.id,
+      childIds: [`${spec.id}:props`, `${spec.id}:routes`, `${spec.id}:signals`],
+      clusterBudget: naniteStreaming.clusterTriangleBudget,
+      rootPage: spec.seed % naniteStreaming.rNaniteStreamingNumInitialRootPages,
+    },
+  };
+
+  const platformMat = material(`GD_${spec.id}_platform`, 0x151d28, 0x02060c, 0.12);
+  const accent = material(`GD_${spec.id}_emissive_cluster`, spec.color, spec.color, 0.46);
+  const shadow = material(`GD_${spec.id}_low_cluster`, 0x263247, spec.color, 0.14);
+  chunk.add(mesh(`GD_${spec.id}_walkable_platform`, new THREE.BoxGeometry(17, 0.16, 14), platformMat, [0, -0.04, 0], [1, 1, 1]));
+
+  for (let i = 0; i < 18; i += 1) {
+    const angle = spec.seed + i * 1.618;
+    const radius = 3.5 + ((i * 7 + spec.seed) % 5);
+    const x = Math.cos(angle) * radius;
+    const z = Math.sin(angle) * radius * 0.75;
+    const y = 0.42 + ((i + spec.seed) % 4) * 0.18;
+    const scale = 0.5 + ((i + spec.seed) % 5) * 0.12;
+    const geo = i % 2 === 0 ? new THREE.IcosahedronGeometry(0.34, 3) : new THREE.BoxGeometry(0.62, 0.62, 0.62);
+    const mat = i % 2 === 0 ? accent : shadow;
+    chunk.add(mesh(`GD_${spec.id}_cluster_${i}`, geo, mat, [x, y, z], [scale, scale, scale], angle));
+    if (i % 6 === 0) {
+      chunk.add(mesh(`GD_${spec.id}_pcg_route_${i}`, new THREE.BoxGeometry(0.12, 0.05, 6.6), gold, [x * 0.5, 0.12, z * 0.5], [1, 1, 1], angle));
+    }
+  }
+
+  for (let i = 0; i < 4; i += 1) {
+    const towerHeight = 1.8 + ((i + spec.seed) % 3) * 0.85;
+    chunk.add(
+      mesh(
+        `GD_${spec.id}_distant_tower_${i}`,
+        new THREE.BoxGeometry(1, 1, 1),
+        platformMat,
+        [-5.8 + i * 3.7, towerHeight / 2, 4.6 - (i % 2) * 2.8],
+        [1.1, towerHeight, 1.1],
+      ),
+    );
+  }
+
+  return chunk;
+}
+
+async function exportGlb(object, filePath) {
+  const exporter = new GLTFExporter();
+  const glb = await new Promise((resolve, reject) => {
+    exporter.parse(object, resolve, reject, { binary: true, trs: true, onlyVisible: true });
+  });
+
+  if (!(glb instanceof ArrayBuffer)) {
+    throw new TypeError("Expected GLTFExporter to return binary ArrayBuffer output.");
+  }
+
+  await writeFile(filePath, Buffer.from(glb));
+}
+
 const scene = new THREE.Scene();
 const city = new THREE.Group();
 city.name = "GD_Rookie_Plaza_GLB_Kit";
@@ -180,17 +273,11 @@ for (let i = 0; i < 16; i += 1) {
 }
 city.add(beatWall);
 
-await mkdir(outputDir, { recursive: true });
-const exporter = new GLTFExporter();
-const glb = await new Promise((resolve, reject) => {
-  exporter.parse(city, resolve, reject, { binary: true, trs: true, onlyVisible: true });
-});
-
-if (!(glb instanceof ArrayBuffer)) {
-  throw new TypeError("Expected GLTFExporter to return binary ArrayBuffer output.");
+await mkdir(chunkOutputDir, { recursive: true });
+await exportGlb(city, path.join(outputDir, "rookie-plaza-city-kit.glb"));
+for (const chunkSpec of chunkSpecs) {
+  await exportGlb(createStreamingChunk(chunkSpec), path.join(chunkOutputDir, `${chunkSpec.id}.glb`));
 }
-
-await writeFile(path.join(outputDir, "rookie-plaza-city-kit.glb"), Buffer.from(glb));
 await writeFile(
   path.join(outputDir, "higgsfield-manifest.json"),
   JSON.stringify(
@@ -203,20 +290,30 @@ await writeFile(
         format: "glb",
         renderer: "three",
         lighting: "dynamic-emissive-bloom-fog-tone-mapped-lumen-style",
+        lumenSettings,
         ue5InspiredSystems: [
           "world-partition-distance-streaming",
+          "lumen-style-sdf-surface-cache-and-screen-probes",
           "nanite-style-cluster-dag-and-pixel-lod",
+          "nanite-style-priority-glb-chunk-streaming",
           "rapier-chaos-style-rigid-body-props",
           "niagara-style-three-particles",
           "metasounds-style-webaudio-synth",
           "pcg-instanced-campus-props-and-routes",
         ],
         streaming: {
-          clusterTriangleBudget: 128,
+          clusterTriangleBudget: naniteStreaming.clusterTriangleBudget,
+          virtualMemoryBudgetMb: naniteStreaming.virtualMemoryBudgetMb,
+          chunkMemoryBudgetMb: naniteStreaming.chunkMemoryBudgetMb,
+          maxAsyncChunkLoads: naniteStreaming.maxAsyncChunkLoads,
+          pixelErrorThreshold: naniteStreaming.pixelErrorThreshold,
+          rNaniteMaxPixelsPerEdge: naniteStreaming.rNaniteMaxPixelsPerEdge,
+          rNaniteStreamingNumInitialRootPages: naniteStreaming.rNaniteStreamingNumInitialRootPages,
           maxInitialMemoryMb: 24,
           culling: "distance-priority Object3D visibility plus camera frustum checks",
           lod: "projected pixel-size high/low instanced cluster switching",
-          worldPartitionChunks: ["north-academy", "east-blacktop", "south-vault", "west-depths"],
+          worldPartitionChunks: chunkSpecs.map((chunk) => chunk.id),
+          priorityChunkUrls: chunkSpecs.map((chunk) => `/galaxy-dynasty/assets/chunks/${chunk.id}.glb`),
           compressionDecision: "uncompressed local kit now; Draco or Meshopt reserved for larger imported packs",
         },
       },
@@ -226,6 +323,11 @@ await writeFile(
           url: "/galaxy-dynasty/assets/rookie-plaza-city-kit.glb",
           purpose: "walkable plaza, streets, gates, NPC silhouettes, vehicles, Beat Wall",
         },
+        ...chunkSpecs.map((chunk) => ({
+          id: `world-partition-${chunk.id}`,
+          url: `/galaxy-dynasty/assets/chunks/${chunk.id}.glb`,
+          purpose: "priority-loaded Nanite-style campus chunk GLB for distance and pixel LOD streaming",
+        })),
       ],
     },
     null,
@@ -234,3 +336,4 @@ await writeFile(
 );
 
 console.log(`Generated ${path.join(outputDir, "rookie-plaza-city-kit.glb")}`);
+console.log(`Generated ${chunkSpecs.length} streaming chunk GLBs in ${chunkOutputDir}`);

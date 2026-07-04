@@ -1,15 +1,30 @@
 {
   "name": "Galaxy Dynasty Rookie Plaza HIGGSFIELD manifest",
-  "generatedAt": "2026-07-04T01:00:19.609Z",
+  "generatedAt": "2026-07-04T01:19:51.595Z",
   "source": "Original in-repo procedural GLB kit generated from scripts/galaxy-dynasty/generate-city-kit.mjs",
   "license": "Project-owned original mesh data; no external GTA clone assets or code copied.",
   "runtime": {
     "format": "glb",
     "renderer": "three",
     "lighting": "dynamic-emissive-bloom-fog-tone-mapped-lumen-style",
+    "lumenSettings": {
+      "giQuality": 0.78,
+      "reflectionQuality": 0.58,
+      "surfaceCacheResolution": 64,
+      "screenProbeCount": 5,
+      "finalGatherRays": 24,
+      "traceDistance": 52,
+      "temporalBlend": 0.86,
+      "bloomStrength": 0.52,
+      "bloomRadius": 0.36,
+      "bloomThreshold": 0.22,
+      "sdfSteps": 28
+    },
     "ue5InspiredSystems": [
       "world-partition-distance-streaming",
+      "lumen-style-sdf-surface-cache-and-screen-probes",
       "nanite-style-cluster-dag-and-pixel-lod",
+      "nanite-style-priority-glb-chunk-streaming",
       "rapier-chaos-style-rigid-body-props",
       "niagara-style-three-particles",
       "metasounds-style-webaudio-synth",
@@ -17,6 +32,12 @@
     ],
     "streaming": {
       "clusterTriangleBudget": 128,
+      "virtualMemoryBudgetMb": 48,
+      "chunkMemoryBudgetMb": 4,
+      "maxAsyncChunkLoads": 2,
+      "pixelErrorThreshold": 38,
+      "rNaniteMaxPixelsPerEdge": 42,
+      "rNaniteStreamingNumInitialRootPages": 4,
       "maxInitialMemoryMb": 24,
       "culling": "distance-priority Object3D visibility plus camera frustum checks",
       "lod": "projected pixel-size high/low instanced cluster switching",
@@ -26,6 +47,12 @@
         "south-vault",
         "west-depths"
       ],
+      "priorityChunkUrls": [
+        "/galaxy-dynasty/assets/chunks/north-academy.glb",
+        "/galaxy-dynasty/assets/chunks/east-blacktop.glb",
+        "/galaxy-dynasty/assets/chunks/south-vault.glb",
+        "/galaxy-dynasty/assets/chunks/west-depths.glb"
+      ],
       "compressionDecision": "uncompressed local kit now; Draco or Meshopt reserved for larger imported packs"
     }
   },
@@ -34,6 +61,26 @@
       "id": "rookie-plaza-city-kit",
       "url": "/galaxy-dynasty/assets/rookie-plaza-city-kit.glb",
       "purpose": "walkable plaza, streets, gates, NPC silhouettes, vehicles, Beat Wall"
+    },
+    {
+      "id": "world-partition-north-academy",
+      "url": "/galaxy-dynasty/assets/chunks/north-academy.glb",
+      "purpose": "priority-loaded Nanite-style campus chunk GLB for distance and pixel LOD streaming"
+    },
+    {
+      "id": "world-partition-east-blacktop",
+      "url": "/galaxy-dynasty/assets/chunks/east-blacktop.glb",
+      "purpose": "priority-loaded Nanite-style campus chunk GLB for distance and pixel LOD streaming"
+    },
+    {
+      "id": "world-partition-south-vault",
+      "url": "/galaxy-dynasty/assets/chunks/south-vault.glb",
+      "purpose": "priority-loaded Nanite-style campus chunk GLB for distance and pixel LOD streaming"
+    },
+    {
+      "id": "world-partition-west-depths",
+      "url": "/galaxy-dynasty/assets/chunks/west-depths.glb",
+      "purpose": "priority-loaded Nanite-style campus chunk GLB for distance and pixel LOD streaming"
     }
   ]
 }

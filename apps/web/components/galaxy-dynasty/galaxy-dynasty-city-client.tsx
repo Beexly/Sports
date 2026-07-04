@@ -32,6 +32,8 @@ interface TouchVector {
   readonly y: number;
 }
 
+type ChunkLoadState = "cold" | "queued" | "loaded" | "failed";
+
 interface CampusChunk {
   readonly id: string;
   readonly center: ThreeVector3;
@@ -39,13 +41,21 @@ interface CampusChunk {
   readonly root: ThreeGroup;
   readonly highDetail: ThreeObject3D;
   readonly lowDetail: ThreeObject3D;
+  readonly assetUrl: string;
+  readonly priorityWeight: number;
+  assetRoot: ThreeGroup | null;
   loaded: boolean;
+  streamState: ChunkLoadState;
+  streamPromise: Promise<void> | null;
 }
 
 interface StreamingStats {
   readonly loaded: number;
   readonly highDetail: number;
   readonly total: number;
+  readonly streamed: number;
+  readonly queued: number;
+  readonly memoryMb: number;
 }
 
 interface ParticleField {
@@ -66,12 +76,21 @@ interface PhysicsBridge {
   dispose: () => void;
 }
 
+interface LumenProbeField {
+  readonly probes: readonly InstanceType<typeof THREE.PointLight>[];
+  readonly surfaceCache: InstanceType<typeof THREE.Mesh>;
+  readonly timeUniform: { value: number };
+  readonly playerUniform: { value: ThreeVector3 };
+}
+
 interface GalaxyWorld {
   readonly scene: ThreeScene;
   readonly city: ThreeGroup;
   readonly neon: readonly ThreeMaterial[];
   readonly chunks: readonly CampusChunk[];
   readonly particles: ParticleField;
+  readonly lumen: LumenProbeField;
+  readonly loader: GLTFLoader;
   assetRoot: ThreeGroup | null;
 }
 
@@ -81,6 +100,36 @@ const CITY_KIT_ASSET = {
   license: "original-repo-generated",
   memoryBudgetMb: 24,
   clusterBudget: 128,
+} as const;
+
+const LUMEN_GI_SETTINGS = {
+  giQuality: 0.78,
+  reflectionQuality: 0.58,
+  surfaceCacheResolution: 64,
+  screenProbeCount: 5,
+  finalGatherRays: 24,
+  traceDistance: 52,
+  temporalBlend: 0.86,
+  toneMappingExposure: 1.02,
+  fogDensity: 0.024,
+  bloomStrength: 0.52,
+  bloomRadius: 0.36,
+  bloomThreshold: 0.22,
+  probeLightCount: 5,
+  sdfSteps: 28,
+  postScale: 1,
+} as const;
+
+const NANITE_STREAMING_SETTINGS = {
+  clusterTriangleBudget: 128,
+  virtualMemoryBudgetMb: 48,
+  chunkMemoryBudgetMb: 4,
+  maxAsyncChunkLoads: 2,
+  streamRadiusMultiplier: 1.68,
+  unloadRadiusMultiplier: 1.92,
+  pixelErrorThreshold: 38,
+  rNaniteMaxPixelsPerEdge: 42,
+  rNaniteStreamingNumInitialRootPages: 4,
 } as const;
 
 const DISTRICTS: readonly [DistrictAnchor, ...DistrictAnchor[]] = [
@@ -137,18 +186,18 @@ export function GalaxyDynastyCityClient() {
     if (!mount) return;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio * LUMEN_GI_SETTINGS.postScale, 1.75));
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.98;
+    renderer.toneMappingExposure = LUMEN_GI_SETTINGS.toneMappingExposure;
     mount.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x05070d);
-    scene.fog = new THREE.FogExp2(0x060914, 0.026);
+    scene.fog = new THREE.FogExp2(0x060914, LUMEN_GI_SETTINGS.fogDensity);
 
     const camera = new THREE.PerspectiveCamera(58, mount.clientWidth / mount.clientHeight, 0.1, 240);
     camera.position.set(0, 6.6, 10);
@@ -161,7 +210,12 @@ export function GalaxyDynastyCityClient() {
 
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(mount.clientWidth, mount.clientHeight), 0.44, 0.32, 0.26);
+    const bloom = new UnrealBloomPass(
+      new THREE.Vector2(mount.clientWidth, mount.clientHeight),
+      LUMEN_GI_SETTINGS.bloomStrength,
+      LUMEN_GI_SETTINGS.bloomRadius,
+      LUMEN_GI_SETTINGS.bloomThreshold,
+    );
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
 
@@ -223,7 +277,7 @@ export function GalaxyDynastyCityClient() {
       if (clock.elapsedTime >= nextEngineHudAt) {
         nextEngineHudAt = clock.elapsedTime + 0.5;
         setEngineStatus(
-          `Chunks ${streamingStats.loaded}/${streamingStats.total} · LOD ${streamingStats.highDetail} high · Rapier ${
+          `Chunks ${streamingStats.loaded}/${streamingStats.total} · LOD ${streamingStats.highDetail} high · GLB ${streamingStats.streamed}/${streamingStats.total} · VM ${streamingStats.memoryMb}/${NANITE_STREAMING_SETTINGS.virtualMemoryBudgetMb}MB · SDF ${LUMEN_GI_SETTINGS.sdfSteps} · Rapier ${
             physicsBridge?.links.length ?? 0
           } bodies`,
         );
@@ -336,9 +390,9 @@ function buildGalaxyCity(scene: ThreeScene): GalaxyWorld {
   const city = new THREE.Group();
   scene.add(city);
 
-  const hemi = new THREE.HemisphereLight(0x8fb6ff, 0x090a12, 1.15);
+  const hemi = new THREE.HemisphereLight(0x8fb6ff, 0x090a12, 1.15 + LUMEN_GI_SETTINGS.giQuality * 0.24);
   scene.add(hemi);
-  const moon = new THREE.DirectionalLight(0xdde7ff, 3.4);
+  const moon = new THREE.DirectionalLight(0xdde7ff, 3.4 + LUMEN_GI_SETTINGS.reflectionQuality * 0.72);
   moon.position.set(-9, 18, 7);
   moon.castShadow = true;
   moon.shadow.mapSize.set(2048, 2048);
@@ -410,9 +464,10 @@ function buildGalaxyCity(scene: ThreeScene): GalaxyWorld {
   addBeatTower(city);
   const chunks = createCampusChunks();
   const particles = createParticleField();
+  const lumen = createLumenProbeField(scene);
   scene.add(particles.points);
 
-  return { scene, city, neon: [cyan, gold], chunks, particles, assetRoot: null };
+  return { scene, city, neon: [cyan, gold], chunks, particles, lumen, loader: new GLTFLoader(), assetRoot: null };
 }
 
 function createCampusChunks(): readonly CampusChunk[] {
@@ -429,7 +484,12 @@ function createCampusChunk(id: string, center: ThreeVector3, color: number, seed
   const root = new THREE.Group();
   root.name = `WorldPartition_${id}`;
   root.position.copy(center);
-  root.userData.clusterNode = { id, childIds: [`${id}:props`, `${id}:routes`, `${id}:signals`], clusterBudget: CITY_KIT_ASSET.clusterBudget };
+  root.userData.clusterNode = {
+    id,
+    childIds: [`${id}:props`, `${id}:routes`, `${id}:signals`],
+    clusterBudget: Math.min(CITY_KIT_ASSET.clusterBudget, NANITE_STREAMING_SETTINGS.clusterTriangleBudget),
+    rootPage: seed % NANITE_STREAMING_SETTINGS.rNaniteStreamingNumInitialRootPages,
+  };
 
   const platformMaterial = new THREE.MeshStandardMaterial({ color: 0x151d28, roughness: 0.74, metalness: 0.14 });
   const platform = new THREE.Mesh(new THREE.BoxGeometry(17, 0.16, 14), platformMaterial);
@@ -479,7 +539,12 @@ function createCampusChunk(id: string, center: ThreeVector3, color: number, seed
     root,
     highDetail,
     lowDetail,
+    assetUrl: `/galaxy-dynasty/assets/chunks/${id}.glb`,
+    priorityWeight: 1 + seed * 0.16,
+    assetRoot: null,
     loaded: false,
+    streamState: "cold",
+    streamPromise: null,
   };
 }
 
@@ -510,6 +575,69 @@ function createParticleField(): ParticleField {
   const points = new THREE.Points(geometry, material);
   points.name = "NiagaraStyle_BeatParticles";
   return { points, positions, velocities };
+}
+
+function createLumenProbeField(scene: ThreeScene): LumenProbeField {
+  const timeUniform = { value: 0 };
+  const playerUniform = { value: new THREE.Vector3() };
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: timeUniform,
+      uPlayer: playerUniform,
+      uTraceDistance: { value: LUMEN_GI_SETTINGS.traceDistance },
+      uSdfSteps: { value: LUMEN_GI_SETTINGS.sdfSteps },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uTime;
+      uniform vec3 uPlayer;
+      uniform float uTraceDistance;
+      uniform float uSdfSteps;
+      varying vec2 vUv;
+
+      float sdRing(vec2 point, float radius, float width) {
+        return abs(length(point) - radius) - width;
+      }
+
+      void main() {
+        vec2 centered = vUv * 2.0 - 1.0;
+        float playerFalloff = 1.0 - clamp(length(centered - uPlayer.xz / uTraceDistance), 0.0, 1.0);
+        float ring = 1.0 - smoothstep(0.0, 0.018 + 1.0 / uSdfSteps, sdRing(centered, 0.22 + sin(uTime * 0.7) * 0.035, 0.012));
+        float grid = pow(max(0.0, sin((centered.x + uTime * 0.04) * 24.0) * sin((centered.y - uTime * 0.03) * 24.0)), 4.0);
+        vec3 color = mix(vec3(0.0, 0.55, 0.72), vec3(1.0, 0.78, 0.24), playerFalloff);
+        float alpha = (ring * 0.16 + grid * 0.07 + playerFalloff * 0.08) * ${LUMEN_GI_SETTINGS.giQuality.toFixed(2)};
+        gl_FragColor = vec4(color, alpha);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const surfaceCache = new THREE.Mesh(
+    new THREE.PlaneGeometry(44, 44, LUMEN_GI_SETTINGS.surfaceCacheResolution, LUMEN_GI_SETTINGS.surfaceCacheResolution),
+    material,
+  );
+  surfaceCache.name = "LumenStyle_SDF_SurfaceCache";
+  surfaceCache.rotation.x = -Math.PI / 2;
+  surfaceCache.position.y = 0.045;
+  surfaceCache.renderOrder = 1;
+  scene.add(surfaceCache);
+
+  const probes = DISTRICTS.slice(0, Math.min(LUMEN_GI_SETTINGS.screenProbeCount, LUMEN_GI_SETTINGS.probeLightCount)).map((district, index) => {
+    const probe = new THREE.PointLight(district.color, 4.5 + index * 0.32, LUMEN_GI_SETTINGS.traceDistance * 0.42, 1.8);
+    probe.name = `LumenStyle_ScreenProbe_${district.id}`;
+    probe.position.set(district.position.x, 3.2 + (index % 2) * 0.7, district.position.z);
+    scene.add(probe);
+    return probe;
+  });
+
+  return { probes, surfaceCache, timeUniform, playerUniform };
 }
 
 async function createRapierPhysics(scene: ThreeScene): Promise<PhysicsBridge> {
@@ -848,6 +976,7 @@ function updateCity(world: GalaxyWorld, playerPosition: ThreeVector3, camera: Th
   const activeCity = world.assetRoot ?? world.city;
   const streamingStats = updateWorldPartition(world, playerPosition, camera);
   updateParticleField(world.particles, elapsed);
+  updateLumenProbeField(world.lumen, playerPosition, elapsed);
   activeCity.traverse((object: ThreeObject3D) => {
     const streamRadius = typeof object.userData.streamRadius === "number" ? object.userData.streamRadius : 44;
     object.visible = object.position.distanceTo(playerPosition) < streamRadius || object.name.includes("Floor");
@@ -865,16 +994,34 @@ function updateCity(world: GalaxyWorld, playerPosition: ThreeVector3, camera: Th
   return streamingStats;
 }
 
+function updateLumenProbeField(lumen: LumenProbeField, playerPosition: ThreeVector3, elapsed: number) {
+  lumen.timeUniform.value = elapsed;
+  lumen.playerUniform.value.copy(playerPosition);
+  lumen.surfaceCache.visible = playerPosition.y < 2.1;
+
+  for (const [index, probe] of lumen.probes.entries()) {
+    const distance = probe.position.distanceTo(playerPosition);
+    const falloff = 1 - THREE.MathUtils.clamp(distance / LUMEN_GI_SETTINGS.traceDistance, 0, 1);
+    probe.intensity = 2.2 + falloff * (6.8 + LUMEN_GI_SETTINGS.finalGatherRays * 0.035);
+    probe.decay = 1.45 + LUMEN_GI_SETTINGS.temporalBlend * 0.4;
+    probe.position.y = 3.1 + Math.sin(elapsed * 0.75 + index) * 0.28;
+  }
+}
+
 function updateWorldPartition(world: GalaxyWorld, playerPosition: ThreeVector3, camera: ThreePerspectiveCamera): StreamingStats {
   camera.updateMatrixWorld();
   const projection = new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
   const frustum = new THREE.Frustum().setFromProjectionMatrix(projection);
   let loaded = 0;
   let highDetail = 0;
+  let streamed = 0;
+  let queued = 0;
 
   for (const chunk of world.chunks) {
     const distance = chunk.center.distanceTo(playerPosition);
-    const shouldLoad = distance < chunk.radius * 1.65;
+    const shouldLoad =
+      distance < chunk.radius * NANITE_STREAMING_SETTINGS.streamRadiusMultiplier ||
+      (chunk.loaded && distance < chunk.radius * NANITE_STREAMING_SETTINGS.unloadRadiusMultiplier);
     if (shouldLoad && !chunk.loaded) {
       world.scene.add(chunk.root);
       chunk.loaded = true;
@@ -888,13 +1035,69 @@ function updateWorldPartition(world: GalaxyWorld, playerPosition: ThreeVector3, 
     const visible = frustum.intersectsSphere(new THREE.Sphere(chunk.center, chunk.radius));
     chunk.root.visible = visible;
     const pixelSize = estimateProjectedPixelSize(camera, chunk.center, chunk.radius);
-    const useHighDetail = visible && pixelSize > 42;
-    chunk.highDetail.visible = useHighDetail;
+    const useHighDetail = visible && pixelSize > NANITE_STREAMING_SETTINGS.pixelErrorThreshold;
+    if (chunk.assetRoot) {
+      chunk.assetRoot.visible = useHighDetail;
+      chunk.highDetail.visible = false;
+    } else {
+      chunk.highDetail.visible = useHighDetail;
+    }
     chunk.lowDetail.visible = visible && !useHighDetail;
     if (useHighDetail) highDetail += 1;
+    if (chunk.streamState === "loaded") streamed += 1;
+    if (chunk.streamState === "queued") queued += 1;
   }
 
-  return { loaded, highDetail, total: world.chunks.length };
+  queueCampusChunkStreams(world, playerPosition, camera);
+  const memoryMb = Math.min(
+    NANITE_STREAMING_SETTINGS.virtualMemoryBudgetMb,
+    CITY_KIT_ASSET.memoryBudgetMb + streamed * NANITE_STREAMING_SETTINGS.chunkMemoryBudgetMb,
+  );
+  return { loaded, highDetail, total: world.chunks.length, streamed, queued, memoryMb };
+}
+
+function queueCampusChunkStreams(world: GalaxyWorld, playerPosition: ThreeVector3, camera: ThreePerspectiveCamera) {
+  const activeLoads = world.chunks.filter((chunk) => chunk.streamState === "queued").length;
+  const capacity = Math.max(0, NANITE_STREAMING_SETTINGS.maxAsyncChunkLoads - activeLoads);
+  if (capacity === 0) return;
+
+  const candidates = world.chunks
+    .filter((chunk) => chunk.loaded && chunk.streamState === "cold")
+    .map((chunk) => {
+      const distance = Math.max(1, chunk.center.distanceTo(playerPosition));
+      const pixelSize = estimateProjectedPixelSize(camera, chunk.center, chunk.radius);
+      return {
+        chunk,
+        priority: (pixelSize / NANITE_STREAMING_SETTINGS.rNaniteMaxPixelsPerEdge) * chunk.priorityWeight + 1 / distance,
+      };
+    })
+    .sort((a, b) => b.priority - a.priority)
+    .slice(0, capacity);
+
+  for (const candidate of candidates) {
+    candidate.chunk.streamState = "queued";
+    candidate.chunk.streamPromise = hydrateCampusChunkAsset(world, candidate.chunk);
+  }
+}
+
+async function hydrateCampusChunkAsset(world: GalaxyWorld, chunk: CampusChunk) {
+  try {
+    const gltf = await world.loader.loadAsync(chunk.assetUrl);
+    const asset = gltf.scene;
+    asset.name = `HIGGSFIELD_NaniteChunk_${chunk.id}`;
+    asset.traverse((object: ThreeObject3D) => {
+      object.userData.streamRadius = chunk.radius;
+      if (object instanceof THREE.Mesh) {
+        object.castShadow = true;
+        object.receiveShadow = true;
+      }
+    });
+    chunk.root.add(asset);
+    chunk.assetRoot = asset;
+    chunk.streamState = "loaded";
+  } catch {
+    chunk.streamState = "failed";
+  }
 }
 
 function estimateProjectedPixelSize(camera: ThreePerspectiveCamera, center: ThreeVector3, radius: number) {
@@ -928,8 +1131,7 @@ function updateParticleField(field: ParticleField, elapsed: number) {
 }
 
 async function hydrateGalaxyAssets(scene: ThreeScene, world: GalaxyWorld) {
-  const loader = new GLTFLoader();
-  const gltf = await loader.loadAsync(CITY_KIT_ASSET.url);
+  const gltf = await world.loader.loadAsync(CITY_KIT_ASSET.url);
   const root = gltf.scene;
   root.name = "HIGGSFIELD Rookie Plaza GLB city kit";
   root.traverse((object: ThreeObject3D) => {

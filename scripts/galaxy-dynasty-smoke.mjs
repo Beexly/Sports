@@ -23,8 +23,9 @@ async function exerciseDesktop(browser) {
   });
   await page.waitForFunction(() => {
     const status = document.querySelector('[aria-label="Galaxy engine status"]');
-    return Boolean(status?.textContent?.includes("Rapier 5 bodies"));
-  });
+    const text = status?.textContent ?? "";
+    return text.includes("Rapier 5 bodies") && text.includes("GLB") && text.includes("VM") && text.includes("SDF");
+  }, { timeout: 60000 });
   await page.keyboard.down("KeyW");
   await page.keyboard.down("ShiftLeft");
   await page.waitForTimeout(350);

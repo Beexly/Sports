@@ -20,6 +20,8 @@ export interface RookiePlazaSnapshot {
   };
   readonly engine: {
     readonly streaming: "world-partition-local";
+    readonly nanite: "priority-glb-chunks-pixel-lod";
+    readonly lumen: "sdf-surface-cache-probes";
     readonly physics: "rapier-local";
     readonly vfx: "three-particles";
     readonly audio: "webaudio-metasynth";
@@ -65,6 +67,8 @@ export function getRookiePlazaSnapshot(now = Date.now()): RookiePlazaSnapshot {
     },
     engine: {
       streaming: "world-partition-local",
+      nanite: "priority-glb-chunks-pixel-lod",
+      lumen: "sdf-surface-cache-probes",
       physics: "rapier-local",
       vfx: "three-particles",
       audio: "webaudio-metasynth",

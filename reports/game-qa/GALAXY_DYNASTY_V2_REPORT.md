@@ -11,6 +11,7 @@ Updated: 2026-07-04
 - Added `scripts/galaxy-dynasty/generate-city-kit.mjs` to regenerate the original in-repo GLB kit.
 - Added `scripts/galaxy-dynasty-smoke.mjs` for desktop/mobile Playwright smoke screenshots.
 - Added v12 web equivalents for UE5 inspiration: World Partition chunk streaming, Nanite-style projected pixel LOD, Rapier rigid-body props, Three particle VFX, WebAudio synth pulses, and deterministic PCG props/routes.
+- Added explicit Lumen/Nanite tuning: SDF surface-cache shader field, screen-probe-style point lights, runtime GI/post settings, priority async chunk GLB streaming, chunk memory budgets, and four generated campus chunk GLBs.
 
 ## License And Reuse
 
@@ -22,8 +23,8 @@ Updated: 2026-07-04
 
 - GTA-inspired: city streets, chase camera, low HUD, night lighting, sprint/jump movement, vehicles staged for Phase 2.
 - RuneScape-inspired: central hub, readable floor routes, quest boards, NPC stations, named gates, dense but navigable plaza dressing.
-- Lumen-style web mimic: emissive city materials, bloom, ACES tone mapping, fog, dynamic lights.
-- Nanite-style web mimic: GLB manifest, memory budget, 128-triangle cluster budget, chunk DAG metadata, runtime distance/frustum culling, and projected pixel-size high/low instanced LOD.
+- Lumen-style web mimic: emissive city materials, bloom, ACES tone mapping, fog, dynamic lights, screen-probe-style point lights, and a surface-cache/SDF shader field driven by player position.
+- Nanite-style web mimic: GLB manifest, memory budget, 128-triangle cluster budget, chunk DAG metadata, priority chunk GLB URLs, async chunk load state, runtime distance/frustum culling, and projected pixel-size high/low instanced LOD.
 - UE5-suite web mimic: streamed campus chunks, Rapier motion, Three particle field, MetaSounds-style synth, and PCG route/prop dressing.
 
 ## Verification Evidence
@@ -43,13 +44,13 @@ Build and gate logs are written during final verification:
 
 ## Final Verification Result
 
-- Typecheck: passed after v12.
-- Full web lint: passed after v12.
-- Focused web test: passed after v12.
-- Desktop/mobile Playwright smoke: passed after v12 with screenshots.
-- Production build: passed after v12.
-- Trust gate: passed after v12.
-- Secret scan: passed after v12.
+- Typecheck: passed after Lumen/Nanite streaming pass.
+- Full web lint: passed after Lumen/Nanite streaming pass.
+- Focused web test: passed after Lumen/Nanite streaming pass.
+- Desktop/mobile Playwright smoke: passed after Lumen/Nanite streaming pass with screenshots.
+- Production build: passed after Lumen/Nanite streaming pass.
+- Trust gate: passed after Lumen/Nanite streaming pass.
+- Secret scan: passed after Lumen/Nanite streaming pass.
 
 ## Review And Debug Gate
 
@@ -63,5 +64,6 @@ Runtime hypotheses checked:
 - Hypothesis 2: Mobile controls and HUD could overlap after adding room status and Beat controls. Evidence: first screenshot showed overlap, the HUD was patched, and the second mobile screenshot shows joystick, minimap, prompt, and Beat controls readable without collision.
 - Hypothesis 3: Build could silently pass while Prisma was misconfigured. Evidence: first build used an invalid local Postgres URL and logged Prisma auth noise, so build was rerun with `DATABASE_URL` unset to use repo stub mode; final `web-build.exit` is `0` and the log has no Prisma authentication failures.
 - Hypothesis 4: Room presence could remain a decorative ghost. Evidence: `/api/galaxy/rookie-plaza` returned live ticks during smoke (`roomTick: 12`) and the HUD rendered room tick plus Beat BPM.
-- Hypothesis 5: Rapier WASM could fail after the page boots. Evidence: v12 smoke captured `Chunks 4/4 · LOD 4 high · Rapier 5 bodies` with no page or console errors.
+- Hypothesis 5: Rapier WASM could fail after the page boots. Evidence: latest smoke captured `Chunks 4/4 · LOD 4 high · GLB 4/4 · VM 40/48MB · SDF 28 · Rapier 5 bodies` with no page or console errors.
 - Hypothesis 6: Production build could fail on the Rapier dynamic import or WASM packaging. Evidence: `reports/game-qa/web-build.exit` is `0`.
+- Hypothesis 7: Lumen/Nanite equivalents could remain declared but not observable at runtime. Evidence: the smoke script now waits for HUD text containing `GLB`, `VM`, `SDF`, and `Rapier 5 bodies`, and the manifest records the chunk URLs plus Lumen/Nanite tuning budgets.

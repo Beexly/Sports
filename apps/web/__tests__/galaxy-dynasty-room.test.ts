@@ -11,6 +11,8 @@ describe("Galaxy Dynasty Rookie Plaza room", () => {
     expect(first.routes.some((route) => route.id === "beat" && route.status === "active")).toBe(true);
     expect(first.engine).toEqual({
       streaming: "world-partition-local",
+      nanite: "priority-glb-chunks-pixel-lod",
+      lumen: "sdf-surface-cache-probes",
       physics: "rapier-local",
       vfx: "three-particles",
       audio: "webaudio-metasynth",
