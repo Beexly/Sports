@@ -16,13 +16,27 @@ Visible docs:
 - `docs/fable/aws/AWS_FINAL_REPORT.md`
 
 Visible code:
+- `apps/web/app/fable/*`
 - `apps/web/lib/fable/*`
+- `scripts/fable-aws-operating-intelligence.ts`
 
 Visible tests:
 - `apps/web/lib/fable/*.test.ts`
+- `apps/web/__tests__/next-config-policy.test.ts`
+- `apps/web/__tests__/public-copy-scan-strong.test.ts`
+
+Visible app routes:
+- `/fable` - public evidence lab backed by local FABLE docs and validators.
 
 Visible AWS skeletons:
 - `infrastructure/aws/amplify/*`
+- `infrastructure/aws/cdk/*`
+- `docs/fable/aws/fixtures/*`
+- `docs/fable/aws/governance-os/*`
+
+Visible schemas:
+- `schemas/fable/personal-learning-evidence.schema.json`
+- `schemas/fable/aws-local-fixture-library.schema.json`
 
 GitHub issue bodies:
 - FABLE issues: `docs/fable/GITHUB_ISSUES_TO_CREATE.md`

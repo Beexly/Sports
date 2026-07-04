@@ -1,6 +1,8 @@
 # FABLE Index
 
 Core evidence:
+- `apps/web/app/fable/page.tsx`
+- `apps/web/lib/fable/public-summary.ts`
 - `docs/fable/evidence/CLAIM_EVIDENCE_LEDGER.md`
 - `docs/fable/evidence/EVIDENCE_INDEX.md`
 - `docs/fable/REPO_REALITY_MAP.md`
@@ -33,6 +35,7 @@ Personal AWS learning:
 - `docs/personal/aws/AWS_LEARNING_TO_REPO_ACTIONS.md`
 - `docs/personal/aws/AWS_PORTFOLIO_CASE_STUDY.md`
 - `schemas/fable/personal-learning-evidence.schema.json`
+- `schemas/fable/aws-local-fixture-library.schema.json`
 
 AWS evidence:
 - `docs/fable/aws/README.md`
@@ -57,6 +60,11 @@ AWS evidence:
 - `docs/fable/aws/AWS_MACHINE_LADDER.md`
 - `docs/fable/aws/AWS_TECHNIQUE_LEDGER.md`
 - `docs/fable/aws/AWS_OPERATING_INTELLIGENCE_RUNBOOK.md`
+- `docs/fable/aws/fixtures/README.md`
+- `docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json`
+- `docs/fable/aws/governance-os/README.md`
+- `docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json`
+- `docs/fable/aws/governance-os/guard-rules/fable-shadow-control.guard`
 - `docs/fable/aws/AGENTCORE_SECURITY_FIREBREAK.md`
 - `docs/fable/aws/AGENT_TOOL_PERMISSION_MATRIX.md`
 - `docs/fable/aws/AGENT_EVALUATION_RUBRICS.md`

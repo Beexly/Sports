@@ -1,5 +1,7 @@
 import { validateAwsCostAndDeployGates } from "../aws-gates";
 import { evaluateAwsDecision } from "../aws-decision-engine";
+import { evaluateShadowControlTowerBlueprint } from "../aws-governance-os";
+import { validateAwsLocalFixtureLibrary } from "../aws-local-fixtures";
 import type { FableSourceRegistryEntry } from "../source-registry";
 import {
   AwsDecisionEngineEvaluationSchema,
@@ -145,6 +147,26 @@ export function validateAwsDecisionEngineDefaults(): EvidenceValidationReport {
   }
 
   return report(issues);
+}
+
+export function validateAwsFixtureLibraryEvidence(raw: unknown): EvidenceValidationReport {
+  const validation = validateAwsLocalFixtureLibrary(raw);
+
+  return report(
+    validation.issues.map((issue) =>
+      error("aws-fixture-library", "docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json", issue)
+    )
+  );
+}
+
+export function validateAwsGovernanceOsEvidence(raw: unknown): EvidenceValidationReport {
+  const validation = evaluateShadowControlTowerBlueprint(raw);
+
+  return report(
+    validation.issues.map((issue) =>
+      error("aws-governance-os", "docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json", issue)
+    )
+  );
 }
 
 export function validatePersonalLearningEvidence(raw: unknown): EvidenceValidationReport {

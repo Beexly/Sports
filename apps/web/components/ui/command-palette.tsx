@@ -24,6 +24,7 @@ const COMMANDS: Command[] = [
   { label: "Parlay MRI", href: "/parlay-mri", group: "Intelligence", keywords: "parlay risk genome" },
   { label: "The Academy", href: "/academy", group: "Intelligence", keywords: "train scenarios lessons" },
   { label: "Trust Ledger", href: "/ledger", group: "Intelligence", keywords: "merkle proof record" },
+  { label: "FABLE Evidence Lab", href: "/fable", group: "Intelligence", keywords: "proof evidence source rights claims aws gates fable" },
   { label: "CLV Tracker", href: "/track", group: "Intelligence", keywords: "bets clv closing line value calibration roi" },
   { label: "The Cipher", href: "/cipher", group: "Intelligence", keywords: "puzzle hunt easter egg" },
   { label: "Methodology", href: "/methodology", group: "Intelligence", keywords: "how method" },

@@ -5,6 +5,8 @@ import { buildFableSourceRegistry } from "../source-registry";
 import {
   validateAwsGateDefaults,
   validateAwsDecisionEngineDefaults,
+  validateAwsFixtureLibraryEvidence,
+  validateAwsGovernanceOsEvidence,
   validateClaimLedger,
   validateFableSourceRegistryEntries,
   validateGithubVisibility,
@@ -60,6 +62,12 @@ describe("FABLE evidence harness", () => {
     expect(validateFableSourceRegistryEntries(buildFableSourceRegistry()).ok).toBe(true);
     expect(validateAwsGateDefaults().ok).toBe(true);
     expect(validateAwsDecisionEngineDefaults().ok).toBe(true);
+    expect(validateAwsFixtureLibraryEvidence(readJson("docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json")).ok).toBe(
+      true
+    );
+    expect(
+      validateAwsGovernanceOsEvidence(readJson("docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json")).ok
+    ).toBe(true);
   });
 
   it("validates GitHub navigation paths", () => {

@@ -67,4 +67,9 @@ describe("next.config.mjs — security policy", () => {
       expect(m[1]).not.toMatch(/\*/);
     }
   });
+
+  it("bundles local FABLE docs for the public evidence route", () => {
+    expect(src).toContain('"/fable"');
+    expect(src).toContain('"../../docs/fable/**/*"');
+  });
 });

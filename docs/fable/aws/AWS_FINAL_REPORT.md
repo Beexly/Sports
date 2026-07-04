@@ -11,6 +11,12 @@ Implemented:
 - AWS show-teeth strategy for lawful, falsifiable leverage.
 - AWS model leverage map, model router design, model evaluation plan, AgentCore firebreak, tool permission matrix, evaluation rubrics, SageMaker/Amplify ADRs, and synthetic Clean Rooms partner demo docs.
 - Personal AWS learning bridge under `docs/personal/aws/`, with public-safe proof templates, badge-to-GSE crosswalk, portfolio case study, learning-to-repo actions, and schema-backed evidence boundaries.
+- Public `/fable` app route that exposes AWS deploy/paid-resource gate status from local evidence only; it does not call AWS APIs.
+- No-cost AWS fixture library under `docs/fable/aws/fixtures/`, with S3, IAM, SageMaker, Bedrock/AgentCore, and Clean Rooms scenarios.
+- AWS local fixture validator in `apps/web/lib/fable/aws-local-fixtures.ts`, plus schema and Vitest coverage.
+- Shadow Control Tower governance OS under `docs/fable/aws/governance-os/`, validated by `apps/web/lib/fable/aws-governance-os.ts`.
+- CDK-style synth fixture under `infrastructure/aws/cdk/`; no CDK dependency, bootstrap, synth command, account, or deploy is included.
+- Service scorecard expansion explaining decision meanings, Well-Architected pillar checks, and success metrics.
 
 Service decisions:
 - Amplify: preview-only spike later; no migration or deploy.
@@ -24,10 +30,20 @@ Verification log:
   - Passed: aggregate evidence harness returned `[fable-evidence] OK - all`.
 - `npm run fable:aws-gates`
   - Passed: AWS gate validation returned `[fable-evidence] OK - aws-gates`.
+- `npm run fable:aws-fixtures`
+  - Passed: local AWS fixture library returned `[fable-evidence] OK - aws-fixtures`.
+- `npm run fable:aws-governance`
+  - Passed: Shadow Control Tower governance OS returned `[fable-evidence] OK - aws-governance`.
+- `npm run fable:aws-intel`
+  - Passed: emitted `docs_required: 19`, `docs_present: 19`, `live_aws_action: false`, `paid_resource_used: false`, `fixture_library.fixtures: 5`, `well_architected_pillars_covered: 6`, `shadow_guardrails: 6`, and `well_architected_lens_checks: 6`.
 - `npm run test --workspace=apps/web -- lib/fable/source-registry.test.ts lib/fable/uncertainty.test.ts lib/fable/labeling.test.ts lib/fable/drift.test.ts lib/fable/aws-gates.test.ts lib/fable/aws-decision-engine.test.ts lib/fable/claim-scanner.test.ts lib/fable/docs-claims.test.ts lib/fable/evidence/evidence-harness.test.ts`
   - Passed: 9 files / 33 tests.
+- `npm run test --workspace=apps/web -- lib/fable/public-summary.test.ts lib/fable/evidence/evidence-harness.test.ts __tests__/next-config-policy.test.ts __tests__/public-copy-scan-strong.test.ts`
+  - Passed: 4 files / 27 tests.
+- `npm run test --workspace=apps/web -- lib/fable/aws-local-fixtures.test.ts lib/fable/aws-governance-os.test.ts lib/fable/evidence/evidence-harness.test.ts`
+  - Passed: 3 files / 10 tests.
 - `npm run typecheck --workspaces --if-present`
-  - Passed after the ES2020 target update described in `docs/fable/master/TYPECHECK_DECISION.md`.
+  - Passed after the ES2020 target update described in `docs/fable/master/TYPECHECK_DECISION.md`; re-run after adding the `/fable` route also completed successfully.
 - `npm run guard:secrets`
   - Passed after staging: scanned 3063 tracked files; no secrets detected.
 - `npm run guard:trust`

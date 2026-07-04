@@ -5,6 +5,8 @@ Adds the additive claim-verification, evidence harness, forensic demo, AWS model
 
 Adds a repo-safe personal AWS learning bridge so public AWS learning proof can become GSE/FABLE architecture leverage without exposing private information or touching AWS accounts.
 
+Adds a public `/fable` app route and a no-cost AWS local governance OS: S3/IAM/SageMaker/Bedrock/Clean Rooms fixture library, Shadow Control Tower mock, generated Well-Architected lens checks, self-explaining agent cases, SageMaker drift cards, synthetic Clean Rooms NFL cases, and CDK-style synth fixture. Everything is local and runs without AWS credentials, model calls, deploys, DNS, or paid resources.
+
 ## Why It Matters
 The repo now separates ambition from evidence with executable checks.
 
@@ -19,6 +21,12 @@ The repo now separates ambition from evidence with executable checks.
 - GitHub publication path is documented if CLI auth is unavailable.
 - Personal AWS learning bridge exists under `docs/personal/aws/`.
 - Personal learning evidence validates through `schemas/fable/personal-learning-evidence.schema.json`.
+- AWS local fixture evidence validates through `schemas/fable/aws-local-fixture-library.schema.json`.
+- S3, IAM, SageMaker, Bedrock/AgentCore, and Clean Rooms mock cases exist under `docs/fable/aws/fixtures/`.
+- Shadow Control Tower governance validates through `apps/web/lib/fable/aws-governance-os.ts`.
+- Preventive, detective, and proactive shadow guardrails exist.
+- All six Well-Architected pillars have generated local lens checks.
+- AWS service scorecard includes decision explanation, Well-Architected pillar checks, and success metrics.
 - No personal secrets are included.
 - No AWS account was used.
 - No paid resources were used.
@@ -27,6 +35,7 @@ The repo now separates ambition from evidence with executable checks.
 
 ## Files Likely Touched
 - `apps/web/lib/fable/**`
+- `apps/web/app/fable/**`
 - `scripts/fable-*.ts`
 - `docs/fable/**`
 - `docs/personal/aws/**`
@@ -37,6 +46,9 @@ The repo now separates ambition from evidence with executable checks.
 
 ## Test Plan
 - `npm run fable:evidence`
+- `npm run fable:aws-fixtures`
+- `npm run fable:aws-governance`
+- `npm run fable:aws-intel`
 - `npm run fable:demo`
 - targeted FABLE Vitest tests
 - `npm run typecheck --workspaces --if-present`

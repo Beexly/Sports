@@ -2,6 +2,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PersonalLearningEvidenceLedgerSchema } from "../apps/web/lib/fable/evidence/schemas";
+import { evaluateShadowControlTowerBlueprint } from "../apps/web/lib/fable/aws-governance-os";
+import { WELL_ARCHITECTED_PILLARS, validateAwsLocalFixtureLibrary } from "../apps/web/lib/fable/aws-local-fixtures";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
@@ -24,6 +26,8 @@ const REQUIRED_DOCS = [
   { category: "machines", path: "docs/fable/aws/AWS_MACHINE_LADDER.md" },
   { category: "techniques", path: "docs/fable/aws/AWS_TECHNIQUE_LEDGER.md" },
   { category: "guardrails", path: "docs/fable/aws/AWS_OPERATING_INTELLIGENCE_RUNBOOK.md" },
+  { category: "fixtures", path: "docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json" },
+  { category: "governance", path: "docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json" },
 ] as const;
 
 type RequiredCategory = (typeof REQUIRED_DOCS)[number]["category"];
@@ -40,6 +44,10 @@ const missingDocs = REQUIRED_DOCS.filter((doc) => !existsSync(resolve(repoRoot, 
 const learningEvidence = PersonalLearningEvidenceLedgerSchema.safeParse(
   readJson("docs/personal/aws/personal-learning-evidence.example.json")
 );
+const fixtureLibrary = validateAwsLocalFixtureLibrary(readJson("docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json"));
+const governanceOs = evaluateShadowControlTowerBlueprint(
+  readJson("docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json")
+);
 
 if (!learningEvidence.success) {
   console.error(`[fable-aws-intel] personal learning evidence failed: ${learningEvidence.error.message}`);
@@ -49,6 +57,20 @@ if (!learningEvidence.success) {
 if (missingDocs.length > 0) {
   for (const doc of missingDocs) {
     console.error(`[fable-aws-intel] missing ${doc.category}: ${doc.path}`);
+  }
+  process.exit(1);
+}
+
+if (!fixtureLibrary.ok) {
+  for (const issue of fixtureLibrary.issues) {
+    console.error(`[fable-aws-intel] fixture library failed: ${issue}`);
+  }
+  process.exit(1);
+}
+
+if (!governanceOs.ok) {
+  for (const issue of governanceOs.issues) {
+    console.error(`[fable-aws-intel] governance OS failed: ${issue}`);
   }
   process.exit(1);
 }
@@ -65,6 +87,8 @@ const report = {
     agents: countDocs("agents"),
     apps: countDocs("apps"),
     data: countDocs("data"),
+    fixtures: countDocs("fixtures"),
+    governance: countDocs("governance"),
     guardrails: countDocs("guardrails"),
     learning: countDocs("learning"),
     machines: countDocs("machines"),
@@ -77,6 +101,19 @@ const report = {
     owner_approved_for_public_use: evidenceEntries.filter((entry) => entry.owner_approved_for_public_use).length,
     no_secrets_confirmed: evidenceEntries.filter((entry) => entry.no_secrets_confirmed).length,
     no_paid_resource_confirmed: evidenceEntries.filter((entry) => entry.no_paid_resource_confirmed).length,
+  },
+  fixture_library: {
+    fixtures: fixtureLibrary.fixtureCount,
+    well_architected_pillars_covered: WELL_ARCHITECTED_PILLARS.filter(
+      (pillar) => fixtureLibrary.pillarCoverage[pillar]
+    ).length,
+  },
+  governance_os: {
+    shadow_guardrails: governanceOs.guardrailCount,
+    preventive_controls: governanceOs.controlTypeCounts.preventive,
+    detective_controls: governanceOs.controlTypeCounts.detective,
+    proactive_controls: governanceOs.controlTypeCounts.proactive,
+    well_architected_lens_checks: governanceOs.pillarChecks.length,
   },
 };
 

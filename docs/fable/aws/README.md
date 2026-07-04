@@ -47,6 +47,11 @@ Second-level AWS docs:
 - `AWS_MACHINE_LADDER.md`
 - `AWS_TECHNIQUE_LEDGER.md`
 - `AWS_OPERATING_INTELLIGENCE_RUNBOOK.md`
+- `fixtures/README.md`
+- `fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json`
+- `governance-os/README.md`
+- `governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json`
+- `governance-os/guard-rules/fable-shadow-control.guard`
 - `AWS_SERVICE_SCORECARD.md`
 - `AWS_MODEL_LEVERAGE_MAP.md`
 - `AWS_MODEL_ROUTER_DESIGN.md`

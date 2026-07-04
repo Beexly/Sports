@@ -11,6 +11,7 @@ What is proven:
 - FABLE uncertainty, labeling, drift, parity, AWS gate, and evidence harness primitives have targeted tests.
 - AWS deploy, paid-resource, and decision-engine gates default off for risky AWS action.
 - GitHub navigation exists from the root README into this folder.
+- A public app route at `/fable` can summarize the local evidence ledgers without live AWS calls or unsupported claims.
 
 What is not proven:
 - Any model-performance gain.
@@ -23,6 +24,7 @@ How to verify locally:
 ```bash
 npm run fable:evidence
 npm run test --workspace=apps/web -- lib/fable/evidence/evidence-harness.test.ts
+npm run test --workspace=apps/web -- lib/fable/public-summary.test.ts lib/fable/evidence/evidence-harness.test.ts __tests__/next-config-policy.test.ts __tests__/public-copy-scan-strong.test.ts
 ```
 
 AWS posture:
@@ -37,6 +39,7 @@ Current scope:
 - Calibration and drift are anchored to `packages/prediction-engine/src/probability-calibration.ts`, `calibration-map.ts`, and `calibration-drift.ts`.
 - Source rights are anchored to `apps/web/lib/scraping/source-rights-registry.ts`.
 - New FABLE primitives live in `apps/web/lib/fable`.
+- Public evidence summary code lives in `apps/web/lib/fable/public-summary.ts` and renders through `apps/web/app/fable/page.tsx`.
 - AWS work is design, local guardrails, and zero-cost skeletons only.
 
 Nothing in this folder changes provider accounts, deploys infrastructure, creates paid labeling jobs, or grants rights beyond the existing registry.
