@@ -168,6 +168,21 @@ Draft review fixtures added in the continuation:
 - `apps/web/__tests__/draft-review-fixtures.test.ts`
   - proves expected workflow statuses, closed live-action locks, protected payload omission, and claim-safety counts
 
+First-month media queue fixtures added in the continuation:
+
+- `apps/web/lib/media-revenue/first-month-content-seeds.ts`
+  - preserves the first-week exact content titles from the media plan
+  - defines four weekly content seeds and daily watch topics
+- `apps/web/lib/media-revenue/first-month-content-queue.ts`
+  - builds 90 local draft content items across daily watch posts, long videos, short clips, newsletters, founder build logs, and board meetings
+  - builds 30 manual partner-outreach batches at 10 targets per day
+  - builds a claim-safety batch report over generated titles, hooks, script beats, and CTAs
+  - keeps `DRAFT_ONLY`, `manualReviewRequired`, `publishAllowed=false`, and `externalSendAllowed=false`
+- `apps/web/__tests__/first-month-content-queue.test.ts`
+  - proves first-week exact titles, 30-day coverage, weekly cadence minimums, 300 outreach targets, claim-safety pass, and closed live-action locks
+- `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`
+  - records the local-only fixture contract and boundaries
+
 Metric slice added in the continuation:
 
 - `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
@@ -190,6 +205,7 @@ Completed so far:
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts fences-and-adapters.test.ts` | PASS | 2 files, 13 tests; workflow harness and fence/plugin seams passed together |
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts` | PASS | 1 file, 9 tests; review packet serialization, markdown rendering, append-only ledger, queue filters, summary counts, and live-action locks passed |
 | `npm run test --workspace=apps/web -- draft-review-fixtures.test.ts draft-fence-workflow.test.ts` | PASS | 2 files, 12 tests; representative packet fixtures and batch report passed |
+| `npm run test --workspace=apps/web -- first-month-content-queue.test.ts media-revenue-claim-safety.test.ts` | PASS | 2 files, 9 tests; first-month queue fixtures and claim-safety report passed |
 | `npm run guard:commercial-copy` | PASS | npm entry point works |
 | `npm run guard:performance-claims` | PASS | npm entry point works |
 | `npm run guard:no-raw-ngs` | PASS | npm entry point works |
@@ -202,7 +218,7 @@ Completed so far:
 | `npm run guardrails` | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, three new guards, and eval contracts |
 | `npm run typecheck` | PASS | all workspaces with typecheck scripts completed |
 | `npm run lint` | PASS | `@sports/web` ESLint completed with max warnings 0 |
-| `npm run test --workspaces --if-present` | PASS | 632 test files and 8028 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types |
+| `npm run test --workspaces --if-present` | PASS | 635 test files and 8052 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types |
 | `git diff --check` | PASS | no whitespace errors |
 
 PowerShell syntax caveat:
@@ -217,13 +233,13 @@ Final broad validation completed in this slice.
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
 - API auth, API v1 pure seams, API payload/OpenAPI guardrails, and a route-level shadow harness now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
-- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, and a claim-safety batch report now exist.
+- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and claim-safety batch reports now exist.
 - Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Add media content queue fixtures for the first 30 days and a claim-safety batch scanner for generated titles/scripts.
+1. Add local review-queue export for first-month media queue items without publish/send actions.
 2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
 3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
 4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.

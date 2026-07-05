@@ -103,11 +103,22 @@ The tests prove:
 - unsafe API payload rights block
 - protected payload values are not echoed in workflow results
 
+## First-Month Media Queue
+
+`apps/web/lib/media-revenue/first-month-content-queue.ts` defines the first 30-day media queue as local draft fixtures:
+
+1. 90 content drafts across daily watch posts, long video, short-form, newsletter, founder build-log, and board-meeting formats
+2. 30 manual partner-outreach batches at 10 targets per day
+3. claim-safety report over generated titles, hooks, script beats, and CTAs
+4. all publish/send locks closed
+
+Supporting doc: `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`.
+
 ## Next Gate
 
-The next safe expansion is first-month media queue fixtures:
+The next safe expansion is a local review-queue export:
 
-1. add the first 30-day media content queue as local fixtures
-2. run the claim-safety batch report over generated titles/scripts
+1. render first-month queue items into markdown or JSON review packets
+2. keep payload/title/script scan results attached
 3. keep final approval manual
 4. keep publish/send/API exposure disabled

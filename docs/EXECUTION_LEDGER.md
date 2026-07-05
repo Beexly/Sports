@@ -712,3 +712,20 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   in the Sunday audit before commit.
 - FLAG: local fixtures/report only; no content publish, no email/newsletter send, no affiliate activation,
   no API route exposure, no secrets, no paid services, and no production workflow automation.
+
+## 2026-07-05 - (codex) - Sunday frontier first-month media queue fixtures
+
+- WHAT: Added the first 30-day media queue as local draft fixtures plus a claim-safety batch report. The queue contains
+  90 content drafts across daily watch posts, long-form YouTube, short-form clips, newsletters, founder build logs,
+  and weekly board meetings. It also includes 30 manual partner-outreach batches at 10 targets per day. The batch
+  report scans generated titles, hooks, script beats, and CTAs while keeping all live-action locks closed.
+- FILES: `apps/web/lib/media-revenue/first-month-content-seeds.ts`,
+  `apps/web/lib/media-revenue/first-month-content-queue.ts`,
+  `apps/web/__tests__/first-month-content-queue.test.ts`,
+  `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`, `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: focused app tests passed (`first-month-content-queue.test.ts` + `media-revenue-claim-safety.test.ts`,
+  2 files, 9 tests). Root `npm run typecheck`, `npm run lint`, `npm run guardrails`,
+  `npm run test --workspaces --if-present` (635 files, 8052 tests), and `git diff --check` passed.
+- FLAG: local draft fixtures/report only; no content publish, no social upload, no newsletter send,
+  no partner email, no affiliate activation, no sponsor claim, no secrets, no paid services, and no production automation.
