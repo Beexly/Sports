@@ -17,4 +17,5 @@ export * from "./scopes";
 export * from "./schema-proposal";
 export * from "./shadow-gateway";
 export * from "./shadow-route-harness";
+export * from "./shadow-route-replay";
 export * from "./types";

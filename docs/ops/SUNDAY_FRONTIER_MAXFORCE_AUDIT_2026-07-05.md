@@ -143,6 +143,18 @@ Route-level API shadow harness added in the continuation:
 - `docs/api/API_V1_SHADOW_ROUTE_HARNESS.md`
   - records the harness contract and the live-route boundary
 
+API v1 idempotency replay simulation added in the continuation:
+
+- `apps/web/lib/api/v1/shadow-route-replay.ts`
+  - wraps the shadow route harness with a local in-memory replay store for successful idempotent responses
+  - computes replay keys from method, endpoint path, hashed payload, parsed key id, and external idempotency key
+  - stores no raw API keys or raw request payloads
+  - keeps `routeExposed=false` and durable persistence disabled
+- `apps/web/__tests__/api-v1-shadow-route-replay.test.ts`
+  - proves duplicate successful requests return the same envelope without double-counting usage, denied requests create no success records, payload changes do not replay, and malformed idempotency keys create no replay record
+- `docs/api/API_V1_SHADOW_ROUTE_REPLAY.md`
+  - records the replay contract and boundaries
+
 Draft workflow harness added in the continuation:
 
 - `apps/web/lib/workflows/draft-fence-workflow.ts`
@@ -213,6 +225,7 @@ Completed so far:
 | `node scripts/guardrails/api-payload-rights-scan.mjs` | PASS | 8 fixture cases passed; unsafe API fields fail closed |
 | `node scripts/guardrails/openapi-security-scan.mjs` | PASS | 3 contract files passed shadow OpenAPI security checks |
 | `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-boundary-guard.test.ts` | PASS | 5 files, 40 tests; API v1 route harness, seam, registry, persistence, and boundary guard all passed together |
+| `npm run test --workspace=apps/web -- api-v1-shadow-route-replay.test.ts api-v1-shadow-route-harness.test.ts api-v1-persistence.test.ts` | PASS | 3 files, 19 tests; API replay simulation, route harness, and persistence seam passed |
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts fences-and-adapters.test.ts` | PASS | 2 files, 13 tests; workflow harness and fence/plugin seams passed together |
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts` | PASS | 1 file, 9 tests; review packet serialization, markdown rendering, append-only ledger, queue filters, summary counts, and live-action locks passed |
 | `npm run test --workspace=apps/web -- draft-review-fixtures.test.ts draft-fence-workflow.test.ts` | PASS | 2 files, 12 tests; representative packet fixtures and batch report passed |
@@ -243,7 +256,7 @@ Final broad validation completed in this slice.
 ## Remaining Risks
 
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
-- API auth, API v1 pure seams, API payload/OpenAPI guardrails, and a route-level shadow harness now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
+- API auth, API v1 pure seams, API payload/OpenAPI guardrails, route-level shadow harness, and idempotency replay simulation now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
 - Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
 - Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
@@ -251,16 +264,16 @@ Final broad validation completed in this slice.
 
 ## Next Highest-Leverage Tasks
 
-1. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
-2. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
-3. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
-4. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
-5. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
-6. Add model-card and drift-card generators for every promoted metric.
-7. Add source-policy generation from the web registry into prediction-engine metric fixtures.
-8. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-9. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-10. Add durable local queue persistence simulation for media review packets without DB writes.
+1. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
+2. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
+3. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
+4. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
+5. Add model-card and drift-card generators for every promoted metric.
+6. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+7. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+8. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+9. Add durable local queue persistence simulation for media review packets without DB writes.
+10. Add API replay promotion checks for conflict detection after a durable adapter exists.
 
 ## Safety Statement
 

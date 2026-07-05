@@ -745,3 +745,20 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   `npm run guardrails` passed; `git diff --check` passed.
 - FLAG: local export only; no persistent queue storage, no content publish, no social upload, no newsletter send,
   no partner email, no affiliate activation, no sponsor claim, no secrets, no paid services, and no production automation.
+
+## 2026-07-05 - (codex) - Sunday frontier API v1 idempotency replay simulation
+
+- WHAT: Added a local in-memory replay wrapper around the API v1 shadow route harness. Successful idempotent
+  requests are stored by a replay key built from method, endpoint path, hashed request payload, parsed key id,
+  and external idempotency key. Duplicate successful requests return the same response envelope without
+  double-counting quota usage or appending a second audit event. Denied requests and malformed idempotency keys
+  do not create reusable success records.
+- FILES: `apps/web/lib/api/v1/shadow-route-replay.ts`,
+  `apps/web/__tests__/api-v1-shadow-route-replay.test.ts`,
+  `apps/web/lib/api/v1/index.ts`, `docs/api/API_V1_SHADOW_ROUTE_REPLAY.md`,
+  `docs/api/API_V1_SHADOW_ROUTE_HARNESS.md`, Sunday audit/handoff docs, and commercial ledger.
+- GATE: focused app tests passed (`api-v1-shadow-route-replay.test.ts` + `api-v1-shadow-route-harness.test.ts`
+  + `api-v1-persistence.test.ts`, 3 files, 19 tests); `@sports/web` typecheck passed;
+  `npm run guardrails` passed; `git diff --check` passed.
+- FLAG: local replay simulation only; no live API route, no durable persistence, no Prisma model, no migration,
+  no env vars, no generated keys, no network call, no paid service, and no production API promotion.

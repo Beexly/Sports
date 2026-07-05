@@ -18,6 +18,8 @@ The route harness proves the route-level API v1 contract before any real endpoin
 
 The implementation is pure TypeScript under `apps/web/lib/api/v1/shadow-route-harness.ts`. It does not read environment variables, create credentials, call a network provider, write a database, or expose a live route.
 
+The idempotency replay simulation lives in `apps/web/lib/api/v1/shadow-route-replay.ts`. It wraps the base harness with a local in-memory replay store for successful idempotent responses only.
+
 ## Route Lifecycle
 
 1. Locate the endpoint contract from `scopes.ts`.
@@ -56,6 +58,13 @@ The implementation is pure TypeScript under `apps/web/lib/api/v1/shadow-route-ha
 - quota exhaustion as the route-level rate-limit denial
 - abuse response for malformed request ID, malformed idempotency key, and wrong method
 - no `apps/web/app/api/v1` route tree exists
+
+`apps/web/__tests__/api-v1-shadow-route-replay.test.ts` proves:
+
+- duplicate successful requests return the same response envelope
+- duplicate successful requests do not double-count quota usage
+- denied requests do not create reusable success records
+- malformed idempotency keys create no replay records
 
 ## Boundary
 
