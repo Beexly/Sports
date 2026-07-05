@@ -10,10 +10,10 @@ Updated: 2026-07-04
 | Commercial revenue core | complete for pure seam | `apps/web/lib/revenue/*` | owner review and future route/UI decisions |
 | Partner/offer live registry | not live | no DB schema or provider integration added | owner product decision |
 | Affiliate links | not live | no real links added | owner/compliance approval |
-| B2B Evidence API | shadow/future | existing B2B governance plus closeout docs | API v1 shadow seam |
+| B2B Evidence API | shadow with route harness | existing B2B governance, closeout docs, API v1 shadow seam, and route-level shadow harness | draft workflow harness and owner-gated live-route promotion packet |
 | AWS live resources | not live | no credentials or deploy actions | owner/AWS approval |
 | Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, `partner-offer-compliance-scan`, `api-payload-rights-scan`, `openapi-security-scan`, pricing copy hardening | route-level API harness |
-| Fence and policy seams | complete for pure seam | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*` | draft workflow harness and route-level tests |
+| Fence and policy seams | complete for pure seam | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*`, `apps/web/lib/api/v1/shadow-route-harness.ts` | draft workflow harness |
 
 ## Verification Contract
 
@@ -33,4 +33,6 @@ Every commercial slice must record:
 - Added and wired partner-offer compliance scanner with explicit sportsbook/DFS fail-closed handling.
 - Added pure commercial/source/API fence seams and tests; no live route or partner exposure was added.
 - Added API payload rights scanner and OpenAPI security scanner.
-- Next commercial/API gate: route-level shadow harness with auth, scope, rate-limit, envelope, usage, payload-rights, and abuse-response tests.
+- Added route-level API shadow harness with auth, scope, rate-limit/quota, request ID, envelope, usage event, payload-rights, and abuse-response tests.
+- No live API routes, durable persistence, env vars, secrets, affiliate links, partner exposure, or production API promotion were added.
+- Next commercial/API gate: draft workflow harness for content/API manual-review workflows.

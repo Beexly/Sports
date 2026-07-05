@@ -63,7 +63,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | B. Media Revenue Studio | COMPLETE | Docs, typed media utilities, five public-safe pages, and tests already exist. This slice added stronger guardrails around launch-facing commercial copy. |
 | C. Partnership/Affiliate/Sponsorship layer | COMPLETE FOR PURE SEAM | `docs/commercial`, `docs/revenue`, and `apps/web/lib/revenue` exist with approval, disclosure, responsible-gaming, copy, scoring, pipeline, and audit primitives. No live affiliate links were added. |
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
-| E. B2B Evidence API | PARTIAL WITH PURE SEAMS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, and OpenAPI access. Live `app/api/v1` routes remain intentionally deferred. |
+| E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, and a route-level shadow harness. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
 | G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | PARTIAL | GSS and market gravity exist. Full no-bet governor and market intelligence product wiring remain future work. |
@@ -131,6 +131,18 @@ Pure app seams added in the continuation:
 - `apps/web/lib/api-auth/*`
 - `apps/web/lib/api-v1/*`
 
+Route-level API shadow harness added in the continuation:
+
+- `apps/web/lib/api/v1/shadow-route-harness.ts`
+  - composes auth, consumer registry resolution, scope/origin checks, rate/quota, request ID, response envelope, usage audit event, payload rights, and abuse responses
+  - keeps `routeExposed: false`
+  - records denials without quota debit
+  - blocks malformed request IDs, malformed idempotency keys, method abuse, missing auth, missing scope, exhausted quota, and unsafe payload rights
+- `apps/web/__tests__/api-v1-shadow-route-harness.test.ts`
+  - proves allow and deny behavior before any live route implementation
+- `docs/api/API_V1_SHADOW_ROUTE_HARNESS.md`
+  - records the harness contract and the live-route boundary
+
 Metric slice added in the continuation:
 
 - `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
@@ -149,18 +161,20 @@ Completed so far:
 | `node scripts/guardrails/partner-offer-compliance-scan.mjs` | PASS | 8 fixture cases passed; high-risk offers fail closed |
 | `node scripts/guardrails/api-payload-rights-scan.mjs` | PASS | 8 fixture cases passed; unsafe API fields fail closed |
 | `node scripts/guardrails/openapi-security-scan.mjs` | PASS | 3 contract files passed shadow OpenAPI security checks |
+| `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-boundary-guard.test.ts` | PASS | 5 files, 40 tests; API v1 route harness, seam, registry, persistence, and boundary guard all passed together |
 | `npm run guard:commercial-copy` | PASS | npm entry point works |
 | `npm run guard:performance-claims` | PASS | npm entry point works |
 | `npm run guard:no-raw-ngs` | PASS | npm entry point works |
 | `npx vitest run apps/web/__tests__/guardrails.test.ts` | PASS | 15 tests passed across current file and mirrored worktree file discovered by Vitest |
 | `npx vitest run __tests__/guardrails.test.ts __tests__/fences-and-adapters.test.ts` from `apps/web` | PASS | 2 files, 21 tests |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/receiver-difficulty.test.ts src/metrics/__tests__/expected-yac.test.ts` | PASS | 4 files, 11 tests |
-| `npm run typecheck --workspace=@sports/web` | PASS | app TypeScript checked after fence/API adapter additions |
+| `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts` | PASS | 1 file, 6 tests; proves route-level shadow auth/scope/rate/envelope/usage/payload/abuse behavior |
+| `npm run typecheck --workspace=@sports/web` | PASS | app TypeScript checked after fence/API adapter and route-harness additions |
 | `npm run typecheck --workspace=packages/prediction-engine` | PASS | prediction-engine TypeScript checked after receiving metric additions |
 | `npm run guardrails` | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, three new guards, and eval contracts |
 | `npm run typecheck` | PASS | all workspaces with typecheck scripts completed |
 | `npm run lint` | PASS | `@sports/web` ESLint completed with max warnings 0 |
-| `npm run test --workspaces --if-present` | PASS | 631 test files and 8020 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types |
+| `npm run test --workspaces --if-present` | PASS | 632 test files and 8028 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types |
 | `git diff --check` | PASS | no whitespace errors |
 
 PowerShell syntax caveat:
@@ -173,7 +187,7 @@ Final broad validation completed in this slice.
 ## Remaining Risks
 
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
-- API auth and API v1 pure seams now exist, and API payload/OpenAPI guardrails are wired. Live `app/api/v1` routes remain intentionally deferred until route-level auth, usage persistence, rate limits, payload rights, and abuse tests are proven together.
+- API auth, API v1 pure seams, API payload/OpenAPI guardrails, and a route-level shadow harness now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
 - Fence plugin files now exist as pure plugins. Workflow wiring remains manual/draft-only until content/API workflow tests are added.
 - Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
@@ -181,8 +195,8 @@ Final broad validation completed in this slice.
 
 ## Next Highest-Leverage Tasks
 
-1. Add route-level API v1 shadow endpoints only after auth, scope, rate-limit, response-envelope, payload-rights, usage-event, and abuse-response tests are green.
-2. Wire fence plugins into draft-only content/API workflow harnesses with manual-review gates.
+1. Wire fence plugins into draft-only content/API workflow harnesses with manual-review gates.
+2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
 3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
 4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
 5. Add media content queue fixtures for the first 30 days and a claim-safety batch scanner for generated titles/scripts.
@@ -190,7 +204,7 @@ Final broad validation completed in this slice.
 7. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
 8. Add model-card and drift-card generators for every promoted metric.
 9. Add source-policy generation from the web registry into prediction-engine metric fixtures.
-10. Add API abuse-response fixtures for malformed keys, replayed idempotency keys, overscoped consumers, and unsafe payload attempts.
+10. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
 
 ## Safety Statement
 

@@ -617,3 +617,23 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   root `npm run guardrails` passed with both scripts wired into the composite chain.
 - FLAG: local scanner/fixture work only; no live API routes, no persistence, no env vars, no secrets,
   no paid resources, and no production API promotion.
+
+## 2026-07-05 - (codex) - Sunday frontier route-level API shadow harness
+
+- WHAT: Completed the next commercial/API gate from the Sunday handoff without exposing live routes.
+  Added a pure `handleApiV1ShadowRouteRequest()` harness that composes the existing API v1 auth,
+  shadow consumer registry, origin/scope gateway, monthly quota/rate decision, request id,
+  response envelope, usage audit event, payload-rights check, and abuse-response behavior. Denials
+  append hash-chained `request_denied` events without debiting quota; allowed requests append
+  `request_allowed` and debit local shadow quota. Malformed request ids, malformed idempotency keys,
+  method abuse, missing auth, missing scopes, unsafe payload rights, and quota exhaustion all fail closed.
+- FILES: `apps/web/lib/api/v1/shadow-route-harness.ts`, `apps/web/lib/api/v1/index.ts`,
+  `apps/web/__tests__/api-v1-shadow-route-harness.test.ts`,
+  `docs/api/API_V1_SHADOW_ROUTE_HARNESS.md`, `docs/api/API_V1_SHADOW_SEAM.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: focused route harness Vitest passed (1 file, 6 tests); API v1 focused suite passed (5 files,
+  40 tests); `@sports/web` typecheck passed after strict generic helper repair; root `npm run typecheck`,
+  `npm run lint`, `npm run guardrails`, `npm run test --workspaces --if-present` (632 files, 8028 tests),
+  and `git diff --check` passed.
+- FLAG: pure local harness only; no `apps/web/app/api/v1` route tree, no durable persistence, no env vars,
+  no secrets, no DB/schema changes, no live partner/API access, and no production API promotion.
