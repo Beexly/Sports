@@ -28,6 +28,7 @@ Implemented:
 - API-auth/API-v1 pure seams for key shape, hashing, scopes, plans, quotas, rate-limit re-exports, usage records, audit logs, webhook signatures, idempotency, response envelopes, schemas, payload filtering, and OpenAPI access
 - API v1 route-level shadow harness for auth, consumer resolution, scope/origin, rate/quota, request ID, response envelope, usage event, payload rights, and abuse-response coverage without live route exposure
 - draft fence workflow harness for content/API drafts with source-rights, commercial-copy, disclosure, responsible-gaming, API payload-rights, restricted-tracking-data, manual-review gates, local review packet serialization, markdown rendering, an in-memory packet ledger, queue filters, and summary counts
+- representative content/API review packet fixtures and a local claim-safety batch report
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 
 ## Files Changed
@@ -46,6 +47,8 @@ Application and test files:
 - `apps/web/__tests__/api-v1-shadow-route-harness.test.ts`
 - `apps/web/lib/workflows/draft-fence-workflow.ts`
 - `apps/web/__tests__/draft-fence-workflow.test.ts`
+- `apps/web/lib/workflows/draft-review-fixtures.ts`
+- `apps/web/__tests__/draft-review-fixtures.test.ts`
 - `packages/prediction-engine/src/metrics/receiving/*`
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
@@ -132,6 +135,7 @@ Broad test result:
 - B2B Evidence API has strong docs, rehearsal packets, pure `apps/web/lib/api-auth` / `apps/web/lib/api-v1` seams, payload/OpenAPI guardrails, and a route-level shadow harness. Live `app/api/v1` routes are still intentionally deferred by boundary guard.
 - Source-rights/IP adapters under `apps/web/lib/source-rights` and `apps/web/lib/ip` exist, but they are policy gates and not legal clearance.
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, and review summary counts exist as pure manual-review gates. Representative content/API packet fixtures remain future work.
+- Representative content/API packet fixtures and claim-safety batch report exist. First-month media queue fixtures remain future work.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are not present, even though equivalent FABLE/AWS artifacts exist.
 - Full proprietary metric backlog remains future work.
 
@@ -159,22 +163,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add representative content/API packet fixtures and a claim-safety batch report over those fixtures.
+1. Add media content queue fixtures for the first 30 days and a claim-safety batch scanner for generated titles/scripts.
 2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
 3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes pointing to existing FABLE/AWS docs and fixtures.
-4. Create a 30-day media content fixture and scanner-backed claim-safety report for first-month posts.
-5. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
-6. Continue proprietary metric backlog with YAC Creation and Rush Environment Index.
-7. Add model-card and drift-card generators that consume metric validation outputs.
-8. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
-9. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-10. Add route-level visual QA and accessibility checks for the five media pages plus pricing.
+4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
+5. Continue proprietary metric backlog with YAC Creation and Rush Environment Index.
+6. Add model-card and drift-card generators that consume metric validation outputs.
+7. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
+8. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+9. Add route-level visual QA and accessibility checks for the five media pages plus pricing.
+10. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation by adding local review packet fixtures:
+Continue the Sunday frontier implementation by adding first-month media content queue fixtures:
 
-1. Add representative content and API packet fixtures.
-2. Add a claim-safety batch report over those fixtures.
-3. Add tests proving fixture packets remain local and cannot publish, send, or expose routes.
+1. Encode the first 30-day media queue from the Sunday plan as local fixtures.
+2. Run a claim-safety batch report over generated titles/scripts.
+3. Add tests proving no banned phrases, no unsupported performance claims, no fake sponsors/revenue/audience, and no publish/send actions.
 4. Do not publish content, expose API routes, create partner links, or flip any production gates.

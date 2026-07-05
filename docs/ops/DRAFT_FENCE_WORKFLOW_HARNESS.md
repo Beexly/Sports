@@ -51,6 +51,20 @@ Owner checklist fields are informational. Even when `ownerDecision` is `APPROVED
 - queue summaries count total, blocked, waiting-review, and reviewed/repair packets
 - appending a packet never approves publish, send, route exposure, or live integration
 
+## Fixture Batch
+
+`apps/web/lib/workflows/draft-review-fixtures.ts` defines local representative packets:
+
+- safe No-Bet Clinic content draft
+- unsafe tout-claim content draft
+- partner mention without disclosure
+- safe derived nflverse API packet
+- blocked raw-vendor API packet
+
+`buildDraftReviewFixturePackets()` builds packets and markdown from those definitions.
+
+`buildDraftReviewClaimSafetyBatchReport()` summarizes workflow status, claim-safety hits, evidence-required language, source ids, payload presence, and live-action locks without printing protected payload values.
+
 ## Workflow Kinds
 
 | Kind | Fences |
@@ -91,9 +105,9 @@ The tests prove:
 
 ## Next Gate
 
-The next safe expansion is local queue fixtures:
+The next safe expansion is first-month media queue fixtures:
 
-1. add representative content/API packet fixtures
-2. add a claim-safety batch report over those fixtures
+1. add the first 30-day media content queue as local fixtures
+2. run the claim-safety batch report over generated titles/scripts
 3. keep final approval manual
 4. keep publish/send/API exposure disabled

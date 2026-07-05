@@ -159,6 +159,15 @@ Draft workflow harness added in the continuation:
 - `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`
   - records the draft-only workflow contract
 
+Draft review fixtures added in the continuation:
+
+- `apps/web/lib/workflows/draft-review-fixtures.ts`
+  - defines representative content/API packet fixtures
+  - builds local review packets and markdown from those fixtures
+  - builds a claim-safety batch report over fixture text without exposing protected payload values
+- `apps/web/__tests__/draft-review-fixtures.test.ts`
+  - proves expected workflow statuses, closed live-action locks, protected payload omission, and claim-safety counts
+
 Metric slice added in the continuation:
 
 - `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
@@ -180,6 +189,7 @@ Completed so far:
 | `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-boundary-guard.test.ts` | PASS | 5 files, 40 tests; API v1 route harness, seam, registry, persistence, and boundary guard all passed together |
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts fences-and-adapters.test.ts` | PASS | 2 files, 13 tests; workflow harness and fence/plugin seams passed together |
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts` | PASS | 1 file, 9 tests; review packet serialization, markdown rendering, append-only ledger, queue filters, summary counts, and live-action locks passed |
+| `npm run test --workspace=apps/web -- draft-review-fixtures.test.ts draft-fence-workflow.test.ts` | PASS | 2 files, 12 tests; representative packet fixtures and batch report passed |
 | `npm run guard:commercial-copy` | PASS | npm entry point works |
 | `npm run guard:performance-claims` | PASS | npm entry point works |
 | `npm run guard:no-raw-ngs` | PASS | npm entry point works |
@@ -207,22 +217,22 @@ Final broad validation completed in this slice.
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
 - API auth, API v1 pure seams, API payload/OpenAPI guardrails, and a route-level shadow harness now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
-- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, and review summary counts now exist. Representative content/API packet fixtures remain future local-only expansions.
+- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, and a claim-safety batch report now exist.
 - Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Add representative content/API packet fixtures and a claim-safety batch report over those fixtures.
+1. Add media content queue fixtures for the first 30 days and a claim-safety batch scanner for generated titles/scripts.
 2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
 3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
 4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
-5. Add media content queue fixtures for the first 30 days and a claim-safety batch scanner for generated titles/scripts.
-6. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
-7. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
-8. Add model-card and drift-card generators for every promoted metric.
-9. Add source-policy generation from the web registry into prediction-engine metric fixtures.
-10. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+5. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
+6. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
+7. Add model-card and drift-card generators for every promoted metric.
+8. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+9. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+10. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
 
 ## Safety Statement
 

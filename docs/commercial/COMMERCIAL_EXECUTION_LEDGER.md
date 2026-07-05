@@ -14,6 +14,7 @@ Updated: 2026-07-04
 | AWS live resources | not live | no credentials or deploy actions | owner/AWS approval |
 | Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, `partner-offer-compliance-scan`, `api-payload-rights-scan`, `openapi-security-scan`, pricing copy hardening | route-level API harness |
 | Fence and policy seams | complete for pure seam, draft harness, local review packet, renderer, memory ledger, queue filters, and summary counts | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*`, `apps/web/lib/api/v1/shadow-route-harness.ts`, `apps/web/lib/workflows/draft-fence-workflow.ts` | representative packet fixtures and claim-safety batch report |
+| Review packet fixtures | complete for local content/API samples | `apps/web/lib/workflows/draft-review-fixtures.ts`, `apps/web/__tests__/draft-review-fixtures.test.ts` | first-month media queue fixtures |
 
 ## Verification Contract
 
@@ -39,5 +40,6 @@ Every commercial slice must record:
 - Added local draft review packet serialization with owner checklist fields. Checklist approval does not publish, send, expose routes, or activate integrations.
 - Added packet markdown rendering and an in-memory append-only packet ledger. Rendering omits protected payload values and ledger append does not approve live actions.
 - Added local packet queue status filters and review summary counts. Summaries keep publish/send/route/live locks false.
+- Added representative content/API review packet fixtures and claim-safety batch report. Fixtures remain local and do not expose protected payload values.
 - No content publish, external send, affiliate activation, API route exposure, or production workflow automation was added.
-- Next commercial/API gate: representative packet fixtures and claim-safety batch report.
+- Next commercial/API gate: first-month media queue fixtures with claim-safety report.

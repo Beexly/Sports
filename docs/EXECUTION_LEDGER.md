@@ -696,3 +696,19 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   typecheck passed; `git diff --check` passed. Full root validation is recorded in the Sunday audit before commit.
 - FLAG: local in-memory queue helpers only; no file persistence, no publish/send/API exposure, no partner activation,
   no secrets, no paid services, and no production workflow automation.
+
+## 2026-07-05 - (codex) - Sunday frontier representative review packet fixtures
+
+- WHAT: Added representative local content/API review packet fixtures and a claim-safety batch report. Fixtures cover
+  a safe No-Bet Clinic content draft, unsafe tout-claim draft, partner mention without disclosure, safe derived
+  nflverse API packet, and blocked raw-vendor API packet. The batch report summarizes workflow statuses, claim-safety
+  hits, evidence-required language, source ids, payload presence, and live-action locks without exposing protected
+  payload values.
+- FILES: `apps/web/lib/workflows/draft-review-fixtures.ts`,
+  `apps/web/__tests__/draft-review-fixtures.test.ts`, `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`,
+  Sunday audit/handoff docs, and execution ledger.
+- GATE: focused app tests passed (`draft-review-fixtures.test.ts` + `draft-fence-workflow.test.ts`, 2 files,
+  12 tests); `@sports/web` typecheck passed; `git diff --check` passed. Full root validation is recorded
+  in the Sunday audit before commit.
+- FLAG: local fixtures/report only; no content publish, no email/newsletter send, no affiliate activation,
+  no API route exposure, no secrets, no paid services, and no production workflow automation.
