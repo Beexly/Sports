@@ -550,6 +550,16 @@ export type {
   ExpectedCompletionInput,
   ExpectedCompletionMetric,
 } from "./metrics/passing/expected-completion.js";
+export { receiverDifficultyIndex } from "./metrics/receiving/receiver-difficulty.js";
+export type {
+  ReceiverDifficultyInput,
+  ReceiverDifficultyMetric,
+} from "./metrics/receiving/receiver-difficulty.js";
+export { expectedYacGse } from "./metrics/receiving/expected-yac.js";
+export type {
+  ExpectedYacInput,
+  ExpectedYacMetric,
+} from "./metrics/receiving/expected-yac.js";
 export { gseSignalScore } from "./metrics/decision/gse-signal-score.js";
 export type {
   GseSignalGrade,

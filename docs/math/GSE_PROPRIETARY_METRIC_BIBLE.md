@@ -357,25 +357,60 @@ Payload field kinds:
 
 This layer is not a legal clearance claim. It is a code-level policy gate that encodes the current repo evidence and blocks unsafe exposure until a stronger source-rights record exists.
 
+## Receiving Metric Slice
+
+Implemented on 2026-07-05:
+
+- `receiver-difficulty-index`
+- `expected-yac-gse`
+
+Both metrics follow the same foundation rules as Slice 1:
+
+- lifecycle status defaults to `SHADOW`
+- each metric has a birth certificate
+- each metric returns public drivers, not protected weights
+- confidence remains evidence quality, not probability or certainty
+- source-policy evidence is carried through the result
+- uncertainty is derived from available proxy count, sample size, and source-policy posture
+
+Receiver Difficulty Index behavior:
+
+- increases when expected completion probability falls
+- increases when air yards rise
+- increases when separation/cushion proxies worsen
+- increases when contested-catch and sideline proxies rise
+- shrinks receiver prior difficulty toward neutral when sample size is low
+
+Expected YAC behavior:
+
+- increases with space, separation, cushion, and a shrunk receiver YAC prior
+- decreases with defender leverage, deeper target depth, and red-zone constraint
+- uses protected basis expansion for depth so callers see public drivers without protected transform weights
+
+Tests added:
+
+- `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
+
+This is not a claim that either metric is validated for public/API exposure. The metrics are usable as governed shadow primitives until model cards, drift cards, validation reports, and source-rights envelopes support promotion.
+
 ## Metric Asset Backlog
 
 Build in this order for proprietary football metrics:
 
-1. Receiver Difficulty Index
-2. Expected YAC
-3. YAC Creation
-4. Rush Environment Index
-5. Expected Rush Yards
-6. Rush Over Expected
-7. QB Burden Index
-8. Role Volatility Index
-9. Calibration Integrity Grade
-10. No-Bet Pressure
-11. Playable Window Score
-12. Market Mirage Score
-13. Portfolio Fit Score
-14. Drift Pressure Index
-15. Conformal Uncertainty Width
+1. YAC Creation
+2. Rush Environment Index
+3. Expected Rush Yards
+4. Rush Over Expected
+5. QB Burden Index
+6. Role Volatility Index
+7. Calibration Integrity Grade
+8. No-Bet Pressure
+9. Playable Window Score
+10. Market Mirage Score
+11. Portfolio Fit Score
+12. Drift Pressure Index
+13. Conformal Uncertainty Width
 
 Product/governance backlog from the doctrine and competitive map:
 
@@ -412,6 +447,8 @@ Recorded run on 2026-07-04:
 | Command | Result |
 | --- | --- |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/data-reliability-index.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/expected-completion.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 7 files, 25 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/receiver-difficulty.test.ts src/metrics/__tests__/expected-yac.test.ts` | PASS - 4 files, 11 tests. |
+| `npm run typecheck --workspace=packages/prediction-engine` on 2026-07-05 receiving slice | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 1 file, 6 tests. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 1 file, 6 tests. |
 | `npm run typecheck --workspace=packages/prediction-engine` | PASS. |
@@ -451,9 +488,10 @@ Pure LOC review for new source files:
 
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer and Payload Rights Engine added in this pass:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, and receiving metric slice:
 
-1. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
-2. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
-3. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
-4. Then implement Receiver Difficulty Index and Expected YAC on the same governed foundation.
+1. Add YAC Creation as a residual over `expected-yac-gse`.
+2. Add Rush Environment Index and Expected Rush Yards on the same governed foundation.
+3. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
+4. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
+5. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.

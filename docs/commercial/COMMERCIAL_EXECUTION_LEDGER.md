@@ -12,7 +12,8 @@ Updated: 2026-07-04
 | Affiliate links | not live | no real links added | owner/compliance approval |
 | B2B Evidence API | shadow/future | existing B2B governance plus closeout docs | API v1 shadow seam |
 | AWS live resources | not live | no credentials or deploy actions | owner/AWS approval |
-| Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, pricing copy hardening | partner-offer compliance scanner |
+| Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, `partner-offer-compliance-scan`, `api-payload-rights-scan`, `openapi-security-scan`, pricing copy hardening | route-level API harness |
+| Fence and policy seams | complete for pure seam | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*` | draft workflow harness and route-level tests |
 
 ## Verification Contract
 
@@ -29,4 +30,7 @@ Every commercial slice must record:
 - Added and wired local guardrails for public commercial copy, unsupported performance claims, and raw NGS export language.
 - Tightened `/pricing` copy to avoid unsupported public proof language.
 - No affiliate links, sponsor claims, traffic claims, revenue claims, win-rate claims, ROI claims, or live partner integrations were added.
-- Next commercial guardrail: partner-offer compliance scanner with explicit sportsbook/DFS fail-closed handling.
+- Added and wired partner-offer compliance scanner with explicit sportsbook/DFS fail-closed handling.
+- Added pure commercial/source/API fence seams and tests; no live route or partner exposure was added.
+- Added API payload rights scanner and OpenAPI security scanner.
+- Next commercial/API gate: route-level shadow harness with auth, scope, rate-limit, envelope, usage, payload-rights, and abuse-response tests.

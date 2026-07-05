@@ -53,6 +53,8 @@ describe("GSE metric assets and graduation", () => {
       "data-reliability-index",
       "market-gravity-index",
       "expected-completion-gse",
+      "receiver-difficulty-index",
+      "expected-yac-gse",
       "gse-signal-score",
     ]);
     for (const asset of GSE_METRIC_ASSETS) {

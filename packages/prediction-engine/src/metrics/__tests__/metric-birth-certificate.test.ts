@@ -8,9 +8,11 @@ import {
   GSE_PROPRIETARY_METRIC_BIRTH_CERTIFICATES,
   dataReliabilityIndex,
   expectedCompletionGse,
+  expectedYacGse,
   gseMarketGravityIndex,
   gseSignalScore,
   proprietaryMetricBirthCertificate,
+  receiverDifficultyIndex,
 } from "../../index.js";
 
 describe("metric birth certificates", () => {
@@ -19,6 +21,8 @@ describe("metric birth certificates", () => {
       "data-reliability-index",
       "market-gravity-index",
       "expected-completion-gse",
+      "receiver-difficulty-index",
+      "expected-yac-gse",
       "gse-signal-score",
     ];
 
@@ -45,6 +49,8 @@ describe("metric birth certificates", () => {
     expect(typeof dataReliabilityIndex).toBe("function");
     expect(typeof gseMarketGravityIndex).toBe("function");
     expect(typeof expectedCompletionGse).toBe("function");
+    expect(typeof receiverDifficultyIndex).toBe("function");
+    expect(typeof expectedYacGse).toBe("function");
     expect(typeof gseSignalScore).toBe("function");
   });
 });

@@ -579,3 +579,41 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   Sunday audit and handoff.
 - FLAG: local guardrails and public copy only; no model, schema, paid service, live AWS, affiliate,
   sponsor, publishing, or prediction gate changes.
+
+## 2026-07-05 - (codex) - Sunday frontier compliance seams and receiving metrics
+
+- WHAT: Completed the next queued local tasks from the Sunday frontier handoff. Added the partner-offer
+  compliance scanner with fail-closed sportsbook/DFS fixtures; added pure fence plugins for commercial
+  copy, affiliate disclosure, responsible gaming, source rights, API payload rights, and restricted
+  tracking-data export language; added source-rights/IP adapters that reuse the canonical web scraping
+  registry; added API-auth/API-v1 pure seams; and implemented Receiver Difficulty Index plus Expected
+  YAC as governed `SHADOW` metrics.
+- FILES: `scripts/guardrails/partner-offer-compliance-scan.mjs`,
+  `scripts/guardrails/fixtures/partner-offer-compliance.json`, `apps/web/lib/fences/*`,
+  `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`,
+  `apps/web/lib/api-v1/*`, `apps/web/__tests__/fences-and-adapters.test.ts`,
+  `packages/prediction-engine/src/metrics/receiving/*`, and receiving metric tests/export updates.
+- GATE: partner-offer and raw-tracking-data guard scripts passed; app fence/adapter tests passed from
+  `apps/web`; prediction-engine receiving metric tests passed; web and prediction-engine typechecks passed.
+  Full root validation passed: `npm run typecheck`, `npm run lint`, `npm run guardrails`,
+  `npm run test --workspaces --if-present` (631 files, 8020 tests), and `git diff --check`.
+- FLAG: pure local code and docs only; no live API route exposure, no affiliate links, no live AWS, no
+  secrets, no dependencies, no DB/schema changes, no publishing, and no prediction gates flipped.
+
+## 2026-07-05 - (codex) - Sunday frontier API payload and OpenAPI guardrails
+
+- WHAT: Completed the next queued API guardrail scripts before commit. Added `api-payload-rights-scan`
+  with fixtures proving derived/public/aggregate fields can pass while raw source values, protected
+  weights, provider identifiers, raw vendor payloads, unknown sources, missing sources, personal-data
+  paths, and partner-sharing payloads fail closed. Added `openapi-security-scan` to check the shadow
+  API v1 OpenAPI generator and endpoint contract for bearer auth, required scopes, 401/403 responses,
+  data-class metadata, shadow-only markers, and no live-route promotion markers.
+- FILES: `scripts/guardrails/api-payload-rights-scan.mjs`,
+  `scripts/guardrails/openapi-security-scan.mjs`,
+  `scripts/guardrails/fixtures/api-payload-rights.json`,
+  `scripts/guardrails/fixtures/openapi-security.json`, `package.json`,
+  `apps/web/__tests__/guardrails.test.ts`, Sunday audit/handoff docs, and commercial ledger.
+- GATE: both scripts passed directly; focused app guardrail/fence tests passed (2 files, 21 tests);
+  root `npm run guardrails` passed with both scripts wired into the composite chain.
+- FLAG: local scanner/fixture work only; no live API routes, no persistence, no env vars, no secrets,
+  no paid resources, and no production API promotion.

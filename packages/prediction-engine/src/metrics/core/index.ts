@@ -88,3 +88,13 @@ export {
   uncertaintyFromEvidence,
   validateSourcePolicies,
 } from "./validation.js";
+export { receiverDifficultyIndex } from "../receiving/receiver-difficulty.js";
+export type {
+  ReceiverDifficultyInput,
+  ReceiverDifficultyMetric,
+} from "../receiving/receiver-difficulty.js";
+export { expectedYacGse } from "../receiving/expected-yac.js";
+export type {
+  ExpectedYacInput,
+  ExpectedYacMetric,
+} from "../receiving/expected-yac.js";

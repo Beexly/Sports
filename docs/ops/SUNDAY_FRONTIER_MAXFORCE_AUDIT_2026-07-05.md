@@ -41,6 +41,11 @@ No application code, docs, package scripts, or guardrails were dirty before this
 - `apps/web/lib/media-revenue/*`
 - `apps/web/lib/revenue/*`
 - `apps/web/lib/workflows/*`
+- `apps/web/lib/fences/*`
+- `apps/web/lib/source-rights/*`
+- `apps/web/lib/ip/*`
+- `apps/web/lib/api-auth/*`
+- `apps/web/lib/api-v1/*`
 - `apps/web/lib/ingestion/next-gen-stats.ts`
 - `apps/web/__tests__/guardrails.test.ts`
 - `apps/web/__tests__/media-revenue-claim-safety.test.ts`
@@ -48,6 +53,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 - `apps/web/__tests__/next-gen-stats.test.ts`
 - `packages/prediction-engine/src/metrics/**/*`
 - `scripts/guardrails/*`
+- `scripts/guardrails/fixtures/*`
 
 ## Reality Map
 
@@ -57,14 +63,14 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | B. Media Revenue Studio | COMPLETE | Docs, typed media utilities, five public-safe pages, and tests already exist. This slice added stronger guardrails around launch-facing commercial copy. |
 | C. Partnership/Affiliate/Sponsorship layer | COMPLETE FOR PURE SEAM | `docs/commercial`, `docs/revenue`, and `apps/web/lib/revenue` exist with approval, disclosure, responsible-gaming, copy, scoring, pipeline, and audit primitives. No live affiliate links were added. |
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
-| E. B2B Evidence API | PARTIAL | Strong docs and disposable rehearsal packets exist under `docs/api`. Exact `apps/web/lib/api-auth`, `apps/web/lib/api-v1`, and live `app/api/v1` routes are not present in this checkout and remain a shadow/API slice. |
-| F. Source rights / NGS / IP | PARTIAL | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. Exact `apps/web/lib/source-rights` and `apps/web/lib/ip` adapters are still missing. |
-| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
+| E. B2B Evidence API | PARTIAL WITH PURE SEAMS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, and OpenAPI access. Live `app/api/v1` routes remain intentionally deferred. |
+| F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
+| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | PARTIAL | GSS and market gravity exist. Full no-bet governor and market intelligence product wiring remain future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE UNDER FABLE PATHS, PARTIAL UNDER EXACT PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` path families are not present. |
-| J. Fence/workflow plugin system | PARTIAL | `apps/web/lib/workflows` exists. Exact `apps/web/lib/fences/*` plugin files are not present. |
-| K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, and raw-NGS-export scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
-| L. Tests | IMPROVED THIS SESSION | Extended `apps/web/__tests__/guardrails.test.ts` to execute and assert the new guardrails and package script wiring. |
+| J. Fence/workflow plugin system | PARTIAL WITH PURE FENCES | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins for commercial copy, affiliate disclosure, responsible gaming, source rights, API payload rights, and raw tracking-data export language. Workflow wiring remains manual/draft-only. |
+| K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, raw-NGS-export, partner-offer-compliance, API-payload-rights, and OpenAPI-security scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
+| L. Tests | IMPROVED THIS SESSION | Extended `apps/web/__tests__/guardrails.test.ts` and added `apps/web/__tests__/fences-and-adapters.test.ts`; added receiving metric tests in prediction-engine. |
 | M. Handoffs | IMPROVED THIS SESSION | Added this audit plus Sunday handoff and R&D map. Existing stale handoff remains historical, not current. |
 
 ## Session Patches
@@ -74,6 +80,12 @@ Guardrails added:
 - `scripts/guardrails/commercial-copy-scan.mjs`
 - `scripts/guardrails/no-unsupported-performance-claims.mjs`
 - `scripts/guardrails/no-raw-ngs-export.mjs`
+- `scripts/guardrails/partner-offer-compliance-scan.mjs`
+- `scripts/guardrails/fixtures/partner-offer-compliance.json`
+- `scripts/guardrails/api-payload-rights-scan.mjs`
+- `scripts/guardrails/openapi-security-scan.mjs`
+- `scripts/guardrails/fixtures/api-payload-rights.json`
+- `scripts/guardrails/fixtures/openapi-security.json`
 
 Guardrail wiring:
 
@@ -81,13 +93,22 @@ Guardrail wiring:
   - added `guard:commercial-copy`
   - added `guard:performance-claims`
   - added `guard:no-raw-ngs`
-  - added all three checks to the composite `guardrails` chain
+  - added `guard:partner-offers`
+  - added `guard:api-payload-rights`
+  - added `guard:openapi-security`
+  - added all six frontier checks to the composite `guardrails` chain
 
 Tests updated:
 
 - `apps/web/__tests__/guardrails.test.ts`
-  - executes all three new guardrail scripts
+  - executes all six new guardrail scripts
   - asserts root package scripts include the new checks
+- `apps/web/__tests__/fences-and-adapters.test.ts`
+  - proves fence plugins, source-rights/IP adapters, API-auth helpers, and API-v1 payload filtering fail closed where required
+- `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
+  - proves Receiver Difficulty increases for harder, deeper, tighter, more contested targets
+- `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
+  - proves Expected YAC rises with space and falls with leverage/depth constraints
 
 Public copy tightened:
 
@@ -102,6 +123,20 @@ Docs added:
 - `docs/research/SUNDAY_FRONTIER_R_AND_D_MAP_2026-07-05.md`
 - `docs/ops/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md`
 
+Pure app seams added in the continuation:
+
+- `apps/web/lib/fences/*`
+- `apps/web/lib/source-rights/*`
+- `apps/web/lib/ip/*`
+- `apps/web/lib/api-auth/*`
+- `apps/web/lib/api-v1/*`
+
+Metric slice added in the continuation:
+
+- `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
+- `packages/prediction-engine/src/metrics/receiving/expected-yac.ts`
+- birth certificates, asset graduation coverage, package exports, and tests for both metrics
+
 ## Verification Log
 
 Completed so far:
@@ -110,15 +145,22 @@ Completed so far:
 | --- | --- | --- |
 | `node scripts/guardrails/commercial-copy-scan.mjs` | PASS | scanned 32 launch/commercial files |
 | `node scripts/guardrails/no-unsupported-performance-claims.mjs` | PASS | scanned 32 launch/commercial files |
-| `node scripts/guardrails/no-raw-ngs-export.mjs` | PASS | scanned 1166 files |
+| `node scripts/guardrails/no-raw-ngs-export.mjs` | PASS | scanned 1207 files |
+| `node scripts/guardrails/partner-offer-compliance-scan.mjs` | PASS | 8 fixture cases passed; high-risk offers fail closed |
+| `node scripts/guardrails/api-payload-rights-scan.mjs` | PASS | 8 fixture cases passed; unsafe API fields fail closed |
+| `node scripts/guardrails/openapi-security-scan.mjs` | PASS | 3 contract files passed shadow OpenAPI security checks |
 | `npm run guard:commercial-copy` | PASS | npm entry point works |
 | `npm run guard:performance-claims` | PASS | npm entry point works |
 | `npm run guard:no-raw-ngs` | PASS | npm entry point works |
 | `npx vitest run apps/web/__tests__/guardrails.test.ts` | PASS | 15 tests passed across current file and mirrored worktree file discovered by Vitest |
+| `npx vitest run __tests__/guardrails.test.ts __tests__/fences-and-adapters.test.ts` from `apps/web` | PASS | 2 files, 21 tests |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/receiver-difficulty.test.ts src/metrics/__tests__/expected-yac.test.ts` | PASS | 4 files, 11 tests |
+| `npm run typecheck --workspace=@sports/web` | PASS | app TypeScript checked after fence/API adapter additions |
+| `npm run typecheck --workspace=packages/prediction-engine` | PASS | prediction-engine TypeScript checked after receiving metric additions |
 | `npm run guardrails` | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, three new guards, and eval contracts |
 | `npm run typecheck` | PASS | all workspaces with typecheck scripts completed |
 | `npm run lint` | PASS | `@sports/web` ESLint completed with max warnings 0 |
-| `npm run test --workspaces --if-present` | PASS | 628 test files and 7922 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types |
+| `npm run test --workspaces --if-present` | PASS | 631 test files and 8020 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types |
 | `git diff --check` | PASS | no whitespace errors |
 
 PowerShell syntax caveat:
@@ -131,24 +173,24 @@ Final broad validation completed in this slice.
 ## Remaining Risks
 
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
-- Exact API auth and API v1 libraries remain missing. Do not expose `app/api/v1` routes until pure auth, rights, envelope, usage, and rate-limit tests exist.
-- Exact source-rights adapter paths remain missing. Current rights logic should be reused through adapters rather than forked.
-- Exact fence plugin files remain missing. Build them as pure plugins with tests before wiring workflows.
+- API auth and API v1 pure seams now exist, and API payload/OpenAPI guardrails are wired. Live `app/api/v1` routes remain intentionally deferred until route-level auth, usage persistence, rate limits, payload rights, and abuse tests are proven together.
+- Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
+- Fence plugin files now exist as pure plugins. Workflow wiring remains manual/draft-only until content/API workflow tests are added.
 - Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Add `partner-offer-compliance-scan.mjs` for high-risk offer metadata, disclosure, responsible-gaming text, age/state handling, expiry, and approval separation.
-2. Add `api-payload-rights-scan.mjs` and `openapi-security-scan.mjs` after the API v1 pure seam lands.
-3. Add `apps/web/lib/fences/*` as pure fence plugins and tests, reusing existing claim, revenue, and rights utilities.
-4. Add source-rights adapter exports under `apps/web/lib/source-rights` and `apps/web/lib/ip` without duplicating the existing registry.
-5. Build API auth/payload-rights pure seams under `apps/web/lib/api-auth` and `apps/web/lib/api-v1`; keep routes dormant until tests pass.
-6. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
-7. Continue metric backlog with Receiver Difficulty and Expected YAC after preserving birth certificate, source-rights, payload-rights, and graduation controls.
-8. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
-9. Add media content queue fixtures for the first 30 days and a claim-safety batch scanner for generated titles/scripts.
-10. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
+1. Add route-level API v1 shadow endpoints only after auth, scope, rate-limit, response-envelope, payload-rights, usage-event, and abuse-response tests are green.
+2. Wire fence plugins into draft-only content/API workflow harnesses with manual-review gates.
+3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
+4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
+5. Add media content queue fixtures for the first 30 days and a claim-safety batch scanner for generated titles/scripts.
+6. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
+7. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
+8. Add model-card and drift-card generators for every promoted metric.
+9. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+10. Add API abuse-response fixtures for malformed keys, replayed idempotency keys, overscoped consumers, and unsafe payload attempts.
 
 ## Safety Statement
 
