@@ -682,3 +682,17 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   typecheck passed; `git diff --check` passed. Full root validation is recorded in the Sunday audit before commit.
 - FLAG: local markdown/object/ledger only; no file persistence, no content publish, no email/newsletter send,
   no affiliate activation, no API route exposure, no secrets, no paid services, and no production workflow automation.
+
+## 2026-07-05 - (codex) - Sunday frontier review queue filters and summary counts
+
+- WHAT: Extended the in-memory draft review packet ledger with status filters and queue summary counts.
+  Callers can list `BLOCKED` and `NEEDS_MANUAL_REVIEW` packets, count total/blocked/waiting/reviewed packets,
+  and inspect deduplicated source ids. Summary live-action locks remain false for publish, external send,
+  route exposure, and live integration.
+- FILES: `apps/web/lib/workflows/draft-fence-workflow.ts`,
+  `apps/web/__tests__/draft-fence-workflow.test.ts`, `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`,
+  Sunday audit/handoff docs, and execution ledger.
+- GATE: focused app test passed (`draft-fence-workflow.test.ts`, 1 file, 9 tests); `@sports/web`
+  typecheck passed; `git diff --check` passed. Full root validation is recorded in the Sunday audit before commit.
+- FLAG: local in-memory queue helpers only; no file persistence, no publish/send/API exposure, no partner activation,
+  no secrets, no paid services, and no production workflow automation.

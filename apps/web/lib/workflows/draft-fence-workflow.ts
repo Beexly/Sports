@@ -121,6 +121,22 @@ export type DraftFenceReviewPacketLedger = {
   readonly append: (packet: DraftFenceReviewPacket) => DraftFenceReviewPacketLedgerAppendResult;
   readonly list: () => readonly DraftFenceReviewPacket[];
   readonly find: (packetId: string) => DraftFenceReviewPacket | null;
+  readonly filterByStatus: (status: DraftFenceWorkflowStatus) => readonly DraftFenceReviewPacket[];
+  readonly summary: () => DraftFenceReviewPacketQueueSummary;
+};
+
+export type DraftFenceReviewPacketQueueSummary = {
+  readonly totalPackets: number;
+  readonly blockedPackets: number;
+  readonly waitingManualReviewPackets: number;
+  readonly repairedOrApprovedDraftUsePackets: number;
+  readonly sourceIds: readonly string[];
+  readonly liveActionLocks: {
+    readonly publishAllowed: false;
+    readonly routeExposureAllowed: false;
+    readonly externalSendAllowed: false;
+    readonly liveIntegrationAllowed: false;
+  };
 };
 
 export type DraftFenceReviewPacketLedgerAppendResult =
@@ -427,12 +443,40 @@ export function createMemoryDraftFenceReviewPacketLedger(
     return packet === undefined ? null : clonePacket(packet);
   }
 
+  function filterByStatus(status: DraftFenceWorkflowStatus): readonly DraftFenceReviewPacket[] {
+    return clonePackets(packets.filter((packet) => packet.status === status));
+  }
+
+  function summary(): DraftFenceReviewPacketQueueSummary {
+    const sourceIds = [
+      ...new Set(packets.flatMap((packet) => packet.inspected.sourceIds)),
+    ].sort();
+
+    return {
+      blockedPackets: packets.filter((packet) => packet.status === "BLOCKED").length,
+      liveActionLocks: {
+        externalSendAllowed: false,
+        liveIntegrationAllowed: false,
+        publishAllowed: false,
+        routeExposureAllowed: false,
+      },
+      repairedOrApprovedDraftUsePackets: packets.filter(
+        (packet) => packet.checklist.ownerDecision !== "UNREVIEWED",
+      ).length,
+      sourceIds,
+      totalPackets: packets.length,
+      waitingManualReviewPackets: packets.filter((packet) => packet.status === "NEEDS_MANUAL_REVIEW").length,
+    };
+  }
+
   return {
     append,
+    filterByStatus,
     find,
     get packets() {
       return list();
     },
     list,
+    summary,
   };
 }

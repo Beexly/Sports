@@ -153,8 +153,9 @@ Draft workflow harness added in the continuation:
   - serializes local review packets with checklist fields through `createDraftFenceReviewPacket()`
   - renders review packets to markdown through `renderDraftFenceReviewPacketMarkdown()`
   - stores packets in an append-only in-memory ledger through `createMemoryDraftFenceReviewPacketLedger()`
+  - filters packets by `BLOCKED` / `NEEDS_MANUAL_REVIEW` and summarizes queue counts without granting live actions
 - `apps/web/__tests__/draft-fence-workflow.test.ts`
-  - proves blocked commercial claims, missing disclosures, responsible-gaming failures, unsafe API payloads, manual-review gating, non-automatic checklist serialization, protected-payload omission in markdown, and append-only ledger behavior
+  - proves blocked commercial claims, missing disclosures, responsible-gaming failures, unsafe API payloads, manual-review gating, non-automatic checklist serialization, protected-payload omission in markdown, append-only ledger behavior, and queue summary locks
 - `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`
   - records the draft-only workflow contract
 
@@ -178,7 +179,7 @@ Completed so far:
 | `node scripts/guardrails/openapi-security-scan.mjs` | PASS | 3 contract files passed shadow OpenAPI security checks |
 | `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-boundary-guard.test.ts` | PASS | 5 files, 40 tests; API v1 route harness, seam, registry, persistence, and boundary guard all passed together |
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts fences-and-adapters.test.ts` | PASS | 2 files, 13 tests; workflow harness and fence/plugin seams passed together |
-| `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts` | PASS | 1 file, 8 tests; review packet serialization, markdown rendering, append-only ledger, and live-action locks passed |
+| `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts` | PASS | 1 file, 9 tests; review packet serialization, markdown rendering, append-only ledger, queue filters, summary counts, and live-action locks passed |
 | `npm run guard:commercial-copy` | PASS | npm entry point works |
 | `npm run guard:performance-claims` | PASS | npm entry point works |
 | `npm run guard:no-raw-ngs` | PASS | npm entry point works |
@@ -206,13 +207,13 @@ Final broad validation completed in this slice.
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
 - API auth, API v1 pure seams, API payload/OpenAPI guardrails, and a route-level shadow harness now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
-- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, and an in-memory packet ledger now exist. Queue status filters and review summary counts remain future local-only expansions.
+- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, and review summary counts now exist. Representative content/API packet fixtures remain future local-only expansions.
 - Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Add local packet queue status filters and review summary counts.
+1. Add representative content/API packet fixtures and a claim-safety batch report over those fixtures.
 2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
 3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
 4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.

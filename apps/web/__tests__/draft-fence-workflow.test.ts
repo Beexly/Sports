@@ -170,4 +170,46 @@ describe("draft fence workflow harness", () => {
     });
     expect(ledger.packets).toHaveLength(1);
   });
+
+  it("summarizes and filters the local packet queue without granting live action", async () => {
+    const waiting = createDraftFenceReviewPacket({
+      workflow: await runDraftFenceWorkflow({
+        kind: "content",
+        metadata: { sourceIds: ["nflverse"], surface: "newsletter" },
+        now: "2026-07-05T19:00:00.000Z",
+        text: "GSE board note: a no-bet can be the correct call.",
+        workflowRunId: "workflow_queue_waiting",
+      }),
+    });
+    const blocked = createDraftFenceReviewPacket({
+      checklist: { ownerDecision: "REPAIR_REQUIRED", reviewer: "owner" },
+      workflow: await runDraftFenceWorkflow({
+        kind: "content",
+        metadata: { sourceIds: ["nflverse"], surface: "newsletter" },
+        now: "2026-07-05T19:05:00.000Z",
+        text: "Guaranteed lock with verified ROI.",
+        workflowRunId: "workflow_queue_blocked",
+      }),
+    });
+    const ledger = createMemoryDraftFenceReviewPacketLedger([waiting]);
+    ledger.append(blocked);
+
+    expect(ledger.filterByStatus("NEEDS_MANUAL_REVIEW").map((packet) => packet.packetId)).toEqual([
+      waiting.packetId,
+    ]);
+    expect(ledger.filterByStatus("BLOCKED").map((packet) => packet.packetId)).toEqual([blocked.packetId]);
+    expect(ledger.summary()).toEqual({
+      blockedPackets: 1,
+      liveActionLocks: {
+        externalSendAllowed: false,
+        liveIntegrationAllowed: false,
+        publishAllowed: false,
+        routeExposureAllowed: false,
+      },
+      repairedOrApprovedDraftUsePackets: 1,
+      sourceIds: ["nflverse"],
+      totalPackets: 2,
+      waitingManualReviewPackets: 1,
+    });
+  });
 });

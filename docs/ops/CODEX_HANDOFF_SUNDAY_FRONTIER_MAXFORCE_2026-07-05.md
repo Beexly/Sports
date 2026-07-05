@@ -27,7 +27,7 @@ Implemented:
 - source-rights/IP adapters that reuse the canonical scraping registry and expose source envelopes, payload rights, metric cards, model cards, drift cards, and licensing readiness helpers
 - API-auth/API-v1 pure seams for key shape, hashing, scopes, plans, quotas, rate-limit re-exports, usage records, audit logs, webhook signatures, idempotency, response envelopes, schemas, payload filtering, and OpenAPI access
 - API v1 route-level shadow harness for auth, consumer resolution, scope/origin, rate/quota, request ID, response envelope, usage event, payload rights, and abuse-response coverage without live route exposure
-- draft fence workflow harness for content/API drafts with source-rights, commercial-copy, disclosure, responsible-gaming, API payload-rights, restricted-tracking-data, manual-review gates, local review packet serialization, markdown rendering, and an in-memory packet ledger
+- draft fence workflow harness for content/API drafts with source-rights, commercial-copy, disclosure, responsible-gaming, API payload-rights, restricted-tracking-data, manual-review gates, local review packet serialization, markdown rendering, an in-memory packet ledger, queue filters, and summary counts
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 
 ## Files Changed
@@ -131,7 +131,7 @@ Broad test result:
 
 - B2B Evidence API has strong docs, rehearsal packets, pure `apps/web/lib/api-auth` / `apps/web/lib/api-v1` seams, payload/OpenAPI guardrails, and a route-level shadow harness. Live `app/api/v1` routes are still intentionally deferred by boundary guard.
 - Source-rights/IP adapters under `apps/web/lib/source-rights` and `apps/web/lib/ip` exist, but they are policy gates and not legal clearance.
-- Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, and in-memory packet ledger exist as pure manual-review gates. Queue status filters and review summary counts remain future work.
+- Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, and review summary counts exist as pure manual-review gates. Representative content/API packet fixtures remain future work.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are not present, even though equivalent FABLE/AWS artifacts exist.
 - Full proprietary metric backlog remains future work.
 
@@ -159,7 +159,7 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add local packet queue status filters and review summary counts.
+1. Add representative content/API packet fixtures and a claim-safety batch report over those fixtures.
 2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
 3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes pointing to existing FABLE/AWS docs and fixtures.
 4. Create a 30-day media content fixture and scanner-backed claim-safety report for first-month posts.
@@ -172,9 +172,9 @@ Broad test result:
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation by adding local packet queue operations:
+Continue the Sunday frontier implementation by adding local review packet fixtures:
 
-1. Add status filters for `BLOCKED` and `NEEDS_MANUAL_REVIEW`.
-2. Add review summary counts for blocked, waiting-review, and total packets.
-3. Add tests proving queue summaries do not approve, publish, send, or expose routes.
+1. Add representative content and API packet fixtures.
+2. Add a claim-safety batch report over those fixtures.
+3. Add tests proving fixture packets remain local and cannot publish, send, or expose routes.
 4. Do not publish content, expose API routes, create partner links, or flip any production gates.

@@ -13,7 +13,7 @@ Updated: 2026-07-04
 | B2B Evidence API | shadow with route harness | existing B2B governance, closeout docs, API v1 shadow seam, and route-level shadow harness | draft workflow harness and owner-gated live-route promotion packet |
 | AWS live resources | not live | no credentials or deploy actions | owner/AWS approval |
 | Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, `partner-offer-compliance-scan`, `api-payload-rights-scan`, `openapi-security-scan`, pricing copy hardening | route-level API harness |
-| Fence and policy seams | complete for pure seam, draft harness, local review packet, renderer, and memory ledger | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*`, `apps/web/lib/api/v1/shadow-route-harness.ts`, `apps/web/lib/workflows/draft-fence-workflow.ts` | local queue filters and review summary counts |
+| Fence and policy seams | complete for pure seam, draft harness, local review packet, renderer, memory ledger, queue filters, and summary counts | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*`, `apps/web/lib/api/v1/shadow-route-harness.ts`, `apps/web/lib/workflows/draft-fence-workflow.ts` | representative packet fixtures and claim-safety batch report |
 
 ## Verification Contract
 
@@ -38,5 +38,6 @@ Every commercial slice must record:
 - Added draft fence workflow harness for content/API manual-review workflows. Safe drafts can only reach manual review; blocked drafts require repair.
 - Added local draft review packet serialization with owner checklist fields. Checklist approval does not publish, send, expose routes, or activate integrations.
 - Added packet markdown rendering and an in-memory append-only packet ledger. Rendering omits protected payload values and ledger append does not approve live actions.
+- Added local packet queue status filters and review summary counts. Summaries keep publish/send/route/live locks false.
 - No content publish, external send, affiliate activation, API route exposure, or production workflow automation was added.
-- Next commercial/API gate: packet queue filters and review summary counts.
+- Next commercial/API gate: representative packet fixtures and claim-safety batch report.

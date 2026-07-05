@@ -47,6 +47,8 @@ Owner checklist fields are informational. Even when `ownerDecision` is `APPROVED
 
 - duplicate packet ids fail closed
 - list/find return defensive copies
+- status filters return `BLOCKED` or `NEEDS_MANUAL_REVIEW` packets without mutating the ledger
+- queue summaries count total, blocked, waiting-review, and reviewed/repair packets
 - appending a packet never approves publish, send, route exposure, or live integration
 
 ## Workflow Kinds
@@ -89,9 +91,9 @@ The tests prove:
 
 ## Next Gate
 
-The next safe expansion is local packet queue operations:
+The next safe expansion is local queue fixtures:
 
-1. add packet status filters for `BLOCKED` and `NEEDS_MANUAL_REVIEW`
-2. add local review queue summary counts
+1. add representative content/API packet fixtures
+2. add a claim-safety batch report over those fixtures
 3. keep final approval manual
 4. keep publish/send/API exposure disabled
