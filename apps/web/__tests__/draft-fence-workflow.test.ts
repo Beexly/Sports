@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { runDraftFenceWorkflow } from "@/lib/workflows/draft-fence-workflow";
+import { createDraftFenceReviewPacket, runDraftFenceWorkflow } from "@/lib/workflows/draft-fence-workflow";
 
 describe("draft fence workflow harness", () => {
   it("routes safe content drafts to manual review without allowing publish or external send", async () => {
@@ -88,5 +88,38 @@ describe("draft fence workflow harness", () => {
       payloadPresent: true,
       sourceIds: ["espn-public-api"],
     });
+  });
+
+  it("serializes a local review packet without turning owner checklist fields into live approval", async () => {
+    const workflow = await runDraftFenceWorkflow({
+      kind: "content",
+      metadata: { sourceIds: ["nflverse"], surface: "newsletter" },
+      now: "2026-07-05T17:00:00.000Z",
+      text: "GSE board note: no-bet discipline protects the board.",
+      workflowRunId: "workflow_packet_1",
+    });
+    const packet = createDraftFenceReviewPacket({
+      checklist: {
+        claimEvidenceReviewed: true,
+        disclosureReviewed: true,
+        ownerDecision: "APPROVED_FOR_DRAFT_USE",
+        reviewedAt: "2026-07-05T17:05:00.000Z",
+        reviewer: "owner",
+        sourceRightsReviewed: true,
+      },
+      workflow,
+    });
+
+    expect(packet.packetId).toContain("draft-review-content-workflow-packet-1");
+    expect(packet.manualReviewRequired).toBe(true);
+    expect(packet.approvalIsAutomatic).toBe(false);
+    expect(packet.checklist.ownerDecision).toBe("APPROVED_FOR_DRAFT_USE");
+    expect(packet.liveActionLocks).toEqual({
+      externalSendAllowed: false,
+      liveIntegrationAllowed: false,
+      publishAllowed: false,
+      routeExposureAllowed: false,
+    });
+    expect(packet.stageSummary.every((stage) => stage.reasonCount >= 0)).toBe(true);
   });
 });

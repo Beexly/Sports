@@ -76,6 +76,46 @@ export type DraftFenceWorkflowResult = {
   };
 };
 
+export type DraftFenceReviewChecklist = {
+  readonly sourceRightsReviewed: boolean;
+  readonly claimEvidenceReviewed: boolean;
+  readonly disclosureReviewed: boolean;
+  readonly responsibleGamingReviewed: boolean;
+  readonly payloadRightsReviewed: boolean;
+  readonly ownerDecision: "UNREVIEWED" | "REPAIR_REQUIRED" | "APPROVED_FOR_DRAFT_USE";
+  readonly reviewer: string | null;
+  readonly reviewedAt: string | null;
+  readonly notes: string;
+};
+
+export type DraftFenceReviewPacket = {
+  readonly packetId: string;
+  readonly workflowRunId: string;
+  readonly kind: DraftFenceWorkflowKind;
+  readonly createdAt: string;
+  readonly status: DraftFenceWorkflowStatus;
+  readonly manualReviewRequired: true;
+  readonly approvalIsAutomatic: false;
+  readonly checklist: DraftFenceReviewChecklist;
+  readonly blockers: readonly string[];
+  readonly warnings: readonly string[];
+  readonly fixHints: readonly string[];
+  readonly stageSummary: readonly {
+    readonly stageId: DraftFenceWorkflowStageId;
+    readonly fenceId: string;
+    readonly severity: FenceSeverity;
+    readonly reasonCount: number;
+    readonly fixHintCount: number;
+  }[];
+  readonly inspected: DraftFenceWorkflowResult["inspected"];
+  readonly liveActionLocks: {
+    readonly publishAllowed: false;
+    readonly routeExposureAllowed: false;
+    readonly externalSendAllowed: false;
+    readonly liveIntegrationAllowed: false;
+  };
+};
+
 export const CONTENT_DRAFT_WORKFLOW_FENCES: readonly FencePlugin[] = [
   sourceRightsFence,
   commercialCopyFence,
@@ -184,5 +224,62 @@ export async function runDraftFenceWorkflow(input: DraftFenceWorkflowInput): Pro
     summary,
     warnings,
     workflowRunId,
+  };
+}
+
+function defaultChecklist(overrides: Partial<DraftFenceReviewChecklist> = {}): DraftFenceReviewChecklist {
+  return {
+    claimEvidenceReviewed: false,
+    disclosureReviewed: false,
+    notes: "",
+    ownerDecision: "UNREVIEWED",
+    payloadRightsReviewed: false,
+    responsibleGamingReviewed: false,
+    reviewedAt: null,
+    reviewer: null,
+    sourceRightsReviewed: false,
+    ...overrides,
+  };
+}
+
+function packetIdFor(workflow: DraftFenceWorkflowResult): string {
+  const normalized = `${workflow.kind}:${workflow.workflowRunId}:${workflow.generatedAt}`
+    .replace(/[^A-Za-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return `draft-review-${normalized.slice(0, 112)}`;
+}
+
+export function createDraftFenceReviewPacket(input: {
+  readonly workflow: DraftFenceWorkflowResult;
+  readonly checklist?: Partial<DraftFenceReviewChecklist>;
+}): DraftFenceReviewPacket {
+  const checklist = defaultChecklist(input.checklist);
+
+  return {
+    approvalIsAutomatic: false,
+    blockers: input.workflow.blockers,
+    checklist,
+    createdAt: input.workflow.generatedAt,
+    fixHints: input.workflow.fixHints,
+    inspected: input.workflow.inspected,
+    kind: input.workflow.kind,
+    liveActionLocks: {
+      externalSendAllowed: false,
+      liveIntegrationAllowed: false,
+      publishAllowed: false,
+      routeExposureAllowed: false,
+    },
+    manualReviewRequired: true,
+    packetId: packetIdFor(input.workflow),
+    stageSummary: input.workflow.stageResults.map((stage) => ({
+      fenceId: stage.fenceId,
+      fixHintCount: stage.fixHints.length,
+      reasonCount: stage.reasons.length,
+      severity: stage.severity,
+      stageId: stage.stageId,
+    })),
+    status: input.workflow.status,
+    warnings: input.workflow.warnings,
+    workflowRunId: input.workflow.workflowRunId,
   };
 }

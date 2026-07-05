@@ -13,7 +13,7 @@ Updated: 2026-07-04
 | B2B Evidence API | shadow with route harness | existing B2B governance, closeout docs, API v1 shadow seam, and route-level shadow harness | draft workflow harness and owner-gated live-route promotion packet |
 | AWS live resources | not live | no credentials or deploy actions | owner/AWS approval |
 | Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, `partner-offer-compliance-scan`, `api-payload-rights-scan`, `openapi-security-scan`, pricing copy hardening | route-level API harness |
-| Fence and policy seams | complete for pure seam and draft harness | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*`, `apps/web/lib/api/v1/shadow-route-harness.ts`, `apps/web/lib/workflows/draft-fence-workflow.ts` | durable local review packet |
+| Fence and policy seams | complete for pure seam, draft harness, and local review packet | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*`, `apps/web/lib/api/v1/shadow-route-harness.ts`, `apps/web/lib/workflows/draft-fence-workflow.ts` | packet renderer and local packet ledger |
 
 ## Verification Contract
 
@@ -36,5 +36,6 @@ Every commercial slice must record:
 - Added route-level API shadow harness with auth, scope, rate-limit/quota, request ID, envelope, usage event, payload-rights, and abuse-response tests.
 - No live API routes, durable persistence, env vars, secrets, affiliate links, partner exposure, or production API promotion were added.
 - Added draft fence workflow harness for content/API manual-review workflows. Safe drafts can only reach manual review; blocked drafts require repair.
+- Added local draft review packet serialization with owner checklist fields. Checklist approval does not publish, send, expose routes, or activate integrations.
 - No content publish, external send, affiliate activation, API route exposure, or production workflow automation was added.
-- Next commercial/API gate: durable local review packet serialization for draft workflow results.
+- Next commercial/API gate: packet markdown renderer and in-memory append-only packet ledger.

@@ -20,6 +20,27 @@ Tests:
 
 The harness is pure TypeScript. It does not use the task-store runtime, Prisma, route handlers, email, publishing, partner links, or external services.
 
+## Local Review Packet
+
+`createDraftFenceReviewPacket()` serializes a workflow result into a local review artifact object. The packet includes:
+
+- packet id
+- workflow run id
+- blockers, warnings, and fix hints
+- compact stage summary
+- inspected source ids and payload/text presence
+- owner checklist fields
+- live-action locks
+
+Owner checklist fields are informational. Even when `ownerDecision` is `APPROVED_FOR_DRAFT_USE`, the packet still returns:
+
+- `manualReviewRequired: true`
+- `approvalIsAutomatic: false`
+- `publishAllowed: false`
+- `routeExposureAllowed: false`
+- `externalSendAllowed: false`
+- `liveIntegrationAllowed: false`
+
 ## Workflow Kinds
 
 | Kind | Fences |
@@ -60,9 +81,9 @@ The tests prove:
 
 ## Next Gate
 
-The next safe expansion is a durable draft review packet:
+The next safe expansion is local packet rendering and storage:
 
-1. serialize the workflow result into a local review artifact
-2. add optional owner checklist fields
+1. render packets to markdown for review queues
+2. add an in-memory packet ledger for local tests
 3. keep final approval manual
 4. keep publish/send/API exposure disabled

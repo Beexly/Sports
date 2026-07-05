@@ -654,3 +654,17 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   in the Sunday audit before commit.
 - FLAG: local draft workflow only; no content publish, no email/newsletter send, no affiliate link activation,
   no live API route exposure, no durable persistence, no secrets, no paid services, and no production gate flip.
+
+## 2026-07-05 - (codex) - Sunday frontier local draft review packets
+
+- WHAT: Extended the draft fence workflow harness with `createDraftFenceReviewPacket()`, a local review artifact
+  object that serializes workflow results, stage summaries, blockers, warnings, fix hints, inspected source ids,
+  and owner checklist fields. Checklist fields are informational: even `APPROVED_FOR_DRAFT_USE` keeps
+  `approvalIsAutomatic=false` and all live-action locks false.
+- FILES: `apps/web/lib/workflows/draft-fence-workflow.ts`,
+  `apps/web/__tests__/draft-fence-workflow.test.ts`, `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`,
+  Sunday audit/handoff docs, and execution ledger.
+- GATE: focused app test passed (`draft-fence-workflow.test.ts`, 1 file, 6 tests); `@sports/web`
+  typecheck passed; `git diff --check` passed. Full root validation is recorded in the Sunday audit before commit.
+- FLAG: local review packet object only; no persisted approval, no publish/send/API exposure, no partner activation,
+  no DB/schema changes, no secrets, no paid services, and no production workflow automation.
