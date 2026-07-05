@@ -183,6 +183,17 @@ First-month media queue fixtures added in the continuation:
 - `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`
   - records the local-only fixture contract and boundaries
 
+First-month review queue export added in the continuation:
+
+- `apps/web/lib/media-revenue/first-month-review-queue.ts`
+  - converts first-month queue items into local review packet summaries
+  - attaches workflow status, content score, claim-safety result, script-beat count, cadence summary, blockers, warnings, fix hints, and live-action locks
+  - renders bounded markdown without printing full script bodies
+- `apps/web/__tests__/first-month-review-queue.test.ts`
+  - proves 90 default review packets, closed live-action locks, bounded markdown, and blocked unsafe custom drafts
+- `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md`
+  - records the export contract and boundaries
+
 Metric slice added in the continuation:
 
 - `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
@@ -206,6 +217,7 @@ Completed so far:
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts` | PASS | 1 file, 9 tests; review packet serialization, markdown rendering, append-only ledger, queue filters, summary counts, and live-action locks passed |
 | `npm run test --workspace=apps/web -- draft-review-fixtures.test.ts draft-fence-workflow.test.ts` | PASS | 2 files, 12 tests; representative packet fixtures and batch report passed |
 | `npm run test --workspace=apps/web -- first-month-content-queue.test.ts media-revenue-claim-safety.test.ts` | PASS | 2 files, 9 tests; first-month queue fixtures and claim-safety report passed |
+| `npm run test --workspace=apps/web -- first-month-review-queue.test.ts first-month-content-queue.test.ts draft-fence-workflow.test.ts` | PASS | 3 files, 16 tests; first-month review export, queue fixtures, and draft workflow passed |
 | `npm run guard:commercial-copy` | PASS | npm entry point works |
 | `npm run guard:performance-claims` | PASS | npm entry point works |
 | `npm run guard:no-raw-ngs` | PASS | npm entry point works |
@@ -233,22 +245,22 @@ Final broad validation completed in this slice.
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
 - API auth, API v1 pure seams, API payload/OpenAPI guardrails, and a route-level shadow harness now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
-- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and claim-safety batch reports now exist.
+- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
 - Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Add local review-queue export for first-month media queue items without publish/send actions.
-2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
-3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
-4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
-5. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
-6. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
-7. Add model-card and drift-card generators for every promoted metric.
-8. Add source-policy generation from the web registry into prediction-engine metric fixtures.
-9. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-10. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+1. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
+2. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
+3. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
+4. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
+5. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
+6. Add model-card and drift-card generators for every promoted metric.
+7. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+8. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+9. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+10. Add durable local queue persistence simulation for media review packets without DB writes.
 
 ## Safety Statement
 

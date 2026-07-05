@@ -30,6 +30,7 @@ Implemented:
 - draft fence workflow harness for content/API drafts with source-rights, commercial-copy, disclosure, responsible-gaming, API payload-rights, restricted-tracking-data, manual-review gates, local review packet serialization, markdown rendering, an in-memory packet ledger, queue filters, and summary counts
 - representative content/API review packet fixtures and a local claim-safety batch report
 - first-month media content queue fixtures and local claim-safety batch report
+- first-month media review queue export with bounded markdown packets and closed live-action locks
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 
 ## Files Changed
@@ -53,6 +54,8 @@ Application and test files:
 - `apps/web/lib/media-revenue/first-month-content-seeds.ts`
 - `apps/web/lib/media-revenue/first-month-content-queue.ts`
 - `apps/web/__tests__/first-month-content-queue.test.ts`
+- `apps/web/lib/media-revenue/first-month-review-queue.ts`
+- `apps/web/__tests__/first-month-review-queue.test.ts`
 - `packages/prediction-engine/src/metrics/receiving/*`
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
@@ -88,6 +91,7 @@ Docs:
 - `docs/api/API_V1_SHADOW_SEAM.md`
 - `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`
 - `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`
+- `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md`
 
 ## Verification Run
 
@@ -111,6 +115,7 @@ Passed:
 - `npx vitest run __tests__/guardrails.test.ts __tests__/fences-and-adapters.test.ts` from `apps/web`
 - `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts`
 - `npm run test --workspace=apps/web -- first-month-content-queue.test.ts media-revenue-claim-safety.test.ts`
+- `npm run test --workspace=apps/web -- first-month-review-queue.test.ts first-month-content-queue.test.ts draft-fence-workflow.test.ts`
 - `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/receiver-difficulty.test.ts src/metrics/__tests__/expected-yac.test.ts`
 - `npm run typecheck --workspace=@sports/web`
 - `npm run typecheck --workspace=packages/prediction-engine`
@@ -133,7 +138,7 @@ Broad test result:
 - Partner-offer compliance guardrail exists and is wired into `npm run guardrails`.
 - API payload-rights and OpenAPI security guardrails exist and are wired into `npm run guardrails`.
 - Fence, source-rights/IP, API-auth, API-v1 pure seams, the route-level API shadow harness, and the draft workflow harness exist with tests.
-- Representative content/API review packet fixtures and first-month media queue fixtures exist with claim-safety reports.
+- Representative content/API review packet fixtures, first-month media queue fixtures, and first-month review queue exports exist with claim-safety reports.
 - FABLE/AWS shadow architecture exists under `docs/fable/aws` and `infrastructure/aws`.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI guardrails pass and are wired into root scripts.
 
@@ -141,7 +146,7 @@ Broad test result:
 
 - B2B Evidence API has strong docs, rehearsal packets, pure `apps/web/lib/api-auth` / `apps/web/lib/api-v1` seams, payload/OpenAPI guardrails, and a route-level shadow harness. Live `app/api/v1` routes are still intentionally deferred by boundary guard.
 - Source-rights/IP adapters under `apps/web/lib/source-rights` and `apps/web/lib/ip` exist, but they are policy gates and not legal clearance.
-- Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, and first-month media queue fixtures exist as pure manual-review gates.
+- Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and first-month review queue export exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are not present, even though equivalent FABLE/AWS artifacts exist.
 - Full proprietary metric backlog remains future work.
 
@@ -169,22 +174,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add a local review-queue export for first-month media queue items without publish/send actions.
-2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
-3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes pointing to existing FABLE/AWS docs and fixtures.
-4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
-5. Continue proprietary metric backlog with YAC Creation and Rush Environment Index.
-6. Add model-card and drift-card generators that consume metric validation outputs.
-7. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
-8. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-9. Add route-level visual QA and accessibility checks for the five media pages plus pricing.
-10. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+1. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
+2. Add `docs/aws` and `infra/aws-shadow` compatibility indexes pointing to existing FABLE/AWS docs and fixtures.
+3. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
+4. Continue proprietary metric backlog with YAC Creation and Rush Environment Index.
+5. Add model-card and drift-card generators that consume metric validation outputs.
+6. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
+7. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+8. Add route-level visual QA and accessibility checks for the five media pages plus pricing.
+9. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+10. Add durable local queue persistence simulation for media review packets without DB writes.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation by adding a local review-queue export for first-month media content drafts:
+Continue the Sunday frontier implementation by adding API v1 replay/idempotency storage simulation:
 
-1. Render first-month queue items into local review packet summaries.
-2. Attach claim-safety, score, cadence, and approval-lock metadata.
-3. Add tests proving protected text is bounded, no publish/send actions are enabled, and unsafe drafts stay draft/manual-review only.
+1. Simulate idempotency-key replay on the API v1 route harness.
+2. Prove duplicate successful requests return the same response envelope without double-counting usage.
+3. Prove denied requests do not create reusable success records.
 4. Do not publish content, expose API routes, create partner links, or flip any production gates.

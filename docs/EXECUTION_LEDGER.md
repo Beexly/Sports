@@ -729,3 +729,19 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   `npm run test --workspaces --if-present` (635 files, 8052 tests), and `git diff --check` passed.
 - FLAG: local draft fixtures/report only; no content publish, no social upload, no newsletter send,
   no partner email, no affiliate activation, no sponsor claim, no secrets, no paid services, and no production automation.
+
+## 2026-07-05 - (codex) - Sunday frontier first-month review queue export
+
+- WHAT: Added a local review-queue export for the first-month media queue. The export converts the 90 draft content
+  items into bounded review packet summaries with workflow status, content score, claim-safety result, script-beat
+  count, cadence summary, blockers, warnings, fix hints, and live-action locks. It can also represent unsafe custom
+  drafts as `BLOCKED` without allowing publish, send, route exposure, or live integration.
+- FILES: `apps/web/lib/media-revenue/first-month-review-queue.ts`,
+  `apps/web/__tests__/first-month-review-queue.test.ts`,
+  `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md`, `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: focused app tests passed (`first-month-review-queue.test.ts` + `first-month-content-queue.test.ts`
+  + `draft-fence-workflow.test.ts`, 3 files, 16 tests); `@sports/web` typecheck passed;
+  `npm run guardrails` passed; `git diff --check` passed.
+- FLAG: local export only; no persistent queue storage, no content publish, no social upload, no newsletter send,
+  no partner email, no affiliate activation, no sponsor claim, no secrets, no paid services, and no production automation.

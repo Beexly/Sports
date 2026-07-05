@@ -6,7 +6,7 @@ Updated: 2026-07-04
 | --- | --- | --- | --- |
 | Media Revenue Studio docs | complete | `docs/media/*` | owner review |
 | Media public pages | complete | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast` | visual QA before production push |
-| Media revenue utilities | complete with first-month queue fixtures | `apps/web/lib/media-revenue/*` | review-queue export slice |
+| Media revenue utilities | complete with first-month queue and review export fixtures | `apps/web/lib/media-revenue/*` | API replay/idempotency storage simulation |
 | Commercial revenue core | complete for pure seam | `apps/web/lib/revenue/*` | owner review and future route/UI decisions |
 | Partner/offer live registry | not live | no DB schema or provider integration added | owner product decision |
 | Affiliate links | not live | no real links added | owner/compliance approval |
@@ -14,8 +14,8 @@ Updated: 2026-07-04
 | AWS live resources | not live | no credentials or deploy actions | owner/AWS approval |
 | Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, `partner-offer-compliance-scan`, `api-payload-rights-scan`, `openapi-security-scan`, pricing copy hardening | route-level API harness |
 | Fence and policy seams | complete for pure seam, draft harness, local review packet, renderer, memory ledger, queue filters, and summary counts | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*`, `apps/web/lib/api/v1/shadow-route-harness.ts`, `apps/web/lib/workflows/draft-fence-workflow.ts` | representative packet fixtures and claim-safety batch report |
-| Review packet fixtures | complete for local content/API samples | `apps/web/lib/workflows/draft-review-fixtures.ts`, `apps/web/__tests__/draft-review-fixtures.test.ts` | local review-queue export |
-| First-month media queue fixtures | complete for local draft queue | `apps/web/lib/media-revenue/first-month-content-queue.ts`, `apps/web/__tests__/first-month-content-queue.test.ts`, `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md` | local review-queue export |
+| Review packet fixtures | complete for local content/API samples | `apps/web/lib/workflows/draft-review-fixtures.ts`, `apps/web/__tests__/draft-review-fixtures.test.ts` | API replay/idempotency storage simulation |
+| First-month media queue fixtures | complete for local draft queue and review export | `apps/web/lib/media-revenue/first-month-content-queue.ts`, `apps/web/lib/media-revenue/first-month-review-queue.ts`, `apps/web/__tests__/first-month-review-queue.test.ts`, `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`, `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md` | API replay/idempotency storage simulation |
 
 ## Verification Contract
 
@@ -44,4 +44,5 @@ Every commercial slice must record:
 - Added representative content/API review packet fixtures and claim-safety batch report. Fixtures remain local and do not expose protected payload values.
 - No content publish, external send, affiliate activation, API route exposure, or production workflow automation was added.
 - Added first-month media queue fixtures and claim-safety report: 90 local content drafts, 30 manual partner-outreach batches, 300 outreach targets, and all publish/send locks closed.
-- Next commercial/API gate: local review-queue export for first-month content drafts.
+- Added first-month review-queue export for local content drafts. Exported packets keep full script bodies bounded out of markdown and keep all publish/send/route/live locks closed.
+- Next commercial/API gate: API replay/idempotency storage simulation.

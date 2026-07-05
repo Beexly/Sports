@@ -114,11 +114,23 @@ The tests prove:
 
 Supporting doc: `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`.
 
+## First-Month Review Queue Export
+
+`apps/web/lib/media-revenue/first-month-review-queue.ts` converts the first-month queue into bounded local review packets:
+
+1. 90 default review packets
+2. workflow status, content score, claim-safety result, blockers, warnings, and fix hints
+3. weekly cadence summary
+4. markdown review text without full script bodies
+5. all publish/send/route/live locks closed
+
+Supporting doc: `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md`.
+
 ## Next Gate
 
-The next safe expansion is a local review-queue export:
+The next safe expansion is an API replay/idempotency storage simulation:
 
-1. render first-month queue items into markdown or JSON review packets
-2. keep payload/title/script scan results attached
-3. keep final approval manual
-4. keep publish/send/API exposure disabled
+1. simulate idempotency-key replay on the API v1 route harness
+2. prove duplicate successful requests return the same response envelope without double-counting usage
+3. prove denied requests do not create reusable success records
+4. keep route exposure and durable persistence disabled
