@@ -52,7 +52,7 @@ Status: copy-paste-ready PR map only. GitHub CLI auth is required before live PR
      - adds `docs/api/API_V1_AUTONOMOUS_POLISH_VERIFICATION_LOG.md`
 
 10. `codex/api-v1-promotion-readiness-matrix`
-   - Commit: current branch after this slice is committed
+   - Commit: `a1616bd6`
    - PR body: `docs/api/API_V1_PROMOTION_READINESS_PR_BODY.md`
    - Summary:
      - adds local-only promotion readiness gate matrix
@@ -60,7 +60,20 @@ Status: copy-paste-ready PR map only. GitHub CLI auth is required before live PR
      - keeps live promotion disabled in every state
      - documents expected current status as `owner_approval_required`
 
-## Current Promotion Readiness PR Body
+11. `codex/api-v1-disposable-rehearsal-packet`
+   - Commit: current branch after this slice is committed
+   - PR body: `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET_PR_BODY.md`
+   - Summary:
+     - adds non-executable disposable rehearsal packet builder
+     - consumes promotion readiness matrix output
+     - records command intents, expected evidence, and forbidden targets
+     - keeps live promotion and commands disabled
+
+## Current Disposable Rehearsal Packet PR Body
+
+Use `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET_PR_BODY.md` for the current branch.
+
+## Previous Promotion Readiness PR Body
 
 Use `docs/api/API_V1_PROMOTION_READINESS_PR_BODY.md` for the current branch.
 

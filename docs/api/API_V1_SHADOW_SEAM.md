@@ -36,12 +36,14 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/lib/api/v1/durable-fixture-report-renderer.ts` | Renders the tracked fixture report archive to markdown. |
 | `apps/web/lib/api/v1/durable-rehearsal-plan.ts` | Defines the plan-only disposable database rehearsal checklist and validator. |
 | `apps/web/lib/api/v1/promotion-readiness.ts` | Evaluates local-only promotion readiness gates across shadow evidence, repo boundaries, and owner approvals. |
+| `apps/web/lib/api/v1/disposable-rehearsal-packet.ts` | Builds a non-executable owner-review packet from promotion readiness output. |
 | `apps/web/__fixtures__/api-v1/durable-fixture-simulator.json` | Local synthetic durable trace covering read-only, commit, and rollback cases. |
 | `apps/web/__fixtures__/api-v1/durable-fixture-edge-cases.json` | Local synthetic edge-case trace for suspended, expired, quota-exhausted, and malformed-audit cases. |
 | `apps/web/__fixtures__/api-v1/durable-fixture-hostile-invalid.json` | Local negative-control trace proving unsafe durable side effects are rejected. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json` | Local tracked shadow evidence archive; live promotion remains false. |
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md` | Human-readable rendering of the tracked shadow evidence archive. |
 | `docs/api/API_V1_PROMOTION_READINESS_MATRIX.md` | Documents the readiness matrix and expected current status. |
+| `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET.md` | Documents the rehearsal packet, command intents, and forbidden targets. |
 | `scripts/guardrails/api-v1-boundary.mjs` | Boundary guard wired into `npm.cmd run guardrails`. |
 | `apps/web/__tests__/api-v1-shadow-seam.test.ts` | Focused Vitest coverage for the seam. |
 | `apps/web/__tests__/api-v1-consumer-registry.test.ts` | Focused Vitest coverage for consumer registry and audit-ledger behavior. |
@@ -53,6 +55,7 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/__tests__/api-v1-durable-fixture-report.test.ts` | Focused Vitest coverage for tracked archive parity, checklist behavior, and live-promotion blockers. |
 | `apps/web/__tests__/api-v1-durable-rehearsal-plan.test.ts` | Focused Vitest coverage for rehearsal plan-only boundaries and rollback evidence requirements. |
 | `apps/web/__tests__/api-v1-promotion-readiness.test.ts` | Focused Vitest coverage for readiness gates, approval blockers, and live-promotion denial. |
+| `apps/web/__tests__/api-v1-disposable-rehearsal-packet.test.ts` | Focused Vitest coverage for packet blockers, command-intent boundaries, and owner-review readiness. |
 | `apps/web/__tests__/api-v1-boundary-guard.test.ts` | Focused Vitest coverage for the API v1 boundary guard. |
 
 ## Shadow Endpoints
@@ -106,13 +109,14 @@ A future live API route should not be added until all of these are true:
 - future report archives must keep live promotion false until owner approval, migration review, rollback rehearsal, and route review exist
 - future disposable database rehearsals must remain blocked until the owner approves a disposable target and scope
 - future promotion readiness checks must keep live promotion false even when disposable rehearsal review evidence is complete
+- future rehearsal packets must record command intents instead of executable commands
 
 ## Verification Commands
 
 Run before promoting or merging this slice:
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-promotion-readiness.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-promotion-readiness.test.ts api-v1-disposable-rehearsal-packet.test.ts
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run guardrails

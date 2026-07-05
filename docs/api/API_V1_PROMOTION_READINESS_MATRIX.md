@@ -70,6 +70,6 @@ npm.cmd run guardrails
 git diff --check
 ```
 
-## Next Safe Slice
+## Adjacent Safe Slice
 
-The next safe R&D slice is a repo-visible disposable rehearsal packet template that consumes this matrix output and still keeps all commands non-executable until owner approval is present.
+The repo-visible disposable rehearsal packet now lives in `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET.md` and `apps/web/lib/api/v1/disposable-rehearsal-packet.ts`. It consumes this matrix output and keeps all command intents non-executable until owner approval is present.

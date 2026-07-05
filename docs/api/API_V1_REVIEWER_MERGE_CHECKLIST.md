@@ -16,6 +16,7 @@ Review and merge the stack in this order:
 8. `codex/api-v1-rd-polish-guards`
 9. `codex/api-v1-autonomous-polish-hardening`
 10. `codex/api-v1-promotion-readiness-matrix`
+11. `codex/api-v1-disposable-rehearsal-packet`
 
 Do not merge a later branch before all earlier branches are either merged or deliberately recreated on the target branch.
 
@@ -39,7 +40,7 @@ Stop review if the diff introduces any of these before explicit owner approval:
 Run the focused stack checks first:
 
 ```bash
-npm.cmd run test --workspace=apps/web -- api-v1-promotion-readiness.test.ts api-v1-boundary-guard.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-adapter-harness.test.ts api-v1-db-schema-proposal.test.ts api-v1-persistence.test.ts api-v1-consumer-registry.test.ts api-v1-shadow-seam.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-disposable-rehearsal-packet.test.ts api-v1-promotion-readiness.test.ts api-v1-boundary-guard.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-adapter-harness.test.ts api-v1-db-schema-proposal.test.ts api-v1-persistence.test.ts api-v1-consumer-registry.test.ts api-v1-shadow-seam.test.ts
 ```
 
 Then run the repo-level checks:
@@ -58,6 +59,7 @@ git diff --check
 - `docs/api/API_V1_STACK_PR_INDEX.md`
 - `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`
 - `docs/api/API_V1_PROMOTION_READINESS_MATRIX.md`
+- `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET.md`
 - `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json`
 - `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md`
 - `apps/web/__fixtures__/api-v1/durable-fixture-hostile-invalid.json`

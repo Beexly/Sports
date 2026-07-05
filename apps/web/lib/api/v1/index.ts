@@ -1,6 +1,7 @@
 export * from "./audit-ledger";
 export * from "./api-key";
 export * from "./consumer-registry";
+export * from "./disposable-rehearsal-packet";
 export * from "./dormant-durable-adapter-interface";
 export * from "./durable-fixture-simulator";
 export * from "./durable-fixture-report";
