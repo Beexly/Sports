@@ -12,6 +12,7 @@ Updated: 2026-07-04
 | Affiliate links | not live | no real links added | owner/compliance approval |
 | B2B Evidence API | shadow/future | existing B2B governance plus closeout docs | API v1 shadow seam |
 | AWS live resources | not live | no credentials or deploy actions | owner/AWS approval |
+| Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, pricing copy hardening | partner-offer compliance scanner |
 
 ## Verification Contract
 
@@ -22,3 +23,10 @@ Every commercial slice must record:
 - guardrails run
 - claim-safety boundary
 - any live integration intentionally not added
+
+## 2026-07-05 Update
+
+- Added and wired local guardrails for public commercial copy, unsupported performance claims, and raw NGS export language.
+- Tightened `/pricing` copy to avoid unsupported public proof language.
+- No affiliate links, sponsor claims, traffic claims, revenue claims, win-rate claims, ROI claims, or live partner integrations were added.
+- Next commercial guardrail: partner-offer compliance scanner with explicit sportsbook/DFS fail-closed handling.

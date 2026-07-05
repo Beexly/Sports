@@ -2,6 +2,8 @@
 
 Audit date: 2026-07-04
 
+Current-status note, 2026-07-05: this document is a historical closeout audit. The current Sunday frontier audit is `docs/ops/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md`. That newer audit records that commercial/revenue docs and modules now exist, and that commercial-copy, unsupported-performance-claim, and raw-NGS guardrails were added and wired after this file was first written.
+
 Repository: `C:/Users/Garrett/Sports`
 
 Branch: `codex/media-revenue-metric-api-closeout`

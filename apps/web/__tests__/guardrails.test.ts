@@ -102,4 +102,44 @@ describe("Phase 9 guardrails", () => {
     }
     expect(r.stdout).toMatch(/\[claude-api-usage\] OK/);
   }, GUARD_TEST_TIMEOUT_MS);
+
+  it("commercial-copy-scan exits 0 on launch-facing revenue surfaces", () => {
+    const r = runGuard("scripts/guardrails/commercial-copy-scan.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `commercial-copy-scan failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[commercial-copy-scan\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("no-unsupported-performance-claims exits 0 on public monetization copy", () => {
+    const r = runGuard("scripts/guardrails/no-unsupported-performance-claims.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `no-unsupported-performance-claims failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[no-unsupported-performance-claims\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("no-raw-ngs-export exits 0 without raw Next Gen Stats redistribution language", () => {
+    const r = runGuard("scripts/guardrails/no-raw-ngs-export.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `no-raw-ngs-export failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[no-raw-ngs-export\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("root guardrails chain includes commercial, performance, and raw-NGS checks", () => {
+    const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
+    expect(pkg.scripts["guard:commercial-copy"]).toContain("commercial-copy-scan.mjs");
+    expect(pkg.scripts["guard:performance-claims"]).toContain("no-unsupported-performance-claims.mjs");
+    expect(pkg.scripts["guard:no-raw-ngs"]).toContain("no-raw-ngs-export.mjs");
+    expect(pkg.scripts.guardrails).toContain("commercial-copy-scan.mjs");
+    expect(pkg.scripts.guardrails).toContain("no-unsupported-performance-claims.mjs");
+    expect(pkg.scripts.guardrails).toContain("no-raw-ngs-export.mjs");
+  });
 });

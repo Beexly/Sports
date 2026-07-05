@@ -561,3 +561,21 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   most current sample, the same verdict as every other variant: the projection does NOT beat naive
   points-persistence out-of-sample. Honest path forward = real ML work (the harness supports it);
   nothing published, canPublishProjections stays off.
+
+## 2026-07-05 - (codex) - Sunday frontier commercial safety guardrails
+
+- WHAT: Added repo-visible commercial safety guardrails for launch-facing media/revenue copy, unsupported
+  performance claims, and raw Next Gen Stats export language. Tightened pricing copy from unsupported
+  "verified record" / "CLV proves edge" phrasing to safer public-record, calibration-status, and
+  line-value-tracker language.
+- FILES: `scripts/guardrails/commercial-copy-scan.mjs`,
+  `scripts/guardrails/no-unsupported-performance-claims.mjs`,
+  `scripts/guardrails/no-raw-ngs-export.mjs`, `package.json`,
+  `apps/web/__tests__/guardrails.test.ts`, `apps/web/app/pricing/page.tsx`,
+  `docs/ops/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md`,
+  `docs/research/SUNDAY_FRONTIER_R_AND_D_MAP_2026-07-05.md`,
+  `docs/ops/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md`.
+- GATE: individual guardrails and focused guardrail Vitest test passed; full validation recorded in the
+  Sunday audit and handoff.
+- FLAG: local guardrails and public copy only; no model, schema, paid service, live AWS, affiliate,
+  sponsor, publishing, or prediction gate changes.
