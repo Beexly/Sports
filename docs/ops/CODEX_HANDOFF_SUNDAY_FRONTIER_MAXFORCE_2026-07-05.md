@@ -27,6 +27,7 @@ Implemented:
 - source-rights/IP adapters that reuse the canonical scraping registry and expose source envelopes, payload rights, metric cards, model cards, drift cards, and licensing readiness helpers
 - API-auth/API-v1 pure seams for key shape, hashing, scopes, plans, quotas, rate-limit re-exports, usage records, audit logs, webhook signatures, idempotency, response envelopes, schemas, payload filtering, and OpenAPI access
 - API v1 route-level shadow harness for auth, consumer resolution, scope/origin, rate/quota, request ID, response envelope, usage event, payload rights, and abuse-response coverage without live route exposure
+- draft fence workflow harness for content/API drafts with source-rights, commercial-copy, disclosure, responsible-gaming, API payload-rights, restricted-tracking-data, and manual-review gates
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 
 ## Files Changed
@@ -43,6 +44,8 @@ Application and test files:
 - `apps/web/lib/api-v1/*`
 - `apps/web/lib/api/v1/shadow-route-harness.ts`
 - `apps/web/__tests__/api-v1-shadow-route-harness.test.ts`
+- `apps/web/lib/workflows/draft-fence-workflow.ts`
+- `apps/web/__tests__/draft-fence-workflow.test.ts`
 - `packages/prediction-engine/src/metrics/receiving/*`
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
@@ -76,6 +79,7 @@ Docs:
 - `docs/media/MEDIA_REVENUE_STUDIO_COMPLETION_AUDIT.md`
 - `docs/api/API_V1_SHADOW_ROUTE_HARNESS.md`
 - `docs/api/API_V1_SHADOW_SEAM.md`
+- `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`
 
 ## Verification Run
 
@@ -94,6 +98,7 @@ Passed:
 - `npm run guard:api-payload-rights`
 - `npm run guard:openapi-security`
 - `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-boundary-guard.test.ts`
+- `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts fences-and-adapters.test.ts`
 - `npx vitest run apps/web/__tests__/guardrails.test.ts`
 - `npx vitest run __tests__/guardrails.test.ts __tests__/fences-and-adapters.test.ts` from `apps/web`
 - `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts`
@@ -118,7 +123,7 @@ Broad test result:
 - Receiver Difficulty Index and Expected YAC exist as governed `SHADOW` metrics with birth certificates and directional tests.
 - Partner-offer compliance guardrail exists and is wired into `npm run guardrails`.
 - API payload-rights and OpenAPI security guardrails exist and are wired into `npm run guardrails`.
-- Fence, source-rights/IP, API-auth, API-v1 pure seams, and the route-level API shadow harness exist with tests.
+- Fence, source-rights/IP, API-auth, API-v1 pure seams, the route-level API shadow harness, and the draft workflow harness exist with tests.
 - FABLE/AWS shadow architecture exists under `docs/fable/aws` and `infrastructure/aws`.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI guardrails pass and are wired into root scripts.
 
@@ -126,7 +131,7 @@ Broad test result:
 
 - B2B Evidence API has strong docs, rehearsal packets, pure `apps/web/lib/api-auth` / `apps/web/lib/api-v1` seams, payload/OpenAPI guardrails, and a route-level shadow harness. Live `app/api/v1` routes are still intentionally deferred by boundary guard.
 - Source-rights/IP adapters under `apps/web/lib/source-rights` and `apps/web/lib/ip` exist, but they are policy gates and not legal clearance.
-- Fence plugin path family under `apps/web/lib/fences` exists as pure plugins, but workflow wiring remains manual/draft-only.
+- Fence plugin path family under `apps/web/lib/fences` and the draft workflow harness exist as pure manual-review gates. Durable review packet serialization remains future work.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are not present, even though equivalent FABLE/AWS artifacts exist.
 - Full proprietary metric backlog remains future work.
 
@@ -154,7 +159,7 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Wire `apps/web/lib/fences/*` into a draft-only workflow runtime harness and keep manual review as the final gate.
+1. Add durable local draft review packet serialization for `runDraftFenceWorkflow()` results.
 2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
 3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes pointing to existing FABLE/AWS docs and fixtures.
 4. Create a 30-day media content fixture and scanner-backed claim-safety report for first-month posts.
@@ -167,9 +172,9 @@ Broad test result:
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation by wiring the draft-only workflow runtime harness:
+Continue the Sunday frontier implementation by adding durable local review packets for draft workflows:
 
-1. Compose the existing fence plugins into content/API draft workflows.
-2. Keep manual review as the final gate.
-3. Add tests proving blocked claims, blocked payload rights, missing disclosures, and responsible-gaming failures stop the workflow.
+1. Serialize `runDraftFenceWorkflow()` results into a local review-packet object.
+2. Add owner checklist fields without making approval automatic.
+3. Add tests proving publish/send/API exposure remain false.
 4. Do not publish content, expose API routes, create partner links, or flip any production gates.

@@ -68,7 +68,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | PARTIAL | GSS and market gravity exist. Full no-bet governor and market intelligence product wiring remain future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE UNDER FABLE PATHS, PARTIAL UNDER EXACT PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` path families are not present. |
-| J. Fence/workflow plugin system | PARTIAL WITH PURE FENCES | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins for commercial copy, affiliate disclosure, responsible gaming, source rights, API payload rights, and raw tracking-data export language. Workflow wiring remains manual/draft-only. |
+| J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
 | K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, raw-NGS-export, partner-offer-compliance, API-payload-rights, and OpenAPI-security scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
 | L. Tests | IMPROVED THIS SESSION | Extended `apps/web/__tests__/guardrails.test.ts` and added `apps/web/__tests__/fences-and-adapters.test.ts`; added receiving metric tests in prediction-engine. |
 | M. Handoffs | IMPROVED THIS SESSION | Added this audit plus Sunday handoff and R&D map. Existing stale handoff remains historical, not current. |
@@ -143,6 +143,18 @@ Route-level API shadow harness added in the continuation:
 - `docs/api/API_V1_SHADOW_ROUTE_HARNESS.md`
   - records the harness contract and the live-route boundary
 
+Draft workflow harness added in the continuation:
+
+- `apps/web/lib/workflows/draft-fence-workflow.ts`
+  - composes content fences: source rights, commercial copy, restricted tracking data, affiliate disclosure, and responsible gaming
+  - composes API fences: source rights, API payload rights, and restricted tracking data
+  - returns `BLOCKED` or `NEEDS_MANUAL_REVIEW`; it never returns publish/live success
+  - hard-codes `publishAllowed`, `routeExposureAllowed`, `externalSendAllowed`, and `liveIntegrationAllowed` to `false`
+- `apps/web/__tests__/draft-fence-workflow.test.ts`
+  - proves blocked commercial claims, missing disclosures, responsible-gaming failures, unsafe API payloads, and manual-review gating
+- `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`
+  - records the draft-only workflow contract
+
 Metric slice added in the continuation:
 
 - `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
@@ -162,6 +174,7 @@ Completed so far:
 | `node scripts/guardrails/api-payload-rights-scan.mjs` | PASS | 8 fixture cases passed; unsafe API fields fail closed |
 | `node scripts/guardrails/openapi-security-scan.mjs` | PASS | 3 contract files passed shadow OpenAPI security checks |
 | `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-boundary-guard.test.ts` | PASS | 5 files, 40 tests; API v1 route harness, seam, registry, persistence, and boundary guard all passed together |
+| `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts fences-and-adapters.test.ts` | PASS | 2 files, 13 tests; workflow harness and fence/plugin seams passed together |
 | `npm run guard:commercial-copy` | PASS | npm entry point works |
 | `npm run guard:performance-claims` | PASS | npm entry point works |
 | `npm run guard:no-raw-ngs` | PASS | npm entry point works |
@@ -189,13 +202,13 @@ Final broad validation completed in this slice.
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
 - API auth, API v1 pure seams, API payload/OpenAPI guardrails, and a route-level shadow harness now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
-- Fence plugin files now exist as pure plugins. Workflow wiring remains manual/draft-only until content/API workflow tests are added.
+- Fence plugin files and a pure draft workflow harness now exist. Durable review packet serialization remains a future local-only expansion.
 - Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Wire fence plugins into draft-only content/API workflow harnesses with manual-review gates.
+1. Add durable local draft review packet serialization for `runDraftFenceWorkflow()` results.
 2. Add replay/idempotency storage simulation to the API v1 route harness without exposing live routes.
 3. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
 4. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
