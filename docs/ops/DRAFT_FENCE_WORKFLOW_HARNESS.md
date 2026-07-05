@@ -41,6 +41,14 @@ Owner checklist fields are informational. Even when `ownerDecision` is `APPROVED
 - `externalSendAllowed: false`
 - `liveIntegrationAllowed: false`
 
+`renderDraftFenceReviewPacketMarkdown()` renders the packet for a local review queue without printing protected payload values. It reports payload presence, source ids, stage severities, blockers, warnings, and fix hints.
+
+`createMemoryDraftFenceReviewPacketLedger()` provides an append-only in-memory ledger for tests and local review queue design:
+
+- duplicate packet ids fail closed
+- list/find return defensive copies
+- appending a packet never approves publish, send, route exposure, or live integration
+
 ## Workflow Kinds
 
 | Kind | Fences |
@@ -81,9 +89,9 @@ The tests prove:
 
 ## Next Gate
 
-The next safe expansion is local packet rendering and storage:
+The next safe expansion is local packet queue operations:
 
-1. render packets to markdown for review queues
-2. add an in-memory packet ledger for local tests
+1. add packet status filters for `BLOCKED` and `NEEDS_MANUAL_REVIEW`
+2. add local review queue summary counts
 3. keep final approval manual
 4. keep publish/send/API exposure disabled

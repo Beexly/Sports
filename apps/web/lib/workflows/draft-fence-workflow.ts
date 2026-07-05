@@ -116,6 +116,26 @@ export type DraftFenceReviewPacket = {
   };
 };
 
+export type DraftFenceReviewPacketLedger = {
+  readonly packets: readonly DraftFenceReviewPacket[];
+  readonly append: (packet: DraftFenceReviewPacket) => DraftFenceReviewPacketLedgerAppendResult;
+  readonly list: () => readonly DraftFenceReviewPacket[];
+  readonly find: (packetId: string) => DraftFenceReviewPacket | null;
+};
+
+export type DraftFenceReviewPacketLedgerAppendResult =
+  | {
+      readonly ok: true;
+      readonly packet: DraftFenceReviewPacket;
+      readonly packets: readonly DraftFenceReviewPacket[];
+    }
+  | {
+      readonly ok: false;
+      readonly code: "duplicate_packet";
+      readonly message: string;
+      readonly packets: readonly DraftFenceReviewPacket[];
+    };
+
 export const CONTENT_DRAFT_WORKFLOW_FENCES: readonly FencePlugin[] = [
   sourceRightsFence,
   commercialCopyFence,
@@ -281,5 +301,138 @@ export function createDraftFenceReviewPacket(input: {
     status: input.workflow.status,
     warnings: input.workflow.warnings,
     workflowRunId: input.workflow.workflowRunId,
+  };
+}
+
+function yesNo(value: boolean): string {
+  return value ? "yes" : "no";
+}
+
+function markdownList(values: readonly string[]): string {
+  if (values.length === 0) return "- none";
+  return values.map((value) => `- ${value}`).join("\n");
+}
+
+export function renderDraftFenceReviewPacketMarkdown(packet: DraftFenceReviewPacket): string {
+  const lines = [
+    `# Draft Review Packet: ${packet.packetId}`,
+    "",
+    `- Workflow run: ${packet.workflowRunId}`,
+    `- Kind: ${packet.kind}`,
+    `- Status: ${packet.status}`,
+    `- Created at: ${packet.createdAt}`,
+    `- Manual review required: ${yesNo(packet.manualReviewRequired)}`,
+    `- Approval automatic: ${yesNo(packet.approvalIsAutomatic)}`,
+    "",
+    "## Live Action Locks",
+    "",
+    `- Publish allowed: ${yesNo(packet.liveActionLocks.publishAllowed)}`,
+    `- External send allowed: ${yesNo(packet.liveActionLocks.externalSendAllowed)}`,
+    `- Route exposure allowed: ${yesNo(packet.liveActionLocks.routeExposureAllowed)}`,
+    `- Live integration allowed: ${yesNo(packet.liveActionLocks.liveIntegrationAllowed)}`,
+    "",
+    "## Owner Checklist",
+    "",
+    `- Source rights reviewed: ${yesNo(packet.checklist.sourceRightsReviewed)}`,
+    `- Claim evidence reviewed: ${yesNo(packet.checklist.claimEvidenceReviewed)}`,
+    `- Disclosure reviewed: ${yesNo(packet.checklist.disclosureReviewed)}`,
+    `- Responsible gaming reviewed: ${yesNo(packet.checklist.responsibleGamingReviewed)}`,
+    `- Payload rights reviewed: ${yesNo(packet.checklist.payloadRightsReviewed)}`,
+    `- Owner decision: ${packet.checklist.ownerDecision}`,
+    `- Reviewer: ${packet.checklist.reviewer ?? "unassigned"}`,
+    `- Reviewed at: ${packet.checklist.reviewedAt ?? "not reviewed"}`,
+    "",
+    "## Stage Summary",
+    "",
+    "| Stage | Fence | Severity | Reasons | Fix hints |",
+    "| --- | --- | --- | ---: | ---: |",
+    ...packet.stageSummary.map(
+      (stage) =>
+        `| ${stage.stageId} | ${stage.fenceId} | ${stage.severity} | ${stage.reasonCount} | ${stage.fixHintCount} |`,
+    ),
+    "",
+    "## Blockers",
+    "",
+    markdownList(packet.blockers),
+    "",
+    "## Warnings",
+    "",
+    markdownList(packet.warnings),
+    "",
+    "## Fix Hints",
+    "",
+    markdownList(packet.fixHints),
+    "",
+    "## Inspected",
+    "",
+    `- Source ids: ${packet.inspected.sourceIds.length > 0 ? packet.inspected.sourceIds.join(", ") : "none"}`,
+    `- Text characters: ${packet.inspected.textCharacters}`,
+    `- Payload present: ${yesNo(packet.inspected.payloadPresent)}`,
+  ];
+
+  return `${lines.join("\n")}\n`;
+}
+
+function clonePacket(packet: DraftFenceReviewPacket): DraftFenceReviewPacket {
+  return {
+    ...packet,
+    blockers: [...packet.blockers],
+    checklist: { ...packet.checklist },
+    fixHints: [...packet.fixHints],
+    inspected: {
+      payloadPresent: packet.inspected.payloadPresent,
+      sourceIds: [...packet.inspected.sourceIds],
+      textCharacters: packet.inspected.textCharacters,
+    },
+    liveActionLocks: { ...packet.liveActionLocks },
+    stageSummary: packet.stageSummary.map((stage) => ({ ...stage })),
+    warnings: [...packet.warnings],
+  };
+}
+
+function clonePackets(packets: readonly DraftFenceReviewPacket[]): readonly DraftFenceReviewPacket[] {
+  return packets.map(clonePacket);
+}
+
+export function createMemoryDraftFenceReviewPacketLedger(
+  initialPackets: readonly DraftFenceReviewPacket[] = [],
+): DraftFenceReviewPacketLedger {
+  let packets = clonePackets(initialPackets);
+
+  function list(): readonly DraftFenceReviewPacket[] {
+    return clonePackets(packets);
+  }
+
+  function append(packet: DraftFenceReviewPacket): DraftFenceReviewPacketLedgerAppendResult {
+    if (packets.some((candidate) => candidate.packetId === packet.packetId)) {
+      return {
+        code: "duplicate_packet",
+        message: `Draft review packet ${packet.packetId} already exists.`,
+        ok: false,
+        packets: list(),
+      };
+    }
+
+    const cloned = clonePacket(packet);
+    packets = [...packets, cloned];
+    return {
+      ok: true,
+      packet: clonePacket(cloned),
+      packets: list(),
+    };
+  }
+
+  function find(packetId: string): DraftFenceReviewPacket | null {
+    const packet = packets.find((candidate) => candidate.packetId === packetId);
+    return packet === undefined ? null : clonePacket(packet);
+  }
+
+  return {
+    append,
+    find,
+    get packets() {
+      return list();
+    },
+    list,
   };
 }

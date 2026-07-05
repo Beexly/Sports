@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { createDraftFenceReviewPacket, runDraftFenceWorkflow } from "@/lib/workflows/draft-fence-workflow";
+import {
+  createDraftFenceReviewPacket,
+  createMemoryDraftFenceReviewPacketLedger,
+  renderDraftFenceReviewPacketMarkdown,
+  runDraftFenceWorkflow,
+} from "@/lib/workflows/draft-fence-workflow";
 
 describe("draft fence workflow harness", () => {
   it("routes safe content drafts to manual review without allowing publish or external send", async () => {
@@ -121,5 +126,48 @@ describe("draft fence workflow harness", () => {
       routeExposureAllowed: false,
     });
     expect(packet.stageSummary.every((stage) => stage.reasonCount >= 0)).toBe(true);
+  });
+
+  it("renders packet markdown without protected payload values", async () => {
+    const workflow = await runDraftFenceWorkflow({
+      kind: "api",
+      metadata: { intendedUse: "commercial_display", sourceIds: ["espn-public-api"] },
+      payload: { protectedPayload: "must-not-appear" },
+      text: "API review draft",
+    });
+    const packet = createDraftFenceReviewPacket({ workflow });
+    const markdown = renderDraftFenceReviewPacketMarkdown(packet);
+
+    expect(markdown).toContain(`# Draft Review Packet: ${packet.packetId}`);
+    expect(markdown).toContain("Route exposure allowed: no");
+    expect(markdown).toContain("Payload present: yes");
+    expect(markdown).not.toContain("must-not-appear");
+  });
+
+  it("stores review packets in an append-only memory ledger without approving live actions", async () => {
+    const workflow = await runDraftFenceWorkflow({
+      kind: "content",
+      metadata: { sourceIds: ["nflverse"], surface: "newsletter" },
+      now: "2026-07-05T18:00:00.000Z",
+      text: "GSE board note: route every claim through review.",
+      workflowRunId: "workflow_ledger_1",
+    });
+    const packet = createDraftFenceReviewPacket({ workflow });
+    const ledger = createMemoryDraftFenceReviewPacketLedger();
+    const appended = ledger.append(packet);
+    const duplicate = ledger.append(packet);
+    const listed = ledger.list();
+    const found = ledger.find(packet.packetId);
+
+    expect(appended.ok).toBe(true);
+    expect(duplicate).toMatchObject({ code: "duplicate_packet", ok: false });
+    expect(listed).toHaveLength(1);
+    expect(found?.liveActionLocks).toEqual({
+      externalSendAllowed: false,
+      liveIntegrationAllowed: false,
+      publishAllowed: false,
+      routeExposureAllowed: false,
+    });
+    expect(ledger.packets).toHaveLength(1);
   });
 });
