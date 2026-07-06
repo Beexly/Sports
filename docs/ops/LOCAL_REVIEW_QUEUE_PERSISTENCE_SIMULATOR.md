@@ -28,6 +28,14 @@ The simulator provides:
 - approval blocking when packet blockers remain unresolved
 - markdown snapshot rendering
 
+Companion reporting:
+
+- `apps/web/lib/workflows/local-review-queue-report.ts`
+- `apps/web/lib/workflows/local-review-queue-report-markdown.ts`
+- `docs/ops/LOCAL_REVIEW_QUEUE_BLOCKER_REPORT.md`
+
+The companion report consumes simulator snapshots and groups unresolved blockers by queue source, workflow surface, and source ID without adding database writes or live workflow actions.
+
 ## Queue Event Types
 
 | Event | Purpose | Live effect |
@@ -90,4 +98,4 @@ Result:
 
 This simulator does not approve live queue persistence, database writes, public route exposure, content publication, outbound outreach, affiliate activation, sponsor approval, performance claims, source legal clearance, or any production workflow.
 
-The next gate is API replay promotion conflict checks and abuse-response fixtures, still local-only.
+The next local gate is guarded Portfolio Fit / Calibration Integrity metric work or owner-reviewed production preview QA.

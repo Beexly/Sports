@@ -70,7 +70,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, Stale Line Risk Score, Market Mirage Score, xCOMP-GSE, QB Burden Index, Role Volatility Index, Playable Window Score, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, SLRS/QBI/RVI/PWS/MMS evidence-card fixture coverage, generated shadow metric evidence markdown reports, RVI/PWS validation split fixture coverage, source-rights-reviewed historical validation adapters for RVI/PWS/MMS, composed decision metric payload-envelope fixture coverage including MMS, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR AND PUBLIC-SAFE EXAMPLES, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, Stale Line Risk Score, Market Mirage Score, Playable Window Score, DRI, action score, and no-bet strength exist. This slice added integration proof that high model interest cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. SLRS hard-blocks stale market snapshots from market-signal use. MMS now blocks market interpretation when market movement is stale, blocked, narrative-heavy, contradictory, source-weak, or burdened by no-bet/drift/calibration pressure. PWS composes stale-line, source-rights, no-bet, drift, calibration, QBI, and RVI pressure into a `SHADOW` decision-window readiness gate without claiming playable edge. Public-safe no-bet methodology examples now exist under `apps/web/lib/gse/no-bet-methodology.ts` and `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`. Full market intelligence product wiring remains future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
-| J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
+| J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS AND LOCAL REPORTING | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows, local review queue persistence, and blocker reporting by source/surface/source ID. Manual review remains required and no publish/send/API exposure terminal state exists. |
 | K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, raw-NGS-export, partner-offer-compliance, API-payload-rights, OpenAPI-security, and AWS-compatibility scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
 | L. Tests | IMPROVED THIS SESSION | Extended `apps/web/__tests__/guardrails.test.ts` and added `apps/web/__tests__/fences-and-adapters.test.ts` plus `apps/web/__tests__/aws-compatibility-index.test.ts`; added receiving/rushing metric and residual-rollup tests in prediction-engine. |
 | M. Handoffs | IMPROVED THIS SESSION | Added this audit plus Sunday handoff and R&D map. Existing stale handoff remains historical, not current. |
@@ -379,6 +379,20 @@ Source-rights-reviewed historical validation adapter added in the continuation:
   - includes adapted nflverse/The Odds API cases, Sleeper manual-review case, and Scores24 permission-blocked case
 - `packages/prediction-engine/src/metrics/__tests__/metric-historical-validation-adapter.test.ts`
 - package core and root export updates
+
+Local review queue blocker reporting added in the continuation:
+
+- `apps/web/lib/workflows/local-review-queue-report.ts`
+  - consumes the existing memory-shadow queue snapshot
+  - groups unresolved blockers by queue source, workflow surface, and source ID
+  - builds a local priority queue from blocker count, stale evidence, status, warnings, and source type
+  - keeps report gates closed for publish, route exposure, external send, live integration, affiliate activation, sponsor approval automation, database writes, durable persistence, and external side effects
+- `apps/web/lib/workflows/local-review-queue-report-markdown.ts`
+  - renders a local markdown blocker report without creating live workflow actions
+- `apps/web/__tests__/local-review-queue-report.test.ts`
+  - proves source/surface/source-ID grouping, stale blocked-packet priority, clean approved packet omission, and local-only markdown locks
+- `docs/ops/LOCAL_REVIEW_QUEUE_BLOCKER_REPORT.md`
+  - records purpose, grouping, safety locks, verification, and non-approval statement
 
 Metric source-policy generation continuation added in the continuation:
 
@@ -700,6 +714,13 @@ Completed so far:
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after evidence-card generators | PASS | 91 files, 806 tests |
 | `npm run typecheck && npm run guardrails && npm run lint && git diff --check` after evidence-card generators | PASS | root typecheck, guardrails, lint, and whitespace check completed without errors |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-source-payload-rights.test.ts` after source-policy adapter | PASS | 1 file, 8 tests; fixture alignment and conservative generated permissions passed |
+| `npm run test --workspace=apps/web -- local-review-queue-report.test.ts` | FAIL then PASS | first run staled a clean packet, fixture corrected; final run passed 1 file, 4 tests |
+| `npm run test --workspace=apps/web -- local-review-queue-report.test.ts local-review-queue-persistence.test.ts draft-review-fixtures.test.ts partner-sponsor-review-fixtures.test.ts` | PASS | 4 files, 20 tests; blocker report, memory-shadow persistence, draft packets, and partner/sponsor queue fixtures passed together |
+| `npm run typecheck --workspace=@sports/web` after local review queue blocker report | PASS | app TypeScript checked after report builder, markdown renderer, docs, and tests |
+| local review queue blocker-report LOC and escape-hatch scan | PASS | report builder 250 lines, markdown renderer 52 lines, test 130 lines; no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access found |
+| `npm run typecheck && npm run lint && npm run guardrails && git diff --check` after local review queue blocker report | PASS | root typecheck, lint, guardrails, and whitespace checks completed without errors |
+| `npm run test --workspaces --if-present` after local review queue blocker report | PASS | command exited 0; output was too large for a reliable aggregate count in the tool transcript, so no new all-workspaces total is claimed here |
+| `npm run test --workspaces --if-present -- --reporter=dot --silent` after local review queue blocker report | PASS | command exited 0 on concise rerun; transcript still truncated before a clean aggregate count, with prediction-engine and types workspace summaries visible |
 | `npm run typecheck --workspace=packages/prediction-engine` after source-policy adapter | PASS | prediction-engine TypeScript checked after generated policy wiring |
 | source-policy adapter LOC and escape-hatch scan | PASS | adapter 71 lines, fixtures 180 lines, updated source/payload-rights test 159 lines; no TS escape hatches or type assertions found |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after source-policy adapter | PASS | 91 files, 808 tests |
@@ -725,6 +746,7 @@ Final broad validation for the current API live-route promotion packet slice com
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
 - Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, partner/sponsor review fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
 - Local review queue persistence simulation now exists for media, content/API, and partner/sponsor packets. It is memory-shadow only, with duplicate rejection, stale packet reporting, deterministic replay, version conflict checks, unresolved blocker approval blocking, and no database writes.
+- Local review queue blocker reporting now exists for unresolved blockers by queue source, workflow surface, and source ID. It is a local repair map only, not approval automation, durable persistence, route exposure, publication, outreach, affiliate activation, or sponsor approval.
 - API abuse-response and promotion-conflict fixture reporting now exists. It proves denied API cases do not debit quota or leak protected response data, and it blocks abuse-response promotion evidence when replay conflicts, unresolved/stale queue packets, or duplicate route-promotion IDs exist.
 - The AWS public case-study route now exists and is registered in the exact `docs/aws` compatibility lane. It passed focused source QA, app typecheck, AWS compatibility guard, root typecheck, root lint, root guardrails, full all-workspaces tests, and local desktop/mobile screenshot QA.
 - Partner/sponsor review fixtures now exist and are local-only. They prove low-risk disclosed copy reaches manual review while sponsor-control attempts, regulated unknown-state offers, expired offers, and unsafe ROI/proven language block before any live action.
@@ -753,16 +775,16 @@ Final broad validation for the current API live-route promotion packet slice com
 
 ## Next Highest-Leverage Tasks
 
-1. Add local commercial review queue reporting for unresolved blockers by source and surface.
-2. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
-3. Add historical distribution/drift adapters only after source rights and payload rights prove the inputs are cleared.
-4. Add markdown export tests for any future metric report before allowing it into public/API route planning.
-5. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
-6. Run owner-reviewed production preview QA before live push.
-7. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
-8. Add route design paperwork only after owner approval; keep it non-executable and route-free.
-9. Add visual QA for any new public-safe case-study route before production preview.
-10. Add historical-data adapters for validation splits only after source-rights and payload-rights review confirms the inputs are cleared.
+1. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
+2. Add historical distribution/drift adapters only after source rights and payload rights prove the inputs are cleared.
+3. Add markdown export tests for any future metric report before allowing it into public/API route planning.
+4. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
+5. Run owner-reviewed production preview QA before live push.
+6. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
+7. Add route design paperwork only after owner approval; keep it non-executable and route-free.
+8. Add visual QA for any new public-safe case-study route before production preview.
+9. Add historical-data adapters for validation splits only after source-rights and payload-rights review confirms the inputs are cleared.
+10. Add source-policy generation receipts for new metric families before any app/API bridge expansion.
 
 ## Safety Statement
 

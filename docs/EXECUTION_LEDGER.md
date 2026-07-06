@@ -1407,3 +1407,24 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local adapter and fixture layer only; no live data fetch, no route, no public/API exposure,
   no legal clearance claim, no production-readiness claim, no metric promotion, no raw odds/tracking
   export, no package/dependency change, no live AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier local review queue blocker report
+
+- WHAT: Added a local blocker-report layer on top of the existing memory-shadow review queue. The
+  report groups unresolved blockers by queue source, workflow surface, and source ID, then builds a
+  priority queue from blocker count, stale evidence, queue status, warning count, and source type.
+  Markdown rendering is split into a separate module so the report builder stays within the strict
+  file-size ceiling.
+- FILES: `apps/web/lib/workflows/local-review-queue-report.ts`,
+  `apps/web/lib/workflows/local-review-queue-report-markdown.ts`,
+  `apps/web/__tests__/local-review-queue-report.test.ts`,
+  `docs/ops/LOCAL_REVIEW_QUEUE_BLOCKER_REPORT.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution ledger.
+- GATE: first focused run failed because the test staled a clean packet instead of an unresolved
+  blocker; fixture corrected. Focused report tests passed (1 file, 4 tests). Builder and renderer
+  LOC review passed at 250 and 52 pure lines. Broader validation is recorded in the Sunday audit and
+  handoff after this slice.
+- FLAG: local report only; no DB writes, durable persistence, live API route, publish/send action,
+  affiliate activation, sponsor approval automation, legal clearance claim, source clearance claim,
+  production-readiness claim, package/dependency change, live AWS/cloud/service action, or prediction
+  gate flip.
