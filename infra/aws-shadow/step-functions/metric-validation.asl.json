@@ -1,0 +1,39 @@
+{
+  "Comment": "Local Step Functions-shaped fixture for GSE metric validation. It is not deployed and is not a CloudFormation artifact.",
+  "StartAt": "CollectEvidence",
+  "States": {
+    "CollectEvidence": {
+      "Type": "Pass",
+      "Result": "source-rights envelope, metric birth certificate, validation fixture",
+      "Next": "EvaluateMetric"
+    },
+    "EvaluateMetric": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.metric.shadowApproved",
+          "BooleanEquals": true,
+          "Next": "ManualReview"
+        }
+      ],
+      "Default": "Blocked"
+    },
+    "ManualReview": {
+      "Type": "Pass",
+      "Result": "owner review required before promotion",
+      "End": true
+    },
+    "Blocked": {
+      "Type": "Fail",
+      "Cause": "metric evidence incomplete or not shadow-approved"
+    }
+  },
+  "gse_shadow_boundary": {
+    "schema_version": "gse-shadow-step-functions-fixture-v1",
+    "canonical_artifact": "docs/fable/aws/AWS_OPERATING_INTELLIGENCE_RUNBOOK.md",
+    "live_aws_action": false,
+    "deploy_allowed": false,
+    "credentials_required": false,
+    "paid_resource_required": false
+  }
+}

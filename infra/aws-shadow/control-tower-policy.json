@@ -1,0 +1,40 @@
+{
+  "schema_version": "gse-shadow-control-tower-policy-v1",
+  "status": "local_fixture_only",
+  "canonical_artifact": "docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json",
+  "live_aws_action": false,
+  "deploy_allowed": false,
+  "credentials_required": false,
+  "paid_resource_required": false,
+  "mapped_service": "AWS Control Tower",
+  "well_architected_pillars": [
+    "operational_excellence",
+    "security",
+    "reliability",
+    "cost_optimization"
+  ],
+  "guardrails": [
+    {
+      "id": "gse-aws-no-live-mutation",
+      "effect": "block",
+      "checks": [
+        "no account mutation",
+        "no DNS mutation",
+        "no IAM mutation",
+        "no deploy action"
+      ]
+    },
+    {
+      "id": "gse-aws-zero-cost-default",
+      "effect": "block",
+      "checks": [
+        "monthly spend assumption equals zero",
+        "paid resource request requires owner approval"
+      ]
+    }
+  ],
+  "validation_sources": [
+    "docs/aws/AWS_SHADOW_BOUNDARY.md",
+    "scripts/guardrails/aws-compatibility-index-scan.mjs"
+  ]
+}

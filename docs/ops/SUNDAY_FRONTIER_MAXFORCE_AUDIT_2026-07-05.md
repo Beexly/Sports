@@ -32,6 +32,8 @@ No application code, docs, package scripts, or guardrails were dirty before this
 - `docs/revenue/*`
 - `docs/api/*`
 - `docs/fable/aws/*`
+- `docs/aws/*`
+- `infra/aws-shadow/*`
 - `apps/web/app/pricing/page.tsx`
 - `apps/web/app/media-kit/page.tsx`
 - `apps/web/app/partners/page.tsx`
@@ -67,10 +69,10 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
 | G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | PARTIAL | GSS and market gravity exist. Full no-bet governor and market intelligence product wiring remain future work. |
-| I. AWS shadow architecture / cloud R&D | COMPLETE UNDER FABLE PATHS, PARTIAL UNDER EXACT PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` path families are not present. |
+| I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
 | J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
-| K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, raw-NGS-export, partner-offer-compliance, API-payload-rights, and OpenAPI-security scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
-| L. Tests | IMPROVED THIS SESSION | Extended `apps/web/__tests__/guardrails.test.ts` and added `apps/web/__tests__/fences-and-adapters.test.ts`; added receiving metric tests in prediction-engine. |
+| K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, raw-NGS-export, partner-offer-compliance, API-payload-rights, OpenAPI-security, and AWS-compatibility scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
+| L. Tests | IMPROVED THIS SESSION | Extended `apps/web/__tests__/guardrails.test.ts` and added `apps/web/__tests__/fences-and-adapters.test.ts` plus `apps/web/__tests__/aws-compatibility-index.test.ts`; added receiving metric tests in prediction-engine. |
 | M. Handoffs | IMPROVED THIS SESSION | Added this audit plus Sunday handoff and R&D map. Existing stale handoff remains historical, not current. |
 
 ## Session Patches
@@ -86,6 +88,8 @@ Guardrails added:
 - `scripts/guardrails/openapi-security-scan.mjs`
 - `scripts/guardrails/fixtures/api-payload-rights.json`
 - `scripts/guardrails/fixtures/openapi-security.json`
+- `scripts/guardrails/aws-compatibility-index-scan.mjs`
+- `scripts/guardrails/fixtures/aws-compatibility-index.json`
 
 Guardrail wiring:
 
@@ -96,7 +100,8 @@ Guardrail wiring:
   - added `guard:partner-offers`
   - added `guard:api-payload-rights`
   - added `guard:openapi-security`
-  - added all six frontier checks to the composite `guardrails` chain
+  - added `guard:aws-compatibility-index`
+  - added all seven frontier checks to the composite `guardrails` chain
 
 Tests updated:
 
@@ -105,6 +110,8 @@ Tests updated:
   - asserts root package scripts include the new checks
 - `apps/web/__tests__/fences-and-adapters.test.ts`
   - proves fence plugins, source-rights/IP adapters, API-auth helpers, and API-v1 payload filtering fail closed where required
+- `apps/web/__tests__/aws-compatibility-index.test.ts`
+  - proves exact AWS compatibility paths stay local-only and point to existing canonical artifacts
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
   - proves Receiver Difficulty increases for harder, deeper, tighter, more contested targets
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
@@ -154,6 +161,17 @@ API v1 idempotency replay simulation added in the continuation:
   - proves duplicate successful requests return the same envelope without double-counting usage, denied requests create no success records, payload changes do not replay, and malformed idempotency keys create no replay record
 - `docs/api/API_V1_SHADOW_ROUTE_REPLAY.md`
   - records the replay contract and boundaries
+
+AWS compatibility indexes added in the continuation:
+
+- `docs/aws/*`
+  - provides exact-path AWS index, compatibility map, six-pillar GSE Well-Architected lens, and shadow boundary
+  - points to canonical `docs/fable/aws` and `infrastructure/aws` artifacts without claiming live AWS
+- `infra/aws-shadow/*`
+  - provides local-only fixture aliases for Shadow Control Tower, Step Functions, EventBridge, SageMaker, Bedrock Guardrails, AgentCore, and Clean Rooms patterns
+  - keeps `live_aws_action=false`, `deploy_allowed=false`, `credentials_required=false`, and `paid_resource_required=false`
+- `scripts/guardrails/aws-compatibility-index-scan.mjs`
+  - validates exact paths, canonical targets, required local-only fragments, fixture flags, and forbidden activation phrases
 
 Draft workflow harness added in the continuation:
 
@@ -224,6 +242,12 @@ Completed so far:
 | `node scripts/guardrails/partner-offer-compliance-scan.mjs` | PASS | 8 fixture cases passed; high-risk offers fail closed |
 | `node scripts/guardrails/api-payload-rights-scan.mjs` | PASS | 8 fixture cases passed; unsafe API fields fail closed |
 | `node scripts/guardrails/openapi-security-scan.mjs` | PASS | 3 contract files passed shadow OpenAPI security checks |
+| `npm run guard:aws-compatibility-index` | PASS | first run failed on two deployment-shaped phrases; after wording repair, 13 compatibility paths and 8 local fixtures passed |
+| `npm run test --workspace=apps/web -- aws-compatibility-index.test.ts` | PASS | 1 file, 3 tests; exact AWS compatibility path guard, package wiring, and canonical references passed |
+| `npm run fable:aws-gates` | PASS | local AWS gate evidence passed |
+| `npm run fable:aws-fixtures` | PASS | local AWS fixture library evidence passed |
+| `npm run fable:aws-governance` | PASS | local Shadow Control Tower/governance evidence passed |
+| `npm run fable:aws-intel` | PASS | 19 required AWS docs present; live_aws_action=false; paid_resource_used=false; all six Well-Architected pillars covered in fixtures |
 | `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-boundary-guard.test.ts` | PASS | 5 files, 40 tests; API v1 route harness, seam, registry, persistence, and boundary guard all passed together |
 | `npm run test --workspace=apps/web -- api-v1-shadow-route-replay.test.ts api-v1-shadow-route-harness.test.ts api-v1-persistence.test.ts` | PASS | 3 files, 19 tests; API replay simulation, route harness, and persistence seam passed |
 | `npm run test --workspace=apps/web -- draft-fence-workflow.test.ts fences-and-adapters.test.ts` | PASS | 2 files, 13 tests; workflow harness and fence/plugin seams passed together |
@@ -240,10 +264,17 @@ Completed so far:
 | `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts` | PASS | 1 file, 6 tests; proves route-level shadow auth/scope/rate/envelope/usage/payload/abuse behavior |
 | `npm run typecheck --workspace=@sports/web` | PASS | app TypeScript checked after fence/API adapter and route-harness additions |
 | `npm run typecheck --workspace=packages/prediction-engine` | PASS | prediction-engine TypeScript checked after receiving metric additions |
-| `npm run guardrails` | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, three new guards, and eval contracts |
+| `npm run guardrails` | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, and eval contracts |
 | `npm run typecheck` | PASS | all workspaces with typecheck scripts completed |
 | `npm run lint` | PASS | `@sports/web` ESLint completed with max warnings 0 |
 | `npm run test --workspaces --if-present` | PASS | 635 test files and 8052 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types |
+| `npm run test --workspaces --if-present` | TIMEOUT | current AWS slice rerun exceeded the 300s tool ceiling and is not counted as a pass |
+| `npm run test --workspace=apps/web -- --reporter=dot --silent` | PASS | 530 files, 7051 tests |
+| `npm run test --workspace=packages/crypto -- --reporter=dot --silent` | PASS | 1 file, 13 tests |
+| `npm run test --workspace=packages/data-ingestion -- --reporter=dot --silent` | PASS | 16 files, 131 tests |
+| `npm run test --workspace=packages/ingestion-pipeline -- --reporter=dot --silent` | PASS | 6 files, 60 tests |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` | PASS | 84 files, 781 tests |
+| `npm run test --workspace=packages/types -- --reporter=dot --silent` | PASS | 1 file, 31 tests |
 | `git diff --check` | PASS | no whitespace errors |
 
 PowerShell syntax caveat:
@@ -251,7 +282,7 @@ PowerShell syntax caveat:
 - `npm run guard:commercial-copy && npm run guard:performance-claims && npm run guard:no-raw-ngs` failed before execution because this shell version rejected `&&`.
 - The same npm scripts were rerun separately and passed.
 
-Final broad validation completed in this slice.
+Final broad validation for the current AWS slice completed through segmented workspace test commands because the root all-workspaces test command exceeded the 300s tool ceiling. The segmented commands covered all workspaces that define test scripts.
 
 ## Remaining Risks
 
@@ -259,21 +290,21 @@ Final broad validation completed in this slice.
 - API auth, API v1 pure seams, API payload/OpenAPI guardrails, route-level shadow harness, and idempotency replay simulation now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
 - Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
-- Exact `docs/aws` and `infra/aws-shadow` paths remain missing, but equivalent AWS/FABLE artifacts exist elsewhere. Add compatibility indexes only if path visibility matters.
+- Exact `docs/aws` and `infra/aws-shadow` paths now exist as compatibility indexes. They are local visibility paths, not live AWS infrastructure.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Add `docs/aws` and `infra/aws-shadow` compatibility indexes to point to the existing FABLE/AWS work.
-2. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
-3. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
-4. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
-5. Add model-card and drift-card generators for every promoted metric.
-6. Add source-policy generation from the web registry into prediction-engine metric fixtures.
-7. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-8. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-9. Add durable local queue persistence simulation for media review packets without DB writes.
-10. Add API replay promotion checks for conflict detection after a durable adapter exists.
+1. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
+2. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
+3. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
+4. Add model-card and drift-card generators for every promoted metric.
+5. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+6. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+7. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+8. Add durable local queue persistence simulation for media review packets without DB writes.
+9. Add API replay promotion checks for conflict detection after a durable adapter exists.
+10. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
 
 ## Safety Statement
 

@@ -762,3 +762,20 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   `npm run guardrails` passed; `git diff --check` passed.
 - FLAG: local replay simulation only; no live API route, no durable persistence, no Prisma model, no migration,
   no env vars, no generated keys, no network call, no paid service, and no production API promotion.
+
+## 2026-07-05 - (codex) - Sunday frontier AWS compatibility indexes
+
+- WHAT: Added exact `docs/aws` and `infra/aws-shadow` visibility paths without creating a parallel AWS
+  source of truth. The docs index points to canonical `docs/fable/aws` and `infrastructure/aws` artifacts,
+  explains the AWS Well-Architected six-pillar GSE lens, and records the local-only AWS shadow boundary.
+  The infra path adds local fixture aliases for Shadow Control Tower, Step Functions, EventBridge,
+  SageMaker Model Monitor, Bedrock Guardrails, AgentCore, and Clean Rooms patterns.
+- FILES: `docs/aws/*`, `infra/aws-shadow/*`, `scripts/guardrails/aws-compatibility-index-scan.mjs`,
+  `scripts/guardrails/fixtures/aws-compatibility-index.json`, `apps/web/__tests__/aws-compatibility-index.test.ts`,
+  `package.json`, Sunday audit/handoff docs, and commercial ledger.
+- GATE: first scanner run correctly failed on two command-shaped deployment phrases; wording was tightened.
+  `npm run guard:aws-compatibility-index`, `npm run test --workspace=apps/web -- aws-compatibility-index.test.ts`,
+  `npm run fable:aws-gates`, `npm run fable:aws-fixtures`, `npm run fable:aws-governance`, and
+  `git diff --check` passed.
+- FLAG: compatibility indexes and local fixtures only; no AWS credentials, account IDs, ARNs, CLI calls,
+  deploy code, DNS changes, paid resources, SDK dependencies, cloud mutation, or production gate flips.
