@@ -50,6 +50,12 @@ export {
   generateShadowMetricEvidenceFixtureCards,
   SHADOW_METRIC_EVIDENCE_FIXTURES,
 } from "./metric-evidence-card-fixtures.js";
+export type { ShadowMetricEvidenceMarkdownReport } from "./metric-evidence-report-markdown.js";
+export {
+  renderAllShadowMetricEvidenceReportsMarkdown,
+  renderShadowMetricEvidenceReportIndexMarkdown,
+  renderShadowMetricEvidenceReportMarkdown,
+} from "./metric-evidence-report-markdown.js";
 export type {
   DecisionWindowValidationSplit,
   MetricValidationSplitResult,

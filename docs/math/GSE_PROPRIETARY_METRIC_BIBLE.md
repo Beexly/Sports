@@ -918,11 +918,19 @@ Pure LOC review for new source files:
 - MMS is now included in the composed metric payload fixtures and app API-v1 payload bridge as a safe derived score/band/allowance shape, while protected/raw/provider/probability fields stay blocked.
 - Focused MMS tests passed (6 files, 27 tests), focused MMS payload/app bridge tests passed (prediction-engine 6 files / 31 tests; app 1 file / 4 tests), prediction-engine typecheck passed, app typecheck passed, full prediction-engine tests passed (99 files, 850 tests), full app tests passed (538 files, 7111 tests), and remaining segmented workspace tests passed across crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, and types 1 / 31.
 
+2026-07-06 generated evidence report continuation check:
+
+- `metric-evidence-card-fixtures.ts` now includes Market Mirage Score in the synthetic/local shadow evidence fixture family.
+- `metric-evidence-report-markdown.ts` renders one markdown report per shadow metric plus an index while preserving lifecycle, API, licensing, public API, and live-route locks.
+- `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md` makes the generated report layer visible in the repository for SLRS, QBI, RVI, PWS, and MMS.
+- The markdown reports are local governance artifacts only. They do not approve public content, API exposure, licensing, betting use, production promotion, legal clearance, probability claims, expected-value claims, or pick claims.
+- Focused evidence-card/report tests passed (2 files, 11 tests), prediction-engine typecheck passed, file length scan kept the report renderer at 92 lines, fixture file at 166 lines, split tests at 196 and 62 lines, and no TS escape hatches were found.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, and generated source policies:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, and generated source policies:
 
-1. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, caveats, and synthetic/local labels for SLRS/QBI/RVI/PWS/MMS.
-2. Add source-rights-reviewed historical adapters for split validation only after input clearance is proven.
-3. Add local commercial review queue reporting for unresolved blockers by source and surface.
-4. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
+1. Add source-rights-reviewed historical adapters for split validation only after input clearance is proven.
+2. Add local commercial review queue reporting for unresolved blockers by source and surface.
+3. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
+4. Add markdown export tests for any future metric report before allowing it into public/API route planning.

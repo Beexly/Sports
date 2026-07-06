@@ -139,6 +139,7 @@ describe("metric evidence card generators", () => {
       "qb-burden-index",
       "role-volatility-index",
       "playable-window-score",
+      "market-mirage-score",
     ]);
 
     for (const card of cards) {
@@ -174,17 +175,20 @@ describe("metric evidence card generators", () => {
     const cards = generateAllShadowMetricEvidenceFixtureCards();
     const rvi = cardFor(cards, "role-volatility-index");
     const pws = cardFor(cards, "playable-window-score");
+    const mms = cardFor(cards, "market-mirage-score");
 
     expect(rvi.driftCard.status).toBe("WATCH");
     expect(rvi.driftCard.notes).toContain("role_stability_psi: value 0.21 -> WATCH.");
     expect(pws.driftCard.status).toBe("SEVERE");
     expect(pws.driftCard.notes).toContain("decision_window_block_rate_delta: value 0.31 -> SEVERE.");
+    expect(mms.driftCard.status).toBe("WATCH");
+    expect(mms.driftCard.notes).toContain("market_mirage_watch_rate_delta: value 0.19 -> WATCH.");
   });
 });
 
 function cardFor(
   cards: ReturnType<typeof generateAllShadowMetricEvidenceFixtureCards>,
-  metricId: "role-volatility-index" | "playable-window-score",
+  metricId: "role-volatility-index" | "playable-window-score" | "market-mirage-score",
 ) {
   const card = cards.find((candidate) => candidate.metricId === metricId);
   if (!card) throw new Error(`Missing generated card for ${metricId}`);

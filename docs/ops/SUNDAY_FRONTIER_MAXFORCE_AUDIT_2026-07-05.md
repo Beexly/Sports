@@ -67,7 +67,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
 | E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, a route-level shadow harness, and an app-level composed metric payload bridge. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
-| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, Stale Line Risk Score, Market Mirage Score, xCOMP-GSE, QB Burden Index, Role Volatility Index, Playable Window Score, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, SLRS/QBI/RVI/PWS evidence-card fixture coverage, RVI/PWS validation split fixture coverage, composed decision metric payload-envelope fixture coverage including MMS, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
+| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, Stale Line Risk Score, Market Mirage Score, xCOMP-GSE, QB Burden Index, Role Volatility Index, Playable Window Score, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, SLRS/QBI/RVI/PWS/MMS evidence-card fixture coverage, generated shadow metric evidence markdown reports, RVI/PWS validation split fixture coverage, composed decision metric payload-envelope fixture coverage including MMS, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR AND PUBLIC-SAFE EXAMPLES, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, Stale Line Risk Score, Market Mirage Score, Playable Window Score, DRI, action score, and no-bet strength exist. This slice added integration proof that high model interest cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. SLRS hard-blocks stale market snapshots from market-signal use. MMS now blocks market interpretation when market movement is stale, blocked, narrative-heavy, contradictory, source-weak, or burdened by no-bet/drift/calibration pressure. PWS composes stale-line, source-rights, no-bet, drift, calibration, QBI, and RVI pressure into a `SHADOW` decision-window readiness gate without claiming playable edge. Public-safe no-bet methodology examples now exist under `apps/web/lib/gse/no-bet-methodology.ts` and `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`. Full market intelligence product wiring remains future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
 | J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
@@ -357,6 +357,18 @@ Market Mirage Score continuation added in the continuation:
 - `packages/prediction-engine/src/metrics/__tests__/market-mirage-score.test.ts`
 - metric birth-certificate registry, asset graduation, package export, payload fixture, app payload bridge, metric bible, IP ledger, commercial ledger, audit, handoff, and execution ledger updates
 
+Generated shadow metric evidence reports added in the continuation:
+
+- `packages/prediction-engine/src/metrics/core/metric-evidence-report-markdown.ts`
+  - renders one synthetic/local markdown report per shadow metric and an index
+  - preserves lifecycle, API, licensing, public API, and live-route locks
+- `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md`
+  - repo-visible report for SLRS, QBI, RVI, PWS, and MMS
+  - labels all evidence synthetic/local and blocks public/API, lifecycle, betting, production, and legal-clearance claims
+- `packages/prediction-engine/src/metrics/__tests__/metric-evidence-report-markdown.test.ts`
+  - checks generated report locks and alignment with the repo-visible markdown report
+- package core and root export updates
+
 Metric source-policy generation continuation added in the continuation:
 
 - `packages/prediction-engine/src/metrics/core/source-rights-registry-adapter.ts`
@@ -590,6 +602,9 @@ Completed so far:
 | `npm run lint` after Market Mirage Score docs | PASS | root lint completed through `@sports/web` ESLint with max warnings 0 |
 | `npm run guardrails` after Market Mirage Score docs | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | `git diff --check` after Market Mirage Score docs | PASS | no whitespace errors |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-evidence-cards.test.ts src/metrics/__tests__/metric-evidence-report-markdown.test.ts` after generated reports | PASS | 2 files, 11 tests |
+| `npm run typecheck --workspace=packages/prediction-engine` after generated reports | PASS | prediction-engine TypeScript checked after renderer, fixture, export, and doc-alignment test additions |
+| generated report LOC and escape-hatch scan | PASS | renderer 92 lines, fixture 166 lines, split tests 196 and 62 lines, report doc 164 lines; no TS escape hatches or non-null property access found |
 | `npm run typecheck` after no-bet methodology examples | PASS | all workspaces with typecheck scripts completed |
 | `npm run guardrails` after no-bet methodology examples | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | `npm run lint && git diff --check` after no-bet methodology examples | PASS | root lint and whitespace check completed without errors |
@@ -710,7 +725,8 @@ Final broad validation for the current API live-route promotion packet slice com
 - YAC Creation, Rush Environment Index, Expected Rush Yards, and Rush Over Expected now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, confidence/evidence separation, and no protected weights in outputs.
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries. They are aggregation helpers only, not public/API leaderboards, and they do not create validation, drift, model-card, or source-clearance claims.
 - Metric model/drift-card generators now exist as local evidence helpers. Model cards remain draft-first by default, and generated cards do not approve lifecycle, public/API exposure, licensing, validation, source clearance, or production promotion.
-- SLRS/QBI/RVI/PWS model-card and drift-card fixture coverage now exists. The fixture generator is synthetic/local, preserves `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, draft-first model cards, metric-specific caveats, and active drift review; it does not create public/API exposure or promotion evidence.
+- SLRS/QBI/RVI/PWS/MMS model-card and drift-card fixture coverage now exists. The fixture generator is synthetic/local, preserves `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, draft-first model cards, metric-specific caveats, and active drift review; it does not create public/API exposure or promotion evidence.
+- Generated shadow metric evidence markdown reports now exist under `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md`. They are test-linked to the fixture renderer, synthetic/local only, and do not create public/API exposure, lifecycle promotion, betting use, production approval, legal clearance, probability claims, expected-value claims, or pick claims.
 - RVI/PWS validation split fixture coverage now exists. The split runner is synthetic/local, preserves `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`, and classifies clean/watch/fail-closed split cases without creating promotion evidence.
 - Composed decision metric payload-envelope fixture coverage now exists. The fixture layer is synthetic/local, approves only safe derived fields and public drivers, blocks protected weights, raw values, provider IDs, unsupported probability claims, and uncleared fallback source fields, and does not create route exposure.
 - The app API-v1 composed metric payload bridge now exists. It consumes package-owned payload fixtures through the app bridge, preserves safe approvals and unsafe blocks, and explicitly records no live route creation.
@@ -722,10 +738,10 @@ Final broad validation for the current API live-route promotion packet slice com
 
 ## Next Highest-Leverage Tasks
 
-1. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, caveats, and synthetic/local labels for SLRS/QBI/RVI/PWS/MMS.
-2. Add source-rights-reviewed historical adapters for validation splits only after input clearance is proven.
-3. Add local commercial review queue reporting for unresolved blockers by source and surface.
-4. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
+1. Add source-rights-reviewed historical adapters for validation splits only after input clearance is proven.
+2. Add local commercial review queue reporting for unresolved blockers by source and surface.
+3. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
+4. Add markdown export tests for any future metric report before allowing it into public/API route planning.
 5. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 6. Run owner-reviewed production preview QA before live push.
 7. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.

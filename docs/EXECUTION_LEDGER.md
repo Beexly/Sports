@@ -1360,3 +1360,29 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   public/API exposure, no raw odds or tracking export, no probability claim, no lifecycle promotion,
   no legal clearance claim, no production-readiness claim, no package/dependency change, no live
   AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier generated shadow metric evidence reports
+
+- WHAT: Added generated markdown report coverage for the governed shadow metric evidence-card layer.
+  The fixture family now includes Stale Line Risk Score, QB Burden Index, Role Volatility Index,
+  Playable Window Score, and Market Mirage Score. `metric-evidence-report-markdown.ts` renders one
+  synthetic/local report per metric plus an index, preserving lifecycle, API, licensing, public API,
+  and live-route locks. `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md` makes the report layer
+  visible to Codex/Claude without creating public/API exposure.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-evidence-card-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-evidence-report-markdown.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-evidence-report-markdown.test.ts`,
+  `packages/prediction-engine/src/index.ts`, `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `docs/ip/GSE_METRIC_IP_LEDGER.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution
+  ledger.
+- GATE: focused evidence-card/report tests passed (2 files, 11 tests). Prediction-engine typecheck
+  passed. LOC / escape-hatch review passed: renderer 92 lines, fixture 166 lines, split tests 196
+  and 62 lines, report doc 164 lines, and no `as any`, `as unknown`, `@ts-ignore`,
+  `@ts-expect-error`, `: any`, or non-null property access found.
+- FLAG: generated synthetic/local reports only; no live route, no public/API exposure, no legal
+  clearance claim, no production-readiness claim, no model promotion, no betting use, no probability
+  or expected-value claim, no raw odds/tracking export, no package/dependency change, no live
+  AWS/cloud/service action, and no prediction gate flip.

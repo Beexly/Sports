@@ -17,7 +17,8 @@ export type ShadowEvidenceMetricId =
   | "stale-line-risk-score"
   | "qb-burden-index"
   | "role-volatility-index"
-  | "playable-window-score";
+  | "playable-window-score"
+  | "market-mirage-score";
 
 export interface ShadowMetricEvidenceFixture {
   readonly metricId: ShadowEvidenceMetricId;
@@ -97,6 +98,22 @@ export const SHADOW_METRIC_EVIDENCE_FIXTURES: readonly ShadowMetricEvidenceFixtu
     evidenceRefs: ["fixture-pws-model-card", "fixture-pws-decision-window-split"],
     metricId: "playable-window-score",
     validationReport: shadowValidationReport("fixture-pws-validation", 300),
+  },
+  {
+    caveat:
+      "MMS market-integrity fixture is synthetic/local and cannot be used as market edge, expected value, win probability, or betting advice.",
+    driftChecks: [
+      {
+        evidenceRef: "fixture-mms-market-mirage-split",
+        name: "market_mirage_watch_rate_delta",
+        severeThreshold: 0.28,
+        value: 0.19,
+        watchThreshold: 0.14,
+      },
+    ],
+    evidenceRefs: ["fixture-mms-model-card", "fixture-mms-market-mirage-split"],
+    metricId: "market-mirage-score",
+    validationReport: shadowValidationReport("fixture-mms-validation", 300),
   },
 ];
 
