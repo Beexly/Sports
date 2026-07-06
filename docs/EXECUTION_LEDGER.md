@@ -875,3 +875,22 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local metric primitives only; no public/API metric exposure, no model-card or drift-card
   promotion, no validation claim, no source-rights legal clearance claim, no prediction publication,
   no model-version bump, no schema change, no live route, and no production gate flip.
+
+## 2026-07-05 - (codex) - Sunday frontier receiver/rusher residual rollups
+
+- WHAT: Added a governed player-season residual rollup helper for `yac-creation-gse` and
+  `rush-over-expected-gse`. The helper groups play-level residual rows by metric, player, and
+  season; rejects mixed direct rollups; emits `SHADOW` / `INTERNAL` summaries only; carries
+  source-policy validation forward; fails source posture closed for blocked modeling sources; and
+  keeps residual totals/per-play values separate from evidence confidence.
+- FILES: `packages/prediction-engine/src/metrics/core/residual-rollup.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`,
+  metric core/package export updates, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: targeted residual tests passed with adjacent residual metrics (3 files, 9 tests), the
+  direct mixed-rollup guard passed (1 file, 6 tests), prediction-engine typecheck passed, full
+  prediction-engine Vitest passed (90 files, 800 tests), root typecheck passed, root lint passed,
+  root guardrails passed, and `git diff --check` passed.
+- FLAG: local aggregation primitive only; no public leaderboard, no API exposure, no raw tracking
+  rows, no protected weights, no model-card or drift-card promotion, no validation claim, no source
+  legal-clearance claim, no schema change, no live route, and no production gate flip.

@@ -421,6 +421,16 @@ Rush Over Expected behavior:
 - uses rusher RYOE prior as a shrinkage stabilizer, not as a public weight
 - can include source-cleared broken-tackle and yards-after-contact proxies as public drivers
 
+Player Residual Rollup helper behavior:
+
+- rolls `yac-creation-gse` and `rush-over-expected-gse` play-level residuals into player-season summaries
+- groups only by metric, player, and season; direct mixed rollups are rejected instead of blended
+- returns `SHADOW` / `INTERNAL` summaries only
+- carries source-policy validation forward and fails source posture closed when any input source blocks modeling
+- keeps residual totals/per-play values separate from evidence confidence
+- returns public drivers for residual per play, sample size, evidence confidence, uncertainty, and source-policy posture
+- does not expose protected weights, raw tracking rows, public/API eligibility, model cards, drift cards, or validation claims
+
 Tests added:
 
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
@@ -429,6 +439,7 @@ Tests added:
 - `packages/prediction-engine/src/metrics/__tests__/rush-environment-index.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-rush-yards.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 
 This is not a claim that any metric is validated for public/API exposure. The metrics are usable as governed shadow primitives until model cards, drift cards, validation reports, and source-rights envelopes support promotion.
 
@@ -436,7 +447,7 @@ This is not a claim that any metric is validated for public/API exposure. The me
 
 Build in this order for proprietary football metrics:
 
-1. Receiver/rusher aggregation helpers for play-level residuals and player-season rollups
+1. Model-card and drift-card generators for governed metric assets
 2. QB Burden Index
 3. Role Volatility Index
 4. Calibration Integrity Grade
@@ -493,6 +504,13 @@ Recorded run on 2026-07-04:
 | `npm run guardrails` after Expected Rush Yards/Rush Over Expected | PASS. |
 | `npm run test --workspaces --if-present` after Expected Rush Yards/Rush Over Expected | WRAPPER TIMEOUT - hit the 300s tool ceiling; decomposed into segmented workspace runs. |
 | segmented workspace tests after Expected Rush Yards/Rush Over Expected | PASS - apps/web six chunks covered 531 files / 7056 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 89 / 794; types 1 / 31. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/residual-rollup.test.ts src/metrics/__tests__/yac-creation.test.ts src/metrics/__tests__/rush-over-expected.test.ts` | PASS - 3 files, 9 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/residual-rollup.test.ts` after direct mixed-rollup guard | PASS - 1 file, 6 tests. |
+| `npm run typecheck --workspace=packages/prediction-engine` after residual rollup helper | PASS. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after residual rollup helper | PASS - 90 files, 800 tests. |
+| `npm run typecheck` after residual rollup helper | PASS. |
+| `npm run guardrails` after residual rollup helper | PASS. |
+| `npm run lint && git diff --check` after residual rollup helper | PASS. |
 | `npm run typecheck --workspace=packages/prediction-engine` on 2026-07-05 receiving slice | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 1 file, 6 tests. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 1 file, 6 tests. |
@@ -550,13 +568,23 @@ Pure LOC review for new source files:
 - `rush-over-expected.test.ts` measured 52 pure LOC.
 - Targeted metric tests passed after the registry split: `metric-birth-certificate.test.ts`, `rush-environment-index.test.ts`, `expected-rush-yards.test.ts`, `rush-over-expected.test.ts`, and `metric-asset-graduation.test.ts` (5 files, 15 tests).
 
+2026-07-05 residual rollup continuation check:
+
+- `residual-rollup.ts` measured 220 source lines after removing an unnecessary type assertion.
+- `residual-rollup.test.ts` measured 142 source lines.
+- Escape-hatch scan over the new rollup files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, non-null property access, enums, or remaining type assertions.
+- Targeted rollup tests passed: `residual-rollup.test.ts`, `yac-creation.test.ts`, and `rush-over-expected.test.ts` (3 files, 9 tests).
+- Direct mixed-rollup guard test passed after adding a same metric/player/season assertion (1 file, 6 tests).
+- Prediction-engine typecheck passed after adding rollup exports.
+- Full prediction-engine Vitest passed after adding residual rollups (90 files, 800 tests).
+- Root typecheck, root lint, root guardrails, and `git diff --check` passed after adding residual rollups.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, and receiving/rushing metric slices:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, and residual rollup helper:
 
-1. Add receiver/rusher aggregation helpers that roll play-level residuals into season/player summaries without exposing protected weights.
+1. Add model-card and drift-card generators that can turn validation and rollup outputs into asset evidence.
 2. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
-3. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
-4. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
-5. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
-6. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+3. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
+4. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
+5. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.

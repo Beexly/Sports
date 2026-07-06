@@ -31,6 +31,19 @@ export {
   requireMetricAsset,
 } from "./metric-asset.js";
 export type {
+  MetricResidualConfidenceMeaning,
+  MetricResidualMetricId,
+  MetricResidualPlayInput,
+  MetricResidualRollup,
+  MetricResidualRollupExposure,
+  MetricResidualRollupKind,
+} from "./residual-rollup.js";
+export {
+  buildMetricResidualRollup,
+  buildMetricResidualRollups,
+  metricResidualRollupKey,
+} from "./residual-rollup.js";
+export type {
   MetricPayloadExposure,
   MetricPayloadField,
   MetricPayloadFieldKind,

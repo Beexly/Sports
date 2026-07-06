@@ -193,6 +193,7 @@ Broad test result:
 - Launch-facing commercial pages now have source-level QA plus local desktop/mobile screenshot artifacts for the five media pages and pricing.
 - YAC Creation, Rush Environment Index, Expected Rush Yards, and Rush Over Expected now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, and explicit confidence/evidence separation.
 - `metric-birth-certificate.ts` was split into a compact contract/lookup module plus `metric-birth-certificate-registry.ts` to keep the growing metric registry maintainable.
+- Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries for `yac-creation-gse` and `rush-over-expected-gse`, with source-policy validation and evidence-confidence separation.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 
 ## Partial
@@ -202,7 +203,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and first-month review queue export exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains required before live push.
-- Full proprietary metric backlog remains future work, with receiver/rusher aggregation helpers, model-card generators, drift-card generators, and source-policy generation next.
+- Full proprietary metric backlog remains future work, with model-card generators, drift-card generators, source-policy generation, QB Burden Index, and Stale Line Risk Score next.
 
 ## Intentionally Deferred
 
@@ -228,22 +229,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add receiver/rusher aggregation helpers for play-level residuals and player-season rollups without exposing protected weights.
-2. Add model-card and drift-card generators that consume metric validation outputs.
-3. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
-4. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
-5. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-6. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-7. Add durable local queue persistence simulation for media review packets without DB writes.
-8. Add API replay promotion checks for conflict detection after a durable adapter exists.
-9. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-10. Run production preview visual QA before live push.
+1. Add model-card and drift-card generators that consume metric validation and rollup outputs.
+2. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
+3. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
+4. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+5. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+6. Add durable local queue persistence simulation for media review packets without DB writes.
+7. Add API replay promotion checks for conflict detection after a durable adapter exists.
+8. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+9. Run production preview visual QA before live push.
+10. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the next proprietary metric slice:
+Continue the Sunday frontier implementation with the next proprietary metric evidence slice:
 
 1. Inspect the governed metric foundation under `packages/prediction-engine/src/metrics`.
-2. Add receiver/rusher aggregation helpers that roll play-level expected/residual metrics into player-season summaries without exposing protected weights.
-3. Reuse existing math, shrinkage, validation, metric asset, and graduation controls.
+2. Add model-card and drift-card generators that can consume metric validation and residual rollup outputs without implying approval.
+3. Reuse existing math, validation, metric asset, source-rights, payload-rights, and graduation controls.
 4. Run targeted prediction-engine tests, prediction-engine typecheck, guardrails, and `git diff --check`.
