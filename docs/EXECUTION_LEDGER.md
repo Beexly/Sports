@@ -956,3 +956,21 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local shadow payload filtering only; no live API route was opened, no raw provider payload
   was exposed, no protected weights were exposed, no source was legally cleared, no pricing or
   partner exposure was changed, and no production gate was flipped.
+
+## 2026-07-05 - (codex) - Sunday frontier public no-bet methodology examples
+
+- WHAT: Added public-safe no-bet governor methodology examples as a typed app artifact plus a
+  repo-visible doctrine doc. The examples cover missing required data, stale market context,
+  source-rights blockers, calibration drift, calibration debt, model disagreement, and
+  responsible-gaming override states. Public copy shows reason codes and reopen gates without
+  exposing protected formula details, raw provider payloads, model internals, sponsor influence,
+  individualized staking instructions, or performance promises.
+- FILES: `apps/web/lib/gse/no-bet-methodology.ts`,
+  `apps/web/__tests__/no-bet-methodology.test.ts`,
+  `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`, Sunday audit/handoff docs, and commercial ledger.
+- GATE: targeted no-bet methodology and media claim-safety tests passed (2 files, 10 tests).
+  Adjacent no-bet governor tests passed (3 files, 13 tests). Web typecheck passed. Root typecheck,
+  guardrails, lint, and `git diff --check` passed. The methodology test scans every public string
+  and the methodology doc through media claim safety, no-claim guard, and performance-claim guard.
+- FLAG: local methodology/copy governance only; no pick publication, API route, partner offer,
+  personalized advice, model promotion, performance claim, or production gate flip.

@@ -68,7 +68,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, and a route-level shadow harness. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
 | G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
-| H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, DRI, action score, and no-bet strength exist. This slice added integration proof that high edge cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. Full market intelligence product wiring remains future work. |
+| H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR AND PUBLIC-SAFE EXAMPLES, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, DRI, action score, and no-bet strength exist. This slice added integration proof that high model interest cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. Public-safe no-bet methodology examples now exist under `apps/web/lib/gse/no-bet-methodology.ts` and `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`. Full market intelligence product wiring remains future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
 | J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
 | K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, raw-NGS-export, partner-offer-compliance, API-payload-rights, OpenAPI-security, and AWS-compatibility scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
@@ -303,6 +303,16 @@ No-bet governor hardening added in the continuation:
 - `packages/prediction-engine/src/gse-score/gse-action-score.ts`
   - applies the calibration cap, hard-pass policy, and public `probability_claim_cap` driver without exposing protected weights
 
+Public no-bet methodology examples added in the continuation:
+
+- `apps/web/lib/gse/no-bet-methodology.ts`
+  - provides public-safe reason-code examples for missing required data, stale market context, source-rights blockers, calibration drift, calibration debt, model disagreement, and responsible-gaming overrides
+  - exposes copy strings for tests without revealing protected formula details or raw provider payloads
+- `apps/web/__tests__/no-bet-methodology.test.ts`
+  - scans every public copy string and the methodology doc through media claim safety, no-claim guard, and performance-claim guard
+- `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`
+  - records doctrine, public reason codes, reopen gates, copy rules, implementation notes, and live-action boundaries
+
 ## Verification Log
 
 Completed so far:
@@ -317,6 +327,13 @@ Completed so far:
 | `node scripts/guardrails/openapi-security-scan.mjs` | PASS | 3 contract files passed shadow OpenAPI security checks |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-payload-envelope.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS | 2 files, 12 tests; metric payload-envelope and source/payload rights passed together |
 | `npm run test --workspace=@sports/web -- __tests__/fences-and-adapters.test.ts` | PASS | 1 file, 9 tests; app bridge delegates metric payload fields through prediction-engine rights |
+| `npm run test --workspace=@sports/web -- __tests__/no-bet-methodology.test.ts` | PASS | 1 file, 5 tests; public no-bet examples and doc passed claim-safety scans |
+| `npm run test --workspace=@sports/web -- __tests__/no-bet-methodology.test.ts media-revenue-claim-safety.test.ts` | PASS | 2 files, 10 tests; no-bet methodology and media claim-safety passed together |
+| `npm run test --workspace=packages/prediction-engine -- src/gse-score/__tests__/no-bet-governor-integration.test.ts src/gse-score/__tests__/gse-action-score.test.ts src/gse-score/__tests__/no-bet-strength.test.ts` | PASS | 3 files, 13 tests; adjacent no-bet governor seams passed |
+| `npm run typecheck --workspace=@sports/web` after no-bet methodology examples | PASS | web TypeScript checked after no-bet methodology additions |
+| `npm run typecheck` after no-bet methodology examples | PASS | all workspaces with typecheck scripts completed |
+| `npm run guardrails` after no-bet methodology examples | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
+| `npm run lint && git diff --check` after no-bet methodology examples | PASS | root lint and whitespace check completed without errors |
 | `npm run typecheck --workspace=packages/prediction-engine` after payload-envelope filter | PASS | prediction-engine TypeScript checked after payload-envelope/export additions |
 | `npm run typecheck --workspace=@sports/web` after payload-envelope bridge | PASS | web TypeScript checked after app API-v1 bridge additions |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after payload-envelope filter | PASS | 92 files, 812 tests |
@@ -414,6 +431,7 @@ Final broad validation for the current AWS slice completed through segmented wor
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
 - Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
 - No-bet governor integration is complete for the shadow decision seam. Full product wiring and public explanations remain future work and must not expose protected weights or imply legal/performance clearance.
+- Public no-bet methodology examples now exist and are claim-scanned, but they remain local copy governance only. They do not publish picks, expose routes, or approve model promotion.
 - Launch-facing commercial pages now have local source QA plus desktop/mobile screenshot artifacts under `reports/launch-page-visual-qa/2026-07-05`. This is local render evidence, not a production preview approval.
 - YAC Creation, Rush Environment Index, Expected Rush Yards, and Rush Over Expected now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, confidence/evidence separation, and no protected weights in outputs.
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries. They are aggregation helpers only, not public/API leaderboards, and they do not create validation, drift, model-card, or source-clearance claims.
@@ -426,16 +444,16 @@ Final broad validation for the current AWS slice completed through segmented wor
 
 ## Next Highest-Leverage Tasks
 
-1. Add public-safe no-bet governor methodology examples without exposing protected weights.
-2. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-3. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-4. Add durable local queue persistence simulation for media review packets without DB writes.
-5. Add API replay promotion checks for conflict detection after a durable adapter exists.
-6. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-7. Run production preview visual QA before live push.
-8. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-9. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
-10. Build API live-route promotion checks that explicitly consume `filterProprietaryMetricPayloadEnvelope`.
+1. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+2. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+3. Add durable local queue persistence simulation for media review packets without DB writes.
+4. Add API replay promotion checks for conflict detection after a durable adapter exists.
+5. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+6. Run production preview visual QA before live push.
+7. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+8. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+9. Build API live-route promotion checks that explicitly consume `filterProprietaryMetricPayloadEnvelope`.
+10. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
 
 ## Safety Statement
 
