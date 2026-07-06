@@ -644,6 +644,15 @@ Recorded run on 2026-07-04:
 | `npm run guardrails` after evidence-card fixture coverage | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
 | segmented workspace tests after evidence-card fixture coverage | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 96 / 835; types 1 / 31. Aggregate segmented receipt: 657 files / 8175 tests. |
 | `git diff --check` after evidence-card fixture coverage | PASS - no whitespace errors. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-validation-split-fixtures.test.ts src/metrics/__tests__/playable-window-score.test.ts src/metrics/__tests__/role-volatility-index.test.ts` after validation split fixtures | FAIL then PASS - first run caught clean fixtures carrying pressure proxies; after fixture repair, 3 files / 16 tests passed. |
+| `npm run typecheck --workspace=packages/prediction-engine` after validation split fixtures | FAIL then PASS - first run caught missing `signalIntegrityIndex` in PWS split fixtures; after repair, prediction-engine TypeScript passed. |
+| validation split fixture LOC and escape-hatch scan | PASS - runner 138 lines, data fixtures 176 lines, test 111 lines; no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access found. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after validation split fixtures | PASS - 97 files, 840 tests. |
+| `npm run typecheck` after validation split fixtures | PASS - all workspaces with typecheck scripts completed. |
+| `npm run lint` after validation split fixtures | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
+| `npm run guardrails` after validation split fixtures | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
+| segmented workspace tests after validation split fixtures | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 97 / 840; types 1 / 31. Aggregate segmented receipt: 658 files / 8180 tests. |
+| `git diff --check` after validation split fixtures | PASS - no whitespace errors. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/expected-rush-yards.test.ts src/metrics/__tests__/rush-over-expected.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 5 files, 15 tests after registry split. |
 | `npm run typecheck --workspace=packages/prediction-engine` after Expected Rush Yards/Rush Over Expected | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Expected Rush Yards/Rush Over Expected | PASS - 89 files, 794 tests. |
@@ -830,11 +839,20 @@ Pure LOC review for new source files:
 - `metric-evidence-card-fixtures.ts` measured 149 source lines and the updated evidence-card test file measured 192 source lines. Escape-hatch scan over both files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
 - Focused evidence-card fixture tests passed (4 files, 26 tests), prediction-engine typecheck passed after root proprietary alias exports, full prediction-engine tests passed (96 files, 835 tests), root typecheck/lint/guardrails passed, segmented workspace tests passed across 657 files / 8175 tests, and `git diff --check` passed.
 
+2026-07-06 validation split fixture continuation check:
+
+- `metric-validation-split-fixture-data.ts` adds synthetic/local RVI role-stability and PWS decision-window split fixtures covering clean, watch, stale, calibration-debt, and blocked-source cases.
+- `metric-validation-split-fixtures.ts` runs the split fixtures and summarizes `PASS`, `WATCH`, and `FAIL_CLOSED` outcomes while preserving `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`.
+- The first focused run caught clean fixtures that still carried optional pressure proxy fields; clean fixtures were repaired so only true clean cases pass.
+- The first prediction-engine typecheck caught missing `signalIntegrityIndex` in PWS split fixtures; the fixture shape was repaired before broad validation.
+- `metric-validation-split-fixtures.ts` measured 138 lines, `metric-validation-split-fixture-data.ts` measured 176 lines, and `metric-validation-split-fixtures.test.ts` measured 111 lines. Escape-hatch scan over all three files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
+- Focused validation split tests passed (3 files, 16 tests), prediction-engine typecheck passed, full prediction-engine tests passed (97 files, 840 tests), root typecheck/lint/guardrails passed, segmented workspace tests passed across 658 files / 8180 tests, and `git diff --check` passed.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, and generated source policies:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, validation split fixture runner, and generated source policies:
 
-1. Add deeper local validation fixtures for role-stability and decision-window splits before any RVI/PWS public/API exposure.
-2. Add metric payload-envelope fixture coverage for newly composed decision metrics before route promotion paperwork changes.
-3. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.
-4. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, and caveats.
+1. Add metric payload-envelope fixture coverage for newly composed decision metrics before route promotion paperwork changes.
+2. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.
+3. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, and caveats.
+4. Add historical-data adapters for split validation only after source-rights and payload-rights review confirms the inputs are cleared.

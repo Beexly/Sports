@@ -67,7 +67,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
 | E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, and a route-level shadow harness. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
-| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, Stale Line Risk Score, xCOMP-GSE, QB Burden Index, Role Volatility Index, Playable Window Score, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, SLRS/QBI/RVI/PWS evidence-card fixture coverage, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
+| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, Stale Line Risk Score, xCOMP-GSE, QB Burden Index, Role Volatility Index, Playable Window Score, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, SLRS/QBI/RVI/PWS evidence-card fixture coverage, RVI/PWS validation split fixture coverage, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR AND PUBLIC-SAFE EXAMPLES, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, Stale Line Risk Score, Playable Window Score, DRI, action score, and no-bet strength exist. This slice added integration proof that high model interest cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. SLRS now separately hard-blocks stale market snapshots from market-signal use. PWS composes stale-line, source-rights, no-bet, drift, calibration, QBI, and RVI pressure into a `SHADOW` decision-window readiness gate without claiming playable edge. Public-safe no-bet methodology examples now exist under `apps/web/lib/gse/no-bet-methodology.ts` and `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`. Full market intelligence product wiring remains future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
 | J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
@@ -106,7 +106,7 @@ Guardrail wiring:
 Tests updated:
 
 - `apps/web/__tests__/guardrails.test.ts`
-  - executes all six new guardrail scripts
+  - executes the frontier guardrail scripts
   - asserts root package scripts include the new checks
 - `apps/web/__tests__/fences-and-adapters.test.ts`
   - proves fence plugins, source-rights/IP adapters, API-auth helpers, API-v1 payload filtering, and metric payload-envelope delegation fail closed where required
@@ -120,6 +120,8 @@ Tests updated:
   - proves stale/blocked market signals, blocked source posture, high no-bet pressure, drift, calibration debt, role volatility, and QB burden close or narrow the decision window without returning probability or protected weights
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
   - proves SLRS, QBI, RVI, and PWS fixture-generated cards remain draft-first, preserve `SHADOW` lifecycle and API/licensing locks, carry caveats, and keep role-stability / decision-window splits in active drift review
+- `packages/prediction-engine/src/metrics/__tests__/metric-validation-split-fixtures.test.ts`
+  - proves RVI role-stability and PWS decision-window split fixtures classify clean, watch, stale, calibration-debt, and blocked-source cases while preserving lifecycle/API/licensing locks
 
 Public copy tightened:
 
@@ -309,6 +311,17 @@ Metric evidence-card continuation added in the continuation:
   - leaves metric lifecycle, exposure, licensing, source-clearance, and production status unchanged
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
 - metric core and package export updates
+
+Metric validation split fixture continuation added in the continuation:
+
+- `packages/prediction-engine/src/metrics/core/metric-validation-split-fixture-data.ts`
+  - defines synthetic/local RVI role-stability and PWS decision-window split fixtures
+  - covers clean, watch, stale, calibration-debt, and blocked-source cases without public/API exposure
+- `packages/prediction-engine/src/metrics/core/metric-validation-split-fixtures.ts`
+  - runs split fixtures and summarizes `PASS`, `WATCH`, and `FAIL_CLOSED` outcomes
+  - preserves `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`
+- `packages/prediction-engine/src/metrics/__tests__/metric-validation-split-fixtures.test.ts`
+- metric core and package-root proprietary alias export updates
 
 Metric source-policy generation continuation added in the continuation:
 
@@ -504,6 +517,15 @@ Completed so far:
 | `npm run guardrails` after evidence-card fixture coverage | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | segmented workspace tests after evidence-card fixture coverage | PASS | apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 96 / 835; types 1 / 31; aggregate segmented receipt 657 files / 8175 tests |
 | `git diff --check` after evidence-card fixture coverage | PASS | no whitespace errors |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-validation-split-fixtures.test.ts src/metrics/__tests__/playable-window-score.test.ts src/metrics/__tests__/role-volatility-index.test.ts` after validation split fixtures | FAIL then PASS | first run caught clean fixtures carrying optional pressure proxy fields; after fixture repair, 3 files / 16 tests passed |
+| `npm run typecheck --workspace=packages/prediction-engine` after validation split fixtures | FAIL then PASS | first run caught missing `signalIntegrityIndex` in PWS split fixtures; after repair, prediction-engine TypeScript passed |
+| validation split fixture LOC and escape-hatch scan | PASS | runner 138 lines, data fixtures 176 lines, test 111 lines; no TS escape hatches or non-null property access found |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after validation split fixtures | PASS | 97 files, 840 tests |
+| `npm run typecheck` after validation split fixtures | PASS | all workspaces with typecheck scripts completed |
+| `npm run lint` after validation split fixtures | PASS | root lint completed through `@sports/web` ESLint with max warnings 0 |
+| `npm run guardrails` after validation split fixtures | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
+| segmented workspace tests after validation split fixtures | PASS | apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 97 / 840; types 1 / 31; aggregate segmented receipt 658 files / 8180 tests |
+| `git diff --check` after validation split fixtures | PASS | no whitespace errors |
 | `npm run typecheck` after no-bet methodology examples | PASS | all workspaces with typecheck scripts completed |
 | `npm run guardrails` after no-bet methodology examples | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | `npm run lint && git diff --check` after no-bet methodology examples | PASS | root lint and whitespace check completed without errors |
@@ -624,6 +646,7 @@ Final broad validation for the current API live-route promotion packet slice com
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries. They are aggregation helpers only, not public/API leaderboards, and they do not create validation, drift, model-card, or source-clearance claims.
 - Metric model/drift-card generators now exist as local evidence helpers. Model cards remain draft-first by default, and generated cards do not approve lifecycle, public/API exposure, licensing, validation, source clearance, or production promotion.
 - SLRS/QBI/RVI/PWS model-card and drift-card fixture coverage now exists. The fixture generator is synthetic/local, preserves `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, draft-first model cards, metric-specific caveats, and active drift review; it does not create public/API exposure or promotion evidence.
+- RVI/PWS validation split fixture coverage now exists. The split runner is synthetic/local, preserves `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`, and classifies clean/watch/fail-closed split cases without creating promotion evidence.
 - Metric source-policy generation now exists from registry-shaped fixtures aligned to the canonical web source-rights registry. This is code-level governance only, not legal clearance.
 - Metric payload-envelope filtering now exists before app API-v1 metric payload exposure. This is local shadow filtering, not a live route or legal clearance.
 - `metric-birth-certificate.ts` was split into a compact contract/lookup file plus a dedicated registry data file before commit, avoiding continued growth in the core contract module.
@@ -632,16 +655,16 @@ Final broad validation for the current API live-route promotion packet slice com
 
 ## Next Highest-Leverage Tasks
 
-1. Add deeper local validation fixtures for role-stability and decision-window splits before any RVI/PWS public/API exposure.
-2. Add API payload-envelope fixture coverage for newly composed decision metrics before route promotion paperwork changes.
-3. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.
+1. Add API payload-envelope fixture coverage for newly composed decision metrics before route promotion paperwork changes.
+2. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.
+3. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, caveats, and synthetic/local labels.
 4. Add local commercial review queue reporting for unresolved blockers by source and surface.
 5. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 6. Run owner-reviewed production preview QA before live push.
 7. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
 8. Add route design paperwork only after owner approval; keep it non-executable and route-free.
 9. Add visual QA for any new public-safe case-study route before production preview.
-10. Add API payload-envelope fixture coverage for newly composed decision metrics before route promotion paperwork changes.
+10. Add historical-data adapters for validation splits only after source-rights and payload-rights review confirms the inputs are cleared.
 
 ## Safety Statement
 

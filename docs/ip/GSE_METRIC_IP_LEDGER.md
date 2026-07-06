@@ -52,11 +52,12 @@ Verified locally on 2026-07-04:
 - 2026-07-06 governed PWS focused tests: 4 files passed, 17 tests passed; first package typecheck caught a non-canonical validation method name before passing after repair.
 - 2026-07-06 governed PWS broad checks: prediction-engine tests passed (96 files, 832 tests); root typecheck, lint, and guardrails passed; segmented workspace tests passed across 657 files and 8172 tests.
 - 2026-07-06 evidence-card fixture coverage: SLRS, QBI, RVI, and PWS fixture cards preserve `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, draft-first model cards, and active drift review; focused tests passed (4 files, 26 tests), prediction-engine tests passed (96 files, 835 tests), root typecheck/lint/guardrails passed, and segmented workspace tests passed across 657 files and 8175 tests.
+- 2026-07-06 validation split fixture coverage: synthetic/local RVI role-stability and PWS decision-window split fixtures preserve `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`; first focused run caught dirty clean fixtures, first typecheck caught missing `signalIntegrityIndex`, focused tests passed after repair (3 files, 16 tests), prediction-engine tests passed (97 files, 840 tests), root typecheck/lint/guardrails passed, segmented workspace tests passed across 658 files and 8180 tests, and no TS escape hatches were found in the new split files.
 
 ## Next Review Gates
 
-- Add fixture-backed season splits before any review-ready claim.
+- Keep validation split fixtures synthetic/local until source-rights-reviewed historical splits are approved.
 - Add source-rights adapters from the web source registry before any customer surface.
 - Add drift cards from real historical distributions before any public metric card.
-- Add deeper local validation fixtures for role-stability and decision-window splits before any public/API exposure.
+- Add API payload-envelope fixture coverage for newly composed decision metrics before any public/API exposure.
 - Keep protected components out of public API payloads.

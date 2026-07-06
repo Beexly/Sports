@@ -1243,3 +1243,32 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   no raw odds/tracking export, no public/API exposure, no lifecycle promotion, no model-card or
   drift-card approval, no legal clearance claim, no production-readiness claim, no route exposure,
   no package/dependency change, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier metric validation split fixtures
+
+- WHAT: Added synthetic/local validation split fixture coverage for the newest role and decision
+  shadow metrics. RVI role-stability splits now cover clean, elevated-watch, stale fail-closed,
+  and blocked-source fail-closed cases. PWS decision-window splits now cover clean open, contextual
+  watch, stale-market fail-closed, calibration-debt fail-closed, and blocked-source fail-closed
+  cases. The runner summarizes `PASS`, `WATCH`, and `FAIL_CLOSED` outcomes while preserving
+  lifecycle, API exposure, licensing, and public API locks for every result.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-validation-split-fixture-data.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-validation-split-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-validation-split-fixtures.test.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `docs/ip/GSE_METRIC_IP_LEDGER.md`, Sunday
+  audit/handoff docs, commercial ledger, and execution ledger.
+- GATE: the first focused split test run caught clean fixtures that still carried optional pressure
+  proxy fields; after fixture repair, focused split/PWS/RVI tests passed (3 files, 16 tests). The
+  first prediction-engine typecheck caught missing `signalIntegrityIndex` in PWS split fixtures;
+  after fixture repair, prediction-engine typecheck passed. LOC / escape-hatch review passed:
+  runner 138 lines, data fixtures 176 lines, test 111 lines, and no `as any`, `as unknown`,
+  `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access found. Full
+  prediction-engine tests passed (97 files, 840 tests). Root typecheck, root lint, root guardrails,
+  and `git diff --check` passed. Segmented workspace tests passed: apps/web 537 files / 7105 tests,
+  crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 97 / 840,
+  and types 1 / 31, for 658 files / 8180 tests.
+- FLAG: synthetic/local fixture layer only; no live validation data, no raw odds/tracking export,
+  no public/API exposure, no lifecycle promotion, no model-card or drift-card approval, no legal
+  clearance claim, no production-readiness claim, no route exposure, no package/dependency change,
+  and no prediction gate flip.

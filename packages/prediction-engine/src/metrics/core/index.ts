@@ -51,6 +51,22 @@ export {
   SHADOW_METRIC_EVIDENCE_FIXTURES,
 } from "./metric-evidence-card-fixtures.js";
 export type {
+  DecisionWindowValidationSplit,
+  MetricValidationSplitResult,
+  MetricValidationSplitSummary,
+  RoleStabilityValidationSplit,
+  ValidationSplitMetricId,
+  ValidationSplitStatus,
+} from "./metric-validation-split-fixtures.js";
+export {
+  DECISION_WINDOW_VALIDATION_SPLITS,
+  ROLE_STABILITY_VALIDATION_SPLITS,
+  runDecisionWindowValidationSplits,
+  runMetricValidationSplitFixtures,
+  runRoleStabilityValidationSplits,
+  summarizeMetricValidationSplitResults,
+} from "./metric-validation-split-fixtures.js";
+export type {
   MetricResidualConfidenceMeaning,
   MetricResidualMetricId,
   MetricResidualPlayInput,
