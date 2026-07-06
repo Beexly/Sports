@@ -675,6 +675,13 @@ export type {
   RoleVolatilityIndexMetric,
   RoleVolatilitySourcePosture,
 } from "./metrics/role/role-volatility-index.js";
+export { calibrationIntegrityGrade } from "./metrics/calibration/calibration-integrity-grade.js";
+export type {
+  CalibrationIntegrityGradeInput,
+  CalibrationIntegrityGradeMetric,
+  CalibrationIntegrityLetter,
+  CalibrationIntegritySourcePosture,
+} from "./metrics/calibration/calibration-integrity-grade.js";
 export { playableWindowScore } from "./metrics/decision/playable-window-score.js";
 export type {
   PlayableWindowBand,
@@ -682,6 +689,13 @@ export type {
   PlayableWindowScoreMetric,
   PlayableWindowSourcePosture,
 } from "./metrics/decision/playable-window-score.js";
+export { portfolioFitScore } from "./metrics/decision/portfolio-fit-score.js";
+export type {
+  PortfolioFitBand,
+  PortfolioFitScoreInput,
+  PortfolioFitScoreMetric,
+  PortfolioFitSourcePosture,
+} from "./metrics/decision/portfolio-fit-score.js";
 export { gseSignalScore } from "./metrics/decision/gse-signal-score.js";
 export type {
   GseSignalGrade,

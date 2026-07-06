@@ -98,4 +98,4 @@ Result:
 
 This simulator does not approve live queue persistence, database writes, public route exposure, content publication, outbound outreach, affiliate activation, sponsor approval, performance claims, source legal clearance, or any production workflow.
 
-The next local gate is guarded Portfolio Fit / Calibration Integrity metric work or owner-reviewed production preview QA.
+The next local gate is historical distribution/drift adapters for governed metrics or owner-reviewed production preview QA.

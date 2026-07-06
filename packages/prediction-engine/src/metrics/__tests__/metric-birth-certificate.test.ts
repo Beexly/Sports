@@ -6,6 +6,7 @@ import {
 } from "../core/metric-birth-certificate.js";
 import {
   GSE_PROPRIETARY_METRIC_BIRTH_CERTIFICATES,
+  calibrationIntegrityGrade,
   dataReliabilityIndex,
   expectedCompletionGse,
   expectedRushYardsGse,
@@ -15,6 +16,7 @@ import {
   gseSignalScore,
   gseStaleLineRiskScore,
   playableWindowScore,
+  portfolioFitScore,
   proprietaryMetricBirthCertificate,
   qbBurdenIndex,
   receiverDifficultyIndex,
@@ -40,7 +42,9 @@ describe("metric birth certificates", () => {
       "expected-rush-yards-gse",
       "rush-over-expected-gse",
       "role-volatility-index",
+      "calibration-integrity-grade",
       "playable-window-score",
+      "portfolio-fit-score",
       "gse-signal-score",
     ];
 
@@ -77,7 +81,9 @@ describe("metric birth certificates", () => {
     expect(typeof expectedRushYardsGse).toBe("function");
     expect(typeof rushOverExpectedGse).toBe("function");
     expect(typeof roleVolatilityIndex).toBe("function");
+    expect(typeof calibrationIntegrityGrade).toBe("function");
     expect(typeof playableWindowScore).toBe("function");
+    expect(typeof portfolioFitScore).toBe("function");
     expect(typeof gseSignalScore).toBe("function");
   });
 });

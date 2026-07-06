@@ -92,7 +92,9 @@ Application and test files:
 - `apps/web/__tests__/first-month-review-queue.test.ts`
 - `packages/prediction-engine/src/metrics/receiving/*`
 - `packages/prediction-engine/src/metrics/role/role-volatility-index.ts`
+- `packages/prediction-engine/src/metrics/calibration/calibration-integrity-grade.ts`
 - `packages/prediction-engine/src/metrics/decision/playable-window-score.ts`
+- `packages/prediction-engine/src/metrics/decision/portfolio-fit-score.ts`
 - `packages/prediction-engine/src/metrics/core/metric-evidence-card-fixtures.ts`
 - `packages/prediction-engine/src/metrics/core/metric-validation-split-fixture-data.ts`
 - `packages/prediction-engine/src/metrics/core/metric-validation-split-fixtures.ts`
@@ -102,7 +104,9 @@ Application and test files:
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/role-volatility-index.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/calibration-integrity-grade.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/playable-window-score.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/portfolio-fit-score.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-validation-split-fixtures.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-payload-envelope-fixtures.test.ts`
@@ -219,6 +223,7 @@ Passed:
 - `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/desktop WIDTH=1440 HEIGHT=1100 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing`
 - `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/mobile WIDTH=390 HEIGHT=844 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing`
 - `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/expected-yac.test.ts src/metrics/__tests__/yac-creation.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts`
+- `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/calibration-integrity-grade.test.ts src/metrics/__tests__/portfolio-fit-score.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/gse-signal-score.test.ts`
 - `npm run typecheck --workspace=packages/prediction-engine`
 - `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent`
 - `npm run guardrails`
@@ -235,6 +240,8 @@ Broad test result:
 - Launch commercial page source QA passed: 5 files and 40 tests.
 - Local desktop/mobile screenshot pass rendered `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` with HTTP 200 after rerunning the screenshot helper with `MSYS_NO_PATHCONV=1` to avoid Git Bash path conversion. Evidence lives in `reports/launch-page-visual-qa/2026-07-05/*`.
 - Metric continuation red/green: first targeted run failed because asset graduation still pinned the old six-metric order; after updating the expectation, targeted metric tests passed (6 files, 20 tests), prediction-engine typecheck passed, and full prediction-engine tests passed (87 files, 790 tests).
+- Calibration/portfolio metric red/green: first targeted run caught registry order mismatch, second targeted run caught a missing market-mirage object brace after moving the certificate, final targeted suite passed (5 files, 20 tests), prediction-engine typecheck passed, file/escape scan passed, and full prediction-engine tests passed (103 files, 866 tests).
+- Calibration/portfolio broad validation: root typecheck, root lint, and `git diff --check` passed. First root guardrails run caught a banned phrase in a forbidden-input list; after changing it to `certain-return claim`, guardrails passed. The all-workspaces test wrapper hit the 300s tool ceiling and is not counted as a pass; segmented workspace tests passed across apps/web chunks plus crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types for 571 files / 7583 tests.
 - `npx prettier --check ...` was attempted but blocked before execution by npm certificate verification while fetching Prettier; no install or dependency change was attempted.
 - Rushing metric continuation passed targeted tests after splitting the metric birth-certificate registry: `metric-birth-certificate.test.ts`, `rush-environment-index.test.ts`, `expected-rush-yards.test.ts`, `rush-over-expected.test.ts`, and `metric-asset-graduation.test.ts` (5 files, 15 tests).
 - Current rushing metric validation: prediction-engine typecheck passed; full prediction-engine tests passed (89 files, 794 tests); root typecheck passed; root lint passed; root guardrails passed; `git diff --check` passed.
@@ -305,7 +312,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, partner/sponsor review fixture reports, local review queue persistence simulator, and local blocker report exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains owner-reviewed and intentionally deferred.
-- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, app-level composed payload fixture bridge coverage, real historical distribution/drift adapters, and Portfolio Fit Score / Calibration Integrity Grade next.
+- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, app-level composed payload fixture bridge coverage, real historical distribution/drift adapters, No-Bet Pressure, Drift Pressure Index, and Conformal Uncertainty Width next.
 
 ## Intentionally Deferred
 
@@ -331,9 +338,9 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
-2. Add historical distribution/drift adapters only after source rights and payload rights prove the inputs are cleared.
-3. Add markdown export tests for any future metric report before allowing it into public/API route planning.
+1. Add historical distribution/drift adapters for Calibration Integrity Grade and Portfolio Fit Score only after source rights and payload rights prove the inputs are cleared.
+2. Add markdown evidence-card export coverage for Calibration Integrity Grade and Portfolio Fit Score before allowing either into public/API route planning.
+3. Continue guarded metric backlog with No-Bet Pressure, Drift Pressure Index, or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
 4. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 5. Run owner-reviewed production preview QA before live push.
 6. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
@@ -346,7 +353,7 @@ Broad test result:
 
 Continue the Sunday frontier implementation with the next governed metric or draft evidence report:
 
-1. Continue with Portfolio Fit Score / Calibration Integrity Grade after preserving all no-bet/source/payload vetoes.
+1. Continue with historical distribution/drift adapters for Calibration Integrity Grade and Portfolio Fit Score after preserving all no-bet/source/payload vetoes.
 2. Preserve source-policy posture, lifecycle locks, API locks, and no-bet/calibration/staleness veto semantics.
 3. Keep all work separate from live `app/api/v1` route implementation.
 4. Keep all validation outputs separate from legal clearance, production readiness, AWS deployment, public/API exposure, and betting advice.

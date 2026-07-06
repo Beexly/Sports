@@ -564,7 +564,9 @@ Tests added:
 - `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/stale-line-risk-score.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/role-volatility-index.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/calibration-integrity-grade.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/playable-window-score.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/portfolio-fit-score.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
 - source-policy generation coverage in `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`
@@ -578,11 +580,11 @@ Build in this order for proprietary football metrics:
 1. API response-envelope filtering with proprietary metric payload-rights checks
 2. QB Burden Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 3. Role Volatility Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
-4. Calibration Integrity Grade
+4. Calibration Integrity Grade - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 5. No-Bet Pressure
 6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
-8. Portfolio Fit Score
+8. Portfolio Fit Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 9. Drift Pressure Index
 10. Conformal Uncertainty Width
 11. Source Trust Score
@@ -928,6 +930,9 @@ Pure LOC review for new source files:
 
 2026-07-06 historical validation adapter continuation check:
 
+- `calibration-integrity-grade.ts` adds a governed calibration evidence metric for ECE, Brier risk, reliability slope, settled sample support, bucket coverage, freshness, drift, calibration debt, and source posture.
+- `portfolio-fit-score.ts` adds a governed portfolio-composition metric for exposure concentration, correlation, duplicate-thesis risk, playable-window readiness, liquidity, bankroll fit, refusal pressure, drift, calibration debt, and source posture.
+- Both metrics are `SHADOW`, emit `probability: null`, keep confidence separate from win probability, expose public drivers without protected weights, and fail closed on blocked source-policy posture.
 - `metric-historical-validation-adapter.ts` adds a source-rights-reviewed adapter for historical-shaped validation records before they can become shadow split inputs.
 - The adapter checks both `validation` and `derived_metric` source-rights permissions before adaptation.
 - Fully cleared sources adapt locally; logged-off/manual-review sources return `NEEDS_MANUAL_REVIEW`; missing or permission-required sources return `BLOCKED_BY_SOURCE_RIGHTS`.
@@ -939,7 +944,7 @@ Pure LOC review for new source files:
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, and generated source policies:
 
-1. Add local commercial review queue reporting for unresolved blockers by source and surface.
-2. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
-3. Add historical distribution/drift adapters only after source rights and payload rights prove the inputs are cleared.
+1. Add historical distribution/drift adapters for Calibration Integrity Grade and Portfolio Fit Score only after source rights and payload rights prove the inputs are cleared.
+2. Add markdown evidence-card export coverage for Calibration Integrity Grade and Portfolio Fit Score before allowing either into public/API route planning.
+3. Continue guarded metric backlog with No-Bet Pressure, Drift Pressure Index, or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
 4. Add markdown export tests for any future metric report before allowing it into public/API route planning.

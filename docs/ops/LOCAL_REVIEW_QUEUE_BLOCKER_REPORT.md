@@ -63,4 +63,4 @@ Result:
 
 This report does not approve content publication, outbound outreach, affiliate activation, sponsor approval, API route exposure, database writes, durable persistence, legal clearance, source clearance, or any production workflow.
 
-The next safe local gate is guarded Portfolio Fit / Calibration Integrity metric work or owner-reviewed production preview QA.
+The next safe local gate is historical distribution/drift adapters for governed metrics or owner-reviewed production preview QA.

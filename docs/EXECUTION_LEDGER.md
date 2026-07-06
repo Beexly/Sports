@@ -1428,3 +1428,36 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   affiliate activation, sponsor approval automation, legal clearance claim, source clearance claim,
   production-readiness claim, package/dependency change, live AWS/cloud/service action, or prediction
   gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier calibration and portfolio metric gates
+
+- WHAT: Added Calibration Integrity Grade and Portfolio Fit Score as governed proprietary `SHADOW`
+  metrics. CIG grades calibration evidence quality from ECE, Brier risk, reliability slope, settled
+  sample support, bucket coverage, report freshness, drift, calibration debt, and source posture.
+  PFS grades portfolio composition quality from playable-window readiness, exposure concentration,
+  correlation risk, duplicate thesis risk, liquidity fit, bankroll fit, no-bet pressure, drift,
+  calibration debt, and source posture. Both metrics emit `probability: null`, keep confidence
+  separate from win probability, expose public drivers without protected weights, and fail closed on
+  blocked source-policy posture.
+- FILES: `packages/prediction-engine/src/metrics/calibration/calibration-integrity-grade.ts`,
+  `packages/prediction-engine/src/metrics/decision/portfolio-fit-score.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/calibration-integrity-grade.test.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/portfolio-fit-score.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`,
+  Sunday audit/handoff docs, and execution ledger.
+- GATE: first focused run caught a registry-order mismatch; after moving CIG to the calibration
+  slot, the next run caught a missing market-mirage object brace from the move. Final focused metric
+  suite passed (5 files, 20 tests). Prediction-engine typecheck passed. LOC / escape-hatch review
+  passed: CIG 210 lines, PFS 222 lines, CIG test 87 lines, PFS test 114 lines, and no `as any`,
+  `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access found. Full
+  prediction-engine tests passed (103 files, 866 tests). Root typecheck, root lint, and whitespace
+  checks passed. First root guardrails run caught a banned phrase inside a forbidden-input list; after
+  replacing it with `certain-return claim`, guardrails passed. The all-workspaces test wrapper hit the
+  300s tool ceiling and is not counted as a pass; segmented workspace tests passed across 571 files /
+  7583 tests.
+- FLAG: shadow metrics only; no live route, no public/API exposure, no legal clearance claim, no
+  production-readiness claim, no metric promotion, no betting advice, no stake advice, no probability
+  claim, no raw odds/tracking export, no package/dependency change, no live AWS/cloud/service action,
+  and no prediction gate flip.
