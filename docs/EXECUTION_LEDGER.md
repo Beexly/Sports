@@ -800,3 +800,23 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local shadow decision-quality hardening only; no pick publication, probability claim activation,
   model-version promotion, pricing, betting, schema, route exposure, live API, paid service, or production
   gate flip.
+
+## 2026-07-05 - (codex) - Sunday frontier launch page visual and copy QA
+
+- WHAT: Added a route-level launch commercial QA harness for `/media-kit`, `/partners`, `/newsletter`,
+  `/content-lab`, `/podcast`, and `/pricing`. The test locks canonical route metadata, shared Nav/Footer/main
+  anatomy, responsive source contracts, page-specific launch promises, newsletter lead magnets, podcast
+  coming-soon/no-auto-publish language, sponsor/editorial boundaries, no live provider markers on media pages,
+  and no unsupported public proof, fake traffic, fake sponsor, ROI, CLV-ledger, or verified-win-rate claims.
+  Then captured desktop and mobile full-page screenshots from a local Next dev server for all six routes.
+- FILES: `apps/web/__tests__/commercial-pages-launch-qa.test.ts`,
+  `reports/launch-page-visual-qa/2026-07-05/*`, Sunday audit/handoff docs, and commercial ledger.
+- GATE: focused page tests passed (`commercial-pages-launch-qa.test.ts`, `media-kit-page.test.ts`,
+  `partners-page.test.ts`, `pricing-honesty.test.ts`, and `pricing-value-architecture.test.ts`:
+  5 files, 40 tests). Local render captured all six routes at desktop 1440px and mobile 390px after
+  starting `npm run dev --workspace=apps/web -- --hostname 127.0.0.1 --port 3065`; final route captures
+  returned HTTP 200. The first screenshot attempt exposed Git Bash path conversion and was rerun with
+  `MSYS_NO_PATHCONV=1`.
+- FLAG: local source/render QA only; no production preview, no email provider, no podcast feed,
+  no affiliate link, no sponsor integration, no API route exposure, no AWS action, no paid service,
+  no auto-publish, and no commercial/performance claim activation.

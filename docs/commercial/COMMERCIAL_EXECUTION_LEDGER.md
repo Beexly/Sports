@@ -5,8 +5,8 @@ Updated: 2026-07-04
 | Work item | Status | Evidence | Next gate |
 | --- | --- | --- | --- |
 | Media Revenue Studio docs | complete | `docs/media/*` | owner review |
-| Media public pages | complete | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast` | visual QA before production push |
-| Media revenue utilities | complete with first-month queue and review export fixtures | `apps/web/lib/media-revenue/*` | visual QA before production push |
+| Media public pages | complete with local source/render QA | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, `apps/web/__tests__/commercial-pages-launch-qa.test.ts`, `reports/launch-page-visual-qa/2026-07-05/*` | production preview QA before live push |
+| Media revenue utilities | complete with first-month queue and review export fixtures | `apps/web/lib/media-revenue/*` | production preview QA before live push |
 | Commercial revenue core | complete for pure seam | `apps/web/lib/revenue/*` | owner review and future route/UI decisions |
 | Partner/offer live registry | not live | no DB schema or provider integration added | owner product decision |
 | Affiliate links | not live | no real links added | owner/compliance approval |
@@ -15,10 +15,11 @@ Updated: 2026-07-04
 | Sunday frontier safety guardrails | complete for current slice | `commercial-copy-scan`, `no-unsupported-performance-claims`, `no-raw-ngs-export`, `partner-offer-compliance-scan`, `api-payload-rights-scan`, `openapi-security-scan`, pricing copy hardening | route-level API harness |
 | Fence and policy seams | complete for pure seam, draft harness, local review packet, renderer, memory ledger, queue filters, and summary counts | `apps/web/lib/fences/*`, `apps/web/lib/source-rights/*`, `apps/web/lib/ip/*`, `apps/web/lib/api-auth/*`, `apps/web/lib/api-v1/*`, `apps/web/lib/api/v1/shadow-route-harness.ts`, `apps/web/lib/workflows/draft-fence-workflow.ts` | representative packet fixtures and claim-safety batch report |
 | Review packet fixtures | complete for local content/API samples | `apps/web/lib/workflows/draft-review-fixtures.ts`, `apps/web/__tests__/draft-review-fixtures.test.ts` | API replay/idempotency storage simulation |
-| First-month media queue fixtures | complete for local draft queue and review export | `apps/web/lib/media-revenue/first-month-content-queue.ts`, `apps/web/lib/media-revenue/first-month-review-queue.ts`, `apps/web/__tests__/first-month-review-queue.test.ts`, `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`, `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md` | visual QA before production push |
+| First-month media queue fixtures | complete for local draft queue and review export | `apps/web/lib/media-revenue/first-month-content-queue.ts`, `apps/web/lib/media-revenue/first-month-review-queue.ts`, `apps/web/__tests__/first-month-review-queue.test.ts`, `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`, `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md` | production preview QA before live push |
 | API idempotency replay simulation | complete for local shadow harness | `apps/web/lib/api/v1/shadow-route-replay.ts`, `apps/web/__tests__/api-v1-shadow-route-replay.test.ts`, `docs/api/API_V1_SHADOW_ROUTE_REPLAY.md` | owner-gated live-route promotion packet after durable persistence review |
 | AWS compatibility indexes | complete for exact local paths | `docs/aws/*`, `infra/aws-shadow/*`, `scripts/guardrails/aws-compatibility-index-scan.mjs`, `apps/web/__tests__/aws-compatibility-index.test.ts` | owner/AWS approval before any live AWS step |
-| No-bet governor integration hardening | complete for shadow decision seam | `packages/prediction-engine/src/gse-score/gse-action-score.ts`, `packages/prediction-engine/src/gse-score/calibration-action-policy.ts`, `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts` | visual QA before production push |
+| No-bet governor integration hardening | complete for shadow decision seam | `packages/prediction-engine/src/gse-score/gse-action-score.ts`, `packages/prediction-engine/src/gse-score/calibration-action-policy.ts`, `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts` | public-safe no-bet methodology examples |
+| Launch page visual/copy QA | complete for local source and screenshot evidence | `apps/web/__tests__/commercial-pages-launch-qa.test.ts`, `reports/launch-page-visual-qa/2026-07-05/*` | production preview QA before live push |
 
 ## Verification Contract
 
@@ -52,4 +53,6 @@ Every commercial slice must record:
 - Added AWS compatibility indexes for exact `docs/aws` and `infra/aws-shadow` visibility paths, with a guardrail proving local-only boundaries.
 - Added no-bet governor integration hardening. Initial targeted test failed because high modeled edge still produced `PLAY` under calibration drift and calibration debt; policy cap now prevents PLAY/LEAN when probability claims are unearned and hard-passes DRIFTING/BLOCKED calibration.
 - No pick publication, probability claim activation, model-version promotion, pricing, betting, schema, route exposure, live API, paid service, or production gate was flipped.
-- Next overall gate: route-level visual QA for the five media pages plus pricing before any production push.
+- Added local launch-page visual/copy QA. Six commercial routes passed source-level launch safety tests and rendered HTTP 200 in desktop/mobile Playwright screenshots under a local Next dev server.
+- No production preview was opened, no live provider was wired, and no publish/send/affiliate/sponsor/API/AWS action was taken.
+- Next overall gate: continue proprietary metric backlog with YAC Creation and Rush Environment Index, then production preview QA before any live push.

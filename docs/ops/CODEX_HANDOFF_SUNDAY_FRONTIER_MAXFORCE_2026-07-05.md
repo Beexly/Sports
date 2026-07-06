@@ -152,6 +152,10 @@ Passed:
 - `npm run test --workspace=packages/prediction-engine -- src/gse-score/__tests__/gse-action-score.test.ts src/gse-score/__tests__/no-bet-strength.test.ts src/gse-score/__tests__/model-parliament.test.ts src/gse-score/__tests__/no-bet-governor-integration.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/data-reliability-index.test.ts`
 - `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent`
 - `npm run typecheck --workspace=packages/prediction-engine`
+- `npm run test --workspace=apps/web -- __tests__/commercial-pages-launch-qa.test.ts __tests__/media-kit-page.test.ts __tests__/partners-page.test.ts __tests__/pricing-honesty.test.ts __tests__/pricing-value-architecture.test.ts`
+- `npm run dev --workspace=apps/web -- --hostname 127.0.0.1 --port 3065`
+- `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/desktop WIDTH=1440 HEIGHT=1100 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing`
+- `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/mobile WIDTH=390 HEIGHT=844 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing`
 - `npm run guardrails`
 - `git diff --check`
 
@@ -161,6 +165,8 @@ Broad test result:
 - Current AWS compatibility slice rerun of `npm run test --workspaces --if-present` exceeded the 300s tool ceiling and is not counted as a pass.
 - Equivalent segmented workspace tests passed across all test-script workspaces: 638 files and 8067 tests.
 - No-bet governor integration red/green: first targeted run failed because drift and calibration debt still produced `PLAY`; after hardening, targeted test passed (1 file, 5 tests), adjacent governor/metric suite passed (7 files, 23 tests), prediction-engine suite passed (85 files, 786 tests), and prediction-engine typecheck passed after correcting one fixture literal from uppercase `UNKNOWN` to lowercase `unknown`.
+- Launch commercial page source QA passed: 5 files and 40 tests.
+- Local desktop/mobile screenshot pass rendered `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` with HTTP 200 after rerunning the screenshot helper with `MSYS_NO_PATHCONV=1` to avoid Git Bash path conversion. Evidence lives in `reports/launch-page-visual-qa/2026-07-05/*`.
 
 ## Complete
 
@@ -176,6 +182,7 @@ Broad test result:
 - Exact `docs/aws` and `infra/aws-shadow` compatibility indexes exist and point to canonical FABLE/AWS artifacts.
 - No-bet governor integration tests now prove high edge cannot override missing data, stale market gravity, unclear source rights, calibration drift, or calibration debt.
 - `computeGseActionScore` now caps action quality when probability claims are unearned and hard-passes DRIFTING/BLOCKED calibration.
+- Launch-facing commercial pages now have source-level QA plus local desktop/mobile screenshot artifacts for the five media pages and pricing.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 
 ## Partial
@@ -184,6 +191,7 @@ Broad test result:
 - Source-rights/IP adapters under `apps/web/lib/source-rights` and `apps/web/lib/ip` exist, but they are policy gates and not legal clearance.
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and first-month review queue export exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
+- Launch-page visual QA is local render evidence only. Production preview QA remains required before live push.
 - Full proprietary metric backlog remains future work.
 
 ## Intentionally Deferred
@@ -210,22 +218,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add route-level visual QA and accessibility checks for the five media pages plus pricing.
-2. Continue proprietary metric backlog with YAC Creation and Rush Environment Index.
-3. Add model-card and drift-card generators that consume metric validation outputs.
-4. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
+1. Continue proprietary metric backlog with YAC Creation and Rush Environment Index.
+2. Add model-card and drift-card generators that consume metric validation outputs.
+3. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
+4. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
 5. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-6. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
-7. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-8. Add durable local queue persistence simulation for media review packets without DB writes.
-9. Add API replay promotion checks for conflict detection after a durable adapter exists.
-10. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+6. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+7. Add durable local queue persistence simulation for media review packets without DB writes.
+8. Add API replay promotion checks for conflict detection after a durable adapter exists.
+9. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+10. Run production preview visual QA before live push.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with route-level visual QA for the launch-facing commercial pages:
+Continue the Sunday frontier implementation with the next proprietary metric slice:
 
-1. Inspect `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing`.
-2. Add or extend route-level tests proving launch-safe copy, sponsor boundaries, newsletter lead magnets, podcast coming-soon copy, and no fake audience/revenue/performance claims.
-3. Run the strongest route/page validation available without publishing or starting paid services.
-4. Update ledgers with exact commands and failures.
+1. Inspect the governed metric foundation under `packages/prediction-engine/src/metrics`.
+2. Add YAC Creation and Rush Environment Index only if they can be grounded with birth certificates, source/payload rights, public drivers, shadow status, and directional tests.
+3. Reuse existing math, shrinkage, validation, metric asset, and graduation controls.
+4. Run targeted prediction-engine tests, prediction-engine typecheck, guardrails, and `git diff --check`.

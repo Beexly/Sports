@@ -290,6 +290,10 @@ Completed so far:
 | `npm run test --workspace=packages/prediction-engine -- src/gse-score/__tests__/gse-action-score.test.ts src/gse-score/__tests__/no-bet-strength.test.ts src/gse-score/__tests__/model-parliament.test.ts src/gse-score/__tests__/no-bet-governor-integration.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/data-reliability-index.test.ts` | PASS | 7 files, 23 tests; adjacent no-bet/GSS/MGI/DRI suite passed |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` | PASS | 85 files, 786 tests after no-bet governor hardening |
 | `npm run typecheck --workspace=packages/prediction-engine` | FAIL then PASS | first run caught uppercase `UNKNOWN` fixture literal; corrected to lowercase `unknown`, then typecheck passed |
+| `npm run test --workspace=apps/web -- __tests__/commercial-pages-launch-qa.test.ts __tests__/media-kit-page.test.ts __tests__/partners-page.test.ts __tests__/pricing-honesty.test.ts __tests__/pricing-value-architecture.test.ts` | PASS | 5 files, 40 tests; launch commercial source QA passed |
+| `npm run dev --workspace=apps/web -- --hostname 127.0.0.1 --port 3065` | PASS | local-only Next dev server rendered all six launch commercial routes; stopped after screenshot pass |
+| `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/desktop WIDTH=1440 HEIGHT=1100 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing` | PASS | desktop screenshots captured for all six routes; final route responses were HTTP 200 |
+| `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/mobile WIDTH=390 HEIGHT=844 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing` | PASS | mobile screenshots captured for all six routes; final route responses were HTTP 200 |
 | `git diff --check` | PASS | no whitespace errors |
 
 PowerShell syntax caveat:
@@ -306,21 +310,22 @@ Final broad validation for the current AWS slice completed through segmented wor
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
 - Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
 - No-bet governor integration is complete for the shadow decision seam. Full product wiring and public explanations remain future work and must not expose protected weights or imply legal/performance clearance.
+- Launch-facing commercial pages now have local source QA plus desktop/mobile screenshot artifacts under `reports/launch-page-visual-qa/2026-07-05`. This is local render evidence, not a production preview approval.
 - Exact `docs/aws` and `infra/aws-shadow` paths now exist as compatibility indexes. They are local visibility paths, not live AWS infrastructure.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Create a route-level visual QA pass for the five media pages plus pricing after copy changes.
-2. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
-3. Add model-card and drift-card generators for every promoted metric.
-4. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+1. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
+2. Add model-card and drift-card generators for every promoted metric.
+3. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+4. Add public-safe no-bet governor methodology examples without exposing protected weights.
 5. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
 6. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
 7. Add durable local queue persistence simulation for media review packets without DB writes.
 8. Add API replay promotion checks for conflict detection after a durable adapter exists.
 9. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-10. Add public-safe no-bet governor methodology examples without exposing protected weights.
+10. Run production preview visual QA before any live push.
 
 ## Safety Statement
 
