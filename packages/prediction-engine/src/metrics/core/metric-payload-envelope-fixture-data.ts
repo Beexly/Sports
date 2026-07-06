@@ -1,5 +1,6 @@
 import { gseSignalScore } from "../decision/gse-signal-score.js";
 import { playableWindowScore } from "../decision/playable-window-score.js";
+import { marketMirageScore } from "../market/market-mirage-score.js";
 import { staleLineRiskScore } from "../market/stale-line-risk-score.js";
 import { qbBurdenIndex } from "../passing/qb-burden-index.js";
 import { roleVolatilityIndex } from "../role/role-volatility-index.js";
@@ -37,7 +38,7 @@ const marketPolicy: MetricSourcePolicy = {
 
 export const COMPOSED_DECISION_METRIC_PAYLOAD_FIXTURES: readonly ComposedDecisionMetricPayloadFixture[] = [
   {
-    description: "PWS, GSS, SLRS, QBI, and RVI expose only derived scores, bands, and public drivers.",
+    description: "PWS, GSS, MMS, SLRS, QBI, and RVI expose only derived scores, bands, and public drivers.",
     expectedApprovedFields: safeComposedDecisionFields().map((field) => field.path),
     expectedBlockedFields: [],
     exposure: "API",
@@ -115,6 +116,19 @@ function safeComposedDecisionFields(): readonly MetricPayloadEnvelopeField[] {
     sourcePolicy: [footballPolicy, marketPolicy],
     staleLineRiskScore: slrs.score,
   });
+  const mms = marketMirageScore({
+    bookDispersionIndex: 8,
+    calibrationDebt: 10,
+    driftPressure: 12,
+    explainabilityScore: 88,
+    marketGravityIndex: 86,
+    marketSignalAllowed: slrs.marketSignalAllowed,
+    noBetPressure: 14,
+    publicNarrativeHeat: 12,
+    sourceContradictionPressure: 4,
+    sourcePolicy: [footballPolicy, marketPolicy],
+    staleLineRiskScore: slrs.score,
+  });
   const gss = gseSignalScore({
     calibrationDebt: 12,
     calibrationIntegrityGrade: 84,
@@ -138,6 +152,9 @@ function safeComposedDecisionFields(): readonly MetricPayloadEnvelopeField[] {
     field("metrics.gseSignal.score", "DERIVED_METRIC", gss.score, ["nflverse", "the-odds-api"]),
     field("metrics.gseSignal.grade", "AGGREGATE_SUMMARY", gss.grade, ["nflverse", "the-odds-api"]),
     field("metrics.gseSignal.confidenceMeaning", "PUBLIC_DRIVER", gss.confidenceMeaning, ["nflverse"]),
+    field("metrics.marketMirage.score", "DERIVED_METRIC", mms.score, ["nflverse", "the-odds-api"]),
+    field("metrics.marketMirage.band", "AGGREGATE_SUMMARY", mms.band, ["nflverse", "the-odds-api"]),
+    field("metrics.marketMirage.marketInterpretationAllowed", "AGGREGATE_SUMMARY", mms.marketInterpretationAllowed, ["nflverse", "the-odds-api"]),
     field("metrics.staleLineRisk.score", "DERIVED_METRIC", slrs.score, ["the-odds-api"]),
     field("metrics.staleLineRisk.marketSignalAllowed", "AGGREGATE_SUMMARY", slrs.marketSignalAllowed, ["the-odds-api"]),
     field("metrics.qbBurden.burdenIndex", "DERIVED_METRIC", qbi.burdenIndex, ["nflverse"]),

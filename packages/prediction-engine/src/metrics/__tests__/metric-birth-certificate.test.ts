@@ -11,6 +11,7 @@ import {
   expectedRushYardsGse,
   expectedYacGse,
   gseMarketGravityIndex,
+  gseMarketMirageScore,
   gseSignalScore,
   gseStaleLineRiskScore,
   playableWindowScore,
@@ -29,6 +30,7 @@ describe("metric birth certificates", () => {
       "data-reliability-index",
       "market-gravity-index",
       "stale-line-risk-score",
+      "market-mirage-score",
       "expected-completion-gse",
       "qb-burden-index",
       "receiver-difficulty-index",
@@ -65,6 +67,7 @@ describe("metric birth certificates", () => {
     expect(typeof dataReliabilityIndex).toBe("function");
     expect(typeof gseMarketGravityIndex).toBe("function");
     expect(typeof gseStaleLineRiskScore).toBe("function");
+    expect(typeof gseMarketMirageScore).toBe("function");
     expect(typeof expectedCompletionGse).toBe("function");
     expect(typeof qbBurdenIndex).toBe("function");
     expect(typeof receiverDifficultyIndex).toBe("function");

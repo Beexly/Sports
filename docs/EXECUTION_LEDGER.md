@@ -1322,3 +1322,41 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: route-free shadow bridge only; no live `app/api/v1` route, no public/API exposure, no raw
   vendor payload export, no probability claim, no DB persistence, no credential handling change, no
   package/dependency change, and no production gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier Market Mirage Score
+
+- WHAT: Added Market Mirage Score as a governed `SHADOW` market-integrity risk metric. MMS composes
+  Market Gravity, Stale Line Risk Score, market-signal allowance, public narrative heat, source
+  contradiction pressure, book dispersion, explainability, no-bet pressure, drift pressure,
+  calibration debt, and source-policy posture. It is not win probability, expected value,
+  confidence, betting advice, or a pick trigger. `probability` is always `null`; confidence means
+  evidence quality only. Stale or blocked market signals, blocked source posture, high no-bet
+  pressure, high drift pressure, or high calibration debt block market interpretation before
+  downstream review.
+- FILES: `packages/prediction-engine/src/metrics/market/market-mirage-score.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/market-mirage-score.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-payload-envelope-fixture-data.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-payload-envelope-fixtures.test.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-birth-certificate.test.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-asset-graduation.test.ts`,
+  `packages/prediction-engine/src/index.ts`,
+  `apps/web/__tests__/api-v1-composed-metric-payload-bridge.test.ts`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `docs/ip/GSE_METRIC_IP_LEDGER.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution
+  ledger.
+- GATE: first focused MMS run caught a noisy fixture still classified `LOW`; after threshold repair,
+  focused MMS tests passed (6 files, 27 tests). MMS payload integration tests passed in
+  prediction-engine (6 files, 31 tests) and app bridge coverage passed (1 file, 4 tests).
+  Prediction-engine and app typechecks passed. LOC / escape-hatch review passed:
+  `market-mirage-score.ts` 200 lines, test 101 lines, updated payload fixture data 187 lines, app
+  bridge test 76 lines, and no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`,
+  or non-null property access found. Full prediction-engine tests passed (99 files, 850 tests).
+  Full app tests passed (538 files, 7111 tests). Remaining segmented workspace tests passed:
+  crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, and types 1 / 31, for an
+  aggregate segmented receipt of 661 files / 8196 tests. Root typecheck, root lint, root guardrails,
+  and `git diff --check` passed after the documentation/ledger updates.
+- FLAG: shadow metric and local fixture/bridge coverage only; no live `app/api/v1` route, no
+  public/API exposure, no raw odds or tracking export, no probability claim, no lifecycle promotion,
+  no legal clearance claim, no production-readiness claim, no package/dependency change, no live
+  AWS/cloud/service action, and no prediction gate flip.

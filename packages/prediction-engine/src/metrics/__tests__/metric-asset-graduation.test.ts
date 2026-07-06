@@ -53,6 +53,7 @@ describe("GSE metric assets and graduation", () => {
       "data-reliability-index",
       "market-gravity-index",
       "stale-line-risk-score",
+      "market-mirage-score",
       "expected-completion-gse",
       "qb-burden-index",
       "receiver-difficulty-index",

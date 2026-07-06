@@ -241,6 +241,21 @@ Implementation boundary:
 - It complements Market Gravity: MGI asks whether the market is pulling; SLRS asks whether the line snapshot is trustworthy enough to interpret.
 - It does not classify any stale line as a clean market signal.
 
+### Market Mirage Score
+
+Target question: is the apparent market signal real enough for downstream review, or is it likely a noisy, stale, narrative-driven, contradictory, or source-weak mirage?
+
+MMS is a market-risk score, not a playable-edge score, win probability, expected value, betting advice, or a pick trigger. Higher is worse. It composes Market Gravity, Stale Line Risk Score, market-signal allowance, public narrative heat, source contradiction pressure, book dispersion, market explainability, no-bet pressure, drift pressure, calibration debt, and source-policy posture.
+
+Implementation boundary:
+
+- It returns `score`, `band`, `marketInterpretationAllowed`, evidence confidence, uncertainty, source posture, block reasons, and public drivers.
+- `probability` is always `null`.
+- `confidenceScore` measures evidence quality, not edge, probability, advice quality, or pick strength.
+- Stale or blocked market signals, blocked source-policy posture, high no-bet pressure, high drift pressure, or high calibration debt block market interpretation before downstream review.
+- It is an upstream market-integrity primitive for PWS/GSS/action review, not a pick trigger.
+- It exposes public drivers only and keeps mirage pressure weights, explainable-market credit transforms, hard-block thresholds, band cutoffs, and source-posture scaling protected.
+
 ### GSE Expected Completion
 
 Target question: how likely should this pass have been completed?
@@ -566,7 +581,7 @@ Build in this order for proprietary football metrics:
 4. Calibration Integrity Grade
 5. No-Bet Pressure
 6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
-7. Market Mirage Score
+7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 8. Portfolio Fit Score
 9. Drift Pressure Index
 10. Conformal Uncertainty Width
@@ -577,7 +592,7 @@ Product/governance backlog from the doctrine and competitive map:
 
 1. Keep source-policy fixture alignment green whenever the canonical web source-rights registry changes.
 2. Apply generated model/drift cards to owner-approved promoted metric evidence packets after source-policy generation.
-3. Market Intelligence v2: stale-line risk now has a shadow primitive; consensus fragility, move quality, book dispersion, market mirage, and playable window remain future work.
+3. Market Intelligence v2: stale-line risk, market mirage, and playable-window readiness now have shadow primitives; consensus fragility, move quality, book dispersion decomposition, and historical market-stability validation remain future work.
 4. No-Bet/Decision Intelligence: no-bet strength, refusal reasons, calibration sufficiency, model disagreement, volatility pressure, and responsible-gaming warnings.
 5. Evidence API contracts: board, game evidence, calibration summary, slate intelligence, player expected metrics, and signed webhooks.
 6. Content claim governance: evidence refs, risk level, disclosure status, responsible-gaming status, publish status, and manual review.
@@ -670,6 +685,19 @@ Recorded run on 2026-07-04:
 | `npm run lint` after app payload bridge | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
 | `npm run guardrails` after app payload bridge | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
 | `git diff --check` after app payload bridge | PASS - no whitespace errors. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/market-mirage-score.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/stale-line-risk-score.test.ts src/metrics/__tests__/playable-window-score.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` after Market Mirage Score | FAIL then PASS - first run caught a noisy fixture still classified `LOW`; after lowering the WATCH cutoff to match the intended risk sensitivity, 6 files / 27 tests passed. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/market-mirage-score.test.ts src/metrics/__tests__/metric-payload-envelope-fixtures.test.ts src/metrics/__tests__/metric-payload-envelope.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` after MMS payload integration | PASS - 6 files, 31 tests. |
+| `npm run test --workspace=@sports/web -- __tests__/api-v1-composed-metric-payload-bridge.test.ts` after MMS payload integration | PASS - 1 file, 4 tests. |
+| `npm run typecheck --workspace=packages/prediction-engine` after Market Mirage Score | PASS - prediction-engine TypeScript checked after MMS implementation, certificate, exports, and payload fixture updates. |
+| `npm run typecheck --workspace=@sports/web` after MMS app bridge update | PASS - app TypeScript checked after bridge expectation update. |
+| MMS LOC and escape-hatch scan | PASS - `market-mirage-score.ts` 200 lines, `market-mirage-score.test.ts` 101 lines, updated payload data fixture 187 lines, app bridge test 76 lines; no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access found. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Market Mirage Score | PASS - 99 files, 850 tests. |
+| `npm run test --workspace=apps/web -- --reporter=dot --silent` after MMS app bridge update | PASS - 538 files, 7111 tests. |
+| remaining segmented workspace tests after Market Mirage Score | PASS - crypto 1 file / 13 tests; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; types 1 / 31. Aggregate segmented receipt including prediction-engine and web: 661 files / 8196 tests. |
+| `npm run typecheck` after Market Mirage Score docs | PASS - all workspaces with typecheck scripts completed. |
+| `npm run lint` after Market Mirage Score docs | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
+| `npm run guardrails` after Market Mirage Score docs | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
+| `git diff --check` after Market Mirage Score docs | PASS - no whitespace errors. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/expected-rush-yards.test.ts src/metrics/__tests__/rush-over-expected.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 5 files, 15 tests after registry split. |
 | `npm run typecheck --workspace=packages/prediction-engine` after Expected Rush Yards/Rush Over Expected | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Expected Rush Yards/Rush Over Expected | PASS - 89 files, 794 tests. |
@@ -880,11 +908,21 @@ Pure LOC review for new source files:
 - The bridge records `shadowOnly: true`, `liveRouteCreated: false`, and `routePath: null` for every fixture result; it does not create or expose `app/api/v1` routes.
 - Focused bridge tests passed (2 files, 13 tests), app typecheck passed, full app tests passed (538 files, 7111 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, and escape-hatch scan over the bridge/test files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
 
+2026-07-06 Market Mirage Score continuation check:
+
+- `market-mirage-score.ts` adds a governed `SHADOW` market-integrity metric over MGI, SLRS, market-signal allowance, narrative heat, contradiction pressure, dispersion, explainability, no-bet pressure, drift pressure, calibration debt, and source-policy posture.
+- The metric is market mirage risk, not win probability, expected value, confidence, betting advice, or a pick trigger. `probability` is always `null`.
+- Stale or blocked market signals, blocked source-policy posture, high no-bet pressure, high drift pressure, or high calibration debt block market interpretation before downstream review.
+- Outputs expose public drivers only; protected mirage-pressure weights, explainability transforms, band cutoffs, hard-block thresholds, and source-posture scaling stay private.
+- The first focused MMS test run caught a noisy fixture below the intended `WATCH` threshold; the threshold was repaired before broad validation.
+- MMS is now included in the composed metric payload fixtures and app API-v1 payload bridge as a safe derived score/band/allowance shape, while protected/raw/provider/probability fields stay blocked.
+- Focused MMS tests passed (6 files, 27 tests), focused MMS payload/app bridge tests passed (prediction-engine 6 files / 31 tests; app 1 file / 4 tests), prediction-engine typecheck passed, app typecheck passed, full prediction-engine tests passed (99 files, 850 tests), full app tests passed (538 files, 7111 tests), and remaining segmented workspace tests passed across crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, and types 1 / 31.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, validation split fixture runner, composed payload fixtures, app bridge, and generated source policies:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, and generated source policies:
 
-1. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, payload-envelope, and source-rights veto tests stay green.
-2. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, caveats, and synthetic/local labels.
-3. Add historical-data adapters for split validation only after source-rights and payload-rights review confirms the inputs are cleared.
-4. Add local commercial review queue reporting for unresolved blockers by source and surface.
+1. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, caveats, and synthetic/local labels for SLRS/QBI/RVI/PWS/MMS.
+2. Add source-rights-reviewed historical adapters for split validation only after input clearance is proven.
+3. Add local commercial review queue reporting for unresolved blockers by source and surface.
+4. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.

@@ -600,6 +600,13 @@ export type {
   StaleLineRiskInput as GseStaleLineRiskInput,
   StaleLineRiskScore as GseStaleLineRiskScore,
 } from "./metrics/market/stale-line-risk-score.js";
+export { marketMirageScore as gseMarketMirageScore } from "./metrics/market/market-mirage-score.js";
+export type {
+  MarketMirageBand as GseMarketMirageBand,
+  MarketMirageScore as GseMarketMirageScore,
+  MarketMirageScoreInput as GseMarketMirageScoreInput,
+  MarketMirageSourcePosture as GseMarketMirageSourcePosture,
+} from "./metrics/market/market-mirage-score.js";
 export { expectedCompletionGse } from "./metrics/passing/expected-completion.js";
 export type {
   ExpectedCompletionInput,

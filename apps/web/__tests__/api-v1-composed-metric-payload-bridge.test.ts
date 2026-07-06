@@ -29,6 +29,7 @@ describe("API v1 composed metric payload fixture bridge", () => {
     expect(safe.approvedFields).toEqual(safe.expectedApprovedFields);
     expect(safe.payload["metrics.playableWindow.score"]).toEqual(expect.any(Number));
     expect(safe.payload["metrics.gseSignal.score"]).toEqual(expect.any(Number));
+    expect(safe.payload["metrics.marketMirage.score"]).toEqual(expect.any(Number));
     expect(safe.payload["metrics.gseSignal.probability"]).toBeUndefined();
   });
 
@@ -56,7 +57,7 @@ describe("API v1 composed metric payload fixture bridge", () => {
     );
 
     expect(summary).toEqual({
-      approvedFieldCount: 20,
+      approvedFieldCount: 26,
       blocked: 2,
       blockedFieldCount: 6,
       liveRouteCreatedCount: 0,

@@ -23,6 +23,7 @@ describe("composed decision metric payload-envelope fixtures", () => {
     expect(safe.envelope.approvedFields).toEqual(safe.expectedApprovedFields);
     expect(safe.envelope.payload["metrics.playableWindow.score"]).toEqual(expect.any(Number));
     expect(safe.envelope.payload["metrics.gseSignal.score"]).toEqual(expect.any(Number));
+    expect(safe.envelope.payload["metrics.marketMirage.score"]).toEqual(expect.any(Number));
     expect(safe.envelope.payload["metrics.staleLineRisk.marketSignalAllowed"]).toBe(true);
     expect(safe.envelope.payload["metrics.gseSignal.probability"]).toBeUndefined();
     expect(safe.envelope.meta).toMatchObject({
@@ -61,7 +62,7 @@ describe("composed decision metric payload-envelope fixtures", () => {
     const summary = summarizeComposedDecisionMetricPayloadFixtures(results);
 
     expect(summary).toEqual({
-      approvedFieldCount: 20,
+      approvedFieldCount: 26,
       blocked: 2,
       blockedFieldCount: 6,
       ok: 1,
