@@ -1272,3 +1272,33 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   no public/API exposure, no lifecycle promotion, no model-card or drift-card approval, no legal
   clearance claim, no production-readiness claim, no route exposure, no package/dependency change,
   and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier composed metric payload-envelope fixtures
+
+- WHAT: Added synthetic/local payload-envelope fixture coverage for composed decision metric payload
+  shapes: Playable Window Score, GSE Signal Score, Stale Line Risk Score, QB Burden Index, and Role
+  Volatility Index. Safe fixtures approve only derived scores, bands, aggregate summaries,
+  confidence meaning, and public drivers. Unsafe fixtures block protected weights, raw source
+  values, provider identifiers, unsupported probability claims, and uncleared fallback source
+  fields. `payload-rights.ts` now has an explicit `UNSUPPORTED_PROBABILITY_CLAIM` field kind so
+  GSS/PWS decision quality cannot be packaged as probability.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-payload-envelope-fixture-data.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-payload-envelope-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/core/payload-rights.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-payload-envelope-fixtures.test.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `docs/ip/GSE_METRIC_IP_LEDGER.md`, Sunday
+  audit/handoff docs, commercial ledger, and execution ledger.
+- GATE: focused payload fixture, payload-envelope, and source-rights tests passed (3 files,
+  17 tests). Prediction-engine typecheck passed after adding fixture exports and the unsupported
+  probability claim kind. The initial combined fixture file measured 226 lines, so it was split into
+  data and runner files before broad validation. Final LOC / escape-hatch review passed: data
+  fixture 170 lines, runner 61 lines, test 77 lines, and no `as any`, `as unknown`, `@ts-ignore`,
+  `@ts-expect-error`, `: any`, or non-null property access found. Full prediction-engine tests
+  passed (98 files, 845 tests). Root typecheck, root lint, root guardrails, and `git diff --check`
+  passed. Segmented workspace tests passed: apps/web 537 files / 7105 tests, crypto 1 / 13,
+  data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 98 / 845, and types 1 / 31,
+  for 659 files / 8185 tests.
+- FLAG: synthetic/local fixture layer only; no live route, no public/API exposure, no raw odds or
+  tracking export, no probability claim, no lifecycle promotion, no legal clearance claim, no
+  production-readiness claim, no package/dependency change, and no prediction gate flip.

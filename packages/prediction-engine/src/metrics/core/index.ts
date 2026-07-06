@@ -87,6 +87,17 @@ export type {
 } from "./payload-envelope.js";
 export { filterMetricPayloadEnvelope } from "./payload-envelope.js";
 export type {
+  ComposedDecisionMetricPayloadFixture,
+  ComposedDecisionMetricPayloadFixtureId,
+  ComposedDecisionMetricPayloadFixtureResult,
+  ComposedDecisionMetricPayloadFixtureSummary,
+} from "./metric-payload-envelope-fixtures.js";
+export {
+  COMPOSED_DECISION_METRIC_PAYLOAD_FIXTURES,
+  runComposedDecisionMetricPayloadFixtures,
+  summarizeComposedDecisionMetricPayloadFixtures,
+} from "./metric-payload-envelope-fixtures.js";
+export type {
   MetricPayloadExposure,
   MetricPayloadField,
   MetricPayloadFieldKind,

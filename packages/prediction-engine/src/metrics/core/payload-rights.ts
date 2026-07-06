@@ -8,7 +8,8 @@ export type MetricPayloadFieldKind =
   | "AGGREGATE_SUMMARY"
   | "RAW_SOURCE_VALUE"
   | "PROTECTED_WEIGHT"
-  | "PROVIDER_IDENTIFIER";
+  | "PROVIDER_IDENTIFIER"
+  | "UNSUPPORTED_PROBABILITY_CLAIM";
 
 export interface MetricPayloadField {
   readonly path: string;
@@ -82,6 +83,11 @@ function evaluateField(field: MetricPayloadField, input: MetricPayloadRightsInpu
   if (field.kind === "RAW_SOURCE_VALUE" && input.exposure === "API") {
     violations.push(
       `${field.path}: raw source value from ${field.sourceIds.join(", ")} cannot be exposed through metric API payloads`,
+    );
+  }
+  if (field.kind === "UNSUPPORTED_PROBABILITY_CLAIM") {
+    violations.push(
+      `${field.path}: unsupported probability claims cannot be exposed through metric payloads`,
     );
   }
 
