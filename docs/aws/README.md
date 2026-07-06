@@ -29,6 +29,7 @@ Compatibility files:
 - `COMPATIBILITY_INDEX.md` maps this exact path to the canonical FABLE/AWS docs.
 - `AWS_WELL_ARCHITECTED_GSE_LENS.md` gives the six-pillar reading map for GSE.
 - `AWS_SHADOW_BOUNDARY.md` records allowed and forbidden actions for this path family.
+- `AWS_PUBLIC_CASE_STUDY_ROUTE.md` records the public-safe local route that explains AWS-style governance without claiming live cloud action.
 
 Validation:
 

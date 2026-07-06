@@ -13,6 +13,7 @@ Purpose: expose the exact `docs/aws` path requested in Sunday frontier work whil
 | Amplify investigation | `docs/aws/README.md` | `infrastructure/aws/amplify/README.md` | Amplify is evaluated as a future option. | Amplify app creation or DNS migration. |
 | CDK fixture lane | `docs/aws/AWS_SHADOW_BOUNDARY.md` | `infrastructure/aws/cdk/shadow-control-tower-synth.fixture.json` | A reviewable IaC-shaped fixture exists. | CDK account initialization, synthesis, or deployment. |
 | Infra shadow aliases | `infra/aws-shadow/README.md` | `infrastructure/aws/*` and `docs/fable/aws/*` | Exact local fixture paths exist for agents. | Live infrastructure. |
+| Public case-study route | `docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md` | `apps/web/app/case-studies/aws-governed-sports-intelligence/page.tsx` | GSE can explain AWS-style governance in public-safe copy. | AWS approval, cloud setup, funding, customer adoption, or release readiness. |
 
 Rules for future edits:
 

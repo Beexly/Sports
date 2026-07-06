@@ -36,6 +36,7 @@ Implemented:
 - partner/sponsor review packet fixtures with local-only locks, disclosure/responsible-gaming checks, sponsor-independence blockers, claim-safety blockers, and no affiliate activation
 - local review queue persistence simulator for media, content/API, and partner/sponsor packets with append-only replay, duplicate rejection, stale packet reporting, version conflict checks, unresolved blocker approval blocking, and no DB writes
 - API abuse-response and promotion-conflict fixture report for malformed keys, conflicting keys, overscope, quota exhaustion, unsafe payloads, malformed route controls, replay conflicts, unresolved/stale review packets, and duplicate promotion request IDs
+- public-safe AWS-governed sports intelligence case-study route with six Well-Architected pillar mappings, exact `docs/aws` route record, launch-page source QA, and closed live-action locks
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 
 ## Files Changed
@@ -56,6 +57,10 @@ Application and test files:
 - `apps/web/__tests__/api-v1-shadow-route-replay.test.ts`
 - `apps/web/lib/api/v1/abuse-response-fixtures.ts`
 - `apps/web/__tests__/api-v1-abuse-response-fixtures.test.ts`
+- `apps/web/lib/aws-case-study/public-case-study.ts`
+- `apps/web/app/case-studies/aws-governed-sports-intelligence/page.tsx`
+- `apps/web/__tests__/aws-case-study-page.test.ts`
+- `apps/web/__tests__/commercial-pages-launch-qa.test.ts`
 - `apps/web/lib/workflows/draft-fence-workflow.ts`
 - `apps/web/__tests__/draft-fence-workflow.test.ts`
 - `apps/web/lib/workflows/draft-review-fixtures.ts`
@@ -112,6 +117,7 @@ Docs:
 - `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PACKET.md`
 - `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PR_BODY.md`
 - `docs/api/API_V1_ABUSE_RESPONSE_FIXTURES.md`
+- `docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md`
 - `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`
 - `docs/ops/LOCAL_REVIEW_QUEUE_PERSISTENCE_SIMULATOR.md`
 - `docs/revenue/PARTNER_SPONSOR_REVIEW_FIXTURES.md`
@@ -202,6 +208,8 @@ Broad test result:
 - Partner/sponsor fixture validation: first targeted run failed because disclosure warnings were treated as hard blockers and the test expected uppercase `ROI`; after repair, targeted tests passed (6 files, 32 tests). App workspace typecheck passed.
 - Local review queue persistence validation: targeted local queue, first-month review export, draft-review fixture, and partner/sponsor fixture tests passed (4 files, 19 tests). First app typecheck failed because mutable queue record status was still narrowed to raw draft workflow status; after splitting `initialWorkflowStatus` from mutable queue status, app workspace typecheck passed.
 - API abuse-response fixture validation: targeted API abuse, route harness, replay, live-route promotion packet, and local review queue tests passed (5 files, 25 tests). First app typecheck failed on nullable replay-conflict map/filter typing; after replacing it with an explicit conflict collection loop, app workspace typecheck passed.
+- AWS case-study route validation: first focused route test caught unsafe `live AWS` wording and an evidence-required `ROI` reference; after wording repair, AWS case-study, launch QA, media-kit, and partners tests passed (4 files, 16 tests). App workspace typecheck passed.
+- Current AWS case-study root validation: AWS compatibility guard passed, root typecheck passed, root lint passed, root guardrails passed, full all-workspaces tests passed (653 files, 8152 tests), and `git diff --check` passed.
 
 ## Complete
 
@@ -218,6 +226,7 @@ Broad test result:
 - API abuse-response and promotion-conflict fixture reporting now exists. It proves denied API cases do not debit quota or leak protected response data, and it blocks live-route abuse-review evidence when replay conflicts, unresolved/stale review packets, or duplicate route-promotion IDs exist.
 - FABLE/AWS shadow architecture exists under `docs/fable/aws` and `infrastructure/aws`.
 - Exact `docs/aws` and `infra/aws-shadow` compatibility indexes exist and point to canonical FABLE/AWS artifacts.
+- Public-safe AWS-governed sports intelligence case-study route now exists and is registered in `docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md`. It explains local AWS-style governance without claiming AWS approval, cloud setup, funding, audience, sponsors, legal clearance, or release readiness.
 - No-bet governor integration tests now prove high edge cannot override missing data, stale market gravity, unclear source rights, calibration drift, or calibration debt.
 - `computeGseActionScore` now caps action quality when probability claims are unearned and hard-passes DRIFTING/BLOCKED calibration.
 - Public-safe no-bet methodology examples now exist for seven refusal/review states, with copy scanned through media claim safety, no-claim guard, and performance-claim guard.
@@ -237,7 +246,7 @@ Broad test result:
 - Source-rights/IP adapters under `apps/web/lib/source-rights` and `apps/web/lib/ip` exist, but they are policy gates and not legal clearance.
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, partner/sponsor review fixture reports, and local review queue persistence simulator exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
-- Launch-page visual QA is local render evidence only. Production preview QA remains required before live push.
+- Launch-page visual QA is local render evidence only. The new AWS case-study route still needs its own local desktop/mobile screenshot evidence before any production preview discussion.
 - Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, QB Burden Index, and Stale Line Risk Score next.
 
 ## Intentionally Deferred
@@ -264,22 +273,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-2. Run production preview visual QA before live push.
+1. Add local desktop/mobile visual QA for the AWS case-study route before any production preview discussion.
+2. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
 3. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-4. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+4. Run production preview visual QA before live push.
 5. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
 6. Add model-card and drift-card generation coverage for every newly promoted metric family.
 7. Add local commercial review queue reporting for unresolved blockers by source and surface.
 8. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 9. Add route design paperwork only after owner approval; keep it non-executable and route-free.
-10. Add visual QA for any new public-safe case-study route before production preview.
+10. Add route design paperwork only after owner approval; keep it non-executable and route-free.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the public-safe AWS portfolio/case-study route slice:
+Continue the Sunday frontier implementation with the local AWS case-study visual QA slice:
 
-1. Inspect existing public commercial page style, AWS docs, media claim-safety utilities, and route tests.
-2. Add a launch-safe portfolio/case-study route only if copy can stay public-safe, evidence-based, and local-only.
-3. Do not claim AWS approval, live AWS use, revenue, users, sponsors, ESPN notice, production readiness, or legal clearance.
-4. Add route/source tests and visual QA before any production preview discussion.
+1. Start a local Next dev server only.
+2. Capture desktop and mobile screenshots for `/case-studies/aws-governed-sports-intelligence`.
+3. Confirm HTTP 200, visible first viewport, no overlapping text, and no provider/live-AWS markers.
+4. Keep production preview, provider wiring, and live AWS actions out of scope.

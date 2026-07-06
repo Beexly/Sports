@@ -4,6 +4,7 @@
     "docs/aws/COMPATIBILITY_INDEX.md",
     "docs/aws/AWS_WELL_ARCHITECTED_GSE_LENS.md",
     "docs/aws/AWS_SHADOW_BOUNDARY.md",
+    "docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md",
     "infra/aws-shadow/README.md",
     "infra/aws-shadow/compatibility-manifest.json",
     "infra/aws-shadow/control-tower-policy.json",
@@ -47,6 +48,12 @@
     "docs/aws/AWS_SHADOW_BOUNDARY.md": [
       "Not allowed here:",
       "Before any live AWS step exists"
+    ],
+    "docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md": [
+      "Status: public-safe local route artifact.",
+      "/case-studies/aws-governed-sports-intelligence",
+      "Well-Architected mapping:",
+      "release readiness claimed: false"
     ],
     "infra/aws-shadow/README.md": [
       "Status: exact-path compatibility layer only.",

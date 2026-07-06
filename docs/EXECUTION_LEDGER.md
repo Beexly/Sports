@@ -1056,3 +1056,27 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local shadow report only; no live route tree, no database write, no credential, no env var,
   no provider call, no billing hook, no partner exposure, no outbound request, no command execution,
   and no production API promotion.
+
+## 2026-07-06 - (codex) - Sunday frontier AWS public case-study route
+
+- WHAT: Added a public-safe AWS-governed sports intelligence case-study route and data module that
+  translate the local AWS shadow architecture into reader-facing copy. The route covers the six
+  AWS Well-Architected pillars as GSE controls, points to repo-visible evidence paths, and keeps
+  every live-action lock closed. The exact `docs/aws` compatibility lane now records the route and
+  the AWS compatibility guard fixture requires the new doc.
+- FILES: `apps/web/lib/aws-case-study/public-case-study.ts`,
+  `apps/web/app/case-studies/aws-governed-sports-intelligence/page.tsx`,
+  `apps/web/__tests__/aws-case-study-page.test.ts`,
+  `apps/web/__tests__/commercial-pages-launch-qa.test.ts`,
+  `docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md`, `docs/aws/README.md`,
+  `docs/aws/COMPATIBILITY_INDEX.md`, `scripts/guardrails/fixtures/aws-compatibility-index.json`,
+  Sunday audit/handoff docs, commercial ledger, and execution ledger.
+- GATE: first focused route test run failed on unsafe source-level wording: `live AWS` and an
+  evidence-required `ROI` reference. After changing the lock and business-outcome wording, focused
+  AWS case-study, launch QA, media-kit, and partners tests passed (4 files, 16 tests), app workspace
+  typecheck passed, AWS compatibility guard passed, root typecheck passed, root lint passed, root
+  guardrails passed, full all-workspaces tests passed (653 files, 8152 tests), and `git diff --check`
+  passed.
+- FLAG: public-safe local route only; no AWS resource, account, credential, DNS, deploy action,
+  funding approval, customer claim, sponsor claim, production route promotion, or paid service was
+  added. The route is a portfolio case study, not cloud approval or release evidence.

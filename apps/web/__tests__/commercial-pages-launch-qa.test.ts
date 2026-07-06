@@ -57,6 +57,17 @@ const LAUNCH_PAGES: readonly LaunchPage[] = [
     ],
   },
   {
+    route: "/case-studies/aws-governed-sports-intelligence",
+    file: "apps/web/app/case-studies/aws-governed-sports-intelligence/page.tsx",
+    requiredCopy: [
+      "AWS-governed sports intelligence, built locally before it is allowed to run.",
+      "This page is a portfolio case study, not an AWS deployment claim.",
+      "AWS_CASE_STUDY_PILLARS",
+      "AWS_CASE_STUDY_LIVE_ACTION_LOCKS",
+      "Live-action locks",
+    ],
+  },
+  {
     route: "/podcast",
     file: "apps/web/app/podcast/page.tsx",
     requiredCopy: [
