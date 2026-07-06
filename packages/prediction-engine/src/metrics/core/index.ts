@@ -57,6 +57,27 @@ export {
   renderShadowMetricEvidenceReportMarkdown,
 } from "./metric-evidence-report-markdown.js";
 export type {
+  HistoricalDecisionWindowRecord,
+  HistoricalMarketMirageRecord,
+  HistoricalRoleStabilityRecord,
+  HistoricalValidationAdapterResult,
+  HistoricalValidationAdapterStatus,
+  HistoricalValidationMetricId,
+  HistoricalValidationRecord,
+  HistoricalValidationSourceReview,
+} from "./metric-historical-validation-adapter.js";
+export {
+  adaptHistoricalValidationRecord,
+  reviewHistoricalValidationSources,
+  runHistoricalValidationAdapterRecords,
+} from "./metric-historical-validation-adapter.js";
+export type { HistoricalValidationAdapterSummary } from "./metric-historical-validation-adapter-fixtures.js";
+export {
+  HISTORICAL_VALIDATION_ADAPTER_FIXTURES,
+  runHistoricalValidationAdapterFixtures,
+  summarizeHistoricalValidationAdapterResults,
+} from "./metric-historical-validation-adapter-fixtures.js";
+export type {
   DecisionWindowValidationSplit,
   MetricValidationSplitResult,
   MetricValidationSplitSummary,

@@ -58,13 +58,15 @@ Verified locally on 2026-07-04:
 - 2026-07-06 app payload bridge coverage: the app API-v1 bridge consumes package-owned composed metric payload fixtures through `filterApiV1MetricPayloadFields`, preserves safe field approvals and unsafe field blocks, and records `liveRouteCreated: false`; focused app tests passed (2 files, 13 tests), app typecheck passed, full app tests passed (538 files, 7111 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, and no TS escape hatches were found in the bridge/test files.
 - 2026-07-06 governed MMS focused coverage: Market Mirage Score is a `SHADOW` market-integrity risk metric, not win probability, expected value, confidence, betting advice, or a pick trigger. It fail-closes stale/blocked market signals, blocked source posture, high no-bet pressure, high drift pressure, and high calibration debt before downstream review. The first focused run caught a noisy fixture under the intended `WATCH` threshold; after repair, focused MMS tests passed (6 files, 27 tests), prediction-engine typecheck passed, and prediction-engine tests passed (99 files, 850 tests).
 - 2026-07-06 generated evidence report coverage: the shadow metric fixture set now includes SLRS, QBI, RVI, PWS, and MMS; `metric-evidence-report-markdown.ts` renders synthetic/local markdown reports with lifecycle, API, licensing, public API, and live-route locks; `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md` is test-linked to the generated report list. Focused tests passed (2 files, 11 tests), prediction-engine typecheck passed, file length review stayed below the local warning band for new files, and no TS escape hatches were found.
+- 2026-07-06 historical validation adapter coverage: the adapter reviews source rights before adapting historical-shaped RVI, PWS, and MMS records into local shadow validation inputs. Fully cleared sources adapt; manual-review sources remain manual review; permission-required/missing sources block before metric execution. Focused adapter/split/source-rights tests passed (3 files, 18 tests), prediction-engine typecheck passed, and no TS escape hatches were found.
 
 ## Next Review Gates
 
-- Keep validation split fixtures synthetic/local until source-rights-reviewed historical splits are approved.
+- Keep validation split fixtures and adapter fixtures local until real historical inputs have source-rights and payload-rights evidence.
 - Add source-rights adapters from the web source registry before any customer surface.
 - Add drift cards from real historical distributions before any public metric card.
 - Keep app-level composed payload bridge route-free before any public/API route exposure.
 - Keep protected components out of public API payloads.
 - Add source-rights-reviewed historical market-mirage validation before any MMS public/API exposure or lifecycle promotion.
 - Keep generated markdown reports synthetic/local until source-rights-reviewed historical evidence is added.
+- Do not treat adapter success as promotion evidence; it only proves source-rights-gated adaptation behavior.

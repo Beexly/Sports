@@ -1386,3 +1386,24 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   clearance claim, no production-readiness claim, no model promotion, no betting use, no probability
   or expected-value claim, no raw odds/tracking export, no package/dependency change, no live
   AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier historical validation adapter
+
+- WHAT: Added a source-rights-reviewed historical validation adapter for governed shadow metrics.
+  The adapter checks `validation` and `derived_metric` source-rights permissions before adapting
+  historical-shaped records into local shadow metric inputs. Fully cleared records adapt for RVI,
+  PWS, and MMS. Logged-off/manual-review source posture returns `NEEDS_MANUAL_REVIEW`. Missing or
+  permission-required sources return `BLOCKED_BY_SOURCE_RIGHTS` before metric execution.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-historical-validation-adapter.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-historical-validation-adapter-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-historical-validation-adapter.test.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `docs/ip/GSE_METRIC_IP_LEDGER.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution ledger.
+- GATE: focused adapter/split/source-rights tests passed (3 files, 18 tests). Prediction-engine
+  typecheck passed. LOC / escape-hatch review passed: adapter 210 lines, fixture 116 lines, test 79
+  lines, and no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null
+  property access found.
+- FLAG: local adapter and fixture layer only; no live data fetch, no route, no public/API exposure,
+  no legal clearance claim, no production-readiness claim, no metric promotion, no raw odds/tracking
+  export, no package/dependency change, no live AWS/cloud/service action, and no prediction gate flip.

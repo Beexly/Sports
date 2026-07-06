@@ -926,11 +926,20 @@ Pure LOC review for new source files:
 - The markdown reports are local governance artifacts only. They do not approve public content, API exposure, licensing, betting use, production promotion, legal clearance, probability claims, expected-value claims, or pick claims.
 - Focused evidence-card/report tests passed (2 files, 11 tests), prediction-engine typecheck passed, file length scan kept the report renderer at 92 lines, fixture file at 166 lines, split tests at 196 and 62 lines, and no TS escape hatches were found.
 
+2026-07-06 historical validation adapter continuation check:
+
+- `metric-historical-validation-adapter.ts` adds a source-rights-reviewed adapter for historical-shaped validation records before they can become shadow split inputs.
+- The adapter checks both `validation` and `derived_metric` source-rights permissions before adaptation.
+- Fully cleared sources adapt locally; logged-off/manual-review sources return `NEEDS_MANUAL_REVIEW`; missing or permission-required sources return `BLOCKED_BY_SOURCE_RIGHTS`.
+- Adapted records preserve `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, `publicApiAllowed: false`, and no live route.
+- Fixture coverage includes RVI, PWS, and MMS adapted cases plus Sleeper manual-review and Scores24 blocked cases.
+- Focused adapter/split/source-rights tests passed (3 files, 18 tests), prediction-engine typecheck passed, adapter LOC scan measured 210, 116, and 79 lines, and no TS escape hatches were found.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, and generated source policies:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, and generated source policies:
 
-1. Add source-rights-reviewed historical adapters for split validation only after input clearance is proven.
-2. Add local commercial review queue reporting for unresolved blockers by source and surface.
-3. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
+1. Add local commercial review queue reporting for unresolved blockers by source and surface.
+2. Continue guarded metric backlog with Portfolio Fit Score or Calibration Integrity Grade only after no-bet, payload-envelope, and source-rights veto tests stay green.
+3. Add historical distribution/drift adapters only after source rights and payload rights prove the inputs are cleared.
 4. Add markdown export tests for any future metric report before allowing it into public/API route planning.
