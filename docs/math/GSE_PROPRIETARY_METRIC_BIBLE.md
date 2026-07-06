@@ -51,6 +51,7 @@ Grounded metrics and governed continuations:
 - `packages/prediction-engine/src/metrics/market/market-gravity-index.ts`
 - `packages/prediction-engine/src/metrics/market/stale-line-risk-score.ts`
 - `packages/prediction-engine/src/metrics/passing/expected-completion.ts`
+- `packages/prediction-engine/src/metrics/passing/qb-burden-index.ts`
 - `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
 - `packages/prediction-engine/src/metrics/receiving/expected-yac.ts`
 - `packages/prediction-engine/src/metrics/receiving/yac-creation.ts`
@@ -77,6 +78,7 @@ Root package exports:
 - `gseMarketGravityIndex`
 - `gseStaleLineRiskScore`
 - `expectedCompletionGse`
+- `qbBurdenIndex`
 - `receiverDifficultyIndex`
 - `expectedYacGse`
 - `yacCreationGse`
@@ -112,6 +114,7 @@ Current governed metric certificates:
 | `market-gravity-index` | market | SHADOW | score_band |
 | `stale-line-risk-score` | market | SHADOW | score_band |
 | `expected-completion-gse` | passing | SHADOW | score_band |
+| `qb-burden-index` | passing | SHADOW | score_band |
 | `receiver-difficulty-index` | receiving | SHADOW | score_band |
 | `expected-yac-gse` | receiving | SHADOW | score_band |
 | `yac-creation-gse` | receiving | SHADOW | score_band |
@@ -255,6 +258,20 @@ Implementation boundary:
 - `confidenceScore` measures evidence quality and uncertainty, not probability.
 - Public drivers report directional effects; protected basis transforms and coefficients are not returned.
 - Source policy is carried with the output so downstream gates can reject weak rights.
+
+### QB Burden Index
+
+Target question: how much contextual burden was placed on the quarterback independent of quarterback quality?
+
+QBI is a passing-context burden score, not a quarterback talent score, not win probability, and not a pick signal. It uses expected-completion difficulty, pressure, throw depth, down-distance friction, offensive-line disruption proxy, receiver separation deficit proxy, time-to-throw stress proxy, weather penalty, pass-rate pressure, and source-policy posture.
+
+Implementation boundary:
+
+- It returns `burdenIndex`, `burdenBand`, evidence confidence, uncertainty, source posture, and public drivers.
+- `confidenceScore` measures evidence quality, not quarterback quality or win probability.
+- Manual-review source posture raises uncertainty; blocked modeling posture forces `sourcePosture: "BLOCKED"` and high uncertainty.
+- It does not expose burden component weights, proxy transforms, source posture scaling, raw private tracking rows, or proprietary pass-rush feeds.
+- Poor source posture increases review pressure without pretending the metric is precise.
 
 ### GSE Signal Score
 
@@ -507,7 +524,7 @@ This is not a claim that any metric is validated for public/API exposure. The me
 Build in this order for proprietary football metrics:
 
 1. API response-envelope filtering with proprietary metric payload-rights checks
-2. QB Burden Index
+2. QB Burden Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 3. Role Volatility Index
 4. Calibration Integrity Grade
 5. No-Bet Pressure
@@ -558,6 +575,14 @@ Recorded run on 2026-07-04:
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/stale-line-risk-score.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 4 files, 16 tests. |
 | `npm run typecheck --workspace=packages/prediction-engine` after Stale Line Risk Score | FAIL then PASS - first run caught strict indexed driver access in the new test; after replacing it with a `.some(...)` assertion, package typecheck passed. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Stale Line Risk Score | PASS - 93 files, 817 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/qb-burden-index.test.ts src/metrics/__tests__/expected-completion.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | FAIL then PASS - first run caught low-uncertainty expectation with proxy-heavy input; second run caught manual-review posture expected as HIGH instead of MEDIUM. After fixture corrections, 4 files and 15 tests passed. |
+| `npm run typecheck --workspace=packages/prediction-engine` after QB Burden Index | PASS - prediction-engine TypeScript checked after QBI implementation and exports. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after QB Burden Index | PASS - 94 files, 821 tests. |
+| `npm run typecheck` after QB Burden Index | PASS - all workspaces with typecheck scripts completed. |
+| `npm run lint` after QB Burden Index | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
+| `npm run guardrails` after QB Burden Index | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
+| segmented workspace tests after QB Burden Index | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 94 / 821; types 1 / 31. Aggregate segmented receipt: 655 files / 8161 tests. |
+| `git diff --check` after QB Burden Index | PASS - no whitespace errors. |
 | `npm run typecheck` after Stale Line Risk Score | PASS - all workspaces with typecheck scripts completed. |
 | `npm run lint` after Stale Line Risk Score | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
 | `npm run guardrails` after Stale Line Risk Score | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
@@ -626,6 +651,7 @@ Pure LOC review for new source files:
 | `market-gravity-index.ts` | 98 |
 | `stale-line-risk-score.ts` | 131 |
 | `expected-completion.ts` | 110 |
+| `qb-burden-index.ts` | 156 |
 | `gse-signal-score.ts` | 113 |
 | `yac-creation.ts` | 88 |
 | `rush-environment-index.ts` | 108 |
@@ -708,11 +734,19 @@ Pure LOC review for new source files:
 - Directional tests prove stale age, low source count, contradiction, and unclear/blocked rights increase risk.
 - Focused SLRS tests passed (4 files, 16 tests), full prediction-engine tests passed (93 files, 817 tests), root typecheck/lint/guardrails passed, the all-workspaces test wrapper exited 0, segmented workspace summaries passed (654 files, 8157 tests), and `git diff --check` passed.
 
+2026-07-06 QB Burden Index continuation check:
+
+- `qb-burden-index.ts` adds a governed `SHADOW` passing metric on top of the proprietary metric foundation, separate from the older compatibility `nfl/qb-burden.ts` export.
+- The metric is contextual burden, not quarterback quality, win probability, model confidence, or a pick signal.
+- Pressure, throw depth, late/down-distance friction, weather, line disruption, and harder expected-completion context increase burden.
+- Source posture is explicit: clean sources can support lower uncertainty, manual-review sources raise uncertainty, and blocked modeling posture returns `sourcePosture: "BLOCKED"` with high uncertainty.
+- Focused tests passed after two red/green corrections; full prediction-engine tests passed (94 files, 821 tests), package typecheck passed, root typecheck/lint/guardrails passed, segmented workspace summaries passed (655 files, 8161 tests), and `git diff --check` passed.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card generators, and generated source policies:
 
-1. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
-2. Add Role Volatility Index after role/source fields are normalized and stale roster signals fail closed.
-3. Add Playable Window Score only after Stale Line Risk Score, Market Gravity, and no-bet veto inputs can be composed without claiming playable edge.
-4. Add model-card and drift-card generation coverage for every newly promoted metric family before any public/API exposure.
+1. Add Role Volatility Index after role/source fields are normalized and stale roster signals fail closed.
+2. Add Playable Window Score only after Stale Line Risk Score, Market Gravity, QBI, and no-bet veto inputs can be composed without claiming playable edge.
+3. Add model-card and drift-card generation coverage for every newly added market/passing/role metric family before any public/API exposure.
+4. Add QBI model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.

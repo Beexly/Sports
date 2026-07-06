@@ -54,6 +54,7 @@ describe("GSE metric assets and graduation", () => {
       "market-gravity-index",
       "stale-line-risk-score",
       "expected-completion-gse",
+      "qb-burden-index",
       "receiver-difficulty-index",
       "expected-yac-gse",
       "yac-creation-gse",

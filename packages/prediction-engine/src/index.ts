@@ -580,6 +580,13 @@ export type {
   ExpectedCompletionInput,
   ExpectedCompletionMetric,
 } from "./metrics/passing/expected-completion.js";
+export { qbBurdenIndex } from "./metrics/passing/qb-burden-index.js";
+export type {
+  QbBurdenBand,
+  QbBurdenIndexInput,
+  QbBurdenIndexMetric,
+  QbBurdenSourcePosture,
+} from "./metrics/passing/qb-burden-index.js";
 export { receiverDifficultyIndex } from "./metrics/receiving/receiver-difficulty.js";
 export type {
   ReceiverDifficultyInput,

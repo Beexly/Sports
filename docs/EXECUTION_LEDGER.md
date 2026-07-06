@@ -1126,3 +1126,32 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   odds resale, no public/API exposure, no model-card or drift-card promotion, no playable-edge
   claim, no win-probability claim, no protected weights exposed, no route exposure, and no
   production prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier QB Burden Index
+
+- WHAT: Added `qb-burden-index` as a governed `SHADOW` passing-context burden metric on the
+  proprietary metric foundation. QBI measures contextual burden from expected-completion
+  difficulty, pressure, throw depth, down-distance friction, offensive-line disruption proxy,
+  receiver separation deficit proxy, time-to-throw stress proxy, weather penalty, pass-rate
+  pressure, and source-policy posture. It is not quarterback quality, win probability, confidence,
+  or pick actionability. Outputs expose public drivers only and keep burden weights, proxy
+  transforms, and source-posture scaling protected.
+- FILES: `packages/prediction-engine/src/metrics/passing/qb-burden-index.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/qb-burden-index.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  metric birth-certificate and asset-graduation tests, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/ip/GSE_METRIC_IP_LEDGER.md`, Sunday audit/handoff docs, commercial ledger, and execution
+  ledger.
+- GATE: focused QBI/expected-completion/birth-certificate/asset-graduation tests failed then passed.
+  First run caught a low-uncertainty expectation with proxy-heavy input; second run caught manual
+  review source posture incorrectly expected as HIGH instead of MEDIUM. After fixture corrections,
+  the focused suite passed (4 files, 15 tests). Prediction-engine typecheck passed, full
+  prediction-engine tests passed (94 files, 821 tests), root typecheck passed, root lint passed,
+  root guardrails passed, and `git diff --check` passed. Segmented workspace tests passed:
+  apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline
+  6 / 60, prediction-engine 94 / 821, and types 1 / 31, for 655 files / 8161 tests.
+- FLAG: shadow metric only; no raw tracking rows, no proprietary pass-rush feed, no film-charting
+  feed, no public/API exposure, no model-card or drift-card promotion, no quarterback-quality
+  claim, no win-probability claim, no confidence-as-probability claim, no pick-signal claim, no
+  protected weights exposed, no route exposure, and no production prediction gate flip.

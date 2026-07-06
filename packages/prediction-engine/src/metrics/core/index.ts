@@ -128,6 +128,13 @@ export type {
   StaleLineRiskInput,
   StaleLineRiskScore,
 } from "../market/stale-line-risk-score.js";
+export { qbBurdenIndex } from "../passing/qb-burden-index.js";
+export type {
+  QbBurdenBand,
+  QbBurdenIndexInput,
+  QbBurdenIndexMetric,
+  QbBurdenSourcePosture,
+} from "../passing/qb-burden-index.js";
 export { receiverDifficultyIndex } from "../receiving/receiver-difficulty.js";
 export type {
   ReceiverDifficultyInput,

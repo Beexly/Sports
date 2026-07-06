@@ -78,6 +78,58 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     validationMethods: ["brier", "log_loss", "ece", "bucket_lift", "walk_forward"],
   },
   {
+    allowedInputs: [
+      "public play-by-play",
+      "expected completion probability",
+      "air yards",
+      "down",
+      "yards to go",
+      "pressure proxy",
+      "time-to-throw stress proxy",
+      "weather penalty",
+      "receiver separation deficit proxy",
+      "offensive-line disruption proxy",
+      "pass rate over expected",
+      "source-policy posture",
+    ],
+    failureModes: [
+      "burden can reflect play calling and receiver context rather than quarterback quality",
+      "pressure and separation proxies can be stale or missing without tracking",
+      "source-policy review pressure raises uncertainty and does not prove play difficulty",
+    ],
+    family: "passing",
+    forbiddenInputs: [
+      "raw private tracking coordinates",
+      "private Next Gen Stats pressure model output",
+      "unlicensed charting grades",
+      "proprietary pass-rush win-rate feeds",
+    ],
+    formulaClass: "composite_score",
+    formulaSummary:
+      "Quarterback contextual burden from expected-completion difficulty, pressure, depth, down-distance friction, line disruption, receiver context, weather, pass-rate pressure, and source posture.",
+    historicalPrecedent: [
+      {
+        name: "QB burden and contextual difficulty analysis",
+        reason:
+          "Quarterback evaluation often separates outcome quality from pressure, depth, down-distance, receiver separation, and play-calling context.",
+      },
+    ],
+    internalName: "qb_burden_index_shadow",
+    metricId: "qb-burden-index",
+    protectedComponents: ["burden component weights", "proxy transforms", "source posture review pressure scaling"],
+    publicExposure: "score_band",
+    publicName: "QB Burden Index",
+    sourceRightsRequired: [
+      "public play-by-play modeling allowed",
+      "derived passing-context proxies only",
+      "no raw tracking exposure",
+    ],
+    status: "SHADOW",
+    targetQuestion: "How much contextual burden was placed on the quarterback independent of quarterback quality?",
+    targetVariable: "quarterback contextual burden",
+    validationMethods: ["bucket_lift", "walk_forward", "drift_test"],
+  },
+  {
     allowedInputs: ["expected completion probability", "air yards", "separation proxy", "cushion proxy", "contested catch proxy", "sideline proxy", "shrunk receiver priors"],
     failureModes: ["separation proxy can be stale or unavailable", "difficulty can be inflated by quarterback error", "tracking-derived proxies require explicit source-rights review"],
     family: "receiving",

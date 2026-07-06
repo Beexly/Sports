@@ -1,8 +1,8 @@
 # GSE Metric IP Ledger
 
-Updated: 2026-07-04
+Updated: 2026-07-06
 
-This ledger tracks the first local NFL proprietary metric slice. These metrics are shadow-only primitives in `packages/prediction-engine/src/nfl/`; they do not publish picks, do not use live feeds, and do not claim production readiness.
+This ledger tracks local NFL proprietary metric slices. The original compatibility primitives live in `packages/prediction-engine/src/nfl/`; the governed foundation metrics live in `packages/prediction-engine/src/metrics/`. They do not publish picks, do not use live feeds, and do not claim production readiness.
 
 ## Doctrine
 
@@ -18,6 +18,8 @@ No number enters GSE unless it is grounded, testable, source-rights-clean, comme
 | `gse-rush-environment` | GSE Rush Environment | rushing | SHADOW | score_band |
 | `gse-qb-burden` | GSE QB Burden | passing | SHADOW | grade_only |
 | `gse-role-volatility` | GSE Role Volatility | role | SHADOW | driver_only |
+| `stale-line-risk-score` | Stale Line Risk Score | market | SHADOW | score_band |
+| `qb-burden-index` | QB Burden Index | passing | SHADOW | score_band |
 
 ## Guardrails
 
