@@ -20,6 +20,7 @@ No number enters GSE unless it is grounded, testable, source-rights-clean, comme
 | `gse-role-volatility` | GSE Role Volatility | role | SHADOW | driver_only |
 | `stale-line-risk-score` | Stale Line Risk Score | market | SHADOW | score_band |
 | `qb-burden-index` | QB Burden Index | passing | SHADOW | score_band |
+| `role-volatility-index` | Role Volatility Index | role | SHADOW | score_band |
 
 ## Guardrails
 
@@ -46,6 +47,7 @@ Verified locally on 2026-07-04:
 - Focused NFL metric tests: 1 file passed, 6 tests passed.
 - Prediction-engine typecheck: passed.
 - Full prediction-engine tests: 75 files passed, 754 tests passed.
+- 2026-07-06 governed RVI focused tests: 4 files passed, 20 tests passed after adding blocked-source fail-closed coverage.
 
 ## Next Review Gates
 

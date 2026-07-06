@@ -61,6 +61,7 @@ describe("GSE metric assets and graduation", () => {
       "rush-environment-index",
       "expected-rush-yards-gse",
       "rush-over-expected-gse",
+      "role-volatility-index",
       "gse-signal-score",
     ]);
     for (const asset of GSE_METRIC_ASSETS) {

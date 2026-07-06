@@ -1155,3 +1155,32 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   feed, no public/API exposure, no model-card or drift-card promotion, no quarterback-quality
   claim, no win-probability claim, no confidence-as-probability claim, no pick-signal claim, no
   protected weights exposed, no route exposure, and no production prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier Role Volatility Index
+
+- WHAT: Added `role-volatility-index` as a governed `SHADOW` role-instability metric on the
+  proprietary metric foundation. RVI measures role volatility from snap-share movement,
+  target/carry/route opportunity movement, depth-chart shock, injury or return uncertainty,
+  teammate role shock, sample size, usage freshness, and source-policy posture. It is not player
+  quality, win probability, model confidence, or pick actionability. Stale usage evidence
+  hard-blocks role-signal use with `volatilityBand: "BLOCK"`, high uncertainty, and
+  `roleSignalAllowed: false`. Blocked modeling source posture also disables role-signal use even
+  when usage evidence is fresh. Outputs expose public drivers only and keep weights, freshness
+  thresholds, proxy transforms, and source-posture scaling protected.
+- FILES: `packages/prediction-engine/src/metrics/role/role-volatility-index.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/role-volatility-index.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  metric birth-certificate and asset-graduation tests, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/ip/GSE_METRIC_IP_LEDGER.md`, Sunday audit/handoff docs, commercial ledger, and execution
+  ledger.
+- GATE: focused RVI/birth-certificate/asset/NFL compatibility tests passed after adding
+  blocked-source fail-closed coverage (4 files, 20 tests). Prediction-engine typecheck passed and
+  full prediction-engine tests passed (95 files, 826 tests). Root typecheck passed, root lint
+  passed, root guardrails passed, and `git diff --check` passed. Segmented workspace tests passed:
+  apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline
+  6 / 60, prediction-engine 95 / 826, and types 1 / 31, for 656 files / 8166 tests.
+- FLAG: shadow metric only; no raw paid roster/tracking payloads, no public/API exposure, no
+  model-card or drift-card promotion, no player-quality claim, no role-certainty claim, no
+  win-probability claim, no confidence-as-probability claim, no pick-signal claim, no protected
+  weights exposed, no route exposure, and no production prediction gate flip.

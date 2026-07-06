@@ -617,6 +617,13 @@ export type {
   RushOverExpectedInput,
   RushOverExpectedMetric,
 } from "./metrics/rushing/rush-over-expected.js";
+export { roleVolatilityIndex } from "./metrics/role/role-volatility-index.js";
+export type {
+  RoleVolatilityBand,
+  RoleVolatilityIndexInput,
+  RoleVolatilityIndexMetric,
+  RoleVolatilitySourcePosture,
+} from "./metrics/role/role-volatility-index.js";
 export { gseSignalScore } from "./metrics/decision/gse-signal-score.js";
 export type {
   GseSignalGrade,

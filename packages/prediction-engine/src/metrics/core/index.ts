@@ -165,3 +165,10 @@ export type {
   RushOverExpectedInput,
   RushOverExpectedMetric,
 } from "../rushing/rush-over-expected.js";
+export { roleVolatilityIndex } from "../role/role-volatility-index.js";
+export type {
+  RoleVolatilityBand,
+  RoleVolatilityIndexInput,
+  RoleVolatilityIndexMetric,
+  RoleVolatilitySourcePosture,
+} from "../role/role-volatility-index.js";

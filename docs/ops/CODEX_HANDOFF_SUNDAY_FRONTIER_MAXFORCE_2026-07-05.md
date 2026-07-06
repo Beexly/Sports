@@ -38,6 +38,7 @@ Implemented:
 - API abuse-response and promotion-conflict fixture report for malformed keys, conflicting keys, overscope, quota exhaustion, unsafe payloads, malformed route controls, replay conflicts, unresolved/stale review packets, and duplicate promotion request IDs
 - public-safe AWS-governed sports intelligence case-study route with six Well-Architected pillar mappings, exact `docs/aws` route record, launch-page source QA, and closed live-action locks
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
+- Role Volatility Index metric slice with birth certificate, exports, asset coverage, source-policy fail-closed behavior, and directional tests
 
 ## Files Changed
 
@@ -75,8 +76,10 @@ Application and test files:
 - `apps/web/lib/media-revenue/first-month-review-queue.ts`
 - `apps/web/__tests__/first-month-review-queue.test.ts`
 - `packages/prediction-engine/src/metrics/receiving/*`
+- `packages/prediction-engine/src/metrics/role/role-volatility-index.ts`
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/role-volatility-index.test.ts`
 - `packages/prediction-engine/src/metrics/core/metric-birth-certificate.ts`
 - `packages/prediction-engine/src/metrics/core/index.ts`
 - `packages/prediction-engine/src/index.ts`
@@ -181,6 +184,7 @@ Passed:
 - `npm run test --workspace=packages/prediction-engine -- src/gse-score/__tests__/gse-action-score.test.ts src/gse-score/__tests__/no-bet-strength.test.ts src/gse-score/__tests__/model-parliament.test.ts src/gse-score/__tests__/no-bet-governor-integration.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/data-reliability-index.test.ts`
 - `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent`
 - `npm run typecheck --workspace=packages/prediction-engine`
+- `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/role-volatility-index.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/nfl/__tests__/gse-nfl-metrics.test.ts`
 - `npm run test --workspace=apps/web -- __tests__/commercial-pages-launch-qa.test.ts __tests__/media-kit-page.test.ts __tests__/partners-page.test.ts __tests__/pricing-honesty.test.ts __tests__/pricing-value-architecture.test.ts`
 - `npm run dev --workspace=apps/web -- --hostname 127.0.0.1 --port 3065`
 - `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/desktop WIDTH=1440 HEIGHT=1100 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing`
@@ -210,6 +214,7 @@ Broad test result:
 - API abuse-response fixture validation: targeted API abuse, route harness, replay, live-route promotion packet, and local review queue tests passed (5 files, 25 tests). First app typecheck failed on nullable replay-conflict map/filter typing; after replacing it with an explicit conflict collection loop, app workspace typecheck passed.
 - AWS case-study route validation: first focused route test caught unsafe `live AWS` wording and an evidence-required `ROI` reference; after wording repair, AWS case-study, launch QA, media-kit, and partners tests passed (4 files, 16 tests). App workspace typecheck passed.
 - Current AWS case-study root validation: AWS compatibility guard passed, root typecheck passed, root lint passed, root guardrails passed, full all-workspaces tests passed (653 files, 8152 tests), and `git diff --check` passed.
+- Role Volatility Index validation: focused RVI/birth-certificate/asset/NFL compatibility tests passed after adding blocked-source fail-closed coverage (4 files, 20 tests); prediction-engine typecheck passed; full prediction-engine tests passed (95 files, 826 tests); root typecheck, root lint, and root guardrails passed; segmented workspace tests passed across apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 95 / 826, and types 1 / 31, for 656 files / 8166 tests.
 - AWS case-study visual QA: first screenshot attempts hit `net::ERR_CONNECTION_RESET` during route compilation. After local dev-server restart and direct HTTP probe, the route returned 200, desktop and mobile screenshots were captured under `reports/launch-page-visual-qa/2026-07-06/*`, and both captures were visually reviewed.
 
 ## Complete
@@ -241,6 +246,7 @@ Broad test result:
 - Metric payload-envelope filtering now exists in `@sports/prediction-engine`, with an app API-v1 bridge that delegates metric-shaped payload fields through proprietary metric payload-rights before exposure.
 - Stale Line Risk Score now exists as a governed `SHADOW` market-risk metric. It blocks stale line snapshots from market-signal use, exposes only public drivers, keeps protected thresholds/weights/scales private, and has directional tests for staleness, source coverage, contradiction, and rights status.
 - QB Burden Index now exists as a governed `SHADOW` passing-context metric. It is separate from quarterback quality, win probability, model confidence, and pick actionability; it exposes public burden drivers only and keeps protected weights/proxy transforms/source-posture scaling private.
+- Role Volatility Index now exists as a governed `SHADOW` role-instability metric. It is separate from player quality, win probability, model confidence, and pick actionability; stale usage and blocked source-policy posture both disable role-signal use, public drivers explain the volatility pressure, and protected weights/thresholds/proxy transforms remain private.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 - API live-route promotion packet now exists as a non-executable owner-review seam. It requires owner approval, durable persistence review, route exposure approval, abuse-response review, payload-envelope consumption, OpenAPI/security review, rate-limit policy review, rollback plan review, boundary exception review, and raw-key absence review while keeping live route creation and command execution disabled in every state.
 
@@ -251,7 +257,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, partner/sponsor review fixture reports, and local review queue persistence simulator exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains owner-reviewed and intentionally deferred.
-- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, Role Volatility Index, Playable Window Score, and metric model/drift-card fixture coverage next.
+- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, Playable Window Score, and metric model/drift-card fixture coverage next.
 
 ## Intentionally Deferred
 
@@ -277,23 +283,23 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add Role Volatility Index only after role/source fields are normalized and stale roster signals fail closed.
-2. Add Playable Window Score only after SLRS, Market Gravity, QBI, no-bet pressure, and source-rights inputs can be composed without claiming playable edge.
-3. Add model-card and drift-card generation coverage for every newly added market/passing/role metric family before public/API exposure.
-4. Add QBI model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
-5. Add local commercial review queue reporting for unresolved blockers by source and surface.
-6. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
-7. Run owner-reviewed production preview QA before live push.
-8. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
-9. Add route design paperwork only after owner approval; keep it non-executable and route-free.
-10. Add visual QA for any new public-safe case-study route before production preview.
+1. Add Playable Window Score only after SLRS, Market Gravity, QBI, RVI, no-bet pressure, and source-rights inputs can be composed without claiming playable edge.
+2. Add model-card and drift-card generation coverage for every newly added market/passing/role metric family before public/API exposure.
+3. Add QBI/RVI model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
+4. Add local commercial review queue reporting for unresolved blockers by source and surface.
+5. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
+6. Run owner-reviewed production preview QA before live push.
+7. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
+8. Add route design paperwork only after owner approval; keep it non-executable and route-free.
+9. Add visual QA for any new public-safe case-study route before production preview.
+10. Continue guarded metric backlog with Market Mirage Score only after Playable Window Score has no-bet and source-rights veto tests.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the Role Volatility Index metric slice:
+Continue the Sunday frontier implementation with the Playable Window Score metric slice:
 
-1. Inspect the existing compatibility `nfl/role-volatility.ts`, source-policy rules, and metric birth-certificate patterns.
-2. Add `role-volatility-index` as a governed `SHADOW` role metric only if stale roster/usage signals fail closed.
-3. Keep role uncertainty separate from player quality, win probability, or pick actionability.
-4. Add directional tests proving snap volatility, target/carry volatility, depth-chart shock, injury/return uncertainty, and poor source posture increase role volatility.
-5. Keep outputs to public drivers only; do not expose protected weights, raw paid payloads, or public/API eligibility.
+1. Compose SLRS, Market Gravity, QBI, RVI, no-bet pressure, calibration debt, and source-policy posture without claiming playable edge.
+2. Add `playable-window-score` as a governed `SHADOW` decision-readiness metric only if stale market data, blocked sources, high no-bet pressure, drift, or calibration debt fail closed.
+3. Keep playable-window readiness separate from win probability, expected value, confidence, and betting advice.
+4. Add directional tests proving freshness, source posture, calibration, no-bet pressure, and role/market uncertainty can suppress or block actionability.
+5. Keep outputs to public drivers only; do not expose protected weights, raw odds, paid payloads, or public/API eligibility.

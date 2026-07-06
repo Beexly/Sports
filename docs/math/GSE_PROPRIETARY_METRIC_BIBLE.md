@@ -52,6 +52,7 @@ Grounded metrics and governed continuations:
 - `packages/prediction-engine/src/metrics/market/stale-line-risk-score.ts`
 - `packages/prediction-engine/src/metrics/passing/expected-completion.ts`
 - `packages/prediction-engine/src/metrics/passing/qb-burden-index.ts`
+- `packages/prediction-engine/src/metrics/role/role-volatility-index.ts`
 - `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
 - `packages/prediction-engine/src/metrics/receiving/expected-yac.ts`
 - `packages/prediction-engine/src/metrics/receiving/yac-creation.ts`
@@ -79,6 +80,7 @@ Root package exports:
 - `gseStaleLineRiskScore`
 - `expectedCompletionGse`
 - `qbBurdenIndex`
+- `roleVolatilityIndex`
 - `receiverDifficultyIndex`
 - `expectedYacGse`
 - `yacCreationGse`
@@ -115,6 +117,7 @@ Current governed metric certificates:
 | `stale-line-risk-score` | market | SHADOW | score_band |
 | `expected-completion-gse` | passing | SHADOW | score_band |
 | `qb-burden-index` | passing | SHADOW | score_band |
+| `role-volatility-index` | role | SHADOW | score_band |
 | `receiver-difficulty-index` | receiving | SHADOW | score_band |
 | `expected-yac-gse` | receiving | SHADOW | score_band |
 | `yac-creation-gse` | receiving | SHADOW | score_band |
@@ -272,6 +275,20 @@ Implementation boundary:
 - Manual-review source posture raises uncertainty; blocked modeling posture forces `sourcePosture: "BLOCKED"` and high uncertainty.
 - It does not expose burden component weights, proxy transforms, source posture scaling, raw private tracking rows, or proprietary pass-rush feeds.
 - Poor source posture increases review pressure without pretending the metric is precise.
+
+### Role Volatility Index
+
+Target question: how unstable is a player's role signal before the model or content layer treats it as reliable?
+
+RVI is a role-instability score, not player quality, win probability, model confidence, or pick actionability. It uses snap-share movement, target/carry/route opportunity movement, depth-chart shock, injury or return uncertainty, teammate role shock, sample size, usage freshness, and source-policy posture.
+
+Implementation boundary:
+
+- It returns `volatilityIndex`, `volatilityBand`, `staleUsage`, `roleSignalAllowed`, evidence confidence, uncertainty, source posture, and public drivers.
+- `confidenceScore` measures evidence quality, not player quality, role certainty, or win probability.
+- Usage evidence at or beyond the freshness TTL forces `volatilityBand: "BLOCK"`, high uncertainty, and `roleSignalAllowed: false`.
+- Blocked source-policy posture also forces `roleSignalAllowed: false`; clean usage is not enough when modeling rights fail.
+- It exposes role volatility drivers only and keeps weights, freshness thresholds, proxy transforms, and source-posture scaling protected.
 
 ### GSE Signal Score
 
@@ -513,6 +530,7 @@ Tests added:
 - `packages/prediction-engine/src/metrics/__tests__/expected-rush-yards.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/stale-line-risk-score.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/role-volatility-index.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
 - source-policy generation coverage in `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`
@@ -525,7 +543,7 @@ Build in this order for proprietary football metrics:
 
 1. API response-envelope filtering with proprietary metric payload-rights checks
 2. QB Burden Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
-3. Role Volatility Index
+3. Role Volatility Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 4. Calibration Integrity Grade
 5. No-Bet Pressure
 6. Playable Window Score
@@ -583,6 +601,14 @@ Recorded run on 2026-07-04:
 | `npm run guardrails` after QB Burden Index | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
 | segmented workspace tests after QB Burden Index | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 94 / 821; types 1 / 31. Aggregate segmented receipt: 655 files / 8161 tests. |
 | `git diff --check` after QB Burden Index | PASS - no whitespace errors. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/role-volatility-index.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/nfl/__tests__/gse-nfl-metrics.test.ts` | PASS - 4 files, 20 tests after adding blocked-source fail-closed coverage. |
+| `npm run typecheck --workspace=packages/prediction-engine` after Role Volatility Index | PASS - prediction-engine TypeScript checked after RVI implementation and stricter source-policy gate. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Role Volatility Index | PASS - 95 files, 826 tests. |
+| `npm run typecheck` after Role Volatility Index | PASS - all workspaces with typecheck scripts completed. |
+| `npm run lint` after Role Volatility Index | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
+| `npm run guardrails` after Role Volatility Index | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
+| segmented workspace tests after Role Volatility Index | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 95 / 826; types 1 / 31. Aggregate segmented receipt: 656 files / 8166 tests. |
+| `git diff --check` after Role Volatility Index | PASS - no whitespace errors. |
 | `npm run typecheck` after Stale Line Risk Score | PASS - all workspaces with typecheck scripts completed. |
 | `npm run lint` after Stale Line Risk Score | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
 | `npm run guardrails` after Stale Line Risk Score | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
@@ -652,6 +678,7 @@ Pure LOC review for new source files:
 | `stale-line-risk-score.ts` | 131 |
 | `expected-completion.ts` | 110 |
 | `qb-burden-index.ts` | 156 |
+| `role-volatility-index.ts` | 166 |
 | `gse-signal-score.ts` | 113 |
 | `yac-creation.ts` | 88 |
 | `rush-environment-index.ts` | 108 |
@@ -742,11 +769,22 @@ Pure LOC review for new source files:
 - Source posture is explicit: clean sources can support lower uncertainty, manual-review sources raise uncertainty, and blocked modeling posture returns `sourcePosture: "BLOCKED"` with high uncertainty.
 - Focused tests passed after two red/green corrections; full prediction-engine tests passed (94 files, 821 tests), package typecheck passed, root typecheck/lint/guardrails passed, segmented workspace summaries passed (655 files, 8161 tests), and `git diff --check` passed.
 
+2026-07-06 Role Volatility Index continuation check:
+
+- `role-volatility-index.ts` adds a governed `SHADOW` role-instability metric over snap-share movement, target/carry/route opportunity movement, depth-chart shock, injury/return uncertainty, teammate role shock, sample size, usage freshness, and source-policy posture.
+- The metric is role volatility, not player quality, win probability, model confidence, or a pick signal.
+- Stale usage evidence hard-blocks role-signal use with `volatilityBand: "BLOCK"`, high uncertainty, and `roleSignalAllowed: false`.
+- Blocked modeling source posture also disables role-signal use, even when usage evidence is fresh.
+- Outputs expose public drivers only; protected weights, freshness thresholds, proxy transforms, and source-posture scaling stay private.
+- `role-volatility-index.ts` measured 166 pure LOC and `role-volatility-index.test.ts` measured 94 pure LOC.
+- Escape-hatch scan over the RVI source and test files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
+- Focused RVI tests passed after adding blocked-source fail-closed coverage (4 files, 20 tests). Package typecheck passed. Full prediction-engine tests passed (95 files, 826 tests). Root typecheck/lint/guardrails passed. Segmented workspace summaries passed (656 files, 8166 tests). `git diff --check` passed.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card generators, and generated source policies:
 
-1. Add Role Volatility Index after role/source fields are normalized and stale roster signals fail closed.
-2. Add Playable Window Score only after Stale Line Risk Score, Market Gravity, QBI, and no-bet veto inputs can be composed without claiming playable edge.
-3. Add model-card and drift-card generation coverage for every newly added market/passing/role metric family before any public/API exposure.
-4. Add QBI model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
+1. Add Playable Window Score only after Stale Line Risk Score, Market Gravity, QBI, RVI, and no-bet veto inputs can be composed without claiming playable edge.
+2. Add model-card and drift-card generation coverage for every newly added market/passing/role metric family before any public/API exposure.
+3. Add QBI/RVI model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
+4. Add local validation fixtures for role-stability splits before any RVI public/API exposure.

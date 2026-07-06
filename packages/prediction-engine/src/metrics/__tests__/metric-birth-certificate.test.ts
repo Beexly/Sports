@@ -16,6 +16,7 @@ import {
   proprietaryMetricBirthCertificate,
   qbBurdenIndex,
   receiverDifficultyIndex,
+  roleVolatilityIndex,
   rushEnvironmentIndex,
   rushOverExpectedGse,
   yacCreationGse,
@@ -35,6 +36,7 @@ describe("metric birth certificates", () => {
       "rush-environment-index",
       "expected-rush-yards-gse",
       "rush-over-expected-gse",
+      "role-volatility-index",
       "gse-signal-score",
     ];
 
@@ -69,6 +71,7 @@ describe("metric birth certificates", () => {
     expect(typeof rushEnvironmentIndex).toBe("function");
     expect(typeof expectedRushYardsGse).toBe("function");
     expect(typeof rushOverExpectedGse).toBe("function");
+    expect(typeof roleVolatilityIndex).toBe("function");
     expect(typeof gseSignalScore).toBe("function");
   });
 });
