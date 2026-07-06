@@ -894,3 +894,23 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local aggregation primitive only; no public leaderboard, no API exposure, no raw tracking
   rows, no protected weights, no model-card or drift-card promotion, no validation claim, no source
   legal-clearance claim, no schema change, no live route, and no production gate flip.
+
+## 2026-07-05 - (codex) - Sunday frontier metric evidence-card generators
+
+- WHAT: Added governed model-card and drift-card generators for proprietary metric assets.
+  Model cards are draft-first and consume asset metadata, validation reports, residual rollups,
+  limitations, and evidence refs without changing lifecycle, API exposure, licensing status, or
+  public approval. Drift cards consume explicit drift checks plus residual-rollup risk signals and
+  classify local evidence as `MISSING`, `STABLE`, `WATCH`, or `SEVERE`.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-evidence-cards.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`,
+  metric core/package export updates, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: targeted evidence-card, residual-rollup, and graduation tests passed (3 files, 18 tests);
+  evidence-card cleanup test passed (1 file, 6 tests); prediction-engine typecheck passed; and
+  escape-hatch scan found no TS escape hatches or type assertions in the new evidence-card files.
+  Full prediction-engine Vitest passed (91 files, 806 tests), root typecheck passed, root guardrails
+  passed, root lint passed, and `git diff --check` passed.
+- FLAG: local evidence-card generation only; no metric approval, no lifecycle promotion, no public/API
+  exposure, no licensing readiness claim, no validation claim beyond supplied fixtures, no source
+  legal-clearance claim, no schema change, no live route, and no production gate flip.

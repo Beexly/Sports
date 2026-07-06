@@ -31,6 +31,16 @@ export {
   requireMetricAsset,
 } from "./metric-asset.js";
 export type {
+  MetricDriftCardInput,
+  MetricDriftCheck,
+  MetricDriftDirection,
+  MetricModelCardInput,
+} from "./metric-evidence-cards.js";
+export {
+  generateMetricDriftCard,
+  generateMetricModelCard,
+} from "./metric-evidence-cards.js";
+export type {
   MetricResidualConfidenceMeaning,
   MetricResidualMetricId,
   MetricResidualPlayInput,

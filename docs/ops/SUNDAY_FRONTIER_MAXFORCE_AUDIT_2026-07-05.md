@@ -67,7 +67,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
 | E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, and a route-level shadow harness. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
-| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
+| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, DRI, action score, and no-bet strength exist. This slice added integration proof that high edge cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. Full market intelligence product wiring remains future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
 | J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
@@ -255,6 +255,15 @@ Residual rollup continuation added in the continuation:
 - `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 - metric core and package export updates
 
+Metric evidence-card continuation added in the continuation:
+
+- `packages/prediction-engine/src/metrics/core/metric-evidence-cards.ts`
+  - generates draft-first model cards from assets, validation reports, residual rollups, limitations, and evidence refs
+  - generates drift cards from explicit drift checks and residual-rollup risk signals
+  - leaves metric lifecycle, exposure, licensing, source-clearance, and production status unchanged
+- `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
+- metric core and package export updates
+
 No-bet governor hardening added in the continuation:
 
 - `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts`
@@ -337,6 +346,12 @@ Completed so far:
 | `npm run guardrails` after residual rollup helper | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | residual rollup escape-hatch scan | PASS | no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, non-null property access, enums, or remaining type assertions in the new rollup files |
 | `npm run lint && git diff --check` after residual rollup helper | PASS | root lint and whitespace check completed without errors |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-evidence-cards.test.ts src/metrics/__tests__/residual-rollup.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS | 3 files, 18 tests; evidence-card, residual-rollup, and graduation seams passed together |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-evidence-cards.test.ts` | PASS | 1 file, 6 tests after evidence-card cleanup |
+| `npm run typecheck --workspace=packages/prediction-engine` after evidence-card generators | PASS | prediction-engine TypeScript checked after generator/export additions |
+| metric evidence-card LOC and escape-hatch scan | PASS | `metric-evidence-cards.ts` 197 lines, `metric-evidence-cards.test.ts` 131 lines; no TS escape hatches or type assertions found |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after evidence-card generators | PASS | 91 files, 806 tests |
+| `npm run typecheck && npm run guardrails && npm run lint && git diff --check` after evidence-card generators | PASS | root typecheck, guardrails, lint, and whitespace check completed without errors |
 | `npm run typecheck --workspace=packages/prediction-engine` | PASS | prediction-engine TypeScript checked after YAC Creation and Rush Environment additions |
 | metric LOC and escape-hatch scan | PASS | `yac-creation.ts` 88 pure LOC, `rush-environment-index.ts` 108, `metric-birth-certificate.ts` 226; no TS escape hatches found |
 | metric registry split LOC check | PASS | `metric-birth-certificate.ts` 74 pure LOC, `metric-birth-certificate-registry.ts` 193, `expected-rush-yards.ts` 95, `rush-over-expected.ts` 88 |
@@ -361,21 +376,22 @@ Final broad validation for the current AWS slice completed through segmented wor
 - Launch-facing commercial pages now have local source QA plus desktop/mobile screenshot artifacts under `reports/launch-page-visual-qa/2026-07-05`. This is local render evidence, not a production preview approval.
 - YAC Creation, Rush Environment Index, Expected Rush Yards, and Rush Over Expected now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, confidence/evidence separation, and no protected weights in outputs.
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries. They are aggregation helpers only, not public/API leaderboards, and they do not create validation, drift, model-card, or source-clearance claims.
+- Metric model/drift-card generators now exist as local evidence helpers. Model cards remain draft-first by default, and generated cards do not approve lifecycle, public/API exposure, licensing, validation, source clearance, or production promotion.
 - `metric-birth-certificate.ts` was split into a compact contract/lookup file plus a dedicated registry data file before commit, avoiding continued growth in the core contract module.
 - Exact `docs/aws` and `infra/aws-shadow` paths now exist as compatibility indexes. They are local visibility paths, not live AWS infrastructure.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Add model-card and drift-card generators for every promoted metric.
-2. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+1. Add source-policy generation from the web registry into prediction-engine metric fixtures.
+2. Add API response-envelope filtering that calls proprietary metric payload-rights before any field leaves the package.
 3. Add public-safe no-bet governor methodology examples without exposing protected weights.
 4. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
 5. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
 6. Add durable local queue persistence simulation for media review packets without DB writes.
 7. Add API replay promotion checks for conflict detection after a durable adapter exists.
 8. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-9. Run production preview visual QA before any live push.
+9. Run production preview visual QA before live push.
 10. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
 
 ## Safety Statement

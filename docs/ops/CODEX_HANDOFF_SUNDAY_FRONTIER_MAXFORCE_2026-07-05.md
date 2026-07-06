@@ -194,6 +194,7 @@ Broad test result:
 - YAC Creation, Rush Environment Index, Expected Rush Yards, and Rush Over Expected now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, and explicit confidence/evidence separation.
 - `metric-birth-certificate.ts` was split into a compact contract/lookup module plus `metric-birth-certificate-registry.ts` to keep the growing metric registry maintainable.
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries for `yac-creation-gse` and `rush-over-expected-gse`, with source-policy validation and evidence-confidence separation.
+- Metric model/drift-card generators now exist as local evidence helpers. Model cards are draft-first by default, and generated cards do not promote lifecycle, exposure, licensing, validation, or source clearance.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 
 ## Partial
@@ -203,7 +204,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and first-month review queue export exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains required before live push.
-- Full proprietary metric backlog remains future work, with model-card generators, drift-card generators, source-policy generation, QB Burden Index, and Stale Line Risk Score next.
+- Full proprietary metric backlog remains future work, with source-policy generation, payload-filter integration, QB Burden Index, and Stale Line Risk Score next.
 
 ## Intentionally Deferred
 
@@ -229,8 +230,8 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add model-card and drift-card generators that consume metric validation and rollup outputs.
-2. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
+1. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
+2. Add API response-envelope filtering that calls proprietary metric payload-rights before any field leaves the package.
 3. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
 4. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
 5. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
@@ -242,9 +243,9 @@ Broad test result:
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the next proprietary metric evidence slice:
+Continue the Sunday frontier implementation with the next proprietary metric source-policy slice:
 
 1. Inspect the governed metric foundation under `packages/prediction-engine/src/metrics`.
-2. Add model-card and drift-card generators that can consume metric validation and residual rollup outputs without implying approval.
-3. Reuse existing math, validation, metric asset, source-rights, payload-rights, and graduation controls.
+2. Generate prediction-engine metric source-policy fixtures from the canonical web source-rights registry without claiming legal clearance.
+3. Reuse existing validation, metric asset, source-rights, payload-rights, evidence-card, and graduation controls.
 4. Run targeted prediction-engine tests, prediction-engine typecheck, guardrails, and `git diff --check`.
