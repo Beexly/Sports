@@ -1098,3 +1098,31 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local visual QA only; no production preview, provider integration, live AWS action, DNS
   change, credential, sponsor integration, affiliate link, content publish, API route promotion,
   paid service, or release approval was added.
+
+## 2026-07-06 - (codex) - Sunday frontier Stale Line Risk Score
+
+- WHAT: Added `stale-line-risk-score` as a governed `SHADOW` market-risk metric. The metric scores
+  stale-line risk from line age, freshness TTL, source coverage, contradiction pressure,
+  source-rights cleanliness, book dispersion, and line movement audit pressure. Stale snapshots
+  hard-block market-signal use with `band: "BLOCK"` and `marketSignalAllowed: false`, while fresh,
+  well-sourced, rights-clean lines remain low risk. Outputs expose public drivers only and keep
+  protected thresholds, component weights, and market-type dispersion scales private.
+- FILES: `packages/prediction-engine/src/metrics/market/stale-line-risk-score.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/stale-line-risk-score.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  metric birth-certificate and asset-graduation tests, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  Sunday audit/handoff docs, commercial ledger, and execution ledger.
+- GATE: focused SLRS/market-gravity/birth-certificate/asset-graduation tests passed (4 files,
+  16 tests). The first prediction-engine typecheck caught strict indexed driver access in the new
+  test; after replacing it with a `.some(...)` assertion, package typecheck passed. Full
+  prediction-engine tests passed (93 files, 817 tests). Root typecheck passed, root lint passed,
+  root guardrails passed, and `git diff --check` passed. `npm run test --workspaces --if-present`
+  exited 0; the tool transcript truncated before the final aggregate summary, so segmented
+  workspace summary runs were recorded: apps/web 537 files / 7105 tests, crypto 1 / 13,
+  data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 93 / 817, and types
+  1 / 31, for 654 files / 8157 tests.
+- FLAG: shadow metric only; no live odds ingestion, no sportsbook or paid feed integration, no raw
+  odds resale, no public/API exposure, no model-card or drift-card promotion, no playable-edge
+  claim, no win-probability claim, no protected weights exposed, no route exposure, and no
+  production prediction gate flip.

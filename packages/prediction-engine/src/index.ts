@@ -569,6 +569,12 @@ export type {
   MarketGravityInput as GseMarketGravityInput,
   MarketGravitySignal as GseMarketGravitySignal,
 } from "./metrics/market/market-gravity-index.js";
+export { staleLineRiskScore as gseStaleLineRiskScore } from "./metrics/market/stale-line-risk-score.js";
+export type {
+  StaleLineRiskBand as GseStaleLineRiskBand,
+  StaleLineRiskInput as GseStaleLineRiskInput,
+  StaleLineRiskScore as GseStaleLineRiskScore,
+} from "./metrics/market/stale-line-risk-score.js";
 export { expectedCompletionGse } from "./metrics/passing/expected-completion.js";
 export type {
   ExpectedCompletionInput,

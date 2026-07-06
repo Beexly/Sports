@@ -52,6 +52,7 @@ describe("GSE metric assets and graduation", () => {
     expect(ids).toEqual([
       "data-reliability-index",
       "market-gravity-index",
+      "stale-line-risk-score",
       "expected-completion-gse",
       "receiver-difficulty-index",
       "expected-yac-gse",

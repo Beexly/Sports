@@ -239,6 +239,7 @@ Broad test result:
 - Metric model/drift-card generators now exist as local evidence helpers. Model cards are draft-first by default, and generated cards do not promote lifecycle, exposure, licensing, validation, or source clearance.
 - Metric source-policy generation now exists from registry-shaped fixtures aligned to `apps/web/lib/scraping/source-rights-registry.ts`; raw API exposure stays blocked for every generated source.
 - Metric payload-envelope filtering now exists in `@sports/prediction-engine`, with an app API-v1 bridge that delegates metric-shaped payload fields through proprietary metric payload-rights before exposure.
+- Stale Line Risk Score now exists as a governed `SHADOW` market-risk metric. It blocks stale line snapshots from market-signal use, exposes only public drivers, keeps protected thresholds/weights/scales private, and has directional tests for staleness, source coverage, contradiction, and rights status.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 - API live-route promotion packet now exists as a non-executable owner-review seam. It requires owner approval, durable persistence review, route exposure approval, abuse-response review, payload-envelope consumption, OpenAPI/security review, rate-limit policy review, rollback plan review, boundary exception review, and raw-key absence review while keeping live route creation and command execution disabled in every state.
 
@@ -249,7 +250,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, partner/sponsor review fixture reports, and local review queue persistence simulator exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains owner-reviewed and intentionally deferred.
-- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, QB Burden Index, and Stale Line Risk Score next.
+- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, QB Burden Index, Role Volatility Index, and Playable Window Score next.
 
 ## Intentionally Deferred
 
@@ -275,22 +276,23 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
-2. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-3. Run owner-reviewed production preview QA before live push.
-4. Add model-card and drift-card generation coverage for every newly promoted metric family.
-5. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
-6. Add model-card and drift-card generation coverage for every newly promoted metric family.
-7. Add local commercial review queue reporting for unresolved blockers by source and surface.
-8. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
+1. Add QB Burden Index only after passing-event source policy and validation plan are explicit.
+2. Add Role Volatility Index only after role/source fields are normalized and stale roster signals fail closed.
+3. Add Playable Window Score only after SLRS, Market Gravity, no-bet pressure, and source-rights inputs can be composed without claiming playable edge.
+4. Add model-card and drift-card generation coverage for every newly added market/role metric family before public/API exposure.
+5. Add local commercial review queue reporting for unresolved blockers by source and surface.
+6. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
+7. Run owner-reviewed production preview QA before live push.
+8. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
 9. Add route design paperwork only after owner approval; keep it non-executable and route-free.
-10. Add route design paperwork only after owner approval; keep it non-executable and route-free.
+10. Add visual QA for any new public-safe case-study route before production preview.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the Stale Line Risk Score metric slice:
+Continue the Sunday frontier implementation with the QB Burden Index metric slice:
 
-1. Inspect existing Market Gravity Index and metric birth-certificate patterns.
-2. Add `stale-line-risk-score` as a governed `SHADOW` market metric only if stale-data behavior stays fail-closed.
-3. Add directional tests proving stale age, low source count, contradiction, and unclear rights increase risk.
-4. Keep outputs to public drivers only; do not expose protected weights or claim playable edge.
+1. Inspect existing `expected-completion-gse`, passing-event source-policy rules, and metric birth-certificate patterns.
+2. Add `qb-burden-index` as a governed `SHADOW` passing metric only if confidence remains evidence quality, not win probability.
+3. Include source-rights and sample-size guardrails; missing/unclear passing context must increase burden uncertainty rather than fabricate precision.
+4. Add directional tests proving pressure, depth, down-distance friction, weather/context penalty, and poor source posture increase burden.
+5. Keep outputs to public drivers only; do not expose protected weights, raw tracking rows, or public/API eligibility.

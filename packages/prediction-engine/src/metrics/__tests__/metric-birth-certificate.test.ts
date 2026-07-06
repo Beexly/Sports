@@ -12,6 +12,7 @@ import {
   expectedYacGse,
   gseMarketGravityIndex,
   gseSignalScore,
+  gseStaleLineRiskScore,
   proprietaryMetricBirthCertificate,
   receiverDifficultyIndex,
   rushEnvironmentIndex,
@@ -24,6 +25,7 @@ describe("metric birth certificates", () => {
     const required = [
       "data-reliability-index",
       "market-gravity-index",
+      "stale-line-risk-score",
       "expected-completion-gse",
       "receiver-difficulty-index",
       "expected-yac-gse",
@@ -56,6 +58,7 @@ describe("metric birth certificates", () => {
     expect(proprietaryMetricBirthCertificate("gse-signal-score")?.status).toBe("SHADOW");
     expect(typeof dataReliabilityIndex).toBe("function");
     expect(typeof gseMarketGravityIndex).toBe("function");
+    expect(typeof gseStaleLineRiskScore).toBe("function");
     expect(typeof expectedCompletionGse).toBe("function");
     expect(typeof receiverDifficultyIndex).toBe("function");
     expect(typeof expectedYacGse).toBe("function");

@@ -122,6 +122,12 @@ export {
   uncertaintyFromEvidence,
   validateSourcePolicies,
 } from "./validation.js";
+export { staleLineRiskScore } from "../market/stale-line-risk-score.js";
+export type {
+  StaleLineRiskBand,
+  StaleLineRiskInput,
+  StaleLineRiskScore,
+} from "../market/stale-line-risk-score.js";
 export { receiverDifficultyIndex } from "../receiving/receiver-difficulty.js";
 export type {
   ReceiverDifficultyInput,

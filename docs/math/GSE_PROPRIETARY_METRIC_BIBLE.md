@@ -1,6 +1,6 @@
 # GSE Proprietary Metric Bible
 
-Updated: 2026-07-04
+Updated: 2026-07-06
 
 This document defines Slice 1 of the GSE proprietary metric system. It is a shadow-only math grammar and first metric layer, not a production scoring hookup, public probability claim, or live data product.
 
@@ -45,11 +45,18 @@ Core grammar:
 - `packages/prediction-engine/src/metrics/core/source-rights.ts`
 - `packages/prediction-engine/src/metrics/core/payload-rights.ts`
 
-First grounded metrics:
+Grounded metrics and governed continuations:
 
 - `packages/prediction-engine/src/metrics/source/data-reliability-index.ts`
 - `packages/prediction-engine/src/metrics/market/market-gravity-index.ts`
+- `packages/prediction-engine/src/metrics/market/stale-line-risk-score.ts`
 - `packages/prediction-engine/src/metrics/passing/expected-completion.ts`
+- `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
+- `packages/prediction-engine/src/metrics/receiving/expected-yac.ts`
+- `packages/prediction-engine/src/metrics/receiving/yac-creation.ts`
+- `packages/prediction-engine/src/metrics/rushing/rush-environment-index.ts`
+- `packages/prediction-engine/src/metrics/rushing/expected-rush-yards.ts`
+- `packages/prediction-engine/src/metrics/rushing/rush-over-expected.ts`
 - `packages/prediction-engine/src/metrics/decision/gse-signal-score.ts`
 
 Root package exports:
@@ -68,7 +75,14 @@ Root package exports:
 - `proprietarySourceRightsEnvelopeFromPolicy`
 - `dataReliabilityIndex`
 - `gseMarketGravityIndex`
+- `gseStaleLineRiskScore`
 - `expectedCompletionGse`
+- `receiverDifficultyIndex`
+- `expectedYacGse`
+- `yacCreationGse`
+- `rushEnvironmentIndex`
+- `expectedRushYardsGse`
+- `rushOverExpectedGse`
 - `gseSignalScore`
 
 Existing NFL-specific exports remain available under their prior names. The new market gravity metric is exported as `gseMarketGravityIndex` from the package root to avoid colliding with the pre-existing `marketGravityIndex` from `market-read.ts`.
@@ -90,13 +104,20 @@ Every metric must declare:
 - public exposure level
 - lifecycle status
 
-Slice 1 certificates:
+Current governed metric certificates:
 
 | Metric ID | Family | Status | Public Exposure |
 | --- | --- | --- | --- |
 | `data-reliability-index` | source | SHADOW | grade_only |
 | `market-gravity-index` | market | SHADOW | score_band |
+| `stale-line-risk-score` | market | SHADOW | score_band |
 | `expected-completion-gse` | passing | SHADOW | score_band |
+| `receiver-difficulty-index` | receiving | SHADOW | score_band |
+| `expected-yac-gse` | receiving | SHADOW | score_band |
+| `yac-creation-gse` | receiving | SHADOW | score_band |
+| `rush-environment-index` | rushing | SHADOW | score_band |
+| `expected-rush-yards-gse` | rushing | SHADOW | score_band |
+| `rush-over-expected-gse` | rushing | SHADOW | score_band |
 | `gse-signal-score` | decision | SHADOW | score_band |
 
 ## Core Math Grammar
@@ -196,6 +217,20 @@ Implementation boundary:
 - It exposes score, stale flag, signal band, and drivers.
 - It does not expose market-normalization weights, timing decay calibration, key-number table, or injury explainability logic.
 - It is not an edge claim; injury-explained movement and key-number crossings can support classification but never prove value.
+
+### Stale Line Risk Score
+
+Target question: is this line too stale, thin, contradictory, or rights-unclear to support market interpretation?
+
+SLRS is a market-risk score, not a playable-edge score. Higher is worse. It uses line age, freshness TTL, source coverage, contradiction pressure, source-rights cleanliness, book dispersion, and movement audit pressure. A line snapshot at or beyond the freshness TTL is forced to `BLOCK`; `marketSignalAllowed` becomes false even when the line moved sharply.
+
+Implementation boundary:
+
+- It is derived market-risk interpretation, not raw odds resale.
+- It exposes score, stale flag, risk band, `marketSignalAllowed`, and public drivers.
+- It does not expose freshness hard-block thresholds, component weights, market-type dispersion scales, private book order flow, or paid steam-feed logic.
+- It complements Market Gravity: MGI asks whether the market is pulling; SLRS asks whether the line snapshot is trustworthy enough to interpret.
+- It does not classify any stale line as a clean market signal.
 
 ### GSE Expected Completion
 
@@ -460,6 +495,7 @@ Tests added:
 - `packages/prediction-engine/src/metrics/__tests__/rush-environment-index.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-rush-yards.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/stale-line-risk-score.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
 - source-policy generation coverage in `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`
@@ -481,13 +517,13 @@ Build in this order for proprietary football metrics:
 9. Drift Pressure Index
 10. Conformal Uncertainty Width
 11. Source Trust Score
-12. Stale Line Risk Score
+12. Stale Line Risk Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 
 Product/governance backlog from the doctrine and competitive map:
 
 1. Keep source-policy fixture alignment green whenever the canonical web source-rights registry changes.
 2. Apply generated model/drift cards to owner-approved promoted metric evidence packets after source-policy generation.
-3. Market Intelligence v2: stale-line risk, consensus fragility, move quality, book dispersion, market mirage, and playable window.
+3. Market Intelligence v2: stale-line risk now has a shadow primitive; consensus fragility, move quality, book dispersion, market mirage, and playable window remain future work.
 4. No-Bet/Decision Intelligence: no-bet strength, refusal reasons, calibration sufficiency, model disagreement, volatility pressure, and responsible-gaming warnings.
 5. Evidence API contracts: board, game evidence, calibration summary, slate intelligence, player expected metrics, and signed webhooks.
 6. Content claim governance: evidence refs, risk level, disclosure status, responsible-gaming status, publish status, and manual review.
@@ -519,6 +555,15 @@ Recorded run on 2026-07-04:
 | --- | --- |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/data-reliability-index.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/expected-completion.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 7 files, 25 tests. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/receiver-difficulty.test.ts src/metrics/__tests__/expected-yac.test.ts` | PASS - 4 files, 11 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/stale-line-risk-score.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 4 files, 16 tests. |
+| `npm run typecheck --workspace=packages/prediction-engine` after Stale Line Risk Score | FAIL then PASS - first run caught strict indexed driver access in the new test; after replacing it with a `.some(...)` assertion, package typecheck passed. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Stale Line Risk Score | PASS - 93 files, 817 tests. |
+| `npm run typecheck` after Stale Line Risk Score | PASS - all workspaces with typecheck scripts completed. |
+| `npm run lint` after Stale Line Risk Score | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
+| `npm run guardrails` after Stale Line Risk Score | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
+| `npm run test --workspaces --if-present` after Stale Line Risk Score | PASS - command exited 0. Tool transcript was truncated before the final aggregate summary, so segmented workspace summaries below provide the counted receipt. |
+| segmented workspace tests after Stale Line Risk Score | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 93 / 817; types 1 / 31. Aggregate segmented receipt: 654 files / 8157 tests. |
+| `git diff --check` after Stale Line Risk Score | PASS - no whitespace errors. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/expected-rush-yards.test.ts src/metrics/__tests__/rush-over-expected.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 5 files, 15 tests after registry split. |
 | `npm run typecheck --workspace=packages/prediction-engine` after Expected Rush Yards/Rush Over Expected | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Expected Rush Yards/Rush Over Expected | PASS - 89 files, 794 tests. |
@@ -579,6 +624,7 @@ Pure LOC review for new source files:
 | `validation.ts` | 63 |
 | `data-reliability-index.ts` | 84 |
 | `market-gravity-index.ts` | 98 |
+| `stale-line-risk-score.ts` | 131 |
 | `expected-completion.ts` | 110 |
 | `gse-signal-score.ts` | 113 |
 | `yac-creation.ts` | 88 |
@@ -653,11 +699,20 @@ Pure LOC review for new source files:
 - Full prediction-engine Vitest passed (92 files, 812 tests).
 - Root typecheck, root guardrails, root lint, and `git diff --check` passed.
 
+2026-07-06 Stale Line Risk Score continuation check:
+
+- `stale-line-risk-score.ts` adds a governed `SHADOW` market-risk metric over line age, freshness TTL, source coverage, contradiction pressure, source-rights cleanliness, book dispersion, and line movement audit pressure.
+- The metric is a stale-market risk gate, not a playable-edge score and not win probability.
+- Any stale line snapshot hard-blocks market-signal use with `band: "BLOCK"` and `marketSignalAllowed: false`.
+- Outputs expose public drivers only; protected component weights, thresholds, and market-type dispersion scales stay in the birth certificate as protected components.
+- Directional tests prove stale age, low source count, contradiction, and unclear/blocked rights increase risk.
+- Focused SLRS tests passed (4 files, 16 tests), full prediction-engine tests passed (93 files, 817 tests), root typecheck/lint/guardrails passed, the all-workspaces test wrapper exited 0, segmented workspace summaries passed (654 files, 8157 tests), and `git diff --check` passed.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card generators, and generated source policies:
 
-1. Add public-safe no-bet governor methodology examples without exposing protected weights or implying betting certainty.
-2. Add owner-approved live-route promotion packet only after durable persistence, route exposure, abuse-response, and payload-envelope gates are reviewed.
-3. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
-4. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+1. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
+2. Add Role Volatility Index after role/source fields are normalized and stale roster signals fail closed.
+3. Add Playable Window Score only after Stale Line Risk Score, Market Gravity, and no-bet veto inputs can be composed without claiming playable edge.
+4. Add model-card and drift-card generation coverage for every newly promoted metric family before any public/API exposure.
