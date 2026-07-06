@@ -414,6 +414,8 @@ Completed so far:
 | `npm run guardrails` after AWS public case-study route | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | `npm run test --workspaces --if-present` after AWS public case-study route | PASS | 653 test files and 8152 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types |
 | `git diff --check` after AWS public case-study route | PASS | no whitespace errors |
+| `npm run dev --workspace=apps/web -- --hostname 127.0.0.1 --port 3066` plus route probe | PASS | local dev server served `/case-studies/aws-governed-sports-intelligence` with HTTP 200 after restart; expected Sentry/OpenTelemetry and image-domain warnings observed |
+| desktop/mobile screenshots for AWS case-study route | PASS | screenshots captured under `reports/launch-page-visual-qa/2026-07-06/*` and visually reviewed |
 | `npm run typecheck` after no-bet methodology examples | PASS | all workspaces with typecheck scripts completed |
 | `npm run guardrails` after no-bet methodology examples | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | `npm run lint && git diff --check` after no-bet methodology examples | PASS | root lint and whitespace check completed without errors |
@@ -521,7 +523,7 @@ Final broad validation for the current API live-route promotion packet slice com
 - Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, partner/sponsor review fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
 - Local review queue persistence simulation now exists for media, content/API, and partner/sponsor packets. It is memory-shadow only, with duplicate rejection, stale packet reporting, deterministic replay, version conflict checks, unresolved blocker approval blocking, and no database writes.
 - API abuse-response and promotion-conflict fixture reporting now exists. It proves denied API cases do not debit quota or leak protected response data, and it blocks abuse-response promotion evidence when replay conflicts, unresolved/stale queue packets, or duplicate route-promotion IDs exist.
-- The AWS public case-study route now exists and is registered in the exact `docs/aws` compatibility lane. It passed focused source QA, app typecheck, AWS compatibility guard, root typecheck, root lint, root guardrails, and full all-workspaces tests. It is still source/test evidence only; local desktop/mobile screenshot evidence for this new route needs to be captured before any production preview discussion.
+- The AWS public case-study route now exists and is registered in the exact `docs/aws` compatibility lane. It passed focused source QA, app typecheck, AWS compatibility guard, root typecheck, root lint, root guardrails, full all-workspaces tests, and local desktop/mobile screenshot QA.
 - Partner/sponsor review fixtures now exist and are local-only. They prove low-risk disclosed copy reaches manual review while sponsor-control attempts, regulated unknown-state offers, expired offers, and unsafe ROI/proven language block before any live action.
 - No-bet governor integration is complete for the shadow decision seam. Full product wiring and public explanations remain future work and must not expose protected weights or imply legal/performance clearance.
 - Public no-bet methodology examples now exist and are claim-scanned, but they remain local copy governance only. They do not publish picks, expose routes, or approve model promotion.
@@ -537,10 +539,10 @@ Final broad validation for the current API live-route promotion packet slice com
 
 ## Next Highest-Leverage Tasks
 
-1. Add local desktop/mobile visual QA for the AWS case-study route before any production preview discussion.
-2. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
-3. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-4. Run production preview visual QA before live push.
+1. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+2. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+3. Run owner-reviewed production preview QA before live push.
+4. Add model-card and drift-card generation coverage for every newly promoted metric family.
 5. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
 6. Add model-card and drift-card generation coverage for every newly promoted metric family.
 7. Add local commercial review queue reporting for unresolved blockers by source and surface.

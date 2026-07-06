@@ -210,6 +210,7 @@ Broad test result:
 - API abuse-response fixture validation: targeted API abuse, route harness, replay, live-route promotion packet, and local review queue tests passed (5 files, 25 tests). First app typecheck failed on nullable replay-conflict map/filter typing; after replacing it with an explicit conflict collection loop, app workspace typecheck passed.
 - AWS case-study route validation: first focused route test caught unsafe `live AWS` wording and an evidence-required `ROI` reference; after wording repair, AWS case-study, launch QA, media-kit, and partners tests passed (4 files, 16 tests). App workspace typecheck passed.
 - Current AWS case-study root validation: AWS compatibility guard passed, root typecheck passed, root lint passed, root guardrails passed, full all-workspaces tests passed (653 files, 8152 tests), and `git diff --check` passed.
+- AWS case-study visual QA: first screenshot attempts hit `net::ERR_CONNECTION_RESET` during route compilation. After local dev-server restart and direct HTTP probe, the route returned 200, desktop and mobile screenshots were captured under `reports/launch-page-visual-qa/2026-07-06/*`, and both captures were visually reviewed.
 
 ## Complete
 
@@ -227,6 +228,7 @@ Broad test result:
 - FABLE/AWS shadow architecture exists under `docs/fable/aws` and `infrastructure/aws`.
 - Exact `docs/aws` and `infra/aws-shadow` compatibility indexes exist and point to canonical FABLE/AWS artifacts.
 - Public-safe AWS-governed sports intelligence case-study route now exists and is registered in `docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md`. It explains local AWS-style governance without claiming AWS approval, cloud setup, funding, audience, sponsors, legal clearance, or release readiness.
+- Local desktop/mobile visual QA for the AWS case-study route now exists under `reports/launch-page-visual-qa/2026-07-06/*`.
 - No-bet governor integration tests now prove high edge cannot override missing data, stale market gravity, unclear source rights, calibration drift, or calibration debt.
 - `computeGseActionScore` now caps action quality when probability claims are unearned and hard-passes DRIFTING/BLOCKED calibration.
 - Public-safe no-bet methodology examples now exist for seven refusal/review states, with copy scanned through media claim safety, no-claim guard, and performance-claim guard.
@@ -246,7 +248,7 @@ Broad test result:
 - Source-rights/IP adapters under `apps/web/lib/source-rights` and `apps/web/lib/ip` exist, but they are policy gates and not legal clearance.
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, partner/sponsor review fixture reports, and local review queue persistence simulator exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
-- Launch-page visual QA is local render evidence only. The new AWS case-study route still needs its own local desktop/mobile screenshot evidence before any production preview discussion.
+- Launch-page visual QA is local render evidence only. Production preview QA remains owner-reviewed and intentionally deferred.
 - Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, QB Burden Index, and Stale Line Risk Score next.
 
 ## Intentionally Deferred
@@ -273,10 +275,10 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add local desktop/mobile visual QA for the AWS case-study route before any production preview discussion.
-2. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
-3. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-4. Run production preview visual QA before live push.
+1. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+2. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+3. Run owner-reviewed production preview QA before live push.
+4. Add model-card and drift-card generation coverage for every newly promoted metric family.
 5. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
 6. Add model-card and drift-card generation coverage for every newly promoted metric family.
 7. Add local commercial review queue reporting for unresolved blockers by source and surface.
@@ -286,9 +288,9 @@ Broad test result:
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the local AWS case-study visual QA slice:
+Continue the Sunday frontier implementation with the Stale Line Risk Score metric slice:
 
-1. Start a local Next dev server only.
-2. Capture desktop and mobile screenshots for `/case-studies/aws-governed-sports-intelligence`.
-3. Confirm HTTP 200, visible first viewport, no overlapping text, and no provider/live-AWS markers.
-4. Keep production preview, provider wiring, and live AWS actions out of scope.
+1. Inspect existing Market Gravity Index and metric birth-certificate patterns.
+2. Add `stale-line-risk-score` as a governed `SHADOW` market metric only if stale-data behavior stays fail-closed.
+3. Add directional tests proving stale age, low source count, contradiction, and unclear rights increase risk.
+4. Keep outputs to public drivers only; do not expose protected weights or claim playable edge.

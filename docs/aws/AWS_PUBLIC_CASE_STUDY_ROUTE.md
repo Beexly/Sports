@@ -54,7 +54,13 @@ npm run typecheck --workspace=@sports/web
 npm run guard:aws-compatibility-index
 ```
 
+Visual QA:
+
+- Local report: `reports/launch-page-visual-qa/2026-07-06/README.md`
+- Desktop capture: `reports/launch-page-visual-qa/2026-07-06/aws-case-study-desktop/127_0_0_1_3066_case_studies_aws_governed_sports_intelligence.png`
+- Mobile capture: `reports/launch-page-visual-qa/2026-07-06/aws-case-study-mobile/127_0_0_1_3066_case_studies_aws_governed_sports_intelligence.png`
+- Result: HTTP 200 on local dev server, desktop and mobile screenshots captured and reviewed.
+
 Known follow-up:
 
-- Add local desktop/mobile screenshot evidence for this new route before any production preview discussion.
 - Keep any future case-study expansion behind the same claim-safety and AWS compatibility checks.

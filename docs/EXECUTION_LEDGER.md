@@ -1080,3 +1080,21 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: public-safe local route only; no AWS resource, account, credential, DNS, deploy action,
   funding approval, customer claim, sponsor claim, production route promotion, or paid service was
   added. The route is a portfolio case study, not cloud approval or release evidence.
+
+## 2026-07-06 - (codex) - Sunday frontier AWS case-study visual QA
+
+- WHAT: Drove the new AWS-governed sports intelligence case-study route through the local visual QA
+  surface. A local Next dev server served the route at HTTP 200, and desktop/mobile screenshots were
+  captured, reviewed, and recorded in the launch visual-QA report tree.
+- FILES: `reports/launch-page-visual-qa/2026-07-06/README.md`,
+  `reports/launch-page-visual-qa/2026-07-06/aws-case-study-desktop/127_0_0_1_3066_case_studies_aws_governed_sports_intelligence.png`,
+  `reports/launch-page-visual-qa/2026-07-06/aws-case-study-mobile/127_0_0_1_3066_case_studies_aws_governed_sports_intelligence.png`,
+  `docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md`, Sunday audit/handoff docs, commercial ledger, and
+  execution ledger.
+- GATE: first screenshot attempts hit `net::ERR_CONNECTION_RESET` because the route was still
+  compiling. After restarting the local dev server and probing the route directly, local HTTP
+  returned 200, desktop screenshot capture passed, mobile screenshot capture passed, and both
+  captures were visually inspected for first-viewport fit, readable stacking, and obvious overlap.
+- FLAG: local visual QA only; no production preview, provider integration, live AWS action, DNS
+  change, credential, sponsor integration, affiliate link, content publish, API route promotion,
+  paid service, or release approval was added.
