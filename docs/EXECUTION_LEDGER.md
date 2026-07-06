@@ -1017,3 +1017,22 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local fixture/report generation only; no live affiliate link, no partner registry write, no
   sponsor approval, no outreach send, no route exposure, no database write, no sponsor control, no
   performance claim, and no production gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier local review queue persistence simulator
+
+- WHAT: Added a memory-shadow queue persistence simulator for media, content/API, and
+  partner/sponsor review packets. The simulator normalizes existing review packet surfaces into
+  append-only queue events, replays events deterministically into snapshots, rejects duplicate
+  packet IDs, rejects duplicate event IDs, flags stale packets, blocks stale owner updates through
+  optimistic version checks, and prevents approving packets that still have unresolved blockers.
+- FILES: `apps/web/lib/workflows/local-review-queue-persistence.ts`,
+  `apps/web/__tests__/local-review-queue-persistence.test.ts`,
+  `docs/ops/LOCAL_REVIEW_QUEUE_PERSISTENCE_SIMULATOR.md`, Sunday audit/handoff docs, commercial
+  ledger, and execution ledger.
+- GATE: targeted local queue, first-month review export, draft-review fixture, and partner/sponsor
+  fixture tests passed (4 files, 19 tests). First app typecheck failed because mutable queue record
+  status was still narrowed to raw draft workflow status; after splitting `initialWorkflowStatus`
+  from mutable queue status, app workspace typecheck passed.
+- FLAG: local memory-shadow simulation only; no database write, migration, durable store, live API
+  route, content publish, outbound send, affiliate activation, sponsor approval automation, live AWS
+  action, or production gate flip.
