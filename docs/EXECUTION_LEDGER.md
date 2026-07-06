@@ -1215,3 +1215,31 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   public/API exposure, no model-card or drift-card promotion, no playable-edge claim, no
   win-probability claim, no expected-value claim, no betting-advice claim, no protected weights
   exposed, no route exposure, and no production prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier metric evidence-card fixtures
+
+- WHAT: Added synthetic/local evidence-card fixture coverage for the new shadow market, passing,
+  role, and decision metric families: Stale Line Risk Score, QB Burden Index, Role Volatility
+  Index, and Playable Window Score. The fixture library generates draft-first model cards and
+  drift cards while returning lifecycle status, API exposure, licensing status, and
+  `publicApiAllowed` locks for direct assertions. RVI role-stability drift remains in `WATCH`
+  review under the local split fixture, and PWS decision-window drift reaches `SEVERE` review
+  under the local decision-window block-rate fixture. Generated evidence does not promote
+  lifecycle, exposure, licensing, validation, source clearance, betting use, or production
+  readiness.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-evidence-card-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `docs/ip/GSE_METRIC_IP_LEDGER.md`, Sunday
+  audit/handoff docs, commercial ledger, and execution ledger.
+- GATE: focused evidence-card/asset/PWS/RVI tests passed (4 files, 26 tests). Prediction-engine
+  typecheck passed after adding fixture exports and package-root proprietary aliases. Full
+  prediction-engine tests passed (96 files, 835 tests). Root typecheck passed, root lint passed,
+  root guardrails passed, and `git diff --check` passed. Segmented workspace tests passed: apps/web 537 files / 7105 tests,
+  crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 96 / 835,
+  and types 1 / 31, for 657 files / 8175 tests. LOC / escape-hatch review passed for the new
+  fixture module and updated evidence-card tests.
+- FLAG: synthetic/local fixtures only; no live validation data, no real market or player payloads,
+  no raw odds/tracking export, no public/API exposure, no lifecycle promotion, no model-card or
+  drift-card approval, no legal clearance claim, no production-readiness claim, no route exposure,
+  no package/dependency change, and no prediction gate flip.

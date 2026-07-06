@@ -636,6 +636,14 @@ Recorded run on 2026-07-04:
 | `npm run guardrails` after Playable Window Score | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
 | segmented workspace tests after Playable Window Score | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 96 / 832; types 1 / 31. Aggregate segmented receipt: 657 files / 8172 tests. |
 | `git diff --check` after Playable Window Score | PASS - no whitespace errors. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-evidence-cards.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/playable-window-score.test.ts src/metrics/__tests__/role-volatility-index.test.ts` after evidence-card fixture coverage | PASS - 4 files, 26 tests. |
+| `npm run typecheck --workspace=packages/prediction-engine` after evidence-card fixture coverage | PASS - prediction-engine TypeScript checked after fixture library, core exports, and root proprietary aliases. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after evidence-card fixture coverage | PASS - 96 files, 835 tests. |
+| `npm run typecheck` after evidence-card fixture coverage | PASS - all workspaces with typecheck scripts completed. |
+| `npm run lint` after evidence-card fixture coverage | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
+| `npm run guardrails` after evidence-card fixture coverage | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
+| segmented workspace tests after evidence-card fixture coverage | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 96 / 835; types 1 / 31. Aggregate segmented receipt: 657 files / 8175 tests. |
+| `git diff --check` after evidence-card fixture coverage | PASS - no whitespace errors. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/expected-rush-yards.test.ts src/metrics/__tests__/rush-over-expected.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 5 files, 15 tests after registry split. |
 | `npm run typecheck --workspace=packages/prediction-engine` after Expected Rush Yards/Rush Over Expected | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Expected Rush Yards/Rush Over Expected | PASS - 89 files, 794 tests. |
@@ -813,11 +821,20 @@ Pure LOC review for new source files:
 - Focused PWS tests passed on the first run (4 files, 17 tests). The first package typecheck caught a non-canonical validation method name; after replacing it with existing validation vocabulary, package typecheck passed. Full prediction-engine tests passed (96 files, 832 tests).
 - Root typecheck, root lint, root guardrails, and `git diff --check` passed after PWS. Segmented workspace tests passed across apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 96 / 832, and types 1 / 31, for 657 files / 8172 tests.
 
+2026-07-06 evidence-card fixture continuation check:
+
+- `metric-evidence-card-fixtures.ts` adds synthetic/local model-card and drift-card fixture generation for Stale Line Risk Score, QB Burden Index, Role Volatility Index, and Playable Window Score.
+- Generated fixture cards preserve `SHADOW` lifecycle status, `INTERNAL` API exposure, `NOT_READY` licensing status, and `publicApiAllowed: false`.
+- Model cards remain `DRAFT` by default, carry metric-specific caveats, and state that generated evidence does not change lifecycle or exposure.
+- Drift cards include role-stability and decision-window split checks: RVI remains in `WATCH` review and PWS enters `SEVERE` review under the synthetic decision-window block-rate fixture.
+- `metric-evidence-card-fixtures.ts` measured 149 source lines and the updated evidence-card test file measured 192 source lines. Escape-hatch scan over both files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
+- Focused evidence-card fixture tests passed (4 files, 26 tests), prediction-engine typecheck passed after root proprietary alias exports, full prediction-engine tests passed (96 files, 835 tests), root typecheck/lint/guardrails passed, segmented workspace tests passed across 657 files / 8175 tests, and `git diff --check` passed.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card generators, and generated source policies:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, and generated source policies:
 
-1. Add model-card and drift-card generation coverage for every newly added market/passing/role/decision metric family before any public/API exposure.
-2. Add QBI/RVI/PWS model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
-3. Add local validation fixtures for role-stability and decision-window splits before any RVI/PWS public/API exposure.
-4. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.
+1. Add deeper local validation fixtures for role-stability and decision-window splits before any RVI/PWS public/API exposure.
+2. Add metric payload-envelope fixture coverage for newly composed decision metrics before route promotion paperwork changes.
+3. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.
+4. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, and caveats.

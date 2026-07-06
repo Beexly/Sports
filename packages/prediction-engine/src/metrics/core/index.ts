@@ -41,6 +41,16 @@ export {
   generateMetricModelCard,
 } from "./metric-evidence-cards.js";
 export type {
+  ShadowEvidenceMetricId,
+  ShadowMetricEvidenceFixture,
+  ShadowMetricEvidenceFixtureCards,
+} from "./metric-evidence-card-fixtures.js";
+export {
+  generateAllShadowMetricEvidenceFixtureCards,
+  generateShadowMetricEvidenceFixtureCards,
+  SHADOW_METRIC_EVIDENCE_FIXTURES,
+} from "./metric-evidence-card-fixtures.js";
+export type {
   MetricResidualConfidenceMeaning,
   MetricResidualMetricId,
   MetricResidualPlayInput,

@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   buildMetricResidualRollup,
+  generateAllShadowMetricEvidenceFixtureCards,
   generateMetricDriftCard,
   generateMetricModelCard,
   requireMetricAsset,
+  SHADOW_METRIC_EVIDENCE_FIXTURES,
   type MetricValidationReport,
 } from "../core/index.js";
 import type { MetricSourcePolicy } from "../core/validation.js";
@@ -128,4 +130,63 @@ describe("metric evidence card generators", () => {
     expect(card.status).toBe("MISSING");
     expect(card.notes).toContain("No explicit drift checks were supplied.");
   });
+
+  it("generates draft-first cards for new shadow market, passing, role, and decision metrics", () => {
+    const cards = generateAllShadowMetricEvidenceFixtureCards();
+
+    expect(cards.map((card) => card.metricId)).toEqual([
+      "stale-line-risk-score",
+      "qb-burden-index",
+      "role-volatility-index",
+      "playable-window-score",
+    ]);
+
+    for (const card of cards) {
+      expect(card.lifecycleStatus).toBe("SHADOW");
+      expect(card.apiExposure).toBe("INTERNAL");
+      expect(card.licensingStatus).toBe("NOT_READY");
+      expect(card.publicApiAllowed).toBe(false);
+      expect(card.modelCard.status).toBe("DRAFT");
+      expect(card.modelCard.summary).toContain("Metric lifecycle is SHADOW");
+      expect(card.modelCard.summary).toContain("generated evidence does not change lifecycle or exposure");
+      expect(card.modelCard.limitations).toContain(
+        "Generated card does not approve public content, API exposure, licensing, betting use, or production promotion.",
+      );
+      expect(card.driftCard.status).not.toBe("MISSING");
+      expect(card.driftCard.evidenceRefs.length).toBeGreaterThan(0);
+      expect(card.driftCard.notes[0]).toContain("does not promote metric lifecycle or exposure");
+    }
+  });
+
+  it("carries fixture caveats into model-card limitations", () => {
+    const cards = generateAllShadowMetricEvidenceFixtureCards();
+
+    for (const fixture of SHADOW_METRIC_EVIDENCE_FIXTURES) {
+      const card = cards.find((candidate) => candidate.metricId === fixture.metricId);
+      if (!card) throw new Error(`Missing generated card for ${fixture.metricId}`);
+      expect(card.modelCard.limitations).toContain(fixture.caveat);
+      expect(card.modelCard.evidenceRefs).toContain(fixture.validationReport.evidenceRefs[0]);
+      expect(card.modelCard.evidenceRefs).toContain(fixture.evidenceRefs[0]);
+    }
+  });
+
+  it("keeps role-stability and decision-window split fixtures in active drift review", () => {
+    const cards = generateAllShadowMetricEvidenceFixtureCards();
+    const rvi = cardFor(cards, "role-volatility-index");
+    const pws = cardFor(cards, "playable-window-score");
+
+    expect(rvi.driftCard.status).toBe("WATCH");
+    expect(rvi.driftCard.notes).toContain("role_stability_psi: value 0.21 -> WATCH.");
+    expect(pws.driftCard.status).toBe("SEVERE");
+    expect(pws.driftCard.notes).toContain("decision_window_block_rate_delta: value 0.31 -> SEVERE.");
+  });
 });
+
+function cardFor(
+  cards: ReturnType<typeof generateAllShadowMetricEvidenceFixtureCards>,
+  metricId: "role-volatility-index" | "playable-window-score",
+) {
+  const card = cards.find((candidate) => candidate.metricId === metricId);
+  if (!card) throw new Error(`Missing generated card for ${metricId}`);
+  return card;
+}

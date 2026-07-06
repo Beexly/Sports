@@ -515,9 +515,12 @@ export {
   metricSourceRightsPolicy as proprietaryMetricSourceRightsPolicy,
   generateMetricDriftCard as generateProprietaryMetricDriftCard,
   generateMetricModelCard as generateProprietaryMetricModelCard,
+  generateAllShadowMetricEvidenceFixtureCards as generateAllProprietaryShadowMetricEvidenceFixtureCards,
+  generateShadowMetricEvidenceFixtureCards as generateProprietaryShadowMetricEvidenceFixtureCards,
   metricSourceRightsPoliciesFromRegistry as proprietaryMetricSourceRightsPoliciesFromRegistry,
   metricSourceRightsPolicyFromRegistryEntry as proprietaryMetricSourceRightsPolicyFromRegistryEntry,
   requireMetricAsset as requireProprietaryMetricAsset,
+  SHADOW_METRIC_EVIDENCE_FIXTURES as PROPRIETARY_SHADOW_METRIC_EVIDENCE_FIXTURES,
   sourceRightsEnvelopeFromPolicy as proprietarySourceRightsEnvelopeFromPolicy,
 } from "./metrics/core/index.js";
 export type {
@@ -533,6 +536,9 @@ export type {
   MetricDriftCheck as ProprietaryMetricDriftCheck,
   MetricDriftDirection as ProprietaryMetricDriftDirection,
   MetricModelCardInput as ProprietaryMetricModelCardInput,
+  ShadowEvidenceMetricId as ProprietaryShadowEvidenceMetricId,
+  ShadowMetricEvidenceFixture as ProprietaryShadowMetricEvidenceFixture,
+  ShadowMetricEvidenceFixtureCards as ProprietaryShadowMetricEvidenceFixtureCards,
   MetricResidualConfidenceMeaning as ProprietaryMetricResidualConfidenceMeaning,
   MetricResidualMetricId as ProprietaryMetricResidualMetricId,
   MetricResidualPlayInput as ProprietaryMetricResidualPlayInput,
