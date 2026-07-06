@@ -69,6 +69,18 @@ Status: copy-paste-ready PR map only. GitHub CLI auth is required before live PR
      - records command intents, expected evidence, and forbidden targets
      - keeps live promotion and commands disabled
 
+12. `codex/sunday-frontier-maxforce-2026-07-05` live route promotion packet slice
+   - Commit: current branch after this slice is committed
+   - PR body: `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PR_BODY.md`
+   - Summary:
+     - adds non-executable live route promotion packet builder
+     - requires owner approval, durable persistence review, route exposure approval, abuse-response review, payload-envelope consumption, OpenAPI/security, rate-limit policy, rollback plan, boundary exception, and raw-key absence evidence
+     - keeps live route creation and command execution disabled in every state
+
+## Current Live Route Promotion PR Body
+
+Use `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PR_BODY.md` for the current branch.
+
 ## Current Disposable Rehearsal Packet PR Body
 
 Use `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET_PR_BODY.md` for the current branch.

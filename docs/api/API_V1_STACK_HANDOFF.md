@@ -34,6 +34,7 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | 9 | `codex/api-v1-autonomous-polish-hardening` | `6d7601e6` | Adds hostile invalid fixture coverage, reviewer merge checklist, README navigation, focused CI guard wiring, and verification log. |
 | 10 | `codex/api-v1-promotion-readiness-matrix` | `a1616bd6` | Adds local-only promotion readiness gate matrix. |
 | 11 | `codex/api-v1-disposable-rehearsal-packet` | current branch after this slice is committed | Adds non-executable disposable rehearsal packet builder. |
+| 12 | `codex/sunday-frontier-maxforce-2026-07-05` live route promotion packet slice | current branch after this slice is committed | Adds non-executable owner-review packet for future live route promotion gates. |
 
 ## Key Code Surfaces
 
@@ -49,6 +50,7 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | `apps/web/lib/api/v1/durable-rehearsal-plan.ts` | Plan-only disposable DB rehearsal checklist and validator. |
 | `apps/web/lib/api/v1/promotion-readiness.ts` | Local-only gate matrix separating shadow evidence, repo boundaries, and owner approvals. |
 | `apps/web/lib/api/v1/disposable-rehearsal-packet.ts` | Non-executable owner-review packet builder for future disposable rehearsals. |
+| `apps/web/lib/api/v1/live-route-promotion-packet.ts` | Non-executable owner-review packet builder for future live route promotion gates. |
 | `scripts/guardrails/api-v1-boundary.mjs` | Repo guard that blocks accidental API v1 live surfaces. |
 
 ## Tracked Evidence
@@ -64,6 +66,7 @@ The current hard gate is `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`: data
 | `docs/api/API_V1_AUTONOMOUS_POLISH_VERIFICATION_LOG.md` | Exact local verification commands, outcomes, caveats, and GitHub auth blocker. |
 | `docs/api/API_V1_PROMOTION_READINESS_MATRIX.md` | Promotion-readiness matrix contract and expected current state. |
 | `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET.md` | Rehearsal packet contract, command intents, expected evidence, and forbidden targets. |
+| `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PACKET.md` | Live route promotion packet contract, owner gates, payload-envelope gate, rollback gate, and non-approval statement. |
 
 ## Focused Tests
 
@@ -71,6 +74,7 @@ Run:
 
 ```bash
 npm.cmd run test --workspace=apps/web -- api-v1-disposable-rehearsal-packet.test.ts api-v1-promotion-readiness.test.ts api-v1-boundary-guard.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-adapter-harness.test.ts api-v1-db-schema-proposal.test.ts api-v1-persistence.test.ts api-v1-consumer-registry.test.ts api-v1-shadow-seam.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-live-route-promotion-packet.test.ts api-v1-boundary-guard.test.ts api-v1-promotion-readiness.test.ts api-v1-disposable-rehearsal-packet.test.ts
 ```
 
 ## Full Verification
@@ -103,6 +107,7 @@ Copy-paste PR bodies are tracked per slice:
 - `docs/api/API_V1_AUTONOMOUS_POLISH_PR_BODY.md`
 - `docs/api/API_V1_PROMOTION_READINESS_PR_BODY.md`
 - `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET_PR_BODY.md`
+- `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PR_BODY.md`
 - `docs/api/API_V1_STACK_PR_INDEX.md`
 
 ## Remaining Approval Gate
@@ -116,3 +121,5 @@ Do not proceed to database-adjacent implementation until all of these are true:
 5. Raw-key absence proof is prepared.
 
 Before that approval, safe work is limited to docs, checklist hardening, local synthetic fixtures, and guardrails.
+
+After disposable rehearsal approval, live route design remains separately blocked by `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PACKET.md`; route creation still requires explicit owner review of durable persistence, route exposure, abuse response, payload-envelope consumption, OpenAPI/security, rate limits, rollback, boundary exception, and raw-key absence evidence.

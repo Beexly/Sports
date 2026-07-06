@@ -974,3 +974,27 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   and the methodology doc through media claim safety, no-claim guard, and performance-claim guard.
 - FLAG: local methodology/copy governance only; no pick publication, API route, partner offer,
   personalized advice, model promotion, performance claim, or production gate flip.
+
+## 2026-07-05 - (codex) - Sunday frontier API live-route promotion packet
+
+- WHAT: Added a non-executable API v1 live-route promotion packet that lists every gate required
+  before a future live route implementation can be reviewed. The packet requires owner approval,
+  durable persistence review, route exposure approval, abuse-response review, metric
+  payload-envelope consumption, OpenAPI/security review, rate-limit policy review, rollback plan
+  review, boundary exception review, and raw-key absence review. It keeps live route creation and
+  command execution disabled in every state.
+- FILES: `apps/web/lib/api/v1/live-route-promotion-packet.ts`,
+  `apps/web/__tests__/api-v1-live-route-promotion-packet.test.ts`,
+  `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PACKET.md`,
+  `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PR_BODY.md`, API stack navigation docs,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: focused API packet tests passed (4 files, 19 tests). First app typecheck caught a strict
+  blocker-list issue in the new packet builder; after repair, app workspace typecheck passed.
+  Root typecheck, root lint, and root guardrails passed. The root all-workspaces test wrapper hit
+  the 300s tool ceiling and is not counted as a pass; segmented workspace tests passed across every
+  test-script workspace: web 533 files / 7072 tests, crypto 1 / 13, data-ingestion 16 / 131,
+  ingestion-pipeline 6 / 60, prediction-engine 92 / 812, and types 1 / 31. `git diff --check`
+  passed after doc and code updates.
+- FLAG: local owner-review packet only; no `app/api/v1` route tree, no Prisma model, no migration,
+  no env var, no credential, no raw key storage, no provider call, no database execution, no billing
+  hook, no partner exposure, no AWS/cloud action, and no production API gate flip.

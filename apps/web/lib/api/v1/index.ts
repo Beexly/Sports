@@ -9,6 +9,7 @@ export * from "./durable-fixture-report-renderer";
 export * from "./durable-rehearsal-plan";
 export * from "./durable-adapter-harness";
 export * from "./envelope";
+export * from "./live-route-promotion-packet";
 export * from "./openapi";
 export * from "./payload-rights";
 export * from "./persistence";

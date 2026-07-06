@@ -17,6 +17,7 @@ Review and merge the stack in this order:
 9. `codex/api-v1-autonomous-polish-hardening`
 10. `codex/api-v1-promotion-readiness-matrix`
 11. `codex/api-v1-disposable-rehearsal-packet`
+12. `codex/sunday-frontier-maxforce-2026-07-05` live route promotion packet slice
 
 Do not merge a later branch before all earlier branches are either merged or deliberately recreated on the target branch.
 
@@ -60,6 +61,7 @@ git diff --check
 - `docs/api/API_V1_DISPOSABLE_DB_REHEARSAL_PLAN.md`
 - `docs/api/API_V1_PROMOTION_READINESS_MATRIX.md`
 - `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET.md`
+- `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PACKET.md`
 - `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json`
 - `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md`
 - `apps/web/__fixtures__/api-v1/durable-fixture-hostile-invalid.json`
@@ -69,3 +71,5 @@ git diff --check
 The next implementation step is still a disposable database rehearsal. That remains blocked until the owner names the disposable target, approves the rehearsal scope, approves a destroy-by timestamp, and confirms the rollback evidence expected from that rehearsal.
 
 Until that approval exists, allowed work remains local-only: docs, synthetic fixtures, deterministic report rendering, guardrails, tests, and copy-paste-ready PR material.
+
+The live route promotion packet is a later owner-review gate. It keeps `liveRouteCreationAllowed=false` and `commandsExecutableNow=false` even when all packet evidence is simulated as reviewed.
