@@ -15,7 +15,9 @@ describe("shadow metric evidence markdown reports", () => {
       "stale-line-risk-score",
       "qb-burden-index",
       "role-volatility-index",
+      "calibration-integrity-grade",
       "playable-window-score",
+      "portfolio-fit-score",
       "market-mirage-score",
     ]);
     expect(indexMarkdown).toContain("Generated from synthetic/local evidence fixtures");

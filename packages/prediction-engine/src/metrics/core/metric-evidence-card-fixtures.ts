@@ -17,7 +17,9 @@ export type ShadowEvidenceMetricId =
   | "stale-line-risk-score"
   | "qb-burden-index"
   | "role-volatility-index"
+  | "calibration-integrity-grade"
   | "playable-window-score"
+  | "portfolio-fit-score"
   | "market-mirage-score";
 
 export interface ShadowMetricEvidenceFixture {
@@ -85,6 +87,22 @@ export const SHADOW_METRIC_EVIDENCE_FIXTURES: readonly ShadowMetricEvidenceFixtu
     validationReport: shadowValidationReport("fixture-rvi-validation", 220),
   },
   {
+    caveat:
+      "CIG calibration fixture is synthetic/local and cannot be used as a public probability, verified calibration, or win-probability claim.",
+    driftChecks: [
+      {
+        evidenceRef: "fixture-cig-calibration-stability-split",
+        name: "calibration_integrity_ece_delta",
+        severeThreshold: 0.12,
+        value: 0.07,
+        watchThreshold: 0.05,
+      },
+    ],
+    evidenceRefs: ["fixture-cig-model-card", "fixture-cig-calibration-stability-split"],
+    metricId: "calibration-integrity-grade",
+    validationReport: shadowValidationReport("fixture-cig-validation", 360),
+  },
+  {
     caveat: "PWS decision-window fixture is synthetic/local and cannot be used as playable edge, expected value, or betting advice.",
     driftChecks: [
       {
@@ -98,6 +116,22 @@ export const SHADOW_METRIC_EVIDENCE_FIXTURES: readonly ShadowMetricEvidenceFixtu
     evidenceRefs: ["fixture-pws-model-card", "fixture-pws-decision-window-split"],
     metricId: "playable-window-score",
     validationReport: shadowValidationReport("fixture-pws-validation", 300),
+  },
+  {
+    caveat:
+      "PFS portfolio fixture is synthetic/local and cannot be used as stake sizing, expected value, betting advice, or board approval.",
+    driftChecks: [
+      {
+        evidenceRef: "fixture-pfs-portfolio-concentration-split",
+        name: "portfolio_concentration_risk_delta",
+        severeThreshold: 0.3,
+        value: 0.11,
+        watchThreshold: 0.16,
+      },
+    ],
+    evidenceRefs: ["fixture-pfs-model-card", "fixture-pfs-portfolio-concentration-split"],
+    metricId: "portfolio-fit-score",
+    validationReport: shadowValidationReport("fixture-pfs-validation", 280),
   },
   {
     caveat:

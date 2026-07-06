@@ -53,6 +53,7 @@ Grounded metrics and governed continuations:
 - `packages/prediction-engine/src/metrics/passing/expected-completion.ts`
 - `packages/prediction-engine/src/metrics/passing/qb-burden-index.ts`
 - `packages/prediction-engine/src/metrics/role/role-volatility-index.ts`
+- `packages/prediction-engine/src/metrics/calibration/calibration-integrity-grade.ts`
 - `packages/prediction-engine/src/metrics/receiving/receiver-difficulty.ts`
 - `packages/prediction-engine/src/metrics/receiving/expected-yac.ts`
 - `packages/prediction-engine/src/metrics/receiving/yac-creation.ts`
@@ -60,6 +61,7 @@ Grounded metrics and governed continuations:
 - `packages/prediction-engine/src/metrics/rushing/expected-rush-yards.ts`
 - `packages/prediction-engine/src/metrics/rushing/rush-over-expected.ts`
 - `packages/prediction-engine/src/metrics/decision/playable-window-score.ts`
+- `packages/prediction-engine/src/metrics/decision/portfolio-fit-score.ts`
 - `packages/prediction-engine/src/metrics/decision/gse-signal-score.ts`
 
 Root package exports:
@@ -120,6 +122,7 @@ Current governed metric certificates:
 | `expected-completion-gse` | passing | SHADOW | score_band |
 | `qb-burden-index` | passing | SHADOW | score_band |
 | `role-volatility-index` | role | SHADOW | score_band |
+| `calibration-integrity-grade` | calibration | SHADOW | score_band |
 | `receiver-difficulty-index` | receiving | SHADOW | score_band |
 | `expected-yac-gse` | receiving | SHADOW | score_band |
 | `yac-creation-gse` | receiving | SHADOW | score_band |
@@ -127,6 +130,7 @@ Current governed metric certificates:
 | `expected-rush-yards-gse` | rushing | SHADOW | score_band |
 | `rush-over-expected-gse` | rushing | SHADOW | score_band |
 | `playable-window-score` | decision | SHADOW | score_band |
+| `portfolio-fit-score` | decision | SHADOW | score_band |
 | `gse-signal-score` | decision | SHADOW | score_band |
 
 ## Core Math Grammar
@@ -308,6 +312,20 @@ Implementation boundary:
 - Blocked source-policy posture also forces `roleSignalAllowed: false`; clean usage is not enough when modeling rights fail.
 - It exposes role volatility drivers only and keeps weights, freshness thresholds, proxy transforms, and source-posture scaling protected.
 
+### Calibration Integrity Grade
+
+Target question: is the calibration evidence healthy enough to support downstream decision review?
+
+CIG is a calibration-evidence quality score, not win probability, public probability, verified calibration status, or a pick signal. It uses ECE, Brier risk, reliability slope, settled-sample support, bucket coverage, report freshness, drift pressure, calibration debt, and source-policy posture.
+
+Implementation boundary:
+
+- It returns `grade`, `score`, calibration evidence confidence, uncertainty, source posture, block reasons, and public drivers.
+- `probability` is always `null`.
+- `confidenceScore` measures evidence quality, not win probability or public probability.
+- Low sample size, stale calibration reports, high ECE, drift pressure, calibration debt, or blocked source posture suppress or block calibration use.
+- It exposes calibration evidence drivers only and keeps protected thresholds, component blends, band cutoffs, and source-posture scaling private.
+
 ### Playable Window Score
 
 Target question: is the decision window ready enough for downstream review, or should it stay closed?
@@ -322,6 +340,20 @@ Implementation boundary:
 - Stale or blocked market signals, blocked source-policy posture, high no-bet pressure, high drift pressure, or high calibration debt close the window before any downstream action review.
 - It is an upstream readiness primitive for GSS/action review, not a pick trigger.
 - It exposes public drivers only and keeps support/pressure blends, hard-block thresholds, band cutoffs, and source-posture scaling protected.
+
+### Portfolio Fit Score
+
+Target question: does this candidate fit the current shadow portfolio without creating concentration, correlation, or duplicate-thesis risk?
+
+PFS is a portfolio-composition quality score, not stake sizing, expected value, betting advice, win probability, or a pick trigger. It composes playable-window readiness, exposure concentration, correlation risk, duplicate thesis risk, liquidity fit, bankroll fit, no-bet pressure, drift pressure, calibration debt, and source-policy posture.
+
+Implementation boundary:
+
+- It returns `score`, `band`, `portfolioActionAllowed`, evidence confidence, uncertainty, source posture, block reasons, and public drivers.
+- `probability` is always `null`.
+- `confidenceScore` measures evidence quality, not win probability, stake confidence, or advice quality.
+- Closed playable windows, excessive exposure, high concentration, high correlation risk, duplicate thesis pressure, no-bet pressure, drift, calibration debt, or blocked source posture suppress or block portfolio actionability.
+- It exposes portfolio composition drivers only and keeps support/pressure blends, hard-block thresholds, band cutoffs, and source-posture scaling protected.
 
 ### GSE Signal Score
 
@@ -569,6 +601,7 @@ Tests added:
 - `packages/prediction-engine/src/metrics/__tests__/portfolio-fit-score.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/metric-evidence-report-markdown.test.ts`
 - source-policy generation coverage in `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`
 
 This is not a claim that any metric is validated for public/API exposure. The metrics are usable as governed shadow primitives until model cards, drift cards, validation reports, and source-rights envelopes support promotion.
@@ -580,11 +613,11 @@ Build in this order for proprietary football metrics:
 1. API response-envelope filtering with proprietary metric payload-rights checks
 2. QB Burden Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 3. Role Volatility Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
-4. Calibration Integrity Grade - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
+4. Calibration Integrity Grade - implemented as `SHADOW`; local evidence-card/report fixtures exist; historical validation, promotion, and public/API exposure remain future gates.
 5. No-Bet Pressure
 6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
-8. Portfolio Fit Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
+8. Portfolio Fit Score - implemented as `SHADOW`; local evidence-card/report fixtures exist; historical validation, promotion, and public/API exposure remain future gates.
 9. Drift Pressure Index
 10. Conformal Uncertainty Width
 11. Source Trust Score

@@ -1461,3 +1461,27 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   production-readiness claim, no metric promotion, no betting advice, no stake advice, no probability
   claim, no raw odds/tracking export, no package/dependency change, no live AWS/cloud/service action,
   and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier CIG/PFS shadow evidence reports
+
+- WHAT: Extended the generated shadow metric evidence-report layer to Calibration Integrity Grade and
+  Portfolio Fit Score. CIG now has a synthetic/local draft model card plus `WATCH` drift fixture for
+  calibration ECE delta. PFS now has a synthetic/local draft model card plus `STABLE` drift fixture
+  for portfolio concentration risk. Both remain `SHADOW`, `INTERNAL`, `NOT_READY`, public-API-locked,
+  route-free, and separate from probability, betting-advice, stake-sizing, promotion, production, and
+  legal-clearance claims.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-evidence-card-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-evidence-report-markdown.test.ts`,
+  `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution ledger.
+- GATE: focused evidence-card/report/birth-certificate/asset tests passed (4 files, 20 tests).
+  Prediction-engine typecheck passed. Full prediction-engine tests passed (103 files, 866 tests).
+  Root typecheck, root lint, root guardrails, and `git diff --check` passed. LOC / escape-hatch scan
+  passed: fixture 200 lines, evidence-card test 209 lines, report test 64 lines, and no `as any`,
+  `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access found.
+- FLAG: generated synthetic/local reports only; no live route, no public/API exposure, no legal
+  clearance claim, no production-readiness claim, no model promotion, no betting use, no probability
+  or expected-value claim, no raw odds/tracking export, no package/dependency change, no live
+  AWS/cloud/service action, and no prediction gate flip.

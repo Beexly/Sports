@@ -138,7 +138,9 @@ describe("metric evidence card generators", () => {
       "stale-line-risk-score",
       "qb-burden-index",
       "role-volatility-index",
+      "calibration-integrity-grade",
       "playable-window-score",
+      "portfolio-fit-score",
       "market-mirage-score",
     ]);
 
@@ -171,16 +173,22 @@ describe("metric evidence card generators", () => {
     }
   });
 
-  it("keeps role-stability and decision-window split fixtures in active drift review", () => {
+  it("keeps role, calibration, decision, portfolio, and market fixtures in drift review", () => {
     const cards = generateAllShadowMetricEvidenceFixtureCards();
     const rvi = cardFor(cards, "role-volatility-index");
+    const cig = cardFor(cards, "calibration-integrity-grade");
     const pws = cardFor(cards, "playable-window-score");
+    const pfs = cardFor(cards, "portfolio-fit-score");
     const mms = cardFor(cards, "market-mirage-score");
 
     expect(rvi.driftCard.status).toBe("WATCH");
     expect(rvi.driftCard.notes).toContain("role_stability_psi: value 0.21 -> WATCH.");
+    expect(cig.driftCard.status).toBe("WATCH");
+    expect(cig.driftCard.notes).toContain("calibration_integrity_ece_delta: value 0.07 -> WATCH.");
     expect(pws.driftCard.status).toBe("SEVERE");
     expect(pws.driftCard.notes).toContain("decision_window_block_rate_delta: value 0.31 -> SEVERE.");
+    expect(pfs.driftCard.status).toBe("STABLE");
+    expect(pfs.driftCard.notes).toContain("portfolio_concentration_risk_delta: value 0.11 -> STABLE.");
     expect(mms.driftCard.status).toBe("WATCH");
     expect(mms.driftCard.notes).toContain("market_mirage_watch_rate_delta: value 0.19 -> WATCH.");
   });
@@ -188,7 +196,12 @@ describe("metric evidence card generators", () => {
 
 function cardFor(
   cards: ReturnType<typeof generateAllShadowMetricEvidenceFixtureCards>,
-  metricId: "role-volatility-index" | "playable-window-score" | "market-mirage-score",
+  metricId:
+    | "role-volatility-index"
+    | "calibration-integrity-grade"
+    | "playable-window-score"
+    | "portfolio-fit-score"
+    | "market-mirage-score",
 ) {
   const card = cards.find((candidate) => candidate.metricId === metricId);
   if (!card) throw new Error(`Missing generated card for ${metricId}`);

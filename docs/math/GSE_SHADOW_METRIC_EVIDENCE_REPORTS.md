@@ -23,7 +23,9 @@ licensing, betting use, production promotion, legal clearance, or metric lifecyc
 | `stale-line-risk-score` | `stale-line-risk-score.md` | DRAFT | WATCH | false | false |
 | `qb-burden-index` | `qb-burden-index.md` | DRAFT | STABLE | false | false |
 | `role-volatility-index` | `role-volatility-index.md` | DRAFT | WATCH | false | false |
+| `calibration-integrity-grade` | `calibration-integrity-grade.md` | DRAFT | WATCH | false | false |
 | `playable-window-score` | `playable-window-score.md` | DRAFT | SEVERE | false | false |
+| `portfolio-fit-score` | `portfolio-fit-score.md` | DRAFT | STABLE | false | false |
 | `market-mirage-score` | `market-mirage-score.md` | DRAFT | WATCH | false | false |
 
 ## Stale Line Risk Score
@@ -104,6 +106,32 @@ Drift card:
 - Check: `role_stability_psi` value `0.21` against watch `0.16` and severe `0.32`.
 - Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-rvi-role-stability-split`, `fixture-rvi-model-card`.
 
+## Calibration Integrity Grade
+
+Generated from synthetic/local metric evidence fixtures.
+
+Boundary:
+
+- Lifecycle: `SHADOW`.
+- API exposure: `INTERNAL`.
+- Licensing: `NOT_READY`.
+- Public API allowed: false.
+- Live route created: false.
+- This report does not approve public content, API exposure, licensing, betting use, or production promotion.
+
+Model card:
+
+- Status: `DRAFT`.
+- Summary: DRAFT model card for Calibration Integrity Grade (`calibration-integrity-grade`). Metric lifecycle is `SHADOW`; generated evidence does not change lifecycle or exposure.
+- Limitations include fixture-only calibration checks and the rule that CIG grades calibration evidence quality, not win probability, public probability, or verified calibration status.
+- Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-cig-validation`, `fixture-cig-model-card`, `fixture-cig-calibration-stability-split`.
+
+Drift card:
+
+- Status: `WATCH`.
+- Check: `calibration_integrity_ece_delta` value `0.07` against watch `0.05` and severe `0.12`.
+- Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-cig-calibration-stability-split`, `fixture-cig-model-card`.
+
 ## Playable Window Score
 
 Generated from synthetic/local metric evidence fixtures.
@@ -129,6 +157,32 @@ Drift card:
 - Status: `SEVERE`.
 - Check: `decision_window_block_rate_delta` value `0.31` against watch `0.12` and severe `0.25`.
 - Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-pws-decision-window-split`, `fixture-pws-model-card`.
+
+## Portfolio Fit Score
+
+Generated from synthetic/local metric evidence fixtures.
+
+Boundary:
+
+- Lifecycle: `SHADOW`.
+- API exposure: `INTERNAL`.
+- Licensing: `NOT_READY`.
+- Public API allowed: false.
+- Live route created: false.
+- This report does not approve public content, API exposure, licensing, betting use, or production promotion.
+
+Model card:
+
+- Status: `DRAFT`.
+- Summary: DRAFT model card for Portfolio Fit Score (`portfolio-fit-score`). Metric lifecycle is `SHADOW`; generated evidence does not change lifecycle or exposure.
+- Limitations include fixture-only portfolio-composition checks and the rule that PFS is not stake sizing, expected value, betting advice, board approval, or a pick trigger.
+- Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-pfs-validation`, `fixture-pfs-model-card`, `fixture-pfs-portfolio-concentration-split`.
+
+Drift card:
+
+- Status: `STABLE`.
+- Check: `portfolio_concentration_risk_delta` value `0.11` against watch `0.16` and severe `0.30`.
+- Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-pfs-portfolio-concentration-split`, `fixture-pfs-model-card`.
 
 ## Market Mirage Score
 
@@ -158,7 +212,8 @@ Drift card:
 
 ## Next Gate
 
-The next safe gate is source-rights-reviewed historical validation adapters. Do not create public/API
-routes, model promotion, pricing, betting use, publication, or cloud/live-service actions from this
-report. Historical validation must prove source rights, payload rights, calibration separation, and
-drift behavior before any promotion review.
+The next safe gate is source-rights-reviewed historical distribution and drift adapters for CIG/PFS
+plus any remaining governed metric backlog. Do not create public/API routes, model promotion, pricing,
+betting use, publication, or cloud/live-service actions from this report. Historical validation must
+prove source rights, payload rights, calibration separation, and drift behavior before any promotion
+review.
