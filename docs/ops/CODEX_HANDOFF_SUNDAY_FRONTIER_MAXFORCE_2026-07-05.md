@@ -43,6 +43,7 @@ Implemented:
 - SLRS/QBI/RVI/PWS evidence-card fixture library with draft-first model cards, active drift cards, role-stability split coverage, decision-window split coverage, and package-root proprietary aliases
 - RVI/PWS validation split fixture runner with synthetic/local clean, watch, stale, calibration-debt, and blocked-source cases, plus package-root proprietary aliases
 - Composed decision metric payload-envelope fixture runner for PWS, GSS, SLRS, QBI, and RVI, plus unsupported probability claim fail-closed field kind and package-root proprietary aliases
+- App API-v1 composed metric payload bridge that consumes package-owned fixtures through `filterApiV1MetricPayloadFields` while keeping route creation locked off
 
 ## Files Changed
 
@@ -56,6 +57,8 @@ Application and test files:
 - `apps/web/lib/ip/*`
 - `apps/web/lib/api-auth/*`
 - `apps/web/lib/api-v1/*`
+- `apps/web/lib/api-v1/composed-metric-payload-fixture-bridge.ts`
+- `apps/web/__tests__/api-v1-composed-metric-payload-bridge.test.ts`
 - `apps/web/lib/api/v1/shadow-route-harness.ts`
 - `apps/web/__tests__/api-v1-shadow-route-harness.test.ts`
 - `apps/web/lib/api/v1/shadow-route-replay.ts`
@@ -234,6 +237,7 @@ Broad test result:
 - Evidence-card fixture validation: focused evidence-card/asset/PWS/RVI tests passed (4 files, 26 tests); prediction-engine typecheck passed after adding the fixture library, core exports, and package-root proprietary aliases; full prediction-engine tests passed (96 files, 835 tests); root typecheck, lint, guardrails, and `git diff --check` passed; segmented workspace tests passed across apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 96 / 835, and types 1 / 31, for 657 files / 8175 tests.
 - Validation split fixture validation: first focused run caught clean fixtures carrying pressure proxies, and first prediction-engine typecheck caught missing `signalIntegrityIndex`; after repair, focused split/PWS/RVI tests passed (3 files, 16 tests), prediction-engine typecheck passed, full prediction-engine tests passed (97 files, 840 tests), root typecheck, lint, guardrails, and `git diff --check` passed, and segmented workspace tests passed across apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 97 / 840, and types 1 / 31, for 658 files / 8180 tests.
 - Composed payload fixture validation: focused payload fixture, payload-envelope, and source-rights tests passed (3 files, 17 tests); prediction-engine typecheck passed after fixture exports and the unsupported probability claim field kind; full prediction-engine tests passed (98 files, 845 tests); root typecheck, lint, guardrails, and `git diff --check` passed; segmented workspace tests passed across apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 98 / 845, and types 1 / 31, for 659 files / 8185 tests. LOC/escape-hatch scan passed with data fixture 170 lines, runner 61 lines, test 77 lines, and no TS escape hatches or non-null property access.
+- App payload bridge validation: focused app bridge and fence/API adapter tests passed (2 files, 13 tests); app typecheck passed; full app tests passed (538 files, 7111 tests); root typecheck, lint, guardrails, and `git diff --check` passed. LOC/escape-hatch scan passed with bridge 72 lines, test 75 lines, and no TS escape hatches or non-null property access.
 - AWS case-study visual QA: first screenshot attempts hit `net::ERR_CONNECTION_RESET` during route compilation. After local dev-server restart and direct HTTP probe, the route returned 200, desktop and mobile screenshots were captured under `reports/launch-page-visual-qa/2026-07-06/*`, and both captures were visually reviewed.
 
 ## Complete
@@ -264,6 +268,7 @@ Broad test result:
 - Metric evidence-card fixtures now exist for SLRS, QBI, RVI, and PWS. They generate draft-first model cards and drift cards from synthetic/local evidence, preserve `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`, and keep role-stability plus decision-window split evidence in active drift review.
 - Metric validation split fixtures now exist for RVI role-stability and PWS decision-window seams. They are synthetic/local, preserve `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`, and classify clean/watch/fail-closed split cases without public/API exposure or promotion.
 - Composed decision metric payload-envelope fixtures now exist for PWS, GSS, SLRS, QBI, and RVI. They are synthetic/local, approve only derived scores, bands, summaries, confidence meaning, and public drivers, and block protected weights, raw values, provider IDs, unsupported probability claims, and uncleared fallback source fields without route exposure.
+- The app API-v1 composed metric payload bridge now exists. It consumes the package-owned payload fixtures through `filterApiV1MetricPayloadFields`, preserves approvals/blocks, and records `shadowOnly: true`, `liveRouteCreated: false`, and `routePath: null`.
 - Metric source-policy generation now exists from registry-shaped fixtures aligned to `apps/web/lib/scraping/source-rights-registry.ts`; raw API exposure stays blocked for every generated source.
 - Metric payload-envelope filtering now exists in `@sports/prediction-engine`, with an app API-v1 bridge that delegates metric-shaped payload fields through proprietary metric payload-rights before exposure.
 - Stale Line Risk Score now exists as a governed `SHADOW` market-risk metric. It blocks stale line snapshots from market-signal use, exposes only public drivers, keeps protected thresholds/weights/scales private, and has directional tests for staleness, source coverage, contradiction, and rights status.
@@ -308,7 +313,7 @@ Broad test result:
 
 1. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, payload-envelope, and source-rights veto tests stay green.
 2. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, caveats, and synthetic/local labels.
-3. Add app-level fixture coverage that consumes composed payload fixtures through `filterApiV1MetricPayloadFields` without creating live routes.
+3. Add source-rights-reviewed historical adapters for validation splits only after input clearance is proven.
 4. Add local commercial review queue reporting for unresolved blockers by source and surface.
 5. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 6. Run owner-reviewed production preview QA before live push.
@@ -319,9 +324,9 @@ Broad test result:
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the next governed metric or app-level payload bridge:
+Continue the Sunday frontier implementation with the next governed metric or draft evidence report:
 
-1. Either implement Market Mirage Score as a governed `SHADOW` metric after reusing PWS/SLRS/MGI/no-bet/source-rights vetoes, or add app-level tests that pass composed payload fixtures through `filterApiV1MetricPayloadFields`.
+1. Either implement Market Mirage Score as a governed `SHADOW` metric after reusing PWS/SLRS/MGI/no-bet/source-rights vetoes, or generate draft model/drift-card markdown reports with synthetic/local labels.
 2. Preserve source-policy posture, lifecycle locks, API locks, and no-bet/calibration/staleness veto semantics.
 3. Keep all work separate from live `app/api/v1` route implementation.
 4. Keep all validation outputs separate from legal clearance, production readiness, AWS deployment, public/API exposure, and betting advice.

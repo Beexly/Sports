@@ -662,6 +662,14 @@ Recorded run on 2026-07-04:
 | `npm run guardrails` after composed payload fixtures | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
 | segmented workspace tests after composed payload fixtures | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 98 / 845; types 1 / 31. Aggregate segmented receipt: 659 files / 8185 tests. |
 | `git diff --check` after composed payload fixtures | PASS - no whitespace errors. |
+| `npm run test --workspace=@sports/web -- __tests__/api-v1-composed-metric-payload-bridge.test.ts __tests__/fences-and-adapters.test.ts` after app payload bridge | PASS - 2 files, 13 tests. |
+| `npm run typecheck --workspace=@sports/web` after app payload bridge | PASS - app TypeScript checked after bridge export. |
+| app payload bridge LOC and escape-hatch scan | PASS - bridge 72 lines, test 75 lines; no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access found. |
+| `npm run test --workspace=apps/web -- --reporter=dot --silent` after app payload bridge | PASS - 538 files, 7111 tests. |
+| `npm run typecheck` after app payload bridge | PASS - all workspaces with typecheck scripts completed. |
+| `npm run lint` after app payload bridge | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
+| `npm run guardrails` after app payload bridge | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
+| `git diff --check` after app payload bridge | PASS - no whitespace errors. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/expected-rush-yards.test.ts src/metrics/__tests__/rush-over-expected.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 5 files, 15 tests after registry split. |
 | `npm run typecheck --workspace=packages/prediction-engine` after Expected Rush Yards/Rush Over Expected | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Expected Rush Yards/Rush Over Expected | PASS - 89 files, 794 tests. |
@@ -866,11 +874,17 @@ Pure LOC review for new source files:
 - The combined fixture file was split after measuring 226 lines; the final data fixture measured 170 lines, the runner measured 61 lines, and the test measured 77 lines. Escape-hatch scan over the new payload files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
 - Focused payload fixture/source-rights tests passed (3 files, 17 tests), prediction-engine typecheck passed after fixture exports and the unsupported-probability field kind, full prediction-engine tests passed (98 files, 845 tests), root typecheck/lint/guardrails passed, segmented workspace tests passed across 659 files / 8185 tests, and `git diff --check` passed.
 
+2026-07-06 app payload bridge continuation check:
+
+- `apps/web/lib/api-v1/composed-metric-payload-fixture-bridge.ts` consumes the package-owned composed payload fixtures through `filterApiV1MetricPayloadFields`.
+- The bridge records `shadowOnly: true`, `liveRouteCreated: false`, and `routePath: null` for every fixture result; it does not create or expose `app/api/v1` routes.
+- Focused bridge tests passed (2 files, 13 tests), app typecheck passed, full app tests passed (538 files, 7111 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, and escape-hatch scan over the bridge/test files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, validation split fixture runner, composed payload fixtures, and generated source policies:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, validation split fixture runner, composed payload fixtures, app bridge, and generated source policies:
 
 1. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, payload-envelope, and source-rights veto tests stay green.
 2. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, caveats, and synthetic/local labels.
 3. Add historical-data adapters for split validation only after source-rights and payload-rights review confirms the inputs are cleared.
-4. Add app-level fixture coverage that consumes the composed payload fixtures through `filterApiV1MetricPayloadFields` without creating live routes.
+4. Add local commercial review queue reporting for unresolved blockers by source and surface.

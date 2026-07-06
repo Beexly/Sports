@@ -65,7 +65,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | B. Media Revenue Studio | COMPLETE | Docs, typed media utilities, five public-safe pages, and tests already exist. This slice added stronger guardrails around launch-facing commercial copy. |
 | C. Partnership/Affiliate/Sponsorship layer | COMPLETE FOR PURE SEAM | `docs/commercial`, `docs/revenue`, and `apps/web/lib/revenue` exist with approval, disclosure, responsible-gaming, copy, scoring, pipeline, and audit primitives. No live affiliate links were added. |
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
-| E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, and a route-level shadow harness. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
+| E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, a route-level shadow harness, and an app-level composed metric payload bridge. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
 | G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, Stale Line Risk Score, xCOMP-GSE, QB Burden Index, Role Volatility Index, Playable Window Score, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, SLRS/QBI/RVI/PWS evidence-card fixture coverage, RVI/PWS validation split fixture coverage, composed decision metric payload-envelope fixture coverage, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR AND PUBLIC-SAFE EXAMPLES, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, Stale Line Risk Score, Playable Window Score, DRI, action score, and no-bet strength exist. This slice added integration proof that high model interest cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. SLRS now separately hard-blocks stale market snapshots from market-signal use. PWS composes stale-line, source-rights, no-bet, drift, calibration, QBI, and RVI pressure into a `SHADOW` decision-window readiness gate without claiming playable edge. Public-safe no-bet methodology examples now exist under `apps/web/lib/gse/no-bet-methodology.ts` and `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`. Full market intelligence product wiring remains future work. |
@@ -124,6 +124,8 @@ Tests updated:
   - proves RVI role-stability and PWS decision-window split fixtures classify clean, watch, stale, calibration-debt, and blocked-source cases while preserving lifecycle/API/licensing locks
 - `packages/prediction-engine/src/metrics/__tests__/metric-payload-envelope-fixtures.test.ts`
   - proves composed PWS/GSS/SLRS/QBI/RVI payload fixtures approve safe derived fields while blocking protected weights, raw values, provider IDs, unsupported probability claims, and uncleared source fields
+- `apps/web/__tests__/api-v1-composed-metric-payload-bridge.test.ts`
+  - proves package-owned composed metric payload fixtures flow through the app API-v1 bridge while keeping `liveRouteCreated: false`
 
 Public copy tightened:
 
@@ -338,6 +340,14 @@ Metric composed payload-envelope fixture continuation added in the continuation:
   - adds explicit `UNSUPPORTED_PROBABILITY_CLAIM` fail-closed field kind
 - metric core and package-root proprietary alias export updates
 
+App composed payload bridge continuation added in the continuation:
+
+- `apps/web/lib/api-v1/composed-metric-payload-fixture-bridge.ts`
+  - consumes package-owned composed metric payload fixtures through `filterApiV1MetricPayloadFields`
+  - records `shadowOnly: true`, `liveRouteCreated: false`, and `routePath: null` for every result
+- `apps/web/__tests__/api-v1-composed-metric-payload-bridge.test.ts`
+- `apps/web/lib/api-v1/index.ts`
+
 Metric source-policy generation continuation added in the continuation:
 
 - `packages/prediction-engine/src/metrics/core/source-rights-registry-adapter.ts`
@@ -550,6 +560,14 @@ Completed so far:
 | `npm run guardrails` after composed payload fixtures | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | segmented workspace tests after composed payload fixtures | PASS | apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 98 / 845; types 1 / 31; aggregate segmented receipt 659 files / 8185 tests |
 | `git diff --check` after composed payload fixtures | PASS | no whitespace errors |
+| `npm run test --workspace=@sports/web -- __tests__/api-v1-composed-metric-payload-bridge.test.ts __tests__/fences-and-adapters.test.ts` after app payload bridge | PASS | 2 files, 13 tests |
+| `npm run typecheck --workspace=@sports/web` after app payload bridge | PASS | app TypeScript checked after bridge export |
+| app payload bridge LOC and escape-hatch scan | PASS | bridge 72 lines, test 75 lines; no TS escape hatches or non-null property access found |
+| `npm run test --workspace=apps/web -- --reporter=dot --silent` after app payload bridge | PASS | 538 files, 7111 tests |
+| `npm run typecheck` after app payload bridge | PASS | all workspaces with typecheck scripts completed |
+| `npm run lint` after app payload bridge | PASS | root lint completed through `@sports/web` ESLint with max warnings 0 |
+| `npm run guardrails` after app payload bridge | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
+| `git diff --check` after app payload bridge | PASS | no whitespace errors |
 | `npm run typecheck` after no-bet methodology examples | PASS | all workspaces with typecheck scripts completed |
 | `npm run guardrails` after no-bet methodology examples | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | `npm run lint && git diff --check` after no-bet methodology examples | PASS | root lint and whitespace check completed without errors |
@@ -672,6 +690,7 @@ Final broad validation for the current API live-route promotion packet slice com
 - SLRS/QBI/RVI/PWS model-card and drift-card fixture coverage now exists. The fixture generator is synthetic/local, preserves `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, draft-first model cards, metric-specific caveats, and active drift review; it does not create public/API exposure or promotion evidence.
 - RVI/PWS validation split fixture coverage now exists. The split runner is synthetic/local, preserves `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`, and classifies clean/watch/fail-closed split cases without creating promotion evidence.
 - Composed decision metric payload-envelope fixture coverage now exists. The fixture layer is synthetic/local, approves only safe derived fields and public drivers, blocks protected weights, raw values, provider IDs, unsupported probability claims, and uncleared fallback source fields, and does not create route exposure.
+- The app API-v1 composed metric payload bridge now exists. It consumes package-owned payload fixtures through the app bridge, preserves safe approvals and unsafe blocks, and explicitly records no live route creation.
 - Metric source-policy generation now exists from registry-shaped fixtures aligned to the canonical web source-rights registry. This is code-level governance only, not legal clearance.
 - Metric payload-envelope filtering now exists before app API-v1 metric payload exposure. This is local shadow filtering, not a live route or legal clearance.
 - `metric-birth-certificate.ts` was split into a compact contract/lookup file plus a dedicated registry data file before commit, avoiding continued growth in the core contract module.
@@ -682,7 +701,7 @@ Final broad validation for the current API live-route promotion packet slice com
 
 1. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, payload-envelope, and source-rights veto tests stay green.
 2. Add generated draft model-card/drift-card markdown reports only if they preserve shadow lifecycle, API locks, caveats, and synthetic/local labels.
-3. Add app-level fixture coverage that consumes composed payload fixtures through `filterApiV1MetricPayloadFields` without creating live routes.
+3. Add source-rights-reviewed historical adapters for validation splits only after input clearance is proven.
 4. Add local commercial review queue reporting for unresolved blockers by source and surface.
 5. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 6. Run owner-reviewed production preview QA before live push.

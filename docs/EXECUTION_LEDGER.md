@@ -1302,3 +1302,23 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: synthetic/local fixture layer only; no live route, no public/API exposure, no raw odds or
   tracking export, no probability claim, no lifecycle promotion, no legal clearance claim, no
   production-readiness claim, no package/dependency change, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier app composed metric payload bridge
+
+- WHAT: Added an app API-v1 bridge that consumes the package-owned composed metric payload fixtures
+  through `filterApiV1MetricPayloadFields`. The bridge preserves safe approvals and unsafe blocks,
+  exposes fixture summaries for route-design review, and records `shadowOnly: true`,
+  `liveRouteCreated: false`, and `routePath: null` for every fixture.
+- FILES: `apps/web/lib/api-v1/composed-metric-payload-fixture-bridge.ts`,
+  `apps/web/__tests__/api-v1-composed-metric-payload-bridge.test.ts`,
+  `apps/web/lib/api-v1/index.ts`, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/ip/GSE_METRIC_IP_LEDGER.md`, Sunday audit/handoff docs, commercial ledger, and execution
+  ledger.
+- GATE: focused app bridge and fence/API adapter tests passed (2 files, 13 tests). App typecheck
+  passed after exporting the bridge through `apps/web/lib/api-v1/index.ts`. LOC / escape-hatch
+  review passed: bridge 72 lines, test 75 lines, and no `as any`, `as unknown`, `@ts-ignore`,
+  `@ts-expect-error`, `: any`, or non-null property access found. Full app tests passed (538 files,
+  7111 tests). Root typecheck, root lint, root guardrails, and `git diff --check` passed.
+- FLAG: route-free shadow bridge only; no live `app/api/v1` route, no public/API exposure, no raw
+  vendor payload export, no probability claim, no DB persistence, no credential handling change, no
+  package/dependency change, and no production gate flip.
