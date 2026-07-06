@@ -108,3 +108,13 @@ export type {
   RushEnvironmentIndex,
   RushEnvironmentInput,
 } from "../rushing/rush-environment-index.js";
+export { expectedRushYardsGse } from "../rushing/expected-rush-yards.js";
+export type {
+  ExpectedRushYardsInput,
+  ExpectedRushYardsMetric,
+} from "../rushing/expected-rush-yards.js";
+export { rushOverExpectedGse } from "../rushing/rush-over-expected.js";
+export type {
+  RushOverExpectedInput,
+  RushOverExpectedMetric,
+} from "../rushing/rush-over-expected.js";

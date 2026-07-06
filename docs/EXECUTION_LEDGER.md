@@ -846,3 +846,32 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local metric primitives only; no public/API metric exposure, no model-card or drift-card
   promotion, no validation claim, no source-rights legal clearance claim, no prediction publication,
   no model-version bump, no schema change, and no production gate flip.
+
+## 2026-07-05 - (codex) - Sunday frontier Expected Rush Yards and Rush Over Expected metrics
+
+- WHAT: Added two governed `SHADOW` rushing metrics on the proprietary metric foundation.
+  `expected-rush-yards-gse` derives expected rushing yards from Rush Environment Index,
+  down-distance/field constraints, designed-rush context, and shrunk rusher/defense priors.
+  `rush-over-expected-gse` derives rushing yards over expectation from actual rush yards versus
+  GSE expected rush yards, stabilized by shrunk rusher residual prior and source-cleared contact
+  proxies. Both return public drivers without protected weights, source-policy passthrough,
+  uncertainty bands, and confidence meanings that explicitly avoid outcome-certainty/talent claims.
+- FILES: `packages/prediction-engine/src/metrics/rushing/expected-rush-yards.ts`,
+  `packages/prediction-engine/src/metrics/rushing/rush-over-expected.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/expected-rush-yards.test.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`,
+  metric birth certificate/export/test updates, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: targeted metric tests passed after splitting the growing birth-certificate registry into a
+  compact contract/lookup module plus `metric-birth-certificate-registry.ts` (5 files, 15 tests).
+  LOC check: `metric-birth-certificate.ts` 74 pure LOC, registry 193, `expected-rush-yards.ts`
+  95, `rush-over-expected.ts` 88, and both new test files under 60 pure LOC. Prediction-engine
+  typecheck passed; full prediction-engine Vitest passed (89 files, 794 tests); root typecheck
+  and lint passed; root guardrails passed; `git diff --check` passed. The full all-workspaces test
+  wrapper hit the 300s tool ceiling, so validation was decomposed by workspace: apps/web passed in
+  six chunks (531 files, 7056 tests), crypto passed (1 file, 13 tests), data-ingestion passed
+  (16 files, 131 tests), ingestion-pipeline passed (6 files, 60 tests), prediction-engine passed
+  (89 files, 794 tests), and types passed (1 file, 31 tests).
+- FLAG: local metric primitives only; no public/API metric exposure, no model-card or drift-card
+  promotion, no validation claim, no source-rights legal clearance claim, no prediction publication,
+  no model-version bump, no schema change, no live route, and no production gate flip.

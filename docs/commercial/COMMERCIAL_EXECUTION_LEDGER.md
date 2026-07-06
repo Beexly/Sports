@@ -20,7 +20,7 @@ Updated: 2026-07-04
 | AWS compatibility indexes | complete for exact local paths | `docs/aws/*`, `infra/aws-shadow/*`, `scripts/guardrails/aws-compatibility-index-scan.mjs`, `apps/web/__tests__/aws-compatibility-index.test.ts` | owner/AWS approval before any live AWS step |
 | No-bet governor integration hardening | complete for shadow decision seam | `packages/prediction-engine/src/gse-score/gse-action-score.ts`, `packages/prediction-engine/src/gse-score/calibration-action-policy.ts`, `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts` | public-safe no-bet methodology examples |
 | Launch page visual/copy QA | complete for local source and screenshot evidence | `apps/web/__tests__/commercial-pages-launch-qa.test.ts`, `reports/launch-page-visual-qa/2026-07-05/*` | production preview QA before live push |
-| Metric backlog YAC/Rush continuation | complete for two shadow primitives | `yac-creation-gse`, `rush-environment-index`, tests, metric bible | Expected Rush Yards and Rush Over Expected |
+| Metric backlog YAC/Rush continuation | complete for four shadow primitives | `yac-creation-gse`, `rush-environment-index`, `expected-rush-yards-gse`, `rush-over-expected-gse`, tests, metric bible | receiver/rusher aggregation helpers and model/drift-card generators |
 
 ## Verification Contract
 
@@ -57,4 +57,6 @@ Every commercial slice must record:
 - Added local launch-page visual/copy QA. Six commercial routes passed source-level launch safety tests and rendered HTTP 200 in desktop/mobile Playwright screenshots under a local Next dev server.
 - No production preview was opened, no live provider was wired, and no publish/send/affiliate/sponsor/API/AWS action was taken.
 - Added YAC Creation and Rush Environment Index as governed shadow metrics on the proprietary metric foundation.
-- Next overall gate: continue proprietary metric backlog with Expected Rush Yards and Rush Over Expected, then production preview QA before any live push.
+- Added Expected Rush Yards and Rush Over Expected as governed shadow metrics on top of Rush Environment Index and expected-residual doctrine.
+- Split the metric birth-certificate registry out of the core contract module to keep the growing proprietary metric registry maintainable.
+- Next overall gate: continue proprietary metric backlog with receiver/rusher aggregation helpers and model/drift-card generators, then production preview QA before any live push.

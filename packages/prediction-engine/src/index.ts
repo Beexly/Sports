@@ -570,6 +570,16 @@ export type {
   RushEnvironmentIndex,
   RushEnvironmentInput,
 } from "./metrics/rushing/rush-environment-index.js";
+export { expectedRushYardsGse } from "./metrics/rushing/expected-rush-yards.js";
+export type {
+  ExpectedRushYardsInput,
+  ExpectedRushYardsMetric,
+} from "./metrics/rushing/expected-rush-yards.js";
+export { rushOverExpectedGse } from "./metrics/rushing/rush-over-expected.js";
+export type {
+  RushOverExpectedInput,
+  RushOverExpectedMetric,
+} from "./metrics/rushing/rush-over-expected.js";
 export { gseSignalScore } from "./metrics/decision/gse-signal-score.js";
 export type {
   GseSignalGrade,

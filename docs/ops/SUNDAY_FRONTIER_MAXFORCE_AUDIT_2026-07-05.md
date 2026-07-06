@@ -67,12 +67,12 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
 | E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, and a route-level shadow harness. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
-| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
+| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, DRI, action score, and no-bet strength exist. This slice added integration proof that high edge cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. Full market intelligence product wiring remains future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
 | J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
 | K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, raw-NGS-export, partner-offer-compliance, API-payload-rights, OpenAPI-security, and AWS-compatibility scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
-| L. Tests | IMPROVED THIS SESSION | Extended `apps/web/__tests__/guardrails.test.ts` and added `apps/web/__tests__/fences-and-adapters.test.ts` plus `apps/web/__tests__/aws-compatibility-index.test.ts`; added receiving metric tests in prediction-engine. |
+| L. Tests | IMPROVED THIS SESSION | Extended `apps/web/__tests__/guardrails.test.ts` and added `apps/web/__tests__/fences-and-adapters.test.ts` plus `apps/web/__tests__/aws-compatibility-index.test.ts`; added receiving/rushing metric tests in prediction-engine. |
 | M. Handoffs | IMPROVED THIS SESSION | Added this audit plus Sunday handoff and R&D map. Existing stale handoff remains historical, not current. |
 
 ## Session Patches
@@ -230,6 +230,20 @@ Metric slice added in the continuation:
 - `packages/prediction-engine/src/metrics/receiving/expected-yac.ts`
 - birth certificates, asset graduation coverage, package exports, and tests for both metrics
 
+Rushing metric continuation added in the continuation:
+
+- `packages/prediction-engine/src/metrics/rushing/expected-rush-yards.ts`
+  - derives expected rushing yards from Rush Environment Index, down-distance/field constraints, and shrunk rusher/defense priors
+  - keeps confidence as evidence quality, not rush-outcome certainty
+- `packages/prediction-engine/src/metrics/rushing/rush-over-expected.ts`
+  - derives rushing yards over expectation from actual rush yards versus GSE expected rush yards
+  - exposes public drivers for residual/prior/contact proxies without protected weights
+- `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`
+  - splits the growing birth-certificate data registry out of the core contract/lookup module
+- `packages/prediction-engine/src/metrics/__tests__/expected-rush-yards.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`
+- metric birth certificate/export/test updates for both metrics
+
 No-bet governor hardening added in the continuation:
 
 - `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts`
@@ -295,8 +309,18 @@ Completed so far:
 | `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/desktop WIDTH=1440 HEIGHT=1100 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing` | PASS | desktop screenshots captured for all six routes; final route responses were HTTP 200 |
 | `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/mobile WIDTH=390 HEIGHT=844 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing` | PASS | mobile screenshots captured for all six routes; final route responses were HTTP 200 |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/expected-yac.test.ts src/metrics/__tests__/yac-creation.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` | FAIL then PASS | first run failed because asset graduation still pinned the old six-metric order; after updating expected ids, 6 files and 20 tests passed |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/expected-rush-yards.test.ts src/metrics/__tests__/rush-over-expected.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS | 5 files, 15 tests after splitting the certificate registry |
+| `npm run typecheck --workspace=packages/prediction-engine` after Expected Rush Yards/Rush Over Expected | PASS | prediction-engine TypeScript checked after registry split and rushing metric additions |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Expected Rush Yards/Rush Over Expected | PASS | 89 files, 794 tests |
+| `npm run typecheck` after Expected Rush Yards/Rush Over Expected | PASS | all workspaces with typecheck scripts completed |
+| `npm run lint` after Expected Rush Yards/Rush Over Expected | PASS | root lint completed through `@sports/web` ESLint with max warnings 0 |
+| `npm run guardrails` after Expected Rush Yards/Rush Over Expected | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
+| `npm run test --workspaces --if-present` after Expected Rush Yards/Rush Over Expected | TIMEOUT | full wrapper hit the 300s tool ceiling and is not counted as a pass |
+| apps/web segmented Vitest after Expected Rush Yards/Rush Over Expected | PASS | six chunks covered 531 files and 7056 tests |
+| remaining segmented workspace tests after Expected Rush Yards/Rush Over Expected | PASS | crypto 1/13, data-ingestion 16/131, ingestion-pipeline 6/60, prediction-engine 89/794, types 1/31 |
 | `npm run typecheck --workspace=packages/prediction-engine` | PASS | prediction-engine TypeScript checked after YAC Creation and Rush Environment additions |
 | metric LOC and escape-hatch scan | PASS | `yac-creation.ts` 88 pure LOC, `rush-environment-index.ts` 108, `metric-birth-certificate.ts` 226; no TS escape hatches found |
+| metric registry split LOC check | PASS | `metric-birth-certificate.ts` 74 pure LOC, `metric-birth-certificate-registry.ts` 193, `expected-rush-yards.ts` 95, `rush-over-expected.ts` 88 |
 | `npx prettier --check ...` | BLOCKED | npm attempted a network fetch for Prettier and failed with `UNABLE_TO_VERIFY_LEAF_SIGNATURE`; no install or dependency change attempted |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` | PASS | 87 files, 790 tests after metric additions |
 | `git diff --check` | PASS | no whitespace errors |
@@ -316,13 +340,14 @@ Final broad validation for the current AWS slice completed through segmented wor
 - Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
 - No-bet governor integration is complete for the shadow decision seam. Full product wiring and public explanations remain future work and must not expose protected weights or imply legal/performance clearance.
 - Launch-facing commercial pages now have local source QA plus desktop/mobile screenshot artifacts under `reports/launch-page-visual-qa/2026-07-05`. This is local render evidence, not a production preview approval.
-- YAC Creation and Rush Environment Index now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, confidence/evidence separation, and no protected weights in outputs.
+- YAC Creation, Rush Environment Index, Expected Rush Yards, and Rush Over Expected now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, confidence/evidence separation, and no protected weights in outputs.
+- `metric-birth-certificate.ts` was split into a compact contract/lookup file plus a dedicated registry data file before commit, avoiding continued growth in the core contract module.
 - Exact `docs/aws` and `infra/aws-shadow` paths now exist as compatibility indexes. They are local visibility paths, not live AWS infrastructure.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Continue the metric backlog with Expected Rush Yards and Rush Over Expected on the governed foundation.
+1. Add receiver/rusher aggregation helpers for play-level residuals and player-season rollups without exposing protected weights.
 2. Add model-card and drift-card generators for every promoted metric.
 3. Add source-policy generation from the web registry into prediction-engine metric fixtures.
 4. Add public-safe no-bet governor methodology examples without exposing protected weights.

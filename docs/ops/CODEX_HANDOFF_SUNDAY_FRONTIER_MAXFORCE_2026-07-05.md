@@ -172,6 +172,9 @@ Broad test result:
 - Local desktop/mobile screenshot pass rendered `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` with HTTP 200 after rerunning the screenshot helper with `MSYS_NO_PATHCONV=1` to avoid Git Bash path conversion. Evidence lives in `reports/launch-page-visual-qa/2026-07-05/*`.
 - Metric continuation red/green: first targeted run failed because asset graduation still pinned the old six-metric order; after updating the expectation, targeted metric tests passed (6 files, 20 tests), prediction-engine typecheck passed, and full prediction-engine tests passed (87 files, 790 tests).
 - `npx prettier --check ...` was attempted but blocked before execution by npm certificate verification while fetching Prettier; no install or dependency change was attempted.
+- Rushing metric continuation passed targeted tests after splitting the metric birth-certificate registry: `metric-birth-certificate.test.ts`, `rush-environment-index.test.ts`, `expected-rush-yards.test.ts`, `rush-over-expected.test.ts`, and `metric-asset-graduation.test.ts` (5 files, 15 tests).
+- Current rushing metric validation: prediction-engine typecheck passed; full prediction-engine tests passed (89 files, 794 tests); root typecheck passed; root lint passed; root guardrails passed; `git diff --check` passed.
+- Current all-workspaces test wrapper hit the 300s tool ceiling and is not counted as a pass. Segmented fallback passed: apps/web in six chunks (531 files, 7056 tests), crypto (1 file, 13 tests), data-ingestion (16 files, 131 tests), ingestion-pipeline (6 files, 60 tests), prediction-engine (89 files, 794 tests), and types (1 file, 31 tests).
 
 ## Complete
 
@@ -188,7 +191,8 @@ Broad test result:
 - No-bet governor integration tests now prove high edge cannot override missing data, stale market gravity, unclear source rights, calibration drift, or calibration debt.
 - `computeGseActionScore` now caps action quality when probability claims are unearned and hard-passes DRIFTING/BLOCKED calibration.
 - Launch-facing commercial pages now have source-level QA plus local desktop/mobile screenshot artifacts for the five media pages and pricing.
-- YAC Creation and Rush Environment Index now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, and explicit confidence/evidence separation.
+- YAC Creation, Rush Environment Index, Expected Rush Yards, and Rush Over Expected now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, and explicit confidence/evidence separation.
+- `metric-birth-certificate.ts` was split into a compact contract/lookup module plus `metric-birth-certificate-registry.ts` to keep the growing metric registry maintainable.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 
 ## Partial
@@ -198,7 +202,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and first-month review queue export exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains required before live push.
-- Full proprietary metric backlog remains future work, with Expected Rush Yards and Rush Over Expected next.
+- Full proprietary metric backlog remains future work, with receiver/rusher aggregation helpers, model-card generators, drift-card generators, and source-policy generation next.
 
 ## Intentionally Deferred
 
@@ -224,7 +228,7 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Continue proprietary metric backlog with Expected Rush Yards and Rush Over Expected.
+1. Add receiver/rusher aggregation helpers for play-level residuals and player-season rollups without exposing protected weights.
 2. Add model-card and drift-card generators that consume metric validation outputs.
 3. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
 4. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
@@ -240,6 +244,6 @@ Broad test result:
 Continue the Sunday frontier implementation with the next proprietary metric slice:
 
 1. Inspect the governed metric foundation under `packages/prediction-engine/src/metrics`.
-2. Add Expected Rush Yards and Rush Over Expected only if they can be grounded with birth certificates, source/payload rights, public drivers, shadow status, and directional tests.
+2. Add receiver/rusher aggregation helpers that roll play-level expected/residual metrics into player-season summaries without exposing protected weights.
 3. Reuse existing math, shrinkage, validation, metric asset, and graduation controls.
 4. Run targeted prediction-engine tests, prediction-engine typecheck, guardrails, and `git diff --check`.

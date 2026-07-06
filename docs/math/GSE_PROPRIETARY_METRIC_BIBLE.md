@@ -365,8 +365,10 @@ Implemented on 2026-07-05:
 - `expected-yac-gse`
 - `yac-creation-gse`
 - `rush-environment-index`
+- `expected-rush-yards-gse`
+- `rush-over-expected-gse`
 
-All four metrics follow the same foundation rules as Slice 1:
+All six metrics follow the same foundation rules as Slice 1:
 
 - lifecycle status defaults to `SHADOW`
 - each metric has a birth certificate
@@ -404,12 +406,29 @@ Rush Environment Index behavior:
 - describes the rushing context before crediting or blaming the ball carrier
 - confidence remains evidence quality, not rush-success probability
 
+Expected Rush Yards behavior:
+
+- starts from `rush-environment-index` rather than copying any private expected-rush output
+- rises with favorable rush environment, stronger shrunk rusher prior, weaker defensive rush allowance, and designed-rush context
+- falls with long-distance stress and red-zone compression
+- keeps confidence tied to evidence quality and source posture, not certainty about a carry outcome
+
+Rush Over Expected behavior:
+
+- starts from the residual between actual rushing yards and `expected-rush-yards-gse`
+- rises when actual rushing yards clear the GSE expected-rush baseline
+- falls when actual rushing yards underperform the GSE expected-rush baseline
+- uses rusher RYOE prior as a shrinkage stabilizer, not as a public weight
+- can include source-cleared broken-tackle and yards-after-contact proxies as public drivers
+
 Tests added:
 
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/yac-creation.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/rush-environment-index.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/expected-rush-yards.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`
 
 This is not a claim that any metric is validated for public/API exposure. The metrics are usable as governed shadow primitives until model cards, drift cards, validation reports, and source-rights envelopes support promotion.
 
@@ -417,18 +436,18 @@ This is not a claim that any metric is validated for public/API exposure. The me
 
 Build in this order for proprietary football metrics:
 
-1. Expected Rush Yards
-2. Rush Over Expected
-3. YAC Creation aggregation and receiver-season rollups
-4. QB Burden Index
-5. Role Volatility Index
-6. Calibration Integrity Grade
-7. No-Bet Pressure
-8. Playable Window Score
-9. Market Mirage Score
-10. Portfolio Fit Score
-11. Drift Pressure Index
-12. Conformal Uncertainty Width
+1. Receiver/rusher aggregation helpers for play-level residuals and player-season rollups
+2. QB Burden Index
+3. Role Volatility Index
+4. Calibration Integrity Grade
+5. No-Bet Pressure
+6. Playable Window Score
+7. Market Mirage Score
+8. Portfolio Fit Score
+9. Drift Pressure Index
+10. Conformal Uncertainty Width
+11. Source Trust Score
+12. Stale Line Risk Score
 
 Product/governance backlog from the doctrine and competitive map:
 
@@ -466,6 +485,14 @@ Recorded run on 2026-07-04:
 | --- | --- |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/data-reliability-index.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/expected-completion.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 7 files, 25 tests. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/receiver-difficulty.test.ts src/metrics/__tests__/expected-yac.test.ts` | PASS - 4 files, 11 tests. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/expected-rush-yards.test.ts src/metrics/__tests__/rush-over-expected.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 5 files, 15 tests after registry split. |
+| `npm run typecheck --workspace=packages/prediction-engine` after Expected Rush Yards/Rush Over Expected | PASS. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Expected Rush Yards/Rush Over Expected | PASS - 89 files, 794 tests. |
+| `npm run typecheck` after Expected Rush Yards/Rush Over Expected | PASS. |
+| `npm run lint` after Expected Rush Yards/Rush Over Expected | PASS. |
+| `npm run guardrails` after Expected Rush Yards/Rush Over Expected | PASS. |
+| `npm run test --workspaces --if-present` after Expected Rush Yards/Rush Over Expected | WRAPPER TIMEOUT - hit the 300s tool ceiling; decomposed into segmented workspace runs. |
+| segmented workspace tests after Expected Rush Yards/Rush Over Expected | PASS - apps/web six chunks covered 531 files / 7056 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 89 / 794; types 1 / 31. |
 | `npm run typecheck --workspace=packages/prediction-engine` on 2026-07-05 receiving slice | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 1 file, 6 tests. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 1 file, 6 tests. |
@@ -506,7 +533,7 @@ Pure LOC review for new source files:
 
 `source-rights.ts` is in the 200-250 warning band. Keep the next expansion split by responsibility: move policy data to a fixture/policy table file before adding more sources.
 
-2026-07-05 metric continuation check:
+2026-07-05 receiving/rushing continuation check:
 
 - `metric-birth-certificate.ts` measured 226 pure LOC after adding YAC Creation and Rush Environment Index.
 - `yac-creation.test.ts` measured 52 pure LOC.
@@ -514,13 +541,22 @@ Pure LOC review for new source files:
 - Escape-hatch scan over new metric code found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, non-null property access, or enums.
 - `npx prettier --check ...` could not run because npm tried to fetch Prettier and failed with `UNABLE_TO_VERIFY_LEAF_SIGNATURE`; no package install or dependency change was attempted.
 
+2026-07-05 rushing continuation check:
+
+- `metric-birth-certificate.ts` was split into a 74 pure LOC contract/lookup file plus a 193 pure LOC `metric-birth-certificate-registry.ts` data registry before commit.
+- `expected-rush-yards.ts` measured 95 pure LOC.
+- `rush-over-expected.ts` measured 88 pure LOC.
+- `expected-rush-yards.test.ts` measured 53 pure LOC.
+- `rush-over-expected.test.ts` measured 52 pure LOC.
+- Targeted metric tests passed after the registry split: `metric-birth-certificate.test.ts`, `rush-environment-index.test.ts`, `expected-rush-yards.test.ts`, `rush-over-expected.test.ts`, and `metric-asset-graduation.test.ts` (5 files, 15 tests).
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, and receiving/rushing metric slices:
 
-1. Add Expected Rush Yards on top of `rush-environment-index`.
-2. Add Rush Over Expected as a residual over Expected Rush Yards.
-3. Add receiver/rusher aggregation helpers that roll play-level residuals into season/player summaries without exposing protected weights.
-4. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
-5. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
-6. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
+1. Add receiver/rusher aggregation helpers that roll play-level residuals into season/player summaries without exposing protected weights.
+2. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
+3. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
+4. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
+5. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
+6. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
