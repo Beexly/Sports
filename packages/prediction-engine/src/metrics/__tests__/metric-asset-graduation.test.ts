@@ -55,6 +55,8 @@ describe("GSE metric assets and graduation", () => {
       "expected-completion-gse",
       "receiver-difficulty-index",
       "expected-yac-gse",
+      "yac-creation-gse",
+      "rush-environment-index",
       "gse-signal-score",
     ]);
     for (const asset of GSE_METRIC_ASSETS) {

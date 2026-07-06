@@ -357,14 +357,16 @@ Payload field kinds:
 
 This layer is not a legal clearance claim. It is a code-level policy gate that encodes the current repo evidence and blocks unsafe exposure until a stronger source-rights record exists.
 
-## Receiving Metric Slice
+## Receiving and Rushing Metric Slices
 
 Implemented on 2026-07-05:
 
 - `receiver-difficulty-index`
 - `expected-yac-gse`
+- `yac-creation-gse`
+- `rush-environment-index`
 
-Both metrics follow the same foundation rules as Slice 1:
+All four metrics follow the same foundation rules as Slice 1:
 
 - lifecycle status defaults to `SHADOW`
 - each metric has a birth certificate
@@ -387,30 +389,46 @@ Expected YAC behavior:
 - decreases with defender leverage, deeper target depth, and red-zone constraint
 - uses protected basis expansion for depth so callers see public drivers without protected transform weights
 
+YAC Creation behavior:
+
+- starts from the residual between actual YAC and `expected-yac-gse`
+- rises when actual YAC clears the expected YAC baseline
+- falls when actual YAC underperforms the expected YAC baseline
+- uses receiver YAC-over-expected prior as a shrinkage stabilizer, not as a public weight
+- can include source-cleared broken-tackle/contact-balance proxies as public drivers
+
+Rush Environment Index behavior:
+
+- rises with lighter box pressure, stronger offensive-line continuity, favorable run-direction leverage, and run-friendly game script
+- falls with heavy box/front pressure, worse down-distance stress, and weather penalty
+- describes the rushing context before crediting or blaming the ball carrier
+- confidence remains evidence quality, not rush-success probability
+
 Tests added:
 
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/yac-creation.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/rush-environment-index.test.ts`
 
-This is not a claim that either metric is validated for public/API exposure. The metrics are usable as governed shadow primitives until model cards, drift cards, validation reports, and source-rights envelopes support promotion.
+This is not a claim that any metric is validated for public/API exposure. The metrics are usable as governed shadow primitives until model cards, drift cards, validation reports, and source-rights envelopes support promotion.
 
 ## Metric Asset Backlog
 
 Build in this order for proprietary football metrics:
 
-1. YAC Creation
-2. Rush Environment Index
-3. Expected Rush Yards
-4. Rush Over Expected
-5. QB Burden Index
-6. Role Volatility Index
-7. Calibration Integrity Grade
-8. No-Bet Pressure
-9. Playable Window Score
-10. Market Mirage Score
-11. Portfolio Fit Score
-12. Drift Pressure Index
-13. Conformal Uncertainty Width
+1. Expected Rush Yards
+2. Rush Over Expected
+3. YAC Creation aggregation and receiver-season rollups
+4. QB Burden Index
+5. Role Volatility Index
+6. Calibration Integrity Grade
+7. No-Bet Pressure
+8. Playable Window Score
+9. Market Mirage Score
+10. Portfolio Fit Score
+11. Drift Pressure Index
+12. Conformal Uncertainty Width
 
 Product/governance backlog from the doctrine and competitive map:
 
@@ -478,6 +496,8 @@ Pure LOC review for new source files:
 | `market-gravity-index.ts` | 98 |
 | `expected-completion.ts` | 110 |
 | `gse-signal-score.ts` | 113 |
+| `yac-creation.ts` | 88 |
+| `rush-environment-index.ts` | 108 |
 | `metric-asset.ts` | 105 |
 | `metric-graduation.ts` | 80 |
 | `source-rights.ts` | 205 |
@@ -486,12 +506,21 @@ Pure LOC review for new source files:
 
 `source-rights.ts` is in the 200-250 warning band. Keep the next expansion split by responsibility: move policy data to a fixture/policy table file before adding more sources.
 
+2026-07-05 metric continuation check:
+
+- `metric-birth-certificate.ts` measured 226 pure LOC after adding YAC Creation and Rush Environment Index.
+- `yac-creation.test.ts` measured 52 pure LOC.
+- `rush-environment-index.test.ts` measured 57 pure LOC.
+- Escape-hatch scan over new metric code found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, non-null property access, or enums.
+- `npx prettier --check ...` could not run because npm tried to fetch Prettier and failed with `UNABLE_TO_VERIFY_LEAF_SIGNATURE`; no package install or dependency change was attempted.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, and receiving metric slice:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, and receiving/rushing metric slices:
 
-1. Add YAC Creation as a residual over `expected-yac-gse`.
-2. Add Rush Environment Index and Expected Rush Yards on the same governed foundation.
-3. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
-4. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
-5. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
+1. Add Expected Rush Yards on top of `rush-environment-index`.
+2. Add Rush Over Expected as a residual over Expected Rush Yards.
+3. Add receiver/rusher aggregation helpers that roll play-level residuals into season/player summaries without exposing protected weights.
+4. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
+5. Add model-card and drift-card generators that can turn validation outputs into asset evidence.
+6. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.

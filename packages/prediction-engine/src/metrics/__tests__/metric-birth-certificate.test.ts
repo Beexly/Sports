@@ -13,6 +13,8 @@ import {
   gseSignalScore,
   proprietaryMetricBirthCertificate,
   receiverDifficultyIndex,
+  rushEnvironmentIndex,
+  yacCreationGse,
 } from "../../index.js";
 
 describe("metric birth certificates", () => {
@@ -23,6 +25,8 @@ describe("metric birth certificates", () => {
       "expected-completion-gse",
       "receiver-difficulty-index",
       "expected-yac-gse",
+      "yac-creation-gse",
+      "rush-environment-index",
       "gse-signal-score",
     ];
 
@@ -51,6 +55,8 @@ describe("metric birth certificates", () => {
     expect(typeof expectedCompletionGse).toBe("function");
     expect(typeof receiverDifficultyIndex).toBe("function");
     expect(typeof expectedYacGse).toBe("function");
+    expect(typeof yacCreationGse).toBe("function");
+    expect(typeof rushEnvironmentIndex).toBe("function");
     expect(typeof gseSignalScore).toBe("function");
   });
 });

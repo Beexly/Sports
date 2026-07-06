@@ -98,3 +98,13 @@ export type {
   ExpectedYacInput,
   ExpectedYacMetric,
 } from "../receiving/expected-yac.js";
+export { yacCreationGse } from "../receiving/yac-creation.js";
+export type {
+  YacCreationInput,
+  YacCreationMetric,
+} from "../receiving/yac-creation.js";
+export { rushEnvironmentIndex } from "../rushing/rush-environment-index.js";
+export type {
+  RushEnvironmentIndex,
+  RushEnvironmentInput,
+} from "../rushing/rush-environment-index.js";

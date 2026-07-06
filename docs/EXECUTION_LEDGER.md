@@ -820,3 +820,29 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local source/render QA only; no production preview, no email provider, no podcast feed,
   no affiliate link, no sponsor integration, no API route exposure, no AWS action, no paid service,
   no auto-publish, and no commercial/performance claim activation.
+
+## 2026-07-05 - (codex) - Sunday frontier YAC Creation and Rush Environment metrics
+
+- WHAT: Added two governed `SHADOW` proprietary football metrics on the existing metric foundation.
+  `yac-creation-gse` measures actual YAC over `expected-yac-gse` with shrinkage and public after-catch
+  drivers. `rush-environment-index` measures rushing context before crediting/blaming the ball carrier,
+  using down-distance, box/front pressure, line continuity, run-direction leverage, game script, and weather.
+  Both carry birth certificates, public drivers without protected weights, source-policy passthrough,
+  uncertainty bands, and confidence meanings that explicitly avoid probability/talent claims.
+- FILES: `packages/prediction-engine/src/metrics/receiving/yac-creation.ts`,
+  `packages/prediction-engine/src/metrics/rushing/rush-environment-index.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/yac-creation.test.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/rush-environment-index.test.ts`,
+  metric birth certificate/export updates, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: first targeted metric run failed because `metric-asset-graduation.test.ts` still pinned the old
+  six-metric asset order. After updating the registry expectation, targeted metric tests passed
+  (6 files, 20 tests), prediction-engine typecheck passed, and full prediction-engine tests passed
+  (87 files, 790 tests). Escape-hatch scan over new metric code found no `as any`, `as unknown`,
+  `@ts-ignore`, `@ts-expect-error`, `: any`, non-null property access, or enums. `npm run guardrails`
+  and `git diff --check` passed. `npx prettier --check ...` could not run because npm attempted a
+  network fetch for Prettier and failed with `UNABLE_TO_VERIFY_LEAF_SIGNATURE`; no package install
+  or dependency change was attempted.
+- FLAG: local metric primitives only; no public/API metric exposure, no model-card or drift-card
+  promotion, no validation claim, no source-rights legal clearance claim, no prediction publication,
+  no model-version bump, no schema change, and no production gate flip.

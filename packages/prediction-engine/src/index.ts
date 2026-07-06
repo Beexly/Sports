@@ -560,6 +560,16 @@ export type {
   ExpectedYacInput,
   ExpectedYacMetric,
 } from "./metrics/receiving/expected-yac.js";
+export { yacCreationGse } from "./metrics/receiving/yac-creation.js";
+export type {
+  YacCreationInput,
+  YacCreationMetric,
+} from "./metrics/receiving/yac-creation.js";
+export { rushEnvironmentIndex } from "./metrics/rushing/rush-environment-index.js";
+export type {
+  RushEnvironmentIndex,
+  RushEnvironmentInput,
+} from "./metrics/rushing/rush-environment-index.js";
 export { gseSignalScore } from "./metrics/decision/gse-signal-score.js";
 export type {
   GseSignalGrade,

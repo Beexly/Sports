@@ -294,6 +294,11 @@ Completed so far:
 | `npm run dev --workspace=apps/web -- --hostname 127.0.0.1 --port 3065` | PASS | local-only Next dev server rendered all six launch commercial routes; stopped after screenshot pass |
 | `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/desktop WIDTH=1440 HEIGHT=1100 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing` | PASS | desktop screenshots captured for all six routes; final route responses were HTTP 200 |
 | `MSYS_NO_PATHCONV=1 BASE_URL=http://127.0.0.1:3065 OUT_DIR=reports/launch-page-visual-qa/2026-07-05/mobile WIDTH=390 HEIGHT=844 FULL_PAGE=1 node scripts/screenshot.mjs /media-kit /partners /newsletter /content-lab /podcast /pricing` | PASS | mobile screenshots captured for all six routes; final route responses were HTTP 200 |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/expected-yac.test.ts src/metrics/__tests__/yac-creation.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` | FAIL then PASS | first run failed because asset graduation still pinned the old six-metric order; after updating expected ids, 6 files and 20 tests passed |
+| `npm run typecheck --workspace=packages/prediction-engine` | PASS | prediction-engine TypeScript checked after YAC Creation and Rush Environment additions |
+| metric LOC and escape-hatch scan | PASS | `yac-creation.ts` 88 pure LOC, `rush-environment-index.ts` 108, `metric-birth-certificate.ts` 226; no TS escape hatches found |
+| `npx prettier --check ...` | BLOCKED | npm attempted a network fetch for Prettier and failed with `UNABLE_TO_VERIFY_LEAF_SIGNATURE`; no install or dependency change attempted |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` | PASS | 87 files, 790 tests after metric additions |
 | `git diff --check` | PASS | no whitespace errors |
 
 PowerShell syntax caveat:
@@ -311,12 +316,13 @@ Final broad validation for the current AWS slice completed through segmented wor
 - Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
 - No-bet governor integration is complete for the shadow decision seam. Full product wiring and public explanations remain future work and must not expose protected weights or imply legal/performance clearance.
 - Launch-facing commercial pages now have local source QA plus desktop/mobile screenshot artifacts under `reports/launch-page-visual-qa/2026-07-05`. This is local render evidence, not a production preview approval.
+- YAC Creation and Rush Environment Index now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, confidence/evidence separation, and no protected weights in outputs.
 - Exact `docs/aws` and `infra/aws-shadow` paths now exist as compatibility indexes. They are local visibility paths, not live AWS infrastructure.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Continue the metric backlog with YAC Creation and Rush Environment Index on the governed foundation.
+1. Continue the metric backlog with Expected Rush Yards and Rush Over Expected on the governed foundation.
 2. Add model-card and drift-card generators for every promoted metric.
 3. Add source-policy generation from the web registry into prediction-engine metric fixtures.
 4. Add public-safe no-bet governor methodology examples without exposing protected weights.
