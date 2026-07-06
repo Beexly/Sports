@@ -63,6 +63,7 @@ export type {
 export { evaluateMetricPayloadRights } from "./payload-rights.js";
 export type {
   MetricSourceAttributionPolicy,
+  MetricSourceRightsRegistryEntry,
   MetricSourceRightsDecision,
   MetricSourceRightsInput,
   MetricSourceRightsPermissionSet,
@@ -73,6 +74,9 @@ export type {
 export {
   evaluateMetricSourceRights,
   GSE_METRIC_SOURCE_RIGHTS_POLICIES,
+  GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES,
+  metricSourceRightsPoliciesFromRegistry,
+  metricSourceRightsPolicyFromRegistryEntry,
   metricSourceRightsPolicy,
   sourceRightsEnvelopeFromPolicy,
 } from "./source-rights.js";

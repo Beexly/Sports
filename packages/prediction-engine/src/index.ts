@@ -503,6 +503,7 @@ export type {
 export {
   GSE_METRIC_ASSETS as GSE_PROPRIETARY_METRIC_ASSETS,
   GSE_METRIC_SOURCE_RIGHTS_POLICIES as GSE_PROPRIETARY_METRIC_SOURCE_RIGHTS_POLICIES,
+  GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES as GSE_PROPRIETARY_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES,
   evaluateMetricGraduation,
   evaluateMetricPayloadRights as evaluateProprietaryMetricPayloadRights,
   evaluateMetricSourceRights as evaluateProprietaryMetricSourceRights,
@@ -513,6 +514,8 @@ export {
   metricSourceRightsPolicy as proprietaryMetricSourceRightsPolicy,
   generateMetricDriftCard as generateProprietaryMetricDriftCard,
   generateMetricModelCard as generateProprietaryMetricModelCard,
+  metricSourceRightsPoliciesFromRegistry as proprietaryMetricSourceRightsPoliciesFromRegistry,
+  metricSourceRightsPolicyFromRegistryEntry as proprietaryMetricSourceRightsPolicyFromRegistryEntry,
   requireMetricAsset as requireProprietaryMetricAsset,
   sourceRightsEnvelopeFromPolicy as proprietarySourceRightsEnvelopeFromPolicy,
 } from "./metrics/core/index.js";
@@ -543,6 +546,7 @@ export type {
   MetricSourceRightsDecision as ProprietaryMetricSourceRightsDecision,
   MetricSourceRightsInput as ProprietaryMetricSourceRightsInput,
   MetricSourceRightsPolicy as ProprietaryMetricSourceRightsPolicy,
+  MetricSourceRightsRegistryEntry as ProprietaryMetricSourceRightsRegistryEntry,
   MetricSourceRightsStatus as ProprietaryMetricSourceRightsStatus,
   MetricSourceRightsUse as ProprietaryMetricSourceRightsUse,
   MetricValidationReport as ProprietaryMetricValidationReport,

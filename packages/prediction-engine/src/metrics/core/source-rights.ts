@@ -1,4 +1,15 @@
 import type { SourceRightsEnvelope } from "./metric-asset.js";
+import { GSE_METRIC_SOURCE_RIGHTS_POLICIES } from "./source-rights-registry-fixtures.js";
+
+export {
+  metricSourceRightsPoliciesFromRegistry,
+  metricSourceRightsPolicyFromRegistryEntry,
+  type MetricSourceRightsRegistryEntry,
+} from "./source-rights-registry-adapter.js";
+export {
+  GSE_METRIC_SOURCE_RIGHTS_POLICIES,
+  GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES,
+} from "./source-rights-registry-fixtures.js";
 
 export type MetricSourceRightsUse =
   | "model_training"
@@ -16,6 +27,7 @@ export type MetricSourceRightsStatus =
   | "approved_written_permission"
   | "manual_research_only"
   | "permission_required"
+  | "blocked_technical_controls"
   | "vendor_candidate"
   | "excluded";
 
@@ -57,63 +69,6 @@ export interface MetricSourceRightsDecision {
   readonly requiredAttribution: readonly string[];
   readonly notes: readonly string[];
 }
-
-export const GSE_METRIC_SOURCE_RIGHTS_POLICIES = [
-  {
-    attribution: {
-      required: true,
-      text: "Data from nflverse (https://github.com/nflverse), CC-BY-4.0",
-    },
-    evidenceRefs: [
-      "apps/web/lib/scraping/source-rights-registry.ts#nflverse",
-      "https://github.com/nflverse/nflverse-data/blob/master/LICENSE",
-    ],
-    notes: [
-      "Mirrors the app source-rights registry: open license, attribution required.",
-      "Raw API resale remains off by default; GSE exposes derived metrics and drivers.",
-    ],
-    permissions: {
-      contentDisplay: true,
-      derivedApi: true,
-      derivedMetric: true,
-      modelTraining: true,
-      rawApi: false,
-      storage: true,
-      validation: true,
-    },
-    registrySourceId: "nflverse",
-    sourceId: "nflverse",
-    sourceName: "nflverse",
-    status: "approved_open_license",
-  },
-  {
-    attribution: {
-      required: false,
-      text: null,
-    },
-    evidenceRefs: [
-      "apps/web/lib/scraping/source-rights-registry.ts#the-odds-api",
-      "https://the-odds-api.com/legalstuff.html",
-    ],
-    notes: [
-      "Mirrors the app source-rights registry: licensed API with derived analytics allowed.",
-      "Model training is false in the registry; raw API resale is blocked by this metric layer.",
-    ],
-    permissions: {
-      contentDisplay: true,
-      derivedApi: true,
-      derivedMetric: true,
-      modelTraining: false,
-      rawApi: false,
-      storage: true,
-      validation: true,
-    },
-    registrySourceId: "the-odds-api",
-    sourceId: "the-odds-api",
-    sourceName: "The Odds API",
-    status: "approved_api",
-  },
-] satisfies readonly MetricSourceRightsPolicy[];
 
 export function metricSourceRightsPolicy(
   policies: readonly MetricSourceRightsPolicy[],

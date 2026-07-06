@@ -442,6 +442,16 @@ Metric Evidence Card generator behavior:
 - treats high-uncertainty or fail-closed residual rollup evidence as review pressure, not stable proof
 - returns `MISSING` drift cards when no checks or rollup risk are supplied
 
+Metric Source-Policy generation behavior:
+
+- generates prediction-engine metric source-rights policies from registry-shaped fixtures aligned to `apps/web/lib/scraping/source-rights-registry.ts`
+- covers every current canonical web registry source ID with a fixture alignment test
+- maps canonical source flags into metric permissions for model training, validation, derived metrics, content display, storage, raw API, and derived API
+- keeps raw API exposure blocked for every generated policy
+- treats approved open/license/written-permission sources as the only paths that can support derived API exposure when derived analytics is also allowed
+- keeps public logged-off, permission-required, vendor-candidate, manual-research-only, blocked-technical-control, and excluded sources conservative by default
+- remains a code-level rights gate and does not claim legal clearance
+
 Tests added:
 
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
@@ -452,6 +462,7 @@ Tests added:
 - `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
+- source-policy generation coverage in `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`
 
 This is not a claim that any metric is validated for public/API exposure. The metrics are usable as governed shadow primitives until model cards, drift cards, validation reports, and source-rights envelopes support promotion.
 
@@ -459,7 +470,7 @@ This is not a claim that any metric is validated for public/API exposure. The me
 
 Build in this order for proprietary football metrics:
 
-1. Source-policy generation from the web source-rights registry into prediction-engine metric fixtures
+1. API response-envelope filtering with proprietary metric payload-rights checks
 2. QB Burden Index
 3. Role Volatility Index
 4. Calibration Integrity Grade
@@ -474,7 +485,7 @@ Build in this order for proprietary football metrics:
 
 Product/governance backlog from the doctrine and competitive map:
 
-1. Wire `apps/web` source-rights registry entries into metric source-policy generation instead of maintaining a mirrored package policy table by hand.
+1. Keep source-policy fixture alignment green whenever the canonical web source-rights registry changes.
 2. Apply generated model/drift cards to owner-approved promoted metric evidence packets after source-policy generation.
 3. Market Intelligence v2: stale-line risk, consensus fragility, move quality, book dispersion, market mirage, and playable window.
 4. No-Bet/Decision Intelligence: no-bet strength, refusal reasons, calibration sufficiency, model disagreement, volatility pressure, and responsible-gaming warnings.
@@ -528,6 +539,10 @@ Recorded run on 2026-07-04:
 | `npm run typecheck --workspace=packages/prediction-engine` after evidence-card generators | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after evidence-card generators | PASS - 91 files, 806 tests. |
 | `npm run typecheck && npm run guardrails && npm run lint && git diff --check` after evidence-card generators | PASS. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-source-payload-rights.test.ts` after source-policy adapter | PASS - 1 file, 8 tests. |
+| `npm run typecheck --workspace=packages/prediction-engine` after source-policy adapter | PASS. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after source-policy adapter | PASS - 91 files, 808 tests. |
+| `npm run typecheck && npm run guardrails && npm run lint && git diff --check` after source-policy adapter | PASS. |
 | `npm run typecheck --workspace=packages/prediction-engine` on 2026-07-05 receiving slice | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 1 file, 6 tests. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 1 file, 6 tests. |
@@ -606,11 +621,21 @@ Pure LOC review for new source files:
 - Full prediction-engine Vitest passed after evidence-card generators (91 files, 806 tests).
 - Root typecheck, root guardrails, root lint, and `git diff --check` passed after evidence-card generators.
 
+2026-07-05 source-policy generation continuation check:
+
+- `source-rights-registry-adapter.ts` measured 71 source lines.
+- `source-rights-registry-fixtures.ts` measured 180 source lines.
+- `metric-source-payload-rights.test.ts` measured 159 source lines after adding fixture alignment coverage.
+- Escape-hatch scan over the adapter, fixtures, and source/payload-rights tests found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, non-null property access, enums, or type assertions.
+- Targeted source/payload-rights tests passed after generated policy wiring (1 file, 8 tests).
+- Prediction-engine typecheck passed after generated policy wiring.
+- Full prediction-engine Vitest passed after generated policy wiring (91 files, 808 tests).
+- Root typecheck, root guardrails, root lint, and `git diff --check` passed after generated policy wiring.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, and evidence-card generators:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card generators, and generated source policies:
 
-1. Add a registry adapter that converts `apps/web/lib/scraping/source-rights-registry.ts` entries into metric source-policy fixtures.
-2. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
-3. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
-4. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+1. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
+2. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
+3. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.

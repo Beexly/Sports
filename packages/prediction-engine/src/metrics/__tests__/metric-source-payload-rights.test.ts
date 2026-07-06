@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import {
   GSE_METRIC_SOURCE_RIGHTS_POLICIES,
+  GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES,
   evaluateMetricPayloadRights,
   evaluateMetricSourceRights,
+  metricSourceRightsPoliciesFromRegistry,
   metricSourceRightsPolicy,
   sourceRightsEnvelopeFromPolicy,
   type MetricPayloadField,
@@ -11,6 +15,31 @@ import {
 const policies = GSE_METRIC_SOURCE_RIGHTS_POLICIES;
 
 describe("metric source and payload rights", () => {
+  it("keeps metric source fixtures aligned with the canonical web registry source ids", () => {
+    const registryPath = resolve(process.cwd(), "../../apps/web/lib/scraping/source-rights-registry.ts");
+    const registrySource = readFileSync(registryPath, "utf8");
+    const canonicalIds = [...registrySource.matchAll(/source_id:\s*"([^"]+)"/g)].map((match) => match[1]);
+    const fixtureIds = GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES.map((entry) => entry.source_id);
+
+    expect(fixtureIds).toEqual(canonicalIds);
+  });
+
+  it("generates conservative metric source policies from registry-shaped fixtures", () => {
+    const generated = metricSourceRightsPoliciesFromRegistry(GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES);
+    const nflverse = metricSourceRightsPolicy(generated, "nflverse");
+    const espn = metricSourceRightsPolicy(generated, "espn-public-api");
+    const blocked = metricSourceRightsPolicy(generated, "siriusxm-activator");
+
+    expect(nflverse?.permissions.modelTraining).toBe(true);
+    expect(nflverse?.permissions.derivedApi).toBe(true);
+    expect(nflverse?.permissions.rawApi).toBe(false);
+    expect(espn?.permissions.derivedMetric).toBe(true);
+    expect(espn?.permissions.derivedApi).toBe(false);
+    expect(espn?.permissions.modelTraining).toBe(false);
+    expect(blocked?.permissions.derivedMetric).toBe(false);
+    expect(blocked?.permissions.storage).toBe(false);
+  });
+
   it("allows nflverse modeling, validation, and derived exposure with attribution", () => {
     const modeling = evaluateMetricSourceRights({
       policies,

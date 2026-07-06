@@ -195,6 +195,7 @@ Broad test result:
 - `metric-birth-certificate.ts` was split into a compact contract/lookup module plus `metric-birth-certificate-registry.ts` to keep the growing metric registry maintainable.
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries for `yac-creation-gse` and `rush-over-expected-gse`, with source-policy validation and evidence-confidence separation.
 - Metric model/drift-card generators now exist as local evidence helpers. Model cards are draft-first by default, and generated cards do not promote lifecycle, exposure, licensing, validation, or source clearance.
+- Metric source-policy generation now exists from registry-shaped fixtures aligned to `apps/web/lib/scraping/source-rights-registry.ts`; raw API exposure stays blocked for every generated source.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 
 ## Partial
@@ -204,7 +205,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and first-month review queue export exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains required before live push.
-- Full proprietary metric backlog remains future work, with source-policy generation, payload-filter integration, QB Burden Index, and Stale Line Risk Score next.
+- Full proprietary metric backlog remains future work, with payload-filter integration, QB Burden Index, and Stale Line Risk Score next.
 
 ## Intentionally Deferred
 
@@ -230,22 +231,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
-2. Add API response-envelope filtering that calls proprietary metric payload-rights before any field leaves the package.
-3. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
-4. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-5. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-6. Add durable local queue persistence simulation for media review packets without DB writes.
-7. Add API replay promotion checks for conflict detection after a durable adapter exists.
-8. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-9. Run production preview visual QA before live push.
-10. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+1. Add API response-envelope filtering that calls proprietary metric payload-rights before any field leaves the package.
+2. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
+3. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+4. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+5. Add durable local queue persistence simulation for media review packets without DB writes.
+6. Add API replay promotion checks for conflict detection after a durable adapter exists.
+7. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+8. Run production preview visual QA before live push.
+9. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+10. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the next proprietary metric source-policy slice:
+Continue the Sunday frontier implementation with the next proprietary metric payload-filter slice:
 
 1. Inspect the governed metric foundation under `packages/prediction-engine/src/metrics`.
-2. Generate prediction-engine metric source-policy fixtures from the canonical web source-rights registry without claiming legal clearance.
-3. Reuse existing validation, metric asset, source-rights, payload-rights, evidence-card, and graduation controls.
+2. Add API response-envelope filtering that calls proprietary metric payload-rights before any metric field leaves the package.
+3. Reuse existing validation, metric asset, source-rights, generated source policies, payload-rights, evidence-card, and graduation controls.
 4. Run targeted prediction-engine tests, prediction-engine typecheck, guardrails, and `git diff --check`.

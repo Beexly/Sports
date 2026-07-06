@@ -20,7 +20,7 @@ Updated: 2026-07-04
 | AWS compatibility indexes | complete for exact local paths | `docs/aws/*`, `infra/aws-shadow/*`, `scripts/guardrails/aws-compatibility-index-scan.mjs`, `apps/web/__tests__/aws-compatibility-index.test.ts` | owner/AWS approval before any live AWS step |
 | No-bet governor integration hardening | complete for shadow decision seam | `packages/prediction-engine/src/gse-score/gse-action-score.ts`, `packages/prediction-engine/src/gse-score/calibration-action-policy.ts`, `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts` | public-safe no-bet methodology examples |
 | Launch page visual/copy QA | complete for local source and screenshot evidence | `apps/web/__tests__/commercial-pages-launch-qa.test.ts`, `reports/launch-page-visual-qa/2026-07-05/*` | production preview QA before live push |
-| Metric backlog YAC/Rush continuation | complete for four shadow primitives, residual rollups, and evidence-card generators | `yac-creation-gse`, `rush-environment-index`, `expected-rush-yards-gse`, `rush-over-expected-gse`, `buildMetricResidualRollups`, `generateMetricModelCard`, `generateMetricDriftCard`, tests, metric bible | source-policy adapter and payload-filter integration |
+| Metric backlog YAC/Rush continuation | complete for four shadow primitives, residual rollups, evidence-card generators, and source-policy generation | `yac-creation-gse`, `rush-environment-index`, `expected-rush-yards-gse`, `rush-over-expected-gse`, `buildMetricResidualRollups`, `generateMetricModelCard`, `generateMetricDriftCard`, generated source policies, tests, metric bible | payload-filter integration |
 
 ## Verification Contract
 
@@ -61,4 +61,5 @@ Every commercial slice must record:
 - Split the metric birth-certificate registry out of the core contract module to keep the growing proprietary metric registry maintainable.
 - Added receiver/rusher residual rollup helper for play-level residuals and player-season summaries. Rollups stay `SHADOW` / `INTERNAL`, fail source posture closed, and do not expose protected weights.
 - Added metric evidence-card generators. Model cards remain draft-first by default; drift cards require explicit checks or rollup risk and do not promote metrics.
-- Next overall gate: continue proprietary metric backlog with source-policy adapter and payload-filter integration, then production preview QA before any live push.
+- Added metric source-policy generator from registry-shaped fixtures aligned to the canonical web source-rights registry. Raw API exposure remains blocked for every generated source.
+- Next overall gate: continue proprietary metric backlog with payload-filter integration, then production preview QA before any live push.

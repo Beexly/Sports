@@ -914,3 +914,24 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local evidence-card generation only; no metric approval, no lifecycle promotion, no public/API
   exposure, no licensing readiness claim, no validation claim beyond supplied fixtures, no source
   legal-clearance claim, no schema change, no live route, and no production gate flip.
+
+## 2026-07-05 - (codex) - Sunday frontier metric source-policy generation
+
+- WHAT: Replaced the hand-maintained two-source metric source-rights table with a generated policy
+  layer fed by registry-shaped fixtures aligned to the canonical web source-rights registry. The
+  adapter maps source flags into model-training, validation, derived-metric, content-display,
+  storage, raw-API, and derived-API permissions while keeping raw API exposure blocked for every
+  generated source and fail-closing non-approved paths.
+- FILES: `packages/prediction-engine/src/metrics/core/source-rights-registry-adapter.ts`,
+  `packages/prediction-engine/src/metrics/core/source-rights-registry-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/core/source-rights.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`,
+  metric core/package export updates, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: targeted source/payload-rights tests passed (1 file, 8 tests), prediction-engine typecheck
+  passed, escape-hatch scan found no TS escape hatches or type assertions in the adapter,
+  fixtures, or updated tests, full prediction-engine Vitest passed (91 files, 808 tests), root
+  typecheck passed, root guardrails passed, root lint passed, and `git diff --check` passed.
+- FLAG: local source-policy generation only; fixture alignment is code-level governance, not legal
+  clearance. No live data source was queried, no scraping job was run, no raw provider payload was
+  exposed, no API route was opened, no source was licensed, and no production gate was flipped.
