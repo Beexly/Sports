@@ -29,6 +29,7 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `apps/web/lib/api/v1/audit-ledger.ts` | Creates and verifies a local hash-chained audit event ledger for API decisions. |
 | `apps/web/lib/api/v1/persistence.ts` | Provides a local shadow persistence adapter and promotion-plan gates without adding a database or route. |
 | `apps/web/lib/api/v1/shadow-route-harness.ts` | Simulates route-level auth, consumer resolution, scope, rate/quota, request ID, response envelope, usage event, payload rights, and abuse responses without exposing a live route tree. |
+| `apps/web/lib/api/v1/abuse-response-fixtures.ts` | Builds local abuse-response and promotion-conflict fixture reports for malformed keys, overscope, quota, unsafe payloads, route-control abuse, replay conflicts, unresolved review packets, stale review packets, and duplicate promotion request IDs. |
 | `apps/web/lib/api/v1/schema-proposal.ts` | Provides proposal-only durable table drafts and rollback validation without editing Prisma or migrations. |
 | `apps/web/lib/api/v1/durable-adapter-harness.ts` | Provides a reusable adapter conformance suite and mocked transaction boundary. |
 | `apps/web/lib/api/v1/dormant-durable-adapter-interface.ts` | Maps future durable operations to proposed table names while staying route-free, env-free, SQL-free, and non-executable. |
@@ -45,11 +46,13 @@ The implementation lives in `apps/web/lib/api/v1/` and is pure TypeScript. It do
 | `docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.md` | Human-readable rendering of the tracked shadow evidence archive. |
 | `docs/api/API_V1_PROMOTION_READINESS_MATRIX.md` | Documents the readiness matrix and expected current status. |
 | `docs/api/API_V1_DISPOSABLE_REHEARSAL_PACKET.md` | Documents the rehearsal packet, command intents, and forbidden targets. |
+| `docs/api/API_V1_ABUSE_RESPONSE_FIXTURES.md` | Documents the API v1 abuse-response fixture report and promotion-conflict checks. |
 | `scripts/guardrails/api-v1-boundary.mjs` | Boundary guard wired into `npm.cmd run guardrails`. |
 | `apps/web/__tests__/api-v1-shadow-seam.test.ts` | Focused Vitest coverage for the seam. |
 | `apps/web/__tests__/api-v1-consumer-registry.test.ts` | Focused Vitest coverage for consumer registry and audit-ledger behavior. |
 | `apps/web/__tests__/api-v1-persistence.test.ts` | Focused Vitest coverage for persistence adapter semantics and promotion blockers. |
 | `apps/web/__tests__/api-v1-shadow-route-harness.test.ts` | Focused Vitest coverage for route-level shadow auth, scope, rate/quota, request ID, response envelope, usage event, payload rights, abuse response, and no live route tree. |
+| `apps/web/__tests__/api-v1-abuse-response-fixtures.test.ts` | Focused Vitest coverage for denial fixtures, replay promotion conflicts, local review queue blockers, duplicate promotion requests, and live-route promotion packet integration. |
 | `apps/web/__tests__/api-v1-db-schema-proposal.test.ts` | Focused Vitest coverage for the schema-proposal boundary. |
 | `apps/web/__tests__/api-v1-durable-adapter-harness.test.ts` | Focused Vitest coverage for adapter conformance and rollback behavior. |
 | `apps/web/__tests__/api-v1-dormant-durable-adapter-interface.test.ts` | Focused Vitest coverage for table mapping, non-executable dry runs, and no-live-surface blockers. |
@@ -106,6 +109,7 @@ A future live API route should not be added until all of these are true:
 - quota decrement and audit append happen together inside the persistence adapter
 - route-level shadow harnesses must compose auth, consumer resolution, scope, rate/quota, request ID, response envelope, usage events, payload rights, and abuse responses before any live route file exists
 - denied route-harness responses must never include protected response data
+- abuse-response fixture reports must keep live promotion blocked when replay conflicts, unresolved queue blockers, stale queue packets, or duplicate promotion request IDs exist
 - future durable tables are proposal-only and have a rollback plan before any migration exists
 - future durable adapters must pass the local conformance harness before real storage is considered
 - future durable adapter interfaces must map operations to the proposed tables and remain dormant before fixture simulation or database work
@@ -121,6 +125,7 @@ Run before promoting or merging this slice:
 
 ```bash
 npm.cmd run test --workspace=apps/web -- api-v1-shadow-seam.test.ts api-v1-consumer-registry.test.ts api-v1-persistence.test.ts api-v1-db-schema-proposal.test.ts api-v1-durable-adapter-harness.test.ts api-v1-dormant-durable-adapter-interface.test.ts api-v1-durable-fixture-simulator.test.ts api-v1-durable-fixture-report.test.ts api-v1-durable-rehearsal-plan.test.ts api-v1-promotion-readiness.test.ts api-v1-disposable-rehearsal-packet.test.ts
+npm.cmd run test --workspace=apps/web -- api-v1-abuse-response-fixtures.test.ts api-v1-shadow-route-harness.test.ts api-v1-shadow-route-replay.test.ts api-v1-live-route-promotion-packet.test.ts local-review-queue-persistence.test.ts
 npm.cmd run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts
 npm.cmd run typecheck
 npm.cmd run lint

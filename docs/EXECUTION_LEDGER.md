@@ -1036,3 +1036,23 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local memory-shadow simulation only; no database write, migration, durable store, live API
   route, content publish, outbound send, affiliate activation, sponsor approval automation, live AWS
   action, or production gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier API abuse-response and promotion-conflict fixtures
+
+- WHAT: Added a local API v1 abuse-response fixture report that exercises malformed key,
+  conflicting key, overscoped consumer, quota exhaustion, unsafe payload-rights, and malformed route
+  control denials through the existing shadow route harness. The report also detects replay
+  promotion conflicts from reused idempotency keys with different payload hashes, unresolved/stale
+  local review queue packets, and duplicate route-promotion request IDs before feeding
+  `abuseResponseReviewed` into the non-executable live-route promotion packet.
+- FILES: `apps/web/lib/api/v1/abuse-response-fixtures.ts`,
+  `apps/web/__tests__/api-v1-abuse-response-fixtures.test.ts`,
+  `docs/api/API_V1_ABUSE_RESPONSE_FIXTURES.md`, `docs/api/API_V1_SHADOW_SEAM.md`, Sunday
+  audit/handoff docs, commercial ledger, and execution ledger.
+- GATE: targeted API abuse, route harness, replay, live-route promotion packet, and local review
+  queue tests passed (5 files, 25 tests). First app typecheck failed on a nullable replay-conflict
+  map/filter return; after replacing it with an explicit conflict collection loop, app workspace
+  typecheck passed.
+- FLAG: local shadow report only; no live route tree, no database write, no credential, no env var,
+  no provider call, no billing hook, no partner exposure, no outbound request, no command execution,
+  and no production API promotion.
