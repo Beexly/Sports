@@ -67,6 +67,9 @@ Application and test files:
 - `packages/prediction-engine/src/metrics/core/index.ts`
 - `packages/prediction-engine/src/index.ts`
 - `apps/web/__tests__/aws-compatibility-index.test.ts`
+- `packages/prediction-engine/src/gse-score/calibration-action-policy.ts`
+- `packages/prediction-engine/src/gse-score/gse-action-score.ts`
+- `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts`
 
 Guardrails:
 
@@ -145,6 +148,10 @@ Passed:
 - `npm run test --workspace=packages/ingestion-pipeline -- --reporter=dot --silent`
 - `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent`
 - `npm run test --workspace=packages/types -- --reporter=dot --silent`
+- `npm run test --workspace=packages/prediction-engine -- src/gse-score/__tests__/no-bet-governor-integration.test.ts`
+- `npm run test --workspace=packages/prediction-engine -- src/gse-score/__tests__/gse-action-score.test.ts src/gse-score/__tests__/no-bet-strength.test.ts src/gse-score/__tests__/model-parliament.test.ts src/gse-score/__tests__/no-bet-governor-integration.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/market-gravity-index.test.ts src/metrics/__tests__/data-reliability-index.test.ts`
+- `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent`
+- `npm run typecheck --workspace=packages/prediction-engine`
 - `npm run guardrails`
 - `git diff --check`
 
@@ -153,6 +160,7 @@ Broad test result:
 - `npm run test --workspaces --if-present`: 635 test files and 8052 tests passed across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types.
 - Current AWS compatibility slice rerun of `npm run test --workspaces --if-present` exceeded the 300s tool ceiling and is not counted as a pass.
 - Equivalent segmented workspace tests passed across all test-script workspaces: 638 files and 8067 tests.
+- No-bet governor integration red/green: first targeted run failed because drift and calibration debt still produced `PLAY`; after hardening, targeted test passed (1 file, 5 tests), adjacent governor/metric suite passed (7 files, 23 tests), prediction-engine suite passed (85 files, 786 tests), and prediction-engine typecheck passed after correcting one fixture literal from uppercase `UNKNOWN` to lowercase `unknown`.
 
 ## Complete
 
@@ -166,6 +174,8 @@ Broad test result:
 - Representative content/API review packet fixtures, first-month media queue fixtures, and first-month review queue exports exist with claim-safety reports.
 - FABLE/AWS shadow architecture exists under `docs/fable/aws` and `infrastructure/aws`.
 - Exact `docs/aws` and `infra/aws-shadow` compatibility indexes exist and point to canonical FABLE/AWS artifacts.
+- No-bet governor integration tests now prove high edge cannot override missing data, stale market gravity, unclear source rights, calibration drift, or calibration debt.
+- `computeGseActionScore` now caps action quality when probability claims are unearned and hard-passes DRIFTING/BLOCKED calibration.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 
 ## Partial
@@ -200,12 +210,12 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Build no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
+1. Add route-level visual QA and accessibility checks for the five media pages plus pricing.
 2. Continue proprietary metric backlog with YAC Creation and Rush Environment Index.
 3. Add model-card and drift-card generators that consume metric validation outputs.
 4. Generate prediction-engine metric source policies from the web source-rights registry instead of maintaining mirrored policy tables by hand.
 5. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-6. Add route-level visual QA and accessibility checks for the five media pages plus pricing.
+6. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
 7. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
 8. Add durable local queue persistence simulation for media review packets without DB writes.
 9. Add API replay promotion checks for conflict detection after a durable adapter exists.
@@ -213,9 +223,9 @@ Broad test result:
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation by adding no-bet governor integration tests:
+Continue the Sunday frontier implementation with route-level visual QA for the launch-facing commercial pages:
 
-1. Find the canonical no-bet, GSE Signal Score, market gravity, calibration debt, drift, and source-reliability seams.
-2. Add integration tests proving high EV cannot override missing data, stale markets, drift pressure, calibration debt, or source-rights uncertainty.
-3. Keep every path shadow/local and do not flip any pick, publication, pricing, or prediction gate.
+1. Inspect `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing`.
+2. Add or extend route-level tests proving launch-safe copy, sponsor boundaries, newsletter lead magnets, podcast coming-soon copy, and no fake audience/revenue/performance claims.
+3. Run the strongest route/page validation available without publishing or starting paid services.
 4. Update ledgers with exact commands and failures.

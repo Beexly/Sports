@@ -4,6 +4,11 @@ import {
   type CalibrationContractResult,
 } from "./calibration-contract.js";
 import {
+  calibrationActionCap,
+  calibrationRequiresHardPass,
+  calibrationRiskSeverity,
+} from "./calibration-action-policy.js";
+import {
   evaluateFeatureContract,
   type FeatureContractInput,
   type FeatureContractResult,
@@ -74,9 +79,16 @@ export function computeGseActionScore(input: GseActionScoreInput): GseActionScor
   const noBetPenalty = noBet.score * 0.72;
   const rawScore =
     18 + positiveEdgeScore + confidenceContribution + featureContribution + calibrationContribution - noBetPenalty;
+  const scoreBeforeCalibrationCap = clampScore(rawScore);
+  const calibrationScoreCap = calibrationActionCap(calibration.status);
+  const probabilityClaimCapPenalty = Math.max(0, scoreBeforeCalibrationCap - calibrationScoreCap);
+  const calibrationCappedScore = Math.min(scoreBeforeCalibrationCap, calibrationScoreCap);
   const forcedHardPass =
-    noBet.decision === "HARD_PASS" || featureContract.status === "BLOCK" || parliament.status === "BLOCK";
-  const score = forcedHardPass ? Math.min(24, clampScore(rawScore)) : clampScore(rawScore);
+    noBet.decision === "HARD_PASS" ||
+    featureContract.status === "BLOCK" ||
+    parliament.status === "BLOCK" ||
+    calibrationRequiresHardPass(calibration.status);
+  const score = forcedHardPass ? Math.min(24, calibrationCappedScore) : calibrationCappedScore;
 
   return {
     calibration,
@@ -89,6 +101,7 @@ export function computeGseActionScore(input: GseActionScoreInput): GseActionScor
       noBetPenalty,
       positiveEdgeScore,
       probabilityEdge,
+      probabilityClaimCapPenalty,
     }),
     featureContract,
     marketProbability: round4(marketProbability),
@@ -135,8 +148,9 @@ function derivedRisks(
   if (!calibration.probabilityClaimsAllowed) {
     risks.push({
       factor: "CALIBRATION_NOT_VALIDATED",
+      hardBlock: calibrationRequiresHardPass(calibration.status),
       reason: `Calibration status is ${calibration.status}.`,
-      severity: calibration.status === "BLOCKED" || calibration.status === "DRIFTING" ? 1 : 0.65,
+      severity: calibrationRiskSeverity(calibration.status),
     });
   }
   if (parliament.disagreement > 0.08) {
@@ -165,6 +179,7 @@ function buildDrivers(input: {
   readonly calibrationContribution: number;
   readonly noBetPenalty: number;
   readonly probabilityEdge: number;
+  readonly probabilityClaimCapPenalty: number;
 }): readonly GseActionDriver[] {
   const drivers: GseActionDriver[] = [
     {
@@ -196,6 +211,12 @@ function buildDrivers(input: {
       explanation: "No-bet pressure suppresses action even when expected value looks attractive.",
       impact: -round2(input.noBetPenalty),
       name: "no_bet_governor",
+    },
+    {
+      direction: input.probabilityClaimCapPenalty > 0 ? "DOWN" : "NEUTRAL",
+      explanation: "Unearned probability claims cap action quality until calibration survives.",
+      impact: -round2(input.probabilityClaimCapPenalty),
+      name: "probability_claim_cap",
     },
   ];
 

@@ -17,7 +17,8 @@ Updated: 2026-07-04
 | Review packet fixtures | complete for local content/API samples | `apps/web/lib/workflows/draft-review-fixtures.ts`, `apps/web/__tests__/draft-review-fixtures.test.ts` | API replay/idempotency storage simulation |
 | First-month media queue fixtures | complete for local draft queue and review export | `apps/web/lib/media-revenue/first-month-content-queue.ts`, `apps/web/lib/media-revenue/first-month-review-queue.ts`, `apps/web/__tests__/first-month-review-queue.test.ts`, `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`, `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md` | visual QA before production push |
 | API idempotency replay simulation | complete for local shadow harness | `apps/web/lib/api/v1/shadow-route-replay.ts`, `apps/web/__tests__/api-v1-shadow-route-replay.test.ts`, `docs/api/API_V1_SHADOW_ROUTE_REPLAY.md` | owner-gated live-route promotion packet after durable persistence review |
-| AWS compatibility indexes | complete for exact local paths | `docs/aws/*`, `infra/aws-shadow/*`, `scripts/guardrails/aws-compatibility-index-scan.mjs`, `apps/web/__tests__/aws-compatibility-index.test.ts` | no-bet governor integration tests |
+| AWS compatibility indexes | complete for exact local paths | `docs/aws/*`, `infra/aws-shadow/*`, `scripts/guardrails/aws-compatibility-index-scan.mjs`, `apps/web/__tests__/aws-compatibility-index.test.ts` | owner/AWS approval before any live AWS step |
+| No-bet governor integration hardening | complete for shadow decision seam | `packages/prediction-engine/src/gse-score/gse-action-score.ts`, `packages/prediction-engine/src/gse-score/calibration-action-policy.ts`, `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts` | visual QA before production push |
 
 ## Verification Contract
 
@@ -49,4 +50,6 @@ Every commercial slice must record:
 - Added first-month review-queue export for local content drafts. Exported packets keep full script bodies bounded out of markdown and keep all publish/send/route/live locks closed.
 - Added API v1 idempotency replay simulation. Duplicate successful requests return the stored envelope without a second quota debit, and denied requests do not create reusable success records.
 - Added AWS compatibility indexes for exact `docs/aws` and `infra/aws-shadow` visibility paths, with a guardrail proving local-only boundaries.
-- Next overall gate: no-bet governor integration tests proving high EV cannot override missing data, stale markets, drift, or calibration debt.
+- Added no-bet governor integration hardening. Initial targeted test failed because high modeled edge still produced `PLAY` under calibration drift and calibration debt; policy cap now prevents PLAY/LEAN when probability claims are unearned and hard-passes DRIFTING/BLOCKED calibration.
+- No pick publication, probability claim activation, model-version promotion, pricing, betting, schema, route exposure, live API, paid service, or production gate was flipped.
+- Next overall gate: route-level visual QA for the five media pages plus pricing before any production push.

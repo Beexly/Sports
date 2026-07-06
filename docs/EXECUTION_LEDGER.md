@@ -779,3 +779,24 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   `git diff --check` passed.
 - FLAG: compatibility indexes and local fixtures only; no AWS credentials, account IDs, ARNs, CLI calls,
   deploy code, DNS changes, paid resources, SDK dependencies, cloud mutation, or production gate flips.
+
+## 2026-07-05 - (codex) - Sunday frontier no-bet governor integration hardening
+
+- WHAT: Added a focused no-bet governor integration harness proving high modeled edge cannot override
+  missing required evidence, stale market-gravity inputs, unclear source rights, calibration drift, or
+  calibration debt. The first red run exposed two real failures: drift pressure and ECE/Brier debt still
+  allowed a `PLAY`. Hardened `computeGseActionScore` with a calibration action policy: validated
+  calibration can score normally, WATCH/insufficient calibration caps action below LEAN/PLAY, and
+  DRIFTING/BLOCKED calibration hard-passes. Added a public driver for the probability-claim cap without
+  exposing protected weights.
+- FILES: `packages/prediction-engine/src/gse-score/gse-action-score.ts`,
+  `packages/prediction-engine/src/gse-score/calibration-action-policy.ts`,
+  `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: initial targeted test failed exactly on drift/debt still producing `PLAY`; after the policy patch,
+  targeted no-bet integration passed (1 file, 5 tests), adjacent governor/metric suite passed (7 files,
+  23 tests), full prediction-engine tests passed (85 files, 786 tests), and prediction-engine typecheck
+  passed after fixing one fixture literal from uppercase `UNKNOWN` to lowercase `unknown`.
+- FLAG: local shadow decision-quality hardening only; no pick publication, probability claim activation,
+  model-version promotion, pricing, betting, schema, route exposure, live API, paid service, or production
+  gate flip.
