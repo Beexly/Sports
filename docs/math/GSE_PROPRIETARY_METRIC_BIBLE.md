@@ -543,6 +543,14 @@ Recorded run on 2026-07-04:
 | `npm run typecheck --workspace=packages/prediction-engine` after source-policy adapter | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after source-policy adapter | PASS - 91 files, 808 tests. |
 | `npm run typecheck && npm run guardrails && npm run lint && git diff --check` after source-policy adapter | PASS. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-payload-envelope.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` after payload-envelope filter | PASS - 2 files, 12 tests. |
+| `npm run test --workspace=@sports/web -- __tests__/fences-and-adapters.test.ts` after app metric payload bridge | PASS - 1 file, 9 tests. |
+| `npm run typecheck --workspace=packages/prediction-engine` after payload-envelope filter | PASS. |
+| `npm run typecheck --workspace=@sports/web` after app metric payload bridge | PASS. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after payload-envelope filter | PASS - 92 files, 812 tests. |
+| `npm run typecheck` after payload-envelope filter | PASS. |
+| `npm run guardrails` after payload-envelope filter | PASS. |
+| `npm run lint && git diff --check` after payload-envelope filter | PASS. |
 | `npm run typecheck --workspace=packages/prediction-engine` on 2026-07-05 receiving slice | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 1 file, 6 tests. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS - 1 file, 6 tests. |
@@ -632,10 +640,24 @@ Pure LOC review for new source files:
 - Full prediction-engine Vitest passed after generated policy wiring (91 files, 808 tests).
 - Root typecheck, root guardrails, root lint, and `git diff --check` passed after generated policy wiring.
 
+2026-07-05 payload-envelope continuation check:
+
+- `payload-envelope.ts` adds a package-owned API/default envelope filter for metric fields.
+- The helper calls proprietary metric payload-rights before adding any metric field to the output payload.
+- API exposure keeps derived metrics and public drivers only when generated source policies allow derived API use.
+- Raw source values and protected weights are excluded from API payloads and reported as blocked fields.
+- The app API-v1 bridge delegates metric-shaped payload fields into `@sports/prediction-engine`; it does not duplicate the metric rights rules.
+- Targeted prediction-engine payload-envelope/source-rights tests passed (2 files, 12 tests).
+- Targeted app fence/API adapter tests passed (1 file, 9 tests).
+- Prediction-engine and app workspace typechecks passed.
+- Full prediction-engine Vitest passed (92 files, 812 tests).
+- Root typecheck, root guardrails, root lint, and `git diff --check` passed.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card generators, and generated source policies:
 
-1. Add API response-envelope filtering that calls `evaluateProprietaryMetricPayloadRights` before any field leaves the package.
-2. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
-3. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+1. Add public-safe no-bet governor methodology examples without exposing protected weights or implying betting certainty.
+2. Add owner-approved live-route promotion packet only after durable persistence, route exposure, abuse-response, and payload-envelope gates are reviewed.
+3. Add QB Burden Index only after the passing-event source policy and validation plan are explicit.
+4. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.

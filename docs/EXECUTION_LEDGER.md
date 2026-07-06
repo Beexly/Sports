@@ -935,3 +935,24 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local source-policy generation only; fixture alignment is code-level governance, not legal
   clearance. No live data source was queried, no scraping job was run, no raw provider payload was
   exposed, no API route was opened, no source was licensed, and no production gate was flipped.
+
+## 2026-07-05 - (codex) - Sunday frontier metric payload-envelope filter
+
+- WHAT: Added a package-owned metric payload-envelope helper that calls proprietary metric
+  payload-rights before constructing API-facing metric payloads. The envelope keeps only approved
+  fields, drops blocked raw source values and protected weights, carries source attributions, and
+  fails closed when a generated source policy blocks derived API exposure. A thin `apps/web`
+  API-v1 bridge now delegates metric-shaped payloads into `@sports/prediction-engine` instead of
+  duplicating metric rights logic in app code.
+- FILES: `packages/prediction-engine/src/metrics/core/payload-envelope.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-payload-envelope.test.ts`,
+  `apps/web/lib/api-v1/payload-filter.ts`, `apps/web/__tests__/fences-and-adapters.test.ts`,
+  metric core/package export updates, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  Sunday audit/handoff docs, and commercial ledger.
+- GATE: targeted prediction-engine payload tests passed (2 files, 12 tests). Targeted app adapter
+  test passed (1 file, 9 tests). Prediction-engine and app workspace typechecks passed. Full
+  prediction-engine Vitest passed (92 files, 812 tests). Root typecheck, guardrails, lint, and
+  `git diff --check` passed.
+- FLAG: local shadow payload filtering only; no live API route was opened, no raw provider payload
+  was exposed, no protected weights were exposed, no source was legally cleared, no pricing or
+  partner exposure was changed, and no production gate was flipped.

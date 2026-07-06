@@ -67,7 +67,7 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
 | E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, and a route-level shadow harness. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
-| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, generated source policies, source-rights, payload-rights, and tests exist. Full metric backlog remains future work. |
+| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, xCOMP-GSE, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
 | H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, DRI, action score, and no-bet strength exist. This slice added integration proof that high edge cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. Full market intelligence product wiring remains future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
 | J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
@@ -109,7 +109,7 @@ Tests updated:
   - executes all six new guardrail scripts
   - asserts root package scripts include the new checks
 - `apps/web/__tests__/fences-and-adapters.test.ts`
-  - proves fence plugins, source-rights/IP adapters, API-auth helpers, and API-v1 payload filtering fail closed where required
+  - proves fence plugins, source-rights/IP adapters, API-auth helpers, API-v1 payload filtering, and metric payload-envelope delegation fail closed where required
 - `apps/web/__tests__/aws-compatibility-index.test.ts`
   - proves exact AWS compatibility paths stay local-only and point to existing canonical artifacts
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
@@ -277,6 +277,21 @@ Metric source-policy generation continuation added in the continuation:
   - verifies generated permissions stay conservative
 - metric core and package export updates
 
+Metric payload-envelope filtering continuation added in the continuation:
+
+- `packages/prediction-engine/src/metrics/core/payload-envelope.ts`
+  - calls proprietary metric payload-rights before constructing an API-facing metric payload
+  - includes only approved fields in the payload map
+  - carries blocked fields, violations, and required source attribution
+  - defaults to generated metric source policies and API exposure
+- `packages/prediction-engine/src/metrics/__tests__/metric-payload-envelope.test.ts`
+  - proves derived/public metric fields pass with attribution
+  - proves raw source values and protected weights are excluded from API payloads
+  - proves ESPN public fallback remains blocked for derived API exposure
+- `apps/web/lib/api-v1/payload-filter.ts`
+  - adds `filterApiV1MetricPayloadFields()` as a thin app bridge into `@sports/prediction-engine`
+- metric core, package, and app export/test updates
+
 No-bet governor hardening added in the continuation:
 
 - `packages/prediction-engine/src/gse-score/__tests__/no-bet-governor-integration.test.ts`
@@ -300,6 +315,14 @@ Completed so far:
 | `node scripts/guardrails/partner-offer-compliance-scan.mjs` | PASS | 8 fixture cases passed; high-risk offers fail closed |
 | `node scripts/guardrails/api-payload-rights-scan.mjs` | PASS | 8 fixture cases passed; unsafe API fields fail closed |
 | `node scripts/guardrails/openapi-security-scan.mjs` | PASS | 3 contract files passed shadow OpenAPI security checks |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-payload-envelope.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts` | PASS | 2 files, 12 tests; metric payload-envelope and source/payload rights passed together |
+| `npm run test --workspace=@sports/web -- __tests__/fences-and-adapters.test.ts` | PASS | 1 file, 9 tests; app bridge delegates metric payload fields through prediction-engine rights |
+| `npm run typecheck --workspace=packages/prediction-engine` after payload-envelope filter | PASS | prediction-engine TypeScript checked after payload-envelope/export additions |
+| `npm run typecheck --workspace=@sports/web` after payload-envelope bridge | PASS | web TypeScript checked after app API-v1 bridge additions |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after payload-envelope filter | PASS | 92 files, 812 tests |
+| `npm run typecheck` after payload-envelope filter | PASS | all workspaces with typecheck scripts completed |
+| `npm run guardrails` after payload-envelope filter | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
+| `npm run lint && git diff --check` after payload-envelope filter | PASS | root lint and whitespace check completed without errors |
 | `npm run guard:aws-compatibility-index` | PASS | first run failed on two deployment-shaped phrases; after wording repair, 13 compatibility paths and 8 local fixtures passed |
 | `npm run test --workspace=apps/web -- aws-compatibility-index.test.ts` | PASS | 1 file, 3 tests; exact AWS compatibility path guard, package wiring, and canonical references passed |
 | `npm run fable:aws-gates` | PASS | local AWS gate evidence passed |
@@ -396,22 +419,23 @@ Final broad validation for the current AWS slice completed through segmented wor
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries. They are aggregation helpers only, not public/API leaderboards, and they do not create validation, drift, model-card, or source-clearance claims.
 - Metric model/drift-card generators now exist as local evidence helpers. Model cards remain draft-first by default, and generated cards do not approve lifecycle, public/API exposure, licensing, validation, source clearance, or production promotion.
 - Metric source-policy generation now exists from registry-shaped fixtures aligned to the canonical web source-rights registry. This is code-level governance only, not legal clearance.
+- Metric payload-envelope filtering now exists before app API-v1 metric payload exposure. This is local shadow filtering, not a live route or legal clearance.
 - `metric-birth-certificate.ts` was split into a compact contract/lookup file plus a dedicated registry data file before commit, avoiding continued growth in the core contract module.
 - Exact `docs/aws` and `infra/aws-shadow` paths now exist as compatibility indexes. They are local visibility paths, not live AWS infrastructure.
 - Startup funding and cloud credit program terms were not live-refreshed in this slice. Verify official pages before any application.
 
 ## Next Highest-Leverage Tasks
 
-1. Add API response-envelope filtering that calls proprietary metric payload-rights before any field leaves the package.
-2. Add public-safe no-bet governor methodology examples without exposing protected weights.
-3. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-4. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-5. Add durable local queue persistence simulation for media review packets without DB writes.
-6. Add API replay promotion checks for conflict detection after a durable adapter exists.
-7. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-8. Run production preview visual QA before live push.
-9. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-10. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+1. Add public-safe no-bet governor methodology examples without exposing protected weights.
+2. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+3. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+4. Add durable local queue persistence simulation for media review packets without DB writes.
+5. Add API replay promotion checks for conflict detection after a durable adapter exists.
+6. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+7. Run production preview visual QA before live push.
+8. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+9. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+10. Build API live-route promotion checks that explicitly consume `filterProprietaryMetricPayloadEnvelope`.
 
 ## Safety Statement
 

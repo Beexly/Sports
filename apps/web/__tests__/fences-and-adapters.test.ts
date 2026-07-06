@@ -21,7 +21,7 @@ import {
   signWebhookPayload,
   verifyWebhookSignature,
 } from "@/lib/api-auth/index";
-import { filterApiV1PayloadFields } from "@/lib/api-v1/index";
+import { filterApiV1MetricPayloadFields, filterApiV1PayloadFields } from "@/lib/api-v1/index";
 import type { RevenueOffer, RevenuePartner } from "@/lib/revenue";
 
 const partner: RevenuePartner = {
@@ -154,5 +154,33 @@ describe("API auth compatibility seams", () => {
     expect(payload.ok).toBe(false);
     expect(payload.payload.summary).toBe("ok");
     expect(payload.blockedFields).toContain("raw.price");
+  });
+
+  it("filters proprietary metric payloads through prediction-engine rights before API exposure", () => {
+    const payload = filterApiV1MetricPayloadFields([
+      {
+        description: "GSE-derived receiver difficulty score.",
+        exposure: "API",
+        kind: "DERIVED_METRIC",
+        path: "metrics.receiverDifficulty.score",
+        sourceIds: ["nflverse"],
+        value: 74,
+      },
+      {
+        description: "Protected coefficient that must stay inside the metric package.",
+        exposure: "INTERNAL",
+        kind: "PROTECTED_WEIGHT",
+        path: "metrics.receiverDifficulty.weights.contestedCatch",
+        sourceIds: ["nflverse"],
+        value: 0.27,
+      },
+    ]);
+
+    expect(payload.ok).toBe(false);
+    expect(payload.payload["metrics.receiverDifficulty.score"]).toBe(74);
+    expect(payload.payload["metrics.receiverDifficulty.weights.contestedCatch"]).toBeUndefined();
+    expect(payload.blockedFields).toEqual(["metrics.receiverDifficulty.weights.contestedCatch"]);
+    expect(payload.attributions.join(" ")).toContain("nflverse");
+    expect(payload.blockers.join(" ")).toContain("protected weights");
   });
 });

@@ -137,6 +137,8 @@ Passed:
 - `npm run test --workspace=apps/web -- first-month-content-queue.test.ts media-revenue-claim-safety.test.ts`
 - `npm run test --workspace=apps/web -- first-month-review-queue.test.ts first-month-content-queue.test.ts draft-fence-workflow.test.ts`
 - `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/receiver-difficulty.test.ts src/metrics/__tests__/expected-yac.test.ts`
+- `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-payload-envelope.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts`
+- `npm run test --workspace=@sports/web -- __tests__/fences-and-adapters.test.ts`
 - `npm run typecheck --workspace=@sports/web`
 - `npm run typecheck --workspace=packages/prediction-engine`
 - `npm run typecheck`
@@ -196,6 +198,7 @@ Broad test result:
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries for `yac-creation-gse` and `rush-over-expected-gse`, with source-policy validation and evidence-confidence separation.
 - Metric model/drift-card generators now exist as local evidence helpers. Model cards are draft-first by default, and generated cards do not promote lifecycle, exposure, licensing, validation, or source clearance.
 - Metric source-policy generation now exists from registry-shaped fixtures aligned to `apps/web/lib/scraping/source-rights-registry.ts`; raw API exposure stays blocked for every generated source.
+- Metric payload-envelope filtering now exists in `@sports/prediction-engine`, with an app API-v1 bridge that delegates metric-shaped payload fields through proprietary metric payload-rights before exposure.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 
 ## Partial
@@ -205,7 +208,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and first-month review queue export exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains required before live push.
-- Full proprietary metric backlog remains future work, with payload-filter integration, QB Burden Index, and Stale Line Risk Score next.
+- Full proprietary metric backlog remains future work, with public-safe no-bet methodology examples, QB Burden Index, and Stale Line Risk Score next.
 
 ## Intentionally Deferred
 
@@ -231,22 +234,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add API response-envelope filtering that calls proprietary metric payload-rights before any field leaves the package.
-2. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
-3. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
-4. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-5. Add durable local queue persistence simulation for media review packets without DB writes.
-6. Add API replay promotion checks for conflict detection after a durable adapter exists.
-7. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-8. Run production preview visual QA before live push.
-9. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-10. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+1. Add local no-bet governor docs/examples for public-safe methodology copy without exposing protected weights.
+2. Add owner-approved live-route promotion packet only after durable persistence, route exposure, and abuse-response gates are reviewed.
+3. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
+4. Add durable local queue persistence simulation for media review packets without DB writes.
+5. Add API replay promotion checks for conflict detection after a durable adapter exists.
+6. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+7. Run production preview visual QA before live push.
+8. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+9. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+10. Build API live-route promotion checks that explicitly consume `filterProprietaryMetricPayloadEnvelope`.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the next proprietary metric payload-filter slice:
+Continue the Sunday frontier implementation with the next public-safe no-bet methodology slice:
 
-1. Inspect the governed metric foundation under `packages/prediction-engine/src/metrics`.
-2. Add API response-envelope filtering that calls proprietary metric payload-rights before any metric field leaves the package.
-3. Reuse existing validation, metric asset, source-rights, generated source policies, payload-rights, evidence-card, and graduation controls.
-4. Run targeted prediction-engine tests, prediction-engine typecheck, guardrails, and `git diff --check`.
+1. Inspect `packages/prediction-engine/src/gse-score`, no-bet governor tests, and public claim-safety docs.
+2. Add public-safe methodology examples that explain no-bet/refusal behavior without exposing protected weights or making betting-performance claims.
+3. Reuse existing no-bet governor, calibration cap, market gravity, DRI, GSS, content claim-safety, and responsible-gaming policy.
+4. Run targeted no-bet/governor tests, app claim-safety tests if docs/pages are touched, guardrails, and `git diff --check`.

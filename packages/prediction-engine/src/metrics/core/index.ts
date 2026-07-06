@@ -54,6 +54,13 @@ export {
   metricResidualRollupKey,
 } from "./residual-rollup.js";
 export type {
+  MetricPayloadEnvelope,
+  MetricPayloadEnvelopeField,
+  MetricPayloadEnvelopeInput,
+  MetricPayloadEnvelopeMeta,
+} from "./payload-envelope.js";
+export { filterMetricPayloadEnvelope } from "./payload-envelope.js";
+export type {
   MetricPayloadExposure,
   MetricPayloadField,
   MetricPayloadFieldKind,
