@@ -1184,3 +1184,34 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   model-card or drift-card promotion, no player-quality claim, no role-certainty claim, no
   win-probability claim, no confidence-as-probability claim, no pick-signal claim, no protected
   weights exposed, no route exposure, and no production prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier Playable Window Score
+
+- WHAT: Added `playable-window-score` as a governed `SHADOW` decision-window readiness metric on
+  the proprietary metric foundation. PWS composes market gravity, stale-line risk,
+  market-signal allowance, no-bet pressure, drift pressure, calibration debt, signal integrity,
+  evidence health, model agreement, Role Volatility Index, QB Burden Index, and source-policy
+  posture. It is not win probability, expected value, confidence, betting advice, or a pick
+  trigger. Stale or blocked market signals, blocked source posture, high no-bet pressure, high
+  drift pressure, or high calibration debt close the decision window before downstream action
+  review. Outputs expose public drivers only and keep support/pressure blends, hard-block
+  thresholds, band cutoffs, and source-posture scaling protected.
+- FILES: `packages/prediction-engine/src/metrics/decision/playable-window-score.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/playable-window-score.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  metric birth-certificate and asset-graduation tests, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/ip/GSE_METRIC_IP_LEDGER.md`, Sunday audit/handoff docs, commercial ledger, and execution
+  ledger.
+- GATE: focused PWS/GSS/birth-certificate/asset tests passed (4 files, 17 tests). The first
+  prediction-engine typecheck caught a non-canonical `abstention_audit` validation method in the
+  birth-certificate registry; after replacing it with existing validation vocabulary,
+  prediction-engine typecheck passed. Full prediction-engine tests passed (96 files, 832 tests).
+  Root typecheck passed, root lint passed, root guardrails passed, `git diff --check` passed, and
+  segmented workspace tests passed: apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131,
+  ingestion-pipeline 6 / 60, prediction-engine 96 / 832, and types 1 / 31, for 657 files / 8172
+  tests.
+- FLAG: shadow metric only; no raw odds export, no sportsbook or paid feed integration, no
+  public/API exposure, no model-card or drift-card promotion, no playable-edge claim, no
+  win-probability claim, no expected-value claim, no betting-advice claim, no protected weights
+  exposed, no route exposure, and no production prediction gate flip.

@@ -21,6 +21,7 @@ No number enters GSE unless it is grounded, testable, source-rights-clean, comme
 | `stale-line-risk-score` | Stale Line Risk Score | market | SHADOW | score_band |
 | `qb-burden-index` | QB Burden Index | passing | SHADOW | score_band |
 | `role-volatility-index` | Role Volatility Index | role | SHADOW | score_band |
+| `playable-window-score` | Playable Window Score | decision | SHADOW | score_band |
 
 ## Guardrails
 
@@ -48,10 +49,13 @@ Verified locally on 2026-07-04:
 - Prediction-engine typecheck: passed.
 - Full prediction-engine tests: 75 files passed, 754 tests passed.
 - 2026-07-06 governed RVI focused tests: 4 files passed, 20 tests passed after adding blocked-source fail-closed coverage.
+- 2026-07-06 governed PWS focused tests: 4 files passed, 17 tests passed; first package typecheck caught a non-canonical validation method name before passing after repair.
+- 2026-07-06 governed PWS broad checks: prediction-engine tests passed (96 files, 832 tests); root typecheck, lint, and guardrails passed; segmented workspace tests passed across 657 files and 8172 tests.
 
 ## Next Review Gates
 
 - Add fixture-backed season splits before any review-ready claim.
 - Add source-rights adapters from the web source registry before any customer surface.
 - Add drift cards from real historical distributions before any public metric card.
+- Add fixture-backed model-card and drift-card coverage for SLRS, QBI, RVI, and PWS before any public/API exposure.
 - Keep protected components out of public API payloads.

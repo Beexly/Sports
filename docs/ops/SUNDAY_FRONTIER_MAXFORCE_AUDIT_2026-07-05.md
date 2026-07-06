@@ -67,8 +67,8 @@ No application code, docs, package scripts, or guardrails were dirty before this
 | D. Public commercial pages | COMPLETE | `/media-kit`, `/partners`, `/newsletter`, `/content-lab`, `/podcast`, and `/pricing` exist. Pricing copy was tightened to avoid unsupported proof language. |
 | E. B2B Evidence API | PARTIAL WITH ROUTE-LEVEL SHADOW HARNESS | Strong docs and disposable rehearsal packets exist under `docs/api`. This continuation added pure `apps/web/lib/api-auth/*` and `apps/web/lib/api-v1/*` compatibility seams for keys, hashing, scopes, quotas, rate-limit re-exports, webhook signatures, idempotency, response envelopes, payload filtering, OpenAPI access, and a route-level shadow harness. Live `app/api/v1` routes remain intentionally deferred by the API v1 boundary guard. |
 | F. Source rights / NGS / IP | PARTIAL WITH ADAPTERS | Existing source-rights and NGS ingestion surfaces exist, plus metric source/payload rights in prediction-engine. This continuation added `apps/web/lib/source-rights/*` adapters that reuse the canonical scraping registry and `apps/web/lib/ip/*` envelope, payload-rights, model-card, drift-card, metric-card, and licensing-readiness helpers. |
-| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, Stale Line Risk Score, xCOMP-GSE, QB Burden Index, Role Volatility Index, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
-| H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR AND PUBLIC-SAFE EXAMPLES, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, Stale Line Risk Score, DRI, action score, and no-bet strength exist. This slice added integration proof that high model interest cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. SLRS now separately hard-blocks stale market snapshots from market-signal use. Public-safe no-bet methodology examples now exist under `apps/web/lib/gse/no-bet-methodology.ts` and `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`. Full market intelligence product wiring remains future work. |
+| G. Proprietary metric/math layer | COMPLETE FOR CURRENT SLICES | Metric birth certificates, metric assets, graduation controls, DRI, MGI, Stale Line Risk Score, xCOMP-GSE, QB Burden Index, Role Volatility Index, Playable Window Score, GSS, Receiver Difficulty Index, Expected YAC, YAC Creation, Rush Environment Index, Expected Rush Yards, Rush Over Expected, receiver/rusher residual rollups, model/drift-card generators, generated source policies, source-rights, payload-rights, package-owned payload-envelope filtering, and tests exist. Full metric backlog remains future work. |
+| H. Market intelligence / no-bet / GSE Signal Score | COMPLETE FOR SHADOW GOVERNOR AND PUBLIC-SAFE EXAMPLES, PARTIAL FOR PRODUCT WIRING | GSS, market gravity, Stale Line Risk Score, Playable Window Score, DRI, action score, and no-bet strength exist. This slice added integration proof that high model interest cannot override missing evidence, stale market gravity, unclear source rights, calibration drift, or calibration debt. SLRS now separately hard-blocks stale market snapshots from market-signal use. PWS composes stale-line, source-rights, no-bet, drift, calibration, QBI, and RVI pressure into a `SHADOW` decision-window readiness gate without claiming playable edge. Public-safe no-bet methodology examples now exist under `apps/web/lib/gse/no-bet-methodology.ts` and `docs/gse/NO_BET_GOVERNOR_METHODOLOGY.md`. Full market intelligence product wiring remains future work. |
 | I. AWS shadow architecture / cloud R&D | COMPLETE FOR LOCAL PATHS | Extensive no-cost AWS docs and fixtures exist under `docs/fable/aws` and `infrastructure/aws`. Exact `docs/aws` and `infra/aws-shadow` compatibility paths now point to canonical local artifacts and are guarded against live AWS language. |
 | J. Fence/workflow plugin system | COMPLETE FOR PURE DRAFT HARNESS | `apps/web/lib/workflows` exists. This continuation added pure `apps/web/lib/fences/*` plugins plus `runDraftFenceWorkflow()` for content/API draft workflows. Manual review remains required and no publish/send/API exposure terminal state exists. |
 | K. Guardrails | IMPROVED THIS SESSION | Added and wired commercial-copy, unsupported-performance-claim, raw-NGS-export, partner-offer-compliance, API-payload-rights, OpenAPI-security, and AWS-compatibility scanners. Existing trust/model/draft/Claude/API/secret/eval guards preserved. |
@@ -116,6 +116,8 @@ Tests updated:
   - proves Receiver Difficulty increases for harder, deeper, tighter, more contested targets
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
   - proves Expected YAC rises with space and falls with leverage/depth constraints
+- `packages/prediction-engine/src/metrics/__tests__/playable-window-score.test.ts`
+  - proves stale/blocked market signals, blocked source posture, high no-bet pressure, drift, calibration debt, role volatility, and QB burden close or narrow the decision window without returning probability or protected weights
 
 Public copy tightened:
 
@@ -483,6 +485,14 @@ Completed so far:
 | `npm run guardrails` after Role Volatility Index | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | segmented workspace tests after Role Volatility Index | PASS | apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 95 / 826; types 1 / 31; aggregate segmented receipt 656 files / 8166 tests |
 | `git diff --check` after Role Volatility Index | PASS | no whitespace errors |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/playable-window-score.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS | 4 files, 17 tests; PWS, adjacent decision-quality seam, birth certificates, and asset graduation passed together |
+| `npm run typecheck --workspace=packages/prediction-engine` after Playable Window Score | FAIL then PASS | first run caught non-canonical `abstention_audit` validation method; after replacing it with existing validation vocabulary, prediction-engine TypeScript passed |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Playable Window Score | PASS | 96 files, 832 tests |
+| `npm run typecheck` after Playable Window Score | PASS | all workspaces with typecheck scripts completed |
+| `npm run lint` after Playable Window Score | PASS | root lint completed through `@sports/web` ESLint with max warnings 0 |
+| `npm run guardrails` after Playable Window Score | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
+| segmented workspace tests after Playable Window Score | PASS | apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 96 / 832; types 1 / 31; aggregate segmented receipt 657 files / 8172 tests |
+| `git diff --check` after Playable Window Score | PASS | no whitespace errors |
 | `npm run typecheck` after no-bet methodology examples | PASS | all workspaces with typecheck scripts completed |
 | `npm run guardrails` after no-bet methodology examples | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | `npm run lint && git diff --check` after no-bet methodology examples | PASS | root lint and whitespace check completed without errors |
@@ -598,6 +608,7 @@ Final broad validation for the current API live-route promotion packet slice com
 - Stale Line Risk Score now exists as a governed `SHADOW` market-risk metric. It blocks stale market snapshots from market-signal use, but it is not a playable-edge claim and has no model card, drift card, public/API exposure, or promotion approval.
 - QB Burden Index now exists as a governed `SHADOW` passing-context metric. It is not quarterback quality, win probability, confidence, or a pick signal, and it still has no model card, drift card, public/API exposure, or promotion approval.
 - Role Volatility Index now exists as a governed `SHADOW` role-instability metric. It is not player quality, win probability, confidence, or a pick signal; stale usage and blocked source posture disable role-signal use; it still has no model card, drift card, public/API exposure, or promotion approval.
+- Playable Window Score now exists as a governed `SHADOW` decision-window readiness metric. It is not win probability, expected value, confidence, betting advice, or a pick trigger; stale or blocked market signals, blocked source posture, high no-bet pressure, drift, or calibration debt close the window; it still has no model card, drift card, public/API exposure, or promotion approval.
 - YAC Creation, Rush Environment Index, Expected Rush Yards, and Rush Over Expected now exist as governed `SHADOW` metrics with birth certificates, package exports, directional tests, public drivers, source-policy passthrough, confidence/evidence separation, and no protected weights in outputs.
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries. They are aggregation helpers only, not public/API leaderboards, and they do not create validation, drift, model-card, or source-clearance claims.
 - Metric model/drift-card generators now exist as local evidence helpers. Model cards remain draft-first by default, and generated cards do not approve lifecycle, public/API exposure, licensing, validation, source clearance, or production promotion.
@@ -609,16 +620,16 @@ Final broad validation for the current API live-route promotion packet slice com
 
 ## Next Highest-Leverage Tasks
 
-1. Add Playable Window Score only after SLRS, Market Gravity, QBI, RVI, no-bet pressure, and source-rights inputs can be composed without claiming playable edge.
-2. Add model-card and drift-card generation coverage for every newly added market/passing/role metric family before public/API exposure.
-3. Add QBI/RVI model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
+1. Add model-card and drift-card generation fixture coverage for Stale Line Risk Score, QB Burden Index, Role Volatility Index, and Playable Window Score before any public/API exposure.
+2. Add local validation fixtures for role-stability and decision-window splits before any RVI/PWS public/API exposure.
+3. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.
 4. Add local commercial review queue reporting for unresolved blockers by source and surface.
 5. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
-6. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
-7. Run owner-reviewed production preview QA before live push.
-8. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
-9. Add route design paperwork only after owner approval; keep it non-executable and route-free.
-10. Add visual QA for any new public-safe case-study route before production preview.
+6. Run owner-reviewed production preview QA before live push.
+7. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
+8. Add route design paperwork only after owner approval; keep it non-executable and route-free.
+9. Add visual QA for any new public-safe case-study route before production preview.
+10. Add API payload-envelope fixture coverage for newly composed decision metrics before route promotion paperwork changes.
 
 ## Safety Statement
 

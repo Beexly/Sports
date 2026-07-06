@@ -59,6 +59,7 @@ Grounded metrics and governed continuations:
 - `packages/prediction-engine/src/metrics/rushing/rush-environment-index.ts`
 - `packages/prediction-engine/src/metrics/rushing/expected-rush-yards.ts`
 - `packages/prediction-engine/src/metrics/rushing/rush-over-expected.ts`
+- `packages/prediction-engine/src/metrics/decision/playable-window-score.ts`
 - `packages/prediction-engine/src/metrics/decision/gse-signal-score.ts`
 
 Root package exports:
@@ -87,6 +88,7 @@ Root package exports:
 - `rushEnvironmentIndex`
 - `expectedRushYardsGse`
 - `rushOverExpectedGse`
+- `playableWindowScore`
 - `gseSignalScore`
 
 Existing NFL-specific exports remain available under their prior names. The new market gravity metric is exported as `gseMarketGravityIndex` from the package root to avoid colliding with the pre-existing `marketGravityIndex` from `market-read.ts`.
@@ -124,6 +126,7 @@ Current governed metric certificates:
 | `rush-environment-index` | rushing | SHADOW | score_band |
 | `expected-rush-yards-gse` | rushing | SHADOW | score_band |
 | `rush-over-expected-gse` | rushing | SHADOW | score_band |
+| `playable-window-score` | decision | SHADOW | score_band |
 | `gse-signal-score` | decision | SHADOW | score_band |
 
 ## Core Math Grammar
@@ -289,6 +292,21 @@ Implementation boundary:
 - Usage evidence at or beyond the freshness TTL forces `volatilityBand: "BLOCK"`, high uncertainty, and `roleSignalAllowed: false`.
 - Blocked source-policy posture also forces `roleSignalAllowed: false`; clean usage is not enough when modeling rights fail.
 - It exposes role volatility drivers only and keeps weights, freshness thresholds, proxy transforms, and source-posture scaling protected.
+
+### Playable Window Score
+
+Target question: is the decision window ready enough for downstream review, or should it stay closed?
+
+PWS is a decision-window readiness score, not win probability, expected value, confidence, or betting advice. It composes market gravity, stale-line risk, market-signal allowance, no-bet pressure, drift pressure, calibration debt, signal integrity, evidence health, model agreement, Role Volatility Index, QB Burden Index, and source-policy posture.
+
+Implementation boundary:
+
+- It returns `score`, `band`, `decisionWindowAllowed`, evidence confidence, uncertainty, source posture, block reasons, and public drivers.
+- `probability` is always `null`.
+- `confidenceScore` measures evidence quality, not win probability, expected value, or advice quality.
+- Stale or blocked market signals, blocked source-policy posture, high no-bet pressure, high drift pressure, or high calibration debt close the window before any downstream action review.
+- It is an upstream readiness primitive for GSS/action review, not a pick trigger.
+- It exposes public drivers only and keeps support/pressure blends, hard-block thresholds, band cutoffs, and source-posture scaling protected.
 
 ### GSE Signal Score
 
@@ -531,6 +549,7 @@ Tests added:
 - `packages/prediction-engine/src/metrics/__tests__/rush-over-expected.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/stale-line-risk-score.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/role-volatility-index.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/playable-window-score.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
 - source-policy generation coverage in `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`
@@ -546,7 +565,7 @@ Build in this order for proprietary football metrics:
 3. Role Volatility Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 4. Calibration Integrity Grade
 5. No-Bet Pressure
-6. Playable Window Score
+6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 7. Market Mirage Score
 8. Portfolio Fit Score
 9. Drift Pressure Index
@@ -609,12 +628,14 @@ Recorded run on 2026-07-04:
 | `npm run guardrails` after Role Volatility Index | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
 | segmented workspace tests after Role Volatility Index | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 95 / 826; types 1 / 31. Aggregate segmented receipt: 656 files / 8166 tests. |
 | `git diff --check` after Role Volatility Index | PASS - no whitespace errors. |
-| `npm run typecheck` after Stale Line Risk Score | PASS - all workspaces with typecheck scripts completed. |
-| `npm run lint` after Stale Line Risk Score | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
-| `npm run guardrails` after Stale Line Risk Score | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
-| `npm run test --workspaces --if-present` after Stale Line Risk Score | PASS - command exited 0. Tool transcript was truncated before the final aggregate summary, so segmented workspace summaries below provide the counted receipt. |
-| segmented workspace tests after Stale Line Risk Score | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 93 / 817; types 1 / 31. Aggregate segmented receipt: 654 files / 8157 tests. |
-| `git diff --check` after Stale Line Risk Score | PASS - no whitespace errors. |
+| `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/playable-window-score.test.ts src/metrics/__tests__/gse-signal-score.test.ts src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 4 files, 17 tests. |
+| `npm run typecheck --workspace=packages/prediction-engine` after Playable Window Score | FAIL then PASS - first run caught non-canonical `abstention_audit` validation method; after replacing it with existing validation vocabulary, package typecheck passed. |
+| `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Playable Window Score | PASS - 96 files, 832 tests. |
+| `npm run typecheck` after Playable Window Score | PASS - all workspaces with typecheck scripts completed. |
+| `npm run lint` after Playable Window Score | PASS - root lint completed through `@sports/web` ESLint with max warnings 0. |
+| `npm run guardrails` after Playable Window Score | PASS - trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed. |
+| segmented workspace tests after Playable Window Score | PASS - apps/web 537 files / 7105 tests; crypto 1 / 13; data-ingestion 16 / 131; ingestion-pipeline 6 / 60; prediction-engine 96 / 832; types 1 / 31. Aggregate segmented receipt: 657 files / 8172 tests. |
+| `git diff --check` after Playable Window Score | PASS - no whitespace errors. |
 | `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/rush-environment-index.test.ts src/metrics/__tests__/expected-rush-yards.test.ts src/metrics/__tests__/rush-over-expected.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts` | PASS - 5 files, 15 tests after registry split. |
 | `npm run typecheck --workspace=packages/prediction-engine` after Expected Rush Yards/Rush Over Expected | PASS. |
 | `npm run test --workspace=packages/prediction-engine -- --reporter=dot --silent` after Expected Rush Yards/Rush Over Expected | PASS - 89 files, 794 tests. |
@@ -679,6 +700,7 @@ Pure LOC review for new source files:
 | `expected-completion.ts` | 110 |
 | `qb-burden-index.ts` | 156 |
 | `role-volatility-index.ts` | 166 |
+| `playable-window-score.ts` | 215 |
 | `gse-signal-score.ts` | 113 |
 | `yac-creation.ts` | 88 |
 | `rush-environment-index.ts` | 108 |
@@ -780,11 +802,22 @@ Pure LOC review for new source files:
 - Escape-hatch scan over the RVI source and test files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
 - Focused RVI tests passed after adding blocked-source fail-closed coverage (4 files, 20 tests). Package typecheck passed. Full prediction-engine tests passed (95 files, 826 tests). Root typecheck/lint/guardrails passed. Segmented workspace summaries passed (656 files, 8166 tests). `git diff --check` passed.
 
+2026-07-06 Playable Window Score continuation check:
+
+- `playable-window-score.ts` adds a governed `SHADOW` decision-window readiness metric over market gravity, stale-line risk, market-signal allowance, no-bet pressure, drift pressure, calibration debt, signal integrity, evidence health, model agreement, RVI, QBI, and source-policy posture.
+- The metric is readiness for downstream review, not win probability, expected value, confidence, betting advice, or a pick trigger.
+- Stale or blocked market signals, blocked source-policy posture, high no-bet pressure, high drift pressure, or high calibration debt close the window before any downstream action review.
+- Outputs expose public drivers only; protected support/pressure blends, hard-block thresholds, band cutoffs, and source-posture scaling stay private.
+- `playable-window-score.ts` measured 215 pure LOC and `playable-window-score.test.ts` measured 109 pure LOC.
+- Escape-hatch scan over the PWS source and test files found no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access.
+- Focused PWS tests passed on the first run (4 files, 17 tests). The first package typecheck caught a non-canonical validation method name; after replacing it with existing validation vocabulary, package typecheck passed. Full prediction-engine tests passed (96 files, 832 tests).
+- Root typecheck, root lint, root guardrails, and `git diff --check` passed after PWS. Segmented workspace tests passed across apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 96 / 832, and types 1 / 31, for 657 files / 8172 tests.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card generators, and generated source policies:
 
-1. Add Playable Window Score only after Stale Line Risk Score, Market Gravity, QBI, RVI, and no-bet veto inputs can be composed without claiming playable edge.
-2. Add model-card and drift-card generation coverage for every newly added market/passing/role metric family before any public/API exposure.
-3. Add QBI/RVI model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
-4. Add local validation fixtures for role-stability splits before any RVI public/API exposure.
+1. Add model-card and drift-card generation coverage for every newly added market/passing/role/decision metric family before any public/API exposure.
+2. Add QBI/RVI/PWS model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
+3. Add local validation fixtures for role-stability and decision-window splits before any RVI/PWS public/API exposure.
+4. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.

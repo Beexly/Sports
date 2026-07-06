@@ -624,6 +624,13 @@ export type {
   RoleVolatilityIndexMetric,
   RoleVolatilitySourcePosture,
 } from "./metrics/role/role-volatility-index.js";
+export { playableWindowScore } from "./metrics/decision/playable-window-score.js";
+export type {
+  PlayableWindowBand,
+  PlayableWindowScoreInput,
+  PlayableWindowScoreMetric,
+  PlayableWindowSourcePosture,
+} from "./metrics/decision/playable-window-score.js";
 export { gseSignalScore } from "./metrics/decision/gse-signal-score.js";
 export type {
   GseSignalGrade,

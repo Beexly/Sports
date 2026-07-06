@@ -39,6 +39,7 @@ Implemented:
 - public-safe AWS-governed sports intelligence case-study route with six Well-Architected pillar mappings, exact `docs/aws` route record, launch-page source QA, and closed live-action locks
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 - Role Volatility Index metric slice with birth certificate, exports, asset coverage, source-policy fail-closed behavior, and directional tests
+- Playable Window Score metric slice with birth certificate, exports, asset coverage, stale/source/no-bet/drift/calibration fail-closed behavior, and directional tests
 
 ## Files Changed
 
@@ -77,9 +78,11 @@ Application and test files:
 - `apps/web/__tests__/first-month-review-queue.test.ts`
 - `packages/prediction-engine/src/metrics/receiving/*`
 - `packages/prediction-engine/src/metrics/role/role-volatility-index.ts`
+- `packages/prediction-engine/src/metrics/decision/playable-window-score.ts`
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/expected-yac.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/role-volatility-index.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/playable-window-score.test.ts`
 - `packages/prediction-engine/src/metrics/core/metric-birth-certificate.ts`
 - `packages/prediction-engine/src/metrics/core/index.ts`
 - `packages/prediction-engine/src/index.ts`
@@ -215,6 +218,7 @@ Broad test result:
 - AWS case-study route validation: first focused route test caught unsafe `live AWS` wording and an evidence-required `ROI` reference; after wording repair, AWS case-study, launch QA, media-kit, and partners tests passed (4 files, 16 tests). App workspace typecheck passed.
 - Current AWS case-study root validation: AWS compatibility guard passed, root typecheck passed, root lint passed, root guardrails passed, full all-workspaces tests passed (653 files, 8152 tests), and `git diff --check` passed.
 - Role Volatility Index validation: focused RVI/birth-certificate/asset/NFL compatibility tests passed after adding blocked-source fail-closed coverage (4 files, 20 tests); prediction-engine typecheck passed; full prediction-engine tests passed (95 files, 826 tests); root typecheck, root lint, and root guardrails passed; segmented workspace tests passed across apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 95 / 826, and types 1 / 31, for 656 files / 8166 tests.
+- Playable Window Score validation: focused PWS/GSS/birth-certificate/asset tests passed (4 files, 17 tests); first prediction-engine typecheck caught a non-canonical `abstention_audit` validation method before passing after repair; full prediction-engine tests passed (96 files, 832 tests); root typecheck, root lint, root guardrails, and `git diff --check` passed; segmented workspace tests passed across apps/web 537 files / 7105 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 96 / 832, and types 1 / 31, for 657 files / 8172 tests.
 - AWS case-study visual QA: first screenshot attempts hit `net::ERR_CONNECTION_RESET` during route compilation. After local dev-server restart and direct HTTP probe, the route returned 200, desktop and mobile screenshots were captured under `reports/launch-page-visual-qa/2026-07-06/*`, and both captures were visually reviewed.
 
 ## Complete
@@ -247,6 +251,7 @@ Broad test result:
 - Stale Line Risk Score now exists as a governed `SHADOW` market-risk metric. It blocks stale line snapshots from market-signal use, exposes only public drivers, keeps protected thresholds/weights/scales private, and has directional tests for staleness, source coverage, contradiction, and rights status.
 - QB Burden Index now exists as a governed `SHADOW` passing-context metric. It is separate from quarterback quality, win probability, model confidence, and pick actionability; it exposes public burden drivers only and keeps protected weights/proxy transforms/source-posture scaling private.
 - Role Volatility Index now exists as a governed `SHADOW` role-instability metric. It is separate from player quality, win probability, model confidence, and pick actionability; stale usage and blocked source-policy posture both disable role-signal use, public drivers explain the volatility pressure, and protected weights/thresholds/proxy transforms remain private.
+- Playable Window Score now exists as a governed `SHADOW` decision-window readiness metric. It is separate from win probability, expected value, confidence, betting advice, and pick triggers; stale or blocked market signals, blocked source-policy posture, high no-bet pressure, high drift pressure, or high calibration debt close the window before downstream action review.
 - New commercial/performance/raw-NGS/partner-offer/API-payload/OpenAPI/AWS-compatibility guardrails pass and are wired into root scripts.
 - API live-route promotion packet now exists as a non-executable owner-review seam. It requires owner approval, durable persistence review, route exposure approval, abuse-response review, payload-envelope consumption, OpenAPI/security review, rate-limit policy review, rollback plan review, boundary exception review, and raw-key absence review while keeping live route creation and command execution disabled in every state.
 
@@ -257,7 +262,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, partner/sponsor review fixture reports, and local review queue persistence simulator exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains owner-reviewed and intentionally deferred.
-- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, Playable Window Score, and metric model/drift-card fixture coverage next.
+- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, metric model/drift-card fixture coverage, role-stability fixtures, decision-window split fixtures, and Market Mirage Score next.
 
 ## Intentionally Deferred
 
@@ -283,23 +288,23 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add Playable Window Score only after SLRS, Market Gravity, QBI, RVI, no-bet pressure, and source-rights inputs can be composed without claiming playable edge.
-2. Add model-card and drift-card generation coverage for every newly added market/passing/role metric family before public/API exposure.
-3. Add QBI/RVI model-card and drift-card fixture coverage without changing lifecycle or public/API exposure.
+1. Add model-card and drift-card generation fixture coverage for SLRS, QBI, RVI, and PWS before public/API exposure.
+2. Add local validation fixtures for role-stability and decision-window splits before any RVI/PWS public/API exposure.
+3. Continue guarded metric backlog with Market Mirage Score only after PWS, SLRS, MGI, no-bet, and source-rights veto tests stay green.
 4. Add local commercial review queue reporting for unresolved blockers by source and surface.
 5. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 6. Run owner-reviewed production preview QA before live push.
 7. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
 8. Add route design paperwork only after owner approval; keep it non-executable and route-free.
 9. Add visual QA for any new public-safe case-study route before production preview.
-10. Continue guarded metric backlog with Market Mirage Score only after Playable Window Score has no-bet and source-rights veto tests.
+10. Add API payload-envelope fixture coverage for newly composed decision metrics before route promotion paperwork changes.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the Playable Window Score metric slice:
+Continue the Sunday frontier implementation with model-card and drift-card fixture coverage for the newly added shadow metric families:
 
-1. Compose SLRS, Market Gravity, QBI, RVI, no-bet pressure, calibration debt, and source-policy posture without claiming playable edge.
-2. Add `playable-window-score` as a governed `SHADOW` decision-readiness metric only if stale market data, blocked sources, high no-bet pressure, drift, or calibration debt fail closed.
-3. Keep playable-window readiness separate from win probability, expected value, confidence, and betting advice.
-4. Add directional tests proving freshness, source posture, calibration, no-bet pressure, and role/market uncertainty can suppress or block actionability.
-5. Keep outputs to public drivers only; do not expose protected weights, raw odds, paid payloads, or public/API eligibility.
+1. Add fixture coverage proving SLRS, QBI, RVI, and PWS produce draft-first model cards and drift cards without lifecycle promotion.
+2. Prove generated cards preserve `SHADOW` status, source-policy warnings, drift evidence, validation caveats, and public/API exposure locks.
+3. Add role-stability and decision-window split fixtures where safe, keeping all data synthetic/local and rights-clean.
+4. Keep cards separate from legal clearance, production readiness, AWS deployment, public/API exposure, and betting advice.
+5. Run focused prediction-engine tests plus root typecheck, lint, guardrails, segmented workspace tests, and `git diff --check`.

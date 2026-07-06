@@ -172,3 +172,10 @@ export type {
   RoleVolatilityIndexMetric,
   RoleVolatilitySourcePosture,
 } from "../role/role-volatility-index.js";
+export { playableWindowScore } from "../decision/playable-window-score.js";
+export type {
+  PlayableWindowBand,
+  PlayableWindowScoreInput,
+  PlayableWindowScoreMetric,
+  PlayableWindowSourcePosture,
+} from "../decision/playable-window-score.js";
