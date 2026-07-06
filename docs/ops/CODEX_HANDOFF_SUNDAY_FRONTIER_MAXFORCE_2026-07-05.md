@@ -33,6 +33,7 @@ Implemented:
 - representative content/API review packet fixtures and a local claim-safety batch report
 - first-month media content queue fixtures and local claim-safety batch report
 - first-month media review queue export with bounded markdown packets and closed live-action locks
+- partner/sponsor review packet fixtures with local-only locks, disclosure/responsible-gaming checks, sponsor-independence blockers, claim-safety blockers, and no affiliate activation
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 
 ## Files Changed
@@ -55,6 +56,8 @@ Application and test files:
 - `apps/web/__tests__/draft-fence-workflow.test.ts`
 - `apps/web/lib/workflows/draft-review-fixtures.ts`
 - `apps/web/__tests__/draft-review-fixtures.test.ts`
+- `apps/web/lib/workflows/partner-sponsor-review-fixtures.ts`
+- `apps/web/__tests__/partner-sponsor-review-fixtures.test.ts`
 - `apps/web/lib/media-revenue/first-month-content-seeds.ts`
 - `apps/web/lib/media-revenue/first-month-content-queue.ts`
 - `apps/web/__tests__/first-month-content-queue.test.ts`
@@ -103,6 +106,7 @@ Docs:
 - `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PACKET.md`
 - `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PR_BODY.md`
 - `docs/ops/DRAFT_FENCE_WORKFLOW_HARNESS.md`
+- `docs/revenue/PARTNER_SPONSOR_REVIEW_FIXTURES.md`
 - `docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md`
 - `docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md`
 - `docs/aws/*`
@@ -138,6 +142,7 @@ Passed:
 - `npm run test --workspace=apps/web -- api-v1-shadow-route-harness.test.ts`
 - `npm run test --workspace=apps/web -- first-month-content-queue.test.ts media-revenue-claim-safety.test.ts`
 - `npm run test --workspace=apps/web -- first-month-review-queue.test.ts first-month-content-queue.test.ts draft-fence-workflow.test.ts`
+- `npm run test --workspace=apps/web -- partner-sponsor-review-fixtures.test.ts draft-review-fixtures.test.ts affiliate-compliance.test.ts sponsor-copy-scan.test.ts partner-risk-engine.test.ts partner-opportunity.test.ts`
 - `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-birth-certificate.test.ts src/metrics/__tests__/metric-asset-graduation.test.ts src/metrics/__tests__/receiver-difficulty.test.ts src/metrics/__tests__/expected-yac.test.ts`
 - `npm run test --workspace=packages/prediction-engine -- src/metrics/__tests__/metric-payload-envelope.test.ts src/metrics/__tests__/metric-source-payload-rights.test.ts`
 - `npm run test --workspace=@sports/web -- __tests__/fences-and-adapters.test.ts`
@@ -184,6 +189,7 @@ Broad test result:
 - Current rushing metric validation: prediction-engine typecheck passed; full prediction-engine tests passed (89 files, 794 tests); root typecheck passed; root lint passed; root guardrails passed; `git diff --check` passed.
 - Current all-workspaces test wrapper hit the 300s tool ceiling and is not counted as a pass. Segmented fallback passed: apps/web in six chunks (531 files, 7056 tests), crypto (1 file, 13 tests), data-ingestion (16 files, 131 tests), ingestion-pipeline (6 files, 60 tests), prediction-engine (89 files, 794 tests), and types (1 file, 31 tests).
 - API live-route promotion packet validation: focused packet/readiness/boundary tests passed (4 files, 19 tests). First app typecheck caught a strict optional blocker-list issue; after explicit filtering, app workspace typecheck passed. Root typecheck, root lint, and root guardrails passed. The root all-workspaces test wrapper hit the 300s tool ceiling and is not counted as a pass; segmented workspace tests passed across every test-script workspace: web 533 files / 7072 tests, crypto 1 / 13, data-ingestion 16 / 131, ingestion-pipeline 6 / 60, prediction-engine 92 / 812, and types 1 / 31. `git diff --check` passed.
+- Partner/sponsor fixture validation: first targeted run failed because disclosure warnings were treated as hard blockers and the test expected uppercase `ROI`; after repair, targeted tests passed (6 files, 32 tests). App workspace typecheck passed.
 
 ## Complete
 
@@ -195,6 +201,7 @@ Broad test result:
 - API payload-rights and OpenAPI security guardrails exist and are wired into `npm run guardrails`.
 - Fence, source-rights/IP, API-auth, API-v1 pure seams, the route-level API shadow harness, API replay simulation, and the draft workflow harness exist with tests.
 - Representative content/API review packet fixtures, first-month media queue fixtures, and first-month review queue exports exist with claim-safety reports.
+- Partner/sponsor review fixtures now exist for creator-tool affiliate review, board-meeting sponsor independence, sponsor-control blocking, regulated unknown-state blocking, expired-offer blocking, and unsafe-claim copy blocking.
 - FABLE/AWS shadow architecture exists under `docs/fable/aws` and `infrastructure/aws`.
 - Exact `docs/aws` and `infra/aws-shadow` compatibility indexes exist and point to canonical FABLE/AWS artifacts.
 - No-bet governor integration tests now prove high edge cannot override missing data, stale market gravity, unclear source rights, calibration drift, or calibration debt.
@@ -214,7 +221,7 @@ Broad test result:
 
 - B2B Evidence API has strong docs, rehearsal packets, pure `apps/web/lib/api-auth` / `apps/web/lib/api-v1` seams, payload/OpenAPI guardrails, a route-level shadow harness, local idempotency replay simulation, and a non-executable live-route promotion packet. Live `app/api/v1` routes are still intentionally deferred by boundary guard and owner-review gates.
 - Source-rights/IP adapters under `apps/web/lib/source-rights` and `apps/web/lib/ip` exist, but they are policy gates and not legal clearance.
-- Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, and first-month review queue export exist as pure manual-review gates.
+- Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and partner/sponsor review fixture reports exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains required before live push.
 - Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, QB Burden Index, and Stale Line Risk Score next.
@@ -243,22 +250,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-2. Add durable local queue persistence simulation for media review packets without DB writes.
-3. Add API replay promotion checks for conflict detection after a durable adapter exists.
-4. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-5. Run production preview visual QA before live push.
-6. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-7. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
-8. Add an API abuse-response fixture pack for malformed keys, overscope, replay conflicts, rate limits, and unsafe payload attempts.
-9. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
-10. Add model-card and drift-card generation coverage for every newly promoted metric family.
+1. Add durable local queue persistence simulation for media, content/API, and partner/sponsor review packets without DB writes.
+2. Add API replay promotion checks for conflict detection after a durable adapter exists.
+3. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+4. Run production preview visual QA before live push.
+5. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+6. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+7. Add an API abuse-response fixture pack for malformed keys, overscope, replay conflicts, rate limits, and unsafe payload attempts.
+8. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
+9. Add model-card and drift-card generation coverage for every newly promoted metric family.
+10. Add local commercial review queue reporting for stale packets, duplicate packet IDs, and unresolved blockers.
 
 ## Next Prompt
 
-Continue the Sunday frontier implementation with the next partner/sponsor review fixture slice:
+Continue the Sunday frontier implementation with the durable local review queue persistence slice:
 
-1. Inspect `apps/web/lib/workflows`, `apps/web/lib/revenue`, `docs/revenue`, `docs/commercial`, and existing draft-review fixtures.
-2. Add partner/sponsor review packet fixtures that prove disclosures, responsible-gaming boundaries, sponsor independence, and claim safety.
-3. Keep all partner/sponsor packets local-only, no live links, no outreach send, no sponsor claims, no affiliate activation, and no route exposure.
+1. Inspect `apps/web/lib/workflows`, existing draft-review fixtures, first-month review queue exports, partner/sponsor review fixtures, and API replay/idempotency helpers.
+2. Add a pure local review queue persistence simulator that can ingest review packets, reject duplicate packet IDs, replay append-only events, filter queue state, and report unresolved blockers without DB writes.
+3. Keep all queue operations local-only, no external sends, no live route exposure, no affiliate activation, no sponsor approval automation, and no publication approval.
 4. Add tests and update the commercial ledger/audit with exact verification.

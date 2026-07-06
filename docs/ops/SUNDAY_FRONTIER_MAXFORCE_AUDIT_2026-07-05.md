@@ -327,6 +327,18 @@ API live-route promotion packet added in the continuation:
 - `docs/api/API_V1_LIVE_ROUTE_PROMOTION_PR_BODY.md`
   - provides copy-paste-ready PR language without claiming live route approval
 
+Partner/sponsor review fixtures added in the continuation:
+
+- `apps/web/lib/workflows/partner-sponsor-review-fixtures.ts`
+  - adds local partner/sponsor review fixture definitions and report generation on top of the existing draft workflow and revenue policy seams
+  - proves low-risk disclosed affiliate/sponsor copy only reaches manual review
+  - blocks sponsor-control attempts, regulated unknown-state offers, expired offers, and unsafe ROI/proven claim copy
+  - keeps publish, route, external send, live integration, affiliate activation, and automatic sponsor approval locks closed
+- `apps/web/__tests__/partner-sponsor-review-fixtures.test.ts`
+  - verifies expected review statuses, sponsor independence boundaries, unknown-state fail-closed behavior, expired-offer blocking, unsafe claim blocking, and live-action locks
+- `docs/revenue/PARTNER_SPONSOR_REVIEW_FIXTURES.md`
+  - records fixture purpose, fixture set, live-action locks, sponsor independence boundary, verification, and non-approval statement
+
 ## Verification Log
 
 Completed so far:
@@ -347,6 +359,8 @@ Completed so far:
 | `npm run typecheck --workspace=@sports/web` after no-bet methodology examples | PASS | web TypeScript checked after no-bet methodology additions |
 | `npm run test --workspace=apps/web -- api-v1-live-route-promotion-packet.test.ts api-v1-boundary-guard.test.ts api-v1-promotion-readiness.test.ts api-v1-disposable-rehearsal-packet.test.ts` | PASS | 4 files, 19 tests; live-route promotion packet and adjacent API readiness guards passed |
 | `npm run typecheck --workspace=@sports/web` after live-route promotion packet | FAIL then PASS | first run caught `(string \| undefined)[]` blockers; after explicit blocker filtering, web TypeScript passed |
+| `npm run test --workspace=apps/web -- partner-sponsor-review-fixtures.test.ts draft-review-fixtures.test.ts affiliate-compliance.test.ts sponsor-copy-scan.test.ts partner-risk-engine.test.ts partner-opportunity.test.ts` | FAIL then PASS | first run treated disclosure warnings as blockers and expected uppercase `ROI`; after repair, 6 files and 32 tests passed |
+| `npm run typecheck --workspace=@sports/web` after partner/sponsor fixtures | PASS | web TypeScript checked after fixture/report additions |
 | `npm run typecheck` after no-bet methodology examples | PASS | all workspaces with typecheck scripts completed |
 | `npm run guardrails` after no-bet methodology examples | PASS | trust, model-freeze, draft-only, Claude API, secret scan, API v1 boundary, frontier guards, AWS compatibility, and eval contracts passed |
 | `npm run lint && git diff --check` after no-bet methodology examples | PASS | root lint and whitespace check completed without errors |
@@ -451,7 +465,8 @@ Final broad validation for the current API live-route promotion packet slice com
 - The new commercial/performance scanners intentionally focus on launch and monetization surfaces. They do not scan every internal calibration, academy, admin, cockpit, or performance file because those surfaces legitimately discuss CLV, ROI, calibration, and verified receipts in policy/proof contexts.
 - API auth, API v1 pure seams, API payload/OpenAPI guardrails, route-level shadow harness, idempotency replay simulation, and live-route promotion packet now exist. Live `app/api/v1` routes remain intentionally deferred until the owner approves route exposure plus durable persistence, abuse-response behavior, payload-envelope consumption, OpenAPI/security review, rate-limit policy, rollback, boundary exception, and raw-key absence evidence.
 - Source-rights/IP adapter paths now exist and reuse the canonical scraping registry. They are code-level policy gates, not legal clearance.
-- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
+- Fence plugin files, a pure draft workflow harness, local review packet serialization, packet markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, partner/sponsor review fixtures, first-month media queue fixtures, first-month review queue export, and claim-safety batch reports now exist.
+- Partner/sponsor review fixtures now exist and are local-only. They prove low-risk disclosed copy reaches manual review while sponsor-control attempts, regulated unknown-state offers, expired offers, and unsafe ROI/proven language block before any live action.
 - No-bet governor integration is complete for the shadow decision seam. Full product wiring and public explanations remain future work and must not expose protected weights or imply legal/performance clearance.
 - Public no-bet methodology examples now exist and are claim-scanned, but they remain local copy governance only. They do not publish picks, expose routes, or approve model promotion.
 - Launch-facing commercial pages now have local source QA plus desktop/mobile screenshot artifacts under `reports/launch-page-visual-qa/2026-07-05`. This is local render evidence, not a production preview approval.
@@ -466,16 +481,16 @@ Final broad validation for the current API live-route promotion packet slice com
 
 ## Next Highest-Leverage Tasks
 
-1. Add packet fixtures for partner/sponsor review surfaces once owner-approved partner copy exists.
-2. Add durable local queue persistence simulation for media review packets without DB writes.
-3. Add API replay promotion checks for conflict detection after a durable adapter exists.
-4. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
-5. Run production preview visual QA before live push.
-6. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
-7. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
-8. Add an API abuse-response fixture pack for malformed keys, overscope, replay conflicts, rate limits, and unsafe payload attempts.
-9. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
-10. Add model-card and drift-card generation coverage for every newly promoted metric family.
+1. Add durable local queue persistence simulation for media/review packets without DB writes.
+2. Add API replay promotion checks for conflict detection after a durable adapter exists.
+3. Add public-safe AWS portfolio/case-study route only if launch copy stays claim-safe and local-only.
+4. Run production preview visual QA before live push.
+5. Continue metric backlog with QB Burden Index only after passing-event source policy and validation plan are explicit.
+6. Add Stale Line Risk Score on top of Market Gravity only if stale-data behavior remains fail-closed.
+7. Add an API abuse-response fixture pack for malformed keys, overscope, replay conflicts, rate limits, and unsafe payload attempts.
+8. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
+9. Add model-card and drift-card generation coverage for every newly promoted metric family.
+10. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 
 ## Safety Statement
 

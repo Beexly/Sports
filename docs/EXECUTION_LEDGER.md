@@ -998,3 +998,22 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local owner-review packet only; no `app/api/v1` route tree, no Prisma model, no migration,
   no env var, no credential, no raw key storage, no provider call, no database execution, no billing
   hook, no partner exposure, no AWS/cloud action, and no production API gate flip.
+
+## 2026-07-05 - (codex) - Sunday frontier partner/sponsor review fixtures
+
+- WHAT: Added a local partner/sponsor review fixture pack over the existing draft workflow and
+  revenue policy seams. The fixtures prove low-risk disclosed affiliate/sponsor copy can only reach
+  manual review, sponsor-control attempts are blocked, regulated offers fail closed on unknown user
+  state, expired offers block separately from partner approval, and unsafe ROI/proven language blocks
+  before review.
+- FILES: `apps/web/lib/workflows/partner-sponsor-review-fixtures.ts`,
+  `apps/web/__tests__/partner-sponsor-review-fixtures.test.ts`,
+  `docs/revenue/PARTNER_SPONSOR_REVIEW_FIXTURES.md`, Sunday audit/handoff docs, commercial ledger,
+  and execution ledger.
+- GATE: first targeted run failed because disclosure warnings were incorrectly treated as blockers
+  and the claim scanner normalizes `ROI` to lowercase. After repair, targeted partner/sponsor,
+  draft-fixture, affiliate, sponsor-copy, partner-risk, and partner-opportunity tests passed (6
+  files, 32 tests). Web workspace typecheck passed.
+- FLAG: local fixture/report generation only; no live affiliate link, no partner registry write, no
+  sponsor approval, no outreach send, no route exposure, no database write, no sponsor control, no
+  performance claim, and no production gate flip.
