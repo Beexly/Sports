@@ -49,8 +49,14 @@ export type PickResultLike = "WIN" | "LOSS" | "PUSH" | "VOID" | "PENDING";
  */
 export function unitsForPick(result: PickResultLike, americanEntryOdds: number | null | undefined): number | null {
   if (result === "PENDING") return null;
-  if (result === "PUSH" || result === "VOID") return 0;
+  // A settled pick only counts toward the published ROI sample if it is backed by
+  // a sealed entry price — UNIFORMLY, pushes included. Without this, a legacy PUSH
+  // with no proof receipt would still count as a graded 0 (inflating n and
+  // shrinking the CI) while wins/losses without a receipt are excluded, letting an
+  // unsealed ledger clear the publication floor. Check the price before the 0-unit
+  // no-action return.
   if (americanEntryOdds == null || !Number.isFinite(americanEntryOdds) || americanEntryOdds === 0) return null;
+  if (result === "PUSH" || result === "VOID") return 0;
   if (result === "WIN") return americanToDecimalOdds(americanEntryOdds) - 1;
   return -1; // LOSS
 }

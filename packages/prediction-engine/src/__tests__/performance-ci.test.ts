@@ -39,6 +39,15 @@ describe("normalCdf / normalQuantile", () => {
     expect(normalQuantile(0.975)).toBeCloseTo(1.959964, 4);
     expect(normalQuantile(0.5)).toBeCloseTo(0, 6);
   });
+
+  it("is accurate in the Acklam tail regions (p < 0.02425 and p > 0.97575)", () => {
+    // Guards the full 4-term tail denominator. A missing d[3] term put
+    // normalQuantile(0.01) near -8.9 instead of -2.326, distorting BCa ROI bands.
+    expect(normalQuantile(0.01)).toBeCloseTo(-2.326348, 4);
+    expect(normalQuantile(0.99)).toBeCloseTo(2.326348, 4);
+    expect(normalQuantile(0.001)).toBeCloseTo(-3.090232, 3);
+    expect(normalQuantile(0.999)).toBeCloseTo(3.090232, 3);
+  });
 });
 
 describe("bcaMeanCi", () => {

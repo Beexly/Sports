@@ -3,10 +3,8 @@ import { Nav } from "@/components/ui/nav";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
-import {
-  LineFreshnessBadge,
-  freshestLineTimestamp,
-} from "@/components/picks/line-freshness-badge";
+import { LineFreshnessBadge } from "@/components/picks/line-freshness-badge";
+import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";

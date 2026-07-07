@@ -29,6 +29,15 @@ describe("unitsForPick", () => {
     expect(unitsForPick("PENDING", -110)).toBeNull();
     expect(unitsForPick("PENDING", null)).toBeNull();
   });
+
+  it("EXCLUDES a PUSH/VOID with no sealed price — the graded sample is uniformly receipt-backed", () => {
+    // A push without a proof-receipt price must not count as a graded 0: that
+    // would inflate n and shrink the CI on unsealed data while wins/losses
+    // without a price are already excluded. Priced pushes still count as 0.
+    expect(unitsForPick("PUSH", null)).toBeNull();
+    expect(unitsForPick("VOID", undefined)).toBeNull();
+    expect(unitsForPick("PUSH", 0)).toBeNull();
+  });
   it("excludes a pick with no usable entry price", () => {
     expect(unitsForPick("WIN", null)).toBeNull();
     expect(unitsForPick("WIN", 0)).toBeNull();

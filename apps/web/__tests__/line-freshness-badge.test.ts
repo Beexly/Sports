@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  freshestLineTimestamp,
-  lineAgeLabel,
-} from "@/components/picks/line-freshness-badge";
+import { freshestLineTimestamp, lineAgeLabel } from "@/lib/picks/line-freshness";
 
 /**
  * The /picks line-age badge is a public trust surface: it must show the real

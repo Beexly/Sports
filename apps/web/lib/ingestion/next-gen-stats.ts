@@ -132,8 +132,17 @@ export async function ingestNextGenStats(
   }
 
   const data = records
-    // Skip NGS season-aggregate rows (week 0) and rows with no player key.
-    .filter((r) => Number(r["week"] ?? "0") >= 1 && (r["player_gsis_id"] ?? "") !== "")
+    // `fetchNflverse("ngs", …)` serves the COMBINED all-season asset, so we must
+    // filter to the requested season here — otherwise every year's rows get
+    // written under one season and collide on @@unique(gsisId, season, week,
+    // seasonType, statType). Also skip season-aggregate rows (week 0) and rows
+    // with no player key.
+    .filter(
+      (r) =>
+        Number(r["season"] ?? "0") === season &&
+        Number(r["week"] ?? "0") >= 1 &&
+        (r["player_gsis_id"] ?? "") !== "",
+    )
     .map((r) => toRecord(r, season, statType, gate.rightsSnapshot, now));
 
     // Never wipe existing rows on an empty upstream response (transient
