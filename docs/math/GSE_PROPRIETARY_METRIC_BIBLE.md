@@ -60,6 +60,7 @@ Grounded metrics and governed continuations:
 - `packages/prediction-engine/src/metrics/rushing/rush-environment-index.ts`
 - `packages/prediction-engine/src/metrics/rushing/expected-rush-yards.ts`
 - `packages/prediction-engine/src/metrics/rushing/rush-over-expected.ts`
+- `packages/prediction-engine/src/metrics/decision/no-bet-pressure.ts`
 - `packages/prediction-engine/src/metrics/decision/playable-window-score.ts`
 - `packages/prediction-engine/src/metrics/decision/portfolio-fit-score.ts`
 - `packages/prediction-engine/src/metrics/decision/gse-signal-score.ts`
@@ -90,6 +91,7 @@ Root package exports:
 - `rushEnvironmentIndex`
 - `expectedRushYardsGse`
 - `rushOverExpectedGse`
+- `noBetPressureMetric`
 - `playableWindowScore`
 - `gseSignalScore`
 
@@ -129,6 +131,7 @@ Current governed metric certificates:
 | `rush-environment-index` | rushing | SHADOW | score_band |
 | `expected-rush-yards-gse` | rushing | SHADOW | score_band |
 | `rush-over-expected-gse` | rushing | SHADOW | score_band |
+| `no-bet-pressure` | decision | SHADOW | score_band |
 | `playable-window-score` | decision | SHADOW | score_band |
 | `portfolio-fit-score` | decision | SHADOW | score_band |
 | `gse-signal-score` | decision | SHADOW | score_band |
@@ -325,6 +328,20 @@ Implementation boundary:
 - `confidenceScore` measures evidence quality, not win probability or public probability.
 - Low sample size, stale calibration reports, high ECE, drift pressure, calibration debt, or blocked source posture suppress or block calibration use.
 - It exposes calibration evidence drivers only and keeps protected thresholds, component blends, band cutoffs, and source-posture scaling private.
+
+### No-Bet Pressure
+
+Target question: should this candidate be refused before downstream action-quality review?
+
+No-Bet Pressure is a refusal-pressure score, not a pick trigger, win probability, expected value, confidence, betting advice, or stake advice. It wraps the existing `computeNoBetStrength()` governor and turns governed metric inputs into canonical risk factors for missing data, stale data, model disagreement, unvalidated calibration, blocked source rights, low evidence, market volatility, and responsible-gaming pressure.
+
+Implementation boundary:
+
+- It returns `score`, `band`, `noBetRecommended`, evidence confidence, uncertainty, source posture, block reasons, and public drivers.
+- `probability` is always `null`.
+- `confidenceScore` measures evidence support for the refusal-pressure estimate, not win probability, expected value, or advice quality.
+- Blocked source-policy posture, blocked market-signal posture, missing required data, severe calibration debt, severe drift, or responsible-gaming pressure can hard-pass the candidate before downstream GSS/PWS/PFS review.
+- It exposes public risk drivers only and keeps risk mapping, evidence-health blend, hard-block thresholds, band cutoffs, and source-posture scaling protected.
 
 ### Playable Window Score
 
@@ -982,11 +999,18 @@ Pure LOC review for new source files:
 - Fixture coverage includes RVI, PWS, and MMS adapted cases plus Sleeper manual-review and Scores24 blocked cases.
 - Focused adapter/split/source-rights tests passed (3 files, 18 tests), prediction-engine typecheck passed, adapter LOC scan measured 210, 116, and 79 lines, and no TS escape hatches were found.
 
+2026-07-06 No-Bet Pressure continuation check:
+
+- `no-bet-pressure.ts` adds a governed `SHADOW` decision metric over data reliability, stale-line risk, market-signal allowance, calibration integrity, calibration debt, drift, model disagreement, source contradiction pressure, missing-data pressure, low evidence pressure, market mirage score, role volatility, responsible-gaming pressure, and source-policy posture.
+- It reuses `computeNoBetStrength()` from the existing GSE action-score governor so the metric does not invent a parallel refusal grammar.
+- It returns `probability: null`, keeps confidence separate from win probability/EV/advice, exposes public drivers without protected weights, and hard-passes source blocks, blocked market signals, missing required data, severe calibration debt/drift, and responsible-gaming pressure before downstream GSS/PWS/PFS review.
+- Focused no-bet/birth-certificate/asset/downstream decision tests passed (5 files, 22 tests), prediction-engine typecheck passed, full prediction-engine tests passed (105 files, 876 tests), root typecheck/lint/guardrails/whitespace checks passed, the all-workspaces test wrapper exited 0 without an invented aggregate count, metric LOC scan measured 200 and 118 lines, and no TS escape hatches were found.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, and generated source policies:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, No-Bet Pressure, and generated source policies:
 
-1. Add historical distribution/drift adapters for Calibration Integrity Grade and Portfolio Fit Score only after source rights and payload rights prove the inputs are cleared.
-2. Add markdown evidence-card export coverage for Calibration Integrity Grade and Portfolio Fit Score before allowing either into public/API route planning.
-3. Continue guarded metric backlog with No-Bet Pressure, Drift Pressure Index, or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
+1. Add evidence-card fixture and generated markdown-report coverage for No-Bet Pressure before allowing it into public/API route planning.
+2. Add source/payload-reviewed historical validation adapters for No-Bet Pressure only after cleared data proves the inputs are usable.
+3. Continue guarded metric backlog with Drift Pressure Index or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
 4. Add markdown export tests for any future metric report before allowing it into public/API route planning.

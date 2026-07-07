@@ -1510,3 +1510,29 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   clearance claim, no production-readiness claim, no metric promotion, no betting use, no probability
   or expected-value claim, no raw odds/tracking export, no package/dependency change, no live
   AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier No-Bet Pressure metric
+
+- WHAT: Added No-Bet Pressure as a governed proprietary `SHADOW` decision metric. The metric wraps the
+  existing `computeNoBetStrength()` governor rather than inventing a parallel refusal grammar, maps
+  reliability/freshness/calibration/drift/disagreement/contradiction/missing-data/evidence/market-mirage/
+  responsible-gaming/source-posture inputs into canonical no-bet risk factors, emits `probability: null`,
+  and hard-passes source blocks, blocked market signals, missing required data, severe calibration debt or
+  drift, and responsible-gaming pressure before downstream Playable Window, Portfolio Fit, or GSE Signal review.
+- FILES: `packages/prediction-engine/src/metrics/decision/no-bet-pressure.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/no-bet-pressure.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  metric birth-certificate/asset tests, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution ledger.
+- GATE: first focused metric run caught the certificate inserted in the wrong registry slot; second run caught
+  the old Market Mirage object missing its opening brace after the move. Final focused no-bet/birth-certificate/
+  asset/downstream decision tests passed (5 files, 22 tests). Prediction-engine typecheck passed. Full
+  prediction-engine tests passed (105 files, 876 tests). Root typecheck, root lint, root guardrails, and
+  `git diff --check` passed. The all-workspaces test wrapper exited 0; the transcript was too large for a
+  reliable aggregate count, so no invented total is claimed. LOC / escape-hatch scan passed: metric 200
+  lines, test 118 lines, and no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or
+  non-null property access found.
+- FLAG: shadow metric only; no live route, no public/API exposure, no legal clearance claim, no production-readiness
+  claim, no metric promotion, no betting use, no probability or expected-value claim, no raw odds/tracking export,
+  no package/dependency change, no live AWS/cloud/service action, and no prediction gate flip.

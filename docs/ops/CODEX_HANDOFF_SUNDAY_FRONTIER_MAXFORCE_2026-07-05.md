@@ -40,6 +40,7 @@ Implemented:
 - public-safe AWS-governed sports intelligence case-study route with six Well-Architected pillar mappings, exact `docs/aws` route record, launch-page source QA, and closed live-action locks
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 - Role Volatility Index metric slice with birth certificate, exports, asset coverage, source-policy fail-closed behavior, and directional tests
+- No-Bet Pressure metric slice with birth certificate, exports, asset coverage, source/market/missing-data/calibration/drift/responsible-gaming hard-pass behavior, `computeNoBetStrength()` reuse, and directional tests
 - Playable Window Score metric slice with birth certificate, exports, asset coverage, stale/source/no-bet/drift/calibration fail-closed behavior, and directional tests
 - Market Mirage Score metric slice with birth certificate, exports, asset coverage, stale/source/no-bet/drift/calibration fail-closed behavior, composed payload fixture integration, app bridge expectation coverage, and directional tests
 - SLRS/QBI/RVI/CIG/PWS/PFS/MMS evidence-card fixture library with draft-first model cards, active drift cards, role-stability, calibration, decision-window, portfolio-concentration, and market-mirage split coverage, plus package-root proprietary aliases
@@ -245,6 +246,7 @@ Broad test result:
 - Calibration/portfolio broad validation: root typecheck, root lint, and `git diff --check` passed. First root guardrails run caught a banned phrase in a forbidden-input list; after changing it to `certain-return claim`, guardrails passed. The all-workspaces test wrapper hit the 300s tool ceiling and is not counted as a pass; segmented workspace tests passed across apps/web chunks plus crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types for 571 files / 7583 tests.
 - Calibration/portfolio evidence-report validation: focused evidence-card/report/birth-certificate/asset tests passed (4 files, 20 tests); prediction-engine typecheck passed; full prediction-engine tests passed (103 files, 866 tests); root typecheck, lint, guardrails, and `git diff --check` passed. LOC/escape-hatch scan passed with fixture 200 lines, evidence-card test 209 lines, report test 64 lines, and no TS escape hatches or non-null property access.
 - Calibration/portfolio historical distribution validation: first package typecheck caught source-policy status widening to `string`; after tightening the mapped return type, focused distribution/validation/source-rights/CIG/PFS tests passed (5 files, 27 tests), prediction-engine typecheck passed, and full prediction-engine tests passed (104 files, 871 tests). Root typecheck, lint, guardrails, and `git diff --check` passed. LOC/escape-hatch scan passed with adapter 222 lines, fixture 149 lines, test 73 lines, and no TS escape hatches or non-null property access; touched export barrels are marked `SIZE_OK`.
+- No-Bet Pressure validation: first focused run caught the certificate inserted in the wrong registry slot; second run caught the old Market Mirage object missing its opening brace after the move; final no-bet/birth-certificate/asset/downstream decision tests passed (5 files, 22 tests). Prediction-engine typecheck passed. Full prediction-engine tests passed (105 files, 876 tests). Root typecheck, root lint, root guardrails, and `git diff --check` passed. The all-workspaces test wrapper exited 0; the transcript was too large for a reliable aggregate count, so no invented total is claimed. LOC/escape-hatch scan passed with metric 200 lines, test 118 lines, and no TS escape hatches or non-null property access.
 - `npx prettier --check ...` was attempted but blocked before execution by npm certificate verification while fetching Prettier; no install or dependency change was attempted.
 - Rushing metric continuation passed targeted tests after splitting the metric birth-certificate registry: `metric-birth-certificate.test.ts`, `rush-environment-index.test.ts`, `expected-rush-yards.test.ts`, `rush-over-expected.test.ts`, and `metric-asset-graduation.test.ts` (5 files, 15 tests).
 - Current rushing metric validation: prediction-engine typecheck passed; full prediction-engine tests passed (89 files, 794 tests); root typecheck passed; root lint passed; root guardrails passed; `git diff --check` passed.
@@ -316,7 +318,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, partner/sponsor review fixture reports, local review queue persistence simulator, and local blocker report exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains owner-reviewed and intentionally deferred.
-- Full proprietary metric backlog remains future work, with owner-approved live-route promotion packet, app-level composed payload fixture bridge coverage, real historical distribution/drift adapters, No-Bet Pressure, Drift Pressure Index, and Conformal Uncertainty Width next.
+- Full proprietary metric backlog remains future work, with No-Bet Pressure evidence/report/adapters, Drift Pressure Index, Conformal Uncertainty Width, and any owner-approved live-route promotion packet still pending.
 
 ## Intentionally Deferred
 
@@ -342,22 +344,22 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Continue guarded metric backlog with No-Bet Pressure, Drift Pressure Index, or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
-2. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
-3. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
-4. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
+1. Add evidence-card fixture and generated markdown-report coverage for No-Bet Pressure before allowing it into public/API route planning.
+2. Add source/payload-reviewed historical validation adapters for No-Bet Pressure only after cleared data proves the inputs are usable.
+3. Continue guarded metric backlog with Drift Pressure Index or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
+4. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
 5. Run owner-reviewed production preview QA before live push.
 6. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
 7. Add route design paperwork only after owner approval; keep it non-executable and route-free.
 8. Add visual QA for any new public-safe case-study route before production preview.
 9. Add historical-data adapters for validation splits only after source-rights and payload-rights review confirms the inputs are cleared.
-10. Add source-policy generation receipts for new metric families before any app/API bridge expansion.
+10. Add partner/sponsor markdown export docs only if generated copy remains claim-safe and sponsor-independent.
 
 ## Next Prompt
 
 Continue the Sunday frontier implementation with the next governed metric or draft evidence report:
 
-1. Continue with No-Bet Pressure, Drift Pressure Index, or Conformal Uncertainty Width after preserving all no-bet/source/payload vetoes.
+1. Continue with No-Bet Pressure evidence-card/report/adapters, Drift Pressure Index, or Conformal Uncertainty Width after preserving all no-bet/source/payload vetoes.
 2. Preserve source-policy posture, lifecycle locks, API locks, and no-bet/calibration/staleness veto semantics.
 3. Keep all work separate from live `app/api/v1` route implementation.
 4. Keep all validation outputs separate from legal clearance, production readiness, AWS deployment, public/API exposure, and betting advice.

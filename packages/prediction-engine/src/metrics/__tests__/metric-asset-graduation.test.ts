@@ -64,6 +64,7 @@ describe("GSE metric assets and graduation", () => {
       "rush-over-expected-gse",
       "role-volatility-index",
       "calibration-integrity-grade",
+      "no-bet-pressure",
       "playable-window-score",
       "portfolio-fit-score",
       "gse-signal-score",
