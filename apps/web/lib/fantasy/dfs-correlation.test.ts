@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { simulateLineups, rankByTournamentScore, mulberry32 } from "./dfs-correlation";
+import { simulateLineups, rankByTournamentScore, mulberry32, duplicationRisk } from "./dfs-correlation";
 import { DFS_SLATE, type DfsPlayer } from "./dfs-slate";
 
 const byId = (id: string): DfsPlayer => {
@@ -13,6 +13,7 @@ const byId = (id: string): DfsPlayer => {
 const QB_PHI = byId("dqb1");
 const WR_PHI = byId("dwr0");
 const WR_LAR = byId("dwr3");
+const RB_PHI = byId("drb3"); // Tariq Bell, PHI RB — same team as QB_PHI
 
 describe("dfs correlation / simulation", () => {
   it("is deterministic under a fixed seed", () => {
@@ -50,5 +51,20 @@ describe("dfs correlation / simulation", () => {
     for (let i = 1; i < ranked.length; i++) {
       expect(ranked[i - 1]!.sim.score).toBeGreaterThanOrEqual(ranked[i]!.sim.score);
     }
+  });
+
+  it("is position-aware: a QB↔WR stack correlates harder than a QB↔RB pairing", () => {
+    // Same team for both, so both are correlated with the QB — but the model
+    // loads WR/TE onto the offense far more than RB. The QB+WR sum should swing
+    // wider (more shared variance) than the QB+RB sum.
+    const [qbWr] = simulateLineups([[QB_PHI, WR_PHI]], { sims: 8000, seed: 3 });
+    const [qbRb] = simulateLineups([[QB_PHI, RB_PHI]], { sims: 8000, seed: 3 });
+    expect(qbWr!.stdev).toBeGreaterThan(qbRb!.stdev);
+  });
+
+  it("duplication risk rises with chalk", () => {
+    const chalky = [byId("drb1"), byId("dwr1"), byId("dqb1")]; // owns .22 / .20 / .18
+    const contrarian = [byId("drb9"), byId("dwr10"), byId("dte5")]; // owns .02 / .02 / .02
+    expect(duplicationRisk(chalky)).toBeGreaterThan(duplicationRisk(contrarian));
   });
 });

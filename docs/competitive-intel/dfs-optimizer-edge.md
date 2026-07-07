@@ -33,11 +33,11 @@ code change):
 
 | File | Role |
 |---|---|
-| `dfs-exact.ts` | **Exact branch-and-bound.** Returns the *provable* maximum of the mode's objective under salary cap + slots + distinct + locks/excludes. Symmetry-broken (identical slots are combinations, not permutations), with admissible objective + salary bounds and a node-cap safety backstop. |
-| `dfs-correlation.ts` | **Correlation-aware Monte-Carlo.** A compact factor model (team latent + game latent + idiosyncratic) so a QB and his pass-catcher boom together, an offense and the opposing DST move opposite, and both teams in a shootout rise together. Scores lineups by top-quintile ceiling EV under correlation + ownership leverage. Seeded/deterministic. |
-| `dfs-optimizer-edge.ts` | Orchestration: `optimizeExact` for **cash** (provable), `selectGppLineups` (generate diverse pool → simulate → rank) for **GPP**, and a head-to-head `benchmark()`. |
-| `dfs-optimizer.ts` | (existing, unchanged behaviour) — exported four shared helpers so the exact path optimises the *same* objective the heuristic does. |
-| `*.test.ts` (3) | 13 tests incl. a **brute-force verifier** proving the solver hits the true optimum on every mode. |
+| `dfs-exact.ts` | **Exact branch-and-bound**, provable optimum under cap + slots + distinct + locks/excludes. **Distinct per-position** admissible bound, **FLEX-slot symmetry breaking**, and a **greedy warm-start** so the search proves rather than discovers. Adds `minStack` (provably-optimal QB stack, with an infeasibility precheck), slot-pinning, exact **`kBest`** (top-K distinct lineups), **`diversePool`** (k-best + overlap cap), and **`lateSwap`** / Swaptimize (exact re-opt of the unplayed slots). |
+| `dfs-correlation.ts` | **Position-aware** correlation Monte-Carlo: per-position team + game loadings — QB↔WR/TE strong, QB↔RB weak, both-offenses bring-back, offense↔opposing-DST negative — plus a **duplication-risk** proxy. Scores by top-quintile ceiling EV − ownership − dup. Seeded/deterministic. |
+| `dfs-optimizer-edge.ts` | Orchestration: `optimizeExact` / `lateSwap` for cash & swaps; `selectGppLineups` (**deterministic** k-best diverse pool → simulate → rank) for GPP; `benchmark()`. |
+| `dfs-optimizer.ts` | existing behaviour unchanged — exports 4 shared helpers so exact + heuristic optimise the *same* objective. |
+| `*.test.ts` (3) | **19 tests** incl. a **brute-force verifier** (exact == ground truth on every mode), k-best distinctness, the diversity cap, minStack, late-swap, and the position-aware correlation checks. |
 
 The incumbent `dfs-optimizer.ts` (randomized multi-start + hill-climb) already
 out-designs LineStar conceptually — mode-aware objective (GPP = ceiling, not
@@ -50,30 +50,35 @@ Run: `pnpm --dir apps/web test dfs-exact dfs-correlation dfs-optimizer-edge`.
 Representative `benchmark()` output:
 
 ```
-CASH   exactObjective 120.5  (salary 50000, PROVEN optimal, ~1.6M nodes / ~0.6s)
-       heuristic best 120.5, worst 119.0  →  optimalityGap up to 2.0
-GPP    naive point-sum ceilEV 146.3   vs   correlation-selected ceilEV 147.6
-       correlationEdge +1.3   (selected lineup is stacked)
+CASH   exactObjective 120.5  (salary 50000, PROVEN optimal)
+       heuristic worst 118.0  →  optimalityGap 2.5
+GPP    naive point-sum ceilEV 145.2   vs   correlation-selected ceilEV 146.4
+       correlationEdge +1.2   (selected lineup is stacked; DETERMINISTIC pool)
+Search nodes: leverage 1 · gpp ~390k · cash ~871k  (all < 1s, provably optimal)
 ```
 
 **Read honestly:**
 - **CASH is the clean win.** The exact optimum is guaranteed every run; the
-  randomized heuristic (the same *class* of tool as LineStar's) drops ~2
+  randomized heuristic (the same *class* of tool as LineStar's) drops ~2.5
   projected points when it gets too few restarts. "Provably optimal" is a claim
   their patent structurally cannot make.
-- **GPP edge is real but modest here (+1.3 ceilEV).** On a ~35-player toy slate
+- **GPP edge is real but modest here (+1.2 ceilEV).** On a ~35-player toy slate
   the point-sum lineup is already near-optimal and often already stacked, so the
   correlation gain is small. The *mechanism* is proven independently
   (`dfs-correlation.test.ts`: a same-team stack has strictly higher ceiling
-  variance and p90 than an equal-projection off-team pair). On real slates —
-  more players, stronger stacks, live ownership — the edge widens.
+  variance than a QB↔RB pairing). On real slates — more players, stronger
+  stacks, live ownership — the edge widens.
+- The GPP pool is now **deterministic** (exact k-best + overlap cap), so results
+  are reproducible run-to-run — unlike the random-restart approach it replaced.
 
 ## Honest caveats / next work
 
-- The exact solver explores ~1.6M nodes on the illustrative slate (~0.6s). Fine
-  when gated; for large live slates it wants a tighter bound (per-position
-  knapsack / LP relaxation) or a dedicated MILP solver (OR-Tools / HiGHS).
-  `NODE_CAP` returns best-so-far with `optimal:false` rather than hanging.
+- Node counts after the max-out pass: **leverage 1, gpp ~390k, cash ~871k**, all
+  under a second and provably optimal. The FLEX symmetry break + warm-start cut
+  the earlier ~1.6M. Cash stays highest because its objective bound doesn't
+  couple salary; for large **live** slates the right tool is a dedicated MILP
+  solver (OR-Tools / HiGHS), not a hand-rolled LP bound. `NODE_CAP` returns
+  best-so-far with `optimal:false` rather than hanging.
 - The factor-model loadings are sensible defaults, not calibrated to real
   outcomes — calibrate against historical results before any live claim
   (consistent with GSE's proof-of-accuracy stance).

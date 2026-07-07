@@ -11,6 +11,7 @@ teardowns is tagged `(documented)` / `(inferred)` / `(speculative)`.
 | [rotowire-engine-teardown.md](./rotowire-engine-teardown.md) | How RotoWire's projection / ranking / auction / ADP / mock-draft / draft-assistant engines work, + a license-clean build blueprint. Their weakness: sold on *authority*, never *calibrated in public*. |
 | [linestar-teeth-dossier.md](./linestar-teeth-dossier.md) | LineStar / BetFully patent-invalidity & prior-art, claim-by-claim design-around, engine teardown, weakness/churn dossier, corporate/tech/regulatory map, GSE battle plan. |
 | [dfs-optimizer-edge.md](./dfs-optimizer-edge.md) | The engineering follow-through: exact (provable) optimizer + correlation-aware GPP selection that beat LineStar's patented point-sum heuristic — with a head-to-head benchmark. |
+| [linestar-appendix-corporate-tech-blueprint.md](./linestar-appendix-corporate-tech-blueprint.md) | Completes the dossier's two dropped angles: corporate / tech-stack / regulatory recon + the (now-implemented) build blueprint. |
 
 ## The through-line
 

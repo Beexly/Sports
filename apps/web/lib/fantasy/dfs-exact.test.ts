@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { optimizeExact, isCapLegal } from "./dfs-exact";
+import { optimizeExact, isCapLegal, kBest, diversePool, lateSwap } from "./dfs-exact";
 import { optimizeOne, objVal, objOf, eligible, type Mode } from "./dfs-optimizer";
 import { DFS_SLOTS, SALARY_CAP, DFS_SLATE, type DfsPlayer, type DfsPos } from "./dfs-slate";
 
@@ -100,5 +100,50 @@ describe("exact dfs optimizer", () => {
       // The provable optimum is, by definition, >= anything the heuristic finds.
       expect(exact.objective).toBeGreaterThanOrEqual(objOf(heur!, mode) - 1e-6);
     });
+  });
+});
+
+describe("exact k-best · diverse pool · minStack · late-swap", () => {
+  it("kBest returns k distinct lineups, sorted by objective, topped by the single optimum", () => {
+    const k = 6;
+    const best = kBest({ mode: "gpp" }, k, DFS_SLATE);
+    expect(best.length).toBe(k);
+    const keys = best.map((l) => l.map((p) => p.id).sort().join(","));
+    expect(new Set(keys).size).toBe(k); // all distinct sets
+    const objs = best.map((l) => objOf(l, "gpp"));
+    for (let i = 1; i < objs.length; i++) expect(objs[i - 1]!).toBeGreaterThanOrEqual(objs[i]!);
+    const single = optimizeExact({ mode: "gpp" }, DFS_SLATE);
+    expect(objs[0]!).toBeCloseTo(single.objective, 6); // best-of-k == the proven optimum
+  });
+
+  it("diversePool honours the overlap cap between every pair", () => {
+    const maxOverlap = 6;
+    const pool = diversePool({ mode: "gpp" }, 8, { maxOverlap, factor: 12 }, DFS_SLATE);
+    expect(pool.length).toBeGreaterThanOrEqual(2);
+    for (let a = 0; a < pool.length; a++)
+      for (let b = a + 1; b < pool.length; b++) {
+        const sb = new Set(pool[b]!.map((p) => p.id));
+        const overlap = pool[a]!.filter((p) => sb.has(p.id)).length;
+        expect(overlap).toBeLessThanOrEqual(maxOverlap);
+      }
+  });
+
+  it("minStack forces a QB stack and never beats the unconstrained optimum", () => {
+    const free = optimizeExact({ mode: "gpp" }, DFS_SLATE);
+    const stacked = optimizeExact({ mode: "gpp", minStack: 1 }, DFS_SLATE);
+    expect(stacked.lineup).not.toBeNull();
+    const qb = stacked.lineup!.find((p) => p.pos === "QB")!;
+    const catchers = stacked.lineup!.filter((p) => p.team === qb.team && (p.pos === "WR" || p.pos === "TE")).length;
+    expect(catchers).toBeGreaterThanOrEqual(1);
+    expect(free.objective).toBeGreaterThanOrEqual(stacked.objective - 1e-6);
+  });
+
+  it("late-swap keeps locked players, stays legal, and never lowers the objective", () => {
+    const start = optimizeOne({ mode: "gpp", stack: false, locks: new Set(), excludes: new Set() }, undefined, 5, DFS_SLATE)!;
+    const lockedIds = new Set([start[0]!.id, start[1]!.id, start[8]!.id]); // QB, an RB, DST
+    const swapped = lateSwap(start, lockedIds, "gpp", DFS_SLATE);
+    lockedIds.forEach((id) => expect(swapped.some((p) => p.id === id)).toBe(true));
+    expect(isCapLegal(swapped)).toBe(true);
+    expect(objOf(swapped, "gpp")).toBeGreaterThanOrEqual(objOf(start, "gpp") - 1e-6);
   });
 });

@@ -18,13 +18,12 @@
 
 import {
   optimizeOne,
-  generateLineups,
   metrics,
   objOf,
   type Lineup,
   type LineupMetrics,
 } from "./dfs-optimizer";
-import { optimizeExact, type ExactResult } from "./dfs-exact";
+import { optimizeExact, diversePool, lateSwap, type ExactResult } from "./dfs-exact";
 import { rankByTournamentScore, simulateLineups, type SimStats } from "./dfs-correlation";
 import { type DfsPlayer } from "./dfs-slate";
 import { activeDfsSlate } from "@/lib/integrations/dfs";
@@ -39,30 +38,34 @@ export type GppLineup = {
 
 export type GppOpts = {
   readonly poolMultiple?: number; // candidate pool = count × this
-  readonly maxExposure?: number;
+  readonly maxOverlap?: number; // pool diversity: max shared players between lineups
+  readonly factor?: number; // k-best over-fetch factor for the diverse pool
   readonly sims?: number;
   readonly seed?: number;
   readonly ownWeight?: number;
-  readonly stack?: boolean;
+  readonly dupWeight?: number;
+  readonly stack?: boolean; // require a QB stack in every pool lineup
 };
 
 /**
- * The production GPP path: build a diverse pool of cap-legal lineups, then rank
- * them by correlated tournament upside and return the top `count` — each carrying
- * its full glass-box metrics AND its simulation stats (mean / p90 / ceilEV).
+ * The production GPP path: build a DETERMINISTIC diverse pool via exact k-best
+ * (top lineups by ceiling with an overlap cap — no random restarts), then rank
+ * by correlated tournament upside and return the top `count`, each with full
+ * glass-box metrics AND simulation stats (mean / p90 / ceilEV / dupRisk).
  */
 export function selectGppLineups(
   count: number,
   opts: GppOpts = {},
   slate: readonly DfsPlayer[] = activeDfsSlate(),
 ): GppLineup[] {
-  const poolMultiple = opts.poolMultiple ?? 4;
-  const pool = generateLineups(
-    { mode: "gpp", stack: opts.stack ?? true, locks: new Set(), excludes: new Set() },
-    Math.max(count * poolMultiple, count),
-    opts.maxExposure ?? 0.6,
+  const poolMultiple = opts.poolMultiple ?? 6;
+  const poolSize = Math.max(count * poolMultiple, count);
+  const pool = diversePool(
+    { mode: "gpp", minStack: opts.stack ?? true ? 1 : 0 },
+    poolSize,
+    { maxOverlap: opts.maxOverlap ?? 6, factor: opts.factor ?? 8 },
     slate,
-  ).lineups.map((l) => l.players);
+  );
 
   if (!pool.length) return [];
 
@@ -70,6 +73,7 @@ export function selectGppLineups(
     sims: opts.sims,
     seed: opts.seed,
     ownWeight: opts.ownWeight,
+    dupWeight: opts.dupWeight,
   });
 
   return ranked.slice(0, count).map((r) => ({
@@ -108,6 +112,7 @@ export type Benchmark = {
   };
   readonly gpp: {
     readonly naiveCeilingSum: number; // Σceiling of the point-sum-optimal lineup
+    readonly naiveNodes: number; // search nodes for the provable GPP optimum
     readonly naiveSimCeilEV: number; // its CORRELATED top-quintile expectation
     readonly selectedCeilingSum: number; // Σceiling of the correlation-selected lineup
     readonly selectedSimCeilEV: number; // its correlated top-quintile expectation
@@ -159,6 +164,7 @@ export function benchmark(slate: readonly DfsPlayer[] = activeDfsSlate(), seed =
     },
     gpp: {
       naiveCeilingSum: ceilSum(naiveLu),
+      naiveNodes: naive.nodes,
       naiveSimCeilEV: naiveSim.ceilEV,
       selectedCeilingSum: ceilSum(selectedLu),
       selectedSimCeilEV: selectedSim.ceilEV,
@@ -171,5 +177,5 @@ export function benchmark(slate: readonly DfsPlayer[] = activeDfsSlate(), seed =
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
 // re-exports so callers have one import surface
-export { optimizeExact, type ExactResult } from "./dfs-exact";
-export { rankByTournamentScore, simulateLineups } from "./dfs-correlation";
+export { optimizeExact, kBest, diversePool, lateSwap, type ExactResult } from "./dfs-exact";
+export { rankByTournamentScore, simulateLineups, duplicationRisk } from "./dfs-correlation";

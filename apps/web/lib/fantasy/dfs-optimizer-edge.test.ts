@@ -22,6 +22,7 @@ describe("dfs optimizer edge — benchmark + gpp selection", () => {
     expect(b.gpp.selectedSimCeilEV).toBeGreaterThan(0);
     expect(Number.isFinite(b.gpp.correlationEdge)).toBe(true);
     expect(b.gpp.naiveCeilingSum).toBeGreaterThan(0);
+    expect(b.gpp.naiveNodes).toBeGreaterThan(0); // provable GPP optimum via search
   });
 
   it("selectGppLineups returns glass-box, cap-legal lineups ranked by sim score", () => {
