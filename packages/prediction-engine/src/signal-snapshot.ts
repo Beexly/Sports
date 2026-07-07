@@ -78,7 +78,14 @@ export function buildPickSignalSnapshot(
   isBootstrap: boolean,
   usedDerivedHistory: boolean
 ): PickSignalSnapshotData {
-  // Line movement: opening line existed and is different from current
+  // Line-movement availability: true when any opening line (spread OR total)
+  // was captured. This is a coarse data-availability flag only — it does NOT
+  // compare the opening line to the current line, and it does NOT restrict to
+  // the pick's own market. A SPREAD pick with only an openingTotal will set
+  // this true even though no spread movement was observable for that pick.
+  // For the market-specific, opening-vs-current delta, use lineMovementDelta
+  // (computed below), which is null unless both endpoints exist for the pick's
+  // own pickType.
   const hadLineMovementSignal =
     (context?.openingSpread != null) ||
     (context?.openingTotal != null);

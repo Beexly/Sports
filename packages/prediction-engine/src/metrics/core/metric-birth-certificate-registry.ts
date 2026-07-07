@@ -709,6 +709,12 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
     validationMethods: ["bucket_lift", "walk_forward", "drift_test", "clv"],
   },
   {
+    // `allowedInputs` enumerates the eight always-present component inputs. gseSignalScore
+    // (metrics/decision/gse-signal-score.ts) additionally consumes six inputs not listed here that
+    // each materially move the score: a strongly-weighted calibration-debt penalty plus five
+    // optional interaction/penalty inputs — playable-window readiness, model agreement, stale-line
+    // risk, role volatility, and player-prop exposure. They are omitted from the enumerated array
+    // above; auditors reading the declared contract should treat them as part of the input surface.
     allowedInputs: ["edge quality", "signal integrity", "market gravity", "player signal", "calibration integrity", "portfolio fit", "no-bet pressure", "drift pressure"],
     failureModes: ["uncalibrated component scores can inflate action quality", "high no-bet pressure should veto apparent edge"],
     family: "decision",

@@ -45,6 +45,62 @@ export interface PlayableWindowScoreMetric {
   readonly sourcePolicy: readonly MetricSourcePolicy[];
 }
 
+/**
+ * Playable Window Score — an upstream *readiness* gate, not a pick.
+ *
+ * WHAT IT ANSWERS
+ * "Is the decision window ready enough for downstream review, or should it stay
+ * closed?" It does NOT answer who wins, by how much, the expected value, or
+ * whether to bet — those are forbidden inputs/outputs for this metric (see the
+ * birth certificate). `probability` is always `null` by contract.
+ *
+ * UNITS & RANGES
+ * - Every `*Score`/`*Index`/`*Pressure`/`*Debt` input is a 0–100 score; the
+ *   optional `modelAgreement` is a 0–1 fraction (defaults to 0.65 when absent).
+ *   `normalizeScore` clamps each 0–100 input to [0,1] before blending; missing
+ *   `roleVolatilityIndex`/`qbBurdenIndex` default to 0 (no penalty).
+ * - Output `score` is 0–100 readiness (higher = more ready). `rawScore =
+ *   clampScore(100*support − 62*pressure)`, where `support` is the readiness
+ *   blend (weights 0.24/0.22/0.20/0.14/0.08/0.07/0.05) and `pressure` is the
+ *   suppression blend (weights 0.28/0.20/0.18/0.18/0.08/0.04/0.04). Weights are
+ *   hand-set governance policy, not fit; the birth certificate marks them
+ *   protected and they are never exposed in public output.
+ * - `band` cutoffs: OPEN ≥72, NARROW ≥55, WATCH ≥35, else CLOSED.
+ *
+ * HARD-BLOCK GATES (fail-closed)
+ * Any of these force the window shut regardless of apparent opportunity:
+ * `!marketSignalAllowed` or `staleLineRiskScore ≥ 85`; source policy disallows
+ * modeling; `noBetPressure ≥ 85`; `driftPressure ≥ 80`; `calibrationDebt ≥ 80`.
+ * When any gate trips, `blockReasons` is non-empty and, deliberately:
+ *   - `score` is capped at 24 (`Math.min(24, rawScore)`), so a blocked window
+ *     can never present as anything but CLOSED-tier readiness;
+ *   - `band` is forced to `CLOSED` (belt-and-suspenders: the 24 cap already
+ *     grades CLOSED, but the forcing makes it unconditional);
+ *   - `uncertaintyBand` is forced to `HIGH`;
+ *   - `decisionWindowAllowed` is `false`.
+ *
+ * THREE SEPARATE AXES — do not conflate them
+ * - `score`/`band`: readiness (is the window open?). Suppressed on block.
+ * - `uncertaintyBand`: how much evidence backs the readiness call. Forced HIGH
+ *   on block.
+ * - `confidenceScore` (0–100, meaning `EVIDENCE_QUALITY_NOT_..._BET_ADVICE`):
+ *   evidence quality, orthogonal to readiness. It is intentionally NOT
+ *   suppressed on block — it is derived from the *pre-block* `uncertaintyBand`
+ *   and `evidenceHealth`, so a well-sourced setup that is blocked for market
+ *   staleness still honestly reports that its evidence was high quality. Do not
+ *   read `confidenceScore` as a win probability, EV, or stake recommendation.
+ *
+ * EVIDENCE → UNCERTAINTY HEURISTIC (limitation)
+ * `uncertaintyBand` comes from `uncertaintyFromEvidence`, which keys off a
+ * `sampleSize` against 50/250 cutoffs. This metric has no true observation
+ * count, so it synthesizes one as `Math.max(1, evidenceHealth) * 4` (a 0–100
+ * health score maps to a 4–400 pseudo-sample). This is a monotone proxy, not a
+ * real N: it lets an evidence-health signal drive the band but must not be read
+ * as an actual sample size, and its scaling is a tuning choice, not a
+ * statistical derivation.
+ *
+ * STATUS: SHADOW (not priced/surfaced live). Pure function, no I/O.
+ */
 export function playableWindowScore(input: PlayableWindowScoreInput): PlayableWindowScoreMetric {
   const market = normalizeScore(input.marketGravityIndex);
   const staleRisk = normalizeScore(input.staleLineRiskScore);
@@ -85,7 +141,12 @@ export function playableWindowScore(input: PlayableWindowScoreInput): PlayableWi
     { value: sourceRisk, weight: 0.04 },
   ]);
   const rawScore = clampScore(100 * support - 62 * pressure);
+  // A blocked window is capped at 24 (CLOSED-tier) so apparent opportunity can never
+  // present as playable; an unblocked window keeps its raw readiness score.
   const score = round(blockReasons.length > 0 ? Math.min(24, rawScore) : rawScore, 2);
+  // Pre-block uncertainty band (see line-159 forcing for the blocked path). sampleSize
+  // is a synthetic proxy — this metric has no real observation count, so evidence
+  // health (0-100) is scaled to a 4-400 pseudo-sample against the 50/250 cutoffs.
   const uncertaintyBand = uncertaintyFromEvidence({
     driftPressure: Math.max(input.driftPressure, input.calibrationDebt, sourceRisk * 100),
     proxyCount: proxyCount([input.roleVolatilityIndex, input.qbBurdenIndex]),
@@ -98,6 +159,8 @@ export function playableWindowScore(input: PlayableWindowScoreInput): PlayableWi
     birthCertificate: requireMetricBirthCertificate("playable-window-score"),
     blockReasons,
     confidenceMeaning: "EVIDENCE_QUALITY_NOT_WIN_PROBABILITY_EV_OR_BET_ADVICE",
+    // Evidence quality, orthogonal to readiness: intentionally uses the pre-block
+    // uncertaintyBand and is NOT suppressed when the window is blocked.
     confidenceScore: confidenceFromEvidence(input.evidenceHealth, uncertaintyBand, Math.max(sourceRisk, staleRisk, drift)),
     decisionWindowAllowed: blockReasons.length === 0,
     drivers: sortedDrivers([
@@ -156,6 +219,7 @@ export function playableWindowScore(input: PlayableWindowScoreInput): PlayableWi
     sourcePolicy: input.sourcePolicy,
     sourcePosture: sourcePosture(sourceRisk, sourceAllowed),
     status: "SHADOW",
+    // A blocked window is always reported as HIGH uncertainty regardless of evidence.
     uncertaintyBand: blockReasons.length > 0 ? "HIGH" : uncertaintyBand,
   };
 }

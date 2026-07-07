@@ -65,10 +65,17 @@ export interface MoneylineClvResult {
 /**
  * Spread CLV in points.
  *
- * Example (HOME): bet home at -3, market closes -4 → you laid fewer points →
- * clvPoints = (-3) − (-4) = +1 → BEAT_CLOSE.
- * Example (AWAY): bet away (home line +3, i.e. away -3), closes home +2 (away -2) →
- * away laid fewer points at your price → clvPoints = (+2) − (+3)... handled by side.
+ * Inputs are HOME-perspective lines (see the module header). The side flips the
+ * sign so POSITIVE clvPoints always means the locked line beat the close.
+ *
+ * Example (HOME, BEAT): bet home -3, close moves to home -4 → you locked the
+ *   cheaper number → clvPoints = pick − close = (-3) − (-4) = +1 → BEAT_CLOSE.
+ * Example (AWAY, LOST): bet away -3 (home line +3); close moves to away -2
+ *   (home +2) → at the close away lays fewer points than your lock, so your -3
+ *   is the worse number → clvPoints = close − pick = (+2) − (+3) = -1 → LOST_TO_CLOSE.
+ * Example (AWAY, BEAT): bet away -2 (home line +2); close moves to away -4
+ *   (home +4) → you locked the cheaper number → clvPoints = close − pick =
+ *   (+4) − (+2) = +2 → BEAT_CLOSE.
  */
 export function computeSpreadClv(
   pickHomeLine: number,

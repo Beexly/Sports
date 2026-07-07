@@ -48,6 +48,44 @@ export interface NoBetPressureMetric {
   readonly sourcePolicy: readonly MetricSourcePolicy[];
 }
 
+/**
+ * No-Bet Pressure — calibrated refusal-pressure metric for the decision layer.
+ *
+ * Answers one question: "How strongly should we decline to act on this game or
+ * prop right now?" It is deliberately NOT a win probability, an expected-value
+ * estimate, or bet advice — `confidenceMeaning` is pinned to
+ * REFUSAL_PRESSURE_NOT_WIN_PROBABILITY_EV_OR_BET_ADVICE and `probability` is
+ * always null by construction.
+ *
+ * Inputs: every `*Pressure` / `*Score` / `*Grade` / `*Index` field is a 0–100
+ * score (0 = clean / no pressure, 100 = maximal pressure), with the single
+ * exception of `modelDisagreement`, which is a 0–1 fraction. `marketSignalAllowed`
+ * is a freshness/rights gate and `sourcePolicy` carries the per-source rights
+ * posture. The optional proxy inputs (`marketMirageScore`, `roleVolatilityIndex`,
+ * `responsibleGamingPressure`) default to absent/0 and only add pressure when
+ * present and strictly positive.
+ *
+ * Output `score` is calibrated refusal pressure on 0–100 (higher = refuse
+ * harder), rounded to 2 dp. `band` uses fixed cutpoints:
+ *   CLEAR [0,30) → WATCH [30,60) → SOFT_PASS [60,85) → HARD_PASS [85,100].
+ * Any hard block forces the HARD_PASS decision regardless of the additive
+ * score: a blocked market signal (`marketSignalAllowed=false`) or blocked
+ * source rights, missing/stale/low-evidence pressure at or above its floor,
+ * calibration collapse (`calibrationIntegrityGrade<=20` or `calibrationDebt>=80`),
+ * or ANY responsible-gaming pressure (> 0). When the decision is HARD_PASS the
+ * reported `score` is floored to `max(85, score)` so the number can never
+ * under-state a hard refusal, and `uncertaintyBand` is forced to HIGH.
+ * `noBetRecommended` is true for SOFT_PASS and HARD_PASS.
+ *
+ * `confidenceScore` measures evidence quality — how much we trust the pressure
+ * reading — NOT how likely any bet is to win; it is orthogonal to `score`.
+ * The metric always returns a value (never null): with thin or blocked evidence
+ * it emits high pressure at HIGH uncertainty rather than declining to answer.
+ * Limitation: `drivers` is an ordered attribution of the largest pressure
+ * contributors, not an exact decomposition of `score` (the underlying strength
+ * model and the HARD_PASS floor can diverge from the driver sum). `status` is
+ * SHADOW — computed and audited but not yet priced.
+ */
 export function noBetPressureMetric(input: NoBetPressureInput): NoBetPressureMetric {
   const sourceAllowed = sourcePoliciesAllowed(input.sourcePolicy);
   const sourceRisk = sourcePostureRisk(input.sourcePolicy);

@@ -11,13 +11,26 @@
  * Real edge is the gap between an estimate the market has NOT already absorbed
  * and the market's fair price. So this engine takes one or more *independent*
  * estimators — the Poisson model (poisson.ts) and the Kalshi exchange (an
- * independent market, not the sportsbook) — and surfaces a pick only when they:
- *   1. diverge from the sportsbook's de-vigged fair probability, AND
- *   2. agree with each OTHER on the direction of that divergence, AND
- *   3. clear an evidence/uncertainty-shrunk edge threshold.
- * Using a second, independent market as a *referee* on our own model is the part
- * tout tools don't do: if the exchange agrees with the sportsbook, our model is
- * the outlier and we pass rather than fade the world on one signal.
+ * independent market, not the sportsbook) — and surfaces a pick only when the
+ * independent blend:
+ *   1. diverges from the sportsbook's de-vigged fair probability, AND
+ *   2. is not contradicted by a referee (see next paragraph), AND
+ *   3. clears an evidence/uncertainty-shrunk edge threshold.
+ *
+ * WHAT "REFEREE" ACTUALLY GUARANTEES — AND ITS LIMIT AT ONE SOURCE
+ * Cross-checking requires ≥2 independent estimators; only then can they referee
+ * each other, and the edge is scaled by their agreement (agreementFactor):
+ *   • CONFIRMS  (≥2, all on the edge's side)                    → ×1.0 full credit
+ *   • SPLIT     (≥2, some neutral, none opposing)               → ×0.5 half credit
+ *   • CONTRADICTS (any estimator on the sportsbook's side)      → ×0   forced PASS
+ * That forced PASS on disagreement is the part tout tools skip: if the exchange
+ * sides with the sportsbook, our model is the outlier and we stand down rather
+ * than fade the world on one signal.
+ *   • SOLO      (exactly one estimator) → ×0.6 discounted, but NOT refereed.
+ * With a single source requirement #2 cannot bind — there is no second opinion to
+ * contradict it — so a large enough lone divergence can still SPEAK, merely at the
+ * 0.6 discount. Single-source picks are therefore un-refereed and should be read
+ * as correspondingly less proven, not as clearing the cross-check above.
  *
  * The honest default is silence. With no independent estimate we PASS — we never
  * manufacture an edge from the market's own price. Every surfaced pick carries an

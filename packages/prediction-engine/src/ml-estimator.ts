@@ -28,19 +28,36 @@
  * data, provenance metadata, and calibration (the gate enforces this).
  *
  * HONESTY GATE
- * `predictWinProb` returns `null` — never a guess — when:
+ * `predictWinProb` returns `null` — never a guess — when any of these fail:
  *   1. `model` is null or undefined.
  *   2. `model.provenance.sampleSize` is below `MIN_SAMPLE_SIZE` (documented floor).
- *   3. `model.provenance.trainedAt` is older than `MODEL_MAX_AGE_DAYS`.
+ *   3. `model.provenance.trainedAt` is older than `MODEL_MAX_AGE_DAYS`, OR is not
+ *      a parseable ISO timestamp. NOTE: this staleness check is one-sided — it
+ *      rejects models that are too OLD but does NOT reject a `trainedAt` dated in
+ *      the future (a future date yields a negative age, which passes the
+ *      upper-bound test). A clock-skewed or corrupt future training date is
+ *      therefore served, not gated; callers needing future-date rejection must
+ *      validate provenance upstream.
  *   4. `model.provenance.featureSchemaHash` does not match `FEATURE_SCHEMA_HASH`
  *      (the deterministic hash of `MlFeatureVector`'s own field names, computed
  *      once at module load). A mismatched schema means the model was fit on
  *      different features; serving it would be silently wrong.
+ *   5. `model.stumps` is empty (the ensemble has no opinion to serve).
+ *   6. any field in `features` is null or non-finite (no silent imputation).
  *
- * Pure, no I/O. Types, feature contract, inference math, the deterministic
- * reference fitter, and all gate logic live here. Wiring into the scorer is a
- * separate, founder-gated step (identical protocol to Poisson / Elo). The
- * reference fitter is test-only and is clearly labelled as such.
+ * DETERMINISM / CLOCK SEAM
+ * The inference math is pure. The one impurity is the staleness gate's clock:
+ * `predictWinProb` / `toMlFairValue` accept an injectable `options.now`, and when
+ * it is omitted they fall back to an argless wall-clock `() => new Date()`. That
+ * default is the module's single non-deterministic seam — two runs on identical
+ * inputs straddling the `MODEL_MAX_AGE_DAYS` boundary can disagree. Production and
+ * any reproducibility-sensitive caller MUST inject `now` at the I/O boundary (as
+ * the tests do); the default exists only as a convenience escape hatch.
+ *
+ * Types, feature contract, inference math, the deterministic reference fitter,
+ * and all gate logic live here. Wiring into the scorer is a separate,
+ * founder-gated step (identical protocol to Poisson / Elo). The reference fitter
+ * is test-only and is clearly labelled as such.
  */
 
 import type { IndependentMarketFairValue } from "@sports/types";
@@ -273,13 +290,23 @@ function sigmoid(z: number): number {
  *
  * Algorithm:
  *   1. Provenance gate — returns null if model is null, sampleSize < floor,
- *      model is stale, or featureSchemaHash does not match this module's hash.
+ *      model is stale (too old) or its trainedAt is unparseable, or
+ *      featureSchemaHash does not match this module's hash.
  *   2. Feature completeness check — returns null if any feature is null or
  *      non-finite (no silent imputation).
  *   3. GBM inference: accumulate intercept + each stump's leaf logit, then
  *      apply sigmoid.
  *
- * Returns a number in (0, 1) on success, null on any honesty gate failure.
+ * @param model    The trained ensemble + provenance, or null/undefined.
+ * @param features Fully-populated feature vector; any null/non-finite field
+ *                 fails the completeness check and yields null.
+ * @param options  `options.now` is an injectable clock for the staleness gate.
+ *                 Omit to read the wall clock — see the file-header
+ *                 DETERMINISM / CLOCK SEAM note; production callers must inject it
+ *                 for reproducibility.
+ * @returns A probability strictly in (0, 1) on success, or null on any honesty
+ *          gate failure. The staleness gate is one-sided (rejects too-old, not
+ *          future-dated) — see the file-header HONESTY GATE note.
  */
 export function predictWinProb(
   model: MlModelObject | null | undefined,
@@ -292,10 +319,18 @@ export function predictWinProb(
   // ---- Gate 2: sample size floor ----
   if (model.provenance.sampleSize < MIN_SAMPLE_SIZE) return null;
 
-  // ---- Gate 3: staleness ----
+  // ---- Gate 3: staleness (one-sided) ----
+  // Clock seam: `options.now` is injectable; the argless `new Date()` fallback is
+  // the module's single non-deterministic path (see file-header note). Callers
+  // that need reproducible output must pass `now`.
   const now = (options.now ?? (() => new Date()))();
   const trainedAt = Date.parse(model.provenance.trainedAt);
+  // Unparseable ISO timestamp → treat as no valid provenance, reject.
   if (!Number.isFinite(trainedAt)) return null;
+  // Upper-bound-only staleness: rejects models older than the max age. A future
+  // trainedAt produces a negative ageDays that intentionally passes here — this
+  // gate does not defend against clock-skewed/corrupt future dates (documented
+  // limitation; validate provenance upstream if that matters).
   const ageDays = (now.getTime() - trainedAt) / (1000 * 60 * 60 * 24);
   if (ageDays > MODEL_MAX_AGE_DAYS) return null;
 
@@ -349,12 +384,24 @@ function extractFeatureVector(features: MlFeatureVector): readonly number[] | nu
 /**
  * Wrap a successful ML prediction into the engine's `IndependentMarketFairValue`
  * envelope. Returns null when `predictWinProb` returns null (gate not cleared).
+ *
+ * The resolved `now` is used both for the staleness gate (forwarded to
+ * `predictWinProb`) and as the provenance `capturedAt`, so a single clock read is
+ * shared between the gate check and the stamped timestamp.
+ *
+ * @param options `options.now` is an injectable clock. Omit to read the wall
+ *                clock — the same non-deterministic seam documented in the file
+ *                header; production callers must inject it for a reproducible
+ *                `capturedAt`.
  */
 export function toMlFairValue(
   model: MlModelObject | null | undefined,
   features: MlFeatureVector,
   options: { readonly now?: () => Date } = {},
 ): IndependentMarketFairValue | null {
+  // Resolve the clock once (injectable `now`, argless `new Date()` fallback — the
+  // module's sole non-deterministic seam) so the gate check and `capturedAt`
+  // agree; see the file-header DETERMINISM / CLOCK SEAM note.
   const now = (options.now ?? (() => new Date()))();
   const homeFairProb = predictWinProb(model, features, { now: () => now });
   if (homeFairProb === null) return null;

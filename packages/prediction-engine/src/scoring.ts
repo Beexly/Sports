@@ -913,7 +913,33 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
 // Score a single game — returns all publishable picks, ranked
 // ============================================================
 
+/**
+ * Score a single game and return every publishable pick (spread, total,
+ * moneyline) ranked by confidence, highest first.
+ *
+ * Runs each market scorer against `input` and drops any market that fails the
+ * publish gates (e.g. confidence below `MIN_PUBLISH_CONFIDENCE`, fewer than
+ * `MIN_BOOKMAKERS` books), so the result holds 0–3 picks.
+ *
+ * @param input Normalized odds for one game (all books, all markets).
+ * @param fetchedAt Ingestion timestamp of this odds snapshot. It is stamped
+ *   verbatim onto every returned pick's `dataFreshnessAt` (and flows into any
+ *   downstream freshness / proof-receipt `asOf`). It does NOT influence the
+ *   confidence, edge, or ranking math, and it is the SOLE nondeterministic
+ *   input to scoring: given identical `input` and `fetchedAt`, the returned
+ *   picks are byte-identical.
+ *
+ *   Determinism caveat: when omitted, `fetchedAt` defaults to the wall-clock
+ *   `new Date()` at call time, so `dataFreshnessAt` will differ between runs on
+ *   identical odds. That argless-`new Date()` default is a convenience for
+ *   ad-hoc/test callers only; production callers that need reproducible output
+ *   MUST pass the real ingestion timestamp (see `process-sport.ts`, which does).
+ * @returns Publishable `ScoredPick`s sorted by `confidence` descending.
+ */
 export function scoreGame(input: OddsInput, fetchedAt?: Date): ScoredPick[] {
+  // `now` is only a freshness stamp (see `fetchedAt` docs above); it does not
+  // enter the scoring math. Omitting `fetchedAt` reads the wall clock here and
+  // is the one nondeterministic default in this library entrypoint.
   const now = fetchedAt ?? new Date();
   const picks: ScoredPick[] = [];
 
@@ -933,8 +959,25 @@ export function scoreGame(input: OddsInput, fetchedAt?: Date): ScoredPick[] {
 // Score multiple games — returns all picks sorted by confidence
 // ============================================================
 
+/**
+ * Score a batch of games and return the pooled, publishable picks ranked by
+ * confidence across all games (highest first).
+ *
+ * Every input game is scored against the same `fetchedAt` reference so the
+ * whole batch shares one freshness stamp.
+ *
+ * @param inputs Normalized odds, one entry per game.
+ * @param fetchedAt Ingestion timestamp for the batch; stamped onto each pick's
+ *   `dataFreshnessAt` exactly as in {@link scoreGame}. Same determinism caveat:
+ *   when omitted it defaults to wall-clock `new Date()` (nondeterministic), so
+ *   production callers MUST pass the real ingestion timestamp.
+ * @returns All publishable `ScoredPick`s across `inputs`, sorted by
+ *   `confidence` descending.
+ */
 export function scoreGames(inputs: OddsInput[], fetchedAt?: Date): ScoredPick[] {
   const allPicks: ScoredPick[] = [];
+  // Single shared freshness stamp for the batch; see {@link scoreGame} for the
+  // nondeterministic-default caveat when `fetchedAt` is omitted.
   const now = fetchedAt ?? new Date();
 
   for (const input of inputs) {

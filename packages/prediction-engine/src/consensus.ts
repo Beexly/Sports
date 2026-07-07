@@ -33,7 +33,13 @@ export interface ConsensusResult {
   /** 0–1; 1 = unanimous, 0 = maximally split. */
   readonly agreementScore: number;
   readonly sources: number;
-  /** Sources ≥2σ from consensus (only when ≥3 sources and dispersion>0). */
+  /**
+   * Sources ≥2σ from consensus, standardized against the weighted *population*
+   * std-dev (`dispersion`). Scanned only when ≥3 sources and dispersion>0. That
+   * ≥3 guard is a conservative floor, not the count at which a flag first becomes
+   * feasible: see `computeConsensus` for why an equal-weight field cannot reach
+   * the 2σ bar until ≥5 sources (max |z| = √(n−1)).
+   */
   readonly outliers: readonly ConsensusOutlier[];
   /** consensus − market P(home); >0 = referees rate home higher than the book. Null if no market. */
   readonly marketDivergence: number | null;
@@ -79,6 +85,17 @@ export function computeConsensus(probs: readonly SourceProb[], marketHomeProb?: 
   const dispersion = Math.sqrt(variance);
   const agreementScore = clamp01(1 - dispersion / MAX_DISPERSION);
 
+  // Outlier scan: standardized deviation of each source from the weighted mean.
+  //
+  // The `usable.length >= 3` guard is a conservative FLOOR, not the count at which
+  // a flag first becomes attainable. Because `dispersion` is the *population*
+  // (not sample) std-dev, |z| is bounded: under equal weights the extreme
+  // "n−1 identical + 1 apart" configuration gives max |z| = √(n−1) — i.e. 1.41 at
+  // n=3, 1.73 at n=4, and only 2.0 at n=5. So an equal-weight field never crosses
+  // the 2σ bar below 5 sources, even though the scan runs from 3. Unequal weights
+  // lift this ceiling (a heavily-weighted cluster can push a lightly-weighted
+  // source past 2σ with as few as 3 sources), which is why the guard stays at 3
+  // rather than being raised — behavior is intentionally unchanged here.
   const outliers: ConsensusOutlier[] =
     usable.length >= 3 && dispersion > 1e-9
       ? usable

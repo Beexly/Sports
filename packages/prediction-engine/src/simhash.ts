@@ -16,9 +16,17 @@
  *   WITHOUT the classic LSH cost of many hash tables: instead of L tables we probe
  *   the neighbor buckets reached by flipping the LEAST-CONFIDENT bits first —
  *   the bits whose projections landed nearest their hyperplane, ranked by inverse
- *   projection magnitude. That heuristic is training-free and correct: a small
- *   |projection| is precisely a high posterior probability that a true neighbor
- *   sits on the other side of that hyperplane.
+ *   projection magnitude. That heuristic is training-free: a small |projection|
+ *   signals a high posterior probability that a true neighbor sits on the other
+ *   side of that hyperplane. Be precise about the ranking key, though — it is
+ *   |h_i·v| scaled by 1/||v|| (a per-signature constant that does not affect
+ *   order), NOT the exact geometric margin |h_i·v|/(||h_i||·||v||): the per-
+ *   hyperplane 1/||h_i|| factor is omitted, so the flip order equals the true
+ *   distance-to-hyperplane rank only under equal-norm hyperplanes. With i.i.d.
+ *   Gaussian normals ||h_i||² ~ chi-squared(dim) (relative SD ≈ sqrt(2/dim)), so
+ *   the order carries a mild bias toward higher-norm hyperplanes. Harmless here —
+ *   candidates are always re-ranked by true cosine downstream — leaving the probe
+ *   order a well-motivated proxy rather than the exact posterior rank.
  *
  * Signature representation: bigint, capped at MAX_BITS = 64. bigint keeps the
  * signature EXACT at any width (no float53 truncation, no signed-int32 coercion
@@ -85,8 +93,13 @@ export interface SimhashSignature {
   /** The bit signature: bit i is 1 iff the projection onto hyperplane i is ≥ 0. */
   readonly sig: bigint;
   /**
-   * Per-bit projection magnitudes |h_i · v| / ||v|| (scale-invariant margin from
-   * hyperplane i). Small magnitude = low-confidence bit = flip it FIRST when
+   * Per-bit projection magnitudes |h_i · v| / ||v|| — scale-invariant in `v` (the
+   * 1/||v|| factor is constant across bits within one signature, so it does not
+   * change probe ordering). This is PROPORTIONAL to, not equal to, the true
+   * distance from unit v to hyperplane i, which is |h_i · v| / (||h_i|| · ||v||);
+   * the per-hyperplane 1/||h_i|| factor is intentionally omitted, so ranking by
+   * this value matches the exact margin rank only when all hyperplane normals
+   * share a norm. Small magnitude = low-confidence bit = flip it FIRST when
    * multi-probing.
    */
   readonly magnitudes: readonly number[];
@@ -199,9 +212,13 @@ export function estimatedCosine(
  * Generate up to `maxProbes` probe signatures ordered by INVERSE projection
  * magnitude priority: flip the least-confident bits first. Sequence = all single
  * flips (ascending |projection|), then all pair flips (ascending combined
- * |projection| sum). This is the dump's inverse-magnitude heuristic — correct
- * and training-free: a small margin from hyperplane i is exactly a high
- * probability that a true neighbor lies on the other side of i.
+ * |projection| sum). This is the dump's inverse-magnitude heuristic —
+ * training-free and well-motivated: a small |projection| signals a high
+ * probability that a true neighbor lies on the other side of hyperplane i.
+ * The priority is |h_i·v|/||v|| (see SimhashSignature.magnitudes), which is
+ * proportional to the exact distance-to-hyperplane margin only under equal-norm
+ * hyperplanes — a deliberate, behavior-preserving approximation, since retrieved
+ * candidates are re-ranked by true cosine afterward.
  *
  * The unflipped original signature is NOT included (callers query their own
  * bucket separately). Returns null when maxProbes is negative/non-integer or

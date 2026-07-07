@@ -212,22 +212,59 @@ export function poissonConsistencyScore(
   return Math.min(1, ratio / 0.25);
 }
 
-// ============================================================
-// Bridge the Poisson model into the engine's independent fair-value shape (a
-// referee, like Kalshi/Elo). Draw-no-bet basis: P(home | decisive) and
-// P(away | decisive), so the two sides sum to 1 and compare cleanly to a 2-way
-// win market (in 2-outcome sports draw≈0, so this is just the moneyline).
-// Requires REAL team rates — moneylineProbabilities enforces the
-// no-fabricated-stats guard, so this can never run on synthesized λ in prod.
-// ============================================================
+/**
+ * Bridge the Poisson model into the engine's independent fair-value ("referee")
+ * shape, alongside Elo/Kalshi/ML. Uses a draw-no-bet basis: reports
+ * P(home | decisive) and P(away | decisive), conditioning out the draw so the
+ * two sides sum to 1 and compare cleanly to a 2-way win market. In 2-outcome
+ * sports draw≈0, so this collapses to the plain moneyline.
+ *
+ * Returns `homeFairProb`/`awayFairProb` in (0, 1), each rounded to 4 dp; the two
+ * sum to 1 up to that rounding. Both are `null` when the model produces no
+ * decisive mass (decisive = P(home) + P(away) == 0, e.g. non-positive λ inputs)
+ * — the engine reads null as "no independent read", never as an implied 50/50.
+ * These are structured, market-independent probabilities: nothing here reads the
+ * sportsbook line, which is what makes this a valid independent cross-check in
+ * the edge engine.
+ *
+ * Requires REAL team scoring rates: `moneylineProbabilities` runs the
+ * `assertTeamRatesAvailable` guard, so in production this can never price
+ * synthesized λ (upholds the non-negotiable no-fabricated-stats rule). See the
+ * file header for why the module is not yet wired into the live scorer.
+ *
+ * `capturedAt` is provenance only: an ISO-8601 timestamp recording when the
+ * estimate was materialised. It never affects any probability.
+ *
+ * Determinism seam: `options.now` is the SOLE non-deterministic input to this
+ * otherwise pure module. When omitted it defaults to an argless `new Date()`,
+ * reading the wall clock at call time, so two calls with identical rates emit
+ * different `capturedAt` values. Deterministic/reproducible callers (and all
+ * tests that assert on `capturedAt`) MUST inject `now`; the default is a
+ * convenience escape hatch for ad-hoc use only, not for library/pipeline paths
+ * that require byte-identical, replayable output.
+ */
 export function toPoissonFairValue(
   lambdaHome: number,
   lambdaAway: number,
-  options: { readonly maxGoals?: number; readonly now?: () => Date } = {}
+  options: {
+    /**
+     * Truncation ceiling for the joint score grid; probability mass on scores
+     * above this is dropped (the tail is negligible for realistic λ). Default 12.
+     */
+    readonly maxGoals?: number;
+    /**
+     * Clock supplying the provenance `capturedAt` stamp. Inject for determinism;
+     * defaults to wall-clock time — see the determinism-seam note above.
+     */
+    readonly now?: () => Date;
+  } = {}
 ): IndependentMarketFairValue {
   const { home, away } = moneylineProbabilities(lambdaHome, lambdaAway, options.maxGoals ?? 12);
   const decisive = home + away;
   const homeFairProb = decisive > 0 ? Number((home / decisive).toFixed(4)) : null;
+  // Clock seam: `options.now` is injectable; the argless `new Date()` fallback is
+  // this module's single non-deterministic path (see the determinism-seam note in
+  // the JSDoc above). It stamps `capturedAt` provenance only — no probability reads it.
   const now = (options.now ?? (() => new Date()))();
   return {
     source: "poisson",

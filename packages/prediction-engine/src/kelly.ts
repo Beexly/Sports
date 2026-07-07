@@ -58,7 +58,12 @@ export const MIN_CONFIDENCE_FOR_STAKE = 65;
 export const MIN_EDGE_FOR_STAKE = 50;
 
 export interface KellyStake {
-  /** Bankroll sizing lens in units (0.0 – MAX_UNITS_PER_PICK). */
+  /**
+   * Headline bankroll sizing lens, in units where 1 unit = 1% of bankroll.
+   * This is the CAPPED and ROUNDED figure: the raw fractional-Kelly stake is
+   * clamped to [0, MAX_UNITS_PER_PICK] and then rounded to the nearest 0.25u.
+   * `recommendStake` only returns a stake when this rounds to >= 0.25u.
+   */
   units: number;
   /**
    * ILLUSTRATIVE fair-value win probability used in the Kelly computation.
@@ -72,7 +77,16 @@ export interface KellyStake {
   decimalOdds: number;
   /** Full-Kelly stake before fractional discount, as % of bankroll. */
   fullKellyPercent: number;
-  /** Final stake as % of bankroll (= fullKellyPercent × KELLY_FRACTION, clamped). */
+  /**
+   * Raw fractional-Kelly stake as % of bankroll (= fullKellyPercent ×
+   * KELLY_FRACTION). This is the exact sizing math BEFORE the unit cap and
+   * 0.25u rounding, so — unlike `units` — it is intentionally neither clamped
+   * to MAX_UNITS_PER_PICK nor rounded. Under the 1u = 1% convention it will
+   * therefore NOT exactly equal `units` when the cap binds (e.g. units 3.00
+   * alongside recommendedPercent 3.09%) or when 0.25u rounding shifts the
+   * value. Treat `units` as the headline figure and this as the underlying,
+   * un-capped fractional-Kelly percentage.
+   */
   recommendedPercent: number;
   /** "quarter-kelly" or whatever fraction was applied. */
   strategy: string;
@@ -176,6 +190,12 @@ export function recommendStake(pick: StakeInput): KellyStake | null {
   const roundedUnits = Math.round(units * 4) / 4; // nearest 0.25u
   if (roundedUnits < 0.25) return null;
 
+  // Raw fractional-Kelly percentage of bankroll, BEFORE the MAX_UNITS_PER_PICK
+  // cap and 0.25u rounding that `units` applies. Deliberately left un-capped and
+  // un-rounded so the exact sizing math stays visible; as a result it can read
+  // slightly higher than `roundedUnits` × 1% when the unit cap binds (see the
+  // KellyStake.recommendedPercent docstring). The rationale string below prints
+  // both figures verbatim, so a capped pick honestly shows the two side by side.
   const recommendedPercent = fullKelly * KELLY_FRACTION * 100;
 
   const rationale =

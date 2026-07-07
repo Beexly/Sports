@@ -253,16 +253,30 @@ export function computeHistoricalFormScore(
 // ============================================================
 
 /**
- * Computes an overall data quality score and a confidence penalty.
- * Low quality data = lower confidence, flagged factor.
+ * Computes an overall data-quality score (0–100) and a confidence penalty.
+ * Low-quality data lowers confidence and surfaces a flagged factor.
  *
- * Factors:
- *   - Bookmaker coverage: 0–40 pts
- *   - Data freshness: 0–30 pts (full credit at 0 min, linear decay to 0 at 90 min)
- *   - Market coverage: 0–30 pts (having spread + total + h2h = full)
+ * Score components (additive, sum to 0–100):
+ *   - Bookmaker coverage: 0–40 pts (linear in book count, full credit at 10+ books)
+ *   - Data freshness:     0–30 pts (full credit at 0 min old, linear decay to 0 at 90 min)
+ *   - Market coverage:    0–30 pts (10 pts each for spread / total / h2h present)
+ *
+ * Penalty bands (the penalty is a confidence adjustment applied downstream):
+ *   - qualityScore < 30  → penalty -15 ("low data quality")
+ *   - qualityScore < 50  → penalty  -8 ("limited data coverage")
+ *   - qualityScore >= 50 → penalty   0 (no penalty; also no boost)
+ *
+ * HONESTY GATE — freshness default. `dataFreshnessMinutes` defaults to 0, which
+ * means "measured as perfectly fresh" and grants the full 30 freshness points.
+ * It is NOT an "unknown" sentinel: an omitted value is scored as freshest-
+ * possible, so missing freshness understates the penalty rather than triggering
+ * one. Per the platform's "no stale data" rule, supplying a real measured age is
+ * the caller's responsibility; this function trusts the value it is given.
  */
 export function computeDataQuality(
   bookmakerCoverageMax: number = 0,
+  // Minutes since the odds were fetched. 0 = freshest possible (full credit), NOT
+  // "unknown" — see the HONESTY GATE note above; callers must pass a real age.
   dataFreshnessMinutes: number = 0,
   hasSpreadMarket: boolean = false,
   hasTotalMarket: boolean = false,
@@ -510,7 +524,9 @@ export function computeScheduleStressScore(
   const diff = home - away; // positive = home team played more recently
   if (Math.abs(diff) < 2) return { score: 0, factor: null };
 
-  // Normalize: 2-game diff = half score, 3+-game diff = full signal
+  // Normalize on a 1/3-per-game ramp. With |diff| already gated at >= 2, a
+  // 2-game diff yields magnitude ≈ 0.667 (~two-thirds of max, rounds to 3 of 5)
+  // and a 3+-game diff saturates the full signal.
   const magnitude = clamp(Math.abs(diff) / 3, 0, 1);
   const maxScore = WEIGHTS.SCHEDULE_STRESS_COMPONENT_MAX; // 5
 
@@ -519,6 +535,9 @@ export function computeScheduleStressScore(
   const sideScore = pickedSide === "HOME" ? rawHomeScore : -rawHomeScore;
   const score = clamp(Math.round(sideScore), -maxScore, maxScore);
 
+  // Defensive: the |diff| >= 2 gate above forces |sideScore| >= 3.33, which
+  // always rounds to at least 3, so this branch is currently unreachable — it
+  // is kept as a guard against future changes to the ramp or maxScore.
   if (score === 0) return { score: 0, factor: null };
 
   const stressed = diff > 0 ? "Home" : "Away";

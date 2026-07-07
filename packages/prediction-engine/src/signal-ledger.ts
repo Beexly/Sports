@@ -16,8 +16,17 @@
  * step, never a hardcoded guess. An unparsable/absent timestamp decays to zero
  * influence (a bad-timestamp signal never votes as fresh).
  *
- * Pure and db-free. NOT wired into the published pick score (that remains a
- * separate, calibration-gated MODEL_VERSION step).
+ * The blend math is pure and db-free. NOT wired into the published pick score
+ * (that remains a separate, calibration-gated MODEL_VERSION step).
+ *
+ * Determinism seam: `options.now` is the SOLE non-deterministic input to this
+ * otherwise pure module. When omitted it defaults to an argless
+ * `new Date().toISOString()`, reading the wall clock at compose time, so two
+ * calls on identical rows on different days derive different ages and therefore
+ * different freshness decay. Deterministic/reproducible callers (and all tests)
+ * MUST inject `now`; the default is a convenience escape hatch for ad-hoc use
+ * only, not for library/pipeline paths that require byte-identical, replayable
+ * output.
  */
 import { compositeScore, type CompositeScore, type CompositeScoreOptions } from "./composite-score.js";
 
@@ -35,7 +44,11 @@ export interface LedgerSignalRow {
 }
 
 export interface ComposeLedgerOptions extends CompositeScoreOptions {
-  /** "Now" for age computation (default: current time). */
+  /**
+   * ISO reference instant for age computation. Inject for determinism; when
+   * omitted it defaults to the wall clock (`new Date().toISOString()`) — see the
+   * determinism-seam note in the file header.
+   */
   readonly now?: string;
 }
 
@@ -55,12 +68,17 @@ export function ledgerAgeDays(capturedAt: string, now: string): number {
 
 /**
  * Blend persisted ledger rows for one entity into a single attributed score.
- * Pure: derives age from `capturedAt` and delegates to `compositeScore`.
+ * Derives each row's age from `capturedAt` and delegates to `compositeScore`.
+ * The blend is pure given a fixed `options.now`; omitting `now` reads the wall
+ * clock (see the determinism-seam note in the file header) and is the module's
+ * only non-deterministic path.
  */
 export function composeLedger(
   rows: readonly LedgerSignalRow[],
   options: ComposeLedgerOptions = {},
 ): CompositeScore {
+  // Determinism seam: omitting `options.now` reads the wall clock here — a
+  // convenience escape hatch only; deterministic/replayable callers inject `now`.
   const now = options.now ?? new Date().toISOString();
   const signals = rows.map((r) => {
     const ageDays = ledgerAgeDays(r.capturedAt, now);

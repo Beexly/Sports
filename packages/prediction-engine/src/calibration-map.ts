@@ -437,7 +437,14 @@ export interface CalibratorSelection {
    * minEceGain) — otherwise its win is indistinguishable from selection noise.
    */
   readonly nullGainMargin: number;
-  /** The recommended family, refit on ALL data (null when recommended === "identity"). */
+  /**
+   * The recommended family, refit on ALL data. Null whenever `recommended` is
+   * "identity". Callers MUST still null-check `model` even when `recommended`
+   * names a family: the all-data refit can (near-unreachably) refuse — a family
+   * that fit every training fold almost always fits their union, but it is not
+   * guaranteed — leaving `recommended` set to the OOF winner while `model` is
+   * null. Treat a null `model` as "apply nothing" regardless of `recommended`.
+   */
   readonly model: CalibratorFit | null;
   readonly sampleSize: number;
   readonly folds: number;
@@ -577,6 +584,11 @@ export function selectCalibrator(
 
   const requiredGain = Math.max(minEceGain, nullGainMargin);
   const beatsRaw = best !== null && gain > requiredGain;
+  // A winning family is refit on ALL data. That full-sample refit succeeds in
+  // practice — the winner fit every training fold, so it almost always fits their
+  // union — but it is not guaranteed, so `model` can be null even when beatsRaw is
+  // true. `recommended` still names the OOF winner in that case; consumers gate on
+  // `model` (see its field doc), treating a null model as "apply nothing".
   const recommended: CalibrationMethod | "identity" = beatsRaw ? best!.method : "identity";
   const model = beatsRaw ? fitFamily(best!.method, samples) : null;
 

@@ -4,13 +4,28 @@ import { clamp, clampScore, round } from "../core/math.js";
 import { shrinkWeightedMean } from "../core/shrinkage.js";
 import { uncertaintyFromEvidence, type MetricLifecycleStatus, type MetricSourcePolicy, type MetricUncertaintyBand } from "../core/validation.js";
 
+/**
+ * Single-carry inputs for the rush-over-expected (RYOE) metric.
+ *
+ * All yardage fields are PER-CARRY, not per-game. Optional fields default to a
+ * neutral 0 and are clamped to the ranges noted below. Only the optional proxy
+ * fields that are actually supplied raise the proxy count that feeds the
+ * evidence/uncertainty gate (`uncertaintyFromEvidence`).
+ */
 export interface RushOverExpectedInput {
+  /** Actual rushing yards gained on this carry (per-carry). Clamped to [-10, 99]. */
   readonly actualRushYards: number;
+  /** GSE expected rush yards for this carry's context (per-carry, from expected-rush-yards-gse). Clamped to [-2, 18]. */
   readonly expectedRushYards: number;
+  /** Rusher's shrunk RYOE prior, in yards. Clamped to [-8, 8]. Default 0; weighted by `sampleSize` and shrunk toward 0. */
   readonly rusherRushOverExpectedPrior?: number;
+  /** Broken-tackle rate proxy, dimensionless 0-1. Clamped to [0,1]. Default 0. Contributes up to +0.95 yards. */
   readonly brokenTackleProxy?: number;
+  /** Yards-after-contact proxy, in yards. Clamped to [0,8]. Default 0. Contributes up to +1.28 yards (8 * 0.16). */
   readonly yardsAfterContactProxy?: number;
+  /** Carries backing the prior/proxies. Drives both the prior's shrinkage weight and the evidence/confidence gate. Default 0. */
   readonly sampleSize?: number;
+  /** Source rights/modeling policies. Empty or disallowed fails the metric closed to HIGH uncertainty. */
   readonly sourcePolicy: readonly MetricSourcePolicy[];
 }
 
@@ -27,6 +42,48 @@ export interface RushOverExpectedMetric {
   readonly sourcePolicy: readonly MetricSourcePolicy[];
 }
 
+/**
+ * Rush yards over expected (RYOE) for a single carry — isolates ball-carrier
+ * creation beyond the expected rush environment. This is a post-outcome credit
+ * signal (it consumes the actual result), not a pre-play prediction, and it
+ * measures the carry, not the runner's repeatable talent.
+ *
+ * Output (`rushYardsOverExpected`): in YARDS, clamped to [-24, 55]. It is a
+ * weighted sum of four terms:
+ *   - carry residual   0.76 * clamp(actual - expected, -20, 50)
+ *   - rusher prior     0.18 * shrunk RYOE prior (shrunk toward 0, strength 140)
+ *   - broken-tackle    clamp(proxy, 0, 1) * 0.95
+ *   - after-contact    clamp(proxy, 0, 8) * 0.16
+ * The shrinkage on the prior (via `shrinkWeightedMean`, priorStrength 140)
+ * stabilizes noisy single-carry residuals: a thin sample pulls the prior toward
+ * 0 so a lucky/unlucky one-carry result cannot dominate.
+ *
+ * Output (`creationIndex`): a 0-100 band centered at 50 (= `clampScore(50 +
+ * rushYardsOverExpected * 4)`). 50 is neutral; roughly +4 index points per yard
+ * of RYOE, saturating at 0/100 once |rushYardsOverExpected| reaches ~12.5 yards.
+ * Higher = more rushing creation.
+ *
+ * Confidence (`confidenceScore`, 0-100) measures EVIDENCE QUALITY — how much we
+ * trust the inputs — and is explicitly NOT repeatable rush talent or a yardage
+ * probability (see `confidenceMeaning`). It rises with sample size but is
+ * capped, and the source-rights gate can floor it.
+ *
+ * Honesty gate: this metric ALWAYS returns a value; it never returns null. When
+ * source rights are uncleared or the sample is thin, `uncertaintyBand` fails
+ * closed to HIGH and `confidenceScore` is capped low (rather than suppressing
+ * the output) so consumers see a computed-but-untrusted signal, not a gap.
+ *
+ * `status` is always SHADOW — this metric is computed and audited but not priced.
+ *
+ * Factor trail (`drivers`): all four score components are surfaced, but their
+ * contributions use per-driver display scales (residual*4, prior*3, lifts*10)
+ * rather than the exact index weights, so the entries are directional and do
+ * NOT sum to `creationIndex`.
+ *
+ * Limitations: single-carry residuals are inherently noisy; broken-play and
+ * scramble regimes can distort designed-rush residuals; the contact proxies are
+ * only credited when source-cleared (see the metric birth certificate).
+ */
 export function rushOverExpectedGse(input: RushOverExpectedInput): RushOverExpectedMetric {
   const actual = clamp(input.actualRushYards, -10, 99);
   const expected = clamp(input.expectedRushYards, -2, 18);
@@ -84,11 +141,20 @@ export function rushOverExpectedGse(input: RushOverExpectedInput): RushOverExpec
   };
 }
 
+/**
+ * Maps evidence into an evidence-quality confidence score (0-100).
+ *
+ * The uncertainty band sets the base (LOW->80, MEDIUM->58, HIGH->34); sample
+ * size adds at most +12 (1 point per 100 carries, capped). Because HIGH caps at
+ * 46, a large sample cannot rescue confidence once the rights/sample gate has
+ * failed closed. This is evidence quality, not repeatable rush talent.
+ */
 function confidenceFromEvidence(sampleSize: number, uncertaintyBand: MetricUncertaintyBand): number {
   const base = uncertaintyBand === "LOW" ? 80 : uncertaintyBand === "MEDIUM" ? 58 : 34;
   return round(Math.min(100, base + Math.min(12, sampleSize / 100)), 2);
 }
 
+/** Counts how many proxy inputs were actually supplied (undefined = not observed). */
 function proxyCount(values: readonly (number | undefined)[]): number {
   return values.filter((value) => value !== undefined).length;
 }

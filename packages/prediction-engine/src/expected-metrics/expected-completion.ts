@@ -92,6 +92,17 @@ function featureRow(play: DropbackPlay): number[] {
   ];
 }
 
+/**
+ * A play qualifies for fitting/scoring when it has a passer id, a binary
+ * completion label, and finite continuous features.
+ *
+ * Note: the 0/1 flag features (`qbHit`, `shotgun`, `noHuddle`) are assumed to be
+ * already conforming to {0, 1} from the upstream nflverse mapping and are NOT
+ * finite-guarded here — only the continuous fields are. A non-finite flag on a
+ * qualifying play would therefore pass this filter and, via `featureRow`,
+ * propagate NaN into the fit. That never happens on clean 0/1 flag data; guard
+ * the flags at the mapping boundary if a source can emit non-conforming flags.
+ */
 function isUsable(play: DropbackPlay): boolean {
   return (
     play.passerId.length > 0 &&
