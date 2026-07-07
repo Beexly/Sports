@@ -25,6 +25,7 @@ import {
   rushEnvironmentIndex,
   rushOverExpectedGse,
   yacCreationGse,
+  driftPressureIndex,
 } from "../../index.js";
 
 describe("metric birth certificates", () => {
@@ -44,6 +45,7 @@ describe("metric birth certificates", () => {
       "rush-over-expected-gse",
       "role-volatility-index",
       "calibration-integrity-grade",
+      "drift-pressure-index",
       "no-bet-pressure",
       "playable-window-score",
       "portfolio-fit-score",
@@ -84,6 +86,7 @@ describe("metric birth certificates", () => {
     expect(typeof rushOverExpectedGse).toBe("function");
     expect(typeof roleVolatilityIndex).toBe("function");
     expect(typeof calibrationIntegrityGrade).toBe("function");
+    expect(typeof driftPressureIndex).toBe("function");
     expect(typeof noBetPressureMetric).toBe("function");
     expect(typeof playableWindowScore).toBe("function");
     expect(typeof portfolioFitScore).toBe("function");

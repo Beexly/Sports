@@ -1585,3 +1585,30 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: local synthetic fixtures and adapter only; no live route, no public/API exposure, no legal clearance claim,
   no production-readiness claim, no model promotion, no betting use, no probability or expected-value claim, no
   raw odds/tracking export, no package/dependency change, no live AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier Drift Pressure Index
+
+- WHAT: Added Drift Pressure Index as a governed `SHADOW` calibration/drift metric. DPI turns cleared drift
+  evidence into pressure, band, public drivers, and downstream veto recommendation while keeping probability
+  `null` and confidence scoped to evidence quality. Source blocks, insufficient samples, stale drift reports,
+  severe PSI, severe Brier drift, severe calibration-error drift, and severe schema drift fail closed.
+- FILES: `packages/prediction-engine/src/metrics/calibration/drift-pressure-index.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/drift-pressure-index.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-evidence-card-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  metric birth-certificate/asset/evidence-report tests, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md`, Sunday audit/handoff docs, commercial ledger, and
+  execution ledger.
+- GATE: focused DPI/birth-certificate/asset/evidence-report tests passed (5 files, 24 tests). First package
+  typecheck caught invalid validation-method labels in the DPI certificate; after switching to the approved
+  validation-method vocabulary, prediction-engine typecheck passed. LOC / escape-hatch scan passed: metric
+  224 lines after driver helper tightening, test 95 lines, evidence fixture file 234 lines, and no `as any`,
+  `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access found. Full
+  prediction-engine tests passed (106 files, 881 tests). Root typecheck, root lint, root guardrails, and
+  `git diff --check` passed. Full all-workspaces tests passed across web, crypto, data-ingestion,
+  ingestion-pipeline, prediction-engine, and types (669 files, 8235 tests).
+- FLAG: local synthetic fixtures only; no live route, no public/API exposure, no legal clearance claim, no
+  production-readiness claim, no model promotion, no betting use, no probability or expected-value claim, no
+  production drift-monitoring claim, no raw odds/tracking export, no package/dependency change, no live
+  AWS/cloud/service action, and no prediction gate flip.

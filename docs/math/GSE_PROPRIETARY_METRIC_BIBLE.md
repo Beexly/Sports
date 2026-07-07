@@ -329,6 +329,21 @@ Implementation boundary:
 - Low sample size, stale calibration reports, high ECE, drift pressure, calibration debt, or blocked source posture suppress or block calibration use.
 - It exposes calibration evidence drivers only and keeps protected thresholds, component blends, band cutoffs, and source-posture scaling private.
 
+### Drift Pressure Index
+
+Target question: is the current model/data regime drifting enough to veto or suppress downstream decisions?
+
+DPI is a drift-pressure score, not win probability, expected value, confidence, betting advice, or proof that production drift monitoring is configured. It uses feature distribution movement, calibration Brier delta, calibration error delta, schema change rate, prediction-volume shift, model disagreement, source contradiction pressure, drift-report freshness, sample support, and source-policy posture.
+
+Implementation boundary:
+
+- It returns `score`, `band`, `downstreamVetoRecommended`, evidence confidence, uncertainty, source posture, block reasons, and public drivers.
+- `probability` is always `null`.
+- `confidenceScore` measures evidence quality for the drift-pressure estimate, not win probability, expected value, or edge.
+- Blocked source-policy posture, insufficient samples, stale drift reports, severe PSI, severe Brier drift, severe calibration-error drift, or severe schema drift force `band: "BLOCKED"` and recommend downstream veto.
+- Severe non-blocking pressure recommends downstream veto for NBP/PWS/PFS/GSS review while remaining a shadow metric.
+- It exposes public drift-pressure drivers only and keeps pressure blends, hard-block thresholds, band cutoffs, freshness/sample transforms, and source-posture scaling protected.
+
 ### No-Bet Pressure
 
 Target question: should this candidate be refused before downstream action-quality review?
@@ -644,7 +659,7 @@ Build in this order for proprietary football metrics:
 6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 8. Portfolio Fit Score - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
-9. Drift Pressure Index
+9. Drift Pressure Index - implemented as `SHADOW`; local evidence-card/report fixtures exist; real historical distribution adapter, promotion, and public/API exposure remain future gates.
 10. Conformal Uncertainty Width
 11. Source Trust Score
 12. Stale Line Risk Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
@@ -1021,11 +1036,19 @@ Pure LOC review for new source files:
 - Focused adapter/source-rights/NBP tests passed (3 files, 19 tests), prediction-engine typecheck passed, full prediction-engine tests passed (105 files, 877 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, the all-workspaces wrapper exited 0 with transcript too large for a reliable aggregate count, the main adapter measured 243 lines after helper split, payload helper measured 52 lines, fixtures measured 184 lines, adapter test measured 107 lines, and no TS escape hatches were found.
 - The adapter remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, raw odds/tracking export, or prediction gate flip.
 
+2026-07-06 Drift Pressure Index continuation check:
+
+- `drift-pressure-index.ts` adds a governed `SHADOW` calibration/drift metric over feature PSI, Brier delta, calibration-error delta, schema changes, prediction-volume shift, model disagreement, source contradiction, freshness, sample support, and source-policy posture.
+- It returns `probability: null`, keeps confidence separate from pressure, exposes public drivers without protected weights, and can recommend downstream veto without creating a pick, expected-value claim, public probability, live route, or promotion.
+- The birth-certificate registry, package exports, asset tests, shadow evidence-card fixtures, and checked-in shadow evidence markdown now include Drift Pressure Index.
+- Validation covered DPI directionality, birth-certificate/asset coverage, generated evidence-report alignment, prediction-engine typecheck, full prediction-engine tests (106 files, 881 tests), root typecheck/lint/guardrails, `git diff --check`, and full all-workspaces tests (669 files, 8235 tests).
+- The metric remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, raw odds/tracking export, or prediction gate flip.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, No-Bet Pressure, and generated source policies:
 
-1. Continue guarded metric backlog with Drift Pressure Index or Conformal Uncertainty Width only after no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
+1. Continue guarded metric backlog with Conformal Uncertainty Width only after DPI, no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
 2. Add markdown export tests for any future metric report before allowing it into public/API route planning.
 3. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
 4. Add real historical validation only after cleared data, owner review, and legal/source-rights approval; local NBP fixtures are not promotion evidence.

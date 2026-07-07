@@ -40,11 +40,12 @@ Implemented:
 - public-safe AWS-governed sports intelligence case-study route with six Well-Architected pillar mappings, exact `docs/aws` route record, launch-page source QA, and closed live-action locks
 - Receiver Difficulty Index and Expected YAC metric slice with birth certificates, exports, asset coverage, and directional tests
 - Role Volatility Index metric slice with birth certificate, exports, asset coverage, source-policy fail-closed behavior, and directional tests
+- Drift Pressure Index metric slice with birth certificate, exports, asset coverage, evidence fixture/report coverage, source-policy/sample/freshness fail-closed behavior, downstream veto recommendation, and directional tests
 - No-Bet Pressure metric slice with birth certificate, exports, asset coverage, source/market/missing-data/calibration/drift/responsible-gaming hard-pass behavior, `computeNoBetStrength()` reuse, and directional tests
 - Playable Window Score metric slice with birth certificate, exports, asset coverage, stale/source/no-bet/drift/calibration fail-closed behavior, and directional tests
 - Market Mirage Score metric slice with birth certificate, exports, asset coverage, stale/source/no-bet/drift/calibration fail-closed behavior, composed payload fixture integration, app bridge expectation coverage, and directional tests
-- SLRS/QBI/RVI/CIG/NBP/PWS/PFS/MMS evidence-card fixture library with draft-first model cards, active drift cards, role-stability, calibration, no-bet hard-pass-rate, decision-window, portfolio-concentration, and market-mirage split coverage, plus package-root proprietary aliases
-- generated shadow metric evidence markdown reports for SLRS, QBI, RVI, CIG, NBP, PWS, PFS, and MMS, plus package-root proprietary aliases
+- SLRS/QBI/RVI/CIG/DPI/NBP/PWS/PFS/MMS evidence-card fixture library with draft-first model cards, active drift cards, role-stability, calibration, drift-pressure, no-bet hard-pass-rate, decision-window, portfolio-concentration, and market-mirage split coverage, plus package-root proprietary aliases
+- generated shadow metric evidence markdown reports for SLRS, QBI, RVI, CIG, DPI, NBP, PWS, PFS, and MMS, plus package-root proprietary aliases
 - source-rights-reviewed historical validation adapters for RVI, PWS, and MMS, plus source/payload-reviewed historical validation adapter coverage for NBP, plus package-root proprietary aliases
 - source/payload-reviewed historical distribution adapters for CIG and PFS, plus package-root proprietary aliases
 - local blocker-report docs and tests for unresolved commercial review queue repair work
@@ -249,6 +250,7 @@ Broad test result:
 - No-Bet Pressure validation: first focused run caught the certificate inserted in the wrong registry slot; second run caught the old Market Mirage object missing its opening brace after the move; final no-bet/birth-certificate/asset/downstream decision tests passed (5 files, 22 tests). Prediction-engine typecheck passed. Full prediction-engine tests passed (105 files, 876 tests). Root typecheck, root lint, root guardrails, and `git diff --check` passed. The all-workspaces test wrapper exited 0; the transcript was too large for a reliable aggregate count, so no invented total is claimed. LOC/escape-hatch scan passed with metric 200 lines, test 118 lines, and no TS escape hatches or non-null property access.
 - No-Bet Pressure evidence-report validation: focused evidence-card/report/birth-certificate/asset tests passed (4 files, 20 tests). Prediction-engine typecheck passed. Full prediction-engine tests passed (105 files, 876 tests). Root typecheck, root lint, root guardrails, and `git diff --check` passed. The all-workspaces test wrapper exited 0; the transcript was too large for a reliable aggregate count, so no invented total is claimed. LOC/escape-hatch scan passed with fixture 217 lines, evidence-card test 214 lines, report test 65 lines, checked-in report 247 lines, and no TS escape hatches or non-null property access.
 - No-Bet Pressure historical adapter validation: first focused run caught the safe NBP fixture adapting as `CLEAR` instead of the stale `WATCH` expectation; after correcting the expectation, focused adapter/source-rights/NBP tests passed (3 files, 19 tests). Prediction-engine typecheck passed. Full prediction-engine tests passed (105 files, 877 tests). Root typecheck, root lint, root guardrails, and `git diff --check` passed. The all-workspaces test wrapper exited 0; the transcript was too large for a reliable aggregate count, so no invented total is claimed. LOC/escape-hatch scan passed with adapter 243 lines after helper split, payload helper 52 lines, fixtures 184 lines, adapter test 107 lines, and no TS escape hatches or non-null property access.
+- Drift Pressure Index validation: focused DPI/birth-certificate/asset/evidence-report tests passed (5 files, 24 tests). First package typecheck caught invalid validation-method labels in the DPI birth certificate; after switching to the approved validation-method vocabulary, prediction-engine typecheck passed. Full prediction-engine tests passed (106 files, 881 tests). Root typecheck, root lint, root guardrails, and `git diff --check` passed. Full all-workspaces tests passed (669 files, 8235 tests). LOC/escape-hatch scan passed with metric 224 lines after driver helper tightening, test 95 lines, evidence fixture file 234 lines, and no TS escape hatches or non-null property access.
 - `npx prettier --check ...` was attempted but blocked before execution by npm certificate verification while fetching Prettier; no install or dependency change was attempted.
 - Rushing metric continuation passed targeted tests after splitting the metric birth-certificate registry: `metric-birth-certificate.test.ts`, `rush-environment-index.test.ts`, `expected-rush-yards.test.ts`, `rush-over-expected.test.ts`, and `metric-asset-graduation.test.ts` (5 files, 15 tests).
 - Current rushing metric validation: prediction-engine typecheck passed; full prediction-engine tests passed (89 files, 794 tests); root typecheck passed; root lint passed; root guardrails passed; `git diff --check` passed.
@@ -295,7 +297,7 @@ Broad test result:
 - `metric-birth-certificate.ts` was split into a compact contract/lookup module plus `metric-birth-certificate-registry.ts` to keep the growing metric registry maintainable.
 - Receiver/rusher residual rollups now exist as governed `SHADOW` / `INTERNAL` player-season summaries for `yac-creation-gse` and `rush-over-expected-gse`, with source-policy validation and evidence-confidence separation.
 - Metric model/drift-card generators now exist as local evidence helpers. Model cards are draft-first by default, and generated cards do not promote lifecycle, exposure, licensing, validation, or source clearance.
-- Metric evidence-card fixtures now exist for SLRS, QBI, RVI, CIG, NBP, PWS, PFS, and MMS. They generate draft-first model cards and drift cards from synthetic/local evidence, preserve `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`, and keep role-stability, calibration, no-bet hard-pass-rate, decision-window, portfolio-concentration, and market-mirage split evidence in drift review.
+- Metric evidence-card fixtures now exist for SLRS, QBI, RVI, CIG, DPI, NBP, PWS, PFS, and MMS. They generate draft-first model cards and drift cards from synthetic/local evidence, preserve `SHADOW` lifecycle, `INTERNAL` API exposure, `NOT_READY` licensing, and `publicApiAllowed: false`, and keep role-stability, calibration, drift-pressure, no-bet hard-pass-rate, decision-window, portfolio-concentration, and market-mirage split evidence in drift review.
 - Generated shadow metric evidence markdown reports now exist for SLRS, QBI, RVI, CIG, NBP, PWS, PFS, and MMS. The reports are synthetic/local, route-free, public-API-locked, and do not approve public content, API exposure, licensing, betting use, production promotion, legal clearance, probability claims, expected-value claims, or pick claims.
 - Source-rights-reviewed historical validation adapters now exist for RVI, PWS, and MMS. Source/payload-reviewed historical validation adapter coverage now exists for NBP. They adapt fully cleared safe-derived local historical-shaped records, return manual review for logged-off/manual-review source posture, block raw/probability payload leakage after source review, and block permission-required or missing sources before metric execution.
 - Source/payload-reviewed historical distribution adapters now exist for CIG and PFS. They adapt local historical-shaped records only after source rights and payload rights pass, classify local score-delta drift as `STABLE`, `WATCH`, or `SEVERE`, block raw input leakage before metric execution, and keep public API exposure false.
@@ -320,7 +322,7 @@ Broad test result:
 - Fence plugin path family under `apps/web/lib/fences`, the draft workflow harness, local review packet serialization, markdown rendering, in-memory packet ledger, queue status filters, review summary counts, representative content/API packet fixtures, first-month media queue fixtures, first-month review queue export, partner/sponsor review fixture reports, local review queue persistence simulator, and local blocker report exist as pure manual-review gates.
 - AWS exact paths `docs/aws` and `infra/aws-shadow` are compatibility indexes only; canonical AWS ownership remains under `docs/fable/aws` and `infrastructure/aws`.
 - Launch-page visual QA is local render evidence only. Production preview QA remains owner-reviewed and intentionally deferred.
-- Full proprietary metric backlog remains future work, with Drift Pressure Index, Conformal Uncertainty Width, real owner-reviewed historical validation, and any owner-approved live-route promotion packet still pending.
+- Full proprietary metric backlog remains future work, with Conformal Uncertainty Width, DPI historical distribution adapter coverage, real owner-reviewed historical validation, and any owner-approved live-route promotion packet still pending.
 
 ## Intentionally Deferred
 
@@ -346,7 +348,7 @@ Broad test result:
 
 ## Next 10 Codex Tasks Ranked By Leverage
 
-1. Continue guarded metric backlog with Drift Pressure Index or Conformal Uncertainty Width only after no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
+1. Continue guarded metric backlog with Conformal Uncertainty Width only after DPI, no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
 2. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
 3. Run owner-reviewed production preview QA before live push.
 4. Add public-safe no-bet examples to a future owner-approved product surface only after visual/copy QA.
@@ -361,7 +363,7 @@ Broad test result:
 
 Continue the Sunday frontier implementation with the next governed metric or draft evidence report:
 
-1. Continue with Drift Pressure Index or Conformal Uncertainty Width after preserving all no-bet/source/payload/historical-adapter vetoes.
+1. Continue with Conformal Uncertainty Width or DPI historical distribution adapter coverage after preserving all no-bet/source/payload/historical-adapter vetoes.
 2. Preserve source-policy posture, lifecycle locks, API locks, and no-bet/calibration/staleness veto semantics.
 3. Keep all work separate from live `app/api/v1` route implementation.
 4. Keep all validation outputs separate from legal clearance, production readiness, AWS deployment, public/API exposure, and betting advice.

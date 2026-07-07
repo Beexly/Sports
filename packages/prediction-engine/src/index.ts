@@ -696,6 +696,13 @@ export type {
   CalibrationIntegrityLetter,
   CalibrationIntegritySourcePosture,
 } from "./metrics/calibration/calibration-integrity-grade.js";
+export { driftPressureIndex } from "./metrics/calibration/drift-pressure-index.js";
+export type {
+  DriftPressureBand,
+  DriftPressureIndexInput,
+  DriftPressureIndexMetric,
+  DriftPressureSourcePosture,
+} from "./metrics/calibration/drift-pressure-index.js";
 export { noBetPressureMetric } from "./metrics/decision/no-bet-pressure.js";
 export type {
   NoBetPressureBand,

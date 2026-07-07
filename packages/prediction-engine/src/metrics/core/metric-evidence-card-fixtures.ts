@@ -18,6 +18,7 @@ export type ShadowEvidenceMetricId =
   | "qb-burden-index"
   | "role-volatility-index"
   | "calibration-integrity-grade"
+  | "drift-pressure-index"
   | "no-bet-pressure"
   | "playable-window-score"
   | "portfolio-fit-score"
@@ -102,6 +103,22 @@ export const SHADOW_METRIC_EVIDENCE_FIXTURES: readonly ShadowMetricEvidenceFixtu
     evidenceRefs: ["fixture-cig-model-card", "fixture-cig-calibration-stability-split"],
     metricId: "calibration-integrity-grade",
     validationReport: shadowValidationReport("fixture-cig-validation", 360),
+  },
+  {
+    caveat:
+      "DPI fixture is synthetic/local and cannot be used as a public probability, expected value, betting advice, or proof of production drift monitoring.",
+    driftChecks: [
+      {
+        evidenceRef: "fixture-dpi-drift-pressure-split",
+        name: "drift_pressure_composite_delta",
+        severeThreshold: 0.28,
+        value: 0.16,
+        watchThreshold: 0.12,
+      },
+    ],
+    evidenceRefs: ["fixture-dpi-model-card", "fixture-dpi-drift-pressure-split"],
+    metricId: "drift-pressure-index",
+    validationReport: shadowValidationReport("fixture-dpi-validation", 330),
   },
   {
     caveat:

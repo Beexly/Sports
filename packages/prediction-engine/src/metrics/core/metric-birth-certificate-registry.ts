@@ -398,6 +398,68 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
   },
   {
     allowedInputs: [
+      "feature population stability index",
+      "calibration Brier delta",
+      "calibration error delta",
+      "schema change rate",
+      "prediction volume shift",
+      "model disagreement",
+      "source contradiction pressure",
+      "drift report age",
+      "drift report freshness TTL",
+      "settled sample size",
+      "minimum sample size",
+      "source-policy posture",
+    ],
+    failureModes: [
+      "thin drift samples can overstate or understate regime change",
+      "stable feature distributions can still hide calibration drift",
+      "drift pressure is not win probability, edge, expected value, or betting advice",
+      "source-policy blocks must override apparently useful drift evidence",
+    ],
+    family: "calibration",
+    forbiddenInputs: [
+      "ungated probability claims",
+      "future game outcomes",
+      "uncleared model logs",
+      "raw protected sportsbook payloads",
+      "raw paid tracking payloads",
+      "protected component weights in public output",
+    ],
+    formulaClass: "composite_score",
+    formulaSummary:
+      "Drift pressure from feature distribution movement, calibration degradation, schema changes, prediction-volume shifts, model disagreement, source contradictions, freshness, sample support, and source posture.",
+    historicalPrecedent: [
+      {
+        name: "Population stability, calibration drift, and schema-drift monitoring",
+        reason:
+          "Governed prediction systems need explicit drift pressure so stale regimes, degraded calibration, and schema changes can suppress downstream decisions before public claims.",
+      },
+    ],
+    internalName: "drift_pressure_index_shadow",
+    metricId: "drift-pressure-index",
+    protectedComponents: [
+      "drift pressure blend",
+      "source posture scaling",
+      "hard-block thresholds",
+      "band cutoffs",
+      "freshness and sample transforms",
+    ],
+    publicExposure: "score_band",
+    publicName: "Drift Pressure Index",
+    sourceRightsRequired: [
+      "derived drift checks only",
+      "calibration and feature-monitor source retained",
+      "no raw odds or tracking payload exposure",
+      "source-policy posture retained",
+    ],
+    status: "SHADOW",
+    targetQuestion: "Is the current model/data regime drifting enough to veto or suppress downstream decisions?",
+    targetVariable: "drift pressure",
+    validationMethods: ["brier", "ece", "reliability_curve", "bucket_lift", "walk_forward", "drift_test"],
+  },
+  {
+    allowedInputs: [
       "data reliability index",
       "stale line risk score",
       "market signal allowed flag",

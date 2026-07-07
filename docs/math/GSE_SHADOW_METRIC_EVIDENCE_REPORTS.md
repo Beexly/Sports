@@ -24,6 +24,7 @@ licensing, betting use, production promotion, legal clearance, or metric lifecyc
 | `qb-burden-index` | `qb-burden-index.md` | DRAFT | STABLE | false | false |
 | `role-volatility-index` | `role-volatility-index.md` | DRAFT | WATCH | false | false |
 | `calibration-integrity-grade` | `calibration-integrity-grade.md` | DRAFT | WATCH | false | false |
+| `drift-pressure-index` | `drift-pressure-index.md` | DRAFT | WATCH | false | false |
 | `no-bet-pressure` | `no-bet-pressure.md` | DRAFT | WATCH | false | false |
 | `playable-window-score` | `playable-window-score.md` | DRAFT | SEVERE | false | false |
 | `portfolio-fit-score` | `portfolio-fit-score.md` | DRAFT | STABLE | false | false |
@@ -133,6 +134,32 @@ Drift card:
 - Check: `calibration_integrity_ece_delta` value `0.07` against watch `0.05` and severe `0.12`.
 - Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-cig-calibration-stability-split`, `fixture-cig-model-card`.
 
+## Drift Pressure Index
+
+Generated from synthetic/local metric evidence fixtures.
+
+Boundary:
+
+- Lifecycle: `SHADOW`.
+- API exposure: `INTERNAL`.
+- Licensing: `NOT_READY`.
+- Public API allowed: false.
+- Live route created: false.
+- This report does not approve public content, API exposure, licensing, betting use, or production promotion.
+
+Model card:
+
+- Status: `DRAFT`.
+- Summary: DRAFT model card for Drift Pressure Index (`drift-pressure-index`). Metric lifecycle is `SHADOW`; generated evidence does not change lifecycle or exposure.
+- Limitations include fixture-only drift-pressure checks and the rule that DPI is not public probability, expected value, betting advice, or proof of production drift monitoring.
+- Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-dpi-validation`, `fixture-dpi-model-card`, `fixture-dpi-drift-pressure-split`.
+
+Drift card:
+
+- Status: `WATCH`.
+- Check: `drift_pressure_composite_delta` value `0.16` against watch `0.12` and severe `0.28`.
+- Evidence refs: `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`, `fixture-dpi-drift-pressure-split`, `fixture-dpi-model-card`.
+
 ## No Bet Pressure
 
 Generated from synthetic/local metric evidence fixtures.
@@ -239,8 +266,8 @@ Drift card:
 
 ## Next Gate
 
-The next safe gate is source-rights-reviewed historical validation adapters for No-Bet Pressure and
-source/payload-reviewed distribution and drift adapters for any remaining governed metric backlog.
+The next safe gate is source/payload-reviewed distribution and drift adapters for Drift Pressure Index and
+any remaining governed metric backlog.
 Do not create public/API routes, model promotion, pricing,
 betting use, publication, or cloud/live-service actions from this report. Historical validation must
 prove source rights, payload rights, calibration separation, and drift behavior before any promotion
