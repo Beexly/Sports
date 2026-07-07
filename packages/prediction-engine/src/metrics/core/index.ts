@@ -83,6 +83,7 @@ export {
 } from "./metric-historical-validation-adapter-fixtures.js";
 export type {
   HistoricalCalibrationDistributionRecord,
+  HistoricalDriftPressureDistributionRecord,
   HistoricalDistributionAdapterResult,
   HistoricalDistributionAdapterStatus,
   HistoricalDistributionMetricId,
@@ -94,6 +95,7 @@ export {
   adaptHistoricalDistributionRecord,
   runHistoricalDistributionAdapterRecords,
 } from "./metric-historical-distribution-adapter.js";
+export { reviewHistoricalDistributionPayload } from "./metric-historical-distribution-payload.js";
 export type { HistoricalDistributionAdapterSummary } from "./metric-historical-distribution-fixtures.js";
 export {
   HISTORICAL_DISTRIBUTION_ADAPTER_FIXTURES,

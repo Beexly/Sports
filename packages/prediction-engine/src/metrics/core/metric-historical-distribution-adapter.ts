@@ -2,6 +2,7 @@ import {
   calibrationIntegrityGrade,
   type CalibrationIntegrityGradeInput,
 } from "../calibration/calibration-integrity-grade.js";
+import { driftPressureIndex, type DriftPressureIndexInput } from "../calibration/drift-pressure-index.js";
 import { portfolioFitScore, type PortfolioFitScoreInput } from "../decision/portfolio-fit-score.js";
 import {
   requireMetricAsset,
@@ -10,11 +11,10 @@ import {
   type MetricLicensingStatus,
 } from "./metric-asset.js";
 import {
-  evaluateMetricPayloadRights,
   type MetricPayloadExposure,
-  type MetricPayloadField,
   type MetricPayloadRightsDecision,
 } from "./payload-rights.js";
+import { reviewHistoricalDistributionPayload } from "./metric-historical-distribution-payload.js";
 import { GSE_METRIC_SOURCE_RIGHTS_POLICIES, type MetricSourceRightsPolicy } from "./source-rights.js";
 import {
   reviewHistoricalValidationSources,
@@ -23,7 +23,10 @@ import {
 } from "./metric-historical-validation-adapter.js";
 import type { MetricLifecycleStatus, MetricSourcePolicy } from "./validation.js";
 
-export type HistoricalDistributionMetricId = "calibration-integrity-grade" | "portfolio-fit-score";
+export type HistoricalDistributionMetricId =
+  | "calibration-integrity-grade"
+  | "drift-pressure-index"
+  | "portfolio-fit-score";
 export type HistoricalDistributionPayloadProfile =
   | "safe_derived"
   | "raw_input_leak"
@@ -56,8 +59,21 @@ export interface HistoricalPortfolioDistributionRecord {
   readonly payloadProfile: HistoricalDistributionPayloadProfile;
 }
 
+export interface HistoricalDriftPressureDistributionRecord {
+  readonly metricId: "drift-pressure-index";
+  readonly splitId: string;
+  readonly description: string;
+  readonly sourceIds: readonly string[];
+  readonly input: Omit<DriftPressureIndexInput, "sourcePolicy">;
+  readonly baselineScore: number;
+  readonly watchDelta: number;
+  readonly severeDelta: number;
+  readonly payloadProfile: HistoricalDistributionPayloadProfile;
+}
+
 export type HistoricalDistributionRecord =
   | HistoricalCalibrationDistributionRecord
+  | HistoricalDriftPressureDistributionRecord
   | HistoricalPortfolioDistributionRecord;
 
 export interface HistoricalDistributionAdapterResult {
@@ -113,11 +129,7 @@ export function adaptHistoricalDistributionRecord(
     });
   }
 
-  const payloadRights = evaluateMetricPayloadRights({
-    exposure,
-    fields: payloadFieldsForRecord(record),
-    policies,
-  });
+  const payloadRights = reviewHistoricalDistributionPayload(record, policies, exposure);
   if (!payloadRights.allowed) {
     return blockedResult({
       base,
@@ -166,6 +178,10 @@ function runDistributionMetric(
       const metric = calibrationIntegrityGrade({ ...record.input, sourcePolicy });
       return { allowed: metric.calibrationUsable, band: metric.letterGrade, score: metric.score };
     }
+    case "drift-pressure-index": {
+      const metric = driftPressureIndex({ ...record.input, sourcePolicy });
+      return { allowed: !metric.downstreamVetoRecommended, band: metric.band, score: metric.score };
+    }
     case "portfolio-fit-score": {
       const metric = portfolioFitScore({ ...record.input, sourcePolicy });
       return { allowed: metric.portfolioActionAllowed, band: metric.band, score: metric.score };
@@ -173,34 +189,6 @@ function runDistributionMetric(
     default:
       return assertNever(record);
   }
-}
-
-function payloadFieldsForRecord(record: HistoricalDistributionRecord): readonly MetricPayloadField[] {
-  const basePath = record.metricId;
-  const safeFields: readonly MetricPayloadField[] = [
-    payloadField(`${basePath}.score`, "DERIVED_METRIC", record.sourceIds),
-    payloadField(`${basePath}.band`, "AGGREGATE_SUMMARY", record.sourceIds),
-    payloadField(`${basePath}.drivers`, "PUBLIC_DRIVER", record.sourceIds),
-  ];
-  if (record.payloadProfile === "safe_derived") return safeFields;
-  if (record.payloadProfile === "raw_input_leak") {
-    return [...safeFields, payloadField(`${basePath}.raw_input_snapshot`, "RAW_SOURCE_VALUE", record.sourceIds)];
-  }
-  return [...safeFields, payloadField(`${basePath}.probability_claim`, "UNSUPPORTED_PROBABILITY_CLAIM", record.sourceIds)];
-}
-
-function payloadField(
-  path: string,
-  kind: MetricPayloadField["kind"],
-  sourceIds: readonly string[],
-): MetricPayloadField {
-  return {
-    description: "Historical distribution adapter payload field.",
-    exposure: "API",
-    kind,
-    path,
-    sourceIds,
-  };
 }
 
 function classifyDistributionDrift(

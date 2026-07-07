@@ -1612,3 +1612,26 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   production-readiness claim, no model promotion, no betting use, no probability or expected-value claim, no
   production drift-monitoring claim, no raw odds/tracking export, no package/dependency change, no live
   AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier DPI historical distribution adapter
+
+- WHAT: Extended the source/payload-reviewed historical distribution adapter from CIG/PFS to Drift Pressure
+  Index. DPI records now adapt only after source-policy review passes and payload-rights review approves safe
+  derived score, band, and public-driver fields. Raw input leakage blocks after source review but before metric
+  execution, and public/API exposure remains closed.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-historical-distribution-adapter.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-historical-distribution-payload.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-historical-distribution-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-historical-distribution-adapter.test.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  metric bible, commercial ledger, Sunday audit, Sunday handoff, and execution ledger.
+- GATE: focused distribution/DPI/source-payload tests passed (3 files, 17 tests). Prediction-engine typecheck
+  passed. LOC / escape-hatch scan passed: adapter 227 lines, payload helper 48 lines, fixtures 199 lines,
+  adapter test 100 lines, and no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or
+  non-null property access found. Full prediction-engine tests passed (106 files, 881 tests). Root typecheck,
+  root lint, root guardrails, and `git diff --check` passed. Full all-workspaces tests passed across web,
+  crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types (669 files, 8235 tests).
+- FLAG: local synthetic fixtures and adapter only; no live route, no public/API exposure, no legal clearance
+  claim, no production-readiness claim, no model promotion, no betting use, no probability or expected-value
+  claim, no production drift-monitoring claim, no raw odds/tracking export, no package/dependency change, no
+  live AWS/cloud/service action, and no prediction gate flip.

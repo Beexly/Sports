@@ -659,7 +659,7 @@ Build in this order for proprietary football metrics:
 6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 8. Portfolio Fit Score - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
-9. Drift Pressure Index - implemented as `SHADOW`; local evidence-card/report fixtures exist; real historical distribution adapter, promotion, and public/API exposure remain future gates.
+9. Drift Pressure Index - implemented as `SHADOW`; local evidence-card/report fixtures and source/payload-reviewed historical distribution adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
 10. Conformal Uncertainty Width
 11. Source Trust Score
 12. Stale Line Risk Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
@@ -1044,11 +1044,19 @@ Pure LOC review for new source files:
 - Validation covered DPI directionality, birth-certificate/asset coverage, generated evidence-report alignment, prediction-engine typecheck, full prediction-engine tests (106 files, 881 tests), root typecheck/lint/guardrails, `git diff --check`, and full all-workspaces tests (669 files, 8235 tests).
 - The metric remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, raw odds/tracking export, or prediction gate flip.
 
+2026-07-06 Drift Pressure Index historical distribution adapter continuation check:
+
+- `metric-historical-distribution-adapter.ts` now supports Drift Pressure Index records while preserving the existing CIG/PFS distribution path.
+- `metric-historical-distribution-payload.ts` owns the reusable payload-rights review for historical distribution fixtures, approving only safe derived score, band, and public-driver fields while blocking raw input snapshots and unsupported probability claims.
+- `metric-historical-distribution-fixtures.ts` now includes a safe-derived DPI `WATCH` case and a raw-payload-blocked DPI case.
+- Focused distribution/DPI/source-payload tests passed (3 files, 17 tests), prediction-engine typecheck passed, full prediction-engine tests passed (106 files, 881 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, and full all-workspaces tests passed (669 files, 8235 tests).
+- The adapter remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, raw odds/tracking export, or prediction gate flip.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, No-Bet Pressure, and generated source policies:
 
-1. Continue guarded metric backlog with Conformal Uncertainty Width only after DPI, no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
+1. Continue guarded metric backlog with Conformal Uncertainty Width after DPI, no-bet, payload-envelope, source-rights, and historical-adapter veto tests stayed green.
 2. Add markdown export tests for any future metric report before allowing it into public/API route planning.
 3. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
 4. Add real historical validation only after cleared data, owner review, and legal/source-rights approval; local NBP fixtures are not promotion evidence.
