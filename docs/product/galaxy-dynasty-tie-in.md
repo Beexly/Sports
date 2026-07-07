@@ -52,17 +52,27 @@ Ranks are a true ladder — you cannot reach Established without also clearing P
 The **Vault**'s floors (Foundation → Century → Calibrated → Beats the Close →
 Established → Authority) are earned by the player's real, settled record.
 
-## The seam: `GET /api/dynasty/me`
+## The seam + the loader
 
-`apps/web/app/api/dynasty/me/route.ts` — read-only, session-gated, **fails closed**
-to the anonymous FREE world on any error. It resolves real entitlements
-(`getUserEntitlements`) and the real canonical settled sample (same non-bootstrap,
-non-seed filters as `load-performance.ts`), then returns `deriveDynastyProfile(...)`.
-The game client renders only this output.
+`apps/web/lib/dynasty/load-dynasty-profile.ts` holds the shared logic in two layers:
 
-Known follow-up: `hasPublishedCalibration` is conservatively `false` in the route
-until the published-calibration signal is wired in — the "Calibrated" Vault floor
-stays honestly locked rather than faked.
+- `loadDynastyProfile(deps)` — dependency-injected (pick-count surface + gates +
+  entitlements) and **unit-tested** with a fake db. Reads the canonical settled
+  sample (same non-bootstrap, non-seed filters as `load-performance.ts`).
+- `getViewerDynastyProfile()` — server glue that resolves the session, real
+  entitlements, real readiness gates, and the live db, and **fails closed** to the
+  anonymous FREE world on any error.
+
+Both surfaces consume it:
+
+- `GET /api/dynasty/me` — the machine seam the 3D client will call.
+- `/dynasty` — the visible hub page (rank, ladder progress, districts, Vault),
+  rendered with the existing design system.
+
+Real signals, not guesses: `hasPublishedCalibration` is wired to the readiness
+gate `canApplyCalibrationAdjustments` (GSN's own "the calibrator is live" flag),
+and `performanceStatsPublic` to `canExposePerformanceStats` + the settled floor.
+Nothing is faked — floors stay honestly locked until the real signal flips.
 
 ## Roadmap
 
