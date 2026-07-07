@@ -12,15 +12,21 @@ teardowns is tagged `(documented)` / `(inferred)` / `(speculative)`.
 | [linestar-teeth-dossier.md](./linestar-teeth-dossier.md) | LineStar / BetFully patent-invalidity & prior-art, claim-by-claim design-around, engine teardown, weakness/churn dossier, corporate/tech/regulatory map, GSE battle plan. |
 | [dfs-optimizer-edge.md](./dfs-optimizer-edge.md) | The engineering follow-through: exact (provable) optimizer + correlation-aware GPP selection that beat LineStar's patented point-sum heuristic — with a head-to-head benchmark. |
 | [linestar-appendix-corporate-tech-blueprint.md](./linestar-appendix-corporate-tech-blueprint.md) | Completes the dossier's two dropped angles: corporate / tech-stack / regulatory recon + the (now-implemented) build blueprint. |
+| [fantasypros-nfl-teardown.md](./fantasypros-nfl-teardown.md) | ECR consensus engine (Borda-style Rank Points, not accuracy-weighted) + the fully-published Expert Accuracy grading formula + the gap between the two. Lean pass (~15 credits, no workflow). |
 
 ## The through-line
 
-RotoWire sells **authority**; LineStar sells a **patent**. **Neither proves
-accuracy in public.** GSE's wedge is the one thing they both skip — *proving*
-edge on open data they don't own, with a glass-box every step. The DFS optimizer
-upgrade is a concrete instance: provably-optimal cash lineups and
-correlation-aware tournament selection, each a clean design-around of the
-BetFully patents (confirm FTO with counsel).
+RotoWire sells **authority**; LineStar sells a **patent**; FantasyPros sells
+**rigor** — and unlike the other two, FantasyPros' rigor is real: a genuinely
+well-designed, transparently published expert-accuracy methodology. Its gap
+isn't sloppiness, it's that the accuracy grading **doesn't drive the default
+consensus weighting** — a real, documented product decision, not a secret.
+GSE's wedge is the one thing all three under-deliver on to different degrees —
+*proving* edge on open data, glass-box, with accuracy-weighting as the
+*default* rather than an opt-in filter. The DFS optimizer upgrade is a concrete
+instance of the same posture applied to LineStar specifically: provably-optimal
+cash lineups and correlation-aware tournament selection, each a clean
+design-around of the BetFully patents (confirm FTO with counsel).
 
 ## Key LineStar facts (verified)
 
