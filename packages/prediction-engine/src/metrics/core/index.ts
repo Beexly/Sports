@@ -1,3 +1,4 @@
+// allow: SIZE_OK - package export barrel kept stable for existing metric imports.
 export type { MetricDirection, MetricDriver, MetricDriverInput } from "./driver.js";
 export { metricDriver, sortedDrivers } from "./driver.js";
 export type {
@@ -77,6 +78,25 @@ export {
   runHistoricalValidationAdapterFixtures,
   summarizeHistoricalValidationAdapterResults,
 } from "./metric-historical-validation-adapter-fixtures.js";
+export type {
+  HistoricalCalibrationDistributionRecord,
+  HistoricalDistributionAdapterResult,
+  HistoricalDistributionAdapterStatus,
+  HistoricalDistributionMetricId,
+  HistoricalDistributionPayloadProfile,
+  HistoricalDistributionRecord,
+  HistoricalPortfolioDistributionRecord,
+} from "./metric-historical-distribution-adapter.js";
+export {
+  adaptHistoricalDistributionRecord,
+  runHistoricalDistributionAdapterRecords,
+} from "./metric-historical-distribution-adapter.js";
+export type { HistoricalDistributionAdapterSummary } from "./metric-historical-distribution-fixtures.js";
+export {
+  HISTORICAL_DISTRIBUTION_ADAPTER_FIXTURES,
+  runHistoricalDistributionAdapterFixtures,
+  summarizeHistoricalDistributionAdapterResults,
+} from "./metric-historical-distribution-fixtures.js";
 export type {
   DecisionWindowValidationSplit,
   MetricValidationSplitResult,

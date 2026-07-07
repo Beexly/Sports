@@ -586,6 +586,14 @@ Metric Source-Policy generation behavior:
 - keeps public logged-off, permission-required, vendor-candidate, manual-research-only, blocked-technical-control, and excluded sources conservative by default
 - remains a code-level rights gate and does not claim legal clearance
 
+Historical distribution/drift adapter behavior:
+
+- adapts Calibration Integrity Grade and Portfolio Fit Score historical-shaped records only after source rights pass validation and derived-metric checks
+- runs metric payload-rights checks before metric execution and blocks raw input leakage or unsupported probability claims even when source rights are otherwise cleared
+- returns local `STABLE`, `WATCH`, or `SEVERE` score-delta drift status against fixture baselines
+- keeps lifecycle `SHADOW`, API exposure `INTERNAL`, licensing `NOT_READY`, and `publicApiAllowed: false`
+- remains synthetic/local fixture coverage, not validation evidence for promotion or public/API exposure
+
 Tests added:
 
 - `packages/prediction-engine/src/metrics/__tests__/receiver-difficulty.test.ts`
@@ -602,6 +610,7 @@ Tests added:
 - `packages/prediction-engine/src/metrics/__tests__/residual-rollup.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`
 - `packages/prediction-engine/src/metrics/__tests__/metric-evidence-report-markdown.test.ts`
+- `packages/prediction-engine/src/metrics/__tests__/metric-historical-distribution-adapter.test.ts`
 - source-policy generation coverage in `packages/prediction-engine/src/metrics/__tests__/metric-source-payload-rights.test.ts`
 
 This is not a claim that any metric is validated for public/API exposure. The metrics are usable as governed shadow primitives until model cards, drift cards, validation reports, and source-rights envelopes support promotion.
@@ -613,11 +622,11 @@ Build in this order for proprietary football metrics:
 1. API response-envelope filtering with proprietary metric payload-rights checks
 2. QB Burden Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 3. Role Volatility Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
-4. Calibration Integrity Grade - implemented as `SHADOW`; local evidence-card/report fixtures exist; historical validation, promotion, and public/API exposure remain future gates.
+4. Calibration Integrity Grade - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
 5. No-Bet Pressure
 6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
-8. Portfolio Fit Score - implemented as `SHADOW`; local evidence-card/report fixtures exist; historical validation, promotion, and public/API exposure remain future gates.
+8. Portfolio Fit Score - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
 9. Drift Pressure Index
 10. Conformal Uncertainty Width
 11. Source Trust Score

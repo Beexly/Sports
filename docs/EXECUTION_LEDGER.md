@@ -1485,3 +1485,28 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   clearance claim, no production-readiness claim, no model promotion, no betting use, no probability
   or expected-value claim, no raw odds/tracking export, no package/dependency change, no live
   AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier CIG/PFS historical distribution adapters
+
+- WHAT: Added source/payload-reviewed historical distribution adapters for Calibration Integrity
+  Grade and Portfolio Fit Score. The adapter checks source rights before payload rights, blocks raw
+  input leakage even when source rights are otherwise cleared, adapts only synthetic/local
+  historical-shaped records, and classifies local score-delta drift as `STABLE`, `WATCH`, or `SEVERE`
+  against fixture baselines. Public API exposure remains false.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-historical-distribution-adapter.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-historical-distribution-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-historical-distribution-adapter.test.ts`,
+  core/package export updates, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution ledger.
+- GATE: focused distribution/validation/source-rights/CIG/PFS tests passed (5 files, 27 tests).
+  First prediction-engine typecheck caught source-policy status widening to `string`; after
+  tightening the mapped return type, prediction-engine typecheck passed. Full prediction-engine tests
+  passed (104 files, 871 tests). Root typecheck, root lint, root guardrails, and `git diff --check`
+  passed. LOC / escape-hatch scan passed: adapter 222 lines, fixture 149 lines, test 73 lines, and
+  no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`, or non-null property access
+  found. Existing package export barrels remain over 250 lines and are marked with explicit
+  `SIZE_OK` comments because this slice only extends stable public exports.
+- FLAG: local synthetic fixtures and adapters only; no live route, no public/API exposure, no legal
+  clearance claim, no production-readiness claim, no metric promotion, no betting use, no probability
+  or expected-value claim, no raw odds/tracking export, no package/dependency change, no live
+  AWS/cloud/service action, and no prediction gate flip.
