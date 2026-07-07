@@ -275,6 +275,17 @@ export type {
   DriftPressureIndexMetric,
   DriftPressureSourcePosture,
 } from "../calibration/drift-pressure-index.js";
+export {
+  conformalUncertaintyWidth,
+  conformalUncertaintyWidthFromReport,
+} from "../calibration/conformal-uncertainty-width.js";
+export type {
+  ConformalUncertaintyIntervalInput,
+  ConformalUncertaintyWidthBand,
+  ConformalUncertaintyWidthInput,
+  ConformalUncertaintyWidthMetric,
+  ConformalUncertaintyWidthSourcePosture,
+} from "../calibration/conformal-uncertainty-width.js";
 export { noBetPressureMetric } from "../decision/no-bet-pressure.js";
 export type {
   NoBetPressureBand,

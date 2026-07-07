@@ -460,6 +460,67 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
   },
   {
     allowedInputs: [
+      "conformal interval lower bound",
+      "conformal interval upper bound",
+      "interval coverage flag",
+      "target coverage",
+      "expected width",
+      "severe width",
+      "settled interval sample size",
+      "minimum sample size",
+      "conformal report age",
+      "drift pressure",
+      "source-policy posture",
+    ],
+    failureModes: [
+      "narrow intervals can be unsafe when they under-cover the target",
+      "wide intervals can be honest but unsuitable for downstream action",
+      "thin interval samples can make coverage look better or worse by chance",
+      "source-policy blocks must override apparently useful uncertainty evidence",
+    ],
+    family: "calibration",
+    forbiddenInputs: [
+      "ungated probability claims",
+      "future game outcomes",
+      "uncleared model logs",
+      "raw protected sportsbook payloads",
+      "raw paid tracking payloads",
+      "protected component weights in public output",
+    ],
+    formulaClass: "conformal",
+    formulaSummary:
+      "Conformal uncertainty-width pressure from mean interval width, tail interval width, target-coverage shortfall, sample support, freshness, drift, and source posture.",
+    historicalPrecedent: [
+      {
+        name: "Split conformal and Mondrian conformal intervals",
+        reason:
+          "Conformal prediction gives finite-sample uncertainty intervals; governed systems must track both interval width and empirical coverage before using projections downstream.",
+      },
+    ],
+    internalName: "conformal_uncertainty_width_shadow",
+    metricId: "conformal-uncertainty-width",
+    protectedComponents: [
+      "width pressure blend",
+      "coverage-gap thresholds",
+      "source posture scaling",
+      "band cutoffs",
+      "freshness and sample transforms",
+    ],
+    publicExposure: "score_band",
+    publicName: "Conformal Uncertainty Width",
+    sourceRightsRequired: [
+      "derived conformal intervals only",
+      "settled projection outcome source retained",
+      "no raw odds or tracking payload exposure",
+      "source-policy posture retained",
+    ],
+    status: "SHADOW",
+    targetQuestion: "Are projection intervals too wide, stale, thin, or under-covering to support downstream decisions?",
+    targetVariable: "conformal uncertainty-width pressure",
+    validationMethods: ["conformal_coverage", "mae", "rmse", "bucket_lift", "walk_forward", "drift_test"],
+  },
+  {
+    allowedInputs: [
       "data reliability index",
       "stale line risk score",
       "market signal allowed flag",

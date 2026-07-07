@@ -523,6 +523,8 @@ export {
   renderShadowMetricEvidenceReportMarkdown as renderProprietaryShadowMetricEvidenceReportMarkdown,
   adaptHistoricalValidationRecord as adaptProprietaryHistoricalValidationRecord,
   adaptHistoricalDistributionRecord as adaptProprietaryHistoricalDistributionRecord,
+  conformalUncertaintyWidth as proprietaryConformalUncertaintyWidth,
+  conformalUncertaintyWidthFromReport as proprietaryConformalUncertaintyWidthFromReport,
   reviewHistoricalValidationSources as reviewProprietaryHistoricalValidationSources,
   reviewHistoricalDistributionPayload as reviewProprietaryHistoricalDistributionPayload,
   runHistoricalDistributionAdapterFixtures as runProprietaryHistoricalDistributionAdapterFixtures,
@@ -580,6 +582,11 @@ export type {
   HistoricalDistributionMetricId as ProprietaryHistoricalDistributionMetricId,
   HistoricalDistributionPayloadProfile as ProprietaryHistoricalDistributionPayloadProfile,
   HistoricalDistributionRecord as ProprietaryHistoricalDistributionRecord,
+  ConformalUncertaintyIntervalInput as ProprietaryConformalUncertaintyIntervalInput,
+  ConformalUncertaintyWidthBand as ProprietaryConformalUncertaintyWidthBand,
+  ConformalUncertaintyWidthInput as ProprietaryConformalUncertaintyWidthInput,
+  ConformalUncertaintyWidthMetric as ProprietaryConformalUncertaintyWidthMetric,
+  ConformalUncertaintyWidthSourcePosture as ProprietaryConformalUncertaintyWidthSourcePosture,
   HistoricalMarketMirageRecord as ProprietaryHistoricalMarketMirageRecord,
   HistoricalPortfolioDistributionRecord as ProprietaryHistoricalPortfolioDistributionRecord,
   HistoricalRoleStabilityRecord as ProprietaryHistoricalRoleStabilityRecord,
@@ -705,6 +712,17 @@ export type {
   DriftPressureIndexMetric,
   DriftPressureSourcePosture,
 } from "./metrics/calibration/drift-pressure-index.js";
+export {
+  conformalUncertaintyWidth,
+  conformalUncertaintyWidthFromReport,
+} from "./metrics/calibration/conformal-uncertainty-width.js";
+export type {
+  ConformalUncertaintyIntervalInput,
+  ConformalUncertaintyWidthBand,
+  ConformalUncertaintyWidthInput,
+  ConformalUncertaintyWidthMetric,
+  ConformalUncertaintyWidthSourcePosture,
+} from "./metrics/calibration/conformal-uncertainty-width.js";
 export { noBetPressureMetric } from "./metrics/decision/no-bet-pressure.js";
 export type {
   NoBetPressureBand,

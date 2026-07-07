@@ -140,6 +140,7 @@ describe("metric evidence card generators", () => {
       "role-volatility-index",
       "calibration-integrity-grade",
       "drift-pressure-index",
+      "conformal-uncertainty-width",
       "no-bet-pressure",
       "playable-window-score",
       "portfolio-fit-score",
@@ -180,6 +181,7 @@ describe("metric evidence card generators", () => {
     const rvi = cardFor(cards, "role-volatility-index");
     const cig = cardFor(cards, "calibration-integrity-grade");
     const dpi = cardFor(cards, "drift-pressure-index");
+    const cuw = cardFor(cards, "conformal-uncertainty-width");
     const nbp = cardFor(cards, "no-bet-pressure");
     const pws = cardFor(cards, "playable-window-score");
     const pfs = cardFor(cards, "portfolio-fit-score");
@@ -191,6 +193,8 @@ describe("metric evidence card generators", () => {
     expect(cig.driftCard.notes).toContain("calibration_integrity_ece_delta: value 0.07 -> WATCH.");
     expect(dpi.driftCard.status).toBe("WATCH");
     expect(dpi.driftCard.notes).toContain("drift_pressure_composite_delta: value 0.16 -> WATCH.");
+    expect(cuw.driftCard.status).toBe("WATCH");
+    expect(cuw.driftCard.notes).toContain("conformal_width_coverage_gap_delta: value 0.13 -> WATCH.");
     expect(nbp.driftCard.status).toBe("WATCH");
     expect(nbp.driftCard.notes).toContain("no_bet_hard_pass_rate_delta: value 0.17 -> WATCH.");
     expect(pws.driftCard.status).toBe("SEVERE");
@@ -208,6 +212,7 @@ function cardFor(
     | "role-volatility-index"
     | "calibration-integrity-grade"
     | "drift-pressure-index"
+    | "conformal-uncertainty-width"
     | "no-bet-pressure"
     | "playable-window-score"
     | "portfolio-fit-score"

@@ -19,6 +19,7 @@ export type ShadowEvidenceMetricId =
   | "role-volatility-index"
   | "calibration-integrity-grade"
   | "drift-pressure-index"
+  | "conformal-uncertainty-width"
   | "no-bet-pressure"
   | "playable-window-score"
   | "portfolio-fit-score"
@@ -119,6 +120,22 @@ export const SHADOW_METRIC_EVIDENCE_FIXTURES: readonly ShadowMetricEvidenceFixtu
     evidenceRefs: ["fixture-dpi-model-card", "fixture-dpi-drift-pressure-split"],
     metricId: "drift-pressure-index",
     validationReport: shadowValidationReport("fixture-dpi-validation", 330),
+  },
+  {
+    caveat:
+      "CUW fixture is synthetic/local and cannot be used as production interval calibration, public probability, expected value, betting advice, or projection-safety proof.",
+    driftChecks: [
+      {
+        evidenceRef: "fixture-cuw-conformal-width-split",
+        name: "conformal_width_coverage_gap_delta",
+        severeThreshold: 0.24,
+        value: 0.13,
+        watchThreshold: 0.08,
+      },
+    ],
+    evidenceRefs: ["fixture-cuw-model-card", "fixture-cuw-conformal-width-split"],
+    metricId: "conformal-uncertainty-width",
+    validationReport: shadowValidationReport("fixture-cuw-validation", 320),
   },
   {
     caveat:

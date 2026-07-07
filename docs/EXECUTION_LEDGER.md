@@ -1635,3 +1635,31 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   claim, no production-readiness claim, no model promotion, no betting use, no probability or expected-value
   claim, no production drift-monitoring claim, no raw odds/tracking export, no package/dependency change, no
   live AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-07 - (codex) - Sunday frontier Conformal Uncertainty Width
+
+- WHAT: Added Conformal Uncertainty Width as a governed `SHADOW` calibration/uncertainty metric. CUW wraps
+  existing rolling Mondrian conformal interval reports, measures mean and p90 interval width, empirical
+  coverage, coverage gap, freshness, drift pressure, sample support, and source-policy posture, and recommends
+  downstream veto when uncertainty evidence is too wide, stale, thin, blocked, or under-covering. It keeps
+  probability `null`, treats confidence as evidence quality only, and blocks narrow under-covering intervals as
+  unsafe evidence rather than a clean signal.
+- FILES: `packages/prediction-engine/src/metrics/calibration/conformal-uncertainty-width.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/conformal-uncertainty-width.test.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-birth-certificate-registry.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-evidence-card-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  metric birth-certificate/asset/evidence-report tests, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md`, Sunday audit/handoff docs, commercial ledger, and
+  execution ledger.
+- GATE: focused CUW/birth-certificate/asset/evidence-report tests passed (5 files, 24 tests). Prediction-engine
+  typecheck passed. LOC / escape-hatch scan passed: metric 279 lines, test 130 lines, registry 730 lines,
+  evidence fixture file 251 lines, and no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`, `: any`,
+  or non-null property access found. Full prediction-engine tests passed (107 files, 885 tests). Root
+  typecheck, root lint, root guardrails, and `git diff --check` passed. Full all-workspaces tests passed
+  across web, crypto, data-ingestion, ingestion-pipeline, prediction-engine, and types (670 files,
+  8239 tests).
+- FLAG: local synthetic fixtures and report-adapter code only; no live route, no public/API exposure, no legal
+  clearance claim, no production-readiness claim, no model promotion, no betting use, no probability or
+  expected-value claim, no production interval-calibration claim, no raw odds/tracking export, no
+  package/dependency change, no live AWS/cloud/service action, and no prediction gate flip.

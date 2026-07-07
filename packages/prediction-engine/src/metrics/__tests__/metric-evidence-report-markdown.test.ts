@@ -17,6 +17,7 @@ describe("shadow metric evidence markdown reports", () => {
       "role-volatility-index",
       "calibration-integrity-grade",
       "drift-pressure-index",
+      "conformal-uncertainty-width",
       "no-bet-pressure",
       "playable-window-score",
       "portfolio-fit-score",

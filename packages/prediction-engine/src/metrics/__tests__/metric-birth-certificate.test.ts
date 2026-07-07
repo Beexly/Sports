@@ -15,6 +15,7 @@ import {
   gseMarketMirageScore,
   gseSignalScore,
   gseStaleLineRiskScore,
+  conformalUncertaintyWidth,
   noBetPressureMetric,
   playableWindowScore,
   portfolioFitScore,
@@ -46,6 +47,7 @@ describe("metric birth certificates", () => {
       "role-volatility-index",
       "calibration-integrity-grade",
       "drift-pressure-index",
+      "conformal-uncertainty-width",
       "no-bet-pressure",
       "playable-window-score",
       "portfolio-fit-score",
@@ -87,6 +89,7 @@ describe("metric birth certificates", () => {
     expect(typeof roleVolatilityIndex).toBe("function");
     expect(typeof calibrationIntegrityGrade).toBe("function");
     expect(typeof driftPressureIndex).toBe("function");
+    expect(typeof conformalUncertaintyWidth).toBe("function");
     expect(typeof noBetPressureMetric).toBe("function");
     expect(typeof playableWindowScore).toBe("function");
     expect(typeof portfolioFitScore).toBe("function");

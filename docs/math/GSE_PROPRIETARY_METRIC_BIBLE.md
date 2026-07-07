@@ -344,6 +344,21 @@ Implementation boundary:
 - Severe non-blocking pressure recommends downstream veto for NBP/PWS/PFS/GSS review while remaining a shadow metric.
 - It exposes public drift-pressure drivers only and keeps pressure blends, hard-block thresholds, band cutoffs, freshness/sample transforms, and source-posture scaling protected.
 
+### Conformal Uncertainty Width
+
+Target question: are projection intervals too wide, stale, thin, or under-covering to support downstream decisions?
+
+CUW is conformal uncertainty-width pressure, not win probability, expected value, public probability, betting advice, or proof that production interval calibration is configured. It uses conformal interval lower/upper bounds, empirical coverage flags, target coverage, expected/severe width thresholds, settled interval sample support, conformal report freshness, drift pressure, and source-policy posture.
+
+Implementation boundary:
+
+- It returns `score`, `band`, mean width, p90 width, empirical coverage, coverage gap, `downstreamVetoRecommended`, evidence confidence, uncertainty, source posture, block reasons, and public drivers.
+- `probability` is always `null`.
+- `confidenceScore` measures evidence quality for the conformal-width estimate, not win probability, expected value, projection certainty, or edge.
+- Narrow intervals that under-cover the target are unsafe evidence, not a clean uncertainty signal.
+- Blocked source-policy posture, insufficient interval samples, stale conformal reports, invalid target coverage, or material undercoverage force `band: "BLOCKED"` and recommend downstream veto.
+- It exposes public width/coverage drivers only and keeps pressure blends, coverage-gap thresholds, band cutoffs, freshness/sample transforms, and source-posture scaling protected.
+
 ### No-Bet Pressure
 
 Target question: should this candidate be refused before downstream action-quality review?
@@ -660,7 +675,7 @@ Build in this order for proprietary football metrics:
 7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 8. Portfolio Fit Score - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
 9. Drift Pressure Index - implemented as `SHADOW`; local evidence-card/report fixtures and source/payload-reviewed historical distribution adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
-10. Conformal Uncertainty Width
+10. Conformal Uncertainty Width - implemented as `SHADOW`; local conformal-report adapter, directional tests, evidence-card/report fixtures, and source-policy gates exist; real historical validation, promotion, and public/API exposure remain future gates.
 11. Source Trust Score
 12. Stale Line Risk Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 
@@ -1052,11 +1067,19 @@ Pure LOC review for new source files:
 - Focused distribution/DPI/source-payload tests passed (3 files, 17 tests), prediction-engine typecheck passed, full prediction-engine tests passed (106 files, 881 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, and full all-workspaces tests passed (669 files, 8235 tests).
 - The adapter remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, raw odds/tracking export, or prediction gate flip.
 
+2026-07-07 Conformal Uncertainty Width continuation check:
+
+- `conformal-uncertainty-width.ts` adds a governed `SHADOW` calibration/uncertainty metric over existing rolling Mondrian conformal reports, interval width, p90 width, empirical coverage, target-coverage gap, report freshness, drift pressure, sample support, and source-policy posture.
+- It returns `probability: null`, keeps confidence separate from projection certainty, exposes public width/coverage drivers without protected weights, and can recommend downstream veto without creating a pick, expected-value claim, public probability, live route, or promotion.
+- The birth-certificate registry, package exports, asset tests, shadow evidence-card fixtures, and checked-in shadow evidence markdown now include Conformal Uncertainty Width.
+- Focused CUW/birth-certificate/asset/evidence-report tests passed (5 files, 24 tests), prediction-engine typecheck passed, full prediction-engine tests passed (107 files, 885 tests), root typecheck/lint/guardrails passed, and `git diff --check` passed.
+- The metric remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, production interval-calibration claim, raw odds/tracking export, or prediction gate flip.
+
 ## Next Slice Recommendation
 
-Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, No-Bet Pressure, and generated source policies:
+Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, No-Bet Pressure, Conformal Uncertainty Width, and generated source policies:
 
-1. Continue guarded metric backlog with Conformal Uncertainty Width after DPI, no-bet, payload-envelope, source-rights, and historical-adapter veto tests stayed green.
+1. Continue guarded metric backlog with Source Trust Score or add source/payload-reviewed historical adapter coverage for Conformal Uncertainty Width after CUW, DPI, no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
 2. Add markdown export tests for any future metric report before allowing it into public/API route planning.
 3. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
-4. Add real historical validation only after cleared data, owner review, and legal/source-rights approval; local NBP fixtures are not promotion evidence.
+4. Add real historical validation only after cleared data, owner review, and legal/source-rights approval; local NBP/DPI/CUW fixtures are not promotion evidence.
