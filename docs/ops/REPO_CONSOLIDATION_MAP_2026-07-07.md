@@ -5,6 +5,58 @@ shippable `main`.** Written after auditing the full remote (126+ branches). `mai
 not moved in this window (`a7bd5639`); nearly all recent work is stranded on unmerged
 branches. This document accounts for all of it.
 
+---
+
+## EXECUTIVE DECISION — "reset the record?" → NO. Consolidate instead. (2026-07-07)
+
+The instinct behind the question is right (too much branch sprawl, no single baseline).
+But **"reset" is the wrong instrument** — it would destroy the two most valuable, hardest-
+to-rebuild assets this company has. Three distinct things get called "the record":
+
+1. **Git history / commit record → DO NOT RESET.** The signed, auditable commit trail
+   *is* the integrity moat versus ESPN / Action Network / Genius Sports. "Prove it, don't
+   assert it" only means something if the history is intact. Squashing/resetting throws
+   away provenance for a cosmetic clean-up. Never do this.
+2. **Prediction / calibration track record → NEVER RESET.** This is the revenue engine.
+   Pricing is a proof-gated ladder (FOUNDING → PROVEN ≥100 settled → ESTABLISHED ≥500 +
+   CLV ≥52.4% → AUTHORITY). Every settled pick is a rung toward charging more and making
+   stronger, defensible claims. Resetting it zeroes the clock on the only thing that lets
+   us raise prices honestly. It is the single most valuable non-code asset. Keep it running.
+3. **A clean consolidated baseline branch → YES. This is what actually helps.** One green
+   trunk that carries every verified engine, that `main` can fast-forward to. Same
+   "fresh baseline" outcome the question is reaching for — with zero loss of provable record.
+
+**Decision:** consolidate onto one trunk, preserve all history and the track record, prune
+dead experiment branches, then take the trunk to `main` via a CI-verified PR (founder-gated).
+
+### The trunk is already 90% built
+`claude/nfl-pbp-expected-metrics-xb069r` (`5918b5dc`, **183 commits ahead of main**) already
+absorbed the 171-commit codex program + the IP engine + security/correctness/data-integrity
+hardening, and is **verified green** (204-page prod build, ~1,063 engine + ~7,500 web/pkg
+tests, 14 guardrails, green Vercel previews on every push). It is the natural baseline.
+
+### The other real, verified islands to fold in (each additive, each its own decision)
+| Branch | Capability (new to GSE) | Fold-in note |
+|---|---|---|
+| `claude/consensus-accuracy-engine` (`57baff1`) | Fantasy multi-source consensus, accuracy-weighted by default; fixes FantasyPros' short-list loophole; 14 tests | Additive (new fantasy lib); merge + re-gate |
+| `claude/dfs-optimizer-edge` (`c7ca41b8`) | Exact DFS solver + position-aware correlation v2 + competitive-intel docs; 19 tests | Additive (fantasy + engine); merge + re-gate |
+| `claude/magical-feynman-j9180p` | `/dynasty` hub (rank ladder tied to real proof gates); 18 tests | Additive (new routes/lib); merge + re-gate |
+
+**Coordination caveat:** these are being iterated in parallel sessions. Fold each in only
+when its owning session says it is final, to avoid merging over live edits.
+
+### Path to REVENUE (honest, no reset, no overclaim)
+Revenue does not require a new engine — it requires getting the *proven, honest* surfaces to
+production and selling the **tools + transparency**, not accuracy claims we have not yet earned.
+Ordered:
+1. Keep the track record running (never reset) so the pricing ladder can advance to PROVEN.
+2. Fold the finalized islands onto the trunk; keep it green.
+3. **Founder-gated:** open the CI-verified PR trunk → `main`, merge, promote the preview to a
+   production deploy. (This is the one outward, hard-to-reverse step — it stays the owner's call.)
+4. Sell Pro/Elite on the tool suite (optimizer, consensus, metrics, edge signals) + the public
+   calibration/track-record page. Paywall enforcement is already server-side + tested.
+5. Prune the ~120 dead experiment branches once their value is confirmed captured on the trunk.
+
 ## TL;DR
 
 - **The GSE expected-metrics IP play is built, proven, and shipped** — our own
