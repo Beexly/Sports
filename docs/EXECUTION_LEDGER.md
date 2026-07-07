@@ -561,3 +561,54 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   most current sample, the same verdict as every other variant: the projection does NOT beat naive
   points-persistence out-of-sample. Honest path forward = real ML work (the harness supports it);
   nothing published, canPublishProjections stays off.
+
+## 2026-07-07T00:00:00Z - (self-commit) - GSE-XM — GSE Expected Metrics: own CPOE/RYOE/xYAC from public PBP, proven against NGS
+
+- WHAT: Shipped the GSE Expected Metrics IP — we compute our OWN expected-value metrics from public
+  play-by-play and PROVE them against Next Gen Stats as ground truth, instead of re-serving NGS. Three
+  pieces: (1) a pure, deterministic, zero-dep prediction-engine module — expected completion probability
+  → GSE-CPOE (`gse-xcomp-v1`, logistic regression; CPOE = 100 × mean(complete − P̂)), expected rush yards
+  → GSE-RYOE (`gse-xrush-v1`, ridge linear; yards over expected per attempt), expected YAC → GSE-xYAC
+  (`gse-xyac-v1`, ridge linear; YAC over expected), each with provenance (modelVersion/method/featureKeys/
+  featureSchemaHash/sampleSize) and honesty gates (MIN_*_TO_FIT=200 sample floors that return null rather
+  than guess), plus a ground-truth validation bridge (Pearson/Spearman/RMSE/MAE/bias vs NGS, and honest
+  per-metric graduation thresholds — CPOE 0.6, xYAC 0.5, RYOE 0.4 — reflecting how much tracking signal is
+  recoverable from public data). (2) A fit-on-load loader that fetches a real season of nflverse PBP
+  (column-projected), fits our models on that season, rolls up per-player metrics, and correlates them
+  against NGS at MATCHED grain (same season, REG, per-player, joined on gsis id). (3) A premium-gated API
+  route. NGS values enter ONLY as the y-axis of a validation correlation — never copied into a served
+  metric; what we serve is always our own computation.
+- FILES: `packages/prediction-engine/src/expected-metrics/numeric.ts`,
+  `packages/prediction-engine/src/expected-metrics/linear.ts`,
+  `packages/prediction-engine/src/expected-metrics/logistic.ts`,
+  `packages/prediction-engine/src/expected-metrics/types.ts`,
+  `packages/prediction-engine/src/expected-metrics/rollup.ts`,
+  `packages/prediction-engine/src/expected-metrics/expected-completion.ts`,
+  `packages/prediction-engine/src/expected-metrics/expected-rush-yards.ts`,
+  `packages/prediction-engine/src/expected-metrics/expected-yac.ts`,
+  `packages/prediction-engine/src/expected-metrics/validation.ts`,
+  `packages/prediction-engine/src/expected-metrics/index.ts`,
+  `packages/prediction-engine/src/__tests__/expected-metrics.test.ts`,
+  `apps/web/lib/nflverse/expected-metrics.ts`,
+  `apps/web/app/api/nflverse/expected-metrics/route.ts`,
+  `apps/web/__tests__/expected-metrics-route.test.ts`,
+  `docs/math/GSE_EXPECTED_METRICS.md`, `docs/data/NGS_GROUND_TRUTH_MAP.md`, `docs/EXECUTION_LEDGER.md`
+- GATE: pure-engine Vitest green — `packages/prediction-engine/src/__tests__/expected-metrics.test.ts`,
+  22 tests (numeric primitives, ridge/logistic recovery + null-on-degenerate, CPOE/RYOE/xYAC recover
+  injected latent skill, validation inner-join + threshold transitions, deterministic feature-schema hash).
+  Loader/route covered by `apps/web/__tests__/expected-metrics-route.test.ts` on the repo's gzip-fixture +
+  mock-fetch pattern. Engine is pure/deterministic and typechecks clean.
+- FLAG: additive / DARK. No scoring flag flips; `canPublishProjections` stays false (historical measurement,
+  not a projection or pick). Wiring any of this into the edge/scoring engine is a founder-gated MODEL_VERSION
+  step, not an automatic consequence of a `graduated` verdict.
+- DECISIONS: Graduation bars are set HONESTLY per metric (CPOE 0.6 > xYAC 0.5 > RYOE 0.4) to reflect that
+  public PBP recovers most of completion-probability signal (depth + pressure), less of YAC (hidden defender
+  proximity), and least of RYOE (hidden box counts / closing speed). Grain discipline is enforced by the
+  loader (season/REG/per-player/gsis-id, matched qualifier) and only documented/assumed by the pure engine —
+  the validation join is per-playerId only, so the caller owns the grain. NGS is used strictly as a
+  ground-truth referee under CC-BY-4.0 (attribution required, no share-alike); the CC-BY-SA FTN/participation
+  assets are NOT used. Never scrape nfl.com / nextgenstats.nfl.com / PFR / AWS — open nflverse mirror only.
+- NEXT: optional cockpit surface for the leaders + validation report (dark/premium-gated); revisit thresholds
+  only against real season correlations, never to flatter.
+- BLOCKED-ON-HUMAN: any edge-engine wiring / publication / pricing use remains [OWNER]/[MODEL]-gated on
+  demonstrated out-of-sample reproduction and CLV, per `docs/evidence-engine.md`.
