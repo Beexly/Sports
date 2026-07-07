@@ -49,6 +49,34 @@ describe("commercial copy and docs", () => {
     expect(draft.body).not.toContain("http");
   });
 
+  it("fails closed when the offer has no usable disclosure", () => {
+    const draft = buildOfferCopyDraft(
+      {
+        allowedSurfaces: ["newsletter"],
+        approvalStatus: "approved",
+        category: "creator_tool",
+        disclosureRequired: true,
+        displayName: "Creator Tool",
+        id: "creator_tool",
+      },
+      {
+        allowedSurfaces: ["newsletter"],
+        approvalStatus: "approved",
+        category: "creator_tool",
+        id: "offer",
+        partnerId: "creator_tool",
+        publicName: "Workflow review",
+        riskClass: "low",
+      },
+    );
+
+    // No disclosureText -> placeholder disclosure that names no commercial
+    // relationship. The banned-term scan is clean, but ok must not signal
+    // publish-readiness while the emitted disclosure would fail the policy.
+    expect(draft.ok).toBe(false);
+    expect(draft.warnings.some((warning) => warning.toLowerCase().includes("disclosure"))).toBe(true);
+  });
+
   it("keeps the daily outreach target at 10 messages", () => {
     expect(dailyOutreachTarget()).toBe(10);
   });

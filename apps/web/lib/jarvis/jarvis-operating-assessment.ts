@@ -1,6 +1,7 @@
 import { summarizeAgentHealth } from "@/lib/agents/agent-health";
 import { COCKPIT_OPERATING_MAP } from "@/lib/cockpit/cockpit-operating-map";
 import { listSeedAgentTasks } from "@/lib/tasks/agent-task-router";
+import type { AgentTask } from "@/lib/tasks/agent-task-types";
 import { WORKFLOW_REGISTRY } from "@/lib/workflows/workflow-registry";
 import { getJarvisClaudeReviewItems, getJarvisOwnerDecisions } from "./jarvis-decision-queue";
 import { getJarvisDepartmentHealth } from "./jarvis-department-health";
@@ -20,6 +21,19 @@ export interface JarvisOperatingAssessment {
   readonly nextBestAction: string;
 }
 
+// Freshness/staleness is an explicit content signal, not an id naming convention.
+// Non-negotiable #5 (validate freshness) means an owner-facing stale-data warning must
+// keep surfacing even if a task is renamed (e.g. "stale-ingestion-alert" -> "freshness-breach").
+// Match the freshness marker vocabulary against the task's descriptive fields with word
+// boundaries (so "refresh"/"installed" do not false-hit), rather than a substring of task.id.
+const STALE_DATA_MARKER = /\b(?:stale|fresh)/i;
+
+function describesStaleDataCondition(task: AgentTask): boolean {
+  return [task.title, task.description, task.nextAction, ...task.sourceEvidence].some((field) =>
+    STALE_DATA_MARKER.test(field),
+  );
+}
+
 export function buildJarvisOperatingAssessment(): JarvisOperatingAssessment {
   const agentHealth = summarizeAgentHealth();
   const tasks = listSeedAgentTasks();
@@ -32,7 +46,7 @@ export function buildJarvisOperatingAssessment(): JarvisOperatingAssessment {
     topRisks: blocked.slice(0, 5).map((task) => task.title),
     ownerDecisions: ownerDecisions.slice(0, 5).map((task) => task.title),
     safeAutonomousTasks: tasks.filter((task) => !task.ownerApprovalRequired && !task.claudeReviewRequired && !task.status.startsWith("BLOCKED")).slice(0, 5).map((task) => task.title),
-    staleDataWarnings: tasks.filter((task) => task.id.includes("stale")).map((task) => task.title),
+    staleDataWarnings: tasks.filter(describesStaleDataCondition).map((task) => task.title),
     publicGateStatus: "Public picks cannot self-enable; owner approval and trust gates are required.",
     calibrationStatus: "Manual/AUDIT-owned; model weights cannot change automatically.",
     revenueStatus: "Unknown until real Stripe/funnel signals are parsed; no fake revenue.",

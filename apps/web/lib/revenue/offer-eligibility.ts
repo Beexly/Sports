@@ -69,8 +69,17 @@ export function evaluateOfferEligibility(input: OfferEligibilityInput): OfferEli
     partner: input.partner,
     surface: input.surface,
   });
-  if (!disclosure.ok) {
-    blockers.push(blocker("MISSING_DISCLOSURE", disclosure.reasons.join(" ")));
+  // reviewDisclosure also re-checks surface approval, but any surface mismatch is
+  // already reported above via SURFACE_NOT_ALLOWED. Fold only genuine disclosure-text
+  // reasons into MISSING_DISCLOSURE so a compliant disclosure on a disallowed surface
+  // is not mislabeled as a missing disclosure. Filtering the known surface reasons
+  // (rather than allow-listing the text reason) keeps this failing closed: any new,
+  // non-surface disclosure reason still surfaces as MISSING_DISCLOSURE.
+  const disclosureTextReasons = disclosure.reasons.filter(
+    (reason) => !reason.includes("is not approved for"),
+  );
+  if (disclosureTextReasons.length > 0) {
+    blockers.push(blocker("MISSING_DISCLOSURE", disclosureTextReasons.join(" ")));
   }
 
   const responsibleGaming = reviewResponsibleGaming({ offer: input.offer, userState: input.userState });

@@ -82,6 +82,72 @@ interface ScanRule {
 
 export const STUDIO_THIN_EVIDENCE_REFUSAL = "Evidence is thin - no asset generated.";
 
+const GAME_DATA_GROUNDING_INSTRUCTION =
+  "Ground every figure you write in the GAME DATA block above. Do NOT invent, " +
+  "estimate, or infer any statistic, factor score, line or prop movement, win " +
+  "rate, or numeric value that is not present in GAME DATA. When GAME DATA does " +
+  "not contain a specific number the outline asks for, describe that read " +
+  "qualitatively instead of citing a fabricated figure.";
+
+/**
+ * Serializes the node's verified factual fields into a structured GAME DATA
+ * block. The Studio templates instruct the model to "cite specific factor
+ * names and scores" and "specific numbers"; without the real values injected
+ * here the model would be forced to fabricate every stat (non-negotiables #1
+ * and #4). Only fields actually present on the node are emitted, and absent
+ * market fields are explicitly marked "not available" so the model does not
+ * invent a value. Bootstrap/seed nodes never reach this path — they gate to
+ * THIN before prompt construction — so every value below is canonical.
+ */
+export function serializeNodeGameData(node: GameIntelligenceNode): string {
+  const mp = node.marketPulse;
+  const eh = node.evidenceHealth;
+  const lines: string[] = [
+    "=== GAME DATA (verified platform values) ===",
+    `Matchup: ${node.matchup}`,
+    `Sport: ${node.sport}`,
+    `Commence time (UTC): ${node.commenceTime}`,
+    mp.edgeIndex !== null
+      ? `Edge Index: ${mp.edgeIndex}`
+      : "Edge Index: not available - do not cite a value",
+    `Bookmaker coverage: ${mp.bookmakerCoverage} book(s)`,
+    mp.lineMovementSpread !== null
+      ? `Line movement (spread): ${mp.lineMovementSpread}`
+      : "Line movement (spread): not available - do not cite a value",
+    mp.lineMovementTotal !== null
+      ? `Line movement (total): ${mp.lineMovementTotal}`
+      : "Line movement (total): not available - do not cite a value",
+    `Evidence health: ${eh.score}/100 (${eh.status}); ${eh.sourceCount} source(s); ${eh.staleCount} stale`,
+  ];
+
+  if (node.picks.length === 0) {
+    lines.push("Published picks: none published yet - do not invent a pick.");
+  } else {
+    lines.push("Published picks:");
+    for (const pick of node.picks) {
+      lines.push(
+        `  - ${pick.selection} | market ${pick.market} | confidence ${pick.confidence} | edge score ${pick.edgeScore} | result ${pick.result ?? "PENDING"}`
+      );
+    }
+  }
+
+  lines.push("=== END GAME DATA ===");
+  return lines.join("\n");
+}
+
+/**
+ * Wraps a template-built prompt so the model receives the node's real data and
+ * an explicit instruction to use only those values. The templates themselves
+ * ignore the node argument (declared `_node`); this is where the factual
+ * grounding is attached before the prompt is handed to Claude.
+ */
+function attachNodeGameData(base: ClaudePrompt, node: GameIntelligenceNode): ClaudePrompt {
+  return {
+    ...base,
+    user: `${serializeNodeGameData(node)}\n\n${GAME_DATA_GROUNDING_INSTRUCTION}\n\n${base.user}`,
+  };
+}
+
 function regexForScan(pattern: RegExp): RegExp {
   return new RegExp(pattern.source, pattern.flags.replace("g", ""));
 }
@@ -210,7 +276,9 @@ export function buildStudioAssetDraft(input: {
     templateName: template.displayName,
     gateState,
     refusalReason,
-    prompt: refusalReason ? null : template.promptBuilder(input.node, input.context),
+    prompt: refusalReason
+      ? null
+      : attachNodeGameData(template.promptBuilder(input.node, input.context), input.node),
     body,
     citations: refusalReason ? [] : buildStudioCitations(input.node),
     compliance: body

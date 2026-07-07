@@ -342,14 +342,18 @@ export function replayLocalReviewQueueEvents(
   const generatedAt = options.now ?? new Date(0).toISOString();
   const staleAfterHours = options.staleAfterHours ?? 72;
   const generatedAtMs = Date.parse(generatedAt);
-  const staleCutoffMs = Number.isFinite(generatedAtMs)
-    ? generatedAtMs - staleAfterHours * 60 * 60 * 1000
-    : Number.NEGATIVE_INFINITY;
+  const generatedAtParsable = Number.isFinite(generatedAtMs);
+  const staleCutoffMs = generatedAtMs - staleAfterHours * 60 * 60 * 1000;
   const stalePackets = packetRecords
     .filter((packet) => {
       if (packet.status === "APPROVED_FOR_DRAFT_USE" || packet.status === "ARCHIVED") return false;
       const updatedAtMs = Date.parse(packet.updatedAt);
-      return Number.isFinite(updatedAtMs) && updatedAtMs < staleCutoffMs;
+      // Fail closed on corrupt freshness inputs (non-negotiable #5): an unparsable
+      // snapshot `now` or packet `updatedAt` must never read as fresh-green. Flag the
+      // unresolved packet as needing refresh instead of silently marking it fresh,
+      // mirroring detectStaleSource which never presents an unparsable timestamp as FRESH.
+      if (!generatedAtParsable || !Number.isFinite(updatedAtMs)) return true;
+      return updatedAtMs < staleCutoffMs;
     })
     .map((packet) => packet.packetId)
     .sort();

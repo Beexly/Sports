@@ -46,6 +46,16 @@ describe("ApertureStateMachine", () => {
     expect(evaluateAperture(merge({ model: { ...base.model, calibrationHealth: 0.3 } })).state).toBe("shadow");
   });
 
+  it("does not emit a Signal on a non-finite model probability (fails safe to shadow, edge null)", () => {
+    for (const bad of [NaN, Infinity, -Infinity]) {
+      const r = evaluateAperture(merge({ model: { ...base.model, probability: bad } }));
+      expect(r.state).not.toBe("signal");
+      expect(r.state).toBe("shadow");
+      expect(r.decidedBy).toBe("edge-gate");
+      expect(r.edge).toBeNull();
+    }
+  });
+
   it("is deterministic for the same input", () => {
     expect(evaluateAperture(base)).toEqual(evaluateAperture(base));
   });

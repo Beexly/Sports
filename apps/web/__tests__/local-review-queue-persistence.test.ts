@@ -126,6 +126,31 @@ describe("local review queue persistence simulator", () => {
     expect(markdown).toContain(packet.packetId);
   });
 
+  it("fails closed on corrupt freshness timestamps instead of reporting fresh-green", async () => {
+    const [packet] = await buildMixedQueuePackets();
+    if (packet === undefined) throw new Error("missing review packet");
+
+    // Unparsable snapshot `now` must not silently mark every unresolved packet fresh.
+    const corruptNow = createLocalReviewQueuePersistenceSimulator([
+      createLocalReviewQueueEnqueueEvent({
+        eventId: "corrupt-now-packet",
+        occurredAt: "2026-07-05T00:00:00.000Z",
+        packet,
+      }),
+    ]).snapshot({ now: "not-a-date" });
+    expect(corruptNow.stalePackets).toEqual([packet.packetId]);
+
+    // An unparsable packet `updatedAt` must read as stale/needs-refresh, not fresh.
+    const corruptUpdatedAt = createLocalReviewQueuePersistenceSimulator([
+      createLocalReviewQueueEnqueueEvent({
+        eventId: "corrupt-updatedat-packet",
+        occurredAt: "not-a-date",
+        packet,
+      }),
+    ]).snapshot({ now: "2026-07-08T01:00:00.000Z", staleAfterHours: 24 });
+    expect(corruptUpdatedAt.stalePackets).toEqual([packet.packetId]);
+  });
+
   it("enforces version conflicts and blocks approval when blockers remain unresolved", async () => {
     const packets = await buildMixedQueuePackets();
     const blocked = packets.find((packet) => packet.blockers.length > 0);

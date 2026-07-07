@@ -13,7 +13,7 @@
  * the WebGL view and the accessible manifest both read from it. Pure, illustrative.
  */
 
-import { DEFAULT_ROSTER_IDS } from "./lineup";
+import { DEFAULT_ROSTER_IDS, sampleRoster } from "./lineup";
 import { PLAYERS, POS_HEX, vor, volatility, playerById, correlated, type Player, type Pos } from "./players";
 import { activePlayerPool, isLiveProjections } from "@/lib/integrations/projections";
 
@@ -65,7 +65,15 @@ export function buildLeagueTwin(
   rosterIds: readonly string[] = DEFAULT_ROSTER_IDS,
   pool: readonly Player[] = activePlayerPool(),
 ): LeagueTwin {
-  const roster = rosterIds.map((id) => playerById(id, pool)).filter((p): p is Player => Boolean(p));
+  let roster = rosterIds.map((id) => playerById(id, pool)).filter((p): p is Player => Boolean(p));
+
+  // When a LIVE pool is active the illustrative DEFAULT_ROSTER_IDS ('qb-silas-hart'
+  // etc.) don't exist in the real feed, so the requested roster resolves to nothing
+  // and the galaxy would silently empty while reporting illustrative=false. Mirror
+  // lineup.sampleRoster(): draw a labelled "your team" from the live pool (top-projected
+  // per position) instead of shipping an empty live galaxy. Players and projections are
+  // REAL — only the roster *selection* is a sample. Never invents a player.
+  if (roster.length === 0 && pool.length > 0) roster = sampleRoster(pool);
 
   const projs = roster.map((p) => p.proj);
   const maxProj = Math.max(...projs, 1);

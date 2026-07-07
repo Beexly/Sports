@@ -30,6 +30,22 @@ describe("ConformalDecisionGate", () => {
   it("abstains when the interval is too wide", () => {
     expect(shouldRefuse({ probability: 0.7, intervalLow: 0.4, intervalHigh: 0.95, calibrationHealth: 0.9 })).toBe(true);
   });
+
+  it("abstains when calibration health is non-finite (NaN) instead of returning a side", () => {
+    const d = conformalDecision({ probability: 0.62, intervalLow: 0.55, intervalHigh: 0.69, calibrationHealth: NaN });
+    expect(d.abstain).toBe(true);
+    expect(d.side).toBeNull();
+  });
+
+  it("abstains when calibration health is Infinity", () => {
+    expect(shouldRefuse({ probability: 0.62, intervalLow: 0.55, intervalHigh: 0.69, calibrationHealth: Infinity })).toBe(true);
+  });
+
+  it("abstains when interval bounds are non-finite (both Infinity would otherwise clear the boundary)", () => {
+    const d = conformalDecision({ probability: 0.9, intervalLow: Infinity, intervalHigh: Infinity, calibrationHealth: 0.9 });
+    expect(d.abstain).toBe(true);
+    expect(d.side).toBeNull();
+  });
 });
 
 describe("MarketPhysics", () => {
@@ -87,6 +103,14 @@ describe("ClaimIndependenceIndex", () => {
     const r = claimIndependence([claim("1", "espn"), claim("2", "athletic"), claim("3", "rotowire")]);
     expect(r.independentSources).toBe(3);
     expect(r.independenceIndex).toBe(1);
+  });
+
+  it("collapses claims from the same source (publisher) into one origin", () => {
+    // Two reports from a single publisher are not two independent sources — the natural
+    // shape where callers pass publisher names as `source` must not inflate the count.
+    const r = claimIndependence([claim("1", "espn"), claim("2", "espn")]);
+    expect(r.independentSources).toBe(1);
+    expect(r.independenceIndex).toBe(0.5);
   });
 
   it("collapses claims that share an origin", () => {

@@ -70,7 +70,7 @@ PROHIBITED
 - No banned vocabulary.`,
 
     user: `Write the newsletter block for this game. The creator's audience
-will read this as their newsletter content. Include one inline link to ${context.brandConfig.publicUrl}/room/[gameId].`,
+will read this as their newsletter content. Include one inline link to ${context.brandConfig.publicUrl}/room/${context.gameId}.`,
 
     maxTokens: 2000,
     temperature: 0.55,

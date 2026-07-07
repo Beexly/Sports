@@ -238,6 +238,12 @@ function answerPerformance(summary: OwnerSummary): JarvisAnswer {
   if (performance.displaySafe && performance.actualWinRate !== null) {
     answer = `Yes. Performance stats are public-ready. Current win rate: ${performance.actualWinRate}% vs target ${performance.targetPct}% (${performance.record}, ${performance.canonicalSampleSize} canonical picks).`;
     confidence = "HIGH";
+  } else if (performance.displaySafe && performance.actualWinRate === null) {
+    // Gate open and the canonical sample is met, but no win/loss outcomes have
+    // settled yet (the record is all pushes), so there is no rate to compute.
+    // This is NOT a gated state — do not claim it is.
+    answer = `Display is enabled, but no win/loss outcomes have settled yet — the canonical sample is all pushes (${performance.record}). A win rate will appear once picks settle as wins or losses. Target: ${performance.targetPct}%.`;
+    confidence = "HIGH";
   } else if (!performance.isGateOpen) {
     answer = `No. The PERFORMANCE_STATS_ENABLED gate is closed. Target: ${performance.targetPct}%. Public display is off until the operator opens the gate.`;
     confidence = "HIGH";

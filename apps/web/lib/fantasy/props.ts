@@ -52,6 +52,13 @@ function normCdf(x: number, mu: number, sigma: number): number {
 
 /** Probability the player goes OVER a line, given our projection distribution. */
 export function probOver(line: number, mean: number, sigma: number): number {
+  // Degenerate distribution (sigma<=0, NaN, or non-finite): the projection is a
+  // point mass at `mean`, so the over is a certainty (1), an impossibility (0),
+  // or an exact coin flip when the line sits on the mean. Guarding here keeps
+  // NaN from a bad/settled feed line out of edge, pSide, and the note text.
+  if (!(sigma > 0) || !Number.isFinite(sigma)) {
+    return line < mean ? 1 : line > mean ? 0 : 0.5;
+  }
   return 1 - normCdf(line, mean, sigma);
 }
 

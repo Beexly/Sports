@@ -41,6 +41,49 @@ describe("Galaxy Studio runtime", () => {
     expect(drafts.every((draft) => draft.citations.length >= 2)).toBe(true);
   });
 
+  it("injects the node's verified game data into every prompt so the model does not fabricate stats", () => {
+    const drafts = buildStudioDraftsForNode(makeNode(), context);
+    for (const draft of drafts) {
+      const user = draft.prompt?.user ?? "";
+      // Real node values are present in the prompt, not left for the model to invent.
+      expect(user).toContain("=== GAME DATA (verified platform values) ===");
+      expect(user).toContain("Milwaukee Bucks @ Boston Celtics");
+      expect(user).toContain("Edge Index: 71");
+      expect(user).toContain("Boston Celtics -4.5");
+      expect(user).toContain("market ATS_SPREAD");
+      // The model is explicitly told not to fabricate anything absent from GAME DATA.
+      expect(user).toContain("Do NOT invent");
+    }
+  });
+
+  it("marks absent market fields and empty pick lists so the model does not invent them", () => {
+    const node = buildGameIntelligenceNode({
+      game: {
+        ...fixtureGame,
+        id: "no-line-move",
+        currentEdgeIndex: null,
+        lineMovementSpread: null,
+        lineMovementTotal: null,
+      },
+      picks: [],
+      signals: fixtureSignals.map((signal) => ({
+        ...signal,
+        isBootstrap: false,
+        expiresAt: "2026-05-23T00:00:00.000Z",
+      })),
+      now: new Date("2026-05-22T18:30:00.000Z"),
+    });
+    const draft = buildStudioAssetDraft({
+      node,
+      templateKind: "BETTING_EDUCATION",
+      context: { ...context, gameId: "no-line-move" },
+    });
+    const user = draft.prompt?.user ?? "";
+    expect(user).toContain("Edge Index: not available - do not cite a value");
+    expect(user).toContain("Line movement (spread): not available - do not cite a value");
+    expect(user).toContain("Published picks: none published yet - do not invent a pick.");
+  });
+
   it("refuses thin-evidence games before prompt construction", () => {
     const thinGame: IntelligenceGameInput = {
       ...fixtureGame,

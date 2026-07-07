@@ -89,4 +89,28 @@ describe("partner opportunity decisions", () => {
     expect(summary.blockedOfferCount).toBe(1);
     expect(summary.blockers.join(" ")).toContain("OFFER_NOT_APPROVED");
   });
+
+  it("counts a partner as high-risk when its offers drive risk over the HIGH threshold", () => {
+    const summary = auditRevenueSurface({
+      offers: [highRiskOffer],
+      partners: [highRiskPartner],
+      surface: "newsletter",
+      userState: "NJ",
+    });
+
+    // Without folding the partner's offers into scorePartnerRisk, this DFS
+    // partner scores 43 (MEDIUM) and is undercounted; with the high-risk offer
+    // it scores 68 (HIGH) and must be flagged.
+    expect(summary.highRiskPartnerCount).toBe(1);
+  });
+
+  it("does not flag an approved low-risk partner whose offers carry no offer-driven risk", () => {
+    const summary = auditRevenueSurface({
+      offers: [offer],
+      partners: [partner],
+      surface: "newsletter",
+    });
+
+    expect(summary.highRiskPartnerCount).toBe(0);
+  });
 });

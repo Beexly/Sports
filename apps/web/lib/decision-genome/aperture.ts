@@ -148,6 +148,7 @@ export function evaluateAperture(
 
 /** Modeled edge over the devigged market: model probability − market fair probability. */
 function computeEdge(model: ModelState, market: MarketState): number | null {
+  if (!Number.isFinite(model.probability)) return null;
   if (market.devigFairProb == null || !Number.isFinite(market.devigFairProb)) return null;
   return model.probability - market.devigFairProb;
 }

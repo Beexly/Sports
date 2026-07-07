@@ -24,19 +24,40 @@ export function scoreContentKpis(kpi: ContentKpi): ContentKpiScore {
   const retention = scaled(kpi.watchTimeHours, 10) + scaled(kpi.averageViewDurationSeconds, 180) + scaled(kpi.clickThroughRate, 0.08);
   const reach = scaled(kpi.views, 2_000);
   const score = roundScore(Math.min(100, reach * 18 + engagement * 28 + conversion * 34 + retention * 20));
+  const measured = hasMeasuredKpis(kpi);
   const signals: string[] = ["Scores are internal relative signals until real account analytics establish baselines."];
+  if (!measured) signals.push("No analytics recorded yet; a zero score reflects absent data, not measured failure.");
   if ((kpi.newsletterClicks ?? 0) > 0 || (kpi.subscribersGained ?? 0) > 0) signals.push("Owned-audience conversion appeared.");
   if ((kpi.shares ?? 0) > 0 || (kpi.saves ?? 0) > 0) signals.push("Save/share behavior suggests repurposing value.");
   if ((kpi.clickThroughRate ?? 0) < 0.02 && (kpi.views ?? 0) > 500) signals.push("Reach without click-through suggests the hook or CTA needs revision.");
-  return { nextAction: decideNextAction(score, kpi), score, signals };
+  return { nextAction: decideNextAction(score, kpi, measured), score, signals };
 }
 
-function decideNextAction(score: number, kpi: ContentKpi): ContentKpiScore["nextAction"] {
+function decideNextAction(score: number, kpi: ContentKpi, measured: boolean): ContentKpiScore["nextAction"] {
   if (score >= 80) return "double_down";
   if (score >= 60) return "repurpose";
   if ((kpi.views ?? 0) > 500 && (kpi.clickThroughRate ?? 0) < 0.02) return "revise_hook";
+  // Absence of analytics is not evidence of failure: never issue a definitive
+  // "archive" verdict against a piece that simply has no measured data yet.
+  if (!measured) return "test_again";
   if (score < 25) return "archive";
   return "test_again";
+}
+
+function hasMeasuredKpis(kpi: ContentKpi): boolean {
+  return [
+    kpi.views,
+    kpi.watchTimeHours,
+    kpi.averageViewDurationSeconds,
+    kpi.clickThroughRate,
+    kpi.comments,
+    kpi.shares,
+    kpi.saves,
+    kpi.newsletterClicks,
+    kpi.siteClicks,
+    kpi.partnerClicks,
+    kpi.subscribersGained,
+  ].some((value) => typeof value === "number" && Number.isFinite(value));
 }
 
 function scaled(value: number | undefined, target: number): number {

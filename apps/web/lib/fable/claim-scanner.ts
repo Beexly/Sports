@@ -44,6 +44,11 @@ const ALLOWED_CONTEXT_MARKERS = [
 
 const EVIDENCE_ID_PATTERN = /\b(?:CE|FABLE-EVIDENCE)-[A-Z0-9-]+\b/i;
 
+const ALLOWED_CONTEXT_PATTERNS: readonly RegExp[] = ALLOWED_CONTEXT_MARKERS.map(
+  (marker) =>
+    new RegExp("\\b" + marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i")
+);
+
 const CLAIM_PATTERNS: readonly { readonly phrase: string; readonly pattern: RegExp }[] =
   UNSUPPORTED_FABLE_CLAIMS.map((phrase) => ({
     phrase,
@@ -58,8 +63,10 @@ function stripMarkdownCode(text: string): string {
 }
 
 function hasAllowedContext(lineText: string): boolean {
-  const lower = lineText.toLowerCase();
-  return ALLOWED_CONTEXT_MARKERS.some((marker) => lower.includes(marker)) || EVIDENCE_ID_PATTERN.test(lineText);
+  return (
+    ALLOWED_CONTEXT_PATTERNS.some((pattern) => pattern.test(lineText)) ||
+    EVIDENCE_ID_PATTERN.test(lineText)
+  );
 }
 
 export function scanUnsupportedFableClaims(text: string): readonly UnsupportedClaimHit[] {

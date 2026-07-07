@@ -65,6 +65,13 @@ export function conformalDecision(
   const width = high - low;
   const { boundary, minMargin, minCalibrationHealth, maxIntervalWidth } = config;
 
+  if (
+    !Number.isFinite(input.calibrationHealth) ||
+    !Number.isFinite(input.intervalLow) ||
+    !Number.isFinite(input.intervalHigh)
+  ) {
+    return { abstain: true, side: null, margin: 0, reason: "Non-finite conformal input (calibration health or interval bounds unknown). Abstain." };
+  }
   if (input.calibrationHealth < minCalibrationHealth) {
     return { abstain: true, side: null, margin: 0, reason: `Calibration health ${input.calibrationHealth.toFixed(2)} below ${minCalibrationHealth}. Abstain.` };
   }

@@ -219,6 +219,35 @@ describe("askJarvis('performance')", () => {
     expect(supportText).toMatch(/bootstrap/);
     expect(supportText).toMatch(/pending/);
   });
+
+  it("does not falsely claim 'gated' with empty blockers when gate is open and the sample is all pushes", () => {
+    // Gate open, canonical sample met (>= minimum), but every settled pick is a
+    // PUSH → no win/loss outcomes → publicWinRate is null while displaySafe stays
+    // true. This must not fall through to the "Performance display is gated.
+    // Blockers: ." branch (empty blocker list = false 'gated' claim).
+    const policy = makePolicy({
+      canExposePerformanceStats: true,
+      canonicalSettledCount: 100,
+      canonicalWins: 0,
+      canonicalLosses: 0,
+      canonicalPushes: 100,
+    });
+    const summary = makeSummary({ performancePolicy: policy });
+
+    // Precondition: the exact state the bug required.
+    expect(summary.performance.displaySafe).toBe(true);
+    expect(summary.performance.actualWinRate).toBeNull();
+    expect(summary.performance.remainingToThreshold).toBe(0);
+    expect(summary.performance.gateBlockers).toEqual([]);
+
+    const answer = askJarvis("performance", summary);
+    // Must NOT assert the display is gated when it is not.
+    expect(answer.answer.toLowerCase()).not.toMatch(/display is gated/);
+    // Must NOT emit an empty blockers list.
+    expect(answer.answer).not.toMatch(/blockers:\s*\.?\s*$/i);
+    // Honest state: acknowledge no win/loss outcomes yet.
+    expect(answer.answer.toLowerCase()).toMatch(/win\/loss|pushes|no win rate|once picks settle/);
+  });
 });
 
 // ─── Blocked intent ───────────────────────────────────────────────────────────

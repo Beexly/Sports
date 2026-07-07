@@ -24,6 +24,16 @@ export function auditRevenueSurface(input: RevenueAuditInput): RevenueAuditSumma
   let approvedOfferCount = 0;
   let blockedOfferCount = 0;
 
+  const offersByPartner = new Map<string, RevenueOffer[]>();
+  for (const offer of input.offers) {
+    const bucket = offersByPartner.get(offer.partnerId);
+    if (bucket) {
+      bucket.push(offer);
+    } else {
+      offersByPartner.set(offer.partnerId, [offer]);
+    }
+  }
+
   for (const offer of input.offers) {
     const partner = input.partners.find((candidate) => candidate.id === offer.partnerId);
     if (!partner) {
@@ -40,11 +50,20 @@ export function auditRevenueSurface(input: RevenueAuditInput): RevenueAuditSumma
     }
   }
 
+  let highRiskPartnerCount = 0;
+  for (const partner of input.partners) {
+    const partnerOffers = offersByPartner.get(partner.id) ?? [];
+    const { tier } = scorePartnerRisk(partner, partnerOffers);
+    if (tier === "HIGH" || tier === "BLOCKED") {
+      highRiskPartnerCount++;
+    }
+  }
+
   return {
     approvedOfferCount,
     blockedOfferCount,
     blockers,
-    highRiskPartnerCount: input.partners.filter((partner) => scorePartnerRisk(partner).tier === "HIGH" || scorePartnerRisk(partner).tier === "BLOCKED").length,
+    highRiskPartnerCount,
     offerCount: input.offers.length,
     partnerCount: input.partners.length,
   };
