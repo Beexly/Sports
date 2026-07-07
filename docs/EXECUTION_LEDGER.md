@@ -1536,3 +1536,28 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
 - FLAG: shadow metric only; no live route, no public/API exposure, no legal clearance claim, no production-readiness
   claim, no metric promotion, no betting use, no probability or expected-value claim, no raw odds/tracking export,
   no package/dependency change, no live AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier No-Bet Pressure evidence reports
+
+- WHAT: Extended the generated shadow evidence-card and markdown-report layer to No-Bet Pressure. NBP now has a
+  synthetic/local draft model-card fixture, a `WATCH` hard-pass-rate drift fixture, a checked-in report section,
+  and report-order coverage between Calibration Integrity Grade and Playable Window Score. It remains `SHADOW`,
+  `INTERNAL`, `NOT_READY`, route-free, public-API-locked, and separate from legal clearance, production readiness,
+  betting advice, expected value, public probability, pick approval, and responsible-gaming clearance.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-evidence-card-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-evidence-cards.test.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-evidence-report-markdown.test.ts`,
+  `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution ledger.
+- GATE: focused evidence-card/report/birth-certificate/asset tests passed (4 files, 20 tests).
+  Prediction-engine typecheck passed. Full prediction-engine tests passed (105 files, 876 tests).
+  Root typecheck, root lint, root guardrails, and `git diff --check` passed. The all-workspaces test
+  wrapper exited 0; the transcript was too large for a reliable aggregate count, so no invented total
+  is claimed. LOC / escape-hatch scan passed: fixture 217 lines, evidence-card test 214 lines, report
+  test 65 lines, checked-in report 247 lines, and no `as any`, `as unknown`, `@ts-ignore`,
+  `@ts-expect-error`, `: any`, or non-null property access found.
+- FLAG: generated synthetic/local reports only; no live route, no public/API exposure, no legal clearance claim,
+  no production-readiness claim, no model promotion, no betting use, no probability or expected-value claim, no
+  responsible-gaming clearance claim, no raw odds/tracking export, no package/dependency change, no live
+  AWS/cloud/service action, and no prediction gate flip.

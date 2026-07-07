@@ -18,6 +18,7 @@ export type ShadowEvidenceMetricId =
   | "qb-burden-index"
   | "role-volatility-index"
   | "calibration-integrity-grade"
+  | "no-bet-pressure"
   | "playable-window-score"
   | "portfolio-fit-score"
   | "market-mirage-score";
@@ -101,6 +102,22 @@ export const SHADOW_METRIC_EVIDENCE_FIXTURES: readonly ShadowMetricEvidenceFixtu
     evidenceRefs: ["fixture-cig-model-card", "fixture-cig-calibration-stability-split"],
     metricId: "calibration-integrity-grade",
     validationReport: shadowValidationReport("fixture-cig-validation", 360),
+  },
+  {
+    caveat:
+      "NBP fixture is synthetic/local and cannot be used as betting advice, expected value, public probability, pick approval, or responsible-gaming clearance.",
+    driftChecks: [
+      {
+        evidenceRef: "fixture-nbp-refusal-pressure-split",
+        name: "no_bet_hard_pass_rate_delta",
+        severeThreshold: 0.28,
+        value: 0.17,
+        watchThreshold: 0.12,
+      },
+    ],
+    evidenceRefs: ["fixture-nbp-model-card", "fixture-nbp-refusal-pressure-split"],
+    metricId: "no-bet-pressure",
+    validationReport: shadowValidationReport("fixture-nbp-validation", 310),
   },
   {
     caveat: "PWS decision-window fixture is synthetic/local and cannot be used as playable edge, expected value, or betting advice.",

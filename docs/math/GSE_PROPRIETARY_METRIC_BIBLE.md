@@ -640,7 +640,7 @@ Build in this order for proprietary football metrics:
 2. QB Burden Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 3. Role Volatility Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 4. Calibration Integrity Grade - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
-5. No-Bet Pressure
+5. No-Bet Pressure - implemented as `SHADOW`; local evidence-card/report fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
 6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 8. Portfolio Fit Score - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
@@ -1006,11 +1006,18 @@ Pure LOC review for new source files:
 - It returns `probability: null`, keeps confidence separate from win probability/EV/advice, exposes public drivers without protected weights, and hard-passes source blocks, blocked market signals, missing required data, severe calibration debt/drift, and responsible-gaming pressure before downstream GSS/PWS/PFS review.
 - Focused no-bet/birth-certificate/asset/downstream decision tests passed (5 files, 22 tests), prediction-engine typecheck passed, full prediction-engine tests passed (105 files, 876 tests), root typecheck/lint/guardrails/whitespace checks passed, the all-workspaces test wrapper exited 0 without an invented aggregate count, metric LOC scan measured 200 and 118 lines, and no TS escape hatches were found.
 
+2026-07-06 No-Bet Pressure evidence-report continuation check:
+
+- `metric-evidence-card-fixtures.ts` now includes No-Bet Pressure in the synthetic/local shadow evidence fixture family.
+- `docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md` now includes the No-Bet Pressure report section and index row.
+- The NBP fixture remains `SHADOW`, `INTERNAL`, `NOT_READY`, route-free, public-API-locked, and `WATCH` under the local hard-pass-rate drift fixture.
+- Focused evidence-card/report/birth-certificate/asset tests passed (4 files, 20 tests), prediction-engine typecheck passed, full prediction-engine tests passed (105 files, 876 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, and the all-workspaces wrapper exited 0 with transcript too large for a reliable aggregate count. The updated fixture measured 217 lines, evidence-card test measured 214 lines, report test measured 65 lines, checked-in report doc measured 247 lines, and no TS escape hatches were found.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, No-Bet Pressure, and generated source policies:
 
-1. Add evidence-card fixture and generated markdown-report coverage for No-Bet Pressure before allowing it into public/API route planning.
-2. Add source/payload-reviewed historical validation adapters for No-Bet Pressure only after cleared data proves the inputs are usable.
-3. Continue guarded metric backlog with Drift Pressure Index or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
-4. Add markdown export tests for any future metric report before allowing it into public/API route planning.
+1. Add source/payload-reviewed historical validation adapters for No-Bet Pressure only after cleared data proves the inputs are usable.
+2. Continue guarded metric backlog with Drift Pressure Index or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
+3. Add markdown export tests for any future metric report before allowing it into public/API route planning.
+4. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
