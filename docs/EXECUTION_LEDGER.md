@@ -1561,3 +1561,27 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   no production-readiness claim, no model promotion, no betting use, no probability or expected-value claim, no
   responsible-gaming clearance claim, no raw odds/tracking export, no package/dependency change, no live
   AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-06 - (codex) - Sunday frontier No-Bet Pressure historical adapter
+
+- WHAT: Extended the existing historical validation adapter to support No-Bet Pressure with source review first
+  and payload review second. Safe derived NBP score/band/driver payloads can adapt locally; raw input leakage and
+  unsupported probability payloads block after source review; permission-required sources block before metric
+  execution. The metric remains `SHADOW`, `INTERNAL`, `NOT_READY`, route-free, public-API-locked, and not promoted.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-historical-validation-adapter.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-historical-validation-payload.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-historical-validation-adapter-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-historical-validation-adapter.test.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`,
+  `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, Sunday audit/handoff docs, and execution ledger.
+- GATE: first focused adapter run caught the safe NBP fixture adapting as `CLEAR` rather than the stale `WATCH`
+  expectation. After correcting the expectation, focused adapter/source-rights/NBP tests passed (3 files, 19 tests).
+  Prediction-engine typecheck passed. LOC / escape-hatch scan passed: adapter 243 lines after helper split, payload
+  helper 52 lines, fixtures 184 lines, adapter test 107 lines, and no `as any`, `as unknown`, `@ts-ignore`,
+  `@ts-expect-error`, `: any`, or non-null property access found. Full prediction-engine tests passed (105 files,
+  877 tests). Root typecheck, root lint, root guardrails, and `git diff --check` passed. The all-workspaces test
+  wrapper exited 0; the transcript was too large for a reliable aggregate count, so no invented total is claimed.
+- FLAG: local synthetic fixtures and adapter only; no live route, no public/API exposure, no legal clearance claim,
+  no production-readiness claim, no model promotion, no betting use, no probability or expected-value claim, no
+  raw odds/tracking export, no package/dependency change, no live AWS/cloud/service action, and no prediction gate flip.

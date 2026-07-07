@@ -640,7 +640,7 @@ Build in this order for proprietary football metrics:
 2. QB Burden Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 3. Role Volatility Index - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 4. Calibration Integrity Grade - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
-5. No-Bet Pressure - implemented as `SHADOW`; local evidence-card/report fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
+5. No-Bet Pressure - implemented as `SHADOW`; local evidence-card/report fixtures and source/payload-reviewed historical validation adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
 6. Playable Window Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 7. Market Mirage Score - implemented as `SHADOW`; validation, model/drift cards, and promotion remain future gates.
 8. Portfolio Fit Score - implemented as `SHADOW`; local evidence-card/report and historical distribution/drift adapter fixtures exist; real historical validation, promotion, and public/API exposure remain future gates.
@@ -1013,11 +1013,19 @@ Pure LOC review for new source files:
 - The NBP fixture remains `SHADOW`, `INTERNAL`, `NOT_READY`, route-free, public-API-locked, and `WATCH` under the local hard-pass-rate drift fixture.
 - Focused evidence-card/report/birth-certificate/asset tests passed (4 files, 20 tests), prediction-engine typecheck passed, full prediction-engine tests passed (105 files, 876 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, and the all-workspaces wrapper exited 0 with transcript too large for a reliable aggregate count. The updated fixture measured 217 lines, evidence-card test measured 214 lines, report test measured 65 lines, checked-in report doc measured 247 lines, and no TS escape hatches were found.
 
+2026-07-06 No-Bet Pressure historical adapter continuation check:
+
+- `metric-historical-validation-adapter.ts` now supports `no-bet-pressure` records while preserving the existing RVI/PWS/MMS source-rights adapter path.
+- `metric-historical-validation-payload.ts` holds NBP payload-rights review so safe derived NBP fields can adapt and raw input/probability leakage can block before metric execution.
+- `metric-historical-validation-adapter-fixtures.ts` now includes NBP safe-derived, raw-payload-blocked, and permission-required-source-blocked cases.
+- Focused adapter/source-rights/NBP tests passed (3 files, 19 tests), prediction-engine typecheck passed, full prediction-engine tests passed (105 files, 877 tests), root typecheck/lint/guardrails passed, `git diff --check` passed, the all-workspaces wrapper exited 0 with transcript too large for a reliable aggregate count, the main adapter measured 243 lines after helper split, payload helper measured 52 lines, fixtures measured 184 lines, adapter test measured 107 lines, and no TS escape hatches were found.
+- The adapter remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, raw odds/tracking export, or prediction gate flip.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, No-Bet Pressure, and generated source policies:
 
-1. Add source/payload-reviewed historical validation adapters for No-Bet Pressure only after cleared data proves the inputs are usable.
-2. Continue guarded metric backlog with Drift Pressure Index or Conformal Uncertainty Width only after no-bet, payload-envelope, and source-rights veto tests stay green.
-3. Add markdown export tests for any future metric report before allowing it into public/API route planning.
-4. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
+1. Continue guarded metric backlog with Drift Pressure Index or Conformal Uncertainty Width only after no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
+2. Add markdown export tests for any future metric report before allowing it into public/API route planning.
+3. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
+4. Add real historical validation only after cleared data, owner review, and legal/source-rights approval; local NBP fixtures are not promotion evidence.

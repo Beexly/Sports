@@ -1,4 +1,5 @@
 import { playableWindowScore, type PlayableWindowScoreInput } from "../decision/playable-window-score.js";
+import { noBetPressureMetric, type NoBetPressureInput } from "../decision/no-bet-pressure.js";
 import { marketMirageScore, type MarketMirageScoreInput } from "../market/market-mirage-score.js";
 import { roleVolatilityIndex, type RoleVolatilityIndexInput } from "../role/role-volatility-index.js";
 import {
@@ -12,13 +13,13 @@ import {
   metricSourceRightsPolicy,
   type MetricSourceRightsPolicy,
 } from "./source-rights.js";
+import type { MetricPayloadExposure, MetricPayloadRightsDecision } from "./payload-rights.js";
+import { reviewHistoricalValidationPayload } from "./metric-historical-validation-payload.js";
 import type { MetricLifecycleStatus, MetricSourcePolicy, MetricSourceStatus } from "./validation.js";
 
-export type HistoricalValidationMetricId =
-  | "role-volatility-index"
-  | "playable-window-score"
-  | "market-mirage-score";
-export type HistoricalValidationAdapterStatus = "ADAPTED" | "NEEDS_MANUAL_REVIEW" | "BLOCKED_BY_SOURCE_RIGHTS";
+export type HistoricalValidationMetricId = "role-volatility-index" | "playable-window-score" | "market-mirage-score" | "no-bet-pressure";
+export type HistoricalValidationAdapterStatus = "ADAPTED" | "NEEDS_MANUAL_REVIEW" | "BLOCKED_BY_SOURCE_RIGHTS" | "BLOCKED_BY_PAYLOAD_RIGHTS";
+export type HistoricalValidationPayloadProfile = "safe_derived" | "raw_input_leak" | "unsupported_probability_claim";
 
 export interface HistoricalValidationSourceReview {
   readonly status: HistoricalValidationAdapterStatus;
@@ -52,10 +53,20 @@ export interface HistoricalMarketMirageRecord {
   readonly input: Omit<MarketMirageScoreInput, "sourcePolicy">;
 }
 
+export interface HistoricalNoBetPressureRecord {
+  readonly metricId: "no-bet-pressure";
+  readonly splitId: string;
+  readonly description: string;
+  readonly sourceIds: readonly string[];
+  readonly input: Omit<NoBetPressureInput, "sourcePolicy">;
+  readonly payloadProfile: HistoricalValidationPayloadProfile;
+}
+
 export type HistoricalValidationRecord =
   | HistoricalRoleStabilityRecord
   | HistoricalDecisionWindowRecord
-  | HistoricalMarketMirageRecord;
+  | HistoricalMarketMirageRecord
+  | HistoricalNoBetPressureRecord;
 
 export interface HistoricalValidationAdapterResult {
   readonly metricId: HistoricalValidationMetricId;
@@ -69,12 +80,14 @@ export interface HistoricalValidationAdapterResult {
   readonly score: number | null;
   readonly allowed: boolean;
   readonly sourceReview: HistoricalValidationSourceReview;
+  readonly payloadRights: MetricPayloadRightsDecision | null;
   readonly notes: readonly string[];
 }
 
 export function adaptHistoricalValidationRecord(
   record: HistoricalValidationRecord,
   policies: readonly MetricSourceRightsPolicy[] = GSE_METRIC_SOURCE_RIGHTS_POLICIES,
+  exposure: MetricPayloadExposure = "API",
 ): HistoricalValidationAdapterResult {
   const sourceReview = reviewHistoricalValidationSources(record.sourceIds, policies);
   const asset = requireMetricAsset(record.metricId);
@@ -93,8 +106,22 @@ export function adaptHistoricalValidationRecord(
       allowed: false,
       notes: [record.description, "Historical-shaped input was not adapted because source clearance is incomplete."],
       observedBand: null,
+      payloadRights: null,
       score: null,
       status: sourceReview.status,
+    };
+  }
+
+  const payloadRights = reviewHistoricalValidationPayload(record, policies, exposure);
+  if (payloadRights !== null && !payloadRights.allowed) {
+    return {
+      ...base,
+      allowed: false,
+      notes: [record.description, "Historical-shaped input was not adapted because payload rights did not pass."],
+      observedBand: null,
+      payloadRights,
+      score: null,
+      status: "BLOCKED_BY_PAYLOAD_RIGHTS",
     };
   }
 
@@ -105,6 +132,7 @@ export function adaptHistoricalValidationRecord(
     allowed: observed.allowed,
     notes: [record.description, "Source-rights-reviewed historical-shaped input adapted locally for shadow validation."],
     observedBand: observed.band,
+    payloadRights,
     score: observed.score,
     status: "ADAPTED",
   };
@@ -139,8 +167,9 @@ export function reviewHistoricalValidationSources(
 export function runHistoricalValidationAdapterRecords(
   records: readonly HistoricalValidationRecord[],
   policies: readonly MetricSourceRightsPolicy[] = GSE_METRIC_SOURCE_RIGHTS_POLICIES,
+  exposure: MetricPayloadExposure = "API",
 ): readonly HistoricalValidationAdapterResult[] {
-  return records.map((record) => adaptHistoricalValidationRecord(record, policies));
+  return records.map((record) => adaptHistoricalValidationRecord(record, policies, exposure));
 }
 
 function runAdaptedMetric(
@@ -159,6 +188,10 @@ function runAdaptedMetric(
     case "market-mirage-score": {
       const metric = marketMirageScore({ ...record.input, sourcePolicy });
       return { allowed: metric.marketInterpretationAllowed, band: metric.band, score: metric.score };
+    }
+    case "no-bet-pressure": {
+      const metric = noBetPressureMetric({ ...record.input, sourcePolicy });
+      return { allowed: !metric.noBetRecommended, band: metric.band, score: metric.score };
     }
     default:
       return assertNever(record);

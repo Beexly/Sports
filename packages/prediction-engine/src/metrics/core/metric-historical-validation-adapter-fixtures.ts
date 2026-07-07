@@ -8,7 +8,8 @@ export interface HistoricalValidationAdapterSummary {
   readonly total: number;
   readonly adapted: number;
   readonly manualReview: number;
-  readonly blocked: number;
+  readonly sourceBlocked: number;
+  readonly payloadBlocked: number;
   readonly publicApiAllowedCount: number;
 }
 
@@ -66,6 +67,72 @@ export const HISTORICAL_VALIDATION_ADAPTER_FIXTURES: readonly HistoricalValidati
     splitId: "historical_market_mirage_odds_adapted",
   },
   {
+    description: "Rights-cleared no-bet pressure inputs can adapt only after source and payload rights pass.",
+    input: {
+      calibrationDebt: 12,
+      calibrationIntegrityGrade: 84,
+      dataReliabilityIndex: 88,
+      driftPressure: 18,
+      lowEvidencePressure: 12,
+      marketMirageScore: 20,
+      marketSignalAllowed: true,
+      missingRequiredDataPressure: 0,
+      modelDisagreement: 0.12,
+      responsibleGamingPressure: 0,
+      roleVolatilityIndex: 24,
+      sourceContradictionPressure: 8,
+      staleLineRiskScore: 18,
+    },
+    metricId: "no-bet-pressure",
+    payloadProfile: "safe_derived",
+    sourceIds: ["nflverse", "the-odds-api"],
+    splitId: "historical_no_bet_pressure_safe_adapted",
+  },
+  {
+    description: "Raw no-bet pressure input leakage blocks even when source rights are otherwise cleared.",
+    input: {
+      calibrationDebt: 16,
+      calibrationIntegrityGrade: 78,
+      dataReliabilityIndex: 84,
+      driftPressure: 24,
+      lowEvidencePressure: 18,
+      marketMirageScore: 28,
+      marketSignalAllowed: true,
+      missingRequiredDataPressure: 0,
+      modelDisagreement: 0.18,
+      responsibleGamingPressure: 0,
+      roleVolatilityIndex: 28,
+      sourceContradictionPressure: 10,
+      staleLineRiskScore: 24,
+    },
+    metricId: "no-bet-pressure",
+    payloadProfile: "raw_input_leak",
+    sourceIds: ["nflverse"],
+    splitId: "historical_no_bet_pressure_raw_payload_blocked",
+  },
+  {
+    description: "Permission-required no-bet pressure source blocks before metric execution.",
+    input: {
+      calibrationDebt: 18,
+      calibrationIntegrityGrade: 76,
+      dataReliabilityIndex: 80,
+      driftPressure: 28,
+      lowEvidencePressure: 22,
+      marketMirageScore: 32,
+      marketSignalAllowed: true,
+      missingRequiredDataPressure: 0,
+      modelDisagreement: 0.2,
+      responsibleGamingPressure: 0,
+      roleVolatilityIndex: 30,
+      sourceContradictionPressure: 14,
+      staleLineRiskScore: 28,
+    },
+    metricId: "no-bet-pressure",
+    payloadProfile: "safe_derived",
+    sourceIds: ["scores24-live"],
+    splitId: "historical_no_bet_pressure_permission_blocked",
+  },
+  {
     description: "Logged-off fantasy source remains manual review and is not adapted automatically.",
     input: {
       routeShareDelta: 0.08,
@@ -108,9 +175,10 @@ export function summarizeHistoricalValidationAdapterResults(
 ): HistoricalValidationAdapterSummary {
   return {
     adapted: results.filter((result) => result.status === "ADAPTED").length,
-    blocked: results.filter((result) => result.status === "BLOCKED_BY_SOURCE_RIGHTS").length,
     manualReview: results.filter((result) => result.status === "NEEDS_MANUAL_REVIEW").length,
+    payloadBlocked: results.filter((result) => result.status === "BLOCKED_BY_PAYLOAD_RIGHTS").length,
     publicApiAllowedCount: results.filter((result) => result.publicApiAllowed).length,
+    sourceBlocked: results.filter((result) => result.status === "BLOCKED_BY_SOURCE_RIGHTS").length,
     total: results.length,
   };
 }

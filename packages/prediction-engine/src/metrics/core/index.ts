@@ -60,10 +60,12 @@ export {
 export type {
   HistoricalDecisionWindowRecord,
   HistoricalMarketMirageRecord,
+  HistoricalNoBetPressureRecord,
   HistoricalRoleStabilityRecord,
   HistoricalValidationAdapterResult,
   HistoricalValidationAdapterStatus,
   HistoricalValidationMetricId,
+  HistoricalValidationPayloadProfile,
   HistoricalValidationRecord,
   HistoricalValidationSourceReview,
 } from "./metric-historical-validation-adapter.js";
@@ -72,6 +74,7 @@ export {
   reviewHistoricalValidationSources,
   runHistoricalValidationAdapterRecords,
 } from "./metric-historical-validation-adapter.js";
+export { reviewHistoricalValidationPayload } from "./metric-historical-validation-payload.js";
 export type { HistoricalValidationAdapterSummary } from "./metric-historical-validation-adapter-fixtures.js";
 export {
   HISTORICAL_VALIDATION_ADAPTER_FIXTURES,
