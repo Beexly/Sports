@@ -193,12 +193,16 @@ export function computeHistoricalFormScore(
   label: string  // "Home" | "Away" for descriptions
 ): { score: number; atsPct: number | null; factor: FactorDetail | null } {
   const MIN_SAMPLE = 5;
-  if (!form || form.sampleSize < MIN_SAMPLE) {
+  if (!form) {
     return { score: 0, atsPct: null, factor: null };
   }
 
+  // Gate on DECIDED games (wins + losses), NOT total sample size. sampleSize
+  // includes pushes, so a mostly-push bucket (e.g. 1-0-4) would otherwise clear
+  // the >=5-game guard and emit a full-strength signal off a single decided
+  // game. Gating on decided also subsumes the old decided===0 guard.
   const decided = form.wins + form.losses;
-  if (decided === 0) return { score: 0, atsPct: null, factor: null };
+  if (decided < MIN_SAMPLE) return { score: 0, atsPct: null, factor: null };
 
   const atsPct = form.wins / decided;
 
@@ -319,12 +323,14 @@ export function computeHeadToHeadScore(
   h2hForm: AtsFormBucket | null | undefined
 ): { score: number; atsPct: number | null; factor: FactorDetail | null } {
   const MIN_SAMPLE = 5;
-  if (!h2hForm || h2hForm.sampleSize < MIN_SAMPLE) {
+  if (!h2hForm) {
     return { score: 0, atsPct: null, factor: null };
   }
 
+  // Gate on DECIDED games (wins + losses), not sampleSize (which counts pushes),
+  // so a mostly-push H2H bucket cannot mint a full ±5 signal off one decided game.
   const decided = h2hForm.wins + h2hForm.losses;
-  if (decided === 0) return { score: 0, atsPct: null, factor: null };
+  if (decided < MIN_SAMPLE) return { score: 0, atsPct: null, factor: null };
 
   const atsPct = h2hForm.wins / decided;
 
@@ -374,12 +380,14 @@ export function computeVenueFormScore(
   venueLabel: string   // "Home" | "Away" for descriptions
 ): { score: number; factor: FactorDetail | null } {
   const MIN_SAMPLE = 5;
-  if (!atsFormAtVenue || atsFormAtVenue.sampleSize < MIN_SAMPLE) {
+  if (!atsFormAtVenue) {
     return { score: 0, factor: null };
   }
 
+  // Gate on DECIDED games (wins + losses), not sampleSize (which counts pushes),
+  // so a mostly-push venue bucket cannot mint a full ±5 signal off one decided game.
   const decided = atsFormAtVenue.wins + atsFormAtVenue.losses;
-  if (decided === 0) return { score: 0, factor: null };
+  if (decided < MIN_SAMPLE) return { score: 0, factor: null };
 
   const atsPct = atsFormAtVenue.wins / decided;
 

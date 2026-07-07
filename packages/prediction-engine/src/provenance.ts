@@ -65,12 +65,24 @@ export function buildProvenance(input: ProvenanceInput, options: ProvenanceOptio
   const aging = options.agingMinutes ?? 60;
   const stale = options.staleMinutes ?? 180;
 
+  // Honesty gate: an unparseable timestamp yields age 0, which would otherwise
+  // read as perfectly fresh. Unknown freshness must never be reported as fresh,
+  // so a bad generatedAt or any bad source fetchedAt forces the pessimistic verdict.
+  const hasUnparseable =
+    Number.isNaN(Date.parse(input.generatedAt)) ||
+    input.sources.some((s) => Number.isNaN(Date.parse(s.fetchedAt)));
+
   const maxStalenessMinutes = input.sources.reduce(
     (max, s) => Math.max(max, ageMinutes(input.generatedAt, s.fetchedAt)),
     0,
   );
+  // Fail closed: unparseable timestamps or zero sources cannot be called "fresh".
   const freshness: FreshnessVerdict =
-    maxStalenessMinutes >= stale ? "stale" : maxStalenessMinutes >= aging ? "aging" : "fresh";
+    hasUnparseable || input.sources.length === 0 || maxStalenessMinutes >= stale
+      ? "stale"
+      : maxStalenessMinutes >= aging
+        ? "aging"
+        : "fresh";
 
   return {
     predictionId: input.predictionId,
@@ -79,7 +91,8 @@ export function buildProvenance(input: ProvenanceInput, options: ProvenanceOptio
     sources: input.sources,
     maxStalenessMinutes: round2(maxStalenessMinutes),
     freshness,
-    fullyCitable: input.sources.length > 0 && input.sources.every((s) => s.tier === "A"),
+    fullyCitable:
+      !hasUnparseable && input.sources.length > 0 && input.sources.every((s) => s.tier === "A"),
   };
 }
 

@@ -196,5 +196,8 @@ function sourcePosture(sourceRisk: number, sourceAllowed: boolean): NoBetPressur
 }
 
 function proxyCount(values: readonly (number | undefined)[]): number {
-  return values.filter((value) => value !== undefined).length;
+  // Count only informative (present AND nonzero) optional signals. Counting an
+  // explicit zero as a proxy would let the cleanest data (e.g. zero responsible-
+  // gaming pressure) inflate reported uncertainty, inverting LOW to HIGH.
+  return values.filter((value) => value !== undefined && value > 0).length;
 }

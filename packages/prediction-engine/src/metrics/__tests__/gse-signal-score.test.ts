@@ -49,4 +49,47 @@ describe("gseSignalScore", () => {
     expect(pressured.grade).toBe("HARD_PASS");
     expect(pressured.drivers.some((driver) => driver.name === "no_bet_pressure" && driver.direction === "DOWN")).toBe(true);
   });
+
+  it("applies the role-volatility x prop-exposure penalty only when both are present", () => {
+    const baseline = strongSignal({ playerPropExposure: 0, roleVolatility: 0 });
+    const roleVolatilityOnly = strongSignal({ playerPropExposure: 0, roleVolatility: 70 });
+    const bothHigh = strongSignal({ playerPropExposure: 70, roleVolatility: 70 });
+
+    // The term is -0.35 * roleVolatility * playerPropExposure, so role volatility
+    // is inert without prop exposure and only bites when both are elevated.
+    expect(roleVolatilityOnly.score).toBe(baseline.score);
+    expect(bothHigh.score).toBeLessThan(baseline.score);
+  });
+
+  it("maps score to each interior grade band and vetoes on a low score without no-bet pressure", () => {
+    // Flat signal: all positive inputs equal `value`, every pressure zeroed, so the
+    // grade is driven purely by the resulting score (noBetPressure stays 0 < 85).
+    function flatSignal(value: number) {
+      return strongSignal({
+        calibrationDebt: 0,
+        calibrationIntegrityGrade: value,
+        driftPressure: 0,
+        edgeQualityScore: value,
+        marketGravityIndex: value,
+        noBetPressure: 0,
+        playableWindowScore: value,
+        playerPropExposure: 0,
+        portfolioFitScore: value,
+        proprietaryPlayerSignal: value,
+        roleVolatility: 0,
+        signalIntegrityIndex: value,
+        staleLineRiskScore: 0,
+      });
+    }
+
+    const vetoed = flatSignal(0);
+    expect(vetoed.score).toBeLessThanOrEqual(24);
+    expect(vetoed.grade).toBe("HARD_PASS");
+
+    expect(flatSignal(10).grade).toBe("PASS");
+    expect(flatSignal(28).grade).toBe("WATCH");
+    expect(flatSignal(40).grade).toBe("LEAN");
+    expect(flatSignal(50).grade).toBe("SPEAK");
+    expect(strongSignal().grade).toBe("STRONG");
+  });
 });

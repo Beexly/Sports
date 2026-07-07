@@ -82,7 +82,7 @@ export function marketMirageScore(input: MarketMirageScoreInput): MarketMirageSc
   const score = round(blockReasons.length > 0 ? Math.max(85, rawScore) : rawScore, 2);
   const uncertaintyBand = uncertaintyFromEvidence({
     driftPressure: Math.max(input.driftPressure, input.calibrationDebt, sourceRisk * 100),
-    proxyCount: 4,
+    proxyCount: 2,
     sampleSize: Math.max(1, 100 - input.staleLineRiskScore) * 3,
     sourcePolicy: input.sourcePolicy,
   });

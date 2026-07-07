@@ -121,11 +121,28 @@ describe("GSE metric assets and graduation", () => {
       asset: readyAsset({ driftCard: { ...readyAsset().driftCard, status: "SEVERE" } }),
       requestedExposure: "CONTENT_AGGREGATE",
     });
+    const missingDrift = evaluateMetricGraduation({
+      asset: readyAsset({ driftCard: { ...readyAsset().driftCard, status: "MISSING" } }),
+      requestedExposure: "CONTENT_AGGREGATE",
+    });
 
     expect(lowSample.status).toBe("BLOCKED_SAMPLE");
     expect(missingModel.status).toBe("BLOCKED_MODEL_CARD");
     expect(failedValidation.status).toBe("BLOCKED_VALIDATION");
     expect(severeDrift.status).toBe("BLOCKED_DRIFT");
+    expect(missingDrift.status).toBe("BLOCKED_DRIFT");
+    expect(missingDrift.reasons[0]).toContain("drift_status MISSING");
+  });
+
+  it("fails closed with BLOCKED_SOURCE_RIGHTS when the source-rights envelope is empty", () => {
+    const decision = evaluateMetricGraduation({
+      asset: readyAsset({ sourceRights: [] }),
+      requestedExposure: "API_FULL",
+    });
+
+    expect(decision.status).toBe("BLOCKED_SOURCE_RIGHTS");
+    expect(decision.reasons[0]).toContain("missing source-rights envelope");
+    expect(decision.approvedExposure).toBe("NONE");
   });
 
   it("allows content aggregate review for shadow metrics but blocks API exposure", () => {

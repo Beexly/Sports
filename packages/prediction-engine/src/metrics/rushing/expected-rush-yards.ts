@@ -48,7 +48,7 @@ export function expectedRushYardsGse(input: ExpectedRushYardsInput): ExpectedRus
     18,
   );
   const uncertaintyBand = uncertaintyFromEvidence({
-    proxyCount: proxyCount([input.rusherYardsPerCarryPrior, input.defenseRushYardsAllowedPrior, input.yardline100]),
+    proxyCount: proxyCount([input.rusherYardsPerCarryPrior, input.defenseRushYardsAllowedPrior]),
     sampleSize: input.sampleSize,
     sourcePolicy: input.sourcePolicy,
   });

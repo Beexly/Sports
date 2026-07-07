@@ -54,6 +54,52 @@ describe("roleVolatilityIndex", () => {
     expect(snapShock.drivers.some((driver) => driver.name === "snap_share_volatility" && driver.direction === "UP")).toBe(true);
   });
 
+  it("reaches ELEVATED and HIGH volatility bands as shocks compound", () => {
+    const elevated = roleVolatilityIndex({
+      ...stableInput,
+      depthChartShock: true,
+      injuryStatusChanged: true,
+      snapShareDelta: 0.45,
+    });
+    const high = roleVolatilityIndex({
+      ...stableInput,
+      depthChartShock: true,
+      injuryStatusChanged: true,
+      returnUncertainty: 1,
+      routeShareDelta: 0.45,
+      sampleGames: 2,
+      snapShareDelta: 0.45,
+      targetShareDelta: 0.35,
+      teammateRoleShock: true,
+    });
+
+    expect(elevated.staleUsage).toBe(false);
+    expect(elevated.volatilityIndex).toBeGreaterThanOrEqual(35);
+    expect(elevated.volatilityIndex).toBeLessThan(70);
+    expect(elevated.volatilityBand).toBe("ELEVATED");
+
+    expect(high.staleUsage).toBe(false);
+    expect(high.volatilityIndex).toBeGreaterThanOrEqual(70);
+    expect(high.volatilityBand).toBe("HIGH");
+    expect(
+      high.drivers.some((driver) => driver.name === "route_share_volatility" && driver.direction === "UP"),
+    ).toBe(true);
+    expect(
+      high.drivers.some((driver) => driver.name === "teammate_role_shock" && driver.direction === "UP"),
+    ).toBe(true);
+    expect(
+      high.drivers.some((driver) => driver.name === "sample_size_risk" && driver.direction === "UP"),
+    ).toBe(true);
+  });
+
+  it("fails closed when no source policy is supplied", () => {
+    const noPolicy = roleVolatilityIndex({ ...stableInput, sourcePolicy: [] });
+
+    expect(noPolicy.sourcePosture).toBe("BLOCKED");
+    expect(noPolicy.roleSignalAllowed).toBe(false);
+    expect(noPolicy.uncertaintyBand).toBe("HIGH");
+  });
+
   it("fails stale usage closed before role signals can be trusted", () => {
     const stale = roleVolatilityIndex({
       ...stableInput,

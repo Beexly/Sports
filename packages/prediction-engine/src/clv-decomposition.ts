@@ -60,10 +60,17 @@ export interface ClvDecompositionResult {
   readonly informationCoefficient: PerformanceCi | null;
   /** Bootstrapped OLS slope of clvValue on book disagreement at lock. */
   readonly liquidityCoefficient: PerformanceCi | null;
-  /** R^2 of the two-control OLS on the full sample, in [0, 1]. */
-  readonly varianceExplained: number;
-  /** 1 - R^2 — unexplained by available controls. Never causally labeled. */
-  readonly residualShare: number;
+  /**
+   * Sample-size-adjusted R^2 of the two-control OLS, in [0, 1]. Null when the
+   * residual degrees of freedom are inadequate (n - 3 <= 0), where a raw
+   * in-sample R^2 is mechanically ~1.0 and would overstate explained variance.
+   */
+  readonly varianceExplained: number | null;
+  /**
+   * 1 - adjusted R^2 — unexplained by available controls. Never causally
+   * labeled. Null whenever varianceExplained is null (inadequate residual df).
+   */
+  readonly residualShare: number | null;
   readonly note: string;
 }
 
@@ -175,12 +182,33 @@ export function decomposeClv(
   const informationCoefficient = bcaCi(indices, coefStatistic(1), opts);
   const liquidityCoefficient = bcaCi(indices, coefStatistic(2), opts);
 
+  // Adequate residual degrees of freedom guard. With 3 OLS parameters
+  // (intercept + bInfo + bLiquidity), residual df = n - 3; at n = 3 the fit is
+  // exact for ANY data (r2 === 1) and just beyond that a raw in-sample R^2 is
+  // upward-biased. Report a sample-size-adjusted R^2 when df permits, and
+  // honestly WITHHOLD a variance share (null) when it does not, rather than
+  // publishing a fabricated "controls explain ~100% of CLV" story on a handful
+  // of picks. The bootstrapped coefficient CIs remain honest and are unchanged.
+  const residualDf = n - 3;
+  const varianceExplained =
+    residualDf <= 0
+      ? null
+      : Math.max(0, Math.min(1, 1 - (1 - full.r2) * ((n - 1) / residualDf)));
+  const residualShare = varianceExplained === null ? null : 1 - varianceExplained;
+
   const note =
-    `Association decomposition over ${n} settled ${kind} picks: the information-content ` +
-    `and liquidity controls jointly explain ${(full.r2 * 100).toFixed(1)}% of CLV variance; ` +
-    `the remaining ${((1 - full.r2) * 100).toFixed(1)}% is unexplained by available controls. ` +
-    `No bet-split data exists on this platform, so no component is attributed to bettor ` +
-    `behavior — this is association under stated controls, not a causal story.`;
+    varianceExplained === null
+      ? `Association decomposition over ${n} settled ${kind} picks: insufficient sample to ` +
+        `attribute variance (residual degrees of freedom too low for a reliable R^2), so the ` +
+        `variance share is withheld; bootstrapped coefficient intervals are still reported. ` +
+        `No bet-split data exists on this platform, so no component is attributed to bettor ` +
+        `behavior — this is association under stated controls, not a causal story.`
+      : `Association decomposition over ${n} settled ${kind} picks: the information-content ` +
+        `and liquidity controls jointly explain ${(varianceExplained * 100).toFixed(1)}% of CLV ` +
+        `variance (adjusted for sample size); the remaining ${((1 - varianceExplained) * 100).toFixed(1)}% ` +
+        `is unexplained by available controls. No bet-split data exists on this platform, so no ` +
+        `component is attributed to bettor behavior — this is association under stated controls, ` +
+        `not a causal story.`;
 
   return {
     n,
@@ -188,8 +216,8 @@ export function decomposeClv(
     realizedClvMean,
     informationCoefficient,
     liquidityCoefficient,
-    varianceExplained: full.r2,
-    residualShare: 1 - full.r2,
+    varianceExplained,
+    residualShare,
     note,
   };
 }

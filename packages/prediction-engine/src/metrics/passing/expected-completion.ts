@@ -69,21 +69,25 @@ export function expectedCompletionGse(input: ExpectedCompletionInput): ExpectedC
   const probability = clamp(sigmoid(logitValue), 0.02, 0.98);
   const uncertaintyBand = uncertaintyFromEvidence({ proxyCount: proxyCount([input.sidelineProxy, input.pressureProxy, input.weatherPenalty, input.timeToThrowProxy]), sampleSize: input.sampleSize, sourcePolicy: input.sourcePolicy });
   const confidenceScore = confidenceFromEvidence(input.sampleSize ?? 0, uncertaintyBand);
+  const airContribution = -nonlinearDepth * 18.5;
+  const yardsContribution = -nonlinearYards * 5.5;
+  const pressureContribution = -pressure * 8.2;
+  const weatherContribution = -weather * 4.8;
   const drivers = sortedDrivers([
     metricDriver({
-      contribution: -nonlinearDepth * 18.5,
-      direction: "DOWN",
+      contribution: airContribution,
+      direction: airContribution > 0 ? "UP" : airContribution < 0 ? "DOWN" : "NEUTRAL",
       explanation: "Protected air-yard basis lowers completion expectation as depth rises.",
       name: "air_yards_basis",
     }),
     metricDriver({
-      contribution: -nonlinearYards * 5.5,
-      direction: "DOWN",
+      contribution: yardsContribution,
+      direction: yardsContribution > 0 ? "UP" : yardsContribution < 0 ? "DOWN" : "NEUTRAL",
       explanation: "Protected yards-to-go basis lowers completion expectation.",
       name: "yards_to_go_basis",
     }),
-    metricDriver({ contribution: -pressure * 8.2, direction: "DOWN", explanation: "Pressure proxy lowers completion expectation.", name: "pressure_proxy" }),
-    metricDriver({ contribution: -weather * 4.8, direction: "DOWN", explanation: "Weather penalty lowers completion expectation.", name: "weather_penalty" }),
+    metricDriver({ contribution: pressureContribution, direction: pressureContribution > 0 ? "UP" : pressureContribution < 0 ? "DOWN" : "NEUTRAL", explanation: "Pressure proxy lowers completion expectation.", name: "pressure_proxy" }),
+    metricDriver({ contribution: weatherContribution, direction: weatherContribution > 0 ? "UP" : weatherContribution < 0 ? "DOWN" : "NEUTRAL", explanation: "Weather penalty lowers completion expectation.", name: "weather_penalty" }),
     metricDriver({
       contribution: (qb - 0.5) * 9.5,
       direction: qb >= 0.5 ? "UP" : "DOWN",

@@ -101,8 +101,14 @@ export function evaluateMetricSourceRights(input: MetricSourceRightsInput): Metr
     if (!permitsUse(policy, input.use)) {
       violations.push(`${policy.sourceId} blocks ${useLabel(input.use)}`);
     }
-    if (policy.attribution.required && policy.attribution.text !== null) {
-      requiredAttribution.push(policy.attribution.text);
+    if (policy.attribution.required) {
+      if (policy.attribution.text === null) {
+        violations.push(
+          `${policy.sourceId} requires attribution but no attribution text is configured`,
+        );
+      } else {
+        requiredAttribution.push(policy.attribution.text);
+      }
     }
     notes.push(...policy.notes);
   }
@@ -115,6 +121,9 @@ export function evaluateMetricSourceRights(input: MetricSourceRightsInput): Metr
   };
 }
 
+export const ATTRIBUTION_REQUIRED_TEXT_MISSING =
+  "attribution required but no attribution text is configured";
+
 export function sourceRightsEnvelopeFromPolicy(policy: MetricSourceRightsPolicy): SourceRightsEnvelope {
   const base = {
     mayExposeDerived: policy.permissions.derivedApi,
@@ -124,7 +133,12 @@ export function sourceRightsEnvelopeFromPolicy(policy: MetricSourceRightsPolicy)
     notes: policy.notes,
     sourceId: policy.sourceId,
   };
-  if (!policy.attribution.required || policy.attribution.text === null) return base;
+  if (!policy.attribution.required) return base;
+  // Fail-closed: a required-but-unconfigured attribution must be surfaced, not
+  // silently dropped as "no attribution needed".
+  if (policy.attribution.text === null) {
+    return { ...base, attributionRequired: ATTRIBUTION_REQUIRED_TEXT_MISSING };
+  }
   return { ...base, attributionRequired: policy.attribution.text };
 }
 

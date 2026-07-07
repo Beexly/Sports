@@ -54,6 +54,14 @@ describe("calibrationIntegrityGrade", () => {
     expect(debt.drivers.map((driver) => driver.name)).toContain("calibration_pressure");
   });
 
+  it("lowers the score and surfaces a reliability-slope driver when the reliability curve drifts from 1.0", () => {
+    const clean = calibrationIntegrityGrade(cleanInput);
+    const badSlope = calibrationIntegrityGrade({ ...cleanInput, reliabilitySlope: 0.5 });
+
+    expect(badSlope.score).toBeLessThan(clean.score);
+    expect(badSlope.drivers.map((driver) => driver.name)).toContain("reliability_slope_risk");
+  });
+
   it("fails closed for blocked sources, insufficient samples, stale reports, and extreme debt", () => {
     const blockedSource = calibrationIntegrityGrade({
       ...cleanInput,
@@ -62,6 +70,8 @@ describe("calibrationIntegrityGrade", () => {
     const lowSample = calibrationIntegrityGrade({ ...cleanInput, sampleSize: 120 });
     const staleReport = calibrationIntegrityGrade({ ...cleanInput, reportAgeDays: 30 });
     const debtBlock = calibrationIntegrityGrade({ ...cleanInput, calibrationDebt: 90 });
+    const highEce = calibrationIntegrityGrade({ ...cleanInput, expectedCalibrationError: 0.25 });
+    const highDrift = calibrationIntegrityGrade({ ...cleanInput, driftPressure: 90 });
 
     expect(blockedSource.calibrationUsable).toBe(false);
     expect(blockedSource.sourcePosture).toBe("BLOCKED");
@@ -70,6 +80,10 @@ describe("calibrationIntegrityGrade", () => {
     expect(staleReport.calibrationUsable).toBe(false);
     expect(debtBlock.calibrationUsable).toBe(false);
     expect(debtBlock.blockReasons.join(" ")).toContain("Calibration debt");
+    expect(highEce.calibrationUsable).toBe(false);
+    expect(highEce.blockReasons.join(" ")).toContain("Expected calibration error");
+    expect(highDrift.calibrationUsable).toBe(false);
+    expect(highDrift.blockReasons.join(" ")).toContain("Drift pressure");
   });
 
   it("keeps confidence separate from calibration integrity score", () => {

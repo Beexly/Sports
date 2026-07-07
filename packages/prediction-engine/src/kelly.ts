@@ -60,8 +60,14 @@ export const MIN_EDGE_FOR_STAKE = 50;
 export interface KellyStake {
   /** Bankroll sizing lens in units (0.0 – MAX_UNITS_PER_PICK). */
   units: number;
-  /** The fair-value win probability used in the computation. */
-  fairProbability: number;
+  /**
+   * ILLUSTRATIVE fair-value win probability used in the Kelly computation.
+   * This is an ESTIMATE derived from edgeScore and the offered (break-even)
+   * price — it is NOT a de-vigged market consensus and must not be presented
+   * as a precise money-management figure. Callers holding a real de-vigged
+   * fair probability should compute Kelly from that instead.
+   */
+  estimatedFairProbability: number;
   /** Decimal odds (used in the b term). */
   decimalOdds: number;
   /** Full-Kelly stake before fractional discount, as % of bankroll. */
@@ -142,19 +148,29 @@ export function recommendStake(pick: StakeInput): KellyStake | null {
   const americanOdds = pick.pickType === "MONEYLINE" ? pick.line : -110;
   const decimalOdds = americanToDecimalOdds(americanOdds);
 
-  // Re-derive fair probability from the edge score and offered price.
-  // edgeScore is on 0–100 normalized from edgeComponentScore; the
-  // FactorBreakdown carries the canonical numeric edge implicitly via
-  // consensusPct. For Kelly we use the bookmaker consensus probability
-  // adjusted by our edge: fairProb = offeredProb + (edgeScore/100 × 0.05).
-  // This recovers a reasonable fair-value estimate without re-walking
-  // the full scoring pipeline.
-  const offeredProb = americanToImpliedProbability(americanOdds);
-  const inferredEdge = (pick.edgeScore / 100) * 0.05; // up to +5% edge
-  const fairProb = clamp(offeredProb + inferredEdge, 0, 0.95);
+  // Reject degenerate / invalid prices before any Kelly math. A missing
+  // MONEYLINE price commonly defaults to 0 upstream, which makes
+  // americanToDecimalOdds return Infinity; that in turn makes fullKelly NaN,
+  // and every guard below is a NaN comparison that FAILS OPEN (NaN <= 0 and
+  // NaN < 0.25 are both false), so a garbage stake object would leak out.
+  // Fail closed on non-finite / non-payout odds instead.
+  if (!Number.isFinite(decimalOdds) || decimalOdds <= 1) return null;
 
-  const fullKelly = fullKellyFraction(fairProb, decimalOdds);
-  if (fullKelly <= 0) return null;
+  // Derive an ILLUSTRATIVE fair-value probability from the offered price and
+  // the edge score. This is intentionally NOT a de-vigged market consensus:
+  // it nudges the break-even (offered) probability up by a bounded edge proxy
+  // so the Kelly lens has something to size against without re-walking the full
+  // scoring pipeline. Because it is only an estimate, the output field is named
+  // `estimatedFairProbability` and the rationale flags it as illustrative — we
+  // do not claim a precise fair-value number here.
+  const offeredProb = americanToImpliedProbability(americanOdds);
+  const inferredEdge = (pick.edgeScore / 100) * 0.05; // bounded +5% edge proxy
+  const estimatedFairProb = clamp(offeredProb + inferredEdge, 0, 0.95);
+
+  const fullKelly = fullKellyFraction(estimatedFairProb, decimalOdds);
+  // Fail closed on non-positive OR non-finite Kelly (`!(x > 0)` also rejects
+  // NaN, unlike `x <= 0`).
+  if (!(fullKelly > 0)) return null;
 
   const units = unitsFromKelly(fullKelly);
   const roundedUnits = Math.round(units * 4) / 4; // nearest 0.25u
@@ -165,13 +181,14 @@ export function recommendStake(pick: StakeInput): KellyStake | null {
   const rationale =
     `Quarter-Kelly bankroll lens: ${roundedUnits.toFixed(2)} units ` +
     `(${recommendedPercent.toFixed(2)}% of bankroll). ` +
-    `Based on ${Math.round(fairProb * 100)}% fair-value probability at ` +
+    `Based on an estimated ${Math.round(estimatedFairProb * 100)}% fair-value ` +
+    `probability (illustrative, derived from edge score) at ` +
     `${americanOdds > 0 ? "+" : ""}${Math.round(americanOdds)} odds. ` +
     `Fractional Kelly applied to reduce variance.`;
 
   return {
     units: roundedUnits,
-    fairProbability: fairProb,
+    estimatedFairProbability: estimatedFairProb,
     decimalOdds,
     fullKellyPercent: fullKelly * 100,
     recommendedPercent,

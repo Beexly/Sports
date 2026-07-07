@@ -37,7 +37,7 @@ export type WalkForwardSplit = {
 export type ReplayBacktestReport = {
   readonly baseline: "market-total-closing-line";
   readonly sampleSize: number;
-  readonly outOfSampleMae: number;
+  readonly outOfSampleMae: number | null;
   readonly folds: readonly WalkForwardSplit[];
   readonly seasonRange: {
     readonly from: number;
@@ -136,7 +136,7 @@ export function runMarketTotalReplayBacktest(
   return {
     baseline: MARKET_TOTAL_BASELINE,
     sampleSize: absoluteErrors.length,
-    outOfSampleMae: mean(absoluteErrors),
+    outOfSampleMae: absoluteErrors.length === 0 ? null : mean(absoluteErrors),
     folds,
     seasonRange: seasonRange(games),
   };

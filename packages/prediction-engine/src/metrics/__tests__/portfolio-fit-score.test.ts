@@ -111,4 +111,66 @@ describe("portfolioFitScore", () => {
     expect(result.birthCertificate.metricId).toBe("portfolio-fit-score");
     expect(result.probability).toBeNull();
   });
+
+  it("classifies a max-support, low-pressure portfolio as PRIME", () => {
+    const result = portfolioFitScore({
+      ...cleanInput,
+      bankrollFit: 100,
+      correlationRisk: 0,
+      duplicateThesisRisk: 0,
+      edgeQualityScore: 100,
+      liquidityFit: 100,
+      marketTypeExposurePercent: 5,
+      playableWindowScore: 100,
+      playerExposurePercent: 5,
+      slateExposurePercent: 5,
+      teamExposurePercent: 5,
+    });
+
+    expect(result.band).toBe("PRIME");
+    expect(result.score).toBeGreaterThanOrEqual(82);
+    expect(result.portfolioActionAllowed).toBe(true);
+  });
+
+  it("classifies high-pressure but unblocked portfolios as POOR while still allowing action", () => {
+    const result = portfolioFitScore({
+      ...cleanInput,
+      bankrollFit: 30,
+      calibrationDebt: 75,
+      correlationRisk: 79,
+      driftPressure: 75,
+      duplicateThesisRisk: 79,
+      edgeQualityScore: 40,
+      liquidityFit: 30,
+      marketTypeExposurePercent: 80,
+      noBetPressure: 80,
+      playableWindowScore: 40,
+      playerExposurePercent: 80,
+      slateExposurePercent: 80,
+      teamExposurePercent: 80,
+    });
+
+    expect(result.band).toBe("POOR");
+    expect(result.score).toBeLessThan(48);
+    expect(result.portfolioActionAllowed).toBe(true);
+    expect(result.blockReasons).toHaveLength(0);
+  });
+
+  it("reports the no-bet-pressure hard-block reason in isolation", () => {
+    const result = portfolioFitScore({ ...cleanInput, noBetPressure: 90 });
+
+    expect(result.portfolioActionAllowed).toBe(false);
+    expect(result.band).toBe("BLOCKED");
+    expect(result.blockReasons.join(" ")).toContain("No-bet pressure");
+    expect(result.blockReasons.join(" ")).not.toContain("Calibration debt");
+  });
+
+  it("reports the calibration-debt hard-block reason in isolation", () => {
+    const result = portfolioFitScore({ ...cleanInput, calibrationDebt: 85 });
+
+    expect(result.portfolioActionAllowed).toBe(false);
+    expect(result.band).toBe("BLOCKED");
+    expect(result.blockReasons.join(" ")).toContain("Calibration debt");
+    expect(result.blockReasons.join(" ")).not.toContain("Drift pressure");
+  });
 });

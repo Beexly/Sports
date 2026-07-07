@@ -43,7 +43,18 @@ describe("marketMirageScore", () => {
     expect(result.confidenceMeaning).toBe("EVIDENCE_QUALITY_NOT_EDGE_PROBABILITY_OR_PICK");
     expect(result.band).toBe("LOW");
     expect(result.marketInterpretationAllowed).toBe(true);
+    expect(result.uncertaintyBand).toBe("MEDIUM");
+    expect(result.confidenceScore).toBe(58.72);
     expect(result.drivers.every((driver) => !driver.name.includes("weight"))).toBe(true);
+  });
+
+  it("fails closed with a BLOCKED posture when the source policy is empty", () => {
+    const result = marketMirageScore({ ...cleanInput, sourcePolicy: [] });
+
+    expect(result.band).toBe("BLOCK");
+    expect(result.sourcePosture).toBe("BLOCKED");
+    expect(result.marketInterpretationAllowed).toBe(false);
+    expect(result.blockReasons).toContain("Source policy blocks modeling.");
   });
 
   it("hard-blocks stale or blocked market signals even when market gravity is high", () => {

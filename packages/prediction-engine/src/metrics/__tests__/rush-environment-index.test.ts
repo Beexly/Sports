@@ -59,4 +59,75 @@ describe("rushEnvironmentIndex", () => {
     expect(weakEvidence.environmentIndex).toBe(strongerEvidence.environmentIndex);
     expect(strongerEvidence.confidenceScore).toBeGreaterThan(weakEvidence.confidenceScore);
   });
+
+  it("fails closed to HIGH uncertainty and low confidence when the source policy is empty", () => {
+    const blocked = rushEnvironmentIndex({
+      down: 1,
+      sampleSize: 900,
+      sourcePolicy: [],
+      yardsToGo: 4,
+    });
+    const allowed = rushEnvironmentIndex({
+      down: 1,
+      sampleSize: 900,
+      sourcePolicy: [sourcePolicy],
+      yardsToGo: 4,
+    });
+
+    // A large sample cannot rescue confidence once the rights gate fails closed.
+    expect(blocked.uncertaintyBand).toBe("HIGH");
+    expect(blocked.confidenceScore).toBeLessThanOrEqual(48);
+    expect(blocked.confidenceScore).toBeLessThan(allowed.confidenceScore);
+  });
+
+  it("keeps environmentIndex within [0, 100] for out-of-range inputs", () => {
+    const extremeHigh = rushEnvironmentIndex({
+      boxPressureProxy: -3,
+      defensiveFrontPressureProxy: -3,
+      down: -5,
+      gameScriptRunFriendliness: 5,
+      offensiveLineContinuityProxy: 5,
+      runDirectionLeverageProxy: 5,
+      sampleSize: 400,
+      sourcePolicy: [sourcePolicy],
+      weatherPenalty: -2,
+      yardsToGo: -10,
+    });
+    const extremeLow = rushEnvironmentIndex({
+      boxPressureProxy: 4,
+      defensiveFrontPressureProxy: 4,
+      down: 8,
+      gameScriptRunFriendliness: -4,
+      offensiveLineContinuityProxy: -4,
+      runDirectionLeverageProxy: -4,
+      sampleSize: 400,
+      sourcePolicy: [sourcePolicy],
+      weatherPenalty: 2,
+      yardsToGo: 40,
+    });
+
+    for (const result of [extremeHigh, extremeLow]) {
+      expect(result.environmentIndex).toBeGreaterThanOrEqual(0);
+      expect(result.environmentIndex).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it("sorts drivers by descending absolute contribution", () => {
+    const result = rushEnvironmentIndex({
+      boxPressureProxy: 0.3,
+      defensiveFrontPressureProxy: 0.4,
+      down: 2,
+      gameScriptRunFriendliness: 0.6,
+      offensiveLineContinuityProxy: 0.7,
+      runDirectionLeverageProxy: 0.55,
+      sampleSize: 300,
+      sourcePolicy: [sourcePolicy],
+      weatherPenalty: 0.5,
+      yardsToGo: 6,
+    });
+
+    const magnitudes = result.drivers.map((driver) => Math.abs(driver.contribution));
+    const descending = [...magnitudes].sort((a, b) => b - a);
+    expect(magnitudes).toEqual(descending);
+  });
 });

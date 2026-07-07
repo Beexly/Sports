@@ -171,7 +171,13 @@ export function planSlateCommitment(input: SlatePlanInput, hash: HashFn): SlateP
   }
   const now = Date.parse(input.now);
   const kickoff = Date.parse(input.earliestKickoff);
-  if (Number.isFinite(now) && Number.isFinite(kickoff) && now >= kickoff) {
+  if (!Number.isFinite(now) || !Number.isFinite(kickoff)) {
+    return {
+      action: "SKIP",
+      reason: "unparseable timestamp — cannot prove the slate is pre-result",
+    };
+  }
+  if (now >= kickoff) {
     return {
       action: "SKIP",
       reason: "first game already started — cannot publish a pre-result commitment now",

@@ -51,8 +51,10 @@ export function staleLineRiskScore(input: StaleLineRiskInput): StaleLineRiskScor
         0.05 * dispersionRisk +
         0.03 * movementRisk,
     );
-  const score = stale ? Math.max(85, baseRisk) : baseRisk;
-  const band = stale ? "BLOCK" : classifyRisk(score);
+  const rightsHardDeny = input.rightsStatus === "blocked" || input.rightsStatus === "excluded";
+  const hardBlock = stale || rightsHardDeny;
+  const score = hardBlock ? Math.max(85, baseRisk) : baseRisk;
+  const band = hardBlock ? "BLOCK" : classifyRisk(score);
   const drivers = sortedDrivers([
     metricDriver({
       contribution: ageRisk * 40,

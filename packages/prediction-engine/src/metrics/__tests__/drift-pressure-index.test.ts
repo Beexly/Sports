@@ -75,6 +75,33 @@ describe("driftPressureIndex", () => {
     expect(severePsi.blockReasons.join(" ")).toContain("Feature distribution");
   });
 
+  it("blocks and vetoes on severe Brier, calibration-error, and schema-change drift", () => {
+    const brier = driftPressureIndex({ ...cleanInput, calibrationBrierDelta: 0.12 });
+    const calibrationError = driftPressureIndex({ ...cleanInput, calibrationErrorDelta: 0.25 });
+    const schema = driftPressureIndex({ ...cleanInput, schemaChangeRate: 0.7 });
+
+    expect(brier.band).toBe("BLOCKED");
+    expect(brier.downstreamVetoRecommended).toBe(true);
+    expect(brier.blockReasons.join(" ")).toContain("Brier");
+
+    expect(calibrationError.band).toBe("BLOCKED");
+    expect(calibrationError.downstreamVetoRecommended).toBe(true);
+    expect(calibrationError.blockReasons.join(" ")).toContain("error");
+
+    expect(schema.band).toBe("BLOCKED");
+    expect(schema.downstreamVetoRecommended).toBe(true);
+    expect(schema.blockReasons.join(" ")).toContain("Schema");
+  });
+
+  it("fails closed when no source policy is present", () => {
+    const result = driftPressureIndex({ ...cleanInput, sourcePolicy: [] });
+
+    expect(result.band).toBe("BLOCKED");
+    expect(result.sourcePosture).toBe("BLOCKED");
+    expect(result.downstreamVetoRecommended).toBe(true);
+    expect(result.blockReasons.join(" ")).toContain("Source policy");
+  });
+
   it("keeps confidence separate from drift pressure score and recommends veto on severe pressure", () => {
     const result = driftPressureIndex({
       ...cleanInput,

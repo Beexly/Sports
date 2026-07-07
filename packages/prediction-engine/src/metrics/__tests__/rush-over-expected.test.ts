@@ -54,4 +54,30 @@ describe("rushOverExpectedGse", () => {
     expect(smallSample.creationIndex).toBe(largeSample.creationIndex);
     expect(largeSample.confidenceScore).toBeGreaterThan(smallSample.confidenceScore);
   });
+
+  it("forces HIGH uncertainty and caps confidence when source rights are not cleared", () => {
+    const uncleared = rushOverExpectedGse({
+      actualRushYards: 11,
+      expectedRushYards: 4,
+      sampleSize: 900,
+      sourcePolicy: [],
+    });
+
+    expect(uncleared.uncertaintyBand).toBe("HIGH");
+    expect(uncleared.confidenceScore).toBeLessThanOrEqual(46);
+  });
+
+  it("marks a stuffed run below expectation with a DOWN residual driver", () => {
+    const stuffed = rushOverExpectedGse({
+      actualRushYards: 0,
+      expectedRushYards: 5,
+      sampleSize: 360,
+      sourcePolicy: [sourcePolicy],
+    });
+
+    expect(stuffed.rushYardsOverExpected).toBeLessThan(0);
+    expect(stuffed.creationIndex).toBeLessThan(50);
+    const residualDriver = stuffed.drivers.find((driver) => driver.name === "rush_yards_residual");
+    expect(residualDriver?.direction).toBe("DOWN");
+  });
 });

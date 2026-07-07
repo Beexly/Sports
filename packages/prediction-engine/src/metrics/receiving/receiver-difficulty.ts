@@ -51,7 +51,11 @@ export function receiverDifficultyIndex(input: ReceiverDifficultyInput): Receive
     { value: priorDifficulty, weight: 0.04 },
   ]);
   const uncertaintyBand = uncertaintyFromEvidence({
-    proxyCount: proxyCount([input.separationYards, input.cushionYards, input.contestedCatchProxy, input.sidelineProxy]),
+    // Count only genuine soft proxies. separationYards/cushionYards are real
+    // tracking measurements, so their presence must not raise reported
+    // uncertainty (supplying real data cannot lower confidence below the
+    // fabricated-default fallback).
+    proxyCount: proxyCount([input.contestedCatchProxy, input.sidelineProxy]),
     sampleSize: input.sampleSize,
     sourcePolicy: input.sourcePolicy,
   });

@@ -98,7 +98,23 @@ describe("Conformal Uncertainty Width", () => {
     expect(wide.score).toBeGreaterThan(tight.score);
     expect(wide.p90Width).toBeGreaterThan(tight.p90Width);
     expect(wide.band).toBe("WATCH");
+    expect(wide.downstreamVetoRecommended).toBe(false);
     expect(tight.band).toBe("TIGHT");
+    expect(tight.downstreamVetoRecommended).toBe(false);
+  });
+
+  it("flags a genuinely wide, non-blocked band as a downstream veto", () => {
+    const wide = conformalUncertaintyWidth(baseInput({
+      driftPressure: 100,
+      intervals: Array.from({ length: 20 }, (_value, index) => interval(0, 30, index < 14)),
+      reportAgeDays: 14,
+    }));
+
+    expect(wide.blockReasons).toHaveLength(0);
+    expect(wide.coverageGap).toBeLessThan(0.25);
+    expect(wide.score).toBeGreaterThanOrEqual(70);
+    expect(wide.band).toBe("WIDE");
+    expect(wide.downstreamVetoRecommended).toBe(true);
   });
 
   it("treats under-covering narrow intervals as unsafe evidence", () => {

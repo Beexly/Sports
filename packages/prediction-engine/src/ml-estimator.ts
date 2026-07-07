@@ -358,10 +358,17 @@ export function toMlFairValue(
   const now = (options.now ?? (() => new Date()))();
   const homeFairProb = predictWinProb(model, features, { now: () => now });
   if (homeFairProb === null) return null;
+  // Re-assert the strict (0, 1) bound after rounding: round4 can collapse an
+  // extreme-but-valid probability (e.g. 4.54e-5) to exactly 0 or 1, which would
+  // fabricate an impossible certainty that predictWinProb's line-326 guard
+  // explicitly promises never to emit (and would break downstream edge math).
+  const rh = round4(homeFairProb);
+  const ra = round4(1 - homeFairProb);
+  if (rh <= 0 || rh >= 1 || ra <= 0 || ra >= 1) return null;
   return {
     source: "ml-gbm",
-    homeFairProb: round4(homeFairProb),
-    awayFairProb: round4(1 - homeFairProb),
+    homeFairProb: rh,
+    awayFairProb: ra,
     capturedAt: now.toISOString(),
   };
 }

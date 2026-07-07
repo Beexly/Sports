@@ -131,7 +131,7 @@ export function buildVegasWinProbabilityPath(
     const homeWinProbability =
       checkpoint === "pregame"
         ? normalCdf(projectedFinalHomeMargin / assumptions.spreadToWinProbStdev)
-        : normalCdf(projectedHomeMargin / stdev);
+        : normalCdf(projectedFinalHomeMargin / stdev);
     return {
       checkpoint,
       gameShare,

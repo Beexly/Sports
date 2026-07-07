@@ -562,14 +562,23 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const totals = totalOdds.map((o) => o.total as number);
   const avgTotal = totals.reduce((a, b) => a + b, 0) / totals.length;
 
-  // Consensus: over is favored when over price < under price (closer to -110)
-  const overFavored = totalOdds.filter(
-    (o) =>
-      o.overPrice !== undefined &&
-      o.underPrice !== undefined &&
-      Math.abs(o.overPrice) <= Math.abs(o.underPrice)
+  // Consensus is only meaningful over books that quote BOTH sides. A totals row
+  // with a `total` but no over/under prices carries no consensus signal, so we
+  // must not let its absence fabricate a one-sided (100% UNDER) consensus.
+  const pricedTotals = totalOdds.filter(
+    (o) => o.overPrice !== undefined && o.underPrice !== undefined
+  );
+  if (pricedTotals.length === 0) return null;
+
+  // Over is the market favorite when its SIGNED American price is <= the under
+  // price: the higher-implied-probability side is the one with the smaller
+  // signed price (e.g. -115 over is favored over -105 under). Using Math.abs
+  // here would pick the LESS-juiced side and invert the favorite on any
+  // asymmetric juice.
+  const overFavored = pricedTotals.filter(
+    (o) => o.overPrice! <= o.underPrice!
   ).length;
-  const overFavoredPct = totalOdds.length > 0 ? overFavored / totalOdds.length : 0.5;
+  const overFavoredPct = overFavored / pricedTotals.length;
   const overIsChosen = overFavoredPct >= 0.5;
   const consensusPct = overIsChosen ? overFavoredPct : 1 - overFavoredPct;
 

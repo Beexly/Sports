@@ -107,6 +107,36 @@ describe("playableWindowScore", () => {
     expect(both.drivers.map((driver) => driver.name)).toContain("role_volatility");
   });
 
+  it("flags restricted-but-allowed sources as REVIEW without closing the window", () => {
+    const result = playableWindowScore({
+      ...openInput,
+      sourcePolicy: [{ ...approvedSource, status: "restricted" }],
+    });
+
+    expect(result.sourcePosture).toBe("REVIEW");
+    expect(result.decisionWindowAllowed).toBe(true);
+    const reviewDriver = result.drivers.find((driver) => driver.name === "source_posture_review_pressure");
+    expect(reviewDriver?.direction).toBe("DOWN");
+  });
+
+  it("fails closed with a BLOCKED posture when the source policy is empty", () => {
+    const result = playableWindowScore({ ...openInput, sourcePolicy: [] });
+
+    expect(result.sourcePosture).toBe("BLOCKED");
+    expect(result.decisionWindowAllowed).toBe(false);
+    expect(result.band).toBe("CLOSED");
+    expect(result.blockReasons.join(" ")).toContain("Source policy blocks modeling.");
+  });
+
+  it("does not treat model agreement as a data proxy that inflates uncertainty", () => {
+    const withAgreement = playableWindowScore(openInput);
+    const withoutAgreement = playableWindowScore({ ...openInput, modelAgreement: undefined });
+
+    expect(withAgreement.uncertaintyBand).toBe("MEDIUM");
+    expect(withAgreement.uncertaintyBand).toBe(withoutAgreement.uncertaintyBand);
+    expect(withAgreement.confidenceScore).toBeCloseTo(withoutAgreement.confidenceScore, 2);
+  });
+
   it("keeps readiness separate from confidence, EV, and betting advice", () => {
     const result = playableWindowScore({
       ...openInput,

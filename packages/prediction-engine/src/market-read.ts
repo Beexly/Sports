@@ -37,8 +37,17 @@ export function noVigFromAmericanPrices(prices: readonly number[]): MarketRead |
   const raw = impliedFromDecimalOdds(decimal);
   const shin = shinDevig(raw);
 
+  // Shin's early-return for an underround book (booksum < 1) leaves the raw
+  // implied probabilities unchanged, so they sum to < 1. Renormalize so the
+  // interface's "sums to 1" contract holds on both sides — otherwise a
+  // best-home/best-away price pair leaks probability mass and shows impossible
+  // simultaneous positive edge. Idempotent when the probs already sum to 1.
+  const probSum = shin.probabilities.reduce((acc, p) => acc + p, 0);
+  const fairProbabilities =
+    probSum > 0 ? shin.probabilities.map((p) => p / probSum) : shin.probabilities;
+
   return {
-    fairProbabilities: shin.probabilities,
+    fairProbabilities,
     bookHoldPct: round2(Math.max(0, (shin.booksum - 1) * 100)),
     insiderShareZ: shin.z,
     outcomeCount: valid.length,
@@ -170,8 +179,15 @@ export function marketGravityIndex(consensus: ConsensusMarketRead): MarketGravit
 
   const band: GravityBand =
     index >= 60 ? "strong" : index >= 30 ? "moderate" : index >= 10 ? "slight" : "balanced";
+  // Field-relative side test: equivalent to `fairHomeProb >= 0.5` on a 2-way
+  // market (where fairHomeProb + fairAwayProb = 1), but correct on a 3-way
+  // (1X2) consensus where the favourite can lead the field with P < 0.5.
   const side =
-    band === "balanced" ? "none" : consensus.fairHomeProb >= 0.5 ? "home" : "away";
+    band === "balanced"
+      ? "none"
+      : consensus.fairHomeProb >= consensus.fairAwayProb
+        ? "home"
+        : "away";
 
   return {
     index,

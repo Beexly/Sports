@@ -109,6 +109,12 @@ export function calibrationIntegrityGrade(
         name: "brier_score_risk",
       }),
       metricDriver({
+        contribution: -(slopeRisk * 14),
+        direction: slopeRisk > 0 ? "DOWN" : "NEUTRAL",
+        explanation: "Reliability-curve slope drifting from 1.0 lowers calibration integrity.",
+        name: "reliability_slope_risk",
+      }),
+      metricDriver({
         contribution: sampleSupport * 13,
         direction: sampleSupport > 0 ? "UP" : "NEUTRAL",
         explanation: "Sufficient settled calibration samples support integrity.",

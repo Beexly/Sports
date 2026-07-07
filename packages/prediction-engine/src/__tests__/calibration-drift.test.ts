@@ -30,6 +30,15 @@ describe("assessDrift", () => {
     expect(r.drifted).toBe(true);
   });
 
+  it("flags watch when recent Brier degrades mildly (watch ≤ delta < alert)", () => {
+    // baseline 35/50 wins (brier 0.21); recent 30/50 wins (brier 0.25) → delta 0.04
+    const r = assessDrift(window(50, 0.7, 35), window(50, 0.7, 30));
+    expect(r.brierDelta).toBeGreaterThanOrEqual(0.02);
+    expect(r.brierDelta).toBeLessThan(0.05);
+    expect(r.severity).toBe("watch");
+    expect(r.drifted).toBe(true);
+  });
+
   it("returns insufficient when a window is too small to judge", () => {
     const r = assessDrift(window(5, 0.7, 3), window(50, 0.7, 15));
     expect(r.severity).toBe("insufficient");

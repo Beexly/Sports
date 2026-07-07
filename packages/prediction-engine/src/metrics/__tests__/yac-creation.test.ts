@@ -54,4 +54,38 @@ describe("yacCreationGse", () => {
     expect(smallSample.creationIndex).toBe(largeSample.creationIndex);
     expect(largeSample.confidenceScore).toBeGreaterThan(smallSample.confidenceScore);
   });
+
+  it("fails closed to HIGH uncertainty and floored confidence when the source policy is empty", () => {
+    const cleared = yacCreationGse({
+      actualYardsAfterCatch: 14,
+      expectedYac: 4,
+      sampleSize: 900,
+      sourcePolicy: [sourcePolicy],
+    });
+    const blockedSource = yacCreationGse({
+      actualYardsAfterCatch: 14,
+      expectedYac: 4,
+      sampleSize: 900,
+      sourcePolicy: [],
+    });
+
+    expect(blockedSource.uncertaintyBand).toBe("HIGH");
+    // HIGH band floors confidence to base 34 (+ capped sample bonus), well below a cleared source.
+    expect(blockedSource.confidenceScore).toBe(43);
+    expect(blockedSource.confidenceScore).toBeLessThan(cleared.confidenceScore);
+  });
+
+  it("marks the residual driver DOWN and reports negative creation when actual YAC trails expected", () => {
+    const belowBaseline = yacCreationGse({
+      actualYardsAfterCatch: 2,
+      expectedYac: 10,
+      sampleSize: 320,
+      sourcePolicy: [sourcePolicy],
+    });
+
+    const residualDriver = belowBaseline.drivers.find((driver) => driver.name === "yac_residual");
+    expect(residualDriver?.direction).toBe("DOWN");
+    expect(residualDriver?.contribution).toBeLessThan(0);
+    expect(belowBaseline.yacOverExpected).toBeLessThan(0);
+  });
 });

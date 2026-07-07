@@ -40,7 +40,7 @@ export function yacCreationGse(input: YacCreationInput): YacCreationMetric {
   const contactBalanceLift = clamp(input.contactBalanceProxy ?? 0, 0, 1) * 0.75;
   const yacOverExpected = clamp(0.74 * residual + 0.18 * priorResidual + brokenTackleLift + contactBalanceLift, -20, 40);
   const uncertaintyBand = uncertaintyFromEvidence({
-    proxyCount: proxyCount([input.brokenTackleProxy, input.contactBalanceProxy, input.receiverYacOverExpectedPrior]),
+    proxyCount: proxyCount([input.brokenTackleProxy, input.contactBalanceProxy]),
     sampleSize: input.sampleSize,
     sourcePolicy: input.sourcePolicy,
   });
@@ -52,25 +52,25 @@ export function yacCreationGse(input: YacCreationInput): YacCreationMetric {
     creationIndex: round(clampScore(50 + yacOverExpected * 4), 2),
     drivers: sortedDrivers([
       metricDriver({
-        contribution: residual * 4,
+        contribution: 0.74 * residual * 4,
         direction: residual >= 0 ? "UP" : "DOWN",
         explanation: "Actual YAC above GSE expected YAC raises creation; below expectation lowers it.",
         name: "yac_residual",
       }),
       metricDriver({
-        contribution: priorResidual * 3,
+        contribution: 0.18 * priorResidual * 4,
         direction: priorResidual >= 0 ? "UP" : "DOWN",
         explanation: "Shrunk receiver YAC-over-expected prior stabilizes noisy one-play residuals.",
         name: "receiver_yac_creation_prior",
       }),
       metricDriver({
-        contribution: brokenTackleLift * 10,
+        contribution: brokenTackleLift * 4,
         direction: "UP",
         explanation: "Broken-tackle proxy can add post-catch creation credit when source-cleared.",
         name: "broken_tackle_proxy",
       }),
       metricDriver({
-        contribution: contactBalanceLift * 10,
+        contribution: contactBalanceLift * 4,
         direction: "UP",
         explanation: "Contact-balance proxy can add creation credit when source-cleared.",
         name: "contact_balance_proxy",

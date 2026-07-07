@@ -70,14 +70,18 @@ export function qbBurdenIndex(input: QbBurdenIndexInput): QbBurdenIndexMetric {
   ]);
   const uncertaintyBand = uncertaintyFromEvidence({
     driftPressure: sourceRisk * 100,
-    proxyCount: proxyCount([
-      input.pressureProxy,
-      input.timeToThrowStressProxy,
-      input.weatherPenalty,
-      input.receiverSeparationDeficit,
-      input.offensiveLineDisruptionProxy,
-      input.passRateOverExpected,
-    ]),
+    proxyCount:
+      proxyCount([
+        input.pressureProxy,
+        input.timeToThrowStressProxy,
+        input.weatherPenalty,
+        input.passRateOverExpected,
+      ]) +
+      // Absent receiverSeparationDeficit / offensiveLineDisruptionProxy fall back to a
+      // fabricated 0.5 prior that drives ~45% of a clean-context burden. Count that
+      // reliance so defaulted (unmeasured) data cannot report LOW uncertainty, and so
+      // supplying the real measurements does not raise uncertainty.
+      defaultedReliance([input.receiverSeparationDeficit, input.offensiveLineDisruptionProxy]),
     sampleSize: input.sampleSize,
     sourcePolicy: input.sourcePolicy,
   });
@@ -164,4 +168,8 @@ function sourcePosture(policies: readonly MetricSourcePolicy[], sourceRisk: numb
 
 function proxyCount(values: readonly (number | undefined)[]): number {
   return values.filter((value) => value !== undefined).length;
+}
+
+function defaultedReliance(values: readonly (number | undefined)[]): number {
+  return values.filter((value) => value === undefined).length;
 }

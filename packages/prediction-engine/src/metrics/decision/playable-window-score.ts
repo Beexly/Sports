@@ -88,7 +88,7 @@ export function playableWindowScore(input: PlayableWindowScoreInput): PlayableWi
   const score = round(blockReasons.length > 0 ? Math.min(24, rawScore) : rawScore, 2);
   const uncertaintyBand = uncertaintyFromEvidence({
     driftPressure: Math.max(input.driftPressure, input.calibrationDebt, sourceRisk * 100),
-    proxyCount: proxyCount([input.roleVolatilityIndex, input.qbBurdenIndex, input.modelAgreement]),
+    proxyCount: proxyCount([input.roleVolatilityIndex, input.qbBurdenIndex]),
     sampleSize: Math.max(1, input.evidenceHealth) * 4,
     sourcePolicy: input.sourcePolicy,
   });

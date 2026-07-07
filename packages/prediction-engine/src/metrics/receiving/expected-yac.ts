@@ -82,7 +82,7 @@ export function expectedYacGse(input: ExpectedYacInput): ExpectedYacMetric {
       }),
       metricDriver({
         contribution: -depthPenalty * 8,
-        direction: "DOWN",
+        direction: depthPenalty <= 0 ? "UP" : "DOWN",
         explanation: "Protected depth basis lowers expected YAC on deeper targets.",
         name: "air_yards_depth",
       }),

@@ -31,12 +31,17 @@ export interface MarketGravityIndex {
 export function marketGravityIndex(input: MarketGravityInput): MarketGravityIndex {
   const marketScale = scaleForMarket(input.marketType ?? "spread");
   const lineMoveStrength = normalizeClamped(Math.abs(input.currentLine - input.openingLine), 0, marketScale);
-  const consensusAlignment = 1 - normalizeClamped(standardDeviation(input.bookLines), 0, marketScale / 2);
+  // A single (or empty) book is not corroboration: without >=2 books we cannot
+  // observe agreement, so we award no consensus reward and treat dispersion as
+  // maximally penalized (unknown/thin) rather than fabricating perfect alignment.
+  const hasConsensusEvidence = input.bookLines.length >= 2;
+  const consensusAlignment = hasConsensusEvidence ? 1 - normalizeClamped(standardDeviation(input.bookLines), 0, marketScale / 2) : 0;
   const timingWeight = Math.exp(-Math.max(0, input.hoursToStart) / 24);
   const freshnessPenalty = normalizeClamped(input.sourceAgeMinutes, 0, Math.max(1, input.freshnessTtlMinutes));
   const injuryExplainability = normalizeClamped(input.injuryExplainability ?? 0, 0, 1);
   const keyNumberBonus = input.crossedKeyNumber ? 1 : 0;
-  const dispersionPenalty = normalizeClamped(input.bookDispersionPenalty ?? 1 - consensusAlignment, 0, 1);
+  const dispersionDefault = hasConsensusEvidence ? 1 - consensusAlignment : 1;
+  const dispersionPenalty = normalizeClamped(input.bookDispersionPenalty ?? dispersionDefault, 0, 1);
   const raw =
     -1.3 +
     2.2 * lineMoveStrength +
@@ -69,6 +74,18 @@ export function marketGravityIndex(input: MarketGravityInput): MarketGravityInde
       direction: dispersionPenalty > 0 ? "DOWN" : "NEUTRAL",
       explanation: "Book dispersion suppresses clean signal classification.",
       name: "book_dispersion",
+    }),
+    metricDriver({
+      contribution: injuryExplainability * 5.5,
+      direction: injuryExplainability > 0 ? "UP" : "NEUTRAL",
+      explanation: "Injury-explained line movement raises market gravity.",
+      name: "injury_explainability",
+    }),
+    metricDriver({
+      contribution: keyNumberBonus * 3.5,
+      direction: keyNumberBonus > 0 ? "UP" : "NEUTRAL",
+      explanation: "Crossing a key number raises market gravity.",
+      name: "key_number",
     }),
   ]);
 

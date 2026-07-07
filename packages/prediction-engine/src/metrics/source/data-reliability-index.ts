@@ -28,8 +28,11 @@ export interface DataReliabilityIndex {
 export function dataReliabilityIndex(input: DataReliabilityInput): DataReliabilityIndex {
   const ttl = Math.max(1, input.ttlMinutes);
   const freshnessScore = freshness(input.sourceAgeMinutes, ttl);
-  const coverageScore = input.expectedSourceCount <= 0 ? 0 : clamp01(input.sourceCount / input.expectedSourceCount);
-  const providerTrustScore = clamp01(input.providerTrustScore);
+  const coverageScore =
+    !Number.isFinite(input.sourceCount) || !Number.isFinite(input.expectedSourceCount) || input.expectedSourceCount <= 0
+      ? 0
+      : clamp01(input.sourceCount / input.expectedSourceCount);
+  const providerTrustScore = clamp01(Number.isFinite(input.providerTrustScore) ? input.providerTrustScore : 0);
   const rightsScore = rightsCleanliness(input.rightsStatus);
   const contradictionPenalty = Math.min(0.5, 0.2 * Math.max(0, input.contradictionCount ?? 0));
   const missingPenalty = Math.min(0.4, 0.08 * Math.max(0, input.missingRequiredFields ?? 0));
@@ -47,8 +50,8 @@ export function dataReliabilityIndex(input: DataReliabilityInput): DataReliabili
     metricDriver({ contribution: coverageScore * 22, direction: "UP", explanation: "More expected sources covered raises reliability.", name: "coverage" }),
     metricDriver({ contribution: providerTrustScore * 20, direction: "UP", explanation: "Provider trust raises reliability.", name: "provider_trust" }),
     metricDriver({
-      contribution: rightsScore * 20,
-      direction: rightsScore > 0 ? "UP" : "DOWN",
+      contribution: (rightsScore - 1) * 20,
+      direction: rightsScore < 1 ? "DOWN" : "NEUTRAL",
       explanation: "Source-rights cleanliness controls whether data can influence decisions.",
       name: "rights_cleanliness",
     }),

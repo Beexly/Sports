@@ -37,7 +37,33 @@ describe("noBetPressureMetric", () => {
     expect(result.band).toBe("CLEAR");
     expect(result.noBetRecommended).toBe(false);
     expect(result.blockReasons).toEqual([]);
+    expect(result.uncertaintyBand).toBe("MEDIUM");
+    expect(result.confidenceScore).toBe(66.37);
+    expect(result.confidenceScore).toBeGreaterThanOrEqual(0);
+    expect(result.confidenceScore).toBeLessThanOrEqual(100);
     expect(result.drivers.every((driver) => !Object.prototype.hasOwnProperty.call(driver, "weight"))).toBe(true);
+  });
+
+  it("does not penalize uncertainty for supplying explicit zero optional pressures", () => {
+    // Presence of clean, informative-but-zero optional signals must not raise
+    // uncertainty vs omitting them: zeros are not proxies.
+    const explicitZeros = noBetPressureMetric({
+      ...cleanInput,
+      marketMirageScore: 0,
+      responsibleGamingPressure: 0,
+      roleVolatilityIndex: 0,
+    });
+    const omitted = noBetPressureMetric({
+      ...cleanInput,
+      marketMirageScore: undefined,
+      responsibleGamingPressure: undefined,
+      roleVolatilityIndex: undefined,
+    });
+
+    expect(explicitZeros.uncertaintyBand).toBe("LOW");
+    expect(omitted.uncertaintyBand).toBe("LOW");
+    expect(explicitZeros.uncertaintyBand).toBe(omitted.uncertaintyBand);
+    expect(explicitZeros.confidenceScore).toBe(omitted.confidenceScore);
   });
 
   it("rises when stale data, missing data, contradictions, and low evidence increase", () => {
@@ -95,6 +121,19 @@ describe("noBetPressureMetric", () => {
     expect(blockedSource.noBetRecommended).toBe(true);
     expect(blockedSource.score).toBeGreaterThanOrEqual(85);
     expect(responsibleGaming.blockReasons.join(" ")).toContain("Responsible-gaming");
+    expect(blockedSource.uncertaintyBand).toBe("HIGH");
+    expect(blockedMarket.uncertaintyBand).toBe("HIGH");
+    expect(missingRequired.uncertaintyBand).toBe("HIGH");
+    expect(responsibleGaming.uncertaintyBand).toBe("HIGH");
+  });
+
+  it("fails closed when the source policy is missing entirely", () => {
+    const emptyPolicy = noBetPressureMetric({ ...cleanInput, sourcePolicy: [] });
+
+    expect(emptyPolicy.band).toBe("HARD_PASS");
+    expect(emptyPolicy.sourcePosture).toBe("BLOCKED");
+    expect(emptyPolicy.noBetRecommended).toBe(true);
+    expect(emptyPolicy.uncertaintyBand).toBe("HIGH");
   });
 
   it("can veto attractive downstream inputs without emitting betting advice", () => {

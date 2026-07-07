@@ -106,6 +106,12 @@ export function roleVolatilityIndex(input: RoleVolatilityIndexInput): RoleVolati
         name: "opportunity_share_volatility",
       }),
       metricDriver({
+        contribution: routeShock * 12,
+        direction: routeShock > 0 ? "UP" : "NEUTRAL",
+        explanation: "Route-share movement increases role volatility.",
+        name: "route_share_volatility",
+      }),
+      metricDriver({
         contribution: depthShock * 12,
         direction: depthShock > 0 ? "UP" : "NEUTRAL",
         explanation: "Depth-chart shock increases role volatility.",
@@ -116,6 +122,18 @@ export function roleVolatilityIndex(input: RoleVolatilityIndexInput): RoleVolati
         direction: injuryShock + returnUncertainty > 0 ? "UP" : "NEUTRAL",
         explanation: "Injury or return uncertainty increases role volatility.",
         name: "injury_return_uncertainty",
+      }),
+      metricDriver({
+        contribution: teammateShock * 7,
+        direction: teammateShock > 0 ? "UP" : "NEUTRAL",
+        explanation: "Teammate role shock shifts available role and increases volatility.",
+        name: "teammate_role_shock",
+      }),
+      metricDriver({
+        contribution: sampleRisk * 5,
+        direction: sampleRisk > 0 ? "UP" : "NEUTRAL",
+        explanation: "Thin usage sample raises role-estimate volatility.",
+        name: "sample_size_risk",
       }),
       metricDriver({
         contribution: freshnessRisk * 4,

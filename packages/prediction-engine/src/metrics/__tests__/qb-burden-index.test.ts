@@ -25,10 +25,28 @@ describe("qbBurdenIndex", () => {
     expect(result.metricId).toBe("qb-burden-index");
     expect(result.status).toBe("SHADOW");
     expect(result.sourcePosture).toBe("CLEAN");
-    expect(result.uncertaintyBand).toBe("LOW");
+    // baseInput omits receiverSeparationDeficit and offensiveLineDisruptionProxy, so
+    // the burden leans on two fabricated 0.5 priors. That reliance must surface as
+    // MEDIUM uncertainty rather than a falsely confident LOW.
+    expect(result.uncertaintyBand).toBe("MEDIUM");
     expect(result.burdenBand).toBe("LOW");
     expect(result.burdenIndex).toBeLessThan(35);
     expect(result.drivers.every((driver) => !Object.prototype.hasOwnProperty.call(driver, "weight"))).toBe(true);
+  });
+
+  it("does not lower uncertainty for defaulted separation/O-line inputs vs measured data", () => {
+    const defaulted = qbBurdenIndex(baseInput);
+    const measured = qbBurdenIndex({
+      ...baseInput,
+      offensiveLineDisruptionProxy: 0.3,
+      receiverSeparationDeficit: 0.3,
+    });
+
+    // Supplying the real measurements removes the fabricated-prior reliance, so the
+    // metric may only become MORE certain, never less.
+    expect(measured.uncertaintyBand).toBe("LOW");
+    expect(defaulted.uncertaintyBand).toBe("MEDIUM");
+    expect(measured.confidenceScore).toBeGreaterThan(defaulted.confidenceScore);
   });
 
   it("increases with pressure, throw depth, down-distance friction, and weather", () => {
@@ -53,7 +71,39 @@ describe("qbBurdenIndex", () => {
     expect(lateAndLong.burdenIndex).toBeGreaterThan(clean.burdenIndex);
     expect(weather.burdenIndex).toBeGreaterThan(clean.burdenIndex);
     expect(hard.burdenIndex).toBeGreaterThan(70);
+    // hard supplies three proxies (pressure, weather present + separation defaulted),
+    // so proxyCount > 2 must force HIGH uncertainty.
+    expect(hard.uncertaintyBand).toBe("HIGH");
     expect(hard.drivers.some((driver) => driver.name === "pressure_burden" && driver.direction === "UP")).toBe(true);
+  });
+
+  it("pins the classifyBurden ELEVATED/HIGH boundary at index 60", () => {
+    const boundaryBase: QbBurdenIndexInput = {
+      ...baseInput,
+      airYards: 35,
+      down: 4,
+      expectedCompletionProbability: 0.3,
+      timeToThrowStressProxy: 0.5,
+      weatherPenalty: 0.5,
+      yardsToGo: 15,
+    };
+    const justUnder = qbBurdenIndex({ ...boundaryBase, pressureProxy: 0.36 });
+    const justAt = qbBurdenIndex({ ...boundaryBase, pressureProxy: 0.38 });
+
+    expect(justUnder.burdenIndex).toBeLessThan(60);
+    expect(justUnder.burdenBand).toBe("ELEVATED");
+    expect(justAt.burdenIndex).toBeGreaterThanOrEqual(60);
+    expect(justAt.burdenBand).toBe("HIGH");
+  });
+
+  it("fails closed when the source policy list is empty", () => {
+    const noPolicy = qbBurdenIndex({ ...baseInput, sourcePolicy: [] });
+
+    expect(noPolicy.sourcePosture).toBe("BLOCKED");
+    expect(noPolicy.uncertaintyBand).toBe("HIGH");
+    const sourceDriver = noPolicy.drivers.find((driver) => driver.name === "source_posture_review_pressure");
+    expect(sourceDriver?.direction).toBe("UP");
+    expect(sourceDriver?.contribution).toBeGreaterThan(0);
   });
 
   it("raises review pressure and uncertainty when source posture is unclear or blocked", () => {
