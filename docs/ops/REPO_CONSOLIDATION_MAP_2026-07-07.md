@@ -101,3 +101,52 @@ our correlation-backed `graduationVerdict` is exactly the empirical proof it lac
 - `npx vitest` — prediction-engine **907/907**, apps/web **7,128/7,128**.
 - `npm run guardrails` — all 14 scanners + 34 eval-contracts pass; 3,489 files
   secret-scanned clean.
+
+---
+
+## Best-of-the-best review campaign — progress log
+
+A multi-wave adversarial review (correctness / honesty-gate / security / rights /
+coverage), verified findings only, applied under full gates. Landed on this branch:
+
+| Commit | Batch | Result |
+|---|---|---|
+| `761ebcbd` | Security: FANTASY→Pro **paywall leak** closed (+regression test), admin JWT revocation (DB re-resolve + fresh allow-list + 24h cap), clearance blocks automation on `technical_controls_detected` | apps/web 7,129 green |
+| `b807e033` | **74 verified correctness + honesty-gate fixes** across every engine (e.g. `settlement` LA/LAC mis-grade, `scoring` totals-favorite inversion + fabricated consensus, `kelly` fabricated fair-prob + NaN leak, `edge-significance` Math.random, `market-read` under-round renorm, `game-context` push-inflated sample gate) | engine green |
+| `bd70d651` | 4 late modules (`gse-action-score`, `model-parliament`, `performance-analytics/ci`) + deferred coverage | engine green |
+| `a2458ede` | 92 behavior-preserving doc/clarity/robustness polish across engines | engine 1,063 green |
+| (pending) | Wave-4 product-lib fixes (revenue, fantasy, media, studio, cockpit, jarvis, fable, …) — 45 applied | gating |
+
+**Reviewed to date:** every prediction-engine metric + core framework + the IP engine
+(43 modules), the core scoring/edge/CLV/Poisson/Kelly/calibration logic (18 groups),
+apps/web security+rights+entitlement (9 subsystems), apps/web product libs (12 subsystems).
+
+**Deliberate skips (not defects):** manual-research clearance on technically-blocked
+sources (CLAUDE.md permits manual research; controls only bar automation); `studio/load.ts`
+`isBootstrap` (field does not exist on the Prisma `Game` model — the "fix" would break the build).
+
+## Remaining queue (not yet done)
+
+- **Un-reviewed subsystems** (breadth waves — PAUSED on the monthly subagent spend limit;
+  resume when it resets): 120 API routes, workers (data-refresh / pick-generation /
+  content-publishing / airwave), data-ingestion + ingestion-pipeline, 202 pages/components,
+  docs quality.
+- **`npm run build`** (full Next production build) — the ultimate gate — not yet run.
+- **`claude/dfs-optimizer-edge`** (stranded worktree branch, 2 commits `aefe8074`+`8874f174`,
+  held / not pushed): max-out DFS solver — exact solver (`dfs-exact.ts`) with FLEX-slot
+  symmetry break, `minStack` provably-optimal QB stack, exact kBest, deterministic
+  `diversePool`, and exact `lateSwap`/Swaptimize; position-aware correlation v2
+  (`dfs-correlation.ts`) with bring-back + offense↔DST loadings + duplication risk;
+  GPP on the deterministic k-best pool. 19 tests, typecheck clean. Gated to the
+  illustrative slate via `activeDfsSlate()`. **Founder-gated to go live:** push + draft PR,
+  wire the `/optimizer` UI (exact-cash + sim-ranked GPP + late-swap), and calibrate the
+  correlation loadings against real outcomes before any public accuracy claim. Legally/
+  correctness-review this branch and fold into the consolidation once verified.
+- **Stranded lineages still pending a decision:** jarvis (312), safety (185),
+  research/proven-edge (5) — as above.
+
+## Constraint note
+
+The subagent review fleet hit the account's **monthly spend limit** mid-campaign
+(raise at claude.ai/settings/usage). Verification + commits continued in the main loop;
+the remaining breadth waves are queued until budget resets.
