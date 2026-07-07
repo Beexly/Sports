@@ -1,0 +1,104 @@
+import { describe, it, expect } from "vitest";
+import { optimizeExact, isCapLegal } from "./dfs-exact";
+import { optimizeOne, objVal, objOf, eligible, type Mode } from "./dfs-optimizer";
+import { DFS_SLOTS, SALARY_CAP, DFS_SLATE, type DfsPlayer, type DfsPos } from "./dfs-slate";
+
+// ── small fixture we can brute-force exhaustively ─────────────────────────────
+const p = (
+  id: string, pos: DfsPos, salary: number, proj: number, floor: number, ceiling: number, own: number,
+): DfsPlayer => ({ id, name: id, pos, team: id.slice(0, 3).toUpperCase(), opp: "OPP", salary, proj, floor, ceiling, own });
+
+const FIXTURE: DfsPlayer[] = [
+  p("q1", "QB", 8000, 25, 15, 38, 0.2), p("q2", "QB", 6000, 18, 10, 30, 0.1),
+  p("r1", "RB", 7500, 20, 12, 32, 0.2), p("r2", "RB", 7000, 18, 10, 28, 0.18),
+  p("r3", "RB", 5500, 14, 7, 24, 0.12), p("r4", "RB", 4500, 10, 4, 20, 0.08),
+  p("w1", "WR", 8000, 22, 12, 34, 0.2), p("w2", "WR", 7000, 18, 10, 30, 0.16),
+  p("w3", "WR", 6000, 15, 8, 27, 0.12), p("w4", "WR", 5000, 12, 6, 22, 0.09), p("w5", "WR", 3800, 8, 3, 18, 0.05),
+  p("t1", "TE", 6000, 14, 7, 24, 0.16), p("t2", "TE", 4500, 10, 5, 18, 0.1), p("t3", "TE", 3000, 6, 2, 14, 0.04),
+  p("d1", "DST", 3500, 9, 3, 18, 0.14), p("d2", "DST", 2500, 6, 1, 14, 0.06),
+];
+
+function combos<T>(arr: readonly T[], k: number): T[][] {
+  if (k === 0) return [[]];
+  if (k > arr.length) return [];
+  const [head, ...rest] = arr;
+  return [...combos(rest, k - 1).map((c) => [head!, ...c]), ...combos(rest, k)];
+}
+
+const FLEX_POS: DfsPos[] = ["RB", "WR", "TE"];
+
+/** Exhaustive optimum over the fixture — the ground truth the solver must match. */
+function bruteForce(slate: DfsPlayer[], mode: Mode): { obj: number; salary: number } {
+  const by = (pos: DfsPos) => slate.filter((x) => x.pos === pos);
+  let best = { obj: -Infinity, salary: 0 };
+  for (const flex of FLEX_POS) {
+    const need: Record<DfsPos, number> = { QB: 1, RB: 2, WR: 3, TE: 1, DST: 1 };
+    need[flex] += 1;
+    for (const qb of combos(by("QB"), need.QB))
+      for (const rb of combos(by("RB"), need.RB))
+        for (const wr of combos(by("WR"), need.WR))
+          for (const te of combos(by("TE"), need.TE))
+            for (const dst of combos(by("DST"), need.DST)) {
+              const lu = [...qb, ...rb, ...wr, ...te, ...dst];
+              const salary = lu.reduce((s, x) => s + x.salary, 0);
+              if (salary > SALARY_CAP) continue;
+              const obj = lu.reduce((s, x) => s + objVal(x, mode), 0);
+              if (obj > best.obj) best = { obj, salary };
+            }
+  }
+  return best;
+}
+
+const slotLegal = (lu: readonly DfsPlayer[]) => DFS_SLOTS.every((slot, i) => eligible(lu[i]!, slot));
+
+describe("exact dfs optimizer", () => {
+  it("matches brute-force ground truth on every mode", () => {
+    (["cash", "gpp", "leverage"] as Mode[]).forEach((mode) => {
+      const exact = optimizeExact({ mode, locks: new Set(), excludes: new Set() }, FIXTURE);
+      const bf = bruteForce(FIXTURE, mode);
+      expect(exact.optimal).toBe(true);
+      expect(exact.objective).toBeCloseTo(bf.obj, 6);
+    });
+  });
+
+  it("returns a slot-legal, cap-legal, distinct lineup", () => {
+    const exact = optimizeExact({ mode: "cash", locks: new Set(), excludes: new Set() }, FIXTURE);
+    expect(exact.lineup).not.toBeNull();
+    expect(exact.lineup!.length).toBe(DFS_SLOTS.length);
+    expect(slotLegal(exact.lineup!)).toBe(true);
+    expect(isCapLegal(exact.lineup!)).toBe(true);
+    expect(new Set(exact.lineup!.map((x) => x.id)).size).toBe(exact.lineup!.length);
+  });
+
+  it("honours locks and excludes while staying optimal", () => {
+    const exact = optimizeExact(
+      { mode: "cash", locks: new Set(["r4", "w5"]), excludes: new Set(["q1"]) },
+      FIXTURE,
+    );
+    expect(exact.lineup!.some((x) => x.id === "r4")).toBe(true);
+    expect(exact.lineup!.some((x) => x.id === "w5")).toBe(true);
+    expect(exact.lineup!.some((x) => x.id === "q1")).toBe(false);
+    expect(isCapLegal(exact.lineup!)).toBe(true);
+  });
+
+  it("reports infeasible (null) when constraints can't be met", () => {
+    // exclude every DST → no legal lineup exists
+    const exact = optimizeExact(
+      { mode: "cash", locks: new Set(), excludes: new Set(["d1", "d2"]) },
+      FIXTURE,
+    );
+    expect(exact.lineup).toBeNull();
+    expect(exact.objective).toBe(-Infinity);
+  });
+
+  it("on the real slate: optimal, and never worse than the heuristic", () => {
+    (["cash", "gpp", "leverage"] as Mode[]).forEach((mode) => {
+      const exact = optimizeExact({ mode, locks: new Set(), excludes: new Set() }, DFS_SLATE);
+      expect(exact.optimal).toBe(true);
+      expect(slotLegal(exact.lineup!)).toBe(true);
+      const heur = optimizeOne({ mode, stack: false, locks: new Set(), excludes: new Set() }, undefined, 80, DFS_SLATE);
+      // The provable optimum is, by definition, >= anything the heuristic finds.
+      expect(exact.objective).toBeGreaterThanOrEqual(objOf(heur!, mode) - 1e-6);
+    });
+  });
+});
