@@ -1663,3 +1663,27 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   clearance claim, no production-readiness claim, no model promotion, no betting use, no probability or
   expected-value claim, no production interval-calibration claim, no raw odds/tracking export, no
   package/dependency change, no live AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-07 - (codex) - Sunday frontier CUW historical distribution adapter
+
+- WHAT: Added source/payload-reviewed historical distribution adapter coverage for Conformal Uncertainty Width.
+  The adapter now treats CUW as a first-class historical distribution record, injects reviewed source policies,
+  runs the governed CUW metric only after source and payload rights pass, records `WATCH` local width pressure,
+  and blocks raw conformal input snapshots before metric execution.
+- FILES: `packages/prediction-engine/src/metrics/core/metric-historical-distribution-adapter.ts`,
+  `packages/prediction-engine/src/metrics/core/metric-historical-distribution-fixtures.ts`,
+  `packages/prediction-engine/src/metrics/core/index.ts`, `packages/prediction-engine/src/index.ts`,
+  `packages/prediction-engine/src/metrics/__tests__/metric-historical-distribution-adapter.test.ts`,
+  `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md`, `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md`,
+  Sunday audit/handoff docs, and this execution ledger.
+- GATE: focused distribution/CUW/source-payload tests passed (3 files, 17 tests). Prediction-engine typecheck
+  passed. LOC / escape-hatch scan passed: adapter 232 lines, fixtures 249 lines, adapter test 102 lines,
+  package export barrels marked `SIZE_OK`, and no `as any`, `as unknown`, `@ts-ignore`, `@ts-expect-error`,
+  `: any`, or non-null property access found. Full prediction-engine tests passed (107 files, 885 tests).
+  Root typecheck, root lint, root guardrails, and `git diff --check` passed; whitespace check only printed CRLF
+  normalization warnings for edited markdown. Full all-workspaces tests passed across web, crypto,
+  data-ingestion, ingestion-pipeline, prediction-engine, and types (670 files, 8239 tests).
+- FLAG: local synthetic fixtures and adapter only; no live route, no public/API exposure, no legal clearance
+  claim, no production-readiness claim, no model promotion, no betting use, no probability or expected-value
+  claim, no production interval-calibration claim, no raw odds/tracking export, no package/dependency change,
+  no live AWS/cloud/service action, and no prediction gate flip.

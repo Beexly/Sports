@@ -83,6 +83,7 @@ export {
 } from "./metric-historical-validation-adapter-fixtures.js";
 export type {
   HistoricalCalibrationDistributionRecord,
+  HistoricalConformalUncertaintyDistributionRecord,
   HistoricalDriftPressureDistributionRecord,
   HistoricalDistributionAdapterResult,
   HistoricalDistributionAdapterStatus,

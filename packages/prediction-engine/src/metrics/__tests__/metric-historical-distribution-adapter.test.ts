@@ -11,8 +11,10 @@ describe("metric historical distribution adapter", () => {
       "historical_cig_nflverse_watch",
       "historical_pfs_portfolio_stable",
       "historical_dpi_drift_watch",
+      "historical_cuw_width_watch",
       "historical_cig_raw_payload_blocked",
       "historical_dpi_raw_payload_blocked",
+      "historical_cuw_raw_payload_blocked",
       "historical_pfs_sleeper_manual_review",
       "historical_pfs_permission_blocked",
     ]);
@@ -23,6 +25,7 @@ describe("metric historical distribution adapter", () => {
     const cig = resultFor(results, "historical_cig_nflverse_watch");
     const pfs = resultFor(results, "historical_pfs_portfolio_stable");
     const dpi = resultFor(results, "historical_dpi_drift_watch");
+    const cuw = resultFor(results, "historical_cuw_width_watch");
 
     expect(cig.status).toBe("ADAPTED");
     expect(cig.lifecycleStatus).toBe("SHADOW");
@@ -47,12 +50,20 @@ describe("metric historical distribution adapter", () => {
     expect(dpi.publicApiAllowed).toBe(false);
     expect(dpi.allowed).toBe(true);
     expect(dpi.payloadRights?.approvedFields).toContain("drift-pressure-index.score");
+
+    expect(cuw.status).toBe("ADAPTED");
+    expect(cuw.observedBand).toBe("WATCH");
+    expect(cuw.driftStatus).toBe("WATCH");
+    expect(cuw.publicApiAllowed).toBe(false);
+    expect(cuw.allowed).toBe(true);
+    expect(cuw.payloadRights?.approvedFields).toContain("conformal-uncertainty-width.score");
   });
 
   it("blocks raw payload leakage after source rights pass", () => {
     const results = runHistoricalDistributionAdapterFixtures();
     const rawLeak = resultFor(results, "historical_cig_raw_payload_blocked");
     const rawDpiLeak = resultFor(results, "historical_dpi_raw_payload_blocked");
+    const rawCuwLeak = resultFor(results, "historical_cuw_raw_payload_blocked");
 
     expect(rawLeak.status).toBe("BLOCKED_BY_PAYLOAD_RIGHTS");
     expect(rawLeak.sourceReview.status).toBe("ADAPTED");
@@ -64,6 +75,10 @@ describe("metric historical distribution adapter", () => {
     expect(rawDpiLeak.sourceReview.status).toBe("ADAPTED");
     expect(rawDpiLeak.payloadRights?.blockedFields).toContain("drift-pressure-index.raw_input_snapshot");
     expect(rawDpiLeak.score).toBeNull();
+    expect(rawCuwLeak.status).toBe("BLOCKED_BY_PAYLOAD_RIGHTS");
+    expect(rawCuwLeak.sourceReview.status).toBe("ADAPTED");
+    expect(rawCuwLeak.payloadRights?.blockedFields).toContain("conformal-uncertainty-width.raw_input_snapshot");
+    expect(rawCuwLeak.score).toBeNull();
   });
 
   it("blocks manual-review and permission-required sources before metric execution", () => {
@@ -83,12 +98,12 @@ describe("metric historical distribution adapter", () => {
     const summary = summarizeHistoricalDistributionAdapterResults(runHistoricalDistributionAdapterFixtures());
 
     expect(summary).toEqual({
-      adapted: 3,
+      adapted: 4,
       manualReview: 1,
-      payloadBlocked: 2,
+      payloadBlocked: 3,
       publicApiAllowedCount: 0,
       sourceBlocked: 1,
-      total: 7,
+      total: 9,
     });
   });
 });

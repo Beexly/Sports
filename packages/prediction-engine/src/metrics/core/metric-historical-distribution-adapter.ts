@@ -2,6 +2,10 @@ import {
   calibrationIntegrityGrade,
   type CalibrationIntegrityGradeInput,
 } from "../calibration/calibration-integrity-grade.js";
+import {
+  conformalUncertaintyWidth,
+  type ConformalUncertaintyWidthInput,
+} from "../calibration/conformal-uncertainty-width.js";
 import { driftPressureIndex, type DriftPressureIndexInput } from "../calibration/drift-pressure-index.js";
 import { portfolioFitScore, type PortfolioFitScoreInput } from "../decision/portfolio-fit-score.js";
 import {
@@ -25,6 +29,7 @@ import type { MetricLifecycleStatus, MetricSourcePolicy } from "./validation.js"
 
 export type HistoricalDistributionMetricId =
   | "calibration-integrity-grade"
+  | "conformal-uncertainty-width"
   | "drift-pressure-index"
   | "portfolio-fit-score";
 export type HistoricalDistributionPayloadProfile =
@@ -71,8 +76,21 @@ export interface HistoricalDriftPressureDistributionRecord {
   readonly payloadProfile: HistoricalDistributionPayloadProfile;
 }
 
+export interface HistoricalConformalUncertaintyDistributionRecord {
+  readonly metricId: "conformal-uncertainty-width";
+  readonly splitId: string;
+  readonly description: string;
+  readonly sourceIds: readonly string[];
+  readonly input: Omit<ConformalUncertaintyWidthInput, "sourcePolicy">;
+  readonly baselineScore: number;
+  readonly watchDelta: number;
+  readonly severeDelta: number;
+  readonly payloadProfile: HistoricalDistributionPayloadProfile;
+}
+
 export type HistoricalDistributionRecord =
   | HistoricalCalibrationDistributionRecord
+  | HistoricalConformalUncertaintyDistributionRecord
   | HistoricalDriftPressureDistributionRecord
   | HistoricalPortfolioDistributionRecord;
 
@@ -177,6 +195,10 @@ function runDistributionMetric(
     case "calibration-integrity-grade": {
       const metric = calibrationIntegrityGrade({ ...record.input, sourcePolicy });
       return { allowed: metric.calibrationUsable, band: metric.letterGrade, score: metric.score };
+    }
+    case "conformal-uncertainty-width": {
+      const metric = conformalUncertaintyWidth({ ...record.input, sourcePolicy });
+      return { allowed: !metric.downstreamVetoRecommended, band: metric.band, score: metric.score };
     }
     case "drift-pressure-index": {
       const metric = driftPressureIndex({ ...record.input, sourcePolicy });

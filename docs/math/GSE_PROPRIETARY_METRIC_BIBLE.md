@@ -1075,11 +1075,19 @@ Pure LOC review for new source files:
 - Focused CUW/birth-certificate/asset/evidence-report tests passed (5 files, 24 tests), prediction-engine typecheck passed, full prediction-engine tests passed (107 files, 885 tests), root typecheck/lint/guardrails passed, and `git diff --check` passed.
 - The metric remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, production interval-calibration claim, raw odds/tracking export, or prediction gate flip.
 
+2026-07-07 Conformal Uncertainty Width historical distribution adapter continuation check:
+
+- `metric-historical-distribution-adapter.ts` now supports Conformal Uncertainty Width records while preserving the existing CIG/PFS/DPI distribution path.
+- The reusable `metric-historical-distribution-payload.ts` gate approves only safe derived CUW score, band, and public-driver fields while blocking raw conformal input snapshots and unsupported probability claims.
+- `metric-historical-distribution-fixtures.ts` now includes a safe-derived CUW `WATCH` case and a raw-payload-blocked CUW case.
+- Focused distribution/CUW/source-payload tests passed (3 files, 17 tests), prediction-engine typecheck passed, full prediction-engine tests passed (107 files, 885 tests), root typecheck/lint/guardrails passed, `git diff --check` passed with CRLF-only markdown warnings, full all-workspaces tests passed (670 files, 8239 tests), adapter LOC stayed under the warning band at 232 lines, fixtures stayed under the ceiling at 249 lines, and no TS escape hatches were found.
+- The adapter remains local/synthetic only: no live route, public API exposure, legal clearance, production readiness, model promotion, betting advice, probability claim, expected-value claim, production interval-calibration claim, raw odds/tracking export, or prediction gate flip.
+
 ## Next Slice Recommendation
 
 Next slice should build on the concrete Source Rights Layer, Payload Rights Engine, residual rollup helper, evidence-card fixture generator, generated report renderer, historical validation adapter, validation split fixture runner, composed payload fixtures, app bridge, Market Mirage Score, No-Bet Pressure, Conformal Uncertainty Width, and generated source policies:
 
-1. Continue guarded metric backlog with Source Trust Score or add source/payload-reviewed historical adapter coverage for Conformal Uncertainty Width after CUW, DPI, no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
+1. Continue guarded metric backlog with Source Trust Score after CUW, DPI, no-bet, payload-envelope, source-rights, and historical-adapter veto tests stay green.
 2. Add markdown export tests for any future metric report before allowing it into public/API route planning.
 3. Add source-policy generation receipts for any new metric family before app/API bridge expansion.
 4. Add real historical validation only after cleared data, owner review, and legal/source-rights approval; local NBP/DPI/CUW fixtures are not promotion evidence.
