@@ -420,3 +420,68 @@ export type {
   WalkForwardSplit,
   ReplayBacktestReport,
 } from "./replay-harness.js";
+
+// Expected-metrics engine — our OWN expected-value metrics (CPOE / RYOE / xYAC)
+// computed from public play-by-play, plus the ground-truth validation that proves
+// them against Next Gen Stats. Pure, deterministic, fit-on-load. NGS enters ONLY
+// as the y-axis of the validation correlation; what we serve is always our own
+// computation, never re-served NGS figures. See docs/math/GSE_EXPECTED_METRICS.md.
+export {
+  // reusable regression primitives
+  fitRidge,
+  predictRidge,
+  fitLogistic,
+  predictLogistic,
+  // shared contracts
+  computeExpectedMetricSchemaHash,
+  rollupByPlayer,
+  // expected completion → GSE-CPOE
+  fitExpectedCompletionModel,
+  predictCompletionProbability,
+  computeCpoe,
+  EXPECTED_COMPLETION_FEATURE_KEYS,
+  EXPECTED_COMPLETION_MODEL_VERSION,
+  MIN_DROPBACKS_TO_FIT,
+  DEFAULT_MIN_PASSER_ATTEMPTS,
+  // expected rush yards → GSE-RYOE
+  fitExpectedRushModel,
+  predictExpectedRushYards,
+  computeRyoe,
+  EXPECTED_RUSH_FEATURE_KEYS,
+  EXPECTED_RUSH_MODEL_VERSION,
+  MIN_RUSHES_TO_FIT,
+  DEFAULT_MIN_RUSHER_ATTEMPTS,
+  // expected YAC → GSE-xYAC
+  fitExpectedYacModel,
+  predictExpectedYac,
+  computeYacOverExpected,
+  EXPECTED_YAC_FEATURE_KEYS,
+  EXPECTED_YAC_MODEL_VERSION,
+  MIN_CATCHES_TO_FIT,
+  DEFAULT_MIN_RECEIVER_CATCHES,
+  // ground-truth validation (prove it)
+  buildCalibrationReport,
+  graduationVerdict,
+  DEFAULT_GRADUATION_THRESHOLDS,
+} from "./expected-metrics/index.js";
+export type {
+  LinearModel,
+  LogisticModel,
+  LogisticFitOptions,
+  FeatureScaler,
+  ExpectedMetricProvenance,
+  PlayerExpectedMetric,
+  PlayerPlayOutcome,
+  RollupOptions,
+  DropbackPlay,
+  ExpectedCompletionModel,
+  RushPlay,
+  ExpectedRushModel,
+  CatchPlay,
+  ExpectedYacModel,
+  GroundTruthPoint,
+  CalibrationReport,
+  GraduationVerdict,
+  GraduationThresholds,
+  GraduationResult,
+} from "./expected-metrics/index.js";
