@@ -31,8 +31,9 @@ export const waitlistLeadSchema = z.object({
     errorMap: () => ({ message: "Pick a role" }),
   }),
   sportInterests: z
-    .array(z.string().trim().min(1))
-    .min(1, "Pick at least one sport"),
+    .array(z.string().trim().min(1).max(40))
+    .min(1, "Pick at least one sport")
+    .max(12, "Too many sports selected"),
   currentStack: optionalText(2000),
   weakestProcess: optionalText(2000),
   // Consent must be explicitly true — a hard gate before any persistence.

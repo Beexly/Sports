@@ -115,11 +115,15 @@ coverage), verified findings only, applied under full gates. Landed on this bran
 | `b807e033` | **74 verified correctness + honesty-gate fixes** across every engine (e.g. `settlement` LA/LAC mis-grade, `scoring` totals-favorite inversion + fabricated consensus, `kelly` fabricated fair-prob + NaN leak, `edge-significance` Math.random, `market-read` under-round renorm, `game-context` push-inflated sample gate) | engine green |
 | `bd70d651` | 4 late modules (`gse-action-score`, `model-parliament`, `performance-analytics/ci`) + deferred coverage | engine green |
 | `a2458ede` | 92 behavior-preserving doc/clarity/robustness polish across engines | engine 1,063 green |
-| (pending) | Wave-4 product-lib fixes (revenue, fantasy, media, studio, cockpit, jarvis, fable, …) — 45 applied | gating |
+| `2a223c53` | Wave-4 product-lib fixes (revenue, fantasy, media, studio, cockpit, jarvis, fable, …) — 45 applied; reverted 1 over-strict claim scanner; fixed header-convention + trust-gate false-positive | apps/web 7,212 green |
+| **build** | **`npm run build` — full Next production build: 204/204 pages compiled, deployable** | ✅ |
+| (API wave) | **120 API routes reviewed** — cockpit/intelligence/nflverse/cron/webhooks/admin all EXCELLENT (server-side authz correct); fixed `/api/waitlist` rate-limit + input bounds, `/api/health` DB-error leak, `/api/picks/daily-slate` prod seed-exclusion | gating |
 
 **Reviewed to date:** every prediction-engine metric + core framework + the IP engine
 (43 modules), the core scoring/edge/CLV/Poisson/Kelly/calibration logic (18 groups),
-apps/web security+rights+entitlement (9 subsystems), apps/web product libs (12 subsystems).
+apps/web security+rights+entitlement (9 subsystems), apps/web product libs (12 subsystems),
+and all **120 API routes** (authorization/entitlement/input-validation). The full
+production build passes (204 pages).
 
 **Deliberate skips (not defects):** manual-research clearance on technically-blocked
 sources (CLAUDE.md permits manual research; controls only bar automation); `studio/load.ts`
@@ -127,11 +131,13 @@ sources (CLAUDE.md permits manual research; controls only bar automation); `stud
 
 ## Remaining queue (not yet done)
 
-- **Un-reviewed subsystems** (breadth waves — PAUSED on the monthly subagent spend limit;
-  resume when it resets): 120 API routes, workers (data-refresh / pick-generation /
+- **Un-reviewed subsystems** (breadth waves): workers (data-refresh / pick-generation /
   content-publishing / airwave), data-ingestion + ingestion-pipeline, 202 pages/components,
-  docs quality.
-- **`npm run build`** (full Next production build) — the ultimate gate — not yet run.
+  docs quality. (API routes ✅ done; engine + product libs + security ✅ done; build ✅ passing.)
+- **Two deferred, non-critical API findings** (logged, low priority): `/api/picks/daily-slate`
+  `sportBreakdown` is honest-empty in production (a per-sport-breakdown feature gap, not
+  fabricated data — needs a grouped DB query); `/api/subscriptions/checkout`+`portal` have no
+  per-user rate limit on Stripe resource creation (authenticated; defense-in-depth polish).
 - **`claude/dfs-optimizer-edge`** (stranded worktree branch, 2 commits `aefe8074`+`8874f174`,
   held / not pushed): max-out DFS solver — exact solver (`dfs-exact.ts`) with FLEX-slot
   symmetry break, `minStack` provably-optimal QB stack, exact kBest, deterministic

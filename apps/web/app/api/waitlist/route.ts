@@ -11,6 +11,7 @@
 import { NextResponse } from "next/server";
 import { validateWaitlistLead } from "@/lib/gse/waitlist-validation";
 import { selectWaitlistStore } from "@/lib/gse/waitlist-store";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,6 +39,21 @@ function isTooFast(body: unknown): boolean {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  // Public unauthenticated endpoint: rate-limit per IP so a scripted client can't
+  // flood the O(n) file-append store (the honeypot/timing checks are trivially
+  // omitted by a non-browser caller). 5 submissions / minute / IP is ample for a human.
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "anon";
+  const rl = consumeRateLimit("waitlist", ip, 5, 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { ok: false, error: "Too many requests" },
+      { status: 429, headers: { "retry-after": String(rl.retryAfterSec) } },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
