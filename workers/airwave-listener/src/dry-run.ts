@@ -23,6 +23,7 @@
 import {
   createChannel87ScheduleContract,
   summarizeChannel87Schedule,
+  centralTimeHour,
   CH87_WINDOW,
   CH87_TIMEZONE,
 } from "../../../apps/web/lib/airwave/channel-87-schedule";
@@ -53,22 +54,17 @@ const gates: SourcePolicyGates = {
 
 const now = new Date();
 
-// Approximate CT offset: UTC-6 (CST) / UTC-5 (CDT).
-// For dry-run purposes, we use a coarse offset.
-// A production implementation would use a proper timezone library.
-const isDst = (() => {
-  const jan = new Date(now.getFullYear(), 0, 1).getTimezoneOffset();
-  const jul = new Date(now.getFullYear(), 6, 1).getTimezoneOffset();
-  return now.getTimezoneOffset() < Math.max(jan, jul);
-})();
-const ctOffsetHours = isDst ? -5 : -6;
-const nowCt = new Date(now.getTime() + ctOffsetHours * 60 * 60 * 1000);
-const hourCt = nowCt.getUTCHours();
+// CH87 windows/shows are defined in Central Time. The schedule library owns the
+// host-independent, DST-correct UTC->America/Chicago conversion (centralTimeHour),
+// and summarizeChannel87Schedule() converts internally. So we pass the REAL `now`
+// straight through — pre-shifting it here would double-convert and report a CT
+// hour ~5–6h off from reality.
+const hourCt = centralTimeHour(now);
 
 // ─── Schedule + intake plan ───────────────────────────────────────────────────
 
 const scheduleContract = createChannel87ScheduleContract();
-const scheduleSummary = summarizeChannel87Schedule(scheduleContract.shows, nowCt);
+const scheduleSummary = summarizeChannel87Schedule(scheduleContract.shows, now);
 const intakePlan = buildAirwaveIntakePlan(env, now, [...scheduleContract.shows]);
 const policies = getAirwaveSourcePolicies();
 const policySummary = summarizeSourcePolicyReadiness(policies, gates);
@@ -80,9 +76,8 @@ const line = "─".repeat(60);
 console.log();
 console.log(line);
 console.log("  AIRWAVE LISTENER — DRY RUN REPORT");
-console.log(`  Generated: ${now.toISOString()}`);
-console.log(`  CT Time:   ${nowCt.toISOString()} (UTC${ctOffsetHours})`);
-console.log(`  CT Hour:   ${hourCt}:00`);
+console.log(`  Generated: ${now.toISOString()} (UTC)`);
+console.log(`  CT Hour:   ${hourCt}:00 ${CH87_TIMEZONE}`);
 console.log(line);
 
 console.log();

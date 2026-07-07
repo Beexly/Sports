@@ -7,6 +7,15 @@ import type {
 import { FRESHNESS_THRESHOLD_MS } from "./config.js";
 import { freshnessMode, resolveFreshnessThresholdMs } from "./freshness-schedule.js";
 
+// Clock-skew allowance for UPSTREAM timestamps. A bookmaker `last_update` a few
+// minutes ahead of our host clock is normal (server clocks drift); one that is
+// HOURS or DAYS in the future is corrupt/poisoned and must NOT be trusted as
+// fresh. Rows beyond this ceiling are treated as not-provably-fresh — the same
+// fail-safe applied to an unparseable timestamp — so a future-dated row can
+// neither manufacture a fake-fresh signal nor keep a stale game/dead feed
+// classified live.
+const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000; // 5 minutes
+
 export class DataNormalizer {
   /**
    * Guard the odds-format boundary.
@@ -143,10 +152,15 @@ export class DataNormalizer {
     },
   ): Set<string> {
     const now = opts?.now ?? new Date();
+    const futureCeiling = now.getTime() + MAX_CLOCK_SKEW_MS;
     const freshestByGame = new Map<string, number>();
     for (const o of odds) {
       const t = o.bookmakerLastUpdate.getTime();
       if (!Number.isFinite(t)) continue;
+      // Implausible future timestamp (corrupt/poisoned upstream row): not
+      // provably fresh. Skip it exactly like an unparseable row so it can
+      // neither supply a fake-fresh signal nor mask a genuinely stale game.
+      if (t > futureCeiling) continue;
       const prev = freshestByGame.get(o.gameExternalId);
       if (prev === undefined || t > prev) freshestByGame.set(o.gameExternalId, t);
     }
@@ -193,16 +207,27 @@ export class DataNormalizer {
     rows: number;
     games: number;
     unparseableRows: number;
+    futureDatedRows: number;
     newestAgeMinutes: number | null;
   } {
+    const now = Date.now();
+    const futureCeiling = now + MAX_CLOCK_SKEW_MS;
     const games = new Set<string>();
     let unparseableRows = 0;
+    let futureDatedRows = 0;
     let newest = Number.NEGATIVE_INFINITY;
     for (const o of odds) {
       games.add(o.gameExternalId);
       const t = o.bookmakerLastUpdate.getTime();
       if (!Number.isFinite(t)) {
         unparseableRows++;
+        continue;
+      }
+      // Implausible future timestamp: counted separately and excluded from the
+      // newest-age readout so a poisoned +10-day row can't report a bogus
+      // (negative-minute) "newest line age" that reads as freshly updated.
+      if (t > futureCeiling) {
+        futureDatedRows++;
         continue;
       }
       if (t > newest) newest = t;
@@ -213,8 +238,9 @@ export class DataNormalizer {
       rows: odds.length,
       games: games.size,
       unparseableRows,
+      futureDatedRows,
       newestAgeMinutes: Number.isFinite(newest)
-        ? Math.round((Date.now() - newest) / 60_000)
+        ? Math.round((now - newest) / 60_000)
         : null,
     };
   }

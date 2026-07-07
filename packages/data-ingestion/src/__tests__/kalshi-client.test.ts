@@ -53,6 +53,18 @@ describe("impliedYesProbability", () => {
     expect(impliedYesProbability({ ticker: "x" })).toBeNull();
     expect(impliedYesProbability({ ticker: "x", yes_bid_dollars: "0", yes_ask_dollars: "0", last_price_dollars: "0" })).toBeNull();
   });
+
+  it("does NOT fabricate a half-price mid from a one-sided quote (only a genuine two-sided book mids)", () => {
+    // Only a bid, explicit zero ask: (0.40 + 0) / 2 = 0.20 would halve the only real
+    // price. Must NOT mid — fall through to null when there is no last trade.
+    expect(impliedYesProbability({ ticker: "x", yes_bid_dollars: "0.40", yes_ask_dollars: "0" })).toBeNull();
+    // Symmetric one-sided ask.
+    expect(impliedYesProbability({ ticker: "x", yes_bid_dollars: "0", yes_ask_dollars: "0.55" })).toBeNull();
+    // With a last trade present, a one-sided quote falls back to the honest last price, not the mid.
+    expect(
+      impliedYesProbability({ ticker: "x", yes_bid_dollars: "0.40", yes_ask_dollars: "0", last_price_dollars: "0.38" }),
+    ).toBeCloseTo(0.38, 6);
+  });
 });
 
 describe("devigTwoSided", () => {
@@ -91,10 +103,10 @@ describe("KalshiClient.getFairValue", () => {
         });
       }
       if (url.endsWith("-NYK")) {
-        return jsonResponse({ market: { ticker: "KXNBAGAME-26JUN03NYKSAS-NYK", yes_sub_title: "New York", yes_bid_dollars: "0.36", yes_ask_dollars: "0.37" } });
+        return jsonResponse({ market: { ticker: "KXNBAGAME-26JUN03NYKSAS-NYK", yes_sub_title: "New York", status: "active", yes_bid_dollars: "0.36", yes_ask_dollars: "0.37" } });
       }
       if (url.endsWith("-SAS")) {
-        return jsonResponse({ market: { ticker: "KXNBAGAME-26JUN03NYKSAS-SAS", yes_sub_title: "San Antonio", yes_bid_dollars: "0.63", yes_ask_dollars: "0.64" } });
+        return jsonResponse({ market: { ticker: "KXNBAGAME-26JUN03NYKSAS-SAS", yes_sub_title: "San Antonio", status: "active", yes_bid_dollars: "0.63", yes_ask_dollars: "0.64" } });
       }
       throw new Error(`unexpected url ${url}`);
     });
@@ -141,6 +153,36 @@ describe("KalshiClient.getFairValue", () => {
 
     const fv = await client.getFairValue({ league: "NBA", dateUtc: "2026-06-03", awayAbbr: "NYK", homeAbbr: "SAS" });
     expect(fv.sides.every((s) => s.fairProb === null)).toBe(true);
+  });
+
+  it("yields null fair values for a closed/settled market even when a stale bid/ask/last remains (no stale data served as fresh)", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/markets?event_ticker=")) {
+        return jsonResponse({ markets: [
+          { ticker: "KXNBAGAME-26JUN03NYKSAS-NYK", yes_sub_title: "New York" },
+          { ticker: "KXNBAGAME-26JUN03NYKSAS-SAS", yes_sub_title: "San Antonio" },
+        ] });
+      }
+      if (url.endsWith("-NYK")) {
+        // Settled market that still carries a residual full-price quote/last.
+        return jsonResponse({ market: { ticker: "KXNBAGAME-26JUN03NYKSAS-NYK", yes_sub_title: "New York", status: "settled", yes_bid_dollars: "0.99", yes_ask_dollars: "1.00", last_price_dollars: "1.00" } });
+      }
+      return jsonResponse({ market: { ticker: "KXNBAGAME-26JUN03NYKSAS-SAS", yes_sub_title: "San Antonio", status: "closed", yes_bid_dollars: "0.00", yes_ask_dollars: "0.01", last_price_dollars: "0.00" } });
+    });
+
+    const fv = await client.getFairValue({ league: "NBA", dateUtc: "2026-06-03", awayAbbr: "NYK", homeAbbr: "SAS" });
+    // A non-live market must produce no implied prob, no fair prob, and no overround.
+    expect(fv.sides.every((s) => s.rawImpliedProb === null)).toBe(true);
+    expect(fv.sides.every((s) => s.fairProb === null)).toBe(true);
+    expect(fv.overround).toBeNull();
+  });
+
+  it("surfaces a typed KalshiError when a 200 response carries a non-JSON body", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response("<html>not json</html>", { status: 200, headers: { "Content-Type": "text/html" } }),
+    );
+    await expect(client.getEventMarkets("KXNBAGAME-26JUN03NYKSAS")).rejects.toBeInstanceOf(KalshiError);
   });
 
   it("passes an abort signal so a call can never hang forever", async () => {

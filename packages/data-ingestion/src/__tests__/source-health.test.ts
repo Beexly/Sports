@@ -49,4 +49,55 @@ describe("assessSourceHealth", () => {
     expect(h.stale).toBe(true);
     expect(h.usable).toBe(false);
   });
+
+  it("treats a source with no known-fresh timestamp as stale, not fresh (trailing failures)", () => {
+    const h = assessSourceHealth({
+      source: "odds-api",
+      recentOutcomes: [false, false],
+      lastSuccessAt: undefined,
+      now: NOW,
+    });
+    expect(h.state).toBe("degraded");
+    expect(h.stalenessMinutes).toBeNull();
+    // Never succeeded + no timestamp => freshness is unproven, so NOT usable.
+    expect(h.stale).toBe(true);
+    expect(h.usable).toBe(false);
+  });
+
+  it("treats a source with zero call history and no timestamp as unusable", () => {
+    const h = assessSourceHealth({
+      source: "espn",
+      recentOutcomes: [],
+      lastSuccessAt: undefined,
+      now: NOW,
+    });
+    expect(h.state).toBe("closed");
+    expect(h.stalenessMinutes).toBeNull();
+    expect(h.stale).toBe(true);
+    expect(h.usable).toBe(false);
+  });
+
+  it("allows a source with no timestamp when its most recent call succeeded", () => {
+    const h = assessSourceHealth({
+      source: "kalshi",
+      recentOutcomes: [false, true],
+      lastSuccessAt: undefined,
+      now: NOW,
+    });
+    // A fresh success is direct evidence of life even without a stored timestamp.
+    expect(h.stale).toBe(false);
+    expect(h.usable).toBe(true);
+  });
+
+  it("treats an unparseable last-success timestamp as not-provably-fresh", () => {
+    const h = assessSourceHealth({
+      source: "api-sports",
+      recentOutcomes: [false],
+      lastSuccessAt: "not-a-date",
+      now: NOW,
+    });
+    expect(h.stalenessMinutes).toBeNull();
+    expect(h.stale).toBe(true);
+    expect(h.usable).toBe(false);
+  });
 });
