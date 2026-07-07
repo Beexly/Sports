@@ -74,7 +74,11 @@ export async function gateApi(
  * paid analytics stay paid. FREE → 403, fails closed to FREE on lookup error.
  */
 export function requirePremiumApi(): Promise<NextResponse | null> {
-  return gateApi((e) => e.tier !== "FREE");
+  // Premium analytics floor is PRO or ELITE only. FANTASY is a paid tier for the
+  // fantasy suite (gated by requireFantasyApi), NOT the betting-depth tier — so it
+  // must NOT reach /api/intelligence/* or /api/nflverse/* Pro analytics. Keying on
+  // tier !== "FREE" leaked the full Pro slate to FANTASY subscribers.
+  return gateApi((e) => e.tier === "PRO" || e.tier === "ELITE");
 }
 
 /**

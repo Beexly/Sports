@@ -106,7 +106,12 @@ export function checkClearance(
   }
 
   // ── 3. Technical controls: block all automated modes ────────────────────────
-  if (source.status === "blocked_technical_controls") {
+  // Block on EITHER the manual status downgrade OR the detected-controls flag, so
+  // a source that later deploys anti-bot (flag flips true) can't keep being hit by
+  // automation just because its status was never manually changed. Defense-in-depth
+  // against the evasion posture CLAUDE.md forbids. Manual (non-automated) modes are
+  // unaffected — human research remains allowed.
+  if (source.status === "blocked_technical_controls" || source.technical_controls_detected) {
     const constraint = EXTRACTION_MODE_CONSTRAINTS[request.mode];
     if (constraint.requiresAutomation) {
       blocks.push(block(

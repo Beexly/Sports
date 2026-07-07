@@ -59,6 +59,20 @@ describe("requirePremiumApi", () => {
     expect(await requirePremiumApi()).toBeNull();
   });
 
+  it("returns 403 for a FANTASY user — the paid fantasy tier is NOT the premium-analytics tier", async () => {
+    // Regression guard: FANTASY is a paid tier for the fantasy suite only. It must
+    // not reach /api/intelligence/* or /api/nflverse/* Pro analytics. A predicate of
+    // `tier !== "FREE"` leaked the full Pro slate to $4.99 FANTASY subscribers.
+    mocks.auth.mockResolvedValue({ user: { id: "fantasy_user" } });
+    mocks.getUserEntitlements.mockResolvedValue(getEntitlements("FANTASY"));
+
+    const res = await requirePremiumApi();
+
+    expect(res).not.toBeNull();
+    expect(res!.status).toBe(403);
+    await expect(res!.json()).resolves.toMatchObject({ error: "insufficient_tier" });
+  });
+
   it("fails closed to 403 when the entitlement lookup throws", async () => {
     mocks.auth.mockResolvedValue({ user: { id: "user" } });
     mocks.getUserEntitlements.mockRejectedValue(new Error("db down"));
