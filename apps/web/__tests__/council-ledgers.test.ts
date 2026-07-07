@@ -136,6 +136,63 @@ describe("seat validation", () => {
   });
 });
 
+// ─── 1b. Confidence validation ────────────────────────────────────────────────
+
+describe("confidence validation in logSubagentRun", () => {
+  const base = {
+    subagentId: "scout-injury-context",
+    parentSeat: "scout",
+    task: "check injury",
+    inputContext: "{}",
+    outputArtifactRef: "draft://artifact/1",
+    uncertainty: "low",
+    prohibitedActionsChecked: true,
+  };
+
+  it("rejects NaN confidence before touching the db", async () => {
+    await expect(
+      logSubagentRun({ ...base, confidence: Number.NaN })
+    ).rejects.toThrow(/Invalid confidence.*0.*100/i);
+  });
+
+  it("rejects Infinity confidence", async () => {
+    await expect(
+      logSubagentRun({ ...base, confidence: Number.POSITIVE_INFINITY })
+    ).rejects.toThrow(/Invalid confidence/i);
+  });
+
+  it("rejects confidence above 100", async () => {
+    await expect(
+      logSubagentRun({ ...base, confidence: 250 })
+    ).rejects.toThrow(/Invalid confidence/i);
+  });
+
+  it("rejects negative confidence", async () => {
+    await expect(
+      logSubagentRun({ ...base, confidence: -5 })
+    ).rejects.toThrow(/Invalid confidence/i);
+  });
+
+  it("does not call db.create when confidence is out of range", async () => {
+    const { db } = await import("@sports/db");
+    const createSpy = vi.spyOn(db.subagentRun, "create");
+    createSpy.mockClear();
+    await expect(
+      logSubagentRun({ ...base, confidence: Number.NaN })
+    ).rejects.toThrow(/Invalid confidence/i);
+    expect(createSpy).not.toHaveBeenCalled();
+  });
+
+  it("accepts a valid boundary confidence of 0 and 100", async () => {
+    await expect(
+      logSubagentRun({ ...base, confidence: 0 })
+    ).resolves.not.toThrow();
+    await expect(
+      logSubagentRun({ ...base, confidence: 100 })
+    ).resolves.not.toThrow();
+  });
+});
+
 // ─── 2. Review-states law ─────────────────────────────────────────────────────
 
 describe("review-states law", () => {

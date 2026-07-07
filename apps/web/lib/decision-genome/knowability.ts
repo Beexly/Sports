@@ -63,6 +63,7 @@ export interface DecisionWindow {
 
 export type LeakageReason =
   | "missing-available-at"
+  | "missing-decision-time"
   | "available-too-late"
   | "trusted-too-late"
   | "not-cleared-for-decision-use";
@@ -87,6 +88,13 @@ export function isKnowableAtLock(fact: KnowableFact, window: DecisionWindow): bo
 export function checkFact(fact: KnowableFact, window: DecisionWindow): LeakageViolation | null {
   const { stamps } = fact;
   const lockTime = window.decisionLockedAt;
+
+  // Fail-safe: a non-finite lock time cannot prove anything was knowable in time.
+  // Without this guard every `availableAt > lockTime` comparison is false (NaN
+  // compares false), so the whole evidence set would silently pass as knowable.
+  if (lockTime == null || !Number.isFinite(lockTime)) {
+    return { factId: fact.id, reason: "missing-decision-time", lateByMs: 0 };
+  }
 
   if (stamps.availableAt == null || !Number.isFinite(stamps.availableAt)) {
     return { factId: fact.id, reason: "missing-available-at", lateByMs: 0 };

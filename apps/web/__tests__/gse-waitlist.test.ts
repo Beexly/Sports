@@ -31,6 +31,7 @@ import {
   RESEARCH_BRIEF_TOPICS,
 } from "@/lib/gse/content-drafts";
 import { POST } from "@/app/api/waitlist/route";
+import { resetRateLimits } from "@/lib/api/rate-limit";
 import WaitlistPage from "@/app/waitlist/page";
 
 const VALID_LEAD = {
@@ -50,6 +51,7 @@ function tmpStorePath(tag: string): string {
 
 afterEach(async () => {
   cleanup();
+  resetRateLimits(); // keep the public-route rate limiter deterministic across tests
   await Promise.all(
     tmpFiles.splice(0).map((p) => fs.rm(p, { force: true }).catch(() => undefined)),
   );

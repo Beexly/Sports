@@ -11,13 +11,26 @@
  * Real edge is the gap between an estimate the market has NOT already absorbed
  * and the market's fair price. So this engine takes one or more *independent*
  * estimators — the Poisson model (poisson.ts) and the Kalshi exchange (an
- * independent market, not the sportsbook) — and surfaces a pick only when they:
- *   1. diverge from the sportsbook's de-vigged fair probability, AND
- *   2. agree with each OTHER on the direction of that divergence, AND
- *   3. clear an evidence/uncertainty-shrunk edge threshold.
- * Using a second, independent market as a *referee* on our own model is the part
- * tout tools don't do: if the exchange agrees with the sportsbook, our model is
- * the outlier and we pass rather than fade the world on one signal.
+ * independent market, not the sportsbook) — and surfaces a pick only when the
+ * independent blend:
+ *   1. diverges from the sportsbook's de-vigged fair probability, AND
+ *   2. is not contradicted by a referee (see next paragraph), AND
+ *   3. clears an evidence/uncertainty-shrunk edge threshold.
+ *
+ * WHAT "REFEREE" ACTUALLY GUARANTEES — AND ITS LIMIT AT ONE SOURCE
+ * Cross-checking requires ≥2 independent estimators; only then can they referee
+ * each other, and the edge is scaled by their agreement (agreementFactor):
+ *   • CONFIRMS  (≥2, all on the edge's side)                    → ×1.0 full credit
+ *   • SPLIT     (≥2, some neutral, none opposing)               → ×0.5 half credit
+ *   • CONTRADICTS (any estimator on the sportsbook's side)      → ×0   forced PASS
+ * That forced PASS on disagreement is the part tout tools skip: if the exchange
+ * sides with the sportsbook, our model is the outlier and we stand down rather
+ * than fade the world on one signal.
+ *   • SOLO      (exactly one estimator) → ×0.6 discounted, but NOT refereed.
+ * With a single source requirement #2 cannot bind — there is no second opinion to
+ * contradict it — so a large enough lone divergence can still SPEAK, merely at the
+ * 0.6 discount. Single-source picks are therefore un-refereed and should be read
+ * as correspondingly less proven, not as clearing the cross-check above.
  *
  * The honest default is silence. With no independent estimate we PASS — we never
  * manufacture an edge from the market's own price. Every surfaced pick carries an
@@ -78,7 +91,11 @@ export interface EdgeAssessment {
   readonly agreementRatio: number;
   /** Honest expectation of beating the close, in probability points. */
   readonly expectedClv: number;
-  /** Glass-box conviction 0–100 for display. */
+  /**
+   * Glass-box conviction 0–100 for display. Only a backable positive edge earns
+   * conviction: it is 0 whenever the engine is not backing the side (dir ≤ 0), so
+   * a faded/declined side never displays a high conviction number.
+   */
   readonly conviction: number;
   readonly decision: EdgeDecision;
   /** Plain-language, measured "why" — safe for the glass-box surface. */
@@ -95,6 +112,27 @@ function pct(v: number): string {
 }
 
 /**
+ * The honest no-edge PASS. Used both when there is no independent estimate and
+ * when the supplied weights are unusable (non-positive / non-finite total) — we
+ * decline rather than blend garbage into a fabricated (or NaN) edge.
+ */
+function noEdgeAssessment(marketFairProb: number): EdgeAssessment {
+  return {
+    marketFairProb,
+    trueProb: null,
+    rawEdge: 0,
+    shrunkEdge: 0,
+    agreement: "NONE",
+    agreementRatio: 0,
+    expectedClv: 0,
+    conviction: 0,
+    decision: "PASS",
+    rationale:
+      "No independent estimate available — we decline rather than manufacture an edge from the market's own price.",
+  };
+}
+
+/**
  * Assess whether we have a genuine, independent edge on a side and how strong.
  * Returns a PASS (with a reason) far more often than a SPEAK — that restraint is
  * the product: we only have an opinion where one is defensible.
@@ -105,28 +143,29 @@ export function assessEdge(input: EdgeInput): EdgeAssessment {
   const uncertaintyFactor = clamp(1 - (input.uncertainty ?? 0), 0, 1);
   const marketConsistent = input.marketConsistent ?? true;
 
-  const independents = input.independents.filter(
-    (e) => Number.isFinite(e.prob) && e.prob >= 0 && e.prob <= 1,
-  );
+  const independents = input.independents.filter((e) => {
+    if (!(Number.isFinite(e.prob) && e.prob >= 0 && e.prob <= 1)) return false;
+    const w = e.weight;
+    // Undefined weight defaults to 1 downstream. A present finite weight must be
+    // strictly positive (0 / negative are meaningless trust and get dropped). A
+    // NaN/±Infinity weight is kept here so the totalWeight guard below can fail
+    // closed rather than silently blend a NaN into trueProb.
+    return w === undefined || !Number.isFinite(w) || w > 0;
+  });
 
   // Honest default: no independent estimate → no opinion.
   if (independents.length === 0) {
-    return {
-      marketFairProb,
-      trueProb: null,
-      rawEdge: 0,
-      shrunkEdge: 0,
-      agreement: "NONE",
-      agreementRatio: 0,
-      expectedClv: 0,
-      conviction: 0,
-      decision: "PASS",
-      rationale:
-        "No independent estimate available — we decline rather than manufacture an edge from the market's own price.",
-    };
+    return noEdgeAssessment(marketFairProb);
   }
 
   const totalWeight = independents.reduce((s, e) => s + (e.weight ?? 1), 0);
+  // A non-positive or non-finite total weight (e.g. a NaN/±Infinity trust weight)
+  // would make trueProb NaN and cascade NaN through every numeric output — fail
+  // closed to the honest PASS instead of publishing garbage.
+  if (!Number.isFinite(totalWeight) || totalWeight <= 0) {
+    return noEdgeAssessment(marketFairProb);
+  }
+
   const trueProb = clamp(
     independents.reduce((s, e) => s + e.prob * (e.weight ?? 1), 0) / totalWeight,
     0,
@@ -168,9 +207,14 @@ export function assessEdge(input: EdgeInput): EdgeAssessment {
   // the closing line should drift toward our number — that drift IS our CLV.
   const expectedClv = round(shrunkEdge);
 
-  // Glass-box conviction: a confirmed ~+6pt shrunk edge tops out near 85.
+  // Glass-box conviction: a confirmed ~+6pt shrunk edge tops out near 85. Gated on
+  // a backable positive edge — a side we are fading/declining (dir ≤ 0) reports 0
+  // conviction, so the display never shows high conviction on a PASS.
   const agreementBonus = agreement === "CONFIRMS" ? 15 : agreement === "SOLO" ? -5 : agreement === "SPLIT" ? -8 : 0;
-  const conviction = clamp(Math.round((Math.min(shrunkMag, 0.06) / 0.06) * 70 + agreementBonus), 0, 100);
+  const conviction =
+    dir > 0
+      ? clamp(Math.round((Math.min(shrunkMag, 0.06) / 0.06) * 70 + agreementBonus), 0, 100)
+      : 0;
 
   let decision: EdgeDecision;
   if (agreement === "CONTRADICTS" || dir <= 0) decision = "PASS";

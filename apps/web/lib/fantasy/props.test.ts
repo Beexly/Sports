@@ -15,6 +15,24 @@ describe("props edge", () => {
     expect(probOver(50, 40, 20)).toBeLessThan(0.5);
   });
 
+  it("collapses to a point mass (no NaN) when sigma is degenerate", () => {
+    // sigma<=0 / NaN: projection is a point mass at mean, not a NaN divide.
+    expect(probOver(60, 50, 0)).toBe(0); // line above mean -> over impossible
+    expect(probOver(40, 50, 0)).toBe(1); // line below mean -> over certain
+    expect(probOver(50, 50, 0)).toBe(0.5); // line on mean -> coin flip
+    expect(probOver(60, 50, -5)).toBe(0);
+    expect(probOver(60, 50, NaN)).toBe(0);
+  });
+
+  it("readProp stays finite (no 'NaN%' note) on a degenerate sigma line", () => {
+    const r = readProp(mk({ line: 40, mean: 50, sigma: 0, alts: [] }));
+    expect(Number.isFinite(r.pOver)).toBe(true);
+    expect(Number.isFinite(r.pSide)).toBe(true);
+    expect(Number.isFinite(r.edge)).toBe(true);
+    expect(r.note).not.toContain("NaN");
+    expect(r.side).toBe("over");
+  });
+
   it("recommends OVER when our number clears the line, UNDER when below", () => {
     expect(readProp(mk({ mean: 65 })).side).toBe("over");
     expect(readProp(mk({ mean: 35 })).side).toBe("under");

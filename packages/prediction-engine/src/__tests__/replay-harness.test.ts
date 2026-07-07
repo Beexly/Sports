@@ -97,4 +97,13 @@ describe("runMarketTotalReplayBacktest", () => {
     expect(report.baseline).toBe("market-total-closing-line");
     expect(report.folds).toHaveLength(2);
   });
+
+  it("reports a null out-of-sample MAE (not a fabricated 0) when no test weeks qualify", () => {
+    const games = nflverseSchedulesToReplayGames(rows);
+    const report = runMarketTotalReplayBacktest(games, { minTrainWeeks: 99, purgeWeeks: 0, embargoWeeks: 0 });
+
+    expect(report.folds).toHaveLength(0);
+    expect(report.sampleSize).toBe(0);
+    expect(report.outOfSampleMae).toBeNull();
+  });
 });

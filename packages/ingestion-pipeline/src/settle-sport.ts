@@ -91,16 +91,23 @@ export async function settleSport(
 
       const bothScores = score.homeScore !== null && score.awayScore !== null;
 
+      // Never write scores unless BOTH are present. A completed-but-scoreless
+      // feed row (Odds API drops the scores array for an older completed game,
+      // a PPD/cancelled game flagged completed=true, or a team-name lookup miss)
+      // must NOT overwrite a previously-recorded FINAL score with null — that
+      // would erase a published outcome and leave an inconsistent FINAL-with-null
+      // state that score-verification / settlement / backtest consumers read as
+      // the result. Gate the whole data object: an empty update is a harmless
+      // no-op that preserves the existing recorded score and status.
       await db.game.update({
         where: { id: game.id },
-        data: {
-          homeScore: score.homeScore,
-          awayScore: score.awayScore,
-          // Only a game with both scores is truly FINAL. A completed-but-
-          // scoreless feed row keeps its prior status so consumers never read
-          // FINAL with null scores (an inconsistent "graded but no score" state).
-          ...(bothScores ? { status: "FINAL" as const } : {}),
-        },
+        data: bothScores
+          ? {
+              homeScore: score.homeScore,
+              awayScore: score.awayScore,
+              status: "FINAL" as const,
+            }
+          : {},
       });
 
       // The inline null-check (not the bothScores boolean) is what narrows the

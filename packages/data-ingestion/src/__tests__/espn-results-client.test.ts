@@ -59,6 +59,30 @@ describe("parseEspnScoreboard", () => {
   it("tolerates an empty / malformed payload", () => {
     expect(parseEspnScoreboard({}, "nfl")).toEqual([]);
   });
+
+  it("reports null (not a fabricated 0) for an empty or whitespace score string", () => {
+    const payload = {
+      events: [
+        {
+          id: "401700003",
+          date: "2026-06-04T00:00Z",
+          competitions: [
+            {
+              status: { type: { state: "pre", completed: false } },
+              competitors: [
+                { homeAway: "home", score: "", team: { abbreviation: "LAL", displayName: "Los Angeles Lakers" } },
+                { homeAway: "away", score: "  ", team: { abbreviation: "GSW", displayName: "Golden State Warriors" } },
+              ],
+            },
+          ],
+        },
+      ],
+    } as const;
+
+    const [game] = parseEspnScoreboard(payload, "nba");
+    expect(game?.home).toMatchObject({ abbr: "LAL", score: null });
+    expect(game?.away).toMatchObject({ abbr: "GSW", score: null });
+  });
 });
 
 describe("EspnResultsClient", () => {

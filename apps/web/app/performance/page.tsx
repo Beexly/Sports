@@ -16,6 +16,7 @@ import {
   winRateToneClass,
 } from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
+import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
@@ -200,6 +201,14 @@ export default async function PerformancePage() {
   // only sanctioned path (this surface is policy-pinned to that helper).
   const flooredWinRate = (wins: number, losses: number): number | null =>
     insufficientSample ? null : winRatePct(wins, losses);
+  // PER-SLICE FLOOR (audit fix): the overall gate alone let a thin sport slice
+  // render a 2xl-bold headline rate (e.g. 3 picks -> "100%") while the overall
+  // headline was honestly floored. A SPORT CARD's rate is a headline number with
+  // no denominator prominence, so it must clear the SAME floor on its OWN
+  // decided count. (The recent-periods TABLE keeps the overall floor: each row
+  // shows W/L right next to the rate, so the denominator is already honest.)
+  const flooredSliceWinRate = (wins: number, losses: number): number | null =>
+    insufficientSample || wins + losses < minSettledFloor ? null : winRatePct(wins, losses);
   // overall.winRate is already winRatePct(overall.wins, overall.losses); withhold
   // it below the floor so the headline never publishes a thin-sample rate.
   const publishedOverallWinRate = insufficientSample ? null : overall.winRate;
@@ -374,7 +383,7 @@ export default async function PerformancePage() {
                           losses={l}
                           pushes={p}
                           totalPicks={total}
-                          winRate={flooredWinRate(w, l)}
+                          winRate={flooredSliceWinRate(w, l)}
                         />
                       );
                     })}
@@ -535,6 +544,11 @@ function SportCard({
   totalPicks: number;
   winRate: number | null;
 }) {
+  // Wilson 95% band on the decided count — shown only when the rate itself
+  // cleared the per-slice floor, so the headline number never travels without
+  // its uncertainty (audit fix: unbanded per-sport win%).
+  const wilson = winRate !== null ? wilsonInterval(wins, wins + losses) : null;
+  const band = wilson ? formatWilsonPct(wilson, 0) : null;
   return (
     <div className="rounded-2xl border border-mineral bg-eclipse/60 p-5">
       <div className="mb-3 flex items-center justify-between">
@@ -576,6 +590,12 @@ function SportCard({
       <p className="mt-3 text-center text-xs text-ion-3">
         <span className={NUMERIC_TEXT_CLASS}>{formatCount(totalPicks)}</span>{" "}
         canonical picks
+        {band !== null && (
+          <>
+            {" · "}
+            <span className={NUMERIC_TEXT_CLASS}>95% band {band}</span>
+          </>
+        )}
       </p>
 
       {winRate !== null && (

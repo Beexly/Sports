@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/drift-report-entry.schema.json",
+  "type": "object",
+  "required": ["statistic_type", "window", "sample_size", "result", "decision"],
+  "properties": {
+    "statistic_type": { "type": "string" },
+    "window": { "type": "string" },
+    "sample_size": { "type": "integer" },
+    "result": { "type": "number" },
+    "decision": { "type": "string" }
+  }
+}

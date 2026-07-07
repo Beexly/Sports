@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
+import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BillingNoticeBanner } from "@/components/ui/billing-notice-banner";
 import { getBillingNotice } from "@/lib/billing/notice";
@@ -163,6 +164,11 @@ export default async function DashboardPage() {
     performanceVisible &&
     performancePolicy.publicWinRate !== null &&
     performancePolicy.publicWinRate >= 55;
+  const winRateWilson =
+    performanceVisible && performancePolicy.publicWinRate !== null
+      ? wilsonInterval(canonicalWins, canonicalWins + canonicalLosses)
+      : null;
+  const winRateSubtext = winRateWilson ? `Wilson band ${formatWilsonPct(winRateWilson, 0)}` : null;
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -214,7 +220,7 @@ export default async function DashboardPage() {
           <div className="mb-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatCard label="Today's Picks" value={todayPicksCount.toString()} />
             <StatCard label="Verified Record" value={recordDisplay} />
-            <StatCard label="Win Rate" value={winRateDisplay} highlight={winRateHighlight} />
+            <StatCard label="Win Rate" value={winRateDisplay} highlight={winRateHighlight} subtext={winRateSubtext} />
             <StatCard
               label="Tier"
               value={
@@ -432,15 +438,18 @@ function StatCard({
   label,
   value,
   highlight,
+  subtext,
 }: {
   label: string;
   value: string;
   highlight?: boolean;
+  subtext?: string | null;
 }) {
   return (
     <div className="rounded-xl border border-titanium bg-carbon/60 p-4">
       <p className="text-xs text-ion-3">{label}</p>
       <p className={`mt-1 text-2xl font-bold ${highlight ? "text-orbital-cyan" : "text-white"}`}>{value}</p>
+      {subtext && <p className="mt-0.5 text-[10px] text-ion-3">{subtext}</p>}
     </div>
   );
 }

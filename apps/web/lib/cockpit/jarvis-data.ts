@@ -83,6 +83,7 @@ export async function loadJarvisAssessment(): Promise<{
     recentTotal,
     recentBootstrap,
     snapshotCoverageRaw,
+    publishedCanonicalCount,
     avgDqRaw,
     modelVersions,
   ] = await Promise.all([
@@ -136,7 +137,12 @@ export async function loadJarvisAssessment(): Promise<{
     db.pick.count({ where: { isFeatured: true } }).catch(() => 0),
     db.pick.count({ where: { generatedAt: { gte: recentSince } } }).catch(() => 0),
     db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }).catch(() => 0),
-    db.pick.count({ where: { signalSnapshot: { isNot: null } } }).catch(() => 0),
+    db.pick
+      .count({
+        where: { signalSnapshot: { isNot: null }, isPublished: true, isBootstrap: false },
+      })
+      .catch(() => 0),
+    db.pick.count({ where: { isPublished: true, isBootstrap: false } }).catch(() => 0),
     db.game
       .aggregate({ _avg: { dataQualityScore: true } })
       .catch(() => ({ _avg: { dataQualityScore: 0 } } as { _avg: { dataQualityScore: number | null } })),
@@ -158,7 +164,13 @@ export async function loadJarvisAssessment(): Promise<{
     recentBootstrapCount: recentBootstrap,
   });
 
-  const totalPicks = publishedCount + canonicalPending;
+  // Signal-coverage must compare like with like: the numerator counts
+  // snapshots only among the public, canonical (published, non-bootstrap)
+  // pick population, and the denominator is that exact same population.
+  // Counting snapshots across ALL picks (unpublished internal + bootstrap)
+  // over a published denominator let bootstrap/internal snapshots push the
+  // ratio past 1 (then clamped to 1), falsely reading as fully covered / GREEN.
+  const totalPicks = publishedCanonicalCount;
   const snapshotPct = totalPicks > 0 ? Math.min(1, snapshotCoverageRaw / totalPicks) : 0;
   const dq = avgDqRaw._avg?.dataQualityScore ?? 0;
 

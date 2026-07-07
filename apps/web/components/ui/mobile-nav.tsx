@@ -68,6 +68,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Closing Line Value", href: "/clv" },
       { label: "Trust Ledger: pick receipts", href: "/ledger" },
       { label: "Proof of Record", href: "/proof" },
+      { label: "FABLE Evidence Lab", href: "/fable" },
       { label: "Accountability", href: "/accountability" },
       { label: "How we read metrics", href: "/intelligence/metrics" },
       { label: "CLV Tracker: track your bets", href: "/track" },

@@ -67,4 +67,27 @@ describe("compositeScore", () => {
     const rumor = r.contributions.find((c) => c.key === "rumor_holdout")!;
     expect(rumor.weightShare).toBeLessThan(0.1); // the rumor is a minor, honest contributor
   });
+
+  it("treats non-finite signal values as inert so the composite never goes NaN", () => {
+    // An Infinity/NaN z-score (e.g. from a zero-variance sample) must not poison the blend.
+    const r = compositeScore([
+      { key: "good", value: 1, weight: 1 },
+      { key: "poisoned_inf", value: Infinity, weight: 1 },
+      { key: "poisoned_neg_inf", value: -Infinity, weight: 1 },
+      { key: "poisoned_nan", value: NaN, weight: 1 },
+    ]);
+    // The output stays a real, finite number.
+    expect(Number.isFinite(r.score)).toBe(true);
+    expect(Number.isNaN(r.score)).toBe(false);
+    // Each poisoned value is guarded to 0 but keeps its weight, so the blend is
+    // (1*1 + 0*1 + 0*1 + 0*1) / (1+1+1+1) = 0.25 — diluted, but never corrupted.
+    expect(r.score).toBeCloseTo(0.25, 4);
+    // Every reported contribution is finite too.
+    for (const c of r.contributions) {
+      expect(Number.isFinite(c.value)).toBe(true);
+      expect(Number.isFinite(c.contribution)).toBe(true);
+      expect(Number.isFinite(c.effectiveWeight)).toBe(true);
+      expect(Number.isFinite(c.weightShare)).toBe(true);
+    }
+  });
 });

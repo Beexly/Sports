@@ -39,4 +39,31 @@ describe("mission control briefing", () => {
     // the demo wire has a fresh insider 'ruled out' — it should top the briefing
     expect(cards[0]!.kind).toBe("breaking");
   });
+
+  it("marks illustrative cards as samples with a per-card provenance tag", () => {
+    // Every card whose numbers come from a fictional engine must carry
+    // sample:true and a visible 'Sample' marker so it is never mistaken for a
+    // live, sourced alert (non-negotiables #1/#4).
+    const illustrative = cards.filter((c) => c.kind !== "discipline");
+    expect(illustrative.length).toBeGreaterThan(0);
+    for (const c of illustrative) {
+      expect(c.sample).toBe(true);
+      expect(c.eyebrow).toContain("Sample");
+    }
+  });
+
+  it("does not mark the generic discipline nudge as a sample", () => {
+    const discipline = cards.find((c) => c.kind === "discipline");
+    expect(discipline).toBeDefined();
+    expect(discipline!.sample).toBe(false);
+    expect(discipline!.eyebrow).not.toContain("Sample");
+  });
+
+  it("does not assert a fabricated 'confirmed by N sources' corroboration on the breaking card", () => {
+    // DEMO_WIRE is fictional; the eyebrow must not present a real-world
+    // corroboration count as a live, sourced alert.
+    const breaking = cards.find((c) => c.kind === "breaking");
+    expect(breaking).toBeDefined();
+    expect(breaking!.eyebrow).not.toMatch(/confirmed by \d+ sources/i);
+  });
 });

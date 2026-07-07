@@ -76,6 +76,34 @@ describe("computeGameContext — orchestrator", () => {
     expect(scores.factors.every((f) => f.name === "Data Quality")).toBe(true);
   });
 
+  it("fails closed on a mostly-push bucket that clears sampleSize but not decided games", () => {
+    // sampleSize 5 (>= MIN_SAMPLE) but only 1 decided game (1-0-4). The old
+    // gate checked sampleSize and would emit a full-strength 100%-ATS signal
+    // off a single decided game; the corrected gate requires >=5 DECIDED games.
+    const pushHeavy = bucket(1, 0, 4); // sampleSize === 5, decided === 1
+    const input: GameContextInput = {
+      homeAtsForm: pushHeavy,
+      homeAtsFormAtHome: pushHeavy,
+      headToHeadForm: pushHeavy,
+    };
+    const scores = computeGameContext(input, "SPREAD", "HOME");
+    expect(scores.historicalFormScore).toBe(0);
+    expect(scores.venueFormScore).toBe(0);
+    expect(scores.headToHeadScore).toBe(0);
+    // None of the form scorers should have emitted a factor from this bucket.
+    expect(scores.factors.some((f) => f.name === "Home ATS Form")).toBe(false);
+    expect(scores.factors.some((f) => f.name === "Home Venue Form")).toBe(false);
+    expect(scores.factors.some((f) => f.name === "Head-to-Head Form")).toBe(false);
+  });
+
+  it("still emits a signal once decided games reach the minimum, even with pushes present", () => {
+    // 5 decided games (3-2) plus pushes → clears the decided-game gate.
+    const enough = bucket(5, 0, 3); // decided === 5, 100% ATS
+    const scores = computeGameContext({ homeAtsForm: enough }, "SPREAD", "HOME");
+    expect(scores.historicalFormScore).toBe(10);
+    expect(scores.factors.some((f) => f.name === "Home ATS Form")).toBe(true);
+  });
+
   it("keeps every numeric field within its documented band", () => {
     // A rich input that lights up multiple signals at once.
     const input: GameContextInput = {

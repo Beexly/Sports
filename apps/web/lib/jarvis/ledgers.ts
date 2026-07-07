@@ -62,6 +62,20 @@ function assertValidSeat(value: string, label: string): void {
   }
 }
 
+// ─── Confidence validation ────────────────────────────────────────────────────
+
+/**
+ * Confidence is a calibrated 0–100 score. Reject NaN/Infinity and out-of-range
+ * values before they enter the ledger — an out-of-range or non-finite confidence
+ * would be read back by review surfaces as a real "confidence score" and mislead
+ * the parent seat's review. Fail closed on bad input.
+ */
+function assertValidConfidence(value: number, label: string): void {
+  if (!Number.isFinite(value) || value < 0 || value > 100) {
+    throw new Error(`Invalid confidence "${value}" for ${label}. Must be a number in 0–100.`);
+  }
+}
+
 // ─── DB error wrapper ─────────────────────────────────────────────────────────
 
 function wrapDbError(err: unknown): never {
@@ -164,6 +178,7 @@ export interface LogSubagentRunInput {
  */
 export async function logSubagentRun(input: LogSubagentRunInput) {
   assertValidSeat(input.parentSeat, "parentSeat");
+  assertValidConfidence(input.confidence, "confidence");
 
   try {
     return await db.subagentRun.create({

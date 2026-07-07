@@ -84,7 +84,14 @@ export class EspnError extends Error {
 
 function toTeamScore(competitor: EspnCompetitorRaw | undefined): EspnTeamScore {
   const rawScore = competitor?.score;
-  const numeric = rawScore != null && Number.isFinite(Number(rawScore)) ? Number(rawScore) : null;
+  // ESPN emits "" (and occasionally whitespace) for a competitor with no posted
+  // score yet. Number("")===0 and Number("  ")===0 are both finite, so coercing
+  // directly fabricates a 0. Require a non-empty numeric string before trusting it.
+  const trimmed = typeof rawScore === "string" ? rawScore.trim() : rawScore;
+  const numeric =
+    trimmed != null && trimmed !== "" && Number.isFinite(Number(trimmed))
+      ? Number(trimmed)
+      : null;
   return {
     abbr: competitor?.team?.abbreviation ?? null,
     name: competitor?.team?.displayName ?? null,

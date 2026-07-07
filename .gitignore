@@ -46,6 +46,12 @@ coverage/
 .turbo
 apps/web/tsconfig.tsbuildinfo
 
+# Local agent/runtime debris
+.agent/logs/
+scrapes/
+tmp/
+.cache/
+
 # Sandbox / launch-night debris — these get created when the operator
 # runs the recovery recipe and should never land in a commit.
 _speedtest/
@@ -71,6 +77,8 @@ VERCEL_ENV.txt
 screenshots/
 /test-results/
 /playwright-report/
+test-results/
+playwright-report/
 
 # Ignore local .claude config, but DO track shared project commands.
 .claude/*

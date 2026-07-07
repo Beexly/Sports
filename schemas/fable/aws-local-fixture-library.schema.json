@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxy-sports-edge.local/schemas/fable/aws-local-fixture-library.schema.json",
+  "title": "FABLE AWS Local Fixture Library",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "scope_note", "fixtures"],
+  "properties": {
+    "schema_version": { "const": "fable-aws-local-fixture-library-v1" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "scope_note": { "type": "string", "minLength": 1 },
+    "fixtures": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "fixture_id",
+          "fixture_type",
+          "title",
+          "aws_services",
+          "learning_inputs",
+          "well_architected_pillars",
+          "live_aws_action",
+          "paid_resource_used",
+          "owner_approval_required",
+          "boundary",
+          "success_metrics",
+          "checks",
+          "mock_artifacts"
+        ],
+        "properties": {
+          "fixture_id": { "type": "string", "minLength": 1 },
+          "fixture_type": {
+            "enum": [
+              "s3_storage_policy_mock",
+              "iam_policy_review_cases",
+              "sagemaker_model_card_fixture",
+              "bedrock_agentcore_refusal_cases",
+              "clean_rooms_synthetic_scenarios"
+            ]
+          },
+          "title": { "type": "string", "minLength": 1 },
+          "aws_services": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+          "learning_inputs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+          "well_architected_pillars": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "operational_excellence",
+                "security",
+                "reliability",
+                "performance_efficiency",
+                "cost_optimization",
+                "sustainability"
+              ]
+            },
+            "minItems": 1
+          },
+          "live_aws_action": { "const": false },
+          "paid_resource_used": { "const": false },
+          "owner_approval_required": { "const": true },
+          "boundary": { "type": "string", "minLength": 1 },
+          "success_metrics": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+          "checks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["check_id", "pillar", "expectation", "pass_condition"],
+              "properties": {
+                "check_id": { "type": "string", "minLength": 1 },
+                "pillar": {
+                  "enum": [
+                    "operational_excellence",
+                    "security",
+                    "reliability",
+                    "performance_efficiency",
+                    "cost_optimization",
+                    "sustainability"
+                  ]
+                },
+                "expectation": { "type": "string", "minLength": 1 },
+                "pass_condition": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "mock_artifacts": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

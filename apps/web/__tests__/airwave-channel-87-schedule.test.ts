@@ -6,6 +6,7 @@ import {
   sortShowBlocks,
   getCurrentShowBlock,
   summarizeChannel87Schedule,
+  centralTimeHour,
   CH87_CHANNEL_NUMBER,
   CH87_WINDOW,
   type ShowBlock,
@@ -166,19 +167,28 @@ describe("Channel 87 Schedule", () => {
   });
 
   describe("getCurrentShowBlock", () => {
-    it("returns undefined when hour is outside window", () => {
-      const blocks = [SAMPLE_BLOCK]; // 8-12
-      // UTC 2 = roughly 21:00 CT previous day (but simplified: use UTC directly)
-      const date = new Date("2026-06-11T02:00:00Z"); // hour 2 = outside window
+    it("returns undefined when the CT hour is outside the window", () => {
+      const blocks = [SAMPLE_BLOCK]; // 8-12 CT
+      // June is CDT (UTC-5): 07:00Z -> 02:00 CT, which is outside 05:00-23:00.
+      const date = new Date("2026-06-11T07:00:00Z");
       const result = getCurrentShowBlock(blocks, date);
       expect(result).toBeUndefined();
     });
 
-    it("returns the current show block when hour matches", () => {
-      const blocks = [SAMPLE_BLOCK]; // startHour 8, endHour 12
-      const date = new Date("2026-06-11T09:00:00Z"); // UTC hour 9, within 8-12
+    it("returns the current show block when the CT hour matches", () => {
+      const blocks = [SAMPLE_BLOCK]; // startHour 8, endHour 12 CT
+      // June is CDT (UTC-5): 14:00Z -> 09:00 CT, which is within 8-12.
+      const date = new Date("2026-06-11T14:00:00Z");
       const result = getCurrentShowBlock(blocks, date);
       expect(result).toEqual(SAMPLE_BLOCK);
+    });
+
+    it("uses Central Time, not the raw UTC hour, to pick the block", () => {
+      const blocks = [SAMPLE_BLOCK]; // 8-12 CT
+      // UTC hour 9 would (buggily) match 8-12, but 09:00Z is 04:00 CT in June
+      // (CDT, UTC-5) — outside the window entirely.
+      const date = new Date("2026-06-11T09:00:00Z");
+      expect(getCurrentShowBlock(blocks, date)).toBeUndefined();
     });
   });
 
@@ -199,6 +209,44 @@ describe("Channel 87 Schedule", () => {
       const contract = createChannel87ScheduleContract();
       const summary = summarizeChannel87Schedule(contract.shows, new Date());
       expect(summary.operatorNote).toMatch(/SAMPLE_PLACEHOLDER/);
+    });
+
+    it("reports windowOpen/currentShow in Central Time, not UTC", () => {
+      const contract = createChannel87ScheduleContract();
+      // 2026-11-15 is CST (UTC-6): 02:00Z -> 20:00 CT (Nov 14), inside the
+      // 05:00-23:00 window and inside the 18-22 "Evening Debrief" block.
+      // Raw getUTCHours() would be 2 and wrongly report the window closed.
+      const date = new Date("2026-11-15T02:00:00Z");
+      const summary = summarizeChannel87Schedule(contract.shows, date);
+      expect(summary.windowOpen).toBe(true);
+      expect(summary.currentShow?.showId).toBe("ch87-evening-debrief");
+    });
+
+    it("reports windowOpen=false when it is pre-dawn in Central Time", () => {
+      const contract = createChannel87ScheduleContract();
+      // CST (UTC-6): 09:00Z -> 03:00 CT, before the 05:00 window open.
+      const date = new Date("2026-11-15T09:00:00Z");
+      const summary = summarizeChannel87Schedule(contract.shows, date);
+      expect(summary.windowOpen).toBe(false);
+      expect(summary.currentShow).toBeUndefined();
+    });
+  });
+
+  describe("centralTimeHour", () => {
+    it("converts a UTC instant to the Central-Time hour in CDT (summer)", () => {
+      // June -> CDT (UTC-5): 14:00Z -> 09:00 CT.
+      expect(centralTimeHour(new Date("2026-06-11T14:00:00Z"))).toBe(9);
+    });
+
+    it("converts a UTC instant to the Central-Time hour in CST (winter)", () => {
+      // November (post-DST) -> CST (UTC-6): 02:00Z -> 20:00 CT (previous day).
+      expect(centralTimeHour(new Date("2026-11-15T02:00:00Z"))).toBe(20);
+    });
+
+    it("returns NaN for an invalid Date so window checks fail closed", () => {
+      const hour = centralTimeHour(new Date("not-a-date"));
+      expect(Number.isNaN(hour)).toBe(true);
+      expect(isWithinChannel87Window(hour)).toBe(false);
     });
   });
 });

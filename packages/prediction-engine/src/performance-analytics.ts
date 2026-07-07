@@ -13,6 +13,12 @@ export interface SettledPickRecord {
   readonly pickType: string;
   /** P(the chosen side wins) the model claimed, 0–1. */
   readonly modelProb: number;
+  /**
+   * Whether the chosen side won. This module has NO push/void state: every record
+   * MUST represent a DECIDED bet. Pushes/voids (bet refunded, neither win nor loss)
+   * must be excluded by the caller BEFORE calling — a push mapped to `won:false` is
+   * counted as a loss, understating winRate and breaking win streaks.
+   */
   readonly won: boolean;
   /** Market-implied prob of the same side at close (for beat-the-close). */
   readonly closingProb?: number;
@@ -50,15 +56,19 @@ export interface PerformanceReport {
 export function computeSegment(records: readonly SettledPickRecord[], segment: string): SegmentPerformance {
   const picks = records.length;
   const wins = records.reduce((n, r) => n + (r.won ? 1 : 0), 0);
-  const hasProfit = records.some((r) => r.profitUnits != null);
-  const roiUnits = round2(records.reduce((s, r) => s + (r.profitUnits ?? 0), 0));
+  // ROI% numerator and denominator must range over the SAME population: only the
+  // records that actually carry profit data. Imputing missing profit as 0 and then
+  // dividing by ALL picks lets a partially-graded losing ledger publish a positive
+  // ROI (a real overclaim path). Return null when nothing is graded.
+  const profitRecs = records.filter((r) => r.profitUnits != null);
+  const roiUnits = round2(profitRecs.reduce((s, r) => s + (r.profitUnits ?? 0), 0));
   return {
     segment,
     picks,
     wins,
     winRate: picks > 0 ? round4(wins / picks) : 0,
     roiUnits,
-    roiPercentPerPick: picks > 0 && hasProfit ? round2((roiUnits / picks) * 100) : null,
+    roiPercentPerPick: profitRecs.length > 0 ? round2((roiUnits / profitRecs.length) * 100) : null,
   };
 }
 
@@ -85,7 +95,10 @@ export function calibrationCurve(
   const buckets = new Map<number, { wins: number; count: number }>();
   for (const r of records) {
     const p = Math.max(0, Math.min(0.999999, r.modelProb));
-    const idx = Math.floor(p / bucketSize);
+    // Nudge by a tiny epsilon before flooring so exact deciles (0.7/0.1 ===
+    // 6.999999999999999 in IEEE-754) land in the correct bucket, and clamp the
+    // top index so the 0.999999 guard never spills past the final bucket.
+    const idx = Math.min(Math.ceil(1 / bucketSize) - 1, Math.floor(p / bucketSize + 1e-9));
     const prev = buckets.get(idx) ?? { wins: 0, count: 0 };
     buckets.set(idx, { wins: prev.wins + (r.won ? 1 : 0), count: prev.count + 1 });
   }

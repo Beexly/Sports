@@ -1,0 +1,155 @@
+import { metricDriver, sortedDrivers, type MetricDriver } from "../core/driver.js";
+import { requireMetricBirthCertificate, type GseMetricBirthCertificate } from "../core/metric-birth-certificate.js";
+import { clamp01, normalizeClamped, round, weightedMean } from "../core/math.js";
+import { shrinkProbability } from "../core/shrinkage.js";
+import { uncertaintyFromEvidence, type MetricLifecycleStatus, type MetricSourcePolicy, type MetricUncertaintyBand } from "../core/validation.js";
+
+export interface ReceiverDifficultyInput {
+  readonly expectedCompletionProbability: number;
+  readonly airYards: number;
+  readonly separationYards?: number;
+  readonly cushionYards?: number;
+  readonly contestedCatchProxy?: number;
+  readonly sidelineProxy?: number;
+  readonly receiverPriorDifficulty?: number;
+  readonly sampleSize?: number;
+  readonly sourcePolicy: readonly MetricSourcePolicy[];
+}
+
+export interface ReceiverDifficultyMetric {
+  readonly metricId: "receiver-difficulty-index";
+  readonly difficultyIndex: number;
+  readonly confidenceScore: number;
+  readonly confidenceMeaning: "EVIDENCE_QUALITY_NOT_PLAYER_TALENT";
+  readonly uncertaintyBand: MetricUncertaintyBand;
+  readonly status: MetricLifecycleStatus;
+  readonly drivers: readonly MetricDriver[];
+  readonly birthCertificate: GseMetricBirthCertificate;
+  readonly sourcePolicy: readonly MetricSourcePolicy[];
+}
+
+/**
+ * Receiver Difficulty Index — a 0–100 SHADOW-status score of how hard a
+ * receiver's target context was, independent of the receiver's own talent
+ * (higher = harder target to catch).
+ *
+ * Output (see {@link ReceiverDifficultyMetric}):
+ * - `difficultyIndex` — 0–100, `difficulty * 100` rounded to 2 dp, where
+ *   `difficulty` is the weighted mean (every component in [0, 1]) of the seven
+ *   difficulty terms below. 0 = trivial target context, 100 = maximally hard.
+ * - `confidenceScore` — 0–100 EVIDENCE QUALITY, NOT player talent (encoded by
+ *   `confidenceMeaning: "EVIDENCE_QUALITY_NOT_PLAYER_TALENT"`): it grades how
+ *   much clean evidence backs the index (uncertainty band + sample size),
+ *   never how good or bad the receiver is.
+ * - `uncertaintyBand` — from real-proxy count, sample size, and source policy.
+ *   Only the soft proxies (contested-catch, sideline) count toward
+ *   `proxyCount`; `separationYards`/`cushionYards` are real tracking
+ *   measurements, so supplying them can never raise reported uncertainty.
+ *
+ * Input units and normalization bounds:
+ * - `expectedCompletionProbability` — probability in [0, 1]; its difficulty
+ *   term is the complement `1 - p` (lower completion => harder).
+ * - `airYards` — target depth in yards, min-max normalized over [0, 45].
+ * - `separationYards` — defender separation in yards, normalized over [0, 7]
+ *   then inverted (less separation => harder). Defaults to 2.5 when absent.
+ * - `cushionYards` — pre-snap cushion in yards, normalized over [0, 10] then
+ *   inverted. Defaults to 5 when absent.
+ * - `contestedCatchProxy`, `sidelineProxy` — soft proxies in [0, 1] (clamped),
+ *   default 0.
+ * - `receiverPriorDifficulty` — a receiver's prior difficulty rate in [0, 1],
+ *   empirical-Bayes shrunk toward the neutral 0.5 prior with priorStrength 120
+ *   over `sampleSize` observations (default observed 0.5; sampleSize 0 collapses
+ *   the shrunk value to the 0.5 prior, contributing nothing net to the index).
+ *
+ * Component weights (sum to 1.0): completion 0.34, depth 0.20, separation 0.18,
+ * contested 0.10, cushion 0.08, sideline 0.06, prior 0.04.
+ *
+ * Factor-trail limitation (honesty gate): `drivers` surfaces only the four
+ * highest-weighted components — completion, depth, separation, contested —
+ * ordered by descending absolute contribution, with each contribution expressed
+ * in index points (component × weight × 100). The three lower-weighted terms
+ * (cushion 8 pts, sideline 6 pts, prior 4 pts) are intentionally omitted, so the
+ * surfaced driver contributions are a partial attribution and do NOT sum to
+ * `difficultyIndex`. Treat the trail as the leading explanations of the score,
+ * not an exhaustive decomposition.
+ *
+ * Status is SHADOW: computed and auditable, but not wired into live pricing.
+ */
+export function receiverDifficultyIndex(input: ReceiverDifficultyInput): ReceiverDifficultyMetric {
+  const completionDifficulty = 1 - clamp01(input.expectedCompletionProbability);
+  const depthDifficulty = normalizeClamped(input.airYards, 0, 45);
+  const separationDifficulty = 1 - normalizeClamped(input.separationYards ?? 2.5, 0, 7);
+  const cushionDifficulty = 1 - normalizeClamped(input.cushionYards ?? 5, 0, 10);
+  const contested = clamp01(input.contestedCatchProxy ?? 0);
+  const sideline = clamp01(input.sidelineProxy ?? 0);
+  const priorDifficulty = shrinkProbability({
+    observed: input.receiverPriorDifficulty ?? 0.5,
+    prior: 0.5,
+    priorStrength: 120,
+    sampleSize: input.sampleSize ?? 0,
+  });
+  const difficulty = weightedMean([
+    { value: completionDifficulty, weight: 0.34 },
+    { value: depthDifficulty, weight: 0.2 },
+    { value: separationDifficulty, weight: 0.18 },
+    { value: cushionDifficulty, weight: 0.08 },
+    { value: contested, weight: 0.1 },
+    { value: sideline, weight: 0.06 },
+    { value: priorDifficulty, weight: 0.04 },
+  ]);
+  const uncertaintyBand = uncertaintyFromEvidence({
+    // Count only genuine soft proxies. separationYards/cushionYards are real
+    // tracking measurements, so their presence must not raise reported
+    // uncertainty (supplying real data cannot lower confidence below the
+    // fabricated-default fallback).
+    proxyCount: proxyCount([input.contestedCatchProxy, input.sidelineProxy]),
+    sampleSize: input.sampleSize,
+    sourcePolicy: input.sourcePolicy,
+  });
+
+  return {
+    birthCertificate: requireMetricBirthCertificate("receiver-difficulty-index"),
+    confidenceMeaning: "EVIDENCE_QUALITY_NOT_PLAYER_TALENT",
+    confidenceScore: confidenceFromEvidence(input.sampleSize ?? 0, uncertaintyBand),
+    difficultyIndex: round(difficulty * 100, 2),
+    drivers: sortedDrivers([
+      metricDriver({
+        contribution: completionDifficulty * 34,
+        direction: "UP",
+        explanation: "Lower expected completion increases target difficulty.",
+        name: "completion_difficulty",
+      }),
+      metricDriver({
+        contribution: depthDifficulty * 20,
+        direction: "UP",
+        explanation: "Deeper targets increase receiver difficulty.",
+        name: "air_yards_depth",
+      }),
+      metricDriver({
+        contribution: separationDifficulty * 18,
+        direction: "UP",
+        explanation: "Lower separation proxy increases receiver difficulty.",
+        name: "separation_proxy",
+      }),
+      metricDriver({
+        contribution: contested * 10,
+        direction: "UP",
+        explanation: "Contested-catch proxy increases difficulty.",
+        name: "contested_proxy",
+      }),
+    ]),
+    metricId: "receiver-difficulty-index",
+    sourcePolicy: input.sourcePolicy,
+    status: "SHADOW",
+    uncertaintyBand,
+  };
+}
+
+function confidenceFromEvidence(sampleSize: number, uncertaintyBand: MetricUncertaintyBand): number {
+  const base = uncertaintyBand === "LOW" ? 82 : uncertaintyBand === "MEDIUM" ? 60 : 36;
+  return round(Math.min(100, base + Math.min(12, sampleSize / 90)), 2);
+}
+
+function proxyCount(values: readonly (number | undefined)[]): number {
+  return values.filter((value) => value !== undefined).length;
+}

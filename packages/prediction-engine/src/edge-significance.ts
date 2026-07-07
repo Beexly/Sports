@@ -25,7 +25,10 @@ export interface SignificanceOptions {
   readonly trials?: number;
   /** Significance threshold. Default 0.05. */
   readonly alpha?: number;
-  /** Injectable RNG in [0,1). Default Math.random. */
+  /**
+   * Injectable RNG in [0,1). Defaults to a fixed-seed deterministic PRNG so the
+   * Monte-Carlo p-value is reproducible in library code (no Math.random).
+   */
   readonly random?: () => number;
 }
 
@@ -46,7 +49,9 @@ export function edgeSignificance(
 ): SignificanceResult {
   const trials = options.trials ?? 2000;
   const alpha = options.alpha ?? 0.05;
-  const rnd = options.random ?? Math.random;
+  // Default to a fixed-seed deterministic PRNG (not Math.random) so identical
+  // picks always yield the same p-value — a proof-of-record must not flip runs.
+  const rnd = options.random ?? mulberry32(DEFAULT_SEED);
 
   const observedWins = picks.reduce((n, p) => n + (p.won ? 1 : 0), 0);
   const expectedWins = picks.reduce((s, p) => s + clamp01(p.nullProb), 0);
@@ -69,6 +74,20 @@ export function edgeSignificance(
     winRatePValue: round4(winRatePValue),
     trials,
     significant: picks.length > 0 && winRatePValue <= alpha,
+  };
+}
+
+/** Fixed seed for the default deterministic PRNG. Constant → reproducible output. */
+const DEFAULT_SEED = 0x9e3779b9;
+
+/** Deterministic seedable PRNG in [0,1). Pure — no Math.random / Date.now. */
+function mulberry32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
 

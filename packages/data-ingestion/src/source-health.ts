@@ -55,7 +55,13 @@ export function assessSourceHealth(input: SourceHealthInput, options: SourceHeal
     consecutiveFailures >= failuresToOpen ? "open" : anyFailure ? "degraded" : "closed";
 
   const stalenessMinutes = computeStaleness(input.lastSuccessAt, input.now);
-  const stale = stalenessMinutes != null && stalenessMinutes >= staleMinutes;
+  // Freshness must be *proven*, never assumed from a missing/unparseable timestamp.
+  // When we have no known-fresh timestamp (never succeeded, empty history, or an
+  // unparseable clock) staleness is unknown — treat the source as stale unless its
+  // most recent call was itself a success (that success is direct evidence of life).
+  const lastOutcomeSucceeded = input.recentOutcomes[input.recentOutcomes.length - 1] === true;
+  const stale =
+    stalenessMinutes != null ? stalenessMinutes >= staleMinutes : !lastOutcomeSucceeded;
 
   return {
     source: input.source,

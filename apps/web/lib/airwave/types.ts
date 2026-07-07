@@ -124,6 +124,12 @@ export type PunditScorecard = {
   /** Hits / (hits + misses). 0..1. `null` when no decided calls yet. */
   readonly hitRate: number | null;
   /**
+   * Wilson 95% band on the hit rate over DECIDED calls, as percentages 0..100.
+   * `null` when no decided calls. The band travels with the rate so a small-n
+   * hit rate never reads as settled skill.
+   */
+  readonly hitRateBandPct: { readonly low: number; readonly high: number } | null;
+  /**
    * Composite 0..100. Rewards making checkable calls AND being right; emphatic
    * calls are weighted more (a confident wrong call costs more than a hedge).
    * Hedging and unfalsifiable volume drag it down.

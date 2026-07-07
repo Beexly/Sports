@@ -94,5 +94,6 @@ export async function GET(request: Request) {
     requestedSport: requestedSport ?? null,
     bootstrapMode: gates.isBootstrapMode,
     results: result.results,
+    freeze: result.freeze,
   });
 }

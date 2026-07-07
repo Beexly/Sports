@@ -82,6 +82,31 @@ export function isWithinChannel87Window(hourCt: number): boolean {
 }
 
 /**
+ * Derive the Central-Time (America/Chicago) hour-of-day (0–23) from a Date,
+ * honoring CST/CDT daylight-saving offsets.
+ *
+ * The CH87 capture window is defined in Central Time, so every window/show
+ * comparison MUST use the CT hour — using the raw UTC hour puts the schedule
+ * ~5–6 hours off from real CT and silently disagrees with the rest of the
+ * intake control plane. Returns NaN for an invalid Date, which fails closed
+ * (isWithinChannel87Window returns false).
+ */
+export function centralTimeHour(date: Date): number {
+  // An invalid Date fails closed: Intl.format throws on it, and NaN makes
+  // isWithinChannel87Window return false.
+  if (Number.isNaN(date.getTime())) return NaN;
+  const formatted = new Intl.DateTimeFormat("en-US", {
+    timeZone: CH87_TIMEZONE,
+    hour: "2-digit",
+    hour12: false,
+  }).format(date);
+  const hour = Number.parseInt(formatted, 10);
+  if (!Number.isFinite(hour)) return NaN;
+  // Some ICU builds render midnight as "24"; normalize to 0–23.
+  return hour === 24 ? 0 : hour;
+}
+
+/**
  * Validate a ShowBlock for required fields and time integrity.
  * Returns an array of validation errors (empty if valid).
  */
@@ -133,7 +158,7 @@ export function getCurrentShowBlock(
   blocks: readonly ShowBlock[],
   date: Date,
 ): ShowBlock | undefined {
-  const hourCt = date.getUTCHours(); // caller is responsible for CT offset
+  const hourCt = centralTimeHour(date);
   if (!isWithinChannel87Window(hourCt)) return undefined;
   return blocks.find((block) => hourCt >= block.startHour && hourCt < block.endHour);
 }
@@ -146,7 +171,7 @@ export function getNextShowBlock(
   blocks: readonly ShowBlock[],
   date: Date,
 ): ShowBlock | undefined {
-  const hourCt = date.getUTCHours();
+  const hourCt = centralTimeHour(date);
   const sorted = sortShowBlocks(blocks);
   return sorted.find((block) => block.startHour > hourCt);
 }
@@ -171,7 +196,7 @@ export function summarizeChannel87Schedule(
   blocks: readonly ShowBlock[],
   date: Date,
 ): Channel87ScheduleSummary {
-  const hourCt = date.getUTCHours();
+  const hourCt = centralTimeHour(date);
   const windowOpen = isWithinChannel87Window(hourCt);
   const currentShow = getCurrentShowBlock(blocks, date);
   const nextShow = getNextShowBlock(blocks, date);

@@ -126,15 +126,35 @@ export function isotonicCalibration(samples: readonly CalibrationSample[]): Isot
 // ============================================================
 
 export interface BrierDecomposition {
-  /** Mean squared error of the forecasts. brier = reliability − resolution + uncertainty. */
+  /**
+   * Exact raw Brier score: the per-sample mean of (p − y)², in [0,1], lower is
+   * better. This is computed from the actual forecasts, NOT from bin means.
+   *
+   * The Murphy identity brier = reliability − resolution + uncertainty holds
+   * exactly only when forecasts are constant within each bin. `reliability` and
+   * `resolution` below are the BINNED terms (each forecast is effectively
+   * replaced by its bin's mean), so when forecasts vary inside a bin they differ
+   * from this exact `brier` by a within-bin variance (discretization) term:
+   * brier ≈ reliability − resolution + uncertainty. Treat the split as a
+   * diagnostic read on WHY the score is what it is, not as an exact algebraic
+   * reconstruction of `brier`.
+   */
   readonly brier: number;
-  /** Lower is better: how far bin forecasts stray from bin outcome rates. */
+  /**
+   * Binned reliability term (lower is better): sample-weighted mean squared gap
+   * between each bin's mean forecast and its observed outcome rate.
+   */
   readonly reliability: number;
-  /** Higher is better: how much the forecasts separate outcomes from the base rate. */
+  /**
+   * Binned resolution term (higher is better): sample-weighted mean squared gap
+   * between each bin's observed outcome rate and the overall base rate.
+   */
   readonly resolution: number;
-  /** Irreducible: baseRate·(1−baseRate). */
+  /** Irreducible uncertainty fixed by the data: baseRate·(1−baseRate). */
   readonly uncertainty: number;
+  /** Overall observed outcome rate (fraction of y === 1) across all samples. */
   readonly baseRate: number;
+  /** Number of samples the decomposition was computed over. */
   readonly sampleSize: number;
 }
 
@@ -147,6 +167,12 @@ function binIndex(p: number, bins: number): number {
  * Murphy (1973) two-component decomposition over `bins` equal-width bins.
  * Reliability and resolution are the actionable terms; uncertainty is fixed by
  * the data's base rate.
+ *
+ * The returned `brier` is the EXACT raw score (mean of (p − y)²), while
+ * reliability/resolution are the BINNED terms. The identity
+ * brier = reliability − resolution + uncertainty is exact only when forecasts
+ * are constant within each bin; otherwise a within-bin variance term separates
+ * the two (see `BrierDecomposition.brier`). More `bins` shrinks that gap.
  */
 export function brierDecomposition(
   samples: readonly CalibrationSample[],

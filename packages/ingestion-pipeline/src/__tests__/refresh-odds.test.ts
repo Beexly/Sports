@@ -29,6 +29,7 @@ const hoisted = vi.hoisted(() => {
     getInSeasonSports:
       vi.fn<() => Array<{ key: string; name: string; displayName: string }>>(),
     getReadinessGates: vi.fn<() => unknown>(),
+    freezeSlateCommitments: vi.fn<(...args: unknown[]) => Promise<unknown[]>>(),
   };
 });
 
@@ -37,10 +38,15 @@ const mocks = {
   processSport: hoisted.processSport,
   getInSeasonSports: hoisted.getInSeasonSports,
   getReadinessGates: hoisted.getReadinessGates,
+  freezeSlateCommitments: hoisted.freezeSlateCommitments,
 };
 
 vi.mock("../process-sport.js", () => ({
   processSport: hoisted.processSport,
+}));
+
+vi.mock("../freeze-slate-commitments.js", () => ({
+  freezeSlateCommitments: hoisted.freezeSlateCommitments,
 }));
 
 vi.mock("@sports/data-ingestion", () => ({
@@ -63,6 +69,7 @@ beforeEach(() => {
   mocks.getReadinessGates.mockReturnValue(GATES);
   mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1]]);
   mocks.processSport.mockResolvedValue({ status: "success" });
+  mocks.freezeSlateCommitments.mockResolvedValue([]);
 });
 
 afterEach(() => {
@@ -181,6 +188,41 @@ describe("refreshOdds", () => {
 
     expect(mocks.processSport).not.toHaveBeenCalled();
     expect(result).toMatchObject({ ok: true, okCount: 0, totalCount: 0, results: [] });
+  });
+
+  it("freezes slate commitments AFTER the sport loop, for exactly the processed sports", async () => {
+    mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1]]);
+
+    await runWithTimers(refreshOdds());
+
+    expect(mocks.freezeSlateCommitments).toHaveBeenCalledTimes(1);
+    expect(mocks.freezeSlateCommitments).toHaveBeenCalledWith(
+      ["americanfootball_nfl", "basketball_nba"],
+      expect.any(Date),
+      expect.any(Function),
+      "[cron:refresh-odds]",
+    );
+    // Invoked strictly after every per-sport processSport call completed.
+    const freezeOrder = mocks.freezeSlateCommitments.mock.invocationCallOrder[0]!;
+    for (const order of mocks.processSport.mock.invocationCallOrder) {
+      expect(freezeOrder).toBeGreaterThan(order);
+    }
+    // The injected hash is a real SHA-256 hex fn (the proof spine's HashFn).
+    const hash = mocks.freezeSlateCommitments.mock.calls[0]![2] as (s: string) => string;
+    expect(hash("abc")).toBe(
+      "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    );
+  });
+
+  it("does not fail the refresh cycle when the freeze pass rejects (non-fatal)", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    mocks.freezeSlateCommitments.mockRejectedValue(new Error("freeze exploded"));
+
+    const result = await runWithTimers(refreshOdds());
+
+    expect(result.ok).toBe(true); // the odds refresh itself still succeeded
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("freeze exploded"));
+    warn.mockRestore();
   });
 
   it("throws when THE_ODDS_API_KEY is not configured", async () => {

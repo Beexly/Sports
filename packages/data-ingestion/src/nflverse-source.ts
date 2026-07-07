@@ -427,6 +427,13 @@ export async function fetchNflverse(key: NflverseDatasetKey, season: number, var
   if (key !== "player_stats_week" || !Number.isFinite(season)) return table;
 
   const covered = maxSeasonIn(table);
+  // maxSeasonIn floors at 0, so covered===0 means NO row had a parseable `season`
+  // (e.g. an nflverse column rename — the same drift class this adapter documents).
+  // Such a table is untrustworthy: trusting covered=0 would run the backfill loop
+  // from year 1 to the target season, firing thousands of sequential fetches (a
+  // self-inflicted rate-limit/timeout). Return the combined asset as-is instead —
+  // never worse than the combined asset alone, matching this section's contract.
+  if (!Number.isFinite(covered) || covered === 0) return table;
   if (season <= covered) return table;
 
   const records = [...table.records];

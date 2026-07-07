@@ -106,9 +106,18 @@ const LEXICON: readonly ThemeLexicon[] = [
 ];
 
 export interface AnalyzeOptions {
-  /** Now, for recency decay (injectable for tests). */
+  /**
+   * Reference "now" for recency decay, injectable for deterministic tests.
+   * DEFAULT: an argless `new Date()` read at call time — the single
+   * non-deterministic (clock) seam in this otherwise pure module. Because
+   * recency weighting is measured relative to this clock, omitting `now`
+   * makes the output time-dependent: identical `items` can yield different
+   * direction/intensity/confidence on different real-world days. Callers that
+   * need reproducible output (production scoring, snapshots, replays) MUST
+   * inject a fixed clock here.
+   */
   readonly now?: () => Date;
-  /** Half-life of an item's weight, in days. Default 7. */
+  /** Half-life of an item's recency weight, in days. Default 7. */
   readonly halfLifeDays?: number;
 }
 
@@ -132,13 +141,36 @@ function matchThemes(text: string): NarrativeTheme[] {
 
 /**
  * Reduce a bag of athlete-tagged text items to a single narrative signal.
- * Returns null when nothing in the bag triggers a theme (the honest default:
- * no narrative → no nudge).
+ *
+ * Each item's text is scanned against the theme LEXICON; only items that
+ * trigger at least one theme contribute. A contributing item's mass is its
+ * recency weight (exponential half-life decay vs `now`) times its optional
+ * `item.weight`, and that mass is added to every theme the item matched.
+ * Themes carry a ±1 performance polarity (THEME_POLARITY), so the aggregate
+ * has both a signed direction and a total mass. The bag is assumed to already
+ * be grouped to one athlete: `athleteId` is taken from the first item and is
+ * NOT cross-checked against the rest.
+ *
+ * Output fields (`direction`/`intensity`/`confidence`/theme heat rounded to 4 dp):
+ *  - direction ∈ [-1, 1]: polarity-weighted mean of contributing mass; > 0
+ *    means the narrative tends to lift the athlete's side, < 0 to depress it.
+ *  - intensity ∈ [0, 1]: saturates toward 1 with total mass, 1 − exp(−mass/3).
+ *  - confidence ∈ [0, 1]: grows with volume AND source diversity — a single
+ *    noisy thread can never reach full confidence.
+ *  - volume: count of contributing (theme-triggering) items.
+ *  - themes: per-theme heat (summed mass) and hit count, sorted by heat desc.
+ *
+ * Honesty gate: returns null when nothing in the bag triggers a theme (no
+ * narrative → no nudge). This is a weak, hard-capped Tier-B signal, never a
+ * pick origin — see the module header and narrativeEdgeAdjustment.
  */
 export function analyzeNarrative(
   items: readonly NarrativeTextItem[],
   options: AnalyzeOptions = {},
 ): NarrativeSignal | null {
+  // Clock seam: `options.now` is injectable; the argless `new Date()` fallback
+  // is this module's single non-deterministic path (see AnalyzeOptions.now).
+  // Callers that need reproducible output must pass `now`.
   const now = (options.now ?? (() => new Date()))();
   const halfLifeDays = options.halfLifeDays ?? 7;
 

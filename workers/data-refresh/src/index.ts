@@ -80,16 +80,31 @@ async function main(): Promise<void> {
   console.log(`[data-refresh] Derived history enabled: ${gates.canUseDerivedHistory}`);
   console.log(`[data-refresh] Featured promotion enabled: ${gates.canPromoteFeaturedPicks}`);
 
+  // First cycle runs fail-fast: an error here propagates to main().catch and
+  // exits the process (startup readiness check).
   await runRefreshCycle();
   await settleResults();
-  setInterval(async () => {
-    try {
-      await runRefreshCycle();
-      await settleResults();
-    } catch (err) {
-      console.error("[data-refresh] Unhandled error:", err instanceof Error ? err.message : err);
-    }
-  }, REFRESH_INTERVAL_MS);
+
+  // Recurring cycles are self-scheduling: the next cycle is armed only AFTER the
+  // previous one has fully settled. setInterval fires on a fixed clock regardless
+  // of whether the prior async callback resolved, so under degraded upstream
+  // conditions (retries/backoff across ~7 sports) a slow cycle would overlap the
+  // next — doubling Odds API request volume and racing concurrent creates on the
+  // immutable PickSignalSnapshot rows. Re-arming after await makes overlap impossible.
+  const scheduleNextCycle = (): void => {
+    setTimeout(async () => {
+      try {
+        await runRefreshCycle();
+        await settleResults();
+      } catch (err) {
+        console.error("[data-refresh] Unhandled error:", err instanceof Error ? err.message : err);
+      } finally {
+        scheduleNextCycle();
+      }
+    }, REFRESH_INTERVAL_MS);
+  };
+
+  scheduleNextCycle();
 }
 
 main().catch((err) => {

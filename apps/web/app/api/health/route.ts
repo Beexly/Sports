@@ -16,11 +16,11 @@ export async function GET(): Promise<NextResponse> {
   try {
     await db.$queryRaw`SELECT 1`;
     checks["database"] = { status: "ok" };
-  } catch (err) {
-    checks["database"] = {
-      status: "error",
-      detail: err instanceof Error ? err.message : "Unknown",
-    };
+  } catch {
+    // Do not serialize the raw DB error to this public, unauthenticated response —
+    // its message discloses the internal database host/port. Static detail only;
+    // the real error stays in server logs.
+    checks["database"] = { status: "error", detail: "database unreachable" };
   }
 
   // Last ingestion run check — must be a SUCCESS run, not any run.

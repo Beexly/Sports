@@ -7,6 +7,18 @@
  * other sources, and latency — minus a penalty for settlement losses traced to its bad
  * data — then maps to a tier, a confidence penalty applied to its signals, and whether
  * it may back a PUBLIC claim (rights-gated). Pure, no I/O.
+ *
+ * Relationship to the other two source-scoring modules (deliberately NOT merged —
+ * each answers a different question):
+ *   - This module: per-source rolling OPERATIONAL telemetry score
+ *     (uptime/freshness/agreement/schema/latency).
+ *   - lib/source-intelligence/index.ts — per-ARTIFACT (pick/promo/brief)
+ *     freshness gate over ephemeral evidence lists.
+ *   - lib/data-sources/source-confidence.ts — per-SOURCE-TYPE static/structural
+ *     trust (rights + wiring + cost); time-invariant.
+ *
+ * UNWIRED as of 2026-07: inputs require a telemetry-accrual layer that does not
+ * yet exist; scoped as a future task.
  */
 
 export type RightsStatus =

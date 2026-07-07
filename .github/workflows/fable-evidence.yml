@@ -1,0 +1,42 @@
+name: FABLE Evidence
+
+on:
+  pull_request:
+    paths:
+      - "apps/web/lib/fable/**"
+      - "docs/fable/**"
+      - "schemas/fable/**"
+      - "scripts/fable-*.ts"
+      - ".github/workflows/fable-evidence.yml"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+jobs:
+  fable-evidence:
+    name: No-cost FABLE evidence checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      - name: Run FABLE evidence harness
+        run: npm run fable:evidence
+
+      - name: Run FABLE targeted tests
+        run: npm run test --workspace=apps/web -- lib/fable/evidence/evidence-harness.test.ts lib/fable/docs-claims.test.ts lib/fable/aws-gates.test.ts
+
+      - name: Secret scan
+        run: npm run guard:secrets

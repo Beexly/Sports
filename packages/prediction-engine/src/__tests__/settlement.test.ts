@@ -199,6 +199,39 @@ describe("calculatePickResult — away name contains home name (no mis-settle)",
 });
 
 // ============================================================
+// Prefix-collision regression: the home identifier is a strict PREFIX of the
+// away identifier (nflverse canonicalizes Rams → "LA" home, Chargers → "LAC"
+// away). A bare startsWith(homeTeam) mis-derives "LAC …" as a home pick because
+// "LAC".startsWith("LA") is true, inverting WIN/LOSS. The boundary-aware match
+// (`=== homeTeam || startsWith(homeTeam + " ")`) must classify "LAC …" as away
+// while still classifying "LA …" as home.
+// ============================================================
+
+describe("calculatePickResult — home identifier is a prefix of the away identifier (no mis-settle)", () => {
+  const HOME = "LA"; // Rams home; away Chargers canonicalize to "LAC"
+
+  it("away SPREAD pick (LAC +3) LOSES when home covers -3", () => {
+    // pickedHome=false (LAC is NOT LA); homeMargin=7, homeCoverMargin=7+(-3)=4>0 →
+    // home covered → away pick LOSS. A bare startsWith("LA") wrongly returned WIN.
+    expect(calculatePickResult("SPREAD", "LAC +3.0", -3, HOME, 27, 20, NFL)).toBe("LOSS");
+  });
+
+  it("away MONEYLINE pick (LAC ML) LOSES when the home team (LA) wins", () => {
+    // pickedHome=false; homeWon=true → pickedHome !== homeWon → LOSS.
+    expect(calculatePickResult("MONEYLINE", "LAC ML (+120)", 0, HOME, 27, 20, NFL)).toBe("LOSS");
+  });
+
+  it("home SPREAD pick (LA -3) WINS when home covers -3 (boundary match still fires)", () => {
+    // pickedHome=true via startsWith("LA "); homeCoverMargin=4>0 → home WIN.
+    expect(calculatePickResult("SPREAD", "LA -3.0", -3, HOME, 27, 20, NFL)).toBe("WIN");
+  });
+
+  it("home MONEYLINE pick (LA ML) WINS when the home team wins", () => {
+    expect(calculatePickResult("MONEYLINE", "LA ML (-140)", 0, HOME, 27, 20, NFL)).toBe("WIN");
+  });
+});
+
+// ============================================================
 // selectGradingLine — the no-drift rule
 // ============================================================
 

@@ -8,6 +8,9 @@ describe("buildVegasWinProbabilityPath", () => {
     expect(path[0]!.checkpoint).toBe("pregame");
     expect(path[0]!.homeWinProbability).toBeGreaterThan(0.5);
     expect(path[path.length - 1]!.homeWinProbability).toBeGreaterThan(path[0]!.homeWinProbability);
+    for (let i = 1; i < path.length; i += 1) {
+      expect(path[i]!.homeWinProbability).toBeGreaterThanOrEqual(path[i - 1]!.homeWinProbability);
+    }
     expect(path.every((point) => point.homeWinProbability + point.awayWinProbability > 0.99)).toBe(true);
     expect(path.every((point) => point.homeWinProbability + point.awayWinProbability < 1.01)).toBe(true);
   });

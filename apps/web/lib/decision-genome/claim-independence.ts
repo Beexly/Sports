@@ -6,9 +6,10 @@
  * of claims, so source-count never inflates into fake confidence. The result feeds the
  * genome's `evidence.independentSources`. Pure, no I/O.
  *
- * Two claims are DEPENDENT when they share an origin id, when one cites the other's
- * source, or when their text is near-identical within a short echo window. Dependence is
- * transitive (union-find), so a chain of copies collapses to one effective source.
+ * Two claims are DEPENDENT when they come from the same source (publisher/outlet), when
+ * they share an origin id, when one cites the other's source, or when their text is
+ * near-identical within a short echo window. Dependence is transitive (union-find), so a
+ * chain of copies collapses to one effective source.
  */
 
 export interface IndependenceClaim {
@@ -74,6 +75,12 @@ export function claimIndependence(claims: readonly IndependenceClaim[]): Indepen
     if (c.originId) (byOrigin.get(c.originId) ?? byOrigin.set(c.originId, []).get(c.originId)!).push(c.id);
   }
 
+  // Same source (publisher/outlet) → dependent. Two reports from one outlet are not two
+  // independent origins; collapsing same-source claims keeps source-count from inflating
+  // into fake confidence, which is the whole point of this module.
+  for (const ids of bySource.values()) {
+    for (let i = 1; i < ids.length; i++) uf.union(ids[0]!, ids[i]!);
+  }
   // Same origin → dependent.
   for (const ids of byOrigin.values()) {
     for (let i = 1; i < ids.length; i++) uf.union(ids[0]!, ids[i]!);

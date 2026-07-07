@@ -1,0 +1,98 @@
+import { describe, expect, it } from "vitest";
+import {
+  GSE_METRIC_BIRTH_CERTIFICATES,
+  metricBirthCertificate,
+  requireMetricBirthCertificate,
+} from "../core/metric-birth-certificate.js";
+import {
+  GSE_PROPRIETARY_METRIC_BIRTH_CERTIFICATES,
+  calibrationIntegrityGrade,
+  dataReliabilityIndex,
+  expectedCompletionGse,
+  expectedRushYardsGse,
+  expectedYacGse,
+  gseMarketGravityIndex,
+  gseMarketMirageScore,
+  gseSignalScore,
+  gseStaleLineRiskScore,
+  conformalUncertaintyWidth,
+  noBetPressureMetric,
+  playableWindowScore,
+  portfolioFitScore,
+  proprietaryMetricBirthCertificate,
+  qbBurdenIndex,
+  receiverDifficultyIndex,
+  roleVolatilityIndex,
+  rushEnvironmentIndex,
+  rushOverExpectedGse,
+  yacCreationGse,
+  driftPressureIndex,
+} from "../../index.js";
+
+describe("metric birth certificates", () => {
+  it("requires every Slice 1 metric to have a SHADOW birth certificate", () => {
+    const required = [
+      "data-reliability-index",
+      "market-gravity-index",
+      "stale-line-risk-score",
+      "market-mirage-score",
+      "expected-completion-gse",
+      "qb-burden-index",
+      "receiver-difficulty-index",
+      "expected-yac-gse",
+      "yac-creation-gse",
+      "rush-environment-index",
+      "expected-rush-yards-gse",
+      "rush-over-expected-gse",
+      "role-volatility-index",
+      "calibration-integrity-grade",
+      "drift-pressure-index",
+      "conformal-uncertainty-width",
+      "no-bet-pressure",
+      "playable-window-score",
+      "portfolio-fit-score",
+      "gse-signal-score",
+    ];
+
+    for (const metricId of required) {
+      const certificate = requireMetricBirthCertificate(metricId);
+      expect(certificate.status).toBe("SHADOW");
+      expect(certificate.allowedInputs.length).toBeGreaterThan(0);
+      expect(certificate.forbiddenInputs.length).toBeGreaterThan(0);
+      expect(certificate.protectedComponents.length).toBeGreaterThan(0);
+      expect(certificate.validationMethods.length).toBeGreaterThan(0);
+      expect(certificate.sourceRightsRequired.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("keeps the registry unique and rejects unknown metrics", () => {
+    const ids = GSE_METRIC_BIRTH_CERTIFICATES.map((certificate) => certificate.metricId);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(metricBirthCertificate("decorative-score")).toBeNull();
+  });
+
+  it("exposes Slice 1 metrics through the prediction-engine package boundary", () => {
+    expect(GSE_PROPRIETARY_METRIC_BIRTH_CERTIFICATES.length).toBe(GSE_METRIC_BIRTH_CERTIFICATES.length);
+    expect(proprietaryMetricBirthCertificate("gse-signal-score")?.status).toBe("SHADOW");
+    expect(typeof dataReliabilityIndex).toBe("function");
+    expect(typeof gseMarketGravityIndex).toBe("function");
+    expect(typeof gseStaleLineRiskScore).toBe("function");
+    expect(typeof gseMarketMirageScore).toBe("function");
+    expect(typeof expectedCompletionGse).toBe("function");
+    expect(typeof qbBurdenIndex).toBe("function");
+    expect(typeof receiverDifficultyIndex).toBe("function");
+    expect(typeof expectedYacGse).toBe("function");
+    expect(typeof yacCreationGse).toBe("function");
+    expect(typeof rushEnvironmentIndex).toBe("function");
+    expect(typeof expectedRushYardsGse).toBe("function");
+    expect(typeof rushOverExpectedGse).toBe("function");
+    expect(typeof roleVolatilityIndex).toBe("function");
+    expect(typeof calibrationIntegrityGrade).toBe("function");
+    expect(typeof driftPressureIndex).toBe("function");
+    expect(typeof conformalUncertaintyWidth).toBe("function");
+    expect(typeof noBetPressureMetric).toBe("function");
+    expect(typeof playableWindowScore).toBe("function");
+    expect(typeof portfolioFitScore).toBe("function");
+    expect(typeof gseSignalScore).toBe("function");
+  });
+});

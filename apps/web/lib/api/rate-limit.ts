@@ -60,3 +60,8 @@ export function clientIp(req: NextRequest): string {
   if (fwd) return fwd.split(",")[0]!.trim();
   return req.headers.get("x-real-ip") ?? "anon";
 }
+
+/** Test-only: clear every rate-limit bucket so suites that share a key are deterministic. */
+export function resetRateLimits(): void {
+  registries.clear();
+}

@@ -17,10 +17,7 @@ export const depthTemplate: FailureModeTemplate = {
     return value !== undefined && value > 0.55;
   },
 
-  generateBullet: (snapshot, _pick, _game) => {
-    const depth = snapshot.factors.depth ?? 0;
-    const depthPct = Math.round(depth * 100);
-
-    return `If depth shifts toward the opposing side and the dollar-weighted balance drops below ${depthPct - 15}%, the line we caught is no longer the line.`;
+  generateBullet: (_snapshot, _pick, _game) => {
+    return `If market depth shifts toward the opposing side and the dollar-weighted balance that supported our number gives way, the line we caught is no longer the line.`;
   },
 };

@@ -107,6 +107,20 @@ export function toKalshiEventTicker(game: KalshiGameRef): string {
 }
 
 /**
+ * Kalshi market statuses in which the market is live and trading, so its quote is a
+ * real-time price. Any other status (closed/settled/determined/finalized/…) — or an
+ * absent status — means the quote is NOT provably live: a residual bid/ask/last from
+ * a non-trading market must never be served as a fresh fair-value anchor. Freshness
+ * is proven, not assumed from a missing field (honesty doctrine: no stale data).
+ */
+const LIVE_KALSHI_STATUSES: ReadonlySet<string> = new Set(["active", "open"]);
+
+/** True only when a market is provably open for trading (explicit live status). */
+function isLiveMarket(market: KalshiMarketRaw): boolean {
+  return market.status != null && LIVE_KALSHI_STATUSES.has(market.status.toLowerCase());
+}
+
+/**
  * Market-implied YES probability from a quote. Prefer the bid/ask mid; fall back
  * to the last trade. Returns null when there is no live quote at all.
  */
@@ -114,7 +128,7 @@ export function impliedYesProbability(market: KalshiMarketRaw): number | null {
   const bid = Number(market.yes_bid_dollars);
   const ask = Number(market.yes_ask_dollars);
   const last = Number(market.last_price_dollars);
-  if (Number.isFinite(bid) && Number.isFinite(ask) && (bid > 0 || ask > 0)) {
+  if (Number.isFinite(bid) && Number.isFinite(ask) && bid > 0 && ask > 0) {
     return (bid + ask) / 2;
   }
   if (Number.isFinite(last) && last > 0) return last;
@@ -213,7 +227,14 @@ export class KalshiClient {
       const body = await response.text();
       throw new KalshiError(`Kalshi error: ${response.status} — ${body}`, response.status);
     }
-    return (await response.json()) as T;
+    try {
+      return (await response.json()) as T;
+    } catch (err) {
+      throw new KalshiError(
+        `Kalshi returned a non-JSON body (status ${response.status}): ${err instanceof Error ? err.message : String(err)}`,
+        response.status,
+      );
+    }
   }
 
   /** List the markets (one per outcome) for an event ticker. Read-only. */
@@ -247,7 +268,10 @@ export class KalshiClient {
       detailed.push(full);
     }
 
-    const raws = detailed.map((m) => impliedYesProbability(m));
+    // Only a live, currently-trading market yields a real-time quote. A closed/
+    // settled market's residual bid/ask/last is stale and must not become a fresh
+    // CLV anchor stamped capturedAt=now — treat it as unquoted (null).
+    const raws = detailed.map((m) => (isLiveMarket(m) ? impliedYesProbability(m) : null));
     const { fairA, fairB, overround } =
       detailed.length >= 2
         ? devigTwoSided(raws[0] ?? null, raws[1] ?? null)

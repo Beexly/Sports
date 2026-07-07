@@ -7,7 +7,8 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { TheBeat } from "@/components/news/the-beat";
 import { GalaxyBroadcast } from "@/components/news/galaxy-broadcast";
 import { buildBroadcast } from "@/lib/fantasy/host";
-import { WIRE_DISCLAIMER } from "@/lib/news/wire";
+import { WIRE_DISCLAIMER, WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
+import { fetchLiveWire } from "@/lib/news/rss";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -17,8 +18,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/the-beat" },
 };
 
-export default function TheBeatPage() {
+export default async function TheBeatPage() {
   const broadcast = buildBroadcast();
+  // Live RSS wire when NEWS_RSS_FEEDS is configured (headlines only,
+  // source-attributed, classified into the signal taxonomy); null keeps the
+  // clearly-labeled fictional sample. Fails soft: a feed outage falls back
+  // to whatever fetched, never fabricates.
+  const liveWire = await fetchLiveWire().catch(() => null);
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -87,10 +93,12 @@ export default function TheBeatPage() {
               </div>
             </Reveal>
             <div className="mt-8">
-              <TheBeat />
+              <TheBeat liveWire={liveWire} />
             </div>
             <Reveal delay={120}>
-              <p className="mt-6 text-xs leading-relaxed text-ion-2">{WIRE_DISCLAIMER}</p>
+              <p className="mt-6 text-xs leading-relaxed text-ion-2">
+                {liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
+              </p>
             </Reveal>
           </div>
         </section>

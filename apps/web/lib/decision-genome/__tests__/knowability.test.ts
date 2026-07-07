@@ -36,6 +36,17 @@ describe("KnowabilityKernel", () => {
     expect(v?.reason).toBe("missing-available-at");
   });
 
+  it("fails closed when the decision lock time is non-finite (does not fail open)", () => {
+    const badWindow: DecisionWindow = { decisionLockedAt: Number.NaN };
+    const v = checkFact(fact("goodfact", { availableAt: LOCK - 100 }), badWindow);
+    expect(v?.reason).toBe("missing-decision-time");
+    expect(isKnowableAtLock(fact("goodfact", { availableAt: LOCK - 100 }), badWindow)).toBe(false);
+    // Every fact must be flagged, not silently passed, against a garbage lock.
+    const facts = [fact("a", {}), fact("b", {})];
+    expect(assertNoLeakage(facts, badWindow)).toHaveLength(2);
+    expect(knowableFactsOnly(facts, badWindow)).toHaveLength(0);
+  });
+
   it("rejects a fact trusted after lock even if available before", () => {
     const v = checkFact(fact("trustlate", { availableAt: LOCK - 50, trustedAt: LOCK + 10 }), window);
     expect(v?.reason).toBe("trusted-too-late");

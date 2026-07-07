@@ -113,7 +113,11 @@ export function computeTeamScoringRates(
       r.teamScore >= 0 &&
       r.opponentScore >= 0,
   );
-  if (valid.length < minGames) return null;
+  // Floor the required sample at 1 real game: a minGames <= 0 (or NaN) must
+  // never let an empty / all-invalid sample slip through to a 0/0 = NaN rate.
+  // `!(length >= floor)` also fails closed when floor is NaN.
+  const floor = Math.max(1, Math.trunc(minGames));
+  if (!(valid.length >= floor)) return null;
 
   const n = valid.length;
   const scored = valid.reduce((s, r) => s + r.teamScore, 0) / n;

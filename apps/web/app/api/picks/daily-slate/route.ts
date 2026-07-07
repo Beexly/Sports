@@ -53,6 +53,12 @@ export async function GET() {
     }
   }
 
+  // Match /api/picks and the board: in production, drop dev seed rows
+  // (modelVersion="v5.0.0-seed") so this slate's counts agree with the picks the
+  // /api/picks route actually returns. No-op in dev/test.
+  const excludeSeedInProd =
+    process.env["NODE_ENV"] === "production" ? { NOT: { modelVersion: "v5.0.0-seed" } } : {};
+
   const totalPicks = await db.pick
     .count({
       where: {
@@ -60,6 +66,7 @@ export async function GET() {
         result: "PENDING",
         isBootstrap: false,
         game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+        ...excludeSeedInProd,
       },
     })
     .catch(() => 0);
@@ -80,6 +87,7 @@ export async function GET() {
       result: "PENDING" as const,
       isBootstrap: false,
       game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+      ...excludeSeedInProd,
     };
     freePickCount = await db.pick
       .count({ where: { ...baseWhere, tier: "FREE" } })

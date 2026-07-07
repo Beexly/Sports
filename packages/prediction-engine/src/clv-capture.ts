@@ -50,6 +50,15 @@ export interface ClosingSnapshot {
   readonly mlAwayPrice: number | null;
   /** fetchedAt of the snapshot used as "the close"; null if none before kickoff. */
   readonly capturedAt: Date | null;
+  /**
+   * Count of odds ROWS in the closing batch — NOT distinct bookmakers. A single
+   * book that priced H2H + SPREADS + TOTALS contributes 3 rows here, so this is a
+   * cross-market row count that can overstate true book depth. `ClosingOddsRow`
+   * carries no bookmaker identifier, so a distinct-book count is not computable
+   * from the inputs; read this as a coarse "how many priced rows formed the close"
+   * signal only, not as a market-participation / liquidity count. (The name is
+   * retained for backward compatibility with existing callers and tests.)
+   */
   readonly bookmakerCount: number;
 }
 
@@ -121,6 +130,8 @@ export function deriveClosingSnapshotFromOdds(
     mlHomePrice: mlHome == null ? null : Math.round(mlHome),
     mlAwayPrice: mlAway == null ? null : Math.round(mlAway),
     capturedAt: new Date(latestTs),
+    // Cross-market row count (see ClosingSnapshot.bookmakerCount): counts every
+    // bookmaker-market row in the closing batch, not distinct books.
     bookmakerCount: closingBatch.length,
   };
 }

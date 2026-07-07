@@ -14,12 +14,14 @@ vi.mock("@/lib/ingestion/player-stats", async (importActual) => {
 vi.mock("@/lib/ingestion/snap-counts", () => ({ ingestSnapCounts: vi.fn() }));
 vi.mock("@/lib/ingestion/injuries", () => ({ ingestInjuries: vi.fn() }));
 vi.mock("@/lib/ingestion/depth-charts", () => ({ ingestDepthCharts: vi.fn() }));
+vi.mock("@/lib/ingestion/next-gen-stats", () => ({ ingestNextGenStats: vi.fn() }));
 
 import { GET } from "@/app/api/cron/refresh-player-stats/route";
 import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/player-stats";
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
+import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
 
 function req(url: string, auth?: string): Request {
   return new Request(url, auth ? { headers: { authorization: auth } } : undefined);
@@ -45,6 +47,10 @@ describe("GET /api/cron/refresh-player-stats", () => {
     (ingestSnapCounts as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 2 });
     (ingestInjuries as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 1 });
     (ingestDepthCharts as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 3 });
+    (ingestNextGenStats as Mock).mockReset();
+    (ingestNextGenStats as Mock).mockImplementation((season: number, statType: string) =>
+      Promise.resolve({ status: "ok", season, statType, rowsWritten: 5 }),
+    );
     vi.stubEnv("CRON_SECRET", "secret");
   });
   afterEach(() => vi.unstubAllEnvs());
@@ -89,12 +95,33 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(ingestSnapCounts).toHaveBeenCalledWith(2024);
     expect(ingestInjuries).toHaveBeenCalledWith(2024);
     expect(ingestDepthCharts).toHaveBeenCalledWith(2024);
+    // Next Gen Stats persist for all three variants.
+    expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "passing");
+    expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "receiving");
+    expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "rushing");
+    const ngsBody = body as unknown as { ngs: { passing: { rowsWritten: number } } };
+    expect(ngsBody.ngs.passing.rowsWritten).toBe(5);
   });
 
   it("502s when any ingestion reports a non-ok status", async () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "source-error", season: 2024, playersUpserted: 0, statsUpserted: 0, error: "down",
     });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"));
+    expect(res.status).toBe(502);
+  });
+
+  it("502s when an NGS variant reports a non-ok status", async () => {
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
+    });
+    (ingestNextGenStats as Mock).mockImplementation((season: number, statType: string) =>
+      Promise.resolve(
+        statType === "rushing"
+          ? { status: "source-error", season, statType, rowsWritten: 0, error: "down" }
+          : { status: "ok", season, statType, rowsWritten: 5 },
+      ),
+    );
     const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"));
     expect(res.status).toBe(502);
   });

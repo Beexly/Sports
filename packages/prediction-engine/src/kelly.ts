@@ -58,15 +58,35 @@ export const MIN_CONFIDENCE_FOR_STAKE = 65;
 export const MIN_EDGE_FOR_STAKE = 50;
 
 export interface KellyStake {
-  /** Bankroll sizing lens in units (0.0 – MAX_UNITS_PER_PICK). */
+  /**
+   * Headline bankroll sizing lens, in units where 1 unit = 1% of bankroll.
+   * This is the CAPPED and ROUNDED figure: the raw fractional-Kelly stake is
+   * clamped to [0, MAX_UNITS_PER_PICK] and then rounded to the nearest 0.25u.
+   * `recommendStake` only returns a stake when this rounds to >= 0.25u.
+   */
   units: number;
-  /** The fair-value win probability used in the computation. */
-  fairProbability: number;
+  /**
+   * ILLUSTRATIVE fair-value win probability used in the Kelly computation.
+   * This is an ESTIMATE derived from edgeScore and the offered (break-even)
+   * price — it is NOT a de-vigged market consensus and must not be presented
+   * as a precise money-management figure. Callers holding a real de-vigged
+   * fair probability should compute Kelly from that instead.
+   */
+  estimatedFairProbability: number;
   /** Decimal odds (used in the b term). */
   decimalOdds: number;
   /** Full-Kelly stake before fractional discount, as % of bankroll. */
   fullKellyPercent: number;
-  /** Final stake as % of bankroll (= fullKellyPercent × KELLY_FRACTION, clamped). */
+  /**
+   * Raw fractional-Kelly stake as % of bankroll (= fullKellyPercent ×
+   * KELLY_FRACTION). This is the exact sizing math BEFORE the unit cap and
+   * 0.25u rounding, so — unlike `units` — it is intentionally neither clamped
+   * to MAX_UNITS_PER_PICK nor rounded. Under the 1u = 1% convention it will
+   * therefore NOT exactly equal `units` when the cap binds (e.g. units 3.00
+   * alongside recommendedPercent 3.09%) or when 0.25u rounding shifts the
+   * value. Treat `units` as the headline figure and this as the underlying,
+   * un-capped fractional-Kelly percentage.
+   */
   recommendedPercent: number;
   /** "quarter-kelly" or whatever fraction was applied. */
   strategy: string;
@@ -142,36 +162,53 @@ export function recommendStake(pick: StakeInput): KellyStake | null {
   const americanOdds = pick.pickType === "MONEYLINE" ? pick.line : -110;
   const decimalOdds = americanToDecimalOdds(americanOdds);
 
-  // Re-derive fair probability from the edge score and offered price.
-  // edgeScore is on 0–100 normalized from edgeComponentScore; the
-  // FactorBreakdown carries the canonical numeric edge implicitly via
-  // consensusPct. For Kelly we use the bookmaker consensus probability
-  // adjusted by our edge: fairProb = offeredProb + (edgeScore/100 × 0.05).
-  // This recovers a reasonable fair-value estimate without re-walking
-  // the full scoring pipeline.
-  const offeredProb = americanToImpliedProbability(americanOdds);
-  const inferredEdge = (pick.edgeScore / 100) * 0.05; // up to +5% edge
-  const fairProb = clamp(offeredProb + inferredEdge, 0, 0.95);
+  // Reject degenerate / invalid prices before any Kelly math. A missing
+  // MONEYLINE price commonly defaults to 0 upstream, which makes
+  // americanToDecimalOdds return Infinity; that in turn makes fullKelly NaN,
+  // and every guard below is a NaN comparison that FAILS OPEN (NaN <= 0 and
+  // NaN < 0.25 are both false), so a garbage stake object would leak out.
+  // Fail closed on non-finite / non-payout odds instead.
+  if (!Number.isFinite(decimalOdds) || decimalOdds <= 1) return null;
 
-  const fullKelly = fullKellyFraction(fairProb, decimalOdds);
-  if (fullKelly <= 0) return null;
+  // Derive an ILLUSTRATIVE fair-value probability from the offered price and
+  // the edge score. This is intentionally NOT a de-vigged market consensus:
+  // it nudges the break-even (offered) probability up by a bounded edge proxy
+  // so the Kelly lens has something to size against without re-walking the full
+  // scoring pipeline. Because it is only an estimate, the output field is named
+  // `estimatedFairProbability` and the rationale flags it as illustrative — we
+  // do not claim a precise fair-value number here.
+  const offeredProb = americanToImpliedProbability(americanOdds);
+  const inferredEdge = (pick.edgeScore / 100) * 0.05; // bounded +5% edge proxy
+  const estimatedFairProb = clamp(offeredProb + inferredEdge, 0, 0.95);
+
+  const fullKelly = fullKellyFraction(estimatedFairProb, decimalOdds);
+  // Fail closed on non-positive OR non-finite Kelly (`!(x > 0)` also rejects
+  // NaN, unlike `x <= 0`).
+  if (!(fullKelly > 0)) return null;
 
   const units = unitsFromKelly(fullKelly);
   const roundedUnits = Math.round(units * 4) / 4; // nearest 0.25u
   if (roundedUnits < 0.25) return null;
 
+  // Raw fractional-Kelly percentage of bankroll, BEFORE the MAX_UNITS_PER_PICK
+  // cap and 0.25u rounding that `units` applies. Deliberately left un-capped and
+  // un-rounded so the exact sizing math stays visible; as a result it can read
+  // slightly higher than `roundedUnits` × 1% when the unit cap binds (see the
+  // KellyStake.recommendedPercent docstring). The rationale string below prints
+  // both figures verbatim, so a capped pick honestly shows the two side by side.
   const recommendedPercent = fullKelly * KELLY_FRACTION * 100;
 
   const rationale =
     `Quarter-Kelly bankroll lens: ${roundedUnits.toFixed(2)} units ` +
     `(${recommendedPercent.toFixed(2)}% of bankroll). ` +
-    `Based on ${Math.round(fairProb * 100)}% fair-value probability at ` +
+    `Based on an estimated ${Math.round(estimatedFairProb * 100)}% fair-value ` +
+    `probability (illustrative, derived from edge score) at ` +
     `${americanOdds > 0 ? "+" : ""}${Math.round(americanOdds)} odds. ` +
     `Fractional Kelly applied to reduce variance.`;
 
   return {
     units: roundedUnits,
-    fairProbability: fairProb,
+    estimatedFairProbability: estimatedFairProb,
     decimalOdds,
     fullKellyPercent: fullKelly * 100,
     recommendedPercent,

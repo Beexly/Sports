@@ -203,6 +203,36 @@ describe("settleSport", () => {
     );
   });
 
+  it("never overwrites a recorded score with null on a completed-but-scoreless feed row", async () => {
+    // Cycle 2: the same completed game comes back with the scores dropped
+    // (Odds API omits the scores array for an older game, a PPD/cancelled game
+    // flagged completed=true, or a name-format drift). This must NOT null out a
+    // previously-recorded FINAL score, must NOT set status FINAL, and must not
+    // settle any picks.
+    mocks.normalizeScores.mockReturnValue([
+      completedScore({ homeScore: null, awayScore: null }),
+    ]);
+
+    const result = await settleSport(SPORT, "key", gates());
+
+    expect(result).toMatchObject({
+      status: "success",
+      gamesSettled: 0,
+      picksSettled: 0,
+    });
+
+    // The game update is a harmless no-op: empty data, never null score fields,
+    // never status FINAL.
+    const updateCall = mocks.gameUpdate.mock.calls[0]?.[0] as
+      | { data: Record<string, unknown> }
+      | undefined;
+    expect(updateCall?.data).toEqual({});
+
+    // No settlement math ran for a scoreless game.
+    expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+  });
+
   it("is idempotent: a pick already settled by a concurrent run is skipped", async () => {
     // The race loser's updateMany matches 0 rows (no longer PENDING).
     mocks.pickUpdateMany.mockResolvedValue({ count: 0 });

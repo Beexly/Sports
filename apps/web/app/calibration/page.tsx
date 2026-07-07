@@ -10,6 +10,7 @@
  *   - /clv                  Closing Line Value (beat-the-close benchmark)
  *   - /ledger               Trust Ledger (tamper-evident receipts)
  *   - /proof                Proof of Record (Merkle root)
+ *   - /fable                FABLE Evidence Lab (source rights + AWS gates)
  *   - /accountability       Loss autopsies + the full public record
  *   - /track                CLV Tracker (track your own bets)
  *   - /intelligence/metrics How we read every metric, in plain terms
@@ -33,12 +34,12 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: `The Proof Room · ${BRAND_NAME}`,
   description:
-    "Galaxy Calibration: every credibility receipt in one place. Calibration report, closing line value, the trust ledger, tamper-evident proof of record, and public loss autopsies. No fabricated stats. Every number is gated until it can be honestly backed.",
+    "Galaxy Calibration: every credibility receipt in one place. Calibration report, closing line value, the trust ledger, tamper-evident proof of record, FABLE evidence gates, and public loss autopsies. No fabricated stats. Every number is gated until it can be honestly backed.",
   alternates: { canonical: "/calibration" },
   openGraph: {
     title: `The Proof Room · ${BRAND_NAME}`,
     description:
-      "Galaxy Calibration: calibration, CLV, the trust ledger, proof of record, and loss autopsies. One branded surface.",
+      "Galaxy Calibration: calibration, CLV, the trust ledger, proof of record, FABLE evidence gates, and loss autopsies. One branded surface.",
     url: "/calibration",
     type: "website",
   },
@@ -158,6 +159,13 @@ export default async function CalibrationProofRoomPage() {
             href="/proof"
             linkLabel="View Proof of Record"
             accent
+          />
+          <ProofCard
+            eyebrow="Research evidence"
+            title="FABLE Evidence Lab"
+            body="Source rights, claim ledgers, uncertainty gates, drift checks, and AWS deploy controls. This is the research layer that says what can be shown, what stays gated, and what still needs owner approval."
+            href="/fable"
+            linkLabel="Open FABLE Evidence Lab"
           />
           <ProofCard
             eyebrow="Loss autopsies"

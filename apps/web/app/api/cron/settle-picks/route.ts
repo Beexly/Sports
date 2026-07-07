@@ -23,9 +23,10 @@
  */
 
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
-import { settleSport } from "@sports/ingestion-pipeline";
+import { settleSport, freezeSlateCommitments, type SlateFreezeResult } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
 
 export const dynamic = "force-dynamic";
@@ -82,6 +83,26 @@ export async function GET(request: Request) {
     await new Promise((r) => setTimeout(r, 750));
   }
 
+  // SECOND FREEZE SHOT (hostile-review F1): the 10:00 UTC refresh-odds run is
+  // otherwise a single point of loss for early-UTC slates (an offset-1 freeze
+  // that fails there is unrecoverable by the slate's own post-kickoff day).
+  // The freeze pass is idempotent (findUnique + unique-constraint rollback)
+  // and non-fatal, so a 07:00 UTC retry here is pure redundancy.
+  let freeze: SlateFreezeResult[] = [];
+  try {
+    freeze = await freezeSlateCommitments(
+      sportsToProcess.map((sport) => sport.key),
+      new Date(),
+      (input: string) => createHash("sha256").update(input, "utf8").digest("hex"),
+      "[cron:settle-picks]",
+    );
+  } catch (freezeErr) {
+    console.warn(
+      `[cron:settle-picks] slate commitment freeze pass failed: ` +
+        `${freezeErr instanceof Error ? freezeErr.message : freezeErr}`,
+    );
+  }
+
   const elapsedMs = Date.now() - startedAt;
   const okCount = results.filter((r) => r.ok).length;
   const gamesSettled = results.reduce((sum, r) => sum + r.gamesSettled, 0);
@@ -97,5 +118,6 @@ export async function GET(request: Request) {
     requestedSport: requestedSport ?? null,
     bootstrapMode: gates.isBootstrapMode,
     results,
+    freeze,
   });
 }

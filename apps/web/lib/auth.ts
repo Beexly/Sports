@@ -29,16 +29,21 @@ const config: NextAuthConfig = {
       clientSecret: process.env["GOOGLE_CLIENT_SECRET"] ?? "dev-noop",
     }),
   ],
-  session: { strategy: "jwt" },
+  // Bound token lifetime so any stale claim (role, entitlement) self-heals within
+  // a day even on the paths that don't re-resolve it — defense-in-depth for revocation.
+  session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         token.role = ((user as any).role as UserRole) ?? "USER";
-      }
-
-      if (!token.role && token.email) {
+      } else if (token.email) {
+        // Re-resolve the DB role on every refresh (not only when it is unset) so a
+        // role change — e.g. an ADMIN downgraded to USER — propagates within the
+        // token's life instead of being frozen at sign-in. The DB is the source of
+        // truth; a failed/absent lookup leaves the existing role untouched (fail-safe,
+        // never fail-open to ADMIN).
         const dbUser = await db.user
           .findUnique({
             where: { email: token.email },
@@ -52,10 +57,9 @@ const config: NextAuthConfig = {
         }
       }
 
-      if (isAdminEmail(token.email)) {
-        token.role = "ADMIN";
-      }
-
+      // The ADMIN_EMAILS allow-list is applied FRESH in the session callback, never
+      // baked into the token — so removing an email from the list revokes admin on
+      // the next request instead of persisting for the token's whole lifetime.
       return token;
     },
     async session({ session, token }) {

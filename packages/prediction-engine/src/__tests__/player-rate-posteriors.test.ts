@@ -77,6 +77,27 @@ describe("estimateBetaBinomialRatePosterior", () => {
     expect(highVolume.posteriorMean).toBeGreaterThan(lowVolume.posteriorMean);
     expect(highVolume.posteriorMean).toBeLessThan(highVolume.unshrunkMean);
   });
+
+  it("falls back to the pure prior with no data (trials 0, prior sampleSize 0)", () => {
+    const posterior = estimateBetaBinomialRatePosterior({
+      playerId: "wr-no-data",
+      metricId: "target-share",
+      successes: 0,
+      trials: 0,
+      prior: { mean: 0.3, sampleSize: 0, source: "position-prior" },
+    });
+
+    expect(posterior.sampleSize).toBe(0);
+    expect(posterior.posteriorMean).toBe(0.3);
+    expect(posterior.posteriorMean).toBe(posterior.priorMean);
+    expect(posterior.shrinkageWeight).toBe(0);
+    expect(posterior.observedMean).toBe(0.3);
+    expect(posterior.alpha).toBe(0);
+    expect(posterior.beta).toBe(0);
+    expect(Number.isFinite(posterior.alpha ?? Number.NaN)).toBe(true);
+    expect(Number.isFinite(posterior.beta ?? Number.NaN)).toBe(true);
+    expect(Number.isNaN(posterior.posteriorMean)).toBe(false);
+  });
 });
 
 describe("estimateNormalNormalRatePosterior", () => {
@@ -97,5 +118,24 @@ describe("estimateNormalNormalRatePosterior", () => {
     expect(posterior.posteriorVariance).toBe(0.1667);
     expect(posterior.posteriorMean).toBeLessThan(posterior.unshrunkMean);
     expect(posterior.priced).toBe(false);
+  });
+
+  it("falls back to the pure prior with no data (sampleSize 0, prior sampleSize 0)", () => {
+    const posterior = estimateNormalNormalRatePosterior({
+      playerId: "rb-no-data",
+      metricId: "yards-per-route",
+      sampleMean: 18,
+      sampleSize: 0,
+      prior: { mean: 10, sampleSize: 0, source: "position-prior" },
+    });
+
+    expect(posterior.sampleSize).toBe(0);
+    expect(posterior.observedMean).toBe(10);
+    expect(posterior.posteriorMean).toBe(10);
+    expect(posterior.posteriorMean).toBe(posterior.priorMean);
+    expect(posterior.shrinkageWeight).toBe(0);
+    expect(posterior.posteriorVariance).toBe(0);
+    expect(Number.isNaN(posterior.posteriorMean)).toBe(false);
+    expect(Number.isNaN(posterior.posteriorVariance ?? Number.NaN)).toBe(false);
   });
 });

@@ -63,11 +63,15 @@ export function compositeScore(
   const halfLife = options.halfLifeDays ?? 14;
 
   const rows = signals.map((s) => {
+    // Treat non-finite inputs as inert so one bad signal (e.g. an Infinity/NaN
+    // z-score from a zero-variance sample) cannot corrupt the whole composite.
+    const value = Number.isFinite(s.value) ? s.value : 0;
+    const weight = Number.isFinite(s.weight) ? Math.max(0, s.weight) : 0;
     const conf = clamp01(s.confidence ?? 1);
     const age = Math.max(0, s.ageDays ?? 0);
     const freshness = halfLife > 0 ? Math.pow(0.5, age / halfLife) : 1;
-    const effectiveWeight = Math.max(0, s.weight) * conf * freshness;
-    return { key: s.key, value: s.value, effectiveWeight, contribution: s.value * effectiveWeight };
+    const effectiveWeight = weight * conf * freshness;
+    return { key: s.key, value, effectiveWeight, contribution: value * effectiveWeight };
   });
 
   const totalWeight = rows.reduce((sum, r) => sum + r.effectiveWeight, 0);

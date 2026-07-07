@@ -110,3 +110,56 @@ describe("assessEdge — shrink + guards", () => {
     expect(a.decision).toBe("PASS"); // we only back positive-edge sides
   });
 });
+
+describe("assessEdge — regression: numeric integrity of conviction + weights", () => {
+  it("reports 0 conviction on a negative-edge (faded) side — never a high conviction on a PASS", () => {
+    // Independents (0.52, 0.53) blend to 0.525, well BELOW the market's 0.60 fair
+    // value → the side is overvalued, edge is negative, we are declining it.
+    const a = assessEdge({
+      marketFairProb: 0.60,
+      independents: [
+        { source: "poisson", prob: 0.52 },
+        { source: "kalshi", prob: 0.53 },
+      ],
+    });
+    expect(a.rawEdge).toBeLessThan(0); // direction is negative
+    // Not a back: neither a SPEAK nor a LEAN.
+    expect(a.decision).not.toBe("SPEAK");
+    expect(a.decision).not.toBe("LEAN");
+    expect(a.decision).toBe("PASS");
+    // The glass-box conviction must be exactly 0 for a faded/declined side.
+    expect(a.conviction).toBe(0);
+  });
+
+  it("does not cascade a zero-weight independent into NaN (drops it, blends the rest)", () => {
+    const a = assessEdge({
+      marketFairProb: 0.50,
+      independents: [
+        { source: "poisson", prob: 0.58, weight: 0 }, // zero trust → dropped, not blended
+        { source: "kalshi", prob: 0.58, weight: 1 },
+      ],
+    });
+    // The zero-weight source is dropped; the remaining valid estimate yields a
+    // finite edge, and every numeric field stays a real number (never NaN).
+    expect(a.trueProb).not.toBeNull();
+    expect(Number.isFinite(a.trueProb)).toBe(true);
+    expect(Number.isFinite(a.rawEdge)).toBe(true);
+    expect(Number.isFinite(a.shrunkEdge)).toBe(true);
+    expect(Number.isFinite(a.expectedClv)).toBe(true);
+    expect(Number.isFinite(a.conviction)).toBe(true);
+    expect(a.rawEdge).toBeCloseTo(0.08, 4); // 0.58 (kalshi only) − 0.50
+  });
+
+  it("falls to the honest no-edge PASS when the only independent has zero weight", () => {
+    const a = assessEdge({
+      marketFairProb: 0.50,
+      independents: [{ source: "poisson", prob: 0.58, weight: 0 }],
+    });
+    // No usable independent remains → honest no-independents branch, never NaN.
+    expect(a.decision).toBe("PASS");
+    expect(a.trueProb).toBeNull();
+    expect(a.rawEdge).toBe(0);
+    expect(Number.isFinite(a.rawEdge)).toBe(true);
+    expect(a.conviction).toBe(0);
+  });
+});
