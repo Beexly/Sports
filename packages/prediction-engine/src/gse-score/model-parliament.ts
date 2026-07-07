@@ -89,7 +89,7 @@ export function aggregateModelParliament(input: ModelParliamentInput): ModelParl
     ) / totalWeight;
   const averageConfidence =
     weightedVotes.reduce((sum, vote) => sum + clamp01(vote.confidence) * vote.effectiveWeight, 0) / totalWeight;
-  const maxDisagreement = input.maxDisagreement ?? 0.12;
+  const maxDisagreement = Math.max(1e-9, input.maxDisagreement ?? 0.12);
   const disagreementPenalty = Math.min(1, disagreement / maxDisagreement);
   const confidenceScore = clampScore(averageConfidence * 100 - disagreementPenalty * 35);
   const staleCount = validVotes.filter((vote) => vote.stale).length;

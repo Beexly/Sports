@@ -228,6 +228,30 @@ describe("studentizedMeanCi (bootstrap-t, second-order accurate)", () => {
     expect(Number.isFinite(ci.low)).toBe(true);
   });
 
+  it("REGRESSION (Inf-adjacent-finite quantile straddle): a boundary-straddling degenerate tail yields honest Infinity, never NaN", () => {
+    // A ~2.5%-degenerate lopsided ledger (3 varied wins, 17 flat losses) puts the
+    // 0.025 pivot quantile index right on the boundary between the -Infinity
+    // degenerate block and the first finite pivot. sortedPercentile's old
+    // interpolation computed (-Inf) + frac·(finite - (-Inf)) = (-Inf) + (+Inf) =
+    // NaN, silently poisoning tLow and the inverted upper bound — a NaN band.high
+    // reads downstream as a false "cannot cover" and deflates realized coverage.
+    // The endpoint-snap fix returns the -Infinity endpoint instead, so the pivot
+    // is honestly unbounded and the upper edge is +Infinity, never NaN.
+    const straddle = [3, 5, 7, ...Array(17).fill(-1)];
+    const ci = studentizedMeanCi(straddle, { resamples: 400, seed: 20 })!;
+    expect(ci.degenerateResamples!).toBeGreaterThan(0); // the boundary regime is real
+    // No NaN anywhere in the reported band or its pivot quantiles.
+    expect(Number.isNaN(ci.low)).toBe(false);
+    expect(Number.isNaN(ci.high)).toBe(false);
+    expect(Number.isNaN(ci.tLow!)).toBe(false);
+    // The straddled lower pivot is honestly -Infinity -> upper bound +Infinity.
+    expect(ci.tLow).toBe(Number.NEGATIVE_INFINITY);
+    expect(ci.high).toBe(Number.POSITIVE_INFINITY);
+    // The bounded side stays finite (only the degenerate tail is unbounded).
+    expect(Number.isFinite(ci.low)).toBe(true);
+    expect(Number.isFinite(ci.tHigh!)).toBe(true);
+  });
+
   it("realistic mixed ledgers have ~zero degenerate resamples (the fix changes nothing there)", () => {
     const mixed = [...Array(55).fill(1), ...Array(45).fill(-1)];
     const ci = studentizedMeanCi(mixed, { resamples: 4000, seed: 1 })!;

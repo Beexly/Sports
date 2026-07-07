@@ -235,6 +235,46 @@ describe("expected completion → GSE-CPOE", () => {
     expect(bad!.overExpected).toBeLessThan(0);
   });
 
+  it("reports CPOE in completion-percentage POINTS, not a raw 0–1 probability difference", () => {
+    // computeCpoe rolls up with reportScale=100, so overExpected is CPOE in
+    // completion-percentage points. A raw probability difference — mean(complete)
+    // minus mean(P̂(complete)) — is bounded in [-1, 1] and in practice tiny; the
+    // points-scale value is that same difference ×100, so its magnitude lands in
+    // the tens. We assert the reported values live on the 0–100 points scale.
+    const plays = syntheticDropbacks({ "00-ACCURATE": 1.5, "00-ERRATIC": -1.5 }, 400, 15);
+    const model = fitExpectedCompletionModel(plays);
+    expect(model).not.toBeNull();
+    if (!model) return;
+    const cpoe = computeCpoe(plays, model, { minAttempts: 100 });
+    const accurate = cpoe.find((m) => m.playerId === "00-ACCURATE");
+    const erratic = cpoe.find((m) => m.playerId === "00-ERRATIC");
+    expect(accurate).toBeDefined();
+    expect(erratic).toBeDefined();
+
+    // Core regression assertion: |CPOE| exceeds 1 — impossible for a raw 0–1
+    // probability difference (which cannot exceed 1 in magnitude), and here it is
+    // firmly in the tens of points.
+    expect(Math.abs(accurate!.overExpected)).toBeGreaterThan(1);
+    expect(Math.abs(erratic!.overExpected)).toBeGreaterThan(1);
+    expect(accurate!.overExpected).toBeGreaterThan(5);
+    expect(erratic!.overExpected).toBeLessThan(-5);
+
+    // The reported per-play means are also on the percentage-POINTS scale: an
+    // expected completion rate reads as e.g. ~54, not ~0.54. If these were raw
+    // probabilities they could never exceed 1.
+    for (const m of [accurate!, erratic!]) {
+      expect(m.actualMean).toBeGreaterThan(1);
+      expect(m.actualMean).toBeLessThanOrEqual(100);
+      expect(m.expectedMean).toBeGreaterThan(1);
+      expect(m.expectedMean).toBeLessThanOrEqual(100);
+      // overExpected is exactly the points-scale gap between the two means.
+      expect(m.overExpected).toBeCloseTo(m.actualMean - m.expectedMean, 3);
+      // Dividing back out by the ×100 report scale recovers a valid raw
+      // probability difference in [-1, 1] — confirming the scale factor is 100.
+      expect(Math.abs(m.overExpected / 100)).toBeLessThanOrEqual(1);
+    }
+  });
+
   it("computed CPOE correlates with injected latent skill (recovers the truth)", () => {
     const skillById: Record<string, number> = {};
     PASSERS.forEach((id, i) => {

@@ -129,6 +129,45 @@ describe("computeGseActionScore", () => {
     expect(stale.score).toBeLessThan(fresh.score);
   });
 
+  it("never recommends LEAN or PLAY when the modeled edge is non-positive", () => {
+    const result = computeGseActionScore(
+      validInput({
+        marketProbability: 0.7,
+        modelParliament: {
+          votes: [
+            { confidence: 0.95, evidenceWeight: 1, modelId: "under-market-a", probability: 0.55 },
+            { confidence: 0.95, evidenceWeight: 1, modelId: "under-market-b", probability: 0.55 },
+          ],
+        },
+      }),
+    );
+
+    expect(result.modeledProbability).not.toBeNull();
+    expect(result.modeledProbability ?? 1).toBeLessThanOrEqual(result.marketProbability);
+    expect(result.probabilityEdge).toBeLessThanOrEqual(0);
+    expect(result.decision).not.toBe("LEAN");
+    expect(result.decision).not.toBe("PLAY");
+    expect(result.decision).toBe("WATCH");
+  });
+
+  it("forces HARD_PASS with null modeled probability when all model votes carry zero evidence weight", () => {
+    const result = computeGseActionScore(
+      validInput({
+        modelParliament: {
+          votes: [
+            { confidence: 0.95, evidenceWeight: 0, modelId: "weightless-a", probability: 0.8 },
+            { confidence: 0.9, evidenceWeight: 0, modelId: "weightless-b", probability: 0.62 },
+          ],
+        },
+      }),
+    );
+
+    expect(result.parliament.status).toBe("BLOCK");
+    expect(result.modeledProbability).toBeNull();
+    expect(result.probabilityEdge).toBe(0);
+    expect(result.decision).toBe("HARD_PASS");
+  });
+
   it("clamps scores to the 0-100 range and exposes drivers without internal weights", () => {
     const high = computeGseActionScore(
       validInput({

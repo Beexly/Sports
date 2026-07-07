@@ -107,6 +107,14 @@ function sortedPercentile(sorted: readonly number[], p: number): number {
   // Equal neighbors (ties, or two same-sign infinities): interpolation would be
   // a no-op or an Inf-Inf NaN — return the shared value directly.
   if (sorted[lo]! === sorted[hi]!) return sorted[lo]!;
+  // Infinite endpoint adjacent to a finite (or opposite-sign infinite) neighbor:
+  // linear interpolation computes (±Inf) + frac·(±Inf) = NaN, which silently
+  // destroys the honest unbounded-tail semantics (a NaN bound reads as a false
+  // "cannot cover" downstream). Snap to the infinite endpoint so a boundary
+  // straddle yields an honestly unbounded quantile instead of NaN. Finite/finite
+  // pairs fall through to exact interpolation, unchanged.
+  if (!Number.isFinite(sorted[lo]!)) return sorted[lo]!;
+  if (!Number.isFinite(sorted[hi]!)) return sorted[hi]!;
   return sorted[lo]! + (idx - lo) * (sorted[hi]! - sorted[lo]!);
 }
 

@@ -93,7 +93,7 @@ export function computeGseActionScore(input: GseActionScoreInput): GseActionScor
   return {
     calibration,
     confidenceScore: parliament.confidenceScore,
-    decision: decide(score, noBet.decision, forcedHardPass),
+    decision: decide(score, noBet.decision, forcedHardPass, probabilityEdge),
     drivers: buildDrivers({
       calibrationContribution,
       confidenceContribution,
@@ -164,9 +164,18 @@ function derivedRisks(
   return risks;
 }
 
-function decide(score: number, noBetDecision: NoBetStrengthResult["decision"], forcedHardPass: boolean): GseActionDecision {
+function decide(
+  score: number,
+  noBetDecision: NoBetStrengthResult["decision"],
+  forcedHardPass: boolean,
+  probabilityEdge: number,
+): GseActionDecision {
   if (forcedHardPass) return "HARD_PASS";
   if (noBetDecision === "SOFT_PASS" || score < 35) return "PASS";
+  // Honesty gate: never recommend an action tier above WATCH without the model
+  // seeing more value than the market. A non-positive modeled edge means the bet
+  // is priced at negative expected value, so PLAY/LEAN must be unreachable.
+  if (probabilityEdge <= 0) return "WATCH";
   if (score >= 72) return "PLAY";
   if (score >= 55) return "LEAN";
   return "WATCH";
