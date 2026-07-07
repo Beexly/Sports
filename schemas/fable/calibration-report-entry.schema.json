@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/calibration-report-entry.schema.json",
+  "type": "object",
+  "required": ["baseline", "hypothesis", "dataset", "split_method", "metric", "result", "decision"],
+  "properties": {
+    "baseline": { "type": "string" },
+    "hypothesis": { "type": "string" },
+    "dataset": { "type": "string" },
+    "split_method": { "type": "string" },
+    "metric": { "type": "string" },
+    "result": { "type": "string" },
+    "decision": { "type": "string" }
+  }
+}

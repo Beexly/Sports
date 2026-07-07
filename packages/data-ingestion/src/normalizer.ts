@@ -5,6 +5,7 @@ import type {
   NormalizedOdds,
 } from "@sports/types";
 import { FRESHNESS_THRESHOLD_MS } from "./config.js";
+import { freshnessMode, resolveFreshnessThresholdMs } from "./freshness-schedule.js";
 
 export class DataNormalizer {
   /**
@@ -133,8 +134,15 @@ export class DataNormalizer {
    * bookmaker's own `last_update`. A game with no parseable upstream timestamp is omitted
    * (fail-safe: not provably fresh → treated as stale). Callers DROP games not in this set.
    */
-  freshGameIds(odds: readonly NormalizedOdds[]): Set<string> {
-    const cutoff = Date.now() - FRESHNESS_THRESHOLD_MS;
+  freshGameIds(
+    odds: readonly NormalizedOdds[],
+    opts?: {
+      /** externalId -> commence time; enables the time-to-game dynamic gate. */
+      commenceTimeByGame?: ReadonlyMap<string, Date>;
+      now?: Date;
+    },
+  ): Set<string> {
+    const now = opts?.now ?? new Date();
     const freshestByGame = new Map<string, number>();
     for (const o of odds) {
       const t = o.bookmakerLastUpdate.getTime();
@@ -144,7 +152,14 @@ export class DataNormalizer {
     }
     const fresh = new Set<string>();
     for (const [game, freshest] of freshestByGame) {
-      if (freshest > cutoff) fresh.add(game);
+      // Per-game threshold: under ODDS_FRESHNESS_MODE=dynamic a game near
+      // first pitch demands a fresher line than one a day out (never looser
+      // than the fixed ceiling). Without a commence time: fixed threshold.
+      const threshold = resolveFreshnessThresholdMs(
+        opts?.commenceTimeByGame?.get(game),
+        now,
+      );
+      if (freshest > now.getTime() - threshold) fresh.add(game);
     }
     return fresh;
   }
@@ -156,9 +171,12 @@ export class DataNormalizer {
    * is vacuously fresh (no odds to be stale). The "no stale data" invariant is enforced on
    * real upstream data age, not the local clock.
    */
-  validateOddsFreshness(odds: readonly NormalizedOdds[]): boolean {
+  validateOddsFreshness(
+    odds: readonly NormalizedOdds[],
+    opts?: { commenceTimeByGame?: ReadonlyMap<string, Date>; now?: Date },
+  ): boolean {
     if (odds.length === 0) return true;
-    return this.freshGameIds(odds).size > 0;
+    return this.freshGameIds(odds, opts).size > 0;
   }
 
   /**
@@ -171,6 +189,7 @@ export class DataNormalizer {
    */
   freshnessDiagnostics(odds: readonly NormalizedOdds[]): {
     thresholdHours: number;
+    mode: "fixed" | "dynamic";
     rows: number;
     games: number;
     unparseableRows: number;
@@ -190,6 +209,7 @@ export class DataNormalizer {
     }
     return {
       thresholdHours: FRESHNESS_THRESHOLD_MS / (60 * 60 * 1000),
+      mode: freshnessMode(),
       rows: odds.length,
       games: games.size,
       unparseableRows,

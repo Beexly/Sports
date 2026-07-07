@@ -28,9 +28,16 @@
  * import cycle (data-ingestion → types only; prediction-engine → types only).
  */
 
+import { createHash } from "node:crypto";
 import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "./process-sport.js";
+import { freezeSlateCommitments, type SlateFreezeResult } from "./freeze-slate-commitments.js";
+
+/** Production SHA-256 HashFn for the proof spine — matches process-sport.ts. */
+function sha256Hex(input: string): string {
+  return createHash("sha256").update(input, "utf8").digest("hex");
+}
 
 /** Per-sport outcome — mirrors the route's `sportResults` entry shape. */
 export interface RefreshOddsSportResult {
@@ -50,6 +57,13 @@ export interface RefreshOddsResult {
   readonly totalCount: number;
   /** Per-sport outcomes, in processing order. */
   readonly results: RefreshOddsSportResult[];
+  /**
+   * Slate-commitment freeze outcomes (COMMIT/SKIP + reason per sport + day).
+   * Surfaced so a structurally never-committing slate class is VISIBLE in the
+   * cron response instead of scrolling past in logs (hostile-review fix —
+   * silently discarded results are how the primetime gap would have hidden).
+   */
+  readonly freeze: SlateFreezeResult[];
 }
 
 /** Error thrown when an explicit `sport` key matches no supported sport. */
@@ -126,6 +140,25 @@ export async function refreshOdds(
     await new Promise((r) => setTimeout(r, INTER_SPORT_PAUSE_MS));
   }
 
+  // Freeze slate commitments (commit-reveal) for the sports just processed —
+  // one immutable pre-kickoff Merkle root per sport + UTC day. Strictly
+  // non-fatal: the odds refresh's outcome must never hinge on the freeze pass
+  // (freezeSlateCommitments also catches per-sport failures internally).
+  let freeze: SlateFreezeResult[] = [];
+  try {
+    freeze = await freezeSlateCommitments(
+      sportsToProcess.map((sport) => sport.key),
+      new Date(),
+      sha256Hex,
+      "[cron:refresh-odds]",
+    );
+  } catch (freezeErr) {
+    console.warn(
+      `[cron:refresh-odds] slate commitment freeze pass failed: ` +
+        `${freezeErr instanceof Error ? freezeErr.message : freezeErr}`,
+    );
+  }
+
   const elapsedMs = Date.now() - startedAt;
   const okCount = results.filter((r) => r.ok).length;
 
@@ -135,5 +168,6 @@ export async function refreshOdds(
     okCount,
     totalCount: results.length,
     results,
+    freeze,
   };
 }

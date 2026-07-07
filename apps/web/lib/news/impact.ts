@@ -129,14 +129,22 @@ export type Corroboration = {
 
 /** Group the wire by (team, player, signal) and count distinct sources per story. */
 export function corroborate(items: readonly NewsItem[]): Map<string, Corroboration> {
+  const out = new Map<string, Corroboration>();
   const groups = new Map<string, NewsItem[]>();
   for (const it of items) {
-    const key = `${it.team}|${it.player ?? ""}|${it.signal}`;
+    // Only a specific PLAYER makes two headlines the same story. Without one,
+    // "team + signal" is far too coarse to claim corroboration — two unrelated
+    // Chiefs injury notes are not "confirmed by 2 sources". Player-less items
+    // stand alone (sources: 1) so the badge can never be fabricated.
+    if (!it.player) {
+      out.set(it.id, { sources: 1, confirmed: false, sourceNames: [it.source] });
+      continue;
+    }
+    const key = `${it.team}|${it.player}|${it.signal}`;
     const g = groups.get(key);
     if (g) g.push(it);
     else groups.set(key, [it]);
   }
-  const out = new Map<string, Corroboration>();
   for (const group of groups.values()) {
     const sourceNames = [...new Set(group.map((g) => g.source))];
     const corr: Corroboration = { sources: sourceNames.length, confirmed: sourceNames.length >= 2, sourceNames };

@@ -102,4 +102,80 @@ describe("Phase 9 guardrails", () => {
     }
     expect(r.stdout).toMatch(/\[claude-api-usage\] OK/);
   }, GUARD_TEST_TIMEOUT_MS);
+
+  it("commercial-copy-scan exits 0 on launch-facing revenue surfaces", () => {
+    const r = runGuard("scripts/guardrails/commercial-copy-scan.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `commercial-copy-scan failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[commercial-copy-scan\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("no-unsupported-performance-claims exits 0 on public monetization copy", () => {
+    const r = runGuard("scripts/guardrails/no-unsupported-performance-claims.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `no-unsupported-performance-claims failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[no-unsupported-performance-claims\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("no-raw-ngs-export exits 0 without raw Next Gen Stats redistribution language", () => {
+    const r = runGuard("scripts/guardrails/no-raw-ngs-export.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `no-raw-ngs-export failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[no-raw-ngs-export\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("partner-offer-compliance-scan exits 0 with high-risk offers fail-closed", () => {
+    const r = runGuard("scripts/guardrails/partner-offer-compliance-scan.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `partner-offer-compliance-scan failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[partner-offer-compliance-scan\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("api-payload-rights-scan exits 0 with unsafe API fields fail-closed", () => {
+    const r = runGuard("scripts/guardrails/api-payload-rights-scan.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `api-payload-rights-scan failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[api-payload-rights-scan\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("openapi-security-scan exits 0 with shadow auth metadata intact", () => {
+    const r = runGuard("scripts/guardrails/openapi-security-scan.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `openapi-security-scan failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[openapi-security-scan\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("root guardrails chain includes commercial, performance, payload-rights, OpenAPI, and raw-NGS checks", () => {
+    const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
+    expect(pkg.scripts["guard:commercial-copy"]).toContain("commercial-copy-scan.mjs");
+    expect(pkg.scripts["guard:performance-claims"]).toContain("no-unsupported-performance-claims.mjs");
+    expect(pkg.scripts["guard:no-raw-ngs"]).toContain("no-raw-ngs-export.mjs");
+    expect(pkg.scripts["guard:partner-offers"]).toContain("partner-offer-compliance-scan.mjs");
+    expect(pkg.scripts["guard:api-payload-rights"]).toContain("api-payload-rights-scan.mjs");
+    expect(pkg.scripts["guard:openapi-security"]).toContain("openapi-security-scan.mjs");
+    expect(pkg.scripts.guardrails).toContain("commercial-copy-scan.mjs");
+    expect(pkg.scripts.guardrails).toContain("no-unsupported-performance-claims.mjs");
+    expect(pkg.scripts.guardrails).toContain("no-raw-ngs-export.mjs");
+    expect(pkg.scripts.guardrails).toContain("partner-offer-compliance-scan.mjs");
+    expect(pkg.scripts.guardrails).toContain("api-payload-rights-scan.mjs");
+    expect(pkg.scripts.guardrails).toContain("openapi-security-scan.mjs");
+  });
 });

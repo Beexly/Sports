@@ -1,0 +1,79 @@
+# FABLE Index
+
+Core evidence:
+- `apps/web/app/fable/page.tsx`
+- `apps/web/lib/fable/public-summary.ts`
+- `docs/fable/evidence/CLAIM_EVIDENCE_LEDGER.md`
+- `docs/fable/evidence/EVIDENCE_INDEX.md`
+- `docs/fable/REPO_REALITY_MAP.md`
+- `docs/fable/SYSTEM_ARCHITECTURE.md`
+- `docs/fable/DATA_LEGAL_BOUNDARIES.md`
+- `docs/fable/METRIC_DERIVATIONS.md`
+- `docs/fable/MODEL_CALIBRATION.md`
+- `docs/fable/UNCERTAINTY_AND_ACTIVE_LEARNING.md`
+- `docs/fable/DRIFT_BIAS_MONITORING.md`
+- `docs/fable/LABELING_WORKFLOWS.md`
+- `docs/fable/VALIDATION_REPORT.md`
+- `docs/fable/validation/VALIDATION_PROTOCOL.md`
+- `docs/fable/TESTING_GUIDE.md`
+- `docs/fable/RISKS_AND_FAILURE_MODES.md`
+- `docs/fable/GITHUB_VISIBILITY_MAP.md`
+- `docs/fable/github/PR_BODY_FABLE_EVIDENCE.md`
+- `docs/fable/CLAUDE_HANDOFF.md`
+- `docs/fable/CODEX_FINAL_REPORT.md`
+- `docs/fable/CODEX_SECOND_LEVEL_REPORT.md`
+- `docs/fable/CODEX_THIRD_PASS_REPORT.md`
+- `docs/fable/master/AUDIT_STATE.md`
+- `docs/fable/master/TYPECHECK_DECISION.md`
+- `docs/fable/master/GITHUB_PUBLICATION_PATH.md`
+- `docs/fable/master/MASTER_FINAL_REPORT.md`
+- `docs/fable/master/AWS_LEARNING_BRIDGE_REPORT.md`
+
+Personal AWS learning:
+- `docs/personal/aws/README.md`
+- `docs/personal/aws/AWS_TO_GSE_CROSSWALK.md`
+- `docs/personal/aws/AWS_LEARNING_TO_REPO_ACTIONS.md`
+- `docs/personal/aws/AWS_PORTFOLIO_CASE_STUDY.md`
+- `schemas/fable/personal-learning-evidence.schema.json`
+- `schemas/fable/aws-local-fixture-library.schema.json`
+
+AWS evidence:
+- `docs/fable/aws/README.md`
+- `docs/fable/aws/AWS_REPO_REALITY_MAP.md`
+- `docs/fable/aws/AWS_SERVICE_SCORECARD.md`
+- `docs/fable/aws/AWS_AMPLIFY_INVESTIGATION.md`
+- `docs/fable/aws/AWS_MODEL_LEVERAGE_MAP.md`
+- `docs/fable/aws/AWS_MODEL_ROUTER_DESIGN.md`
+- `docs/fable/aws/AWS_MODEL_EVALUATION_PLAN.md`
+- `docs/fable/aws/AWS_PLUGIN_TO_REPO_CROSSWALK.md`
+- `docs/fable/aws/AWS_PLUGIN_GOVERNED_AUDIT.md`
+- `docs/fable/aws/AWS_SHOW_TEETH_STRATEGY.md`
+- `docs/fable/aws/AWS_OPERATING_INTELLIGENCE_MATRIX.md`
+- `docs/fable/aws/AWS_NO_COST_WORKFLOW_BLUEPRINTS.md`
+- `docs/fable/aws/AWS_AGENT_LAB_PLAYBOOK.md`
+- `docs/fable/aws/AWS_METRICS_AND_MATRICES.md`
+- `docs/fable/aws/AWS_FREE_LEARNING_OPERATING_SYSTEM.md`
+- `docs/fable/aws/AWS_INCUMBENT_PRESSURE_SYSTEM.md`
+- `docs/fable/aws/AWS_MICRO_EDGE_FACTORY.md`
+- `docs/fable/aws/AWS_LOCAL_DATA_FACTORY.md`
+- `docs/fable/aws/AWS_LOCAL_APP_BLUEPRINTS.md`
+- `docs/fable/aws/AWS_MACHINE_LADDER.md`
+- `docs/fable/aws/AWS_TECHNIQUE_LEDGER.md`
+- `docs/fable/aws/AWS_OPERATING_INTELLIGENCE_RUNBOOK.md`
+- `docs/fable/aws/fixtures/README.md`
+- `docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json`
+- `docs/fable/aws/governance-os/README.md`
+- `docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json`
+- `docs/fable/aws/governance-os/guard-rules/fable-shadow-control.guard`
+- `docs/fable/aws/AGENTCORE_SECURITY_FIREBREAK.md`
+- `docs/fable/aws/AGENT_TOOL_PERMISSION_MATRIX.md`
+- `docs/fable/aws/AGENT_EVALUATION_RUBRICS.md`
+- `docs/fable/aws/AWS_COST_SECURITY_GATES.md`
+- `docs/fable/aws/AWS_IMPLEMENTATION_SPIKES.md`
+- `docs/fable/aws/AWS_FINAL_REPORT.md`
+
+Demo and review surfaces:
+- `docs/fable/demo/PUBLIC_DATA_FORENSIC_REPORT.md`
+- `docs/fable/edge-lab/MICRO_EDGE_HARVEST_LEDGER.md`
+- `docs/fable/competitive/INCUMBENT_PRESSURE_TEST.md`
+- `docs/fable/red-team/ADVERSARIAL_REVIEW.md`

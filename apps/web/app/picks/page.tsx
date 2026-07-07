@@ -3,6 +3,10 @@ import { Nav } from "@/components/ui/nav";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
+import {
+  LineFreshnessBadge,
+  freshestLineTimestamp,
+} from "@/components/picks/line-freshness-badge";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
@@ -377,6 +381,17 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Picks grid */}
           {!fetchError && picks.length > 0 && (
+            <>
+              {(() => {
+                // Honest line-age badge: renders only when a real upstream
+                // timestamp exists on today's picks (never a fake "just now").
+                const freshest = freshestLineTimestamp(picks);
+                return freshest ? (
+                  <div className="mb-4">
+                    <LineFreshnessBadge freshestIso={freshest} />
+                  </div>
+                ) : null;
+              })()}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {picks.map((pick) => (
                 <PickCard
@@ -388,6 +403,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 />
               ))}
             </div>
+            </>
           )}
 
           {/* Bottom upgrade CTA for free users */}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxy-sports-edge.local/schemas/fable/aws-decision-engine-evaluation.schema.json",
+  "title": "FABLE AWS Decision Engine Evaluation",
+  "type": "object",
+  "required": [
+    "actionTier",
+    "blastRadius",
+    "costRisk",
+    "iamRisk",
+    "dataRightsRisk",
+    "productionRisk",
+    "reversibility",
+    "approvalRequired",
+    "allowed",
+    "allowedByDefault",
+    "requiredDryRunCommand",
+    "requiredRollbackField",
+    "requiredOwnerDecision",
+    "blockers"
+  ],
+  "properties": {
+    "actionTier": {
+      "enum": [
+        "tier0_local_only",
+        "tier1_local_validation",
+        "tier2_read_only_discovery",
+        "tier3_reversible_change",
+        "tier4_cost_impacting_change",
+        "tier5_destructive_production_security"
+      ]
+    },
+    "blastRadius": { "enum": ["low", "medium", "high", "critical"] },
+    "costRisk": { "enum": ["low", "medium", "high", "critical"] },
+    "iamRisk": { "enum": ["low", "medium", "high", "critical"] },
+    "dataRightsRisk": { "enum": ["low", "medium", "high", "critical"] },
+    "productionRisk": { "enum": ["low", "medium", "high", "critical"] },
+    "reversibility": { "enum": ["easy", "planned", "hard", "destructive"] },
+    "approvalRequired": { "type": "boolean" },
+    "allowed": { "type": "boolean" },
+    "allowedByDefault": { "type": "boolean" },
+    "requiredDryRunCommand": { "type": "boolean" },
+    "requiredRollbackField": { "type": "boolean" },
+    "requiredOwnerDecision": { "type": "boolean" },
+    "blockers": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

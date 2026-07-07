@@ -8,7 +8,7 @@ import {
   getCurrentPricingPhase,
   annualSavingsPct,
   annualMonthlyEquivalent,
-  GRANDFATHER_GUARANTEE,
+  GRANDFATHER_GUARANTEE as LIFETIME_PRICE_NOTE,
 } from "@/lib/pricing/pricing-phases";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { Reveal } from "@/components/motion/reveal";
@@ -30,7 +30,7 @@ const phase = getCurrentPricingPhase();
 export const metadata: Metadata = {
   title: "Pricing: Founding-Member Rates, Locked For Life",
   description:
-    "Free, honest picks and the most transparent verified record in the game. Pro and Elite are for the tools, depth, analytics, and alerts. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
+    "Free, honest picks, a public record as settled history accumulates, and paid tools for depth, analytics, and alerts. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing · ${BRAND_NAME}`,
@@ -44,20 +44,20 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 const FREE_FEATURES = [
-  { label: "Every pick, free: honest labels & the open verified record", included: true },
+  { label: "Every pick, free: honest labels & the open public record", included: true },
   { label: "Edge Index on every signal", included: true },
   { label: "Game matchup info + pick type", included: true },
-  { label: "Public verified record & calibration", included: true },
+  { label: "Public record & calibration status", included: true },
   { label: "The Academy: full training floor", included: true },
   { label: "Confidence on the full board (Pro)", included: false },
   { label: "Factor trail & evidence audit (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
   { label: "Real-time alerts (Elite)", included: false },
-  { label: "CLV Ledger + staking toolkit (Elite)", included: false },
+  { label: "Line-value tracker + staking toolkit (Elite)", included: false },
 ] as const;
 
 const PRO_FEATURES = [
-  { label: "The Academy + public verified record", included: true },
+  { label: "The Academy + public record", included: true },
   { label: "Every signal, every day: all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
   { label: "Full factor trail & reasoning", included: true },
@@ -67,12 +67,12 @@ const PRO_FEATURES = [
   { label: "Trend Lab: full cohort workbench", included: true },
   { label: "Parlay MRI: the portfolio surgeon", included: true },
   { label: "Real-time alerts (Elite)", included: false },
-  { label: "CLV Ledger + staking toolkit (Elite)", included: false },
+  { label: "Line-value tracker + staking toolkit (Elite)", included: false },
 ] as const;
 
 const ELITE_FEATURES = [
   { label: "Real-time email + push alerts on every signal", included: true },
-  { label: "CLV Ledger: your glass-box bet tracker", included: true },
+  { label: "Line-value tracker: your glass-box bet tracker", included: true },
   { label: "Staking calculator: Kelly-aware sizing", included: true },
   { label: "First access to new intelligence surfaces", included: true },
   { label: "Every signal, every day: all 7 sports", included: true },
@@ -81,7 +81,7 @@ const ELITE_FEATURES = [
   { label: "Ask the model why + line-movement intel", included: true },
   { label: "Trend Lab: full cohort workbench", included: true },
   { label: "Parlay MRI: the portfolio surgeon", included: true },
-  { label: "The Academy + public verified record", included: true },
+  { label: "The Academy + public record", included: true },
 ] as const;
 
 const FANTASY_FEATURES = [
@@ -89,7 +89,7 @@ const FANTASY_FEATURES = [
   { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
   { label: "Bye-week fragility + roster-construction guidance", included: true },
   { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
-  { label: "Every pick, free + the public verified record", included: true },
+  { label: "Every pick, free + the public record", included: true },
   { label: "The Academy: full training floor", included: true },
   { label: "Betting depth: factor trail & line movement (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
@@ -140,7 +140,7 @@ const PLANS: PlanView[] = [
     annual: phase.elite.annual,
     annualSavingsPct: annualSavingsPct(phase.elite),
     annualMonthly: annualMonthlyEquivalent(phase.elite),
-    description: "The professional toolkit: everything in Pro, plus real-time alerts and the CLV ledger that proves your own edge.",
+    description: "The professional toolkit: everything in Pro, plus real-time alerts and a line-value tracker for post-close review.",
     badge: "The professional toolkit",
     cta: "Subscribe to Elite",
     features: [...ELITE_FEATURES],
@@ -159,9 +159,9 @@ const COMPARISON_FEATURES = [
   "Trend Lab",
   "Parlay MRI",
   "Real-time alerts",
-  "CLV Ledger + staking toolkit",
+  "Line-value tracker + staking toolkit",
   "The Academy",
-  "Public verified record",
+  "Public record",
   "Fantasy draft + best-ball suite",
 ] as const;
 
@@ -188,7 +188,7 @@ const FAQ = [
   },
   {
     q: "What is founding-member pricing?",
-    a: "We're pre-track-record, so the launch cohort gets the lowest price we'll ever offer, locked for the life of your subscription. When prices rise for new members as the verified record grows, yours never does.",
+    a: "We're pre-track-record, so the launch cohort gets the lowest price we'll ever offer, locked for the life of your subscription. When prices rise for new members as the public record matures, yours never does.",
   },
   {
     q: "How is this different from a tout service?",
@@ -219,7 +219,7 @@ const faqJsonLd = {
 // ─────────────────────────────────────────────
 
 export default function PricingPage() {
-  const grandfatherNote = `${phase.name}-member rate. ${GRANDFATHER_GUARANTEE}`;
+  const grandfatherNote = `${phase.name}-member rate. ${LIFETIME_PRICE_NOTE}`;
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -327,7 +327,7 @@ export default function PricingPage() {
                 doors={[
                   { label: "Today's board", href: "/board" },
                   { label: "The Academy", href: "/academy" },
-                  { label: "Verified record & calibration", href: "/performance" },
+                  { label: "Public record & calibration status", href: "/performance" },
                 ]}
               />
               <TierDoorColumn
@@ -343,7 +343,7 @@ export default function PricingPage() {
                 tier="Elite"
                 hex={BRAND_COLORS.softUltraviolet}
                 doors={[
-                  { label: "CLV Ledger + staking toolkit", href: "/track" },
+                  { label: "Line-value tracker + staking toolkit", href: "/track" },
                   { label: "Real-time alerts", href: "/dashboard" },
                   { label: "New surfaces, first", href: "/changelog" },
                 ]}

@@ -21,6 +21,15 @@
  *     always recomputes from current evidence.
  *   - Categories carry both a *soft* and a *hard* TTL. Aging evidence yields
  *     a HOLD; stale evidence is treated as missing.
+ *
+ * Relationship to the other two source-scoring modules (deliberately NOT
+ * merged — each answers a different question):
+ *   - This module: per-ARTIFACT freshness/coverage gate over ephemeral
+ *     evidence lists; no persistence.
+ *   - lib/data-sources/source-confidence.ts — per-SOURCE-TYPE static/structural
+ *     trust (rights + wiring + cost); time-invariant.
+ *   - lib/sources/source-reliability.ts — per-source rolling OPERATIONAL
+ *     telemetry score (uptime/freshness/agreement/schema/latency).
  */
 
 export type SourceCategory =

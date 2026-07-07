@@ -874,7 +874,7 @@ function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
           label="Sell-high hit-rate"
           value={pctNullable(p.overall.sellHighHitRate)}
           tone={hitRateTone(p.overall.sellHighHitRate)}
-          sublabel={`buy-low ${pctNullable(p.overall.buyLowHitRate)} · vs 50% coin flip`}
+          sublabel={`n=${p.overall.sellHighN} calls · buy-low ${pctNullable(p.overall.buyLowHitRate)} (n=${p.overall.buyLowN}) · vs 50% coin flip`}
         />
       </section>
 

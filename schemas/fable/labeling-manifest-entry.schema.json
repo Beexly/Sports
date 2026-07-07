@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/labeling-manifest-entry.schema.json",
+  "type": "object",
+  "required": ["candidate_id", "task_type", "source_id", "prompt", "priority"],
+  "properties": {
+    "candidate_id": { "type": "string" },
+    "task_type": { "type": "string" },
+    "source_id": { "type": "string" },
+    "prompt": { "type": "string" },
+    "priority": { "type": "integer" }
+  }
+}

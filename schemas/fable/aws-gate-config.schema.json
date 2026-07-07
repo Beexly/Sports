@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/aws-gate-config.schema.json",
+  "type": "object",
+  "required": ["FABLE_AWS_ALLOW_EXPERIMENTS", "FABLE_AWS_ALLOW_DEPLOY", "FABLE_AWS_ALLOW_PAID_RESOURCES", "FABLE_AWS_MAX_MONTHLY_COST_USD"],
+  "properties": {
+    "FABLE_AWS_ALLOW_EXPERIMENTS": { "const": "false" },
+    "FABLE_AWS_ALLOW_DEPLOY": { "const": "false" },
+    "FABLE_AWS_ALLOW_PAID_RESOURCES": { "const": "false" },
+    "FABLE_AWS_MAX_MONTHLY_COST_USD": { "const": "0" }
+  }
+}

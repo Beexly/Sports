@@ -67,3 +67,6 @@ export const DEMO_WIRE: readonly NewsItem[] = [
 
 export const WIRE_DISCLAIMER =
   "Sample feed: the sources, players, and reports shown here are fictional, used only to demonstrate how the impact engine scores news by source tier and freshness. Real reports populate from licensed and official feeds when ingestion is enabled (founder-gated).";
+
+export const WIRE_LIVE_DISCLAIMER =
+  "Live wire: headlines come from public RSS feeds (titles and timestamps only) and are attributed to their sources. The tier, impact, and urgency shown are our model's read of each report, not the source's own claim.";

@@ -1,3 +1,4 @@
+// allow: SIZE_OK - package-root export barrel kept stable for downstream imports.
 export {
   scoreGame,
   scoreGames,
@@ -120,9 +121,11 @@ export type { ReadinessGates } from "./readiness.js";
 export {
   hashLeaf,
   merkleRoot,
+  merkleRootFromLeafHashes,
   inclusionProof,
   verifyInclusion,
   canonicalPickPayload,
+  parseCanonicalPayload,
 } from "./proof-of-record.js";
 export type { HashFn, PickRecord, MerkleSibling, MerkleProof } from "./proof-of-record.js";
 // Pre-result proof receipt — freeze + verify a tamper-evident per-pick claim.
@@ -210,6 +213,109 @@ export type {
   BrierDecomposition,
   ReliabilityBin,
 } from "./probability-calibration.js";
+
+// R&D — parametric calibration maps (Platt, Beta) + cross-validated selection
+// across calibrator families (the honest fix for "isotonic by fiat"). Composes
+// the isotonic/ECE toolkit above; equal-mass ECE for robust small-fold scoring.
+export {
+  plattScaling,
+  betaCalibration,
+  equalMassEce,
+  selectCalibrator,
+} from "./calibration-map.js";
+export type {
+  CalibrationMethod,
+  CalibratorFit,
+  PlattModel,
+  BetaModel,
+  CalibratorScore,
+  CalibratorSelection,
+} from "./calibration-map.js";
+
+// R&D — linear Thompson sampling contextual bandit (2026-07-02 ZK/ML dump,
+// extraction ledger Cluster B). Dark, NOT wired: the future explore/exploit
+// primitive for allocation decisions (content variants, estimator trials).
+// Must NEVER gate a real-money action without its own founder-approved policy.
+export {
+  createLinTsState,
+  selectAction,
+  updateLinTs,
+  thetaEstimate,
+  MAX_LIN_TS_DIM,
+} from "./linear-thompson.js";
+export type {
+  LinTsOptions,
+  LinTsState,
+  LinTsDecision,
+} from "./linear-thompson.js";
+
+// R&D — tamper-evident pre-registration of the calibration MAP itself (composes
+// proof-of-record). NOT zero-knowledge; CommitmentEnvelope is a documented
+// future seam only, proof always null. See ZK-ML-DUMP-EXTRACTION-LEDGER.md.
+export {
+  buildCalibrationCommitment,
+  verifyCalibrationCommitment,
+  toCommitmentEnvelope,
+} from "./calibration-commitment.js";
+export type {
+  CalibrationCommitmentInput,
+  CalibrationCommitment,
+  CommitmentEnvelope,
+} from "./calibration-commitment.js";
+
+// R&D — anytime-valid CALIBRATION monitoring (the profit ledger's sibling):
+// a Ville e-process testing "the stated probabilities are honest" continuously,
+// two-sided (over/under-confidence) with a per-region bin layer. Dark, unwired;
+// order-sensitive (settlement order required). Proven by adversarial-peeking MC.
+export { anytimeCalibrationMonitor } from "./calibration-sequence.js";
+export type {
+  CalibrationSequenceSample,
+  CalibrationSequencePoint,
+  CalibrationSequenceResult,
+  CalibrationSequenceOptions,
+  CalibrationBinDiagnostic,
+} from "./calibration-sequence.js";
+
+// R&D — Pedersen homomorphic commitments (the ADDITIVE layer Merkle lacks:
+// verify a published aggregate against per-pick commitments without opening the
+// picks). Dark, unwired; ADDITIVE to the SHA-256 Merkle layer, never a
+// replacement (classical DLOG only, NOT post-quantum). Group verified by
+// execution. See ZK-ML-DUMP-EXTRACTION-LEDGER.md wave 7.
+export {
+  commit,
+  openCommitment,
+  addCommitments,
+  aggregateCommitments,
+  commitLedger,
+  verifyLedgerAggregate,
+  verifyGroup,
+  encodeFixedPoint,
+  DEFAULT_PEDERSEN_GROUP,
+  PEDERSEN_P,
+  PEDERSEN_Q,
+  PEDERSEN_G,
+  PEDERSEN_H,
+} from "./pedersen-ledger.js";
+export type { PedersenGroup, PedersenCommitment, LedgerCommitmentResult } from "./pedersen-ledger.js";
+
+// Performance CIs for CONTINUOUS returns (ROI/units) — the BCa bootstrap
+// counterpart to the Wilson interval (which only covers binomial win rate).
+// Deterministic/seeded so a public performance band is reproducible from the
+// sealed ledger by anyone. Honest uncertainty for the public loss ledger.
+export { bcaCi, percentileCi, bcaMeanCi, percentileMeanCi, studentizedCi, studentizedMeanCi, empiricalBernsteinMeanCi, jackknifeStandardError, meanStandardError, meanStatistic, normalCdf, normalQuantile } from "./performance-ci.js";
+export type { PerformanceCi, CiMethod, Statistic } from "./performance-ci.js";
+export { bcaCoverageSelfAudit, studentizedCoverageSelfAudit } from "./coverage-self-audit.js";
+export type { CoverageSelfAuditResult, CoverageSelfAuditOptions, CoverageVerdict } from "./coverage-self-audit.js";
+export { anytimeValidLedger, initAnytimeFold, foldAnytimePick } from "./anytime-ledger.js";
+export type {
+  AnytimeLedgerResult,
+  AnytimeLedgerPoint,
+  AnytimeLedgerOptions,
+  AnytimeFoldState,
+  AnytimeFoldOptions,
+} from "./anytime-ledger.js";
+export { decomposeClv, informationScore } from "./clv-decomposition.js";
+export type { ClvDecompositionItem, ClvDecompositionResult } from "./clv-decomposition.js";
 
 // Player season projection (recency+games-weighted, regressed) and its
 // honest backtest vs a carry-forward baseline. Forecasts; surfaced with their
@@ -343,6 +449,358 @@ export type { TeamGameEfficiency, TeamRating, OpponentAdjustOptions } from "./op
 // plus attributed contributions for interpretation/narration.
 export { compositeScore } from "./composite-score.js";
 export type { WeightedSignal, SignalContribution, CompositeScore, CompositeScoreOptions } from "./composite-score.js";
+export { assessCalibrationContract } from "./gse-score/calibration-contract.js";
+export type {
+  CalibrationContractInput,
+  CalibrationContractResult,
+  CalibrationContractStatus,
+} from "./gse-score/calibration-contract.js";
+export { evaluateFeatureContract } from "./gse-score/feature-contract.js";
+export type {
+  FeatureContractDriver,
+  FeatureContractInput,
+  FeatureContractResult,
+  FeatureContractStatus,
+  FeatureSourcePolicy,
+  FeatureSourceStatus,
+  GseFeatureValue,
+} from "./gse-score/feature-contract.js";
+export { computeGseActionScore } from "./gse-score/gse-action-score.js";
+export type {
+  GseActionDecision,
+  GseActionDriver,
+  GseActionScoreInput,
+  GseActionScoreResult,
+} from "./gse-score/gse-action-score.js";
+export { aggregateModelParliament } from "./gse-score/model-parliament.js";
+export type {
+  ModelParliamentDriver,
+  ModelParliamentInput,
+  ModelParliamentResult,
+  ModelParliamentStatus,
+  ModelVote,
+} from "./gse-score/model-parliament.js";
+export { computeNoBetStrength } from "./gse-score/no-bet-strength.js";
+export type {
+  NoBetDecision,
+  NoBetDriver,
+  NoBetRiskFactor,
+  NoBetRiskInput,
+  NoBetStrengthInput,
+  NoBetStrengthResult,
+} from "./gse-score/no-bet-strength.js";
+export {
+  GSE_METRIC_BIRTH_CERTIFICATES as GSE_PROPRIETARY_METRIC_BIRTH_CERTIFICATES,
+  metricBirthCertificate as proprietaryMetricBirthCertificate,
+  requireMetricBirthCertificate as requireProprietaryMetricBirthCertificate,
+} from "./metrics/core/metric-birth-certificate.js";
+export type {
+  GseFormulaClass as ProprietaryFormulaClass,
+  GseMetricBirthCertificate as ProprietaryMetricBirthCertificate,
+  GseMetricFamily as ProprietaryMetricFamily,
+  MetricPublicExposure as ProprietaryMetricPublicExposure,
+  MetricValidationMethod as ProprietaryMetricValidationMethod,
+} from "./metrics/core/metric-birth-certificate.js";
+export {
+  GSE_METRIC_ASSETS as GSE_PROPRIETARY_METRIC_ASSETS,
+  GSE_METRIC_SOURCE_RIGHTS_POLICIES as GSE_PROPRIETARY_METRIC_SOURCE_RIGHTS_POLICIES,
+  GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES as GSE_PROPRIETARY_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES,
+  evaluateMetricGraduation,
+  evaluateMetricPayloadRights as evaluateProprietaryMetricPayloadRights,
+  evaluateMetricSourceRights as evaluateProprietaryMetricSourceRights,
+  filterMetricPayloadEnvelope as filterProprietaryMetricPayloadEnvelope,
+  buildMetricResidualRollup as buildProprietaryMetricResidualRollup,
+  buildMetricResidualRollups as buildProprietaryMetricResidualRollups,
+  metricAsset as proprietaryMetricAsset,
+  metricResidualRollupKey as proprietaryMetricResidualRollupKey,
+  metricSourceRightsPolicy as proprietaryMetricSourceRightsPolicy,
+  generateMetricDriftCard as generateProprietaryMetricDriftCard,
+  generateMetricModelCard as generateProprietaryMetricModelCard,
+  generateAllShadowMetricEvidenceFixtureCards as generateAllProprietaryShadowMetricEvidenceFixtureCards,
+  generateShadowMetricEvidenceFixtureCards as generateProprietaryShadowMetricEvidenceFixtureCards,
+  renderAllShadowMetricEvidenceReportsMarkdown as renderAllProprietaryShadowMetricEvidenceReportsMarkdown,
+  renderShadowMetricEvidenceReportIndexMarkdown as renderProprietaryShadowMetricEvidenceReportIndexMarkdown,
+  renderShadowMetricEvidenceReportMarkdown as renderProprietaryShadowMetricEvidenceReportMarkdown,
+  adaptHistoricalValidationRecord as adaptProprietaryHistoricalValidationRecord,
+  adaptHistoricalDistributionRecord as adaptProprietaryHistoricalDistributionRecord,
+  conformalUncertaintyWidth as proprietaryConformalUncertaintyWidth,
+  conformalUncertaintyWidthFromReport as proprietaryConformalUncertaintyWidthFromReport,
+  reviewHistoricalValidationSources as reviewProprietaryHistoricalValidationSources,
+  reviewHistoricalDistributionPayload as reviewProprietaryHistoricalDistributionPayload,
+  runHistoricalDistributionAdapterFixtures as runProprietaryHistoricalDistributionAdapterFixtures,
+  runHistoricalDistributionAdapterRecords as runProprietaryHistoricalDistributionAdapterRecords,
+  runHistoricalValidationAdapterFixtures as runProprietaryHistoricalValidationAdapterFixtures,
+  runHistoricalValidationAdapterRecords as runProprietaryHistoricalValidationAdapterRecords,
+  summarizeHistoricalDistributionAdapterResults as summarizeProprietaryHistoricalDistributionAdapterResults,
+  summarizeHistoricalValidationAdapterResults as summarizeProprietaryHistoricalValidationAdapterResults,
+  runComposedDecisionMetricPayloadFixtures as runProprietaryComposedDecisionMetricPayloadFixtures,
+  runDecisionWindowValidationSplits as runProprietaryDecisionWindowValidationSplits,
+  runMetricValidationSplitFixtures as runProprietaryMetricValidationSplitFixtures,
+  runRoleStabilityValidationSplits as runProprietaryRoleStabilityValidationSplits,
+  summarizeComposedDecisionMetricPayloadFixtures as summarizeProprietaryComposedDecisionMetricPayloadFixtures,
+  summarizeMetricValidationSplitResults as summarizeProprietaryMetricValidationSplitResults,
+  COMPOSED_DECISION_METRIC_PAYLOAD_FIXTURES as PROPRIETARY_COMPOSED_DECISION_METRIC_PAYLOAD_FIXTURES,
+  DECISION_WINDOW_VALIDATION_SPLITS as PROPRIETARY_DECISION_WINDOW_VALIDATION_SPLITS,
+  HISTORICAL_DISTRIBUTION_ADAPTER_FIXTURES as PROPRIETARY_HISTORICAL_DISTRIBUTION_ADAPTER_FIXTURES,
+  HISTORICAL_VALIDATION_ADAPTER_FIXTURES as PROPRIETARY_HISTORICAL_VALIDATION_ADAPTER_FIXTURES,
+  metricSourceRightsPoliciesFromRegistry as proprietaryMetricSourceRightsPoliciesFromRegistry,
+  metricSourceRightsPolicyFromRegistryEntry as proprietaryMetricSourceRightsPolicyFromRegistryEntry,
+  ROLE_STABILITY_VALIDATION_SPLITS as PROPRIETARY_ROLE_STABILITY_VALIDATION_SPLITS,
+  requireMetricAsset as requireProprietaryMetricAsset,
+  SHADOW_METRIC_EVIDENCE_FIXTURES as PROPRIETARY_SHADOW_METRIC_EVIDENCE_FIXTURES,
+  sourceRightsEnvelopeFromPolicy as proprietarySourceRightsEnvelopeFromPolicy,
+} from "./metrics/core/index.js";
+export type {
+  GseMetricAsset as ProprietaryMetricAsset,
+  GseModelCard as ProprietaryModelCard,
+  MetricApiExposure as ProprietaryMetricApiExposure,
+  MetricDriftCard as ProprietaryMetricDriftCard,
+  MetricGraduationDecision as ProprietaryMetricGraduationDecision,
+  MetricGraduationInput as ProprietaryMetricGraduationInput,
+  MetricGraduationStatus as ProprietaryMetricGraduationStatus,
+  MetricLicensingStatus as ProprietaryMetricLicensingStatus,
+  MetricDriftCardInput as ProprietaryMetricDriftCardInput,
+  MetricDriftCheck as ProprietaryMetricDriftCheck,
+  MetricDriftDirection as ProprietaryMetricDriftDirection,
+  MetricModelCardInput as ProprietaryMetricModelCardInput,
+  ComposedDecisionMetricPayloadFixture as ProprietaryComposedDecisionMetricPayloadFixture,
+  ComposedDecisionMetricPayloadFixtureId as ProprietaryComposedDecisionMetricPayloadFixtureId,
+  ComposedDecisionMetricPayloadFixtureResult as ProprietaryComposedDecisionMetricPayloadFixtureResult,
+  ComposedDecisionMetricPayloadFixtureSummary as ProprietaryComposedDecisionMetricPayloadFixtureSummary,
+  DecisionWindowValidationSplit as ProprietaryDecisionWindowValidationSplit,
+  MetricValidationSplitResult as ProprietaryMetricValidationSplitResult,
+  MetricValidationSplitSummary as ProprietaryMetricValidationSplitSummary,
+  RoleStabilityValidationSplit as ProprietaryRoleStabilityValidationSplit,
+  ShadowEvidenceMetricId as ProprietaryShadowEvidenceMetricId,
+  ShadowMetricEvidenceMarkdownReport as ProprietaryShadowMetricEvidenceMarkdownReport,
+  HistoricalDecisionWindowRecord as ProprietaryHistoricalDecisionWindowRecord,
+  HistoricalCalibrationDistributionRecord as ProprietaryHistoricalCalibrationDistributionRecord,
+  HistoricalConformalUncertaintyDistributionRecord as ProprietaryHistoricalConformalUncertaintyDistributionRecord,
+  HistoricalDriftPressureDistributionRecord as ProprietaryHistoricalDriftPressureDistributionRecord,
+  HistoricalDistributionAdapterResult as ProprietaryHistoricalDistributionAdapterResult,
+  HistoricalDistributionAdapterStatus as ProprietaryHistoricalDistributionAdapterStatus,
+  HistoricalDistributionAdapterSummary as ProprietaryHistoricalDistributionAdapterSummary,
+  HistoricalDistributionMetricId as ProprietaryHistoricalDistributionMetricId,
+  HistoricalDistributionPayloadProfile as ProprietaryHistoricalDistributionPayloadProfile,
+  HistoricalDistributionRecord as ProprietaryHistoricalDistributionRecord,
+  ConformalUncertaintyIntervalInput as ProprietaryConformalUncertaintyIntervalInput,
+  ConformalUncertaintyWidthBand as ProprietaryConformalUncertaintyWidthBand,
+  ConformalUncertaintyWidthInput as ProprietaryConformalUncertaintyWidthInput,
+  ConformalUncertaintyWidthMetric as ProprietaryConformalUncertaintyWidthMetric,
+  ConformalUncertaintyWidthSourcePosture as ProprietaryConformalUncertaintyWidthSourcePosture,
+  HistoricalMarketMirageRecord as ProprietaryHistoricalMarketMirageRecord,
+  HistoricalPortfolioDistributionRecord as ProprietaryHistoricalPortfolioDistributionRecord,
+  HistoricalRoleStabilityRecord as ProprietaryHistoricalRoleStabilityRecord,
+  HistoricalValidationAdapterResult as ProprietaryHistoricalValidationAdapterResult,
+  HistoricalValidationAdapterStatus as ProprietaryHistoricalValidationAdapterStatus,
+  HistoricalValidationAdapterSummary as ProprietaryHistoricalValidationAdapterSummary,
+  HistoricalValidationMetricId as ProprietaryHistoricalValidationMetricId,
+  HistoricalValidationRecord as ProprietaryHistoricalValidationRecord,
+  HistoricalValidationSourceReview as ProprietaryHistoricalValidationSourceReview,
+  ShadowMetricEvidenceFixture as ProprietaryShadowMetricEvidenceFixture,
+  ShadowMetricEvidenceFixtureCards as ProprietaryShadowMetricEvidenceFixtureCards,
+  ValidationSplitMetricId as ProprietaryValidationSplitMetricId,
+  ValidationSplitStatus as ProprietaryValidationSplitStatus,
+  MetricResidualConfidenceMeaning as ProprietaryMetricResidualConfidenceMeaning,
+  MetricResidualMetricId as ProprietaryMetricResidualMetricId,
+  MetricResidualPlayInput as ProprietaryMetricResidualPlayInput,
+  MetricResidualRollup as ProprietaryMetricResidualRollup,
+  MetricResidualRollupExposure as ProprietaryMetricResidualRollupExposure,
+  MetricResidualRollupKind as ProprietaryMetricResidualRollupKind,
+  MetricPayloadEnvelope as ProprietaryMetricPayloadEnvelope,
+  MetricPayloadEnvelopeField as ProprietaryMetricPayloadEnvelopeField,
+  MetricPayloadEnvelopeInput as ProprietaryMetricPayloadEnvelopeInput,
+  MetricPayloadEnvelopeMeta as ProprietaryMetricPayloadEnvelopeMeta,
+  MetricPayloadExposure as ProprietaryMetricPayloadExposure,
+  MetricPayloadField as ProprietaryMetricPayloadField,
+  MetricPayloadFieldKind as ProprietaryMetricPayloadFieldKind,
+  MetricPayloadRightsDecision as ProprietaryMetricPayloadRightsDecision,
+  MetricPayloadRightsInput as ProprietaryMetricPayloadRightsInput,
+  MetricSourceRightsDecision as ProprietaryMetricSourceRightsDecision,
+  MetricSourceRightsInput as ProprietaryMetricSourceRightsInput,
+  MetricSourceRightsPolicy as ProprietaryMetricSourceRightsPolicy,
+  MetricSourceRightsRegistryEntry as ProprietaryMetricSourceRightsRegistryEntry,
+  MetricSourceRightsStatus as ProprietaryMetricSourceRightsStatus,
+  MetricSourceRightsUse as ProprietaryMetricSourceRightsUse,
+  MetricValidationReport as ProprietaryMetricValidationReport,
+  SourceRightsEnvelope as ProprietarySourceRightsEnvelope,
+} from "./metrics/core/index.js";
+export { dataReliabilityIndex } from "./metrics/source/data-reliability-index.js";
+export type {
+  DataReliabilityGrade,
+  DataReliabilityIndex,
+  DataReliabilityInput,
+} from "./metrics/source/data-reliability-index.js";
+export { marketGravityIndex as gseMarketGravityIndex } from "./metrics/market/market-gravity-index.js";
+export type {
+  MarketGravityIndex as GseMarketGravityIndex,
+  MarketGravityInput as GseMarketGravityInput,
+  MarketGravitySignal as GseMarketGravitySignal,
+} from "./metrics/market/market-gravity-index.js";
+export { staleLineRiskScore as gseStaleLineRiskScore } from "./metrics/market/stale-line-risk-score.js";
+export type {
+  StaleLineRiskBand as GseStaleLineRiskBand,
+  StaleLineRiskInput as GseStaleLineRiskInput,
+  StaleLineRiskScore as GseStaleLineRiskScore,
+} from "./metrics/market/stale-line-risk-score.js";
+export { marketMirageScore as gseMarketMirageScore } from "./metrics/market/market-mirage-score.js";
+export type {
+  MarketMirageBand as GseMarketMirageBand,
+  MarketMirageScore as GseMarketMirageScore,
+  MarketMirageScoreInput as GseMarketMirageScoreInput,
+  MarketMirageSourcePosture as GseMarketMirageSourcePosture,
+} from "./metrics/market/market-mirage-score.js";
+export { expectedCompletionGse } from "./metrics/passing/expected-completion.js";
+export type {
+  ExpectedCompletionInput,
+  ExpectedCompletionMetric,
+} from "./metrics/passing/expected-completion.js";
+export { qbBurdenIndex } from "./metrics/passing/qb-burden-index.js";
+export type {
+  QbBurdenBand,
+  QbBurdenIndexInput,
+  QbBurdenIndexMetric,
+  QbBurdenSourcePosture,
+} from "./metrics/passing/qb-burden-index.js";
+export { receiverDifficultyIndex } from "./metrics/receiving/receiver-difficulty.js";
+export type {
+  ReceiverDifficultyInput,
+  ReceiverDifficultyMetric,
+} from "./metrics/receiving/receiver-difficulty.js";
+export { expectedYacGse } from "./metrics/receiving/expected-yac.js";
+export type {
+  ExpectedYacInput,
+  ExpectedYacMetric,
+} from "./metrics/receiving/expected-yac.js";
+export { yacCreationGse } from "./metrics/receiving/yac-creation.js";
+export type {
+  YacCreationInput,
+  YacCreationMetric,
+} from "./metrics/receiving/yac-creation.js";
+export { rushEnvironmentIndex } from "./metrics/rushing/rush-environment-index.js";
+export type {
+  RushEnvironmentIndex,
+  RushEnvironmentInput,
+} from "./metrics/rushing/rush-environment-index.js";
+export { expectedRushYardsGse } from "./metrics/rushing/expected-rush-yards.js";
+export type {
+  ExpectedRushYardsInput,
+  ExpectedRushYardsMetric,
+} from "./metrics/rushing/expected-rush-yards.js";
+export { rushOverExpectedGse } from "./metrics/rushing/rush-over-expected.js";
+export type {
+  RushOverExpectedInput,
+  RushOverExpectedMetric,
+} from "./metrics/rushing/rush-over-expected.js";
+export { roleVolatilityIndex } from "./metrics/role/role-volatility-index.js";
+export type {
+  RoleVolatilityBand,
+  RoleVolatilityIndexInput,
+  RoleVolatilityIndexMetric,
+  RoleVolatilitySourcePosture,
+} from "./metrics/role/role-volatility-index.js";
+export { calibrationIntegrityGrade } from "./metrics/calibration/calibration-integrity-grade.js";
+export type {
+  CalibrationIntegrityGradeInput,
+  CalibrationIntegrityGradeMetric,
+  CalibrationIntegrityLetter,
+  CalibrationIntegritySourcePosture,
+} from "./metrics/calibration/calibration-integrity-grade.js";
+export { driftPressureIndex } from "./metrics/calibration/drift-pressure-index.js";
+export type {
+  DriftPressureBand,
+  DriftPressureIndexInput,
+  DriftPressureIndexMetric,
+  DriftPressureSourcePosture,
+} from "./metrics/calibration/drift-pressure-index.js";
+export {
+  conformalUncertaintyWidth,
+  conformalUncertaintyWidthFromReport,
+} from "./metrics/calibration/conformal-uncertainty-width.js";
+export type {
+  ConformalUncertaintyIntervalInput,
+  ConformalUncertaintyWidthBand,
+  ConformalUncertaintyWidthInput,
+  ConformalUncertaintyWidthMetric,
+  ConformalUncertaintyWidthSourcePosture,
+} from "./metrics/calibration/conformal-uncertainty-width.js";
+export { noBetPressureMetric } from "./metrics/decision/no-bet-pressure.js";
+export type {
+  NoBetPressureBand,
+  NoBetPressureInput,
+  NoBetPressureMetric,
+  NoBetPressureSourcePosture,
+} from "./metrics/decision/no-bet-pressure.js";
+export { playableWindowScore } from "./metrics/decision/playable-window-score.js";
+export type {
+  PlayableWindowBand,
+  PlayableWindowScoreInput,
+  PlayableWindowScoreMetric,
+  PlayableWindowSourcePosture,
+} from "./metrics/decision/playable-window-score.js";
+export { portfolioFitScore } from "./metrics/decision/portfolio-fit-score.js";
+export type {
+  PortfolioFitBand,
+  PortfolioFitScoreInput,
+  PortfolioFitScoreMetric,
+  PortfolioFitSourcePosture,
+} from "./metrics/decision/portfolio-fit-score.js";
+export { gseSignalScore } from "./metrics/decision/gse-signal-score.js";
+export type {
+  GseSignalGrade,
+  GseSignalScore,
+  GseSignalScoreInput,
+} from "./metrics/decision/gse-signal-score.js";
+export {
+  GSE_NFL_METRIC_BIRTH_CERTIFICATES,
+  metricBirthCertificate,
+} from "./nfl/metric-birth-certificate.js";
+export type {
+  GseMetricBirthCertificate,
+  GseMetricFamily,
+  MetricPublicExposure,
+} from "./nfl/metric-birth-certificate.js";
+export {
+  clamp as metricClamp,
+  clamp01 as metricClamp01,
+  normalizeClamped as metricNormalizeClamped,
+  sigmoid as metricSigmoid,
+  sortedDrivers as metricSortedDrivers,
+  sourcePoliciesAllowed,
+  uncertaintyFromEvidence,
+  weightedMean as metricWeightedMean,
+} from "./nfl/metric-core.js";
+export type {
+  MetricDirection,
+  MetricDriver,
+  MetricLifecycleStatus,
+  MetricSourcePolicy,
+  MetricSourceStatus,
+  MetricUncertaintyBand,
+} from "./nfl/metric-core.js";
+export { gseExpectedCompletion } from "./nfl/expected-completion.js";
+export type { GseExpectedCompletion, GseExpectedCompletionInput } from "./nfl/expected-completion.js";
+export { gseReceiverDifficulty } from "./nfl/receiver-difficulty.js";
+export type { GseReceiverDifficulty, GseReceiverDifficultyInput } from "./nfl/receiver-difficulty.js";
+export { gseExpectedYac } from "./nfl/expected-yac.js";
+export type { GseExpectedYac, GseExpectedYacInput } from "./nfl/expected-yac.js";
+export { gseRushEnvironment } from "./nfl/rush-environment.js";
+export type { GseRushEnvironment, GseRushEnvironmentInput } from "./nfl/rush-environment.js";
+export { gseQbBurden } from "./nfl/qb-burden.js";
+export type { GseQbBurden, GseQbBurdenInput } from "./nfl/qb-burden.js";
+export { gseRoleVolatility } from "./nfl/role-volatility.js";
+export type { GseRoleVolatility, GseRoleVolatilityInput } from "./nfl/role-volatility.js";
+export {
+  populationStabilityIndex,
+  evaluateMetricDrift,
+} from "./nfl/metric-drift.js";
+export type { MetricDriftInput, MetricDriftResult, MetricDriftStatus } from "./nfl/metric-drift.js";
+export { validateGseMetric } from "./nfl/metric-validation.js";
+export type {
+  GseMetricValidationInput,
+  GseMetricValidationResult,
+  GseMetricValidationStatus,
+} from "./nfl/metric-validation.js";
 // Universal signal ledger — the persistent "weight everything" accumulation layer
 // that bridges stored ledger rows to the composer (NOT wired into the live score).
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
@@ -421,21 +879,36 @@ export type {
   ReplayBacktestReport,
 } from "./replay-harness.js";
 
-// Expected-metrics engine — our OWN expected-value metrics (CPOE / RYOE / xYAC)
-// computed from public play-by-play, plus the ground-truth validation that proves
-// them against Next Gen Stats. Pure, deterministic, fit-on-load. NGS enters ONLY
-// as the y-axis of the validation correlation; what we serve is always our own
-// computation, never re-served NGS figures. See docs/math/GSE_EXPECTED_METRICS.md.
+// R&D — SimHash (random-hyperplane LSH, Charikar) angular-similarity signatures
+// with inverse-magnitude multi-probe querying. Dark, NOT wired into live scoring:
+// the approximate-nearest-neighbor primitive for future "closest historical comp /
+// games like this one" surfaces. See ZK-ML-DUMP-EXTRACTION-LEDGER.md, Cluster B.
 export {
-  // reusable regression primitives
+  buildSimhashModel,
+  signature,
+  hammingDistance,
+  estimatedCosine,
+  multiProbeSignatures,
+  buildSimhashIndex,
+  querySimhashIndex,
+} from "./simhash.js";
+export type {
+  SimhashModel,
+  SimhashSignature,
+  SimhashIndex,
+  SimhashQueryOptions,
+} from "./simhash.js";
+
+// Expected-metrics engine — our OWN expected-value metrics (CPOE / RYOE / xYAC)
+// computed from public play-by-play, proven against Next Gen Stats. Pure,
+// deterministic, fit-on-load; additive and dark. See docs/math/GSE_EXPECTED_METRICS.md.
+export {
   fitRidge,
   predictRidge,
   fitLogistic,
   predictLogistic,
-  // shared contracts
   computeExpectedMetricSchemaHash,
   rollupByPlayer,
-  // expected completion → GSE-CPOE
   fitExpectedCompletionModel,
   predictCompletionProbability,
   computeCpoe,
@@ -443,7 +916,6 @@ export {
   EXPECTED_COMPLETION_MODEL_VERSION,
   MIN_DROPBACKS_TO_FIT,
   DEFAULT_MIN_PASSER_ATTEMPTS,
-  // expected rush yards → GSE-RYOE
   fitExpectedRushModel,
   predictExpectedRushYards,
   computeRyoe,
@@ -451,7 +923,6 @@ export {
   EXPECTED_RUSH_MODEL_VERSION,
   MIN_RUSHES_TO_FIT,
   DEFAULT_MIN_RUSHER_ATTEMPTS,
-  // expected YAC → GSE-xYAC
   fitExpectedYacModel,
   predictExpectedYac,
   computeYacOverExpected,
@@ -459,7 +930,6 @@ export {
   EXPECTED_YAC_MODEL_VERSION,
   MIN_CATCHES_TO_FIT,
   DEFAULT_MIN_RECEIVER_CATCHES,
-  // ground-truth validation (prove it)
   buildCalibrationReport,
   graduationVerdict,
   DEFAULT_GRADUATION_THRESHOLDS,

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/forensic-report-input.schema.json",
+  "type": "object",
+  "required": ["fixture_id", "source_id", "source_freshness", "market_open_probability", "current_model_probability", "event_timestamp", "features"],
+  "properties": {
+    "fixture_id": { "type": "string" },
+    "source_id": { "type": "string" },
+    "source_freshness": { "type": "string" },
+    "market_open_probability": { "type": "number" },
+    "current_model_probability": { "type": "number" },
+    "event_timestamp": { "type": "string" },
+    "features": { "type": "array" }
+  }
+}

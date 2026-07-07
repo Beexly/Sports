@@ -116,6 +116,9 @@ export function PickCard({
             Line: {pick.line > 0 ? "+" : ""}{pick.line}
           </p>
         )}
+        {pick.lineMovement && (
+          <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} />
+        )}
       </div>
 
       {/* Scores row: confidence + edge + risk */}
@@ -178,6 +181,21 @@ export function PickCard({
           </div>
         )}
       </div>
+
+      {/* Tamper-evident receipt: frozen before kickoff, verifiable by anyone. */}
+      {pick.receiptHash && (
+        <Link
+          href={`/verify?hash=${pick.receiptHash}`}
+          className="group flex items-center gap-1.5 font-mono text-[10px] text-ion-2 transition-colors hover:text-orbital-cyan"
+          title="This pick was frozen into a SHA-256 receipt before kickoff. Click to verify it was never edited."
+        >
+          <span aria-hidden>⛓</span>
+          Receipt {pick.receiptHash.slice(0, 10)}…
+          <span className="underline decoration-dotted underline-offset-2 group-hover:decoration-solid">
+            verify
+          </span>
+        </Link>
+      )}
 
       {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
       <div className="flex items-center justify-stretch sm:justify-end">
@@ -431,13 +449,67 @@ function ConfidenceBadge({
       </span>
     );
   }
+  // Uncalibrated fallback: render the raw heuristic as a SCORE ("72/100"), not
+  // a percent — "%" reads as a win probability, which this number is not
+  // (audit fix; the aria-label already honestly said "out of 100").
   return (
     <span
       className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(confidence)}`}
       aria-label={`Model confidence: ${confidence} out of 100`}
     >
-      {confidence}%
+      {confidence}/100
     </span>
+  );
+}
+
+/**
+ * Format opening -> current movement honestly per market type. TOTAL lines are
+ * side-free, so the full open/now pair is shown. SPREAD lines are stored in
+ * HOME-team perspective (see the selection-box comment above), so asserting
+ * "opened -6.5, now -7.5" next to an away-side selection would read wrong;
+ * spreads show movement magnitude only, with the home-perspective pair in the
+ * tooltip for anyone who wants the raw numbers.
+ */
+export function formatLineMovement(
+  movement: { opening: number; current: number },
+  pickType: "SPREAD" | "MONEYLINE" | "TOTAL",
+): { label: string; title: string; moved: boolean } {
+  const delta = movement.current - movement.opening;
+  const magnitude = Math.round(Math.abs(delta) * 10) / 10;
+  const title = `Opening line ${movement.opening} · current ${movement.current} (home-team perspective)`;
+  if (magnitude < 0.05) {
+    return { label: "Unmoved since open", title, moved: false };
+  }
+  if (pickType === "TOTAL") {
+    return {
+      label: `Opened ${movement.opening} · now ${movement.current}`,
+      title,
+      moved: true,
+    };
+  }
+  return { label: `Moved ${magnitude} since open`, title, moved: true };
+}
+
+function LineMovementChip({
+  movement,
+  pickType,
+}: {
+  movement: { opening: number; current: number };
+  pickType: "SPREAD" | "MONEYLINE" | "TOTAL";
+}) {
+  const { label, title, moved } = formatLineMovement(movement, pickType);
+  return (
+    <p
+      className={`mt-1 inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[11px] ${
+        moved
+          ? "border-plasma/40 bg-plasma/10 text-plasma"
+          : "border-titanium text-ion-2"
+      }`}
+      title={title}
+    >
+      <span aria-hidden>{moved ? "⇄" : "·"}</span>
+      {label}
+    </p>
   );
 }
 

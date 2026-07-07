@@ -143,7 +143,17 @@ export function PunditLedger({
 
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t pt-3 text-[11px] text-ink-400" style={{ borderColor: BRAND_COLORS.steelGray }}>
           <span>Checkable rate: <strong className="text-ink-200">{Math.round(selected.falsifiableRate * 100)}%</strong></span>
-          <span>On decided calls: <strong className="text-ink-200">{selected.hitRate === null ? "—" : `${Math.round(selected.hitRate * 100)}% hit`}</strong></span>
+          <span>
+            Decided calls:{" "}
+            <strong className="text-ink-200">
+              {selected.hitRate === null
+                ? "—"
+                : `${selected.hits} of ${selected.hits + selected.misses} hit (${Math.round(selected.hitRate * 100)}%)`}
+            </strong>
+            {selected.hitRateBandPct && (
+              <span className="text-ink-500"> · 95% band {selected.hitRateBandPct.low}–{selected.hitRateBandPct.high}%</span>
+            )}
+          </span>
           <span>Claims logged: <strong className="text-ink-200">{selected.total}</strong></span>
         </div>
 

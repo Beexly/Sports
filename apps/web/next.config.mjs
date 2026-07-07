@@ -27,6 +27,7 @@ const nextConfig = {
     outputFileTracingIncludes: {
       "/stats/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
       "/admin/statking/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
+      "/fable": ["../../docs/fable/**/*"],
     },
   },
   webpack: (config) => {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   merkleRoot,
+  merkleRootFromLeafHashes,
   inclusionProof,
   verifyInclusion,
   canonicalPickPayload,
@@ -61,5 +62,17 @@ describe("proof-of-record (Merkle commitment)", () => {
     const a = canonicalPickPayload({ gameId: "g1", side: "home", line: -110, modelVersion: "v5" });
     const b = canonicalPickPayload({ modelVersion: "v5", line: -110, side: "home", gameId: "g1" });
     expect(a).toBe(b);
+  });
+
+  it("merkleRootFromLeafHashes reproduces merkleRoot from pre-hashed leaves (the /verify/slate re-fold path)", () => {
+    // A receipt's contentHash IS its leaf, so a verifier holding only the
+    // public fingerprints must reach the same root the full records produce —
+    // including the odd-count duplication case (5 records) and the empty set.
+    const leaves = records.map((r) => hashLeaf(fnv1a, r));
+    expect(merkleRootFromLeafHashes(leaves, fnv1a)).toBe(merkleRoot(records, fnv1a));
+    expect(merkleRootFromLeafHashes(leaves.slice(0, 4), fnv1a)).toBe(merkleRoot(records.slice(0, 4), fnv1a));
+    expect(merkleRootFromLeafHashes([], fnv1a)).toBe(merkleRoot([], fnv1a));
+    // Order matters — a permuted list is a DIFFERENT commitment.
+    expect(merkleRootFromLeafHashes([...leaves].reverse(), fnv1a)).not.toBe(merkleRoot(records, fnv1a));
   });
 });

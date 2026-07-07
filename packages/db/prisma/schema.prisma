@@ -3,6 +3,11 @@
 
 generator client {
   provider = "prisma-client-js"
+  // driverAdapters unlocks the Neon serverless HTTP driver (see
+  // src/neon-serverless-adapter.ts): serverless-friendly connections that
+  // survive the cold-start flakiness of raw TCP to Neon. Inert unless
+  // NEON_SERVERLESS_DRIVER=true at runtime.
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
