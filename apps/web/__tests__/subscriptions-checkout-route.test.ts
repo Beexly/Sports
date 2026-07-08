@@ -22,6 +22,7 @@ vi.mock("@/lib/stripe", () => ({
 }));
 
 import { POST } from "@/app/api/subscriptions/checkout/route";
+import { resetRateLimits } from "@/lib/api/rate-limit";
 
 function checkoutRequest(body: unknown): NextRequest {
   return new NextRequest("http://localhost/api/subscriptions/checkout", {
@@ -35,6 +36,7 @@ const user = { id: "user_1", email: "pro@example.com", name: "Pro User" };
 
 describe("POST /api/subscriptions/checkout", () => {
   beforeEach(() => {
+    resetRateLimits();
     mocks.auth.mockReset();
     mocks.getStripePriceId.mockReset();
     mocks.getOrCreateStripeCustomer.mockReset();
@@ -98,5 +100,22 @@ describe("POST /api/subscriptions/checkout", () => {
     mocks.createCheckoutSession.mockRejectedValue(new Error("stripe unreachable"));
     const res = await POST(checkoutRequest({ tier: "PRO" }));
     expect(res.status).toBe(500);
+  });
+
+  it("rate-limits runaway checkout attempts per user (429 with Retry-After)", async () => {
+    for (let i = 0; i < 10; i++) {
+      const res = await POST(checkoutRequest({ tier: "PRO" }));
+      expect(res.status).toBe(200);
+    }
+    const blocked = await POST(checkoutRequest({ tier: "PRO" }));
+    expect(blocked.status).toBe(429);
+    expect(blocked.headers.get("Retry-After")).toBeTruthy();
+    // 10 sessions were created, not 11 — the limiter stopped Stripe resource creation.
+    expect(mocks.createCheckoutSession).toHaveBeenCalledTimes(10);
+
+    // A different user is unaffected (per-user buckets).
+    mocks.auth.mockResolvedValue({ user: { ...user, id: "user_2" } });
+    const other = await POST(checkoutRequest({ tier: "PRO" }));
+    expect(other.status).toBe(200);
   });
 });

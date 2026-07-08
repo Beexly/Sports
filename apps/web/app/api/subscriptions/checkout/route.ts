@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
   getStripePriceId,
   getOrCreateStripeCustomer,
@@ -16,6 +17,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Defense-in-depth on Stripe resource creation: 10 checkout attempts / 5 min
+  // per user is far above any legitimate buyer (a retry or two) but stops a
+  // looping client from minting unbounded checkout sessions/customers.
+  const limit = consumeRateLimit("subscriptions-checkout", session.user.id, 10, 5 * 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many checkout attempts. Please wait a moment and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
   }
 
   const body = await req.json();
