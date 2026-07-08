@@ -312,6 +312,21 @@ stateful client button (interaction refactor, fits the Claude Design prompt). CL
 global prefers-reduced-motion guard, mobile-nav drawer focus mgmt, sport tabs/grade filter
 sizing, focus-visible rings, bright-accent tokens all pass AA.
 
+## Content pipeline honesty audit — 2026-07-08
+
+FIXED + pushed: F1 (HIGH) the numeric-grounding guard (validateNumericClaims) was dead
+code — now wired into BOTH the live Model Journal generator and the (dormant) blog
+generator; any stat-shaped number in a draft that wasn't in the prompt (fabricated
+record like 9-2, invented win rate, hallucinated factor stat) is blocked as
+UNGROUNDED_NUMERIC at generation time. F2 (MED/HIGH) the public journal prompt fed raw
+paid confidence + internal edge numbers to the model — now qualitative bands only.
+DEFERRED: F4 (LOW) blog free-tier teaser is a client-side blur of ~300 chars of the
+premium body (full body is correctly server-gated); truncate to a plain-text teaser
+server-side. CLEAN (verified): no auto-publish anywhere (create→DRAFT, submit→
+REVIEW_PENDING, publish is out-of-band operator action; draft-only guardrail in CI);
+draft/unpublished never leak to list/RSS/sitemap/JSON-LD; existing guards block not warn;
+JSON-LD XSS-escaped; published journal entries immutable.
+
 ## Remaining queue (not yet done)
 
 - **Un-reviewed subsystems** (breadth waves): workers ✅ **all four reviewed** (deploy
