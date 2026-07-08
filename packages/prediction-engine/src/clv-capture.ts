@@ -141,9 +141,10 @@ export function deriveClosingSnapshotFromOdds(
  * the derived closing snapshot. Returns null when the close has no comparable
  * number (no coverage of that market at kickoff) — we never invent a close.
  *
- * Side is derived the same way settlement does: SPREAD/MONEYLINE are HOME when
- * the selection names the home team; TOTAL is OVER when the selection starts
- * with "OVER".
+ * Side is derived the same way settlement does (boundary-aware team match, so a
+ * team whose name is a string prefix of another can never invert the side):
+ * SPREAD/MONEYLINE are HOME when the selection names the home team; TOTAL is
+ * OVER when the selection starts with "OVER".
  */
 export function gradePickClv(args: {
   readonly pickType: PickKind;
@@ -157,7 +158,8 @@ export function gradePickClv(args: {
 
   if (pickType === "MONEYLINE") {
     if (lockPrice == null) return null;
-    const side: SpreadSide = selection.startsWith(homeTeamName) ? "HOME" : "AWAY";
+    const side: SpreadSide =
+      selection === homeTeamName || selection.startsWith(homeTeamName + " ") ? "HOME" : "AWAY";
     const closePrice = side === "HOME" ? close.mlHomePrice : close.mlAwayPrice;
     if (closePrice == null) return null;
     const r = computeMoneylineClv(lockPrice, closePrice);
@@ -172,7 +174,8 @@ export function gradePickClv(args: {
 
   if (pickType === "SPREAD") {
     if (lockLine == null || close.spreadHome == null) return null;
-    const side: SpreadSide = selection.startsWith(homeTeamName) ? "HOME" : "AWAY";
+    const side: SpreadSide =
+      selection === homeTeamName || selection.startsWith(homeTeamName + " ") ? "HOME" : "AWAY";
     const r = computeSpreadClv(lockLine, close.spreadHome, side);
     return {
       kind: "POINTS",

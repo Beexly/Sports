@@ -98,6 +98,27 @@ function buildMissingContextEvidence(fetchedAt: Date): EvidenceRecord[] {
  * @param gates      - Readiness gates (read once per cycle by the caller)
  * @param logPrefix  - Log prefix for distinguishing caller context, e.g. "[data-refresh]"
  */
+/**
+ * The side of the market a selection string represents — the pick's identity.
+ * Formats are exactly what scoring emits (scoring.ts): SPREAD `"<team> -3.5"`,
+ * TOTAL `"OVER 8.5"` / `"UNDER 9.0"`, MONEYLINE `"<team> ML (-150)"`. A line
+ * move keeps the side ("Celtics -3.5" → "Celtics -4.0" → both "Celtics"); a
+ * flip changes it ("OVER 8.5" → "UNDER 9.0"). Exported for tests.
+ */
+export function pickSelectionSide(pickType: string, selection: string): string {
+  const trimmed = selection.trim();
+  if (pickType === "TOTAL") {
+    return (trimmed.split(" ")[0] ?? trimmed).toUpperCase(); // OVER | UNDER
+  }
+  if (pickType === "MONEYLINE") {
+    const mlIdx = trimmed.indexOf(" ML");
+    return mlIdx > 0 ? trimmed.slice(0, mlIdx) : trimmed; // the team name
+  }
+  // SPREAD: strip the trailing points token (e.g. "-3.5", "+7").
+  const lastSpace = trimmed.lastIndexOf(" ");
+  return lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
+}
+
 export async function processSport(
   sport: SportConfig,
   apiKey: string,
@@ -380,12 +401,30 @@ export async function processSport(
       // a unique-key upsert, so check first and skip the rewrite when settled.
       const existingPick = await db.pick.findUnique({
         where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-        select: { id: true, result: true },
+        select: { id: true, result: true, selection: true },
       });
 
       let upsertedPick: { id: string };
       if (existingPick && existingPick.result !== "PENDING") {
         // Frozen — leave the settled pick exactly as graded.
+        upsertedPick = { id: existingPick.id };
+      } else if (
+        existingPick &&
+        pickSelectionSide(pick.pickType, existingPick.selection) !==
+          pickSelectionSide(pick.pickType, pick.selection)
+      ) {
+        // SIDE FLIP — the model now prefers the OTHER side of this market.
+        // The published pick's identity is its side: its CLV lock (create-only)
+        // and proof receipt (immutable) were minted for the ORIGINAL side, so
+        // rewriting selection/line here would grade the customer-visible pick
+        // against the other side's locked numbers — fabricated CLV, wrong-line
+        // settlement, and a receipt that provably mismatches the display. Keep
+        // the pick exactly as published; surface the flip for the operator.
+        console.warn(
+          `${logPrefix} SIDE FLIP frozen: ${sport.key} ${pick.pickType} kept ` +
+            `"${existingPick.selection}" (model now prefers "${pick.selection}"). ` +
+            "Published picks are never silently reversed."
+        );
         upsertedPick = { id: existingPick.id };
       } else {
         // Upsert by DB-enforced unique key [gameId, pickType].

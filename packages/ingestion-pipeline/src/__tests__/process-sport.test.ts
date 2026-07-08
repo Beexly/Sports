@@ -37,7 +37,7 @@ const mocks = vi.hoisted(() => ({
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
-  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string } | null>>(),
+  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
 }));
 
@@ -85,7 +85,7 @@ vi.mock("../source-snapshot.js", () => ({
   recordSourceSnapshot: vi.fn().mockResolvedValue(undefined),
 }));
 
-import { processSport } from "../process-sport.js";
+import { processSport, pickSelectionSide } from "../process-sport.js";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
 
@@ -247,6 +247,36 @@ describe("processSport", () => {
     expect(mocks.pickUpsert).not.toHaveBeenCalled();
   });
 
+  it("freezes a PENDING pick whose SIDE flipped — published picks are never silently reversed", async () => {
+    // Published "Raiders +3.5"; the model now prefers the other side of the
+    // same market. The CLV lock and proof receipt were minted for the Raiders
+    // side, so the rewrite must be frozen, not applied.
+    mocks.pickFindUnique.mockResolvedValue({
+      id: "pick-1",
+      result: "PENDING",
+      selection: "Raiders +3.5",
+    });
+    mocks.scoreGames.mockReturnValue([scoredPick({ selection: "Chiefs -3.5" })]);
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(result.status).toBe("success");
+    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+  });
+
+  it("a line move on the SAME side still refreshes (no false flip-freeze)", async () => {
+    mocks.pickFindUnique.mockResolvedValue({
+      id: "pick-1",
+      result: "PENDING",
+      selection: "Chiefs -4.0",
+    });
+    mocks.scoreGames.mockReturnValue([scoredPick({ selection: "Chiefs -3.5" })]);
+
+    await processSport(SPORT, "key", gates());
+
+    expect(mocks.pickUpsert).toHaveBeenCalledTimes(1);
+  });
+
   it("locks the American price (not the line) for moneyline picks", async () => {
     mocks.scoreGames.mockReturnValue([scoredPick({ pickType: "MONEYLINE", line: -135 })]);
 
@@ -306,5 +336,35 @@ describe("processSport", () => {
 
     expect(result.status).toBe("success");
     expect(result.picks).toBe(1);
+  });
+});
+
+describe("pickSelectionSide", () => {
+  it("derives OVER/UNDER for totals regardless of the number", () => {
+    expect(pickSelectionSide("TOTAL", "OVER 8.5")).toBe("OVER");
+    expect(pickSelectionSide("TOTAL", "UNDER 9.0")).toBe("UNDER");
+    expect(pickSelectionSide("TOTAL", "OVER 8.5")).not.toBe(
+      pickSelectionSide("TOTAL", "UNDER 8.5"),
+    );
+  });
+
+  it("derives the team for moneylines (multi-word names included)", () => {
+    expect(pickSelectionSide("MONEYLINE", "Kansas City Chiefs ML (-150)")).toBe(
+      "Kansas City Chiefs",
+    );
+    expect(pickSelectionSide("MONEYLINE", "Jets ML (+130)")).toBe("Jets");
+  });
+
+  it("derives the team for spreads by stripping only the trailing points token", () => {
+    expect(pickSelectionSide("SPREAD", "Los Angeles Lakers -3.5")).toBe("Los Angeles Lakers");
+    expect(pickSelectionSide("SPREAD", "Chiefs +7")).toBe("Chiefs");
+    // A pure line move is NOT a side change…
+    expect(pickSelectionSide("SPREAD", "Chiefs -4.0")).toBe(
+      pickSelectionSide("SPREAD", "Chiefs -3.5"),
+    );
+    // …but the other team is.
+    expect(pickSelectionSide("SPREAD", "Raiders +3.5")).not.toBe(
+      pickSelectionSide("SPREAD", "Chiefs -3.5"),
+    );
   });
 });
