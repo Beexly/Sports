@@ -10,6 +10,8 @@ import {
   getCurrentMonthClaudeSpendUsd,
   getUtcMonthWindow,
 } from "@/lib/claude-api/usage-store";
+import { getCreditPoolBreakdown } from "@/lib/claude-api/credit-pool-store";
+import type { CreditPoolTotals } from "@/lib/claude-api/credit-pool";
 
 export interface ClaudeApiCostSurfaceSummary {
   readonly surface: ClaudeApiSurface;
@@ -41,6 +43,12 @@ export interface ClaudeApiCostsDashboard {
   readonly totalSpentUsd: number;
   readonly totalBudgetUsd: number;
   readonly recentErrors: readonly ClaudeApiRecentError[];
+  /**
+   * Spend attributed to the credit pool that paid for it (Bedrock→AWS Activate,
+   * Vertex→partner credit, direct→Anthropic/cash). Shows how much of each program's
+   * credits we're actually burning. Empty until a provider is activated.
+   */
+  readonly creditPools: readonly CreditPoolTotals[];
 }
 
 export async function loadClaudeApiCostsDashboard(now = new Date()): Promise<ClaudeApiCostsDashboard> {
@@ -73,20 +81,23 @@ export async function loadClaudeApiCostsDashboard(now = new Date()): Promise<Cla
     })
   );
 
-  const recentErrors = await db.claudeApiCallRecord.findMany({
-    where: { success: false },
-    orderBy: { observedAt: "desc" },
-    take: 8,
-    select: {
-      id: true,
-      surface: true,
-      modelName: true,
-      errorKind: true,
-      gameId: true,
-      templateKind: true,
-      observedAt: true,
-    },
-  });
+  const [recentErrors, creditPools] = await Promise.all([
+    db.claudeApiCallRecord.findMany({
+      where: { success: false },
+      orderBy: { observedAt: "desc" },
+      take: 8,
+      select: {
+        id: true,
+        surface: true,
+        modelName: true,
+        errorKind: true,
+        gameId: true,
+        templateKind: true,
+        observedAt: true,
+      },
+    }),
+    getCreditPoolBreakdown(now),
+  ]);
 
   return {
     generatedAtIso: now.toISOString(),
@@ -104,5 +115,6 @@ export async function loadClaudeApiCostsDashboard(now = new Date()): Promise<Cla
       templateKind: error.templateKind,
       observedAtIso: error.observedAt.toISOString(),
     })),
+    creditPools,
   };
 }
