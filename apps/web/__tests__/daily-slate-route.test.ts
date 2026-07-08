@@ -68,4 +68,23 @@ describe("/api/picks/daily-slate", () => {
     expect(body.data["premiumPickCount"]).toBe(0);
     expect(body.data["isSampleData"]).toBe(false);
   });
+
+  it("sportBreakdown counts real picks per sport (not just demo samples), sorted by count", async () => {
+    process.env["DEMO_PICKS_ENABLED"] = "false";
+    const { body } = await callGet();
+    // Stub DB returns no picks → honest-empty breakdown, same shape as demo mode.
+    expect(body.data["sportBreakdown"]).toEqual([]);
+
+    // Demo mode still counts the sample picks by sport.
+    process.env["DEMO_PICKS_ENABLED"] = "true";
+    const demo = await callGet();
+    const breakdown = demo.body.data["sportBreakdown"] as { sport: string; pickCount: number }[];
+    expect(breakdown.length).toBeGreaterThan(0);
+    const totalFromBreakdown = breakdown.reduce((sum, s) => sum + s.pickCount, 0);
+    expect(totalFromBreakdown).toBe(demo.body.data["totalPicks"]);
+    // Sorted by descending pickCount.
+    for (let i = 1; i < breakdown.length; i++) {
+      expect(breakdown[i - 1]!.pickCount).toBeGreaterThanOrEqual(breakdown[i]!.pickCount);
+    }
+  });
 });

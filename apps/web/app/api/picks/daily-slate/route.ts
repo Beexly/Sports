@@ -59,17 +59,16 @@ export async function GET() {
   const excludeSeedInProd =
     process.env["NODE_ENV"] === "production" ? { NOT: { modelVersion: "v5.0.0-seed" } } : {};
 
-  const totalPicks = await db.pick
-    .count({
-      where: {
-        isPublished: true,
-        result: "PENDING",
-        isBootstrap: false,
-        game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
-        ...excludeSeedInProd,
-      },
-    })
-    .catch(() => 0);
+  // Shared published-pick filter for every count on this slate (matches /api/picks).
+  const baseWhere = {
+    isPublished: true,
+    result: "PENDING" as const,
+    isBootstrap: false,
+    game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+    ...excludeSeedInProd,
+  };
+
+  const totalPicks = await db.pick.count({ where: baseWhere }).catch(() => 0);
 
   const samples = demoActive ? getSamplePicks() : [];
   let totalGames: number;
@@ -82,13 +81,6 @@ export async function GET() {
     // Deriving totalGames/free/premium from `samples` in prod published a
     // self-contradictory "Games Today: 0" next to a non-zero Total Picks and
     // mislabelled every FREE-tier pick as premium (premium = total − 0).
-    const baseWhere = {
-      isPublished: true,
-      result: "PENDING" as const,
-      isBootstrap: false,
-      game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
-      ...excludeSeedInProd,
-    };
     freePickCount = await db.pick
       .count({ where: { ...baseWhere, tier: "FREE" } })
       .catch(() => 0);
@@ -99,14 +91,31 @@ export async function GET() {
   }
   const premiumPickCount = Math.max(0, totalPicks - freePickCount);
 
-  // Sport breakdown
+  // Sport breakdown — demo mode counts the sample picks; production groups the
+  // REAL published picks by sport (this was honest-empty before the grouped query
+  // existed). A day's slate is bounded, so selecting the sport name per pick and
+  // counting in-process is simpler and correct (Prisma groupBy can't traverse the
+  // pick→game→sport relation). On a DB error, fall back to [] — never fabricate.
   const sportCount = new Map<string, number>();
-  for (const p of samples) {
-    sportCount.set(p.game.sport.name, (sportCount.get(p.game.sport.name) ?? 0) + 1);
+  if (demoActive) {
+    for (const p of samples) {
+      sportCount.set(p.game.sport.name, (sportCount.get(p.game.sport.name) ?? 0) + 1);
+    }
+  } else {
+    const sportRows = await db.pick
+      .findMany({
+        where: baseWhere,
+        select: { game: { select: { sport: { select: { name: true } } } } },
+      })
+      .catch(() => [] as { game: { sport: { name: string } } }[]);
+    for (const row of sportRows) {
+      const name = row.game.sport.name;
+      sportCount.set(name, (sportCount.get(name) ?? 0) + 1);
+    }
   }
-  const sportBreakdown = Array.from(sportCount.entries()).map(
-    ([sport, pickCount]) => ({ sport, pickCount })
-  );
+  const sportBreakdown = Array.from(sportCount.entries())
+    .map(([sport, pickCount]) => ({ sport, pickCount }))
+    .sort((a, b) => b.pickCount - a.pickCount || a.sport.localeCompare(b.sport));
   let recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
   if (gates.canExposePerformanceStats) {
     recentRecord = { wins: 0, losses: 0, pushes: 0, period: "Last 7 days" };
