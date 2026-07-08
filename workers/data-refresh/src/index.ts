@@ -30,7 +30,12 @@ import { processSport, settleSport } from "@sports/ingestion-pipeline";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
 
-async function runRefreshCycle(): Promise<void> {
+interface CycleSummary {
+  readonly total: number;
+  readonly failed: number;
+}
+
+async function runRefreshCycle(): Promise<CycleSummary> {
   const apiKey = process.env["THE_ODDS_API_KEY"];
   if (!apiKey) throw new Error("THE_ODDS_API_KEY not set");
 
@@ -49,13 +54,26 @@ async function runRefreshCycle(): Promise<void> {
   }
 
   // In-season sports only (cost control). Override: ODDS_REFRESH_ALL_SPORTS=true.
+  // processSport never throws (it returns status:"failed"), so failures are
+  // aggregated here — a fully-failed cycle must be loud, not "Cycle complete".
+  let total = 0;
+  let failed = 0;
   for (const sport of getInSeasonSports()) {
-    await processSport(sport, apiKey, gates, "[data-refresh]");
+    const result = await processSport(sport, apiKey, gates, "[data-refresh]");
+    total += 1;
+    if (result.status === "failed") failed += 1;
     // Brief pause between sports to avoid saturating the API
     await new Promise((r) => setTimeout(r, 1000));
   }
 
-  console.log(`[data-refresh] Cycle complete ${new Date().toISOString()}`);
+  if (failed > 0) {
+    console.error(
+      `[data-refresh] ${failed}/${total} in-season sports FAILED this cycle — ` +
+      "check THE_ODDS_API_KEY validity, API quota, and upstream status."
+    );
+  }
+  console.log(`[data-refresh] Cycle complete ${new Date().toISOString()} (${total - failed}/${total} sports ok)`);
+  return { total, failed };
 }
 
 async function settleResults(): Promise<void> {
@@ -66,12 +84,36 @@ async function settleResults(): Promise<void> {
   // the single source of truth shared with the Vercel settle-picks cron, so the
   // two settlement paths can never drift.
   const gates = getReadinessGates();
+  let failed = 0;
   for (const sport of SUPPORTED_SPORTS) {
-    await settleSport(sport, apiKey, gates, "[settlement]");
+    const result = await settleSport(sport, apiKey, gates, "[settlement]");
+    if (result.status === "failed") failed += 1;
     // Brief pause between sports to avoid saturating the scores endpoint.
     await new Promise((r) => setTimeout(r, 750));
   }
+  if (failed > 0) {
+    console.error(`[settlement] ${failed}/${SUPPORTED_SPORTS.length} sports FAILED settlement this cycle.`);
+  }
 }
+
+// Graceful shutdown: `docker stop` sends SIGTERM (10s grace, then SIGKILL). An
+// idle worker exits immediately; a mid-cycle worker finishes the cycle and exits
+// from the loop's `finally`, so IngestionRun rows aren't abandoned in RUNNING.
+let shuttingDown = false;
+let pendingTimer: NodeJS.Timeout | null = null;
+let cycleInFlight = false;
+
+function requestShutdown(signal: string): void {
+  console.log(`[data-refresh] ${signal} received — ${cycleInFlight ? "finishing current cycle, then exiting" : "exiting"}.`);
+  shuttingDown = true;
+  if (pendingTimer) {
+    clearTimeout(pendingTimer);
+    pendingTimer = null;
+  }
+  if (!cycleInFlight) process.exit(0);
+}
+process.on("SIGTERM", () => requestShutdown("SIGTERM"));
+process.on("SIGINT", () => requestShutdown("SIGINT"));
 
 async function main(): Promise<void> {
   const gates = getReadinessGates();
@@ -80,9 +122,17 @@ async function main(): Promise<void> {
   console.log(`[data-refresh] Derived history enabled: ${gates.canUseDerivedHistory}`);
   console.log(`[data-refresh] Featured promotion enabled: ${gates.canPromoteFeaturedPicks}`);
 
-  // First cycle runs fail-fast: an error here propagates to main().catch and
-  // exits the process (startup readiness check).
-  await runRefreshCycle();
+  // Startup readiness check. processSport catches its own errors (returning
+  // status:"failed"), so a bad API key doesn't throw — it fails every sport. If
+  // the ENTIRE first cycle fails, exit non-zero so the deploy is visibly broken
+  // instead of logging "Cycle complete" with zero picks forever.
+  const first = await runRefreshCycle();
+  if (first.total > 0 && first.failed === first.total) {
+    throw new Error(
+      `startup readiness check failed: all ${first.total} in-season sports failed the first cycle ` +
+      "(likely an invalid THE_ODDS_API_KEY, exhausted quota, or an upstream/DB outage)"
+    );
+  }
   await settleResults();
 
   // Recurring cycles are self-scheduling: the next cycle is armed only AFTER the
@@ -92,13 +142,20 @@ async function main(): Promise<void> {
   // next — doubling Odds API request volume and racing concurrent creates on the
   // immutable PickSignalSnapshot rows. Re-arming after await makes overlap impossible.
   const scheduleNextCycle = (): void => {
-    setTimeout(async () => {
+    if (shuttingDown) return;
+    pendingTimer = setTimeout(async () => {
+      cycleInFlight = true;
       try {
         await runRefreshCycle();
         await settleResults();
       } catch (err) {
         console.error("[data-refresh] Unhandled error:", err instanceof Error ? err.message : err);
       } finally {
+        cycleInFlight = false;
+        if (shuttingDown) {
+          console.log("[data-refresh] Cycle finished during shutdown — exiting.");
+          process.exit(0);
+        }
         scheduleNextCycle();
       }
     }, REFRESH_INTERVAL_MS);
