@@ -4,6 +4,11 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
 import { jsonLdScript } from "@/lib/seo/json-ld";
+import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
+
+// Phase-derived prices so this page can never advertise a rate checkout won't
+// honor when PRICING_PHASE advances (same source of truth as /pricing).
+const phase = getCurrentPricingPhase();
 
 /**
  * /faq — Standalone FAQ landing page with FAQPage JSON-LD.
@@ -85,11 +90,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What does Pro get?",
-        a: "$14.99/month, or $99/year. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement alerts.",
+        a: `$${phase.pro.monthly}/month, or $${phase.pro.annual}/year. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement intel on every pick.`,
       },
       {
         q: "What does Elite get?",
-        a: "$24.99/month, or $179/year. Everything in Pro plus email and push notifications for high-Edge-Index signals as they ship.",
+        a: `$${phase.elite.monthly}/month, or $${phase.elite.annual}/year. Everything in Pro plus email and push notifications for high-Edge-Index signals as they ship.`,
       },
       {
         q: "Is there a refund window?",
@@ -97,7 +102,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Will pricing change?",
-        a: "Free stays free. Pro is $14.99/month, Elite is $24.99/month. Founding-member rates locked for the life of your subscription. As the verified record grows and prices rise for new members, yours never does.",
+        a: `Free stays free. Pro is $${phase.pro.monthly}/month, Elite is $${phase.elite.monthly}/month at the current ${phase.name} rate, locked for the life of your subscription. The full price ladder is public on the pricing page: each step up is triggered by a verified proof milestone, and when prices rise for new members, yours never does.`,
       },
     ],
   },

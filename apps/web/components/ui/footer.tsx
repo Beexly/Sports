@@ -4,6 +4,7 @@ import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
 
 const PRODUCT_LINKS = [
+  { label: "Today's Picks", href: "/picks" },
   { label: "The NFL House", href: "/house" },
   { label: "Today's Board", href: "/board" },
   { label: "Galaxy Twin", href: "/observatory" },

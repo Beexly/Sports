@@ -41,13 +41,22 @@ describe("public pricing honesty", () => {
     expect(pricing).toContain("PricingPlans");
   });
 
-  it("shows the founding monthly prices on FAQ and picks surfaces", () => {
+  it("FAQ and picks derive their displayed prices from the phase module (can never go stale)", () => {
+    // Stronger than pinning literals: these surfaces now interpolate from
+    // getCurrentPricingPhase(), the same source checkout reads — so advancing
+    // PRICING_PHASE can never leave a page advertising a price checkout won't honor.
     const faq = readRepoFile("apps/web/app/faq/page.tsx");
     const picks = readRepoFile("apps/web/app/picks/page.tsx");
-    expect(faq).toContain(`$${FOUNDING.pro.monthly}/month`);
-    expect(faq).toContain(`$${FOUNDING.elite.monthly}/month`);
-    expect(picks).toContain(`Upgrade to Pro · $${FOUNDING.pro.monthly}/mo`);
-    expect(picks).toContain(`Upgrade to Elite · $${FOUNDING.elite.monthly}/mo`);
+    expect(faq).toContain("getCurrentPricingPhase");
+    expect(faq).toContain("${phase.pro.monthly}/month");
+    expect(faq).toContain("${phase.elite.monthly}/month");
+    expect(picks).toContain("getCurrentPricingPhase");
+    expect(picks).toContain("Upgrade to Pro · $${phase.pro.monthly}/mo");
+    expect(picks).toContain("Upgrade to Elite · $${phase.elite.monthly}/mo");
+    // No stale hardcoded founding prices left behind on either surface.
+    expect(faq).not.toContain("$14.99/month");
+    expect(picks).not.toContain("· $14.99/mo");
+    expect(picks).not.toContain("· $24.99/mo");
   });
 
   it("retires weekly billing from every public pricing surface", () => {

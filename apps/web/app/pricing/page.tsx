@@ -9,6 +9,7 @@ import {
   annualSavingsPct,
   annualMonthlyEquivalent,
   GRANDFATHER_GUARANTEE as LIFETIME_PRICE_NOTE,
+  PRICING_PHASES,
 } from "@/lib/pricing/pricing-phases";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { Reveal } from "@/components/motion/reveal";
@@ -268,7 +269,8 @@ export default function PricingPage() {
             <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
           </div>
 
-          {/* Why each step up — the value ladder (incl. the Operator waitlist) */}
+          {/* Why each step up — the value ladder (live tiers only; hidden tiers
+              like Operator are filtered out until they graduate to live). */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Why each step up</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
@@ -280,16 +282,9 @@ export default function PricingPage() {
                   key={t.id}
                   className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5"
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-400">
-                      {t.name}
-                    </p>
-                    {t.status === "waitlist" && (
-                      <span className="rounded-full border border-titanium px-2 py-0.5 text-[10px] font-medium text-ink-300">
-                        Waitlist
-                      </span>
-                    )}
-                  </div>
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-400">
+                    {t.name}
+                  </p>
                   <p className="mt-2 text-base font-semibold text-white">{t.promise}</p>
                   <p className="mt-1 text-xs text-ink-400">{t.forWho}</p>
                   {t.whyNextTier && (
@@ -298,17 +293,66 @@ export default function PricingPage() {
                       {t.whyNextTier}
                     </p>
                   )}
-                  {t.status === "waitlist" && (
-                    <Link
-                      href="/contact"
-                      className="mt-4 inline-block text-xs font-semibold text-brand-400 transition-colors hover:text-brand-300"
-                    >
-                      {t.ctaLabel} →
-                    </Link>
-                  )}
                 </div>
               ))}
             </div>
+          </section>
+
+          {/* The price ladder — proof-gated escalation, published ahead of time.
+              This is the honest version of urgency: the next prices and the
+              verified milestones that trigger them are documented in code
+              (lib/pricing/pricing-phases.ts), never a marketing calendar. */}
+          <section className="mt-20" aria-labelledby="price-ladder-heading">
+            <h2 id="price-ladder-heading" className="text-center text-2xl font-bold text-white">
+              The price ladder is public
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
+              Prices only rise when a verified proof milestone is met — never on a marketing
+              calendar. Join at any phase and your rate is locked for the life of your
+              subscription.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {PRICING_PHASES.map((p) => {
+                const isCurrent = p.id === phase.id;
+                return (
+                  <div
+                    key={p.id}
+                    className={`flex h-full flex-col rounded-2xl border p-5 ${
+                      isCurrent
+                        ? "border-brand-400/60 bg-brand-400/5"
+                        : "border-titanium bg-carbon/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-400">
+                        {p.name}
+                      </p>
+                      {isCurrent && (
+                        <span
+                          className="rounded-full border px-2 py-0.5 text-[10px] font-semibold"
+                          style={{ color: BRAND_COLORS.orbitalCyan, borderColor: BRAND_COLORS.orbitalCyan }}
+                        >
+                          You are here
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-3 text-base font-semibold text-white">
+                      Pro ${p.pro.monthly}/mo · Elite ${p.elite.monthly}/mo
+                    </p>
+                    <p className="mt-1 text-xs text-ink-400">
+                      Annual: Pro ${p.pro.annual} · Elite ${p.elite.annual}
+                    </p>
+                    <p className="mt-3 border-t border-titanium pt-3 text-xs leading-relaxed text-ink-300">
+                      <span className="text-ink-500">Unlocks when: </span>
+                      {p.trigger}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="mx-auto mt-6 max-w-2xl text-center text-xs text-ink-400">
+              {LIFETIME_PRICE_NOTE}
+            </p>
           </section>
 
           <SignalRule className="mt-20" />
