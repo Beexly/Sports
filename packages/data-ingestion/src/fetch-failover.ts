@@ -35,10 +35,28 @@ export function withMirrors(primaryUrl: string): string[] {
   return mirror ? [primaryUrl, mirror] : [primaryUrl];
 }
 
+export interface FailoverOptions {
+  readonly timeoutMs?: number;
+  readonly init?: RequestInit;
+  /**
+   * Optional integrity validator, applied to every OK response BEFORE it is
+   * accepted. This is the supply-chain guard for untrusted community mirrors
+   * (e.g. ghproxy): a tampered or truncated body becomes a recorded failover
+   * event instead of silently entering the data path. Return false to reject
+   * the source and continue down the mirror list.
+   *
+   * When provided, the body is buffered so the validator can inspect the raw
+   * bytes; the returned Response is reconstructed from those same bytes, so the
+   * caller-facing contract is unchanged. When omitted, the request path is
+   * byte-identical to before (no buffering).
+   */
+  readonly validate?: (body: Uint8Array, sourceUrl: string) => boolean;
+}
+
 export async function fetchWithFailover(
   urls: readonly string[],
   fetcher: FetchLike,
-  { timeoutMs = 15000, init = {} }: { timeoutMs?: number; init?: RequestInit } = {},
+  { timeoutMs = 15000, init = {}, validate }: FailoverOptions = {},
 ): Promise<FailoverResult> {
   const errors: string[] = [];
   let attempts = 0;
@@ -48,8 +66,21 @@ export async function fetchWithFailover(
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const response = await fetcher(url, { ...init, signal: controller.signal });
-      if (response.ok) return { response, sourceUrl: url, attempts, errors };
-      errors.push(`${url} -> HTTP ${response.status}`);
+      if (response.ok) {
+        if (!validate) return { response, sourceUrl: url, attempts, errors };
+        const body = new Uint8Array(await response.arrayBuffer());
+        if (validate(body, url)) {
+          const rebuilt = new Response(body.byteLength > 0 ? body : null, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers,
+          });
+          return { response: rebuilt, sourceUrl: url, attempts, errors };
+        }
+        errors.push(`${url} -> integrity validation failed`);
+      } else {
+        errors.push(`${url} -> HTTP ${response.status}`);
+      }
     } catch (error) {
       errors.push(`${url} -> ${error instanceof Error ? error.message : "error"}`);
     } finally {

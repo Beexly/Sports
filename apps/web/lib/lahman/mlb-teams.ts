@@ -128,7 +128,17 @@ export async function loadLahmanMlbTeams({
   if (cacheTtlMs > 0 && live && cache && cache.expiresAt > now) return cache.value;
 
   try {
-    const { response, sourceUrl } = await fetchWithFailover(HOSTS, fetcher, { timeoutMs });
+    // Integrity guard on every host (mirror supply-chain hardening): a host
+    // serving HTML/garbage fails over to the next mirror instead of failing the
+    // whole load. The post-parse shape checks below stay as defense-in-depth.
+    const looksLikeLahmanCsv = (body: Uint8Array): boolean => {
+      const head = new TextDecoder().decode(body.slice(0, 1024));
+      return !head.trimStart().startsWith("<") && head.includes("yearID");
+    };
+    const { response, sourceUrl } = await fetchWithFailover(HOSTS, fetcher, {
+      timeoutMs,
+      validate: looksLikeLahmanCsv,
+    });
     const text = await response.text();
     if (text.trimStart().startsWith("<")) throw new Error("Lahman host returned non-CSV (HTML)");
     const { records } = parseCsv(text);
