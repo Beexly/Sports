@@ -18,6 +18,7 @@ COPY packages/db/package.json         ./packages/db/
 COPY packages/types/package.json      ./packages/types/
 COPY packages/prediction-engine/package.json ./packages/prediction-engine/
 COPY packages/data-ingestion/package.json    ./packages/data-ingestion/
+COPY packages/ingestion-pipeline/package.json ./packages/ingestion-pipeline/
 COPY workers/data-refresh/package.json       ./workers/data-refresh/
 
 # Copy Prisma schema so postinstall can generate the client
