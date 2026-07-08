@@ -21,6 +21,12 @@ import {
   BedrockConfigError,
   BedrockMessagesError,
 } from "./providers/bedrock";
+import {
+  callVertexClaudeMessages,
+  isVertexProviderSelected,
+  VertexConfigError,
+  VertexMessagesError,
+} from "./providers/vertex";
 
 type Env = Record<string, string | undefined>;
 
@@ -34,31 +40,38 @@ export function resolveAnthropicModelId(request: ClaudeMessagesRequest): string 
 }
 
 /**
- * Provider-aware Claude call. Routes to Bedrock only when explicitly selected and
- * configured; otherwise (and on any Bedrock failure) uses the direct Anthropic API.
+ * Provider-aware Claude call. Routes to Bedrock or Vertex only when that provider
+ * is explicitly selected (single `CLAUDE_PROVIDER` value) and configured; otherwise
+ * — and on ANY provider error (config or runtime) — uses the direct Anthropic API,
+ * so a credits-routing problem never takes a surface down.
  */
 export async function callClaude(
   request: ClaudeMessagesRequest,
   env: Env = process.env,
 ): Promise<ClaudeMessagesResult> {
+  const providerRequest = {
+    anthropicModelId: resolveAnthropicModelId(request),
+    system: request.system,
+    user: request.user,
+    maxTokens: request.maxTokens,
+    ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
+    ...(request.fetchImpl ? { fetchImpl: request.fetchImpl } : {}),
+    ...(request.cache ? { cache: request.cache } : {}),
+  };
+
   if (isBedrockProviderSelected(env)) {
     try {
-      return await callBedrockClaudeMessages(
-        {
-          anthropicModelId: resolveAnthropicModelId(request),
-          system: request.system,
-          user: request.user,
-          maxTokens: request.maxTokens,
-          ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
-          ...(request.fetchImpl ? { fetchImpl: request.fetchImpl } : {}),
-          ...(request.cache ? { cache: request.cache } : {}),
-        },
-        env,
-      );
+      return await callBedrockClaudeMessages(providerRequest, env);
     } catch (error) {
-      // Best-effort: fall back to Anthropic on a Bedrock config OR API error so a
-      // credits-routing problem never takes a surface down. Re-throw anything else.
       if (!(error instanceof BedrockMessagesError) && !(error instanceof BedrockConfigError)) {
+        throw error;
+      }
+    }
+  } else if (isVertexProviderSelected(env)) {
+    try {
+      return await callVertexClaudeMessages(providerRequest, env);
+    } catch (error) {
+      if (!(error instanceof VertexMessagesError) && !(error instanceof VertexConfigError)) {
         throw error;
       }
     }

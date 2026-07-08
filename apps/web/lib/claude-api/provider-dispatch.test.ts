@@ -75,6 +75,14 @@ describe("callClaude — provider routing", () => {
     expect(result.text).toBe("anthropic-direct");
   });
 
+  it("stays on Anthropic when CLAUDE_PROVIDER=vertex but Vertex is not configured", async () => {
+    const fetchImpl = vi.fn(async () => anthropicResponse());
+    const result = await callClaude(baseReq(fetchImpl as unknown as typeof fetch), { CLAUDE_PROVIDER: "vertex" });
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect((fetchImpl.mock.calls[0] as unknown as [string])[0]).toBe("https://api.anthropic.com/v1/messages");
+    expect(result.text).toBe("anthropic-direct");
+  });
+
   it("falls back to Anthropic when the Bedrock API errors at runtime", async () => {
     const fetchImpl = vi
       .fn()
