@@ -200,12 +200,50 @@ and not general Marketplace SaaS; Google credits never cover third-party models.
 offers worth claiming from the Activate console: Datadog 1yr (claim BEFORE any organic
 trial), Stripe $500 fee credit, Amplitude 1yr. Full table in the credits strategy doc.
 
+## Workers adversarial review — 2026-07-08 (data-refresh / pick-generation / airwave)
+
+Full verified review of the three remaining workers. **Fixed + pushed** (`d0920a7f`): H1
+data-refresh Dockerfile missing ingestion-pipeline manifest (build failure); H2
+pick-generation Dockerfile shell-in-COPY (build failure); M1 restart-loop on the two
+run-once stub workers; M2 airwave dry-run wrong gate env names. Clean areas confirmed:
+no fabricated values, strong freshness gate, race-safe idempotent settle, fail-closed
+airwave gates, no secrets logged.
+
+**Deferred — founder-gated (touch settlement/track-record, DB schema, or shared pipeline —
+review before shipping):**
+
+- **M3 — settlement horizon is a hardcoded 2 days, no backfill.** `settleSport` calls
+  `getScores(sport, 2)`; after any >2-day outage of both the worker and the Vercel cron,
+  completed games fall out of the scores feed and their picks stay PENDING forever
+  (silently shrinks the settled denominator behind calibration). Fix = raise `daysFrom` to
+  the API max **and** add a reconciliation pass that flags/voids picks whose game commenced
+  > N days ago but is still PENDING. (Settlement-path change → founder review.)
+- **M4 — worker "startup readiness" comment is false; per-sport results discarded.** A bad
+  API key logs "Cycle complete" with 0 picks forever instead of failing loudly. Fix =
+  aggregate per-sport results and fail/alert when the whole first cycle fails.
+- **L2 — settlement polls all 7 sports year-round** (refresh season-gates; settlement does
+  not) → ~480 wasted Odds-API credits/day out of season vs a 500/mo free tier. Fix =
+  season-gate settlement with a ~1-month grace past `endMonth`. **Real cost lever**, but
+  needs the grace-window trade-off reviewed so late playoff games still settle.
+- **L4 — completed draws recorded as `result:"TBD"`** (`context-enrichment.ts`); the
+  `GameLogResult` Prisma enum has no `DRAW`. MLS draws are routine final outcomes stored as
+  indeterminate. Fix = add `DRAW` to the enum (**DB migration** → founder-gated; this is the
+  previously-logged tie/draw enum item).
+- **L1 — no graceful shutdown**: `docker stop` mid-cycle leaves `IngestionRun` rows stuck
+  `RUNNING`; add a SIGTERM handler + a reaper. **L3 — TOCTOU** on the settled-pick freeze
+  between the two concurrent settlement writers (scope the rewrite `updateMany` to PENDING).
+  **L5** — `workers:refresh/picks` npm scripts run compiled `node dist` but workspace `main`
+  fields point at `.ts` (Docker uses ts-node; the npm scripts don't work). **L6** —
+  `mapMarket` throws on any unknown market key, failing a whole sport's cycle (skip-and-warn
+  instead). **L7** — airwave `isWindowOpen` uses fixed-offset UTC math that disagrees with
+  the DST-correct `centralTimeHour` at the edges (latent; dry-run prints the correct one).
+
 ## Remaining queue (not yet done)
 
-- **Un-reviewed subsystems** (breadth waves): workers data-refresh / pick-generation /
-  airwave (**review in flight 2026-07-08**; content-publishing ✅ tested), data-ingestion +
-  ingestion-pipeline, 202 pages/components, docs quality. (API routes ✅ done; engine +
-  product libs + security ✅ done; build ✅ passing.)
+- **Un-reviewed subsystems** (breadth waves): workers ✅ **all four reviewed** (deploy
+  blockers fixed 2026-07-08; design items logged above), data-ingestion + ingestion-pipeline,
+  202 pages/components, docs quality. (API routes ✅ done; engine + product libs + security ✅
+  done; build ✅ passing.)
 - **Two deferred, non-critical API findings** (logged, low priority): `/api/picks/daily-slate`
   `sportBreakdown` is honest-empty in production (a per-sport-breakdown feature gap, not
   fabricated data — needs a grouped DB query); `/api/subscriptions/checkout`+`portal` have no
