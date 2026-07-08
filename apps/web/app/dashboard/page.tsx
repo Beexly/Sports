@@ -183,12 +183,12 @@ export default async function DashboardPage({
           <Link href="/" className="text-sm font-semibold text-white">
             {BRAND_NAME}
           </Link>
-          <nav className="flex items-center gap-4 text-xs text-ion-2">
-            <Link href="/picks" className="hover:text-white">Picks</Link>
-            <Link href="/performance" className="hover:text-white">Performance</Link>
-            <Link href="/pricing" className="hover:text-white">Pricing</Link>
-            <span className="text-ion-3">|</span>
-            <span className="text-ion-3">{user.email}</span>
+          <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-xs text-ion-2">
+            <Link href="/picks" className="inline-flex min-h-11 items-center py-2 hover:text-white">Picks</Link>
+            <Link href="/performance" className="inline-flex min-h-11 items-center py-2 hover:text-white">Performance</Link>
+            <Link href="/pricing" className="inline-flex min-h-11 items-center py-2 hover:text-white">Pricing</Link>
+            <span className="hidden text-ion-3 sm:inline">|</span>
+            <span className="max-w-[45vw] truncate text-ion-3">{user.email}</span>
           </nav>
         </div>
       </header>

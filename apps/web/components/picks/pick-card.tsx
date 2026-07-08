@@ -32,9 +32,9 @@ const PICK_GRADE_STYLES: Record<PickGrade, string> = {
 const RISK_LEVEL_STYLES: Record<RiskLevel, string> = {
   LOW_RISK: "text-verify",
   MODERATE: "text-plasma",
-  HIGH_VARIANCE: "text-ultraviolet",
+  HIGH_VARIANCE: "text-ultraviolet-glow",
   INJURY_RISK: "text-alert",
-  LINE_STEAM: "text-ultraviolet",
+  LINE_STEAM: "text-ultraviolet-glow",
 };
 
 export function PickCard({
@@ -408,8 +408,8 @@ function TierBadge({ tier }: { tier: "FREE" | "PREMIUM" }) {
 function PickTypeBadge({ type }: { type: PickType }) {
   const colors: Record<PickType, string> = {
     SPREAD: "bg-ion-blue/10 text-ion-blue",
-    MONEYLINE: "bg-ultraviolet/10 text-ultraviolet",
-    TOTAL: "bg-ultraviolet/10 text-ultraviolet",
+    MONEYLINE: "bg-ultraviolet/10 text-ultraviolet-glow",
+    TOTAL: "bg-ultraviolet/10 text-ultraviolet-glow",
   };
   const labels: Record<PickType, string> = {
     SPREAD: "Spread",
@@ -553,7 +553,7 @@ function LockedValue({ label }: { label: string }) {
     <Link
       href="/pricing"
       aria-label={`${label} unlocks on Pro. See pricing`}
-      className="flex items-center gap-1 text-xs text-ion-1 transition-colors hover:text-plasma"
+      className="inline-flex min-h-11 items-center gap-1 py-2 text-xs text-ion-1 transition-colors hover:text-plasma"
     >
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path

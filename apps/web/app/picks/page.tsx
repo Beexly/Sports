@@ -303,7 +303,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {fetchError && (
             <div className="rounded-xl border border-alert/40 bg-alert/10 p-6 text-center">
               <p className="text-sm font-medium text-alert">{fetchError}</p>
-              <p className="mt-1 text-xs text-alert/70">
+              <p className="mt-1 text-xs text-alert">
                 Please refresh the page or try again shortly.
               </p>
             </div>
@@ -420,7 +420,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   ? "Every pick is free: no daily limit, with the open verified record."
                   : "Every pick is free with a free account, with the open verified record."}
               </p>
-              <p className="mt-1 text-xs text-blue-400/70">
+              <p className="mt-1 text-xs text-blue-300">
                 Pro adds the confidence score, the full factor trail, and line movement behind each one.
                 Edge Index is public on every pick.
               </p>

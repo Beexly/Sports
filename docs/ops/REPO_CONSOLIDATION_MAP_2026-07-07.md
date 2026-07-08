@@ -272,6 +272,46 @@ success banner, sign-in callbackUrl, MLS tab, board title, dead-waitlist cleanup
 - Email/magic-link auth provider (Google-only is a hard wall for some paying customers).
 - Grade filter no-ops for anonymous visitors (apply unconditionally or hide the row).
 
+## Pre-live-keys audit wave — 2026-07-08 (billing / DB / auth / a11y)
+
+Four adversarial audits ahead of Stripe live keys. FIXED + pushed unless noted.
+
+**Billing/Stripe lifecycle** — FIXED: H1 grandfathered-downgrade (historical price-id
+recognition via comma-lists + defensive no-downgrade guard), M4 duplicate-customer
+(userId idempotency key), M5 double-billing (already-subscribed → 409 → portal).
+DEFERRED (founder/ops): M2 phase↔Stripe-price coupling (advancing PRICING_PHASE requires
+provisioning a new Stripe Price + prepending its id — documented in price-ids.ts); M3
+out-of-order updated/created can apply a stale tier (self-heals; fix = re-retrieve live in
+that handler); L6 refund-without-cancel doesn't revoke (pair every refund with a cancel, or
+handle charge.refunded); L7 add a boot assertion for STRIPE_WEBHOOK_SECRET (already fails
+closed). CLEAN: raw-body signature verify, idempotency, status fail-closed, PAST_DUE grace,
+delete→update resurrection guard, server-derived tier.
+
+**DB/Prisma** — FIXED: hot-path indexes (odds[gameId,fetchedAt], ingestion_runs[status,
+completedAt], picks[settledAt]; migration 20260708000000), M4 odds.createMany batch.
+DEFERRED (need raw-SQL/groupBy rewrite or a migration + careful tests): H1 /api/performance
+unbounded findMany over all settled picks (public; gated behind ≥100-settled + operator flag,
+so not launch-critical) → grouped aggregate; H2 daily-slate two unbounded row-scans → count/
+groupBy + a bound; M5 admin-dashboard unbounded scans; M6 pick+snapshot+receipt not a
+$transaction (currently deliberate degrade-don't-block); L1 redundant game reload; L2
+invoice.payment_failed two non-atomic updateManys; L3 /api/picks over-fetch. CLEAN:
+TeamGameLog indexed access, atomic settleGameLogs, race-safe settlement, non-N+1 audit route.
+
+**Auth/session/API authz** — essentially CLEAN across all 120 routes (RBAC, cron secrets,
+premium gating, webhook verify all enforced server-side). FIXED: 5a admin Claude routes
+(studio/generate, loss-draft) now rate-limited (denial-of-wallet). DEFERRED: 5b in-memory
+limiter is per-instance — back with Redis for shared counters on the user-facing Claude
+routes (budget gate remains the real backstop).
+
+**A11y/contrast/responsive** — FIXED: pricing text-ink-400/500 (~3.4:1/2.0:1) → text-ion-3
+(AA); picks low-opacity sublines (blue-400/70, alert/70) → full-opacity brighter tokens;
+pick-card ultraviolet badges/risk labels → ultraviolet-glow (AA); LockedValue + dashboard
+header-nav tap targets → min-h-11; dashboard header nav flex-wrap + email truncate (360px
+reflow). DEFERRED to the design pass: nav dropdown needs aria-expanded/controls via a
+stateful client button (interaction refactor, fits the Claude Design prompt). CLEAN:
+global prefers-reduced-motion guard, mobile-nav drawer focus mgmt, sport tabs/grade filter
+sizing, focus-visible rings, bright-accent tokens all pass AA.
+
 ## Remaining queue (not yet done)
 
 - **Un-reviewed subsystems** (breadth waves): workers ✅ **all four reviewed** (deploy

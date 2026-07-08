@@ -260,7 +260,7 @@ export default function PricingPage() {
               </p>
             </Reveal>
             <Reveal delay={260}>
-              <p className="mx-auto mt-5 max-w-2xl text-sm text-ink-400">{POSITIONING}</p>
+              <p className="mx-auto mt-5 max-w-2xl text-sm text-ion-3">{POSITIONING}</p>
             </Reveal>
           </div>
 
@@ -282,14 +282,14 @@ export default function PricingPage() {
                   key={t.id}
                   className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5"
                 >
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-400">
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ion-3">
                     {t.name}
                   </p>
                   <p className="mt-2 text-base font-semibold text-white">{t.promise}</p>
-                  <p className="mt-1 text-xs text-ink-400">{t.forWho}</p>
+                  <p className="mt-1 text-xs text-ion-3">{t.forWho}</p>
                   {t.whyNextTier && (
                     <p className="mt-3 border-t border-titanium pt-3 text-xs leading-relaxed text-ink-300">
-                      <span className="text-ink-500">Next: </span>
+                      <span className="text-ion-3">Next: </span>
                       {t.whyNextTier}
                     </p>
                   )}
@@ -324,7 +324,7 @@ export default function PricingPage() {
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-400">
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ion-3">
                         {p.name}
                       </p>
                       {isCurrent && (
@@ -339,18 +339,18 @@ export default function PricingPage() {
                     <p className="mt-3 text-base font-semibold text-white">
                       Pro ${p.pro.monthly}/mo · Elite ${p.elite.monthly}/mo
                     </p>
-                    <p className="mt-1 text-xs text-ink-400">
+                    <p className="mt-1 text-xs text-ion-3">
                       Annual: Pro ${p.pro.annual} · Elite ${p.elite.annual}
                     </p>
                     <p className="mt-3 border-t border-titanium pt-3 text-xs leading-relaxed text-ink-300">
-                      <span className="text-ink-500">Unlocks when: </span>
+                      <span className="text-ion-3">Unlocks when: </span>
                       {p.trigger}
                     </p>
                   </div>
                 );
               })}
             </div>
-            <p className="mx-auto mt-6 max-w-2xl text-center text-xs text-ink-400">
+            <p className="mx-auto mt-6 max-w-2xl text-center text-xs text-ion-3">
               {LIFETIME_PRICE_NOTE}
             </p>
           </section>
