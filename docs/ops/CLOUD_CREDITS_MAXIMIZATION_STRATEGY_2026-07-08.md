@@ -18,10 +18,12 @@ quality, integrity, or the non-negotiable rules in `CLAUDE.md`.
   Bedrock is the identical model at identical pricing**, but the spend is **billable to AWS
   Activate GenAI credits** (that tier explicitly covers Bedrock). So the biggest cash line
   can be paid with credits → direct runway extension.
-- **Google for Startups credits do NOT cover third-party models** (Anthropic). They *do*
-  cover Google infra (Cloud Run, Cloud SQL, BigQuery, Memorystore) and **Gemini/Gemma**.
-  So Google credits are best spent on **infrastructure** + a **Gemini "free lane"** for
-  non-user-facing drafting — not on our user-facing Claude surfaces.
+- **Google for Startups credits do NOT cover third-party models** (Anthropic) — with one
+  verified exception: a separate **$10k Anthropic partner-model credit** on Vertex (request
+  via your Google AE). The general pool covers Google infra (Cloud Run, Cloud SQL, BigQuery,
+  Memorystore) and **Gemini/Gemma**. So Google credits are best spent on **infrastructure**
+  + a **Gemini "free lane"** for non-user-facing drafting, with the $10k as a small Claude
+  top-up — the primary Claude offset stays AWS Bedrock.
 - This is not either/or. **AWS pays the AI bill; Google pays the infra bill.** Both extend
   runway on different cost centers simultaneously.
 
@@ -192,12 +194,35 @@ package (console shows the exact date; 60/30-day warning emails). Re-applying on
 the **difference** up to the larger package — sequence Founders → Portfolio (within 12
 months of a raise) deliberately.
 
-### Google for Startups — full set
+### Google for Startups — full set (verified 2026-07-08)
 
-(Verified detail pending the Google research pass — will be appended. Known now: credits
-never cover third-party models; Gemini/infra only. Claim the Enhanced Support and Workspace
-benefits from the program console; use Gemini via the existing OpenAI-compatible
-`internal-llm` seam for the non-user-facing lane.)
+| Benefit | Value | Action |
+|---|---|---|
+| **Anthropic partner-model credit (Vertex Model Garden)** | **$10,000** | Scale/Scale-AI tier only, **not automatic — request via your Google Cloud Account Executive.** This is the ONLY Google pool that touches our Claude bill: route Claude through Vertex (`us.anthropic.*`) to burn it. Small vs AWS Bedrock's up-to-$300k, so it's a **top-up**, not the primary. |
+| **Enhanced Support** | up to **$12k / 1 yr** free | Turn on for year 1 (1-hr critical response). Downgrade before it lapses — support bills on *gross* (pre-credit) consumption. |
+| **Redis Cloud credits** | up to **$25k** | We run Redis (BullMQ). Move Memorystore/self-managed → Redis Cloud and this covers it for years. |
+| **Workspace Business Plus** | free 12 mo (~$264) | Business email on our domain (also satisfies the program's domain-match requirement). **31-day trap:** don't start paid Workspace on the domain within 31 days of applying. |
+| **Mixpanel** | 1 year free | Funnel/paywall/replay analytics for conversion — pairs with (or substitutes for) AWS's Amplitude offer; pick one. |
+| **Datadog Pro** | 1 year free (★ Scale form) | Same offer exists on both programs — claim once, before any organic trial. |
+| **Google Ads 2× match** (separate public promo, NOT credits) | spend $500 → $1,000 (up to $1,400→$2,800) | **The acquisition lever.** New-advertiser only, <14-day account, ~35-day verification, 60-day spend window — **time it to launch week** on sports-picks keywords. |
+| Maps credits ($600/mo), Skills ($500) | — | Near-zero for us; skip Maps. |
+| AI-tier non-cash: AI experts, Startup School, Gemini API Sprints | — | Join Startup School / Sprints now; accelerator (AI-First NA, equity-free, free TPU) once we have traction. |
+
+**Google's exact third-party-model constraint** (benefits footnote 5 / partner-models PDF):
+Gemini, Gemma, and **open-weight** models on Vertex burn program credits; Vertex (Google
+models) and Firebase count toward the $200k/$350k pool. **Anthropic/Mistral/AI21 on Vertex
+bill cash** — except the separate $10k partner credit above. Credits also do **not** cover
+Workspace, Maps, Ads, or Marketplace. Year 2 covers only 20% of usage (up to $100k) — plan
+the heavy-spend work for year 1. One-incentive/anti-stacking rule: joining other Google
+Cloud promos can forfeit remaining credits.
+
+**Seam readiness:** the `callClaude` dispatcher shipped this session makes a **Vertex Claude
+provider** a drop-in sibling to the Bedrock one (add a `providers/vertex.ts` returning the
+same `ClaudeMessagesResult`; Vertex uses a service-account OAuth2 bearer instead of SigV4).
+Worth building only after the $10k AE credit is confirmed — otherwise Bedrock alone captures
+the far larger AWS pool. Gemini for the non-user-facing lane needs **no new code** (existing
+OpenAI-compatible `internal-llm` seam) and can start on the always-free AI Studio tier before
+touching credits at all.
 
 ## Open items / founder actions
 
