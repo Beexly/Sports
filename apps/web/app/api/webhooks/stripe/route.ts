@@ -147,19 +147,21 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
-        // Stamp the first failure only — retries must not slide the
-        // grace window that entitlements compute from pastDueSince.
-        await db.subscription.updateMany({
-          where: {
-            stripeSubscriptionId: invoice.subscription as string,
-            pastDueSince: null,
-          },
-          data: { pastDueSince: new Date() },
-        });
-        await db.subscription.updateMany({
-          where: { stripeSubscriptionId: invoice.subscription as string },
-          data: { status: "PAST_DUE" },
-        });
+        const subId = invoice.subscription as string;
+        // Atomic: stamp the first-failure anchor (only where null — retries must
+        // not slide the grace window entitlements compute from pastDueSince) AND
+        // set PAST_DUE together, so a crash between them can't leave a member
+        // past-due-but-still-ACTIVE.
+        await db.$transaction([
+          db.subscription.updateMany({
+            where: { stripeSubscriptionId: subId, pastDueSince: null },
+            data: { pastDueSince: new Date() },
+          }),
+          db.subscription.updateMany({
+            where: { stripeSubscriptionId: subId },
+            data: { status: "PAST_DUE" },
+          }),
+        ]);
       }
       break;
     }

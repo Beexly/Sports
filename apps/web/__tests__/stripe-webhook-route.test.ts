@@ -30,6 +30,9 @@ vi.mock("@/lib/stripe", () => ({
 
 vi.mock("@sports/db", () => ({
   db: {
+    // $transaction([...]) executes the array of prisma promises atomically in prod;
+    // the mock just awaits them so the underlying updateMany calls are recorded.
+    $transaction: (ops: Promise<unknown>[]) => Promise.all(ops),
     webhookEvent: {
       findUnique: mocks.webhookEventFindUnique,
       create: mocks.webhookEventCreate,
