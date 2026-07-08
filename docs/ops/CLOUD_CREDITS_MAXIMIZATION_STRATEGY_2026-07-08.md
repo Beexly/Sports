@@ -164,6 +164,41 @@ to today (direct Anthropic API).
 
 ---
 
+## Full benefits extraction — beyond the headline credits (verified 2026-07-08)
+
+The programs bundle far more than compute credits. Every item below was web-verified by a
+research pass (sources in the research log); claim-order matters on several.
+
+### AWS Activate — the full set, ranked by realistic value to us
+
+| Benefit | Value | Action |
+|---|---|---|
+| **Datadog for Startups** (Activate exclusive) | 1 year Datadog Pro free | **Claim BEFORE ever starting an organic Datadog trial** (existing customers ineligible). Gives us real monitoring for workers/Redis/webhooks — currently a gap. |
+| **Stripe fee credit** | ~$500 in processing-fee credits (12-mo clock from activation) | Claim in the Activate console **when payments go live** (don't start the clock early). ≈ fees on ~$11k of Pro-tier volume. |
+| **Amplitude Growth** | 1 year free (~$10k list) | Claim; wire pick-view → paywall → checkout funnel analytics. |
+| **Support credits** | Founders: $350 Developer Support / Portfolio: up to $10k Business Support (~1 yr) | Auto-included per tier; confirm in console. Use during the Bedrock migration window. |
+| **DB/infra offers** | Supabase $300, MongoDB Atlas credits, ClickHouse $400, CircleCI up to $20k | Optional hedges; nothing here beats our current Neon/Vercel setup — claim only on need. |
+| **SaaS ops bundle** | Notion 6mo, Slack 30% off, Intercom 12mo free, HubSpot up to 75% off, Mercury $750 | Intercom free-year is the standout (subscriber support). |
+| **GenAI Accelerator** | up to $1M credits, 8-week program (~40 startups/yr) | Long-shot application once the NGS-validated IP + track record make the pitch credible. |
+| Training & Certification | **NOT credit-eligible** (explicit exclusion) | Budget cert exams as cash; use free Skill Builder courses. |
+
+**Critical eligibility pitfall (affects our architecture directly):** Activate credits cover
+Anthropic **only as Bedrock 3P model spend via `InvokeModel`/`Converse`** — the exact API our
+shipped adapter uses. They do **NOT** cover Claude-Platform-on-AWS (which bills through AWS
+Marketplace) nor general Marketplace SaaS purchases. Do not "upgrade" the integration to
+Claude Platform on AWS while credits remain — it would silently move the spend off-credit.
+Other exclusions: Mechanical Turk, ProServe, Training. Credits expire ~12–24 months by
+package (console shows the exact date; 60/30-day warning emails). Re-applying only grants
+the **difference** up to the larger package — sequence Founders → Portfolio (within 12
+months of a raise) deliberately.
+
+### Google for Startups — full set
+
+(Verified detail pending the Google research pass — will be appended. Known now: credits
+never cover third-party models; Gemini/infra only. Claim the Enhanced Support and Workspace
+benefits from the program console; use Gemini via the existing OpenAI-compatible
+`internal-llm` seam for the non-user-facing lane.)
+
 ## Open items / founder actions
 
 - [ ] Confirm which AWS Activate tier was granted (Founders vs Portfolio vs GenAI) — the
@@ -172,3 +207,8 @@ to today (direct Anthropic API).
 - [ ] Confirm Google credit amount/track and generate an AI Studio (Gemini) key.
 - [ ] Decide the monthly Bedrock cost cap; set the budget alarm + mirror in FABLE.
 - [ ] Run the staging smoke test before flipping any production surface.
+- [ ] **Claim order (console):** Datadog year-free FIRST (before any organic trial) →
+      Amplitude year-free → Intercom year-free → hold the Stripe $500 fee credit until
+      payments go live (12-mo clock starts at activation).
+- [ ] Keep ALL Claude spend on Bedrock InvokeModel while credits last — never Claude
+      Platform on AWS / Marketplace billing (not credit-eligible).

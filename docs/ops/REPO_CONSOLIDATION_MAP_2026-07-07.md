@@ -181,11 +181,31 @@ production build passes (204 pages).
 sources (CLAUDE.md permits manual research; controls only bar automation); `studio/load.ts`
 `isBootstrap` (field does not exist on the Prisma `Game` model — the "fix" would break the build).
 
+## Session addendum — 2026-07-08 (post-merge; PR #65 landed on main, prod deployed)
+
+Branch restarted from `origin/main` per merged-PR protocol; new work pushed on the same
+branch name. Landed:
+
+| Commit | What | Result |
+|---|---|---|
+| `fddd4beb` | **AWS Bedrock provider seam** (the cloud-credits play): zero-dep SigV4 signer pinned to AWS's `get-vanilla` known-answer vector; Bedrock `InvokeModel` adapter returning the exact `ClaudeMessagesResult` shape; `callClaude()` dispatcher (Bedrock only when `CLAUDE_PROVIDER=bedrock` + creds, Anthropic fallback on any error); env surface + strategy doc `docs/ops/CLOUD_CREDITS_MAXIMIZATION_STRATEGY_2026-07-08.md` | 20 tests; typecheck+lint clean |
+| `0fe34272` | **Both logged coverage gaps closed**: team-rates-source (leakage-safety `before` cutoff, honest-empty, no fabricated anchor — 6 tests) + content-publishing worker kill switch (first worker test infra; default-ON refusal, no path to PUBLISHED — 5 tests). Honesty correction to the credits doc: all 7 system prompts sit below Sonnet 4.6's ~2048-token cache floor → prompt caching is currently a silent no-op; no savings booked | 145+5 green |
+| `2e0e79a1`* | **Mirror supply-chain guard** (deferred ghproxy item): `fetchWithFailover` opt-in `validate(body, sourceUrl)` — tampered/truncated mirror bodies become recorded failover events; wired into the Lahman loader (poisoned host now fails over instead of failing the load) | 8 failover + 6 lahman green |
+
+*commit id may differ — see `git log`.
+
+Verified program intel (research agents, sourced): AWS Activate credits cover Anthropic
+**only via Bedrock InvokeModel/Converse** — NOT Claude-Platform-on-AWS (Marketplace-billed)
+and not general Marketplace SaaS; Google credits never cover third-party models. Partner
+offers worth claiming from the Activate console: Datadog 1yr (claim BEFORE any organic
+trial), Stripe $500 fee credit, Amplitude 1yr. Full table in the credits strategy doc.
+
 ## Remaining queue (not yet done)
 
-- **Un-reviewed subsystems** (breadth waves): workers (data-refresh / pick-generation /
-  content-publishing / airwave), data-ingestion + ingestion-pipeline, 202 pages/components,
-  docs quality. (API routes ✅ done; engine + product libs + security ✅ done; build ✅ passing.)
+- **Un-reviewed subsystems** (breadth waves): workers data-refresh / pick-generation /
+  airwave (**review in flight 2026-07-08**; content-publishing ✅ tested), data-ingestion +
+  ingestion-pipeline, 202 pages/components, docs quality. (API routes ✅ done; engine +
+  product libs + security ✅ done; build ✅ passing.)
 - **Two deferred, non-critical API findings** (logged, low priority): `/api/picks/daily-slate`
   `sportBreakdown` is honest-empty in production (a per-sport-breakdown feature gap, not
   fabricated data — needs a grouped DB query); `/api/subscriptions/checkout`+`portal` have no
