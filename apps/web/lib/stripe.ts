@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { getCurrentPricingPhase, type BillingInterval } from "@/lib/pricing/pricing-phases";
+import { checkoutPriceId, currentPriceId } from "@/lib/billing/price-ids";
 
 export type { BillingInterval };
 
@@ -9,38 +10,34 @@ export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
 });
 
 // Stripe price IDs per tier × billing interval. The operator creates these prices
-// in Stripe (test mode) and wires the env vars. The dollar amounts shown to users
-// are NEVER hardcoded here — they derive from the current pricing phase
-// (pricing-phases.ts), the single source of truth, so display and intent can't drift.
-// The monthly interval falls back to the LEGACY single-interval vars
-// (STRIPE_PRO_PRICE_ID / STRIPE_ELITE_PRICE_ID) that the env template + CLAUDE.md
-// historically documented, mirroring the webhook's getTierFromPriceId tolerance.
-// Without this, an operator who provisioned prod from the documented legacy vars
-// would leave the _MONTHLY_ vars empty and every checkout would 503.
+// in Stripe and wires the env vars. The dollar amounts shown to users are NEVER
+// hardcoded here — they derive from the current pricing phase (pricing-phases.ts),
+// the single source of truth, so display and intent can't drift.
+//
+// Each env var may hold a COMMA-SEPARATED list of price ids: the FIRST is the
+// current price (what new checkouts charge); older entries stay so a grandfathered
+// member's price id is still RECOGNIZED by the webhook (see lib/billing/price-ids.ts).
+// The monthly interval also falls back to the LEGACY single-interval vars
+// (STRIPE_PRO_PRICE_ID / STRIPE_ELITE_PRICE_ID) so an operator who provisioned prod
+// from the documented legacy vars isn't left with empty _MONTHLY_ vars → 503.
 export const STRIPE_PRICE_IDS = {
   PRO: {
-    month:
-      process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] ??
-      process.env["STRIPE_PRO_PRICE_ID"] ??
-      "",
-    year: process.env["STRIPE_PRO_ANNUAL_PRICE_ID"] ?? "",
+    month: currentPriceId(process.env["STRIPE_PRO_MONTHLY_PRICE_ID"], process.env["STRIPE_PRO_PRICE_ID"]),
+    year: currentPriceId(process.env["STRIPE_PRO_ANNUAL_PRICE_ID"]),
   },
   ELITE: {
-    month:
-      process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"] ??
-      process.env["STRIPE_ELITE_PRICE_ID"] ??
-      "",
-    year: process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"] ?? "",
+    month: currentPriceId(process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"], process.env["STRIPE_ELITE_PRICE_ID"]),
+    year: currentPriceId(process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"]),
   },
   FANTASY: {
-    month: process.env["STRIPE_FANTASY_MONTHLY_PRICE_ID"] ?? "",
-    year: process.env["STRIPE_FANTASY_ANNUAL_PRICE_ID"] ?? "",
+    month: currentPriceId(process.env["STRIPE_FANTASY_MONTHLY_PRICE_ID"]),
+    year: currentPriceId(process.env["STRIPE_FANTASY_ANNUAL_PRICE_ID"]),
   },
 } as const;
 
-/** Resolve the Stripe price ID for a tier + billing interval. */
+/** Resolve the CURRENT Stripe price ID for a tier + billing interval (for checkout). */
 export function getStripePriceId(tier: "FANTASY" | "PRO" | "ELITE", interval: BillingInterval): string {
-  return STRIPE_PRICE_IDS[tier][interval];
+  return checkoutPriceId(tier, interval);
 }
 
 // Display prices derive from the current pricing phase (Founding by default).
@@ -73,12 +70,19 @@ export async function getOrCreateStripeCustomer(
     return existing.stripeCustomerId;
   }
 
-  // Create new Stripe customer
-  const customer = await stripe.customers.create({
-    email,
-    name: name ?? undefined,
-    metadata: { userId },
-  });
+  // Create new Stripe customer. The idempotency key (keyed on userId) makes two
+  // concurrent first-checkouts (double-click / two tabs) return the SAME customer
+  // instead of minting duplicates — a duplicate customer can strand a paid user
+  // (webhook upsert keyed on stripeCustomerId misses, sync fails, charged-but-
+  // not-entitled). Stripe replays the first result for a repeated key.
+  const customer = await stripe.customers.create(
+    {
+      email,
+      name: name ?? undefined,
+      metadata: { userId },
+    },
+    { idempotencyKey: `gse-customer-${userId}` },
+  );
 
   // Upsert subscription record with customer ID
   await db.subscription.upsert({

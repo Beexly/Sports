@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { db } from "@sports/db";
 import { auth } from "@/lib/auth";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
@@ -52,6 +53,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       { error: "An email address is required to start checkout." },
       { status: 400 }
+    );
+  }
+
+  // Double-billing guard: a user with a live paid subscription must change plans
+  // through the billing portal, not a fresh checkout — a second checkout would
+  // create a SECOND active Stripe subscription and bill them twice. Fail closed
+  // toward allowing checkout only on a lookup error (never block a genuine buyer).
+  const existingSub = await db.subscription
+    .findUnique({
+      where: { userId: session.user.id },
+      select: { status: true, tier: true },
+    })
+    .catch(() => null);
+  const hasLivePaidSub =
+    existingSub != null &&
+    (existingSub.status === "ACTIVE" || existingSub.status === "TRIALING" || existingSub.status === "PAST_DUE") &&
+    existingSub.tier !== "FREE";
+  if (hasLivePaidSub) {
+    return NextResponse.json(
+      {
+        error: "You already have an active subscription. Manage or change your plan from the billing portal.",
+        code: "already_subscribed",
+      },
+      { status: 409 }
     );
   }
 

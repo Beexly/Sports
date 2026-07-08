@@ -20,6 +20,8 @@ vi.mock("@/lib/stripe", () => ({
   getOrCreateStripeCustomer: mocks.getOrCreateStripeCustomer,
   createCheckoutSession: mocks.createCheckoutSession,
 }));
+const dbMock = vi.hoisted(() => ({ subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>() }));
+vi.mock("@sports/db", () => ({ db: { subscription: { findUnique: dbMock.subscriptionFindUnique } } }));
 
 import { POST } from "@/app/api/subscriptions/checkout/route";
 import { resetRateLimits } from "@/lib/api/rate-limit";
@@ -41,6 +43,8 @@ describe("POST /api/subscriptions/checkout", () => {
     mocks.getStripePriceId.mockReset();
     mocks.getOrCreateStripeCustomer.mockReset();
     mocks.createCheckoutSession.mockReset();
+    dbMock.subscriptionFindUnique.mockReset();
+    dbMock.subscriptionFindUnique.mockResolvedValue(null); // no existing sub by default
 
     process.env["NEXT_PUBLIC_APP_URL"] = "https://app.example.com";
 
@@ -94,6 +98,22 @@ describe("POST /api/subscriptions/checkout", () => {
       successUrl: "https://app.example.com/dashboard?upgraded=true",
       cancelUrl: "https://app.example.com/pricing",
     });
+  });
+
+  it("blocks a second checkout for an already-subscribed user (409, no Stripe call)", async () => {
+    dbMock.subscriptionFindUnique.mockResolvedValue({ status: "ACTIVE", tier: "PRO" });
+    const res = await POST(checkoutRequest({ tier: "ELITE" }));
+    const body = await res.json();
+    expect(res.status).toBe(409);
+    expect(body.code).toBe("already_subscribed");
+    expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+  });
+
+  it("allows checkout for a FREE-tier record (e.g. after cancellation)", async () => {
+    dbMock.subscriptionFindUnique.mockResolvedValue({ status: "CANCELED", tier: "FREE" });
+    const res = await POST(checkoutRequest({ tier: "PRO" }));
+    expect(res.status).toBe(200);
+    expect(mocks.createCheckoutSession).toHaveBeenCalledTimes(1);
   });
 
   it("returns 500 when Stripe session creation fails", async () => {

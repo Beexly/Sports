@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db } from "@sports/db";
+import { tierForPriceId } from "@/lib/billing/price-ids";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
@@ -182,13 +183,16 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   // for free. A genuine resubscribe is a new subscription id (and/or comes via checkout),
   // so it is unaffected.
   const incomingStatus = mapStripeStatus(stripeSubscription.status);
+  // One read of the existing row, reused by the out-of-order guard AND the
+  // defensive no-downgrade guard below.
+  const existing = await db.subscription
+    .findUnique({
+      where: { stripeCustomerId: customerId },
+      select: { status: true, canceledAt: true, stripeSubscriptionId: true, tier: true },
+    })
+    .catch(() => null);
+
   if (incomingStatus !== "CANCELED") {
-    const existing = await db.subscription
-      .findUnique({
-        where: { stripeCustomerId: customerId },
-        select: { status: true, canceledAt: true, stripeSubscriptionId: true },
-      })
-      .catch(() => null);
     if (
       existing &&
       existing.status === "CANCELED" &&
@@ -203,8 +207,25 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   }
 
   const priceId = stripeSubscription.items.data[0]?.price.id;
-  const tier = getTierFromPriceId(priceId);
   const status = mapStripeStatus(stripeSubscription.status);
+  let tier = getTierFromPriceId(priceId);
+
+  // Defensive no-downgrade guard (grandfathering safety net). If a NON-EMPTY price
+  // id maps to no configured tier (an operator repointed a STRIPE_*_PRICE_ID and
+  // dropped the historical id), do NOT downgrade a currently-paid member to FREE —
+  // that would silently revoke a grandfathered subscriber's access on renewal.
+  // Retain their recorded paid tier and alert. Only applies to access-granting
+  // statuses; a genuinely canceled/incomplete sub still resolves to FREE normally.
+  const statusGrantsAccess = status === "ACTIVE" || status === "TRIALING" || status === "PAST_DUE";
+  const existingIsPaid = existing?.tier === "PRO" || existing?.tier === "ELITE" || existing?.tier === "FANTASY";
+  if (tier === "FREE" && priceId && statusGrantsAccess && existingIsPaid) {
+    console.error(
+      `[stripe] unmapped priceId ${priceId} on an active PAID subscription — retaining tier ` +
+        `${existing!.tier} instead of downgrading to FREE. Add this historical price id to the ` +
+        "matching STRIPE_*_PRICE_ID (comma-separated) so grandfathered members keep access.",
+    );
+    tier = existing!.tier as "FANTASY" | "PRO" | "ELITE";
+  }
 
   const periodStart = stripeSubscription.current_period_start
     ? new Date(stripeSubscription.current_period_start * 1000)
@@ -278,32 +299,11 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
 }
 
 function getTierFromPriceId(priceId: string | undefined): "FREE" | "FANTASY" | "PRO" | "ELITE" {
-  if (!priceId) return "FREE";
-  const eliteIds = [
-    process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"],
-    process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"],
-    process.env["STRIPE_ELITE_PRICE_ID"], // legacy single-interval
-  ];
-  const proIds = [
-    process.env["STRIPE_PRO_MONTHLY_PRICE_ID"],
-    process.env["STRIPE_PRO_ANNUAL_PRICE_ID"],
-    process.env["STRIPE_PRO_PRICE_ID"], // legacy single-interval
-  ];
-  const fantasyIds = [
-    process.env["STRIPE_FANTASY_MONTHLY_PRICE_ID"],
-    process.env["STRIPE_FANTASY_ANNUAL_PRICE_ID"],
-  ];
-  if (eliteIds.includes(priceId)) return "ELITE";
-  if (proIds.includes(priceId)) return "PRO";
-  if (fantasyIds.includes(priceId)) return "FANTASY";
-  // A real, non-empty priceId that matches NO configured tier means the webhook
-  // process is missing/typo'd a STRIPE_*_PRICE_ID. We fail closed to FREE for
-  // fraud-safety, but it must be loud — otherwise a paying customer is silently
-  // written tier=FREE. Surface it for alerting rather than swallowing it.
-  console.error(
-    `[stripe] unmapped priceId ${priceId} — defaulting to FREE; check the webhook env's STRIPE_*_PRICE_ID values`,
-  );
-  return "FREE";
+  // Recognizes CURRENT and HISTORICAL price ids (comma-separated env values) so a
+  // grandfathered member's original price id still maps to their paid tier after a
+  // phase advance. A non-empty-but-unmapped id resolving to FREE is logged by the
+  // caller's defensive guard (it has the subscription's paid/active context).
+  return tierForPriceId(priceId);
 }
 
 function mapStripeStatus(
