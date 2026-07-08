@@ -224,6 +224,36 @@ the far larger AWS pool. Gemini for the non-user-facing lane needs **no new code
 OpenAI-compatible `internal-llm` seam) and can start on the always-free AI Studio tier before
 touching credits at all.
 
+## Adjacent stackable programs (verified 2026-07-08) — the credit stack, not just the two clouds
+
+The two clouds are the big levers, but several vendor programs stack on top and target our
+exact stack. Ranked by expected value × acceptance for an **unfunded solo founder**:
+
+| Program | Value | Unfunded-solo? | Why it matters to us |
+|---|---|---|---|
+| **Anthropic — Claude for Startups** | Free API credits + highest rate limits + early access (amounts unpublished) | **Yes — apply.** Open "with or without VC backing"; selection explicitly weighs *Claude integration and usage* — which we have | Offsets our single biggest variable cost directly, and is a **third independent way** to pay the Claude bill alongside AWS Bedrock + the Google $10k |
+| **Neon self-funded tier** | up to **$1,000** | **Yes — explicitly** (<$1M funding, MVP stage) | ~1 year of our primary Postgres, near-certain acceptance |
+| **Stripe (via AWS Activate)** | fee credits, 12 mo | Yes (through Activate) | **Only ONE Stripe offer is redeemable per lifetime** — claim the Activate one; never burn the slot on a small perk-code |
+| **Vercel $1,200 (Activate side-path)** | ~$1.2k | Maybe (Activate) | ⚠️ May consume the once-ever Vercel-for-Startups slot before a future $30k partner claim — confirm terms first |
+| **Microsoft for Startups** | $5k Azure, investor-free | Yes | ⚠️ **Cannot pay for Claude** (Anthropic explicitly excluded from Azure sponsorship credits, confirmed 2026-07) — only worth it if we move infra/queues to Azure. The "Azure credits for Claude" play is **dead**. |
+| Vercel $30k / GitHub $10k / Redis $10k | large | **No** (partner/VC-gated) | Deferred — all unlocked at once by an accelerator affiliation |
+
+**Highest-leverage future move:** joining any recognized accelerator (even **equity-free**,
+e.g. Google's AI-First NA) simultaneously flips eligibility for Vercel $30k, GitHub $10k,
+Redis $10k, Neon $100k, and the larger Anthropic/AWS credit tiers. One action, five unlocks —
+pursue once there's user traction to show.
+
+**Apply-this-week order:** (1) Anthropic Claude for Startups (2-min form; biggest bill,
+usage counts in selection); (2) Neon self-funded (near-certain); (3) AWS Activate console —
+claim Stripe (best lifetime slot) + Datadog year-free (before any organic trial); (4) Google
+AE email for the $10k Anthropic-on-Vertex credit + turn on Enhanced Support/Workspace/Redis
+Cloud/Mixpanel; (5) hold the Google Ads 2× match until the paywall funnel is live.
+
+**Three independent ways to pay the Claude bill** — in priority order: AWS Bedrock (up to
+$300k, shipped adapter) → Anthropic Claude for Startups credits (direct API, no code change)
+→ Google Vertex $10k partner credit (drop-in `callClaude` sibling). Diversified so no single
+program's approval or expiry strands us.
+
 ## Open items / founder actions
 
 - [ ] Confirm which AWS Activate tier was granted (Founders vs Portfolio vs GenAI) — the
