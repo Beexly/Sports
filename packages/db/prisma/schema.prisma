@@ -316,6 +316,10 @@ model Odds {
   @@index([gameId])
   @@index([ingestionRunId])
   @@index([fetchedAt])
+  // Closing-line lookups filter gameId + range/order on fetchedAt (settle-sport,
+  // audit route). Per-game odds grow every cycle × book × market, so the composite
+  // avoids sorting the whole per-game partition.
+  @@index([gameId, fetchedAt])
   @@map("odds")
 }
 
@@ -338,6 +342,9 @@ model IngestionRun {
 
   @@index([status])
   @@index([startedAt])
+  // "Latest successful run" (health, public freshness gate, admin dashboard) filters
+  // status="SUCCESS" and orders by completedAt desc; this composite serves it directly.
+  @@index([status, completedAt])
   @@map("ingestion_runs")
 }
 
@@ -418,6 +425,9 @@ model Pick {
   @@index([result])
   @@index([isFeatured])
   @@index([clvVerdict])
+  // Dashboard orders/ranges settled history by settledAt; unindexed it full-scans as
+  // the settled set grows.
+  @@index([settledAt])
   @@map("picks")
 }
 

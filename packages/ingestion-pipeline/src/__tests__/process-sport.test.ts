@@ -35,7 +35,7 @@ const mocks = vi.hoisted(() => ({
   sportUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   gameUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
-  oddsCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  oddsCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -46,7 +46,7 @@ vi.mock("@sports/db", () => ({
     ingestionRun: { create: mocks.ingestionRunCreate, update: mocks.ingestionRunUpdate },
     sport: { upsert: mocks.sportUpsert },
     game: { upsert: mocks.gameUpsert, findUnique: mocks.gameFindUnique },
-    odds: { create: mocks.oddsCreate },
+    odds: { createMany: mocks.oddsCreateMany },
     pick: { upsert: mocks.pickUpsert, findUnique: mocks.pickFindUnique },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
   },
@@ -153,6 +153,7 @@ describe("processSport", () => {
     mocks.getHeadToHeadForm.mockResolvedValue(null);
     mocks.scoreGames.mockReturnValue([scoredPick()]);
     mocks.pickUpsert.mockResolvedValue({ id: "pick-1" });
+    mocks.oddsCreateMany.mockResolvedValue({ count: 0 });
     // Default: no existing pick → the create/update upsert path runs as before.
     mocks.pickFindUnique.mockResolvedValue(null);
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });

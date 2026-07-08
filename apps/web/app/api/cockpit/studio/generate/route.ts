@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db, Prisma } from "@sports/db";
 import { auth } from "@/lib/auth";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { loadStudioDashboard } from "@/lib/studio/load";
 import { generateStudioAssetDraft, StudioGenerationError } from "@/lib/studio/claude";
 import { getStudioTemplate } from "@/lib/studio/build-assets";
@@ -34,6 +35,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ success: false, error: "unauthorized" }, { status: 401 });
+  }
+
+  // Denial-of-wallet guard: each call is a paid Claude generation. The org-wide
+  // monthly budget gate is the ceiling; this per-admin limiter stops a single
+  // (compromised/shared) session from looping the endpoint and draining it fast.
+  const limit = consumeRateLimit("studio-generate", session.user.id, 20, 5 * 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "rate-limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
   }
 
   let body: StudioGenerateBody;

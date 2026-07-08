@@ -219,28 +219,33 @@ export async function processSport(
 
     // Ingest all odds records
     let oddsInserted = 0;
-    for (const odds of normalizedOdds) {
+    // Batch the odds inserts: one createMany round-trip instead of one INSERT per
+    // row (games × books × markets each cycle). Odds has no unique constraint, so
+    // createMany is safe (append-only snapshots). Rows for games we didn't persist
+    // are skipped, exactly as the per-row `if (!game) continue` did.
+    const oddsRows = normalizedOdds.flatMap((odds) => {
       const game = gameRecords[odds.gameExternalId];
-      if (!game) continue;
-      await db.odds.create({
-        data: {
-          gameId: game.id,
-          ingestionRunId: run.id,
-          bookmaker: odds.bookmaker,
-          market: odds.market,
-          homePrice: odds.homePrice,
-          awayPrice: odds.awayPrice,
-          drawPrice: odds.drawPrice,
-          spread: odds.spread,
-          homeSpreadPrice: odds.homeSpreadPrice,
-          awaySpreadPrice: odds.awaySpreadPrice,
-          total: odds.total,
-          overPrice: odds.overPrice,
-          underPrice: odds.underPrice,
-          fetchedAt: odds.fetchedAt,
-        },
-      });
-      oddsInserted++;
+      if (!game) return [];
+      return [{
+        gameId: game.id,
+        ingestionRunId: run.id,
+        bookmaker: odds.bookmaker,
+        market: odds.market,
+        homePrice: odds.homePrice,
+        awayPrice: odds.awayPrice,
+        drawPrice: odds.drawPrice,
+        spread: odds.spread,
+        homeSpreadPrice: odds.homeSpreadPrice,
+        awaySpreadPrice: odds.awaySpreadPrice,
+        total: odds.total,
+        overPrice: odds.overPrice,
+        underPrice: odds.underPrice,
+        fetchedAt: odds.fetchedAt,
+      }];
+    });
+    if (oddsRows.length > 0) {
+      const created = await db.odds.createMany({ data: oddsRows });
+      oddsInserted += created.count ?? oddsRows.length;
     }
 
     // Build OddsInputs with full context enrichment
