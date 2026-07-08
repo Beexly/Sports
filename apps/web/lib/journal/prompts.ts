@@ -102,6 +102,25 @@ Not available in this evidence bundle yet.
 Draft the essay now. Markdown output. Adhere to all voice rules.`;
 }
 
+/**
+ * The Model Journal is a FULLY PUBLIC surface, but `confidence` is a PAID metric
+ * and `edgeScore` is internal. So the public draft prompt must NOT carry the raw
+ * numbers (the model would happily quote "82 confidence, 6.4 edge" onto a public
+ * page). We hand the model QUALITATIVE bands instead — enough for the narrative,
+ * nothing that leaks a paid/internal value.
+ */
+function confidenceBand(confidence: number): string {
+  if (confidence >= 80) return "high conviction";
+  if (confidence >= 65) return "solid conviction";
+  if (confidence >= 50) return "a lean";
+  return "low conviction";
+}
+function edgeBand(edgeScore: number): string {
+  if (edgeScore >= 70) return "a strong edge";
+  if (edgeScore >= 50) return "a moderate edge";
+  return "a slim edge";
+}
+
 function formatPicks(weekData: JournalWeekData): string {
   if (weekData.picks.length === 0) return "No settled canonical picks found for this ISO week.";
 
@@ -111,8 +130,9 @@ function formatPicks(weekData: JournalWeekData): string {
       `${pick.id}: ${pick.matchup}`,
       pick.selection,
       pick.result,
-      `confidence ${pick.confidence}`,
-      `edge ${pick.edgeScore.toFixed(1)}`,
+      // Qualitative only — never the raw paid confidence or internal edge number.
+      `conviction: ${confidenceBand(pick.confidence)}`,
+      `edge: ${edgeBand(pick.edgeScore)}`,
       `consensus ${Math.round(pick.consensusPct * 100)}%`,
       `${pick.bookmakerCount} books`,
       `model ${pick.modelVersion}`,
