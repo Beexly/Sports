@@ -254,6 +254,63 @@ $300k, shipped adapter) → Anthropic Claude for Startups credits (direct API, n
 → Google Vertex $10k partner credit (drop-in `callClaude` sibling). Diversified so no single
 program's approval or expiry strands us.
 
+## Expanded program landscape (July 2026) — inference + infra providers, with citations
+
+Folded in from the founder's July-2026 research handoff and reconciled against this project's
+independent web-verified pass. **Where figures differ, the honest read is noted** — vendor
+"up to" numbers are best-case/top-tier and usually gated by funding or traction.
+
+| Program | Handoff figure | Reconciled / verified read | Cite |
+|---|---|---|---|
+| **AWS Activate + Bedrock** | up to $200k+ | Founders ~$1k · Portfolio $25–100k · **GenAI tier up to $300k** covers Claude via `InvokeModel`. Portfolio/GenAI need accelerator/VC org id. | aws.amazon.com/startups |
+| **Anthropic Claude for Startups** | $25k–$100k+ | Amounts **unpublished** in official terms; open with/without VC; *usage counts in selection* (we qualify). Treat $25k+ as plausible-but-unconfirmed. | claude.com/programs/startups |
+| **Google for Startups (AI track)** | up to $350k / 2 yrs | Confirmed up to $250k Y1 / $350k total for AI-first; **general credits don't cover Anthropic** except a separate $10k Vertex partner credit (AE request). | cloud.google.com/startup |
+| **Neon** | up to $100k | ⚠️ **Tiered:** self-funded (<$1M) is **up to $1k**; the **$100k** is the VC-backed ($1–5M) tier. Apply to the self-funded tier now. | neon.com/startups |
+| **Vercel for Startups** | $30k (+ AI Accelerator $6–8M pool) | $30k is **partner/Series-A-gated**; an Activate side-path ~$1.2k may exist. AI Accelerator credit pool is real but cohort-gated. One redemption per lifetime — don't burn the slot. | vercel.com/startups |
+| **GitHub for Startups** | $10k | Confirmed; **partner-affiliation + outside-funding gated**; once per company. Defer. | github.com/enterprise/startups |
+| **Together AI / Groq / Fireworks / Modal / Mistral** | $50k / $10k / — / GPU / — | Real startup programs; **most gated by accelerator/VC**. Value to us is the *non-user-facing* lane only (never user-facing content). See seam note below. | respective /startups pages |
+| **Redis** | free 6mo+ | ⚠️ **venture-backed only** per Redis Ltd; stay on our current setup / Upstash free until then. | redis.io/startups |
+
+**Reconciliation stance (integrity):** we do not book runway on "up to" ceilings. The three
+Claude-bill paths (Bedrock, Anthropic startup credits, Vertex $10k) remain the plan; the
+inference-provider programs above are opportunistic and mostly accelerator-gated.
+
+## Provider diversification is already wired — the OpenAI-compatible seam
+
+The handoff's inference providers (Together AI, Groq, Fireworks, and Google Gemini) all expose
+**OpenAI-compatible chat endpoints**, and we already have the seam for them: `internal-llm.ts`
+takes `INTERNAL_LLM_BASE_URL` + `INTERNAL_LLM_MODEL` + `INTERNAL_LLM_API_KEY`. So routing the
+**non-user-facing lane** (classification, normalization, dedup, JSON extraction, draft-then-
+polish) to any of their credit pools is **zero new code — env only**:
+
+| Provider | `INTERNAL_LLM_BASE_URL` |
+|---|---|
+| Groq | `https://api.groq.com/openai/v1` |
+| Together AI | `https://api.together.xyz/v1` |
+| Fireworks | `https://api.fireworks.ai/inference/v1` |
+| Google Gemini | `https://generativelanguage.googleapis.com/v1beta/openai` |
+
+Hard rule unchanged (`CLAUDE.md`): the free/internal lane is **never** used for user-facing
+content — that stays on governed Claude (via Bedrock/Vertex/direct). These pools only offset
+the cheap back-office LLM work.
+
+## Ops workflows (capturing the Neon-branching + AWS-billing ideas)
+
+Rather than port the uploaded Python stubs (they carry 2024 model ids and a parallel JSON
+ledger that would duplicate our DB-backed cost store), the useful ideas become ops workflows:
+
+- **Neon branching for backtests/experiments** — Neon's branching is genuinely valuable for
+  GSE's data work (settlement dry-runs, calibration experiments, migration rehearsals). CI
+  already provisions Neon branches per PR. For local/experiment work: create a branch off
+  `main` in the Neon console (or `neonctl branches create`), point `DATABASE_URL`/`DIRECT_URL`
+  at it, run the backtest, then delete the branch (credit hygiene). No app code needed — it's
+  a connection-string swap, and every experiment stays isolated from production data.
+- **AWS cost reconciliation** — once Bedrock is live, reconcile our estimated spend
+  (`credit-pool` dashboard breakdown) against **actual** AWS Cost Explorer
+  (`ce:GetCostAndUsage`, grouped by SERVICE). This is a founder console/CLI step (needs live
+  AWS creds); the in-app side is already covered by the credit-pool breakdown shipped this
+  session + the FABLE `MAX_MONTHLY_COST_USD` ceiling.
+
 ## Open items / founder actions
 
 - [ ] Confirm which AWS Activate tier was granted (Founders vs Portfolio vs GenAI) — the
