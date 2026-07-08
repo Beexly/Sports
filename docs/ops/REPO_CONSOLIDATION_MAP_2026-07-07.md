@@ -238,6 +238,40 @@ review before shipping):**
   instead). **L7** — airwave `isWindowOpen` uses fixed-offset UTC math that disagrees with
   the DST-correct `centralTimeHour` at the edges (latent; dry-run prints the correct one).
 
+## Ingestion-backbone review + conversion-funnel audit — 2026-07-08
+
+**Ingestion backbone (adversarial review, verified):** FIXED + pushed: F1 HIGH side-flip
+freeze (PENDING pick flipping sides on refresh desynced the frozen CLV lock/receipt →
+fabricated CLV + wrong-line settlement; picks now freeze on flip with a loud log) and F6
+CLV side-derivation prefix-collision (boundary-aware match, same as settlement).
+**Deferred (founder-gated, data-path semantics):**
+- F2 MEDIUM — per-game freshness gate admits stale per-book rows (freshest book passes the
+  whole game); fix = row-level filter alongside freshGameIds. Touches consensus math.
+- F3 MEDIUM — TeamGameLog ATS graded vs OPENING consensus spread, not the close (closing
+  snapshot already computed in scope); systematically biased ATS form signal. Fix is
+  one line but changes a recorded-metric convention → founder sign-off.
+- F4 MEDIUM — rest-days/B2B uses floor(hours/24) not calendar days (ET) → phantom B2B flags.
+- F5/F8 LOW (latent, unwired surfaces): Kalshi ticker UTC-date boundary; failover id-namespace
+  contract for the future odds-api.io adapter. F7 LOW: network errors bypass the odds
+  client's retry loop (only HTTP 429/5xx retry).
+**Clean areas confirmed:** normalizer core math, freshness schedule, config seasons/credits,
+source-health, fetch-failover, settle-sport (beyond logged items), openfootball, reddit,
+nflverse-ngs mappings, kalshi devig/gating.
+
+**Conversion-funnel audit (verified):** SHIPPED the safe set (nav/footer /picks links, public
+price ladder on /pricing, honesty copy fixes, phase-derived prices on FAQ/picks, purchase-
+success banner, sign-in callbackUrl, MLS tab, board title, dead-waitlist cleanup).
+**Founder-gated conversion items:**
+- Landing hero: point a primary/secondary CTA at /picks and/or /pricing with a founding-rate
+  line (brand decision; currently routes to /board + /the-beat).
+- 3-day money-back promise on /pricing is not backed by Terms §5 (discretionary wording) —
+  align one way or the other (legal wording; recommend honoring + codifying).
+- Anonymous 2-pick cap: decide free-sample vs account-capture posture (copy now honest
+  either way); consider entitlements-FREE parity for anonymous.
+- Resume-checkout after OAuth (carry tier/interval through signin → re-open checkout).
+- Email/magic-link auth provider (Google-only is a hard wall for some paying customers).
+- Grade filter no-ops for anonymous visitors (apply unconditionally or hide the row).
+
 ## Remaining queue (not yet done)
 
 - **Un-reviewed subsystems** (breadth waves): workers ✅ **all four reviewed** (deploy
