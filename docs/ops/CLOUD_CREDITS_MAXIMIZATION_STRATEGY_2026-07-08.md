@@ -108,9 +108,14 @@ to today (direct Anthropic API).
    lowest-stakes first (`brief`, `calibration-insight`), validating output parity each step —
    exactly the deliberate flip pattern `model-router.ts` documents. Quality-/trust-sensitive
    surfaces last.
-6. Layer the discounts: enable **prompt caching** (`cache: { system: true }`, already
-   supported on both providers) and move batchable content generation to **Batch** for up to
-   50% additional savings **on top of** credits.
+6. Layer the discounts — **with eyes open on caching**: move batchable content generation to
+   **Batch** for up to 50% additional savings **on top of** credits. Prompt caching
+   (`cache: { system: true }`, supported on both providers) is currently a **silent no-op**
+   here: a `cache_control` block only engages when the cached prefix meets the model's
+   minimum (≈2048 tokens on Sonnet 4.6), and every one of our 7 surfaces' system prompts is
+   far below that (largest ≈650 tokens; verified 2026-07-08). It becomes a real 90%-off
+   lever only if a surface's static system prompt grows past the floor AND is hit repeatedly
+   within the 5-minute TTL — don't book savings from it before then.
 
 ### Google side (no code required to start)
 
@@ -145,8 +150,9 @@ to today (direct Anthropic API).
 
 1. **Claude → Bedrock on AWS GenAI credits.** Biggest cash line, now paid by credits.
    *Scaffolding shipped; pending credential approval + console model-id confirmation.*
-2. **Prompt caching + Batch on top of credits.** Up to 90% off cached input, 50% off batch —
-   multiplies the credit runway. Caching is already supported in the adapter.
+2. **Batch on top of credits.** Up to 50% off batchable generation — multiplies the credit
+   runway. (Prompt caching is plumbed in but currently inert: all system prompts sit below
+   the model's ~2048-token cache floor — see runbook step 6. No savings booked from it.)
 3. **Gemini free lane via the existing seam** for non-user-facing drafting on Google credits.
    *Zero new code — env only.*
 4. **BigQuery for historical PBP / calibration analytics.** Capability unlock that
@@ -166,4 +172,3 @@ to today (direct Anthropic API).
 - [ ] Confirm Google credit amount/track and generate an AI Studio (Gemini) key.
 - [ ] Decide the monthly Bedrock cost cap; set the budget alarm + mirror in FABLE.
 - [ ] Run the staging smoke test before flipping any production surface.
-```
