@@ -14,7 +14,8 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
-import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { callClaude } from "@/lib/claude-api/provider-dispatch";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -126,7 +127,7 @@ Respond ONLY with valid JSON in this exact format:
 
   let parsed: ParsedBlogGeneration;
   try {
-    const result = await callClaudeMessages({
+    const result = await callClaude({
       apiKey,
       fetchImpl: options.fetchImpl,
       model: modelName,
