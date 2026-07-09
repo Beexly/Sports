@@ -300,7 +300,7 @@ export default function PricingPage() {
 
           {/* The price ladder — proof-gated escalation, published ahead of time.
               This is the honest version of urgency: the next prices and the
-              verified milestones that trigger them are documented in code
+              milestones that trigger them are documented in code
               (lib/pricing/pricing-phases.ts), never a marketing calendar. */}
           <section className="mt-20" aria-labelledby="price-ladder-heading">
             <h2 id="price-ladder-heading" className="text-center text-2xl font-bold text-white">
