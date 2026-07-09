@@ -118,3 +118,27 @@ frame poster still. Must look intentional at 0.85 opacity behind a headline.
 ```
 Delivery target in code: the hero `GeneratedPlate` `motion`/`still` slot (already built to
 accept it) — I add poster-first load, lazy, and a reduced-motion still fallback.
+
+---
+
+## Live visual audit (2026-07-08, ran the real app + screenshotted the funnel)
+
+Ran `next dev` (stub mode) + Playwright over landing/pricing/picks/dashboard. Findings:
+
+- **The site is already clean, professional, cinematic, and CLEAR — not stale.** Landing
+  (hero → Four-Doors console → signal-vs-noise → No-Bet ring → proof strip → methodology)
+  reads as a structured, on-brand instrument, not a read-only page. Pricing is strong
+  (4 plans, "Where most start" anchor, the public price-ladder with "You are here", the
+  side-by-side table). Picks shows honest slate stats + the "gate collecting" empty state
+  as intentional discipline. My recent fixes are LIVE and correct (sportBreakdown MLB/NBA/
+  NFL/NHL counts, MLS tab, price ladder, AA contrast, honest free-sample copy).
+- **A flagged "empty purple box" was a SCREENSHOT ARTIFACT, not a bug** — `Reveal` +
+  IntersectionObserver start at opacity:0; a full-page capture doesn't scroll, so below-fold
+  sections render invisible over their `bg-mineral` grid. Verified before touching anything
+  (reduced-motion re-capture rendered everything correctly). Discipline: don't fix phantoms.
+- **Verdict: DO NOT apply Claude Design's static mockups wholesale — they would REGRESS this
+  into flat pages.** Use Claude Design only for the component-scoped refinements in Brief A.
+- **The real 2026 frontier is INTERACTIVITY + community, not more visual polish** (the visual/
+  cinematic layer is already there). That's a product layer needing Garrett's direction —
+  candidate features: live board pulse, hover-to-reveal reasoning, a "your read vs the model"
+  micro-interaction, streak/participation surfaces, The Beat as the community hook.
