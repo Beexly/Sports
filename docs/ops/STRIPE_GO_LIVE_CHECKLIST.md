@@ -9,11 +9,16 @@ exactly** (`apps/web/lib/pricing/pricing-phases.ts` FOUNDING). This is the actua
 Verified from the live account; amounts match FOUNDING to the cent:
 
 ```
-STRIPE_PRO_MONTHLY_PRICE_ID=price_1TdsqBQ2wPZMxx6094V2T9cY     # Pro Monthly  $14.99 (1499)
-STRIPE_PRO_ANNUAL_PRICE_ID=price_1TdsqCQ2wPZMxx60z4GWzgu9      # Pro Annual   $99.00 (9900)
-STRIPE_ELITE_MONTHLY_PRICE_ID=price_1TdsqLQ2wPZMxx60eKtNl1cZ   # Elite Monthly $24.99 (2499)
-STRIPE_ELITE_ANNUAL_PRICE_ID=price_1TdsqLQ2wPZMxx60XVzOFPxd    # Elite Annual  $179.00 (17900)
+STRIPE_PRO_MONTHLY_PRICE_ID=price_1TdsqBQ2wPZMxx6094V2T9cY       # Pro Monthly   $14.99 (1499)
+STRIPE_PRO_ANNUAL_PRICE_ID=price_1TdsqCQ2wPZMxx60z4GWzgu9        # Pro Annual    $99.00 (9900)
+STRIPE_ELITE_MONTHLY_PRICE_ID=price_1TdsqLQ2wPZMxx60eKtNl1cZ     # Elite Monthly $24.99 (2499)
+STRIPE_ELITE_ANNUAL_PRICE_ID=price_1TdsqLQ2wPZMxx60XVzOFPxd      # Elite Annual  $179.00 (17900)
+STRIPE_FANTASY_MONTHLY_PRICE_ID=price_1TrOEIQ2wPZMxx60sgo6r9K5   # Fantasy Monthly $4.99 (499)
+STRIPE_FANTASY_ANNUAL_PRICE_ID=price_1TrOESQ2wPZMxx603FyIWvOe    # Fantasy Annual  $49.00 (4900)
 ```
+
+Also set `NEXT_PUBLIC_APP_URL=https://www.galaxysportsedge.com` — the apex 307-redirects
+to www, so www is the canonical host (checkout success/cancel URLs + metadata base).
 
 (Price IDs are not secrets — they're safe in config. **Do not** put the secret key or webhook
 secret in code; env only.)
@@ -29,7 +34,8 @@ STRIPE_WEBHOOK_SECRET=whsec_…          # the signing secret of the webhook end
 
 In the Stripe dashboard → Developers → Webhooks → add endpoint:
 
-- **URL:** `https://<your-production-domain>/api/webhooks/stripe`
+- **URL:** `https://www.galaxysportsedge.com/api/webhooks/stripe` (www, NOT apex — the
+  apex 307-redirects and Stripe does not follow redirects)
 - **Events to send** (exactly what the handler processes — `apps/web/app/api/webhooks/stripe/route.ts`):
   - `checkout.session.completed`
   - `customer.subscription.created`
@@ -47,12 +53,11 @@ Price** for the higher rate, then **PREPEND** its id to the matching `STRIPE_*_P
 (comma-separated), keeping the old id. The webhook recognizes historical ids so founding members
 keep their rate for life (`apps/web/lib/billing/price-ids.ts`). Never just replace the id.
 
-## 5. Not yet configured (optional / lower priority)
+## 5. Fantasy tier — DONE (created 2026-07-09, live mode)
 
-- **Fantasy tier** has no Stripe product/prices → Fantasy checkout returns a graceful 503 until
-  you create a "Galaxy Sports Edge Fantasy" product with monthly ($4.99/499) + annual ($49/4900)
-  prices and set `STRIPE_FANTASY_MONTHLY_PRICE_ID` / `STRIPE_FANTASY_ANNUAL_PRICE_ID`. Pro/Elite
-  are the revenue tiers; Fantasy can wait.
+- Product `prod_Ur6RIZ0AzmKKiT` "Galaxy Sports Edge Fantasy" (metadata tier=FANTASY) with
+  founding prices `price_1TrOEIQ2wPZMxx60sgo6r9K5` ($4.99/mo) and
+  `price_1TrOESQ2wPZMxx603FyIWvOe` ($49/yr) — env mapping already in step 1.
 
 ## 6. Verify before opening the doors
 
