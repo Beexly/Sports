@@ -3,7 +3,8 @@ import {
   evaluateClaudeBudgetUsage,
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
-import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { callClaude } from "@/lib/claude-api/provider-dispatch";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -95,7 +96,7 @@ export async function generateCalibrationWeeklyInsight(
   }
 
   try {
-    const result = await callClaudeMessages({
+    const result = await callClaude({
       apiKey: options.apiKey,
       fetchImpl: options.fetchImpl,
       model: modelName,

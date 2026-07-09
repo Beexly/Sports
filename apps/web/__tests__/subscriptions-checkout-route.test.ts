@@ -20,8 +20,11 @@ vi.mock("@/lib/stripe", () => ({
   getOrCreateStripeCustomer: mocks.getOrCreateStripeCustomer,
   createCheckoutSession: mocks.createCheckoutSession,
 }));
+const dbMock = vi.hoisted(() => ({ subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>() }));
+vi.mock("@sports/db", () => ({ db: { subscription: { findUnique: dbMock.subscriptionFindUnique } } }));
 
 import { POST } from "@/app/api/subscriptions/checkout/route";
+import { resetRateLimits } from "@/lib/api/rate-limit";
 
 function checkoutRequest(body: unknown): NextRequest {
   return new NextRequest("http://localhost/api/subscriptions/checkout", {
@@ -35,10 +38,13 @@ const user = { id: "user_1", email: "pro@example.com", name: "Pro User" };
 
 describe("POST /api/subscriptions/checkout", () => {
   beforeEach(() => {
+    resetRateLimits();
     mocks.auth.mockReset();
     mocks.getStripePriceId.mockReset();
     mocks.getOrCreateStripeCustomer.mockReset();
     mocks.createCheckoutSession.mockReset();
+    dbMock.subscriptionFindUnique.mockReset();
+    dbMock.subscriptionFindUnique.mockResolvedValue(null); // no existing sub by default
 
     process.env["NEXT_PUBLIC_APP_URL"] = "https://app.example.com";
 
@@ -94,9 +100,42 @@ describe("POST /api/subscriptions/checkout", () => {
     });
   });
 
+  it("blocks a second checkout for an already-subscribed user (409, no Stripe call)", async () => {
+    dbMock.subscriptionFindUnique.mockResolvedValue({ status: "ACTIVE", tier: "PRO" });
+    const res = await POST(checkoutRequest({ tier: "ELITE" }));
+    const body = await res.json();
+    expect(res.status).toBe(409);
+    expect(body.code).toBe("already_subscribed");
+    expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+  });
+
+  it("allows checkout for a FREE-tier record (e.g. after cancellation)", async () => {
+    dbMock.subscriptionFindUnique.mockResolvedValue({ status: "CANCELED", tier: "FREE" });
+    const res = await POST(checkoutRequest({ tier: "PRO" }));
+    expect(res.status).toBe(200);
+    expect(mocks.createCheckoutSession).toHaveBeenCalledTimes(1);
+  });
+
   it("returns 500 when Stripe session creation fails", async () => {
     mocks.createCheckoutSession.mockRejectedValue(new Error("stripe unreachable"));
     const res = await POST(checkoutRequest({ tier: "PRO" }));
     expect(res.status).toBe(500);
+  });
+
+  it("rate-limits runaway checkout attempts per user (429 with Retry-After)", async () => {
+    for (let i = 0; i < 10; i++) {
+      const res = await POST(checkoutRequest({ tier: "PRO" }));
+      expect(res.status).toBe(200);
+    }
+    const blocked = await POST(checkoutRequest({ tier: "PRO" }));
+    expect(blocked.status).toBe(429);
+    expect(blocked.headers.get("Retry-After")).toBeTruthy();
+    // 10 sessions were created, not 11 — the limiter stopped Stripe resource creation.
+    expect(mocks.createCheckoutSession).toHaveBeenCalledTimes(10);
+
+    // A different user is unaffected (per-user buckets).
+    mocks.auth.mockResolvedValue({ user: { ...user, id: "user_2" } });
+    const other = await POST(checkoutRequest({ tier: "PRO" }));
+    expect(other.status).toBe(200);
   });
 });

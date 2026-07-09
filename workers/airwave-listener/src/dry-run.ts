@@ -44,8 +44,8 @@ const gates: SourcePolicyGates = {
   airwaveEnabled: env.AIRWAVE_ENABLED === "true",
   siriusxmLegalAck: env.AIRWAVE_SIRIUSXM_LEGAL_ACK === "true",
   transcriptImportEnabled: env.AIRWAVE_TRANSCRIPT_IMPORT_ENABLED === "true",
-  youtubeEnabled: env.AIRWAVE_YOUTUBE_ENABLED === "true",
-  podcastEnabled: env.AIRWAVE_PODCAST_ENABLED === "true",
+  youtubeEnabled: env.AIRWAVE_YOUTUBE_FEEDS_ENABLED === "true",
+  podcastEnabled: env.AIRWAVE_PODCAST_RSS_ENABLED === "true",
   beatReportsEnabled: env.AIRWAVE_BEAT_REPORTS_ENABLED === "true",
   studioHandoffEnabled: env.AIRWAVE_STUDIO_HANDOFF_ENABLED === "true",
 };

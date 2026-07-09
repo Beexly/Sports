@@ -8,6 +8,7 @@ import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import type { PublicPick, DailySlate } from "@sports/types";
 import Link from "next/link";
 import { headers } from "next/headers";
@@ -145,6 +146,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
   const isPro = entitlements.tier === "PRO" || entitlements.tier === "ELITE";
   const isFreeTier = entitlements.tier === "FREE";
+  const hasAccount = Boolean(session?.user);
+  // Phase-derived prices so this page can never advertise a rate checkout
+  // won't honor when PRICING_PHASE advances (same source as /pricing).
+  const phase = getCurrentPricingPhase();
 
   const [slateResult, picksResult] = await Promise.allSettled([
     fetchSlate(),
@@ -175,6 +180,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     { key: "nhl", label: "NHL" },
     { key: "ncaaf", label: "NCAAF" },
     { key: "ncaab", label: "NCAAB" },
+    { key: "mls", label: "MLS" },
   ];
 
   const GRADES = [
@@ -297,7 +303,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {fetchError && (
             <div className="rounded-xl border border-alert/40 bg-alert/10 p-6 text-center">
               <p className="text-sm font-medium text-alert">{fetchError}</p>
-              <p className="mt-1 text-xs text-alert/70">
+              <p className="mt-1 text-xs text-alert">
                 Please refresh the page or try again shortly.
               </p>
             </div>
@@ -404,13 +410,17 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </>
           )}
 
-          {/* Bottom upgrade CTA for free users */}
+          {/* Bottom upgrade CTA for free users — copy is audience-honest:
+              anonymous visitors are server-capped to a free sample, so only
+              signed-in FREE users see the "no daily limit" line. */}
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
               <p className="text-sm font-semibold text-blue-200">
-                Every pick is free: no daily limit, with the open verified record.
+                {hasAccount
+                  ? "Every pick is free: no daily limit, with the open verified record."
+                  : "Every pick is free with a free account, with the open verified record."}
               </p>
-              <p className="mt-1 text-xs text-blue-400/70">
+              <p className="mt-1 text-xs text-blue-300">
                 Pro adds the confidence score, the full factor trail, and line movement behind each one.
                 Edge Index is public on every pick.
               </p>
@@ -418,7 +428,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 href="/pricing"
                 className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
-                Upgrade to Pro · $14.99/mo
+                {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
             </div>
           )}
@@ -429,7 +439,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <p className="text-xs text-purple-400">
                 Want real-time email and push alerts on every signal?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
-                  Upgrade to Elite · $24.99/mo
+                  {`Upgrade to Elite · $${phase.elite.monthly}/mo`}
                 </Link>
               </p>
             </div>
@@ -543,10 +553,14 @@ function PaywallBanner({
   totalAvailableToday: number | null;
   hitDailyLimit: boolean;
 }) {
+  // Honest copy per audience: anonymous visitors are server-capped to a small
+  // free sample, so only signed-in FREE users get the "every pick, free" line.
   const headline =
     hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > 2
       ? `${totalAvailableToday} picks published today. Create a free account to see them all.`
-      : "You're on Free: every pick, free, with the open verified record.";
+      : hasAccount
+        ? "You're on Free: every pick, free, with the open verified record."
+        : "You're seeing today's free sample. Create a free account to see every pick, free.";
   return (
     <div
       data-testid="paywall-banner"
@@ -561,7 +575,7 @@ function PaywallBanner({
       <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
         {!hasAccount && (
           <Link
-            href="/auth/signin"
+            href="/auth/signin?callbackUrl=%2Fpicks"
             className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium bg-titanium px-4 py-2 text-xs font-medium text-ion-1 transition-colors hover:bg-titanium"
           >
             Sign in

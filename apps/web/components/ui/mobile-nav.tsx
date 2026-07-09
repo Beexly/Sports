@@ -17,6 +17,7 @@ const SECTIONS: readonly Section[] = [
     heading: "Board",
     collapsible: true,
     links: [
+      { label: "Today's Picks", href: "/picks" },
       { label: "Today's Board", href: "/board" },
       { label: "The House: NFL hub", href: "/house" },
       { label: "Mission Control", href: "/today" },

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { db } from "@sports/db";
 import { auth } from "@/lib/auth";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
   getStripePriceId,
   getOrCreateStripeCustomer,
@@ -16,6 +18,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Defense-in-depth on Stripe resource creation: 10 checkout attempts / 5 min
+  // per user is far above any legitimate buyer (a retry or two) but stops a
+  // looping client from minting unbounded checkout sessions/customers.
+  const limit = consumeRateLimit("subscriptions-checkout", session.user.id, 10, 5 * 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many checkout attempts. Please wait a moment and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
   }
 
   const body = await req.json();
@@ -40,6 +53,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       { error: "An email address is required to start checkout." },
       { status: 400 }
+    );
+  }
+
+  // Double-billing guard: a user with a live paid subscription must change plans
+  // through the billing portal, not a fresh checkout — a second checkout would
+  // create a SECOND active Stripe subscription and bill them twice. Fail closed
+  // toward allowing checkout only on a lookup error (never block a genuine buyer).
+  const existingSub = await db.subscription
+    .findUnique({
+      where: { userId: session.user.id },
+      select: { status: true, tier: true },
+    })
+    .catch(() => null);
+  const hasLivePaidSub =
+    existingSub != null &&
+    (existingSub.status === "ACTIVE" || existingSub.status === "TRIALING" || existingSub.status === "PAST_DUE") &&
+    existingSub.tier !== "FREE";
+  if (hasLivePaidSub) {
+    return NextResponse.json(
+      {
+        error: "You already have an active subscription. Manage or change your plan from the billing portal.",
+        code: "already_subscribed",
+      },
+      { status: 409 }
     );
   }
 

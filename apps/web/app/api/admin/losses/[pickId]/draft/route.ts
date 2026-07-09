@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { db } from "@sports/db";
 import type { FactorBreakdown } from "@sports/types";
 import { SIGNAL_LABELS, type GroundingSnapshot } from "@/lib/pick-explainer/grounding";
@@ -30,6 +31,16 @@ export async function POST(
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  // Denial-of-wallet guard: each call is a paid Claude generation (mirrors the
+  // studio-generate limiter). Backs up the org-wide monthly budget gate.
+  const limit = consumeRateLimit("loss-autopsy-draft", session.user.id, 20, 5 * 60 * 1000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "rate-limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
   }
 
   const pickId = context.params.pickId;

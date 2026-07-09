@@ -21,8 +21,9 @@ RUN npx prisma generate --schema=./packages/db/prisma/schema.prisma
 FROM base AS runner
 WORKDIR /app
 
+# Root install hoists all workspace deps + the generated Prisma client into
+# /app/node_modules, so a separate packages/db/node_modules copy is unneeded.
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules 2>/dev/null || true
 
 COPY packages/       ./packages/
 COPY workers/pick-generation/ ./workers/pick-generation/

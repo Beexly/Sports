@@ -30,6 +30,9 @@ vi.mock("@/lib/stripe", () => ({
 
 vi.mock("@sports/db", () => ({
   db: {
+    // $transaction([...]) executes the array of prisma promises atomically in prod;
+    // the mock just awaits them so the underlying updateMany calls are recorded.
+    $transaction: (ops: Promise<unknown>[]) => Promise.all(ops),
     webhookEvent: {
       findUnique: mocks.webhookEventFindUnique,
       create: mocks.webhookEventCreate,
@@ -273,7 +276,8 @@ describe("POST /api/webhooks/stripe", () => {
       );
     });
 
-    it("maps an unknown price id to FREE (never grants unpaid access)", async () => {
+    it("maps an unknown price id to FREE (never grants unpaid access) when there is no paid record", async () => {
+      mocks.subscriptionFindUnique.mockResolvedValue(null);
       mocks.constructEvent.mockReturnValue(
         stripeEvent(
           "customer.subscription.updated",
@@ -285,6 +289,29 @@ describe("POST /api/webhooks/stripe", () => {
 
       expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
         expect.objectContaining({ update: expect.objectContaining({ tier: "FREE" }) })
+      );
+    });
+
+    it("does NOT downgrade a grandfathered PAID member to FREE on an unmapped (repointed) price id", async () => {
+      // A member whose original price id was dropped from the env after a phase
+      // advance: the sub is still active + paid, so retain their tier, don't revoke.
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "ACTIVE",
+        canceledAt: null,
+        stripeSubscriptionId: "sub_test",
+        tier: "PRO",
+      });
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent(
+          "customer.subscription.updated",
+          stripeSubscription({ status: "active", items: { data: [{ price: { id: "price_orphaned_founding" } }] } })
+        )
+      );
+
+      await POST(webhookRequest());
+
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({ update: expect.objectContaining({ tier: "PRO" }) })
       );
     });
 

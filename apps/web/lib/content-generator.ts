@@ -14,7 +14,9 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
-import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { callClaude } from "@/lib/claude-api/provider-dispatch";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -49,7 +51,8 @@ type BlogGenerationPolicyReason =
   | "MISSING_FIELD"
   | "MISSING_DISCLAIMER"
   | "CERTAINTY_LANGUAGE"
-  | "INVALID_TAGS";
+  | "INVALID_TAGS"
+  | "UNGROUNDED_NUMERIC";
 
 export interface BlogGenerationPolicyResult {
   readonly allowed: boolean;
@@ -126,7 +129,7 @@ Respond ONLY with valid JSON in this exact format:
 
   let parsed: ParsedBlogGeneration;
   try {
-    const result = await callClaudeMessages({
+    const result = await callClaude({
       apiKey,
       fetchImpl: options.fetchImpl,
       model: modelName,
@@ -149,7 +152,7 @@ Respond ONLY with valid JSON in this exact format:
       throw new Error("Could not parse JSON from Claude response");
     }
 
-    const policy = evaluateGeneratedBlogPolicy(parsed);
+    const policy = evaluateGeneratedBlogPolicy(parsed, { promptText: userPrompt });
     if (!policy.allowed) {
       await maybeRecordBlogUsage({
         options,
@@ -218,6 +221,7 @@ function parseGeneratedBlogResponse(text: string): ParsedBlogGeneration {
 
 export function evaluateGeneratedBlogPolicy(
   post: ParsedBlogGeneration,
+  grounding?: { readonly promptText: string },
 ): BlogGenerationPolicyResult {
   const fields = [
     post.title,
@@ -254,6 +258,16 @@ export function evaluateGeneratedBlogPolicy(
   const publicText = [post.title, post.excerpt, post.content, post.seoTitle, post.seoDescription].join("\n");
   if (certaintyPatterns.some((pattern) => pattern.test(publicText))) {
     return { allowed: false, reason: "CERTAINTY_LANGUAGE" };
+  }
+
+  // Numeric grounding: every stat-shaped number in the copy must have appeared in
+  // the source prompt (the model's only data). Blocks a hallucinated stat before it
+  // could ever be persisted/published. Only runs when the caller supplies grounding.
+  if (grounding) {
+    const allowed = extractNumericClaims(grounding.promptText).map((c) => c.value);
+    if (!validateNumericClaims(publicText, { allowed }).grounded) {
+      return { allowed: false, reason: "UNGROUNDED_NUMERIC" };
+    }
   }
 
   return { allowed: true, reason: null };

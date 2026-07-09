@@ -9,6 +9,7 @@ import { BillingNoticeBanner } from "@/components/ui/billing-notice-banner";
 import { getBillingNotice } from "@/lib/billing/notice";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { BRAND_NAME } from "@/lib/brand";
+import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +35,11 @@ type TodayPick = {
   };
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: { upgraded?: string };
+}) {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -76,6 +81,7 @@ export default async function DashboardPage() {
   // Server-side tier gate (rule #3): FREE members see their 1 daily FREE
   // pick without confidence; PRO+ sees the full slate with confidence.
   const entitlements = await getUserEntitlements(user.id);
+  const phaseName = getCurrentPricingPhase().name;
 
   const [
     todayPicks,
@@ -177,12 +183,12 @@ export default async function DashboardPage() {
           <Link href="/" className="text-sm font-semibold text-white">
             {BRAND_NAME}
           </Link>
-          <nav className="flex items-center gap-4 text-xs text-ion-2">
-            <Link href="/picks" className="hover:text-white">Picks</Link>
-            <Link href="/performance" className="hover:text-white">Performance</Link>
-            <Link href="/pricing" className="hover:text-white">Pricing</Link>
-            <span className="text-ion-3">|</span>
-            <span className="text-ion-3">{user.email}</span>
+          <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-xs text-ion-2">
+            <Link href="/picks" className="inline-flex min-h-11 items-center py-2 hover:text-white">Picks</Link>
+            <Link href="/performance" className="inline-flex min-h-11 items-center py-2 hover:text-white">Performance</Link>
+            <Link href="/pricing" className="inline-flex min-h-11 items-center py-2 hover:text-white">Pricing</Link>
+            <span className="hidden text-ion-3 sm:inline">|</span>
+            <span className="max-w-[45vw] truncate text-ion-3">{user.email}</span>
           </nav>
         </div>
       </header>
@@ -214,6 +220,35 @@ export default async function DashboardPage() {
           </div>
 
           {demoActive && <SampleDataBanner />}
+
+          {/* Purchase-success moment: Stripe checkout returns to
+              /dashboard?upgraded=true. One-time (URL-param-driven) banner that
+              confirms the locked founding rate and points at what just unlocked
+              — first-session activation is the strongest churn lever. */}
+          {searchParams?.upgraded === "true" && (
+            <div
+              data-testid="upgrade-success-banner"
+              className="mb-6 rounded-xl border border-emerald-700/50 bg-emerald-950/30 p-5"
+            >
+              <p className="text-sm font-semibold text-emerald-300">
+                You&apos;re in — at the {phaseName} rate, locked for the life of your
+                subscription.
+              </p>
+              <p className="mt-1 text-xs text-emerald-300/80">
+                Confidence scores, the full factor trail, and line movement are now live on
+                every pick.
+                {entitlements.tier === "ELITE"
+                  ? " Real-time email and push alerts are included with Elite."
+                  : ""}
+              </p>
+              <Link
+                href="/picks"
+                className="mt-3 inline-flex rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-emerald-500"
+              >
+                See today&apos;s board →
+              </Link>
+            </div>
+          )}
 
           {billingNotice && <BillingNoticeBanner notice={billingNotice} />}
 

@@ -34,4 +34,51 @@ describe("fetch failover", () => {
     const fetcher = vi.fn(async () => new Response("no", { status: 500 }));
     await expect(fetchWithFailover(withMirrors(PRIMARY), fetcher)).rejects.toThrow(/All 2 source\(s\) failed/);
   });
+
+  it("integrity validate: a tampered mirror body is rejected and recorded as a failover error", async () => {
+    // Primary down; mirror answers 200 but with a poisoned body. The validator
+    // must turn that into a failure instead of letting it into the data path.
+    const fetcher = vi.fn(async (url: string) => {
+      if (url === PRIMARY) return new Response("down", { status: 503 });
+      return new Response("<html>not a csv</html>", { status: 200 });
+    });
+    const looksLikeCsv = (body: Uint8Array) =>
+      new TextDecoder().decode(body.slice(0, 64)).includes("season,team");
+
+    await expect(
+      fetchWithFailover(withMirrors(PRIMARY), fetcher, { validate: looksLikeCsv }),
+    ).rejects.toThrow(/integrity validation failed/);
+  });
+
+  it("integrity validate: a valid body passes and the rebuilt response preserves the bytes", async () => {
+    const csv = "season,team\n2025,KC\n";
+    const fetcher = vi.fn(async () => new Response(csv, { status: 200 }));
+    const result = await fetchWithFailover([PRIMARY], fetcher, {
+      validate: (body) => new TextDecoder().decode(body).startsWith("season,team"),
+    });
+    expect(result.sourceUrl).toBe(PRIMARY);
+    await expect(result.response.text()).resolves.toBe(csv);
+  });
+
+  it("integrity validate: rejection on the primary fails over to a clean mirror", async () => {
+    const csv = "season,team\n2025,KC\n";
+    const fetcher = vi.fn(async (url: string) =>
+      url === PRIMARY
+        ? new Response("truncat", { status: 200 })
+        : new Response(csv, { status: 200 }),
+    );
+    const result = await fetchWithFailover(withMirrors(PRIMARY), fetcher, {
+      validate: (body) => new TextDecoder().decode(body).startsWith("season,team"),
+    });
+    expect(result.sourceUrl).toBe(`https://ghproxy.net/${PRIMARY}`);
+    expect(result.errors[0]).toContain("integrity validation failed");
+    await expect(result.response.text()).resolves.toBe(csv);
+  });
+
+  it("no validator: response is passed through unbuffered (contract unchanged)", async () => {
+    const original = new Response("raw", { status: 200 });
+    const fetcher = vi.fn(async () => original);
+    const result = await fetchWithFailover([PRIMARY], fetcher);
+    expect(result.response).toBe(original);
+  });
 });

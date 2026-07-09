@@ -19,6 +19,7 @@ type NavGroup = { heading?: string; items: readonly NavItem[] };
 const BOARD_MENU: readonly NavGroup[] = [
   {
     items: [
+      { label: "Today's Picks", href: "/picks", desc: "Every pick, with the reasoning attached" },
       { label: "Today's Board", href: "/board", desc: "Today's picks, scored and ranked" },
       { label: "The House", href: "/house", desc: "NFL hub: odds, picks & matchups" },
       { label: "Mission Control", href: "/today", desc: "Everything happening today, in one view" },

@@ -88,7 +88,10 @@ services:
   worker-pick-generation:
     build: { context: ../.., dockerfile: workers/pick-generation/Dockerfile }
     container_name: sports_worker_pick_generation
-    restart: unless-stopped
+    # Run-once stub (pick generation is integrated into worker-data-refresh); it
+    # exits 0 immediately, so restart:"no" avoids an infinite restart loop.
+    # Switch back to unless-stopped when this becomes a long-running worker.
+    restart: "no"
     env_file: ./.env
     environment:
       REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379"
@@ -97,7 +100,10 @@ services:
   worker-content-publishing:
     build: { context: ../.., dockerfile: workers/content-publishing/Dockerfile }
     container_name: sports_worker_content_publishing
-    restart: unless-stopped
+    # Run-once kill-switch stub (auto-publish is disabled; main() logs and exits);
+    # restart:"no" avoids an infinite restart loop. Switch back to unless-stopped
+    # when this becomes a long-running consumer.
+    restart: "no"
     env_file: ./.env
     environment:
       REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379"

@@ -147,4 +147,31 @@ describe("Model Journal Claude generation", () => {
       expect.arrayContaining(["MJ-FIRST-PERSON-CONFIDENCE"])
     );
   });
+
+  describe("numeric grounding guard (fabricated-stat safety net)", () => {
+    // Real week: 7 wins, 4 losses. The prompt exposes those counts + a 64% consensus.
+    const grounding = {
+      promptText: "Settled picks (11) | consensus 64% | 12 books",
+      counts: { settledPicks: 11, wins: 7, losses: 4, pushes: 0, publicLossAutopsies: 2 },
+    };
+
+    it("blocks a fabricated win-loss record (9-2 when the week was 7-4)", () => {
+      const draft = "The model closed the week 9-2 on settled sides, its best stretch yet.";
+      expect(evaluateModelJournalDraftPolicy(draft, grounding)).toContain("UNGROUNDED_NUMERIC");
+    });
+
+    it("blocks an invented win rate the prompt never contained", () => {
+      const draft = "We connected on 81% of our settled unders this week.";
+      expect(evaluateModelJournalDraftPolicy(draft, grounding)).toContain("UNGROUNDED_NUMERIC");
+    });
+
+    it("passes copy that only cites grounded numbers (real record + a given consensus)", () => {
+      const draft = "A steady 7-4 week; the market consensus sat near 64% on our best read.";
+      expect(evaluateModelJournalDraftPolicy(draft, grounding)).not.toContain("UNGROUNDED_NUMERIC");
+    });
+
+    it("does not run the numeric check when no grounding is supplied (backward compatible)", () => {
+      expect(evaluateModelJournalDraftPolicy("A 9-2 week.")).not.toContain("UNGROUNDED_NUMERIC");
+    });
+  });
 });

@@ -3,7 +3,8 @@ import {
   evaluateClaudeBudgetUsage,
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
-import { callClaudeMessages, ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { callClaude } from "@/lib/claude-api/provider-dispatch";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -15,7 +16,20 @@ import {
   JOURNAL_DRAFTING_SYSTEM_PROMPT,
 } from "@/lib/journal/prompts";
 import { scanModelJournalMarkdown } from "@/lib/journal/compliance";
+import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 import type { JournalWeekData } from "@/lib/journal/week-data";
+
+/**
+ * Numbers the draft is ALLOWED to contain: every stat-shaped number that appeared
+ * in the exact prompt the model was given, plus the structured weekly counts (and
+ * thus the real W-L record). Any stat in the output that isn't here is fabricated —
+ * the model was never given it. This is the "Math you can read" safety net actually
+ * connected (it was previously dead code, imported only by its own test).
+ */
+export interface JournalGrounding {
+  readonly promptText: string;
+  readonly counts: JournalWeekData["counts"];
+}
 
 export interface ModelJournalClaudeOptions {
   readonly apiKey: string;
@@ -64,17 +78,21 @@ export async function generateModelJournalDraftMarkdown(
     }
   }
 
+  const userPrompt = buildJournalDraftPromptUser(weekData);
   try {
-    const result = await callClaudeMessages({
+    const result = await callClaude({
       apiKey: options.apiKey,
       fetchImpl: options.fetchImpl,
       model: modelName,
       maxTokens: 3000,
       temperature: 0.2,
       system: JOURNAL_DRAFTING_SYSTEM_PROMPT,
-      user: buildJournalDraftPromptUser(weekData),
+      user: userPrompt,
     });
-    const policyFailures = evaluateModelJournalDraftPolicy(result.text);
+    const policyFailures = evaluateModelJournalDraftPolicy(result.text, {
+      promptText: userPrompt,
+      counts: weekData.counts,
+    });
     if (policyFailures.length > 0) {
       await maybeRecordJournalUsage({
         options,
@@ -114,7 +132,10 @@ export async function generateModelJournalDraftMarkdown(
   }
 }
 
-export function evaluateModelJournalDraftPolicy(markdown: string): string[] {
+export function evaluateModelJournalDraftPolicy(
+  markdown: string,
+  grounding?: JournalGrounding,
+): string[] {
   const failures: string[] = [];
   const text = markdown.trim();
 
@@ -129,6 +150,25 @@ export function evaluateModelJournalDraftPolicy(markdown: string): string[] {
   for (const flag of scan.flags) {
     if (flag.severity === "block") {
       failures.push(flag.id);
+    }
+  }
+
+  // Numeric grounding: every stat-shaped number in the draft must have appeared in
+  // the prompt (or be a real weekly count). A fabricated record (9-2 when the week
+  // was 7-4), an invented win rate, or a hallucinated factor stat is thus blocked —
+  // not just the narrow banned-phrase regexes. Only runs when the caller supplies
+  // grounding (generation time); the length/phrase checks stay standalone.
+  if (grounding) {
+    const allowed = [
+      ...extractNumericClaims(grounding.promptText).map((c) => c.value),
+      grounding.counts.settledPicks,
+      grounding.counts.wins,
+      grounding.counts.losses,
+      grounding.counts.pushes,
+      grounding.counts.publicLossAutopsies,
+    ];
+    if (!validateNumericClaims(text, { allowed }).grounded) {
+      failures.push("UNGROUNDED_NUMERIC");
     }
   }
 

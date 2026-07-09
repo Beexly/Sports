@@ -11,12 +11,12 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
 
 export const metadata: Metadata = {
-  title: "Today's Board - Galaxy Sports Edge",
+  title: "Today's Board",
   description:
     "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
   alternates: { canonical: "/board" },
   openGraph: {
-    title: "Today's Board - Galaxy Sports Edge",
+    title: "Today's Board",
     description:
       "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
   },

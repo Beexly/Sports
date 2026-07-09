@@ -7,7 +7,12 @@ const CSV = `yearID,lgID,teamID,franchID,divID,G,W,L,R,RA,name
 2023,AL,BAL,BAL,E,162,101,61,807,712,Baltimore Orioles`;
 
 function ok(body: string): Response {
-  return { ok: true, status: 200, text: async () => body } as unknown as Response;
+  return {
+    ok: true,
+    status: 200,
+    text: async () => body,
+    arrayBuffer: async () => new TextEncoder().encode(body).buffer,
+  } as unknown as Response;
 }
 
 beforeEach(() => resetLahmanMlbCacheForTests());

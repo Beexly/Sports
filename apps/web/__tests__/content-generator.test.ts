@@ -31,6 +31,38 @@ describe("blog content generator", () => {
     ).toEqual({ allowed: false, reason: "MISSING_DISCLAIMER" });
   });
 
+  it("blocks blog copy with a fabricated stat absent from the source prompt", () => {
+    const result = evaluateGeneratedBlogPolicy(
+      {
+        title: "NBA Picks for May 22",
+        excerpt: "A measured preview.",
+        content:
+          "Our model hit 87% of spreads last month. Please gamble responsibly and only bet what you can afford to lose.",
+        seoTitle: "NBA Picks May 22",
+        seoDescription: "Measured NBA pick analysis.",
+        tags: ["NBA", "picks", "analysis"],
+      },
+      { promptText: "PICKS DATA: BOS -3.5. Market consensus 64%. Confidence: 72/100" },
+    );
+    expect(result).toEqual({ allowed: false, reason: "UNGROUNDED_NUMERIC" });
+  });
+
+  it("allows blog copy whose numbers all trace back to the source prompt", () => {
+    const result = evaluateGeneratedBlogPolicy(
+      {
+        title: "NBA Picks for May 22",
+        excerpt: "A measured preview.",
+        content:
+          "The market consensus sat near 64% on our lead read. Please gamble responsibly and only bet what you can afford to lose.",
+        seoTitle: "NBA Picks May 22",
+        seoDescription: "Measured NBA pick analysis.",
+        tags: ["NBA", "picks", "analysis"],
+      },
+      { promptText: "PICKS DATA: BOS -3.5. Market consensus 64%. Confidence: 72/100" },
+    );
+    expect(result).toEqual({ allowed: true, reason: null });
+  });
+
   it("enforces the blog generation budget before calling Claude", async () => {
     process.env["ANTHROPIC_API_KEY"] = "test-key";
     const fetchImpl = vi.fn();

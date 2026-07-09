@@ -75,4 +75,16 @@ describe("Model Journal prompts", () => {
     expect(prompt).toContain("Loss autopsies (1)");
     expect(prompt).toContain("autopsy-1: Lineup news changed the read");
   });
+
+  it("never leaks the raw paid confidence or internal edge number into the public prompt", () => {
+    const prompt = buildJournalDraftPromptUser(weekData);
+    // Qualitative bands, not the raw values (confidence 72 / edge 6.4).
+    expect(prompt).toContain("conviction: solid conviction");
+    expect(prompt).toContain("edge: a slim edge");
+    expect(prompt).not.toContain("confidence 72");
+    expect(prompt).not.toContain("edge 6.4");
+    // Market/public data (consensus %, book count) is still fine to include.
+    expect(prompt).toContain("consensus 64%");
+    expect(prompt).toContain("12 books");
+  });
 });
