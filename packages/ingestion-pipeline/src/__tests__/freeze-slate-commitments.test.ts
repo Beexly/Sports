@@ -117,17 +117,7 @@ describe("freezeSlateCommitments", () => {
 
     expect(mocks.slateCreate).toHaveBeenCalledTimes(1);
     expect(mocks.slateCreate).toHaveBeenCalledWith({
-      data: {
-        slateKey: TODAY_KEY,
-        root: expected.root,
-        count: 2,
-        committedAt: NOW,
-        // Mock receipts carry no edgeScore, so the Pedersen aggregate fails
-        // OPEN to nulls — proving the Merkle path is never blocked by it.
-        pedersenAggregateHex: null,
-        pedersenAggregateValue: null,
-        pedersenBlindingSum: null,
-      },
+      data: { slateKey: TODAY_KEY, root: expected.root, count: 2, committedAt: NOW },
     });
     // ATOMICITY (hostile-review fix): create + backfill ride ONE transaction.
     expect(mocks.transaction).toHaveBeenCalledTimes(1);

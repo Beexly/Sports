@@ -48,7 +48,6 @@ import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
-import { bookLineDispersion, type DispersionPickType } from "./book-dispersion.js";
 
 export interface SportConfig {
   key: SupportedSportKey;
@@ -276,26 +275,12 @@ export async function processSport(
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
 
-    // gameId -> per-kind book-line dispersion at lock, filled in the game loop
-    // and read at pick creation (a separate loop over scoredPicks below).
-    const dispersionByGame = new Map<string, Record<DispersionPickType, number | null>>();
-
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
 
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
       const bookmakerCoverageMax = new Set(gameOdds.map((o) => o.bookmaker)).size;
-
-      // Capture the book-line dispersion (max−min across books) per kind NOW,
-      // while every book's line for this game is in hand. It is the CLV
-      // decomposition's liquidity regressor (bookDisagreementAtLock) and cannot
-      // be honestly reconstructed later; persisted write-once at pick creation.
-      dispersionByGame.set(gameRecord.id, {
-        SPREAD: bookLineDispersion("SPREAD", gameOdds),
-        TOTAL: bookLineDispersion("TOTAL", gameOdds),
-        MONEYLINE: bookLineDispersion("MONEYLINE", gameOdds),
-      });
 
       const spreadOdds = gameOdds.filter((o) => o.market === "SPREADS" && o.spread !== undefined);
       const totalOdds = gameOdds.filter((o) => o.market === "TOTALS" && o.total !== undefined);
@@ -489,11 +474,6 @@ export async function processSport(
             // points line. Graded against the closing line at settlement.
             clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
             clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
-            // Book-line dispersion at lock — the CLV decomposition's liquidity
-            // regressor, captured write-once (absent from `update`, like the CLV
-            // lock). null when <2 books quoted the kind at publish.
-            bookDisagreementAtLock:
-              dispersionByGame.get(pick.gameId)?.[pick.pickType as DispersionPickType] ?? null,
             ...pickUpdateData,
           },
           update: {

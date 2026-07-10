@@ -209,9 +209,7 @@ export async function freezeSlateCommitments(
             pick: { gameId: { in: games.map((g) => g.id) } },
             slateKey: null,
           },
-          // edgeScore feeds the Pedersen aggregate (Phase 0.5); the Merkle
-          // planner still hashes exactly { pickId, payload }.
-          select: { pickId: true, payload: true, edgeScore: true },
+          select: { pickId: true, payload: true },
           orderBy: { pickId: "asc" },
         });
 
@@ -239,12 +237,6 @@ export async function freezeSlateCommitments(
         // slateKey @unique constraint is the concurrent-double-commit
         // backstop; a P2002 rolls the whole transaction back and we stand
         // down (the other writer's identical-input root won).
-        // Pedersen aggregate (Phase 0.5): minted in the SAME atomic create —
-        // write-once with the commitment row, never backfilled onto a frozen
-        // slate. Nulls (unencodable slate / crypto failure) never block the
-        // Merkle path.
-        const pedersen = mintSlatePedersenAggregate(receipts.map((r) => r.edgeScore));
-
         try {
           await db.$transaction([
             db.slateCommitment.create({
@@ -253,9 +245,6 @@ export async function freezeSlateCommitments(
                 root: plan.commitment.root,
                 count: plan.commitment.count,
                 committedAt: new Date(plan.commitment.committedAt),
-                pedersenAggregateHex: pedersen?.hex ?? null,
-                pedersenAggregateValue: pedersen?.value ?? null,
-                pedersenBlindingSum: pedersen?.blindingSum ?? null,
               },
             }),
             db.pickProofReceipt.updateMany({
