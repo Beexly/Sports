@@ -28,6 +28,7 @@ type VerifyResponse = {
     edgeScore: number;
     modelProb: number | null;
   };
+  payload?: string;
   contentHash?: string;
 };
 
@@ -180,6 +181,42 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                   </>
                 )}
               </dl>
+
+              {/* Recompute-it-yourself: the exact committed payload and its
+                  SHA-256 receipt hash. Showing both means a skeptic never has
+                  to trust our "verified" verdict — they can hash the payload
+                  themselves and confirm it equals the hash we froze pre-kickoff.
+                  This is the whole point of a tamper-evident receipt: it is
+                  checkable without us. */}
+              {res.payload && res.contentHash && (
+                <details className="mt-6 border-t border-white/10 pt-4">
+                  <summary className="cursor-pointer text-xs font-semibold uppercase tracking-wider text-ion-2 hover:text-ion-white">
+                    Recompute it yourself
+                  </summary>
+                  <p className="mt-3 text-xs leading-relaxed text-ion-2">
+                    Don&apos;t take our word for it. Below is the exact committed
+                    payload and the SHA-256 receipt hash we froze before kickoff.
+                    Hash the payload yourself &mdash; any change to a single
+                    character changes the hash.
+                  </p>
+                  <div className="mt-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-ion-2">
+                      Committed payload
+                    </p>
+                    <pre className="mt-1 max-h-48 overflow-auto rounded bg-black/40 p-3 font-mono text-[11px] leading-relaxed text-ion-white">
+                      {res.payload}
+                    </pre>
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-ion-2">
+                      Receipt hash (SHA-256)
+                    </p>
+                    <code className="mt-1 block break-all rounded bg-black/40 p-3 font-mono text-[11px] text-ion-white">
+                      {res.contentHash}
+                    </code>
+                  </div>
+                </details>
+              )}
             </div>
           )}
         </div>
