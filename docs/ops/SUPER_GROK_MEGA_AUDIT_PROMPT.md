@@ -1,5 +1,11 @@
 # Super Grok Mega-Audit Prompt — full-repo depth audit + hands-on fixes
 
+> **⚠️ SUPERSEDED FOR EXECUTION (2026-07-10):** running this as ONE Grok conversation
+> overflows Grok's context window ("conversation is too long" — observed twice; Grok
+> pulled 100 sources). Use **`GROK_SHARDED_AUDIT_PROMPTS.md`** instead — the same
+> audit, same rails, split into 12 context-safe missions with exact file lists.
+> This document remains the audit's full intent/spec reference.
+
 **Date:** 2026-07-10 · **Use:** paste the block below into Super Grok (or any frontier
 agent with repo access). Repo: `https://github.com/Beexly/Sports`. Grok works on its own
 branch and opens PRs; it never touches `main` directly.
