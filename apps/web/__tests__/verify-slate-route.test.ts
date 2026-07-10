@@ -82,6 +82,10 @@ describe("/api/verify/slate GET", () => {
       root: REAL_ROOT,
       count: 2,
       committedAt: "2026-07-02T10:00:00.000Z",
+      // Sealed Pedersen aggregate (Phase 0.5): PUBLIC hex only — the opener
+      // (value + blinding sum) is never selected by this route. Null on the
+      // mocked pre-Phase-0.5 row.
+      pedersenAggregateHex: null,
       receiptIndexComplete: true,
       membershipVerified: true, // the displayed list re-folds EXACTLY to the root
       receipts: [

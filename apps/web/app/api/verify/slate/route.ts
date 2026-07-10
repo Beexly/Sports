@@ -58,6 +58,10 @@ export async function GET(request: Request) {
         root: true,
         count: true,
         committedAt: true,
+        // Public sealed aggregate ONLY — pedersenAggregateValue and
+        // pedersenBlindingSum are the OPENER (server-side secrets until a
+        // deliberate post-slate open) and must never be selected here.
+        pedersenAggregateHex: true,
         receipts: {
           // pickId + contentHash ONLY — never the sealed payload fields.
           select: { pickId: true, contentHash: true },
@@ -104,6 +108,9 @@ export async function GET(request: Request) {
     root: slate.root,
     count: slate.count,
     committedAt: slate.committedAt.toISOString(),
+    // Sealed Pedersen aggregate over the slate's published edge scores (a
+    // commitment, opened after the slate settles). Null on pre-Phase-0.5 slates.
+    pedersenAggregateHex: slate.pedersenAggregateHex ?? null,
     receiptIndexComplete,
     /** True when the displayed receipt list re-folds EXACTLY to the committed root. */
     membershipVerified,
