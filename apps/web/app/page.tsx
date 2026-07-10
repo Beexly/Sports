@@ -217,19 +217,24 @@ export default async function HomePage(): Promise<JSX.Element> {
                 Trust is an architecture, not a tagline.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
-                No fabricated picks, no invented stats, no silent edits. Closing line value,
-                calibration, and a tamper-evident ledger. Counted over every settled pick.
+                Every pick is sealed with a receipt before kickoff — hashed, committed,
+                and impossible to edit after the game. No fabricated picks, no invented
+                stats, no silent edits. And you don&apos;t have to take our word for any
+                of it: check a receipt yourself.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-              <Link href="/clv" className="btn btn-primary whitespace-nowrap">
-                See our CLV
+              <Link href="/proof" className="btn btn-primary whitespace-nowrap">
+                See the sealed record
+              </Link>
+              <Link href="/verify" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                Check a receipt →
+              </Link>
+              <Link href="/clv" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                Our CLV →
               </Link>
               <Link href="/performance" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
                 Calibration →
-              </Link>
-              <Link href="/accountability" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                Accountability →
               </Link>
             </div>
           </div>

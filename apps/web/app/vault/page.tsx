@@ -47,6 +47,9 @@ export default function VaultPage() {
                 <Link href="/verify" className="btn btn-primary">
                   Verify a receipt
                 </Link>
+                <Link href="/proof" className="btn btn-ghost">
+                  The settled record
+                </Link>
                 <Link href="/methodology" className="btn btn-ghost">
                   How the calibration works
                 </Link>

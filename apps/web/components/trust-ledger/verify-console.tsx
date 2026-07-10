@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 /**
@@ -81,6 +82,27 @@ function RecomputePanel({
         </code>
       </div>
     </details>
+  );
+}
+
+/**
+ * Post-verdict funnel: a verified receipt is the product demo. Shown only on
+ * the two verified branches — never on the not-found or integrity-failure
+ * states, where selling anything would be tone-deaf.
+ */
+function VerifiedNextSteps() {
+  return (
+    <p className="mt-4 border-t border-white/10 pt-3 text-xs leading-5 text-ion-2">
+      Every pick on the live board carries this same pre-kickoff seal.{" "}
+      <Link href="/picks" className="font-semibold text-orbital-cyan hover:text-ion-white">
+        See today&apos;s board
+      </Link>{" "}
+      or{" "}
+      <Link href="/proof" className="font-semibold text-orbital-cyan hover:text-ion-white">
+        browse the whole settled record
+      </Link>
+      .
+    </p>
   );
 }
 
@@ -187,6 +209,7 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                 </div>
               </dl>
               {res.note && <p className="mt-3 text-xs leading-5 text-ion-2">{res.note}</p>}
+              <VerifiedNextSteps />
             </div>
           ) : (
             <div>
@@ -248,6 +271,7 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                 payload={res.payload}
                 contentHash={res.contentHash}
               />
+              <VerifiedNextSteps />
             </div>
           )}
         </div>
