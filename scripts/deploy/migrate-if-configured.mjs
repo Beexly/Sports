@@ -31,6 +31,17 @@
  *      · status reports pending/failed migrations, or itself cannot reach the
  *        DB → FAIL THE BUILD. A client ahead of the applied schema is exactly
  *        the outage class this gate exists to prevent.
+ *
+ * Break-glass (explicit operator override, never silent): setting
+ * MIGRATE_GATE_ALLOW_UNVERIFIED=true in the Vercel env lets a build proceed
+ * despite an unverified/pending verdict. It exists for the migration-ledger
+ * reconciliation window (docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md):
+ * the 2026-07-10 fail-closed rollout revealed the production _prisma_migrations
+ * ledger had silently diverged from the repo for weeks (schema evolved via
+ * db push while the old P1001-proceed policy skipped migrate deploy), so the
+ * gate blocks ALL production deploys until the ledger is reconciled. The
+ * override is a deliberate, logged, temporary decision — REMOVE the env var
+ * immediately after use.
  */
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
@@ -166,11 +177,22 @@ function runMigrateWithRetry() {
         );
         return 0;
       }
+      if (process.env.MIGRATE_GATE_ALLOW_UNVERIFIED === "true") {
+        console.warn(
+          `[migrate-if-configured] BREAK-GLASS OVERRIDE ACTIVE (MIGRATE_GATE_ALLOW_UNVERIFIED=true): ` +
+            `proceeding WITHOUT verified schema parity (pooled verdict: ${verdict}). This must be a ` +
+            `deliberate, temporary operator decision — REMOVE the env var after this deploy and ` +
+            `reconcile the ledger (docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md).`
+        );
+        return 0;
+      }
       console.error(
         `[migrate-if-configured] FAIL-CLOSED: direct endpoint unreachable AND the pooled check ` +
           `did not confirm parity (verdict: ${verdict}). Refusing to ship a Prisma client that may ` +
           `reference schema the database does not have — that exact mismatch caused the /api/picks ` +
-          `outage. Fix DIRECT_URL reachability or apply pending migrations out-of-band, then redeploy.`
+          `outage. Fix DIRECT_URL + reconcile the migration ledger ` +
+          `(docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md), or set ` +
+          `MIGRATE_GATE_ALLOW_UNVERIFIED=true as a deliberate temporary override, then redeploy.`
       );
       return 1;
     }
