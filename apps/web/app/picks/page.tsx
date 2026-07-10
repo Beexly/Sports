@@ -153,7 +153,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
       };
 
   const isPro = entitlements.tier === "PRO" || entitlements.tier === "ELITE";
-  const isFreeTier = entitlements.tier === "FREE";
+  // Teaser-board viewers: anyone WITHOUT the full paid board (FREE and
+  // FANTASY alike) — drives the daily-limit banner + Pro upgrade prompts so a
+  // Fantasy subscriber never sees a silently truncated board.
+  const isFreeTier = !entitlements.canSeePremiumPicks;
   const hasAccount = Boolean(session?.user);
   // Phase-derived prices so this page can never advertise a rate checkout
   // won't honor when PRICING_PHASE advances (same source as /pricing).
@@ -417,7 +420,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 <PickCard
                   key={pick.id}
                   pick={pick}
-                  canSeeConfidence={entitlements.canSeeConfidence || pick.tier === "FREE"}
+                  canSeeConfidence={entitlements.canSeeConfidence}
                   canSeeEdgeScore={entitlements.canSeeEdgeScore ?? false}
                   canSeeFactorBreakdown={entitlements.canSeeFactorBreakdown ?? false}
                 />
@@ -573,7 +576,7 @@ function PaywallBanner({
   // free sample, so only signed-in FREE users get the "every pick, free" line.
   const headline =
     hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > 2
-      ? `${totalAvailableToday} picks published today. Create a free account to see them all.`
+      ? `${totalAvailableToday} picks published today. Upgrade to Pro to see the full board.`
       : hasAccount
         ? "You're on Free: every pick, free, with the open verified record."
         : "You're seeing today's free sample. Create a free account to see every pick, free.";

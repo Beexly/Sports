@@ -1,5 +1,14 @@
 # Entitlement Remap Spec — picks go free, tools become the product
 
+> **⚠️ REVERSED (2026-07-10). DO NOT RE-APPLY.** The founder reversed Thread 1 ahead of
+> football season: the picks are the paid product again (gate the board, win the top of
+> funnel on content + engagement, not by giving picks away at peak demand).
+> `getEntitlements("FREE")` now returns `canSeePremiumPicks:false`, `canSeeConfidence:false`,
+> `dailyPickLimit:2` (a small daily teaser); `canSeeEdgeScore` stays public. PRO/ELITE own
+> the full board + confidence + depth + tools; ELITE adds alerts + the CLV ledger. This
+> document is retained for history only — the "Target end-state" below is no longer the
+> target.
+
 > Precise, sequenced implementation spec for the Thread 1 decision (stop charging for
 > picks). Written against the real enforcement code so it can be executed safely on the
 > hot path. Paywall enforcement is server-side and security-sensitive — follow the

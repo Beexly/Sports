@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
-import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
+import { getEntitlements, type PublicPick, type PickResult, type PickGrade, type RiskLevel, type FactorBreakdown } from "@sports/types";
 import { startOfDay, endOfDay } from "date-fns";
 import { parseDateParam } from "@/lib/parse-date-param";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
@@ -37,18 +37,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const session = await auth();
 
+  // Anonymous viewers get the canonical FREE entitlements — the SAME single
+  // source of truth (getEntitlements) that signed-in users resolve through.
+  // A hand-rolled fallback here is exactly how the two FREE definitions drifted
+  // apart (anon limited vs signed-in over-granted); never re-inline it.
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
-    : {
-        tier: "FREE" as const,
-        canSeePremiumPicks: false,
-        canSeeConfidence: false,
-        canSeeLineMovement: false,
-        canSeeFactorBreakdown: false,
-        canSeeEdgeScore: true,
-        canGetAlerts: false,
-        dailyPickLimit: 2,
-      };
+    : getEntitlements("FREE");
 
   const { searchParams } = new URL(req.url);
   const sportFilter = searchParams.get("sport");
@@ -151,11 +146,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
     const dataQualityScore = storedDqScore ?? Math.round(pick.game.dataQualityScore);
 
-    // FREE-tier picks always carry their confidence; premium picks need the
-    // canSeeConfidence entitlement. (Picks are free; confidence is the paid line
-    // until Step 3 frees the now-calibrated number.)
-    const shownConfidence =
-      entitlements.canSeeConfidence || pick.tier === "FREE" ? pick.confidence : null;
+    // Confidence is a PAID metric (Thread 1 reversed): gated solely on the
+    // viewer's entitlement — a teaser pick's tier no longer frees it. The free
+    // trust signal on the teaser is the Edge Index, not the confidence number.
+    const shownConfidence = entitlements.canSeeConfidence ? pick.confidence : null;
 
     return {
       id: pick.id,
@@ -186,11 +180,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
                 : null;
             })()
           : null,
-      // Gated fields. FREE-tier picks are the public free sample — they carry
-      // their confidence score (the owner's "2 free picks with confidence"
-      // decision). Premium picks are never returned to FREE viewers (tier filter
-      // above), and the board redacts confidence independently, so this does not
-      // leak the paid product.
+      // Gated fields. Premium picks are never returned to FREE viewers (tier
+      // filter above); confidence is entitlement-gated for every viewer.
       confidence: shownConfidence,
       // Honest calibrated display of the confidence shown, when the audited
       // calibrator is active (else null → surfaces show the raw heuristic %).

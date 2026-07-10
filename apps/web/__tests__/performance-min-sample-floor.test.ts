@@ -53,6 +53,10 @@ function settledPicks(count: number, wins: number, sportName = "NFL"): unknown[]
   return out;
 }
 
+function pick(result: "WIN" | "LOSS" | "PUSH", sportName: string): unknown {
+  return { result, game: { sport: { name: sportName } } };
+}
+
 async function callPerformance(): Promise<{ status: number; body: Record<string, unknown> }> {
   vi.resetModules();
   const mod = await import("@/app/api/performance/route");
@@ -119,6 +123,27 @@ describe("/api/performance — minimum-sample floor", () => {
     const data = body["data"] as PerfData;
     expect(data.insufficientSample).toBe(false);
     expect(data.overall.winRate).toBe(54);
+  });
+
+  it("per-sport: withholds a thin slice's rate even when the GLOBAL sample clears the floor", async () => {
+    // 120 MLB (over the floor) + 7 NBA (below it). Global = 127 >= 100, so
+    // insufficientSample is false and MLB shows a rate — but NBA's "0% on 7"
+    // must NOT publish; its count stays visible.
+    const rows = [
+      ...Array.from({ length: 120 }, (_, i) => pick(i < 66 ? "WIN" : "LOSS", "MLB")),
+      ...Array.from({ length: 7 }, () => pick("LOSS", "NBA")),
+    ];
+    mocks.pickFindMany.mockResolvedValue(rows);
+
+    const { body } = await callPerformance();
+    const data = body["data"] as PerfData;
+
+    expect(data.insufficientSample).toBe(false);
+    const mlb = data.bySport.find((s) => s.sport === "MLB")!;
+    const nba = data.bySport.find((s) => s.sport === "NBA")!;
+    expect(mlb.winRate).toBe(55); // 66/120
+    expect(nba.total).toBe(7); // count still shown (factual)
+    expect(nba.winRate).toBeNull(); // rate withheld — 7 is below the floor
   });
 
   it("empty sample stays null (unchanged) and is flagged insufficient", async () => {

@@ -49,12 +49,49 @@
  *     root or have its original pre-registration overwritten
  */
 
+import { randomBytes } from "node:crypto";
 import { db } from "@sports/db";
 import {
   dailySlateKey,
   planSlateCommitment,
   type HashFn,
 } from "@sports/prediction-engine";
+import { commitLedger, encodeFixedPoint, CURVE_ORDER } from "@sports/crypto";
+
+/** Uniform-enough blinding scalar in [0, n): 48 CSPRNG bytes mod n (bias ~2^-128). */
+function randomBlinding(): bigint {
+  return BigInt("0x" + randomBytes(48).toString("hex")) % CURVE_ORDER;
+}
+
+/**
+ * Pedersen aggregate over the slate's published edge scores (ZK roadmap Phase
+ * 0.5 — an additive layer on the Merkle root; the public hex commits to the
+ * slate's TOTAL claimed edge before kickoff, openable after). Pure-fail-open:
+ * any invalid input (missing/out-of-range edgeScore) or crypto failure returns
+ * nulls so the Merkle commitment is NEVER blocked by this layer. Blindings are
+ * CSPRNG-minted here (the crypto core never mints randomness); the summed
+ * blinding is the SECRET opener — persisted server-side, never on a public route.
+ */
+export function mintSlatePedersenAggregate(
+  edgeScores: readonly (number | null | undefined)[],
+): { hex: string; value: string; blindingSum: string } | null {
+  if (edgeScores.length === 0) return null;
+  const values: bigint[] = [];
+  for (const e of edgeScores) {
+    // Published edge scores live on the 0–100 scale (receipt column contract).
+    const enc = typeof e === "number" ? encodeFixedPoint(e, 0, 100) : null;
+    if (enc === null) return null; // fail open — an unencodable slate mints nothing
+    values.push(enc);
+  }
+  const blindings = values.map(() => randomBlinding());
+  const ledger = commitLedger(values, blindings);
+  if (ledger === null || ledger.aggregateCommitment === null) return null;
+  return {
+    hex: ledger.aggregateCommitment,
+    value: ledger.aggregateValue.toString(),
+    blindingSum: ledger.aggregateBlinding.toString(),
+  };
+}
 
 export interface SlateFreezeResult {
   readonly slateKey: string;
@@ -172,7 +209,9 @@ export async function freezeSlateCommitments(
             pick: { gameId: { in: games.map((g) => g.id) } },
             slateKey: null,
           },
-          select: { pickId: true, payload: true },
+          // edgeScore feeds the Pedersen aggregate (Phase 0.5); the Merkle
+          // planner still hashes exactly { pickId, payload }.
+          select: { pickId: true, payload: true, edgeScore: true },
           orderBy: { pickId: "asc" },
         });
 
@@ -200,6 +239,12 @@ export async function freezeSlateCommitments(
         // slateKey @unique constraint is the concurrent-double-commit
         // backstop; a P2002 rolls the whole transaction back and we stand
         // down (the other writer's identical-input root won).
+        // Pedersen aggregate (Phase 0.5): minted in the SAME atomic create —
+        // write-once with the commitment row, never backfilled onto a frozen
+        // slate. Nulls (unencodable slate / crypto failure) never block the
+        // Merkle path.
+        const pedersen = mintSlatePedersenAggregate(receipts.map((r) => r.edgeScore));
+
         try {
           await db.$transaction([
             db.slateCommitment.create({
@@ -208,6 +253,9 @@ export async function freezeSlateCommitments(
                 root: plan.commitment.root,
                 count: plan.commitment.count,
                 committedAt: new Date(plan.commitment.committedAt),
+                pedersenAggregateHex: pedersen?.hex ?? null,
+                pedersenAggregateValue: pedersen?.value ?? null,
+                pedersenBlindingSum: pedersen?.blindingSum ?? null,
               },
             }),
             db.pickProofReceipt.updateMany({

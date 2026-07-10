@@ -125,7 +125,12 @@ export function PickCard({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {/* Confidence */}
         <div className="min-w-0">
-          <p className="mb-1 text-[10px] font-medium text-ion-1">Confidence</p>
+          <p
+            className="mb-1 text-[10px] font-medium text-ion-1"
+            title="How strongly the model likes this pick, 0-100. Unlocks with Pro."
+          >
+            Confidence
+          </p>
           {canSeeConfidence && pick.confidence !== null ? (
             <ConfidenceBadge confidence={pick.confidence} calibrated={pick.confidenceCalibrated} />
           ) : (
@@ -135,7 +140,12 @@ export function PickCard({
 
         {/* Edge score */}
         <div className="min-w-0">
-          <p className="mb-1 text-[10px] font-medium text-ion-1">Edge Score</p>
+          <p
+            className="mb-1 text-[10px] font-medium text-ion-1"
+            title="How much better our number is than the market price, 0-100. Higher = more value. Free on every pick."
+          >
+            Edge Score
+          </p>
           {canSeeEdgeScore && pick.edgeScore !== null ? (
             <EdgeScoreBadge edgeScore={pick.edgeScore} />
           ) : (
@@ -549,10 +559,13 @@ function ResultBadge({ result }: { result: PickResult }) {
 // FREE users — so it links to /pricing instead of dead-ending. Purely navigational
 // (no entitlement logic; the server gate in /api/picks stays authoritative).
 function LockedValue({ label }: { label: string }) {
+  // Says WHAT unlocks it in plain words — a bare padlock + abbreviation reads
+  // as broken to a non-technical visitor; "Pro" turns it into an invitation.
   return (
     <Link
       href="/pricing"
-      aria-label={`${label} unlocks on Pro. See pricing`}
+      aria-label={`${label} unlocks with Pro. See pricing`}
+      title={`${label} unlocks with Pro — tap to see pricing`}
       className="inline-flex min-h-11 items-center gap-1 py-2 text-xs text-ion-1 transition-colors hover:text-plasma"
     >
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -563,6 +576,7 @@ function LockedValue({ label }: { label: string }) {
         />
       </svg>
       {label}
+      <span className="font-semibold text-plasma/90">· Pro</span>
     </Link>
   );
 }

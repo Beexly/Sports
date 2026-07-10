@@ -26,5 +26,5 @@ export {
 } from "./quiet-board.js";
 export { bookLineDispersion } from "./book-dispersion.js";
 export type { DispersionPickType, BookOddsRow } from "./book-dispersion.js";
-export { freezeSlateCommitments } from "./freeze-slate-commitments.js";
+export { freezeSlateCommitments, mintSlatePedersenAggregate } from "./freeze-slate-commitments.js";
 export type { SlateFreezeResult } from "./freeze-slate-commitments.js";
