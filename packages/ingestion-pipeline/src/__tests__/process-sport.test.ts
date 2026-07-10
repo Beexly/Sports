@@ -241,6 +241,39 @@ describe("processSport", () => {
     );
   });
 
+  it("captures bookDisagreementAtLock (max-min book spread) write-once at pick creation", async () => {
+    // Three books quoting the SPREAD for the game: -3, -3.5, -2.5 -> dispersion 1.0.
+    mocks.normalizeGames.mockReturnValue([normalizedGame()]);
+    mocks.normalizeOdds.mockReturnValue([
+      { gameExternalId: "ext-1", bookmaker: "a", market: "SPREADS", spread: -3 },
+      { gameExternalId: "ext-1", bookmaker: "b", market: "SPREADS", spread: -3.5 },
+      { gameExternalId: "ext-1", bookmaker: "c", market: "SPREADS", spread: -2.5 },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+    // scoredPick default is a SPREAD pick on game-1 (= gameUpsert id).
+
+    await processSport(SPORT, "key", gates());
+
+    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
+    expect(call.create["bookDisagreementAtLock"]).toBeCloseTo(1.0, 10);
+    // Write-once: never in the update path (immutable lock-time measurement).
+    const upd = (mocks.pickUpsert.mock.calls[0]![0] as { update: Record<string, unknown> }).update;
+    expect(upd).not.toHaveProperty("bookDisagreementAtLock");
+  });
+
+  it("writes null bookDisagreementAtLock when fewer than two books quote the kind", async () => {
+    mocks.normalizeGames.mockReturnValue([normalizedGame()]);
+    mocks.normalizeOdds.mockReturnValue([
+      { gameExternalId: "ext-1", bookmaker: "a", market: "SPREADS", spread: -3 },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+    await processSport(SPORT, "key", gates());
+
+    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
+    expect(call.create["bookDisagreementAtLock"]).toBeNull();
+  });
+
   it("derives isBootstrap from the canonical-history gate and propagates it", async () => {
     await processSport(SPORT, "key", gates({ canPersistCanonicalHistory: false }));
 
