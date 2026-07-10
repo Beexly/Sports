@@ -4,6 +4,7 @@ import { describe, it, expect } from "vitest";
 // import.meta.url check, so importing here never runs a migration.
 import {
   isTransientDbError,
+  classifyMigrateStatus,
   backoffMs,
   MAX_MIGRATE_ATTEMPTS,
 } from "../../../scripts/deploy/migrate-if-configured.mjs";
@@ -32,6 +33,43 @@ describe("isTransientDbError", () => {
     expect(isTransientDbError("")).toBe(false);
     // @ts-expect-error — guards the null/undefined path
     expect(isTransientDbError(undefined)).toBe(false);
+  });
+});
+
+describe("classifyMigrateStatus — the fail-closed pooled-endpoint verdict", () => {
+  it("recognizes a clean schema (the ONLY verdict that lets a build proceed)", () => {
+    expect(
+      classifyMigrateStatus("4 migrations found in prisma/migrations\n\nDatabase schema is up to date!")
+    ).toBe("up-to-date");
+  });
+
+  it("recognizes pending migrations — the exact condition that caused the /api/picks outage", () => {
+    expect(
+      classifyMigrateStatus(
+        "Following migration have not yet been applied:\n20260710210000_add_book_disagreement_at_lock"
+      )
+    ).toBe("pending");
+    expect(
+      classifyMigrateStatus("P3009 migrate found failed migration in the target database")
+    ).toBe("pending");
+    expect(classifyMigrateStatus("Error: P3005 The database schema is not empty")).toBe("pending");
+  });
+
+  it("pending signals outrank an up-to-date phrase in the same output (never read mixed output as safe)", () => {
+    expect(
+      classifyMigrateStatus(
+        "Database schema is up to date!\nWARN: Following migration have not yet been applied: 20990101_x"
+      )
+    ).toBe("pending");
+  });
+
+  it("anything unrecognizable is unknown — the caller must fail closed on it", () => {
+    expect(
+      classifyMigrateStatus("Error: P1001: Can't reach database server at `ep-x.neon.tech:5432`")
+    ).toBe("unknown");
+    expect(classifyMigrateStatus("")).toBe("unknown");
+    // @ts-expect-error — guards the null/undefined path
+    expect(classifyMigrateStatus(undefined)).toBe("unknown");
   });
 });
 
