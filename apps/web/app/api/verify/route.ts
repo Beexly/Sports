@@ -145,6 +145,11 @@ export async function GET(request: Request) {
       : null,
     payload: receipt.payload,
     contentHash: receipt.contentHash,
+    // The leaf preimage id — the recompute recipe is
+    // sha256("leaf:" + pickId + ":" + payload), NOT sha256(payload). Exposing
+    // pickId lets the UI show the exact string to hash so a skeptic's digest
+    // matches the stored receipt hash. (hashLeaf, proof-of-record.ts.)
+    pickId: receipt.pickId,
   });
 }
 

@@ -20,6 +20,28 @@ export type { Entitlements };
 const DEV_FAKE_ADMIN_TIER: SubscriptionTier = "ELITE";
 
 /**
+ * Boot-time, fail-loud defense-in-depth. The inline guard in
+ * `getUserEntitlements` already blocks the bypass at every call, but relying on
+ * a per-call check means a prod deploy that accidentally carries
+ * DEV_FAKE_ADMIN=true runs indefinitely, one refactor away from a paywall
+ * bypass. This assertion refuses to load the module in that state — a loud,
+ * un-missable failure at startup/build instead of a silent latent hole. There
+ * is no legitimate reason for DEV_FAKE_ADMIN to be set in production.
+ */
+export function assertDevAdminDisabledInProd(
+  env: NodeJS.ProcessEnv = process.env,
+): void {
+  if (env["NODE_ENV"] === "production" && env["DEV_FAKE_ADMIN"] === "true") {
+    throw new Error(
+      "DEV_FAKE_ADMIN must be unset in production — it grants ELITE to the " +
+        "dev-admin session and would bypass the paywall. Unset it and redeploy.",
+    );
+  }
+}
+
+assertDevAdminDisabledInProd();
+
+/**
  * Days a PAST_DUE member keeps premium access while Stripe retries the
  * charge. Anchored to pastDueSince (stamped once on the first failed
  * payment) so retries can't slide the window. After the window, or if

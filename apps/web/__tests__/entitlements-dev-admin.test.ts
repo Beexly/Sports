@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { getUserEntitlements } from "@/lib/entitlements";
+import { getUserEntitlements, assertDevAdminDisabledInProd } from "@/lib/entitlements";
 
 describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
   beforeEach(() => {
@@ -26,5 +26,32 @@ describe("getUserEntitlements DEV_FAKE_ADMIN shortcut", () => {
     process.env["DEV_FAKE_ADMIN"] = "false";
     const ent = await getUserEntitlements("dev-admin");
     expect(ent.tier).toBe("FREE");
+  });
+});
+
+describe("assertDevAdminDisabledInProd (boot-time fail-loud guard)", () => {
+  it("throws when DEV_FAKE_ADMIN=true in production", () => {
+    expect(() =>
+      assertDevAdminDisabledInProd({ NODE_ENV: "production", DEV_FAKE_ADMIN: "true" }),
+    ).toThrow(/DEV_FAKE_ADMIN must be unset in production/);
+  });
+
+  it("does not throw in production when DEV_FAKE_ADMIN is unset", () => {
+    expect(() => assertDevAdminDisabledInProd({ NODE_ENV: "production" })).not.toThrow();
+  });
+
+  it("does not throw in production when DEV_FAKE_ADMIN is not exactly 'true'", () => {
+    expect(() =>
+      assertDevAdminDisabledInProd({ NODE_ENV: "production", DEV_FAKE_ADMIN: "1" }),
+    ).not.toThrow();
+  });
+
+  it("allows DEV_FAKE_ADMIN=true outside production (dev/test/preview)", () => {
+    expect(() =>
+      assertDevAdminDisabledInProd({ NODE_ENV: "development", DEV_FAKE_ADMIN: "true" }),
+    ).not.toThrow();
+    expect(() =>
+      assertDevAdminDisabledInProd({ NODE_ENV: "test", DEV_FAKE_ADMIN: "true" }),
+    ).not.toThrow();
   });
 });

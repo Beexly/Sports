@@ -28,8 +28,61 @@ type VerifyResponse = {
     edgeScore: number;
     modelProb: number | null;
   };
+  payload?: string;
   contentHash?: string;
+  pickId?: string;
 };
+
+/**
+ * Recompute-it-yourself: the EXACT leaf preimage and the frozen receipt hash.
+ * The receipt hash is SHA-256 over `leaf:<pickId>:<payload>` (hashLeaf,
+ * proof-of-record.ts) — NOT over the payload alone. We show the full preimage
+ * string so a skeptic can copy it, run SHA-256, and get a digest that matches
+ * the receipt hash. Rendered on BOTH the verified branch (confirm intact) and
+ * the integrity-failure branch (reproduce WHY the stored record no longer
+ * matches) — the failure case is exactly when independent recompute matters
+ * most. Renders nothing until the endpoint returns the raw material.
+ */
+function RecomputePanel({
+  pickId,
+  payload,
+  contentHash,
+}: {
+  pickId?: string;
+  payload?: string;
+  contentHash?: string;
+}) {
+  if (!pickId || !payload || !contentHash) return null;
+  const preimage = `leaf:${pickId}:${payload}`;
+  return (
+    <details className="mt-6 border-t border-white/10 pt-4">
+      <summary className="cursor-pointer text-xs font-semibold uppercase tracking-wider text-ion-2 hover:text-ion-white">
+        Recompute it yourself
+      </summary>
+      <p className="mt-3 text-xs leading-relaxed text-ion-2">
+        Don&apos;t take our word for it. Run SHA-256 over the exact string below
+        &mdash; prefix included &mdash; and it equals the receipt hash we froze
+        before kickoff. Any change to a single character changes the digest.
+      </p>
+      <div className="mt-3">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-ion-2">
+          SHA-256 input (hash this exact string)
+        </p>
+        <pre className="mt-1 max-h-48 overflow-auto rounded bg-black/40 p-3 font-mono text-[11px] leading-relaxed text-ion-white">
+          {preimage}
+        </pre>
+      </div>
+      <div className="mt-3">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-ion-2">
+          Receipt hash (SHA-256)
+        </p>
+        <code className="mt-1 block break-all rounded bg-black/40 p-3 font-mono text-[11px] text-ion-white">
+          {contentHash}
+        </code>
+      </div>
+    </details>
+  );
+}
 
 export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
   const [hash, setHash] = useState(initialHash);
@@ -108,6 +161,15 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                 never happen, and showing you this state is the point of the
                 system: it cannot be hidden.
               </p>
+              {/* The failure case is exactly when independent recompute matters
+                  most — reproduce the mismatch yourself rather than trust the
+                  red verdict. Shows only for open (post-kickoff) receipts, which
+                  are the only ones that return the raw payload. */}
+              <RecomputePanel
+                pickId={res.pickId}
+                payload={res.payload}
+                contentHash={res.contentHash}
+              />
             </div>
           ) : res.sealed ? (
             <div>
@@ -180,6 +242,12 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                   </>
                 )}
               </dl>
+
+              <RecomputePanel
+                pickId={res.pickId}
+                payload={res.payload}
+                contentHash={res.contentHash}
+              />
             </div>
           )}
         </div>

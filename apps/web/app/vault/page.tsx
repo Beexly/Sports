@@ -37,8 +37,17 @@ export default function VaultPage() {
                 handful of games. Selective history is exactly what this
                 product is built to avoid.
               </p>
+              <p className="text-sm leading-relaxed text-ink-300">
+                Every pick already carries a tamper-evident receipt frozen before
+                kickoff. You don&apos;t have to wait for the Vault to check one:
+                paste any receipt hash and verify it against the committed payload
+                yourself.
+              </p>
               <div className="mt-2 flex flex-wrap gap-3">
-                <Link href="/methodology" className="btn btn-primary">
+                <Link href="/verify" className="btn btn-primary">
+                  Verify a receipt
+                </Link>
+                <Link href="/methodology" className="btn btn-ghost">
                   How the calibration works
                 </Link>
                 <Link href="/performance" className="btn btn-ghost">
