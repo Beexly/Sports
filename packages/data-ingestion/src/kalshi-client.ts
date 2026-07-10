@@ -20,6 +20,7 @@
  */
 
 import type { IndependentMarketFairValue } from "@sports/types";
+import { noStoreFetch } from "./no-store-fetch.js";
 
 // Public Trade API. Despite the host, this serves all Kalshi markets.
 const KALSHI_BASE_URL = "https://external-api.kalshi.com/trade-api/v2";
@@ -201,7 +202,7 @@ export class KalshiClient {
 
     for (let attempt = 0; attempt <= this.opts.maxRetries; attempt++) {
       try {
-        response = await globalThis.fetch(`${KALSHI_BASE_URL}${path}`, {
+        response = await noStoreFetch(`${KALSHI_BASE_URL}${path}`, {
           headers: { accept: "application/json" },
           signal: AbortSignal.timeout(KALSHI_TIMEOUT_MS),
         });

@@ -198,9 +198,13 @@ describe("processSport", () => {
 
   it("rejects a STALE UPSTREAM feed even when our fetch clock looks fresh (no-stale-data rule)", async () => {
     // We fetched now (validateFreshness passes) but every game's upstream odds are stale,
-    // so no game id is fresh and the whole job must fail closed.
+    // and a game commences INSIDE the quiet-board horizon — books always touch a live
+    // pregame market in the final day, so this is a real incident: fail closed.
     mocks.validateFreshness.mockReturnValue(true);
-    mocks.normalizeOdds.mockReturnValue([{ gameExternalId: "g1", bookmaker: "x" }]);
+    mocks.normalizeGames.mockReturnValue([
+      normalizedGame({ commenceTime: new Date(Date.now() + 6 * 3_600_000) }),
+    ]);
+    mocks.normalizeOdds.mockReturnValue([{ gameExternalId: "ext-1", bookmaker: "x" }]);
     mocks.freshGameIds.mockReturnValue(new Set());
 
     const result = await processSport(SPORT, "key", gates());
@@ -208,6 +212,33 @@ describe("processSport", () => {
     expect(result.status).toBe("failed");
     expect(result.error).toMatch(/stale/i);
     expect(mocks.pickUpsert).not.toHaveBeenCalled();
+  });
+
+  it("classifies an all-stale board with every game beyond the horizon as QUIET — zero-work success, no alarm, no picks", async () => {
+    // Mid-week MLS shape (2026-07-10 false-alarm incident): weekend games 40h+
+    // out, books untouched for 13h. Not an incident — but also NOT fresh: the
+    // run records SUCCESS with oddsInserted 0 so the public freshness clock is
+    // not reset, and no pick is generated from the stale rows.
+    mocks.validateFreshness.mockReturnValue(true);
+    mocks.normalizeGames.mockReturnValue([
+      normalizedGame({ commenceTime: new Date(Date.now() + 40 * 3_600_000) }),
+    ]);
+    mocks.normalizeOdds.mockReturnValue([{ gameExternalId: "ext-1", bookmaker: "x" }]);
+    mocks.freshGameIds.mockReturnValue(new Set());
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(result.status).toBe("success");
+    expect(result.note).toBe("quiet_board");
+    expect(result.games).toBe(0);
+    expect(result.picks).toBe(0);
+    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.oddsCreateMany).not.toHaveBeenCalled();
+    expect(mocks.ingestionRunUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ status: "SUCCESS", gamesUpserted: 0, oddsInserted: 0 }),
+      }),
+    );
   });
 
   it("derives isBootstrap from the canonical-history gate and propagates it", async () => {

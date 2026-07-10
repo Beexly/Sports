@@ -11,6 +11,7 @@ import {
   type Market,
   type SupportedSportKey,
 } from "./config.js";
+import { noStoreFetch } from "./no-store-fetch.js";
 
 export class OddsApiError extends Error {
   constructor(
@@ -125,7 +126,10 @@ export class OddsApiClient {
 
     for (let attempt = 0; attempt <= this.retryOptions.maxRetries; attempt++) {
       try {
-        response = await globalThis.fetch(url.toString(), {
+        // noStoreFetch: odds/scores MUST bypass Next's Data Cache — a cached
+        // quota header + frozen bookmaker timestamps took the whole pipeline
+        // down on 2026-07-10 (see no-store-fetch.ts).
+        response = await noStoreFetch(url.toString(), {
           signal: AbortSignal.timeout(ODDS_API_TIMEOUT_MS),
         });
       } catch (err) {

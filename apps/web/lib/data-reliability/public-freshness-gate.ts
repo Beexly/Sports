@@ -27,6 +27,32 @@ import { db } from "@sports/db";
 import { classifyRefreshFreshness } from "./refresh-sla";
 
 /**
+ * Structured 503 body for a surface darkened by the stale-data kill switch.
+ * Deliberately DISTINCT from `bootstrapGateResponse`: during the 2026-07-10
+ * incident the stale branch reused the bootstrap body, so from the outside
+ * "env flags regressed" and "board dark awaiting fresh data" were
+ * indistinguishable — the wrong runbook for either diagnosis. `reason` gives
+ * monitors and operators a stable discriminator.
+ */
+export function staleDataGateResponse(featureName: string): {
+  error: string;
+  reason: "stale_data";
+  bootstrapMode: false;
+  hint: string;
+} {
+  return {
+    error: `${featureName} is temporarily dark: awaiting fresh odds data.`,
+    reason: "stale_data",
+    bootstrapMode: false,
+    hint:
+      "The stale-data kill switch (FORCE_NO_BET_IF_STALE) suppressed this surface because " +
+      "the last odds-inserting ingestion run is older than the Refresh SLA. It reopens " +
+      "automatically on the next successful ingestion — check /api/health and recent " +
+      "ingestion runs, not the environment flags.",
+  };
+}
+
+/**
  * Returns true when the latest successful ingestion run is classified "stale"
  * by the shared Refresh SLA. A never-succeeded pipeline (no SUCCESS run, or a
  * SUCCESS run with no completedAt) classifies as stale — never-fresh is not

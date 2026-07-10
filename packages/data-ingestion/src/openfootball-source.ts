@@ -11,6 +11,8 @@
  * attack/defense λ and wiring into pick-gen are separate, founder-gated steps.
  */
 
+import { noStoreFetch } from "./no-store-fetch.js";
+
 const OPENFOOTBALL_BASE = "https://raw.githubusercontent.com/openfootball/football.json/master";
 const OPENFOOTBALL_TIMEOUT_MS = 15 * 1000;
 
@@ -119,7 +121,7 @@ export class OpenFootballSource {
       maxRetries: options.maxRetries ?? DEFAULTS.maxRetries,
       baseDelayMs: options.baseDelayMs ?? DEFAULTS.baseDelayMs,
       sleep: options.sleep ?? DEFAULTS.sleep,
-      fetchImpl: options.fetchImpl ?? globalThis.fetch,
+      fetchImpl: options.fetchImpl ?? noStoreFetch,
     };
   }
 

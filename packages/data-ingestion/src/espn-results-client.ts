@@ -15,6 +15,8 @@
  * is a separate, founder-gated step (it is MODEL_VERSION-affecting).
  */
 
+import { noStoreFetch } from "./no-store-fetch.js";
+
 const ESPN_BASE_URL = "https://site.api.espn.com/apis/site/v2/sports";
 const ESPN_TIMEOUT_MS = 15 * 1000;
 
@@ -164,7 +166,7 @@ export class EspnResultsClient {
       jitterRatio: options.jitterRatio ?? DEFAULTS.jitterRatio,
       random: options.random ?? DEFAULTS.random,
       sleep: options.sleep ?? DEFAULTS.sleep,
-      fetchImpl: options.fetchImpl ?? globalThis.fetch,
+      fetchImpl: options.fetchImpl ?? noStoreFetch,
     };
   }
 
