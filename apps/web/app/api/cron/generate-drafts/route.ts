@@ -13,7 +13,13 @@
  * The body is built by the pure, non-fabricating builder in
  * `content-engine/build-draft.ts` — every number in the brief comes from a real
  * DB count (game count, published pick count), so there is no ungrounded stat to
- * guard. Idempotent per day: a second run finds the date-slugged draft and skips.
+ * guard. Idempotent per day: a second run finds the date-slugged draft and skips,
+ * and a create that races another invocation is caught (unique-slug) and treated
+ * as already generated rather than throwing.
+ *
+ * The daily brief and the Monday weekly recap are INDEPENDENT: the weekly recap
+ * is attempted every Monday regardless of whether the daily brief already exists
+ * (so a retry where the daily landed but the weekly failed still gets its recap).
  *
  * Auth mirrors the other crons: Vercel calls with `Authorization: Bearer
  * <CRON_SECRET>` (see apps/web/app/api/cron/refresh-odds/route.ts).
@@ -36,24 +42,90 @@ import type { ContentSourceRecord } from "@/lib/content-engine/types";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
+type DraftOutcome = { slug: string; created: boolean; skipped?: boolean; reason?: string };
+
+/**
+ * True for Prisma's P2002 unique-constraint violation. Under stub mode (no
+ * DATABASE_URL) writes are no-ops, so this only fires against a real DB — a
+ * concurrent invocation that inserted the same date-slug between our findFirst
+ * and create. Checked structurally so the pure route stays decoupled from the
+ * generated Prisma error class.
+ */
+function isUniqueConstraintError(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    (err as { code?: unknown }).code === "P2002"
+  );
+}
+
+/**
+ * Persist a draft, treating a raced unique-slug create as "already generated"
+ * rather than an error — so overlapping cron/manual invocations both return the
+ * documented skipped shape instead of one throwing a 500.
+ */
+async function createDraftIdempotent(
+  createData: unknown,
+  slug: string,
+  onCreated: DraftOutcome,
+): Promise<DraftOutcome> {
+  try {
+    await db.contentDraft.create({
+      data: createData as Parameters<typeof db.contentDraft.create>[0]["data"],
+    });
+    return onCreated;
+  } catch (err) {
+    if (isUniqueConstraintError(err)) {
+      return { slug, created: false, skipped: true, reason: "already generated today (raced)" };
+    }
+    throw err;
+  }
+}
+
 export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
   if (denied) return denied;
 
   const now = new Date();
+  const dayStart = startOfDay(now);
+  const dayEnd = endOfDay(now);
+
+  const daily = await generateDailyBrief(now, dayStart, dayEnd);
+
+  // Mondays: the weekly transparency recap runs INDEPENDENTLY of the daily
+  // result. A retry where the daily already exists but the weekly failed (the
+  // catch below), a manual daily backfill, or a concurrent duplicate must still
+  // get the recap attempted. Isolated catch: a recap failure never fails the
+  // route or the daily brief.
+  let weeklyRecap: DraftOutcome | null = null;
+  if (now.getUTCDay() === 1) {
+    try {
+      weeklyRecap = await generateWeeklyRecap(now, dayStart);
+    } catch (err) {
+      console.error(
+        `[cron:generate-drafts] weekly recap failed: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+  }
+
+  return NextResponse.json({ ok: true, daily, weeklyRecap });
+}
+
+async function generateDailyBrief(
+  now: Date,
+  dayStart: Date,
+  dayEnd: Date,
+): Promise<DraftOutcome> {
   const isoDate = now.toISOString().slice(0, 10);
   const slug = `daily-slate-brief-${isoDate}`;
 
-  // Idempotent per calendar day: the date-slugged brief is created once.
   const existing = await db.contentDraft
     .findFirst({ where: { slug }, select: { id: true } })
     .catch(() => null);
   if (existing) {
-    return NextResponse.json({ ok: true, skipped: true, reason: "already generated today", slug });
+    return { slug, created: false, skipped: true, reason: "already generated today" };
   }
-
-  const dayStart = startOfDay(now);
-  const dayEnd = endOfDay(now);
 
   const [gameCount, publishedPickCount] = await Promise.all([
     db.game.count({ where: { commenceTime: { gte: dayStart, lte: dayEnd } } }),
@@ -103,53 +175,21 @@ export async function GET(request: Request): Promise<NextResponse> {
     sources,
   });
 
-  const createData = contentDraftToCreateData(record, now);
-
-  // Structural match to Prisma's ContentDraftCreateInput (enum unions + nested
-  // sources.create + Json metadata); the seed uses the same shape. Cast keeps
-  // the pure mapper decoupled from the generated client.
-  await db.contentDraft.create({
-    data: createData as unknown as Parameters<typeof db.contentDraft.create>[0]["data"],
-  });
-
-  // Mondays additionally draft the weekly transparency recap — the honest
-  // W/L/Push record of the prior 7 days, counted canonical-only exactly like
-  // /api/performance. The builder itself holds the copy when the performance
-  // gate is off, so this never fabricates a record. Failure here must not
-  // void the daily brief above, hence the isolated catch.
-  let weeklyRecap: { slug: string; created: boolean } | null = null;
-  if (now.getUTCDay() === 1) {
-    try {
-      weeklyRecap = await generateWeeklyRecap(now, dayStart);
-    } catch (err) {
-      console.error(
-        `[cron:generate-drafts] weekly recap failed: ${err instanceof Error ? err.message : err}`,
-      );
-    }
-  }
-
-  return NextResponse.json({
-    ok: true,
-    created: true,
+  return createDraftIdempotent(contentDraftToCreateData(record, now), slug, {
     slug,
-    status: "DRAFT",
-    gameCount,
-    publishedPickCount,
-    weeklyRecap,
+    created: true,
+    reason: "DRAFT",
   });
 }
 
-async function generateWeeklyRecap(
-  now: Date,
-  dayStart: Date,
-): Promise<{ slug: string; created: boolean }> {
+async function generateWeeklyRecap(now: Date, dayStart: Date): Promise<DraftOutcome> {
   const isoDate = now.toISOString().slice(0, 10);
   const slug = `weekly-transparency-recap-${isoDate}`;
 
   const existing = await db.contentDraft
     .findFirst({ where: { slug }, select: { id: true } })
     .catch(() => null);
-  if (existing) return { slug, created: false };
+  if (existing) return { slug, created: false, skipped: true, reason: "already generated" };
 
   const weekStart = subDays(dayStart, 7);
   const canonicalSettledWhere = {
@@ -164,11 +204,12 @@ async function generateWeeklyRecap(
     db.pick.count({ where: { ...canonicalSettledWhere, result: "LOSS" } }),
     db.pick.count({ where: { ...canonicalSettledWhere, result: "PUSH" } }),
   ]);
+  const settledCount = winCount + lossCount + pushCount;
 
   const summary: WeeklyRecapSummary = {
     weekStart,
     weekEnd: dayStart,
-    settledCount: winCount + lossCount + pushCount,
+    settledCount,
     winCount,
     lossCount,
     pushCount,
@@ -176,27 +217,41 @@ async function generateWeeklyRecap(
     performanceGateOn: getReadinessGates().canExposePerformanceStats,
   };
 
+  // WEEKLY_RECAP requires BOTH a PERFORMANCE and a PICK source
+  // (source-coverage.ts: WEEKLY_RECAP: ["PERFORMANCE", "PICK"]). Attaching only
+  // PERFORMANCE left every recap stuck at NEEDS_SOURCE, un-approvable without a
+  // manual patch. Both are the same real settled-pick window, sourced honestly.
+  const sources: ContentSourceRecord[] = [
+    {
+      sourceType: "PERFORMANCE",
+      sourceLabel: "Settled canonical record (7-day window)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: `W ${winCount} / L ${lossCount} / Push ${pushCount}, bootstrap + seed excluded.`,
+    },
+    {
+      sourceType: "PICK",
+      sourceLabel: "Settled canonical picks (7-day window)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: `${settledCount} settled canonical picks graded in the window.`,
+    },
+  ];
+
   const record = buildWeeklyRecapDraft({
     summary,
     generatedBy: "cron:generate-drafts",
     slug,
-    sources: [
-      {
-        sourceType: "PERFORMANCE",
-        sourceLabel: "Settled canonical picks (7-day window)",
-        sourceUrl: null,
-        sourceStatus: "FRESH",
-        trustLevel: "PLATFORM",
-        fetchedAt: now,
-        notes: `W ${winCount} / L ${lossCount} / Push ${pushCount}, bootstrap + seed excluded.`,
-      },
-    ],
+    sources,
   });
 
-  const createData = contentDraftToCreateData(record, now);
-  await db.contentDraft.create({
-    data: createData as unknown as Parameters<typeof db.contentDraft.create>[0]["data"],
+  return createDraftIdempotent(contentDraftToCreateData(record, now), slug, {
+    slug,
+    created: true,
+    reason: "DRAFT",
   });
-
-  return { slug, created: true };
 }
