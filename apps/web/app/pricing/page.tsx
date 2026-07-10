@@ -168,13 +168,14 @@ const COMPARISON_FEATURES = [
 ] as const;
 
 // Fantasy mirrors Free on the betting columns (it adds no betting depth) and unlocks
-// the fantasy suite — so the table tells the honest "Free + the fantasy suite" story.
-// "Signals per day" is "All" for every tier: picks were de-paywalled (dailyPickLimit is
-// null for all — ENTITLEMENT_REMAP_SPEC), so the cell must not advertise a per-day cap
-// the server doesn't enforce. The paid line differentiates on depth/tools/alerts.
+// the fantasy suite — so the table tells the honest "Free teaser + the fantasy suite"
+// story. The picks are the PAID product (Thread 1 reversed): FREE and FANTASY get a
+// 2-pick daily teaser without the confidence number (the server enforces exactly
+// this — dailyPickLimit:2, canSeeConfidence:false); the full board + confidence
+// unlock with Pro. Cells must never advertise more than the server grants.
 const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | boolean)[]> = {
-  FREE: ["All", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true, "Trial"],
-  FANTASY: ["All", "Sampler", true, "Free picks", false, "Counts only", false, false, false, false, false, false, true, true, true],
+  FREE: ["2/day teaser", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true, "Trial"],
+  FANTASY: ["2/day teaser", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true, true],
   PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
   ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
 };
