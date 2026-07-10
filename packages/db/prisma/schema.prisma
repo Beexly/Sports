@@ -404,11 +404,6 @@ model Pick {
   clvCapturedAt  DateTime?  // fetchedAt of the closing snapshot used
   clvGradedAt    DateTime?  // when CLV was graded at settlement
 
-  // Book-line dispersion (max−min across books) at lock, in the pick kind's unit
-  // (points for SPREAD/TOTAL, implied-prob for MONEYLINE). The CLV decomposition's
-  // liquidity regressor (clv-decomposition.ts bookDisagreementAtLock). Captured
-  // write-once at publish (per-book lines only in hand then); null when <2 books.
-  bookDisagreementAtLock Float?
 
   // Bootstrap safety — true for all picks written before CANONICAL_HISTORY_ENABLED=true.
   // Bootstrap picks are stored for admin review and settlement but excluded from
@@ -479,15 +474,6 @@ model SlateCommitment {
   count       Int                 // pre-registered population size (the fixed denominator)
   committedAt DateTime            // published BEFORE the first kickoff
 
-  // Pedersen aggregate over the slate's published edge scores (additive layer on
-  // the Merkle root; see docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md Phase 0.5).
-  // Hex is PUBLIC (the sealed aggregate commitment). Value + blindingSum are the
-  // OPENER — server-side secrets until a deliberate post-slate open; they must
-  // never appear in a public route's select. Nullable: minted at freeze going
-  // forward; a mint failure never blocks the Merkle commitment.
-  pedersenAggregateHex   String?
-  pedersenAggregateValue String? // decimal-string bigint (fixed-point encoded sum)
-  pedersenBlindingSum    String? // decimal-string bigint — SECRET until open
 
   createdAt   DateTime @default(now())
 
