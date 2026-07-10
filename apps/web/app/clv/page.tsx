@@ -93,13 +93,14 @@ export default async function ClvPage() {
             <p className="mt-1.5 text-sm text-ion-1">
               The CLV Tracker logs your bets, settles them against the closing line,
               and shows whether <em>you</em> beat the close: your real scoreboard,
-              stored in your browser. The same metric we hold ourselves to.
+              stored in your browser. The same metric we hold ourselves to. Part of
+              the Elite toolkit.
             </p>
             <Link
               href="/track"
               className="mt-4 inline-flex items-center rounded-lg border border-orbital-cyan/50 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan hover:bg-orbital-cyan/20"
             >
-              Open the CLV Tracker →
+              Open the CLV Tracker (Elite) →
             </Link>
           </div>
 
