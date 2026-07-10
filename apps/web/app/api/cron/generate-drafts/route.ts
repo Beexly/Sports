@@ -21,9 +21,15 @@
 
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
-import { startOfDay, endOfDay } from "date-fns";
+import { startOfDay, endOfDay, subDays } from "date-fns";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { buildDailyBriefDraft, type SlateSummary } from "@/lib/content-engine/build-draft";
+import { getReadinessGates } from "@sports/prediction-engine";
+import {
+  buildDailyBriefDraft,
+  buildWeeklyRecapDraft,
+  type SlateSummary,
+  type WeeklyRecapSummary,
+} from "@/lib/content-engine/build-draft";
 import { contentDraftToCreateData } from "@/lib/content-engine/persist-draft";
 import type { ContentSourceRecord } from "@/lib/content-engine/types";
 
@@ -106,6 +112,22 @@ export async function GET(request: Request): Promise<NextResponse> {
     data: createData as unknown as Parameters<typeof db.contentDraft.create>[0]["data"],
   });
 
+  // Mondays additionally draft the weekly transparency recap — the honest
+  // W/L/Push record of the prior 7 days, counted canonical-only exactly like
+  // /api/performance. The builder itself holds the copy when the performance
+  // gate is off, so this never fabricates a record. Failure here must not
+  // void the daily brief above, hence the isolated catch.
+  let weeklyRecap: { slug: string; created: boolean } | null = null;
+  if (now.getUTCDay() === 1) {
+    try {
+      weeklyRecap = await generateWeeklyRecap(now, dayStart);
+    } catch (err) {
+      console.error(
+        `[cron:generate-drafts] weekly recap failed: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+  }
+
   return NextResponse.json({
     ok: true,
     created: true,
@@ -113,5 +135,68 @@ export async function GET(request: Request): Promise<NextResponse> {
     status: "DRAFT",
     gameCount,
     publishedPickCount,
+    weeklyRecap,
   });
+}
+
+async function generateWeeklyRecap(
+  now: Date,
+  dayStart: Date,
+): Promise<{ slug: string; created: boolean }> {
+  const isoDate = now.toISOString().slice(0, 10);
+  const slug = `weekly-transparency-recap-${isoDate}`;
+
+  const existing = await db.contentDraft
+    .findFirst({ where: { slug }, select: { id: true } })
+    .catch(() => null);
+  if (existing) return { slug, created: false };
+
+  const weekStart = subDays(dayStart, 7);
+  const canonicalSettledWhere = {
+    isPublished: true,
+    isBootstrap: false,
+    NOT: { modelVersion: "v5.0.0-seed" },
+    settledAt: { gte: weekStart, lt: dayStart },
+  } as const;
+
+  const [winCount, lossCount, pushCount] = await Promise.all([
+    db.pick.count({ where: { ...canonicalSettledWhere, result: "WIN" } }),
+    db.pick.count({ where: { ...canonicalSettledWhere, result: "LOSS" } }),
+    db.pick.count({ where: { ...canonicalSettledWhere, result: "PUSH" } }),
+  ]);
+
+  const summary: WeeklyRecapSummary = {
+    weekStart,
+    weekEnd: dayStart,
+    settledCount: winCount + lossCount + pushCount,
+    winCount,
+    lossCount,
+    pushCount,
+    bootstrapExcluded: true,
+    performanceGateOn: getReadinessGates().canExposePerformanceStats,
+  };
+
+  const record = buildWeeklyRecapDraft({
+    summary,
+    generatedBy: "cron:generate-drafts",
+    slug,
+    sources: [
+      {
+        sourceType: "PERFORMANCE",
+        sourceLabel: "Settled canonical picks (7-day window)",
+        sourceUrl: null,
+        sourceStatus: "FRESH",
+        trustLevel: "PLATFORM",
+        fetchedAt: now,
+        notes: `W ${winCount} / L ${lossCount} / Push ${pushCount}, bootstrap + seed excluded.`,
+      },
+    ],
+  });
+
+  const createData = contentDraftToCreateData(record, now);
+  await db.contentDraft.create({
+    data: createData as unknown as Parameters<typeof db.contentDraft.create>[0]["data"],
+  });
+
+  return { slug, created: true };
 }
