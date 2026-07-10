@@ -404,6 +404,12 @@ model Pick {
   clvCapturedAt  DateTime?  // fetchedAt of the closing snapshot used
   clvGradedAt    DateTime?  // when CLV was graded at settlement
 
+  // Book-line dispersion (max−min across books) at lock, in the pick kind's unit
+  // (points for SPREAD/TOTAL, implied-prob for MONEYLINE). The CLV decomposition's
+  // liquidity regressor (clv-decomposition.ts bookDisagreementAtLock). Captured
+  // write-once at publish (per-book lines only in hand then); null when <2 books.
+  bookDisagreementAtLock Float?
+
   // Bootstrap safety — true for all picks written before CANONICAL_HISTORY_ENABLED=true.
   // Bootstrap picks are stored for admin review and settlement but excluded from
   // canonical performance metrics and public performance stats.
