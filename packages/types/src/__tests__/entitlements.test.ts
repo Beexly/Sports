@@ -6,13 +6,15 @@ describe("getEntitlements", () => {
     const ents = getEntitlements("FREE");
 
     it("tier is FREE", () => expect(ents.tier).toBe("FREE"));
-    it("can see premium picks (picks are free)", () => expect(ents.canSeePremiumPicks).toBe(true));
-    it("can see confidence (calibrated-honest, freed for FREE)", () => expect(ents.canSeeConfidence).toBe(true));
+    // Thread 1 reversed: picks are the paid product again. FREE = teaser only.
+    it("cannot see premium picks (picks are the paid product)", () =>
+      expect(ents.canSeePremiumPicks).toBe(false));
+    it("cannot see confidence (paid)", () => expect(ents.canSeeConfidence).toBe(false));
     it("cannot see line movement", () => expect(ents.canSeeLineMovement).toBe(false));
     it("cannot see factor breakdown", () => expect(ents.canSeeFactorBreakdown).toBe(false));
-    it("can see edge score", () => expect(ents.canSeeEdgeScore).toBe(true));
+    it("can see edge score (public trust signal)", () => expect(ents.canSeeEdgeScore).toBe(true));
     it("cannot get alerts", () => expect(ents.canGetAlerts).toBe(false));
-    it("no daily pick limit (picks are free)", () => expect(ents.dailyPickLimit).toBeNull());
+    it("gets a small daily teaser (2 picks)", () => expect(ents.dailyPickLimit).toBe(2));
   });
 
   describe("PRO tier", () => {

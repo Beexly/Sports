@@ -114,9 +114,9 @@ describe("getUserEntitlements — production DB path", () => {
     const ent = await getUserEntitlements("lapsed_user");
 
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
-    expect(ent.canSeeConfidence).toBe(true); // confidence freed for FREE (calibrated-honest, Step 3)
-    expect(ent.dailyPickLimit).toBeNull();
+    expect(ent.canSeePremiumPicks).toBe(false); // picks are the paid product (Thread 1 reversed)
+    expect(ent.canSeeConfidence).toBe(false); // confidence is paid
+    expect(ent.dailyPickLimit).toBe(2); // small daily teaser
     expect(ent.canUseFantasyFull).toBe(false); // fantasy suite is paid; FREE gets a depth-limited trial
   });
 
@@ -128,7 +128,7 @@ describe("getUserEntitlements — production DB path", () => {
     const ent = await getUserEntitlements("user_1");
 
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
+    expect(ent.canSeePremiumPicks).toBe(false); // picks are paid; fail-closed to FREE means teaser only
   });
 
   it("rethrows unexpected database errors instead of masking them", async () => {
@@ -155,8 +155,8 @@ describe("requireEntitlement", () => {
   it("throws EntitlementError when the check fails", async () => {
     mocks.subscriptionFindFirst.mockResolvedValue(null);
 
-    // FREE can now see confidence (it is calibrated-honest); gate on a flag FREE
-    // still lacks (factor breakdown is Pro+) to exercise the throw path.
+    // FREE lacks the paid flags (confidence, factor breakdown, premium picks);
+    // gate on factor breakdown (Pro+) to exercise the throw path.
     await expect(requireEntitlement("free_user", (e) => e.canSeeFactorBreakdown)).rejects.toThrow(
       EntitlementError
     );
@@ -192,7 +192,7 @@ describe("getUserEntitlements — DEV_FAKE_ADMIN gating", () => {
 
     // Falls through to the real DB path → fails closed to FREE.
     expect(ent.tier).toBe("FREE");
-    expect(ent.canSeePremiumPicks).toBe(true); // picks are free for all tiers; fail-closed is asserted via tier==="FREE"
+    expect(ent.canSeePremiumPicks).toBe(false); // picks are paid; fail-closed to FREE means teaser only
     expect(mocks.subscriptionFindFirst).toHaveBeenCalledTimes(1);
   });
 

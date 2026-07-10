@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
-import type { PublicPick, PickResult, PickGrade, RiskLevel, FactorBreakdown } from "@sports/types";
+import { getEntitlements, type PublicPick, type PickResult, type PickGrade, type RiskLevel, type FactorBreakdown } from "@sports/types";
 import { startOfDay, endOfDay } from "date-fns";
 import { parseDateParam } from "@/lib/parse-date-param";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
@@ -37,18 +37,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const session = await auth();
 
+  // Anonymous viewers get the canonical FREE entitlements — the SAME single
+  // source of truth (getEntitlements) that signed-in users resolve through.
+  // A hand-rolled fallback here is exactly how the two FREE definitions drifted
+  // apart (anon limited vs signed-in over-granted); never re-inline it.
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
-    : {
-        tier: "FREE" as const,
-        canSeePremiumPicks: false,
-        canSeeConfidence: false,
-        canSeeLineMovement: false,
-        canSeeFactorBreakdown: false,
-        canSeeEdgeScore: true,
-        canGetAlerts: false,
-        dailyPickLimit: 2,
-      };
+    : getEntitlements("FREE");
 
   const { searchParams } = new URL(req.url);
   const sportFilter = searchParams.get("sport");

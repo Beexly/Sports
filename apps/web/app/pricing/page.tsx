@@ -31,7 +31,7 @@ const phase = getCurrentPricingPhase();
 export const metadata: Metadata = {
   title: "Pricing: Founding-Member Rates, Locked For Life",
   description:
-    "Free, honest picks, a public record as settled history accumulates, and paid tools for depth, analytics, and alerts. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
+    "A free daily sample and a public record as settled history accumulates, with the full board, confidence, depth, and alerts on the paid tiers. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing · ${BRAND_NAME}`,
@@ -45,12 +45,13 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 const FREE_FEATURES = [
-  { label: "Every pick, free: honest labels & the open public record", included: true },
-  { label: "Edge Index on every signal", included: true },
+  { label: "2 free picks daily, with the Edge Index and the open public record", included: true },
+  { label: "Edge Index on every free pick", included: true },
   { label: "Game matchup info + pick type", included: true },
   { label: "Public record & calibration status", included: true },
   { label: "The Academy: full training floor", included: true },
-  { label: "Confidence on the full board (Pro)", included: false },
+  { label: "The full daily board, every signal (Pro)", included: false },
+  { label: "Confidence rating on every pick (Pro)", included: false },
   { label: "Factor trail & evidence audit (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
   { label: "Real-time alerts (Elite)", included: false },
@@ -59,7 +60,7 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   { label: "The Academy + public record", included: true },
-  { label: "Every signal, every day: all 7 sports", included: true },
+  { label: "The full board unlocked: every signal, every day, all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
   { label: "Full factor trail & reasoning", included: true },
   { label: "Evidence audit: full forensic detail", included: true },
@@ -90,7 +91,7 @@ const FANTASY_FEATURES = [
   { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
   { label: "Bye-week fragility + roster-construction guidance", included: true },
   { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
-  { label: "Every pick, free + the public record", included: true },
+  { label: "The 2 free daily picks + the public record", included: true },
   { label: "The Academy: full training floor", included: true },
   { label: "Betting depth: factor trail & line movement (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
@@ -105,7 +106,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "The discipline, sampled: every pick free, the public record, and the full Academy.",
+    description: "The discipline, sampled: 2 free picks daily, the public record, and the full Academy.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],

@@ -135,24 +135,27 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
   const isPaid = tier !== "FREE"; // FANTASY, PRO, or ELITE — the paid fantasy line
   return {
     tier,
-    // Entitlement remap Step 1 (ENTITLEMENT_REMAP_SPEC.md): picks are FREE.
-    // All tiers see all picks with no daily cap. The paid line is depth +
-    // tools + analytics + alerts, never access to the picks themselves.
-    canSeePremiumPicks: true,
-    // FREE confidence is freed now that the public number is calibrated-honest
-    // (Thread 2 wired the audited calibrator into the public path; Step 3).
-    // When CALIBRATION_ADJUSTMENTS_ENABLED is on, the displayed confidence is the
-    // honest calibrated label; honest first, free second.
-    canSeeConfidence: true,
+    // Thread 1 REVERSED (docs/strategy/ENTITLEMENT_REMAP_SPEC.md): the picks are
+    // the paid product again. Ahead of football season the top of funnel is won
+    // on content + engagement, not by giving picks away at the moment demand
+    // peaks. FREE gets a small daily TEASER (a couple of picks, no confidence
+    // number); the paid betting line — full board, confidence, depth, tools,
+    // alerts — unlocks with PRO/ELITE. FANTASY is a separate product line (the
+    // fantasy suite), not the betting picks.
+    canSeePremiumPicks: isPro,
+    canSeeConfidence: isPro,
     canSeeLineMovement: isPro,
     canSeeFactorBreakdown: isPro,
+    // Edge Index stays public on every pick — the free trust/transparency signal
+    // that makes the teaser credible and pulls visitors toward the paid board.
     canSeeEdgeScore: true,
     canGetAlerts: tier === "ELITE",
-    dailyPickLimit: null,
+    // FREE + FANTASY see a small betting-picks teaser; PRO/ELITE get the full board.
+    dailyPickLimit: isPro ? null : 2,
     canUseTrendLab: isPro,
     canUseParlayMri: isPro,
     canUseClvLedger: tier === "ELITE",
-    // Fantasy suite — the new FANTASY tier unlocks it; PRO/ELITE include it. FREE's
+    // Fantasy suite — the FANTASY tier unlocks it; PRO/ELITE include it. FREE's
     // trial is depth-limited at the page/API level, never a flag flip.
     canUseFantasyDraftSuite: isPaid,
     canUseFantasyFull: isPaid,

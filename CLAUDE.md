@@ -68,9 +68,11 @@ grandfathered for life. See `COMPETITIVE_PRICING_AND_PACKAGING.md`.
 
 | Tier | Founding rate (live) | Access |
 |---|---|---|
-| Free | $0 | 1 pick/day, no confidence scores; public calibration/track record |
-| Pro | $14.99/mo · $99/yr | All picks, confidence scores, factor trail, line movement, 7 sports |
-| Elite | $24.99/mo · $179/yr | All Pro + real-time email & push alerts |
+| Free | $0 | 2 picks/day teaser, no confidence scores; public Edge Index + calibration/track record |
+| Pro | $14.99/mo · $99/yr | Full board (all picks), confidence scores, factor trail, line movement, Trend Lab + Parlay MRI, 7 sports |
+| Elite | $24.99/mo · $179/yr | All Pro + real-time email & push alerts + CLV/line-value ledger |
+
+(Fantasy tier — $4.99/mo · $49/yr — unlocks the fantasy suite; on the betting picks it sees the same free teaser, not the full board.)
 
 Ladder (named ahead of time): FOUNDING → PROVEN (≥100 settled + published calibration)
 → ESTABLISHED (≥500 settled + verified CLV ≥52.4%) → AUTHORITY (multi-season ROI).

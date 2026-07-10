@@ -102,12 +102,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ? Math.round((overall.wins / (overall.wins + overall.losses)) * 100 * 10) / 10
       : null;
 
-  // When below the floor, suppress per-sport rates too — the counts stay
-  // visible (they're factual), only the derived rate is withheld.
-  const publishedStats = (insufficientSample
-    ? stats.map((s) => ({ ...s, winRate: null }))
-    : stats
-  ).sort((a, b) => b.total - a.total);
+  // Per-slice honesty: withhold a per-sport win rate whenever THAT sport's own
+  // decided sample is below the floor — even when the global sample clears it.
+  // Otherwise a thin slice (e.g. "NBA 0% on 7") publishes a misleading rate off
+  // a handful of picks while the healthy global total masks it. The COUNTS stay
+  // visible for every sport (they're factual); only the derived rate is withheld.
+  const publishedStats = stats
+    .map((s) => ({
+      ...s,
+      winRate:
+        insufficientSample || s.wins + s.losses < minSettledFloor ? null : s.winRate,
+    }))
+    .sort((a, b) => b.total - a.total);
 
   return NextResponse.json({
     success: true,
