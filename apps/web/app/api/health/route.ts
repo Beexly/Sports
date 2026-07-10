@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { REFRESH_STALE_AFTER_MINUTES } from "@/lib/data-reliability/refresh-sla";
 
+// A no-arg GET handler is statically cached by Next 14 unless it opts out —
+// which served hours-old "healthy" snapshots from the Vercel edge (observed
+// x-vercel-cache: HIT, age ~3h). A health check must reflect live state.
+export const dynamic = "force-dynamic";
+
 type HealthCheck = {
   status: "ok" | "error";
   detail?: string;

@@ -18,6 +18,14 @@ describe("/api/health", () => {
     expect(src).toMatch(/export\s+async\s+function\s+GET/);
   });
 
+  it("opts out of static caching (force-dynamic) so probes see live state", () => {
+    // Without this, Next 14 statically caches the no-arg GET handler and the
+    // Vercel edge serves hours-old "healthy" snapshots (observed in prod:
+    // x-vercel-cache HIT with age ~3h). A cached health check is worse than
+    // none — it can report a dead pipeline as fresh.
+    expect(src).toMatch(/export\s+const\s+dynamic\s*=\s*["']force-dynamic["']/);
+  });
+
   it("returns a Response.json envelope (NextResponse.json)", () => {
     expect(src).toMatch(/NextResponse\.json/);
   });
