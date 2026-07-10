@@ -15,17 +15,22 @@
  *    production database. Build proceeds against the runtime env it has.
  *  - No VERCEL_ENV (local)  → migrate only when both DB URLs are present.
  *
- * Resilience: Neon's serverless compute auto-suspends when idle, so a
- * production build can hit it cold and `prisma migrate deploy` fails with
- * P1001 ("Can't reach database server") — even when there are no pending
- * migrations to apply. (This broke the deploy of #49, and again after a
- * password rotation.) Policy on failure:
+ * Resilience vs. safety (the #70 outage): Neon's direct endpoint can be
+ * unreachable from the build network (P1001 cold-start, network path, stale
+ * DIRECT_URL) even when the pooled endpoint the runtime uses is healthy. The
+ * old policy warned and PROCEEDED on transient failures — and once shipped a
+ * Prisma client referencing columns whose migration was never applied, taking
+ * /api/picks down and breaking pick creation. The gate is now FAIL-CLOSED:
  *  - NON-transient error (drift, conflict, bad SQL) → fail the build. Never
  *    ship code against an unmigrated schema.
- *  - TRANSIENT connectivity (P1001 / cold-start / unreachable from the build
- *    network) after all retries → warn and PROCEED. We never reached the
- *    server, so nothing was half-applied; the runtime connects through the
- *    pooled endpoint independently. A connectivity blip must not gate a deploy.
+ *  - TRANSIENT connectivity after all retries → VERIFY, don't trust: run
+ *    `prisma migrate status` against the POOLED endpoint (DATABASE_URL as the
+ *    direct URL — the runtime provably reaches it).
+ *      · status says "Database schema is up to date"  → proceed. The deploy
+ *        is schema-safe; the blip only affected the direct endpoint.
+ *      · status reports pending/failed migrations, or itself cannot reach the
+ *        DB → FAIL THE BUILD. A client ahead of the applied schema is exactly
+ *        the outage class this gate exists to prevent.
  */
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
@@ -64,9 +69,57 @@ export function backoffMs(attempt) {
 
 export const MAX_MIGRATE_ATTEMPTS = 4;
 
+/**
+ * Classify `prisma migrate status` output. TEXT-primary, not exit-code-primary:
+ * older Prisma versions exit 0 even with pending migrations, and an exit-code
+ * misread here would reopen the fail-open hole. Anything unrecognizable is
+ * "unknown" — the caller must treat that as NOT verified (fail closed).
+ * Pure + exported so the classification is unit-tested.
+ * @param {string} text combined stdout+stderr of `prisma migrate status`
+ * @returns {"up-to-date" | "pending" | "unknown"}
+ */
+export function classifyMigrateStatus(text) {
+  if (!text) return "unknown";
+  const haystack = text.toLowerCase();
+  // Pending/failed checks FIRST: a combined output that somehow contained both
+  // signals must never read as safe.
+  if (
+    haystack.includes("have not yet been applied") ||
+    haystack.includes("failed migration") ||
+    haystack.includes("p3005") // schema not empty / baseline missing
+  ) {
+    return "pending";
+  }
+  if (haystack.includes("database schema is up to date")) return "up-to-date";
+  return "unknown";
+}
+
 /** Block synchronously without busy-waiting (build step only). */
 function sleepSync(ms) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+/**
+ * When the DIRECT endpoint is unreachable, ask the POOLED endpoint (the one
+ * the runtime provably uses) whether any migrations are pending. Read-only:
+ * `migrate status` only inspects _prisma_migrations. DIRECT_URL is overridden
+ * to DATABASE_URL for this one check.
+ * @returns {"up-to-date" | "pending" | "unknown"}
+ */
+function checkMigrateStatusViaPooledEndpoint() {
+  const pooled = process.env.DATABASE_URL;
+  if (!pooled) return "unknown";
+  const result = spawnSync(
+    "npm",
+    ["run", "db:migrate:status", "--workspace=packages/db"],
+    {
+      encoding: "utf8",
+      env: { ...process.env, DIRECT_URL: pooled },
+    }
+  );
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+  return classifyMigrateStatus(`${result.stdout ?? ""}\n${result.stderr ?? ""}`);
 }
 
 function runMigrateWithRetry() {
@@ -93,17 +146,33 @@ function runMigrateWithRetry() {
       return result.status ?? 1;
     }
 
-    // Transient connectivity after all retries: we could not reach the DB to
-    // apply (or even check) migrations. A connectivity blip must NOT gate the
-    // deploy — nothing was half-applied, and the runtime uses the pooled
-    // endpoint independently. Proceed; apply any pending migration out-of-band.
+    // Transient connectivity after all retries: the direct endpoint is
+    // unreachable, so we could not apply (or even see) migrations. FAIL-CLOSED
+    // policy: proceed ONLY if the pooled endpoint — which the runtime provably
+    // reaches — confirms there is nothing pending to apply. Shipping a client
+    // ahead of the applied schema took /api/picks down (#70); never again.
     if (attempt >= MAX_MIGRATE_ATTEMPTS) {
       console.warn(
-        `[migrate-if-configured] could not reach the DB after ${MAX_MIGRATE_ATTEMPTS} attempts ` +
-          `(transient connectivity, e.g. Neon cold-start). Proceeding with the build WITHOUT ` +
-          `blocking the deploy; apply migrations out-of-band if any are pending.`
+        `[migrate-if-configured] could not reach the DB via the DIRECT endpoint after ` +
+          `${MAX_MIGRATE_ATTEMPTS} attempts — verifying schema parity via the POOLED endpoint…`
       );
-      return 0;
+      const verdict = checkMigrateStatusViaPooledEndpoint();
+      if (verdict === "up-to-date") {
+        console.warn(
+          `[migrate-if-configured] pooled-endpoint check confirms ZERO pending migrations — ` +
+            `this deploy is schema-safe; proceeding. ACTION REQUIRED: DIRECT_URL is unreachable ` +
+            `from the build network, so the next deploy that carries a migration WILL fail this ` +
+            `gate until DIRECT_URL is fixed.`
+        );
+        return 0;
+      }
+      console.error(
+        `[migrate-if-configured] FAIL-CLOSED: direct endpoint unreachable AND the pooled check ` +
+          `did not confirm parity (verdict: ${verdict}). Refusing to ship a Prisma client that may ` +
+          `reference schema the database does not have — that exact mismatch caused the /api/picks ` +
+          `outage. Fix DIRECT_URL reachability or apply pending migrations out-of-band, then redeploy.`
+      );
+      return 1;
     }
 
     const waitMs = backoffMs(attempt);
