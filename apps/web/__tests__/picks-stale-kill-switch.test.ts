@@ -89,14 +89,19 @@ describe("/api/picks — stale-data kill switch", () => {
     expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
   });
 
-  it("flag ON + stale: returns the same 503 collecting/bootstrap state", async () => {
+  it("flag ON + stale: goes dark with a DISTINCT stale_data 503 (not the bootstrap body)", async () => {
     mocks.forceNoBetIfStale = true;
     mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(241) });
 
     const { status, body } = await callPicks();
 
     expect(status).toBe(503);
-    expect(body["bootstrapMode"]).toBe(true);
+    // 2026-07-10 incident lesson: the stale branch used to reuse the bootstrap
+    // body, making "env flags regressed" and "awaiting fresh data" externally
+    // indistinguishable. The discriminator is part of the contract now.
+    expect(body["reason"]).toBe("stale_data");
+    expect(body["bootstrapMode"]).toBe(false);
+    expect(body["error"]).toContain("awaiting fresh odds data");
     // Suppressed: the picks query never ran.
     expect(mocks.pickFindMany).not.toHaveBeenCalled();
   });
@@ -108,7 +113,8 @@ describe("/api/picks — stale-data kill switch", () => {
     const { status, body } = await callPicks();
 
     expect(status).toBe(503);
-    expect(body["bootstrapMode"]).toBe(true);
+    expect(body["reason"]).toBe("stale_data");
+    expect(body["bootstrapMode"]).toBe(false);
   });
 
   it("flag ON + fresh: serves picks normally", async () => {

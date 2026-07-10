@@ -327,6 +327,25 @@ REVIEW_PENDING, publish is out-of-band operator action; draft-only guardrail in 
 draft/unpublished never leak to list/RSS/sitemap/JSON-LD; existing guards block not warn;
 JSON-LD XSS-escaped; published journal entries immutable.
 
+## LAUNCH MILESTONE — 2026-07-09: PR #66 merged, production deployed
+
+- **PR #66 (34 commits) squash-merged to main as `444f76b4`** — billing integrity
+  (grandfathering-safe price-id recognition, double-billing 409, duplicate-customer
+  idempotency, atomic dunning), track-record integrity (side-flip CLV freeze, numeric-
+  grounding guard connected), conversion funnel + AA a11y, hot-path DB indexes + batched
+  inserts, Bedrock/Vertex provider seam + credit-pool attribution, workers deploy fixes,
+  go-live runbooks. CI green (7,308 tests, 14 guardrails).
+- **Production deploy READY** (`dpl_7R3k9R8QbPg34NHjR2XoNbQhP1fD`, target=production);
+  /api/health 200 with database ok + ingestion succeeding (15m-old run at verification).
+- **Stripe live catalog complete**: Pro/Elite (pre-existing) + Fantasy created this session
+  (`prod_Ur6RIZ0AzmKKiT`, $4.99/mo + $49/yr founding, tier metadata). All six price ids in
+  STRIPE_GO_LIVE_CHECKLIST.md.
+- **Remaining founder step (~10 min, secrets only):** run the Chrome co-work prompt
+  (FOUNDER_COWORK_PROMPT_GO_LIVE_CHROME.md) — production env vars (gate launch set +
+  Stripe secrets) + webhook endpoint + redeploy. Then all launch gates are open and the
+  daily learning loop (canonical history → calibration evidence) runs unattended.
+- Working branch restarted from the new main per merged-PR protocol.
+
 ## Remaining queue (not yet done)
 
 - **Un-reviewed subsystems** (breadth waves): workers ✅ **all four reviewed** (deploy

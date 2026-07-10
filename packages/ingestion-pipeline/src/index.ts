@@ -19,5 +19,10 @@ export type {
   RefreshOddsOptions,
 } from "./refresh-odds.js";
 export { notifyOwner, ownerAlertsConfigured } from "./owner-alert.js";
+export {
+  isQuietBoard,
+  quietBoardHorizonHours,
+  DEFAULT_QUIET_BOARD_HORIZON_HOURS,
+} from "./quiet-board.js";
 export { freezeSlateCommitments } from "./freeze-slate-commitments.js";
 export type { SlateFreezeResult } from "./freeze-slate-commitments.js";

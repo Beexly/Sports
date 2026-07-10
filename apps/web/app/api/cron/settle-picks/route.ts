@@ -30,6 +30,11 @@ import { settleSport, freezeSlateCommitments, type SlateFreezeResult } from "@sp
 import { getReadinessGates } from "@sports/prediction-engine";
 
 export const dynamic = "force-dynamic";
+// Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
+// opt route-handler fetches out of Next's Data Cache — cached upstream scores
+// stalled settlement on 2026-07-10 (207 pending picks). Force no-store here
+// even if a future fetch forgets the option.
+export const fetchCache = "force-no-store";
 export const maxDuration = 300; // settling 7 sports with upstream calls + writes
 
 export async function GET(request: Request) {

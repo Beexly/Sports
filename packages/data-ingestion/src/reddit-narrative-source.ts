@@ -13,6 +13,8 @@
  * collection beyond public post titles/snippets. Wiring this into the pipeline is
  * a separate, founder-gated step.
  */
+
+import { noStoreFetch } from "./no-store-fetch.js";
 import type { NarrativeTextItem } from "@sports/types";
 
 const REDDIT_SEARCH_URL = "https://www.reddit.com/search.json";
@@ -129,7 +131,7 @@ export class RedditNarrativeSource {
       jitterRatio: options.jitterRatio ?? DEFAULTS.jitterRatio,
       random: options.random ?? DEFAULTS.random,
       sleep: options.sleep ?? DEFAULTS.sleep,
-      fetchImpl: options.fetchImpl ?? globalThis.fetch,
+      fetchImpl: options.fetchImpl ?? noStoreFetch,
     };
   }
 

@@ -47,6 +47,7 @@ function sha256Hex(input: string): string {
 import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import { notifyOwner } from "./owner-alert.js";
+import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
 
 export interface SportConfig {
   key: SupportedSportKey;
@@ -60,6 +61,8 @@ export interface ProcessSportResult {
   games: number;
   picks: number;
   error?: string;
+  /** Set when the cycle did no work for a benign, classified reason (e.g. "quiet_board"). */
+  note?: string;
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -182,6 +185,27 @@ export async function processSport(
       // "payload shape drift (unparseable last_update)" vs "genuinely old lines"
       // from the error alone, without a redeploy-and-add-logging cycle.
       const d = normalizer.freshnessDiagnostics(normalizedOddsRaw);
+
+      // Quiet market ≠ incident: when no game commences within the horizon,
+      // books legitimately leave the board untouched for 12h+ (observed on
+      // mid-week MLS). Record a clean zero-work SUCCESS and generate nothing —
+      // oddsInserted stays 0, so the public freshness clock is NOT reset and
+      // the kill switch still sees the surface as stale if nothing else is
+      // fresh. Only an upcoming game inside the horizon makes staleness real.
+      const horizonHours = quietBoardHorizonHours();
+      if (isQuietBoard(commenceTimeByGame.values(), fetchedAt, horizonHours)) {
+        await db.ingestionRun.update({
+          where: { id: run.id },
+          data: { status: "SUCCESS", gamesUpserted: 0, oddsInserted: 0, completedAt: new Date() },
+        });
+        console.log(
+          `${logPrefix} ${sport.key}: quiet board — no game within ${horizonHours}h and no ` +
+            `fresh bookmaker update (newestUpdateAgeMin=${d.newestAgeMinutes ?? "none"}); ` +
+            "skipped without alarm"
+        );
+        return { sport: sport.key, status: "success", games: 0, picks: 0, note: "quiet_board" };
+      }
+
       throw new Error(
         "Upstream odds are stale: no game has a fresh bookmaker update " +
           `(threshold=${d.thresholdHours}h, rows=${d.rows}, games=${d.games}, ` +

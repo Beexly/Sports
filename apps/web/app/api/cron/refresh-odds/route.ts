@@ -38,6 +38,11 @@ import { getReadinessGates } from "@sports/prediction-engine";
 import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
 
 export const dynamic = "force-dynamic";
+// Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
+// opt route-handler fetches out of Next's Data Cache — cached upstream odds
+// froze the whole pipeline on 2026-07-10. This segment config forces every
+// fetch in this route to no-store even if a future fetch forgets the option.
+export const fetchCache = "force-no-store";
 export const maxDuration = 300; // Vercel hobby/pro cron caps at 5 min
 
 export async function GET(request: Request) {

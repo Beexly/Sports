@@ -41,6 +41,8 @@ interface PicksResponse {
   bootstrap?: {
     message: string;
     hint?: string;
+    /** Which gate darkened the board: history-gated launch vs stale-data pause. */
+    kind: "gated" | "stale";
   };
 }
 
@@ -85,10 +87,15 @@ async function fetchPicks(
     const body = await res.json().catch(() => null) as {
       error?: string;
       bootstrapMode?: boolean;
+      reason?: string;
       hint?: string;
     } | null;
 
-    if (body?.bootstrapMode) {
+    // Both graceful dark states share the shape: the bootstrap/history gate
+    // (bootstrapMode) and the stale-data kill switch (reason: "stale_data",
+    // distinct body since the 2026-07-10 incident). Render both as a calm
+    // board state, never an error page.
+    if (body?.bootstrapMode || body?.reason === "stale_data") {
       return {
         success: false,
         data: [],
@@ -100,6 +107,7 @@ async function fetchPicks(
         bootstrap: {
           message: body.error ?? "Today's Board is collecting live history.",
           hint: body.hint,
+          kind: body?.reason === "stale_data" ? "stale" : "gated",
         },
       };
     }
@@ -329,15 +337,23 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 </svg>
               </div>
               <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
-                Signal gate collecting
+                {bootstrapState.kind === "stale"
+                  ? "Freshness guard active"
+                  : "Signal gate collecting"}
               </p>
               <h3 className="mt-3 text-lg font-semibold text-white">
-                The board is live. Public picks are still gated.
+                {bootstrapState.kind === "stale"
+                  ? "The board is paused while fresh odds land."
+                  : "The board is live. Public picks are still gated."}
               </h3>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
-                We&apos;re building up odds and settlement history before we
-                publish picks. That keeps the record clean and weak signals
-                off the board.
+                {bootstrapState.kind === "stale"
+                  ? "Our freshness guard holds the board rather than show you " +
+                    "lines that have gone stale. It reopens automatically on the " +
+                    "next successful odds refresh — no stale data, ever."
+                  : "We're building up odds and settlement history before we " +
+                    "publish picks. That keeps the record clean and weak signals " +
+                    "off the board."}
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link

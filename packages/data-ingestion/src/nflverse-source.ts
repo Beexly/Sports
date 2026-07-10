@@ -21,6 +21,7 @@
  */
 
 import { gunzipSync } from "node:zlib";
+import { noStoreFetch } from "./no-store-fetch.js";
 
 export const NFLVERSE_BASE = "https://github.com/nflverse/nflverse-data/releases/download";
 
@@ -382,7 +383,7 @@ export async function decodeDatasetText(response: Response): Promise<string> {
 /** Fetch a dataset asset as text, transparently gunzipping `.gz` assets. */
 export async function fetchNflverseText(key: NflverseDatasetKey, season: number, variant?: string): Promise<string> {
   const url = nflverseUrl(key, season, variant);
-  const res = await fetch(url);
+  const res = await noStoreFetch(url);
   if (!res.ok) throw new Error(`nflverse fetch failed (${res.status}) for ${url}`);
   return decodeDatasetText(res);
 }
@@ -407,7 +408,7 @@ function maxSeasonIn(table: CsvTable): number {
 async function fetchPerSeasonPlayerStatsWeek(season: number): Promise<CsvTable | null> {
   const url = `${NFLVERSE_BASE}/stats_player/stats_player_week_${season}.csv`;
   try {
-    const res = await fetch(url);
+    const res = await noStoreFetch(url);
     if (!res.ok) return null;
     const table = parseCsv(await decodeDatasetText(res));
     const records = table.records.filter((row) => {
