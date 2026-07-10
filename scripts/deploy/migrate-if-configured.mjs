@@ -33,15 +33,19 @@
  *        the outage class this gate exists to prevent.
  *
  * Break-glass (explicit operator override, never silent): setting
- * MIGRATE_GATE_ALLOW_UNVERIFIED=true in the Vercel env lets a build proceed
- * despite an unverified/pending verdict. It exists for the migration-ledger
- * reconciliation window (docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md):
- * the 2026-07-10 fail-closed rollout revealed the production _prisma_migrations
- * ledger had silently diverged from the repo for weeks (schema evolved via
- * db push while the old P1001-proceed policy skipped migrate deploy), so the
- * gate blocks ALL production deploys until the ledger is reconciled. The
- * override is a deliberate, logged, temporary decision — REMOVE the env var
- * immediately after use.
+ * MIGRATE_GATE_ALLOW_UNVERIFIED=true in the Vercel env makes the gate SKIP
+ * `prisma migrate deploy` entirely for that build (checked before the first
+ * attempt — a post-failure override would be unreachable when a repaired
+ * DIRECT_URL turns ledger divergence into a NON-transient failure, and an
+ * attempted-then-failed apply records a P3018 failed-migration row). It
+ * exists for the migration-ledger reconciliation window
+ * (docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md): the 2026-07-10
+ * fail-closed rollout revealed the production _prisma_migrations ledger had
+ * silently diverged from the repo for weeks (schema evolved via db push
+ * while the old P1001-proceed policy skipped migrate deploy), so the gate
+ * blocks ALL production deploys until the ledger is reconciled. The override
+ * is a deliberate, logged, temporary decision for deploys known to carry no
+ * schema change — REMOVE the env var immediately after use.
  */
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
@@ -134,6 +138,23 @@ function checkMigrateStatusViaPooledEndpoint() {
 }
 
 function runMigrateWithRetry() {
+  // BREAK-GLASS: checked BEFORE the first migrate attempt, not after a
+  // failure. Two reasons (Codex P1 on #73): (1) with DIRECT_URL repaired but
+  // the ledger still divergent, migrate deploy connects and fails
+  // NON-transiently — a post-failure override in the transient branch would
+  // never be reached; (2) letting migrate attempt-and-fail against existing
+  // objects records a P3018 FAILED migration row, making the ledger surgery
+  // harder. Skipping the attempt entirely has neither problem.
+  if (process.env.MIGRATE_GATE_ALLOW_UNVERIFIED === "true") {
+    console.warn(
+      `[migrate-if-configured] BREAK-GLASS OVERRIDE ACTIVE (MIGRATE_GATE_ALLOW_UNVERIFIED=true): ` +
+        `SKIPPING prisma migrate deploy — this deploy ships WITHOUT schema-parity verification. ` +
+        `Use ONLY for a deploy you know carries no schema change, during the ledger-reconciliation ` +
+        `window (docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md). REMOVE the env var immediately ` +
+        `after this deploy — leaving it set reopens the silent fail-open hole behind the 2026-07-10 outage.`
+    );
+    return 0;
+  }
   for (let attempt = 1; ; attempt += 1) {
     const result = spawnSync("npm", ["run", "db:migrate", "--workspace=packages/db"], {
       encoding: "utf8",
@@ -174,15 +195,6 @@ function runMigrateWithRetry() {
             `this deploy is schema-safe; proceeding. ACTION REQUIRED: DIRECT_URL is unreachable ` +
             `from the build network, so the next deploy that carries a migration WILL fail this ` +
             `gate until DIRECT_URL is fixed.`
-        );
-        return 0;
-      }
-      if (process.env.MIGRATE_GATE_ALLOW_UNVERIFIED === "true") {
-        console.warn(
-          `[migrate-if-configured] BREAK-GLASS OVERRIDE ACTIVE (MIGRATE_GATE_ALLOW_UNVERIFIED=true): ` +
-            `proceeding WITHOUT verified schema parity (pooled verdict: ${verdict}). This must be a ` +
-            `deliberate, temporary operator decision — REMOVE the env var after this deploy and ` +
-            `reconcile the ledger (docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md).`
         );
         return 0;
       }

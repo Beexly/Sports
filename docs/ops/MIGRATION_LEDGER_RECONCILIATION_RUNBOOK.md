@@ -63,34 +63,60 @@ Sanity check from any machine with `psql`:
 psql "$DIRECT_URL" -c "select 1;"
 ```
 
+> **⚠️ Do NOT trigger a production deploy between Fix 1 and Fix 2** (except
+> with the break-glass var set). With `DIRECT_URL` repaired but the ledger
+> unreconciled, `prisma migrate deploy` will connect and try to apply the four
+> "pending" migrations against objects that already exist — the apply fails
+> AND records a P3018 *failed migration* row, which makes the ledger surgery
+> below harder. Finish Fix 2 before redeploying, or use break-glass.
+
 ## Fix 2 — reconcile the ledger (run locally with production env)
 
 Run from the repo root with production `DATABASE_URL` + repaired `DIRECT_URL`
-exported. Every step is read-only until step 3.
+exported. Step 1's diff check is read-only; writes begin only if the diff
+finds missing objects (manual apply) or at step 3 (ledger updates).
 
-### Step 1 — verify each "unapplied" migration's objects already exist
+### Step 1 — prove the LIVE schema fully matches the repo schema
+
+Table-existence spot checks are not enough: these migrations also add columns
+(`pick_proof_receipts."slateKey"`), unique constraints (the slate double-commit
+backstop), foreign keys, and indexes. Marking a migration applied while any of
+those is missing makes `migrate status` go green over a silently broken
+invariant. So use Prisma's own schema diff as the authoritative check — it
+compares the **actual** database schema against `schema.prisma`, object by
+object:
 
 ```bash
-psql "$DIRECT_URL" <<'SQL'
--- 20260622120000_add_fantasy_subscription_tier
-select 'FANTASY tier'   , count(*) from pg_enum e join pg_type t on t.oid=e.enumtypid
-                                    where t.typname ilike '%tier%' and e.enumlabel='FANTASY';
--- 20260622173000_add_pick_proof_receipt
-select 'pick_proof_receipts', count(*) from information_schema.tables where table_name='pick_proof_receipts';
--- 20260622180000_add_slate_commitment
-select 'slate_commitments',   count(*) from information_schema.tables where table_name='slate_commitments';
--- 20260708000000_add_hot_path_indexes (check each index name in that migration file)
-select indexname from pg_indexes where indexname in (
-  select unnest(string_to_array('<paste index names from the migration SQL>', ','))
-);
-SQL
+cd packages/db
+npx prisma migrate diff \
+  --from-url "$DIRECT_URL" \
+  --to-schema-datamodel prisma/schema.prisma
 ```
 
-- Object **exists** → that migration gets `migrate resolve --applied` (step 3).
-- Object **missing** (plausible for the hot-path indexes) → apply that one
-  migration's SQL manually via psql first, then still `resolve --applied`.
-  Do NOT let `migrate deploy` apply a mixed batch where some objects exist —
+- Output is **"No difference detected"** → the live schema is byte-for-byte
+  what the repo describes; every object of all four migrations exists. Safe to
+  resolve all four as applied (step 3).
+- Output lists differences → the live schema is **partially** applied. For
+  each missing object, apply it manually first (see below), then re-run the
+  diff until it is clean. Do NOT let `migrate deploy` apply a mixed batch —
   `CREATE TABLE` on an existing table fails the whole migration.
+
+**Applying missing objects manually:** copy the relevant statements from the
+migration's `migration.sql` — with one change for indexes on hot tables. The
+hot-path migration (`20260708000000`) uses plain `CREATE INDEX` on `odds`,
+`ingestion_runs`, and `picks`; on production-sized tables that holds a
+write-blocking lock for the whole build and can stall ingestion/pick writes.
+For the manual path use the online form instead (must run OUTSIDE a
+transaction — psql autocommit is fine, don't wrap in BEGIN):
+
+```sql
+CREATE INDEX CONCURRENTLY IF NOT EXISTS "odds_gameId_fetchedAt_idx" ON "odds"("gameId", "fetchedAt");
+CREATE INDEX CONCURRENTLY IF NOT EXISTS "ingestion_runs_status_completedAt_idx" ON "ingestion_runs"("status", "completedAt");
+CREATE INDEX CONCURRENTLY IF NOT EXISTS "picks_settledAt_idx" ON "picks"("settledAt");
+```
+
+(If a `CONCURRENTLY` build fails midway it leaves an INVALID index — drop it
+and rerun: `DROP INDEX CONCURRENTLY <name>;`.)
 
 ### Step 2 — back up the ledger rows you are about to touch
 
@@ -137,8 +163,12 @@ parity check confirming zero pending.
 ## Break-glass (if you need to ship BEFORE reconciling)
 
 Set `MIGRATE_GATE_ALLOW_UNVERIFIED=true` in the Vercel Production env and
-redeploy. The build proceeds with a loud warning and NO schema-parity
-guarantee — acceptable only for deploys you know carry no migration.
+redeploy. The gate then **skips `prisma migrate deploy` entirely** for that
+build (checked before the first attempt, so it works in every failure mode —
+including the repaired-DIRECT_URL/divergent-ledger state, where an attempted
+apply would otherwise record a P3018 failed-migration row). The build ships
+with a loud warning and NO schema-parity guarantee — acceptable only for
+deploys you know carry no schema change.
 **Remove the variable immediately after.** This is an explicit, logged
 operator decision; the silent version of it is what caused the 2026-07-10
 `/api/picks` outage.
