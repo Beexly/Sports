@@ -15,6 +15,8 @@ const PRODUCT_LINKS = [
   { label: "Start-Sit Helper", href: "/fantasy/lineup" },
   { label: "Contests", href: "/fantasy/contests" },
   { label: "The Beat", href: "/the-beat" },
+  { label: "Newsletter", href: "/newsletter" },
+  { label: "Podcast", href: "/podcast" },
   { label: "The Studio", href: "/fantasy/studio" },
   { label: "The Academy", href: "/academy" },
 ] as const;
@@ -48,6 +50,7 @@ const DATA_LINKS = [
   { label: "MLB stats", href: "/mlb" },
   { label: "NHL stats", href: "/nhl" },
   { label: "NFL weather", href: "/weather" },
+  { label: "NFL stat intelligence", href: "/stats" },
   { label: "How we source data", href: "/data" },
 ] as const;
 

@@ -195,11 +195,11 @@ const FAQ = [
   },
   {
     q: "How is this different from a tout service?",
-    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and holds back a public win-rate until enough canonical settled history exists to support one honestly.",
+    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge keeps every finished pick in the public record, wins and losses alike, and holds back a public win-rate until enough settled history exists to support one honestly. See the full comparison at /vs/tout-services.",
   },
   {
     q: "Why is the Performance page empty right now?",
-    a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to make the published number statistically defensible. Patience over noise. That's the standard.",
+    a: "The Calibration Report stays gated until enough finished, graded picks have accumulated to make the published number statistically defensible. Patience over noise. That's the standard.",
   },
   {
     q: "Which sports are covered?",
