@@ -49,7 +49,7 @@ export const COCKPIT_OPERATING_MAP: readonly CockpitOperatingSurface[] = [
   surface("Airwave", "/cockpit/airwave", "scout", ["gauge"], "airwave-claim", "Pundit claim review", ["manual-entry", "proof-required"], "HIGH", "MANUAL", "internal"),
   surface("Listener Log", "/cockpit/listener-log", "scout", ["gauge"], "airwave-claim", "Manual broadcast claim entry", ["manual-entry"], "MEDIUM", "MANUAL", "internal"),
   surface("Moderation", "/cockpit/moderation", "pulse", ["sarah"], "support-trust", "Community room queue", ["human-review"], "HIGH", "DESIGNED", "internal"),
-  surface("Memory", "/cockpit/memory", "archive", ["jarvis"], "memory", "Memory review queue", ["owner-approval"], "HIGH", "NOT_WIRED", "future"),
+  surface("Memory", "/cockpit/memory", "archive", ["jarvis"], "memory", "Memory review queue", ["owner-approval"], "HIGH", "DESIGNED", "internal"),
   surface("Film Room", "/cockpit/film-room", "ava", ["gauge"], "film-room", "Visual production", ["spend-gate", "owner-approval"], "HIGH", "DESIGNED", "public-adjacent"),
 ] as const;
 

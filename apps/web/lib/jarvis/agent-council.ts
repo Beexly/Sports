@@ -835,8 +835,10 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
       "Persist operator decisions, analysis outcomes, and context across sessions so Jarvis " +
       "never re-derives known facts.",
     currentTruth:
-      "Seat is designed only. No memory store, vector index, or cross-session recall exists. " +
-      "The memory protocol lives as markdown in docs/ai/jarvis/.",
+      "Seat is non-executing. The memory store is implemented in code (schema, migration, state " +
+      "machine, /cockpit/memory review queue) but not activated: no confirmed production write " +
+      "exists and no cross-session recall is wired. Activation is owner-gated per " +
+      "JARVIS_MEMORY_PROTOCOL.md.",
     ownsCapabilities: ["memory-knowledge-base"],
     safeActions: [
       "Maintain the markdown memory protocol docs",

@@ -110,7 +110,10 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "to augment prediction quality and inform operator strategy.",
     currentTruth:
       "The Odds API is wired for data ingestion. Raw odds/lines flow into the prediction engine. " +
-      "No CLV tracking, no line movement alerts, no market intelligence layer beyond ingestion.",
+      "CLV capture is implemented in code: settlement (settle-sport.ts) grades each pick against " +
+      "the close and the public /clv report renders verdicts under a coverage policy, with CLV " +
+      "columns on the proof ledger. A live market map (observatory) surfaces line moves. " +
+      "No sharp-money signal layer exists, and no automated line-movement alerts fire yet.",
     inputs: ["The Odds API real-time data", "Historical odds snapshots", "Sharp money indicators"],
     outputs: ["CLV signals", "Line movement alerts", "Market consensus scores"],
     allowedActions: [
@@ -122,10 +125,11 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Surface market intelligence before it is built",
     ],
     ownerMode: "NOT_WIRED",
-    proofSource: null,
+    proofSource: "/clv",
     riskLevel: "MEDIUM",
     nextAction:
-      "Build CLV tracking layer: capture opening line, closing line, and actual result per pick.",
+      "Decompose CLV (capture book disagreement at lock), add line-movement alerts, and verify " +
+      "production CLV rows before promoting beyond DESIGNED.",
     requiresHumanApproval: true,
     canAnswer: false,
     canRecommend: false,
@@ -412,14 +416,23 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "memory-knowledge-base",
     name: "Memory / Knowledge Base",
     category: "AI_INFRASTRUCTURE",
-    status: "NOT_WIRED",
+    // DESIGNED, not NOT_WIRED: the store exists in code (schema models
+    // JarvisMemoryEvent/JarvisDecision, migration 20260612120000, state
+    // machine, guards, conflict detection, /cockpit/memory review queue,
+    // buildLiveMemoryStatus counts). NOT promoted further: no confirmed
+    // production write exists and runtime recall is not wired. Promotion
+    // criteria live in JARVIS_MEMORY_PROTOCOL.md and require owner action.
+    status: "DESIGNED",
     mission:
       "Persist operational decisions, analysis outcomes, and operator context across sessions. " +
       "Prevent re-deriving known facts. Enable Jarvis to remember what changed and why.",
     currentTruth:
-      "No persistent memory system exists. No vector store. No conversation history. " +
-      "No cross-session recall. Architecture docs exist as markdown. " +
-      "Jarvis context is rebuilt fresh from OwnerSummary on every cockpit load.",
+      "The episodic store is implemented in code: JarvisMemoryEvent/JarvisDecision schema models " +
+      "with repo migration 20260612120000_jarvis_memory_protocol, an append-only state machine with " +
+      "guards and conflict detection (lib/jarvis/memory/), a review queue at /cockpit/memory, and " +
+      "live state counts via buildLiveMemoryStatus(). Runtime recall is NOT wired: Jarvis context " +
+      "is still rebuilt fresh from OwnerSummary on every cockpit load, and no confirmed production " +
+      "write exists. Activation (first governed production write) is an owner action.",
     inputs: ["Operator decisions", "Jarvis session outputs", "Analysis artifacts"],
     outputs: ["Persistent context", "Cross-session recall", "Knowledge graph nodes"],
     allowedActions: [
@@ -432,12 +445,15 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Fabricate recalled facts",
       "Store PII without explicit consent layer",
     ],
-    ownerMode: "NOT_WIRED",
-    proofSource: null,
+    ownerMode: "OWNER_DECISION_REQUIRED",
+    proofSource: "/cockpit/memory",
     riskLevel: "LOW",
-    nextAction: "Wire mem0 or Postgres-based episodic memory to capture owner decisions.",
-    requiresHumanApproval: false,
-    canAnswer: false,
+    nextAction:
+      "Owner activation: confirm the jarvis_memory_protocol migration is applied in production, " +
+      "record the first governed memory write, then promote per the JARVIS_MEMORY_PROTOCOL.md " +
+      "promotion criteria. Never promote on code existence alone.",
+    requiresHumanApproval: true,
+    canAnswer: true,
     canRecommend: false,
     canExecute: false,
   },

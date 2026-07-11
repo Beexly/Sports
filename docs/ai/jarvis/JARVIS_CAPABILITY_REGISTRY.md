@@ -24,7 +24,7 @@ Ordered by wiring depth. A capability holds exactly one status:
 | ID | Name | Category | Status | Risk | Owner mode | Next action |
 |---|---|---|---|---|---|---|
 | `picks-intelligence` | Picks Intelligence | INTELLIGENCE_CORE | DRAFT_ONLY | MEDIUM | OWNER_DECISION_REQUIRED | Open PUBLIC_PICKS_ENABLED gate when data quality and trust gates are satisfied. |
-| `market-line-intelligence` | Market / Line Intelligence | INTELLIGENCE_CORE | DESIGNED | MEDIUM | NOT_WIRED | Build CLV tracking layer: capture opening line, closing line, and actual result per pick. |
+| `market-line-intelligence` | Market / Line Intelligence | INTELLIGENCE_CORE | DESIGNED | MEDIUM | NOT_WIRED | Decompose CLV (capture book disagreement at lock), add line-movement alerts, and verify production CLV rows before promoting beyond DESIGNED. |
 | `data-reliability` | Data Reliability | INTELLIGENCE_CORE | DRAFT_ONLY | HIGH | DRAFT_AWAITS_APPROVAL | Wire auto-alerting on stale ingestion (>4h) to cockpit decision queue. |
 | `settlement-results` | Settlement & Results | PLATFORM_OPERATIONS | MANUAL | HIGH | MANUAL_OPERATOR | Wire external score data source (ESPN/The Odds API results) for auto-settlement. |
 | `performance-calibration` | Performance Calibration | PLATFORM_OPERATIONS | MANUAL | HIGH | MANUAL_OPERATOR | Accumulate 25 canonical settled picks. Then review win rate. Open gate if accurate. |
@@ -33,7 +33,7 @@ Ordered by wiring depth. A capability holds exactly one status:
 | `content-media` | Content & Media | GROWTH_REVENUE | DRAFT_ONLY | HIGH | DRAFT_AWAITS_APPROVAL | Review draft content queue at /cockpit/content before expanding to newsletter. |
 | `revenue-subscriptions` | Revenue & Subscriptions | GROWTH_REVENUE | DESIGNED | HIGH | OWNER_DECISION_REQUIRED | Build BOBBY subscription intelligence layer: churn signals, tier migration triggers. |
 | `ai-ops-token-discipline` | AI Ops / Token Discipline | AI_INFRASTRUCTURE | MANUAL | MEDIUM | MANUAL_OPERATOR | Wire ccusage daily totals to /cockpit/api-costs. Then add Langfuse. |
-| `memory-knowledge-base` | Memory / Knowledge Base | AI_INFRASTRUCTURE | NOT_WIRED | LOW | NOT_WIRED | Wire mem0 or Postgres-based episodic memory to capture owner decisions. |
+| `memory-knowledge-base` | Memory / Knowledge Base | AI_INFRASTRUCTURE | DESIGNED | LOW | OWNER_DECISION_REQUIRED | Owner activation: confirm the production migration, record the first governed memory write, then promote per JARVIS_MEMORY_PROTOCOL.md. |
 | `tool-router-mcp-layer` | Tool Router / MCP Layer | AI_INFRASTRUCTURE | NOT_WIRED | MEDIUM | NOT_WIRED | Wire Claude MCP SDK. Register The Odds API as first approved tool. |
 | `agent-orchestration` | Agent Orchestration | AI_INFRASTRUCTURE | DESIGNED | MEDIUM | NOT_WIRED | Implement BullMQ-based orchestration layer: task routing from Jarvis to agent queues. |
 | `browser-computer-control` | Browser / Computer Control | AI_INFRASTRUCTURE | NOT_WIRED | HIGH | NOT_WIRED | NOT YET — wire MCP tool bus first. Browser control comes after tool routing. |
@@ -47,14 +47,14 @@ Ordered by wiring depth. A capability holds exactly one status:
 | ACTIVE | 0 | — |
 | DRAFT_ONLY | 5 | picks-intelligence, data-reliability, risk-public-claims, customer-surface, content-media |
 | MANUAL | 3 | settlement-results, performance-calibration, ai-ops-token-discipline |
-| DESIGNED | 3 | market-line-intelligence, revenue-subscriptions, agent-orchestration |
-| NOT_WIRED | 5 | memory-knowledge-base, tool-router-mcp-layer, browser-computer-control, voice-interface, workflow-automation |
+| DESIGNED | 4 | market-line-intelligence, revenue-subscriptions, agent-orchestration, memory-knowledge-base |
+| NOT_WIRED | 4 | tool-router-mcp-layer, browser-computer-control, voice-interface, workflow-automation |
 
 ### Counts by category
 
 - INTELLIGENCE_CORE: 3 · PLATFORM_OPERATIONS: 3 · GROWTH_REVENUE: 3 · AI_INFRASTRUCTURE: 7
 
-Other registry-wide facts: `canExecute` is `false` for all 16 capabilities. 8 capabilities `canAnswer` from live data. 14 of 16 require human approval (`requiresHumanApproval`); only `ai-ops-token-discipline` and `memory-knowledge-base` do not, because neither has an externally visible output to approve.
+Other registry-wide facts: `canExecute` is `false` for all 16 capabilities. 9 capabilities `canAnswer` from live data. 15 of 16 require human approval (`requiresHumanApproval`); only `ai-ops-token-discipline` does not, because it has no externally visible output to approve. Memory now requires approval: every memory promotion passes the owner review queue at `/cockpit/memory`.
 
 ## Wiring Score
 
@@ -63,7 +63,7 @@ Computed by `computeWiringScore()`:
 1. Each capability's status maps to a weight: **ACTIVE = 4, DRAFT_ONLY = 3, MANUAL = 2, DESIGNED = 1, NOT_WIRED = 0**.
 2. Sum the weights across all 16 capabilities; divide by the maximum possible (16 × 4 = 64); multiply by 100 and round.
 
-Current score: (5×3 + 3×2 + 3×1 + 5×0) = 24 / 64 → **38 / 100**.
+Current score: (5×3 + 3×2 + 4×1 + 4×0) = 25 / 64 → **39 / 100**.
 
 Label bands from `getWiringLabel()`:
 
@@ -74,7 +74,7 @@ Label bands from `getWiringLabel()`:
 | ≥ 30 | Early Stage |
 | < 30 | Foundation |
 
-Current label: **Early Stage (38/100)**. The score moves only when a capability's status changes in the registry — it cannot be adjusted for optics.
+Current label: **Early Stage (39/100)**. The score moves only when a capability's status changes in the registry — it cannot be adjusted for optics.
 
 ## Governance: How a Capability Earns a Promotion
 

@@ -1,0 +1,24 @@
+{
+  "program": "frontier-intelligence-fabric",
+  "asOf": "2026-07-11",
+  "nodes": [
+    { "id": "WS-A", "name": "Truth reconciliation", "pr": "A", "status": "done", "dependsOn": [] },
+    { "id": "WS-B", "name": "R&D Radar (Resource Intelligence 2.0)", "pr": "A", "status": "in_progress", "dependsOn": ["WS-A"] },
+    { "id": "WS-C", "name": "Agent Foundry foundation", "pr": "B", "status": "queued", "dependsOn": ["WS-A"] },
+    { "id": "WS-D", "name": "AI Setup Assurance", "pr": "B", "status": "queued", "dependsOn": ["WS-C"] },
+    { "id": "WS-E", "name": "Model Portfolio Router (shadow)", "pr": "C", "status": "queued", "dependsOn": ["WS-A"] },
+    { "id": "WS-F", "name": "Queued governed specs (no activation)", "pr": "docs", "status": "queued", "dependsOn": ["WS-B", "WS-C", "WS-D", "WS-E"] }
+  ],
+  "ownerGates": [
+    { "id": "B1", "name": "Production migration-ledger reconciliation", "blocks": ["production deploys"] },
+    { "id": "B2", "name": "First governed memory write", "blocks": ["memory promotion beyond DESIGNED"] },
+    { "id": "B6", "name": "Frontier PR merges", "blocks": ["stacked workstream branches landing"] }
+  ],
+  "invariants": [
+    "no external repository installed",
+    "no production migration applied",
+    "no public behavior change",
+    "all new flags default false",
+    "statuses never promoted on code existence alone"
+  ]
+}

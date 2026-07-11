@@ -203,10 +203,13 @@ describe("operating loop", () => {
 // ─── Memory honesty ───────────────────────────────────────────────────────────
 
 describe("memory status", () => {
-  it("memory is not wired and says so", () => {
+  it("memory is not activated and says so", () => {
+    // Pin evolved 2026-07-11: the store exists in code, so the honest claim
+    // is "built, not activated" — never "does not exist", never "recalls".
     const memory = buildMemoryStatus();
     expect(memory.wired).toBe(false);
-    expect(memory.truth).toMatch(/no persistent memory/i);
+    expect(memory.truth).toMatch(/not activated/i);
+    expect(memory.truth).toMatch(/nothing is recalled across sessions/i);
   });
 
   it("lists the five version-controlled protocol docs", () => {
@@ -232,9 +235,13 @@ describe("ask-jarvis architecture intents", () => {
     expect(answer.answer).toMatch(/nothing runs autonomously/i);
   });
 
-  it("'what-is-memory-status' reports memory as absent, never recalled", () => {
+  it("'what-is-memory-status' reports memory as not activated, never recalled", () => {
+    // Pin evolved 2026-07-11: same promise, updated truth — the answer must
+    // say no recall happens and activation awaits the owner, without denying
+    // that the store exists in code.
     const answer = askJarvis("what-is-memory-status", makeSummary());
-    expect(answer.answer).toMatch(/no persistent memory/i);
+    expect(answer.answer).toMatch(/no memory is recalled across sessions/i);
+    expect(answer.answer).toMatch(/no confirmed production write/i);
     expect(answer.supportingState.join("\n")).toMatch(/Memory wired: NO/);
   });
 
