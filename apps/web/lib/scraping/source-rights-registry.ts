@@ -299,6 +299,108 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "as FTN charting data. Attribution required in all internal outputs.",
   },
 
+  {
+    source_id: "mlb-statsapi",
+    source_name: "MLB Stats API (statsapi.mlb.com)",
+    source_url: "https://statsapi.mlb.com/api/v1",
+    terms_url: "http://gdx.mlb.com/components/copyright.txt",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "sports_data_api",
+    status: "approved_public_logged_off",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    // MLBAM's linked notice (copyright.txt, fetched 2026-07-11) states: "Only
+    // individual, non-commercial, non-bulk use of the Materials is permitted".
+    // So raw-data commercial display and bulk storage stay OFF. Derived
+    // analytics stay ON: the underlying stats are uncopyrightable facts
+    // (Feist), and C.B.C. Distribution v. MLB Advanced Media, 505 F.3d 818
+    // (8th Cir. 2007) held specifically that fantasy products may use MLB
+    // player names + performance stats without a license. Signals WE compute
+    // from those facts are our own work product (data-rules.ts).
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Source statistics via MLB Stats API (statsapi.mlb.com); MLB data © MLB Advanced Media, L.P.",
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-07-11",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "http://gdx.mlb.com/components/copyright.txt",
+      "https://statsapi.mlb.com/api/v1/teams/stats?season=2025&group=pitching&stats=season&sportIds=1",
+      "https://statsapi.mlb.com/api/v1/stats?stats=season&group=pitching&season=2025&sportIds=1&playerPool=all",
+    ],
+    unlock_condition:
+      "Commercial display or bulk storage of raw MLB data requires a written MLB data license " +
+      "from MLB Advanced Media (mlb.com data licensing). Until then: compute-and-discard only.",
+    vendor_contact: "https://www.mlb.com/official-information/contact",
+    notes:
+      "Official league stats API. Free, public, no key, no login; no robots.txt is served " +
+      "(verified 2026-07-11). Response bodies carry the copyright field pointing at " +
+      "gdx.mlb.com/components/copyright.txt, which permits 'individual, non-commercial, non-bulk' " +
+      "use only — so this entry is FACTS-ONLY, NON-BULK by discipline: bounded season-aggregate " +
+      "reads (team pitching splits, player season lines), at most one pull per surface per day, " +
+      "no play-by-play bulk archiving, raw payloads never persisted (STORAGE_NOT_ALLOWED enforces " +
+      "compute-and-discard; only derived signals we generate are stored). Endpoint schemas " +
+      "verified live 2026-07-11: era/whip/goAo arrive as decimal STRINGS, counts as numbers, " +
+      "inheritedRunners present at player grain and on sitCodes=rp team splits. Feeds the " +
+      "glass-box fantasy engine (BURR/RVS/advantage) in @sports/fantasy-engine.",
+  },
+
+  {
+    source_id: "baseball-savant",
+    source_name: "Baseball Savant — Statcast leaderboard CSV exports (baseballsavant.mlb.com)",
+    source_url: "https://baseballsavant.mlb.com",
+    terms_url: "http://gdx.mlb.com/components/copyright.txt",
+    robots_url: "https://baseballsavant.mlb.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "sports_data_api",
+    status: "approved_public_logged_off",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    // Same MLBAM ownership and notice as mlb-statsapi — same conservative
+    // flags and the same C.B.C./Feist rationale for derived analytics.
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Statcast data via Baseball Savant (baseballsavant.mlb.com); MLB data © MLB Advanced Media, L.P.",
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-07-11",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "http://gdx.mlb.com/components/copyright.txt",
+      "https://baseballsavant.mlb.com/robots.txt",
+      "https://baseballsavant.mlb.com/leaderboard/custom",
+    ],
+    unlock_condition:
+      "Commercial display or bulk storage of raw Statcast data requires a written MLB data " +
+      "license from MLB Advanced Media. Until then: compute-and-discard only.",
+    vendor_contact: "https://www.mlb.com/official-information/contact",
+    notes:
+      "MLB's own public Statcast site. The custom-leaderboard CSV export is a first-party, " +
+      "logged-off download link (no key, no login); robots.txt is a universal allow " +
+      "('User-agent: * / Disallow:' — verified 2026-07-11). CSV schema verified live 2026-07-11: " +
+      "columns pa, xwoba (quoted decimal string like \".300\"), k_percent, bb_percent, " +
+      "barrel_batted_rate, hard_hit_percent, whiff_percent; UTF-8 BOM prefix. NON-BULK " +
+      "discipline: qualified-leaderboard snapshots only (the same table the public page shows), " +
+      "at most one pull per leaderboard per day, no historical bulk archive, raw CSVs never " +
+      "persisted. NEVER fetch Savant's charts/illustrations/GIFs — protected expression. Feeds " +
+      "the glass-box fantasy engine (SMASH hitter/pitcher populations, team Statcast-allowed " +
+      "aggregates) in @sports/fantasy-engine.",
+  },
+
   // ── Approved: licensed API ───────────────────────────────────────────────────
   // Rate-term note (2026-07-16): the adapter honors the once/day term with a 24h
   // live cache PLUS a short negative cache for source-error results (see

@@ -28,6 +28,43 @@ export {
   getLeagueAverageScored,
   type TeamScoringRecord,
 } from "./team-rates-source.js";
+// Rights-gated MLB fantasy data plane (fetchers REQUIRE a SourceClearanceProof
+// from the app-side clearance gate; compute-and-discard, never persist raw MLB
+// payloads — see source-rights registry entries mlb-statsapi / baseball-savant).
+export { assertCleared, type SourceClearanceProof } from "./source-clearance.js";
+export {
+  SAVANT_SOURCE_ID,
+  SAVANT_BASE,
+  SAVANT_SMASH_SELECTIONS,
+  SavantError,
+  buildSavantCustomUrl,
+  parseSavantCustomCsv,
+  toHitterSkillInputs,
+  toPitcherSkillInputs,
+  buildTeamStatcastAllowed,
+  fetchSavantSmashLeaderboard,
+  type SavantLeaderboardType,
+  type SavantCustomRow,
+  type SavantSkillRow,
+  type TeamStatcastAllowed,
+} from "./baseball-savant-source.js";
+export {
+  MLB_STATSAPI_SOURCE_ID,
+  MLB_STATSAPI_BASE,
+  MlbStatsApiError,
+  ipToInnings,
+  parseMlbPitchingStats,
+  consolidateByPlayer,
+  isReliever,
+  relieverFipConstant,
+  buildRelieverSeasons,
+  buildTeamBullpenCategories,
+  relieverPidToTeam,
+  fetchMlbPitcherSeasons,
+  type MlbPitcherSeasonLine,
+  type ConsolidatedPitcherLine,
+  type AdapterRelieverRow,
+} from "./mlb-statsapi-source.js";
 export {
   NFLVERSE_CATALOG,
   NFLVERSE_BASE,
