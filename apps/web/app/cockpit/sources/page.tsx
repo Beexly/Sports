@@ -166,6 +166,12 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
             <Link
+              href="/cockpit/sources/radar"
+              className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60"
+            >
+              R&amp;D Radar
+            </Link>
+            <Link
               href="/integrations"
               className="rounded-lg border border-titanium/40 px-3 py-1.5 text-ion-1 hover:bg-carbon/60"
             >
