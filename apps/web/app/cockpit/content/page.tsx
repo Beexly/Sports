@@ -12,6 +12,7 @@ import {
   type ContentDraftType,
   type ContentSourceRecord,
 } from "@/lib/content-engine";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * Cockpit · Content workflow (Phase 8 — Draft-Only Content Engine).
@@ -124,6 +125,7 @@ async function loadLegacyMedia() {
 }
 
 export default async function CockpitContentPage() {
+  await requireCockpitAdmin();
   const gates = getReadinessGates();
   const [drafts, legacy] = await Promise.all([
     loadDrafts(gates.canExposePerformanceStats),

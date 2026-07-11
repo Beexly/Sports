@@ -20,6 +20,7 @@ import {
   confirmMemory,
   rejectMemory,
 } from "@/lib/jarvis/memory/actions";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * In-action authorization. The cockpit layout guard only protects page RENDER;
@@ -292,6 +293,7 @@ function MemoryCard({
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function CockpitMemoryPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const [candidates, conflicts, hygiene] = await Promise.all([
     loadCandidates(),
     loadConflicts(),

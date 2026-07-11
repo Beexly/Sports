@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { db } from "@sports/db";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 type MarketTwinPosture = "READY_TO_SCORE" | "WATCH_ONLY" | "CONFLICT" | "QUIET";
 
@@ -113,6 +114,7 @@ async function loadRows(): Promise<TwinRow[]> {
 }
 
 export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const rows = await loadRows();
   const counts = rows.reduce(
     (acc, row) => {

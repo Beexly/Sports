@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { loadJournalDashboard, type JournalEntryListItem } from "@/lib/journal/load";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -109,6 +110,7 @@ function JournalSection({
 }
 
 export default async function CockpitJournalPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const data = await loadJournalDashboard();
 
   return (

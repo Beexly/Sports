@@ -7,6 +7,7 @@ import type {
   DataMode,
   OwnerAttentionItem,
 } from "@/lib/command-center/types";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * Cockpit → Command Center.
@@ -38,6 +39,7 @@ const DATA_MODE_STYLES: Record<DataMode, string> = {
 };
 
 export default async function CommandCenterPage() {
+  await requireCockpitAdmin();
   const feed = await loadCommandCenterFeed();
 
   const shell =

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { JournalNewForm } from "./journal-new-form";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
-export default function NewJournalEntryPage(): JSX.Element {
+export default async function NewJournalEntryPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   return (
     <div className="flex flex-col gap-6">
       <header>

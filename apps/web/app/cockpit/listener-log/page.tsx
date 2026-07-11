@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ListenerLogForm } from "@/components/cockpit/listener-log-form";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * /cockpit/listener-log — the legal manual lane for broadcast claims.
@@ -9,7 +10,8 @@ import { ListenerLogForm } from "@/components/cockpit/listener-log-form";
  */
 export const dynamic = "force-dynamic";
 
-export default function ListenerLogPage() {
+export default async function ListenerLogPage() {
+  await requireCockpitAdmin();
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold text-ion-white">Listener log</h1>

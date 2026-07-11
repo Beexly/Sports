@@ -3,12 +3,14 @@ import { notFound } from "next/navigation";
 import { db } from "@sports/db";
 import { AGENTS } from "@/lib/cockpit/agents";
 import { allowedTransitionsFrom } from "@/lib/cockpit/transitions";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export default async function CockpitTaskDetail({
   params,
 }: {
   params: { taskId: string };
 }) {
+  await requireCockpitAdmin();
   const task = await db.cockpitTask.findUnique({
     where: { id: params.taskId },
     include: {

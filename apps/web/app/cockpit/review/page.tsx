@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db, type Prisma } from "@sports/db";
 import { AGENTS } from "@/lib/cockpit/agents";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 // Operator data is read per request; never statically prerendered.
 export const dynamic = "force-dynamic";
@@ -13,6 +14,7 @@ const reviewQueueQuery = {
 } satisfies Prisma.CockpitTaskFindManyArgs;
 
 export default async function CockpitReviewPage() {
+  await requireCockpitAdmin();
   const items = await db.cockpitTask
     .findMany(reviewQueueQuery)
     // Fail-open: a transient DB blip degrades to the existing "Nothing in

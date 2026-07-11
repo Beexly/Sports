@@ -11,6 +11,7 @@ import {
   rollupLifecycle,
   type LifecycleStage,
 } from "@/lib/platform/lifecycle-rollup";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * Integrity Ledger cockpit — the command-truth surface. Every critical system, by
@@ -134,7 +135,8 @@ function LifecycleRollupTile({ systems }: { systems: readonly SystemEntry[] }) {
   );
 }
 
-export default function CockpitIntegrityPage() {
+export default async function CockpitIntegrityPage() {
+  await requireCockpitAdmin();
   const groups = ledgerByCategory();
   const violations = auditLedger();
   const allSystems = groups.flatMap((g) => g.systems);
