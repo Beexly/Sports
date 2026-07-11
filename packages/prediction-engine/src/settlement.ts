@@ -83,7 +83,14 @@ export function calculatePickResult(
     return (isOver && total > line) || (!isOver && total < line) ? "WIN" : "LOSS";
   }
 
-  return "PUSH";
+  // Fail loud, never fail-open (adversarial-review finding): a fall-through
+  // PUSH silently manufactures a no-loss result for any pick type that ever
+  // reaches settlement unhandled — a result-truth corruption. PickType is a
+  // closed union, so this is unreachable today; if it becomes reachable, it
+  // must halt settlement of that pick, not fabricate a push.
+  throw new Error(
+    `calculatePickResult: unsupported pickType "${String(pickType)}" — refusing to fabricate a result`,
+  );
 }
 
 /**

@@ -267,7 +267,14 @@ export async function GET(
       upgradeRequiredForDetail: true,
     };
     const payload: AuditPayload = summary;
-    return NextResponse.json({ success: true, audit: payload, preMortem, fragility });
+    // Server-side paywall (non-negotiable #3): preMortem.summary embeds the
+    // gated confidence number in plaintext ("scored at N confidence…") and
+    // both preMortem.riskDrivers and fragility name factor inputs with
+    // concrete thresholds — all paid, method-bearing detail. An anonymous
+    // curl of this endpoint must NOT receive them. The client types both as
+    // nullable and the panels render nothing when absent, so FREE gets the
+    // locked experience with zero method leak. (Adversarial-review finding.)
+    return NextResponse.json({ success: true, audit: payload, preMortem: null, fragility: null });
   }
 
   // ──────────────────────────────────────────────────────────────────

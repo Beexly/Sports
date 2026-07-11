@@ -152,13 +152,21 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         // not slide the grace window entitlements compute from pastDueSince) AND
         // set PAST_DUE together, so a crash between them can't leave a member
         // past-due-but-still-ACTIVE.
+        //
+        // CANCELED is terminal and excluded (adversarial-review finding): Stripe
+        // delivers a dunning-cancellation burst UNORDERED, so a late
+        // payment_failed can arrive after subscription.deleted. Without this
+        // guard it flips a CANCELED row back to PAST_DUE — which grants access —
+        // and the subsequent updated-event resurrection guard (which requires
+        // existing.status === "CANCELED") no longer matches, restoring paid tier
+        // permanently on a subscription that is dead in Stripe.
         await db.$transaction([
           db.subscription.updateMany({
-            where: { stripeSubscriptionId: subId, pastDueSince: null },
+            where: { stripeSubscriptionId: subId, pastDueSince: null, status: { not: "CANCELED" } },
             data: { pastDueSince: new Date() },
           }),
           db.subscription.updateMany({
-            where: { stripeSubscriptionId: subId },
+            where: { stripeSubscriptionId: subId, status: { not: "CANCELED" } },
             data: { status: "PAST_DUE" },
           }),
         ]);

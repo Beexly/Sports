@@ -251,3 +251,26 @@ describe("selectGradingLine", () => {
     expect(selectGradingLine({ clvLockLine: 0, line: 1.5 })).toBe(0);
   });
 });
+
+// ============================================================
+// calculatePickResult — fail loud, never fail-open
+// ============================================================
+
+describe("calculatePickResult — no fabricated results", () => {
+  it("throws on an unsupported pick type instead of silently returning PUSH", () => {
+    // Adversarial-review finding: a fall-through PUSH manufactures a no-loss
+    // result for any pick type reaching settlement unhandled. PickType is a
+    // closed union today, so this is unreachable — cast past the type to prove
+    // the runtime guard exists and refuses to fabricate.
+    expect(() =>
+      // @ts-expect-error — deliberately unsupported pickType at runtime
+      calculatePickResult("PARLAY", "Team A", 0, "Team A", 21, 17, "americanfootball_nfl"),
+    ).toThrow(/unsupported pickType/i);
+  });
+
+  it("still settles the three supported pick types correctly", () => {
+    expect(calculatePickResult("MONEYLINE", "Team A", 0, "Team A", 21, 17, "x")).toBe("WIN");
+    expect(calculatePickResult("SPREAD", "Team A", -3, "Team A", 21, 17, "x")).toBe("WIN");
+    expect(calculatePickResult("TOTAL", "OVER 40", 40, "Team A", 21, 17, "x")).toBe("LOSS");
+  });
+});

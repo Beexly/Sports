@@ -433,7 +433,7 @@ describe("POST /api/webhooks/stripe", () => {
       expect(mocks.subscriptionUpsert).toHaveBeenCalled();
     });
 
-    it("payment_failed marks the subscription PAST_DUE and stamps the first failure", async () => {
+    it("payment_failed marks the subscription PAST_DUE, stamps the first failure, and never touches a CANCELED row", async () => {
       mocks.constructEvent.mockReturnValue(
         stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
       );
@@ -444,13 +444,15 @@ describe("POST /api/webhooks/stripe", () => {
       // retries must not slide the grace window.
       expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { stripeSubscriptionId: "sub_123", pastDueSince: null },
+          where: { stripeSubscriptionId: "sub_123", pastDueSince: null, status: { not: "CANCELED" } },
           data: { pastDueSince: expect.any(Date) },
         })
       );
+      // Adversarial-review regression: CANCELED is terminal and excluded, so a
+      // late payment_failed after subscription.deleted cannot resurrect access.
       expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { stripeSubscriptionId: "sub_123" },
+          where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
           data: { status: "PAST_DUE" },
         })
       );
