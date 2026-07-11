@@ -56,7 +56,22 @@ function parentLayer(layer: readonly string[], hash: HashFn): string[] {
   return next;
 }
 
-/** Merkle root of a committed set of picks. Empty set → hash(""). */
+/**
+ * Merkle root of a committed set of picks. Empty set → hash("").
+ *
+ * COMMITMENT CONTRACT (M-F12): a bare root is NOT a complete commitment —
+ * root + COUNT together are. This tree duplicates the last node of an odd
+ * layer (the Bitcoin-style fold), so a list with its final record duplicated
+ * re-folds to the SAME root as the original ([A,B,C] ≡ [A,B,C,C]) — a
+ * padded list can "prove" against an odd-set root unless the verifier also
+ * checks the committed count. Every surface that publishes a root publishes
+ * its count beside it and every verifier MUST compare both (the /api/verify
+ * slate endpoint's receiptIndexComplete gate and the /proof page's
+ * totalSettled do exactly this). For single-value external publication use
+ * commitmentDigest, which binds the two. The fold itself is kept stable
+ * because production slate roots are already frozen in the DB — changing the
+ * algorithm would make every historical commitment read as tampered.
+ */
 export function merkleRoot(records: readonly PickRecord[], hash: HashFn): string {
   let layer = leafLayer(records, hash);
   if (layer.length === 0) return hash("");
@@ -105,6 +120,21 @@ export function verifyInclusion(proof: MerkleProof, root: string, hash: HashFn):
     running = sib.right ? hashNode(hash, running, sib.hash) : hashNode(hash, sib.hash, running);
   }
   return running === root;
+}
+
+/**
+ * Count-bound commitment digest — the single hex string to publish EXTERNALLY
+ * (bot posts, third-party attestations). Folding the count into the digest
+ * removes the duplicate-last-leaf ambiguity that a bare root carries (see
+ * merkleRoot's commitment contract): [A,B,C] and [A,B,C,C] share a root but
+ * never a digest. Additive and versioned — existing stored roots and their
+ * count-checked verification are untouched.
+ */
+export function commitmentDigest(hash: HashFn, root: string, count: number): string {
+  if (!Number.isInteger(count) || count < 0) {
+    throw new Error(`commitmentDigest: count must be a non-negative integer, got ${count}`);
+  }
+  return hash(`commit:v1:${count}:${root}`);
 }
 
 /**

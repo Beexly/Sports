@@ -124,6 +124,7 @@ export {
   merkleRootFromLeafHashes,
   inclusionProof,
   verifyInclusion,
+  commitmentDigest,
   canonicalPickPayload,
   parseCanonicalPayload,
 } from "./proof-of-record.js";

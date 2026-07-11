@@ -70,10 +70,14 @@ export function redactBoardConfidence(payload: BoardStatePayload): BoardStatePay
 }
 
 function todayBounds(): { start: Date; end: Date } {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  // UTC day bounds (T-board-utc). The engine's "day" is the UTC game-day
+  // everywhere else (slate freeze keys, settlement windows), and setHours()
+  // is SERVER-LOCAL midnight — identical on Vercel (TZ=UTC) but a different
+  // day on any non-UTC host, which would show the board a different "today"
+  // than the engine committed. Compute the bounds in UTC explicitly.
+  const now = new Date();
+  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
   return { start, end };
 }
 

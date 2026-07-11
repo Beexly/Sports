@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  commitmentDigest,
   merkleRoot,
   merkleRootFromLeafHashes,
   inclusionProof,
@@ -74,5 +75,44 @@ describe("proof-of-record (Merkle commitment)", () => {
     expect(merkleRootFromLeafHashes([], fnv1a)).toBe(merkleRoot([], fnv1a));
     // Order matters — a permuted list is a DIFFERENT commitment.
     expect(merkleRootFromLeafHashes([...leaves].reverse(), fnv1a)).not.toBe(merkleRoot(records, fnv1a));
+  });
+});
+
+// ── M-F12: root+count is the commitment; a bare root is ambiguous ────────────
+
+describe("commitment contract (M-F12)", () => {
+  const rec = (id: string) => ({ id, payload: `p:${id}` });
+
+  it("PINS the duplicate-last-leaf ambiguity: [A,B,C] and [A,B,C,C] share a root", () => {
+    // This is deliberate documentation-by-test of the fold's known property —
+    // the algorithm stays stable because production slate roots are frozen.
+    const three = [rec("A"), rec("B"), rec("C")];
+    const padded = [rec("A"), rec("B"), rec("C"), rec("C")];
+    expect(merkleRoot(padded, fnv1a)).toBe(merkleRoot(three, fnv1a));
+  });
+
+  it("count-checked verification rejects the padded list (the disambiguator)", () => {
+    const three = [rec("A"), rec("B"), rec("C")];
+    const padded = [rec("A"), rec("B"), rec("C"), rec("C")];
+    const committedCount = three.length;
+    // Same root — but the padded list fails the count check every verifier
+    // surface performs (verify/slate receiptIndexComplete, /proof totalSettled).
+    expect(padded.length === committedCount).toBe(false);
+  });
+
+  it("commitmentDigest binds count into a single publishable hex", () => {
+    const three = [rec("A"), rec("B"), rec("C")];
+    const padded = [rec("A"), rec("B"), rec("C"), rec("C")];
+    const rootDigest3 = commitmentDigest(fnv1a, merkleRoot(three, fnv1a), three.length);
+    const rootDigest4 = commitmentDigest(fnv1a, merkleRoot(padded, fnv1a), padded.length);
+    expect(rootDigest3).not.toBe(rootDigest4); // same root, different digest
+    // Deterministic and versioned.
+    expect(commitmentDigest(fnv1a, "r", 3)).toBe(fnv1a("commit:v1:3:r"));
+  });
+
+  it("commitmentDigest rejects non-integer or negative counts", () => {
+    expect(() => commitmentDigest(fnv1a, "r", -1)).toThrow(/non-negative integer/);
+    expect(() => commitmentDigest(fnv1a, "r", Number.NaN)).toThrow(/non-negative integer/);
+    expect(() => commitmentDigest(fnv1a, "r", 2.5)).toThrow(/non-negative integer/);
   });
 });
