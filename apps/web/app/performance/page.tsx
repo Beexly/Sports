@@ -23,12 +23,12 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 export const metadata: Metadata = {
   title: "Calibration Report: Settled-Pick Audit Trail",
   description:
-    "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
+    "Every finished pick from the live engine is counted, wins and losses alike. Early warm-up picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
   alternates: { canonical: "/performance" },
   openGraph: {
     title: "Calibration Report: Settled-Pick Audit Trail",
     description:
-      "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
+      "Every finished pick from the live engine is counted, wins and losses alike. Early warm-up picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
     url: "/performance",
   },
 };
@@ -145,7 +145,7 @@ export default async function PerformancePage() {
                   sample
                 </span>
               )}
-              . Win-rate aggregation is gated until canonical history accumulates.
+              . The win rate stays gated until enough finished picks accumulate.
             </p>
             <Link
               href="/picks"
@@ -295,7 +295,7 @@ export default async function PerformancePage() {
                       <span className={NUMERIC_TEXT_CLASS}>
                         {formatCount(overall.totalPicks)}
                       </span>{" "}
-                      canonical picks
+                      official live-engine picks
                     </dd>
                   </div>
                   <div>
@@ -364,7 +364,7 @@ export default async function PerformancePage() {
                       <span className={NUMERIC_TEXT_CLASS}>
                         {formatCount(overall.totalPicks)}
                       </span>{" "}
-                      canonical settled picks. Win rate excludes pushes.
+                      finished live-engine picks. Win rate excludes pushes.
                     </p>
                   </div>
                 </div>
@@ -628,7 +628,7 @@ function SportCard({
 
       <p className="mt-3 text-center text-xs text-ion-3">
         <span className={NUMERIC_TEXT_CLASS}>{formatCount(totalPicks)}</span>{" "}
-        canonical picks
+        official live-engine picks
         {band !== null && (
           <>
             {" · "}

@@ -190,7 +190,7 @@ export default async function ProofOfRecordPage() {
                     <span className={NUMERIC_TEXT_CLASS}>
                       {formatCount(board.totalSettled)}
                     </span>{" "}
-                    settled canonical picks · computed{" "}
+                    settled live-engine picks · computed{" "}
                     {new Date(board.generatedAt).toUTCString()}
                   </p>
                 </div>
@@ -243,7 +243,7 @@ export default async function ProofOfRecordPage() {
                 The record starts when the first pick settles.
               </p>
               <p className="mt-3 text-sm leading-6 text-ion-1">
-                No canonical settled picks exist yet. This page will populate
+                No finished live-engine picks exist yet. This page will populate
                 automatically once picks move from pending to settled. Every
                 outcome, win or loss, appears here with its hash and trail.
                 Nothing is hidden once it settles.

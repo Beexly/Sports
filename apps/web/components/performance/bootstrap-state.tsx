@@ -35,7 +35,7 @@ export function PerformanceBootstrapState({
           data-testid="bootstrap-status-label"
           className="text-xs font-semibold uppercase tracking-widest text-caution"
         >
-          {gateEnabled ? "No canonical performance data yet" : "Public stats disabled"}
+          {gateEnabled ? "No official record yet" : "Public stats disabled"}
         </p>
 
         <h2 className="mt-3 text-2xl font-bold text-ion-white">
@@ -51,7 +51,7 @@ export function PerformanceBootstrapState({
         </p>
 
         <p className="mt-3 text-sm leading-relaxed text-ion-1">
-          Bootstrap-era picks, those generated before canonical history was
+          Warm-up picks, those generated before the official record was
           enabled, are stored for internal validation but are{" "}
           <strong className="text-ion-white">never</strong> counted in public
           performance numbers. We do this on purpose so the first numbers you
@@ -75,7 +75,7 @@ export function PerformanceBootstrapState({
           <li className="flex gap-3">
             <span className="text-ion-3">1.</span>
             <span>
-              Canonical history is enabled and new picks are being written with{" "}
+              The official record is on and new picks are being written as{" "}
               <code className="rounded bg-titanium px-1 py-0.5 font-mono text-xs text-ion-1">
                 isBootstrap=false
               </code>
@@ -89,7 +89,7 @@ export function PerformanceBootstrapState({
               <strong className="font-numerals tabular-nums text-ion-white">
                 {minSettledPicksForLearning}
               </strong>{" "}
-              canonical picks have settled with verified outcomes.
+              official picks have settled with verified outcomes.
             </span>
           </li>
           <li className="flex gap-3">
@@ -112,7 +112,7 @@ export function PerformanceBootstrapState({
         <ul className="mt-4 space-y-2 text-sm text-ion-1">
           <li>• Sample size and period covered</li>
           <li>• Model version used during the period</li>
-          <li>• Win / loss / push counts, computed only from canonical picks</li>
+          <li>• Win / loss / push counts, computed only from official live-engine picks</li>
           <li>
             • Win rate computed as{" "}
             <code className="rounded bg-titanium px-1 py-0.5 font-mono text-xs text-ion-1">
