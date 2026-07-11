@@ -52,6 +52,15 @@ export interface ProofPickRow {
   readonly clvValue: number | null;
   /** Merkle leaf hash (SHA-256) for this pick's committed payload. */
   readonly leafHash: string;
+  /**
+   * The pick-proof RECEIPT hash (pickProofReceipt.contentHash) — the hash the
+   * public /verify console looks up. Distinct from leafHash: the receipt
+   * payload is FROZEN at mint time while the Merkle leaf is recomputed from
+   * current fields, and picks minted before the receipt spine (or without
+   * market data) have no receipt. Null when this pick carries no receipt —
+   * the UI must not route hashless rows to the verifier.
+   */
+  readonly receiptHash: string | null;
   /** Index of this pick in the ordered committed set (deterministic). */
   readonly leafIndex: number;
   /** Full inclusion proof so anyone can verify against the published root. */
@@ -167,6 +176,7 @@ export async function loadProofOfRecord(
           where: { id: { in: topIds } },
           select: {
             id: true,
+            proofReceipt: { select: { contentHash: true } },
             game: {
               select: {
                 homeTeamName: true,
@@ -245,6 +255,7 @@ export async function loadProofOfRecord(
       clvVerdict: pick.clvVerdict ?? null,
       clvValue: pick.clvValue ?? null,
       leafHash: hashLeaf(sha256, record),
+      receiptHash: displayById.get(pick.id)?.proofReceipt?.contentHash ?? null,
       leafIndex: i,
       inclusionProof: proof,
       consensusAtSettle: consensus,
