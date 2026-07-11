@@ -35,6 +35,17 @@ describe("proof-funnel weave", () => {
     expect(proof).toContain('href="/picks"');
     // The close must never promise outcomes — it sells receipts, not wins.
     expect(proof).toContain("not louder claims, more receipts");
+    // Codex P2 on #74: the close must be gated on a non-empty ledger — selling
+    // against an empty (or DB-failed) record contradicts the empty state.
+    expect(proof).toMatch(/\{!isEmpty &&[\s\S]{0,400}proof-funnel-close/);
+  });
+
+  it("/proof routes only RECEIPT hashes to the verifier, never bare Merkle leaves", () => {
+    const proof = read("app/proof/page.tsx");
+    // Codex P2 on #74: leafHash is this page's Merkle fingerprint; /verify
+    // looks up the frozen receipt hash. Only receipt-carrying rows may link.
+    expect(proof).toMatch(/row\.receiptHash &&[\s\S]{0,300}\/verify\?hash=\$\{row\.receiptHash\}/);
+    expect(proof).not.toContain("/verify?hash=${row.leafHash}");
   });
 
   it("verify console funnels ONLY from verified states, never from failure states", () => {

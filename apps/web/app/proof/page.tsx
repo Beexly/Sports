@@ -304,42 +304,46 @@ export default async function ProofOfRecordPage() {
             </ul>
           </section>
 
-          {/* ── Funnel close: the record IS the product demo ── */}
-          <section
-            data-testid="proof-funnel-close"
-            className="mt-10 rounded-2xl border border-plasma/30 bg-plasma/[0.06] px-6 py-8"
-          >
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-plasma">
-              The same receipts run the live board
-            </p>
-            <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white">
-              Everything on this page was sealed before kickoff. Today&apos;s
-              picks carry the same seal.
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
-              Free shows two picks a day with the public Edge Index. Pro opens
-              the full board — every sealed pick, its confidence score, and the
-              factor trail behind it. The record above is what you&apos;re
-              buying: not louder claims, more receipts.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
-              <Link href="/pricing" className="btn btn-primary whitespace-nowrap">
-                See plans
-              </Link>
-              <Link
-                href="/picks"
-                className="text-sm font-semibold text-orbital-cyan hover:text-ion-white"
-              >
-                Today&apos;s board →
-              </Link>
-              <Link
-                href="/verify"
-                className="text-sm font-semibold text-orbital-cyan hover:text-ion-white"
-              >
-                Check a receipt →
-              </Link>
-            </div>
-          </section>
+          {/* ── Funnel close: the record IS the product demo. Gated on a
+                 non-empty ledger — selling against an empty (or DB-failed)
+                 record would contradict the empty state two sections up. ── */}
+          {!isEmpty && (
+            <section
+              data-testid="proof-funnel-close"
+              className="mt-10 rounded-2xl border border-plasma/30 bg-plasma/[0.06] px-6 py-8"
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-plasma">
+                The same receipts run the live board
+              </p>
+              <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white">
+                Everything on this page was sealed before kickoff. Today&apos;s
+                board publishes with the same receipts.
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
+                Free shows two picks a day with the public Edge Index. Pro opens
+                the full board — the sealed picks, their confidence scores, and
+                the factor trail behind them. The record above is what
+                you&apos;re buying: not louder claims, more receipts.
+              </p>
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+                <Link href="/pricing" className="btn btn-primary whitespace-nowrap">
+                  See plans
+                </Link>
+                <Link
+                  href="/picks"
+                  className="text-sm font-semibold text-orbital-cyan hover:text-ion-white"
+                >
+                  Today&apos;s board →
+                </Link>
+                <Link
+                  href="/verify"
+                  className="text-sm font-semibold text-orbital-cyan hover:text-ion-white"
+                >
+                  Check a receipt →
+                </Link>
+              </div>
+            </section>
+          )}
 
           <div className="mt-8">
             <RiskDisclosure variant="compact" className="text-center" />
@@ -431,17 +435,30 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
         )}
       </div>
 
-      {/* Right column: leaf hash + index */}
+      {/* Right column: leaf hash + index, plus the RECEIPT hash where one
+          exists. The two are different fingerprints: the leaf belongs to this
+          page's Merkle ledger; the receipt hash is what /verify looks up.
+          Routing a leaf hash to the verifier would produce a false
+          "no receipt matches" — so only receipt-carrying rows link out. */}
       <div className="flex flex-col items-end gap-1 text-right">
         <p className={`text-[10px] font-semibold uppercase tracking-widest text-ion-3`}>
           Leaf {formatCount(row.leafIndex)}
         </p>
         <code
           className={`max-w-[200px] truncate rounded bg-titanium px-2 py-1 font-mono text-[10px] text-ion-1 ${NUMERIC_TEXT_CLASS}`}
-          title={row.leafHash}
+          title={`Merkle leaf hash (this page's ledger): ${row.leafHash}`}
         >
           {row.leafHash.slice(0, 12)}…
         </code>
+        {row.receiptHash && (
+          <Link
+            href={`/verify?hash=${row.receiptHash}`}
+            className="text-[10px] font-semibold text-orbital-cyan hover:text-ion-white"
+            title="Open this pick's frozen receipt in the public verifier"
+          >
+            Verify receipt →
+          </Link>
+        )}
       </div>
     </li>
   );

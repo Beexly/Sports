@@ -217,10 +217,10 @@ export default async function HomePage(): Promise<JSX.Element> {
                 Trust is an architecture, not a tagline.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
-                Every pick is sealed with a receipt before kickoff — hashed, committed,
-                and impossible to edit after the game. No fabricated picks, no invented
-                stats, no silent edits. And you don&apos;t have to take our word for any
-                of it: check a receipt yourself.
+                Picks publish with tamper-evident receipts, frozen before kickoff:
+                hashed, committed, impossible to edit after the game. No fabricated
+                picks, no invented stats, no silent edits. And you don&apos;t have to
+                take our word for it. Check a receipt yourself.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
