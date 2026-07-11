@@ -54,9 +54,13 @@ describe("Customer dashboard performance gate", () => {
     const fullShape =
       /if\s*\([^)]*canExposePerformanceStats[^)]*\)[^{]*\{[^}]*recentRecord\s*=/m.test(src) ||
       /if\s*\([^)]*recentSettled[^)]*&&[^)]*canExposePerformanceStats[^)]*\)/m.test(src);
+    // T-daily-slate fix shape: the record is COMPUTED (real groupBy) inside the
+    // gate guard, so nested braces sit between the `if` and the assignment.
+    const computedShape =
+      /if\s*\(gates\.canExposePerformanceStats\)\s*\{[\s\S]*?recentRecord\s*=/m.test(src);
     expect(
-      stubShape || fullShape,
-      "recentRecord must be gated by canExposePerformanceStats (ternary stub OR if-guard)"
+      stubShape || fullShape || computedShape,
+      "recentRecord must be gated by canExposePerformanceStats (ternary stub, if-guard, or gated computation)"
     ).toBe(true);
   });
 

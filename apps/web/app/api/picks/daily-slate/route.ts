@@ -113,9 +113,40 @@ export async function GET() {
   const sportBreakdown = Array.from(sportCount.entries())
     .map(([sport, pickCount]) => ({ sport, pickCount }))
     .sort((a, b) => b.pickCount - a.pickCount || a.sport.localeCompare(b.sport));
+  // REAL last-7-days settled record (adversarial finding T-daily-slate): the
+  // previous version returned a HARDCODED {0,0,0} whenever the performance
+  // gate was open — fabricated stats on a public surface (non-negotiable #2).
+  // The record is computed from settled picks under the same official filter
+  // the proof surfaces use (published, non-bootstrap, seed-excluded), and
+  // WITHHELD (null) when nothing settled in the window or the query fails —
+  // never invented. The stub client's groupBy returns [] and lands on the
+  // same honest null.
   let recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
   if (gates.canExposePerformanceStats) {
-    recentRecord = { wins: 0, losses: 0, pushes: 0, period: "Last 7 days" };
+    try {
+      const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const grouped = await db.pick.groupBy({
+        by: ["result"],
+        where: {
+          isPublished: true,
+          isBootstrap: false,
+          NOT: { modelVersion: "v5.0.0-seed" },
+          result: { in: ["WIN", "LOSS", "PUSH"] },
+          settledAt: { gte: since },
+        },
+        _count: { _all: true },
+      });
+      const count = (r: string) =>
+        grouped.find((g) => g.result === r)?._count._all ?? 0;
+      const wins = count("WIN");
+      const losses = count("LOSS");
+      const pushes = count("PUSH");
+      if (wins + losses + pushes > 0) {
+        recentRecord = { wins, losses, pushes, period: "Last 7 days" };
+      }
+    } catch {
+      recentRecord = null; // withhold on failure — never fabricate
+    }
   }
 
   return NextResponse.json({
@@ -129,7 +160,8 @@ export async function GET() {
       topEdgePick: null,
       lastUpdatedAt: new Date().toISOString(),
       sportBreakdown,
-      // recentRecord stays null when stats are gated.
+      // Null when stats are gated, when nothing settled in the window, or on
+      // query failure — a record is shown only when it is real.
       recentRecord,
       isSampleData: demoActive,
     },
