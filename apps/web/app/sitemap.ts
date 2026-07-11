@@ -34,6 +34,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/faq", priority: 0.5, changeFrequency: "monthly" },
   { path: "/responsible-play", priority: 0.5, changeFrequency: "monthly" },
   { path: "/vs/tout-services", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/how-to-verify-a-record", priority: 0.7, changeFrequency: "monthly" },
   { path: "/accountability", priority: 0.7, changeFrequency: "weekly" },
   { path: "/proof", priority: 0.7, changeFrequency: "daily" },
   { path: "/engine", priority: 0.7, changeFrequency: "daily" },

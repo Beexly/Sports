@@ -49,6 +49,13 @@ export default function VsToutServicesPage() {
               sports model space deserves a product that can&apos;t play that
               game.
             </p>
+            <p className="mt-4 text-base text-ink-300">
+              Not sure how to tell the difference? Start with{" "}
+              <Link href="/how-to-verify-a-record" className="font-semibold text-orbital-cyan hover:text-white">
+                the five-part checklist for verifying any picks record
+              </Link>
+              , then run it on anyone, including us.
+            </p>
           </div>
         </section>
 
