@@ -265,6 +265,92 @@ describe("freezeSlateCommitments", () => {
     expect(mocks.slateCreate).toHaveBeenCalledTimes(1);
   });
 
+  describe("M-F2: a pre-mint-hour run must not front-run the 10:00 mint on today's slate", () => {
+    // The 07:00 UTC settle-picks freeze shot. Same slate day as NOW (10:00).
+    const SEVEN_AM = new Date("2026-07-02T07:00:00.000Z");
+
+    it("(a) 07:00 run DEFERS today's slate when every kickoff is after the mint run's reach", async () => {
+      // Kickoffs 17:00/20:00 — well past the mint run's 12:00 reach. Freezing
+      // at 07:00 would seal yesterday's population and lock the 10:00 mint
+      // out of the root forever (freeze-once). Must defer, not commit.
+      const results = await freezeSlateCommitments([SPORT], SEVEN_AM, testHash);
+
+      expect(mocks.slateCreate).not.toHaveBeenCalled();
+      expect(results).toEqual([
+        { slateKey: TODAY_KEY, action: "SKIP", reason: expect.stringMatching(/deferred.*mint/i) },
+        NO_GAMES_TOMORROW,
+      ]);
+    });
+
+    it("(b) the 10:00 mint run then freezes the SAME slate with its full population", async () => {
+      // Identical slate, NOW = the mint hour: the deferral must not apply.
+      const results = await freezeSlateCommitments([SPORT], NOW, testHash);
+
+      expect(mocks.slateCreate).toHaveBeenCalledWith({
+        data: expect.objectContaining({ slateKey: TODAY_KEY, count: 2 }),
+      });
+      expect(results[0]).toEqual({ slateKey: TODAY_KEY, action: "COMMIT", count: 2 });
+    });
+
+    it("(c) 07:00 run SEALS today's slate when a kickoff precedes the mint run's reach", async () => {
+      // A 09:00 UTC kickoff (before the 12:00 reach): waiting for the mint
+      // run would publish the root post-kickoff — a fake pre-registration.
+      // Seal NOW with the existing population; that trade is deliberate.
+      mocks.gameFindMany.mockImplementation(
+        gamesInWindow([
+          { id: "game-early", commenceTime: new Date("2026-07-02T09:00:00.000Z") },
+          { id: "game-late", commenceTime: new Date("2026-07-02T21:00:00.000Z") },
+        ]),
+      );
+      mocks.receiptFindMany.mockImplementation(
+        receiptsForGames([{ pickId: "pick-e", payload: "p-e", gameId: "game-early" }]),
+      );
+
+      const results = await freezeSlateCommitments([SPORT], SEVEN_AM, testHash);
+
+      expect(mocks.slateCreate).toHaveBeenCalledWith({
+        data: expect.objectContaining({ slateKey: TODAY_KEY, count: 1 }),
+      });
+      expect(results[0]).toEqual({ slateKey: TODAY_KEY, action: "COMMIT", count: 1 });
+    });
+
+    it("(d) offset-1 behavior is unchanged from a 07:00 run (early-UTC tomorrow still frozen, late tomorrow still deferred)", async () => {
+      // Primetime case: tomorrow 03:00Z kickoff must still freeze early.
+      const nightGame = [{ id: "game-west", commenceTime: new Date("2026-07-03T03:00:00.000Z") }];
+      mocks.gameFindMany.mockImplementation(gamesInWindow(nightGame));
+      mocks.receiptFindMany.mockImplementation(
+        receiptsForGames([{ pickId: "pick-w", payload: "payload-w", gameId: "game-west" }]),
+      );
+      const early = await freezeSlateCommitments([SPORT], SEVEN_AM, testHash);
+      expect(early[1]).toEqual({ slateKey: TOMORROW_KEY, action: "COMMIT", count: 1 });
+
+      // Late-tomorrow case: still deferred to its own day, same reason string.
+      mocks.slateCreate.mockClear();
+      mocks.gameFindMany.mockImplementation(
+        gamesInWindow([{ id: "game-late", commenceTime: new Date("2026-07-03T20:00:00.000Z") }]),
+      );
+      const late = await freezeSlateCommitments([SPORT], SEVEN_AM, testHash);
+      expect(mocks.slateCreate).not.toHaveBeenCalled();
+      expect(late[1]).toEqual({
+        slateKey: TOMORROW_KEY,
+        action: "SKIP",
+        reason: "deferred: own-day run can still freeze it",
+      });
+    });
+
+    it("(e) TRAP PIN: the mint run itself must NEVER defer offset 0 — even though now < runReach still holds at 10:00", async () => {
+      // The tempting implementation (`now < runReach`, mirroring offset 1)
+      // is still TRUE at the 10:00 run (10:00 < 12:00) — offset 0 would
+      // defer at 07:00 AND at 10:00, and nothing would ever freeze today's
+      // slate. The guard must key on the mint HOUR. NOW is exactly 10:00
+      // with kickoffs ≥ runReach; a deferral here means the trap shipped.
+      const results = await freezeSlateCommitments([SPORT], NOW, testHash);
+
+      expect(results[0]!.action).toBe("COMMIT");
+      expect(results[0]!.reason ?? "").not.toMatch(/deferred/i);
+    });
+  });
+
   it("treats a unique-violation inside the transaction as a logged SKIP (concurrent freeze race)", async () => {
     mocks.slateCreate.mockRejectedValue(
       Object.assign(new Error("Unique constraint failed on slateKey"), { code: "P2002" }),

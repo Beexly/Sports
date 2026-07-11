@@ -26,6 +26,15 @@
  * NULL by design (a frozen root is immutable — late picks are honestly outside
  * the pre-registration).
  *
+ * The SAME population rule protects today's slate from a pre-mint freeze
+ * pass (the 07:00 UTC settle-picks retry shot): the 10:00 refresh-odds run
+ * MINTS the day's picks before it freezes, so a 07:00 freeze of today's
+ * slate would commit yesterday's population and freeze-once would lock the
+ * 10:00 mint out of the root forever. A pre-mint-hour run therefore defers
+ * offset 0 to the mint run unless a kickoff precedes the mint run's reach
+ * (early kickoffs are sealed immediately — a pre-kickoff root over the
+ * smaller existing population beats no pre-kickoff root at all).
+ *
  * Invariants (all enforced by the pure planner, planSlateCommitment):
  *   - one commitment per slateKey, ever (immutable once frozen)
  *   - only committed while the WHOLE slate is still pre-result
@@ -182,16 +191,41 @@ export async function freezeSlateCommitments(
           games[0]!.commenceTime,
         );
 
-        // CONDITIONAL early freeze (F2): a tomorrow-slate that its own day's
-        // run could still safely freeze (earliest kickoff after that run's
-        // reach) is left to wait — freezing it now would only shrink its
-        // pre-registered population. Today's slate (offset 0) always proceeds.
+        // MINT-RUN DEFERRAL — freeze from the run that sees the FULLEST
+        // pre-kickoff population. `runReach` = when the slate's own day's
+        // mint run (NEXT_RUN_UTC_HOUR refresh-odds, which mints picks BEFORE
+        // freezing) has reached it, plus jitter margin.
+        //
+        // offset 1 (tomorrow, F2): its own day's run can still freeze it
+        // unless an early-UTC kickoff precedes that run's reach (the
+        // primetime fix) — freezing early would only shrink the population.
+        //
+        // offset 0 (today, M-F2): a freeze pass running BEFORE the mint hour
+        // (the 07:00 settle-picks shot) must not front-run the 10:00 mint —
+        // freeze-once would seal today's slate with yesterday's population
+        // and every pick minted at 10:00 would carry slateKey null forever,
+        // outside the pre-registration. Defer to the mint run UNLESS a
+        // kickoff precedes its reach (then seal now: pre-kickoff sealing
+        // beats population completeness). The guard is `now` BEFORE the mint
+        // hour — never `now < runReach` — because at the 10:00 run itself
+        // that comparison is still true (10:00 < 12:00) and offset 0 would
+        // defer forever; at/after the mint hour this run IS the mint run and
+        // must always freeze.
+        const runReach = new Date(
+          start.getTime() + (NEXT_RUN_UTC_HOUR + NEXT_RUN_MARGIN_HOURS) * 3600_000,
+        );
         if (offsetDays > 0) {
-          const ownRunReach = new Date(start.getTime() + (NEXT_RUN_UTC_HOUR + NEXT_RUN_MARGIN_HOURS) * 3600_000);
-          if (earliestKickoff >= ownRunReach) {
+          if (earliestKickoff >= runReach) {
             results.push({ slateKey, action: "SKIP", reason: "deferred: own-day run can still freeze it" });
             continue;
           }
+        } else if (now.getUTCHours() < NEXT_RUN_UTC_HOUR && earliestKickoff >= runReach) {
+          results.push({
+            slateKey,
+            action: "SKIP",
+            reason: "deferred: today's mint run will freeze the full population",
+          });
+          continue;
         }
 
         // Freeze-once: a commitment is immutable, so an existing row means SKIP.
