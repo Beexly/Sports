@@ -181,83 +181,103 @@ describe("Phase 9 guardrails", () => {
 });
 
 /**
- * Guardrail-hardening pins (adversarial findings O-2.1 / O-4.x / O-5.1).
+ * Guardrail-hardening pins (adversarial findings O-2.1 / O-3.x / O-4.x / O-5.1).
  *
- * These tests prove the gates have TEETH, not just that they pass on a clean
- * tree: each detector must FIRE on a planted violation and stay quiet on the
- * excluded surfaces. Fixtures are written under a throwaway route dir and
- * removed in afterEach; tests within this file run sequentially, so the
- * clean-tree OK tests above never observe a plant.
+ * These tests prove the gates have TEETH: each detector must FIRE on a
+ * planted violation and stay quiet on excluded surfaces. Plants NEVER touch
+ * the real repository tree — every plant test builds a minimal repo skeleton
+ * in the OS temp dir and runs the scanner with cwd there (the scanners
+ * resolve their root from process.cwd()). A plant inside the real tree races
+ * against every repo-scanning test in a parallel vitest worker (public-copy
+ * and docs scans walk the same dirs), failing the suite nondeterministically.
+ * The clean-tree OK tests above still run against the REAL repo root.
  */
 import { afterEach } from "vitest";
-import { mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { mkdirSync, writeFileSync, rmSync, mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, dirname } from "node:path";
 
-const FIXTURE_APP_DIR = resolve(REPO_ROOT, "apps/web/app/__guardrail_fixture__");
-const FIXTURE_API_DIR = resolve(REPO_ROOT, "apps/web/app/api/__guardrail_fixture__");
-
-function plantPage(dir: string, jsxCopy: string): void {
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(
-    resolve(dir, "page.tsx"),
+let sandbox: string | null = null;
+function sandboxRepo(): string {
+  if (!sandbox) sandbox = mkdtempSync(join(tmpdir(), "guardrail-sandbox-"));
+  return sandbox;
+}
+function cleanSandbox(): void {
+  if (sandbox) rmSync(sandbox, { recursive: true, force: true });
+  sandbox = null;
+}
+function plantFile(relPath: string, content: string): string {
+  const abs = join(sandboxRepo(), relPath);
+  mkdirSync(dirname(abs), { recursive: true });
+  writeFileSync(abs, content);
+  return abs;
+}
+function plantPage(relDir: string, jsxCopy: string): void {
+  plantFile(
+    `${relDir}/page.tsx`,
     `export default function Fixture() {\n  return <p>${jsxCopy}</p>;\n}\n`,
   );
 }
+/** Run a guard with the SANDBOX as its repo root (never the real tree). */
+function runGuardInSandbox(relativePath: string, args: string[] = []): {
+  status: number;
+  stdout: string;
+  stderr: string;
+} {
+  const script = resolve(REPO_ROOT, relativePath);
+  const r = spawnSync("node", [script, ...args], {
+    cwd: sandboxRepo(),
+    encoding: "utf8",
+    timeout: GUARD_TIMEOUT_MS,
+  });
+  return { status: typeof r.status === "number" ? r.status : 1, stdout: r.stdout ?? "", stderr: r.stderr ?? "" };
+}
 
 describe("guardrail-hardening: full public-surface sweep has teeth", () => {
-  afterEach(() => {
-    rmSync(FIXTURE_APP_DIR, { recursive: true, force: true });
-    rmSync(FIXTURE_API_DIR, { recursive: true, force: true });
-  });
+  afterEach(cleanSandbox);
 
   it("commercial-copy-scan FAILS on tout copy planted on an arbitrary public route", () => {
-    plantPage(FIXTURE_APP_DIR, "Tonight is a lock. Guaranteed winner, easy money.");
-    const r = runGuard("scripts/guardrails/commercial-copy-scan.mjs");
+    plantPage("apps/web/app/__fixture__", "Tonight is a lock. Guaranteed winner, easy money.");
+    const r = runGuardInSandbox("scripts/guardrails/commercial-copy-scan.mjs");
     expect(r.status).toBe(1);
     expect(r.stderr).toContain("commercial-copy.tout");
-    expect(r.stderr).toContain("__guardrail_fixture__/page.tsx");
+    expect(r.stderr).toContain("__fixture__/page.tsx");
   }, GUARD_TEST_TIMEOUT_MS);
 
   it("no-unsupported-performance-claims FAILS on a hardcoded numeric record planted on a public route", () => {
-    plantPage(FIXTURE_APP_DIR, "We are 14-3 ATS with a 68% win rate, up 42 units this month.");
-    const r = runGuard("scripts/guardrails/no-unsupported-performance-claims.mjs");
+    plantPage("apps/web/app/__fixture__", "We are 14-3 ATS with a 68% win rate, up 42 units this month.");
+    const r = runGuardInSandbox("scripts/guardrails/no-unsupported-performance-claims.mjs");
     expect(r.status).toBe(1);
     expect(r.stderr).toContain("hardcoded-numeric");
-    expect(r.stderr).toContain("__guardrail_fixture__/page.tsx");
+    expect(r.stderr).toContain("__fixture__/page.tsx");
   }, GUARD_TEST_TIMEOUT_MS);
 
   it("the sweep excludes non-public surfaces: the same plant under app/api stays quiet", () => {
-    plantPage(FIXTURE_API_DIR, "Tonight is a lock with a 68% win rate, up 42 units.");
-    const commercial = runGuard("scripts/guardrails/commercial-copy-scan.mjs");
-    const perf = runGuard("scripts/guardrails/no-unsupported-performance-claims.mjs");
+    plantPage("apps/web/app/api/__fixture__", "Tonight is a lock with a 68% win rate, up 42 units.");
+    const commercial = runGuardInSandbox("scripts/guardrails/commercial-copy-scan.mjs");
+    const perf = runGuardInSandbox("scripts/guardrails/no-unsupported-performance-claims.mjs");
     expect(commercial.status).toBe(0);
     expect(perf.status).toBe(0);
   }, GUARD_TEST_TIMEOUT_MS);
 
   it("legitimate product vocabulary does not trip the sweep (lock-time, grandfathered guarantee)", () => {
     plantPage(
-      FIXTURE_APP_DIR,
+      "apps/web/app/__fixture__",
       "Every pick commits a Merkle root at lock time. Your founding rate carries a grandfather guarantee.",
     );
-    const r = runGuard("scripts/guardrails/commercial-copy-scan.mjs");
+    const r = runGuardInSandbox("scripts/guardrails/commercial-copy-scan.mjs");
     expect(r.status).toBe(0);
   }, GUARD_TEST_TIMEOUT_MS);
 });
 
 describe("guardrail-hardening: secret-scan rule coverage (O-4.x)", () => {
-  const SECRET_FIXTURE = resolve(REPO_ROOT, "apps/web/app/__guardrail_fixture__/planted.txt");
-  afterEach(() => {
-    rmSync(FIXTURE_APP_DIR, { recursive: true, force: true });
-  });
+  afterEach(cleanSandbox);
 
   function runSecretScanOn(content: string): { status: number; stderr: string } {
-    mkdirSync(FIXTURE_APP_DIR, { recursive: true });
-    writeFileSync(SECRET_FIXTURE, content + "\n");
-    const r = spawnSync(
-      "node",
-      [resolve(REPO_ROOT, "scripts/guardrails/secret-scan.mjs"), SECRET_FIXTURE],
-      { cwd: REPO_ROOT, encoding: "utf8", timeout: GUARD_TIMEOUT_MS },
-    );
-    return { status: typeof r.status === "number" ? r.status : 1, stderr: r.stderr ?? "" };
+    // Plants live in the SANDBOX, never the repo tree: a constructed token on
+    // disk inside the repo would race a parallel --all scan in another worker.
+    const planted = plantFile("planted.txt", content + "\n");
+    return runGuardInSandbox("scripts/guardrails/secret-scan.mjs", [planted]);
   }
 
   // Tokens are CONSTRUCTED so this test file never contains a scannable
@@ -327,23 +347,16 @@ describe("guardrail-hardening: CI topology (O-5.1)", () => {
 });
 
 describe("guardrail-hardening: Unicode-evasion normalization (O-3.x)", () => {
-  // Fixtures live in scanned (non-whitelisted) locations; cleaned in afterEach.
-  const TG_FIXTURE_DIR = resolve(REPO_ROOT, "apps/web/lib/__guardrail_fixture__");
-
-  afterEach(() => {
-    rmSync(TG_FIXTURE_DIR, { recursive: true, force: true });
-    rmSync(FIXTURE_APP_DIR, { recursive: true, force: true });
-  });
+  afterEach(cleanSandbox);
 
   function plantLib(name: string, content: string): void {
-    mkdirSync(TG_FIXTURE_DIR, { recursive: true });
-    writeFileSync(resolve(TG_FIXTURE_DIR, name), content);
+    plantFile(`apps/web/lib/__fixture__/${name}`, content);
   }
 
   it("trust-gate catches a zero-width-split banned phrase", () => {
     // "guar<ZWSP>anteed" — invisible in review, previously invisible to the gate.
     plantLib("copy.ts", `export const claim = "guar​anteed to win";\n`);
-    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
     expect(r.status).toBe(1);
     expect(r.stderr).toContain("banned.guaranteed-outcome");
   }, GUARD_TEST_TIMEOUT_MS);
@@ -352,14 +365,14 @@ describe("guardrail-hardening: Unicode-evasion normalization (O-3.x)", () => {
     // Marketing copy typically ships “can’t lose” with U+2019, which the
     // ASCII-apostrophe ban silently missed before normalization.
     plantLib("copy.ts", `export const claim = "you can’t lose tonight";\n`);
-    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
     expect(r.status).toBe(1);
     expect(r.stderr).toContain("banned.cant-lose");
   }, GUARD_TEST_TIMEOUT_MS);
 
   it("trust-gate catches fullwidth compatibility forms via NFKC", () => {
     plantLib("copy.ts", `export const claim = "ｇｕａｒａｎｔｅｅｄ winner";\n`);
-    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
     expect(r.status).toBe(1);
     expect(r.stderr).toContain("banned.guaranteed");
   }, GUARD_TEST_TIMEOUT_MS);
@@ -368,22 +381,22 @@ describe("guardrail-hardening: Unicode-evasion normalization (O-3.x)", () => {
     // "#" and "*" are rendered copy in markdown; treating them as comment
     // prefixes let a "# Guaranteed winners" heading pass the gate.
     plantLib("copy.md", "# Guaranteed winners\n\n* a risk-free system\n");
-    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
     expect(r.status).toBe(1);
     expect(r.stderr).toContain("banned.guaranteed-outcome");
     expect(r.stderr).toContain("banned.risk-free");
   }, GUARD_TEST_TIMEOUT_MS);
 
   it("commercial-copy sweep catches a zero-width-split tout phrase", () => {
-    plantPage(FIXTURE_APP_DIR, "This is easy​ money, a sure thing.");
-    const r = runGuard("scripts/guardrails/commercial-copy-scan.mjs");
+    plantPage("apps/web/app/__fixture__", "This is easy​ money, a sure thing.");
+    const r = runGuardInSandbox("scripts/guardrails/commercial-copy-scan.mjs");
     expect(r.status).toBe(1);
     expect(r.stderr).toContain("commercial-copy.tout");
   }, GUARD_TEST_TIMEOUT_MS);
 
   it("code comments and TS/JS '#' lines are still skipped outside markdown (no new false positives)", () => {
     plantLib("copy.ts", `// the word guaranteed appears only in this comment\n`);
-    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
     expect(r.status).toBe(0);
   }, GUARD_TEST_TIMEOUT_MS);
 });
