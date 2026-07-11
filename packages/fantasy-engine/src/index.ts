@@ -74,6 +74,25 @@ export {
 } from "./nfl/trench";
 export { computeWrSmash, type ReceiverSeason, type WrSmashScore } from "./nfl/wr-smash";
 
+// NFL — Coaching/Scheme engine, team defense, rolling form
+export {
+  schemeLabel,
+  topShare,
+  SCHEME_THRESHOLDS,
+  type TeamSchemeTendencies,
+} from "./nfl/scheme";
+export {
+  computeTeamDefense,
+  type TeamDefenseCategories,
+  type TeamDefenseIndices,
+} from "./nfl/defense";
+export {
+  computeFormDeltas,
+  proeShiftRead,
+  type TeamWindowAggregates,
+  type TeamFormDelta,
+} from "./nfl/rolling";
+
 // Accuracy — proper scoring rules, the honest leaderboard, weighted consensus
 export {
   brierScore,
