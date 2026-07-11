@@ -122,6 +122,25 @@ describe("assurance — health and recommendation", () => {
   });
 });
 
+describe("assurance — runtime honesty (repo tree unreachable)", () => {
+  it("findRepoRoot locates the real root and returns null where no markers exist", async () => {
+    const { findRepoRoot } = await import("@/lib/ops/repo-root");
+    expect(findRepoRoot(join(__dirname, ".."))).toBe(REPO_ROOT);
+    expect(findRepoRoot("/")).toBeNull();
+  });
+
+  it("route and page refuse with a distinct runtime-limited state instead of inverted findings", () => {
+    const route = read("app/api/cockpit/assurance/route.ts");
+    expect(route).toContain("findRepoRoot");
+    expect(route).toMatch(/runtimeLimited: true/);
+    expect(route).toMatch(/status: 503/);
+    expect(route).toMatch(/not a verdict/i);
+    const page = read("app/cockpit/assurance/page.tsx");
+    expect(page).toContain("assurance-runtime-limited-state");
+    expect(page).toMatch(/runtime limitation, not a verdict/i);
+  });
+});
+
 describe("assurance — admin-only API and flag", () => {
   it("route checks the admin session first, then the flag", () => {
     const route = read("app/api/cockpit/assurance/route.ts");

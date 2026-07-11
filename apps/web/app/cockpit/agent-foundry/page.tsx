@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { resolve } from "node:path";
+import { findRepoRoot } from "@/lib/ops/repo-root";
 import {
   isFoundryEnabled,
   scanAll,
@@ -130,7 +130,7 @@ export default function AgentFoundryPage() {
     );
   }
 
-  const repoRoot = resolve(process.cwd(), "..", "..");
+  const repoRoot = findRepoRoot();
   const scans = scanAll(repoRoot);
 
   return (

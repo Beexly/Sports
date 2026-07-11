@@ -1,10 +1,10 @@
-import { resolve } from "node:path";
 import {
   buildAssuranceReport,
   isAssuranceEnabled,
   COVERAGE_THRESHOLD,
   type AssuranceFinding,
 } from "@/lib/assurance";
+import { findRepoRoot } from "@/lib/ops/repo-root";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +72,32 @@ export default function AssurancePage() {
     );
   }
 
-  const report = buildAssuranceReport({ repoRoot: resolve(process.cwd(), "..", "..") });
+  const repoRoot = findRepoRoot();
+  if (repoRoot === null) {
+    // Serverless runtime: file evidence is uninspectable. Refusing beats a
+    // report whose fs claims all invert (the deployed-runtime bug class).
+    return (
+      <div className="mx-auto max-w-4xl px-4 py-12">
+        <h1 className="text-2xl font-bold text-ion-white">AI Setup Assurance</h1>
+        <section
+          data-testid="assurance-runtime-limited-state"
+          className="mt-8 rounded-2xl border border-caution/40 bg-caution/[0.06] px-6 py-10 text-center"
+        >
+          <p className="text-base font-semibold text-ion-white">
+            This runtime cannot inspect the repository tree.
+          </p>
+          <p className="mt-3 text-sm leading-6 text-ion-1">
+            File-based evidence is unavailable here, so no report is shown —
+            a report built on uninspectable ground would state absences as
+            facts. Run it in CI or dev, where the checkout exists. This is a
+            runtime limitation, not a verdict on the setup.
+          </p>
+        </section>
+      </div>
+    );
+  }
+
+  const report = buildAssuranceReport({ repoRoot });
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">

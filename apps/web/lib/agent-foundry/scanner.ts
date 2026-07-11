@@ -33,7 +33,9 @@ const INJECTION_PATTERNS: readonly RegExp[] = [
 
 const SHELL_OR_WRITE_TOOLS = /\b(shell|bash|exec|write_file|edit_file|fs_write)\b/i;
 
-type Rule = (m: SkillManifest, repoRoot: string) => ScanFinding[];
+/** repoRoot is null when the runtime cannot reach the repository tree
+ * (serverless). Rules must then say "unverifiable", never claim absence. */
+type Rule = (m: SkillManifest, repoRoot: string | null) => ScanFinding[];
 
 const f = (
   manifestId: string,
@@ -126,10 +128,16 @@ const RULES: Readonly<Record<string, Rule>> = {
       ? [f(m.id, "no-hidden-instructions", "BLOCK", "prompt-injection-shaped content in manifest text")]
       : [];
   },
-  "proof-source-exists": (m, repoRoot) =>
-    existsSync(join(repoRoot, m.proofSource))
+  "proof-source-exists": (m, repoRoot) => {
+    if (repoRoot === null) {
+      // Runtime can't see the tree — saying "not found" here would be a
+      // false absence claim (the deployed-runtime inversion bug class).
+      return [f(m.id, "proof-source-exists", "INFO", `proof source ${m.proofSource} not verifiable from this runtime — verify in CI/dev`)];
+    }
+    return existsSync(join(repoRoot, m.proofSource))
       ? []
-      : [f(m.id, "proof-source-exists", "WARN", `proof source ${m.proofSource} not found in repo`)],
+      : [f(m.id, "proof-source-exists", "WARN", `proof source ${m.proofSource} not found in repo`)];
+  },
   "unique-id-version": (m) => {
     const dupes = SKILL_MANIFESTS.filter((x) => x.id === m.id);
     return dupes.length === 1
@@ -146,7 +154,7 @@ export const ABSENT_EXTERNAL_SCANNERS: readonly string[] = [
   "dependency-vulnerability-scan (no external skill dependencies exist yet)",
 ];
 
-export function scanManifest(m: SkillManifest, repoRoot: string): ScanReport {
+export function scanManifest(m: SkillManifest, repoRoot: string | null): ScanReport {
   const findings = SCANNER_RULE_IDS.flatMap((rule) => RULES[rule]!(m, repoRoot));
   return {
     manifestId: m.id,
@@ -159,7 +167,7 @@ export function scanManifest(m: SkillManifest, repoRoot: string): ScanReport {
   };
 }
 
-export function scanAll(repoRoot: string): readonly ScanReport[] {
+export function scanAll(repoRoot: string | null): readonly ScanReport[] {
   return SKILL_MANIFESTS.map((m) => scanManifest(m, repoRoot));
 }
 
@@ -171,7 +179,7 @@ export function scanAll(repoRoot: string): readonly ScanReport[] {
  * lifecycle says (Codex P2 on #77). Nothing in this wave can return true;
  * tests pin it.
  */
-export function canExecute(m: SkillManifest, repoRoot: string): boolean {
+export function canExecute(m: SkillManifest, repoRoot: string | null): boolean {
   if (m.lifecycle !== "APPROVED" || m.humanApprovalRequired) return false;
   return !scanManifest(m, repoRoot).blocked;
 }

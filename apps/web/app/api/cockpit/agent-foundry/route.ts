@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { resolve } from "node:path";
 import { auth } from "@/lib/auth";
 import { isFoundryEnabled, scanAll, SKILL_MANIFESTS, canExecute } from "@/lib/agent-foundry";
+import { findRepoRoot } from "@/lib/ops/repo-root";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +28,9 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const repoRoot = resolve(process.cwd(), "..", "..");
+  // null on serverless runtimes — the scanner then reports the proof-source
+  // rule as "not verifiable from this runtime" instead of a false absence.
+  const repoRoot = findRepoRoot();
   const scans = scanAll(repoRoot);
 
   return NextResponse.json({

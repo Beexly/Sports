@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { resolve } from "node:path";
 import { auth } from "@/lib/auth";
 import { buildAssuranceReport, isAssuranceEnabled } from "@/lib/assurance";
+import { findRepoRoot } from "@/lib/ops/repo-root";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +26,21 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const repoRoot = resolve(process.cwd(), "..", "..");
+  // The report's evidence is file-based. On a runtime that cannot reach the
+  // repository tree, emitting a report would invert every fs claim (absence
+  // reported as fact) — so it refuses honestly instead. Not an error state:
+  // run the report in CI or dev, where the checkout exists.
+  const repoRoot = findRepoRoot();
+  if (repoRoot === null) {
+    return NextResponse.json(
+      {
+        success: false,
+        runtimeLimited: true,
+        error:
+          "This runtime cannot reach the repository tree, so file-based evidence is uninspectable. Run the assurance report in CI or dev. This is a runtime limitation, not a verdict.",
+      },
+      { status: 503 },
+    );
+  }
   return NextResponse.json({ success: true, data: buildAssuranceReport({ repoRoot }) });
 }

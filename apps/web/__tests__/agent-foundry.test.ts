@@ -230,6 +230,32 @@ describe("foundry — no simulated APPROVED status, nothing executable", () => {
   });
 });
 
+describe("foundry — runtime honesty (repo tree unreachable)", () => {
+  // The deployed-runtime inversion class: on serverless, cwd-based roots are
+  // wrong and existsSync claims invert. With a null root the scanner must say
+  // "unverifiable", never "not found", and must not block on it.
+  it("null repo root degrades the proof-source rule to INFO, never a false absence", () => {
+    const report = scanManifest(base, null);
+    const proof = report.findings.filter((x) => x.rule === "proof-source-exists");
+    expect(proof.length).toBe(1);
+    expect(proof[0]!.severity).toBe("INFO");
+    expect(proof[0]!.detail).toMatch(/not verifiable from this runtime/i);
+    expect(report.blocked).toBe(false);
+  });
+
+  it("no cwd-relative repo-root guessing remains in foundry/assurance surfaces", () => {
+    for (const rel of [
+      "app/api/cockpit/agent-foundry/route.ts",
+      "app/cockpit/agent-foundry/page.tsx",
+      "app/api/cockpit/assurance/route.ts",
+      "app/cockpit/assurance/page.tsx",
+    ]) {
+      expect(read(rel), rel).not.toMatch(/resolve\(process\.cwd\(\), "\.\.", "\.\."\)/);
+      expect(read(rel), rel).toContain("findRepoRoot");
+    }
+  });
+});
+
 describe("foundry — scanner coverage shown honestly", () => {
   it("reports name the rules that ran and the external scanners that did not", () => {
     const reports = scanAll(REPO_ROOT);
