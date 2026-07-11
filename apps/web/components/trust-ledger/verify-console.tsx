@@ -288,11 +288,11 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
               <dl className="mt-3 grid gap-2 text-sm">
                 <div className="flex justify-between gap-4">
                   <dt className="text-ion-2">Commitment frozen</dt>
-                  <dd className="font-mono text-ion-white">{res.frozenAt}</dd>
+                  <dd className="break-all text-right font-mono text-ion-white">{res.frozenAt}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-ion-2">Model version</dt>
-                  <dd className="font-mono text-ion-white">{res.modelVersion}</dd>
+                  <dd className="break-all text-right font-mono text-ion-white">{res.modelVersion}</dd>
                 </div>
               </dl>
               {res.note && <p className="mt-3 text-xs leading-5 text-ion-2">{res.note}</p>}
@@ -314,36 +314,36 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                 )}
                 <div className="flex justify-between gap-4">
                   <dt className="text-ion-2">Frozen (pre-kickoff)</dt>
-                  <dd className="font-mono text-ion-white">{res.frozenAt}</dd>
+                  <dd className="break-all text-right font-mono text-ion-white">{res.frozenAt}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-ion-2">Result</dt>
-                  <dd className="font-mono text-ion-white">{res.result}</dd>
+                  <dd className="break-all text-right font-mono text-ion-white">{res.result}</dd>
                 </div>
                 {res.committed && (
                   <>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Committed line / entry price</dt>
-                      <dd className="font-mono text-ion-white">
+                      <dd className="break-all text-right font-mono text-ion-white">
                         {res.committed.line} at {res.committed.entryOdds > 0 ? "+" : ""}
                         {res.committed.entryOdds}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Market fair probability</dt>
-                      <dd className="font-mono text-ion-white">
+                      <dd className="break-all text-right font-mono text-ion-white">
                         {(res.committed.marketFairProb * 100).toFixed(1)}%
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Committed confidence / edge</dt>
-                      <dd className="font-mono text-ion-white">
+                      <dd className="break-all text-right font-mono text-ion-white">
                         {res.committed.confidence} / {res.committed.edgeScore}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Calibrated model probability</dt>
-                      <dd className="font-mono text-ion-white">
+                      <dd className="break-all text-right font-mono text-ion-white">
                         {res.committed.modelProb == null
                           ? "none claimed (honest)"
                           : `${(res.committed.modelProb * 100).toFixed(1)}%`}

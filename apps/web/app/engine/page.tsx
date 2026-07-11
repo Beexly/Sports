@@ -236,7 +236,7 @@ export default async function SealedEnginePage() {
                           <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-2">
                             Slate root · {s.slateKey}
                           </p>
-                          <code className="mt-2 block truncate font-mono text-[11px] text-ion-1" title={s.root}>
+                          <code className="mt-2 block break-all font-mono text-[11px] text-ion-1" title={s.root}>
                             {s.root}
                           </code>
                           <p className="mt-2 text-[11px] text-ion-3">

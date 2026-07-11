@@ -152,7 +152,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 index={3}
                 label="Intelligence"
                 decides="Why the engine reads a game the way it does."
-                stat={settled > 0 ? `Calibrated on ${settled} settled picks` : "Calibration sample building"}
+                stat={settled > 0 ? `Graded on ${settled} settled picks` : "Calibration sample building"}
                 action="Open the engines"
                 href="/intelligence/engines"
                 accent
@@ -184,7 +184,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             <span className="text-orbital-cyan">{cleared} cleared</span> ·{" "}
             <span className="text-plasma">{gated} gated</span> ·{" "}
             {settled > 0 ? (
-              <>calibrated on <span className="text-ion-white">{settled} settled picks</span> ·{" "}</>
+              <>graded on <span className="text-ion-white">{settled} settled picks</span> ·{" "}</>
             ) : (
               <>calibration sample building ·{" "}</>
             )}
@@ -234,7 +234,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 Check a receipt →
               </Link>
               <Link href="/clv" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                Our CLV →
+                Closing line value →
               </Link>
               <Link href="/performance" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
                 Calibration →

@@ -124,11 +124,12 @@ export default async function ProofOfRecordPage() {
               The record can&apos;t be rewritten.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              Every pick is hashed at generation time using a Merkle tree,
-              the same tamper-evident commitment scheme used in public proof-of-
-              liabilities systems. Once settled, the leaf hash is fixed. Edit
-              the pick and the hash changes. Anyone with the raw records can
-              re-derive the root and spot the difference.
+              The moment a pick is written, it gets a digital fingerprint (a
+              hash). All the fingerprints are folded into one published master
+              fingerprint, using the same tamper-evident math public audit
+              systems use. Edit any pick afterward and its fingerprint stops
+              matching. Anyone with the raw records can recompute it and catch
+              the difference.
             </p>
             <p className="mt-3 text-sm text-ion-2">
               This is not a promise. It is a mechanism. The math enforces it.

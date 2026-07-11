@@ -202,7 +202,7 @@ export function PickCard({
       {pick.receiptHash && (
         <Link
           href={`/verify?hash=${pick.receiptHash}`}
-          className="group flex items-center gap-1.5 font-mono text-[10px] text-ion-2 transition-colors hover:text-orbital-cyan"
+          className="group flex min-h-11 items-center gap-1.5 py-2 font-mono text-[10px] text-ion-2 transition-colors hover:text-orbital-cyan"
           title="This pick was frozen into a SHA-256 receipt before kickoff. Click to verify it was never edited."
         >
           <span aria-hidden>⛓</span>

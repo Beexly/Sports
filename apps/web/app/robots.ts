@@ -27,6 +27,7 @@ export default function robots(): MetadataRoute.Robots {
           "/dashboard",
           "/dashboard/",
           "/brief",
+          "/go/",
         ],
       },
     ],

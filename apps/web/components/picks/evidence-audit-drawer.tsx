@@ -426,7 +426,7 @@ function DetailedAudit({
               v={`${audit.deathClock.booksUsed} books quoted both sides of publish · latest capture ${new Date(audit.deathClock.latestCaptureAt).toLocaleTimeString()}`}
             />
           </dl>
-          <p className="mt-2 text-[10px] leading-relaxed text-ink-400">
+          <p className="mt-2 text-[10px] leading-relaxed text-ion-2">
             Price movement only: what the books charge now vs when this pick
             was published. Median across books; describes the market, not the
             outcome.
@@ -678,7 +678,7 @@ function FragilityPanel({ fragility }: { fragility: FragilityView | null }) {
           />
         ))}
       </dl>
-      <p className="mt-2 text-[10px] leading-relaxed text-ink-400">
+      <p className="mt-2 text-[10px] leading-relaxed text-ion-2">
         {fragility.weakness}
       </p>
     </section>

@@ -140,7 +140,7 @@ export default async function CalibrationProofRoomPage() {
           <ProofCard
             eyebrow="Calibration report"
             title="Honest Band"
-            body="Win rate across every settled canonical pick, with the uncertainty band shown. And held back entirely until the sample is honest. Bootstrap-era picks never inflate the denominator."
+            body="Win rate across every finished live-engine pick, with the uncertainty band shown. And held back entirely until the sample is honest. Warm-up picks from before the live engine never pad the sample."
             href="/performance"
             linkLabel="View Calibration Report"
             accent
@@ -163,7 +163,7 @@ export default async function CalibrationProofRoomPage() {
           <ProofCard
             eyebrow="Cryptographic proof"
             title="Proof of Record"
-            body="Every settled pick carries a Merkle leaf hash stamped at generation time. The root over all settled picks is published so anyone can re-derive it and verify the record hasn't changed."
+            body="Every settled pick gets a digital fingerprint (a hash) the moment it is written. One published master fingerprint covers the whole record, so anyone can recheck that nothing was ever edited."
             href="/proof"
             linkLabel="View Proof of Record"
             accent
@@ -187,7 +187,7 @@ export default async function CalibrationProofRoomPage() {
             title="CLV Tracker"
             body="Track your own bets against the same closing-line benchmark we hold ourselves to. The proof works the same whether the bet is ours or yours."
             href="/track"
-            linkLabel="Track your bets"
+            linkLabel="Track your bets (Elite)"
           />
         </section>
 

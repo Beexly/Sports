@@ -216,7 +216,7 @@ function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
           </h2>
         </div>
         <div className="px-6 py-8 text-center">
-          <p className="text-6xl font-extrabold tabular-nums text-orbital-cyan">
+          <p className="text-5xl sm:text-6xl font-extrabold tabular-nums text-orbital-cyan">
             {policy.beatCloseRatePct}%
           </p>
           <p className="mt-2 text-sm text-ion-2">

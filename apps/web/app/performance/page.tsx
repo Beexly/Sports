@@ -109,7 +109,7 @@ function BootstrapShell({ children }: { children: React.ReactNode }) {
       <Nav />
       <main id="main-content" className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <span className="sr-only">Performance</span>
+          <h1 className="sr-only">Performance</h1>
           {children}
         </div>
       </main>
@@ -237,9 +237,9 @@ export default async function PerformancePage() {
               Calibration Report
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-ion-1">
-              Every settled canonical pick is included. Bootstrap-era picks
-              are excluded by design. They don&apos;t get to inflate the
-              record.
+              Every finished pick from the live engine is counted, wins and
+              losses alike. Picks from our early warm-up period are excluded
+              by design. They don&apos;t get to inflate the record.
             </p>
             <p className="mt-3 text-xs text-ion-3">
               Past performance does not guarantee future results.

@@ -40,14 +40,14 @@ export function PerformanceBootstrapState({
 
         <h2 className="mt-3 text-2xl font-bold text-ion-white">
           {gateEnabled
-            ? "We're still accumulating settled canonical picks."
+            ? "We're still collecting finished, graded picks from the live engine."
             : "We don't show a track record we haven't earned."}
         </h2>
 
         <p className="mt-4 text-sm leading-relaxed text-ion-1">
           {gateEnabled
-            ? "The performance page is enabled, but there aren't yet enough settled canonical picks to publish meaningful win-rate numbers."
-            : "Public performance statistics are disabled at the platform level because the system hasn't accumulated enough settled, canonical picks to publish them honestly."}
+            ? "The performance page is on, but not enough live picks have finished and been graded to publish a win rate that means anything."
+            : "Public performance statistics are switched off because not enough live picks have finished and been graded to publish them honestly."}
         </p>
 
         <p className="mt-3 text-sm leading-relaxed text-ion-1">

@@ -344,11 +344,11 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   ? "Freshness guard active"
                   : "Signal gate collecting"}
               </p>
-              <h3 className="mt-3 text-lg font-semibold text-white">
+              <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
                   ? "The board is paused while fresh odds land."
                   : "The board is live. Public picks are still gated."}
-              </h3>
+              </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
                   ? "Our freshness guard holds the board rather than show you " +
@@ -394,7 +394,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold text-white">No signals published for this date</h3>
+              <h2 className="text-base font-semibold text-white">No signals published for this date</h2>
               <p className="mt-2 text-sm text-ion-3">
                 We only publish when the stack earns it. Some slates don&apos;t
                 clear the gates. That&apos;s the point.

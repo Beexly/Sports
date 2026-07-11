@@ -85,7 +85,7 @@ export function Footer() {
                 Set limits before emotion enters.
               </strong>
             </p>
-            <p className="mt-4 text-xs text-ink-500">
+            <p className="mt-4 text-xs text-ion-3">
               {BRAND_NAME} is a {GSN_NAME} production.
             </p>
           </div>
