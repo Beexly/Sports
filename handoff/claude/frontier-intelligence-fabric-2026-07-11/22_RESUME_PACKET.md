@@ -27,13 +27,14 @@ Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack
 
 ## Ranked next queue
 
-1. T-daily-slate: recentRecord hardcoded {0,0,0} → board renders fabricated "0W/0L" (withhold, never fabricate).
+1. T-daily-slate: recentRecord hardcoded {0,0,0} → board renders fabricated "0W/0L" (withhold, never fabricate). **DONE — PR #85.**
 2. M-F9: VOID path for cancelled/PPD games + catch-up settle window.
 3. T-picks-outage: /api/picks DB outage dressed as bootstrap gating (states doctrine).
 4. M-F5/F6 (Stripe event ordering; refresh/settle TOCTOU), M-F7 (close staleness bound; take:80 truncation).
 5. M-F10 fantasy-upsell hardcoded price; frontier-module G-findings on their PR branches (G-1 auth defense-in-depth first).
 6. O-3.x remainder: concatenation joins, cross-line bans, confusables map.
 7. After merges: task #4 CLV decomposition columns, task #6 backtest scheduling (designed), SEO strike page 2, memory-write form, grandpa-simple UX pass.
+8. Task #13 Fantasy Engine intake + honest calibrated accuracy leaderboard / accuracy-weighted consensus (proper scoring rule — Brier/log-loss, absolute+relative, no dropped week, coverage-adjusted). Full design inputs live in the owner-delivered confidential intel bank (2026-07-11, session files — intentionally NOT in this public repo). Fantasy suite = glass-box product line by design; betting engine stays method-opaque.
 
 ## Standing patterns (hard-won today)
 
