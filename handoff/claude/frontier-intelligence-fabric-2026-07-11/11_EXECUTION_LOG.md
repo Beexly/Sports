@@ -121,3 +121,33 @@ when PR A opens.
 - Surfaces: /cockpit/assurance + admin API behind AI_SETUP_ASSURANCE_ENABLED
   (default off); sidebar entry added.
 - Tests: assurance suite green; typecheck, lint, scanners green.
+
+## 2026-07-11 — PR B opened + Codex sweep on PR A
+
+- PR #77 (https://github.com/Beexly/Sports/pull/77): Foundry + Assurance,
+  stacked on PR A's branch. Owner-gated merge.
+- Codex left 6 findings on PR A — all six confirmed and fixed (merged-risk
+  score override, conservative license merge, positive license allowlist,
+  memory canAnswer reverted to false, importer closed-set risk validation +
+  fail-closed policy on unknown labels, latest.json runtime pointer).
+  Regression tests added for each; threads resolved; pushed as 9fcf0c78.
+- Assurance model-routing finding made two-state (absent vs shadow-only) so
+  PR B and PR C are both honest without edits.
+
+## 2026-07-11 — Workstream E: Model Portfolio Router, shadow only (complete)
+
+- Branch `claude/frontier-model-router-shadow-2026-07-11` (stacked on PR B).
+- `apps/web/lib/ai-routing/`: 7 lanes, deterministic priority policy
+  (deterministic→NO_MODEL; sensitive→LOCAL_PRIVATE, blocks with no local
+  endpoint; public/critical→PUBLIC_HIGH_STAKES regardless of budget),
+  version-pinned (routing-policy/1.0.0), single registered endpoint (the
+  production Claude config; trainsOnData:false structurally required),
+  honest probe-less health (UNKNOWN usable only for the endpoint production
+  already exercises), per-lane budget ceilings (lower-only task overrides),
+  frozen eval interfaces with EMPTY committed suite/history (comparative
+  claims impossible without runs), shadowRecommend gated by
+  AI_MODEL_ROUTER_SHADOW_ENABLED (default off; null when off).
+- Structurally no-op: source-level pins forbid network primitives in the
+  module and forbid any reference from lib/claude-api call sites.
+- Tests 20/20 (all 11 packet rules); typecheck, lint green.
+- Route policy is method IP: no public surface renders any of it.
