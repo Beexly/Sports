@@ -151,6 +151,88 @@ describe("POST /api/webhooks/stripe", () => {
       expect(mocks.subscriptionUpsert).toHaveBeenCalled(); // resubscribe is not blocked
     });
 
+    it("ignores a late event for a SUPERSEDED subscription — sub_OLD noise cannot revoke sub_NEW (Codex P1)", async () => {
+      // The member cancelled sub_OLD and resubscribed as sub_NEW (row is active).
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "ACTIVE",
+        canceledAt: null,
+        stripeSubscriptionId: "sub_NEW",
+        tier: "ELITE",
+      });
+      // A delayed `updated` for sub_OLD arrives; Stripe's current state for it
+      // is canceled. Syncing it would overwrite the sub_NEW row as CANCELED.
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ id: "sub_OLD", status: "canceled" }),
+        "evt_superseded",
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
+      expect(mocks.subscriptionUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it("a late same-id canceled update CONVERGES on the delete handler's terminal state (Codex P2)", async () => {
+      const stampedAt = new Date("2026-07-01T00:00:00Z");
+      // The delete handler already recorded the terminal state.
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "CANCELED",
+        canceledAt: stampedAt,
+        stripeSubscriptionId: "sub_123",
+        tier: "FREE",
+      });
+      // A delayed `updated` for the SAME id retrieves the canceled object,
+      // which still carries the old paid price.
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ status: "canceled" }),
+        "evt_late_cancel",
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      // Terminal record preserved: FREE tier, original cancellation stamp —
+      // never a paid-tier canceled row with canceledAt wiped to null.
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({
+            tier: "FREE",
+            status: "CANCELED",
+            canceledAt: stampedAt,
+          }),
+        }),
+      );
+    });
+
+    it("an immediate cancel arriving via `updated` stamps canceledAt and drops to FREE", async () => {
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "ACTIVE",
+        canceledAt: null,
+        stripeSubscriptionId: "sub_123",
+        tier: "PRO",
+      });
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ status: "canceled" }),
+        "evt_immediate_cancel",
+      );
+
+      await POST(webhookRequest());
+
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({
+            tier: "FREE",
+            status: "CANCELED",
+            canceledAt: expect.any(Date),
+          }),
+        }),
+      );
+    });
+
     it("syncs the RETRIEVED current state, never the embedded snapshot (stale event cannot regress tier)", async () => {
       // A delayed `updated` event carries the OLD state: PRO + past_due.
       // Stripe's CURRENT state (the member upgraded and recovered): ELITE + active.
