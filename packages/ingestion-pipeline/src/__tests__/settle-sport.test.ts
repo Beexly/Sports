@@ -496,6 +496,82 @@ describe("settleSport", () => {
         picksVoided: 0,
       });
     });
+
+    it("the sweep still runs when the scores feed fails — an upstream outage must not recreate M-F9 (Codex)", async () => {
+      mocks.getScores.mockRejectedValue(new Error("quota exhausted"));
+      mocks.gameFindMany
+        .mockResolvedValueOnce([]) // heal arm: nothing
+        .mockResolvedValueOnce([
+          dbGame([pendingPick()], { status: "SCHEDULED", homeScore: null, awayScore: null }),
+        ]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      // The error contract is unchanged (status failed, message preserved)...
+      expect(result.status).toBe("failed");
+      expect(result.error).toBe("quota exhausted");
+      // ...but the DB-only sweep ran anyway and its work is counted honestly.
+      expect(mocks.gameFindMany).toHaveBeenCalledTimes(2);
+      expect(result.picksVoided).toBe(1);
+    });
+
+    it("the heal still runs when the scores feed fails — recorded FINALs settle without the feed (Codex)", async () => {
+      mocks.getScores.mockRejectedValue(new Error("rate limited"));
+      mocks.gameFindMany
+        .mockResolvedValueOnce([
+          dbGame([pendingPick()], { status: "FINAL", homeScore: 24, awayScore: 21 }),
+        ])
+        .mockResolvedValueOnce([]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("failed");
+      // The orphaned FINAL settled from its recorded scores, feed or no feed.
+      expect(result.picksSettled).toBe(1);
+      expect(result.gamesSettled).toBe(1);
+    });
+
+    it("a heal across the bootstrap→canonical flip preserves bootstrap provenance on the game log (Codex)", async () => {
+      // Current mode is CANONICAL, but the healed game's pick was created in
+      // bootstrap. The regenerated TeamGameLog must NOT be tagged canonical —
+      // that would let bootstrap-era data into derived ATS/H2H history.
+      mocks.normalizeScores.mockReturnValue([]);
+      mocks.gameFindMany
+        .mockResolvedValueOnce([
+          dbGame([pendingPick({ isBootstrap: true })], {
+            status: "FINAL",
+            homeScore: 31,
+            awayScore: 17,
+          }),
+        ])
+        .mockResolvedValueOnce([]);
+
+      await settleSport(SPORT, "key", gates({ canPersistCanonicalHistory: true }));
+
+      expect(mocks.settleGameLogs).toHaveBeenCalledWith(
+        expect.objectContaining({ isBootstrap: true })
+      );
+    });
+
+    it("a canonical-era game in canonical mode still writes a canonical game log", async () => {
+      // Guard the other direction: the provenance widening is bootstrap-only.
+      mocks.normalizeScores.mockReturnValue([]);
+      mocks.gameFindMany
+        .mockResolvedValueOnce([
+          dbGame([pendingPick({ isBootstrap: false })], {
+            status: "FINAL",
+            homeScore: 31,
+            awayScore: 17,
+          }),
+        ])
+        .mockResolvedValueOnce([]);
+
+      await settleSport(SPORT, "key", gates({ canPersistCanonicalHistory: true }));
+
+      expect(mocks.settleGameLogs).toHaveBeenCalledWith(
+        expect.objectContaining({ isBootstrap: false })
+      );
+    });
   });
 
   describe("CLV grading", () => {

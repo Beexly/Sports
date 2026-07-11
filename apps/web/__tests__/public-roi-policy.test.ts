@@ -17,10 +17,9 @@ describe("unitsForPick", () => {
     expect(unitsForPick("WIN", 100)).toBeCloseTo(1, 6);
     expect(unitsForPick("WIN", 150)).toBeCloseTo(1.5, 6);
   });
-  it("loses the stake on a loss, zero on settled no-action", () => {
+  it("loses the stake on a loss, zero on a settled push", () => {
     expect(unitsForPick("LOSS", -110)).toBe(-1);
     expect(unitsForPick("PUSH", -110)).toBe(0);
-    expect(unitsForPick("VOID", 200)).toBe(0);
   });
 
   it("EXCLUDES PENDING entirely — an unresolved bet is not a settled 0 (hostile-quant fix)", () => {
@@ -30,12 +29,21 @@ describe("unitsForPick", () => {
     expect(unitsForPick("PENDING", null)).toBeNull();
   });
 
-  it("EXCLUDES a PUSH/VOID with no sealed price — the graded sample is uniformly receipt-backed", () => {
+  it("EXCLUDES VOID entirely — a cancelled bet is no action, not a graded 0 (Codex on PR #86)", () => {
+    // The M-F9 sweep is the platform's first real VOID writer: a postponed
+    // slate can void many picks at once. Counting them as graded 0s would
+    // inflate n toward the publication floor and shrink the CI with bets that
+    // never happened — even a PRICED void must be excluded.
+    expect(unitsForPick("VOID", 200)).toBeNull();
+    expect(unitsForPick("VOID", -110)).toBeNull();
+    expect(unitsForPick("VOID", undefined)).toBeNull();
+  });
+
+  it("EXCLUDES a PUSH with no sealed price — the graded sample is uniformly receipt-backed", () => {
     // A push without a proof-receipt price must not count as a graded 0: that
     // would inflate n and shrink the CI on unsealed data while wins/losses
     // without a price are already excluded. Priced pushes still count as 0.
     expect(unitsForPick("PUSH", null)).toBeNull();
-    expect(unitsForPick("VOID", undefined)).toBeNull();
     expect(unitsForPick("PUSH", 0)).toBeNull();
   });
   it("excludes a pick with no usable entry price", () => {

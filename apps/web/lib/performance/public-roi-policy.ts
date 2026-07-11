@@ -29,10 +29,19 @@
  * 2.33% at n=25 (within the 2.5% one-sided budget) vs 3.00% for BCa alone.
  * Below n~100, do not weaken this gate to BCa-only.
  *
- * CONVENTIONS (pinned so a competitor can't pin them for us): pushes/voids are
- * settled 0-unit bets — included in n and in the mean (conservative: zeros drag
- * a positive mean toward 0). PENDING picks are NOT settled and are excluded
- * entirely (null), never counted as 0-unit returns.
+ * CONVENTIONS (pinned so a competitor can't pin them for us): a PUSH is a
+ * settled 0-unit bet — action that resolved even — included in n and in the
+ * mean (conservative: zeros drag a positive mean toward 0). A VOID is NO
+ * ACTION — a cancelled bet, not a graded one — and is excluded from n entirely,
+ * exactly like PENDING. This distinction became load-bearing when the M-F9
+ * stale-pick sweep (PR #86) created the platform's first real VOID writer: a
+ * postponed/cancelled slate can void many picks at once, and counting those
+ * no-action rows as graded 0s would inflate n toward the publication floor and
+ * shrink the CI with bets that never happened — the sample would claim more
+ * evidence than exists. Every published record surface (daily-slate record,
+ * learning eligibility, W-L-P counts) already excludes VOID; ROI now agrees.
+ * PENDING picks are NOT settled and are excluded entirely (null), never
+ * counted as 0-unit returns.
  */
 
 import { bcaMeanCi, studentizedMeanCi, empiricalBernsteinMeanCi, anytimeValidLedger, americanToDecimalOdds } from "@sports/prediction-engine";
@@ -42,21 +51,21 @@ export type PickResultLike = "WIN" | "LOSS" | "PUSH" | "VOID" | "PENDING";
 /**
  * Realized units for one settled pick at a 1-unit flat stake, using the actual
  * American entry price. WIN pays the decimal profit; LOSS loses the stake;
- * PUSH/VOID are settled 0-unit bets (no action). PENDING is UNRESOLVED — it has
- * no realized return, so it is excluded (null), never counted as a settled 0:
- * counting it would inflate n past the publication gate and inject variance-
- * shrinking zeros into the CI.
+ * PUSH is a settled 0-unit bet (action that resolved even). VOID is NO ACTION —
+ * a cancelled bet, excluded (null) exactly like PENDING: counting no-action
+ * rows as graded 0s would inflate n past the publication gate and inject
+ * variance-shrinking zeros into the CI (see module CONVENTIONS).
  */
 export function unitsForPick(result: PickResultLike, americanEntryOdds: number | null | undefined): number | null {
-  if (result === "PENDING") return null;
+  if (result === "PENDING" || result === "VOID") return null;
   // A settled pick only counts toward the published ROI sample if it is backed by
   // a sealed entry price — UNIFORMLY, pushes included. Without this, a legacy PUSH
   // with no proof receipt would still count as a graded 0 (inflating n and
   // shrinking the CI) while wins/losses without a receipt are excluded, letting an
   // unsealed ledger clear the publication floor. Check the price before the 0-unit
-  // no-action return.
+  // push return.
   if (americanEntryOdds == null || !Number.isFinite(americanEntryOdds) || americanEntryOdds === 0) return null;
-  if (result === "PUSH" || result === "VOID") return 0;
+  if (result === "PUSH") return 0;
   if (result === "WIN") return americanToDecimalOdds(americanEntryOdds) - 1;
   return -1; // LOSS
 }
@@ -324,7 +333,9 @@ export async function loadPublicRoiPolicy(
     where: {
       isBootstrap: false,
       isPublished: true,
-      result: { in: ["WIN", "LOSS", "PUSH", "VOID"] },
+      // VOID is NO ACTION (cancelled, not graded) — excluded at the query so a
+      // voided slate can never enter the ROI sample (see module CONVENTIONS).
+      result: { in: ["WIN", "LOSS", "PUSH"] },
     },
     select: { result: true, proofReceipt: { select: { entryOdds: true } } },
     // SETTLEMENT ORDER IS LOAD-BEARING (K11): the anytime-valid evidence tier

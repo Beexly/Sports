@@ -261,8 +261,19 @@ async function settleCompletedGame(
   }
 
   // Write TeamGameLog entries for ATS form tracking.
-  // isBootstrap propagated from current mode — marks creation era.
   // Data quality gate prevents corrupt ATS data from thin-coverage games.
+  //
+  // Bootstrap provenance: the current run mode alone is NOT sufficient — the
+  // catch-up heal can process a game long after settlement should have run,
+  // including ACROSS the bootstrap→canonical flip. A game whose picks were
+  // created during bootstrap must never write a canonical-tagged log just
+  // because the heal happened to run later (that would let bootstrap-era data
+  // into derived ATS/H2H history). Tag bootstrap when the current mode is
+  // bootstrap OR any pick on the game carries bootstrap provenance —
+  // over-tagging merely excludes a log from derived history (conservative);
+  // under-tagging corrupts it. Games with no pending picks fall back to the
+  // current mode, exactly the pre-existing behavior.
+  const logIsBootstrap = isBootstrap || game.picks.some((p) => p.isBootstrap);
   const openingSpreadOdds = await db.openingLine.findUnique({
     where: { gameId_market: { gameId: game.id, market: "SPREADS" } },
   });
@@ -277,7 +288,7 @@ async function settleCompletedGame(
       homeScore,
       awayScore,
       spread: openingSpreadOdds?.spread ?? null,
-      isBootstrap,
+      isBootstrap: logIsBootstrap,
       gameDataQualityScore: game.dataQualityScore,
       minDataQualityThreshold: gates.minDataQualityForGameLog,
     });
@@ -431,7 +442,13 @@ export async function settleSport(
   let gamesSettled = 0;
   let picksSettled = 0;
   let picksVoided = 0;
+  let feedError: string | null = null;
 
+  // The feed pass and the catch-up sweep are INDEPENDENT halves. The feed pass
+  // needs The Odds API; the sweep is DB-only. An upstream outage/quota error on
+  // the feed must not skip the sweep — that would recreate M-F9 (immortal
+  // PENDING picks) for exactly as long as the upstream is down, when healing
+  // recorded FINALs and VOIDing stale games needs no fresh feed data at all.
   try {
     const { data: scores } = await client.getScores(sport.key, SCORES_DAYS_FROM);
     const normalized = normalizer.normalizeScores(scores);
@@ -473,24 +490,31 @@ export async function settleSport(
         gamesSettled++;
       }
     }
-
-    // Feed-independent healing + VOID of games the feed can no longer reach.
-    const sweep = await catchUpSweep(ctx);
-    gamesSettled += sweep.gamesHealed;
-    picksSettled += sweep.picksSettled;
-    picksVoided += sweep.picksVoided;
-
-    return { sport: sport.key, status: "success", gamesSettled, picksSettled, picksVoided };
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error(`${logPrefix} ${sport.key} failed: ${message}`);
+    feedError = err instanceof Error ? err.message : String(err);
+    console.error(`${logPrefix} ${sport.key} failed: ${feedError}`);
+  }
+
+  // Feed-independent healing + VOID of games the feed can no longer reach.
+  // Runs even when the feed pass failed (see above); internally guarded so its
+  // own failure can never throw.
+  const sweep = await catchUpSweep(ctx);
+  gamesSettled += sweep.gamesHealed;
+  picksSettled += sweep.picksSettled;
+  picksVoided += sweep.picksVoided;
+
+  // A feed failure still reports status:"failed" (the caller's error contract
+  // is unchanged) — but with whatever the sweep accomplished counted honestly.
+  if (feedError) {
     return {
       sport: sport.key,
       status: "failed",
       gamesSettled,
       picksSettled,
       picksVoided,
-      error: message,
+      error: feedError,
     };
   }
+
+  return { sport: sport.key, status: "success", gamesSettled, picksSettled, picksVoided };
 }
