@@ -130,6 +130,14 @@ export default async function CalibrationProofRoomPage() {
 
         <section className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
           <ProofCard
+            eyebrow="Live telemetry"
+            title="The Sealed Engine"
+            body="Watch the machine commit, live: what it swept today, how much of the slate it declined in writing, and the receipts it froze before kickoff. The commitments are public. The recipe never is."
+            href="/engine"
+            linkLabel="Watch it commit"
+            accent
+          />
+          <ProofCard
             eyebrow="Calibration report"
             title="Honest Band"
             body="Win rate across every settled canonical pick, with the uncertainty band shown. And held back entirely until the sample is honest. Bootstrap-era picks never inflate the denominator."
