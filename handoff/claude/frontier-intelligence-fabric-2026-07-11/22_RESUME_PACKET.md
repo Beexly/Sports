@@ -15,8 +15,10 @@ Any session resumes from here without re-deriving context.
 | #82 | claude/hotfix-prod-db-fail-closed | main | O-1.7 stub-Prisma fail-closed (Vercel prod + PRODUCTION_RUNTIME worker images) + non-vacuous health; db suite wired into CI |
 | #83 | claude/stress-property-suite | #79 branch | 18-family seeded property/stress suite + M-F13 mandatory-awayTeam side derivation |
 | #84 | claude/hotfix-clv-regrade-orphans | main | M-F4 orphaned-CLV heal (two-population settle pass, grade-once) |
+| #85 | claude/hotfix-fabricated-record | main | T-daily-slate real-or-withheld 7-day record (computed via groupBy, null on gate-closed/empty/failure) |
+| #86 | claude/hotfix-void-stale-picks | main | M-F9 catch-up heal + 72h VOID sweep + daysFrom 3; settleCompletedGame() extraction (one settlement semantics) |
 
-Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack order); #80/#81/#82/#84 independent anytime.
+Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack order); #80/#81/#82/#84/#85/#86 independent anytime. (#84 and #86 both touch settle-sport.ts — whichever lands second takes a small rebase; #86 + #83: thread awayTeamName, one line.)
 
 ## Owner blockers (surface once, never nag)
 
@@ -28,7 +30,7 @@ Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack
 ## Ranked next queue
 
 1. T-daily-slate: recentRecord hardcoded {0,0,0} → board renders fabricated "0W/0L" (withhold, never fabricate). **DONE — PR #85.**
-2. M-F9: VOID path for cancelled/PPD games + catch-up settle window.
+2. M-F9: VOID path for cancelled/PPD games + catch-up settle window. **DONE — PR #86.** (Merge-order: if #83 lands first, thread game.awayTeamName into settleCompletedGame's calculatePickResult call — one line, value in scope.)
 3. T-picks-outage: /api/picks DB outage dressed as bootstrap gating (states doctrine).
 4. M-F5/F6 (Stripe event ordering; refresh/settle TOCTOU), M-F7 (close staleness bound; take:80 truncation).
 5. M-F10 fantasy-upsell hardcoded price; frontier-module G-findings on their PR branches (G-1 auth defense-in-depth first).
