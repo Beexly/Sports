@@ -23,6 +23,7 @@ const mocks = vi.hoisted(() => ({
   gradePickClv: vi.fn<(args: unknown) => unknown>(),
   // db
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   gameUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   pickUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -35,7 +36,11 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
-    game: { findUnique: mocks.gameFindUnique, update: mocks.gameUpdate },
+    game: {
+      findUnique: mocks.gameFindUnique,
+      findMany: mocks.gameFindMany,
+      update: mocks.gameUpdate,
+    },
     odds: { findMany: mocks.oddsFindMany },
     pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany },
     openingLine: { findUnique: mocks.openingLineFindUnique },
@@ -127,6 +132,8 @@ describe("settleSport", () => {
     mocks.getScores.mockResolvedValue({ data: ["raw"] });
     mocks.normalizeScores.mockReturnValue([completedScore()]);
     mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()]));
+    // Catch-up sweep default: nothing to heal, nothing stale.
+    mocks.gameFindMany.mockResolvedValue([]);
     mocks.gameUpdate.mockResolvedValue({});
     mocks.oddsFindMany.mockResolvedValue([]);
     mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
@@ -349,6 +356,145 @@ describe("settleSport", () => {
 
       expect(result.status).toBe("success");
       expect(result.gamesSettled).toBe(1);
+    });
+  });
+
+  describe("catch-up sweep (M-F9)", () => {
+    it("fetches scores at the API's maximum lookback (daysFrom=3)", async () => {
+      await settleSport(SPORT, "key", gates());
+      expect(mocks.getScores).toHaveBeenCalledWith(SPORT.key, 3);
+    });
+
+    it("heals a FINAL game with recorded scores whose picks are still PENDING", async () => {
+      // Feed has nothing; the orphan exists only in the DB.
+      mocks.normalizeScores.mockReturnValue([]);
+      mocks.gameFindMany
+        .mockResolvedValueOnce([
+          dbGame([pendingPick()], { status: "FINAL", homeScore: 31, awayScore: 17 }),
+        ]) // heal arm
+        .mockResolvedValueOnce([]); // void arm
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      // Settled from the RECORDED scores — truth preserved, not VOIDed.
+      expect(mocks.calculatePickResult).toHaveBeenCalledWith(
+        "SPREAD",
+        expect.anything(),
+        expect.anything(),
+        "Chiefs",
+        31,
+        17,
+        SPORT.key,
+      );
+      expect(result).toMatchObject({
+        status: "success",
+        gamesSettled: 1,
+        picksSettled: 1,
+        picksVoided: 0,
+      });
+    });
+
+    it("VOIDs pending picks on a stale game with no gradeable outcome", async () => {
+      mocks.normalizeScores.mockReturnValue([]);
+      mocks.gameFindMany
+        .mockResolvedValueOnce([]) // heal arm: nothing
+        .mockResolvedValueOnce([
+          dbGame([pendingPick()], {
+            status: "SCHEDULED",
+            homeScore: null,
+            awayScore: null,
+            commenceTime: new Date("2026-06-01T17:00:00.000Z"),
+          }),
+        ]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      // Terminal VOID via the same idempotent PENDING-scoped write as settlement.
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "pick-1", result: "PENDING" },
+          data: expect.objectContaining({ result: "VOID", settledAt: expect.any(Date) }),
+        })
+      );
+      // No settlement math is ever run without scores.
+      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+      // VOIDs are counted separately and never as settled picks.
+      expect(result).toMatchObject({
+        status: "success",
+        gamesSettled: 0,
+        picksSettled: 0,
+        picksVoided: 1,
+      });
+      // The game's status is never fabricated to CANCELED (or anything else).
+      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+    });
+
+    it("records the VOID snapshot as never learning-eligible", async () => {
+      mocks.normalizeScores.mockReturnValue([]);
+      mocks.gameFindMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([
+          dbGame([pendingPick()], { status: "POSTPONED", homeScore: null, awayScore: null }),
+        ]);
+
+      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: true }));
+
+      expect(mocks.snapshotUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            settlementResult: "VOID",
+            eligibleForLearning: false,
+          }),
+        })
+      );
+    });
+
+    it("only VOIDs games past the stale horizon — the query carries the cutoff and excludes gradeable FINALs", async () => {
+      await settleSport(SPORT, "key", gates());
+
+      // Second findMany call is the VOID arm.
+      const voidQuery = mocks.gameFindMany.mock.calls[1]?.[0] as {
+        where: {
+          commenceTime: { lt: Date };
+          picks: { some: { result: string } };
+          NOT: Record<string, unknown>;
+        };
+      };
+      expect(voidQuery.where.commenceTime.lt).toBeInstanceOf(Date);
+      // Cutoff is in the past (72h horizon), so freshly-commenced games are untouchable.
+      expect(voidQuery.where.commenceTime.lt.getTime()).toBeLessThan(Date.now());
+      expect(voidQuery.where.picks).toEqual({ some: { result: "PENDING" } });
+      // FINAL-with-scores games are excluded — they belong to the heal arm.
+      expect(voidQuery.where.NOT).toMatchObject({ status: "FINAL" });
+    });
+
+    it("is idempotent: a pick voided by a concurrent run is not double-counted", async () => {
+      mocks.normalizeScores.mockReturnValue([]);
+      mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
+      mocks.gameFindMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([
+          dbGame([pendingPick()], { status: "SCHEDULED", homeScore: null, awayScore: null }),
+        ]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.picksVoided).toBe(0);
+      expect(mocks.snapshotUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it("a sweep failure never takes down feed settlement that already succeeded", async () => {
+      mocks.gameFindMany.mockRejectedValue(new Error("relation scan timeout"));
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      // Feed settled its one game; the sweep failure is contained.
+      expect(result).toMatchObject({
+        status: "success",
+        gamesSettled: 1,
+        picksSettled: 1,
+        picksVoided: 0,
+      });
     });
   });
 
