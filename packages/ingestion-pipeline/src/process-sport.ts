@@ -122,6 +122,17 @@ export function pickSelectionSide(pickType: string, selection: string): string {
   return lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
 }
 
+/** True only for a Prisma P2002 unique-constraint violation on the pick's [gameId, pickType] key. */
+function isUniquePickConflict(err: unknown): boolean {
+  if (!err || typeof err !== "object") return false;
+  const e = err as { code?: unknown; meta?: { target?: unknown } };
+  if (e.code !== "P2002") return false;
+  const target = e.meta?.target;
+  if (Array.isArray(target)) return target.includes("gameId") || target.includes("pickType");
+  if (typeof target === "string") return target.includes("gameId") || target.includes("pickType");
+  return true; // P2002 with no target detail on a pick create — the unique key is [gameId, pickType]
+}
+
 export async function processSport(
   sport: SportConfig,
   apiKey: string,
@@ -455,33 +466,64 @@ export async function processSport(
             "Published picks are never silently reversed."
         );
         upsertedPick = { id: existingPick.id };
-      } else {
-        // Upsert by DB-enforced unique key [gameId, pickType].
-        // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
-        // Update never changes isBootstrap — creation era is immutable.
-        upsertedPick = await db.pick.upsert({
-          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-          create: {
-            gameId: pick.gameId,
-            pickType: pick.pickType,
-            ingestionRunId: run.id,
-            isBootstrap,
-            isFeatured,
-            // CLV lock snapshot — the line/price we ACTUALLY published at, captured
-            // once at creation. Absent from `update` below, so the refresh cycle can
-            // never overwrite it (Pick.line itself IS mutated each cycle). Moneyline
-            // `pick.line` holds the American price; spread/total `pick.line` holds the
-            // points line. Graded against the closing line at settlement.
-            clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
-            clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
-            ...pickUpdateData,
-          },
-          update: {
+      } else if (existingPick) {
+        // Refresh an existing PENDING pick — ATOMICALLY (M-F6). The frozen check
+        // above is check-then-act: the settlement job can grade this pick between
+        // that read and this write, and an unconditional update would then rewrite
+        // a just-settled pick's published selection/line/confidence/grade — the
+        // exact corruption the frozen guard exists to prevent. Scoping the UPDATE
+        // itself to result:"PENDING" closes the race: the loser writes nothing and
+        // the settled row stays exactly as graded. Update never changes
+        // isBootstrap or the CLV lock — creation era is immutable.
+        const rewritten = await db.pick.updateMany({
+          where: { id: existingPick.id, result: "PENDING" },
+          data: {
             ...pickUpdateData,
             // Re-evaluate featured status on each refresh when promotion is enabled.
             isFeatured,
           },
         });
+        if (rewritten.count === 0) {
+          console.warn(
+            `${logPrefix} pick ${existingPick.id} settled mid-refresh — left frozen as graded.`
+          );
+        }
+        upsertedPick = { id: existingPick.id };
+      } else {
+        // First sighting — create with origin fields (ingestionRunId, isBootstrap,
+        // isFeatured). A concurrent run can win the create race between the null
+        // read above and here; the DB-enforced unique key [gameId, pickType] turns
+        // that into P2002, and the loser adopts the winner's row UNTOUCHED (the
+        // next cycle refreshes it through the conditional path — never an
+        // unconditional overwrite, for the same TOCTOU reason as above).
+        try {
+          upsertedPick = await db.pick.create({
+            data: {
+              gameId: pick.gameId,
+              pickType: pick.pickType,
+              ingestionRunId: run.id,
+              isBootstrap,
+              isFeatured,
+              // CLV lock snapshot — the line/price we ACTUALLY published at, captured
+              // once at creation and never rewritten by the refresh path (Pick.line
+              // itself IS mutated each cycle). Moneyline `pick.line` holds the
+              // American price; spread/total `pick.line` holds the points line.
+              // Graded against the closing line at settlement.
+              clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
+              clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
+              ...pickUpdateData,
+            },
+            select: { id: true },
+          });
+        } catch (createErr) {
+          if (!isUniquePickConflict(createErr)) throw createErr;
+          const winner = await db.pick.findUnique({
+            where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
+            select: { id: true },
+          });
+          if (!winner) throw createErr;
+          upsertedPick = { id: winner.id };
+        }
       }
       picksGenerated++;
 
