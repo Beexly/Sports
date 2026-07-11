@@ -85,7 +85,24 @@ export async function settleSport(
 
       const game = await db.game.findUnique({
         where: { externalId: score.externalId },
-        include: { picks: { where: { result: "PENDING" } } },
+        include: {
+          picks: {
+            // Two populations ride one settlement pass (M-F4):
+            //  - PENDING picks to settle (and CLV-grade), and
+            //  - already-settled picks whose CLV grade was ORPHANED: a crash
+            //    (or race loss) between the settlement write and the CLV
+            //    write leaves result != PENDING with clvGradedAt null. The
+            //    old PENDING-only read could never see such a pick again, so
+            //    its grade — the input to the public beat-close rate and the
+            //    ESTABLISHED pricing gate — was silently lost forever.
+            where: {
+              OR: [
+                { result: "PENDING" },
+                { result: { in: ["WIN", "LOSS", "PUSH"] }, clvGradedAt: null },
+              ],
+            },
+          },
+        },
       });
       if (!game) continue;
 
@@ -144,33 +161,49 @@ export async function settleSport(
         }
 
         for (const pick of game.picks) {
-          // Grade against the LOCKED line (the number we published, receipted, and
-          // CLV-graded the pick at) — NOT pick.line, which can drift on every refresh
-          // cycle while the pick is PENDING. Grading SPREAD/TOTAL against a drifted line
-          // would settle a published WIN as a LOSS and contradict the CLV verdict (which
-          // already uses clvLockLine below). Fall back to pick.line only for legacy rows
-          // with no lock. (MONEYLINE ignores the line entirely.)
-          const gradingLine = selectGradingLine(pick);
-          const result = calculatePickResult(
-            pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
-            pick.selection,
-            gradingLine,
-            game.homeTeamName,
-            score.homeScore,
-            score.awayScore,
-            sport.key,
-          );
-          // Idempotent settle. game.picks was read with result:"PENDING", but
-          // the worker and the Vercel settle-picks cron can both reach this game
-          // between that read and this write. updateMany scoped to
-          // result:"PENDING" makes the write a no-op for the loser of the race
-          // (count===0) — so the first settlement and its settledAt stay
-          // immutable and CLV is never re-graded against a second close.
-          const settled = await db.pick.updateMany({
-            where: { id: pick.id, result: "PENDING" },
-            data: { result, settledAt },
-          });
-          if (settled.count === 0) continue;
+          // Orphan re-grade arm (M-F4): the pick is already settled and only
+          // its CLV/snapshot writes are missing. Its recorded result is the
+          // immutable truth — settlement math must NOT be re-run against a
+          // possibly-different feed.
+          // Explicit settled-trio check (not `!== "PENDING"`): the query only
+          // returns PENDING or settled-with-null-grade rows, and VOID or any
+          // unexpected state must take the settle path's own guards, never the
+          // re-grade shortcut.
+          const alreadySettled =
+            pick.result === "WIN" || pick.result === "LOSS" || pick.result === "PUSH";
+          let result: "WIN" | "LOSS" | "PUSH";
+          if (alreadySettled) {
+            result = pick.result as "WIN" | "LOSS" | "PUSH";
+          } else {
+            // Grade against the LOCKED line (the number we published, receipted, and
+            // CLV-graded the pick at) — NOT pick.line, which can drift on every refresh
+            // cycle while the pick is PENDING. Grading SPREAD/TOTAL against a drifted line
+            // would settle a published WIN as a LOSS and contradict the CLV verdict (which
+            // already uses clvLockLine below). Fall back to pick.line only for legacy rows
+            // with no lock. (MONEYLINE ignores the line entirely.)
+            const gradingLine = selectGradingLine(pick);
+            result = calculatePickResult(
+              pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+              pick.selection,
+              gradingLine,
+              game.homeTeamName,
+              score.homeScore,
+              score.awayScore,
+              sport.key,
+            );
+            // Idempotent settle. game.picks was read with result:"PENDING", but
+            // the worker and the Vercel settle-picks cron can both reach this game
+            // between that read and this write. updateMany scoped to
+            // result:"PENDING" makes the write a no-op for the loser of the race
+            // (count===0) — so the first settlement and its settledAt stay
+            // immutable. (If the winner then crashed before its CLV write, the
+            // orphan arm above heals the grade on the next cycle.)
+            const settled = await db.pick.updateMany({
+              where: { id: pick.id, result: "PENDING" },
+              data: { result, settledAt },
+            });
+            if (settled.count === 0) continue;
+          }
 
           // Grade Closing-Line Value against the immutable lock snapshot
           // (clvLockLine/clvLockPrice, captured at publish). Additive and
@@ -187,8 +220,12 @@ export async function settleSport(
                 close: closingSnapshot,
               });
               if (grade) {
-                await db.pick.update({
-                  where: { id: pick.id },
+                // Grade-once, mirroring settle-once: conditional on
+                // clvGradedAt still null so a concurrent grader (or a
+                // re-run over the orphan arm) can never overwrite an
+                // existing verdict with a grade against a second close.
+                await db.pick.updateMany({
+                  where: { id: pick.id, clvGradedAt: null },
                   data: {
                     clvCloseLine: grade.closeLine,
                     clvClosePrice: grade.closePrice,
@@ -238,7 +275,7 @@ export async function settleSport(
               `${snapErr instanceof Error ? snapErr.message : snapErr}`,
             );
           }
-          picksSettled++;
+          if (!alreadySettled) picksSettled++;
         }
 
         // Write TeamGameLog entries for ATS form tracking.

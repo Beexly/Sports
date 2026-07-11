@@ -91,6 +91,7 @@ function completedScore(overrides: Record<string, unknown> = {}): Record<string,
 
 function pendingPick(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
+    result: "PENDING",
     id: "pick-1",
     gameId: "game-1",
     pickType: "SPREAD",
@@ -366,9 +367,12 @@ describe("settleSport", () => {
 
       await settleSport(SPORT, "key", gates());
 
-      expect(mocks.pickUpdate).toHaveBeenCalledWith(
+      // Grade-once (M-F4): the CLV write is a conditional updateMany keyed on
+      // clvGradedAt still null, so a concurrent grader or an orphan re-grade
+      // can never overwrite an existing verdict with a second close.
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { id: "pick-1" },
+          where: { id: "pick-1", clvGradedAt: null },
           data: expect.objectContaining({
             clvCloseLine: -4,
             clvVerdict: "BEAT_CLOSE",
@@ -385,10 +389,62 @@ describe("settleSport", () => {
       await settleSport(SPORT, "key", gates());
 
       expect(mocks.gradePickClv).not.toHaveBeenCalled();
-      // Settlement goes through updateMany; pick.update is CLV-only, so with no
-      // close it is never called.
+      // Settlement goes through updateMany (once, the settle write); with no
+      // close there is no second (CLV) updateMany and pick.update is unused.
       expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
       expect(mocks.pickUpdate).not.toHaveBeenCalled();
+    });
+
+    it("M-F4: reads settled-but-ungraded picks (the orphan arm) alongside PENDING", async () => {
+      await settleSport(SPORT, "key", gates());
+
+      expect(mocks.gameFindUnique).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: {
+            picks: {
+              where: {
+                OR: [
+                  { result: "PENDING" },
+                  { result: { in: ["WIN", "LOSS", "PUSH"] }, clvGradedAt: null },
+                ],
+              },
+            },
+          },
+        })
+      );
+    });
+
+    it("M-F4: an orphaned settled pick is CLV-graded WITHOUT re-running settlement", async () => {
+      const capturedAt = new Date("2026-06-10T16:55:00.000Z");
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt });
+      mocks.gradePickClv.mockReturnValue({
+        closeLine: -4,
+        closePrice: null,
+        kind: "LINE",
+        value: 0.5,
+        verdict: "BEAT_CLOSE",
+      });
+      // A pick a previous run settled (WIN) whose CLV write crashed: the old
+      // PENDING-only read never saw it again and the grade was lost forever.
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick({ result: "WIN", clvGradedAt: null })])
+      );
+
+      const res = await settleSport(SPORT, "key", gates());
+
+      // Settlement math must NOT re-run against a possibly-different feed…
+      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+      // …and no settle write happens; the ONLY updateMany is the CLV grade,
+      // still conditional on clvGradedAt null (grade-once).
+      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "pick-1", clvGradedAt: null },
+          data: expect.objectContaining({ clvVerdict: "BEAT_CLOSE" }),
+        })
+      );
+      // The healed orphan is not double-counted as a fresh settlement.
+      expect(res.picksSettled).toBe(0);
     });
   });
 });
