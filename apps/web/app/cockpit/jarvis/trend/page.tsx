@@ -1,6 +1,7 @@
 import { sharedJarvisHistory } from "@/lib/cockpit/jarvis-history";
 import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import { JarvisTrend } from "@/components/cockpit/jarvis-trend";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * /cockpit/jarvis/trend — admin-only.
@@ -20,6 +21,7 @@ import { JarvisTrend } from "@/components/cockpit/jarvis-trend";
 export const dynamic = "force-dynamic";
 
 export default async function JarvisTrendPage() {
+  await requireCockpitAdmin();
   const buf = sharedJarvisHistory();
 
   // Best-effort refresh.

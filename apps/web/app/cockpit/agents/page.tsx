@@ -4,11 +4,13 @@ import { listAgents } from "@/lib/cockpit/agents";
 import { AgentStatusRail } from "@/components/cockpit/agent-status-rail";
 import { StatusTile } from "@/components/cockpit/status-tile";
 import { summarizeAgentHealth } from "@/lib/agents/agent-health";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 // Operator data is read per request; never statically prerendered.
 export const dynamic = "force-dynamic";
 
 export default async function CockpitAgentsPage() {
+  await requireCockpitAdmin();
   const groupByPromise = db.cockpitTask.groupBy({
     by: ["assignedAgent", "status"],
     _count: { _all: true },

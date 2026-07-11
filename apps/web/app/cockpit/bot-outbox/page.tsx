@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { loadBotOutboxDrafts } from "@/lib/bot-outbox/load";
 import type { PlannedBotOutboxItem } from "@/lib/bot-outbox/plan";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,7 @@ const CHANNEL_STYLES: Readonly<Record<PlannedBotOutboxItem["channel"], string>> 
 };
 
 export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const drafts = await loadBotOutboxDrafts({ lookbackMinutes: 180, limitPerKind: 20 });
   const readyItems = drafts.items.filter((item) => item.shouldPost);
   const blockedItems = drafts.items.filter((item) => !item.shouldPost);

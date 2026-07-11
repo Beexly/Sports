@@ -6,6 +6,7 @@ import {
   isGenerationEnabled,
   isOwnerSpendApproved,
 } from "@/lib/visual-production/spend-policy";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const metadata = { title: "Film Room — Visual Production", robots: { index: false } };
 
@@ -16,6 +17,7 @@ export const metadata = { title: "Film Room — Visual Production", robots: { in
  * never spends — it only shows what a credit would buy and what's missing.
  */
 export default async function FilmRoomPage() {
+  await requireCockpitAdmin();
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") redirect("/");
 

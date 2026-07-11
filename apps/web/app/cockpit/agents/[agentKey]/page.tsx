@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@sports/db";
 import { AGENTS, getAgent, type AgentKey } from "@/lib/cockpit/agents";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 interface Params {
   agentKey: string;
@@ -16,6 +17,7 @@ export default async function CockpitAgentDetail({
 }: {
   params: Params;
 }) {
+  await requireCockpitAdmin();
   if (!isAgentKey(params.agentKey)) {
     notFound();
   }

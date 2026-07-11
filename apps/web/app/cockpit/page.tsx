@@ -26,10 +26,12 @@ import { loadCommandCenterFeed } from "@/lib/command-center/feed";
 import type { OwnerAttentionItem } from "@/lib/command-center/types";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function CockpitOverview() {
+  await requireCockpitAdmin();
   const gates = getReadinessGates();
   const stubMode = isStubMode();
   const demoActive = isDemoPicksEnabled() && stubMode;
