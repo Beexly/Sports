@@ -13,7 +13,11 @@ import type { ModelEndpoint } from "../types";
 export const CURRENT_CLAUDE_ENDPOINT: ModelEndpoint = {
   id: "anthropic-current-production",
   provider: "anthropic",
-  modelEnvVar: "ANTHROPIC_MODEL (falls back to the lib/claude-api default)",
+  // Model resolution stays where it already lives: lib/claude-api resolves
+  // explicit id > pickModelForSurface(surface) > default, with operator-
+  // selected Bedrock/Vertex dispatch in provider-dispatch.ts. The lane
+  // router EXTENDS that surface router; it never re-picks the model id.
+  modelEnvVar: "resolved by lib/claude-api (explicit id > surface tier > default)",
   trainsOnData: false,
   approvedLanes: [
     "PLAN_FRONTIER",

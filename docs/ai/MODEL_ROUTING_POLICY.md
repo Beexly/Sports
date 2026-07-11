@@ -7,6 +7,17 @@
 **Route policy is GSE intellectual property.** Nothing from this module is
 rendered on a public surface; lanes, rules, and budgets stay server-side.
 
+## Relationship to the existing surface router (extend, never duplicate)
+
+`lib/claude-api` already routes: `pickModelForSurface` maps six surfaces to
+Claude tiers (with validated Haiku flips and a machine-readable recommended
+map), and `provider-dispatch.ts` adds operator-selected Bedrock/Vertex
+dispatch with transparent Anthropic fallback. The lane router sits ABOVE
+that layer: it decides the task lane (risk, sensitivity, public visibility,
+budget); model-id resolution stays exactly where it is today. The two meet
+only when the owner later instruments call sites to LOG shadow
+recommendations beside the calls they were already making.
+
 ## Shadow contract (this wave)
 
 - The router **recommends**; it never calls a model, never retries, never
