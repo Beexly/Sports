@@ -7,7 +7,7 @@
  * xwoba, statsapi's string era/whip/goAo and thirds-notation innings. Math
  * expectations are hand-computed on the reference-engine formulas.
  */
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { computeBurr, computeRvs } from "@sports/fantasy-engine";
 import {
   buildSavantCustomUrl,
@@ -487,25 +487,24 @@ describe("clearance enforcement", () => {
   });
 
   it("fetches and parses with a valid proof (no network — mocked transport)", async () => {
-    const fetchImpl = vi.fn(async () => new Response(SAVANT_CSV, { status: 200 }));
+    const urls: string[] = [];
+    const fetchImpl = (async (input: RequestInfo | URL) => {
+      urls.push(String(input));
+      return new Response(SAVANT_CSV, { status: 200 });
+    }) as typeof globalThis.fetch;
     const rows = await fetchSavantSmashLeaderboard(
       { year: 2025, type: "batter" },
       savantProof,
-      fetchImpl as unknown as typeof globalThis.fetch,
+      fetchImpl,
     );
     expect(rows).toHaveLength(3);
-    const url = String(fetchImpl.mock.calls[0]![0]);
-    expect(url).toContain("csv=true");
+    expect(urls[0]).toContain("csv=true");
   });
 
   it("throws on non-200 instead of returning fabricated emptiness", async () => {
-    const fetchImpl = vi.fn(async () => new Response("nope", { status: 503 }));
+    const fetchImpl = (async () => new Response("nope", { status: 503 })) as typeof globalThis.fetch;
     await expect(
-      fetchSavantSmashLeaderboard(
-        { year: 2025, type: "batter" },
-        savantProof,
-        fetchImpl as unknown as typeof globalThis.fetch,
-      ),
+      fetchSavantSmashLeaderboard({ year: 2025, type: "batter" }, savantProof, fetchImpl),
     ).rejects.toThrow(/HTTP 503/);
   });
 
@@ -523,16 +522,14 @@ describe("clearance enforcement", () => {
       ],
     });
     const responses = [page(500, 600), page(100, 600)];
-    const fetchImpl = vi.fn(async () =>
-      new Response(JSON.stringify(responses.shift()), { status: 200 }),
-    );
-    const lines = await fetchMlbPitcherSeasons(
-      2025,
-      statsApiProof,
-      fetchImpl as unknown as typeof globalThis.fetch,
-    );
+    const urls: string[] = [];
+    const fetchImpl = (async (input: RequestInfo | URL) => {
+      urls.push(String(input));
+      return new Response(JSON.stringify(responses.shift()), { status: 200 });
+    }) as typeof globalThis.fetch;
+    const lines = await fetchMlbPitcherSeasons(2025, statsApiProof, fetchImpl);
     expect(lines).toHaveLength(600);
-    expect(fetchImpl).toHaveBeenCalledTimes(2);
-    expect(String(fetchImpl.mock.calls[1]![0])).toContain("offset=500");
+    expect(urls).toHaveLength(2);
+    expect(urls[1]).toContain("offset=500");
   });
 });
