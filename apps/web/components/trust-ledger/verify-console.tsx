@@ -44,6 +44,78 @@ type VerifyResponse = {
  * matches) — the failure case is exactly when independent recompute matters
  * most. Renders nothing until the endpoint returns the raw material.
  */
+/**
+ * The zero-server-trust moment: recompute the receipt hash IN THE VISITOR'S
+ * BROWSER via WebCrypto. The server's "verified" verdict, the displayed
+ * payload, and the frozen hash are all inputs the visitor can now check
+ * against each other locally — a MATCH here means their own machine derived
+ * the same digest from the same committed fields. No fetch, no trust.
+ */
+function BrowserRecompute({
+  preimage,
+  contentHash,
+}: {
+  preimage: string;
+  contentHash: string;
+}) {
+  const [verdict, setVerdict] = useState<"idle" | "working" | "match" | "mismatch" | "unsupported">(
+    "idle",
+  );
+  const [computed, setComputed] = useState<string | null>(null);
+
+  const run = useCallback(async () => {
+    if (!globalThis.crypto?.subtle) {
+      setVerdict("unsupported");
+      return;
+    }
+    setVerdict("working");
+    const digest = await globalThis.crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(preimage),
+    );
+    const hex = Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    setComputed(hex);
+    setVerdict(hex === contentHash.toLowerCase() ? "match" : "mismatch");
+  }, [preimage, contentHash]);
+
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => void run()}
+        disabled={verdict === "working"}
+        className="rounded-lg border border-orbital-cyan/40 px-3 py-2 text-xs font-semibold text-orbital-cyan hover:bg-orbital-cyan/10 disabled:opacity-60"
+      >
+        {verdict === "working" ? "Computing…" : "Recompute in this browser"}
+      </button>
+      {verdict === "match" && (
+        <p className="mt-2 text-xs font-semibold text-verify" role="status">
+          MATCH. Your browser computed{" "}
+          <code className="break-all font-mono text-[10px]">{computed?.slice(0, 16)}…</code>{" "}
+          from the committed fields, identical to the frozen receipt hash. No
+          part of that computation touched our servers.
+        </p>
+      )}
+      {verdict === "mismatch" && (
+        <p className="mt-2 text-xs font-semibold text-alert" role="status">
+          MISMATCH. Your browser&apos;s digest ({computed?.slice(0, 16)}…) does
+          not equal the displayed receipt hash. That means the displayed
+          payload and hash do not belong together. Take a screenshot; this is
+          exactly the state this system exists to expose.
+        </p>
+      )}
+      {verdict === "unsupported" && (
+        <p className="mt-2 text-xs text-ion-2" role="status">
+          This browser does not expose WebCrypto. You can still copy the
+          string above into any SHA-256 tool.
+        </p>
+      )}
+    </div>
+  );
+}
+
 function RecomputePanel({
   pickId,
   payload,
@@ -81,6 +153,7 @@ function RecomputePanel({
           {contentHash}
         </code>
       </div>
+      <BrowserRecompute preimage={preimage} contentHash={contentHash} />
     </details>
   );
 }
