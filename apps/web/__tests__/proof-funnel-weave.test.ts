@@ -35,9 +35,11 @@ describe("proof-funnel weave", () => {
     expect(proof).toContain('href="/picks"');
     // The close must never promise outcomes — it sells receipts, not wins.
     expect(proof).toContain("not louder claims, more receipts");
-    // Codex P2 on #74: the close must be gated on a non-empty ledger — selling
-    // against an empty (or DB-failed) record contradicts the empty state.
-    expect(proof).toMatch(/\{!isEmpty &&[\s\S]{0,400}proof-funnel-close/);
+    // Codex P2 on #74 + #75: the close must be gated on rows actually present.
+    // (!isEmpty was not enough: during a DB outage isEmpty is false, which
+    // rendered the funnel alongside the outage card.)
+    expect(proof).toContain("const hasLedger = board.picks.length > 0");
+    expect(proof).toMatch(/\{hasLedger &&[\s\S]{0,400}proof-funnel-close/);
   });
 
   it("/proof routes only RECEIPT hashes to the verifier, never bare Merkle leaves", () => {

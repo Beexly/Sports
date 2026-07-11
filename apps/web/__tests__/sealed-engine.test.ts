@@ -33,6 +33,19 @@ describe("sealed engine — method opacity (founder doctrine, CI-enforced)", () 
     expect(loader).not.toContain("reason: true");
   });
 
+  it("receipts count as public seals only when their pick is official", () => {
+    // Codex P2 on #75: the freezer mints receipts during warm-up too. Both
+    // receipt queries (today's count and the latest seal) must join back to
+    // the official record — published, non-bootstrap, non-seed — or /engine
+    // presents warm-up receipts as today's commitments while the adjacent
+    // gate/record counts exclude them.
+    const loader = read("lib/engine/load-engine-story.ts");
+    const joined = loader.match(/pick: OFFICIAL_PICK_FILTER/g) ?? [];
+    expect(joined.length).toBeGreaterThanOrEqual(2);
+    expect(loader).toContain("isBootstrap: false");
+    expect(loader).toContain('NOT: { modelVersion: "v5.0.0-seed" }');
+  });
+
   it("the page renders no method vocabulary", () => {
     // The doctrine governs RENDERED copy — strip code comments (which may
     // name the doctrine itself) before scanning.

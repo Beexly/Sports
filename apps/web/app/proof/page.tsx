@@ -106,6 +106,11 @@ export default async function ProofOfRecordPage() {
   }
 
   const isEmpty = board.picks.length === 0 && !ledgerUnreachable;
+  // Ledger-bearing sections (root banner, table, funnel) key off rows actually
+  // present, NOT !isEmpty: during an outage isEmpty is false, and gating on it
+  // would render a "0 settled picks" stamp, an empty table shell, and the paid
+  // funnel alongside the outage card.
+  const hasLedger = board.picks.length > 0;
 
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-carbon">
@@ -175,7 +180,7 @@ export default async function ProofOfRecordPage() {
           </section>
 
           {/* ── Merkle root banner ── */}
-          {!isEmpty && board.merkleRoot && (
+          {hasLedger && board.merkleRoot && (
             <section
               data-testid="proof-root-banner"
               className="mt-6 rounded-2xl border border-titanium bg-eclipse/60 px-6 py-5"
@@ -209,7 +214,7 @@ export default async function ProofOfRecordPage() {
             className={`mt-4 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}
           >
             Board generated {new Date(board.generatedAt).toUTCString()}
-            {!isEmpty && (
+            {hasLedger && (
               <> · {formatCount(board.totalSettled)} settled picks in the ledger</>
             )}
           </p>
@@ -262,7 +267,7 @@ export default async function ProofOfRecordPage() {
           )}
 
           {/* ── Pick ledger ── */}
-          {!isEmpty && (
+          {hasLedger && (
             <section className="mt-8">
               <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral px-6 py-4">
@@ -329,10 +334,10 @@ export default async function ProofOfRecordPage() {
             </ul>
           </section>
 
-          {/* ── Funnel close: the record IS the product demo. Gated on a
-                 non-empty ledger — selling against an empty (or DB-failed)
-                 record would contradict the empty state two sections up. ── */}
-          {!isEmpty && (
+          {/* ── Funnel close: the record IS the product demo. Gated on rows
+                 actually present — selling against an empty (or DB-failed)
+                 record would contradict the states two sections up. ── */}
+          {hasLedger && (
             <section
               data-testid="proof-funnel-close"
               className="mt-10 rounded-2xl border border-plasma/30 bg-plasma/[0.06] px-6 py-8"

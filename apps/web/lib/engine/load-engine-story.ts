@@ -62,6 +62,19 @@ const EMPTY_STORY: Omit<EngineStory, "generatedAt" | "unreachable"> = {
   record: { totalSettled: 0 },
 };
 
+/**
+ * A receipt only counts as a public seal when its pick is part of the
+ * official record: published, live-engine (never bootstrap), never seed
+ * data. The freezer mints receipts during warm-up too, and presenting those
+ * as today's commitments would let the warm-up era inflate the sealed count
+ * that the adjacent gate/record numbers deliberately exclude.
+ */
+const OFFICIAL_PICK_FILTER = {
+  isPublished: true,
+  isBootstrap: false,
+  NOT: { modelVersion: "v5.0.0-seed" },
+} as const;
+
 /** [start, end) of the UTC calendar day containing `now`. */
 function utcDayBounds(now: Date): { start: Date; end: Date; key: string } {
   const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -92,8 +105,11 @@ export async function loadEngineStory(now = new Date()): Promise<EngineStory> {
           where: { evaluatedAt: { gte: start, lt: end }, isBootstrap: false },
           _count: { _all: true },
         }),
-        db.pickProofReceipt.count({ where: { frozenAt: { gte: start, lt: end } } }),
+        db.pickProofReceipt.count({
+          where: { frozenAt: { gte: start, lt: end }, pick: OFFICIAL_PICK_FILTER },
+        }),
         db.pickProofReceipt.findFirst({
+          where: { pick: OFFICIAL_PICK_FILTER },
           orderBy: { frozenAt: "desc" },
           select: { contentHash: true, frozenAt: true },
         }),
@@ -105,9 +121,7 @@ export async function loadEngineStory(now = new Date()): Promise<EngineStory> {
         db.pick.count({
           where: {
             result: { in: ["WIN", "LOSS", "PUSH", "VOID"] },
-            isPublished: true,
-            isBootstrap: false,
-            NOT: { modelVersion: "v5.0.0-seed" },
+            ...OFFICIAL_PICK_FILTER,
           },
         }),
       ]);

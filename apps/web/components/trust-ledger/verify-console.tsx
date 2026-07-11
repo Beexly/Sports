@@ -54,14 +54,33 @@ type VerifyResponse = {
 function BrowserRecompute({
   preimage,
   contentHash,
+  context = "verified",
 }: {
   preimage: string;
   contentHash: string;
+  /**
+   * Which server verdict this recompute sits under. Under a failed verdict a
+   * local MATCH must not read as "the record is healthy": the server hashes
+   * the same string, so MATCH there means the committed payload is intact
+   * and the failure is column drift &mdash; the stored row no longer agrees
+   * with what was sealed. The copy has to say that, never contradict the red
+   * verdict above it.
+   */
+  context?: "verified" | "failure";
 }) {
   const [verdict, setVerdict] = useState<"idle" | "working" | "match" | "mismatch" | "unsupported">(
     "idle",
   );
   const [computed, setComputed] = useState<string | null>(null);
+
+  // A new receipt (fresh paste or deep link) must start from an idle verdict.
+  // React reuses this component instance across lookups, so without the reset
+  // a previous receipt's MATCH would display for a hash that was never
+  // recomputed locally.
+  useEffect(() => {
+    setVerdict("idle");
+    setComputed(null);
+  }, [preimage, contentHash]);
 
   const run = useCallback(async () => {
     if (!globalThis.crypto?.subtle) {
@@ -90,12 +109,23 @@ function BrowserRecompute({
       >
         {verdict === "working" ? "Computing…" : "Recompute in this browser"}
       </button>
-      {verdict === "match" && (
+      {verdict === "match" && context === "verified" && (
         <p className="mt-2 text-xs font-semibold text-verify" role="status">
           MATCH. Your browser computed{" "}
           <code className="break-all font-mono text-[10px]">{computed?.slice(0, 16)}…</code>{" "}
           from the committed fields, identical to the frozen receipt hash. No
           part of that computation touched our servers.
+        </p>
+      )}
+      {verdict === "match" && context === "failure" && (
+        <p className="mt-2 text-xs font-semibold text-caution" role="status">
+          Digest match, verdict unchanged. Your browser computed{" "}
+          <code className="break-all font-mono text-[10px]">{computed?.slice(0, 16)}…</code>{" "}
+          from the committed string, so the frozen commitment itself is
+          intact. The failure above means the record&apos;s stored fields no
+          longer agree with that committed string. The break is between the
+          live record and what was sealed, and this local check does not
+          clear it.
         </p>
       )}
       {verdict === "mismatch" && (
@@ -120,10 +150,12 @@ function RecomputePanel({
   pickId,
   payload,
   contentHash,
+  context = "verified",
 }: {
   pickId?: string;
   payload?: string;
   contentHash?: string;
+  context?: "verified" | "failure";
 }) {
   if (!pickId || !payload || !contentHash) return null;
   const preimage = `leaf:${pickId}:${payload}`;
@@ -153,7 +185,7 @@ function RecomputePanel({
           {contentHash}
         </code>
       </div>
-      <BrowserRecompute preimage={preimage} contentHash={contentHash} />
+      <BrowserRecompute preimage={preimage} contentHash={contentHash} context={context} />
     </details>
   );
 }
@@ -278,6 +310,7 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                 pickId={res.pickId}
                 payload={res.payload}
                 contentHash={res.contentHash}
+                context="failure"
               />
             </div>
           ) : res.sealed ? (
