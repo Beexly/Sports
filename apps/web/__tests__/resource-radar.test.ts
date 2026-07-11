@@ -217,14 +217,24 @@ describe("radar — 11. empty and disabled states are distinct from error", () =
 });
 
 describe("radar — 12. fixture integrity", () => {
-  it("the committed snapshot hashes to its pinned digest (tamper-evident fixture)", () => {
-    const raw = read("lib/resource-intelligence/radar/generated/2026-07-11.json");
+  it("the runtime pointer (latest.json) hashes to its pinned digest", () => {
+    const raw = read("lib/resource-intelligence/radar/generated/latest.json");
     const digest = createHash("sha256").update(raw, "utf8").digest("hex");
     // Pinned at import time. A new founder-verified snapshot updates this pin
     // in the same commit — silent fixture edits fail here.
     expect(`sha256:${digest}`).toBe(
       "sha256:74dcddc01c0f07aa26f22868773248d9c424ba2d7a65f422910bf3e96f38f619"
     );
+  });
+
+  it("latest.json equals its dated history copy, and the runtime imports latest", () => {
+    // Codex P2 on #76: the importer rewrites latest.json so a new snapshot
+    // goes live without editing snapshot.ts. The dated copy is provenance.
+    const latest = read("lib/resource-intelligence/radar/generated/latest.json");
+    const dated = read("lib/resource-intelligence/radar/generated/2026-07-11.json");
+    expect(latest).toBe(dated);
+    const snapshotSrc = read("lib/resource-intelligence/radar/snapshot.ts");
+    expect(snapshotSrc).toContain('from "./generated/latest.json"');
   });
 
   it("snapshot carries the source CSV's sha256 for provenance", () => {
@@ -239,5 +249,86 @@ describe("radar — 12. fixture integrity", () => {
   it("all 43 packet observations are preserved", () => {
     expect(RADAR_SNAPSHOT.observationCount).toBe(43);
     expect(getObservations().length).toBe(43);
+  });
+});
+
+describe("radar — Codex #76 regressions", () => {
+  const mk = (over: Partial<ReturnType<typeof getObservations>[number]>) => ({
+    ...getObservations()[0]!,
+    ...over,
+  });
+
+  it("license allowlist rejects non-evidence values", () => {
+    for (const bad of ["NOASSERTION", "Other", "TBD", "Proprietary", "SEE LICENSE IN FILE"]) {
+      expect(isLicenseVerified(bad), bad).toBe(false);
+    }
+    expect(isLicenseVerified("MIT")).toBe(true);
+    expect(isLicenseVerified("Apache-2.0")).toBe(true);
+  });
+
+  it("conservative license merge: any unverified row keeps the dossier unverified", () => {
+    const a = mk({
+      id: "weekly:example/repo", window: "weekly" as const,
+      repository: "example/repo", normalizedRepository: "example/repo",
+      normalizedPosture: "PROTOTYPE" as const, risk: "MEDIUM" as const, license: "MIT",
+    });
+    const b = mk({
+      id: "monthly:example/repo", window: "monthly" as const,
+      repository: "example/repo", normalizedRepository: "example/repo",
+      normalizedPosture: "PROTOTYPE" as const, risk: "MEDIUM" as const, license: "VERIFY",
+    });
+    const [d] = buildDossiers([a, b], AS_OF).filter((x) => x.normalizedRepository === "example/repo");
+    expect(d!.licenseUnverified).toBe(true);
+    // The open gap caps the disposition: prototype demoted to owner review.
+    expect(d!.effectiveDisposition).toBe("owner_review");
+  });
+
+  it("merged hard risk voids the score even when the scored row was tame", () => {
+    const rich = mk({
+      id: "weekly:example/blocked", window: "weekly" as const,
+      repository: "example/blocked", normalizedRepository: "example/blocked",
+      normalizedPosture: "PROTOTYPE" as const, risk: "MEDIUM" as const,
+      license: "MIT", totalStars: 50000, trendGain: 9000,
+    });
+    const blockedSparse = mk({
+      id: "monthly:example/blocked", window: "monthly" as const,
+      repository: "example/blocked", normalizedRepository: "example/blocked",
+      normalizedPosture: "PROTOTYPE" as const, risk: "BLOCKED" as const,
+      license: "MIT", totalStars: null, trendGain: null,
+    });
+    const [d] = buildDossiers([rich, blockedSparse], AS_OF).filter(
+      (x) => x.normalizedRepository === "example/blocked"
+    );
+    expect(d!.risk).toBe("BLOCKED");
+    expect(d!.score.blockedOverride).toBe(true);
+    expect(d!.effectiveDisposition).toBe("quarantine");
+  });
+
+  it("unknown risk labels fail closed to quarantine", () => {
+    expect(
+      effectiveDisposition("PROTOTYPE", "BLOCKED_RIGHTS" as never, "MIT")
+    ).toBe("quarantine");
+  });
+
+  it("the importer validates risk against the closed set", () => {
+    const importer = readFileSync(
+      join(__dirname, "..", "..", "..", "scripts", "resource-radar-import.mjs"),
+      "utf8"
+    );
+    expect(importer).toMatch(/RISKS = \["LOW", "MEDIUM", "HIGH", "CRITICAL", "BLOCKED"\]/);
+    expect(importer).toMatch(/Unknown risk/);
+    expect(importer).toMatch(/process\.exit\(1\)/);
+  });
+
+  it("validateSnapshot rejects unknown enum values in a hand-edited fixture", () => {
+    const tampered = {
+      ...RADAR_SNAPSHOT,
+      observations: [
+        { ...getObservations()[0]!, risk: "BLOCKED_RIGHTS" as never },
+        ...getObservations().slice(1),
+      ],
+    };
+    const problems = validateSnapshot(tampered);
+    expect(problems.some((p) => p.includes("unknown risk"))).toBe(true);
   });
 });

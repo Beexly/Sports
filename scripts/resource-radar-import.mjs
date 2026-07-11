@@ -105,10 +105,20 @@ if (JSON.stringify(header) !== JSON.stringify(expected)) {
   process.exit(1);
 }
 
+// Closed risk set. An unknown label (typo or expanded value like
+// "BLOCKED_RIGHTS") must FAIL the import, not flow into the fixture — the
+// runtime policy caps exact values only, so a novel label would silently
+// skip the hard caps.
+const RISKS = ["LOW", "MEDIUM", "HIGH", "CRITICAL", "BLOCKED"];
+
 const observations = rows.slice(1).map((r) => {
   const [window, repo, trendGain, totalStars, language, license, category, gseMapping, posture, risk, reason] = r;
   if (!WINDOWS.includes(window.trim())) {
     console.error(`Unknown window "${window}" for repo "${repo}"`);
+    process.exit(1);
+  }
+  if (!RISKS.includes(risk.trim().toUpperCase())) {
+    console.error(`Unknown risk "${risk}" for repo "${repo}" — allowed: ${RISKS.join(", ")}`);
     process.exit(1);
   }
   return {
@@ -145,13 +155,20 @@ const snapshot = {
   observations,
 };
 
-const outPath = resolve(
+const generatedDir = resolve(
   dirname(new URL(import.meta.url).pathname),
   "..",
-  "apps/web/lib/resource-intelligence/radar/generated",
-  `${observedAt}.json`
+  "apps/web/lib/resource-intelligence/radar/generated"
 );
-mkdirSync(dirname(outPath), { recursive: true });
-writeFileSync(outPath, JSON.stringify(snapshot, null, 2) + "\n", "utf8");
-console.log(`[radar-import] wrote ${observations.length} observations -> ${outPath}`);
+mkdirSync(generatedDir, { recursive: true });
+const json = JSON.stringify(snapshot, null, 2) + "\n";
+// Dated file = immutable history; latest.json = the runtime pointer the
+// module imports. Writing both means a new import is live without editing
+// snapshot.ts (Codex P2 on #76) — and the dated file keeps provenance.
+const datedPath = resolve(generatedDir, `${observedAt}.json`);
+const latestPath = resolve(generatedDir, "latest.json");
+writeFileSync(datedPath, json, "utf8");
+writeFileSync(latestPath, json, "utf8");
+console.log(`[radar-import] wrote ${observations.length} observations -> ${datedPath}`);
+console.log(`[radar-import] runtime pointer updated -> ${latestPath}`);
 console.log(`[radar-import] source sha256 ${snapshot.sourceSha256}`);

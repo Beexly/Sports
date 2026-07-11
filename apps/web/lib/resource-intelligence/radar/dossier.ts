@@ -55,12 +55,17 @@ export function buildDossiers(
     );
     const posture = mostRestrictivePosture(sorted.map((o) => o.normalizedPosture));
     const risk = highestRisk(sorted.map((o) => o.risk));
-    // License: prefer a verified value if ANY observation carries one —
-    // otherwise keep the first non-null string (still unverified).
+    // License merge is conservative (Codex P2 on #76): ANY observation with
+    // an unverified license keeps the whole dossier unverified — one row
+    // saying MIT does not resolve another row's open license gap. The
+    // display string still prefers the best value seen.
+    const licenseUnverified = sorted.some((o) => !isLicenseVerified(o.license));
     const license =
       sorted.map((o) => o.license).find((l) => isLicenseVerified(l)) ??
       sorted.map((o) => o.license).find((l) => l !== null) ??
       null;
+    // Policy sees the merged verification state, not the prettiest string.
+    const licenseForPolicy = licenseUnverified ? null : license;
     // Score the strongest-evidence observation (facts beat gaps): the one
     // with the most non-null numeric fields, ties broken by window order.
     const scored = sorted
@@ -70,6 +75,14 @@ export function buildDossiers(
       (max, o) => (o.observedAt > max ? o.observedAt : max),
       sorted[0]!.observedAt
     );
+    // The score's blocked flag must reflect the MERGED risk (Codex P2 on
+    // #76): a hard-capped dossier can never show a live-looking number just
+    // because its strongest-evidence row was the tame one.
+    const scoreBase = scoreObservation(scored);
+    const score = {
+      ...scoreBase,
+      blockedOverride: scoreBase.blockedOverride || risk === "BLOCKED" || risk === "CRITICAL",
+    };
 
     dossiers.push({
       normalizedRepository: repo,
@@ -79,11 +92,11 @@ export function buildDossiers(
       posture,
       risk,
       license,
-      licenseUnverified: !isLicenseVerified(license),
-      effectiveDisposition: effectiveDisposition(posture, risk, license),
+      licenseUnverified,
+      effectiveDisposition: effectiveDisposition(posture, risk, licenseForPolicy),
       whyRelevant: scored.gseMapping,
-      whyNotReady: whyNotReady(posture, risk, license, scored.sourceKind),
-      score: scoreObservation(scored),
+      whyNotReady: whyNotReady(posture, risk, licenseForPolicy, scored.sourceKind),
+      score,
       stale: daysBetween(newestObservedAt, asOfDate) > RADAR_FRESHNESS_DAYS,
       sourceKinds: [...new Set(sorted.map((o) => o.sourceKind))],
     });

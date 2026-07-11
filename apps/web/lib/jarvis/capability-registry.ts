@@ -453,7 +453,11 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "record the first governed memory write, then promote per the JARVIS_MEMORY_PROTOCOL.md " +
       "promotion criteria. Never promote on code existence alone.",
     requiresHumanApproval: true,
-    canAnswer: true,
+    // canAnswer stays false until recall is live-backed: counting a
+    // not-activated store among "answers from live data" would overstate
+    // coverage in answerWhatCanRun. Flips true with the first confirmed
+    // production write (owner action).
+    canAnswer: false,
     canRecommend: false,
     canExecute: false,
   },

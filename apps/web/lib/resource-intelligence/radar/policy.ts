@@ -33,22 +33,52 @@ const POSTURE_TO_DISPOSITION: Readonly<Record<RadarPosture, ResourceDisposition>
   REJECT: "rejected_noise",
 };
 
-/** License strings that count as verified. "VERIFY"/null/"N/A" do not. */
+/**
+ * Positive allowlist of accepted license identifiers (SPDX-ish, uppercased).
+ * Codex P2 on #76: a negative-list would let non-evidence values like
+ * "NOASSERTION", "TBD", or "Proprietary" count as verified. Anything not on
+ * this list — including "VERIFY", "CUSTOM", null — is unverified until the
+ * importer of a future snapshot carries a confirmed identifier.
+ */
+const VERIFIED_LICENSES: ReadonlySet<string> = new Set([
+  "MIT",
+  "APACHE-2.0",
+  "BSD-2-CLAUSE",
+  "BSD-3-CLAUSE",
+  "ISC",
+  "MPL-2.0",
+  "GPL-2.0",
+  "GPL-3.0",
+  "LGPL-2.1",
+  "LGPL-3.0",
+  "AGPL-3.0",
+  "AGPL-3.0-OR-COMMERCIAL",
+  "CC0",
+  "CC0-1.0",
+  "UNLICENSE",
+]);
+
+/** True only for identifiers on the positive allowlist. */
 export function isLicenseVerified(license: string | null): boolean {
   if (license === null) return false;
-  const l = license.trim().toUpperCase();
-  return l !== "" && l !== "VERIFY" && l !== "N/A" && l !== "UNKNOWN" && l !== "CUSTOM";
+  return VERIFIED_LICENSES.has(license.trim().toUpperCase());
 }
+
+const KNOWN_RISKS: readonly RadarRisk[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL", "BLOCKED"];
 
 /**
  * The one function every consumer must go through. Applies the caps in
  * order; the result is what the rest of the system treats as truth.
+ * FAIL-CLOSED on unknown risk labels: a value outside the closed set (e.g.
+ * a hand-edited fixture's "BLOCKED_RIGHTS") quarantines rather than slipping
+ * past the string-exact caps.
  */
 export function effectiveDisposition(
   posture: RadarPosture,
   risk: RadarRisk,
   license: string | null
 ): ResourceDisposition {
+  if (!KNOWN_RISKS.includes(risk)) return "quarantine";
   if (risk === "BLOCKED") return "quarantine";
   const base = POSTURE_TO_DISPOSITION[posture];
   if (base === "quarantine" || base === "rejected_noise") return base;

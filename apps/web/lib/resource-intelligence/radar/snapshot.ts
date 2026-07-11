@@ -8,12 +8,29 @@
  * pipeline dedupes into dossiers but never discards an observation.
  */
 
-import type { RadarSnapshot, RepoRadarObservation, RadarWindow } from "./types";
-import snapshot20260711 from "./generated/2026-07-11.json";
+import type { RadarSnapshot, RepoRadarObservation, RadarWindow, RadarRisk, RadarPosture, RadarSourceKind } from "./types";
+// latest.json is the runtime pointer: the import script rewrites it on every
+// import (alongside an immutable dated copy), so a new founder snapshot goes
+// live without editing this file. (Codex P2 on #76.)
+import latestSnapshot from "./generated/latest.json";
 
 const WINDOWS: readonly RadarWindow[] = ["daily", "weekly", "monthly", "targeted"];
+const RISKS: readonly RadarRisk[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL", "BLOCKED"];
+const POSTURES: readonly RadarPosture[] = [
+  "OBSERVE", "REFERENCE_ONLY", "ADOPT_PATTERNS", "PROTOTYPE",
+  "PILOT", "OWNER_REVIEW", "QUARANTINE", "REJECT",
+];
+const SOURCE_KINDS: readonly RadarSourceKind[] = [
+  "GITHUB_TRENDING", "PRIMARY_REPO", "OWNER_SCREENSHOT", "MANUAL",
+];
 
-/** Runtime validation — the fixture is data, so it gets checked like data. */
+/**
+ * Runtime validation — the fixture is data, so it gets checked like data.
+ * Enum fields are checked against the closed sets: the JSON cast cannot
+ * catch a hand-edited "BLOCKED_RIGHTS", and the policy caps exact values
+ * only, so an unknown label failing loud here is what keeps the hard caps
+ * un-skippable.
+ */
 export function validateSnapshot(s: RadarSnapshot): string[] {
   const problems: string[] = [];
   if (s.schemaVersion !== 1) problems.push(`unknown schemaVersion ${String(s.schemaVersion)}`);
@@ -23,6 +40,9 @@ export function validateSnapshot(s: RadarSnapshot): string[] {
   const seen = new Set<string>();
   for (const o of s.observations) {
     if (!WINDOWS.includes(o.window)) problems.push(`${o.id}: bad window`);
+    if (!RISKS.includes(o.risk)) problems.push(`${o.id}: unknown risk "${o.risk}"`);
+    if (!POSTURES.includes(o.normalizedPosture)) problems.push(`${o.id}: unknown posture "${o.normalizedPosture}"`);
+    if (!SOURCE_KINDS.includes(o.sourceKind)) problems.push(`${o.id}: unknown sourceKind "${o.sourceKind}"`);
     if (o.id !== `${o.window}:${o.normalizedRepository}`) problems.push(`${o.id}: id mismatch`);
     if (seen.has(o.id)) problems.push(`${o.id}: duplicate observation id`);
     seen.add(o.id);
@@ -32,7 +52,7 @@ export function validateSnapshot(s: RadarSnapshot): string[] {
 }
 
 /** The current committed snapshot (latest import wins; history stays in git). */
-export const RADAR_SNAPSHOT: RadarSnapshot = snapshot20260711 as RadarSnapshot;
+export const RADAR_SNAPSHOT: RadarSnapshot = latestSnapshot as RadarSnapshot;
 
 export function getObservations(): readonly RepoRadarObservation[] {
   return RADAR_SNAPSHOT.observations;

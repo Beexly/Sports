@@ -54,7 +54,7 @@ Ordered by wiring depth. A capability holds exactly one status:
 
 - INTELLIGENCE_CORE: 3 · PLATFORM_OPERATIONS: 3 · GROWTH_REVENUE: 3 · AI_INFRASTRUCTURE: 7
 
-Other registry-wide facts: `canExecute` is `false` for all 16 capabilities. 9 capabilities `canAnswer` from live data. 15 of 16 require human approval (`requiresHumanApproval`); only `ai-ops-token-discipline` does not, because it has no externally visible output to approve. Memory now requires approval: every memory promotion passes the owner review queue at `/cockpit/memory`.
+Other registry-wide facts: `canExecute` is `false` for all 16 capabilities. 8 capabilities `canAnswer` from live data — memory stays `canAnswer: false` until recall is live-backed by a confirmed production write, so live-answer coverage is never overstated. 15 of 16 require human approval (`requiresHumanApproval`); only `ai-ops-token-discipline` does not, because it has no externally visible output to approve. Memory requires approval: every memory promotion passes the owner review queue at `/cockpit/memory`.
 
 ## Wiring Score
 
