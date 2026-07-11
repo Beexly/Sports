@@ -82,3 +82,42 @@ guardrail scanners green. Full-suite result recorded in 12_FINAL_REPORT.md
 when PR A opens.
 
 **Rollback:** revert the Workstream B commit; delete the flag from any env.
+
+## 2026-07-11 — PR A opened
+
+- PR #76 (https://github.com/Beexly/Sports/pull/76), head `06ffa38c`,
+  base `main`. Opened for owner review — NOT auto-merged per program rules.
+- Babysit loop armed: CI + review sweeps continue; merge stays owner-gated.
+
+## 2026-07-11 — Workstream C: Agent Foundry (complete)
+
+- Branch `claude/frontier-agent-foundry-2026-07-11` (stacked on PR A head).
+- `apps/web/lib/agent-foundry/`: manifest contract, sealed content hashes,
+  council-derived authority (never duplicated), deterministic 15-family
+  baseline scanner (findings only, never approves), external-scanner adapter
+  boundary with honest absence, 3 first-party DRAFT manifests, canExecute
+  structurally false.
+- Surfaces: /cockpit/agent-foundry + admin API behind AGENT_FOUNDRY_ENABLED
+  (default off); sidebar entry added (nav-coverage pin).
+- Fix during build: scanner \b boundary missed snake_case verbs
+  ("publish_post") — separators normalized before the verb check; test
+  caught it before commit.
+- Tests 26/26; typecheck, lint green.
+
+## 2026-07-11 — Workstream D: AI Setup Assurance (complete)
+
+- `apps/web/lib/assurance/`: categories/weights (sum 100, pinned), honest
+  per-category coverage with not-inspected lists, findings derived from live
+  registry + file evidence (nothing hard-coded that code disproves), health
+  scoring with risk×confidence penalties, top recommendation by
+  risk-adjusted leverage.
+- Verdict for a pure repo checkout: INCOMPLETE (weighted coverage ~0.76 <
+  threshold 0.80, deliberately set above what a checkout can reach). The
+  grade unlocks via evidence collectors, never threshold relaxation.
+- Current open findings (all derived, not asserted): memory activation
+  pending (owner B2), no model router (Workstream E ships shadow),
+  no external skill scanner, tool bus not wired, provider-specific
+  telemetry, doc-drift pins partial, foundry unused (acknowledged).
+- Surfaces: /cockpit/assurance + admin API behind AI_SETUP_ASSURANCE_ENABLED
+  (default off); sidebar entry added.
+- Tests: assurance suite green; typecheck, lint, scanners green.
