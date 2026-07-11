@@ -31,7 +31,7 @@ Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack
 
 1. T-daily-slate: recentRecord hardcoded {0,0,0} → board renders fabricated "0W/0L" (withhold, never fabricate). **DONE — PR #85.**
 2. M-F9: VOID path for cancelled/PPD games + catch-up settle window. **DONE — PR #86.** (Merge-order: if #83 lands first, thread game.awayTeamName into settleCompletedGame's calculatePickResult call — one line, value in scope.)
-3. T-picks-outage: /api/picks DB outage dressed as bootstrap gating (states doctrine).
+3. T-picks-outage: /api/picks DB outage dressed as bootstrap gating (states doctrine). **DONE — branch claude/hotfix-picks-outage-state pushed (also fixes /api/clv); PR opens after the verify-workflow verdict (consumer sweep).**
 4. M-F5/F6 (Stripe event ordering; refresh/settle TOCTOU), M-F7 (close staleness bound; take:80 truncation).
 5. M-F10 fantasy-upsell hardcoded price; frontier-module G-findings on their PR branches (G-1 auth defense-in-depth first).
 6. O-3.x remainder: concatenation joins, cross-line bans, confusables map.
