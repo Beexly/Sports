@@ -44,14 +44,118 @@ type VerifyResponse = {
  * matches) — the failure case is exactly when independent recompute matters
  * most. Renders nothing until the endpoint returns the raw material.
  */
+/**
+ * The zero-server-trust moment: recompute the receipt hash IN THE VISITOR'S
+ * BROWSER via WebCrypto. The server's "verified" verdict, the displayed
+ * payload, and the frozen hash are all inputs the visitor can now check
+ * against each other locally — a MATCH here means their own machine derived
+ * the same digest from the same committed fields. No fetch, no trust.
+ */
+function BrowserRecompute({
+  preimage,
+  contentHash,
+  context = "verified",
+}: {
+  preimage: string;
+  contentHash: string;
+  /**
+   * Which server verdict this recompute sits under. Under a failed verdict a
+   * local MATCH must not read as "the record is healthy": the server hashes
+   * the same string, so MATCH there means the committed payload is intact
+   * and the failure is column drift &mdash; the stored row no longer agrees
+   * with what was sealed. The copy has to say that, never contradict the red
+   * verdict above it.
+   */
+  context?: "verified" | "failure";
+}) {
+  const [verdict, setVerdict] = useState<"idle" | "working" | "match" | "mismatch" | "unsupported">(
+    "idle",
+  );
+  const [computed, setComputed] = useState<string | null>(null);
+
+  // A new receipt (fresh paste or deep link) must start from an idle verdict.
+  // React reuses this component instance across lookups, so without the reset
+  // a previous receipt's MATCH would display for a hash that was never
+  // recomputed locally.
+  useEffect(() => {
+    setVerdict("idle");
+    setComputed(null);
+  }, [preimage, contentHash]);
+
+  const run = useCallback(async () => {
+    if (!globalThis.crypto?.subtle) {
+      setVerdict("unsupported");
+      return;
+    }
+    setVerdict("working");
+    const digest = await globalThis.crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(preimage),
+    );
+    const hex = Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    setComputed(hex);
+    setVerdict(hex === contentHash.toLowerCase() ? "match" : "mismatch");
+  }, [preimage, contentHash]);
+
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => void run()}
+        disabled={verdict === "working"}
+        className="rounded-lg border border-orbital-cyan/40 px-3 py-2 text-xs font-semibold text-orbital-cyan hover:bg-orbital-cyan/10 disabled:opacity-60"
+      >
+        {verdict === "working" ? "Computing…" : "Recompute in this browser"}
+      </button>
+      {verdict === "match" && context === "verified" && (
+        <p className="mt-2 text-xs font-semibold text-verify" role="status">
+          MATCH. Your browser computed{" "}
+          <code className="break-all font-mono text-[10px]">{computed?.slice(0, 16)}…</code>{" "}
+          from the committed fields, identical to the frozen receipt hash. No
+          part of that computation touched our servers.
+        </p>
+      )}
+      {verdict === "match" && context === "failure" && (
+        <p className="mt-2 text-xs font-semibold text-caution" role="status">
+          Digest match, verdict unchanged. Your browser computed{" "}
+          <code className="break-all font-mono text-[10px]">{computed?.slice(0, 16)}…</code>{" "}
+          from the committed string, so the frozen commitment itself is
+          intact. The failure above means the record&apos;s stored fields no
+          longer agree with that committed string. The break is between the
+          live record and what was sealed, and this local check does not
+          clear it.
+        </p>
+      )}
+      {verdict === "mismatch" && (
+        <p className="mt-2 text-xs font-semibold text-alert" role="status">
+          MISMATCH. Your browser&apos;s digest ({computed?.slice(0, 16)}…) does
+          not equal the displayed receipt hash. That means the displayed
+          payload and hash do not belong together. Take a screenshot; this is
+          exactly the state this system exists to expose.
+        </p>
+      )}
+      {verdict === "unsupported" && (
+        <p className="mt-2 text-xs text-ion-2" role="status">
+          This browser does not expose WebCrypto. You can still copy the
+          string above into any SHA-256 tool.
+        </p>
+      )}
+    </div>
+  );
+}
+
 function RecomputePanel({
   pickId,
   payload,
   contentHash,
+  context = "verified",
 }: {
   pickId?: string;
   payload?: string;
   contentHash?: string;
+  context?: "verified" | "failure";
 }) {
   if (!pickId || !payload || !contentHash) return null;
   const preimage = `leaf:${pickId}:${payload}`;
@@ -81,6 +185,7 @@ function RecomputePanel({
           {contentHash}
         </code>
       </div>
+      <BrowserRecompute preimage={preimage} contentHash={contentHash} context={context} />
     </details>
   );
 }
@@ -121,7 +226,21 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
     setState("loading");
     try {
       const r = await fetch(`/api/verify?hash=${trimmed}`);
-      setRes((await r.json()) as VerifyResponse);
+      const body = (await r.json().catch(() => null)) as VerifyResponse | null;
+      if (!r.ok || body === null) {
+        // A server fault must never wear the not-found copy — telling a user
+        // to "check for a copy/paste miss" over our 5xx blames them for our
+        // outage. The endpoint's own error text (e.g. the 503 "not a verdict"
+        // line) wins when present.
+        setRes({
+          found: false,
+          error:
+            body?.error ??
+            `The verifier hit an error (HTTP ${r.status}). This is not a verdict on the receipt; try again shortly.`,
+        });
+      } else {
+        setRes(body);
+      }
     } catch {
       setRes({ found: false, error: "Could not reach the verifier. Try again." });
     }
@@ -191,6 +310,7 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                 pickId={res.pickId}
                 payload={res.payload}
                 contentHash={res.contentHash}
+                context="failure"
               />
             </div>
           ) : res.sealed ? (
@@ -201,11 +321,11 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
               <dl className="mt-3 grid gap-2 text-sm">
                 <div className="flex justify-between gap-4">
                   <dt className="text-ion-2">Commitment frozen</dt>
-                  <dd className="font-mono text-ion-white">{res.frozenAt}</dd>
+                  <dd className="break-all text-right font-mono text-ion-white">{res.frozenAt}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-ion-2">Model version</dt>
-                  <dd className="font-mono text-ion-white">{res.modelVersion}</dd>
+                  <dd className="break-all text-right font-mono text-ion-white">{res.modelVersion}</dd>
                 </div>
               </dl>
               {res.note && <p className="mt-3 text-xs leading-5 text-ion-2">{res.note}</p>}
@@ -227,36 +347,36 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                 )}
                 <div className="flex justify-between gap-4">
                   <dt className="text-ion-2">Frozen (pre-kickoff)</dt>
-                  <dd className="font-mono text-ion-white">{res.frozenAt}</dd>
+                  <dd className="break-all text-right font-mono text-ion-white">{res.frozenAt}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-ion-2">Result</dt>
-                  <dd className="font-mono text-ion-white">{res.result}</dd>
+                  <dd className="break-all text-right font-mono text-ion-white">{res.result}</dd>
                 </div>
                 {res.committed && (
                   <>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Committed line / entry price</dt>
-                      <dd className="font-mono text-ion-white">
+                      <dd className="break-all text-right font-mono text-ion-white">
                         {res.committed.line} at {res.committed.entryOdds > 0 ? "+" : ""}
                         {res.committed.entryOdds}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Market fair probability</dt>
-                      <dd className="font-mono text-ion-white">
+                      <dd className="break-all text-right font-mono text-ion-white">
                         {(res.committed.marketFairProb * 100).toFixed(1)}%
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Committed confidence / edge</dt>
-                      <dd className="font-mono text-ion-white">
+                      <dd className="break-all text-right font-mono text-ion-white">
                         {res.committed.confidence} / {res.committed.edgeScore}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Calibrated model probability</dt>
-                      <dd className="font-mono text-ion-white">
+                      <dd className="break-all text-right font-mono text-ion-white">
                         {res.committed.modelProb == null
                           ? "none claimed (honest)"
                           : `${(res.committed.modelProb * 100).toFixed(1)}%`}

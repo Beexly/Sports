@@ -115,7 +115,7 @@ export default function AccountabilityPage() {
           <AccountabilityCard
             eyebrow="Calibration report"
             title="Honest Band"
-            body="The calibration report includes every settled canonical pick. Bootstrap-era picks are excluded by design: they do not get to inflate the record. Win rate stays gated until enough settled history exists to publish a number that is honest."
+            body="The calibration report counts every finished pick from the live engine, wins and losses alike. Early warm-up picks are excluded by design: they do not get to inflate the record. Win rate stays gated until enough settled history exists to publish a number that is honest."
             href="/performance"
             linkLabel="View Calibration Report"
           />
@@ -139,7 +139,7 @@ export default function AccountabilityPage() {
           <AccountabilityCard
             eyebrow="Tamper-evident record"
             title="Proof of Record"
-            body="Every settled pick carries a Merkle leaf hash stamped at generation time. Change a pick after the fact and the hash breaks. The Merkle root over all settled picks is published publicly so anyone can re-derive it and verify the record."
+            body="Every settled pick gets a digital fingerprint (a hash) the moment it is written. Change a pick after the fact and its fingerprint stops matching. One published master fingerprint covers the whole record, so anyone can re-run the math and confirm nothing was changed."
             href="/proof"
             linkLabel="View Proof of Record"
           />

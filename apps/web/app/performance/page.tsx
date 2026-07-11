@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -22,12 +23,12 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 export const metadata: Metadata = {
   title: "Calibration Report: Settled-Pick Audit Trail",
   description:
-    "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
+    "Every finished pick from the live engine is counted, wins and losses alike. Early warm-up picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
   alternates: { canonical: "/performance" },
   openGraph: {
     title: "Calibration Report: Settled-Pick Audit Trail",
     description:
-      "Every settled canonical pick is included. Bootstrap-era picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
+      "Every finished pick from the live engine is counted, wins and losses alike. Early warm-up picks are excluded by design. The public win-rate stays gated until enough settled history exists to publish a number that's honest.",
     url: "/performance",
   },
 };
@@ -108,7 +109,7 @@ function BootstrapShell({ children }: { children: React.ReactNode }) {
       <Nav />
       <main id="main-content" className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <span className="sr-only">Performance</span>
+          <h1 className="sr-only">Performance</h1>
           {children}
         </div>
       </main>
@@ -144,7 +145,7 @@ export default async function PerformancePage() {
                   sample
                 </span>
               )}
-              . Win-rate aggregation is gated until canonical history accumulates.
+              . The win rate stays gated until enough finished picks accumulate.
             </p>
             <Link
               href="/picks"
@@ -236,9 +237,9 @@ export default async function PerformancePage() {
               Calibration Report
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-ion-1">
-              Every settled canonical pick is included. Bootstrap-era picks
-              are excluded by design. They don&apos;t get to inflate the
-              record.
+              Every finished pick from the live engine is counted, wins and
+              losses alike. Picks from our early warm-up period are excluded
+              by design. They don&apos;t get to inflate the record.
             </p>
             <p className="mt-3 text-xs text-ion-3">
               Past performance does not guarantee future results.
@@ -294,7 +295,7 @@ export default async function PerformancePage() {
                       <span className={NUMERIC_TEXT_CLASS}>
                         {formatCount(overall.totalPicks)}
                       </span>{" "}
-                      canonical picks
+                      official live-engine picks
                     </dd>
                   </div>
                   <div>
@@ -324,7 +325,16 @@ export default async function PerformancePage() {
                   <div className="grid grid-cols-2 divide-x divide-mineral/60 sm:grid-cols-4">
                     <OverallStat
                       label="Win Rate"
-                      value={formatPercent(publishedOverallWinRate)}
+                      value={
+                        publishedOverallWinRate !== null ? (
+                          formatPercent(publishedOverallWinRate)
+                        ) : (
+                          <WithheldStat
+                            settled={overall.totalPicks}
+                            floor={minSettledFloor}
+                          />
+                        )
+                      }
                       accent={
                         publishedOverallWinRate !== null
                           ? winRateToneClass(publishedOverallWinRate)
@@ -354,7 +364,7 @@ export default async function PerformancePage() {
                       <span className={NUMERIC_TEXT_CLASS}>
                         {formatCount(overall.totalPicks)}
                       </span>{" "}
-                      canonical settled picks. Win rate excludes pushes.
+                      finished live-engine picks. Win rate excludes pushes.
                     </p>
                   </div>
                 </div>
@@ -499,6 +509,35 @@ export default async function PerformancePage() {
 
 // Sub-components
 
+/**
+ * The deliberately-withheld headline stat. A bare dash at text-5xl reads as
+ * BROKEN to a visitor; this states plainly that the number is withheld on
+ * purpose until the sample clears the honesty floor, and shows the live
+ * progress toward it. Same "opens at N settled" framing as ClvGatedState.
+ */
+function WithheldStat({ settled, floor }: { settled: number; floor: number }) {
+  return (
+    <span
+      className="flex flex-col items-center gap-1"
+      title={`Withheld on purpose: a win rate on fewer than ${floor} settled picks is noise, not signal.`}
+    >
+      <span className="inline-flex items-center gap-1.5 text-2xl font-bold text-ion-2">
+        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path
+            fillRule="evenodd"
+            d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+            clipRule="evenodd"
+          />
+        </svg>
+        Withheld
+      </span>
+      <span className={`text-[11px] font-medium normal-case tracking-normal text-ion-3 ${NUMERIC_TEXT_CLASS}`}>
+        opens at {floor} settled · {settled} so far
+      </span>
+    </span>
+  );
+}
+
 function OverallStat({
   label,
   value,
@@ -506,7 +545,7 @@ function OverallStat({
   large,
 }: {
   label: string;
-  value: string;
+  value: ReactNode;
   accent: string;
   large?: boolean;
 }) {
@@ -589,7 +628,7 @@ function SportCard({
 
       <p className="mt-3 text-center text-xs text-ion-3">
         <span className={NUMERIC_TEXT_CLASS}>{formatCount(totalPicks)}</span>{" "}
-        canonical picks
+        official live-engine picks
         {band !== null && (
           <>
             {" · "}

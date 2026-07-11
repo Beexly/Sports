@@ -88,10 +88,15 @@ function clvClass(verdict: string | null): string {
 
 export default async function ProofOfRecordPage() {
   let board: Awaited<ReturnType<typeof loadProofOfRecord>>;
+  // An outage must NOT read as "no record was ever committed" on an honesty
+  // surface (same doctrine as /api/verify/slate: outage -> unavailable,
+  // absence -> honest empty state). The flag keeps the two states apart.
+  let ledgerUnreachable = false;
   try {
     board = await loadProofOfRecord();
   } catch {
     // Surface a safe error state rather than throwing to Next.js error boundary.
+    ledgerUnreachable = true;
     board = {
       generatedAt: new Date().toISOString(),
       picks: [],
@@ -100,7 +105,12 @@ export default async function ProofOfRecordPage() {
     };
   }
 
-  const isEmpty = board.picks.length === 0;
+  const isEmpty = board.picks.length === 0 && !ledgerUnreachable;
+  // Ledger-bearing sections (root banner, table, funnel) key off rows actually
+  // present, NOT !isEmpty: during an outage isEmpty is false, and gating on it
+  // would render a "0 settled picks" stamp, an empty table shell, and the paid
+  // funnel alongside the outage card.
+  const hasLedger = board.picks.length > 0;
 
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-carbon">
@@ -119,11 +129,12 @@ export default async function ProofOfRecordPage() {
               The record can&apos;t be rewritten.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              Every pick is hashed at generation time using a Merkle tree,
-              the same tamper-evident commitment scheme used in public proof-of-
-              liabilities systems. Once settled, the leaf hash is fixed. Edit
-              the pick and the hash changes. Anyone with the raw records can
-              re-derive the root and spot the difference.
+              The moment a pick is written, it gets a digital fingerprint (a
+              hash). All the fingerprints are folded into one published master
+              fingerprint, using the same tamper-evident math public audit
+              systems use. Edit any pick afterward and its fingerprint stops
+              matching. Anyone with the raw records can recompute it and catch
+              the difference.
             </p>
             <p className="mt-3 text-sm text-ion-2">
               This is not a promise. It is a mechanism. The math enforces it.
@@ -169,7 +180,7 @@ export default async function ProofOfRecordPage() {
           </section>
 
           {/* ── Merkle root banner ── */}
-          {!isEmpty && board.merkleRoot && (
+          {hasLedger && board.merkleRoot && (
             <section
               data-testid="proof-root-banner"
               className="mt-6 rounded-2xl border border-titanium bg-eclipse/60 px-6 py-5"
@@ -184,7 +195,7 @@ export default async function ProofOfRecordPage() {
                     <span className={NUMERIC_TEXT_CLASS}>
                       {formatCount(board.totalSettled)}
                     </span>{" "}
-                    settled canonical picks · computed{" "}
+                    settled live-engine picks · computed{" "}
                     {new Date(board.generatedAt).toUTCString()}
                   </p>
                 </div>
@@ -203,10 +214,29 @@ export default async function ProofOfRecordPage() {
             className={`mt-4 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}
           >
             Board generated {new Date(board.generatedAt).toUTCString()}
-            {!isEmpty && (
+            {hasLedger && (
               <> · {formatCount(board.totalSettled)} settled picks in the ledger</>
             )}
           </p>
+
+          {/* ── Outage state: distinct from empty. The record exists; we
+                 just can't reach it right now. Saying "no picks exist yet"
+                 here would be false. ── */}
+          {ledgerUnreachable && (
+            <section
+              data-testid="proof-unreachable-state"
+              className="mt-10 rounded-2xl border border-caution/40 bg-caution/[0.06] px-6 py-10 text-center"
+            >
+              <p className="text-base font-semibold text-ion-white">
+                The ledger is temporarily unreachable.
+              </p>
+              <p className="mt-3 text-sm leading-6 text-ion-1">
+                This is a connection problem, not a verdict on the record. The
+                committed roots and receipts are unchanged; refresh in a moment
+                and the full settled ledger will be back.
+              </p>
+            </section>
+          )}
 
           {/* ── Empty state ── */}
           {isEmpty && (
@@ -218,7 +248,7 @@ export default async function ProofOfRecordPage() {
                 The record starts when the first pick settles.
               </p>
               <p className="mt-3 text-sm leading-6 text-ion-1">
-                No canonical settled picks exist yet. This page will populate
+                No finished live-engine picks exist yet. This page will populate
                 automatically once picks move from pending to settled. Every
                 outcome, win or loss, appears here with its hash and trail.
                 Nothing is hidden once it settles.
@@ -237,7 +267,7 @@ export default async function ProofOfRecordPage() {
           )}
 
           {/* ── Pick ledger ── */}
-          {!isEmpty && (
+          {hasLedger && (
             <section className="mt-8">
               <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral px-6 py-4">
@@ -304,10 +334,10 @@ export default async function ProofOfRecordPage() {
             </ul>
           </section>
 
-          {/* ── Funnel close: the record IS the product demo. Gated on a
-                 non-empty ledger — selling against an empty (or DB-failed)
-                 record would contradict the empty state two sections up. ── */}
-          {!isEmpty && (
+          {/* ── Funnel close: the record IS the product demo. Gated on rows
+                 actually present — selling against an empty (or DB-failed)
+                 record would contradict the states two sections up. ── */}
+          {hasLedger && (
             <section
               data-testid="proof-funnel-close"
               className="mt-10 rounded-2xl border border-plasma/30 bg-plasma/[0.06] px-6 py-8"

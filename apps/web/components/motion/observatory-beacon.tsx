@@ -44,6 +44,10 @@ export function ObservatoryBeacon() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // While hidden it must be GONE, not transparent: an opacity-0 button that
+  // keeps keyboard focus and (on lg) pointer events is an invisible tab stop.
+  if (!visible) return null;
+
   return (
     <button
       type="button"

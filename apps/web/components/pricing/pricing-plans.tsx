@@ -179,7 +179,7 @@ function ToggleButton({
       onClick={onClick}
       aria-pressed={active}
       className={[
-        "rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
+        "min-h-11 rounded-full px-5 py-1.5 text-sm font-semibold transition-colors",
         active ? "bg-brand-600 text-white" : "text-ion-2 hover:text-ion-1",
       ].join(" ")}
     >

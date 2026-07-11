@@ -34,8 +34,13 @@ const ROUTES: ReadonlyArray<{
   { path: "/faq", priority: 0.5, changeFrequency: "monthly" },
   { path: "/responsible-play", priority: 0.5, changeFrequency: "monthly" },
   { path: "/vs/tout-services", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/how-to-verify-a-record", priority: 0.7, changeFrequency: "monthly" },
   { path: "/accountability", priority: 0.7, changeFrequency: "weekly" },
   { path: "/proof", priority: 0.7, changeFrequency: "daily" },
+  { path: "/engine", priority: 0.7, changeFrequency: "daily" },
+  { path: "/verify", priority: 0.6, changeFrequency: "daily" },
+  { path: "/clv", priority: 0.7, changeFrequency: "daily" },
+  { path: "/calibration", priority: 0.7, changeFrequency: "weekly" },
   { path: "/fable", priority: 0.6, changeFrequency: "weekly" },
   { path: "/changelog", priority: 0.5, changeFrequency: "weekly" },
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
@@ -115,15 +120,16 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
     process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
-  const now = new Date();
   const [journalEntries, previewRoutes] = await Promise.all([
     loadPublicJournalEntries(),
     loadPreviewGames(),
   ]);
 
+  // No lastModified on static routes: stamping them with request time claims
+  // every page changed today, which teaches crawlers the field is noise.
+  // Real change dates stay on journal/preview entries below.
   const staticRoutes = ROUTES.map(({ path, priority, changeFrequency }) => ({
     url: `${baseUrl}${path}`,
-    lastModified: now,
     changeFrequency,
     priority,
   }));

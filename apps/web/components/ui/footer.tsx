@@ -15,11 +15,16 @@ const PRODUCT_LINKS = [
   { label: "Start-Sit Helper", href: "/fantasy/lineup" },
   { label: "Contests", href: "/fantasy/contests" },
   { label: "The Beat", href: "/the-beat" },
+  { label: "Newsletter", href: "/newsletter" },
+  { label: "Podcast", href: "/podcast" },
   { label: "The Studio", href: "/fantasy/studio" },
   { label: "The Academy", href: "/academy" },
 ] as const;
 
 const COMPANY_LINKS = [
+  { label: "The Sealed Engine", href: "/engine" },
+  { label: "Proof of Record", href: "/proof" },
+  { label: "Verify a Receipt", href: "/verify" },
   { label: "Accountability", href: "/accountability" },
   { label: "FABLE Evidence Lab", href: "/fable" },
   { label: "Receipts · Calibration", href: "/performance" },
@@ -45,6 +50,7 @@ const DATA_LINKS = [
   { label: "MLB stats", href: "/mlb" },
   { label: "NHL stats", href: "/nhl" },
   { label: "NFL weather", href: "/weather" },
+  { label: "NFL stat intelligence", href: "/stats" },
   { label: "How we source data", href: "/data" },
 ] as const;
 
@@ -82,7 +88,7 @@ export function Footer() {
                 Set limits before emotion enters.
               </strong>
             </p>
-            <p className="mt-4 text-xs text-ink-500">
+            <p className="mt-4 text-xs text-ion-3">
               {BRAND_NAME} is a {GSN_NAME} production.
             </p>
           </div>

@@ -108,7 +108,7 @@ describe("PerformanceBootstrapState — gate-closed render", () => {
 });
 
 describe("PerformanceBootstrapState — gate-open-but-empty render", () => {
-  it("uses 'No canonical performance data yet' wording, not 'disabled'", () => {
+  it("uses 'No official record yet' wording, not 'disabled'", () => {
     render(
       <PerformanceBootstrapState
         gateEnabled
@@ -116,7 +116,7 @@ describe("PerformanceBootstrapState — gate-open-but-empty render", () => {
       />
     );
     expect(screen.getByTestId("bootstrap-status-label").textContent).toMatch(
-      /No canonical performance data yet/i
+      /No official record yet/i
     );
   });
 });

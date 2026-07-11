@@ -113,7 +113,9 @@ export const metadata: Metadata = {
     title: BRAND_META.defaultTitle,
     description: BRAND_TAGLINE,
     siteName: BRAND_NAME,
-    url: SITE_URL,
+    // No url here on purpose: children inherit this whole object, and a
+    // hardcoded og:url would stamp every page's share card with the homepage
+    // URL. metadataBase + per-page canonicals resolve og:url correctly.
     images: [
       {
         url: "/opengraph-image",

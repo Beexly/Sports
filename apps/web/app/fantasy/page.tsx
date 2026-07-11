@@ -107,6 +107,9 @@ export default async function FantasyHubPage({
                 <Link href="/fantasy/connect" className="btn btn-primary">
                   Connect your league
                 </Link>
+                <Link href="/launch" className="btn btn-ghost">
+                  Founding launch
+                </Link>
                 <Link href="/optimizer" className="btn btn-ghost">
                   Open the Optimizer
                 </Link>

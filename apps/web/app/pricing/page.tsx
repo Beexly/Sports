@@ -131,7 +131,7 @@ const PLANS: PlanView[] = [
     annualSavingsPct: annualSavingsPct(phase.pro),
     annualMonthly: annualMonthlyEquivalent(phase.pro),
     description: "The full intelligence layer: every signal, the confidence rating, the factor trail, the Trend Lab, the Parlay MRI.",
-    badge: "Where most start",
+    badge: "Recommended",
     cta: "Subscribe to Pro",
     features: [...PRO_FEATURES],
   },
@@ -174,7 +174,7 @@ const COMPARISON_FEATURES = [
 // this — dailyPickLimit:2, canSeeConfidence:false); the full board + confidence
 // unlock with Pro. Cells must never advertise more than the server grants.
 const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | boolean)[]> = {
-  FREE: ["2/day teaser", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true, "Trial"],
+  FREE: ["2/day teaser", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true, "Preview"],
   FANTASY: ["2/day teaser", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true, true],
   PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
   ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
@@ -195,11 +195,11 @@ const FAQ = [
   },
   {
     q: "How is this different from a tout service?",
-    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge publishes every signal's full factor trail and holds back a public win-rate until enough canonical settled history exists to support one honestly.",
+    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge keeps every finished pick in the public record, wins and losses alike, and holds back a public win-rate until enough settled history exists to support one honestly. See the full comparison at /vs/tout-services.",
   },
   {
     q: "Why is the Performance page empty right now?",
-    a: "The Calibration Report stays gated until enough canonical settled signals have accumulated to make the published number statistically defensible. Patience over noise. That's the standard.",
+    a: "The Calibration Report stays gated until enough finished, graded picks have accumulated to make the published number statistically defensible. Patience over noise. That's the standard.",
   },
   {
     q: "Which sports are covered?",
@@ -217,6 +217,25 @@ const faqJsonLd = {
   })),
 };
 
+// Product/Offer structured data: real phase prices only (single source of
+// truth: pricing-phases.ts). Free tier omitted (no offer); prices in USD.
+const productJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: `${BRAND_NAME} Membership`,
+  description:
+    "Sports decision intelligence: a free daily sample, with the full board, confidence ratings, factor trails, and alerts on the paid tiers.",
+  brand: { "@type": "Brand", name: BRAND_NAME },
+  offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
+    "@type": "Offer",
+    name: `${p.name} (monthly)`,
+    price: p.monthly,
+    priceCurrency: "USD",
+    url: "/pricing",
+    availability: "https://schema.org/InStock",
+  })),
+};
+
 // ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
@@ -231,6 +250,10 @@ export default function PricingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdScript(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(productJsonLd) }}
       />
 
       <main id="main-content" className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
@@ -271,12 +294,32 @@ export default function PricingPage() {
             <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
           </div>
 
+          {/* Evidence strip: inspect before you pay. The proof surfaces ARE
+              the sales pitch; they belong next to the buy buttons. */}
+          <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-ink-300">
+            Inspect before you pay:{" "}
+            <Link href="/proof" className="font-semibold text-orbital-cyan hover:text-white">
+              the sealed record
+            </Link>
+            ,{" "}
+            <Link href="/performance" className="font-semibold text-orbital-cyan hover:text-white">
+              the calibration report
+            </Link>
+            , and{" "}
+            <Link href="/engine" className="font-semibold text-orbital-cyan hover:text-white">
+              the engine committing live
+            </Link>
+            . Every claim on this page stands on that record.
+          </p>
+
           {/* Why each step up — the value ladder (live tiers only; hidden tiers
               like Operator are filtered out until they graduate to live). */}
           <section className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Why each step up</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
               Each plan is a different job, and you can see exactly what the next tier adds before you pay for it.
+              Fantasy sits beside this ladder: it unlocks the draft and lineup suite, while the betting board keeps
+              its free daily preview.
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {VALUE_TIERS.filter((t) => t.status === "live").map((t) => (
@@ -285,6 +328,8 @@ export default function PricingPage() {
                   className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5"
                 >
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ion-3">
+                    {({ FREE: "Free", PRO: "Pro", ELITE: "Elite" } as Record<string, string>)[t.id] ?? t.id}
+                    {" · "}
                     {t.name}
                   </p>
                   <p className="mt-2 text-base font-semibold text-white">{t.promise}</p>
@@ -401,7 +446,7 @@ export default function PricingPage() {
           <div className="mt-20">
             <h2 className="text-center text-2xl font-bold text-white">Side by side</h2>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-titanium">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-[560px] text-sm">
                 <thead>
                   <tr className="border-b border-titanium">
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2">
@@ -462,13 +507,15 @@ export default function PricingPage() {
               <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
                 <h3 className="text-sm font-semibold text-white">How confidence works</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-300">
-                  {getFeature("confidence")?.customerExplanation}
+                  {getFeature("confidence")?.customerExplanation ??
+                    "A 0 to 100 score of how strongly the model likes a pick, calibrated against every settled result. It is an input to your judgment, not a promise."}
                 </p>
               </div>
               <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
                 <h3 className="text-sm font-semibold text-white">What No-Bet means</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-300">
-                  {getFeature("no-bet-reasoning")?.customerExplanation}
+                  {getFeature("no-bet-reasoning")?.customerExplanation ??
+                    "When the numbers do not clear our bar, the engine says so and sits out, with the reasons logged. Restraint is a feature you are paying for, not a gap."}
                 </p>
               </div>
             </div>

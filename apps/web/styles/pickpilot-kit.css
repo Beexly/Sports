@@ -1071,6 +1071,15 @@ button { font-family: inherit; cursor: pointer; }
   .hero h1 em { font-size: 78px; margin-left: 0.4ch; }
 }
 
+/* Nav collapse happens EARLIER than the general mobile styles: six door
+   links + live chip + auth need ~1080px to breathe. Between 861-1080 the
+   desktop row was cramping into overlap; the burger takes that range. */
+@media (max-width: 1080px) {
+  .nav-links,
+  .desktop-auth { display: none; }
+  .mobile-nav { display: block; }
+}
+
 @media (max-width: 860px) {
   .container { padding: 0 20px; }
   .mission-lanes { grid-template-columns: 1fr; }
@@ -1086,9 +1095,6 @@ button { font-family: inherit; cursor: pointer; }
   .brand-lockup { gap: 9px; }
   .brand-emblem { width: 34px; height: 34px; }
   .brand-wordmark-text { font-size: 15px; letter-spacing: 0.12em; }
-  .nav-links,
-  .desktop-auth { display: none; }
-  .mobile-nav { display: block; }
   .live-chip { padding: 6px 9px; letter-spacing: 0.10em; }
   .hero {
     padding: 86px 0 48px;

@@ -135,7 +135,23 @@ export async function CalibrationPanel() {
   try {
     report = await loadPublicCalibrationReport();
   } catch {
-    return null;
+    // Never vanish silently: the section heading above this panel would be
+    // left dangling over nothing, which reads as a rendering bug. Say what
+    // happened instead (outage != verdict, same doctrine as /verify).
+    return (
+      <div
+        data-testid="calibration-unreachable-state"
+        className="rounded-2xl border border-caution/40 bg-caution/[0.06] px-6 py-8 text-center"
+      >
+        <p className="text-sm font-semibold text-ion-white">
+          Calibration data is temporarily unavailable.
+        </p>
+        <p className="mt-2 text-xs leading-5 text-ion-2">
+          A connection problem, not a verdict. The graded record is unchanged;
+          refresh in a moment.
+        </p>
+      </div>
+    );
   }
   const data = report.data;
   const d = data.discrimination;

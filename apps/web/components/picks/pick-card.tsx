@@ -131,10 +131,12 @@ export function PickCard({
           >
             Confidence
           </p>
-          {canSeeConfidence && pick.confidence !== null ? (
+          {!canSeeConfidence ? (
+            <LockedValue label="Conf." />
+          ) : pick.confidence !== null ? (
             <ConfidenceBadge confidence={pick.confidence} calibrated={pick.confidenceCalibrated} />
           ) : (
-            <LockedValue label="Conf." />
+            <MissingValue />
           )}
         </div>
 
@@ -146,10 +148,12 @@ export function PickCard({
           >
             Edge Score
           </p>
-          {canSeeEdgeScore && pick.edgeScore !== null ? (
+          {!canSeeEdgeScore ? (
+            <LockedValue label="Edge" />
+          ) : pick.edgeScore !== null ? (
             <EdgeScoreBadge edgeScore={pick.edgeScore} />
           ) : (
-            <LockedValue label="Edge" />
+            <MissingValue />
           )}
         </div>
 
@@ -162,9 +166,11 @@ export function PickCard({
         </div>
       </div>
 
-      {/* Reasoning teaser / full */}
+      {/* Reasoning teaser / full — gated on the SAME flag the API gates the
+          full prose on (canSeeFactorBreakdown), so the display gate can never
+          drift from the server gate if the two flags ever diverge. */}
       <p className="text-xs leading-relaxed text-ion-1">
-        {canSeeConfidence ? pick.reasoning : pick.reasoningShort}
+        {canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort}
       </p>
 
       {/* Factor breakdown (PRO+ only) */}
@@ -196,7 +202,7 @@ export function PickCard({
       {pick.receiptHash && (
         <Link
           href={`/verify?hash=${pick.receiptHash}`}
-          className="group flex items-center gap-1.5 font-mono text-[10px] text-ion-2 transition-colors hover:text-orbital-cyan"
+          className="group flex min-h-11 items-center gap-1.5 py-2 font-mono text-[10px] text-ion-2 transition-colors hover:text-orbital-cyan"
           title="This pick was frozen into a SHA-256 receipt before kickoff. Click to verify it was never edited."
         >
           <span aria-hidden>⛓</span>
@@ -578,6 +584,23 @@ function LockedValue({ label }: { label: string }) {
       {label}
       <span className="font-semibold text-plasma/90">· Pro</span>
     </Link>
+  );
+}
+
+/**
+ * Entitled user, absent data. Distinct from LockedValue on purpose: showing a
+ * "unlocks with Pro" upsell to someone already entitled (or for the always-free
+ * Edge Index) over a value that simply wasn't captured reads as a bait, not a
+ * gate. Neutral, labeled, no link.
+ */
+function MissingValue() {
+  return (
+    <span
+      className="inline-flex min-h-11 items-center py-2 text-xs text-ion-3"
+      title="This value was not captured for this pick. Nothing is hidden; it does not exist."
+    >
+      not captured
+    </span>
   );
 }
 
