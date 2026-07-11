@@ -445,6 +445,11 @@ export async function processSport(
       });
 
       let upsertedPick: { id: string };
+      // True only when THIS run actually wrote this loop's scored payload to the
+      // Pick row (fresh create, or a conditional rewrite that matched). The
+      // immutable sidecars below must never be minted from a payload that was
+      // not published — see the sidecar gate after picksGenerated.
+      let wrotePickPayload = false;
       if (existingPick && existingPick.result !== "PENDING") {
         // Frozen — leave the settled pick exactly as graded.
         upsertedPick = { id: existingPick.id };
@@ -487,6 +492,8 @@ export async function processSport(
           console.warn(
             `${logPrefix} pick ${existingPick.id} settled mid-refresh — left frozen as graded.`
           );
+        } else {
+          wrotePickPayload = true;
         }
         upsertedPick = { id: existingPick.id };
       } else {
@@ -515,6 +522,7 @@ export async function processSport(
             },
             select: { id: true },
           });
+          wrotePickPayload = true;
         } catch (createErr) {
           if (!isUniquePickConflict(createErr)) throw createErr;
           const winner = await db.pick.findUnique({
@@ -526,6 +534,17 @@ export async function processSport(
         }
       }
       picksGenerated++;
+
+      // Sidecar gate (Codex round on M-F6): the snapshot and proof receipt are
+      // immutable (upsert with update:{}), so minting them commits THIS loop's
+      // scored payload forever. When this run did NOT write that payload to the
+      // Pick row — frozen settled pick, side-flip freeze, a mid-refresh
+      // settlement winning the conditional rewrite, or losing the create race —
+      // a mint here could record a selection/line that was never published
+      // (whenever the row's original sidecar mint had failed non-fatally).
+      // Skip: the writer of the row is the only legitimate provenance author,
+      // and a missing sidecar self-heals on the next cycle that actually writes.
+      if (!wrotePickPayload) continue;
 
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
       // Created ONCE (update:{} ensures existing snapshots are never overwritten).

@@ -310,6 +310,9 @@ describe("processSport", () => {
       expect.objectContaining({ where: { id: "pick-1", result: "PENDING" } })
     );
     expect(mocks.pickCreate).not.toHaveBeenCalled();
+    // The unapplied payload must not be committed as immutable provenance
+    // for the settled row (Codex round on M-F6).
+    expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
   });
 
   it("M-F6: adopts the winner's row untouched when a concurrent run wins the create race (P2002)", async () => {
@@ -326,14 +329,12 @@ describe("processSport", () => {
     expect(result.status).toBe("success");
     // The loser writes nothing over the winner's row…
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
-    // …and downstream (snapshot) keys off the winner's id.
-    expect(mocks.buildPickSignalSnapshot).toHaveBeenCalledWith(
-      "pick-won",
-      expect.anything(),
-      expect.anything(),
-      expect.anything(),
-      expect.anything(),
-    );
+    // …and mints NO sidecars: the loser's scored payload can differ from what
+    // the winner published, and the immutable snapshot/receipt must only ever
+    // record the writer's payload. The winner (or the next cycle that actually
+    // writes) is the provenance author (Codex round on M-F6).
+    expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
+    expect(mocks.buildPickSignalSnapshot).not.toHaveBeenCalled();
   });
 
   it("freezes a SETTLED pick — a refresh never rewrites a graded row", async () => {
@@ -347,6 +348,9 @@ describe("processSport", () => {
     expect(result.status).toBe("success");
     expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    // No sidecar mint either: the refresh's payload was never published, and
+    // the immutable snapshot/receipt must not record it (Codex round).
+    expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
   });
 
   it("freezes a PENDING pick whose SIDE flipped — published picks are never silently reversed", async () => {
@@ -365,6 +369,7 @@ describe("processSport", () => {
     expect(result.status).toBe("success");
     expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(mocks.snapshotUpsert).not.toHaveBeenCalled(); // flipped payload never becomes provenance
   });
 
   it("a line move on the SAME side still refreshes (no false flip-freeze)", async () => {
