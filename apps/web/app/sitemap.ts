@@ -119,7 +119,6 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
     process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
-  const now = new Date();
   const [journalEntries, previewRoutes] = await Promise.all([
     loadPublicJournalEntries(),
     loadPreviewGames(),
