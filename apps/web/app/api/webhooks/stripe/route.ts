@@ -98,7 +98,16 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
 
     case "customer.subscription.created":
     case "customer.subscription.updated": {
-      const subscription = event.data.object as Stripe.Subscription;
+      // NEVER sync the embedded snapshot. Stripe does not guarantee delivery
+      // order, so a delayed `updated` event can carry an OLDER subscription
+      // state (previous tier, stale past_due) and silently regress a member
+      // who has since upgraded or recovered. Re-retrieving by id makes every
+      // sync converge on Stripe's CURRENT state regardless of arrival order —
+      // the same pattern the checkout + invoice handlers already use. A
+      // retrieval failure throws → 500 → Stripe retries the event, so we fail
+      // closed instead of applying a possibly-stale snapshot.
+      const embedded = event.data.object as Stripe.Subscription;
+      const subscription = await stripe.subscriptions.retrieve(embedded.id);
       await syncSubscription(subscription);
       break;
     }

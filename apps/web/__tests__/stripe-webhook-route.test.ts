@@ -80,6 +80,22 @@ function stripeSubscription(overrides: Record<string, unknown> = {}): Record<str
   };
 }
 
+/**
+ * Arm a subscription lifecycle event AND the fresh re-retrieve the handler
+ * performs on it (M-F5: embedded snapshots are never synced directly).
+ * `retrieved` defaults to the embedded snapshot; pass a different object to
+ * simulate a stale event whose current Stripe state has moved on.
+ */
+function armSubscriptionEvent(
+  type: "customer.subscription.created" | "customer.subscription.updated",
+  sub: Record<string, unknown>,
+  id = "evt_test_1",
+  retrieved: Record<string, unknown> = sub,
+): void {
+  mocks.constructEvent.mockReturnValue(stripeEvent(type, sub, id));
+  mocks.subscriptionsRetrieve.mockResolvedValue(retrieved);
+}
+
 describe("POST /api/webhooks/stripe", () => {
   beforeEach(() => {
     mocks.constructEvent.mockReset();
@@ -111,9 +127,7 @@ describe("POST /api/webhooks/stripe", () => {
         stripeSubscriptionId: "sub_123",
       });
       // A delayed updated event arrives with an OLD active snapshot of the SAME sub.
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ status: "active" }), "evt_late")
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "active" }), "evt_late");
 
       const res = await POST(webhookRequest());
 
@@ -129,14 +143,52 @@ describe("POST /api/webhooks/stripe", () => {
         canceledAt: new Date(),
         stripeSubscriptionId: "sub_OLD",
       });
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ id: "sub_NEW", status: "active" }), "evt_resub")
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ id: "sub_NEW", status: "active" }), "evt_resub");
 
       const res = await POST(webhookRequest());
 
       expect(res.status).toBe(200);
       expect(mocks.subscriptionUpsert).toHaveBeenCalled(); // resubscribe is not blocked
+    });
+
+    it("syncs the RETRIEVED current state, never the embedded snapshot (stale event cannot regress tier)", async () => {
+      // A delayed `updated` event carries the OLD state: PRO + past_due.
+      // Stripe's CURRENT state (the member upgraded and recovered): ELITE + active.
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ status: "past_due" }), // embedded stale snapshot (PRO price)
+        "evt_stale",
+        stripeSubscription({
+          status: "active",
+          items: { data: [{ price: { id: ELITE_ANNUAL } }] },
+        }),
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionsRetrieve).toHaveBeenCalledWith("sub_123");
+      // The write reflects CURRENT Stripe state — the stale snapshot's
+      // PRO/PAST_DUE regression never reaches the DB.
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({ tier: "ELITE", status: "ACTIVE" }),
+        }),
+      );
+    });
+
+    it("fails closed (500, event unrecorded) when the fresh retrieve fails — Stripe retries", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("customer.subscription.updated", stripeSubscription(), "evt_retrieve_down"),
+      );
+      mocks.subscriptionsRetrieve.mockRejectedValue(new Error("stripe api unreachable"));
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(500);
+      // Not recorded as processed — the retry must not be idempotency-skipped.
+      expect(mocks.webhookEventCreate).not.toHaveBeenCalled();
+      expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
     });
   });
 
@@ -165,9 +217,7 @@ describe("POST /api/webhooks/stripe", () => {
 
   describe("idempotency", () => {
     it("skips events that were already processed", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription(), "evt_dup")
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription(), "evt_dup");
       mocks.webhookEventFindUnique.mockResolvedValue({ id: "wh_existing" });
 
       const res = await POST(webhookRequest());
@@ -180,9 +230,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("records the event id after successful processing", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription(), "evt_new")
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription(), "evt_new");
 
       const res = await POST(webhookRequest());
       expect(res.status).toBe(200);
@@ -197,9 +245,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("returns 500 and does NOT record the event when handling fails (Stripe will retry)", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription())
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription());
       mocks.subscriptionUpsert.mockRejectedValue(new Error("db down"));
 
       const res = await POST(webhookRequest());
@@ -233,9 +279,7 @@ describe("POST /api/webhooks/stripe", () => {
 
   describe("customer.subscription.created / updated — syncSubscription", () => {
     it("upserts by stripeCustomerId with PRO tier for a pro monthly price", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.created", stripeSubscription())
-      );
+      armSubscriptionEvent("customer.subscription.created", stripeSubscription());
 
       await POST(webhookRequest());
 
@@ -262,12 +306,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("maps an elite annual price to the ELITE tier", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent(
-          "customer.subscription.updated",
-          stripeSubscription({ items: { data: [{ price: { id: ELITE_ANNUAL } }] } })
-        )
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ items: { data: [{ price: { id: ELITE_ANNUAL } }] } }));
 
       await POST(webhookRequest());
 
@@ -278,12 +317,7 @@ describe("POST /api/webhooks/stripe", () => {
 
     it("maps an unknown price id to FREE (never grants unpaid access) when there is no paid record", async () => {
       mocks.subscriptionFindUnique.mockResolvedValue(null);
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent(
-          "customer.subscription.updated",
-          stripeSubscription({ items: { data: [{ price: { id: "price_unknown" } }] } })
-        )
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ items: { data: [{ price: { id: "price_unknown" } }] } }));
 
       await POST(webhookRequest());
 
@@ -301,12 +335,7 @@ describe("POST /api/webhooks/stripe", () => {
         stripeSubscriptionId: "sub_test",
         tier: "PRO",
       });
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent(
-          "customer.subscription.updated",
-          stripeSubscription({ status: "active", items: { data: [{ price: { id: "price_orphaned_founding" } }] } })
-        )
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "active", items: { data: [{ price: { id: "price_orphaned_founding" } }] } }));
 
       await POST(webhookRequest());
 
@@ -324,9 +353,7 @@ describe("POST /api/webhooks/stripe", () => {
       ["incomplete", "INCOMPLETE"],
       ["paused", "PAUSED"],
     ])("maps Stripe status %s to %s", async (stripeStatus, dbStatus) => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ status: stripeStatus }))
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: stripeStatus }));
 
       await POST(webhookRequest());
 
@@ -336,9 +363,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("clears the past-due grace anchor when the subscription recovers", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ status: "active" }))
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "active" }));
 
       await POST(webhookRequest());
 
@@ -350,9 +375,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("backfills the grace anchor when a sync arrives already PAST_DUE", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ status: "past_due" }))
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "past_due" }));
 
       await POST(webhookRequest());
 
@@ -371,9 +394,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("falls back to updateMany by stripeCustomerId when userId metadata is missing", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ metadata: {} }))
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ metadata: {} }));
 
       await POST(webhookRequest());
 
@@ -384,12 +405,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("resolves the customer id from an expanded customer object", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent(
-          "customer.subscription.updated",
-          stripeSubscription({ customer: { id: "cus_expanded" } })
-        )
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ customer: { id: "cus_expanded" } }));
 
       await POST(webhookRequest());
 
