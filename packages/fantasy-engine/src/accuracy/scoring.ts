@@ -61,6 +61,11 @@ export function brierScore(forecasts: readonly ScoredForecast[]): number {
  * The clamp is public and fixed (1e-9): no per-forecaster tuning surface.
  */
 export function logLoss(forecasts: readonly ScoredForecast[], epsilon = 1e-9): number {
+  if (!Number.isFinite(epsilon) || epsilon <= 0 || epsilon >= 0.5) {
+    // An out-of-range clamp silently produces invalid probabilities (negative
+    // p, or no clamp at all) — reject instead of scoring garbage.
+    throw new Error(`scoring: epsilon must be in (0, 0.5), got ${epsilon}`);
+  }
   if (forecasts.length === 0) return Number.NaN;
   let sum = 0;
   forecasts.forEach((f, i) => {

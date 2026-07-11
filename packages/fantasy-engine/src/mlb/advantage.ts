@@ -82,7 +82,11 @@ export type MatchupEdge = "HITTER" | "PITCHER" | "NEUTRAL";
 
 /** Which side of the league line the expected matchup lands on. */
 export function matchupEdge(expectedXwoba: number, leagueXwoba: number): MatchupEdge {
-  if (!Number.isFinite(expectedXwoba) || !Number.isFinite(leagueXwoba)) return "NEUTRAL";
+  // Same invalid-league handling as matchupXwoba: a missing baseline
+  // defaulted to 0 must never label every matchup a hitter edge.
+  if (!Number.isFinite(expectedXwoba) || !Number.isFinite(leagueXwoba) || leagueXwoba <= 0) {
+    return "NEUTRAL";
+  }
   if (expectedXwoba > leagueXwoba) return "HITTER";
   if (expectedXwoba < leagueXwoba) return "PITCHER";
   return "NEUTRAL";

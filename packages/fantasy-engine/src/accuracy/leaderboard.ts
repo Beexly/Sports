@@ -84,6 +84,13 @@ export function buildLeaderboard(
   }
 
   const entries = records.map((r) => {
+    if (!Number.isInteger(r.eventsAvailable) || r.eventsAvailable < 0) {
+      // A NaN/Infinity/negative denominator would corrupt coverage silently
+      // (NaN comparisons are false, Infinity passes the < check) — reject it.
+      throw new Error(
+        `leaderboard: ${r.forecasterId} eventsAvailable must be a non-negative integer, got ${r.eventsAvailable}`,
+      );
+    }
     if (r.eventsAvailable < r.forecasts.length) {
       throw new Error(
         `leaderboard: ${r.forecasterId} reports more forecasts (${r.forecasts.length}) than available events (${r.eventsAvailable})`,
@@ -104,27 +111,37 @@ export function buildLeaderboard(
       // Coverage scales POSITIVE skill down toward 0 (partial boards earn
       // partial credit) and leaves non-positive skill unscaled — low coverage
       // must never SHRINK a negative skill toward zero (that would reward
-      // skipping with a better composite).
-      coverageAdjustedSkill: Number.isFinite(skill)
-        ? skill > 0
-          ? skill * coverage
-          : skill
-        : Number.NaN,
+      // skipping with a better composite). -Infinity (imperfect forecasts on
+      // an all-same-outcome window, where the base rate is perfect) is a
+      // legitimate worst-possible skill and is PRESERVED, never laundered to
+      // NaN/neutral.
+      coverageAdjustedSkill: Number.isNaN(skill) ? Number.NaN : skill > 0 ? skill * coverage : skill,
       meetsMinimumSample: n >= minimumSample,
     };
   });
 
   // Rankable first (by coverage-adjusted skill desc, then calibration asc,
   // then brier asc, then id for total order); unrankable after, same keys.
+  // NaN sorts BELOW every number including -Infinity (an unscoreable entry
+  // never outranks a scored one); equal infinities compare equal.
+  const descending = (x: number, y: number): number => {
+    const xNaN = Number.isNaN(x);
+    const yNaN = Number.isNaN(y);
+    if (xNaN && yNaN) return 0;
+    if (xNaN) return 1;
+    if (yNaN) return -1;
+    if (x === y) return 0;
+    return y > x ? 1 : -1;
+  };
   return entries.sort((a, b) => {
     if (a.meetsMinimumSample !== b.meetsMinimumSample) {
       return a.meetsMinimumSample ? -1 : 1;
     }
-    const bySkill = (b.coverageAdjustedSkill || 0) - (a.coverageAdjustedSkill || 0);
+    const bySkill = descending(a.coverageAdjustedSkill, b.coverageAdjustedSkill);
     if (bySkill !== 0) return bySkill;
-    const byCal = (a.calibrationError || 0) - (b.calibrationError || 0);
+    const byCal = -descending(a.calibrationError, b.calibrationError);
     if (byCal !== 0) return byCal;
-    const byBrier = (a.brier || 0) - (b.brier || 0);
+    const byBrier = -descending(a.brier, b.brier);
     if (byBrier !== 0) return byBrier;
     return a.forecasterId.localeCompare(b.forecasterId);
   });

@@ -178,6 +178,25 @@ describe("SMASH golden-file verification (2026 live-season reference outputs)", 
     expect(staffXwobaAllowed(staff)).toBeCloseTo((0.3 * 300 + 0.24 * 100) / 400, 10);
   });
 
+  it("missing inputs surface as UNRATED (tier null), never the worst tier (Codex on PR #90)", () => {
+    const population: HitterSkillInput[] = [
+      hitters[0]!,
+      hitters[1]!,
+      { ...hitters[2]!, xwoba: Number.NaN },
+    ];
+    const scores = computeHitterSmash(population);
+    expect(Number.isNaN(scores[2]!.smash)).toBe(true);
+    expect(scores[2]!.tier).toBeNull();
+    // And the tier function itself refuses non-finite scores.
+    expect(() => smashTier(Number.NaN)).toThrow();
+  });
+
+  it("matchupEdge treats a missing/zero league baseline as NEUTRAL, never a universal hitter edge (Codex on PR #90)", () => {
+    expect(matchupEdge(0.32, 0)).toBe("NEUTRAL");
+    expect(matchupEdge(0.32, -0.1)).toBe("NEUTRAL");
+    expect(matchupEdge(0.32, Number.NaN)).toBe("NEUTRAL");
+  });
+
   it("tier boundaries are exact (public contract)", () => {
     expect(smashTier(63)).toBe("ELITE");
     expect(smashTier(62.999)).toBe("GREEN");
