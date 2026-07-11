@@ -157,9 +157,9 @@ export function gradePickClv(args: {
   readonly pickType: PickKind;
   readonly selection: string;
   readonly homeTeamName: string;
-  /** Away team name — pass it (same most-specific-match rule as settlement):
+  /** Away team name — REQUIRED (same most-specific-match rule as settlement):
    * without it, an away name beginning with `homeTeamName + " "` inverts the side. */
-  readonly awayTeamName?: string;
+  readonly awayTeamName: string;
   readonly lockLine: number | null; // points (spread/total) we published at
   readonly lockPrice: number | null; // American (moneyline) we published at
   readonly close: ClosingSnapshot;

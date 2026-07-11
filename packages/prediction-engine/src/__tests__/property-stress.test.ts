@@ -79,7 +79,7 @@ describe("A. settlement properties (5,000 random games per family)", () => {
           ? pick(r, [`OVER ${line}`, `UNDER ${line}`])
           : pick(r, [HOME, AWAY, `${HOME} ${line}`, `${AWAY} +${line}`]);
       const sport = pick(r, ["basketball_nba", "soccer_usa_mls", "americanfootball_nfl"]);
-      const res = calculatePickResult(kind, selection, line, HOME, homeScore, awayScore, sport);
+      const res = calculatePickResult(kind, selection, line, HOME, homeScore, awayScore, sport, AWAY);
       expect(RESULTS, `case ${i}: ${kind} ${selection} line=${line} ${homeScore}-${awayScore} ${sport}`).toContain(res);
     }
   });
@@ -94,17 +94,17 @@ describe("A. settlement properties (5,000 random games per family)", () => {
       const sport = pick(r, ["basketball_nba", "americanfootball_nfl", "icehockey_nhl"]);
 
       const ctx = `case ${i}: line=${line} ${homeScore}-${awayScore} ${sport}`;
-      const sHome = calculatePickResult("SPREAD", HOME, line, HOME, homeScore, awayScore, sport);
-      const sAway = calculatePickResult("SPREAD", AWAY, line, HOME, homeScore, awayScore, sport);
+      const sHome = calculatePickResult("SPREAD", HOME, line, HOME, homeScore, awayScore, sport, AWAY);
+      const sAway = calculatePickResult("SPREAD", AWAY, line, HOME, homeScore, awayScore, sport, AWAY);
       expect(sAway, `SPREAD ${ctx}`).toBe(mirror[sHome]);
 
-      const tOver = calculatePickResult("TOTAL", "OVER", Math.abs(line), HOME, homeScore, awayScore, sport);
-      const tUnder = calculatePickResult("TOTAL", "UNDER", Math.abs(line), HOME, homeScore, awayScore, sport);
+      const tOver = calculatePickResult("TOTAL", "OVER", Math.abs(line), HOME, homeScore, awayScore, sport, AWAY);
+      const tUnder = calculatePickResult("TOTAL", "UNDER", Math.abs(line), HOME, homeScore, awayScore, sport, AWAY);
       expect(tUnder, `TOTAL ${ctx}`).toBe(mirror[tOver]);
 
       // Non-soccer moneyline: ties push both ways, decided games mirror.
-      const mHome = calculatePickResult("MONEYLINE", HOME, 0, HOME, homeScore, awayScore, sport);
-      const mAway = calculatePickResult("MONEYLINE", AWAY, 0, HOME, homeScore, awayScore, sport);
+      const mHome = calculatePickResult("MONEYLINE", HOME, 0, HOME, homeScore, awayScore, sport, AWAY);
+      const mAway = calculatePickResult("MONEYLINE", AWAY, 0, HOME, homeScore, awayScore, sport, AWAY);
       expect(mAway, `ML ${ctx}`).toBe(mirror[mHome]);
     }
   });
@@ -116,17 +116,17 @@ describe("A. settlement properties (5,000 random games per family)", () => {
       const awayScore = int(r, 0, 60);
       const intLine = int(r, -30, 30);
 
-      const halfRes = calculatePickResult("SPREAD", HOME, intLine + 0.5, HOME, homeScore, awayScore, "basketball_nba");
+      const halfRes = calculatePickResult("SPREAD", HOME, intLine + 0.5, HOME, homeScore, awayScore, "basketball_nba", AWAY);
       expect(halfRes, `half-point spread must decide (case ${i})`).not.toBe("PUSH");
-      const halfTotal = calculatePickResult("TOTAL", "OVER", Math.abs(intLine) + 0.5, HOME, homeScore, awayScore, "basketball_nba");
+      const halfTotal = calculatePickResult("TOTAL", "OVER", Math.abs(intLine) + 0.5, HOME, homeScore, awayScore, "basketball_nba", AWAY);
       expect(halfTotal, `half-point total must decide (case ${i})`).not.toBe("PUSH");
 
-      const spreadRes = calculatePickResult("SPREAD", HOME, intLine, HOME, homeScore, awayScore, "basketball_nba");
+      const spreadRes = calculatePickResult("SPREAD", HOME, intLine, HOME, homeScore, awayScore, "basketball_nba", AWAY);
       const isBoundary = homeScore - awayScore + intLine === 0;
       expect(spreadRes === "PUSH", `spread push iff boundary (case ${i}: ${homeScore}-${awayScore} line=${intLine})`).toBe(isBoundary);
 
       const total = int(r, 0, 120);
-      const totalRes = calculatePickResult("TOTAL", "OVER", total, HOME, homeScore, awayScore, "basketball_nba");
+      const totalRes = calculatePickResult("TOTAL", "OVER", total, HOME, homeScore, awayScore, "basketball_nba", AWAY);
       expect(totalRes === "PUSH", `total push iff boundary (case ${i})`).toBe(homeScore + awayScore === total);
     }
   });
@@ -135,10 +135,10 @@ describe("A. settlement properties (5,000 random games per family)", () => {
     const r = rng(404);
     for (let i = 0; i < 2000; i++) {
       const score = int(r, 0, 6);
-      const soccerHome = calculatePickResult("MONEYLINE", HOME, 0, HOME, score, score, "soccer_epl");
-      const soccerAway = calculatePickResult("MONEYLINE", AWAY, 0, HOME, score, score, "soccer_epl");
+      const soccerHome = calculatePickResult("MONEYLINE", HOME, 0, HOME, score, score, "soccer_epl", AWAY);
+      const soccerAway = calculatePickResult("MONEYLINE", AWAY, 0, HOME, score, score, "soccer_epl", AWAY);
       expect([soccerHome, soccerAway], `soccer draw case ${i}`).toEqual(["LOSS", "LOSS"]);
-      const nbaTie = calculatePickResult("MONEYLINE", HOME, 0, HOME, score, score, "basketball_nba");
+      const nbaTie = calculatePickResult("MONEYLINE", HOME, 0, HOME, score, score, "basketball_nba", AWAY);
       expect(nbaTie, `non-soccer tie case ${i}`).toBe("PUSH");
     }
   });
@@ -166,11 +166,15 @@ describe("A. settlement properties (5,000 random games per family)", () => {
     }
   });
 
-  it("LEGACY PIN: without awayTeam, a spaced-prefix away selection still resolves HOME (documented limitation of old callers)", () => {
-    // Old 7-arg callers keep byte-identical behavior; the fix is opt-in via
-    // the 8th argument, which every production call site now passes.
-    const res = calculatePickResult("MONEYLINE", "Jets Metro", 0, "Jets", 9, 25, "basketball_nba");
-    expect(res).toBe("LOSS"); // resolved as a (losing) HOME pick — the old behavior
+  it("COMPILE PIN: the away team can never be omitted again (Codex, PR #83)", () => {
+    // An OPTIONAL safety parameter is itself a fail-open: two production
+    // callers (free-settlement, historical replay) had the away name in hand
+    // and omitted it, keeping the inversion alive on their paths. The 8th
+    // argument is now REQUIRED — the 7-arg legacy form must not compile.
+    const sevenArgForm = () =>
+      // @ts-expect-error — omitting awayTeam is a type error by design
+      calculatePickResult("MONEYLINE", "Jets Metro", 0, "Jets", 9, 25, "basketball_nba");
+    expect(typeof sevenArgForm).toBe("function");
   });
 });
 

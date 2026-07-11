@@ -46,13 +46,16 @@ export type SettlementResult = "WIN" | "LOSS" | "PUSH";
  * @param homeScore  - Final home team score
  * @param awayScore  - Final away team score
  * @param sportKey   - Sport key (e.g. "soccer_usa_mls"). Soccer draws settle ML as LOSS.
- * @param awayTeam   - The away team name. Optional for backward compatibility,
- *                     but callers SHOULD pass it: when the away name begins
- *                     with the home name plus a space (home "Jets", away
- *                     "Jets Metro"), the boundary-aware home check alone still
- *                     false-positives and inverts WIN/LOSS (found by the
- *                     property-stress fuzzer). With both names available, the
- *                     MOST SPECIFIC match wins the side.
+ * @param awayTeam   - The away team name. REQUIRED (Codex review, PR #83):
+ *                     when the away name begins with the home name plus a
+ *                     space (home "Jets", away "Jets Metro"), the
+ *                     boundary-aware home check alone false-positives and
+ *                     inverts WIN/LOSS (found by the property-stress fuzzer).
+ *                     An optional safety parameter is itself a fail-open —
+ *                     two production callers (free-settlement, historical
+ *                     replay) had the away name in hand and omitted it — so
+ *                     the compiler now enforces it. The MOST SPECIFIC match
+ *                     wins the side.
  */
 function selectionMatchesTeam(selection: string, team: string): boolean {
   return selection === team || selection.startsWith(team + " ");
@@ -61,20 +64,15 @@ function selectionMatchesTeam(selection: string, team: string): boolean {
 /**
  * Derive whether a selection is the HOME side. Boundary-aware on both names;
  * when both match (one identifier is a spaced prefix of the other), the
- * longer — more specific — name wins. Without `awayTeam` (legacy callers), a
- * home match resolves home, preserving the historical behavior.
+ * longer — more specific — name wins.
  */
 export function selectionIsHomeSide(
   selection: string,
   homeTeam: string,
-  awayTeam?: string
+  awayTeam: string
 ): boolean {
   if (!selectionMatchesTeam(selection, homeTeam)) return false;
-  if (
-    awayTeam !== undefined &&
-    awayTeam.length > homeTeam.length &&
-    selectionMatchesTeam(selection, awayTeam)
-  ) {
+  if (awayTeam.length > homeTeam.length && selectionMatchesTeam(selection, awayTeam)) {
     return false;
   }
   return true;
@@ -88,7 +86,7 @@ export function calculatePickResult(
   homeScore: number,
   awayScore: number,
   sportKey: string,
-  awayTeam?: string
+  awayTeam: string
 ): SettlementResult {
   if (pickType === "MONEYLINE") {
     const homeWon = homeScore > awayScore;
