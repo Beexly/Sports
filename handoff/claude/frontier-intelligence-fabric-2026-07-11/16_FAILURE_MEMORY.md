@@ -29,7 +29,7 @@ Legend: sev/conf · [FIXED commit] / [OPEN → branch] / [QUEUED] / [OWNER] / [W
 
 | # | Finding | Sev/Conf | Disposition |
 |---|---|---|---|
-| M-F2 | 07:00 settle-picks "second freeze" front-runs the 10:00 pick mint; today-slate committed with yesterday's population daily → receipts stay slateKey:null, outside pre-registration | HIGH/CONF | QUEUED hotfix-2. **Precise root cause + correct fix below** — do NOT rush; a naive patch breaks the commit-reveal guarantee. |
+| M-F2 | 07:00 settle-picks "second freeze" front-runs the 10:00 pick mint; today-slate committed with yesterday's population daily → receipts stay slateKey:null, outside pre-registration | HIGH/CONF | **FIXED — PR #80** (claude/hotfix-slate-freeze-frontrun, d58a200e; owner-gated merge). Implemented exactly per the spec below incl. both trap avoidances; test matrix (a)–(e) pinned, 15/15. |
 | O-1.7 | Stub Prisma client in prod is warn-and-continue → silent dropped writes, `/api/health` DB check passes vacuously | HIGH/CONF | QUEUED: fail-closed when `DATABASE_URL` unset in prod; make health DB check non-vacuous |
 | O-5.1 | CI push/PR filters: a PR from a non-`claude/*` head into a `claude/*` trunk triggers ZERO checks | HIGH/CONF | QUEUED: broaden PR base filter / add required aggregate gate. **Owner: branch-protection config** |
 | O-2.1 | commercial/perf scanners cover 7 of ~60 public app dirs; homepage/picks/board/fantasy uncovered → "printing money" passes every gate | HIGH/CONF | QUEUED guardrail-hardening: expand scanned-dir list to all app/**/page copy |
