@@ -88,7 +88,9 @@ const LAUNCH_PAGES: readonly LaunchPage[] = [
       "public record as settled history accumulates",
       "Public record & calibration status",
       "line-value tracker",
-      "holds back a public win-rate until enough canonical settled history exists",
+      // The pinned PROMISE is the withhold-until-honest commitment; the
+      // phrasing was de-jargoned ("canonical" dropped) in the wording sweep.
+      "holds back a public win-rate until enough settled history exists",
       "The Calibration Report stays gated",
     ],
   },
