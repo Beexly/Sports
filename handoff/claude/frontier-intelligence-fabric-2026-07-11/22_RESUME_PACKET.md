@@ -18,8 +18,9 @@ Any session resumes from here without re-deriving context.
 | #85 | claude/hotfix-fabricated-record | main | T-daily-slate real-or-withheld 7-day record (computed via groupBy, null on gate-closed/empty/failure) |
 | #86 | claude/hotfix-void-stale-picks | main | M-F9 catch-up heal + 72h VOID sweep + daysFrom 3; settleCompletedGame() extraction (one settlement semantics); Codex round: feed-independent sweep, heal provenance, VOID-is-no-action everywhere |
 | #87 | claude/hotfix-picks-outage-state | main | T-picks-outage distinct backend_outage 503 (API + /picks page designed state + prod-probe three-state classifier + runbook) |
+| #88 | claude/hotfix-fantasy-upsell-price | main | M-F10 phase-derived fantasy upsell price (server-resolved, required prop, compiler-enforced) |
 
-Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack order); #80/#81/#82/#84/#85/#86/#87 independent anytime. (#84 and #86 both touch settle-sport.ts — whichever lands second takes a small rebase; #86 + #83: thread awayTeamName, one line.)
+Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack order); #80/#81/#82/#84/#85/#86/#87/#88 independent anytime. (#84 and #86 both touch settle-sport.ts — whichever lands second takes a small rebase; #86 + #83: thread awayTeamName, one line.)
 
 ## Owner blockers (surface once, never nag)
 
@@ -35,7 +36,7 @@ Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack
 3. T-picks-outage: /api/picks DB outage dressed as bootstrap gating (states doctrine). **DONE — PR #87** (API + /picks page + prod-probe + runbook; verify-workflow round included).
 4. T-outage-sweep (NEW, from the verify workflow — 5 confirmed sites): calibration 200-as-collecting, daily-slate count fallbacks, promotions 200-empty+CDN, game-room null→404, proof-of-record empty-ledger dressing. Each needs its own honest-degraded-state design.
 5. M-F5/F6 (Stripe event ordering; refresh/settle TOCTOU), M-F7 (close staleness bound; take:80 truncation).
-5. M-F10 fantasy-upsell hardcoded price; frontier-module G-findings on their PR branches (G-1 auth defense-in-depth first).
+5. M-F10 fantasy-upsell hardcoded price **DONE — PR #88**; frontier-module G-findings on their PR branches (G-1 auth defense-in-depth first).
 6. O-3.x remainder: concatenation joins, cross-line bans, confusables map.
 7. After merges: task #4 CLV decomposition columns, task #6 backtest scheduling (designed), SEO strike page 2, memory-write form, grandpa-simple UX pass.
 8. Task #13 Fantasy Engine intake + honest calibrated accuracy leaderboard / accuracy-weighted consensus (proper scoring rule — Brier/log-loss, absolute+relative, no dropped week, coverage-adjusted). Full design inputs live in the owner-delivered confidential intel bank (2026-07-11, session files — intentionally NOT in this public repo). Fantasy suite = glass-box product line by design; betting engine stays method-opaque.
