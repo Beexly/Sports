@@ -217,6 +217,25 @@ const faqJsonLd = {
   })),
 };
 
+// Product/Offer structured data: real phase prices only (single source of
+// truth: pricing-phases.ts). Free tier omitted (no offer); prices in USD.
+const productJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: `${BRAND_NAME} Membership`,
+  description:
+    "Sports decision intelligence: a free daily sample, with the full board, confidence ratings, factor trails, and alerts on the paid tiers.",
+  brand: { "@type": "Brand", name: BRAND_NAME },
+  offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
+    "@type": "Offer",
+    name: `${p.name} (monthly)`,
+    price: p.monthly,
+    priceCurrency: "USD",
+    url: "/pricing",
+    availability: "https://schema.org/InStock",
+  })),
+};
+
 // ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
@@ -231,6 +250,10 @@ export default function PricingPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdScript(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(productJsonLd) }}
       />
 
       <main id="main-content" className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
