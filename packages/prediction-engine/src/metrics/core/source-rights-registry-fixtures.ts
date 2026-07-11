@@ -57,6 +57,39 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     storage_allowed: true,
   },
   {
+    attribution_required: true,
+    attribution_text:
+      "Source statistics via MLB Stats API (statsapi.mlb.com); MLB data \u00a9 MLB Advanced Media, L.P.",
+    commercial_display_allowed: false,
+    derived_analytics_allowed: true,
+    evidence_urls: ["http://gdx.mlb.com/components/copyright.txt"],
+    model_training_allowed: false,
+    notes:
+      "Official league stats API, facts-only and non-bulk. Raw payloads are compute-and-discard (storage blocked); derived engine scores are our own work product.",
+    source_id: "mlb-statsapi",
+    source_name: "MLB Stats API (statsapi.mlb.com)",
+    status: "approved_public_logged_off",
+    storage_allowed: false,
+  },
+  {
+    attribution_required: true,
+    attribution_text:
+      "Statcast data via Baseball Savant (baseballsavant.mlb.com); MLB data \u00a9 MLB Advanced Media, L.P.",
+    commercial_display_allowed: false,
+    derived_analytics_allowed: true,
+    evidence_urls: [
+      "http://gdx.mlb.com/components/copyright.txt",
+      "https://baseballsavant.mlb.com/robots.txt",
+    ],
+    model_training_allowed: false,
+    notes:
+      "Public Statcast leaderboard CSV exports, facts-only and non-bulk. Raw payloads are compute-and-discard (storage blocked); derived engine scores are our own work product.",
+    source_id: "baseball-savant",
+    source_name: "Baseball Savant \u2014 Statcast leaderboard CSV exports (baseballsavant.mlb.com)",
+    status: "approved_public_logged_off",
+    storage_allowed: false,
+  },
+  {
     attribution_required: false,
     attribution_text: null,
     commercial_display_allowed: true,
