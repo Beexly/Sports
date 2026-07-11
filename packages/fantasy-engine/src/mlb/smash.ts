@@ -78,8 +78,15 @@ export const PITCHER_COMPONENTS: readonly SmashComponent<keyof PitcherSkillInput
   { key: "whiffPercent", direction: 1, weight: 0.9 },
 ];
 
-/** Tier boundaries on the 50±10 scale (public, pinned by tests). */
+/**
+ * Tier boundaries on the 50±10 scale (public, pinned by tests). Throws on a
+ * non-finite score: missing data must surface as UNRATED (tier null from
+ * computeSmash), never fall through to the worst tier.
+ */
 export function smashTier(score: number): SmashTier {
+  if (!Number.isFinite(score)) {
+    throw new Error(`smashTier: score must be finite, got ${score}`);
+  }
   if (score >= 63) return "ELITE";
   if (score >= 56) return "GREEN";
   if (score >= 44) return "WHITE";
@@ -88,9 +95,10 @@ export function smashTier(score: number): SmashTier {
 }
 
 export interface SmashScore {
-  /** 50±10 OVR-style index over the scored population. */
+  /** 50±10 OVR-style index over the scored population. NaN = unscoreable. */
   readonly smash: number;
-  readonly tier: SmashTier;
+  /** Null = UNRATED (missing inputs) — never conflated with a real AVOID. */
+  readonly tier: SmashTier | null;
 }
 
 /**
@@ -120,7 +128,7 @@ function computeSmash<K extends string, T extends Readonly<Record<K, number>>>(
       acc += zByKey.get(c.key)![i]! * c.weight;
     }
     const smash = to100(acc / totalWeight);
-    return { smash, tier: smashTier(smash) };
+    return { smash, tier: Number.isFinite(smash) ? smashTier(smash) : null };
   });
 }
 

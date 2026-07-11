@@ -38,6 +38,22 @@ export {
   type MatchupEdge,
 } from "./mlb/advantage";
 
+// MLB — BURR bullpen index + Reliever Value Score
+export {
+  computeBurr,
+  BURR_CATEGORIES,
+  type TeamBullpenCategories,
+  type BurrCategory,
+  type BurrScore,
+} from "./mlb/burr";
+export {
+  computeRvs,
+  relieverRole,
+  type RelieverSeason,
+  type RelieverRole,
+  type RvsScore,
+} from "./mlb/rvs";
+
 // Accuracy — proper scoring rules, the honest leaderboard, weighted consensus
 export {
   brierScore,

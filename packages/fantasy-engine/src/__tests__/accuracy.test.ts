@@ -142,6 +142,46 @@ describe("honest leaderboard", () => {
   });
 });
 
+describe("edge-case hardening (Codex on PR #90)", () => {
+  it("all-same-outcome window: -Infinity skill is PRESERVED and ranks below finite negative skill", () => {
+    // Outcomes all 1 → the base-rate reference is perfect → any imperfect
+    // forecaster has skill -Infinity. That entry must rank BELOW a forecaster
+    // with finite negative skill, never launder to neutral.
+    const allOnes: Array<0 | 1> = Array.from({ length: 30 }, () => 1);
+    const mixed: Array<0 | 1> = Array.from({ length: 30 }, (_, i) => (i % 2 === 0 ? 1 : 0));
+    const board = buildLeaderboard(
+      [
+        { forecasterId: "neg-infinity", forecasts: allOnes.map((o) => f(0.9, o)), eventsAvailable: 30 },
+        { forecasterId: "finite-negative", forecasts: mixed.map((o) => f(o === 1 ? 0.3 : 0.7, o)), eventsAvailable: 30 },
+      ],
+      { minimumSample: 25 },
+    );
+    expect(board[0]!.forecasterId).toBe("finite-negative");
+    expect(board[1]!.coverageAdjustedSkill).toBe(Number.NEGATIVE_INFINITY);
+  });
+
+  it("rejects non-finite or negative eventsAvailable instead of corrupting coverage", () => {
+    const forecasts = [f(0.5, 1)];
+    expect(() =>
+      buildLeaderboard([{ forecasterId: "x", forecasts, eventsAvailable: Number.NaN }]),
+    ).toThrow();
+    expect(() =>
+      buildLeaderboard([{ forecasterId: "x", forecasts, eventsAvailable: Number.POSITIVE_INFINITY }]),
+    ).toThrow();
+    expect(() =>
+      buildLeaderboard([{ forecasterId: "x", forecasts, eventsAvailable: -1 }]),
+    ).toThrow();
+  });
+
+  it("rejects an out-of-range log-loss epsilon instead of scoring garbage", () => {
+    expect(() => logLoss([f(0.5, 1)], 2)).toThrow();
+    expect(() => logLoss([f(0.5, 1)], 0)).toThrow();
+    expect(() => logLoss([f(0.5, 1)], -1e-9)).toThrow();
+    expect(() => logLoss([f(0.5, 1)], Number.NaN)).toThrow();
+    expect(Number.isFinite(logLoss([f(0.5, 1)], 1e-6))).toBe(true);
+  });
+});
+
 describe("accuracy-weighted consensus", () => {
   const outcomes: Array<0 | 1> = [];
   for (let i = 0; i < 100; i++) outcomes.push(i % 10 < 6 ? 1 : 0);
