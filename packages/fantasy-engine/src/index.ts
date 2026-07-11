@@ -54,6 +54,26 @@ export {
   type RvsScore,
 } from "./mlb/rvs";
 
+// NFL — QB-Types (with receipts), Trench SMASH, WR/TE SMASH
+export {
+  classifyQb,
+  computeQbTypes,
+  mobilityReceipts,
+  type QbSeason,
+  type QbType,
+  type QbTypeScore,
+  type MobilityReceipts,
+} from "./nfl/qb-types";
+export {
+  computeOffensiveLineIndex,
+  computeDefensiveLineIndex,
+  trenchMatchup,
+  type TeamOffensiveLine,
+  type TeamDefensiveLine,
+  type TrenchIndex,
+} from "./nfl/trench";
+export { computeWrSmash, type ReceiverSeason, type WrSmashScore } from "./nfl/wr-smash";
+
 // Accuracy — proper scoring rules, the honest leaderboard, weighted consensus
 export {
   brierScore,
