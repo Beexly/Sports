@@ -19,8 +19,10 @@ Any session resumes from here without re-deriving context.
 | #86 | claude/hotfix-void-stale-picks | main | M-F9 catch-up heal + 72h VOID sweep + daysFrom 3; settleCompletedGame() extraction (one settlement semantics); Codex round: feed-independent sweep, heal provenance, VOID-is-no-action everywhere |
 | #87 | claude/hotfix-picks-outage-state | main | T-picks-outage distinct backend_outage 503 (API + /picks page designed state + prod-probe three-state classifier + runbook) |
 | #88 | claude/hotfix-fantasy-upsell-price | main | M-F10 phase-derived fantasy upsell price (server-resolved, required prop, compiler-enforced) |
+| #89 | claude/hotfix-outage-sweep | #87 branch | T-outage-sweep: 5 surfaces stop dressing DB outages as healthy states (calibration/daily-slate/promotions/game-room/proof) |
+| #90 | claude/fantasy-engine-foundation | main | OWNER MANDATE: @sports/fantasy-engine glass-box foundation — SMASH+Log5 golden-verified 800/800 vs reference engine; proper-scoring accuracy engine (all six incumbent-grader seams closed by construction) |
 
-Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack order); #80/#81/#82/#84/#85/#86/#87/#88 independent anytime. (#84 and #86 both touch settle-sport.ts — whichever lands second takes a small rebase; #86 + #83: thread awayTeamName, one line.)
+Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack order); #80/#81/#82/#84/#85/#86/#87/#88/#90 independent anytime; #89 stacked on #87. (#84 and #86 both touch settle-sport.ts — whichever lands second takes a small rebase; #86 + #83: thread awayTeamName, one line.)
 
 ## Owner blockers (surface once, never nag)
 
@@ -34,12 +36,13 @@ Merge order suggestion: #79 → retarget #83 to main; #76 → #77 → #78 (stack
 1. T-daily-slate: recentRecord hardcoded {0,0,0} → board renders fabricated "0W/0L" (withhold, never fabricate). **DONE — PR #85.**
 2. M-F9: VOID path for cancelled/PPD games + catch-up settle window. **DONE — PR #86.** (Merge-order: if #83 lands first, thread game.awayTeamName into settleCompletedGame's calculatePickResult call — one line, value in scope.)
 3. T-picks-outage: /api/picks DB outage dressed as bootstrap gating (states doctrine). **DONE — PR #87** (API + /picks page + prod-probe + runbook; verify-workflow round included).
-4. T-outage-sweep (NEW, from the verify workflow — 5 confirmed sites): calibration 200-as-collecting, daily-slate count fallbacks, promotions 200-empty+CDN, game-room null→404, proof-of-record empty-ledger dressing. Each needs its own honest-degraded-state design.
+4. T-outage-sweep: **DONE — PR #89** (stacked on #87; merge #87 first). 5 surfaces fixed, 13 pins.
 5. M-F5/F6 (Stripe event ordering; refresh/settle TOCTOU), M-F7 (close staleness bound; take:80 truncation).
 5. M-F10 fantasy-upsell hardcoded price **DONE — PR #88**; frontier-module G-findings on their PR branches (G-1 auth defense-in-depth first).
 6. O-3.x remainder: concatenation joins, cross-line bans, confusables map.
 7. After merges: task #4 CLV decomposition columns, task #6 backtest scheduling (designed), SEO strike page 2, memory-write form, grandpa-simple UX pass.
-8. Task #13 Fantasy Engine intake + honest calibrated accuracy leaderboard / accuracy-weighted consensus (proper scoring rule — Brier/log-loss, absolute+relative, no dropped week, coverage-adjusted). Full design inputs live in the owner-delivered confidential intel bank (2026-07-11, session files — intentionally NOT in this public repo). Fantasy suite = glass-box product line by design; betting engine stays method-opaque.
+8. OWNER MANDATE (2026-07-11 ~16:15Z, verbatim intent): everything FantasyPros + FantasyGuru have as FLOOR/BASELINE, then tremendous transformation — autonomous, no stopping. Foundation SHIPPED (PR #90). NEXT: BURR 14-cat + RVS modules; NFL modules (QB-Types w/ receipts, Trench, WR SMASH, scheme-PROE, defense, rolling windows) — Python specs + golden CSVs in the confidential intel bank; data adapters in @sports/data-ingestion + source-rights registry entries (statsapi.mlb.com, Baseball Savant, nflverse); founder-gated UI surfaces; then the full incumbent catalog parity matrix (Draft Wizard-class sim, closer grid, SoS, dispersion displays). Original task #13 note follows.
+9. Task #13 Fantasy Engine intake + honest calibrated accuracy leaderboard / accuracy-weighted consensus (proper scoring rule — Brier/log-loss, absolute+relative, no dropped week, coverage-adjusted). Full design inputs live in the owner-delivered confidential intel bank (2026-07-11, session files — intentionally NOT in this public repo). Fantasy suite = glass-box product line by design; betting engine stays method-opaque.
 
 ## Standing patterns (hard-won today)
 
