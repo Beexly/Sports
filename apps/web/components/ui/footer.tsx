@@ -20,6 +20,9 @@ const PRODUCT_LINKS = [
 ] as const;
 
 const COMPANY_LINKS = [
+  { label: "The Sealed Engine", href: "/engine" },
+  { label: "Proof of Record", href: "/proof" },
+  { label: "Verify a Receipt", href: "/verify" },
   { label: "Accountability", href: "/accountability" },
   { label: "FABLE Evidence Lab", href: "/fable" },
   { label: "Receipts · Calibration", href: "/performance" },
