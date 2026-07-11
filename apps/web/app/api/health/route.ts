@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@sports/db";
+import { db, isStubMode } from "@sports/db";
 import { REFRESH_STALE_AFTER_MINUTES } from "@/lib/data-reliability/refresh-sla";
 
 // A no-arg GET handler is statically cached by Next 14 unless it opts out —
@@ -17,15 +17,25 @@ type HealthCheck = {
 export async function GET(): Promise<NextResponse> {
   const checks: Record<string, HealthCheck> = {};
 
-  // Database check
-  try {
-    await db.$queryRaw`SELECT 1`;
-    checks["database"] = { status: "ok" };
-  } catch {
-    // Do not serialize the raw DB error to this public, unauthenticated response —
-    // its message discloses the internal database host/port. Static detail only;
-    // the real error stays in server logs.
-    checks["database"] = { status: "error", detail: "database unreachable" };
+  // Database check. The stub client answers $queryRaw with [] — a vacuous
+  // pass that reported "database: ok" with NO database at all (adversarial
+  // finding O-1.7), misdirecting any outage diagnosis. Stub mode is a
+  // configuration failure, never health.
+  if (isStubMode()) {
+    checks["database"] = {
+      status: "error",
+      detail: "no database configured (stub client active) — reads empty, writes dropped",
+    };
+  } else {
+    try {
+      await db.$queryRaw`SELECT 1`;
+      checks["database"] = { status: "ok" };
+    } catch {
+      // Do not serialize the raw DB error to this public, unauthenticated response —
+      // its message discloses the internal database host/port. Static detail only;
+      // the real error stays in server logs.
+      checks["database"] = { status: "error", detail: "database unreachable" };
+    }
   }
 
   // Last ingestion run check — must be a SUCCESS run, not any run.

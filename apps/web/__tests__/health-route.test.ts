@@ -63,6 +63,7 @@ const dbMocks = vi.hoisted(() => ({
   queryRaw: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  stubMode: vi.fn<() => boolean>(),
 }));
 
 vi.mock("@sports/db", () => ({
@@ -70,14 +71,17 @@ vi.mock("@sports/db", () => ({
     $queryRaw: dbMocks.queryRaw,
     ingestionRun: { findFirst: dbMocks.ingestionRunFindFirst },
   },
+  isStubMode: dbMocks.stubMode,
 }));
 
 describe("/api/health — freshness threshold (executed)", () => {
   beforeEach(() => {
     dbMocks.queryRaw.mockReset();
     dbMocks.ingestionRunFindFirst.mockReset();
+    dbMocks.stubMode.mockReset();
     // DB ping always healthy so the ingestion check drives the outcome.
     dbMocks.queryRaw.mockResolvedValue([{ "?column?": 1 }]);
+    dbMocks.stubMode.mockReturnValue(false);
   });
 
   afterEach(() => {
@@ -116,5 +120,25 @@ describe("/api/health — freshness threshold (executed)", () => {
     expect(body.ok).toBe(true);
     expect(body.status).toBe("healthy");
     expect(body.checks.ingestion.status).toBe("ok");
+  });
+
+  it("O-1.7: stub mode is a database ERROR, never a vacuous pass", async () => {
+    // The stub client answers $queryRaw with [] — before this pin, health
+    // reported "database: ok" while there was NO database at all and every
+    // write was being dropped. Stub mode must read as a config failure.
+    dbMocks.stubMode.mockReturnValue(true);
+    dbMocks.queryRaw.mockResolvedValue([]); // the stub's vacuous answer
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({
+      completedAt: minutesAgo(10), // even with "fresh" ingestion...
+    });
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    expect(res.status).toBe(503);
+    expect(body.ok).toBe(false);
+    expect(body.checks.database.status).toBe("error");
+    expect(body.checks.database.detail).toMatch(/stub/i);
   });
 });
