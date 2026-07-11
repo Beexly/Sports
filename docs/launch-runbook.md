@@ -273,8 +273,13 @@ non-2xx. When opening the index in the morning:
 - Status **3xx** → page redirected. For `/cockpit` this is expected
   when there's no admin session. The placeholder body in the snapshot
   notes the redirect destination.
-- Status **503** → readiness gate is closed. Expected for `/performance`
-  and `/api/picks` in bootstrap mode.
+- Status **503** → read the BODY, not just the code — three distinct states
+  (states doctrine): `bootstrapMode: true` → readiness gate closed, expected
+  for `/performance` and `/api/picks` in bootstrap mode; `reason: "stale_data"`
+  → freshness kill switch held the board, reopens on the next successful
+  ingestion; `reason: "backend_outage"` → the DB read itself FAILED — this one
+  is an incident, not gating: check `/api/health` and the database provider,
+  do not touch the env flags.
 - Status **4xx** other than 401/403 → investigate. Likely a build or
   route handler bug.
 - Status **0** → the dev server wasn't running. Re-run

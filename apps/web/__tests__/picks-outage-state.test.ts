@@ -102,6 +102,25 @@ describe("/api/picks outage state (T-picks-outage)", () => {
     expect(body["success"]).toBe(true);
   });
 
+  it("the /picks page renders the outage as a DESIGNED state — never the raw thrown 'Failed to fetch picks: 503'", async () => {
+    // Page-source pins (server component; the executed-route pins above cover
+    // the API side). The verify sweep on this change caught the original gap:
+    // the page's dark-state guard only knew bootstrap + stale_data, so the new
+    // outage body fell through to `throw` and customers saw the literal string
+    // "Failed to fetch picks: 503" in the alert box.
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const src = readFileSync(resolve(__dirname, "../app/picks/page.tsx"), "utf8");
+
+    // Guard admits the outage body into the designed dark-state path...
+    expect(src).toMatch(/reason === "backend_outage"/);
+    // ...typed as its own kind...
+    expect(src).toMatch(/"gated" \| "stale" \| "outage"/);
+    // ...with designed customer copy (not a status-code string).
+    expect(src).toMatch(/Temporary interruption/);
+    expect(src).toMatch(/temporarily unavailable/);
+  });
+
   it("the three public dark states carry mutually distinct discriminators", async () => {
     const { bootstrapGateResponse } = await import("@sports/prediction-engine");
     const { staleDataGateResponse } = await import(
