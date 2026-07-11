@@ -98,6 +98,23 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/validatePublicPicksGate[\s\S]*?classifyDarkState[\s\S]*?validatePerformanceGate[\s\S]*?classifyDarkState/);
   });
 
+  it("accepts a stale_data 503 ONLY on the picks probe — the sole surface that emits it (Codex on PR #87)", () => {
+    // /api/picks is today's only staleDataGateResponse emitter. A stale_data
+    // body on any other surface (e.g. the performance gate) is a misrouted or
+    // copy-pasted response and must FAIL the probe, not be green-lit as a
+    // deliberate dark state.
+    expect(src).toMatch(/allowStale = false/);
+    expect(src).toMatch(/Misrouted stale_data 503/);
+    // The picks validator opts in; the performance validator's FUNCTION BODY
+    // does not (extracted precisely — a spanning [\s\S] match would leak into
+    // the neighboring validator and pin nothing).
+    const picksBody = src.match(/function validatePublicPicksGate\([\s\S]*?\n\}/)?.[0] ?? "";
+    const perfBody = src.match(/function validatePerformanceGate\([\s\S]*?\n\}/)?.[0] ?? "";
+    expect(picksBody).toContain("classifyDarkState(status, json, { allowStale: true })");
+    expect(perfBody).toContain("classifyDarkState(status, json)");
+    expect(perfBody).not.toContain("allowStale: true");
+  });
+
   it("exits non-zero when /api/health is unhealthy", () => {
     expect(src).toMatch(/process\.exit\(1\)/);
   });
