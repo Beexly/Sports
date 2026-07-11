@@ -41,7 +41,9 @@ describe("/performance — pick-count banner above the bootstrap state", () => {
 
   it("never claims a verified record on the gate-closed branch", () => {
     expect(perfSrc).toMatch(/!gates\.canExposePerformanceStats/);
-    // The banner explicitly says win-rate aggregation is gated.
-    expect(perfSrc).toMatch(/aggregation is gated/);
+    // The banner explicitly says the win rate is gated (phrasing was
+    // de-jargoned in the wording sweep; the withheld-not-verified promise
+    // is what this pin protects).
+    expect(perfSrc).toMatch(/win rate stays gated until enough finished picks accumulate/);
   });
 });
