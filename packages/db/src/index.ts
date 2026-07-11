@@ -178,16 +178,21 @@ function buildClient(): PrismaClient {
     // FAIL CLOSED in the production runtime (adversarial finding O-1.7): a
     // stub client in production means every write is silently dropped and
     // every read is empty while jobs report success — data loss dressed as
-    // health. A console.error alone was warn-and-continue. VERCEL_ENV (not
-    // NODE_ENV) is the gate: NODE_ENV is "production" during every
-    // `next build`, including CI and local builds that legitimately have no
-    // database; VERCEL_ENV==="production" exists only on Vercel production
-    // builds/runtime, where a missing DATABASE_URL is always a
-    // misconfiguration. The escape hatch must be EXPLICIT, never a default.
-    if (
-      process.env["VERCEL_ENV"] === "production" &&
-      process.env["ALLOW_STUB_DB_IN_PRODUCTION"] !== "true"
-    ) {
+    // health. A console.error alone was warn-and-continue. Two production
+    // signals trip the guard, neither of them NODE_ENV (which is
+    // "production" during every `next build`, including CI and local builds
+    // that legitimately have no database):
+    //   - VERCEL_ENV==="production" — Vercel production builds/runtime.
+    //   - PRODUCTION_RUNTIME==="true" — the explicit declaration baked into
+    //     the production worker images (workers/*/Dockerfile, oracle-vps
+    //     compose), which run NODE_ENV=production outside Vercel and would
+    //     otherwise silently drop every refresh/settlement write (Codex
+    //     review, PR #82).
+    // The escape hatch must be EXPLICIT, never a default.
+    const productionRuntime =
+      process.env["VERCEL_ENV"] === "production" ||
+      process.env["PRODUCTION_RUNTIME"] === "true";
+    if (productionRuntime && process.env["ALLOW_STUB_DB_IN_PRODUCTION"] !== "true") {
       throw new Error(
         "[@sports/db] REFUSING to activate the stub Prisma client in the production " +
           "runtime: DATABASE_URL is unset or a sentinel, so every write would be " +

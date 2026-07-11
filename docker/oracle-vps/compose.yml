@@ -83,6 +83,9 @@ services:
     environment:
       REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379"
       HENRYGD_NCAA_BASE_URL: "http://ncaa-api:3000"
+      # Production runtime declaration — @sports/db fails closed (crash at boot)
+      # on a missing/sentinel DATABASE_URL instead of stubbing writes away.
+      PRODUCTION_RUNTIME: "true"
     depends_on: [redis, ncaa-api]
 
   worker-pick-generation:
@@ -95,6 +98,7 @@ services:
     env_file: ./.env
     environment:
       REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379"
+      PRODUCTION_RUNTIME: "true"
     depends_on: [redis]
 
   worker-content-publishing:
@@ -107,6 +111,7 @@ services:
     env_file: ./.env
     environment:
       REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379"
+      PRODUCTION_RUNTIME: "true"
     depends_on: [redis]
 
 volumes:

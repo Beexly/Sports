@@ -46,5 +46,9 @@ COPY tsconfig*.json ./
 WORKDIR /app/workers/data-refresh
 
 ENV NODE_ENV=production
+# Trips @sports/db's fail-closed guard: this image is a production runtime,
+# so a missing/sentinel DATABASE_URL must crash the worker at boot instead
+# of activating the stub client and silently dropping every write.
+ENV PRODUCTION_RUNTIME=true
 
 CMD ["npx", "ts-node", "--esm", "src/index.ts"]

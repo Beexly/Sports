@@ -1,15 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 /**
  * O-1.7 fail-closed guard: the stub Prisma client must REFUSE to activate in
- * the Vercel production runtime (VERCEL_ENV === "production") — a stub there
- * silently drops every write and empties every read while jobs report
- * success. A console.error was warn-and-continue; the guard now throws at
- * module init so the deployment (or function) fails loudly instead.
+ * a production runtime — a stub there silently drops every write and empties
+ * every read while jobs report success. A console.error was
+ * warn-and-continue; the guard now throws at module init so the deployment
+ * (or worker boot) fails loudly instead.
  *
- * The gate is VERCEL_ENV, deliberately NOT NODE_ENV: NODE_ENV is
- * "production" during every `next build`, including CI and local builds
- * that legitimately have no database.
+ * Two production signals trip it: VERCEL_ENV==="production" (Vercel) and
+ * PRODUCTION_RUNTIME==="true" (declared by the Docker worker images — Codex
+ * review, PR #82). Deliberately NOT NODE_ENV: NODE_ENV is "production"
+ * during every `next build`, including CI and local builds that
+ * legitimately have no database.
  *
  * The module builds its client at import time and caches on globalThis, so
  * each case stages env, clears the cache, resets the module registry, and
@@ -24,6 +28,7 @@ const ENV_KEYS = [
   "POSTGRES_URL_NON_POOLING",
   "FORCE_REAL_PRISMA",
   "VERCEL_ENV",
+  "PRODUCTION_RUNTIME",
   "ALLOW_STUB_DB_IN_PRODUCTION",
   "DEMO_PICKS_ENABLED",
 ] as const;
@@ -89,5 +94,42 @@ describe("stub client fail-closed in the production runtime (O-1.7)", () => {
 
     const mod = await import("../index.js");
     expect(mod.isStubMode()).toBe(false);
+  });
+
+  it("THROWS in a non-Vercel production runtime declared via PRODUCTION_RUNTIME (worker images)", async () => {
+    // Codex review (PR #82): the Docker workers run NODE_ENV=production with
+    // no VERCEL_ENV — the Vercel-only gate left refresh/settlement writes
+    // silently droppable there. The worker images declare
+    // PRODUCTION_RUNTIME=true and must trip the same guard.
+    process.env["PRODUCTION_RUNTIME"] = "true";
+
+    await expect(import("../index.js")).rejects.toThrow(/REFUSING/);
+  });
+
+  it("PRODUCTION_RUNTIME honors the same explicit escape hatch", async () => {
+    process.env["PRODUCTION_RUNTIME"] = "true";
+    process.env["ALLOW_STUB_DB_IN_PRODUCTION"] = "true";
+
+    const mod = await import("../index.js");
+    expect(mod.isStubMode()).toBe(true);
+  });
+});
+
+describe("the production worker images declare PRODUCTION_RUNTIME (the guard is only as good as the declaration)", () => {
+  const repoRoot = resolve(__dirname, "..", "..", "..", "..");
+
+  it.each([
+    "workers/data-refresh/Dockerfile",
+    "workers/pick-generation/Dockerfile",
+    "workers/content-publishing/Dockerfile",
+  ])("%s sets PRODUCTION_RUNTIME=true", (rel) => {
+    const src = readFileSync(resolve(repoRoot, rel), "utf8");
+    expect(src).toMatch(/^ENV PRODUCTION_RUNTIME=true$/m);
+  });
+
+  it("oracle-vps compose declares PRODUCTION_RUNTIME on every worker service", () => {
+    const src = readFileSync(resolve(repoRoot, "docker/oracle-vps/compose.yml"), "utf8");
+    const count = (src.match(/PRODUCTION_RUNTIME:\s*"true"/g) ?? []).length;
+    expect(count).toBe(3);
   });
 });
