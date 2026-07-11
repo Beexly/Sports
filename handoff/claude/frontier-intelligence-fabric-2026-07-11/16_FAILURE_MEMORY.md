@@ -23,6 +23,13 @@ Legend: sev/conf · [FIXED commit] / [OPEN → branch] / [QUEUED] / [OWNER] / [W
 |---|---|---|
 | G-runtime | assurance/foundry resolved repo root from process.cwd() → every fs claim inverts on serverless | findRepoRoot() returns null when tree unreachable; honest degrade (1161ebc0, PR #77) |
 
+## Caught by the property-stress suite (2026-07-11 PM cycle)
+
+| # | Finding | Sev/Conf | Disposition |
+|---|---|---|---|
+| M-F13 | Settlement side-derivation inverts WIN/LOSS when the away name begins with the home name + space ("Jets" vs "Jets Metro"): the away selection matches `homeTeam + " "` and settles as a HOME pick. Same latent class as the LA/LAC prefix bug; not reachable with current full team names. Found by the seeded property fuzzer ON ITS FIRST RUN. | MED-latent/CONF | **FIXED — claude/stress-property-suite (fec2ecc1**, stacked on PR #79; PR opens when the GitHub connector is re-authorized): `selectionIsHomeSide()` most-specific-match in settlement + gradePickClv; settle-sport passes awayTeamName on both paths; legacy 7-arg behavior pinned byte-identical. |
+| T-INFRA-1 | Plant-fixture tests wrote violations into the REAL tree; calibration-cockpit's own trust-gate check in a parallel vitest worker saw them → nondeterministic CI red on PR #81 (green in isolation). | test-infra/CONF | **FIXED — PR #81 (a3d2705e)**: all plant tests build a sandbox repo skeleton in the OS temp dir and run the scanner with cwd there — plants structurally invisible to every other test. LESSON: a plant inside the scanned tree is a race with every repo-scanning test; sandbox-cwd is the standing pattern. |
+
 ## OPEN — ranked, to their proper branch (NOT bundled into hotfix)
 
 ### Production (independent → own hotfix PR after #79, or queued)
