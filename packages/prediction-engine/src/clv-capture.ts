@@ -30,6 +30,7 @@ import {
   type TotalSide,
 } from "./clv.js";
 import { averageAmericanPrices } from "./scoring.js";
+import { selectionIsHomeSide } from "./settlement.js";
 
 export type PickKind = "SPREAD" | "MONEYLINE" | "TOTAL";
 
@@ -156,16 +157,20 @@ export function gradePickClv(args: {
   readonly pickType: PickKind;
   readonly selection: string;
   readonly homeTeamName: string;
+  /** Away team name — pass it (same most-specific-match rule as settlement):
+   * without it, an away name beginning with `homeTeamName + " "` inverts the side. */
+  readonly awayTeamName?: string;
   readonly lockLine: number | null; // points (spread/total) we published at
   readonly lockPrice: number | null; // American (moneyline) we published at
   readonly close: ClosingSnapshot;
 }): ClvGrade | null {
-  const { pickType, selection, homeTeamName, lockLine, lockPrice, close } = args;
+  const { pickType, selection, homeTeamName, awayTeamName, lockLine, lockPrice, close } = args;
 
   if (pickType === "MONEYLINE") {
     if (lockPrice == null) return null;
-    const side: SpreadSide =
-      selection === homeTeamName || selection.startsWith(homeTeamName + " ") ? "HOME" : "AWAY";
+    const side: SpreadSide = selectionIsHomeSide(selection, homeTeamName, awayTeamName)
+      ? "HOME"
+      : "AWAY";
     const closePrice = side === "HOME" ? close.mlHomePrice : close.mlAwayPrice;
     if (closePrice == null) return null;
     const r = computeMoneylineClv(lockPrice, closePrice);
@@ -180,8 +185,9 @@ export function gradePickClv(args: {
 
   if (pickType === "SPREAD") {
     if (lockLine == null || close.spreadHome == null) return null;
-    const side: SpreadSide =
-      selection === homeTeamName || selection.startsWith(homeTeamName + " ") ? "HOME" : "AWAY";
+    const side: SpreadSide = selectionIsHomeSide(selection, homeTeamName, awayTeamName)
+      ? "HOME"
+      : "AWAY";
     const r = computeSpreadClv(lockLine, close.spreadHome, side);
     return {
       kind: "POINTS",
