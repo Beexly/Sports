@@ -125,9 +125,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     loadPreviewGames(),
   ]);
 
+  // No lastModified on static routes: stamping them with request time claims
+  // every page changed today, which teaches crawlers the field is noise.
+  // Real change dates stay on journal/preview entries below.
   const staticRoutes = ROUTES.map(({ path, priority, changeFrequency }) => ({
     url: `${baseUrl}${path}`,
-    lastModified: now,
     changeFrequency,
     priority,
   }));

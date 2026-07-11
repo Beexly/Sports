@@ -27,22 +27,16 @@ export default async function Page() {
       ]} />
       <SectionHeader eyebrow="Data & Sources" title="Data & Sources" />
       <SimpleTable rows={[
-        { section: "Data & Sources", page: "Audit", href: "/admin/statking/audit" },
-        { section: "Data & Sources", page: "Coverage", href: "/admin/statking/coverage" },
         { section: "Data & Sources", page: "Rights Ledger", href: "/admin/statking/rights" },
-        { section: "Data & Sources", page: "Activation ROI", href: "/admin/statking/roi" },
       ]} />
       <SectionHeader eyebrow="Intelligence" title="Intelligence" />
       <SimpleTable rows={[
         { section: "Intelligence", page: "Crown Dashboard", href: "/admin/statking/crown" },
-        { section: "Intelligence", page: "King Gap Map", href: "/admin/statking/gaps" },
-        { section: "Intelligence", page: "Metric Manifest", href: "/admin/statking/metrics" },
       ]} />
       <SectionHeader eyebrow="Ops & Proof" title="Ops & Proof" />
       <SimpleTable rows={[
         { section: "Ops & Proof", page: "Readiness", href: "/admin/statking/readiness" },
         { section: "Ops & Proof", page: "Proof Archive", href: "/admin/statking/proof" },
-        { section: "Ops & Proof", page: "Summary", href: "/admin/statking/summary" },
       ]} />
       <SimpleTable rows={a.items} />
     </Shell>
