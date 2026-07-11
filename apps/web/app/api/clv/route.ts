@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
+import { outageGateResponse } from "@/lib/data-reliability/outage-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -27,15 +28,17 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(bootstrapGateResponse("CLV"), { status: 503 });
   }
 
-  // Fail OPEN to the same gated/collecting shape on a DB error rather than
-  // leaking a stack trace on this public, unauthenticated route.
+  // Fail SOFT on a DB error — no stack trace on this public, unauthenticated
+  // route — but fail soft HONESTLY (T-picks-outage, states doctrine): a failed
+  // read is an OUTAGE with its own distinct 503 body, never the bootstrap
+  // "collecting" body, so monitors and operators run the right runbook.
   const policy = await loadPublicClvPolicy(db, {
     canExposePerformanceStats: gates.canExposePerformanceStats,
     minGradedForPublic: gates.minSettledPicksForLearning,
   }).catch(() => null);
 
   if (policy === null) {
-    return NextResponse.json(bootstrapGateResponse("CLV"), { status: 503 });
+    return NextResponse.json(outageGateResponse("CLV"), { status: 503 });
   }
 
   return NextResponse.json({

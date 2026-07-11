@@ -99,12 +99,15 @@ describe("/api/clv", () => {
     expect(data["gradedSampleSize"]).toBe(5);
   });
 
-  it("fails closed to a 503 collecting state on a DB error (no stack-trace leak)", async () => {
+  it("returns the DISTINCT outage 503 on a DB error — never the bootstrap body (states doctrine)", async () => {
     mocks.pickCount.mockRejectedValue(new Error("db down"));
 
     const { status, body } = await callClv();
 
+    // Fail soft (503, no stack trace) but fail soft HONESTLY: a failed read is
+    // an outage, not deliberate bootstrap gating (T-picks-outage).
     expect(status).toBe(503);
-    expect(body["bootstrapMode"]).toBe(true);
+    expect(body["reason"]).toBe("backend_outage");
+    expect(body["bootstrapMode"]).toBe(false);
   });
 });
