@@ -32,6 +32,34 @@ export function americanToImpliedProbability(americanOdds: number): number {
   return Math.abs(americanOdds) / (Math.abs(americanOdds) + 100);
 }
 
+/**
+ * Inverse of americanToImpliedProbability. Needed because American odds are
+ * DISCONTINUOUS across the ±100 boundary (a value like +2 is not a real price),
+ * so market prices must be averaged in probability space and only then converted
+ * back to a representative American price. p ≥ 0.5 → favorite (negative).
+ */
+export function impliedProbabilityToAmerican(p: number): number {
+  const q = Math.min(0.999999, Math.max(0.000001, p));
+  if (q >= 0.5) {
+    return -Math.round((q / (1 - q)) * 100);
+  }
+  return Math.round(((1 - q) / q) * 100);
+}
+
+/**
+ * Average a set of same-side American prices CORRECTLY: convert each to implied
+ * probability, average the probabilities, convert the mean back to a
+ * representative American price. Averaging American prices directly across books
+ * that straddle pick'em produces invalid prices that map to absurd implied
+ * probabilities and poison CLV. Returns null for an empty set.
+ */
+export function averageAmericanPrices(prices: readonly number[]): number | null {
+  if (prices.length === 0) return null;
+  const meanImplied =
+    prices.reduce((s, price) => s + americanToImpliedProbability(price), 0) / prices.length;
+  return impliedProbabilityToAmerican(meanImplied);
+}
+
 // ============================================================
 // Utility: remove vig to get fair-value probability
 // ============================================================
@@ -748,9 +776,13 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const chosenTeam = homeIsChosen ? input.homeTeam : input.awayTeam;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
-  const avgPrice = homeIsChosen
-    ? h2hOdds.reduce((acc, o) => acc + o.homePrice!, 0) / h2hOdds.length
-    : h2hOdds.reduce((acc, o) => acc + o.awayPrice!, 0) / h2hOdds.length;
+  // Lock price is averaged in probability space (see averageAmericanPrices):
+  // averaging American prices across the ±100 discontinuity mints an invalid
+  // entry price that would then mis-grade CLV against the close. Non-null by
+  // construction — h2hOdds is non-empty here and every price is present.
+  const avgPrice = averageAmericanPrices(
+    h2hOdds.map((o) => (homeIsChosen ? o.homePrice! : o.awayPrice!)),
+  )!;
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct, "win-probability");
   const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(h2hOdds.length);
