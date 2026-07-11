@@ -93,32 +93,39 @@ function memoryForPick(pick: {
   };
 }
 
+/**
+ * Load a game room. Returns null ONLY for a genuinely missing game — a DB-read
+ * failure THROWS (T-outage-sweep, states doctrine). The old `.catch(() => null)`
+ * collapsed the two, so consumers dressed an outage as non-existence: the
+ * model-court API answered 404 "game-not-found" and the room page rendered
+ * notFound() while the database was down. Callers translate the throw into
+ * their own honest failure state (the API's outage 503; the page's error
+ * boundary — an error screen is honest, a fabricated 404 is not).
+ */
 export async function loadGameRoom(gameId: string, now = new Date()): Promise<GameRoomData | null> {
-  const game = await db.game
-    .findUnique({
-      where: { id: gameId },
-      include: {
-        sport: { select: { name: true } },
-        picks: {
-          where: {
-            isPublished: true,
-            isBootstrap: false,
-            NOT: { modelVersion: "v5.0.0-seed" },
-          },
-          include: {
-            signalSnapshot: true,
-            lossAutopsy: true,
-          },
-          orderBy: [{ generatedAt: "desc" }],
-          take: 5,
+  const game = await db.game.findUnique({
+    where: { id: gameId },
+    include: {
+      sport: { select: { name: true } },
+      picks: {
+        where: {
+          isPublished: true,
+          isBootstrap: false,
+          NOT: { modelVersion: "v5.0.0-seed" },
         },
-        gameSignals: {
-          orderBy: { fetchedAt: "desc" },
-          take: 25,
+        include: {
+          signalSnapshot: true,
+          lossAutopsy: true,
         },
+        orderBy: [{ generatedAt: "desc" }],
+        take: 5,
       },
-    })
-    .catch(() => null);
+      gameSignals: {
+        orderBy: { fetchedAt: "desc" },
+        take: 25,
+      },
+    },
+  });
 
   if (!game) return null;
 

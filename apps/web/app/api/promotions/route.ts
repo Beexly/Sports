@@ -13,6 +13,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@sports/db";
 import { buildPublicPromotionsResponse } from "@/lib/promotions/public-payload";
+import { outageGateResponse } from "@/lib/data-reliability/outage-gate";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -38,10 +39,20 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       orderBy: { updatedAt: "desc" },
       take: 100,
     })
-    // Fail-open: a transient DB error degrades to an honest "no offers right
-    // now" 200 (buildPublicPromotionsResponse returns success on []), instead
-    // of throwing a 500 out of this read-only public route.
-    .catch(() => [] as Awaited<ReturnType<typeof db.promotion.findMany>>);
+    .catch(() => null);
+
+  // A failed read is an OUTAGE, not "no offers right now" (T-outage-sweep,
+  // states doctrine): the old fail-open 200 was byte-identical to a genuinely
+  // empty promo list AND carried the public cache header — a CDN could keep
+  // serving the fabricated empty state for minutes past DB recovery. Fail
+  // soft (structured 503, no stack trace) with no-store so recovery is
+  // immediate and monitors see the truth.
+  if (rows === null) {
+    return NextResponse.json(outageGateResponse("Promotions"), {
+      status: 503,
+      headers: { "cache-control": "no-store" },
+    });
+  }
 
   const payload = buildPublicPromotionsResponse(rows, { state });
 

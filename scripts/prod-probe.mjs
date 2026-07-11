@@ -124,7 +124,6 @@ const API_SHAPE_PROBES = [
     label: "public Edge Index",
     validate: validateBoardEdgeIndex,
   },
-  { path: "/api/calibration", label: "calibration", validate: validateCalibration },
 ];
 
 const TEXT_SHAPE_PROBES = [
@@ -141,6 +140,15 @@ const GATE_SHAPE_PROBES = [
     path: "/api/performance?check=performance-gate",
     label: "performance stats gate",
     validate: validatePerformanceGate,
+  },
+  // Status-aware since T-outage-sweep: /api/calibration answers the distinct
+  // outage 503 when its DB read fails, and the probe must fail BY NAME —
+  // not as a generic non-200. Bootstrap/stale 503 bodies are NOT emitted by
+  // this surface, so they fall through to the unexpected-response failure.
+  {
+    path: "/api/calibration",
+    label: "calibration",
+    validate: validateCalibrationGate,
   },
 ];
 
@@ -409,6 +417,22 @@ function validateCalibration(json) {
   if (typeof json.data.isCollecting !== "boolean") return "Missing data.isCollecting boolean.";
   if (!json.meta || typeof json.meta.gated !== "boolean") return "Missing meta.gated boolean.";
   return "";
+}
+
+/**
+ * Status-aware calibration validator (T-outage-sweep). /api/calibration
+ * emits ONLY two states: 200 (healthy or the deliberate "collecting" young-
+ * record shape, both validated by validateCalibration) and the outage 503.
+ * Bootstrap/stale 503 bodies are not this surface's — a misrouted one falls
+ * through to the unexpected-response failure rather than being green-lit
+ * (same scoping rule Codex established for stale_data on the gate probes).
+ */
+function validateCalibrationGate(status, json) {
+  if (status === 503 && json?.reason === "backend_outage") {
+    return "OUTAGE: backend read failed (reason=backend_outage) — check /api/health database check and the DB provider, not the env flags.";
+  }
+  if (status !== 200) return `Unexpected calibration response: HTTP ${status}.`;
+  return validateCalibration(json);
 }
 
 function validateJournalRss(text) {

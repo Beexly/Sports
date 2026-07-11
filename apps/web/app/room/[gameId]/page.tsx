@@ -18,6 +18,9 @@ export default async function GameRoomPage({
 }: {
   params: { gameId: string };
 }): Promise<JSX.Element> {
+  // loadGameRoom returns null ONLY for a genuinely missing game; a DB-read
+  // failure THROWS (T-outage-sweep) and deliberately propagates to the app
+  // error boundary — an error screen is honest, a fabricated 404 is not.
   const room = await loadGameRoom(params.gameId);
   if (!room) notFound();
 

@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { loadGameRoom } from "@/lib/game-room/load";
+import { outageGateResponse } from "@/lib/data-reliability/outage-gate";
 import {
   answerModelCourtQuestion,
   detectModelCourtRefusal,
@@ -88,7 +89,18 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
     );
   }
 
-  const room = await loadGameRoom(context.params.gameId);
+  // loadGameRoom returns null ONLY for a genuinely missing game and THROWS on
+  // a DB-read failure (T-outage-sweep) — an outage must answer 503, never a
+  // fabricated 404 "game-not-found".
+  let room;
+  try {
+    room = await loadGameRoom(context.params.gameId);
+  } catch {
+    return NextResponse.json(outageGateResponse("Model Court"), {
+      status: 503,
+      headers: { "cache-control": "no-store" },
+    });
+  }
   if (!room) {
     return NextResponse.json({ success: false, error: "game-not-found" }, { status: 404 });
   }

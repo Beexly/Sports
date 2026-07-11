@@ -149,8 +149,13 @@ export async function loadProofOfRecord(
         clvValue: true,
       },
       orderBy: [{ settledAt: "desc" }, { id: "asc" }],
-    })
-    .catch(() => []);
+    });
+  // NO catch on this read (T-outage-sweep): a DB failure must THROW into the
+  // /proof page's ledgerUnreachable handler — the designed outage state that
+  // already exists there. The old `.catch(() => [])` swallowed the error, so
+  // an outage rendered the honest-EMPTY state instead: "0 settled picks" and
+  // a sha256("") root, on the platform's trust surface. An outage must never
+  // read as "no record was ever committed".
 
   if (committed.length === 0) {
     return {
@@ -192,6 +197,10 @@ export async function loadProofOfRecord(
             },
           },
         })
+        // This catch STAYS (unlike the committed-set read above): it is display
+        // ENRICHMENT only. On failure the rows still render the true ledger data
+        // (selection, result, root, inclusion proofs) with "—" placeholders for
+        // the game fields — honest degradation, not a fabricated empty record.
         .catch(() => [])
     : [];
   const displayById = new Map(displayRows.map((d) => [d.id, d]));
