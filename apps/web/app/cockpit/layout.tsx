@@ -65,6 +65,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
   {
     section: "Signals & sources",
     items: [
+      { href: "/cockpit/fantasy-engine", label: "Fantasy Engine", hint: "Live MLB boards · glass-box" },
       { href: "/cockpit/sources", label: "Sources", hint: "Source intelligence" },
       { href: "/cockpit/airwave", label: "Airwave", hint: "Pundit claim review" },
       { href: "/cockpit/listener-log", label: "Listener Log", hint: "Manual broadcast claim entry" },
