@@ -56,7 +56,7 @@ Legend: sev/conf · [FIXED commit] / [OPEN → branch] / [QUEUED] / [OWNER] / [W
 
 | # | Finding | Branch |
 |---|---|---|
-| G-1 | Page-level auth: cockpit pages do zero auth (rely on layout); RSC flight payload may stream admin data to non-ADMIN | PR #77 — add explicit per-page `auth()` role check (defense-in-depth) |
+| G-1 | Page-level auth: cockpit pages do zero auth (rely on layout); RSC flight payload may stream admin data to non-ADMIN | FIXED: PR #93 — requireCockpitAdmin() first statement of ALL 32 cockpit pages, tree-walk scan enforces (new page that forgets fails CI); helper behavior unit-pinned; #90's fantasy page adopted proactively; #77's pages take the same 2-liner on rebase |
 | G-3/G-4 | radar `validateSnapshot` never called at runtime → policy fails OPEN on unknown POSTURE (risk is fixed-closed, posture is not); REJECT/posture typos → OBSERVE | PR #76 — call validateSnapshot at load; posture fail-closed like risk |
 | G-10 | assurance council-autonomy tripwire checks "ACTIVE", outside the CouncilSeatStatus union → dead guard behind an `as` cast | PR #77 — check wiringState/real regression signal |
 | G-11 | assurance security + outcome_quality have no findings generator → vacuous health 1.0 shown as "70% inspected, 100% healthy" | PR #77 — emit an explicit "no checks implemented" finding, cap health |
