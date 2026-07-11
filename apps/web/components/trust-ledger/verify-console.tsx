@@ -121,7 +121,21 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
     setState("loading");
     try {
       const r = await fetch(`/api/verify?hash=${trimmed}`);
-      setRes((await r.json()) as VerifyResponse);
+      const body = (await r.json().catch(() => null)) as VerifyResponse | null;
+      if (!r.ok || body === null) {
+        // A server fault must never wear the not-found copy — telling a user
+        // to "check for a copy/paste miss" over our 5xx blames them for our
+        // outage. The endpoint's own error text (e.g. the 503 "not a verdict"
+        // line) wins when present.
+        setRes({
+          found: false,
+          error:
+            body?.error ??
+            `The verifier hit an error (HTTP ${r.status}). This is not a verdict on the receipt; try again shortly.`,
+        });
+      } else {
+        setRes(body);
+      }
     } catch {
       setRes({ found: false, error: "Could not reach the verifier. Try again." });
     }

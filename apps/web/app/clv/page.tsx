@@ -25,10 +25,17 @@ export default async function ClvPage() {
   const minGraded =
     gates.minSettledPicksForLearning > 0 ? gates.minSettledPicksForLearning : 25;
 
+  // An outage must not masquerade as "still accruing at 0/N" — that fabricates
+  // a progress reading. Track the failure separately from a gated-but-healthy
+  // policy load.
+  let policyUnreachable = false;
   const policy = await loadPublicClvPolicy(db, {
     canExposePerformanceStats: gates.canExposePerformanceStats,
     minGradedForPublic: gates.minSettledPicksForLearning,
-  }).catch(() => null);
+  }).catch(() => {
+    policyUnreachable = true;
+    return null;
+  });
 
   const clv = glossaryEntry("clv");
 
@@ -71,8 +78,21 @@ export default async function ClvPage() {
             </div>
           </section>
 
-          {/* The report — gated or open */}
-          {policy?.canExposeClv ? (
+          {/* The report — open, gated, or unreachable (never conflated) */}
+          {policyUnreachable ? (
+            <section
+              data-testid="clv-unreachable-state"
+              className="rounded-2xl border border-caution/40 bg-caution/[0.06] p-6 text-center"
+            >
+              <p className="text-sm font-semibold text-ion-white">
+                The CLV report is temporarily unavailable.
+              </p>
+              <p className="mt-2 text-xs leading-5 text-ion-2">
+                This is a connection problem, not a verdict on the record.
+                Refresh in a moment.
+              </p>
+            </section>
+          ) : policy?.canExposeClv ? (
             <ClvScoreboard policy={policy} />
           ) : (
             <ClvGatedState

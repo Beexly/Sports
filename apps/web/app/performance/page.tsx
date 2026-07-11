@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -324,7 +325,16 @@ export default async function PerformancePage() {
                   <div className="grid grid-cols-2 divide-x divide-mineral/60 sm:grid-cols-4">
                     <OverallStat
                       label="Win Rate"
-                      value={formatPercent(publishedOverallWinRate)}
+                      value={
+                        publishedOverallWinRate !== null ? (
+                          formatPercent(publishedOverallWinRate)
+                        ) : (
+                          <WithheldStat
+                            settled={overall.totalPicks}
+                            floor={minSettledFloor}
+                          />
+                        )
+                      }
                       accent={
                         publishedOverallWinRate !== null
                           ? winRateToneClass(publishedOverallWinRate)
@@ -499,6 +509,35 @@ export default async function PerformancePage() {
 
 // Sub-components
 
+/**
+ * The deliberately-withheld headline stat. A bare dash at text-5xl reads as
+ * BROKEN to a visitor; this states plainly that the number is withheld on
+ * purpose until the sample clears the honesty floor, and shows the live
+ * progress toward it. Same "opens at N settled" framing as ClvGatedState.
+ */
+function WithheldStat({ settled, floor }: { settled: number; floor: number }) {
+  return (
+    <span
+      className="flex flex-col items-center gap-1"
+      title={`Withheld on purpose: a win rate on fewer than ${floor} settled picks is noise, not signal.`}
+    >
+      <span className="inline-flex items-center gap-1.5 text-2xl font-bold text-ion-2">
+        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path
+            fillRule="evenodd"
+            d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+            clipRule="evenodd"
+          />
+        </svg>
+        Withheld
+      </span>
+      <span className={`text-[11px] font-medium normal-case tracking-normal text-ion-3 ${NUMERIC_TEXT_CLASS}`}>
+        opens at {floor} settled · {settled} so far
+      </span>
+    </span>
+  );
+}
+
 function OverallStat({
   label,
   value,
@@ -506,7 +545,7 @@ function OverallStat({
   large,
 }: {
   label: string;
-  value: string;
+  value: ReactNode;
   accent: string;
   large?: boolean;
 }) {

@@ -131,10 +131,12 @@ export function PickCard({
           >
             Confidence
           </p>
-          {canSeeConfidence && pick.confidence !== null ? (
+          {!canSeeConfidence ? (
+            <LockedValue label="Conf." />
+          ) : pick.confidence !== null ? (
             <ConfidenceBadge confidence={pick.confidence} calibrated={pick.confidenceCalibrated} />
           ) : (
-            <LockedValue label="Conf." />
+            <MissingValue />
           )}
         </div>
 
@@ -146,10 +148,12 @@ export function PickCard({
           >
             Edge Score
           </p>
-          {canSeeEdgeScore && pick.edgeScore !== null ? (
+          {!canSeeEdgeScore ? (
+            <LockedValue label="Edge" />
+          ) : pick.edgeScore !== null ? (
             <EdgeScoreBadge edgeScore={pick.edgeScore} />
           ) : (
-            <LockedValue label="Edge" />
+            <MissingValue />
           )}
         </div>
 
@@ -578,6 +582,23 @@ function LockedValue({ label }: { label: string }) {
       {label}
       <span className="font-semibold text-plasma/90">· Pro</span>
     </Link>
+  );
+}
+
+/**
+ * Entitled user, absent data. Distinct from LockedValue on purpose: showing a
+ * "unlocks with Pro" upsell to someone already entitled (or for the always-free
+ * Edge Index) over a value that simply wasn't captured reads as a bait, not a
+ * gate. Neutral, labeled, no link.
+ */
+function MissingValue() {
+  return (
+    <span
+      className="inline-flex min-h-11 items-center py-2 text-xs text-ion-3"
+      title="This value was not captured for this pick. Nothing is hidden; it does not exist."
+    >
+      not captured
+    </span>
   );
 }
 

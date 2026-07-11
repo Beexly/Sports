@@ -88,10 +88,15 @@ function clvClass(verdict: string | null): string {
 
 export default async function ProofOfRecordPage() {
   let board: Awaited<ReturnType<typeof loadProofOfRecord>>;
+  // An outage must NOT read as "no record was ever committed" on an honesty
+  // surface (same doctrine as /api/verify/slate: outage -> unavailable,
+  // absence -> honest empty state). The flag keeps the two states apart.
+  let ledgerUnreachable = false;
   try {
     board = await loadProofOfRecord();
   } catch {
     // Surface a safe error state rather than throwing to Next.js error boundary.
+    ledgerUnreachable = true;
     board = {
       generatedAt: new Date().toISOString(),
       picks: [],
@@ -100,7 +105,7 @@ export default async function ProofOfRecordPage() {
     };
   }
 
-  const isEmpty = board.picks.length === 0;
+  const isEmpty = board.picks.length === 0 && !ledgerUnreachable;
 
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-carbon">
@@ -207,6 +212,25 @@ export default async function ProofOfRecordPage() {
               <> · {formatCount(board.totalSettled)} settled picks in the ledger</>
             )}
           </p>
+
+          {/* ── Outage state: distinct from empty. The record exists; we
+                 just can't reach it right now. Saying "no picks exist yet"
+                 here would be false. ── */}
+          {ledgerUnreachable && (
+            <section
+              data-testid="proof-unreachable-state"
+              className="mt-10 rounded-2xl border border-caution/40 bg-caution/[0.06] px-6 py-10 text-center"
+            >
+              <p className="text-base font-semibold text-ion-white">
+                The ledger is temporarily unreachable.
+              </p>
+              <p className="mt-3 text-sm leading-6 text-ion-1">
+                This is a connection problem, not a verdict on the record. The
+                committed roots and receipts are unchanged; refresh in a moment
+                and the full settled ledger will be back.
+              </p>
+            </section>
+          )}
 
           {/* ── Empty state ── */}
           {isEmpty && (
