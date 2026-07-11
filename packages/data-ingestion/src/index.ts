@@ -65,6 +65,38 @@ export {
   type ConsolidatedPitcherLine,
   type AdapterRelieverRow,
 } from "./mlb-statsapi-source.js";
+// nflverse → fantasy-engine NFL input mappers (CC-BY-4.0; fail-closed header
+// assertions pin the verified-by-execution schema — drift throws, never misparses).
+export {
+  VALID_NFL_TEAMS,
+  assertColumns,
+  parsePlayerSeasonRows,
+  toQbSeasons,
+  parseAdvPassRows,
+  parseAdvRushRows,
+  parseAdvRecRows,
+  parseAdvDefRows,
+  buildTeamOffensiveLines,
+  buildTeamDefensiveLines,
+  buildReceiverSeasons,
+  parsePbpFantasyPlays,
+  buildTeamSchemeTendencies,
+  buildTeamDefenseCategories,
+  buildTeamWindowAggregates,
+  topShare,
+  PLAYER_SEASON_COLUMNS,
+  ADV_PASS_COLUMNS,
+  ADV_RUSH_COLUMNS,
+  ADV_REC_COLUMNS,
+  ADV_DEF_COLUMNS,
+  PBP_FANTASY_COLUMNS,
+  type NflPlayerSeasonRow,
+  type AdvPassRow,
+  type AdvRushRow,
+  type AdvRecRow,
+  type AdvDefRow,
+  type PbpFantasyPlay,
+} from "./nflverse-fantasy-source.js";
 export {
   NFLVERSE_CATALOG,
   NFLVERSE_BASE,
