@@ -77,11 +77,18 @@ describe("assurance — findings carry evidence, validation, and fix", () => {
     // These derive from live registry/module state — they disappear when the
     // underlying gap is fixed, without editing assurance code.
     expect(ids).toContain("memory-activation-pending");
-    // Model routing has two honest states, tracked by the checkout itself:
-    // absent → no-model-router; shadow module present → shadow-only finding.
-    const routerExists = existsSync(join(REPO_ROOT, "apps/web/lib/ai-routing/router.ts"));
-    expect(ids).toContain(routerExists ? "model-router-shadow-only" : "no-model-router");
-    expect(ids).not.toContain(routerExists ? "no-model-router" : "model-router-shadow-only");
+    // Model routing is graded from REAL evidence (Codex P2 on #77): this repo
+    // ships pickModelForSurface + provider-dispatch, so the honest finding is
+    // the missing lane policy/telemetry — never a false "no router exists".
+    expect(ids).toContain("model-routing-lanes-missing");
+    expect(ids).not.toContain("no-model-router");
+    // The shadow-lane finding stacks only when the WS-E module is present.
+    const shadowExists = existsSync(join(REPO_ROOT, "apps/web/lib/ai-routing/router.ts"));
+    if (shadowExists) {
+      expect(ids).toContain("model-router-shadow-only");
+    } else {
+      expect(ids).not.toContain("model-router-shadow-only");
+    }
     expect(ids).toContain("no-external-skill-scanner");
     expect(ids).toContain("tool-router-not-wired");
     // The council autonomy tripwire must NOT fire while no seat is ACTIVE.

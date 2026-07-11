@@ -26,9 +26,14 @@ export {
   computeContentHash,
   SKILL_MANIFESTS,
   getManifest,
-  canExecute,
   PRE_APPROVAL_LIFECYCLES,
 } from "./registry";
 
 export { getOwningSeat, checkSeatAuthority } from "./derive-council-manifests";
-export { scanManifest, scanAll, SCANNER_RULE_IDS, ABSENT_EXTERNAL_SCANNERS } from "./scanner";
+export {
+  scanManifest,
+  scanAll,
+  canExecute,
+  SCANNER_RULE_IDS,
+  ABSENT_EXTERNAL_SCANNERS,
+} from "./scanner";

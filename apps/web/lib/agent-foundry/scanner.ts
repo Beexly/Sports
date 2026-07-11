@@ -16,6 +16,7 @@ import { join } from "node:path";
 import type { ScanFinding, ScanReport, SkillManifest } from "./types";
 import { computeContentHash, SKILL_MANIFESTS } from "./registry";
 import { checkSeatAuthority } from "./derive-council-manifests";
+import HASH_LEDGER from "./manifest-hashes.json";
 
 const EXTERNAL_ACTION_VERBS =
   /\b(publish|send|email|post|bet|wager|charge|refund|deploy|migrate|delete|purchase)\b/i;
@@ -50,9 +51,21 @@ const RULES: Readonly<Record<string, Rule>> = {
     return out;
   },
   "hash-intact": (m) => {
-    return computeContentHash(m) === m.contentHash
-      ? []
-      : [f(m.id, "hash-intact", "BLOCK", "stored contentHash does not match recomputed canonical hash")];
+    // The integrity anchor is the PERSISTED ledger (manifest-hashes.json),
+    // not the sealed field: seal() recomputes at load, so a code edit would
+    // always self-match. Codex P2 on #77. Three failure modes, all BLOCK:
+    const expected = (HASH_LEDGER as Record<string, string>)[`${m.id}@${m.version}`];
+    if (!expected) {
+      return [f(m.id, "hash-intact", "BLOCK", `no persisted hash for ${m.id}@${m.version} — add it to manifest-hashes.json in the same reviewed diff`)];
+    }
+    const out: ScanFinding[] = [];
+    if (computeContentHash(m) !== expected) {
+      out.push(f(m.id, "hash-intact", "BLOCK", "content differs from the persisted hash for this version — bump the version and update manifest-hashes.json"));
+    }
+    if (m.contentHash !== expected && computeContentHash(m) === expected) {
+      out.push(f(m.id, "hash-intact", "BLOCK", "sealed contentHash was mutated after registration"));
+    }
+    return out;
   },
   "no-wildcard-authority": (m) => {
     const out: ScanFinding[] = [];
@@ -148,4 +161,17 @@ export function scanManifest(m: SkillManifest, repoRoot: string): ScanReport {
 
 export function scanAll(repoRoot: string): readonly ScanReport[] {
   return SKILL_MANIFESTS.map((m) => scanManifest(m, repoRoot));
+}
+
+/**
+ * The one execution guard. Requires ALL of: APPROVED lifecycle (only
+ * reachable through an owner-reviewed code change), per-run human approval
+ * waived (a second explicit owner decision), AND a clean scan — a manifest
+ * with any BLOCK finding can never read as PERMITTED, whatever its
+ * lifecycle says (Codex P2 on #77). Nothing in this wave can return true;
+ * tests pin it.
+ */
+export function canExecute(m: SkillManifest, repoRoot: string): boolean {
+  if (m.lifecycle !== "APPROVED" || m.humanApprovalRequired) return false;
+  return !scanManifest(m, repoRoot).blocked;
 }

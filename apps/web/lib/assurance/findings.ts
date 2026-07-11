@@ -51,38 +51,67 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
   }
 
   // ── Model routing ─────────────────────────────────────────────────────────
-  // Two honest states, both findings: absent entirely, or present in shadow
-  // mode with production call sites still uninstrumented. The finding evolves
-  // with the checkout — it never claims a stage that hasn't shipped.
-  if (!has(ctx, "apps/web/lib/ai-routing/router.ts")) {
+  // Codex P2 on #77: the first version of this section declared "no router
+  // exists" while lib/claude-api already ships pickModelForSurface (surface →
+  // Claude tier, with validated Haiku flips) and provider-dispatch
+  // (operator-selected Bedrock/Vertex with Anthropic fallback). Findings are
+  // now graded from the REAL routing evidence, in layers:
+  //   1. surface-tier router + provider dispatch (exists today) → the honest
+  //      gap is lane policy + route telemetry, LOW;
+  //   2. neither exists → the original MEDIUM absence finding;
+  //   3. shadow lane module present → the not-instrumented finding stacks.
+  const surfaceRouterExists =
+    has(ctx, "apps/web/lib/claude-api/model-router.ts") &&
+    has(ctx, "apps/web/lib/claude-api/provider-dispatch.ts");
+  if (surfaceRouterExists) {
     findings.push({
-      id: "no-model-router",
+      id: "model-routing-lanes-missing",
       category: "model_routing",
-      title: "No provider-neutral model router exists (all AI call sites are single-model)",
+      title:
+        "Model routing is surface-tier + provider dispatch — no task-lane policy or route telemetry yet",
       evidence: [
-        { path: "apps/web/lib/ai-routing/", observation: "module absent from checkout" },
-        { path: "apps/web/lib/claude-api/", observation: "call sites target one provider directly" },
+        { path: "apps/web/lib/claude-api/model-router.ts", observation: "pickModelForSurface routes six surfaces to Claude tiers (two validated Haiku flips)" },
+        { path: "apps/web/lib/claude-api/provider-dispatch.ts", observation: "operator-selected Bedrock/Vertex dispatch with transparent Anthropic fallback" },
+        { path: "apps/web/lib/claude-api/messages.ts", observation: "request.surface resolves through pickModelForSurface" },
       ],
       whyItMatters:
-        "Task-fit routing (risk, privacy, cost, latency) is unavailable; every task pays frontier price and depends on one provider's uptime.",
-      risk: "MEDIUM",
+        "Model choice is centralized per surface, but risk/sensitivity/public-claim lanes are not policy, and calls carry no route-lane dimension — per-lane cost/quality cannot be compared yet.",
+      risk: "LOW",
       confidence: 1,
-      smallestValidation: "Check for apps/web/lib/ai-routing/router.ts.",
-      smallestSafeFix: "Ship the shadow-mode router (frontier Workstream E) — recommendation-only, flag off.",
+      smallestValidation: "Read SURFACE_TIER in model-router.ts and grep call records for a lane field (none).",
+      smallestSafeFix: "Ship the shadow lane policy (Workstream E) and reconcile it WITH pickModelForSurface — extend, never duplicate.",
       ownerActionRequired: false,
       status: "OPEN",
     });
   } else {
     findings.push({
-      id: "model-router-shadow-only",
+      id: "no-model-router",
       category: "model_routing",
-      title: "Model router exists in shadow mode only — production call sites are not instrumented",
+      title: "No model routing exists (call sites hardcode a model)",
       evidence: [
-        { path: "apps/web/lib/ai-routing/shadow.ts", observation: "shadowRecommend returns advisory objects; no call path consults it" },
-        { path: "apps/web/lib/claude-api/", observation: "call sites unchanged; AI_MODEL_ROUTER_LIVE_ENABLED is never set" },
+        { path: "apps/web/lib/claude-api/", observation: "no model-router/provider-dispatch modules found" },
       ],
       whyItMatters:
-        "The routing policy cannot earn trust until shadow recommendations are logged beside real calls and evaluated; promotion stays owner-gated.",
+        "Task-fit routing (risk, privacy, cost, latency) is unavailable; every task pays one price and depends on one provider's uptime.",
+      risk: "MEDIUM",
+      confidence: 1,
+      smallestValidation: "Check for apps/web/lib/claude-api/model-router.ts.",
+      smallestSafeFix: "Centralize model selection per surface before any lane policy work.",
+      ownerActionRequired: false,
+      status: "OPEN",
+    });
+  }
+  if (has(ctx, "apps/web/lib/ai-routing/router.ts")) {
+    findings.push({
+      id: "model-router-shadow-only",
+      category: "model_routing",
+      title: "Lane router exists in shadow mode only — production call sites are not instrumented",
+      evidence: [
+        { path: "apps/web/lib/ai-routing/shadow.ts", observation: "shadowRecommend returns advisory objects; no call path consults it" },
+        { path: "apps/web/lib/claude-api/", observation: "call sites route via pickModelForSurface, unchanged; AI_MODEL_ROUTER_LIVE_ENABLED is never set" },
+      ],
+      whyItMatters:
+        "The lane policy cannot earn trust until shadow recommendations are logged beside real calls and evaluated; promotion stays owner-gated.",
       risk: "LOW",
       confidence: 1,
       smallestValidation: "grep call sites for shadowRecommend usage (none yet).",

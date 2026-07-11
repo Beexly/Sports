@@ -1,11 +1,13 @@
 /**
  * Agent Foundry — manifest registry + content hashing.
  *
- * Manifests live in code, so every change is a reviewed commit — that IS the
- * approval channel. `contentHash` is computed, never hand-written: authors
- * declare `contentHash: ""` in AUTHORED and the registry seals it, so a
- * stored-hash/recomputed-hash mismatch can only mean post-registration
- * tampering.
+ * Integrity anchor (Codex P2 on #77): the sealed `contentHash` alone cannot
+ * prove anything — it is recomputed at module load, so editing a manifest
+ * would simply reseal. The tamper evidence is `manifest-hashes.json`: a
+ * PERSISTED ledger of `id@version → expected hash`, checked by the scanner's
+ * hash-intact rule. Changing manifest content without bumping the version
+ * AND updating the ledger in the same reviewed diff is a BLOCK finding, so
+ * silent edits fail CI and loud edits are visible in review.
  *
  * Seed manifests are deliberately narrow, first-party, and non-executing:
  * every one is DRAFT or SCANNED, `humanApprovalRequired: true`, no network,
@@ -150,11 +152,6 @@ export function getManifest(id: string): SkillManifest | undefined {
   return SKILL_MANIFESTS.find((m) => m.id === id);
 }
 
-/**
- * The one execution guard. Nothing in this wave can return true: APPROVED
- * requires an owner-reviewed code change, and even then the runner (not yet
- * built) re-checks. Tests pin that all seeds return false.
- */
-export function canExecute(m: SkillManifest): boolean {
-  return m.lifecycle === "APPROVED" && !m.humanApprovalRequired;
-}
+// The execution guard lives in scanner.ts (canExecute): the decision requires
+// a clean scan, so it must sit where the scan runs — a lifecycle flag alone
+// can never make a manifest executable. (Codex P2 on #77.)

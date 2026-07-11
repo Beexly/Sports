@@ -28,7 +28,7 @@ const LIFECYCLE_TONE: Record<SkillManifest["lifecycle"], string> = {
   RETIRED: "border-red-900/60 bg-red-950/40 text-red-400",
 };
 
-function ManifestCard({ m, scan }: { m: SkillManifest; scan: ScanReport }) {
+function ManifestCard({ m, scan, executable }: { m: SkillManifest; scan: ScanReport; executable: boolean }) {
   const seat = getOwningSeat(m);
   const blockers = scan.findings.filter((x) => x.severity === "BLOCK");
   return (
@@ -95,10 +95,12 @@ function ManifestCard({ m, scan }: { m: SkillManifest; scan: ScanReport }) {
           </p>
         )}
         <p className="mt-2 text-[11px] font-semibold text-ion-1" data-testid="foundry-execution-block">
-          Execution: {canExecute(m) ? "PERMITTED" : "BLOCKED"} ·{" "}
+          Execution: {executable ? "PERMITTED" : "BLOCKED"} ·{" "}
           {m.lifecycle !== "APPROVED"
             ? `lifecycle is ${m.lifecycle}; APPROVED requires an owner-reviewed code change`
-            : "human approval required on every run"}
+            : m.humanApprovalRequired
+              ? "human approval required on every run"
+              : "blocking scan findings present"}
           {blockers.length > 0 ? ` · ${blockers.length} blocking finding(s)` : ""}
         </p>
       </div>
@@ -179,7 +181,12 @@ export default function AgentFoundryPage() {
 
       <ul className="mt-6 flex flex-col gap-4">
         {SKILL_MANIFESTS.map((m) => (
-          <ManifestCard key={m.id} m={m} scan={scans.find((s) => s.manifestId === m.id)!} />
+          <ManifestCard
+            key={m.id}
+            m={m}
+            scan={scans.find((s) => s.manifestId === m.id)!}
+            executable={canExecute(m, repoRoot)}
+          />
         ))}
       </ul>
     </div>

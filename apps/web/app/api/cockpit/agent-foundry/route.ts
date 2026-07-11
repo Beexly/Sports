@@ -37,15 +37,18 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
       totalManifests: SKILL_MANIFESTS.length,
       manifests: SKILL_MANIFESTS.map((m) => {
         const scan = scans.find((s) => s.manifestId === m.id)!;
+        const executable = canExecute(m, repoRoot);
         return {
           ...m,
           scan,
-          executable: canExecute(m),
-          executionBlockedBecause: canExecute(m)
+          executable,
+          executionBlockedBecause: executable
             ? null
             : m.lifecycle !== "APPROVED"
               ? `lifecycle is ${m.lifecycle}; APPROVED requires an owner-reviewed code change`
-              : "human approval required on every run",
+              : m.humanApprovalRequired
+                ? "human approval required on every run"
+                : "blocking scan findings present",
         };
       }),
       externalScannersAbsent: scans[0]?.externalScannersAbsent ?? [],

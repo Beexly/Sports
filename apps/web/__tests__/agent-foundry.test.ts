@@ -55,10 +55,24 @@ describe("foundry — manifest schema", () => {
   });
 });
 
-describe("foundry — content hash", () => {
+describe("foundry — content hash anchored to the persisted ledger", () => {
+  const LEDGER = JSON.parse(read("lib/agent-foundry/manifest-hashes.json")) as Record<string, string>;
+
   it("stored hash equals recomputed canonical hash (sealed at registration)", () => {
     for (const m of SKILL_MANIFESTS) {
       expect(m.contentHash).toBe(computeContentHash(m));
+    }
+  });
+
+  it("every manifest has a persisted ledger entry that matches its content (Codex P2 #77)", () => {
+    // The ledger is the integrity anchor: seal() recomputes at load, so only
+    // a committed, review-visible hash can prove content didn't drift. If
+    // this fails after an intentional edit, bump the version and update
+    // manifest-hashes.json in the same diff.
+    for (const m of SKILL_MANIFESTS) {
+      expect(LEDGER[`${m.id}@${m.version}`], `${m.id}@${m.version} missing from ledger`).toBe(
+        computeContentHash(m)
+      );
     }
   });
 
@@ -73,11 +87,22 @@ describe("foundry — content hash", () => {
     expect(computeContentHash(mutated)).not.toBe(base.contentHash);
   });
 
-  it("the scanner blocks a stored-hash mismatch", () => {
-    const tampered = { ...base, purpose: base.purpose + " (edited)" }; // hash now stale
-    const report = scanManifest(tampered, REPO_ROOT);
-    expect(report.findings.some((x) => x.rule === "hash-intact" && x.severity === "BLOCK")).toBe(true);
+  it("the scanner blocks edited content EVEN WHEN the seal is recomputed to match", () => {
+    // The exact bypass Codex flagged: a code edit reseals itself, so the
+    // in-object hash always matches. The ledger check catches it anyway.
+    const edited = withHash({ ...base, purpose: base.purpose + " (edited)" });
+    expect(edited.contentHash).toBe(computeContentHash(edited)); // self-consistent...
+    const report = scanManifest(edited, REPO_ROOT);
+    expect(report.findings.some((x) => x.rule === "hash-intact" && x.severity === "BLOCK")).toBe(true); // ...still blocked
     expect(report.blocked).toBe(true);
+  });
+
+  it("a manifest version with no ledger entry blocks", () => {
+    const unledgered = withHash({ ...base, version: "9.9.9" });
+    const report = scanManifest(unledgered, REPO_ROOT);
+    expect(
+      report.findings.some((x) => x.rule === "hash-intact" && x.detail.includes("no persisted hash"))
+    ).toBe(true);
   });
 });
 
@@ -182,13 +207,26 @@ describe("foundry — no simulated APPROVED status, nothing executable", () => {
     for (const m of SKILL_MANIFESTS) {
       expect(PRE_APPROVAL_LIFECYCLES).toContain(m.lifecycle);
       expect(m.lifecycle).not.toBe("APPROVED");
-      expect(canExecute(m), `${m.id} must not be executable`).toBe(false);
+      expect(canExecute(m, REPO_ROOT), `${m.id} must not be executable`).toBe(false);
     }
   });
 
   it("canExecute is false even for a hypothetical APPROVED manifest that keeps human approval", () => {
     const approved = withHash({ ...base, lifecycle: "APPROVED" });
-    expect(canExecute(approved)).toBe(false); // humanApprovalRequired still true
+    expect(canExecute(approved, REPO_ROOT)).toBe(false); // humanApprovalRequired still true
+  });
+
+  it("a scan-blocked manifest can never read PERMITTED, whatever its lifecycle says (Codex P2 #77)", () => {
+    // Worst case: APPROVED, per-run approval waived, but the scan blocks
+    // (wildcard tools here; the edited content also trips the hash ledger).
+    const dangerous = withHash({
+      ...base,
+      lifecycle: "APPROVED",
+      humanApprovalRequired: false,
+      allowedTools: ["*"],
+    });
+    expect(scanManifest(dangerous, REPO_ROOT).blocked).toBe(true);
+    expect(canExecute(dangerous, REPO_ROOT)).toBe(false);
   });
 });
 
