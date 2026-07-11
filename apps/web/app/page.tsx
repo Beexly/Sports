@@ -227,6 +227,9 @@ export default async function HomePage(): Promise<JSX.Element> {
               <Link href="/proof" className="btn btn-primary whitespace-nowrap">
                 See the sealed record
               </Link>
+              <Link href="/engine" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+                Watch it commit →
+              </Link>
               <Link href="/verify" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
                 Check a receipt →
               </Link>

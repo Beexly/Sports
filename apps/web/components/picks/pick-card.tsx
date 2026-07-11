@@ -166,9 +166,11 @@ export function PickCard({
         </div>
       </div>
 
-      {/* Reasoning teaser / full */}
+      {/* Reasoning teaser / full — gated on the SAME flag the API gates the
+          full prose on (canSeeFactorBreakdown), so the display gate can never
+          drift from the server gate if the two flags ever diverge. */}
       <p className="text-xs leading-relaxed text-ion-1">
-        {canSeeConfidence ? pick.reasoning : pick.reasoningShort}
+        {canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort}
       </p>
 
       {/* Factor breakdown (PRO+ only) */}
