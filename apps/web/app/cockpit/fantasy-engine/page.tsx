@@ -1,4 +1,5 @@
 import { loadMlbFantasyBoards, type BoardSection } from "@/lib/cockpit/fantasy-mlb-boards";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 import type { BurrScore, RvsScore, SmashTier } from "@sports/fantasy-engine";
 
 /**
@@ -70,6 +71,7 @@ function DegradedState<T>({ section }: { section: BoardSection<T> }) {
 const TOP_N = 25;
 
 export default async function CockpitFantasyEnginePage() {
+  await requireCockpitAdmin();
   const boards = await loadMlbFantasyBoards();
 
   return (
