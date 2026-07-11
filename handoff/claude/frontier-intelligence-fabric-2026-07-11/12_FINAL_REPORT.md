@@ -27,10 +27,40 @@ good", never "production ready".
 - Owner-only actions: `10_BLOCKERS.md` B1 (production ledger runbook),
   B2 (first memory write), B6 (review + merge this PR).
 
-## PR B — Agent Foundry + Assurance
+## PR B — Agent Foundry + Assurance (OPEN: #77, stacked on PR A)
 
-*Not started.*
+- Branch `claude/frontier-agent-foundry-2026-07-11`; base = PR A's branch.
+- Added: manifest contract with sealed content hashes and council-derived
+  authority; deterministic 15-family baseline scanner (findings only);
+  external-scanner adapter with honest absence; 3 first-party DRAFT
+  manifests, execution structurally blocked; assurance report with fixed
+  weights, honest coverage, INCOMPLETE verdict below the 0.80 threshold,
+  findings derived from live state.
+- Deliberately NOT added: any runner, any write path to APPROVED, any grade
+  over unverified ground.
+- Tests: full workspace suite exit 0 pre-rebase; foundry 26/26, assurance
+  13/13 post-rebase; typecheck/lint/scanners green.
+- Flags: `AGENT_FOUNDRY_ENABLED`, `AI_SETUP_ASSURANCE_ENABLED` (both false).
+- Migrations none; dependencies none; public change none.
+- Owner actions: review/merge after PR A (B6).
 
-## PR C — Model Router Shadow
+## PR C — Model Router Shadow (OPEN: #78, stacked on PR B)
 
-*Not started.*
+- Branch `claude/frontier-model-router-shadow-2026-07-11`.
+- Added: 7-lane deterministic version-pinned policy; single registered
+  endpoint (current production Claude config); honest probe-less health;
+  per-lane budget ceilings; frozen empty eval suite; shadowRecommend gated
+  by `AI_MODEL_ROUTER_SHADOW_ENABLED` (false). Source-level pins forbid
+  network primitives in the module and router references in call sites.
+- Deliberately NOT added: any provider, any credential, any call-site
+  instrumentation, any telemetry rename (dual-write plan documented).
+- Tests: 20/20 (all 11 packet rules); typecheck/lint green.
+- Owner actions: review/merge after PR B; promotion beyond shadow is a
+  separate explicitly-gated decision.
+
+## Workstream F — queued specs (docs only)
+
+`13_QUEUED_SPECS.md`: twelve capabilities specified with target files, data
+contracts, risk, smallest experiment, flags, acceptance, rollback, and owner
+gates — zero production code created for optics. Recommended order starts
+with memory recall (F5), unlocked by owner action B2.
