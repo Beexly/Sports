@@ -23,6 +23,33 @@ const SCAN_TARGETS = [
   "apps/web/lib/media-revenue",
   "apps/web/lib/revenue",
 ];
+// FULL PUBLIC-SURFACE SWEEP (adversarial finding O-2.1): the deep-scan
+// targets above covered 7 of ~60 public app dirs. The word-list CLAIMS
+// cannot run over all rendered routes (the evidence surfaces — /clv,
+// /calibration, /accountability — legitimately name these concepts on
+// nearly every line), so the sweep instead hunts the actual crime:
+// HARDCODED numeric performance claims in source. Real numbers on evidence
+// surfaces arrive through variables from settled data; a literal
+// "68% win rate" or "14-3 ATS run" in JSX is a fabricated stat wherever it
+// appears (non-negotiable #2).
+const PUBLIC_APP_ROOT = "apps/web/app";
+const RENDERED_BASENAMES = new Set([
+  "page.tsx",
+  "layout.tsx",
+  "template.tsx",
+  "error.tsx",
+  "not-found.tsx",
+  "loading.tsx",
+  "opengraph-image.tsx",
+]);
+const NON_PUBLIC_TOP_DIRS = new Set(["api", "admin", "cockpit"]);
+const NUMERIC_CLAIM_PATTERNS = [
+  ["percent-performance", /\b\d{1,3}(?:\.\d+)?%\s*(?:win|hit|roi|accuracy|success)\b/i],
+  ["percent-performance", /\b(?:win|hit|success)(?:\s|-)rate of \d{1,3}(?:\.\d+)?%/i],
+  ["units-won", /\b(?:up|won|\+)\s?\d+(?:\.\d+)?\s?units\b/i],
+  ["streak-claim", /\b(?:hit|won|cash(?:ed)?) \d+ of (?:the )?last \d+\b/i],
+  ["record-claim", /\b\d+[-–]\d+\s+(?:ats|run|streak|record)\b/i],
+];
 const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx"]);
 const SKIP_DIRS = new Set(["__tests__", "node_modules", ".next", "dist", "coverage"]);
 const SKIP_PATH_PARTS = [
@@ -102,9 +129,43 @@ function scanLine(line, relPath, lineNumber) {
   }));
 }
 
+function scanNumericClaimLine(line, relPath, lineNumber) {
+  const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+  if (normalized.length === 0 || SAFE_CONTEXT.test(normalized)) return [];
+  const hits = [];
+  for (const [label, pattern] of NUMERIC_CLAIM_PATTERNS) {
+    if (pattern.test(normalized)) {
+      hits.push({ claim: `hardcoded-numeric:${label}`, file: relPath, line: lineNumber, snippet: line.trim().slice(0, 220) });
+    }
+  }
+  return hits;
+}
+
+/** All rendered route files under app/, excluding non-public top dirs. */
+async function walkRenderedSurfaces(dir, isTop, files = []) {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return files;
+  }
+  for (const entry of entries) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (SKIP_DIRS.has(entry.name)) continue;
+      if (isTop && NON_PUBLIC_TOP_DIRS.has(entry.name)) continue;
+      await walkRenderedSurfaces(full, false, files);
+    } else if (entry.isFile() && RENDERED_BASENAMES.has(entry.name)) {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
 async function main() {
   const hits = [];
   let scanned = 0;
+  const deepScanned = new Set();
   for (const target of SCAN_TARGETS) {
     const abs = resolve(ROOT, target);
     let targetStat;
@@ -115,12 +176,25 @@ async function main() {
     }
     const files = targetStat.isDirectory() ? await walk(abs) : [abs];
     for (const file of files) {
-      if (shouldSkipFile(file)) continue;
+      if (deepScanned.has(file) || shouldSkipFile(file)) continue;
+      deepScanned.add(file);
       scanned++;
       const text = await readFile(file, "utf8");
       const relPath = rel(file);
       text.split(/\r?\n/).forEach((line, index) => hits.push(...scanLine(line, relPath, index + 1)));
     }
+  }
+
+  // Public sweep: hardcoded numeric performance claims over every rendered
+  // route file (deep-scanned files also get the numeric pass — a literal
+  // stat is a violation in the commercial dirs too).
+  const sweepFiles = await walkRenderedSurfaces(resolve(ROOT, PUBLIC_APP_ROOT), true);
+  for (const file of sweepFiles) {
+    if (shouldSkipFile(file)) continue;
+    if (!deepScanned.has(file)) scanned++;
+    const text = await readFile(file, "utf8");
+    const relPath = rel(file);
+    text.split(/\r?\n/).forEach((line, index) => hits.push(...scanNumericClaimLine(line, relPath, index + 1)));
   }
 
   if (hits.length === 0) {

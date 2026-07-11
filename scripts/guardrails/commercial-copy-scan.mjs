@@ -23,6 +23,25 @@ const SCAN_TARGETS = [
   "apps/web/lib/media-revenue",
   "apps/web/lib/revenue",
 ];
+// FULL PUBLIC-SURFACE SWEEP (adversarial finding O-2.1): the deep-scan
+// targets above covered 7 of ~60 public app dirs — tout copy on the
+// homepage, board, picks, or fantasy pages passed every gate. Every
+// RENDERED route file under app/ is now swept (page/layout/template/
+// error/not-found/loading/opengraph-image), excluding auth-gated operator
+// surfaces and JSON API routes, whose response shapes are covered by
+// dedicated tests and whose code comments legitimately discuss lock-time
+// lines and CLV internals.
+const PUBLIC_APP_ROOT = "apps/web/app";
+const RENDERED_BASENAMES = new Set([
+  "page.tsx",
+  "layout.tsx",
+  "template.tsx",
+  "error.tsx",
+  "not-found.tsx",
+  "loading.tsx",
+  "opengraph-image.tsx",
+]);
+const NON_PUBLIC_TOP_DIRS = new Set(["api", "admin", "cockpit"]);
 const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx", ".md"]);
 const SKIP_PARTS = new Set(["__tests__", "node_modules", ".next", "dist", "coverage"]);
 const SKIP_PATH_PARTS = [
@@ -71,6 +90,33 @@ const EVIDENCE_REQUIRED = [
 const SAFE_POLICY_CONTEXT =
   /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance)\b/i;
 
+// Tout-pattern detectors for the FULL public sweep. The strict single-word
+// list above stays as-is on the commercial SCAN_TARGETS, but it cannot run
+// over all 204 rendered routes: "lock" is core product vocabulary there
+// (lock-time lines, the Merkle root committed at lock) and "guarantee"
+// names the grandfathered-pricing promise. These patterns match the tout
+// USAGE — "lock of the day", "guaranteed winner" — not the word.
+const TOUT_PATTERNS = [
+  ["lock", /\b(?:a|the|tonight'?s|today'?s|our) lock\b/i],
+  ["lock", /\block of the (?:day|night|week|year)\b/i],
+  ["lock", /\block it in\b/i],
+  ["lock", /\bstone[- ]?cold lock\b/i],
+  ["guarantee", /\bguaranteed? (?:a )?(?:win|winner|profit|cash|money|return)/i],
+  ["guarantee", /\b(?:win|winner|profit)s? guaranteed\b/i],
+  ["risk free", /\brisk[- ]?free\b/i],
+  ["free money", /\bfree money\b/i],
+  ["can't lose", /\bcan'?t lose\b/i],
+  ["100% winner", /\b100% winners?\b/i],
+  ["sure thing", /\bsure thing\b/i],
+  ["easy money", /\beasy money\b/i],
+  ["mortgage play", /\bmortgage play\b/i],
+  ["max bet", /\bmax bet\b/i],
+  ["hammer this", /\bhammer this\b/i],
+  ["printing money", /\bprint(?:ing|s)? money\b/i],
+  ["can't miss", /\bcan'?t miss\b/i],
+  ["all in", /\b(?:go|going|goes|went) all[- ]?in\b/i],
+];
+
 function rel(filePath) {
   return relative(ROOT, filePath).split(sep).join("/");
 }
@@ -107,6 +153,27 @@ async function walk(dir, files = []) {
   return files;
 }
 
+/** All rendered route files under app/, excluding non-public top dirs. */
+async function walkRenderedSurfaces(dir, isTop, files = []) {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return files;
+  }
+  for (const entry of entries) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (SKIP_PARTS.has(entry.name)) continue;
+      if (isTop && NON_PUBLIC_TOP_DIRS.has(entry.name)) continue;
+      await walkRenderedSurfaces(full, false, files);
+    } else if (entry.isFile() && RENDERED_BASENAMES.has(entry.name)) {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
 function scanLine(line, relPath, lineNumber) {
   const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
   if (normalized.startsWith("import ") || normalized.startsWith("export ")) return [];
@@ -132,9 +199,24 @@ function scanLine(line, relPath, lineNumber) {
   return hits;
 }
 
+function scanToutLine(line, relPath, lineNumber) {
+  const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+  if (normalized.length === 0) return [];
+  if (normalized.startsWith("import ") || normalized.startsWith("export ")) return [];
+  if (SAFE_POLICY_CONTEXT.test(normalized)) return [];
+  const hits = [];
+  for (const [label, pattern] of TOUT_PATTERNS) {
+    if (pattern.test(normalized)) {
+      hits.push({ claim: "commercial-copy.tout", file: relPath, line: lineNumber, phrase: label, snippet: line.trim().slice(0, 220) });
+    }
+  }
+  return hits;
+}
+
 async function main() {
   const hits = [];
   let scanned = 0;
+  const deepScanned = new Set();
 
   for (const target of SCAN_TARGETS) {
     const abs = resolve(ROOT, target);
@@ -146,12 +228,25 @@ async function main() {
     }
     const files = targetStat.isDirectory() ? await walk(abs) : [abs];
     for (const file of files) {
-      if (shouldSkipFile(file)) continue;
+      if (deepScanned.has(file) || shouldSkipFile(file)) continue;
+      deepScanned.add(file);
       scanned++;
       const text = await readFile(file, "utf8");
       const relPath = rel(file);
       text.split(/\r?\n/).forEach((line, index) => hits.push(...scanLine(line, relPath, index + 1)));
     }
+  }
+
+  // Public sweep: tout-usage patterns over every rendered route file. Files
+  // already deep-scanned above are not re-scanned (the strict list subsumes
+  // the tout patterns there).
+  const sweepFiles = await walkRenderedSurfaces(resolve(ROOT, PUBLIC_APP_ROOT), true);
+  for (const file of sweepFiles) {
+    if (deepScanned.has(file) || shouldSkipFile(file)) continue;
+    scanned++;
+    const text = await readFile(file, "utf8");
+    const relPath = rel(file);
+    text.split(/\r?\n/).forEach((line, index) => hits.push(...scanToutLine(line, relPath, index + 1)));
   }
 
   if (hits.length === 0) {

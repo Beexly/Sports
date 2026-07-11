@@ -34,9 +34,17 @@ export function resolveTrunks(env = process.env) {
 /** Refs we always build, resolved from the environment at load time. */
 export const TRUNK_BRANCHES = resolveTrunks();
 
-/** A push touching any of these should build. */
-const BUILD_PATH_PREFIXES = ["apps/web/", "packages/", "workers/"];
-const BUILD_PATH_EXACT = ["package.json", "package-lock.json", "vercel.json"];
+/** A push touching any of these should build. scripts/deploy/ and this gate
+ * itself are deploy-relevant: vercel.json's buildCommand executes the
+ * migration gate from scripts/deploy/, and a change to either must not be
+ * able to skip its own deploy (adversarial finding O-1.x). */
+const BUILD_PATH_PREFIXES = ["apps/web/", "packages/", "workers/", "scripts/deploy/"];
+const BUILD_PATH_EXACT = [
+  "package.json",
+  "package-lock.json",
+  "vercel.json",
+  "scripts/vercel-skip-build.mjs",
+];
 
 /**
  * Pure decision: should Vercel build this commit?
@@ -63,14 +71,33 @@ export function isMergeCommit(revListParentsLine) {
   return parts.length > 2; // sha + 2+ parents
 }
 
-/** Changed files vs the parent commit. Returns null when it can't be determined. */
-function changedFilesFromGit() {
-  try {
-    const out = execSync("git diff --name-only HEAD^ HEAD", { encoding: "utf8" });
-    return out.split("\n").map((l) => l.trim()).filter(Boolean);
-  } catch {
-    return null; // first commit / git unavailable → build to be safe
+/**
+ * Changed files for THIS deployment decision. Returns null when it can't be
+ * determined (→ force-build, fail safe).
+ *
+ * The diff base is the last DEPLOYED sha (`VERCEL_GIT_PREVIOUS_SHA`) when
+ * Vercel supplies it, not `HEAD^` (adversarial finding O-1.x): a push of
+ * several commits where only an EARLIER commit touched deploy-relevant paths
+ * would otherwise diff just the docs-only tip and skip a needed deploy. If
+ * the previous sha is absent or outside the shallow clone, the diff throws
+ * and we fall back to HEAD^..HEAD; if that also fails, null → build.
+ * @param {Record<string,string|undefined>} env
+ */
+function changedFilesFromGit(env = process.env) {
+  const bases = [];
+  const prev = (env.VERCEL_GIT_PREVIOUS_SHA ?? "").trim();
+  // Env-sourced value interpolated into a shell command: accept only a hex sha.
+  if (/^[0-9a-f]{7,40}$/i.test(prev)) bases.push(prev);
+  bases.push("HEAD^");
+  for (const base of bases) {
+    try {
+      const out = execSync(`git diff --name-only ${base} HEAD`, { encoding: "utf8" });
+      return out.split("\n").map((l) => l.trim()).filter(Boolean);
+    } catch {
+      // try the next base
+    }
   }
+  return null; // first commit / git unavailable → build to be safe
 }
 
 /** True when HEAD is a merge commit (force-build). Safe-fails to false. */

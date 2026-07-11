@@ -4,7 +4,19 @@ on:
   push:
     branches: [main, "claude/*", "sports-intelligence-os-*"]
   pull_request:
-    branches: [main]
+    # The base filter must cover the claude/* trunks, not just main
+    # (adversarial finding O-5.1): stacked PRs target claude/* bases, and a
+    # PR from a head that matches no push filter (codex/*, fix/*, chore/*)
+    # into such a trunk previously triggered ZERO checks — an unreviewed,
+    # untested merge path into branches that later merge to main.
+    branches: [main, "claude/*", "sports-intelligence-os-*"]
+
+# A push to a claude/* head with an open PR now triggers both a push and a
+# pull_request run; dedupe by cancelling the superseded run for the same ref
+# (never on main, where every push must complete its run).
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   # --------------------------------------------------------------
@@ -64,6 +76,9 @@ jobs:
 
       - name: Run tests (all workspaces)
         run: npm test
+
+      - name: Run deploy skip-gate tests (node:test, outside the vitest workspaces)
+        run: node --test scripts/vercel-skip-build.test.mjs
 
   # --------------------------------------------------------------
   # 2. Build

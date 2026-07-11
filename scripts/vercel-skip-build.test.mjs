@@ -41,3 +41,21 @@ test("skips docs-only / unrelated changes on a non-trunk branch", () => {
 test("custom trunk list is honored", () => {
   assert.equal(shouldBuild({ branch: "release", changedFiles: ["docs/a.md"], trunkBranches: ["release"] }), true);
 });
+
+test("scripts/deploy and the skip gate itself are deploy-relevant (O-1.x)", () => {
+  // vercel.json's buildCommand executes scripts/deploy/*; a change to the
+  // migration gate or to this gate must never skip its own deploy.
+  assert.equal(
+    shouldBuild({ branch: "claude/docs-only", changedFiles: ["scripts/deploy/migrate-if-configured.mjs"] }),
+    true,
+  );
+  assert.equal(
+    shouldBuild({ branch: "claude/docs-only", changedFiles: ["scripts/vercel-skip-build.mjs"] }),
+    true,
+  );
+  // Unrelated operator scripts stay skip-eligible.
+  assert.equal(
+    shouldBuild({ branch: "claude/docs-only", changedFiles: ["scripts/morning-setup.mjs"] }),
+    false,
+  );
+});
