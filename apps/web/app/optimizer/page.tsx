@@ -6,6 +6,7 @@ import { OptimizerWorkspace } from "@/components/fantasy/optimizer-workspace";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
+import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 
 export const metadata: Metadata = {
   title: "The Optimizer: One Workspace for Every Lineup",
@@ -44,7 +45,7 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
           </p>
         </section>
 
-        <OptimizerWorkspace pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
+        <OptimizerWorkspace pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} fantasyAnnual={getCurrentPricingPhase().fantasy.annual} />
       </main>
       <Footer />
     </div>

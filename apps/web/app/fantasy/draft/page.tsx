@@ -5,6 +5,7 @@ import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
+import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 
 export const metadata: Metadata = {
   title: "Draft Assistant · Galaxy Fantasy",
@@ -34,7 +35,7 @@ export default async function DraftPage() {
         : "Illustrative player universe: fictional players, illustrative projections. Value over replacement, tiers, and recommendations are computed live from this sample pool."}
       wide
     >
-      <DraftAssistant pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
+      <DraftAssistant pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} fantasyAnnual={getCurrentPricingPhase().fantasy.annual} />
     </FantasyShell>
   );
 }

@@ -34,7 +34,13 @@ const TABS: { key: Tab; label: string; blurb: string }[] = [
 export function OptimizerWorkspace({
   pool,
   canUseFantasyFull = false,
-}: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
+  fantasyAnnual,
+}: {
+  pool?: readonly Player[];
+  canUseFantasyFull?: boolean;
+  /** Current-phase Fantasy annual price (server-resolved; see FantasyUpsell). */
+  fantasyAnnual: number;
+}) {
   const [tab, setTab] = useState<Tab>("dfs");
   const active = TABS.find((t) => t.key === tab)!;
 
@@ -73,7 +79,7 @@ export function OptimizerWorkspace({
             </p>
             <Link href="/fantasy/draft" className="text-xs font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>Open full page →</Link>
           </div>
-          <DraftAssistant pool={pool} canUseFantasyFull={canUseFantasyFull} />
+          <DraftAssistant pool={pool} canUseFantasyFull={canUseFantasyFull} fantasyAnnual={fantasyAnnual} />
         </div>
       )}
     </div>

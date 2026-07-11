@@ -40,7 +40,16 @@ const ADP_HEX: Record<AdpLabel, string> = { steal: BRAND_COLORS.orbitalCyan, val
  * @param canUseFantasyFull Server-provided entitlement. Defaults FALSE (fail-closed): a
  * caller that forgets it gets the capped trial board, never the full paid suite.
  */
-export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
+export function DraftAssistant({
+  pool,
+  canUseFantasyFull = false,
+  fantasyAnnual,
+}: {
+  pool?: readonly Player[];
+  canUseFantasyFull?: boolean;
+  /** Current-phase Fantasy annual price (server-resolved; see FantasyUpsell). */
+  fantasyAnnual: number;
+}) {
   const universe = useMemo(() => pool ?? PLAYERS, [pool]);
   const [mine, setMine] = useState<Set<string>>(new Set());
   const [gone, setGone] = useState<Set<string>>(new Set());
@@ -190,7 +199,7 @@ export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: rea
 
         {/* ── Brain: recommendation + scarcity + my roster ── */}
         <div className="space-y-4">
-          {!canUseFantasyFull && <FantasyUpsell />}
+          {!canUseFantasyFull && <FantasyUpsell fantasyAnnual={fantasyAnnual} />}
           {/* recommendation */}
           <div className="surface-card relative overflow-hidden p-5" aria-live="polite">
             <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl" style={{ background: `${BRAND_COLORS.orbitalCyan}1f` }} />

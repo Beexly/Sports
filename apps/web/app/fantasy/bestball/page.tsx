@@ -5,6 +5,7 @@ import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { BRAND_COLORS } from "@/lib/brand";
+import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 
 export const metadata: Metadata = {
   title: "Best Ball · Galaxy Fantasy",
@@ -36,7 +37,7 @@ export default async function BestBallPage() {
         : "Illustrative player universe: fictional players, illustrative projections. Ceiling, stack, and structure are computed live from this sample pool."}
       wide
     >
-      <BestBallBoard pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
+      <BestBallBoard pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} fantasyAnnual={getCurrentPricingPhase().fantasy.annual} />
     </FantasyShell>
   );
 }

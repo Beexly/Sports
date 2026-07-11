@@ -59,6 +59,31 @@ describe("public pricing honesty", () => {
     expect(picks).not.toContain("· $24.99/mo");
   });
 
+  it("the fantasy upsell derives its price from the phase — server-resolved and threaded as a REQUIRED prop (M-F10)", () => {
+    // The upsell renders inside CLIENT components, where the server-only
+    // PRICING_PHASE env var is invisible — resolving the phase there silently
+    // falls back to FOUNDING forever (the same drift as the old hardcoded
+    // "$49/yr", just through a second door). So the price is resolved on the
+    // SERVER pages and threaded down; the prop is required, so the compiler
+    // rejects any call site that forgets it.
+    const upsell = readRepoFile("apps/web/components/fantasy/fantasy-upsell.tsx");
+    expect(upsell).toContain("fantasyAnnual: number");
+    expect(upsell).toContain("${fantasyAnnual}/yr");
+    // No hardcoded price literal, and no client-side phase resolution.
+    expect(upsell).not.toMatch(/\$\d+\/yr/);
+    expect(upsell).not.toContain("getCurrentPricingPhase()");
+
+    // Every server page above the chain resolves from the single source of truth.
+    for (const path of [
+      "apps/web/app/fantasy/draft/page.tsx",
+      "apps/web/app/fantasy/bestball/page.tsx",
+      "apps/web/app/optimizer/page.tsx",
+    ]) {
+      const src = readRepoFile(path);
+      expect(src).toContain("fantasyAnnual={getCurrentPricingPhase().fantasy.annual}");
+    }
+  });
+
   it("retires weekly billing from every public pricing surface", () => {
     const surfaces = [
       "apps/web/app/pricing/page.tsx",

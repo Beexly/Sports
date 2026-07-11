@@ -36,7 +36,16 @@ const STATUS_HEX: Record<StructureStatus, string> = { short: BRAND_COLORS.ionMag
  * @param canUseFantasyFull Server-provided entitlement. Defaults FALSE (fail-closed): a
  * caller that forgets it gets the capped trial board, never the full paid suite.
  */
-export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: readonly Player[]; canUseFantasyFull?: boolean } = {}) {
+export function BestBallBoard({
+  pool,
+  canUseFantasyFull = false,
+  fantasyAnnual,
+}: {
+  pool?: readonly Player[];
+  canUseFantasyFull?: boolean;
+  /** Current-phase Fantasy annual price (server-resolved; see FantasyUpsell). */
+  fantasyAnnual: number;
+}) {
   const universe = useMemo(() => pool ?? PLAYERS, [pool]);
   const [mine, setMine] = useState<Set<string>>(new Set());
   const [gone, setGone] = useState<Set<string>>(new Set());
@@ -169,7 +178,7 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
 
       {/* ── Best-ball brain ── */}
       <div className="space-y-4">
-        {!canUseFantasyFull && <FantasyUpsell />}
+        {!canUseFantasyFull && <FantasyUpsell fantasyAnnual={fantasyAnnual} />}
         {/* next pick */}
         <div className="surface-card relative overflow-hidden p-5" aria-live="polite">
           <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl" style={{ background: `${BRAND_COLORS.orbitalCyan}1f` }} />
