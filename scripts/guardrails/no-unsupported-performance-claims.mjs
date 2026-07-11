@@ -119,7 +119,15 @@ async function walk(dir, files = []) {
 }
 
 function scanLine(line, relPath, lineNumber) {
-  const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+  // NFKC + zero-width/soft-hyphen strip (O-3.x): fullwidth forms fold to
+  // ASCII and invisible characters cannot split a banned phrase.
+  const normalized = line
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
+    .toLowerCase()
+    .replace(/[’']/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
   if (normalized.length === 0 || SAFE_CONTEXT.test(normalized)) return [];
   return CLAIMS.filter((claim) => phraseRegex(claim).test(normalized)).map((claim) => ({
     claim,
@@ -130,7 +138,15 @@ function scanLine(line, relPath, lineNumber) {
 }
 
 function scanNumericClaimLine(line, relPath, lineNumber) {
-  const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+  // NFKC + zero-width/soft-hyphen strip (O-3.x): fullwidth forms fold to
+  // ASCII and invisible characters cannot split a banned phrase.
+  const normalized = line
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
+    .toLowerCase()
+    .replace(/[’']/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
   if (normalized.length === 0 || SAFE_CONTEXT.test(normalized)) return [];
   const hits = [];
   for (const [label, pattern] of NUMERIC_CLAIM_PATTERNS) {

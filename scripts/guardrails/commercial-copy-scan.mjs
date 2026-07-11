@@ -175,7 +175,15 @@ async function walkRenderedSurfaces(dir, isTop, files = []) {
 }
 
 function scanLine(line, relPath, lineNumber) {
-  const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+  // NFKC + zero-width/soft-hyphen strip (O-3.x): fullwidth forms fold to
+  // ASCII and invisible characters cannot split a banned phrase.
+  const normalized = line
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
+    .toLowerCase()
+    .replace(/[’']/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
   if (normalized.startsWith("import ") || normalized.startsWith("export ")) return [];
   if (/^\s*[A-Z0-9_]+(?:\s+as\s+[A-Z0-9_]+)?,?\s*$/.test(line)) return [];
   if (normalized.length === 0) return [];
@@ -200,7 +208,15 @@ function scanLine(line, relPath, lineNumber) {
 }
 
 function scanToutLine(line, relPath, lineNumber) {
-  const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+  // NFKC + zero-width/soft-hyphen strip (O-3.x): fullwidth forms fold to
+  // ASCII and invisible characters cannot split a banned phrase.
+  const normalized = line
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
+    .toLowerCase()
+    .replace(/[’']/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
   if (normalized.length === 0) return [];
   if (normalized.startsWith("import ") || normalized.startsWith("export ")) return [];
   if (SAFE_POLICY_CONTEXT.test(normalized)) return [];

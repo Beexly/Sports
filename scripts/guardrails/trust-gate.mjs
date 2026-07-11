@@ -180,7 +180,11 @@ function buildRegex(entry) {
     : new RegExp(escaped, "i");
 }
 
-function lineIsCommentOnly(line) {
+function lineIsCommentOnly(line, isMarkdown) {
+  // In MARKDOWN none of these prefixes mean "comment": "#" begins a heading
+  // and "*" a list item — both fully rendered copy. Skipping them let a
+  // "# Guaranteed winners" heading pass the gate (adversarial finding O-3.x).
+  if (isMarkdown) return false;
   const trimmed = line.trimStart();
   if (trimmed.startsWith("//")) return true;
   if (trimmed.startsWith("*")) return true;
@@ -189,24 +193,50 @@ function lineIsCommentOnly(line) {
   return false;
 }
 
+/**
+ * Unicode-evasion normalization (adversarial finding O-3.x), applied to every
+ * line BEFORE matching:
+ *   - NFKC folds compatibility forms (fullwidth "ｇｕａｒａｎｔｅｅｄ", ligatures)
+ *     back to canonical ASCII;
+ *   - zero-width characters and soft hyphens are DELETED, so
+ *     "guar​anteed" cannot split a phrase invisibly;
+ *   - curly/modifier apostrophes fold to ASCII so "can’t lose" matches the
+ *     "can't lose" ban;
+ *   - all horizontal Unicode whitespace (NBSP etc.) collapses to a single
+ *     space so "easy money" cannot dodge a two-word ban.
+ * Boundary stated honestly: cross-script homoglyphs (Cyrillic "о") do NOT
+ * fold under NFKC; catching those needs a confusables map and is out of
+ * scope here.
+ */
+function normalizeForScan(line) {
+  return line
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
+    .replace(/[‘’ʼ]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/[^\S\r\n]+/g, " ");
+}
+
 function scanText(text, relPath) {
   const hits = [];
-  const lines = text.split(/\r?\n/);
   const relNorm = relPath.split(sep).join("/");
+  const isMarkdown = relNorm.endsWith(".md");
+  const rawLines = text.split(/\r?\n/);
+  const lines = rawLines.map(normalizeForScan);
   for (const entry of BANNED_PHRASES) {
     // Per-rule file exemption (BS-023): skip this phrase for its allowlisted
     // files only; every other banned phrase still applies to those files.
     if (entry.allowFiles && entry.allowFiles.has(relNorm)) continue;
     const re = buildRegex(entry);
     for (let i = 0; i < lines.length; i++) {
-      if (lineIsCommentOnly(lines[i])) continue;
+      if (lineIsCommentOnly(rawLines[i], isMarkdown)) continue;
       // For the "lock" slang ban, blank the legitimate temporal idioms first;
       // a residual standalone "lock" (e.g. "a lock", "lock of the day") still hits.
       const subject = entry.claim === "banned.lock" ? lines[i].replace(LOCK_SAFE_CONTEXT, " ") : lines[i];
       if (re.test(subject)) {
         hits.push({
           line: i + 1,
-          snippet: lines[i].trim().slice(0, 200),
+          snippet: rawLines[i].trim().slice(0, 200),
           claim: entry.claim,
           phrase: entry.phrase,
         });

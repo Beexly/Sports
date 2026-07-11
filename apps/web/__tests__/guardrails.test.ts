@@ -325,3 +325,65 @@ describe("guardrail-hardening: CI topology (O-5.1)", () => {
     expect(ci).toContain("cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}");
   });
 });
+
+describe("guardrail-hardening: Unicode-evasion normalization (O-3.x)", () => {
+  // Fixtures live in scanned (non-whitelisted) locations; cleaned in afterEach.
+  const TG_FIXTURE_DIR = resolve(REPO_ROOT, "apps/web/lib/__guardrail_fixture__");
+
+  afterEach(() => {
+    rmSync(TG_FIXTURE_DIR, { recursive: true, force: true });
+    rmSync(FIXTURE_APP_DIR, { recursive: true, force: true });
+  });
+
+  function plantLib(name: string, content: string): void {
+    mkdirSync(TG_FIXTURE_DIR, { recursive: true });
+    writeFileSync(resolve(TG_FIXTURE_DIR, name), content);
+  }
+
+  it("trust-gate catches a zero-width-split banned phrase", () => {
+    // "guar<ZWSP>anteed" — invisible in review, previously invisible to the gate.
+    plantLib("copy.ts", `export const claim = "guar​anteed to win";\n`);
+    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("banned.guaranteed-outcome");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("trust-gate catches a curly-apostrophe variant of a banned phrase", () => {
+    // Marketing copy typically ships “can’t lose” with U+2019, which the
+    // ASCII-apostrophe ban silently missed before normalization.
+    plantLib("copy.ts", `export const claim = "you can’t lose tonight";\n`);
+    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("banned.cant-lose");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("trust-gate catches fullwidth compatibility forms via NFKC", () => {
+    plantLib("copy.ts", `export const claim = "ｇｕａｒａｎｔｅｅｄ winner";\n`);
+    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("banned.guaranteed");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("trust-gate scans markdown headings and list items (not comments)", () => {
+    // "#" and "*" are rendered copy in markdown; treating them as comment
+    // prefixes let a "# Guaranteed winners" heading pass the gate.
+    plantLib("copy.md", "# Guaranteed winners\n\n* a risk-free system\n");
+    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("banned.guaranteed-outcome");
+    expect(r.stderr).toContain("banned.risk-free");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("commercial-copy sweep catches a zero-width-split tout phrase", () => {
+    plantPage(FIXTURE_APP_DIR, "This is easy​ money, a sure thing.");
+    const r = runGuard("scripts/guardrails/commercial-copy-scan.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("commercial-copy.tout");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("code comments and TS/JS '#' lines are still skipped outside markdown (no new false positives)", () => {
+    plantLib("copy.ts", `// the word guaranteed appears only in this comment\n`);
+    const r = runGuard("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(0);
+  }, GUARD_TEST_TIMEOUT_MS);
+});
