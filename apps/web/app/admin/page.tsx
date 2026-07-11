@@ -1,3 +1,4 @@
+import { utcDayBounds } from "@/lib/time/utc-day";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
@@ -18,7 +19,7 @@ export default async function AdminPage() {
   ] = await Promise.all([
     db.user.count(),
     db.subscription.count({ where: { status: { in: ["ACTIVE", "TRIALING"] }, tier: { not: "FREE" } } }),
-    db.pick.count({ where: { generatedAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } } }),
+    db.pick.count({ where: { generatedAt: { gte: utcDayBounds().start } } }),
     db.ingestionRun.findFirst({ orderBy: { startedAt: "desc" } }),
     db.blogPost.count({ where: { status: "PUBLISHED" } }),
   ]);

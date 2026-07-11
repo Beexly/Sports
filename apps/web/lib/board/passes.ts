@@ -1,3 +1,4 @@
+import { utcDayBounds } from "@/lib/time/utc-day";
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
@@ -17,13 +18,7 @@ export interface BoardPassesPayload {
   meta: { isSampleData: boolean; suppressedDemoData?: boolean; dataError?: "DB_UNREACHABLE" };
 }
 
-function todayBounds(): { start: Date; end: Date } {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  return { start, end };
-}
+
 
 function passReason(bookmakerCoverageMax: number, dataQualityScore: number): string {
   if (bookmakerCoverageMax < 3) return "Market depth below publish threshold.";
@@ -62,7 +57,7 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
       : {}),
   };
 
-  const { start, end } = todayBounds();
+  const { start, end } = utcDayBounds();
   try {
     const gateDecisions = await db.gateDecision.findMany({
       where: {
