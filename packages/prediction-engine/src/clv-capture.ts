@@ -29,6 +29,7 @@ import {
   type SpreadSide,
   type TotalSide,
 } from "./clv.js";
+import { averageAmericanPrices } from "./scoring.js";
 
 export type PickKind = "SPREAD" | "MONEYLINE" | "TOTAL";
 
@@ -121,14 +122,19 @@ export function deriveClosingSnapshotFromOdds(
     .filter((r) => r.market === "H2H" && r.awayPrice != null)
     .map((r) => r.awayPrice as number);
 
-  const mlHome = avg(homePrices);
-  const mlAway = avg(awayPrices);
+  // Moneyline prices MUST be averaged in probability space, not American space:
+  // American odds are discontinuous across ±100, so avg([-102, +105]) = +2 is a
+  // non-price that maps to ~0.98 implied probability and fabricates the CLV
+  // verdict that gates the ESTABLISHED pricing phase. averageAmericanPrices
+  // converts → prob → mean → back. Spread/total are continuous; plain avg is fine.
+  const mlHome = averageAmericanPrices(homePrices);
+  const mlAway = averageAmericanPrices(awayPrices);
 
   return {
     spreadHome: avg(spreads),
     total: avg(totals),
-    mlHomePrice: mlHome == null ? null : Math.round(mlHome),
-    mlAwayPrice: mlAway == null ? null : Math.round(mlAway),
+    mlHomePrice: mlHome,
+    mlAwayPrice: mlAway,
     capturedAt: new Date(latestTs),
     // Cross-market row count (see ClosingSnapshot.bookmakerCount): counts every
     // bookmaker-market row in the closing batch, not distinct books.
