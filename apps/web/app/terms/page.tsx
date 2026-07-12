@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, LEGAL_EMAIL } from "@/lib/brand";
+import { TERMS_LAST_UPDATED, formatLegalDate } from "@/lib/legal-dates";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -27,7 +28,7 @@ export default function TermsPage() {
               Terms of Service
             </h1>
             <p className="mt-2 text-sm text-ink-500">
-              Last updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+              Last updated: {formatLegalDate(TERMS_LAST_UPDATED)}
             </p>
 
             <Heading>1. Acceptance of these terms</Heading>
