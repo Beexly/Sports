@@ -131,10 +131,14 @@ export default async function CockpitModelAccuracyPage() {
           Version accuracy board
         </h2>
         <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
-          Each row is a distinct model version scored over its own settled WIN/LOSS decisions.
-          Confidence is read as a probability (confidence ÷ 100); the outcome is the settled result.
-          Ranking is coverage-adjusted skill — proven skill on the full board, never a cherry-picked
-          slice.
+          Each row is a distinct model version — the version FROZEN in each pick&apos;s immutable
+          proof receipt at publish, never the value the refresh cycle later rewrites. A pick is
+          scored as a win probability only when that is honest: a genuinely calibrated model
+          probability (any pick type) or, absent one, confidence ÷ 100 for MONEYLINE picks, where
+          confidence is the vig-free fair probability. Spread/total picks are priced to ~50% by
+          construction, so they settle as unscored (lowering coverage) rather than being dressed up
+          as probabilities — today that makes this a MONEYLINE calibration board. Ranking is
+          coverage-adjusted skill — proven skill on the full board, never a cherry-picked slice.
         </p>
         {board.status === "unavailable" ? (
           <UnavailableState reason={board.reason} />
@@ -150,8 +154,10 @@ export default async function CockpitModelAccuracyPage() {
           Metrics are proper scoring rules over settled picks: Brier and log loss are absolute
           (measured against reality, not a field of rivals) and reward calibrated conviction; skill
           vs base rate anchors to each version&apos;s own settled base rate; calibration error is the
-          coverage-weighted gap between stated and realized rates. No pick is dropped — every settled
-          decision counts, and coverage below 100% marks decisions we settled but could not score.
+          coverage-weighted gap between stated and realized rates. Every settled decision we can
+          attribute to a frozen model version counts — including the highest-conviction 0% and 100%
+          forecasts — and coverage below 100% marks decisions we settled but could not score as a
+          win probability without fabricating one.
         </p>
         <p>
           Internal founder tooling. Outcomes and calibration only — no model internals are shown.
