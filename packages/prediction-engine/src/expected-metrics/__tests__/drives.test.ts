@@ -121,6 +121,28 @@ describe("result classification", () => {
     expect(drives[0]?.result).toBe("OTHER");
     expect(drives[0]?.result).not.toBe("SAFETY");
   });
+
+  it("classifies from the DRIVE TOTAL, not the last play — TD then PAT (points 1) → TD", () => {
+    // Trailing play is the PAT (a separate play in the same fixed_drive, pointsScored 1).
+    // Classifying off last.pointsScored would misread this TD drive as OTHER.
+    const drives = buildDrives([
+      play({ playId: "td", playIndex: 1, driveId: 1, pointsScored: 6 }),
+      play({ playId: "pat", playIndex: 2, driveId: 1, pointsScored: 1 }),
+    ]);
+    expect(drives).toHaveLength(1);
+    expect(drives[0]?.points).toBe(7);
+    expect(drives[0]?.result).toBe("TD");
+  });
+
+  it("still never infers SAFETY from a drive-total point sum (total 2 → OTHER)", () => {
+    const drives = buildDrives([
+      play({ playId: "a", playIndex: 1, driveId: 1, pointsScored: 0 }),
+      play({ playId: "b", playIndex: 2, driveId: 1, pointsScored: 2 }),
+    ]);
+    expect(drives[0]?.points).toBe(2);
+    expect(drives[0]?.result).toBe("OTHER");
+    expect(drives[0]?.result).not.toBe("SAFETY");
+  });
 });
 
 describe("aggregates", () => {

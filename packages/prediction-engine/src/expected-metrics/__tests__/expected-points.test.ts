@@ -118,6 +118,10 @@ describe("fitExpectedPointsModel", () => {
     expect(model).not.toBeNull();
     if (!model) return;
     expect(model.provenance.method).toBe("multinomial-ovr-logistic");
+    // Pinned LITERAL — an independent value that catches feature-contract drift a
+    // recompute-from-the-same-constant assertion cannot (both would move together).
+    expect(model.provenance.featureSchemaHash).toBe("dd4831b9");
+    // Secondary consistency check: source constant and stamped hash still agree.
     expect(model.provenance.featureSchemaHash).toBe(
       computeFeatureSchemaHash(EXPECTED_POINTS_FEATURE_KEYS),
     );
@@ -163,6 +167,33 @@ describe("predictScoreDistribution / predictExpectedPoints", () => {
     );
     const ownEnd = predictExpectedPoints(model, play({ yardline100: 95, ydstogo: 12, nextScore: null }));
     expect(nearGoal).toBeGreaterThan(ownEnd);
+  });
+});
+
+describe("non-finite input hardening (EP surface stays bounded)", () => {
+  it("imputes a NaN halfSecondsRemaining at predict → finite EP within [-7,7] (~uniform)", () => {
+    const model = fitExpectedPointsModel(corpus(false, true))!;
+    // Number("NA") === NaN — the exact way a bad clock column arrives from a loader.
+    const nanClock = play({ yardline100: 30, halfSecondsRemaining: Number("NA"), nextScore: null });
+    const ep = predictExpectedPoints(model, nanClock);
+    expect(Number.isFinite(ep)).toBe(true);
+    expect(ep).toBeGreaterThanOrEqual(-7);
+    expect(ep).toBeLessThanOrEqual(7);
+  });
+
+  it("a single NaN-halfSeconds training play does not NaN-poison the fitted model", () => {
+    const poisoned: EpPlay[] = [
+      play({ yardline100: 50, ydstogo: 10, halfSecondsRemaining: Number("NA"), nextScore: "NONE" }),
+      ...corpus(false, true),
+    ];
+    const model = fitExpectedPointsModel(poisoned);
+    expect(model).not.toBeNull();
+    if (!model) return;
+    // Sampled prediction on a well-formed state must be finite (weights not NaN).
+    const ep = predictExpectedPoints(model, play({ yardline100: 20, ydstogo: 8, nextScore: null }));
+    expect(Number.isFinite(ep)).toBe(true);
+    expect(ep).toBeGreaterThanOrEqual(-7);
+    expect(ep).toBeLessThanOrEqual(7);
   });
 });
 

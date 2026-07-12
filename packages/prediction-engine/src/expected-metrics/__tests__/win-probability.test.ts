@@ -66,6 +66,10 @@ describe("fitWinProbabilityModel", () => {
     expect(model).not.toBeNull();
     if (!model) return;
     expect(model.provenance.method).toBe("logistic-regression");
+    // Pinned LITERAL — an independent value that catches feature-contract drift a
+    // recompute-from-the-same-constant assertion cannot (both would move together).
+    expect(model.provenance.featureSchemaHash).toBe("5678f5c9");
+    // Secondary consistency check: source constant and stamped hash still agree.
     expect(model.provenance.featureSchemaHash).toBe(
       computeFeatureSchemaHash(WIN_PROBABILITY_FEATURE_KEYS),
     );
@@ -98,6 +102,34 @@ describe("predictWinProbability", () => {
     const trailing = predictWinProbability(model, play({ scoreDifferential: -21, gameSecondsRemaining: 60, posteamWon: 0 }));
     expect(leading).toBeGreaterThan(0.8);
     expect(trailing).toBeLessThan(0.2);
+  });
+});
+
+describe("non-finite input hardening (WP surface stays in (0,1))", () => {
+  it("coerces a NaN posteamTimeouts at predict → WP strictly in (0,1)", () => {
+    const model = fitWinProbabilityModel(corpus())!;
+    // Number("NA") === NaN — a bad timeout column would make WP = σ(NaN) = NaN.
+    const wp = predictWinProbability(model, play({ posteamTimeouts: Number("NA"), posteamWon: 1 }));
+    expect(Number.isFinite(wp)).toBe(true);
+    expect(wp).toBeGreaterThan(0);
+    expect(wp).toBeLessThan(1);
+  });
+
+  it("a single NaN-timeout training row does not poison the fitted surface", () => {
+    const poisoned: WpPlay[] = [
+      play({ posteamTimeouts: Number("NA"), posteamWon: 1 }),
+      ...corpus(),
+    ];
+    const model = fitWinProbabilityModel(poisoned);
+    expect(model).not.toBeNull();
+    if (!model) return;
+    const wp = predictWinProbability(
+      model,
+      play({ scoreDifferential: 7, gameSecondsRemaining: 600, posteamWon: 1 }),
+    );
+    expect(Number.isFinite(wp)).toBe(true);
+    expect(wp).toBeGreaterThan(0);
+    expect(wp).toBeLessThan(1);
   });
 });
 

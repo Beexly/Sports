@@ -76,11 +76,17 @@ export const DRIVES_MODEL_VERSION = "gse-drives-v1";
 
 const DRIVE_FEATURE_KEYS = ["driveId", "posteam", "playIndex"] as const;
 
-/** Classify a drive result. Explicit terminal outcome wins; else a point fallback. */
-function classifyResult(last: DrivePlay): DriveResult {
+/**
+ * Classify a drive result. Explicit terminal outcome wins; else a point fallback
+ * on the DRIVE-LEVEL total, not the last play's points — a TD drive whose trailing
+ * play is the PAT (a separate play in the same fixed_drive, pointsScored 1) would
+ * otherwise misclassify as OTHER. NEVER infer SAFETY from a point total (a safety
+ * is scored by the defense, not netted by the offense).
+ */
+function classifyResult(last: DrivePlay, drivePoints: number): DriveResult {
   if (last.terminalOutcome !== undefined) return last.terminalOutcome; // authoritative
-  if (last.pointsScored >= 6) return "TD"; // 6 (missed XP) / 7 / 8 (2-pt) all TD
-  if (last.pointsScored === 3) return "FG";
+  if (drivePoints >= 6) return "TD"; // 6 (missed XP) / 7 / 8 (2-pt) all TD
+  if (drivePoints === 3) return "FG";
   return "OTHER"; // PUNT / TURNOVER / SAFETY / etc. require terminalOutcome
 }
 
@@ -113,7 +119,7 @@ function finalize(acc: DriveAccumulator, provenance: ExpectedMetricProvenance): 
     gameId: acc.gameId,
     driveId: acc.driveId,
     posteam: acc.posteam,
-    result: classifyResult(last),
+    result: classifyResult(last, points),
     startYardline100: first.yardline100,
     endYardline100: last.yardline100,
     playCount: ordered.length,

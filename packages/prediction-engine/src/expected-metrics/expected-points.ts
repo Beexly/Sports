@@ -110,13 +110,18 @@ export interface ExpectedPointsModel {
 
 function featureRow(play: EpPlay): number[] {
   const yl = play.yardline100;
+  const hs = play.halfSecondsRemaining;
+  // Impute the mid-half default for a MISSING clock (null) OR a non-finite one
+  // (NaN/Infinity). `?? EP_DEFAULT_HALF_SECONDS` alone catches only null/undefined
+  // and would let a NaN through, poisoning the whole EP surface.
+  const halfSeconds = hs !== null && Number.isFinite(hs) ? hs : EP_DEFAULT_HALF_SECONDS;
   return [
     play.down,
     play.ydstogo,
     yl,
     yl * yl,
     play.goalToGo,
-    play.halfSecondsRemaining ?? EP_DEFAULT_HALF_SECONDS,
+    halfSeconds,
   ];
 }
 
@@ -129,7 +134,11 @@ function isUsableForFit(play: EpPlay): boolean {
     play.down <= 4 &&
     Number.isFinite(play.ydstogo) &&
     Number.isFinite(play.yardline100) &&
-    (play.goalToGo === 0 || play.goalToGo === 1)
+    (play.goalToGo === 0 || play.goalToGo === 1) &&
+    // null is the documented impute sentinel (→ EP_DEFAULT_HALF_SECONDS); a non-null
+    // non-finite clock (NaN/Infinity) is corrupt and MUST NOT enter the fit — one
+    // such row NaN-poisons fitScaler and every fitted weight.
+    (play.halfSecondsRemaining === null || Number.isFinite(play.halfSecondsRemaining))
   );
 }
 
@@ -181,7 +190,9 @@ export function predictScoreDistribution(model: ExpectedPointsModel, play: EpPla
   const raw = model.perOutcome.map((m) => (m === null ? 0 : predictLogistic(m, row)));
   let sum = 0;
   for (const p of raw) sum += p;
-  if (sum <= 0) return EP_OUTCOMES.map(() => 1 / EP_OUTCOMES.length);
+  // `!(sum > 0)` (not `sum <= 0`) so a NaN sum ALSO falls back — `NaN <= 0` is false,
+  // which would otherwise return a NaN-laden distribution and hence EP = NaN.
+  if (!(sum > 0)) return EP_OUTCOMES.map(() => 1 / EP_OUTCOMES.length);
   return raw.map((p) => p / sum);
 }
 

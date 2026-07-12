@@ -73,6 +73,13 @@ export interface WinProbabilityModel {
 function featureRow(play: WpPlay): number[] {
   const t = Math.max(play.gameSecondsRemaining, 0);
   const diffPerSqrtTime = play.scoreDifferential / Math.sqrt(t + 1); // +1 avoids /0 at t=0
+  // Coerce a non-finite timeout differential / spread to a safe default (0),
+  // mirroring the finiteness discipline on the other features. WP has no output
+  // clamp (it is "always a sigmoid"), so a single NaN feature would make
+  // WP = σ(NaN) = NaN — guard the INPUTS instead.
+  const timeoutDiff = play.posteamTimeouts - play.defteamTimeouts;
+  const safeTimeoutDiff = Number.isFinite(timeoutDiff) ? timeoutDiff : 0;
+  const spread = play.spreadLine !== null && Number.isFinite(play.spreadLine) ? play.spreadLine : 0;
   return [
     play.scoreDifferential,
     play.gameSecondsRemaining,
@@ -80,8 +87,8 @@ function featureRow(play: WpPlay): number[] {
     play.yardline100,
     play.down,
     play.ydstogo,
-    play.posteamTimeouts - play.defteamTimeouts,
-    play.spreadLine ?? 0,
+    safeTimeoutDiff,
+    spread,
   ];
 }
 
@@ -93,6 +100,11 @@ function isUsable(play: WpPlay): boolean {
     Number.isFinite(play.yardline100) &&
     Number.isFinite(play.down) &&
     Number.isFinite(play.ydstogo) &&
+    // Timeouts and spread also feed featureRow; a non-finite one would NaN-poison
+    // the fitted surface. null spread is the documented pick'em sentinel (→ 0).
+    Number.isFinite(play.posteamTimeouts) &&
+    Number.isFinite(play.defteamTimeouts) &&
+    (play.spreadLine === null || Number.isFinite(play.spreadLine)) &&
     (play.posteamWon === 0 || play.posteamWon === 1)
   );
 }
