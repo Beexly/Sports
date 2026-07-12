@@ -258,6 +258,121 @@ describe("POST /api/webhooks/stripe", () => {
       expect(mocks.subscriptionUpdateMany).not.toHaveBeenCalled();
     });
 
+    it("a delayed PAST_DUE `updated` for a SUPERSEDED sub_OLD cannot adopt the paying sub_NEW row, and the later sub_OLD cancel cannot revoke it (Codex P2)", async () => {
+      // Regression for the PAST_DUE hole in the superseded guard. PAST_DUE is
+      // access-granting, so on main a delayed `updated` for the dead sub_OLD
+      // (current Stripe state past_due) slipped through, overwrote the row back
+      // onto sub_OLD, and stamped a grace window — then sub_OLD's later cancel
+      // revoked the PAYING sub_NEW. A stateful in-memory row composes both
+      // deliveries exactly as production would.
+      type Row = {
+        status: string;
+        tier: string;
+        canceledAt: Date | null;
+        stripeSubscriptionId: string;
+        stripeCustomerId: string;
+        pastDueSince: Date | null;
+      };
+      const asArgs = (a: unknown) =>
+        a as { where?: Record<string, unknown>; data?: Record<string, unknown>; update?: Record<string, unknown> };
+
+      // The member resubscribed: the row now tracks sub_NEW, active + paying (PRO).
+      let row: Row = {
+        status: "ACTIVE",
+        tier: "PRO",
+        canceledAt: null,
+        stripeSubscriptionId: "sub_NEW",
+        stripeCustomerId: "cus_123",
+        pastDueSince: null,
+      };
+
+      mocks.subscriptionFindUnique.mockImplementation(async () => ({ ...row }));
+      // Model Prisma updateMany's WHERE so a write only lands when the row matches.
+      mocks.subscriptionUpdateMany.mockImplementation(async (argsUnknown) => {
+        const { where = {}, data = {} } = asArgs(argsUnknown);
+        const okSub =
+          where["stripeSubscriptionId"] === undefined || where["stripeSubscriptionId"] === row.stripeSubscriptionId;
+        const okCust =
+          where["stripeCustomerId"] === undefined || where["stripeCustomerId"] === row.stripeCustomerId;
+        const statusNot = (where["status"] as { not?: string } | undefined)?.not;
+        const okStatus = statusNot === undefined || row.status !== statusNot;
+        const okPastDue =
+          where["pastDueSince"] === undefined ? true : where["pastDueSince"] === null ? row.pastDueSince === null : true;
+        if (okSub && okCust && okStatus && okPastDue) {
+          row = { ...row, ...(data as Partial<Row>) };
+          return { count: 1 };
+        }
+        return { count: 0 };
+      });
+      mocks.subscriptionUpsert.mockImplementation(async (argsUnknown) => {
+        const { update = {} } = asArgs(argsUnknown);
+        row = { ...row, ...(update as Partial<Row>) };
+        return { ...row };
+      });
+
+      // 1) A DELAYED customer.subscription.updated for the superseded sub_OLD whose
+      //    authoritative (re-retrieved) Stripe state is past_due.
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ id: "sub_OLD", status: "past_due" }),
+        "evt_superseded_pastdue",
+      );
+      expect((await POST(webhookRequest())).status).toBe(200);
+
+      // The guard skips it: the paying row is UNCHANGED — still sub_NEW / PRO /
+      // ACTIVE — and NO grace window was stamped on it.
+      expect(row.stripeSubscriptionId).toBe("sub_NEW");
+      expect(row.tier).toBe("PRO");
+      expect(row.status).toBe("ACTIVE");
+      expect(row.pastDueSince).toBeNull();
+      expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
+
+      // 2) sub_OLD is finally cancelled in Stripe → customer.subscription.deleted.
+      //    The delete matches BY subscription id; the row tracks sub_NEW, so it
+      //    matches nothing — the paying member is never revoked.
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("customer.subscription.deleted", stripeSubscription({ id: "sub_OLD" }), "evt_superseded_del"),
+      );
+      expect((await POST(webhookRequest())).status).toBe(200);
+
+      // FINAL persisted state: still PRO / sub_NEW / ACTIVE. Access preserved.
+      expect(row.stripeSubscriptionId).toBe("sub_NEW");
+      expect(row.tier).toBe("PRO");
+      expect(row.status).toBe("ACTIVE");
+    });
+
+    it("adopts a genuinely NEW active subscription id over a cancelled row (legit resubscribe still works)", async () => {
+      // The row is the terminal state of a prior cancellation (CANCELED / FREE),
+      // tracking sub_OLD. A real resubscribe brings a NEW id whose authoritative
+      // status is active — this MUST be adopted (the tightened guard only skips
+      // NON-active different-id events, never a genuinely current one).
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "CANCELED",
+        canceledAt: new Date("2026-06-01T00:00:00Z"),
+        stripeSubscriptionId: "sub_OLD",
+        tier: "FREE",
+      });
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ id: "sub_NEW", status: "active" }),
+        "evt_adopt",
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      // The row adopts sub_NEW at the paid tier — access restored for a paying resub.
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({
+            stripeSubscriptionId: "sub_NEW",
+            tier: "PRO",
+            status: "ACTIVE",
+          }),
+        }),
+      );
+    });
+
     it("a late same-id canceled update CONVERGES on the delete handler's terminal state (Codex P2)", async () => {
       const stampedAt = new Date("2026-07-01T00:00:00Z");
       // The delete handler already recorded the terminal state.

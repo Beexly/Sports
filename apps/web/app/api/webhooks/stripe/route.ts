@@ -230,17 +230,30 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   // subscription ids overwrites the whole row. When the row already tracks a
   // DIFFERENT subscription (the member cancelled sub_OLD and resubscribed as
   // sub_NEW), a delayed event for the old id must not clobber the new one —
-  // syncing sub_OLD's canceled state over the active sub_NEW row would revoke
-  // a paying member's access. Only an ACCESS-GRANTING state may adopt the row
-  // for a new subscription id (that is the genuine resubscribe/upgrade path);
-  // non-access states for a non-current id are stale noise and are skipped.
-  const incomingGrantsAccess =
-    incomingStatus === "ACTIVE" || incomingStatus === "TRIALING" || incomingStatus === "PAST_DUE";
+  // syncing sub_OLD's state over the active sub_NEW row would drag the row back
+  // onto the dead subscription and, on sub_OLD's eventual cancel, revoke a
+  // paying member's access.
+  //
+  // A DIFFERENT-id event may ADOPT the row (replace the tracked subscription)
+  // ONLY when its authoritative (re-retrieved) status is genuinely CURRENT —
+  // ACTIVE or TRIALING — because that is the real resubscribe/upgrade path.
+  // PAST_DUE is deliberately EXCLUDED here: a late `updated` for a superseded
+  // sub_OLD whose current Stripe state is past_due must NOT adopt the row away
+  // from the paying sub_NEW. It "grants access", but it is stale dunning noise
+  // from a dead subscription — adopting it would stamp a grace window on sub_OLD
+  // and let sub_OLD's later cancel revoke the paying member. Every other
+  // non-current status for a different id — PAST_DUE, UNPAID, CANCELED,
+  // INCOMPLETE, INCOMPLETE_EXPIRED, PAUSED — is likewise superseded noise and is
+  // skipped. Fail-safe: when in doubt, do NOT adopt a different-id, non-active
+  // event. Same-id events are unaffected and continue to flow through exactly as
+  // before.
+  const incomingCanAdoptRow =
+    incomingStatus === "ACTIVE" || incomingStatus === "TRIALING";
   if (
     existing &&
     existing.stripeSubscriptionId != null &&
     existing.stripeSubscriptionId !== stripeSubscription.id &&
-    !incomingGrantsAccess
+    !incomingCanAdoptRow
   ) {
     console.warn(
       `[stripe] ignoring ${incomingStatus} event for superseded subscription ` +
