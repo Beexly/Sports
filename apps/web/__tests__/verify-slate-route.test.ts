@@ -82,6 +82,10 @@ describe("/api/verify/slate GET", () => {
       root: REAL_ROOT,
       count: 2,
       committedAt: "2026-07-02T10:00:00.000Z",
+      // Sealed Pedersen aggregate (Phase 0.5): PUBLIC hex only — the opener
+      // (value + blinding sum) is never selected by this route. Null on the
+      // mocked pre-Phase-0.5 row.
+      pedersenAggregateHex: null,
       receiptIndexComplete: true,
       membershipVerified: true, // the displayed list re-folds EXACTLY to the root
       receipts: [
@@ -100,6 +104,12 @@ describe("/api/verify/slate GET", () => {
         }),
       }),
     );
+    // OPENER SECRECY: only the PUBLIC hex is selected — the value + blinding sum
+    // (the opener, secret until a deliberate post-slate open) are NEVER queried.
+    const select = (mocks.findUnique.mock.calls[0]![0] as { select: Record<string, unknown> }).select;
+    expect(select["pedersenAggregateHex"]).toBe(true);
+    expect(select).not.toHaveProperty("pedersenAggregateValue");
+    expect(select).not.toHaveProperty("pedersenBlindingSum");
   });
 
   it("DISCLOSES a drifted receipt index: tampered/incomplete lists fail the membership proof", async () => {
@@ -128,6 +138,11 @@ describe("/api/verify/slate GET", () => {
     // shape must still exclude every one of them.
     mocks.findUnique.mockResolvedValue({
       ...slateRow(),
+      // The opener (server-side secret until a post-slate open) must never
+      // surface even if a mis-select carried it onto the row.
+      pedersenAggregateHex: "PUB-HEX",
+      pedersenAggregateValue: "SECRET-OPENER-VALUE",
+      pedersenBlindingSum: "SECRET-BLINDING-SUM",
       receipts: [
         {
           pickId: "pick-1",
@@ -145,6 +160,12 @@ describe("/api/verify/slate GET", () => {
     expect(raw).not.toContain("SEALED");
     expect(raw).not.toContain("marketFairProb");
     expect(raw).not.toContain("confidence");
+    // Public hex may surface; the opener (value + blinding sum) NEVER does.
+    expect(body.pedersenAggregateHex).toBe("PUB-HEX");
+    expect(raw).not.toContain("SECRET-OPENER-VALUE");
+    expect(raw).not.toContain("SECRET-BLINDING-SUM");
+    expect(raw).not.toContain("pedersenAggregateValue");
+    expect(raw).not.toContain("pedersenBlindingSum");
     expect(body.receipts[0]).toEqual({ pickId: "pick-1", contentHash: "hash-one" });
   });
 

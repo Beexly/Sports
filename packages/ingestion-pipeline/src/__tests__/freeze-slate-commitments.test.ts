@@ -117,7 +117,17 @@ describe("freezeSlateCommitments", () => {
 
     expect(mocks.slateCreate).toHaveBeenCalledTimes(1);
     expect(mocks.slateCreate).toHaveBeenCalledWith({
-      data: { slateKey: TODAY_KEY, root: expected.root, count: 2, committedAt: NOW },
+      data: {
+        slateKey: TODAY_KEY,
+        root: expected.root,
+        count: 2,
+        committedAt: NOW,
+        // Mock receipts carry no edgeScore, so the Pedersen aggregate fails
+        // OPEN to nulls — proving the Merkle path is never blocked by it.
+        pedersenAggregateHex: null,
+        pedersenAggregateValue: null,
+        pedersenBlindingSum: null,
+      },
     });
     // ATOMICITY (hostile-review fix): create + backfill ride ONE transaction.
     expect(mocks.transaction).toHaveBeenCalledTimes(1);
@@ -126,6 +136,30 @@ describe("freezeSlateCommitments", () => {
       { slateKey: TODAY_KEY, action: "COMMIT", count: 2 },
       NO_GAMES_TOMORROW,
     ]);
+  });
+
+  it("persists the MINTED Pedersen aggregate atomically when receipts carry edge scores", async () => {
+    // Receipts WITH published edge scores mint a REAL (non-null) aggregate —
+    // the public hex + the opener (value + blinding sum) are persisted in the
+    // SAME atomic create as the Merkle commitment row (write-once, never
+    // backfilled). Only today's slate has games, so only it queries receipts.
+    mocks.receiptFindMany.mockResolvedValue([
+      { pickId: "pick-1", payload: "payload-one", edgeScore: 61 },
+      { pickId: "pick-2", payload: "payload-two", edgeScore: 48 },
+    ]);
+
+    await freezeSlateCommitments([SPORT], NOW, testHash);
+
+    expect(mocks.slateCreate).toHaveBeenCalledTimes(1);
+    const data = (mocks.slateCreate.mock.calls[0]![0] as { data: Record<string, unknown> }).data;
+    // All three aggregate fields are persisted (non-null) when a mint succeeds.
+    expect(typeof data["pedersenAggregateHex"]).toBe("string");
+    expect((data["pedersenAggregateHex"] as string).length).toBeGreaterThan(0);
+    expect(typeof data["pedersenAggregateValue"]).toBe("string");
+    expect(typeof data["pedersenBlindingSum"]).toBe("string");
+    // The mint rides the SAME atomic transaction as the commitment + backfill.
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(2);
   });
 
   it("PRIMETIME FIX: tomorrow's early-UTC slate is committed TODAY, pre-kickoff", async () => {
