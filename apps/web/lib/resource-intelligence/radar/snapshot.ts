@@ -54,6 +54,20 @@ export function validateSnapshot(s: RadarSnapshot): string[] {
 /** The current committed snapshot (latest import wins; history stays in git). */
 export const RADAR_SNAPSHOT: RadarSnapshot = latestSnapshot as RadarSnapshot;
 
+/**
+ * Validated ONCE at module load (G-3: validateSnapshot used to exist but was
+ * never called at runtime, so a hand-edited fixture flowed straight into the
+ * policy caps). Non-empty problems make getObservations throw — the radar is
+ * admin-only and flag-gated, so a corrupt committed snapshot surfaces as a
+ * loud error state, never as a quietly-mislabeled feed.
+ */
+const SNAPSHOT_PROBLEMS: readonly string[] = validateSnapshot(RADAR_SNAPSHOT);
+
 export function getObservations(): readonly RepoRadarObservation[] {
+  if (SNAPSHOT_PROBLEMS.length > 0) {
+    throw new Error(
+      `Radar snapshot failed validation (fail-closed): ${SNAPSHOT_PROBLEMS.join("; ")}`
+    );
+  }
   return RADAR_SNAPSHOT.observations;
 }

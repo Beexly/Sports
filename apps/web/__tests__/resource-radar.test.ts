@@ -14,6 +14,7 @@ import {
   buildDossiers,
   buildRadarFeed,
   mostRestrictivePosture,
+  highestRisk,
 } from "@/lib/resource-intelligence/radar";
 import { GATED_DISPOSITIONS, IMPLEMENTABLE_DISPOSITIONS } from "@/lib/resource-intelligence/types";
 
@@ -42,6 +43,15 @@ describe("radar — 1. normalization determinism", () => {
     expect(normalizePosture("QUARANTINE_RIGHTS")).toBe("QUARANTINE");
     expect(normalizePosture("ADOPT_PATTERNS_NOT_DEPENDENCY")).toBe("ADOPT_PATTERNS");
     expect(normalizePosture("EVALUATE")).toBe("OBSERVE");
+  });
+
+  it("G-4: REJECT variants match by prefix; unrecognized postures gate as OWNER_REVIEW, never watch-only", () => {
+    expect(normalizePosture("REJECTED")).toBe("REJECT");
+    expect(normalizePosture("REJECT_NOISE")).toBe("REJECT");
+    // Fail-closed fallback: an unrecognized posture is an evidence defect —
+    // it must gate (owner_review), not silently become OBSERVE/roadmap.
+    expect(normalizePosture("SHIP_IT_NOW")).toBe("OWNER_REVIEW");
+    expect(normalizePosture("")).toBe("OWNER_REVIEW");
   });
 
   it("the committed snapshot validates clean", () => {
@@ -310,6 +320,17 @@ describe("radar — Codex #76 regressions", () => {
     ).toBe("quarantine");
   });
 
+  it("G-3: unknown POSTURE labels fail closed to quarantine (was: undefined fell through open)", () => {
+    expect(
+      effectiveDisposition("ADOPT_NOW" as never, "LOW", "MIT")
+    ).toBe("quarantine");
+  });
+
+  it("G-3: unknown labels rank most restrictive in cross-window merges", () => {
+    expect(mostRestrictivePosture(["PROTOTYPE", "ADOPT_NOW" as never])).toBe("ADOPT_NOW");
+    expect(highestRisk(["LOW", "BLOCKED_RIGHTS" as never])).toBe("BLOCKED_RIGHTS");
+  });
+
   it("the importer validates risk against the closed set", () => {
     const importer = readFileSync(
       join(__dirname, "..", "..", "..", "scripts", "resource-radar-import.mjs"),
@@ -330,5 +351,14 @@ describe("radar — Codex #76 regressions", () => {
     };
     const problems = validateSnapshot(tampered);
     expect(problems.some((p) => p.includes("unknown risk"))).toBe(true);
+  });
+
+  it("G-3: validateSnapshot is WIRED at module load and getObservations fails closed on problems", () => {
+    // The committed snapshot is clean, so the throw can't fire in-process;
+    // pin the wiring itself (same pattern as the importer scan above) so
+    // validation can never silently become dead code again.
+    const src = read("lib/resource-intelligence/radar/snapshot.ts");
+    expect(src).toMatch(/const SNAPSHOT_PROBLEMS[^=]*= validateSnapshot\(RADAR_SNAPSHOT\)/);
+    expect(src).toMatch(/if \(SNAPSHOT_PROBLEMS\.length > 0\) \{\s*\n\s*throw new Error/);
   });
 });
