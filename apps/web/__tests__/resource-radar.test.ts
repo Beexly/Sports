@@ -220,7 +220,11 @@ describe("radar — 11. empty and disabled states are distinct from error", () =
     const page = read("app/cockpit/sources/radar/page.tsx");
     const route = read("app/api/cockpit/resource-intelligence/radar/route.ts");
     for (const src of [page, route]) {
-      expect(src.toLowerCase()).not.toMatch(/npm install|npx |git clone|pip install/);
+      // G-18: cover the whole package-manager family — an affordance rendered
+      // as pnpm/yarn/bun/cargo/uv escaped the npm/pip-only pattern.
+      expect(src.toLowerCase()).not.toMatch(
+        /npm (install|i |add)|npx |pnpm (install|i |add)|yarn (install|add)|bun (install|i |add)|git clone|pip install|pipx |uv (pip|add|tool)|cargo (install|add)|brew install/
+      );
     }
     expect(page).toMatch(/Nothing below is approved to install/i);
   });
