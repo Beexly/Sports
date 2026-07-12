@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadGameRoom } from "@/lib/game-room/load";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,15 @@ export default async function GameRoomPage({
 }: {
   params: { gameId: string };
 }): Promise<JSX.Element> {
-  const room = await loadGameRoom(params.gameId);
+  // Resolve the viewer's entitlements server-side (anonymous → FREE, fail-closed)
+  // and pass them into the shared loader so the paid pre-mortem factor trail and
+  // Market Pulse line movement are NEVER built for un-entitled callers — the
+  // public room only shows what FREE is allowed (CLAUDE.md rule #3).
+  const viewer = await getViewerEntitlements();
+  const room = await loadGameRoom(params.gameId, {
+    canSeeFactorBreakdown: viewer.canSeeFactorBreakdown,
+    canSeeLineMovement: viewer.canSeeLineMovement,
+  });
   if (!room) notFound();
 
   return (
@@ -51,8 +60,18 @@ export default async function GameRoomPage({
             <dl className="grid gap-3 text-sm sm:grid-cols-2">
               <Fact label="Published picks" value={String(room.node.marketPulse.publishedPickCount)} />
               <Fact label="Bootstrap gated" value={room.node.marketPulse.gatedByBootstrap ? "Yes" : "No"} />
-              <Fact label="Spread movement" value={formatNullable(room.node.marketPulse.lineMovementSpread)} />
-              <Fact label="Total movement" value={formatNullable(room.node.marketPulse.lineMovementTotal)} />
+              {/* Line movement is a Pro-tier market read. The loader already nulls
+                  it for un-entitled viewers; we also gate the render so the panel
+                  is honest about WHY it is absent (drives upgrade) instead of a
+                  bare "N/A" that reads as missing data. */}
+              {viewer.canSeeLineMovement ? (
+                <>
+                  <Fact label="Spread movement" value={formatNullable(room.node.marketPulse.lineMovementSpread)} />
+                  <Fact label="Total movement" value={formatNullable(room.node.marketPulse.lineMovementTotal)} />
+                </>
+              ) : (
+                <Fact label="Line movement" value="Unlocks with Pro" />
+              )}
             </dl>
           </Panel>
 
@@ -89,14 +108,27 @@ export default async function GameRoomPage({
           </Panel>
 
           <Panel title="What Would Change Our Mind">
-            {room.premortem ? (
+            {!viewer.canSeeFactorBreakdown ? (
+              // The pre-mortem summary embeds the paid factor trail (confidence,
+              // line-movement delta, rest/schedule/ATS/H2H, data quality, book
+              // depth). It is withheld server-side for FREE/anonymous viewers —
+              // the loader returns premortem: null — so nothing paid renders here.
+              <p className="text-sm text-ion-3">
+                The pre-mortem — the model&apos;s own case for what would beat this pick, with the
+                confidence and factor trail behind it — is part of Pro.{" "}
+                <Link href="/pricing" className="font-semibold text-orbital-cyan hover:text-ion-white">
+                  See what Pro unlocks
+                </Link>
+                .
+              </p>
+            ) : room.premortem ? (
               <div className="text-sm leading-6 text-ion-1">
                 <h2 className="font-semibold text-white">{room.premortem.headline}</h2>
                 <p className="mt-3">{room.premortem.summary}</p>
               </div>
             ) : (
               <p className="text-sm text-ion-3">
-                No published pick is attached yet, so the public pre-mortem will appear after a pick clears the gate.
+                No published pick is attached yet, so the pre-mortem will appear after a pick clears the gate.
               </p>
             )}
           </Panel>

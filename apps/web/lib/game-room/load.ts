@@ -37,6 +37,34 @@ export interface GameRoomData {
   readonly memory: GameRoomMemory;
 }
 
+/**
+ * Viewer entitlements the room loader needs to gate premium fields server-side.
+ *
+ * The Game Room is a PUBLIC read-only surface, but two of its panels carry the
+ * platform's paid metrics — the same ones the board (`/api/picks`) and the audit
+ * route (#103) gate for FREE:
+ *
+ *  - the pre-mortem note embeds the paid factor trail (confidence at prediction,
+ *    line-movement delta, rest/schedule/ATS/H2H sample sizes, data-quality score,
+ *    book depth — see `buildPickPremortemNote`), and
+ *  - Market Pulse line movement is the Pro-tier market read (`canSeeLineMovement`).
+ *
+ * Both are built ONLY past the gate; un-entitled callers get null. Fail-closed by
+ * default so a caller that forgets to pass entitlements (anonymous → FREE) can
+ * never leak the paid data (CLAUDE.md rule #3 — enforcement is server-side only).
+ */
+export interface GameRoomViewer {
+  /** PRO/ELITE — unlocks the pre-mortem factor trail (mirrors the audit route). */
+  readonly canSeeFactorBreakdown: boolean;
+  /** PRO/ELITE — unlocks Market Pulse line movement (mirrors the board). */
+  readonly canSeeLineMovement: boolean;
+}
+
+const FAIL_CLOSED_VIEWER: GameRoomViewer = {
+  canSeeFactorBreakdown: false,
+  canSeeLineMovement: false,
+};
+
 const LENSES: readonly UserLens[] = ["FAN", "BETTOR", "CREATOR", "ANALYST"];
 
 function asIso(value: Date | string | null | undefined): string | null {
@@ -93,7 +121,11 @@ function memoryForPick(pick: {
   };
 }
 
-export async function loadGameRoom(gameId: string, now = new Date()): Promise<GameRoomData | null> {
+export async function loadGameRoom(
+  gameId: string,
+  viewer: GameRoomViewer = FAIL_CLOSED_VIEWER,
+  now = new Date(),
+): Promise<GameRoomData | null> {
   const game = await db.game
     .findUnique({
       where: { id: gameId },
@@ -154,8 +186,12 @@ export async function loadGameRoom(gameId: string, now = new Date()): Promise<Ga
       currentEdgeIndex: game.currentEdgeIndex,
       bookmakerCoverageMax: game.bookmakerCoverageMax,
       dataQualityScore: game.dataQualityScore,
-      lineMovementSpread: game.lineMovementSpread,
-      lineMovementTotal: game.lineMovementTotal,
+      // Line movement is the Pro-tier market read (`canSeeLineMovement` on the
+      // board). Serve it ONLY past the gate; un-entitled viewers (anonymous →
+      // FREE) get null so the public room never leaks the paid metric — the raw
+      // value never even enters the node/HTML (CLAUDE.md rule #3).
+      lineMovementSpread: viewer.canSeeLineMovement ? game.lineMovementSpread : null,
+      lineMovementTotal: viewer.canSeeLineMovement ? game.lineMovementTotal : null,
       isBootstrap: false,
     },
     picks,
@@ -169,9 +205,15 @@ export async function loadGameRoom(gameId: string, now = new Date()): Promise<Ga
     bootstrapGameCount: node.marketPulse.gatedByBootstrap ? 1 : 0,
   };
   const primaryPick = game.picks[0] ?? null;
-  const premortem = primaryPick
-    ? buildPickPremortemNote(primaryPick, primaryPick.signalSnapshot)
-    : null;
+  // The pre-mortem note embeds the paid factor trail — confidence at prediction,
+  // line-movement delta, rest/schedule/ATS/H2H sample sizes, data-quality score,
+  // and book depth (see `buildPickPremortemNote`). These are exactly the fields
+  // the audit route (#103) gates behind PRO/ELITE. Build it ONLY past the
+  // factor-breakdown gate; un-entitled viewers (anonymous → FREE) get null.
+  const premortem =
+    viewer.canSeeFactorBreakdown && primaryPick
+      ? buildPickPremortemNote(primaryPick, primaryPick.signalSnapshot)
+      : null;
 
   return {
     node,

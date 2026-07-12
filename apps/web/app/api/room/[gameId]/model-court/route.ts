@@ -88,7 +88,14 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
     );
   }
 
-  const room = await loadGameRoom(context.params.gameId);
+  // Pass the caller's real entitlements to the shared room loader so the paid
+  // pre-mortem factor trail and Market Pulse line movement are built for this
+  // request. The tier check above already 403s anyone below PRO/ELITE, so a
+  // caller reaching here is entitled — the grounding keeps its full market read.
+  const room = await loadGameRoom(context.params.gameId, {
+    canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
+    canSeeLineMovement: entitlements.canSeeLineMovement,
+  });
   if (!room) {
     return NextResponse.json({ success: false, error: "game-not-found" }, { status: 404 });
   }
