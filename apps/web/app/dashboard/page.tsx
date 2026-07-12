@@ -8,6 +8,7 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BillingNoticeBanner } from "@/components/ui/billing-notice-banner";
 import { getBillingNotice } from "@/lib/billing/notice";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { reconcileUserEntitlement } from "@/lib/billing/reconcile-entitlements";
 import { BRAND_NAME } from "@/lib/brand";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
@@ -77,6 +78,15 @@ export default async function DashboardPage({
     process.env.NODE_ENV === "production"
       ? { NOT: { modelVersion: "v5.0.0-seed" } }
       : {};
+
+  // Self-healing backstop for a slow/failed billing webhook. When the member has
+  // just returned from Stripe checkout (?upgraded=true), positively confirm their
+  // live Stripe subscription and grant the paid tier NOW, before we read
+  // entitlements below — so access is immediate even if the webhook never landed.
+  // Strictly confirm-or-grant: it never revokes on this surface and never throws.
+  if (searchParams?.upgraded === "true") {
+    await reconcileUserEntitlement(user.id);
+  }
 
   // Server-side tier gate (rule #3): FREE members see their 1 daily FREE
   // pick without confidence; PRO+ sees the full slate with confidence.
