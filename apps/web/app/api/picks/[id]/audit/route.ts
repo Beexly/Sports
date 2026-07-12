@@ -142,46 +142,6 @@ export async function GET(
   );
 
   const snapshot = pick.signalSnapshot;
-  const snapshotInput = snapshot
-    ? {
-        id: snapshot.id,
-        capturedAt: snapshot.capturedAt,
-        hadLineMovementSignal: snapshot.hadLineMovementSignal,
-        hadRestSignal: snapshot.hadRestSignal,
-        hadScheduleSignal: snapshot.hadScheduleSignal,
-        hadAtsFormSignal: snapshot.hadAtsFormSignal,
-        hadH2HSignal: snapshot.hadH2HSignal,
-        hadVenueSignal: snapshot.hadVenueSignal,
-        hadWeatherSignal: snapshot.hadWeatherSignal,
-        hadInjurySignal: snapshot.hadInjurySignal,
-        bookmakerCount: snapshot.bookmakerCount,
-        dataQualityScore: snapshot.dataQualityScore,
-        lineMovementDelta: snapshot.lineMovementDelta,
-        restAdvantageNet: snapshot.restAdvantageNet,
-        atsFormSampleSize: snapshot.atsFormSampleSize,
-        h2hSampleSize: snapshot.h2hSampleSize,
-        scheduleDensityHome: snapshot.scheduleDensityHome,
-        scheduleDensityAway: snapshot.scheduleDensityAway,
-        modelVersion: snapshot.modelVersion,
-      }
-    : null;
-  const preMortem = buildPickPremortemNote(
-    {
-      id: pick.id,
-      selection: pick.selection,
-      pickType: pick.pickType,
-      confidence: pick.confidence,
-      edgeScore: pick.edgeScore,
-      consensusPct: pick.consensusPct,
-      bookmakerCount: pick.bookmakerCount,
-      riskLevel: pick.riskLevel,
-      modelVersion: pick.modelVersion,
-    },
-    snapshotInput
-  );
-  // Fragility: the premortem's structural risk as a published-weights
-  // number. Same snapshot, no new claims, null without a snapshot.
-  const fragility = computeFragilityScore(snapshotInput);
 
   // Signal-category topology. Derived from the snapshot's hadXxx flags
   // when present; falls back to "ABSENT" otherwise so the audit always
@@ -267,13 +227,72 @@ export async function GET(
       upgradeRequiredForDetail: true,
     };
     const payload: AuditPayload = summary;
-    return NextResponse.json({ success: true, audit: payload, preMortem, fragility });
+    // Premium forensic content — the pre-mortem note and the fragility score —
+    // is gated with the same server-side entitlement as the detailed audit.
+    // Both objects embed exactly the paid factor-trail values the board denies
+    // FREE: confidence at prediction, line-movement delta, rest advantage,
+    // ATS/H2H sample sizes, schedule density, data-quality score, and book
+    // depth. Un-entitled callers (FREE tier AND anonymous, since `session` may
+    // be null → tier "FREE") receive the topology-only summary plus NULL for
+    // both — mirroring the FREE view on the board (`app/api/picks/route.ts`).
+    // These are computed only in the entitled branch below, so this path has
+    // nothing premium in scope to leak.
+    return NextResponse.json({
+      success: true,
+      audit: payload,
+      preMortem: null,
+      fragility: null,
+    });
   }
 
   // ──────────────────────────────────────────────────────────────────
   // PRO / ELITE tier: full forensic detail. Still NO raw payload data,
   // NO Kelly/stake math, NO true-EV — those remain hard-gated.
   // ──────────────────────────────────────────────────────────────────
+  // Premium forensic content is built only past the entitlement gate: the
+  // snapshot input (and everything derived from it) never enters scope for an
+  // un-entitled caller, so it cannot leak from the FREE branch above.
+  const snapshotInput = snapshot
+    ? {
+        id: snapshot.id,
+        capturedAt: snapshot.capturedAt,
+        hadLineMovementSignal: snapshot.hadLineMovementSignal,
+        hadRestSignal: snapshot.hadRestSignal,
+        hadScheduleSignal: snapshot.hadScheduleSignal,
+        hadAtsFormSignal: snapshot.hadAtsFormSignal,
+        hadH2HSignal: snapshot.hadH2HSignal,
+        hadVenueSignal: snapshot.hadVenueSignal,
+        hadWeatherSignal: snapshot.hadWeatherSignal,
+        hadInjurySignal: snapshot.hadInjurySignal,
+        bookmakerCount: snapshot.bookmakerCount,
+        dataQualityScore: snapshot.dataQualityScore,
+        lineMovementDelta: snapshot.lineMovementDelta,
+        restAdvantageNet: snapshot.restAdvantageNet,
+        atsFormSampleSize: snapshot.atsFormSampleSize,
+        h2hSampleSize: snapshot.h2hSampleSize,
+        scheduleDensityHome: snapshot.scheduleDensityHome,
+        scheduleDensityAway: snapshot.scheduleDensityAway,
+        modelVersion: snapshot.modelVersion,
+      }
+    : null;
+  const preMortem = buildPickPremortemNote(
+    {
+      id: pick.id,
+      selection: pick.selection,
+      pickType: pick.pickType,
+      confidence: pick.confidence,
+      edgeScore: pick.edgeScore,
+      consensusPct: pick.consensusPct,
+      bookmakerCount: pick.bookmakerCount,
+      riskLevel: pick.riskLevel,
+      modelVersion: pick.modelVersion,
+    },
+    snapshotInput
+  );
+  // Fragility: the premortem's structural risk as a published-weights
+  // number. Same snapshot, no new claims, null without a snapshot.
+  const fragility = computeFragilityScore(snapshotInput);
+
   // Death clock: price-space market movement since publish, from the
   // same bounded odds rows. Null whenever history can't support it.
   const deathClock = buildPickDeathClock(
