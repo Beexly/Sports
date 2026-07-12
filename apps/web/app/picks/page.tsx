@@ -330,12 +330,47 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </div>
           </div>
 
-          {/* Error state */}
+          {/* Backend-outage state. A rejected fetch (network fault) or an
+              unexpected non-2xx from /api/picks that ISN'T the deliberate
+              bootstrap/stale gate lands here. Per the T-picks-outage doctrine
+              this is a CONNECTION problem, never a verdict on the board — so it
+              is rendered as a calm, designed state that stays visually and
+              textually DISTINCT from the "Signal gate collecting" gate below
+              (caution amber vs the gate's cyan) and NEVER leaks the raw HTTP
+              status the way a bare `{fetchError}` dump would. */}
           {fetchError && (
-            <div className="rounded-xl border border-alert/40 bg-alert/10 p-6 text-center">
-              <p className="text-sm font-medium text-alert">{fetchError}</p>
-              <p className="mt-1 text-xs text-alert">
-                Please refresh the page or try again shortly.
+            <div
+              data-testid="picks-outage-state"
+              role="status"
+              aria-live="polite"
+              className="rounded-xl border border-caution/40 bg-caution/[0.06] p-8 text-center"
+            >
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-caution/30 bg-caution/10">
+                <svg
+                  className="h-7 w-7 text-caution"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                  />
+                </svg>
+              </div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-caution">
+                Temporarily unavailable
+              </p>
+              <h2 className="mt-3 text-lg font-semibold text-white">
+                Today&apos;s Board is taking a moment to load.
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
+                This is a connection problem on our side, not a verdict on the
+                board. Nothing is wrong with today&apos;s picks — refresh in a
+                moment and the board will be back.
               </p>
             </div>
           )}
