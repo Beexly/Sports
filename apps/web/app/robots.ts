@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/seo/site-url";
 
 /**
  * robots.txt
@@ -9,8 +10,7 @@ import type { MetadataRoute } from "next";
  */
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl =
-    process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
+  const baseUrl = SITE_URL;
 
   return {
     rules: [

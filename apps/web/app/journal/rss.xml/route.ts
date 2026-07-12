@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { loadPublicJournalEntries } from "@/lib/journal/load";
-
-const SITE_URL = process.env["NEXT_PUBLIC_APP_URL"] ?? "https://www.galaxysportsedge.com";
+import { SITE_URL } from "@/lib/seo/site-url";
 
 function escapeXml(value: string): string {
   return value

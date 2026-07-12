@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { loadPublicJournalEntries } from "@/lib/journal/load";
+import { SITE_URL } from "@/lib/seo/site-url";
 import { db } from "@sports/db";
 
 /**
@@ -102,8 +103,7 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
       },
     });
 
-    const baseUrl =
-      process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
+    const baseUrl = SITE_URL;
 
     return games.map((g) => ({
       url: `${baseUrl}/preview/${slugify(g.sportId)}/${slugify(g.awayTeamName)}-vs-${slugify(g.homeTeamName)}`,
@@ -118,8 +118,7 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl =
-    process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
+  const baseUrl = SITE_URL;
   const [journalEntries, previewRoutes] = await Promise.all([
     loadPublicJournalEntries(),
     loadPreviewGames(),
