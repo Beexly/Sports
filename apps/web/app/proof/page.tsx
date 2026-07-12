@@ -96,9 +96,13 @@ export default async function ProofOfRecordPage() {
     board = await loadProofOfRecord();
   } catch {
     // Surface a safe error state rather than throwing to Next.js error boundary.
+    // Do NOT synthesize a generatedAt: the board never loaded, so stamping "now"
+    // as its generation time would fabricate a freshness claim directly above the
+    // "ledger is temporarily unreachable" card. Leave it empty; the freshness
+    // stamp is suppressed while ledgerUnreachable is true.
     ledgerUnreachable = true;
     board = {
-      generatedAt: new Date().toISOString(),
+      generatedAt: "",
       picks: [],
       merkleRoot: "",
       totalSettled: 0,
@@ -208,16 +212,22 @@ export default async function ProofOfRecordPage() {
             </section>
           )}
 
-          {/* ── Freshness stamp (always shown) ── */}
-          <p
-            data-testid="proof-freshness-stamp"
-            className={`mt-4 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}
-          >
-            Board generated {new Date(board.generatedAt).toUTCString()}
-            {hasLedger && (
-              <> · {formatCount(board.totalSettled)} settled picks in the ledger</>
-            )}
-          </p>
+          {/* ── Freshness stamp ── Shown only when the board actually loaded.
+                 During an outage generatedAt is empty and this stamp is
+                 suppressed, so we never assert a generation time for a board
+                 that never loaded — the unreachable card below carries that
+                 state instead. ── */}
+          {!ledgerUnreachable && (
+            <p
+              data-testid="proof-freshness-stamp"
+              className={`mt-4 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}
+            >
+              Board generated {new Date(board.generatedAt).toUTCString()}
+              {hasLedger && (
+                <> · {formatCount(board.totalSettled)} settled picks in the ledger</>
+              )}
+            </p>
+          )}
 
           {/* ── Outage state: distinct from empty. The record exists; we
                  just can't reach it right now. Saying "no picks exist yet"
