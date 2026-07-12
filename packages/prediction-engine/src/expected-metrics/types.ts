@@ -15,7 +15,12 @@ export interface ExpectedMetricProvenance {
   /** Stable version tag for the metric definition (bump when features change). */
   readonly modelVersion: string;
   /** The estimator family used. */
-  readonly method: "logistic-regression" | "ridge-linear";
+  readonly method:
+    | "logistic-regression"
+    | "ridge-linear"
+    | "multinomial-ovr-logistic" // EP: 7 one-vs-rest binary logistics, renormalized
+    | "deterministic-rule" // Success rate: closed-form threshold, no fit
+    | "drive-segmentation"; // Drive aggregation: partition, no fit
   /** Canonical ordered feature-key list the model was fit on. */
   readonly featureKeys: readonly string[];
   /** Deterministic hash of `featureKeys` — detects silent feature-contract drift. */
