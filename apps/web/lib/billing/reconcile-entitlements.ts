@@ -34,7 +34,7 @@
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db } from "@sports/db";
-import { tierForPriceId, type PaidTier } from "@/lib/billing/price-ids";
+import { tierForPriceId, type PaidTier, type ResolvedTier } from "@/lib/billing/price-ids";
 
 /** Stripe statuses that grant entitlement in this platform (mirrors entitlements.ts). */
 const ACCESS_GRANTING_STRIPE_STATUSES = ["active", "trialing", "past_due"] as const;
@@ -42,6 +42,27 @@ type GrantingStripeStatus = (typeof ACCESS_GRANTING_STRIPE_STATUSES)[number];
 
 /** DB status a positively-confirmed granting Stripe status maps to. */
 type GrantingDbStatus = "ACTIVE" | "TRIALING" | "PAST_DUE";
+
+/** Paid DB statuses whose rows currently GRANT access (the downgrade-guard target). */
+const PAID_DB_STATUSES = ["ACTIVE", "TRIALING", "PAST_DUE"] as const;
+
+/**
+ * Entitlement precedence for picking ONE canonical subscription per customer
+ * (FINDING 4). A customer can hold several live Stripe subscriptions; the DB row is
+ * keyed on `stripeCustomerId`, so without a deterministic winner an older / lower
+ * sub processed last would clobber the entitlement of a newer / higher one. Highest
+ * rank wins; ties break on newest (see `isMoreCanonical`).
+ */
+const TIER_RANK: Record<ResolvedTier, number> = { ELITE: 3, PRO: 2, FANTASY: 1, FREE: 0 };
+
+/**
+ * FINDING 2 fail-closed anchor. When a past_due grant's real first-failure time
+ * cannot be reconstructed from Stripe, we stamp this UNIX-epoch sentinel instead of
+ * `now()`: it is unconditionally older than any grace cutoff, so
+ * `getUserEntitlements` resolves the row to FREE (grace already expired) rather than
+ * minting a fresh premium grace window. Never grant premium on an unknown anchor.
+ */
+const UNKNOWN_PAST_DUE_ANCHOR = new Date(0);
 
 export interface ReconcileSummary {
   /** Subscriptions/rows examined across both phases. */
@@ -89,6 +110,95 @@ function isResourceMissing(err: unknown): boolean {
 }
 
 /**
+ * FINDING 1 — downgrade-phase classification of a POSITIVELY-RETRIEVED Stripe
+ * status. Called ONLY with a status Stripe actually returned (never on an API
+ * error — errors fail SAFE at the call site by keeping the row). A definitively
+ * retrieved status is authoritative, never "ambiguous":
+ *
+ *   "keep"      → still access-granting (active / trialing / past_due). The
+ *                 active-set list merely missed it (pagination / race); do NOT
+ *                 revoke. Also the fail-safe landing for any UNKNOWN future status.
+ *   "downgrade" → CONFIRMED non-access. Stripe positively reports the subscription
+ *                 no longer grants entitlement, so a paid GRANTING row must drop to
+ *                 FREE. Covers terminal states (canceled, incomplete_expired) and
+ *                 dunning-exhausted / non-billing holds (unpaid, incomplete,
+ *                 paused) — none of which grant access. Leaving the row would strand
+ *                 a paid tier on a dead subscription forever (every cron a no-op).
+ */
+function downgradeActionForRetrievedStatus(
+  status: Stripe.Subscription.Status,
+): "keep" | "downgrade" {
+  switch (status) {
+    case "active":
+    case "trialing":
+    case "past_due":
+      return "keep";
+    case "canceled":
+    case "incomplete_expired":
+    case "unpaid":
+    case "incomplete":
+    case "paused":
+      return "downgrade";
+    default: {
+      // Exhaustiveness guard. Stripe's status set is closed and fully handled
+      // above; this only fires if Stripe introduces a NEW status — which we must
+      // classify explicitly, never silently revoke on. Fail SAFE (keep) + surface.
+      const _exhaustive: never = status;
+      console.error(
+        `[reconcile] unrecognized Stripe subscription status "${String(_exhaustive)}"; ` +
+          "NOT revoking (fail-safe) — classify it explicitly in reconcile-entitlements.",
+      );
+      return "keep";
+    }
+  }
+}
+
+/**
+ * FINDING 2 — reconstruct the REAL past-due anchor from Stripe so a backfill never
+ * renews the grace window. When an invoice payment fails, Stripe raised that
+ * invoice at the current period boundary and stops advancing the period, so
+ * `current_period_start` is when this unpaid cycle (and thus the failure) began —
+ * a conservative anchor that is never LATER than the true first-failure time.
+ * Returns null when no usable Stripe timestamp exists, so the caller FAILS CLOSED
+ * (stamps `UNKNOWN_PAST_DUE_ANCHOR`) instead of inventing `now()`.
+ */
+function derivePastDueAnchor(subscription: Stripe.Subscription): Date | null {
+  const periodStart = subscription.current_period_start;
+  if (typeof periodStart === "number" && periodStart > 0) {
+    return new Date(periodStart * 1000);
+  }
+  return null;
+}
+
+/** Sort key for canonical selection: newest subscription wins a tier tie. */
+function canonicalCreatedAt(subscription: Stripe.Subscription): number {
+  if (typeof subscription.created === "number") return subscription.created;
+  if (typeof subscription.current_period_start === "number") {
+    return subscription.current_period_start;
+  }
+  return 0;
+}
+
+/** FINDING 4 — true when `a` outranks `b` as the customer's canonical subscription. */
+function isMoreCanonical(a: Stripe.Subscription, b: Stripe.Subscription): boolean {
+  const rankA = TIER_RANK[tierForPriceId(a.items.data[0]?.price.id)];
+  const rankB = TIER_RANK[tierForPriceId(b.items.data[0]?.price.id)];
+  if (rankA !== rankB) return rankA > rankB;
+  return canonicalCreatedAt(a) > canonicalCreatedAt(b);
+}
+
+/**
+ * FINDING 4 — select the ONE canonical live subscription for a customer: highest
+ * entitlement tier, tie-broken by newest. Deterministic regardless of the order
+ * subscriptions were retrieved, so a lower / older sub can never overwrite the row.
+ */
+function canonicalSubscription(subscriptions: Stripe.Subscription[]): Stripe.Subscription {
+  return subscriptions.reduce((best, current) =>
+    isMoreCanonical(current, best) ? current : best,
+  );
+}
+
+/**
  * Write the confirmed paid tier for a subscription. Mirrors the webhook's
  * `syncSubscription` upsert semantics (keyed on `stripeCustomerId`) but is a
  * dedicated reconcile-side write so the webhook route is left untouched.
@@ -102,6 +212,14 @@ async function upsertGrant(
   const priceId = subscription.items.data[0]?.price.id;
   const status = mapGrantingStatus(subscription.status as GrantingStripeStatus);
   const isPastDue = status === "PAST_DUE";
+
+  // FINDING 2: anchor the grace window to a Stripe timestamp, NEVER `now()` — else
+  // every reconcile of a still-past_due sub mints a fresh full grace window. If the
+  // real anchor can't be reconstructed, fail closed with the epoch sentinel so
+  // access resolves to FREE instead of renewing premium on an unknown anchor.
+  const pastDueAnchor: Date | null = isPastDue
+    ? (derivePastDueAnchor(subscription) ?? UNKNOWN_PAST_DUE_ANCHOR)
+    : null;
 
   const periodStart = subscription.current_period_start
     ? new Date(subscription.current_period_start * 1000)
@@ -136,16 +254,17 @@ async function upsertGrant(
       userId,
       stripeCustomerId: customerId,
       ...base,
-      ...(isPastDue ? { pastDueSince: new Date() } : {}),
+      ...(isPastDue && pastDueAnchor ? { pastDueSince: pastDueAnchor } : {}),
     },
     update: base,
   });
 
-  if (isPastDue) {
-    // Stamp the grace anchor only where absent so retries can't slide the window.
+  if (isPastDue && pastDueAnchor) {
+    // Stamp the grace anchor only where absent so retries can't slide the window,
+    // and use the Stripe-derived anchor (FINDING 2) — never `now()`.
     await db.subscription.updateMany({
       where: { stripeCustomerId: customerId, pastDueSince: null },
-      data: { pastDueSince: new Date() },
+      data: { pastDueSince: pastDueAnchor },
     });
   }
 }
@@ -240,9 +359,13 @@ async function listGrantingSubscriptions(
 /**
  * Downgrade DB rows that still claim a paid tier but whose subscription Stripe no
  * longer grants. FAIL-SAFE: a row absent from the confirmed active-set is NOT
- * enough — we positively re-confirm the specific subscription with Stripe and only
- * revoke on a TERMINAL status (canceled / incomplete_expired) or a confirmed
- * absence. Any transient/ambiguous outcome revokes nothing.
+ * enough — we positively re-confirm the specific subscription with Stripe and revoke
+ * only on a CONFIRMED non-access status (canceled / incomplete_expired / unpaid /
+ * incomplete / paused — see `downgradeActionForRetrievedStatus`) or a confirmed
+ * absence. The fail-safe applies to Stripe ERRORS only (a transient list/retrieve
+ * failure revokes nothing); a definitively-retrieved terminal status is never
+ * treated as ambiguous. The revoke write is itself guarded against a concurrent
+ * resubscribe (FINDING 3).
  */
 async function downgradeStaleRows(
   confirmedCustomerIds: ReadonlySet<string>,
@@ -287,23 +410,20 @@ async function downgradeStaleRows(
       continue;
     }
 
+    const subscriptionId = row.stripeSubscriptionId; // narrowed non-null by the guard above
+
     let confirmedGone = false;
     try {
-      const remote = await stripe.subscriptions.retrieve(row.stripeSubscriptionId);
-      if (isAccessGrantingStatus(remote.status)) {
-        // The list simply missed it (pagination/race) — it is still active. Don't revoke.
+      const remote = await stripe.subscriptions.retrieve(subscriptionId);
+      // FINDING 1: a positively-retrieved status is authoritative, never "ambiguous".
+      // "keep" only for still-granting (active/trialing/past_due) or an unknown future
+      // status; every CONFIRMED non-access status (canceled / incomplete_expired /
+      // unpaid / incomplete / paused) is a downgrade. The fail-safe now lives in the
+      // catch below (errors only) — never on a definitively-retrieved terminal status.
+      if (downgradeActionForRetrievedStatus(remote.status) === "keep") {
         continue;
       }
-      if (remote.status === "canceled" || remote.status === "incomplete_expired") {
-        confirmedGone = true;
-      } else {
-        // incomplete / paused / unpaid — recoverable or ambiguous. Fail-safe: keep.
-        console.warn(
-          `[reconcile] subscription ${row.stripeSubscriptionId} is in ambiguous status ` +
-            `${remote.status}; NOT revoking (fail-safe).`,
-        );
-        continue;
-      }
+      confirmedGone = true;
     } catch (err) {
       if (isResourceMissing(err)) {
         // Stripe positively reports the subscription does not exist ⇒ safe to revoke.
@@ -311,7 +431,7 @@ async function downgradeStaleRows(
       } else {
         errors++;
         console.error(
-          `[reconcile] could not confirm subscription ${row.stripeSubscriptionId} — transient ` +
+          `[reconcile] could not confirm subscription ${subscriptionId} — transient ` +
             `error; NOT revoking (fail-safe): ${errorMessage(err)}`,
         );
         continue;
@@ -320,11 +440,27 @@ async function downgradeStaleRows(
 
     if (confirmedGone) {
       try {
-        await db.subscription.update({
-          where: { id: row.id },
+        // FINDING 3: guard the revoke against a concurrent resubscribe/heal. Revoke
+        // ONLY the exact row we observed, still carrying the exact dead sub id and
+        // still in a paid-granting status. If a webhook / post-checkout heal moved
+        // the row onto a NEW active subscription between the read and here, the WHERE
+        // no longer matches (count 0) and we skip — never clobbering fresh access.
+        const revoke = await db.subscription.updateMany({
+          where: {
+            id: row.id,
+            stripeSubscriptionId: subscriptionId,
+            status: { in: [...PAID_DB_STATUSES] },
+          },
           data: { tier: "FREE", status: "CANCELED", canceledAt: new Date(), pastDueSince: null },
         });
-        downgraded++;
+        if (revoke.count > 0) {
+          downgraded++;
+        } else {
+          console.warn(
+            `[reconcile] downgrade for row ${row.id} affected 0 rows — the row moved on ` +
+              "(concurrent resubscribe/heal); skipping revoke (fail-safe).",
+          );
+        }
       } catch (err) {
         errors++;
         console.error(`[reconcile] failed to downgrade row ${row.id}: ${errorMessage(err)}`);
@@ -368,8 +504,21 @@ export async function reconcileEntitlements(): Promise<ReconcileSummary> {
   let checked = 0;
   let granted = 0;
 
-  // Phase 2 — GRANT: bring the DB up to each confirmed active subscription.
+  // FINDING 4: a customer may hold several live subscriptions, but the DB row is
+  // keyed on stripeCustomerId. Group by customer and reconcile only the ONE
+  // canonical sub (highest tier, newest on a tie) so a lower / older sub can never
+  // overwrite the entitlement of a higher / newer one, regardless of list order.
+  const subscriptionsByCustomer = new Map<string, Stripe.Subscription[]>();
   for (const subscription of confirmedSubscriptions) {
+    const customerId = customerIdOf(subscription);
+    const bucket = subscriptionsByCustomer.get(customerId);
+    if (bucket) bucket.push(subscription);
+    else subscriptionsByCustomer.set(customerId, [subscription]);
+  }
+
+  // Phase 2 — GRANT: bring the DB up to each customer's canonical subscription.
+  for (const subscriptions of subscriptionsByCustomer.values()) {
+    const subscription = canonicalSubscription(subscriptions);
     checked++;
     let outcome: "granted" | "noop" | "error";
     try {
@@ -422,11 +571,14 @@ export async function reconcileUserEntitlement(userId: string): Promise<void> {
       limit: 20,
     });
 
-    // The best live, paid subscription for this customer.
-    const active = list.data.find(
+    // The canonical live, paid subscription for this customer: highest tier, newest
+    // on a tie (FINDING 4) — mirrors the cron reconcile so a customer holding several
+    // live subs is granted their BEST tier, not whichever `find` happened to hit.
+    const paidLiveSubs = list.data.filter(
       (s) => isAccessGrantingStatus(s.status) && tierForPriceId(s.items.data[0]?.price.id) !== "FREE",
     );
-    if (!active) return; // no positively-confirmed paid subscription ⇒ never grant, never revoke
+    if (paidLiveSubs.length === 0) return; // no positively-confirmed paid subscription ⇒ never grant, never revoke
+    const active = canonicalSubscription(paidLiveSubs);
 
     const intendedTier = tierForPriceId(active.items.data[0]?.price.id);
     if (intendedTier === "FREE") return; // narrowing guard (unreachable given the find predicate)

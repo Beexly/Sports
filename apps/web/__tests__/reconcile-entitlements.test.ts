@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Behavioral tests for the Stripe entitlement reconciliation backstop — the
@@ -52,6 +52,7 @@ import { GET as reconcileCron } from "@/app/api/cron/reconcile-entitlements/rout
 
 const PRO_PRICE = "price_pro_test";
 const ELITE_PRICE = "price_elite_test";
+const FANTASY_PRICE = "price_fantasy_test";
 
 function stripeSub(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
@@ -59,6 +60,7 @@ function stripeSub(overrides: Record<string, unknown> = {}): Record<string, unkn
     customer: "cus_1",
     status: "active",
     items: { data: [{ price: { id: PRO_PRICE } }] },
+    created: 1759900000,
     current_period_start: 1760000000,
     current_period_end: 1762600000,
     cancel_at_period_end: false,
@@ -88,6 +90,7 @@ beforeEach(() => {
 
   process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] = PRO_PRICE;
   process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"] = ELITE_PRICE;
+  process.env["STRIPE_FANTASY_MONTHLY_PRICE_ID"] = FANTASY_PRICE;
   process.env["CRON_SECRET"] = "test-cron-secret";
 
   // Defaults: no Stripe subs, no DB rows, writes succeed.
@@ -98,6 +101,10 @@ beforeEach(() => {
   mocks.upsert.mockResolvedValue({ id: "s_1" });
   mocks.update.mockResolvedValue({ id: "s_1" });
   mocks.updateMany.mockResolvedValue({ count: 1 });
+});
+
+afterEach(() => {
+  vi.useRealTimers();
 });
 
 describe("reconcileEntitlements — GRANT (missed/failed webhook recovery)", () => {
@@ -204,9 +211,15 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
     expect(summary.granted).toBe(0);
     expect(summary.errors).toBe(0);
     expect(mocks.subscriptionsRetrieve).toHaveBeenCalledWith("sub_2");
-    expect(mocks.update).toHaveBeenCalledWith(
+    // FINDING 3: the revoke is a GUARDED updateMany, not an unconditional update.
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { id: "row_1" },
+        where: expect.objectContaining({
+          id: "row_1",
+          stripeSubscriptionId: "sub_2",
+          status: { in: ["ACTIVE", "TRIALING", "PAST_DUE"] },
+        }),
         data: expect.objectContaining({ tier: "FREE", status: "CANCELED" }),
       }),
     );
@@ -226,7 +239,41 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
     const summary = await reconcileEntitlements();
 
     expect(summary.downgraded).toBe(1);
-    expect(mocks.update).toHaveBeenCalledWith(
+    expect(mocks.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ tier: "FREE" }) }),
+    );
+  });
+
+  it("FINDING 1: downgrades a paid row when Stripe positively reports 'unpaid' (confirmed non-access)", async () => {
+    mocks.findMany.mockResolvedValue([
+      { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue({ status: "unpaid" });
+
+    const summary = await reconcileEntitlements();
+
+    // A paid ACTIVE row backed by an 'unpaid' Stripe sub must NOT keep access forever.
+    expect(summary.downgraded).toBe(1);
+    expect(summary.errors).toBe(0);
+    expect(mocks.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ id: "row_1", stripeSubscriptionId: "sub_2" }),
+        data: expect.objectContaining({ tier: "FREE", status: "CANCELED" }),
+      }),
+    );
+  });
+
+  it("FINDING 1: downgrades a paid row when Stripe positively reports 'paused'", async () => {
+    mocks.findMany.mockResolvedValue([
+      { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "ELITE" },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue({ status: "paused" });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.downgraded).toBe(1);
+    expect(summary.errors).toBe(0);
+    expect(mocks.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({ data: expect.objectContaining({ tier: "FREE" }) }),
     );
   });
@@ -240,20 +287,47 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
     const summary = await reconcileEntitlements();
 
     expect(summary.downgraded).toBe(0);
-    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.updateMany).not.toHaveBeenCalled();
   });
 
-  it("FAIL-SAFE: a transient retrieve error revokes nothing and reports the error", async () => {
+  it("FAIL-SAFE (FINDING 1): a transient retrieve error revokes nothing and reports the error", async () => {
     mocks.findMany.mockResolvedValue([
       { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
     ]);
+    // A NON-terminal Stripe API error (503) — the fail-safe applies to errors ONLY.
     mocks.subscriptionsRetrieve.mockRejectedValue(new Error("503 Service Unavailable"));
 
     const summary = await reconcileEntitlements();
 
     expect(summary.downgraded).toBe(0);
     expect(summary.errors).toBeGreaterThan(0);
-    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("FINDING 3: a concurrent resubscribe (updateMany WHERE count 0) is NOT clobbered", async () => {
+    mocks.findMany.mockResolvedValue([
+      { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+    ]);
+    // Stripe confirms the OLD sub is dead...
+    mocks.subscriptionsRetrieve.mockResolvedValue({ status: "canceled" });
+    // ...but between the read and the write, a resubscribe repointed the row to a NEW
+    // active sub, so the guarded WHERE (id + old sub id + paid status) matches nothing.
+    mocks.updateMany.mockResolvedValue({ count: 0 });
+
+    const summary = await reconcileEntitlements();
+
+    // The fresh paid row is preserved — no revoke counted, no error.
+    expect(summary.downgraded).toBe(0);
+    expect(summary.errors).toBe(0);
+    expect(mocks.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          id: "row_1",
+          stripeSubscriptionId: "sub_2",
+          status: { in: ["ACTIVE", "TRIALING", "PAST_DUE"] },
+        }),
+      }),
+    );
   });
 
   it("FAIL-SAFE: never revokes a paid row that has no stripeSubscriptionId to confirm", async () => {
@@ -265,7 +339,195 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
 
     expect(summary.downgraded).toBe(0);
     expect(mocks.subscriptionsRetrieve).not.toHaveBeenCalled();
-    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.updateMany).not.toHaveBeenCalled();
+  });
+});
+
+describe("reconcileEntitlements — FINDING 2 past-due grace anchor", () => {
+  it("stamps the Stripe-derived anchor (period start), never the current reconcile time", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-01T00:00:00Z")); // "now" — weeks after the failure
+    const anchorUnix = 1748736000; // 2025-06-01: the current period start / first failure
+
+    listOnly("past_due", [
+      stripeSub({ status: "past_due", current_period_start: anchorUnix }),
+    ]);
+    mocks.findUnique.mockResolvedValue({
+      userId: "user_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.granted).toBe(1);
+    // The backfill stamps the REAL anchor where absent — not now().
+    expect(mocks.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ pastDueSince: null }),
+        data: { pastDueSince: new Date(anchorUnix * 1000) },
+      }),
+    );
+    const backfill = mocks.updateMany.mock.calls.find(
+      ([arg]) => (arg as { where?: { pastDueSince?: unknown } }).where?.pastDueSince === null,
+    );
+    const stamped = (backfill?.[0] as { data: { pastDueSince: Date } }).data.pastDueSince;
+    expect(stamped.getTime()).toBe(anchorUnix * 1000);
+    expect(stamped.getTime()).not.toBe(Date.now()); // categorically not the reconcile time
+  });
+
+  it("FAILS CLOSED (epoch anchor, not now) when the true anchor can't be reconstructed", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-01T00:00:00Z"));
+
+    listOnly("past_due", [
+      stripeSub({ status: "past_due", current_period_start: null }),
+    ]);
+    mocks.findUnique.mockResolvedValue({
+      userId: "user_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.granted).toBe(1);
+    // No fresh grace window: epoch is older than any grace cutoff ⇒ access resolves FREE.
+    expect(mocks.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ pastDueSince: null }),
+        data: { pastDueSince: new Date(0) },
+      }),
+    );
+  });
+});
+
+describe("reconcileEntitlements — FINDING 4 one canonical subscription per customer", () => {
+  it("grants the highest tier (active PRO + past_due FANTASY ⇒ PRO), one upsert only", async () => {
+    mocks.subscriptionsList.mockImplementation(async (args: unknown) => {
+      const { status } = args as { status?: string };
+      if (status === "active") {
+        return {
+          data: [
+            stripeSub({
+              id: "sub_pro",
+              customer: "cus_1",
+              status: "active",
+              items: { data: [{ price: { id: PRO_PRICE } }] },
+            }),
+          ],
+          has_more: false,
+        };
+      }
+      if (status === "past_due") {
+        return {
+          data: [
+            stripeSub({
+              id: "sub_fan",
+              customer: "cus_1",
+              status: "past_due",
+              items: { data: [{ price: { id: FANTASY_PRICE } }] },
+            }),
+          ],
+          has_more: false,
+        };
+      }
+      return { data: [], has_more: false };
+    });
+    mocks.findUnique.mockResolvedValue({
+      userId: "user_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.granted).toBe(1);
+    expect(mocks.upsert).toHaveBeenCalledTimes(1);
+    expect(mocks.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({ tier: "PRO", stripeSubscriptionId: "sub_pro" }),
+      }),
+    );
+  });
+
+  it("higher tier wins even as the LATER-processed past_due sub (active FANTASY + past_due PRO ⇒ PRO)", async () => {
+    mocks.subscriptionsList.mockImplementation(async (args: unknown) => {
+      const { status } = args as { status?: string };
+      if (status === "active") {
+        return {
+          data: [
+            stripeSub({
+              id: "sub_fan",
+              customer: "cus_1",
+              status: "active",
+              items: { data: [{ price: { id: FANTASY_PRICE } }] },
+            }),
+          ],
+          has_more: false,
+        };
+      }
+      if (status === "past_due") {
+        return {
+          data: [
+            stripeSub({
+              id: "sub_pro",
+              customer: "cus_1",
+              status: "past_due",
+              items: { data: [{ price: { id: PRO_PRICE } }] },
+            }),
+          ],
+          has_more: false,
+        };
+      }
+      return { data: [], has_more: false };
+    });
+    mocks.findUnique.mockResolvedValue({
+      userId: "user_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.granted).toBe(1);
+    expect(mocks.upsert).toHaveBeenCalledTimes(1);
+    expect(mocks.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({
+          tier: "PRO",
+          status: "PAST_DUE",
+          stripeSubscriptionId: "sub_pro",
+        }),
+      }),
+    );
+  });
+
+  it("breaks a same-tier tie by newest subscription (created)", async () => {
+    listOnly("active", [
+      stripeSub({ id: "sub_old", customer: "cus_1", created: 1000, items: { data: [{ price: { id: PRO_PRICE } }] } }),
+      stripeSub({ id: "sub_new", customer: "cus_1", created: 2000, items: { data: [{ price: { id: PRO_PRICE } }] } }),
+    ]);
+    mocks.findUnique.mockResolvedValue({
+      userId: "user_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.granted).toBe(1);
+    expect(mocks.upsert).toHaveBeenCalledTimes(1);
+    expect(mocks.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({ stripeSubscriptionId: "sub_new" }),
+      }),
+    );
   });
 });
 

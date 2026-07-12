@@ -9,7 +9,11 @@
  * only on POSITIVE confirmation, downgrading stale paid rows. See
  * `lib/billing/reconcile-entitlements.ts` for the fail-safe guarantees.
  *
- * Schedule is declared in `vercel.json` at the repo root ("*\/15 * * * *").
+ * Schedule is declared in `vercel.json` at the repo root ("0 8 * * *" — DAILY).
+ * The existing crons all run once/day (Vercel Hobby's minimum interval), so this
+ * backstop matches that cadence and can never break a Hobby deploy. Immediacy is
+ * already covered by the on-demand post-checkout reconcile (`reconcileUserEntitlement`);
+ * this scheduled pass is the slower, self-healing safety net.
  *
  * Authentication: Vercel invokes the route with
  *   Authorization: Bearer <CRON_SECRET>
