@@ -65,13 +65,18 @@ export function isLicenseVerified(license: string | null): boolean {
 }
 
 const KNOWN_RISKS: readonly RadarRisk[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL", "BLOCKED"];
+const KNOWN_POSTURES: readonly RadarPosture[] = [
+  "OBSERVE", "REFERENCE_ONLY", "ADOPT_PATTERNS", "PROTOTYPE",
+  "PILOT", "OWNER_REVIEW", "QUARANTINE", "REJECT",
+];
 
 /**
  * The one function every consumer must go through. Applies the caps in
  * order; the result is what the rest of the system treats as truth.
- * FAIL-CLOSED on unknown risk labels: a value outside the closed set (e.g.
- * a hand-edited fixture's "BLOCKED_RIGHTS") quarantines rather than slipping
- * past the string-exact caps.
+ * FAIL-CLOSED on unknown risk AND posture labels (G-3): a value outside the
+ * closed sets (e.g. a hand-edited fixture's "BLOCKED_RIGHTS") quarantines
+ * rather than slipping past the string-exact caps — an unknown posture would
+ * otherwise index POSTURE_TO_DISPOSITION to undefined and fall through open.
  */
 export function effectiveDisposition(
   posture: RadarPosture,
@@ -79,6 +84,7 @@ export function effectiveDisposition(
   license: string | null
 ): ResourceDisposition {
   if (!KNOWN_RISKS.includes(risk)) return "quarantine";
+  if (!KNOWN_POSTURES.includes(posture)) return "quarantine";
   if (risk === "BLOCKED") return "quarantine";
   const base = POSTURE_TO_DISPOSITION[posture];
   if (base === "quarantine" || base === "rejected_noise") return base;
@@ -124,10 +130,14 @@ const POSTURE_RESTRICTIVENESS: Readonly<Record<RadarPosture, number>> = {
   PROTOTYPE: 0,
 };
 
+/** Unknown labels rank MOST restrictive (fail-closed): they win the merge and
+ *  then quarantine at effectiveDisposition's closed-set guard. */
+function postureRank(p: RadarPosture): number {
+  return POSTURE_RESTRICTIVENESS[p] ?? Number.POSITIVE_INFINITY;
+}
+
 export function mostRestrictivePosture(postures: readonly RadarPosture[]): RadarPosture {
-  return postures.reduce((worst, p) =>
-    POSTURE_RESTRICTIVENESS[p] > POSTURE_RESTRICTIVENESS[worst] ? p : worst
-  );
+  return postures.reduce((worst, p) => (postureRank(p) > postureRank(worst) ? p : worst));
 }
 
 const RISK_ORDER: Readonly<Record<RadarRisk, number>> = {
@@ -138,8 +148,12 @@ const RISK_ORDER: Readonly<Record<RadarRisk, number>> = {
   BLOCKED: 4,
 };
 
+function riskRank(r: RadarRisk): number {
+  return RISK_ORDER[r] ?? Number.POSITIVE_INFINITY; // unknown = worst (fail-closed)
+}
+
 export function highestRisk(risks: readonly RadarRisk[]): RadarRisk {
-  return risks.reduce((worst, r) => (RISK_ORDER[r] > RISK_ORDER[worst] ? r : worst));
+  return risks.reduce((worst, r) => (riskRank(r) > riskRank(worst) ? r : worst));
 }
 
 /** Days after which a snapshot observation is stale (recommendations expire). */
