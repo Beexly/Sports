@@ -10,6 +10,7 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { normalizeScanLine, collapseStringJoins } from "./scan-normalize.mjs";
 
 const ROOT = resolve(process.cwd());
 const SCAN_TARGETS = [
@@ -118,40 +119,62 @@ async function walk(dir, files = []) {
   return files;
 }
 
-function scanLine(line, relPath, lineNumber) {
-  // NFKC + zero-width/soft-hyphen strip (O-3.x): fullwidth forms fold to
-  // ASCII and invisible characters cannot split a banned phrase.
-  const normalized = line
-    .normalize("NFKC")
-    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
-    .toLowerCase()
-    .replace(/[’']/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (normalized.length === 0 || SAFE_CONTEXT.test(normalized)) return [];
-  return CLAIMS.filter((claim) => phraseRegex(claim).test(normalized)).map((claim) => ({
-    claim,
-    file: relPath,
-    line: lineNumber,
-    snippet: line.trim().slice(0, 220),
-  }));
+/** Normalized + join-collapsed views of a raw line (O-3.x shared pipeline). */
+function viewsOf(line) {
+  const normalized = normalizeScanLine(line).toLowerCase().trim();
+  const joined = collapseStringJoins(normalized);
+  return normalized === joined ? [normalized] : [normalized, joined];
+}
+function joinView(line) {
+  return collapseStringJoins(normalizeScanLine(line).toLowerCase());
+}
+function pairSubjectOf(rawLines, i) {
+  return i + 1 < rawLines.length
+    ? `${joinView(rawLines[i]).trimEnd()} ${joinView(rawLines[i + 1]).trimStart()}`
+    : null;
 }
 
-function scanNumericClaimLine(line, relPath, lineNumber) {
-  // NFKC + zero-width/soft-hyphen strip (O-3.x): fullwidth forms fold to
-  // ASCII and invisible characters cannot split a banned phrase.
-  const normalized = line
-    .normalize("NFKC")
-    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
-    .toLowerCase()
-    .replace(/[’']/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (normalized.length === 0 || SAFE_CONTEXT.test(normalized)) return [];
+function scanLine(rawLines, i, relPath) {
+  const line = rawLines[i];
+  const subjects = viewsOf(line);
+  const normalized = subjects[0];
+  if (normalized.length === 0) return [];
+  const pairSubject = pairSubjectOf(rawLines, i);
+  const hits = [];
+  for (const claim of CLAIMS) {
+    const re = phraseRegex(claim);
+    // Descriptive concept words carry a line-wide safe-context exemption (they
+    // fire on legitimate evidence surfaces); the O-3.x hardening here is the
+    // shared normalize (confusables), the join-collapse view (concat splits),
+    // and cross-line pairing for multi-word claims.
+    const inline = subjects.some((subj) => re.test(subj) && !SAFE_CONTEXT.test(subj));
+    if (inline) {
+      hits.push({ claim, file: relPath, line: i + 1, snippet: line.trim().slice(0, 220) });
+      continue;
+    }
+    if (claim.includes(" ") && pairSubject !== null && re.test(pairSubject) && !SAFE_CONTEXT.test(pairSubject)) {
+      hits.push({ claim, file: relPath, line: i + 1, snippet: pairSubject.trim().slice(0, 220) });
+    }
+  }
+  return hits;
+}
+
+function scanNumericClaimLine(rawLines, i, relPath) {
+  const line = rawLines[i];
+  const subjects = viewsOf(line);
+  const normalized = subjects[0];
+  if (normalized.length === 0) return [];
+  const pairSubject = pairSubjectOf(rawLines, i);
   const hits = [];
   for (const [label, pattern] of NUMERIC_CLAIM_PATTERNS) {
-    if (pattern.test(normalized)) {
-      hits.push({ claim: `hardcoded-numeric:${label}`, file: relPath, line: lineNumber, snippet: line.trim().slice(0, 220) });
+    const inline = subjects.some((subj) => pattern.test(subj) && !SAFE_CONTEXT.test(subj));
+    if (inline) {
+      hits.push({ claim: `hardcoded-numeric:${label}`, file: relPath, line: i + 1, snippet: line.trim().slice(0, 220) });
+      continue;
+    }
+    // A stat split across a line break ("68%\n win rate") re-forms in the pair.
+    if (pairSubject !== null && pattern.test(pairSubject) && !SAFE_CONTEXT.test(pairSubject)) {
+      hits.push({ claim: `hardcoded-numeric:${label}`, file: relPath, line: i + 1, snippet: pairSubject.trim().slice(0, 220) });
     }
   }
   return hits;
@@ -197,7 +220,8 @@ async function main() {
       scanned++;
       const text = await readFile(file, "utf8");
       const relPath = rel(file);
-      text.split(/\r?\n/).forEach((line, index) => hits.push(...scanLine(line, relPath, index + 1)));
+      const rawLines = text.split(/\r?\n/);
+      rawLines.forEach((_line, index) => hits.push(...scanLine(rawLines, index, relPath)));
     }
   }
 
@@ -210,7 +234,8 @@ async function main() {
     if (!deepScanned.has(file)) scanned++;
     const text = await readFile(file, "utf8");
     const relPath = rel(file);
-    text.split(/\r?\n/).forEach((line, index) => hits.push(...scanNumericClaimLine(line, relPath, index + 1)));
+    const rawLines = text.split(/\r?\n/);
+    rawLines.forEach((_line, index) => hits.push(...scanNumericClaimLine(rawLines, index, relPath)));
   }
 
   if (hits.length === 0) {

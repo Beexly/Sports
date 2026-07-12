@@ -115,6 +115,7 @@ function annotateContext(text) {
 
   for (const line of lines) {
     let stripped = "";
+    let code = "";
     let i = 0;
     let inSD = false;
     let inSS = false;
@@ -134,32 +135,36 @@ function annotateContext(text) {
         continue;
       }
       if (inSD) {
-        if (c === "\\") { i += 2; continue; }
+        if (c === "\\") { code += line[i] + (line[i + 1] ?? ""); stripped += "  "; i += 2; continue; }
         if (c === '"') inSD = false;
+        code += c;
         stripped += " ";
         i++;
         continue;
       }
       if (inSS) {
-        if (c === "\\") { i += 2; continue; }
+        if (c === "\\") { code += line[i] + (line[i + 1] ?? ""); stripped += "  "; i += 2; continue; }
         if (c === "'") inSS = false;
+        code += c;
         stripped += " ";
         i++;
         continue;
       }
       if (inSB) {
-        if (c === "\\") { i += 2; continue; }
+        if (c === "\\") { code += line[i] + (line[i + 1] ?? ""); stripped += "  "; i += 2; continue; }
         if (c === "`") inSB = false;
+        code += c;
         stripped += " ";
         i++;
         continue;
       }
       if (c === "/" && c2 === "/") { lineComment = true; i += 2; continue; }
       if (c === "/" && c2 === "*") { inBlockComment = true; i += 2; continue; }
-      if (c === '"') { inSD = true; stripped += " "; i++; continue; }
-      if (c === "'") { inSS = true; stripped += " "; i++; continue; }
-      if (c === "`") { inSB = true; stripped += " "; i++; continue; }
+      if (c === '"') { inSD = true; code += c; stripped += " "; i++; continue; }
+      if (c === "'") { inSS = true; code += c; stripped += " "; i++; continue; }
+      if (c === "`") { inSB = true; code += c; stripped += " "; i++; continue; }
       stripped += c;
+      code += c;
       i++;
     }
 
@@ -199,7 +204,7 @@ function annotateContext(text) {
       }
     }
 
-    out.push({ line, inWhere: lineHasWhere, inData: lineHasData });
+    out.push({ line, code, inWhere: lineHasWhere, inData: lineHasData });
   }
 
   return out;
@@ -253,16 +258,24 @@ async function main() {
       }
       const annotated = annotateContext(text);
       for (let i = 0; i < annotated.length; i++) {
-        const { line, inWhere, inData } = annotated[i];
-        if (lineIsExempt(line)) continue;
+        const { line, code, inWhere, inData } = annotated[i];
+        // O-3.x remainder: match against `code` (line-comments and block
+        // comments removed by the tokenizer, string literals PRESERVED), not
+        // the raw line. A real publish action can no longer be smuggled past
+        // the gate behind a reassuring trailing comment
+        // ("await publishNow(pick); // INTENTIONALLY safe"): the comment is
+        // gone from `code`, so the call is still seen. lineIsExempt now reads
+        // `code` too, so the "// INTENTIONALLY" family exempts nothing — only
+        // a genuine `publishedAt: null` value is still allowed.
+        if (lineIsExempt(code)) continue;
         for (const p of ALWAYS_FORBIDDEN) {
-          if (!p.rx.test(line)) continue;
+          if (!p.rx.test(code)) continue;
           if (inWhere && p.id.startsWith("publishedAt")) continue;
           hits.push({ file: relPath, line: i + 1, pattern: p.id, desc: p.desc, snippet: line.trim().slice(0, 200) });
         }
         if (inData && !inWhere) {
           for (const p of DATA_ONLY_FORBIDDEN) {
-            if (!p.rx.test(line)) continue;
+            if (!p.rx.test(code)) continue;
             hits.push({ file: relPath, line: i + 1, pattern: p.id, desc: p.desc, snippet: line.trim().slice(0, 200) });
           }
         }

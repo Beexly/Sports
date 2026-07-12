@@ -10,6 +10,7 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { normalizeScanLine, collapseStringJoins } from "./scan-normalize.mjs";
 
 const ROOT = resolve(process.cwd());
 const SCAN_TARGETS = [
@@ -89,6 +90,53 @@ const EVIDENCE_REQUIRED = [
 
 const SAFE_POLICY_CONTEXT =
   /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance)\b/i;
+
+// O-3.x remainder: the safe-policy exemption for tout-slang is CLAUSE-scoped
+// around the match, not line-wide — one "not" anywhere on a line used to
+// excuse every banned phrase on it. The exemption word must sit in the SAME
+// clause as the match (no sentence boundary between them): "not a lock" is
+// excused, but "this is not hype. Guaranteed profit, easy money." is not —
+// the "not" negates "hype", on the far side of the period.
+const SAFE_WINDOW_BEFORE = 60;
+const SAFE_WINDOW_AFTER = 24;
+const CLAUSE_BOUNDARY = /[.!?;—]/;
+function safeContextNear(subject, matchIndex, matchLength) {
+  const winStart = Math.max(0, matchIndex - SAFE_WINDOW_BEFORE);
+  const winEnd = Math.min(subject.length, matchIndex + matchLength + SAFE_WINDOW_AFTER);
+  const before = subject.slice(winStart, matchIndex);
+  const after = subject.slice(matchIndex + matchLength, winEnd);
+  // Trim `before` back to the last clause boundary; trim `after` at the first.
+  const lastBoundary = Math.max(
+    before.lastIndexOf("."), before.lastIndexOf("!"),
+    before.lastIndexOf("?"), before.lastIndexOf(";"), before.lastIndexOf("—"),
+  );
+  const beforeClause = lastBoundary >= 0 ? before.slice(lastBoundary + 1) : before;
+  const firstBoundary = after.search(CLAUSE_BOUNDARY);
+  const afterClause = firstBoundary >= 0 ? after.slice(0, firstBoundary) : after;
+  return SAFE_POLICY_CONTEXT.test(`${beforeClause} ${afterClause}`);
+}
+
+// O-3.x remainder: only STRUCTURAL import/export shapes are exempt. The old
+// startsWith("import ")/startsWith("export ") prefix excused any line that
+// happened to begin with those words — including rendered markdown copy and
+// `export const tagline = "..."` lines that carry real customer-facing text.
+const STRUCTURAL_MODULE_LINE = [
+  /^import\b[^"'`]*\bfrom\s*["']/, // import ... from "..."
+  /^import\s*["']/, // side-effect import "..."
+  /^export\s*\{[^}]*\}(?:\s*from\s*["'])?/, // export { A, B } [from "..."]
+  /^export\s+\*\s+from\s*["']/, // export * from "..."
+  /^export\s+type\b/, // export type ...
+];
+function isStructuralModuleLine(normalized) {
+  return STRUCTURAL_MODULE_LINE.some((re) => re.test(normalized));
+}
+
+/** First match of a word-boundary phrase regex, with its true start index. */
+function findPhrase(phrase, subject) {
+  const m = new RegExp(`(^|[^a-z0-9])(${escapeRegex(phrase)})([^a-z0-9]|$)`, "i").exec(subject);
+  if (!m) return null;
+  return { index: m.index + m[1].length, length: m[2].length };
+}
 
 // Tout-pattern detectors for the FULL public sweep. The strict single-word
 // list above stays as-is on the commercial SCAN_TARGETS, but it cannot run
@@ -174,56 +222,98 @@ async function walkRenderedSurfaces(dir, isTop, files = []) {
   return files;
 }
 
-function scanLine(line, relPath, lineNumber) {
-  // NFKC + zero-width/soft-hyphen strip (O-3.x): fullwidth forms fold to
-  // ASCII and invisible characters cannot split a banned phrase.
-  const normalized = line
-    .normalize("NFKC")
-    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
-    .toLowerCase()
-    .replace(/[’']/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (normalized.startsWith("import ") || normalized.startsWith("export ")) return [];
-  if (/^\s*[A-Z0-9_]+(?:\s+as\s+[A-Z0-9_]+)?,?\s*$/.test(line)) return [];
-  if (normalized.length === 0) return [];
+/** Normalized + join-collapsed views of a raw line (O-3.x shared pipeline). */
+function viewsOf(line) {
+  const normalized = normalizeScanLine(line).toLowerCase().trim();
+  const joined = collapseStringJoins(normalized);
+  return normalized === joined ? [normalized] : [normalized, joined];
+}
+
+/** Join view of `line` for cross-line pairing (normalized + collapsed). */
+function joinView(line) {
+  return collapseStringJoins(normalizeScanLine(line).toLowerCase());
+}
+
+// O-3.x remainder: the safe-context exemption is applied at two granularities.
+// BANNED tout-slang uses a TIGHT window around the match (windowScoped) so a
+// distant negation cannot excuse the crime ("this is not hype — guaranteed
+// profit, easy money" — the "not" no longer covers the touts far down the
+// line). EVIDENCE_REQUIRED terms are inherently DESCRIPTIVE ("calibrated
+// against every settled result", "verified proof milestone") and legitimately
+// carry a sentence-level disclaimer ("…, not a promise"), so they keep the
+// line-wide safe context — and they cannot tout on their own (a real claim
+// also trips a BANNED phrase or the hardcoded-numeric gate).
+function isSafe(subject, match, windowScoped) {
+  return windowScoped
+    ? safeContextNear(subject, match.index, match.length)
+    : SAFE_POLICY_CONTEXT.test(subject);
+}
+
+function scanPhraseList(phrases, claim, subjects, pairSubject, line, relPath, lineNumber, windowScoped) {
   const hits = [];
-  for (const phrase of BANNED) {
-    if (phraseRegex(phrase).test(normalized) && !SAFE_POLICY_CONTEXT.test(normalized)) {
-      hits.push({ claim: "commercial-copy.banned", file: relPath, line: lineNumber, phrase, snippet: line.trim().slice(0, 220) });
+  for (const phrase of phrases) {
+    let matched = null;
+    for (const subject of subjects) {
+      const m = findPhrase(phrase, subject);
+      if (m && !isSafe(subject, m, windowScoped)) {
+        matched = { snippet: line.trim().slice(0, 220) };
+        break;
+      }
     }
-  }
-  for (const phrase of EVIDENCE_REQUIRED) {
-    if (phraseRegex(phrase).test(normalized) && !SAFE_POLICY_CONTEXT.test(normalized)) {
-      hits.push({
-        claim: "commercial-copy.evidence-required",
-        file: relPath,
-        line: lineNumber,
-        phrase,
-        snippet: line.trim().slice(0, 220),
-      });
+    // Cross-line: a multi-word phrase split over a line break re-forms in the
+    // pair view (JSX renders adjacent text lines as one phrase).
+    if (!matched && pairSubject !== null && phrase.includes(" ")) {
+      const m = findPhrase(phrase, pairSubject);
+      if (m && !isSafe(pairSubject, m, windowScoped)) {
+        matched = { snippet: pairSubject.trim().slice(0, 220) };
+      }
     }
+    if (matched) hits.push({ claim, file: relPath, line: lineNumber, phrase, snippet: matched.snippet });
   }
   return hits;
 }
 
-function scanToutLine(line, relPath, lineNumber) {
-  // NFKC + zero-width/soft-hyphen strip (O-3.x): fullwidth forms fold to
-  // ASCII and invisible characters cannot split a banned phrase.
-  const normalized = line
-    .normalize("NFKC")
-    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
-    .toLowerCase()
-    .replace(/[’']/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
+function scanLine(rawLines, i, relPath) {
+  const line = rawLines[i];
+  const subjects = viewsOf(line);
+  const normalized = subjects[0];
+  if (isStructuralModuleLine(normalized)) return [];
+  if (/^\s*[A-Z0-9_]+(?:\s+as\s+[A-Z0-9_]+)?,?\s*$/.test(line)) return [];
   if (normalized.length === 0) return [];
-  if (normalized.startsWith("import ") || normalized.startsWith("export ")) return [];
-  if (SAFE_POLICY_CONTEXT.test(normalized)) return [];
+  const pairSubject =
+    i + 1 < rawLines.length ? `${joinView(rawLines[i]).trimEnd()} ${joinView(rawLines[i + 1]).trimStart()}` : null;
+  return [
+    ...scanPhraseList(BANNED, "commercial-copy.banned", subjects, pairSubject, line, relPath, i + 1, true),
+    ...scanPhraseList(EVIDENCE_REQUIRED, "commercial-copy.evidence-required", subjects, pairSubject, line, relPath, i + 1, false),
+  ];
+}
+
+function scanToutLine(rawLines, i, relPath) {
+  const line = rawLines[i];
+  const subjects = viewsOf(line);
+  const normalized = subjects[0];
+  if (normalized.length === 0) return [];
+  if (isStructuralModuleLine(normalized)) return [];
+  const pairSubject =
+    i + 1 < rawLines.length ? `${joinView(rawLines[i]).trimEnd()} ${joinView(rawLines[i + 1]).trimStart()}` : null;
   const hits = [];
   for (const [label, pattern] of TOUT_PATTERNS) {
-    if (pattern.test(normalized)) {
-      hits.push({ claim: "commercial-copy.tout", file: relPath, line: lineNumber, phrase: label, snippet: line.trim().slice(0, 220) });
+    let snippet = null;
+    for (const subject of subjects) {
+      const m = pattern.exec(subject);
+      if (m && !safeContextNear(subject, m.index, m[0].length)) {
+        snippet = line.trim().slice(0, 220);
+        break;
+      }
+    }
+    if (snippet === null && pairSubject !== null) {
+      const m = pattern.exec(pairSubject);
+      if (m && !safeContextNear(pairSubject, m.index, m[0].length)) {
+        snippet = pairSubject.trim().slice(0, 220);
+      }
+    }
+    if (snippet !== null) {
+      hits.push({ claim: "commercial-copy.tout", file: relPath, line: i + 1, phrase: label, snippet });
     }
   }
   return hits;
@@ -249,7 +339,8 @@ async function main() {
       scanned++;
       const text = await readFile(file, "utf8");
       const relPath = rel(file);
-      text.split(/\r?\n/).forEach((line, index) => hits.push(...scanLine(line, relPath, index + 1)));
+      const rawLines = text.split(/\r?\n/);
+      rawLines.forEach((_line, index) => hits.push(...scanLine(rawLines, index, relPath)));
     }
   }
 
@@ -262,7 +353,8 @@ async function main() {
     scanned++;
     const text = await readFile(file, "utf8");
     const relPath = rel(file);
-    text.split(/\r?\n/).forEach((line, index) => hits.push(...scanToutLine(line, relPath, index + 1)));
+    const rawLines = text.split(/\r?\n/);
+    rawLines.forEach((_line, index) => hits.push(...scanToutLine(rawLines, index, relPath)));
   }
 
   if (hits.length === 0) {

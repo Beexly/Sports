@@ -13,6 +13,7 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { normalizeScanLine, collapseStringJoins } from "./scan-normalize.mjs";
 
 const ROOT = resolve(process.cwd());
 
@@ -110,6 +111,13 @@ const WHITELIST_PATHS = new Set([
   "apps/web/lib/pick-explainer/policy.ts",
   // Content-safety lexicon: contains the banned phrases as detection terms.
   "apps/web/lib/safety/content-safety.ts",
+  // Brand-voice lexicon (BANNED_LANGUAGE) and draft-review test fixtures:
+  // both deliberately contain banned phrases AS detection/negative-test
+  // material. They previously hid from this gate via string concatenation
+  // ("guaran" + "teed") — the O-3.x join-collapse view now sees through
+  // that, so the exemption is explicit and review-visible instead.
+  "apps/web/lib/brand.ts",
+  "apps/web/lib/workflows/draft-review-fixtures.ts",
   "packages/db/prisma/seed.ts",
 ]);
 
@@ -118,8 +126,11 @@ const WHITELIST_PATHS = new Set([
 // ("at lock", "lock time", "lock→close"). Same false-positive handling intent as
 // the word-boundary guard that already exempts block/unlock/clock: we blank the
 // safe temporal idioms, then a residual standalone "lock" is still a real hit.
+// O-3.x remainder: "the lock" is blanked ONLY behind a temporal preposition
+// ("before the lock", "at the lock") — bare "the lock" IS the slang ("it's
+// the lock of the century") and used to be blanked wholesale.
 const LOCK_SAFE_CONTEXT =
-  /\b(?:at|before|by|after|until|since|the)\s+lock\b|\block\s*(?:time\b|→|->|→)/gi;
+  /\b(?:at|before|by|after|until|since)\s+(?:the\s+)?lock\b|\block\s*(?:time\b|→|->)/gi;
 
 const WHITELIST_PREFIXES = [
   "apps/web/lib/compliance-scanner/",
@@ -194,52 +205,62 @@ function lineIsCommentOnly(line, isMarkdown) {
 }
 
 /**
- * Unicode-evasion normalization (adversarial finding O-3.x), applied to every
- * line BEFORE matching:
- *   - NFKC folds compatibility forms (fullwidth "ｇｕａｒａｎｔｅｅｄ", ligatures)
- *     back to canonical ASCII;
- *   - zero-width characters and soft hyphens are DELETED, so
- *     "guar​anteed" cannot split a phrase invisibly;
- *   - curly/modifier apostrophes fold to ASCII so "can’t lose" matches the
- *     "can't lose" ban;
- *   - all horizontal Unicode whitespace (NBSP etc.) collapses to a single
- *     space so "easy money" cannot dodge a two-word ban.
- * Boundary stated honestly: cross-script homoglyphs (Cyrillic "о") do NOT
- * fold under NFKC; catching those needs a confusables map and is out of
- * scope here.
+ * Unicode-evasion normalization (adversarial finding O-3.x), shared across
+ * all copy gates (scan-normalize.mjs): NFKC compatibility folding, deletion
+ * of zero-width characters and soft hyphens, a cross-script CONFUSABLES fold
+ * (Cyrillic/Greek homoglyphs to Latin - the remainder pass; NFKC alone left
+ * these open), apostrophe/quote folding, and whitespace collapse.
+ *
+ * Every line is matched in TWO views (O-3.x remainder):
+ *   1. the normalized line;
+ *   2. the same line with string-literal joins collapsed, so
+ *      "guaran" + "teed" and template-interpolation splits re-form the
+ *      banned phrase.
+ * And every MULTI-WORD phrase is additionally matched against each pair of
+ * adjacent non-comment lines joined by a space, so a two-word ban cannot be
+ * dodged by a line break mid-phrase (JSX renders it as one phrase anyway).
  */
-function normalizeForScan(line) {
-  return line
-    .normalize("NFKC")
-    .replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g, "")
-    .replace(/[‘’ʼ]/g, "'")
-    .replace(/[“”]/g, '"')
-    .replace(/[^\S\r\n]+/g, " ");
+function lockSubject(entry, s) {
+  // For the "lock" slang ban, blank the legitimate temporal idioms first;
+  // a residual standalone "lock" (e.g. "a lock", "lock of the day") still hits.
+  return entry.claim === "banned.lock" ? s.replace(LOCK_SAFE_CONTEXT, " ") : s;
 }
 
 function scanText(text, relPath) {
   const hits = [];
+  const seen = new Set();
+  const push = (line, claim, phrase, snippet) => {
+    const key = `${line}:${claim}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    hits.push({ line, snippet: snippet.trim().slice(0, 200), claim, phrase });
+  };
   const relNorm = relPath.split(sep).join("/");
   const isMarkdown = relNorm.endsWith(".md");
   const rawLines = text.split(/\r?\n/);
-  const lines = rawLines.map(normalizeForScan);
+  const lines = rawLines.map(normalizeScanLine);
+  const joined = lines.map(collapseStringJoins);
   for (const entry of BANNED_PHRASES) {
     // Per-rule file exemption (BS-023): skip this phrase for its allowlisted
     // files only; every other banned phrase still applies to those files.
     if (entry.allowFiles && entry.allowFiles.has(relNorm)) continue;
     const re = buildRegex(entry);
+    const multiWord = entry.phrase.includes(" ");
     for (let i = 0; i < lines.length; i++) {
       if (lineIsCommentOnly(rawLines[i], isMarkdown)) continue;
-      // For the "lock" slang ban, blank the legitimate temporal idioms first;
-      // a residual standalone "lock" (e.g. "a lock", "lock of the day") still hits.
-      const subject = entry.claim === "banned.lock" ? lines[i].replace(LOCK_SAFE_CONTEXT, " ") : lines[i];
-      if (re.test(subject)) {
-        hits.push({
-          line: i + 1,
-          snippet: rawLines[i].trim().slice(0, 200),
-          claim: entry.claim,
-          phrase: entry.phrase,
-        });
+      if (re.test(lockSubject(entry, lines[i])) || re.test(lockSubject(entry, joined[i]))) {
+        push(i + 1, entry.claim, entry.phrase, rawLines[i]);
+        continue;
+      }
+      // Cross-line: a multi-word phrase split over a line break re-forms when
+      // this line and the next non-comment line are joined with a space.
+      if (
+        multiWord &&
+        i + 1 < lines.length &&
+        !lineIsCommentOnly(rawLines[i + 1], isMarkdown) &&
+        re.test(lockSubject(entry, `${joined[i].trimEnd()} ${joined[i + 1].trimStart()}`))
+      ) {
+        push(i + 1, entry.claim, entry.phrase, rawLines[i].trim() + " / " + rawLines[i + 1].trim());
       }
     }
   }

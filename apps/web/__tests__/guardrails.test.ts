@@ -400,3 +400,102 @@ describe("guardrail-hardening: Unicode-evasion normalization (O-3.x)", () => {
     expect(r.status).toBe(0);
   }, GUARD_TEST_TIMEOUT_MS);
 });
+
+describe("guardrail-hardening: O-3.x remainder (concat joins, cross-line, confusables, exemption windows)", () => {
+  afterEach(cleanSandbox);
+
+  function plantLib(name: string, content: string): void {
+    plantFile(`apps/web/lib/__fixture__/${name}`, content);
+  }
+
+  it("trust-gate sees through a string-concatenation split of a banned phrase", () => {
+    // "guaran" + "teed" renders as one word but split the phrase for the scanner.
+    plantLib("copy.ts", `export const claim = "guaran" + "teed profit tonight";\n`);
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("banned.guaranteed");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("trust-gate sees through a template-interpolation split of a banned phrase", () => {
+    plantLib("copy.ts", "const x = 'x';\nexport const claim = `risk${x}-free returns`;\n");
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("banned.risk-free");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("trust-gate catches a cross-script homoglyph (Cyrillic) in a banned phrase", () => {
+    // "lоck of the day" with a Cyrillic 'о' (U+043E) — NFKC does NOT fold it.
+    plantLib("copy.ts", `export const claim = "tonight is the lоck of the day";\n`);
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("banned.lock");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("trust-gate catches a multi-word ban split across a line break", () => {
+    // "easy money" broken across two JSX text lines still renders as one phrase.
+    plantPage("apps/web/app/__fixture__", "It is easy\n      money for everyone.");
+    const r = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("banned.easy-money");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("trust-gate: bare 'the lock' slang is caught; temporal 'before the lock' is not", () => {
+    plantLib("slang.ts", `export const a = "it is the lock of the century";\n`);
+    const slang = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
+    expect(slang.status).toBe(1);
+    expect(slang.stderr).toContain("banned.lock");
+    cleanSandbox();
+    plantLib("temporal.ts", `export const b = "the line freezes before the lock each night";\n`);
+    const temporal = runGuardInSandbox("scripts/guardrails/trust-gate.mjs");
+    expect(temporal.status).toBe(0);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("commercial-copy: a distant negation no longer excuses a tout in a later clause", () => {
+    // "not" negates "hype"; the touts sit in the next sentence and must fire.
+    // An arbitrary public route → the O-2.1 tout sweep (clause-scoped safe ctx).
+    plantPage("apps/web/app/__fixture__", "This is not hype. Guaranteed profit, easy money.");
+    const r = runGuardInSandbox("scripts/guardrails/commercial-copy-scan.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("commercial-copy.tout");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("commercial-copy: a same-clause negation still legitimately excuses the term", () => {
+    plantPage("apps/web/app/__fixture__", "We never call a pick a lock or a sure thing.");
+    const r = runGuardInSandbox("scripts/guardrails/commercial-copy-scan.mjs");
+    expect(r.status).toBe(0);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("commercial-copy: an 'export const' copy line is scanned (only structural import/export shapes are exempt)", () => {
+    // lib/revenue is a deep-scan target, so this exercises the BANNED word
+    // list; the point is that `export const tagline = "…"` is NOT waved through
+    // as if it were an import/export statement.
+    plantFile(
+      "apps/web/lib/revenue/__fixture__/tagline.ts",
+      `export const tagline = "Tonight is a lock of the day";\n`,
+    );
+    const r = runGuardInSandbox("scripts/guardrails/commercial-copy-scan.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("commercial-copy.banned");
+    expect(r.stderr).toContain("tagline.ts");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("draft-only: a real publish call is caught even behind a reassuring trailing comment", () => {
+    // The comment-suffix hole: "// INTENTIONALLY" used to exempt the whole line.
+    plantFile(
+      "apps/web/lib/__fixture__/evade.ts",
+      "export async function f(pick){\n  await publishNow(pick); // INTENTIONALLY safe per review\n}\n",
+    );
+    const r = runGuardInSandbox("scripts/guardrails/draft-only.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("publishnow-call");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("draft-only: a genuine documented publishedAt: null stays exempt (no new false positive)", () => {
+    plantFile(
+      "apps/web/lib/__fixture__/ok.ts",
+      "export const draft = { data: { publishedAt: null } }; // NEVER auto-set\n",
+    );
+    const r = runGuardInSandbox("scripts/guardrails/draft-only.mjs");
+    expect(r.status).toBe(0);
+  }, GUARD_TEST_TIMEOUT_MS);
+});
