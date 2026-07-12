@@ -14,6 +14,7 @@ import {
   buildDossiers,
   buildRadarFeed,
   mostRestrictivePosture,
+  highestRisk,
 } from "@/lib/resource-intelligence/radar";
 import { GATED_DISPOSITIONS, IMPLEMENTABLE_DISPOSITIONS } from "@/lib/resource-intelligence/types";
 
@@ -42,6 +43,15 @@ describe("radar — 1. normalization determinism", () => {
     expect(normalizePosture("QUARANTINE_RIGHTS")).toBe("QUARANTINE");
     expect(normalizePosture("ADOPT_PATTERNS_NOT_DEPENDENCY")).toBe("ADOPT_PATTERNS");
     expect(normalizePosture("EVALUATE")).toBe("OBSERVE");
+  });
+
+  it("G-4: REJECT variants match by prefix; unrecognized postures gate as OWNER_REVIEW, never watch-only", () => {
+    expect(normalizePosture("REJECTED")).toBe("REJECT");
+    expect(normalizePosture("REJECT_NOISE")).toBe("REJECT");
+    // Fail-closed fallback: an unrecognized posture is an evidence defect —
+    // it must gate (owner_review), not silently become OBSERVE/roadmap.
+    expect(normalizePosture("SHIP_IT_NOW")).toBe("OWNER_REVIEW");
+    expect(normalizePosture("")).toBe("OWNER_REVIEW");
   });
 
   it("the committed snapshot validates clean", () => {
@@ -210,7 +220,11 @@ describe("radar — 11. empty and disabled states are distinct from error", () =
     const page = read("app/cockpit/sources/radar/page.tsx");
     const route = read("app/api/cockpit/resource-intelligence/radar/route.ts");
     for (const src of [page, route]) {
-      expect(src.toLowerCase()).not.toMatch(/npm install|npx |git clone|pip install/);
+      // G-18: cover the whole package-manager family — an affordance rendered
+      // as pnpm/yarn/bun/cargo/uv escaped the npm/pip-only pattern.
+      expect(src.toLowerCase()).not.toMatch(
+        /npm (install|i |add)|npx |pnpm (install|i |add)|yarn (install|add)|bun (install|i |add)|git clone|pip install|pipx |uv (pip|add|tool)|cargo (install|add)|brew install/
+      );
     }
     expect(page).toMatch(/Nothing below is approved to install/i);
   });
@@ -310,6 +324,17 @@ describe("radar — Codex #76 regressions", () => {
     ).toBe("quarantine");
   });
 
+  it("G-3: unknown POSTURE labels fail closed to quarantine (was: undefined fell through open)", () => {
+    expect(
+      effectiveDisposition("ADOPT_NOW" as never, "LOW", "MIT")
+    ).toBe("quarantine");
+  });
+
+  it("G-3: unknown labels rank most restrictive in cross-window merges", () => {
+    expect(mostRestrictivePosture(["PROTOTYPE", "ADOPT_NOW" as never])).toBe("ADOPT_NOW");
+    expect(highestRisk(["LOW", "BLOCKED_RIGHTS" as never])).toBe("BLOCKED_RIGHTS");
+  });
+
   it("the importer validates risk against the closed set", () => {
     const importer = readFileSync(
       join(__dirname, "..", "..", "..", "scripts", "resource-radar-import.mjs"),
@@ -330,5 +355,14 @@ describe("radar — Codex #76 regressions", () => {
     };
     const problems = validateSnapshot(tampered);
     expect(problems.some((p) => p.includes("unknown risk"))).toBe(true);
+  });
+
+  it("G-3: validateSnapshot is WIRED at module load and getObservations fails closed on problems", () => {
+    // The committed snapshot is clean, so the throw can't fire in-process;
+    // pin the wiring itself (same pattern as the importer scan above) so
+    // validation can never silently become dead code again.
+    const src = read("lib/resource-intelligence/radar/snapshot.ts");
+    expect(src).toMatch(/const SNAPSHOT_PROBLEMS[^=]*= validateSnapshot\(RADAR_SNAPSHOT\)/);
+    expect(src).toMatch(/if \(SNAPSHOT_PROBLEMS\.length > 0\) \{\s*\n\s*throw new Error/);
   });
 });

@@ -29,8 +29,12 @@ export function buildAssuranceReport(ctx: EvidenceContext): AssuranceReport {
     findings: findings.filter((f) => f.category === spec.id),
   }));
 
-  const overallCoverage = Math.round(weightedCoverage() * 100) / 100;
-  const graded = overallCoverage >= COVERAGE_THRESHOLD;
+  // G-14: the grade gate compares the UNROUNDED coverage — rounding first let
+  // 0.796 read as 0.80 and clear a threshold the true value missed. Rounding
+  // is display-only.
+  const rawCoverage = weightedCoverage();
+  const graded = rawCoverage >= COVERAGE_THRESHOLD;
+  const overallCoverage = Math.round(rawCoverage * 100) / 100;
 
   // Health weighted over the INSPECTED fraction only — uncovered ground can
   // neither help nor hurt the number; it voids the grade via the threshold.

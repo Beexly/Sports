@@ -65,17 +65,20 @@ function normalizeRepository(raw) {
   return "concept:" + trimmed.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
+// Mirrors apps/web/lib/resource-intelligence/radar/normalize.ts EXACTLY.
+// Fail-closed fallback (G-4): an unrecognized posture string gates as
+// OWNER_REVIEW instead of silently becoming watch-only OBSERVE.
 function normalizePosture(raw) {
   const p = raw.trim().toUpperCase();
   if (p.startsWith("QUARANTINE")) return "QUARANTINE";
   if (p.startsWith("OWNER") ) return "OWNER_REVIEW";
-  if (p === "REJECT") return "REJECT";
+  if (p.startsWith("REJECT")) return "REJECT";
   if (p.startsWith("ADOPT_PATTERNS")) return "ADOPT_PATTERNS";
   if (p.startsWith("PROTOTYPE")) return "PROTOTYPE";
   if (p.startsWith("PILOT")) return "PILOT";
   if (p.startsWith("REFERENCE") || p === "DESIGN_REFERENCE" || p === "UNVERIFIED_REFERENCE") return "REFERENCE_ONLY";
   if (p === "OBSERVE" || p === "EVALUATE") return "OBSERVE";
-  return "OBSERVE";
+  return "OWNER_REVIEW";
 }
 
 function toIntOrNull(s) {

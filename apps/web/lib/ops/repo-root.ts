@@ -2,7 +2,8 @@
  * Repo-root resolution for modules that inspect the repository tree
  * (assurance evidence, foundry proof-source checks).
  *
- * `resolve(process.cwd(), "..", "..")` is a lie outside dev: on a serverless
+ * Resolving a fixed number of levels up from the working directory is a lie
+ * outside dev: on a serverless
  * runtime cwd is the function root and source files are only present if the
  * bundler traced an import — existsSync on repo paths then returns false and
  * every fs-based "evidence" claim silently inverts. This helper walks upward
@@ -19,7 +20,15 @@ export function findRepoRoot(startDir: string = process.cwd()): string | null {
   for (let i = 0; i < 8; i++) {
     if (
       existsSync(join(dir, "apps", "web", "package.json")) &&
-      existsSync(join(dir, "packages", "db"))
+      existsSync(join(dir, "packages", "db")) &&
+      // G-2: SOURCE-ONLY markers. package.json and packages/db can both be
+      // traced into a serverless bundle (Prisma schema tracing), so a partial
+      // deployed tree could pass the two checks above and re-enable the very
+      // evidence inversion this helper exists to prevent. Test dirs and CI
+      // workflow configs are never traced by the bundler — they exist only in
+      // a real checkout.
+      existsSync(join(dir, "apps", "web", "__tests__")) &&
+      existsSync(join(dir, ".github", "workflows"))
     ) {
       return dir;
     }
