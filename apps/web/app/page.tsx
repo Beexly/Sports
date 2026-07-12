@@ -49,7 +49,20 @@ export default async function HomePage(): Promise<JSX.Element> {
   // shape byte-identical to a genuinely quiet board. Read the loader meta so an
   // outage is never dressed up as calm live truth ("Gate holding", "0 cleared ·
   // 0 gated", "Intake warming up"). When unavailable, say so plainly instead.
-  const boardUnavailable = stateResult.meta.dataError === "DB_UNREACHABLE";
+  //
+  // "Unavailable" covers TWO board states that both zero the counts without a
+  // genuinely quiet slate: a hard DB outage (meta.dataError), AND an intentional
+  // suppression (the stale-data kill switch parking a failed-freshness slate, or
+  // demo rows held off the public board) that the loader flags via degradation
+  // codes but NOT dataError. /board reads the same codes; mirror it here so a
+  // suppressed slate never renders as a healthy "0 cleared · 0 gated".
+  const boardSuppressed = stateResult.meta.degradations.some(
+    (degradation) =>
+      degradation.code === "STALE_DATA_SUPPRESSED" ||
+      degradation.code === "DEMO_DATA_SUPPRESSED",
+  );
+  const boardUnavailable =
+    stateResult.meta.dataError === "DB_UNREACHABLE" || boardSuppressed;
   const nflUnavailable = nflversePulse.status === "source-error";
 
   return (
@@ -268,13 +281,22 @@ export default async function HomePage(): Promise<JSX.Element> {
         </section>
 
         {/* The live-counts ledger band is a real operational readout. During a
-            board outage its cleared/gated counts are zeroed by the failed load,
-            so we withhold the band rather than caption unverifiable zeros as
-            "Live counts". The methodology cards below stay; they explain method,
-            not live numbers. */}
+            board outage/suppression its cleared/gated counts are zeroed, so we
+            withhold the whole band rather than caption unverifiable zeros as
+            "Live counts". When only the nflverse source has errored, the board
+            counts stay real but the player metric is withheld, so an outage
+            never renders as the reassuring "Player intake / warming up". The
+            methodology cards below stay; they explain method, not live numbers. */}
         <MethodologySection
           metrics={
-            boardUnavailable ? undefined : { settled, cleared, gated, playerRows: nflRows }
+            boardUnavailable
+              ? undefined
+              : {
+                  settled,
+                  cleared,
+                  gated,
+                  ...(nflUnavailable ? {} : { playerRows: nflRows }),
+                }
           }
         />
 

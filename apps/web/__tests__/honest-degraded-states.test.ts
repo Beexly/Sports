@@ -39,7 +39,8 @@ vi.mock("@/lib/proof/load-proof-of-record", () => ({ loadProofOfRecord: mocks.pr
 import BoardPage from "@/app/board/page";
 import HomePage from "@/app/page";
 import ProofPage from "@/app/proof/page";
-import { MethodologySection } from "@/components/ui/methodology-section";
+import { db } from "@sports/db";
+import { MethodologySection, type TrustLedgerMetrics } from "@/components/ui/methodology-section";
 import { buildBoardHealth, type BoardSuppressionReason } from "@/lib/board/health";
 import type { BoardStatePayload } from "@/lib/board/state";
 
@@ -266,18 +267,43 @@ describe("/board — honest suppression banner replaces the dead sample-data ban
 // ── Finding 2: /proof suppresses the fabricated freshness stamp on outage ─────
 
 describe("/proof — outage suppresses the freshness stamp; no synthesized generatedAt", () => {
-  it("ledger outage renders ONLY the unreachable card, with no 'Board generated' stamp", async () => {
-    mocks.proof.mockRejectedValue(new Error("ledger down"));
-    const tree = await ProofPage();
-    const ids = testIdsOf(tree);
-    const text = textOf(tree);
+  it("REAL loader outage: internal DB failure → ledgerUnreachable → page renders the unreachable card, no stamp", async () => {
+    // Exercise the ACTUAL path a real outage takes. A real ledger DB outage does
+    // NOT make loadProofOfRecord reject — its internal db.pick.findMany rejects
+    // and the loader must resolve an explicit ledgerUnreachable signal. Drive the
+    // REAL loader with the DB call failing, then feed its real output to the page.
+    const { loadProofOfRecord } = await vi.importActual<
+      typeof import("@/lib/proof/load-proof-of-record")
+    >("@/lib/proof/load-proof-of-record");
+    const spy = vi
+      .spyOn(db.pick, "findMany")
+      .mockRejectedValue(new Error("ledger DB unreachable"));
 
-    expect(ids.has("proof-unreachable-state")).toBe(true);
-    expect(ids.has("proof-freshness-stamp")).toBe(false);
-    expect(ids.has("proof-empty-state")).toBe(false);
-    expect(text).toContain("temporarily unreachable");
-    // The fabricated "Board generated <now>" stamp must not appear during outage.
-    expect(text).not.toContain("Board generated");
+    try {
+      const board = await loadProofOfRecord();
+
+      // Fail-safe + honest: the loader RESOLVED (never threw), flagged the
+      // outage, and synthesized neither a freshness stamp nor an empty-set root.
+      expect(board.ledgerUnreachable).toBe(true);
+      expect(board.picks).toHaveLength(0);
+      expect(board.generatedAt).toBe("");
+      expect(board.merkleRoot).toBe("");
+
+      // Wire the page to the loader's REAL outage signal and render it.
+      mocks.proof.mockResolvedValue(board);
+      const tree = await ProofPage();
+      const ids = testIdsOf(tree);
+      const text = textOf(tree);
+
+      expect(ids.has("proof-unreachable-state")).toBe(true);
+      expect(ids.has("proof-freshness-stamp")).toBe(false);
+      expect(ids.has("proof-empty-state")).toBe(false);
+      expect(text).toContain("temporarily unreachable");
+      // The fabricated "Board generated <now>" stamp must not appear on outage.
+      expect(text).not.toContain("Board generated");
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   it("successful empty ledger still renders the freshness stamp and honest empty state", async () => {
@@ -286,6 +312,7 @@ describe("/proof — outage suppresses the freshness stamp; no synthesized gener
       picks: [],
       merkleRoot: "a".repeat(64),
       totalSettled: 0,
+      ledgerUnreachable: false,
     });
     const tree = await ProofPage();
     const ids = testIdsOf(tree);
@@ -319,6 +346,71 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     // caption unverifiable zeros as "Live counts".
     const methodology = findByType(tree, MethodologySection);
     expect(methodology).not.toBeNull();
+    expect(methodology?.props.metrics).toBeUndefined();
+  });
+
+  it("nflverse source-error alone withholds the player metric while the healthy board counts stay", async () => {
+    // Board is healthy; ONLY the nflverse source has errored. The real board
+    // counts must still render, but the player metric must be withheld so the
+    // source-error path never renders as the reassuring "Player intake / warming
+    // up" under the "Live counts" caption (Finding A).
+    mocks.boardState.mockResolvedValue(
+      boardState({ rows: { scoringNow: 0, publishedToday: 2, gatedTodayRows: 1 } }),
+    );
+    mocks.calibration.mockResolvedValue(calibration(80));
+    mocks.nflverse.mockResolvedValue({ status: "source-error", sourceRows: 0 });
+    const tree = await HomePage();
+    const text = textOf(tree);
+
+    // Board healthy → its live copy still renders, NOT "unavailable".
+    expect(text).toContain("2 cleared · 1 gated");
+    expect(text).not.toContain("Live board data unavailable");
+    // Lab door reflects the nflverse outage honestly.
+    expect(text).toContain("Live player data unavailable");
+    expect(text).not.toContain("Intake warming up");
+    // The band still carries the REAL board/calibration counts, but playerRows
+    // is omitted so the outage can't render as a warm-up.
+    const methodology = findByType(tree, MethodologySection);
+    const metrics = methodology?.props.metrics as TrustLedgerMetrics | undefined;
+    expect(metrics).toBeDefined();
+    expect(metrics?.playerRows).toBeUndefined();
+    expect(metrics).toEqual({ settled: 80, cleared: 2, gated: 1 });
+  });
+
+  it("stale-suppressed board (degradation code, NO dataError) renders unavailable, not healthy zeros", async () => {
+    // loadBoardState suppresses a stale slate by returning empty rows + a
+    // STALE_DATA_SUPPRESSED degradation WITHOUT setting dataError. That state
+    // must get the unavailable treatment, not the healthy "0 cleared · 0 gated"
+    // / "Gate holding" quiet-board presentation this PR removes (Finding B).
+    mocks.boardState.mockResolvedValue(boardState({ suppressedReason: "STALE_DATA" }));
+    mocks.calibration.mockResolvedValue(calibration(0));
+    mocks.nflverse.mockResolvedValue({ status: "live", sourceRows: 1234 });
+    const tree = await HomePage();
+    const text = textOf(tree);
+
+    expect(text).toContain("Live board data unavailable");
+    expect(text).toContain("Live board counts are temporarily unavailable");
+    expect(text).not.toContain("Gate holding");
+    expect(text).not.toContain("0 cleared");
+    // nflverse is live, so the Lab door still shows real player rows.
+    expect(text).toContain("1,234 live player rows");
+    // Suppressed board zeroes the live counts → the whole band is withheld.
+    const methodology = findByType(tree, MethodologySection);
+    expect(methodology?.props.metrics).toBeUndefined();
+  });
+
+  it("demo-suppressed board (degradation code, NO dataError) also renders unavailable", async () => {
+    mocks.boardState.mockResolvedValue(boardState({ suppressedReason: "DEMO_DATA" }));
+    mocks.calibration.mockResolvedValue(calibration(0));
+    mocks.nflverse.mockResolvedValue({ status: "live", sourceRows: 0 });
+    const tree = await HomePage();
+    const text = textOf(tree);
+
+    expect(text).toContain("Live board data unavailable");
+    expect(text).toContain("Live board counts are temporarily unavailable");
+    expect(text).not.toContain("Gate holding");
+    expect(text).not.toContain("0 cleared");
+    const methodology = findByType(tree, MethodologySection);
     expect(methodology?.props.metrics).toBeUndefined();
   });
 
