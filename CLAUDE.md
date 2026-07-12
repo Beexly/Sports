@@ -83,6 +83,8 @@ Ladder (named ahead of time): FOUNDING → PROVEN (≥100 settled + published ca
 DATABASE_URL=
 DIRECT_URL=
 NEXTAUTH_SECRET=
+# Must be the exact live canonical host WITH www: https://www.galaxysportsedge.com
+# (identical to NEXT_PUBLIC_APP_URL). See canonical-host note below.
 NEXTAUTH_URL=
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
@@ -99,7 +101,29 @@ STRIPE_FANTASY_ANNUAL_PRICE_ID=
 THE_ODDS_API_KEY=
 ANTHROPIC_API_KEY=
 REDIS_URL=
+# Canonical public base URL. The single source of truth is
+# apps/web/lib/seo/site-url.ts, which resolves to NEXT_PUBLIC_APP_URL when set,
+# else defaults to the WWW host https://www.galaxysportsedge.com (never the apex).
+NEXT_PUBLIC_APP_URL=
 ```
+
+### Canonical host (single source of truth)
+
+The one canonical base URL lives in `apps/web/lib/seo/site-url.ts` (`SITE_URL`):
+`NEXT_PUBLIC_APP_URL` when set, else `https://www.galaxysportsedge.com` (the **www**
+host — never the apex). All absolute-URL construction — `metadataBase`, `sitemap.ts`,
+`robots.ts`, canonical tags, JSON-LD, RSS, bot-post links — resolves off it.
+
+**OPERATOR (owner's env/console step — not code):**
+
+- Set `NEXT_PUBLIC_APP_URL=https://www.galaxysportsedge.com` in the deploy env.
+- Set `NEXTAUTH_URL=https://www.galaxysportsedge.com` (identical host).
+- In the Google Cloud Console OAuth client, add
+  `https://www.galaxysportsedge.com/api/auth/callback/google` to the Authorized
+  redirect URIs.
+
+The apex (`https://galaxysportsedge.com`) should redirect to www at the DNS/platform
+layer (not in app code).
 
 ## Development Commands
 

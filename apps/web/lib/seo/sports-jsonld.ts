@@ -11,7 +11,11 @@
  * no hype/guarantees — CLAUDE.md). No DB here — pure + fully testable.
  */
 
-export const SITE_URL = (process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com").replace(/\/$/, "");
+// Canonical base URL comes from the single source of truth (lib/seo/site-url.ts):
+// NEXT_PUBLIC_APP_URL when set, else the www host. Re-exported here so existing
+// `@/lib/seo/sports-jsonld` importers keep working.
+export { SITE_URL } from "./site-url";
+import { SITE_URL } from "./site-url";
 
 export type MatchupPick = {
   readonly type: "SPREAD" | "MONEYLINE" | "TOTAL";

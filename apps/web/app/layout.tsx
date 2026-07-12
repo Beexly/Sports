@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { jsonLdScript } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/seo/site-url";
 import {
   Exo_2,
   Instrument_Serif,
@@ -80,11 +81,8 @@ export const viewport: Viewport = {
  *  - X handle wired in twitter.site/creator so attribution survives reshares.
  */
 
-// Apex host to match sitemap.ts / robots.ts — a mismatched fallback (www here,
-// apex there) splits canonical signals when NEXT_PUBLIC_APP_URL is unset.
-const SITE_URL =
-  process.env["NEXT_PUBLIC_APP_URL"] ?? "https://galaxysportsedge.com";
-
+// SITE_URL is the single canonical base (lib/seo/site-url.ts): NEXT_PUBLIC_APP_URL
+// when set, else the www host. metadataBase + per-page canonicals resolve off it.
 const ORG_HANDLE = "@GalaxySportsAI";
 
 export const metadata: Metadata = {

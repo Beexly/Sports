@@ -10,6 +10,7 @@ import {
   pickRecordToPublicationInput,
   pickRecordToSettlementInput,
 } from "@/lib/bot-outbox/records";
+import { SITE_URL } from "@/lib/seo/site-url";
 
 export interface LoadBotOutboxDraftsOptions {
   readonly now?: Date;
@@ -46,7 +47,9 @@ export async function loadBotOutboxDrafts(
   const now = options.now ?? new Date();
   const lookbackMinutes = options.lookbackMinutes ?? 60;
   const limitPerKind = options.limitPerKind ?? 25;
-  const publicUrl = options.publicUrl ?? "https://galaxysportsedge.com";
+  // Default bot-post links to the canonical site host (www) so they match every
+  // other absolute URL we emit; callers may still override with an explicit host.
+  const publicUrl = options.publicUrl ?? SITE_URL;
   const since = windowStart(now, lookbackMinutes);
 
   const [pickPublications, settlements, gatedSlateStates] = await Promise.all([
