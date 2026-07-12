@@ -87,6 +87,8 @@ describe("/picks page — member data flow", () => {
   it("surfaces the daily-limit meta in the paywall banner", () => {
     expect(picksPageSrc).toMatch(/totalAvailableToday/);
     expect(picksPageSrc).toMatch(/hitDailyLimit/);
-    expect(picksPageSrc).toMatch(/picks published today/);
+    // Date-aware published-count copy (was "published today" — now selected-date
+    // aware so the date picker / ?date= can't make the banner lie).
+    expect(picksPageSrc).toMatch(/picks published for this date/);
   });
 });
