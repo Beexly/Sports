@@ -182,6 +182,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     picksResult.status === "fulfilled"
       ? picksResult.value.meta.date
       : (date ?? new Date().toISOString().split("T")[0]!);
+  // Daily-limit transparency straight off the API meta (read-only — the server
+  // owns these numbers). totalAvailableToday counts the FULL published slate for
+  // this view (free + premium, respecting the active sport filter); the free
+  // board is truncated to the teaser. We only render counts the API returns.
+  const meta =
+    picksResult.status === "fulfilled" ? picksResult.value.meta : null;
+  const totalAvailableToday = meta?.totalAvailableToday ?? null;
+  const hitDailyLimit = meta?.hitDailyLimit ?? false;
 
   const SPORTS = [
     { key: "", label: "All" },
@@ -200,6 +208,24 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
     { key: "STRONG_PLAY", label: "Strong Play" },
     { key: "SOLID_PLAY", label: "Solid Play" },
   ];
+
+  // Human label for an active sport filter, so an empty board blames the sport
+  // (not "this date") when a filter is what produced it. Null when unfiltered
+  // or the key is unknown — never a fabricated sport name.
+  const activeSportLabel = sport
+    ? (SPORTS.find((s) => s.key === sport.toLowerCase())?.label ?? null)
+    : null;
+  // The free teaser size is the single source of truth for "how many picks a
+  // free viewer sees" — entitlements, never a hardcoded absolute.
+  const teaserSize = entitlements.dailyPickLimit ?? 2;
+  // Free board is empty while the API reports picks WERE published today for
+  // this view (they're premium-tier, or premium-only for the active sport):
+  // show the locked upgrade state, not "nothing published for this date".
+  const lockedByPaywall =
+    isFreeTier &&
+    picks.length === 0 &&
+    totalAvailableToday !== null &&
+    totalAvailableToday > 0;
 
   const demoActive = isStubMode() && isDemoPicksEnabled();
   return (
@@ -236,16 +262,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {isFreeTier && (
             <PaywallBanner
               hasAccount={!!session?.user}
-              totalAvailableToday={
-                picksResult.status === "fulfilled"
-                  ? picksResult.value.meta.totalAvailableToday ?? null
-                  : null
-              }
-              hitDailyLimit={
-                picksResult.status === "fulfilled"
-                  ? picksResult.value.meta.hitDailyLimit ?? false
-                  : false
-              }
+              totalAvailableToday={totalAvailableToday}
+              hitDailyLimit={hitDailyLimit}
+              dailyPickLimit={entitlements.dailyPickLimit}
             />
           )}
 
@@ -375,8 +394,43 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </div>
           )}
 
-          {/* Empty state */}
-          {!fetchError && !bootstrapState && picks.length === 0 && (
+          {/* Locked / upgrade state — the free board is empty but the API
+              reports picks WERE published today for this view (premium-tier, or
+              premium-only for the active sport). Surface the real published
+              count from the API meta (never a fabricated number) and route to
+              Pro, instead of falsely claiming nothing was published. */}
+          {!fetchError && !bootstrapState && lockedByPaywall && (
+            <div
+              data-testid="picks-locked-upgrade"
+              className="rounded-xl border border-blue-800/40 bg-blue-950/20 p-8 text-center"
+            >
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-blue-300">
+                Full board is a Pro feature
+              </p>
+              <h2 className="mt-3 text-lg font-semibold text-white">
+                {totalAvailableToday}{" "}
+                {totalAvailableToday === 1 ? "pick" : "picks"} published today.
+                Upgrade to Pro to see them.
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
+                Free includes a {teaserSize}-pick daily teaser with the public
+                Edge Index and no confidence scores. Pro unlocks the full board
+                plus the confidence score, the full factor trail, and line
+                movement behind each pick.
+              </p>
+              <Link
+                href="/pricing"
+                className="mt-6 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+              >
+                {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
+              </Link>
+            </div>
+          )}
+
+          {/* Empty state — genuinely nothing to show for this view. Reflect the
+              active SPORT filter when one is applied, so an empty board never
+              blames "this date" when a sport filter is what emptied it. */}
+          {!fetchError && !bootstrapState && picks.length === 0 && !lockedByPaywall && (
             <div className="rounded-xl border border-titanium bg-carbon/60 p-12 text-center">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-titanium">
                 <svg
@@ -394,10 +448,15 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   />
                 </svg>
               </div>
-              <h2 className="text-base font-semibold text-white">No signals published for this date</h2>
+              <h2 className="text-base font-semibold text-white">
+                {activeSportLabel
+                  ? `No ${activeSportLabel} signals published for this date`
+                  : "No signals published for this date"}
+              </h2>
               <p className="mt-2 text-sm text-ion-3">
-                We only publish when the stack earns it. Some slates don&apos;t
-                clear the gates. That&apos;s the point.
+                {activeSportLabel
+                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date. Try another sport or another date.`
+                  : "We only publish when the stack earns it. Some slates don't clear the gates. That's the point."}
               </p>
             </div>
           )}
@@ -429,19 +488,19 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </>
           )}
 
-          {/* Bottom upgrade CTA for free users — copy is audience-honest:
-              anonymous visitors are server-capped to a free sample, so only
-              signed-in FREE users see the "no daily limit" line. */}
+          {/* Bottom upgrade CTA for free users — states the true model: the
+              free board is a daily teaser (Edge Index only, no confidence
+              scores), and Pro unlocks the full board. teaserSize comes from
+              entitlements.dailyPickLimit, not a hardcoded absolute. */}
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
               <p className="text-sm font-semibold text-blue-200">
                 {hasAccount
-                  ? "Every pick is free: no daily limit, with the open verified record."
-                  : "Every pick is free with a free account, with the open verified record."}
+                  ? `You're on Free: a ${teaserSize}-pick daily teaser with the public Edge Index, no confidence scores.`
+                  : `Today's free teaser: ${teaserSize} picks with the public Edge Index, no confidence scores.`}
               </p>
               <p className="mt-1 text-xs text-blue-300">
-                Pro adds the confidence score, the full factor trail, and line movement behind each one.
-                Edge Index is public on every pick.
+                Pro unlocks the full board plus the confidence score, the full factor trail, and line movement behind each pick.
               </p>
               <Link
                 href="/pricing"
@@ -567,19 +626,25 @@ function PaywallBanner({
   hasAccount,
   totalAvailableToday,
   hitDailyLimit,
+  dailyPickLimit,
 }: {
   hasAccount: boolean;
   totalAvailableToday: number | null;
   hitDailyLimit: boolean;
+  dailyPickLimit: number | null;
 }) {
-  // Honest copy per audience: anonymous visitors are server-capped to a small
-  // free sample, so only signed-in FREE users get the "every pick, free" line.
+  // True copy for the free board: it's a small daily TEASER (Edge Index only,
+  // no confidence scores), not the full board. teaserSize is the entitlement's
+  // dailyPickLimit — the same number the server enforces — so the banner can
+  // never contradict the paywall. When more picks were published than the
+  // teaser shows, surface the real published count and route to Pro.
+  const teaserSize = dailyPickLimit ?? 2;
   const headline =
-    hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > 2
+    hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > teaserSize
       ? `${totalAvailableToday} picks published today. Upgrade to Pro to see the full board.`
       : hasAccount
-        ? "You're on Free: every pick, free, with the open verified record."
-        : "You're seeing today's free sample. Create a free account to see every pick, free.";
+        ? `You're on Free: a ${teaserSize}-pick daily teaser, with the public Edge Index and no confidence scores.`
+        : `You're seeing today's free teaser: ${teaserSize} picks, with the public Edge Index and no confidence scores.`;
   return (
     <div
       data-testid="paywall-banner"
