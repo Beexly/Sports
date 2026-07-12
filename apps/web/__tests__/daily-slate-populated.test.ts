@@ -27,6 +27,15 @@ vi.mock("@/lib/data-reliability/public-freshness-gate", () => ({
 }));
 
 import { GET } from "@/app/api/picks/daily-slate/route";
+import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
+
+/** The published-slate filter every count on this surface must carry. */
+const BASE_WHERE = expect.objectContaining({
+  isPublished: true,
+  result: "PENDING",
+  isBootstrap: false,
+  game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+});
 
 beforeEach(() => {
   for (const m of Object.values(mocks)) m.mockReset();
@@ -62,14 +71,30 @@ describe("daily slate with a POPULATED db (O-6)", () => {
       { sport: "MLB", pickCount: 1 },
     ]);
     expect(body.data["isSampleData"]).toBe(false);
+
+    // The counts are only meaningful UNDER the published-slate filter — pin
+    // the exact predicate on every query so a dropped isPublished/result/
+    // isBootstrap/data-quality clause fails here (Codex round on O-6).
+    expect(mocks.pickCount).toHaveBeenCalledWith(
+      expect.objectContaining({ where: BASE_WHERE }),
+    );
+    expect(mocks.pickCount).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ isPublished: true, result: "PENDING", isBootstrap: false, tier: "FREE" }),
+      }),
+    );
+    expect(mocks.pickFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: BASE_WHERE }),
+    );
   });
 
-  it("demo mode reports sample data, never the real counts' shape as live", async () => {
+  it("demo mode derives EVERY count from the samples — internally consistent", async () => {
     mocks.isStubMode.mockReturnValue(true);
     mocks.isDemoPicksEnabled.mockReturnValue(true);
-    mocks.pickCount.mockResolvedValue(0); // stub reality: counts are empty
+    mocks.pickCount.mockResolvedValue(0); // stub reality: DB counts are empty
     mocks.getSamplePicks.mockReturnValue([
       { gameId: "s-1", tier: "FREE", game: { sport: { name: "NFL" } } },
+      { gameId: "s-2", tier: "PRO", game: { sport: { name: "MLB" } } },
     ]);
 
     const res = (await GET()) as Response;
@@ -80,7 +105,12 @@ describe("daily slate with a POPULATED db (O-6)", () => {
 
     expect(body.meta["isSampleData"]).toBe(true);
     expect(body.data["isSampleData"]).toBe(true);
-    expect(body.data["totalGames"]).toBe(1); // derived from samples, not stub
+    // ONE source of truth (the samples): totals, free, premium, and games all
+    // agree — the route previously published totalPicks 0 beside free 1
+    // because totalPicks came from the stub DB count (Codex round on O-6).
+    expect(body.data["totalPicks"]).toBe(2);
     expect(body.data["freePickCount"]).toBe(1);
+    expect(body.data["premiumPickCount"]).toBe(1); // total − free
+    expect(body.data["totalGames"]).toBe(2);
   });
 });

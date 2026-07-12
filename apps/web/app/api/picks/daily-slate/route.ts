@@ -68,7 +68,7 @@ export async function GET() {
     ...excludeSeedInProd,
   };
 
-  const totalPicks = await db.pick.count({ where: baseWhere }).catch(() => 0);
+  let totalPicks = await db.pick.count({ where: baseWhere }).catch(() => 0);
 
   const samples = demoActive ? getSamplePicks() : [];
   let totalGames: number;
@@ -76,6 +76,11 @@ export async function GET() {
   // Sport breakdown accumulator (demo counts samples; prod counts real picks).
   const sportCount = new Map<string, number>();
   if (demoActive) {
+    // Demo mode derives EVERY count from the samples. totalPicks came from the
+    // (stub) DB count above — zero — while free/games came from the samples,
+    // publishing a self-contradictory slate (totalPicks 0 beside free 1 —
+    // Codex round on O-6). One source of truth per mode.
+    totalPicks = samples.length;
     totalGames = new Set(samples.map((p) => p.gameId)).size;
     freePickCount = samples.filter((p) => p.tier === "FREE").length;
     for (const p of samples) {

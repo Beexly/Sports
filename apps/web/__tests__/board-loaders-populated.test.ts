@@ -41,6 +41,31 @@ import { loadBoardState } from "@/lib/board/state";
 import { loadBoardPasses } from "@/lib/board/passes";
 
 const NOW = new Date("2026-07-11T15:00:00.000Z");
+// The loaders' todayBounds() reads the REAL clock (it ignores the `now`
+// argument), so rows meant to fall inside "today" must be stamped with real
+// wall time — and the excluded row must be safely outside any host's today.
+const FRESH = new Date();
+const STALE = new Date(Date.now() - 48 * 60 * 60 * 1000);
+const SENTINEL_MODEL_VERSION = "v9.9.9-sentinel"; // must differ from engine MODEL_VERSION
+
+/**
+ * Prisma-shaped filter over the decision pool for the predicates the loaders
+ * rely on (isBootstrap, status, evaluatedAt window). Returning the pool
+ * unfiltered would make these pins vacuous again: a loader that DROPPED its
+ * where-clause would still get only valid rows (Codex round on O-6).
+ */
+function applyDecisionWhere(pool: ReadonlyArray<Record<string, unknown>>, args: unknown) {
+  const where = (args as { where?: Record<string, unknown> })?.where ?? {};
+  return pool.filter((d) => {
+    if (where["isBootstrap"] !== undefined && d["isBootstrap"] !== where["isBootstrap"]) return false;
+    if (where["status"] !== undefined && d["status"] !== where["status"]) return false;
+    const window = where["evaluatedAt"] as { gte?: Date; lt?: Date } | undefined;
+    const at = d["evaluatedAt"] as Date;
+    if (window?.gte && !(at >= window.gte)) return false;
+    if (window?.lt && !(at < window.lt)) return false;
+    return true;
+  });
+}
 
 function sportRel(name: string) {
   return { name };
@@ -71,7 +96,7 @@ function decision(over: Record<string, unknown> = {}) {
     edgeIndex: 63,
     confidence: 71,
     modelVersion: "v5.1.0",
-    evaluatedAt: NOW,
+    evaluatedAt: FRESH,
     isBootstrap: false,
     game: gameRel(),
     pick: { selection: "Chiefs -3.5", confidence: 71 },
@@ -90,9 +115,13 @@ beforeEach(() => {
 });
 
 describe("loadBoardState with a POPULATED db (O-6)", () => {
-  it("lanes gate decisions and derives the counts — data must come THROUGH", async () => {
-    mocks.gateDecisionFindMany.mockResolvedValue([
-      decision(),
+  it("lanes gate decisions, derives the counts, and HONORS the where-clause", async () => {
+    // The pool contains rows the where-clause must exclude: a bootstrap
+    // decision and yesterday's decision. The mock FILTERS by args.where, so a
+    // loader that dropped isBootstrap or the evaluatedAt window would leak
+    // them into the lanes and fail below.
+    const pool = [
+      decision({ modelVersion: SENTINEL_MODEL_VERSION }),
       decision({
         id: "dec-2",
         gameId: "game-2",
@@ -102,7 +131,10 @@ describe("loadBoardState with a POPULATED db (O-6)", () => {
         pick: null,
       }),
       decision({ id: "dec-3", gameId: "game-3", status: "SCORING", game: gameRel({ id: "game-3" }), pick: null }),
-    ]);
+      decision({ id: "dec-bootstrap", isBootstrap: true }),
+      decision({ id: "dec-stale", status: "GATED", evaluatedAt: STALE }),
+    ];
+    mocks.gateDecisionFindMany.mockImplementation(async (args) => applyDecisionWhere(pool, args));
 
     const payload = await loadBoardState(NOW);
 
@@ -110,6 +142,14 @@ describe("loadBoardState with a POPULATED db (O-6)", () => {
     expect(payload.data.publishedToday).toHaveLength(1);
     expect(payload.data.gatedTodayRows).toHaveLength(1);
     expect(payload.data.scoringNow).toHaveLength(1);
+    // The excluded rows must NOT leak into any lane.
+    const allIds = [
+      ...payload.data.publishedToday,
+      ...payload.data.gatedTodayRows,
+      ...payload.data.scoringNow,
+    ].map((r) => r.id);
+    expect(allIds).not.toContain("dec-bootstrap");
+    expect(allIds).not.toContain("dec-stale");
     expect(payload.data.openPicks).toBe(1);
     expect(payload.data.gatedToday).toBe(1);
     expect(payload.data.sportsWatched).toBe(2); // NFL + MLB
@@ -120,10 +160,12 @@ describe("loadBoardState with a POPULATED db (O-6)", () => {
       gateReason: null,
     });
     expect(payload.data.gatedTodayRows[0]!.gateReason).toBe("Market depth below threshold");
-    expect(payload.data.modelVersion).toBe("v5.1.0");
+    // Sentinel differs from the engine constant, so this proves the loader
+    // COPIED the persisted decision's version rather than falling back.
+    expect(payload.data.modelVersion).toBe(SENTINEL_MODEL_VERSION);
   });
 
-  it("falls back to pick/game queries when no decisions exist — and still returns data", async () => {
+  it("falls back to pick/game queries when no decisions exist — BOTH game lanes distinctly fed", async () => {
     mocks.gateDecisionFindMany.mockResolvedValue([]);
     mocks.pickFindMany.mockResolvedValue([
       {
@@ -136,13 +178,22 @@ describe("loadBoardState with a POPULATED db (O-6)", () => {
         game: gameRel(),
       },
     ]);
-    mocks.gameFindMany.mockResolvedValue([gameRel({ id: "game-9" })]);
+    // Ordered fixtures: the first game query feeds SCORING_NOW, the second
+    // feeds GATED_TODAY. Distinct ids prove the lanes are driven by their own
+    // queries, not one shared result (Codex round on O-6).
+    mocks.gameFindMany
+      .mockResolvedValueOnce([gameRel({ id: "game-scoring" })])
+      .mockResolvedValueOnce([gameRel({ id: "game-gated", bookmakerCoverageMax: 2 })]);
 
     const payload = await loadBoardState(NOW);
 
     expect(payload.data.publishedToday).toHaveLength(1);
     expect(payload.data.publishedToday[0]!.market).toBe("Chiefs -3.5");
-    expect(payload.data.scoringNow.length).toBeGreaterThan(0);
+    expect(payload.data.scoringNow).toHaveLength(1);
+    expect(payload.data.scoringNow[0]!.gameId).toBe("game-scoring");
+    expect(payload.data.gatedTodayRows).toHaveLength(1);
+    expect(payload.data.gatedTodayRows[0]!.gameId).toBe("game-gated");
+    expect(payload.data.gatedTodayRows[0]!.gateReason).toBe("Market depth below publish threshold.");
   });
 
   it("demo suppression EMPTIES a populated board and never queries the db", async () => {
@@ -166,10 +217,13 @@ describe("loadBoardState with a POPULATED db (O-6)", () => {
 });
 
 describe("loadBoardPasses with a POPULATED db (O-6)", () => {
-  it("maps GATED decisions into pass rows — data must come THROUGH", async () => {
-    mocks.gateDecisionFindMany.mockResolvedValue([
+  it("maps GATED decisions into pass rows and HONORS the status/where filters", async () => {
+    const pool = [
       decision({ status: "GATED", reason: "Books disagree beyond tolerance", pick: undefined }),
-    ]);
+      decision({ id: "dec-pub", status: "PUBLISHED" }), // wrong status — must not appear
+      decision({ id: "dec-old", status: "GATED", evaluatedAt: STALE }), // stale — must not appear
+    ];
+    mocks.gateDecisionFindMany.mockImplementation(async (args) => applyDecisionWhere(pool, args));
 
     const payload = await loadBoardPasses(NOW);
 
