@@ -45,6 +45,8 @@ import {
 } from "../expected-metrics/expected-yac.js";
 import {
   buildCalibrationReport,
+  buildEpCalibration,
+  buildWpCalibration,
   DEFAULT_GRADUATION_THRESHOLDS,
   graduationVerdict,
   type CalibrationReport,
@@ -408,6 +410,21 @@ describe("validation bridge", () => {
       ourMean: 0,
       truthMean: 0,
     });
+  });
+
+  it("play-grain calibration REFUSES misjoined unequal-length inputs (no correlation over truncated pairs)", () => {
+    // A loader filtered one side without the other → lengths diverge. Index-pairing
+    // the truncated overlap would correlate DIFFERENT plays; the guard must throw
+    // rather than emit a numeric correlation over the mispaired prefix.
+    const ours = [0.1, 0.2, 0.3, 0.4];
+    const truthShort = [0.11, 0.19, 0.32]; // one side filtered out a play
+    expect(() => buildEpCalibration(ours, truthShort)).toThrow(/equal length/i);
+    expect(() => buildWpCalibration(truthShort, ours)).toThrow(/equal length/i);
+
+    // Equal-length inputs are unaffected — still produce a real report.
+    const report = buildEpCalibration([0.1, 0.2, 0.3], [0.11, 0.19, 0.32]);
+    expect(report.n).toBe(3);
+    expect(Number.isFinite(report.pearson)).toBe(true);
   });
 
   it("graduationVerdict transitions across the thresholds", () => {

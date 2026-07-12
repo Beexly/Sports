@@ -84,6 +84,8 @@ export {
 // Ground-truth validation (prove it).
 export {
   buildCalibrationReport,
+  buildEpCalibration,
+  buildWpCalibration,
   graduationVerdict,
   DEFAULT_GRADUATION_THRESHOLDS,
   type GroundTruthPoint,
@@ -92,3 +94,57 @@ export {
   type GraduationThresholds,
   type GraduationResult,
 } from "./validation.js";
+
+// Expected points → GSE-EPA (glass-box, enters dark).
+export {
+  fitExpectedPointsModel,
+  predictScoreDistribution,
+  predictExpectedPoints,
+  expectedPointsAdded,
+  deriveNextScore,
+  EXPECTED_POINTS_FEATURE_KEYS,
+  EXPECTED_POINTS_MODEL_VERSION,
+  EP_OUTCOMES,
+  EP_OUTCOME_VALUES,
+  EP_REQUIRED_OUTCOMES,
+  MIN_EP_PLAYS_TO_FIT,
+  EP_DEFAULT_HALF_SECONDS,
+  type EpPlay,
+  type NextScoreOutcome,
+  type ExpectedPointsModel,
+  type RawScoringContext,
+} from "./expected-points.js";
+
+// Win probability → GSE-WPA (glass-box, enters dark).
+export {
+  fitWinProbabilityModel,
+  predictWinProbability,
+  winProbabilityAdded,
+  WIN_PROBABILITY_FEATURE_KEYS,
+  WIN_PROBABILITY_MODEL_VERSION,
+  MIN_WP_PLAYS_TO_FIT,
+  type WpPlay,
+  type WinProbabilityModel,
+} from "./win-probability.js";
+
+// Success rate (deterministic; glass-box, enters dark).
+export {
+  isSuccessfulPlay,
+  successRateByTeam,
+  successRateByPlayer,
+  successRateByDown,
+  successRateBySituation,
+  SUCCESS_RATE_MODEL_VERSION,
+  SUCCESS_YARDAGE_FRACTION,
+  type SuccessPlay,
+  type SuccessRateSplit,
+} from "./success-rate.js";
+
+// Drive aggregation (deterministic; glass-box, enters dark).
+export {
+  buildDrives,
+  DRIVES_MODEL_VERSION,
+  type DrivePlay,
+  type Drive,
+  type DriveResult,
+} from "./drives.js";

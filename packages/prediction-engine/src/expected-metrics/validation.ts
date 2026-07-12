@@ -96,6 +96,89 @@ export function buildCalibrationReport(
   };
 }
 
+/**
+ * Play-grain agreement report between OUR per-play series and a referee per-play
+ * series (nflverse `ep`/`epa` or `wp`), reusing the same numeric.ts primitives as
+ * the player-keyed report — no second statistics kernel. `n` counts paired plays
+ * (both finite); fewer than 2 paired plays yields an all-zero report, never NaN.
+ *
+ * GRAIN DISCIPLINE: the two arrays MUST be index-aligned at the identical play
+ * grain — same season, same season type (REG), joined on `game_id`+`play_id`, with
+ * EPA validation restricted to non-terminal plays on BOTH sides. The caller (the
+ * loader) enforces the join; this helper documents and assumes it.
+ *
+ * MISJOIN GUARD: `ours[i]` is paired with `truth[i]` BY INDEX, so the two series must
+ * be equal length. If a loader filtered one side without the other, the lengths
+ * diverge and truncating to the shorter side would pair DIFFERENT plays — a bogus
+ * correlation that could pass the graduation gate on misjoined data. We therefore
+ * REFUSE a length mismatch (throw) instead of silently truncating. Correctly-paired
+ * equal-length inputs behave exactly as before.
+ */
+function buildPlayGrainCalibration(
+  ours: readonly number[],
+  truth: readonly number[],
+): CalibrationReport {
+  if (ours.length !== truth.length) {
+    throw new Error(
+      `buildPlayGrainCalibration: index-aligned inputs must be equal length; got ` +
+        `ours=${ours.length}, truth=${truth.length}. A length mismatch means the two ` +
+        `per-play series are misjoined (one side filtered without the other) — refusing ` +
+        `to correlate truncated, mispaired plays.`,
+    );
+  }
+  const ourVals: number[] = [];
+  const truthVals: number[] = [];
+  for (let i = 0; i < ours.length; i++) {
+    const ov = ours[i] ?? Number.NaN;
+    const tv = truth[i] ?? Number.NaN;
+    if (!Number.isFinite(ov) || !Number.isFinite(tv)) continue;
+    ourVals.push(ov);
+    truthVals.push(tv);
+  }
+
+  const n = ourVals.length;
+  if (n < 2) {
+    return { n, pearson: 0, spearman: 0, rmse: 0, mae: 0, bias: 0, ourMean: 0, truthMean: 0 };
+  }
+  const ourMean = mean(ourVals);
+  const truthMean = mean(truthVals);
+  return {
+    n,
+    pearson: round(pearson(ourVals, truthVals), 4),
+    spearman: round(spearman(ourVals, truthVals), 4),
+    rmse: round(rmse(ourVals, truthVals), 4),
+    mae: round(mae(ourVals, truthVals), 4),
+    bias: round(ourMean - truthMean, 4),
+    ourMean: round(ourMean, 4),
+    truthMean: round(truthMean, 4),
+  };
+}
+
+/**
+ * Prove our per-play EP against nflverse `ep` (or our EPA against `epa`) as REFEREE
+ * only. `ourEp` and `truthEp` are index-aligned per-play series at the same grain
+ * and MUST be equal length — a length mismatch (misjoin) throws (see
+ * `buildPlayGrainCalibration`).
+ */
+export function buildEpCalibration(
+  ourEp: readonly number[],
+  truthEp: readonly number[],
+): CalibrationReport {
+  return buildPlayGrainCalibration(ourEp, truthEp);
+}
+
+/**
+ * Prove our per-play WP against nflverse `wp` as REFEREE only. `ourWp` and `truthWp`
+ * are index-aligned per-play series at the same grain and MUST be equal length — a
+ * length mismatch (misjoin) throws (see `buildPlayGrainCalibration`).
+ */
+export function buildWpCalibration(
+  ourWp: readonly number[],
+  truthWp: readonly number[],
+): CalibrationReport {
+  return buildPlayGrainCalibration(ourWp, truthWp);
+}
+
 export type GraduationVerdict = "graduated" | "provisional" | "insufficient-sample" | "failed";
 
 /** Thresholds for grading a metric against ground truth. */
@@ -128,6 +211,12 @@ export const DEFAULT_GRADUATION_THRESHOLDS = {
   cpoe: { minSample: 12, graduatedPearson: 0.6, provisionalPearson: 0.35 },
   ryoe: { minSample: 12, graduatedPearson: 0.4, provisionalPearson: 0.2 },
   xyac: { minSample: 12, graduatedPearson: 0.5, provisionalPearson: 0.25 },
+  // EP/WP are play-grain: `minSample` is reinterpreted as paired PLAYS, not players.
+  // The bars are HIGH because EP and WP are almost fully functions of the public
+  // situation (down/distance/field/score/time), so a faithful public reconstruction
+  // should correlate strongly with the referee — we hold ourselves to that.
+  ep: { minSample: 200, graduatedPearson: 0.9, provisionalPearson: 0.75 },
+  wp: { minSample: 200, graduatedPearson: 0.9, provisionalPearson: 0.8 },
 } as const satisfies Record<string, GraduationThresholds>;
 
 /**
