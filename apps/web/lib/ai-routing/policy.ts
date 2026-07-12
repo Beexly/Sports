@@ -9,7 +9,7 @@
 
 import type { RouteLane, RouteTaskProfile } from "./types";
 
-export const ROUTING_POLICY_VERSION = "routing-policy/1.0.0";
+export const ROUTING_POLICY_VERSION = "routing-policy/1.1.0";
 
 /** Default budget ceilings per lane (USD per task). */
 export const LANE_BUDGET_CEILINGS: Readonly<Record<RouteLane, number>> = {
@@ -53,14 +53,21 @@ export function selectLane(t: RouteTaskProfile): LaneDecision {
   if (t.taskType === "verify" || t.taskType === "review") {
     return { lane: "VERIFY_INDEPENDENT", reason: "Second-opinion task: route to the verification lane." };
   }
-  // 5. Schema-constrained extraction is cheaper than planning.
+  // 5. HIGH risk precedes every cheap-lane shortcut (G-15 / policy 1.1.0:
+  //    a HIGH-risk task with structured output used to fall into the cheap
+  //    EXTRACT lane because the structural rule ran first — risk outranks
+  //    shape, always).
+  if (t.risk === "HIGH") {
+    return { lane: "PLAN_FRONTIER", reason: "High-risk task: frontier lane — risk precedes any structural shortcut." };
+  }
+  // 6. Schema-constrained extraction is cheaper than planning.
   if (t.requiresStructuredOutput && !t.requiresTools) {
     return { lane: "EXTRACT_STRUCTURED", reason: "Schema-constrained extraction without tools." };
   }
-  // 6. High-risk or open-ended work plans on the frontier lane.
-  if (t.risk === "HIGH" || t.taskType === "plan" || t.taskType === "architecture") {
-    return { lane: "PLAN_FRONTIER", reason: "Open-ended or high-risk planning: frontier lane." };
+  // 7. Open-ended planning work takes the frontier lane.
+  if (t.taskType === "plan" || t.taskType === "architecture") {
+    return { lane: "PLAN_FRONTIER", reason: "Open-ended planning: frontier lane." };
   }
-  // 7. Everything else is bounded execution.
+  // 8. Everything else is bounded execution.
   return { lane: "EXECUTE_BOUNDED", reason: "Bounded, well-specified task: execution lane." };
 }

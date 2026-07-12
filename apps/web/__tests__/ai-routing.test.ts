@@ -42,7 +42,8 @@ describe("router — deterministic lane selection", () => {
 
   it("policy version is pinned on every recommendation", () => {
     expect(recommendRoute(base).policyVersion).toBe(ROUTING_POLICY_VERSION);
-    expect(ROUTING_POLICY_VERSION).toBe("routing-policy/1.0.0");
+    // 1.1.0: G-15 — HIGH risk hoisted above the structured-extraction rule.
+    expect(ROUTING_POLICY_VERSION).toBe("routing-policy/1.1.0");
   });
 });
 
@@ -191,6 +192,23 @@ describe("router — reasons and lane logic", () => {
     expect(selectLane({ ...base, sensitivity: "SENSITIVE", publicVisibility: true }).lane).toBe("LOCAL_PRIVATE");
     expect(selectLane({ ...base, publicVisibility: true, taskType: "verify" }).lane).toBe("PUBLIC_HIGH_STAKES");
     expect(selectLane({ ...base, taskType: "verify" }).lane).toBe("VERIFY_INDEPENDENT");
+  });
+
+  it("G-15: HIGH risk outranks the cheap structured-extraction shortcut", () => {
+    // The exact inversion: HIGH + structured + no tools used to take
+    // EXTRACT_STRUCTURED because the structural rule ran first.
+    expect(
+      selectLane({ ...base, risk: "HIGH", requiresStructuredOutput: true, requiresTools: false }).lane
+    ).toBe("PLAN_FRONTIER");
+    // Non-HIGH structured extraction still takes the cheap lane…
+    expect(
+      selectLane({ ...base, requiresStructuredOutput: true, requiresTools: false }).lane
+    ).toBe("EXTRACT_STRUCTURED");
+    // …including for plan-type tasks (taskType precedence unchanged by 1.1.0).
+    expect(
+      selectLane({ ...base, taskType: "plan", requiresStructuredOutput: true, requiresTools: false }).lane
+    ).toBe("EXTRACT_STRUCTURED");
+    expect(selectLane({ ...base, taskType: "plan" }).lane).toBe("PLAN_FRONTIER");
   });
 });
 
