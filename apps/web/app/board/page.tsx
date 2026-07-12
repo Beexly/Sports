@@ -41,13 +41,21 @@ export default async function BoardPage(): Promise<JSX.Element> {
   const state = stateResult.data;
   const passes = passesResult.data.passes;
   const calibration = calibrationResult.data;
-  const isSampleData =
-    stateResult.meta.isSampleData ||
-    passesResult.meta.isSampleData ||
-    calibrationResult.meta.isSampleData;
   const dbUnreachable =
     stateResult.meta.dataError === "DB_UNREACHABLE" ||
     passesResult.meta.dataError === "DB_UNREACHABLE";
+  // Honest suppression signal. When the board is intentionally zeroed — demo
+  // rows held off the public board, or the stale-data kill switch parking a
+  // slate that failed the freshness check — say which and why. Empty lanes plus
+  // zeroed counts with no explanation would read as a quiet day, a false healthy
+  // state. The loader already classifies the reason as a degradation code; we
+  // only surface it. (The old isSampleData banner was dead: every loader
+  // hardcodes isSampleData=false, so it could never render.)
+  const suppression = stateResult.meta.degradations.find(
+    (degradation) =>
+      degradation.code === "STALE_DATA_SUPPRESSED" ||
+      degradation.code === "DEMO_DATA_SUPPRESSED",
+  );
 
   return (
     <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-obsidian text-ion-white">
@@ -66,14 +74,37 @@ export default async function BoardPage(): Promise<JSX.Element> {
           </div>
         )}
 
-        {isSampleData && (
-          <div className="flex flex-col gap-2 border border-orbital-cyan/30 bg-orbital-cyan/[0.06] px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center">
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orbital-cyan">
-              Preview mode
-            </span>
-            <span className="break-words sm:ml-3">
-              Showing deterministic sample board data while live ingestion is unavailable.
-            </span>
+        {suppression && (
+          <div
+            data-testid="board-suppression-banner"
+            className={`flex flex-col gap-2 border px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center ${
+              suppression.code === "STALE_DATA_SUPPRESSED"
+                ? "border-caution/40 bg-caution/[0.08]"
+                : "border-orbital-cyan/30 bg-orbital-cyan/[0.06]"
+            }`}
+          >
+            {suppression.code === "STALE_DATA_SUPPRESSED" ? (
+              <>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-caution">
+                  Board paused
+                </span>
+                <span className="break-words sm:ml-3">
+                  Live data did not clear the freshness check, so the board is
+                  held rather than showing a stale slate. Counts read zero until
+                  fresh data lands.
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orbital-cyan">
+                  Demo rows hidden
+                </span>
+                <span className="break-words sm:ml-3">
+                  Demo rows are kept off the public board. Counts read zero here
+                  until real slates publish.
+                </span>
+              </>
+            )}
           </div>
         )}
 

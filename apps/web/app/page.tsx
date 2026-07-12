@@ -45,6 +45,25 @@ export default async function HomePage(): Promise<JSX.Element> {
   const scoring = state.scoringNow.length;
   const settled = calibration.sampleSize;
   const nflRows = nflversePulse.status === "live" ? nflversePulse.sourceRows : 0;
+  // Honest degraded states. The loaders zero their counts on infra failure, a
+  // shape byte-identical to a genuinely quiet board. Read the loader meta so an
+  // outage is never dressed up as calm live truth ("Gate holding", "0 cleared ·
+  // 0 gated", "Intake warming up"). When unavailable, say so plainly instead.
+  //
+  // "Unavailable" covers TWO board states that both zero the counts without a
+  // genuinely quiet slate: a hard DB outage (meta.dataError), AND an intentional
+  // suppression (the stale-data kill switch parking a failed-freshness slate, or
+  // demo rows held off the public board) that the loader flags via degradation
+  // codes but NOT dataError. /board reads the same codes; mirror it here so a
+  // suppressed slate never renders as a healthy "0 cleared · 0 gated".
+  const boardSuppressed = stateResult.meta.degradations.some(
+    (degradation) =>
+      degradation.code === "STALE_DATA_SUPPRESSED" ||
+      degradation.code === "DEMO_DATA_SUPPRESSED",
+  );
+  const boardUnavailable =
+    stateResult.meta.dataError === "DB_UNREACHABLE" || boardSuppressed;
+  const nflUnavailable = nflversePulse.status === "source-error";
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
@@ -135,16 +154,28 @@ export default async function HomePage(): Promise<JSX.Element> {
                 index={1}
                 label="Board"
                 decides="What's worth a play today, and what to pass."
-                stat={cleared > 0 || gated > 0 ? `${cleared} cleared · ${gated} gated` : "Gate holding. No forced action"}
+                stat={
+                  boardUnavailable
+                    ? "Live board data unavailable"
+                    : cleared > 0 || gated > 0
+                      ? `${cleared} cleared · ${gated} gated`
+                      : "Gate holding. No forced action"
+                }
                 action="Open the board"
                 href="/board"
-                bar={{ a: cleared, b: gated }}
+                bar={boardUnavailable ? undefined : { a: cleared, b: gated }}
               />
               <DoorCard
                 index={2}
                 label="The Lab"
                 decides="Who to trust this week, with every signal in one place."
-                stat={nflRows > 0 ? `${nflRows.toLocaleString()} live player rows` : "Intake warming up"}
+                stat={
+                  nflUnavailable
+                    ? "Live player data unavailable"
+                    : nflRows > 0
+                      ? `${nflRows.toLocaleString()} live player rows`
+                      : "Intake warming up"
+                }
                 action="Open the lab"
                 href="/players"
               />
@@ -180,9 +211,15 @@ export default async function HomePage(): Promise<JSX.Element> {
         >
           <SignalFragmentField />
           <p className="mt-10 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">
-            Right now ·{" "}
-            <span className="text-orbital-cyan">{cleared} cleared</span> ·{" "}
-            <span className="text-plasma">{gated} gated</span> ·{" "}
+            {boardUnavailable ? (
+              <>Live board counts are temporarily unavailable ·{" "}</>
+            ) : (
+              <>
+                Right now ·{" "}
+                <span className="text-orbital-cyan">{cleared} cleared</span> ·{" "}
+                <span className="text-plasma">{gated} gated</span> ·{" "}
+              </>
+            )}
             {settled > 0 ? (
               <>graded on <span className="text-ion-white">{settled} settled picks</span> ·{" "}</>
             ) : (
@@ -243,8 +280,24 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
+        {/* The live-counts ledger band is a real operational readout. During a
+            board outage/suppression its cleared/gated counts are zeroed, so we
+            withhold the whole band rather than caption unverifiable zeros as
+            "Live counts". When only the nflverse source has errored, the board
+            counts stay real but the player metric is withheld, so an outage
+            never renders as the reassuring "Player intake / warming up". The
+            methodology cards below stay; they explain method, not live numbers. */}
         <MethodologySection
-          metrics={{ settled, cleared, gated, playerRows: nflRows }}
+          metrics={
+            boardUnavailable
+              ? undefined
+              : {
+                  settled,
+                  cleared,
+                  gated,
+                  ...(nflUnavailable ? {} : { playerRows: nflRows }),
+                }
+          }
         />
 
         <section data-testid="homepage-responsible-close" className="gw-nebula px-4 py-14 sm:px-6 lg:px-8">

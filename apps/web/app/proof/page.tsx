@@ -87,23 +87,27 @@ function clvClass(verdict: string | null): string {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function ProofOfRecordPage() {
-  let board: Awaited<ReturnType<typeof loadProofOfRecord>>;
   // An outage must NOT read as "no record was ever committed" on an honesty
   // surface (same doctrine as /api/verify/slate: outage -> unavailable,
-  // absence -> honest empty state). The flag keeps the two states apart.
-  let ledgerUnreachable = false;
+  // absence -> honest empty state). The loader is fail-safe: on a ledger DB
+  // outage it RESOLVES an explicit `ledgerUnreachable` flag (with no synthesized
+  // generatedAt) rather than throwing, so we read the two states apart from its
+  // REAL signal instead of guessing. The try/catch is defense-in-depth for any
+  // unexpected throw — never an error boundary on an honesty page — and maps to
+  // the same unreachable state.
+  let board: Awaited<ReturnType<typeof loadProofOfRecord>>;
   try {
     board = await loadProofOfRecord();
   } catch {
-    // Surface a safe error state rather than throwing to Next.js error boundary.
-    ledgerUnreachable = true;
     board = {
-      generatedAt: new Date().toISOString(),
+      generatedAt: "",
       picks: [],
       merkleRoot: "",
       totalSettled: 0,
+      ledgerUnreachable: true,
     };
   }
+  const ledgerUnreachable = board.ledgerUnreachable;
 
   const isEmpty = board.picks.length === 0 && !ledgerUnreachable;
   // Ledger-bearing sections (root banner, table, funnel) key off rows actually
@@ -208,16 +212,22 @@ export default async function ProofOfRecordPage() {
             </section>
           )}
 
-          {/* ── Freshness stamp (always shown) ── */}
-          <p
-            data-testid="proof-freshness-stamp"
-            className={`mt-4 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}
-          >
-            Board generated {new Date(board.generatedAt).toUTCString()}
-            {hasLedger && (
-              <> · {formatCount(board.totalSettled)} settled picks in the ledger</>
-            )}
-          </p>
+          {/* ── Freshness stamp ── Shown only when the board actually loaded.
+                 During an outage generatedAt is empty and this stamp is
+                 suppressed, so we never assert a generation time for a board
+                 that never loaded — the unreachable card below carries that
+                 state instead. ── */}
+          {!ledgerUnreachable && (
+            <p
+              data-testid="proof-freshness-stamp"
+              className={`mt-4 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}
+            >
+              Board generated {new Date(board.generatedAt).toUTCString()}
+              {hasLedger && (
+                <> · {formatCount(board.totalSettled)} settled picks in the ledger</>
+              )}
+            </p>
+          )}
 
           {/* ── Outage state: distinct from empty. The record exists; we
                  just can't reach it right now. Saying "no picks exist yet"

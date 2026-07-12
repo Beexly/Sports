@@ -96,6 +96,14 @@ export interface ProofOfRecordBoard {
    * larger than picks.length when the set exceeds MAX_PICKS.
    */
   readonly totalSettled: number;
+  /**
+   * True when the ledger query could not be reached (DB outage). The loader
+   * stays fail-safe — it never throws to the page — but sets this flag so the
+   * proof surface can tell "temporarily unreachable" apart from "genuinely
+   * empty" and never stamp a freshness time for a board that never loaded.
+   * False on every healthy path, INCLUDING a genuinely empty ledger.
+   */
+  readonly ledgerUnreachable: boolean;
 }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -126,6 +134,12 @@ export async function loadProofOfRecord(
   // capped at 500, which silently dropped the oldest picks once the record grew — the root
   // then committed over fewer rows than stated.) The heavy game+odds data is fetched only
   // for the MAX_PICKS rows actually displayed, below.
+  // A REJECTED findMany means the ledger DB is unreachable — a distinct state
+  // from a RESOLVED [] (a genuinely empty ledger). Capture that difference in a
+  // flag instead of swallowing both into the same empty board, so the surface
+  // can render "temporarily unreachable" rather than "no pick ever settled".
+  // The loader stays fail-safe: it still never throws to the page.
+  let ledgerUnreachable = false;
   const committed = await db.pick
     .findMany({
       where: {
@@ -150,7 +164,24 @@ export async function loadProofOfRecord(
       },
       orderBy: [{ settledAt: "desc" }, { id: "asc" }],
     })
-    .catch(() => []);
+    .catch(() => {
+      ledgerUnreachable = true;
+      return [];
+    });
+
+  if (ledgerUnreachable) {
+    // The board never loaded. Do NOT synthesize a generatedAt or the empty-set
+    // Merkle root here — both would be fabricated claims for a set we could not
+    // read. Empty strings tell the page to show the unreachable card and
+    // suppress the freshness stamp, keeping outage distinct from empty.
+    return {
+      generatedAt: "",
+      picks: [],
+      merkleRoot: "",
+      totalSettled: 0,
+      ledgerUnreachable: true,
+    };
+  }
 
   if (committed.length === 0) {
     return {
@@ -158,6 +189,7 @@ export async function loadProofOfRecord(
       picks: [],
       merkleRoot: sha256(""),
       totalSettled: 0,
+      ledgerUnreachable: false,
     };
   }
 
@@ -268,6 +300,7 @@ export async function loadProofOfRecord(
     picks: pageRows,
     merkleRoot: root,
     totalSettled: committed.length,
+    ledgerUnreachable: false,
   };
 }
 

@@ -32,8 +32,13 @@ export interface TrustLedgerMetrics {
   readonly cleared: number;
   /** Reads the gate held back today (restraint as a first-class output). */
   readonly gated: number;
-  /** Live player rows ingested (0 when intake is warming up). */
-  readonly playerRows: number;
+  /**
+   * Live player rows ingested (0 when intake is genuinely warming up). OMITTED
+   * (undefined) when the nflverse source has errored — an outage must not render
+   * as the reassuring "Player intake / warming up" warm-up state under the "Live
+   * counts" caption. When undefined the player stat is dropped from the band.
+   */
+  readonly playerRows?: number;
 }
 
 const ITEMS: readonly MethodologyItem[] = [
@@ -187,13 +192,15 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
                   sub="restraint, logged"
                   tone="plasma"
                 />
-                <LedgerStat
-                  value={metrics.playerRows}
-                  label={metrics.playerRows > 0 ? "Live player rows" : "Player intake"}
-                  sub={metrics.playerRows > 0 ? "ingested + structured" : "warming up"}
-                  tone="uv"
-                  group
-                />
+                {metrics.playerRows !== undefined && (
+                  <LedgerStat
+                    value={metrics.playerRows}
+                    label={metrics.playerRows > 0 ? "Live player rows" : "Player intake"}
+                    sub={metrics.playerRows > 0 ? "ingested + structured" : "warming up"}
+                    tone="uv"
+                    group
+                  />
+                )}
               </div>
             </div>
             <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
