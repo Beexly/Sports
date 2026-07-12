@@ -24,8 +24,9 @@ export interface AuthorityCheck {
  *  - the seat must exist;
  *  - external action is impossible (seats carry externalActionsAllowed:false —
  *    a manifest that names publish/send/bet/charge verbs conflicts);
- *  - a tier-0 seat cannot own a HIGH/CRITICAL-risk skill without the owner
- *    approval bit set (it is set on all seeds; the scanner enforces it).
+ *  - NO seat tier waives owner approval for a HIGH/CRITICAL-risk skill (G-6:
+ *    the rule was tier-0-scoped, but 2 of 3 seed owners sit at tier ≥1 — a
+ *    high-risk skill under them would have passed without the approval bit).
  */
 export function checkSeatAuthority(m: SkillManifest): AuthorityCheck {
   const problems: string[] = [];
@@ -38,9 +39,9 @@ export function checkSeatAuthority(m: SkillManifest): AuthorityCheck {
     // regression is caught here too, not just in council tests.
     problems.push(`seat ${seat.id} claims external actions — council invariant broken`);
   }
-  if ((m.risk === "HIGH" || m.risk === "CRITICAL") && seat.authorityTier === 0 && !m.humanApprovalRequired) {
+  if ((m.risk === "HIGH" || m.risk === "CRITICAL") && !m.humanApprovalRequired) {
     problems.push(
-      `${m.id}: ${m.risk} risk under tier-0 seat ${seat.id} requires humanApprovalRequired`
+      `${m.id}: ${m.risk} risk requires humanApprovalRequired — seat tier ${seat.authorityTier} does not waive it`
     );
   }
   return { ok: problems.length === 0, problems };

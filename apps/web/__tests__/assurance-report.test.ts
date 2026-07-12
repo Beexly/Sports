@@ -91,8 +91,54 @@ describe("assurance — findings carry evidence, validation, and fix", () => {
     }
     expect(ids).toContain("no-external-skill-scanner");
     expect(ids).toContain("tool-router-not-wired");
-    // The council autonomy tripwire must NOT fire while no seat is ACTIVE.
+    // The council autonomy tripwire must NOT fire while every seat status is
+    // in the governed manual-only set (G-10: membership check, not "ACTIVE").
     expect(ids).not.toContain("council-autonomy-claimed");
+    // G-11: categories with no real checks carry an explicit not-implemented
+    // finding instead of a vacuous 1.0 health.
+    expect(ids).toContain("security-checks-not-implemented");
+    expect(ids).toContain("outcome-quality-checks-not-implemented");
+    expect(ids).toContain("foundry-unused");
+  });
+
+  it("G-10: the autonomy tripwire is a closed-set membership check, not a dead ACTIVE comparison", () => {
+    const src = read("lib/assurance/findings.ts");
+    // The dead guard needed an `as { status: string }` cast to compare the
+    // council status to a value outside CouncilSeatStatus — that cast shape
+    // must never return. (CAPABILITY_REGISTRY's ACTIVE filter is a different,
+    // legitimate union and stays.)
+    expect(src).not.toMatch(/as \{ status: string \}/);
+    expect(src).toMatch(/GOVERNED_SEAT_STATUSES/);
+    expect(src).toMatch(/"DRAFT_ONLY", "MANUAL", "NOT_WIRED"/);
+    expect(src).toMatch(/AGENT_COUNCIL\.filter\(\(s\) => !GOVERNED_SEAT_STATUSES\.includes\(s\.status\)\)/);
+  });
+
+  it("G-11: security and outcome_quality health is capped below 1.0 while no real checks exist", () => {
+    const report = buildAssuranceReport(CTX);
+    for (const id of ["security", "outcome_quality"] as const) {
+      const cat = report.categories.find((c) => c.id === id)!;
+      expect(cat.findings.length, id).toBeGreaterThan(0);
+      expect(cat.health, id).toBeLessThan(1);
+    }
+  });
+
+  it("G-13: no fabricated evidence — flag names come from source, counts from the registry, no fake acknowledgment", () => {
+    const src = read("lib/assurance/findings.ts");
+    // The ghost flag that existed nowhere in the codebase:
+    expect(src).not.toContain("AI_MODEL_ROUTER_LIVE_ENABLED");
+    // The hardcoded manifest count and the acknowledgment that never happened:
+    expect(src).not.toContain("3 manifests, all DRAFT");
+    const foundryUnused = deriveFindings(CTX).find((f) => f.id === "foundry-unused")!;
+    expect(foundryUnused.status).toBe("OPEN");
+    expect(foundryUnused.evidence[0]!.observation).toContain("derived from registry state");
+  });
+
+  it("G-14: the grade gate compares UNROUNDED coverage; rounding is display-only", () => {
+    const src = read("lib/assurance/build-report.ts");
+    expect(src).toMatch(/const rawCoverage = weightedCoverage\(\)/);
+    expect(src).toMatch(/graded = rawCoverage >= COVERAGE_THRESHOLD/);
+    // The rounded-then-compared shape must not return:
+    expect(src).not.toMatch(/overallCoverage >= COVERAGE_THRESHOLD/);
   });
 
   it("report is deterministic: same checkout → deep-equal report", () => {

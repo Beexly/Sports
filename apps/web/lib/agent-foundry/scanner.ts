@@ -14,12 +14,14 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { ScanFinding, ScanReport, SkillManifest } from "./types";
-import { computeContentHash, SKILL_MANIFESTS } from "./registry";
+import { canonicalManifestJson, computeContentHash, SKILL_MANIFESTS } from "./registry";
 import { checkSeatAuthority } from "./derive-council-manifests";
 import HASH_LEDGER from "./manifest-hashes.json";
 
+// G-7: money-movement and broadcast verbs a tool/artifact name could smuggle
+// in (tweet/dm/sell/buy/trade/transfer/withdraw/mint/swap/invoice) block too.
 const EXTERNAL_ACTION_VERBS =
-  /\b(publish|send|email|post|bet|wager|charge|refund|deploy|migrate|delete|purchase)\b/i;
+  /\b(publish|send|email|post|bet|wager|charge|refund|deploy|migrate|delete|purchase|tweet|dm|sell|buy|trade|transfer|withdraw|mint|swap|invoice)\b/i;
 
 const CREDENTIAL_SHAPES =
   /\b(DATABASE_URL|DIRECT_URL|STRIPE_SECRET_KEY|STRIPE_WEBHOOK_SECRET|ANTHROPIC_API_KEY|THE_ODDS_API_KEY|NEXTAUTH_SECRET|REDIS_URL)\b/;
@@ -114,16 +116,23 @@ const RULES: Readonly<Record<string, Rule>> = {
     (m.networkPolicy.mode === "allowlist" && m.networkPolicy.domains.length > 0)
       ? []
       : [f(m.id, "network-allowlisted", "BLOCK", "network access without a non-empty allowlist")],
-  "sensitive-data-routing": (m) =>
-    m.allowedInputDataClasses.some((c) => c.startsWith("sensitive_")) && m.modelRoute !== "NO_MODEL"
-      ? [f(m.id, "sensitive-data-routing", "BLOCK", "sensitive data class with a model route — requires NO_MODEL or owner-approved exception")]
-      : [],
+  "sensitive-data-routing": (m) => {
+    // G-16: name the offending classes and the actual route; no "owner-approved
+    // exception" language — no such exception path exists in this codebase.
+    const sensitive = m.allowedInputDataClasses.filter((c) => c.startsWith("sensitive_"));
+    return sensitive.length > 0 && m.modelRoute !== "NO_MODEL"
+      ? [f(m.id, "sensitive-data-routing", "BLOCK", `sensitive data class(es) ${sensitive.join(", ")} with modelRoute ${m.modelRoute} — sensitive inputs require NO_MODEL (no exception path exists)`)]
+      : [];
+  },
   "council-authority": (m) => {
     const check = checkSeatAuthority(m);
     return check.ok ? [] : check.problems.map((p) => f(m.id, "council-authority", "BLOCK", p));
   },
   "no-hidden-instructions": (m) => {
-    const text = `${m.purpose} ${m.prohibitedActions.join(" ")}`;
+    // G-7: scan the WHOLE canonical manifest, not just purpose+prohibitions —
+    // injection content or zero-width characters hidden in licenseEvidence,
+    // proofSource, tool names, or eval-suite ids are equally damning.
+    const text = canonicalManifestJson(m);
     return INJECTION_PATTERNS.some((re) => re.test(text))
       ? [f(m.id, "no-hidden-instructions", "BLOCK", "prompt-injection-shaped content in manifest text")]
       : [];

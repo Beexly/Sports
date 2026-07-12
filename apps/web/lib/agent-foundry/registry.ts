@@ -24,16 +24,29 @@ export function isFoundryEnabled(): boolean {
   return process.env["AGENT_FOUNDRY_ENABLED"] === "true";
 }
 
-/** Canonical JSON: sorted keys, hash field zeroed — deterministic. */
+/**
+ * Canonical JSON: RECURSIVELY sorted keys (G-8 — top-level-only sorting left
+ * nested objects order-sensitive, so two semantically-identical manifests
+ * whose networkPolicy keys were authored in different order hashed apart),
+ * hash field zeroed — deterministic. Arrays keep their order: element order
+ * is semantic (tool lists, allowlist domains).
+ */
+function deepSortKeys(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(deepSortKeys);
+  if (value !== null && typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    return Object.keys(obj)
+      .sort()
+      .reduce<Record<string, unknown>>((acc, k) => {
+        acc[k] = deepSortKeys(obj[k]);
+        return acc;
+      }, {});
+  }
+  return value;
+}
+
 export function canonicalManifestJson(m: SkillManifest): string {
-  const clone: Record<string, unknown> = { ...m, contentHash: "" };
-  const sorted = Object.keys(clone)
-    .sort()
-    .reduce<Record<string, unknown>>((acc, k) => {
-      acc[k] = clone[k];
-      return acc;
-    }, {});
-  return JSON.stringify(sorted);
+  return JSON.stringify(deepSortKeys({ ...m, contentHash: "" }));
 }
 
 export function computeContentHash(m: SkillManifest): string {

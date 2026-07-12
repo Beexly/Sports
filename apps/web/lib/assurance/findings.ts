@@ -9,7 +9,7 @@
  * finding off without touching this file.
  */
 
-import { existsSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { CAPABILITY_REGISTRY, getCapability } from "@/lib/jarvis/capability-registry";
 import { AGENT_COUNCIL } from "@/lib/jarvis/agent-council";
@@ -21,7 +21,15 @@ export interface EvidenceContext {
   readonly repoRoot: string;
 }
 
-const has = (ctx: EvidenceContext, rel: string): boolean => existsSync(join(ctx.repoRoot, rel));
+/** Content read for CONTENT-VERIFIED observations (G-12: existence alone must
+ * never back a claim about what a file does). Null when unreadable. */
+const readIfExists = (ctx: EvidenceContext, rel: string): string | null => {
+  try {
+    return readFileSync(join(ctx.repoRoot, rel), "utf8");
+  } catch {
+    return null;
+  }
+};
 
 export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[] {
   const findings: AssuranceFinding[] = [];
@@ -60,9 +68,13 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
   //      gap is lane policy + route telemetry, LOW;
   //   2. neither exists → the original MEDIUM absence finding;
   //   3. shadow lane module present → the not-instrumented finding stacks.
+  // G-12: observations below are CONTENT-verified (the file is read and the
+  // named symbol found), never inferred from a path existing.
+  const routerSrc = readIfExists(ctx, "apps/web/lib/claude-api/model-router.ts");
+  const dispatchSrc = readIfExists(ctx, "apps/web/lib/claude-api/provider-dispatch.ts");
+  const messagesSrc = readIfExists(ctx, "apps/web/lib/claude-api/messages.ts");
   const surfaceRouterExists =
-    has(ctx, "apps/web/lib/claude-api/model-router.ts") &&
-    has(ctx, "apps/web/lib/claude-api/provider-dispatch.ts");
+    routerSrc !== null && routerSrc.includes("pickModelForSurface") && dispatchSrc !== null;
   if (surfaceRouterExists) {
     findings.push({
       id: "model-routing-lanes-missing",
@@ -70,9 +82,15 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
       title:
         "Model routing is surface-tier + provider dispatch — no task-lane policy or route telemetry yet",
       evidence: [
-        { path: "apps/web/lib/claude-api/model-router.ts", observation: "pickModelForSurface routes six surfaces to Claude tiers (two validated Haiku flips)" },
-        { path: "apps/web/lib/claude-api/provider-dispatch.ts", observation: "operator-selected Bedrock/Vertex dispatch with transparent Anthropic fallback" },
-        { path: "apps/web/lib/claude-api/messages.ts", observation: "request.surface resolves through pickModelForSurface" },
+        { path: "apps/web/lib/claude-api/model-router.ts", observation: "content-verified: exports pickModelForSurface (surface → Claude tier)" },
+        { path: "apps/web/lib/claude-api/provider-dispatch.ts", observation: "content-verified: provider dispatch module present and readable" },
+        {
+          path: "apps/web/lib/claude-api/messages.ts",
+          observation:
+            messagesSrc !== null && messagesSrc.includes("pickModelForSurface")
+              ? "content-verified: messages.ts resolves the surface through pickModelForSurface"
+              : "content check: messages.ts does NOT consult pickModelForSurface — router exists but the main call path bypasses it",
+        },
       ],
       whyItMatters:
         "Model choice is centralized per surface, but risk/sensitivity/public-claim lanes are not policy, and calls carry no route-lane dimension — per-lane cost/quality cannot be compared yet.",
@@ -101,14 +119,42 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
       status: "OPEN",
     });
   }
-  if (has(ctx, "apps/web/lib/ai-routing/router.ts")) {
+  const shadowRouterSrc = readIfExists(ctx, "apps/web/lib/ai-routing/router.ts");
+  if (shadowRouterSrc !== null) {
+    // G-13: the live-enable flag name is EXTRACTED from the router source —
+    // the first version hardcoded a flag name that existed nowhere in the
+    // codebase, a fabricated evidence claim.
+    const flagMatch =
+      shadowRouterSrc.match(/process\.env\[\s*"([A-Z0-9_]+)"\s*\]/) ??
+      shadowRouterSrc.match(/process\.env\.([A-Z0-9_]+)/);
+    const liveFlag = flagMatch?.[1] ?? null;
+    const shadowSrc = readIfExists(ctx, "apps/web/lib/ai-routing/shadow.ts");
     findings.push({
       id: "model-router-shadow-only",
       category: "model_routing",
       title: "Lane router exists in shadow mode only — production call sites are not instrumented",
       evidence: [
-        { path: "apps/web/lib/ai-routing/shadow.ts", observation: "shadowRecommend returns advisory objects; no call path consults it" },
-        { path: "apps/web/lib/claude-api/", observation: "call sites route via pickModelForSurface, unchanged; AI_MODEL_ROUTER_LIVE_ENABLED is never set" },
+        {
+          path: "apps/web/lib/ai-routing/shadow.ts",
+          observation:
+            shadowSrc !== null && shadowSrc.includes("shadowRecommend")
+              ? "content-verified: exports shadowRecommend (advisory objects only)"
+              : "shadow module unreadable or renamed — advisory claim not content-verified",
+        },
+        {
+          path: "apps/web/lib/ai-routing/router.ts",
+          observation:
+            liveFlag !== null
+              ? `content-verified: router gates on ${liveFlag} (extracted from source)`
+              : "content-verified: no env live-flag found in router.ts — promotion is code-review only",
+        },
+        {
+          path: "apps/web/lib/claude-api/messages.ts",
+          observation:
+            messagesSrc !== null && !messagesSrc.includes("shadowRecommend")
+              ? "content-verified: the production call path does not consult shadowRecommend"
+              : "content check inconclusive — verify call-site instrumentation manually",
+        },
       ],
       whyItMatters:
         "The lane policy cannot earn trust until shadow recommendations are logged beside real calls and evaluated; promotion stays owner-gated.",
@@ -180,30 +226,37 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
   }
 
   // ── Observability / cost ──────────────────────────────────────────────────
-  // Telemetry exists (ClaudeApiCallRecord/Budget) but is provider-specific:
-  // deterministic content check against the schema, not a hard-coded claim.
+  // G-12: the schema is READ and the claim derived from its content — the
+  // finding fires only when ClaudeApiCallRecord verifiably exists AND its
+  // model block verifiably lacks a route/lane column. If a lane column ships,
+  // this finding turns itself off without touching this file.
   {
-    const schemaPath = join(ctx.repoRoot, "packages/db/prisma/schema.prisma");
-    if (existsSync(schemaPath)) {
-      // Read lazily via require of fs inside evidence step is avoided;
-      // build-report passes pre-read schema text through EvidenceContext in a
-      // future iteration. For determinism today: existence + registry truth.
-      findings.push({
-        id: "telemetry-provider-specific",
-        category: "observability_cost",
-        title: "AI call telemetry is provider-specific (no route-lane dimension)",
-        evidence: [
-          { path: "packages/db/prisma/schema.prisma", observation: "ClaudeApiCallRecord/ClaudeApiBudget exist; no provider-neutral route field" },
-        ],
-        whyItMatters:
-          "Cost and quality cannot be compared per task lane until calls carry a route dimension.",
-        risk: "LOW",
-        confidence: 0.8,
-        smallestValidation: "grep schema.prisma for a route/lane column on AI call records.",
-        smallestSafeFix: "Workstream E documents a dual-write plan; no rename of ClaudeApiCallRecord.",
-        ownerActionRequired: false,
-        status: "OPEN",
-      });
+    const schemaText = readIfExists(ctx, "packages/db/prisma/schema.prisma");
+    if (schemaText !== null && schemaText.includes("model ClaudeApiCallRecord")) {
+      const recordBlock = schemaText.match(/model ClaudeApiCallRecord \{[\s\S]*?\n\}/)?.[0] ?? "";
+      const hasLaneColumn = /\b(routeLane|taskLane|laneId|routeDimension)\b/.test(recordBlock);
+      if (!hasLaneColumn) {
+        findings.push({
+          id: "telemetry-provider-specific",
+          category: "observability_cost",
+          title: "AI call telemetry is provider-specific (no route-lane dimension)",
+          evidence: [
+            {
+              path: "packages/db/prisma/schema.prisma",
+              observation:
+                "content-verified: model ClaudeApiCallRecord exists and its block carries no routeLane/taskLane/laneId/routeDimension column",
+            },
+          ],
+          whyItMatters:
+            "Cost and quality cannot be compared per task lane until calls carry a route dimension.",
+          risk: "LOW",
+          confidence: 1,
+          smallestValidation: "grep schema.prisma for a route/lane column on AI call records.",
+          smallestSafeFix: "Workstream E documents a dual-write plan; no rename of ClaudeApiCallRecord.",
+          ownerActionRequired: false,
+          status: "OPEN",
+        });
+      }
     }
   }
 
@@ -228,15 +281,21 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
   });
 
   // ── Agent governance (positive control verified, no finding when healthy) ─
-  const autonomous = AGENT_COUNCIL.filter((s) => (s as { status: string }).status === "ACTIVE");
-  if (autonomous.length > 0) {
+  // G-10: the tripwire used to compare against a literal autonomy label — a
+  // value OUTSIDE the CouncilSeatStatus union, reachable only through an `as`
+  // cast, i.e. a dead guard. The real regression signal is CLOSED-SET
+  // membership: any seat whose status is not one of the governed manual-only
+  // values (including any future autonomy-shaped union expansion) fires this.
+  const GOVERNED_SEAT_STATUSES: readonly string[] = ["DRAFT_ONLY", "MANUAL", "NOT_WIRED"];
+  const ungoverned = AGENT_COUNCIL.filter((s) => !GOVERNED_SEAT_STATUSES.includes(s.status));
+  if (ungoverned.length > 0) {
     findings.push({
       id: "council-autonomy-claimed",
       category: "agent_governance",
-      title: "A council seat claims autonomy — invariant broken",
-      evidence: autonomous.map((s) => ({
+      title: "A council seat carries a status outside the governed manual-only set — autonomy invariant broken",
+      evidence: ungoverned.map((s) => ({
         path: "apps/web/lib/jarvis/agent-council.ts",
-        observation: `seat ${s.id} status ${(s as { status: string }).status}`,
+        observation: `seat ${s.id} status "${s.status}" is not in [${GOVERNED_SEAT_STATUSES.join(", ")}]`,
       })),
       whyItMatters: "No seat may be autonomous; this is the platform's core trust rule.",
       risk: "CRITICAL",
@@ -248,14 +307,66 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
     });
   }
 
+  // ── Security / outcome quality — NO automated checks exist yet (G-11) ─────
+  // Without these explicit findings the two categories scored a vacuous 1.0
+  // ("70% inspected, 100% healthy") purely because nothing generated findings
+  // for them. Health is capped through the normal scoring path; when real
+  // checks ship, they replace these placeholders in the same reviewed diff.
+  findings.push({
+    id: "security-checks-not-implemented",
+    category: "security",
+    title: "No automated security findings generator is implemented — the inspected fraction is not verified healthy",
+    evidence: [
+      {
+        path: "apps/web/lib/assurance/findings.ts",
+        observation: "deriveFindings emits no security checks; without this finding the category read 1.0 vacuously",
+      },
+    ],
+    whyItMatters:
+      "A health number over zero checks is fabricated assurance — the exact claim class this platform bans.",
+    risk: "MEDIUM",
+    confidence: 1,
+    smallestValidation: "Search this file for category: \"security\" generators (only this placeholder exists).",
+    smallestSafeFix: "Implement the first real security check (e.g. secret-scan CI wiring assertion) and delete this placeholder in the same diff.",
+    ownerActionRequired: false,
+    status: "OPEN",
+  });
+  findings.push({
+    id: "outcome-quality-checks-not-implemented",
+    category: "outcome_quality",
+    title: "No automated outcome-quality findings generator is implemented — the inspected fraction is not verified healthy",
+    evidence: [
+      {
+        path: "apps/web/lib/assurance/findings.ts",
+        observation: "deriveFindings emits no outcome-quality checks; without this finding the category read 1.0 vacuously",
+      },
+    ],
+    whyItMatters:
+      "A health number over zero checks is fabricated assurance — the exact claim class this platform bans.",
+    risk: "MEDIUM",
+    confidence: 1,
+    smallestValidation: "Search this file for category: \"outcome_quality\" generators (only this placeholder exists).",
+    smallestSafeFix: "Wire the calibration/backtest evidence collector as the first real check and delete this placeholder in the same diff.",
+    ownerActionRequired: false,
+    status: "OPEN",
+  });
+
   // ── Utilization (coverage-limited: no runtime data in this environment) ───
-  if (SKILL_MANIFESTS.every((m) => m.lifecycle === "DRAFT")) {
+  // G-13: the evidence used to hardcode the manifest count and a status of
+  // ACKNOWLEDGED — a count code disproves on the next seed, and an
+  // acknowledgment event that never happened. Both are now derived: counts
+  // from the registry, status OPEN until a real acknowledgment record exists.
+  if (SKILL_MANIFESTS.every((m) => m.lifecycle !== "APPROVED")) {
+    const lifecycles = [...new Set(SKILL_MANIFESTS.map((m) => m.lifecycle))].sort().join(", ");
     findings.push({
       id: "foundry-unused",
       category: "utilization_dead_weight",
-      title: "All Foundry manifests are DRAFT — the supply chain has no approved skill yet",
+      title: "No Foundry manifest is APPROVED — the supply chain has no usable skill yet",
       evidence: [
-        { path: "apps/web/lib/agent-foundry/registry.ts", observation: "3 manifests, all DRAFT" },
+        {
+          path: "apps/web/lib/agent-foundry/registry.ts",
+          observation: `${SKILL_MANIFESTS.length} manifest(s); lifecycle(s): ${lifecycles}; none APPROVED (derived from registry state)`,
+        },
       ],
       whyItMatters: "Expected at this stage; tracked so 'built' never silently equals 'used'.",
       risk: "LOW",
@@ -263,7 +374,7 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
       smallestValidation: "Registry lifecycle states.",
       smallestSafeFix: "Owner reviews a seed manifest when its runner exists (future).",
       ownerActionRequired: true,
-      status: "ACKNOWLEDGED",
+      status: "OPEN",
     });
   }
 

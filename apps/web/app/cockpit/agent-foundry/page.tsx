@@ -160,7 +160,9 @@ export default function AgentFoundryPage() {
           <p className="text-[10px] uppercase tracking-wider text-ion-2">scan findings</p>
         </div>
         <div className="rounded-xl border border-titanium/40 bg-eclipse/40 p-3 text-center">
-          <p className="font-mono text-xl font-bold text-ion-white">0</p>
+          <p className="font-mono text-xl font-bold text-ion-white">
+            {SKILL_MANIFESTS.filter((m) => canExecute(m, repoRoot)).length}
+          </p>
           <p className="text-[10px] uppercase tracking-wider text-ion-2">executable</p>
         </div>
         <div className="rounded-xl border border-yellow-500/30 bg-yellow-950/20 p-3 text-center">
