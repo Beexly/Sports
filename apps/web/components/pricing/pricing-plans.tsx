@@ -147,6 +147,8 @@ export function PricingPlans({
                     label={plan.cta}
                     variant={isPro ? "primary" : "ghost"}
                     interval={interval}
+                    priceMonthly={plan.monthly}
+                    priceAnnual={plan.annual}
                   />
                 )}
               </div>

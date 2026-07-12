@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 /**
  * Subscribe button — isolates the Stripe checkout side-effect so the
@@ -12,6 +13,14 @@ import { useRouter } from "next/navigation";
  *  - If unauthenticated (401), redirects to sign-in with callback back to /pricing
  *  - On success, redirects the window to Stripe Checkout
  *  - Renders friendly founder-voice errors with a recovery hint
+ *
+ * Directly beneath the CTA it renders a proximate recurring-billing disclosure
+ * (FTC ROSCA + state auto-renewal-law compliance): the plan is a recurring
+ * subscription that auto-renews at the stated price/interval until cancelled,
+ * cancellable anytime, with a link to /terms. The price is never hardcoded — it
+ * comes from the pricing-phases single source via the `priceMonthly`/`priceAnnual`
+ * props the server page already derives. Stripe Checkout also collects an
+ * affirmative Terms consent (see lib/stripe.ts).
  */
 
 type Tier = "FANTASY" | "PRO" | "ELITE";
@@ -22,6 +31,10 @@ type Props = {
   label: string;
   variant: "primary" | "ghost";
   interval?: Interval;
+  /** Recurring monthly price (USD) from the current pricing phase. */
+  priceMonthly?: number | null;
+  /** Annual price (USD) from the current pricing phase. */
+  priceAnnual?: number | null;
 };
 
 const PRIMARY_CLASSES =
@@ -29,10 +42,29 @@ const PRIMARY_CLASSES =
 const GHOST_CLASSES =
   "w-full rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
 
-export function SubscribeButton({ tier, label, variant, interval = "month" }: Props) {
+export function SubscribeButton({
+  tier,
+  label,
+  variant,
+  interval = "month",
+  priceMonthly = null,
+  priceAnnual = null,
+}: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Unique id so assistive tech can announce the recurring-billing disclosure as
+  // the button's description (aria-describedby). useId keeps it unique even when
+  // several SubscribeButtons render on the same /pricing page.
+  const disclosureId = useId();
+
+  // Interval-appropriate recurring amount, pulled from the pricing-phases source
+  // (never hardcoded). Falls back to the amount shown on the plan if a price prop
+  // was not passed, so the disclosure is always honest and never invents a number.
+  const renewAmount = interval === "year" ? priceAnnual : priceMonthly;
+  const renewUnit = interval === "year" ? "year" : "month";
+  const renewPricePhrase =
+    renewAmount != null ? `$${renewAmount}/${renewUnit}` : `the ${renewUnit}ly price shown`;
 
   async function handleClick() {
     setError(null);
@@ -75,6 +107,7 @@ export function SubscribeButton({ tier, label, variant, interval = "month" }: Pr
         type="button"
         disabled={loading}
         aria-busy={loading}
+        aria-describedby={disclosureId}
         onClick={handleClick}
         className={variant === "primary" ? PRIMARY_CLASSES : GHOST_CLASSES}
       >
@@ -87,6 +120,22 @@ export function SubscribeButton({ tier, label, variant, interval = "month" }: Pr
           label
         )}
       </button>
+
+      {/* Proximate recurring-billing / auto-renewal disclosure (FTC ROSCA + state
+          auto-renewal laws). Sits immediately beneath the CTA, before any charge. */}
+      <p
+        id={disclosureId}
+        data-testid="auto-renew-disclosure"
+        className="text-[11px] leading-relaxed text-ion-3"
+      >
+        Recurring subscription. Auto-renews at {renewPricePhrase} until you cancel.
+        Cancel anytime.{" "}
+        <Link href="/terms" className="underline hover:text-ion-2">
+          Terms
+        </Link>
+        .
+      </p>
+
       {error && (
         <p
           role="alert"

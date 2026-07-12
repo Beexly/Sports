@@ -66,7 +66,7 @@ export default function LaunchPage() {
             <Reveal delay={300}>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="w-full sm:w-auto">
-                  <SubscribeButton tier="FANTASY" label={`Claim founding: $${phase.fantasy.annual}/yr`} variant="primary" interval="year" />
+                  <SubscribeButton tier="FANTASY" label={`Claim founding: $${phase.fantasy.annual}/yr`} variant="primary" interval="year" priceMonthly={phase.fantasy.monthly} priceAnnual={phase.fantasy.annual} />
                 </div>
                 <Link href="/fantasy/bestball" className="btn btn-ghost">Try the Best Ball board →</Link>
                 <Link href="/pricing" className="text-sm font-semibold" style={{ color: BRAND_COLORS.orbitalCyan }}>See all plans</Link>
