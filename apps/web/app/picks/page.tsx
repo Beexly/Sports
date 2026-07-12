@@ -9,7 +9,7 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
-import type { PublicPick, DailySlate } from "@sports/types";
+import type { PublicPick, DailySlate, SubscriptionTier } from "@sports/types";
 import Link from "next/link";
 import { headers } from "next/headers";
 
@@ -265,6 +265,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               totalAvailableToday={totalAvailableToday}
               hitDailyLimit={hitDailyLimit}
               dailyPickLimit={entitlements.dailyPickLimit}
+              tier={entitlements.tier}
             />
           )}
 
@@ -409,13 +410,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {totalAvailableToday}{" "}
-                {totalAvailableToday === 1 ? "pick" : "picks"} published today.
+                {totalAvailableToday === 1 ? "pick" : "picks"} published for this date.
                 Upgrade to Pro to see them.
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
-                Free includes a {teaserSize}-pick daily teaser with the public
-                Edge Index and no confidence scores. Pro unlocks the full board
-                plus the confidence score, the full factor trail, and line
+                Free includes a daily teaser of up to {teaserSize} picks with the
+                public Edge Index and no confidence scores. Pro unlocks the full
+                board plus the confidence score, the full factor trail, and line
                 movement behind each pick.
               </p>
               <Link
@@ -496,8 +497,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
               <p className="text-sm font-semibold text-blue-200">
                 {hasAccount
-                  ? `You're on Free: a ${teaserSize}-pick daily teaser with the public Edge Index, no confidence scores.`
-                  : `Today's free teaser: ${teaserSize} picks with the public Edge Index, no confidence scores.`}
+                  ? entitlements.tier !== "FREE"
+                    ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
+                    : `You're on Free: a daily teaser of up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
+                  : `Today's free teaser: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`}
               </p>
               <p className="mt-1 text-xs text-blue-300">
                 Pro unlocks the full board plus the confidence score, the full factor trail, and line movement behind each pick.
@@ -627,24 +630,37 @@ function PaywallBanner({
   totalAvailableToday,
   hitDailyLimit,
   dailyPickLimit,
+  tier,
 }: {
   hasAccount: boolean;
   totalAvailableToday: number | null;
   hitDailyLimit: boolean;
   dailyPickLimit: number | null;
+  tier: SubscriptionTier;
 }) {
   // True copy for the free board: it's a small daily TEASER (Edge Index only,
   // no confidence scores), not the full board. teaserSize is the entitlement's
   // dailyPickLimit — the same number the server enforces — so the banner can
-  // never contradict the paywall. When more picks were published than the
-  // teaser shows, surface the real published count and route to Pro.
+  // never contradict the paywall. We present the teaser as an "up to N" CAP,
+  // never an exact count: on a low- or zero-pick day the board renders fewer
+  // than the limit, and an exact count would contradict the empty/locked state
+  // on the same page. The published-slate line says "this date" (never "today"),
+  // because the date picker / ?date= can select a non-today slate. When more
+  // picks were published than the teaser shows, surface the real published count
+  // and route to Pro.
   const teaserSize = dailyPickLimit ?? 2;
+  // A paid non-Pro plan (FANTASY) sees only the betting teaser too — but it is
+  // NOT the Free plan, so it must never be labeled "You're on Free". Give it
+  // neutral limited-board wording instead.
+  const isPaidTeaser = tier !== "FREE";
   const headline =
     hitDailyLimit && totalAvailableToday !== null && totalAvailableToday > teaserSize
-      ? `${totalAvailableToday} picks published today. Upgrade to Pro to see the full board.`
+      ? `${totalAvailableToday} picks published for this date. Upgrade to Pro to see the full board.`
       : hasAccount
-        ? `You're on Free: a ${teaserSize}-pick daily teaser, with the public Edge Index and no confidence scores.`
-        : `You're seeing today's free teaser: ${teaserSize} picks, with the public Edge Index and no confidence scores.`;
+        ? isPaidTeaser
+          ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks, with the public Edge Index and no confidence scores.`
+          : `You're on Free: a daily teaser of up to ${teaserSize} picks, with the public Edge Index and no confidence scores.`
+        : `You're seeing today's free teaser: up to ${teaserSize} picks, with the public Edge Index and no confidence scores.`;
   return (
     <div
       data-testid="paywall-banner"

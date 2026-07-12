@@ -99,10 +99,12 @@ describe("/picks — empty board is honest about the paywall", () => {
   it("renders the real published count from API meta (not a fabricated N)", () => {
     const block = lockedBlock();
     // The count shown is the interpolated meta value immediately before the
-    // "published today" claim — never a literal.
-    expect(block).toMatch(/\{totalAvailableToday\}[\s\S]{0,120}published today/i);
+    // date-aware "published for this date" claim — never a literal.
+    expect(block).toMatch(/\{totalAvailableToday\}[\s\S]{0,120}published for this date/i);
     // No hardcoded pick-count digit is presented as the published total.
-    expect(block).not.toMatch(/\b\d+\s+picks?\s+published today/i);
+    expect(block).not.toMatch(/\b\d+\s+picks?\s+published for this date/i);
+    // Finding B: the locked-state count copy is date-aware, never "today".
+    expect(block).not.toMatch(/published today/i);
   });
 
   it("routes the locked state to the /pricing upgrade CTA", () => {
@@ -132,6 +134,65 @@ describe("/picks — the true-empty state fabricates nothing", () => {
     expect(region).not.toMatch(/win\s*rate/i);
     expect(region).not.toMatch(/\d{1,3}\s*%/);
     expect(region).not.toMatch(/record\s*:\s*\d/i);
+  });
+});
+
+describe("/picks — the three Codex findings stay fixed", () => {
+  // ── Finding A — the anon banner / bottom CTA must not present the teaser
+  //    LIMIT as the actual count. On a zero/low-pick day the banner renders
+  //    above the empty/locked state; an exact "N picks" claim would contradict
+  //    "No signals published" on the same page. The count is an "up to N" cap. ──
+  it("presents the teaser as an 'up to {teaserSize}' cap, never an exact count", () => {
+    // The cap phrasing is what renders wherever the teaser size is shown.
+    expect(picksSrc).toMatch(/up to \$\{teaserSize\} picks/);
+    // No copy asserts the teaser as a definite quantity the page can't guarantee.
+    expect(picksSrc).not.toMatch(/teaser:\s*\$\{teaserSize\} picks/);
+    expect(picksSrc).not.toMatch(/\$\{teaserSize\}-pick/);
+    // The anon banner headline uses the cap, not "${teaserSize} picks,".
+    expect(picksSrc).toMatch(
+      /You're seeing today's free teaser: up to \$\{teaserSize\} picks/
+    );
+  });
+
+  // ── Finding B — the published-count copy must track the SELECTED date, not
+  //    hard-code "today". fetchPicks forwards ?date= / the date picker to the
+  //    API, so "today" is wrong for a non-today slate. Match the empty-state
+  //    "for this date" phrasing. ──
+  it("makes every published-count claim date-aware ('this date'), not 'today'", () => {
+    // Banner over-limit headline is date-aware.
+    expect(picksSrc).toMatch(
+      /\$\{totalAvailableToday\} picks published for this date\. Upgrade to Pro/
+    );
+    expect(picksSrc).not.toMatch(/\$\{totalAvailableToday\} picks published today/);
+    // Locked-upgrade state is date-aware (mirrors the empty-state wording).
+    // Tolerate the JSX line wrap between "date." and "Upgrade".
+    const block = lockedBlock();
+    expect(block).toMatch(/published for this date\.\s+Upgrade to Pro to see them/);
+    expect(block).not.toMatch(/published today/i);
+  });
+
+  // ── Finding C — a paid non-Pro (FANTASY) signed-in user sees only the teaser
+  //    on the betting board, but is NOT on Free. The copy must not tell them
+  //    "You're on Free"; the real subscription tier is threaded in and gates
+  //    neutral limited-board wording instead. ──
+  it("threads the real tier into the banner (not just entitlement booleans)", () => {
+    expect(picksSrc).toMatch(/tier=\{entitlements\.tier\}/);
+    expect(picksSrc).toMatch(/tier:\s*SubscriptionTier/);
+    expect(picksSrc).toMatch(/isPaidTeaser\s*=\s*tier\s*!==\s*"FREE"/);
+  });
+
+  it("gives a paid non-Pro (Fantasy) viewer neutral wording, not 'You're on Free'", () => {
+    // Neutral limited-board wording exists for the paid-teaser branch.
+    expect(picksSrc).toMatch(/sees the daily teaser on the betting board/);
+    // Every "You're on Free" label is the ELSE of a paid-teaser guard — it is
+    // reachable ONLY for a genuinely-free viewer, never for all signed-in users.
+    const labels = [...picksSrc.matchAll(/You're on Free/g)];
+    expect(labels.length).toBeGreaterThan(0);
+    // The banner label is guarded by isPaidTeaser; the CTA label by the tier check.
+    expect(picksSrc).toMatch(/isPaidTeaser[\s\S]{0,240}You're on Free/);
+    expect(picksSrc).toMatch(/entitlements\.tier\s*!==\s*"FREE"[\s\S]{0,240}You're on Free/);
+    // "You're on Free" is never the direct consequent of `hasAccount ?`.
+    expect(picksSrc).not.toMatch(/hasAccount\s*\n?\s*\?\s*`You're on Free/);
   });
 });
 
