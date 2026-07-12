@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -53,6 +53,10 @@ export function SubscribeButton({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Unique id so assistive tech can announce the recurring-billing disclosure as
+  // the button's description (aria-describedby). useId keeps it unique even when
+  // several SubscribeButtons render on the same /pricing page.
+  const disclosureId = useId();
 
   // Interval-appropriate recurring amount, pulled from the pricing-phases source
   // (never hardcoded). Falls back to the amount shown on the plan if a price prop
@@ -103,6 +107,7 @@ export function SubscribeButton({
         type="button"
         disabled={loading}
         aria-busy={loading}
+        aria-describedby={disclosureId}
         onClick={handleClick}
         className={variant === "primary" ? PRIMARY_CLASSES : GHOST_CLASSES}
       >
@@ -119,6 +124,7 @@ export function SubscribeButton({
       {/* Proximate recurring-billing / auto-renewal disclosure (FTC ROSCA + state
           auto-renewal laws). Sits immediately beneath the CTA, before any charge. */}
       <p
+        id={disclosureId}
         data-testid="auto-renew-disclosure"
         className="text-[11px] leading-relaxed text-ion-3"
       >

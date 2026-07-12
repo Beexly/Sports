@@ -96,6 +96,11 @@ STRIPE_ELITE_MONTHLY_PRICE_ID=
 STRIPE_ELITE_ANNUAL_PRICE_ID=
 STRIPE_FANTASY_MONTHLY_PRICE_ID=
 STRIPE_FANTASY_ANNUAL_PRICE_ID=
+# Point-of-sale Terms consent at Stripe Checkout. DEFAULT OFF. Order matters:
+# set the Stripe Dashboard Terms-of-Service URL FIRST, THEN flip this to "true"
+# (otherwise Stripe rejects every Checkout Session and new subscriptions 500).
+# Unset/"false" = checkout omits consent_collection and behaves exactly as before.
+STRIPE_TERMS_CONSENT_ENABLED=
 THE_ODDS_API_KEY=
 ANTHROPIC_API_KEY=
 REDIS_URL=

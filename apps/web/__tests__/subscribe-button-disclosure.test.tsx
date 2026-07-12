@@ -12,6 +12,10 @@ import { SubscribeButton } from "@/components/pricing/subscribe-button";
  *   2. the interval-appropriate price pulled from the pricing source (never a
  *      hardcoded amount), and
  *   3. a link to /terms.
+ *
+ * The disclosure must also be PROGRAMMATICALLY ASSOCIATED with the button via
+ * aria-describedby, so screen-reader / keyboard users hear the price + auto-renew
+ * terms as the button's description before they can activate checkout.
  */
 
 vi.mock("next/navigation", () => ({
@@ -42,6 +46,26 @@ describe("SubscribeButton auto-renewal disclosure", () => {
     expect(text).toMatch(/recurring subscription/i);
     expect(text).toMatch(/auto-renews/i);
     expect(text).toMatch(/cancel anytime/i);
+  });
+
+  it("associates the disclosure with the button via aria-describedby", () => {
+    render(
+      <SubscribeButton
+        tier="PRO"
+        label="Go Pro"
+        variant="primary"
+        interval="month"
+        priceMonthly={14.99}
+        priceAnnual={99}
+      />,
+    );
+
+    const disclosure = screen.getByTestId("auto-renew-disclosure");
+    const disclosureId = disclosure.getAttribute("id");
+    expect(disclosureId).toBeTruthy();
+
+    const button = screen.getByRole("button", { name: /go pro/i });
+    expect(button).toHaveAttribute("aria-describedby", disclosureId);
   });
 
   it("links to /terms from the CTA surface", () => {

@@ -117,7 +117,7 @@ export async function createCheckoutSession({
   successUrl: string;
   cancelUrl: string;
 }): Promise<Stripe.Checkout.Session> {
-  return stripe.checkout.sessions.create({
+  const params: Stripe.Checkout.SessionCreateParams = {
     customer: customerId,
     payment_method_types: ["card"],
     line_items: [{ price: priceId, quantity: 1 }],
@@ -128,24 +128,34 @@ export async function createCheckoutSession({
     subscription_data: {
       metadata: { userId },
     },
-    // Negative-option-law compliance (FTC ROSCA + state auto-renewal laws): require
-    // an affirmative Terms-of-Service acceptance at the point of sale, BEFORE the
-    // first recurring charge. Stripe renders the consent checkbox only once the
-    // operator sets the Terms-of-Service URL in the Stripe Dashboard
-    // (Public business info / Checkout settings) — that's the operator's half; this
-    // flag is the code half. The proximate auto-renewal disclosure lives next to the
-    // Subscribe CTA (see components/pricing/subscribe-button.tsx).
-    consent_collection: { terms_of_service: "required" },
-    // Short, honest acceptance line shown beside the ToS consent checkbox (Stripe
-    // renders the linked Terms-of-Service on the checkbox itself from the Dashboard
-    // URL). This states the recurring/auto-renew nature at the point of sale.
+    // Honest recurring-billing line rendered NEAR THE SUBMIT BUTTON on the
+    // Stripe-hosted page. Unlike custom_text.terms_of_service_acceptance (removed),
+    // custom_text.submit does NOT replace Stripe's default ToS-acceptance copy, so
+    // the linked Terms-of-Service checkbox text stays intact. It needs no Dashboard
+    // configuration, so it is always safe to send. The proximate auto-renewal
+    // disclosure also lives next to the Subscribe CTA in our own UI (see
+    // components/pricing/subscribe-button.tsx).
     custom_text: {
-      terms_of_service_acceptance: {
+      submit: {
         message:
-          "I understand this is a recurring subscription that auto-renews at the price and interval shown until I cancel, and I agree to the Terms of Service.",
+          "You're starting a recurring subscription that auto-renews at the price and interval shown until you cancel. Cancel anytime.",
       },
     },
-  });
+  };
+
+  // Point-of-sale Terms-of-Service consent (FTC ROSCA + state auto-renewal laws).
+  // OPT-IN, DEFAULT OFF. Stripe REJECTS the Checkout Session (→ generic 500) when
+  // consent_collection.terms_of_service is "required" but the account has no public
+  // Terms-of-Service URL configured in the Stripe Dashboard (Public business info /
+  // Checkout settings). To avoid breaking every checkout on deploy, this is gated
+  // behind STRIPE_TERMS_CONSENT_ENABLED: the owner sets the Dashboard Terms URL
+  // FIRST, THEN flips this flag to "true". When the flag is not "true" we omit
+  // consent_collection entirely, so checkout behaves exactly as it did before.
+  if (process.env["STRIPE_TERMS_CONSENT_ENABLED"] === "true") {
+    params.consent_collection = { terms_of_service: "required" };
+  }
+
+  return stripe.checkout.sessions.create(params);
 }
 
 /**
