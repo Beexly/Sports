@@ -80,6 +80,22 @@ function stripeSubscription(overrides: Record<string, unknown> = {}): Record<str
   };
 }
 
+/**
+ * Arm a subscription lifecycle event AND the fresh re-retrieve the handler
+ * performs on it (M-F5: embedded snapshots are never synced directly).
+ * `retrieved` defaults to the embedded snapshot; pass a different object to
+ * simulate a stale event whose current Stripe state has moved on.
+ */
+function armSubscriptionEvent(
+  type: "customer.subscription.created" | "customer.subscription.updated",
+  sub: Record<string, unknown>,
+  id = "evt_test_1",
+  retrieved: Record<string, unknown> = sub,
+): void {
+  mocks.constructEvent.mockReturnValue(stripeEvent(type, sub, id));
+  mocks.subscriptionsRetrieve.mockResolvedValue(retrieved);
+}
+
 describe("POST /api/webhooks/stripe", () => {
   beforeEach(() => {
     mocks.constructEvent.mockReset();
@@ -111,9 +127,7 @@ describe("POST /api/webhooks/stripe", () => {
         stripeSubscriptionId: "sub_123",
       });
       // A delayed updated event arrives with an OLD active snapshot of the SAME sub.
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ status: "active" }), "evt_late")
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "active" }), "evt_late");
 
       const res = await POST(webhookRequest());
 
@@ -129,14 +143,218 @@ describe("POST /api/webhooks/stripe", () => {
         canceledAt: new Date(),
         stripeSubscriptionId: "sub_OLD",
       });
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ id: "sub_NEW", status: "active" }), "evt_resub")
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ id: "sub_NEW", status: "active" }), "evt_resub");
 
       const res = await POST(webhookRequest());
 
       expect(res.status).toBe(200);
       expect(mocks.subscriptionUpsert).toHaveBeenCalled(); // resubscribe is not blocked
+    });
+
+    it("full chain: deleted → late payment_failed → stale ACTIVE updated leaves the member FREE (never resurrected)", async () => {
+      // This is the launch-blocker (B5). A stateful in-memory row lets the three
+      // deliveries compose exactly as they would in production, so the assertion
+      // is on the FINAL persisted state, not a single call shape. On main this
+      // ends at tier PRO (access without payment); the fix keeps it FREE.
+      type Row = {
+        status: string;
+        tier: string;
+        canceledAt: Date | null;
+        stripeSubscriptionId: string;
+        stripeCustomerId: string;
+        pastDueSince: Date | null;
+      };
+      const asArgs = (a: unknown) =>
+        a as { where?: Record<string, unknown>; data?: Record<string, unknown>; update?: Record<string, unknown> };
+
+      let row: Row = {
+        status: "ACTIVE",
+        tier: "ELITE",
+        canceledAt: null,
+        stripeSubscriptionId: "sub_123",
+        stripeCustomerId: "cus_123",
+        pastDueSince: null,
+      };
+
+      mocks.subscriptionFindUnique.mockImplementation(async () => ({ ...row }));
+      // Model Prisma updateMany's WHERE — including the terminal-CANCELED guard —
+      // so a write only lands when the row actually matches.
+      mocks.subscriptionUpdateMany.mockImplementation(async (argsUnknown) => {
+        const { where = {}, data = {} } = asArgs(argsUnknown);
+        const okSub =
+          where["stripeSubscriptionId"] === undefined || where["stripeSubscriptionId"] === row.stripeSubscriptionId;
+        const okCust =
+          where["stripeCustomerId"] === undefined || where["stripeCustomerId"] === row.stripeCustomerId;
+        const statusNot = (where["status"] as { not?: string } | undefined)?.not;
+        const okStatus = statusNot === undefined || row.status !== statusNot;
+        const okPastDue =
+          where["pastDueSince"] === undefined ? true : where["pastDueSince"] === null ? row.pastDueSince === null : true;
+        if (okSub && okCust && okStatus && okPastDue) {
+          row = { ...row, ...(data as Partial<Row>) };
+          return { count: 1 };
+        }
+        return { count: 0 };
+      });
+      mocks.subscriptionUpsert.mockImplementation(async (argsUnknown) => {
+        const { update = {} } = asArgs(argsUnknown);
+        row = { ...row, ...(update as Partial<Row>) };
+        return { ...row };
+      });
+
+      // 1) customer.subscription.deleted → terminal CANCELED / FREE.
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("customer.subscription.deleted", stripeSubscription(), "evt_chain_del"),
+      );
+      expect((await POST(webhookRequest())).status).toBe(200);
+      expect(row.status).toBe("CANCELED");
+      expect(row.tier).toBe("FREE");
+
+      // 2) A LATE invoice.payment_failed for the now-dead sub. The terminal-CANCELED
+      //    guard must stop it flipping CANCELED → PAST_DUE (which would defeat the
+      //    resurrection guard downstream).
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("invoice.payment_failed", { subscription: "sub_123" }, "evt_chain_pf"),
+      );
+      expect((await POST(webhookRequest())).status).toBe(200);
+      expect(row.status).toBe("CANCELED"); // NOT PAST_DUE
+      expect(row.tier).toBe("FREE");
+
+      // 3) A DELAYED customer.subscription.updated carrying a stale ACTIVE snapshot.
+      //    Even in the worst case where the fresh retrieve still returns ACTIVE, the
+      //    same-id resurrection guard blocks the write.
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("customer.subscription.updated", stripeSubscription({ status: "active" }), "evt_chain_stale"),
+      );
+      mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "active" }));
+      expect((await POST(webhookRequest())).status).toBe(200);
+
+      // FINAL persisted state: still FREE / CANCELED. Access was never re-granted,
+      // and no upsert ever wrote a paid tier over the terminal row.
+      expect(row.status).toBe("CANCELED");
+      expect(row.tier).toBe("FREE");
+      expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
+    });
+
+    it("ignores a late event for a SUPERSEDED subscription — sub_OLD noise cannot revoke sub_NEW (Codex P1)", async () => {
+      // The member cancelled sub_OLD and resubscribed as sub_NEW (row is active).
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "ACTIVE",
+        canceledAt: null,
+        stripeSubscriptionId: "sub_NEW",
+        tier: "ELITE",
+      });
+      // A delayed `updated` for sub_OLD arrives; Stripe's current state for it
+      // is canceled. Syncing it would overwrite the sub_NEW row as CANCELED.
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ id: "sub_OLD", status: "canceled" }),
+        "evt_superseded",
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
+      expect(mocks.subscriptionUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it("a late same-id canceled update CONVERGES on the delete handler's terminal state (Codex P2)", async () => {
+      const stampedAt = new Date("2026-07-01T00:00:00Z");
+      // The delete handler already recorded the terminal state.
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "CANCELED",
+        canceledAt: stampedAt,
+        stripeSubscriptionId: "sub_123",
+        tier: "FREE",
+      });
+      // A delayed `updated` for the SAME id retrieves the canceled object,
+      // which still carries the old paid price.
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ status: "canceled" }),
+        "evt_late_cancel",
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      // Terminal record preserved: FREE tier, original cancellation stamp —
+      // never a paid-tier canceled row with canceledAt wiped to null.
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({
+            tier: "FREE",
+            status: "CANCELED",
+            canceledAt: stampedAt,
+          }),
+        }),
+      );
+    });
+
+    it("an immediate cancel arriving via `updated` stamps canceledAt and drops to FREE", async () => {
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        status: "ACTIVE",
+        canceledAt: null,
+        stripeSubscriptionId: "sub_123",
+        tier: "PRO",
+      });
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ status: "canceled" }),
+        "evt_immediate_cancel",
+      );
+
+      await POST(webhookRequest());
+
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({
+            tier: "FREE",
+            status: "CANCELED",
+            canceledAt: expect.any(Date),
+          }),
+        }),
+      );
+    });
+
+    it("syncs the RETRIEVED current state, never the embedded snapshot (stale event cannot regress tier)", async () => {
+      // A delayed `updated` event carries the OLD state: PRO + past_due.
+      // Stripe's CURRENT state (the member upgraded and recovered): ELITE + active.
+      armSubscriptionEvent(
+        "customer.subscription.updated",
+        stripeSubscription({ status: "past_due" }), // embedded stale snapshot (PRO price)
+        "evt_stale",
+        stripeSubscription({
+          status: "active",
+          items: { data: [{ price: { id: ELITE_ANNUAL } }] },
+        }),
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionsRetrieve).toHaveBeenCalledWith("sub_123");
+      // The write reflects CURRENT Stripe state — the stale snapshot's
+      // PRO/PAST_DUE regression never reaches the DB.
+      expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({ tier: "ELITE", status: "ACTIVE" }),
+        }),
+      );
+    });
+
+    it("fails closed (500, event unrecorded) when the fresh retrieve fails — Stripe retries", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("customer.subscription.updated", stripeSubscription(), "evt_retrieve_down"),
+      );
+      mocks.subscriptionsRetrieve.mockRejectedValue(new Error("stripe api unreachable"));
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(500);
+      // Not recorded as processed — the retry must not be idempotency-skipped.
+      expect(mocks.webhookEventCreate).not.toHaveBeenCalled();
+      expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
     });
   });
 
@@ -165,9 +383,7 @@ describe("POST /api/webhooks/stripe", () => {
 
   describe("idempotency", () => {
     it("skips events that were already processed", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription(), "evt_dup")
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription(), "evt_dup");
       mocks.webhookEventFindUnique.mockResolvedValue({ id: "wh_existing" });
 
       const res = await POST(webhookRequest());
@@ -180,9 +396,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("records the event id after successful processing", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription(), "evt_new")
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription(), "evt_new");
 
       const res = await POST(webhookRequest());
       expect(res.status).toBe(200);
@@ -197,9 +411,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("returns 500 and does NOT record the event when handling fails (Stripe will retry)", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription())
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription());
       mocks.subscriptionUpsert.mockRejectedValue(new Error("db down"));
 
       const res = await POST(webhookRequest());
@@ -233,9 +445,7 @@ describe("POST /api/webhooks/stripe", () => {
 
   describe("customer.subscription.created / updated — syncSubscription", () => {
     it("upserts by stripeCustomerId with PRO tier for a pro monthly price", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.created", stripeSubscription())
-      );
+      armSubscriptionEvent("customer.subscription.created", stripeSubscription());
 
       await POST(webhookRequest());
 
@@ -262,12 +472,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("maps an elite annual price to the ELITE tier", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent(
-          "customer.subscription.updated",
-          stripeSubscription({ items: { data: [{ price: { id: ELITE_ANNUAL } }] } })
-        )
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ items: { data: [{ price: { id: ELITE_ANNUAL } }] } }));
 
       await POST(webhookRequest());
 
@@ -278,12 +483,7 @@ describe("POST /api/webhooks/stripe", () => {
 
     it("maps an unknown price id to FREE (never grants unpaid access) when there is no paid record", async () => {
       mocks.subscriptionFindUnique.mockResolvedValue(null);
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent(
-          "customer.subscription.updated",
-          stripeSubscription({ items: { data: [{ price: { id: "price_unknown" } }] } })
-        )
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ items: { data: [{ price: { id: "price_unknown" } }] } }));
 
       await POST(webhookRequest());
 
@@ -301,12 +501,7 @@ describe("POST /api/webhooks/stripe", () => {
         stripeSubscriptionId: "sub_test",
         tier: "PRO",
       });
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent(
-          "customer.subscription.updated",
-          stripeSubscription({ status: "active", items: { data: [{ price: { id: "price_orphaned_founding" } }] } })
-        )
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "active", items: { data: [{ price: { id: "price_orphaned_founding" } }] } }));
 
       await POST(webhookRequest());
 
@@ -324,9 +519,7 @@ describe("POST /api/webhooks/stripe", () => {
       ["incomplete", "INCOMPLETE"],
       ["paused", "PAUSED"],
     ])("maps Stripe status %s to %s", async (stripeStatus, dbStatus) => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ status: stripeStatus }))
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: stripeStatus }));
 
       await POST(webhookRequest());
 
@@ -336,9 +529,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("clears the past-due grace anchor when the subscription recovers", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ status: "active" }))
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "active" }));
 
       await POST(webhookRequest());
 
@@ -350,9 +541,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("backfills the grace anchor when a sync arrives already PAST_DUE", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ status: "past_due" }))
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "past_due" }));
 
       await POST(webhookRequest());
 
@@ -371,9 +560,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("falls back to updateMany by stripeCustomerId when userId metadata is missing", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent("customer.subscription.updated", stripeSubscription({ metadata: {} }))
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ metadata: {} }));
 
       await POST(webhookRequest());
 
@@ -384,12 +571,7 @@ describe("POST /api/webhooks/stripe", () => {
     });
 
     it("resolves the customer id from an expanded customer object", async () => {
-      mocks.constructEvent.mockReturnValue(
-        stripeEvent(
-          "customer.subscription.updated",
-          stripeSubscription({ customer: { id: "cus_expanded" } })
-        )
-      );
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ customer: { id: "cus_expanded" } }));
 
       await POST(webhookRequest());
 
@@ -433,7 +615,7 @@ describe("POST /api/webhooks/stripe", () => {
       expect(mocks.subscriptionUpsert).toHaveBeenCalled();
     });
 
-    it("payment_failed marks the subscription PAST_DUE and stamps the first failure", async () => {
+    it("payment_failed marks the subscription PAST_DUE, stamps the first failure, and never touches a CANCELED row", async () => {
       mocks.constructEvent.mockReturnValue(
         stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
       );
@@ -444,13 +626,15 @@ describe("POST /api/webhooks/stripe", () => {
       // retries must not slide the grace window.
       expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { stripeSubscriptionId: "sub_123", pastDueSince: null },
+          where: { stripeSubscriptionId: "sub_123", pastDueSince: null, status: { not: "CANCELED" } },
           data: { pastDueSince: expect.any(Date) },
         })
       );
+      // Adversarial-review regression: CANCELED is terminal and excluded, so a
+      // late payment_failed after subscription.deleted cannot resurrect access.
       expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { stripeSubscriptionId: "sub_123" },
+          where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
           data: { status: "PAST_DUE" },
         })
       );

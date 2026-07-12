@@ -98,7 +98,16 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
 
     case "customer.subscription.created":
     case "customer.subscription.updated": {
-      const subscription = event.data.object as Stripe.Subscription;
+      // NEVER sync the embedded snapshot. Stripe does not guarantee delivery
+      // order, so a delayed `updated` event can carry an OLDER subscription
+      // state (previous tier, stale past_due) and silently regress a member
+      // who has since upgraded or recovered. Re-retrieving by id makes every
+      // sync converge on Stripe's CURRENT state regardless of arrival order —
+      // the same pattern the checkout + invoice handlers already use. A
+      // retrieval failure throws → 500 → Stripe retries the event, so we fail
+      // closed instead of applying a possibly-stale snapshot.
+      const embedded = event.data.object as Stripe.Subscription;
+      const subscription = await stripe.subscriptions.retrieve(embedded.id);
       await syncSubscription(subscription);
       break;
     }
@@ -152,13 +161,21 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         // not slide the grace window entitlements compute from pastDueSince) AND
         // set PAST_DUE together, so a crash between them can't leave a member
         // past-due-but-still-ACTIVE.
+        //
+        // CANCELED is terminal and excluded (adversarial-review finding): Stripe
+        // delivers a dunning-cancellation burst UNORDERED, so a late
+        // payment_failed can arrive after subscription.deleted. Without this
+        // guard it flips a CANCELED row back to PAST_DUE — which grants access —
+        // and the subsequent updated-event resurrection guard (which requires
+        // existing.status === "CANCELED") no longer matches, restoring paid tier
+        // permanently on a subscription that is dead in Stripe.
         await db.$transaction([
           db.subscription.updateMany({
-            where: { stripeSubscriptionId: subId, pastDueSince: null },
+            where: { stripeSubscriptionId: subId, pastDueSince: null, status: { not: "CANCELED" } },
             data: { pastDueSince: new Date() },
           }),
           db.subscription.updateMany({
-            where: { stripeSubscriptionId: subId },
+            where: { stripeSubscriptionId: subId, status: { not: "CANCELED" } },
             data: { status: "PAST_DUE" },
           }),
         ]);
@@ -208,6 +225,30 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     }
   }
 
+  // Superseded-subscription guard. There is ONE subscription row per customer
+  // (keyed by stripeCustomerId), so an event about ANY of the customer's
+  // subscription ids overwrites the whole row. When the row already tracks a
+  // DIFFERENT subscription (the member cancelled sub_OLD and resubscribed as
+  // sub_NEW), a delayed event for the old id must not clobber the new one —
+  // syncing sub_OLD's canceled state over the active sub_NEW row would revoke
+  // a paying member's access. Only an ACCESS-GRANTING state may adopt the row
+  // for a new subscription id (that is the genuine resubscribe/upgrade path);
+  // non-access states for a non-current id are stale noise and are skipped.
+  const incomingGrantsAccess =
+    incomingStatus === "ACTIVE" || incomingStatus === "TRIALING" || incomingStatus === "PAST_DUE";
+  if (
+    existing &&
+    existing.stripeSubscriptionId != null &&
+    existing.stripeSubscriptionId !== stripeSubscription.id &&
+    !incomingGrantsAccess
+  ) {
+    console.warn(
+      `[stripe] ignoring ${incomingStatus} event for superseded subscription ` +
+        `${stripeSubscription.id} — customer ${customerId}'s row tracks ${existing.stripeSubscriptionId}`,
+    );
+    return;
+  }
+
   const priceId = stripeSubscription.items.data[0]?.price.id;
   const status = mapStripeStatus(stripeSubscription.status);
   let tier = getTierFromPriceId(priceId);
@@ -243,22 +284,28 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     : null;
 
   const isPastDue = status === "PAST_DUE";
+  const isCanceled = status === "CANCELED";
 
   const updateData = {
     stripeSubscriptionId: stripeSubscription.id,
     stripePriceId: priceId,
-    tier,
+    // A CANCELED sync converges on the SAME terminal state the delete handler
+    // writes (tier FREE, cancellation stamp preserved-or-set) — a late
+    // `updated` event carrying the canceled object must not rewrite the
+    // terminal row as a paid-tier record with no cancellation timestamp.
+    tier: isCanceled ? ("FREE" as const) : tier,
     status,
     currentPeriodStart: periodStart,
     currentPeriodEnd: periodEnd,
     cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
     trialStart,
     trialEnd,
-    // A live sync (created/updated/payment) means this is not a deleted row, so
-    // clear any stale cancellation stamp from a prior lifecycle — otherwise a
-    // reactivated member reads as active-but-canceled in reporting/churn logic.
-    // (canceledAt is only stamped by customer.subscription.deleted.)
-    canceledAt: null,
+    // A LIVE sync means this is not a canceled row, so clear any stale
+    // cancellation stamp from a prior lifecycle — otherwise a reactivated
+    // member reads as active-but-canceled in reporting/churn logic. A
+    // CANCELED sync preserves the delete handler's stamp (or sets one when
+    // the cancellation arrives via `updated` before/without a delete event).
+    canceledAt: isCanceled ? (existing?.canceledAt ?? new Date()) : null,
     // Recovery clears the grace anchor. While PAST_DUE the existing
     // first-failure stamp is preserved (and backfilled below if a sync
     // arrives before any invoice.payment_failed event).
