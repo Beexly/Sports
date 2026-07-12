@@ -261,6 +261,36 @@ describe("processSport", () => {
     expect(upd).not.toHaveProperty("bookDisagreementAtLock");
   });
 
+  it("captures an AWAY moneyline pick's bookDisagreementAtLock from the AWAY side, not home (write-once)", async () => {
+    // normalizedGame default: home "Chiefs", away "Bills". Books AGREE on the home
+    // price (both -150 → 0.6, dispersion 0) but DISAGREE on the away price. The
+    // published pick is the AWAY team (Bills), so the lock must reflect the AWAY
+    // side's dispersion (> 0). A home-hardcoded capture would (wrongly) persist 0.
+    mocks.normalizeGames.mockReturnValue([normalizedGame()]);
+    mocks.normalizeOdds.mockReturnValue([
+      { gameExternalId: "ext-1", bookmaker: "a", market: "H2H", homePrice: -150, awayPrice: 130 },
+      { gameExternalId: "ext-1", bookmaker: "b", market: "H2H", homePrice: -150, awayPrice: 110 },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickType: "MONEYLINE", selection: "Bills ML (+120)", line: 120 }),
+    ]);
+
+    await processSport(SPORT, "key", gates());
+
+    const call = mocks.pickUpsert.mock.calls[0]![0] as {
+      create: Record<string, unknown>;
+      update: Record<string, unknown>;
+    };
+    const awayDispersion = 100 / 210 - 100 / 230; // away implied-prob spread (+110 vs +130)
+    expect(call.create["bookDisagreementAtLock"]).toBeCloseTo(awayDispersion, 10);
+    expect(call.create["bookDisagreementAtLock"] as number).toBeGreaterThan(0);
+    // Guard against the home-side regression: the home dispersion here is exactly 0.
+    expect(call.create["bookDisagreementAtLock"]).not.toBe(0);
+    // Write-once: never in the update path (immutable lock-time measurement).
+    expect(call.update).not.toHaveProperty("bookDisagreementAtLock");
+  });
+
   it("writes null bookDisagreementAtLock when fewer than two books quote the kind", async () => {
     mocks.normalizeGames.mockReturnValue([normalizedGame()]);
     mocks.normalizeOdds.mockReturnValue([
