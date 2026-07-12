@@ -30,7 +30,15 @@ export interface DrivePlay {
   readonly playIndex: number;
   /** `yardline_100`. */
   readonly yardline100: number;
-  /** Offense-framed points on this play (`sp`/scoring columns); 0 if none. */
+  /**
+   * ACTUAL points scored on this play, offense-framed: the real point value of the
+   * scoring event — TD 6, FG 3, safety 2, PAT/XP 1, two-point conversion 2; 0 on a
+   * non-scoring play. Summed per drive to classify the result (`points ≥ 6 → TD`).
+   *
+   * MUST NOT be nflfastR's `sp` column, which is a BINARY 0/1 scoring-play INDICATOR,
+   * not a point value. A loader mapping `sp` → pointsScored would total a TD+PAT drive
+   * as 1 + 1 = 2 and misclassify it as OTHER (a TD needs ≥ 6). Map the real points.
+   */
   readonly pointsScored: number;
   /** From the success-rate module; may be null (unratable play). */
   readonly isSuccess: boolean | null;

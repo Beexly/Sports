@@ -95,6 +95,10 @@ confidence/edge math. Shipping them changes no served pick.
   `points ≥ 6 → TD`, `points === 3 → FG`, else `OTHER`. A **safety is never
   inferred from a point total** (a safety is scored by the defense, not netted by
   the offense).
+- **`pointsScored` is ACTUAL points, not `sp`**: the field is the real point value
+  of the play — TD 6, FG 3, safety 2, PAT/XP 1, two-point 2 (0 otherwise). It **must
+  not** be mapped from nflfastR's binary `sp` scoring-play indicator (0/1): a `sp`
+  mapping would total a TD+PAT drive as `1 + 1 = 2` and misclassify it as `OTHER`.
 - **Aggregates**: `points` (Σ), `epaTotal` (Σ epa ?? 0), `successRate` over ratable
   plays only (0, not NaN, when none are ratable), start/end field position from
   first/last play by `playIndex`.

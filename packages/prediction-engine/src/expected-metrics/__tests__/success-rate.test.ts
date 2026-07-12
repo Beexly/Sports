@@ -61,6 +61,11 @@ describe("isSuccessfulPlay — down-conditioned yardage rule", () => {
     expect(isSuccessfulPlay(play({ down: 0, ydstogo: 10, yardsGained: 8 }))).toBeNull();
     expect(isSuccessfulPlay(play({ down: 5, ydstogo: 10, yardsGained: 8 }))).toBeNull();
   });
+
+  it("returns null (unratable, NOT failure) for a non-finite yardsGained or ydstogo on a valid down", () => {
+    expect(isSuccessfulPlay(play({ down: 1, ydstogo: 10, yardsGained: Number("NA") }))).toBeNull();
+    expect(isSuccessfulPlay(play({ down: 2, ydstogo: Number.NaN, yardsGained: 6 }))).toBeNull();
+  });
 });
 
 describe("rollups", () => {
@@ -74,6 +79,27 @@ describe("rollups", () => {
     expect(rows[0]?.plays).toBe(1);
     expect(rows[0]?.successes).toBe(1);
     expect(rows[0]?.successRate).toBe(1);
+  });
+
+  it("excludes a NaN-yardsGained row from the rollup — not counted as a failure", () => {
+    const withoutBad = [
+      play({ teamId: "AAA", down: 1, ydstogo: 10, yardsGained: 5 }), // success
+      play({ teamId: "AAA", down: 2, ydstogo: 10, yardsGained: 6 }), // success
+    ];
+    const withBad = [
+      ...withoutBad,
+      play({ teamId: "AAA", down: 1, ydstogo: 10, yardsGained: Number("NA") }), // unratable → dropped
+    ];
+    const clean = successRateByTeam(withoutBad, 1);
+    const dirty = successRateByTeam(withBad, 1);
+    // The NaN row neither entered the denominator (plays) nor scored a failure.
+    expect(clean[0]?.plays).toBe(2);
+    expect(dirty[0]?.plays).toBe(2);
+    expect(dirty[0]?.successes).toBe(2);
+    // Rate is identical to the rollup WITHOUT the bad row (would be 2/3 = 0.6667 if
+    // the NaN row were wrongly counted as a failure).
+    expect(dirty[0]?.successRate).toBe(clean[0]?.successRate);
+    expect(dirty[0]?.successRate).toBe(1);
   });
 
   it("drops sub-minPlays groups (mirrors the rollup qualifier)", () => {

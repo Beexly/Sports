@@ -6,7 +6,8 @@
  * touchdown is a forced success; a turnover is a forced failure and DOMINATES a
  * touchdown flag (a defensive-score turnover — the offense lost the ball — is an
  * offensive failure). Plays with an unratable down (kickoff, two-point try, etc.)
- * return null and are dropped from every count.
+ * OR a non-finite `yardsGained`/`ydstogo` return null and are dropped from every
+ * count — never silently scored as a failure.
  *
  * This is a definitional metric: there is no model, no correlation gate, only
  * determinism. It deliberately does not reuse `fitLogistic`/`fitRidge`/
@@ -53,12 +54,20 @@ const SUCCESS_FEATURE_KEYS = ["down", "ydstogo", "yardsGained", "touchdown", "tu
 /**
  * Success = scored a TD (forced) OR (not a turnover AND yardsGained ≥
  * fraction(down)·ydstogo). Turnover dominates a TD (a pick-six is a turnover →
- * offensive failure). Returns null when down ∉ {1,2,3,4} (unratable) so callers
- * drop the play from every count. The down is range-guarded BEFORE indexing the
+ * offensive failure).
+ *
+ * Returns null (UNRATABLE → callers drop it from every count) when the play is not
+ * well-formed: down ∉ {1,2,3,4}, OR `yardsGained`/`ydstogo` is non-finite. A NaN
+ * `yardsGained`/`ydstogo` must NOT be scored as a failure — the `>=` comparison is
+ * false for NaN, which would silently count the play as a FAILED attempt and depress
+ * team/player/down success rates. Excluding it from BOTH numerator and denominator
+ * is the honest treatment. TD-forced-success / turnover-forced-failure semantics
+ * apply only to well-formed rows. The down is range-guarded BEFORE indexing the
  * finite-key fraction table, so the lookup is always a real `number`.
  */
 export function isSuccessfulPlay(play: SuccessPlay): boolean | null {
   if (!Number.isInteger(play.down) || play.down < 1 || play.down > 4) return null;
+  if (!Number.isFinite(play.yardsGained) || !Number.isFinite(play.ydstogo)) return null; // unratable, not a failure
   if (play.turnover === 1) return false; // dominates
   if (play.touchdown === 1) return true;
   const frac = SUCCESS_YARDAGE_FRACTION[play.down as 1 | 2 | 3 | 4];

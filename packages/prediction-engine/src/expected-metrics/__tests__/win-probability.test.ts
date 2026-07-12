@@ -115,6 +115,40 @@ describe("non-finite input hardening (WP surface stays in (0,1))", () => {
     expect(wp).toBeLessThan(1);
   });
 
+  it("coerces a NaN gameSecondsRemaining at predict → WP finite & strictly in (0,1)", () => {
+    const model = fitWinProbabilityModel(corpus())!;
+    // Number("NA") === NaN — an end/non-play row with a bad game_seconds_remaining
+    // column previously reached the scaler unguarded → WP = σ(NaN) = NaN.
+    const wp = predictWinProbability(
+      model,
+      play({ scoreDifferential: 7, gameSecondsRemaining: Number("NA"), posteamWon: 1 }),
+    );
+    expect(Number.isFinite(wp)).toBe(true);
+    expect(wp).toBeGreaterThan(0);
+    expect(wp).toBeLessThan(1);
+  });
+
+  it("coerces a NaN scoreDifferential at predict → WP finite & strictly in (0,1)", () => {
+    const model = fitWinProbabilityModel(corpus())!;
+    const wp = predictWinProbability(
+      model,
+      play({ scoreDifferential: Number.NaN, gameSecondsRemaining: 600, posteamWon: 1 }),
+    );
+    expect(Number.isFinite(wp)).toBe(true);
+    expect(wp).toBeGreaterThan(0);
+    expect(wp).toBeLessThan(1);
+  });
+
+  it("winProbabilityAdded across non-finite predict rows stays finite", () => {
+    const model = fitWinProbabilityModel(corpus())!;
+    // before has a NaN clock, after has a NaN score differential; the WPA of these
+    // degraded rows must never leak NaN into the ledger.
+    const before = play({ scoreDifferential: 3, gameSecondsRemaining: Number("NA"), posteamWon: 1 });
+    const after = play({ scoreDifferential: Number.NaN, gameSecondsRemaining: 580, posteamWon: 0 });
+    const wpa = winProbabilityAdded(model, before, after, true);
+    expect(Number.isFinite(wpa)).toBe(true);
+  });
+
   it("a single NaN-timeout training row does not poison the fitted surface", () => {
     const poisoned: WpPlay[] = [
       play({ posteamTimeouts: Number("NA"), posteamWon: 1 }),

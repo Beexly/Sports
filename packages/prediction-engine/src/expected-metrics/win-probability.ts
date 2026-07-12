@@ -70,23 +70,48 @@ export interface WinProbabilityModel {
   readonly provenance: ExpectedMetricProvenance;
 }
 
+/**
+ * Documented NEUTRAL defaults for a non-finite feature at PREDICT time. WP has no
+ * output clamp (it is "always a sigmoid"), so a single NaN feature would make
+ * WP = σ(NaN) = NaN and break the exported "WP always in (0, 1)" contract. The fit
+ * path drops non-finite rows via `isUsable`, but predict-time rows (e.g. an
+ * end/non-play row where `game_seconds_remaining` is NaN) are NOT filtered — so we
+ * coerce every feature to a finite, football-neutral value before it reaches the
+ * scaler. These are NOT served as truth; they only keep a degraded row on-surface.
+ */
+const WP_NEUTRAL_SCORE_DIFFERENTIAL = 0; // tied game
+const WP_NEUTRAL_GAME_SECONDS = 1800; // mid-game (half of a 3600s regulation game)
+const WP_NEUTRAL_YARDLINE_100 = 50; // midfield
+const WP_NEUTRAL_DOWN = 1; // first down
+const WP_NEUTRAL_YDSTOGO = 10; // standard first-and-10
+
+function coerceFinite(value: number, fallback: number): number {
+  return Number.isFinite(value) ? value : fallback;
+}
+
 function featureRow(play: WpPlay): number[] {
-  const t = Math.max(play.gameSecondsRemaining, 0);
-  const diffPerSqrtTime = play.scoreDifferential / Math.sqrt(t + 1); // +1 avoids /0 at t=0
-  // Coerce a non-finite timeout differential / spread to a safe default (0),
-  // mirroring the finiteness discipline on the other features. WP has no output
-  // clamp (it is "always a sigmoid"), so a single NaN feature would make
-  // WP = σ(NaN) = NaN — guard the INPUTS instead.
+  // Coerce EVERY feature to a finite value BEFORE it enters the scaler. `applyScaler`
+  // uses `?? 0`, which does NOT catch NaN (NaN is not null/undefined), so an unguarded
+  // non-finite feature would poison the logit and yield WP = σ(NaN) = NaN. On the fit
+  // path these coercions are no-ops (`isUsable` already dropped non-finite rows); they
+  // only matter at predict time, so the fitted surface is unchanged.
+  const scoreDifferential = coerceFinite(play.scoreDifferential, WP_NEUTRAL_SCORE_DIFFERENTIAL);
+  const gameSecondsRemaining = coerceFinite(play.gameSecondsRemaining, WP_NEUTRAL_GAME_SECONDS);
+  const yardline100 = coerceFinite(play.yardline100, WP_NEUTRAL_YARDLINE_100);
+  const down = coerceFinite(play.down, WP_NEUTRAL_DOWN);
+  const ydstogo = coerceFinite(play.ydstogo, WP_NEUTRAL_YDSTOGO);
+  const t = Math.max(gameSecondsRemaining, 0);
+  const diffPerSqrtTime = scoreDifferential / Math.sqrt(t + 1); // +1 avoids /0 at t=0
   const timeoutDiff = play.posteamTimeouts - play.defteamTimeouts;
   const safeTimeoutDiff = Number.isFinite(timeoutDiff) ? timeoutDiff : 0;
   const spread = play.spreadLine !== null && Number.isFinite(play.spreadLine) ? play.spreadLine : 0;
   return [
-    play.scoreDifferential,
-    play.gameSecondsRemaining,
+    scoreDifferential,
+    gameSecondsRemaining,
     diffPerSqrtTime,
-    play.yardline100,
-    play.down,
-    play.ydstogo,
+    yardline100,
+    down,
+    ydstogo,
     safeTimeoutDiff,
     spread,
   ];
@@ -139,12 +164,21 @@ export function fitWinProbabilityModel(
   };
 }
 
+/** Documented neutral win probability for a fully-degenerate/unusable situation. */
+export const WP_NEUTRAL_PROBABILITY = 0.5;
+
 /**
- * Win probability for the possession team in one state. Always in the open
- * interval (0, 1) — `predictLogistic` returns a sigmoid — so no clamp is applied.
+ * Win probability for the possession team in one state. GUARANTEED finite and in the
+ * open interval (0, 1). `featureRow` coerces every feature to a finite neutral, so
+ * `predictLogistic` sees a finite row and returns a sigmoid already in (0, 1); the
+ * final guard is belt-and-suspenders — any residual non-finite/out-of-range value
+ * (a fully-degenerate situation) collapses to the documented neutral 0.5 rather than
+ * leaking NaN, honoring the exported "WP always in (0, 1)" contract for ALL inputs.
  */
 export function predictWinProbability(model: WinProbabilityModel, play: WpPlay): number {
-  return predictLogistic(model.logistic, featureRow(play));
+  const wp = predictLogistic(model.logistic, featureRow(play));
+  if (!Number.isFinite(wp) || wp <= 0 || wp >= 1) return WP_NEUTRAL_PROBABILITY;
+  return wp;
 }
 
 /**
