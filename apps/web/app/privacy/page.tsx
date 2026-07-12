@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, LEGAL_EMAIL } from "@/lib/brand";
+import { PRIVACY_LAST_UPDATED, formatLegalDate } from "@/lib/legal-dates";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -22,12 +23,7 @@ export default function PrivacyPage() {
               Privacy Policy
             </h1>
             <p className="mt-2 text-sm text-ink-500">
-              Last updated:{" "}
-              {new Date().toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              Last updated: {formatLegalDate(PRIVACY_LAST_UPDATED)}
             </p>
 
             <Heading>1. What we collect</Heading>
