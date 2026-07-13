@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApi: async () => null }));
+vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: async () => null }));
 import {
   loadNflverseInjuryReport,
   resetInjuryReportCacheForTests,

@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { NextResponse } from "next/server";
 
-vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApi: vi.fn() }));
+vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: vi.fn() }));
 vi.mock("@/lib/nflverse/expected-metrics", () => ({ loadNflverseExpectedMetrics: vi.fn() }));
 
 import { GET } from "@/app/api/nflverse/expected-metrics/route";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 import {
   loadNflverseExpectedMetrics,
   type ExpectedMetricBlock,
@@ -62,13 +62,13 @@ function cannedMetrics(status: "live" | "source-error"): NflverseExpectedMetrics
 }
 
 beforeEach(() => {
-  (requirePremiumApi as Mock).mockReset().mockResolvedValue(null);
+  (requirePremiumApiRateLimited as Mock).mockReset().mockResolvedValue(null);
   (loadNflverseExpectedMetrics as Mock).mockReset().mockResolvedValue(cannedMetrics("live"));
 });
 
 describe("GET /api/nflverse/expected-metrics", () => {
   it("returns the gate's denial and never touches the loader when not entitled", async () => {
-    (requirePremiumApi as Mock).mockResolvedValue(NextResponse.json({ error: "premium required" }, { status: 403 }));
+    (requirePremiumApiRateLimited as Mock).mockResolvedValue(NextResponse.json({ error: "premium required" }, { status: 403 }));
 
     const res = await GET();
 

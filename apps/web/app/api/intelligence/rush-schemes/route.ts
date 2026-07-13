@@ -3,14 +3,14 @@
  * Defaults to the current season; empty until the rush-tendency backfill runs.
  */
 import { NextResponse } from "next/server";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 import { loadRushSchemes } from "@/lib/intelligence/rush-schemes";
 import { currentNflSeason } from "@/lib/ingestion/player-stats";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const denied = await requirePremiumApi();
+  const denied = await requirePremiumApiRateLimited("intelligence/rush-schemes");
   if (denied) return denied;
 
   const seasonParam = new URL(request.url).searchParams.get("season");

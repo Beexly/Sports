@@ -24,17 +24,48 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getEntitlements, type Entitlements } from "@sports/types";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 
 const PREMIUM_MESSAGE = "This analytics endpoint requires a Pro or Elite subscription.";
 
 /**
- * Gate an API route on an entitlement predicate. Returns `null` when the
- * caller satisfies `predicate`, otherwise a 401/403 JSON response.
+ * Premium analytics floor: PRO or ELITE only. FANTASY is a paid tier for the
+ * fantasy suite (gated by requireFantasyApi), NOT the betting-depth tier — so it
+ * must NOT reach /api/intelligence/* or /api/nflverse/* Pro analytics. Keying on
+ * tier !== "FREE" leaked the full Pro slate to FANTASY subscribers.
  */
-export async function gateApi(
+const isPremium = (e: Entitlements): boolean => e.tier === "PRO" || e.tier === "ELITE";
+
+/**
+ * Generous per-user ceiling for the premium analytics endpoints. These are
+ * expensive computes (DB reads + derivation) behind requirePremiumApi, but a
+ * legitimate PRO/ELITE user browsing the analytics surfaces refreshes any one
+ * endpoint at most a handful of times a minute. 120 requests / 60s PER endpoint
+ * PER user is ~20x normal-browsing headroom (2 req/sec sustained), so a real
+ * subscriber never trips it, while a scripted loop draining a single compute is
+ * capped. Intentionally far more lenient than the 10/5min limit on the paid
+ * Claude-backed explain / model-court routes, since these are cheaper per call.
+ */
+const PREMIUM_ANALYTICS_RATE_MAX = 120;
+const PREMIUM_ANALYTICS_RATE_WINDOW_MS = 60_000;
+
+interface GateEvaluation {
+  /** Ready-to-send 401/403 when access is denied, else null. */
+  readonly denied: NextResponse | null;
+  /** The authenticated session user id — non-null whenever `denied` is null. */
+  readonly userId: string | null;
+}
+
+/**
+ * Single source of truth for the entitlement gate. Runs auth() once and
+ * resolves the caller's entitlements, returning both the (possible) denial
+ * response and the resolved user id so callers that also rate-limit don't have
+ * to auth() a second time.
+ */
+async function evaluateGate(
   predicate: (entitlements: Entitlements) => boolean,
-  message: string = PREMIUM_MESSAGE
-): Promise<NextResponse | null> {
+  message: string
+): Promise<GateEvaluation> {
   let userId: string | undefined;
   try {
     userId = (await auth())?.user?.id;
@@ -43,10 +74,13 @@ export async function gateApi(
   }
 
   if (!userId) {
-    return NextResponse.json(
-      { success: false, error: "authentication_required", message },
-      { status: 401 }
-    );
+    return {
+      denied: NextResponse.json(
+        { success: false, error: "authentication_required", message },
+        { status: 401 }
+      ),
+      userId: null,
+    };
   }
 
   let entitlements: Entitlements;
@@ -57,13 +91,27 @@ export async function gateApi(
   }
 
   if (!predicate(entitlements)) {
-    return NextResponse.json(
-      { success: false, error: "insufficient_tier", message },
-      { status: 403 }
-    );
+    return {
+      denied: NextResponse.json(
+        { success: false, error: "insufficient_tier", message },
+        { status: 403 }
+      ),
+      userId,
+    };
   }
 
-  return null;
+  return { denied: null, userId };
+}
+
+/**
+ * Gate an API route on an entitlement predicate. Returns `null` when the
+ * caller satisfies `predicate`, otherwise a 401/403 JSON response.
+ */
+export async function gateApi(
+  predicate: (entitlements: Entitlements) => boolean,
+  message: string = PREMIUM_MESSAGE
+): Promise<NextResponse | null> {
+  return (await evaluateGate(predicate, message)).denied;
 }
 
 /**
@@ -74,11 +122,48 @@ export async function gateApi(
  * paid analytics stay paid. FREE → 403, fails closed to FREE on lookup error.
  */
 export function requirePremiumApi(): Promise<NextResponse | null> {
-  // Premium analytics floor is PRO or ELITE only. FANTASY is a paid tier for the
-  // fantasy suite (gated by requireFantasyApi), NOT the betting-depth tier — so it
-  // must NOT reach /api/intelligence/* or /api/nflverse/* Pro analytics. Keying on
-  // tier !== "FREE" leaked the full Pro slate to FANTASY subscribers.
-  return gateApi((e) => e.tier === "PRO" || e.tier === "ELITE");
+  return gateApi(isPremium);
+}
+
+/**
+ * Same premium (PRO/ELITE) floor as {@link requirePremiumApi}, plus a per-user
+ * rate limit applied AFTER the entitlement gate. Anonymous / FREE callers still
+ * receive the 401/403 entitlement denial first — the gate strictly precedes the
+ * limiter, so the paywall is never masked by a 429 and only an already-entitled
+ * caller can be rate-limited. Each caller is limited against their own session
+ * user id; `bucketId` keeps endpoints independent so browsing one analytics
+ * surface never eats into another's budget. On exceed: 429 with a Retry-After
+ * header, mirroring the explain / model-court routes. Returns `null` when the
+ * request may proceed.
+ *
+ * @param bucketId stable per-endpoint limiter name (e.g. "intelligence/combine")
+ */
+export async function requirePremiumApiRateLimited(
+  bucketId: string
+): Promise<NextResponse | null> {
+  const gate = await evaluateGate(isPremium, PREMIUM_MESSAGE);
+  if (gate.denied) return gate.denied;
+  // Unreachable in practice: evaluateGate only grants (denied === null) with a
+  // non-null userId. The guard narrows the type without a non-null assertion.
+  if (!gate.userId) return null;
+
+  const limit = consumeRateLimit(
+    bucketId,
+    gate.userId,
+    PREMIUM_ANALYTICS_RATE_MAX,
+    PREMIUM_ANALYTICS_RATE_WINDOW_MS
+  );
+  if (!limit.ok) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "rate-limited",
+        message: "Too many requests. Please wait a moment before trying again.",
+      },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } }
+    );
+  }
+  return null;
 }
 
 /**

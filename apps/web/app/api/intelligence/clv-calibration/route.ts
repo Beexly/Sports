@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { loadClvBacktest } from "@/lib/intelligence/clv-calibration";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<NextResponse> {
-  const denied = await requirePremiumApi();
+  const denied = await requirePremiumApiRateLimited("intelligence/clv-calibration");
   if (denied) return denied;
   const data = await loadClvBacktest();
   return NextResponse.json({ success: data.status !== "source-error", data });
