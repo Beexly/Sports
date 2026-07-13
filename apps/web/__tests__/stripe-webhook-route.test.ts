@@ -533,6 +533,39 @@ describe("POST /api/webhooks/stripe", () => {
       expect(res.status).toBe(500);
       expect(mocks.webhookEventCreate).not.toHaveBeenCalled();
     });
+
+    it("acks 200 (skipped) when a CONCURRENT duplicate delivery races past the findUnique check (P2002 on record)", async () => {
+      // Two deliveries of the SAME event id both pass the findUnique idempotency
+      // check, then one loses the unique-constraint race on webhookEvent.create.
+      // The handler already synced (idempotently), so a P2002 on stripeEventId is
+      // benign — ack 200 instead of 500-ing into a Stripe retry storm.
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription(), "evt_race");
+      mocks.webhookEventCreate.mockRejectedValue(
+        Object.assign(new Error("Unique constraint failed"), {
+          code: "P2002",
+          meta: { target: ["stripeEventId"] },
+        }),
+      );
+
+      const res = await POST(webhookRequest());
+      const body = await res.json();
+
+      expect(res.status).toBe(200);
+      expect(body.skipped).toBe(true);
+      // The event WAS handled before the benign conflict — the sync still ran.
+      expect(mocks.subscriptionUpsert).toHaveBeenCalled();
+    });
+
+    it("returns 500 when recording the event fails for a NON-conflict reason (Stripe retries)", async () => {
+      // A create failure that is NOT the benign stripeEventId unique-constraint
+      // race must surface as a 500 so Stripe retries — never swallowed as skipped.
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription(), "evt_create_down");
+      mocks.webhookEventCreate.mockRejectedValue(new Error("db write timeout"));
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(500);
+    });
   });
 
   describe("checkout.session.completed", () => {
