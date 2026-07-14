@@ -8,6 +8,7 @@ import { startOfDay, endOfDay } from "date-fns";
 import { parseDateParam } from "@/lib/parse-date-param";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import {
+  getFreshPublicOddsSportKeys,
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
 } from "@/lib/data-reliability/public-freshness-gate";
@@ -22,17 +23,23 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
   }
 
-  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
+  // Stale-Data Kill Switch (default ON via FORCE_NO_BET_IF_STALE). When ON and
   // the latest successful ingestion is "stale" per the shared Refresh SLA, go
   // dark with a DISTINCT 503 body so the surface never serves a stale slate
   // (CLAUDE.md rule #5) — and so operators/monitors can tell "awaiting fresh
   // data" apart from "env gate regressed" (2026-07-10 incident lesson). Fail
-  // OPEN on a DB error — a transient blip must not black out a fresh surface.
+  // CLOSED on a DB error because freshness that cannot be proven is not fresh.
+  let freshSportKeys: string[] | null = null;
   if (gates.forceNoBetIfStale) {
-    const stale = await isPublicPicksSurfaceStale().catch(() => false);
+    const stale = await isPublicPicksSurfaceStale().catch(() => true);
     if (stale) {
       return NextResponse.json(staleDataGateResponse("Public picks"), { status: 503 });
     }
+    const freshSports = await getFreshPublicOddsSportKeys().catch(() => null);
+    if (!freshSports || freshSports.size === 0) {
+      return NextResponse.json(staleDataGateResponse("Public picks"), { status: 503 });
+    }
+    freshSportKeys = [...freshSports];
   }
 
   const session = await auth();
@@ -63,20 +70,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     process.env.NODE_ENV === "production"
       ? { NOT: { modelVersion: "v5.0.0-seed" } }
       : {};
+  const sportKeyFilter = {
+    ...(sportFilter ? { contains: sportFilter, mode: "insensitive" as const } : {}),
+    ...(freshSportKeys ? { in: freshSportKeys } : {}),
+  };
   const gameFilter = {
     dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE },
-    ...(sportFilter
-      ? {
-          sport: {
-            key: { contains: sportFilter, mode: "insensitive" as const },
-          },
-        }
-      : {}),
+    ...(sportFilter || freshSportKeys ? { sport: { key: sportKeyFilter } } : {}),
   };
 
-  // Fail OPEN on a DB error — a transient blip on the primary query must not
-  // black out a fresh surface. The sibling count below already falls back, and
-  // the stale-check fails open too; an unwrapped throw here would 500 the public
+  // Fail closed on a DB error. The sibling count below already falls back; an
+  // unwrapped throw here would 500 the public
   // endpoint instead of honestly returning the bootstrap/collecting state. So on
   // a primary-query failure, collapse to the same dark/"collecting" 503 the
   // bootstrap gate returns rather than leaking a stack trace.

@@ -7,7 +7,10 @@ import {
   getSamplePicks,
 } from "@sports/db";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
-import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import {
+  getFreshPublicOddsSportKeys,
+  isPublicPicksSurfaceStale,
+} from "@/lib/data-reliability/public-freshness-gate";
 
 /**
  * Daily slate API — stub-safe and demo-aware.
@@ -22,18 +25,23 @@ export async function GET() {
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
-  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). The /picks
+  // Stale-Data Kill Switch (default ON via FORCE_NO_BET_IF_STALE). The /picks
   // page reads this slate alongside /api/picks; without this guard the SlateBar
   // would still count published rows and stamp a fresh "updated now" even when
   // /api/picks has collapsed to its dark/collecting state. When the flag is ON
   // and the latest successful ingestion is "stale" per the shared Refresh SLA,
   // return the SAME zeroed/demo-suppressed slate shape — but with
   // lastUpdatedAt: null so we never imply a fresh refresh (CLAUDE.md rule #5).
-  // Fail OPEN on a DB error — a transient blip must not black out a fresh
-  // surface; freshness is enforced separately by /api/health.
+  // Fail CLOSED on a DB error because freshness that cannot be proven is stale.
+  let freshSportKeys: string[] | null = null;
   if (gates.forceNoBetIfStale) {
-    const stale = await isPublicPicksSurfaceStale().catch(() => false);
-    if (stale) {
+    let suppress = await isPublicPicksSurfaceStale().catch(() => true);
+    if (!suppress) {
+      const freshSports = await getFreshPublicOddsSportKeys().catch(() => null);
+      suppress = !freshSports || freshSports.size === 0;
+      freshSportKeys = freshSports ? [...freshSports] : null;
+    }
+    if (suppress) {
       return NextResponse.json({
         success: true,
         data: {
@@ -64,7 +72,10 @@ export async function GET() {
     isPublished: true,
     result: "PENDING" as const,
     isBootstrap: false,
-    game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+    game: {
+      dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE },
+      ...(freshSportKeys ? { sport: { key: { in: freshSportKeys } } } : {}),
+    },
     ...excludeSeedInProd,
   };
 

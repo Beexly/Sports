@@ -6,7 +6,10 @@ import {
   type BoardHealthBadgeState,
   type BoardSuppressionReason,
 } from "@/lib/board/health";
-import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import {
+  getFreshPublicOddsSportKeys,
+  isPublicPicksSurfaceStale,
+} from "@/lib/data-reliability/public-freshness-gate";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -119,13 +122,21 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
-  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
+  // Stale-Data Kill Switch (default ON via FORCE_NO_BET_IF_STALE). When ON and
   // the latest successful ingestion is "stale" per the shared Refresh SLA,
   // suppress the board the same way the demo path does — empty lanes, zeroed
   // counts — so the public board never surfaces a stale slate (CLAUDE.md #5).
-  // Fail OPEN on a DB error so a transient blip can't black out a fresh board.
-  const staleSuppressed =
-    gates.forceNoBetIfStale && (await isPublicPicksSurfaceStale(now).catch(() => false));
+  // Fail CLOSED on a DB error because freshness that cannot be proven is stale.
+  let staleSuppressed = false;
+  let freshSportKeys: string[] | null = null;
+  if (gates.forceNoBetIfStale) {
+    staleSuppressed = await isPublicPicksSurfaceStale(now).catch(() => true);
+    if (!staleSuppressed) {
+      const freshSports = await getFreshPublicOddsSportKeys(now).catch(() => null);
+      staleSuppressed = !freshSports || freshSports.size === 0;
+      freshSportKeys = freshSports ? [...freshSports] : null;
+    }
+  }
 
   if (demoActive || staleSuppressed) {
     const emptyRows = {
@@ -179,6 +190,9 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
       where: {
         isBootstrap: false,
         evaluatedAt: { gte: start, lt: end },
+        ...(freshSportKeys
+          ? { game: { sport: { key: { in: freshSportKeys } } } }
+          : {}),
       },
       include: {
         game: { include: { sport: { select: { name: true } } } },
@@ -239,6 +253,9 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
           isBootstrap: false,
           ...excludeSeedInProd,
           generatedAt: { gte: start, lt: end },
+          ...(freshSportKeys
+            ? { game: { sport: { key: { in: freshSportKeys } } } }
+            : {}),
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
         orderBy: [{ confidence: "desc" }, { generatedAt: "desc" }],
@@ -248,6 +265,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         where: {
           commenceTime: { gte: now },
           status: "SCHEDULED",
+          ...(freshSportKeys ? { sport: { key: { in: freshSportKeys } } } : {}),
         },
         include: { sport: { select: { name: true } } },
         orderBy: { commenceTime: "asc" },
@@ -257,6 +275,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         where: {
           commenceTime: { gte: start, lt: end },
           picks: { none: publishedPickRelation },
+          ...(freshSportKeys ? { sport: { key: { in: freshSportKeys } } } : {}),
         },
         include: { sport: { select: { name: true } } },
         orderBy: { commenceTime: "asc" },

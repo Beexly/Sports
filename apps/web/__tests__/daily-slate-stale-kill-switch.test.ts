@@ -3,14 +3,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 /**
  * Stale-Data Kill Switch — executed behavior for /api/picks/daily-slate.
  *
- * Additive, env-gated, DEFAULT OFF. The /picks page fetches this slate
- * alongside /api/picks, so it gets the SAME kill switch: with
+ * The gate defaults ON. The /picks page fetches this slate alongside /api/picks,
+ * so it gets the SAME kill switch: with an explicit
  * FORCE_NO_BET_IF_STALE off (forceNoBetIfStale = false) the route counts
  * picks and stamps a fresh lastUpdatedAt exactly as before — the freshness
  * query must never even run. With the gate ON, a "stale" latest successful
  * ingestion (per the shared 240m Refresh SLA) must collapse the slate to
  * zeroed counts with lastUpdatedAt: null (no fake "updated now"), while a
- * fresh run serves normally. A DB blip on the freshness query fails OPEN.
+ * fresh run serves normally. A DB blip on the freshness query fails CLOSED.
  *
  * Mirrors picks-stale-kill-switch.test.ts and the daily-slate-route.test.ts
  * vi.mock("@sports/db") + readiness-gates patterns.
@@ -26,6 +26,7 @@ const mocks = vi.hoisted(() => ({
   pickFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  ingestionRunFindMany: vi.fn(),
   isStubMode: vi.fn<() => boolean>(),
   isDemoPicksEnabled: vi.fn<() => boolean>(),
   getSamplePicks: vi.fn<() => unknown[]>(),
@@ -34,7 +35,10 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@sports/db", () => ({
   db: {
     pick: { count: mocks.pickCount, findMany: mocks.pickFindMany },
-    ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
+    ingestionRun: {
+      findFirst: mocks.ingestionRunFindFirst,
+      findMany: mocks.ingestionRunFindMany,
+    },
   },
   isStubMode: mocks.isStubMode,
   isDemoPicksEnabled: mocks.isDemoPicksEnabled,
@@ -73,6 +77,9 @@ describe("/api/picks/daily-slate — stale-data kill switch", () => {
     mocks.pickCount.mockReset().mockResolvedValue(3);
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
     mocks.ingestionRunFindFirst.mockReset();
+    mocks.ingestionRunFindMany.mockReset().mockResolvedValue([
+      { sport: "americanfootball_nfl", completedAt: minutesAgo(10) },
+    ]);
     mocks.isStubMode.mockReset().mockReturnValue(false);
     mocks.isDemoPicksEnabled.mockReset().mockReturnValue(false);
     mocks.getSamplePicks.mockReset().mockReturnValue([]);
@@ -146,21 +153,29 @@ describe("/api/picks/daily-slate — stale-data kill switch", () => {
     expect(data["lastUpdatedAt"]).not.toBeNull();
     expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
     expect(mocks.pickCount).toHaveBeenCalled();
+    expect(mocks.pickCount).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          game: expect.objectContaining({
+            sport: { key: { in: ["americanfootball_nfl"] } },
+          }),
+        }),
+      }),
+    );
   });
 
-  it("flag ON + DB error on freshness query: fails OPEN (serves the slate)", async () => {
+  it("flag ON + DB error on freshness query: fails CLOSED (suppresses the slate)", async () => {
     mocks.forceNoBetIfStale = true;
     mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
 
     const { status, body } = await callSlate();
     const data = body["data"] as Record<string, unknown>;
 
-    // A transient freshness-query blip must not black out a surface — health
-    // enforces staleness separately.
+    // If the read boundary cannot prove freshness, it must not expose prices.
     expect(status).toBe(200);
     expect(body["success"]).toBe(true);
-    expect(data["totalPicks"]).toBe(3);
-    expect(data["lastUpdatedAt"]).not.toBeNull();
-    expect(mocks.pickCount).toHaveBeenCalled();
+    expect(data["totalPicks"]).toBe(0);
+    expect(data["lastUpdatedAt"]).toBeNull();
+    expect(mocks.pickCount).not.toHaveBeenCalled();
   });
 });

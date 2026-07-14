@@ -5,12 +5,10 @@ import { getReadinessGates } from "../readiness.js";
 /**
  * Stale-Data Kill Switch — config wiring contract.
  *
- * The FORCE_NO_BET_IF_STALE gate ships DARK. The non-negotiable here is the
- * DEFAULT: with the env var unset (or empty), forceNoBetIfStale MUST be false,
- * which is what keeps the public picks surface byte-for-byte identical to today.
- * It must also follow the canonical parseBool wiring (true/1 enable, anything
- * else off) and be mirrored onto the readiness gates exactly like every other
- * config flag.
+ * The non-negotiable contract is fail-closed by default: with the env var unset
+ * or empty, forceNoBetIfStale MUST be true. An operator can explicitly set a
+ * false-like value only as an emergency override. The value is mirrored onto
+ * the readiness gates exactly like every other config flag.
  */
 
 describe("FORCE_NO_BET_IF_STALE gate", () => {
@@ -25,13 +23,13 @@ describe("FORCE_NO_BET_IF_STALE gate", () => {
     else process.env["FORCE_NO_BET_IF_STALE"] = original;
   });
 
-  it("defaults to false when the env var is unset", () => {
-    expect(getPlatformConfig().forceNoBetIfStale).toBe(false);
+  it("defaults to true when the env var is unset", () => {
+    expect(getPlatformConfig().forceNoBetIfStale).toBe(true);
   });
 
-  it("defaults to false when the env var is empty", () => {
+  it("defaults to true when the env var is empty", () => {
     process.env["FORCE_NO_BET_IF_STALE"] = "";
-    expect(getPlatformConfig().forceNoBetIfStale).toBe(false);
+    expect(getPlatformConfig().forceNoBetIfStale).toBe(true);
   });
 
   it("enables on \"true\" and \"1\" (canonical parseBool truthy values)", () => {
@@ -48,8 +46,8 @@ describe("FORCE_NO_BET_IF_STALE gate", () => {
     }
   });
 
-  it("is mirrored onto the readiness gates and defaults to false there too", () => {
-    expect(getReadinessGates().forceNoBetIfStale).toBe(false);
+  it("is mirrored onto the readiness gates and defaults to true there too", () => {
+    expect(getReadinessGates().forceNoBetIfStale).toBe(true);
     process.env["FORCE_NO_BET_IF_STALE"] = "true";
     expect(getReadinessGates().forceNoBetIfStale).toBe(true);
   });

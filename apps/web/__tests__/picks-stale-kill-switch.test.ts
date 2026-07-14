@@ -3,8 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 /**
  * Stale-Data Kill Switch — executed behavior for /api/picks.
  *
- * Additive, env-gated, DEFAULT OFF. With FORCE_NO_BET_IF_STALE off (the
- * forceNoBetIfStale gate = false) the route serves picks exactly as before:
+ * The gate defaults ON. With an explicit FORCE_NO_BET_IF_STALE=false override,
+ * the route serves picks without a freshness query:
  * the freshness query must never even run. With the gate on, a "stale" latest
  * successful ingestion (per the shared 240m Refresh SLA) must collapse the
  * public surface to the same dark/collecting 503 the bootstrap gate returns,
@@ -21,6 +21,7 @@ const mocks = vi.hoisted(() => ({
   pickCount: vi.fn<(args?: unknown) => Promise<number>>(),
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  ingestionRunFindMany: vi.fn(),
   auth: vi.fn<() => Promise<{ user?: { id: string } } | null>>(),
   getUserEntitlements: vi.fn<(userId: string) => Promise<Record<string, unknown>>>(),
 }));
@@ -28,7 +29,10 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@sports/db", () => ({
   db: {
     pick: { findMany: mocks.pickFindMany, count: mocks.pickCount },
-    ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
+    ingestionRun: {
+      findFirst: mocks.ingestionRunFindFirst,
+      findMany: mocks.ingestionRunFindMany,
+    },
   },
 }));
 
@@ -66,6 +70,9 @@ describe("/api/picks — stale-data kill switch", () => {
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
     mocks.pickCount.mockReset().mockResolvedValue(0);
     mocks.ingestionRunFindFirst.mockReset();
+    mocks.ingestionRunFindMany.mockReset().mockResolvedValue([
+      { sport: "americanfootball_nfl", completedAt: minutesAgo(10) },
+    ]);
     // Anonymous viewer keeps the path simple (no entitlements lookup).
     mocks.auth.mockReset().mockResolvedValue(null);
     mocks.getUserEntitlements.mockReset();
@@ -134,17 +141,25 @@ describe("/api/picks — stale-data kill switch", () => {
       }),
     );
     expect(mocks.pickFindMany).toHaveBeenCalled();
+    expect(mocks.pickFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          game: expect.objectContaining({
+            sport: { key: expect.objectContaining({ in: ["americanfootball_nfl"] }) },
+          }),
+        }),
+      }),
+    );
   });
 
-  it("flag ON + DB error on freshness query: fails OPEN (serves picks)", async () => {
+  it("flag ON + DB error on freshness query: fails CLOSED (suppresses picks)", async () => {
     mocks.forceNoBetIfStale = true;
     mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
 
     const { status, body } = await callPicks();
 
-    // A transient freshness-query blip must not black out a surface — health
-    // enforces staleness separately.
-    expect(status).toBe(200);
-    expect(body["success"]).toBe(true);
+    expect(status).toBe(503);
+    expect(body["reason"]).toBe("stale_data");
+    expect(mocks.pickFindMany).not.toHaveBeenCalled();
   });
 });

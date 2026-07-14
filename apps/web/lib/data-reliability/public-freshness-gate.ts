@@ -2,7 +2,7 @@
  * Stale-Data Kill Switch — shared freshness gate for the PUBLIC picks surface.
  *
  * Implements CLAUDE.md rule #5 ("no stale data") at the READ boundary. When the
- * `FORCE_NO_BET_IF_STALE` gate is enabled (default OFF — see
+ * `FORCE_NO_BET_IF_STALE` gate is enabled (default ON — see
  * platform-config.ts), the public picks endpoints and board loaders must
  * auto-suppress whenever the odds data is stale, so lifting
  * `PUBLIC_PICKS_ENABLED` cannot expose a stale slate.
@@ -17,10 +17,9 @@
  *     reset the freshness clock and let the picks surface read "fresh" while no
  *     real odds flowed (G4). Only a run that brought in real odds counts.
  *
- * Default-off contract: callers MUST gate the call to
+ * Override contract: callers MUST gate the call to
  * `isPublicPicksSurfaceStale` behind `getReadinessGates().forceNoBetIfStale`.
- * With the flag off, this module is never invoked and behavior is byte-for-byte
- * identical to before it existed.
+ * With an explicit false override, this module is not invoked.
  */
 
 import { db } from "@sports/db";
@@ -58,18 +57,12 @@ export function staleDataGateResponse(featureName: string): {
  * SUCCESS run with no completedAt) classifies as stale — never-fresh is not
  * "ok", matching classifyRefreshFreshness(null).
  *
- * Pure read; performs no writes. On a DB error it is the caller's
- * responsibility to decide fail-open vs fail-closed (consumers below fail OPEN
- * — i.e. do not suppress — so a transient DB blip can't black out a fresh
- * surface; freshness is also enforced separately by /api/health).
+ * Pure read; performs no writes. Consumers fail closed on a DB error: if the
+ * read boundary cannot prove freshness, it must not expose actionable prices.
  *
- * KNOWN LIMITATION (tracked enhancement — per-sport freshness):
- * This uses the GLOBAL latest successful IngestionRun, but ingestion runs are
- * per-sport. If one in-season sport's ingestion fails past the SLA while
- * another sport keeps succeeding, the global SUCCESS masks the stale sport —
- * and that sport's picks could remain visible on the public surface. A
- * per-sport freshness check (suppress only the stale sport's picks) is a
- * planned follow-up; this global check is intentionally the coarse first cut.
+ * This coarse global check is paired with `getFreshPublicOddsSportKeys` at each
+ * public query boundary. The latter prevents one fresh sport from masking a
+ * stale sport while allowing genuinely fresh sports to remain visible.
  */
 export async function isPublicPicksSurfaceStale(now: Date = new Date()): Promise<boolean> {
   const lastSuccessRun = await db.ingestionRun.findFirst({
@@ -85,4 +78,26 @@ export async function isPublicPicksSurfaceStale(now: Date = new Date()): Promise
 
   const lastSuccessAt = lastSuccessRun?.completedAt ?? null;
   return classifyRefreshFreshness(lastSuccessAt, now).status === "stale";
+}
+
+export async function getFreshPublicOddsSportKeys(
+  now: Date = new Date(),
+): Promise<Set<string>> {
+  const runs = await db.ingestionRun.findMany({
+    where: { status: "SUCCESS", oddsInserted: { gt: 0 }, sport: { not: null } },
+    orderBy: { completedAt: "desc" },
+    distinct: ["sport"],
+    select: { sport: true, completedAt: true },
+  });
+
+  const freshSportKeys = new Set<string>();
+  for (const run of runs) {
+    if (
+      run.sport &&
+      classifyRefreshFreshness(run.completedAt, now).status !== "stale"
+    ) {
+      freshSportKeys.add(run.sport);
+    }
+  }
+  return freshSportKeys;
 }

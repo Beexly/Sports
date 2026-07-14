@@ -3,9 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 /**
  * Stale-Data Kill Switch — executed behavior for the public board loaders.
  *
- * Additive, env-gated, DEFAULT OFF (forceNoBetIfStale gate = false). With the
- * flag off the loaders behave exactly as today: no freshness query runs. With
- * the flag on and a "stale" latest successful ingestion, each loader returns the
+ * The gate defaults ON. With an explicit false override no freshness query
+ * runs. With the flag on and a "stale" latest successful ingestion, each loader returns the
  * SAME suppressed/empty shape it already returns for the demo-suppressed case
  * (suppressedDemoData: true, zeroed/empty lanes), so the public board cannot
  * surface a stale slate.
@@ -18,6 +17,7 @@ const mocks = vi.hoisted(() => ({
   forceNoBetIfStale: false,
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  ingestionRunFindMany: vi.fn(),
   gateDecisionFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   pickFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   gameFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
@@ -25,7 +25,10 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
-    ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
+    ingestionRun: {
+      findFirst: mocks.ingestionRunFindFirst,
+      findMany: mocks.ingestionRunFindMany,
+    },
     gateDecision: { findMany: mocks.gateDecisionFindMany },
     pick: { findMany: mocks.pickFindMany },
     game: { findMany: mocks.gameFindMany },
@@ -56,6 +59,9 @@ describe("board loaders — stale-data kill switch", () => {
   beforeEach(() => {
     mocks.forceNoBetIfStale = false;
     mocks.ingestionRunFindFirst.mockReset();
+    mocks.ingestionRunFindMany.mockReset().mockResolvedValue([
+      { sport: "americanfootball_nfl", completedAt: minutesBefore(10) },
+    ]);
     mocks.gateDecisionFindMany.mockReset().mockResolvedValue([]);
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
     mocks.gameFindMany.mockReset().mockResolvedValue([]);
@@ -106,16 +112,24 @@ describe("board loaders — stale-data kill switch", () => {
       expect(result.meta.suppressedDemoData).toBeUndefined();
       expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
+      expect(mocks.gateDecisionFindMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            game: { sport: { key: { in: ["americanfootball_nfl"] } } },
+          }),
+        }),
+      );
     });
 
-    it("flag ON + DB error on freshness query: fails OPEN (loads normally)", async () => {
+    it("flag ON + DB error on freshness query: fails CLOSED (suppresses board)", async () => {
       mocks.forceNoBetIfStale = true;
       mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
 
       const result = await loadBoardState(NOW);
 
-      expect(result.meta.suppressedDemoData).toBeUndefined();
-      expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
+      expect(result.meta.suppressedDemoData).toBe(true);
+      expect(result.data.publishedToday).toEqual([]);
+      expect(mocks.gateDecisionFindMany).not.toHaveBeenCalled();
     });
   });
 
@@ -151,6 +165,17 @@ describe("board loaders — stale-data kill switch", () => {
       expect(result.meta.suppressedDemoData).toBeUndefined();
       expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
+    });
+
+    it("flag ON + DB error on freshness query: fails CLOSED (suppresses passes)", async () => {
+      mocks.forceNoBetIfStale = true;
+      mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
+
+      const result = await loadBoardPasses(NOW);
+
+      expect(result.meta.suppressedDemoData).toBe(true);
+      expect(result.data.passes).toEqual([]);
+      expect(mocks.gateDecisionFindMany).not.toHaveBeenCalled();
     });
   });
 });

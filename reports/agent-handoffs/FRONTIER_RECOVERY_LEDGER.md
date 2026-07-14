@@ -25,7 +25,7 @@ This file is the execution control plane. It is not a readiness claim.
 | P0-2 market units / false precision | P0 | `REPRODUCING` | Trace provider normalization through consensus, persistence, DTOs, settlement/CLV, and market-aware display; lock each confirmed defect with behavioral/property tests. |
 | P0-3 stub DB / false health / client boundary | P0 | `PARTIAL_FIX_VALIDATED` | Production import now rejects stub DB, health reports stub mode as 503, and DB tests run from the root workspace suite. Direct client-component imports were not found; production bundle/runtime verification remains. |
 | P0-4 performance / calibration / pricing contradiction | P0 | `REPRODUCING` | Compare eligible populations and prove whether raw strength scores enter probability-only metrics. |
-| P0-5 stale current-price surfaces | P0 | `REPRODUCING` | Exercise stale per-pick/per-sport data and DB errors at the public selection boundary. |
+| P0-5 stale current-price surfaces | P0 | `FIX_VALIDATED` | The public gate defaults on, freshness-query errors fail closed, empty odds runs do not refresh the clock, and every pick/board/slate query is limited to sports with an odds-inserting run inside the shared SLA. Twenty focused web tests and five engine config tests pass. |
 | P0-6 fictional newsroom framed as live | P0 | `REPRODUCING` | Exercise demo/live source selection, dominant labels, review/rights state, hero and ledger parity. |
 
 ## Open PR #76-#101 reconciliation
@@ -84,6 +84,10 @@ This file is the execution control plane. It is not a readiness claim.
 | `npm.cmd run test --workspace=apps/web -- --run __tests__/health-route.test.ts` | 0 | 10/10 tests passed, including stub-mode 503 behavior | Uses the real health handler with a mocked DB boundary. |
 | `npm.cmd run typecheck --workspace=packages/db` | 0 | TypeScript passed | — |
 | `npm.cmd run typecheck --workspace=apps/web` | 0 | TypeScript passed | — |
+| `npm run test --workspace=packages/prediction-engine -- --run src/__tests__/platform-config-stale-gate.test.ts` | 0 | 5/5 tests passed; stale gate defaults on and remains explicitly overrideable | Pure config boundary. |
+| `npm run test --workspace=apps/web -- --run __tests__/public-freshness-gate.test.ts __tests__/picks-stale-kill-switch.test.ts __tests__/daily-slate-stale-kill-switch.test.ts __tests__/board-stale-kill-switch.test.ts` | 0 | 20/20 tests passed; global, per-sport, never-succeeded, empty-ingestion, and DB-error suppression paths covered | Handler tests use mocked persistence; browser proof remains in the final matrix. |
+| `npm run typecheck --workspace=packages/prediction-engine` | 0 | TypeScript passed after the safe-default flip | — |
+| `git diff --check` | 0 | Current stale-gate patch has no whitespace errors | — |
 | Targeted tests | PENDING | — | Dependencies and existing suite topology under discovery. |
 | `npm.cmd run lint` | PENDING | — | — |
 | `npm.cmd run typecheck` | PENDING | — | — |
@@ -101,6 +105,10 @@ This file is the execution control plane. It is not a readiness claim.
 | `packages/db/src/__tests__/production-stub-fails-closed.test.ts` | Production truth lane | Failing-first production boundary regression | VALIDATED |
 | `packages/db/package.json`, `package-lock.json` | Production truth lane | Ensure DB tests execute from root CI | VALIDATED |
 | `apps/web/app/api/health/route.ts`, `apps/web/__tests__/health-route.test.ts` | Production truth lane | Non-vacuous stub-mode health contract | VALIDATED |
+| `packages/prediction-engine/src/platform-config.ts`, `packages/prediction-engine/src/readiness.ts` | Public-price truth lane | Make stale suppression the safe default | VALIDATED |
+| `apps/web/lib/data-reliability/public-freshness-gate.ts` | Public-price truth lane | Compute fresh sports from real odds-inserting ingestion runs | VALIDATED |
+| `apps/web/app/api/picks/**`, `apps/web/lib/board/**` | Public-price truth lane | Fail closed and exclude stale sports from every actionable public query | VALIDATED |
+| `apps/web/__tests__/*stale*`, `apps/web/__tests__/public-freshness-gate.test.ts` | Public-price truth lane | Failing-first global, per-sport, and DB-error regressions | VALIDATED |
 
 ## Blockers and safe adjacent work
 

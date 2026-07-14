@@ -23,7 +23,7 @@ Gates 2+3 are the ignition. Everything downstream of them opens **itself** as da
 | # | Env var | Default | What opening does | Open at launch? |
 |---|---|---|---|---|
 | 1 | `PUBLIC_PICKS_ENABLED` | false | /api/picks + daily-slate serve the public (503 until then) | **YES** — this is the product |
-| 1b | `FORCE_NO_BET_IF_STALE` | false | Stale-ingestion kill switch on the public surface (CLAUDE.md rule #5 enforced at the read boundary) | **YES — open together with #1**; it's what makes #1 safe |
+| 1b | `FORCE_NO_BET_IF_STALE` | true | Stale-ingestion kill switch on the public surface (CLAUDE.md rule #5 enforced at the read boundary) | **KEEP ON**; false is an emergency override only |
 | 2 | `CANONICAL_HISTORY_ENABLED` | false | New picks/TeamGameLogs count as CANONICAL (isBootstrap=false). **Starts the track record + the learning substrate.** | **YES — the learning ignition.** Every day off = a day of record lost |
 | 3 | `OUTCOME_LEARNING_ENABLED` | false | Settled canonical snapshots marked `eligibleForLearning` — outcome-anchored calibration DATA COLLECTION (never auto-adjusts weights) | **YES** — pure data collection, doctrine-safe |
 | 4 | `PERFORMANCE_STATS_ENABLED` | false | /api/performance serves counts + rates; the route itself withholds win rates below `MIN_SETTLED_PICKS_FOR_LEARNING` (insufficientSample) | **YES** — honest by construction: shows factual counts, withholds thin rates automatically |

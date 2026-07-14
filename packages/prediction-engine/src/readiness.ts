@@ -114,9 +114,9 @@ export interface ReadinessGates {
    * shared Refresh SLA. This is the read-boundary enforcement of CLAUDE.md rule #5
    * ("no stale data"), letting canExposePublicPicks be lifted safely.
    *
-   * Defaults to false via FORCE_NO_BET_IF_STALE — ships dark, no behavior change
-   * until explicitly enabled. The gate itself performs NO I/O; consumers own the
-   * freshness query + classifyRefreshFreshness call.
+   * Defaults to true via FORCE_NO_BET_IF_STALE so public prices fail closed.
+   * An explicit false is an emergency override. The gate itself performs NO I/O;
+   * consumers own the freshness query + classifyRefreshFreshness call.
    */
   readonly forceNoBetIfStale: boolean;
 

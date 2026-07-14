@@ -1,6 +1,9 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
-import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import {
+  getFreshPublicOddsSportKeys,
+  isPublicPicksSurfaceStale,
+} from "@/lib/data-reliability/public-freshness-gate";
 
 export interface PassListRow {
   id: string;
@@ -34,14 +37,22 @@ function passReason(bookmakerCoverageMax: number, dataQualityScore: number): str
 export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayload> {
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
-  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
+  // Stale-Data Kill Switch (default ON via FORCE_NO_BET_IF_STALE). When ON and
   // the latest successful ingestion is "stale" per the shared Refresh SLA,
   // suppress the Pass List the same way the demo path does — empty passes — so
-  // the public board never surfaces a stale slate (CLAUDE.md #5). Fail OPEN on a
-  // DB error so a transient blip can't black out a fresh board.
-  const staleSuppressed =
-    getReadinessGates().forceNoBetIfStale &&
-    (await isPublicPicksSurfaceStale(now).catch(() => false));
+  // the public board never surfaces a stale slate (CLAUDE.md #5). Fail CLOSED on
+  // a DB error because freshness that cannot be proven is stale.
+  const forceNoBetIfStale = getReadinessGates().forceNoBetIfStale;
+  let staleSuppressed = false;
+  let freshSportKeys: string[] | null = null;
+  if (forceNoBetIfStale) {
+    staleSuppressed = await isPublicPicksSurfaceStale(now).catch(() => true);
+    if (!staleSuppressed) {
+      const freshSports = await getFreshPublicOddsSportKeys(now).catch(() => null);
+      staleSuppressed = !freshSports || freshSports.size === 0;
+      freshSportKeys = freshSports ? [...freshSports] : null;
+    }
+  }
 
   if (demoActive || staleSuppressed) {
     return {
@@ -69,6 +80,9 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
         status: "GATED",
         isBootstrap: false,
         evaluatedAt: { gte: start, lt: end },
+        ...(freshSportKeys
+          ? { game: { sport: { key: { in: freshSportKeys } } } }
+          : {}),
       },
       include: { game: { include: { sport: { select: { name: true } } } } },
       orderBy: { evaluatedAt: "desc" },
@@ -97,6 +111,7 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
       where: {
         commenceTime: { gte: start, lt: end },
         picks: { none: publishedPickRelation },
+        ...(freshSportKeys ? { sport: { key: { in: freshSportKeys } } } : {}),
       },
       include: { sport: { select: { name: true } } },
       orderBy: { commenceTime: "asc" },
