@@ -28,7 +28,7 @@ export interface IntelligencePickInput {
   readonly id: string;
   readonly selection: string;
   readonly market: string;
-  readonly confidence: number;
+  readonly confidence: number | null;
   readonly edgeScore: number;
   readonly isPublished: boolean;
   readonly isBootstrap: boolean;
@@ -88,6 +88,16 @@ export interface MonetizationSurface {
   readonly canShowEdgeIndex: boolean;
   readonly visibleSummary: string;
 }
+
+export interface IntelligenceProjectionAccess {
+  readonly canSeeConfidence: boolean;
+  readonly canSeeFactorBreakdown: boolean;
+}
+
+const FAIL_CLOSED_PROJECTION_ACCESS: IntelligenceProjectionAccess = {
+  canSeeConfidence: false,
+  canSeeFactorBreakdown: false,
+};
 
 function asDate(value: Date | string | null | undefined): Date | null {
   if (!value) return null;
@@ -194,9 +204,14 @@ export function buildSlateWeather(nodes: readonly GameIntelligenceNode[]): Slate
   }));
 }
 
-export function projectForLens(node: GameIntelligenceNode, lens: UserLens): MonetizationSurface {
-  const canShowConfidence = lens === "BETTOR" || lens === "ANALYST";
-  const canShowFactorBreakdown = lens === "ANALYST";
+export function projectForLens(
+  node: GameIntelligenceNode,
+  lens: UserLens,
+  access: IntelligenceProjectionAccess = FAIL_CLOSED_PROJECTION_ACCESS,
+): MonetizationSurface {
+  const canShowConfidence =
+    access.canSeeConfidence && (lens === "BETTOR" || lens === "ANALYST");
+  const canShowFactorBreakdown = access.canSeeFactorBreakdown && lens === "ANALYST";
   return {
     lens,
     canShowFactorBreakdown,

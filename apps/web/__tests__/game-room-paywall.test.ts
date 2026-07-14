@@ -88,6 +88,7 @@ function gameFixture() {
         selection: "Chiefs -3.5",
         pickType: "SPREAD",
         confidence: 78,
+        tier: "FREE",
         edgeScore: 60,
         consensusPct: 0.58,
         bookmakerCount: 3,
@@ -98,6 +99,25 @@ function gameFixture() {
         result: "PENDING",
         settledAt: null,
         generatedAt: new Date("2026-07-11T13:00:00.000Z"),
+        signalSnapshot: SNAPSHOT,
+        lossAutopsy: null,
+      },
+      {
+        id: "pick-2",
+        selection: "Raiders +3.5",
+        pickType: "SPREAD",
+        confidence: 91,
+        tier: "PREMIUM",
+        edgeScore: 72,
+        consensusPct: 0.61,
+        bookmakerCount: 4,
+        riskLevel: "LOW",
+        modelVersion: "v5.0.0",
+        isPublished: true,
+        isBootstrap: false,
+        result: "PENDING",
+        settledAt: null,
+        generatedAt: new Date("2026-07-11T12:45:00.000Z"),
         signalSnapshot: SNAPSHOT,
         lossAutopsy: null,
       },
@@ -119,7 +139,12 @@ function gameFixture() {
 
 function viewerFor(tier: "FREE" | "FANTASY" | "PRO" | "ELITE"): GameRoomViewer {
   const e = getEntitlements(tier);
-  return { canSeeFactorBreakdown: e.canSeeFactorBreakdown, canSeeLineMovement: e.canSeeLineMovement };
+  return {
+    canSeePremiumPicks: e.canSeePremiumPicks,
+    canSeeConfidence: e.canSeeConfidence,
+    canSeeFactorBreakdown: e.canSeeFactorBreakdown,
+    canSeeLineMovement: e.canSeeLineMovement,
+  };
 }
 
 // Marker strings emitted ONLY by the premium pre-mortem builder. Their absence
@@ -141,6 +166,10 @@ describe("loadGameRoom — server-side paywall (pre-mortem + line movement)", ()
     expect(room!.premortem).toBeNull();
     expect(room!.node.marketPulse.lineMovementSpread).toBeNull();
     expect(room!.node.marketPulse.lineMovementTotal).toBeNull();
+    expect(room!.node.picks).toHaveLength(1);
+    expect(room!.node.picks[0]?.confidence).toBeNull();
+    expect(room!.lenses.every((lens) => !lens.canShowConfidence)).toBe(true);
+    expect(room!.lenses.every((lens) => !lens.canShowFactorBreakdown)).toBe(true);
   });
 
   it("ANONYMOUS / FREE viewer: pre-mortem null, line movement null, no marker leaks", async () => {
@@ -162,6 +191,18 @@ describe("loadGameRoom — server-side paywall (pre-mortem + line movement)", ()
       expect(serialized).not.toContain(marker);
     }
     expect(serialized).not.toContain("78 confidence");
+    expect(serialized).not.toContain('"confidence":78');
+    expect(serialized).not.toContain('"confidence":91');
+    expect(serialized).not.toContain("Raiders +3.5");
+    expect(mocks.gameFindUnique).toHaveBeenCalledWith(
+      expect.objectContaining({
+        include: expect.objectContaining({
+          picks: expect.objectContaining({
+            where: expect.objectContaining({ tier: "FREE" }),
+          }),
+        }),
+      }),
+    );
   });
 
   it("FANTASY viewer is treated as FREE on the betting room (no full board access)", async () => {
@@ -169,6 +210,33 @@ describe("loadGameRoom — server-side paywall (pre-mortem + line movement)", ()
     expect(room!.premortem).toBeNull();
     expect(room!.node.marketPulse.lineMovementSpread).toBeNull();
     expect(room!.node.marketPulse.lineMovementTotal).toBeNull();
+    expect(room!.node.picks[0]?.confidence).toBeNull();
+  });
+
+  it("never exposes an unpublished loss-autopsy draft in public room memory", async () => {
+    const fixture = gameFixture();
+    mocks.gameFindUnique.mockResolvedValue({
+      ...fixture,
+      picks: [
+        {
+          ...fixture.picks[0]!,
+          result: "LOSS",
+          settledAt: new Date("2026-07-12T23:00:00.000Z"),
+          lossAutopsy: {
+            whatWeLearned: "INTERNAL DRAFT: change the injury prior before review.",
+            status: "DRAFT",
+            isPublic: false,
+          },
+        },
+        fixture.picks[1]!,
+      ],
+    });
+
+    const room = await loadGameRoom("game-1", viewerFor("FREE"));
+
+    expect(room!.memory.status).toBe("SETTLED_LOSS");
+    expect(room!.memory.body).toContain("full post-mortem has not been published");
+    expect(JSON.stringify(room)).not.toContain("INTERNAL DRAFT");
   });
 
   it("PRO viewer: pre-mortem built with confidence + factor trail, line movement served", async () => {
@@ -181,6 +249,14 @@ describe("loadGameRoom — server-side paywall (pre-mortem + line movement)", ()
     // Line movement served unchanged.
     expect(room!.node.marketPulse.lineMovementSpread).toBe(-2.5);
     expect(room!.node.marketPulse.lineMovementTotal).toBe(1.5);
+    expect(room!.node.picks).toHaveLength(2);
+    expect(room!.node.picks.map((pick) => pick.confidence)).toEqual([78, 91]);
+    expect(room!.lenses.find((lens) => lens.lens === "BETTOR")?.canShowConfidence).toBe(true);
+    expect(room!.lenses.find((lens) => lens.lens === "ANALYST")?.canShowFactorBreakdown).toBe(true);
+    const query = mocks.gameFindUnique.mock.calls.at(-1)?.[0] as {
+      include?: { picks?: { where?: Record<string, unknown> } };
+    };
+    expect(query.include?.picks?.where).not.toHaveProperty("tier");
   });
 
   it("ELITE viewer: full premium (unchanged for entitled callers)", async () => {

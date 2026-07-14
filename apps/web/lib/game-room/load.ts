@@ -40,20 +40,22 @@ export interface GameRoomData {
 /**
  * Viewer entitlements the room loader needs to gate premium fields server-side.
  *
- * The Game Room is a PUBLIC read-only surface, but two of its panels carry the
- * platform's paid metrics — the same ones the board (`/api/picks`) and the audit
- * route (#103) gate for FREE:
+ * The Game Room is a PUBLIC read-only surface, but its shared node can carry
+ * premium picks and paid metrics — the same values the board (`/api/picks`) and
+ * audit route (#103) gate for FREE:
  *
  *  - the pre-mortem note embeds the paid factor trail (confidence at prediction,
  *    line-movement delta, rest/schedule/ATS/H2H sample sizes, data-quality score,
  *    book depth — see `buildPickPremortemNote`), and
  *  - Market Pulse line movement is the Pro-tier market read (`canSeeLineMovement`).
  *
- * Both are built ONLY past the gate; un-entitled callers get null. Fail-closed by
- * default so a caller that forgets to pass entitlements (anonymous → FREE) can
- * never leak the paid data (CLAUDE.md rule #3 — enforcement is server-side only).
+ * Premium picks are filtered at query and projection boundaries. Confidence,
+ * factor trails, and line movement are built only past their matching gate.
+ * Defaults fail closed so a caller that omits entitlements cannot leak paid data.
  */
 export interface GameRoomViewer {
+  readonly canSeePremiumPicks: boolean;
+  readonly canSeeConfidence: boolean;
   /** PRO/ELITE — unlocks the pre-mortem factor trail (mirrors the audit route). */
   readonly canSeeFactorBreakdown: boolean;
   /** PRO/ELITE — unlocks Market Pulse line movement (mirrors the board). */
@@ -61,6 +63,8 @@ export interface GameRoomViewer {
 }
 
 const FAIL_CLOSED_VIEWER: GameRoomViewer = {
+  canSeePremiumPicks: false,
+  canSeeConfidence: false,
   canSeeFactorBreakdown: false,
   canSeeLineMovement: false,
 };
@@ -86,7 +90,11 @@ function memoryForPick(pick: {
   readonly result: string;
   readonly settledAt: Date | null;
   readonly selection: string;
-  readonly lossAutopsy: { readonly whatWeLearned: string } | null;
+  readonly lossAutopsy: {
+    readonly whatWeLearned: string;
+    readonly status: string;
+    readonly isPublic: boolean;
+  } | null;
 } | null): GameRoomMemory {
   if (!pick || pick.result === "PENDING") {
     return {
@@ -97,10 +105,14 @@ function memoryForPick(pick: {
   }
 
   if (pick.result === "LOSS") {
+    const publishedLearning =
+      pick.lossAutopsy?.isPublic && pick.lossAutopsy.status === "PUBLISHED"
+        ? pick.lossAutopsy.whatWeLearned
+        : null;
     return {
       status: "SETTLED_LOSS",
       body:
-        pick.lossAutopsy?.whatWeLearned ??
+        publishedLearning ??
         `Loss recorded for ${pick.selection}. A full post-mortem has not been published yet.`,
       settledAt: asIso(pick.settledAt),
     };
@@ -136,6 +148,7 @@ export async function loadGameRoom(
             isPublished: true,
             isBootstrap: false,
             NOT: { modelVersion: "v5.0.0-seed" },
+            ...(viewer.canSeePremiumPicks ? {} : { tier: "FREE" as const }),
           },
           include: {
             signalSnapshot: true,
@@ -154,11 +167,14 @@ export async function loadGameRoom(
 
   if (!game) return null;
 
-  const picks = game.picks.map((pick) => ({
+  const visibleGamePicks = viewer.canSeePremiumPicks
+    ? game.picks
+    : game.picks.filter((pick) => pick.tier === "FREE");
+  const picks = visibleGamePicks.map((pick) => ({
     id: pick.id,
     selection: pick.selection,
     market: pick.pickType,
-    confidence: pick.confidence,
+    confidence: viewer.canSeeConfidence ? pick.confidence : null,
     edgeScore: pick.edgeScore,
     isPublished: pick.isPublished,
     isBootstrap: pick.isBootstrap,
@@ -204,7 +220,7 @@ export async function loadGameRoom(
     averageEvidenceScore: node.evidenceHealth.score,
     bootstrapGameCount: node.marketPulse.gatedByBootstrap ? 1 : 0,
   };
-  const primaryPick = game.picks[0] ?? null;
+  const primaryPick = visibleGamePicks[0] ?? null;
   // The pre-mortem note embeds the paid factor trail — confidence at prediction,
   // line-movement delta, rest/schedule/ATS/H2H sample sizes, data-quality score,
   // and book depth (see `buildPickPremortemNote`). These are exactly the fields
@@ -226,7 +242,12 @@ export async function loadGameRoom(
       status: timelineStatus(signal, now),
     })),
     premortem,
-    lenses: LENSES.map((lens) => projectForLens(node, lens)),
+    lenses: LENSES.map((lens) =>
+      projectForLens(node, lens, {
+        canSeeConfidence: viewer.canSeeConfidence,
+        canSeeFactorBreakdown: viewer.canSeeFactorBreakdown,
+      }),
+    ),
     memory: memoryForPick(primaryPick),
   };
 }

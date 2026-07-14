@@ -57,7 +57,19 @@ describe("Intelligence Graph v0", () => {
 
     expect(projectForLens(node, "FAN").canShowEdgeIndex).toBe(true);
     expect(projectForLens(node, "FAN").canShowConfidence).toBe(false);
-    expect(projectForLens(node, "BETTOR").canShowConfidence).toBe(true);
-    expect(projectForLens(node, "ANALYST").canShowFactorBreakdown).toBe(true);
+    expect(projectForLens(node, "BETTOR").canShowConfidence).toBe(false);
+    expect(projectForLens(node, "ANALYST").canShowFactorBreakdown).toBe(false);
+    expect(
+      projectForLens(node, "BETTOR", {
+        canSeeConfidence: true,
+        canSeeFactorBreakdown: true,
+      }).canShowConfidence,
+    ).toBe(true);
+    expect(
+      projectForLens(node, "ANALYST", {
+        canSeeConfidence: true,
+        canSeeFactorBreakdown: true,
+      }).canShowFactorBreakdown,
+    ).toBe(true);
   });
 });

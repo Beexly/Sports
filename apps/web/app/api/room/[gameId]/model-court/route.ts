@@ -89,10 +89,11 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
   }
 
   // Pass the caller's real entitlements to the shared room loader so the paid
-  // pre-mortem factor trail and Market Pulse line movement are built for this
-  // request. The tier check above already 403s anyone below PRO/ELITE, so a
-  // caller reaching here is entitled — the grounding keeps its full market read.
+  // full premium room node is built for this request. The tier check above
+  // already rejects callers below PRO/ELITE.
   const room = await loadGameRoom(context.params.gameId, {
+    canSeePremiumPicks: entitlements.canSeePremiumPicks,
+    canSeeConfidence: entitlements.canSeeConfidence,
     canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
     canSeeLineMovement: entitlements.canSeeLineMovement,
   });

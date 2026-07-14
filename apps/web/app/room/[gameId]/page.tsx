@@ -20,11 +20,12 @@ export default async function GameRoomPage({
   params: { gameId: string };
 }): Promise<JSX.Element> {
   // Resolve the viewer's entitlements server-side (anonymous → FREE, fail-closed)
-  // and pass them into the shared loader so the paid pre-mortem factor trail and
-  // Market Pulse line movement are NEVER built for un-entitled callers — the
-  // public room only shows what FREE is allowed (CLAUDE.md rule #3).
+  // and pass them into the shared loader so premium picks, confidence, the paid
+  // factor trail, and line movement never enter an un-entitled payload.
   const viewer = await getViewerEntitlements();
   const room = await loadGameRoom(params.gameId, {
+    canSeePremiumPicks: viewer.canSeePremiumPicks,
+    canSeeConfidence: viewer.canSeeConfidence,
     canSeeFactorBreakdown: viewer.canSeeFactorBreakdown,
     canSeeLineMovement: viewer.canSeeLineMovement,
   });

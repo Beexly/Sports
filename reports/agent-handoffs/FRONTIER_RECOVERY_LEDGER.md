@@ -21,7 +21,7 @@ This file is the execution control plane. It is not a readiness claim.
 
 | ID | Severity | Current-main status | Evidence / next decisive check |
 |---|---:|---|---|
-| P0-1 Game Room entitlement leak | P0 | `VERIFYING_FIX` | Main includes #109 (`3ce5c4a1`). Run anonymous/FREE/paid/cockpit projection tests and planted forbidden-value checks across SSR/RSC/API/hydration. |
+| P0-1 Game Room entitlement leak | P0 | `FIX_VALIDATED` | #109 withheld pre-mortem and line movement but the shared node still serialized raw confidence, premium pick rows, entitlement-blind lens capabilities, and unpublished loss-autopsy drafts. The loader now filters at query and projection boundaries, defaults every capability closed, and exposes only published public autopsy copy. Nineteen focused loader/graph/route tests pass; production-build browser/RSC proof remains in the final matrix. |
 | P0-2 market units / false precision | P0 | `REPRODUCING` | Trace provider normalization through consensus, persistence, DTOs, settlement/CLV, and market-aware display; lock each confirmed defect with behavioral/property tests. |
 | P0-3 stub DB / false health / client boundary | P0 | `PARTIAL_FIX_VALIDATED` | Production import now rejects stub DB, health reports stub mode as 503, and DB tests run from the root workspace suite. Direct client-component imports were not found; production bundle/runtime verification remains. |
 | P0-4 performance / calibration / pricing contradiction | P0 | `REPRODUCING` | Compare eligible populations and prove whether raw strength scores enter probability-only metrics. |
@@ -88,6 +88,8 @@ This file is the execution control plane. It is not a readiness claim.
 | `npm run test --workspace=apps/web -- --run __tests__/public-freshness-gate.test.ts __tests__/picks-stale-kill-switch.test.ts __tests__/daily-slate-stale-kill-switch.test.ts __tests__/board-stale-kill-switch.test.ts` | 0 | 20/20 tests passed; global, per-sport, never-succeeded, empty-ingestion, and DB-error suppression paths covered | Handler tests use mocked persistence; browser proof remains in the final matrix. |
 | `npm run typecheck --workspace=packages/prediction-engine` | 0 | TypeScript passed after the safe-default flip | — |
 | `git diff --check` | 0 | Current stale-gate patch has no whitespace errors | — |
+| `npm run test --workspace=apps/web -- --run __tests__/game-room-paywall.test.ts __tests__/intelligence-graph.test.ts __tests__/game-room-route.test.ts __tests__/model-court-route.test.ts` | 0 | 19/19 tests passed; planted raw confidence, premium-pick, lens-capability, line-movement, factor-trail, and draft-autopsy leaks are withheld for default/FREE/FANTASY and preserved for PRO/ELITE | Browser/RSC flight verification remains in the final production-build matrix. |
+| `npm run typecheck --workspace=apps/web` | 0 | TypeScript passed after nullable public confidence and entitlement-aware projections | — |
 | Targeted tests | PENDING | — | Dependencies and existing suite topology under discovery. |
 | `npm.cmd run lint` | PENDING | — | — |
 | `npm.cmd run typecheck` | PENDING | — | — |
@@ -109,6 +111,9 @@ This file is the execution control plane. It is not a readiness claim.
 | `apps/web/lib/data-reliability/public-freshness-gate.ts` | Public-price truth lane | Compute fresh sports from real odds-inserting ingestion runs | VALIDATED |
 | `apps/web/app/api/picks/**`, `apps/web/lib/board/**` | Public-price truth lane | Fail closed and exclude stale sports from every actionable public query | VALIDATED |
 | `apps/web/__tests__/*stale*`, `apps/web/__tests__/public-freshness-gate.test.ts` | Public-price truth lane | Failing-first global, per-sport, and DB-error regressions | VALIDATED |
+| `apps/web/lib/game-room/load.ts`, `apps/web/lib/intelligence-graph/index.ts` | Entitlement lane | Filter premium picks and redact raw confidence, capabilities, and draft autopsies before serialization | VALIDATED |
+| `apps/web/app/room/[gameId]/page.tsx`, `apps/web/app/api/room/[gameId]/model-court/route.ts` | Entitlement lane | Pass the complete entitlement contract into the shared loader | VALIDATED |
+| `apps/web/__tests__/game-room-paywall.test.ts`, `apps/web/__tests__/intelligence-graph.test.ts` | Entitlement lane | Planted forbidden-field/value and fail-closed projection regressions | VALIDATED |
 
 ## Blockers and safe adjacent work
 
