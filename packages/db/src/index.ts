@@ -44,6 +44,13 @@ export function isStubDbUrl(url: string | undefined): boolean {
   return false;
 }
 
+export class ProductionDatabaseUnavailableError extends Error {
+  constructor() {
+    super("Production requires a real DATABASE_URL; the stub database client is disabled.");
+    this.name = "ProductionDatabaseUnavailableError";
+  }
+}
+
 // --- Pick-specific stub (with optional sample data) -------------------
 
 function pickStub() {
@@ -175,25 +182,16 @@ function buildClient(): PrismaClient {
   const force = process.env["FORCE_REAL_PRISMA"] === "true";
 
   if (!force && isStubDbUrl(url)) {
+    if (process.env["NODE_ENV"] === "production") {
+      throw new ProductionDatabaseUnavailableError();
+    }
+
     if (!globalForPrisma.prismaStubMode) {
       const detail = isDemoPicksEnabled()
         ? "DEMO_PICKS_ENABLED=true — pick.findMany returns sample data."
         : "All reads return empty results.";
-      if (process.env["NODE_ENV"] === "production") {
-        // Never silent in prod: a stub client here means DATABASE_URL is
-        // unset/sentinel and FORCE_REAL_PRISMA!=true, so every write is
-        // dropped and every read is empty while jobs still report success.
-        // eslint-disable-next-line no-console
-        console.error(
-          "[@sports/db] CRITICAL: stub Prisma client active in production. " +
-            "DATABASE_URL is unset/sentinel and FORCE_REAL_PRISMA!=true — " +
-            "writes are silently dropped. " +
-            detail
-        );
-      } else {
-        // eslint-disable-next-line no-console
-        console.warn("[@sports/db] stub Prisma client active (DATABASE_URL not set). " + detail);
-      }
+      // eslint-disable-next-line no-console
+      console.warn("[@sports/db] stub Prisma client active (DATABASE_URL not set). " + detail);
       globalForPrisma.prismaStubMode = true;
     }
     return makeStubClient();

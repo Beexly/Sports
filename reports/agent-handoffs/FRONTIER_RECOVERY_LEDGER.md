@@ -23,7 +23,7 @@ This file is the execution control plane. It is not a readiness claim.
 |---|---:|---|---|
 | P0-1 Game Room entitlement leak | P0 | `VERIFYING_FIX` | Main includes #109 (`3ce5c4a1`). Run anonymous/FREE/paid/cockpit projection tests and planted forbidden-value checks across SSR/RSC/API/hydration. |
 | P0-2 market units / false precision | P0 | `REPRODUCING` | Trace provider normalization through consensus, persistence, DTOs, settlement/CLV, and market-aware display; lock each confirmed defect with behavioral/property tests. |
-| P0-3 stub DB / false health / client boundary | P0 | `REPRODUCING` | Prove production fail-closed behavior, non-vacuous health, and absence of DB modules from client execution. |
+| P0-3 stub DB / false health / client boundary | P0 | `PARTIAL_FIX_VALIDATED` | Production import now rejects stub DB, health reports stub mode as 503, and DB tests run from the root workspace suite. Direct client-component imports were not found; production bundle/runtime verification remains. |
 | P0-4 performance / calibration / pricing contradiction | P0 | `REPRODUCING` | Compare eligible populations and prove whether raw strength scores enter probability-only metrics. |
 | P0-5 stale current-price surfaces | P0 | `REPRODUCING` | Exercise stale per-pick/per-sport data and DB errors at the public selection boundary. |
 | P0-6 fictional newsroom framed as live | P0 | `REPRODUCING` | Exercise demo/live source selection, dominant labels, review/rights state, hero and ledger parity. |
@@ -80,6 +80,10 @@ This file is the execution control plane. It is not a readiness claim.
 |---|---:|---|---|
 | `git fetch origin main --prune` | 0 | Live `origin/main` resolved to `3ce5c4a1` | Does not identify production deployment. |
 | `git status --short --branch` | 0 | Clean isolated execution branch | Local debug journal is excluded per clone. |
+| `npm.cmd run test --workspace=packages/db` | 0 | 14/14 tests passed, including production-stub fail-closed behavior | Pure package boundary; no real Postgres required. |
+| `npm.cmd run test --workspace=apps/web -- --run __tests__/health-route.test.ts` | 0 | 10/10 tests passed, including stub-mode 503 behavior | Uses the real health handler with a mocked DB boundary. |
+| `npm.cmd run typecheck --workspace=packages/db` | 0 | TypeScript passed | — |
+| `npm.cmd run typecheck --workspace=apps/web` | 0 | TypeScript passed | — |
 | Targeted tests | PENDING | — | Dependencies and existing suite topology under discovery. |
 | `npm.cmd run lint` | PENDING | — | — |
 | `npm.cmd run typecheck` | PENDING | — | — |
@@ -93,7 +97,10 @@ This file is the execution control plane. It is not a readiness claim.
 | Path | Owner | Purpose | Status |
 |---|---|---|---|
 | `reports/agent-handoffs/FRONTIER_RECOVERY_LEDGER.md` | Codex control plane | Execution evidence and decisions | ACTIVE |
-| Application/test files | Unassigned until failing evidence selects a work unit | — | UNTOUCHED |
+| `packages/db/src/index.ts` | Production truth lane | Reject write-dropping stub clients in production | VALIDATED |
+| `packages/db/src/__tests__/production-stub-fails-closed.test.ts` | Production truth lane | Failing-first production boundary regression | VALIDATED |
+| `packages/db/package.json`, `package-lock.json` | Production truth lane | Ensure DB tests execute from root CI | VALIDATED |
+| `apps/web/app/api/health/route.ts`, `apps/web/__tests__/health-route.test.ts` | Production truth lane | Non-vacuous stub-mode health contract | VALIDATED |
 
 ## Blockers and safe adjacent work
 

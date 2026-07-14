@@ -60,12 +60,14 @@ describe("/api/health", () => {
  */
 
 const dbMocks = vi.hoisted(() => ({
+  stubMode: false,
   queryRaw: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
 }));
 
 vi.mock("@sports/db", () => ({
+  isStubMode: () => dbMocks.stubMode,
   db: {
     $queryRaw: dbMocks.queryRaw,
     ingestionRun: { findFirst: dbMocks.ingestionRunFindFirst },
@@ -74,6 +76,7 @@ vi.mock("@sports/db", () => ({
 
 describe("/api/health — freshness threshold (executed)", () => {
   beforeEach(() => {
+    dbMocks.stubMode = false;
     dbMocks.queryRaw.mockReset();
     dbMocks.ingestionRunFindFirst.mockReset();
     // DB ping always healthy so the ingestion check drives the outcome.
@@ -116,5 +119,26 @@ describe("/api/health — freshness threshold (executed)", () => {
     expect(body.ok).toBe(true);
     expect(body.status).toBe("healthy");
     expect(body.checks.ingestion.status).toBe("ok");
+  });
+
+  it("reports error/503 when the stub client is active even if its vacuous ping succeeds", async () => {
+    // Given: the write-dropping stub is active and would return a successful
+    // empty array from `$queryRaw`, while ingestion appears fresh.
+    dbMocks.stubMode = true;
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+
+    // When: the public health handler evaluates runtime health.
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    // Then: stub mode is a database failure, never a healthy production signal.
+    expect(res.status).toBe(503);
+    expect(body.ok).toBe(false);
+    expect(body.checks.database).toEqual({
+      status: "error",
+      detail: "stub database client active",
+    });
+    expect(dbMocks.queryRaw).not.toHaveBeenCalled();
   });
 });
