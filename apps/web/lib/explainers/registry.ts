@@ -42,7 +42,7 @@ export const PAGE_EXPLAINERS: readonly PageExplainer[] = [
     intro: "New here? Ninety seconds and you'll know exactly where to go.",
     beats: [
       { tag: "The idea", body: "The market is mostly noise. Galaxy turns real sportsbook data into picks you can check. And tells you when not to bet." },
-      { tag: "Four doors", body: "Board is today's plays. Players is the lab. Intelligence is how we think. Fantasy & Daily is the toolkit. Pick the decision you came to make." },
+      { tag: "Four doors", body: "Board is today's plays. Players is the lab. Intelligence is how we think. Fantasy shows whether the player-tool data contract is ready. Pick the decision you came to make." },
       { tag: "The proof", body: "Every claim has a receipt. The Proof door shows calibration, closing line value, and the public ledger. Nothing is hidden." },
       { tag: "Your move", body: "Start at the Board if you want a play today, or open the Proof room first if you want to trust us before you do." },
     ],
@@ -93,6 +93,18 @@ export const PAGE_EXPLAINERS: readonly PageExplainer[] = [
       { tag: "Beat the close", body: "Closing line value is whether our price beat where the market closed. It's the number tout services never show." },
       { tag: "The ledger", body: "Every settled pick carries a tamper-evident receipt. Change one after the fact and the proof breaks." },
       { tag: "Your bets", body: "Track your own bets against the same closing-line benchmark we hold ourselves to." },
+    ],
+  },
+  {
+    route: "/fantasy",
+    title: "Why Fantasy is gated",
+    durationLabel: "0:35",
+    intro: "Fantasy advice stays closed until its player data, rights, and validation receipts are real.",
+    beats: [
+      { tag: "Source rights", body: "Player projections and salaries need documented customer-display rights before they can appear here." },
+      { tag: "Freshness", body: "A live release needs current rosters, usage, availability, schedules, and provider timestamps. A partial feed does not count." },
+      { tag: "Model receipt", body: "Every projection release needs a frozen model version, a dated backtest window, and error metrics you can inspect." },
+      { tag: "Fail closed", body: "If any required feed fails, the tool stays unavailable. Fictional players never fill a live-data gap." },
     ],
   },
   {

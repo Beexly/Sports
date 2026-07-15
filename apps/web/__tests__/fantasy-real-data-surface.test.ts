@@ -8,24 +8,26 @@ function read(rel: string): string {
   return readFileSync(resolve(repoRoot, rel), "utf8");
 }
 
-describe("Fantasy real-data entry surface", () => {
+describe("Fantasy public data gate", () => {
   const page = read("app/fantasy/page.tsx");
 
-  it("uses live source evidence instead of presenting fantasy tools as live on placeholders", () => {
-    expect(page).toMatch(/loadSourceLiveEvidence/);
-    expect(page).toMatch(/Real NFL usage backbone/);
-    expect(page).toMatch(/Player-stat rows/);
-    expect(page).toMatch(/Accepted research/);
-    expect(page).toMatch(/Rejected narratives/);
-    expect(page).toMatch(/Source JSON/);
-    expect(page).toMatch(/Baseline map/);
-    expect(page).toMatch(/LineStar \/ Elite baseline/);
+  it("renders a static release contract instead of implying partial source rows form a live product", () => {
+    expect(page).not.toMatch(/loadSourceLiveEvidence/);
+    expect(page).toMatch(/Fantasy \/ public data gate/);
+    expect(page).toMatch(/SOURCE RIGHTS/);
+    expect(page).toMatch(/FRESHNESS/);
+    expect(page).toMatch(/MODEL RECEIPT/);
+    expect(page).toMatch(/PUBLIC QA/);
+    expect(page).toMatch(/0 \/ 4 clear/);
+    expect(page).not.toMatch(/href="\/fantasy\//);
   });
 
   it("keeps projection-driven fantasy advice gated", () => {
-    expect(page).toMatch(/No fake projections/);
-    expect(page).toMatch(/projection-driven lineup, waiver, trade, DFS, or pick'em/);
-    expect(page).toMatch(/Projections/);
-    expect(page).toMatch(/gated/);
+    expect(page).toMatch(/No simulated salaries/);
+    expect(page).toMatch(/No fictional depth charts/);
+    expect(page).toMatch(/No placeholder projections/);
+    expect(page).toMatch(/Fictional players and sample salaries can never fill the gap/);
+    expect(page).toMatch(/Public availability/);
+    expect(page).toMatch(/Gated/);
   });
 });

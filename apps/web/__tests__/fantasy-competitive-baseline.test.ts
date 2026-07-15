@@ -6,6 +6,7 @@ import {
   FANTASY_BASELINE_SOURCES,
   fantasyBaselineSummary,
 } from "@/lib/fantasy/competitive-baseline";
+import { isPublicFantasyToolPath } from "@/lib/fantasy/public-gate";
 
 const repoRoot = resolve(__dirname, "..");
 
@@ -49,18 +50,14 @@ describe("Fantasy competitive baseline", () => {
     expect(FANTASY_BASELINE_MODULES.some((module) => module.currentTruth.includes("No public projection claims"))).toBe(true);
   });
 
-  it("makes the baseline route and navigation discoverable", () => {
+  it("keeps the baseline as an internal contract instead of public product discovery", () => {
     const page = read("app/fantasy/baseline/page.tsx");
     const fantasy = read("app/fantasy/page.tsx");
 
     expect(page).toMatch(/LineStar plus Elite Sports is the floor/);
     expect(page).toMatch(/FANTASY_BASELINE_MODULES/);
-    // The global nav was slimmed to ~6 top-level doors (Board, Players, Intelligence,
-    // Fantasy, Today, Pricing); the Fantasy ▾ dropdown now carries only the core
-    // manager/DFS tools plus Connect League. The /fantasy/baseline route stays
-    // discoverable from its own section (the /fantasy page), not the global chrome —
-    // so we assert discoverability there rather than re-adding a nav-bar deep link.
-    expect(fantasy).toMatch(/href="\/fantasy\/baseline"/);
+    expect(isPublicFantasyToolPath("/fantasy/baseline")).toBe(true);
+    expect(fantasy).not.toMatch(/href="\/fantasy\/baseline"/);
   });
 
   it("does not convert gated features into fake live claims", () => {
@@ -72,6 +69,7 @@ describe("Fantasy competitive baseline", () => {
 
     expect(combined.toLowerCase()).not.toContain("guaranteed");
     expect(combined).not.toMatch(/100% win/i);
-    expect(combined).toMatch(/No fake projections/);
+    expect(combined).toMatch(/No simulated salaries/);
+    expect(combined).toMatch(/No public projection claims/);
   });
 });

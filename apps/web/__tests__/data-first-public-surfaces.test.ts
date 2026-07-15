@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { getExplainer } from "@/lib/explainers/registry";
 
 const repoRoot = resolve(__dirname, "..", "..", "..");
 
@@ -92,8 +93,13 @@ describe("data-first public surfaces", () => {
     const middleware = read("apps/web/middleware.ts");
     const fantasy = read("apps/web/app/fantasy/page.tsx");
     const gate = read("apps/web/lib/fantasy/public-gate.ts");
-    const explainers = read("apps/web/lib/explainers/registry.ts");
     const commandPalette = read("apps/web/components/ui/command-palette.tsx");
+    const fantasyExplainer = getExplainer("/fantasy");
+    const explainerCopy = [
+      fantasyExplainer?.title,
+      fantasyExplainer?.intro,
+      ...(fantasyExplainer?.beats.map((beat) => beat.body) ?? []),
+    ].join(" ");
     expect(middleware).toMatch(/isPublicFantasyToolPath/);
     expect(middleware).toMatch(/fantasyGateDestination/);
     expect(gate).toMatch(/"\/optimizer"/);
@@ -103,7 +109,11 @@ describe("data-first public surfaces", () => {
     expect(fantasy).toMatch(/0 \/ 4 clear/);
     expect(fantasy).not.toMatch(/LEGACY_TOOL_ROUTES|TOOL_DIRECTORY|loadSourceLiveEvidence/);
     expect(fantasy).not.toMatch(/illustrative pool now|partly live/i);
-    expect(explainers).not.toMatch(/route:\s*"\/fantasy"/);
+    expect(fantasyExplainer).toBeDefined();
+    expect(explainerCopy).toMatch(/gated|stays closed/i);
+    expect(explainerCopy).toMatch(/rights/);
+    expect(explainerCopy).toMatch(/fail|unavailable/i);
+    expect(explainerCopy).not.toMatch(/optimizer is live|today's fantasy picks|open the tool/i);
     expect(commandPalette).toMatch(/hidden items-center[^"]*sm:flex/);
   });
 });

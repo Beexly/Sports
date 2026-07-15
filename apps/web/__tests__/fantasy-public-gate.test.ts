@@ -12,6 +12,7 @@ describe("public fantasy data gate", () => {
     "/fantasy/bestball",
     "/fantasy/connect",
     "/fantasy/dfs",
+    "/fantasy/baseline",
     "/fantasy/trade",
     "/fantasy/waivers",
     "/fantasy/new-future-tool",
