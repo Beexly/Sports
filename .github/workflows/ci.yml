@@ -4,7 +4,10 @@ on:
   push:
     branches: [main, "claude/*", "sports-intelligence-os-*"]
   pull_request:
-    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.repo.full_name || github.repository }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   # --------------------------------------------------------------
@@ -64,6 +67,9 @@ jobs:
 
       - name: Run tests (all workspaces)
         run: npm test
+
+      - name: Run Vercel skip-gate tests
+        run: node --test scripts/vercel-skip-build.test.mjs
 
   # --------------------------------------------------------------
   # 2. Build

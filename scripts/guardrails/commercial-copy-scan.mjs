@@ -10,6 +10,7 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { collapseStringJoins, normalizeScanText } from "./scan-normalize.mjs";
 
 const ROOT = resolve(process.cwd());
 const SCAN_TARGETS = [
@@ -23,6 +24,17 @@ const SCAN_TARGETS = [
   "apps/web/lib/media-revenue",
   "apps/web/lib/revenue",
 ];
+const PUBLIC_APP_ROOT = "apps/web/app";
+const RENDERED_ROUTE_FILES = new Set([
+  "page.tsx",
+  "layout.tsx",
+  "template.tsx",
+  "error.tsx",
+  "not-found.tsx",
+  "loading.tsx",
+  "opengraph-image.tsx",
+]);
+const PRIVATE_ROUTE_ROOTS = new Set(["api", "admin", "cockpit"]);
 const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx", ".md"]);
 const SKIP_PARTS = new Set(["__tests__", "node_modules", ".next", "dist", "coverage"]);
 const SKIP_PATH_PARTS = [
@@ -70,6 +82,25 @@ const EVIDENCE_REQUIRED = [
 
 const SAFE_POLICY_CONTEXT =
   /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance)\b/i;
+const TOUT_PATTERNS = [
+  ["lock", /\b(?:a|the|tonight'?s|today'?s|our) lock\b/i],
+  ["lock", /\block of the (?:day|night|week|year)\b/i],
+  ["lock", /\block it in\b/i],
+  ["guarantee", /\bguaranteed? (?:a )?(?:win|winner|profit|cash|money|return)/i],
+  ["guarantee", /\b(?:win|winner|profit)s? guaranteed\b/i],
+  ["risk free", /\brisk[- ]?free\b/i],
+  ["free money", /\bfree money\b/i],
+  ["can't lose", /\bcan'?t lose\b/i],
+  ["100% winner", /\b100% winners?\b/i],
+  ["sure thing", /\bsure thing\b/i],
+  ["easy money", /\beasy money\b/i],
+  ["mortgage play", /\bmortgage play\b/i],
+  ["max bet", /\bmax bet\b/i],
+  ["hammer this", /\bhammer this\b/i],
+  ["printing money", /\bprint(?:ing|s)? money\b/i],
+  ["can't miss", /\bcan'?t miss\b/i],
+  ["all in", /\b(?:go|going|goes|went) all[- ]?in\b/i],
+];
 
 function rel(filePath) {
   return relative(ROOT, filePath).split(sep).join("/");
@@ -107,8 +138,57 @@ async function walk(dir, files = []) {
   return files;
 }
 
+async function walkRenderedRoutes(dir, isRoot = true, files = []) {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return files;
+  }
+  for (const entry of entries) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (SKIP_PARTS.has(entry.name)) continue;
+      if (isRoot && PRIVATE_ROUTE_ROOTS.has(entry.name)) continue;
+      await walkRenderedRoutes(full, false, files);
+    } else if (entry.isFile() && RENDERED_ROUTE_FILES.has(entry.name)) {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
+function lineViews(line) {
+  const normalized = normalizeScanText(line).toLowerCase().trim();
+  const collapsed = collapseStringJoins(normalized);
+  return normalized === collapsed ? [normalized] : [normalized, collapsed];
+}
+
+function pairView(lines, index) {
+  if (index + 1 >= lines.length) return null;
+  return normalizeScanText(
+    `${collapseStringJoins(lines[index])} ${collapseStringJoins(lines[index + 1])}`,
+  ).toLowerCase();
+}
+
+function isSafeNear(subject, index, length) {
+  const start = Math.max(0, index - 60);
+  const end = Math.min(subject.length, index + length + 24);
+  const window = subject.slice(start, end);
+  const clauses = window.split(/[.!?;—]/);
+  const relativeIndex = index - start;
+  let offset = 0;
+  for (const clause of clauses) {
+    if (relativeIndex >= offset && relativeIndex <= offset + clause.length) {
+      return SAFE_POLICY_CONTEXT.test(clause);
+    }
+    offset += clause.length + 1;
+  }
+  return false;
+}
+
 function scanLine(line, relPath, lineNumber) {
-  const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+  const normalized = normalizeScanText(line).toLowerCase().trim();
   if (normalized.startsWith("import ") || normalized.startsWith("export ")) return [];
   if (/^\s*[A-Z0-9_]+(?:\s+as\s+[A-Z0-9_]+)?,?\s*$/.test(line)) return [];
   if (normalized.length === 0) return [];
@@ -132,9 +212,33 @@ function scanLine(line, relPath, lineNumber) {
   return hits;
 }
 
+function scanToutLine(lines, index, relPath) {
+  const hits = [];
+  const subjects = lineViews(lines[index]);
+  const paired = pairView(lines, index);
+  for (const [phrase, pattern] of TOUT_PATTERNS) {
+    const candidates = paired === null ? subjects : [...subjects, paired];
+    const unsafe = candidates.some((subject) => {
+      const match = pattern.exec(subject);
+      return match !== null && !isSafeNear(subject, match.index, match[0].length);
+    });
+    if (unsafe) {
+      hits.push({
+        claim: "commercial-copy.tout",
+        file: relPath,
+        line: index + 1,
+        phrase,
+        snippet: lines[index].trim().slice(0, 220),
+      });
+    }
+  }
+  return hits;
+}
+
 async function main() {
   const hits = [];
   let scanned = 0;
+  const deepScanned = new Set();
 
   for (const target of SCAN_TARGETS) {
     const abs = resolve(ROOT, target);
@@ -146,12 +250,22 @@ async function main() {
     }
     const files = targetStat.isDirectory() ? await walk(abs) : [abs];
     for (const file of files) {
-      if (shouldSkipFile(file)) continue;
+      if (deepScanned.has(file) || shouldSkipFile(file)) continue;
+      deepScanned.add(file);
       scanned++;
       const text = await readFile(file, "utf8");
       const relPath = rel(file);
       text.split(/\r?\n/).forEach((line, index) => hits.push(...scanLine(line, relPath, index + 1)));
     }
+  }
+
+  const renderedRoutes = await walkRenderedRoutes(resolve(ROOT, PUBLIC_APP_ROOT));
+  for (const file of renderedRoutes) {
+    if (deepScanned.has(file) || shouldSkipFile(file)) continue;
+    scanned++;
+    const lines = (await readFile(file, "utf8")).split(/\r?\n/);
+    const relPath = rel(file);
+    lines.forEach((_line, index) => hits.push(...scanToutLine(lines, index, relPath)));
   }
 
   if (hits.length === 0) {

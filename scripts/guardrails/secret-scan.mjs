@@ -41,6 +41,11 @@ const SECRET_RULES = [
   { id: "aws.access-key", re: /\bAKIA[0-9A-Z]{16}\b/ },
   { id: "google.oauth.secret", re: /\bGOCSPX-[A-Za-z0-9_-]{20,}\b/ },
   { id: "openai.key", re: /\bsk-proj-[A-Za-z0-9_-]{30,}\b/ },
+  { id: "openai.key.legacy", re: /\bsk-[A-Za-z0-9]{20}T3BlbkFJ[A-Za-z0-9]{20}\b/ },
+  { id: "github.token", re: /\bgh[pousr]_[A-Za-z0-9]{30,}\b/ },
+  { id: "github.pat.fine-grained", re: /\bgithub_pat_[A-Za-z0-9_]{50,}\b/ },
+  { id: "slack.token", re: /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/ },
+  { id: "neon.api-key", re: /\bnapi_[A-Za-z0-9]{40,}\b/ },
   { id: "private-key-block", re: /-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----/ },
   // A Postgres/connection URL that embeds a password AND points at a real
   // remote host (not localhost / docker service names). Dev strings like
@@ -48,26 +53,42 @@ const SECRET_RULES = [
   {
     id: "db.url.with-password",
     re: /\bpostgres(?:ql)?:\/\/[^\s:/@]+:([^\s:/@]{6,})@([^\s:/?#]+)/,
-    guard: (m) => {
-      const pass = (m[1] || "").toLowerCase();
-      const host = (m[2] || "").toLowerCase();
-      const localHost =
-        host === "localhost" ||
-        host === "127.0.0.1" ||
-        host === "db" ||
-        host === "postgres" ||
-        host === "database" ||
-        host.endsWith(".local") ||
-        host.endsWith(".internal");
-      const devPass = ["postgres", "password", "changeme", "secret", "example", "dev"].includes(pass);
-      return !localHost && !devPass;
-    },
+    guard: (m) => isRemoteCredential(m[1], m[2]),
+  },
+  {
+    id: "redis.url.with-password",
+    re: /\brediss?:\/\/[^\s:/@]*:([^\s:/@]{6,})@([^\s:/?#]+)/,
+    guard: (m) => isRemoteCredential(m[1], m[2]),
   },
 ];
 
+function isRemoteCredential(rawPassword, rawHost) {
+  const password = (rawPassword || "").toLowerCase();
+  const host = (rawHost || "").toLowerCase();
+  const isLocal =
+    host === "localhost" ||
+    host === "127.0.0.1" ||
+    host === "db" ||
+    host === "redis" ||
+    host === "postgres" ||
+    host === "database" ||
+    host.endsWith(".local") ||
+    host.endsWith(".internal");
+  const isDevelopmentPassword = [
+    "postgres",
+    "password",
+    "changeme",
+    "secret",
+    "example",
+    "dev",
+  ].includes(password);
+  return !isLocal && !isDevelopmentPassword;
+}
+
 const PLACEHOLDER = /placeholder|example|dummy|redacted|changeme|your[-_]|xxxx|<[^>]+>|\.\.\./i;
 
-const SKIP_DIRS = new Set(["node_modules", ".git", ".next", "dist", "build", "coverage"]);
+const SKIP_DIRS_ALWAYS = new Set(["node_modules", ".git"]);
+const SKIP_DIRS_ARTIFACTS = new Set([".next", "dist", "build", "coverage"]);
 
 // This scanner and the key-rotation helper legitimately contain provider
 // prefixes as detection / construction strings.
@@ -76,19 +97,34 @@ const WHITELIST = new Set([
   "scripts/rotate-anthropic-key.mjs",
 ]);
 
-function isSkipped(relNorm) {
+function isSkipped(relNorm, scanAll) {
   if (WHITELIST.has(relNorm)) return true;
-  return relNorm.split("/").some((seg) => SKIP_DIRS.has(seg));
+  return relNorm
+    .split("/")
+    .some(
+      (segment) =>
+        SKIP_DIRS_ALWAYS.has(segment) ||
+        (!scanAll && SKIP_DIRS_ARTIFACTS.has(segment)),
+    );
 }
 
 function stagedFiles() {
   const r = spawnSync(
     "git",
-    ["diff", "--cached", "--name-only", "--diff-filter=ACM"],
+    ["diff", "--cached", "--name-only", "--diff-filter=ACMR"],
     { cwd: ROOT, encoding: "utf8" }
   );
   if (r.status !== 0) return [];
   return r.stdout.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+}
+
+function stagedContent(relPath) {
+  const result = spawnSync("git", ["show", `:${relPath}`], {
+    cwd: ROOT,
+    encoding: "utf8",
+    maxBuffer: 8_000_000,
+  });
+  return result.status === 0 ? result.stdout : null;
 }
 
 function allTrackedFiles() {
@@ -100,15 +136,8 @@ function allTrackedFiles() {
   return r.stdout.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
 }
 
-function scanFile(absPath, relNorm) {
+function scanText(text) {
   const hits = [];
-  let text;
-  try {
-    if (statSync(absPath).size > 2_000_000) return hits; // skip large/binary
-    text = readFileSync(absPath, "utf8");
-  } catch {
-    return hits;
-  }
   const lines = text.split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -123,10 +152,22 @@ function scanFile(absPath, relNorm) {
   return hits;
 }
 
+function scanFile(absPath) {
+  try {
+    if (statSync(absPath).size > 2_000_000) {
+      return { hits: [], skippedLarge: true };
+    }
+    return { hits: scanText(readFileSync(absPath, "utf8")), skippedLarge: false };
+  } catch {
+    return { hits: [], skippedLarge: false };
+  }
+}
+
 function main() {
   const rawArgs = process.argv.slice(2);
   const argPaths = rawArgs.filter((a) => !a.startsWith("--"));
   const scanAll = rawArgs.includes("--all");
+  const stagedMode = !scanAll && argPaths.length === 0;
   // --all (full tree) wins over explicit paths, which win over the staged set.
   const files = scanAll
     ? allTrackedFiles()
@@ -136,20 +177,39 @@ function main() {
 
   let allHits = [];
   let scanned = 0;
+  let skippedLarge = 0;
   for (const f of files) {
     const abs = resolve(ROOT, f);
     const relNorm = relative(ROOT, abs).split(sep).join("/");
-    if (isSkipped(relNorm)) continue;
+    if (isSkipped(relNorm, scanAll)) continue;
     scanned++;
-    for (const hit of scanFile(abs, relNorm)) {
-      allHits.push({ file: relNorm, ...hit });
+    if (stagedMode) {
+      const content = stagedContent(relNorm);
+      if (content === null) continue;
+      for (const hit of scanText(content)) {
+        allHits.push({ file: relNorm, ...hit });
+      }
+    } else {
+      const result = scanFile(abs);
+      if (result.skippedLarge) skippedLarge++;
+      for (const hit of result.hits) {
+        allHits.push({ file: relNorm, ...hit });
+      }
     }
   }
 
   const mode = scanAll ? "all-tracked" : argPaths.length ? "paths" : "staged";
+  const largeFileNote =
+    skippedLarge > 0 ? ` (${skippedLarge} file(s) over 2 MB not scanned)` : "";
   if (allHits.length === 0) {
     console.log(
-      "[secret-scan] OK - scanned " + scanned + " file(s) [" + mode + "]; no secrets detected."
+      "[secret-scan] OK - scanned " +
+        scanned +
+        " file(s) [" +
+        mode +
+        "]" +
+        largeFileNote +
+        "; no secrets detected."
     );
     process.exit(0);
   }

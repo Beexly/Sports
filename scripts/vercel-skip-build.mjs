@@ -13,7 +13,9 @@
  *
  * The pure `shouldBuild()` is exported + unit-tested; the script wires env + git to it.
  */
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 /**
  * Refs we always build. Production `main` is always a trunk; the active development
@@ -35,8 +37,18 @@ export function resolveTrunks(env = process.env) {
 export const TRUNK_BRANCHES = resolveTrunks();
 
 /** A push touching any of these should build. */
-const BUILD_PATH_PREFIXES = ["apps/web/", "packages/", "workers/"];
-const BUILD_PATH_EXACT = ["package.json", "package-lock.json", "vercel.json"];
+const BUILD_PATH_PREFIXES = [
+  "apps/web/",
+  "packages/",
+  "workers/",
+  "scripts/deploy/",
+];
+const BUILD_PATH_EXACT = [
+  "package.json",
+  "package-lock.json",
+  "vercel.json",
+  "scripts/vercel-skip-build.mjs",
+];
 
 /**
  * Pure decision: should Vercel build this commit?
@@ -64,28 +76,41 @@ export function isMergeCommit(revListParentsLine) {
 }
 
 /** Changed files vs the parent commit. Returns null when it can't be determined. */
-function changedFilesFromGit() {
-  try {
-    const out = execSync("git diff --name-only HEAD^ HEAD", { encoding: "utf8" });
-    return out.split("\n").map((l) => l.trim()).filter(Boolean);
-  } catch {
-    return null; // first commit / git unavailable → build to be safe
+export function resolveDiffBases(env = process.env) {
+  const previousSha = (env.VERCEL_GIT_PREVIOUS_SHA ?? "").trim();
+  if (previousSha.length === 0) return ["HEAD^"];
+  return /^[0-9a-f]{7,40}$/i.test(previousSha) ? [previousSha] : [];
+}
+
+export function changedFilesFromGit(env = process.env, runner = spawnSync) {
+  for (const base of resolveDiffBases(env)) {
+    const result = runner("git", ["diff", "--name-only", base, "HEAD"], {
+      encoding: "utf8",
+      maxBuffer: 8_000_000,
+    });
+    if (result.status === 0) {
+      return result.stdout
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+    }
   }
+  return null;
 }
 
 /** True when HEAD is a merge commit (force-build). Safe-fails to false. */
-function headIsMerge() {
-  try {
-    return isMergeCommit(execSync("git rev-list --parents -n 1 HEAD", { encoding: "utf8" }));
-  } catch {
-    return false;
-  }
+export function headIsMerge(runner = spawnSync) {
+  const result = runner("git", ["rev-list", "--parents", "-n", "1", "HEAD"], {
+    encoding: "utf8",
+  });
+  return result.status !== 0 || isMergeCommit(result.stdout);
 }
 
 // Run as a script (not when imported by the test).
-if (import.meta.url === `file://${process.argv[1]}`) {
+const invokedPath = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : "";
+if (import.meta.url === invokedPath) {
   const branch = process.env.VERCEL_GIT_COMMIT_REF ?? "";
-  const changedFiles = changedFilesFromGit();
+  const changedFiles = changedFilesFromGit(process.env);
   // Force-build on merge commits and when the diff can't be determined (fail safe).
   const build = headIsMerge() || changedFiles === null ? true : shouldBuild({ branch, changedFiles });
   if (build) {

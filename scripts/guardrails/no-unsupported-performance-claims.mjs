@@ -10,6 +10,7 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { collapseStringJoins, normalizeScanText } from "./scan-normalize.mjs";
 
 const ROOT = resolve(process.cwd());
 const SCAN_TARGETS = [
@@ -22,6 +23,24 @@ const SCAN_TARGETS = [
   "apps/web/app/promotions",
   "apps/web/lib/media-revenue",
   "apps/web/lib/revenue",
+];
+const PUBLIC_APP_ROOT = "apps/web/app";
+const RENDERED_ROUTE_FILES = new Set([
+  "page.tsx",
+  "layout.tsx",
+  "template.tsx",
+  "error.tsx",
+  "not-found.tsx",
+  "loading.tsx",
+  "opengraph-image.tsx",
+]);
+const PRIVATE_ROUTE_ROOTS = new Set(["api", "admin", "cockpit"]);
+const NUMERIC_CLAIM_PATTERNS = [
+  ["percent-performance", /\b\d{1,3}(?:\.\d+)?%\s*(?:win|hit|roi|accuracy|success)\b/i],
+  ["percent-performance", /\b(?:win|hit|success)(?:\s|-)rate of \d{1,3}(?:\.\d+)?%/i],
+  ["units-won", /\b(?:up|won|\+)\s?\d+(?:\.\d+)?\s?units\b/i],
+  ["streak-claim", /\b(?:hit|won|cash(?:ed)?) \d+ of (?:the )?last \d+\b/i],
+  ["record-claim", /\b\d+[-–]\d+\s+(?:ats|run|streak|record)\b/i],
 ];
 const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx"]);
 const SKIP_DIRS = new Set(["__tests__", "node_modules", ".next", "dist", "coverage"]);
@@ -91,8 +110,41 @@ async function walk(dir, files = []) {
   return files;
 }
 
+async function walkRenderedRoutes(dir, isRoot = true, files = []) {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return files;
+  }
+  for (const entry of entries) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (SKIP_DIRS.has(entry.name)) continue;
+      if (isRoot && PRIVATE_ROUTE_ROOTS.has(entry.name)) continue;
+      await walkRenderedRoutes(full, false, files);
+    } else if (entry.isFile() && RENDERED_ROUTE_FILES.has(entry.name)) {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
+function lineViews(line) {
+  const normalized = normalizeScanText(line).toLowerCase().trim();
+  const collapsed = collapseStringJoins(normalized);
+  return normalized === collapsed ? [normalized] : [normalized, collapsed];
+}
+
+function pairView(lines, index) {
+  if (index + 1 >= lines.length) return null;
+  return normalizeScanText(
+    `${collapseStringJoins(lines[index])} ${collapseStringJoins(lines[index + 1])}`,
+  ).toLowerCase();
+}
+
 function scanLine(line, relPath, lineNumber) {
-  const normalized = line.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+  const normalized = normalizeScanText(line).toLowerCase().trim();
   if (normalized.length === 0 || SAFE_CONTEXT.test(normalized)) return [];
   return CLAIMS.filter((claim) => phraseRegex(claim).test(normalized)).map((claim) => ({
     claim,
@@ -102,9 +154,31 @@ function scanLine(line, relPath, lineNumber) {
   }));
 }
 
+function scanNumericClaimLine(lines, index, relPath) {
+  const subjects = lineViews(lines[index]);
+  const paired = pairView(lines, index);
+  const candidates = paired === null ? subjects : [...subjects, paired];
+  const hits = [];
+  for (const [label, pattern] of NUMERIC_CLAIM_PATTERNS) {
+    const unsupported = candidates.some(
+      (subject) => pattern.test(subject) && !SAFE_CONTEXT.test(subject),
+    );
+    if (unsupported) {
+      hits.push({
+        claim: `hardcoded-numeric:${label}`,
+        file: relPath,
+        line: index + 1,
+        snippet: lines[index].trim().slice(0, 220),
+      });
+    }
+  }
+  return hits;
+}
+
 async function main() {
   const hits = [];
   let scanned = 0;
+  const deepScanned = new Set();
   for (const target of SCAN_TARGETS) {
     const abs = resolve(ROOT, target);
     let targetStat;
@@ -115,12 +189,24 @@ async function main() {
     }
     const files = targetStat.isDirectory() ? await walk(abs) : [abs];
     for (const file of files) {
-      if (shouldSkipFile(file)) continue;
+      if (deepScanned.has(file) || shouldSkipFile(file)) continue;
+      deepScanned.add(file);
       scanned++;
       const text = await readFile(file, "utf8");
       const relPath = rel(file);
       text.split(/\r?\n/).forEach((line, index) => hits.push(...scanLine(line, relPath, index + 1)));
     }
+  }
+
+  const renderedRoutes = await walkRenderedRoutes(resolve(ROOT, PUBLIC_APP_ROOT));
+  for (const file of renderedRoutes) {
+    if (shouldSkipFile(file)) continue;
+    if (!deepScanned.has(file)) scanned++;
+    const lines = (await readFile(file, "utf8")).split(/\r?\n/);
+    const relPath = rel(file);
+    lines.forEach((_line, index) =>
+      hits.push(...scanNumericClaimLine(lines, index, relPath)),
+    );
   }
 
   if (hits.length === 0) {
