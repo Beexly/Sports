@@ -6,7 +6,7 @@ import Image from "next/image";
  * Real data only: the matchup, the pick, the line, the settled result, and the
  * closing-line-value read are all passed in from the real settled-pick record.
  * It states the outcome honestly (WIN / LOSS / PUSH / PENDING) and never frames
- * a result as a guarantee, confidence is shown as a calibrated label, never a
+ * a result as a guarantee, confidence is shown as an evidence label, never a
  * promise. Built at a social-friendly footprint for screenshot / opengraph use.
  */
 
@@ -20,7 +20,6 @@ export interface ResultCardProps {
   /** Optional line/price detail, e.g. "-110". */
   readonly line?: string;
   readonly result: CardResult;
-  /** A calibrated confidence label (never a guarantee). */
   readonly confidenceLabel?: string;
   /** Closing-line-value read, e.g. "+1.2 pts CLV". */
   readonly clvLabel?: string;

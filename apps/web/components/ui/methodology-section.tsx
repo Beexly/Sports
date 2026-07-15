@@ -58,9 +58,9 @@ const ITEMS: readonly MethodologyItem[] = [
     lane: "data",
   },
   {
-    title: "Calibrated confidence presentation",
+    title: "Strength and probability stay separate",
     claimId: "methodology.confidence-presentation",
-    hint: "Until we have enough settled outcomes to calibrate against, confidence is shown as a label, not a number.",
+    hint: "The strength score may rank signals; win probability stays hidden until it is frozen pregame and clears calibration policy.",
     lane: "model",
   },
   {
@@ -175,8 +175,8 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
               <div className="grid grid-cols-2 gap-px bg-mineral lg:grid-cols-4">
                 <LedgerStat
                   value={metrics.settled}
-                  label={metrics.settled > 0 ? "Settled picks calibrated" : "Calibration sample"}
-                  sub={metrics.settled > 0 ? "the only basis for any number" : "building honestly"}
+                  label={metrics.settled > 0 ? "Eligible settled picks" : "Outcome sample"}
+                  sub={metrics.settled > 0 ? "the basis for rank and probability audits" : "building honestly"}
                   tone="ion"
                   group
                 />

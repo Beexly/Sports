@@ -78,6 +78,7 @@ export async function GET(
       signalSnapshot: true,
       game: {
         include: {
+          sport: { select: { name: true } },
           odds: {
             select: {
               ingestionRunId: true,
@@ -302,6 +303,7 @@ export async function GET(
       generatedAt: pick.generatedAt,
       homeTeamName: pick.game.homeTeamName,
       awayTeamName: pick.game.awayTeamName,
+      sport: pick.game.sport.name,
     },
     (pick.game.odds ?? []).map((o) => ({
       bookmaker: o.bookmaker,

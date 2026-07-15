@@ -35,7 +35,7 @@ interface PicksResponse {
     tier: string;
     total: number;
     date: string;
-    totalAvailableToday?: number;
+    totalAvailableToday?: number | null;
     hitDailyLimit?: boolean;
   };
   bootstrap?: {

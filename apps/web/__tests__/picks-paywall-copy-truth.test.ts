@@ -203,8 +203,10 @@ describe("/picks — the server paywall is NOT weakened by the copy fix", () => 
     );
   });
 
-  it("still caps the query take to the entitled daily limit", () => {
-    expect(routeSrc).toMatch(/take:\s*entitlements\.dailyPickLimit\s*\?\?\s*200/);
+  it("still caps the response to the entitled daily limit after projection", () => {
+    expect(routeSrc).toMatch(/take:\s*candidateTake/);
+    expect(routeSrc).toMatch(/const publicPicks\s*=\s*projectedPicks\.slice/);
+    expect(routeSrc).toMatch(/dailyLimit === null[\s\S]{0,100}Math\.max\(0, dailyLimit\)/);
   });
 
   it("still gates confidence on the viewer entitlement, not the pick tier", () => {

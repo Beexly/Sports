@@ -16,12 +16,12 @@
 // `@/lib/seo/sports-jsonld` importers keep working.
 export { SITE_URL } from "./site-url";
 import { SITE_URL } from "./site-url";
+import { formatCanonicalPickLine } from "@sports/types";
 
 export type MatchupPick = {
   readonly type: "SPREAD" | "MONEYLINE" | "TOTAL";
   readonly selection: string;
   readonly line: number;
-  readonly confidence: number; // 0–100
 };
 
 export type MatchupPreviewInput = {
@@ -50,16 +50,23 @@ export function matchupCanonical(input: MatchupPreviewInput): string {
   return `${SITE_URL}${matchupPath(input.sport, input.awayTeam, input.homeTeam)}`;
 }
 
+function canonicalPick(input: MatchupPreviewInput): MatchupPick | null {
+  if (!input.pick) return null;
+  return formatCanonicalPickLine(input.pick.type, input.sport, input.pick.line) === "N/A"
+    ? null
+    : input.pick;
+}
+
 function pickSentence(pick: MatchupPick): string {
-  const line = pick.type === "MONEYLINE" ? "" : ` ${pick.line > 0 ? "+" : ""}${pick.line}`;
-  return `Our model's lean: ${pick.selection}${line} (${pick.type.toLowerCase()}), confidence ${Math.round(pick.confidence)}/100.`;
+  return `Our model's lean: ${pick.selection} (${pick.type.toLowerCase()}).`;
 }
 
 export function buildMatchupMetadata(input: MatchupPreviewInput): { title: string; description: string; canonical: string } {
   const base = `${input.awayTeam} vs ${input.homeTeam} prediction & pick`;
   const sportUpper = input.sport.toUpperCase();
-  const lead = input.pick
-    ? `${input.pick.selection} ${input.pick.type === "MONEYLINE" ? "ML" : input.pick.line}, ${Math.round(input.pick.confidence)}/100 confidence.`
+  const pick = canonicalPick(input);
+  const lead = pick
+    ? `${pick.selection}.`
     : "Model read, line, and matchup context.";
   return {
     title: `${base} | ${sportUpper}`,
@@ -123,10 +130,11 @@ export function buildFaqJsonLd(faq: ReadonlyArray<{ q: string; a: string }>): Re
 
 /** Default, fact-templated FAQ when a page doesn't supply its own. */
 export function defaultMatchupFaq(input: MatchupPreviewInput): Array<{ q: string; a: string }> {
+  const pick = canonicalPick(input);
   const faq: Array<{ q: string; a: string }> = [
     {
       q: `Who is favored in ${input.awayTeam} vs ${input.homeTeam}?`,
-      a: input.pick ? pickSentence(input.pick) : `See the latest model read and market line for ${input.awayTeam} at ${input.homeTeam}.`,
+      a: pick ? pickSentence(pick) : `See the latest model read and market line for ${input.awayTeam} at ${input.homeTeam}.`,
     },
     { q: `When do ${input.awayTeam} and ${input.homeTeam} play?`, a: `Scheduled for ${input.startTimeIso}${input.venue ? ` at ${input.venue}` : ""}.` },
   ];

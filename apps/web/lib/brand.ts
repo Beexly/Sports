@@ -153,7 +153,7 @@ export const SURFACES = {
     label: "Eclipse Gate",
     tagline: "Verified conviction state.",
     blurb:
-      "Verified conviction state. A calibrated indicator, never an outcome promise.",
+      "Verified conviction state. An evidence threshold, never an outcome promise.",
     route: "/eclipse-gate",
   },
   edgeIndex: {
@@ -174,7 +174,7 @@ export const SURFACES = {
     label: "Calibration Report",
     tagline: "Performance, model accuracy, methodology.",
     blurb:
-      "The published record: wins, losses, pushes, ROI, and model calibration. Gated until the data can honestly support a number.",
+      "The published record: wins, losses, pushes, ROI, rank quality, and probability reliability when evidence supports it.",
     route: "/performance",
   },
   methodology: {
@@ -266,5 +266,5 @@ export const BANNED_LANGUAGE = [
 export const APPROVED_LANGUAGE = {
   highConfidence: "confidence-rated signal",
   bestPick: "highest-Edge-Index signal",
-  modelEdge: "calibrated edge",
+  modelEdge: "evidence-backed edge",
 } as const;

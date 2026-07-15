@@ -12,6 +12,7 @@
 
 import { db as prisma } from "@sports/db";
 import type { OddsMarket } from "@prisma/client";
+import { buildMarketPointDelta, normalizeMarketPoint } from "@sports/types";
 
 // ============================================================
 // ATS cover grading (pure)
@@ -54,7 +55,8 @@ export function gradeAtsCover(actualMargin: number, spread: number): AtsCover {
 export async function trackOpeningLines(
   gameId: string,
   currentSpread: number | null,
-  currentTotal: number | null
+  currentTotal: number | null,
+  sport: string,
 ): Promise<{ lineMovementSpread: number | null; lineMovementTotal: number | null }> {
   const result = {
     lineMovementSpread: null as number | null,
@@ -62,7 +64,8 @@ export async function trackOpeningLines(
   };
 
   // Handle spread opening line
-  if (currentSpread !== null) {
+  const canonicalSpread = normalizeMarketPoint("SPREAD_POINTS", sport, currentSpread);
+  if (canonicalSpread) {
     const spreadMarket: OddsMarket = "SPREADS";
     const existing = await prisma.openingLine.findUnique({
       where: { gameId_market: { gameId, market: spreadMarket } },
@@ -71,16 +74,21 @@ export async function trackOpeningLines(
     if (!existing) {
       // First sight — store as opening line
       await prisma.openingLine.create({
-        data: { gameId, market: spreadMarket, spread: currentSpread },
+        data: { gameId, market: spreadMarket, spread: canonicalSpread.normalized },
       });
     } else if (existing.spread !== null) {
-      // Subsequent fetch — compute movement
-      result.lineMovementSpread = currentSpread - existing.spread;
+      result.lineMovementSpread = buildMarketPointDelta(
+        "SPREAD_POINTS",
+        sport,
+        existing.spread,
+        canonicalSpread.normalized,
+      )?.normalized ?? null;
     }
   }
 
   // Handle total opening line
-  if (currentTotal !== null) {
+  const canonicalTotal = normalizeMarketPoint("TOTAL_POINTS", sport, currentTotal);
+  if (canonicalTotal) {
     const totalMarket: OddsMarket = "TOTALS";
     const existing = await prisma.openingLine.findUnique({
       where: { gameId_market: { gameId, market: totalMarket } },
@@ -88,10 +96,15 @@ export async function trackOpeningLines(
 
     if (!existing) {
       await prisma.openingLine.create({
-        data: { gameId, market: totalMarket, total: currentTotal },
+        data: { gameId, market: totalMarket, total: canonicalTotal.normalized },
       });
     } else if (existing.total !== null) {
-      result.lineMovementTotal = currentTotal - existing.total;
+      result.lineMovementTotal = buildMarketPointDelta(
+        "TOTAL_POINTS",
+        sport,
+        existing.total,
+        canonicalTotal.normalized,
+      )?.normalized ?? null;
     }
   }
 
@@ -306,7 +319,8 @@ export async function enrichGameContext(input: GameEnrichmentInput): Promise<voi
   const { lineMovementSpread, lineMovementTotal } = await trackOpeningLines(
     gameId,
     avgSpread,
-    avgTotal
+    avgTotal,
+    sport,
   );
 
   // 2. Rest days for both teams

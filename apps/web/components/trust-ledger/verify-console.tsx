@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { formatCommittedMarket } from "@/lib/market/format-committed-market";
 
 /**
  * VerifyConsole — the interactive half of /verify. Takes a receipt hash,
@@ -22,13 +23,13 @@ type VerifyResponse = {
   result?: string;
   game?: { matchup: string; sport: string; commenceTime: string } | null;
   committed?: {
-    line: number;
+    selection: string;
     entryOdds: number;
-    marketFairProb: number;
-    confidence: number;
-    edgeScore: number;
+    marketFairProb: number | null;
+    confidence: number | null;
+    edgeScore: number | null;
     modelProb: number | null;
-  };
+  } | null;
   payload?: string;
   contentHash?: string;
   pickId?: string;
@@ -356,22 +357,25 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
                 {res.committed && (
                   <>
                     <div className="flex justify-between gap-4">
-                      <dt className="text-ion-2">Committed line / entry price</dt>
+                      <dt className="text-ion-2">Committed selection / entry price</dt>
                       <dd className="break-all text-right font-mono text-ion-white">
-                        {res.committed.line} at {res.committed.entryOdds > 0 ? "+" : ""}
-                        {res.committed.entryOdds}
+                        {formatCommittedMarket(res.committed.selection, res.committed.entryOdds)}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
                       <dt className="text-ion-2">Market fair probability</dt>
                       <dd className="break-all text-right font-mono text-ion-white">
-                        {(res.committed.marketFairProb * 100).toFixed(1)}%
+                        {res.committed.marketFairProb == null
+                          ? "not committed"
+                          : `${(res.committed.marketFairProb * 100).toFixed(1)}%`}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
-                      <dt className="text-ion-2">Committed confidence / edge</dt>
+                      <dt className="text-ion-2">Committed signal score / price-shape score</dt>
                       <dd className="break-all text-right font-mono text-ion-white">
-                        {res.committed.confidence} / {res.committed.edgeScore}
+                        {res.committed.confidence == null ? "not committed" : res.committed.confidence}
+                        {" / "}
+                        {res.committed.edgeScore == null ? "not committed" : res.committed.edgeScore}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">

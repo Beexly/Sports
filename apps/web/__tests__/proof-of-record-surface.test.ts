@@ -153,8 +153,17 @@ describe("loadProofOfRecord source pins", () => {
 
   it("returns null/empty consensus when odds data cannot support a multi-book read", () => {
     expect(loaderSource).toContain("buildH2hMarketRead");
-    // The loader uses the consensus from the market read, not a fabricated value.
-    expect(loaderSource).toContain("consensusAtSettle");
+    expect(loaderSource).toContain("latestMarketConsensus");
+    expect(loaderSource).toContain("marketRead.freshestFetchedAt");
+    expect(loaderSource).not.toContain("consensusAtSettle");
+  });
+
+  it("projects market and CLV fields through fail-closed public boundaries", () => {
+    expect(loaderSource).toContain("projectPublicMarket");
+    expect(loaderSource).toContain("projectCanonicalClv");
+    expect(loaderSource).toContain("pick.clvCapturedAt");
+    expect(loaderSource).not.toContain("modelVsMarketPp");
+    expect(loaderSource).not.toContain("pick.confidence / 100 - fairProb");
   });
 
   it("catches DB errors and returns empty board (catch pattern)", () => {
@@ -246,8 +255,39 @@ describe("proof-of-record page source pins", () => {
   });
 
   it("mentions generated-at vs settled-at framing (the no-edit guarantee anchor)", () => {
-    expect(pageSource.toLowerCase()).toContain("generation time");
+    expect(pageSource.toLowerCase()).toContain("generated-at");
     expect(pageSource.toLowerCase()).toContain("settled");
+  });
+
+  it("separates canonical display text from the literal hash preimage", () => {
+    expect(pageSource).toContain("Canonical market display:");
+    expect(pageSource.toLowerCase()).toContain("not the literal hash preimage");
+    expect(pageSource.toLowerCase()).toContain("presentation projection");
+    expect(pageSource).not.toContain("row.line");
+    expect(pageSource).not.toContain("row.confidence");
+  });
+
+  it("labels the market read as a timestamped latest capture only", () => {
+    expect(pageSource).toContain("Latest captured market consensus");
+    expect(pageSource).toContain("row.latestMarketConsensus.capturedAt");
+    expect(pageSource).not.toContain("Market consensus at settle");
+    expect(pageSource).not.toContain("consensusAtSettle");
+    expect(pageSource).not.toContain("modelVsMarketPp");
+  });
+
+  it("renders CLV only from the projected tuple with no raw numeric fallback", () => {
+    expect(pageSource).toContain("row.clv.display");
+    expect(pageSource).toContain("row.clv.capturedAt");
+    expect(pageSource).not.toContain("row.clvValue");
+    expect(pageSource).not.toContain("row.clvKind");
+    expect(pageSource).not.toContain("row.clvVerdict");
+    expect(pageSource).not.toContain("clvValue.toFixed");
+  });
+
+  it("does not claim every row was sealed before kickoff", () => {
+    expect(pageSource).not.toContain("Everything on this page was sealed before kickoff");
+    expect(pageSource).not.toContain("stamped at generation time");
+    expect(pageSource).toContain("Rows without a receipt do not claim that historical anchor");
   });
 });
 

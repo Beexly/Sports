@@ -112,19 +112,26 @@ export default async function CalibrationProofRoomPage() {
 
         {/* Interactive head, the live calibration, explorable, not a link hub. */}
         <ProofExplorer
-          buckets={report.buckets.map((b) => ({
-            label: b.label,
-            expectedWinRate: b.expectedWinRate,
-            observedWinRate: b.observedWinRate,
-            sampleSize: b.sampleSize,
-            delta: b.delta,
-            sufficientSample: b.sufficientSample,
-          }))}
-          sampleSize={report.sampleSize}
+          buckets={report.buckets.flatMap((b) =>
+            b.sufficientProbabilitySample &&
+            b.expectedWinRate !== null &&
+            b.probabilityObservedWinRate !== null &&
+            b.delta !== null
+              ? [{
+                  label: b.label,
+                  expectedWinRate: b.expectedWinRate,
+                  observedWinRate: b.probabilityObservedWinRate,
+                  sampleSize: b.probabilitySampleSize,
+                  delta: b.delta,
+                  sufficientSample: true,
+                }]
+              : [],
+          )}
+          sampleSize={report.probabilitySampleSize}
           brierScore={report.brierScore}
           discriminationSpread={report.discrimination.spread}
           discriminationTrend={report.discrimination.trend}
-          isCollecting={report.isCollecting}
+          isCollecting={report.probabilitySampleSize === 0}
           publicMessage={report.publicMessage}
         />
 

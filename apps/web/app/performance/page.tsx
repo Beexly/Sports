@@ -16,9 +16,14 @@ import {
   winRatePct,
   winRateToneClass,
 } from "@/lib/format/stat";
-import type { PickType, PickTier } from "@sports/types";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { CANONICAL_SETTLED_PICK_WHERE } from "@/lib/performance/canonical-population";
+import {
+  summarizePerformancePicks,
+  type PerformanceSummary,
+  type SettledPerformancePick,
+} from "@/lib/performance/live-summaries";
 
 export const metadata: Metadata = {
   title: "Calibration Report: Settled-Pick Audit Trail",
@@ -34,22 +39,6 @@ export const metadata: Metadata = {
 };
 
 // Types
-
-interface PerformanceSummary {
-  id: string;
-  sport: string;
-  league: string | null;
-  pickType: PickType | null;
-  tier: PickTier | null;
-  modelVersion: string;
-  totalPicks: number;
-  wins: number;
-  losses: number;
-  pushes: number;
-  winRate: number;
-  period: string;
-  computedAt: Date;
-}
 
 // Helpers
 
@@ -308,7 +297,7 @@ export default async function PerformancePage() {
                   </div>
                   {computedAt && (
                     <div className="col-span-2 sm:col-span-4">
-                      <dt className="text-ion-3">Last computed</dt>
+                      <dt className="text-ion-3">Latest settlement</dt>
                       <dd>{computedAt.toUTCString()}</dd>
                     </div>
                   )}
@@ -658,8 +647,20 @@ function SportCard({
 // "getPerformanceSummaries(" in this file is the call site above, which is
 // itself guarded by the canExposePerformanceStats gate check.
 async function getPerformanceSummaries(): Promise<PerformanceSummary[]> {
-  return db.performanceSummary.findMany({
-    orderBy: [{ period: "desc" }, { totalPicks: "desc" }],
-    take: 100,
-  }) as Promise<PerformanceSummary[]>;
+  const picks = await db.pick.findMany({
+    where: CANONICAL_SETTLED_PICK_WHERE,
+    select: {
+      id: true,
+      result: true,
+      pickType: true,
+      tier: true,
+      modelVersion: true,
+      settledAt: true,
+      game: { select: { sport: { select: { name: true } } } },
+    },
+    orderBy: { settledAt: "desc" },
+    take: 5_000,
+  });
+
+  return summarizePerformancePicks(picks as SettledPerformancePick[]);
 }

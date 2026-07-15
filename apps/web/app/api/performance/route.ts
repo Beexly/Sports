@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import { canonicalSettledPickWhere } from "@/lib/performance/canonical-population";
 
 export const dynamic = "force-dynamic";
 
@@ -32,13 +33,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // when an operator flips PERFORMANCE_STATS_ENABLED in a non-prod
   // environment to test the surface.
   const picks = await db.pick.findMany({
-    where: {
-      result: { in: ["WIN", "LOSS", "PUSH"] },
-      isPublished: true,
-      isBootstrap: false,
-      NOT: { modelVersion: "v5.0.0-seed" },
-      ...(sport ? { game: { sport: { name: { contains: sport, mode: "insensitive" as const } } } } : {}),
-    },
+    where: canonicalSettledPickWhere(
+      sport
+        ? { game: { sport: { name: { contains: sport, mode: "insensitive" } } } }
+        : undefined
+    ),
     // Aggregate-only read: select EXACTLY the two fields the per-sport tally
     // needs (result + sport name) rather than include-ing every Pick column and
     // full Game rows for hundreds/thousands of settled picks. Prisma groupBy

@@ -11,45 +11,39 @@ import {
 } from "@sports/prediction-engine";
 import { buildH2hMarketRead } from "@/lib/market/game-market-read";
 import type { ConsensusMarketRead } from "@sports/prediction-engine";
-
-/**
- * Proof-of-record loader — settled picks with their verifiable evidence trail.
- *
- * Bounded, cached-safe (force-dynamic at the call site). Pulls only canonical,
- * non-bootstrap settled picks. Returns an honest empty state when no data
- * exists — no padding, no fabricated numbers.
- *
- * The Merkle root over the full settled set is computed from the same engine
- * primitive used at publish time, so anyone with the raw records can
- * independently re-derive it and catch any post-hoc edit.
- *
- * Adapted from the proof-of-liabilities pattern (olalonde/*) — see
- * packages/prediction-engine/src/proof-of-record.ts for the primitive.
- * No crypto-currency involved; pure tamper-evidence over sports picks.
- */
+import { projectPublicMarket } from "@/lib/market/project-public-market";
+import type { PickType } from "@sports/types";
+import {
+  projectCanonicalClv,
+  type CanonicalClvProjection,
+} from "@/lib/market/format-clv";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
+
+export interface ProofClvRead extends CanonicalClvProjection {
+  readonly capturedAt: string;
+}
+
+export interface ProofLatestMarketConsensus {
+  readonly read: ConsensusMarketRead;
+  readonly capturedAt: string;
+}
 
 export interface ProofPickRow {
   /** DB pick id. */
   readonly id: string;
-  readonly sport: string;
+  readonly sport: string | null;
   readonly homeTeamName: string;
   readonly awayTeamName: string;
   readonly commenceTime: string;
-  readonly pickType: string;
-  readonly selection: string;
-  readonly line: number;
-  readonly confidence: number;
-  /** ISO — when the engine produced this pick (the no-edit guarantee anchor). */
+  readonly pickType: PickType;
+  readonly publicMarket: { readonly selection: string; readonly line: number } | null;
   readonly generatedAt: string;
   /** ISO — when the game settled; null only for PUSH/VOID with no settledAt. */
   readonly settledAt: string | null;
   readonly result: "WIN" | "LOSS" | "PUSH" | "VOID";
   readonly modelVersion: string;
-  /** CLV verdict if graded; null when closing-line data was absent. */
-  readonly clvVerdict: string | null;
-  readonly clvValue: number | null;
+  readonly clv: ProofClvRead | null;
   /** Merkle leaf hash (SHA-256) for this pick's committed payload. */
   readonly leafHash: string;
   /**
@@ -63,19 +57,8 @@ export interface ProofPickRow {
   readonly receiptHash: string | null;
   /** Index of this pick in the ordered committed set (deterministic). */
   readonly leafIndex: number;
-  /** Full inclusion proof so anyone can verify against the published root. */
   readonly inclusionProof: MerkleProof;
-  /**
-   * Consensus market read at pick generation time — only available when the
-   * game has enough H2H odds rows from multiple books. Null when the odds
-   * history can't honestly support a multi-book consensus.
-   */
-  readonly consensusAtSettle: ConsensusMarketRead | null;
-  /**
-   * Model disagreement vs market fair probability at generation time (pp).
-   * Positive = model was higher than fair market. Null when no consensus exists.
-   */
-  readonly modelVsMarketPp: number | null;
+  readonly latestMarketConsensus: ProofLatestMarketConsensus | null;
 }
 
 export interface ProofOfRecordBoard {
@@ -160,7 +143,9 @@ export async function loadProofOfRecord(
         settledAt: true,
         result: true,
         clvVerdict: true,
+        clvKind: true,
         clvValue: true,
+        clvCapturedAt: true,
       },
       orderBy: [{ settledAt: "desc" }, { id: "asc" }],
     })
@@ -240,6 +225,30 @@ export async function loadProofOfRecord(
     if (!verifyInclusion(proof, root, sha256)) continue;
 
     const game = displayById.get(pick.id)?.game ?? null;
+    const pickType: PickType | null =
+      pick.pickType === "SPREAD" ||
+      pick.pickType === "TOTAL" ||
+      pick.pickType === "MONEYLINE"
+        ? pick.pickType
+        : null;
+    const result: ProofPickRow["result"] | null =
+      pick.result === "WIN" ||
+      pick.result === "LOSS" ||
+      pick.result === "PUSH" ||
+      pick.result === "VOID"
+        ? pick.result
+        : null;
+    if (!pickType || !result) continue;
+    const market = game
+      ? projectPublicMarket({
+          pickType,
+          selection: pick.selection,
+          line: pick.line,
+          sport: game.sport.name,
+          homeTeam: game.homeTeamName,
+          awayTeam: game.awayTeamName,
+        })
+      : null;
 
     // Consensus market read from stored H2H odds history.
     const oddsRows = (game?.odds ?? []).map((o) => ({
@@ -251,47 +260,44 @@ export async function loadProofOfRecord(
       drawPrice: o.drawPrice,
     }));
     const marketRead = buildH2hMarketRead(oddsRows);
-    const consensus = marketRead?.consensus ?? null;
-
-    // Model vs market: ONLY meaningful for MONEYLINE picks — the consensus is an H2H read,
-    // so compare the model's confidence to the fair prob of the SIDE actually picked.
-    // SPREAD/TOTAL picks have no like-for-like H2H probability, so leave it null rather
-    // than print a number that mixes two unrelated quantities.
-    let modelVsMarketPp: number | null = null;
-    if (consensus !== null && pick.pickType === "MONEYLINE") {
-      const fairProb =
-        pick.selection === game?.homeTeamName
-          ? consensus.fairHomeProb
-          : pick.selection === game?.awayTeamName
-            ? consensus.fairAwayProb
-            : null;
-      if (fairProb !== null) {
-        modelVsMarketPp = Number(((pick.confidence / 100 - fairProb) * 100).toFixed(1));
-      }
-    }
+    const consensus = marketRead
+      ? {
+          read: marketRead.consensus,
+          capturedAt: marketRead.freshestFetchedAt,
+        }
+      : null;
+    const clvProjection = game && pick.clvCapturedAt
+      ? projectCanonicalClv({
+          pickType,
+          kind: pick.clvKind,
+          value: pick.clvValue,
+          verdict: pick.clvVerdict,
+          sport: game.sport.name,
+        })
+      : null;
 
     pageRows.push({
       id: pick.id,
-      sport: game?.sport?.name ?? "—",
+      sport: game?.sport?.name ?? null,
       homeTeamName: game?.homeTeamName ?? "—",
       awayTeamName: game?.awayTeamName ?? "—",
       commenceTime: game?.commenceTime?.toISOString() ?? "",
-      pickType: pick.pickType,
-      selection: pick.selection,
-      line: pick.line,
-      confidence: pick.confidence,
+      pickType,
+      publicMarket: market
+        ? { selection: market.selection, line: market.line }
+        : null,
       generatedAt: pick.generatedAt.toISOString(),
       settledAt: pick.settledAt?.toISOString() ?? null,
-      result: pick.result as ProofPickRow["result"],
+      result,
       modelVersion: pick.modelVersion,
-      clvVerdict: pick.clvVerdict ?? null,
-      clvValue: pick.clvValue ?? null,
+      clv: clvProjection && pick.clvCapturedAt
+        ? { ...clvProjection, capturedAt: pick.clvCapturedAt.toISOString() }
+        : null,
       leafHash: hashLeaf(sha256, record),
       receiptHash: displayById.get(pick.id)?.proofReceipt?.contentHash ?? null,
       leafIndex: i,
       inclusionProof: proof,
-      consensusAtSettle: consensus,
-      modelVsMarketPp,
+      latestMarketConsensus: consensus,
     });
   }
 
@@ -306,11 +312,6 @@ export async function loadProofOfRecord(
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-/**
- * Build the PickRecord that feeds the Merkle engine. The committed fields are
- * the ones that were fixed at generation time — changing any of them would
- * produce a different leaf hash, making tampering visible.
- */
 function buildPickRecord(
   pick: {
     id: string;

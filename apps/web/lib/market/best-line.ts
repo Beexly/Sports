@@ -1,4 +1,11 @@
 import { americanToImpliedProbability } from "@sports/prediction-engine";
+import {
+  formatAmericanOdds,
+  formatMarketPoint,
+  formatSignedMarketPoint,
+  normalizeAmericanOdds,
+  normalizeMarketPoint,
+} from "@sports/types";
 
 /**
  * Line shop — the best AVAILABLE price/line for each side across captured books.
@@ -47,8 +54,8 @@ export interface BestLines {
   readonly freshestFetchedAt: string | null;
 }
 
-function isNum(v: number | null | undefined): v is number {
-  return typeof v === "number" && Number.isFinite(v) && v !== 0;
+function canonicalPrice(v: number | null | undefined): number | null {
+  return normalizeAmericanOdds(v)?.normalized ?? null;
 }
 
 /** American odds → implied probability. Lower = longer payout = better for bettor. */
@@ -70,8 +77,8 @@ function bestMoneyline(rows: readonly OddsRowForShop[], side: "home" | "away"): 
   let best: BestPrice | null = null;
   let bestImplied = Infinity;
   for (const r of latestPerBook(rows, "H2H")) {
-    const price = side === "home" ? r.homePrice : r.awayPrice;
-    if (!isNum(price)) continue;
+    const price = canonicalPrice(side === "home" ? r.homePrice : r.awayPrice);
+    if (price === null) continue;
     const ip = impliedProb(price);
     if (ip < bestImplied) {
       bestImplied = ip;
@@ -81,15 +88,20 @@ function bestMoneyline(rows: readonly OddsRowForShop[], side: "home" | "away"): 
   return best;
 }
 
-function bestSpread(rows: readonly OddsRowForShop[], side: "home" | "away"): BestPrice | null {
+function bestSpread(
+  rows: readonly OddsRowForShop[],
+  side: "home" | "away",
+  sport: string,
+): BestPrice | null {
   let best: BestPrice | null = null;
   let bestLine = -Infinity; // bettor-perspective points (more is always better)
   let bestImplied = Infinity;
   for (const r of latestPerBook(rows, "SPREADS")) {
-    if (!isNum(r.spread)) continue;
-    const price = side === "home" ? r.homeSpreadPrice : r.awaySpreadPrice;
-    if (!isNum(price)) continue;
-    const line = side === "home" ? r.spread : -r.spread; // away gets the mirror
+    const point = normalizeMarketPoint("SPREAD_POINTS", sport, r.spread);
+    if (!point) continue;
+    const price = canonicalPrice(side === "home" ? r.homeSpreadPrice : r.awaySpreadPrice);
+    if (price === null) continue;
+    const line = side === "home" ? point.normalized : -point.normalized;
     const ip = impliedProb(price);
     if (line > bestLine || (line === bestLine && ip < bestImplied)) {
       bestLine = line;
@@ -100,36 +112,48 @@ function bestSpread(rows: readonly OddsRowForShop[], side: "home" | "away"): Bes
   return best;
 }
 
-function bestTotal(rows: readonly OddsRowForShop[], side: "over" | "under"): BestPrice | null {
+function bestTotal(
+  rows: readonly OddsRowForShop[],
+  side: "over" | "under",
+  sport: string,
+): BestPrice | null {
   let best: BestPrice | null = null;
   // OVER wants the LOWEST number; UNDER wants the HIGHEST. Normalise to "more is
   // better" by negating the total for the over side.
   let bestScore = -Infinity;
   let bestImplied = Infinity;
   for (const r of latestPerBook(rows, "TOTALS")) {
-    if (!isNum(r.total)) continue;
-    const price = side === "over" ? r.overPrice : r.underPrice;
-    if (!isNum(price)) continue;
-    const score = side === "over" ? -r.total : r.total;
+    const point = normalizeMarketPoint("TOTAL_POINTS", sport, r.total);
+    if (!point) continue;
+    const price = canonicalPrice(side === "over" ? r.overPrice : r.underPrice);
+    if (price === null) continue;
+    const score = side === "over" ? -point.normalized : point.normalized;
     const ip = impliedProb(price);
     if (score > bestScore || (score === bestScore && ip < bestImplied)) {
       bestScore = score;
       bestImplied = ip;
-      best = { bookmaker: r.bookmaker, price, line: r.total };
+      best = { bookmaker: r.bookmaker, price, line: point.normalized };
     }
   }
   return best;
 }
 
-export function buildBestLines(rows: readonly OddsRowForShop[]): BestLines {
+export function buildBestLines(rows: readonly OddsRowForShop[], sport = "NFL"): BestLines {
   const usable = rows.filter(
-    (r) =>
-      isNum(r.homePrice) ||
-      isNum(r.awayPrice) ||
-      isNum(r.homeSpreadPrice) ||
-      isNum(r.awaySpreadPrice) ||
-      isNum(r.overPrice) ||
-      isNum(r.underPrice)
+    (row) => {
+      if (row.market === "H2H") {
+        return canonicalPrice(row.homePrice) !== null || canonicalPrice(row.awayPrice) !== null;
+      }
+      if (row.market === "SPREADS") {
+        return Boolean(normalizeMarketPoint("SPREAD_POINTS", sport, row.spread)) &&
+          (canonicalPrice(row.homeSpreadPrice) !== null || canonicalPrice(row.awaySpreadPrice) !== null);
+      }
+      if (row.market === "TOTALS") {
+        return Boolean(normalizeMarketPoint("TOTAL_POINTS", sport, row.total)) &&
+          (canonicalPrice(row.overPrice) !== null || canonicalPrice(row.underPrice) !== null);
+      }
+      return false;
+    },
   );
   const books = new Set(usable.map((r) => r.bookmaker));
   const freshest = usable.reduce<Date | null>(
@@ -139,8 +163,8 @@ export function buildBestLines(rows: readonly OddsRowForShop[]): BestLines {
 
   return {
     moneyline: { home: bestMoneyline(rows, "home"), away: bestMoneyline(rows, "away") },
-    spread: { home: bestSpread(rows, "home"), away: bestSpread(rows, "away") },
-    total: { over: bestTotal(rows, "over"), under: bestTotal(rows, "under") },
+    spread: { home: bestSpread(rows, "home", sport), away: bestSpread(rows, "away", sport) },
+    total: { over: bestTotal(rows, "over", sport), under: bestTotal(rows, "under", sport) },
     bookCount: books.size,
     freshestFetchedAt: freshest ? freshest.toISOString() : null,
   };
@@ -148,13 +172,12 @@ export function buildBestLines(rows: readonly OddsRowForShop[]): BestLines {
 
 /** Format an American price with an explicit sign (e.g. +150, -110). */
 export function formatAmerican(price: number): string {
-  return price > 0 ? `+${price}` : `${price}`;
+  return formatAmericanOdds(price);
 }
 
 /** Format a bettor-perspective spread/total line with sign for spreads. */
 export function formatLine(line: number, kind: "spread" | "total"): string {
-  if (kind === "total") return String(line);
-  return line > 0 ? `+${line}` : `${line}`;
+  return kind === "total" ? formatMarketPoint(line) : formatSignedMarketPoint(line);
 }
 
 // Re-export for callers that want to mirror the shop's payout ranking.

@@ -21,7 +21,19 @@ import {
 } from "@/lib/seo/sports-jsonld";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import type { PickType } from "@sports/db";
+import {
+  formatMarketDelta,
+  normalizeMarketPoint,
+} from "@sports/types";
+import { projectPublicMarket } from "@/lib/market/project-public-market";
+import { getReadinessGates } from "@sports/prediction-engine";
+import {
+  getFreshPublicOddsSportKeys,
+  isPublicPicksSurfaceStale,
+} from "@/lib/data-reliability/public-freshness-gate";
+import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
+
+const PREVIEW_PICK_CANDIDATE_LIMIT = 10;
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -39,6 +51,21 @@ async function loadGameForSlug(sport: string, slug: string) {
   const awayPart = slug.slice(0, vsIdx);
   const homePart = slug.slice(vsIdx + 4); // "-vs-".length === 4
 
+  const gates = getReadinessGates();
+  let canExposePick = gates.canExposePublicPicks;
+  let freshSportKeys: Set<string> | null = null;
+  if (canExposePick && gates.forceNoBetIfStale) {
+    const [stale, freshSports] = await Promise.all([
+      isPublicPicksSurfaceStale().catch(() => true),
+      getFreshPublicOddsSportKeys().catch(() => null),
+    ]);
+    if (stale || !freshSports || freshSports.size === 0) {
+      canExposePick = false;
+    } else {
+      freshSportKeys = freshSports;
+    }
+  }
+
   // Pull recent + upcoming games for the sport (bounded query — no full scan)
   try {
     const candidates = await db.game.findMany({
@@ -49,10 +76,12 @@ async function loadGameForSlug(sport: string, slug: string) {
       orderBy: { commenceTime: "desc" },
       take: 500,
       include: {
+        sport: { select: { name: true, key: true } },
         picks: {
           where: {
             isPublished: true,
             isBootstrap: false, // never expose bootstrap-era picks publicly (mirrors /api/picks)
+            tier: "FREE",
             // Production seed-row exclusion (defense-in-depth) — drop dev seed
             // rows tagged modelVersion="v5.0.0-seed" only in production; no-op in
             // dev/test. Mirrors excludeSeedInProd in app/api/picks/route.ts.
@@ -61,17 +90,26 @@ async function loadGameForSlug(sport: string, slug: string) {
               : {}),
           },
           orderBy: { confidence: "desc" },
-          take: 1,
+          take: PREVIEW_PICK_CANDIDATE_LIMIT,
+          select: {
+            pickType: true,
+            selection: true,
+            line: true,
+          },
         },
       },
     });
-    return (
-      candidates.find(
-        (g) =>
-          slugify(g.awayTeamName) === awayPart &&
-          slugify(g.homeTeamName) === homePart,
-      ) ?? null
+    const game = candidates.find(
+      (candidate) =>
+        slugify(candidate.awayTeamName) === awayPart &&
+        slugify(candidate.homeTeamName) === homePart,
     );
+    if (!game) return null;
+    const pickBoundaryOpen =
+      canExposePick &&
+      game.dataQualityScore >= MIN_PUBLIC_PICK_DATA_QUALITY_SCORE &&
+      (freshSportKeys === null || freshSportKeys.has(game.sport.key));
+    return pickBoundaryOpen ? game : { ...game, picks: [] };
   } catch {
     return null; // DB unavailable — render 404 rather than 500
   }
@@ -81,15 +119,27 @@ function toMatchupInput(
   sport: string,
   game: NonNullable<Awaited<ReturnType<typeof loadGameForSlug>>>,
 ): MatchupPreviewInput {
-  const raw = game.picks[0] ?? null;
-  const pick: MatchupPick | null = raw
-    ? {
-        type: raw.pickType as PickType & ("SPREAD" | "MONEYLINE" | "TOTAL"),
-        selection: raw.selection,
-        line: raw.line,
-        confidence: raw.confidence,
-      }
-    : null;
+  let pick: MatchupPick | null = null;
+  for (const raw of game.picks) {
+    const market = projectPublicMarket({
+      pickType: String(raw.pickType),
+      selection: raw.selection,
+      line: raw.line,
+      sport: game.sport.name,
+      homeTeam: game.homeTeamName,
+      awayTeam: game.awayTeamName,
+      openingSpread: game.openingSpread,
+      openingTotal: game.openingTotal,
+    });
+    if (market) {
+      pick = {
+        type: market.pickType,
+        selection: market.selection,
+        line: market.line,
+      };
+      break;
+    }
+  }
 
   return {
     sport,
@@ -141,7 +191,14 @@ export default async function PreviewPage({ params }: Props) {
 
   const input = toMatchupInput(sport, game);
   const preview = buildMatchupPreview(input);
-  const pick = game.picks[0] ?? null;
+  const pick = input.pick;
+  const openingSpread = normalizeMarketPoint("SPREAD_POINTS", game.sport.name, game.openingSpread);
+  const openingTotal = normalizeMarketPoint("TOTAL_POINTS", game.sport.name, game.openingTotal);
+  const spreadMovement = normalizeMarketPoint(
+    "SPREAD_POINTS",
+    game.sport.name,
+    game.lineMovementSpread,
+  );
 
   const gameDate = new Date(game.commenceTime);
   const formattedDate = gameDate.toLocaleDateString("en-US", {
@@ -190,11 +247,8 @@ export default async function PreviewPage({ params }: Props) {
             </p>
             <p className="text-2xl font-semibold">{pick.selection}</p>
             <p className="text-sm text-ion-2">
-              {pick.pickType} · Confidence {pick.confidence}/100
+              {pick.type}
             </p>
-            {pick.reasoningShort && (
-              <p className="text-sm mt-2 text-ion-white">{pick.reasoningShort}</p>
-            )}
           </section>
         ) : (
           <section className="rounded-lg border border-mineral p-6">
@@ -217,34 +271,31 @@ export default async function PreviewPage({ params }: Props) {
               <dt className="text-ion-2 w-28 shrink-0">Home</dt>
               <dd>{game.homeTeamName}</dd>
             </div>
-            {game.openingSpread != null && (
+            {openingSpread && (
               <div className="flex gap-2">
                 <dt className="text-ion-2 w-28 shrink-0">
                   Opening spread
                 </dt>
                 <dd>
-                  {game.openingSpread > 0 ? "+" : ""}
-                  {game.openingSpread}
+                  {openingSpread.display}
                 </dd>
               </div>
             )}
-            {game.openingTotal != null && (
+            {openingTotal && (
               <div className="flex gap-2">
                 <dt className="text-ion-2 w-28 shrink-0">
                   Total (O/U)
                 </dt>
-                <dd>{game.openingTotal}</dd>
+                <dd>{openingTotal.display}</dd>
               </div>
             )}
-            {game.lineMovementSpread != null &&
-              game.lineMovementSpread !== 0 && (
+            {spreadMovement && spreadMovement.normalized !== 0 && (
                 <div className="flex gap-2">
                   <dt className="text-ion-2 w-28 shrink-0">
                     Line movement
                   </dt>
                   <dd>
-                    {game.lineMovementSpread > 0 ? "+" : ""}
-                    {game.lineMovementSpread.toFixed(1)} (spread)
+                    {formatMarketDelta(spreadMovement.normalized)} (spread)
                   </dd>
                 </div>
               )}

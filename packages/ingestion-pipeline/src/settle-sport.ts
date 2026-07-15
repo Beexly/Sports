@@ -85,7 +85,12 @@ export async function settleSport(
 
       const game = await db.game.findUnique({
         where: { externalId: score.externalId },
-        include: { picks: { where: { result: "PENDING" } } },
+        include: {
+          picks: {
+            where: { result: "PENDING" },
+            include: { proofReceipt: { select: { payload: true } } },
+          },
+        },
       });
       if (!game) continue;
 
@@ -135,7 +140,11 @@ export async function settleSport(
               awayPrice: true,
             },
           });
-          closingSnapshot = deriveClosingSnapshotFromOdds(closingOdds, game.commenceTime);
+          closingSnapshot = deriveClosingSnapshotFromOdds(
+            closingOdds,
+            game.commenceTime,
+            sport.key,
+          );
         } catch (clvErr) {
           console.warn(
             `${logPrefix} Closing-line fetch failed for game ${game.id}: ` +
@@ -176,7 +185,10 @@ export async function settleSport(
           // (clvLockLine/clvLockPrice, captured at publish). Additive and
           // guarded — never blocks settlement. Returns null (and we skip) when
           // there is no close or no lock to compare.
-          if (closingSnapshot?.capturedAt) {
+          if (
+            closingSnapshot?.capturedAt &&
+            hasObservedMarketContract(pick.proofReceipt?.payload)
+          ) {
             try {
               const grade = gradePickClv({
                 pickType: pick.pickType as PickKind,
@@ -279,4 +291,8 @@ export async function settleSport(
     console.error(`${logPrefix} ${sport.key} failed: ${message}`);
     return { sport: sport.key, status: "failed", gamesSettled, picksSettled, error: message };
   }
+}
+
+function hasObservedMarketContract(payload: string | null | undefined): boolean {
+  return typeof payload === "string" && /(?:^|\|)sport=/.test(payload);
 }

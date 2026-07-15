@@ -1,51 +1,21 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   classifySignal,
   fetchLiveWire,
-  parseFeedConfig,
   parseRssItems,
+  type RssFeedConfig,
 } from "@/lib/news/rss";
 
-/**
- * The live RSS wire is the first real crawler lane. Honesty rules under test:
- * dark-by-default (no env -> null -> the labeled sample renders), headlines
- * that do not classify are DROPPED (never guessed), items without a parseable
- * upstream date are dropped (no fake freshness), stale items age out.
- */
-
-const SAVED = process.env["NEWS_RSS_FEEDS"];
-beforeEach(() => {
-  delete process.env["NEWS_RSS_FEEDS"];
-});
 afterEach(() => {
-  if (SAVED === undefined) delete process.env["NEWS_RSS_FEEDS"];
-  else process.env["NEWS_RSS_FEEDS"] = SAVED;
   vi.restoreAllMocks();
 });
 
-describe("parseFeedConfig", () => {
-  it("parses url|source|tier|team entries and defaults sensibly", () => {
-    const feeds = parseFeedConfig(
-      "https://a.example/rss|ESPN NFL|Aggregator|NFL; https://b.example/rss|Team Feed",
-    );
-    expect(feeds).toHaveLength(2);
-    expect(feeds[0]).toMatchObject({ source: "ESPN NFL", tier: "Aggregator", team: "NFL" });
-    expect(feeds[1]).toMatchObject({ tier: "Aggregator", team: "League" });
-  });
-
-  it("skips malformed, non-https, and invalid-tier entries safely", () => {
-    const feeds = parseFeedConfig(
-      "http://insecure.example/rss|X; |missing-url; https://ok.example/rss|OK|GodTier|NFL",
-    );
-    expect(feeds).toHaveLength(1);
-    expect(feeds[0]!.tier).toBe("Aggregator"); // invalid tier floors to Aggregator
-  });
-
-  it("returns [] for unset/empty", () => {
-    expect(parseFeedConfig(undefined)).toEqual([]);
-    expect(parseFeedConfig("  ")).toEqual([]);
-  });
-});
+const FEED: RssFeedConfig = {
+  url: "https://feed.example/rss",
+  source: "Wire Test",
+  tier: "Verified",
+  team: "NFL",
+};
 
 describe("parseRssItems", () => {
   it("extracts titles + dates from RSS 2.0 items, decoding entities and CDATA", () => {
@@ -87,14 +57,19 @@ describe("classifySignal (conservative: no match -> null, never a guess)", () =>
 });
 
 describe("fetchLiveWire", () => {
-  it("is dark by default: no env -> null, no network call", async () => {
+  it("returns an unconfigured result without making a network call", async () => {
     const spy = vi.spyOn(globalThis, "fetch");
-    expect(await fetchLiveWire()).toBeNull();
+    await expect(fetchLiveWire([])).resolves.toEqual({
+      status: "UNCONFIGURED",
+      items: [],
+      configuredFeedCount: 0,
+      successfulFeedCount: 0,
+      failedFeedCount: 0,
+    });
     expect(spy).not.toHaveBeenCalled();
   });
 
   it("fetches, classifies, drops the unclassifiable + undated, sorts by freshness", async () => {
-    process.env["NEWS_RSS_FEEDS"] = "https://feed.example/rss|Wire Test|Verified|NFL";
     const now = new Date("2026-07-02T12:00:00Z");
     const xml = `<rss><channel>
       <item><title>Star RB ruled out for Sunday</title><pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item>
@@ -104,25 +79,66 @@ describe("fetchLiveWire", () => {
     </channel></rss>`;
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(xml, { status: 200 }));
 
-    const wire = await fetchLiveWire(now);
-    expect(wire).not.toBeNull();
-    expect(wire!.map((i) => i.signal)).toEqual(["injury-out", "trade"]); // takeaways + dateless dropped
-    expect(wire![0]!.minutesAgo).toBe(60);
-    expect(wire![0]!.source).toBe("Wire Test");
-    expect(wire![0]!.tier).toBe("Verified");
+    const result = await fetchLiveWire([FEED], now);
+    expect(result.status).toBe("AVAILABLE");
+    expect(result.items.map((item) => item.signal)).toEqual(["injury-out", "trade"]);
+    expect(result.items[0]!.minutesAgo).toBe(60);
+    expect(result.items[0]!.source).toBe("Wire Test");
+    expect(result.items[0]!.tier).toBe("Verified");
   });
 
-  it("fails soft: a feed outage returns what succeeded, never throws", async () => {
-    process.env["NEWS_RSS_FEEDS"] =
-      "https://down.example/rss|Down|Beat|NFL; https://up.example/rss|Up|Beat|NFL";
+  it("returns successful items and reports a partial source outage", async () => {
+    const downFeed = { ...FEED, url: "https://down.example/rss", source: "Down" };
+    const upFeed = { ...FEED, url: "https://up.example/rss", source: "Up" };
     const xml = `<rss><channel><item><title>Star RB ruled out</title><pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item></channel></rss>`;
     vi.spyOn(globalThis, "fetch").mockImplementation(async (url) =>
       String(url).includes("down.example")
         ? Promise.reject(new Error("feed down"))
         : new Response(xml, { status: 200 }),
     );
-    const wire = await fetchLiveWire(new Date("2026-07-02T12:00:00Z"));
-    expect(wire).toHaveLength(1);
-    expect(wire![0]!.source).toBe("Up");
+    const result = await fetchLiveWire(
+      [downFeed, upFeed],
+      new Date("2026-07-02T12:00:00Z"),
+    );
+    expect(result.status).toBe("AVAILABLE");
+    expect(result.successfulFeedCount).toBe(1);
+    expect(result.failedFeedCount).toBe(1);
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0]!.source).toBe("Up");
+  });
+
+  it("returns outage when every configured feed fails", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response("unavailable", { status: 503 }),
+    );
+    const result = await fetchLiveWire([FEED]);
+    expect(result).toEqual({
+      status: "OUTAGE",
+      items: [],
+      configuredFeedCount: 1,
+      successfulFeedCount: 0,
+      failedFeedCount: 1,
+    });
+  });
+
+  it("distinguishes a successful empty feed from an outage", async () => {
+    const xml = `<rss><channel><item><title>Power rankings for July</title><pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item></channel></rss>`;
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(xml, { status: 200 }));
+    const result = await fetchLiveWire([FEED], new Date("2026-07-02T12:00:00Z"));
+    expect(result.status).toBe("AVAILABLE");
+    expect(result.items).toEqual([]);
+    expect(result.successfulFeedCount).toBe(1);
+  });
+
+  it("rejects feed timestamps beyond the allowed future clock skew", async () => {
+    const xml = `<rss><channel>
+      <item><title>Star RB ruled out in the future</title><pubDate>2030-07-02T12:00:00Z</pubDate></item>
+      <item><title>Ace traded to contender</title><pubDate>2026-07-02T12:02:00Z</pubDate></item>
+    </channel></rss>`;
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(xml, { status: 200 }));
+    const result = await fetchLiveWire([FEED], new Date("2026-07-02T12:00:00Z"));
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0]!.headline).toBe("Ace traded to contender");
+    expect(result.items[0]!.minutesAgo).toBe(0);
   });
 });

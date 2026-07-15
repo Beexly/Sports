@@ -30,7 +30,7 @@ describe("deriveClosingSnapshotFromOdds", () => {
     expect(snap.bookmakerCount).toBe(0);
   });
 
-  it("uses the latest pre-kickoff batch and averages across books", () => {
+  it("uses the latest pre-kickoff batch and keeps an executable closing offer", () => {
     const rows: ClosingOddsRow[] = [
       // older batch — should be ignored
       row({ market: "H2H", fetchedAt: t("2026-04-15T10:00:00Z"), homePrice: -120, awayPrice: 100 }),
@@ -45,10 +45,19 @@ describe("deriveClosingSnapshotFromOdds", () => {
     ];
     const snap = deriveClosingSnapshotFromOdds(rows, COMMENCE);
     expect(snap.capturedAt?.toISOString()).toBe("2026-04-15T17:55:00.000Z");
-    expect(snap.mlHomePrice).toBe(-155); // avg(-160, -150)
-    expect(snap.mlAwayPrice).toBe(135); // avg(140, 130)
-    expect(snap.spreadHome).toBeCloseTo(-3.0, 6); // avg(-3.5, -2.5)
+    expect(snap.mlHomePrice).toBe(-160);
+    expect(snap.mlAwayPrice).toBe(130);
+    expect(snap.spreadHome).toBe(-3.5);
     expect(snap.total).toBeCloseTo(48.5, 6);
+  });
+
+  it("quarantines non-tradable points instead of fabricating a close", () => {
+    const snap = deriveClosingSnapshotFromOdds([
+      row({ market: "SPREADS", fetchedAt: t("2026-04-15T17:55:00Z"), spread: -3.2 }),
+      row({ market: "TOTALS", fetchedAt: t("2026-04-15T17:55:00Z"), total: 8.954545454545455 }),
+    ], COMMENCE, "americanfootball_nfl");
+    expect(snap.spreadHome).toBeNull();
+    expect(snap.total).toBeNull();
   });
 
   it("treats a snapshot exactly at commence time as eligible (<=)", () => {
@@ -58,6 +67,19 @@ describe("deriveClosingSnapshotFromOdds", () => {
     );
     expect(snap.capturedAt?.getTime()).toBe(COMMENCE.getTime());
     expect(snap.mlHomePrice).toBe(-110);
+  });
+
+  it("never invents a cross-pick'em moneyline close", () => {
+    const snap = deriveClosingSnapshotFromOdds(
+      [
+        row({ market: "H2H", fetchedAt: t("2026-04-15T17:55:00Z"), homePrice: -102, awayPrice: -118 }),
+        row({ market: "H2H", fetchedAt: t("2026-04-15T17:55:00Z"), homePrice: 105, awayPrice: -125 }),
+      ],
+      COMMENCE,
+    );
+
+    expect([-102, 105]).toContain(snap.mlHomePrice);
+    expect(Math.abs(snap.mlHomePrice!)).toBeGreaterThanOrEqual(100);
   });
 });
 

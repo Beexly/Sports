@@ -17,7 +17,6 @@ const PRODUCT_LINKS = [
   { label: "The Beat", href: "/the-beat" },
   { label: "Newsletter", href: "/newsletter" },
   { label: "Podcast", href: "/podcast" },
-  { label: "The Studio", href: "/fantasy/studio" },
   { label: "The Academy", href: "/academy" },
 ] as const;
 

@@ -16,7 +16,7 @@ describe("computeCalibration", () => {
     expect(report.proposals).toEqual([]);
   });
 
-  it("computes bucket deltas and Brier score from settled outcomes", () => {
+  it("uses raw confidence only for rank evidence, never as a probability", () => {
     const report = computeCalibration([
       { id: "a", confidence: 72, result: "WIN" },
       { id: "b", confidence: 74, result: "LOSS" },
@@ -26,9 +26,24 @@ describe("computeCalibration", () => {
 
     const bucket = report.buckets.find((entry) => entry.label === "70-79");
     expect(report.sampleSize).toBe(3);
-    expect(report.brierScore).toBeTypeOf("number");
+    expect(report.probabilitySampleSize).toBe(0);
+    expect(report.brierScore).toBeNull();
     expect(bucket?.sampleSize).toBe(3);
     expect(bucket?.observedWinRate).toBe(0.5);
+    expect(bucket?.expectedWinRate).toBeNull();
+  });
+
+  it("computes probability calibration only from committed model probabilities", () => {
+    const report = computeCalibration([
+      { id: "a", confidence: 72, modelProbability: 0.62, result: "WIN" },
+      { id: "b", confidence: 74, modelProbability: 0.58, result: "LOSS" },
+    ]);
+
+    const bucket = report.buckets.find((entry) => entry.label === "70-79");
+    expect(report.probabilitySampleSize).toBe(2);
+    expect(report.brierScore).toBeTypeOf("number");
+    expect(bucket?.probabilityObservedWinRate).toBe(0.5);
+    expect(bucket?.expectedWinRate).toBe(0.6);
   });
 
   it("surfaces an insufficient-data discrimination signal below the sample floor", () => {
@@ -50,10 +65,13 @@ describe("computeDiscrimination", () => {
     confidenceMax,
     sampleSize,
     observedWinRate,
+    probabilitySampleSize: 0,
+    probabilityObservedWinRate: null,
     expectedWinRate: (confidenceMin + confidenceMax) / 200,
     delta: 0,
     brierScore: 0,
     sufficientSample: sampleSize >= 30,
+    sufficientProbabilitySample: false,
   });
 
   it("reports insufficient-data with fewer than two populated buckets", () => {
@@ -122,10 +140,13 @@ describe("computeCalibrationProposals", () => {
           confidenceMax: 79,
           sampleSize: 12,
           observedWinRate: 0.4,
+          probabilitySampleSize: 12,
+          probabilityObservedWinRate: 0.4,
           expectedWinRate: 0.75,
           delta: -0.35,
           brierScore: 0.28,
           sufficientSample: false,
+          sufficientProbabilitySample: false,
         },
       ])
     ).toEqual([]);
@@ -139,10 +160,13 @@ describe("computeCalibrationProposals", () => {
         confidenceMax: 79,
         sampleSize: 40,
         observedWinRate: 0.52,
+        probabilitySampleSize: 40,
+        probabilityObservedWinRate: 0.52,
         expectedWinRate: 0.74,
         delta: -0.22,
         brierScore: 0.24,
         sufficientSample: true,
+        sufficientProbabilitySample: true,
       },
     ]);
 

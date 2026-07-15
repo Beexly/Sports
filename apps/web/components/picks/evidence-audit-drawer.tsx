@@ -23,6 +23,7 @@ import type {
   AuditPayloadDetailed,
   AuditPayloadSummary,
 } from "@sports/types";
+import { formatMarketDelta } from "@sports/types";
 import Link from "next/link";
 
 interface EvidenceAuditDrawerProps {
@@ -385,7 +386,7 @@ function DetailedAudit({
           {audit.lineMovementDelta !== null && (
             <Row
               k="Line movement δ"
-              v={`${audit.lineMovementDelta > 0 ? "+" : ""}${audit.lineMovementDelta.toFixed(2)}`}
+              v={formatMarketDelta(audit.lineMovementDelta)}
             />
           )}
           {audit.restAdvantageNet !== null && (
@@ -409,16 +410,21 @@ function DetailedAudit({
               v={formatClockAge(audit.deathClock.minutesSincePublish)}
             />
             <Row
-              k={clockMetricLabel(audit.deathClock.metric)}
+              k={`${clockMetricLabel(audit.deathClock.metric)} quotes`}
               v={`${formatClockNumber(audit.deathClock.atPublish, audit.deathClock.metric)} → ${formatClockNumber(audit.deathClock.latest, audit.deathClock.metric)}`}
+              mono
+            />
+            <Row
+              k="Median reference"
+              v={`${formatClockNumber(audit.deathClock.referenceAtPublish, audit.deathClock.metric)} → ${formatClockNumber(audit.deathClock.referenceLatest, audit.deathClock.metric)}`}
               mono
             />
             <Row
               k="Movement"
               v={
                 audit.deathClock.direction === "flat"
-                  ? "flat, the market hasn't moved"
-                  : `${audit.deathClock.delta > 0 ? "+" : ""}${audit.deathClock.delta} ${audit.deathClock.direction === "toward_pick" ? "toward this pick" : "against this pick"} · ${audit.deathClock.ratePerHour}/h`
+                  ? "median reference is flat"
+                  : `${formatMarketDelta(audit.deathClock.delta)} points ${audit.deathClock.direction === "toward_pick" ? "toward this pick" : "against this pick"} · ${audit.deathClock.ratePerHour.toFixed(2)} pts/h`
               }
             />
             <Row
@@ -427,9 +433,10 @@ function DetailedAudit({
             />
           </dl>
           <p className="mt-2 text-[10px] leading-relaxed text-ion-2">
-            Price movement only: what the books charge now vs when this pick
-            was published. Median across books; describes the market, not the
-            outcome.
+            Quotes are observed offers nearest each median. Movement is the
+            median-reference change across the same books, so an executable
+            tie-break cannot manufacture a move. This describes the market,
+            not the outcome.
           </p>
         </section>
       )}
@@ -629,16 +636,15 @@ function formatClockAge(minutes: number): string {
 }
 
 function clockMetricLabel(
-  metric: "spread_points" | "total_points" | "moneyline_price"
+  metric: "spread_points" | "total_points"
 ): string {
   if (metric === "spread_points") return "Spread (home line)";
-  if (metric === "total_points") return "Total";
-  return "Side price (American)";
+  return "Total";
 }
 
 function formatClockNumber(
   value: number,
-  metric: "spread_points" | "total_points" | "moneyline_price"
+  metric: "spread_points" | "total_points"
 ): string {
   if (metric === "total_points") return `${value}`;
   return value > 0 ? `+${value}` : `${value}`;

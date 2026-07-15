@@ -84,14 +84,16 @@ describe("Customer dashboard performance gate", () => {
     ).toBe(true);
   });
 
-  it("performance API filters isBootstrap=false when the gate is open", () => {
+  it("performance API uses the canonical settled population when the gate is open", () => {
     const src = read("app/api/performance/route.ts");
-    expect(src).toMatch(/isBootstrap:\s*false/);
+    expect(src).toMatch(/canonicalSettledPickWhere/);
   });
 
-  it("performance API filters isPublished=true when the gate is open", () => {
-    const src = read("app/api/performance/route.ts");
+  it("canonical settled population requires published, non-bootstrap, learning-eligible rows", () => {
+    const src = read("lib/performance/canonical-population.ts");
     expect(src).toMatch(/isPublished:\s*true/);
+    expect(src).toMatch(/isBootstrap:\s*false/);
+    expect(src).toMatch(/eligibleForLearning:\s*true/);
   });
 
   it("picks API returns 503 when canExposePublicPicks gate is off", () => {

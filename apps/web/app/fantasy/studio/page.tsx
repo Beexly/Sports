@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { StudioBrief } from "@/components/fantasy/studio-brief";
 import { StudioHost } from "@/components/fantasy/studio-host";
@@ -6,15 +7,26 @@ import { generateWeeklyBrief } from "@/lib/fantasy/studio";
 import { buildBroadcast } from "@/lib/fantasy/host";
 import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
 import { BRAND_COLORS } from "@/lib/brand";
+import { auth } from "@/lib/auth";
+import { isAdminSession } from "@/lib/auth/require-admin";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Galaxy Studios · Galaxy Fantasy",
   description:
     "The weekly Galaxy Brief, generated from the whole OS (waivers, scheme moves, roster risk, and the sharpest DFS and pick'em edges) as a production-ready draft for review. Never auto-published.",
   alternates: { canonical: "/fantasy/studio" },
+  robots: { index: false, follow: false, nocache: true },
 };
 
-export default function StudioPage() {
+export default async function StudioPage() {
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/auth/signin?callbackUrl=/fantasy/studio");
+  }
+  if (!isAdminSession(session)) redirect("/");
+
   const brief = generateWeeklyBrief();
   const broadcast = buildBroadcast();
   return (

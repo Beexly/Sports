@@ -111,12 +111,12 @@ export const PAGE_EXPLAINERS: readonly PageExplainer[] = [
     route: "/the-beat",
     title: "How The Beat works",
     durationLabel: "0:40",
-    intro: "Sports media is a market too. Noisy, and now accountable. Here's the read.",
+    intro: "Sports feeds are noisy. The Beat shows only source-attributed items that clear the publication gate.",
     beats: [
-      { tag: "Broadcast", body: "Nova brings you the week's top signals on location. The headline and what it means for you." },
-      { tag: "The Ledger", body: "Below, every breaking report is scored the instant it lands: source reliability, what it moves, by how much." },
-      { tag: "Filter", body: "Sort by reliability tier or team to cut to the reports that touch your slate." },
-      { tag: "The move", body: "Each item ends with the move to make. Before the market prices it in." },
+      { tag: "Publication", body: "The ledger stays empty unless a source-controlled feed and the global publication switch are both approved." },
+      { tag: "The Ledger", body: "Retrieved headlines are attributed, checked for freshness, and scored by the impact model after ingestion." },
+      { tag: "Filter", body: "Sort by source tier or team to isolate the feed items that touch your slate." },
+      { tag: "Interpretation", body: "Impact and action text are model estimates, never claims made by the source or measured market movement." },
     ],
   },
 ] as const;

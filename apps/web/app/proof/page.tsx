@@ -1,19 +1,3 @@
-/**
- * /proof — Proof of Record
- *
- * Every settled pick's verifiable trail: the engine's generation-time hash,
- * the Merkle leaf and root, the no-after-the-fact-editing guarantee in plain
- * language, and the consensus/divergence read where captured multi-book
- * data supports it.
- *
- * Voice: the desk — direct, no marketing. See lib/voice/analyst-standard.ts.
- * Design idiom: matches /performance and /accountability (surface-card,
- * eyebrow, NUMERIC_TEXT_CLASS, honest empty state).
- *
- * Source commitment: docs/strategy/repo-firehose-review.md build-queue #6.
- * Engine primitive: packages/prediction-engine/src/proof-of-record.ts.
- */
-
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
@@ -29,18 +13,19 @@ import { BRAND_NAME } from "@/lib/brand";
 import { loadProofOfRecord } from "@/lib/proof/load-proof-of-record";
 import type { ProofPickRow } from "@/lib/proof/load-proof-of-record";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import type { CanonicalClvVerdict } from "@/lib/market/format-clv";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: `Proof of Record · ${BRAND_NAME}`,
   description:
-    "Every settled pick carries a tamper-evident Merkle hash stamped at generation time. The record can't be edited after the fact without the hash changing. This page shows the verifiable trail.",
+    "Deterministic Merkle leaves over persisted pick fields, current inclusion proofs, and frozen mint-time receipts where available.",
   alternates: { canonical: "/proof" },
   openGraph: {
     title: `Proof of Record · ${BRAND_NAME}`,
     description:
-      "Merkle-hash trail for every settled pick. Generated-at vs settled-at, no-after-the-fact-editing guarantee, consensus/divergence read where multi-book data supports it.",
+      "Merkle-hash trail for settled picks, exact receipt verification where available, and timestamped latest captured market snapshots.",
     url: "/proof",
     type: "website",
   },
@@ -63,8 +48,8 @@ function resultClass(result: ProofPickRow["result"]): string {
 
 // ── CLV verdict display ───────────────────────────────────────────────────────
 
-function clvLabel(verdict: string | null): string {
-  if (!verdict) return STAT_PLACEHOLDER;
+function clvLabel(verdict: CanonicalClvVerdict | null): string | null {
+  if (!verdict) return null;
   switch (verdict) {
     case "BEAT_CLOSE":
       return "Beat close";
@@ -72,12 +57,10 @@ function clvLabel(verdict: string | null): string {
       return "Matched close";
     case "LOST_TO_CLOSE":
       return "Lost to close";
-    default:
-      return verdict;
   }
 }
 
-function clvClass(verdict: string | null): string {
+function clvClass(verdict: CanonicalClvVerdict | null): string {
   if (!verdict) return "text-ion-3";
   if (verdict === "BEAT_CLOSE") return "text-orbital-cyan";
   if (verdict === "MATCHED_CLOSE") return "text-ion-2";
@@ -130,18 +113,18 @@ export default async function ProofOfRecordPage() {
               Proof of Record
             </p>
             <h1 className="mt-4 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
-              The record can&apos;t be rewritten.
+              The record leaves fingerprints.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              The moment a pick is written, it gets a digital fingerprint (a
-              hash). All the fingerprints are folded into one published master
-              fingerprint, using the same tamper-evident math public audit
-              systems use. Edit any pick afterward and its fingerprint stops
-              matching. Anyone with the raw records can recompute it and catch
-              the difference.
+              This ledger derives a deterministic fingerprint from each settled
+              pick&apos;s persisted committed fields, then folds those leaves into
+              the current Merkle root. Changing a committed field changes the
+              leaf and the root. When a frozen receipt exists, the verifier also
+              exposes the exact payload sealed at mint time.
             </p>
             <p className="mt-3 text-sm text-ion-2">
-              This is not a promise. It is a mechanism. The math enforces it.
+              Canonical market text is presentation. It is never represented as
+              the literal hash preimage.
             </p>
           </header>
 
@@ -155,29 +138,29 @@ export default async function ProofOfRecordPage() {
             </h2>
             <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
               <div className="flex flex-col gap-1">
-                <dt className="font-semibold text-ion-white">Generation-time hash</dt>
+                <dt className="font-semibold text-ion-white">Committed-field leaf</dt>
                 <dd className="text-ion-1 leading-6">
-                  At the moment a pick is written, the engine serializes the
-                  committed fields (id, pick type, selection, line, confidence,
-                  model version, generated-at) and hashes them with SHA-256.
-                  That hash is the leaf.
+                  The ledger serializes the original persisted values for id,
+                  pick type, selection, line, confidence, model version,
+                  generated-at, and tier, then hashes that exact payload with
+                  SHA-256. The formatted market label shown below is separate.
                 </dd>
               </div>
               <div className="flex flex-col gap-1">
                 <dt className="font-semibold text-ion-white">Merkle root</dt>
                 <dd className="text-ion-1 leading-6">
-                  All settled pick leaves combine into a Merkle tree. The root
-                  summarizes the entire committed set in a single 64-character
-                  hex string. Change one pick and the root changes.
+                  All settled pick leaves combine into a Merkle tree. The current
+                  root summarizes the entire loaded set in one 64-character hex
+                  string. Change one committed value and the recomputed root changes.
                 </dd>
               </div>
               <div className="flex flex-col gap-1">
                 <dt className="font-semibold text-ion-white">Inclusion proof</dt>
                 <dd className="text-ion-1 leading-6">
                   Each pick carries a Merkle path: the minimum set of sibling
-                  hashes needed to re-derive the root from just that leaf. You
-                  can verify any pick was in the committed set without trusting
-                  us.
+                  hashes needed to re-derive the root from just that leaf. It
+                  lets you verify that the displayed leaf folds to the current
+                  root shown on this page.
                 </dd>
               </div>
             </dl>
@@ -192,7 +175,7 @@ export default async function ProofOfRecordPage() {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-2">
-                    Committed Merkle root
+                    Current Merkle root
                   </p>
                   <p className="mt-1 text-[11px] text-ion-3">
                     Over{" "}
@@ -242,8 +225,9 @@ export default async function ProofOfRecordPage() {
               </p>
               <p className="mt-3 text-sm leading-6 text-ion-1">
                 This is a connection problem, not a verdict on the record. The
-                committed roots and receipts are unchanged; refresh in a moment
-                and the full settled ledger will be back.
+                page cannot verify or display a current root while its source is
+                unavailable. Frozen receipts already held outside this request
+                are not rewritten by this page.
               </p>
             </section>
           )}
@@ -259,9 +243,9 @@ export default async function ProofOfRecordPage() {
               </p>
               <p className="mt-3 text-sm leading-6 text-ion-1">
                 No finished live-engine picks exist yet. This page will populate
-                automatically once picks move from pending to settled. Every
-                outcome, win or loss, appears here with its hash and trail.
-                Nothing is hidden once it settles.
+                automatically once picks move from pending to settled. Settled
+                canonical outcomes contribute to the root; the page displays the
+                newest bounded set with their hashes and available receipt links.
               </p>
               <p className="mt-4 text-[11px] text-ion-3">
                 Bootstrap-era picks are excluded by design. They do not get to
@@ -288,7 +272,7 @@ export default async function ProofOfRecordPage() {
                     <p className="mt-1 text-[11px] text-ion-2">
                       Every outcome included: wins, losses, pushes, voids. None
                       quietly removed. Each row carries its Merkle leaf index and
-                      the hashed committed payload.
+                      a validated market display when the stored values support one.
                     </p>
                   </div>
                   <span
@@ -309,11 +293,12 @@ export default async function ProofOfRecordPage() {
                   <p className="text-[11px] leading-relaxed text-ion-2">
                     Leaf index is the pick&apos;s position in the committed set
                     (settled-at descending, id ascending as tiebreaker). The
-                    committed payload is the SHA-256 hash of id + pick type +
-                    selection + line + confidence + model version +
-                    generated-at: the fields locked at creation. The consensus
-                    read comes from captured multi-book H2H odds; it is market
-                    description, not a model claim.
+                    leaf covers the original persisted committed values. The
+                    canonical market label in a row is a validated presentation,
+                    not the literal hash preimage. Use the receipt verifier for
+                    the exact frozen mint-time payload when a receipt link exists.
+                    Market consensus is a timestamped latest captured H2H snapshot,
+                    not a generation-time, settlement-time, or model claim.
                   </p>
                 </div>
               </div>
@@ -323,14 +308,15 @@ export default async function ProofOfRecordPage() {
           {/* ── The guarantee in plain language ── */}
           <section className="mt-10 border-t border-mineral pt-8">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ion-2">
-              The no-after-the-fact-editing guarantee
+              What the mechanism proves
             </h2>
             <ul className="flex flex-col gap-2 text-sm leading-6 text-ion-1">
               {[
-                "Each pick's committed fields are hashed at generation time, before the game is played.",
-                "The hash covers id, pick type, selection, line, confidence score, model version, and the exact generated-at timestamp.",
-                "The Merkle root over all settled picks is published on this page. Anyone can re-derive it.",
-                "If any pick were altered retroactively, changing the confidence or selection, the leaf hash would change, breaking the root.",
+                "Each current leaf deterministically covers the original persisted id, pick type, selection, line, confidence, model version, generated-at timestamp, and tier.",
+                "The canonical market label displayed in the row is a presentation projection, not the exact serialized hash preimage.",
+                "The current Merkle root and inclusion path prove that a displayed leaf belongs to the currently loaded settled set.",
+                "Where a receipt link exists, the verifier exposes the frozen mint-time payload and rechecks its hash. Rows without a receipt do not claim that historical anchor.",
+                "Changing a committed field changes its leaf and the recomputed root; comparison with a prior root or frozen receipt reveals the drift.",
                 "Bootstrap-era picks and seed data are excluded from the committed set by design.",
               ].map((line) => (
                 <li key={line} className="flex items-start gap-3">
@@ -356,14 +342,15 @@ export default async function ProofOfRecordPage() {
                 The same receipts run the live board
               </p>
               <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white">
-                Everything on this page was sealed before kickoff. Today&apos;s
-                board publishes with the same receipts.
+                Receipt-linked rows were sealed at mint time. Today&apos;s board
+                publishes with the same verifier path.
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
                 Free shows two picks a day with the public Edge Index. Pro opens
                 the full board — the sealed picks, their confidence scores, and
-                the factor trail behind them. The record above is what
-                you&apos;re buying: not louder claims, more receipts.
+                the factor trail behind them. The ledger includes every settled
+                canonical result; receipt links identify which rows also carry a
+                frozen mint-time payload.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
                 <Link href="/pricing" className="btn btn-primary whitespace-nowrap">
@@ -398,11 +385,12 @@ export default async function ProofOfRecordPage() {
 
 // ── Sub-component: single ledger row ─────────────────────────────────────────
 
-function PickLedgerRow({ row }: { row: ProofPickRow }) {
+export function PickLedgerRow({ row }: { row: ProofPickRow }) {
   const matchup = `${row.awayTeamName} @ ${row.homeTeamName}`;
   const dateStr = row.settledAt
     ? new Date(row.settledAt).toISOString().slice(0, 10)
     : "—";
+  const clvVerdictLabel = clvLabel(row.clv?.verdict ?? null);
 
   return (
     <li
@@ -414,7 +402,7 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm font-semibold text-ion-white">{matchup}</span>
           <span className="text-[10px] uppercase tracking-wider text-ion-2">
-            {row.sport}
+            {row.sport ?? STAT_PLACEHOLDER}
           </span>
           <span
             className={`text-sm font-bold ${NUMERIC_TEXT_CLASS} ${resultClass(row.result)}`}
@@ -424,9 +412,9 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
         </div>
 
         <p className={`mt-1 text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
-          {row.pickType} · {row.selection} · line {row.line > 0 ? "+" : ""}
-          {row.line} · conf{" "}
-          <span className="text-ion-1">{row.confidence}</span> ·{" "}
+          {row.pickType} · Canonical market display: {row.publicMarket
+            ? row.publicMarket.selection
+            : "unavailable"} ·{" "}
           <abbr
             title="Model version that produced this pick"
             className="no-underline"
@@ -442,35 +430,26 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
 
         {/* CLV verdict */}
         <p className="mt-1 text-[11px]">
-          <span className="text-ion-3">CLV: </span>
-          <span className={`${clvClass(row.clvVerdict)} ${NUMERIC_TEXT_CLASS}`}>
-            {clvLabel(row.clvVerdict)}
-            {row.clvValue !== null && row.clvVerdict
-              ? ` (${row.clvValue > 0 ? "+" : ""}${row.clvValue.toFixed(1)})`
-              : ""}
+          <span className="text-ion-3">
+            {row.clv
+              ? `CLV · close captured ${new Date(row.clv.capturedAt).toUTCString()}: `
+              : "CLV: "}
+          </span>
+          <span className={`${clvClass(row.clv?.verdict ?? null)} ${NUMERIC_TEXT_CLASS}`}>
+            {row.clv && clvVerdictLabel
+              ? `${clvVerdictLabel} (${row.clv.display})`
+              : STAT_PLACEHOLDER}
           </span>
         </p>
 
         {/* Consensus read where available */}
-        {row.consensusAtSettle !== null && (
+        {row.latestMarketConsensus !== null && (
           <p className={`mt-1 text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
-            Market consensus at settle ·{" "}
-            {formatCount(row.consensusAtSettle.bookCount)} books ·{" "}
-            Home {formatRatioAsPercent(row.consensusAtSettle.fairHomeProb)} ·
-            Away {formatRatioAsPercent(row.consensusAtSettle.fairAwayProb)}
-            {row.modelVsMarketPp !== null && (
-              <span className="ml-1">
-                · model vs market{" "}
-                <span
-                  className={
-                    row.modelVsMarketPp >= 0 ? "text-orbital-cyan" : "text-caution"
-                  }
-                >
-                  {row.modelVsMarketPp > 0 ? "+" : ""}
-                  {row.modelVsMarketPp}pp
-                </span>
-              </span>
-            )}
+            Latest captured market consensus ·{" "}
+            captured {new Date(row.latestMarketConsensus.capturedAt).toUTCString()} ·{" "}
+            {formatCount(row.latestMarketConsensus.read.bookCount)} books ·{" "}
+            Home {formatRatioAsPercent(row.latestMarketConsensus.read.fairHomeProb)} ·
+            Away {formatRatioAsPercent(row.latestMarketConsensus.read.fairAwayProb)}
           </p>
         )}
       </div>

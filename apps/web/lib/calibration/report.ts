@@ -1,6 +1,7 @@
 import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { computeCalibration, type CalibrationPickInput } from "@/lib/calibration/compute";
+import { CANONICAL_SETTLED_PICK_WHERE } from "@/lib/performance/canonical-population";
 
 export interface CalibrationReportPayload {
   data: ReturnType<typeof computeCalibration> & {
@@ -32,14 +33,11 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
   // building/empty state instead of throwing into the global error screen.
   const picks = await db.pick
     .findMany({
-      where: {
-        isPublished: true,
-        isBootstrap: false,
-        result: { in: ["WIN", "LOSS", "PUSH"] },
-        signalSnapshot: { is: { eligibleForLearning: true } },
-        NOT: { modelVersion: "v5.0.0-seed" },
+      where: CANONICAL_SETTLED_PICK_WHERE,
+      include: {
+        game: { include: { sport: { select: { name: true } } } },
+        proofReceipt: { select: { modelProb: true } },
       },
-      include: { game: { include: { sport: { select: { name: true } } } } },
       orderBy: { settledAt: "desc" },
       take: 500,
     })
@@ -61,6 +59,7 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
   const input: CalibrationPickInput[] = picks.map((pick) => ({
     id: pick.id,
     confidence: pick.confidence,
+    modelProbability: pick.proofReceipt?.modelProb ?? null,
     result: pick.result,
     sport: pick.game.sport.name,
     pickType: pick.pickType,
@@ -78,7 +77,9 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
       publicMessage:
         report.sampleSize === 0
           ? "Building calibration history from settled canonical picks."
-          : "Calibration is computed from settled canonical picks only.",
+          : report.probabilitySampleSize === 0
+            ? "Confidence is a strength ranking, not a win probability. Probability calibration stays withheld until frozen model probabilities exist."
+            : "Probability calibration uses frozen model probabilities from settled canonical picks only.",
     },
     meta: { gated: false, isSampleData: false },
   };

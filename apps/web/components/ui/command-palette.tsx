@@ -45,7 +45,6 @@ const COMMANDS: Command[] = [
   { label: "Trade Analyzer", href: "/fantasy/trade", group: "Fantasy", keywords: "value fairness" },
   { label: "Scheme Intelligence", href: "/fantasy/scheme", group: "Fantasy", keywords: "coaching change cascade" },
   { label: "Contests", href: "/fantasy/contests", group: "Fantasy", keywords: "best ball survivor squares" },
-  { label: "Galaxy Studios", href: "/fantasy/studio", group: "Fantasy", keywords: "nova news show brief" },
   // Account
   { label: "Dashboard", href: "/dashboard", group: "Account", keywords: "account" },
   { label: "Sign in", href: "/auth/signin", group: "Account", keywords: "login" },

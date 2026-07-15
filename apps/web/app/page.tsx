@@ -128,7 +128,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   href="/the-beat"
                   className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-6 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-ion-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
                 >
-                  Watch The Beat
+                  View the signal ledger
                 </Link>
               </div>
             </Reveal>

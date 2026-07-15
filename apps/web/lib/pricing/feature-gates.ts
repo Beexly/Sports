@@ -81,7 +81,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "sample-signal",
     displayName: "Every pick, free",
     customerExplanation: "Every pick is free, with no daily limit and the open, honest verified record. Pro adds the confidence score, the full factor trail, line movement, and the tools.",
-    internalNote: "Picks de-paywalled (dailyPickLimit=null, canSeePremiumPicks=true for FREE). Confidence remains a Pro feature for FREE until the calibrated-honest display ships (Thread 2 / Step 3).",
+    internalNote: "Picks de-paywalled (dailyPickLimit=null, canSeePremiumPicks=true for FREE). The Pro confidence field is a signal-strength score; it is not a win probability.",
     minTier: "FREE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
 
@@ -103,7 +103,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "confidence",
     displayName: "Confidence",
-    customerExplanation: "Galaxy's estimate of how strong, stable, and supported a signal is. An estimate, never a promise.",
+    customerExplanation: "A 0 to 100 signal-strength ranking. It measures support and stability; it is not a win probability or promise.",
     internalNote: "Confidence score. Free gets it on its 2 free (tier:FREE) picks; Pro+ gets it on the full board.",
     minTier: "PRO", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
@@ -182,7 +182,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "calibration-report",
     displayName: "Calibration reports",
-    customerExplanation: "How well Galaxy's confidence has matched real outcomes over time, the honesty check on the number.",
+    customerExplanation: "Whether stronger signals separate outcomes. Probability reliability stays withheld until frozen model probabilities exist.",
     internalNote: "Calibration depth for Elite.",
     minTier: "ELITE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",
   },

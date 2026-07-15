@@ -4,6 +4,7 @@ import type {
   NormalizedGame,
   NormalizedOdds,
 } from "@sports/types";
+import { normalizeAmericanOdds, normalizeMarketPoint } from "@sports/types";
 import { FRESHNESS_THRESHOLD_MS } from "./config.js";
 import { freshnessMode, resolveFreshnessThresholdMs } from "./freshness-schedule.js";
 
@@ -31,10 +32,7 @@ export class DataNormalizer {
    * with too few usable prices is simply skipped by the engine.
    */
   private sanitizeAmericanPrice(price: number | undefined): number | undefined {
-    if (price === undefined || price === null) return undefined;
-    if (!Number.isFinite(price)) return undefined;
-    if (Math.abs(price) < 100) return undefined; // decimal / malformed — not American
-    return price;
+    return normalizeAmericanOdds(price)?.normalized;
   }
 
   normalizeGames(events: OddsApiEvent[]): NormalizedGame[] {
@@ -86,12 +84,22 @@ export class DataNormalizer {
               (o) => o.name === event.away_team
             );
             const draw = market.outcomes.find((o) => o.name === "Draw");
+            const homePrice = this.sanitizeAmericanPrice(home?.price);
+            const awayPrice = this.sanitizeAmericanPrice(away?.price);
+            const drawPrice = this.sanitizeAmericanPrice(draw?.price);
+            if (
+              homePrice === undefined ||
+              awayPrice === undefined ||
+              (draw !== undefined && drawPrice === undefined)
+            ) {
+              continue;
+            }
             results.push({
               ...base,
               market: "H2H",
-              homePrice: this.sanitizeAmericanPrice(home?.price),
-              awayPrice: this.sanitizeAmericanPrice(away?.price),
-              drawPrice: this.sanitizeAmericanPrice(draw?.price),
+              homePrice,
+              awayPrice,
+              drawPrice,
             });
           } else if (market.key === "spreads") {
             const home = market.outcomes.find(
@@ -100,27 +108,64 @@ export class DataNormalizer {
             const away = market.outcomes.find(
               (o) => o.name === event.away_team
             );
+            const homePoint = normalizeMarketPoint(
+              "SPREAD_POINTS",
+              event.sport_key,
+              home?.point,
+            );
+            const awayPoint = normalizeMarketPoint(
+              "SPREAD_POINTS",
+              event.sport_key,
+              away?.point,
+            );
+            const homeSpreadPrice = this.sanitizeAmericanPrice(home?.price);
+            const awaySpreadPrice = this.sanitizeAmericanPrice(away?.price);
+            if (
+              !homePoint ||
+              !awayPoint ||
+              homePoint.normalized !== -awayPoint.normalized ||
+              homeSpreadPrice === undefined ||
+              awaySpreadPrice === undefined
+            ) {
+              continue;
+            }
             results.push({
               ...base,
               market: "SPREADS",
-              spread: home?.point,
-              // Sanitize the PRICES the same way h2h does — a leaked decimal
-              // price (e.g. 1.91 when oddsFormat=american) otherwise flows raw
-              // into implied-probability math and fabricates a spurious edge.
-              // `spread` above is a POINT (e.g. -3.5), not a price — left as-is.
-              homeSpreadPrice: this.sanitizeAmericanPrice(home?.price),
-              awaySpreadPrice: this.sanitizeAmericanPrice(away?.price),
+              spread: homePoint.normalized,
+              homeSpreadPrice,
+              awaySpreadPrice,
             });
           } else if (market.key === "totals") {
             const over = market.outcomes.find((o) => o.name === "Over");
             const under = market.outcomes.find((o) => o.name === "Under");
+            const overPoint = normalizeMarketPoint(
+              "TOTAL_POINTS",
+              event.sport_key,
+              over?.point,
+            );
+            const underPoint = normalizeMarketPoint(
+              "TOTAL_POINTS",
+              event.sport_key,
+              under?.point,
+            );
+            const overPrice = this.sanitizeAmericanPrice(over?.price);
+            const underPrice = this.sanitizeAmericanPrice(under?.price);
+            if (
+              !overPoint ||
+              !underPoint ||
+              overPoint.normalized !== underPoint.normalized ||
+              overPrice === undefined ||
+              underPrice === undefined
+            ) {
+              continue;
+            }
             results.push({
               ...base,
               market: "TOTALS",
-              total: over?.point ?? under?.point,
-              // Sanitize the PRICES (see SPREADS note); `total` is a POINT.
-              overPrice: this.sanitizeAmericanPrice(over?.price),
-              underPrice: this.sanitizeAmericanPrice(under?.price),
+              total: overPoint.normalized,
+              overPrice,
+              underPrice,
             });
           }
         }

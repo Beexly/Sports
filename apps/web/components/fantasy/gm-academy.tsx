@@ -58,7 +58,6 @@ export function GmAcademy() {
             );
           })}
         </div>
-        <a href="/fantasy/studio" className="ml-auto text-xs" style={{ color: BRAND_COLORS.softUltraviolet }}>Nova breaks down a lesson each week in Studios →</a>
       </div>
 
       {view === "reference" ? (

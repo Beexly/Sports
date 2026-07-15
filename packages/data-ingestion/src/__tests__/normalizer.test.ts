@@ -44,6 +44,22 @@ const mockEvent: OddsApiEvent = {
   ],
 };
 
+function eventWithMarket(
+  market: OddsApiEvent["bookmakers"][number]["markets"][number],
+  sportKey = "americanfootball_nfl",
+): OddsApiEvent {
+  return {
+    ...mockEvent,
+    sport_key: sportKey,
+    bookmakers: [
+      {
+        ...mockEvent.bookmakers[0]!,
+        markets: [market],
+      },
+    ],
+  };
+}
+
 describe("DataNormalizer", () => {
   const normalizer = new DataNormalizer();
 
@@ -86,6 +102,28 @@ describe("DataNormalizer", () => {
       expect(h2h.fetchedAt).toBe(fetchedAt);
     });
 
+    it("preserves the draw quote for a three-way soccer moneyline", () => {
+      const event = eventWithMarket(
+        {
+          key: "h2h",
+          last_update: new Date().toISOString(),
+          outcomes: [
+            { name: "Kansas City Chiefs", price: -125 },
+            { name: "Philadelphia Eagles", price: 310 },
+            { name: "Draw", price: 260 },
+          ],
+        },
+        "soccer_usa_mls",
+      );
+
+      expect(normalizer.normalizeOdds([event], new Date())[0]).toMatchObject({
+        market: "H2H",
+        homePrice: -125,
+        awayPrice: 310,
+        drawPrice: 260,
+      });
+    });
+
     it("normalizes spread odds correctly", () => {
       const fetchedAt = new Date();
       const odds = normalizer.normalizeOdds([mockEvent], fetchedAt);
@@ -110,6 +148,90 @@ describe("DataNormalizer", () => {
       expect(total.total).toBe(48.5);
       expect(total.overPrice).toBe(-110);
       expect(total.underPrice).toBe(-110);
+    });
+
+    it.each([-7750, -110.5, 1.91, Number.NaN, Number.POSITIVE_INFINITY])(
+      "quarantines a two-sided moneyline with invalid American price %s",
+      (homePrice) => {
+        const event = eventWithMarket({
+          key: "h2h",
+          last_update: new Date().toISOString(),
+          outcomes: [
+            { name: mockEvent.home_team, price: homePrice },
+            { name: mockEvent.away_team, price: 120 },
+          ],
+        });
+        expect(normalizer.normalizeOdds([event], new Date())).toEqual([]);
+      },
+    );
+
+    it.each([-3.2, Number.NaN, Number.POSITIVE_INFINITY, 100.5])(
+      "quarantines a non-tradable NFL spread %s",
+      (homePoint) => {
+        const event = eventWithMarket({
+          key: "spreads",
+          last_update: new Date().toISOString(),
+          outcomes: [
+            { name: mockEvent.home_team, price: -110, point: homePoint },
+            { name: mockEvent.away_team, price: -110, point: -homePoint },
+          ],
+        });
+        expect(normalizer.normalizeOdds([event], new Date())).toEqual([]);
+      },
+    );
+
+    it("quarantines spreads whose two sides are not exact opposites", () => {
+      const event = eventWithMarket({
+        key: "spreads",
+        last_update: new Date().toISOString(),
+        outcomes: [
+          { name: mockEvent.home_team, price: -110, point: -3.5 },
+          { name: mockEvent.away_team, price: -110, point: 4 },
+        ],
+      });
+      expect(normalizer.normalizeOdds([event], new Date())).toEqual([]);
+    });
+
+    it("normalizes supported soccer quarter handicaps", () => {
+      const event = eventWithMarket(
+        {
+          key: "spreads",
+          last_update: new Date().toISOString(),
+          outcomes: [
+            { name: mockEvent.home_team, price: -110, point: -0.24999999999999997 },
+            { name: mockEvent.away_team, price: -110, point: 0.25000000000000006 },
+          ],
+        },
+        "soccer_usa_mls",
+      );
+      expect(normalizer.normalizeOdds([event], new Date())[0]?.spread).toBe(-0.25);
+    });
+
+    it.each([8.954545454545455, 0, Number.NaN, Number.POSITIVE_INFINITY])(
+      "quarantines a non-tradable NFL total %s",
+      (point) => {
+        const event = eventWithMarket({
+          key: "totals",
+          last_update: new Date().toISOString(),
+          outcomes: [
+            { name: "Over", price: -110, point },
+            { name: "Under", price: -110, point },
+          ],
+        });
+        expect(normalizer.normalizeOdds([event], new Date())).toEqual([]);
+      },
+    );
+
+    it("quarantines totals whose over and under points disagree", () => {
+      const event = eventWithMarket({
+        key: "totals",
+        last_update: new Date().toISOString(),
+        outcomes: [
+          { name: "Over", price: -110, point: 48.5 },
+          { name: "Under", price: -110, point: 49 },
+        ],
+      });
+      expect(normalizer.normalizeOdds([event], new Date())).toEqual([]);
     });
   });
 

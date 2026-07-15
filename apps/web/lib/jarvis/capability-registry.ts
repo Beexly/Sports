@@ -209,10 +209,10 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "canonical sample size and display safety rules. Never expose stats before the trust bar is met.",
     currentTruth:
       "Calibration page exists at /cockpit/calibration. Public performance policy enforced. " +
-      "70% target tracked internally. Win rate displayed only when displaySafe is true. " +
-      "No automated recalibration or model weight adjustment.",
-    inputs: ["Canonical settled picks", "Win/loss/push record", "Display gate (canExposePerformanceStats)"],
-    outputs: ["Win rate (if displaySafe)", "Calibration proposals", "Performance policy state"],
+      "Confidence is audited as a rank score; Brier and reliability require receipt-committed probabilities. " +
+      "Win rate is displayed only when displaySafe is true. No automated recalibration or model weight adjustment.",
+    inputs: ["Learning-eligible canonical settled picks", "Win/loss/push record", "Receipt-committed probabilities", "Display gate (canExposePerformanceStats)"],
+    outputs: ["Win rate (if displaySafe)", "Rank-discrimination audit", "Probability reliability when evidence exists", "Performance policy state"],
     allowedActions: [
       "Report canonical performance metrics",
       "Gate public display per policy",

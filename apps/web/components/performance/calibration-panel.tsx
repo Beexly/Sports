@@ -1,5 +1,4 @@
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import { HonestBand } from "@/components/performance/honest-band";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import {
   NUMERIC_TEXT_CLASS,
@@ -35,8 +34,10 @@ type Discrimination = CalibrationData["discrimination"];
 
 // Brier score reads better with a plain-English band. Lower is better; 0.25 is
 // the coin-flip baseline for a binary outcome, so under it is meaningfully sharp.
-function brierRead(brier: number | null): string {
-  if (brier === null) return "Not enough settled picks yet.";
+function brierRead(brier: number | null, probabilitySampleSize: number): string {
+  if (brier === null || probabilitySampleSize === 0) {
+    return "Waiting for frozen model probabilities; strength scores are not substituted.";
+  }
   if (brier <= 0.18) return "Sharp. Confidence tracks outcomes closely.";
   if (brier <= 0.25) return "Better than a coin flip. Calibration is holding.";
   return "Above the coin-flip baseline. Calibration needs work.";
@@ -73,18 +74,22 @@ const VERDICT_META: Record<
 };
 
 function ReliabilityRow({ bucket }: { bucket: Bucket }) {
-  const observedWidth = `${Math.round(bucket.observedWinRate * 100)}%`;
-  const expectedLeft = `${Math.round(bucket.expectedWinRate * 100)}%`;
-  const empty = bucket.sampleSize === 0;
-  // Min-sample floor: a bucket below the publish threshold must NEVER show a
-  // win-rate number — a 2-pick bucket reading a raw single-sample rate is an unsupported claim.
-  // Withhold the observed bar, the percentage, and the CI; show only the
-  // sample-progress so the reader sees it is still collecting.
-  const publishable = bucket.sufficientSample;
-  // Per-bucket honesty: deciles of a modest settled set are SMALL samples, so each
-  // observed rate carries a wide 95% band. Show it rather than imply false precision.
+  const observedWidth = bucket.probabilityObservedWinRate === null
+    ? "0%"
+    : `${Math.round(bucket.probabilityObservedWinRate * 100)}%`;
+  const expectedLeft = bucket.expectedWinRate === null
+    ? null
+    : `${Math.round(bucket.expectedWinRate * 100)}%`;
+  const empty = bucket.probabilitySampleSize === 0;
+  const publishable =
+    bucket.sufficientProbabilitySample &&
+    bucket.probabilityObservedWinRate !== null &&
+    bucket.expectedWinRate !== null;
   const ci = publishable
-    ? wilsonInterval(Math.round(bucket.observedWinRate * bucket.sampleSize), bucket.sampleSize)
+    ? wilsonInterval(
+        Math.round(bucket.probabilityObservedWinRate! * bucket.probabilitySampleSize),
+        bucket.probabilitySampleSize,
+      )
     : null;
   return (
     <div className="flex items-center gap-3 py-2" data-testid="reliability-row">
@@ -98,17 +103,20 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
             style={{ width: observedWidth }}
           />
         )}
-        {/* Expected marker — where a perfectly calibrated bucket would land. */}
-        <div
-          className="absolute top-0 h-full w-0.5 bg-ion-white/70"
-          style={{ left: expectedLeft }}
-          aria-hidden="true"
-        />
+        {publishable && expectedLeft && (
+          <div
+            className="absolute top-0 h-full w-0.5 bg-ion-white/70"
+            style={{ left: expectedLeft }}
+            aria-hidden="true"
+          />
+        )}
       </div>
       <span
         className={`w-14 shrink-0 text-right text-xs font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}
       >
-        {publishable ? formatRatioAsPercent(bucket.observedWinRate) : STAT_PLACEHOLDER}
+        {publishable
+          ? formatRatioAsPercent(bucket.probabilityObservedWinRate!)
+          : STAT_PLACEHOLDER}
       </span>
       <span
         className={`hidden w-28 shrink-0 text-right text-[11px] text-ion-2 sm:inline-block ${NUMERIC_TEXT_CLASS}`}
@@ -121,8 +129,8 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
         {empty
           ? "no data"
           : publishable
-            ? `n=${formatCount(bucket.sampleSize)}`
-            : `${formatCount(bucket.sampleSize)}/30`}
+            ? `n=${formatCount(bucket.probabilitySampleSize)}`
+            : `${formatCount(bucket.probabilitySampleSize)}/30`}
       </span>
     </div>
   );
@@ -157,16 +165,6 @@ export async function CalibrationPanel() {
   const d = data.discrimination;
   const meta = VERDICT_META[d.trend];
   const collecting = data.isCollecting || data.sampleSize === 0;
-
-  // Overall observed rate = bucket rates weighted by bucket sample size. Only
-  // buckets that clear the publish floor contribute, so a thin sub-30 bucket
-  // never leaks an unsupported win rate into the headline / HonestBand.
-  const publishableBuckets = data.buckets.filter((b) => b.sufficientSample);
-  const decided = publishableBuckets.reduce((s, b) => s + b.sampleSize, 0);
-  const overallObserved =
-    decided > 0
-      ? publishableBuckets.reduce((s, b) => s + b.observedWinRate * b.sampleSize, 0) / decided
-      : 0;
 
   // Discrimination's low/high readout is computed at a LOWER floor than the
   // publish floor (MIN_DISCRIMINATION_SAMPLE=20 < MIN_PUBLISH_BUCKET_SAMPLE=30):
@@ -238,13 +236,14 @@ export async function CalibrationPanel() {
         </div>
       </div>
 
-      {/* Reliability curve. */}
       <div className="px-6 py-6">
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
-            Reliability by confidence bucket
+            Reliability by frozen model probability
           </h3>
-          <span className="text-[11px] text-ion-2">bar = observed · marker = expected</span>
+          <span className="text-[11px] text-ion-2">
+            bar = observed · marker = committed probability
+          </span>
         </div>
         <div className="divide-y divide-titanium/60">
           {data.buckets.map((b) => (
@@ -253,20 +252,6 @@ export async function CalibrationPanel() {
         </div>
       </div>
 
-      {/* The honest band — Wilson interval + reliability + limitation flags.
-          Back the band with `decided` (the sample behind overallObserved — only
-          publishable ≥30 buckets), NOT data.sampleSize (all settled picks), so the
-          95% interval and its "over N settled picks" caption match the rate. And
-          withhold the band entirely when nothing is publishable (decided === 0):
-          otherwise overallObserved defaults to 0 and the panel would publish a
-          fabricated "0% win rate, High reliability". */}
-      {decided > 0 && (
-        <div className="px-6 pb-6">
-          <HonestBand observedRate={overallObserved} sampleSize={decided} />
-        </div>
-      )}
-
-      {/* Brier score footer. */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-titanium px-6 py-4">
         <div>
           <span className="text-xs uppercase tracking-widest text-ion-2">Brier score</span>{" "}
@@ -274,7 +259,9 @@ export async function CalibrationPanel() {
             {formatBrier(data.brierScore)}
           </span>
         </div>
-        <p className="text-xs text-ion-2">{brierRead(data.brierScore)}</p>
+        <p className="text-xs text-ion-2">
+          {brierRead(data.brierScore, data.probabilitySampleSize)}
+        </p>
       </div>
 
       <div className="border-t border-titanium px-6 py-3">

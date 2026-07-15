@@ -110,7 +110,7 @@ export default async function Image() {
             maxWidth: 940,
           }}
         >
-          Calibrated confidence, Brier-scored against real outcomes, and every loss posted, never deleted.
+          Signal strength audited against outcomes. Probability reliability stays dark until the proof receipts support it.
         </div>
 
         {/* Footer principle */}
@@ -129,7 +129,7 @@ export default async function Image() {
             paddingTop: 28,
           }}
         >
-          <span>Calibrated, not just confident.</span>
+          <span>Receipts first. Numbers second.</span>
           <span style={{ color: "#5FD9A3" }}>galaxysportsedge.com/performance</span>
         </div>
       </div>

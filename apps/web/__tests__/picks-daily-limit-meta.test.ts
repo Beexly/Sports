@@ -8,8 +8,9 @@ import { resolve } from "node:path";
  * Source-level invariants (the full routes/pages need Prisma + auth):
  *
  * /api/picks:
- *   - FREE responses report the full published count (totalAvailableToday)
- *     and a hitDailyLimit flag instead of silently truncating.
+ *   - FREE responses report the full canonically projectable count
+ *     (totalAvailableToday) and a hitDailyLimit flag instead of silently
+ *     truncating or counting malformed legacy rows.
  *   - The count query never relaxes the published/non-bootstrap filters.
  *
  * /dashboard:
@@ -39,9 +40,22 @@ describe("/api/picks — daily-limit meta", () => {
   });
 
   it("the count keeps the published + non-bootstrap floor", () => {
-    const countBlock = routeSrc.slice(routeSrc.indexOf("totalAvailableToday = await db.pick"));
-    expect(countBlock).toMatch(/isPublished:\s*true/);
-    expect(countBlock).toMatch(/isBootstrap:\s*false/);
+    const whereBlock = routeSrc.slice(routeSrc.indexOf("const publicSlateWhere"));
+    expect(whereBlock).toMatch(/isPublished:\s*true/);
+    expect(whereBlock).toMatch(/isBootstrap:\s*false/);
+  });
+
+  it("overfetches a bounded candidate pool, projects it, then applies the daily limit", () => {
+    expect(routeSrc).toMatch(/take:\s*candidateTake/);
+    expect(routeSrc).toMatch(/const projectedPicks[\s\S]{0,100}=\s*picks\.flatMap/);
+    expect(routeSrc).toMatch(/const publicPicks\s*=\s*projectedPicks\.slice/);
+    expect(routeSrc).toMatch(/DAILY_LIMIT_OVERFETCH_FACTOR\s*=\s*10/);
+    expect(routeSrc).toMatch(/PUBLIC_PICK_CANDIDATE_CAP\s*=\s*200/);
+  });
+
+  it("derives the published total from projectable rows and suppresses an unprovable exact count", () => {
+    expect(routeSrc).toMatch(/totalCandidates\.filter\(\(pick\)\s*=>\s*projectCandidateMarket\(pick\)\s*!==\s*null\)\.length/);
+    expect(routeSrc).toMatch(/rawTotal\s*>\s*PUBLIC_PICK_CANDIDATE_CAP[\s\S]{0,120}\?\s*null/);
   });
 });
 

@@ -97,7 +97,7 @@ export const metadata: Metadata = {
     "sports analytics platform",
     "transparent sports picks",
     "audited sports picks",
-    "calibrated betting confidence",
+    "audited sports signal strength",
     "sports betting intelligence",
     "sports pick reasoning",
     "sharp sports analytics",

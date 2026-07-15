@@ -103,6 +103,7 @@ function pendingPick(overrides: Record<string, unknown> = {}): Record<string, un
     factorBreakdown: null,
     clvLockLine: -3.5,
     clvLockPrice: -110,
+    proofReceipt: { payload: "gameId=game-1|sport=NFL" },
     ...overrides,
   };
 }
@@ -388,6 +389,18 @@ describe("settleSport", () => {
       // Settlement goes through updateMany; pick.update is CLV-only, so with no
       // close it is never called.
       expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+      expect(mocks.pickUpdate).not.toHaveBeenCalled();
+    });
+
+    it("withholds CLV for a legacy lock whose market-price contract is unknowable", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick({ proofReceipt: { payload: "gameId=game-1" } })]),
+      );
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt: new Date() });
+
+      await settleSport(SPORT, "key", gates());
+
+      expect(mocks.gradePickClv).not.toHaveBeenCalled();
       expect(mocks.pickUpdate).not.toHaveBeenCalled();
     });
   });

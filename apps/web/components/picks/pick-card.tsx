@@ -6,7 +6,12 @@ import type {
   RiskLevel,
   FactorBreakdown,
 } from "@sports/types";
-import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
+import {
+  PICK_GRADE_LABELS,
+  RISK_LEVEL_LABELS,
+  formatCanonicalPickLine,
+  formatMarketPoint,
+} from "@sports/types";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
 import { AskWhy } from "./ask-why";
 import Link from "next/link";
@@ -113,11 +118,11 @@ export function PickCard({
             for away-favored picks. Show the explicit line for TOTAL/MONEYLINE only. */}
         {pick.line !== 0 && pick.pickType !== "SPREAD" && (
           <p className="mt-0.5 text-xs text-ion-1">
-            Line: {pick.line > 0 ? "+" : ""}{pick.line}
+            Line: {formatPickLine(pick.line, pick.pickType, pick.game.sport)}
           </p>
         )}
         {pick.lineMovement && (
-          <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} />
+          <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} sport={pick.game.sport} />
         )}
       </div>
 
@@ -453,13 +458,11 @@ function ConfidenceBadge({
   confidence: number;
   calibrated?: { pct: number; label: string } | null;
 }) {
-  // Thread 2: when the audited calibrator is active, show the HONEST calibrated
-  // label + win probability instead of the raw, overstated heuristic %.
   if (calibrated) {
     return (
       <span
         className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badgeColor(calibrated.pct)}`}
-        aria-label={`Calibrated confidence: ${calibrated.label}, about ${calibrated.pct} percent win probability`}
+        aria-label={`Committed win probability: ${calibrated.label}, about ${calibrated.pct} percent`}
       >
         {calibrated.label} · {calibrated.pct}%
       </span>
@@ -489,31 +492,66 @@ function ConfidenceBadge({
 export function formatLineMovement(
   movement: { opening: number; current: number },
   pickType: "SPREAD" | "MONEYLINE" | "TOTAL",
+  sport: string,
 ): { label: string; title: string; moved: boolean } {
+  const openingDisplay = formatPickLine(movement.opening, pickType, sport);
+  const currentDisplay = formatPickLine(movement.current, pickType, sport);
+  if (openingDisplay === "N/A" || currentDisplay === "N/A") {
+    return {
+      label: "Line movement unavailable",
+      title: "Opening or current market value is not canonical",
+      moved: false,
+    };
+  }
   const delta = movement.current - movement.opening;
-  const magnitude = Math.round(Math.abs(delta) * 10) / 10;
-  const title = `Opening line ${movement.opening} · current ${movement.current} (home-team perspective)`;
-  if (magnitude < 0.05) {
+  const magnitude = pickType === "MONEYLINE"
+    ? String(Math.abs(delta))
+    : formatMarketPoint(Math.abs(delta));
+  if (magnitude === "N/A") {
+    return {
+      label: "Line movement unavailable",
+      title: "Market movement does not resolve to a supported tick",
+      moved: false,
+    };
+  }
+  const title = `Opening line ${openingDisplay} · current ${currentDisplay} (home-team perspective)`;
+  if (magnitude === "0") {
     return { label: "Unmoved since open", title, moved: false };
   }
   if (pickType === "TOTAL") {
     return {
-      label: `Opened ${movement.opening} · now ${movement.current}`,
+      label: `Opened ${openingDisplay} · now ${currentDisplay}`,
       title,
       moved: true,
     };
   }
-  return { label: `Moved ${magnitude} since open`, title, moved: true };
+  return {
+    label: pickType === "MONEYLINE"
+      ? `Price moved ${magnitude} since open`
+      : `Moved ${magnitude} since open`,
+    title,
+    moved: true,
+  };
+}
+
+export function formatPickLine(
+  line: number,
+  pickType: "SPREAD" | "MONEYLINE" | "TOTAL",
+  sport: string,
+): string {
+  return formatCanonicalPickLine(pickType, sport, line);
 }
 
 function LineMovementChip({
   movement,
   pickType,
+  sport,
 }: {
   movement: { opening: number; current: number };
   pickType: "SPREAD" | "MONEYLINE" | "TOTAL";
+  sport: string;
 }) {
-  const { label, title, moved } = formatLineMovement(movement, pickType);
+  const { label, title, moved } = formatLineMovement(movement, pickType, sport);
   return (
     <p
       className={`mt-1 inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[11px] ${

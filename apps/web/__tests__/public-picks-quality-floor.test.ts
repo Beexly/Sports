@@ -20,13 +20,18 @@ describe("public picks data-quality floor", () => {
 
     expect(src).toMatch(/MIN_PUBLIC_PICK_DATA_QUALITY_SCORE/);
     expect(src).toMatch(/dataQualityScore:\s*\{\s*gte:\s*MIN_PUBLIC_PICK_DATA_QUALITY_SCORE\s*\}/);
-    expect(src.indexOf("game: gameFilter")).toBeLessThan(src.indexOf("picks.map"));
+    expect(src.indexOf("game: gameFilter")).toBeLessThan(src.indexOf("picks.flatMap"));
   });
 
   it("applies the same floor to daily-slate public pick counts", () => {
     const src = read("app/api/picks/daily-slate/route.ts");
 
     expect(src).toMatch(/MIN_PUBLIC_PICK_DATA_QUALITY_SCORE/);
-    expect(src).toMatch(/game:\s*\{\s*dataQualityScore:\s*\{\s*gte:\s*MIN_PUBLIC_PICK_DATA_QUALITY_SCORE\s*\}\s*\}/);
+    const baseWhere = src.indexOf("const baseWhere");
+    const floor = src.indexOf("dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE }", baseWhere);
+    const firstCount = src.indexOf("db.pick.count", baseWhere);
+    expect(baseWhere).toBeGreaterThan(-1);
+    expect(floor).toBeGreaterThan(baseWhere);
+    expect(floor).toBeLessThan(firstCount);
   });
 });

@@ -38,11 +38,12 @@ vi.mock("@/lib/proof/load-proof-of-record", () => ({ loadProofOfRecord: mocks.pr
 
 import BoardPage from "@/app/board/page";
 import HomePage from "@/app/page";
-import ProofPage from "@/app/proof/page";
+import ProofPage, { PickLedgerRow } from "@/app/proof/page";
 import { db } from "@sports/db";
 import { MethodologySection, type TrustLedgerMetrics } from "@/components/ui/methodology-section";
 import { buildBoardHealth, type BoardSuppressionReason } from "@/lib/board/health";
 import type { BoardStatePayload } from "@/lib/board/state";
+import type { ProofPickRow } from "@/lib/proof/load-proof-of-record";
 
 // ── element-tree helpers ─────────────────────────────────────────────────────
 
@@ -126,6 +127,46 @@ function findByType(node: unknown, type: unknown): ElementNode | null {
 // ── loader fixture builders ──────────────────────────────────────────────────
 
 const NOW = "2026-06-17T16:00:00.000Z";
+
+function proofPickRow(overrides: Partial<ProofPickRow> = {}): ProofPickRow {
+  return {
+    id: "proof-pick-1",
+    sport: "NFL",
+    homeTeamName: "Chiefs",
+    awayTeamName: "Bills",
+    commenceTime: "2026-06-16T00:00:00.000Z",
+    pickType: "SPREAD",
+    publicMarket: { selection: "Chiefs -3.5", line: -3.5 },
+    generatedAt: "2026-06-15T16:00:00.000Z",
+    settledAt: "2026-06-16T04:00:00.000Z",
+    result: "WIN",
+    modelVersion: "v5.1.0",
+    clv: {
+      kind: "POINTS",
+      value: 0.5,
+      verdict: "BEAT_CLOSE",
+      display: "+0.5 pts",
+      capturedAt: "2026-06-15T23:55:00.000Z",
+    },
+    leafHash: "a".repeat(64),
+    receiptHash: "b".repeat(64),
+    leafIndex: 0,
+    inclusionProof: { leaf: "a".repeat(64), siblings: [], index: 0 },
+    latestMarketConsensus: {
+      capturedAt: "2026-06-16T05:30:00.000Z",
+      read: {
+        fairHomeProb: 0.54,
+        fairAwayProb: 0.46,
+        fairDrawProb: null,
+        bookCount: 3,
+        medianHoldPct: 4.2,
+        fairHomeProbsByBook: [0.52, 0.54, 0.55],
+        homeProbDispersion: 0.01,
+      },
+    },
+    ...overrides,
+  };
+}
 
 function boardState(opts: {
   dataError?: "DB_UNREACHABLE";
@@ -322,6 +363,39 @@ describe("/proof — outage suppresses the freshness stamp; no synthesized gener
     expect(ids.has("proof-empty-state")).toBe(true);
     expect(ids.has("proof-unreachable-state")).toBe(false);
     expect(text).toContain("Board generated");
+  });
+});
+
+describe("/proof — projected evidence rows", () => {
+  it("renders canonical market text separately from timestamped CLV and latest consensus", () => {
+    const tree = PickLedgerRow({ row: proofPickRow() });
+    const text = textOf(tree).replaceAll("\u0001", "");
+
+    expect(text).toContain("Canonical market display:");
+    expect(text).toContain("Chiefs -3.5");
+    expect(text).toContain("Beat close (+0.5 pts)");
+    expect(text).toContain("Mon, 15 Jun 2026 23:55:00 GMT");
+    expect(text).toContain("Latest captured market consensus");
+    expect(text).toContain("Tue, 16 Jun 2026 05:30:00 GMT");
+    expect(text).toContain("Home 54.0%");
+    expect(text).toContain("Away 46.0%");
+  });
+
+  it("withholds unsupported market and CLV data without a raw fallback", () => {
+    const tree = PickLedgerRow({
+      row: proofPickRow({
+        publicMarket: null,
+        clv: null,
+        latestMarketConsensus: null,
+      }),
+    });
+    const text = textOf(tree).replaceAll("\u0001", "");
+
+    expect(text).toContain("Canonical market display:");
+    expect(text).toContain("unavailable");
+    expect(text).toContain("CLV:");
+    expect(text).not.toContain("Beat close");
+    expect(text).not.toContain("Latest captured market consensus");
   });
 });
 

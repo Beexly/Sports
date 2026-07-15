@@ -279,19 +279,25 @@ export async function processSport(
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
 
+      if (fetchedAt.getTime() >= game.commenceTime.getTime()) {
+        console.warn(
+          `${logPrefix} Pre-kickoff boundary closed for ${sport.key} ${game.externalId}; ` +
+            "odds may be stored for audit, but no pick can be generated at or after commencement.",
+        );
+        continue;
+      }
+
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
       const bookmakerCoverageMax = new Set(gameOdds.map((o) => o.bookmaker)).size;
 
       const spreadOdds = gameOdds.filter((o) => o.market === "SPREADS" && o.spread !== undefined);
       const totalOdds = gameOdds.filter((o) => o.market === "TOTALS" && o.total !== undefined);
-      const avgSpread =
-        spreadOdds.length > 0
-          ? spreadOdds.reduce((s, o) => s + (o.spread ?? 0), 0) / spreadOdds.length
-          : null;
-      const avgTotal =
-        totalOdds.length > 0
-          ? totalOdds.reduce((s, o) => s + (o.total ?? 0), 0) / totalOdds.length
-          : null;
+      const avgSpread = spreadOdds.length > 0
+        ? spreadOdds.reduce((sum, odd) => sum + odd.spread!, 0) / spreadOdds.length
+        : null;
+      const avgTotal = totalOdds.length > 0
+        ? totalOdds.reduce((sum, odd) => sum + odd.total!, 0) / totalOdds.length
+        : null;
       const hasH2HMarket = gameOdds.some((o) => o.market === "H2H");
 
       // Enrich: opening line tracking, rest days, schedule density, data quality.
@@ -380,6 +386,7 @@ export async function processSport(
           market: o.market,
           homePrice: o.homePrice,
           awayPrice: o.awayPrice,
+          drawPrice: o.drawPrice,
           spread: o.spread,
           homeSpreadPrice: o.homeSpreadPrice,
           awaySpreadPrice: o.awaySpreadPrice,
@@ -395,6 +402,19 @@ export async function processSport(
     let picksGenerated = 0;
 
     for (const pick of scoredPicks) {
+      const oddsInputForPick = oddsInputs.find((input) => input.gameId === pick.gameId);
+      if (
+        !oddsInputForPick ||
+        !Number.isFinite(pick.dataFreshnessAt.getTime()) ||
+        pick.dataFreshnessAt.getTime() >= oddsInputForPick.commenceTime.getTime()
+      ) {
+        console.warn(
+          `${logPrefix} Refused post-commencement scorer output for ${sport.key} ` +
+            `${pick.gameId} ${pick.pickType}.`,
+        );
+        continue;
+      }
+
       // Fields refreshed on every cycle (confidence, odds, reasoning).
       // result, settledAt: intentionally absent — never overwritten by refresh.
       // ingestionRunId: intentionally absent from update — preserves creation run ID.
@@ -422,67 +442,39 @@ export async function processSport(
         (pick.pickGrade === "ELITE_PLAY" ||
           (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
 
-      // A SETTLED pick is frozen: once it has a WIN/LOSS/PUSH result, the
-      // refresh cycle must never rewrite its selection/line/confidence/grade/
-      // reasoning, or the published track record stops matching the line it
-      // was graded on (and calibration is corrupted). Settlement is the only
-      // writer for settled rows. We can't express "update only if PENDING" in
-      // a unique-key upsert, so check first and skip the rewrite when settled.
       const existingPick = await db.pick.findUnique({
         where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
         select: { id: true, result: true, selection: true },
       });
 
-      let upsertedPick: { id: string };
-      if (existingPick && existingPick.result !== "PENDING") {
-        // Frozen — leave the settled pick exactly as graded.
-        upsertedPick = { id: existingPick.id };
-      } else if (
-        existingPick &&
-        pickSelectionSide(pick.pickType, existingPick.selection) !==
-          pickSelectionSide(pick.pickType, pick.selection)
-      ) {
-        // SIDE FLIP — the model now prefers the OTHER side of this market.
-        // The published pick's identity is its side: its CLV lock (create-only)
-        // and proof receipt (immutable) were minted for the ORIGINAL side, so
-        // rewriting selection/line here would grade the customer-visible pick
-        // against the other side's locked numbers — fabricated CLV, wrong-line
-        // settlement, and a receipt that provably mismatches the display. Keep
-        // the pick exactly as published; surface the flip for the operator.
-        console.warn(
-          `${logPrefix} SIDE FLIP frozen: ${sport.key} ${pick.pickType} kept ` +
-            `"${existingPick.selection}" (model now prefers "${pick.selection}"). ` +
-            "Published picks are never silently reversed."
-        );
-        upsertedPick = { id: existingPick.id };
-      } else {
-        // Upsert by DB-enforced unique key [gameId, pickType].
-        // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
-        // Update never changes isBootstrap — creation era is immutable.
-        upsertedPick = await db.pick.upsert({
-          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-          create: {
-            gameId: pick.gameId,
-            pickType: pick.pickType,
-            ingestionRunId: run.id,
-            isBootstrap,
-            isFeatured,
-            // CLV lock snapshot — the line/price we ACTUALLY published at, captured
-            // once at creation. Absent from `update` below, so the refresh cycle can
-            // never overwrite it (Pick.line itself IS mutated each cycle). Moneyline
-            // `pick.line` holds the American price; spread/total `pick.line` holds the
-            // points line. Graded against the closing line at settlement.
-            clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
-            clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
-            ...pickUpdateData,
-          },
-          update: {
-            ...pickUpdateData,
-            // Re-evaluate featured status on each refresh when promotion is enabled.
-            isFeatured,
-          },
-        });
+      if (existingPick) {
+        if (
+          pickSelectionSide(pick.pickType, existingPick.selection) !==
+            pickSelectionSide(pick.pickType, pick.selection)
+        ) {
+          console.warn(
+            `${logPrefix} SIDE FLIP frozen: ${sport.key} ${pick.pickType} kept ` +
+              `"${existingPick.selection}" (model now prefers "${pick.selection}").`,
+          );
+        }
+        picksGenerated++;
+        continue;
       }
+
+      const upsertedPick = await db.pick.upsert({
+        where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
+        create: {
+          gameId: pick.gameId,
+          pickType: pick.pickType,
+          ingestionRunId: run.id,
+          isBootstrap,
+          isFeatured,
+          clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
+          clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
+          ...pickUpdateData,
+        },
+        update: {},
+      });
       picksGenerated++;
 
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
@@ -490,7 +482,6 @@ export async function processSport(
       // This is the foundation for future outcome-anchored calibration:
       // "Given these signals at prediction time, what was the real win rate?"
       try {
-        const oddsInputForPick = oddsInputs.find((o) => o.gameId === pick.gameId);
         const snapshotData = buildPickSignalSnapshot(
           upsertedPick.id,
           pick,
@@ -534,6 +525,7 @@ export async function processSport(
             {
               pickId: upsertedPick.id,
               gameId: pick.gameId,
+              sport: sport.name,
               selection: pick.selection,
               pickType: pick.pickType,
               line: pick.line,

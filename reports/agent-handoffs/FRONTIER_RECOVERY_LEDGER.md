@@ -1,6 +1,6 @@
 # GSE Frontier Recovery Execution Ledger
 
-Last updated: 2026-07-14
+Last updated: 2026-07-15
 Executor branch: `codex/gse-frontier-recovery-2026-07-13`
 Current-main base: `3ce5c4a198df7f9baac37888de4f28297e24f581`
 Production deployment identity: `UNVERIFIED` — repository and public runtime evidence must be correlated before a deployment claim.
@@ -22,11 +22,11 @@ This file is the execution control plane. It is not a readiness claim.
 | ID | Severity | Current-main status | Evidence / next decisive check |
 |---|---:|---|---|
 | P0-1 Game Room entitlement leak | P0 | `FIX_VALIDATED` | #109 withheld pre-mortem and line movement but the shared node still serialized raw confidence, premium pick rows, entitlement-blind lens capabilities, and unpublished loss-autopsy drafts. The loader now filters at query and projection boundaries, defaults every capability closed, and exposes only published public autopsy copy. Nineteen focused loader/graph/route tests pass; production-build browser/RSC proof remains in the final matrix. |
-| P0-2 market units / false precision | P0 | `REPRODUCING` | Trace provider normalization through consensus, persistence, DTOs, settlement/CLV, and market-aware display; lock each confirmed defect with behavioral/property tests. |
-| P0-3 stub DB / false health / client boundary | P0 | `PARTIAL_FIX_VALIDATED` | Production import now rejects stub DB, health reports stub mode as 503, and DB tests run from the root workspace suite. Direct client-component imports were not found; production bundle/runtime verification remains. |
-| P0-4 performance / calibration / pricing contradiction | P0 | `REPRODUCING` | Compare eligible populations and prove whether raw strength scores enter probability-only metrics. |
+| P0-2 market units / false precision | P0 | `FIX_VALIDATED` | American prices are canonicalized before scoring/display, MLS moneyline uses full three-way de-vigging, pregame picks and receipts are immutable, CLV closes on an observed executable quote, and proof verification binds stored columns plus game/sport relations. Fresh evidence: 36 normalizer, 153 engine, 43 pipeline, and 134 web market/proof tests pass; all three package typechecks pass. |
+| P0-3 stub DB / false health / client boundary | P0 | `FIX_VALIDATED_LOCAL` | Production import rejects stub DB, health reports stub mode as 503, DB tests run from the root suite, and no direct client-component DB imports were found. Production deployment identity and live Postgres behavior remain explicitly unverified until the final runtime matrix. |
+| P0-4 performance / calibration / pricing contradiction | P0 | `FIX_VALIDATED` | Raw confidence is now a rank score only and never enters Brier/reliability math. Public probability requires a frozen `modelProb` in the pregame proof receipt plus the runtime gate. Calibration, API, policy, and page summaries use one learning-eligible canonical population; the page derives live summaries instead of reading the unwritten summary table. 143 focused tests and web typecheck pass. |
 | P0-5 stale current-price surfaces | P0 | `FIX_VALIDATED` | The public gate defaults on, freshness-query errors fail closed, empty odds runs do not refresh the clock, and every pick/board/slate query is limited to sports with an odds-inserting run inside the shared SLA. Twenty focused web tests and five engine config tests pass. |
-| P0-6 fictional newsroom framed as live | P0 | `REPRODUCING` | Exercise demo/live source selection, dominant labels, review/rights state, hero and ledger parity. |
+| P0-6 fictional newsroom framed as live | P0 | `FIX_VALIDATED` | The public wire accepts only explicitly approved feed IDs, rejects future-dated and unapproved items, preserves rights/review provenance, and renders an honest unavailable state when no approved feed exists. The demo ledger cannot inhabit the live page. 42 focused newsroom tests pass. |
 
 ## Open PR #76-#101 reconciliation
 
@@ -90,12 +90,18 @@ This file is the execution control plane. It is not a readiness claim.
 | `git diff --check` | 0 | Current stale-gate patch has no whitespace errors | — |
 | `npm run test --workspace=apps/web -- --run __tests__/game-room-paywall.test.ts __tests__/intelligence-graph.test.ts __tests__/game-room-route.test.ts __tests__/model-court-route.test.ts` | 0 | 19/19 tests passed; planted raw confidence, premium-pick, lens-capability, line-movement, factor-trail, and draft-autopsy leaks are withheld for default/FREE/FANTASY and preserved for PRO/ELITE | Browser/RSC flight verification remains in the final production-build matrix. |
 | `npm run typecheck --workspace=apps/web` | 0 | TypeScript passed after nullable public confidence and entitlement-aware projections | — |
-| Targeted tests | PENDING | — | Dependencies and existing suite topology under discovery. |
-| `npm.cmd run lint` | PENDING | — | — |
-| `npm.cmd run typecheck` | PENDING | — | — |
+| `npm.cmd run test --workspace=packages/data-ingestion -- src/__tests__/normalizer.test.ts` | 0 | 36/36 tests passed; canonical moneyline normalization includes draw quotes | Provider HTTP and live database are mocked. |
+| `npm.cmd run test --workspace=packages/prediction-engine -- src/__tests__/scoring.test.ts src/__tests__/clv-capture.test.ts src/__tests__/pick-proof-receipt.test.ts src/__tests__/slate-commitment.test.ts` | 0 | 153/153 tests passed; market units, three-way de-vigging, executable CLV, receipt compatibility, and slate commitment are pinned | Pure engine boundary. |
+| `npm.cmd run test --workspace=packages/ingestion-pipeline -- src/__tests__/process-sport.test.ts src/__tests__/settle-sport.test.ts` | 0 | 43/43 tests passed; pre-kickoff minting, immutable publication, proof capture, settlement, and CLV failure isolation are pinned | Persistence and providers are mocked. |
+| Market/proof web matrix (12 files) | 0 | 134/134 tests passed across public projection, line movement, best line, CLV formatting, audit entitlement, proof ledger, and verifier relations | Handler/component tests; production browser proof remains. |
+| Calibration/performance/copy matrix (14 files) | 0 | 143/143 tests passed; raw strength never substitutes for probability and copy scanners remain green | No production settled-history query executed. |
+| Newsroom public-wire matrix (6 files) | 0 | 42/42 tests passed; unapproved, future-dated, fictional, and unavailable states are pinned | No live feed is configured in test. |
+| Package typechecks: data ingestion, prediction engine, ingestion pipeline | 0 | TypeScript passed for all three market-integrity packages | — |
+| `npm.cmd run lint` | 0 | All workspace lint scripts passed with zero warnings | Browser runtime is separate. |
+| `npm.cmd run typecheck` | 0 | All workspace TypeScript projects passed | — |
 | `npm.cmd test` | PENDING | — | — |
 | `npm.cmd run build` | PENDING | — | — |
-| `npm.cmd run guardrails` | PENDING | — | — |
+| `npm.cmd run guardrails` | 0 | Trust, model freeze, draft-only, secret, commercial-claim, rights, OpenAPI, ZK, AWS compatibility, and eval-contract guards passed | Guardrails validate repository artifacts, not production configuration. |
 | Browser / console / visual matrix | PENDING | — | Requires a current production-equivalent build. |
 
 ## Touched-file ownership
@@ -114,6 +120,11 @@ This file is the execution control plane. It is not a readiness claim.
 | `apps/web/lib/game-room/load.ts`, `apps/web/lib/intelligence-graph/index.ts` | Entitlement lane | Filter premium picks and redact raw confidence, capabilities, and draft autopsies before serialization | VALIDATED |
 | `apps/web/app/room/[gameId]/page.tsx`, `apps/web/app/api/room/[gameId]/model-court/route.ts` | Entitlement lane | Pass the complete entitlement contract into the shared loader | VALIDATED |
 | `apps/web/__tests__/game-room-paywall.test.ts`, `apps/web/__tests__/intelligence-graph.test.ts` | Entitlement lane | Planted forbidden-field/value and fail-closed projection regressions | VALIDATED |
+| `packages/types/src/market-values.ts`, `packages/data-ingestion/src/normalizer.ts`, `packages/prediction-engine/src/scoring.ts` | Market truth lane | Canonical price/line parsing and two-way versus three-way scoring invariants | VALIDATED |
+| `packages/ingestion-pipeline/src/process-sport.ts`, `packages/prediction-engine/src/pick-proof-receipt.ts` | Publication integrity lane | Pregame-only create-once picks and relation-bound immutable receipts | VALIDATED |
+| `packages/prediction-engine/src/clv-capture.ts`, `packages/ingestion-pipeline/src/settle-sport.ts` | CLV truth lane | Observed executable close and no mixed legacy/new semantics | VALIDATED |
+| `apps/web/lib/performance/canonical-population.ts`, `apps/web/lib/calibration/**`, `apps/web/app/performance/**` | Calibration truth lane | Shared eligible population, rank/probability separation, and live-derived performance summaries | VALIDATED |
+| `apps/web/lib/news/approved-feeds.ts`, `apps/web/lib/news/public-wire.ts`, `apps/web/app/the-beat/page.tsx` | Newsroom truth lane | Approved-source-only public wire with unavailable state instead of fictional live framing | VALIDATED |
 
 ## Blockers and safe adjacent work
 

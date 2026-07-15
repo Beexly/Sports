@@ -205,7 +205,7 @@ export default function DeckPage(): JSX.Element {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/the-beat" className="btn-primary px-5 py-2.5">
-                  Hear The Beat
+                  Read The Beat
                 </Link>
                 <Link
                   href="/intelligence"

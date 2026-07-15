@@ -6,6 +6,7 @@ import { Nav } from "@/components/ui/nav";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadGameRoom } from "@/lib/game-room/load";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { formatMarketDelta } from "@sports/types";
 
 export const dynamic = "force-dynamic";
 
@@ -218,5 +219,5 @@ function NextStep({ href, label, hint }: { href: string; label: string; hint: st
 
 function formatNullable(value: number | null): string {
   if (value === null) return "N/A";
-  return value > 0 ? `+${value}` : String(value);
+  return formatMarketDelta(value);
 }

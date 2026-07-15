@@ -6,8 +6,8 @@
  * attributed reports on any public surface (only its COUNT is ever surfaced). The
  * per-team beat roster is a set of slots that populate from licensed/official
  * feeds when ingestion is switched on (founder-gated). The DEMO_WIRE below is
- * fully FICTIONAL (sources, players, and reports alike), so no fabricated report
- * is ever attributed to a real journalist; it exists only to demonstrate scoring.
+ * fully FICTIONAL (sources, players, and reports alike) and is restricted to
+ * internal studio/cockpit tooling; public routes must fail closed instead.
  */
 
 import type { NewsItem, Tier } from "./impact";
@@ -70,3 +70,15 @@ export const WIRE_DISCLAIMER =
 
 export const WIRE_LIVE_DISCLAIMER =
   "Live wire: headlines come from public RSS feeds (titles and timestamps only) and are attributed to their sources. The tier, impact, and urgency shown are our model's read of each report, not the source's own claim.";
+
+export const WIRE_PUBLISHED_DISCLAIMER =
+  "Published wire: every displayed headline came from a feed in the source-controlled public registry and is attributed to that feed's source. Tier, impact, urgency, and action text are model estimates, not claims made by the source or measured line movement.";
+
+export const WIRE_EMPTY_DISCLAIMER =
+  "Approved feeds were reached, but no recent headline passed the signal classifier and freshness checks. No report is invented to fill the page.";
+
+export const WIRE_OUTAGE_DISCLAIMER =
+  "Every selected approved feed was unavailable during this request. The ledger is withheld until a feed succeeds.";
+
+export const WIRE_UNAVAILABLE_DISCLAIMER =
+  "No feed in the source-controlled public registry is selected for publication right now. Internal fixtures and studio drafts are withheld from this page.";

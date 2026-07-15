@@ -508,7 +508,7 @@ export default function PricingPage() {
                 <h3 className="text-sm font-semibold text-white">How confidence works</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-300">
                   {getFeature("confidence")?.customerExplanation ??
-                    "A 0 to 100 score of how strongly the model likes a pick, calibrated against every settled result. It is an input to your judgment, not a promise."}
+                    "A 0 to 100 signal-strength ranking. It is not a win probability or promise."}
                 </p>
               </div>
               <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">

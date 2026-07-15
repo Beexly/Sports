@@ -55,8 +55,7 @@ const SECTIONS: readonly Section[] = [
     heading: "GSN",
     collapsible: true,
     links: [
-      { label: "The Beat: cinematic broadcast", href: "/the-beat" },
-      { label: "The Studio: production desk", href: "/fantasy/studio" },
+      { label: "The Beat: attributed signal ledger", href: "/the-beat" },
       { label: "The Academy: learn the signal", href: "/academy" },
     ],
   },

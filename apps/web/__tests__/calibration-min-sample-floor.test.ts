@@ -48,6 +48,15 @@ describe("calibration min-sample floor (sufficientSample)", () => {
     expect(report.buckets.every((b) => b.sufficientSample === false)).toBe(true);
   });
 
+  it("never marks probability calibration ready from strength scores alone", () => {
+    const report = computeCalibration(picks(75, 40));
+    const bucket = report.buckets.find((b) => b.label === "70-79");
+    expect(bucket?.sufficientSample).toBe(true);
+    expect(bucket?.probabilitySampleSize).toBe(0);
+    expect(bucket?.sufficientProbabilitySample).toBe(false);
+    expect(report.brierScore).toBeNull();
+  });
+
   it("a thin bucket below the floor never publishes a 100%-from-2-picks rate", () => {
     // 2 settled wins in one band → observedWinRate would be 1.0; the floor must
     // mark it not publishable so no renderer shows "100%".

@@ -41,6 +41,8 @@ function routeExists(route: string): boolean {
 
 const desktop = read("components/ui/nav.tsx");
 const mobile = read("components/ui/mobile-nav.tsx");
+const footer = read("components/ui/footer.tsx");
+const commandPalette = read("components/ui/command-palette.tsx");
 
 describe("Nav route integrity", () => {
   it("every desktop nav href resolves to a real route (no dead links)", () => {
@@ -67,11 +69,15 @@ describe("Nav route integrity", () => {
     }
   });
 
-  it("GSN is its own door grouping The Beat, The Studio, and The Academy", () => {
-    for (const route of ["/the-beat", "/fantasy/studio", "/academy"]) {
+  it("GSN exposes only its public Beat and Academy routes", () => {
+    for (const route of ["/the-beat", "/academy"]) {
       expect(desktop.includes(`"${route}"`), `desktop GSN missing ${route}`).toBe(true);
       expect(mobile.includes(`"${route}"`), `mobile GSN missing ${route}`).toBe(true);
     }
+    expect(desktop).not.toContain('"/fantasy/studio"');
+    expect(mobile).not.toContain('"/fantasy/studio"');
+    expect(footer).not.toContain('"/fantasy/studio"');
+    expect(commandPalette).not.toContain('"/fantasy/studio"');
     // Metrics moved out of Intelligence (it lives under Proof / on /calibration).
     expect(desktop).not.toContain('"/intelligence/metrics"');
   });

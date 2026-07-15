@@ -31,12 +31,12 @@ const CALLOUTS_RIGHT = [
     body: "Every factor the model weighed: market consensus, line movement, book depth, freshness, intelligence layers. You read what the model read.",
   },
   {
-    label: "05 · Confidence rating",
-    body: "A calibrated 0-100 Edge Index. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth.",
+    label: "05 · Signal strength",
+    body: "A 0-100 Edge Index that ranks market support, data quality, and scoring context. It is not a win probability.",
   },
   {
     label: "06 · Variance line",
-    body: "Every pick carries the reminder that even a 64% confidence signal still loses 36 of 100 times. Variance is described, not hidden.",
+    body: "Every pick carries the reminder that a strength score cannot predict how many times it will win. Variance is described, not hidden.",
   },
 ] as const;
 
@@ -425,7 +425,7 @@ function SampleCard() {
           textAlign: "center",
         }}
       >
-        A 71-confidence signal still loses ~29 of 100. Treat as one input.
+        Signal strength is not win probability. Treat it as one input.
       </p>
     </article>
   );

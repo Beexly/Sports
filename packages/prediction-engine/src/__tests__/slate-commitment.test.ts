@@ -21,6 +21,7 @@ function input(i: number): PickProofInput {
   return {
     pickId: `pick_${i}`,
     gameId: `game_${i}`,
+    sport: "NFL",
     selection: `Team ${i} -3.5`,
     pickType: "SPREAD",
     line: -3.5,

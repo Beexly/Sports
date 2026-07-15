@@ -105,6 +105,7 @@ function pickFixture() {
     game: {
       homeTeamName: "Chiefs",
       awayTeamName: "Broncos",
+      sport: { name: "NFL" },
       odds: [],
     },
   };

@@ -13,9 +13,39 @@ import {
   staleDataGateResponse,
 } from "@/lib/data-reliability/public-freshness-gate";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
-import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
+import { committedProbabilityDisplay } from "@/lib/calibration/honest-confidence";
+import { projectPublicMarket } from "@/lib/market/project-public-market";
 
 export const dynamic = "force-dynamic";
+
+const PUBLIC_PICK_CANDIDATE_CAP = 200;
+const DAILY_LIMIT_OVERFETCH_FACTOR = 10;
+
+type PublicMarketCandidate = {
+  pickType: string;
+  selection: string;
+  line: number;
+  game: {
+    homeTeamName: string;
+    awayTeamName: string;
+    openingSpread: number | null;
+    openingTotal: number | null;
+    sport: { name: string };
+  };
+};
+
+function projectCandidateMarket(pick: PublicMarketCandidate) {
+  return projectPublicMarket({
+    pickType: String(pick.pickType),
+    selection: pick.selection,
+    line: pick.line,
+    sport: pick.game.sport.name,
+    homeTeam: pick.game.homeTeamName,
+    awayTeam: pick.game.awayTeamName,
+    openingSpread: pick.game.openingSpread,
+    openingTotal: pick.game.openingTotal,
+  });
+}
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
@@ -78,6 +108,24 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE },
     ...(sportFilter || freshSportKeys ? { sport: { key: sportKeyFilter } } : {}),
   };
+  const publicSlateWhere = {
+    isPublished: true,
+    isBootstrap: false,
+    ...excludeSeedInProd,
+    generatedAt: {
+      gte: startOfDay(targetDate),
+      lte: endOfDay(targetDate),
+    },
+    game: gameFilter,
+  };
+  const dailyLimit = entitlements.dailyPickLimit;
+  const candidateTake =
+    dailyLimit === null
+      ? PUBLIC_PICK_CANDIDATE_CAP
+      : Math.min(
+          PUBLIC_PICK_CANDIDATE_CAP,
+          Math.max(1, dailyLimit) * DAILY_LIMIT_OVERFETCH_FACTOR,
+        );
 
   // Fail closed on a DB error. The sibling count below already falls back; an
   // unwrapped throw here would 500 the public
@@ -87,18 +135,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const picks = await db.pick
     .findMany({
       where: {
-        isPublished: true,
-        isBootstrap: false, // never expose bootstrap-era picks publicly
-        ...excludeSeedInProd, // prod-only: drop dev seed rows (no-op in dev/test)
-        generatedAt: {
-          gte: startOfDay(targetDate),
-          lte: endOfDay(targetDate),
-        },
+        ...publicSlateWhere,
         // Server-side tier gate
         ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
         // Optional grade filter (only useful for PRO+ who can see premium)
         ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
-        game: gameFilter,
       },
       include: {
         game: {
@@ -108,26 +149,25 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         },
         // The public proof-of-record pointer: a hash reveals nothing, and
         // publishing it pre-kickoff is exactly how a commitment works.
-        proofReceipt: { select: { contentHash: true } },
+        proofReceipt: { select: { contentHash: true, modelProb: true } },
       },
       orderBy: [
         { isFeatured: "desc" },
         { confidence: "desc" },
         { generatedAt: "desc" },
       ],
-      take: entitlements.dailyPickLimit ?? 200,
+      // Projection is deliberately applied before the entitlement limit. A
+      // malformed legacy row must not consume one of a FREE viewer's slots.
+      take: candidateTake,
     })
     .catch(() => null);
   if (picks === null) {
     return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
   }
 
-  // Thread 2: honest calibrated confidence. Built once (memoised) and only when
-  // the audited calibrator is on; the calibrator is self-suppressing if the
-  // sample is insufficient/non-improving, so this is null-safe by construction.
-  const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
-
-  const publicPicks: PublicPick[] = picks.map((pick) => {
+  const projectedPicks: PublicPick[] = picks.flatMap((pick): PublicPick[] => {
+    const market = projectCandidateMarket(pick);
+    if (!market) return [];
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
     // typed JsonValue; parseFactorBreakdown checks the shape and returns null
     // for a malformed/legacy blob (a handled "no factor trail" state) so a
@@ -155,7 +195,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // trust signal on the teaser is the Edge Index, not the confidence number.
     const shownConfidence = entitlements.canSeeConfidence ? pick.confidence : null;
 
-    return {
+    return [{
       id: pick.id,
       game: {
         homeTeam: pick.game.homeTeamName,
@@ -163,33 +203,21 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         commenceTime: pick.game.commenceTime.toISOString(),
         sport: pick.game.sport.name,
       },
-      pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
-      selection: pick.selection,
-      line: pick.line,
+      pickType: market.pickType,
+      selection: market.selection,
+      line: market.line,
       // Opening -> current movement, the Pro-tier market read. Only SPREAD and
       // TOTAL carry a comparable opening line (enrichment captures it at first
       // ingestion); MONEYLINE and games without a captured open return null,
       // as does any viewer without the entitlement.
-      lineMovement:
-        entitlements.canSeeLineMovement
-          ? (() => {
-              const opening =
-                pick.pickType === "SPREAD"
-                  ? pick.game.openingSpread
-                  : pick.pickType === "TOTAL"
-                    ? pick.game.openingTotal
-                    : null;
-              return opening !== null && opening !== undefined
-                ? { opening, current: pick.line }
-                : null;
-            })()
-          : null,
+      lineMovement: entitlements.canSeeLineMovement ? market.lineMovement : null,
       // Gated fields. Premium picks are never returned to FREE viewers (tier
       // filter above); confidence is entitlement-gated for every viewer.
       confidence: shownConfidence,
-      // Honest calibrated display of the confidence shown, when the audited
-      // calibrator is active (else null → surfaces show the raw heuristic %).
-      confidenceCalibrated: calibrator ? honestConfidence(shownConfidence, calibrator, true) : null,
+      confidenceCalibrated: committedProbabilityDisplay(
+        pick.proofReceipt?.modelProb,
+        gates.canApplyCalibrationAdjustments && shownConfidence !== null,
+      ),
       edgeScore: entitlements.canSeeEdgeScore ? pick.edgeScore : null,
       factorBreakdown,
       // Always visible — trust transparency
@@ -212,8 +240,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
       result: pick.result as PickResult,
       receiptHash: pick.proofReceipt?.contentHash ?? null,
-    };
+    }];
   });
+  const publicPicks = projectedPicks.slice(
+    0,
+    dailyLimit === null ? PUBLIC_PICK_CANDIDATE_CAP : Math.max(0, dailyLimit),
+  );
 
   // Demo-mode detection: when any of the returned picks were created by
   // the dev seed (modelVersion === "v5.0.0-seed"), surface a flag so the
@@ -221,28 +253,54 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // this string — synthetic seed picks are the only producer.
   const containsSeedData = picks.some((p) => p.modelVersion === "v5.0.0-seed");
 
-  // Daily-limit transparency for FREE viewers: count the full published
-  // slate (no tier filter, no take) so the UI can say "N picks published
-  // today — you're seeing 1" instead of silently truncating. The count is
-  // already public on the board (openPicks), so no premium data leaks.
-  let totalAvailableToday = publicPicks.length;
+  // Daily-limit transparency for FREE viewers must count only market rows that
+  // can actually be projected onto the public contract. A raw Prisma count can
+  // include malformed legacy rows and make the paywall claim picks exist when
+  // no safe public representation exists. Fetch one sentinel beyond the hard
+  // cap: if the window is saturated, return null rather than publish an exact
+  // count we cannot prove.
+  let totalAvailableToday: number | null = projectedPicks.length;
   if (!entitlements.canSeePremiumPicks) {
-    totalAvailableToday = await db.pick
-      .count({
+    const [rawTotal, totalCandidates] = await Promise.all([
+      db.pick.count({ where: publicSlateWhere }).catch(() => null),
+      db.pick.findMany({
         where: {
-          isPublished: true,
-          isBootstrap: false,
-          ...excludeSeedInProd, // prod-only: keep the count consistent with the slate
-          generatedAt: {
-            gte: startOfDay(targetDate),
-            lte: endOfDay(targetDate),
-          },
-          game: gameFilter,
+          ...publicSlateWhere,
         },
-      })
-      .catch(() => publicPicks.length);
+        select: {
+          pickType: true,
+          selection: true,
+          line: true,
+          game: {
+            select: {
+              homeTeamName: true,
+              awayTeamName: true,
+              openingSpread: true,
+              openingTotal: true,
+              sport: { select: { name: true } },
+            },
+          },
+        },
+        orderBy: [
+          { isFeatured: "desc" },
+          { confidence: "desc" },
+          { generatedAt: "desc" },
+        ],
+        take: PUBLIC_PICK_CANDIDATE_CAP + 1,
+      }).catch(() => null),
+    ]);
+    totalAvailableToday =
+      rawTotal === null ||
+      totalCandidates === null ||
+      rawTotal > PUBLIC_PICK_CANDIDATE_CAP ||
+      totalCandidates.length > PUBLIC_PICK_CANDIDATE_CAP
+        ? null
+        : totalCandidates.filter((pick) => projectCandidateMarket(pick) !== null).length;
   }
-  const hitDailyLimit = totalAvailableToday > publicPicks.length;
+  const hitDailyLimit =
+    totalAvailableToday !== null
+      ? totalAvailableToday > publicPicks.length
+      : projectedPicks.length > publicPicks.length;
 
   return NextResponse.json({
     success: true,

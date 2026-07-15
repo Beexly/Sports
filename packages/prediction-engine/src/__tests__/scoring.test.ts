@@ -360,6 +360,95 @@ describe("scoreGame — precision fields", () => {
 // Risk level classification
 // ============================================================
 
+describe("scoreGame — canonical executable market values", () => {
+  it("stores an observed spread offer instead of an invented arithmetic mean", () => {
+    const homePrices = [-105, -115, -108, -112, -109] as const;
+    const bookmakerOdds: OddsInput["bookmakerOdds"] = [-4, -3.5, -3, -2.5, -3.5].map(
+      (spread, index) => ({
+        bookmaker: `book-${index}`,
+        market: "SPREADS",
+        spread,
+        homeSpreadPrice: homePrices[index]!,
+        awaySpreadPrice: -110,
+      }),
+    );
+    const pick = scoreGame(makeOddsInput({ bookmakerOdds })).find(
+      (candidate) => candidate.pickType === "SPREAD",
+    );
+    expect(pick).toBeDefined();
+    expect(pick?.line).toBe(-3.5);
+    expect(pick?.entryPrice).toBe(-115);
+    expect(bookmakerOdds.map((odd) => odd.spread)).toContain(pick?.line);
+    expect(pick?.selection).not.toContain("-3.3");
+  });
+
+  it("withholds a frozen-model spread when prices cross the pick'em discontinuity", () => {
+    const chosenPrices = [-102, 105, -101, 104];
+    const bookmakerOdds: OddsInput["bookmakerOdds"] = chosenPrices.map(
+      (homeSpreadPrice, index) => ({
+        bookmaker: `book-${index}`,
+        market: "SPREADS",
+        spread: -3.5,
+        homeSpreadPrice,
+        awaySpreadPrice: -110,
+      }),
+    );
+    expect(
+      scoreGame(makeOddsInput({ bookmakerOdds })).some(
+        (candidate) => candidate.pickType === "SPREAD",
+      ),
+    ).toBe(false);
+  });
+
+  it("withholds non-tradable direct inputs even if they bypass ingestion", () => {
+    const bookmakerOdds: OddsInput["bookmakerOdds"] = Array.from({ length: 5 }, (_, index) => ({
+      bookmaker: `book-${index}`,
+      market: "TOTALS" as const,
+      total: 8.954545454545455,
+      overPrice: -110,
+      underPrice: -110,
+    }));
+    expect(
+      scoreGame(makeOddsInput({ sport: "MLB", bookmakerOdds })).some(
+        (candidate) => candidate.pickType === "TOTAL",
+      ),
+    ).toBe(false);
+  });
+
+  it("de-vigs MLS moneylines across home, away, and draw outcomes", () => {
+    const bookmakerOdds: OddsInput["bookmakerOdds"] = Array.from({ length: 10 }, (_, index) => ({
+      bookmaker: `book-${index}`,
+      market: "H2H" as const,
+      homePrice: -900,
+      awayPrice: 1900,
+      drawPrice: 900,
+    }));
+
+    const pick = scoreGame(makeOddsInput({ sport: "MLS", bookmakerOdds })).find(
+      (candidate) => candidate.pickType === "MONEYLINE",
+    );
+
+    expect(pick).toBeDefined();
+    expect(pick?.marketFairProb).toBeCloseTo(0.9 / 1.05, 6);
+    expect(pick?.line).toBe(-900);
+  });
+
+  it("withholds an MLS moneyline when the three-way draw quote is missing", () => {
+    const bookmakerOdds: OddsInput["bookmakerOdds"] = Array.from({ length: 5 }, (_, index) => ({
+      bookmaker: `book-${index}`,
+      market: "H2H" as const,
+      homePrice: -400,
+      awayPrice: 300,
+    }));
+
+    expect(
+      scoreGame(makeOddsInput({ sport: "MLS", bookmakerOdds })).some(
+        (candidate) => candidate.pickType === "MONEYLINE",
+      ),
+    ).toBe(false);
+  });
+});
+
 describe("scoreGame — risk level", () => {
   it("deep market with strong consensus = LOW_RISK or MODERATE", () => {
     const picks = scoreGame(makeOddsInput());
@@ -609,6 +698,7 @@ describe("scoreGames", () => {
         {
           pickId: `${pick.gameId}:${pick.pickType}`,
           gameId: pick.gameId,
+          sport: "NFL",
           selection: pick.selection,
           pickType: pick.pickType,
           line: pick.line,

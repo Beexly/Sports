@@ -40,7 +40,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick: the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
+        a: "A sports intelligence platform. Galaxy Sports Edge ingests live sportsbook odds, scores matchups for edge, and publishes evidence-backed signals. Free gets every pick's matchup and type. Pro and Elite add the strength ranking and full factor trail.",
       },
       {
         q: "How is this different from a tout service?",
@@ -65,7 +65,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What's the Edge Index?",
-        a: "A calibrated 0-100 confidence rating on every signal. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth. A 71 Edge Index still loses ~29 times in 100. Variance is described, not hidden.",
+        a: "A 0-100 signal-strength ranking built from market support, data quality, and scoring context. It is not a win probability, so a 71 does not mean 71 wins in 100. Probability is shown only when frozen pregame evidence clears calibration policy.",
       },
       {
         q: "What's Eclipse Gate?",
@@ -90,7 +90,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What does Pro get?",
-        a: `$${phase.pro.monthly}/month, or $${phase.pro.annual}/year. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement intel on every pick.`,
+        a: `$${phase.pro.monthly}/month, or $${phase.pro.annual}/year. Every signal, every day, with the strength ranking and full factor trail on each one. Plus line-movement intel on every pick.`,
       },
       {
         q: "What does Elite get?",

@@ -1,3 +1,10 @@
+import {
+  CANONICAL_SETTLED_PICK_WHERE,
+  SEED_MODEL_VERSION,
+  canonicalPendingPickWhere,
+  recentPublishedPickWhere,
+} from "@/lib/performance/canonical-population";
+
 /**
  * Public Performance Policy
  *
@@ -174,17 +181,7 @@ export async function loadPublicPerformancePolicy(
   const recentDays = input.recentWindowDays ?? 14;
   const recentSince = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000);
 
-  const settledFilter = {
-    result: { in: ["WIN", "LOSS", "PUSH"] as const },
-    isPublished: true,
-  };
-
-  // Seed/demo picks (modelVersion "v5.0.0-seed") must NEVER count toward a
-  // public win rate. The three other win-rate readers (load-performance,
-  // /api/performance, calibration/report) already exclude them; mirror that
-  // here so this loader is safe-by-construction if it is ever wired to a
-  // public surface.
-  const notSeed = { NOT: { modelVersion: "v5.0.0-seed" } };
+  const recentPublished = recentPublishedPickWhere(recentSince);
 
   const [
     canonicalSettledCount,
@@ -196,14 +193,21 @@ export async function loadPublicPerformancePolicy(
     recentTotalCount,
     recentBootstrapCount,
   ] = await Promise.all([
-    db.pick.count({ where: { ...settledFilter, isBootstrap: false, ...notSeed } }),
-    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...notSeed } }),
-    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...notSeed } }),
-    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...notSeed } }),
-    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...notSeed } }),
-    db.pick.count({ where: { isBootstrap: true, ...settledFilter } }),
-    db.pick.count({ where: { generatedAt: { gte: recentSince } } }),
-    db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }),
+    db.pick.count({ where: CANONICAL_SETTLED_PICK_WHERE }),
+    db.pick.count({ where: { AND: [CANONICAL_SETTLED_PICK_WHERE, { result: "WIN" }] } }),
+    db.pick.count({ where: { AND: [CANONICAL_SETTLED_PICK_WHERE, { result: "LOSS" }] } }),
+    db.pick.count({ where: { AND: [CANONICAL_SETTLED_PICK_WHERE, { result: "PUSH" }] } }),
+    db.pick.count({ where: canonicalPendingPickWhere() }),
+    db.pick.count({
+      where: {
+        result: { in: ["WIN", "LOSS", "PUSH"] },
+        isPublished: true,
+        isBootstrap: true,
+        NOT: { modelVersion: SEED_MODEL_VERSION },
+      },
+    }),
+    db.pick.count({ where: recentPublished }),
+    db.pick.count({ where: { AND: [recentPublished, { isBootstrap: true }] } }),
   ]);
 
   return evaluatePublicPerformancePolicy({

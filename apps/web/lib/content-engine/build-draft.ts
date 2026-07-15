@@ -245,7 +245,7 @@ export function buildMethodologyEducationDraft(input: {
       lines.push("# How confidence labels work");
       lines.push("");
       lines.push(
-        "The platform displays either a numeric confidence score or a label depending on the configured confidence-display mode. Numeric scores are only enabled once they have been calibrated against settled outcomes."
+        "The confidence score is a 0 to 100 signal-strength ranking, not a win probability. A probability is publishable only when it was frozen in the pick's pregame proof receipt and the calibration gate is open."
       );
       break;
     case "GENERAL":
@@ -304,7 +304,7 @@ export function buildWeeklyRecapDraft(input: {
 
   if (!summary.performanceGateOn) {
     lines.push(
-      "Performance gate is currently off. This draft will be held until canonical, calibrated performance data exists."
+      "Performance gate is currently off. This draft will be held until enough learning-eligible canonical performance data exists."
     );
   } else {
     lines.push(
@@ -312,7 +312,7 @@ export function buildWeeklyRecapDraft(input: {
     );
     if (summary.bootstrapExcluded) {
       lines.push(
-        "Bootstrap-era picks are excluded by design. Their data quality is uncalibrated."
+        "Bootstrap-era picks are excluded by the canonical performance population contract."
       );
     }
     lines.push(

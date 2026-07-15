@@ -68,6 +68,15 @@ describe("evidence audit drawer — brand safety", () => {
     expect(src).toMatch(/preMortem/);
   });
 
+  it("death clock distinguishes observed quotes from median movement", () => {
+    const src = readFileSync(drawerPath, "utf8");
+    expect(src).toContain("Median reference");
+    expect(src).toContain("referenceAtPublish");
+    expect(src).toContain("referenceLatest");
+    expect(src).toContain("an executable");
+    expect(src).not.toContain("the market hasn't moved");
+  });
+
   it("drawer is a client component", () => {
     const src = readFileSync(drawerPath, "utf8");
     expect(src.split(/\r?\n/)[0]).toContain("use client");

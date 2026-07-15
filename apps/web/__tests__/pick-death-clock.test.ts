@@ -18,6 +18,7 @@ const basePick = {
   generatedAt: PUBLISH,
   homeTeamName: "Chiefs",
   awayTeamName: "Bills",
+  sport: "NFL",
 };
 
 function spreadRow(
@@ -83,12 +84,16 @@ describe("buildPickDeathClock — direction semantics", () => {
       NOW,
     );
     expect(clock).not.toBeNull();
-    expect(clock!.metric).toBe("spread_points");
-    expect(clock!.atPublish).toBe(-3.5);
-    expect(clock!.latest).toBe(-4.25);
-    expect(clock!.direction).toBe("toward_pick");
-    expect(clock!.booksUsed).toBe(2);
-    expect(clock!.minutesSincePublish).toBe(180);
+    if (!clock) return;
+    expect(clock.metric).toBe("spread_points");
+    expect(clock.atPublish).toBe(-3.5);
+    expect(clock.latest).toBe(-4.5);
+    expect(clock.referenceAtPublish).toBe(-3.5);
+    expect(clock.referenceLatest).toBe(-4.25);
+    expect(clock.delta).toBe(-0.75);
+    expect(clock.direction).toBe("toward_pick");
+    expect(clock.booksUsed).toBe(2);
+    expect(clock.minutesSincePublish).toBe(180);
   });
 
   it("away spread pick reads the same move as away_from_pick", () => {
@@ -132,7 +137,7 @@ describe("buildPickDeathClock — direction semantics", () => {
     expect(under!.direction).toBe("away_from_pick");
   });
 
-  it("moneyline pick: the side's price shortening is toward_pick", () => {
+  it("moneyline pick fails closed while its median reference is a probability unit", () => {
     const pick: PickForClock = {
       ...basePick,
       pickType: "MONEYLINE",
@@ -148,10 +153,7 @@ describe("buildPickDeathClock — direction semantics", () => {
       ],
       NOW,
     );
-    expect(clock!.metric).toBe("moneyline_price");
-    expect(clock!.direction).toBe("toward_pick");
-    expect(clock!.atPublish).toBe(-119);
-    expect(clock!.latest).toBe(-138);
+    expect(clock).toBeNull();
   });
 });
 
@@ -202,6 +204,74 @@ describe("buildPickDeathClock — honesty guards", () => {
         NOW,
       ),
     ).toBeNull();
+  });
+
+  it("rejects wrong-unit prices and non-tradable point values", () => {
+    const moneylinePick: PickForClock = {
+      ...basePick,
+      pickType: "MONEYLINE",
+      selection: "Chiefs ML",
+    };
+    expect(buildPickDeathClock(
+      moneylinePick,
+      [
+        h2hRow("a", -39, 105, "2026-06-12T11:00:00Z"),
+        h2hRow("b", 1.91, 105, "2026-06-12T11:00:00Z"),
+        h2hRow("a", -110, 100, "2026-06-12T14:00:00Z"),
+        h2hRow("b", -110, 100, "2026-06-12T14:00:00Z"),
+      ],
+      NOW,
+    )).toBeNull();
+    expect(buildPickDeathClock(
+      pick,
+      [
+        spreadRow("a", -3.2, "2026-06-12T11:00:00Z"),
+        spreadRow("b", 8.954545454545455, "2026-06-12T11:00:00Z"),
+        spreadRow("a", -3.5, "2026-06-12T14:00:00Z"),
+        spreadRow("b", -3.5, "2026-06-12T14:00:00Z"),
+      ],
+      NOW,
+    )).toBeNull();
+  });
+
+  it("uses an observed executable quote instead of an invented midpoint", () => {
+    const clock = buildPickDeathClock(
+      pick,
+      [
+        spreadRow("a", -3.5, "2026-06-12T11:00:00Z"),
+        spreadRow("b", -3, "2026-06-12T11:00:00Z"),
+        spreadRow("a", -4.5, "2026-06-12T14:00:00Z"),
+        spreadRow("b", -4, "2026-06-12T14:00:00Z"),
+      ],
+      NOW,
+    );
+    expect(clock?.atPublish).toBe(-3.5);
+    expect(clock?.latest).toBe(-4.5);
+    expect(clock?.referenceAtPublish).toBe(-3.25);
+    expect(clock?.referenceLatest).toBe(-4.25);
+    expect([-3.5, -3]).toContain(clock?.atPublish);
+    expect([-4.5, -4]).toContain(clock?.latest);
+  });
+
+  it("reads flat when only the executable tie-break changes", () => {
+    const clock = buildPickDeathClock(
+      pick,
+      [
+        spreadRow("a", -3.5, "2026-06-12T11:00:00Z"),
+        spreadRow("b", -3, "2026-06-12T11:00:00Z"),
+        spreadRow("a", -4, "2026-06-12T14:00:00Z"),
+        spreadRow("b", -2.5, "2026-06-12T14:00:00Z"),
+      ],
+      NOW,
+    );
+
+    expect(clock?.atPublish).toBe(-3.5);
+    expect(clock?.latest).toBe(-4);
+    expect(clock?.referenceAtPublish).toBe(-3.25);
+    expect(clock?.referenceLatest).toBe(-3.25);
+    expect(clock?.delta).toBe(0);
+    expect(clock?.direction).toBe("flat");
+    expect(clock?.ratePerHour).toBe(0);
   });
 
   it("an unmoved market reads flat, not a direction", () => {

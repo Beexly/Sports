@@ -172,4 +172,57 @@ describe("/api/picks — production seed-row exclusion", () => {
     const findArgs = mocks.pickFindMany.mock.calls[0]?.[0];
     expect(findArgs?.where).not.toHaveProperty("NOT");
   });
+
+  it("withholds a persisted pick whose market value is not canonical", async () => {
+    setNodeEnv("test");
+    mocks.pickFindMany.mockResolvedValue([{ ...seedRow("bad-line"), line: -3.2 }]);
+
+    const { status, body } = await callPicks();
+    expect(status).toBe(200);
+    expect(body["data"]).toEqual([]);
+  });
+
+  it("withholds public selection text that disagrees with the canonical market value", async () => {
+    setNodeEnv("test");
+    mocks.pickFindMany.mockResolvedValue([{
+      ...seedRow("canonical-line"),
+      selection: "Home -3 stale raw suffix",
+    }]);
+
+    const { body } = await callPicks();
+    const data = body["data"] as Array<Record<string, unknown>>;
+    expect(data).toEqual([]);
+  });
+
+  it("projects candidates before applying the FREE daily limit", async () => {
+    setNodeEnv("test");
+    const rows = [
+      { ...seedRow("invalid-first"), selection: "Home -3.2", line: -3.2 },
+      { ...seedRow("valid-one"), selection: "Home -3", line: -3 },
+      { ...seedRow("valid-two"), selection: "Home -3.5", line: -3.5 },
+      { ...seedRow("valid-three"), selection: "Home -4", line: -4 },
+    ];
+    mocks.pickFindMany.mockResolvedValue(rows);
+    mocks.pickCount.mockResolvedValue(rows.length);
+
+    const { body } = await callPicks();
+    const data = body["data"] as Array<Record<string, unknown>>;
+    const meta = body["meta"] as Record<string, unknown>;
+
+    expect(data.map((pick) => pick["id"])).toEqual(["valid-one", "valid-two"]);
+    expect(meta["total"]).toBe(2);
+    expect(meta["totalAvailableToday"]).toBe(3);
+    expect(meta["hitDailyLimit"]).toBe(true);
+    expect((mocks.pickFindMany.mock.calls[0]?.[0] as { take?: number }).take).toBe(20);
+  });
+
+  it("withholds an exact total when the canonical count window is saturated", async () => {
+    setNodeEnv("test");
+    mocks.pickCount.mockResolvedValue(201);
+
+    const { body } = await callPicks();
+    const meta = body["meta"] as Record<string, unknown>;
+
+    expect(meta["totalAvailableToday"]).toBeNull();
+  });
 });

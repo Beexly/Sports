@@ -21,13 +21,13 @@ const PRINCIPLES = [
     eyebrow: "02 · Reasoning is published",
     title: "If the work can't be shown, it doesn't ship.",
     body:
-      "Each pick exposes its factor breakdown: consensus, market depth, line movement, intelligence layers, and the calibrated confidence the model assigned. You see the inputs. You decide what to do with them.",
+      "Each pick exposes its factor breakdown: consensus, market depth, line movement, intelligence layers, and the signal-strength score the model assigned. The score ranks support; it is not a win probability.",
   },
   {
     eyebrow: "03 · Outcomes are uncertain",
     title: "Perspective, not certainty.",
     body:
-      "No certainty theater. No guarantees. A signal with a 64% calibrated confidence still loses 36 out of 100 times. Every public surface is designed around that reality. Variance is described, not hidden.",
+      "No certainty theater. No guarantees. A strength score does not predict how many times a pick will win. Probability stays withheld unless the pregame receipt and calibration evidence support it.",
   },
   {
     eyebrow: "04 · Trust is earned slowly",
@@ -60,8 +60,8 @@ export default function AboutPage() {
             </p>
             <p className="mt-5 max-w-2xl text-lg text-ink-300">
               {BRAND_NAME} ingests live odds across dozens of sportsbooks,
-              scores every matchup for edge, and publishes a calibrated,
-              fully-reasoned signal alongside every factor that drove it. The
+              scores every matchup for edge, and publishes a fully-reasoned
+              signal alongside every factor that drove it. The
               bar is simple: if it can&apos;t be explained, it doesn&apos;t
               get published.
             </p>

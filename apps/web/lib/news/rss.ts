@@ -1,41 +1,5 @@
 import type { NewsItem, SignalType, Tier } from "./impact";
 
-/**
- * Live RSS wire — the first real crawler lane, dark-shipped.
- *
- * RSS is the one crawl target that needs no terms debate: a published
- * syndication feed exists specifically for machine consumption. We take
- * HEADLINES ONLY (title + timestamp), never article bodies, and attribute the
- * source on every card. Nothing is stored; items are fetched at render and
- * classified into the existing signal taxonomy.
- *
- * Dark by default: without NEWS_RSS_FEEDS the module returns null and The Beat
- * keeps its clearly-labeled fictional sample. With it, real headlines replace
- * the sample and the sample marker disappears.
- *
- * NEWS_RSS_FEEDS format (semicolon-separated feeds, pipe-separated fields):
- *   url|source-name|tier|team
- * e.g.
- *   https://www.espn.com/espn/rss/nfl/news|ESPN NFL|Aggregator|NFL
- * tier must be one of the Tier union (defaults to "Aggregator" — honest floor
- * for un-vetted feeds); team is the filter-chip label for the feed's scope.
- *
- * Honesty rules:
- *   - A headline that doesn't classify into a real SignalType is DROPPED, not
- *     guessed. The Beat is a signal wire, not a headline dump.
- *   - minutesAgo comes from the feed's own pubDate; items without a parseable
- *     date are dropped (no fake freshness).
- *   - Fetch failures return what succeeded; a feed outage never fabricates.
- */
-
-const VALID_TIERS: readonly Tier[] = [
-  "Insider",
-  "Beat",
-  "Verified",
-  "Aggregator",
-  "Unconfirmed",
-];
-
 export type RssFeedConfig = {
   readonly url: string;
   readonly source: string;
@@ -43,22 +7,14 @@ export type RssFeedConfig = {
   readonly team: string;
 };
 
-/** Parse the NEWS_RSS_FEEDS env format. Malformed entries are skipped. */
-export function parseFeedConfig(raw: string | undefined): RssFeedConfig[] {
-  if (!raw?.trim()) return [];
-  const feeds: RssFeedConfig[] = [];
-  for (const entry of raw.split(";")) {
-    const [url, source, tier, team] = entry.split("|").map((s) => s?.trim());
-    if (!url || !source) continue;
-    if (!/^https:\/\//.test(url)) continue; // https only
-    feeds.push({
-      url,
-      source,
-      tier: VALID_TIERS.includes(tier as Tier) ? (tier as Tier) : "Aggregator",
-      team: team || "League",
-    });
-  }
-  return feeds;
+export type WireFetchStatus = "UNCONFIGURED" | "AVAILABLE" | "OUTAGE";
+
+export interface WireFetchResult {
+  readonly status: WireFetchStatus;
+  readonly items: readonly NewsItem[];
+  readonly configuredFeedCount: number;
+  readonly successfulFeedCount: number;
+  readonly failedFeedCount: number;
 }
 
 /** Minimal RSS 2.0 / Atom item extraction. No deps; headlines only. */
@@ -113,6 +69,7 @@ export function classifySignal(headline: string): SignalType | null {
 }
 
 const FETCH_TIMEOUT_MS = 8_000;
+const MAX_FUTURE_CLOCK_SKEW_MS = 5 * 60_000;
 
 /** Cheap stable id so React keys survive re-renders across fetches. */
 function headlineId(source: string, title: string): string {
@@ -122,16 +79,19 @@ function headlineId(source: string, title: string): string {
   return `rss-${(h >>> 0).toString(36)}`;
 }
 
-/**
- * Fetch + classify the configured live wire. Returns null when unconfigured
- * (caller falls back to the labeled sample); returns [] when configured but
- * nothing classifiable arrived (an honest empty wire).
- */
 export async function fetchLiveWire(
+  feeds: readonly RssFeedConfig[],
   now: Date = new Date(),
-): Promise<NewsItem[] | null> {
-  const feeds = parseFeedConfig(process.env["NEWS_RSS_FEEDS"]);
-  if (feeds.length === 0) return null;
+): Promise<WireFetchResult> {
+  if (feeds.length === 0) {
+    return {
+      status: "UNCONFIGURED",
+      items: [],
+      configuredFeedCount: 0,
+      successfulFeedCount: 0,
+      failedFeedCount: 0,
+    };
+  }
 
   const results = await Promise.allSettled(
     feeds.map(async (feed) => {
@@ -140,7 +100,7 @@ export async function fetchLiveWire(
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
         next: { revalidate: 300 },
       });
-      if (!res.ok) return [];
+      if (!res.ok) throw new Error(`RSS request failed with ${res.status}`);
       const xml = await res.text();
       const items: NewsItem[] = [];
       for (const raw of parseRssItems(xml).slice(0, 40)) {
@@ -149,7 +109,9 @@ export async function fetchLiveWire(
         if (!raw.pubDate) continue; // no fake freshness
         const t = Date.parse(raw.pubDate);
         if (!Number.isFinite(t)) continue;
-        const minutesAgo = Math.max(0, Math.round((now.getTime() - t) / 60_000));
+        const ageMs = now.getTime() - t;
+        if (ageMs < -MAX_FUTURE_CLOCK_SKEW_MS) continue;
+        const minutesAgo = Math.max(0, Math.round(ageMs / 60_000));
         if (minutesAgo > 48 * 60) continue; // stale news is not a signal
         items.push({
           id: headlineId(feed.source, raw.title),
@@ -165,10 +127,19 @@ export async function fetchLiveWire(
     }),
   );
 
-  const wire = results
-    .filter((r): r is PromiseFulfilledResult<NewsItem[]> => r.status === "fulfilled")
+  const successfulResults = results.filter(
+    (result): result is PromiseFulfilledResult<NewsItem[]> =>
+      result.status === "fulfilled",
+  );
+  const wire = successfulResults
     .flatMap((r) => r.value)
     .sort((a, b) => a.minutesAgo - b.minutesAgo)
     .slice(0, 60);
-  return wire;
+  return {
+    status: successfulResults.length > 0 ? "AVAILABLE" : "OUTAGE",
+    items: wire,
+    configuredFeedCount: feeds.length,
+    successfulFeedCount: successfulResults.length,
+    failedFeedCount: feeds.length - successfulResults.length,
+  };
 }

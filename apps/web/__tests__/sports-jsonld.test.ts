@@ -16,7 +16,7 @@ const input: MatchupPreviewInput = {
   awayTeam: "Los Angeles Lakers",
   startTimeIso: "2026-01-15T00:30:00Z",
   venue: "TD Garden",
-  pick: { type: "SPREAD", selection: "Boston Celtics", line: -4.5, confidence: 63.4 },
+  pick: { type: "SPREAD", selection: "Boston Celtics -4.5", line: -4.5 },
 };
 
 describe("programmatic SEO engine (matchup previews)", () => {
@@ -76,5 +76,15 @@ describe("programmatic SEO engine (matchup previews)", () => {
     const out = buildMatchupPreview({ ...input, pick: null });
     expect(out.jsonLd[0]!["@type"]).toBe("SportsEvent");
     expect(out.metadata.description).toContain("NBA");
+  });
+
+  it("withholds a noncanonical market line from metadata and FAQ JSON-LD", () => {
+    const unsafe = {
+      ...input,
+      pick: { ...input.pick!, line: -3.25, selection: "Boston Celtics -3.25" },
+    };
+    const out = buildMatchupPreview(unsafe);
+    expect(out.metadata.description).not.toContain("-3.25");
+    expect(JSON.stringify(out.jsonLd)).not.toContain("-3.25");
   });
 });

@@ -1,13 +1,5 @@
 "use client";
 
-/**
- * The Beat. A reliability-tiered, impact-scored newsroom.
- *
- * Every breaking item, ranked by what deserves attention RIGHT NOW: source tier,
- * the fantasy + market delta, freshness decay, and the move to make. Filter by
- * tier or team. The reasoning the timeline never gives you.
- */
-
 import { useMemo, useState } from "react";
 import {
   rankWireCorroborated,
@@ -16,7 +8,7 @@ import {
   type NewsItem,
   type Tier,
 } from "@/lib/news/impact";
-import { DEMO_WIRE } from "@/lib/news/wire";
+import type { WireFetchResult } from "@/lib/news/rss";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const TIER_HEX: Record<Tier, string> = {
@@ -28,16 +20,19 @@ const TIER_HEX: Record<Tier, string> = {
 };
 
 const TIERS: Tier[] = ["Insider", "Beat", "Verified", "Aggregator", "Unconfirmed"];
+const EMPTY_WIRE: readonly NewsItem[] = [];
 
 const ago = (m: number) => (m < 60 ? `${m}m ago` : `${Math.round(m / 60)}h ago`);
 
-export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
-  // Live RSS wire when the owner has whitelisted feeds (NEWS_RSS_FEEDS);
-  // otherwise the clearly-labeled fictional sample. The two states are
-  // visually unmistakable: sample shows the fictional-sources marker, live
-  // shows the real-source attribution instead.
-  const isLive = liveWire !== null;
-  const wire = liveWire ?? DEMO_WIRE;
+export function TheBeat({
+  wireResult = null,
+}: {
+  readonly wireResult?: WireFetchResult | null;
+}) {
+  const isAvailable = wireResult?.status === "AVAILABLE";
+  const wire = isAvailable ? wireResult.items : EMPTY_WIRE;
+  const hasPublishedItems = wire.length > 0;
+  const hasPartialOutage = isAvailable && wireResult.failedFeedCount > 0;
   const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
   const [tierFilter, setTierFilter] = useState<Tier | "All">("All");
   const teams = useMemo(
@@ -52,22 +47,36 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
 
   return (
     <div className="space-y-5">
-      {/* Provenance marker, unmistakable at the point of display: a sample
-          card is never read as live, and a live card names its feed sources. */}
-      {isLive ? (
+      {hasPublishedItems ? (
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
           style={{ background: `${BRAND_COLORS.orbitalCyan}1c`, color: BRAND_COLORS.orbitalCyan }}
         >
-          Live wire · headlines via public feeds ·{" "}
-          {Array.from(new Set(wire.map((i) => i.source))).join(", ") || "no items in window"}
+          Source-attributed feed signals ·{" "}
+          {Array.from(new Set(wire.map((i) => i.source))).join(", ")}
+          {hasPartialOutage ? " · partial source outage" : ""}
+        </span>
+      ) : isAvailable ? (
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.steelGray}66`, color: BRAND_COLORS.ionWhite }}
+        >
+          Approved feeds checked · no qualifying signals in window
+          {hasPartialOutage ? " · partial source outage" : ""}
+        </span>
+      ) : wireResult?.status === "OUTAGE" ? (
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.ionMagenta}1c`, color: BRAND_COLORS.ionMagenta }}
+        >
+          Approved feed outage · no reports shown
         </span>
       ) : (
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
           style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
         >
-          Sample feed · fictional sources
+          No approved signal feed is published right now
         </span>
       )}
       {/* tier legend / filter */}
@@ -129,8 +138,8 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                   title="These are the impact engine's read of the report (source tier, signal magnitude, freshness), not measured line or projection movement."
                 >
                   <span className="rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.06)", color: "#c8d2dd" }}>{signalLabel(r.item.signal)}</span>
-                  <span className="text-ink-500">{isLive ? "Est. fantasy" : "Fantasy"} <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
-                  <span className="text-ink-500">{isLive ? "Est. market" : "Market"} <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
+                  <span className="text-ink-500">Est. fantasy <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
+                  <span className="text-ink-500">Est. market <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
                   <span className="text-ink-500">Reliability <strong className="text-white">{Math.round(r.reliability * 100)}%</strong></span>
                 </div>
 
@@ -141,7 +150,15 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
             </article>
           );
         })}
-        {shown.length === 0 && <div className="surface-card p-6 text-sm text-ink-400">No items match this filter.</div>}
+        {shown.length === 0 && (
+          <div className="surface-card p-6 text-sm text-ink-400">
+            {isAvailable
+              ? "No qualifying feed items match this filter."
+              : wireResult?.status === "OUTAGE"
+                ? "Approved feeds could not be reached. No reports are shown."
+                : "No approved signal feed is published right now."}
+          </div>
+        )}
       </div>
     </div>
   );

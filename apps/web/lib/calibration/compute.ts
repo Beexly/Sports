@@ -15,6 +15,7 @@ export type CalibrationProposalKind =
 export interface CalibrationPickInput {
   readonly id: string;
   readonly confidence: number;
+  readonly modelProbability?: number | null;
   readonly result: "WIN" | "LOSS" | "PUSH" | "VOID" | "PENDING";
   readonly sport?: string | null;
   readonly pickType?: string | null;
@@ -37,9 +38,11 @@ export interface CalibrationBucket {
   readonly confidenceMax: number;
   readonly sampleSize: number;
   readonly observedWinRate: number;
-  readonly expectedWinRate: number;
-  readonly delta: number;
-  readonly brierScore: number;
+  readonly probabilitySampleSize: number;
+  readonly probabilityObservedWinRate: number | null;
+  readonly expectedWinRate: number | null;
+  readonly delta: number | null;
+  readonly brierScore: number | null;
   /**
    * True once the bucket has enough settled picks to PUBLISH its observed win
    * rate on a public surface. `observedWinRate` is always computed for internal
@@ -48,18 +51,15 @@ export interface CalibrationBucket {
    * public renderer gates on this flag; see MIN_PUBLISH_BUCKET_SAMPLE.
    */
   readonly sufficientSample: boolean;
+  readonly sufficientProbabilitySample: boolean;
 }
 
 /**
  * Discrimination ("rank quality") of the confidence score.
  *
- * Brier score and per-bucket deltas measure ABSOLUTE calibration — they assume
- * `confidence/100` is a win probability. That assumption holds for moneyline
- * picks (confidence is derived from the vig-free fair probability) but NOT for
- * spread/total picks, which are priced to ~50% by construction: a well-built
- * spread model can be perfectly useful yet still win ~52-54% at the top of the
- * confidence range. Judged on absolute calibration alone, every spread/total
- * pick looks "overconfident."
+ * Brier score and per-bucket deltas measure ABSOLUTE calibration and therefore
+ * use only a frozen model probability. The 0–100 confidence field is a ranking
+ * score, not a win probability, for every market type.
  *
  * Discrimination sidesteps that by asking a different, market-neutral question:
  * does the OBSERVED win rate rise as confidence rises? If higher-confidence
@@ -87,6 +87,7 @@ export interface CalibrationReport {
   readonly buckets: readonly CalibrationBucket[];
   readonly proposals: readonly CalibrationProposal[];
   readonly sampleSize: number;
+  readonly probabilitySampleSize: number;
   readonly brierScore: number | null;
   readonly discrimination: CalibrationDiscrimination;
   readonly note: string;
@@ -223,10 +224,6 @@ function finiteNumber(value: number | null | undefined): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }
 
-function expectedFromConfidence(confidence: number): number {
-  return Math.max(0.01, Math.min(0.99, confidence / 100));
-}
-
 function resultToOutcome(result: CalibrationPickInput["result"]): number | null {
   if (result === "WIN") return 1;
   if (result === "LOSS") return 0;
@@ -256,6 +253,13 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
   const buckets: CalibrationBucket[] = [];
   for (const bucket of BUCKETS) {
     const rows = settled.filter(({ pick }) => bucketFor(pick.confidence).label === bucket.label);
+    const probabilityRows = rows.flatMap((row) =>
+      finiteNumber(row.pick.modelProbability) &&
+      row.pick.modelProbability >= 0 &&
+      row.pick.modelProbability <= 1
+        ? [{ ...row, probability: row.pick.modelProbability }]
+        : [],
+    );
     if (rows.length === 0) {
       buckets.push({
         label: bucket.label,
@@ -263,22 +267,30 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
         confidenceMax: bucket.max,
         sampleSize: 0,
         observedWinRate: 0,
-        expectedWinRate: round((bucket.min + bucket.max) / 200),
-        delta: 0,
-        brierScore: 0,
+        probabilitySampleSize: 0,
+        probabilityObservedWinRate: null,
+        expectedWinRate: null,
+        delta: null,
+        brierScore: null,
         sufficientSample: false,
+        sufficientProbabilitySample: false,
       });
       continue;
     }
 
     const observed = rows.reduce((sum, row) => sum + row.outcome, 0) / rows.length;
-    const expected =
-      rows.reduce((sum, row) => sum + expectedFromConfidence(row.pick.confidence), 0) / rows.length;
-    const brier =
-      rows.reduce((sum, row) => {
-        const expectedProb = expectedFromConfidence(row.pick.confidence);
-        return sum + (expectedProb - row.outcome) ** 2;
-      }, 0) / rows.length;
+    const probabilityObserved = probabilityRows.length > 0
+      ? probabilityRows.reduce((sum, row) => sum + row.outcome, 0) / probabilityRows.length
+      : null;
+    const expected = probabilityRows.length > 0
+      ? probabilityRows.reduce((sum, row) => sum + row.probability, 0) / probabilityRows.length
+      : null;
+    const brier = probabilityRows.length > 0
+      ? probabilityRows.reduce(
+          (sum, row) => sum + (row.probability - row.outcome) ** 2,
+          0,
+        ) / probabilityRows.length
+      : null;
 
     buckets.push({
       label: bucket.label,
@@ -286,22 +298,37 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
       confidenceMax: bucket.max,
       sampleSize: rows.length,
       observedWinRate: round(observed),
-      expectedWinRate: round(expected),
-      delta: round(observed - expected),
-      brierScore: round(brier),
+      probabilitySampleSize: probabilityRows.length,
+      probabilityObservedWinRate:
+        probabilityObserved === null ? null : round(probabilityObserved),
+      expectedWinRate: expected === null ? null : round(expected),
+      delta:
+        probabilityObserved === null || expected === null
+          ? null
+          : round(probabilityObserved - expected),
+      brierScore: brier === null ? null : round(brier),
       sufficientSample: rows.length >= MIN_PUBLISH_BUCKET_SAMPLE,
+      sufficientProbabilitySample:
+        probabilityRows.length >= MIN_PUBLISH_BUCKET_SAMPLE,
     });
   }
 
   const proposals = computeCalibrationProposals(buckets);
   const discrimination = computeDiscrimination(buckets);
+  const settledProbabilityRows = settled.flatMap((row) =>
+    finiteNumber(row.pick.modelProbability) &&
+    row.pick.modelProbability >= 0 &&
+    row.pick.modelProbability <= 1
+      ? [{ ...row, probability: row.pick.modelProbability }]
+      : [],
+  );
   const brierScore =
-    settled.length > 0
+    settledProbabilityRows.length > 0
       ? round(
-          settled.reduce((sum, row) => {
-            const expectedProb = expectedFromConfidence(row.pick.confidence);
-            return sum + (expectedProb - row.outcome) ** 2;
-          }, 0) / settled.length
+          settledProbabilityRows.reduce(
+            (sum, row) => sum + (row.probability - row.outcome) ** 2,
+            0,
+          ) / settledProbabilityRows.length,
         )
       : null;
 
@@ -309,12 +336,15 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
     buckets,
     proposals,
     sampleSize: settled.length,
+    probabilitySampleSize: settledProbabilityRows.length,
     brierScore,
     discrimination,
     note:
       settled.length === 0
         ? "No settled canonical picks were provided. Calibration remains collecting."
-        : "Calibration is evidence only. Proposals require human review and a model-version bump.",
+        : settledProbabilityRows.length === 0
+          ? "Confidence rank evidence is available; probability calibration remains unavailable until frozen model probabilities exist."
+          : "Calibration is evidence only. Proposals require human review and a model-version bump.",
   };
 }
 
@@ -698,10 +728,17 @@ export function buildProjectionSelfPublishingArtifact(
 export function computeCalibrationProposals(
   buckets: readonly CalibrationBucket[] = []
 ): readonly CalibrationProposal[] {
-  return buckets
-    .filter((bucket) => bucket.sampleSize >= MIN_BUCKET_SAMPLE)
-    .filter((bucket) => Math.abs(bucket.delta) >= PROPOSAL_DELTA)
-    .map((bucket) => ({
+  return buckets.flatMap((bucket) => {
+    if (
+      bucket.probabilitySampleSize < MIN_BUCKET_SAMPLE ||
+      bucket.delta === null ||
+      bucket.expectedWinRate === null ||
+      bucket.probabilityObservedWinRate === null ||
+      Math.abs(bucket.delta) < PROPOSAL_DELTA
+    ) {
+      return [];
+    }
+    return [{
       id: `confidence-drift-${bucket.label}`,
       kind: "CONFIDENCE_SHIFT" as const,
       title:
@@ -709,9 +746,10 @@ export function computeCalibrationProposals(
           ? `Confidence bucket ${bucket.label} is undercalling outcomes`
           : `Confidence bucket ${bucket.label} is overcalling outcomes`,
       rationale:
-        `Observed ${Math.round(bucket.observedWinRate * 100)}% vs expected ` +
-        `${Math.round(bucket.expectedWinRate * 100)}% across ${bucket.sampleSize} settled picks. ` +
+        `Observed ${Math.round(bucket.probabilityObservedWinRate * 100)}% vs expected ` +
+        `${Math.round(bucket.expectedWinRate * 100)}% across ${bucket.probabilitySampleSize} probability-committed picks. ` +
         "Review before changing weights.",
-      sampleSize: bucket.sampleSize,
-    }));
+      sampleSize: bucket.probabilitySampleSize,
+    }];
+  });
 }

@@ -39,13 +39,10 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
   },
 ];
 
-// GSN ▾ — Galaxy Sports Network, the media + studio arm. The broadcast, the
-// production desk, and the school. (How-we-read-metrics now lives under Proof.)
 const GSN_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "The Beat", href: "/the-beat", desc: "The cinematic broadcast, scored at the source" },
-      { label: "The Studio", href: "/fantasy/studio", desc: "Inside the production desk, where the broadcast is built" },
+      { label: "The Beat", href: "/the-beat", desc: "Source-attributed feed signals, withheld unless approved" },
       { label: "The Academy", href: "/academy", desc: "Learn the signal. Train on the process, step by step" },
     ],
   },

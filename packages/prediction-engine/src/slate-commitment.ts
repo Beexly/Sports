@@ -25,7 +25,10 @@ import {
   type PickRecord,
   type MerkleProof,
 } from "./proof-of-record.js";
-import { buildPickProofReceipt, type PickProofReceipt } from "./pick-proof-receipt.js";
+import {
+  verifyPickProofReceipt,
+  type PickProofReceipt,
+} from "./pick-proof-receipt.js";
 
 export interface SlateCommitment {
   /** Identifies the committed slate (e.g. a date or ingestion-run id). */
@@ -105,18 +108,8 @@ export function verifyPickInSlate(
   root: string,
   hash: HashFn
 ): SlateVerification {
-  let receiptIntact = true;
-  let expectedLeaf: string;
-  try {
-    expectedLeaf = buildPickProofReceipt(receipt.fields, hash).contentHash;
-  } catch {
-    receiptIntact = false;
-    expectedLeaf = "";
-  }
-  // A re-derived receipt whose hash differs from the stored one was tampered with.
-  if (receiptIntact && expectedLeaf !== receipt.contentHash) {
-    receiptIntact = false;
-  }
+  const receiptIntact = verifyPickProofReceipt(receipt, hash);
+  const expectedLeaf = receiptIntact ? receipt.contentHash : "";
 
   const leafMatches = receiptIntact && proof.leaf === expectedLeaf;
   const foldsToRoot = verifyInclusion(proof, root, hash);

@@ -65,12 +65,7 @@ describe("news impact engine", () => {
     expect(NATIONAL_INSIDERS.every((i) => i.tier === "Insider")).toBe(true);
   });
 
-  it("the public DEMO_WIRE never attributes a fabricated report to a real journalist", () => {
-    // The Beat renders DEMO_WIRE with each item's `source` shown next to a
-    // "Confirmed / Reliability %" badge. A fabricated report attributed to a real
-    // reporter (Schefter, Pelissero, …) reads as a genuine endorsement — a trust +
-    // right-of-publicity risk. Demo sources must be fictional; real insider names
-    // stay an internal reliability seed only.
+  it("the internal DEMO_WIRE never attributes a fabricated report to a real journalist", () => {
     const realInsiders = new Set(NATIONAL_INSIDERS.map((i) => i.name));
     for (const w of DEMO_WIRE) {
       expect(realInsiders.has(w.source), `demo source "${w.source}" is a real insider`).toBe(false);
@@ -110,7 +105,7 @@ describe("corroboration", () => {
     expect(doubled[0]!.urgency).toBeGreaterThan(single[0]!.urgency);
   });
 
-  it("the live demo wire surfaces the corroborated top story", () => {
+  it("the internal demo fixture surfaces the corroborated top story", () => {
     const ranked = rankWireCorroborated(DEMO_WIRE);
     expect(ranked[0]!.corroboration.confirmed).toBe(true); // Vale injury-out, two insiders
     expect(ranked[0]!.corroboration.sources).toBeGreaterThanOrEqual(2);

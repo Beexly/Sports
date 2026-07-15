@@ -130,14 +130,14 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
   {
     id: "methodology.confidence-presentation",
     copy:
-      "Confidence is expressed as a label or score depending on the platform's current confidence-display mode. Numeric scores are only shown once calibrated against settled outcomes.",
+      "Confidence is a signal-strength ranking, not a win probability. A probability may appear only when it was frozen in the pick's pregame proof receipt and the calibration gate is open.",
     category: "METHODOLOGY",
     status: "APPROVED",
     evidence: "ENGINE_BEHAVIOR",
     visibility: "PUBLIC",
     lastReviewedAt: LAST_REVIEW,
     reviewNote:
-      "platform-config.ts exposes CONFIDENCE_DISPLAY_MODE; defaults to 'labels' until calibration verified.",
+      "Raw strength and committed probability are separate fields. Public probability fails closed when the receipt or gate is absent.",
   },
   {
     id: "methodology.risk-levels",
@@ -179,7 +179,7 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
   {
     id: "performance.no-cherrypicking",
     copy:
-      "Once performance stats are public, every settled pick is included in the totals. Bootstrap-era picks are excluded by design because their data quality is uncalibrated.",
+      "Once performance stats are public, every published, non-bootstrap, learning-eligible settled pick is included in the totals. Seed and bootstrap rows are excluded by the canonical population contract.",
     category: "PERFORMANCE",
     status: "GATED",
     requiredGate: "canExposePerformanceStats",

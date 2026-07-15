@@ -107,10 +107,10 @@ export default function VsToutServicesPage() {
             </h2>
             <div className="mt-6 space-y-5 text-base leading-relaxed text-ink-300">
               <p>
-                Sports markets are uncertain. A model with a 64% calibrated
-                confidence on a single signal still loses 36 of 100 times.
-                That is not a flaw. That is the math. Any service that hides
-                this is selling certainty it cannot deliver.
+                Sports markets are uncertain. A signal-strength score is not a
+                win probability and cannot tell you how many of 100 picks will
+                win. Any service that blurs that boundary is selling certainty
+                it cannot deliver.
               </p>
               <p>
                 The defensible position in a noisy market is not &ldquo;we win

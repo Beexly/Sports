@@ -9,7 +9,16 @@ import type {
   IndependentMarketFairValue,
   IndependentEdgeSummary,
 } from "@sports/types";
-import { computePickGrade } from "@sports/types";
+import {
+  buildAmericanOddsConsensus,
+  buildMarketPointConsensus,
+  computePickGrade,
+  formatAmericanOdds,
+  formatMarketPoint,
+  formatSignedMarketPoint,
+  normalizeAmericanOdds,
+  normalizeMarketPoint,
+} from "@sports/types";
 import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
 import {
   MODEL_VERSION,
@@ -54,10 +63,23 @@ export function impliedProbabilityToAmerican(p: number): number {
  * probabilities and poison CLV. Returns null for an empty set.
  */
 export function averageAmericanPrices(prices: readonly number[]): number | null {
-  if (prices.length === 0) return null;
+  const validPrices = prices.flatMap((price) => {
+    const value = normalizeAmericanOdds(price);
+    return value ? [value.normalized] : [];
+  });
+  if (validPrices.length === 0) return null;
   const meanImplied =
-    prices.reduce((s, price) => s + americanToImpliedProbability(price), 0) / prices.length;
+    validPrices.reduce((s, price) => s + americanToImpliedProbability(price), 0) /
+    validPrices.length;
   return impliedProbabilityToAmerican(meanImplied);
+}
+
+function averageSameSideAmericanPrices(prices: readonly number[]): number | null {
+  const firstPrice = prices[0];
+  if (firstPrice === undefined) return null;
+  const sign = Math.sign(firstPrice);
+  if (sign === 0 || prices.some((price) => Math.sign(price) !== sign)) return null;
+  return prices.reduce((sum, price) => sum + price, 0) / prices.length;
 }
 
 // ============================================================
@@ -375,13 +397,27 @@ function computeVolatilityPenalty(
 // ============================================================
 
 function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
-  const spreadOdds = input.bookmakerOdds.filter(
-    (o) => o.market === "SPREADS" && o.spread !== undefined
-  );
+  const spreadOdds = input.bookmakerOdds.flatMap((odd) => {
+    if (odd.market !== "SPREADS") return [];
+    const point = normalizeMarketPoint("SPREAD_POINTS", input.sport, odd.spread);
+    const homePrice = normalizeAmericanOdds(odd.homeSpreadPrice);
+    const awayPrice = normalizeAmericanOdds(odd.awaySpreadPrice);
+    if (!point || !homePrice || !awayPrice) return [];
+    return [{
+      ...odd,
+      spread: point.normalized,
+      homeSpreadPrice: homePrice.normalized,
+      awaySpreadPrice: awayPrice.normalized,
+    }];
+  });
   if (spreadOdds.length < MIN_BOOKMAKERS) return null;
 
-  const spreads = spreadOdds.map((o) => o.spread as number);
-  const avgSpread = spreads.reduce((a, b) => a + b, 0) / spreads.length;
+  const spreads = spreadOdds.map((o) => o.spread);
+  const marketConsensus = buildMarketPointConsensus("SPREAD_POINTS", input.sport, spreads);
+  if (!marketConsensus) return null;
+  const executableSpread = marketConsensus.executable;
+  const calibratedSpreadMean = spreads.reduce((sum, spread) => sum + spread, 0) /
+    spreads.length;
 
   const homeFavoredCount = spreads.filter((s) => s < 0).length;
   const homeFavoredPct = homeFavoredCount / spreads.length;
@@ -391,23 +427,26 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   if (consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
 
   // Spread dispersion — measure of line disagreement
-  const spreadMean = avgSpread;
+  const spreadMean = calibratedSpreadMean;
   const variance = spreads.reduce((acc, s) => acc + Math.pow(s - spreadMean, 2), 0) / spreads.length;
   const spreadOfSpreads = Math.sqrt(variance);
 
   // Chosen side
   const chosenTeam = homeIsChosen ? input.homeTeam : input.awayTeam;
-  const chosenSpread = homeIsChosen ? avgSpread : -avgSpread;
+  const chosenSpread = homeIsChosen ? executableSpread : -executableSpread;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
-  // Average price for chosen side
-  const chosenPrices = spreadOdds
+  const calibratedScoringPrices = spreadOdds.map((odd) =>
+    homeIsChosen ? odd.homeSpreadPrice : odd.awaySpreadPrice,
+  );
+  const calibratedScoringPrice = averageSameSideAmericanPrices(calibratedScoringPrices);
+  if (calibratedScoringPrice === null) return null;
+  const executableEntryPrices = spreadOdds
+    .filter((o) => o.spread === executableSpread)
     .map((o) => (homeIsChosen ? o.homeSpreadPrice : o.awaySpreadPrice))
     .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  const entryPrice = buildAmericanOddsConsensus(executableEntryPrices)?.executable;
+  if (entryPrice === undefined) return null;
 
   // Fair value — assume consensus spread IS fair line, edge from vig removal
   const homeImpliedAvg =
@@ -424,14 +463,26 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // Component scores
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
   const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(spreadOdds.length);
-  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
+  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(
+    fairProb,
+    calibratedScoringPrice,
+    twoSidedImpliedSum,
+  );
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
     computeVolatilityPenalty(spreadOdds.length, spreadOfSpreads);
 
   // Compute ML fair probability for cross-market validation
-  const h2hForContext = input.bookmakerOdds.filter(
-    (o) => o.market === "H2H" && o.homePrice !== undefined && o.awayPrice !== undefined
-  );
+  const h2hForContext = input.bookmakerOdds.flatMap((odd) => {
+    if (odd.market !== "H2H") return [];
+    const homePrice = normalizeAmericanOdds(odd.homePrice);
+    const awayPrice = normalizeAmericanOdds(odd.awayPrice);
+    if (!homePrice || !awayPrice) return [];
+    return [{
+      ...odd,
+      homePrice: homePrice.normalized,
+      awayPrice: awayPrice.normalized,
+    }];
+  });
   let mlFairProbHome: number | null = null;
   if (h2hForContext.length >= 2) {
     const homeImplied = h2hForContext.map((o) => americanToImpliedProbability(o.homePrice!));
@@ -498,8 +549,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const riskLevel: RiskLevel = computeRiskLevel(spreadOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
-  const spreadDisplay =
-    chosenSpread > 0 ? `+${chosenSpread.toFixed(1)}` : chosenSpread.toFixed(1);
+  const spreadDisplay = formatSignedMarketPoint(chosenSpread);
   const selection = `${chosenTeam} ${spreadDisplay}`;
 
   // Build contextual reasoning clauses
@@ -552,18 +602,18 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     gameId: input.gameId,
     pickType: "SPREAD",
     selection,
-    // `line` is stored in HOME-team perspective (= avgSpread), matching the
+    // `line` is stored in HOME-team perspective, matching the
     // settlement convention (settlement.ts: `homeCoverMargin = homeMargin + line`),
     // the OpeningLine / Game.openingSpread fields, and the CLV helpers. The
     // chosen-side display number lives in `selection` (e.g. "Away Favs -6.0").
     // Storing chosenSpread here previously mis-graded AWAY-favored picks, because
     // chosenSpread is away-perspective for away picks while settlement reads home.
-    line: avgSpread,
+    line: executableSpread,
     confidence,
     edgeScore,
     consensusPct,
     marketFairProb: fairProb,
-    entryPrice: Math.round(avgPrice),
+    entryPrice,
     bookmakerCount: spreadOdds.length,
     dataQualityScore,
     tier,
@@ -582,13 +632,27 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 // ============================================================
 
 function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
-  const totalOdds = input.bookmakerOdds.filter(
-    (o) => o.market === "TOTALS" && o.total !== undefined
-  );
+  const totalOdds = input.bookmakerOdds.flatMap((odd) => {
+    if (odd.market !== "TOTALS") return [];
+    const point = normalizeMarketPoint("TOTAL_POINTS", input.sport, odd.total);
+    const overPrice = normalizeAmericanOdds(odd.overPrice);
+    const underPrice = normalizeAmericanOdds(odd.underPrice);
+    if (!point || !overPrice || !underPrice) return [];
+    return [{
+      ...odd,
+      total: point.normalized,
+      overPrice: overPrice.normalized,
+      underPrice: underPrice.normalized,
+    }];
+  });
   if (totalOdds.length < MIN_BOOKMAKERS) return null;
 
-  const totals = totalOdds.map((o) => o.total as number);
-  const avgTotal = totals.reduce((a, b) => a + b, 0) / totals.length;
+  const totals = totalOdds.map((o) => o.total);
+  const marketConsensus = buildMarketPointConsensus("TOTAL_POINTS", input.sport, totals);
+  if (!marketConsensus) return null;
+  const executableTotal = marketConsensus.executable;
+  const calibratedTotalMean = totals.reduce((sum, total) => sum + total, 0) /
+    totals.length;
 
   // Consensus is only meaningful over books that quote BOTH sides. A totals row
   // with a `total` but no over/under prices carries no consensus signal, so we
@@ -614,14 +678,17 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const pickedSide = overIsChosen ? "OVER" : "UNDER";
 
-  // Avg price for chosen direction
-  const chosenPrices = totalOdds
+  const calibratedScoringPrices = totalOdds.map((odd) =>
+    overIsChosen ? odd.overPrice : odd.underPrice,
+  );
+  const calibratedScoringPrice = averageSameSideAmericanPrices(calibratedScoringPrices);
+  if (calibratedScoringPrice === null) return null;
+  const executableEntryPrices = totalOdds
+    .filter((o) => o.total === executableTotal)
     .map((o) => (overIsChosen ? o.overPrice : o.underPrice))
     .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  const entryPrice = buildAmericanOddsConsensus(executableEntryPrices)?.executable;
+  if (entryPrice === undefined) return null;
 
   // Fair value
   const overImpliedAvg =
@@ -641,13 +708,17 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const twoSidedImpliedSum = overImpliedAvg + underImpliedAvg;
 
   // Total dispersion
-  const totalMean = avgTotal;
+  const totalMean = calibratedTotalMean;
   const variance = totals.reduce((acc, t) => acc + Math.pow(t - totalMean, 2), 0) / totals.length;
   const totalDispersion = Math.sqrt(variance);
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
   const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(totalOdds.length);
-  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
+  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(
+    fairProb,
+    calibratedScoringPrice,
+    twoSidedImpliedSum,
+  );
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
     computeVolatilityPenalty(totalOdds.length, totalDispersion);
 
@@ -697,20 +768,21 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
   const direction = overIsChosen ? "OVER" : "UNDER";
-  const selection = `${direction} ${avgTotal.toFixed(1)}`;
+  const totalDisplay = formatMarketPoint(executableTotal);
+  const selection = `${direction} ${totalDisplay}`;
 
   const movementNote = lineMovementScore > 5 ? " Total line moving in pick direction." :
     lineMovementScore < -5 ? " Total line moving against pick direction." : "";
 
   const reasoning =
-    `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${totalOdds.length} ` +
+    `${direction} ${totalDisplay} backed by ${Math.round(consensusPct * 100)}% of ${totalOdds.length} ` +
     `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     movementNote +
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
-    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${avgTotal.toFixed(1)}.`;
+    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${totalDisplay}.`;
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -729,12 +801,12 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     gameId: input.gameId,
     pickType: "TOTAL",
     selection,
-    line: avgTotal,
+    line: executableTotal,
     confidence,
     edgeScore,
     consensusPct,
     marketFairProb: fairProb,
-    entryPrice: Math.round(avgPrice),
+    entryPrice,
     bookmakerCount: totalOdds.length,
     dataQualityScore,
     tier,
@@ -753,9 +825,20 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 // ============================================================
 
 function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
-  const h2hOdds = input.bookmakerOdds.filter(
-    (o) => o.market === "H2H" && o.homePrice !== undefined && o.awayPrice !== undefined
-  );
+  const isThreeWay = isThreeWayMoneylineSport(input.sport);
+  const h2hOdds = input.bookmakerOdds.flatMap((odd) => {
+    if (odd.market !== "H2H") return [];
+    const homePrice = normalizeAmericanOdds(odd.homePrice);
+    const awayPrice = normalizeAmericanOdds(odd.awayPrice);
+    const drawPrice = normalizeAmericanOdds(odd.drawPrice);
+    if (!homePrice || !awayPrice || (isThreeWay && !drawPrice)) return [];
+    return [{
+      ...odd,
+      homePrice: homePrice.normalized,
+      awayPrice: awayPrice.normalized,
+      drawPrice: drawPrice?.normalized,
+    }];
+  });
   if (h2hOdds.length < MIN_BOOKMAKERS) return null;
 
   // Compute avg implied probs
@@ -765,7 +848,18 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const avgHomeImplied = homeImplied.reduce((a, b) => a + b, 0) / homeImplied.length;
   const avgAwayImplied = awayImplied.reduce((a, b) => a + b, 0) / awayImplied.length;
 
-  const fair = removeVig(avgHomeImplied, avgAwayImplied);
+  const avgDrawImplied = isThreeWay
+    ? h2hOdds
+        .map((odd) => americanToImpliedProbability(odd.drawPrice!))
+        .reduce((a, b) => a + b, 0) / h2hOdds.length
+    : 0;
+  const marketImpliedSum = avgHomeImplied + avgAwayImplied + avgDrawImplied;
+  const fair = isThreeWay
+    ? {
+        home: avgHomeImplied / marketImpliedSum,
+        away: avgAwayImplied / marketImpliedSum,
+      }
+    : removeVig(avgHomeImplied, avgAwayImplied);
   const homeIsChosen = fair.home > fair.away;
   const fairProb = homeIsChosen ? fair.home : fair.away;
   const consensusPct = fairProb; // for ML, fair prob IS the consensus signal
@@ -776,19 +870,22 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const chosenTeam = homeIsChosen ? input.homeTeam : input.awayTeam;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
-  // Lock price is averaged in probability space (see averageAmericanPrices):
-  // averaging American prices across the ±100 discontinuity mints an invalid
-  // entry price that would then mis-grade CLV against the close. Non-null by
-  // construction — h2hOdds is non-empty here and every price is present.
-  const avgPrice = averageAmericanPrices(
-    h2hOdds.map((o) => (homeIsChosen ? o.homePrice! : o.awayPrice!)),
-  )!;
+  const chosenPrices = h2hOdds.map((odd) =>
+    homeIsChosen ? odd.homePrice : odd.awayPrice,
+  );
+  const calibratedScoringPrice = averageAmericanPrices(chosenPrices);
+  if (calibratedScoringPrice === null) return null;
+  const entryPrice = buildAmericanOddsConsensus(chosenPrices)?.executable;
+  if (entryPrice === undefined) return null;
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct, "win-probability");
   const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(h2hOdds.length);
   // Overround for the inconsistent-market guard in computeEdgeScore.
-  const twoSidedImpliedSum = avgHomeImplied + avgAwayImplied;
-  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
+  const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(
+    fairProb,
+    calibratedScoringPrice,
+    marketImpliedSum,
+  );
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
     computeVolatilityPenalty(h2hOdds.length, 0);
 
@@ -827,7 +924,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     homeIsChosen,
     fairProb,
     dataQualityScore,
-    twoSidedImpliedSum >= 1
+    marketImpliedSum >= 1
   );
   const independentEdgeFactors: FactorDetail[] = independentEdge
     ? [
@@ -871,8 +968,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const riskLevel: RiskLevel = computeRiskLevel(h2hOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
-  const priceDisplay =
-    avgPrice > 0 ? `+${Math.round(avgPrice)}` : Math.round(avgPrice).toString();
+  const priceDisplay = formatAmericanOdds(entryPrice);
   const selection = `${chosenTeam} ML (${priceDisplay})`;
 
   // Context-aware reasoning
@@ -922,12 +1018,12 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     gameId: input.gameId,
     pickType: "MONEYLINE",
     selection,
-    line: avgPrice,
+    line: entryPrice,
     confidence,
     edgeScore,
     consensusPct,
     marketFairProb: fairProb,
-    entryPrice: Math.round(avgPrice),
+    entryPrice,
     bookmakerCount: h2hOdds.length,
     dataQualityScore,
     tier,
@@ -939,6 +1035,11 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     modelVersion: MODEL_VERSION,
     dataFreshnessAt: fetchedAt,
   };
+}
+
+function isThreeWayMoneylineSport(sport: string): boolean {
+  const normalized = sport.trim().toLowerCase();
+  return normalized === "mls" || normalized.includes("soccer");
 }
 
 // ============================================================

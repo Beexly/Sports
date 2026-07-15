@@ -30,14 +30,23 @@ function pointFromBucket(bucket: CalibrationBucket): ReliabilityDiagramPoint | n
   // Min-sample publish floor: a bucket below it (e.g. 2 settled picks at "100%")
   // is an unsupported observed rate, so it is excluded from the public reliability
   // diagram entirely — and from the ECE / max-gap aggregates derived from it.
-  if (bucket.sampleSize <= 0 || !bucket.sufficientSample) return null;
+  if (
+    bucket.probabilitySampleSize <= 0 ||
+    !bucket.sufficientProbabilitySample ||
+    bucket.delta === null ||
+    bucket.brierScore === null ||
+    bucket.expectedWinRate === null ||
+    bucket.probabilityObservedWinRate === null
+  ) {
+    return null;
+  }
   return {
     absoluteGap: round(Math.abs(bucket.delta)),
     brierScore: bucket.brierScore,
     expectedWinRate: bucket.expectedWinRate,
     label: bucket.label,
-    observedWinRate: bucket.observedWinRate,
-    sampleSize: bucket.sampleSize,
+    observedWinRate: bucket.probabilityObservedWinRate,
+    sampleSize: bucket.probabilitySampleSize,
   };
 }
 
@@ -60,7 +69,10 @@ export function buildScoringReliabilityReport(
     const point = pointFromBucket(bucket);
     return point === null ? [] : [point];
   });
-  const hasRows = calibration.sampleSize > 0 && reliabilityPoints.length > 0 && calibration.isCollecting !== true;
+  const hasRows =
+    calibration.probabilitySampleSize > 0 &&
+    reliabilityPoints.length > 0 &&
+    calibration.isCollecting !== true;
 
   return {
     brierScore: calibration.brierScore,
@@ -72,7 +84,7 @@ export function buildScoringReliabilityReport(
       : "Reliability diagram is gated until settled canonical calibration rows exist.",
     priced: false,
     reliabilityPoints,
-    sampleSize: calibration.sampleSize,
+    sampleSize: calibration.probabilitySampleSize,
     status: hasRows ? "READY" : "COLLECTING",
   };
 }

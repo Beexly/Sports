@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { db } from "@sports/db";
 import { hashLeaf, parseCanonicalPayload } from "@sports/prediction-engine";
+import { normalizeAmericanOdds } from "@sports/types";
+import { projectPublicMarket } from "@/lib/market/project-public-market";
 
 /**
  * Public Proof-of-Record verification — the skeptic's endpoint.
@@ -49,10 +51,11 @@ export async function GET(request: Request) {
             result: true,
             game: {
               select: {
+                id: true,
                 homeTeamName: true,
                 awayTeamName: true,
                 commenceTime: true,
-                sport: { select: { name: true } },
+                sport: { select: { name: true, key: true } },
               },
             },
           },
@@ -91,13 +94,34 @@ export async function GET(request: Request) {
     approxEq(receipt.edgeScore, num(p["edgeScore"]), 1e-4) &&
     approxEq(receipt.modelProb, num(p["modelProb"]), 1e-6) &&
     receipt.modelVersion === (p["modelVersion"] ?? receipt.modelVersion);
-  const verified = hashIntact && columnsMatchPayload;
+  const game = receipt.pick?.game ?? null;
+  const payloadSport = p["sport"];
+  const relationMatchesPayload =
+    game !== null &&
+    p["pickId"] === receipt.pickId &&
+    p["gameId"] === game.id &&
+    (payloadSport === undefined ||
+      sameToken(payloadSport, game.sport.name) ||
+      sameToken(payloadSport, game.sport.key));
+  const verified = hashIntact && columnsMatchPayload && relationMatchesPayload;
 
   // Everything below is sourced from the parsed payload (hash-covered).
   const frozenAt = p["asOf"] ?? receipt.asOf.toISOString();
   const modelVersion = p["modelVersion"] ?? receipt.modelVersion;
 
-  const game = receipt.pick?.game ?? null;
+  if (!verified) {
+    return NextResponse.json({
+      found: true,
+      verified: false,
+      sealed: true,
+      frozenAt,
+      modelVersion,
+      contentHash: receipt.contentHash,
+      note:
+        "Receipt integrity or record binding failed. The committed payload remains sealed.",
+    });
+  }
+
   const kickedOff = game ? game.commenceTime.getTime() <= Date.now() : false;
   const settled = (receipt.pick?.result ?? "PENDING") !== "PENDING";
   const open = kickedOff || settled;
@@ -114,6 +138,20 @@ export async function GET(request: Request) {
     });
   }
 
+  const committedLine = num(p["line"]);
+  const committedEntryOdds = normalizeAmericanOdds(num(p["entryOdds"]));
+  const publicMarket =
+    game && p["pickType"] && p["selection"] && committedLine !== null
+      ? projectPublicMarket({
+          pickType: p["pickType"],
+          selection: p["selection"],
+          line: committedLine,
+          sport: game.sport.name,
+          homeTeam: game.homeTeamName,
+          awayTeam: game.awayTeamName,
+        })
+      : null;
+
   return NextResponse.json({
     found: true,
     verified,
@@ -129,14 +167,15 @@ export async function GET(request: Request) {
         }
       : null,
     // The committed financial fields are presented as FACT only when the
-    // integrity check passed. On a failed check the values are tamper-suspect,
-    // so we withhold them (verified:false + the raw payload/hash below let a
-    // skeptic recompute for themselves) rather than surface a number that may
-    // have been altered.
-    committed: verified
+    // integrity check passed AND the hash-covered market fields project into
+    // a supported canonical market. On a failed check the values are
+    // tamper-suspect; on an unsupported legacy market they are ambiguous. In
+    // either case we withhold display while preserving the cryptographic
+    // verdict and raw payload/hash for independent recomputation.
+    committed: verified && publicMarket && committedEntryOdds
       ? {
-          line: num(p["line"]),
-          entryOdds: num(p["entryOdds"]),
+          selection: publicMarket.selection,
+          entryOdds: committedEntryOdds.normalized,
           marketFairProb: num(p["marketFairProb"]),
           confidence: num(p["confidence"]),
           edgeScore: num(p["edgeScore"]),
@@ -158,4 +197,8 @@ function approxEq(a: number | null, b: number | null, tol: number): boolean {
   if (a == null && b == null) return true;
   if (a == null || b == null) return false;
   return Math.abs(a - b) <= tol;
+}
+
+function sameToken(a: string, b: string): boolean {
+  return a.trim().toLowerCase() === b.trim().toLowerCase();
 }

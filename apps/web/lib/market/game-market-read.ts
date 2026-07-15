@@ -4,6 +4,7 @@ import {
   type ConsensusMarketRead,
   type MarketGravity,
 } from "@sports/prediction-engine";
+import { normalizeAmericanOdds } from "@sports/types";
 
 /**
  * Game-level market read — turns captured per-book H2H odds rows into the
@@ -30,6 +31,15 @@ export interface OddsRowForRead {
   readonly awayPrice: number | null;
   readonly drawPrice: number | null;
 }
+
+type CanonicalOddsRowForRead = Omit<
+  OddsRowForRead,
+  "homePrice" | "awayPrice" | "drawPrice"
+> & {
+  readonly homePrice: number;
+  readonly awayPrice: number;
+  readonly drawPrice: number | null;
+};
 
 export interface GameMarketRead {
   readonly consensus: ConsensusMarketRead;
@@ -63,24 +73,25 @@ export function buildH2hMarketRead(
   rows: readonly OddsRowForRead[],
   minBooks = 2,
 ): GameMarketRead | null {
-  const latestByBook = new Map<string, OddsRowForRead>();
+  const latestByBook = new Map<string, CanonicalOddsRowForRead>();
   for (const row of rows) {
     if (row.market !== "H2H") continue;
-    if (!isPrice(row.homePrice) || !isPrice(row.awayPrice)) continue;
+    const canonical = canonicalRow(row);
+    if (!canonical) continue;
     const existing = latestByBook.get(row.bookmaker);
     if (!existing || row.fetchedAt > existing.fetchedAt) {
-      latestByBook.set(row.bookmaker, row);
+      latestByBook.set(row.bookmaker, canonical);
     }
   }
 
   const books = [...latestByBook.values()];
   if (books.length < minBooks) return null;
 
-  const toBookPrices = (rows: readonly OddsRowForRead[]) =>
+  const toBookPrices = (rows: readonly CanonicalOddsRowForRead[]) =>
     rows.map((b) => ({
-      home: b.homePrice as number,
-      away: b.awayPrice as number,
-      draw: isPrice(b.drawPrice) ? b.drawPrice : null,
+      home: b.homePrice,
+      away: b.awayPrice,
+      draw: b.drawPrice,
     }));
 
   const consensus = consensusNoVig(toBookPrices(books));
@@ -92,13 +103,14 @@ export function buildH2hMarketRead(
 
   // Drift: same de-vig over each book's EARLIEST quote. Only books with a
   // genuinely earlier capture count — a single snapshot has no history.
-  const earliestByBook = new Map<string, OddsRowForRead>();
+  const earliestByBook = new Map<string, CanonicalOddsRowForRead>();
   for (const row of rows) {
     if (row.market !== "H2H") continue;
-    if (!isPrice(row.homePrice) || !isPrice(row.awayPrice)) continue;
+    const canonical = canonicalRow(row);
+    if (!canonical) continue;
     const existing = earliestByBook.get(row.bookmaker);
     if (!existing || row.fetchedAt < existing.fetchedAt) {
-      earliestByBook.set(row.bookmaker, row);
+      earliestByBook.set(row.bookmaker, canonical);
     }
   }
   const earlier = [...earliestByBook.values()].filter((b) => {
@@ -128,6 +140,14 @@ export function buildH2hMarketRead(
   };
 }
 
-function isPrice(value: number | null): value is number {
-  return typeof value === "number" && Number.isFinite(value) && value !== 0;
+function canonicalRow(row: OddsRowForRead): CanonicalOddsRowForRead | null {
+  const home = normalizeAmericanOdds(row.homePrice);
+  const away = normalizeAmericanOdds(row.awayPrice);
+  if (!home || !away) return null;
+  return {
+    ...row,
+    homePrice: home.normalized,
+    awayPrice: away.normalized,
+    drawPrice: normalizeAmericanOdds(row.drawPrice)?.normalized ?? null,
+  };
 }

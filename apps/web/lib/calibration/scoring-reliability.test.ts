@@ -7,7 +7,12 @@ describe("buildScoringReliabilityReport", () => {
     // Buckets must clear the min-publish sample floor (>= 30 settled/bucket) to
     // appear in the reliability diagram and feed the ECE / max-gap aggregates —
     // a thin bucket (e.g. 2 picks reading a raw single-sample rate) is withheld.
-    const mk = (confidence: number, id: string, result: "WIN" | "LOSS") => ({ confidence, id, result });
+    const mk = (confidence: number, id: string, result: "WIN" | "LOSS") => ({
+      confidence,
+      id,
+      modelProbability: confidence / 100,
+      result,
+    });
     const calibration = computeCalibration([
       ...Array.from({ length: 30 }, (_, i) => mk(65, `mid-${i}`, i < 15 ? "WIN" : "LOSS")),
       ...Array.from({ length: 30 }, (_, i) => mk(75, `high-${i}`, i < 24 ? "WIN" : "LOSS")),

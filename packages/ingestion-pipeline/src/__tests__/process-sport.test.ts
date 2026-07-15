@@ -37,7 +37,7 @@ const mocks = vi.hoisted(() => ({
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
-  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string } | null>>(),
+  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
 }));
 
@@ -106,7 +106,7 @@ function normalizedGame(overrides: Record<string, unknown> = {}): Record<string,
     externalId: "ext-1",
     homeTeam: "Chiefs",
     awayTeam: "Bills",
-    commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+    commenceTime: new Date("2030-06-12T17:00:00.000Z"),
     ...overrides,
   };
 }
@@ -170,6 +170,103 @@ describe("processSport", () => {
         data: expect.objectContaining({ status: "SUCCESS", gamesUpserted: 1 }),
       })
     );
+  });
+
+  it("preserves the calibrated arithmetic reference in enrichment and scoring context", async () => {
+    const fetchedAt = new Date("2030-06-12T12:00:00.000Z");
+    mocks.normalizeOdds.mockReturnValue([
+      ...[-4, -3.5, -3, -2.5].map((spread, index) => ({
+        gameExternalId: "ext-1",
+        bookmaker: `spread-${index}`,
+        market: "SPREADS",
+        spread,
+        homeSpreadPrice: -110,
+        awaySpreadPrice: -110,
+        fetchedAt,
+        bookmakerLastUpdate: fetchedAt,
+      })),
+      ...[48.5, 49, 49, 49.5].map((total, index) => ({
+        gameExternalId: "ext-1",
+        bookmaker: `total-${index}`,
+        market: "TOTALS",
+        total,
+        overPrice: -110,
+        underPrice: -110,
+        fetchedAt,
+        bookmakerLastUpdate: fetchedAt,
+      })),
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+    mocks.oddsCreateMany.mockResolvedValue({ count: 8 });
+
+    await processSport(SPORT, "key", gates());
+
+    expect(mocks.enrichGameContext).toHaveBeenCalledWith(
+      expect.objectContaining({ avgSpread: -3.25, avgTotal: 49 }),
+    );
+    const [inputs] = mocks.scoreGames.mock.calls[0]!;
+    expect(inputs).toEqual([
+      expect.objectContaining({
+        context: expect.objectContaining({ currentSpread: -3.25, currentTotal: 49 }),
+        bookmakerOdds: expect.arrayContaining([
+          expect.objectContaining({ spread: -4 }),
+          expect.objectContaining({ spread: -2.5 }),
+        ]),
+      }),
+    ]);
+  });
+
+  it("propagates the normalized draw quote into three-way H2H scoring input", async () => {
+    const fetchedAt = new Date("2026-07-15T12:00:00.000Z");
+    mocks.normalizeOdds.mockReturnValue([
+      {
+        gameExternalId: "ext-1",
+        bookmaker: "book-1",
+        market: "H2H",
+        homePrice: -125,
+        awayPrice: 310,
+        drawPrice: 260,
+        fetchedAt,
+        bookmakerLastUpdate: fetchedAt,
+      },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+    mocks.oddsCreateMany.mockResolvedValue({ count: 1 });
+
+    await processSport(SPORT, "key", gates());
+
+    const [inputs] = mocks.scoreGames.mock.calls[0]!;
+    expect(inputs).toEqual([
+      expect.objectContaining({
+        bookmakerOdds: [expect.objectContaining({ drawPrice: 260 })],
+      }),
+    ]);
+    expect(mocks.oddsCreateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [expect.objectContaining({ drawPrice: 260 })],
+      }),
+    );
+  });
+
+  it.each([
+    ["at kickoff", new Date("2030-06-12T17:00:00.000Z")],
+    ["after kickoff", new Date("2030-06-12T17:00:00.001Z")],
+  ])("does not mint a pick %s", async (_label, now) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(now);
+    try {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ commenceTime: new Date("2030-06-12T17:00:00.000Z") }),
+      ]);
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({ status: "success", picks: 0 });
+      expect(mocks.pickUpsert).not.toHaveBeenCalled();
+      expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("marks the run FAILED and returns status failed when the odds API errors", async () => {
@@ -269,7 +366,11 @@ describe("processSport", () => {
 
   it("freezes a SETTLED pick — a refresh never rewrites a graded row", async () => {
     // The pick already exists and has been graded WIN by settlement.
-    mocks.pickFindUnique.mockResolvedValue({ id: "pick-1", result: "WIN" });
+    mocks.pickFindUnique.mockResolvedValue({
+      id: "pick-1",
+      result: "WIN",
+      selection: "Chiefs -3.5",
+    });
 
     const result = await processSport(SPORT, "key", gates());
 
@@ -277,6 +378,7 @@ describe("processSport", () => {
     // no upsert touches its selection/line/confidence/grade/reasoning.
     expect(result.status).toBe("success");
     expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
   });
 
   it("freezes a PENDING pick whose SIDE flipped — published picks are never silently reversed", async () => {
@@ -296,7 +398,7 @@ describe("processSport", () => {
     expect(mocks.pickUpsert).not.toHaveBeenCalled();
   });
 
-  it("a line move on the SAME side still refreshes (no false flip-freeze)", async () => {
+  it("freezes a PENDING pick on the SAME side so its line cannot drift from its receipt", async () => {
     mocks.pickFindUnique.mockResolvedValue({
       id: "pick-1",
       result: "PENDING",
@@ -306,7 +408,8 @@ describe("processSport", () => {
 
     await processSport(SPORT, "key", gates());
 
-    expect(mocks.pickUpsert).toHaveBeenCalledTimes(1);
+    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
   });
 
   it("locks the American price (not the line) for moneyline picks", async () => {

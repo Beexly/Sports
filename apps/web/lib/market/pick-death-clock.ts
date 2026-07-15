@@ -2,7 +2,7 @@
  * Pick Death Clock — how the market has moved on a pick since it was
  * published, from real captured odds rows only.
  *
- * Speaks PRICE SPACE exclusively (points and American prices): the
+ * Speaks PRICE SPACE exclusively (points): the
  * audit-drawer contract bans fair-probability/EV terms on pick surfaces
  * until the owner lifts that gate, so this module never de-vigs and never
  * names an edge. "Toward" / "away" is movement relative to the pick's side
@@ -14,8 +14,16 @@
  *     after it — a one-book move is noise wearing a trend costume
  *   - only books present at both ends compare; book composition can't fake
  *     a move
- *   - medians across books, so one stale book cannot drag the clock
+ *   - direction and movement use median references, while the displayed
+ *     endpoints remain real executable quotes from the captured books
+ *   - moneylines fail closed because their truthful median reference is an
+ *     implied-probability value, not an American-price delta
  */
+
+import {
+  buildMarketPointConsensus,
+  normalizeMarketPoint,
+} from "@sports/types";
 
 export interface PickForClock {
   readonly pickType: string; // SPREAD | TOTAL | MONEYLINE (H2H treated as MONEYLINE)
@@ -23,6 +31,7 @@ export interface PickForClock {
   readonly generatedAt: Date;
   readonly homeTeamName: string;
   readonly awayTeamName: string;
+  readonly sport: string;
 }
 
 export interface OddsRowForClock {
@@ -35,20 +44,24 @@ export interface OddsRowForClock {
   readonly awayPrice: number | null;
 }
 
-export type ClockMetric = "spread_points" | "total_points" | "moneyline_price";
+export type ClockMetric = "spread_points" | "total_points";
 export type ClockDirection = "toward_pick" | "away_from_pick" | "flat";
 
 export interface PickDeathClock {
   readonly metric: ClockMetric;
-  /** Median across books at/just before publish, in market units. */
+  /** Observed executable quote nearest the publish-time median reference. */
   readonly atPublish: number;
-  /** Median across the same books' latest quotes. */
+  /** Observed executable quote nearest the latest median reference. */
   readonly latest: number;
-  /** latest − atPublish, signed, market units (points or American price). */
+  /** Publish-time median used for aggregation; it may be non-executable. */
+  readonly referenceAtPublish: number;
+  /** Latest median used for aggregation; it may be non-executable. */
+  readonly referenceLatest: number;
+  /** referenceLatest − referenceAtPublish, signed point units. */
   readonly delta: number;
   readonly direction: ClockDirection;
   readonly minutesSincePublish: number;
-  /** Absolute movement per hour since publish, market units, 2dp. */
+  /** Absolute median-reference movement per hour, point units, 2dp. */
   readonly ratePerHour: number;
   readonly booksUsed: number;
   readonly latestCaptureAt: string;
@@ -80,9 +93,29 @@ export function buildPickDeathClock(
   const shared = [...before.keys()].filter((b) => after.has(b));
   if (shared.length < 2) return null;
 
-  const atPublish = median(shared.map((b) => plan.value(before.get(b)!)!));
-  const latest = median(shared.map((b) => plan.value(after.get(b)!)!));
-  const delta = Number((latest - atPublish).toFixed(2));
+  const atPublishValues: number[] = [];
+  const latestValues: number[] = [];
+  let latestCapture: Date | null = null;
+  for (const bookmaker of shared) {
+    const beforeRow = before.get(bookmaker);
+    const afterRow = after.get(bookmaker);
+    if (!beforeRow || !afterRow) return null;
+    const beforeValue = plan.value(beforeRow);
+    const afterValue = plan.value(afterRow);
+    if (beforeValue === null || afterValue === null) return null;
+    atPublishValues.push(beforeValue);
+    latestValues.push(afterValue);
+    if (!latestCapture || afterRow.fetchedAt > latestCapture) {
+      latestCapture = afterRow.fetchedAt;
+    }
+  }
+
+  const atPublishConsensus = plan.consensus(atPublishValues);
+  const latestConsensus = plan.consensus(latestValues);
+  if (!atPublishConsensus || !latestConsensus || !latestCapture) return null;
+  const delta = Number(
+    (latestConsensus.reference - atPublishConsensus.reference).toFixed(2),
+  );
 
   const direction: ClockDirection =
     Math.abs(delta) <= FLAT_EPS
@@ -91,9 +124,6 @@ export function buildPickDeathClock(
         ? "toward_pick"
         : "away_from_pick";
 
-  const latestCapture = shared
-    .map((b) => after.get(b)!.fetchedAt)
-    .reduce((max, d) => (d > max ? d : max));
   const minutes = Math.max(
     0,
     Math.round((now.getTime() - pick.generatedAt.getTime()) / 60_000),
@@ -102,8 +132,10 @@ export function buildPickDeathClock(
 
   return {
     metric: plan.metric,
-    atPublish: Number(atPublish.toFixed(2)),
-    latest: Number(latest.toFixed(2)),
+    atPublish: Number(atPublishConsensus.executable.toFixed(2)),
+    latest: Number(latestConsensus.executable.toFixed(2)),
+    referenceAtPublish: Number(atPublishConsensus.reference.toFixed(2)),
+    referenceLatest: Number(latestConsensus.reference.toFixed(2)),
     delta,
     direction,
     minutesSincePublish: minutes,
@@ -117,8 +149,14 @@ interface MetricPlan {
   readonly metric: ClockMetric;
   readonly market: string;
   readonly value: (row: OddsRowForClock) => number | null;
+  readonly consensus: (values: readonly number[]) => ClockConsensus | null;
   /** Sign of delta that means the market moved TOWARD the pick's side. */
   readonly towardSign: 1 | -1;
+}
+
+interface ClockConsensus {
+  readonly reference: number;
+  readonly executable: number;
 }
 
 function metricPlan(pick: PickForClock): MetricPlan | null {
@@ -133,7 +171,13 @@ function metricPlan(pick: PickForClock): MetricPlan | null {
     return {
       metric: "total_points",
       market: "TOTALS",
-      value: (r) => (isNum(r.total) ? r.total : null),
+      value: (r) => normalizeMarketPoint("TOTAL_POINTS", pick.sport, r.total)?.normalized ?? null,
+      consensus: (values) => {
+        const consensus = buildMarketPointConsensus("TOTAL_POINTS", pick.sport, values);
+        return consensus
+          ? { reference: consensus.reference, executable: consensus.executable }
+          : null;
+      },
       towardSign: over ? 1 : -1,
     };
   }
@@ -145,25 +189,22 @@ function metricPlan(pick: PickForClock): MetricPlan | null {
     return {
       metric: "spread_points",
       market: "SPREADS",
-      value: (r) => (isNum(r.spread) ? r.spread : null),
+      value: (r) => normalizeMarketPoint("SPREAD_POINTS", pick.sport, r.spread)?.normalized ?? null,
+      consensus: (values) => {
+        const consensus = buildMarketPointConsensus("SPREAD_POINTS", pick.sport, values);
+        return consensus
+          ? { reference: consensus.reference, executable: consensus.executable }
+          : null;
+      },
       towardSign: side === "home" ? -1 : 1,
     };
   }
 
   if (type === "MONEYLINE" || type === "H2H") {
-    const side = pickSide(pick);
-    if (!side) return null;
-    // American prices are monotone with decimal odds across the book-quoted
-    // range, so the side's price FALLING means it shortened = market agrees.
-    return {
-      metric: "moneyline_price",
-      market: "H2H",
-      value: (r) => {
-        const p = side === "home" ? r.homePrice : r.awayPrice;
-        return isNum(p) && p !== 0 ? p : null;
-      },
-      towardSign: -1,
-    };
+    // American-price distance is discontinuous at pick'em. The shared odds
+    // consensus therefore uses implied probability as its reference, which
+    // cannot truthfully populate this point-unit clock contract.
+    return null;
   }
 
   return null;
@@ -182,16 +223,4 @@ function pickSide(pick: PickForClock): "home" | "away" | null {
     if (name.length > 0 && sel.includes(name)) return side;
   }
   return null;
-}
-
-function isNum(x: number | null): x is number {
-  return typeof x === "number" && Number.isFinite(x);
-}
-
-function median(values: readonly number[]): number {
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 === 1
-    ? sorted[mid]!
-    : (sorted[mid - 1]! + sorted[mid]!) / 2;
 }

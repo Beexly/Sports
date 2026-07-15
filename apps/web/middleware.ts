@@ -17,7 +17,7 @@ import { checkWaitlistGate } from "@/lib/waitlist/access-gate";
  */
 
 // Routes that require authentication (redirect to signin if no cookie)
-const PROTECTED_ROUTES = ["/dashboard", "/admin", "/cockpit"];
+const PROTECTED_ROUTES = ["/dashboard", "/admin", "/cockpit", "/fantasy/studio"];
 
 // Auth cookie name (NextAuth.js v5)
 const AUTH_COOKIE_NAMES = [

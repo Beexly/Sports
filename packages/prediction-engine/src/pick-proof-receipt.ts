@@ -15,18 +15,24 @@
  *      back-dated edit cannot masquerade as the original claim.
  *
  * It builds on proof-of-record.ts (canonical payload + leaf hash); a batch of these
- * leaves rolls up into the published Merkle root. Pure and dependency-free: the hash
- * is injected. PRODUCTION MUST inject a real cryptographic hash (node:crypto sha256
+ * leaves rolls up into the published Merkle root. The hash is injected. PRODUCTION
+ * MUST inject a real cryptographic hash (node:crypto sha256
  * hex). Never fabricate fields — bad input throws rather than minting a false receipt.
  */
 
 import { canonicalPickPayload, hashLeaf, type HashFn } from "./proof-of-record.js";
+import {
+  normalizeAmericanOdds,
+  normalizeMarketPoint,
+  type PickType,
+} from "@sports/types";
 
 export interface PickProofInput {
   readonly pickId: string;
   readonly gameId: string;
+  readonly sport: string;
   readonly selection: string; // e.g. "Chiefs -3.5" / "OVER 48.5"
-  readonly pickType: string; // SPREAD | TOTAL | MONEYLINE
+  readonly pickType: PickType;
   /** The line (spread/total) or American price (moneyline) we published at. */
   readonly line: number;
   /** American odds we entered at. */
@@ -84,12 +90,16 @@ function assertNonEmpty(name: string, s: string): void {
   }
 }
 
+type LegacyPickProofInput = Omit<PickProofInput, "sport">;
+
 /**
  * The committed fields, normalized to stable primitives. Probabilities are rounded
  * to a fixed precision so floating-point noise never changes the hash for the same
  * underlying claim. This is the only place that decides what the receipt commits to.
  */
-function committedFields(i: PickProofInput): Readonly<Record<string, string | number | boolean>> {
+function baseCommittedFields(
+  i: PickProofInput | LegacyPickProofInput,
+): Readonly<Record<string, string | number | boolean>> {
   return {
     pickId: i.pickId,
     gameId: i.gameId,
@@ -108,12 +118,20 @@ function committedFields(i: PickProofInput): Readonly<Record<string, string | nu
   };
 }
 
-/**
- * Freeze a pick into a tamper-evident receipt. Validates the inputs (never mints a
- * receipt from non-finite probabilities or empty identifiers), builds the canonical
- * payload, and stamps it with the injected hash.
- */
-export function buildPickProofReceipt(input: PickProofInput, hash: HashFn): PickProofReceipt {
+function committedFields(i: PickProofInput): Readonly<Record<string, string | number | boolean>> {
+  return {
+    ...baseCommittedFields(i),
+    sport: i.sport,
+  };
+}
+
+function legacyCommittedFields(
+  i: LegacyPickProofInput,
+): Readonly<Record<string, string | number | boolean>> {
+  return baseCommittedFields(i);
+}
+
+function assertCommonInput(input: PickProofInput | LegacyPickProofInput): void {
   assertNonEmpty("pickId", input.pickId);
   assertNonEmpty("gameId", input.gameId);
   assertNonEmpty("selection", input.selection);
@@ -125,12 +143,86 @@ export function buildPickProofReceipt(input: PickProofInput, hash: HashFn): Pick
   if (input.modelProb != null) assertProb("modelProb", input.modelProb);
   if (!Number.isFinite(input.confidence)) throw new Error("pick-proof-receipt: confidence must be finite");
   if (!Number.isFinite(input.edgeScore)) throw new Error("pick-proof-receipt: edgeScore must be finite");
+  if (!normalizeAmericanOdds(input.entryOdds)) {
+    throw new Error("pick-proof-receipt: entryOdds must be a supported American price");
+  }
+}
+
+function assertLegacyInput(input: LegacyPickProofInput): void {
+  assertNonEmpty("pickId", input.pickId);
+  assertNonEmpty("gameId", input.gameId);
+  assertNonEmpty("selection", input.selection);
+  assertNonEmpty("modelVersion", input.modelVersion);
+  assertNonEmpty("asOf", input.asOf);
+  assertProb("marketFairProb", input.marketFairProb);
+  if (input.modelProb != null) assertProb("modelProb", input.modelProb);
+  if (!Number.isFinite(input.confidence)) {
+    throw new Error("pick-proof-receipt: confidence must be finite");
+  }
+  if (!Number.isFinite(input.edgeScore)) {
+    throw new Error("pick-proof-receipt: edgeScore must be finite");
+  }
   if (!Number.isFinite(input.entryOdds) || input.entryOdds === 0) {
     throw new Error("pick-proof-receipt: entryOdds must be a non-zero finite American price");
   }
-  if (!Number.isFinite(input.line)) throw new Error("pick-proof-receipt: line must be finite");
+  if (!Number.isFinite(input.line)) {
+    throw new Error("pick-proof-receipt: line must be finite");
+  }
+}
 
-  const payload = canonicalPickPayload(committedFields(input));
+function normalizeCommittedLine(input: PickProofInput): number {
+  switch (input.pickType) {
+    case "MONEYLINE": {
+      const odds = normalizeAmericanOdds(input.line);
+      if (!odds) {
+        throw new Error("pick-proof-receipt: MONEYLINE line must be a supported American price");
+      }
+      const entryOdds = normalizeAmericanOdds(input.entryOdds);
+      if (!entryOdds || entryOdds.normalized !== odds.normalized) {
+        throw new Error("pick-proof-receipt: MONEYLINE line must match entryOdds");
+      }
+      return odds.normalized;
+    }
+    case "SPREAD": {
+      const point = normalizeMarketPoint("SPREAD_POINTS", input.sport, input.line);
+      if (!point) {
+        throw new Error(
+          `pick-proof-receipt: SPREAD line must be valid for sport ${input.sport}`,
+        );
+      }
+      return point.normalized;
+    }
+    case "TOTAL": {
+      const point = normalizeMarketPoint("TOTAL_POINTS", input.sport, input.line);
+      if (!point) {
+        throw new Error(
+          `pick-proof-receipt: TOTAL line must be valid for sport ${input.sport}`,
+        );
+      }
+      return point.normalized;
+    }
+    default: {
+      const exhaustive: never = input.pickType;
+      throw new Error(`pick-proof-receipt: unsupported pickType ${String(exhaustive)}`);
+    }
+  }
+}
+
+/**
+ * Freeze a pick into a tamper-evident receipt. Validates the inputs (never mints a
+ * receipt from non-finite probabilities or empty identifiers), builds the canonical
+ * payload, and stamps it with the injected hash.
+ */
+export function buildPickProofReceipt(input: PickProofInput, hash: HashFn): PickProofReceipt {
+  assertCommonInput(input);
+  assertNonEmpty("sport", input.sport);
+  const normalizedInput: PickProofInput = {
+    ...input,
+    sport: input.sport.trim(),
+    line: normalizeCommittedLine(input),
+  };
+
+  const payload = canonicalPickPayload(committedFields(normalizedInput));
   const contentHash = hashLeaf(hash, { id: input.pickId, payload });
 
   return {
@@ -138,7 +230,7 @@ export function buildPickProofReceipt(input: PickProofInput, hash: HashFn): Pick
     payload,
     contentHash,
     frozenAt: input.asOf,
-    fields: input,
+    fields: normalizedInput,
   };
 }
 
@@ -148,6 +240,21 @@ export function buildPickProofReceipt(input: PickProofInput, hash: HashFn): Pick
  * after the fact (the tamper signal) — the check a skeptic runs.
  */
 export function verifyPickProofReceipt(receipt: PickProofReceipt, hash: HashFn): boolean {
+  const candidate = receipt.fields as PickProofInput | LegacyPickProofInput;
+  if (!Object.prototype.hasOwnProperty.call(candidate, "sport")) {
+    try {
+      // Receipts minted before the sport-aware contract did not commit a sport.
+      // Re-derive their exact historical field set so the migration does not erase
+      // valid proof, while all newly minted receipts still use the stricter builder.
+      assertLegacyInput(candidate);
+      const payload = canonicalPickPayload(legacyCommittedFields(candidate));
+      const contentHash = hashLeaf(hash, { id: candidate.pickId, payload });
+      return payload === receipt.payload && contentHash === receipt.contentHash;
+    } catch {
+      return false;
+    }
+  }
+
   let recomputed: PickProofReceipt;
   try {
     recomputed = buildPickProofReceipt(receipt.fields, hash);

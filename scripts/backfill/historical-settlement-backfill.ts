@@ -232,6 +232,7 @@ async function main(): Promise<void> {
           {
             pickId: pick.idempotencyKey, // stable backfill id (game+pickType)
             gameId: pick.gameKey,
+            sport: "NFL",
             selection: pick.selection,
             pickType: pick.pickType,
             line: pick.line,
@@ -360,6 +361,7 @@ async function writeBackfill(settled: SettledHistoricalPick[]): Promise<void> {
         {
           pickId: upserted.id,
           gameId: game.id,
+          sport: "NFL",
           selection: pick.selection,
           pickType: pick.pickType,
           line: pick.line,
