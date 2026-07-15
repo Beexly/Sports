@@ -8,7 +8,7 @@ import { BRAND_NAME } from "@/lib/brand";
  */
 
 export const runtime = "edge";
-export const alt = `${BRAND_NAME} · Galaxy Fantasy: Draft & Best Ball on real, cleared data`;
+export const alt = `${BRAND_NAME} · Galaxy Fantasy: public tools gated until real data is cleared`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -66,7 +66,7 @@ export default async function Image() {
           }}
         >
           <div style={{ width: 12, height: 12, borderRadius: 999, background: "#00E5FF", display: "flex" }} />
-          Draft season · Best Ball
+          Public data gate
         </div>
 
         <div
@@ -81,7 +81,7 @@ export default async function Image() {
             maxWidth: 1000,
           }}
         >
-          Draft & Best Ball on real, cleared data.
+          Fantasy tools stay closed until every player row is real.
         </div>
 
         <div
@@ -95,7 +95,7 @@ export default async function Image() {
             maxWidth: 940,
           }}
         >
-          Roster ceiling, QB stacks, bye structure, with the reasoning. No fabricated projections.
+          Rights, freshness, model receipts, and failure behavior must clear before release.
         </div>
 
         <div
@@ -113,7 +113,7 @@ export default async function Image() {
             paddingTop: 28,
           }}
         >
-          <span>Real grades, not fabricated projections.</span>
+          <span>No fictional players. No placeholder projections.</span>
           <span style={{ color: "#00E5FF" }}>galaxysportsedge.com</span>
         </div>
       </div>

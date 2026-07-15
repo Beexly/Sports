@@ -96,7 +96,7 @@ export function CommandPalette() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open command palette"
-        className="fixed bottom-5 right-5 z-[90] flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-medium shadow-lg transition-transform hover:-translate-y-0.5"
+        className="fixed bottom-5 right-5 z-[90] hidden items-center gap-2 rounded-full px-3.5 py-2 text-xs font-medium shadow-lg transition-transform hover:-translate-y-0.5 sm:flex"
         style={{ background: "rgba(10,13,20,0.85)", border: `1px solid ${BRAND_COLORS.steelGray}`, color: "#c8d2dd", backdropFilter: "blur(8px)" }}
       >
         <span aria-hidden style={{ color: BRAND_COLORS.orbitalCyan }}>⌘</span>

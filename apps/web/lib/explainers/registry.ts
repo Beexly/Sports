@@ -96,18 +96,6 @@ export const PAGE_EXPLAINERS: readonly PageExplainer[] = [
     ],
   },
   {
-    route: "/fantasy",
-    title: "How the tools fit together",
-    durationLabel: "0:50",
-    intro: "Season-long and daily, one toolkit. Here's how the tools feed each other.",
-    beats: [
-      { tag: "Draft", body: "Start at the Draft Assistant for tiers and values; it sets the baseline every other tool reads from." },
-      { tag: "Manage", body: "Start-Sit, Waivers, and Trade all share the same projections. So the advice never contradicts itself." },
-      { tag: "Daily", body: "The Optimizer and DFS Suite turn those same reads into lineups for cash and tournaments." },
-      { tag: "The why", body: "Every recommendation shows its confidence and its reason. And never pretends the outcome is already decided." },
-    ],
-  },
-  {
     route: "/the-beat",
     title: "How The Beat works",
     durationLabel: "0:40",

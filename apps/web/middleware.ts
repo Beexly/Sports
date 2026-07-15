@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkWaitlistGate } from "@/lib/waitlist/access-gate";
+import {
+  fantasyGateDestination,
+  isPublicFantasyToolPath,
+} from "@/lib/fantasy/public-gate";
 
 /**
  * Middleware for route protection.
@@ -52,11 +56,12 @@ export function middleware(req: NextRequest): NextResponse {
     }
   }
 
-  // NOTE: the old FANTASY_PUBLIC_TOOLS_ENABLED middleware gate is gone.
-  // It bounced every /fantasy/* tool back to the hub ("tabs not connected"),
-  // and looped against the hub's legacy ?tool= redirect. Each tool page now
-  // carries its own honest live/illustrative status; tier gates protect the
-  // premium surfaces server-side.
+  if (isPublicFantasyToolPath(pathname)) {
+    return NextResponse.redirect(
+      new URL(fantasyGateDestination(pathname), req.url),
+      307,
+    );
+  }
 
   // Check if route requires auth
   const requiresAuth = PROTECTED_ROUTES.some(
