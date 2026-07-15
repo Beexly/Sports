@@ -23,6 +23,7 @@ const mocks = vi.hoisted(() => ({
   gradePickClv: vi.fn<(args: unknown) => unknown>(),
   // db
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   gameUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   pickUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -35,7 +36,11 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
-    game: { findUnique: mocks.gameFindUnique, update: mocks.gameUpdate },
+    game: {
+      findUnique: mocks.gameFindUnique,
+      findMany: mocks.gameFindMany,
+      update: mocks.gameUpdate,
+    },
     odds: { findMany: mocks.oddsFindMany },
     pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany },
     openingLine: { findUnique: mocks.openingLineFindUnique },
@@ -91,6 +96,7 @@ function completedScore(overrides: Record<string, unknown> = {}): Record<string,
 
 function pendingPick(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
+    result: "PENDING",
     id: "pick-1",
     gameId: "game-1",
     pickType: "SPREAD",
@@ -128,6 +134,7 @@ describe("settleSport", () => {
     mocks.getScores.mockResolvedValue({ data: ["raw"] });
     mocks.normalizeScores.mockReturnValue([completedScore()]);
     mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()]));
+    mocks.gameFindMany.mockResolvedValue([]);
     mocks.gameUpdate.mockResolvedValue({});
     mocks.oddsFindMany.mockResolvedValue([]);
     mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
@@ -353,6 +360,122 @@ describe("settleSport", () => {
     });
   });
 
+  describe("catch-up settlement", () => {
+    it("uses the maximum three-day score lookback", async () => {
+      await settleSport(SPORT, "key", gates());
+
+      expect(mocks.getScores).toHaveBeenCalledWith(SPORT.key, 3);
+    });
+
+    it("settles a recorded FINAL that was missed by the score feed", async () => {
+      mocks.normalizeScores.mockReturnValue([]);
+      mocks.gameFindMany
+        .mockResolvedValueOnce([
+          {
+            externalId: "ext-1",
+            homeScore: 31,
+            awayScore: 17,
+          },
+        ])
+        .mockResolvedValueOnce([]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(mocks.calculatePickResult).toHaveBeenCalledWith(
+        "SPREAD",
+        expect.anything(),
+        expect.anything(),
+        "Chiefs",
+        31,
+        17,
+        SPORT.key
+      );
+      expect(result).toMatchObject({
+        status: "success",
+        gamesSettled: 1,
+        picksSettled: 1,
+        picksVoided: 0,
+      });
+    });
+
+    it("voids an old pending pick with no gradeable outcome", async () => {
+      mocks.normalizeScores.mockReturnValue([]);
+      mocks.gameFindMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([
+          dbGame([pendingPick()], {
+            status: "SCHEDULED",
+            homeScore: null,
+            awayScore: null,
+            commenceTime: new Date("2026-06-01T17:00:00.000Z"),
+          }),
+        ]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith({
+        where: { id: "pick-1", result: "PENDING" },
+        data: { result: "VOID", settledAt: expect.any(Date) },
+      });
+      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+      expect(mocks.snapshotUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            settlementResult: "VOID",
+            eligibleForLearning: false,
+          }),
+        })
+      );
+      expect(result).toMatchObject({
+        status: "success",
+        gamesSettled: 0,
+        picksSettled: 0,
+        picksVoided: 1,
+      });
+      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+    });
+
+    it("runs the database-only sweep when the score feed fails", async () => {
+      mocks.getScores.mockRejectedValue(new Error("quota exhausted"));
+      mocks.gameFindMany
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([
+          dbGame([pendingPick()], {
+            status: "POSTPONED",
+            homeScore: null,
+            awayScore: null,
+          }),
+        ]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({
+        status: "failed",
+        error: "quota exhausted",
+        picksVoided: 1,
+      });
+      expect(mocks.gameFindMany).toHaveBeenCalledTimes(2);
+    });
+
+    it("limits the VOID sweep to stale non-final games with pending picks", async () => {
+      await settleSport(SPORT, "key", gates());
+
+      const query = mocks.gameFindMany.mock.calls[1]?.[0] as {
+        where: Record<string, unknown>;
+      };
+      expect(query.where).toMatchObject({
+        sport: { key: SPORT.key },
+        picks: { some: { result: "PENDING" } },
+        NOT: {
+          status: "FINAL",
+          homeScore: { not: null },
+          awayScore: { not: null },
+        },
+      });
+      expect(query.where["commenceTime"]).toEqual({ lt: expect.any(Date) });
+    });
+  });
+
   describe("CLV grading", () => {
     it("writes the CLV grade against the lock when a close exists", async () => {
       const capturedAt = new Date("2026-06-10T16:55:00.000Z");
@@ -367,9 +490,9 @@ describe("settleSport", () => {
 
       await settleSport(SPORT, "key", gates());
 
-      expect(mocks.pickUpdate).toHaveBeenCalledWith(
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { id: "pick-1" },
+          where: { id: "pick-1", clvGradedAt: null },
           data: expect.objectContaining({
             clvCloseLine: -4,
             clvVerdict: "BEAT_CLOSE",
@@ -402,6 +525,52 @@ describe("settleSport", () => {
 
       expect(mocks.gradePickClv).not.toHaveBeenCalled();
       expect(mocks.pickUpdate).not.toHaveBeenCalled();
+    });
+
+    it("queries settled picks whose CLV grade is missing", async () => {
+      await settleSport(SPORT, "key", gates());
+
+      expect(mocks.gameFindUnique).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: {
+            picks: expect.objectContaining({
+              where: {
+                OR: [
+                  { result: "PENDING" },
+                  { result: { in: ["WIN", "LOSS", "PUSH"] }, clvGradedAt: null },
+                ],
+              },
+            }),
+          },
+        })
+      );
+    });
+
+    it("heals an orphaned CLV grade without settling the pick again", async () => {
+      const capturedAt = new Date("2026-06-10T16:55:00.000Z");
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick({ result: "WIN", clvGradedAt: null })])
+      );
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt });
+      mocks.gradePickClv.mockReturnValue({
+        closeLine: -4,
+        closePrice: -112,
+        kind: "LINE",
+        value: 0.5,
+        verdict: "BEAT_CLOSE",
+      });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "pick-1", clvGradedAt: null },
+          data: expect.objectContaining({ clvVerdict: "BEAT_CLOSE" }),
+        })
+      );
+      expect(result.picksSettled).toBe(0);
     });
   });
 });

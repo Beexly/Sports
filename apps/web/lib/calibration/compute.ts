@@ -87,6 +87,8 @@ export interface CalibrationReport {
   readonly buckets: readonly CalibrationBucket[];
   readonly proposals: readonly CalibrationProposal[];
   readonly sampleSize: number;
+  readonly decidedSampleSize: number;
+  readonly overallObservedWinRate: number | null;
   readonly probabilitySampleSize: number;
   readonly brierScore: number | null;
   readonly discrimination: CalibrationDiscrimination;
@@ -249,6 +251,12 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
   const settled = input
     .map((pick) => ({ pick, outcome: resultToOutcome(pick.result) }))
     .filter((entry): entry is { pick: CalibrationPickInput; outcome: number } => entry.outcome !== null);
+  const decided = settled.filter(
+    ({ pick }) => pick.result === "WIN" || pick.result === "LOSS",
+  );
+  const overallObservedWinRate = decided.length > 0
+    ? round(decided.filter(({ pick }) => pick.result === "WIN").length / decided.length)
+    : null;
 
   const buckets: CalibrationBucket[] = [];
   for (const bucket of BUCKETS) {
@@ -336,6 +344,8 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
     buckets,
     proposals,
     sampleSize: settled.length,
+    decidedSampleSize: decided.length,
+    overallObservedWinRate,
     probabilitySampleSize: settledProbabilityRows.length,
     brierScore,
     discrimination,

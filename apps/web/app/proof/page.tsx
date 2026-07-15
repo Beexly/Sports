@@ -346,11 +346,12 @@ export default async function ProofOfRecordPage() {
                 publishes with the same verifier path.
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
-                Free shows two picks a day with the public Edge Index. Pro opens
-                the full board — the sealed picks, their confidence scores, and
-                the factor trail behind them. The ledger includes every settled
-                canonical result; receipt links identify which rows also carry a
-                frozen mint-time payload.
+                The payoff is not louder claims, more receipts. Free shows two
+                picks a day with the public Edge Index. Pro opens the full board:
+                the sealed picks, their confidence scores, and the factor trail
+                behind them. The ledger includes every settled canonical result;
+                receipt links identify which rows also carry a frozen mint-time
+                payload.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
                 <Link href="/pricing" className="btn btn-primary whitespace-nowrap">

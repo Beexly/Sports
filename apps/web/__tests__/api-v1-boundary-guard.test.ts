@@ -2,7 +2,6 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
 
 type ApiV1BoundaryViolation = {
@@ -17,10 +16,9 @@ type ApiV1BoundaryModule = {
 };
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
-const guardPath = path.join(repoRoot, "scripts/guardrails/api-v1-boundary.mjs");
 
 async function loadGuard(): Promise<ApiV1BoundaryModule> {
-  return (await import(pathToFileURL(guardPath).href)) as ApiV1BoundaryModule;
+  return (await import("../../../scripts/guardrails/api-v1-boundary.mjs")) as ApiV1BoundaryModule;
 }
 
 async function tempRepo(): Promise<string> {

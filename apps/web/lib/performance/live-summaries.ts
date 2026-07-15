@@ -1,3 +1,4 @@
+/** Builds public all-time and monthly summaries from canonical settled pick rows. */
 import type { PickTier, PickType } from "@sports/types";
 import { winRatePct } from "@/lib/format/stat";
 

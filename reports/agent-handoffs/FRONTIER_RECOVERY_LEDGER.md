@@ -42,23 +42,23 @@ This file is the execution control plane. It is not a readiness claim.
 | 81 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify CI topology and scanner coverage on current main | PENDING | Revert PR |
 | 82 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Rebuild only if production DB fail-closed gaps remain | PENDING | Revert PR |
 | 83 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Candidate for settlement-integrity rollup | PENDING | Revert rollup commit |
-| 84 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Candidate for settlement-integrity rollup | PENDING | Revert rollup commit |
-| 85 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify canonical record computation/withholding | PENDING | Revert PR |
-| 86 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Candidate for settlement-integrity rollup | PENDING | Revert rollup commit |
+| 84 | `claude/hotfix-clv-regrade-orphans` -> `main` | 2 / 1 commit | Open; prior review threads resolved | Current settlement already carried the observed-market receipt contract; missing grade-once orphan replay was reproduced | `EXTRACTED_REBUILT`; stale PR must not merge | 21 settlement tests + pipeline typecheck | Revert extraction commit |
+| 85 | `claude/hotfix-fabricated-record` -> `main` | 3 / 1 commit | Open; no unresolved review thread | Reproduced hard-coded public 0-0-0; rebuilt on shared canonical settled population with empty/error withholding | `EXTRACTED_REBUILT`; stale PR must not merge | 26 slate/gate assertions + web typecheck | Revert extraction commit |
+| 86 | `claude/hotfix-void-stale-picks` -> `main` | 8 / 2 commits | Open; prior review threads resolved | Three-day feed horizon, recorded-FINAL replay, stale VOID, outage-independent sweep, and no-action downstream semantics remained missing | `EXTRACTED_REBUILT`; stale PR must not merge | 26 settlement + 35 ROI/outbox tests; web/pipeline typechecks | Revert extraction commit |
 | 87 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Preserve only non-superseded API/probe/runbook value | PENDING | Revert rebuilt slice |
 | 88 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Correct/rebase only if fantasy pricing drift remains | PENDING | Revert PR |
 | 89 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Rebase only after public-state prerequisites | PENDING | Revert PR |
 | 90 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | HOLD pending finite/input/epsilon/event-total repairs | PENDING | Close/no merge |
 | 91 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify fully superseded by stronger webhook behavior | PENDING | Close/no merge |
-| 92 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Candidate for settlement-integrity rollup | PENDING | Revert rollup commit |
+| 92 | `claude/hotfix-settle-refresh-races` -> `main` | 5 / 2 commits | Open; prior review threads resolved | Current create-once policy superseded refresh mutation, but concurrent upsert losers could still mint a mismatched immutable sidecar | `EXTRACTED_REBUILT`; create-only P2002 adoption, no loser sidecars | 25 process-sport tests + pipeline typecheck | Revert extraction commit |
 | 93 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify every cockpit page has its own ADMIN check | PENDING | Revert PR |
-| 94 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify UTC day bounds and root+count commitment | PENDING | Revert PR |
-| 95 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Rebuild mocks only if current tests remain vacuous | PENDING | Revert test slice |
+| 94 | `claude/hotfix-proof-count-utc-bounds` -> `main` | 8 / 2 commits | Open; prior review threads resolved | Local-midnight helpers ignored injected time; bare Merkle root retained duplicate-last ambiguity | `EXTRACTED_REBUILT`; shared request time + UTC bounds + count-bound digest | 22 proof/board tests; web/engine typechecks | Revert extraction commit |
+| 95 | `claude/hotfix-vacuous-stub-tests` -> `main` | 3 / 2 commits | Open; no unresolved review thread | Strict populated demo mock reproduced mixed DB/sample totals; board query predicates lacked exact UTC filter pins | `EXTRACTED_REBUILT`; non-vacuous fixtures retained | 16 populated/slate/board tests + web typecheck | Revert extraction commit |
 | 96 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | HOLD until frozen probability/evidence design exists | PENDING | Close/no merge |
-| 97 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify merged/superseded state | PENDING | N/A if merged |
-| 98 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify merged deployment repair | PENDING | Revert merge if required |
-| 99 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify merged/superseded state | PENDING | N/A if merged |
-| 100 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify merged/superseded state | PENDING | N/A if merged |
+| 97 | `claude/picks-states-conversion` -> `main` | 2 / 1 commit | Closed and merged | Ancestry/patch state confirms merged; P0 stale/gate work is additive | `MERGED_IN_MAIN` | GitHub merged state + local ancestry comparison | Revert merged commit only on regression |
+| 98 | `claude/add-ladder-events-migration` -> `main` | 1 / 1 commit | Closed and merged | Missing migration repair is present in current main; no migration executed by this lane | `MERGED_IN_MAIN` | GitHub merged state + local ancestry comparison | Owner-controlled migration rollback |
+| 99 | `claude/picks-paywall-copy-truth` -> `main` | 3 / 2 commits | Closed and merged | Paywall copy repair present; current entitlement projection is stronger | `MERGED_IN_MAIN` | GitHub merged state + local ancestry comparison | Revert merged commits only on regression |
+| 100 | `claude/honest-degraded-states` -> `main` | 6 / 2 commits | Closed and merged | Honest outage/suppression state present; current stale fail-closed work extends it | `MERGED_IN_MAIN` | GitHub merged state + local ancestry comparison | Revert merged commits only on regression |
 | 101 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | HOLD migration; repair moneyline-side logic and shadow-validate first | PENDING | Revert code; migration not applied |
 
 ## Ordered work queue
@@ -96,10 +96,11 @@ This file is the execution control plane. It is not a readiness claim.
 | Market/proof web matrix (12 files) | 0 | 134/134 tests passed across public projection, line movement, best line, CLV formatting, audit entitlement, proof ledger, and verifier relations | Handler/component tests; production browser proof remains. |
 | Calibration/performance/copy matrix (14 files) | 0 | 143/143 tests passed; raw strength never substitutes for probability and copy scanners remain green | No production settled-history query executed. |
 | Newsroom public-wire matrix (6 files) | 0 | 42/42 tests passed; unapproved, future-dated, fictional, and unavailable states are pinned | No live feed is configured in test. |
+| PR #84/#85/#86/#92/#94/#95 extraction matrix | 0 | 25 process, 26 settlement, 35 ROI/outbox, 22 proof/UTC-board, and 16 populated slate/board assertions passed | Persistence/providers are mocked; no production cron or settlement write executed. |
 | Package typechecks: data ingestion, prediction engine, ingestion pipeline | 0 | TypeScript passed for all three market-integrity packages | — |
 | `npm.cmd run lint` | 0 | All workspace lint scripts passed with zero warnings | Browser runtime is separate. |
 | `npm.cmd run typecheck` | 0 | All workspace TypeScript projects passed | — |
-| `npm.cmd test` | PENDING | — | — |
+| `npm.cmd test` | 0 | 9,146/9,146 assertions passed across 736 test files in web, crypto, data ingestion, DB, ingestion pipeline, prediction engine, shared types, and the content-publishing worker | Test persistence and external providers remain mocked or stubbed; no production writes were executed. |
 | `npm.cmd run build` | PENDING | — | — |
 | `npm.cmd run guardrails` | 0 | Trust, model freeze, draft-only, secret, commercial-claim, rights, OpenAPI, ZK, AWS compatibility, and eval-contract guards passed | Guardrails validate repository artifacts, not production configuration. |
 | Browser / console / visual matrix | PENDING | — | Requires a current production-equivalent build. |
@@ -125,6 +126,9 @@ This file is the execution control plane. It is not a readiness claim.
 | `packages/prediction-engine/src/clv-capture.ts`, `packages/ingestion-pipeline/src/settle-sport.ts` | CLV truth lane | Observed executable close and no mixed legacy/new semantics | VALIDATED |
 | `apps/web/lib/performance/canonical-population.ts`, `apps/web/lib/calibration/**`, `apps/web/app/performance/**` | Calibration truth lane | Shared eligible population, rank/probability separation, and live-derived performance summaries | VALIDATED |
 | `apps/web/lib/news/approved-feeds.ts`, `apps/web/lib/news/public-wire.ts`, `apps/web/app/the-beat/page.tsx` | Newsroom truth lane | Approved-source-only public wire with unavailable state instead of fictional live framing | VALIDATED |
+| `apps/web/app/api/picks/daily-slate/route.ts`, `apps/web/lib/time/utc-day.ts`, `apps/web/lib/board/**` | Reconciled PR truth lane | Canonical real recent record, consistent demo totals, and one UTC request-day across co-rendered loaders | VALIDATED |
+| `packages/ingestion-pipeline/src/process-sport.ts`, `packages/ingestion-pipeline/src/settle-sport.ts` | Reconciled integrity lane | Create-race sidecar ownership, grade-once CLV repair, catch-up settlement, and terminal VOID sweep | VALIDATED |
+| `packages/prediction-engine/src/proof-of-record.ts`, `apps/web/lib/performance/public-roi-policy.ts`, `apps/web/lib/bot-outbox/**` | Reconciled proof/outcome lane | Count-bound commitment and VOID-as-no-action consistency | VALIDATED |
 
 ## Blockers and safe adjacent work
 

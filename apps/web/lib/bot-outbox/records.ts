@@ -81,10 +81,11 @@ function formatLine(value: number): string {
   return value > 0 ? `+${value}` : `${value}`;
 }
 
-function mapPickResult(result: PickResultValue): "W" | "L" | "PUSH" | "PENDING" {
+function mapPickResult(result: PickResultValue): "W" | "L" | "PUSH" | "VOID" | "PENDING" {
   if (result === "WIN") return "W";
   if (result === "LOSS") return "L";
-  if (result === "PUSH" || result === "VOID") return "PUSH";
+  if (result === "PUSH") return "PUSH";
+  if (result === "VOID") return "VOID";
   return "PENDING";
 }
 

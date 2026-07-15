@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  commitmentDigest,
   merkleRoot,
   merkleRootFromLeafHashes,
   inclusionProof,
@@ -74,5 +75,26 @@ describe("proof-of-record (Merkle commitment)", () => {
     expect(merkleRootFromLeafHashes([], fnv1a)).toBe(merkleRoot([], fnv1a));
     // Order matters — a permuted list is a DIFFERENT commitment.
     expect(merkleRootFromLeafHashes([...leaves].reverse(), fnv1a)).not.toBe(merkleRoot(records, fnv1a));
+  });
+});
+
+describe("count-bound commitment", () => {
+  const record = (id: string): PickRecord => ({ id, payload: `p:${id}` });
+
+  it("distinguishes an odd tree from its duplicate-last padding", () => {
+    const three = [record("A"), record("B"), record("C")];
+    const padded = [...three, record("C")];
+    const root = merkleRoot(three, fnv1a);
+
+    expect(merkleRoot(padded, fnv1a)).toBe(root);
+    expect(commitmentDigest(fnv1a, root, three.length)).not.toBe(
+      commitmentDigest(fnv1a, root, padded.length)
+    );
+  });
+
+  it("rejects invalid counts", () => {
+    expect(() => commitmentDigest(fnv1a, "root", -1)).toThrow(/non-negative integer/);
+    expect(() => commitmentDigest(fnv1a, "root", 1.5)).toThrow(/non-negative integer/);
+    expect(() => commitmentDigest(fnv1a, "root", Number.NaN)).toThrow(/non-negative integer/);
   });
 });

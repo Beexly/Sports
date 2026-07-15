@@ -103,6 +103,17 @@ describe("board loaders with persisted gate decisions", () => {
     expect(result.data.publishedToday[0]?.market).toBe("BOS -1.5");
     expect(result.data.gatedTodayRows[0]?.gateReason).toBe("Market depth below publish threshold.");
     expect(result.data.scoringNow[0]?.status).toBe("SCORING_NOW");
+    expect(mocks.gateDecisionFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          isBootstrap: false,
+          evaluatedAt: {
+            gte: new Date("2026-05-22T00:00:00.000Z"),
+            lt: new Date("2026-05-23T00:00:00.000Z"),
+          },
+        }),
+      })
+    );
     expect(mocks.pickFindMany).not.toHaveBeenCalled();
     expect(mocks.gameFindMany).not.toHaveBeenCalled();
   });
@@ -156,6 +167,18 @@ describe("board loaders with persisted gate decisions", () => {
       edgeIndex: 44,
       reason: "Consensus below publish threshold.",
     });
+    expect(mocks.gateDecisionFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          status: "GATED",
+          isBootstrap: false,
+          evaluatedAt: {
+            gte: new Date("2026-05-22T00:00:00.000Z"),
+            lt: new Date("2026-05-23T00:00:00.000Z"),
+          },
+        }),
+      })
+    );
     expect(mocks.gameFindMany).not.toHaveBeenCalled();
   });
 

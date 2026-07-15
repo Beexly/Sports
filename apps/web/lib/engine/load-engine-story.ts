@@ -120,7 +120,7 @@ export async function loadEngineStory(now = new Date()): Promise<EngineStory> {
         }),
         db.pick.count({
           where: {
-            result: { in: ["WIN", "LOSS", "PUSH", "VOID"] },
+            result: { in: ["WIN", "LOSS", "PUSH"] },
             ...OFFICIAL_PICK_FILTER,
           },
         }),

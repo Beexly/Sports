@@ -12,6 +12,8 @@ describe("computeCalibration", () => {
   it("returns a collecting report when no settled picks are provided", () => {
     const report = computeCalibration([]);
     expect(report.sampleSize).toBe(0);
+    expect(report.decidedSampleSize).toBe(0);
+    expect(report.overallObservedWinRate).toBeNull();
     expect(report.brierScore).toBeNull();
     expect(report.proposals).toEqual([]);
   });
@@ -26,6 +28,8 @@ describe("computeCalibration", () => {
 
     const bucket = report.buckets.find((entry) => entry.label === "70-79");
     expect(report.sampleSize).toBe(3);
+    expect(report.decidedSampleSize).toBe(2);
+    expect(report.overallObservedWinRate).toBe(0.5);
     expect(report.probabilitySampleSize).toBe(0);
     expect(report.brierScore).toBeNull();
     expect(bucket?.sampleSize).toBe(3);

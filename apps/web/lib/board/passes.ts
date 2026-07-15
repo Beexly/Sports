@@ -4,6 +4,7 @@ import {
   getFreshPublicOddsSportKeys,
   isPublicPicksSurfaceStale,
 } from "@/lib/data-reliability/public-freshness-gate";
+import { utcDayBounds } from "@/lib/time/utc-day";
 
 export interface PassListRow {
   id: string;
@@ -18,14 +19,6 @@ export interface PassListRow {
 export interface BoardPassesPayload {
   data: { date: string; passes: PassListRow[] };
   meta: { isSampleData: boolean; suppressedDemoData?: boolean; dataError?: "DB_UNREACHABLE" };
-}
-
-function todayBounds(): { start: Date; end: Date } {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  return { start, end };
 }
 
 function passReason(bookmakerCoverageMax: number, dataQualityScore: number): string {
@@ -73,7 +66,7 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
       : {}),
   };
 
-  const { start, end } = todayBounds();
+  const { start, end } = utcDayBounds(now);
   try {
     const gateDecisions = await db.gateDecision.findMany({
       where: {

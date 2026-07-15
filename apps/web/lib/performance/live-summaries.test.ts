@@ -1,3 +1,4 @@
+/** Verifies deterministic public performance summaries over canonical settled picks. */
 import { describe, expect, it } from "vitest";
 import { summarizePerformancePicks, type SettledPerformancePick } from "./live-summaries";
 

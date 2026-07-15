@@ -122,6 +122,15 @@ export function pickSelectionSide(pickType: string, selection: string): string {
   return lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
 }
 
+function isUniquePickConflict(error: unknown): boolean {
+  return Boolean(
+    error &&
+      typeof error === "object" &&
+      "code" in error &&
+      (error as { code?: unknown }).code === "P2002"
+  );
+}
+
 export async function processSport(
   sport: SportConfig,
   apiKey: string,
@@ -461,20 +470,31 @@ export async function processSport(
         continue;
       }
 
-      const upsertedPick = await db.pick.upsert({
-        where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-        create: {
-          gameId: pick.gameId,
-          pickType: pick.pickType,
-          ingestionRunId: run.id,
-          isBootstrap,
-          isFeatured,
-          clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
-          clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
-          ...pickUpdateData,
-        },
-        update: {},
-      });
+      let createdPick: { id: string };
+      try {
+        createdPick = await db.pick.create({
+          data: {
+            gameId: pick.gameId,
+            pickType: pick.pickType,
+            ingestionRunId: run.id,
+            isBootstrap,
+            isFeatured,
+            clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
+            clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
+            ...pickUpdateData,
+          },
+          select: { id: true },
+        });
+      } catch (error) {
+        if (!isUniquePickConflict(error)) throw error;
+        const winner = await db.pick.findUnique({
+          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
+          select: { id: true },
+        });
+        if (!winner) throw error;
+        picksGenerated++;
+        continue;
+      }
       picksGenerated++;
 
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
@@ -483,7 +503,7 @@ export async function processSport(
       // "Given these signals at prediction time, what was the real win rate?"
       try {
         const snapshotData = buildPickSignalSnapshot(
-          upsertedPick.id,
+          createdPick.id,
           pick,
           oddsInputForPick?.context,
           isBootstrap,
@@ -495,14 +515,14 @@ export async function processSport(
           ),
         );
         await db.pickSignalSnapshot.upsert({
-          where: { pickId: upsertedPick.id },
+          where: { pickId: createdPick.id },
           create: snapshotData,
           update: {}, // immutable — never overwrite an existing snapshot
         });
       } catch (snapErr) {
         // Non-fatal: snapshot failure must never kill a pick
         console.warn(
-          `${logPrefix} Snapshot capture failed for pick ${upsertedPick.id}: ` +
+          `${logPrefix} Snapshot capture failed for pick ${createdPick.id}: ` +
           `${snapErr instanceof Error ? snapErr.message : snapErr}`
         );
       }
@@ -523,7 +543,7 @@ export async function processSport(
         ) {
           const receipt = buildPickProofReceipt(
             {
-              pickId: upsertedPick.id,
+              pickId: createdPick.id,
               gameId: pick.gameId,
               sport: sport.name,
               selection: pick.selection,
@@ -540,7 +560,7 @@ export async function processSport(
             sha256Hex,
           );
           await db.pickProofReceipt.upsert({
-            where: { pickId: upsertedPick.id },
+            where: { pickId: createdPick.id },
             create: {
               pickId: receipt.pickId,
               payload: receipt.payload,
@@ -560,7 +580,7 @@ export async function processSport(
       } catch (receiptErr) {
         // Non-fatal: proof-receipt failure must never kill a pick
         console.warn(
-          `${logPrefix} Proof receipt mint failed for pick ${upsertedPick.id}: ` +
+          `${logPrefix} Proof receipt mint failed for pick ${createdPick.id}: ` +
           `${receiptErr instanceof Error ? receiptErr.message : receiptErr}`
         );
       }

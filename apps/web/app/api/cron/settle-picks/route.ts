@@ -72,6 +72,7 @@ export async function GET(request: Request) {
     ok: boolean;
     gamesSettled: number;
     picksSettled: number;
+    picksVoided: number;
     error?: string;
   }> = [];
 
@@ -82,6 +83,7 @@ export async function GET(request: Request) {
       ok: result.status === "success",
       gamesSettled: result.gamesSettled,
       picksSettled: result.picksSettled,
+      picksVoided: result.picksVoided,
       ...(result.error ? { error: result.error } : {}),
     });
     // Brief pause to avoid bursting the upstream API quota.
@@ -112,6 +114,7 @@ export async function GET(request: Request) {
   const okCount = results.filter((r) => r.ok).length;
   const gamesSettled = results.reduce((sum, r) => sum + r.gamesSettled, 0);
   const picksSettled = results.reduce((sum, r) => sum + r.picksSettled, 0);
+  const picksVoided = results.reduce((sum, r) => sum + r.picksVoided, 0);
 
   return NextResponse.json({
     ok: okCount === results.length,
@@ -120,6 +123,7 @@ export async function GET(request: Request) {
     totalCount: results.length,
     gamesSettled,
     picksSettled,
+    picksVoided,
     requestedSport: requestedSport ?? null,
     bootstrapMode: gates.isBootstrapMode,
     results,

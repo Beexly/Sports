@@ -107,6 +107,13 @@ export function verifyInclusion(proof: MerkleProof, root: string, hash: HashFn):
   return running === root;
 }
 
+export function commitmentDigest(hash: HashFn, root: string, count: number): string {
+  if (!Number.isInteger(count) || count < 0) {
+    throw new Error(`commitmentDigest: count must be a non-negative integer, got ${count}`);
+  }
+  return hash(`commit:v1:${count}:${root}`);
+}
+
 /**
  * Canonical, stable serialization of the fields a pick commits to (so the same
  * pick always hashes identically). Produces `key=value` pairs joined by "|",

@@ -1,22 +1,12 @@
+/**
+ * Evaluates whether canonical performance data is mature enough for public display.
+ */
 import {
   CANONICAL_SETTLED_PICK_WHERE,
   SEED_MODEL_VERSION,
   canonicalPendingPickWhere,
   recentPublishedPickWhere,
 } from "@/lib/performance/canonical-population";
-
-/**
- * Public Performance Policy
- *
- * Single source of truth for "can this surface make a public performance
- * claim right now?". Used by /dashboard, /performance, and Jarvis.
- *
- * Rules:
- *   1. canExposePerformanceStats OFF → blocked, GATE_OFF_PERFORMANCE_STATS
- *   2. canonicalSettledCount < min → blocked, INSUFFICIENT_CANONICAL_SAMPLE
- *   3. every recent pick bootstrap → blocked, ALL_RECENT_PICKS_BOOTSTRAP
- *   4. otherwise → allowed
- */
 
 export type PublicPerformanceBlocker =
   | "GATE_OFF_PERFORMANCE_STATS"

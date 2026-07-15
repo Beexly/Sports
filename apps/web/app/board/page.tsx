@@ -32,9 +32,10 @@ function timeLabel(value: string): string {
 }
 
 export default async function BoardPage(): Promise<JSX.Element> {
+  const now = new Date();
   const [stateResult, passesResult, calibrationResult] = await Promise.all([
-    loadBoardState(),
-    loadBoardPasses(),
+    loadBoardState(now),
+    loadBoardPasses(now),
     loadPublicCalibrationReport(),
   ]);
 

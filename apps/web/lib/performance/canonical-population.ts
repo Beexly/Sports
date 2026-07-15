@@ -1,3 +1,4 @@
+/** Defines the canonical pick populations shared by public performance surfaces. */
 import type { Prisma } from "@prisma/client";
 
 export const SEED_MODEL_VERSION = "v5.0.0-seed";

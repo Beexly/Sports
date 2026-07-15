@@ -74,6 +74,12 @@ describe("bot outbox record mappers", () => {
     expect(input.topFactorsAtPublish).toHaveLength(3);
   });
 
+  it("preserves VOID as no-action instead of mapping it to PUSH", () => {
+    const input = pickRecordToSettlementInput({ ...pick, result: "VOID" });
+
+    expect(input.outcome).toBe("VOID");
+  });
+
   it("maps gate decision records to gated slate planner input", () => {
     const input = gateDecisionRecordToGatedInput({
       id: "gate-1",

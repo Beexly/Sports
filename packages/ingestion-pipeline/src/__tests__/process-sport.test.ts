@@ -36,7 +36,7 @@ const mocks = vi.hoisted(() => ({
   gameUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
-  pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
+  pickCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
 }));
@@ -47,7 +47,7 @@ vi.mock("@sports/db", () => ({
     sport: { upsert: mocks.sportUpsert },
     game: { upsert: mocks.gameUpsert, findUnique: mocks.gameFindUnique },
     odds: { createMany: mocks.oddsCreateMany },
-    pick: { upsert: mocks.pickUpsert, findUnique: mocks.pickFindUnique },
+    pick: { create: mocks.pickCreate, findUnique: mocks.pickFindUnique },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
   },
 }));
@@ -152,7 +152,7 @@ describe("processSport", () => {
     mocks.getAtsForm.mockResolvedValue(null);
     mocks.getHeadToHeadForm.mockResolvedValue(null);
     mocks.scoreGames.mockReturnValue([scoredPick()]);
-    mocks.pickUpsert.mockResolvedValue({ id: "pick-1" });
+    mocks.pickCreate.mockResolvedValue({ id: "pick-1" });
     mocks.oddsCreateMany.mockResolvedValue({ count: 0 });
     // Default: no existing pick → the create/update upsert path runs as before.
     mocks.pickFindUnique.mockResolvedValue(null);
@@ -170,6 +170,23 @@ describe("processSport", () => {
         data: expect.objectContaining({ status: "SUCCESS", gamesUpserted: 1 }),
       })
     );
+  });
+
+  it("does not mint sidecars after losing a concurrent create race", async () => {
+    mocks.pickFindUnique
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        id: "pick-winner",
+        result: "PENDING",
+        selection: "Chiefs -3.5",
+      });
+    mocks.pickCreate.mockRejectedValue(Object.assign(new Error("unique"), { code: "P2002" }));
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(result).toMatchObject({ status: "success", picks: 1 });
+    expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
+    expect(mocks.buildPickSignalSnapshot).not.toHaveBeenCalled();
   });
 
   it("preserves the calibrated arithmetic reference in enrichment and scoring context", async () => {
@@ -262,7 +279,7 @@ describe("processSport", () => {
       const result = await processSport(SPORT, "key", gates());
 
       expect(result).toMatchObject({ status: "success", picks: 0 });
-      expect(mocks.pickUpsert).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
       expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
     } finally {
       vi.useRealTimers();
@@ -280,7 +297,7 @@ describe("processSport", () => {
         data: expect.objectContaining({ status: "FAILED", errorMessage: "quota exhausted" }),
       })
     );
-    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
   });
 
   it("rejects stale data — freshness failure fails the run (no-stale-data rule)", async () => {
@@ -290,7 +307,7 @@ describe("processSport", () => {
 
     expect(result.status).toBe("failed");
     expect(result.error).toMatch(/freshness/i);
-    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
   });
 
   it("rejects a STALE UPSTREAM feed even when our fetch clock looks fresh (no-stale-data rule)", async () => {
@@ -308,7 +325,7 @@ describe("processSport", () => {
 
     expect(result.status).toBe("failed");
     expect(result.error).toMatch(/stale/i);
-    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
   });
 
   it("classifies an all-stale board with every game beyond the horizon as QUIET — zero-work success, no alarm, no picks", async () => {
@@ -329,7 +346,7 @@ describe("processSport", () => {
     expect(result.note).toBe("quiet_board");
     expect(result.games).toBe(0);
     expect(result.picks).toBe(0);
-    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.oddsCreateMany).not.toHaveBeenCalled();
     expect(mocks.ingestionRunUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -344,24 +361,18 @@ describe("processSport", () => {
     expect(mocks.enrichGameContext).toHaveBeenCalledWith(
       expect.objectContaining({ isBootstrap: true })
     );
-    expect(mocks.pickUpsert).toHaveBeenCalledWith(
-      expect.objectContaining({ create: expect.objectContaining({ isBootstrap: true }) })
+    expect(mocks.pickCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ isBootstrap: true }) })
     );
   });
 
   it("never lets a refresh overwrite isBootstrap or the CLV lock (immutable creation fields)", async () => {
     await processSport(SPORT, "key", gates());
 
-    const call = mocks.pickUpsert.mock.calls[0]![0] as {
-      create: Record<string, unknown>;
-      update: Record<string, unknown>;
-    };
-    expect(call.create["clvLockLine"]).toBe(-3.5);
-    expect(call.update).not.toHaveProperty("isBootstrap");
-    expect(call.update).not.toHaveProperty("clvLockLine");
-    expect(call.update).not.toHaveProperty("clvLockPrice");
-    expect(call.update).not.toHaveProperty("result");
-    expect(call.update).not.toHaveProperty("settledAt");
+    const call = mocks.pickCreate.mock.calls[0]![0] as { data: Record<string, unknown> };
+    expect(call.data["clvLockLine"]).toBe(-3.5);
+    expect(call.data).not.toHaveProperty("result");
+    expect(call.data).not.toHaveProperty("settledAt");
   });
 
   it("freezes a SETTLED pick — a refresh never rewrites a graded row", async () => {
@@ -377,7 +388,7 @@ describe("processSport", () => {
     // The run still succeeds, but the settled pick is left exactly as graded:
     // no upsert touches its selection/line/confidence/grade/reasoning.
     expect(result.status).toBe("success");
-    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
   });
 
@@ -395,7 +406,7 @@ describe("processSport", () => {
     const result = await processSport(SPORT, "key", gates());
 
     expect(result.status).toBe("success");
-    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
   });
 
   it("freezes a PENDING pick on the SAME side so its line cannot drift from its receipt", async () => {
@@ -408,7 +419,7 @@ describe("processSport", () => {
 
     await processSport(SPORT, "key", gates());
 
-    expect(mocks.pickUpsert).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.snapshotUpsert).not.toHaveBeenCalled();
   });
 
@@ -417,9 +428,9 @@ describe("processSport", () => {
 
     await processSport(SPORT, "key", gates());
 
-    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
-    expect(call.create["clvLockLine"]).toBeNull();
-    expect(call.create["clvLockPrice"]).toBe(-135);
+    const call = mocks.pickCreate.mock.calls[0]![0] as { data: Record<string, unknown> };
+    expect(call.data["clvLockLine"]).toBeNull();
+    expect(call.data["clvLockPrice"]).toBe(-135);
   });
 
   it("keeps PickSignalSnapshot immutable (upsert with empty update)", async () => {
@@ -444,8 +455,8 @@ describe("processSport", () => {
 
     await processSport(SPORT, "key", gates({ canPromoteFeaturedPicks: false }));
 
-    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
-    expect(call.create["isFeatured"]).toBe(false);
+    const call = mocks.pickCreate.mock.calls[0]![0] as { data: Record<string, unknown> };
+    expect(call.data["isFeatured"]).toBe(false);
   });
 
   it("promotes elite plays when the gate is on", async () => {
@@ -453,8 +464,8 @@ describe("processSport", () => {
 
     await processSport(SPORT, "key", gates({ canPromoteFeaturedPicks: true }));
 
-    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
-    expect(call.create["isFeatured"]).toBe(true);
+    const call = mocks.pickCreate.mock.calls[0]![0] as { data: Record<string, unknown> };
+    expect(call.data["isFeatured"]).toBe(true);
   });
 
   it("never fetches ATS/H2H history when the derived-history gate is off", async () => {

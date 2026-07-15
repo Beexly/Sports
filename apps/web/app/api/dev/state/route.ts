@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { getReadinessGates } from "@sports/prediction-engine";
-import { isStubMode, isDemoPicksEnabled, SAMPLE_PICK_COUNT } from "@sports/db";
 
 /**
  * /api/dev/state — small JSON snapshot of dev-mode flags + readiness
@@ -13,6 +12,7 @@ export async function GET() {
   if (process.env["NODE_ENV"] === "production") {
     return NextResponse.json({ error: "not-found" }, { status: 404 });
   }
+  const { isStubMode, isDemoPicksEnabled, SAMPLE_PICK_COUNT } = await import("@sports/db");
   const gates = getReadinessGates();
   return NextResponse.json({
     nodeEnv: process.env["NODE_ENV"] ?? "unknown",

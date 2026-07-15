@@ -126,6 +126,20 @@ describe("bot outbox planner", () => {
     expect(items.every((item) => item.blockedReason === "pending-settlement")).toBe(true);
   });
 
+  it("blocks voided picks as no-action instead of publishing a push", () => {
+    const items = planSettlementOutbox(
+      {
+        ...settledLoss,
+        outcome: "VOID",
+      },
+      publicUrl,
+    );
+
+    expect(items).toHaveLength(2);
+    expect(items.every((item) => item.shouldPost === false)).toBe(true);
+    expect(items.every((item) => item.blockedReason === "voided-no-action")).toBe(true);
+  });
+
   it("plans gated slate drafts and blocks bootstrap slate state", () => {
     const items = planGatedSlateOutbox(
       {

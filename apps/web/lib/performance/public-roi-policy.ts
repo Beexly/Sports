@@ -29,10 +29,9 @@
  * 2.33% at n=25 (within the 2.5% one-sided budget) vs 3.00% for BCa alone.
  * Below n~100, do not weaken this gate to BCa-only.
  *
- * CONVENTIONS (pinned so a competitor can't pin them for us): pushes/voids are
- * settled 0-unit bets — included in n and in the mean (conservative: zeros drag
- * a positive mean toward 0). PENDING picks are NOT settled and are excluded
- * entirely (null), never counted as 0-unit returns.
+ * CONVENTIONS (pinned so a competitor can't pin them for us): pushes are
+ * settled 0-unit bets and remain in the sample. VOID is no action, so it is
+ * excluded exactly like PENDING and never inflates the graded sample size.
  */
 
 import { bcaMeanCi, studentizedMeanCi, empiricalBernsteinMeanCi, anytimeValidLedger, americanToDecimalOdds } from "@sports/prediction-engine";
@@ -42,21 +41,17 @@ export type PickResultLike = "WIN" | "LOSS" | "PUSH" | "VOID" | "PENDING";
 /**
  * Realized units for one settled pick at a 1-unit flat stake, using the actual
  * American entry price. WIN pays the decimal profit; LOSS loses the stake;
- * PUSH/VOID are settled 0-unit bets (no action). PENDING is UNRESOLVED — it has
- * no realized return, so it is excluded (null), never counted as a settled 0:
- * counting it would inflate n past the publication gate and inject variance-
- * shrinking zeros into the CI.
+ * PUSH is a settled 0-unit result. VOID and PENDING have no realized return,
+ * so they are excluded rather than counted as variance-shrinking zeros.
  */
 export function unitsForPick(result: PickResultLike, americanEntryOdds: number | null | undefined): number | null {
-  if (result === "PENDING") return null;
+  if (result === "PENDING" || result === "VOID") return null;
   // A settled pick only counts toward the published ROI sample if it is backed by
   // a sealed entry price — UNIFORMLY, pushes included. Without this, a legacy PUSH
   // with no proof receipt would still count as a graded 0 (inflating n and
-  // shrinking the CI) while wins/losses without a receipt are excluded, letting an
-  // unsealed ledger clear the publication floor. Check the price before the 0-unit
-  // no-action return.
+  // shrinking the CI) while wins/losses without a receipt are excluded.
   if (americanEntryOdds == null || !Number.isFinite(americanEntryOdds) || americanEntryOdds === 0) return null;
-  if (result === "PUSH" || result === "VOID") return 0;
+  if (result === "PUSH") return 0;
   if (result === "WIN") return americanToDecimalOdds(americanEntryOdds) - 1;
   return -1; // LOSS
 }
@@ -324,7 +319,7 @@ export async function loadPublicRoiPolicy(
     where: {
       isBootstrap: false,
       isPublished: true,
-      result: { in: ["WIN", "LOSS", "PUSH", "VOID"] },
+      result: { in: ["WIN", "LOSS", "PUSH"] },
     },
     select: { result: true, proofReceipt: { select: { entryOdds: true } } },
     // SETTLEMENT ORDER IS LOAD-BEARING (K11): the anytime-valid evidence tier

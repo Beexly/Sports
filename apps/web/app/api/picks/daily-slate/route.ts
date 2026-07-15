@@ -11,6 +11,7 @@ import {
   getFreshPublicOddsSportKeys,
   isPublicPicksSurfaceStale,
 } from "@/lib/data-reliability/public-freshness-gate";
+import { canonicalSettledPickWhere } from "@/lib/performance/canonical-population";
 
 /**
  * Daily slate API — stub-safe and demo-aware.
@@ -20,6 +21,35 @@ import {
  * is closed — closes the leak documented in the prior session.
  */
 export const dynamic = "force-dynamic";
+
+type RecentRecord = {
+  wins: number;
+  losses: number;
+  pushes: number;
+  period: string;
+};
+
+async function loadRecentRecord(): Promise<RecentRecord | null> {
+  try {
+    const grouped = await db.pick.groupBy({
+      by: ["result"],
+      where: canonicalSettledPickWhere({
+        settledAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+      }),
+      _count: { _all: true },
+    });
+    const count = (result: "WIN" | "LOSS" | "PUSH") =>
+      grouped.find((row) => row.result === result)?._count._all ?? 0;
+    const wins = count("WIN");
+    const losses = count("LOSS");
+    const pushes = count("PUSH");
+    return wins + losses + pushes > 0
+      ? { wins, losses, pushes, period: "Last 7 days" }
+      : null;
+  } catch {
+    return null;
+  }
+}
 
 export async function GET() {
   const gates = getReadinessGates();
@@ -34,7 +64,7 @@ export async function GET() {
   // lastUpdatedAt: null so we never imply a fresh refresh (CLAUDE.md rule #5).
   // Fail CLOSED on a DB error because freshness that cannot be proven is stale.
   let freshSportKeys: string[] | null = null;
-  if (gates.forceNoBetIfStale) {
+  if (gates.forceNoBetIfStale && !demoActive) {
     let suppress = await isPublicPicksSurfaceStale().catch(() => true);
     if (!suppress) {
       const freshSports = await getFreshPublicOddsSportKeys().catch(() => null);
@@ -79,7 +109,7 @@ export async function GET() {
     ...excludeSeedInProd,
   };
 
-  const totalPicks = await db.pick.count({ where: baseWhere }).catch(() => 0);
+  let totalPicks = await db.pick.count({ where: baseWhere }).catch(() => 0);
 
   const samples = demoActive ? getSamplePicks() : [];
   let totalGames: number;
@@ -87,6 +117,7 @@ export async function GET() {
   // Sport breakdown accumulator (demo counts samples; prod counts real picks).
   const sportCount = new Map<string, number>();
   if (demoActive) {
+    totalPicks = samples.length;
     totalGames = new Set(samples.map((p) => p.gameId)).size;
     freePickCount = samples.filter((p) => p.tier === "FREE").length;
     for (const p of samples) {
@@ -124,9 +155,9 @@ export async function GET() {
   const sportBreakdown = Array.from(sportCount.entries())
     .map(([sport, pickCount]) => ({ sport, pickCount }))
     .sort((a, b) => b.pickCount - a.pickCount || a.sport.localeCompare(b.sport));
-  let recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
+  let recentRecord: RecentRecord | null = null;
   if (gates.canExposePerformanceStats) {
-    recentRecord = { wins: 0, losses: 0, pushes: 0, period: "Last 7 days" };
+    recentRecord = await loadRecentRecord();
   }
 
   return NextResponse.json({
@@ -140,7 +171,6 @@ export async function GET() {
       topEdgePick: null,
       lastUpdatedAt: new Date().toISOString(),
       sportBreakdown,
-      // recentRecord stays null when stats are gated.
       recentRecord,
       isSampleData: demoActive,
     },

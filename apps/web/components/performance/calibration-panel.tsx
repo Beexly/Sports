@@ -1,4 +1,5 @@
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { HonestBand } from "@/components/performance/honest-band";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import {
   NUMERIC_TEXT_CLASS,
@@ -75,7 +76,7 @@ const VERDICT_META: Record<
 
 function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   const observedWidth = bucket.probabilityObservedWinRate === null
-    ? "0%"
+    ? undefined
     : `${Math.round(bucket.probabilityObservedWinRate * 100)}%`;
   const expectedLeft = bucket.expectedWinRate === null
     ? null
@@ -165,6 +166,7 @@ export async function CalibrationPanel() {
   const d = data.discrimination;
   const meta = VERDICT_META[d.trend];
   const collecting = data.isCollecting || data.sampleSize === 0;
+  const overallObserved = data.overallObservedWinRate;
 
   // Discrimination's low/high readout is computed at a LOWER floor than the
   // publish floor (MIN_DISCRIMINATION_SAMPLE=20 < MIN_PUBLISH_BUCKET_SAMPLE=30):
@@ -251,6 +253,15 @@ export async function CalibrationPanel() {
           ))}
         </div>
       </div>
+
+      {overallObserved !== null && data.decidedSampleSize >= 30 && (
+        <div className="px-6 pb-6">
+          <HonestBand
+            observedRate={overallObserved}
+            sampleSize={data.decidedSampleSize}
+          />
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-titanium px-6 py-4">
         <div>

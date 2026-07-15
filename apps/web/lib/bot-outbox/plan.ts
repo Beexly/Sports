@@ -27,6 +27,7 @@ export type BotOutboxBlockedReason =
   | "bootstrap-data"
   | "unpublished-pick"
   | "pending-settlement"
+  | "voided-no-action"
   | "non-loss-post-mortem"
   | "compliance-blocked";
 
@@ -67,7 +68,7 @@ export interface BotSettlementInput {
   gameId: string;
   matchup: string;
   pickLine: string;
-  outcome: "W" | "L" | "PUSH" | "PENDING";
+  outcome: "W" | "L" | "PUSH" | "VOID" | "PENDING";
   finalScore: string;
   confidenceAtPublish: number;
   heaviestContributorFactor: FactorKey | null;
@@ -120,6 +121,7 @@ function blockedSettlementReason(
   if (input.isBootstrap) return "bootstrap-data";
   if (!input.isPublished) return "unpublished-pick";
   if (input.outcome === "PENDING" || input.settledAt === null) return "pending-settlement";
+  if (input.outcome === "VOID") return "voided-no-action";
   return null;
 }
 
@@ -281,8 +283,8 @@ export function planSettlementOutbox(
     );
   }
 
-  if (input.outcome === "PENDING" || input.settledAt === null) {
-    throw new Error("Pending settlements must be blocked before outbox rendering.");
+  if (input.outcome === "PENDING" || input.outcome === "VOID" || input.settledAt === null) {
+    throw new Error("Pending and voided settlements must be blocked before outbox rendering.");
   }
 
   const settledAt = input.settledAt;

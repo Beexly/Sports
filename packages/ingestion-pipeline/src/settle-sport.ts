@@ -51,8 +51,19 @@ export interface SettleSportResult {
   status: "success" | "failed";
   gamesSettled: number;
   picksSettled: number;
+  picksVoided: number;
   error?: string;
 }
+
+type NormalizedScore = {
+  externalId: string;
+  homeScore: number | null;
+  awayScore: number | null;
+  completed: boolean;
+};
+
+const SCORES_DAYS_FROM = 3;
+const VOID_STALE_HOURS = 72;
 
 /**
  * Settle all completed games for one sport.
@@ -75,10 +86,63 @@ export async function settleSport(
 
   let gamesSettled = 0;
   let picksSettled = 0;
+  let picksVoided = 0;
+  let feedError: string | null = null;
 
   try {
-    const { data: scores } = await client.getScores(sport.key, 2);
-    const normalized = normalizer.normalizeScores(scores);
+    const normalized: NormalizedScore[] = [];
+    try {
+      const { data: scores } = await client.getScores(sport.key, SCORES_DAYS_FROM);
+      normalized.push(...normalizer.normalizeScores(scores));
+    } catch (error) {
+      feedError = error instanceof Error ? error.message : String(error);
+      console.error(`${logPrefix} ${sport.key} failed: ${feedError}`);
+    }
+
+    try {
+      const recordedFinals = await db.game.findMany({
+        where: {
+          sport: { key: sport.key },
+          status: "FINAL",
+          homeScore: { not: null },
+          awayScore: { not: null },
+          picks: {
+            some: {
+              OR: [
+                { result: "PENDING" },
+                { result: { in: ["WIN", "LOSS", "PUSH"] }, clvGradedAt: null },
+              ],
+            },
+          },
+        },
+        select: {
+          externalId: true,
+          homeScore: true,
+          awayScore: true,
+        },
+      });
+      const seen = new Set(normalized.map((score) => score.externalId));
+      for (const game of recordedFinals) {
+        if (
+          seen.has(game.externalId) ||
+          game.homeScore === null ||
+          game.awayScore === null
+        ) {
+          continue;
+        }
+        normalized.push({
+          externalId: game.externalId,
+          homeScore: game.homeScore,
+          awayScore: game.awayScore,
+          completed: true,
+        });
+      }
+    } catch (error) {
+      console.warn(
+        `${logPrefix} Recorded-final catch-up failed for ${sport.key}: ` +
+          `${error instanceof Error ? error.message : error}`
+      );
+    }
 
     for (const score of normalized) {
       if (!score.completed) continue;
@@ -87,7 +151,12 @@ export async function settleSport(
         where: { externalId: score.externalId },
         include: {
           picks: {
-            where: { result: "PENDING" },
+            where: {
+              OR: [
+                { result: "PENDING" },
+                { result: { in: ["WIN", "LOSS", "PUSH"] }, clvGradedAt: null },
+              ],
+            },
             include: { proofReceipt: { select: { payload: true } } },
           },
         },
@@ -159,27 +228,34 @@ export async function settleSport(
           // would settle a published WIN as a LOSS and contradict the CLV verdict (which
           // already uses clvLockLine below). Fall back to pick.line only for legacy rows
           // with no lock. (MONEYLINE ignores the line entirely.)
-          const gradingLine = selectGradingLine(pick);
-          const result = calculatePickResult(
-            pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
-            pick.selection,
-            gradingLine,
-            game.homeTeamName,
-            score.homeScore,
-            score.awayScore,
-            sport.key,
-          );
+          const alreadySettled =
+            pick.result === "WIN" || pick.result === "LOSS" || pick.result === "PUSH";
+          let result: ReturnType<typeof calculatePickResult>;
+          if (alreadySettled) {
+            result = pick.result as ReturnType<typeof calculatePickResult>;
+          } else {
+            const gradingLine = selectGradingLine(pick);
+            result = calculatePickResult(
+              pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+              pick.selection,
+              gradingLine,
+              game.homeTeamName,
+              score.homeScore,
+              score.awayScore,
+              sport.key,
+            );
           // Idempotent settle. game.picks was read with result:"PENDING", but
           // the worker and the Vercel settle-picks cron can both reach this game
           // between that read and this write. updateMany scoped to
           // result:"PENDING" makes the write a no-op for the loser of the race
           // (count===0) — so the first settlement and its settledAt stay
           // immutable and CLV is never re-graded against a second close.
-          const settled = await db.pick.updateMany({
-            where: { id: pick.id, result: "PENDING" },
-            data: { result, settledAt },
-          });
-          if (settled.count === 0) continue;
+            const settled = await db.pick.updateMany({
+              where: { id: pick.id, result: "PENDING" },
+              data: { result, settledAt },
+            });
+            if (settled.count === 0) continue;
+          }
 
           // Grade Closing-Line Value against the immutable lock snapshot
           // (clvLockLine/clvLockPrice, captured at publish). Additive and
@@ -199,8 +275,8 @@ export async function settleSport(
                 close: closingSnapshot,
               });
               if (grade) {
-                await db.pick.update({
-                  where: { id: pick.id },
+                await db.pick.updateMany({
+                  where: { id: pick.id, clvGradedAt: null },
                   data: {
                     clvCloseLine: grade.closeLine,
                     clvClosePrice: grade.closePrice,
@@ -250,7 +326,7 @@ export async function settleSport(
               `${snapErr instanceof Error ? snapErr.message : snapErr}`,
             );
           }
-          picksSettled++;
+          if (!alreadySettled) picksSettled++;
         }
 
         // Write TeamGameLog entries for ATS form tracking.
@@ -285,11 +361,84 @@ export async function settleSport(
       }
     }
 
-    return { sport: sport.key, status: "success", gamesSettled, picksSettled };
+    try {
+      const cutoff = new Date(Date.now() - VOID_STALE_HOURS * 60 * 60 * 1000);
+      const staleGames = await db.game.findMany({
+        where: {
+          sport: { key: sport.key },
+          commenceTime: { lt: cutoff },
+          picks: { some: { result: "PENDING" } },
+          NOT: {
+            status: "FINAL",
+            homeScore: { not: null },
+            awayScore: { not: null },
+          },
+        },
+        include: { picks: { where: { result: "PENDING" } } },
+      });
+
+      for (const game of staleGames) {
+        const settledAt = new Date();
+        for (const pick of game.picks) {
+          const voided = await db.pick.updateMany({
+            where: { id: pick.id, result: "PENDING" },
+            data: { result: "VOID", settledAt },
+          });
+          if (voided.count === 0) continue;
+          try {
+            await recordPickSettlementSnapshot({
+              db,
+              pick,
+              result: "VOID",
+              settledAt,
+              isEligibleForLearning: false,
+              gameDataQualityScore: game.dataQualityScore,
+            });
+          } catch (error) {
+            console.warn(
+              `${logPrefix} Snapshot VOID update failed for pick ${pick.id}: ` +
+                `${error instanceof Error ? error.message : error}`
+            );
+          }
+          picksVoided++;
+        }
+      }
+    } catch (error) {
+      console.warn(
+        `${logPrefix} Stale-pick VOID sweep failed for ${sport.key}: ` +
+          `${error instanceof Error ? error.message : error}`
+      );
+    }
+
+    if (feedError) {
+      return {
+        sport: sport.key,
+        status: "failed",
+        gamesSettled,
+        picksSettled,
+        picksVoided,
+        error: feedError,
+      };
+    }
+
+    return {
+      sport: sport.key,
+      status: "success",
+      gamesSettled,
+      picksSettled,
+      picksVoided,
+    };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`${logPrefix} ${sport.key} failed: ${message}`);
-    return { sport: sport.key, status: "failed", gamesSettled, picksSettled, error: message };
+    return {
+      sport: sport.key,
+      status: "failed",
+      gamesSettled,
+      picksSettled,
+      picksVoided,
+      error: message,
+    };
   }
 }
 

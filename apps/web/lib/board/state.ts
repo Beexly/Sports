@@ -10,6 +10,7 @@ import {
   getFreshPublicOddsSportKeys,
   isPublicPicksSurfaceStale,
 } from "@/lib/data-reliability/public-freshness-gate";
+import { utcDayBounds } from "@/lib/time/utc-day";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -70,14 +71,6 @@ export function redactBoardConfidence(payload: BoardStatePayload): BoardStatePay
       gatedTodayRows: strip(payload.data.gatedTodayRows),
     },
   };
-}
-
-function todayBounds(): { start: Date; end: Date } {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  return { start, end };
 }
 
 function rowCounts(rows: Pick<BoardStateData, "scoringNow" | "publishedToday" | "gatedTodayRows">) {
@@ -184,7 +177,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     ...excludeSeedInProd,
   };
 
-  const { start, end } = todayBounds();
+  const { start, end } = utcDayBounds(now);
   try {
     const decisions = await db.gateDecision.findMany({
       where: {
