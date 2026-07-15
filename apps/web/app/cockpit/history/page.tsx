@@ -6,6 +6,7 @@ import {
   type HistoricalPickRow,
 } from "@/lib/cockpit/history";
 import { ChecklistRow } from "@/components/cockpit/checklist-row";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * /cockpit/history — forensic pick ledger.
@@ -39,6 +40,7 @@ const RESULT_FILTERS = ["ALL", "PENDING", "WIN", "LOSS", "PUSH", "VOID"] as cons
 const TAKE = 100;
 
 export default async function CockpitHistoryPage({ searchParams }: HistoryPageProps) {
+  await requireCockpitAdmin();
   const gates = getReadinessGates();
 
   const resultParam = (searchParams.result ?? "ALL").toUpperCase();

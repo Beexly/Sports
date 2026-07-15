@@ -5,6 +5,7 @@ import {
   parseStateList,
 } from "@/lib/promotions/guards";
 import type { Promotion } from "@prisma/client";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * Cockpit · Promotions
@@ -19,6 +20,7 @@ import type { Promotion } from "@prisma/client";
 export const dynamic = "force-dynamic";
 
 export default async function CockpitPromotionsPage() {
+  await requireCockpitAdmin();
   const promos: Promotion[] = await db.promotion
     .findMany({ orderBy: [{ status: "asc" }, { updatedAt: "desc" }], take: 100 })
     .catch(() => [] as Promotion[]);

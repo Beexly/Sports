@@ -2,6 +2,7 @@ import Link from "next/link";
 import { loadStudioDashboard } from "@/lib/studio/load";
 import { StudioWorkspace } from "./studio-workspace";
 import { studioWorkspaceProps } from "./studio-props";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,7 @@ export default async function CockpitStudioPage({
 }: {
   searchParams?: { gameId?: string };
 }): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const data = await loadStudioDashboard(searchParams?.gameId);
   return (
     <div className="flex flex-col gap-6">

@@ -5,6 +5,7 @@ import {
   type OperatorClass,
   type OperatorRegistryEntry,
 } from "@/lib/cockpit/operator-registry";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,8 @@ function classBadge(operatorClass: OperatorClass): string {
   }
 }
 
-export default function PromoDeskPage(): JSX.Element {
+export default async function PromoDeskPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const operators = listCockpitOperators();
   const summary = summarizeRegistry();
 

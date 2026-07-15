@@ -9,6 +9,7 @@ import {
   type BriefPromotionInput,
   type BriefTaskInput,
 } from "@/lib/brief/compose";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * /cockpit/brief — the operator's morning packet, rebuilt on real rows.
@@ -22,6 +23,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function CockpitBriefPage() {
+  await requireCockpitAdmin();
   const now = new Date();
 
   const [pickRows, settledRows, movedGames, promoRows, taskRows] = await Promise.all([

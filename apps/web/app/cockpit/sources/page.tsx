@@ -34,6 +34,7 @@ import {
   planIngestion,
   type StatNeed,
 } from "@/lib/data-sources/source-router";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -92,6 +93,7 @@ const RIGHTS_STATUS_LABEL: Record<SourceRightsStatus, string> = {
 };
 
 export default async function CockpitSourcesPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const providers = providerStatuses();
   const providerSummary = readinessSummary();
   const liveEvidence = await loadSourceLiveEvidence({ timeoutMs: 12000 });

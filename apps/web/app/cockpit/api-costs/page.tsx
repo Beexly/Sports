@@ -6,6 +6,7 @@ import {
   type ClaudeApiCostSurfaceSummary,
 } from "@/lib/claude-api/dashboard";
 import type { ClaudeBudgetStatus } from "@/lib/claude-api/cost-monitor";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ const STATUS_STYLES: Readonly<Record<ClaudeBudgetStatus, string>> = {
 };
 
 export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const dashboard = await loadClaudeApiCostsDashboard();
 
   return (

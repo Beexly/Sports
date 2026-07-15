@@ -4,6 +4,7 @@ import {
   evaluatePromotionForPublish,
   parseStateList,
 } from "@/lib/promotions/guards";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,7 @@ interface CockpitPromotionDetailProps {
 export default async function CockpitPromotionDetail({
   params,
 }: CockpitPromotionDetailProps) {
+  await requireCockpitAdmin();
   const promo = await db.promotion
     .findUnique({ where: { slug: params.slug } })
     .catch(() => null);

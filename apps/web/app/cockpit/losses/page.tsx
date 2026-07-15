@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db } from "@sports/db";
 import { StatusTile } from "@/components/cockpit/status-tile";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 interface CockpitLossRow {
   readonly id: string;
@@ -51,6 +52,7 @@ function statusClass(status: string): string {
 }
 
 export default async function CockpitLossesPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const rows = await loadRows();
 
   // Lifecycle rollup derived from rows already loaded — no extra query.
