@@ -3,7 +3,7 @@
 Last updated: 2026-07-15
 Executor branch: `codex/gse-frontier-recovery-2026-07-13`
 Current-main base: `3ce5c4a198df7f9baac37888de4f28297e24f581`
-Production deployment identity: `UNVERIFIED` — repository and public runtime evidence must be correlated before a deployment claim.
+Production deployment identity: `VERIFIED_CURRENT_NOT_RECOVERY` — Vercel reports READY production `main` SHA `3ce5c4a198df7f9baac37888de4f28297e24f581` (`dpl_49hQPFbo57nuQ17E2MFJaV8LKzb7`); the public apex redirects to `www`, which returned `200` without a Vercel SSO wall on 2026-07-15. The recovery branch is not production.
 
 This file is the execution control plane. It is not a readiness claim.
 
@@ -112,7 +112,8 @@ This file is the execution control plane. It is not a readiness claim.
 | `npm.cmd test` | 0 | 9,309/9,309 assertions passed across 746 test files in web, crypto, data ingestion, DB, ingestion pipeline, prediction engine, shared types, and the content-publishing worker | Test persistence and external providers remain mocked or stubbed; no production writes were executed. |
 | Local real-client production build (`DATABASE_URL` set to an unreachable non-secret PostgreSQL URL) | 0 | Next.js compiled, validated types, generated all 205 routes, and emitted the production route/bundle manifest | Sentry/OpenTelemetry emits the known dynamic-require bundling warning. Several legacy prerender loaders attempted DB reads, logged authentication failures, and rendered degraded states; no real database or production secret was used. |
 | `npm.cmd run guardrails` | 0 | Trust, model freeze, draft-only, secret, commercial-claim, rights, OpenAPI, ZK, AWS compatibility, and eval-contract guards passed | Guardrails validate repository artifacts, not production configuration. |
-| Browser / console / visual matrix | PARTIAL | Fantasy public gate and Intelligence Playback renderer are verified on desktop/mobile with screenshots and no runtime errors | A real persisted Game Room and current production deployment remain unverified. |
+| Browser / console / visual matrix | PARTIAL | Fantasy public gate and Intelligence Playback renderer are verified on desktop/mobile with screenshots and no runtime errors | A real persisted Game Room remains unverified. Current production identity is verified separately and does not contain this recovery branch. |
+| Vercel/public-domain correlation | 0 | Public apex returned `307` to `www`; `www` returned `200` without an SSO wall. Vercel reports READY production `main` SHA `3ce5c4a1`; recovery code SHA `0e89e797` has a READY protected preview; docs-only SHA `a2202675` was canceled by the configured ignored-build step. | Confirms accessibility and deployment identity only; does not prove live DB, cron, providers, or recovery-code production behavior. |
 
 ## Touched-file ownership
 

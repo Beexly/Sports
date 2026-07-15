@@ -28,4 +28,11 @@ The browser run verified:
 
 The screenshots used an explicitly labeled local renderer fixture because no production DB or eligible persisted Game Room record was available. The temporary route was deleted before commit. This proves rendering and interaction only.
 
-Production URL, Vercel deployment protection, deployed SHA, environment variables, database rows, odds cron history, and live provider health remain unverified. Do not call the feature live until those are correlated.
+## Deployment evidence captured 2026-07-15
+
+- `https://galaxysportsedge.com` returned `307` to `https://www.galaxysportsedge.com/`; the `www` URL returned `200` from Vercel without a Vercel SSO wall.
+- Vercel deployment `dpl_49hQPFbo57nuQ17E2MFJaV8LKzb7` is the current READY production deployment: `main` SHA `3ce5c4a198df7f9baac37888de4f28297e24f581`.
+- Recovery code commit `0e89e797ea49728cca959513d97d98f3d5639eb5` has READY protected preview deployment `dpl_BXX5YcnS9A22xcbiwZz7bowt2Y3U`; a direct anonymous request redirects to Vercel SSO.
+- The later docs-only head `a22026752843b592e6af7606fc35d63cd789d5ff` was received by Vercel as `dpl_3XVse9oc8cEtfDbYovvPPnPgCpUA` and canceled by the configured ignored-build step. It is not a failed production deployment.
+
+Therefore public accessibility is verified, but this recovery branch is not production. Environment variables, database rows, odds cron history, live provider health, and a real persisted playback record remain unverified. Do not call the playback feature live until the branch is reviewed, merged, deployed, and exercised against eligible persisted data.

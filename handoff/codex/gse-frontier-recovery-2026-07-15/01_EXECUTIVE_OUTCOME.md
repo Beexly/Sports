@@ -20,7 +20,8 @@ The novel product primitive is an **epistemic flight recorder**: a deterministic
 
 ## Not claimed
 
-- Production DB connectivity, cron execution, deployed SHA, Vercel protection state, or real persisted playback rows were not verified.
-- No production migration, secret change, deployment, billing/auth/legal change, publication, or destructive operation occurred.
+- The public custom domain was verified reachable on 2026-07-15 (`galaxysportsedge.com` redirected to `www`, which returned `200` without a Vercel SSO wall). Vercel identifies the current READY production deployment as `main` SHA `3ce5c4a1`; this recovery branch is not deployed to production.
+- Production DB connectivity, cron execution, provider freshness, and real persisted playback rows were not verified.
+- No production migration, secret change, production deployment, billing/auth/legal change, publication, or destructive operation occurred.
 - Twin, Brain, autopsy, and Studio projections are code-level consumers, not publicly wired product surfaces.
 - Current persistence cannot durably reconstruct every historical PASS decision or pick-specific recalibration effect.

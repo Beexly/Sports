@@ -1150,6 +1150,7 @@ Authoritative packet: `handoff/codex/gse-frontier-recovery-2026-07-15/00_READ_ME
 - Result: canonical `PickEvidenceEnvelope` -> `IntelligenceEvent` -> epistemic-delta/certificate spine is rendered in `/room/[gameId]`; pure consumer projections exist for Twin, deterministic Brain answer, postgame autopsy, and draft-only Studio.
 - Validation: 9,309 tests, root typecheck/lint, production build (205 routes), full guardrails, 32-file no-excuse scan, desktop/mobile Playwright + axe + 200% zoom.
 - PR reconciliation: all stale non-merged PRs #76-#96 are closed with receipts; #97-#100 were already merged; #101 remains owner-gated and unmerged.
-- Limits: no production DB proof, migration, secret, deployment, publication, billing/auth/legal mutation, or live-data claim.
+- Deployment truth captured 2026-07-15: the public domain is reachable without a Vercel SSO wall; READY production is `main` SHA `3ce5c4a1`; this recovery branch is not production. Recovery code SHA `0e89e797` has a READY protected preview, while docs-only SHA `a2202675` was skipped by the configured ignored-build rule.
+- Limits: no production DB/provider/cron proof, migration, secret, recovery promotion, publication, billing/auth/legal mutation, or live-playback claim.
 - Next safe task: wire the existing consumer bundle into owner-only selected-game Cockpit surfaces. Do not create another truth store or use fixture events.
 - Preserve untracked `g.id)`, `s.id`, `{`, `pnpm-lock.yaml`, and `pnpm-workspace.yaml`.
