@@ -13,6 +13,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@sports/db";
 import { buildPublicPromotionsResponse } from "@/lib/promotions/public-payload";
+import { backendOutageResponse } from "@/lib/data-reliability/public-freshness-gate";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -38,10 +39,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       orderBy: { updatedAt: "desc" },
       take: 100,
     })
-    // Fail-open: a transient DB error degrades to an honest "no offers right
-    // now" 200 (buildPublicPromotionsResponse returns success on []), instead
-    // of throwing a 500 out of this read-only public route.
-    .catch(() => [] as Awaited<ReturnType<typeof db.promotion.findMany>>);
+    .catch(() => null);
+
+  if (rows === null) {
+    return NextResponse.json(backendOutageResponse("Promotions"), {
+      status: 503,
+      headers: { "cache-control": "no-store" },
+    });
+  }
 
   const payload = buildPublicPromotionsResponse(rows, { state });
 

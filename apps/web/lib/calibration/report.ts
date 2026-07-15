@@ -8,6 +8,7 @@ export interface CalibrationReportPayload {
     updatedAt: string;
     isCollecting: boolean;
     publicMessage: string;
+    readFailed?: true;
   };
   meta: { gated: boolean; isSampleData: boolean };
 }
@@ -50,7 +51,8 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
         ...report,
         updatedAt: now.toISOString(),
         isCollecting: true,
-        publicMessage: "Calibration is temporarily unavailable; building history from settled canonical picks.",
+        publicMessage: "Calibration is temporarily unavailable.",
+        readFailed: true,
       },
       meta: { gated: false, isSampleData: false },
     };

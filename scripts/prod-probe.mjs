@@ -124,7 +124,6 @@ const API_SHAPE_PROBES = [
     label: "public Edge Index",
     validate: validateBoardEdgeIndex,
   },
-  { path: "/api/calibration", label: "calibration", validate: validateCalibration },
 ];
 
 const TEXT_SHAPE_PROBES = [
@@ -141,6 +140,11 @@ const GATE_SHAPE_PROBES = [
     path: "/api/performance?check=performance-gate",
     label: "performance stats gate",
     validate: validatePerformanceGate,
+  },
+  {
+    path: "/api/calibration",
+    label: "calibration",
+    validate: validateCalibrationGate,
   },
 ];
 
@@ -385,6 +389,14 @@ function validateCalibration(json) {
   if (typeof json.data.isCollecting !== "boolean") return "Missing data.isCollecting boolean.";
   if (!json.meta || typeof json.meta.gated !== "boolean") return "Missing meta.gated boolean.";
   return "";
+}
+
+function validateCalibrationGate(status, json) {
+  if (status === 503 && json?.reason === "backend_outage") {
+    return "Backend outage: the calibration read failed. Check /api/health and the database provider.";
+  }
+  if (status !== 200) return `Unexpected calibration response: HTTP ${status}.`;
+  return validateCalibration(json);
 }
 
 function validateJournalRss(text) {

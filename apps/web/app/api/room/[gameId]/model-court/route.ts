@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { loadGameRoom } from "@/lib/game-room/load";
+import { backendOutageResponse } from "@/lib/data-reliability/public-freshness-gate";
 import {
   answerModelCourtQuestion,
   detectModelCourtRefusal,
@@ -91,12 +92,20 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
   // Pass the caller's real entitlements to the shared room loader so the paid
   // full premium room node is built for this request. The tier check above
   // already rejects callers below PRO/ELITE.
-  const room = await loadGameRoom(context.params.gameId, {
-    canSeePremiumPicks: entitlements.canSeePremiumPicks,
-    canSeeConfidence: entitlements.canSeeConfidence,
-    canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
-    canSeeLineMovement: entitlements.canSeeLineMovement,
-  });
+  let room: Awaited<ReturnType<typeof loadGameRoom>>;
+  try {
+    room = await loadGameRoom(context.params.gameId, {
+      canSeePremiumPicks: entitlements.canSeePremiumPicks,
+      canSeeConfidence: entitlements.canSeeConfidence,
+      canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
+      canSeeLineMovement: entitlements.canSeeLineMovement,
+    });
+  } catch {
+    return NextResponse.json(backendOutageResponse("Model Court"), {
+      status: 503,
+      headers: { "cache-control": "no-store" },
+    });
+  }
   if (!room) {
     return NextResponse.json({ success: false, error: "game-not-found" }, { status: 404 });
   }

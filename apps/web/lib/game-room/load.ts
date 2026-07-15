@@ -138,32 +138,30 @@ export async function loadGameRoom(
   viewer: GameRoomViewer = FAIL_CLOSED_VIEWER,
   now = new Date(),
 ): Promise<GameRoomData | null> {
-  const game = await db.game
-    .findUnique({
-      where: { id: gameId },
-      include: {
-        sport: { select: { name: true } },
-        picks: {
-          where: {
-            isPublished: true,
-            isBootstrap: false,
-            NOT: { modelVersion: "v5.0.0-seed" },
-            ...(viewer.canSeePremiumPicks ? {} : { tier: "FREE" as const }),
-          },
-          include: {
-            signalSnapshot: true,
-            lossAutopsy: true,
-          },
-          orderBy: [{ generatedAt: "desc" }],
-          take: 5,
+  const game = await db.game.findUnique({
+    where: { id: gameId },
+    include: {
+      sport: { select: { name: true } },
+      picks: {
+        where: {
+          isPublished: true,
+          isBootstrap: false,
+          NOT: { modelVersion: "v5.0.0-seed" },
+          ...(viewer.canSeePremiumPicks ? {} : { tier: "FREE" as const }),
         },
-        gameSignals: {
-          orderBy: { fetchedAt: "desc" },
-          take: 25,
+        include: {
+          signalSnapshot: true,
+          lossAutopsy: true,
         },
+        orderBy: [{ generatedAt: "desc" }],
+        take: 5,
       },
-    })
-    .catch(() => null);
+      gameSignals: {
+        orderBy: { fetchedAt: "desc" },
+        take: 25,
+      },
+    },
+  });
 
   if (!game) return null;
 
