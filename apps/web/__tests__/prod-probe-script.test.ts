@@ -84,6 +84,12 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/trust gate probes failed/);
   });
 
+  it("reports backend outages by name while accepting deliberate stale-data suppression", () => {
+    expect(src).toMatch(/reason === "backend_outage"/);
+    expect(src).toMatch(/Backend outage: the public picks read failed/);
+    expect(src).toMatch(/reason === "stale_data"/);
+  });
+
   it("exits non-zero when /api/health is unhealthy", () => {
     expect(src).toMatch(/process\.exit\(1\)/);
   });

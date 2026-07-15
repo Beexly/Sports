@@ -175,10 +175,15 @@ describe("loadProofOfRecord source pins", () => {
 
 describe("proof-of-record page source pins", () => {
   let pageSource: string;
+  let rowSource: string;
 
   beforeAll(() => {
     pageSource = fs.readFileSync(
       path.resolve(__dirname, "../app/proof/page.tsx"),
+      "utf8"
+    );
+    rowSource = fs.readFileSync(
+      path.resolve(__dirname, "../components/trust-ledger/pick-ledger-row.tsx"),
       "utf8"
     );
   });
@@ -199,7 +204,7 @@ describe("proof-of-record page source pins", () => {
   });
 
   it("does not contain any BANNED_ANALYST_PHRASES", () => {
-    const lower = pageSource.toLowerCase();
+    const lower = `${pageSource}\n${rowSource}`.toLowerCase();
     for (const phrase of BANNED_ANALYST_PHRASES) {
       expect(
         lower,
@@ -210,7 +215,7 @@ describe("proof-of-record page source pins", () => {
 
   it("does not hardcode win-rate percentages as prose numbers", () => {
     // Must not contain patterns like 54.3% or 57% in prose.
-    expect(pageSource).not.toMatch(/\b5[0-9]\.\d+%/);
+    expect(`${pageSource}\n${rowSource}`).not.toMatch(/\b5[0-9]\.\d+%/);
   });
 
   it("does not hardcode any fabricated pick counts or Merkle roots in JSX", () => {
@@ -260,28 +265,28 @@ describe("proof-of-record page source pins", () => {
   });
 
   it("separates canonical display text from the literal hash preimage", () => {
-    expect(pageSource).toContain("Canonical market display:");
+    expect(rowSource).toContain("Canonical market display:");
     expect(pageSource.toLowerCase()).toContain("not the literal hash preimage");
     expect(pageSource.toLowerCase()).toContain("presentation projection");
-    expect(pageSource).not.toContain("row.line");
-    expect(pageSource).not.toContain("row.confidence");
+    expect(rowSource).not.toContain("row.line");
+    expect(rowSource).not.toContain("row.confidence");
   });
 
   it("labels the market read as a timestamped latest capture only", () => {
-    expect(pageSource).toContain("Latest captured market consensus");
-    expect(pageSource).toContain("row.latestMarketConsensus.capturedAt");
-    expect(pageSource).not.toContain("Market consensus at settle");
-    expect(pageSource).not.toContain("consensusAtSettle");
-    expect(pageSource).not.toContain("modelVsMarketPp");
+    expect(rowSource).toContain("Latest captured market consensus");
+    expect(rowSource).toContain("row.latestMarketConsensus.capturedAt");
+    expect(rowSource).not.toContain("Market consensus at settle");
+    expect(rowSource).not.toContain("consensusAtSettle");
+    expect(rowSource).not.toContain("modelVsMarketPp");
   });
 
   it("renders CLV only from the projected tuple with no raw numeric fallback", () => {
-    expect(pageSource).toContain("row.clv.display");
-    expect(pageSource).toContain("row.clv.capturedAt");
-    expect(pageSource).not.toContain("row.clvValue");
-    expect(pageSource).not.toContain("row.clvKind");
-    expect(pageSource).not.toContain("row.clvVerdict");
-    expect(pageSource).not.toContain("clvValue.toFixed");
+    expect(rowSource).toContain("row.clv.display");
+    expect(rowSource).toContain("row.clv.capturedAt");
+    expect(rowSource).not.toContain("row.clvValue");
+    expect(rowSource).not.toContain("row.clvKind");
+    expect(rowSource).not.toContain("row.clvVerdict");
+    expect(rowSource).not.toContain("clvValue.toFixed");
   });
 
   it("does not claim every row was sealed before kickoff", () => {

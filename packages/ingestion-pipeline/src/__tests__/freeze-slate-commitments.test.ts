@@ -168,6 +168,48 @@ describe("freezeSlateCommitments", () => {
     ]);
   });
 
+  it("defers today's slate when a settlement retry runs before the canonical mint hour", async () => {
+    const earlyRun = new Date("2026-07-02T07:00:00.000Z");
+
+    const results = await freezeSlateCommitments([SPORT], earlyRun, testHash);
+
+    expect(mocks.slateCreate).not.toHaveBeenCalled();
+    expect(results).toEqual([
+      {
+        slateKey: TODAY_KEY,
+        action: "SKIP",
+        reason: "deferred: today's mint run will freeze the full population",
+      },
+      NO_GAMES_TOMORROW,
+    ]);
+  });
+
+  it("seals today's slate before the mint hour when an earlier kickoff cannot wait", async () => {
+    const earlyRun = new Date("2026-07-02T07:00:00.000Z");
+    mocks.gameFindMany.mockImplementation(
+      gamesInWindow([
+        { id: "game-early", commenceTime: new Date("2026-07-02T09:00:00.000Z") },
+        { id: "game-late", commenceTime: new Date("2026-07-02T21:00:00.000Z") },
+      ]),
+    );
+    mocks.receiptFindMany.mockImplementation(
+      receiptsForGames([{ pickId: "pick-e", payload: "p-e", gameId: "game-early" }]),
+    );
+
+    const results = await freezeSlateCommitments([SPORT], earlyRun, testHash);
+
+    expect(mocks.slateCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({ slateKey: TODAY_KEY, count: 1 }),
+    });
+    expect(results[0]).toEqual({ slateKey: TODAY_KEY, action: "COMMIT", count: 1 });
+  });
+
+  it("never defers today's slate at the canonical mint hour", async () => {
+    const results = await freezeSlateCommitments([SPORT], NOW, testHash);
+
+    expect(results[0]).toEqual({ slateKey: TODAY_KEY, action: "COMMIT", count: 2 });
+  });
+
   it("ONE RECEIPT, ONE SLATE: leaves and backfill are both restricted to slateKey NULL (postponement guard)", async () => {
     await freezeSlateCommitments([SPORT], NOW, testHash);
 

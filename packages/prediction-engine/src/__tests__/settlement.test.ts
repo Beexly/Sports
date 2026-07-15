@@ -1,8 +1,34 @@
 import { describe, it, expect } from "vitest";
-import { calculatePickResult, selectGradingLine } from "../settlement.js";
+import {
+  calculatePickResult as calculatePickResultCore,
+  selectGradingLine,
+} from "../settlement.js";
+import type { PickType } from "@sports/types";
 
 const NFL = "americanfootball_nfl";
 const MLS = "soccer_usa_mls";
+
+function calculatePickResult(
+  pickType: PickType,
+  selection: string,
+  line: number,
+  homeTeam: string,
+  homeScore: number,
+  awayScore: number,
+  sportKey: string,
+  awayTeam = "Away Team",
+) {
+  return calculatePickResultCore(
+    pickType,
+    selection,
+    line,
+    homeTeam,
+    homeScore,
+    awayScore,
+    sportKey,
+    awayTeam,
+  );
+}
 
 // ============================================================
 // SPREAD settlement
@@ -228,6 +254,23 @@ describe("calculatePickResult — home identifier is a prefix of the away identi
 
   it("home MONEYLINE pick (LA ML) WINS when the home team wins", () => {
     expect(calculatePickResult("MONEYLINE", "LA ML (-140)", 0, HOME, 27, 20, NFL)).toBe("WIN");
+  });
+});
+
+describe("calculatePickResult — spaced home-name prefix", () => {
+  it("classifies the longer away identifier before the shorter home identifier", () => {
+    expect(
+      calculatePickResult(
+        "MONEYLINE",
+        "Jets Metro ML (+120)",
+        0,
+        "Jets",
+        27,
+        20,
+        NFL,
+        "Jets Metro",
+      ),
+    ).toBe("LOSS");
   });
 });
 

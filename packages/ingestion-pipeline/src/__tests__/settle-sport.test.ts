@@ -163,6 +163,7 @@ describe("settleSport", () => {
       expect.anything(),
       expect.anything(),
       expect.anything(),
+      "Bills",
     );
   });
 
@@ -181,6 +182,7 @@ describe("settleSport", () => {
       expect.anything(),
       expect.anything(),
       expect.anything(),
+      "Bills",
     );
   });
 
@@ -388,7 +390,8 @@ describe("settleSport", () => {
         "Chiefs",
         31,
         17,
-        SPORT.key
+        SPORT.key,
+        "Bills"
       );
       expect(result).toMatchObject({
         status: "success",

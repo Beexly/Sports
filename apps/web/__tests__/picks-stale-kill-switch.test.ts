@@ -162,4 +162,16 @@ describe("/api/picks — stale-data kill switch", () => {
     expect(body["reason"]).toBe("stale_data");
     expect(mocks.pickFindMany).not.toHaveBeenCalled();
   });
+
+  it("returns a distinct outage response when the primary picks read fails", async () => {
+    mocks.forceNoBetIfStale = false;
+    mocks.pickFindMany.mockRejectedValue(new Error("connection refused"));
+
+    const { status, body } = await callPicks();
+
+    expect(status).toBe(503);
+    expect(body["reason"]).toBe("backend_outage");
+    expect(body["bootstrapMode"]).toBe(false);
+    expect(String(body["error"])).not.toContain("connection refused");
+  });
 });

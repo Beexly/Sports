@@ -27,26 +27,30 @@ export type SettlementResult = "WIN" | "LOSS" | "PUSH";
  * Calculate the settlement result for a single pick.
  *
  * @param pickType   - SPREAD, MONEYLINE, or TOTAL
- * @param selection  - The pick selection string. Built by scoring as
- *                     `${chosenTeam} …`, so a home pick is either exactly
- *                     homeTeam or STARTS WITH `homeTeam + " "` (matches
- *                     clv-capture's side derivation); TOTAL starts with
- *                     "OVER"/"UNDER". A bare `startsWith(homeTeam)` is NOT
- *                     sufficient — the match must be word-boundary-aware. It
- *                     mis-derives the side both when an away name CONTAINS the
- *                     home name as a substring (e.g. "Winnipeg Jets" vs home
- *                     "Jets") and — the prefix-collision case — when the home
- *                     identifier is a strict PREFIX of the away identifier
- *                     (nflverse "LA" Rams home vs "LAC" Chargers away, where
- *                     `"LAC …".startsWith("LA")` is a false positive that
- *                     inverts WIN/LOSS). The boundary-aware check
- *                     (`=== homeTeam || startsWith(homeTeam + " ")`) closes both.
+ * @param selection  - The pick selection string emitted by scoring.
  * @param line       - The line (spread or total). For SPREAD, from home team's perspective.
  * @param homeTeam   - The home team name (used to determine home vs away pick)
  * @param homeScore  - Final home team score
  * @param awayScore  - Final away team score
  * @param sportKey   - Sport key (e.g. "soccer_usa_mls"). Soccer draws settle ML as LOSS.
+ * @param awayTeam   - The away team name used to resolve overlapping team identifiers.
  */
+function selectionMatchesTeam(selection: string, team: string): boolean {
+  return selection === team || selection.startsWith(team + " ");
+}
+
+export function selectionIsHomeSide(
+  selection: string,
+  homeTeam: string,
+  awayTeam: string,
+): boolean {
+  if (!selectionMatchesTeam(selection, homeTeam)) return false;
+  return !(
+    awayTeam.length > homeTeam.length &&
+    selectionMatchesTeam(selection, awayTeam)
+  );
+}
+
 export function calculatePickResult(
   pickType: PickType,
   selection: string,
@@ -54,11 +58,12 @@ export function calculatePickResult(
   homeTeam: string,
   homeScore: number,
   awayScore: number,
-  sportKey: string
+  sportKey: string,
+  awayTeam: string,
 ): SettlementResult {
   if (pickType === "MONEYLINE") {
     const homeWon = homeScore > awayScore;
-    const pickedHome = selection === homeTeam || selection.startsWith(homeTeam + " ");
+    const pickedHome = selectionIsHomeSide(selection, homeTeam, awayTeam);
     // Soccer 3-way ML: a draw (tie) is a LOSS for home or away ML picks
     if (homeScore === awayScore) {
       return sportKey.includes("soccer") ? "LOSS" : "PUSH";
@@ -67,7 +72,7 @@ export function calculatePickResult(
   }
 
   if (pickType === "SPREAD") {
-    const pickedHome = selection === homeTeam || selection.startsWith(homeTeam + " ");
+    const pickedHome = selectionIsHomeSide(selection, homeTeam, awayTeam);
     const homeMargin = homeScore - awayScore;
     // homeCoverMargin > 0 means home team covered
     const homeCoverMargin = homeMargin + line;
@@ -83,7 +88,7 @@ export function calculatePickResult(
     return (isOver && total > line) || (!isOver && total < line) ? "WIN" : "LOSS";
   }
 
-  return "PUSH";
+  throw new Error(`Unsupported pick type: ${String(pickType)}`);
 }
 
 /**

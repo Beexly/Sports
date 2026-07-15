@@ -182,16 +182,27 @@ export async function freezeSlateCommitments(
           games[0]!.commenceTime,
         );
 
-        // CONDITIONAL early freeze (F2): a tomorrow-slate that its own day's
-        // run could still safely freeze (earliest kickoff after that run's
-        // reach) is left to wait — freezing it now would only shrink its
-        // pre-registered population. Today's slate (offset 0) always proceeds.
+        // Defer to the run that can seal the fullest pre-kickoff population.
+        // Tomorrow waits for its own day when safe; today waits until the
+        // canonical mint hour unless an earlier kickoff makes that impossible.
+        const ownRunReach = new Date(
+          start.getTime() + (NEXT_RUN_UTC_HOUR + NEXT_RUN_MARGIN_HOURS) * 3600_000,
+        );
         if (offsetDays > 0) {
-          const ownRunReach = new Date(start.getTime() + (NEXT_RUN_UTC_HOUR + NEXT_RUN_MARGIN_HOURS) * 3600_000);
           if (earliestKickoff >= ownRunReach) {
             results.push({ slateKey, action: "SKIP", reason: "deferred: own-day run can still freeze it" });
             continue;
           }
+        } else if (
+          now.getUTCHours() < NEXT_RUN_UTC_HOUR &&
+          earliestKickoff >= ownRunReach
+        ) {
+          results.push({
+            slateKey,
+            action: "SKIP",
+            reason: "deferred: today's mint run will freeze the full population",
+          });
+          continue;
         }
 
         // Freeze-once: a commitment is immutable, so an existing row means SKIP.

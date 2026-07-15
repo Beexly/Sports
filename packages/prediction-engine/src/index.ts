@@ -22,7 +22,11 @@ export {
   computeScheduleStressScore,
 } from "./game-context.js";
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
-export { calculatePickResult, selectGradingLine } from "./settlement.js";
+export {
+  calculatePickResult,
+  selectionIsHomeSide,
+  selectGradingLine,
+} from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
 // Historical backfill settlement engine — re-run the FROZEN model on past games
 // using ONLY pre-game data, then settle vs the known result (no-lookahead by design).

@@ -243,6 +243,7 @@ export async function settleSport(
               score.homeScore,
               score.awayScore,
               sport.key,
+              game.awayTeamName,
             );
           // Idempotent settle. game.picks was read with result:"PENDING", but
           // the worker and the Vercel settle-picks cron can both reach this game
@@ -270,6 +271,7 @@ export async function settleSport(
                 pickType: pick.pickType as PickKind,
                 selection: pick.selection,
                 homeTeamName: game.homeTeamName,
+                awayTeamName: game.awayTeamName,
                 lockLine: pick.clvLockLine,
                 lockPrice: pick.clvLockPrice,
                 close: closingSnapshot,

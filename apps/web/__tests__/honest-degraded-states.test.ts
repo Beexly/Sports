@@ -38,7 +38,8 @@ vi.mock("@/lib/proof/load-proof-of-record", () => ({ loadProofOfRecord: mocks.pr
 
 import BoardPage from "@/app/board/page";
 import HomePage from "@/app/page";
-import ProofPage, { PickLedgerRow } from "@/app/proof/page";
+import ProofPage from "@/app/proof/page";
+import { PickLedgerRow } from "@/components/trust-ledger/pick-ledger-row";
 import { db } from "@sports/db";
 import { MethodologySection, type TrustLedgerMetrics } from "@/components/ui/methodology-section";
 import { buildBoardHealth, type BoardSuppressionReason } from "@/lib/board/health";

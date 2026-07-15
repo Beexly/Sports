@@ -348,7 +348,13 @@ function validateIngestionFreshness(json) {
 }
 
 function validatePublicPicksGate(status, json) {
+  if (status === 503 && json?.reason === "backend_outage") {
+    return "Backend outage: the public picks read failed. Check /api/health and the database provider.";
+  }
   if (status === 503 && json?.bootstrapMode === true && typeof json.error === "string") {
+    return "";
+  }
+  if (status === 503 && json?.reason === "stale_data" && typeof json.error === "string") {
     return "";
   }
   if (status === 200 && json?.success === true && Array.isArray(json.data)) {

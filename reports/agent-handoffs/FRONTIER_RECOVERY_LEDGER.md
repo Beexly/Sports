@@ -38,14 +38,14 @@ This file is the execution control plane. It is not a readiness claim.
 | 77 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | HOLD pending repaired admin/risk findings | PENDING | Close/no merge |
 | 78 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | HOLD pending repaired findings | PENDING | Close/no merge |
 | 79 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify supersession; extract only missing fail-closed result logic | PENDING | Revert extracted commit |
-| 80 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Correct/rebase if pre-mint slate freeze remains needed | PENDING | Revert PR |
+| 80 | `claude/hotfix-slate-freeze-frontrun` -> `main` | 3 / 1 commit | Open; no review threads | The 07:00 settlement freeze could seal today's partial population before the 10:00 mint; current external and Vercel schedules preserve that race | `EXTRACTED_REBUILT`; pre-mint deferral with early-kickoff exception; stale PR must not merge | 13 freeze tests + pipeline typecheck | Revert extraction commit |
 | 81 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Verify CI topology and scanner coverage on current main | PENDING | Revert PR |
 | 82 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Rebuild only if production DB fail-closed gaps remain | PENDING | Revert PR |
-| 83 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Candidate for settlement-integrity rollup | PENDING | Revert rollup commit |
+| 83 | `claude/stress-property-suite` -> `claude/hotfix-clv-settlement-billing-integrity` | 11 / 2 commits | Open; mandatory-away-team review resolved on stale head | Prefix-overlapping team names reproduced side inversion; stale branch left free settlement and historical replay on the unsafe optional path | `EXTRACTED_REBUILT`; mandatory two-team identity across settlement, CLV, replay, and free settlement plus compact seeded properties | 75 engine + 26 pipeline + 17 web assertions; all three typechecks | Revert extraction commit |
 | 84 | `claude/hotfix-clv-regrade-orphans` -> `main` | 2 / 1 commit | Open; prior review threads resolved | Current settlement already carried the observed-market receipt contract; missing grade-once orphan replay was reproduced | `EXTRACTED_REBUILT`; stale PR must not merge | 21 settlement tests + pipeline typecheck | Revert extraction commit |
 | 85 | `claude/hotfix-fabricated-record` -> `main` | 3 / 1 commit | Open; no unresolved review thread | Reproduced hard-coded public 0-0-0; rebuilt on shared canonical settled population with empty/error withholding | `EXTRACTED_REBUILT`; stale PR must not merge | 26 slate/gate assertions + web typecheck | Revert extraction commit |
 | 86 | `claude/hotfix-void-stale-picks` -> `main` | 8 / 2 commits | Open; prior review threads resolved | Three-day feed horizon, recorded-FINAL replay, stale VOID, outage-independent sweep, and no-action downstream semantics remained missing | `EXTRACTED_REBUILT`; stale PR must not merge | 26 settlement + 35 ROI/outbox tests; web/pipeline typechecks | Revert extraction commit |
-| 87 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Preserve only non-superseded API/probe/runbook value | PENDING | Revert rebuilt slice |
+| 87 | `claude/hotfix-picks-outage-state` -> `main` | 9 / 3 commits | Open; stale-data probe scoping review resolved | Picks and CLV primary-read failures still masqueraded as deliberate bootstrap gating; current picks page already had a designed generic outage state | `EXTRACTED_REBUILT`; shared honest `backend_outage` response and picks-scoped probe diagnostics; stale PR must not merge | 41 focused web assertions + web typecheck | Revert extraction commit |
 | 88 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Correct/rebase only if fantasy pricing drift remains | PENDING | Revert PR |
 | 89 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | Rebase only after public-state prerequisites | PENDING | Revert PR |
 | 90 | PENDING_EVIDENCE | PENDING | PENDING | PENDING | HOLD pending finite/input/epsilon/event-total repairs | PENDING | Close/no merge |
@@ -97,11 +97,12 @@ This file is the execution control plane. It is not a readiness claim.
 | Calibration/performance/copy matrix (14 files) | 0 | 143/143 tests passed; raw strength never substitutes for probability and copy scanners remain green | No production settled-history query executed. |
 | Newsroom public-wire matrix (6 files) | 0 | 42/42 tests passed; unapproved, future-dated, fictional, and unavailable states are pinned | No live feed is configured in test. |
 | PR #84/#85/#86/#92/#94/#95 extraction matrix | 0 | 25 process, 26 settlement, 35 ROI/outbox, 22 proof/UTC-board, and 16 populated slate/board assertions passed | Persistence/providers are mocked; no production cron or settlement write executed. |
+| PR #80/#83/#87 extraction matrix | 0 | 13 freeze, 75 engine money-truth, 26 settlement-pipeline, 17 free-settlement, and 41 outage/probe assertions passed; web/engine/pipeline typechecks passed | Deterministic and mocked boundaries; no production cron, database write, or outage was induced. |
 | Package typechecks: data ingestion, prediction engine, ingestion pipeline | 0 | TypeScript passed for all three market-integrity packages | — |
 | `npm.cmd run lint` | 0 | All workspace lint scripts passed with zero warnings | Browser runtime is separate. |
 | `npm.cmd run typecheck` | 0 | All workspace TypeScript projects passed | — |
-| `npm.cmd test` | 0 | 9,146/9,146 assertions passed across 736 test files in web, crypto, data ingestion, DB, ingestion pipeline, prediction engine, shared types, and the content-publishing worker | Test persistence and external providers remain mocked or stubbed; no production writes were executed. |
-| `npm.cmd run build` | PENDING | — | — |
+| `npm.cmd test` | 0 | 9,155/9,155 assertions passed across 737 test files in web, crypto, data ingestion, DB, ingestion pipeline, prediction engine, shared types, and the content-publishing worker | Test persistence and external providers remain mocked or stubbed; no production writes were executed. |
+| Local real-client production build (`DATABASE_URL` set to an unreachable non-secret PostgreSQL URL) | 0 | Next.js compiled, validated types, generated all 205 routes, and emitted the production route/bundle manifest | Sentry/OpenTelemetry emits the known dynamic-require bundling warning. Several legacy prerender loaders attempted DB reads, logged authentication failures, and rendered degraded states; no real database or production secret was used. |
 | `npm.cmd run guardrails` | 0 | Trust, model freeze, draft-only, secret, commercial-claim, rights, OpenAPI, ZK, AWS compatibility, and eval-contract guards passed | Guardrails validate repository artifacts, not production configuration. |
 | Browser / console / visual matrix | PENDING | — | Requires a current production-equivalent build. |
 
@@ -129,11 +130,15 @@ This file is the execution control plane. It is not a readiness claim.
 | `apps/web/app/api/picks/daily-slate/route.ts`, `apps/web/lib/time/utc-day.ts`, `apps/web/lib/board/**` | Reconciled PR truth lane | Canonical real recent record, consistent demo totals, and one UTC request-day across co-rendered loaders | VALIDATED |
 | `packages/ingestion-pipeline/src/process-sport.ts`, `packages/ingestion-pipeline/src/settle-sport.ts` | Reconciled integrity lane | Create-race sidecar ownership, grade-once CLV repair, catch-up settlement, and terminal VOID sweep | VALIDATED |
 | `packages/prediction-engine/src/proof-of-record.ts`, `apps/web/lib/performance/public-roi-policy.ts`, `apps/web/lib/bot-outbox/**` | Reconciled proof/outcome lane | Count-bound commitment and VOID-as-no-action consistency | VALIDATED |
+| `packages/ingestion-pipeline/src/freeze-slate-commitments.ts`, `apps/web/app/api/cron/settle-picks/route.ts` | Reconciled schedule-integrity lane | Prevent the pre-mint settlement run from freezing an incomplete daily population while preserving early-kickoff sealing | VALIDATED |
+| `packages/prediction-engine/src/settlement.ts`, `packages/prediction-engine/src/clv-capture.ts`, `packages/prediction-engine/src/historical-replay.ts`, `apps/web/lib/data-sources/free-settlement.ts` | Reconciled team-identity lane | Resolve overlapping team identifiers consistently across settlement, CLV, replay, and free settlement | VALIDATED |
+| `apps/web/lib/data-reliability/public-freshness-gate.ts`, `apps/web/app/api/picks/route.ts`, `apps/web/app/api/clv/route.ts`, `scripts/prod-probe.mjs` | Reconciled outage-truth lane | Distinguish backend failure from deliberate bootstrap/stale gates and fail the picks probe by incident name | VALIDATED |
+| `apps/web/app/proof/page.tsx`, `apps/web/components/trust-ledger/pick-ledger-row.tsx` | Production-build boundary lane | Keep route-module exports Next-compatible while preserving direct proof-row testing and trust invariants | VALIDATED |
 
 ## Blockers and safe adjacent work
 
 - Production secrets, database migrations, Stripe/DNS/OAuth/vendor configuration, and destructive production operations are not authorized. Code, tests, shadow validation, and exact owner steps remain in scope.
-- Git transport can fetch the repository. GitHub review/PR mutation authentication and push permission remain to be verified before publication claims.
+- Git transport, branch push permission, and authenticated GitHub PR reads are verified. PR closure/merge remains an explicit disposition step; no merge claim is implied by extracted code.
 - Missing production credentials do not block local behavioral tests, pure-domain tests, bundle checks, docs, or current-main PR reconciliation.
 
 ## Decisions with evidence

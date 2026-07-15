@@ -33,6 +33,7 @@ import {
   buildAmericanOddsConsensus,
   buildMarketPointConsensus,
 } from "@sports/types";
+import { selectionIsHomeSide } from "./settlement.js";
 
 export type PickKind = "SPREAD" | "MONEYLINE" | "TOTAL";
 
@@ -142,8 +143,7 @@ export function deriveClosingSnapshotFromOdds(
  * the derived closing snapshot. Returns null when the close has no comparable
  * number (no coverage of that market at kickoff) — we never invent a close.
  *
- * Side is derived the same way settlement does (boundary-aware team match, so a
- * team whose name is a string prefix of another can never invert the side):
+ * Side is derived from both team names so overlapping identifiers cannot invert it:
  * SPREAD/MONEYLINE are HOME when the selection names the home team; TOTAL is
  * OVER when the selection starts with "OVER".
  */
@@ -151,16 +151,18 @@ export function gradePickClv(args: {
   readonly pickType: PickKind;
   readonly selection: string;
   readonly homeTeamName: string;
+  readonly awayTeamName: string;
   readonly lockLine: number | null; // points (spread/total) we published at
   readonly lockPrice: number | null; // American (moneyline) we published at
   readonly close: ClosingSnapshot;
 }): ClvGrade | null {
-  const { pickType, selection, homeTeamName, lockLine, lockPrice, close } = args;
+  const { pickType, selection, homeTeamName, awayTeamName, lockLine, lockPrice, close } = args;
 
   if (pickType === "MONEYLINE") {
     if (lockPrice == null) return null;
-    const side: SpreadSide =
-      selection === homeTeamName || selection.startsWith(homeTeamName + " ") ? "HOME" : "AWAY";
+    const side: SpreadSide = selectionIsHomeSide(selection, homeTeamName, awayTeamName)
+      ? "HOME"
+      : "AWAY";
     const closePrice = side === "HOME" ? close.mlHomePrice : close.mlAwayPrice;
     if (closePrice == null) return null;
     const r = computeMoneylineClv(lockPrice, closePrice);
@@ -175,8 +177,9 @@ export function gradePickClv(args: {
 
   if (pickType === "SPREAD") {
     if (lockLine == null || close.spreadHome == null) return null;
-    const side: SpreadSide =
-      selection === homeTeamName || selection.startsWith(homeTeamName + " ") ? "HOME" : "AWAY";
+    const side: SpreadSide = selectionIsHomeSide(selection, homeTeamName, awayTeamName)
+      ? "HOME"
+      : "AWAY";
     const r = computeSpreadClv(lockLine, close.spreadHome, side);
     return {
       kind: "POINTS",

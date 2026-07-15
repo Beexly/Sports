@@ -4,16 +4,33 @@ import {
   extractSettlementFacts,
   buildHistoricalOddsInput,
   scoreHistoricalGame,
-  settleHistoricalPick,
+  settleHistoricalPick as settleHistoricalPickCore,
   replayAndSettleGame,
   backfillPickKey,
   LookaheadLeakError,
   POST_KICKOFF_FIELDS,
   type RawScheduleRow,
 } from "../historical-replay.js";
-import { calculatePickResult } from "../settlement.js";
+import { calculatePickResult as calculatePickResultCore } from "../settlement.js";
 import { MODEL_VERSION } from "../constants.js";
 import type { ScoredPick } from "@sports/types";
+
+function settleHistoricalPick(
+  pick: Parameters<typeof settleHistoricalPickCore>[0],
+  facts: Parameters<typeof settleHistoricalPickCore>[1],
+  homeTeam: string,
+  awayTeam = "DET",
+) {
+  return settleHistoricalPickCore(pick, facts, homeTeam, awayTeam);
+}
+
+function calculatePickResult(
+  ...args: Parameters<typeof calculatePickResultCore> extends [...infer Head, string]
+    ? Head
+    : never
+) {
+  return calculatePickResultCore(...args, "DET");
+}
 
 // A representative settled nflverse `schedules` row: KC home, favored by 3 (home
 // perspective spread_line = -3), total 47, KC ML -150 / DET +130, final 27-20 (KC by 7).

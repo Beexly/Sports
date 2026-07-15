@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
+import { backendOutageResponse } from "@/lib/data-reliability/public-freshness-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -27,15 +28,13 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(bootstrapGateResponse("CLV"), { status: 503 });
   }
 
-  // Fail OPEN to the same gated/collecting shape on a DB error rather than
-  // leaking a stack trace on this public, unauthenticated route.
   const policy = await loadPublicClvPolicy(db, {
     canExposePerformanceStats: gates.canExposePerformanceStats,
     minGradedForPublic: gates.minSettledPicksForLearning,
   }).catch(() => null);
 
   if (policy === null) {
-    return NextResponse.json(bootstrapGateResponse("CLV"), { status: 503 });
+    return NextResponse.json(backendOutageResponse("CLV"), { status: 503 });
   }
 
   return NextResponse.json({

@@ -99,12 +99,14 @@ describe("/api/clv", () => {
     expect(data["gradedSampleSize"]).toBe(5);
   });
 
-  it("fails closed to a 503 collecting state on a DB error (no stack-trace leak)", async () => {
+  it("returns a distinct outage response on a DB error", async () => {
     mocks.pickCount.mockRejectedValue(new Error("db down"));
 
     const { status, body } = await callClv();
 
     expect(status).toBe(503);
-    expect(body["bootstrapMode"]).toBe(true);
+    expect(body["reason"]).toBe("backend_outage");
+    expect(body["bootstrapMode"]).toBe(false);
+    expect(String(body["error"])).not.toContain("db down");
   });
 });

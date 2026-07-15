@@ -8,6 +8,7 @@ import { startOfDay, endOfDay } from "date-fns";
 import { parseDateParam } from "@/lib/parse-date-param";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import {
+  backendOutageResponse,
   getFreshPublicOddsSportKeys,
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
@@ -127,11 +128,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           Math.max(1, dailyLimit) * DAILY_LIMIT_OVERFETCH_FACTOR,
         );
 
-  // Fail closed on a DB error. The sibling count below already falls back; an
-  // unwrapped throw here would 500 the public
-  // endpoint instead of honestly returning the bootstrap/collecting state. So on
-  // a primary-query failure, collapse to the same dark/"collecting" 503 the
-  // bootstrap gate returns rather than leaking a stack trace.
   const picks = await db.pick
     .findMany({
       where: {
@@ -162,7 +158,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     })
     .catch(() => null);
   if (picks === null) {
-    return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
+    return NextResponse.json(backendOutageResponse("Public picks"), { status: 503 });
   }
 
   const projectedPicks: PublicPick[] = picks.flatMap((pick): PublicPick[] => {

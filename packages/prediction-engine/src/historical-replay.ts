@@ -30,7 +30,7 @@
 import type { OddsInput, BookmakerOddsInput, ScoredPick, PickType } from "@sports/types";
 import { scoreGame } from "./scoring.js";
 import { MODEL_VERSION, WEIGHTS } from "./constants.js";
-import { calculatePickResult, type SettlementResult } from "./settlement.js";
+import { calculatePickResult, selectionIsHomeSide, type SettlementResult } from "./settlement.js";
 import {
   computeSpreadClv,
   computeTotalClv,
@@ -311,6 +311,7 @@ export function settleHistoricalPick(
   pick: ScoredPick,
   facts: SettlementFacts,
   homeTeam: string,
+  awayTeam: string,
 ): SettledHistoricalPick {
   const result = calculatePickResult(
     pick.pickType,
@@ -320,9 +321,10 @@ export function settleHistoricalPick(
     facts.homeScore,
     facts.awayScore,
     "americanfootball_nfl",
+    awayTeam,
   );
 
-  const { clvValue, clvVerdict } = gradeHistoricalClv(pick, homeTeam);
+  const { clvValue, clvVerdict } = gradeHistoricalClv(pick, homeTeam, awayTeam);
 
   const entryOdds =
     pick.entryPrice ?? (pick.pickType === "MONEYLINE" ? Math.round(pick.line) : STD_VIG_PRICE);
@@ -356,9 +358,10 @@ export function settleHistoricalPick(
 function gradeHistoricalClv(
   pick: ScoredPick,
   homeTeam: string,
+  awayTeam: string,
 ): { clvValue: number | null; clvVerdict: ClvVerdict | null } {
   if (pick.pickType === "SPREAD") {
-    const side = pick.selection.startsWith(homeTeam) ? "HOME" : "AWAY";
+    const side = selectionIsHomeSide(pick.selection, homeTeam, awayTeam) ? "HOME" : "AWAY";
     const r = computeSpreadClv(pick.line, pick.line, side);
     return { clvValue: r.clvPoints, clvVerdict: r.verdict };
   }
@@ -403,7 +406,9 @@ export function replayAndSettleGame(row: RawScheduleRow): SettledHistoricalPick[
   // Feature assembly only ever sees the quarantined, score-free row.
   const features = assemblePreGameFeatures(stripPostGame(row));
   const picks = scoreHistoricalGame(features);
-  return picks.map((pick) => settleHistoricalPick(pick, facts, features.homeTeam));
+  return picks.map((pick) =>
+    settleHistoricalPick(pick, facts, features.homeTeam, features.awayTeam),
+  );
 }
 
 function numOrNull(v: number | null | undefined): number | null {

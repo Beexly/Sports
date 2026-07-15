@@ -1,10 +1,18 @@
 import { describe, it, expect } from "vitest";
 import {
   deriveClosingSnapshotFromOdds,
-  gradePickClv,
+  gradePickClv as gradePickClvCore,
   type ClosingOddsRow,
   type ClosingSnapshot,
 } from "../clv-capture.js";
+
+type GradePickClvArgs = Parameters<typeof gradePickClvCore>[0];
+
+function gradePickClv(
+  args: Omit<GradePickClvArgs, "awayTeamName"> & { awayTeamName?: string },
+) {
+  return gradePickClvCore({ awayTeamName: "Eagles", ...args });
+}
 
 const COMMENCE = new Date("2026-04-15T18:00:00Z");
 const t = (iso: string) => new Date(iso);
@@ -194,5 +202,20 @@ describe("gradePickClv", () => {
       close,
     });
     expect(g).toBeNull();
+  });
+
+  it("uses the longer away identifier when team names overlap", () => {
+    const g = gradePickClv({
+      pickType: "MONEYLINE",
+      selection: "Jets Metro ML (+150)",
+      homeTeamName: "Jets",
+      awayTeamName: "Jets Metro",
+      lockLine: null,
+      lockPrice: 150,
+      close,
+    });
+
+    expect(g?.closePrice).toBe(170);
+    expect(g?.verdict).toBe("LOST_TO_CLOSE");
   });
 });

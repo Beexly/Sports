@@ -93,8 +93,8 @@ export async function GET(request: Request) {
   // SECOND FREEZE SHOT (hostile-review F1): the 10:00 UTC refresh-odds run is
   // otherwise a single point of loss for early-UTC slates (an offset-1 freeze
   // that fails there is unrecoverable by the slate's own post-kickoff day).
-  // The freeze pass is idempotent (findUnique + unique-constraint rollback)
-  // and non-fatal, so a 07:00 UTC retry here is pure redundancy.
+  // The freeze pass is idempotent and non-fatal. Same-day attempts before the
+  // canonical mint hour defer unless an earlier kickoff makes waiting unsafe.
   let freeze: SlateFreezeResult[] = [];
   try {
     freeze = await freezeSlateCommitments(

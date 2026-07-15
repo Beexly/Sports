@@ -51,6 +51,22 @@ export function staleDataGateResponse(featureName: string): {
   };
 }
 
+export function backendOutageResponse(featureName: string): {
+  error: string;
+  reason: "backend_outage";
+  bootstrapMode: false;
+  hint: string;
+} {
+  return {
+    error: `${featureName} is temporarily unavailable.`,
+    reason: "backend_outage",
+    bootstrapMode: false,
+    hint:
+      "The backend read failed. Check /api/health, the database provider, and recent " +
+      "deploys. This is not bootstrap gating and no environment flag needs changing.",
+  };
+}
+
 /**
  * Returns true when the latest successful ingestion run is classified "stale"
  * by the shared Refresh SLA. A never-succeeded pipeline (no SUCCESS run, or a
