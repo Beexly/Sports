@@ -1137,3 +1137,19 @@ Do not:
 - Loosen any existing test.
 ```
 
+---
+
+## 2026-07-15 - Frontier recovery continuation relay
+
+Authoritative packet: `handoff/codex/gse-frontier-recovery-2026-07-15/00_READ_ME_FIRST.md`
+
+- Branch: `codex/gse-frontier-recovery-2026-07-13`
+- Base: `origin/main@3ce5c4a198df7f9baac37888de4f28297e24f581`
+- Latest implementation commit: `0e89e797ea49728cca959513d97d98f3d5639eb5`
+- Draft replacement PR: `https://github.com/Beexly/Sports/pull/112`
+- Result: canonical `PickEvidenceEnvelope` -> `IntelligenceEvent` -> epistemic-delta/certificate spine is rendered in `/room/[gameId]`; pure consumer projections exist for Twin, deterministic Brain answer, postgame autopsy, and draft-only Studio.
+- Validation: 9,309 tests, root typecheck/lint, production build (205 routes), full guardrails, 32-file no-excuse scan, desktop/mobile Playwright + axe + 200% zoom.
+- PR reconciliation: all stale non-merged PRs #76-#96 are closed with receipts; #97-#100 were already merged; #101 remains owner-gated and unmerged.
+- Limits: no production DB proof, migration, secret, deployment, publication, billing/auth/legal mutation, or live-data claim.
+- Next safe task: wire the existing consumer bundle into owner-only selected-game Cockpit surfaces. Do not create another truth store or use fixture events.
+- Preserve untracked `g.id)`, `s.id`, `{`, `pnpm-lock.yaml`, and `pnpm-workspace.yaml`.

@@ -208,3 +208,15 @@ improvements (each its own commit; full suite + build green throughout):
     ("All reads return empty results") — logic/contract coverage, not live DB.
 - **Status:** Baseline captured. No hard stops touched (no destructive DB, no
   Stripe live, no prod deploy).
+
+---
+
+## 2026-07-15 - Canonical intelligence flight recorder and recovery disposition
+
+- **Decision:** Use one immutable `PickEvidenceEnvelope` as the truth object and derive lifecycle events, audience projections, epistemic deltas, cited decision explanations, and every downstream consumer from it.
+- **Why:** Game Room, Twin, Brain, autopsy, and Studio must not drift into separate explanations of the same decision. A deterministic ledger can show what changed while refusing unsupported causal attribution.
+- **Safety:** PUBLIC never receives raw internal output, raw source payloads, paid movement/dispersion, or unentitled factor trails. Missing historical facts remain `NOT_CAPTURED`; incomplete PASS rows withhold.
+- **Persistence:** No migration was authorized. `GateDecision` still lacks a complete immutable quote/threshold snapshot and pick-specific calibration effect; the additive design remains proposal-only pending owner approval and shadow-DB proof.
+- **PR decision:** Draft PR #112 is the single replacement review surface. Stale extracted PRs #80/#81/#83-#87/#89/#92-#95 were commented and closed unmerged. PR #101 remains an owner-gated hold.
+- **Evidence:** 9,309 tests; root typecheck/lint; production build with 205 routes; full guardrails; exact no-excuse checker on 32 files; desktop/mobile Playwright with zero axe WCAG A/AA violations, reduced motion, keyboard operation, and 200% zoom.
+- **Production boundary:** Deployed SHA, public domain protection, live DB/cron/provider state, and a real persisted playback record remain unverified.
