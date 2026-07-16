@@ -93,9 +93,17 @@ tunnel vision. Token-smart execution. This section IS the accounting.
   revisit after the hardening wave lands.
 - #8 grandpa-simple + cinematic UX pass · /glass-ledger frontier design pass —
   NEXT UP after current landings (design-now-flip-later on the flagship).
-- #12 Sealed Engine experience · #13 Fantasy Engine 10x (owner mandate; SMASH/
-  BURR/RVS ports must be renamed + edge-lab-calibrated before any confidence
-  framing; pfr verdict gates the trench/WR family).
+- #12 Sealed Engine experience · #13 Fantasy Engine 10x: FOUNDATION REVIVED —
+  the stranded 9-commit engine floor (scheme-PROE, team defense, rolling
+  windows, rights-gated MLB data plane, golden-verified) is rebased onto main,
+  ALL suites green (66+192+1,146+7,680), PUSHED as
+  claude/fantasy-engine-foundation-rebased @ 1b9c38b3 — founder-mergeable.
+  BEFORE ANY PUBLIC SURFACE: rename competitor coinages (~350 SMASH/BURR/Solds
+  occurrences flagged, ADMIN-only today) + edge-lab calibration for any
+  confidence framing; pfr verdict gates the trench/WR family. Unblocks
+  model-accuracy-leaderboard (stacks on the foundation).
+- NEW stranded find: claude/hotfix-cockpit-page-auth (the cockpit-page-auth CI
+  source scan the foundation's docstring references) — evaluate for salvage.
 - World-model NFL feature admissions through the trials registry (orchestrator's
   own slice — the path out of FIRE_NOTHING) — starts once the 7-fix lands.
 - PR #112 founder gates · PR #101 co-work migration · main hotfix merge — all
