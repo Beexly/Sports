@@ -150,12 +150,26 @@ export default async function TrendsPage(): Promise<JSX.Element> {
               <Metric label="Joined obs" value={formatNumber(nflverseReadiness.joinedTrendObservations)} />
               <Metric label="Season" value={String(nflverseReadiness.season)} />
             </dl>
-            <div className="mt-5 border border-mineral bg-carbon p-4">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-alert">
-                Publication blocked
-              </p>
-              <p className="mt-2 text-sm leading-6 text-ion-1">{nflverseReadiness.blockReason}</p>
-            </div>
+            {nflverseReadiness.blockReason !== null ? (
+              <div className="mt-5 border border-mineral bg-carbon p-4">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-alert">
+                  Publication blocked
+                </p>
+                <p className="mt-2 text-sm leading-6 text-ion-1">{nflverseReadiness.blockReason}</p>
+              </div>
+            ) : (
+              <div className="mt-5 border border-mineral bg-carbon p-4">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-orbital-cyan">
+                  Publication gate met
+                </p>
+                <p className="mt-2 text-sm leading-6 text-ion-1">
+                  {formatNumber(nflverseReadiness.joinedTrendObservations)} persisted joined observations across{" "}
+                  {nflverseReadiness.persistedSeasonCount} seasons meet the declared minimums (
+                  {formatNumber(nflverseReadiness.minimumObservations)} observations,{" "}
+                  {nflverseReadiness.minimumSeasons} seasons).
+                </p>
+              </div>
+            )}
             <Link
               href="/nflverse"
               className="mt-5 inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-4 py-2 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
