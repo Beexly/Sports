@@ -23,7 +23,18 @@ founder-gated (handoff §1 Process, directive HARD GUARDRAILS).**
    validation of Phase 0/3 uses nflverse's licensed historical closing lines
    (spread/total/moneyline in the games dataset, CC-BY-4.0). Decide later if a
    paid historical backfill is worth it.
-4. (grows as the build proceeds)
+4. **Main is carrying one failing engine test** (pre-existing, found during
+   this build): PR #117 added two sources to the web rights registry and
+   the engine's fixture-alignment test
+   (`metric-source-payload-rights.test.ts`) now fails on main — a
+   cross-package coverage gap in today's merge process (the fantasy branch
+   never touched packages/*, so its verification never ran the engine
+   suite). THE FIX IS READY AND VERIFIED (8/8) on local branch
+   `claude/fix-metric-source-fixture-alignment` (commit 568ccca6, worktree
+   under the session scratchpad) and is also applied on the build branch —
+   but the push gate (as enforced by the session's permission layer) blocks
+   landing it on main. Say the word and it goes up as a one-file PR.
+5. (grows as the build proceeds)
 
 ## Substrate report (protocol step 1 — what EXISTS and is EXTENDED, not rebuilt)
 
