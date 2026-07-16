@@ -1,0 +1,271 @@
+{
+  "report": {
+    "runner": "feature-admission",
+    "startedAt": "2026-07-16T22:01:23.189Z",
+    "finishedAt": "2026-07-16T22:01:40.072Z",
+    "data": {
+      "gamesSource": "nflverse/nfldata games.csv (CC-BY-4.0)",
+      "pbpSource": "nflverse-data play_by_play_<season>.csv (CC-BY-4.0)",
+      "attribution": "Data via nflverse (nflverse-data), licensed CC BY 4.0.",
+      "rightsSnapshot": {
+        "source_id": "nflverse",
+        "source_url": "https://github.com/nflverse/nflverse-data",
+        "status": "approved_open_license",
+        "automation_allowed": true,
+        "public_logged_off_allowed": true,
+        "commercial_display_allowed": true,
+        "storage_allowed": true,
+        "derived_analytics_allowed": true,
+        "model_training_allowed": true,
+        "attribution_required": true,
+        "attribution_text": "Data from nflverse (https://github.com/nflverse), CC-BY-4.0",
+        "reviewed_at": "2026-06-10",
+        "snapshotted_at": "2026-07-16T22:01:23.190Z"
+      },
+      "workingSeasons": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "gamesLoaded": 1871,
+      "sealedHoldout": {
+        "season": 2025,
+        "count": 272,
+        "from": "2025-09-05T00:20:00.000Z",
+        "to": "2026-01-05T01:20:00.000Z",
+        "pbpDownloaded": false
+      },
+      "pbpSeasons": [
+        {
+          "season": 2019,
+          "sourceUrl": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2019.csv",
+          "servedBy": "cache:/home/user/Sports/.claude/worktrees/edge-feature-admission/.cache/edge-lab/play_by_play_2019.csv",
+          "attempts": 0,
+          "fromCache": true,
+          "fetchedAt": "2026-07-16T22:01:27.064Z",
+          "projectedRows": 47260
+        },
+        {
+          "season": 2020,
+          "sourceUrl": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2020.csv",
+          "servedBy": "cache:/home/user/Sports/.claude/worktrees/edge-feature-admission/.cache/edge-lab/play_by_play_2020.csv",
+          "attempts": 0,
+          "fromCache": true,
+          "fetchedAt": "2026-07-16T22:01:28.681Z",
+          "projectedRows": 47705
+        },
+        {
+          "season": 2021,
+          "sourceUrl": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2021.csv",
+          "servedBy": "cache:/home/user/Sports/.claude/worktrees/edge-feature-admission/.cache/edge-lab/play_by_play_2021.csv",
+          "attempts": 0,
+          "fromCache": true,
+          "fetchedAt": "2026-07-16T22:01:30.359Z",
+          "projectedRows": 49922
+        },
+        {
+          "season": 2022,
+          "sourceUrl": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2022.csv",
+          "servedBy": "cache:/home/user/Sports/.claude/worktrees/edge-feature-admission/.cache/edge-lab/play_by_play_2022.csv",
+          "attempts": 0,
+          "fromCache": true,
+          "fetchedAt": "2026-07-16T22:01:32.147Z",
+          "projectedRows": 49434
+        },
+        {
+          "season": 2023,
+          "sourceUrl": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2023.csv",
+          "servedBy": "cache:/home/user/Sports/.claude/worktrees/edge-feature-admission/.cache/edge-lab/play_by_play_2023.csv",
+          "attempts": 0,
+          "fromCache": true,
+          "fetchedAt": "2026-07-16T22:01:33.688Z",
+          "projectedRows": 49665
+        },
+        {
+          "season": 2024,
+          "sourceUrl": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.csv",
+          "servedBy": "cache:/home/user/Sports/.claude/worktrees/edge-feature-admission/.cache/edge-lab/play_by_play_2024.csv",
+          "attempts": 0,
+          "fromCache": true,
+          "fetchedAt": "2026-07-16T22:01:35.258Z",
+          "projectedRows": 49492
+        }
+      ],
+      "pbpAggregation": {
+        "sourceRows": 293478,
+        "droppedNonReg": 13252,
+        "droppedNotScrimmage": 80160,
+        "droppedNoEpa": 1,
+        "usableRows": 200065,
+        "games": 1599
+      },
+      "evalRows": 1529,
+      "skipped": {
+        "noOdds": 1,
+        "noScores": 0,
+        "thinHistory": 64,
+        "tie": 5
+      },
+      "historyCounts": {
+        "gamesFullyJoined": 1599,
+        "aggregatesRejectedThinPlays": 0,
+        "gamesMissingAggregates": 0
+      },
+      "pbpJoinCoverage": 1,
+      "teamCodeNote": "GameRow era codes canonicalized to pbp's retroactive current codes (OAK→LV, SD→LAC, STL→LA) at the join — found and fixed after a first run left all 16 games of 2019 OAK unjoined; disclosed here because the repair post-dates one sight of the family's numbers."
+    },
+    "config": {
+      "family": "nfl-team-form-2026-07",
+      "fdrQ": 0.1,
+      "window": 8,
+      "minHistory": 4,
+      "minPlaysPerGame": 10,
+      "permutations": 1000,
+      "seed": 20260716
+    },
+    "features": [
+      {
+        "featureKey": "form:off_epa_pp_diff",
+        "miNats": 0.0031781996065993203,
+        "pValue": 0.457,
+        "bhAdjustedP": 0.57125,
+        "admitted": false,
+        "n": 1529,
+        "strata": 10,
+        "permutations": 1000
+      },
+      {
+        "featureKey": "form:def_epa_pp_allowed_diff",
+        "miNats": 0.0031681433423759514,
+        "pValue": 0.455,
+        "bhAdjustedP": 0.57125,
+        "admitted": false,
+        "n": 1529,
+        "strata": 10,
+        "permutations": 1000
+      },
+      {
+        "featureKey": "form:off_success_rate_diff",
+        "miNats": 0.0036468607189403977,
+        "pValue": 0.358,
+        "bhAdjustedP": 0.57125,
+        "admitted": false,
+        "n": 1529,
+        "strata": 10,
+        "permutations": 1000
+      },
+      {
+        "featureKey": "form:pass_rate_diff",
+        "miNats": 0.000855149041533248,
+        "pValue": 0.896,
+        "bhAdjustedP": 0.8960000000000001,
+        "admitted": false,
+        "n": 1529,
+        "strata": 10,
+        "permutations": 1000
+      },
+      {
+        "featureKey": "form:net_epa_pp_diff",
+        "miNats": 0.008484481960952927,
+        "pValue": 0.012,
+        "bhAdjustedP": 0.06,
+        "admitted": true,
+        "n": 1529,
+        "strata": 10,
+        "permutations": 1000
+      }
+    ],
+    "familyDecision": {
+      "family": "nfl-team-form-2026-07",
+      "q": 0.1,
+      "admittedKeys": [
+        "form:net_epa_pp_diff"
+      ],
+      "admittedSetHash": "ace09ab2a89cffa623fc9704e30d16b5ad8164c30361d511eea3b9aef5c846dd",
+      "trialsInFamily": 6
+    },
+    "trialsRegistry": {
+      "chainValid": true,
+      "entries": [
+        {
+          "seq": 0,
+          "trialId": "nfl-team-form-2026-07:grid:run-config",
+          "kind": "threshold_grid",
+          "recordedAt": "2026-07-16T22:01:23.189Z",
+          "pValue": null,
+          "statistic": null,
+          "outcome": "recorded",
+          "prevHash": "7123f208e41ea8cb3c4349dfe8ac56848f1dfa2bbca3ee99f7a27368a6d993e9",
+          "hash": "ad929f09b92f9eabcc975741e9acd617047a75ed649d22590eb4864b0a696a88"
+        },
+        {
+          "seq": 1,
+          "trialId": "nfl-team-form-2026-07:feature:form:off_epa_pp_diff",
+          "kind": "feature_admission",
+          "recordedAt": "2026-07-16T22:01:35.528Z",
+          "pValue": 0.457,
+          "statistic": 0.0031781996065993203,
+          "outcome": "recorded",
+          "prevHash": "ad929f09b92f9eabcc975741e9acd617047a75ed649d22590eb4864b0a696a88",
+          "hash": "aa4b2b0de075d45b510f71a81b5d451f9fe3212607b38edfdf9c4e886dc13934"
+        },
+        {
+          "seq": 2,
+          "trialId": "nfl-team-form-2026-07:feature:form:def_epa_pp_allowed_diff",
+          "kind": "feature_admission",
+          "recordedAt": "2026-07-16T22:01:36.547Z",
+          "pValue": 0.455,
+          "statistic": 0.0031681433423759514,
+          "outcome": "recorded",
+          "prevHash": "aa4b2b0de075d45b510f71a81b5d451f9fe3212607b38edfdf9c4e886dc13934",
+          "hash": "4472b467700b51eec6f12913a0892282b3c8ba3d94198f17adabc520fd5c1839"
+        },
+        {
+          "seq": 3,
+          "trialId": "nfl-team-form-2026-07:feature:form:off_success_rate_diff",
+          "kind": "feature_admission",
+          "recordedAt": "2026-07-16T22:01:37.581Z",
+          "pValue": 0.358,
+          "statistic": 0.0036468607189403977,
+          "outcome": "recorded",
+          "prevHash": "4472b467700b51eec6f12913a0892282b3c8ba3d94198f17adabc520fd5c1839",
+          "hash": "cbb676aa13aad46b2bbeaa76bbbc2dee4ab830d25e6c94ac17468ae62e831d7c"
+        },
+        {
+          "seq": 4,
+          "trialId": "nfl-team-form-2026-07:feature:form:pass_rate_diff",
+          "kind": "feature_admission",
+          "recordedAt": "2026-07-16T22:01:38.373Z",
+          "pValue": 0.896,
+          "statistic": 0.000855149041533248,
+          "outcome": "recorded",
+          "prevHash": "cbb676aa13aad46b2bbeaa76bbbc2dee4ab830d25e6c94ac17468ae62e831d7c",
+          "hash": "4a4474ebef12455e38a2a1a77d575f9a2758ba8ce879dd630fcb658b63454a58"
+        },
+        {
+          "seq": 5,
+          "trialId": "nfl-team-form-2026-07:feature:form:net_epa_pp_diff",
+          "kind": "feature_admission",
+          "recordedAt": "2026-07-16T22:01:39.216Z",
+          "pValue": 0.012,
+          "statistic": 0.008484481960952927,
+          "outcome": "recorded",
+          "prevHash": "4a4474ebef12455e38a2a1a77d575f9a2758ba8ce879dd630fcb658b63454a58",
+          "hash": "a65dce8d274a80a1844428a8301da5e755e23945289b79289df785c6e43a7b7d"
+        }
+      ]
+    },
+    "interpretation": "1 of 5 candidates cleared BH-FDR at q=0.1 (form:net_epa_pp_diff). DO NOT treat this as edge: an admission at this stage is a red flag for leakage before it is evidence of signal, because the closing price already encodes team form heavily. Leading benign-but-not-edge explanation to rule out FIRST: the MI probe conditions on q_close via coarse equal-mass strata, and a feature this correlated with the price can pick up RESIDUAL WITHIN-STRATUM MARKET INFORMATION (reconstructing the close, not beating it). Required next checks before ANY downstream use, each as a NEW registered family (never silent re-runs): (1) finer-conditioning re-probe — more q strata / score bins, fresh seeds — expecting the MI to shrink if it is residual-market artifact; (2) adversarial leak review of the windowing and observedAt stamps for the admitted key(s), plus the shuffled-time placebo on exactly these features; (3) walk-forward EV-vs-close with the admitted key(s) added to the Phase-1 logit-pool, expecting the β test — not this MI probe — to be the binding gate.",
+    "noLookaheadCertificate": "AsOfFeatureStore.assertNoLookahead() passed over the full served audit"
+  },
+  "provenance": {
+    "inputsHash": "60b286d6ef6593d321c3dfb7b941738f3e94873ef3eac7aae0cf810f9f035d76",
+    "outputHash": "6c6a7d86ff185034d319bf5914f911bde6e2e383557571741a949a9fdd6447e8",
+    "modelVersion": "v5.1.0",
+    "producer": "edge-lab/feature-admission",
+    "asOf": "2026-07-16T22:01:23.189Z"
+  }
+}
