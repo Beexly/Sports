@@ -1,0 +1,135 @@
+{
+  "report": {
+    "phase": "0",
+    "startedAt": "2026-07-16T16:00:38.924Z",
+    "finishedAt": "2026-07-16T16:00:43.284Z",
+    "data": {
+      "source": "nflverse/nfldata games (CC-BY-4.0)",
+      "workingSeasons": [
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "gamesLoaded": 1871,
+      "evalRows": 1508,
+      "skipped": {
+        "noOdds": 1,
+        "noScores": 0,
+        "thinHistory": 85,
+        "tie": 5
+      },
+      "sealedHoldout": {
+        "season": 2025,
+        "count": 272,
+        "from": "2025-09-05T00:20:00.000Z",
+        "to": "2026-01-05T01:20:00.000Z"
+      }
+    },
+    "walkForward": {
+      "folds": 6,
+      "minTrainFraction": 0.3,
+      "embargoMs": 259200000
+    },
+    "fireThreshold": 0.03,
+    "realRun": {
+      "note": "EV-vs-close on fired plays. NOT a claimable performance number (no coverage/LCB/CLV/provenance quartet; nothing renders publicly from this).",
+      "eligible": 1056,
+      "fired": 851,
+      "coverage": 0.8058712121212122,
+      "meanReturn": -0.11321316493554827,
+      "seReturn": 0.04747412380656842,
+      "foldCount": 6
+    },
+    "placeboGate": {
+      "passed": true,
+      "failureReason": null,
+      "runs": 12,
+      "seed": 20260716,
+      "medianP": 0.014925373134328358,
+      "medianMean": -0.09122421849820413,
+      "epsilon": 0.01,
+      "perRun": [
+        {
+          "mean": -0.08426590693300001,
+          "fired": 930,
+          "pValue": 0.014925373134328358
+        },
+        {
+          "mean": -0.1005542518387751,
+          "fired": 931,
+          "pValue": 0.004975124378109453
+        },
+        {
+          "mean": -0.09185091934223322,
+          "fired": 922,
+          "pValue": 0.009950248756218905
+        },
+        {
+          "mean": -0.11186158485692795,
+          "fired": 930,
+          "pValue": 0.01990049751243781
+        },
+        {
+          "mean": -0.13118939125612863,
+          "fired": 935,
+          "pValue": 0.004975124378109453
+        },
+        {
+          "mean": -0.09059751765417504,
+          "fired": 923,
+          "pValue": 0.014925373134328358
+        },
+        {
+          "mean": -0.11897964875037702,
+          "fired": 927,
+          "pValue": 0.004975124378109453
+        },
+        {
+          "mean": -0.07957279004658491,
+          "fired": 928,
+          "pValue": 0.01990049751243781
+        },
+        {
+          "mean": -0.084105744879272,
+          "fired": 918,
+          "pValue": 0.0845771144278607
+        },
+        {
+          "mean": -0.07231094153169049,
+          "fired": 919,
+          "pValue": 0.05970149253731343
+        },
+        {
+          "mean": -0.102376378884783,
+          "fired": 929,
+          "pValue": 0.004975124378109453
+        },
+        {
+          "mean": -0.07913855088162676,
+          "fired": 920,
+          "pValue": 0.04975124378109453
+        }
+      ]
+    },
+    "miProbe": {
+      "note": "I(oof score; Y | q_close). ~0 with high p means these schedule features carry no information beyond the close — an expected, honest finding for deliberately modest features; Phase 3 features must clear this bar to matter.",
+      "miNats": 0.009452936055026182,
+      "nullMeanNats": 0.004680590256835384,
+      "pValue": 0.06,
+      "strata": 10,
+      "permutations": 300,
+      "n": 1056
+    },
+    "noLookaheadCertificate": "AsOfFeatureStore.assertNoLookahead() passed over the full served audit"
+  },
+  "provenance": {
+    "inputsHash": "b0ae175129c73a417012c3f6be9685f6d1a2e38c0b9fafe59fe279604136a99f",
+    "outputHash": "187bb541688a35e03b4e96ea42a01cfbd1cfde4476b04a37382e334bc876f980",
+    "modelVersion": "v5.1.0",
+    "producer": "edge-lab/phase0-acceptance",
+    "asOf": "2026-07-16T16:00:38.924Z"
+  }
+}

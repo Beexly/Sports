@@ -1,0 +1,134 @@
+# BUILD_LOG — Glass Ledger + Edge Engine
+
+Autonomous build per the founder's engineering handoff (2026-07-16). Source of
+truth: the handoff text supplied inline with the directive (the Windows path
+`C:\Users\Garrett\.claude\GHuman\.firecrawl\_HANDOFF-to-coding-agent.md` and its
+companion dossiers are not accessible from this cloud container — decisions cite
+the inline handoff's section numbers). Branch: `claude/glass-ledger-edge-engine`.
+**No push, no deploy, no publish, no SHADOW flip, no MODEL_VERSION bump — all
+founder-gated (handoff §1 Process, directive HARD GUARDRAILS).**
+
+## NEEDS FOUNDER (running list)
+
+1. **Push the branch.** Push is founder-gated, but this container is EPHEMERAL —
+   if the session is reclaimed before you say "push it", every commit here is
+   lost. Say the word and `claude/glass-ledger-edge-engine` goes up as a branch
+   (no PR, no deploy target, nothing public).
+2. **Companion dossiers unavailable.** `_MASTER-gse-strategic-dossier.md`,
+   `_gse-edge-lab-final.md`, etc. live on your machine / the inaccessible
+   GSE-competitive-intel repo. Build proceeds on the inline handoff alone.
+3. **Historical odds backfill.** The Odds API historical endpoints are paid
+   (spending is gated) and `THE_ODDS_API_KEY` is not present in this container.
+   The line archive is built to accumulate forward from the existing cron;
+   validation of Phase 0/3 uses nflverse's licensed historical closing lines
+   (spread/total/moneyline in the games dataset, CC-BY-4.0). Decide later if a
+   paid historical backfill is worth it.
+4. (grows as the build proceeds)
+
+## Substrate report (protocol step 1 — what EXISTS and is EXTENDED, not rebuilt)
+
+| Handoff asset | Repo reality | Disposition |
+|---|---|---|
+| `edge-engine.ts` w/ SHADOW | `packages/prediction-engine/src/edge-engine.ts` — fires on e = independent blend − devigged market prob, CLV-judged, PASS-by-default, agreement referee (CONFIRMS/SPLIT/SOLO/CONTRADICTS), sub-vig book guard. SHADOW default-off lives in process-sport wiring. | EXTEND (§1 fire-on-edge rule already law here) |
+| PAVA/isotonic engine | `probability-calibration.ts` (isotonic + Brier decomposition + reliability curve) and `calibration-map.ts` (Platt + **beta calibration** + `selectCalibrator` + equal-mass ECE) | EXTEND — Phase 1 needs OOF fitting + tail-blend policy + selection by Brier decomposition (§2 P1) |
+| Calibrated tiers | `conviction-tier.ts` | REUSE |
+| CLV | `clv-capture.ts` (ClosingSnapshot, gradePickClv, POINTS/PROBABILITY), settle pipeline grades every settled pick (owner ruling R3) | EXTEND |
+| Walk-forward | `replay-harness.ts` — **purged + embargoed** week splits (minTrainWeeks/purgeWeeks/embargoWeeks) vs market-closing-line baseline | EXTEND — generalize to sport-agnostic + sealed forward holdout + placebo/MI gate (§2 P0) |
+| Devig | proportional devig in `apps/web/lib/market/*` + process-sport | ADD Shin beside it, unit-tested on known books (§2 P0) |
+| Conformal | `conformal-intervals.ts` — Mondrian conformal + rolling windows + position coverage | EXTEND — Venn-Abers + LCB(e)>τ_vig selective gate (§2 P1) |
+| CIs | `performance-ci.ts` (BCa/percentile/studentized/empirical-Bernstein) | ADD Wilson + Clopper-Pearson (handoff hard rule: every public number carries Wilson/CP LCB) |
+| Hash-chained pick store | `freeze-slate-commitments.ts` (Merkle sealed slates, pre-mint freeze), `pick-proof-receipt.ts`, `packages/crypto/pedersen-ledger.ts`, public `/verify` + `/how-to-verify-a-record` | EXTEND — append-only chain linkage + external anchor + open `recompute.ts` (§2 P2) |
+| NFL world-model | `prediction-engine/src/nfl/*` (qb-burden, rush-environment, receiver-difficulty, metric-validation) + **expected-metrics engine (gse-ep-v1/wp/success/drives), graduated vs nflverse on real 2025 data (#115)** + nflverse mapper + NGS loaders | REUSE as feature spine |
+| MLB engines | `apps/web/lib/lahman/*`, `/api/mlb/*` | EXTEND with Statcast/MLB-Stats-API loaders behind the same sport-agnostic interfaces (§6) |
+| Signal mesh | `signal-ledger.ts` (weights carried per-row, policy not baked in) | Phase 4 INERT stubs only |
+| Line archive (open+close snapshots) | **MISSING as schema** — picks carry lock/close fields; no OddsSnapshot table. The Odds API free tier = 500 credits/mo (config.ts) — archive design must be credit-aware. | BUILD (additive migration, founder applies; §2 P0) |
+| Placebo / MI probe / logit-pool β / Kelly layer / display guard / recompute.ts / HB props / close distillation / residual GBM | MISSING | BUILD (P0–P3) |
+
+Stack: npm workspaces, TS strict, Vitest, Prisma/Postgres, Next.js 14. Tests
+colocated in `__tests__/`. Guardrail scanners at `scripts/guardrails/` run
+repo-wide — every commit here must keep them green.
+
+## Delegation model (owner directive mid-build)
+
+Fable 5 leads: architecture, specs, integration, honesty gates, verification.
+Mechanical implementation slices delegated to cheaper models (sonnet) with
+exact specs; every delegated slice is re-verified here (tests re-run, diff
+read) before commit. Spend-limit note: the account cap was hit earlier today —
+if delegation dies again, the build continues inline.
+
+## Phase log
+
+### Phase 0 — leak-free data foundation [GATE PASSED — real data]
+
+**Built** (`packages/prediction-engine/src/edge-lab/`, 68 tests, tsc clean,
+trust-gate + draft-only guardrails clean):
+- `asof-store.ts` — as-of feature store: explicit-cutoff reads, closing-key
+  ingest refusal, served-read audit, `assertNoLookahead()` (leak = runtime
+  error, §2 P0 "hard cutoff in code").
+- `walk-forward.ts` — sport-agnostic purged+embargoed splits on decision
+  timestamps + SEALED forward holdout (rows throw without the literal
+  founder token; §5 "thresholds tuned only on inner folds").
+- `devig.ts` — proportional + Shin (bisection), tested on known books;
+  Shin favorite-longshot correction verified (delegated: sonnet, 14 tests).
+- `stats.ts` — Wilson + Clopper-Pearson LCBs + coverage (delegated: sonnet,
+  17 tests; from-scratch incomplete-beta, round-trip verified 1e-7).
+- `provenance.ts` — canonical-JSON SHA-256 stamps binding inputs/output/
+  MODEL_VERSION/asOf (§2 P0 snapshot provenance).
+- `logistic.ts`, `rng.ts` — deterministic reference trainer + seeded PRNG.
+- `game-row.ts` + `loaders/nfl-games.ts` + `loaders/mlb-games.ts` —
+  sport-agnostic GameRow (§6); nflverse games (CC-BY-4.0; spread sign
+  verified empirically: raw nfldata is positive=home-favored, loader
+  negates to repo convention); MLB Stats API loader (odds honestly null
+  until the line archive accumulates). Delegated: sonnet, 22 tests.
+- `schedule-features.ts` — honest rolling features; observedAt = latest
+  constituent game end; self-exclusion tested.
+- `placebo.ts` — THE GATE. Design decisions worth owner attention:
+  - A naive row-shuffle placebo cannot separate leakage from signal; the
+    implemented placebo re-serves features through the REAL store at
+    randomized cross-era instants (§2 P0 intent).
+  - Leak verdicts use a self-calibrating within-run outcome-permutation
+    null (median p across runs), not a fixed z — fat-tailed longshot
+    payouts made any fixed-z rule mis-scaled (empirically diagnosed).
+  - The failure rule is ONE-SIDED (positive placebo EV only): leaks can
+    only manufacture positive EV vs the close; the significantly negative
+    reading on real data is the structural favorite-longshot/proportional-
+    devig cost of firing on noise, reported not gated.
+  - Both directions PROVEN in tests: clean corpus passes; a planted
+    backdated outcome-encoder (mis-stamped observedAt, the handoff's named
+    silent-fatal class) fails the gate.
+  - Honest scope limitation: game-keyed single-observation features
+    survive time-scrambling for ~half the rows, so the placebo's power is
+    aimed at outcome/close-encoders (which it demonstrably catches), not
+    at slow-drift leaks. Recorded here so nobody over-claims it.
+
+**ACCEPTANCE RUN (real nflverse data, 2026-07-16)** —
+`scripts/edge-lab/phase0-acceptance.ts`, report + provenance stamp at
+`reports/edge-lab/phase0-nfl-acceptance.{json,md}`, deterministic seed
+20260716, exit 0:
+- 1,871 games loaded (2019–2025); **season 2025 SEALED (272 games), never
+  evaluated**; 1,508 eval rows (skips itemized).
+- **Placebo gate PASSED**: median permutation p = 0.015 on a NEGATIVE
+  median EV (−0.0912) — no positive leak signature; one-sided rule as
+  above. `assertNoLookahead()` certificate clean over the full served
+  audit.
+- MI probe: I(score; Y | q_close) = 0.0095 nats, permutation p = 0.060 —
+  **these schedule features carry no measurable information beyond the
+  close.** Expected for deliberately modest features; the honest headline
+  is that Phase-3 features must clear this probe to matter (§2 P0 "the
+  founder must know that truth").
+- Real-run EV-vs-close = −0.113 ± 0.048 (fired 851/1056) — labeled NOT
+  claimable; the negative sign is the favorite-longshot bias of firing
+  noisy signals through proportional devig (Shin exists for this; Phase 1
+  will quantify the devig choice).
+
+**Side-finding for founder** (from the loader delegation, verified
+empirically): `historical-replay.ts`'s header claims nflverse
+`spread_line` is negative=home-favored and passes it through unnegated;
+live-data verification (r=+0.43 vs result; 2007 NE 16-0 home games all
+strongly positive) says raw nfldata is POSITIVE=home-favored. Possible
+pre-existing sign bug in that module's consumers — not touched by this
+build; flagged for review.
+
+**Still open in P0 scope:** the forward line archive (open+close snapshot
+persistence — additive schema, inert capture, founder applies/flips).
+Building next alongside Phase 1.

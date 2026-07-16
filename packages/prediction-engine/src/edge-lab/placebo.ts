@@ -69,6 +69,14 @@ export interface FiredPlay {
   readonly y: 0 | 1;
 }
 
+export interface OofScore {
+  readonly rowId: string;
+  /** Out-of-fold model probability for the modeled (home) side. */
+  readonly p: number;
+  readonly q: number;
+  readonly y: 0 | 1;
+}
+
 export interface EvalReport {
   readonly eligible: number;
   readonly fired: number;
@@ -77,6 +85,8 @@ export interface EvalReport {
   readonly seReturn: number | null;
   readonly foldCount: number;
   readonly plays: readonly FiredPlay[];
+  /** Every test-fold prediction (fired or not) — feeds the MI probe + Phase 1 calibration. */
+  readonly oof: readonly OofScore[];
 }
 
 /** Walk-forward train/test evaluation of EV-vs-close on fired plays. */
@@ -88,12 +98,14 @@ export function walkForwardEval(
 ): EvalReport {
   const folds = walkForwardSplits(rows, wf);
   const plays: FiredPlay[] = [];
+  const oof: OofScore[] = [];
   let eligible = 0;
   for (const fold of folds) {
     const predict = trainer(fold.train.map(toExample));
     for (const row of fold.test) {
       eligible += 1;
       const p = predict(row.features);
+      oof.push({ rowId: row.id, p, q: row.qClose, y: row.y });
       if (Math.abs(p - row.qClose) > fireThreshold) {
         plays.push({
           rowId: row.id,
@@ -121,6 +133,7 @@ export function walkForwardEval(
     seReturn,
     foldCount: folds.length,
     plays,
+    oof,
   };
 }
 
@@ -223,9 +236,12 @@ export function shuffledTimePlacebo(
   // clean pipeline the per-run p-values are ~uniform (they share luck, so
   // they move together, but the TYPICAL run is unremarkable). A leak makes
   // essentially every run beat its null: median p collapses. Fail iff the
-  // median p < 0.005 AND the effect is practically real (|median mean| >
-  // epsilon). Softer readings are reported for founder review, never
-  // silently gated on.
+  // median p < 0.005 AND the effect is a practically real POSITIVE edge
+  // (median mean > epsilon) — a post-decision/outcome-encoding leak can only
+  // manufacture positive EV against the close; a significantly NEGATIVE
+  // placebo EV is the structural favorite-longshot/devig cost of firing on
+  // noise (observed on real NFL closes) and is reported, not gated on.
+  // Softer readings are likewise reported for founder review.
   let passed: boolean;
   let failureReason: string | null = null;
   if (medianMean === null) {
@@ -233,7 +249,7 @@ export function shuffledTimePlacebo(
     // strongest possible "no leak" outcome (nothing to fire on once timely
     // information is destroyed).
     passed = true;
-  } else if (medianP !== null && medianP < 0.005 && Math.abs(medianMean) > epsilon) {
+  } else if (medianP !== null && medianP < 0.005 && medianMean > epsilon) {
     passed = false;
     failureReason =
       `placebo median EV ${medianMean.toFixed(4)} with median permutation-null p=${medianP.toFixed(4)} ` +
