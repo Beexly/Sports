@@ -65,4 +65,16 @@ describe("matchSportParam — canonical slug / legacy cuid / casing / unknown", 
       expectSport(matchSportParam("nfl", sorted), "ok", a, "nfl");
     }
   });
+
+  it("a sport whose name slugifies to nothing is unresolvable — never a malformed redirect", () => {
+    // slugify("野球") === "" — such a sport has no canonical URL form, so BOTH
+    // its cuid and its raw name must 404 rather than 308 to `/preview//<slug>`.
+    const unslugifiable = { id: "cmsportjpbb1", key: "baseball_npb", name: "野球" };
+    const sports = [...SPORTS, unslugifiable].sort((a, b) => a.key.localeCompare(b.key));
+
+    expect(matchSportParam("cmsportjpbb1", sports)).toEqual({ kind: "unknown" });
+    expect(matchSportParam("野球", sports)).toEqual({ kind: "unknown" });
+    // Real sports still resolve around it.
+    expectSport(matchSportParam("nfl", sports), "ok", NFL, "nfl");
+  });
 });

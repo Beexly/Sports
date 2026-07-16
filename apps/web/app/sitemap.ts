@@ -84,6 +84,9 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
     const games = await db.game.findMany({
       where: {
         status: { in: ["SCHEDULED", "LIVE", "FINAL"] },
+        // Must agree with resolveSportParam's active filter: the resolver
+        // 404s inactive sports, so the sitemap must not advertise them.
+        sport: { is: { active: true } },
       },
       orderBy: { commenceTime: "desc" },
       take: 2000, // well within sitemap's 50 k URL limit

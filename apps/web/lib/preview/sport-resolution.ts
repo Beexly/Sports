@@ -47,19 +47,24 @@ export function matchSportParam(
   param: string,
   sports: ReadonlyArray<SportRow>,
 ): SportParamResolution {
+  // A sport whose name slugifies to the empty string has no canonical URL
+  // form — treat it as unresolvable so both URL forms 404 instead of
+  // redirecting to a malformed `/preview//<matchup>` path.
+  const routable = sports.filter((s) => slugify(s.name) !== "");
+
   // 1. Exact canonical slug → render. Cuids can never hit this rule: rule 1
   //    uses exact slug equality and a cuid (25-char alphanumeric) is never a
   //    name-slug.
-  const canonical = sports.find((s) => slugify(s.name) === param);
+  const canonical = routable.find((s) => slugify(s.name) === param);
   if (canonical) return { kind: "ok", sport: toResolved(canonical) };
 
   // 2. Legacy Sport cuid — the indexed cuid URLs → 308 to the slug form.
-  const byId = sports.find((s) => s.id === param);
+  const byId = routable.find((s) => s.id === param);
   if (byId) return { kind: "redirect", sport: toResolved(byId) };
 
   // 3. Loose name match ("NFL", stray punctuation) → 308 to the canonical
   //    lowercase slug.
-  const loose = sports.find((s) => slugify(s.name) === slugify(param));
+  const loose = routable.find((s) => slugify(s.name) === slugify(param));
   if (loose) return { kind: "redirect", sport: toResolved(loose) };
 
   return { kind: "unknown" };
