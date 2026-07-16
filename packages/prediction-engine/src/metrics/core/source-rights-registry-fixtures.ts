@@ -58,6 +58,20 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
   },
   {
     attribution_required: true,
+    attribution_text: "Expected points data from ffverse/ffopportunity (CC-BY-SA-4.0)",
+    commercial_display_allowed: false,
+    derived_analytics_allowed: true,
+    evidence_urls: ["https://github.com/ffverse/ffopportunity#readme"],
+    model_training_allowed: true,
+    notes:
+      "CC-BY-SA-4.0 (share-alike): internal analysis/storage/derived analytics cleared; PUBLISHED derivation excluded until legal SA-scope review (mirrors the web registry ruling in #117).",
+    source_id: "ffverse-ffopportunity",
+    source_name: "ffverse ffopportunity (Expected Fantasy Points data)",
+    status: "approved_open_license",
+    storage_allowed: true,
+  },
+  {
+    attribution_required: true,
     attribution_text:
       "Source statistics via MLB Stats API (statsapi.mlb.com); MLB data \u00a9 MLB Advanced Media, L.P.",
     commercial_display_allowed: false,
@@ -88,6 +102,20 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     source_name: "Baseball Savant \u2014 Statcast leaderboard CSV exports (baseballsavant.mlb.com)",
     status: "approved_public_logged_off",
     storage_allowed: false,
+  },
+  {
+    attribution_required: true,
+    attribution_text: "ADP data via FantasyFootballCalculator.com",
+    commercial_display_allowed: true,
+    derived_analytics_allowed: true,
+    evidence_urls: ["https://help.fantasyfootballcalculator.com/article/42-adp-rest-api"],
+    model_training_allowed: true,
+    notes:
+      "Free for personal and commercial use per FFC's API docs; attribution requested; once-per-day data cadence honored by the adapter's cache.",
+    source_id: "ffc-adp",
+    source_name: "Fantasy Football Calculator ADP REST API",
+    status: "approved_api",
+    storage_allowed: true,
   },
   {
     attribution_required: false,
