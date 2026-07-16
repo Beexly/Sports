@@ -34,12 +34,16 @@ import { getEntitlements, type Entitlements } from "@sports/types";
 
 const mocks = vi.hoisted(() => ({
   gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
+  sportFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   auth: vi.fn<() => Promise<{ user?: { id?: string } } | null>>(),
   getUserEntitlements: vi.fn<(userId: string) => Promise<Entitlements>>(),
 }));
 
 vi.mock("@sports/db", () => ({
-  db: { game: { findMany: mocks.gameFindMany } },
+  db: {
+    game: { findMany: mocks.gameFindMany },
+    sport: { findMany: mocks.sportFindMany },
+  },
 }));
 
 vi.mock("@/lib/auth", () => ({
@@ -81,10 +85,17 @@ import PreviewPage, {
 const CONFIDENCE = 91;
 const MOVEMENT = -2.7; // renders as "-2.7 (spread)" for entitled viewers
 
+// The Sport row backing the "/preview/nfl/…" param: the URL segment resolves
+// via slugify(Sport.name), never the cuid. The id is letters-only so it cannot
+// collide with the "91" / "-2.7" / "/100" leak assertions below.
+function sportFixture() {
+  return { id: "cmsportnflzz", key: "americanfootball_nfl", name: "NFL" };
+}
+
 function gameFixture() {
   return {
     id: "game-1",
-    sportId: "nfl",
+    sportId: "cmsportnflzz", // games reference the Sport cuid — rendering must use Sport.name
     status: "SCHEDULED",
     homeTeamName: "Chiefs",
     awayTeamName: "Broncos",
@@ -130,6 +141,7 @@ function expectFreeFactsStillRender(html: string): void {
 describe("/preview/[sport]/[slug] — server-side paywall (line movement + confidence)", () => {
   beforeEach(() => {
     mocks.gameFindMany.mockReset().mockResolvedValue([gameFixture()]);
+    mocks.sportFindMany.mockReset().mockResolvedValue([sportFixture()]);
     mocks.auth.mockReset().mockResolvedValue(null);
     mocks.getUserEntitlements.mockReset();
   });
@@ -215,6 +227,7 @@ describe("/preview/[sport]/[slug] — server-side paywall (line movement + confi
 describe("/preview/[sport]/[slug] — generateMetadata paywall", () => {
   beforeEach(() => {
     mocks.gameFindMany.mockReset().mockResolvedValue([gameFixture()]);
+    mocks.sportFindMany.mockReset().mockResolvedValue([sportFixture()]);
     mocks.auth.mockReset().mockResolvedValue(null);
     mocks.getUserEntitlements.mockReset();
   });

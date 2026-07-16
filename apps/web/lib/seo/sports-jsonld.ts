@@ -34,7 +34,7 @@ export type MatchupPreviewInput = {
   readonly faq?: ReadonlyArray<{ q: string; a: string }>;
 };
 
-const slugify = (s: string): string =>
+export const slugify = (s: string): string =>
   s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 /** "away-team-vs-home-team" (away first — the natural "@ home" reading order). */
