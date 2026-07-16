@@ -1,19 +1,19 @@
 # Jarvis Memory Protocol
 
-This document defines how Jarvis remembers — and, more importantly, the honest truth that today it does not. No persistent memory store exists. Jarvis context is rebuilt fresh from the OwnerSummary on every cockpit load, and these version-controlled markdown files are the only durable memory the system has. The protocol below is the design that the `memory-knowledge-base` capability will be built against.
+This document defines how Jarvis remembers — and the honest truth about how much of that exists today. The episodic store is implemented in code (schema, migration, state machine, guards, server actions, review queue) but is **not activated**: no confirmed production write exists, and Jarvis context is still rebuilt fresh from the OwnerSummary on every cockpit load. Runtime recall is not wired. The protocol below is the design the `memory-knowledge-base` capability is built against.
 
-Last updated: 2026-06-11
-Status: DESIGNED — protocol is documented; episodic store is NOT_WIRED.
+Last updated: 2026-07-11
+Status: DESIGNED — protocol documented AND store implemented in code; production activation (first confirmed governed write) is owner-gated.
 
 ## Current Truth
 
-From `capability-registry.ts` (`memory-knowledge-base`, status `NOT_WIRED`) and `intelligence-state.ts` (`buildMemoryStatus()`):
+From `capability-registry.ts` (`memory-knowledge-base`, status `DESIGNED`) and `intelligence-state.ts` (`buildMemoryStatus()` / `buildLiveMemoryStatus()`):
 
-- **No persistent memory system exists.** No vector store. No conversation history. No cross-session recall.
-- `memory.wired` is hard-typed `false` in `MemoryStatus` and stays false until a real store exists.
-- Operational truth is rebuilt from the database on every load; architectural truth lives in version-controlled markdown. **Nothing is recalled across sessions.**
-- The REMEMBER phase of the operating loop is `NOT_WIRED`.
-- Any claim of remembered context before the store is wired would be fabrication, and fabricated recall is a forbidden action of both the capability and the ARCHIVE council seat (Memory Librarian, status `NOT_WIRED`).
+- **The episodic store exists in code.** `JarvisMemoryEvent` + `JarvisDecision` schema models, migration `20260612120000_jarvis_memory_protocol`, an append-only state machine with guards and conflict detection (`apps/web/lib/jarvis/memory/`), and the `/cockpit/memory` review queue. Per the migration-ledger reconciliation evidence (`docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md`), this migration predates the last-common ledger point and is therefore recorded in the production migration ledger.
+- **Nothing is recalled across sessions.** Runtime recall is not wired, no confirmed production write exists, and `memory.wired` stays `false` in the sync fallback posture until real DB counts are observed.
+- Operational truth is rebuilt from the database on every load; architectural truth lives in version-controlled markdown.
+- The REMEMBER phase of the operating loop stays `NOT_WIRED`: its promotion criterion is a confirmed production memory record, not code existence.
+- Any claim of remembered context before activation would be fabrication, and fabricated recall is a forbidden action of both the capability and the ARCHIVE council seat (Memory Librarian, seat status `NOT_WIRED` for execution).
 
 The five protocol docs registered in `intelligence-state.ts` (`MEMORY_PROTOCOL_DOCS`):
 
@@ -31,7 +31,7 @@ docs/ai/jarvis/JARVIS_OPERATOR_BRIEF.md
 |---|---|---|---|
 | (a) Operational truth | Picks, settlements, gates, ingestion timestamps, decision queue | PostgreSQL, read via Jarvis assessment → OwnerSummary on every cockpit load | **LIVE** — already how Jarvis "knows" the platform |
 | (b) Architectural truth | What Jarvis is, capability statuses, council charters, this protocol | These markdown docs, version-controlled in git | **LIVE** — durable via git history; updated by reviewed commits |
-| (c) Episodic memory | Owner decisions + outcomes over time ("we opened the picks gate on X because Y; result Z") | Future Postgres table or mem0 | **NOT_WIRED** — zero code |
+| (c) Episodic memory | Owner decisions + outcomes over time ("we opened the picks gate on X because Y; result Z") | Postgres (`jarvis_memory_events` / `jarvis_decisions`) | **DESIGNED** — implemented in code; production activation owner-gated |
 
 Tiers (a) and (b) mean Jarvis is never amnesiac about *state* or *architecture* — it is amnesiac only about *episodes*: what the owner decided, why, and how it turned out. That is the gap tier (c) closes.
 
@@ -68,12 +68,12 @@ When wired, recall must cite the stored record (id + timestamp) so every "Jarvis
 
 The capability moves beyond `NOT_WIRED` only when demonstrated in the repo (see JARVIS_CAPABILITY_REGISTRY.md governance):
 
-- **NOT_WIRED → DESIGNED**: schema for the episodic store exists in the repo (Prisma model or mem0 integration scaffolding) plus typed write/read interfaces — even if nothing persists yet. These protocol docs alone do not qualify; the registry requires partial infrastructure in code.
+- **NOT_WIRED → DESIGNED**: schema for the episodic store exists in the repo (Prisma model or mem0 integration scaffolding) plus typed write/read interfaces — even if nothing persists yet. These protocol docs alone do not qualify; the registry requires partial infrastructure in code. **SATISFIED 2026-07-11**: schema models, migration, and typed server actions all exist (see Implementation status below); the registry now records `DESIGNED`.
 - **DESIGNED → MANUAL**: a human can write and read an episodic record end-to-end via a manual process (script or admin form), with the consent and no-PII rules enforced.
 - **MANUAL → DRAFT_ONLY**: Jarvis automatically proposes memory writes (e.g., when a gate flips or a decision is resolved) into a review queue; the owner approves each write.
 - **DRAFT_ONLY → ACTIVE**: writes happen autonomously within the defined record schema, with audit logging and owner-accepted boundaries. Not on the current roadmap until the tool router and audit log exist.
 
-Registry `nextAction` (authoritative): *"Wire mem0 or Postgres-based episodic memory to capture owner decisions."* When any promotion happens, update `capability-registry.ts`, the ARCHIVE seat's `currentTruth` in `agent-council.ts`, the REMEMBER phase in `intelligence-state.ts`, and this document — in the same change.
+Registry `nextAction` (authoritative): *"Owner activation: confirm the jarvis_memory_protocol migration is applied in production, record the first governed memory write, then promote per the JARVIS_MEMORY_PROTOCOL.md promotion criteria. Never promote on code existence alone."* When any promotion happens, update `capability-registry.ts`, the ARCHIVE seat's `currentTruth` in `agent-council.ts`, the REMEMBER phase in `intelligence-state.ts`, and this document — in the same change.
 
 ## Implementation status (2026-06-12)
 
@@ -96,8 +96,8 @@ Registry `nextAction` (authoritative): *"Wire mem0 or Postgres-based episodic me
 
 | Item | Blocker |
 |---|---|
-| Production migration | `DATABASE_URL` must point to a real Postgres and `npm run db:migrate` must be run by the owner |
-| `wired: true` in live cockpit | Depends on production migration above |
+| ~~Production migration~~ | Evidence resolved 2026-07-11: migration `20260612120000` predates the last-common production ledger point (`docs/ops/MIGRATION_LEDGER_RECONCILIATION_RUNBOOK.md`), so the tables exist in production. What remains owner-gated is the first confirmed governed write. |
+| `wired: true` in live cockpit | Requires observing real DB counts in production (first confirmed write makes this meaningful) |
 | `lastWritten` / `lastRecalled` timestamps | Timestamp telemetry not yet instrumented; both fields return `null` in `WiredMemoryStatus` |
-| Capability registry promotion to `DESIGNED` | Update `capability-registry.ts` once the owner confirms the production migration is live |
+| ~~Capability registry promotion to `DESIGNED`~~ | Done 2026-07-11 — `capability-registry.ts` records `DESIGNED` with proof source `/cockpit/memory` |
 | `REMEMBER` phase → `PARTIAL` | Update `intelligence-state.ts` operating loop after first confirmed memory is written in production |

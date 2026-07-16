@@ -50,7 +50,9 @@ export function buildJarvisOperatingAssessment(): JarvisOperatingAssessment {
     publicGateStatus: "Public picks cannot self-enable; owner approval and trust gates are required.",
     calibrationStatus: "Manual/AUDIT-owned; model weights cannot change automatically.",
     revenueStatus: "Unknown until real Stripe/funnel signals are parsed; no fake revenue.",
-    memoryStatus: "ARCHIVE is NOT_WIRED; only memory candidate tasking is safe.",
+    memoryStatus:
+      "ARCHIVE is NOT_WIRED for execution; the store is built in code but awaits owner activation " +
+      "(no confirmed production write). Only memory candidate tasking is safe.",
     claudeReview: claudeReview.slice(0, 5).map((task) => task.title),
     nextBestAction: WORKFLOW_REGISTRY.length > 0 && COCKPIT_OPERATING_MAP.length > 0 ? "Wire stale ingestion task creation into the cockpit decision queue." : "Complete operating map registration.",
   };

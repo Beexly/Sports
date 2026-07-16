@@ -374,8 +374,15 @@ describe("buildMemoryStatus (sync not-wired fallback)", () => {
     expect(m.lastRecalled).toBeNull();
   });
 
-  it("truth statement mentions no persistent memory", () => {
-    expect(buildMemoryStatus().truth).toMatch(/no persistent memory/i);
+  it("truth statement never claims recall exists — activation stays owner-gated", () => {
+    // Pin evolved 2026-07-11 (truth reconciliation): the store now exists in
+    // code, so "no persistent memory" would be false. The preserved PROMISE:
+    // the fallback posture must state that nothing is recalled and that no
+    // confirmed production write exists.
+    const truth = buildMemoryStatus().truth;
+    expect(truth).toMatch(/not activated/i);
+    expect(truth).toMatch(/no confirmed production write/i);
+    expect(truth).toMatch(/nothing is recalled across sessions/i);
   });
 });
 

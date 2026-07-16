@@ -1,4 +1,6 @@
 import { describe, it, expect } from "vitest";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   CAPABILITY_REGISTRY,
   getAllCapabilities,
@@ -97,6 +99,52 @@ describe("capability registry trust rules", () => {
   it("capabilities that can answer have a proof source to verify against", () => {
     for (const c of CAPABILITY_REGISTRY.filter((x) => x.canAnswer)) {
       expect(c.proofSource, `${c.id} should point at a verifiable surface`).not.toBeNull();
+    }
+  });
+});
+
+describe("capability registry truth sync (anti-drift, 2026-07-11)", () => {
+  // The textbook drift this pins against: the registry claimed "No persistent
+  // memory system exists" (NOT_WIRED, zero code) while the schema carried
+  // JarvisMemoryEvent/JarvisDecision and lib/jarvis/memory shipped a full
+  // state machine. Code truth and registry truth must never diverge like
+  // that again: when the store exists in the repo, the registry may not say
+  // it doesn't — and it also may not claim activation that hasn't happened.
+  const memoryCodeExists =
+    existsSync(join(__dirname, "..", "lib", "jarvis", "memory", "actions.ts")) &&
+    readFileSync(
+      join(__dirname, "..", "..", "..", "packages", "db", "prisma", "schema.prisma"),
+      "utf8"
+    ).includes("model JarvisMemoryEvent");
+
+  it("memory entry cannot claim the store is absent while the code exists", () => {
+    const memory = getCapability("memory-knowledge-base");
+    expect(memory).toBeDefined();
+    if (memoryCodeExists) {
+      expect(memory!.status, "store exists in repo — NOT_WIRED (zero code) is false").not.toBe(
+        "NOT_WIRED"
+      );
+      expect(memory!.currentTruth).not.toMatch(/no persistent memory system exists/i);
+    }
+  });
+
+  it("memory entry cannot claim activation that has not been demonstrated", () => {
+    const memory = getCapability("memory-knowledge-base");
+    // Promotion beyond DESIGNED requires a demonstrated end-to-end write —
+    // an owner action this repo cannot verify. The registry must keep saying
+    // activation is pending until that evidence exists.
+    expect(["NOT_WIRED", "DESIGNED"]).toContain(memory!.status);
+    expect(memory!.currentTruth).toMatch(/no confirmed production write/i);
+    expect(memory!.currentTruth).toMatch(/owner/i);
+  });
+
+  it("market-line entry cannot deny the CLV layer while settle-time CLV code exists", () => {
+    const clvCodeExists = existsSync(
+      join(__dirname, "..", "lib", "performance", "public-clv-policy.ts")
+    );
+    const market = getCapability("market-line-intelligence");
+    if (clvCodeExists) {
+      expect(market!.currentTruth).not.toMatch(/no CLV tracking/i);
     }
   });
 });

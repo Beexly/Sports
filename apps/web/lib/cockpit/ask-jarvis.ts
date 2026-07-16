@@ -702,9 +702,10 @@ function answerMemoryStatus(_summary: OwnerSummary): JarvisAnswer {
     intent: "what-is-memory-status",
     question: JARVIS_QUESTIONS["what-is-memory-status"],
     answer:
-      "Jarvis has no persistent memory yet. Operational truth is rebuilt from the database " +
-      "on every load; architectural truth lives in version-controlled markdown. The memory " +
-      "protocol is designed and documented, but no store is wired.",
+      "No memory is recalled across sessions yet. The episodic store is built in code " +
+      "(schema, migration, state machine, review queue) but awaits owner activation: " +
+      "no confirmed production write exists. Operational truth is rebuilt from the " +
+      "database on every load; architectural truth lives in version-controlled markdown.",
     supportingState: [
       `Memory wired: ${memory.wired ? "YES" : "NO"}`,
       `Truth: ${memory.truth}`,

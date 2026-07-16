@@ -69,8 +69,10 @@ export interface NotWiredMemoryStatus {
   /** Always false until a persistent memory store is wired. */
   readonly wired: false;
   /** Per the 2026-06-12 build spec: Postgres is the only canonical store;
-   * mem0/vector is retrieval-only and can never be the authority. */
-  readonly store: "Not Connected";
+   * mem0/vector is retrieval-only and can never be the authority. The label
+   * reflects the 2026-07-11 truth reconciliation: the store is implemented
+   * in code but no production write is confirmed from this posture. */
+  readonly store: "Built, not activated";
   readonly truth: string;
   readonly protocolDocs: readonly string[];
   readonly nextAction: string;
@@ -166,11 +168,17 @@ const OPERATING_LOOP: readonly OperatingPhasePosture[] = [
       "execution path; manual workers are the only act surface.",
   },
   {
+    // Status stays NOT_WIRED even though the store now exists in code: the
+    // documented promotion criteria (JARVIS_MEMORY_PROTOCOL.md) require a
+    // confirmed production write, which remains an owner action. Code
+    // existence alone never promotes this phase.
     phase: "REMEMBER",
     status: "NOT_WIRED",
     truth:
-      "No persistent memory exists. Context is rebuilt fresh from OwnerSummary every " +
-      "load. The memory protocol is designed in docs/ai/jarvis/.",
+      "The episodic store is built in code (schema, migration, state machine, " +
+      "/cockpit/memory review queue) but not activated: no confirmed production " +
+      "write exists and nothing is recalled across sessions. Context is rebuilt " +
+      "fresh from OwnerSummary every load.",
   },
   {
     phase: "AUDIT",
@@ -215,20 +223,22 @@ export function buildCapabilityStats(): CapabilityStats {
   };
 }
 
-// Returns the honest memory posture: protocol designed, store not wired.
+// Returns the honest memory posture: store built in code, not activated.
 export function buildMemoryStatus(): MemoryStatus {
   return {
     wired: false,
-    store: "Not Connected",
+    store: "Built, not activated",
     truth:
-      "Jarvis has no persistent memory. Operational truth is rebuilt from the database " +
-      "on every load; architectural truth lives in version-controlled markdown. " +
-      "Nothing is recalled across sessions.",
+      "The episodic store is implemented in code (schema, migration, state machine, " +
+      "review queue) but not activated: no confirmed production write exists and " +
+      "nothing is recalled across sessions. Operational truth is rebuilt from the " +
+      "database on every load; architectural truth lives in version-controlled markdown.",
     protocolDocs: MEMORY_PROTOCOL_DOCS,
     nextAction:
-      "Wire an episodic memory store that captures owner decisions with timestamps, " +
-      "source references, review state, and recall metadata per JARVIS_MEMORY_PROTOCOL.md. " +
-      "Postgres first: vector/mem0 is retrieval-only, never the source of truth.",
+      "Owner activation: confirm the jarvis_memory_protocol migration is applied in " +
+      "production and record the first governed memory write, then promote per the " +
+      "JARVIS_MEMORY_PROTOCOL.md criteria. Postgres is canonical: vector/mem0 is " +
+      "retrieval-only, never the source of truth.",
     lastWritten: null,
     lastRecalled: null,
     candidatesAwaitingApproval: null,
