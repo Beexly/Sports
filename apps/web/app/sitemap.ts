@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { loadPublicJournalEntries } from "@/lib/journal/load";
 import { SITE_URL } from "@/lib/seo/site-url";
+import { slugify } from "@/lib/seo/sports-jsonld";
 import { db } from "@sports/db";
 
 /**
@@ -77,14 +78,6 @@ const ROUTES: ReadonlyArray<{
   { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" },
 ];
 
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
 /** Load upcoming + recent games for preview page URLs (bounded, DB-safe). */
 async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
   try {
@@ -95,7 +88,7 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
       orderBy: { commenceTime: "desc" },
       take: 2000, // well within sitemap's 50 k URL limit
       select: {
-        sportId: true,
+        sport: { select: { name: true } }, // required relation — one joined query
         awayTeamName: true,
         homeTeamName: true,
         commenceTime: true,
@@ -105,8 +98,13 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
 
     const baseUrl = SITE_URL;
 
+    // The [sport] segment is slugify(Sport.name) — the canonical form the
+    // preview page renders (legacy cuid URLs 308 to it). Known edge: if two
+    // active sports ever shared a name-slug, the loser's game URLs would
+    // resolve to the winner's namespace and 404 at game lookup — acceptable,
+    // guarded by the resolver's ambiguity tests + zero collisions in seed data.
     return games.map((g) => ({
-      url: `${baseUrl}/preview/${slugify(g.sportId)}/${slugify(g.awayTeamName)}-vs-${slugify(g.homeTeamName)}`,
+      url: `${baseUrl}/preview/${slugify(g.sport.name)}/${slugify(g.awayTeamName)}-vs-${slugify(g.homeTeamName)}`,
       lastModified: g.updatedAt,
       changeFrequency: "hourly" as const,
       priority: 0.7,

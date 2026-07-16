@@ -5,8 +5,22 @@
  * page load we find the matching Game row, attach the best published pick if one
  * exists, then spread the result from buildMatchupPreview() for metadata + JSON-LD.
  *
- * Graceful degradation: if the DB is unavailable or the game isn't found, returns
- * 404. If no pick exists yet the page still renders matchup details + JSON-LD.
+ * URL forms — the [sport] segment accepts two shapes, one canonical:
+ *
+ *  - CANONICAL: the human sport slug, `slugify(Sport.name)` ("nfl", "nba").
+ *    This is the only form the sitemap emits and the only form that renders.
+ *  - LEGACY: the Sport cuid (the page used to query `Game.sportId` with the
+ *    raw param, so cuid URLs got indexed). Legacy cuids — and non-canonical
+ *    casing like "NFL" — 308 (`permanentRedirect`) to the slug form BEFORE any
+ *    metadata or HTML is emitted, in both `generateMetadata` and the page, so
+ *    link equity transfers and the cuid never reaches an SEO surface. The
+ *    legacy handler is kept indefinitely: cuids differ per environment, so no
+ *    config-level redirect list is possible. Resolution lives in
+ *    `@/lib/preview/sport-resolution` (lowest `Sport.key` wins on slug ties).
+ *
+ * Graceful degradation: if the DB is unavailable, the sport is unknown, or the
+ * game isn't found, returns 404. If no pick exists yet the page still renders
+ * matchup details + JSON-LD.
  *
  * Paywall (CLAUDE.md rule #3 — server-side only): this is a PUBLIC surface, but
  * two of its values are the platform's paid metrics, gated for FREE on the board
@@ -25,14 +39,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { jsonLdScript } from "@/lib/seo/json-ld";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Script from "next/script";
 import { db } from "@sports/db";
 import {
   buildMatchupPreview,
+  slugify,
   type MatchupPreviewInput,
   type MatchupPick,
 } from "@/lib/seo/sports-jsonld";
+import { resolveSportParam } from "@/lib/preview/sport-resolution";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
@@ -45,15 +61,7 @@ export const dynamic = "force-dynamic";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
-async function loadGameForSlug(sport: string, slug: string) {
+async function loadGameForSlug(sportId: string, slug: string) {
   const vsIdx = slug.indexOf("-vs-");
   if (vsIdx === -1) return null;
   const awayPart = slug.slice(0, vsIdx);
@@ -63,7 +71,7 @@ async function loadGameForSlug(sport: string, slug: string) {
   try {
     const candidates = await db.game.findMany({
       where: {
-        sportId: sport,
+        sportId,
         status: { in: ["SCHEDULED", "LIVE", "FINAL"] },
       },
       orderBy: { commenceTime: "desc" },
@@ -100,13 +108,13 @@ async function loadGameForSlug(sport: string, slug: string) {
 type LoadedGame = NonNullable<Awaited<ReturnType<typeof loadGameForSlug>>>;
 
 function toMatchupInput(
-  sport: string,
+  sportName: string,
   game: LoadedGame,
   canSeeConfidence: boolean,
 ): MatchupPreviewInput {
   const raw = game.picks[0] ?? null;
   const base = {
-    sport,
+    sport: sportName,
     homeTeam: game.homeTeamName,
     awayTeam: game.awayTeamName,
     startTimeIso: game.commenceTime.toISOString(),
@@ -154,9 +162,9 @@ function toMatchupInput(
  * template minus the paid confidence clause, so the free-visible pick facts
  * (selection + line) stay in the SERP snippet without leaking the number.
  */
-function freeSafeDescription(sport: string, game: LoadedGame): string {
+function freeSafeDescription(sportName: string, game: LoadedGame): string {
   const raw = game.picks[0] ?? null;
-  const sportUpper = sport.toUpperCase();
+  const sportUpper = sportName.toUpperCase();
   const lead = raw
     ? `${raw.selection} ${raw.pickType === "MONEYLINE" ? "ML" : raw.line}.`
     : "Model read, line, and matchup context.";
@@ -173,20 +181,27 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { sport, slug } = await params;
+  const { sport: sportParam, slug } = await params;
+  const resolution = await resolveSportParam(sportParam);
+  if (resolution.kind === "unknown") return { title: "Preview not found" };
+  if (resolution.kind === "redirect") {
+    // Legacy cuid or non-canonical casing — 308 before ANY metadata is emitted
+    // (permanentRedirect throws, so no cuid ever reaches an SEO surface).
+    permanentRedirect(`/preview/${resolution.sport.slug}/${slug}`);
+  }
   const [game, viewer] = await Promise.all([
-    loadGameForSlug(sport, slug),
+    loadGameForSlug(resolution.sport.id, slug),
     getViewerEntitlements(),
   ]);
   if (!game) return { title: "Preview not found" };
 
-  const input = toMatchupInput(sport, game, viewer.canSeeConfidence);
+  const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);
   const preview = buildMatchupPreview(input);
   // Entitled viewers keep the existing description (confidence included);
   // everyone else — crawlers are anonymous → FREE — gets the free-safe variant.
   const description = viewer.canSeeConfidence
     ? preview.metadata.description
-    : freeSafeDescription(sport, game);
+    : freeSafeDescription(resolution.sport.name, game);
 
   return {
     title: preview.metadata.title,
@@ -209,16 +224,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function PreviewPage({ params }: Props) {
-  const { sport, slug } = await params;
+  const { sport: sportParam, slug } = await params;
+  const resolution = await resolveSportParam(sportParam);
+  if (resolution.kind === "unknown") notFound();
+  if (resolution.kind === "redirect") {
+    // Legacy cuid or non-canonical casing — 308 to the canonical slug form
+    // before any query or render work. The matchup slug passes through
+    // untouched; a bad one 404s on the canonical URL after the hop.
+    permanentRedirect(`/preview/${resolution.sport.slug}/${slug}`);
+  }
   // Resolve the viewer's entitlements server-side (anonymous → FREE, fail-closed)
   // BEFORE anything paid is selected for render (CLAUDE.md rule #3).
   const [game, viewer] = await Promise.all([
-    loadGameForSlug(sport, slug),
+    loadGameForSlug(resolution.sport.id, slug),
     getViewerEntitlements(),
   ]);
   if (!game) notFound();
 
-  const input = toMatchupInput(sport, game, viewer.canSeeConfidence);
+  const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);
   const preview = buildMatchupPreview(input);
   const pick = game.picks[0] ?? null;
 
@@ -253,7 +276,7 @@ export default async function PreviewPage({ params }: Props) {
         {/* Header */}
         <header className="space-y-2">
           <p className="text-sm uppercase tracking-wide text-ion-2">
-            {sport.toUpperCase()} · {formattedDate}
+            {resolution.sport.name.toUpperCase()} · {formattedDate}
           </p>
           <h1 className="text-3xl font-bold text-ion-white">
             {game.awayTeamName} vs {game.homeTeamName}
