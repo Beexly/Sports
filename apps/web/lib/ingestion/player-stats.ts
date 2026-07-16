@@ -68,10 +68,10 @@ export async function ingestPlayerWeeklyStats(
   const rightsSnapshot = gate.rightsSnapshot;
 
   // 2. Fetch the real nflverse weekly asset.
-  let rows: readonly CsvRow[];
+  let fetched: readonly CsvRow[];
   try {
     const table = await fetchTable("player_stats_week", season);
-    rows = table.records;
+    fetched = table.records;
   } catch (error) {
     return {
       status: "source-error",
@@ -81,6 +81,14 @@ export async function ingestPlayerWeeklyStats(
       error: error instanceof Error ? error.message : "fetch failed",
     };
   }
+
+  // 2b. Hard-filter to the REQUESTED season. The combined nflverse
+  // `player_stats_week` asset spans every season since 1999 in one file; the
+  // cron/planner contract (and the Vercel maxDuration budget) is exactly ONE
+  // season per invocation. Without this filter every run would attempt ~26
+  // seasons of sequential upserts, time out, and never advance the
+  // data-derived backfill cursor.
+  const rows = fetched.filter((r) => int(r["season"]) === season);
 
   // 3. Dedupe players (last row wins for the denormalized fields).
   const players = new Map<

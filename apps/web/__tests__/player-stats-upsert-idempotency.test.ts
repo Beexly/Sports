@@ -104,4 +104,38 @@ describe("player-stats ingestion idempotency", () => {
     expect(week1?.["rushingYards"]).toBe(78);
     expect(week1?.["carries"]).toBe(12);
   });
+
+  it("persists ONLY the requested season from the combined multi-season nflverse asset", async () => {
+    // The real `player_stats_week` asset is one combined file spanning every
+    // season since 1999. The cron/planner contract is one season per run —
+    // the writer must ignore every out-of-window row, both for stats AND for
+    // the player-dedupe upserts.
+    const base = { position: "RB", recent_team: "KC", opponent_team: "DEN", season_type: "REG" };
+    const multiSeason: { records: readonly Row[] } = {
+      records: [
+        { ...base, player_id: "99-old", player_display_name: "Ancient Back", season: "1999", week: "1", carries: "20", rushing_yards: "88" },
+        { ...base, player_id: "00-1", player_display_name: "Alpha Back", season: "2023", week: "1", carries: "10", rushing_yards: "40" },
+        { ...base, player_id: "00-1", player_display_name: "Alpha Back", season: "2024", week: "1", carries: "12", rushing_yards: "71" },
+        { ...base, player_id: "00-1", player_display_name: "Alpha Back", season: "2024", week: "2", carries: "15", rushing_yards: "84" },
+        { ...base, player_id: "00-3", player_display_name: "Future Guy", season: "2025", week: "1", carries: "9", rushing_yards: "33" },
+      ],
+    };
+
+    const result = await ingestPlayerWeeklyStats(2024, { now: NOW, fetcher: async () => multiSeason });
+    expect(result.status).toBe("ok");
+
+    // Only the 2024 rows were persisted; 1999/2023/2025 rows were skipped.
+    expect(result.statsUpserted).toBe(2);
+    expect(fakeDb.stats.size).toBe(2);
+    expect(fakeDb.stats.has("pid-00-1|2024|1|REG")).toBe(true);
+    expect(fakeDb.stats.has("pid-00-1|2024|2|REG")).toBe(true);
+
+    // Player upserts are ALSO scoped to the requested season — no player rows
+    // for athletes who only appear in out-of-window seasons.
+    expect(result.playersUpserted).toBe(1);
+    expect(fakeDb.players.size).toBe(1);
+    expect(fakeDb.players.has("00-1")).toBe(true);
+    expect(fakeDb.players.has("99-old")).toBe(false);
+    expect(fakeDb.players.has("00-3")).toBe(false);
+  });
 });
