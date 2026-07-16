@@ -48,6 +48,7 @@ import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
+import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archive.js";
 
 export interface SportConfig {
   key: SupportedSportKey;
@@ -280,6 +281,19 @@ export async function processSport(
       if (!gameRecord) continue;
 
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
+
+      // Archive OPEN/INTERIM odds snapshots for the Glass Ledger (handoff §2 P0).
+      // Inert by default — captureLineSnapshotsIfEnabled no-ops (zero DB calls)
+      // unless LINE_ARCHIVE_ENABLED=true, and never throws, so it can never block
+      // or fail this refresh path. Persists odds already fetched above; adds no
+      // new Odds API calls.
+      await captureLineSnapshotsIfEnabled({
+        db,
+        gameId: gameRecord.id,
+        capturedAt: fetchedAt,
+        rows: toLineSnapshotRows(gameOdds),
+      });
+
       const bookmakerCoverageMax = new Set(gameOdds.map((o) => o.bookmaker)).size;
 
       const spreadOdds = gameOdds.filter((o) => o.market === "SPREADS" && o.spread !== undefined);

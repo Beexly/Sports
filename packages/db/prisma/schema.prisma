@@ -237,6 +237,7 @@ model Game {
   gateDecisions       GateDecision[]
   creatorAssets       CreatorAsset[]
   claudeApiCalls      ClaudeApiCallRecord[]
+  oddsLineSnapshots   OddsLineSnapshot[]
 
   @@index([sportId])
   @@index([commenceTime])
@@ -321,6 +322,39 @@ model Odds {
   // avoids sorting the whole per-game partition.
   @@index([gameId, fetchedAt])
   @@map("odds")
+}
+
+// OddsLineSnapshot — forward line archive for the Glass Ledger (handoff §2 P0):
+// timestamped OPENING / INTERIM / CLOSING odds snapshots, one row per
+// (game, market, book, side) capture. Purely additive and INERT by default —
+// gated by LINE_ARCHIVE_ENABLED (see
+// packages/ingestion-pipeline/src/line-archive.ts). Persists odds the existing
+// refresh cycle already fetched from The Odds API; adds no new upstream calls.
+//
+// Phase is stamped at write time:
+//   - "OPEN"     the first snapshot ever persisted for (gameId, market)
+//   - "INTERIM"  every later mid-cycle capture before kickoff
+//   - "CLOSE"    re-tagged onto the last pre-kickoff row per (market, book,
+//                side) by the settle-time pass (markClosingSnapshots) — that
+//                pass exists but is NOT wired into settle-sport.ts yet.
+model OddsLineSnapshot {
+  id         String   @id @default(cuid())
+  gameId     String
+  capturedAt DateTime
+  phase      String   // "OPEN" | "INTERIM" | "CLOSE"
+  book       String
+  market     String   // "SPREAD" | "MONEYLINE" | "TOTAL"
+  side       String
+  price      Float    // price at capture, in the source's native odds format
+  line       Float?   // points line at capture (spread/total); null for moneyline
+  source     String
+  createdAt  DateTime @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId, market, capturedAt])
+  @@index([phase, capturedAt])
+  @@map("odds_line_snapshots")
 }
 
 // ============================================================
