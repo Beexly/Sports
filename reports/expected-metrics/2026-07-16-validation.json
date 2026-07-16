@@ -1,0 +1,249 @@
+{
+  "generatedAt": "2026-07-16T04:07:23.277Z",
+  "script": "scripts/validation/nfl-expected-metrics-validation.ts",
+  "season": 2025,
+  "seasonType": "REG",
+  "provenance": {
+    "sourceId": "nflverse",
+    "datasetKey": "pbp",
+    "releaseTag": "pbp",
+    "sourceUrl": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.csv",
+    "servedBy": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.csv",
+    "attempts": 1,
+    "fetchTimestamp": "2026-07-16T04:07:03.776Z",
+    "license": "CC-BY-4.0",
+    "attribution": "Data via nflverse (nflverse-data), licensed CC BY 4.0.",
+    "rightsSnapshot": {
+      "source_id": "nflverse",
+      "source_url": "https://github.com/nflverse/nflverse-data",
+      "status": "approved_open_license",
+      "automation_allowed": true,
+      "public_logged_off_allowed": true,
+      "commercial_display_allowed": true,
+      "storage_allowed": true,
+      "derived_analytics_allowed": true,
+      "model_training_allowed": true,
+      "attribution_required": true,
+      "attribution_text": "Data from nflverse (https://github.com/nflverse), CC-BY-4.0",
+      "reviewed_at": "2026-06-10",
+      "snapshotted_at": "2026-07-16T04:07:00.521Z"
+    },
+    "sourceRows": 48771,
+    "mapperCounts": {
+      "sourceRows": 48771,
+      "regRows": 46452,
+      "droppedNonReg": 2319,
+      "droppedOffSeason": 0,
+      "droppedNoPlayId": 0,
+      "epEligible": 38841,
+      "wpEligible": 38673,
+      "tieGamesExcludedFromWp": 1,
+      "yardlineFilled": 3365
+    },
+    "columnsProjected": 40,
+    "ftnColumnsUsed": 0
+  },
+  "models": {
+    "ep": {
+      "modelVersion": "gse-ep-v1",
+      "method": "multinomial-ovr-logistic",
+      "featureKeys": [
+        "down",
+        "ydstogo",
+        "yardline100",
+        "yardline100Squared",
+        "goalToGo",
+        "halfSecondsRemaining"
+      ],
+      "featureSchemaHash": "dd4831b9",
+      "sampleSize": 38841
+    },
+    "wp": {
+      "modelVersion": "gse-wp-v1",
+      "method": "logistic-regression",
+      "featureKeys": [
+        "scoreDifferential",
+        "gameSecondsRemaining",
+        "scoreDiffPerSqrtTime",
+        "yardline100",
+        "down",
+        "ydstogo",
+        "timeoutDifferential",
+        "spreadLine"
+      ],
+      "featureSchemaHash": "5678f5c9",
+      "sampleSize": 38673
+    }
+  },
+  "calibration": {
+    "grainNote": "n counts paired plays; engine reason strings say 'players' at every grain.",
+    "ep": {
+      "report": {
+        "n": 36510,
+        "pearson": 0.9615,
+        "spearman": 0.9671,
+        "rmse": 0.4679,
+        "mae": 0.3656,
+        "bias": 0.0064,
+        "ourMean": 2.0049,
+        "truthMean": 1.9985
+      },
+      "verdict": "graduated",
+      "reason": "Pearson 0.9615 ≥ 0.9 over 36510 players — reproduces ground truth.",
+      "thresholds": {
+        "minSample": 200,
+        "graduatedPearson": 0.9,
+        "provisionalPearson": 0.75
+      }
+    },
+    "epa": {
+      "report": {
+        "n": 36075,
+        "pearson": 0.9373,
+        "spearman": 0.9112,
+        "rmse": 0.4367,
+        "mae": 0.32,
+        "bias": -0.0251,
+        "ourMean": -0.1139,
+        "truthMean": -0.0888
+      },
+      "verdict": "graduated",
+      "reason": "Pearson 0.9373 ≥ 0.9 over 36075 players — reproduces ground truth.",
+      "thresholds": {
+        "minSample": 200,
+        "graduatedPearson": 0.9,
+        "provisionalPearson": 0.75
+      },
+      "thresholdFamily": "ep"
+    },
+    "wp": {
+      "report": {
+        "n": 38673,
+        "pearson": 0.9255,
+        "spearman": 0.9219,
+        "rmse": 0.1146,
+        "mae": 0.0853,
+        "bias": 0.0033,
+        "ourMean": 0.5095,
+        "truthMean": 0.5062
+      },
+      "verdict": "graduated",
+      "reason": "Pearson 0.9255 ≥ 0.9 over 38673 players — reproduces ground truth.",
+      "thresholds": {
+        "minSample": 200,
+        "graduatedPearson": 0.9,
+        "provisionalPearson": 0.8
+      }
+    },
+    "wpa": {
+      "report": {
+        "n": 35738,
+        "pearson": 0.8056,
+        "spearman": 0.8329,
+        "rmse": 0.0226,
+        "mae": 0.0127,
+        "bias": -0.0011,
+        "ourMean": -0.0023,
+        "truthMean": -0.0013
+      },
+      "verdict": "insufficient-sample",
+      "reason": "Informational only — WPA carries no graduation gate in v1.",
+      "thresholds": null,
+      "informational": true
+    }
+  },
+  "successRate": {
+    "modelVersion": "gse-success-v1",
+    "byDown": [
+      {
+        "key": "down:4",
+        "plays": 882,
+        "successes": 489,
+        "successRate": 0.5544
+      },
+      {
+        "key": "down:1",
+        "plays": 14267,
+        "successes": 7311,
+        "successRate": 0.5124
+      },
+      {
+        "key": "down:2",
+        "plays": 10864,
+        "successes": 5141,
+        "successRate": 0.4732
+      },
+      {
+        "key": "down:3",
+        "plays": 6801,
+        "successes": 2715,
+        "successRate": 0.3992
+      }
+    ],
+    "bySituation": [
+      {
+        "key": "situation:early_short",
+        "plays": 2068,
+        "successes": 1354,
+        "successRate": 0.6547
+      },
+      {
+        "key": "situation:late_short",
+        "plays": 2604,
+        "successes": 1582,
+        "successRate": 0.6075
+      },
+      {
+        "key": "situation:early_medium",
+        "plays": 4057,
+        "successes": 2113,
+        "successRate": 0.5208
+      },
+      {
+        "key": "situation:early_long",
+        "plays": 19006,
+        "successes": 8985,
+        "successRate": 0.4727
+      },
+      {
+        "key": "situation:late_medium",
+        "plays": 2298,
+        "successes": 968,
+        "successRate": 0.4212
+      },
+      {
+        "key": "situation:late_long",
+        "plays": 2781,
+        "successes": 654,
+        "successRate": 0.2352
+      }
+    ],
+    "teams": 32,
+    "qualifiedPlayers": 336
+  },
+  "drives": {
+    "modelVersion": "gse-drives-v1",
+    "drives": 5745,
+    "plays": 46452,
+    "partitionInvariantHolds": true,
+    "resultDistribution": {
+      "PUNT": 1933,
+      "FG": 931,
+      "TD": 1329,
+      "END_OF_HALF": 424,
+      "MISSED_FG": 154,
+      "TURNOVER_ON_DOWNS": 362,
+      "TURNOVER": 599,
+      "SAFETY": 12,
+      "OTHER": 1
+    },
+    "meanPointsPerDrive": 2.1095,
+    "meanSuccessRate": 0.4006,
+    "meanStartYardline": 52.525,
+    "yardlineFilled": 3365
+  },
+  "claims": {
+    "scope": "engineering-evidence-only",
+    "note": "Historical, descriptive measurement of agreement between our fitted EP/WP surfaces and the nflverse referee columns. Referee values are used only as the y-axis of a correlation and are not served. Nothing here is a projection, pick, betting-performance figure, or product claim."
+  }
+}
