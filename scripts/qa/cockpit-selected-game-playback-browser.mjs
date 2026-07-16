@@ -32,7 +32,7 @@ try {
 
     const pathname = `/cockpit/market-twin/${encodeURIComponent(gameId)}`;
     const response = await page.goto(`${baseUrl}${pathname}`, {
-      waitUntil: "networkidle",
+      waitUntil: "domcontentloaded",
       timeout: 60_000,
     });
     await page.getByRole("heading", { name: "Playback unavailable" }).waitFor({
@@ -63,6 +63,8 @@ try {
         hasUnavailableReason: normalizedText.includes("game not found"),
         hasUnavailableMessage: normalizedText.includes("no persisted game matched this id"),
         hasBrainAnswer: normalizedText.includes("deterministic brain answer"),
+        hasAutopsyProjection: normalizedText.includes("postgame autopsy projection"),
+        hasStudioPackage: normalizedText.includes("draft-only studio package"),
         hasRawMarker: normalizedText.includes("raw_private_vector") || normalizedText.includes("rawinternaloutput"),
         hasOverlay: Boolean(document.querySelector("[data-nextjs-dialog], .vite-error-overlay, #webpack-dev-server-client-overlay")),
         horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
@@ -99,6 +101,8 @@ try {
       !state.hasUnavailableReason ? "reason-missing" : null,
       !state.hasUnavailableMessage ? "message-missing" : null,
       state.hasBrainAnswer ? "invented-brain-answer" : null,
+      state.hasAutopsyProjection ? "invented-autopsy-projection" : null,
+      state.hasStudioPackage ? "invented-studio-package" : null,
       state.hasRawMarker ? "raw-output-marker" : null,
       state.hasOverlay ? "framework-overlay" : null,
       state.horizontalOverflow ? "horizontal-overflow" : null,

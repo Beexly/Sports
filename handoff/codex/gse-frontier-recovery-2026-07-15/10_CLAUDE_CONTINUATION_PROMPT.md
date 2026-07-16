@@ -39,12 +39,14 @@ git diff --check
 - Loader: `apps/web/lib/cockpit/load-selected-game-playback.ts`
 - Renderer: `apps/web/components/cockpit/selected-game-playback.tsx`
 - Browser QA: `scripts/qa/cockpit-selected-game-playback-browser.mjs`
-- Evidence: focused Cockpit/static suite 164/164; browser QA desktop/mobile; root lint/typecheck/test/guardrails/build; exact TypeScript no-excuse checker; diff check.
+- Surface: selected-game Twin, deterministic cited Brain, postgame autopsy projection, and draft-only Studio package all come from the same `buildPlaybackConsumerBundle()` result.
+- Safety: the Studio package is read-only, `DRAFT_ONLY`, human-review-blocked, and has no external posting action. Unavailable playback renders none of Brain/autopsy/Studio.
+- Evidence: focused Cockpit/static suite 165/165; browser QA desktop/mobile; root lint/typecheck/test/guardrails/build; exact TypeScript no-excuse checker; diff check.
 - Boundary: local browser proof used real production-board game ID `cmrm6vyzq00b5ozb9rjmuw9hw` against a deliberate stub DB. This proves the actual route's honest unavailable path, not a live eligible playback row.
 
 ## Next task
 
-Expose the already-derived postgame autopsy and draft-only Studio package from the same selected-game stream inside Cockpit. Keep it owner-only, reuse the selected-game loader/bundle, do not create another truth store, do not add fixture events, and do not open any publication path.
+Add live-row proof when an eligible persisted playback record exists. Capture the available route in browser QA with populated Twin, Brain, postgame autopsy, and draft-only Studio sections. Do not add fixture events, do not create another truth store, and do not open any publication path.
 
 ## Hard directives
 

@@ -73,7 +73,7 @@ function AvailablePlayback({
   readonly renderPageHeading: PageHeadingRenderer;
   readonly result: Extract<SelectedGamePlaybackResult, { readonly status: "AVAILABLE" }>;
 }): JSX.Element {
-  const { twin, brain } = result.bundle;
+  const { autopsy, brain, mediaStudio, twin } = result.bundle;
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-3">
@@ -144,6 +144,88 @@ function AvailablePlayback({
             Missing stored fields: {brain.missingData.join(", ")}.
           </p>
         )}
+      </section>
+
+      <section className="rounded-2xl border border-rose-400/30 bg-rose-400/5 p-5" aria-labelledby="postgame-autopsy-projection">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-wide text-ion-3">Postgame read model</p>
+            <h2 id="postgame-autopsy-projection" className="mt-1 text-lg font-semibold text-ion-white">Postgame autopsy projection</h2>
+          </div>
+          <span className="rounded border border-rose-400/30 bg-rose-400/10 px-2 py-1 font-mono text-xs text-rose-100">
+            {autopsy.status.replaceAll("_", " ")}
+          </span>
+        </div>
+        <p className="mt-4 text-sm leading-6 text-ion-2">
+          This is derived only from captured settlement events in the selected-game envelope. If settlement evidence is absent, the autopsy remains unavailable instead of being inferred.
+        </p>
+        <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+          <Metric label="Result" value={autopsy.result ?? "Not captured"} />
+          <Metric label="CLV evidence" value={autopsy.clvState.replaceAll("_", " ")} />
+          <Metric label="Calibration evidence" value={autopsy.calibrationState.replaceAll("_", " ")} />
+          <Metric label="Citation count" value={String(autopsy.citations.length)} />
+        </dl>
+        <div className="mt-5 rounded border border-rose-400/20 bg-obsidian/40 p-3">
+          <p className="font-mono text-[10px] uppercase tracking-wide text-ion-3">Learning state</p>
+          <p className="mt-2 text-sm leading-6 text-ion-1">{autopsy.learningState}</p>
+        </div>
+        {autopsy.citations.length > 0 && (
+          <div className="mt-5">
+            <p className="font-mono text-[10px] uppercase tracking-wide text-ion-3">Autopsy citations</p>
+            <ul className="mt-2 flex flex-wrap gap-2" aria-label="Postgame autopsy citations">
+              {autopsy.citations.map((citation) => (
+                <li key={citation} className="rounded border border-rose-400/30 px-2 py-1 font-mono text-xs text-rose-100">
+                  {citation}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+
+      <section className="rounded-2xl border border-plasma/30 bg-plasma/5 p-5" aria-labelledby="draft-only-studio-package">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-wide text-ion-3">Studio read model</p>
+            <h2 id="draft-only-studio-package" className="mt-1 text-lg font-semibold text-ion-white">Draft-only Studio package</h2>
+          </div>
+          <span className="rounded border border-plasma/30 bg-plasma/10 px-2 py-1 font-mono text-xs text-plasma">
+            {mediaStudio.state.replaceAll("_", " ")}
+          </span>
+        </div>
+        <p className="mt-4 text-sm leading-6 text-ion-2">
+          Scenes are review notes projected from the same playback events. This surface has no external posting action and no separate content truth store.
+        </p>
+        <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+          <Metric label="Scenes" value={String(mediaStudio.scenes.length)} />
+          <Metric label="External posting allowed" value={mediaStudio.autoPublishAllowed ? "Yes" : "No"} />
+          <Metric label="Distribution preflight" value={mediaStudio.exportPreflight.allowed ? "Allowed" : "Blocked"} />
+          <Metric label="Envelope digest" value={mediaStudio.envelopeDigest} />
+        </dl>
+        <div className="mt-5">
+          <p className="font-mono text-[10px] uppercase tracking-wide text-ion-3">Preflight blockers</p>
+          <ul className="mt-2 flex flex-wrap gap-2" aria-label="Studio package preflight blockers">
+            {mediaStudio.exportPreflight.blockers.map((blocker) => (
+              <li key={blocker} className="rounded border border-amber-500/30 bg-amber-500/5 px-2 py-1 font-mono text-xs text-amber-100">
+                {blocker}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <ol className="mt-5 space-y-2" aria-label="Draft-only Studio scenes">
+          {mediaStudio.scenes.map((scene) => (
+            <li key={scene.id} className="rounded border border-titanium/30 bg-obsidian/40 px-3 py-3 text-sm leading-6 text-ion-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-mono text-xs text-plasma">{scene.kind}</span>
+                <span className="rounded border border-titanium/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-ion-3">
+                  {scene.reviewStatus.replaceAll("_", " ")}
+                </span>
+              </div>
+              <p className="mt-2">{scene.script}</p>
+              <p className="mt-2 font-mono text-xs text-ion-3">{scene.eventId} · {scene.eventTime}</p>
+            </li>
+          ))}
+        </ol>
       </section>
     </div>
   );

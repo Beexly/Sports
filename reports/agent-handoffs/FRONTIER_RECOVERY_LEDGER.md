@@ -15,14 +15,14 @@ What changed:
 
 - Added `apps/web/app/cockpit/market-twin/[gameId]/page.tsx` with `requireCockpitAdmin()` before the selected-game loader.
 - Added `apps/web/lib/cockpit/load-selected-game-playback.ts`, which validates the route game ID, calls `loadGameRoom()` once with the full operator viewer, returns fail-closed unavailable reasons for invalid, missing, uncaptured, or withheld playback, and builds `buildPlaybackConsumerBundle()` only from the governed Game Room playback envelope.
-- Added `apps/web/components/cockpit/selected-game-playback.tsx`, rendering selected-game Twin and deterministic Brain answer from one bundle while excluding raw internal output and explicitly limiting causal scope to observed transitions.
+- Added `apps/web/components/cockpit/selected-game-playback.tsx`, rendering selected-game Twin, deterministic Brain answer, postgame autopsy projection, and draft-only Studio package from one bundle while excluding raw internal output and explicitly limiting causal scope to observed transitions.
 - Linked each persisted Market Twin row to `/cockpit/market-twin/[gameId]`.
 - Added `scripts/qa/cockpit-selected-game-playback-browser.mjs` and desktop/mobile screenshots for the honest unavailable route.
 
 Validation:
 
-- Focused Cockpit/static suite: 164/164 passed.
-- Browser QA: desktop and mobile passed for route `/cockpit/market-twin/cmrm6vyzq00b5ozb9rjmuw9hw`, including one H1, main landmark, honest unavailable state, no Brain/raw output, no overlay, no console/page errors, no document overflow at 200% text zoom, and zero axe WCAG A/AA violations.
+- Focused Cockpit/static suite: 165/165 passed.
+- Browser QA: desktop and mobile passed for route `/cockpit/market-twin/cmrm6vyzq00b5ozb9rjmuw9hw`, including one H1, main landmark, honest unavailable state, no Brain/autopsy/Studio/raw output, no overlay, no console/page errors, no document overflow at 200% text zoom, and zero axe WCAG A/AA violations.
 - `npm.cmd run lint`: exit 0.
 - `npm.cmd run typecheck`: exit 0.
 - `npm.cmd test`: exit 0, 9,327/9,327 assertions passed across 746 files.
@@ -35,7 +35,7 @@ Boundary:
 
 - No migration, secret, production deployment, billing/auth/legal change, cron/provider action, or publication occurred.
 - Local browser proof used a real production-board game ID but a deliberate local stub DB, so it proves the actual route's honest unavailable path and not a live eligible playback row.
-- Postgame autopsy and draft-only Studio already consume the same `buildPlaybackConsumerBundle()` projection at the code level; a dedicated route-level Cockpit autopsy/Studio surface remains the next safe UI slice.
+- Postgame autopsy and draft-only Studio consume the same `buildPlaybackConsumerBundle()` projection and are now visible in the owner-only selected-game route when playback is available. Live eligible playback-row proof remains pending.
 
 ## Protected zones
 

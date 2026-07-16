@@ -12,7 +12,7 @@ The recovery branch turns a fragmented sports-intelligence repository into one f
 - PUBLIC, PAID, and COCKPIT projections derive from one canonical object and exclude raw internal output.
 - `/room/[gameId]` renders accessible Intelligence Playback with keyboard controls, scrubber, supporting and weakening evidence, reversal conditions, transcript, table, and an honest unavailable state.
 - Pure, tested projections feed selected-game Twin, deterministic Brain answer, postgame autopsy, and draft-only Media Studio packages without opening new publication paths.
-- `/cockpit/market-twin/[gameId]` gives owners an ADMIN-gated selected-game playback surface that loads one real persisted Game Room ID, builds Twin and deterministic Brain from the same governed envelope, and renders honest unavailable states when playback is absent or withheld.
+- `/cockpit/market-twin/[gameId]` gives owners an ADMIN-gated selected-game playback surface that loads one real persisted Game Room ID and renders Twin, deterministic Brain, postgame autopsy projection, and draft-only Media Studio package from the same governed envelope. It renders honest unavailable states when playback is absent or withheld.
 - Public fantasy routes fail closed behind a real-data release contract. Illustrative player pools cannot render publicly.
 
 ## Frontier contribution
@@ -24,6 +24,6 @@ The novel product primitive is an **epistemic flight recorder**: a deterministic
 - The public custom domain was verified reachable on 2026-07-15 (`galaxysportsedge.com` redirected to `www`, which returned `200` without a Vercel SSO wall). Vercel identifies the current READY production deployment as `main` SHA `3ce5c4a1`; this recovery branch is not deployed to production.
 - Production DB connectivity, cron execution, provider freshness, and real persisted playback rows were not verified.
 - No production migration, secret change, production deployment, billing/auth/legal change, publication, or destructive operation occurred.
-- Twin, Brain, autopsy, and Studio projections are code-level consumers, not publicly wired product surfaces.
+- Twin, Brain, autopsy, and Studio projections are wired only to owner-only Cockpit/Game Room code paths, not public product surfaces.
 - The selected-game Cockpit route is code- and local-browser verified, but no eligible live production playback row was proven. Local browser QA used a real production board game ID against the local stub DB and verified the honest `GAME_NOT_FOUND` path.
 - Current persistence cannot durably reconstruct every historical PASS decision or pick-specific recalibration effect.

@@ -32,7 +32,11 @@ const PUBLICATION: PublicationState = {
   reasonCodes: [],
 };
 
-function event(sequence: number, state: IntelligenceEvent["state"]): IntelligenceEvent {
+function event(
+  sequence: number,
+  state: IntelligenceEvent["state"],
+  overrides: Partial<IntelligenceEvent> = {},
+): IntelligenceEvent {
   const captured = state !== "UNKNOWN";
   return {
     id: `event-${sequence}`,
@@ -76,6 +80,7 @@ function event(sequence: number, state: IntelligenceEvent["state"]): Intelligenc
     clv: { state: "NOT_CAPTURED", reason: "No close." },
     calibration: { state: "NOT_CAPTURED", reason: "No settled outcome." },
     accessibleText: `${state} accessible event.`,
+    ...overrides,
   };
 }
 
@@ -102,6 +107,35 @@ function availableResult(): SelectedGamePlaybackResult {
       envelopeDigest: "digest-1",
       publication: PUBLICATION,
       events: EVENTS,
+    }),
+  };
+}
+
+function settledResult(): SelectedGamePlaybackResult {
+  const settled = event(3, "SETTLED", {
+    act: "AFTER_CLOSE",
+    settlement: { state: "CAPTURED", value: { result: "LOSS", settledAt: "2026-07-15T17:00:00.000Z" } },
+    clv: {
+      state: "CAPTURED",
+      value: { kind: "POINTS", value: 0.5, verdict: "BEAT_CLOSE", capturedAt: "2026-07-15T16:59:00.000Z" },
+    },
+    calibration: {
+      state: "CAPTURED",
+      value: {
+        effect: "Overstated totals edge after late weather move.",
+        recordedAt: "2026-07-15T17:05:00.000Z",
+      },
+    },
+  });
+  return {
+    status: "AVAILABLE",
+    gameId: "game-1",
+    matchup: "Chicago at Detroit",
+    bundle: buildPlaybackConsumerBundle({
+      gameId: "game-1",
+      envelopeDigest: "digest-1",
+      publication: PUBLICATION,
+      events: [...EVENTS, settled],
     }),
   };
 }
@@ -213,6 +247,31 @@ describe("selected-game Cockpit playback rendering", () => {
     expect(document.body.textContent).not.toContain("RAW_PRIVATE_VECTOR");
   });
 
+  it("renders the captured postgame autopsy and draft-only Studio package with no posting action", () => {
+    // Given
+    const result = settledResult();
+
+    // When
+    render(<SelectedGamePlayback result={result} />);
+
+    // Then
+    const autopsySection = screen.getByRole("region", { name: "Postgame autopsy projection" });
+    expect(within(autopsySection).getByText("READY")).toBeInTheDocument();
+    expect(within(autopsySection).getByText("LOSS")).toBeInTheDocument();
+    expect(within(autopsySection).getByText("Overstated totals edge after late weather move.")).toBeInTheDocument();
+    expect(within(screen.getByRole("list", { name: "Postgame autopsy citations" })).getByText("event-3"))
+      .toBeInTheDocument();
+
+    const studioSection = screen.getByRole("region", { name: "Draft-only Studio package" });
+    expect(within(studioSection).getAllByText("DRAFT ONLY").length).toBeGreaterThan(0);
+    expect(within(studioSection).getByText("No")).toBeInTheDocument();
+    expect(within(studioSection).getByText("Blocked")).toBeInTheDocument();
+    expect(within(screen.getByRole("list", { name: "Studio package preflight blockers" })).getByText("human reviewer required"))
+      .toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /publish|post|export/i })).toBeNull();
+    expect(document.body.textContent).not.toContain("RAW_PRIVATE_VECTOR");
+  });
+
   it("renders the unavailable reason without inventing a decision", () => {
     // Given
     const result: SelectedGamePlaybackResult = {
@@ -231,5 +290,7 @@ describe("selected-game Cockpit playback rendering", () => {
     expect(screen.getByRole("heading", { name: "Playback unavailable" })).toBeInTheDocument();
     expect(screen.getByText("No persisted game matched this ID.")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Deterministic Brain answer" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Postgame autopsy projection" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Draft-only Studio package" })).toBeNull();
   });
 });

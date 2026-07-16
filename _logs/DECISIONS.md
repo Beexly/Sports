@@ -228,3 +228,11 @@ improvements (each its own commit; full suite + build green throughout):
 - **Safety:** `requireCockpitAdmin()` runs before data loading; unavailable and withheld states are explicit; raw model output is excluded; the Brain answer is citation-backed and says causality is not inferred.
 - **Evidence:** Focused Cockpit/static suite 164/164; browser QA desktop/mobile with axe and 200% text zoom; root lint/typecheck/test/guardrails/build green; exact TypeScript no-excuse checker clean.
 - **Boundary:** No production DB, migration, cron/provider, deployment, secret, or publication action occurred. Browser proof used a production-board game ID against local stub DB and therefore proves the honest unavailable path, not a live playback row.
+
+## 2026-07-16 - Selected-game Cockpit exposes autopsy and draft-only Studio projections
+
+- **Decision:** Extend the same owner-only selected-game Cockpit route to render `bundle.autopsy` and `bundle.mediaStudio` from `buildPlaybackConsumerBundle()` instead of adding a Studio publisher, fixture event source, or second autopsy store.
+- **Why:** Postgame learning and content preparation must stay attached to the immutable Game Room envelope. Rendering the already-derived projections makes the operator surface useful without allowing explanation drift.
+- **Safety:** The autopsy section says unavailable when settlement evidence is not captured; the Studio section is read-only, `DRAFT_ONLY`, human-review-blocked, and exposes no external posting button or mutation path. Unavailable playback still renders none of Brain/autopsy/Studio.
+- **Evidence:** Focused Cockpit/static suite 165/165; selected-game tests cover captured autopsy, draft-only Studio package, preflight blockers, no posting action, unavailable non-invention, and raw-output exclusion.
+- **Boundary:** This remains code/local verification only. No live eligible playback row, production deployment, migration, production DB, provider, cron, secret, or publication action was touched.
