@@ -112,6 +112,16 @@ tunnel vision. Token-smart execution. This section IS the accounting.
 - PR #112 founder gates · PR #101 co-work migration · main hotfix merge — all
   still founder actions, unchanged.
 
+## OPEN PRs vs main (founder merges; merge #119 first — it fixes live money-truth grading)
+
+#119 salvage-settlement-guardrails · #120 glass-ledger-edge-engine (core build +
+review fixes da86d279) · #121 fantasy-engine-foundation-rebased (rename in
+flight before public use) · #122 clv-decomposition-reland-rebased · #123
+cockpit-page-auth-rebased · #124 frontier-superset-rebased (tasks #15-19
+revived, shadow-only). All six carry the metric-fixture alignment fix; all
+Vercel preview builds Ready. External review findings on #120: four fixed +
+pushed, fifth covered by the in-flight gate-integrity slice.
+
 ## Merge-ready branches on origin (founder merges; all verified green)
 
 - claude/fantasy-engine-foundation-rebased @ 1b9c38b3 — Fantasy Engine floor
