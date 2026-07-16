@@ -22,6 +22,13 @@ export type MatchupPick = {
   readonly type: "SPREAD" | "MONEYLINE" | "TOTAL";
   readonly selection: string;
   readonly line: number;
+  /**
+   * 0–100. The PAID metric (#114): callers must pass a pick only for viewers
+   * entitled to see confidence (`canSeeConfidence`) — un-entitled surfaces pass
+   * `pick: null` plus their own free-safe `faq`, because this builder embeds
+   * the number in the meta description and the FAQ JSON-LD.
+   */
+  readonly confidence: number;
 };
 
 export type MatchupPreviewInput = {
@@ -58,7 +65,8 @@ function canonicalPick(input: MatchupPreviewInput): MatchupPick | null {
 }
 
 function pickSentence(pick: MatchupPick): string {
-  return `Our model's lean: ${pick.selection} (${pick.type.toLowerCase()}).`;
+  // Canonical selections already carry the line ("Chiefs -3.5", "OVER 47.5").
+  return `Our model's lean: ${pick.selection} (${pick.type.toLowerCase()}), confidence ${Math.round(pick.confidence)}/100.`;
 }
 
 export function buildMatchupMetadata(input: MatchupPreviewInput): { title: string; description: string; canonical: string } {
@@ -66,7 +74,7 @@ export function buildMatchupMetadata(input: MatchupPreviewInput): { title: strin
   const sportUpper = input.sport.toUpperCase();
   const pick = canonicalPick(input);
   const lead = pick
-    ? `${pick.selection}.`
+    ? `${pick.selection}, ${Math.round(pick.confidence)}/100 confidence.`
     : "Model read, line, and matchup context.";
   return {
     title: `${base} | ${sportUpper}`,

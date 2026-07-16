@@ -16,7 +16,9 @@ const input: MatchupPreviewInput = {
   awayTeam: "Los Angeles Lakers",
   startTimeIso: "2026-01-15T00:30:00Z",
   venue: "TD Garden",
-  pick: { type: "SPREAD", selection: "Boston Celtics -4.5", line: -4.5 },
+  // confidence is required on MatchupPick (#114): the builder embeds it, so
+  // pages pass a pick only for viewers entitled to see it.
+  pick: { type: "SPREAD", selection: "Boston Celtics -4.5", line: -4.5, confidence: 63.4 },
 };
 
 describe("programmatic SEO engine (matchup previews)", () => {

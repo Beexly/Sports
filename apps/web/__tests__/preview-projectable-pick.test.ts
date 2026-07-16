@@ -10,6 +10,13 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@sports/db", () => ({
   db: { game: { findMany: mocks.gameFindMany } },
 }));
+// Anonymous viewer → FREE entitlements (fail-closed): this suite exercises the
+// record-integrity layer of the page, so the paywall resolves to the strictest
+// (un-entitled) viewer. The paywall layer itself is pinned by
+// preview-page-paywall.test.tsx.
+vi.mock("@/lib/auth", () => ({
+  auth: () => Promise.resolve(null),
+}));
 vi.mock("@sports/prediction-engine", () => ({
   getReadinessGates: mocks.getReadinessGates,
 }));
@@ -75,7 +82,15 @@ describe("matchup preview candidate projection", () => {
           picks: expect.objectContaining({
             take: 10,
             where: expect.objectContaining({ tier: "FREE" }),
-            select: { pickType: true, selection: true, line: true },
+            // reasoningShort is the FREE teaser the board serves to every
+            // viewer (#114); confidence (the paid metric) is NOT fetched for
+            // this un-entitled viewer.
+            select: {
+              pickType: true,
+              selection: true,
+              line: true,
+              reasoningShort: true,
+            },
           }),
         }),
       }),
@@ -98,9 +113,12 @@ describe("matchup preview candidate projection", () => {
     const query = mocks.gameFindMany.mock.calls[0]?.[0] as {
       include: { picks: { select: Record<string, boolean> } };
     };
+    // The paid confidence metric is never fetched for an un-entitled viewer,
+    // and the full reasoning (factor trail) is never fetched on this surface.
+    // reasoningShort IS fetched — it is the free teaser (board parity, #114).
     expect(query.include.picks.select).not.toHaveProperty("confidence");
     expect(query.include.picks.select).not.toHaveProperty("reasoning");
-    expect(query.include.picks.select).not.toHaveProperty("reasoningShort");
+    expect(query.include.picks.select).toHaveProperty("reasoningShort", true);
   });
 
   it("withholds every pick when the public-picks readiness gate is closed", async () => {

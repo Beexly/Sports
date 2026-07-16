@@ -148,3 +148,14 @@ export {
   type Drive,
   type DriveResult,
 } from "./drives.js";
+
+// nflverse pbp → EP/WP/Success/Drives mapper (pure; referee columns carried
+// ONLY as calibration y-axis, never emitted as a metric).
+export {
+  mapNflversePbpToExpectedMetrics,
+  attachOwnEpa,
+  NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS,
+  type PbpRow,
+  type TransitionPair,
+  type MappedExpectedMetricsPlays,
+} from "./nflverse-pbp-mapper.js";
