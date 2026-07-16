@@ -108,7 +108,18 @@ export interface MappedExpectedMetricsPlays {
 
   readonly counts: {
     readonly sourceRows: number;
+    /**
+     * Rows surviving ONLY the REG season_type filter (before the same-season
+     * and finite-play_id guards). Reconciles as sourceRows = regRows +
+     * droppedNonReg.
+     */
     readonly regRows: number;
+    /**
+     * REG rows that ALSO pass the same-season + finite-play_id guards — the
+     * fully-usable row count every downstream series is built from.
+     * Reconciles as regRows = usableRows + droppedOffSeason + droppedNoPlayId.
+     */
+    readonly usableRows: number;
     readonly droppedNonReg: number;
     readonly droppedOffSeason: number;
     readonly droppedNoPlayId: number;
@@ -192,6 +203,14 @@ function halfOf(row: PbpRow): number {
  *    those drives comes from terminalOutcome ("Opp touchdown"), which is
  *    authoritative. Defensive two-point returns (defDelta 2, safety!=1) → 0,
  *    documented limitation. Non-finite deltas → 0, never NaN into points.
+ *
+ * ROW-LOCAL ONLY: this rule alone cannot see the try row that follows a
+ * defensive TD — nflverse flips `posteam` to the scoring (former defense)
+ * team on the XP/2pt try row while keeping that row in the intercepted
+ * offense's `fixed_drive`, so posDelta>0 is genuine for the TRY team but the
+ * point belongs to the opponent of the drive the row sits in. That leak is
+ * closed by the drive-lineage guard in `pointsScoredForDrive` (the only
+ * drive-series call site).
  */
 function pointsScoredOf(row: PbpRow): number {
   const posDelta = num(row["posteam_score_post"]) - num(row["posteam_score"]);
@@ -199,6 +218,27 @@ function pointsScoredOf(row: PbpRow): number {
   if (Number.isFinite(posDelta) && posDelta > 0) return posDelta;
   if (row["safety"] === "1" && defDelta === 2) return 2;
   return 0;
+}
+
+/**
+ * Drive-framed pointsScored: `pointsScoredOf` gated by the drive's LINEAGE
+ * posteam — the first non-empty `posteam` of the row's `fixed_drive` in
+ * play_id order within the game. A row whose `posteam` differs from the
+ * lineage is an opponent's try row parked in this drive (after a defensive
+ * TD, nflverse flips `posteam` on the XP/2pt try row but not `fixed_drive`):
+ * its points belong to the OPPONENT and map to 0 here, so a pick-six drive
+ * totals 0, not 1/2 (FIXED — formerly a known try-point leak; result
+ * classification was and remains driven by terminalOutcome, "Opp touchdown").
+ * Rows with an empty `posteam` (kickoff/END bookkeeping variants) and drives
+ * without a lineage (null fixed_drive grab-bag) fall through to the row-local
+ * rule unchanged — those paths cannot carry a flipped-frame try. The safety
+ * branch is unaffected: a conceded safety happens on the conceding offense's
+ * own row (`posteam` === lineage), so the guard never intercepts it.
+ */
+function pointsScoredForDrive(row: PbpRow, lineagePosteam: string): number {
+  const rowPosteam = row["posteam"] ?? "";
+  if (lineagePosteam !== "" && rowPosteam !== "" && rowPosteam !== lineagePosteam) return 0;
+  return pointsScoredOf(row);
 }
 
 // ── fixed_drive_result → DriveResult ────────────────────────────────────────────
@@ -466,20 +506,29 @@ export function mapNflversePbpToExpectedMetrics(
     wpaPairs.push(...buildTransitionPairs(wpEligibleEntries, rows, scoring, "wpa"));
 
     // (f) Drive series — EVERY usable row (partition completeness at file grain).
-    //     Pre-compute per-drive facts: punt presence (for "Opp touchdown") and
-    //     the drive's terminal outcome (fixed_drive_result is drive-constant;
-    //     stamped on every play — classifyResult reads the LAST play).
+    //     Pre-compute per-drive facts: punt presence (for "Opp touchdown"), the
+    //     drive's terminal outcome (fixed_drive_result is drive-constant;
+    //     stamped on every play — classifyResult reads the LAST play), and the
+    //     drive's LINEAGE posteam — the first non-empty posteam in play_id
+    //     order — which gates pointsScored so an opponent's try row (posteam
+    //     flipped after a defensive TD, fixed_drive unchanged) never leaks its
+    //     point into the turnover drive.
     const driveKeyOf = (row: PbpRow): number | null => {
       const fd = num(row["fixed_drive"]);
       return Number.isFinite(fd) ? fd : null;
     };
     const driveHasPunt = new Map<number | null, boolean>();
     const driveFdr = new Map<number | null, string>();
+    const driveLineagePosteam = new Map<number, string>();
     for (const row of rows) {
       const key = driveKeyOf(row);
       if (row["play_type"] === "punt") driveHasPunt.set(key, true);
       const fdr = row["fixed_drive_result"] ?? "";
       if (fdr !== "" && !driveFdr.has(key)) driveFdr.set(key, fdr);
+      const pos = row["posteam"] ?? "";
+      if (key !== null && pos !== "" && !driveLineagePosteam.has(key)) {
+        driveLineagePosteam.set(key, pos);
+      }
     }
 
     // Drive yardline fill: within each (game, fixed_drive) group in play order,
@@ -540,7 +589,10 @@ export function mapNflversePbpToExpectedMetrics(
         posteam: row["posteam"] ?? "",
         playIndex: k,
         yardline100: filled[k]!,
-        pointsScored: pointsScoredOf(row),
+        pointsScored: pointsScoredForDrive(
+          row,
+          key === null ? "" : driveLineagePosteam.get(key) ?? "",
+        ),
         isSuccess: successPlay === null ? null : isSuccessfulPlay(successPlay),
         epa: null, // fit-free mapper; attach post-fit via attachOwnEpa
         terminalOutcome: mapDriveResult(driveFdr.get(key) ?? "", driveHasPunt.get(key) === true),
@@ -561,7 +613,8 @@ export function mapNflversePbpToExpectedMetrics(
     drivePlays,
     counts: {
       sourceRows,
-      regRows: usable.length,
+      regRows: regCandidates.length,
+      usableRows: usable.length,
       droppedNonReg,
       droppedOffSeason,
       droppedNoPlayId,

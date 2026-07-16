@@ -476,7 +476,7 @@ async function main(): Promise<void> {
     `| attribution (ingestion registry) | ${registryAttribution} |`,
     `| attribution (rights registry) | ${rightsAttribution} |`,
     `| rights snapshot captured | ${rightsSnapshot.snapshotted_at} (reviewed ${rightsSnapshot.reviewed_at}) |`,
-    `| source rows | ${mapped.counts.sourceRows} (REG kept: ${mapped.counts.regRows}) |`,
+    `| source rows | ${mapped.counts.sourceRows} (REG: ${mapped.counts.regRows}, usable: ${mapped.counts.usableRows}) |`,
     `| columns projected | ${NFLVERSE_PBP_EXPECTED_METRICS_COLUMNS.length} of ~372 (FTN/participation columns used: 0) |`,
     "",
     "## Model fits (fit-on-load)",

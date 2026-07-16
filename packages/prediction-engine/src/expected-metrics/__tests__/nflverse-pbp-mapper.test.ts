@@ -5,8 +5,9 @@
  * point-delta-not-`sp` rule, possession-frame transition pairs, next-score
  * labelling (incl. defensive TD via td_team and safety via defteam), referee
  * index-alignment with NaN terminal masking, FTN/`sp` structural exclusion,
- * grain enforcement, drive partition + terminalOutcome mapping, and
- * determinism under input permutation.
+ * grain enforcement, drive partition + terminalOutcome mapping, the drive
+ * lineage guard (try rows after defensive TDs stay out of the turnover
+ * drive's points), and determinism under input permutation.
  */
 
 import { describe, expect, it } from "vitest";
@@ -310,7 +311,16 @@ describe("T6 — REG same-season grain", () => {
     expect(mapped.counts.droppedNonReg).toBe(1);
     expect(mapped.counts.droppedOffSeason).toBe(1);
     expect(mapped.counts.droppedNoPlayId).toBe(1);
-    expect(mapped.counts.regRows).toBe(18);
+    // regRows counts REG survivors ONLY (21 − 1 POST); usableRows also passes
+    // the same-season + finite-play_id guards (20 − 1 off-season − 1 no-id).
+    // The two reconcile: sourceRows = regRows + droppedNonReg and
+    // regRows = usableRows + droppedOffSeason + droppedNoPlayId.
+    expect(mapped.counts.regRows).toBe(20);
+    expect(mapped.counts.usableRows).toBe(18);
+    expect(mapped.counts.regRows).toBe(mapped.counts.sourceRows - mapped.counts.droppedNonReg);
+    expect(mapped.counts.usableRows).toBe(
+      mapped.counts.regRows - mapped.counts.droppedOffSeason - mapped.counts.droppedNoPlayId,
+    );
     expect(mapped.counts.epEligible).toBe(11);
     expect(mapped.counts.wpEligible).toBe(11);
     expect(mapped.counts.tieGamesExcludedFromWp).toBe(0);
@@ -376,7 +386,7 @@ describe("T8 — WP labelling and spread frame", () => {
 describe("T9 — drive partition, terminalOutcome, yardline fill", () => {
   it("puts every usable row in exactly one DrivePlay with strictly increasing playIndex", () => {
     const { drivePlays, counts } = map();
-    expect(drivePlays).toHaveLength(counts.regRows);
+    expect(drivePlays).toHaveLength(counts.usableRows);
     const expectedIds = ["10", "20", "30", "40", "50", "60", "70", "80", "85", "90", "100", "110", "120", "130", "140", "150", "160", "170"].map(pid).sort();
     expect(drivePlays.map((p) => p.playId).sort()).toEqual(expectedIds);
     const indices = drivePlays.filter((p) => p.gameId === G1).map((p) => p.playIndex);
@@ -430,6 +440,63 @@ describe("T9 — drive partition, terminalOutcome, yardline fill", () => {
     expect(attached.find((p) => p.playId === pid("20"))?.epa).toBe(0.42);
     expect(attached.find((p) => p.playId === pid("30"))?.epa).toBeNull();
     expect(drivePlays.find((p) => p.playId === pid("20"))?.epa).toBeNull(); // input untouched
+  });
+});
+
+describe("T11 — drive lineage guard: no try-point leak after a defensive TD", () => {
+  const G4 = "2025_04_AAA_BBB";
+  const pid4 = (playId: string) => `${G4}-${playId}`;
+
+  /**
+   * BBB throws a pick-six (AAA scores via td_team). nflverse then flips
+   * `posteam` to AAA on the try row but keeps it in BBB's fixed_drive 1 —
+   * the exact shape that used to leak the try point into the turnover drive.
+   */
+  const pickSixGame = (tryRow: PbpRow): PbpRow[] => [
+    // Kickoff opens the drive: posteam = receiving team = drive lineage (BBB).
+    row({ game_id: G4, play_id: "10", posteam: "BBB", defteam: "AAA", play_type: "kickoff", fixed_drive: "1", fixed_drive_result: "Opp touchdown" }),
+    // Pick-six: BBB's pass intercepted, returned for TD by AAA.
+    row({ game_id: G4, play_id: "20", posteam: "BBB", defteam: "AAA", down: "1", ydstogo: "10", yardline_100: "75", play_type: "pass", yards_gained: "0", interception: "1", touchdown: "1", td_team: "AAA", posteam_score: "0", posteam_score_post: "0", defteam_score: "0", defteam_score_post: "6", sp: "1", fixed_drive: "1", fixed_drive_result: "Opp touchdown" }),
+    tryRow,
+  ];
+
+  // XP try after the pick-six: posteam flipped to AAA (posDelta +1 in AAA's
+  // frame), still stamped fixed_drive 1 (BBB's drive).
+  const xpTry = row({ game_id: G4, play_id: "30", posteam: "AAA", defteam: "BBB", play_type: "extra_point", posteam_score: "6", posteam_score_post: "7", defteam_score: "0", defteam_score_post: "0", sp: "1", fixed_drive: "1", fixed_drive_result: "Opp touchdown" });
+  // Two-point try variant after a defensive TD: posDelta +2 in AAA's frame.
+  const twoPointTry = row({ game_id: G4, play_id: "30", posteam: "AAA", defteam: "BBB", play_type: "pass", yards_gained: "2", yardline_100: "2", receiver_player_id: "W9", posteam_score: "6", posteam_score_post: "8", defteam_score: "0", defteam_score_post: "0", sp: "1", fixed_drive: "1", fixed_drive_result: "Opp touchdown" });
+
+  it("excludes BOTH the TD's 6 and the XP's 1 from the turnover drive; classification unchanged", () => {
+    const { drivePlays } = mapNflversePbpToExpectedMetrics(pickSixGame(xpTry));
+    const points = new Map(drivePlays.map((p) => [p.playId, p.pointsScored]));
+    expect(points.get(pid4("20"))).toBe(0); // the TD's 6 — opponent's, excluded
+    expect(points.get(pid4("30"))).toBe(0); // the try's 1 — opponent's, excluded (was the leak)
+
+    const drives = buildDrives([...drivePlays]);
+    expect(drives).toHaveLength(1);
+    expect(drives[0]?.points).toBe(0); // turnover drive totals 0, not 1
+    // "Opp touchdown" with no punt row in the drive → TURNOVER, exactly as before.
+    expect(drivePlays.every((p) => p.terminalOutcome === "TURNOVER")).toBe(true);
+    expect(drives[0]?.result).toBe("TURNOVER");
+  });
+
+  it("excludes a defensive-TD + two-point-try the same way", () => {
+    const { drivePlays } = mapNflversePbpToExpectedMetrics(pickSixGame(twoPointTry));
+    const points = new Map(drivePlays.map((p) => [p.playId, p.pointsScored]));
+    expect(points.get(pid4("20"))).toBe(0);
+    expect(points.get(pid4("30"))).toBe(0); // would have leaked 2 pre-fix
+
+    const drives = buildDrives([...drivePlays]);
+    expect(drives[0]?.points).toBe(0);
+    expect(drives[0]?.result).toBe("TURNOVER");
+  });
+
+  it("leaves same-lineage try points intact (TD + PAT drive still totals 7)", () => {
+    // Control: the shared fixture's drive 3 (AAA TD + AAA PAT, posteam ===
+    // lineage on every row) is untouched by the guard.
+    const { drivePlays } = map();
+    const drive3 = drivePlays.filter((p) => p.driveId === 3);
+    expect(drive3.reduce((s, p) => s + p.pointsScored, 0)).toBe(7);
   });
 });
 

@@ -15,7 +15,7 @@ Generated 2026-07-16T04:07:23.277Z by `scripts/validation/nfl-expected-metrics-v
 | attribution (ingestion registry) | Data via nflverse (nflverse-data), licensed CC BY 4.0. |
 | attribution (rights registry) | Data from nflverse (https://github.com/nflverse), CC-BY-4.0 |
 | rights snapshot captured | 2026-07-16T04:07:00.521Z (reviewed 2026-06-10) |
-| source rows | 48771 (REG kept: 46452) |
+| source rows | 48771 (REG: 46452, usable: 46452) |
 | columns projected | 40 of ~372 (FTN/participation columns used: 0) |
 
 ## Model fits (fit-on-load)
