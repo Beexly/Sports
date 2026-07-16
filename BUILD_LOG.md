@@ -183,6 +183,29 @@ The honest NO is the acceptance (§2 P1 blesses this path explicitly).
 Kelly layer landed with the self-disarm pin (stakes exactly 0 below 50
 settled). Line archive landed inert (P0 scope now fully closed).
 
+### Phase 2 — Glass Ledger + open verifier [CORE COMMITTED 2e7d3352; /ledger surface in flight]
+
+- `ledger-chain.ts` (delegated sonnet, re-verified 20 tests + full engine
+  suite 1277 green): append-only hash chain, publish-before-kickoff
+  enforced at append, no mutation path, CLV sign convention numerically
+  pinned (+366.3 / −134.95 bps).
+- `ledger-anchor.ts`: anchoring payload builder, hard-gated env + literal
+  founder confirmation, zero network I/O even when enabled — the founder
+  performs the actual external anchoring step (§1 Process).
+- `recompute-verifier.ts` + `scripts/edge-lab/recompute.ts`: THE open
+  verifier. Proven end-to-end on fixture exports (labeled test data, never
+  shipped as real): valid → exit 0 REPRODUCED; tampered history → exit 2
+  with broken seq named; fabricated CLV on an INTACT chain → caught by
+  re-derivation; VOID/null-CLV honest gaps. 24 tests.
+- `/ledger` surface: delegated (sonnet), in flight — PUBLISH_LEDGER
+  founder flag default OFF, all-picks default, leads with calibration,
+  every cell through the display guard, no fabricated numbers ever.
+- Remaining P2 integration (documented, deliberately unwired): live
+  pick-mint → ledger append and settle → settlement append are the
+  founder-flip step; the chain, the verifier, and the surface are built
+  and proven inert. markClosingSnapshots (line archive) likewise ships
+  unwired pending the same flip.
+
 **P1 acceptance interpretation (recorded per protocol):** the handoff's
 "on the holdout" acceptance is satisfied on a DISJOINT eval fold never
 used for calibration or τ-tuning; the SEALED 2025 forward season stays
