@@ -7,9 +7,23 @@
  *
  * Graceful degradation: if the DB is unavailable or the game isn't found, returns
  * 404. If no pick exists yet the page still renders matchup details + JSON-LD.
+ *
+ * Paywall (CLAUDE.md rule #3 — server-side only): this is a PUBLIC surface, but
+ * two of its values are the platform's paid metrics, gated for FREE on the board
+ * (`/api/picks`), the audit route (#103), and the game room (#109):
+ *
+ *  - line movement (`canSeeLineMovement`) — the Pro-tier market read, and
+ *  - the confidence score (`canSeeConfidence`) — the paid number on every pick.
+ *
+ * The viewer's entitlements are resolved server-side (anonymous → FREE,
+ * fail-closed) and the paid values are selected/rendered ONLY past the gate —
+ * including the meta description and FAQ JSON-LD, which are part of the same
+ * anonymous document. Un-entitled viewers get an honest locked hint, never the
+ * numbers.
  */
 
 import type { Metadata } from "next";
+import Link from "next/link";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { notFound } from "next/navigation";
 import Script from "next/script";
@@ -21,7 +35,13 @@ import {
 } from "@/lib/seo/sports-jsonld";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import type { PickType } from "@sports/db";
+
+// Per-viewer gating means this page can never be served from a shared static /
+// full-route cache — a cached Pro render would hand the paid metrics to the next
+// anonymous visitor. Mirrors /room/[gameId] (#109).
+export const dynamic = "force-dynamic";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -77,27 +97,73 @@ async function loadGameForSlug(sport: string, slug: string) {
   }
 }
 
+type LoadedGame = NonNullable<Awaited<ReturnType<typeof loadGameForSlug>>>;
+
 function toMatchupInput(
   sport: string,
-  game: NonNullable<Awaited<ReturnType<typeof loadGameForSlug>>>,
+  game: LoadedGame,
+  canSeeConfidence: boolean,
 ): MatchupPreviewInput {
   const raw = game.picks[0] ?? null;
-  const pick: MatchupPick | null = raw
-    ? {
-        type: raw.pickType as PickType & ("SPREAD" | "MONEYLINE" | "TOTAL"),
-        selection: raw.selection,
-        line: raw.line,
-        confidence: raw.confidence,
-      }
-    : null;
-
-  return {
+  const base = {
     sport,
     homeTeam: game.homeTeamName,
     awayTeam: game.awayTeamName,
     startTimeIso: game.commenceTime.toISOString(),
-    pick,
   };
+  if (!raw) return { ...base, pick: null };
+
+  const type = raw.pickType as PickType & ("SPREAD" | "MONEYLINE" | "TOTAL");
+
+  if (canSeeConfidence) {
+    // Entitled viewers (PRO/ELITE): unchanged — the full pick, confidence included.
+    const pick: MatchupPick = {
+      type,
+      selection: raw.selection,
+      line: raw.line,
+      confidence: raw.confidence,
+    };
+    return { ...base, pick };
+  }
+
+  // Un-entitled viewers (anonymous → FREE, fail-closed): the confidence number
+  // is the paid metric (`canSeeConfidence` — board, audit route, game room).
+  // Never hand it to the SEO builder: `buildMatchupPreview` would embed it in
+  // the meta description and the FAQ JSON-LD of the anonymous document. Keep
+  // the free-visible facts (selection / line / market) via a page-built FAQ
+  // that mirrors `defaultMatchupFaq` minus the confidence clause.
+  const lineText = type === "MONEYLINE" ? "" : ` ${raw.line > 0 ? "+" : ""}${raw.line}`;
+  return {
+    ...base,
+    pick: null,
+    faq: [
+      {
+        q: `Who is favored in ${game.awayTeamName} vs ${game.homeTeamName}?`,
+        a: `Our model's lean: ${raw.selection}${lineText} (${type.toLowerCase()}). The confidence score is part of Pro.`,
+      },
+      {
+        q: `When do ${game.awayTeamName} and ${game.homeTeamName} play?`,
+        a: `Scheduled for ${base.startTimeIso}.`,
+      },
+    ],
+  };
+}
+
+/**
+ * Meta description for un-entitled viewers — `buildMatchupMetadata`'s exact
+ * template minus the paid confidence clause, so the free-visible pick facts
+ * (selection + line) stay in the SERP snippet without leaking the number.
+ */
+function freeSafeDescription(sport: string, game: LoadedGame): string {
+  const raw = game.picks[0] ?? null;
+  const sportUpper = sport.toUpperCase();
+  const lead = raw
+    ? `${raw.selection} ${raw.pickType === "MONEYLINE" ? "ML" : raw.line}.`
+    : "Model read, line, and matchup context.";
+  return `${sportUpper}: ${game.awayTeamName} at ${game.homeTeamName}. ${lead} Data-backed, no hype.`.slice(
+    0,
+    300,
+  );
 }
 
 // ── Next.js route exports ─────────────────────────────────────────────────────
@@ -108,19 +174,27 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { sport, slug } = await params;
-  const game = await loadGameForSlug(sport, slug);
+  const [game, viewer] = await Promise.all([
+    loadGameForSlug(sport, slug),
+    getViewerEntitlements(),
+  ]);
   if (!game) return { title: "Preview not found" };
 
-  const input = toMatchupInput(sport, game);
+  const input = toMatchupInput(sport, game, viewer.canSeeConfidence);
   const preview = buildMatchupPreview(input);
+  // Entitled viewers keep the existing description (confidence included);
+  // everyone else — crawlers are anonymous → FREE — gets the free-safe variant.
+  const description = viewer.canSeeConfidence
+    ? preview.metadata.description
+    : freeSafeDescription(sport, game);
 
   return {
     title: preview.metadata.title,
-    description: preview.metadata.description,
+    description,
     alternates: { canonical: preview.metadata.canonical },
     openGraph: {
       title: preview.metadata.title,
-      description: preview.metadata.description,
+      description,
       url: preview.metadata.canonical,
       type: "article",
       images: ["/opengraph-image"],
@@ -128,7 +202,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: preview.metadata.title,
-      description: preview.metadata.description,
+      description,
       images: ["/opengraph-image"],
     },
   };
@@ -136,10 +210,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PreviewPage({ params }: Props) {
   const { sport, slug } = await params;
-  const game = await loadGameForSlug(sport, slug);
+  // Resolve the viewer's entitlements server-side (anonymous → FREE, fail-closed)
+  // BEFORE anything paid is selected for render (CLAUDE.md rule #3).
+  const [game, viewer] = await Promise.all([
+    loadGameForSlug(sport, slug),
+    getViewerEntitlements(),
+  ]);
   if (!game) notFound();
 
-  const input = toMatchupInput(sport, game);
+  const input = toMatchupInput(sport, game, viewer.canSeeConfidence);
   const preview = buildMatchupPreview(input);
   const pick = game.picks[0] ?? null;
 
@@ -189,9 +268,27 @@ export default async function PreviewPage({ params }: Props) {
               Model Lean
             </p>
             <p className="text-2xl font-semibold">{pick.selection}</p>
-            <p className="text-sm text-ion-2">
-              {pick.pickType} · Confidence {pick.confidence}/100
-            </p>
+            {/* The confidence number is the paid metric (`canSeeConfidence` —
+                gated for FREE on the board and the game room). Render it ONLY
+                past the gate; un-entitled viewers get an honest locked hint,
+                never the value. */}
+            {viewer.canSeeConfidence ? (
+              <p className="text-sm text-ion-2">
+                {pick.pickType} · Confidence {pick.confidence}/100
+              </p>
+            ) : (
+              <p className="text-sm text-ion-2">
+                {pick.pickType} ·{" "}
+                <Link
+                  href="/pricing"
+                  className="font-semibold text-orbital-cyan hover:text-ion-white"
+                >
+                  Confidence unlocks with Pro
+                </Link>
+              </p>
+            )}
+            {/* The short reasoning teaser is free-visible (the board serves
+                reasoningShort to FREE); the full factor trail never renders here. */}
             {pick.reasoningShort && (
               <p className="text-sm mt-2 text-ion-white">{pick.reasoningShort}</p>
             )}
@@ -236,7 +333,13 @@ export default async function PreviewPage({ params }: Props) {
                 <dd>{game.openingTotal}</dd>
               </div>
             )}
-            {game.lineMovementSpread != null &&
+            {/* Line movement is the Pro-tier market read (`canSeeLineMovement`
+                — gated for FREE on the board and the game room, #109). The
+                value is read ONLY past the gate; un-entitled viewers always get
+                the locked row (never the delta, and no presence/absence signal
+                about whether the line has moved). */}
+            {viewer.canSeeLineMovement ? (
+              game.lineMovementSpread != null &&
               game.lineMovementSpread !== 0 && (
                 <div className="flex gap-2">
                   <dt className="text-ion-2 w-28 shrink-0">
@@ -247,7 +350,22 @@ export default async function PreviewPage({ params }: Props) {
                     {game.lineMovementSpread.toFixed(1)} (spread)
                   </dd>
                 </div>
-              )}
+              )
+            ) : (
+              <div className="flex gap-2">
+                <dt className="text-ion-2 w-28 shrink-0">
+                  Line movement
+                </dt>
+                <dd>
+                  <Link
+                    href="/pricing"
+                    className="font-semibold text-orbital-cyan hover:text-ion-white"
+                  >
+                    Unlocks with Pro
+                  </Link>
+                </dd>
+              </div>
+            )}
           </dl>
         </section>
 
