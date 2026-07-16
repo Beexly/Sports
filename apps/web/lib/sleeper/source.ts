@@ -31,6 +31,12 @@ export interface SleeperPlayerRaw {
   readonly position?: string;
   readonly team?: string | null;
   readonly injury_status?: string | null;
+  /**
+   * Roster status ("Active", "Inactive", "Injured Reserve", "Retired", ...).
+   * Joins must skip Inactive/Retired rows: their stale `injury_status` must
+   * never flag an active same-named player.
+   */
+  readonly status?: string | null;
   readonly years_exp?: number | null;
 }
 export type SleeperPlayersMap = Record<string, SleeperPlayerRaw>;

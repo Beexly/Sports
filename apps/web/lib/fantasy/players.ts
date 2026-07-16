@@ -33,8 +33,25 @@ export type Player = {
   readonly schemeFit: number;
   readonly role: string;
   readonly trend: Trend;
+  /**
+   * The injury signal the SCORING functions read (draft/best-ball/trade/waiver/
+   * lineup multipliers and exclusions). On the illustrative pool this is our own
+   * authored data and a real scoring input. On LIVE graded-pool rows it is
+   * always "healthy": the Sleeper-joined live flag is display-only (see
+   * `injuryDisplay`) and must never modulate a paid number.
+   */
   readonly injury: Injury;
   readonly note: string;
+  /**
+   * DISPLAY-ONLY live injury flag joined from the Sleeper API on live
+   * graded-pool rows. Per the `sleeper-api` rights posture
+   * (commercial_display_allowed=false; enrichment with attribution, never the
+   * value basis), this field is consumed SOLELY by the UI badges in
+   * draft-assistant/bestball-board — no scoring or recommendation function
+   * reads it, so every paid number is identical with or without it. Absent on
+   * the illustrative pool.
+   */
+  readonly injuryDisplay?: Injury;
   /**
    * Real market ADP (overall pick number) joined from the cleared FFC feed —
    * present only on live graded-pool rows. Absent on the illustrative pool

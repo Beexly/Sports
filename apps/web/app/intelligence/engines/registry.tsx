@@ -10,7 +10,7 @@ import { type MetricTerm } from "@/components/ui/metric-explainer";
 // server→client RSC boundary, so they must not live in anything the server page
 // hands to a client component.
 import { loadPlayerModel } from "@/lib/intelligence/player-model";
-import { loadExpectedPoints } from "@/lib/intelligence/expected-points";
+import { loadExpectedPointsForDisplay } from "@/lib/intelligence/expected-points-display";
 import { loadQbForward } from "@/lib/intelligence/qb-forward";
 import { loadRushingContact } from "@/lib/intelligence/rushing-contact";
 import { loadRouteRate } from "@/lib/intelligence/route-rate";
@@ -156,6 +156,16 @@ const PLAYER_MODEL_ENGINE = engine({
 
 // ─────────────────────────────────────────────────────────────────────────────
 // EXPECTED POINTS (xFP)
+//
+// RIGHTS-GATED at the display boundary. This is a PUBLIC (unauthenticated)
+// board, i.e. commercial display — and the xFP data is ffverse ffopportunity
+// (CC-BY-SA-4.0 share-alike; registry: commercial_display_allowed=false), NOT
+// plain-CC-BY nflverse. The loader below runs a real checkClearance() with the
+// TRUE commercial_display intent and fails CLOSED: while the registry blocks
+// (by design today), the board renders the honest rights-gated empty state and
+// nothing is fetched. Unlock: legal SA-scope review, ffverse permission, or the
+// replacement basis (our own gse-ep-v1 expected-points engine, merged in #115,
+// is the planned CC-BY-4.0 substitute). See lib/intelligence/expected-points-display.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const EXPECTED_POINTS_ENGINE = engine({
@@ -170,7 +180,10 @@ const EXPECTED_POINTS_ENGINE = engine({
     </>
   ),
   api: "/api/intelligence/expected-points",
-  sourceIds: ["nflverse"],
+  // The true source: ffverse/ffopportunity (CC-BY-SA-4.0), not the plain-CC-BY
+  // nflverse envelope this entry previously claimed. The attribution component
+  // resolves the line from the Source Rights Registry.
+  sourceIds: ["ffverse-ffopportunity"],
   explainer: [
     {
       term: "xFP: expected, not actual",
@@ -196,7 +209,7 @@ const EXPECTED_POINTS_ENGINE = engine({
       ),
     },
   ],
-  load: loadExpectedPoints,
+  load: loadExpectedPointsForDisplay,
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

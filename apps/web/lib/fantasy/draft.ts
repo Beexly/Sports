@@ -51,7 +51,11 @@ function isTierCliff(player: Player, available: readonly Player[], universe: rea
 }
 
 function byeStackRisk(player: Player, roster: readonly Player[]): number {
-  const sameBye = roster.filter((p) => p.bye === player.bye && (STARTERS[p.pos] ?? 0) > 0).length;
+  // bye <= 0 means "no bye joined" (live rows without an FFC match), not a real
+  // week — there is no Week 0, so an unjoined bye must never score as a stack
+  // (mirrors bestball.ts byeFragility's b > 0 filter).
+  if (player.bye <= 0) return 0;
+  const sameBye = roster.filter((p) => p.bye > 0 && p.bye === player.bye && (STARTERS[p.pos] ?? 0) > 0).length;
   return sameBye; // 0,1,2…
 }
 

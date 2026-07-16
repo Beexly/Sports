@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { BestBallBoard } from "@/components/fantasy/bestball-board";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
+import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { FANTASY_DATA_ATTRIBUTION, FANTASY_VALUE_BASIS_NOTE } from "@/lib/fantasy/attribution";
@@ -35,7 +36,10 @@ export default async function BestBallPage() {
       note={pool
         ? `Live graded pool: real players with model-derived values. ${FANTASY_VALUE_BASIS_NOTE} Ceiling, stack, and structure are computed from real grades.`
         : "Illustrative player universe: fictional players, illustrative projections. Ceiling, stack, and structure are computed live from this sample pool."}
-      attribution={pool ? FANTASY_DATA_ATTRIBUTION : undefined}
+      // Dynamic attribution: the provider composes its line from the sources
+      // ACTUALLY joined this load (a day with failed FFC/Sleeper joins must not
+      // over-credit). The static constant is only the fallback.
+      attribution={pool ? getLiveProjectionsMeta().attribution ?? FANTASY_DATA_ATTRIBUTION : undefined}
       wide
     >
       <BestBallBoard pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />

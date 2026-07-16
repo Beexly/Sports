@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { PLAYERS, playerById, type Player, type Pos } from "./players";
-import { positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp, marketAdpMap, valueVsMarket } from "./draft";
+import { recommend, positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp, marketAdpMap, valueVsMarket } from "./draft";
 
 describe("positionalScarcity", () => {
   it("reports remaining + startersLeft per position on the full board", () => {
@@ -101,6 +101,49 @@ describe("marketAdpMap (real FFC ADP riding on pool rows)", () => {
     const v = valueVsAdp(enriched, marketAdpMap([enriched]), 5);
     expect(v.delta).toBe(15);
     expect(v.label).toBe("steal");
+  });
+});
+
+describe("byeStackRisk regression — bye 0 (unjoined) is 'no bye info', never a Week 0 stack", () => {
+  // Live graded-pool rows without an FFC join carry bye 0. A roster full of
+  // bye-0 rows previously made every bye-0 candidate score a false "Bye stack
+  // risk: N starters on Week 0" 0.86x penalty. There is no Week 0.
+  const roster: Player[] = [
+    { ...playerById("rb-marcus-vale")!, bye: 0 },
+    { ...playerById("wr-deshawn-kemp")!, bye: 0 },
+  ];
+  const base = playerById("wr-julian-roe")!;
+  const other = playerById("te-rocco-vance")!;
+
+  /** Score the SAME candidate with only the bye changed. */
+  function scoreWithBye(bye: number): { score: number; reasons: readonly string[] } {
+    const candidate: Player = { ...base, id: "wr-candidate", name: "Bye Candidate", bye };
+    const universe = [...roster, candidate, other];
+    const rec = recommend([candidate, other], roster, 6, universe).find((r) => r.player.id === "wr-candidate")!;
+    return { score: rec.score, reasons: rec.reasons };
+  }
+
+  it("two candidates identical except bye 0 vs 7 score identically", () => {
+    const zero = scoreWithBye(0);
+    const seven = scoreWithBye(7);
+    expect(zero.score).toBe(seven.score);
+  });
+
+  it("no reason ever mentions Week 0", () => {
+    for (const rec of [scoreWithBye(0), scoreWithBye(7)]) {
+      for (const reason of rec.reasons) expect(reason).not.toMatch(/Week 0/);
+    }
+  });
+
+  it("real same-week stacking still penalizes (the fix only exempts bye <= 0)", () => {
+    const stackedRoster: Player[] = [
+      { ...playerById("rb-marcus-vale")!, bye: 7 },
+      { ...playerById("wr-deshawn-kemp")!, bye: 7 },
+    ];
+    const candidate: Player = { ...base, id: "wr-candidate", name: "Bye Candidate", bye: 7 };
+    const universe = [...stackedRoster, candidate, other];
+    const rec = recommend([candidate, other], stackedRoster, 6, universe).find((r) => r.player.id === "wr-candidate")!;
+    expect(rec.reasons.some((r) => r.includes("Week 7"))).toBe(true);
   });
 });
 

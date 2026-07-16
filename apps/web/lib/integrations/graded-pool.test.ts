@@ -1,7 +1,19 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { buildGradedPool, buildGradedProvider, loadGradedPool } from "./graded-pool";
+import {
+  buildGradedPool,
+  buildGradedProvider,
+  injuryDisplayJoinKey,
+  loadAndRegisterGradedProvider,
+  loadGradedPool,
+  loadSleeperInjuryDisplay,
+} from "./graded-pool";
 import { registerProjectionsProvider, activePlayerPool } from "./projections";
-import { PLAYERS } from "../fantasy/players";
+import { PLAYERS, type Player } from "../fantasy/players";
+import { recommend } from "../fantasy/draft";
+import { rosterNeedsNext } from "../fantasy/bestball";
+import { tradeValue } from "../fantasy/trade";
+import { waiverTargets } from "../fantasy/waivers";
+import { optimize } from "../fantasy/lineup";
 import type { PlayerProfile, ProcessSignal } from "../intelligence/player-model";
 import type { ExpectedPointsRow } from "../intelligence/expected-points";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
@@ -152,8 +164,10 @@ describe("buildGradedPool — ADP/bye/injury enrichment (facts, never the value 
     adpRow("Alpha WR", 10.2, 7),
     adpRow("Beta RB", 1.5, 12, "RB"),
   ]);
-  const injuryByName = new Map<string, "questionable" | "out">([["beta rb", "out"]]);
-  const pool = buildGradedPool(profiles, [], [], [], { adpByName, injuryByName });
+  const injuryDisplayByKey = new Map<string, "questionable" | "out">([
+    [injuryDisplayJoinKey("Beta RB", "RB", "KC"), "out"],
+  ]);
+  const pool = buildGradedPool(profiles, [], [], [], { adpByName, injuryDisplayByKey });
 
   it("fills bye from the joined FFC row and exposes adp + our-value-vs-adp delta", () => {
     const alpha = pool.find((p) => p.name === "Alpha WR")!; // rank 1 (proj 238)
@@ -164,12 +178,14 @@ describe("buildGradedPool — ADP/bye/injury enrichment (facts, never the value 
     expect(beta.adpDelta).toBe(-0.5); // market slightly ahead of our rank
   });
 
-  it("maps the Sleeper injury flag as display enrichment without touching the value basis", () => {
+  it("maps the Sleeper flag to the DISPLAY-ONLY field: scorers' `injury` stays healthy, basis untouched", () => {
     const beta = pool.find((p) => p.name === "Beta RB")!;
-    expect(beta.injury).toBe("out");
+    expect(beta.injuryDisplay).toBe("out"); // the UI badge field
+    expect(beta.injury).toBe("healthy"); // the scoring field never carries the Sleeper flag
     expect(beta.proj).toBe(12 * 17); // basis untouched by enrichment
     const alpha = pool.find((p) => p.name === "Alpha WR")!;
     expect(alpha.injury).toBe("healthy");
+    expect(alpha.injuryDisplay).toBeUndefined();
   });
 
   it("a player with no market row stays honest: bye 0, no adp fields", () => {
@@ -179,13 +195,112 @@ describe("buildGradedPool — ADP/bye/injury enrichment (facts, never the value 
     expect(te.adpDelta).toBeUndefined();
   });
 
-  it("no enrichment (back-compat) keeps the previous shape: bye 0, healthy, no adp", () => {
+  it("no enrichment (back-compat) keeps the previous shape: bye 0, healthy, no adp, no display flag", () => {
     const bare = buildGradedPool(profiles, []);
     for (const p of bare) {
       expect(p.bye).toBe(0);
       expect(p.injury).toBe("healthy");
+      expect(p.injuryDisplay).toBeUndefined();
       expect(p.adp).toBeUndefined();
     }
+  });
+});
+
+describe("buildGradedPool — join correctness (name alone is not identity)", () => {
+  it("FFC row for a same-named player at ANOTHER position attaches nothing to the wrong player", () => {
+    // A QB row must never enrich a WR namesake.
+    const adpByName = adpByNormName([adpRow("Twin Name", 3, 7, "QB", "BUF")]);
+    const pool = buildGradedPool([prof("Twin Name", "WR", 10, "in-line", 80, 8, "KC")], [], [], [], { adpByName });
+    const wr = pool[0]!;
+    expect(wr.adp).toBeUndefined();
+    expect(wr.adpDelta).toBeUndefined();
+    expect(wr.bye).toBe(0);
+  });
+
+  it("FFC row with a matching position but a DIFFERENT team (both sides known) attaches nothing", () => {
+    const adpByName = adpByNormName([adpRow("Moved Guy", 3, 7, "WR", "DAL")]);
+    const pool = buildGradedPool([prof("Moved Guy", "WR", 10, "in-line", 80, 8, "KC")], [], [], [], { adpByName });
+    expect(pool[0]!.adp).toBeUndefined();
+    expect(pool[0]!.bye).toBe(0);
+  });
+
+  it("FFC row with a matching position and no team on the FFC side still joins (team is a secondary check)", () => {
+    const adpByName = adpByNormName([adpRow("Free Agent", 3, 7, "WR", "")]);
+    const pool = buildGradedPool([prof("Free Agent", "WR", 10, "in-line", 80, 8, "KC")], [], [], [], { adpByName });
+    expect(pool[0]!.adp).toBe(3);
+    expect(pool[0]!.bye).toBe(7);
+  });
+
+  it("Sleeper display flag requires position AND team: a same-named player elsewhere is never flagged", () => {
+    const flags = new Map<string, Player["injury"]>([
+      [injuryDisplayJoinKey("Twin Name", "QB", "BUF"), "out"],
+    ]);
+    const pool = buildGradedPool(
+      [
+        prof("Twin Name", "WR", 10, "in-line", 80, 8, "KC"), // wrong position
+        prof("Twin Name2", "QB", 18, "in-line", 0, 8, "KC"),
+      ],
+      [], [], [],
+      { injuryDisplayByKey: flags },
+    );
+    for (const p of pool) expect(p.injuryDisplay).toBeUndefined();
+  });
+});
+
+describe("Sleeper display flag is never a scoring input (registry posture, enforced)", () => {
+  const profiles = [
+    prof("Flagged WR", "WR", 12, "in-line"),
+    prof("Clean RB", "RB", 11, "in-line"),
+    prof("Depth WR", "WR", 9, "buy-low"),
+    prof("Clean QB", "QB", 19, "in-line", 0, 8, "BUF"),
+    prof("Clean TE", "TE", 8, "in-line"),
+  ];
+  const flags = new Map<string, Player["injury"]>([
+    [injuryDisplayJoinKey("Flagged WR", "WR", "KC"), "out"],
+    [injuryDisplayJoinKey("Depth WR", "WR", "KC"), "questionable"],
+  ]);
+  const withFlag = buildGradedPool(profiles, [], [], [], { injuryDisplayByKey: flags });
+  const without = buildGradedPool(profiles, [], [], [], {});
+
+  it("the flag rides on injuryDisplay only", () => {
+    expect(withFlag.find((p) => p.name === "Flagged WR")!.injuryDisplay).toBe("out");
+    expect(without.find((p) => p.name === "Flagged WR")!.injuryDisplay).toBeUndefined();
+  });
+
+  it("pools are byte-identical apart from the display field", () => {
+    const strip = (pool: readonly Player[]) => pool.map(({ injuryDisplay: _display, ...rest }) => rest);
+    expect(JSON.stringify(strip(withFlag))).toBe(JSON.stringify(strip(without)));
+  });
+
+  it("draft / best-ball / trade / waiver / lineup outputs are byte-identical with and without the flag", () => {
+    const rosterOf = (pool: readonly Player[]) => [pool.find((p) => p.pos === "RB")!];
+
+    const draftRecs = (pool: readonly Player[]) =>
+      recommend(pool, rosterOf(pool), 6, pool).map((r) => ({ id: r.player.id, score: r.score, reasons: r.reasons }));
+    expect(JSON.stringify(draftRecs(withFlag))).toBe(JSON.stringify(draftRecs(without)));
+
+    const bestBallRecs = (pool: readonly Player[]) =>
+      rosterNeedsNext(pool, rosterOf(pool), 6, pool).map((r) => ({ id: r.player.id, score: r.score, reasons: r.reasons }));
+    expect(JSON.stringify(bestBallRecs(withFlag))).toBe(JSON.stringify(bestBallRecs(without)));
+
+    const tradeValues = (pool: readonly Player[]) => pool.map((p) => tradeValue(p, pool));
+    expect(JSON.stringify(tradeValues(withFlag))).toBe(JSON.stringify(tradeValues(without)));
+
+    const waivers = (pool: readonly Player[]) =>
+      waiverTargets(pool).map((r) => ({ id: r.player.id, score: r.score, tier: r.tier, bidPct: r.bidPct }));
+    expect(JSON.stringify(waivers(withFlag))).toBe(JSON.stringify(waivers(without)));
+
+    const lineup = (pool: readonly Player[]) => {
+      const o = optimize(pool);
+      return {
+        total: o.total,
+        floor: o.floor,
+        ceiling: o.ceiling,
+        starters: o.starters.map((s) => ({ slot: s.slot, id: s.player.id, leverage: s.leverage, verdict: s.verdict })),
+        bench: o.bench.map((b) => b.id),
+      };
+    };
+    expect(JSON.stringify(lineup(withFlag))).toBe(JSON.stringify(lineup(without)));
   });
 });
 
@@ -289,13 +404,17 @@ describe("loadGradedPool", () => {
     expect(wr.proj).toBe(170);
   });
 
-  it("joins FFC ADP + bye and Sleeper injury enrichment on the live path, and composes the attribution", async () => {
+  it("joins FFC ADP + bye and the Sleeper DISPLAY flag on the live path, and composes the attribution", async () => {
     const ffc = {
       status: "Success",
       meta: { type: "PPR", teams: 12, rounds: 15, total_drafts: 500, start_date: "2026-07-08", end_date: "2026-07-15" },
       players: [{ player_id: 1, name: "Real Wideout", position: "WR", team: "KC", adp: 4.5, times_drafted: 100, high: 1, low: 9, stdev: 1.1, bye: 10 }],
     };
-    const sleeper = { "123": { player_id: "123", full_name: "Real Wideout", position: "WR", team: "KC", injury_status: "Questionable" } };
+    const sleeper = {
+      "123": { player_id: "123", full_name: "Real Wideout", position: "WR", team: "KC", injury_status: "Questionable", status: "Active" },
+      // A RETIRED namesake with a scary stale flag — must be skipped entirely.
+      "999": { player_id: "999", full_name: "Real Wideout", position: "WR", team: "KC", injury_status: "Out", status: "Retired" },
+    };
     const fetcher: FetchLike = async (url) => {
       if (url.includes("player_stats")) return new Response(statsCsv);
       if (url.includes("fantasyfootballcalculator.com/api/v1/adp/")) return new Response(JSON.stringify(ffc));
@@ -308,14 +427,17 @@ describe("loadGradedPool", () => {
     expect(wr.bye).toBe(10); // FFC bye joined (was hardcoded 0)
     expect(wr.adp).toBe(4.5); // real market ADP on the pool row
     expect(wr.adpDelta).toBe(3.5); // market ADP 4.5 - our rank 1
-    expect(wr.injury).toBe("questionable"); // Sleeper display flag
+    expect(wr.injuryDisplay).toBe("questionable"); // Sleeper flag on the DISPLAY field (active row wins; retired row skipped)
+    expect(wr.injury).toBe("healthy"); // the scoring field never carries the Sleeper flag
     expect(wr.proj).toBe(170); // enrichment NEVER moves the value basis
     expect(r.attribution).toContain("nflverse");
     expect(r.attribution).toContain("FantasyFootballCalculator.com");
     expect(r.attribution).toContain("Sleeper");
+    // Published pool (no xFP joined) must not credit ffverse.
+    expect(r.attribution).not.toContain("ffopportunity");
   });
 
-  it("enrichment failures degrade gracefully — bye 0, no adp, healthy, base attribution", async () => {
+  it("enrichment failures degrade gracefully — bye 0, no adp, no flag, base attribution", async () => {
     const r = await loadGradedPool({ fetcher: route(2024) }); // FFC + Sleeper both 404
     expect(r.status).toBe("live");
     const wr = r.players.find((p) => p.id === "WR1")!;
@@ -323,7 +445,57 @@ describe("loadGradedPool", () => {
     expect(wr.adp).toBeUndefined();
     expect(wr.adpDelta).toBeUndefined();
     expect(wr.injury).toBe("healthy");
+    expect(wr.injuryDisplay).toBeUndefined();
     expect(r.attribution).toBe("Data via nflverse (CC-BY-4.0)");
+  });
+
+  it("internal opt-in (includeXfp) propagates the ffverse CC-BY-SA attribution when the xFP basis is joined", async () => {
+    const r = await loadGradedPool({ fetcher: route(2024), includeXfp: true });
+    expect(r.status).toBe("live");
+    expect(r.attribution).toContain("ffverse/ffopportunity");
+    expect(r.attribution).toContain("CC-BY-SA-4.0");
+  });
+
+  it("customer publish path (loadAndRegisterGradedProvider) registers the no-xFP basis: WR1 is 170, never 306", async () => {
+    // Mutation-tested gap: pin the REGISTERED provider (what customers get when
+    // the founder flips the env gate) to the published CC-BY-4.0 basis. A
+    // season-matched ep_weekly asset IS being served — it must stay unused.
+    const result = await loadAndRegisterGradedProvider({ fetcher: route(2024) });
+    expect(result.status).toBe("live");
+    const pool = activePlayerPool({ PROJECTIONS_PROVIDER: "graded" });
+    expect(pool).not.toBe(PLAYERS); // the registered live pool, not the illustrative fallback
+    const wr = pool.find((p) => p.id === "WR1")!;
+    expect(wr.proj).toBe(170); // actual fppg 10/g * 17 — the published basis
+    expect(pool.some((p) => p.proj === 306)).toBe(false); // the xFP 18/g * 17 basis never leaks to customers
+  });
+
+  it("Sleeper extraction is clearance-gated and envelope-wrapped (RightsSnapshot captured)", async () => {
+    const sleeper = {
+      "1": { player_id: "1", full_name: "Hurt Guy", position: "WR", team: "KC", injury_status: "Out", status: "Active" },
+      "2": { player_id: "2", full_name: "Retired Guy", position: "RB", team: "DAL", injury_status: "Out", status: "Retired" },
+      "3": { player_id: "3", full_name: "Inactive Guy", position: "TE", team: "SEA", injury_status: "Questionable", status: "Inactive" },
+      "4": { player_id: "4", full_name: "No Team Guy", position: "WR", team: null, injury_status: "Out", status: "Active" },
+    };
+    const fetcher: FetchLike = async (url) =>
+      url.includes("sleeper.app/v1/players/nfl") ? new Response(JSON.stringify(sleeper)) : new Response("not found", { status: 404 });
+
+    const r = await loadSleeperInjuryDisplay(fetcher);
+    // Position+team-keyed flag for the active player only.
+    expect(r.byKey.get(injuryDisplayJoinKey("Hurt Guy", "WR", "KC"))).toBe("out");
+    // Inactive/retired rows and team-less rows never produce a flag.
+    expect(r.byKey.size).toBe(1);
+    // The extraction rides in the ExtractedRecord envelope with the RightsSnapshot.
+    expect(r.record).not.toBeNull();
+    expect(r.record!.source_id).toBe("sleeper-api");
+    expect(r.record!.rights_snapshot.status).toBe("approved_public_logged_off");
+    expect(r.record!.rights_snapshot.commercial_display_allowed).toBe(false);
+    expect(r.record!.rights_snapshot.attribution_required).toBe(true);
+  });
+
+  it("a Sleeper outage degrades to an empty flag map with no envelope — never blocks the pool", async () => {
+    const r = await loadSleeperInjuryDisplay(async () => { throw new Error("down"); });
+    expect(r.byKey.size).toBe(0);
+    expect(r.record).toBeNull();
   });
 
   it("does NOT load team-environment on the live path — schemeFit stays neutral (cold-start budget)", async () => {

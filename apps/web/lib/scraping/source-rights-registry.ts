@@ -300,6 +300,12 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
   },
 
   // ── Approved: licensed API ───────────────────────────────────────────────────
+  // Rate-term note (2026-07-16): the adapter honors the once/day term with a 24h
+  // live cache PLUS a short negative cache for source-error results (see
+  // lib/fantasy/adp-source.ts, FFC_ERROR_CACHE_TTL_MS). Both caches are
+  // per-instance (in-process) memory — a serverless fleet can still make up to
+  // one call per cold instance per TTL. Acceptable against FFC's soft "don't
+  // call frequently" ask; a shared cache is the upgrade path if fleet fan-out grows.
   {
     source_id: "ffc-adp",
     source_name: "Fantasy Football Calculator ADP REST API",

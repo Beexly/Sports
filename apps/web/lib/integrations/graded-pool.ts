@@ -18,10 +18,17 @@
  * `includeXfp: true`, in which case xFP is preferred over actual per-game.
  *
  * ENRICHMENT (never the value basis): real market ADP + bye weeks join from the
- * cleared FFC ADP API (`ffc-adp`, approved_api, once/day cache), and the injury
- * flag joins from Sleeper (display flag with attribution, per the registry
- * posture — never the sole basis of a paid feature). Enrichment failures degrade
- * gracefully: bye 0 / no ADP / healthy, never invented.
+ * cleared FFC ADP API (`ffc-adp`, approved_api, once/day cache), position-
+ * verified with a team cross-check so a same-named player can never inherit the
+ * wrong row. The Sleeper injury flag is DISPLAY-ONLY in the strict sense: it is
+ * clearance-checked (`sleeper-api`, public_logged_off_fact_extract) and wrapped
+ * in the rights envelope, joined by name+position+team, and lands on the
+ * `injuryDisplay` field that only the UI badges read — `Player.injury` stays
+ * "healthy" on live rows, so NO scoring/recommendation/trade/waiver/lineup
+ * number moves with or without the flag (the sleeper-api registry posture:
+ * commercial_display_allowed=false, never the value basis, never the sole basis
+ * of a paid feature). Enrichment failures degrade gracefully: bye 0 / no ADP /
+ * no flag, never invented.
  *
  * No fabrication: a player without the inputs
  * is excluded, not invented. schemeFit is the player's TEAM offensive environment
@@ -35,11 +42,12 @@
 import { registerProjectionsProvider, type PlayerProjection, type ProjectionsProvider } from "./projections";
 import type { Player } from "../fantasy/players";
 import { loadPlayerModel, type PlayerProfile } from "../intelligence/player-model";
-import type { ExpectedPointsRow } from "../intelligence/expected-points";
+import { FF_OPPORTUNITY_ATTRIBUTION, type ExpectedPointsRow } from "../intelligence/expected-points";
 import { normName, percentileRanks } from "../intelligence/qb-consensus";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
-import { adpByNormName, loadFfcAdp, FFC_ATTRIBUTION, type FfcAdpRow } from "../fantasy/adp-source";
+import { adpByNormName, adpJoinKey, loadFfcAdp, FFC_ATTRIBUTION, type FfcAdpRow } from "../fantasy/adp-source";
+import { checkClearance, wrapExtractedRecord, type ExtractedRecord } from "../scraping/clearance-engine";
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -143,10 +151,25 @@ function buildQbGradeByTeam(qbForward: readonly QbForwardRow[]): Map<string, num
  * no nudge).
  */
 export interface GradedPoolEnrichment {
-  /** FFC ADP rows keyed by the shared normName convention (see adpByNormName). */
+  /** FFC ADP rows keyed by `adpJoinKey(name, pos)` (see adp-source.adpByNormName). */
   readonly adpByName?: ReadonlyMap<string, FfcAdpRow>;
-  /** Sleeper injury flag keyed by normName — display enrichment, never the value basis. */
-  readonly injuryByName?: ReadonlyMap<string, Player["injury"]>;
+  /**
+   * Sleeper injury flag keyed by `injuryDisplayJoinKey(name, pos, team)` —
+   * DISPLAY-ONLY enrichment mapped to `Player.injuryDisplay` and consumed
+   * solely by the UI badges. It never reaches `Player.injury`, so no scoring /
+   * recommendation function can read it: every paid number is identical with
+   * or without the flag (sleeper-api registry posture).
+   */
+  readonly injuryDisplayByKey?: ReadonlyMap<string, Player["injury"]>;
+}
+
+/**
+ * Join key for the Sleeper display flag: normName + position + normalized team.
+ * A name alone is not identity — a stale flag must never attach to a same-named
+ * player at another position or on another team.
+ */
+export function injuryDisplayJoinKey(name: string, pos: string, team: string): string {
+  return `${normName(name)}|${pos.toUpperCase()}|${normTeam(team)}`;
 }
 
 export function buildGradedPool(
@@ -206,12 +229,19 @@ export function buildGradedPool(
           ? `${p.note} Team offensive environment: ${teamKey} ${fitPct}th pct (neutral-script EPA).`
           : p.note;
 
-      // Enrichment joins (facts, never the value basis): bye week from the FFC
-      // feed; injury flag from Sleeper. Missing join -> honest defaults (0 /
-      // healthy), never invented.
-      const key = normName(p.name);
-      const adpRow = enrich.adpByName?.get(key);
-      const injury = enrich.injuryByName?.get(key) ?? "healthy";
+      // Enrichment joins (facts, never the value basis): bye week + market ADP
+      // from the FFC feed, keyed by name+position with a team cross-check when
+      // both sides carry one — a same-named player at another position/team
+      // attaches nothing. The Sleeper flag joins by name+position+team onto the
+      // DISPLAY-ONLY field. Missing/mismatched join -> honest defaults (bye 0 /
+      // no adp / no flag), never invented.
+      const adpCandidate = enrich.adpByName?.get(adpJoinKey(p.name, p.position));
+      const adpRow =
+        adpCandidate != null &&
+        (adpCandidate.team === "" || p.team === "" || normTeam(adpCandidate.team) === normTeam(p.team))
+          ? adpCandidate
+          : undefined;
+      const injuryDisplay = enrich.injuryDisplayByKey?.get(injuryDisplayJoinKey(p.name, p.position, p.team));
 
       return {
         id: p.playerId,
@@ -226,8 +256,12 @@ export function buildGradedPool(
         schemeFit: Math.round(schemeFit * 100) / 100,
         role,
         trend,
-        injury,
+        // Scorers read `injury`; live rows are always "healthy" here so the
+        // Sleeper join can never modulate a recommendation/trade/waiver/lineup
+        // number. The live flag rides on `injuryDisplay` for the UI badge only.
+        injury: "healthy",
         note,
+        ...(injuryDisplay != null && injuryDisplay !== "healthy" ? { injuryDisplay } : {}),
         ...(adpRow != null ? { adp: adpRow.adp } : {}),
       };
     })
@@ -275,30 +309,69 @@ function mapSleeperInjury(status: string | null | undefined): Player["injury"] {
   return "out"; // Out / IR / PUP / Sus / NA / DNR — anything flagged harder than doubtful
 }
 
+/** Sleeper roster statuses whose stale injury_status must never flag anyone. */
+function isInactiveSleeperStatus(status: string | null | undefined): boolean {
+  const s = (status ?? "").trim().toLowerCase();
+  return s === "inactive" || s === "retired";
+}
+
+export interface SleeperInjuryDisplay {
+  /** Non-healthy DISPLAY flags keyed by `injuryDisplayJoinKey(name, pos, team)`. */
+  readonly byKey: ReadonlyMap<string, Player["injury"]>;
+  /** Rights envelope (RightsSnapshot inside) for the extraction; null on skip/failure. */
+  readonly record: ExtractedRecord | null;
+}
+
 /**
- * Injury flag by normName from Sleeper's (shared, cached) player map. Display
- * enrichment ONLY, per the `sleeper-api` registry posture: attribution required,
- * never the value basis, never the sole basis of a paid feature. Fully guarded —
- * any failure returns an empty map (everyone stays "healthy"), never invented.
+ * Injury DISPLAY flags from Sleeper's (shared, cached) player map — enrichment
+ * ONLY, per the `sleeper-api` registry posture: attribution required, never the
+ * value basis, never the sole basis of a paid feature.
+ *
+ * Rights posture, enforced in order (mirrors the FFC adapter):
+ *   1. assertIngestible("sleeper") — the legacy source-registry verdict.
+ *   2. checkClearance() BEFORE any fetch — a block returns the empty map
+ *      (graceful degrade, no fetch, nothing invented).
+ *   3. wrapExtractedRecord() — the extraction carries a RightsSnapshot
+ *      captured at extraction time.
+ *
+ * Join safety: keys are name+position+team, and Inactive/Retired Sleeper rows
+ * are skipped so a stale injury_status can never flag an active same-named
+ * player. Fully guarded — any failure returns an empty map, never invented.
  */
-async function loadSleeperInjuryByName(fetcher: FetchLike): Promise<Map<string, Player["injury"]>> {
-  const out = new Map<string, Player["injury"]>();
+export async function loadSleeperInjuryDisplay(fetcher: FetchLike): Promise<SleeperInjuryDisplay> {
+  const byKey = new Map<string, Player["injury"]>();
   try {
     const { assertIngestible } = await import("@sports/data-ingestion/src/source-registry");
     assertIngestible("sleeper");
-    const { fetchSleeperPlayers } = await import("../sleeper/source");
+    const clearance = checkClearance({
+      source_id: "sleeper-api",
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["storage", "derived_analytics"],
+    });
+    if (!clearance.allowed) return { byKey, record: null }; // rights gate: degrade, never bypass
+    const { fetchSleeperPlayers, SLEEPER_PLAYERS_URL } = await import("../sleeper/source");
     const players = await fetchSleeperPlayers({ fetcher });
     for (const p of Object.values(players)) {
       const name = p.full_name ?? [p.first_name, p.last_name].filter(Boolean).join(" ");
       const pos = (p.position ?? "").toUpperCase();
+      const team = (p.team ?? "").trim().toUpperCase();
       if (!name || !(pos === "QB" || pos === "RB" || pos === "WR" || pos === "TE")) continue;
+      if (!team) continue; // no team on the Sleeper side -> no team-verified join target
+      if (isInactiveSleeperStatus(p.status)) continue; // stale flags never attach
       const injury = mapSleeperInjury(p.injury_status);
-      if (injury !== "healthy") out.set(normName(name), injury);
+      if (injury !== "healthy") byKey.set(injuryDisplayJoinKey(name, pos, team), injury);
     }
+    // Envelope: the extracted facts carry the RightsSnapshot captured at
+    // extraction time (throws if clearance were not granted).
+    const record = wrapExtractedRecord(clearance, SLEEPER_PLAYERS_URL, {
+      flagged: Object.fromEntries(byKey),
+    });
+    return { byKey, record };
   } catch {
     // enrichment only — a Sleeper failure never blocks the pool
+    return { byKey: new Map(), record: null };
   }
-  return out;
 }
 
 /**
@@ -337,25 +410,30 @@ export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { 
   // Downstream loads are cheap; run them concurrently, each guarded. Enrichment
   // (FFC ADP + Sleeper injuries) is fact-joins for the UPCOMING season's draft
   // market — a failure of either degrades to no enrichment, never an error.
-  const [xfp, qbForward, ffcAdp, injuryByName] = await Promise.all([
+  const [xfp, qbForward, ffcAdp, sleeperInjury] = await Promise.all([
     includeXfp
       ? import("../intelligence/expected-points").then((m) => m.loadExpectedPoints({ fetcher, season: model.season }))
       : Promise.resolve(null),
     loadQbForward({ fetcher, season: model.season }),
     loadFfcAdp({ fetcher }),
-    loadSleeperInjuryByName(fetcher),
+    loadSleeperInjuryDisplay(fetcher),
   ]);
 
   const xfpRows = xfp && xfp.status === "live" && xfp.season === model.season ? xfp.rows : [];
   const qbForwardRows = qbForward.status === "live" && qbForward.season === model.season ? qbForward.rows : [];
   const adpByName = ffcAdp.status === "live" ? adpByNormName(ffcAdp.rows) : new Map<string, FfcAdpRow>();
+  const injuryDisplayByKey = sleeperInjury.byKey;
 
   // teamEnv intentionally [] on the live path (see note above) -> neutral schemeFit.
-  const pool = buildGradedPool(model.profiles, xfpRows, [], qbForwardRows, { adpByName, injuryByName });
+  const pool = buildGradedPool(model.profiles, xfpRows, [], qbForwardRows, { adpByName, injuryDisplayByKey });
+  // Attribution composes from the sources ACTUALLY joined — a failed join must
+  // not over-credit, and the ffverse CC-BY-SA line rides on every (internal)
+  // pool that used the xFP basis, per the registry's propagation requirement.
   const attribution = [
     NFLVERSE_ATTRIBUTION,
+    ...(xfpRows.length > 0 ? [FF_OPPORTUNITY_ATTRIBUTION] : []),
     ...(adpByName.size > 0 ? [FFC_ATTRIBUTION] : []),
-    ...(injuryByName.size > 0 ? ["rosters/injury via Sleeper"] : []),
+    ...(injuryDisplayByKey.size > 0 ? ["rosters/injury via Sleeper"] : []),
   ].join(" · ");
   return { status: "live", season: model.season, count: pool.length, players: pool, attribution, error: null };
 }

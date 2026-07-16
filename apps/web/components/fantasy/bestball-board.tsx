@@ -143,13 +143,17 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
               const c = POS_HEX[pl.pos];
               const av = activeAdp.size > 0 ? valueVsAdp(pl, activeAdp, currentPick) : null;
               const mv = adp.size === 0 ? valueVsMarket(pl) : null; // our-rank-vs-market read (live pool only)
+              // Badge flag: the illustrative pool's own `injury`, or the live
+              // Sleeper DISPLAY flag (`injuryDisplay`) — display-only, never a
+              // scoring input on live rows.
+              const injuryFlag = pl.injuryDisplay ?? pl.injury;
               return (
                 <div key={pl.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 border-b px-4 py-2.5 last:border-b-0" style={{ borderColor: BRAND_COLORS.steelGray }}>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="rounded px-1.5 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{pl.pos}</span>
                       <span className="truncate text-sm font-semibold text-white">{pl.name}</span>
-                      {pl.injury !== "healthy" && <span title={pl.injury} style={{ color: BRAND_COLORS.ionMagenta }}>⚠</span>}
+                      {injuryFlag !== "healthy" && <span title={injuryFlag} style={{ color: BRAND_COLORS.ionMagenta }}>⚠</span>}
                       {av && av.label !== "none" && av.label !== "on-time" && (
                         <span className="rounded px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider" style={{ color: ADP_HEX[av.label], background: `${ADP_HEX[av.label]}1c` }}>{av.label}</span>
                       )}
@@ -157,7 +161,8 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
                         <span title={`Our rank vs market ADP: ${mv.delta! >= 0 ? "+" : ""}${mv.delta}`} className="rounded px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider" style={{ color: ADP_HEX[mv.label], background: `${ADP_HEX[mv.label]}1c` }}>mkt {mv.label}</span>
                       )}
                     </div>
-                    <p className="mt-0.5 font-mono text-[10px] text-ink-500">{pl.team} · Bye {pl.bye} · {pl.role}</p>
+                    {/* bye <= 0 = no bye joined (live rows without an FFC match): show nothing, there is no Week 0 */}
+                    <p className="mt-0.5 font-mono text-[10px] text-ink-500">{pl.team}{pl.bye > 0 ? ` · Bye ${pl.bye}` : ""} · {pl.role}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-mono text-sm" style={{ color: c }}>{vor(pl, universe) >= 0 ? "+" : ""}{vor(pl, universe)}</p>
@@ -193,7 +198,7 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
               <div className="mt-2 flex items-center justify-between gap-2">
                 <div>
                   <p className="font-display text-lg text-white">{recs[0]!.player.name}</p>
-                  <p className="font-mono text-[11px] text-ink-500">{recs[0]!.player.pos} · {recs[0]!.player.team} · Bye {recs[0]!.player.bye}</p>
+                  <p className="font-mono text-[11px] text-ink-500">{recs[0]!.player.pos} · {recs[0]!.player.team}{recs[0]!.player.bye > 0 ? ` · Bye ${recs[0]!.player.bye}` : ""}</p>
                 </div>
                 <button type="button" onClick={() => draftMine(recs[0]!.player.id)} className="btn btn-primary">Draft</button>
               </div>

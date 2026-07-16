@@ -72,6 +72,7 @@ describe("loadExpectedPoints", () => {
     const r = await loadExpectedPoints({ fetcher: async () => { throw new Error("blocked"); } });
     expect(r.status).toBe("source-error");
     expect(r.rows).toEqual([]);
+    expect(r.record).toBeNull(); // no extraction -> no envelope
     expect(r.canPublishProjections).toBe(false);
   });
 
@@ -90,6 +91,15 @@ describe("loadExpectedPoints", () => {
     expect(r.season).toBe(2025);
     expect(r.rows.map((x) => x.name)).toContain("Buy Low");
     expect(r.sourceUrl).toContain("ep_weekly_2025.csv");
+    // ExtractedRecord envelope: the RightsSnapshot is captured at extraction
+    // time and rides on the result (mirrors adp-source.ts).
+    expect(r.record).not.toBeNull();
+    expect(r.record!.source_id).toBe("ffverse-ffopportunity");
+    expect(r.record!.rights_snapshot.status).toBe("approved_open_license");
+    expect(r.record!.rights_snapshot.commercial_display_allowed).toBe(false);
+    // Registry attribution propagates on the result for every derived output.
+    expect(r.attribution).toContain("ffverse/ffopportunity");
+    expect(r.attribution).toContain("CC-BY-SA-4.0");
   });
 
   // Regression: in the offseason the current season's asset 404s; the loader

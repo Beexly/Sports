@@ -5,8 +5,9 @@
  * with attribution requested as a link/mention — recorded in the Source Rights
  * Registry as `ffc-adp` (approved_api). The data updates ONCE PER DAY and the
  * docs ask integrators not to call frequently, so this adapter caches every
- * live result for 24h (module-level TTL cache) — the once/day term is honored
- * in code, not just in a comment.
+ * live result for 24h (module-level TTL cache) and NEGATIVE-caches failures for
+ * a short TTL (FFC_ERROR_CACHE_TTL_MS) so an outage doesn't re-hit the endpoint
+ * on every load — the once/day term is honored in code, not just in a comment.
  *
  * Rights posture, enforced in order:
  *   1. checkClearance() BEFORE any fetch — a block stops the job (no fetch).
@@ -76,6 +77,16 @@ export const FFC_ATTRIBUTION = "ADP data via FantasyFootballCalculator.com";
 const FFC_BASE = "https://fantasyfootballcalculator.com/api/v1/adp";
 /** Once/day per the FFC API terms — do not lower. */
 export const FFC_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+/**
+ * Short NEGATIVE cache for source-error results. Under an FFC outage every
+ * pool load would otherwise re-hit the endpoint (the docs ask integrators not
+ * to call frequently), so a failure is held for 30 minutes — bounded and
+ * retryable, deliberately far shorter than the 24h live TTL so recovery is
+ * quick. NOTE: like the live cache this is per-instance (module-level) memory;
+ * a serverless fleet still makes up to one call per cold instance per TTL —
+ * recorded as a limitation on the `ffc-adp` rights-registry entry.
+ */
+export const FFC_ERROR_CACHE_TTL_MS = 30 * 60 * 1000;
 
 export function ffcAdpUrl(format: AdpFormat, season: number, teams = 12): string {
   return `${FFC_BASE}/${format}?teams=${teams}&year=${season}`;
@@ -137,23 +148,36 @@ export function parseFfcAdp(payload: unknown): { rows: FfcAdpRow[]; meta: FfcAdp
 }
 
 /**
- * Join helper: key FFC rows by the pool's shared `normName` convention so the
- * ADP column joins the graded pool (and any other name-keyed surface) the same
- * way every other cross-source join in the app does.
+ * Join key for an FFC row: the pool's shared `normName` convention PLUS the
+ * position. Name alone is not identity — two players can share a normalized
+ * name at different positions, and an ADP row must never attach to the
+ * same-named player at another position.
+ */
+export function adpJoinKey(name: string, pos: string): string {
+  return `${normName(name)}|${pos.toUpperCase()}`;
+}
+
+/**
+ * Join helper: key FFC rows by `adpJoinKey` (normName + position) so the ADP
+ * column joins the graded pool (and any other keyed surface) position-safely.
+ * First (best-ADP) row wins on a same-name+position collision. Consumers should
+ * additionally verify team when both sides carry one (see graded-pool.ts).
  */
 export function adpByNormName(rows: readonly FfcAdpRow[]): Map<string, FfcAdpRow> {
   const out = new Map<string, FfcAdpRow>();
   for (const r of rows) {
-    const key = normName(r.player);
-    if (key && !out.has(key)) out.set(key, r); // first (best-ADP) row wins on collision
+    if (!normName(r.player)) continue;
+    const key = adpJoinKey(r.player, r.pos);
+    if (!out.has(key)) out.set(key, r);
   }
   return out;
 }
 
 // ─── IO (clearance-gated, daily-cached) ───────────────────────────────────────
 
-// Module-level daily cache — the once/day API term. Only LIVE results are
-// cached (a source-error must stay retryable).
+// Module-level cache — the once/day API term. LIVE results are held for 24h;
+// source-error results are held for a SHORT negative TTL (an outage must not
+// turn every pool load into a fresh hit, but errors must stay retryable).
 const cache = new Map<string, { readonly expiresAt: number; readonly value: FfcAdp }>();
 
 export function resetFfcAdpCacheForTests(): void {
@@ -256,6 +280,11 @@ export async function loadFfcAdp({
     cache.set(key, { expiresAt: now() + FFC_CACHE_TTL_MS, value });
     return value;
   } catch (error) {
-    return sourceError(format, season, url, error instanceof Error ? error.message : "UNKNOWN");
+    // Negative-cache the failure for a short, bounded TTL so an FFC outage
+    // doesn't re-hit the once/day endpoint on every pool load; expires and
+    // retries automatically.
+    const value = sourceError(format, season, url, error instanceof Error ? error.message : "UNKNOWN");
+    cache.set(key, { expiresAt: now() + FFC_ERROR_CACHE_TTL_MS, value });
+    return value;
   }
 }

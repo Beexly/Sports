@@ -1,12 +1,14 @@
 import { describe, it, expect, afterEach } from "vitest";
 import {
   adpByNormName,
+  adpJoinKey,
   ffcAdpUrl,
   loadFfcAdp,
   parseFfcAdp,
   resetFfcAdpCacheForTests,
   FFC_ATTRIBUTION,
   FFC_CACHE_TTL_MS,
+  FFC_ERROR_CACHE_TTL_MS,
 } from "./adp-source";
 
 // Fixture pinned from the LIVE endpoint (2026-07-16):
@@ -73,12 +75,26 @@ describe("parseFfcAdp (pure)", () => {
 });
 
 describe("adpByNormName", () => {
-  it("keys rows by the shared normName convention (suffix/punctuation folded)", () => {
+  it("keys rows by normName + position (suffix/punctuation folded, position-safe)", () => {
     const { rows } = parseFfcAdp(FIXTURE)!;
     const map = adpByNormName(rows);
-    expect(map.get("jamarr chase")!.adp).toBe(4.0); // apostrophe folded
-    expect(map.get("bijan robinson")!.bye).toBe(11);
+    expect(map.get(adpJoinKey("Ja'Marr Chase", "WR"))!.adp).toBe(4.0); // apostrophe folded
+    expect(map.get("jamarr chase|WR")!.adp).toBe(4.0); // key shape pinned
+    expect(map.get(adpJoinKey("Bijan Robinson", "RB"))!.bye).toBe(11);
     expect(map.size).toBe(4);
+    // Name alone no longer joins: a same-named player at another position must
+    // never inherit the row.
+    expect(map.get("jamarr chase")).toBeUndefined();
+    expect(map.get(adpJoinKey("Ja'Marr Chase", "RB"))).toBeUndefined();
+  });
+
+  it("same-name different-position rows both survive under their own keys", () => {
+    const map = adpByNormName([
+      { player: "Twin Name", pos: "QB", team: "BUF", adp: 3, high: 1, low: 5, stdev: 1, timesDrafted: 10, bye: 7 },
+      { player: "Twin Name", pos: "WR", team: "KC", adp: 40, high: 30, low: 50, stdev: 2, timesDrafted: 10, bye: 10 },
+    ]);
+    expect(map.get(adpJoinKey("Twin Name", "QB"))!.adp).toBe(3);
+    expect(map.get(adpJoinKey("Twin Name", "WR"))!.adp).toBe(40);
   });
 });
 
@@ -120,18 +136,56 @@ describe("loadFfcAdp (clearance-gated, daily-cached IO)", () => {
     expect(calls).toBe(2);
   });
 
-  it("degrades to source-error on HTTP failure / malformed payload — and does not cache it", async () => {
+  it("negative-caches a source-error for a short TTL: an outage does not re-hit the once/day endpoint on every load", async () => {
     let calls = 0;
     const failing = async () => { calls += 1; return new Response("nope", { status: 503 }); };
-    const r1 = await loadFfcAdp({ fetcher: failing, season: 2026 });
+    let t = 5_000_000;
+    const now = () => t;
+
+    const r1 = await loadFfcAdp({ fetcher: failing, season: 2026, now });
     expect(r1.status).toBe("source-error");
     expect(r1.rows).toEqual([]);
     expect(r1.record).toBeNull();
-    const r2 = await loadFfcAdp({ fetcher: failing, season: 2026 });
-    expect(r2.status).toBe("source-error");
-    expect(calls).toBe(2); // errors stay retryable, never cached
 
-    const malformed = await loadFfcAdp({ fetcher: async () => new Response(JSON.stringify({ status: "Error" })), season: 2026, format: "standard" });
+    // Second failed load within the negative TTL is served from the cache — one fetch total.
+    const r2 = await loadFfcAdp({ fetcher: failing, season: 2026, now });
+    expect(r2.status).toBe("source-error");
+    expect(calls).toBe(1);
+
+    // Bounded and retryable: past the TTL the endpoint is retried…
+    t += FFC_ERROR_CACHE_TTL_MS + 1;
+    const r3 = await loadFfcAdp({ fetcher: failing, season: 2026, now });
+    expect(r3.status).toBe("source-error");
+    expect(calls).toBe(2);
+
+    const malformed = await loadFfcAdp({ fetcher: async () => new Response(JSON.stringify({ status: "Error" })), season: 2026, format: "standard", now });
     expect(malformed.status).toBe("source-error");
+  });
+
+  it("recovers after the negative TTL: a live payload replaces the cached error", async () => {
+    let healthy = false;
+    let calls = 0;
+    const flaky = async () => {
+      calls += 1;
+      return healthy ? new Response(JSON.stringify(FIXTURE)) : new Response("nope", { status: 503 });
+    };
+    let t = 9_000_000;
+    const now = () => t;
+
+    expect((await loadFfcAdp({ fetcher: flaky, season: 2026, now })).status).toBe("source-error");
+    healthy = true;
+    // Still inside the negative TTL: the cached error holds (the once/day term wins).
+    expect((await loadFfcAdp({ fetcher: flaky, season: 2026, now })).status).toBe("source-error");
+    expect(calls).toBe(1);
+    t += FFC_ERROR_CACHE_TTL_MS + 1;
+    const recovered = await loadFfcAdp({ fetcher: flaky, season: 2026, now });
+    expect(recovered.status).toBe("live");
+    expect(calls).toBe(2);
+  });
+
+  it("keeps the negative TTL far shorter than the live once/day TTL", () => {
+    expect(FFC_ERROR_CACHE_TTL_MS).toBeLessThan(FFC_CACHE_TTL_MS);
+    expect(FFC_ERROR_CACHE_TTL_MS).toBeGreaterThanOrEqual(15 * 60 * 1000);
+    expect(FFC_ERROR_CACHE_TTL_MS).toBeLessThanOrEqual(60 * 60 * 1000);
   });
 });
