@@ -93,8 +93,11 @@ export function wilsonInterval(successes: number, n: number, z: number = Z_ONE_S
 }
 
 /** Lanczos approximation to ln(Gamma(x)), g=5/n=6 coefficients (Numerical
- * Recipes). Accurate to double precision for x > 0. */
-function gammaLn(xx: number): number {
+ * Recipes). Accurate to double precision for x > 0. Exported for reuse by
+ * other edge-lab modules that need their own gamma-family special function
+ * (e.g. props-hb.ts's regularized incomplete gamma for the continuous-yardage
+ * survival path) rather than re-deriving the same Lanczos coefficients. */
+export function gammaLn(xx: number): number {
   const cof = [
     76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2,
     -0.5395239384953e-5,
