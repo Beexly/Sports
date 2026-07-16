@@ -124,6 +124,11 @@ tunnel vision. Token-smart execution. This section IS the accounting.
   tests prove teeth. Recommended FIRST merge — it fixes money-truth grading.
 - claude/fix-metric-source-fixture-alignment @ 568ccca6 — main's failing engine
   test (subsumed by the fantasy foundation branch; either order works).
+- claude/cockpit-page-auth-rebased @ 29777d3c — G-1 per-page ADMIN checks on
+  all 32 cockpit pages + scan-enforced (wired into test:cockpit +
+  test:brand-safety); web suite 7,695 green. NOTE: fantasy-foundation branch
+  carries the same require-admin helper — merge either first, the overlap is
+  the identical file and resolves trivially.
 
 ## Post-activation product queue (sequenced after ledger activation)
 
