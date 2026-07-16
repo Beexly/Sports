@@ -115,8 +115,8 @@ tunnel vision. Token-smart execution. This section IS the accounting.
 ## OPEN PRs vs main (founder merges; merge #119 first — it fixes live money-truth grading)
 
 #119 salvage-settlement-guardrails · #120 glass-ledger-edge-engine (core build +
-review fixes da86d279) · #121 fantasy-engine-foundation-rebased (rename in
-flight before public use) · #122 clv-decomposition-reland-rebased · #123
+review fixes da86d279) · #121 fantasy-engine-foundation-rebased (PUBLIC-READY: coinage rename landed
+7fa7892d — MSI/BSI/SVH, value-identity proven by golden suites) · #122 clv-decomposition-reland-rebased · #123
 cockpit-page-auth-rebased · #124 frontier-superset-rebased (tasks #15-19
 revived, shadow-only). All six carry the metric-fixture alignment fix; all
 Vercel preview builds Ready. External review findings on #120: four fixed +
