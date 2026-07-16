@@ -18,6 +18,22 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     storage_allowed: true,
   },
   {
+    attribution_required: false,
+    attribution_text: null,
+    commercial_display_allowed: false,
+    derived_analytics_allowed: false,
+    evidence_urls: ["https://www.sports-reference.com/termsofuse.html"],
+    model_training_allowed: false,
+    notes:
+      "Permission required (2026-07-16 verdict: YELLOW internal / RED public — HOLD). " +
+      "Sportradar-licensed PFR content scraped by nflverse; SRL ToU §5(i)/§5(j) bar substitute " +
+      "stores and ML training. FTN charting is the approved trench/coverage alternative.",
+    source_id: "pfr-advstats-via-nflverse",
+    source_name: "PFR advanced stats (pfr_advstats release via nflverse)",
+    status: "permission_required",
+    storage_allowed: false,
+  },
+  {
     attribution_required: true,
     attribution_text: "Weather data by Open-Meteo.com (CC-BY-4.0)",
     commercial_display_allowed: true,
