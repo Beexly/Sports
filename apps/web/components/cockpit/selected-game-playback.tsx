@@ -101,7 +101,7 @@ function AvailablePlayback({
         </div>
         <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
           <Metric label="Selected game" value={twin.selectedGameId} />
-          <Metric label="Recorded events" value={String(twin.eventIds.length)} />
+          <Metric label="Derived events" value={String(twin.eventIds.length)} />
           <Metric label="Contradictions" value={String(twin.contradictionEventIds.length)} />
           <Metric label="Boundary crossing" value={twin.boundaryCrossingEventId ?? "Not captured"} />
         </dl>

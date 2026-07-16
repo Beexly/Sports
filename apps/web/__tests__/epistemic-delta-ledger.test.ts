@@ -136,6 +136,11 @@ describe("epistemic delta ledger", () => {
     expect(certificate.causalScope).toBe("OBSERVED_TRANSITION_ONLY");
     expect(certificate.citations).toContain("event-3");
     expect(certificate.answer).toMatch(/did not cross/i);
+    // M5 (2026-07-16): the copy says "derived" — these are read-time
+    // projections of a mutable envelope, and the wording must not imply an
+    // append-only recorded log that does not exist yet.
+    expect(certificate.answer).toMatch(/derived events/);
+    expect(certificate.answer).not.toMatch(/recorded transitions/);
     expect(buildDecisionChangeCertificate("digest-123", events)).toEqual(certificate);
   });
 

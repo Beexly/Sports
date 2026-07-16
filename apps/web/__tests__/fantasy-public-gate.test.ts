@@ -50,4 +50,18 @@ describe("public fantasy data gate", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();
   });
+
+  // M2 (2026-07-16): social-card crawlers do not follow the 307 — metadata
+  // image routes must pass the gate or every share card for gated paths breaks.
+  it.each([
+    "/fantasy/draft/opengraph-image",
+    "/fantasy/draft/twitter-image",
+    "/fantasy/bestball/opengraph-image-a1b2c3",
+    "/optimizer/opengraph-image",
+  ])("exempts the metadata image route %s from the 307 redirect", (pathname) => {
+    expect(isPublicFantasyToolPath(pathname)).toBe(false);
+    const response = middleware(new NextRequest(`https://gse.test${pathname}`));
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+  });
 });

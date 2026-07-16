@@ -142,6 +142,42 @@ const NEXT_RUN_UTC_HOUR = 10;
 /** Safety margin (h) before the nominal run hour — covers cron jitter/retries. */
 const NEXT_RUN_MARGIN_HOURS = 2;
 
+/**
+ * FREEZE REDUNDANCY (owner ruling R4, 2026-07-16): the 10:00 UTC mint run is
+ * the PRIMARY freeze (fullest pre-kickoff population); the 07:00 UTC settle
+ * run is the FALLBACK. Deferring a pre-mint-hour attempt to the 10:00 run is
+ * only safe while the mint pipeline is demonstrably alive — so before
+ * deferring, this checks that the PRIOR scheduled mint actually succeeded
+ * (a SUCCESS IngestionRun for the sport since the previous mint hour). When
+ * it did not, the 07:00 run freezes NOW with the population it has: a slate
+ * must never reach kickoff unsealed because a single cron was trusted twice.
+ *
+ * Fails toward sealing: any error in the health lookup reports "not healthy",
+ * which makes the caller freeze rather than defer.
+ */
+async function priorMintRunSucceeded(sportKey: string, now: Date): Promise<boolean> {
+  try {
+    const todayMintHour = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), NEXT_RUN_UTC_HOUR),
+    );
+    const priorMintHour =
+      now >= todayMintHour
+        ? todayMintHour
+        : new Date(todayMintHour.getTime() - 24 * 3600_000);
+    const run = await db.ingestionRun.findFirst({
+      where: {
+        sport: sportKey,
+        status: "SUCCESS",
+        startedAt: { gte: priorMintHour },
+      },
+      select: { id: true },
+    });
+    return run !== null;
+  } catch {
+    return false;
+  }
+}
+
 export async function freezeSlateCommitments(
   sportKeys: readonly string[],
   now: Date,
@@ -184,7 +220,10 @@ export async function freezeSlateCommitments(
 
         // Defer to the run that can seal the fullest pre-kickoff population.
         // Tomorrow waits for its own day when safe; today waits until the
-        // canonical mint hour unless an earlier kickoff makes that impossible.
+        // canonical mint hour unless an earlier kickoff makes that impossible
+        // OR the mint pipeline is not demonstrably healthy (owner ruling R4:
+        // 10:00 mint is the primary freeze, the 07:00 settle pass is the
+        // fallback — a slate must never reach kickoff unsealed).
         const ownRunReach = new Date(
           start.getTime() + (NEXT_RUN_UTC_HOUR + NEXT_RUN_MARGIN_HOURS) * 3600_000,
         );
@@ -195,7 +234,8 @@ export async function freezeSlateCommitments(
           }
         } else if (
           now.getUTCHours() < NEXT_RUN_UTC_HOUR &&
-          earliestKickoff >= ownRunReach
+          earliestKickoff >= ownRunReach &&
+          (await priorMintRunSucceeded(sportKey, now))
         ) {
           results.push({
             slateKey,

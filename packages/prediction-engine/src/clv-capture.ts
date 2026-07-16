@@ -6,8 +6,14 @@
  *   1. deriveClosingSnapshotFromOdds — the closing line is not a stored marker;
  *      it is the LAST odds snapshot before kickoff. The Odds table is a
  *      timestamped history (one insert per cycle, indexed on fetchedAt), so we
- *      take the most recent batch at/before commenceTime and select an executable
- *      offer nearest the robust market reference used by scoring.
+ *      take the most recent batch at/before commenceTime and average across
+ *      books — exactly how the scorer forms its consensus.
+ *
+ *      METHODOLOGY IS FROZEN (owner ruling R2b, 2026-07-16): probability-space
+ *      averaging is the close derivation of record. A switch to executable-offer
+ *      consensus was reverted because a grading methodology must never change
+ *      silently mid-record — any future change ships as a versioned, dated
+ *      methodology revision with BOTH series published side by side.
  *   2. gradePickClv — given the immutable lock-time line/price we published at
  *      and that closing snapshot, compute Closing-Line Value via clv.ts.
  *
@@ -29,10 +35,7 @@ import {
   type SpreadSide,
   type TotalSide,
 } from "./clv.js";
-import {
-  buildAmericanOddsConsensus,
-  buildMarketPointConsensus,
-} from "@sports/types";
+import { averageAmericanPrices } from "./scoring.js";
 import { selectionIsHomeSide } from "./settlement.js";
 
 export type PickKind = "SPREAD" | "MONEYLINE" | "TOTAL";
@@ -48,9 +51,10 @@ export interface ClosingOddsRow {
 }
 
 export interface ClosingSnapshot {
+  /** Home-perspective average closing spread; null if unpriced at the close. */
   readonly spreadHome: number | null;
   readonly total: number | null;
-  readonly mlHomePrice: number | null;
+  readonly mlHomePrice: number | null; // averaged American, rounded
   readonly mlAwayPrice: number | null;
   /** fetchedAt of the snapshot used as "the close"; null if none before kickoff. */
   readonly capturedAt: Date | null;
@@ -78,16 +82,20 @@ export interface ClvGrade {
   readonly closePrice: number | null;
 }
 
+function avg(values: readonly number[]): number | null {
+  if (values.length === 0) return null;
+  return values.reduce((a, b) => a + b, 0) / values.length;
+}
+
 /**
  * Derive the closing-line snapshot for a game: the most recent odds batch at or
- * before `commenceTime`, reconciled to an offered close. Returns an all-null snapshot
+ * before `commenceTime`, averaged across books. Returns an all-null snapshot
  * (capturedAt null) when no odds were recorded before kickoff — in which case we
  * cannot honestly grade CLV.
  */
 export function deriveClosingSnapshotFromOdds(
   rows: readonly ClosingOddsRow[],
   commenceTime: Date,
-  sport = "NFL",
 ): ClosingSnapshot {
   const cutoff = commenceTime.getTime();
   const eligible = rows.filter(
@@ -121,14 +129,17 @@ export function deriveClosingSnapshotFromOdds(
     .filter((r) => r.market === "H2H" && r.awayPrice != null)
     .map((r) => r.awayPrice as number);
 
-  const mlHome = buildAmericanOddsConsensus(homePrices)?.executable ?? null;
-  const mlAway = buildAmericanOddsConsensus(awayPrices)?.executable ?? null;
-  const spreadConsensus = buildMarketPointConsensus("SPREAD_POINTS", sport, spreads);
-  const totalConsensus = buildMarketPointConsensus("TOTAL_POINTS", sport, totals);
+  // Moneyline prices MUST be averaged in probability space, not American space:
+  // American odds are discontinuous across ±100, so avg([-102, +105]) = +2 is a
+  // non-price that maps to ~0.98 implied probability and fabricates the CLV
+  // verdict that gates the ESTABLISHED pricing phase. averageAmericanPrices
+  // converts → prob → mean → back. Spread/total are continuous; plain avg is fine.
+  const mlHome = averageAmericanPrices(homePrices);
+  const mlAway = averageAmericanPrices(awayPrices);
 
   return {
-    spreadHome: spreadConsensus?.executable ?? null,
-    total: totalConsensus?.executable ?? null,
+    spreadHome: avg(spreads),
+    total: avg(totals),
     mlHomePrice: mlHome,
     mlAwayPrice: mlAway,
     capturedAt: new Date(latestTs),

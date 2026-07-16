@@ -239,6 +239,10 @@ describe("selected-game Cockpit playback rendering", () => {
 
     // Then
     expect(screen.getByRole("heading", { name: "Selected-game Twin" })).toBeInTheDocument();
+    // M5 (2026-07-16): "Derived events", never "Recorded events" — the twin is
+    // a read-time projection of a mutable envelope, not an append-only log.
+    expect(screen.getByText("Derived events")).toBeInTheDocument();
+    expect(screen.queryByText("Recorded events")).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Deterministic Brain answer" })).toBeInTheDocument();
     const brainSection = screen.getByRole("region", { name: "Deterministic Brain answer" });
     expect(within(brainSection).getByText(/causality is not inferred/i)).toBeInTheDocument();

@@ -179,7 +179,7 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
   {
     id: "performance.no-cherrypicking",
     copy:
-      "Once performance stats are public, every published, non-bootstrap, learning-eligible settled pick is included in the totals. Seed and bootstrap rows are excluded by the canonical population contract.",
+      "Once performance stats are public, every settled pick is included in the totals. Bootstrap-era picks are excluded by design because their data quality is uncalibrated.",
     category: "PERFORMANCE",
     status: "GATED",
     requiredGate: "canExposePerformanceStats",

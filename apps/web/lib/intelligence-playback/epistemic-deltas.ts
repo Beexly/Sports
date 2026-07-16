@@ -192,6 +192,9 @@ export function buildDecisionChangeCertificate(
     causalScope: "OBSERVED_TRANSITION_ONLY",
     citations: [...new Set([...throughDecision.map((delta) => delta.eventId), decision.id])],
     missingData,
-    answer: `The stored stream advanced to ${decision.state} across ${throughDecision.length} recorded transitions. ${boundary} ${evidenceCount} evidence ID${evidenceCount === 1 ? " entered" : "s entered"}; ${weakeningCount} weakening ID${weakeningCount === 1 ? " was" : "s were"} recorded. This is an observed ledger reconstruction; causality is not inferred.`,
+    // "Derived", not "recorded": these are read-time projections of a mutable
+    // envelope — no append-only event log exists yet, so the copy must not
+    // imply one (verification finding M5, 2026-07-16).
+    answer: `The stored stream advanced to ${decision.state} across ${throughDecision.length} derived events. ${boundary} ${evidenceCount} evidence ID${evidenceCount === 1 ? " entered" : "s entered"}; ${weakeningCount} weakening ID${weakeningCount === 1 ? " was" : "s were"} derived. This is a read-time ledger projection; causality is not inferred.`,
   };
 }

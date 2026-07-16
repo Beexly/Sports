@@ -3,17 +3,21 @@ import type { Prisma } from "@prisma/client";
 
 export const SEED_MODEL_VERSION = "v5.0.0-seed";
 
+/**
+ * EVERY SETTLED PICK (owner ruling R3, 2026-07-16): once performance stats are
+ * public, a settled pick appears in the public W/L totals regardless of
+ * snapshot-write success or learning eligibility. Snapshot capture is
+ * MANDATORY AT MINT (process-sport.ts rolls back a pick whose snapshot fails),
+ * so no snapshot-based narrowing is needed here — and none is allowed: adding
+ * one would let an infrastructure failure silently drop a settled pick from
+ * the published record. Only seed rows and bootstrap-era picks are excluded,
+ * by design, because their data quality is uncalibrated.
+ */
 export const CANONICAL_SETTLED_PICK_WHERE = {
   result: { in: ["WIN", "LOSS", "PUSH"] },
   isPublished: true,
   isBootstrap: false,
   NOT: { modelVersion: SEED_MODEL_VERSION },
-  signalSnapshot: {
-    is: {
-      eligibleForLearning: true,
-      isBootstrap: false,
-    },
-  },
 } satisfies Prisma.PickWhereInput;
 
 export function canonicalSettledPickWhere(

@@ -63,6 +63,13 @@ export function projectPickEvidenceEnvelope(
       reversalCondition: envelope.decision.reversalCondition,
     },
     evidence,
-    factors: envelope.factors.map((factor) => projectFactor(factor, visibleIds, audience)),
+    // PUBLIC projections carry NO factors — the factor trail is a paid surface
+    // and stripping it here, inside the projection itself, is what prevents the
+    // #103-class leak: no caller discipline is ever relied on (verification
+    // finding M3, 2026-07-16).
+    factors:
+      audience === "PUBLIC"
+        ? []
+        : envelope.factors.map((factor) => projectFactor(factor, visibleIds, audience)),
   };
 }

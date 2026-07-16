@@ -81,7 +81,12 @@ function eventForPhase(
     health: uniqueValue<HealthState>(activeEvidence.map((record) => record.health), "UNKNOWN"),
     freshness: uniqueValue<FreshnessState>(activeEvidence.map((record) => record.freshness), "UNKNOWN"),
     contradiction: uniqueValue<ContradictionState>(activeEvidence.map((record) => record.contradiction), "UNKNOWN"),
-    market: phase.includeEvidence ? envelope.market : UNKNOWN_MARKET(envelope.market.kind),
+    // The envelope's market state was captured at DECISION time. Presenting it
+    // on pre-SCORED steps (OBSERVED/CORROBORATED) would claim the decision-time
+    // line as observation-time state — a false timeline. Pre-SCORED phases get
+    // UNKNOWN_MARKET; from SCORED onward the value is shown with its own
+    // capturedAt timestamp (verification finding M4, 2026-07-16).
+    market: phase.includeModel ? envelope.market : UNKNOWN_MARKET(envelope.market.kind),
     modelVersion: envelope.model.version,
     rawInternalOutput: phase.includeModel ? envelope.model.rawInternalOutput : null,
     publicRepresentation: phase.includeModel ? envelope.model.publicRepresentation : phase.accessibleText,

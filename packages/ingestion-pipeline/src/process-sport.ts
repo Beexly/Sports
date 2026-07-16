@@ -501,6 +501,12 @@ export async function processSport(
       // Created ONCE (update:{} ensures existing snapshots are never overwritten).
       // This is the foundation for future outcome-anchored calibration:
       // "Given these signals at prediction time, what was the real win rate?"
+      //
+      // MANDATORY AT MINT (owner ruling R3, 2026-07-16): the public performance
+      // population includes EVERY settled pick, so a pick may never exist whose
+      // snapshot could later be missing. If the snapshot write fails, the mint
+      // fails loudly — the just-created pick is rolled back and the owner is
+      // alerted — instead of publishing a pick a filter would have to exclude.
       try {
         const snapshotData = buildPickSignalSnapshot(
           createdPick.id,
@@ -520,11 +526,21 @@ export async function processSport(
           update: {}, // immutable — never overwrite an existing snapshot
         });
       } catch (snapErr) {
-        // Non-fatal: snapshot failure must never kill a pick
-        console.warn(
-          `${logPrefix} Snapshot capture failed for pick ${createdPick.id}: ` +
-          `${snapErr instanceof Error ? snapErr.message : snapErr}`
+        const snapMessage = snapErr instanceof Error ? snapErr.message : String(snapErr);
+        console.error(
+          `${logPrefix} Snapshot capture failed for pick ${createdPick.id} — ` +
+          `rolling back the mint (snapshot is mandatory): ${snapMessage}`
         );
+        // Roll back: the pick must not exist without its prediction-time
+        // snapshot. If even the rollback fails, rethrow — the run must fail
+        // rather than leave a snapshot-less published pick behind.
+        await db.pick.delete({ where: { id: createdPick.id } });
+        picksGenerated--;
+        await notifyOwner(
+          `GSE mint FAILED (mandatory snapshot)\nsport: ${sport.key}\n` +
+          `pick: ${createdPick.id} (${pick.pickType} ${pick.selection})\n${snapMessage}`,
+        );
+        continue;
       }
 
       // Freeze a tamper-evident proof receipt — the pre-result, pre-kickoff commitment
@@ -578,10 +594,18 @@ export async function processSport(
           });
         }
       } catch (receiptErr) {
-        // Non-fatal: proof-receipt failure must never kill a pick
+        // Non-fatal for the pick, but NEVER silent: a pick published without a
+        // receipt is a record-integrity event (the pre-result commitment the
+        // whole track record leans on is missing). Alert the owner immediately
+        // in addition to the log line (verification finding M1, 2026-07-16).
+        const receiptMessage =
+          receiptErr instanceof Error ? receiptErr.message : String(receiptErr);
         console.warn(
-          `${logPrefix} Proof receipt mint failed for pick ${createdPick.id}: ` +
-          `${receiptErr instanceof Error ? receiptErr.message : receiptErr}`
+          `${logPrefix} Proof receipt mint failed for pick ${createdPick.id}: ${receiptMessage}`
+        );
+        await notifyOwner(
+          `GSE RECORD-INTEGRITY: proof receipt mint FAILED\nsport: ${sport.key}\n` +
+          `pick: ${createdPick.id} (${pick.pickType} ${pick.selection})\n${receiptMessage}`,
         );
       }
     }

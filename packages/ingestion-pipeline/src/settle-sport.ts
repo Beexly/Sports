@@ -66,6 +66,19 @@ const SCORES_DAYS_FROM = 3;
 const VOID_STALE_HOURS = 72;
 
 /**
+ * Receipt-gated CLV applies FORWARD ONLY (owner ruling R2a, 2026-07-16).
+ *
+ * Picks minted at/after this epoch were published under the receipt contract
+ * (the proof receipt commits the observed-market contract, and the mint path
+ * alerts loudly when a receipt fails to mint) — they are CLV-graded only when
+ * that contract is present. Picks minted BEFORE the epoch keep the
+ * pre-existing CLV grading path unchanged: the public CLV record is
+ * continuous, and no legacy pick is retroactively denied a grade it would
+ * have received under the methodology it was published under.
+ */
+const RECEIPT_MARKET_CONTRACT_EPOCH = new Date("2026-07-17T00:00:00.000Z");
+
+/**
  * Settle all completed games for one sport.
  *
  * @param sport     - Sport configuration (key, name, displayName)
@@ -100,20 +113,18 @@ export async function settleSport(
     }
 
     try {
+      // Catch-up: recorded FINALs whose picks are still PENDING (the score feed
+      // dropped them). PENDING ONLY — already-settled picks are never re-fetched
+      // for retroactive CLV backfill (owner ruling R2c, 2026-07-16: a settled
+      // pick's CLV fields are frozen as graded at settlement, or terminally
+      // marked ungradeable; they are not revised against a later-derived close).
       const recordedFinals = await db.game.findMany({
         where: {
           sport: { key: sport.key },
           status: "FINAL",
           homeScore: { not: null },
           awayScore: { not: null },
-          picks: {
-            some: {
-              OR: [
-                { result: "PENDING" },
-                { result: { in: ["WIN", "LOSS", "PUSH"] }, clvGradedAt: null },
-              ],
-            },
-          },
+          picks: { some: { result: "PENDING" } },
         },
         select: {
           externalId: true,
@@ -151,12 +162,9 @@ export async function settleSport(
         where: { externalId: score.externalId },
         include: {
           picks: {
-            where: {
-              OR: [
-                { result: "PENDING" },
-                { result: { in: ["WIN", "LOSS", "PUSH"] }, clvGradedAt: null },
-              ],
-            },
+            // PENDING only (owner ruling R2c): settlement never re-opens an
+            // already-settled pick to backfill CLV retroactively.
+            where: { result: "PENDING" },
             include: { proofReceipt: { select: { payload: true } } },
           },
         },
@@ -209,11 +217,7 @@ export async function settleSport(
               awayPrice: true,
             },
           });
-          closingSnapshot = deriveClosingSnapshotFromOdds(
-            closingOdds,
-            game.commenceTime,
-            sport.key,
-          );
+          closingSnapshot = deriveClosingSnapshotFromOdds(closingOdds, game.commenceTime);
         } catch (clvErr) {
           console.warn(
             `${logPrefix} Closing-line fetch failed for game ${game.id}: ` +
@@ -228,44 +232,51 @@ export async function settleSport(
           // would settle a published WIN as a LOSS and contradict the CLV verdict (which
           // already uses clvLockLine below). Fall back to pick.line only for legacy rows
           // with no lock. (MONEYLINE ignores the line entirely.)
-          const alreadySettled =
-            pick.result === "WIN" || pick.result === "LOSS" || pick.result === "PUSH";
-          let result: ReturnType<typeof calculatePickResult>;
-          if (alreadySettled) {
-            result = pick.result as ReturnType<typeof calculatePickResult>;
-          } else {
-            const gradingLine = selectGradingLine(pick);
-            result = calculatePickResult(
-              pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
-              pick.selection,
-              gradingLine,
-              game.homeTeamName,
-              score.homeScore,
-              score.awayScore,
-              sport.key,
-              game.awayTeamName,
-            );
+          const gradingLine = selectGradingLine(pick);
+          const result = calculatePickResult(
+            pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+            pick.selection,
+            gradingLine,
+            game.homeTeamName,
+            score.homeScore,
+            score.awayScore,
+            sport.key,
+            game.awayTeamName,
+          );
           // Idempotent settle. game.picks was read with result:"PENDING", but
           // the worker and the Vercel settle-picks cron can both reach this game
           // between that read and this write. updateMany scoped to
           // result:"PENDING" makes the write a no-op for the loser of the race
           // (count===0) — so the first settlement and its settledAt stay
           // immutable and CLV is never re-graded against a second close.
-            const settled = await db.pick.updateMany({
-              where: { id: pick.id, result: "PENDING" },
-              data: { result, settledAt },
-            });
-            if (settled.count === 0) continue;
-          }
+          const settled = await db.pick.updateMany({
+            where: { id: pick.id, result: "PENDING" },
+            data: { result, settledAt },
+          });
+          if (settled.count === 0) continue;
 
           // Grade Closing-Line Value against the immutable lock snapshot
           // (clvLockLine/clvLockPrice, captured at publish). Additive and
-          // guarded — never blocks settlement. Returns null (and we skip) when
-          // there is no close or no lock to compare.
-          if (
-            closingSnapshot?.capturedAt &&
-            hasObservedMarketContract(pick.proofReceipt?.payload)
-          ) {
+          // guarded — never blocks settlement.
+          //
+          // FORWARD-ONLY receipt gate (owner ruling R2a): picks minted under
+          // the receipt contract (at/after RECEIPT_MARKET_CONTRACT_EPOCH) must
+          // carry the observed-market contract in their proof receipt to be
+          // graded; every pick minted before the epoch keeps the pre-existing
+          // grading path — the gate never denies a legacy pick retroactively.
+          //
+          // TERMINAL RESOLUTION: every pick settled by this pass leaves with a
+          // non-null clvGradedAt. A full grade is written when one is derivable;
+          // otherwise clvGradedAt alone is stamped (null verdict fields = CLV
+          // terminally ungradeable), so no later pass or query keyed on
+          // clvGradedAt IS NULL ever re-fetches or churns on it.
+          const mintedUnderReceiptContract =
+            pick.generatedAt >= RECEIPT_MARKET_CONTRACT_EPOCH;
+          const clvEligible =
+            !mintedUnderReceiptContract ||
+            hasObservedMarketContract(pick.proofReceipt?.payload);
+          let clvGraded = false;
+          if (closingSnapshot?.capturedAt && clvEligible) {
             try {
               const grade = gradePickClv({
                 pickType: pick.pickType as PickKind,
@@ -289,11 +300,29 @@ export async function settleSport(
                     clvGradedAt: settledAt,
                   },
                 });
+                clvGraded = true;
               }
             } catch (clvErr) {
               console.warn(
                 `${logPrefix} CLV grading failed for pick ${pick.id}: ` +
                 `${clvErr instanceof Error ? clvErr.message : clvErr}`,
+              );
+            }
+          }
+          if (!clvGraded) {
+            try {
+              // Terminal marker: settled, CLV not derivable (no pre-kickoff
+              // close, no comparable lock, or a post-epoch pick without its
+              // receipt contract). Stamp clvGradedAt with null verdict fields
+              // so the pick exits every CLV query without churn.
+              await db.pick.updateMany({
+                where: { id: pick.id, clvGradedAt: null },
+                data: { clvGradedAt: settledAt },
+              });
+            } catch (clvMarkErr) {
+              console.warn(
+                `${logPrefix} CLV terminal marker failed for pick ${pick.id}: ` +
+                `${clvMarkErr instanceof Error ? clvMarkErr.message : clvMarkErr}`,
               );
             }
           }
@@ -328,7 +357,7 @@ export async function settleSport(
               `${snapErr instanceof Error ? snapErr.message : snapErr}`,
             );
           }
-          if (!alreadySettled) picksSettled++;
+          picksSettled++;
         }
 
         // Write TeamGameLog entries for ATS form tracking.
@@ -363,52 +392,65 @@ export async function settleSport(
       }
     }
 
-    try {
-      const cutoff = new Date(Date.now() - VOID_STALE_HOURS * 60 * 60 * 1000);
-      const staleGames = await db.game.findMany({
-        where: {
-          sport: { key: sport.key },
-          commenceTime: { lt: cutoff },
-          picks: { some: { result: "PENDING" } },
-          NOT: {
-            status: "FINAL",
-            homeScore: { not: null },
-            awayScore: { not: null },
+    // FEED-GATED VOID sweep (owner ruling R1, 2026-07-16): the 72h auto-void
+    // policy stands, but it must NEVER run on a settle pass where the scores
+    // feed errored. Voiding is a judgment that the outcome is genuinely
+    // ungradeable — absence-of-data caused by a failed fetch is not that.
+    // Only a pass with a healthy feed lookup (feedError === null) may void.
+    if (feedError === null) {
+      try {
+        const cutoff = new Date(Date.now() - VOID_STALE_HOURS * 60 * 60 * 1000);
+        const staleGames = await db.game.findMany({
+          where: {
+            sport: { key: sport.key },
+            commenceTime: { lt: cutoff },
+            picks: { some: { result: "PENDING" } },
+            NOT: {
+              status: "FINAL",
+              homeScore: { not: null },
+              awayScore: { not: null },
+            },
           },
-        },
-        include: { picks: { where: { result: "PENDING" } } },
-      });
+          include: { picks: { where: { result: "PENDING" } } },
+        });
 
-      for (const game of staleGames) {
-        const settledAt = new Date();
-        for (const pick of game.picks) {
-          const voided = await db.pick.updateMany({
-            where: { id: pick.id, result: "PENDING" },
-            data: { result: "VOID", settledAt },
-          });
-          if (voided.count === 0) continue;
-          try {
-            await recordPickSettlementSnapshot({
-              db,
-              pick,
-              result: "VOID",
-              settledAt,
-              isEligibleForLearning: false,
-              gameDataQualityScore: game.dataQualityScore,
+        for (const game of staleGames) {
+          const settledAt = new Date();
+          for (const pick of game.picks) {
+            const voided = await db.pick.updateMany({
+              where: { id: pick.id, result: "PENDING" },
+              data: { result: "VOID", settledAt },
             });
-          } catch (error) {
-            console.warn(
-              `${logPrefix} Snapshot VOID update failed for pick ${pick.id}: ` +
-                `${error instanceof Error ? error.message : error}`
-            );
+            if (voided.count === 0) continue;
+            try {
+              await recordPickSettlementSnapshot({
+                db,
+                pick,
+                result: "VOID",
+                settledAt,
+                isEligibleForLearning: false,
+                gameDataQualityScore: game.dataQualityScore,
+              });
+            } catch (error) {
+              console.warn(
+                `${logPrefix} Snapshot VOID update failed for pick ${pick.id}: ` +
+                  `${error instanceof Error ? error.message : error}`
+              );
+            }
+            picksVoided++;
           }
-          picksVoided++;
         }
+      } catch (error) {
+        console.warn(
+          `${logPrefix} Stale-pick VOID sweep failed for ${sport.key}: ` +
+            `${error instanceof Error ? error.message : error}`
+        );
       }
-    } catch (error) {
+    } else {
       console.warn(
-        `${logPrefix} Stale-pick VOID sweep failed for ${sport.key}: ` +
-          `${error instanceof Error ? error.message : error}`
+        `${logPrefix} Skipping stale-pick VOID sweep for ${sport.key}: ` +
+          "scores feed errored this pass; voiding on absence-of-data from a " +
+          "failed fetch is forbidden (owner ruling R1).",
       );
     }
 

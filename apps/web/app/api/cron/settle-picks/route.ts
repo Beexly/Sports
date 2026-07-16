@@ -90,11 +90,13 @@ export async function GET(request: Request) {
     await new Promise((r) => setTimeout(r, 750));
   }
 
-  // SECOND FREEZE SHOT (hostile-review F1): the 10:00 UTC refresh-odds run is
-  // otherwise a single point of loss for early-UTC slates (an offset-1 freeze
-  // that fails there is unrecoverable by the slate's own post-kickoff day).
-  // The freeze pass is idempotent and non-fatal. Same-day attempts before the
-  // canonical mint hour defer unless an earlier kickoff makes waiting unsafe.
+  // SECOND FREEZE SHOT (hostile-review F1 + owner ruling R4, 2026-07-16): the
+  // 10:00 UTC refresh-odds run is the PRIMARY freeze but must never be a
+  // single point of loss — this 07:00 pass is the FALLBACK. It is idempotent
+  // and non-fatal. Same-day attempts before the canonical mint hour defer
+  // ONLY when an earlier kickoff can wait AND the prior scheduled mint
+  // demonstrably succeeded; otherwise this run seals the slate immediately.
+  // A slate must never reach kickoff unsealed.
   let freeze: SlateFreezeResult[] = [];
   try {
     freeze = await freezeSlateCommitments(

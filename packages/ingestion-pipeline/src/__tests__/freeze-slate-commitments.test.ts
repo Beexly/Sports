@@ -29,6 +29,7 @@ const mocks = vi.hoisted(() => ({
   slateCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
   receiptFindMany: vi.fn<(args: { where: { pick: { gameId: { in: string[] } } } }) => Promise<unknown[]>>(),
   receiptUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  ingestionRunFindFirst: vi.fn<(args: unknown) => Promise<{ id: string } | null>>(),
   transaction: vi.fn<(ops: Promise<unknown>[]) => Promise<unknown[]>>(),
 }));
 
@@ -37,6 +38,7 @@ vi.mock("@sports/db", () => ({
     game: { findMany: mocks.gameFindMany },
     slateCommitment: { findUnique: mocks.slateFindUnique, create: mocks.slateCreate },
     pickProofReceipt: { findMany: mocks.receiptFindMany, updateMany: mocks.receiptUpdateMany },
+    ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
     $transaction: mocks.transaction,
   },
 }));
@@ -103,6 +105,9 @@ beforeEach(() => {
   mocks.receiptFindMany.mockImplementation(receiptsForGames(RECEIPTS));
   mocks.slateCreate.mockResolvedValue({ id: "slate-row-1" });
   mocks.receiptUpdateMany.mockResolvedValue({ count: RECEIPTS.length });
+  // Default: the prior scheduled mint run succeeded (pipeline healthy), so
+  // pre-mint-hour deferrals behave as before. R4 tests override this to null.
+  mocks.ingestionRunFindFirst.mockResolvedValue({ id: "run-prior" });
   // Prisma array-transaction: with mocks, the ops are already-created promises.
   mocks.transaction.mockImplementation((ops) => Promise.all(ops));
 });
@@ -168,12 +173,19 @@ describe("freezeSlateCommitments", () => {
     ]);
   });
 
-  it("defers today's slate when a settlement retry runs before the canonical mint hour", async () => {
+  it("defers today's slate when a settlement retry runs before the canonical mint hour (prior mint healthy)", async () => {
     const earlyRun = new Date("2026-07-02T07:00:00.000Z");
 
     const results = await freezeSlateCommitments([SPORT], earlyRun, testHash);
 
     expect(mocks.slateCreate).not.toHaveBeenCalled();
+    // The deferral consulted the prior mint's health before trusting the
+    // 10:00 run (owner ruling R4).
+    expect(mocks.ingestionRunFindFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ sport: SPORT, status: "SUCCESS" }),
+      }),
+    );
     expect(results).toEqual([
       {
         slateKey: TODAY_KEY,
@@ -182,6 +194,35 @@ describe("freezeSlateCommitments", () => {
       },
       NO_GAMES_TOMORROW,
     ]);
+  });
+
+  it("R4 FALLBACK: the 07:00 run freezes today's slate when the prior day's 10:00 mint FAILED", async () => {
+    // No SUCCESS IngestionRun since the prior mint hour → the mint pipeline
+    // is not demonstrably alive, so deferring to today's 10:00 run would bet
+    // an unsealed slate on a cron that already failed once. Freeze NOW.
+    const earlyRun = new Date("2026-07-02T07:00:00.000Z");
+    mocks.ingestionRunFindFirst.mockResolvedValue(null);
+
+    const results = await freezeSlateCommitments([SPORT], earlyRun, testHash);
+
+    expect(mocks.slateCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({ slateKey: TODAY_KEY, count: 2 }),
+    });
+    expect(results[0]).toEqual({ slateKey: TODAY_KEY, action: "COMMIT", count: 2 });
+    // It asked for a SUCCESS run since the prior mint hour (2026-07-01T10:00Z).
+    const healthQuery = mocks.ingestionRunFindFirst.mock.calls[0]?.[0] as {
+      where: { startedAt: { gte: Date } };
+    };
+    expect(healthQuery.where.startedAt.gte.toISOString()).toBe("2026-07-01T10:00:00.000Z");
+  });
+
+  it("R4 fails toward sealing: a health-lookup error freezes rather than defers", async () => {
+    const earlyRun = new Date("2026-07-02T07:00:00.000Z");
+    mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db unreachable"));
+
+    const results = await freezeSlateCommitments([SPORT], earlyRun, testHash);
+
+    expect(results[0]).toEqual({ slateKey: TODAY_KEY, action: "COMMIT", count: 2 });
   });
 
   it("seals today's slate before the mint hour when an earlier kickoff cannot wait", async () => {

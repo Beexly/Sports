@@ -7,6 +7,73 @@ Production deployment identity: `VERIFIED_CURRENT_NOT_RECOVERY` — Vercel repor
 
 This file is the execution control plane. It is not a readiness claim.
 
+## 2026-07-16 owner adjudication — PR #112 HOLD findings (fix pass applied on-branch)
+
+The independent adversarial verification of PR #112 ("disposition: HOLD") raised four record-integrity
+disputes. The founder adjudicated all four on 2026-07-16. This section records the rulings verbatim in
+substance and the exact implementation applied by the fix pass (this branch, merged with current `main`).
+
+### Ruling R1 — VOID sweep: APPROVED, FEED-GATED
+
+The 72h auto-void policy stands, but the sweep MUST NOT run on any settle pass where the scores feed
+errored. Voiding is a judgment that an outcome is genuinely ungradeable; absence-of-data caused by a
+failed fetch is not that. **Implemented:** `packages/ingestion-pipeline/src/settle-sport.ts` gates the
+entire stale-game VOID sweep on `feedError === null`. Pinned: a settle run with `feedError` set voids
+nothing (and still settles recorded FINALs — only voiding is feed-gated).
+
+### Ruling R2 — CLV: CONTINUITY FIRST
+
+(a) Receipt-gated CLV applies FORWARD ONLY. Picks minted before the receipt contract
+(`RECEIPT_MARKET_CONTRACT_EPOCH`, 2026-07-17T00:00Z) keep the pre-existing CLV grading path. Every pick
+settled by a pass now resolves terminally: a grade is written when derivable, otherwise `clvGradedAt`
+is stamped with null verdict fields (terminal "ungradeable" marker) so nothing re-fetches or churns on
+`clvGradedAt IS NULL`.
+(b) The closing-line methodology switch (executable-offer consensus) is REVERTED. Probability-space
+averaging (`averageAmericanPrices` + plain point averaging, as `main` shipped in #105) is restored as
+the close derivation of record in `packages/prediction-engine/src/clv-capture.ts`. A methodology change
+may only happen later as a versioned, dated revision with BOTH series published — never silently
+mid-record. (The team-identity fix — `awayTeamName` + boundary-aware side derivation in `gradePickClv`
+— is retained; it is a correctness fix, not a methodology change.)
+(c) The retroactive CLV backfill onto already-settled picks is REVERTED. Settlement queries are
+PENDING-only again; a settled pick is never re-opened to grade CLV against a later-derived close.
+
+### Ruling R3 — PUBLIC RECORD: EVERY SETTLED PICK
+
+The eligibility narrowing (`signalSnapshot.eligibleForLearning`) is removed from
+`apps/web/lib/performance/canonical-population.ts`: a settled pick appears in public W/L totals
+regardless of snapshot-write success. To make the filter permanently unnecessary, the snapshot capture
+is now MANDATORY AT MINT: `packages/ingestion-pipeline/src/process-sport.ts` rolls back the
+just-created pick and alerts the owner when the snapshot write fails — a mint fails loudly rather than
+producing a pick that could later be excluded. The public trust claim (`performance.no-cherrypicking`)
+is restored to the original "every settled pick" wording.
+
+### Ruling R4 — FREEZE REDUNDANCY: RESTORED
+
+10:00 UTC mint is the PRIMARY freeze; the 07:00 UTC settle run is the FALLBACK. The pre-mint-hour
+deferral in `packages/ingestion-pipeline/src/freeze-slate-commitments.ts` now first verifies the prior
+scheduled mint actually succeeded (a SUCCESS `IngestionRun` for the sport since the prior mint hour).
+If the prior day's 10:00 mint failed — or the health lookup itself errors — the 07:00 run freezes the
+slate immediately with the population it has. A slate must never reach kickoff unsealed.
+
+### Mechanical verification findings applied in the same pass
+
+- **M1** `process-sport.ts`: proof-receipt mint failure now alerts via `notifyOwner` (Telegram owner
+  alert) in addition to the log line — a pick published without a receipt is a record-integrity event.
+- **M2** `apps/web/lib/fantasy/public-gate.ts`: `/(opengraph|twitter)-image` metadata routes are exempt
+  from the fantasy 307 redirect so social cards render.
+- **M3** `apps/web/lib/intelligence-playback/project.ts`: PUBLIC-audience projections strip `factors`
+  inside the projection itself (never rely on caller discipline — the #103-class leak pattern).
+- **M4** `apps/web/lib/intelligence-playback/events.ts`: OBSERVED/CORROBORATED steps present
+  `UNKNOWN_MARKET`; the decision-time market line appears only from SCORED onward, with its own
+  `capturedAt`.
+- **M5** "Recorded events/transitions" copy replaced with "Derived events" in the selected-game
+  Cockpit playback and the decision-change certificate — these are read-time projections of a mutable
+  envelope; no append-only log exists yet.
+
+All four rulings and all mechanical fixes are pinned by tests (settle-sport, process-sport,
+freeze-slate-commitments, clv-capture, fantasy-public-gate, pick-evidence-envelope,
+epistemic-delta-ledger, cockpit-selected-game-playback, dashboard-performance-gate).
+
 ## 2026-07-16 selected-game Cockpit continuation
 
 Status: `VALIDATED_LOCAL_OWNER_ROUTE`
@@ -104,6 +171,10 @@ Boundary:
 8. Build the additive `PickEvidenceEnvelope`, canonical `IntelligenceEvent` stream, and a real `/room/[gameId]` playback slice.
 9. Feed the same stream to transcript/table, selected-game Twin/Observatory, postgame autopsy, draft-only Media Studio, and deterministic cockpit explanation.
 10. Complete accessibility, performance, browser, visual, trust, and full-workspace validation.
+11. DONE (2026-07-16): apply the four owner rulings (R1 feed-gated VOID, R2 CLV continuity, R3
+    every-settled-pick population + mandatory mint snapshot, R4 freeze redundancy) and the five
+    mechanical verification fixes (M1–M5) on this branch; merge `origin/main` (post-#110/#111/#113);
+    re-pin all rulings in tests. PR #112 remains the sole review surface — merge is owner-controlled.
 
 ## Validation ledger
 

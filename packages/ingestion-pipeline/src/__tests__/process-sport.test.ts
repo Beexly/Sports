@@ -29,6 +29,7 @@ const mocks = vi.hoisted(() => ({
   // prediction-engine
   scoreGames: vi.fn<(inputs: unknown[], at: Date) => unknown[]>(),
   buildPickSignalSnapshot: vi.fn<(...args: unknown[]) => Record<string, unknown>>(),
+  buildPickProofReceipt: vi.fn<(...args: unknown[]) => Record<string, unknown>>(),
   // db
   ingestionRunCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   ingestionRunUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -37,8 +38,11 @@ const mocks = vi.hoisted(() => ({
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   oddsCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   pickCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
+  pickDelete: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  receiptUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  notifyOwner: vi.fn<(message: string) => Promise<boolean>>(),
 }));
 
 vi.mock("@sports/db", () => ({
@@ -47,9 +51,15 @@ vi.mock("@sports/db", () => ({
     sport: { upsert: mocks.sportUpsert },
     game: { upsert: mocks.gameUpsert, findUnique: mocks.gameFindUnique },
     odds: { createMany: mocks.oddsCreateMany },
-    pick: { create: mocks.pickCreate, findUnique: mocks.pickFindUnique },
+    pick: { create: mocks.pickCreate, delete: mocks.pickDelete, findUnique: mocks.pickFindUnique },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
+    pickProofReceipt: { upsert: mocks.receiptUpsert },
   },
+}));
+
+vi.mock("../owner-alert.js", () => ({
+  notifyOwner: mocks.notifyOwner,
+  ownerAlertsConfigured: () => false,
 }));
 
 vi.mock("@sports/data-ingestion", () => ({
@@ -79,6 +89,7 @@ vi.mock("@sports/data-ingestion", () => ({
 vi.mock("@sports/prediction-engine", () => ({
   scoreGames: mocks.scoreGames,
   buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
+  buildPickProofReceipt: mocks.buildPickProofReceipt,
 }));
 
 vi.mock("../source-snapshot.js", () => ({
@@ -158,6 +169,25 @@ describe("processSport", () => {
     mocks.pickFindUnique.mockResolvedValue(null);
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
+    mocks.pickDelete.mockResolvedValue({});
+    mocks.receiptUpsert.mockResolvedValue({});
+    mocks.notifyOwner.mockResolvedValue(false);
+    mocks.buildPickProofReceipt.mockReturnValue({
+      pickId: "pick-1",
+      payload: "payload",
+      contentHash: "hash",
+      frozenAt: new Date().toISOString(),
+      fields: {
+        marketFairProb: 0.55,
+        confidence: 72,
+        edgeScore: 61,
+        modelProb: null,
+        entryOdds: -110,
+        line: -3.5,
+        modelVersion: "v5.0.0",
+        asOf: new Date().toISOString(),
+      },
+    });
   });
 
   it("runs the happy path and marks the IngestionRun SUCCESS with counts", async () => {
@@ -441,13 +471,38 @@ describe("processSport", () => {
     );
   });
 
-  it("a snapshot failure never kills the pick or the run", async () => {
+  it("SNAPSHOT IS MANDATORY AT MINT (owner ruling R3): a snapshot failure rolls the pick back and alerts", async () => {
     mocks.snapshotUpsert.mockRejectedValue(new Error("snapshot table locked"));
 
     const result = await processSport(SPORT, "key", gates());
 
+    // The run survives, but the pick does NOT — a pick may never exist whose
+    // prediction-time snapshot is missing (it could later be silently excluded
+    // from the public record; mint must fail loudly instead).
+    expect(result.status).toBe("success");
+    expect(result.picks).toBe(0);
+    expect(mocks.pickDelete).toHaveBeenCalledWith({ where: { id: "pick-1" } });
+    expect(mocks.notifyOwner).toHaveBeenCalledWith(
+      expect.stringContaining("mandatory snapshot"),
+    );
+  });
+
+  it("a proof-receipt mint failure ALERTS the owner — a receipt-less publish is a record-integrity event (M1)", async () => {
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ marketFairProb: 0.55, entryPrice: -110 }),
+    ]);
+    mocks.receiptUpsert.mockRejectedValue(new Error("receipt table locked"));
+
+    const result = await processSport(SPORT, "key", gates());
+
+    // The pick still publishes (receipt failure stays non-fatal for the pick)…
     expect(result.status).toBe("success");
     expect(result.picks).toBe(1);
+    expect(mocks.pickDelete).not.toHaveBeenCalled();
+    // …but the failure is pushed to the owner, never just console.warn'd.
+    expect(mocks.notifyOwner).toHaveBeenCalledWith(
+      expect.stringContaining("RECORD-INTEGRITY"),
+    );
   });
 
   it("suppresses featured promotion when the gate is off", async () => {

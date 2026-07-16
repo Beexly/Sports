@@ -360,4 +360,41 @@ describe("PickEvidenceEnvelope", () => {
     expect(cockpitEvents.some((event) => event.rawInternalOutput?.includes("weight=protected"))).toBe(true);
     expect(cockpitEvents.some((event) => event.evidenceIds.includes("internal-1"))).toBe(true);
   });
+
+  it("PUBLIC projections carry NO factors — stripped inside the projection, never by caller discipline (M3)", () => {
+    const envelope = buildPickEvidenceEnvelope(completeInput(), sha256);
+
+    const publicProjection = projectPickEvidenceEnvelope(envelope, "PUBLIC");
+    const paidProjection = projectPickEvidenceEnvelope(envelope, "PAID");
+    const cockpitProjection = projectPickEvidenceEnvelope(envelope, "COCKPIT");
+
+    // The factor trail is a paid surface; a PUBLIC projection must be safe to
+    // hand to ANY renderer as-is (the #103-class leak pattern is a caller
+    // forgetting to filter — so the projection itself never includes them).
+    expect(publicProjection.factors).toEqual([]);
+    expect(paidProjection.factors.length).toBeGreaterThan(0);
+    expect(cockpitProjection.factors.length).toBeGreaterThan(0);
+  });
+
+  it("OBSERVED/CORROBORATED steps never present the decision-time market line as observation-time state (M4)", () => {
+    const envelope = buildPickEvidenceEnvelope(completeInput(), sha256);
+    const events = buildIntelligenceEvents(envelope);
+
+    const preScored = events.filter((event) =>
+      event.state === "UNKNOWN" || event.state === "OBSERVED" || event.state === "CORROBORATED",
+    );
+    const scoredOnward = events.filter((event) => event.state === "SCORED");
+
+    expect(preScored.length).toBeGreaterThan(0);
+    for (const event of preScored) {
+      // The market snapshot was captured at DECISION time; pre-SCORED steps
+      // must show UNKNOWN_MARKET rather than back-dating that line.
+      expect(event.market.offeredPrice).toBeNull();
+      expect(event.market.offeredPoint).toBeNull();
+      expect(event.market.capturedAt).toBeNull();
+    }
+    // From SCORED onward the value appears together with its own capturedAt.
+    expect(scoredOnward[0]?.market.offeredPoint).toBe(-3.5);
+    expect(scoredOnward[0]?.market.capturedAt).toBe("2026-07-14T16:00:00.000Z");
+  });
 });

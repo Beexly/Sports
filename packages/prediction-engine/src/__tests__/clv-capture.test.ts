@@ -38,7 +38,11 @@ describe("deriveClosingSnapshotFromOdds", () => {
     expect(snap.bookmakerCount).toBe(0);
   });
 
-  it("uses the latest pre-kickoff batch and keeps an executable closing offer", () => {
+  // OWNER RULING R2b (2026-07-16): probability-space averaging IS the closing
+  // methodology of record. The executable-offer consensus switch was reverted —
+  // the close derivation must not change silently mid-record. This test pins
+  // the restored (pre-existing) methodology.
+  it("uses the latest pre-kickoff batch and averages across books", () => {
     const rows: ClosingOddsRow[] = [
       // older batch — should be ignored
       row({ market: "H2H", fetchedAt: t("2026-04-15T10:00:00Z"), homePrice: -120, awayPrice: 100 }),
@@ -53,19 +57,10 @@ describe("deriveClosingSnapshotFromOdds", () => {
     ];
     const snap = deriveClosingSnapshotFromOdds(rows, COMMENCE);
     expect(snap.capturedAt?.toISOString()).toBe("2026-04-15T17:55:00.000Z");
-    expect(snap.mlHomePrice).toBe(-160);
-    expect(snap.mlAwayPrice).toBe(130);
-    expect(snap.spreadHome).toBe(-3.5);
+    expect(snap.mlHomePrice).toBe(-155); // prob-space avg(-160, -150), rounded
+    expect(snap.mlAwayPrice).toBe(135); // prob-space avg(140, 130), rounded
+    expect(snap.spreadHome).toBeCloseTo(-3.0, 6); // avg(-3.5, -2.5)
     expect(snap.total).toBeCloseTo(48.5, 6);
-  });
-
-  it("quarantines non-tradable points instead of fabricating a close", () => {
-    const snap = deriveClosingSnapshotFromOdds([
-      row({ market: "SPREADS", fetchedAt: t("2026-04-15T17:55:00Z"), spread: -3.2 }),
-      row({ market: "TOTALS", fetchedAt: t("2026-04-15T17:55:00Z"), total: 8.954545454545455 }),
-    ], COMMENCE, "americanfootball_nfl");
-    expect(snap.spreadHome).toBeNull();
-    expect(snap.total).toBeNull();
   });
 
   it("treats a snapshot exactly at commence time as eligible (<=)", () => {
@@ -77,7 +72,7 @@ describe("deriveClosingSnapshotFromOdds", () => {
     expect(snap.mlHomePrice).toBe(-110);
   });
 
-  it("never invents a cross-pick'em moneyline close", () => {
+  it("never invents a cross-pick'em ~0.98-implied moneyline close (prob-space averaging)", () => {
     const snap = deriveClosingSnapshotFromOdds(
       [
         row({ market: "H2H", fetchedAt: t("2026-04-15T17:55:00Z"), homePrice: -102, awayPrice: -118 }),
@@ -86,7 +81,9 @@ describe("deriveClosingSnapshotFromOdds", () => {
       COMMENCE,
     );
 
-    expect([-102, 105]).toContain(snap.mlHomePrice);
+    // Prob-space mean of -102 and +105 is ~0.496 implied — a sane near-pick'em
+    // price, never the fabricated near-0-American artifact of naive averaging.
+    expect(snap.mlHomePrice).not.toBeNull();
     expect(Math.abs(snap.mlHomePrice!)).toBeGreaterThanOrEqual(100);
   });
 });

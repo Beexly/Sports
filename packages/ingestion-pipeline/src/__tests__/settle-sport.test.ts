@@ -109,9 +109,20 @@ function pendingPick(overrides: Record<string, unknown> = {}): Record<string, un
     factorBreakdown: null,
     clvLockLine: -3.5,
     clvLockPrice: -110,
+    // Minted under the receipt contract (post-epoch, receipt carries sport=).
+    generatedAt: new Date("2026-08-01T12:00:00.000Z"),
     proofReceipt: { payload: "gameId=game-1|sport=NFL" },
     ...overrides,
   };
+}
+
+/** A pick minted BEFORE the receipt contract epoch — no receipt at all. */
+function legacyPick(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return pendingPick({
+    generatedAt: new Date("2026-05-01T12:00:00.000Z"),
+    proofReceipt: null,
+    ...overrides,
+  });
 }
 
 function dbGame(picks: Record<string, unknown>[], overrides: Record<string, unknown> = {}): Record<string, unknown> {
@@ -438,26 +449,50 @@ describe("settleSport", () => {
       expect(mocks.gameUpdate).not.toHaveBeenCalled();
     });
 
-    it("runs the database-only sweep when the score feed fails", async () => {
+    it("NEVER voids on a pass where the scores feed errored (owner ruling R1)", async () => {
+      // The feed failing is absence-of-data, not evidence the games are
+      // ungradeable — the VOID sweep must not run at all on this pass.
       mocks.getScores.mockRejectedValue(new Error("quota exhausted"));
-      mocks.gameFindMany
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([
-          dbGame([pendingPick()], {
-            status: "POSTPONED",
-            homeScore: null,
-            awayScore: null,
-          }),
-        ]);
+      mocks.gameFindMany.mockResolvedValue([
+        dbGame([pendingPick()], {
+          status: "POSTPONED",
+          homeScore: null,
+          awayScore: null,
+          commenceTime: new Date("2026-06-01T17:00:00.000Z"),
+        }),
+      ]);
 
       const result = await settleSport(SPORT, "key", gates());
 
       expect(result).toMatchObject({
         status: "failed",
         error: "quota exhausted",
-        picksVoided: 1,
+        picksVoided: 0,
       });
-      expect(mocks.gameFindMany).toHaveBeenCalledTimes(2);
+      // Only the recorded-final catch-up query ran — the stale-game VOID
+      // sweep query was skipped entirely.
+      expect(mocks.gameFindMany).toHaveBeenCalledTimes(1);
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ result: "VOID" }),
+        })
+      );
+    });
+
+    it("still settles recorded FINALs when the feed fails — only voiding is feed-gated", async () => {
+      mocks.getScores.mockRejectedValue(new Error("quota exhausted"));
+      mocks.gameFindMany.mockResolvedValueOnce([
+        { externalId: "ext-1", homeScore: 31, awayScore: 17 },
+      ]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({
+        status: "failed",
+        error: "quota exhausted",
+        picksSettled: 1,
+        picksVoided: 0,
+      });
     });
 
     it("limits the VOID sweep to stale non-final games with pending picks", async () => {
@@ -506,19 +541,63 @@ describe("settleSport", () => {
       );
     });
 
-    it("skips CLV writes when no close can be derived", async () => {
+    it("stamps a terminal marker (clvGradedAt, null verdict) when no close can be derived", async () => {
       mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
 
       await settleSport(SPORT, "key", gates());
 
       expect(mocks.gradePickClv).not.toHaveBeenCalled();
-      // Settlement goes through updateMany; pick.update is CLV-only, so with no
-      // close it is never called.
-      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+      // Two updateMany calls: the settle write, then the terminal CLV marker —
+      // clvGradedAt alone, so the pick exits every CLV query without churn.
+      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(2);
+      expect(mocks.pickUpdateMany).toHaveBeenLastCalledWith({
+        where: { id: "pick-1", clvGradedAt: null },
+        data: { clvGradedAt: expect.any(Date) },
+      });
       expect(mocks.pickUpdate).not.toHaveBeenCalled();
     });
 
-    it("withholds CLV for a legacy lock whose market-price contract is unknowable", async () => {
+    it("a LEGACY pre-receipt pick still gets old-path CLV (forward-only gate, owner ruling R2a)", async () => {
+      const capturedAt = new Date("2026-06-10T16:55:00.000Z");
+      mocks.gameFindUnique.mockResolvedValue(dbGame([legacyPick()]));
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt });
+      mocks.gradePickClv.mockReturnValue({
+        closeLine: -4,
+        closePrice: null,
+        kind: "POINTS",
+        value: 0.5,
+        verdict: "BEAT_CLOSE",
+      });
+
+      await settleSport(SPORT, "key", gates());
+
+      // No receipt, no observed-market contract — but the pick predates the
+      // receipt contract, so the pre-existing grading path applies unchanged.
+      expect(mocks.gradePickClv).toHaveBeenCalledTimes(1);
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "pick-1", clvGradedAt: null },
+          data: expect.objectContaining({ clvVerdict: "BEAT_CLOSE" }),
+        })
+      );
+    });
+
+    it("a legacy pick that genuinely cannot be graded exits terminally (no clvGradedAt churn)", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([legacyPick({ clvLockLine: null, clvLockPrice: null })])
+      );
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt: new Date() });
+      mocks.gradePickClv.mockReturnValue(null); // no lock to compare — ungradeable
+
+      await settleSport(SPORT, "key", gates());
+
+      expect(mocks.pickUpdateMany).toHaveBeenLastCalledWith({
+        where: { id: "pick-1", clvGradedAt: null },
+        data: { clvGradedAt: expect.any(Date) },
+      });
+    });
+
+    it("withholds CLV (terminal marker) for a post-epoch pick whose receipt lacks the market contract", async () => {
       mocks.gameFindUnique.mockResolvedValue(
         dbGame([pendingPick({ proofReceipt: { payload: "gameId=game-1" } })]),
       );
@@ -528,52 +607,29 @@ describe("settleSport", () => {
 
       expect(mocks.gradePickClv).not.toHaveBeenCalled();
       expect(mocks.pickUpdate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).toHaveBeenLastCalledWith({
+        where: { id: "pick-1", clvGradedAt: null },
+        data: { clvGradedAt: expect.any(Date) },
+      });
     });
 
-    it("queries settled picks whose CLV grade is missing", async () => {
+    it("queries PENDING picks ONLY — no retroactive CLV backfill of settled picks (owner ruling R2c)", async () => {
       await settleSport(SPORT, "key", gates());
 
       expect(mocks.gameFindUnique).toHaveBeenCalledWith(
         expect.objectContaining({
           include: {
             picks: expect.objectContaining({
-              where: {
-                OR: [
-                  { result: "PENDING" },
-                  { result: { in: ["WIN", "LOSS", "PUSH"] }, clvGradedAt: null },
-                ],
-              },
+              where: { result: "PENDING" },
             }),
           },
         })
       );
-    });
-
-    it("heals an orphaned CLV grade without settling the pick again", async () => {
-      const capturedAt = new Date("2026-06-10T16:55:00.000Z");
-      mocks.gameFindUnique.mockResolvedValue(
-        dbGame([pendingPick({ result: "WIN", clvGradedAt: null })])
-      );
-      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt });
-      mocks.gradePickClv.mockReturnValue({
-        closeLine: -4,
-        closePrice: -112,
-        kind: "LINE",
-        value: 0.5,
-        verdict: "BEAT_CLOSE",
-      });
-
-      const result = await settleSport(SPORT, "key", gates());
-
-      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
-      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
-      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: { id: "pick-1", clvGradedAt: null },
-          data: expect.objectContaining({ clvVerdict: "BEAT_CLOSE" }),
-        })
-      );
-      expect(result.picksSettled).toBe(0);
+      // The recorded-final catch-up query is likewise PENDING-only.
+      const catchUpQuery = mocks.gameFindMany.mock.calls[0]?.[0] as {
+        where: Record<string, unknown>;
+      };
+      expect(catchUpQuery.where["picks"]).toEqual({ some: { result: "PENDING" } });
     });
   });
 });

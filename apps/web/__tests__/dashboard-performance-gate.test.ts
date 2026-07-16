@@ -89,11 +89,16 @@ describe("Customer dashboard performance gate", () => {
     expect(src).toMatch(/canonicalSettledPickWhere/);
   });
 
-  it("canonical settled population requires published, non-bootstrap, learning-eligible rows", () => {
+  it("canonical settled population is EVERY published, non-bootstrap settled pick — no snapshot narrowing (owner ruling R3)", () => {
     const src = read("lib/performance/canonical-population.ts");
     expect(src).toMatch(/isPublished:\s*true/);
     expect(src).toMatch(/isBootstrap:\s*false/);
-    expect(src).toMatch(/eligibleForLearning:\s*true/);
+    // A settled pick appears in the public W/L totals regardless of
+    // snapshot-write success or learning eligibility. Snapshot capture is
+    // enforced at mint instead — the population contract must never let an
+    // infrastructure failure silently drop a settled pick from the record.
+    expect(src).not.toMatch(/eligibleForLearning/);
+    expect(src).not.toMatch(/signalSnapshot/);
   });
 
   it("picks API returns 503 when canExposePublicPicks gate is off", () => {
