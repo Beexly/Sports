@@ -456,6 +456,52 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "adding it is gated on this clearance.",
   },
 
+  // ── Permission required ──────────────────────────────────────────────────────
+  {
+    source_id: "fantasypros-com",
+    source_name: "FantasyPros Public API (fantasypros.com)",
+    source_url: "https://api.fantasypros.com/public/v2",
+    terms_url: "https://www.fantasypros.com/api/",
+    robots_url: "https://www.fantasypros.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "none",
+    copyright_expression_risk: "medium",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-07-16",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.fantasypros.com/api/",
+      "https://www.fantasypros.com/robots.txt",
+    ],
+    unlock_condition:
+      "Signed commercial license via FantasyPros' custom-priced Commercial API tier — the only tier " +
+      "that grants a commercial license and redistribution rights. Contact FantasyPros to negotiate " +
+      "Commercial tier terms.",
+    vendor_contact: "https://www.fantasypros.com/api/",
+    notes:
+      "FantasyPros' public API (api.fantasypros.com/public/v2) licenses BOTH the Free ($0, 100 " +
+      "calls/day) and Premium tiers for personal, NON-COMMERCIAL use only, explicitly excluding " +
+      "historical player stats and player images; only their custom-priced Commercial tier grants a " +
+      "commercial license and redistribution rights. robots.txt disallows /api/, /json/, /xml/, " +
+      "/ajax/, and /ranker/ paths. Automation is permitted ONLY via the documented public API under a " +
+      "signed commercial license, never via the disallowed paths. The stub adapter " +
+      "(lib/statking/sources/adapters/fantasyProsAdapter.ts) is correctly marked " +
+      "license_or_partner_required and MUST stay stubbed until this entry's status changes. " +
+      "Reviewed 2026-07-16.",
+  },
+
   // ── Vendor candidate ─────────────────────────────────────────────────────────
   {
     source_id: "score24-com",

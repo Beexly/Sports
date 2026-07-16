@@ -128,6 +128,21 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     attribution_text: null,
     commercial_display_allowed: false,
     derived_analytics_allowed: false,
+    evidence_urls: ["https://www.fantasypros.com/api/"],
+    model_training_allowed: false,
+    notes:
+      "Permission required; Free and Premium API tiers are personal/non-commercial only. Commercial " +
+      "tier license required before any automation or metric use.",
+    source_id: "fantasypros-com",
+    source_name: "FantasyPros Public API (fantasypros.com)",
+    status: "permission_required",
+    storage_allowed: false,
+  },
+  {
+    attribution_required: false,
+    attribution_text: null,
+    commercial_display_allowed: false,
+    derived_analytics_allowed: false,
     evidence_urls: ["https://www.score24.com/"],
     model_training_allowed: false,
     notes: "Vendor candidate only. No metric use until a license path is approved.",
