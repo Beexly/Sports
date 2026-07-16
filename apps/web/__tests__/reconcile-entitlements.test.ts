@@ -47,7 +47,7 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-import { reconcileEntitlements } from "@/lib/billing/reconcile-entitlements";
+import { reconcileEntitlements, reconcileUserEntitlement } from "@/lib/billing/reconcile-entitlements";
 import { GET as reconcileCron } from "@/app/api/cron/reconcile-entitlements/route";
 
 const PRO_PRICE = "price_pro_test";
@@ -610,5 +610,158 @@ describe("GET /api/cron/reconcile-entitlements — auth", () => {
     expect(body).toMatchObject({ checked: 0, granted: 0, downgraded: 0, errors: 0, listReliable: true });
     // Proof the REAL reconcile function ran end-to-end (it pulled Stripe state).
     expect(mocks.subscriptionsList).toHaveBeenCalled();
+  });
+});
+
+/**
+ * reconcileUserEntitlement — the ON-DEMAND, single-user post-checkout grant
+ * (dashboard/page.tsx `?upgraded=true`). It is the instant-access backstop when
+ * the webhook is slow or 500s. Its contract (per the module doc): confirm-or-
+ * GRANT only — it NEVER revokes (the success page must never strand a buyer) and
+ * NEVER throws (a Stripe hiccup must not break the dashboard render). The whole
+ * function was previously unexercised; these pin every branch of that contract.
+ */
+describe("reconcileUserEntitlement — post-checkout single-user grant", () => {
+  it("grants the paid tier when Stripe reports an active paid sub but the DB row is FREE", async () => {
+    mocks.findUnique.mockResolvedValue({
+      stripeCustomerId: "cus_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+    mocks.subscriptionsList.mockResolvedValue({ data: [stripeSub()], has_more: false });
+
+    await reconcileUserEntitlement("user_1");
+
+    // Queried Stripe for THIS customer only (all statuses), then granted PRO.
+    expect(mocks.subscriptionsList).toHaveBeenCalledWith(
+      expect.objectContaining({ customer: "cus_1", status: "all" }),
+    );
+    expect(mocks.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { stripeCustomerId: "cus_1" },
+        update: expect.objectContaining({
+          tier: "PRO",
+          status: "ACTIVE",
+          stripeSubscriptionId: "sub_1",
+          stripePriceId: PRO_PRICE,
+        }),
+      }),
+    );
+    // A grant is NEVER a revoke.
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it("does nothing (no Stripe call, no write) when the user has no Stripe customer yet", async () => {
+    mocks.findUnique.mockResolvedValue({
+      stripeCustomerId: null,
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+
+    await reconcileUserEntitlement("user_1");
+
+    // Nothing has been paid for → never touch Stripe or the DB.
+    expect(mocks.subscriptionsList).not.toHaveBeenCalled();
+    expect(mocks.upsert).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("NEVER revokes: a paid DB row whose Stripe subs are all non-granting is left untouched", async () => {
+    // The buyer's landing page must never strand them — even if Stripe currently
+    // shows only a canceled sub, reconcileUserEntitlement grants-or-nothing.
+    mocks.findUnique.mockResolvedValue({
+      stripeCustomerId: "cus_1",
+      tier: "PRO",
+      status: "ACTIVE",
+      stripeSubscriptionId: "sub_old",
+    });
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [stripeSub({ status: "canceled" })],
+      has_more: false,
+    });
+
+    await reconcileUserEntitlement("user_1");
+
+    // No paid LIVE sub to confirm → no grant, and categorically no downgrade.
+    expect(mocks.upsert).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("is idempotent: no write when the DB row already matches the live Stripe sub", async () => {
+    mocks.findUnique.mockResolvedValue({
+      stripeCustomerId: "cus_1",
+      tier: "PRO",
+      status: "ACTIVE",
+      stripeSubscriptionId: "sub_1",
+    });
+    mocks.subscriptionsList.mockResolvedValue({ data: [stripeSub()], has_more: false });
+
+    await reconcileUserEntitlement("user_1");
+
+    expect(mocks.upsert).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it("grants the highest tier when the customer holds several live paid subs (canonical selection)", async () => {
+    mocks.findUnique.mockResolvedValue({
+      stripeCustomerId: "cus_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [
+        stripeSub({ id: "sub_fan", status: "active", items: { data: [{ price: { id: FANTASY_PRICE } }] } }),
+        stripeSub({ id: "sub_elite", status: "active", items: { data: [{ price: { id: ELITE_PRICE } }] } }),
+      ],
+      has_more: false,
+    });
+
+    await reconcileUserEntitlement("user_1");
+
+    // ELITE outranks FANTASY regardless of list order — one grant, the best tier.
+    expect(mocks.upsert).toHaveBeenCalledTimes(1);
+    expect(mocks.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({ tier: "ELITE", stripeSubscriptionId: "sub_elite" }),
+      }),
+    );
+  });
+
+  it("never grants on an unmapped price id (grandfathering landmine), and never throws", async () => {
+    mocks.findUnique.mockResolvedValue({
+      stripeCustomerId: "cus_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [stripeSub({ items: { data: [{ price: { id: "price_unmapped" } }] } })],
+      has_more: false,
+    });
+
+    await expect(reconcileUserEntitlement("user_1")).resolves.toBeUndefined();
+
+    // An unmapped price resolves to FREE → filtered out of the paid-live set → no grant.
+    expect(mocks.upsert).not.toHaveBeenCalled();
+  });
+
+  it("fail-safe: swallows a Stripe error (never throws, never writes) so the dashboard still renders", async () => {
+    mocks.findUnique.mockResolvedValue({
+      stripeCustomerId: "cus_1",
+      tier: "FREE",
+      status: "ACTIVE",
+      stripeSubscriptionId: null,
+    });
+    mocks.subscriptionsList.mockRejectedValue(new Error("stripe.subscriptions.list unavailable"));
+
+    await expect(reconcileUserEntitlement("user_1")).resolves.toBeUndefined();
+
+    expect(mocks.upsert).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
   });
 });
