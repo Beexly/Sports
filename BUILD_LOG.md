@@ -131,4 +131,40 @@ build; flagged for review.
 
 **Still open in P0 scope:** the forward line archive (open+close snapshot
 persistence — additive schema, inert capture, founder applies/flips).
-Building next alongside Phase 1.
+Delegated (sonnet), in flight.
+
+### Phase 1 — honesty engine [CORE COMMITTED 81be1cca; Kelly + acceptance pending]
+
+**Built by Fable directly** (edge-lab 77 tests, apps/web guard 10 tests, tsc
+clean both packages):
+- `calibration-blend.ts` — OOF calibration: beta tails + isotonic middle,
+  cross-fit selection by held-out Brier reliability-resolution
+  decomposition, NOT ECE (§2 P1). Found + fixed a real math bug in my own
+  design: a position-varying cross-fade of monotone maps is not monotone
+  (w′(iso−β) term); fixed with a monotone-envelope rearrangement, ranking
+  preservation proven on a grid. Thin data → honest identity map.
+- `logit-pool.ts` — the falsifiable "do we have edge" test (Y ~ logit(q) +
+  β·logit(p), Newton MLE, observed-information CI). CI∋0 ⇒ FIRE_NOTHING as
+  a first-class verdict. Proven both directions on synthetic corpora.
+- `selective-gate.ts` — inductive Venn-Abers (Mondrian per-stratum,
+  100-row calibration floor), fire ⇔ LCB(e) > τ; coverage-vs-edge curve
+  with Wilson LCBs; `tuneTau` runs on DISJOINT rows and returns τ=null
+  (fire nothing) when nothing clears breakeven.
+- `apps/web/lib/ledger/display-guard.ts` — the §1 statutory guard as real
+  code: metrics missing coverage/LCB/CLV/walk-forward-provenance THROW.
+  Nothing imports it into a rendering page yet (publishing founder-gated).
+
+**Delegated (sonnet), in flight:** line archive (P0 remainder — additive
+OddsLineSnapshot migration, LINE_ARCHIVE_ENABLED default-off capture,
+failure-isolated process-sport hook) · Kelly layer (fractional λ≈0.3,
+James-Stein haircut, Ledoit-Wolf shrinkage, CLV deflator that self-disarms
+stakes to 0 below 50 settled).
+
+**P1 acceptance interpretation (recorded per protocol):** the handoff's
+"on the holdout" acceptance is satisfied on a DISJOINT eval fold never
+used for calibration or τ-tuning; the SEALED 2025 forward season stays
+sealed — §5 reserves its opening for founder sign-off, which is exactly
+what the sealed-holdout token implements. Expected honest outcome with
+Phase-0's modest features: logit-pool FIRE_NOTHING + τ=null + a
+coverage-stamped ZERO-coverage report (the handoff explicitly blesses
+"or honestly reports 0 coverage").
