@@ -206,6 +206,25 @@ settled). Line archive landed inert (P0 scope now fully closed).
   and proven inert. markClosingSnapshots (line archive) likewise ships
   unwired pending the same flip.
 
+### Phase 3 — edge models [ACCEPTED within the honest data boundary]
+
+Real-data acceptance exit 0 (`reports/edge-lab/phase3-nfl-acceptance.*`):
+distillation beats baseline 6/6 walk-forward folds (mean R² 0.596 vs
+baseline on real closes); props HB validated on 111,329 real player-weeks
+(Brier 0.2189 < climatology 0.2285, decile calibration fully monotone);
+residual GBM anti-rediscovery test-pinned (val pinball 0.978× the noise
+floor, max|f(x)| 0.126 vs the 2.4 line swing a cheater would show).
+Price-CLV: PENDING LINE-ARCHIVE DATA — honestly unclaimed, activates on
+the founder's archive flip with no code changes.
+
+### Phase 4 — frontier fusion [BUILT INERT]
+
+Precision-weighted signal fusion (coin-flip channels earn exactly 0;
+no earned weight → fusion says NOTHING), ACI, Learn-then-Test. No live
+capture exists; ingestion founder/legal-gated. 8 tests.
+
+### BUILD COMPLETE — see FINAL_REPORT.md
+
 **P1 acceptance interpretation (recorded per protocol):** the handoff's
 "on the holdout" acceptance is satisfied on a DISJOINT eval fold never
 used for calibration or τ-tuning; the SEALED 2025 forward season stays
