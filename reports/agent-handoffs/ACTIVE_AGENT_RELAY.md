@@ -87,8 +87,11 @@ tunnel vision. Token-smart execution. This section IS the accounting.
 
 ## Standing workstreams (older tasks, accounted for — not dropped)
 
-- #4 CLV decomposition (bookDisagreementAtLock at publish) — in progress
-  pre-wave; fold into line-archive activation work when flags flip.
+- #4 CLV decomposition — DONE & PUSHED as claude/clv-decomposition-reland-rebased
+  @ 62d2f123 (zero-conflict rebase; away-side moneyline dispersion bug fixed;
+  migration safety proven on live Postgres incl. the original incident's drift
+  scenario + P2022 graceful-degradation regression tests). Founder legs: merge
+  + apply the two IF-NOT-EXISTS migrations.
 - #5 Jarvis memory write path · #6 scheduled backtest harness — pending;
   revisit after the hardening wave lands.
 - #8 grandpa-simple + cinematic UX pass · /glass-ledger frontier design pass —
