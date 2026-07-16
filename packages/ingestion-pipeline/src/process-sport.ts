@@ -18,7 +18,9 @@
  * Rules:
  *   - isBootstrap is derived from gates inside this function — never defaults
  *   - PickSignalSnapshot uses update:{} — immutable, never overwritten
- *   - Snapshot failures are non-fatal (warn and continue)
+ *   - Prediction-time snapshot is MANDATORY AT MINT (owner ruling R3): a failed
+ *     snapshot write rolls the pick back (db.pick.delete) and alerts the owner;
+ *     only settlement-time snapshot updates are non-fatal
  *   - All errors are caught; status:"failed" is returned, not thrown
  */
 

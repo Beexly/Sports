@@ -371,6 +371,31 @@ describe("settleSport", () => {
       expect(result.status).toBe("success");
       expect(result.gamesSettled).toBe(1);
     });
+
+    it("a settlement-snapshot write failure never blocks settlement (settle-time half of owner ruling R3)", async () => {
+      // Snapshot mandatoriness is MINT-time only (R3): at settle time the
+      // outcome is source truth, so a failing recordPickSettlementSnapshot —
+      // every write path down, retries exhausted — must be contained. The pick
+      // still settles (status flips, public W/L unaffected) and no error
+      // escapes the settle pass.
+      mocks.snapshotUpdateMany.mockRejectedValue(new Error("snapshot table locked"));
+      mocks.snapshotFindUnique.mockRejectedValue(new Error("snapshot table locked"));
+      mocks.snapshotCreate.mockRejectedValue(new Error("snapshot table locked"));
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.gamesSettled).toBe(1);
+      expect(result.picksSettled).toBe(1);
+      // The settle write itself flipped the pick's status — the public W/L
+      // record is unaffected by the snapshot failure.
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "pick-1", result: "PENDING" },
+          data: expect.objectContaining({ result: "WIN", settledAt: expect.any(Date) }),
+        })
+      );
+    });
   });
 
   describe("catch-up settlement", () => {
