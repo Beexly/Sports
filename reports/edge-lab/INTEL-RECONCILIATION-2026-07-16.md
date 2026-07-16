@@ -23,6 +23,19 @@ tree before being recorded here. Clears FINAL_REPORT "NEEDS FOUNDER" item #6.
 
 ## FOUNDER DECISIONS (new — each verified in the tree)
 
+> **RULINGS 2026-07-16 (founder, verbatim intent):** (1) Affiliate = ON — "it's
+> new revenue… let's run." Resolution: the DISCLOSED-CONFLICT model, not the
+> denial model — the absolute "we make money in exactly one situation" claim is
+> retired before it ever ships; every partner relationship is disclosed
+> per-link and on a public how-we-make-money page; pick generation stays
+> structurally separated from partner economics (machine-checked, see
+> guardrail); state-licensing + signed agreements + FTC-compliant disclosures
+> remain prerequisites to LIVE activation (registry stays code-review gated).
+> (2) DFS = DOMINATE — resolved via the exact-optimizer design-around (provably
+> optimal, deterministic, no randomized-column iteration), which is both the
+> stronger product and the cleaner patent posture; formal FTO before
+> real-money marketing pushes stays recommended.
+
 1. **Affiliate posture (P0).** `apps/web/app/go/[slug]/route.ts` + `lib/affiliate/ledger.ts`
    + the `sportsbook` partner category exist and are inert only because
    `operator-registry.ts` has zero `APPROVED_PARTNER` rows. The intel's entire trust wedge

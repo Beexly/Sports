@@ -35,13 +35,25 @@ Glass Ledger + Edge Engine core build is COMPLETE and accepted (FINAL_REPORT.md)
 | MLB Statcast + platoon-split loaders (§6 parity) | QUEUED |
 | DSR/White-RC/SPA model admission | QUEUED (registry records model trials now so the count stays honest) |
 
+## FOUNDER RULINGS 2026-07-16 (supersede items 1-2 below)
+
+- **Affiliate: ON (disclosed-conflict model).** "No affiliate ever" is amended:
+  affiliate revenue is pursued with per-link + sitewide disclosure, structural
+  separation of pick generation from partner economics (machine-checked
+  guardrail), and the absolute "only when our number is right" claim retired
+  from all copy. LIVE activation still requires: signed partner agreements,
+  state affiliate licensing where required, founder registry approval + merge.
+- **DFS: DOMINATE via the exact-optimizer design-around** (provably optimal,
+  deterministic — no randomized-column iteration). FTO opinion before
+  real-money marketing remains recommended, not blocking the build.
+
 ## NEEDS FOUNDER (live list)
 
-1. **Affiliate posture (P0)** — /go/[slug] + affiliate ledger vs "no affiliate,
-   ever" doctrine: kill/lock the surfaces or drop the absolute claim. Blocks
-   Glass Ledger publicization.
-2. **DFS patent FTO (P0)** — Betfully/LineStar family vs dfs-optimizer.ts; MILP
-   design-around available on request.
+1. ~~Affiliate posture~~ — RESOLVED (ruling above). Founder legs remaining:
+   sign partner agreements, state licensing/registration, approve registry
+   rows, merge + env.
+2. ~~DFS patent FTO~~ — build unblocked via design-around (ruling above);
+   FTO opinion queued as a founder legal errand, not a code gate.
 3. **StatKing hardcoded scores** — /stats + /stats/proof render literal 61/100
    self-assessments (audit findings 1-2): compute, reframe, or remove.
 4. Line-archive activation ORDER: apply migration → `LINE_ARCHIVE_ENABLED=true`
