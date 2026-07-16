@@ -35,15 +35,18 @@ calibration blend) — each documented in BUILD_LOG.
 
 ## NEEDS FOUNDER (complete list — every gated flip/act waiting on you)
 
-1. **PUSH THE BRANCH** — 18 commits exist only in this ephemeral container.
-   "Push it" puts `claude/glass-ledger-edge-engine` up as a plain branch.
-2. **Main hotfix push** — main carries one failing engine test since #117
-   (cross-package fixture alignment; my merge-process miss). Fix verified
-   8/8 on local branch `claude/fix-metric-source-fixture-alignment`.
+1. ~~**PUSH THE BRANCH**~~ — **DONE 2026-07-16** (founder authorized "push it";
+   `claude/glass-ledger-edge-engine` is on origin at `214d5cad`).
+2. ~~**Main hotfix push**~~ — **DONE 2026-07-16**
+   (`claude/fix-metric-source-fixture-alignment` on origin at `568ccca6`;
+   still needs merging to main to fix the failing engine test from #117).
 3. **Apply the line-archive migration** (`20260716120000_add_odds_line_snapshots`,
    additive-only) + run `prisma generate`, then set `LINE_ARCHIVE_ENABLED=true`
    — starts accumulating the decision-time prices every CLV claim needs.
    The earlier this flips, the earlier the non-copyable record starts.
+   **NEW (intel):** flip only after the Pinnacle/eu snapshot leg lands (being
+   built, gated) — the handoff's PRIMARY CLV benchmark is otherwise never
+   captured; see `reports/edge-lab/INTEL-RECONCILIATION-2026-07-16.md`.
 4. **Ledger activation** (when you choose): wire pick-mint → `appendPick` and
    settle → `appendSettlement` (chain is built; wiring is the flip), set
    `PUBLISH_LEDGER=true` for the `/glass-ledger` surface, and perform the
@@ -51,8 +54,12 @@ calibration blend) — each documented in BUILD_LOG.
    builds the payload but never sends; requires your literal confirmation).
 5. **Sealed holdout opening** — season 2025 (272 games) opens only with the
    founder token at your sign-off, after independent review (§1 Process).
-6. **Companion dossiers** still unavailable (intel repo inaccessible);
-   build proceeded on the inline handoff alone.
+6. ~~**Companion dossiers** still unavailable~~ — **CLEARED 2026-07-16**:
+   `beexly/gse-competitive-intel` delivered and fully reconciled against this
+   build; verdicts, new founder decisions (affiliate posture P0, DFS patent
+   FTO P0, named reviewer before PUBLISH_LEDGER, pricing ceiling), rights red
+   lines, and the engineering queue are in
+   `reports/edge-lab/INTEL-RECONCILIATION-2026-07-16.md`.
 7. **Historical odds backfill** (optional, paid): The Odds API historical
    endpoints could backfill decision-time prices; spending is gated.
 

@@ -233,3 +233,22 @@ what the sealed-holdout token implements. Expected honest outcome with
 Phase-0's modest features: logit-pool FIRE_NOTHING + τ=null + a
 coverage-stamped ZERO-coverage report (the handoff explicitly blesses
 "or honestly reports 0 coverage").
+
+---
+
+## POST-BUILD — 2026-07-16: push executed + intel reconciliation
+
+Founder authorized "push it": `claude/glass-ledger-edge-engine` (214d5cad) and
+`claude/fix-metric-source-fixture-alignment` (568ccca6) are on origin. The
+companion intel repo (`beexly/gse-competitive-intel` @ b8fc1cf76) arrived and was
+fully reconciled against this build via a 10-reader verification pass — verdicts,
+new founder decisions (affiliate-posture P0, DFS-patent FTO P0, named reviewer
+before PUBLISH_LEDGER, Pinnacle close-capture before the archive flip), rights
+red lines, stale-intel corrections, and the resulting engineering queue live in
+`reports/edge-lab/INTEL-RECONCILIATION-2026-07-16.md`. Key facts: the Codex
+"reference engine" is a stale snapshot of our own tree (never diff-adopt); the
+edge-lab spec reader confirmed the build is at-or-above spec everywhere except
+the §5 multiple-testing machinery (trials registry + BH-FDR + per-feature MI
+admission — now queued, must precede any Phase-3 feature expansion) and two
+enforcement gaps (fold-disjointness assertion; asof-store closing-key flag
+allowlist) now queued as the hardening wave.
