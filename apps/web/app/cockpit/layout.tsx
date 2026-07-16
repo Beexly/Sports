@@ -119,8 +119,8 @@ export default async function CockpitLayout({
   return (
     <div className="flex min-h-screen flex-col bg-obsidian/60">
       <header className="border-b border-titanium/40 bg-obsidian/90 backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
+        <div className="mx-auto flex min-h-14 max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 lg:px-8">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <span
               className="rounded-md bg-yellow-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300"
               aria-label="Internal operator surface"
@@ -137,7 +137,7 @@ export default async function CockpitLayout({
               </span>
             )}
           </div>
-          <div className="text-xs text-ion-3">
+          <div className="min-w-0 break-all text-xs text-ion-3">
             Signed in as <span className="text-ion-1">{session.user.email}</span>
           </div>
         </div>

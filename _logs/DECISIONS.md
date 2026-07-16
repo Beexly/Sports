@@ -220,3 +220,11 @@ improvements (each its own commit; full suite + build green throughout):
 - **PR decision:** Draft PR #112 is the single replacement review surface. Stale extracted PRs #80/#81/#83-#87/#89/#92-#95 were commented and closed unmerged. PR #101 remains an owner-gated hold.
 - **Evidence:** 9,309 tests; root typecheck/lint; production build with 205 routes; full guardrails; exact no-excuse checker on 32 files; desktop/mobile Playwright with zero axe WCAG A/AA violations, reduced motion, keyboard operation, and 200% zoom.
 - **Production boundary:** Public access and deployment identity were later verified: apex `307` to `www`, `www` `200` without an SSO wall, READY production `main` SHA `3ce5c4a1`. The recovery branch is not production; live DB/cron/provider state and a real persisted playback record remain unverified.
+
+## 2026-07-16 - Selected-game Cockpit playback uses the Game Room envelope
+
+- **Decision:** Wire owner-only `/cockpit/market-twin/[gameId]` to the existing Game Room playback envelope and `buildPlaybackConsumerBundle()` instead of creating another event store.
+- **Why:** Operators need a selected-game Cockpit view of the same Twin and deterministic Brain explanation already produced by the governed playback stream. A second store would create explanation drift.
+- **Safety:** `requireCockpitAdmin()` runs before data loading; unavailable and withheld states are explicit; raw model output is excluded; the Brain answer is citation-backed and says causality is not inferred.
+- **Evidence:** Focused Cockpit/static suite 164/164; browser QA desktop/mobile with axe and 200% text zoom; root lint/typecheck/test/guardrails/build green; exact TypeScript no-excuse checker clean.
+- **Boundary:** No production DB, migration, cron/provider, deployment, secret, or publication action occurred. Browser proof used a production-board game ID against local stub DB and therefore proves the honest unavailable path, not a live playback row.

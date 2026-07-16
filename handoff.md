@@ -1154,3 +1154,14 @@ Authoritative packet: `handoff/codex/gse-frontier-recovery-2026-07-15/00_READ_ME
 - Limits: no production DB/provider/cron proof, migration, secret, recovery promotion, publication, billing/auth/legal mutation, or live-playback claim.
 - Next safe task: wire the existing consumer bundle into owner-only selected-game Cockpit surfaces. Do not create another truth store or use fixture events.
 - Preserve untracked `g.id)`, `s.id`, `{`, `pnpm-lock.yaml`, and `pnpm-workspace.yaml`.
+
+---
+
+## 2026-07-16 - Selected-game Cockpit continuation
+
+- Branch: `codex/gse-frontier-recovery-2026-07-13`
+- Result: `/cockpit/market-twin/[gameId]` is now owner-only and route-driven. It calls `requireCockpitAdmin()` before selected-game data, uses one persisted Game Room ID, returns honest unavailable states when playback is absent or withheld, and renders selected-game Twin plus deterministic cited Brain from the same `buildPlaybackConsumerBundle()` output.
+- Validation: focused Cockpit/static suite 164/164; browser QA desktop/mobile with axe and 200% text zoom; root lint; root typecheck; root test 9,327/9,327; root guardrails; production build with non-secret unreachable DB placeholder; exact bundled TypeScript no-excuse checker; `git diff --check`.
+- Visual evidence: `reports/visual/frontier-recovery/cockpit-selected-game-unavailable-desktop.png` and `reports/visual/frontier-recovery/cockpit-selected-game-unavailable-mobile.png`.
+- Boundary: local browser proof used real production-board game ID `cmrm6vyzq00b5ozb9rjmuw9hw` against a local stub DB, so this proves the actual route's honest unavailable path. It does not prove a live eligible playback row, production deployment, DB connectivity, cron/provider freshness, or migration readiness.
+- Next safe task: expose the already-derived postgame autopsy and draft-only Studio package from the same selected-game stream inside Cockpit, still owner-only and still without a second truth store.

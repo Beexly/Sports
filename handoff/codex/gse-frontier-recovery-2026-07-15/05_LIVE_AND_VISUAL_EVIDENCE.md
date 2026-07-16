@@ -28,6 +28,17 @@ The browser run verified:
 
 The screenshots used an explicitly labeled local renderer fixture because no production DB or eligible persisted Game Room record was available. The temporary route was deleted before commit. This proves rendering and interaction only.
 
+## Selected-game Cockpit evidence captured 2026-07-16
+
+- Desktop: `reports/visual/frontier-recovery/cockpit-selected-game-unavailable-desktop.png`
+- Mobile: `reports/visual/frontier-recovery/cockpit-selected-game-unavailable-mobile.png`
+- Reproduction: `scripts/qa/cockpit-selected-game-playback-browser.mjs`
+- Route exercised: `/cockpit/market-twin/cmrm6vyzq00b5ozb9rjmuw9hw`
+
+The browser run verified the actual owner-only route under `DEV_FAKE_ADMIN=true`, not a temporary renderer fixture: 200 response, one H1, main landmark, unavailable reason/message, no Brain answer when the envelope is absent, no raw marker, no framework overlay, no console/page errors, no horizontal document overflow at 200% text zoom, reduced-motion mode, keyboard focus, and zero axe WCAG A/AA violations on desktop and mobile.
+
+The game ID came from the public production board, but local QA used a deliberate stub DB. That makes this proof an honest unavailable-path proof, not a live playback-row proof.
+
 ## Deployment evidence captured 2026-07-15
 
 - `https://galaxysportsedge.com` returned `307` to `https://www.galaxysportsedge.com/`; the `www` URL returned `200` from Vercel without a Vercel SSO wall.

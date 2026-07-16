@@ -1,11 +1,41 @@
 # GSE Frontier Recovery Execution Ledger
 
-Last updated: 2026-07-15
+Last updated: 2026-07-16
 Executor branch: `codex/gse-frontier-recovery-2026-07-13`
 Current-main base: `3ce5c4a198df7f9baac37888de4f28297e24f581`
 Production deployment identity: `VERIFIED_CURRENT_NOT_RECOVERY` — Vercel reports READY production `main` SHA `3ce5c4a198df7f9baac37888de4f28297e24f581` (`dpl_49hQPFbo57nuQ17E2MFJaV8LKzb7`); the public apex redirects to `www`, which returned `200` without a Vercel SSO wall on 2026-07-15. The recovery branch is not production.
 
 This file is the execution control plane. It is not a readiness claim.
+
+## 2026-07-16 selected-game Cockpit continuation
+
+Status: `VALIDATED_LOCAL_OWNER_ROUTE`
+
+What changed:
+
+- Added `apps/web/app/cockpit/market-twin/[gameId]/page.tsx` with `requireCockpitAdmin()` before the selected-game loader.
+- Added `apps/web/lib/cockpit/load-selected-game-playback.ts`, which validates the route game ID, calls `loadGameRoom()` once with the full operator viewer, returns fail-closed unavailable reasons for invalid, missing, uncaptured, or withheld playback, and builds `buildPlaybackConsumerBundle()` only from the governed Game Room playback envelope.
+- Added `apps/web/components/cockpit/selected-game-playback.tsx`, rendering selected-game Twin and deterministic Brain answer from one bundle while excluding raw internal output and explicitly limiting causal scope to observed transitions.
+- Linked each persisted Market Twin row to `/cockpit/market-twin/[gameId]`.
+- Added `scripts/qa/cockpit-selected-game-playback-browser.mjs` and desktop/mobile screenshots for the honest unavailable route.
+
+Validation:
+
+- Focused Cockpit/static suite: 164/164 passed.
+- Browser QA: desktop and mobile passed for route `/cockpit/market-twin/cmrm6vyzq00b5ozb9rjmuw9hw`, including one H1, main landmark, honest unavailable state, no Brain/raw output, no overlay, no console/page errors, no document overflow at 200% text zoom, and zero axe WCAG A/AA violations.
+- `npm.cmd run lint`: exit 0.
+- `npm.cmd run typecheck`: exit 0.
+- `npm.cmd test`: exit 0, 9,327/9,327 assertions passed across 746 files.
+- `npm.cmd run guardrails`: exit 0.
+- Production build with non-secret unreachable DB placeholder: exit 0, 205 routes generated.
+- Exact bundled TypeScript no-excuse checker on touched TS/TSX files: exit 0.
+- `git diff --check`: exit 0.
+
+Boundary:
+
+- No migration, secret, production deployment, billing/auth/legal change, cron/provider action, or publication occurred.
+- Local browser proof used a real production-board game ID but a deliberate local stub DB, so it proves the actual route's honest unavailable path and not a live eligible playback row.
+- Postgame autopsy and draft-only Studio already consume the same `buildPlaybackConsumerBundle()` projection at the code level; a dedicated route-level Cockpit autopsy/Studio surface remains the next safe UI slice.
 
 ## Protected zones
 
@@ -148,6 +178,7 @@ This file is the execution control plane. It is not a readiness claim.
 | `apps/web/lib/fantasy/public-gate.ts`, `apps/web/middleware.ts`, `apps/web/app/fantasy/**`, `apps/web/lib/explainers/registry.ts` | Public fantasy truth lane | Stop illustrative public tools at routing, replace the hub/share card with an evidence clearance contract, and remove the now-false walkthrough | VALIDATED |
 | `scripts/qa/fantasy-public-gate-browser.mjs`, `reports/visual/frontier-recovery/fantasy-gate-*.png` | Public fantasy QA lane | Reproducible desktop/mobile redirect, runtime, overflow, console, landmark, and visual receipts | VALIDATED |
 | `scripts/qa/intelligence-playback-browser.mjs`, `reports/visual/frontier-recovery/intelligence-playback-renderer-qa-*.png` | Playback browser QA lane | Reusable Game Room path checker plus explicit renderer-only desktop/mobile receipts | VALIDATED_RENDERER_ONLY |
+| `apps/web/app/cockpit/market-twin/[gameId]/page.tsx`, `apps/web/lib/cockpit/load-selected-game-playback.ts`, `apps/web/components/cockpit/selected-game-playback.tsx`, `scripts/qa/cockpit-selected-game-playback-browser.mjs` | Selected-game Cockpit playback lane | Owner-only route for a persisted Game Room ID, honest unavailable states, selected-game Twin, deterministic cited Brain, and browser evidence without raw output | VALIDATED_LOCAL_OWNER_ROUTE |
 | `apps/web/lib/intelligence-playback/**`, `apps/web/lib/game-room/evidence-record.ts` | Canonical evidence lane | Deterministic evidence envelope, audience policy, lifecycle stream, stored evidence adapter, and explicit not-captured states | VALIDATED_FOCUSED |
 | `apps/web/components/game-room/intelligence-playback.tsx`, `apps/web/components/game-room/room-primitives.tsx`, `apps/web/app/room/[gameId]/page.tsx` | Game Room playback lane | DOM-first playback, keyboard/scrubber controls, both evidence directions, provenance, transcript/table, and honest unavailable state | VALIDATED_FOCUSED |
 | `reports/agent-handoffs/FRONTIER_RECOVERY_REALITY_MAP.md` | Truth map | Classify named systems as REAL/PARTIAL/DEMO/DOC_ONLY/ABSENT with repo evidence and current caveats | VERIFIED_REPO |

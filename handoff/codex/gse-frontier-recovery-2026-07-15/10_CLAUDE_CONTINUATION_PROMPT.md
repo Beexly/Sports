@@ -31,19 +31,20 @@ npm.cmd run guardrails
 git diff --check
 ```
 
-## First task
+## Completed continuation task
 
-Wire `buildPlaybackConsumerBundle()` into an **owner-only, selected-game Cockpit surface** using the existing `GameRoomPlayback`/envelope path:
+`buildPlaybackConsumerBundle()` is now wired into an owner-only, selected-game Cockpit surface using the existing `GameRoomPlayback`/envelope path:
 
-1. Reuse `requireCockpitAdmin()` before loading data.
-2. Use one real persisted game ID supplied by the route or operator; do not add demo events.
-3. Return an honest unavailable state when the Game Room envelope is absent or withheld.
-4. Render the Twin read model and the deterministic cited Brain answer from the same event stream.
-5. Do not expose raw model output, paid fields to PUBLIC, or any causal claim.
-6. Add failing-first tests for auth, one-query loading, withheld/unavailable behavior, citations, and raw-output exclusion.
-7. Keep each production source file at or below 250 lines and run the exact validation stack.
+- Route: `/cockpit/market-twin/[gameId]`
+- Loader: `apps/web/lib/cockpit/load-selected-game-playback.ts`
+- Renderer: `apps/web/components/cockpit/selected-game-playback.tsx`
+- Browser QA: `scripts/qa/cockpit-selected-game-playback-browser.mjs`
+- Evidence: focused Cockpit/static suite 164/164; browser QA desktop/mobile; root lint/typecheck/test/guardrails/build; exact TypeScript no-excuse checker; diff check.
+- Boundary: local browser proof used real production-board game ID `cmrm6vyzq00b5ozb9rjmuw9hw` against a deliberate stub DB. This proves the actual route's honest unavailable path, not a live eligible playback row.
 
-After that, feed the same settled stream to the postgame autopsy and draft-only Studio adapter. Do not create another truth store.
+## Next task
+
+Expose the already-derived postgame autopsy and draft-only Studio package from the same selected-game stream inside Cockpit. Keep it owner-only, reuse the selected-game loader/bundle, do not create another truth store, do not add fixture events, and do not open any publication path.
 
 ## Hard directives
 
