@@ -13,11 +13,24 @@
  * conversion luck). This is the master opportunity input behind the waiver tool
  * and the graded projections provider.
  *
- * Real nflverse data (CC-BY-4.0), multi-host failover, honest source-error.
- * canPublishProjections false — it's an opportunity read, not a point projection.
+ * LICENSE (corrected 2026-07-16): this dataset is ffverse ffopportunity, whose
+ * README licenses the models AND the expected-points DATA as CC-BY-SA-4.0
+ * (share-alike) — NOT the plain CC-BY-4.0 of the core nflverse releases this
+ * header previously claimed. Share-alike is the license class the platform
+ * excludes for published derivatives (same grounds as FTN), so while that
+ * question is open nothing derived from ff_opportunity may be published to
+ * customers as a value basis: the PUBLISHED graded pool excludes the xFP basis
+ * by default (see lib/integrations/graded-pool.ts); internal/owner surfaces may
+ * still compute it. Clearance is routed through the `ffverse-ffopportunity`
+ * entry in the Source Rights Registry (commercial_display_allowed=false), and
+ * this loader requests internal intents only — never commercial_display.
+ * Multi-host failover, honest source-error. canPublishProjections false — it's
+ * an opportunity read, not a point projection.
  */
 
-import { assertIngestible, decodeDatasetText, fetchWithFailover, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { decodeDatasetText, fetchWithFailover, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { checkClearance, wrapExtractedRecord, type ExtractedRecord } from "@/lib/scraping/clearance-engine";
+import { getSourceRightsEntry } from "@/lib/scraping/source-rights-registry";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { percentileRanks } from "./qb-consensus";
 
@@ -45,15 +58,36 @@ export interface ExpectedPointsRow {
 export interface ExpectedPoints {
   readonly generatedAt: string;
   readonly status: "live" | "source-error";
+  /**
+   * True when the payload was withheld at a CUSTOMER-DISPLAY boundary by the
+   * Scraping Clearance Engine (commercial display of the CC-BY-SA ff_opportunity
+   * data is not cleared) — a deliberate rights gate, not a fetch failure. See
+   * lib/intelligence/expected-points-display.ts.
+   */
+  readonly rightsGated?: boolean;
   readonly season: number;
   readonly throughWeek: number | null;
   readonly sourceRows: number;
   readonly rows: readonly ExpectedPointsRow[];
+  /** Rights envelope (RightsSnapshot inside) captured at extraction time; null on source-error. */
+  readonly record: ExtractedRecord | null;
   readonly canPublishProjections: false;
+  /** Registry attribution — must propagate to every derived output. */
+  readonly attribution: string;
   readonly note: string;
   readonly sourceUrl: string;
   readonly error: string | null;
 }
+
+/**
+ * Attribution from the `ffverse-ffopportunity` rights entry. The registry
+ * requires this line to propagate to ALL derived outputs (internal/owner
+ * surfaces included). The literal fallback matches the registry entry and only
+ * covers the impossible-in-practice case of the entry being removed.
+ */
+export const FF_OPPORTUNITY_ATTRIBUTION: string =
+  getSourceRightsEntry("ffverse-ffopportunity")?.attribution_text ??
+  "Expected points data from ffverse/ffopportunity (CC-BY-SA-4.0)";
 
 // ffverse ships ff_opportunity as per-season plain-CSV release assets on the
 // ffopportunity repo (tag `latest-data`, asset `ep_weekly_{season}.csv`), NOT a
@@ -163,7 +197,21 @@ export async function loadExpectedPoints({
   timeoutMs = 15000,
   fetcher = fetch,
 }: { season?: number; timeoutMs?: number; fetcher?: FetchLike } = {}): Promise<ExpectedPoints> {
-  assertIngestible("nflverse");
+  // Rights gate: ffverse-ffopportunity (CC-BY-SA-4.0). Internal intents only —
+  // commercial_display is deliberately NOT requested (the registry blocks it while
+  // the share-alike question is open). A block stops the job before any fetch.
+  const clearance = checkClearance({
+    source_id: "ffverse-ffopportunity",
+    mode: "open_dataset_ingest",
+    tool_id: "fetch-native",
+    intents: ["internal_analysis", "storage", "derived_analytics"],
+  });
+  if (!clearance.allowed) {
+    throw new Error(
+      `ff_opportunity ingestion blocked by the Scraping Clearance Engine: ` +
+      clearance.blocks.map((b) => b.code).join(", "),
+    );
+  }
   // ff_opportunity is one plain-CSV asset PER season. Try the requested season,
   // then fall back one season so the offseason gap (no current-season weeks yet)
   // still renders the most recent completed season instead of an empty state.
@@ -180,6 +228,14 @@ export async function loadExpectedPoints({
       if (records.length === 0) { lastError = `empty ff_opportunity ${candidate}`; continue; }
       const { rows, throughWeek } = buildExpectedPoints(records, candidate);
       if (rows.length === 0) { lastError = `no qualified rows for ${candidate}`; continue; }
+      // Envelope: every extracted record carries the RightsSnapshot captured at
+      // extraction time (mirrors adp-source.ts; throws if clearance were absent).
+      const record = wrapExtractedRecord(clearance, url, {
+        season: candidate,
+        throughWeek,
+        sourceRows: records.length,
+        rows,
+      });
       return {
         generatedAt: new Date().toISOString(),
         status: "live",
@@ -187,7 +243,9 @@ export async function loadExpectedPoints({
         throughWeek,
         sourceRows: records.length,
         rows,
+        record,
         canPublishProjections: false,
+        attribution: FF_OPPORTUNITY_ATTRIBUTION,
         note: "Expected fantasy points from ffverse ff_opportunity: what a player's real usage should have produced. We surface expected-vs-actual as buy-low / sell-high. The opportunity backbone, not a point projection.",
         sourceUrl: url,
         error: null,
@@ -203,7 +261,9 @@ export async function loadExpectedPoints({
     throughWeek: null,
     sourceRows: 0,
     rows: [],
+    record: null,
     canPublishProjections: false,
+    attribution: FF_OPPORTUNITY_ATTRIBUTION,
     note: "Expected points could not load from ffverse ff_opportunity. The board shows an empty state instead of fabricated expectations.",
     sourceUrl: lastUrl,
     error: lastError,

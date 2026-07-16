@@ -239,6 +239,21 @@ function xfpReadTone(r: ExpectedPointsRow): SignalTone {
 
 function ExpectedPointsView({ f }: { f: ExpectedPoints }): JSX.Element {
   if (f.status === "source-error") {
+    // Rights-gated is a deliberate, honest state — not a fetch failure. The xFP
+    // data (ffverse/ffopportunity) is CC-BY-SA-4.0 and its rights entry blocks
+    // commercial display while the share-alike question is open (see
+    // lib/intelligence/expected-points-display.ts). No data, no fabrication,
+    // no promised return date.
+    if (f.rightsGated) {
+      return (
+        <SourceError
+          variant="dark"
+          kicker="Rights-gated"
+          title="This engine is intentionally unavailable."
+          reason={f.note}
+        />
+      );
+    }
     return <SourceError variant="dark" reason={f.error ?? "UNKNOWN"} />;
   }
   const columns: Column<ExpectedPointsRow>[] = [

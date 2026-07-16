@@ -12,7 +12,7 @@ import { ProjectionsBadge } from "@/components/integrations/projections-badge";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export function FantasyShell({
-  eyebrow, title, intro, accent = BRAND_COLORS.softUltraviolet, children, note, wide, projectionsBadge = true,
+  eyebrow, title, intro, accent = BRAND_COLORS.softUltraviolet, children, note, attribution, wide, projectionsBadge = true,
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -20,6 +20,8 @@ export function FantasyShell({
   accent?: string;
   children: ReactNode;
   note?: string;
+  /** Source-attribution footer line (required on live-data surfaces by the rights registry). */
+  attribution?: string;
   wide?: boolean;
   /** Show the honest live/illustrative projections status in the hero (default on). */
   projectionsBadge?: boolean;
@@ -65,6 +67,9 @@ export function FantasyShell({
             <Reveal>{children}</Reveal>
             {note && (
               <p className="mt-8 text-xs leading-relaxed text-ink-500">{note}</p>
+            )}
+            {attribution && (
+              <p className="mt-2 font-mono text-[11px] leading-relaxed text-ink-600">{attribution}</p>
             )}
           </div>
         </section>

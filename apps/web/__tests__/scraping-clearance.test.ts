@@ -128,6 +128,88 @@ describe("Source rights registry — registry shape", () => {
     const ids = permRequired.map((s) => s.source_id);
     expect(ids).toContain("scores24-live");
   });
+
+  it("ffc-adp is approved_api — commercial display allowed, attribution + once/day cache required", () => {
+    const entry = getSourceRightsEntry("ffc-adp");
+    expect(entry).toBeDefined();
+    expect(entry!.status).toBe("approved_api");
+    expect(entry!.automation_allowed).toBe(true);
+    expect(entry!.commercial_display_allowed).toBe(true);
+    expect(entry!.storage_allowed).toBe(true);
+    expect(entry!.derived_analytics_allowed).toBe(true);
+    expect(entry!.model_training_allowed).toBe(false);
+    expect(entry!.attribution_required).toBe(true);
+    expect(entry!.attribution_text).toBe("ADP data via FantasyFootballCalculator.com");
+    expect(entry!.evidence_urls).toContain("https://help.fantasyfootballcalculator.com/article/42-adp-rest-api");
+    expect(entry!.notes).toMatch(/once per day/i); // the cache term is recorded on the entry
+  });
+
+  it("ffverse-ffopportunity records the TRUE CC-BY-SA-4.0 license — published derivation NOT cleared", () => {
+    const entry = getSourceRightsEntry("ffverse-ffopportunity");
+    expect(entry).toBeDefined();
+    expect(entry!.status).toBe("approved_open_license");
+    expect(entry!.attribution_text).toContain("CC-BY-SA-4.0"); // the true license, not CC-BY-4.0
+    // Share-alike: the platform excludes SA for published derivatives (same
+    // grounds as FTN) — commercial display stays OFF while the question is open.
+    expect(entry!.commercial_display_allowed).toBe(false);
+    expect(entry!.derived_analytics_allowed).toBe(true); // internal analysis stays cleared
+    expect(entry!.storage_allowed).toBe(true);
+    expect(entry!.model_training_allowed).toBe(false);
+    expect(entry!.unlock_condition).toMatch(/share-alike/i);
+    expect(entry!.notes).toMatch(/share-alike|SA/);
+  });
+});
+
+// ─── FFC ADP + ffverse ff_opportunity clearance behavior ──────────────────────
+
+describe("ffc-adp clearance — the ADP adapter's exact request clears", () => {
+  it("licensed_api_ingest with commercial_display + storage + derived_analytics is allowed", () => {
+    const result = checkClearance({
+      source_id: "ffc-adp",
+      mode: "licensed_api_ingest",
+      tool_id: "fetch-native",
+      intents: ["commercial_display", "storage", "derived_analytics"],
+    });
+    expect(result.allowed).toBe(true);
+    expect(result.rightsSnapshot!.attribution_text).toBe("ADP data via FantasyFootballCalculator.com");
+    // Attribution reminder must ride along so it propagates to derived outputs.
+    expect(result.warnings.some((w) => w.includes("FantasyFootballCalculator.com"))).toBe(true);
+  });
+
+  it("model_training stays blocked", () => {
+    const result = checkClearance({
+      source_id: "ffc-adp",
+      mode: "licensed_api_ingest",
+      tool_id: "fetch-native",
+      intents: ["model_training"],
+    });
+    expect(result.allowed).toBe(false);
+    expect(result.blocks.some((b) => b.code === "MODEL_TRAINING_NOT_ALLOWED")).toBe(true);
+  });
+});
+
+describe("ffverse-ffopportunity clearance — internal cleared, published derivation blocked", () => {
+  it("open_dataset_ingest for internal analysis + storage + derived analytics is allowed", () => {
+    const result = checkClearance({
+      source_id: "ffverse-ffopportunity",
+      mode: "open_dataset_ingest",
+      tool_id: "fetch-native",
+      intents: ["internal_analysis", "storage", "derived_analytics"],
+    });
+    expect(result.allowed).toBe(true);
+    expect(result.rightsSnapshot!.commercial_display_allowed).toBe(false);
+  });
+
+  it("commercial_display is blocked while the share-alike question is open", () => {
+    const result = checkClearance({
+      source_id: "ffverse-ffopportunity",
+      mode: "open_dataset_ingest",
+      tool_id: "fetch-native",
+      intents: ["commercial_display"],
+    });
+    expect(result.allowed).toBe(false);
+    expect(result.blocks.some((b) => b.code === "COMMERCIAL_DISPLAY_NOT_ALLOWED")).toBe(true);
+  });
 });
 
 // ─── PROOF 1: scores24.live cannot run automated extraction ───────────────────

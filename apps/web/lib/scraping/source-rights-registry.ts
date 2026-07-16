@@ -250,7 +250,99 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "enrichment. The older source-registry marks this commercialUse:false, honored here.",
   },
 
+  {
+    source_id: "ffverse-ffopportunity",
+    source_name: "ffverse ffopportunity (Expected Fantasy Points data)",
+    source_url: "https://github.com/ffverse/ffopportunity",
+    terms_url: "https://github.com/ffverse/ffopportunity#readme",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "open_dataset",
+    status: "approved_open_license",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    // TRUE license: the ffopportunity README states the models AND the expected
+    // points DATA are CC-BY-SA-4.0 (share-alike) — NOT the plain CC-BY-4.0 of the
+    // core nflverse releases. Share-alike is the license class this platform
+    // excludes for published derivatives (same grounds as nflverse's FTN charting
+    // data): publishing derived outputs could obligate us to share-alike-license
+    // our own derived work. So published derivation is NOT cleared:
+    // commercial_display stays false; internal analysis / internal derived
+    // analytics remain allowed under the open license.
+    commercial_display_allowed: false,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Expected points data from ffverse/ffopportunity (CC-BY-SA-4.0)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "none",
+    database_right_risk: "none",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-07-16",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://github.com/ffverse/ffopportunity#readme",
+      "https://creativecommons.org/licenses/by-sa/4.0/",
+    ],
+    unlock_condition:
+      "Legal review concluding CC-BY-SA-4.0 share-alike does not attach to our derived " +
+      "customer-facing outputs, OR written permission / alternate license from ffverse. " +
+      "Until then: internal/owner surfaces only; the PUBLISHED graded pool must exclude " +
+      "the xFP basis (it defaults to the pure CC-BY-4.0 player-model basis).",
+    vendor_contact: "https://github.com/ffverse/ffopportunity/issues",
+    notes:
+      "ep_weekly_{season}.csv release assets (tag latest-data). Previously mis-filed under " +
+      "the nflverse CC-BY-4.0 envelope; corrected 2026-07-16. The SA (share-alike) clause is " +
+      "why published derivation is not cleared while the question is open — the same posture " +
+      "as FTN charting data. Attribution required in all internal outputs.",
+  },
+
   // ── Approved: licensed API ───────────────────────────────────────────────────
+  // Rate-term note (2026-07-16): the adapter honors the once/day term with a 24h
+  // live cache PLUS a short negative cache for source-error results (see
+  // lib/fantasy/adp-source.ts, FFC_ERROR_CACHE_TTL_MS). Both caches are
+  // per-instance (in-process) memory — a serverless fleet can still make up to
+  // one call per cold instance per TTL. Acceptable against FFC's soft "don't
+  // call frequently" ask; a shared cache is the upgrade path if fleet fan-out grows.
+  {
+    source_id: "ffc-adp",
+    source_name: "Fantasy Football Calculator ADP REST API",
+    source_url: "https://fantasyfootballcalculator.com/api/v1/adp",
+    terms_url: "https://help.fantasyfootballcalculator.com/article/42-adp-rest-api",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "approved_api",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "ADP data via FantasyFootballCalculator.com",
+    personal_data_risk: "none",
+    copyright_expression_risk: "none",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-07-16",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://help.fantasyfootballcalculator.com/article/42-adp-rest-api",
+    ],
+    unlock_condition: null,
+    vendor_contact: "https://fantasyfootballcalculator.com/contact",
+    notes:
+      "Official docs: 'Use of the ADP REST API is free for personal and commercial use.' " +
+      "Attribution requested as a link/mention (honored via attribution_text on every " +
+      "surface). The data updates ONCE PER DAY — the docs ask integrators not to call " +
+      "frequently, so the adapter MUST cache for >= 24h (see lib/fantasy/adp-source.ts). " +
+      "No key required. Facts only: aggregated draft-position numbers + bye weeks.",
+  },
+
   {
     source_id: "the-odds-api",
     source_name: "The Odds API",

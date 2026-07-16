@@ -7,13 +7,15 @@
  * actually wins: weekly ceiling/spike, QB↔catcher stack correlation, and bye/
  * positional structure. Mark players drafted-by-you or off-the-board; the engine
  * recommends your next pick with reasons and grades your roster on those axes.
- * Overlay your own ADP CSV (the legal path — never scraped). Reads the active pool,
- * so it runs on the cleared live graded pool the moment projections are flipped on.
+ * The market ADP column defaults to real FFC ADP riding on live pool rows
+ * (cleared feed, attribution required); a user CSV import overrides it. We never
+ * scrape ADP from sources that prohibit it. Reads the active pool, so it runs on
+ * the cleared live graded pool the moment projections are flipped on.
  */
 
 import { useMemo, useRef, useState } from "react";
 import { PLAYERS, POSITIONS, POS_HEX, vor, tier, playerById, type Pos, type Player } from "@/lib/fantasy/players";
-import { parseAdpCsv, valueVsAdp, type AdpLabel } from "@/lib/fantasy/draft";
+import { parseAdpCsv, valueVsAdp, marketAdpMap, valueVsMarket, type AdpLabel } from "@/lib/fantasy/draft";
 import { rosterNeedsNext, evaluateBestBallRoster, type StructureStatus } from "@/lib/fantasy/bestball";
 import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
@@ -48,6 +50,10 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
 
   const myPlayers = useMemo(() => [...mine].map((id) => playerById(id, universe)!).filter(Boolean), [mine, universe]);
   const available = useMemo(() => universe.filter((p) => !mine.has(p.id) && !gone.has(p.id)), [mine, gone, universe]);
+  // The default market column: real FFC ADP riding on live pool rows. A user CSV
+  // import (adp) always overrides it.
+  const marketAdp = useMemo(() => marketAdpMap(universe), [universe]);
+  const activeAdp = adp.size > 0 ? adp : marketAdp;
   const recs = useMemo(() => rosterNeedsNext(available, myPlayers, canUseFantasyFull ? 4 : 1, universe), [available, myPlayers, universe, canUseFantasyFull]);
   const evalr = useMemo(() => evaluateBestBallRoster(myPlayers), [myPlayers]);
   const currentPick = order.length + 1;
@@ -119,33 +125,44 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
               <span className="text-[11px] text-ink-300">{adpName}</span>
               <button type="button" onClick={clearAdp} className="text-[11px] text-ink-500 hover:text-white">clear</button>
             </>
+          ) : marketAdp.size > 0 ? (
+            <span className="text-[10px] text-ink-600">ADP via FantasyFootballCalculator.com ({marketAdp.size} players, updated daily). Import a CSV to override. <span className="text-ink-500">name,adp</span></span>
           ) : (
-            <span className="text-[10px] text-ink-600">Bring your own ADP. We don&apos;t scrape it from the books that publish it. <span className="text-ink-500">name,adp</span></span>
+            <span className="text-[10px] text-ink-600">Bring your own ADP. We don&apos;t scrape it from sources that prohibit it. <span className="text-ink-500">name,adp</span></span>
           )}
         </div>
 
         <div className="surface-card overflow-hidden p-0">
           <div className="grid grid-cols-[1fr_auto_auto] gap-3 border-b px-4 py-2.5 text-[10px] uppercase tracking-[0.16em] text-ink-500" style={{ borderColor: BRAND_COLORS.steelGray }}>
-            <span>Player</span><span className="text-right">VOR · Tier{adp.size > 0 ? " · ADP" : ""}</span><span className="text-right">Action</span>
+            <span>Player</span><span className="text-right">VOR · Tier{activeAdp.size > 0 ? " · ADP" : ""}</span><span className="text-right">Action</span>
           </div>
           <div className="max-h-[60vh] overflow-y-auto">
             {boardCapped.length === 0 ? (
               <p className="px-4 py-6 text-sm text-ink-400">No players left at this filter.</p>
             ) : boardCapped.map((pl) => {
               const c = POS_HEX[pl.pos];
-              const av = adp.size > 0 ? valueVsAdp(pl, adp, currentPick) : null;
+              const av = activeAdp.size > 0 ? valueVsAdp(pl, activeAdp, currentPick) : null;
+              const mv = adp.size === 0 ? valueVsMarket(pl) : null; // our-rank-vs-market read (live pool only)
+              // Badge flag: the illustrative pool's own `injury`, or the live
+              // Sleeper DISPLAY flag (`injuryDisplay`) — display-only, never a
+              // scoring input on live rows.
+              const injuryFlag = pl.injuryDisplay ?? pl.injury;
               return (
                 <div key={pl.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 border-b px-4 py-2.5 last:border-b-0" style={{ borderColor: BRAND_COLORS.steelGray }}>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="rounded px-1.5 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{pl.pos}</span>
                       <span className="truncate text-sm font-semibold text-white">{pl.name}</span>
-                      {pl.injury !== "healthy" && <span title={pl.injury} style={{ color: BRAND_COLORS.ionMagenta }}>⚠</span>}
+                      {injuryFlag !== "healthy" && <span title={injuryFlag} style={{ color: BRAND_COLORS.ionMagenta }}>⚠</span>}
                       {av && av.label !== "none" && av.label !== "on-time" && (
                         <span className="rounded px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider" style={{ color: ADP_HEX[av.label], background: `${ADP_HEX[av.label]}1c` }}>{av.label}</span>
                       )}
+                      {mv && mv.label !== "none" && mv.label !== "on-time" && (
+                        <span title={`Our rank vs market ADP: ${mv.delta! >= 0 ? "+" : ""}${mv.delta}`} className="rounded px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider" style={{ color: ADP_HEX[mv.label], background: `${ADP_HEX[mv.label]}1c` }}>mkt {mv.label}</span>
+                      )}
                     </div>
-                    <p className="mt-0.5 font-mono text-[10px] text-ink-500">{pl.team} · Bye {pl.bye} · {pl.role}</p>
+                    {/* bye <= 0 = no bye joined (live rows without an FFC match): show nothing, there is no Week 0 */}
+                    <p className="mt-0.5 font-mono text-[10px] text-ink-500">{pl.team}{pl.bye > 0 ? ` · Bye ${pl.bye}` : ""} · {pl.role}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-mono text-sm" style={{ color: c }}>{vor(pl, universe) >= 0 ? "+" : ""}{vor(pl, universe)}</p>
@@ -181,7 +198,7 @@ export function BestBallBoard({ pool, canUseFantasyFull = false }: { pool?: read
               <div className="mt-2 flex items-center justify-between gap-2">
                 <div>
                   <p className="font-display text-lg text-white">{recs[0]!.player.name}</p>
-                  <p className="font-mono text-[11px] text-ink-500">{recs[0]!.player.pos} · {recs[0]!.player.team} · Bye {recs[0]!.player.bye}</p>
+                  <p className="font-mono text-[11px] text-ink-500">{recs[0]!.player.pos} · {recs[0]!.player.team}{recs[0]!.player.bye > 0 ? ` · Bye ${recs[0]!.player.bye}` : ""}</p>
                 </div>
                 <button type="button" onClick={() => draftMine(recs[0]!.player.id)} className="btn btn-primary">Draft</button>
               </div>
