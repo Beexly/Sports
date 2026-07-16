@@ -1,5 +1,5 @@
 /**
- * GSE Team Defense — the defensive half of every SMASH matchup pair.
+ * GSE Team Defense — the defensive half of every Matchup Skill Index pairing.
  *
  * A receiver matches against the opposing PASS-defense index; a running back
  * against the RUSH-defense index; an offensive line against the pass-rush

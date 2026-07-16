@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { computeBurr, BURR_CATEGORIES, type TeamBullpenCategories } from "../mlb/burr";
+import { computeBsi, BSI_CATEGORIES, type TeamBullpenCategories } from "../mlb/bullpen-strength";
 import { computeRvs, relieverRole, type RelieverSeason } from "../mlb/rvs";
 
 /**
- * GOLDEN-FILE verification for BURR and RVS against the validated clean-room
+ * GOLDEN-FILE verification for BSI and RVS against the validated clean-room
  * reference implementation's live 2026-season tables.
  *
  * Precision note (stated, not hidden): the fixtures store the reference
  * engine's inputs ROUNDED for display (3dp categories, 1dp K−BB%, whole-pct
  * reliability), while the reference computed from unrounded values. Ratios
- * over 3dp-rounded categories bound the BURR drift at well under 0.01; the
+ * over 3dp-rounded categories bound the BSI drift at well under 0.01; the
  * RVS percentile ranks can flip on display-rounding near-ties, which the
  * tolerance and the ≥-share assertions below account for explicitly.
  */
@@ -30,8 +30,8 @@ function parseCsv(file: string): Array<Record<string, string>> {
   });
 }
 
-describe("BURR golden-file verification (30 team bullpens, 2026 live season)", () => {
-  const rows = parseCsv("burr_table.csv");
+describe("BSI golden-file verification (30 team bullpens, 2026 live season)", () => {
+  const rows = parseCsv("bsi_table.csv");
   const teams: TeamBullpenCategories[] = rows.map((r) => ({
     team: r["team"]!,
     era: Number(r["ERA"]),
@@ -52,41 +52,41 @@ describe("BURR golden-file verification (30 team bullpens, 2026 live season)", (
 
   it("loads all 30 teams and the 14 public categories sum to the pinned weight total", () => {
     expect(teams.length).toBe(30);
-    expect(BURR_CATEGORIES.length).toBe(14);
-    expect(BURR_CATEGORIES.reduce((s, c) => s + c.weight, 0)).toBeCloseTo(14.5, 10);
+    expect(BSI_CATEGORIES.length).toBe(14);
+    expect(BSI_CATEGORIES.reduce((s, c) => s + c.weight, 0)).toBeCloseTo(14.5, 10);
   });
 
-  it("reproduces every team's BURR within rounded-input drift (30/30)", () => {
-    const scores = computeBurr(teams);
+  it("reproduces every team's BSI within rounded-input drift (30/30)", () => {
+    const scores = computeBsi(teams);
     const failures: string[] = [];
     scores.forEach((s, i) => {
-      const ref = Number(rows[i]!["BURR"]);
-      if (Math.abs(s.burr - ref) > 0.01) {
-        failures.push(`${s.team}: got ${s.burr.toFixed(4)} ref ${ref}`);
+      const ref = Number(rows[i]!["BSI"]);
+      if (Math.abs(s.bsi - ref) > 0.01) {
+        failures.push(`${s.team}: got ${s.bsi.toFixed(4)} ref ${ref}`);
       }
     });
     expect(failures).toEqual([]);
   });
 
   it("reproduces the strength ordering (ATL strongest, WSH weakest; display-precision ties may swap)", () => {
-    const scores = computeBurr(teams);
+    const scores = computeBsi(teams);
     const byRank = [...scores].sort((a, b) => a.rank - b.rank);
     expect(byRank[0]!.team).toBe("ATL");
-    expect(byRank[0]!.burr).toBeCloseTo(1.205, 2);
+    expect(byRank[0]!.bsi).toBeCloseTo(1.205, 2);
     expect(byRank[byRank.length - 1]!.team).toBe("WSH");
 
     // Reference ranks are 1..30 in fixture order (already sorted desc). A team
-    // whose reference BURR sits within the rounded-input drift bound of a
+    // whose reference BSI sits within the rounded-input drift bound of a
     // neighbor (e.g. the KC 0.880 / CIN 0.879 / CWS 0.879 three-way tie) may
     // legitimately swap with that neighbor; everyone else must match exactly.
     const DRIFT = 0.01;
-    const refBurr = rows.map((r) => Number(r["BURR"]));
+    const refBsi = rows.map((r) => Number(r["BSI"]));
     const rankFailures: string[] = [];
     scores.forEach((s, i) => {
       const refRank = Number(rows[i]!["rank"]);
       const nearTie =
-        (i > 0 && Math.abs(refBurr[i]! - refBurr[i - 1]!) <= DRIFT) ||
-        (i < refBurr.length - 1 && Math.abs(refBurr[i]! - refBurr[i + 1]!) <= DRIFT);
+        (i > 0 && Math.abs(refBsi[i]! - refBsi[i - 1]!) <= DRIFT) ||
+        (i < refBsi.length - 1 && Math.abs(refBsi[i]! - refBsi[i + 1]!) <= DRIFT);
       const allowed = nearTie ? 2 : 0;
       if (Math.abs(s.rank - refRank) > allowed) {
         rankFailures.push(`${s.team}: rank ${s.rank} ref ${refRank}`);
@@ -96,7 +96,7 @@ describe("BURR golden-file verification (30 team bullpens, 2026 live season)", (
   });
 
   it("exposes all 14 component indices (the glass-box breakdown)", () => {
-    const scores = computeBurr(teams);
+    const scores = computeBsi(teams);
     for (const s of scores) {
       expect(Object.keys(s.components).length).toBe(14);
       for (const v of Object.values(s.components)) {
@@ -106,7 +106,7 @@ describe("BURR golden-file verification (30 team bullpens, 2026 live season)", (
   });
 
   it("a missing category contributes a NEUTRAL 1.0, never a reward or penalty", () => {
-    const scores = computeBurr([
+    const scores = computeBsi([
       { ...teams[0]!, team: "X", saveConversion: null },
       ...teams.slice(1),
     ]);
@@ -115,7 +115,7 @@ describe("BURR golden-file verification (30 team bullpens, 2026 live season)", (
 });
 
 describe("RVS golden-file verification (311 relievers, 2026 live season)", () => {
-  const rows = parseCsv("solds_table.csv");
+  const rows = parseCsv("svh_table.csv");
   const population: RelieverSeason[] = rows.map((r, i) => ({
     id: `${r["name"]}#${i}`,
     gamesPitched: Number(r["GP"]),
@@ -149,19 +149,19 @@ describe("RVS golden-file verification (311 relievers, 2026 live season)", () =>
     expect(rows[0]!["name"]).toBe("Mason Miller");
     expect(scores[0]!.rvs).toBeCloseTo(99.6, 0);
     expect(scores[0]!.role).toBe("Closer");
-    expect(scores[0]!.solds).toBe(23);
+    expect(scores[0]!.svh).toBe(23);
   });
 
-  it("Solds and Solds% reproduce exactly (they are pure arithmetic)", () => {
+  it("SVH and SVH% reproduce exactly (they are pure arithmetic)", () => {
     const scores = computeRvs(population);
     const failures: string[] = [];
     scores.forEach((s, i) => {
-      const refSolds = Number(rows[i]!["Solds"]);
-      if (s.solds !== refSolds) failures.push(`${s.id}: solds ${s.solds} ref ${refSolds}`);
-      const refPct = rows[i]!["Solds_pct"];
-      if (refPct !== "" && s.soldsPct !== null) {
-        if (Math.abs(s.soldsPct * 100 - Number(refPct)) > 0.5) {
-          failures.push(`${s.id}: solds% ${(s.soldsPct * 100).toFixed(1)} ref ${refPct}`);
+      const refSvh = Number(rows[i]!["SVH"]);
+      if (s.svh !== refSvh) failures.push(`${s.id}: svh ${s.svh} ref ${refSvh}`);
+      const refPct = rows[i]!["SVH_pct"];
+      if (refPct !== "" && s.svhPct !== null) {
+        if (Math.abs(s.svhPct * 100 - Number(refPct)) > 0.5) {
+          failures.push(`${s.id}: svh% ${(s.svhPct * 100).toFixed(1)} ref ${refPct}`);
         }
       }
     });
@@ -188,7 +188,7 @@ describe("RVS golden-file verification (311 relievers, 2026 live season)", () =>
       { id: "b", gamesPitched: 10, saves: 0, holds: 0, blownSaves: 0, saveOpportunities: 0, kMinusBb: 0.2, fip: 3 },
     ];
     const scores = computeRvs(tiny);
-    expect(scores[1]!.soldsPct).toBeNull();
+    expect(scores[1]!.svhPct).toBeNull();
     // b's reliability contribution used the median (0.5 from a), not 1.0:
     // RVS(b) = 100·(0.55·pct(vol=0) + 0.25·skill(=1.0) + 0.20·0.5)
     expect(scores[1]!.rvs).toBeCloseTo(100 * (0.55 * 0.5 + 0.25 * 1.0 + 0.2 * 0.5), 5);

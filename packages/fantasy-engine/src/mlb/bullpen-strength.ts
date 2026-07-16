@@ -1,8 +1,8 @@
 /**
- * GSE Bullpen Rating (BURR) — 14 bullpen categories, league-normalized into
- * ONE matchup number. Glass-box: unlike the sealed incumbent equivalent, all
- * 14 component indices are returned, so a reader sees WHY a pen rates where
- * it does.
+ * GSE Bullpen Strength Index (BSI) — 14 bullpen categories, league-normalized
+ * into ONE matchup number. Glass-box: unlike a sealed equivalent, all 14
+ * component indices are returned, so a reader sees WHY a pen rates where it
+ * does.
  *
  * Convention: 1.00 = league average; >1.00 = STRONG pen (bad for opposing
  * hitters); <1.00 = weak pen (a late-inning edge for hitters). Each category
@@ -10,8 +10,9 @@
  * always stronger (value/league when more is better, league/value when less
  * is better), then weight-averaged.
  *
- * Port of the validated clean-room reference implementation; verified against
- * its live-season team table in the test suite. Statcast expected-contact
+ * Clean-room implementation computed solely from MLB StatsAPI / Baseball
+ * Savant / nflverse public data; methodology provenance documented in the
+ * internal competitive-research package. Statcast expected-contact
  * categories (xwOBA/barrel/hard-hit allowed) carry the highest weights —
  * skills over results, resistant to small-sample luck.
  */
@@ -46,7 +47,7 @@ export interface TeamBullpenCategories {
 
 type CategoryKey = Exclude<keyof TeamBullpenCategories, "team">;
 
-export interface BurrCategory {
+export interface BsiCategory {
   readonly key: CategoryKey;
   /** +1 when a higher raw value means a STRONGER pen, −1 when lower does. */
   readonly direction: 1 | -1;
@@ -54,7 +55,7 @@ export interface BurrCategory {
 }
 
 /** The 14 categories and weights (public, pinned by tests). */
-export const BURR_CATEGORIES: readonly BurrCategory[] = [
+export const BSI_CATEGORIES: readonly BsiCategory[] = [
   { key: "era", direction: -1, weight: 1.3 },
   { key: "fip", direction: -1, weight: 1.4 },
   { key: "kPct", direction: 1, weight: 1.2 },
@@ -71,10 +72,10 @@ export const BURR_CATEGORIES: readonly BurrCategory[] = [
   { key: "hardHitAllowed", direction: -1, weight: 0.9 },
 ];
 
-export interface BurrScore {
+export interface BsiScore {
   readonly team: string;
   /** The single matchup number: 1.00 = league average, higher = stronger pen. */
-  readonly burr: number;
+  readonly bsi: number;
   /** 1 = strongest pen. Ties share the smaller rank ordinal deterministically. */
   readonly rank: number;
   /** Every component index (same convention) — the glass-box breakdown. */
@@ -82,17 +83,17 @@ export interface BurrScore {
 }
 
 /**
- * Compute BURR for a league of team bullpens. League means are taken over the
+ * Compute BSI for a league of team bullpens. League means are taken over the
  * FINITE values of each category (a team with no inherited runners does not
  * drag the strand-rate mean); a team's missing category contributes a NEUTRAL
  * 1.0 index — absence of evidence never rewards or punishes.
  */
-export function computeBurr(teams: readonly TeamBullpenCategories[]): BurrScore[] {
-  const totalWeight = BURR_CATEGORIES.reduce((s, c) => s + c.weight, 0);
+export function computeBsi(teams: readonly TeamBullpenCategories[]): BsiScore[] {
+  const totalWeight = BSI_CATEGORIES.reduce((s, c) => s + c.weight, 0);
 
   // League mean per category over finite values only.
   const leagueMean = new Map<CategoryKey, number>();
-  for (const c of BURR_CATEGORIES) {
+  for (const c of BSI_CATEGORIES) {
     let sum = 0;
     let n = 0;
     for (const t of teams) {
@@ -108,7 +109,7 @@ export function computeBurr(teams: readonly TeamBullpenCategories[]): BurrScore[
   const scored = teams.map((t) => {
     const components = {} as Record<CategoryKey, number>;
     let acc = 0;
-    for (const c of BURR_CATEGORIES) {
+    for (const c of BSI_CATEGORIES) {
       const v = t[c.key];
       const lg = leagueMean.get(c.key)!;
       let idx = 1.0; // neutral when the category is missing for this team
@@ -118,12 +119,12 @@ export function computeBurr(teams: readonly TeamBullpenCategories[]): BurrScore[
       components[c.key] = idx;
       acc += idx * c.weight;
     }
-    return { team: t.team, burr: acc / totalWeight, components };
+    return { team: t.team, bsi: acc / totalWeight, components };
   });
 
   // Dense-stable ranking: 1 = strongest. Sort copy for rank lookup; input
   // order is preserved in the returned array.
-  const order = [...scored].sort((a, b) => b.burr - a.burr || a.team.localeCompare(b.team));
+  const order = [...scored].sort((a, b) => b.bsi - a.bsi || a.team.localeCompare(b.team));
   const rankByTeam = new Map(order.map((s, i) => [s.team, i + 1]));
 
   return scored.map((s) => ({ ...s, rank: rankByTeam.get(s.team)! }));

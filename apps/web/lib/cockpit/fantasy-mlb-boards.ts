@@ -4,7 +4,7 @@
  *
  *   clearance gate (fantasy-mlb-gate) → SourceClearanceProof → adapters
  *   (@sports/data-ingestion, live-verified schemas) → engine
- *   (@sports/fantasy-engine SMASH / BURR / RVS) → boards.
+ *   (@sports/fantasy-engine MSI / BSI / RVS) → boards.
  *
  * RIGHTS POSTURE (registry: mlb-statsapi, baseball-savant — derived-analytics
  * ONLY): raw payloads are fetched, mapped, and DISCARDED in this function —
@@ -19,17 +19,17 @@
  *
  * HONESTY: a refused clearance means NO fetch (blocked state, with codes); a
  * failed fetch means an unavailable board (with the reason) — never an empty
- * board dressed as a quiet day, and SMASH vs BURR/RVS degrade independently.
+ * board dressed as a quiet day, and MSI vs BSI/RVS degrade independently.
  */
 
 import {
-  computeBurr,
-  computeHitterSmash,
-  computePitcherSmash,
+  computeBsi,
+  computeHitterMsi,
+  computePitcherMsi,
   computeRvs,
-  type BurrScore,
+  type BsiScore,
   type RvsScore,
-  type SmashScore,
+  type MsiScore,
 } from "@sports/fantasy-engine";
 import {
   buildRelieverSeasons,
@@ -37,7 +37,7 @@ import {
   buildTeamStatcastAllowed,
   consolidateByPlayer,
   fetchMlbPitcherSeasons,
-  fetchSavantSmashLeaderboard,
+  fetchSavantMsiLeaderboard,
   relieverPidToTeam,
   toHitterSkillInputs,
   toPitcherSkillInputs,
@@ -48,11 +48,11 @@ import { baseballSavantGate, mlbStatsApiGate } from "@/lib/ingestion/fantasy-mlb
 
 // ── Board types ───────────────────────────────────────────────────────────────
 
-export interface SmashBoardRow {
+export interface MsiBoardRow {
   readonly name: string;
   readonly playerId: number;
   readonly pa: number;
-  readonly score: SmashScore;
+  readonly score: MsiScore;
 }
 
 export interface RvsBoardRow {
@@ -71,9 +71,9 @@ export interface MlbFantasyBoards {
   readonly computedAt: string;
   /** Attribution strings from the clearance proofs — render them, always. */
   readonly attributions: readonly string[];
-  readonly hitters: BoardSection<readonly SmashBoardRow[]>;
-  readonly pitchers: BoardSection<readonly SmashBoardRow[]>;
-  readonly bullpens: BoardSection<readonly BurrScore[]>;
+  readonly hitters: BoardSection<readonly MsiBoardRow[]>;
+  readonly pitchers: BoardSection<readonly MsiBoardRow[]>;
+  readonly bullpens: BoardSection<readonly BsiScore[]>;
   readonly relievers: BoardSection<readonly RvsBoardRow[]>;
 }
 
@@ -93,15 +93,15 @@ function unavailable(err: unknown): { status: "unavailable"; reason: string } {
   };
 }
 
-function toSmashBoard(
+function toMsiBoard(
   rows: ReadonlyArray<{ playerId: number; name: string; pa: number }>,
-  scores: readonly SmashScore[],
-): SmashBoardRow[] {
+  scores: readonly MsiScore[],
+): MsiBoardRow[] {
   return rows
     .map((r, i) => ({ name: r.name, playerId: r.playerId, pa: r.pa, score: scores[i]! }))
     .sort((a, b) => {
-      const av = Number.isFinite(a.score.smash) ? a.score.smash : -Infinity;
-      const bv = Number.isFinite(b.score.smash) ? b.score.smash : -Infinity;
+      const av = Number.isFinite(a.score.msi) ? a.score.msi : -Infinity;
+      const bv = Number.isFinite(b.score.msi) ? b.score.msi : -Infinity;
       return bv - av;
     });
 }
@@ -124,7 +124,7 @@ export async function computeMlbFantasyBoards(
     ...(statsGate.ok && statsGate.proof.attributionText ? [statsGate.proof.attributionText] : []),
   ];
 
-  // ── Savant populations (SMASH hitters + pitchers) ──────────────────────────
+  // ── Savant populations (MSI hitters + pitchers) ────────────────────────────
   let hitters: MlbFantasyBoards["hitters"];
   let pitchers: MlbFantasyBoards["pitchers"];
   let savantPitcherRows: readonly SavantCustomRow[] | null = null;
@@ -134,12 +134,12 @@ export async function computeMlbFantasyBoards(
   } else {
     try {
       const [batterRows, pitcherRows] = await Promise.all([
-        fetchSavantSmashLeaderboard(
+        fetchSavantMsiLeaderboard(
           { year: season, type: "batter" },
           savantGate.proof,
           opts.fetchImpl,
         ),
-        fetchSavantSmashLeaderboard(
+        fetchSavantMsiLeaderboard(
           { year: season, type: "pitcher" },
           savantGate.proof,
           opts.fetchImpl,
@@ -148,15 +148,15 @@ export async function computeMlbFantasyBoards(
       savantPitcherRows = pitcherRows;
       const h = toHitterSkillInputs(batterRows);
       const p = toPitcherSkillInputs(pitcherRows);
-      hitters = { status: "ok", data: toSmashBoard(h, computeHitterSmash(h.map((r) => r.input))) };
-      pitchers = { status: "ok", data: toSmashBoard(p, computePitcherSmash(p.map((r) => r.input))) };
+      hitters = { status: "ok", data: toMsiBoard(h, computeHitterMsi(h.map((r) => r.input))) };
+      pitchers = { status: "ok", data: toMsiBoard(p, computePitcherMsi(p.map((r) => r.input))) };
     } catch (err) {
       hitters = unavailable(err);
       pitchers = unavailable(err);
     }
   }
 
-  // ── statsapi reliever pool (RVS) + team bullpens (BURR) ─────────────────────
+  // ── statsapi reliever pool (RVS) + team bullpens (BSI) ──────────────────────
   let bullpens: MlbFantasyBoards["bullpens"];
   let relievers: MlbFantasyBoards["relievers"];
   if (!statsGate.ok) {
@@ -179,8 +179,8 @@ export async function computeMlbFantasyBoards(
           .sort((a, b) => b.score.rvs - a.score.rvs),
       };
 
-      // BURR needs the Savant team-Statcast join; without it the three Statcast
-      // categories are NaN → neutral, which computeBurr handles honestly — the
+      // BSI needs the Savant team-Statcast join; without it the three Statcast
+      // categories are NaN → neutral, which computeBsi handles honestly — the
       // board still renders, from 11 of 14 categories, and says nothing false.
       const teamStatcast =
         savantPitcherRows !== null
@@ -189,7 +189,7 @@ export async function computeMlbFantasyBoards(
       const categories = buildTeamBullpenCategories(stintLines, fipConstant, teamStatcast);
       bullpens = {
         status: "ok",
-        data: [...computeBurr(categories)].sort((a, b) => a.rank - b.rank),
+        data: [...computeBsi(categories)].sort((a, b) => a.rank - b.rank),
       };
     } catch (err) {
       bullpens = unavailable(err);

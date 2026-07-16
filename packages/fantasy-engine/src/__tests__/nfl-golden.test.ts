@@ -8,7 +8,7 @@ import {
   trenchMatchup,
   type TeamOffensiveLine,
 } from "../nfl/trench";
-import { computeWrSmash, type ReceiverSeason } from "../nfl/wr-smash";
+import { computeWrMatchup, type ReceiverSeason } from "../nfl/wr-matchup";
 
 /**
  * NFL golden-file verification against the validated clean-room reference
@@ -19,8 +19,8 @@ import { computeWrSmash, type ReceiverSeason } from "../nfl/wr-smash";
  * trench table carries all O-line inputs (D-line inputs qbkd/hurries are not
  * exported by the reference, so the D-line side is verified structurally
  * plus formula-tested synthetically); the WR table exports only the display
- * columns, so WR SMASH is verified on structure, headline ordering, and the
- * documented missing-data deviation.
+ * columns, so the WR Matchup Index is verified on structure, headline
+ * ordering, and the documented missing-data deviation.
  */
 
 function parseCsv(file: string): Array<Record<string, string>> {
@@ -37,7 +37,7 @@ function parseCsv(file: string): Array<Record<string, string>> {
   });
 }
 
-describe("QB-Types golden verification (45 QBs, 2025 live season)", () => {
+describe("QB Mobility Profiles golden verification (45 QBs, 2025 live season)", () => {
   const rows = parseCsv("qb_types.csv");
 
   it("loads the full reference population", () => {
@@ -115,8 +115,8 @@ describe("QB-Types golden verification (45 QBs, 2025 live season)", () => {
   });
 });
 
-describe("Trench SMASH golden verification (32 teams, 2025 live season)", () => {
-  const rows = parseCsv("trench_smash.csv");
+describe("Trench Matchup Index golden verification (32 teams, 2025 live season)", () => {
+  const rows = parseCsv("trench_matchup.csv");
   const teams: TeamOffensiveLine[] = rows.map((r) => ({
     team: r["team"]!,
     pressurePct: Number(r["pressure_pct"]),
@@ -198,8 +198,8 @@ describe("Trench SMASH golden verification (32 teams, 2025 live season)", () => 
   });
 });
 
-describe("WR SMASH (160 pass-catchers, 2025 live season)", () => {
-  const rows = parseCsv("wr_smash.csv");
+describe("WR Matchup Index (160 pass-catchers, 2025 live season)", () => {
+  const rows = parseCsv("wr_matchup.csv");
 
   it("loads the full reference population", () => {
     expect(rows.length).toBe(160);
@@ -207,17 +207,17 @@ describe("WR SMASH (160 pass-catchers, 2025 live season)", () => {
 
   it("pins the reference headline board (Nacua 74.5 ELITE, JSN 70.2 ELITE)", () => {
     expect(rows[0]!["Player"]).toBe("Puka Nacua");
-    expect(Number(rows[0]!["SMASH"])).toBeCloseTo(74.5, 1);
+    expect(Number(rows[0]!["MSI"])).toBeCloseTo(74.5, 1);
     expect(rows[0]!["tier"]).toBe("ELITE");
     expect(rows[1]!["Player"]).toBe("Jaxon Smith-Njigba");
-    expect(Number(rows[1]!["SMASH"])).toBeCloseTo(70.2, 1);
+    expect(Number(rows[1]!["MSI"])).toBeCloseTo(70.2, 1);
   });
 
   it("DOCUMENTED DEVIATION: the reference tiers missing-advanced-stat rows AVOID; GSE rates them UNRATED", () => {
-    // e.g. A.J. Brown's row has empty adot/yac_r/SMASH yet tier "AVOID" in the
+    // e.g. A.J. Brown's row has empty adot/yac_r/MSI yet tier "AVOID" in the
     // reference output — missing PFR columns became a skill judgment. Our
     // port returns tier null for exactly this shape.
-    const missingRows = rows.filter((r) => r["SMASH"] === "");
+    const missingRows = rows.filter((r) => r["MSI"] === "");
     expect(missingRows.length).toBeGreaterThan(0);
     expect(missingRows.every((r) => r["tier"] === "AVOID")).toBe(true);
 
@@ -256,12 +256,12 @@ describe("WR SMASH (160 pass-catchers, 2025 live season)", () => {
         receivingEpa: -5,
       },
     ];
-    const scores = computeWrSmash(population);
-    expect(Number.isNaN(scores[1]!.smash)).toBe(true);
+    const scores = computeWrMatchup(population);
+    expect(Number.isNaN(scores[1]!.msi)).toBe(true);
     expect(scores[1]!.tier).toBeNull();
     // And the complete rows still score and tier normally.
     expect(scores[0]!.tier).not.toBeNull();
-    expect(scores[0]!.smash).toBeGreaterThan(scores[2]!.smash);
+    expect(scores[0]!.msi).toBeGreaterThan(scores[2]!.msi);
   });
 
   it("weights favor volume + efficiency: same profile with higher yards/EPA scores higher", () => {
@@ -281,9 +281,9 @@ describe("WR SMASH (160 pass-catchers, 2025 live season)", () => {
       { ...base, id: "better", recYardsPerGame: 90, receivingEpa: 45 },
       { ...base, id: "droppy", dropPercent: 12 },
     ];
-    const scores = computeWrSmash(population);
+    const scores = computeWrMatchup(population);
     const byId = new Map(scores.map((s) => [s.id, s]));
-    expect(byId.get("better")!.smash).toBeGreaterThan(byId.get("base")!.smash);
-    expect(byId.get("droppy")!.smash).toBeLessThan(byId.get("base")!.smash);
+    expect(byId.get("better")!.msi).toBeGreaterThan(byId.get("base")!.msi);
+    expect(byId.get("droppy")!.msi).toBeLessThan(byId.get("base")!.msi);
   });
 });

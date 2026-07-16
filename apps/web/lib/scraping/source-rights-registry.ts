@@ -350,7 +350,7 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "compute-and-discard; only derived signals we generate are stored). Endpoint schemas " +
       "verified live 2026-07-11: era/whip/goAo arrive as decimal STRINGS, counts as numbers, " +
       "inheritedRunners present at player grain and on sitCodes=rp team splits. Feeds the " +
-      "glass-box fantasy engine (BURR/RVS/advantage) in @sports/fantasy-engine.",
+      "glass-box fantasy engine (BSI/RVS/advantage) in @sports/fantasy-engine.",
   },
 
   {
@@ -397,7 +397,7 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "discipline: qualified-leaderboard snapshots only (the same table the public page shows), " +
       "at most one pull per leaderboard per day, no historical bulk archive, raw CSVs never " +
       "persisted. NEVER fetch Savant's charts/illustrations/GIFs — protected expression. Feeds " +
-      "the glass-box fantasy engine (SMASH hitter/pitcher populations, team Statcast-allowed " +
+      "the glass-box fantasy engine (MSI hitter/pitcher populations, team Statcast-allowed " +
       "aggregates) in @sports/fantasy-engine.",
   },
 

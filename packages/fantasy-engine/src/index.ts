@@ -16,19 +16,19 @@
 // Core statistics
 export { mean, populationStd, zscores, to100, percentileRanks, round } from "./core/stats";
 
-// MLB — SMASH skill index + Log5 Advantage
+// MLB — Matchup Skill Index (MSI) + Log5 Advantage
 export {
-  computeHitterSmash,
-  computePitcherSmash,
-  smashTier,
+  computeHitterMsi,
+  computePitcherMsi,
+  msiTier,
   HITTER_COMPONENTS,
   PITCHER_COMPONENTS,
   type HitterSkillInput,
   type PitcherSkillInput,
-  type SmashComponent,
-  type SmashScore,
-  type SmashTier,
-} from "./mlb/smash";
+  type MsiComponent,
+  type MsiScore,
+  type MsiTier,
+} from "./mlb/matchup-skill";
 export {
   matchupXwoba,
   staffXwobaAllowed,
@@ -38,14 +38,14 @@ export {
   type MatchupEdge,
 } from "./mlb/advantage";
 
-// MLB — BURR bullpen index + Reliever Value Score
+// MLB — Bullpen Strength Index (BSI) + Reliever Value Score
 export {
-  computeBurr,
-  BURR_CATEGORIES,
+  computeBsi,
+  BSI_CATEGORIES,
   type TeamBullpenCategories,
-  type BurrCategory,
-  type BurrScore,
-} from "./mlb/burr";
+  type BsiCategory,
+  type BsiScore,
+} from "./mlb/bullpen-strength";
 export {
   computeRvs,
   relieverRole,
@@ -54,7 +54,7 @@ export {
   type RvsScore,
 } from "./mlb/rvs";
 
-// NFL — QB-Types (with receipts), Trench SMASH, WR/TE SMASH
+// NFL — QB Mobility Profiles (with receipts), Trench Matchup Index, WR/TE Matchup Index
 export {
   classifyQb,
   computeQbTypes,
@@ -72,7 +72,7 @@ export {
   type TeamDefensiveLine,
   type TrenchIndex,
 } from "./nfl/trench";
-export { computeWrSmash, type ReceiverSeason, type WrSmashScore } from "./nfl/wr-smash";
+export { computeWrMatchup, type ReceiverSeason, type WrMatchupScore } from "./nfl/wr-matchup";
 
 // NFL — Coaching/Scheme engine, team defense, rolling form
 export {

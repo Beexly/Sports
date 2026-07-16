@@ -1,5 +1,6 @@
 /**
- * GSE QB-Types — the quarterback mobility model, published WITH receipts.
+ * GSE QB Mobility Profiles — the quarterback mobility model, published WITH
+ * receipts.
  *
  * The industry claim this rebuilds is that mobile quarterbacks carry a
  * +2–4 fantasy-points-per-game edge. GSE does not assert the premium — it

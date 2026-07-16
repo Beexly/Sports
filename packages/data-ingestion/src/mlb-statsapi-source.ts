@@ -1,7 +1,7 @@
 /**
  * MLB Stats API ingestion — pitcher season lines for the glass-box fantasy
- * engine (@sports/fantasy-engine RVS reliever pool + BURR team bullpen
- * categories).
+ * engine (@sports/fantasy-engine RVS reliever pool + Bullpen Strength Index
+ * (BSI) team bullpen categories).
  *
  * Source posture (source-rights registry: "mlb-statsapi"): official league
  * API, public logged-off, no key. MLBAM's notice permits only individual,
@@ -24,7 +24,7 @@
  * The mapping mirrors the reference engine's data prep verbatim (reliever =
  * pure relief appearances: gamesStarted 0, gamesPitched ≥ 1; league FIP
  * constant from the reliever pool; LOB% from components; IP-weighted GO/AO),
- * so adapter output feeds computeRvs/computeBurr on the same conventions the
+ * so adapter output feeds computeRvs/computeBsi on the same conventions the
  * golden fixtures were generated under.
  */
 
@@ -283,7 +283,7 @@ export function buildRelieverSeasons(
   return { relievers, fipConstant };
 }
 
-// ── Team bullpen categories (BURR input) ──────────────────────────────────────
+// ── Team bullpen categories (BSI input) ────────────────────────────────────────
 
 /**
  * Aggregate team-attributed reliever stint rows → TeamBullpenCategories,
@@ -292,7 +292,7 @@ export function buildRelieverSeasons(
  *   HR/9 · WHIP (H+BB)/IP · LOB% (H+BB+HBP−R)/(H+BB+HBP−1.4·HR) ·
  *   strand 1−IRS/IR (null when IR=0) · SV/(SV+BS) (null when no chances) ·
  *   IP-weighted GO/AO. Statcast-allowed columns come from the Savant
- *   PA-weighted map; a team missing there gets NaN, which computeBurr treats
+ *   PA-weighted map; a team missing there gets NaN, which computeBsi treats
  *   as neutral (1.0) rather than fabricating a value.
  *
  * Pass the SAME consolidated pool used for buildRelieverSeasons via

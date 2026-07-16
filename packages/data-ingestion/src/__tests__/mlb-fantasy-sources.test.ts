@@ -8,14 +8,14 @@
  * expectations are hand-computed on the reference-engine formulas.
  */
 import { describe, expect, it } from "vitest";
-import { computeBurr, computeRvs } from "@sports/fantasy-engine";
+import { computeBsi, computeRvs } from "@sports/fantasy-engine";
 import {
   buildSavantCustomUrl,
   buildTeamStatcastAllowed,
-  fetchSavantSmashLeaderboard,
+  fetchSavantMsiLeaderboard,
   parseSavantCustomCsv,
   toHitterSkillInputs,
-  SAVANT_SMASH_SELECTIONS,
+  SAVANT_MSI_SELECTIONS,
 } from "../baseball-savant-source.js";
 import {
   buildRelieverSeasons,
@@ -118,7 +118,7 @@ describe("buildSavantCustomUrl", () => {
     const url = buildSavantCustomUrl({ year: 2025, type: "pitcher" });
     expect(url).toBe(
       "https://baseballsavant.mlb.com/leaderboard/custom?year=2025&type=pitcher&filter=&min=q" +
-        `&selections=${encodeURIComponent(SAVANT_SMASH_SELECTIONS.join(","))}` +
+        `&selections=${encodeURIComponent(SAVANT_MSI_SELECTIONS.join(","))}` +
         "&chart=false&x=xwoba&y=xwoba&r=no&chartType=beeswarm&sort=xwoba&sortDir=desc&csv=true",
     );
   });
@@ -419,7 +419,7 @@ describe("reliever pool math", () => {
   });
 });
 
-// ── Team bullpen categories (BURR input) ──────────────────────────────────────
+// ── Team bullpen categories (BSI input) ────────────────────────────────────────
 
 describe("buildTeamBullpenCategories", () => {
   const consolidated = consolidateByPlayer([R1, R2]);
@@ -462,9 +462,9 @@ describe("buildTeamBullpenCategories", () => {
     expect(t!.inheritedStrandRate).toBeNull(); // IR = 0
     expect(t!.saveConversion).toBeNull(); // SV+BS = 0
     expect(t!.xwobaAllowed).toBeNaN();
-    // computeBurr treats the NaN columns as neutral instead of crashing.
-    const scores = computeBurr([t!]);
-    expect(scores[0]!.burr).toBeGreaterThan(0);
+    // computeBsi treats the NaN columns as neutral instead of crashing.
+    const scores = computeBsi([t!]);
+    expect(scores[0]!.bsi).toBeGreaterThan(0);
   });
 
   it("exposes the pid→team map for the Savant join (relievers only)", () => {
@@ -479,7 +479,7 @@ describe("buildTeamBullpenCategories", () => {
 describe("clearance enforcement", () => {
   it("refuses a proof granted for a different source", async () => {
     await expect(
-      fetchSavantSmashLeaderboard({ year: 2025, type: "batter" }, statsApiProof),
+      fetchSavantMsiLeaderboard({ year: 2025, type: "batter" }, statsApiProof),
     ).rejects.toThrow(/refusing to fetch/);
     await expect(fetchMlbPitcherSeasons(2025, savantProof)).rejects.toThrow(
       /refusing to fetch/,
@@ -492,7 +492,7 @@ describe("clearance enforcement", () => {
       urls.push(String(input));
       return new Response(SAVANT_CSV, { status: 200 });
     }) as typeof globalThis.fetch;
-    const rows = await fetchSavantSmashLeaderboard(
+    const rows = await fetchSavantMsiLeaderboard(
       { year: 2025, type: "batter" },
       savantProof,
       fetchImpl,
@@ -504,7 +504,7 @@ describe("clearance enforcement", () => {
   it("throws on non-200 instead of returning fabricated emptiness", async () => {
     const fetchImpl = (async () => new Response("nope", { status: 503 })) as typeof globalThis.fetch;
     await expect(
-      fetchSavantSmashLeaderboard({ year: 2025, type: "batter" }, savantProof, fetchImpl),
+      fetchSavantMsiLeaderboard({ year: 2025, type: "batter" }, savantProof, fetchImpl),
     ).rejects.toThrow(/HTTP 503/);
   });
 

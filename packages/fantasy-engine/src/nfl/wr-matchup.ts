@@ -1,6 +1,6 @@
 /**
- * GSE WR/TE SMASH — receiving skill ("skills over results") on the 50±10
- * scale, tiered like the MLB SMASH family.
+ * GSE WR/TE Matchup Index — receiving skill ("skills over results") on the
+ * 50±10 scale, tiered like the MLB Matchup Skill Index family.
  *
  * Components (direction, weight — public, pinned by tests):
  *   receiving yards/game (+1.4) · target share (+1.1) · aDOT (+0.6) ·
@@ -14,10 +14,14 @@
  * non-finite component makes the score NaN and the tier NULL (unrated) —
  * missing data is never a skill judgment. The golden test verifies scored
  * rows against the reference and pins this deviation explicitly.
+ *
+ * Clean-room implementation computed solely from MLB StatsAPI / Baseball
+ * Savant / nflverse public data; methodology provenance documented in the
+ * internal competitive-research package.
  */
 
 import { zscores, to100 } from "../core/stats";
-import { smashTier, type SmashTier } from "../mlb/smash";
+import { msiTier, type MsiTier } from "../mlb/matchup-skill";
 
 export interface ReceiverSeason {
   /** Stable identifier (display key; not used in math). */
@@ -58,12 +62,12 @@ const WR_COMPONENTS: readonly WrComponent[] = [
 
 const WR_WEIGHT_TOTAL = WR_COMPONENTS.reduce((s, c) => s + c.weight, 0);
 
-export interface WrSmashScore {
+export interface WrMatchupScore {
   readonly id: string;
   /** 50±10 index over the scored population. NaN = unscoreable. */
-  readonly smash: number;
+  readonly msi: number;
   /** Null = UNRATED (missing inputs) — never conflated with a real AVOID. */
-  readonly tier: SmashTier | null;
+  readonly tier: MsiTier | null;
 }
 
 /**
@@ -72,18 +76,18 @@ export interface WrSmashScore {
  * non-finite values, so one receiver's missing column never distorts the
  * league baseline for everyone else.
  */
-export function computeWrSmash(population: readonly ReceiverSeason[]): WrSmashScore[] {
+export function computeWrMatchup(population: readonly ReceiverSeason[]): WrMatchupScore[] {
   const zByComponent = WR_COMPONENTS.map((c) => zscores(population.map(c.read)));
   return population.map((r, i) => {
     let acc = 0;
     for (let k = 0; k < WR_COMPONENTS.length; k++) {
       acc += zByComponent[k]![i]! * WR_COMPONENTS[k]!.weight;
     }
-    const smash = to100(acc / WR_WEIGHT_TOTAL);
+    const msi = to100(acc / WR_WEIGHT_TOTAL);
     return {
       id: r.id,
-      smash,
-      tier: Number.isFinite(smash) ? smashTier(smash) : null,
+      msi,
+      tier: Number.isFinite(msi) ? msiTier(msi) : null,
     };
   });
 }

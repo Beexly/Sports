@@ -2,7 +2,7 @@
  * GSE Advantage Score — a PRINCIPLED hitter-vs-pitcher matchup, not a vibe.
  *
  * Uses the Log5 / odds-ratio family's standard rate-interaction form on the
- * xwOBA scale (the same scale SMASH grades skills on):
+ * xwOBA scale (the same scale the Matchup Skill Index grades skills on):
  *
  *   expected_matchup_xwOBA = (hitter_xwOBA × pitcher_xwOBA_allowed) / league_xwOBA
  *

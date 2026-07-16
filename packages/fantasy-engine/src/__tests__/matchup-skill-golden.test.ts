@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  computeHitterSmash,
-  computePitcherSmash,
-  smashTier,
+  computeHitterMsi,
+  computePitcherMsi,
+  msiTier,
   type HitterSkillInput,
-} from "../mlb/smash";
+} from "../mlb/matchup-skill";
 import { matchupXwoba, matchupEdge, platoonAdjustedMatchup, staffXwobaAllowed } from "../mlb/advantage";
 import { mean } from "../core/stats";
 
@@ -16,7 +16,7 @@ import { mean } from "../core/stats";
  *
  * The fixtures are the reference engine's actual output tables over the 2026
  * MLB season (463 hitters, 337 pitchers): input columns AND the reference
- * SMASH/tier outputs. The scored population is exactly the fixture rows, so
+ * MSI/tier outputs. The scored population is exactly the fixture rows, so
  * the port's population z-scores must land within display rounding (the
  * reference rounds to 1 decimal) of every reference score. This is the
  * glass-box promise made executable: anyone can re-run the math and get the
@@ -25,7 +25,7 @@ import { mean } from "../core/stats";
 
 interface GoldenRow extends HitterSkillInput {
   readonly name: string;
-  readonly refSmash: number;
+  readonly refMsi: number;
   readonly refTier: string;
 }
 
@@ -63,7 +63,7 @@ function loadGolden(file: string, hasTeam: boolean): GoldenRow[] {
   const kI = idx("k_percent");
   const bbI = idx("bb_percent");
   const whiffI = idx("whiff_percent");
-  const smashI = idx("SMASH");
+  const msiI = idx("MSI");
   const tierI = idx("tier");
   void hasTeam;
 
@@ -77,7 +77,7 @@ function loadGolden(file: string, hasTeam: boolean): GoldenRow[] {
       kPercent: Number(f[kI]),
       bbPercent: Number(f[bbI]),
       whiffPercent: Number(f[whiffI]),
-      refSmash: Number(f[smashI]),
+      refMsi: Number(f[msiI]),
       refTier: f[tierI]!,
     };
   });
@@ -86,32 +86,32 @@ function loadGolden(file: string, hasTeam: boolean): GoldenRow[] {
 // Reference rounds to 1dp; allow rounding + float-order drift.
 const TOLERANCE = 0.06;
 
-describe("SMASH golden-file verification (2026 live-season reference outputs)", () => {
-  const hitters = loadGolden("smash_hitters.csv", false);
-  const pitchers = loadGolden("smash_pitchers.csv", true);
+describe("MSI golden-file verification (2026 live-season reference outputs)", () => {
+  const hitters = loadGolden("msi_hitters.csv", false);
+  const pitchers = loadGolden("msi_pitchers.csv", true);
 
   it("loads the full reference populations", () => {
     expect(hitters.length).toBe(463);
     expect(pitchers.length).toBe(337);
   });
 
-  it("reproduces every hitter SMASH within display rounding (463/463)", () => {
-    const scores = computeHitterSmash(hitters);
+  it("reproduces every hitter MSI within display rounding (463/463)", () => {
+    const scores = computeHitterMsi(hitters);
     const failures: string[] = [];
     scores.forEach((s, i) => {
-      if (Math.abs(s.smash - hitters[i]!.refSmash) > TOLERANCE) {
-        failures.push(`${hitters[i]!.name}: got ${s.smash.toFixed(3)} ref ${hitters[i]!.refSmash}`);
+      if (Math.abs(s.msi - hitters[i]!.refMsi) > TOLERANCE) {
+        failures.push(`${hitters[i]!.name}: got ${s.msi.toFixed(3)} ref ${hitters[i]!.refMsi}`);
       }
     });
     expect(failures).toEqual([]);
   });
 
-  it("reproduces every pitcher SMASH within display rounding (337/337)", () => {
-    const scores = computePitcherSmash(pitchers);
+  it("reproduces every pitcher MSI within display rounding (337/337)", () => {
+    const scores = computePitcherMsi(pitchers);
     const failures: string[] = [];
     scores.forEach((s, i) => {
-      if (Math.abs(s.smash - pitchers[i]!.refSmash) > TOLERANCE) {
-        failures.push(`${pitchers[i]!.name}: got ${s.smash.toFixed(3)} ref ${pitchers[i]!.refSmash}`);
+      if (Math.abs(s.msi - pitchers[i]!.refMsi) > TOLERANCE) {
+        failures.push(`${pitchers[i]!.name}: got ${s.msi.toFixed(3)} ref ${pitchers[i]!.refMsi}`);
       }
     });
     expect(failures).toEqual([]);
@@ -125,10 +125,10 @@ describe("SMASH golden-file verification (2026 live-season reference outputs)", 
     const nearBoundary = (v: number): boolean =>
       boundaries.some((b) => Math.abs(v - b) <= TOLERANCE);
 
-    const scores = computeHitterSmash(hitters);
+    const scores = computeHitterMsi(hitters);
     const failures: string[] = [];
     scores.forEach((s, i) => {
-      if (s.tier !== hitters[i]!.refTier && !nearBoundary(s.smash)) {
+      if (s.tier !== hitters[i]!.refTier && !nearBoundary(s.msi)) {
         failures.push(`${hitters[i]!.name}: got ${s.tier} ref ${hitters[i]!.refTier}`);
       }
     });
@@ -136,17 +136,17 @@ describe("SMASH golden-file verification (2026 live-season reference outputs)", 
   });
 
   it("pins the season's headline results (the numbers the dossier reported)", () => {
-    const scores = computeHitterSmash(hitters);
+    const scores = computeHitterMsi(hitters);
     const byName = new Map(hitters.map((h, i) => [h.name, scores[i]!]));
 
     const alvarez = byName.get("Alvarez, Yordan")!;
-    expect(alvarez.smash).toBeCloseTo(71.2, 1);
+    expect(alvarez.msi).toBeCloseTo(71.2, 1);
     expect(alvarez.tier).toBe("ELITE");
 
-    const pScores = computePitcherSmash(pitchers);
+    const pScores = computePitcherMsi(pitchers);
     const pByName = new Map(pitchers.map((p, i) => [p.name, pScores[i]!]));
     const miller = pByName.get("Miller, Mason")!;
-    expect(miller.smash).toBeCloseTo(81.3, 1);
+    expect(miller.msi).toBeCloseTo(81.3, 1);
     expect(miller.tier).toBe("ELITE");
   });
 
@@ -184,11 +184,11 @@ describe("SMASH golden-file verification (2026 live-season reference outputs)", 
       hitters[1]!,
       { ...hitters[2]!, xwoba: Number.NaN },
     ];
-    const scores = computeHitterSmash(population);
-    expect(Number.isNaN(scores[2]!.smash)).toBe(true);
+    const scores = computeHitterMsi(population);
+    expect(Number.isNaN(scores[2]!.msi)).toBe(true);
     expect(scores[2]!.tier).toBeNull();
     // And the tier function itself refuses non-finite scores.
-    expect(() => smashTier(Number.NaN)).toThrow();
+    expect(() => msiTier(Number.NaN)).toThrow();
   });
 
   it("matchupEdge treats a missing/zero league baseline as NEUTRAL, never a universal hitter edge (Codex on PR #90)", () => {
@@ -198,13 +198,13 @@ describe("SMASH golden-file verification (2026 live-season reference outputs)", 
   });
 
   it("tier boundaries are exact (public contract)", () => {
-    expect(smashTier(63)).toBe("ELITE");
-    expect(smashTier(62.999)).toBe("GREEN");
-    expect(smashTier(56)).toBe("GREEN");
-    expect(smashTier(55.999)).toBe("WHITE");
-    expect(smashTier(44)).toBe("WHITE");
-    expect(smashTier(43.999)).toBe("RED");
-    expect(smashTier(37)).toBe("RED");
-    expect(smashTier(36.999)).toBe("AVOID");
+    expect(msiTier(63)).toBe("ELITE");
+    expect(msiTier(62.999)).toBe("GREEN");
+    expect(msiTier(56)).toBe("GREEN");
+    expect(msiTier(55.999)).toBe("WHITE");
+    expect(msiTier(44)).toBe("WHITE");
+    expect(msiTier(43.999)).toBe("RED");
+    expect(msiTier(37)).toBe("RED");
+    expect(msiTier(36.999)).toBe("AVOID");
   });
 });

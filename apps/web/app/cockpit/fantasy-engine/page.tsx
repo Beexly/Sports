@@ -1,13 +1,13 @@
 import { loadMlbFantasyBoards, type BoardSection } from "@/lib/cockpit/fantasy-mlb-boards";
 import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
-import type { BurrScore, RvsScore, SmashTier } from "@sports/fantasy-engine";
+import type { BsiScore, RvsScore, MsiTier } from "@sports/fantasy-engine";
 
 /**
  * Cockpit Fantasy Engine — LIVE MLB boards from the glass-box engine.
  *
  * Founder-gated by the cockpit layout (ADMIN role). Every number here is
  * computed on demand through the rights machinery: clearance gates →
- * SourceClearanceProof-requiring adapters → SMASH/BURR/RVS. Raw MLB payloads
+ * SourceClearanceProof-requiring adapters → MSI/BSI/RVS. Raw MLB payloads
  * are compute-and-discard (registry: derived-analytics only) — this page
  * renders our derived scores and the REQUIRED attribution strings.
  *
@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
 // Cold compute fetches two Savant CSVs + paginated statsapi (can take ~30s+).
 export const maxDuration = 60;
 
-const TIER_CLASSES: Record<SmashTier, string> = {
+const TIER_CLASSES: Record<MsiTier, string> = {
   ELITE: "text-emerald-300",
   GREEN: "text-emerald-500",
   WHITE: "text-ion-1",
@@ -27,7 +27,7 @@ const TIER_CLASSES: Record<SmashTier, string> = {
   AVOID: "text-red-500",
 };
 
-function TierBadge({ tier }: { tier: SmashTier | null }) {
+function TierBadge({ tier }: { tier: MsiTier | null }) {
   if (tier === null) return <span className="text-ion-3">UNRATED</span>;
   return <span className={TIER_CLASSES[tier]}>{tier}</span>;
 }
@@ -86,35 +86,35 @@ export default async function CockpitFantasyEnginePage() {
       </header>
 
       <SectionShell
-        title="SMASH — hitters"
+        title="Matchup Skill Index — hitters"
         subtitle="Skills-over-results index (xwOBA, barrel%, hard-hit%, K%, BB%, whiff%), 50±10 over the qualified population."
       >
         {boards.hitters.status !== "ok" ? (
           <DegradedState section={boards.hitters} />
         ) : (
-          <SmashTable rows={boards.hitters.data.slice(0, TOP_N)} />
+          <MsiTable rows={boards.hitters.data.slice(0, TOP_N)} />
         )}
       </SectionShell>
 
       <SectionShell
-        title="SMASH — pitchers"
+        title="Matchup Skill Index — pitchers"
         subtitle="The suppression view of the same six skills; higher = more dominant arm."
       >
         {boards.pitchers.status !== "ok" ? (
           <DegradedState section={boards.pitchers} />
         ) : (
-          <SmashTable rows={boards.pitchers.data.slice(0, TOP_N)} />
+          <MsiTable rows={boards.pitchers.data.slice(0, TOP_N)} />
         )}
       </SectionShell>
 
       <SectionShell
-        title="BURR — bullpen matchup index"
+        title="Bullpen Strength Index"
         subtitle="14-category league-normalized bullpen strength; 1.00 = league average, higher = stronger pen (worse for opposing hitters)."
       >
         {boards.bullpens.status !== "ok" ? (
           <DegradedState section={boards.bullpens} />
         ) : (
-          <BurrTable rows={boards.bullpens.data} />
+          <BsiTable rows={boards.bullpens.data} />
         )}
       </SectionShell>
 
@@ -142,10 +142,10 @@ export default async function CockpitFantasyEnginePage() {
   );
 }
 
-function SmashTable({
+function MsiTable({
   rows,
 }: {
-  rows: ReadonlyArray<{ name: string; pa: number; score: { smash: number; tier: SmashTier | null } }>;
+  rows: ReadonlyArray<{ name: string; pa: number; score: { msi: number; tier: MsiTier | null } }>;
 }) {
   return (
     <table className="w-full text-left">
@@ -154,7 +154,7 @@ function SmashTable({
           <th scope="col" className="py-1 pr-4 font-medium">#</th>
           <th scope="col" className="py-1 pr-4 font-medium">Player</th>
           <th scope="col" className="py-1 pr-4 font-medium">PA</th>
-          <th scope="col" className="py-1 pr-4 font-medium">SMASH</th>
+          <th scope="col" className="py-1 pr-4 font-medium">MSI</th>
           <th scope="col" className="py-1 font-medium">Tier</th>
         </tr>
       </thead>
@@ -165,7 +165,7 @@ function SmashTable({
             <td className="py-1 pr-4">{r.name}</td>
             <td className="py-1 pr-4">{Number.isFinite(r.pa) ? r.pa : "—"}</td>
             <td className="py-1 pr-4 font-mono">
-              {Number.isFinite(r.score.smash) ? r.score.smash.toFixed(1) : "—"}
+              {Number.isFinite(r.score.msi) ? r.score.msi.toFixed(1) : "—"}
             </td>
             <td className="py-1">
               <TierBadge tier={r.score.tier} />
@@ -177,14 +177,14 @@ function SmashTable({
   );
 }
 
-function BurrTable({ rows }: { rows: readonly BurrScore[] }) {
+function BsiTable({ rows }: { rows: readonly BsiScore[] }) {
   return (
     <table className="w-full text-left">
       <thead>
         <tr className="text-[10px] uppercase tracking-widest text-ion-3">
           <th scope="col" className="py-1 pr-4 font-medium">Rank</th>
           <th scope="col" className="py-1 pr-4 font-medium">Team</th>
-          <th scope="col" className="py-1 font-medium">BURR</th>
+          <th scope="col" className="py-1 font-medium">BSI</th>
         </tr>
       </thead>
       <tbody className="text-ion-1">
@@ -192,7 +192,7 @@ function BurrTable({ rows }: { rows: readonly BurrScore[] }) {
           <tr key={r.team} className="border-t border-titanium/20">
             <td className="py-1 pr-4 text-ion-3">{r.rank}</td>
             <td className="py-1 pr-4">{r.team}</td>
-            <td className="py-1 font-mono">{r.burr.toFixed(3)}</td>
+            <td className="py-1 font-mono">{r.bsi.toFixed(3)}</td>
           </tr>
         ))}
       </tbody>
@@ -213,7 +213,7 @@ function RvsTable({
           <th scope="col" className="py-1 pr-4 font-medium">Reliever</th>
           <th scope="col" className="py-1 pr-4 font-medium">Team</th>
           <th scope="col" className="py-1 pr-4 font-medium">Role</th>
-          <th scope="col" className="py-1 pr-4 font-medium">Solds</th>
+          <th scope="col" className="py-1 pr-4 font-medium">SVH (Saves+Holds)</th>
           <th scope="col" className="py-1 pr-4 font-medium">Conv%</th>
           <th scope="col" className="py-1 font-medium">RVS</th>
         </tr>
@@ -225,9 +225,9 @@ function RvsTable({
             <td className="py-1 pr-4">{r.playerName}</td>
             <td className="py-1 pr-4">{r.teamName ?? "—"}</td>
             <td className="py-1 pr-4">{r.score.role}</td>
-            <td className="py-1 pr-4 font-mono">{r.score.solds}</td>
+            <td className="py-1 pr-4 font-mono">{r.score.svh}</td>
             <td className="py-1 pr-4 font-mono">
-              {r.score.soldsPct === null ? "—" : `${(r.score.soldsPct * 100).toFixed(0)}%`}
+              {r.score.svhPct === null ? "—" : `${(r.score.svhPct * 100).toFixed(0)}%`}
             </td>
             <td className="py-1 font-mono">{r.score.rvs.toFixed(1)}</td>
           </tr>

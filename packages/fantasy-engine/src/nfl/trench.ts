@@ -1,9 +1,10 @@
 /**
- * GSE Trench SMASH — team O-line and D-line indices on the 50±10 scale.
+ * GSE Trench Matchup Index — team O-line and D-line indices on the 50±10
+ * scale.
  *
  * The trenches decide fantasy outcomes (pocket time for the passing game,
- * yards-before-contact for the run game), and the incumbents sell trench
- * "matchup" grades as sealed numbers. GSE's version is a published formula:
+ * yards-before-contact for the run game), and sealed trench "matchup" grades
+ * hide the formula. GSE's version is a published formula:
  * percentile-rank each component (average-rank ties), weight-blend, z-score
  * the blend across the league, map to 50±10.
  *

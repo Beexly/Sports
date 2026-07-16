@@ -107,11 +107,11 @@ describe("computeMlbFantasyBoards", () => {
     expect(boards.attributions.join(" ")).toMatch(/Baseball Savant/);
     expect(boards.attributions.join(" ")).toMatch(/MLB Stats API/);
 
-    // SMASH: Schwarber's profile dominates this 3-hitter cohort.
+    // MSI: Schwarber's profile dominates this 3-hitter cohort.
     expect(boards.hitters.status).toBe("ok");
     if (boards.hitters.status === "ok") {
       expect(boards.hitters.data[0]!.name).toBe("Schwarber, Kyle");
-      expect(boards.hitters.data[0]!.score.smash).toBeGreaterThan(50);
+      expect(boards.hitters.data[0]!.score.msi).toBeGreaterThan(50);
     }
     expect(boards.pitchers.status).toBe("ok");
 
@@ -124,17 +124,17 @@ describe("computeMlbFantasyBoards", () => {
       expect(boards.relievers.data[0]!.score.role).toBe("Closer");
     }
 
-    // BURR: one team, league-of-one → 1.000 by construction, with the Savant
+    // BSI: one team, league-of-one → 1.000 by construction, with the Savant
     // Statcast join supplying the three expected-contact categories.
     expect(boards.bullpens.status).toBe("ok");
     if (boards.bullpens.status === "ok") {
       expect(boards.bullpens.data).toHaveLength(1);
       expect(boards.bullpens.data[0]!.team).toBe("Test Team");
-      expect(boards.bullpens.data[0]!.burr).toBeCloseTo(1.0, 6);
+      expect(boards.bullpens.data[0]!.bsi).toBeCloseTo(1.0, 6);
     }
   });
 
-  it("degrades honestly when statsapi is down: SMASH stands, BURR/RVS say unavailable", async () => {
+  it("degrades honestly when statsapi is down: MSI stands, BSI/RVS say unavailable", async () => {
     const { impl } = fakeFetch({ failStatsapi: true });
     const boards = await computeMlbFantasyBoards({ now: NOW, fetchImpl: impl });
 
@@ -146,7 +146,7 @@ describe("computeMlbFantasyBoards", () => {
     }
   });
 
-  it("degrades honestly when Savant is down: BURR still renders (Statcast columns neutral)", async () => {
+  it("degrades honestly when Savant is down: BSI still renders (Statcast columns neutral)", async () => {
     const { impl } = fakeFetch({ failSavant: true });
     const boards = await computeMlbFantasyBoards({ now: NOW, fetchImpl: impl });
 

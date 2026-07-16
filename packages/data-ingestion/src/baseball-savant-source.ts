@@ -1,7 +1,7 @@
 /**
  * Baseball Savant ingestion — Statcast skill inputs for the glass-box fantasy
- * engine (@sports/fantasy-engine SMASH populations + team Statcast-allowed
- * aggregates for BURR).
+ * engine (@sports/fantasy-engine Matchup Skill Index populations + team
+ * Statcast-allowed aggregates for the Bullpen Strength Index).
  *
  * Source posture (source-rights registry: "baseball-savant"): MLBAM property,
  * public logged-off CSV export, robots.txt universal allow. Raw MLB data is
@@ -33,8 +33,8 @@ import { assertCleared, type SourceClearanceProof } from "./source-clearance.js"
 export const SAVANT_SOURCE_ID = "baseball-savant";
 export const SAVANT_BASE = "https://baseballsavant.mlb.com";
 
-/** The six SMASH components + PA (the weighting/exposure column). */
-export const SAVANT_SMASH_SELECTIONS = [
+/** The six MSI components + PA (the weighting/exposure column). */
+export const SAVANT_MSI_SELECTIONS = [
   "pa",
   "xwoba",
   "k_percent",
@@ -66,7 +66,7 @@ export function buildSavantCustomUrl(opts: {
   readonly min?: "q" | number;
   readonly selections?: readonly string[];
 }): string {
-  const selections = (opts.selections ?? SAVANT_SMASH_SELECTIONS).join(",");
+  const selections = (opts.selections ?? SAVANT_MSI_SELECTIONS).join(",");
   const params = new URLSearchParams({
     year: String(opts.year),
     type: opts.type,
@@ -138,7 +138,7 @@ export function parseSavantCustomCsv(text: string): SavantCustomRow[] {
   return rows;
 }
 
-/** A SMASH engine input paired with its display identity, order-aligned. */
+/** An MSI engine input paired with its display identity, order-aligned. */
 export interface SavantSkillRow<T> {
   readonly playerId: number;
   readonly name: string;
@@ -184,7 +184,7 @@ export function toPitcherSkillInputs(
   }));
 }
 
-/** Team-level Statcast-allowed aggregate (the three BURR Statcast columns). */
+/** Team-level Statcast-allowed aggregate (the three BSI Statcast columns). */
 export interface TeamStatcastAllowed {
   readonly xwobaAllowed: number;
   readonly barrelAllowed: number;
@@ -230,7 +230,7 @@ export function buildTeamStatcastAllowed(
  * proof for "baseball-savant" — there is no ungated overload. Non-bulk by
  * construction: one bounded CSV, the same table the public page shows.
  */
-export async function fetchSavantSmashLeaderboard(
+export async function fetchSavantMsiLeaderboard(
   opts: { readonly year: number; readonly type: SavantLeaderboardType; readonly min?: "q" | number },
   proof: SourceClearanceProof,
   fetchImpl: typeof globalThis.fetch = noStoreFetch,

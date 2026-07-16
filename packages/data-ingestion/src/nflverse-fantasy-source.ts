@@ -311,7 +311,7 @@ export function buildTeamDefensiveLines(advDef: readonly AdvDefRow[]): TeamDefen
   return out.sort((a, b) => a.team.localeCompare(b.team));
 }
 
-// ── Receivers (WR/TE SMASH population) ────────────────────────────────────────
+// ── Receivers (WR/TE Matchup Index population) ─────────────────────────────────
 
 /**
  * ReceiverSeason population: WR/TE with ≥ minTargets (reference floor 30),

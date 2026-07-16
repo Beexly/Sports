@@ -1,7 +1,8 @@
 /**
- * GSE Reliever Value Score (RVS) — the forward-looking upgrade of raw Solds.
+ * GSE Reliever Value Score (RVS) — the forward-looking upgrade of raw SVH
+ * (Saves+Holds).
  *
- * Raw Solds (saves + holds) is backward-looking volume: it can't tell a
+ * Raw SVH (saves + holds) is backward-looking volume: it can't tell a
  * secure, skilled closer from a volume-only arm, treats a save and a hold as
  * equal, and ignores whether the pitcher keeps the job. RVS blends:
  *
@@ -9,10 +10,10 @@
  *                 (a save is worth more than a hold), percentile-ranked
  *   skill       — 0.60·pct(K−BB%) + 0.40·pct(−FIP): the two most
  *                 skill-descriptive reliever stats
- *   reliability — Solds% = (SV+HLD)/(SV+HLD+BS), conversion of chances
+ *   reliability — SVH% = (SV+HLD)/(SV+HLD+BS), conversion of chances
  *                 (population-median fill when a reliever has no chances yet)
  *
- *   RVS = 100 · clamp01( 0.55·pct(volume) + 0.25·skill + 0.20·Solds% )
+ *   RVS = 100 · clamp01( 0.55·pct(volume) + 0.25·skill + 0.20·SVH% )
  *
  * Role tags classify usage from saves/holds/opportunities so the board reads
  * at a glance who is the 9th-inning arm, the committee piece, or the
@@ -63,10 +64,10 @@ export function relieverRole(r: {
 export interface RvsScore {
   readonly id: string;
   readonly role: RelieverRole;
-  /** Saves + holds — the raw incumbent metric, kept for reference. */
-  readonly solds: number;
+  /** Saves + holds — the raw volume metric, kept for reference. */
+  readonly svh: number;
   /** Conversion reliability in [0,1]; null when the reliever has no chances. */
-  readonly soldsPct: number | null;
+  readonly svhPct: number | null;
   /** 0–100 Reliever Value Score. */
   readonly rvs: number;
 }
@@ -88,23 +89,23 @@ export function computeRvs(population: readonly RelieverSeason[]): RvsScore[] {
   const kmbbRank = percentileRanks(population.map((r) => r.kMinusBb));
   const invFipRank = percentileRanks(population.map((r) => -r.fip));
 
-  const soldsPct = population.map((r) => {
+  const svhPct = population.map((r) => {
     const chances = r.saves + r.holds + r.blownSaves;
     return chances > 0 ? (r.saves + r.holds) / chances : null;
   });
   // No-chances relievers get the population median — neutral, never a free 100%.
-  const reliabilityFill = median(soldsPct.filter((v): v is number => v !== null));
+  const reliabilityFill = median(svhPct.filter((v): v is number => v !== null));
 
   return population.map((r, i) => {
     const skill = kmbbRank[i]! * 0.6 + invFipRank[i]! * 0.4;
-    const reliability = soldsPct[i] ?? reliabilityFill;
+    const reliability = svhPct[i] ?? reliabilityFill;
     const raw = 0.55 * volumeRank[i]! + 0.25 * skill + 0.2 * reliability;
     const rvs = Math.min(1, Math.max(0, raw)) * 100;
     return {
       id: r.id,
       role: relieverRole(r),
-      solds: r.saves + r.holds,
-      soldsPct: soldsPct[i] ?? null,
+      svh: r.saves + r.holds,
+      svhPct: svhPct[i] ?? null,
       rvs,
     };
   });
