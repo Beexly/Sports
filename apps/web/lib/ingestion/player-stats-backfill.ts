@@ -19,6 +19,13 @@
  * Successive daily runs therefore complete the backfill with no human action,
  * then settle into a current-season refresh. When the NFL season rolls over in
  * September the new season shows up as missing and is backfilled automatically.
+ *
+ * The planner is a pure pre-run decision over persisted state; it cannot know
+ * that a picked season will yield zero rows (e.g. rollover before nflverse
+ * publishes week-1 data). The cron route therefore owns the starvation guard:
+ * on a zero-row/source-error outcome it attempts the next-newest missing
+ * season within the same run, capped at one fallback (see
+ * `app/api/cron/ingest-player-stats/route.ts`).
  */
 import { db } from "@sports/db";
 import { NFLVERSE_TREND_PLANS } from "@sports/data-ingestion";
