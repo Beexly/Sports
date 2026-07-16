@@ -35,6 +35,18 @@ export type Player = {
   readonly trend: Trend;
   readonly injury: Injury;
   readonly note: string;
+  /**
+   * Real market ADP (overall pick number) joined from the cleared FFC feed —
+   * present only on live graded-pool rows. Absent on the illustrative pool
+   * (fictional players have no market) and when the join found no row.
+   */
+  readonly adp?: number;
+  /**
+   * Our-value-vs-market delta: market ADP minus our overall rank (by proj).
+   * Positive = the market drafts the player LATER than we rank him (value);
+   * negative = earlier (reach). Present only alongside `adp`.
+   */
+  readonly adpDelta?: number;
 };
 
 const p = (

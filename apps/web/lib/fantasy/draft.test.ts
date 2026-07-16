@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { PLAYERS, playerById, type Pos } from "./players";
-import { positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp } from "./draft";
+import { PLAYERS, playerById, type Player, type Pos } from "./players";
+import { positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp, marketAdpMap, valueVsMarket } from "./draft";
 
 describe("positionalScarcity", () => {
   it("reports remaining + startersLeft per position on the full board", () => {
@@ -78,5 +78,50 @@ describe("valueVsAdp", () => {
   it("labels near-ADP picks on-time, and unknown players none", () => {
     expect(valueVsAdp(vale, new Map([["marcus vale", 6]]), 5).label).toBe("on-time");
     expect(valueVsAdp(vale, new Map(), 5).label).toBe("none");
+  });
+});
+
+describe("marketAdpMap (real FFC ADP riding on pool rows)", () => {
+  it("builds the lowercased-name map from rows carrying adp, skipping rows without one", () => {
+    const pool: Player[] = [
+      { ...playerById("rb-marcus-vale")!, adp: 3.4, adpDelta: -2.4 },
+      playerById("wr-julian-roe")!, // no adp on the row
+    ];
+    const m = marketAdpMap(pool);
+    expect(m.get("marcus vale")).toBe(3.4);
+    expect(m.has("julian roe")).toBe(false);
+  });
+
+  it("is empty on the illustrative pool (fictional players carry no market)", () => {
+    expect(marketAdpMap(PLAYERS).size).toBe(0);
+  });
+
+  it("feeds the same valueVsAdp compare the CSV path uses", () => {
+    const enriched: Player = { ...playerById("rb-marcus-vale")!, adp: 20, adpDelta: 19 };
+    const v = valueVsAdp(enriched, marketAdpMap([enriched]), 5);
+    expect(v.delta).toBe(15);
+    expect(v.label).toBe("steal");
+  });
+});
+
+describe("valueVsMarket (our-rank-vs-ADP steal/reach)", () => {
+  const vale = playerById("rb-marcus-vale")!;
+
+  it("labels a big positive delta (market drafts him later than we rank him) a steal", () => {
+    const v = valueVsMarket({ ...vale, adp: 15, adpDelta: 12 });
+    expect(v).toEqual({ adp: 15, delta: 12, label: "steal" });
+  });
+
+  it("labels a big negative delta (market well ahead of our rank) a reach", () => {
+    expect(valueVsMarket({ ...vale, adp: 2, adpDelta: -11 }).label).toBe("reach");
+  });
+
+  it("labels small deltas value/on-time with the shared thresholds", () => {
+    expect(valueVsMarket({ ...vale, adp: 8, adpDelta: 4 }).label).toBe("value");
+    expect(valueVsMarket({ ...vale, adp: 5, adpDelta: 1.4 }).label).toBe("on-time");
+  });
+
+  it("returns none when the row carries no market ADP (illustrative pool rows)", () => {
+    expect(valueVsMarket(vale).label).toBe("none");
   });
 });

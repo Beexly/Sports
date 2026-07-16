@@ -6,6 +6,7 @@ import type { PlayerProfile, ProcessSignal } from "../intelligence/player-model"
 import type { ExpectedPointsRow } from "../intelligence/expected-points";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
+import { adpByNormName, resetFfcAdpCacheForTests, type FfcAdpRow } from "../fantasy/adp-source";
 
 function prof(name: string, position: string, fppg: number, signal: ProcessSignal, touches = 80, games = 8, team = "KC"): PlayerProfile {
   return {
@@ -31,7 +32,14 @@ function qbf(team: string, forwardGrade: number, name = `${team} QB`): QbForward
   };
 }
 
-afterEach(() => registerProjectionsProvider(null));
+afterEach(() => {
+  registerProjectionsProvider(null);
+  resetFfcAdpCacheForTests();
+});
+
+function adpRow(player: string, adp: number, bye: number, pos = "WR", team = "KC"): FfcAdpRow {
+  return { player, pos, team, adp, high: Math.max(1, Math.floor(adp - 1)), low: Math.ceil(adp + 2), stdev: 1, timesDrafted: 100, bye };
+}
 
 describe("buildGradedPool", () => {
   const profiles = [prof("Star WR", "WR", 12, "buy-low"), prof("No XFP RB", "RB", 10, "in-line"), prof("Zero Guy", "WR", 0, "in-line")];
@@ -134,6 +142,53 @@ describe("buildGradedPool — QB forward passing-environment nudge", () => {
   });
 });
 
+describe("buildGradedPool — ADP/bye/injury enrichment (facts, never the value basis)", () => {
+  const profiles = [
+    prof("Alpha WR", "WR", 14, "in-line"),
+    prof("Beta RB", "RB", 12, "in-line"),
+    prof("No Market TE", "TE", 8, "in-line"),
+  ];
+  const adpByName = adpByNormName([
+    adpRow("Alpha WR", 10.2, 7),
+    adpRow("Beta RB", 1.5, 12, "RB"),
+  ]);
+  const injuryByName = new Map<string, "questionable" | "out">([["beta rb", "out"]]);
+  const pool = buildGradedPool(profiles, [], [], [], { adpByName, injuryByName });
+
+  it("fills bye from the joined FFC row and exposes adp + our-value-vs-adp delta", () => {
+    const alpha = pool.find((p) => p.name === "Alpha WR")!; // rank 1 (proj 238)
+    expect(alpha.bye).toBe(7);
+    expect(alpha.adp).toBe(10.2);
+    expect(alpha.adpDelta).toBe(9.2); // market drafts him ~9 picks later than our rank -> value
+    const beta = pool.find((p) => p.name === "Beta RB")!; // rank 2 (proj 204)
+    expect(beta.adpDelta).toBe(-0.5); // market slightly ahead of our rank
+  });
+
+  it("maps the Sleeper injury flag as display enrichment without touching the value basis", () => {
+    const beta = pool.find((p) => p.name === "Beta RB")!;
+    expect(beta.injury).toBe("out");
+    expect(beta.proj).toBe(12 * 17); // basis untouched by enrichment
+    const alpha = pool.find((p) => p.name === "Alpha WR")!;
+    expect(alpha.injury).toBe("healthy");
+  });
+
+  it("a player with no market row stays honest: bye 0, no adp fields", () => {
+    const te = pool.find((p) => p.name === "No Market TE")!;
+    expect(te.bye).toBe(0);
+    expect(te.adp).toBeUndefined();
+    expect(te.adpDelta).toBeUndefined();
+  });
+
+  it("no enrichment (back-compat) keeps the previous shape: bye 0, healthy, no adp", () => {
+    const bare = buildGradedPool(profiles, []);
+    for (const p of bare) {
+      expect(p.bye).toBe(0);
+      expect(p.injury).toBe("healthy");
+      expect(p.adp).toBeUndefined();
+    }
+  });
+});
+
 describe("buildGradedProvider + the founder gate", () => {
   const pool = buildGradedPool([prof("Live Guy", "WR", 14, "buy-low")], [xfp("Live Guy", 16)]);
 
@@ -200,8 +255,22 @@ describe("loadGradedPool", () => {
     };
   }
 
-  it("pins xFP to the model's season so the projection basis is xFP, not actual", async () => {
+  it("PUBLISHED pool default: excludes the CC-BY-SA xFP basis even when the asset is available", async () => {
+    // ff_opportunity is CC-BY-SA-4.0 (share-alike) — excluded for published
+    // derivatives while the SA question is open. The default load (what
+    // loadAndRegisterGradedProvider publishes to customers) must fall back to
+    // the pure CC-BY-4.0 basis (player-model actual per-game + process grade)
+    // even though a season-matched ep_weekly asset is being served.
     const r = await loadGradedPool({ fetcher: route(2024) });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2024);
+    const wr = r.players.find((p) => p.id === "WR1")!;
+    // basis = actual fppg 10/g * 17 = 170 — NOT the xFP 18/g -> 306
+    expect(wr.proj).toBe(170);
+  });
+
+  it("internal opt-in (includeXfp): pins xFP to the model's season so the basis is xFP, not actual", async () => {
+    const r = await loadGradedPool({ fetcher: route(2024), includeXfp: true });
     expect(r.status).toBe("live");
     expect(r.season).toBe(2024);
     const wr = r.players.find((p) => p.id === "WR1")!;
@@ -210,14 +279,51 @@ describe("loadGradedPool", () => {
     expect(wr.proj).toBe(306);
   });
 
-  it("falls back to the model's per-game when xFP for the model's season is missing (no cross-season basis)", async () => {
+  it("internal opt-in: falls back to the model's per-game when xFP for the model's season is missing (no cross-season basis)", async () => {
     // Only 2025 xFP is served; the 2024 model must NOT borrow it.
-    const r = await loadGradedPool({ fetcher: route(2025) });
+    const r = await loadGradedPool({ fetcher: route(2025), includeXfp: true });
     expect(r.status).toBe("live");
     expect(r.season).toBe(2024);
     const wr = r.players.find((p) => p.id === "WR1")!;
     // basis = actual fppg 10/g * 17 = 170 (2025 xFP rejected as off-season)
     expect(wr.proj).toBe(170);
+  });
+
+  it("joins FFC ADP + bye and Sleeper injury enrichment on the live path, and composes the attribution", async () => {
+    const ffc = {
+      status: "Success",
+      meta: { type: "PPR", teams: 12, rounds: 15, total_drafts: 500, start_date: "2026-07-08", end_date: "2026-07-15" },
+      players: [{ player_id: 1, name: "Real Wideout", position: "WR", team: "KC", adp: 4.5, times_drafted: 100, high: 1, low: 9, stdev: 1.1, bye: 10 }],
+    };
+    const sleeper = { "123": { player_id: "123", full_name: "Real Wideout", position: "WR", team: "KC", injury_status: "Questionable" } };
+    const fetcher: FetchLike = async (url) => {
+      if (url.includes("player_stats")) return new Response(statsCsv);
+      if (url.includes("fantasyfootballcalculator.com/api/v1/adp/")) return new Response(JSON.stringify(ffc));
+      if (url.includes("sleeper.app/v1/players/nfl")) return new Response(JSON.stringify(sleeper));
+      return new Response("not found", { status: 404 });
+    };
+    const r = await loadGradedPool({ fetcher });
+    expect(r.status).toBe("live");
+    const wr = r.players.find((p) => p.id === "WR1")!;
+    expect(wr.bye).toBe(10); // FFC bye joined (was hardcoded 0)
+    expect(wr.adp).toBe(4.5); // real market ADP on the pool row
+    expect(wr.adpDelta).toBe(3.5); // market ADP 4.5 - our rank 1
+    expect(wr.injury).toBe("questionable"); // Sleeper display flag
+    expect(wr.proj).toBe(170); // enrichment NEVER moves the value basis
+    expect(r.attribution).toContain("nflverse");
+    expect(r.attribution).toContain("FantasyFootballCalculator.com");
+    expect(r.attribution).toContain("Sleeper");
+  });
+
+  it("enrichment failures degrade gracefully — bye 0, no adp, healthy, base attribution", async () => {
+    const r = await loadGradedPool({ fetcher: route(2024) }); // FFC + Sleeper both 404
+    expect(r.status).toBe("live");
+    const wr = r.players.find((p) => p.id === "WR1")!;
+    expect(wr.bye).toBe(0);
+    expect(wr.adp).toBeUndefined();
+    expect(wr.adpDelta).toBeUndefined();
+    expect(wr.injury).toBe("healthy");
+    expect(r.attribution).toBe("Data via nflverse (CC-BY-4.0)");
   });
 
   it("does NOT load team-environment on the live path — schemeFit stays neutral (cold-start budget)", async () => {

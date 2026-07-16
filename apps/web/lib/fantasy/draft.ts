@@ -150,13 +150,20 @@ export function detectRuns(recentPositions: readonly Pos[], window = 5, threshol
     .sort((a, b) => b.count - a.count);
 }
 
-// ── ADP overlay (legal path: user CSV import) ────────────────────────────────
+// ── ADP overlay ──────────────────────────────────────────────────────────────
+//
+// Two cleared paths, in precedence order:
+//   1. USER CSV import (the override) — a file the user exports/owns.
+//   2. REAL MARKET ADP riding on the live pool rows (`player.adp`), joined
+//      server-side from the FantasyFootballCalculator ADP REST API — free for
+//      commercial use, attribution required, cached once/day per its terms
+//      (see lib/fantasy/adp-source.ts + the `ffc-adp` rights entry).
+// We still never scrape ADP from sources that prohibit it.
 
 /**
- * Parse a user-provided ADP CSV. ADP feeds can't be scraped from the books that
- * publish them, so the legal path is a CSV the user exports/owns. Tolerant of a
- * header row and of `name,adp` or `adp,name` column order. Returns a map keyed
- * by lowercased player name. Pure.
+ * Parse a user-provided ADP CSV (the override path). Tolerant of a header row
+ * and of `name,adp` or `adp,name` column order. Returns a map keyed by
+ * lowercased player name. Pure.
  */
 export function parseAdpCsv(text: string): Map<string, number> {
   const out = new Map<string, number>();
@@ -196,6 +203,37 @@ export function valueVsAdp(player: Player, adp: Map<string, number>, currentPick
   const a = adp.get(player.name.toLowerCase());
   if (a == null) return { adp: null, delta: null, label: "none" };
   const delta = Math.round(a - currentPick);
-  const label: AdpLabel = delta >= 10 ? "steal" : delta >= 3 ? "value" : delta <= -10 ? "reach" : "on-time";
-  return { adp: a, delta, label };
+  return { adp: a, delta, label: adpLabel(delta) };
+}
+
+function adpLabel(delta: number): AdpLabel {
+  return delta >= 10 ? "steal" : delta >= 3 ? "value" : delta <= -10 ? "reach" : "on-time";
+}
+
+/**
+ * The default market column: real ADP carried on the live pool rows (joined
+ * server-side from the cleared FFC feed), in the same lowercased-name map shape
+ * the CSV path produces — so a user CSV import cleanly OVERRIDES it and every
+ * downstream compare (`valueVsAdp`) is shared. Empty on the illustrative pool
+ * (fictional players have no market). Pure.
+ */
+export function marketAdpMap(pool: readonly Player[]): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const p of pool) {
+    if (p.adp != null && p.adp > 0) out.set(p.name.toLowerCase(), p.adp);
+  }
+  return out;
+}
+
+/**
+ * Our-rank-vs-market steal/reach read, from the pool row's precomputed
+ * `adpDelta` (market ADP minus our overall rank by proj). Positive delta = the
+ * market drafts the player later than we rank him — a value/steal by our
+ * numbers; negative = a reach. Same thresholds as the pick-time compare. `none`
+ * when the row carries no market ADP. Pure.
+ */
+export function valueVsMarket(player: Player): AdpValue {
+  if (player.adp == null || player.adpDelta == null) return { adp: null, delta: null, label: "none" };
+  const delta = Math.round(player.adpDelta);
+  return { adp: player.adp, delta, label: adpLabel(delta) };
 }

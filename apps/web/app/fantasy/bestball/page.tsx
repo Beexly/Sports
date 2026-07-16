@@ -4,6 +4,7 @@ import { BestBallBoard } from "@/components/fantasy/bestball-board";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
+import { FANTASY_DATA_ATTRIBUTION, FANTASY_VALUE_BASIS_NOTE } from "@/lib/fantasy/attribution";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -32,8 +33,9 @@ export default async function BestBallPage() {
       title={<>Draft for the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>spike</span>, build the stack.</>}
       intro="Best ball is won at the draft: no waivers, no start/sit: the optimal lineup is banked for you every week. So the engine grades what actually matters (weekly ceiling, QB-to-catcher correlation, and bye structure) and tells you what your roster needs next, and why."
       note={pool
-        ? "Live graded pool: real players with model-derived projections. Ceiling, stack, and structure are computed from real grades."
+        ? `Live graded pool: real players with model-derived values. ${FANTASY_VALUE_BASIS_NOTE} Ceiling, stack, and structure are computed from real grades.`
         : "Illustrative player universe: fictional players, illustrative projections. Ceiling, stack, and structure are computed live from this sample pool."}
+      attribution={pool ? FANTASY_DATA_ATTRIBUTION : undefined}
       wide
     >
       <BestBallBoard pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />

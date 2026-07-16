@@ -2,9 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import { registerProjectionsFromEnv } from "../instrumentation";
 import type { GradedPoolResult } from "@/lib/integrations/graded-pool";
 
-const LIVE: GradedPoolResult = { status: "live", season: 2025, count: 3, players: [], error: null };
-const EMPTY_LIVE: GradedPoolResult = { status: "live", season: 2025, count: 0, players: [], error: null };
-const SRC_ERR: GradedPoolResult = { status: "source-error", season: 0, count: 0, players: [], error: "blocked" };
+const LIVE: GradedPoolResult = { status: "live", season: 2025, count: 3, players: [], attribution: "Data via nflverse (CC-BY-4.0)", error: null };
+const EMPTY_LIVE: GradedPoolResult = { status: "live", season: 2025, count: 0, players: [], attribution: "Data via nflverse (CC-BY-4.0)", error: null };
+const SRC_ERR: GradedPoolResult = { status: "source-error", season: 0, count: 0, players: [], attribution: "Data via nflverse (CC-BY-4.0)", error: "blocked" };
 
 describe("instrumentation projections gate", () => {
   it("does nothing outside the Node.js runtime", async () => {

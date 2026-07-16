@@ -10,8 +10,20 @@
  * trade / autopilot all run on real nflverse-graded data via activePlayerPool() —
  * with ZERO changes to those tools.
  *
- * No fabrication: the projection is derived from xFP (expected points), falling
- * back to actual per-game only when xFP is missing; a player without the inputs
+ * LICENSE BOUNDARY (2026-07-16): the ff_opportunity xFP data is CC-BY-SA-4.0
+ * (share-alike) — a license class we exclude for PUBLISHED derivatives while the
+ * SA question is open. The PUBLISHED pool therefore defaults to the pure
+ * CC-BY-4.0 basis (player-model actual per-game + process grade) and does not
+ * fetch ff_opportunity at all; an internal/owner surface may opt in with
+ * `includeXfp: true`, in which case xFP is preferred over actual per-game.
+ *
+ * ENRICHMENT (never the value basis): real market ADP + bye weeks join from the
+ * cleared FFC ADP API (`ffc-adp`, approved_api, once/day cache), and the injury
+ * flag joins from Sleeper (display flag with attribution, per the registry
+ * posture — never the sole basis of a paid feature). Enrichment failures degrade
+ * gracefully: bye 0 / no ADP / healthy, never invented.
+ *
+ * No fabrication: a player without the inputs
  * is excluded, not invented. schemeFit is the player's TEAM offensive environment
  * (within-league percentile of neutral-script offensive EPA) and falls back to a
  * neutral 0.6 when the team has no environment row — never an invented number.
@@ -23,10 +35,11 @@
 import { registerProjectionsProvider, type PlayerProjection, type ProjectionsProvider } from "./projections";
 import type { Player } from "../fantasy/players";
 import { loadPlayerModel, type PlayerProfile } from "../intelligence/player-model";
-import { loadExpectedPoints, type ExpectedPointsRow } from "../intelligence/expected-points";
+import type { ExpectedPointsRow } from "../intelligence/expected-points";
 import { normName, percentileRanks } from "../intelligence/qb-consensus";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
+import { adpByNormName, loadFfcAdp, FFC_ATTRIBUTION, type FfcAdpRow } from "../fantasy/adp-source";
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -129,11 +142,19 @@ function buildQbGradeByTeam(qbForward: readonly QbForwardRow[]): Map<string, num
  * Nudges are bounded, clearly model-derived, and fully graceful (no qbForward ->
  * no nudge).
  */
+export interface GradedPoolEnrichment {
+  /** FFC ADP rows keyed by the shared normName convention (see adpByNormName). */
+  readonly adpByName?: ReadonlyMap<string, FfcAdpRow>;
+  /** Sleeper injury flag keyed by normName — display enrichment, never the value basis. */
+  readonly injuryByName?: ReadonlyMap<string, Player["injury"]>;
+}
+
 export function buildGradedPool(
   profiles: readonly PlayerProfile[],
   xfp: readonly ExpectedPointsRow[],
   teamEnv: readonly TeamEnvironmentRow[] = [],
   qbForward: readonly QbForwardRow[] = [],
+  enrich: GradedPoolEnrichment = {},
 ): Player[] {
   const xfpByName = new Map(xfp.map((r) => [normName(r.name), r.xfpPerGame]));
   const schemeFitByTeam = buildSchemeFitByTeam(teamEnv);
@@ -185,12 +206,19 @@ export function buildGradedPool(
           ? `${p.note} Team offensive environment: ${teamKey} ${fitPct}th pct (neutral-script EPA).`
           : p.note;
 
+      // Enrichment joins (facts, never the value basis): bye week from the FFC
+      // feed; injury flag from Sleeper. Missing join -> honest defaults (0 /
+      // healthy), never invented.
+      const key = normName(p.name);
+      const adpRow = enrich.adpByName?.get(key);
+      const injury = enrich.injuryByName?.get(key) ?? "healthy";
+
       return {
         id: p.playerId,
         name: p.name,
         pos: p.position,
         team: p.team,
-        bye: 0, // bye not in this feed; tools' bye logic no-ops rather than misfire
+        bye: adpRow != null && adpRow.bye > 0 ? adpRow.bye : 0, // FFC bye when joined; tools' bye logic no-ops on 0
         proj,
         floor: round(proj * 0.75), // floor is never nudged
         ceiling,
@@ -198,12 +226,17 @@ export function buildGradedPool(
         schemeFit: Math.round(schemeFit * 100) / 100,
         role,
         trend,
-        injury: "healthy",
+        injury,
         note,
+        ...(adpRow != null ? { adp: adpRow.adp } : {}),
       };
     })
     .filter((p): p is Player => p !== null)
-    .sort((a, b) => b.proj - a.proj);
+    .sort((a, b) => b.proj - a.proj)
+    // Our-value-vs-market delta needs the final overall rank (by proj), so it is
+    // computed after the sort: positive = market drafts him later than we rank
+    // him (value); negative = a market reach relative to our rank.
+    .map((p, i) => (p.adp != null ? { ...p, adpDelta: round(p.adp - (i + 1), 1) } : p));
 }
 
 function toProjection(p: Player): PlayerProjection {
@@ -213,12 +246,12 @@ function toProjection(p: Player): PlayerProjection {
 const NFLVERSE_ATTRIBUTION = "Data via nflverse (CC-BY-4.0)";
 
 /** Build a live ProjectionsProvider from an already-loaded graded pool. Pure. */
-export function buildGradedProvider(pool: readonly Player[], fetchedAt?: string): ProjectionsProvider {
+export function buildGradedProvider(pool: readonly Player[], fetchedAt?: string, attribution: string = NFLVERSE_ATTRIBUTION): ProjectionsProvider {
   return {
     name: "Graded · nflverse process model",
     live: true,
     fetchedAt,
-    attribution: NFLVERSE_ATTRIBUTION,
+    attribution,
     list: () => pool.map(toProjection),
     players: () => pool,
   };
@@ -229,22 +262,69 @@ export interface GradedPoolResult {
   readonly season: number;
   readonly count: number;
   readonly players: readonly Player[];
+  /** Source-license attribution for every surface that displays the pool. */
+  readonly attribution: string;
   readonly error: string | null;
 }
 
-/** Load the model + xFP + team environment + QB forward and build the graded pool (no registration). */
-export async function loadGradedPool({ fetcher = fetch }: { fetcher?: FetchLike } = {}): Promise<GradedPoolResult> {
+/** Sleeper injury_status -> the pool's display flag. Facts only, conservative. */
+function mapSleeperInjury(status: string | null | undefined): Player["injury"] {
+  const s = (status ?? "").trim().toLowerCase();
+  if (!s) return "healthy";
+  if (s === "questionable" || s === "doubtful") return "questionable";
+  return "out"; // Out / IR / PUP / Sus / NA / DNR — anything flagged harder than doubtful
+}
+
+/**
+ * Injury flag by normName from Sleeper's (shared, cached) player map. Display
+ * enrichment ONLY, per the `sleeper-api` registry posture: attribution required,
+ * never the value basis, never the sole basis of a paid feature. Fully guarded —
+ * any failure returns an empty map (everyone stays "healthy"), never invented.
+ */
+async function loadSleeperInjuryByName(fetcher: FetchLike): Promise<Map<string, Player["injury"]>> {
+  const out = new Map<string, Player["injury"]>();
+  try {
+    const { assertIngestible } = await import("@sports/data-ingestion/src/source-registry");
+    assertIngestible("sleeper");
+    const { fetchSleeperPlayers } = await import("../sleeper/source");
+    const players = await fetchSleeperPlayers({ fetcher });
+    for (const p of Object.values(players)) {
+      const name = p.full_name ?? [p.first_name, p.last_name].filter(Boolean).join(" ");
+      const pos = (p.position ?? "").toUpperCase();
+      if (!name || !(pos === "QB" || pos === "RB" || pos === "WR" || pos === "TE")) continue;
+      const injury = mapSleeperInjury(p.injury_status);
+      if (injury !== "healthy") out.set(normName(name), injury);
+    }
+  } catch {
+    // enrichment only — a Sleeper failure never blocks the pool
+  }
+  return out;
+}
+
+/**
+ * Load the model (+ optionally xFP) + QB forward + enrichment and build the
+ * graded pool (no registration).
+ *
+ * `includeXfp` defaults FALSE — the PUBLISHED pool. ff_opportunity xFP is
+ * CC-BY-SA-4.0 (share-alike), which this platform excludes for published
+ * derivatives while the SA question is open, so the published basis is the pure
+ * CC-BY-4.0 player model (actual per-game + process grade) and ff_opportunity is
+ * not even fetched. An INTERNAL/owner surface may pass `includeXfp: true` to
+ * compute the xFP-preferred basis (internal analysis is cleared by the
+ * `ffverse-ffopportunity` registry entry).
+ */
+export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { fetcher?: FetchLike; includeXfp?: boolean } = {}): Promise<GradedPoolResult> {
   const model = await loadPlayerModel({ fetcher });
   if (model.status === "source-error") {
-    return { status: "source-error", season: 0, count: 0, players: [], error: model.error };
+    return { status: "source-error", season: 0, count: 0, players: [], attribution: NFLVERSE_ATTRIBUTION, error: model.error };
   }
-  // Season-consistent composition: the expected-points basis and the QB forward
-  // prior must describe the SAME season as the process grade. They publish on
-  // different cadences (nflverse player_stats vs ffverse ff_opportunity), so we
-  // pin each to the model's season and only feed it when status === "live" AND the
-  // season matches exactly — otherwise we drop it (xFP basis falls back to the
-  // model's own per-game; no QB nudge). We never pair a grade from one season with
-  // a signal from another.
+  // Season-consistent composition: the (internal-only) expected-points basis and
+  // the QB forward prior must describe the SAME season as the process grade. They
+  // publish on different cadences (nflverse player_stats vs ffverse
+  // ff_opportunity), so we pin each to the model's season and only feed it when
+  // status === "live" AND the season matches exactly — otherwise we drop it (xFP
+  // basis falls back to the model's own per-game; no QB nudge). We never pair a
+  // grade from one season with a signal from another.
   //
   // DELIBERATELY NOT loaded here: team-environment (neutral-script EPA). It reads
   // play-by-play (~40MB), which is far too heavy to fetch+parse on a serverless
@@ -254,27 +334,40 @@ export async function loadGradedPool({ fetcher = fetch }: { fetcher?: FetchLike 
   // the heavy load runs with an extended budget), not on this hot path.
   const { loadQbForward } = await import("../intelligence/qb-forward");
 
-  // Both remaining downstream loads are cheap; run them concurrently, each guarded.
-  const [xfp, qbForward] = await Promise.all([
-    loadExpectedPoints({ fetcher, season: model.season }),
+  // Downstream loads are cheap; run them concurrently, each guarded. Enrichment
+  // (FFC ADP + Sleeper injuries) is fact-joins for the UPCOMING season's draft
+  // market — a failure of either degrades to no enrichment, never an error.
+  const [xfp, qbForward, ffcAdp, injuryByName] = await Promise.all([
+    includeXfp
+      ? import("../intelligence/expected-points").then((m) => m.loadExpectedPoints({ fetcher, season: model.season }))
+      : Promise.resolve(null),
     loadQbForward({ fetcher, season: model.season }),
+    loadFfcAdp({ fetcher }),
+    loadSleeperInjuryByName(fetcher),
   ]);
 
-  const xfpRows = xfp.status === "live" && xfp.season === model.season ? xfp.rows : [];
+  const xfpRows = xfp && xfp.status === "live" && xfp.season === model.season ? xfp.rows : [];
   const qbForwardRows = qbForward.status === "live" && qbForward.season === model.season ? qbForward.rows : [];
+  const adpByName = ffcAdp.status === "live" ? adpByNormName(ffcAdp.rows) : new Map<string, FfcAdpRow>();
 
   // teamEnv intentionally [] on the live path (see note above) -> neutral schemeFit.
-  const pool = buildGradedPool(model.profiles, xfpRows, [], qbForwardRows);
-  return { status: "live", season: model.season, count: pool.length, players: pool, error: null };
+  const pool = buildGradedPool(model.profiles, xfpRows, [], qbForwardRows, { adpByName, injuryByName });
+  const attribution = [
+    NFLVERSE_ATTRIBUTION,
+    ...(adpByName.size > 0 ? [FFC_ATTRIBUTION] : []),
+    ...(injuryByName.size > 0 ? ["rosters/injury via Sleeper"] : []),
+  ].join(" · ");
+  return { status: "live", season: model.season, count: pool.length, players: pool, attribution, error: null };
 }
 
 /**
  * Founder/server hook: load + register the graded provider so the tools go live
  * (only takes effect when PROJECTIONS_PROVIDER is also set — the env gate). A
  * source-error model registers nothing (the tools stay on the illustrative pool).
+ * Always the PUBLISHED pool: xFP stays excluded (see loadGradedPool).
  */
 export async function loadAndRegisterGradedProvider({ fetcher = fetch }: { fetcher?: FetchLike } = {}): Promise<GradedPoolResult> {
   const result = await loadGradedPool({ fetcher });
-  registerProjectionsProvider(result.status === "live" && result.players.length > 0 ? buildGradedProvider(result.players, new Date().toISOString()) : null);
+  registerProjectionsProvider(result.status === "live" && result.players.length > 0 ? buildGradedProvider(result.players, new Date().toISOString(), result.attribution) : null);
   return result;
 }

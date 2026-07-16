@@ -13,11 +13,23 @@
  * conversion luck). This is the master opportunity input behind the waiver tool
  * and the graded projections provider.
  *
- * Real nflverse data (CC-BY-4.0), multi-host failover, honest source-error.
- * canPublishProjections false — it's an opportunity read, not a point projection.
+ * LICENSE (corrected 2026-07-16): this dataset is ffverse ffopportunity, whose
+ * README licenses the models AND the expected-points DATA as CC-BY-SA-4.0
+ * (share-alike) — NOT the plain CC-BY-4.0 of the core nflverse releases this
+ * header previously claimed. Share-alike is the license class the platform
+ * excludes for published derivatives (same grounds as FTN), so while that
+ * question is open nothing derived from ff_opportunity may be published to
+ * customers as a value basis: the PUBLISHED graded pool excludes the xFP basis
+ * by default (see lib/integrations/graded-pool.ts); internal/owner surfaces may
+ * still compute it. Clearance is routed through the `ffverse-ffopportunity`
+ * entry in the Source Rights Registry (commercial_display_allowed=false), and
+ * this loader requests internal intents only — never commercial_display.
+ * Multi-host failover, honest source-error. canPublishProjections false — it's
+ * an opportunity read, not a point projection.
  */
 
-import { assertIngestible, decodeDatasetText, fetchWithFailover, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { decodeDatasetText, fetchWithFailover, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { checkClearance } from "@/lib/scraping/clearance-engine";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { percentileRanks } from "./qb-consensus";
 
@@ -163,7 +175,21 @@ export async function loadExpectedPoints({
   timeoutMs = 15000,
   fetcher = fetch,
 }: { season?: number; timeoutMs?: number; fetcher?: FetchLike } = {}): Promise<ExpectedPoints> {
-  assertIngestible("nflverse");
+  // Rights gate: ffverse-ffopportunity (CC-BY-SA-4.0). Internal intents only —
+  // commercial_display is deliberately NOT requested (the registry blocks it while
+  // the share-alike question is open). A block stops the job before any fetch.
+  const clearance = checkClearance({
+    source_id: "ffverse-ffopportunity",
+    mode: "open_dataset_ingest",
+    tool_id: "fetch-native",
+    intents: ["internal_analysis", "storage", "derived_analytics"],
+  });
+  if (!clearance.allowed) {
+    throw new Error(
+      `ff_opportunity ingestion blocked by the Scraping Clearance Engine: ` +
+      clearance.blocks.map((b) => b.code).join(", "),
+    );
+  }
   // ff_opportunity is one plain-CSV asset PER season. Try the requested season,
   // then fall back one season so the offseason gap (no current-season weeks yet)
   // still renders the most recent completed season instead of an empty state.
