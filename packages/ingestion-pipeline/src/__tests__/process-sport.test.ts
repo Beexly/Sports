@@ -304,6 +304,40 @@ describe("processSport", () => {
     expect(call.create["bookDisagreementAtLock"]).toBeNull();
   });
 
+  it("MIGRATION SAFETY: a pre-migration missing-column write failure fails the run gracefully, never throws", async () => {
+    // Reproduces the exact historical outage (#69/#70 -> #71): a Prisma Client
+    // generated from a schema.prisma that declares bookDisagreementAtLock, run
+    // against a database where the additive migration has not yet been applied
+    // (the founder applies migrations manually; a deploy can land ahead of the
+    // apply). Prisma surfaces this as a runtime Postgres error on the INSERT —
+    // not a TypeScript-catchable precondition — so the only safety net is
+    // processSport's function-level catch. It MUST swallow this into a FAILED
+    // run and never let it escape as an unhandled rejection/throw, which is
+    // what would turn a missing column into a 500 for any caller that awaits
+    // this (the admin trigger-refresh route, the cron worker).
+    mocks.pickUpsert.mockRejectedValue(
+      Object.assign(
+        new Error(
+          "The column `picks.bookDisagreementAtLock` does not exist in the current database.",
+        ),
+        { code: "P2022" },
+      ),
+    );
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(result.status).toBe("failed");
+    expect(result.error).toMatch(/bookDisagreementAtLock.*does not exist/);
+    expect(mocks.ingestionRunUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          status: "FAILED",
+          errorMessage: expect.stringContaining("bookDisagreementAtLock"),
+        }),
+      }),
+    );
+  });
+
   it("derives isBootstrap from the canonical-history gate and propagates it", async () => {
     await processSport(SPORT, "key", gates({ canPersistCanonicalHistory: false }));
 

@@ -314,4 +314,34 @@ describe("freezeSlateCommitments", () => {
       NO_GAMES_TOMORROW,
     ]);
   });
+
+  it("MIGRATION SAFETY: a pre-migration missing pedersenAggregate column fails the slate gracefully, never throws", async () => {
+    // Reproduces the exact historical outage class (#69/#70 -> #71) for the
+    // Pedersen columns specifically: the atomic create writes
+    // pedersenAggregateHex/Value/BlindingSum, which do not exist in the
+    // database until the additive migration is applied (manual, founder-run).
+    // This is NOT a unique-violation (isUniqueViolation must say no), so it
+    // must fall through to the generic per-slate catch — logged as a SKIP,
+    // never escaping freezeSlateCommitments as a throw (which is the
+    // "non-fatal by contract" invariant this module documents: a freeze
+    // failure must never fail the ingestion cycle).
+    mocks.slateCreate.mockRejectedValue(
+      Object.assign(
+        new Error(
+          "The column `slate_commitments.pedersenAggregateHex` does not exist in the current database.",
+        ),
+        { code: "P2022" },
+      ),
+    );
+
+    const results = await freezeSlateCommitments([SPORT], NOW, testHash);
+
+    expect(console.warn).toHaveBeenCalledWith(
+      expect.stringContaining("pedersenAggregateHex"),
+    );
+    expect(results).toEqual([
+      { slateKey: TODAY_KEY, action: "SKIP", reason: expect.stringContaining("pedersenAggregateHex") },
+      NO_GAMES_TOMORROW,
+    ]);
+  });
 });
