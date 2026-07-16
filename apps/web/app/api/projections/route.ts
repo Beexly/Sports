@@ -5,14 +5,14 @@
  * Defaults to projecting NEXT season.
  */
 import { NextResponse } from "next/server";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 import { loadPlayerProjections } from "@/lib/projections/player-projections";
 import { currentNflSeason } from "@/lib/ingestion/player-stats";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const denied = await requirePremiumApi();
+  const denied = await requirePremiumApiRateLimited("projections");
   if (denied) return denied;
 
   const seasonParam = new URL(request.url).searchParams.get("season");

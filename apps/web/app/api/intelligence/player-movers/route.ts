@@ -4,14 +4,14 @@
  * recent-form window (2–8, default 4). Honest empty state until the backfill runs.
  */
 import { NextResponse } from "next/server";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 import { loadPlayerMovers } from "@/lib/intelligence/player-movers";
 import { currentNflSeason } from "@/lib/ingestion/player-stats";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const denied = await requirePremiumApi();
+  const denied = await requirePremiumApiRateLimited("intelligence/player-movers");
   if (denied) return denied;
 
   const url = new URL(request.url);

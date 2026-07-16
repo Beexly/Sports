@@ -3,14 +3,14 @@
  *   GET /api/tools/lineup?season=2025&players=id1,id2,id3
  */
 import { NextResponse } from "next/server";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 import { compareLineup } from "@/lib/tools/lineup-tools";
 import { currentNflSeason } from "@/lib/ingestion/player-stats";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const denied = await requirePremiumApi();
+  const denied = await requirePremiumApiRateLimited("tools/lineup");
   if (denied) return denied;
 
   const url = new URL(request.url);

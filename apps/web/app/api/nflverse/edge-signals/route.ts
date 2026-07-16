@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { loadNflverseEdgeSignals } from "@/lib/nflverse/edge-signals";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<NextResponse> {
-  const denied = await requirePremiumApi();
+  const denied = await requirePremiumApiRateLimited("nflverse/edge-signals");
   if (denied) return denied;
   const data = await loadNflverseEdgeSignals();
   return NextResponse.json({ success: data.status !== "source-error", data });

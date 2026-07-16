@@ -1,24 +1,24 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { NextResponse } from "next/server";
 
-vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApi: vi.fn() }));
+vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: vi.fn() }));
 vi.mock("@/lib/intelligence/player-movers", () => ({ loadPlayerMovers: vi.fn() }));
 vi.mock("@/lib/ingestion/player-stats", () => ({ currentNflSeason: () => 2025 }));
 
 import { GET } from "@/app/api/intelligence/player-movers/route";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 import { loadPlayerMovers } from "@/lib/intelligence/player-movers";
 
 const req = (qs = ""): Request => new Request(`http://x/api/intelligence/player-movers${qs}`);
 
 beforeEach(() => {
-  (requirePremiumApi as Mock).mockReset().mockResolvedValue(null);
+  (requirePremiumApiRateLimited as Mock).mockReset().mockResolvedValue(null);
   (loadPlayerMovers as Mock).mockReset().mockResolvedValue({ status: "ok", season: 2025, risers: [], fallers: [] });
 });
 
 describe("GET /api/intelligence/player-movers", () => {
   it("returns the gate's denial when not entitled", async () => {
-    (requirePremiumApi as Mock).mockResolvedValue(NextResponse.json({ error: "x" }, { status: 403 }));
+    (requirePremiumApiRateLimited as Mock).mockResolvedValue(NextResponse.json({ error: "x" }, { status: 403 }));
     expect((await GET(req())).status).toBe(403);
     expect(loadPlayerMovers).not.toHaveBeenCalled();
   });
