@@ -3,8 +3,22 @@ name: CI
 on:
   push:
     branches: [main, "claude/*", "sports-intelligence-os-*"]
+  # Deliberately NO base-branch filter (adversarial finding O-5.1): stacked
+  # PRs target claude/* (and codex/*, review-*, …) bases, and a PR from a head
+  # that matches no push filter into such a trunk previously triggered ZERO
+  # checks — an unreviewed, untested merge path into branches that later merge
+  # to main. Every pull request, whatever its base, must run CI. Do not
+  # re-add a branches: filter here.
   pull_request:
-    branches: [main]
+
+# A push to a branch with an open PR triggers both a push and a pull_request
+# run; key the group on the SOURCE branch (head_ref for PRs, ref_name for
+# pushes) so the duplicate pair dedupes across event types. The head-repo
+# qualifier keeps same-named fork branches out of each other's group. Never
+# cancel main: every push to main must complete its run.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.repo.full_name || github.repository }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   # --------------------------------------------------------------
@@ -64,6 +78,9 @@ jobs:
 
       - name: Run tests (all workspaces)
         run: npm test
+
+      - name: Run Vercel skip-gate tests
+        run: node --test scripts/vercel-skip-build.test.mjs
 
   # --------------------------------------------------------------
   # 2. Build
