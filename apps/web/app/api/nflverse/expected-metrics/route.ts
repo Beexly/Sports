@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { loadNflverseExpectedMetrics } from "@/lib/nflverse/expected-metrics";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
  * like the other nflverse intelligence routes; measurement only.
  */
 export async function GET(): Promise<NextResponse> {
-  const denied = await requirePremiumApi();
+  const denied = await requirePremiumApiRateLimited("nflverse/expected-metrics");
   if (denied) return denied;
   const data = await loadNflverseExpectedMetrics();
   return NextResponse.json({ success: data.status !== "source-error", data });

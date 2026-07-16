@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { loadGradedPool } from "@/lib/integrations/graded-pool";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 
 export const dynamic = "force-dynamic";
 // The pool composes several multi-MB nflverse/ffverse assets; give the diagnostic
@@ -13,7 +13,7 @@ export const maxDuration = 60;
  * gated go-live decision (PROJECTIONS_PROVIDER).
  */
 export async function GET(): Promise<NextResponse> {
-  const denied = await requirePremiumApi();
+  const denied = await requirePremiumApiRateLimited("intelligence/graded-pool");
   if (denied) return denied;
   const data = await loadGradedPool();
   return NextResponse.json({ success: data.status !== "source-error", data });

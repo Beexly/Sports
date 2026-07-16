@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApi: async () => null }));
+vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: async () => null }));
 import { loadNflverseQbr, resetQbrCacheForTests } from "@/lib/nflverse/qbr";
 
 const HEADER = "season,season_type,game_week,team_abb,player_id,qbr_total,qb_plays,epa_total,pts_added,name_display";

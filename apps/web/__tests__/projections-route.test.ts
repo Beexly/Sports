@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { NextResponse } from "next/server";
 
-vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApi: vi.fn() }));
+vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: vi.fn() }));
 vi.mock("@/lib/projections/player-projections", () => ({ loadPlayerProjections: vi.fn() }));
 vi.mock("@/lib/ingestion/player-stats", () => ({ currentNflSeason: () => 2025 }));
 
 import { GET } from "@/app/api/projections/route";
-import { requirePremiumApi } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 import { loadPlayerProjections } from "@/lib/projections/player-projections";
 
 function req(qs = ""): Request {
@@ -14,7 +14,7 @@ function req(qs = ""): Request {
 }
 
 beforeEach(() => {
-  (requirePremiumApi as Mock).mockReset().mockResolvedValue(null); // granted by default
+  (requirePremiumApiRateLimited as Mock).mockReset().mockResolvedValue(null); // granted by default
   (loadPlayerProjections as Mock).mockReset().mockResolvedValue({
     status: "ok", targetSeason: 2026, top: [], playerCount: 0,
     backtest: { sampleSize: 0, mae: 0, bias: 0, naiveMae: 0, skillVsNaive: 0 },
@@ -23,7 +23,7 @@ beforeEach(() => {
 
 describe("GET /api/projections", () => {
   it("returns the gate's denial response when not entitled", async () => {
-    (requirePremiumApi as Mock).mockResolvedValue(NextResponse.json({ error: "x" }, { status: 403 }));
+    (requirePremiumApiRateLimited as Mock).mockResolvedValue(NextResponse.json({ error: "x" }, { status: 403 }));
     const res = await GET(req());
     expect(res.status).toBe(403);
     expect(loadPlayerProjections).not.toHaveBeenCalled();
