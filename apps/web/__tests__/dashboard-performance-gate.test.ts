@@ -41,23 +41,19 @@ describe("Customer dashboard performance gate", () => {
     expect(src).toMatch(/isBootstrap:\s*false/);
   });
 
-  it("daily-slate API gates recentRecord on canExposePerformanceStats", () => {
+  it("daily-slate API never fabricates recentRecord (audit fix: no hardcoded 0-0-0)", () => {
+    // public-number-audit-2026-07-16, finding #7: recentRecord used to be
+    // gate-protected but hardcoded to {wins:0,losses:0,pushes:0} — a dead
+    // path that would render a fabricated 0-0-0 record the day
+    // canExposePerformanceStats opened. There is no real graded W-L-push
+    // data source wired to this route, so recentRecord must stay
+    // unconditionally null (never a stub object with zeroed fields) until
+    // one is. This replaces the old gate-shape assertion, which pinned the
+    // very structure that produced the fabricated-zeros bug.
     const src = read("app/api/picks/daily-slate/route.ts");
-    expect(src).toMatch(/canExposePerformanceStats/);
     expect(src).toMatch(/recentRecord/);
-    // The current minimal stub uses a ternary; the historical full
-    // implementation used `if (gates.canExposePerformanceStats && ...) { recentRecord = ... }`.
-    // Either shape is fine — we only require that the gate gate-controls
-    // the value of recentRecord on the wire.
-    const stubShape =
-      /recentRecord\s*:\s*[^,;]*canExposePerformanceStats[^,;]*\?[^:]*:\s*undefined/m.test(src);
-    const fullShape =
-      /if\s*\([^)]*canExposePerformanceStats[^)]*\)[^{]*\{[^}]*recentRecord\s*=/m.test(src) ||
-      /if\s*\([^)]*recentSettled[^)]*&&[^)]*canExposePerformanceStats[^)]*\)/m.test(src);
-    expect(
-      stubShape || fullShape,
-      "recentRecord must be gated by canExposePerformanceStats (ternary stub OR if-guard)"
-    ).toBe(true);
+    expect(src).not.toMatch(/wins:\s*0\s*,\s*losses:\s*0\s*,\s*pushes:\s*0/);
+    expect(src).toMatch(/recentRecord\s*:\s*\{[^}]*\}\s*\|\s*null\s*=\s*null/);
   });
 
   it("performance API short-circuits with bootstrapGateResponse when gate is closed", () => {

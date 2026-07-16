@@ -13,8 +13,10 @@ import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshne
  * Daily slate API — stub-safe and demo-aware.
  *
  * Response shape matches @sports/types `DailySlate` so /picks SlateBar
- * renders correctly. recentRecord stays null when the performance gate
- * is closed — closes the leak documented in the prior session.
+ * renders correctly. recentRecord is always null: no real graded W-L-push
+ * data source is wired to this route yet, so there is nothing honest to
+ * report. It must NOT be backfilled with a hardcoded placeholder — see the
+ * note at its declaration below.
  */
 export const dynamic = "force-dynamic";
 
@@ -113,10 +115,14 @@ export async function GET() {
   const sportBreakdown = Array.from(sportCount.entries())
     .map(([sport, pickCount]) => ({ sport, pickCount }))
     .sort((a, b) => b.pickCount - a.pickCount || a.sport.localeCompare(b.sport));
-  let recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
-  if (gates.canExposePerformanceStats) {
-    recentRecord = { wins: 0, losses: 0, pushes: 0, period: "Last 7 days" };
-  }
+  // recentRecord: no real graded win/loss/push data source is wired to this
+  // route yet. Always null — do NOT resurrect a hardcoded all-zero record
+  // placeholder here. That was a dead path that would render a fabricated
+  // 0-0-0 record the day canExposePerformanceStats opens
+  // (public-number-audit-2026-07-16, finding #7; CLAUDE.md "no fabricated
+  // stats"). Wire this to real settled-pick aggregates before ever setting
+  // it non-null.
+  const recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
 
   return NextResponse.json({
     success: true,
@@ -129,7 +135,7 @@ export async function GET() {
       topEdgePick: null,
       lastUpdatedAt: new Date().toISOString(),
       sportBreakdown,
-      // recentRecord stays null when stats are gated.
+      // Always null — see the declaration above for why.
       recentRecord,
       isSampleData: demoActive,
     },

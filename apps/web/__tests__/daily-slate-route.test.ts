@@ -60,6 +60,17 @@ describe("/api/picks/daily-slate", () => {
     expect(body.data["recentRecord"]).toBeNull();
   });
 
+  it("still omits recentRecord when the performance stats gate is OPEN (audit fix: no fabricated 0-0-0)", async () => {
+    // public-number-audit-2026-07-16, finding #7: recentRecord used to
+    // hardcode {wins:0,losses:0,pushes:0} the moment this gate opened — a
+    // dead path that rendered a fabricated record. No real graded W-L-push
+    // data source is wired to this route, so recentRecord must stay null
+    // even with the gate open, until one is.
+    process.env["PERFORMANCE_STATS_ENABLED"] = "true";
+    const { body } = await callGet();
+    expect(body.data["recentRecord"]).toBeNull();
+  });
+
   it("returns zero counts when demo is off", async () => {
     process.env["DEMO_PICKS_ENABLED"] = "false";
     const { body } = await callGet();

@@ -482,3 +482,145 @@ function normalizeForScan(s: string): string {
 function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
+// ─────────────────────────────────────────────
+// Numeric performance-claim detector (public-number-audit-2026-07-16, #6)
+// ─────────────────────────────────────────────
+//
+// `scanForBannedPhrases` above is a fixed WORD list — it cannot see a claim
+// made entirely of numerals. "Our picks hit 71% last month" contains no
+// banned word at all, only a number next to "hit". This detector closes
+// that gap. It is intentionally kept SEPARATE from `scanForBannedPhrases`
+// (not merged into it) so the ~dozen other CI/source-file scanners that call
+// `scanForBannedPhrases` verbatim are provably unaffected — extend, don't
+// break. Callers that want both checks (currently just the blog public
+// guard) use `scanPublicCopyForClaims` below, which unions the two.
+
+/**
+ * Words that turn a nearby number into a PERFORMANCE claim, as opposed to an
+ * unrelated statistic. This is a fixed enumerated word list, NOT a prefix/
+ * stem match — a stem match on "win" would also catch "window" ("7-day
+ * refund window" is a real approved trust-claim, not a performance claim).
+ */
+const PERFORMANCE_WORDS = [
+  "win", "wins", "won", "winning",
+  "hit", "hits", "hitting",
+  "accuracy", "accurate",
+  "roi",
+  "return", "returns", "returned", "returning",
+  "cover", "covers", "covered", "covering",
+  "success", "successful", "successfully",
+] as const;
+
+const PERFORMANCE_WORD_RE = new RegExp(`\\b(?:${PERFORMANCE_WORDS.join("|")})\\b`, "i");
+
+/**
+ * A bare percentage, e.g. "71%", "14.5%". Requires the literal "%" sign, so
+ * American odds ("-110", "+150") never match it — odds are never printed
+ * with a percent sign.
+ */
+const PERCENT_RE = /\b\d{1,3}(?:\.\d+)?%/g;
+
+/** "ROI of 14%" / "ROI of 14.5%" — explicit pattern, independent of the
+ *  percent+nearby-word window check below (also called out separately in
+ *  the audit so it gets its own reviewable claimId). */
+const ROI_OF_PCT_RE = /\broi\s+of\s+\d{1,3}(?:\.\d+)?%/gi;
+
+/** "12-3 ATS" / "45-30 record" / "12-3-1 record" — a won-loss(-push) record. */
+const RECORD_RE = /\b\d{1,4}-\d{1,4}(?:-\d{1,4})?\s+(?:record|ats)\b/gi;
+
+/** "+81u" / "+14 units" / "+3.5 units" — a betting-unit profit claim. The
+ *  leading "+" is required, so this does not fire on a plain loss ("-3u")
+ *  or on American odds ("+150", which has no trailing "u"). */
+const UNITS_RE = /\+\d+(?:\.\d+)?\s*u(?:nits?)?\b/gi;
+
+/** Characters of context inspected on each side of a bare "%" match for a
+ *  nearby performance word — "a few tokens", not the whole paragraph. */
+const PERCENT_WINDOW_CHARS = 40;
+
+/** Resolve a 1-based line number and the trimmed source line for a match index. */
+function lineAndSnippetFor(input: string, index: number): { line: number; snippet: string } {
+  const before = input.slice(0, index);
+  const line = before.split(/\r?\n/).length;
+  const lineStart = before.lastIndexOf("\n") + 1;
+  const nextNewline = input.indexOf("\n", index);
+  const lineEnd = nextNewline === -1 ? input.length : nextNewline;
+  return { line, snippet: input.slice(lineStart, lineEnd).trim() };
+}
+
+/**
+ * Detect numeric performance claims that a fixed phrase list cannot catch —
+ * a claim made of numerals with no banned word anywhere in the sentence.
+ *
+ * Flags:
+ *   1. A bare percentage within ~a few tokens of a performance word
+ *      (win/hit/accuracy/roi/return/cover/success) — "hit 71%", "71% win rate".
+ *   2. "ROI of N%" explicitly (a subset of #1, kept separate for a more
+ *      specific claimId a reviewer can act on directly).
+ *   3. A won-loss(-push) record: "12-3 ATS", "45-30 record".
+ *   4. A betting-unit profit claim: "+81u", "+14 units".
+ *
+ * Deliberately does NOT flag: American odds ("-110", "+150" — no "%" sign
+ * and no trailing "u"), plain dates ("since 2019" — no "%", no record/ATS,
+ * no units marker), or a bare statistic unrelated to performance ("30% of
+ * snaps" — a percentage with no performance word in its window).
+ */
+export function scanForNumericPerformanceClaims(input: string): BannedPhraseHit[] {
+  const hits: BannedPhraseHit[] = [];
+  const claimedPercentIndices = new Set<number>();
+
+  for (const m of input.matchAll(ROI_OF_PCT_RE)) {
+    const idx = m.index ?? 0;
+    const { line, snippet } = lineAndSnippetFor(input, idx);
+    hits.push({ phrase: "ROI of N%", claimId: "numeric.performance-roi", line, snippet });
+    // Suppress the redundant generic percent-window hit for the SAME "%" this
+    // match already covers — locate the percent's own offset within m[0]
+    // (not the ROI match's start) so the dedup key lines up with what the
+    // PERCENT_RE pass below will report for that same "%".
+    const pctInMatch = /\d{1,3}(?:\.\d+)?%$/.exec(m[0]);
+    if (pctInMatch) claimedPercentIndices.add(idx + pctInMatch.index);
+  }
+
+  for (const m of input.matchAll(RECORD_RE)) {
+    const idx = m.index ?? 0;
+    const { line, snippet } = lineAndSnippetFor(input, idx);
+    hits.push({ phrase: "win-loss record", claimId: "numeric.performance-record", line, snippet });
+  }
+
+  for (const m of input.matchAll(UNITS_RE)) {
+    const idx = m.index ?? 0;
+    const { line, snippet } = lineAndSnippetFor(input, idx);
+    hits.push({ phrase: "units profit claim", claimId: "numeric.performance-units", line, snippet });
+  }
+
+  for (const m of input.matchAll(PERCENT_RE)) {
+    const idx = m.index ?? 0;
+    // Already counted via the more specific "ROI of N%" pattern above.
+    if (claimedPercentIndices.has(idx)) continue;
+    const start = Math.max(0, idx - PERCENT_WINDOW_CHARS);
+    const end = Math.min(input.length, idx + m[0].length + PERCENT_WINDOW_CHARS);
+    const window = input.slice(start, end);
+    if (PERFORMANCE_WORD_RE.test(window)) {
+      const { line, snippet } = lineAndSnippetFor(input, idx);
+      hits.push({
+        phrase: "percentage near a performance word",
+        claimId: "numeric.performance-percent",
+        line,
+        snippet,
+      });
+    }
+  }
+
+  return hits;
+}
+
+/**
+ * Combined public-copy guard: the fixed banned-phrase list PLUS the numeric-
+ * performance-claim detector. Kept as a separate export from
+ * `scanForBannedPhrases` (see note above the detector) — use this for
+ * CMS-authored copy that needs the fuller check; use `scanForBannedPhrases`
+ * alone where existing callers must keep their exact current behavior.
+ */
+export function scanPublicCopyForClaims(input: string): BannedPhraseHit[] {
+  return [...scanForBannedPhrases(input), ...scanForNumericPerformanceClaims(input)];
+}

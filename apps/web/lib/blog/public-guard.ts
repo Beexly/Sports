@@ -1,4 +1,4 @@
-import { scanForBannedPhrases } from "@/lib/trust-claims";
+import { scanPublicCopyForClaims } from "@/lib/trust-claims";
 
 /**
  * Fail-safe no-claim guard for public Blog copy.
@@ -9,9 +9,14 @@ import { scanForBannedPhrases } from "@/lib/trust-claims";
  * never sees DB rows. There is no shared blog loader, so these helpers run the
  * same scanner at each public read site.
  *
+ * The scan is `scanPublicCopyForClaims`: the fixed banned-phrase list PLUS
+ * the numeric-performance-claim detector (public-number-audit-2026-07-16,
+ * #6) — a fixed word list alone lets "our picks hit 71% last month" through
+ * untouched, since that sentence contains no banned WORD, only a number.
+ *
  * Fail-safe posture: on ANY scanner hit we replace the entire string with a
  * calm placeholder. We never partially redact and never echo offending text
- * back out (that would leak the banned phrase).
+ * back out (that would leak the banned phrase or the numeric claim).
  *
  * Pure: no I/O, no side effects.
  */
@@ -34,21 +39,21 @@ const TITLE_PLACEHOLDER = "Model analysis";
  * When clean, the value passes through byte-for-byte.
  */
 export function guardPublicTitle(value: string): string {
-  if (scanForBannedPhrases(value).length === 0) {
+  if (scanPublicCopyForClaims(value).length === 0) {
     return value;
   }
   return TITLE_PLACEHOLDER;
 }
 
 export function guardPublicExcerpt(excerpt: string): string {
-  if (scanForBannedPhrases(excerpt).length === 0) {
+  if (scanPublicCopyForClaims(excerpt).length === 0) {
     return excerpt;
   }
   return EXCERPT_PLACEHOLDER;
 }
 
 export function guardPublicContent(content: string): string {
-  if (scanForBannedPhrases(content).length === 0) {
+  if (scanPublicCopyForClaims(content).length === 0) {
     return content;
   }
   return CONTENT_PLACEHOLDER;
