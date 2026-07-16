@@ -68,6 +68,39 @@ Glass Ledger + Edge Engine core build is COMPLETE and accepted (FINAL_REPORT.md)
 8. Merge `claude/fix-metric-source-fixture-alignment` (pushed) to fix main's
    failing engine test; PR #112 founder gates; PR #101 co-work migration.
 
+## Standing goal (founder, 2026-07-16)
+
+Work until everything in this program is reviewed, accounted for, improved,
+polished, and coded to frontier standard. IMPROVE, NOT REMOVE. Breadth over
+tunnel vision. Token-smart execution. This section IS the accounting.
+
+## In-flight slices (2026-07-16 ~21:05Z — verify → land → push as each reports)
+
+1. Edge-lab gate-integrity 7-fix (delegated, sonnet, worktree)
+2. Affiliate trust layer: /how-we-make-money + per-link disclosure + separation
+   guardrail + activation runbook (delegated)
+3. DFS exact optimizer — deterministic DP, brute-force-verified, exposure suite
+   (delegated)
+4. StatKing scores computed from real state — improve-not-remove (delegated)
+5. pfr_advstats license verdict — TOS-trench research (delegated)
+6. MLB Statcast + platoon loaders, prior-season leak-free (delegated)
+
+## Standing workstreams (older tasks, accounted for — not dropped)
+
+- #4 CLV decomposition (bookDisagreementAtLock at publish) — in progress
+  pre-wave; fold into line-archive activation work when flags flip.
+- #5 Jarvis memory write path · #6 scheduled backtest harness — pending;
+  revisit after the hardening wave lands.
+- #8 grandpa-simple + cinematic UX pass · /glass-ledger frontier design pass —
+  NEXT UP after current landings (design-now-flip-later on the flagship).
+- #12 Sealed Engine experience · #13 Fantasy Engine 10x (owner mandate; SMASH/
+  BURR/RVS ports must be renamed + edge-lab-calibrated before any confidence
+  framing; pfr verdict gates the trench/WR family).
+- World-model NFL feature admissions through the trials registry (orchestrator's
+  own slice — the path out of FIRE_NOTHING) — starts once the 7-fix lands.
+- PR #112 founder gates · PR #101 co-work migration · main hotfix merge — all
+  still founder actions, unchanged.
+
 ## Post-activation product queue (sequenced after ledger activation)
 
 Per-fixture prediction pages · llms.txt + read-only MCP over SETTLED ledger only
