@@ -112,6 +112,19 @@ tunnel vision. Token-smart execution. This section IS the accounting.
 - PR #112 founder gates · PR #101 co-work migration · main hotfix merge — all
   still founder actions, unchanged.
 
+## Merge-ready branches on origin (founder merges; all verified green)
+
+- claude/fantasy-engine-foundation-rebased @ 1b9c38b3 — Fantasy Engine floor
+  (trademark rename landing on top of it next).
+- claude/clv-decomposition-reland-rebased @ 62d2f123 — task #4, migration
+  safety proven live.
+- claude/salvage-settlement-guardrails @ cdcd3e96 — LIVE settlement mis-grade
+  fix (fail-loud, mandatory awayTeam) + scanner/CI bypass closures (staged-index
+  secret scan, unfiltered PR triggers, fail-closed vercel-skip); 55/55 plant
+  tests prove teeth. Recommended FIRST merge — it fixes money-truth grading.
+- claude/fix-metric-source-fixture-alignment @ 568ccca6 — main's failing engine
+  test (subsumed by the fantasy foundation branch; either order works).
+
 ## Post-activation product queue (sequenced after ledger activation)
 
 Per-fixture prediction pages · llms.txt + read-only MCP over SETTLED ledger only
