@@ -171,6 +171,18 @@ failure-isolated process-sport hook) · Kelly layer (fractional λ≈0.3,
 James-Stein haircut, Ledoit-Wolf shrinkage, CLV deflator that self-disarms
 stakes to 0 below 50 settled).
 
+**P1 ACCEPTANCE RUN (real data, 2026-07-16): PASSED, exit 0** —
+`scripts/edge-lab/phase1-acceptance.ts`, report + provenance at
+`reports/edge-lab/phase1-nfl-acceptance.{json,md}`. Time-disjoint OOF
+segments 352/352/352; calibration selected "beta" by held-out Brier
+decomposition; logit-pool β = −0.082 ± 0.351, CI [−0.770, +0.606] →
+FIRE_NOTHING (consistent with Phase-0's MI probe); τ=null → ZERO COVERAGE
+honestly reported; Venn-Abers marginal coverage HOLDS (realized 0.540 in
+[0.519, 0.552] ± 0.05); the gate provably cannot fire without β evidence.
+The honest NO is the acceptance (§2 P1 blesses this path explicitly).
+Kelly layer landed with the self-disarm pin (stakes exactly 0 below 50
+settled). Line archive landed inert (P0 scope now fully closed).
+
 **P1 acceptance interpretation (recorded per protocol):** the handoff's
 "on the holdout" acceptance is satisfied on a DISJOINT eval fold never
 used for calibration or τ-tuning; the SEALED 2025 forward season stays

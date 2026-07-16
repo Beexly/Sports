@@ -1,0 +1,154 @@
+{
+  "report": {
+    "phase": "1",
+    "startedAt": "2026-07-16T16:24:08.002Z",
+    "finishedAt": "2026-07-16T16:24:11.315Z",
+    "segments": {
+      "calibration": 352,
+      "tuning": 352,
+      "eval": 352
+    },
+    "sealedHoldout": {
+      "season": 2025,
+      "count": 272,
+      "from": "2025-09-05T00:20:00.000Z",
+      "to": "2026-01-05T01:20:00.000Z"
+    },
+    "calibration": {
+      "selected": "beta",
+      "heldOutScores": [
+        {
+          "candidate": "beta",
+          "brier": 0.24059999999999998,
+          "reliability": 0.02615,
+          "resolution": 0.033275
+        },
+        {
+          "candidate": "tail-blend",
+          "brier": 0.244475,
+          "reliability": 0.0225,
+          "resolution": 0.021449999999999997
+        },
+        {
+          "candidate": "isotonic",
+          "brier": 0.245925,
+          "reliability": 0.024775000000000002,
+          "resolution": 0.022324999999999998
+        }
+      ],
+      "sampleSize": 352
+    },
+    "logitPool": {
+      "note": "The falsifiable edge test: CI including 0 mandates FIRE NOTHING (handoff §2 P1).",
+      "beta": -0.08220270888311144,
+      "se": 0.35113892316664913,
+      "ci95": [
+        -0.7704349982897437,
+        0.6060295805235208
+      ],
+      "verdict": "FIRE_NOTHING",
+      "n": 352
+    },
+    "selectiveGate": {
+      "tau": null,
+      "tauReason": "no operating point clears breakeven with a valid Wilson LCB — fire nothing",
+      "tuningCurve": [
+        {
+          "tau": 0,
+          "coverage": 0.3806818181818182,
+          "fired": 134,
+          "realizedRate": 0.3805970149253731,
+          "wilsonLcb": 0.31461233469947636,
+          "meanBreakeven": 0.4163259135927545
+        },
+        {
+          "tau": 0.005,
+          "coverage": 0.375,
+          "fired": 132,
+          "realizedRate": 0.38636363636363635,
+          "wilsonLcb": 0.31960027824793724,
+          "meanBreakeven": 0.41334388338145156
+        },
+        {
+          "tau": 0.01,
+          "coverage": 0.3522727272727273,
+          "fired": 124,
+          "realizedRate": 0.3870967741935484,
+          "wilsonLcb": 0.31828868326199083,
+          "meanBreakeven": 0.4092743807303003
+        },
+        {
+          "tau": 0.015,
+          "coverage": 0.3409090909090909,
+          "fired": 120,
+          "realizedRate": 0.36666666666666664,
+          "wilsonLcb": 0.2979881960460242,
+          "meanBreakeven": 0.4054758372983451
+        },
+        {
+          "tau": 0.02,
+          "coverage": 0.3125,
+          "fired": 110,
+          "realizedRate": 0.34545454545454546,
+          "wilsonLcb": 0.27539432241564676,
+          "meanBreakeven": 0.394841510371503
+        },
+        {
+          "tau": 0.03,
+          "coverage": 0.2784090909090909,
+          "fired": 98,
+          "realizedRate": 0.3469387755102041,
+          "wilsonLcb": 0.2729210453438161,
+          "meanBreakeven": 0.37971769693249746
+        },
+        {
+          "tau": 0.04,
+          "coverage": 0.2528409090909091,
+          "fired": 89,
+          "realizedRate": 0.3595505617977528,
+          "wilsonLcb": 0.281164391380877,
+          "meanBreakeven": 0.37387703590666793
+        },
+        {
+          "tau": 0.05,
+          "coverage": 0.2215909090909091,
+          "fired": 78,
+          "realizedRate": 0.34615384615384615,
+          "wilsonLcb": 0.2640506983309928,
+          "meanBreakeven": 0.36091796594679976
+        }
+      ],
+      "evalReport": {
+        "fired": 0,
+        "eligible": 352,
+        "coverage": 0,
+        "realizedRate": null,
+        "wilsonLcb": null
+      }
+    },
+    "vennAbersCoverage": {
+      "stratum": "nfl|ML",
+      "meanLower": 0.518486931818181,
+      "meanUpper": 0.5516383522727275,
+      "realizedRate": 0.5397727272727273,
+      "tolerance": 0.05,
+      "holds": true
+    },
+    "criteria": {
+      "oofProduced": true,
+      "calibrationSelected": "beta",
+      "betaCiReported": true,
+      "gateOutcome": "ZERO_COVERAGE_HONESTLY_REPORTED",
+      "vaMarginalCoverageHolds": true,
+      "firingConsistentWithBeta": true
+    },
+    "passed": true
+  },
+  "provenance": {
+    "inputsHash": "fcf68c3a2e6c67b4124df97c0cf3adc5510c427fba3d998e484cfe45741da11c",
+    "outputHash": "27fa50f11998a177128f847849e83146d6907e0d7ebc4ed83dafccb83c56d0a7",
+    "modelVersion": "v5.1.0",
+    "producer": "edge-lab/phase1-acceptance",
+    "asOf": "2026-07-16T16:24:08.002Z"
+  }
+}
