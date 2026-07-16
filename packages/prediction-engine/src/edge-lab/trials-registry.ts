@@ -94,8 +94,21 @@ export interface TrialsRegistry {
   verify(): { valid: boolean; brokenSeq: number | null };
 }
 
+/** Recursively freeze an entry so post-append mutation (including nested
+ *  params) throws in strict mode instead of silently diverging from the hash. */
+function deepFreeze<T>(value: T): T {
+  if (value !== null && typeof value === "object") {
+    for (const key of Object.keys(value as object)) {
+      deepFreeze((value as Record<string, unknown>)[key]);
+    }
+    Object.freeze(value);
+  }
+  return value;
+}
+
 export function createTrialsRegistry(seed: readonly TrialEntry[] = []): TrialsRegistry {
-  const chain: TrialEntry[] = [...seed];
+  // Clone-and-freeze the seed so external references cannot mutate the chain.
+  const chain: TrialEntry[] = seed.map((e) => deepFreeze(JSON.parse(JSON.stringify(e)) as TrialEntry));
   const seenIds = new Set(chain.map((e) => e.trialId));
   {
     const check = verifyTrialEntries(chain);
@@ -111,8 +124,13 @@ export function createTrialsRegistry(seed: readonly TrialEntry[] = []): TrialsRe
       }
       const seq = chain.length;
       const prevHash = seq === 0 ? TRIALS_GENESIS_HASH : chain[seq - 1]!.hash;
-      const unsealed = { ...input, seq, prevHash };
-      const entry: TrialEntry = { ...unsealed, hash: entryHash(unsealed) };
+      // Canonical clone severs caller references (params included) BEFORE
+      // hashing, so what is hashed is exactly what is stored — then the sealed
+      // entry is deep-frozen: the append-only guarantee is enforced by the
+      // object itself, not by caller discipline.
+      const params = JSON.parse(canonicalJson(input.params)) as Canonical;
+      const unsealed = { ...input, params, seq, prevHash };
+      const entry: TrialEntry = deepFreeze({ ...unsealed, hash: entryHash(unsealed) });
       chain.push(entry);
       seenIds.add(input.trialId);
       return entry;

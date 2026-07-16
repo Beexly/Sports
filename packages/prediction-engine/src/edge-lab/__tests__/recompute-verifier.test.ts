@@ -57,6 +57,17 @@ function buildFixtureChain(): LedgerChain {
 }
 
 describe("recomputeLedger — the open verifier", () => {
+  it("a settlement with CLV but no closing price is a discrepancy, never silently skipped", () => {
+    const chain = buildFixtureChain();
+    const tampered = chain.map((e) =>
+      "outcome" in e && e.pickId === "p1" ? { ...e, closingPriceDecimal: null } : e,
+    );
+    const report = recomputeLedger(tampered);
+    expect(report.clvDiscrepancies.some((d) => d.pickId === "p1" && Number.isNaN(d.recomputedBps))).toBe(
+      true,
+    );
+  });
+
   it("REPRODUCES a valid chain: integrity, pre-kickoff rule, every CLV figure, aggregates", () => {
     const chain = buildFixtureChain();
     const report = recomputeLedger(chain);

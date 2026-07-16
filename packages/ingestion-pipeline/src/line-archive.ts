@@ -245,7 +245,11 @@ export function toLineSnapshotRows(gameOdds: readonly NormalizedOdds[]): LineSna
           market: "SPREAD",
           side: "away",
           price: odds.awaySpreadPrice,
-          line: odds.spread ?? null,
+          // NormalizedOdds.spread is the HOME outcome's point. The away side's
+          // handicap is its negation (home -3.5 ⇒ away +3.5); storing the home
+          // point on the away row would grade away selections against the
+          // opposite handicap. `+ 0` normalizes -0 to 0.
+          line: odds.spread !== undefined && odds.spread !== null ? -odds.spread + 0 : null,
         });
       }
     } else if (odds.market === "TOTALS") {

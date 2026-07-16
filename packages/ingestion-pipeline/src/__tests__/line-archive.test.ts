@@ -53,7 +53,7 @@ function mockDb(): LineArchiveDb & {
 
 const ROWS = [
   { book: "fanduel", market: "SPREAD" as const, side: "home", price: -110, line: -3.5 },
-  { book: "fanduel", market: "SPREAD" as const, side: "away", price: -110, line: -3.5 },
+  { book: "fanduel", market: "SPREAD" as const, side: "away", price: -110, line: 3.5 },
 ];
 
 describe("captureLineSnapshotsIfEnabled — hard gate", () => {
@@ -315,7 +315,11 @@ describe("toLineSnapshotRows", () => {
         { book: "fanduel", market: "MONEYLINE", side: "home", price: -150, line: null },
         { book: "fanduel", market: "MONEYLINE", side: "away", price: 130, line: null },
         { book: "fanduel", market: "SPREAD", side: "home", price: -110, line: -3.5 },
-        { book: "fanduel", market: "SPREAD", side: "away", price: -110, line: -3.5 },
+        // NormalizedOdds.spread is the HOME point; the away handicap is its
+        // negation. The old expectation here (-3.5 on both sides) encoded the
+        // exact grading bug this pins against: an away selection stored with
+        // the home handicap grades against the opposite line.
+        { book: "fanduel", market: "SPREAD", side: "away", price: -110, line: 3.5 },
         { book: "fanduel", market: "TOTAL", side: "over", price: -105, line: 48.5 },
         { book: "fanduel", market: "TOTAL", side: "under", price: -115, line: 48.5 },
       ]),

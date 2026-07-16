@@ -68,6 +68,26 @@ describe("trials registry chain", () => {
   });
 });
 
+describe("trials registry immutability", () => {
+  it("entries are deep-frozen — post-append mutation throws instead of diverging from the hash", () => {
+    const reg = createTrialsRegistry();
+    const params = { grid: [1, 2, 3] };
+    const entry = reg.append({ ...trial("a", 0.1), params });
+    expect(Object.isFrozen(entry)).toBe(true);
+    expect(() => {
+      (entry as { pValue: number | null }).pValue = 0.0001;
+    }).toThrow(TypeError);
+    expect(() => {
+      (entry.params as { grid: number[] }).grid.push(99);
+    }).toThrow(TypeError);
+    // Caller-side mutation of the ORIGINAL params object must not reach the chain.
+    params.grid.push(4);
+    const stored = reg.entries()[0]!;
+    expect(stored.params).toEqual({ grid: [1, 2, 3] });
+    expect(reg.verify().valid).toBe(true);
+  });
+});
+
 describe("benjaminiHochberg", () => {
   it("matches the hand-computed step-up example", () => {
     const res = benjaminiHochberg([0.01, 0.02, 0.03, 0.2, 0.5], 0.05);

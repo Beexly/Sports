@@ -281,6 +281,17 @@ export function appendSettlement(chain: LedgerChain, settlement: SettlementEntry
       `ledger-chain: outcome must be one of WIN|LOSS|PUSH|VOID, got ${JSON.stringify(settlement.outcome)}`,
     );
   }
+  // clvBps is DERIVED from the closing price — one without the other is a
+  // fabrication vector: a posted CLV with no closing price to re-derive it
+  // from would hash/verify fine while the open verifier silently skips it.
+  // Both together, or both null.
+  if ((settlement.closingPriceDecimal === null) !== (settlement.clvBps === null)) {
+    throw new TypeError(
+      `ledger-chain: closingPriceDecimal and clvBps must be present together or both null ` +
+        `(got closingPriceDecimal=${String(settlement.closingPriceDecimal)}, clvBps=${String(settlement.clvBps)}) ` +
+        `for settlement of pick ${settlement.pickId}`,
+    );
+  }
   if (settlement.closingPriceDecimal !== null) {
     assertDecimalPrice("closingPriceDecimal", settlement.closingPriceDecimal);
   }

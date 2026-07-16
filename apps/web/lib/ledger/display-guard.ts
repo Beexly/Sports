@@ -71,8 +71,17 @@ function collectDefects(metric: SubstantiatedMetric): string[] {
     missing.push("coverage(fired/eligible)");
   }
   const lb = metric.lowerBound;
-  if (!lb || (lb.method !== "wilson" && lb.method !== "clopper-pearson") || !Number.isFinite(lb.value)) {
-    missing.push("lowerBound(wilson|clopper-pearson)");
+  // The lower bound is a Wilson/Clopper-Pearson PROBABILITY bound — neither
+  // method can produce a value outside [0, 1], so anything outside that range
+  // is a corrupt or fabricated record, not a substantiated one.
+  if (
+    !lb ||
+    (lb.method !== "wilson" && lb.method !== "clopper-pearson") ||
+    !Number.isFinite(lb.value) ||
+    lb.value < 0 ||
+    lb.value > 1
+  ) {
+    missing.push("lowerBound(wilson|clopper-pearson,0..1)");
   }
   const clv = metric.clv;
   if (!clv || !Number.isFinite(clv.meanBps) || !Number.isInteger(clv.settledCount) || clv.settledCount <= 0) {

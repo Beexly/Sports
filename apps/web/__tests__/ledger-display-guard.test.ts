@@ -48,6 +48,14 @@ describe("display guard — every statutory leg is load-bearing", () => {
     lowerBound: { method: "vibes" as unknown as "wilson", value: 0.5 },
   }));
   breakLeg("a finite lower bound", (m) => ({ ...m, lowerBound: { method: "wilson", value: Number.NaN } }));
+  breakLeg("a lower bound within [0,1] (probability bounds cannot exceed 1)", (m) => ({
+    ...m,
+    lowerBound: { method: "wilson", value: 2 },
+  }));
+  breakLeg("a non-negative lower bound", (m) => ({
+    ...m,
+    lowerBound: { method: "clopper-pearson", value: -0.01 },
+  }));
   breakLeg("CLV backing", (m) => ({ ...m, clv: { meanBps: Number.NaN, settledCount: 0 } }));
   breakLeg("settled plays behind the CLV", (m) => ({ ...m, clv: { meanBps: 120, settledCount: 0 } }));
   breakLeg("walk-forward provenance", (m) => ({

@@ -66,6 +66,20 @@ export function recomputeLedger(entries: readonly LedgerEntry[]): RecomputeRepor
   const clvDiscrepancies: ClvDiscrepancy[] = [];
   const gradedBps: number[] = [];
   for (const s of settlements) {
+    // A posted CLV with no closing price (or vice versa) is un-re-derivable —
+    // appendSettlement now rejects the pairing at write time, but a legacy or
+    // hand-crafted export must FAIL verification here rather than be skipped,
+    // or the CLI would report REPRODUCED for a number it cannot derive.
+    if ((s.clvBps === null) !== (s.closingPriceDecimal === null)) {
+      clvDiscrepancies.push({
+        seq: s.seq,
+        pickId: s.pickId,
+        recordedBps: s.clvBps ?? Number.NaN,
+        recomputedBps: Number.NaN,
+        deltaBps: Number.NaN,
+      });
+      continue;
+    }
     if (s.clvBps === null || s.closingPriceDecimal === null) continue;
     const pick = pickById.get(s.pickId);
     if (!pick) {

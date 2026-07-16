@@ -76,6 +76,24 @@ describe("genesis linkage", () => {
   });
 });
 
+describe("appendSettlement — paired closing/CLV fields", () => {
+  it("rejects a posted CLV with no closing price (and vice versa); both-null stays first-class", () => {
+    let chain: LedgerChain = [];
+    chain = appendPick(chain, pickInput(chain, { pickId: "p0" }));
+    expect(() =>
+      appendSettlement(chain, settlementInput(chain, "p0", { clvBps: 500, closingPriceDecimal: null })),
+    ).toThrow(/present together or both null/);
+    expect(() =>
+      appendSettlement(chain, settlementInput(chain, "p0", { clvBps: null, closingPriceDecimal: 1.91 })),
+    ).toThrow(/present together or both null/);
+    chain = appendSettlement(
+      chain,
+      settlementInput(chain, "p0", { clvBps: null, closingPriceDecimal: null }),
+    );
+    expect(chain).toHaveLength(2);
+  });
+});
+
 describe("append 3 picks + 2 settlements", () => {
   it("verifyChain reports valid on an honestly built chain", () => {
     let chain: LedgerChain = [];
