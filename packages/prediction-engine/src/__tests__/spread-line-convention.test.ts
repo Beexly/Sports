@@ -51,7 +51,8 @@ describe("SPREAD line convention — away-favored picks", () => {
       20,
       23,
       "americanfootball_nfl",
-    );
+      "Away Favs",
+      );
     expect(result).toBe("LOSS");
   });
 
@@ -66,7 +67,8 @@ describe("SPREAD line convention — away-favored picks", () => {
       13,
       23,
       "americanfootball_nfl",
-    );
+      "Away Favs",
+      );
     expect(result).toBe("WIN");
   });
 });

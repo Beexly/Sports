@@ -155,6 +155,7 @@ describe("settleSport", () => {
       expect.anything(),
       expect.anything(),
       expect.anything(),
+      "Bills", // awayTeamName rides along (most-specific side derivation)
     );
   });
 
@@ -173,6 +174,7 @@ describe("settleSport", () => {
       expect.anything(),
       expect.anything(),
       expect.anything(),
+      "Bills",
     );
   });
 
