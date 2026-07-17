@@ -119,6 +119,12 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
       description: "OpenAPI 3.1 contract for the read-only Proof API — import it to call these endpoints from any OpenAPI-aware tooling.",
     },
     {
+      rel: "mcp",
+      url: `${base}/api/mcp`,
+      description:
+        "Hosted MCP endpoint (streamable HTTP): add this URL as a connector in any MCP-capable agent and call the 7 proof tools — including a full trustless record audit where every hash verdict is your own recomputation.",
+    },
+    {
       rel: "ots-anchor",
       url: `${base}/api/proof/ots/<slateKey>`,
       description:

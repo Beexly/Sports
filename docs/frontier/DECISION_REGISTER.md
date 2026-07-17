@@ -152,3 +152,18 @@ as honest 404 "not activated yet"; outage 503. Discovery rel "ots-anchor"
 added to the llms.txt/machine-proof map. Slice 3 (nightly upgrade poll)
 deferred: requires an upgrade-fetch addition to the verbatim crypto port —
 new-tests-first rule applies.
+
+## DEC-012 — W-MCP slice 1: hosted /api/mcp, minimum-human-input design (2026-07-17)
+
+Founder directive "as little human input as possible" changed the deploy
+decision: instead of a separate hosted runtime (new accounts/creds), the
+packet's 7-tool contract is served from apps/web itself at /api/mcp
+(streamable-HTTP JSON-RPC, stateless JSON responses — spec-permitted). It
+deploys with the site: zero new infrastructure, zero founder steps. Handlers
+run in-process over the repo's own proof modules and invoke the REAL
+receipts/verify route handlers internally, so pagination, the settled-only
+leak gate, and tamper checks are exactly the public API's. The JSON-RPC subset
+is hand-owned (initialize/initialized/ping/tools/list/tools/call) — no new
+dependency, fully auditable. llms.txt discovery rel "mcp" added. Deferred:
+vendoring the stdio packet (local installs) and registry listings (founder
+click). Read-only by construction; no tool makes a performance claim.
