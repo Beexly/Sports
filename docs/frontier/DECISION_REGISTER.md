@@ -584,3 +584,61 @@ stitching) — recorded here so no backtest can slip past it.
   already-red-teamed disclosure policy (DEC-018), not a new disclosure decision.
 - Files: apps/web/lib/reality-receipt/{card.ts,__tests__/card.test.ts}, .gitignore.
 - Supersedes: none.
+
+## DEC-023 — W-WEATHER §2 strict previous-runs smoke: CLOSED (capability confirmed live) (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: Phase 4 standing arc (W-WEATHER-REC's own DEC-014 named this the "REMAINING
+  GATE before any real historical admission run").
+- Decision: located the founder's original `gse-weather-edge` packet (session upload
+  `gseweatheredge.zip`, previously vendored only as the loader source — its
+  `INTEGRATION_SPEC.md` had never actually been read/vendored/acted on) and executed §2's
+  "the one thing to smoke-test live." Confirmed EMPIRICALLY, via a real network call (not
+  just documentation reading) to `previous-runs-api.open-meteo.com`, that Open-Meteo
+  genuinely serves distinct forecast runs for the same valid hour via `_previous_dayN`
+  suffixed variables (`temperature_2m_previous_day1/2/3`, up to day7) — this is the
+  "previous-runs / model-run capability" INTEGRATION_SPEC §2 point 1 asked this session to
+  confirm exists before any backtest admits weather features. New repeatable script,
+  `scripts/weather-integration-smoke.mjs` (`npm run smoke:weather-integration`), performs
+  this check and is not an ephemeral one-off — anyone can re-run it. Live run this session:
+  hour `2026-07-14T00:00`, current-run 91.5°F vs. `previous_day1` 91.4°F / `previous_day2`
+  83.3°F / `previous_day3` 84.8°F at Lambeau Field's coordinates — genuinely distinct values,
+  not duplicated/stitched output, proving the capability is real and currently live.
+- Also confirmed (via Open-Meteo's own docs, cross-checked) WHY this matters: the
+  `historical-forecast-api` host the SHIPPED loader (`weather-edge.ts`) currently uses for
+  its backtest path does NOT support run selection — it explicitly stitches multiple runs
+  into one continuous timeseries and exposes no per-hour issuance time, exactly the leakage
+  risk INTEGRATION_SPEC §2 warned about. `previous-runs-api` (day-bucketed, confirmed above)
+  and a separate Single Runs API (`run=<init-datetime>`, exact-run selection, not smoke-tested
+  this pass — day-bucketed granularity already satisfies the honest-conservative-rounding
+  requirement) are the correct integration targets.
+- Explicit scope boundary — what this decision does NOT close: `weather-edge.ts` was NOT
+  modified. DEC-014 recorded it "vendored verbatim... behavioral edits forbidden," and that
+  constraint stands. This decision closes the CAPABILITY-CONFIRMATION gate INTEGRATION_SPEC
+  §2 names — it does not wire the previous-runs-api into the feature store or the loader.
+  A real historical weather-feature admission run still requires that separate integration
+  step (select `_previous_dayN` where `N = ceil(leadTimeHours / 24)`, never a smaller N, so
+  the selected run is guaranteed issued ≤ `asOfUtc` — conservative rounding toward an OLDER
+  run when the exact day boundary doesn't align) — named here as a fast-follow, not silently
+  dropped, and NOT attempted in this pass to respect the vendored file's edit boundary and
+  avoid conflating a capability-confirmation gate with a full leak-safe re-implementation.
+  §3-§6 of the spec (feature-store wiring behind `MODEL_VERSION`, trials-registry admission,
+  operational rate-limit/refresh/caching/attribution rules, the non-goals) remain entirely
+  unactioned — this decision is narrowly scoped to §2 only, per DEC-014's own framing.
+- Evidence: `node scripts/weather-integration-smoke.mjs` — real network call, exit 0, PASS
+  with the exact values above (reproducible, not a fixture); `trust-gate`/`secret-scan` clean
+  on the new script.
+- Alternatives rejected: modifying `weather-edge.ts` to route backtests through
+  previous-runs-api now (would violate the vendored file's "behavioral edits forbidden"
+  constraint and conflate two distinctly-scoped decisions — capability confirmation vs.
+  implementation — into one, when DEC-014 explicitly separated them); using the Single Runs
+  API instead (more precise but requires knowing exact model-run cadence per provider,
+  meaningfully more complex; previous-runs-api's day-granularity already suffices for a
+  conservative-rounding leak-safe selection, so the extra complexity isn't justified for the
+  confirmation step).
+- Reversibility: additive only — one new script, one new package.json script entry.
+- Protected zones: data, model claims (per W-WEATHER-REC's own row) — this decision adds no
+  model claim and touches no scoring path; it is a pure capability-confirmation utility.
+- Files: scripts/weather-integration-smoke.mjs (new), package.json (1 script line).
+- Supersedes: none. Narrows DEC-014's "REMAINING GATE" note — the §2 smoke-test sub-item is
+  now DONE; the feature-store integration sub-item DEC-014 implied is still open and unscoped.

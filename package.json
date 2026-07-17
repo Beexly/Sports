@@ -68,6 +68,7 @@
     "test:fast": "npm run test:brand-safety && npm run test:cockpit",
     "smoke:launch-night": "node scripts/launch-night-smoke.mjs",
     "smoke:prod": "node scripts/post-deploy-smoke.mjs",
+    "smoke:weather-integration": "node scripts/weather-integration-smoke.mjs",
     "prod:probe": "node scripts/prod-probe.mjs",
     "synthetic:run": "node scripts/synthetic-monitoring-runner.mjs",
     "jarvis:diff": "node scripts/jarvis-diff.mjs",
