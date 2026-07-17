@@ -460,3 +460,66 @@ stitching) — recorded here so no backtest can slip past it.
   apps/web/lib/source-rights/{index.ts,source-attribution.ts,source-rights-evaluator.ts},
   apps/web/lib/ip/source-rights-envelope.ts.
 - Supersedes: none.
+
+## DEC-021 — W005 Intelligence Watch v0: generalize watchlist alerting beyond pick-settlement, name collision avoided (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: W005 (Phase 3 of the master plan; `docs/frontier/WORKSTREAM_005_INTELLIGENCE_WATCH_V0.md`
+  is the frozen contract). Dependencies satisfied: W002 Worldline ✓, existing watchlist ✓.
+- Decision: added `apps/web/lib/intelligence-watch/` — `IntelligenceWatchContract` (a
+  per-watchlist-entry preference: which attributes matter, what materiality threshold) +
+  `defaultIntelligenceWatchContract()` (v0's only constructor — watches all attributes,
+  threshold 1, honestly labeled as a default since there is no UI to customize yet) +
+  `evaluateIntelligenceWatch()`, a pure function that compiles a W002 `WorldDelta` against
+  the contract and an entitlement flag into a discriminated `surface: true/false` decision.
+  Genuinely new capability, not a duplicate of the existing `watchlist/alert-eligibility.ts`:
+  that module gates on ONE pick lifecycle event (settlement); this module generalizes to ANY
+  observed Worldline change about a followed entity. Reuses the existing
+  `Entitlements.canGetAlerts` (Elite-exclusive) rather than adding a new entitlement
+  dimension. Zero new Prisma models/migrations, zero new API routes, zero send-path code —
+  the evaluator produces a decision only and has no caller outside its own test file (fully
+  shadow, matching every prior v0 this session).
+- Naming: named `IntelligenceWatchContract`, not `IntelligenceContract` — confirmed via
+  `git show origin/genesis/gx-000-codebase-twin-plan-compiler:packages/genesis-kernel/src/contracts.ts`
+  that a type of that exact name already exists there for an unrelated Metacortex
+  plan-compiler concept (`question`/`requiredOutputs`/`evidencePolicy`/`proof`/`budget` — "compile
+  a research question into an evaluated plan," nothing to do with per-user entity-watching
+  intent). gse-red-team judged the rename "reasonable naming hygiene, not strictly required"
+  (the two types live in different packages and would not actually collide at compile time)
+  but recommended keeping it for future-grep/documentation clarity — kept.
+- gse-red-team pass (mandatory — entitlements + notifications are both protected zones per
+  this workstream's own queue row): confirmed the entitlement gate is checked first,
+  fail-closed, with no path for a non-entitled caller to receive delta content (traced
+  line-by-line); confirmed zero draft-only guardrail violations (verified by running the
+  guardrail directly, not just trusting the diff); confirmed test fixtures are built from
+  the REAL `WorldlineStore`/`worldDelta()` primitives, not invented shapes; confirmed the
+  naming-collision claim against the actual genesis-kernel source. ONE real finding:
+  `evaluateIntelligenceWatch` has no graded/settled-fact guard (unlike
+  `alert-eligibility.ts`'s `isGradedEvent` check) — `WorldDeltaEntry` carries no such
+  marker, so a future Worldline producer could in principle feed speculative/unsettled data
+  through this evaluator. Confirmed NOT currently exploitable (repo-wide grep: zero
+  production callers of `WorldlineStore.ingest()` and zero callers of
+  `evaluateIntelligenceWatch` outside its own test file), so no code change was required to
+  land v0 — but documented as a REQUIRED (not optional) precondition for any future live
+  wiring, both in the workstream doc and as a doc-comment directly on `evaluate.ts`, so the
+  gap cannot be silently carried forward when this module gets its first real caller.
+- Evidence: 7/7 new tests green (entitlement-gate ordering, zero-entity-match,
+  below-threshold, at-threshold with exact entry filtering, attribute-scoped filtering,
+  contract-identity passthrough); `tsc --noEmit` clean; `eslint --max-warnings=0` clean;
+  `npm run guardrails` (including `draft-only`) all green.
+- Alternatives rejected: adding a graded-only guard now anyway (would require inventing a
+  "settled" concept on `WorldDeltaEntry` that no real producer has ever populated —
+  fabricating a check with no real data behind it, rather than honestly documenting the
+  precondition for whoever builds the first live producer); adding a new
+  `canUseIntelligenceWatch` entitlement field (a real product/pricing decision, not an
+  autonomous one — v0 reuses the existing Elite-exclusive `canGetAlerts`); wiring a live
+  consumer or dispatch path in this slice (explicitly out of scope — draft-only doctrine,
+  no send path exists here at all, not even an inert-by-default seam like
+  `alert-dispatch.ts`'s).
+- Reversibility: additive only — new directory, zero existing files modified.
+- Protected zones: entitlements (read-only consumption of `canGetAlerts`), notifications
+  (draft-only — no dispatch). gse-red-team pass completed pre-commit per
+  `.claude/rules/protected-money-truth.md`.
+- Files: apps/web/lib/intelligence-watch/{types.ts,contract.ts,evaluate.ts,index.ts,
+  __tests__/evaluate.test.ts} (new), docs/frontier/WORKSTREAM_005_INTELLIGENCE_WATCH_V0.md (new).
+- Supersedes: none.
