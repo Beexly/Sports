@@ -13,6 +13,7 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { collapseStringJoins, normalizeScanLine } from "./scan-normalize.mjs";
 
 const ROOT = resolve(process.cwd());
 
@@ -113,13 +114,33 @@ const WHITELIST_PATHS = new Set([
   "packages/db/prisma/seed.ts",
 ]);
 
+const ALLOWLISTED_DEFINITION_BLOCKS = new Map([
+  [
+    "apps/web/lib/brand.ts",
+    {
+      start: /^\s*export const BANNED_LANGUAGE\s*=\s*\[/,
+      end: /^\s*\]\s+as const;/,
+    },
+  ],
+]);
+
+const ALLOWLISTED_DEFINITION_LINES = new Map([
+  [
+    "apps/web/lib/workflows/draft-review-fixtures.ts",
+    [
+      /^\s*const unsafeOutcomeClaim\s*=/,
+      /^\s*const unsafePickSlang\s*=/,
+    ],
+  ],
+]);
+
 // "lock" is banned ONLY as betting slang for a guaranteed pick (a lock, lock of
 // the day). It has a legitimate TEMPORAL sense — the moment a line locks/closes
 // ("at lock", "lock time", "lock→close"). Same false-positive handling intent as
 // the word-boundary guard that already exempts block/unlock/clock: we blank the
 // safe temporal idioms, then a residual standalone "lock" is still a real hit.
 const LOCK_SAFE_CONTEXT =
-  /\b(?:at|before|by|after|until|since|the)\s+lock\b|\block\s*(?:time\b|→|->|→)/gi;
+  /\b(?:at|before|by|after|until|since)\s+(?:the\s+)?lock\b|\block\s*(?:time\b|→|->|→)/gi;
 
 const WHITELIST_PREFIXES = [
   "apps/web/lib/compliance-scanner/",
@@ -180,7 +201,8 @@ function buildRegex(entry) {
     : new RegExp(escaped, "i");
 }
 
-function lineIsCommentOnly(line) {
+function lineIsCommentOnly(line, isMarkdown) {
+  if (isMarkdown) return false;
   const trimmed = line.trimStart();
   if (trimmed.startsWith("//")) return true;
   if (trimmed.startsWith("*")) return true;
@@ -189,24 +211,65 @@ function lineIsCommentOnly(line) {
   return false;
 }
 
+function allowlistedDefinitionLines(rawLines, relNorm) {
+  const allowed = new Set();
+  const block = ALLOWLISTED_DEFINITION_BLOCKS.get(relNorm);
+  if (block) {
+    let inside = false;
+    for (let index = 0; index < rawLines.length; index++) {
+      if (!inside && block.start.test(rawLines[index])) inside = true;
+      if (!inside) continue;
+      allowed.add(index);
+      if (block.end.test(rawLines[index])) inside = false;
+    }
+  }
+  const patterns = ALLOWLISTED_DEFINITION_LINES.get(relNorm) ?? [];
+  for (let index = 0; index < rawLines.length; index++) {
+    if (patterns.some((pattern) => pattern.test(rawLines[index]))) {
+      allowed.add(index);
+    }
+  }
+  return allowed;
+}
+
 function scanText(text, relPath) {
   const hits = [];
-  const lines = text.split(/\r?\n/);
+  const rawLines = text.split(/\r?\n/);
+  const lines = rawLines.map((line) => normalizeScanLine(line));
+  const joinedLines = lines.map((line) => collapseStringJoins(line));
   const relNorm = relPath.split(sep).join("/");
+  const isMarkdown = relNorm.endsWith(".md");
+  const allowedDefinitions = allowlistedDefinitionLines(rawLines, relNorm);
   for (const entry of BANNED_PHRASES) {
     // Per-rule file exemption (BS-023): skip this phrase for its allowlisted
     // files only; every other banned phrase still applies to those files.
     if (entry.allowFiles && entry.allowFiles.has(relNorm)) continue;
     const re = buildRegex(entry);
     for (let i = 0; i < lines.length; i++) {
-      if (lineIsCommentOnly(lines[i])) continue;
+      if (allowedDefinitions.has(i)) continue;
+      if (lineIsCommentOnly(rawLines[i], isMarkdown)) continue;
       // For the "lock" slang ban, blank the legitimate temporal idioms first;
       // a residual standalone "lock" (e.g. "a lock", "lock of the day") still hits.
-      const subject = entry.claim === "banned.lock" ? lines[i].replace(LOCK_SAFE_CONTEXT, " ") : lines[i];
-      if (re.test(subject)) {
+      const candidates = [lines[i], joinedLines[i]];
+      if (
+        entry.phrase.includes(" ") &&
+        i + 1 < lines.length &&
+        !allowedDefinitions.has(i + 1) &&
+        !lineIsCommentOnly(rawLines[i + 1], isMarkdown)
+      ) {
+        candidates.push(`${joinedLines[i].trimEnd()} ${joinedLines[i + 1].trimStart()}`);
+      }
+      const matched = candidates.some((candidate) => {
+        const subject =
+          entry.claim === "banned.lock"
+            ? candidate.replace(LOCK_SAFE_CONTEXT, " ")
+            : candidate;
+        return re.test(subject);
+      });
+      if (matched) {
         hits.push({
           line: i + 1,
-          snippet: lines[i].trim().slice(0, 200),
+          snippet: rawLines[i].trim().slice(0, 200),
           claim: entry.claim,
           phrase: entry.phrase,
         });

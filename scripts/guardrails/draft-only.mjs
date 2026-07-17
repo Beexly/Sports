@@ -45,32 +45,6 @@ const WHITELIST_DIRS = new Set([
   "_speedtest",
 ]);
 
-const LINE_EXEMPT_SUBSTRINGS = [
-  "publishedAt: null",
-  "publishedAt = null",
-  "publishedAt: null,",
-  "// INTENTIONALLY",
-  "// INTENTIONAL",
-  "// NEVER",
-  "// no auto-publish",
-  "// auto-publish disabled",
-  "ENGINE NEVER SETS THIS",
-  "engine never sets this",
-];
-
-function lineIsExempt(line) {
-  const trimmed = line.trimStart();
-  if (trimmed.startsWith("//")) return true;
-  if (trimmed.startsWith("*")) return true;
-  if (trimmed.startsWith("/*")) return true;
-  const lower = line.toLowerCase();
-  for (const s of LINE_EXEMPT_SUBSTRINGS) {
-    if (line.includes(s)) return true;
-    if (lower.includes(s.toLowerCase())) return true;
-  }
-  return false;
-}
-
 function shouldSkipDir(name) {
   return WHITELIST_DIRS.has(name);
 }
@@ -115,6 +89,7 @@ function annotateContext(text) {
 
   for (const line of lines) {
     let stripped = "";
+    let code = "";
     let i = 0;
     let inSD = false;
     let inSS = false;
@@ -134,32 +109,51 @@ function annotateContext(text) {
         continue;
       }
       if (inSD) {
-        if (c === "\\") { i += 2; continue; }
+        if (c === "\\") {
+          code += line[i] + (line[i + 1] ?? "");
+          stripped += "  ";
+          i += 2;
+          continue;
+        }
         if (c === '"') inSD = false;
+        code += c;
         stripped += " ";
         i++;
         continue;
       }
       if (inSS) {
-        if (c === "\\") { i += 2; continue; }
+        if (c === "\\") {
+          code += line[i] + (line[i + 1] ?? "");
+          stripped += "  ";
+          i += 2;
+          continue;
+        }
         if (c === "'") inSS = false;
+        code += c;
         stripped += " ";
         i++;
         continue;
       }
       if (inSB) {
-        if (c === "\\") { i += 2; continue; }
+        if (c === "\\") {
+          code += line[i] + (line[i + 1] ?? "");
+          stripped += "  ";
+          i += 2;
+          continue;
+        }
         if (c === "`") inSB = false;
+        code += c;
         stripped += " ";
         i++;
         continue;
       }
       if (c === "/" && c2 === "/") { lineComment = true; i += 2; continue; }
       if (c === "/" && c2 === "*") { inBlockComment = true; i += 2; continue; }
-      if (c === '"') { inSD = true; stripped += " "; i++; continue; }
-      if (c === "'") { inSS = true; stripped += " "; i++; continue; }
-      if (c === "`") { inSB = true; stripped += " "; i++; continue; }
+      if (c === '"') { inSD = true; code += c; stripped += " "; i++; continue; }
+      if (c === "'") { inSS = true; code += c; stripped += " "; i++; continue; }
+      if (c === "`") { inSB = true; code += c; stripped += " "; i++; continue; }
       stripped += c;
+      code += c;
       i++;
     }
 
@@ -199,7 +193,7 @@ function annotateContext(text) {
       }
     }
 
-    out.push({ line, inWhere: lineHasWhere, inData: lineHasData });
+    out.push({ line, code, inWhere: lineHasWhere, inData: lineHasData });
   }
 
   return out;
@@ -253,16 +247,15 @@ async function main() {
       }
       const annotated = annotateContext(text);
       for (let i = 0; i < annotated.length; i++) {
-        const { line, inWhere, inData } = annotated[i];
-        if (lineIsExempt(line)) continue;
+        const { line, code, inWhere, inData } = annotated[i];
         for (const p of ALWAYS_FORBIDDEN) {
-          if (!p.rx.test(line)) continue;
+          if (!p.rx.test(code)) continue;
           if (inWhere && p.id.startsWith("publishedAt")) continue;
           hits.push({ file: relPath, line: i + 1, pattern: p.id, desc: p.desc, snippet: line.trim().slice(0, 200) });
         }
         if (inData && !inWhere) {
           for (const p of DATA_ONLY_FORBIDDEN) {
-            if (!p.rx.test(line)) continue;
+            if (!p.rx.test(code)) continue;
             hits.push({ file: relPath, line: i + 1, pattern: p.id, desc: p.desc, snippet: line.trim().slice(0, 200) });
           }
         }
