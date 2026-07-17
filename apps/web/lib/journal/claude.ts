@@ -88,6 +88,7 @@ export async function generateModelJournalDraftMarkdown(
       temperature: 0.2,
       system: JOURNAL_DRAFTING_SYSTEM_PROMPT,
       user: userPrompt,
+      cache: { system: true },
     });
     const policyFailures = evaluateModelJournalDraftPolicy(result.text, {
       promptText: userPrompt,
