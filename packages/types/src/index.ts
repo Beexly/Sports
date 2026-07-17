@@ -19,6 +19,7 @@ export type RiskLevel =
 
 export * from "./ladder.js";
 export * from "./heartbeat.js";
+export * from "./sports-ir.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick

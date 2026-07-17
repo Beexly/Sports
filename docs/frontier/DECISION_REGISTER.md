@@ -246,3 +246,30 @@ stitching) — recorded here so no backtest can slip past it.
   `content-type: image/png` for both a found and an honest-unavailable
   receipt) plus the Next build's own type-check/bundle pass.
 - Supersedes: none.
+
+## DEC-016 — W004 SportsIR v0: vocabulary-not-store, adapt-only-what-is-real (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: W004
+- Decision: SportsIR v0 is a dependency-free VOCABULARY in `packages/types/src/sports-ir.ts`
+  (12 kernel primitives + 4 clocks + `SportsIrValue` structurally identical to Worldline's
+  `WorldValue`), with one-directional pure adapters in `apps/web/lib/sports-ir/adapters.ts`.
+  Only SIX primitives are claimed ADAPTED — each proven by a test against a REAL object from
+  this branch's own production builders (WorldlineStore, buildRoomEvidenceEnvelope,
+  buildRealityReceipt): Entity (explicit ctor — kind/label never inferred from an opaque id),
+  Observation/State (← W002), Claim/Outcome (← W001; confidence honestly null at the envelope
+  layer; Outcome null when settlement NOT_CAPTURED), Proof (← W003; verified null when no
+  receipt captured; NOT_MIGRATED/NO_PROOF/UNAVAILABLE anchors collapse to "UNKNOWN"). The
+  other six (Event, Measurement, Relation, Interaction, Intervention, Branch) are DECLARED
+  type contracts with named future adapter sources — never presented as wired.
+- Evidence: 16 adapter tests + 4 type tests green; `tsc --noEmit` clean (packages/types,
+  apps/web); eslint --max-warnings=0 clean on lib/sports-ir.
+- Alternatives rejected: a SportsIR persistence layer (projection vocabulary only in v0);
+  adapting all 12 primitives now (would fabricate completeness for objects with no current
+  concrete source); putting the types in apps/web (packages could not adopt them).
+- Reversibility: additive only — new files + one export line in packages/types/src/index.ts.
+- Protected zones: schema/contracts (type-level only; no DB, no routes, no behavior change).
+- Files: packages/types/src/sports-ir.ts, packages/types/src/__tests__/sports-ir.test.ts,
+  apps/web/lib/sports-ir/{adapters.ts,index.ts,__tests__/adapters.test.ts},
+  packages/types/src/index.ts (1 line), docs/frontier/WORKSTREAM_004_SPORTSIR_V0.md.
+- Supersedes: none.

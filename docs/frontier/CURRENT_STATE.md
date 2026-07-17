@@ -4,7 +4,7 @@
 **Last verified:** 2026-07-17 (this session, command evidence in DEC-001/DEC-004, extended through DEC-015)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
-**Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP slice 1 DONE; W-WEATHER-REC DONE (DEC-014); W003 Reality Receipt v0 DONE (DEC-015). Next `/gse-run next`: W004 SportsIR v0 (dependency W002-W003, both now satisfied), or vendor the stdio galaxy-proof-mcp packet, or an 8th MCP tool wrapping the reality-receipt loader.
+**Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP slice 1 DONE; W-WEATHER-REC DONE (DEC-014); W003 Reality Receipt v0 DONE (DEC-015); W004 SportsIR v0 DONE (DEC-016). Master plan approved 2026-07-17 (founder): next is GG-000 Genesis Convergence Map (PR #126, docs-only) then the GX-000/GG-001 unified genesis-kernel build (PR #125 contract) in separate worktrees from main, then Phase-2 follow-ups (8th MCP tool, W003 inclusion leg, stdio MCP vendoring, duplicate rights-registry reconciliation), then W005.
 
 ## Verified facts
 
