@@ -225,3 +225,20 @@ rebased heads above; no unlanded value is stranded outside these PRs. Worktrees
 under .claude/worktrees are agent scratch (the watchlist one already ported +
 landed). Tasks #8 (grandpa-simple UX) and #13 (Fantasy Engine 10x) remain the
 only genuinely-open standing workstreams.
+
+## Cloud-credit leverage (Google Dev Program + AWS Activate) — 2026-07-17
+
+Full plan: reports/ops/CLOUD_CREDIT_LEVERAGE_STRATEGY.md. Headline: the AI-inference
+bill is the biggest lever and is CODE-COMPLETE — Claude routing is already live-wired
+into 7 content generators (provider-dispatch.ts callClaude, transparent Anthropic
+fallback). Flip to credits with env only: Bedrock → CLAUDE_PROVIDER=bedrock + AWS creds
++ BEDROCK_MODEL_MAP (throws on unmapped id — copy exact Bedrock model-id from console);
+Vertex → CLAUDE_PROVIDER=vertex + SA JSON + VERTEX_MODEL_MAP. Bedrock/Vertex Claude is
+same per-token price as Anthropic direct, so credits pay at zero premium; MODEL_VERSION
+unchanged (provider swap, not model change). SET AN AWS BUDGETS CAP FIRST — Bedrock has
+no cost-anomaly alert, credits deplete silently. Second lever: alert channel (Elite +
+watchlist) via SES — seam built at alert-dispatch.ts:92, callable with the existing
+SigV4 signer (no new dep); needs founder SES provisioning then a ~1-file wire. Also:
+Neon→RDS/CloudSQL + Upstash→ElastiCache/Memorystore are connection-string swaps;
+Activate Founders tier ($1k + $350 support) is claimable now; the Fable AWS governance
+system is application/credibility material for the AI-tier.
