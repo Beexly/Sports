@@ -783,3 +783,61 @@ stitching) — recorded here so no backtest can slip past it.
   apps/web/lib/sports-ir/__tests__/adapters.test.ts (additive tests only),
   docs/frontier/WORKSTREAM_009_HYPOTHESIS_TO_INSTRUMENT_V0.md (new).
 - Supersedes: none.
+
+## DEC-026 — W010 dependency re-verification: "telemetry baseline" genuinely does not exist (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: W010 (frontier queue). Not an implementation — a verification-only decision closing
+  the gap this session's own prior CURRENT_STATE.md note flagged: "W010's own listed dependency
+  ('telemetry baseline') has not yet been verified to exist in the repo... check for real
+  evidence before freezing that contract... rather than assuming." Ran an exhaustive read-only
+  sweep (Explore agent, 49 tool calls) rather than trust the queue row's prose.
+- Decision: W010 stays BLOCKED. No real, live, structured capture of user
+  behavior/comprehension/friction signal exists anywhere in this repo today. Evidence, closest
+  candidates first: (1) `apps/web/lib/analytics/events.ts` — a well-designed, well-tested typed
+  event contract (28 event names spanning the pricing/conversion and waitlist funnels), but its
+  `track()` function is an explicit, documented NO-OP (returns its input unchanged; zero
+  network call, zero persistence) — `docs/gse/pr3-analytics-provider-plan.md` states outright
+  "Status: PLAN ONLY. No provider integration," gated on an unmade owner/privacy decision; only
+  4 real call sites exist in the whole app (all in the waitlist form), despite ~24 of the 28
+  defined events describing surfaces that never call `track()`; no analytics vendor SDK
+  (PostHog/Segment/Mixpanel/Amplitude/Plausible/GA4/`@vercel/analytics`) is an actual dependency
+  anywhere in `package.json`/`package-lock.json`, contradicting the PR3 doc's claim one is
+  "already present in the OSS stack." (2) `apps/web/lib/observability/sentry.ts` — real code,
+  genuinely wired into the global error boundary and `instrumentation.ts`, but dormant by
+  default (`SENTRY_DSN` unset in both `.env.example` and `.env.production.example`), and even
+  when live it captures crashes/exceptions only — not comprehension gaps or drop-off. (3)
+  `app/admin/statking/user-feedback/page.tsx` — the one page literally named "User Feedback" is
+  explicitly labeled `status="fixture"` in its own UI copy and backed entirely by
+  `scripts/statking_autonomous_build.py`-generated synthetic rows (`user_id: 'fixture_user'`)
+  with no submission form or write path — not live capture. (4) `packages/db/prisma/schema.prisma`
+  (~60 models) has no page-view/funnel/session-behavior/click-event table; its one `Session`
+  model is NextAuth's auth session, unrelated. (5) No A/B testing or experiment infrastructure
+  exists beyond founder-gated operational kill-switches (`PROJECTIONS_PROVIDER`,
+  `OTS_ANCHOR_ENABLED`, etc.), which toggle backend data sources, not user-segment experiments.
+  `docs/frontier/FRONTIER_KERNEL.md` names "Product Twin" only in aspirational vision-doc prose
+  (line 41) and — unlike every other frontier concept that already landed a workstream
+  (W002/W003/W004/W005/W007/W009) — its own "Nearest existing assets" pointer table has zero
+  entry for Product Twin, confirming even that doc never claimed a real substrate existed.
+- Evidence: full sweep documented above; agent read `apps/web/lib/analytics/events.ts` in full,
+  `docs/gse/pr3-analytics-provider-plan.md` and `docs/gse/analytics-events.md` in full,
+  `apps/web/lib/observability/sentry.ts` + both env-example files, the statking user-feedback
+  page + its data source (`apps/web/lib/statking/product.ts`) + its generator script, the full
+  Prisma schema, and grepped for every plausible telemetry/analytics/experiment vendor and
+  keyword repo-wide.
+- Alternatives rejected: treating `analytics/events.ts`'s existence as "close enough" to unblock
+  W010 (would mean building Product Twin v0 against a data source that captures nothing today —
+  the workstream's own "bounded proposals from comprehension gaps" premise requires REAL gaps to
+  observe, and this session's "adapt only what is real" discipline forbids substituting a
+  well-designed no-op for actual evidence); wiring up `track()` to a real provider ourselves as
+  a prerequisite (out of scope — `pr3-analytics-provider-plan.md` correctly marks provider
+  selection as owner-gated, pending a privacy/DPA review this session cannot perform
+  autonomously).
+- Reversibility: n/a — no code changed, verification only.
+- Protected zones: privacy, experiments (per the workstream's own queue row) — exactly why this
+  dependency could not be casually assumed satisfied; a privacy review is explicitly required
+  before any real telemetry capture is wired up, which is itself evidence this cannot be
+  self-authorized into existence.
+- Files: docs/frontier/WORKSTREAM_QUEUE.md (W010 row), docs/frontier/CURRENT_STATE.md (refresh).
+  No product code touched.
+- Supersedes: none — the prior W010 BLOCKED label (unverified) is now BLOCKED (verified).
