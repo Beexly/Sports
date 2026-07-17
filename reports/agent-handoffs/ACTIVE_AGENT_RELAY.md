@@ -250,6 +250,20 @@ Web Analytics free; PostHog $50K + generous free fills the zero-analytics gap; f
 sports data incl. keyless Open-Meteo/NWS weather; SES/FCM/OneSignal alert channels).
 Stacking can reach $300K-$500K+ combined. Most need a founder account/key first.
 
+Completeness sweep (nothing sidestepped): reports/ops/LEVERAGE_ATLAS_ADDENDUM.md covers
+the categories the first pass under-covered — coding agents/workflows (Claude Code, Agent
+SDK, the LIVE in-session MCP servers: Figma/Higgsfield/Vercel/Stripe/Notion/Gmail/Drive/
+GitHub), Anthropic Claude-for-Startups ($25K-$100K+ credits), Vercel for-Startups + AI
+Gateway ($5/mo free, fits via the internal-llm lane) + $6M AI Accelerator, GitHub for
+Startups ($10K + 50K Actions + Copilot), accelerators (referral code = the multiplier
+that lifts EVERY tier), Modal/Replicate/Groq/Together/OpenRouter compute, ElevenLabs/
+Higgsfield voice+video, Stripe-Atlas incorporation (the gate for Inception/Azure tiers).
+KEY CODE FACT: the claude-api router already fits most AI lanes by ENV — internal-llm.ts
+is a universal OpenAI-compatible lane with Bearer auth, so Vercel AI Gateway / Groq /
+Together / Fireworks / OpenRouter work via INTERNAL_LLM_BASE_URL/MODEL/API_KEY (no new
+adapter). Prompt caching is ALREADY optimally applied (high-freq surfaces cached, low-freq
+correctly not — the 1.25x write premium only pays with in-TTL repeats; NOT touched).
+
 OPERATIONALIZED (first integration, code not just docs): leak-free NFL WEATHER edge
 feature — packages/prediction-engine/src/edge-lab/features/nfl-weather.ts. Turns a
 game's PRE-KICKOFF forecast (wind/precip/temp + dome + a bounded suppression prior) into
