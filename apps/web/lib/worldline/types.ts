@@ -82,3 +82,19 @@ export interface WorldDelta {
   readonly to: WorldCoordinate;
   readonly entries: readonly WorldDeltaEntry[];
 }
+
+/**
+ * A genuine, unresolved disagreement the single-winner snapshot view
+ * (`WorldSnapshot`) would otherwise silently flatten (W007): two or more
+ * observations for the same cell tied for the winning position once the
+ * deterministic `id` tiebreak — which exists only for replay determinism,
+ * not epistemic priority — is set aside, carrying DIFFERENT values.
+ * Agreement between sources at the same instant is corroboration, never
+ * reported here. `candidates` always has length >= 2 and always spans
+ * >= 2 distinct canonical values.
+ */
+export interface WorldConflict {
+  readonly entityId: string;
+  readonly attribute: string;
+  readonly candidates: readonly WorldObservation[];
+}

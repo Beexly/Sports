@@ -24,8 +24,10 @@
  * ISO strings. Ingest validates and freezes; snapshots are deep-frozen.
  */
 
+import { canonicalJson } from "@/lib/intelligence-playback/canonical-json";
 import { snapshotDigest } from "./digest";
 import type {
+  WorldConflict,
   WorldCoordinate,
   WorldObservation,
   WorldSnapshot,
@@ -77,6 +79,14 @@ function beats(a: WorldObservation, b: WorldObservation): boolean {
   const bk = Date.parse(b.observedAt);
   if (ak !== bk) return ak > bk;
   return a.id > b.id;
+}
+
+/** True iff neither observation's (occurredAt, observedAt) pair strictly
+ *  beats the other's — tied once the id tiebreak (determinism only, not an
+ *  epistemic judgment) is set aside. W007's conflict-detection predicate. */
+function tiedIgnoringId(a: WorldObservation, b: WorldObservation): boolean {
+  if (Date.parse(a.occurredAt) !== Date.parse(b.occurredAt)) return false;
+  return Date.parse(a.observedAt) === Date.parse(b.observedAt);
 }
 
 export class WorldlineStore {
@@ -157,6 +167,63 @@ export class WorldlineStore {
       if (!cur || beats(obs, cur)) winners.set(key, obs);
     }
     return winners;
+  }
+
+  /**
+   * Detect genuine, unresolved disagreements the single-winner snapshot view
+   * (`snapshotAt`/`resolve`) silently flattens (W007): cells where 2+
+   * observations are tied for the winning position once the deterministic
+   * `id` tiebreak is set aside, AND carry different values. Same no-lookahead
+   * eligibility filter as normal resolution. Read-only — never mutates the
+   * store, never affects `resolveOver`'s own resolution, which stays exactly
+   * as before this method existed.
+   */
+  detectConflicts(at: WorldCoordinate): WorldConflict[] {
+    return this.detectConflictsOver(at, this.observations.length);
+  }
+
+  private detectConflictsOver(at: WorldCoordinate, count: number): WorldConflict[] {
+    const v = isoOrThrow("validTime", at.validTime);
+    const k = isoOrThrow("knowledgeTime", at.knowledgeTime);
+    const byCell = new Map<string, WorldObservation[]>();
+    for (let i = 0; i < count; i += 1) {
+      const obs = this.observations[i]!;
+      if (Date.parse(obs.occurredAt) > v) continue;
+      if (Date.parse(obs.observedAt) > k) continue; // the no-lookahead line
+      const key = cellKey(obs.entityId, obs.attribute);
+      const list = byCell.get(key);
+      if (list) list.push(obs);
+      else byCell.set(key, [obs]);
+    }
+
+    const conflicts: WorldConflict[] = [];
+    for (const list of byCell.values()) {
+      // Single linear pass: `top` accumulates observations tied with the
+      // best-known-so-far tier; a strictly later observation resets it. By
+      // the end, `top` is exactly the set tied for the true winning position,
+      // regardless of ingestion order (each reset only moves to a strictly
+      // temporally later observation, so the final top[0] is the global best).
+      let top: WorldObservation[] = [list[0]!];
+      for (let i = 1; i < list.length; i += 1) {
+        const obs = list[i]!;
+        if (tiedIgnoringId(obs, top[0]!)) top.push(obs);
+        else if (beats(obs, top[0]!)) top = [obs];
+      }
+      if (top.length < 2) continue;
+      const distinctValues = new Set(top.map((o) => canonicalJson(o.value)));
+      if (distinctValues.size < 2) continue; // agreement, not a conflict
+      conflicts.push({
+        entityId: top[0]!.entityId,
+        attribute: top[0]!.attribute,
+        candidates: Object.freeze([...top].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))),
+      });
+    }
+
+    return conflicts.sort((a, b) =>
+      a.entityId === b.entityId
+        ? a.attribute < b.attribute ? -1 : a.attribute > b.attribute ? 1 : 0
+        : a.entityId < b.entityId ? -1 : 1,
+    );
   }
 
   /**

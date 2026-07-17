@@ -1,12 +1,12 @@
 /**
- * SportsIR v0 adapters (W004) — pure projections from real, already-shipped
- * objects into the shared minimal intermediate representation
- * (@sports/types's sports-ir.ts). One direction only: concrete object ->
- * primitive. SportsIR is a vocabulary for describing what already exists,
- * never a new source of truth, so nothing here mutates or persists — every
- * function is a pure, synchronous projection.
+ * SportsIR v0 adapters (W004 + W007) — pure projections from real,
+ * already-shipped objects into the shared minimal intermediate
+ * representation (@sports/types's sports-ir.ts). One direction only:
+ * concrete object -> primitive. SportsIR is a vocabulary for describing what
+ * already exists, never a new source of truth, so nothing here mutates or
+ * persists — every function is a pure, synchronous projection.
  *
- * Six of the twelve primitives are adapted here, each backed by an object
+ * Seven of the twelve primitives are adapted here, each backed by an object
  * that already ships on this branch:
  *   Entity      <- explicit constructor (Worldline ids are opaque strings;
  *                  no kind/label is ever guessed from an id)
@@ -15,13 +15,16 @@
  *   Claim       <- PickEvidenceEnvelope.decision + .model (W001)
  *   Outcome     <- PickEvidenceEnvelope.settlement Capture (W001)
  *   Proof       <- RealityReceipt (W003)
+ *   Branch      <- Worldline WorldConflict (W007) — an unresolved
+ *                  disagreement, never flattened into a single consensus
  *
- * See docs/frontier/WORKSTREAM_004_SPORTSIR_V0.md for which six are still
- * DECLARED-only (Event, Measurement, Relation, Interaction, Intervention,
- * Branch) and what each will adapt from next.
+ * See docs/frontier/WORKSTREAM_004_SPORTSIR_V0.md for which five are still
+ * DECLARED-only (Event, Measurement, Relation, Interaction, Intervention)
+ * and what each will adapt from next.
  */
 
 import type {
+  SportsIrBranch,
   SportsIrClaim,
   SportsIrEntity,
   SportsIrEntityKind,
@@ -31,7 +34,7 @@ import type {
   SportsIrProofAnchor,
   SportsIrState,
 } from "@sports/types";
-import type { WorldObservation, WorldSnapshot } from "@/lib/worldline";
+import type { WorldConflict, WorldObservation, WorldSnapshot } from "@/lib/worldline";
 import type { PickEvidenceEnvelope } from "@/lib/intelligence-playback";
 import type { RealityReceipt } from "@/lib/reality-receipt";
 
@@ -132,4 +135,26 @@ export function realityReceiptToSportsIrProof(receipt: RealityReceipt): SportsIr
     verified: receipt.receipt.state === "NOT_CAPTURED" ? null : receipt.receipt.verified,
     anchor: anchorFor(receipt),
   };
+}
+
+/**
+ * One Branch per tied candidate — a flat set of sibling alternate worlds
+ * (v0 never populates `parentBranchId`; nested branch hierarchies are a
+ * named future step, not claimed here). `id` traces back to the exact
+ * observation that grounds it — never a synthetic id — and `createdAt` is
+ * that observation's own `observedAt` (when this candidate became known).
+ *
+ * `label` embeds `obs.source`/`obs.value` VERBATIM. REQUIRED before any
+ * public/live wiring: pass through apps/web/lib/scraping/clearance-engine.ts
+ * first — a raw source name or value could otherwise leak a vendor identity
+ * or licensed content with no attribution/rights review. See
+ * docs/frontier/WORKSTREAM_007_BRANCHING_REALITY_V0.md.
+ */
+export function worldConflictToSportsIrBranches(conflict: WorldConflict): SportsIrBranch[] {
+  return conflict.candidates.map((obs) => ({
+    id: `branch:${obs.id}`,
+    parentBranchId: null,
+    label: `${conflict.entityId}.${conflict.attribute} = ${JSON.stringify(obs.value)} (per ${obs.source})`,
+    createdAt: obs.observedAt,
+  }));
 }

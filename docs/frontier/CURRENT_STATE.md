@@ -1,10 +1,10 @@
 # GSE Frontier Current State
 
 **Status:** ACTIVE
-**Last verified:** 2026-07-17 (this session, command evidence in DEC-001/DEC-004, extended through DEC-023)
+**Last verified:** 2026-07-17 (this session, command evidence in DEC-001/DEC-004, extended through DEC-024)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
-**Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE + §2 smoke CLOSED (DEC-014/023); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016); W005 Intelligence Watch v0 DONE (DEC-021). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Phase 3 (W005) DONE. Full-session audit pass DONE (DEC-022). W-WEATHER §2 smoke gate DONE (DEC-023). Master plan's explicitly-specified phases plus all named Phase-4 standing arcs with a concrete autonomous-safe scope are now complete; remaining work is Task #8/#13's larger, not-fully-scoped mandates and the not-pre-specified W006-W010 queue.
+**Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE + §2 smoke CLOSED (DEC-014/023); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016); W005 Intelligence Watch v0 DONE (DEC-021); W007 Branching Reality v0 DONE (DEC-024). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Phase 3 (W005) DONE. Full-session audit pass DONE (DEC-022). W-WEATHER §2 smoke gate DONE (DEC-023). W007 DONE (DEC-024) — SportsIR's 6th and final DECLARED primitive (Branch) is now ADAPTED, so ALL 12 SportsIR primitives have real evidence. W006 re-checked and confirmed still genuinely BLOCKED (GG-001/genesis-kernel hasn't landed). Remaining work: Task #8/#13's larger, not-fully-scoped mandates, and W008-W010 (all currently BLOCKED — W008 needs W006+W007, W009/W010 need dependencies not yet verified present).
 
 ## Verified facts
 
@@ -25,6 +25,7 @@
 - Phase 2.4 DONE (DEC-020): the GX-000 Codebase Twin's flagged source-rights-registry "duplicate" turned out to be a pure 18-line re-export shim with zero independent data — deleted, three consumers + the barrel re-pointed to the canonical `apps/web/lib/scraping/source-rights-registry.ts` (860 lines, untouched — zero-line diff). gse-red-team CONFIRMED clean on all 6 checks; minimum fix required: none. 125 tests green.
 - W005 DONE (DEC-021): `apps/web/lib/intelligence-watch` generalizes watchlist alerting beyond the existing pick-settlement-only doctrine — a per-watchlist-entry `IntelligenceWatchContract` compiled against a W002 `WorldDelta` + the existing Elite `canGetAlerts` entitlement into a surface/suppress decision. Named `IntelligenceWatchContract` (verified via `git show` against genesis-kernel's actual source that a same-named but unrelated `IntelligenceContract` type already exists there). Fully shadow (zero live callers, zero send path). gse-red-team flagged one REQUIRED-before-live-wiring precondition (a graded/settled guard `WorldDeltaEntry` doesn't carry yet) — confirmed not currently exploitable (no Worldline producer, no caller exist in production), documented in the workstream doc and directly in `evaluate.ts` so it can't be silently dropped later. 7 tests green.
 - Full-session audit pass DONE (DEC-022): independent gse-verifier re-ran every gate claimed green this session (236+ tests, all typechecks, all guardrails, genesis-kernel's + galaxy-proof-mcp-stdio's own suites) — all reconfirmed. Found and fixed two real gaps: `reality-receipt/card.ts` never surfaced the Phase 2.2 `slateInclusion` leg (display-only gap, data/gating already correct); `.gitignore` had CRLF line endings failing `git diff --check` (pure whitespace, predates this session, normalized to LF). Also independently verified Task #13's competitor-trademark rename was ALREADY complete (a prior session's commit `7fa7892d` on PR #121's branch) despite that PR's description still claiming it "pending" — corrected the PR description; no code change needed there.
+- W007 DONE (DEC-024): `WorldlineStore.detectConflicts()` — one new, purely additive method (zero change to existing resolution) surfacing genuine same-instant source disagreements the single-winner snapshot view silently flattens today. Adapts SportsIR's `Branch` primitive (the 6th and final DECLARED-only one from W004 — all 12 SportsIR primitives now have real evidence). Fully shadow, zero live callers. gse-red-team confirmed clean on 5/6 checks (algorithm correctness, no-lookahead parity, value-equality, adapter honesty, zero existing-code changes); the 6th (future-misuse risk) was closed independently — zero callers confirmed by grep, plus a self-identified REQUIRED-before-live-wiring finding (the adapter's `label` embeds raw source/value text — must clear `apps/web/lib/scraping/clearance-engine.ts` before any public wiring), documented in both the workstream doc and the code itself.
 
 ## Owner gates
 
@@ -33,10 +34,14 @@
 
 ## Next action
 
-The master plan's explicitly-specified phases (0, 1A, 1B, 2.1-2.4, 3) are all DONE. Remaining
-work is Phase 4 (standing longer arcs — Task #8 UX pass, Task #13 Fantasy Engine rename,
-W-WEATHER §2 strict previous-runs smoke gate) and the not-pre-specified frontier queue
-continuation (W006 Capability Foundry v0, deps: W000 + #124 disposition — the GX-000
-Codebase Twin has already classified #124 as STRANDED_BRANCH, so W006 is where its
-recovery actually happens; then W007-W010 in dependency order). Each gets its own frozen
-contract on arrival per this session's established discipline — do not pre-spec here.
+The master plan's explicitly-specified phases (0, 1A, 1B, 2.1-2.4, 3) are all DONE, as are
+all Phase-4 standing arcs with a concrete autonomous-safe scope (Task #13's rename verified
+already-complete; W-WEATHER §2 smoke gate closed) and W007. W006 remains correctly BLOCKED
+(re-checked 2026-07-17: GG-001/genesis-kernel genuinely has not landed — still only on
+unmerged draft PR #127). W008 (deps: W006-W007) stays blocked on W006. W009/W010's own
+listed dependencies ("historical harness," "telemetry baseline") have not yet been verified
+to exist in the repo — the next session should check for real evidence before freezing either
+contract, per this session's own "adapt only what is real" discipline, rather than assuming.
+Task #8 (Grandpa-simple + cinematic UX pass) and Task #13's full "10x transformation" mandate
+remain large, standing, not-fully-scoped arcs — no concrete autonomous-safe next slice was
+identified for either this pass.

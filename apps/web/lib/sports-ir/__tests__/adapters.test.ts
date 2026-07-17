@@ -16,6 +16,7 @@ import {
   pickDecisionToSportsIrClaim,
   realityReceiptToSportsIrProof,
   settlementToSportsIrOutcome,
+  worldConflictToSportsIrBranches,
   worldObservationToSportsIrObservation,
   worldSnapshotToSportsIrState,
 } from "../adapters";
@@ -319,5 +320,32 @@ describe("Proof (← RealityReceipt, W003)", () => {
       sha256,
     );
     expect(realityReceiptToSportsIrProof(receipt).verified).toBe(false);
+  });
+});
+
+// ── Branch ← real WorldlineStore.detectConflicts() output (W007) ─────────────
+
+describe("Branch (← WorldConflict, W007)", () => {
+  it("one Branch per tied candidate, id/label/createdAt traced back to the real observation", () => {
+    const store = new WorldlineStore();
+    store.ingest({ id: "team-report", entityId: "player-1", attribute: "injuryStatus", value: "questionable", occurredAt: "2026-07-14T10:00:00.000Z", observedAt: "2026-07-14T10:00:00.000Z", source: "team-injury-report" });
+    store.ingest({ id: "beat-writer", entityId: "player-1", attribute: "injuryStatus", value: "out", occurredAt: "2026-07-14T10:00:00.000Z", observedAt: "2026-07-14T10:00:00.000Z", source: "beat-writer" });
+    const [conflict] = store.detectConflicts({ validTime: "2026-07-14T23:00:00.000Z", knowledgeTime: "2026-07-14T23:00:00.000Z" });
+    expect(conflict).toBeDefined();
+
+    const branches = worldConflictToSportsIrBranches(conflict!);
+    expect(branches).toHaveLength(2);
+    expect(branches.map((b) => b.parentBranchId)).toEqual([null, null]);
+    expect(branches.map((b) => b.id).sort()).toEqual(["branch:beat-writer", "branch:team-report"]);
+    const teamBranch = branches.find((b) => b.id === "branch:team-report")!;
+    expect(teamBranch.label).toBe('player-1.injuryStatus = "questionable" (per team-injury-report)');
+    expect(teamBranch.createdAt).toBe("2026-07-14T10:00:00.000Z");
+  });
+
+  it("a resolved (single-winner) cell produces zero conflicts, so zero branches — never fabricates disagreement", () => {
+    const store = new WorldlineStore();
+    store.ingest({ id: "only-source", entityId: "player-2", attribute: "injuryStatus", value: "active", occurredAt: "2026-07-14T10:00:00.000Z", observedAt: "2026-07-14T10:00:00.000Z", source: "team-injury-report" });
+    const conflicts = store.detectConflicts({ validTime: "2026-07-14T23:00:00.000Z", knowledgeTime: "2026-07-14T23:00:00.000Z" });
+    expect(conflicts).toHaveLength(0);
   });
 });

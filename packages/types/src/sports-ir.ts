@@ -161,8 +161,8 @@ export interface SportsIrIntervention extends SportsIrClocks {
   readonly reasonCode: string;
 }
 
-// ── Branch — DECLARED (future adapter: W007 Branching Reality — an
-//    unresolved alternate world, not flattened into a single consensus) ──
+// ── Branch — ADAPTED (← Worldline WorldConflict, W007 — an unresolved
+//    alternate world, not flattened into a single consensus) ──
 
 export interface SportsIrBranch {
   readonly id: string;

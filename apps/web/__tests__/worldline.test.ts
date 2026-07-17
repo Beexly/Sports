@@ -170,6 +170,69 @@ describe("canonical digest (provable replays)", () => {
   });
 });
 
+describe("conflict detection (W007 Branching Reality — preserve, don't flatten)", () => {
+  it("a single-source cell reports zero conflicts", () => {
+    const s = new WorldlineStore();
+    s.ingest(obs({ id: "inj-1", entityId: "player-1", attribute: "injuryStatus", value: "questionable", source: "team-report" }));
+    expect(s.detectConflicts({ validTime: T(23), knowledgeTime: T(23) })).toEqual([]);
+  });
+
+  it("two sources disagreeing at the EXACT same instant is reported, with exactly the tied candidates", () => {
+    const s = new WorldlineStore();
+    // Unrelated clean cell — must not appear in the conflict report.
+    s.ingest(obs({ id: "clean", entityId: "game-1", attribute: "score", value: "7-0", occurredAt: T(13), observedAt: T(13) }));
+    s.ingest(obs({ id: "team-report", entityId: "player-1", attribute: "injuryStatus", value: "questionable", occurredAt: T(10), observedAt: T(10), source: "team-injury-report" }));
+    s.ingest(obs({ id: "beat-writer", entityId: "player-1", attribute: "injuryStatus", value: "out", occurredAt: T(10), observedAt: T(10), source: "beat-writer" }));
+    const conflicts = s.detectConflicts({ validTime: T(23), knowledgeTime: T(23) });
+    expect(conflicts).toHaveLength(1);
+    expect(conflicts[0]?.entityId).toBe("player-1");
+    expect(conflicts[0]?.attribute).toBe("injuryStatus");
+    expect(conflicts[0]?.candidates.map((c) => c.id).sort()).toEqual(["beat-writer", "team-report"]);
+    expect(conflicts[0]?.candidates.map((c) => c.value).sort()).toEqual(["out", "questionable"]);
+  });
+
+  it("two sources AGREEING at the same instant is corroboration, not a conflict", () => {
+    const s = new WorldlineStore();
+    s.ingest(obs({ id: "src-a", entityId: "player-1", attribute: "injuryStatus", value: "out", occurredAt: T(10), observedAt: T(10), source: "source-a" }));
+    s.ingest(obs({ id: "src-b", entityId: "player-1", attribute: "injuryStatus", value: "out", occurredAt: T(10), observedAt: T(10), source: "source-b" }));
+    expect(s.detectConflicts({ validTime: T(23), knowledgeTime: T(23) })).toEqual([]);
+  });
+
+  it("a later, non-tied observation supersedes an earlier tie — the stale tie must not leak into the result", () => {
+    const s = new WorldlineStore();
+    s.ingest(obs({ id: "early-a", entityId: "player-1", attribute: "injuryStatus", value: "questionable", occurredAt: T(8), observedAt: T(8), source: "source-a" }));
+    s.ingest(obs({ id: "early-b", entityId: "player-1", attribute: "injuryStatus", value: "out", occurredAt: T(8), observedAt: T(8), source: "source-b" }));
+    // A later, undisputed update resolves the disagreement.
+    s.ingest(obs({ id: "resolved", entityId: "player-1", attribute: "injuryStatus", value: "active", occurredAt: T(14), observedAt: T(14), source: "official-inactive-list" }));
+    expect(s.detectConflicts({ validTime: T(23), knowledgeTime: T(23) })).toEqual([]);
+    // And normal resolution correctly reports the later winner, exactly as before this workstream.
+    expect(s.resolve({ validTime: T(23), knowledgeTime: T(23) }).cells[0]?.value).toBe("active");
+  });
+
+  it("respects the same no-lookahead filter as normal resolution", () => {
+    const s = new WorldlineStore();
+    s.ingest(obs({ id: "src-a", entityId: "player-1", attribute: "injuryStatus", value: "questionable", occurredAt: T(10), observedAt: T(10), source: "source-a" }));
+    s.ingest(obs({ id: "src-b", entityId: "player-1", attribute: "injuryStatus", value: "out", occurredAt: T(10), observedAt: T(10), source: "source-b" }));
+    // Knowledge time before either observation was known: no conflict visible yet.
+    expect(s.detectConflicts({ validTime: T(23), knowledgeTime: T(9) })).toEqual([]);
+    // Once knowledge catches up, the conflict is visible.
+    expect(s.detectConflicts({ validTime: T(23), knowledgeTime: T(11) })).toHaveLength(1);
+  });
+
+  it("detectConflicts never changes resolve/snapshotAt's own single-winner behavior", () => {
+    const s = new WorldlineStore();
+    s.ingest(obs({ id: "src-a", entityId: "player-1", attribute: "injuryStatus", value: "questionable", occurredAt: T(10), observedAt: T(10), source: "source-a" }));
+    s.ingest(obs({ id: "src-b", entityId: "player-1", attribute: "injuryStatus", value: "out", occurredAt: T(10), observedAt: T(10), source: "source-b" }));
+    const at = { validTime: T(23), knowledgeTime: T(23) };
+    const beforeConflictCheck = s.resolve(at).digest;
+    s.detectConflicts(at);
+    expect(s.resolve(at).digest).toBe(beforeConflictCheck);
+    // The single-winner view still resolves to exactly one value (the existing
+    // id-tiebreak behavior, untouched) — conflict detection is a separate read.
+    expect(s.resolve(at).cells).toHaveLength(1);
+  });
+});
+
 describe("ingest validation + immutability", () => {
   it("rejects duplicate ids, missing source, and unparseable clocks", () => {
     const s = new WorldlineStore();

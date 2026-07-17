@@ -642,3 +642,68 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: scripts/weather-integration-smoke.mjs (new), package.json (1 script line).
 - Supersedes: none. Narrows DEC-014's "REMAINING GATE" note — the §2 smoke-test sub-item is
   now DONE; the feature-store integration sub-item DEC-014 implied is still open and unscoped.
+
+## DEC-024 — W007 Branching Reality v0: Worldline conflict detection + Branch adapted (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: W007 (frontier queue; contract `docs/frontier/WORKSTREAM_007_BRANCHING_REALITY_V0.md`).
+  Dependencies satisfied: W002 Worldline ✓, W004 SportsIR ✓. Not W006 (checked first — its own
+  dependency, "after GG-001 lands," is genuinely unmet: `packages/genesis-kernel`/GG-001 still
+  lives only on unmerged draft PR #127, not on this branch or main — forcing W006 now would
+  risk exactly the "uncontrolled multiplication of parallel systems" this session has guarded
+  against throughout; W006 correctly stays BLOCKED, unchanged from `WORKSTREAM_QUEUE.md`).
+- Decision: `WorldlineStore` (W002) always resolves each (entity, attribute) cell to exactly
+  ONE winning observation via a deterministic total order (`beats()`) whose final tiebreak
+  (`id`) exists only for replay determinism, not as an epistemic judgment — so when two
+  sources report DIFFERENT values at the identical `(occurredAt, observedAt)`, the single-
+  snapshot view silently discards one of them. Added ONE new, purely additive public method,
+  `WorldlineStore.detectConflicts(at): WorldConflict[]` (`apps/web/lib/worldline/store.ts`) —
+  `resolveOver`/`winnersOver`/`beats()`/`snapshotAt`/`resolve`/`auditReplayStability` are
+  UNCHANGED (confirmed: the diff to store.ts contains zero deleted/modified lines, only
+  additions). Reports a conflict only when tied-for-first candidates carry genuinely
+  different canonical values (`canonicalJson`-compared, the same W001 serializer
+  `snapshotDigest` already uses); agreement between sources is corroboration, never reported.
+  Adapted `SportsIrBranch` (W004's sixth and final DECLARED-only primitive — its own header
+  comment already named this exact workstream as its future adapter) via
+  `worldConflictToSportsIrBranches()` in `apps/web/lib/sports-ir/adapters.ts`: one Branch per
+  tied candidate, `id` traced to the real observation id, `parentBranchId: null` (v0 is a flat
+  sibling set, honestly not claiming a hierarchy), `label`/`createdAt` taken directly from the
+  source observation with zero inference.
+- gse-red-team pass (protected zone: model/public interpretation, per the workstream's own
+  queue row): CONFIRMED clean on 5 of 6 checks (algorithm correctness across adversarial
+  ingestion orderings including the empty/singleton-cell edge case; no-lookahead filter
+  byte-identical to `winnersOver`'s; `canonicalJson` value-equality has no false-conflict or
+  false-negative risk; the adapter fabricates nothing, and its `parentBranchId: null` gap is
+  disclosed in-comment rather than hidden; zero deleted/modified lines in the existing
+  resolution code). The 6th check (public-claims/future-misuse risk) was left incomplete by
+  the reviewing pass — closed independently in this same decision: confirmed via repo-wide
+  grep that `detectConflicts`/`worldConflictToSportsIrBranches` have ZERO callers outside
+  their own definitions/barrel exports/tests, and — going beyond what was asked — identified
+  and documented a REQUIRED-before-live-wiring precondition the review's own framing (mirroring
+  DEC-021's W005 finding) prompted: `worldConflictToSportsIrBranches`'s `label` field embeds
+  `obs.source`/`obs.value` VERBATIM, so any future public/live wiring MUST first pass through
+  `apps/web/lib/scraping/clearance-engine.ts` — a raw source name or licensed value could
+  otherwise leak without attribution/rights review. Documented both in the workstream doc and
+  directly as a doc-comment on `worldConflictToSportsIrBranches` itself, so it cannot be
+  silently dropped when this module gets its first real caller — the same "REQUIRED before any
+  live wiring" pattern this session established for W005.
+- Evidence: 44 tests green across the three re-run suites (worldline 19 [13 pre-existing +
+  6 new, all pre-existing assertions unchanged — independently confirmed by direct execution,
+  not inferred], sports-ir adapters 18 [16 pre-existing + 2 new], intelligence-watch 7
+  unaffected); `packages/types` 35 green (sports-ir 4 + entitlements 31, unaffected by the
+  DECLARED→ADAPTED comment-only change); `tsc --noEmit` clean; `eslint --max-warnings=0`
+  clean; `npm run guardrails` all green.
+- Alternatives rejected: modifying `winnersOver`/`beats()` to return the full tied set always
+  (would change `resolveOver`'s existing, tested, protected behavior — `WorldSnapshot` must
+  keep resolving to exactly one value per cell, since every W002/W003/W005 consumer already
+  depends on that single-value contract); nesting `SportsIrBranch.parentBranchId` now (no
+  policy exists yet for what "one branch refines another" means — inventing one would be
+  premature abstraction with no real usage to validate it against).
+- Reversibility: additive only — one new method + one new type on already-shipped W002/W004
+  modules, zero existing behavior changed.
+- Protected zones: model/public interpretation. gse-red-team pass completed pre-commit per
+  this session's established discipline for near-adjacent protected zones.
+- Files: apps/web/lib/worldline/{store.ts,types.ts}, apps/web/lib/sports-ir/{adapters.ts,index.ts},
+  apps/web/__tests__/worldline.test.ts, apps/web/lib/sports-ir/__tests__/adapters.test.ts,
+  packages/types/src/sports-ir.ts (comment only), docs/frontier/WORKSTREAM_007_BRANCHING_REALITY_V0.md (new).
+- Supersedes: none.
