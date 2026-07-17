@@ -19,6 +19,7 @@ const PRODUCT_LINKS = [
   { label: "Podcast", href: "/podcast" },
   { label: "The Studio", href: "/fantasy/studio" },
   { label: "The Academy", href: "/academy" },
+  { label: "Free Calculators", href: "/tools" },
 ] as const;
 
 const COMPANY_LINKS = [

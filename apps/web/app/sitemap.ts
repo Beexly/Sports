@@ -77,6 +77,11 @@ const ROUTES: ReadonlyArray<{
   { path: "/stats/ask", priority: 0.5, changeFrequency: "weekly" },
   { path: "/stats/proof", priority: 0.5, changeFrequency: "weekly" },
   { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/tools", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/tools/ev-calculator", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/tools/no-vig-calculator", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/tools/odds-converter", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/tools/parlay-calculator", priority: 0.6, changeFrequency: "monthly" },
 ];
 
 /** Load upcoming + recent games for preview page URLs (bounded, DB-safe). */
