@@ -11,7 +11,10 @@ import { WorldlineStore, type WorldObservation } from "@/lib/worldline";
 import { buildRoomEvidenceEnvelope, type RoomEvidenceRecord } from "@/lib/intelligence-playback";
 import { buildRealityReceipt } from "@/lib/reality-receipt";
 import type { ReceiptForVerification } from "@/lib/proof/receipt-proof";
+import { runBacktestHarness, type BacktestPickInput } from "@/lib/backtest/harness";
+import { buildModelBeatsClimatologyInstrument } from "@/lib/hypothesis-instrument";
 import {
+  hypothesisInstrumentToSportsIrClaim,
   makeSportsIrEntity,
   pickDecisionToSportsIrClaim,
   realityReceiptToSportsIrProof,
@@ -347,5 +350,67 @@ describe("Branch (← WorldConflict, W007)", () => {
     store.ingest({ id: "only-source", entityId: "player-2", attribute: "injuryStatus", value: "active", occurredAt: "2026-07-14T10:00:00.000Z", observedAt: "2026-07-14T10:00:00.000Z", source: "team-injury-report" });
     const conflicts = store.detectConflicts({ validTime: "2026-07-14T23:00:00.000Z", knowledgeTime: "2026-07-14T23:00:00.000Z" });
     expect(conflicts).toHaveLength(0);
+  });
+});
+
+// ── Claim, second source (← HypothesisInstrument, W009) ─────────────────────
+
+describe("Claim (← HypothesisInstrument, W009)", () => {
+  const sha = (payload: string) => createHash("sha256").update(payload).digest("hex");
+  const NOW = new Date("2026-07-17T12:00:00.000Z");
+
+  function pick(overrides: Partial<BacktestPickInput> & { id: string }): BacktestPickInput {
+    return { confidence: 65, result: "WIN", modelVersion: "v5.1.0", ...overrides };
+  }
+
+  it("confidence is always null and subjectEntityId passes through exactly, for every status branch", () => {
+    const untested = buildModelBeatsClimatologyInstrument(runBacktestHarness([], { now: NOW, minSampleSize: 5 }), sha);
+    const insufficient = buildModelBeatsClimatologyInstrument(
+      runBacktestHarness([pick({ id: "p1" })], { now: NOW, minSampleSize: 100 }),
+      sha,
+    );
+    const supported = buildModelBeatsClimatologyInstrument(
+      runBacktestHarness(
+        Array.from({ length: 20 }, (_, i) => pick({ id: `p${i}`, confidence: i % 2 === 0 ? 90 : 10, result: i % 2 === 0 ? "WIN" : "LOSS" })),
+        { now: NOW, minSampleSize: 5 },
+      ),
+      sha,
+    );
+
+    for (const instrument of [untested, insufficient, supported]) {
+      const claim = hypothesisInstrumentToSportsIrClaim(instrument, "model:v5.1.0");
+      expect(claim.confidence).toBeNull();
+      expect(claim.subjectEntityId).toBe("model:v5.1.0");
+      expect(claim.kind).toBe("MODEL_BEATS_CLIMATOLOGY");
+      expect(claim.id).toBe(instrument.instrumentId);
+      expect(claim.statement).not.toContain("null");
+    }
+  });
+
+  it("statement renders the real numbers for a SUPPORTED instrument", () => {
+    const report = runBacktestHarness(
+      Array.from({ length: 20 }, (_, i) => pick({ id: `p${i}`, confidence: i % 2 === 0 ? 90 : 10, result: i % 2 === 0 ? "WIN" : "LOSS" })),
+      { now: NOW, minSampleSize: 5 },
+    );
+    const instrument = buildModelBeatsClimatologyInstrument(report, sha);
+    expect(instrument.status).toBe("SUPPORTED");
+
+    const claim = hypothesisInstrumentToSportsIrClaim(instrument, "model:v5.1.0");
+    expect(claim.statement).toContain("Model beats climatology");
+    expect(claim.statement).toContain(String(instrument.modelBrierScore));
+    expect(claim.assertedBy).toBe(instrument.sourceHarnessVersion);
+    expect(claim.occurredAt).toBe(instrument.generatedAt);
+    expect(claim.observedAt).toBe(instrument.generatedAt);
+  });
+
+  it("statement honestly withholds numbers (no template-injected null) for UNTESTED/INSUFFICIENT_SAMPLE", () => {
+    const untested = buildModelBeatsClimatologyInstrument(runBacktestHarness([], { now: NOW, minSampleSize: 5 }), sha);
+    const insufficient = buildModelBeatsClimatologyInstrument(
+      runBacktestHarness([pick({ id: "p1" })], { now: NOW, minSampleSize: 100 }),
+      sha,
+    );
+
+    expect(hypothesisInstrumentToSportsIrClaim(untested, "model:v5.1.0").statement).toMatch(/has not been tested/);
+    expect(hypothesisInstrumentToSportsIrClaim(insufficient, "model:v5.1.0").statement).toMatch(/larger settled sample/);
   });
 });

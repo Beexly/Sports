@@ -707,3 +707,79 @@ stitching) — recorded here so no backtest can slip past it.
   apps/web/__tests__/worldline.test.ts, apps/web/lib/sports-ir/__tests__/adapters.test.ts,
   packages/types/src/sports-ir.ts (comment only), docs/frontier/WORKSTREAM_007_BRANCHING_REALITY_V0.md (new).
 - Supersedes: none.
+
+## DEC-025 — W009 Hypothesis-to-Instrument v0: HypothesisInstrument wrapping the backtest harness + second Claim adapter (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: W009 (frontier queue; contract
+  `docs/frontier/WORKSTREAM_009_HYPOTHESIS_TO_INSTRUMENT_V0.md`). Queue listed dependencies as
+  "W004, historical harness" — both verified real before starting: W004 SportsIR ✓ (DEC-016);
+  the "historical harness" is `apps/web/lib/backtest/harness.ts`'s `runBacktestHarness`, a pure,
+  deterministic, content-hash-provenanced calibration re-proof over settled picks, confirmed by
+  direct read of its full 332-line implementation (not assumed from the queue row's name alone).
+  Also checked `packages/prediction-engine/src/edge-lab/trials-registry.ts` (a real, existing,
+  hash-chained FDR-corrected feature/threshold/model ADMISSION system) before designing, to rule
+  out duplication: trials-registry decides what enters the live model during research; W009
+  packages a RESULT the harness already produced, post-hoc, over settled picks — a distinct,
+  later lifecycle stage, not a second admission system.
+- Decision: added `apps/web/lib/hypothesis-instrument/` — `types.ts` (`HypothesisKind`, a closed
+  union with exactly one v0 member, `MODEL_BEATS_CLIMATOLOGY`, the only comparison the harness
+  actually computes; a 4-state `HypothesisInstrumentStatus`:
+  `SUPPORTED`/`NOT_SUPPORTED`/`INSUFFICIENT_SAMPLE`/`UNTESTED` — deliberately NOT collapsing
+  "thin/empty sample" into "no", which would itself be a fabricated stat) and `build.ts`
+  (`buildModelBeatsClimatologyInstrument(report, hash)`, pure, zero I/O, zero new statistics —
+  every score field is copied straight off `BacktestHarnessReport.climatology`; `status` is
+  derived by reading `climatology.modelBeatsClimatology` directly rather than the harness's
+  coarser top-level `status` string, because the two can diverge: an all-PUSH eligible sample
+  clears the `settledSampleSize` floor [harness `status` reads `"ok"`] while `binarySampleSize`
+  is zero, so the harness itself withholds `climatology` — reading the field this instrument
+  actually depends on is what keeps that edge case honest). `instrumentId` is a STABLE key off
+  the hypothesis kind (a lookup identity), distinct from `digest` (this instrument's own content
+  hash) and `sourceReportHash` (the harness's own `provenance.outputHash`, cited not re-hashed).
+  Also added the concrete W004 integration: `hypothesisInstrumentToSportsIrClaim(instrument,
+  subjectEntityId)` in `apps/web/lib/sports-ir/adapters.ts` — a SECOND source for the existing
+  ADAPTED `SportsIrClaim` primitive (alongside `pickDecisionToSportsIrClaim`), not a new
+  primitive. `subjectEntityId` is caller-supplied (same discipline as `makeSportsIrEntity`) since
+  the instrument is an aggregate across the eligible sample, not scoped to one entity.
+  `confidence` is always `null` — SUPPORTED/NOT_SUPPORTED is a test result, not a calibrated
+  probability, and fabricating one would violate this repo's "no fabricated stats" rule. The
+  claim's `statement` renders real numbers when present and an honest withholding sentence
+  otherwise — verified by test to never interpolate a literal `null`.
+- Evidence: 10 new tests green (7 `hypothesis-instrument/__tests__/build.test.ts` — UNTESTED,
+  INSUFFICIENT_SAMPLE, the all-PUSH edge case specifically, SUPPORTED and NOT_SUPPORTED each
+  proven against a REAL `runBacktestHarness()` run with exact Brier numbers cross-checked
+  against `brierDecomposition()` called directly, `instrumentId` stability, `digest`
+  reproducibility/change-detection; 3 `sports-ir/__tests__/adapters.test.ts` — confidence always
+  null and id/subjectEntityId/kind pass-through across all four status branches, statement
+  renders real numbers when SUPPORTED, statement honestly withholds for UNTESTED/
+  INSUFFICIENT_SAMPLE). Full re-run: `backtest/harness.test.ts` 12 unaffected,
+  `sports-ir/__tests__/adapters.test.ts` 21 (18 pre-existing + 3 new, zero pre-existing
+  assertions changed), `backtest/artifact.test.ts` 3 unaffected — 43 total in the targeted
+  suites. `tsc --noEmit` clean. `eslint --max-warnings=0` clean on all touched files.
+  `npm run guardrails` all 17 gates green (including `no-unsupported-performance-claims` and
+  `commercial-copy-scan`, both relevant given the protected zone). Full `apps/web` suite
+  independently re-run once, whole: 630 files / 8,501 tests green, zero regressions.
+  `git diff --check` clean on all new/changed files.
+- Alternatives rejected: a freeform `hypothesis: string` field instead of a closed
+  `HypothesisKind` union (would let a future caller invent a comparison the harness never
+  actually computed — the entire risk this workstream's protected-zone note exists to close);
+  reusing `trials-registry.ts`'s hash-chain/FDR machinery directly (wrong lifecycle stage — that
+  system is about admitting research into the model, not packaging an already-published
+  post-hoc result); a new SportsIR primitive instead of a second Claim source (an instrument IS
+  structurally an assertion — reusing the existing ADAPTED `Claim` avoids the "uncontrolled
+  multiplication of parallel systems" this session has repeatedly guarded against).
+- Reversibility: purely additive — one new package-local module, zero existing files' logic
+  changed (`sports-ir/adapters.ts`/`index.ts` gained new exports only), zero new API routes,
+  zero new DB access, zero UI changes, zero live callers.
+- Protected zones: evaluation/claims (per the workstream's own queue row) — the closest any
+  workstream has come to public-performance-claims territory this session. Scope kept
+  deliberately conservative (wrap only, zero new statistics) rather than running a full
+  gse-red-team pass, since there is no public/live surface for that pass to review yet (zero
+  callers); a REQUIRED-before-any-live/public-wiring precondition is documented in both the
+  workstream doc and directly in `adapters.ts`'s doc comment, mirroring DEC-021/DEC-024's
+  pattern, so it cannot be silently dropped when this module gets its first real caller.
+- Files: apps/web/lib/hypothesis-instrument/{types.ts,build.ts,index.ts,__tests__/build.test.ts}
+  (new), apps/web/lib/sports-ir/{adapters.ts,index.ts} (additive exports only),
+  apps/web/lib/sports-ir/__tests__/adapters.test.ts (additive tests only),
+  docs/frontier/WORKSTREAM_009_HYPOTHESIS_TO_INSTRUMENT_V0.md (new).
+- Supersedes: none.

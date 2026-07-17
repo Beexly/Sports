@@ -12,7 +12,8 @@
  *                  no kind/label is ever guessed from an id)
  *   Observation <- Worldline WorldObservation (W002)
  *   State       <- Worldline WorldSnapshot (W002)
- *   Claim       <- PickEvidenceEnvelope.decision + .model (W001)
+ *   Claim       <- PickEvidenceEnvelope.decision + .model (W001), and
+ *                  a second Claim source: HypothesisInstrument (W009)
  *   Outcome     <- PickEvidenceEnvelope.settlement Capture (W001)
  *   Proof       <- RealityReceipt (W003)
  *   Branch      <- Worldline WorldConflict (W007) — an unresolved
@@ -37,6 +38,7 @@ import type {
 import type { WorldConflict, WorldObservation, WorldSnapshot } from "@/lib/worldline";
 import type { PickEvidenceEnvelope } from "@/lib/intelligence-playback";
 import type { RealityReceipt } from "@/lib/reality-receipt";
+import type { HypothesisInstrument } from "@/lib/hypothesis-instrument";
 
 /** Entity has no inherent id->kind/label mapping anywhere in the codebase
  *  today — the caller states both explicitly rather than SportsIR guessing. */
@@ -157,4 +159,47 @@ export function worldConflictToSportsIrBranches(conflict: WorldConflict): Sports
     label: `${conflict.entityId}.${conflict.attribute} = ${JSON.stringify(obs.value)} (per ${obs.source})`,
     createdAt: obs.observedAt,
   }));
+}
+
+/** Plain-language statement per instrument status. Never interpolates a
+ *  `null` score field into the text — the withheld branches say so honestly
+ *  instead. */
+function hypothesisStatement(instrument: HypothesisInstrument): string {
+  switch (instrument.status) {
+    case "UNTESTED":
+      return "Model-beats-climatology hypothesis has not been tested yet — no settled picks were available.";
+    case "INSUFFICIENT_SAMPLE":
+      return "Model-beats-climatology hypothesis is untested pending a larger settled sample — score withheld rather than published off a thin sample.";
+    case "SUPPORTED":
+      return `Model beats climatology over ${instrument.sampleSize} settled picks: model Brier ${instrument.modelBrierScore}, climatology Brier ${instrument.climatologyBrierScore}, edge ${instrument.edgeOverClimatology}.`;
+    case "NOT_SUPPORTED":
+      return `Model does not beat climatology over ${instrument.sampleSize} settled picks: model Brier ${instrument.modelBrierScore}, climatology Brier ${instrument.climatologyBrierScore}, edge ${instrument.edgeOverClimatology}.`;
+  }
+}
+
+/**
+ * A second Claim source (W009): a `HypothesisInstrument` is itself an
+ * assertion — "the model does/doesn't beat climatology" — so it projects
+ * into the SAME `SportsIrClaim` shape `pickDecisionToSportsIrClaim` already
+ * uses, rather than a new primitive. `subjectEntityId` is caller-supplied
+ * (never guessed — same discipline as `makeSportsIrEntity`): the instrument
+ * is an aggregate across the eligible sample, not scoped to one game/pick,
+ * so nothing here can honestly infer an entity id. `confidence` is always
+ * `null` — SUPPORTED/NOT_SUPPORTED is a test result, not a calibrated
+ * probability, and fabricating one would violate this repo's "no fabricated
+ * stats" rule. See the REQUIRED-before-public-wiring note in
+ * docs/frontier/WORKSTREAM_009_HYPOTHESIS_TO_INSTRUMENT_V0.md before any
+ * caller surfaces this on a public/product surface.
+ */
+export function hypothesisInstrumentToSportsIrClaim(instrument: HypothesisInstrument, subjectEntityId: string): SportsIrClaim {
+  return {
+    id: instrument.instrumentId,
+    subjectEntityId,
+    kind: instrument.hypothesis,
+    statement: hypothesisStatement(instrument),
+    confidence: null,
+    assertedBy: instrument.sourceHarnessVersion,
+    occurredAt: instrument.generatedAt,
+    observedAt: instrument.generatedAt,
+  };
 }

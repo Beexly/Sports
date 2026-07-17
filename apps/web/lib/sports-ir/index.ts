@@ -1,4 +1,5 @@
 export {
+  hypothesisInstrumentToSportsIrClaim,
   makeSportsIrEntity,
   pickDecisionToSportsIrClaim,
   realityReceiptToSportsIrProof,
