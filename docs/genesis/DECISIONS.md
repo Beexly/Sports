@@ -195,3 +195,102 @@ Research, discovery, benchmarking, plan generation, code generation and PR prepa
 ## D-020 — First implementation is shadow-only
 
 `GX-000` must not alter any production consumer. It emits plans and reports only. No model, source, agent or public route may branch on its recommendation.
+
+## D-021 — The complete canon is preserved once and loaded selectively
+
+`COMPLETE_CANON.md` is the archival completeness authority. `CANON_MANIFEST.json` is the machine-readable lookup layer. Coding agents do not reread the entire canon by default; they query the manifest and active contract.
+
+## D-022 — Assumptions are first-class objects
+
+Every material empirical, causal, measurement, operational, legal, economic, simulation and human-behavior assumption should be versioned and linked to its dependent evidence, models, instruments, plans, branches, interfaces and claims.
+
+Galaxy must be able to compute an assumption’s blast radius and identify shared premises across apparently independent capabilities.
+
+## D-023 — Instrument credibility precedes promotion
+
+Computability, predictive correlation and benchmark performance are insufficient to establish a scientific instrument.
+
+Promotion requires an Instrument Credibility Record covering construct or measurand, units, traceability, measurement procedure, calibration, reliability, validity, invariance, uncertainty, software implementation, supported regimes, V&V, UQ, expiry and recalibration.
+
+## D-024 — Context is compiled, versioned and budgeted
+
+Agent context must be generated from the active contract, Codebase Twin, Canon Manifest, decisions, protected zones, tests and semantic changes.
+
+Context packages carry provenance, semantic hashes, token budgets, expiry and invalidation triggers. Lossy prompt compression requires task-specific evaluation before admission.
+
+## D-025 — Equivalent plans are preserved before selection
+
+The destination Metacortex maintains multiple semantically equivalent candidate plans. Rewrite systems, constraint solving, Pareto analysis and optimization may improve selection, but every elimination and rewrite remains explainable in the Plan Receipt.
+
+Hard constraints are resolved before utility optimization.
+
+## D-026 — Execution placement is compiled, not hard-coded
+
+A valid logical plan may compile to server, SQL, incremental dataflow, CPU, GPU, TPU, NPU, browser, mobile, edge, federated or confidential execution.
+
+Conversion, quantization, sparsity, distillation, kernel or provider changes produce new capability revisions requiring equivalence, calibration, security, rights, performance and rollback evidence.
+
+## D-027 — Resilience is empirically tested
+
+Trustworthiness requires controlled evidence of behavior under source outages, schema drift, stale data, provider failure, queue faults, partial storage failure, policy denial, license revocation, corrupted artifacts, clock skew and observability loss.
+
+Galaxy must prefer honest degradation, abstention and recoverability over apparently continuous but fabricated service.
+
+## D-028 — Rights, artifacts and policies are living dependencies
+
+Licenses, terms, model cards, dataset cards, dependencies, vulnerabilities, standards, regulations, permissions and cloud services may change after admission.
+
+Detected drift must traverse provenance, identify affected capabilities and outputs, and trigger quarantine, restriction, re-evaluation, retraining, retraction, rollback or owner/legal review.
+
+## D-029 — Cloud and platform providers are execution profiles
+
+AWS, Google Cloud, Microsoft Azure, Hugging Face, local and future providers may supply capabilities, but they do not own Galaxy semantics, evidence, policy, assumptions, receipts, evaluation or workstream state.
+
+Provider choice follows contract eligibility, measured capability fit, resilience, cost, latency, energy, residency, portability and rollback.
+
+## D-030 — Cognitive observability is semantic and privacy-aware
+
+Galaxy traces the path from contract through plan, evidence, assumptions, capabilities, policy, output, interface, user decision, outcome and autopsy.
+
+Raw prompts, licensed data, personal data and sensitive evidence are minimized, redacted, hashed, aggregated, kept local or separated according to purpose.
+
+## D-031 — Diversity and stepping stones are preserved
+
+Model, agent, hypothesis, plan, interface and world selection must not collapse every population onto one average winner.
+
+Galaxy maintains quality-diversity archives across regimes, modalities, evidence states, cost, latency, privacy, human comprehension and failure independence.
+
+## D-032 — Capability recombination is systematic but not novelty-driven
+
+Galaxy may search combinations of existing capabilities using typed affordances, constraints, economics and unresolved gaps.
+
+A novel combination earns only a sandbox experiment. Promotion still requires rights, security, evaluation, scientific credibility, user value and operational evidence.
+
+## D-033 — Closed-loop planning is a research destination
+
+The Metacortex may evolve into a cybernetic controller that maintains beliefs, seeks information, acts, observes consequences and replans under partial observability.
+
+Active inference, POMDP, model-predictive and adaptive-control methods are candidates, not doctrine. They must outperform simpler planners under Galaxy-specific evaluation.
+
+## D-034 — Local consistency does not guarantee global truth
+
+Galaxy may research local-to-global consistency and obstruction methods for multimodal data, sources, policies, rosters, model outputs and world states.
+
+Advanced mathematical methods, including sheaf-inspired approaches, remain research-only until they beat simpler constraint, graph and probabilistic baselines on concrete Galaxy tasks.
+
+## D-035 — Institutional and economic systems are part of sports reality
+
+Galaxy may model league rules, roster markets, contracts, incentives, media, fan behavior, governance, regulation and organizational decisions when they materially affect sports understanding.
+
+These systems do not become pick factors merely because they can be represented.
+
+## D-036 — Package completeness is testable
+
+Every accepted system from the founding conversation must appear in at least one of:
+
+- `COMPLETE_CANON.md`;
+- `CANON_MANIFEST.json`;
+- `ORIGIN_SOURCE_MAP.md`;
+- the dependency-ordered work queue.
+
+A future package-completeness test should fail when a canonical manifest entry lacks documentation, a workstream, or an explicit research/owner-gate status.
