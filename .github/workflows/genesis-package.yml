@@ -1,0 +1,44 @@
+name: Galaxy Genesis Package
+
+on:
+  pull_request:
+    paths:
+      - "GENESIS_START_HERE.md"
+      - ".claude/commands/genesis-next.md"
+      - "docs/genesis/**"
+      - "scripts/genesis/**"
+      - ".github/workflows/genesis-package.yml"
+  push:
+    branches:
+      - "research/galaxy-genesis-*"
+    paths:
+      - "GENESIS_START_HERE.md"
+      - ".claude/commands/genesis-next.md"
+      - "docs/genesis/**"
+      - "scripts/genesis/**"
+      - ".github/workflows/genesis-package.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-package-${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  validate-package:
+    name: Validate complete canon and loading package
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate Galaxy Genesis package
+        run: node scripts/genesis/validate-package.mjs
