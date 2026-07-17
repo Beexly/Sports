@@ -80,11 +80,14 @@ screenshots/
 test-results/
 playwright-report/
 
-# Ignore local .claude config, but DO track shared project commands, skills, and agents.
+# Ignore local .claude config, but DO track shared project commands, skills,
+# agents, rules, and the shared settings.json (local runtime debris remains ignored).
 .claude/*
 !.claude/commands/
 !.claude/skills/
 !.claude/agents/
+!.claude/rules/
+!.claude/settings.json
 
 # Local session helper scripts — never commit
 *.bat

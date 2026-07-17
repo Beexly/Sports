@@ -1,34 +1,41 @@
 ---
 name: gse-run
-description: Galaxy Sports Edge execution conductor. Selects, contracts, implements, and verifies one workstream per invocation using the docs/frontier ledgers. Usage - /gse-run next | recover | <workstream-id> | verify
+description: Executes exactly one token-efficient Galaxy Sports Edge frontier workstream. Use when asked to continue, recover stranded work, implement the next frontier slice, or run `/gse-run next`.
+argument-hint: "[next|workstream-id]"
 ---
 
-# /gse-run — GSE execution conductor
+# Live state
 
-One invocation = one workstream, fully verified, then stop. Never ask the founder questions; resolve via code, tests, git history, PRs, and conservative reversible defaults. Record genuine founder-authority blocks as OWNER_GATE entries in `docs/frontier/DECISIONS.md` and keep working around them.
+- Branch: !`git branch --show-current 2>/dev/null || echo unknown`
+- Status: !`git status --short 2>/dev/null | head -40`
+- Recent commits: !`git log -5 --oneline --decorate 2>/dev/null`
+- Open PRs: !`gh pr list --state open --limit 20 --json number,title,headRefName,baseRefName,isDraft,mergeStateStatus,updatedAt --jq '.[] | "#\(.number) [\(.mergeStateStatus)] draft=\(.isDraft) \(.title) :: \(.headRefName) -> \(.baseRefName)"' 2>/dev/null || echo "gh unavailable"`
 
-## Modes
+# Mission
 
-- `/gse-run next` — select and execute the highest-leverage unblocked workstream.
-- `/gse-run recover` — execute the top item of `docs/frontier/RECOVERY_MATRIX.md`.
-- `/gse-run <workstream-id>` — execute that specific `Wxxx` from `docs/frontier/WORK_QUEUE.md`.
-- `/gse-run verify` — re-run the verification gates for the most recent workstream only.
+Argument: `$ARGUMENTS`
 
-## Procedure for `next`
+Read, in order:
+1. `docs/frontier/CURRENT_STATE.md`
+2. `docs/frontier/WORKSTREAM_QUEUE.md`
+3. `docs/frontier/RECOVERY_MATRIX.md`
+4. The one selected workstream file
+5. Supporting references below only when the selected workstream needs them
 
-1. Baseline: `git status --short && git branch --show-current && git log -5 --oneline`; list open PRs vs `origin/main`.
-2. Read ONLY `docs/frontier/CURRENT_STATE.md`, `WORK_QUEUE.md`, `RECOVERY_MATRIX.md`, `DECISIONS.md`. Do not reread the documentation tree.
-3. Select the highest-leverage unblocked workstream (dependency order in WORK_QUEUE.md wins over excitement).
-4. Freeze the contract (template in `docs/frontier/EXECUTION_PROTOCOL.md`) BEFORE editing.
-5. Map existing implementation with gse-scout (read-only, narrow). Recover before rewriting.
-6. Implement the smallest complete vertical slice (gse-builder discipline: one frozen contract, no scope expansion).
-7. Targeted tests during development; full gates once at completion (see EXECUTION_PROTOCOL.md).
-8. Independent verification (gse-verifier discipline: verify claims against the actual diff and command output).
-9. Protected zones (list in EXECUTION_PROTOCOL.md) additionally get a gse-red-team adversarial pass.
-10. Update CURRENT_STATE.md, WORK_QUEUE.md, DECISIONS.md; append to RECOVERY_MATRIX.md if classifications changed.
-11. Commit and push the working branch; prepare/update its PR if one exists.
-12. Emit the completion receipt (format in EXECUTION_PROTOCOL.md). Stop. Do not start another workstream.
+Supporting references:
+- Product kernel: [references/frontier-kernel.md](references/frontier-kernel.md)
+- Token protocol: [references/token-protocol.md](references/token-protocol.md)
+- Recovery priorities: [references/recovery-priorities.md](references/recovery-priorities.md)
 
-## Token discipline
+Execute one coherent workstream and stop.
 
-Search by symbol/route/schema, not by reading trees. Redirect large command output to the scratchpad and inspect failures only. At most one subagent at a time. Cheaper models for narrow discovery and routine verification; strongest reasoning for orchestration and protected-zone review.
+Mandatory behavior:
+- Never ask the user. Record genuine founder-only needs as `OWNER_GATE` and continue non-blocked work.
+- Never deploy, merge main, apply production migrations, mutate live services, change secrets, or activate gated capabilities.
+- Current code, tests, current main, and live PR state outrank stale handoffs.
+- Do not read the entire docs tree or duplicate an open-branch capability.
+- Freeze a short contract before editing: objective, invariant, base SHA, files, forbidden files, protected zones, acceptance, tests, rollback.
+- Use `gse-scout` once for bounded discovery, `gse-builder` for implementation, `gse-verifier` for independent verification, and `gse-red-team` only if protected zones changed. Never run more than one subagent at once.
+- Use targeted tests during edits and final gates once.
+- Update `CURRENT_STATE.md`, `DECISION_REGISTER.md`, `WORKSTREAM_QUEUE.md`, and `RECOVERY_MATRIX.md`.
+- Final receipt: baseline, change, protected-zone disposition, verification, GitHub, owner gates, one next workstream, token discipline. Maximum 900 words.

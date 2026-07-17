@@ -1,0 +1,77 @@
+# GSE Frontier Decision Register
+
+Append-only. Never rewrite prior entries; add a superseding decision when evidence changes.
+
+## Entry template
+
+### DEC-XXX — Title
+
+- Date:
+- Workstream:
+- Decision:
+- Evidence:
+- Alternatives rejected:
+- Reversibility:
+- Protected zones:
+- Files/PRs affected:
+- Supersedes:
+
+---
+
+### DEC-001 — W000 slice 1 = recover PR #119
+
+- Date: 2026-07-17
+- Workstream: W000
+- Decision: Recover PR #119 (settlement side-derivation fix + scanner/CI hardening) onto current main on `claude/galaxy-sports-edge-pdcswh`.
+- Evidence: Only open asset fixing an active money-truth defect on main; auto-merge onto c179a78 verified clean before selection; settlement correctness is upstream of calibration/CLV/proof.
+- Alternatives rejected: #123 (defense-in-depth, no live bug), #124/#112 (feature substrate, not correctness).
+- Reversibility: branch-only; founder merges.
+- Protected zones: settlement grading, CI/scanner.
+- Files/PRs affected: PR #119 content; 24 files.
+- Supersedes: —
+
+### DEC-002 — Cherry-pick, not merge-commit
+
+- Date: 2026-07-17
+- Workstream: W000
+- Decision: Linear cherry-pick of #119's commits; PR branch left untouched for founder comparison.
+- Evidence: Keeps working branch a clean superset of main with per-commit review.
+- Reversibility: full.
+- Supersedes: —
+
+### DEC-003 — Frontier asset classifications
+
+- Date: 2026-07-17
+- Workstream: W000
+- Decision: #101 SUPERSEDED by #122; #112 RECOVER_PARTIAL (spine extracted as W001, draft not merged wholesale); #52 deferred to Dynasty convergence; fixture-alignment branch ALREADY_ON_MAIN.
+- Evidence: RECOVERY_MATRIX.md rows; empty cherry-pick of 9b61a60 proved fixture parity.
+- Reversibility: classifications only.
+- Supersedes: —
+
+### DEC-004 — W000 red-team outcome
+
+- Date: 2026-07-17
+- Workstream: W000
+- Decision: APPROVE-WITH-NOTES accepted. Fixed in-slice: stale `headIsMerge` fail-closed comment. Deferred: (a) secret-scan staged mode silently skips unreadable/oversized index blobs (pre-existing); (b) new numeric performance-claims gate reuses broad line-wide `SAFE_CONTEXT` (incomplete net-new coverage); (c) per-sport catch in `settleSport` gives an impossible pickType a sport-wide blast radius (loud and safe).
+- Evidence: red-team report, session 2026-07-17; verification gates all exit 0.
+- Reversibility: full.
+- Protected zones: settlement, CI/scanner.
+- Supersedes: —
+
+### DEC-005 — OWNER_GATE OG-001: merges and migrations are founder-only
+
+- Date: 2026-07-17
+- Workstream: W000
+- Decision: OWNER_GATE. Merging PRs #119/#121/#122/#123/#124 into main and applying #122's two additive migrations to production require founder authority. Default non-destructive disposition: PRs remain open; #119's content additionally recovered and re-verified on `claude/galaxy-sports-edge-pdcswh` so the merge decision is de-risked. Work continued around the gate.
+- Reversibility: n/a (gate record).
+- Supersedes: —
+
+### DEC-006 — Adopt founder orchestrator overlay as canonical control layer
+
+- Date: 2026-07-17
+- Workstream: (control layer)
+- Decision: Install GSE_FRONTIER_ORCHESTRATOR_1.zip overlay (skill + references, agents with resource envelopes, path-scoped rules, shared settings.json); migrate the session-built ledgers' live state into the overlay's canonical names (CURRENT_STATE, WORKSTREAM_QUEUE, RECOVERY_MATRIX, DECISION_REGISTER, FRONTIER_KERNEL); delete divergent duplicates (PRODUCT_KERNEL.md, WORK_QUEUE.md, DECISIONS.md, EXECUTION_PROTOCOL.md).
+- Evidence: founder-shipped package; one canonical truth path doctrine.
+- Alternatives rejected: keeping two parallel ledger editions (duplicated-truth hazard).
+- Reversibility: full (git history preserves both editions).
+- Supersedes: FD-numbered entries in the deleted DECISIONS.md (migrated here as DEC-001..005).
