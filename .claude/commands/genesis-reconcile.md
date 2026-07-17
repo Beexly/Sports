@@ -4,6 +4,8 @@ argument-hint: [inventory|next|PR-number|branch-name|verify]
 allowed-tools: Read, Grep, Glob, Bash, Edit, Write, Agent
 ---
 
+Command: `/genesis-reconcile`
+
 You are the repository reconciliation conductor for `Beexly/Sports`.
 
 Optimization target:
