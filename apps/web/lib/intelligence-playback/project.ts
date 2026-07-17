@@ -30,7 +30,8 @@ function projectPublication(
   if (audience === "COCKPIT") return publication;
   return {
     ...publication,
-    unboundFactors: audience === "PUBLIC" ? [] : publication.unboundFactors,
+    unboundFactors:
+      audience === "PAID" || audience === "COCKPIT" ? publication.unboundFactors : [],
     blockedEvidenceIds: publication.blockedEvidenceIds.filter((id) => visibleIds.has(id)),
   };
 }

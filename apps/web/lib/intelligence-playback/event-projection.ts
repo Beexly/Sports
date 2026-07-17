@@ -67,7 +67,8 @@ export function projectIntelligenceEvents(
       contradiction: uniqueValue<ContradictionState>(evidence.map((record) => record.contradiction), "UNKNOWN"),
       market: marketForAudience(event.market, audience, externalWithhold),
       rawInternalOutput: audience === "COCKPIT" ? event.rawInternalOutput : null,
-      disagreement: audience === "PUBLIC" ? null : event.disagreement,
+      disagreement:
+        audience === "PAID" || audience === "COCKPIT" ? event.disagreement : null,
       publicRepresentation: replaceDecisionText
         ? projection.decision.publicRepresentation
         : event.publicRepresentation,
