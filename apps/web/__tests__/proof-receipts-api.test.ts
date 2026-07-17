@@ -116,6 +116,26 @@ describe("verifyReceiptIntegrity — tamper check (mirrors /api/verify)", () => 
   });
 });
 
+interface ReceiptsResponseRow {
+  pickId: string;
+  contentHash: string;
+  slateKey: string | null;
+  result: string;
+  frozenAt: string;
+  modelVersion: string;
+  verified: boolean;
+  game: { matchup: string; sport: string; commenceTime: string } | null;
+  committed: Record<string, number | null> | null;
+  payload: string;
+}
+interface ReceiptsResponse {
+  doctrine?: string;
+  count?: number;
+  nextCursor?: string | null;
+  receipts?: ReceiptsResponseRow[];
+  error?: string;
+}
+
 describe("GET /api/proof/receipts", () => {
   const mocks = vi.hoisted(() => ({ findMany: vi.fn() }));
   vi.mock("@sports/db", () => ({ db: { pickProofReceipt: { findMany: mocks.findMany } } }));
@@ -124,10 +144,10 @@ describe("GET /api/proof/receipts", () => {
     mocks.findMany.mockReset();
   });
 
-  async function call(query = ""): Promise<{ status: number; body: any }> {
+  async function call(query = ""): Promise<{ status: number; body: ReceiptsResponse }> {
     const { GET } = await import("@/app/api/proof/receipts/route");
     const res = await GET(new Request(`https://www.galaxysportsedge.com/api/proof/receipts${query}`));
-    return { status: res.status, body: await res.json() };
+    return { status: res.status, body: (await res.json()) as ReceiptsResponse };
   }
 
   it("LEAK GATE: queries only settled (result != PENDING) AND kicked-off (commenceTime <= now) receipts", async () => {
@@ -152,11 +172,11 @@ describe("GET /api/proof/receipts", () => {
     mocks.findMany.mockResolvedValue([makeReceipt()]);
     const { body } = await call();
     expect(body.count).toBe(1);
-    const row = body.receipts[0];
+    const row = body.receipts![0]!;
     expect(row.verified).toBe(true);
     expect(row.committed).not.toBeNull();
-    expect(row.game.matchup).toBe("Ravens @ Chiefs");
-    expect(row.game.sport).toBe("NFL");
+    expect(row.game!.matchup).toBe("Ravens @ Chiefs");
+    expect(row.game!.sport).toBe("NFL");
     expect(typeof row.payload).toBe("string"); // the leaf preimage, so an agent can recompute
     expect(row.contentHash).toMatch(/^[0-9a-f]{64}$/);
   });
@@ -166,11 +186,12 @@ describe("GET /api/proof/receipts", () => {
     bad.payload = `${bad.payload}&z=9`; // hash no longer matches
     mocks.findMany.mockResolvedValue([bad]);
     const { body } = await call();
-    expect(body.receipts[0].verified).toBe(false);
-    expect(body.receipts[0].committed).toBeNull();
+    const row = body.receipts![0]!;
+    expect(row.verified).toBe(false);
+    expect(row.committed).toBeNull();
     // raw payload + hash remain so a skeptic can recompute and see the mismatch
-    expect(body.receipts[0].payload).toContain("&z=9");
-    expect(body.receipts[0].contentHash).toMatch(/^[0-9a-f]{64}$/);
+    expect(row.payload).toContain("&z=9");
+    expect(row.contentHash).toMatch(/^[0-9a-f]{64}$/);
   });
 
   it("paginates: limit=2 over 3 rows → 2 returned + nextCursor = last returned id", async () => {
