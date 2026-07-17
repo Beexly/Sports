@@ -167,3 +167,18 @@ is hand-owned (initialize/initialized/ping/tools/list/tools/call) — no new
 dependency, fully auditable. llms.txt discovery rel "mcp" added. Deferred:
 vendoring the stdio packet (local installs) and registry listings (founder
 click). Read-only by construction; no tool makes a performance claim.
+
+## DEC-013 — W-OTS slice 3: upgrade poll, new-tests-first (2026-07-17)
+
+upgradeDetached lives in a NEW file (ots-upgrade.ts) so the verbatim packet
+port stays byte-untouched. Reference semantics: op-path commitment
+(sha256/append/prepend) → GET <calendar>/timestamp/<hex> → graft ONLY when the
+returned subtree carries a Bitcoin attestation; failures/still-pending keep
+the original marker byte-for-byte; input never mutated. 7 unit tests incl. a
+hand-computed commitment path and a python-reference parse of an UPGRADED
+proof. Nightly poll /api/cron/ots-upgrade: OTS_ANCHOR_ENABLED no-op default,
+Bearer CRON_SECRET, unmigrated → honest ran:false, bytes rewritten only on
+real progress, height only from an actual attestation (5 route tests).
+Documented-not-registered — the founder adds the scheduler entry with the
+flag flip. W-OTS is COMPLETE: primitive → storage → mint wire → public
+endpoint → autonomous upgrade.

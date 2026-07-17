@@ -28,4 +28,4 @@ export { bookLineDispersion } from "./book-dispersion.js";
 export type { DispersionPickType, BookOddsRow } from "./book-dispersion.js";
 export { freezeSlateCommitments, mintSlatePedersenAggregate } from "./freeze-slate-commitments.js";
 export type { SlateFreezeResult } from "./freeze-slate-commitments.js";
-export { anchorSlateCommitment, isOtsAnchorEnabled } from "./ots-anchor-slate.js";
+export { anchorSlateCommitment, isOtsAnchorEnabled, defaultCalendarTransport } from "./ots-anchor-slate.js";
