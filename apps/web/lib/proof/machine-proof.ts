@@ -113,6 +113,11 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
       url: `${base}/api/proof/ledger`,
       description: "This document as JSON — the machine-readable ledger snapshot and verification map.",
     },
+    {
+      rel: "openapi",
+      url: `${base}/api/proof/openapi.json`,
+      description: "OpenAPI 3.1 contract for the read-only Proof API — import it to call these endpoints from any OpenAPI-aware tooling.",
+    },
   ];
 
   const verifyMethod: readonly string[] = [
