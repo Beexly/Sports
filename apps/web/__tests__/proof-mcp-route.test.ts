@@ -82,6 +82,26 @@ describe("tools/list", () => {
     ]);
     for (const t of tools) expect(t.inputSchema).toBeDefined();
   });
+
+  it("is a superset of the local (stdio) galaxy-proof-mcp packet's 7-tool contract — the hosted and local installs stay in parity", async () => {
+    // Mirrors packages/galaxy-proof-mcp-stdio/smoke.mjs's own `expected` array
+    // (the founder's vendored packet, verified end to end by its own smoke
+    // test — see that package's README/smoke.mjs). Kept as a literal here
+    // rather than a cross-package import: the stdio packet is a standalone,
+    // independently-publishable npm package and must not depend on apps/web.
+    const STDIO_PACKET_TOOLS = [
+      "audit_record_trustlessly",
+      "get_openapi_contract",
+      "get_record_summary",
+      "get_verification_spec",
+      "list_settled_receipts",
+      "verify_receipt_local",
+      "verify_receipt_via_api",
+    ];
+    const body = await json(await rpc({ jsonrpc: "2.0", id: 4, method: "tools/list" }));
+    const hostedNames = (body["result"] as { tools: { name: string }[] }).tools.map((t) => t.name);
+    for (const name of STDIO_PACKET_TOOLS) expect(hostedNames).toContain(name);
+  });
 });
 
 describe("tools/call — trustless verification", () => {

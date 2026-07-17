@@ -345,3 +345,64 @@ stitching) — recorded here so no backtest can slip past it.
   apps/web/__tests__/proof-reality-route.test.ts, apps/web/lib/sports-ir/__tests__/adapters.test.ts,
   docs/frontier/WORKSTREAM_003_REALITY_RECEIPT_V0.md (scope note updated).
 - Supersedes: none.
+
+## DEC-019 — Phase 2.3: vendor the founder's stdio galaxy-proof-mcp packet unchanged (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: Phase 2 (post-GX-000/GG-001 master-plan follow-up).
+- Source: the founder's original `galaxy-proof-mcp` packet, located this session at
+  `/root/.claude/uploads/<session>/8b6e970f-galaxyproofmcp.zip` (an early-session upload
+  referenced only obliquely in `DECISION_REGISTER.md`'s "Packet intake accounting" and
+  `CURRENT_STATE.md`'s "Next action" note — the packet's actual file content had never
+  been located/vendored into the repo tree before this decision; only its DESIGN was
+  ported into the hosted `/api/mcp` as W-MCP slice 1, DEC-012). Located and extracted this
+  session before vendoring, per the repo's own "old docs are leads, not authority" doctrine
+  — the packet's real contents were verified in-tree, not assumed from prior doc mentions.
+- Decision: vendored as a new standalone npm workspace package,
+  `packages/galaxy-proof-mcp-stdio` (published name kept as the founder's own
+  `galaxy-proof-mcp`, unscoped — this package is meant to be independently
+  installable/publishable outside the monorepo, unlike the internal `@sports/*` packages).
+  `src/index.ts`, `README.md`, `smoke.mjs`, `tsconfig.json` are BYTE-IDENTICAL to the
+  founder's zip (confirmed via `diff`) — zero edits, matching this session's established
+  "vendor unchanged" doctrine (PR #125/#126 docs). `package.json` carries exactly ONE
+  addition beyond the founder's original: a `"test": "npm run build && node smoke.mjs"`
+  script, wiring the founder's OWN already-authored end-to-end smoke test (real stdio
+  JSON-RPC handshake against the built server, asserting the 7-tool list and both a
+  genuine and a tampered hash's `verify_receipt_local` verdict) into `npm test
+  --workspaces`, per CLAUDE.md's "Tests required" rule. No new test logic was authored —
+  the founder's own smoke.mjs is the test.
+- Deliberate architectural non-change: `verify_receipt_local`/`audit_record_trustlessly`
+  reimplement `leafHash`/`nodeHash`/`merkleRoot` LOCALLY rather than importing
+  `@sports/prediction-engine` — this is NOT a "one truth path" violation to fix. It is the
+  entire point of a trustless verifier: if the local check imported Galaxy's own hashing
+  library, a bug or backdoor there would silently propagate into the "independent" check,
+  defeating the packet's stated purpose ("Galaxy's server is trusted only to serve the
+  data — never for the verdict"). Left as designed.
+- Known, deliberately-uncorrected drift: the packet's own 7-tool contract now trails the
+  hosted `/api/mcp`'s 8-tool contract by one (`get_reality_receipt`, added Phase 2.1/DEC-017,
+  authored after this packet). Not added here — extending the vendored `src/index.ts` would
+  violate "vendor unchanged"; flagged as a future, easy follow-on. The README's "Status
+  note" section is also now stale (references the pre-#120 `claude/glass-ledger-edge-engine`
+  branch as the Proof surface's deploy target; the surface has since shipped to main) — left
+  untouched per the same doctrine, exactly as PR #125/#126's vendored docs' pre-existing
+  quirks were left untouched.
+- Parity test added (apps/web side, not inside the standalone package — it must not depend
+  on apps/web to stay independently publishable): `proof-mcp-route.test.ts` asserts the
+  hosted `/api/mcp`'s tool list is a superset of the stdio packet's 7 tool names (literal
+  array, mirroring `smoke.mjs`'s own `expected` constant).
+- Evidence: `npm run typecheck --workspace=packages/galaxy-proof-mcp-stdio` clean;
+  `npm test --workspace=packages/galaxy-proof-mcp-stdio` — real build + the founder's
+  smoke.mjs — PASSED end to end (7 tools listed, genuine hash `matches:true`, tampered
+  hash `matches:false`) against the LIVE production host (`GSE_PROOF_BASE_URL` defaults to
+  `https://www.galaxysportsedge.com`, which already serves the Proof surface post-#120);
+  apps/web parity test green (15/15 in proof-mcp-route.test.ts); root `npm run guardrails`
+  all green including `secret-scan --all` over the newly-tracked files.
+- Reversibility: additive-only new workspace member; root `package.json` untouched
+  (workspace glob `packages/*` already covers it); `package-lock.json` regenerated to
+  register `@modelcontextprotocol/sdk` (new) + `zod` (already present, deduped).
+- Protected zones: proof, public claims (read-only network calls to the public Proof API
+  only; no secrets, no write path, no entitlement surface touched).
+- Files: packages/galaxy-proof-mcp-stdio/{package.json,tsconfig.json,src/index.ts,
+  smoke.mjs,README.md} (new package), apps/web/__tests__/proof-mcp-route.test.ts (parity
+  test added), package-lock.json.
+- Supersedes: none.
