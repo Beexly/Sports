@@ -104,6 +104,11 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
       description: "Proof-of-record surface: the published, substantiated track record (or an honest empty state until one exists).",
     },
     {
+      rel: "receipts",
+      url: `${base}/api/proof/receipts`,
+      description: "Enumerable JSON list of every SETTLED pick receipt (paginated). Each row carries the leaf preimage so you can recompute its hash and verify it independently; pre-kickoff/unsettled receipts are never listed.",
+    },
+    {
       rel: "self",
       url: `${base}/api/proof/ledger`,
       description: "This document as JSON — the machine-readable ledger snapshot and verification map.",
