@@ -106,6 +106,35 @@ describe("evidence audit drawer — brand safety", () => {
     expect(src).toMatch(/AuditPayloadDetailed/);
   });
 
+  it("FREE branch nulls preMortem and fragility (they embed gated confidence + factor thresholds)", () => {
+    // Adversarial-review finding: header rule #3 claimed FREE must not surface
+    // confidence, but no test enforced it, and the FREE branch returned the
+    // live preMortem (whose summary reads "scored at N confidence…") and
+    // fragility (published-weights factor components). Pin the actual fix: the
+    // FREE branch must return them null, never the live objects.
+    const src = readFileSync(apiRoutePath, "utf8");
+    const freeStart = src.indexOf("if (!canSeeDetail)");
+    expect(freeStart).toBeGreaterThan(-1);
+    // The FREE branch ends at the PRO/ELITE section marker.
+    const freeEnd = src.indexOf("PRO / ELITE tier", freeStart);
+    const freeBranch = src.slice(freeStart, freeEnd > -1 ? freeEnd : undefined);
+    expect(freeBranch).toMatch(/preMortem:\s*null/);
+    expect(freeBranch).toMatch(/fragility:\s*null/);
+    // And must NOT hand back the live objects (the exact leak).
+    expect(freeBranch).not.toMatch(/audit:\s*payload,\s*preMortem,\s*fragility\s*\}/);
+  });
+
+  it("the confidence number is only ever emitted inside the paid detail path", () => {
+    // buildPickPremortemNote embeds pick.confidence in plaintext; its output
+    // must never reach the FREE branch. (Structural: the FREE return nulls it.)
+    const src = readFileSync(apiRoutePath, "utf8");
+    const freeBranch = src.slice(
+      src.indexOf("if (!canSeeDetail)"),
+      src.indexOf("PRO / ELITE tier"),
+    );
+    expect(freeBranch).not.toMatch(/\bpreMortem,\s*fragility\b/);
+  });
+
   it("API route includes the deterministic pre-mortem note", () => {
     const src = readFileSync(apiRoutePath, "utf8");
     expect(src).toMatch(/buildPickPremortemNote/);

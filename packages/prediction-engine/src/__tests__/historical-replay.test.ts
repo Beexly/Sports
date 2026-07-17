@@ -115,8 +115,8 @@ describe("no-lookahead: feature assembly excludes/refuses post-kickoff fields", 
     const factsHomeBlowout = extractSettlementFacts(baseRow({ homeScore: 40, awayScore: 0 }))!;
     const factsAwayBlowout = extractSettlementFacts(baseRow({ homeScore: 0, awayScore: 40 }))!;
     const spread = picksA.find((p) => p.pickType === "SPREAD")!;
-    const settledHome = settleHistoricalPick(spread, factsHomeBlowout, features.homeTeam);
-    const settledAway = settleHistoricalPick(spread, factsAwayBlowout, features.homeTeam);
+    const settledHome = settleHistoricalPick(spread, factsHomeBlowout, features.homeTeam, features.awayTeam);
+    const settledAway = settleHistoricalPick(spread, factsAwayBlowout, features.homeTeam, features.awayTeam);
     expect(settledHome.result).not.toBe(settledAway.result);
   });
 });
@@ -133,7 +133,7 @@ describe("settlement grading correctness", () => {
     const facts = extractSettlementFacts(baseRow())!; // KC 27, DET 20
 
     for (const pick of picks) {
-      const settled = settleHistoricalPick(pick, facts, features.homeTeam);
+      const settled = settleHistoricalPick(pick, facts, features.homeTeam, features.awayTeam);
       const expected = calculatePickResult(
         pick.pickType,
         pick.selection,
@@ -142,6 +142,7 @@ describe("settlement grading correctness", () => {
         facts.homeScore,
         facts.awayScore,
         "americanfootball_nfl",
+        features.awayTeam,
       );
       expect(settled.result).toBe(expected);
       expect(settled.homeScore).toBe(27);
@@ -153,20 +154,20 @@ describe("settlement grading correctness", () => {
     // Build a synthetic home-favored spread pick directly to assert the math.
     const pick = makeSpreadPick("KC -3.0", -3, "KC");
     const facts = extractSettlementFacts(baseRow({ homeScore: 27, awayScore: 20 }))!;
-    const settled = settleHistoricalPick(pick, facts, "KC");
+    const settled = settleHistoricalPick(pick, facts, "KC", "DET");
     expect(settled.result).toBe("WIN");
   });
 
   it("SPREAD: home -3 with home winning by exactly 3 → PUSH", () => {
     const pick = makeSpreadPick("KC -3.0", -3, "KC");
     const facts = extractSettlementFacts(baseRow({ homeScore: 23, awayScore: 20 }))!;
-    expect(settleHistoricalPick(pick, facts, "KC").result).toBe("PUSH");
+    expect(settleHistoricalPick(pick, facts, "KC", "DET").result).toBe("PUSH");
   });
 
   it("TOTAL: OVER 47 with combined 47 → PUSH; combined 48 → WIN", () => {
     const over = makeTotalPick("OVER 47.0", 47);
-    expect(settleHistoricalPick(over, extractSettlementFacts(baseRow({ homeScore: 27, awayScore: 20 }))!, "KC").result).toBe("PUSH");
-    expect(settleHistoricalPick(over, extractSettlementFacts(baseRow({ homeScore: 28, awayScore: 20 }))!, "KC").result).toBe("WIN");
+    expect(settleHistoricalPick(over, extractSettlementFacts(baseRow({ homeScore: 27, awayScore: 20 }))!, "KC", "DET").result).toBe("PUSH");
+    expect(settleHistoricalPick(over, extractSettlementFacts(baseRow({ homeScore: 28, awayScore: 20 }))!, "KC", "DET").result).toBe("WIN");
   });
 
   it("extractSettlementFacts returns null for an unplayed game (no settlement possible)", () => {

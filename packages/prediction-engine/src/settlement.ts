@@ -46,7 +46,38 @@ export type SettlementResult = "WIN" | "LOSS" | "PUSH";
  * @param homeScore  - Final home team score
  * @param awayScore  - Final away team score
  * @param sportKey   - Sport key (e.g. "soccer_usa_mls"). Soccer draws settle ML as LOSS.
+ * @param awayTeam   - The away team name. REQUIRED (Codex review, PR #83):
+ *                     when the away name begins with the home name plus a
+ *                     space (home "Jets", away "Jets Metro"), the
+ *                     boundary-aware home check alone false-positives and
+ *                     inverts WIN/LOSS (found by the property-stress fuzzer).
+ *                     An optional safety parameter is itself a fail-open —
+ *                     two production callers (free-settlement, historical
+ *                     replay) had the away name in hand and omitted it — so
+ *                     the compiler now enforces it. The MOST SPECIFIC match
+ *                     wins the side.
  */
+function selectionMatchesTeam(selection: string, team: string): boolean {
+  return selection === team || selection.startsWith(team + " ");
+}
+
+/**
+ * Derive whether a selection is the HOME side. Boundary-aware on both names;
+ * when both match (one identifier is a spaced prefix of the other), the
+ * longer — more specific — name wins.
+ */
+export function selectionIsHomeSide(
+  selection: string,
+  homeTeam: string,
+  awayTeam: string
+): boolean {
+  if (!selectionMatchesTeam(selection, homeTeam)) return false;
+  if (awayTeam.length > homeTeam.length && selectionMatchesTeam(selection, awayTeam)) {
+    return false;
+  }
+  return true;
+}
+
 export function calculatePickResult(
   pickType: PickType,
   selection: string,
@@ -54,11 +85,12 @@ export function calculatePickResult(
   homeTeam: string,
   homeScore: number,
   awayScore: number,
-  sportKey: string
+  sportKey: string,
+  awayTeam: string
 ): SettlementResult {
   if (pickType === "MONEYLINE") {
     const homeWon = homeScore > awayScore;
-    const pickedHome = selection === homeTeam || selection.startsWith(homeTeam + " ");
+    const pickedHome = selectionIsHomeSide(selection, homeTeam, awayTeam);
     // Soccer 3-way ML: a draw (tie) is a LOSS for home or away ML picks
     if (homeScore === awayScore) {
       return sportKey.includes("soccer") ? "LOSS" : "PUSH";
@@ -67,7 +99,7 @@ export function calculatePickResult(
   }
 
   if (pickType === "SPREAD") {
-    const pickedHome = selection === homeTeam || selection.startsWith(homeTeam + " ");
+    const pickedHome = selectionIsHomeSide(selection, homeTeam, awayTeam);
     const homeMargin = homeScore - awayScore;
     // homeCoverMargin > 0 means home team covered
     const homeCoverMargin = homeMargin + line;
@@ -83,7 +115,14 @@ export function calculatePickResult(
     return (isOver && total > line) || (!isOver && total < line) ? "WIN" : "LOSS";
   }
 
-  return "PUSH";
+  // Fail loud, never fail-open (adversarial-review finding): a fall-through
+  // PUSH silently manufactures a no-loss result for any pick type that ever
+  // reaches settlement unhandled — a result-truth corruption. PickType is a
+  // closed union, so this is unreachable today; if it becomes reachable, it
+  // must halt settlement of that pick, not fabricate a push.
+  throw new Error(
+    `calculatePickResult: unsupported pickType "${String(pickType)}" — refusing to fabricate a result`,
+  );
 }
 
 /**

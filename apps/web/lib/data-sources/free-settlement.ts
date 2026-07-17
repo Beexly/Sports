@@ -162,6 +162,7 @@ export function settlePendingPicks(picks: readonly PendingPick[], finals: readon
       oriented.homeScore,
       oriented.awayScore,
       pick.sportKey,
+      pick.awayTeam,
     );
     return {
       pickId: pick.pickId,
