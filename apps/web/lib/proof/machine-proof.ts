@@ -118,6 +118,11 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
       url: `${base}/api/proof/openapi.json`,
       description: "OpenAPI 3.1 contract for the read-only Proof API — import it to call these endpoints from any OpenAPI-aware tooling.",
     },
+    {
+      rel: "verification-spec",
+      url: `${base}/api/proof/verification-spec.json`,
+      description: "The trustless conformance spec: the exact hash-chain algorithm plus synthetic known-answer test vectors, so you can build your own verifier in any language and check us with zero trust in our code.",
+    },
   ];
 
   const verifyMethod: readonly string[] = [

@@ -32,6 +32,7 @@ describe("buildProofOpenApiSpec", () => {
     expect(Object.keys(spec.paths).sort()).toEqual([
       "/api/proof/ledger",
       "/api/proof/receipts",
+      "/api/proof/verification-spec.json",
       "/api/verify",
     ]);
   });

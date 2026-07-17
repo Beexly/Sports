@@ -99,6 +99,20 @@ export function buildProofOpenApiSpec(opts: BuildProofOpenApiOptions = {}) {
           },
         },
       },
+      "/api/proof/verification-spec.json": {
+        get: {
+          operationId: "getVerificationSpec",
+          summary: "Trustless conformance spec: the hash-chain algorithm + known-answer test vectors.",
+          description:
+            "The exact pick-commitment algorithm plus synthetic KAT vectors, so a third party can implement the verifier in any language and confirm it reproduces our hashes. No auth, always 200.",
+          responses: {
+            "200": {
+              description: "The verification specification and its test vectors.",
+              content: { "application/json": { schema: { type: "object" } } },
+            },
+          },
+        },
+      },
       "/api/verify": {
         get: {
           operationId: "verifyReceipt",
