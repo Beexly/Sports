@@ -17,6 +17,7 @@ import { SLEEPER_READONLY_NOTE, type League, type Team } from "@/lib/integration
 import type { StandingRow } from "@/lib/integrations/sleeper-sync";
 import { connectorsByStatus, type ConnectorStatus } from "@/lib/integrations/connectors";
 import { BRAND_COLORS } from "@/lib/brand";
+import { RosterAdvicePanel } from "./roster-advice-panel";
 
 const POS_HEX: Record<string, string> = { QB: "#00E5FF", RB: "#7B61FF", WR: "#FF38C7", TE: "#F5F7FF", DEF: "#9fb3c8", K: "#E0A800" };
 
@@ -175,6 +176,7 @@ export function SleeperConnect() {
               </div>
               <RosterGroup title="Starters" players={view.you.starters} avail={avail} />
               <RosterGroup title="Bench" players={view.you.bench} avail={avail} dim />
+              <RosterAdvicePanel you={view.you} />
             </>
           ) : (
             <p className="mt-4 text-sm text-ink-400">Standings imported. Enter the username that owns a team in this league to resolve your roster.</p>
@@ -183,9 +185,11 @@ export function SleeperConnect() {
           <div className="mt-4 rounded-lg border p-3" style={{ borderColor: `${BRAND_COLORS.softUltraviolet}44`, background: `${BRAND_COLORS.softUltraviolet}0a` }}>
             <p className="text-xs" style={{ color: BRAND_COLORS.softUltraviolet }}>League imported (read-only).</p>
             <p className="mt-1 text-[11px] leading-relaxed text-ink-400">
-              Live lineup, waiver, and trade recommendations on these real players activate when the licensed
-              projections source is wired behind the founder gate. The GM Autopilot then drives this roster:
-              still proposal-only, with every move explained, ledgered, and human-approved.
+              Real waiver signal (add/drop/roster reads) is live today for Pro and Elite on a resolved roster,
+              driven by the real process-grade model. Lineup optimization and trade recommendations on these real
+              players activate when the licensed projections source is wired behind the founder gate. The GM
+              Autopilot then drives this roster: still proposal-only, with every move explained, ledgered, and
+              human-approved.
             </p>
             <a href="/fantasy/autopilot" className="mt-2 inline-block text-sm font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>See how the Autopilot would drive it →</a>
           </div>

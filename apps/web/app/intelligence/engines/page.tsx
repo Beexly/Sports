@@ -46,6 +46,7 @@ const MORE_ENGINES: readonly MoreEngine[] = [
     summary: "Model → real add/drop/read decisions for a posted roster (composes with Sleeper sync).",
     api: "/api/intelligence/roster-advice",
     apiLabel: "API (POST)",
+    board: "/fantasy/connect",
   },
   {
     name: "Graded Pool",

@@ -17,7 +17,7 @@ export default function ConnectPage() {
       accent={BRAND_COLORS.orbitalCyan}
       title={<>Bring in your <span className="gse-editorial" style={{ fontSize: "1.08em" }}>real</span> roster.</>}
       intro="Sleeper first. Its API is public and read-only, so there's no login to hand over and nothing we can change in your league. Enter your username, pick a league, and your actual roster resolves right here. This is the first step from a demo to your team; ESPN and Yahoo (OAuth) follow behind the founder gate."
-      note="Read-only sync via Sleeper's public API. Live recommendations on real players require a licensed projections source (founder-gated). No writes, no posting, no autonomous account actions."
+      note="Read-only sync via Sleeper's public API. Real waiver add/drop/roster-read signal is live today for Pro/Elite; lineup and trade recommendations on real players require a licensed projections source (founder-gated). No writes, no posting, no autonomous account actions."
       wide
     >
       <SleeperConnect />

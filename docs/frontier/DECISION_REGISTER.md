@@ -841,3 +841,72 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: docs/frontier/WORKSTREAM_QUEUE.md (W010 row), docs/frontier/CURRENT_STATE.md (refresh).
   No product code touched.
 - Supersedes: none — the prior W010 BLOCKED label (unverified) is now BLOCKED (verified).
+
+## DEC-027 — Task #13 slice: Real Waiver Signal panel on the live Sleeper sync (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: Task #13 (Fantasy Engine 10x, owner mandate 2026-07-11) — first UI for the
+  already-built, already-tested `apps/web/lib/intelligence/roster-advice.ts` engine, which had
+  a bare PRO/ELITE-gated POST route and zero user surface. Scoped by a read-only scout that
+  verified the engine, its data path (`loadPlayerModel` → live nflverse, NOT behind the
+  founder-gated `PROJECTIONS_PROVIDER` illustrative pool), and the live read-only Sleeper
+  roster sync precedent (`sleeper-connect.tsx`'s availability-overlay useEffect pattern).
+- Decision: added `apps/web/components/fantasy/roster-advice-panel.tsx` — a client panel that
+  POSTs the synced roster's deduped player names to the EXISTING, UNMODIFIED
+  `/api/intelligence/roster-advice` route and renders adds/drops/reads with their real model
+  `reason` strings. Enforcement stays server-side only (`requirePremiumApi`); the panel holds
+  zero entitlement logic and only reacts to the HTTP response. Every state is distinct and
+  honest: loading (plain text, no motion), 401 unauthenticated (sign-in prompt), 403
+  insufficient_tier (upgrade prompt + /pricing), 429 (rate-limit message), source-error
+  (honest unavailable, never stale/fake data), generic error, ok (real data + honest
+  empty-section messages + season/throughWeek recency caption that omits null). Wired into
+  `sleeper-connect.tsx` after the Bench group. Honesty fixes to two stale founder-gate claims
+  (sleeper-connect paragraph + connect/page note): waiver add/drop/read signal is live today
+  for Pro/Elite on a resolved roster; lineup/trade remain founder-gated.
+  `engines/page.tsx`'s "Roster Advice" disclosure entry gained `board: "/fantasy/connect"`.
+  Out-of-scope and untouched (verified by git diff): `roster-advice.ts`, `player-model.ts`,
+  the API route, Stripe/pricing, `PROJECTIONS_PROVIDER`, all entitlement logic.
+- Independent review: gse-verifier CONFIRMED all 10 checks (including `view.you` referential
+  stability — the `[you]` effect cannot refire on unrelated re-renders and hammer the rate
+  limit). gse-red-team found 3 REAL findings, all reproduced directly then fixed: F1 the
+  route reports a live nflverse outage as HTTP 200 + `success:false` +
+  `data.status:"source-error"`, but the panel's generic `!json.success` check ran first,
+  making the dedicated source-error message dead code AND the test fixture had been bent to
+  the component (`success:true`, a payload the route never emits) — fixed by reordering the
+  checks (source-error before generic failure) and correcting the fixture to the route's real
+  contract; F2 anonymous viewers on this public page get 401 `authentication_required`
+  (verified in `api-entitlement.ts` evaluateGate) which fell into the transient-error
+  message — added a distinct unauthenticated state (sign-in + pricing links) + regression
+  test; F3 the reworded paragraph omitted the Pro/Elite qualifier and referenced "the model
+  below" in the standings-only case where no panel renders — reworded ("live today for Pro
+  and Elite on a resolved roster"). Red-team explicitly cleared: premium leak (none — client
+  renders nothing but honest states pre-response), second-gate anti-pattern (none), wrong
+  endpoint/data sinks (none), reason-text substance (process-language anchored to numeric
+  gaps, no outcome promises, all strings pre-existing at base SHA).
+- Evidence: targeted suite 5/5 (was 4, +1 401 regression test); full apps/web suite 631
+  files / 8,509 tests green (re-run AFTER the red-team fixes per the stale-green rule);
+  `tsc --noEmit` clean; `eslint --max-warnings=0` clean on all changed files;
+  `npm run guardrails` 17/17 green (commercial-copy + performance-claims both cover the new
+  copy); `npm run build` 214/214 pages; `git diff --check` clean.
+- Also closed here: the W009 independent re-verification's one open gap — repo-wide grep for
+  `buildModelBeatsClimatologyInstrument`/`hypothesisInstrumentToSportsIrClaim` callers outside
+  the module/adapter files returned zero, and no app route/worker imports `sports-ir` at all,
+  so DEC-025's "fully shadow, zero live callers" claim is now command-verified (the
+  re-verifier's hand-derivation had already confirmed the status-mapping/Brier/null-safety/
+  instrumentId logic with zero discrepancies). The founder's new
+  `.claude/skills/gse-autopilot/SKILL.md` (commit `c1cbda7d`, ff-merged cleanly with zero
+  disturbance to uncommitted work) was read in full and is semantically identical to the PR
+  #125 command doc already adopted — no behavioral delta to record beyond this note.
+- Alternatives rejected: a client-side tier pre-check to skip the doomed fetch for FREE
+  viewers (this repo treats even redundant client gates as drift-risk defects — the honest
+  locked/unauthenticated states ARE the UX); auto-retry on transient errors (would mask real
+  outages and burn the shared rate limit).
+- Reversibility: additive UI + copy + one catalog link; delete the panel file and revert the
+  two copy edits to roll back; zero data/schema/route changes.
+- Protected zones: entitlements + public claims — full verifier + red-team pass completed
+  pre-commit, all confirmed findings fixed and re-gated.
+- Files: apps/web/components/fantasy/roster-advice-panel.tsx (new),
+  apps/web/components/fantasy/sleeper-connect.tsx, apps/web/app/fantasy/connect/page.tsx,
+  apps/web/app/intelligence/engines/page.tsx,
+  apps/web/__tests__/roster-advice-panel.test.tsx (new).
+- Supersedes: none.
