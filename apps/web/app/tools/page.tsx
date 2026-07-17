@@ -14,10 +14,10 @@ import { BRAND_COLORS } from "@/lib/brand";
  *   - Every calculator is free, with no paywall, account, or email gate.
  *   - Every result renders its formula in plain math notation next to it —
  *     "the math you can read," made literal, not just a brand line.
- *   - Zero performance claims, zero banned vocabulary (guaranteed/lock/
- *     risk-free/etc — the trust-gate guardrail enforces this), zero
- *     affiliate links, and nothing implying our own picks' results. These
- *     are generic tools any bettor could reproduce with a calculator.
+ *   - Zero performance claims, zero certainty-implying vocabulary (the
+ *     trust-gate guardrail enforces this), zero affiliate links, and
+ *     nothing implying our own picks' results. These are generic tools
+ *     any bettor could reproduce with a calculator.
  */
 
 export const metadata: Metadata = {
