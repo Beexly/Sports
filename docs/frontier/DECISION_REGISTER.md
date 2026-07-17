@@ -75,3 +75,25 @@ Append-only. Never rewrite prior entries; add a superseding decision when eviden
 - Alternatives rejected: keeping two parallel ledger editions (duplicated-truth hazard).
 - Reversibility: full (git history preserves both editions).
 - Supersedes: FD-numbered entries in the deleted DECISIONS.md (migrated here as DEC-001..005).
+
+### DEC-007 — W001 port scope and grafts
+
+- Date: 2026-07-17
+- Workstream: W001
+- Decision: Port the intelligence-playback spine (12 lib files), game-room helpers (types/evidence-record/presenters), room primitives + IntelligencePlayback component, and 5 playback tests verbatim from PR #112's branch; graft `load.ts` (codex structure + HEAD's `.catch(() => null)` hardening), room `page.tsx`, and the additive fail-closed access param on `projectForLens`; pass full entitlements in the model-court route. EXCLUDED from slice: `packages/types/market-values.ts` and all `lib/market/*` codex files (separate workstream) — `formatNullable` keeps HEAD's exact semantics instead.
+- Evidence: scout closure map; 50-test targeted cluster green; full web 8,323 green; tsc/lint/guardrails/build green.
+- Alternatives rejected: merging draft #112 wholesale (283 files, stale base, mega-PR anti-pattern).
+- Reversibility: revert commits; no schema, no data.
+- Protected zones: entitlements (narrowing only), proof semantics (new envelope digest).
+- Files/PRs affected: 29 files + 3 hardening files; PR #112 remains open as source-of-record.
+- Supersedes: —
+
+### DEC-008 — W001 red-team outcome and entitlement-policy declaration
+
+- Date: 2026-07-17
+- Workstream: W001
+- Decision: gse-red-team APPROVE-WITH-NOTES accepted. Applied in-slice: allowlist-form audience gates in projections (runtime-invalid audience degrades to PUBLIC shape); `canonicalJson` rejects class instances (Date can no longer flatten to `{}` in the digest domain). Declared policy narrowings (from #112's adjudicated rulings, matching the CLAUDE.md tier table): `projectForLens` defaults fail-closed; room loader filters premium picks and nulls confidence for un-entitled viewers; loss-autopsy text public only when PUBLISHED+isPublic. OWNER NOTE (not a gate): settled PUBLIC playback events expose per-pick CLV capture — consistent with the public /proof board today; if per-pick CLV should ever be Elite-only, gate playback and /proof together in one pass.
+- Evidence: red-team report 2026-07-17; post-fix suites green.
+- Reversibility: full.
+- Protected zones: entitlements, proof semantics.
+- Supersedes: —

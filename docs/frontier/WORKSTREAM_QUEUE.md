@@ -3,8 +3,8 @@
 | ID | Status | Workstream | Dependency | Primary leverage | Protected zones |
 |---|---|---|---|---|---|
 | W000 | DONE (slice 1) / REPEATABLE | Recover Existing Assets | none | Prevent duplicate code; restore stranded correctness and frontier substrate | varies by selected PR |
-| W001 | ACTIVE | Governed Playback Canonicalization | W000 ✓; PR #112 disposition | One evidence envelope/event/delta/playback spine | settlement, proof, entitlements |
-| W002 | BLOCKED | Worldline v0 | W001 | Bitemporal as-of replay and no-lookahead world diffs | data, proof |
+| W001 | DONE (2026-07-17) | Governed Playback Canonicalization | W000 ✓; PR #112 disposition | One evidence envelope/event/delta/playback spine | settlement, proof, entitlements |
+| W002 | READY | Worldline v0 | W001 ✓ | Bitemporal as-of replay and no-lookahead world diffs | data, proof |
 | W003 | BLOCKED | Reality Receipt v0 | W002 | Reproducible visual/decision object | proof, public claims |
 | W004 | BLOCKED | SportsIR v0 | W002-W003 | Shared minimal intermediate representation | schema/contracts |
 | W005 | BLOCKED | Intelligence Contract v0 | W002, existing watchlist | Persistent user-maintained intelligence | entitlements, notifications |
