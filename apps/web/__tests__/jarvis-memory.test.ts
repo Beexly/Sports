@@ -424,20 +424,38 @@ describe("buildLiveMemoryStatus (async, mocked DB)", () => {
    * Honesty regression pin (2026-07-17): buildLiveMemoryStatus() used to
    * report `wired: true` / "store healthy" whenever its COUNT queries
    * resolved without throwing — but @sports/db's stub client (active
-   * whenever DATABASE_URL is unset/sentinel, which is the case in this test
-   * environment) resolves every count() to 0 without touching a real
-   * database. That silently overstated activation in the default/no-DB
-   * environment. buildLiveMemoryStatus() now checks isStubMode() first and
-   * short-circuits to the not-wired posture, so this test environment must
-   * deterministically report not-wired — no more "either way" ambiguity.
+   * whenever DATABASE_URL is unset/sentinel) resolves every count() to 0
+   * without touching a real database. That silently overstated activation in
+   * the default/no-DB environment. buildLiveMemoryStatus() now checks
+   * isStubMode() first and short-circuits to the not-wired posture.
+   *
+   * We force isStubMode() → true here rather than assuming the ambient
+   * environment is stub: local test runs leave DATABASE_URL unset (stub), but
+   * CI's "Test, type-check, lint, Prisma" job runs the suite against a real
+   * Postgres (db:push), so isStubMode() is false there and the un-forced call
+   * would take the wired branch. Forcing stub mode exercises the exact
+   * short-circuit this pin protects, deterministically in both environments.
    */
-  it("under the stub db (this test environment) reports the honest not-wired posture, never a fake 'wired: true'", async () => {
-    const result = await buildLiveMemoryStatus();
-    expect(result.wired).toBe(false);
-    expect(result.store).toBe("Not Connected");
-    expect(result.truth).toMatch(/no persistent memory/i);
-    expect(result.candidatesAwaitingApproval).toBeNull();
-    expect(result.healthScore).toBeNull();
+  it("under the stub db reports the honest not-wired posture, never a fake 'wired: true'", async () => {
+    vi.resetModules();
+    vi.doMock("@sports/db", async () => {
+      const actual = await vi.importActual<typeof import("@sports/db")>("@sports/db");
+      return { ...actual, isStubMode: () => true };
+    });
+    try {
+      const { buildLiveMemoryStatus: buildUnderStub } = await import(
+        "@/lib/jarvis/intelligence-state"
+      );
+      const result = await buildUnderStub();
+      expect(result.wired).toBe(false);
+      expect(result.store).toBe("Not Connected");
+      expect(result.truth).toMatch(/no persistent memory/i);
+      expect(result.candidatesAwaitingApproval).toBeNull();
+      expect(result.healthScore).toBeNull();
+    } finally {
+      vi.doUnmock("@sports/db");
+      vi.resetModules();
+    }
   });
 });
 
