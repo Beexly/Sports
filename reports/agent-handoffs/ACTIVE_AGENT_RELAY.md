@@ -186,3 +186,42 @@ flips without a founder setting it; every surface has an honest OFF state.
    seam in apps/web/lib/watchlist/alert-dispatch.ts, THEN set
    WATCHLIST_ALERTS_ENABLED=true. Inert until both are done; Elite-only + graded-
    only enforced regardless of the flag.
+
+## Machine-auditable Proof surface — NEW (2026-07-17, PR #120, CI green)
+
+The Glass Ledger thesis made programmatically checkable — first-of-its-kind for
+a picks platform. Discovery chain: `/llms.txt` (llmstxt.org agent manifest) →
+`/api/proof/ledger` (JSON summary) → `/api/proof/receipts` (every SETTLED pick,
+individually verifiable). All three render from ONE builder
+(apps/web/lib/proof/machine-proof.ts) that reuses loadLedgerView() — the single
+PUBLISH_LEDGER gate — so honesty is inherited, not restated: unpublished + honest
+today, and no unsubstantiated number can leak (only display-guard-cleared metrics
+exist in the view). Receipts endpoint is leak-safe by query construction (settled
+AND kicked-off = strict subset of /api/verify's "open"; a per-row live tamper
+check withholds committed fields on any hash mismatch while still listing the row
+so the mismatch is publicly checkable). 24 tests + live-server probe of /llms.txt
+and /api/proof/ledger (200, honest OFF). No new flag — inherits PUBLISH_LEDGER.
+
+## COMPLETE OPEN-PR ACCOUNTING (2026-07-17 — all founder-gated; merge=deploy)
+
+Merge order recommendation unchanged: **#119 FIRST** (fixes live money-truth
+grading), then #120, then #121/#122/#123/#124 in any order (trivial shared-file
+overlaps resolve whichever lands first).
+
+| PR | Branch | What | State |
+|---|---|---|---|
+| #119 | salvage-settlement-guardrails | settlement mis-grade fix + CI/scanner hardening | READY — merge first |
+| #120 | glass-ledger-edge-engine | core build + watchlist + Jarvis + Sealed + backtest + machine-proof | **CI GREEN**, active |
+| #121 | fantasy-engine-foundation-rebased | Fantasy Engine floor (coinage rename landed) | READY |
+| #122 | clv-decomposition-reland-rebased | CLV decomposition re-land (migration-safety proven live) | READY |
+| #123 | cockpit-page-auth-rebased | 32-page ADMIN checks + scan | READY |
+| #124 | frontier-superset-rebased | tasks #15-19 (shadow-only) | READY |
+| #112 | codex/gse-frontier-recovery | governed intelligence playback | DRAFT (codex) |
+| #101 | clv-decomposition-reland | older CLV re-land | **SUPERSEDED by #122** — close it |
+| #52 | gracious-albattani (Galaxy Dynasty) | world-graph play layer | DORMANT (Jun 20) — founder call |
+
+Everything else across the 180 origin branches is merged hotfix history or the
+rebased heads above; no unlanded value is stranded outside these PRs. Worktrees
+under .claude/worktrees are agent scratch (the watchlist one already ported +
+landed). Tasks #8 (grandpa-simple UX) and #13 (Fantasy Engine 10x) remain the
+only genuinely-open standing workstreams.
