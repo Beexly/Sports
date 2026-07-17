@@ -274,3 +274,10 @@ modeling+attribution). 8 tests, tsc green. Admittable via the §5 trials registr
 bolted onto live scoring. Remaining data step (founder/loader): as-of historical
 forecasts per past game (NWS archive or self-hosted/licensed Open-Meteo) to run the
 admission backtest — same loader-gating every edge-lab feature has.
+
+SECOND no-key feature: BODY-CLOCK/circadian (features/nfl-body-clock.ts) — Pacific-team-
+at-early-Eastern-kickoff displacement (home/away shift, diff, away_early_west flag) from
+kickoff time + a static team→zone table (public facts). Leak-free by nature (schedule
+known months ahead; observedAt=decisionAt); unknown abbreviations skipped, never guessed.
+9 tests, tsc green. Runs on existing GameRow data — backtestable through the trials
+registry TODAY, no loader needed.
