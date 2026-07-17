@@ -1,6 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { shouldBuild, resolveTrunks, isMergeCommit } from "./vercel-skip-build.mjs";
+import {
+  shouldBuild,
+  resolveTrunks,
+  isMergeCommit,
+  resolveDiffBases,
+  changedFilesFromGit,
+  headIsMerge,
+} from "./vercel-skip-build.mjs";
 
 test("builds on a trunk branch regardless of changed files", () => {
   assert.equal(shouldBuild({ branch: "main", changedFiles: ["README.md"] }), true);
@@ -40,4 +47,55 @@ test("skips docs-only / unrelated changes on a non-trunk branch", () => {
 
 test("custom trunk list is honored", () => {
   assert.equal(shouldBuild({ branch: "release", changedFiles: ["docs/a.md"], trunkBranches: ["release"] }), true);
+});
+
+test("deployment scripts and the skip gate itself force a build", () => {
+  assert.equal(
+    shouldBuild({
+      branch: "feature/x",
+      changedFiles: ["scripts/deploy/migrate-if-configured.mjs"],
+    }),
+    true,
+  );
+  assert.equal(
+    shouldBuild({
+      branch: "feature/x",
+      changedFiles: ["scripts/vercel-skip-build.mjs"],
+    }),
+    true,
+  );
+  // Unrelated operator scripts stay skip-eligible (no over-widening).
+  assert.equal(
+    shouldBuild({
+      branch: "feature/x",
+      changedFiles: ["scripts/morning-setup.mjs"],
+    }),
+    false,
+  );
+});
+
+test("the last successful deployment SHA is the preferred multi-commit diff base", () => {
+  const sha = "a".repeat(40);
+  assert.deepEqual(resolveDiffBases({ VERCEL_GIT_PREVIOUS_SHA: sha }), [sha]);
+  assert.deepEqual(resolveDiffBases({ VERCEL_GIT_PREVIOUS_SHA: "not-a-sha" }), []);
+  assert.deepEqual(resolveDiffBases({}), ["HEAD^"]);
+});
+
+test("an unavailable supplied deployment SHA fails closed instead of diffing only HEAD^", () => {
+  const calls = [];
+  const sha = "b".repeat(40);
+  const runner = (_command, args) => {
+    calls.push(args);
+    return { status: 128, stdout: "" };
+  };
+  assert.equal(
+    changedFilesFromGit({ VERCEL_GIT_PREVIOUS_SHA: sha }, runner),
+    null,
+  );
+  assert.deepEqual(calls, [["diff", "--name-only", sha, "HEAD"]]);
+});
+
+test("merge detection failure forces a build", () => {
+  const runner = () => ({ status: 128, stdout: "" });
+  assert.equal(headIsMerge(runner), true);
 });
