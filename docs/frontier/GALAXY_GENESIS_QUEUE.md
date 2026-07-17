@@ -2,6 +2,13 @@
 
 Status: implementation queue. Each workstream must produce one verified vertical slice and stop.
 
+## Verified status (2026-07-17, GG-000)
+
+- **GG-000 — DONE.** Deliverable: `docs/frontier/GENESIS_CONVERGENCE_MAP.md` (evidence-backed system→symbol table, duplicate/conflict map, recover-reuse-supersede decisions, dependency graph, OWNER_GATE records).
+- **GG-001 — UNBLOCKED (next).** Convergence ruling (map §5): GG-001 ≡ PR #125's GX-000 build contract (`docs/genesis/FIRST_BUILD_CONTRACT.md`) — ONE implementation in `packages/genesis-kernel` satisfies both queues; design already founder-approved and validation-hardened (2026-07-17 master plan). Do not spec a second genome.
+- **GG-002/003/004/005 — blocked on GG-001** (see map §6 for the existing substrate each extends). **GG-007** additionally ← Worldline (done, stranded on `claude/galaxy-sports-edge-pdcswh`); **GG-008** EXTENDS the shipped `apps/web/lib/reality-receipt` + OTS anchoring — not a rebuild.
+- SportsIR primitives (canon §SportsIR) are already TYPED verbatim at `packages/types/src/sports-ir.ts` (same branch) with 6 real-object adapters — the canon's vocabulary has a live implementation seed.
+
 ## Selection law
 
 Choose the highest-leverage unblocked workstream by:
