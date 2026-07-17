@@ -10,6 +10,13 @@ Every addition must satisfy three tests:
 
 The atlas is modular so coding and research agents load only the region needed for the active workstream.
 
+## Completeness authorities
+
+- [`COMPLETE_CANON.md`](COMPLETE_CANON.md) preserves every accepted system from the 2026-07-17 R&D.
+- [`CANON_MANIFEST.json`](CANON_MANIFEST.json) is the machine-readable lookup layer.
+- [`ORIGIN_SOURCE_MAP.md`](ORIGIN_SOURCE_MAP.md) maps every founding repository, platform and ecosystem into Galaxy.
+- [`WORK_QUEUE.md`](WORK_QUEUE.md) remains the execution authority.
+
 ## Atlas modules
 
 1. [`atlas/01-intelligence-and-science.md`](atlas/01-intelligence-and-science.md)  
@@ -23,6 +30,12 @@ The atlas is modular so coding and research agents load only the region needed f
 
 4. [`atlas/04-evolution-verification-and-human-ai.md`](atlas/04-evolution-verification-and-human-ai.md)  
    Pareto/sequential decisions, strategic interaction, open-ended curricula, counterexample-guided instruments, runtime constitutional monitoring, revocation/unlearning, contamination resistance, capability security and human-AI complementarity.
+
+5. [`atlas/05-metrology-context-execution-and-resilience.md`](atlas/05-metrology-context-execution-and-resilience.md)  
+   Assumption Graph, Galaxy Metrology Institute, Context Compiler, Plan Superoptimizer, Hardware-Aware Execution Compiler, Resilience Twin, Rights Drift Reflex, Cognitive Observability, Cybernetic Governor, Coherence Governor, Capability Recombinator and Global Consistency Lab.
+
+6. [`atlas/06-cloud-supply-chain-and-institutional-intelligence.md`](atlas/06-cloud-supply-chain-and-institutional-intelligence.md)  
+   Multi-Cloud Capability Mesh, universal intelligence BOM, supply-chain immune system, local-first secure collaboration, quality-diversity archive, Sports Economy and Institutional Twin, polycentric governance and contribution incentives.
 
 ## Governing rule
 
