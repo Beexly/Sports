@@ -176,7 +176,30 @@ export interface PlaceboReport {
   /** THE GATE: placebo edge statistically and practically indistinguishable from 0. */
   readonly passed: boolean;
   readonly failureReason: string | null;
+  /**
+   * NON-GATING blind-spot flag. The gate is deliberately one-sided (it only
+   * fails on a significant POSITIVE placebo EV — see failureReason's
+   * comment: a leak can only manufacture positive EV against the close).
+   * That leaves a blind spot: a SIGN-INVERTED outcome join (e.g. a home/away
+   * or win/loss flip smuggled into the evaluation) manufactures a
+   * significant NEGATIVE placebo EV instead, which the one-sided gate would
+   * pass silently. This field surfaces that exact signature — significant
+   * permutation evidence on the NEGATIVE tail — for founder review WITHOUT
+   * changing passed/failureReason semantics; it never fails the gate.
+   */
+  readonly signIntegrityWarning: boolean;
+  readonly signIntegrityNote: string | null;
 }
+
+/**
+ * Same significance bar as the positive-tail gate (median permutation-null
+ * p < 0.005), mirrored onto the negative tail: median placebo EV
+ * meaningfully below zero (< -epsilon) with p < 0.005 is not proof of a
+ * leak (a real, deliberately-not-gated negative placebo EV is expected —
+ * see the note in shuffledTimePlacebo), but it IS the exact signature a
+ * sign-inverted outcome join produces, so it is worth a human's eyes.
+ */
+const SIGN_INTEGRITY_P_THRESHOLD = 0.005;
 
 /**
  * Run the gate. `store` must be the SAME store the real pipeline reads from,
@@ -259,6 +282,21 @@ export function shuffledTimePlacebo(
     passed = true;
   }
 
+  // Blind-spot check (FIX 5): NON-GATING. Mirrors the positive-tail rule
+  // onto the negative tail so a sign-inverted outcome join can't manufacture
+  // a significant negative EV and pass through undetected.
+  let signIntegrityWarning = false;
+  let signIntegrityNote: string | null = null;
+  if (medianP !== null && medianMean !== null && medianP < SIGN_INTEGRITY_P_THRESHOLD && medianMean < -epsilon) {
+    signIntegrityWarning = true;
+    signIntegrityNote =
+      `placebo median EV ${medianMean.toFixed(4)} with median permutation-null p=${medianP.toFixed(4)} ` +
+      `is significant on the NEGATIVE tail across ${runs} scramble runs. The gate is deliberately ` +
+      `one-sided and does not fail on this, but this is also the exact signature a sign-inverted ` +
+      `outcome join (e.g. a flipped home/away or win/loss label) would produce — worth a founder's ` +
+      `review of the evaluation join before trusting this placebo run.`;
+  }
+
   return {
     runs,
     seed,
@@ -269,6 +307,8 @@ export function shuffledTimePlacebo(
     epsilon,
     passed,
     failureReason,
+    signIntegrityWarning,
+    signIntegrityNote,
   };
 }
 

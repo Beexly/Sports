@@ -1,4 +1,15 @@
 import type { EvidenceActivationStatus, EvidenceRecord, SignalCategory } from "@sports/types";
+import type { LogitPoolResult } from "./edge-lab/logit-pool.js";
+
+/**
+ * The exact "the model adds information beyond the market" verdict string
+ * from edge-lab/logit-pool.ts's LogitPoolResult.verdict (read from source,
+ * not guessed) — trueEv activation reads this artifact's value for equality,
+ * it never re-derives it. Typed against LogitPoolResult so a future rename
+ * of that union in logit-pool.ts fails this file's typecheck instead of
+ * silently going stale.
+ */
+const LOGIT_POOL_ADDS_INFORMATION_VERDICT: LogitPoolResult["verdict"] = "MODEL_ADDS_INFORMATION";
 
 const MIN = 60_000;
 const HOUR = 60 * MIN;
@@ -244,9 +255,25 @@ const DEFINITIONS_BY_KEY = new Map(
   EVIDENCE_FACTOR_DEFINITIONS.map((definition) => [definition.key, definition])
 );
 
+/**
+ * The edge-lab honesty-engine artifact (handoff §2 P1) that gates
+ * model.trueEv activation. Absent by default (zero behavior change for
+ * existing callers — trueEv stays blocked by fiat, as before). When
+ * supplied, trueEv's fiat blocker lifts iff logitPoolVerdict equals the
+ * REAL "adds information" verdict string from edge-lab/logit-pool.ts AND
+ * tunedTau is a real (non-null) tuned threshold from edge-lab/selective-gate.ts's
+ * tuneTau — a FIRE_NOTHING verdict or a null tau (honest "fire nothing")
+ * both keep it blocked.
+ */
+export interface EdgeLabVerdictInput {
+  readonly logitPoolVerdict: string;
+  readonly tunedTau: number | null;
+}
+
 export interface BuildEvidenceReadinessMatrixInput {
   readonly evidence: readonly EvidenceRecord[];
   readonly now?: Date;
+  readonly edgeLabVerdict?: EdgeLabVerdictInput;
 }
 
 export function getEvidenceFactorDefinition(
@@ -264,7 +291,7 @@ export function buildEvidenceReadinessMatrix(
 ): EvidenceReadinessMatrix {
   const now = input.now ?? new Date();
   const rows = EVIDENCE_FACTOR_DEFINITIONS.map((definition) =>
-    evaluateFactor(definition, input.evidence, now)
+    evaluateFactor(definition, input.evidence, now, input.edgeLabVerdict)
   );
   const integrityScore = computeIntegrityScore(rows);
   const blockedCriticalFactors = rows
@@ -288,7 +315,8 @@ export function buildEvidenceReadinessMatrix(
 function evaluateFactor(
   definition: EvidenceFactorDefinition,
   evidence: readonly EvidenceRecord[],
-  now: Date
+  now: Date,
+  edgeLabVerdict?: EdgeLabVerdictInput
 ): EvidenceMatrixRow {
   const matching = evidence.filter((record) =>
     definition.sourceCategories.includes(record.sourceCategory)
@@ -299,7 +327,7 @@ function evaluateFactor(
 
   const ranked = [...matching].sort((a, b) => rankEvidence(b, now) - rankEvidence(a, now));
   const best = ranked[0]!;
-  const blockers = factorBlockers(definition, best, now);
+  const blockers = factorBlockers(definition, best, now, edgeLabVerdict);
   const status = deriveStatus(definition, best, blockers);
   const canContributeToScore =
     status === "ACTIVE" && definition.canContributeWhenActive;
@@ -360,7 +388,8 @@ function rankEvidence(record: EvidenceRecord, now: Date): number {
 function factorBlockers(
   definition: EvidenceFactorDefinition,
   record: EvidenceRecord,
-  now: Date
+  now: Date,
+  edgeLabVerdict?: EdgeLabVerdictInput
 ): readonly string[] {
   const blockers: string[] = [];
   const trust = normalizeTrust(record.trustLevel);
@@ -390,7 +419,20 @@ function factorBlockers(
     blockers.push(blockedActivationReason(record.activationStatus));
   }
   if (definition.key === "model.trueEv") {
-    blockers.push("True EV stays blocked until independent fair probability is active.");
+    // FIX 7: was an unconditional block by fiat. Now conditional on the
+    // edge-lab honesty-engine artifact (handoff §2 P1): trueEv only clears
+    // this specific blocker when the logit-pool β test found the model adds
+    // real information beyond the market AND the selective gate actually
+    // tuned a firing threshold (tau !== null — "fire nothing" stays
+    // blocked). Absent artifact -> same fiat message as before, zero
+    // behavior change for existing callers.
+    const artifactActive =
+      edgeLabVerdict !== undefined &&
+      edgeLabVerdict.logitPoolVerdict === LOGIT_POOL_ADDS_INFORMATION_VERDICT &&
+      edgeLabVerdict.tunedTau !== null;
+    if (!artifactActive) {
+      blockers.push("True EV stays blocked until independent fair probability is active.");
+    }
   }
 
   return blockers;

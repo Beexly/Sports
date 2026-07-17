@@ -13,12 +13,19 @@
  * The SEALED HOLDOUT (handoff §2 P0 "one most-recent season held as an
  * untouched forward holdout until founder sign-off") is enforced in code:
  * rows matching the holdout predicate are hidden behind a getter that THROWS
- * unless called with the literal founder token. Nothing in the automated
- * pipeline holds that token; a human types it at sign-off time. Tuning on
- * the holdout is therefore a runtime error, not a code-review hope (§5
- * "thresholds tuned ONLY on inner/disjoint folds").
+ * unless called with BOTH the literal founder token AND process.env
+ * GSE_ALLOW_HOLDOUT_OPEN === "true". Nothing in the automated pipeline holds
+ * the token or sets that env var — it is deliberately absent in CI/dev, so a
+ * human supplies both by hand at sign-off time, and a token alone (e.g.
+ * copy-pasted into application code) cannot open the holdout in an
+ * unattended environment. Tuning on the holdout is therefore a runtime
+ * error, not a code-review hope (§5 "thresholds tuned ONLY on inner/disjoint
+ * folds") — scripts/guardrails' sealed-holdout-open-scan.mjs is the static
+ * belt to this runtime-check suspenders, failing the build on any
+ * `openHoldout(` call site outside this module's own tests.
  *
- * Pure, deterministic, no I/O.
+ * Pure, deterministic, no I/O (the env var read is a human-operated gate,
+ * not a data dependency).
  */
 
 export interface TimedRow {
@@ -141,11 +148,22 @@ export function walkForwardSplits<R extends TimedRow>(
 /** The literal token a HUMAN types at founder sign-off. Automated code must never hold it. */
 export const FOUNDER_HOLDOUT_TOKEN = "FOUNDER-SIGNED-OFF-OPEN-THE-HOLDOUT";
 
+/**
+ * The env var a HUMAN sets at founder sign-off, alongside the literal token.
+ * Deliberately absent from CI/dev (.env.example, CI secrets) so a
+ * copy-pasted or hard-coded token alone can never open the holdout in an
+ * unattended environment — both gates must be true at the same time, set by
+ * hand, in the same sign-off session.
+ */
+export const HOLDOUT_OPEN_ENV_VAR = "GSE_ALLOW_HOLDOUT_OPEN";
+
 export class SealedHoldoutError extends Error {
   constructor() {
     super(
       "The forward holdout is SEALED until founder sign-off (handoff §2 P0). " +
-        "Tuning or evaluating on it before then voids every downstream guarantee.",
+        "Tuning or evaluating on it before then voids every downstream guarantee. " +
+        `Opening it requires BOTH the literal founder token AND process.env.${HOLDOUT_OPEN_ENV_VAR} === "true" ` +
+        "— the env var is deliberately absent in CI/dev, so a leaked or hard-coded token alone cannot open it.",
     );
     this.name = "SealedHoldoutError";
   }
@@ -156,7 +174,10 @@ export interface SealedSplit<R extends TimedRow> {
   readonly working: readonly R[];
   /** Count + time range are inspectable; the ROWS are not, without the token. */
   readonly holdoutSummary: { readonly count: number; readonly from: string | null; readonly to: string | null };
-  /** Throws SealedHoldoutError unless called with the exact founder token. */
+  /**
+   * Throws SealedHoldoutError unless called with the exact founder token AND
+   * process.env[GSE_ALLOW_HOLDOUT_OPEN] === "true" — both are required.
+   */
   readonly openHoldout: (token: string) => readonly R[];
 }
 
@@ -180,7 +201,9 @@ export function sealHoldout<R extends TimedRow>(
       to: holdout.length ? holdout[holdout.length - 1]!.decisionAt : null,
     },
     openHoldout: (token: string) => {
-      if (token !== FOUNDER_HOLDOUT_TOKEN) throw new SealedHoldoutError();
+      if (token !== FOUNDER_HOLDOUT_TOKEN || process.env[HOLDOUT_OPEN_ENV_VAR] !== "true") {
+        throw new SealedHoldoutError();
+      }
       return holdout;
     },
   };

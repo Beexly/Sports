@@ -5,7 +5,10 @@
  * FAILING when a backdated outcome-encoding feature is planted (the exact
  * silent-fatal leak class the handoff §2 P0 names).
  */
-import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+import { afterEach, describe, expect, it } from "vitest";
 
 import { AsOfFeatureStore, AsOfViolationError } from "../asof-store.js";
 import { logisticTrainer } from "../logistic.js";
@@ -52,6 +55,41 @@ describe("AsOfFeatureStore — hard cutoff in code", () => {
     expect(() =>
       store.ingest({ entityId: "g1", featureKey: "market:open_spread", value: -2.5, observedAt: iso(T0), source: "odds" }),
     ).not.toThrow();
+  });
+
+  // FIX 2: marketDecisionKeys is an exact-name allowlist, not a boolean
+  // escape hatch — a reviewed near-miss key ingests when named explicitly,
+  // but every OTHER closing-pattern key still throws even with the option
+  // present (non-empty list does not turn off the pattern check generally).
+  it("marketDecisionKeys allowlists an exact reviewed key despite the closing-line pattern", () => {
+    const store = new AsOfFeatureStore();
+    expect(() =>
+      store.ingest(
+        { entityId: "g1", featureKey: "player:disclosure_days", value: 2, observedAt: iso(T0), source: "injury" },
+        { marketDecisionKeys: ["player:disclosure_days"] },
+      ),
+    ).not.toThrow();
+    expect(store.get("g1", "player:disclosure_days", iso(T0))?.value).toBe(2);
+  });
+
+  it("a non-allowlisted closing-pattern key still throws even with marketDecisionKeys present", () => {
+    const store = new AsOfFeatureStore();
+    expect(() =>
+      store.ingest(
+        { entityId: "g1", featureKey: "market:closing_spread", value: -3, observedAt: iso(T0), source: "odds" },
+        { marketDecisionKeys: ["player:disclosure_days"] },
+      ),
+    ).toThrow(AsOfViolationError);
+  });
+
+  it("an empty marketDecisionKeys list behaves exactly like no option at all", () => {
+    const store = new AsOfFeatureStore();
+    expect(() =>
+      store.ingest(
+        { entityId: "g1", featureKey: "market:closing_spread", value: -3, observedAt: iso(T0), source: "odds" },
+        { marketDecisionKeys: [] },
+      ),
+    ).toThrow(AsOfViolationError);
   });
 });
 
@@ -100,11 +138,42 @@ describe("sealHoldout — founder-gated forward holdout", () => {
     eventEndAt: iso(T0 + i * DAY + 1),
   }));
 
+  // FIX 6: openHoldout previously opened on the literal token ALONE — a
+  // token that could be (and, before this fix, effectively was) hard-coded
+  // or copy-pasted into application code, silently unsealing the holdout in
+  // CI/prod. It now ALSO requires process.env.GSE_ALLOW_HOLDOUT_OPEN ===
+  // "true", an env var deliberately absent outside a human's interactive
+  // sign-off session. The old assertion here (token alone succeeds) encoded
+  // exactly that gap, so it is updated rather than merely extended.
+  const ENV_VAR = "GSE_ALLOW_HOLDOUT_OPEN";
+  const originalEnv = process.env[ENV_VAR];
+  afterEach(() => {
+    if (originalEnv === undefined) delete process.env[ENV_VAR];
+    else process.env[ENV_VAR] = originalEnv;
+  });
+
   it("hides rows behind the token; summary is inspectable", () => {
     const sealed = sealHoldout(rows, (r) => Date.parse(r.decisionAt) >= T0 + 7 * DAY);
     expect(sealed.working.length).toBe(7);
     expect(sealed.holdoutSummary.count).toBe(3);
     expect(() => sealed.openHoldout("please")).toThrow(SealedHoldoutError);
+  });
+
+  it("the literal token ALONE (no env var) still throws — closes the FIX 6 gap", () => {
+    delete process.env[ENV_VAR];
+    const sealed = sealHoldout(rows, (r) => Date.parse(r.decisionAt) >= T0 + 7 * DAY);
+    expect(() => sealed.openHoldout(FOUNDER_HOLDOUT_TOKEN)).toThrow(SealedHoldoutError);
+  });
+
+  it("wrong token WITH the env var set still throws — both are required", () => {
+    process.env[ENV_VAR] = "true";
+    const sealed = sealHoldout(rows, (r) => Date.parse(r.decisionAt) >= T0 + 7 * DAY);
+    expect(() => sealed.openHoldout("please")).toThrow(SealedHoldoutError);
+  });
+
+  it("token AND the env var together open the holdout", () => {
+    process.env[ENV_VAR] = "true";
+    const sealed = sealHoldout(rows, (r) => Date.parse(r.decisionAt) >= T0 + 7 * DAY);
     expect(sealed.openHoldout(FOUNDER_HOLDOUT_TOKEN).length).toBe(3);
   });
 });
@@ -206,6 +275,10 @@ describe("shuffled-time placebo — THE Phase-0 gate", () => {
       seed: 7,
     });
     expect(report.passed).toBe(true);
+    // FIX 5: an honest corpus with no sign-inversion should not raise the
+    // (non-gating) sign-integrity blind-spot flag either.
+    expect(report.signIntegrityWarning).toBe(false);
+    expect(report.signIntegrityNote).toBeNull();
   }, 30_000);
 
   it("FAILS when a backdated outcome-encoding feature is planted (the named leak class)", () => {
@@ -240,7 +313,126 @@ describe("shuffled-time placebo — THE Phase-0 gate", () => {
     });
     expect(report.passed).toBe(false);
     expect(report.failureReason).toMatch(/post-decision|observedAt/i);
+    // A POSITIVE-tail failure is not what the sign-integrity flag is for.
+    expect(report.signIntegrityWarning).toBe(false);
   }, 30_000);
+
+  // FIX 5: the gate is deliberately one-sided (only a significant POSITIVE
+  // placebo EV fails it — a leak can only manufacture positive EV against an
+  // efficient close). The blind spot: a sign-inverted OUTCOME JOIN (e.g. the
+  // win/loss label got attached to the wrong side downstream of an
+  // otherwise-honest evaluation) manufactures a significant NEGATIVE placebo
+  // EV instead, which the one-sided gate passes silently. signIntegrityWarning
+  // is a NON-GATING flag that catches exactly this signature.
+  it("planted sign-inverted outcome join -> signIntegrityWarning true, gate still PASSES", () => {
+    const rng = mulberry32(53);
+    const teams = 12;
+    const strength = Array.from({ length: teams }, () => (rng() - 0.5) * 1.2);
+    const store = new AsOfFeatureStore();
+    const games = 1600;
+    const rows: EvalRow[] = [];
+    for (let i = 0; i < games; i++) {
+      const t = T0 + i * (DAY / 2);
+      for (let k = 0; k < teams; k++) strength[k] = (strength[k] ?? 0) + (rng() - 0.5) * 0.02;
+      const home = Math.floor(rng() * teams);
+      let away = Math.floor(rng() * teams);
+      if (away === home) away = (away + 1) % teams;
+      const gap = (strength[home] ?? 0) - (strength[away] ?? 0) + 0.12;
+      const trueP = 1 / (1 + Math.exp(-2.2 * gap));
+      const trueY: 0 | 1 = rng() < trueP ? 1 : 0;
+      // THE BUG: the outcome label handed to the harness is the OPPOSITE of
+      // what actually happened (a home/away- or win/loss-flip smuggled into
+      // the join), while the close q is untouched (still the true home-win
+      // probability) — exactly a sign-inverted outcome join.
+      const y: 0 | 1 = (1 - trueY) as 0 | 1;
+      const gameId = `g${i}`;
+      const decisionAt = iso(t);
+      // A confident, entity-fixed read of the TRUE (unflipped) outcome —
+      // ingested with an observedAt that predates the whole corpus era, so
+      // it is served under EVERY possible scramble instant (isolating the
+      // sign effect from reveal-rate noise, not a leak this test is about).
+      store.ingest({
+        entityId: gameId,
+        featureKey: "scout:oracle_read",
+        value: trueY,
+        observedAt: iso(T0 - 10 * DAY),
+        source: "leak",
+      });
+      const features = store.vector(gameId, ["scout:oracle_read"], decisionAt);
+      rows.push({ id: gameId, decisionAt, eventEndAt: iso(t + DAY / 8), features, y, qClose: trueP });
+    }
+    // Non-adaptive: reflects the (true, unflipped) oracle read directly
+    // rather than fitting to labels — a fitted trainer would just flip its
+    // own coefficient sign to match whatever label it's shown and could
+    // never produce negative EV against its OWN training target, which is
+    // exactly why this blind spot needs a decoupled construction to exist
+    // at all (see design note in placebo.ts).
+    const oracleTrainer = (): ((features: ReadonlyMap<string, number>) => number) => (features) => {
+      const v = features.get("scout:oracle_read");
+      if (v === undefined) return 0.5;
+      return v > 0.5 ? 0.97 : 0.03;
+    };
+
+    const report = shuffledTimePlacebo(store, rows, oracleTrainer, {
+      fireThreshold: 0.04,
+      walkForward: WF,
+      featureKeys: ["scout:oracle_read"],
+      runs: 8,
+      seed: 11,
+    });
+
+    expect(report.placeboMedianP).not.toBeNull();
+    expect(report.placeboMedianP!).toBeLessThan(0.005);
+    expect(report.placeboMedianMean).not.toBeNull();
+    expect(report.placeboMedianMean!).toBeLessThan(-report.epsilon);
+    // passed/failureReason semantics are UNCHANGED — the one-sided gate
+    // still passes (this is precisely the blind spot).
+    expect(report.passed).toBe(true);
+    expect(report.failureReason).toBeNull();
+    expect(report.signIntegrityWarning).toBe(true);
+    expect(report.signIntegrityNote).toMatch(/negative/i);
+  }, 30_000);
+});
+
+describe("PlaceboReport.signIntegrityWarning — committed real-run regression (FIX 5)", () => {
+  // The committed Phase-0 NFL acceptance run (reports/edge-lab/phase0-nfl-acceptance.json,
+  // generated by scripts/edge-lab/phase0-acceptance.ts against real nflverse
+  // data) has a genuinely negative median placebo EV (favorite-longshot/vig
+  // cost of firing on noise, not a leak) with median p ~ 0.015 — significant
+  // enough to be noteworthy but NOT at the 0.005 bar this flag uses. FIX 5
+  // must not turn that honest, already-reviewed finding into a new warning:
+  // the threshold check is mirrored here directly against the committed
+  // numbers as a regression guard, since re-running the real pipeline in a
+  // unit test would require network access to nflverse data.
+  it("committed phase0 real-run inputs (median p≈0.015, negative EV) yield NO warning", () => {
+    const reportPath = join(
+      __dirname,
+      "..", "..", "..", "..", "..",
+      "reports", "edge-lab", "phase0-nfl-acceptance.json",
+    );
+    const committed = JSON.parse(readFileSync(reportPath, "utf8")) as {
+      readonly report: {
+        readonly placeboGate: {
+          readonly passed: boolean;
+          readonly medianP: number;
+          readonly medianMean: number;
+          readonly epsilon: number;
+        };
+      };
+    };
+    const { medianP, medianMean, epsilon, passed } = committed.report.placeboGate;
+
+    // Sanity: this is genuinely the "median p ~ 0.015 on negative EV" case
+    // the fix's acceptance criteria names, not a stale/edited fixture.
+    expect(medianP).toBeGreaterThan(0.005);
+    expect(medianP).toBeLessThan(0.03);
+    expect(medianMean).toBeLessThan(0);
+    expect(passed).toBe(true);
+
+    // The exact FIX 5 predicate, mirrored: NOT (p < 0.005 AND mean < -epsilon).
+    const wouldWarn = medianP < 0.005 && medianMean < -epsilon;
+    expect(wouldWarn).toBe(false);
+  });
 });
 
 describe("conditionalMiProbe", () => {

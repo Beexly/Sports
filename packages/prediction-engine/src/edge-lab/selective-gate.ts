@@ -19,13 +19,58 @@
  */
 
 import { isotonicCalibration, type CalibrationSample } from "../probability-calibration.js";
-import { wilsonLowerBound } from "./stats.js";
+import { learnThenTest, type LttCandidate } from "./phase4-research.js";
+import { regularizedIncompleteBeta, wilsonLowerBound } from "./stats.js";
 
 export interface VennAbersInterval {
   readonly p0: number;
   readonly p1: number;
   readonly lower: number;
   readonly upper: number;
+}
+
+/**
+ * Thrown when two row sets that must play disjoint roles (calibration vs
+ * tuning vs eval) share a rowId — the enforcement behind this file's header
+ * claim ("the tuner refuses to run on rows it evaluated"), which was
+ * previously just prose (style: asof-store's AsOfViolationError).
+ */
+export class GateSetOverlapError extends Error {
+  constructor(message: string, readonly offendingIds: readonly string[]) {
+    super(message);
+    this.name = "GateSetOverlapError";
+  }
+}
+
+/**
+ * Pairwise-disjointness assertion (calibration vs tuning vs eval): every
+ * gate entry point that accepts more than one row set calls this first.
+ * Only the pairs actually passed together at a given call site are checked
+ * (applySelectiveGate: calibration vs eval; tuneTau: calibration vs
+ * tuning), but calling this at every entry point transitively enforces full
+ * three-way disjointness across a correct calibration -> tuning -> eval
+ * workflow (tuneTau's calibration/tuning rows must also be disjoint from
+ * whatever is later passed to applySelectiveGate as eval).
+ */
+function assertDisjointRowSets(
+  sets: readonly { readonly name: string; readonly rows: readonly { readonly rowId: string }[] }[],
+): void {
+  for (let i = 0; i < sets.length; i++) {
+    for (let j = i + 1; j < sets.length; j++) {
+      const a = sets[i]!;
+      const b = sets[j]!;
+      const bIds = new Set(b.rows.map((r) => r.rowId));
+      const overlap = [...new Set(a.rows.map((r) => r.rowId).filter((id) => bIds.has(id)))];
+      if (overlap.length > 0) {
+        throw new GateSetOverlapError(
+          `"${a.name}" and "${b.name}" row sets are not disjoint — ${overlap.length} rowId(s) ` +
+            `appear in both, and the tuner/gate refuses to run on rows it also evaluates in ` +
+            `another role: ${overlap.join(", ")}`,
+          overlap,
+        );
+      }
+    }
+  }
 }
 
 /** Inductive Venn–Abers interval for one test score against a calibration set. */
@@ -44,11 +89,20 @@ export interface GateDecisionRow {
   readonly rowId: string;
   /** Raw model score (uncalibrated OOF probability). */
   readonly score: number;
-  /** De-vigged market probability of the modeled side. */
+  /** De-vigged market probability of the modeled side. EDGE ATTRIBUTION only
+   * (see FIX 4 note on meanBreakeven) — the firing decision (lcbEdge) is
+   * always computed against this, never against obtainableDecimalPrice. */
   readonly q: number;
   /** Mondrian stratum key (e.g. "nfl|MONEYLINE"); calibration is per-stratum. */
   readonly stratum: string;
   readonly y: 0 | 1;
+  /**
+   * The real, obtainable decimal price for this row's modeled side, when
+   * known (e.g. a captured book quote). When present, THIS row's breakeven
+   * bar for realized-result evaluation is 1/obtainableDecimalPrice (the true
+   * vig-inclusive bar), not the devigged q. Absent -> falls back to q.
+   */
+  readonly obtainableDecimalPrice?: number;
 }
 
 export interface FiredDecision {
@@ -58,6 +112,35 @@ export interface FiredDecision {
   readonly interval: VennAbersInterval;
   readonly q: number;
   readonly y: 0 | 1;
+  readonly obtainableDecimalPrice?: number;
+}
+
+/**
+ * Per-row breakeven rate for REALIZED-RESULT evaluation (meanBreakeven,
+ * tuneTau's exact-binomial p-values): 1/obtainableDecimalPrice when a real
+ * obtainable price is known (the true, vig-inclusive bar a bettor actually
+ * had to clear), else the devigged market probability q. q ALSO drives
+ * lcbEdge (edge attribution / the firing decision itself) unconditionally —
+ * this function is never used there. Devigged q is not itself the wrong
+ * number; it is the wrong number for "did this beat the price we could get."
+ */
+function rowBreakeven(row: { readonly q: number; readonly obtainableDecimalPrice?: number }): number {
+  return row.obtainableDecimalPrice !== undefined ? 1 / row.obtainableDecimalPrice : row.q;
+}
+
+/**
+ * strictObtainable enforcement: every FIRED decision must carry a real
+ * obtainableDecimalPrice, or the caller is told exactly which rowIds are
+ * missing one rather than silently falling back to devigged q for them.
+ */
+function assertObtainablePrices(decisions: readonly FiredDecision[]): void {
+  const missing = decisions.filter((d) => d.obtainableDecimalPrice === undefined).map((d) => d.rowId);
+  if (missing.length > 0) {
+    throw new RangeError(
+      `strictObtainable requires obtainableDecimalPrice on every fired row; missing on ` +
+        `${missing.length} row(s): ${missing.join(", ")}`,
+    );
+  }
 }
 
 export interface SelectiveGateReport {
@@ -91,6 +174,10 @@ export function applySelectiveGate(
   evalRows: readonly GateDecisionRow[],
   tau: number,
 ): SelectiveGateReport {
+  assertDisjointRowSets([
+    { name: "calibration", rows: calibrationRows },
+    { name: "eval", rows: evalRows },
+  ]);
   const calByStratum = new Map<string, CalibrationSample[]>();
   for (const row of calibrationRows) {
     const list = calByStratum.get(row.stratum) ?? [];
@@ -108,9 +195,20 @@ export function applySelectiveGate(
     const cal = calByStratum.get(row.stratum);
     if (!cal || cal.length < MIN_STRATUM_CALIBRATION) continue; // silent stratum: never fires
     const interval = vennAbersInterval(cal, row.score);
+    // Edge attribution ALWAYS uses devigged q, never obtainableDecimalPrice
+    // (FIX 4: q stays the attribution baseline; the real price only changes
+    // the realized-result breakeven bar computed downstream).
     const lcbEdge = interval.lower - row.q;
     if (lcbEdge > tau) {
-      decisions.push({ rowId: row.rowId, stratum: row.stratum, lcbEdge, interval, q: row.q, y: row.y });
+      decisions.push({
+        rowId: row.rowId,
+        stratum: row.stratum,
+        lcbEdge,
+        interval,
+        q: row.q,
+        y: row.y,
+        obtainableDecimalPrice: row.obtainableDecimalPrice,
+      });
       agg.fired += 1;
       if (row.y === 1) agg.wins += 1;
     }
@@ -143,8 +241,23 @@ export interface CoverageEdgePoint {
   readonly fired: number;
   readonly realizedRate: number | null;
   readonly wilsonLcb: number | null;
-  /** Mean de-vigged breakeven rate of the fired plays (the bar to clear). */
+  /**
+   * Mean breakeven rate of the fired plays (the bar to clear) — per row,
+   * 1/obtainableDecimalPrice when a real obtainable price is known (the
+   * true, vig-inclusive bar), else the devigged q. Devigged q remains the
+   * edge-ATTRIBUTION baseline only (lcbEdge, unconditionally); this field
+   * answers "what win rate breaks even at the price actually obtainable."
+   */
   readonly meanBreakeven: number | null;
+}
+
+export interface CoverageEdgeCurveOptions {
+  /**
+   * When true, every FIRED row at every tau must carry a real
+   * obtainableDecimalPrice — throws (naming the missing rowIds) rather than
+   * silently falling back to devigged q for any of them. Default false.
+   */
+  readonly strictObtainable?: boolean;
 }
 
 /** The published coverage-vs-edge curve (§2 P1). */
@@ -152,11 +265,13 @@ export function coverageEdgeCurve(
   calibrationRows: readonly GateDecisionRow[],
   evalRows: readonly GateDecisionRow[],
   taus: readonly number[],
+  opts: CoverageEdgeCurveOptions = {},
 ): CoverageEdgePoint[] {
   return taus.map((tau) => {
     const r = applySelectiveGate(calibrationRows, evalRows, tau);
+    if (opts.strictObtainable) assertObtainablePrices(r.decisions);
     const meanBreakeven =
-      r.fired > 0 ? r.decisions.reduce((a, d) => a + d.q, 0) / r.fired : null;
+      r.fired > 0 ? r.decisions.reduce((a, d) => a + rowBreakeven(d), 0) / r.fired : null;
     return {
       tau,
       coverage: r.coverage,
@@ -174,33 +289,103 @@ export interface TauSelection {
   readonly curve: readonly CoverageEdgePoint[];
 }
 
+export interface TuneTauOptions {
+  readonly taus?: readonly number[];
+  readonly minFired?: number;
+  /** Fixed-sequence FWER budget fed to learnThenTest (default 0.05). */
+  readonly delta?: number;
+  /** Forwarded to coverageEdgeCurve — see CoverageEdgeCurveOptions. */
+  readonly strictObtainable?: boolean;
+}
+
 /**
- * Tune τ on a DISJOINT tuning fold: the smallest τ whose Wilson LCB of the
- * realized fired rate clears the fired plays' mean breakeven, with at
- * least `minFired` plays behind it. Returns tau: null (fire nothing) when
- * no operating point qualifies — an honest, first-class outcome.
+ * Tune τ on a DISJOINT tuning fold using fixed-sequence Learn-then-Test
+ * (Angelopoulos et al.) instead of an uncorrected multi-look grid scan —
+ * scanning every τ independently and taking whichever one happens to clear
+ * a bar is exactly the "tuning the risk-coverage curve on the eval set is
+ * the #1 self-deception risk" multiplicity failure this module's header
+ * warns about (only worse: it doesn't even need the eval set to fail, a
+ * wide-enough tau grid on the TUNING set alone inflates the false-positive
+ * rate the same way).
+ *
+ * Candidates are ordered MOST-CONSERVATIVE FIRST (largest τ = fires the
+ * fewest plays = hardest to pass by chance) and tested in that fixed
+ * sequence; learnThenTest accepts while each candidate's p-value <= delta
+ * and STOPS at the first failure — later, looser candidates are never
+ * tested once one fails, which is what controls the family-wise error rate
+ * at delta with no Bonferroni-style power loss (§5's "phase4-research.ts
+ * learnThenTest sits unused" is exactly the tool this rewrite puts to use).
+ *
+ * Each candidate's p-value is a valid ONE-SIDED EXACT test of "the fired
+ * set's true win rate is at most its breakeven" against "it's higher":
+ * under the null that the true rate equals breakeven b, wins ~
+ * Binomial(fired, b), and
+ *
+ *     p = P[wins' >= wins | fired, b] = I_b(wins, fired - wins + 1)
+ *
+ * via the regularized incomplete beta identity (stats.ts's
+ * regularizedIncompleteBeta — no normal approximation, no Wilson interval,
+ * exact for any fired count). Breakeven here follows FIX 4's per-row rule
+ * (coverageEdgeCurve's meanBreakeven: 1/obtainableDecimalPrice per row when
+ * known, else devigged q) via the same `opts.strictObtainable` passthrough.
+ *
+ * Returns the LOOSEST accepted τ — the smallest τ in the accepted
+ * fixed-sequence prefix, i.e. the operating point that fires the most while
+ * still surviving every more-conservative test ahead of it in the
+ * sequence. Returns tau: null (fire nothing) when no candidate is accepted
+ * — an honest, first-class outcome, exactly as before.
  */
 export function tuneTau(
   calibrationRows: readonly GateDecisionRow[],
   tuningRows: readonly GateDecisionRow[],
-  opts: { readonly taus?: readonly number[]; readonly minFired?: number } = {},
+  opts: TuneTauOptions = {},
 ): TauSelection {
+  assertDisjointRowSets([
+    { name: "calibration", rows: calibrationRows },
+    { name: "tuning", rows: tuningRows },
+  ]);
   const taus = opts.taus ?? [0, 0.005, 0.01, 0.015, 0.02, 0.03, 0.04, 0.05];
   const minFired = opts.minFired ?? 50;
-  const curve = coverageEdgeCurve(calibrationRows, tuningRows, taus);
+  const delta = opts.delta ?? 0.05;
+  const curve = coverageEdgeCurve(calibrationRows, tuningRows, taus, {
+    strictObtainable: opts.strictObtainable,
+  });
+
+  // Candidates the grid can even speak to: enough fired plays for the exact
+  // test to mean anything, and a defined breakeven. Points that don't meet
+  // this bar are excluded from the candidate universe entirely (not tested
+  // and not treated as a sequence-stopping failure) — a design choice, not
+  // a multiplicity loophole: minFired is a data-sufficiency prerequisite
+  // fixed before looking at outcomes, identical in spirit to the old
+  // implementation's `point.fired >= minFired` gate.
+  const candidates: LttCandidate[] = [];
   for (const point of curve) {
-    if (
-      point.fired >= minFired &&
-      point.wilsonLcb !== null &&
-      point.meanBreakeven !== null &&
-      point.wilsonLcb > point.meanBreakeven
-    ) {
-      return { tau: point.tau, reason: `smallest τ with Wilson LCB ${point.wilsonLcb.toFixed(4)} > breakeven ${point.meanBreakeven.toFixed(4)} on ${point.fired} fired`, curve };
-    }
+    if (point.fired < minFired || point.meanBreakeven === null || point.realizedRate === null) continue;
+    const wins = Math.round(point.realizedRate * point.fired);
+    const pValue = regularizedIncompleteBeta(point.meanBreakeven, wins, point.fired - wins + 1);
+    candidates.push({ threshold: point.tau, pValue });
   }
+
+  const accepted = learnThenTest(candidates, delta);
+  if (accepted.length === 0) {
+    return {
+      tau: null,
+      reason:
+        `no operating point survives the fixed-sequence exact-binomial test at delta=${delta} ` +
+        `(${candidates.length} candidate(s) considered) — fire nothing`,
+      curve,
+    };
+  }
+  // learnThenTest orders most-conservative (largest τ) first and returns the
+  // accepted PREFIX in that same order; the last element is therefore the
+  // smallest — loosest — τ still standing after the fixed-sequence test.
+  const loosest = accepted[accepted.length - 1]!;
   return {
-    tau: null,
-    reason: "no operating point clears breakeven with a valid Wilson LCB — fire nothing",
+    tau: loosest.threshold,
+    reason:
+      `loosest τ=${loosest.threshold} accepted by the fixed-sequence exact-binomial test ` +
+      `(p=${loosest.pValue.toFixed(4)} <= delta=${delta}), ${accepted.length}/${candidates.length} ` +
+      `candidate(s) accepted most-conservative-first`,
     curve,
   };
 }

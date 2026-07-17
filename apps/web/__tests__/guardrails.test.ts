@@ -178,4 +178,20 @@ describe("Phase 9 guardrails", () => {
     expect(pkg.scripts.guardrails).toContain("api-payload-rights-scan.mjs");
     expect(pkg.scripts.guardrails).toContain("openapi-security-scan.mjs");
   });
+
+  it("sealed-holdout-open-scan exits 0 with the seal opened only inside edge-lab (FIX 6)", () => {
+    const r = runGuard("scripts/guardrails/sealed-holdout-open-scan.mjs");
+    if (r.status !== 0) {
+      throw new Error(
+        `sealed-holdout-open-scan failed (status=${r.status}, signal=${r.signal}, error=${r.error}).\nSTDOUT:\n${r.stdout}\nSTDERR:\n${r.stderr}`
+      );
+    }
+    expect(r.stdout).toMatch(/\[sealed-holdout-open-scan\] OK/);
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("root guardrails chain includes the sealed-holdout-open-scan check", () => {
+    const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
+    expect(pkg.scripts["guard:sealed-holdout-open-scan"]).toContain("sealed-holdout-open-scan.mjs");
+    expect(pkg.scripts.guardrails).toContain("sealed-holdout-open-scan.mjs");
+  });
 });
