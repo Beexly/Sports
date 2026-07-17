@@ -14,17 +14,7 @@ MAXIMUM VERIFIED CAPABILITY PER TOKEN
 
 Do not ask the founder questions. Do not perform a broad audit. Do not reread the whole docs tree. Do not begin a second workstream.
 
-## 0. Install the durable package when needed
-
-If `docs/genesis/FIRST_BUILD_CONTRACT.md` is absent and `scripts/install-genesis-package.mjs` exists, run:
-
-```bash
-node scripts/install-genesis-package.mjs
-```
-
-Verify the generated files exist, then continue. Do not reread the installer payload.
-
-## 1. Establish reality
+## 0. Establish reality
 
 Run concise Git checks. Detect a dirty tree before editing.
 
@@ -32,7 +22,7 @@ When unrelated work is in progress, create a separate Git worktree and implement
 
 Verify current main and relevant PR/branch assets. Old docs and PR descriptions are leads, not authority.
 
-## 2. Select the workstream
+## 1. Select the workstream
 
 Argument: `$ARGUMENTS`
 
@@ -41,7 +31,7 @@ Argument: `$ARGUMENTS`
 - Any other ID: read the work queue and only that workstream’s approved contract. If no contract exists, write a compact build contract from existing Genesis doctrine, then stop before implementation unless the contract is unambiguous and no protected policy decision is required.
 - `verify`: independently inspect the current branch diff and execute applicable verification without expanding scope.
 
-## 3. Recover before creating
+## 2. Recover before creating
 
 For every required capability classify existing assets:
 
@@ -57,7 +47,7 @@ ABSENT
 
 Inspect Agent Foundry, Resource Radar, Assurance, model routing, evidence playback, proof systems, source governance and Dynasty assets when relevant. Do not create a second canonical system.
 
-## 4. Freeze one contract
+## 3. Freeze one contract
 
 Before editing, write internally:
 
@@ -75,7 +65,7 @@ Explicit exclusions
 
 Then implement the smallest complete vertical slice.
 
-## 5. Hard constraints
+## 4. Hard constraints
 
 Do not:
 
@@ -91,7 +81,7 @@ Do not:
 
 Record an `OWNER_GATE` and continue around genuinely reserved actions.
 
-## 6. Token discipline
+## 5. Token discipline
 
 - Search by symbol/path before opening files.
 - Prefer current compact state ledgers over historical handoff dumps.
@@ -101,7 +91,7 @@ Record an `OWNER_GATE` and continue around genuinely reserved actions.
 - Run focused tests during development and final relevant gates once.
 - Stop after one workstream even when context remains.
 
-## 7. Verification
+## 6. Verification
 
 Use repository-native commands and the selected contract. Never report green without command evidence.
 
@@ -119,7 +109,7 @@ build when production compilation is affected
 
 Run browser/accessibility checks when user-facing behavior changes.
 
-## 8. Update durable state
+## 7. Update durable state
 
 Update only the compact Genesis files needed to reflect:
 
@@ -131,7 +121,7 @@ Update only the compact Genesis files needed to reflect:
 
 Do not duplicate the full R&D into new docs.
 
-## 9. Git and PR
+## 8. Git and PR
 
 Use one dedicated branch and one draft PR. Do not merge. The PR body must distinguish:
 
@@ -140,7 +130,7 @@ Use one dedicated branch and one draft PR. Do not merge. The PR body must distin
 - production state not proven;
 - owner gates.
 
-## 10. Final receipt
+## 9. Final receipt
 
 Return a concise receipt using:
 
