@@ -135,6 +135,12 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
       url: `${base}/api/proof/verification-spec.json`,
       description: "The trustless conformance spec: the exact hash-chain algorithm plus synthetic known-answer test vectors, so you can build your own verifier in any language and check us with zero trust in our code.",
     },
+    {
+      rel: "reality-receipt",
+      url: `${base}/api/proof/reality/<gameId>`,
+      description:
+        "One reproducible object per decision (publish or pass): the evidence-envelope digest, the pick-proof receipt's live tamper check (sealed pre-kickoff, opening at kickoff/settlement exactly like /api/verify), and the Bitcoin-anchor status of its slate commitment. Add /image for a shareable PNG.",
+    },
   ];
 
   const verifyMethod: readonly string[] = [

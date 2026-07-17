@@ -198,3 +198,51 @@ signal). One canonical path proven end to end by test. REMAINING GATE before
 any real historical admission run: the packet spec's §2 strict previous-runs
 smoke (confirm Open-Meteo serves the run issued ≤ asOf, not best-lead
 stitching) — recorded here so no backtest can slip past it.
+
+## DEC-015 — W003 Reality Receipt v0: compose, don't reinvent (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: W003
+- Decision: `buildRealityReceipt` composes three EXISTING proof primitives
+  (W001 `PickEvidenceEnvelope` digest, `verifyReceiptIntegrity`'s live tamper
+  check, W-OTS's Bitcoin-anchor status) into one reproducible object rather
+  than adding a fourth. The receipt's SEALED→OPEN disclosure transition is
+  derived from the envelope's own `game.commenceTime`/`settlement.state`
+  (one canonical signal) instead of re-deriving `/api/verify`'s
+  `kickedOff || settled` check from a second DB row — same policy, zero
+  duplicated logic to drift. `/api/proof/reality/[gameId]` is public and
+  `gameId`-keyed (a *discovery* surface, unlike `/api/verify`'s
+  confirm-a-hash-you-hold design), so the loader hard-codes the FREE-tier-only
+  fail-closed pick filter Game Room's public viewer already uses and accepts
+  no viewer input — this is what stops a kicked-off/settled PRO/ELITE pick's
+  committed fields from opening to a non-paying visitor.
+- Evidence: 31 new tests green (build.ts pure-function reproducibility +
+  sealed/open/tamper/PASSED branches, card.ts content-mapping, and an
+  end-to-end route suite with a real `@sports/crypto` pending + Bitcoin-
+  attested proof exercised through the mocked DB), plus the touched-adjacent
+  suites (game-room paywall/evidence-adapter, pick-evidence-envelope,
+  machine-proof) re-run green. tsc and `eslint --max-warnings=0` clean on the
+  new/changed files.
+- Alternatives rejected: refactoring `lib/game-room/load.ts` to share its
+  Prisma query (deferred — would touch a protected, tested, entitlement-
+  bearing file for a v0 slice; the ~20-line query duplication is documented,
+  not hidden); a Merkle-inclusion-proof leg (needs sibling receipts, deferred
+  to a fast-follow); an 8th MCP tool wrapping the loader (deferred, cheap
+  fast-follow once the core surface is live).
+- Reversibility: additive only — new `lib/reality-receipt/` module, two new
+  routes, one new discovery-link entry in `machine-proof.ts`. No schema
+  change, no edits to `/api/verify`, `game-room/load.ts`, or the OTS route.
+- Protected zones: proof, public claims.
+- Files/PRs affected: `apps/web/lib/reality-receipt/**` (new),
+  `apps/web/app/api/proof/reality/[gameId]/route.ts` (new),
+  `apps/web/app/api/proof/reality/[gameId]/image/route.tsx` (new),
+  `apps/web/lib/proof/machine-proof.ts` (additive link),
+  `apps/web/lib/reality-receipt/__tests__/*`,
+  `apps/web/__tests__/proof-reality-route.test.ts`.
+- Note: no automated test covers the actual `next/og` `ImageResponse` pixel
+  render (no precedent exists anywhere in this repo — the 3 existing
+  `opengraph-image.tsx` files are untested too); covered instead by a route
+  test that exercises the real render call end to end (asserts status 200 +
+  `content-type: image/png` for both a found and an honest-unavailable
+  receipt) plus the Next build's own type-check/bundle pass.
+- Supersedes: none.

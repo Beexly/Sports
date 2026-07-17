@@ -1,10 +1,10 @@
 # GSE Frontier Current State
 
 **Status:** ACTIVE
-**Last verified:** 2026-07-17 (this session, command evidence in DEC-001/DEC-004)
+**Last verified:** 2026-07-17 (this session, command evidence in DEC-001/DEC-004, extended through DEC-015)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
-**Active workstream:** none — W002 DONE (worldline landed, verifier blockers fixed, DEC-009); W-OTS slice 1 DONE (DEC-010). Next `/gse-run next`: W-OTS slice 2 (mint wire + API + poll) or W003 Reality Receipt v0 (now unblocked) or W-MCP.
+**Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP slice 1 DONE; W-WEATHER-REC DONE (DEC-014); W003 Reality Receipt v0 DONE (DEC-015). Next `/gse-run next`: W004 SportsIR v0 (dependency W002-W003, both now satisfied), or vendor the stdio galaxy-proof-mcp packet, or an 8th MCP tool wrapping the reality-receipt loader.
 
 ## Verified facts
 
@@ -13,6 +13,11 @@
 - Founder orchestrator overlay (GSE_FRONTIER_ORCHESTRATOR_1.zip) installed and reconciled with the session-built control layer; canonical ledger names are the overlay's.
 - Open PRs verified 2026-07-17: #119 (recovered here), #121, #122, #123, #124, #112 (draft), #101 (superseded by #122), #52 (stale base). All based at e9fab35 (#118) or older.
 - W001 DONE: governed playback spine (PickEvidenceEnvelope, IntelligenceEvent lifecycle, epistemic deltas, decision-change certificate, audience projections) + Game Room playback consumer ported from PR #112 with three semantic grafts; entitlement narrowings declared in DEC-008; red-team APPROVE-WITH-NOTES with both fail-closed hardenings applied. Gates: targeted 50 + full web 8,323 green, tsc/lint/guardrails green, build 214 pages.
+- W002 DONE: bitemporal Worldline v0 (`apps/web/lib/worldline`) — as-of reads, semantic diffs, exact-attribution replay-stability audit, canonical digests. Verifier found and both blockers were fixed (DEC-009).
+- W-OTS DONE end to end: verbatim-ported, live-verified OpenTimestamps primitive (`packages/crypto/src/ots-anchor.ts`) → additive `otsProof`/`otsBitcoinHeight` storage → fail-open mint-path wiring + `/api/proof/ots/[slateKey]` → `upgradeDetached` + gated nightly `/api/cron/ots-upgrade` poll (DEC-010/011/013). `OTS_ANCHOR_ENABLED` default off.
+- W-MCP slice 1 DONE: the founder's galaxy-proof-mcp 7-tool contract hosted in-process at `/api/mcp` (streamable-HTTP JSON-RPC), zero new infra (DEC-012).
+- W-WEATHER-REC DONE: vendored as-of Open-Meteo loader + adapter into the existing leak-gated edge-lab feature builder — complementary layers, not duplicates (DEC-014). One open gate before any real historical admission run: the packet's §2 strict previous-runs smoke.
+- W003 DONE: Reality Receipt v0 (`apps/web/lib/reality-receipt`) composes the W001 envelope digest + the pick-proof hash-chain receipt's live tamper check + the W-OTS Bitcoin-anchor status into one reproducible object. `GET /api/proof/reality/[gameId]` (JSON) + `/image` (PNG via `next/og`), FREE-tier-only fail-closed by construction (DEC-015). 31 new tests; tsc/lint clean on changed files.
 
 ## Owner gates
 
@@ -20,4 +25,8 @@
 
 ## Next action
 
-Complete W001 (playback spine port + Game Room consumer), then `/gse-run next`.
+`/gse-run next` — W004 SportsIR v0 is unblocked (W002 ✓, W003 ✓). Lower-effort
+parallel options still open with zero new founder input: vendor the stdio
+galaxy-proof-mcp packet for local Claude Desktop/Cursor installs; an 8th MCP
+tool wrapping `loadRealityReceipt`; W003's deferred Merkle-inclusion-proof
+leg.
