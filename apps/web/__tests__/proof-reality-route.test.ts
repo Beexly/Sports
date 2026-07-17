@@ -9,16 +9,19 @@
 import { createHash } from "node:crypto";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildDetachedOts, emptyNode, serializeDetached } from "@sports/crypto";
+import { hashLeaf, merkleRoot, verifyInclusion, type PickRecord } from "@sports/prediction-engine";
 
 const mocks = vi.hoisted(() => ({
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   slateFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  receiptFindMany: vi.fn<(args: unknown) => Promise<unknown>>(),
 }));
 
 vi.mock("@sports/db", () => ({
   db: {
     game: { findUnique: mocks.gameFindUnique },
     slateCommitment: { findUnique: mocks.slateFindUnique },
+    pickProofReceipt: { findMany: mocks.receiptFindMany },
   },
 }));
 
@@ -158,6 +161,7 @@ function callImage(gameId: string): Promise<Response> {
 afterEach(() => {
   mocks.gameFindUnique.mockReset();
   mocks.slateFindUnique.mockReset();
+  mocks.receiptFindMany.mockReset();
 });
 
 describe("GET /api/proof/reality/[gameId]", () => {
@@ -198,7 +202,9 @@ describe("GET /api/proof/reality/[gameId]", () => {
     expect(receipt.state).toBe("SEALED");
     expect(receipt).not.toHaveProperty("committed");
     expect(body.receipt["anchor"]).toEqual({ state: "NOT_REQUESTED" });
+    expect(body.receipt["slateInclusion"]).toEqual({ state: "NOT_REQUESTED" });
     expect(mocks.slateFindUnique).not.toHaveBeenCalled();
+    expect(mocks.receiptFindMany).not.toHaveBeenCalled();
   });
 
   it("Bitcoin-attested anchor surfaces the block height", async () => {
@@ -252,6 +258,100 @@ describe("GET /api/proof/reality/[gameId]", () => {
     expect(body.receipt.receipt.state).toBe("OPEN");
     expect(body.receipt.receipt.verified).toBe(true);
     expect(body.receipt.receipt.committed).not.toBeNull();
+  });
+});
+
+describe("GET /api/proof/reality/[gameId] — slate Merkle-inclusion leg (Phase 2.2)", () => {
+  const SLATE_KEY = "NFL:2026-07-14";
+  // Shape of the actual pickProofReceipt.findMany({ select: { pickId, payload } }) rows.
+  const LEAF_ROWS: readonly { pickId: string; payload: string }[] = [
+    { pickId: "pick-0", payload: "asOf=2026-07-14T15:00:00.000Z|selection=Away -3.5" },
+    { pickId: "pick-1", payload: PAYLOAD },
+    { pickId: "pick-2", payload: "asOf=2026-07-14T17:00:00.000Z|selection=Home +6.5" },
+  ];
+  const LEAVES: readonly PickRecord[] = LEAF_ROWS.map((r) => ({ id: r.pickId, payload: r.payload }));
+  const ROOT_OVER_SLATE = merkleRoot(LEAVES, sha256Hex);
+
+  it("a genuine inclusion proof PROVES this receipt was in the committed root once the receipt itself is OPEN — index and count included", async () => {
+    // Past commenceTime: the receipt leg genuinely OPENs (kickedOff), so the
+    // slate-inclusion leg is not withheld — see the SEALED-gating test below
+    // for the pre-kickoff case.
+    mocks.gameFindUnique.mockResolvedValue(gameFixture({ commenceTime: new Date("2020-01-01T20:00:00.000Z") }));
+    mocks.slateFindUnique.mockResolvedValue({ root: ROOT_OVER_SLATE, count: LEAF_ROWS.length });
+    mocks.receiptFindMany.mockResolvedValue(LEAF_ROWS);
+
+    const res = await call("game-1");
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      receipt: { receipt: { state: string }; slateInclusion: { state: string; slateKey: string; root: string; count: number; index: number; proof: unknown } };
+    };
+    expect(body.receipt.receipt.state).toBe("OPEN");
+    const inclusion = body.receipt.slateInclusion;
+    expect(inclusion.state).toBe("PROVEN");
+    expect(inclusion.slateKey).toBe(SLATE_KEY);
+    expect(inclusion.root).toBe(ROOT_OVER_SLATE);
+    expect(inclusion.count).toBe(3);
+    expect(inclusion.index).toBe(1); // pick-1 sorts second among pick-0/pick-1/pick-2
+    // Independent recomputation — the proof genuinely folds up to the published root.
+    expect(verifyInclusion(inclusion.proof as never, ROOT_OVER_SLATE, sha256Hex)).toBe(true);
+    expect((inclusion.proof as { leaf: string }).leaf).toBe(hashLeaf(sha256Hex, { id: "pick-1", payload: PAYLOAD }));
+  });
+
+  it("withholds an otherwise-PROVEN inclusion proof as SEALED while pre-kickoff — never discloses the leaf hash early", async () => {
+    mocks.gameFindUnique.mockResolvedValue(gameFixture({ commenceTime: new Date("2026-12-31T20:00:00.000Z") }));
+    mocks.slateFindUnique.mockResolvedValue({ root: ROOT_OVER_SLATE, count: LEAF_ROWS.length });
+    mocks.receiptFindMany.mockResolvedValue(LEAF_ROWS);
+
+    const res = await call("game-1");
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { receipt: { receipt: { state: string }; slateInclusion: Record<string, unknown> } };
+    expect(body.receipt.receipt.state).toBe("SEALED");
+    expect(body.receipt.slateInclusion).toEqual({ state: "SEALED" });
+  });
+
+  it("no commitment row for the slateKey -> UNAVAILABLE, never a fabricated PROVEN", async () => {
+    mocks.gameFindUnique.mockResolvedValue(gameFixture({ commenceTime: new Date("2026-12-31T20:00:00.000Z") }));
+    mocks.slateFindUnique.mockResolvedValue(null);
+    mocks.receiptFindMany.mockResolvedValue(LEAF_ROWS);
+
+    const res = await call("game-1");
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { receipt: { slateInclusion: { state: string } } };
+    expect(body.receipt.slateInclusion.state).toBe("UNAVAILABLE");
+  });
+
+  it("this receipt's own leaf is missing from the fetched slate set -> UNAVAILABLE, not a crash", async () => {
+    mocks.gameFindUnique.mockResolvedValue(gameFixture({ commenceTime: new Date("2026-12-31T20:00:00.000Z") }));
+    mocks.slateFindUnique.mockResolvedValue({ root: ROOT_OVER_SLATE, count: LEAF_ROWS.length });
+    mocks.receiptFindMany.mockResolvedValue(LEAF_ROWS.filter((l) => l.pickId !== "pick-1"));
+
+    const res = await call("game-1");
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { receipt: { slateInclusion: { state: string } } };
+    expect(body.receipt.slateInclusion.state).toBe("UNAVAILABLE");
+  });
+
+  it("a reconstructed proof that does NOT fold to the published root -> UNAVAILABLE, never a false PROVEN", async () => {
+    mocks.gameFindUnique.mockResolvedValue(gameFixture({ commenceTime: new Date("2026-12-31T20:00:00.000Z") }));
+    mocks.slateFindUnique.mockResolvedValue({ root: "0000000000000000000000000000000000000000000000000000000000000000", count: LEAF_ROWS.length });
+    mocks.receiptFindMany.mockResolvedValue(LEAF_ROWS);
+
+    const res = await call("game-1");
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { receipt: { slateInclusion: { state: string } } };
+    expect(body.receipt.slateInclusion.state).toBe("UNAVAILABLE");
+  });
+
+  it("a slate-leaves lookup outage is UNAVAILABLE and never fails the whole Reality Receipt (fail-open)", async () => {
+    mocks.gameFindUnique.mockResolvedValue(gameFixture({ commenceTime: new Date("2026-12-31T20:00:00.000Z") }));
+    mocks.slateFindUnique.mockResolvedValue({ root: ROOT_OVER_SLATE, count: LEAF_ROWS.length });
+    mocks.receiptFindMany.mockRejectedValue(new Error("connection reset"));
+
+    const res = await call("game-1");
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { found: boolean; receipt: { slateInclusion: { state: string } } };
+    expect(body.found).toBe(true);
+    expect(body.receipt.slateInclusion.state).toBe("UNAVAILABLE");
   });
 });
 

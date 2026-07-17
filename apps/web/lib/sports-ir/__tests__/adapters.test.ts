@@ -241,7 +241,13 @@ describe("Proof (← RealityReceipt, W003)", () => {
 
   it("maps a Bitcoin-attested receipt: digest + verified verdict + BITCOIN_ATTESTED anchor", () => {
     const receipt = buildRealityReceipt(
-      { envelope: envelope(), receiptRow, anchor: { state: "BITCOIN_ATTESTED", slateKey: "NFL:2026-07-14", bitcoinBlockHeights: [905432] }, now: after },
+      {
+        envelope: envelope(),
+        receiptRow,
+        anchor: { state: "BITCOIN_ATTESTED", slateKey: "NFL:2026-07-14", bitcoinBlockHeights: [905432] },
+        slateInclusion: { state: "NOT_REQUESTED" },
+        now: after,
+      },
       sha256,
     );
     const proof = realityReceiptToSportsIrProof(receipt);
@@ -255,12 +261,24 @@ describe("Proof (← RealityReceipt, W003)", () => {
   it("PENDING → PENDING and NOT_REQUESTED → NONE", () => {
     expect(
       realityReceiptToSportsIrProof(
-        buildRealityReceipt({ envelope: envelope(), receiptRow, anchor: { state: "PENDING", slateKey: "NFL:2026-07-14", pendingCalendars: ["https://a.calendar"] }, now: after }, sha256),
+        buildRealityReceipt(
+          {
+            envelope: envelope(),
+            receiptRow,
+            anchor: { state: "PENDING", slateKey: "NFL:2026-07-14", pendingCalendars: ["https://a.calendar"] },
+            slateInclusion: { state: "NOT_REQUESTED" },
+            now: after,
+          },
+          sha256,
+        ),
       ).anchor,
     ).toBe("PENDING");
     expect(
       realityReceiptToSportsIrProof(
-        buildRealityReceipt({ envelope: envelope(), receiptRow, anchor: { state: "NOT_REQUESTED" }, now: after }, sha256),
+        buildRealityReceipt(
+          { envelope: envelope(), receiptRow, anchor: { state: "NOT_REQUESTED" }, slateInclusion: { state: "NOT_REQUESTED" }, now: after },
+          sha256,
+        ),
       ).anchor,
     ).toBe("NONE");
   });
@@ -270,7 +288,10 @@ describe("Proof (← RealityReceipt, W003)", () => {
     { state: "NO_PROOF" } as const,
     { state: "UNAVAILABLE" } as const,
   ])("$state collapses to UNKNOWN — never asserted as anchored or not-anchored", (anchor) => {
-    const receipt = buildRealityReceipt({ envelope: envelope(), receiptRow, anchor, now: after }, sha256);
+    const receipt = buildRealityReceipt(
+      { envelope: envelope(), receiptRow, anchor, slateInclusion: { state: "NOT_REQUESTED" }, now: after },
+      sha256,
+    );
     expect(realityReceiptToSportsIrProof(receipt).anchor).toBe("UNKNOWN");
   });
 
@@ -283,7 +304,7 @@ describe("Proof (← RealityReceipt, W003)", () => {
     };
     const passedEnvelope = buildRoomEvidenceEnvelope(record, sha256)!;
     const receipt = buildRealityReceipt(
-      { envelope: passedEnvelope, receiptRow: null, anchor: { state: "NOT_REQUESTED" }, now: after },
+      { envelope: passedEnvelope, receiptRow: null, anchor: { state: "NOT_REQUESTED" }, slateInclusion: { state: "NOT_REQUESTED" }, now: after },
       sha256,
     );
     expect(receipt.receipt.state).toBe("NOT_CAPTURED");
@@ -294,7 +315,7 @@ describe("Proof (← RealityReceipt, W003)", () => {
   it("a tamper-failed receipt maps verified:false — the adapter never launders a bad check", () => {
     const tampered: ReceiptForVerification = { ...receiptRow, line: 999 };
     const receipt = buildRealityReceipt(
-      { envelope: envelope(), receiptRow: tampered, anchor: { state: "NOT_REQUESTED" }, now: after },
+      { envelope: envelope(), receiptRow: tampered, anchor: { state: "NOT_REQUESTED" }, slateInclusion: { state: "NOT_REQUESTED" }, now: after },
       sha256,
     );
     expect(realityReceiptToSportsIrProof(receipt).verified).toBe(false);

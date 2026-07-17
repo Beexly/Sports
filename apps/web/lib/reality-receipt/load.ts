@@ -1,7 +1,7 @@
 /**
  * Reality Receipt v0 — the loader (W003). Impure boundary: DB reads + the
- * OTS anchor lookup live here so build.ts/card.ts stay pure and trivially
- * testable.
+ * OTS anchor lookup + the slate Merkle-inclusion lookup (Phase 2.2) live
+ * here so build.ts/card.ts stay pure and trivially testable.
  *
  * Reuses (never edits) the W001 evidence-spine primitives — `gameRoomEvidenceRecord`
  * and `buildRoomEvidenceEnvelope` — with the SAME fail-closed, FREE-tier-only
@@ -20,11 +20,12 @@
 import { createHash } from "node:crypto";
 import { db } from "@sports/db";
 import { deserializeDetached, isBitcoinAttested, otsStatus } from "@sports/crypto";
+import { inclusionProof, verifyInclusion, type PickRecord } from "@sports/prediction-engine";
 import { buildRoomEvidenceEnvelope } from "@/lib/intelligence-playback";
 import { gameRoomEvidenceRecord, type GameRoomDbRecord } from "@/lib/game-room/evidence-record";
 import type { ReceiptForVerification } from "@/lib/proof/receipt-proof";
 import { buildRealityReceipt } from "./build";
-import type { RealityReceiptAnchor } from "./types";
+import type { RealityReceiptAnchor, RealityReceiptSlateInclusion } from "./types";
 import type { RealityReceiptLoad } from "./load-types";
 
 export type { RealityReceiptLoad, RealityReceiptLoadFailureReason } from "./load-types";
@@ -67,6 +68,47 @@ async function loadAnchorStatus(slateKey: string | null): Promise<RealityReceipt
     return isBitcoinAttested(parsed)
       ? { state: "BITCOIN_ATTESTED", slateKey, bitcoinBlockHeights: status.bitcoin }
       : { state: "PENDING", slateKey, pendingCalendars: status.pendingCalendars };
+  } catch {
+    return { state: "UNAVAILABLE" };
+  }
+}
+
+/**
+ * Resolve the slate Merkle-inclusion leg (Phase 2.2) for one receipt. Fail-open
+ * by contract, mirroring `loadAnchorStatus`: any lookup failure, missing
+ * commitment row, missing leaf, or a reconstructed proof that fails to fold
+ * to the published root degrades to an honest UNAVAILABLE — it never throws
+ * and never blocks the rest of the Reality Receipt, and it never reports a
+ * fabricated PROVEN.
+ *
+ * Reconstructs the EXACT leaf set `freezeSlateCommitments` committed:
+ * `{ pickId, payload }` rows for the slate, ordered `pickId` ascending (see
+ * packages/ingestion-pipeline/src/freeze-slate-commitments.ts) — the same
+ * order the one-receipt-one-slate invariant guarantees is stable after
+ * freeze, since a committed receipt's `slateKey` is never reassigned.
+ */
+async function loadSlateInclusion(pickId: string | null, slateKey: string | null): Promise<RealityReceiptSlateInclusion> {
+  if (!slateKey || !pickId) return { state: "NOT_REQUESTED" };
+
+  try {
+    const [commitment, leaves] = await Promise.all([
+      db.slateCommitment.findUnique({ where: { slateKey }, select: { root: true, count: true } }),
+      db.pickProofReceipt.findMany({
+        where: { slateKey },
+        select: { pickId: true, payload: true },
+        orderBy: { pickId: "asc" },
+      }),
+    ]);
+    if (!commitment) return { state: "UNAVAILABLE" };
+
+    const index = leaves.findIndex((leaf) => leaf.pickId === pickId);
+    if (index === -1) return { state: "UNAVAILABLE" };
+
+    const records: PickRecord[] = leaves.map((leaf) => ({ id: leaf.pickId, payload: leaf.payload }));
+    const proof = inclusionProof(records, index, sha256);
+    if (!verifyInclusion(proof, commitment.root, sha256)) return { state: "UNAVAILABLE" };
+
+    return { state: "PROVEN", slateKey, root: commitment.root, count: commitment.count, index, proof };
   } catch {
     return { state: "UNAVAILABLE" };
   }
@@ -148,7 +190,9 @@ export async function loadRealityReceipt(gameId: string, now: Date = new Date())
       }
     : null;
 
-  const anchor = await loadAnchorStatus(primaryPick?.proofReceipt?.slateKey ?? null);
+  const slateKey = primaryPick?.proofReceipt?.slateKey ?? null;
+  const anchor = await loadAnchorStatus(slateKey);
+  const slateInclusion = await loadSlateInclusion(primaryPick?.proofReceipt?.pickId ?? null, slateKey);
 
-  return { ok: true, receipt: buildRealityReceipt({ envelope, receiptRow, anchor, now }, sha256) };
+  return { ok: true, receipt: buildRealityReceipt({ envelope, receiptRow, anchor, slateInclusion, now }, sha256) };
 }

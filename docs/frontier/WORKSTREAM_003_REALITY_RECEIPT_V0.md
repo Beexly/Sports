@@ -66,11 +66,14 @@ frontend-only paywalls — this is the server-side enforcement.)
    `rel: "reality-receipt"`, same pattern as the `ots-anchor`/`mcp` links.
 
 **Explicitly out of scope for v0** (fast-follow candidates, not blockers):
-Merkle inclusion proof of the receipt within its slate root (needs sibling
-receipts + `inclusionProof` from `@sports/prediction-engine`); an 8th MCP
-tool wrapping this loader; a public page (vs. API-only) for a single Reality
-Receipt; multi-pick-per-game addressing (v0 is single primary-pick-per-game,
-matching Game Room's own existing precedent).
+~~Merkle inclusion proof of the receipt within its slate root~~ — LANDED
+Phase 2.2 (2026-07-17, DEC-018): `slateInclusion` leg on `RealityReceipt`,
+gated on the same `isOpen` signal the `receipt` leg already uses (a
+genuinely-PROVEN proof is withheld as `SEALED` pre-kickoff — see DEC-018).
+~~An 8th MCP tool wrapping this loader~~ — LANDED Phase 2.1 (DEC-017,
+`get_reality_receipt`). Still out of scope: a public page (vs. API-only) for
+a single Reality Receipt; multi-pick-per-game addressing (v0 is single
+primary-pick-per-game, matching Game Room's own existing precedent).
 
 **Base.** `507ab986`. **Forbidden.** `lib/game-room/load.ts` and
 `lib/game-room/evidence-record.ts` (read-only reuse, no edits — protected,

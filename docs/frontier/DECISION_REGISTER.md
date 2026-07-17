@@ -293,3 +293,55 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: apps/web/lib/proof-mcp/tools.ts, apps/web/app/api/mcp/route.ts (comment only),
   apps/web/lib/proof/machine-proof.ts (comment only), apps/web/__tests__/proof-mcp-route.test.ts.
 - Supersedes: none.
+
+## DEC-018 — Phase 2.2: W003 Merkle-inclusion leg, gated to the receipt's own disclosure timing (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: Phase 2 (post-GX-000/GG-001 master-plan follow-up); lands the fast-follow the
+  W003 v0 contract explicitly deferred (`docs/frontier/WORKSTREAM_003_REALITY_RECEIPT_V0.md`
+  §"Explicitly out of scope for v0").
+- Decision: `RealityReceipt` gains a `slateInclusion` leg proving the decision's receipt was
+  inside its slate's pre-kickoff committed Merkle root, reusing `inclusionProof`/
+  `verifyInclusion`/`hashLeaf` from `@sports/prediction-engine` exactly (no new hashing
+  logic). The loader (`load.ts`) reconstructs the EXACT leaf set
+  `freezeSlateCommitments` committed — `pickProofReceipt` rows for the slateKey, ordered
+  `pickId` ascending, matching `packages/ingestion-pipeline/src/freeze-slate-commitments.ts`'s
+  own commit-time query — and independently recomputes + verifies the inclusion proof against
+  the published `SlateCommitment.root`; any lookup failure, missing leaf, or a proof that
+  fails to fold to the root fail-opens to `UNAVAILABLE`, never a fabricated `PROVEN`.
+- Adversarial finding + fix (gse-red-team pass, pre-commit): the first cut passed a `PROVEN`
+  slate-inclusion leg through unconditionally, which discloses `proof.leaf` — exactly the
+  receipt's own `contentHash` (slate-commitment.ts: "a pick's leaf in the slate is exactly
+  its receipt.contentHash") — even while the `receipt` leg itself is still `SEALED`
+  pre-kickoff. That breaks the "SEALED never opens" invariant `/api/verify` and the
+  `receipt` leg both already enforce. Fixed in `build.ts` with `gateSlateInclusion()`: a
+  `PROVEN` result is downgraded to a new `SEALED` state (no fields beyond the state tag)
+  whenever `receipt.state !== "OPEN"`; `NOT_REQUESTED`/`UNAVAILABLE` are not gated (they
+  disclose nothing). The digest is computed off the GATED value, so two different `PROVEN`
+  inputs collapse to an identical digest pre-kickoff — no information about the underlying
+  proof leaks even indirectly. Other red-team findings (server-side over-fetch of
+  same-slate PRO/ELITE/pre-kickoff payloads: confirmed NOT a leak — only hashes ever reach
+  the wire, per `inclusionProof`'s own implementation; slate root/count public pre-kickoff:
+  confirmed already-intentional per `slate-commitment.ts`'s own "publish before kickoff"
+  design and the pre-existing `/api/proof/ots/[slateKey]` route) required no code change.
+- Evidence: 78 combined tests green (reality-receipt build/card/route + sports-ir adapters +
+  proof-mcp route + proof-hash), including new tests proving (a) the SEALED-gating fires
+  end to end at the route level, (b) two structurally different `PROVEN` inputs produce an
+  identical digest pre-kickoff, (c) `PROVEN` passes through untouched once the receipt is
+  genuinely `OPEN`. `tsc --noEmit` clean, `eslint --max-warnings=0` clean on touched files,
+  `npm run guardrails` all green. No schema/migration changes (read-only `findUnique`/
+  `findMany`, no writes).
+- Alternatives rejected: collapsing a withheld proof to `NOT_REQUESTED` (would conflate "no
+  slate commitment applies" with "computed successfully but withheld," a distinct, less
+  honest signal than a dedicated `SEALED` state); gating in the loader instead of the
+  builder (the builder already owns `isOpen`/disclosure-timing policy for the `receipt` leg —
+  one policy owner, not two that could drift).
+- Reversibility: additive only — one new type variant, one new pure gating function, one
+  loader function, digest formula extended (already-updated in this same diff's own tests;
+  no other consumer pins the old 3-field formula — confirmed by repo-wide grep).
+- Protected zones: proof, public claims. gse-red-team pass completed pre-commit per
+  `.claude/rules/protected-money-truth.md`.
+- Files: apps/web/lib/reality-receipt/{types.ts,build.ts,load.ts}, apps/web/lib/reality-receipt/__tests__/build.test.ts,
+  apps/web/__tests__/proof-reality-route.test.ts, apps/web/lib/sports-ir/__tests__/adapters.test.ts,
+  docs/frontier/WORKSTREAM_003_REALITY_RECEIPT_V0.md (scope note updated).
+- Supersedes: none.

@@ -1,4 +1,5 @@
 import type { CommittedFields } from "@/lib/proof/receipt-proof";
+import type { MerkleProof } from "@sports/prediction-engine";
 
 /**
  * The receipt-integrity leg of a Reality Receipt. Mirrors `/api/verify`'s
@@ -39,6 +40,46 @@ export type RealityReceiptAnchor =
   | { readonly state: "PENDING"; readonly slateKey: string; readonly pendingCalendars: readonly string[] }
   | { readonly state: "BITCOIN_ATTESTED"; readonly slateKey: string; readonly bitcoinBlockHeights: readonly number[] };
 
+/**
+ * The slate Merkle-inclusion leg (Phase 2.2): proof that this decision's
+ * receipt was inside its slate's PRE-KICKOFF committed root — the same
+ * commit-reveal population guarantee `/proof`'s board already carries per
+ * row (see `packages/prediction-engine/src/slate-commitment.ts`), now
+ * surfaced on the single-decision Reality Receipt too.
+ *
+ * States mirror the anchor leg's honesty policy: NOT_REQUESTED when no slate
+ * commitment can apply (a PASSED decision, or a receipt not yet frozen into
+ * a slate — `pickProofReceipt.slateKey` is null until the freeze job runs);
+ * UNAVAILABLE on any lookup failure OR a reconstructed proof that fails to
+ * fold to the published root — fail-open, since a transient DB hiccup or a
+ * data inconsistency on this ONE leg must never be reported as a fabricated
+ * PROVEN, and must never block the rest of the Reality Receipt.
+ *
+ * SEALED is the one state `build.ts` imposes rather than the loader: a
+ * genuinely-computed inclusion proof is WITHHELD (never surfaced as PROVEN)
+ * while the `receipt` leg itself is still SEALED — `proof.leaf` is exactly
+ * the receipt's own `contentHash` (see slate-commitment.ts's "a pick's leaf
+ * in the slate is exactly its receipt.contentHash"), so disclosing it early
+ * would open a hash `/api/verify` and the `receipt` leg both deliberately
+ * withhold pre-kickoff. One disclosure rule for the whole composed object,
+ * not two that could drift apart.
+ */
+export type RealityReceiptSlateInclusion =
+  | { readonly state: "NOT_REQUESTED" }
+  | { readonly state: "UNAVAILABLE" }
+  | { readonly state: "SEALED" }
+  | {
+      readonly state: "PROVEN";
+      readonly slateKey: string;
+      /** The published Merkle root this proof folds up to. */
+      readonly root: string;
+      /** The slate's pre-registered population size (the fixed denominator). */
+      readonly count: number;
+      /** This receipt's leaf index within the committed slate. */
+      readonly index: number;
+      readonly proof: MerkleProof;
+    };
+
 export interface RealityReceipt {
   readonly schemaVersion: "reality-receipt/v0";
   /** ISO stamp of when THIS object was assembled — excluded from `digest`. */
@@ -61,10 +102,12 @@ export interface RealityReceipt {
   };
   readonly receipt: RealityReceiptProof;
   readonly anchor: RealityReceiptAnchor;
+  readonly slateInclusion: RealityReceiptSlateInclusion;
   /**
-   * sha256(canonicalJson({envelopeDigest, receipt, anchor})). Reproducible:
-   * given the same envelope digest, the same receipt row, and the same
-   * anchor status, any independent recomputation yields this exact hash.
+   * sha256(canonicalJson({envelopeDigest, receipt, anchor, slateInclusion})).
+   * Reproducible: given the same envelope digest, the same receipt row, the
+   * same anchor status, and the same slate-inclusion state, any independent
+   * recomputation yields this exact hash.
    * `generatedAt` is deliberately NOT covered — a wall-clock stamp would make
    * "reproducible" meaningless.
    */
