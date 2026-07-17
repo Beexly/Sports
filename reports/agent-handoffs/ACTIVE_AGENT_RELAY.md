@@ -145,3 +145,23 @@ pushed, fifth covered by the in-flight gate-integrity slice.
 Per-fixture prediction pages · llms.txt + read-only MCP over SETTLED ledger only
 · EV/no-vig/CLV calculators · watchlist/alerts · contrarian-accuracy ledger stat
 · Google News sitemap · nfelo-shape season table (+ our Wilson LCBs).
+
+## Queue completions (2026-07-17, all on PR #120 unless noted)
+
+- Task #5 Jarvis memory write path — DONE 195f847c (gated JARVIS_MEMORY_WRITE_ENABLED
+  default off; also fixed a live stub overstatement in buildLiveMemoryStatus).
+- Task #6 backtest harness — DONE 9405a7e9 (gated BACKTEST_HARNESS_ENABLED; cron
+  documented-not-registered in reports/ops/backtest-harness-cron.md).
+- Task #12 Sealed Engine ritual — DONE 57e3a3a5 (/sealed, method-opaque by type;
+  gated SEALED_ENGINE_ENABLED; left live /engine untouched).
+- Intel hardening wave (#34), DFS (#36), affiliate (#35), stranded salvage (#37) —
+  all DONE earlier this session.
+- STILL IN FLIGHT: watchlist retention primitive (additive migration, tier-gated,
+  graded-only alerts).
+
+## NEW founder-gated flags added this session (all default OFF)
+
+LINE_ARCHIVE_ENABLED, LINE_ARCHIVE_EU_PINNACLE, PUBLISH_LEDGER, SEALED_ENGINE_ENABLED,
+JARVIS_MEMORY_WRITE_ENABLED, BACKTEST_HARNESS_ENABLED, WATCHLIST_ALERTS_ENABLED
+(pending), plus the sealed-holdout GSE_ALLOW_HOLDOUT_OPEN env for edge-lab. Nothing
+flips without a founder setting it; every surface has an honest OFF state.
