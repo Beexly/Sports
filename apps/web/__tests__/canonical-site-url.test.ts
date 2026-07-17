@@ -99,7 +99,9 @@ describe("robots.txt emits the canonical www host by default", () => {
     const robots = (await import("@/app/robots")).default;
     const out = robots();
     expect(out.host).toBe(WWW);
-    expect(out.sitemap).toBe(`${WWW}/sitemap.xml`);
+    // Both the general sitemap and the Google News sitemap are advertised,
+    // each on the canonical www host (never the apex).
+    expect(out.sitemap).toEqual([`${WWW}/sitemap.xml`, `${WWW}/news-sitemap.xml`]);
     expect(out.host).not.toBe(APEX);
   });
 
