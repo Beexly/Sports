@@ -1,10 +1,13 @@
 /**
  * Galaxy Proof MCP — hosted tool set (W-MCP).
  *
- * The founder's galaxy-proof-mcp packet as a HOSTED surface: the same 7-tool
- * contract, served from the site itself at /api/mcp (streamable-HTTP JSON-RPC),
- * so any MCP-capable agent can add https://www.galaxysportsedge.com/api/mcp as
- * a connector and audit the record — zero installs, zero new infra.
+ * The founder's galaxy-proof-mcp packet as a HOSTED surface: the original
+ * 7-tool contract plus get_reality_receipt (W003's composed envelope +
+ * receipt + Bitcoin-anchor object, added the same in-process, one-truth-path
+ * way as every other tool here), served from the site itself at /api/mcp
+ * (streamable-HTTP JSON-RPC), so any MCP-capable agent can add
+ * https://www.galaxysportsedge.com/api/mcp as a connector and audit the
+ * record — zero installs, zero new infra.
  *
  * One canonical truth path: handlers run IN-PROCESS over the repo's own proof
  * modules — buildMachineProof / buildVerificationSpec / buildProofOpenApiSpec
@@ -72,6 +75,31 @@ async function fetchReceiptsPage(limit: number, cursor: string | null): Promise<
     return { ok: false, error: body.error ?? `receipts source returned HTTP ${res.status}` };
   }
   return { ok: true, page: body };
+}
+
+interface RealityReceiptResponse {
+  readonly found: boolean;
+  readonly receipt?: unknown;
+  readonly reason?: string;
+  readonly error?: string;
+}
+
+/**
+ * Invoke the real /api/proof/reality/[gameId] route handler in-process (one
+ * truth path — the MCP tool can never drift from the public JSON API, same
+ * discipline as fetchReceiptsPage above). Distinguishes honest absence
+ * (found:false, never an isError) from a genuine service outage.
+ */
+async function fetchRealityReceipt(gameId: string): Promise<{ ok: true; body: RealityReceiptResponse } | { ok: false; error: string }> {
+  const { GET } = await import("@/app/api/proof/reality/[gameId]/route");
+  const res = (await GET(new Request(`${SITE_URL}/api/proof/reality/${encodeURIComponent(gameId)}`), {
+    params: Promise.resolve({ gameId }),
+  })) as Response;
+  const body = (await res.json()) as RealityReceiptResponse;
+  if (res.status === 503) {
+    return { ok: false, error: body.error ?? "reality-receipt source returned HTTP 503" };
+  }
+  return { ok: true, body };
 }
 
 const NO_ADDITIONAL = { additionalProperties: false } as const;
@@ -154,6 +182,20 @@ export const PROOF_MCP_TOOLS: readonly McpToolDef[] = [
       ...NO_ADDITIONAL,
     },
   },
+  {
+    name: "get_reality_receipt",
+    title: "Get a Reality Receipt for one decision",
+    description:
+      "One reproducible object per game decision (publish or pass): the W001 evidence-envelope digest, the pick-proof receipt's live tamper check (sealed pre-kickoff, opening at kickoff/settlement exactly like verify_receipt_via_api), and the Bitcoin-anchor status of its slate commitment. Public, FREE-tier-only by construction — a kicked-off/settled PRO or ELITE pick's committed fields can never open here.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        gameId: { type: "string", description: "The game id (as used by /room/[gameId] and /api/proof/reality/[gameId])." },
+      },
+      required: ["gameId"],
+      ...NO_ADDITIONAL,
+    },
+  },
 ];
 
 const MAX_AUDIT_PAGES = 200;
@@ -231,6 +273,15 @@ export async function callProofMcpTool(name: string, args: Record<string, unknow
             : "Every leaf hash above was recomputed from its published preimage; the root is your math, not Galaxy's assertion.",
         truncated: cursor !== null && leaves.length >= cap ? `capped at ${cap} receipts — raise maxReceipts to continue` : null,
       });
+    }
+    case "get_reality_receipt": {
+      const gameId = String(args["gameId"] ?? "").trim();
+      if (!gameId) return jsonResult({ ok: false, error: "gameId is required" }, true);
+      const r = await fetchRealityReceipt(gameId);
+      if (!r.ok) return jsonResult({ ok: false, error: r.error }, true);
+      // Honest absence (no such game, or no decision recorded yet) is a real
+      // answer, not a tool failure — never marked isError.
+      return jsonResult({ ok: true, found: r.body.found, receipt: r.body.receipt ?? null, reason: r.body.reason ?? null });
     }
     default:
       return jsonResult({ ok: false, error: `Unknown tool: ${name}` }, true);

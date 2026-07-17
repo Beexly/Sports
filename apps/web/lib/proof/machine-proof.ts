@@ -122,7 +122,7 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
       rel: "mcp",
       url: `${base}/api/mcp`,
       description:
-        "Hosted MCP endpoint (streamable HTTP): add this URL as a connector in any MCP-capable agent and call the 7 proof tools — including a full trustless record audit where every hash verdict is your own recomputation.",
+        "Hosted MCP endpoint (streamable HTTP): add this URL as a connector in any MCP-capable agent and call the 8 proof tools — including a full trustless record audit where every hash verdict is your own recomputation, and a single decision's Reality Receipt.",
     },
     {
       rel: "ots-anchor",

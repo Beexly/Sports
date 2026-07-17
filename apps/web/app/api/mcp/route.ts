@@ -6,9 +6,9 @@ import { SITE_URL } from "@/lib/seo/site-url";
  * POST /api/mcp — the hosted Galaxy Proof MCP endpoint (streamable-HTTP,
  * stateless JSON responses — permitted by the MCP spec for servers that don't
  * stream). Any MCP-capable agent adds this URL as a connector and gets the
- * 7-tool proof suite: record summary, settled receipts, LOCAL hash
+ * 8-tool proof suite: record summary, settled receipts, LOCAL hash
  * re-verification, cross-check, the conformance spec, the OpenAPI contract,
- * and the full trustless record audit.
+ * the full trustless record audit, and a single decision's Reality Receipt.
  *
  * Deliberately dependency-free: the JSON-RPC 2.0 + MCP handshake subset needed
  * here (initialize / notifications/initialized / ping / tools/list /

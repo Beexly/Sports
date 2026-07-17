@@ -273,3 +273,23 @@ stitching) — recorded here so no backtest can slip past it.
   apps/web/lib/sports-ir/{adapters.ts,index.ts,__tests__/adapters.test.ts},
   packages/types/src/index.ts (1 line), docs/frontier/WORKSTREAM_004_SPORTSIR_V0.md.
 - Supersedes: none.
+
+## DEC-017 — Phase 2.1: 8th proof-MCP tool, one truth path preserved (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: Phase 2 (post-GX-000/GG-001 master-plan follow-up)
+- Decision: `get_reality_receipt` added to the hosted proof-MCP (`apps/web/lib/proof-mcp/tools.ts`),
+  invoking the REAL `/api/proof/reality/[gameId]` route handler in-process — same
+  one-truth-path discipline as `list_settled_receipts`/`verify_receipt_via_api` — rather
+  than calling `loadRealityReceipt` directly, so the MCP tool can never drift from the
+  public JSON API. Honest absence (no such game, no decision yet) returns `found:false`
+  without `isError`; a genuine 503 (DB outage) maps to `isError:true`. FREE-tier-only by
+  construction (inherited from the route's own fail-closed loader — W003 DEC-015).
+- Evidence: 14 proof-mcp-route tests green (4 new), machine-proof 14 green, tsc clean,
+  eslint --max-warnings=0 clean.
+- Reversibility: additive only — one tool def, one dispatch case, one helper function,
+  doc-count updates (7→8) in three files.
+- Protected zones: proof, public claims.
+- Files: apps/web/lib/proof-mcp/tools.ts, apps/web/app/api/mcp/route.ts (comment only),
+  apps/web/lib/proof/machine-proof.ts (comment only), apps/web/__tests__/proof-mcp-route.test.ts.
+- Supersedes: none.

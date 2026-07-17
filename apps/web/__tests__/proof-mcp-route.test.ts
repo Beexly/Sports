@@ -11,8 +11,18 @@
 import { describe, expect, it, vi } from "vitest";
 import { createHash } from "node:crypto";
 
-const mocks = vi.hoisted(() => ({ findMany: vi.fn() }));
-vi.mock("@sports/db", () => ({ db: { pickProofReceipt: { findMany: mocks.findMany } } }));
+const mocks = vi.hoisted(() => ({
+  findMany: vi.fn(),
+  gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  slateFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+}));
+vi.mock("@sports/db", () => ({
+  db: {
+    pickProofReceipt: { findMany: mocks.findMany },
+    game: { findUnique: mocks.gameFindUnique },
+    slateCommitment: { findUnique: mocks.slateFindUnique },
+  },
+}));
 
 import { GET, POST } from "@/app/api/mcp/route";
 
@@ -57,12 +67,13 @@ describe("MCP handshake", () => {
 });
 
 describe("tools/list", () => {
-  it("exposes exactly the 7-tool proof contract with schemas", async () => {
+  it("exposes exactly the 8-tool proof contract with schemas", async () => {
     const body = await json(await rpc({ jsonrpc: "2.0", id: 4, method: "tools/list" }));
     const tools = (body["result"] as { tools: { name: string; inputSchema: unknown }[] }).tools;
     expect(tools.map((t) => t.name).sort()).toEqual([
       "audit_record_trustlessly",
       "get_openapi_contract",
+      "get_reality_receipt",
       "get_record_summary",
       "get_verification_spec",
       "list_settled_receipts",
@@ -144,6 +155,79 @@ describe("GET descriptor", () => {
   it("describes the endpoint, transport, and tool names", async () => {
     const body = await json(GET() as unknown as Response);
     expect(body["transport"]).toBe("streamable-http");
-    expect((body["tools"] as string[]).length).toBe(7);
+    expect((body["tools"] as string[]).length).toBe(8);
+  });
+});
+
+describe("tools/call — get_reality_receipt (one truth path over the real route)", () => {
+  function realityFixture(commenceTime: Date) {
+    return {
+      id: "game-1",
+      homeTeamName: "Home",
+      awayTeamName: "Away",
+      commenceTime,
+      lineMovementSpread: -0.5,
+      lineMovementTotal: null,
+      sport: { name: "NFL" },
+      picks: [],
+      gateDecisions: [
+        {
+          id: "gate-1",
+          pickId: null,
+          status: "GATED",
+          reason: "No edge cleared the floor.",
+          reasonCode: "EDGE_BELOW_FLOOR",
+          edgeIndex: 40,
+          confidence: null,
+          modelVersion: "gse-v6",
+          evaluatedAt: new Date("2026-07-14T16:05:00.000Z"),
+          evidenceRefs: null,
+        },
+      ],
+      odds: [],
+      gameSignals: [],
+    };
+  }
+
+  it("a PASSED decision returns found:true with an honest NOT_CAPTURED receipt leg — never an error", async () => {
+    mocks.gameFindUnique.mockResolvedValue(realityFixture(new Date("2026-12-31T20:00:00.000Z")));
+    const body = await json(
+      await rpc({ jsonrpc: "2.0", id: 10, method: "tools/call", params: { name: "get_reality_receipt", arguments: { gameId: "game-1" } } }),
+    );
+    const result = body["result"] as { content: { text: string }[]; isError?: boolean };
+    const parsed = JSON.parse(result.content[0]!.text) as { ok: boolean; found: boolean; receipt: { receipt: { state: string } } };
+    expect(result.isError).toBeUndefined();
+    expect(parsed.ok).toBe(true);
+    expect(parsed.found).toBe(true);
+    expect(parsed.receipt.receipt.state).toBe("NOT_CAPTURED");
+  });
+
+  it("no such game returns found:false honestly, not isError", async () => {
+    mocks.gameFindUnique.mockResolvedValue(null);
+    const body = await json(
+      await rpc({ jsonrpc: "2.0", id: 11, method: "tools/call", params: { name: "get_reality_receipt", arguments: { gameId: "nope" } } }),
+    );
+    const result = body["result"] as { content: { text: string }[]; isError?: boolean };
+    const parsed = JSON.parse(result.content[0]!.text) as { ok: boolean; found: boolean; reason: string };
+    expect(result.isError).toBeUndefined();
+    expect(parsed.found).toBe(false);
+    expect(parsed.reason).toMatch(/no such game/i);
+  });
+
+  it("a DB outage maps to isError:true — never a false found:false", async () => {
+    mocks.gameFindUnique.mockRejectedValue(new Error("connection reset"));
+    const body = await json(
+      await rpc({ jsonrpc: "2.0", id: 12, method: "tools/call", params: { name: "get_reality_receipt", arguments: { gameId: "game-1" } } }),
+    );
+    const result = body["result"] as { content: { text: string }[]; isError?: boolean };
+    expect(result.isError).toBe(true);
+  });
+
+  it("a missing gameId is a tool-input error", async () => {
+    const body = await json(
+      await rpc({ jsonrpc: "2.0", id: 13, method: "tools/call", params: { name: "get_reality_receipt", arguments: {} } }),
+    );
+    const result = body["result"] as { isError?: boolean };
+    expect(result.isError).toBe(true);
   });
 });
