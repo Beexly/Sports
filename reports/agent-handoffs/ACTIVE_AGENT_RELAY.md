@@ -242,3 +242,21 @@ SigV4 signer (no new dep); needs founder SES provisioning then a ~1-file wire. A
 Neon→RDS/CloudSQL + Upstash→ElastiCache/Memorystore are connection-string swaps;
 Activate Founders tier ($1k + $350 support) is claimable now; the Fable AWS governance
 system is application/credibility material for the AI-tier.
+
+Broader leverage map: reports/ops/LEVERAGE_ATLAS.md — every external program/free-tier
+beyond AWS/Google (Azure Founders Hub up to $150K no-funding; NVIDIA Inception free +
+$100K DGX H100 + stacks, unlocks the AI-tier; Cloudflare R2 $0-egress + Turnstile +
+Web Analytics free; PostHog $50K + generous free fills the zero-analytics gap; free
+sports data incl. keyless Open-Meteo/NWS weather; SES/FCM/OneSignal alert channels).
+Stacking can reach $300K-$500K+ combined. Most need a founder account/key first.
+
+OPERATIONALIZED (first integration, code not just docs): leak-free NFL WEATHER edge
+feature — packages/prediction-engine/src/edge-lab/features/nfl-weather.ts. Turns a
+game's PRE-KICKOFF forecast (wind/precip/temp + dome + a bounded suppression prior) into
+edge-lab features on the schedule-features rails; a forecast issued after the decision
+cutoff is DROPPED (leak guard), observedAt=forecastIssuedAt, store.assertNoLookahead()
+clean. Uses the free/keyless weather leverage (NWS public-domain / Open-Meteo internal-
+modeling+attribution). 8 tests, tsc green. Admittable via the §5 trials registry — never
+bolted onto live scoring. Remaining data step (founder/loader): as-of historical
+forecasts per past game (NWS archive or self-hosted/licensed Open-Meteo) to run the
+admission backtest — same loader-gating every edge-lab feature has.
