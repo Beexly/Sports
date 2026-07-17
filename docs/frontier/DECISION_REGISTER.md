@@ -182,3 +182,19 @@ real progress, height only from an actual attestation (5 route tests).
 Documented-not-registered — the founder adds the scheduler entry with the
 flag flip. W-OTS is COMPLETE: primitive → storage → mint wire → public
 endpoint → autonomous upgrade.
+
+## DEC-014 — W-WEATHER-REC: complementary-layers verdict (2026-07-17)
+
+The gse-weather-edge packet and edge-lab features/nfl-weather.ts are NOT
+duplicates: the packet is the AS-OF LOADER (live path = current forecast for a
+future hour; backtest path = historical-forecast archive constrained to runs
+issued ≤ asOfUtc, never observed weather; provenance + leadTimeHours carried),
+and the edge-lab file is the FEATURE CONSUMER with the store-rails leak gate.
+Vendored the loader verbatim (loaders/weather-edge.ts, provenance header,
+behavioral edits forbidden) + a thin adapter (forecastIssuedAt := the loader's
+asOfUtc — the honest latest bound, so a mis-called loader is dropped as leaky
+rather than trusted; available:false → honest skip; indoor → neutralized-dome
+signal). One canonical path proven end to end by test. REMAINING GATE before
+any real historical admission run: the packet spec's §2 strict previous-runs
+smoke (confirm Open-Meteo serves the run issued ≤ asOf, not best-lead
+stitching) — recorded here so no backtest can slip past it.
