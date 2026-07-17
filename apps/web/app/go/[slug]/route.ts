@@ -15,6 +15,15 @@
  *
  * Subscription stays the primary model; affiliate is additive and only ever
  * lights up once an operator is flipped to APPROVED_PARTNER in the registry.
+ *
+ * DISCLOSURE POINTER: any public anchor that points at this route
+ * (`/go/[slug]`) MUST render the adjacent, non-dismissible FTC-2023
+ * disclosure — never a bare `<a href="/go/...">`. Use
+ * `PartnerLink`/`PartnerLinkDisclosure` from
+ * apps/web/components/ui/partner-link-disclosure.tsx, which wires the label
+ * ("Paid partner link — see how we make money", linking to
+ * /how-we-make-money) to the anchor via `aria-describedby`. See that file's
+ * header comment for the FTC citation and rationale.
  */
 
 import { NextResponse, type NextRequest } from "next/server";

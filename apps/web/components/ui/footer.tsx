@@ -30,6 +30,7 @@ const COMPANY_LINKS = [
   { label: "Receipts · Calibration", href: "/performance" },
   { label: "Closing Line Value", href: "/clv" },
   { label: "Methodology", href: "/methodology" },
+  { label: "How We Make Money", href: "/how-we-make-money" },
   { label: "The Vault", href: "/vault" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
