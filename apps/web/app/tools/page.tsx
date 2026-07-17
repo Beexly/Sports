@@ -14,8 +14,8 @@ import { BRAND_COLORS } from "@/lib/brand";
  *   - Every calculator is free, with no paywall, account, or email gate.
  *   - Every result renders its formula in plain math notation next to it —
  *     "the math you can read," made literal, not just a brand line.
- *   - Zero performance claims, zero banned vocabulary (guaranteed/lock/
- *     risk-free/etc — the trust-gate guardrail enforces this), zero
+ *   - Zero performance claims, zero banned promotional vocabulary (the
+ *     trust-gate and commercial-copy guardrails enforce the term list), zero
  *     affiliate links, and nothing implying our own picks' results. These
  *     are generic tools any bettor could reproduce with a calculator.
  */
