@@ -17,6 +17,8 @@ describe("Game Intelligence Room v0", () => {
     expect(page).toContain("What Would Change Our Mind");
     expect(page).toContain("Lens Switcher");
     expect(page).toContain("Galaxy Memory");
+    expect(page).toContain("IntelligencePlayback");
+    expect(page).toContain("Intelligence Playback");
     expect(page).not.toMatch(/Ask This Game|Ask The Slate|Model Court/);
   });
 

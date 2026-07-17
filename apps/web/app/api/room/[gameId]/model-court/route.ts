@@ -93,6 +93,8 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
   // request. The tier check above already 403s anyone below PRO/ELITE, so a
   // caller reaching here is entitled — the grounding keeps its full market read.
   const room = await loadGameRoom(context.params.gameId, {
+    canSeePremiumPicks: entitlements.canSeePremiumPicks,
+    canSeeConfidence: entitlements.canSeeConfidence,
     canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
     canSeeLineMovement: entitlements.canSeeLineMovement,
   });
