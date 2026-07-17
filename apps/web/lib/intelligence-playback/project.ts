@@ -30,8 +30,9 @@ function projectPublication(
   if (audience === "COCKPIT") return publication;
   return {
     ...publication,
-    unboundFactors:
-      audience === "PAID" || audience === "COCKPIT" ? publication.unboundFactors : [],
+    // COCKPIT already returned above; within the remaining domain only PAID is
+    // entitled, so a runtime-invalid audience degrades to the PUBLIC (empty) shape.
+    unboundFactors: audience === "PAID" ? publication.unboundFactors : [],
     blockedEvidenceIds: publication.blockedEvidenceIds.filter((id) => visibleIds.has(id)),
   };
 }
