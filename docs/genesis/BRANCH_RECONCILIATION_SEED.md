@@ -13,6 +13,10 @@ This file is not a substitute for the generated ledger. It prevents the first re
    - Boundary: accounting container only; split before merge.
 2. **PR #101 closed as superseded** by PR #122.
    - Historical branch remains until #122 is resolved and a deletion receipt exists.
+3. **PR #126 preserved and closed as a competing control package.**
+   - Its unique convergence map is archived in PR #125 at `docs/genesis/archive/GENESIS_CONVERGENCE_MAP_2026-07-17.md`.
+   - Its canon and queue are superseded by PR #125's complete canon, manifest, and dependency-ordered work queue.
+   - The source branch and PR history remain available for forensic comparison.
 
 ## Current main baseline
 
@@ -24,10 +28,10 @@ Merged branch counters may remain nonzero because GitHub used squash merges or t
 
 | PR / branch | Seed disposition | Reason and next action |
 |---|---|---|
-| **#128** `fix/tools-page-commercial-copy-scan` | `RECOVER_WHOLE` / merge-first candidate | One comment-only false-positive fix. It blocks the full guardrail job on current main and contaminates CI interpretation for every other PR. Independently verify, then land first. |
-| **#127** `genesis/gx-000-codebase-twin-plan-compiler` | `ACTIVE_PR` | Canonical shadow kernel for GX-000/GG-001. Rebase after #128, rerun all gates, review deterministic plan semantics, then founder decision. |
-| **#125** `research/galaxy-genesis-metacortex-2026-07-17` | `ACTIVE_PR` / canonical control package | Complete canon, manifest, validator, work queue and commands. Incorporate reconciliation contract and unique #126 assets. Do not call it runtime implementation. |
-| **#126** `chatgpt/galaxy-genesis-orchestrator` | `RECOVER_PARTIAL` then `SUPERSEDED` | Preserve `GENESIS_CONVERGENCE_MAP.md` and any unique queue decisions in #125/current ledger. Close only after exact preservation proof. |
+| **#128** `fix/tools-page-commercial-copy-scan` | `RECOVER_WHOLE` / merge-first candidate | One comment-only false-positive fix. It blocks the full guardrail job on current main and contaminates CI interpretation for every other PR. Independently verified CI is green; land first. |
+| **#127** `genesis/gx-000-codebase-twin-plan-compiler` | `ACTIVE_PR` | Canonical shadow kernel for GX-000/GG-001. Rebase after #128, rerun all gates, diagnose its remaining workspace-test failure, review deterministic plan semantics, then founder decision. |
+| **#125** `research/galaxy-genesis-metacortex-2026-07-17` | `ACTIVE_PR` / canonical control package | Complete canon, manifest, validators, work queue, implementation and reconciliation commands. It now contains the unique #126 convergence map archive. Do not call it runtime implementation. |
+| **#126** `chatgpt/galaxy-genesis-orchestrator` | `SUPERSEDED` / closed after preservation | All three files accounted for: canon and queue are supersets in #125; convergence map archived exactly in #125. Branch retained until deletion receipt. |
 | **#129** `claude/galaxy-sports-edge-pdcswh` | `RECOVER_PARTIAL` across multiple waves | Active 29-commit SportsIR/playback/proof stack. Split by capability and protected-zone boundary; never merge whole. |
 | **#123** `claude/cockpit-page-auth-rebased` | `RECOVER_WHOLE` / security lane | Per-page ADMIN checks and source-scan enforcement. Rebase on fixed main, verify all current Cockpit pages including newer ones, land before large Cockpit feature PRs. |
 | **#121** `claude/fantasy-engine-foundation-rebased` | `REBASE_REQUIRED` then domain review | Substantial glass-box Fantasy Engine and rights-gated MLB plane. Trademark rename is complete. Resolve shared admin helper and fixture alignment after #123/#128. |
@@ -37,6 +41,7 @@ Merged branch counters may remain nonzero because GitHub used squash merges or t
 | **#52** `claude/gracious-albattani-f63wx1` | `ARCHIVE_ONLY` now; future additive ports | Galaxy Dynasty world graph on a stale base. Preserve all unique systems, then port bounded packages when Genesis semantic dependencies are ready. |
 | `claude/fix-metric-source-fixture-alignment` | `DELETE_AFTER_PROOF` candidate | One-file patch appears in #121/#122. Prove exact patch absorption before deletion. |
 | `claude/clv-decomposition-reland` | historical / `DELETE_AFTER_PROOF` candidate | Old source for closed #101. Keep until #122 settles and no unique patch remains. |
+| `chatgpt/galaxy-genesis-orchestrator` | historical / `DELETE_AFTER_PROOF` candidate | Source branch for closed #126. Keep until PR #125 lands and archive/content parity is re-verified. |
 | merged PR branches #115–#120 | `DELETE_AFTER_PROOF` candidates | Verify source head equals the merged PR head and has no later unique commits. Squash merge means “ahead” is not missing-work evidence. |
 
 ## Proven architecture collisions
@@ -64,10 +69,10 @@ Merged branch counters may remain nonzero because GitHub used squash merges or t
    - One canonical genome; existing systems become adapters/projections.
 
 4. **Parallel program queues**
-   - #125 `GX-*`;
-   - #126 `GG-*`;
-   - #129 frontier `W*`.
-   - Ruling: #125 queue and manifest are implementation authority; map other queues into it. One capability is built once.
+   - #125 `GX-*` is canonical implementation authority;
+   - closed #126 `GG-*` is preserved historical input;
+   - #129 frontier `W*` maps into the canonical queue.
+   - One capability is built once.
 
 5. **Playback overlap**
    - #112 and #129 share `intelligence-playback` lineage.
@@ -82,10 +87,10 @@ Merged branch counters may remain nonzero because GitHub used squash merges or t
 ## Recommended recovery order
 
 ```text
-R0  Verify and land #128 to restore trustworthy CI baseline
+R0  Land #128 to restore trustworthy CI baseline
 R1  Rebase and independently verify #123 Cockpit authorization
 R2  Rebase and independently verify #127 Genesis shadow kernel
-R3  Consolidate #125 + unique #126 control package; close #126 after receipt
+R3  Verify #125 preserved #126 fully; PR #126 is now closed
 R4  Generate exhaustive branch/PR ledger and file-symbol ownership map
 R5  Split #129 into bounded recovery PRs
 R6  Rebase/recover #121 Fantasy Engine
