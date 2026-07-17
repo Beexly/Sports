@@ -45,6 +45,21 @@ function anchorLine(anchor: RealityReceipt["anchor"]): string {
   }
 }
 
+/** Phase 2.2 (DEC-018): the slate Merkle-inclusion leg. SEALED mirrors the
+ *  receipt leg's own pre-kickoff withholding — never claims PROVEN early. */
+function slateInclusionLine(slateInclusion: RealityReceipt["slateInclusion"]): string {
+  switch (slateInclusion.state) {
+    case "PROVEN":
+      return `Verified in slate ${slateInclusion.slateKey}'s committed root (position ${slateInclusion.index + 1} of ${slateInclusion.count})`;
+    case "SEALED":
+      return "Slate inclusion proof sealed until kickoff";
+    case "UNAVAILABLE":
+      return "Slate inclusion status temporarily unavailable";
+    case "NOT_REQUESTED":
+      return "No slate commitment applies to this decision yet";
+  }
+}
+
 /** Build the card for a resolved Reality Receipt. */
 export function buildRealityReceiptCard(receipt: RealityReceipt): RealityReceiptCard {
   return {
@@ -55,6 +70,7 @@ export function buildRealityReceiptCard(receipt: RealityReceipt): RealityReceipt
       `Evidence digest: ${shortHash(receipt.envelope.digest)}`,
       receiptLine(receipt.receipt),
       anchorLine(receipt.anchor),
+      slateInclusionLine(receipt.slateInclusion),
     ],
     footer: `receipt digest ${shortHash(receipt.digest, 24)}`,
   };

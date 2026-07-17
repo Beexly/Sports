@@ -11,6 +11,7 @@ function receipt(overrides: Partial<RealityReceipt> = {}): RealityReceipt {
     envelope: { id: "game-1:pick-1", digest: "e".repeat(64), publicationStatus: "ELIGIBLE" },
     receipt: { state: "OPEN", verified: true, frozenAt: "2026-07-14T16:00:00.000Z", modelVersion: "gse-v6", committed: null },
     anchor: { state: "NOT_REQUESTED" },
+    slateInclusion: { state: "NOT_REQUESTED" },
     digest: "d".repeat(64),
     ...overrides,
   } as RealityReceipt;
@@ -36,6 +37,27 @@ describe("buildRealityReceiptCard", () => {
   ])("maps anchor state %s to honest copy", (_label, anchor, expected) => {
     const card = buildRealityReceiptCard(receipt({ anchor }));
     expect(card.lines[2]).toContain(expected);
+  });
+
+  it.each([
+    [
+      "PROVEN" as const,
+      {
+        state: "PROVEN" as const,
+        slateKey: "NFL:2026-07-14",
+        root: "r".repeat(64),
+        count: 3,
+        index: 1,
+        proof: { leaf: "l".repeat(64), siblings: [], index: 1 },
+      },
+      "position 2 of 3",
+    ],
+    ["SEALED" as const, { state: "SEALED" as const }, "sealed until kickoff"],
+    ["UNAVAILABLE" as const, { state: "UNAVAILABLE" as const }, "temporarily unavailable"],
+    ["NOT_REQUESTED" as const, { state: "NOT_REQUESTED" as const }, "No slate commitment applies"],
+  ])("maps slateInclusion state %s to honest copy — never claims PROVEN early", (_label, slateInclusion, expected) => {
+    const card = buildRealityReceiptCard(receipt({ slateInclusion }));
+    expect(card.lines[3]).toContain(expected);
   });
 
   it("says so when no receipt was captured — never fabricates a state", () => {

@@ -523,3 +523,64 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: apps/web/lib/intelligence-watch/{types.ts,contract.ts,evaluate.ts,index.ts,
   __tests__/evaluate.test.ts} (new), docs/frontier/WORKSTREAM_005_INTELLIGENCE_WATCH_V0.md (new).
 - Supersedes: none.
+
+## DEC-022 — Full-session audit pass: card.ts slateInclusion gap + .gitignore CRLF fixed (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: cross-cutting (post-Phase-3 comprehensive review, requested explicitly: "ensure
+  EVERYTHING from the plan has been accounted for, reviewed, coded, reviewed, improved,
+  reviewed polished").
+- Decision: ran an independent gse-verifier audit re-executing (not just re-reading) every
+  gate this session claimed green — full `apps/web` `tsc --noEmit`, all `packages/*`
+  typechecks, 236 targeted tests across reality-receipt/sports-ir/intelligence-watch/
+  worldline/watchlist/proof-mcp/proof-reality/fences-and-adapters/scraping-clearance,
+  `packages/genesis-kernel`'s own suite (26/26, from a temporary worktree since that package
+  lives only on PR #127's branch) and `packages/galaxy-proof-mcp-stdio`'s real build + live
+  stdio smoke test — plus a cross-check of the three frontier ledger docs against each other
+  and against actual git history. All of it reconfirmed green; two genuine, if minor, gaps
+  surfaced and were fixed in this same pass:
+  1. **`apps/web/lib/reality-receipt/card.ts` never surfaced the Phase 2.2 `slateInclusion`
+     leg** — a forgotten spot, not a documented cut. Added `slateInclusionLine()` (mirrors
+     `anchorLine()`'s style exactly: PROVEN → "Verified in slate `<key>`'s committed root
+     (position N of COUNT)"; SEALED → "sealed until kickoff", matching the receipt leg's own
+     pre-kickoff withholding, never claims PROVEN early; UNAVAILABLE/NOT_REQUESTED → honest
+     absence copy) as the card's 4th line. This affects only the visual card / `/image` PNG
+     surface — the underlying data/gating (DEC-018) was already correct; this was a display
+     gap, not a disclosure-policy gap.
+  2. **`git diff --check` against origin/main failed (exit 2)** on `.gitignore` — the file
+     had been entirely CRLF since before this session's own commits (confirmed via
+     `git show <commit>^:.gitignore`, already CRLF at the parent of the founder-orchestrator-
+     overlay commit `b46a526e` from earlier today, i.e. not introduced by any of this
+     session's own Phase 0-3 work), while origin/main's copy is mixed CRLF/LF. Normalized to
+     LF throughout via `sed 's/\r$//'`; verified byte-identical content modulo line endings
+     (`diff <(git show HEAD:.gitignore | tr -d '\r') <(cat .gitignore)` → identical) — pure
+     whitespace fix, zero ignore-pattern semantic change, zero "vendor unchanged" doctrine
+     conflict (that doctrine protects CONTENT, not incidental line-ending encoding).
+- Explicitly NOT found: no test failures, no typecheck failures, no guardrail failures, no
+  fabricated test counts, no drift between the three frontier ledger docs on anything
+  checked, no stale reference to the old 3-field reality-receipt digest formula outside
+  already-updated test files, `packages/galaxy-proof-mcp-stdio` correctly registered in
+  `package-lock.json` for `npm ci`. PR #127 and PR #128's branches confirmed still pushed,
+  not merged into main, not orphaned (via local git refs — GitHub-side force-push history and
+  literal merged/closed state could not be confirmed without API access, an explicitly
+  acknowledged verification gap, not a finding).
+- Also separately verified and corrected in this pass (not a code change): PR #121's
+  description claimed the ~350-occurrence competitor-trademark rename (Task #13) was
+  "pending" — independently confirmed via `git log`/`git show` that the rename (commit
+  `7fa7892d`, `SMASH`→MSI, `BURR`→BSI, `Solds`→SVH) was already complete and merged into that
+  PR's branch by a prior session. Re-ran all 125 relevant tests (fantasy-engine 66, cockpit
+  fantasy-mlb-boards/gate/pool-gating/display-flags/competitive-baseline 35, data-ingestion
+  mlb-fantasy-sources 24) green, `tsc --noEmit` clean, `trust-gate`/`commercial-copy-scan`
+  clean, zero remaining competitor coinage in any shipped surface (only unrelated
+  banned-hype-word filters and third-party references remain). Updated PR #121's description
+  to reflect this — a documentation correction, not a merge or code action.
+- Evidence: full re-run 236+30(card, updated)+17(route) tests green post-fix, `tsc --noEmit`
+  clean, `eslint --max-warnings=0` clean, `npm run guardrails` all 17 checks green,
+  `git diff --check` clean against `.gitignore`.
+- Reversibility: additive (card.ts) + pure line-ending normalization (.gitignore) — both
+  trivially revertible, zero data/schema/behavior change.
+- Protected zones: proof, public claims (card.ts is a public-facing surface, `/image` PNG
+  route). No red-team pass required — this is a strictly-additive display fix mirroring an
+  already-red-teamed disclosure policy (DEC-018), not a new disclosure decision.
+- Files: apps/web/lib/reality-receipt/{card.ts,__tests__/card.test.ts}, .gitignore.
+- Supersedes: none.
