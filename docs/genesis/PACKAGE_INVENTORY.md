@@ -5,31 +5,61 @@ This file tells coding and research agents where every kind of information lives
 ## Primary commands
 
 ```text
+/gse-autopilot continue
 /genesis-next GX-000
 /genesis-reconcile inventory
 ```
 
-Use `/genesis-next` for one dependency-ordered Genesis implementation workstream.
+Use `/gse-autopilot continue` as the normal campaign entrypoint. It continues the repository's live current queue through review, code, improvement, independent review, polish, verification, ledger updates, commit and push. It transitions to reconciliation only after the active queue is genuinely drained.
 
-Use `/genesis-reconcile` when branches, PRs, commits, migrations, or duplicate systems may be stranded, stale, superseded, or unaccounted for. Reconciliation takes priority over new frontier feature work when invisible work is detected.
+Use `/genesis-next` for one explicitly selected dependency-ordered Genesis implementation workstream.
+
+Use `/genesis-reconcile` only after the queue-drain gate passes, or for a narrowly requested emergency accounting/verification pass. It handles branches, PRs, commits, migrations, and duplicate systems that may be stranded, stale, superseded, or unaccounted for.
+
+## Queue-first continuous execution
+
+| File | Purpose | Read when |
+|---|---|---|
+| `docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md` | campaign law for preserving and draining the current queue before reconciliation | every autonomous continuation campaign |
+| `.claude/commands/gse-autopilot.md` | token-efficient continuous conductor | run with `continue`, `status`, or `verify` |
+
+The campaign loop is:
+
+```text
+REVIEW
+→ FREEZE CONTRACT
+→ CODE
+→ TARGETED VERIFY
+→ INDEPENDENT REVIEW
+→ IMPROVE
+→ POLISH
+→ FINAL VERIFY
+→ UPDATE LEDGERS
+→ COMMIT / PUSH / PR
+→ SELECT NEXT
+→ CONTINUE
+```
+
+Historical plans provide intent and dependencies. Live code, Git state, active tasks, tests, and queue ledgers determine what is actually next.
 
 ## First-run mandatory files
 
 | File | Purpose |
 |---|---|
 | `CLAUDE.md` | repository law and current project constraints |
-| `GENESIS_START_HERE.md` | package entrypoint and current mission |
-| `docs/genesis/FIRST_BUILD_CONTRACT.md` | exact GX-000 implementation contract |
+| `docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md` | queue-first campaign law |
+| current branch/workstream contract and compact frontier ledgers | live execution state |
+| `GENESIS_START_HERE.md` | Genesis package entrypoint |
 | `docs/genesis/DECISIONS.md` | binding Genesis decisions |
-| `docs/genesis/CANON_MANIFEST.json` | machine-readable lookup for GX-000 systems and dependencies |
+| `docs/genesis/CANON_MANIFEST.json` | machine-readable lookup for only the systems involved |
 
-Do not load the complete canon during a normal GX-000 run.
+Do not load the complete canon during a normal implementation campaign.
 
 ## Branch and PR reconciliation
 
 | File | Purpose | Read when |
 |---|---|---|
-| `docs/genesis/BRANCH_RECONCILIATION_CONTRACT.md` | exhaustive rules, outputs, statuses, proof and deletion-receipt requirements | any branch/PR inventory, cleanup, recovery, supersession, close, merge-order or deletion decision |
+| `docs/genesis/BRANCH_RECONCILIATION_CONTRACT.md` | exhaustive rules, outputs, statuses, proof and deletion-receipt requirements | after the queue-drain gate, or for a narrowly requested reconciliation unit |
 | `docs/genesis/BRANCH_RECONCILIATION_SEED.md` | current snapshot of known dispositions and recovery order | first reconciliation run; refresh every fact from live Git/GitHub state |
 | `.claude/commands/genesis-reconcile.md` | token-efficient reconciliation conductor | run with `inventory`, `next`, a PR number, branch name or `verify` |
 
@@ -39,7 +69,7 @@ A branch counter is never enough to prove work is missing or safe to delete. The
 
 | File | Purpose | Read when |
 |---|---|---|
-| `docs/genesis/COMPLETE_CANON.md` | preserves every accepted system from the full day of R&D | completeness dispute, supersession, architecture collision, or new program design |
+| `docs/genesis/COMPLETE_CANON.md` | preserves every accepted system from the full R&D program | completeness dispute, supersession, architecture collision, or new program design |
 | `docs/genesis/ORIGIN_SOURCE_MAP.md` | maps every founding repository, platform and research family into Galaxy | touching an origin, provider, tool, model hub, source or external ecosystem |
 | `docs/genesis/CANON_MANIFEST.json` | system IDs, status, dependencies, canonical docs and workstreams | every workstream, but query only matching entries |
 | `docs/genesis/PACKAGE_INVENTORY.md` | this loading map | agent orientation only |
@@ -48,11 +78,13 @@ A branch counter is never enough to prove work is missing or safe to delete. The
 
 | File | Purpose |
 |---|---|
-| `docs/genesis/WORK_QUEUE.md` | dependency-ordered implementation authority |
+| `docs/genesis/WORK_QUEUE.md` | dependency-ordered Genesis implementation authority |
 | `docs/genesis/META_COMPILER_SPEC.md` | Metacortex destination architecture |
 | `docs/genesis/CODEBASE_TWIN_SPEC.md` | repository semantic twin architecture |
 | `docs/genesis/FIRST_BUILD_CONTRACT.md` | bounded GX-000 vertical slice |
-| `.claude/commands/genesis-next.md` | token-efficient implementation command |
+| `docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md` | multi-workstream queue-drain and continuation law |
+| `.claude/commands/gse-autopilot.md` | queue-first autonomous campaign command |
+| `.claude/commands/genesis-next.md` | token-efficient single-workstream implementation command |
 | `.claude/commands/genesis-reconcile.md` | token-efficient stranded-work accounting and recovery command |
 
 ## Research modules
@@ -91,19 +123,19 @@ A branch counter is never enough to prove work is missing or safe to delete. The
 ## Agent loading algorithm
 
 ```text
-1. determine whether the task is implementation or reconciliation
-2. for reconciliation, read only the reconciliation contract + seed + exact live refs
-3. for implementation, identify workstream ID
-4. query CANON_MANIFEST.json by workstream
-5. collect direct system IDs and dependencies
-6. read binding decisions
-7. read active build contract
-8. read only canonical docs for those IDs
-9. inspect current code, tests, Git and PR evidence
-10. freeze one implementation or recovery contract
-11. execute and verify one slice
-12. update manifest/ledger/status/receipts
-13. stop
+1. inspect live branch, worktrees, uncommitted work, tasks and PR state
+2. identify the active or next dependency-ready queue item
+3. read only compact current-state ledgers and its frozen contract
+4. query CANON_MANIFEST.json only for affected systems and dependencies
+5. inspect exact code, tests, history and reusable branch assets
+6. freeze one bounded implementation contract
+7. review → code → test → independent review → improve → polish
+8. run final applicable gates
+9. update queue/state/decision/recovery ledgers and receipts
+10. commit, push and update the correct PR
+11. immediately select the next dependency-ready queue item
+12. only after the queue-drain gate, run reconciliation inventory and recovery waves
+13. stop only at a genuine hard boundary
 ```
 
 ## Completeness rule
@@ -117,6 +149,16 @@ A new accepted system is incomplete until it has:
 - a workstream or explicit research/owner-gate disposition;
 - origin and provenance when externally derived.
 
+A workstream is incomplete until it has:
+
+- a frozen contract;
+- implementation and targeted tests;
+- independent review and confirmed-finding repair;
+- relevant polish;
+- final verification evidence;
+- ledger updates;
+- commit, push, PR/accounting state and receipt.
+
 A branch or PR is unaccounted for until it has:
 
 - a live ledger entry;
@@ -128,4 +170,4 @@ A branch or PR is unaccounted for until it has:
 
 The package is intentionally large enough to preserve ambition and modular enough to avoid charging every coding session for that ambition.
 
-The archive is loaded only when needed. The manifest, active contract, reconciliation ledger and exact code evidence drive normal work.
+The archive is loaded only when needed. Live task state, active contracts, compact ledgers, the manifest, reconciliation ledger and exact code evidence drive normal work.
