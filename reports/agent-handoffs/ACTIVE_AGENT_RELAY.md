@@ -156,12 +156,33 @@ Per-fixture prediction pages · llms.txt + read-only MCP over SETTLED ledger onl
   gated SEALED_ENGINE_ENABLED; left live /engine untouched).
 - Intel hardening wave (#34), DFS (#36), affiliate (#35), stranded salvage (#37) —
   all DONE earlier this session.
-- STILL IN FLIGHT: watchlist retention primitive (additive migration, tier-gated,
-  graded-only alerts).
+- Watchlist retention primitive — DONE (follow/alert loop). Additive
+  founder-applied migration 20260717120000_add_watchlist (CREATE TABLE IF NOT
+  EXISTS watchlist_entries — idempotency + zero-drift proven on live Postgres);
+  follow open to every tier with per-tier caps (FREE/FANTASY 5, PRO 25, ELITE
+  unlimited) → real 403 + upsell, never a cosmetic gate; alerts stay Elite-only
+  via existing canGetAlerts AND graded-only (pickResult !== PENDING && settledAt
+  set) — never an ungraded tip; dispatch inert (no channel wired,
+  WATCHLIST_ALERTS_ENABLED default off). db.ts fails 503-not-500 when the table
+  is absent. 68 tests; typecheck + full guardrail chain green. feature-gate
+  "watchlists" reframed to minTier FREE / status preview / freePreview true.
+- CI honesty fix — jarvis-memory not-wired-posture pin now forces stub mode via
+  vi.doMock instead of assuming the ambient env is stub, so it passes under
+  CI's real-DB "Test, type-check, lint, Prisma" job (was the one red test).
+  Verified against a disposable real Postgres (54/54).
 
 ## NEW founder-gated flags added this session (all default OFF)
 
 LINE_ARCHIVE_ENABLED, LINE_ARCHIVE_EU_PINNACLE, PUBLISH_LEDGER, SEALED_ENGINE_ENABLED,
-JARVIS_MEMORY_WRITE_ENABLED, BACKTEST_HARNESS_ENABLED, WATCHLIST_ALERTS_ENABLED
-(pending), plus the sealed-holdout GSE_ALLOW_HOLDOUT_OPEN env for edge-lab. Nothing
+JARVIS_MEMORY_WRITE_ENABLED, BACKTEST_HARNESS_ENABLED, WATCHLIST_ALERTS_ENABLED,
+plus the sealed-holdout GSE_ALLOW_HOLDOUT_OPEN env for edge-lab. Nothing
 flips without a founder setting it; every surface has an honest OFF state.
+
+## Founder legs to activate the watchlist (all founder-gated, default-off)
+
+1. Apply migration 20260717120000_add_watchlist (additive, IF-NOT-EXISTS, safe
+   to run anytime) — until then the API/UI 503 honestly ("not activated yet").
+2. To turn on graded alerts later: wire a real email/push channel at the TODO
+   seam in apps/web/lib/watchlist/alert-dispatch.ts, THEN set
+   WATCHLIST_ALERTS_ENABLED=true. Inert until both are done; Elite-only + graded-
+   only enforced regardless of the flag.
