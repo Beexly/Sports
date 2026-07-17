@@ -119,6 +119,12 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
       description: "OpenAPI 3.1 contract for the read-only Proof API — import it to call these endpoints from any OpenAPI-aware tooling.",
     },
     {
+      rel: "ots-anchor",
+      url: `${base}/api/proof/ots/<slateKey>`,
+      description:
+        "OpenTimestamps proof for a published slate Merkle root — raw .ots bytes (or ?format=json for status). Once upgraded, the commitment time is attested by a Bitcoin block header: verify with any OpenTimestamps client, zero trust in our clock or database.",
+    },
+    {
       rel: "verification-spec",
       url: `${base}/api/proof/verification-spec.json`,
       description: "The trustless conformance spec: the exact hash-chain algorithm plus synthetic known-answer test vectors, so you can build your own verifier in any language and check us with zero trust in our code.",

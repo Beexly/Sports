@@ -57,6 +57,7 @@ import {
   type HashFn,
 } from "@sports/prediction-engine";
 import { commitLedger, encodeFixedPoint, CURVE_ORDER } from "@sports/crypto";
+import { anchorSlateCommitment } from "./ots-anchor-slate.js";
 
 /** Uniform-enough blinding scalar in [0, n): 48 CSPRNG bytes mod n (bias ~2^-128). */
 function randomBlinding(): bigint {
@@ -274,6 +275,20 @@ export async function freezeSlateCommitments(
           `${logPrefix} slate ${slateKey} frozen: root=${plan.commitment.root} count=${plan.commitment.count}`,
         );
         results.push({ slateKey, action: "COMMIT", count: plan.commitment.count });
+
+        // OTS anchoring (W-OTS): AFTER the atomic commit, fail-open by module
+        // contract (anchorSlateCommitment never throws; DISABLED unless the
+        // founder set OTS_ANCHOR_ENABLED=true). The Merkle commitment above is
+        // load-bearing; the Bitcoin anchor is an upgrade layered on top and a
+        // failure here must never affect the freeze result.
+        const anchor = await anchorSlateCommitment({
+          slateKey,
+          rootHex: plan.commitment.root,
+          db,
+        });
+        if (anchor.action !== "DISABLED") {
+          console.log(`${logPrefix} slate ${slateKey} ots-anchor: ${JSON.stringify(anchor)}`);
+        }
       } catch (err) {
         // Non-fatal by contract: a freeze failure must never fail the ingestion
         // cycle (mirrors the receipt-minting pattern in process-sport.ts).

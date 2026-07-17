@@ -306,3 +306,11 @@ export function otsStatus(d: DetachedOts): { bitcoin: number[]; pendingCalendars
   walk(d.root);
   return { bitcoin, pendingCalendars };
 }
+
+/**
+ * Named transport type for callers (non-behavioral addition to the verbatim
+ * packet port — types only, the deps shape is unchanged).
+ */
+export type CalendarTransport = {
+  readonly fetchBinary: (url: string, body: Uint8Array) => Promise<Uint8Array>;
+};

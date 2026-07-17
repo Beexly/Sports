@@ -139,3 +139,16 @@ GSE_FRONTIER_ORCHESTRATOR_1 → already installed as canon (this system).
 Setup-ClaudeCode-Foundry.ps1 → OWNER_GATE (founder machine; Foundry has zero
 model deployments — deploy Claude first). Untapped Atlas order queued behind:
 Rekor co-publication, Ask-the-Record RAG, GH-Actions backtest grid, enclaves.
+
+## DEC-011 — W-OTS slice 2: mint wire + public proof endpoint (2026-07-17)
+
+Anchoring wired AFTER the atomic Merkle transaction, fail-open by module
+contract (anchorSlateCommitment never throws; tested: DISABLED default with
+zero network/DB, all-calendars-down still stores the valid pending artifact,
+P2022 → SKIP_NOT_MIGRATED, bad root → FAILED result). Public endpoint
+/api/proof/ots/[slateKey] serves raw .ots (octet-stream) or ?format=json
+status; "anchoredToBitcoin" true only on a real attestation; unmigrated reads
+as honest 404 "not activated yet"; outage 503. Discovery rel "ots-anchor"
+added to the llms.txt/machine-proof map. Slice 3 (nightly upgrade poll)
+deferred: requires an upgrade-fetch addition to the verbatim crypto port —
+new-tests-first rule applies.
