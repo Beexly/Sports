@@ -98,7 +98,7 @@ export function changedFilesFromGit(env = process.env, runner = spawnSync) {
   return null;
 }
 
-/** True when HEAD is a merge commit (force-build). Safe-fails to false. */
+/** True when HEAD is a merge commit (force-build). Fails closed: git errors return true (build). */
 export function headIsMerge(runner = spawnSync) {
   const result = runner("git", ["rev-list", "--parents", "-n", "1", "HEAD"], {
     encoding: "utf8",
