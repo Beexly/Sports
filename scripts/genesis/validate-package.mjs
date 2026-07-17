@@ -33,12 +33,14 @@ function parseJson(relativePath) {
 }
 
 const requiredFiles = [
+  ".claude/commands/gse-autopilot.md",
   ".claude/commands/genesis-next.md",
   "GENESIS_START_HERE.md",
   "docs/genesis/CANON_MANIFEST.json",
   "docs/genesis/CLOUD_CAPABILITY_MESH.md",
   "docs/genesis/CODEBASE_TWIN_SPEC.md",
   "docs/genesis/COMPLETE_CANON.md",
+  "docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md",
   "docs/genesis/DECISIONS.md",
   "docs/genesis/EXPANSION_ATLAS.md",
   "docs/genesis/FIRST_BUILD_CONTRACT.md",
@@ -151,6 +153,34 @@ if (capabilityFixture && !Array.isArray(capabilityFixture) && !Array.isArray(cap
 
 if (contractFixture && typeof contractFixture !== "object") {
   errors.push("internal brief contract fixture must be a JSON object");
+}
+
+if (requireFile("docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md") && requireFile(".claude/commands/gse-autopilot.md")) {
+  const continuousContract = read("docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md");
+  const autopilot = read(".claude/commands/gse-autopilot.md");
+  const requiredLoopTerms = [
+    "REVIEW",
+    "FREEZE CONTRACT",
+    "CODE",
+    "INDEPENDENT REVIEW",
+    "IMPROVE",
+    "POLISH",
+    "CONTINUE",
+  ];
+  for (const term of requiredLoopTerms) {
+    if (!continuousContract.includes(term)) errors.push(`continuous execution contract is missing loop term: ${term}`);
+    if (!autopilot.includes(term)) errors.push(`gse-autopilot command is missing loop term: ${term}`);
+  }
+  for (const invariant of [
+    "finish the current queue before branch/PR reconciliation",
+    "Queue-drain law",
+    "Never claim an unrun command",
+    "Do not begin `/genesis-reconcile inventory` yet",
+  ]) {
+    if (!continuousContract.includes(invariant) && !autopilot.includes(invariant)) {
+      errors.push(`continuous execution package is missing invariant: ${invariant}`);
+    }
+  }
 }
 
 const canonConcepts = [
@@ -271,4 +301,5 @@ console.log(`- required files: ${requiredFiles.length}`);
 console.log(`- canon systems: ${manifest?.systems?.length ?? 0}`);
 console.log(`- preserved concepts: ${canonConcepts.length}`);
 console.log(`- founder-supplied origins: ${requiredOrigins.length}`);
+console.log("- continuous queue-first campaign: validated");
 console.log("- current implementation workstream: GX-000");
