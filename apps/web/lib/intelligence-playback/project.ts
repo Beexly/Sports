@@ -67,9 +67,11 @@ export function projectPickEvidenceEnvelope(
     // and stripping it here, inside the projection itself, is what prevents the
     // #103-class leak: no caller discipline is ever relied on (verification
     // finding M3, 2026-07-16).
+    // Allowlist form: only the two entitled audiences ever receive factors, so
+    // a runtime-invalid audience value degrades to the PUBLIC (empty) shape.
     factors:
-      audience === "PUBLIC"
-        ? []
-        : envelope.factors.map((factor) => projectFactor(factor, visibleIds, audience)),
+      audience === "PAID" || audience === "COCKPIT"
+        ? envelope.factors.map((factor) => projectFactor(factor, visibleIds, audience))
+        : [],
   };
 }

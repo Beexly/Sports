@@ -32,7 +32,9 @@ function hiddenMarket(market: MarketState): MarketState {
 
 function marketForAudience(market: MarketState, audience: EvidenceAudience, withheld: boolean): MarketState {
   if (withheld) return hiddenMarket(market);
-  if (audience !== "PUBLIC") return market;
+  // Allowlist form: only the two entitled audiences receive the full market, so
+  // a runtime-invalid audience value degrades to the PUBLIC (stripped) shape.
+  if (audience === "PAID" || audience === "COCKPIT") return market;
   return { ...market, dispersion: null, movement: null };
 }
 
