@@ -19,6 +19,38 @@ MAXIMUM VERIFIED RECOVERY PER TOKEN
 
 Do not ask the founder questions. Do not start a new product feature. Do not bulk-merge a frontier branch. Do not delete a branch because GitHub shows it “ahead.”
 
+## 0. Queue-drain precondition
+
+Read `docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md` and inspect the live current queue before starting reconciliation.
+
+Unless the argument is `verify` or the founder explicitly requested an immediate targeted reconciliation for a proven correctness, security, data-loss, or money-truth risk, reconciliation is blocked while any of the following is true:
+
+```text
+coherent uncommitted work exists in an active worktree
+an active workstream is partially implemented
+an IN_PROGRESS item remains dependency-ready
+a QUEUED or NEXT item remains dependency-ready
+completed work lacks review, polish, final verification, ledger updates, commit, push, or PR state
+```
+
+When the precondition fails, do not create reconciliation outputs yet. Follow `/gse-autopilot continue` semantics and drain the live queue through:
+
+```text
+REVIEW
+→ FREEZE CONTRACT
+→ CODE
+→ TARGETED VERIFY
+→ INDEPENDENT REVIEW
+→ IMPROVE
+→ POLISH
+→ FINAL VERIFY
+→ UPDATE LEDGERS
+→ COMMIT / PUSH / PR
+→ CONTINUE
+```
+
+Begin reconciliation only after a queue-drain receipt exists or live evidence proves every remaining current-queue item is owner-gated or externally blocked with no surrounding work available.
+
 ## 1. Establish live reality
 
 Run concise Git checks and use `gh` when available:
@@ -45,9 +77,9 @@ Treat the seed as historical evidence. Refresh every status from live refs.
 
 Argument: `$ARGUMENTS`
 
-- empty or `inventory`: perform the exhaustive read-only inventory and create/update the required ledgers and audit script. Do not recover feature code in the same run.
-- `next`: select the highest-leverage dependency-ready reconciliation wave from the live ledger. Complete one bounded wave and stop.
-- PR number or branch name: reconcile only that source against current `main` and overlapping refs.
+- empty or `inventory`: after the queue-drain precondition passes, perform the exhaustive read-only inventory and create/update the required ledgers and audit script. Do not recover feature code in the same run.
+- `next`: after the queue-drain precondition passes, select the highest-leverage dependency-ready reconciliation wave from the live ledger. Complete one bounded wave and stop.
+- PR number or branch name: reconcile only that source against current `main` and overlapping refs; urgent targeted reconciliation may proceed before full queue drain only for a proven correctness/security/data-loss risk.
 - `verify`: independently audit the current reconciliation diff and claims.
 
 ## 2. Inventory by semantics, not branch counters
@@ -156,7 +188,7 @@ Do not:
 
 ## 6. Current sequencing defaults
 
-Unless live evidence changes the order:
+After the queue-drain precondition passes, unless live evidence changes the order:
 
 ```text
 1. restore trustworthy baseline CI via #128
@@ -194,6 +226,7 @@ Return only:
 
 ```text
 BASELINE
+QUEUE-DRAIN EVIDENCE
 SELECTED RECONCILIATION UNIT
 INVENTORY COVERAGE
 PROVEN ON MAIN
