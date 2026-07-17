@@ -1,4 +1,4 @@
-import { getSourceRightsEntry } from "./source-rights-registry";
+import { getSourceRightsEntry } from "@/lib/scraping/source-rights-registry";
 import type { SourceRightsUse, SourceRightsUseDecision } from "./source-rights-types";
 
 export function evaluateSourceRightsUse(sourceId: string, use: SourceRightsUse): SourceRightsUseDecision {

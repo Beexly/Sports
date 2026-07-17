@@ -1,4 +1,4 @@
-import { getSourceRightsEntry } from "./source-rights-registry";
+import { getSourceRightsEntry } from "@/lib/scraping/source-rights-registry";
 
 export function sourceAttributionFor(sourceIds: readonly string[]): readonly string[] {
   return [...new Set(sourceIds)]

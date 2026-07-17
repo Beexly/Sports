@@ -406,3 +406,57 @@ stitching) — recorded here so no backtest can slip past it.
   smoke.mjs,README.md} (new package), apps/web/__tests__/proof-mcp-route.test.ts (parity
   test added), package-lock.json.
 - Supersedes: none.
+
+## DEC-020 — Phase 2.4: source-rights-registry "duplicate" was a pure re-export shim, collapsed to one file (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: Phase 2 (post-GX-000/GG-001 master-plan follow-up); resolves the collision
+  the GX-000 Codebase Twin named in its own report (`packages/genesis-kernel/src/codebase-twin.ts`
+  `KNOWN_COLLISIONS`, PR #127): `apps/web/lib/source-rights/source-rights-registry.ts` vs
+  canonical `apps/web/lib/scraping/source-rights-registry.ts`.
+- Investigation finding (before any edit): the "duplicate" was NOT a second implementation.
+  `apps/web/lib/source-rights/source-rights-registry.ts` was an 18-line pure re-export shim —
+  every symbol (`SOURCE_RIGHTS_REGISTRY`, `getSourceRightsEntry`, `getApprovedSources`,
+  `getPermissionRequiredSources`, `getRegistrySummary`, `getSourcesByStatus`,
+  `getVendorCandidates`, `snapshotRights`, plus 5 types) forwarded untouched from the
+  860-line canonical file — zero independent data, zero transformation. The Codebase Twin's
+  collision report (correctly, per its own stated scope) flagged the file-name collision
+  without claiming divergent content; this decision confirms there was none.
+- Decision: deleted the shim; re-pointed its three consumers
+  (`apps/web/lib/source-rights/source-attribution.ts`,
+  `apps/web/lib/source-rights/source-rights-evaluator.ts`,
+  `apps/web/lib/ip/source-rights-envelope.ts`) to import
+  `@/lib/scraping/source-rights-registry` directly; updated the barrel
+  `apps/web/lib/source-rights/index.ts`'s `export *` line to the same canonical path so any
+  future barrel consumer needs no change. Net effect: exactly ONE source-rights-registry
+  file in the repo; every existing symbol name and value unchanged.
+- gse-red-team pass (mandatory, protected zone — source rights): CONFIRMED clean on all 6
+  adversarial checks — (1) the deleted file was verified byte-for-byte pure re-export via
+  `git show HEAD:<path>`, no divergence; (2) repo-wide grep + a full `tsc --noEmit` project
+  typecheck confirmed zero dangling references to the deleted path; (3) the barrel's
+  `export *` surface has no NEW name collision (a pre-existing type re-export overlap with
+  `source-rights-types.ts` resolves to the identical binding both before and after, which is
+  not an ambiguity under ES module semantics); (4) no consumer depended on
+  `lib/source-rights/` as a distinct boundary beyond the shim's own forwarding; (5) the
+  canonical 860-line registry file itself has a ZERO-line diff — no population, status,
+  clearance, or attribution value changed; (6) existing test coverage (85 tests across
+  `fences-and-adapters.test.ts` + `scraping-clearance.test.ts`) traced to genuinely exercise
+  all four repointed files, including transitively through `buildIpMetricCard` →
+  `buildIpSourceRightsEnvelope`. Minimum fix required: none.
+- Evidence: 125 tests green (fences-and-adapters 9, scraping-clearance 76,
+  affiliate-structural-separation-guard 9, agent-os-operating-spine 17, agent-os-runtime 10,
+  ingest-player-stats 4 — the last four as an additional sweep beyond the red-team's own
+  regression set, since they also reference source-rights/clearance surfaces); `tsc --noEmit`
+  clean; `eslint --max-warnings=0` clean on touched files; `npm run guardrails` all green.
+- Alternatives rejected: keeping the shim for "backwards compatibility" (it had zero external
+  consumers outside this repo — an internal-only re-export with no callers needing the old
+  path adds pure indirection, no value); rewriting the shim to diverge intentionally (no
+  evidence any consumer wanted different behavior — that would have MANUFACTURED a real
+  duplicate where none was needed).
+- Reversibility: trivial — `git revert`; no data, schema, or canonical-file change to unwind.
+- Protected zones: source rights. gse-red-team pass completed pre-commit per
+  `.claude/rules/protected-money-truth.md` and `.claude/rules/source-rights.md`.
+- Files: apps/web/lib/source-rights/source-rights-registry.ts (deleted),
+  apps/web/lib/source-rights/{index.ts,source-attribution.ts,source-rights-evaluator.ts},
+  apps/web/lib/ip/source-rights-envelope.ts.
+- Supersedes: none.

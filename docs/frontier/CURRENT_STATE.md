@@ -1,10 +1,10 @@
 # GSE Frontier Current State
 
 **Status:** ACTIVE
-**Last verified:** 2026-07-17 (this session, command evidence in DEC-001/DEC-004, extended through DEC-019)
+**Last verified:** 2026-07-17 (this session, command evidence in DEC-001/DEC-004, extended through DEC-020)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
-**Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE (DEC-014); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3 DONE; 2.4 (duplicate source-rights-registry reconciliation) next, then W005.
+**Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE (DEC-014); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Next: Phase 3 (W005).
 
 ## Verified facts
 
@@ -22,6 +22,7 @@
 - GG-000 DONE (docs-only, on PR #126): `docs/frontier/GENESIS_CONVERGENCE_MAP.md` rules GG-001 ≡ GX-000's build — exactly one implementation satisfies both founder control-package queues.
 - GX-000/GG-001 DONE: `packages/genesis-kernel` (Codebase Twin v0 + Metacortex Plan Compiler v0), shadow-only, zero production imports, 26 tests, independent gse-verifier PASS on all 13 checklist items. Draft PR #127 open — founder merge only; do not begin GX-001 without a fresh founder signal.
 - PR #128 (unrelated, found while opening #127): a pre-existing `commercial-copy-scan` self-trigger on `apps/web/app/tools/page.tsx`'s own doc comment, blocking "All guardrails" green on `main` regardless of any PR's diff. One-line comment fix, non-draft, founder merge only.
+- Phase 2.4 DONE (DEC-020): the GX-000 Codebase Twin's flagged source-rights-registry "duplicate" turned out to be a pure 18-line re-export shim with zero independent data — deleted, three consumers + the barrel re-pointed to the canonical `apps/web/lib/scraping/source-rights-registry.ts` (860 lines, untouched — zero-line diff). gse-red-team CONFIRMED clean on all 6 checks; minimum fix required: none. 125 tests green.
 
 ## Owner gates
 
@@ -30,7 +31,8 @@
 
 ## Next action
 
-Phase 2.4: duplicate source-rights-registry reconciliation (`apps/web/lib/source-rights/source-rights-registry.ts`
-vs canonical `apps/web/lib/scraping/source-rights-registry.ts` — collision named in the
-GX-000 Codebase Twin's own report). Protected zone (source rights): gse-red-team pass
-required before finalizing. Then Phase 3 (W005 Intelligence Contract v0).
+Phase 3: W005 Intelligence Contract v0 — persistent user-maintained intelligence over
+watchlist entities, compiled against the Worldline/SportsIR spine (W002 ✓, W004 ✓). Decide
+`IntelligenceContract` type reuse from `@sports/genesis-kernel` (still on its own unmerged
+branch/PR #127) by evidence at start time — either recover it onto this branch or
+type-mirror until founder merges.

@@ -1,4 +1,4 @@
-import { getSourceRightsEntry, snapshotRights } from "@/lib/source-rights/source-rights-registry";
+import { getSourceRightsEntry, snapshotRights } from "@/lib/scraping/source-rights-registry";
 
 export interface IpSourceRightsEnvelope {
   readonly sourceId: string;
