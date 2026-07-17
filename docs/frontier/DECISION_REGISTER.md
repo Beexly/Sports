@@ -97,3 +97,45 @@ Append-only. Never rewrite prior entries; add a superseding decision when eviden
 - Reversibility: full.
 - Protected zones: entitlements, proof semantics.
 - Supersedes: —
+
+## DEC-009 — W002 verifier FAIL, both blockers fixed forward (2026-07-17)
+
+Independent verifier (adversarial, 8 probe tests) returned FAIL with two
+blockers, both fixed and regression-encoded:
+1. A literal NUL byte (0x00) at store.ts:111 made git classify the file as
+   binary — invisible to tsc/vitest/eslint/`git diff --check`. Fixed by full
+   clean-bytes rewrite; NUL scan of all worldline files now 0; the committed
+   binary blob exists only at b41d768d (squash-on-merge erases it from main).
+2. auditReplayStability() named innocent observations (membership heuristic).
+   Fixed with EXACT attribution: ServedRead now records the observation count
+   at serve time (append-only ⇒ the original view is exactly recomputable);
+   offenders = per-cell winner diffs only. The verifier's own repro (innocent
+   bystander + backdated culprit) is now test "attribution is EXACT" with an
+   exact-set assertion. Also hardened both cell keys to JSON-escaped compound
+   form (space-delimiter collision "a b"+"c" == "a"+"b c" eliminated).
+Accepted low finding (recorded, not fixed): intermediate contaminators
+superseded before the audit runs are not individually named — the final winner
+fully explains the divergence.
+
+## DEC-010 — W-OTS slice 1 scope + live-network verification (2026-07-17)
+
+Ported the founder's gse-ots-anchor packet VERBATIM to packages/crypto (no
+behavioral edits to verified crypto). CLOSED the packet's one open job in this
+environment: live calendar round-trip against the real public OTS network
+(ok>0, real pending attestations grafted) + both python-opentimestamps
+cross-implementation checks run LIVE (lib installed). Storage seam landed
+founder-gated: additive IF-NOT-EXISTS migration 20260717150000_add_ots_anchor
+(otsProof BYTEA, otsBitcoinHeight INT) + OTS_ANCHOR_ENABLED default off.
+Deferred to next slice: freeze-slate mint wire, /api/proof/ots/[slateKey],
+nightly upgrade poll. OWNER_GATE: founder applies the migration. Public-copy
+rule pinned: "anchored to Bitcoin" only when otsBitcoinHeight is non-null.
+
+## Packet intake accounting (2026-07-17, founder upload)
+
+gse-ots-anchor → W-OTS (slice 1 DONE). galaxy-proof-mcp → W-MCP (READY).
+gse-weather-edge → W-WEATHER-REC (READY; must reconcile with
+edge-lab/features/nfl-weather.ts — one canonical path).
+GSE_FRONTIER_ORCHESTRATOR_1 → already installed as canon (this system).
+Setup-ClaudeCode-Foundry.ps1 → OWNER_GATE (founder machine; Foundry has zero
+model deployments — deploy Claude first). Untapped Atlas order queued behind:
+Rekor co-publication, Ask-the-Record RAG, GH-Actions backtest grid, enclaves.

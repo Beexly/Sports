@@ -14,7 +14,10 @@ import { canonicalJson } from "@/lib/intelligence-playback/canonical-json";
 import type { WorldDelta, WorldDeltaEntry, WorldSnapshot } from "./types";
 
 export function worldDelta(from: WorldSnapshot, to: WorldSnapshot): WorldDelta {
-  const key = (entityId: string, attribute: string): string => `${entityId} ${attribute}`;
+  // JSON-escaped compound key — same collision-proof form as the store's
+  // cellKey ("a b"+"c" must never equal "a"+"b c").
+  const key = (entityId: string, attribute: string): string =>
+    `${JSON.stringify(entityId)}:${JSON.stringify(attribute)}`;
   const before = new Map(from.cells.map((c) => [key(c.entityId, c.attribute), c]));
   const after = new Map(to.cells.map((c) => [key(c.entityId, c.attribute), c]));
 

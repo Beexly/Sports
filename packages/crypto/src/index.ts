@@ -23,3 +23,6 @@ export {
   CURVE_ORDER,
 } from "./pedersen-ledger.js";
 export type { Commitment, LedgerCommitmentResult } from "./pedersen-ledger.js";
+
+// OpenTimestamps anchoring (Bitcoin-anchored trustless time for slate roots).
+export * from "./ots-anchor.js";

@@ -509,6 +509,15 @@ model SlateCommitment {
   count       Int                 // pre-registered population size (the fixed denominator)
   committedAt DateTime            // published BEFORE the first kickoff
 
+  // OpenTimestamps anchoring (packages/crypto/src/ots-anchor.ts): the detached
+  // .ots proof bytes for `root`, upgrading via the public calendar network into
+  // a Bitcoin block-header attestation — trustless publish-before-kickoff time.
+  // Nullable + founder-applied migration (20260717150000_add_ots_anchor); the
+  // OTS_ANCHOR_ENABLED env (default off) gates any writer. otsBitcoinHeight is
+  // set ONLY once the proof carries a real Bitcoin attestation — public copy may
+  // claim "anchored to Bitcoin" only when it is non-null.
+  otsProof         Bytes?   @db.ByteA
+  otsBitcoinHeight Int?
 
   createdAt   DateTime @default(now())
 

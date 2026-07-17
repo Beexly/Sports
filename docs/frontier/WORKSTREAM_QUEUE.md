@@ -4,8 +4,11 @@
 |---|---|---|---|---|---|
 | W000 | DONE (slice 1) / REPEATABLE | Recover Existing Assets | none | Prevent duplicate code; restore stranded correctness and frontier substrate | varies by selected PR |
 | W001 | DONE (2026-07-17) | Governed Playback Canonicalization | W000 ✓; PR #112 disposition | One evidence envelope/event/delta/playback spine | settlement, proof, entitlements |
-| W002 | READY | Worldline v0 | W001 ✓ | Bitemporal as-of replay and no-lookahead world diffs | data, proof |
-| W003 | BLOCKED | Reality Receipt v0 | W002 | Reproducible visual/decision object | proof, public claims |
+| W002 | DONE (2026-07-17) | Worldline v0 | W001 ✓ | Bitemporal as-of replay and no-lookahead world diffs — landed `apps/web/lib/worldline` (13 tests; verifier FAIL→both blockers fixed, DEC-009) | data, proof |
+| W-OTS | DONE slice 1 (2026-07-17) | Bitcoin-anchored trustless time | founder packet | `packages/crypto/ots-anchor` verbatim port; python cross-checks LIVE-run; LIVE calendar round-trip CLOSED; additive migration + OTS_ANCHOR_ENABLED. Next slice: mint-path wire + /api/proof/ots/[slateKey] + nightly upgrade poll | proof, data |
+| W-MCP | READY (packet intake 2026-07-17) | galaxy-proof-mcp integrate + hosted remote MCP | proof surface (live) | 7-tool MCP server packet → repo-integrate, reconcile hash logic with lib/proof (one truth path), deploy as remote MCP | proof, public claims |
+| W-WEATHER-REC | READY (packet intake 2026-07-17) | Reconcile gse-weather-edge packet with edge-lab nfl-weather | trials registry | Two weather implementations exist (packet + edge-lab feature) — merge to ONE canonical path, stronger-of-each | data, model claims |
+| W003 | BLOCKED | Reality Receipt v0 | W002 ✓ (now unblocked) | Reproducible visual/decision object | proof, public claims |
 | W004 | BLOCKED | SportsIR v0 | W002-W003 | Shared minimal intermediate representation | schema/contracts |
 | W005 | BLOCKED | Intelligence Contract v0 | W002, existing watchlist | Persistent user-maintained intelligence | entitlements, notifications |
 | W006 | BLOCKED | Capability Foundry v0 | W000; PR #124 disposition | Turn discovered assets into evaluated capabilities | supply chain, source rights |

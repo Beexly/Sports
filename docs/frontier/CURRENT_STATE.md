@@ -4,7 +4,7 @@
 **Last verified:** 2026-07-17 (this session, command evidence in DEC-001/DEC-004)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
-**Active workstream:** none — W001 complete; W002 (Worldline v0) is READY for the next `/gse-run next`
+**Active workstream:** none — W002 DONE (worldline landed, verifier blockers fixed, DEC-009); W-OTS slice 1 DONE (DEC-010). Next `/gse-run next`: W-OTS slice 2 (mint wire + API + poll) or W003 Reality Receipt v0 (now unblocked) or W-MCP.
 
 ## Verified facts
 

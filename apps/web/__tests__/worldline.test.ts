@@ -91,6 +91,25 @@ describe("replay-stability audit (no silent rewrites)", () => {
     expect(err.offenders.some((o) => o.observationId === "backdated")).toBe(true);
   });
 
+  it("attribution is EXACT: an innocent, untouched observation is never named (verifier repro 2026-07-17)", () => {
+    const s = new WorldlineStore();
+    // Innocent bystander on a different cell — must never appear as an offender.
+    s.ingest(obs({ id: "innocent-A", entityId: "game-9", attribute: "status", value: "FINAL", occurredAt: T(12), observedAt: T(12) }));
+    s.ingest(obs({ id: "orig", value: "24-20", occurredAt: T(16), observedAt: T(17) }));
+    s.snapshotAt({ validTime: T(23), knowledgeTime: T(18) }); // served: two cells
+    s.ingest(obs({ id: "backdated", value: "24-21", occurredAt: T(16), observedAt: "2026-01-01T17:30:00.000Z" }));
+    let thrown: unknown;
+    try {
+      s.auditReplayStability();
+    } catch (e) {
+      thrown = e;
+    }
+    const err = thrown as WorldlineReplayError;
+    expect(err).toBeInstanceOf(WorldlineReplayError);
+    // Exact set: the real culprit and ONLY the real culprit.
+    expect(err.offenders.map((o) => o.observationId)).toEqual(["backdated"]);
+  });
+
   it("stays clean when late knowledge arrives with an honest (later) observedAt", () => {
     const s = new WorldlineStore();
     s.ingest(obs({ id: "orig", value: "24-20", occurredAt: T(16), observedAt: T(17) }));
