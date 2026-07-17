@@ -1,0 +1,698 @@
+{
+  "canonVersion": "2026-07-17.2",
+  "publicProduct": "Galaxy Sports Edge",
+  "internalProgram": "Galaxy Genesis",
+  "completenessAuthority": "docs/genesis/COMPLETE_CANON.md",
+  "originAuthority": "docs/genesis/ORIGIN_SOURCE_MAP.md",
+  "executionAuthority": "docs/genesis/WORK_QUEUE.md",
+  "currentWorkstream": "GX-000",
+  "loadingRule": "Query this manifest by id, workstream, domain, and dependency before reading the complete canon.",
+  "stateVocabulary": [
+    "PRESERVED_RND",
+    "BOUND_DOCTRINE",
+    "READY",
+    "BLOCKED_BY_DEPENDENCY",
+    "RESEARCH_ONLY",
+    "OWNER_GATE",
+    "SHADOW",
+    "IMPLEMENTED",
+    "SUPERSEDED"
+  ],
+  "systems": [
+    {
+      "id": "GX-CORE-001",
+      "name": "SportsIR",
+      "domain": "semantics",
+      "status": "BOUND_DOCTRINE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/DECISIONS.md"],
+      "dependencies": [],
+      "workstream": "future SportsIR convergence"
+    },
+    {
+      "id": "GX-CORE-002",
+      "name": "Four-Clock Bitemporal Reality",
+      "domain": "reality",
+      "status": "BOUND_DOCTRINE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/DECISIONS.md"],
+      "dependencies": ["GX-CORE-001"],
+      "workstream": "GX-002"
+    },
+    {
+      "id": "GX-CORE-003",
+      "name": "Evidence Mesh, Vault and Ledger",
+      "domain": "evidence",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001", "GX-CORE-002"],
+      "workstream": "GX-001/GX-002"
+    },
+    {
+      "id": "GX-CORE-004",
+      "name": "Source Genome and Consensus Illusion Detector",
+      "domain": "evidence",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-003"],
+      "workstream": "GX-020/GX-035"
+    },
+    {
+      "id": "GX-CORE-005",
+      "name": "Evidence Half-Life and Unknownness Map",
+      "domain": "uncertainty",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-003", "GX-CORE-004"],
+      "workstream": "GX-004/GX-005"
+    },
+    {
+      "id": "GX-CORE-006",
+      "name": "Branching Reality and Galaxy Multiverse",
+      "domain": "reality",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001", "GX-CORE-002", "GX-CORE-005"],
+      "workstream": "GX-041"
+    },
+    {
+      "id": "GX-CORE-007",
+      "name": "Reality Receipts and Proof Fabric",
+      "domain": "proof",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001", "GX-CORE-002", "GX-CORE-003"],
+      "workstream": "GX-054"
+    },
+    {
+      "id": "GX-CORE-008",
+      "name": "Intelligence Contracts",
+      "domain": "intent",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/META_COMPILER_SPEC.md", "docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001"],
+      "workstream": "GX-000/GX-005"
+    },
+    {
+      "id": "GX-CORE-009",
+      "name": "Galaxy Metacortex",
+      "domain": "planning",
+      "status": "READY",
+      "canonicalDocs": ["docs/genesis/META_COMPILER_SPEC.md", "docs/genesis/FIRST_BUILD_CONTRACT.md"],
+      "dependencies": ["GX-CORE-008", "GX-REPO-001"],
+      "workstream": "GX-000"
+    },
+    {
+      "id": "GX-CORE-010",
+      "name": "Value-of-Information and Active Sensing Router",
+      "domain": "planning",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/01-intelligence-and-science.md"],
+      "dependencies": ["GX-CORE-009", "GX-DECISION-001"],
+      "workstream": "GX-005"
+    },
+    {
+      "id": "GX-MISSION-001",
+      "name": "Evidence Missions",
+      "domain": "execution",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/ORIGIN_SOURCE_MAP.md"],
+      "dependencies": ["GX-CORE-008"],
+      "workstream": "future durable execution"
+    },
+    {
+      "id": "GX-EXEC-001",
+      "name": "Adaptive Cognitive Sharding",
+      "domain": "execution",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/ORIGIN_SOURCE_MAP.md"],
+      "dependencies": ["GX-MISSION-001"],
+      "workstream": "future durable execution"
+    },
+    {
+      "id": "GX-EXEC-002",
+      "name": "Incremental Reality Kernel",
+      "domain": "execution",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/README.md", "docs/genesis/atlas/01-intelligence-and-science.md"],
+      "dependencies": ["GX-CORE-001", "GX-CORE-002", "GX-CORE-009"],
+      "workstream": "GX-002"
+    },
+    {
+      "id": "GX-EXEC-003",
+      "name": "Capability Routing and Signed Packs",
+      "domain": "execution",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/ORIGIN_SOURCE_MAP.md"],
+      "dependencies": ["GX-CAP-001", "GX-SEC-001"],
+      "workstream": "GX-050"
+    },
+    {
+      "id": "GX-REPO-001",
+      "name": "Galaxy Codebase Twin",
+      "domain": "repository",
+      "status": "READY",
+      "canonicalDocs": ["docs/genesis/CODEBASE_TWIN_SPEC.md", "docs/genesis/FIRST_BUILD_CONTRACT.md"],
+      "dependencies": [],
+      "workstream": "GX-000/GX-010"
+    },
+    {
+      "id": "GX-REPO-002",
+      "name": "Architecture Governor",
+      "domain": "repository",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/WORK_QUEUE.md"],
+      "dependencies": ["GX-REPO-001"],
+      "workstream": "GX-011"
+    },
+    {
+      "id": "GX-CAP-001",
+      "name": "Universal Capability Genome",
+      "domain": "capabilities",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001", "GX-POLICY-001"],
+      "workstream": "GX-001/HF-001"
+    },
+    {
+      "id": "GX-CAP-002",
+      "name": "GitHub Software Genome and Capability Foundry",
+      "domain": "capabilities",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/ORIGIN_SOURCE_MAP.md"],
+      "dependencies": ["GX-CAP-001", "GX-REPO-001"],
+      "workstream": "GX-010/GX-050"
+    },
+    {
+      "id": "GX-CAP-003",
+      "name": "Capability Chemistry and Recombinator",
+      "domain": "capabilities",
+      "status": "RESEARCH_ONLY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CAP-001", "GX-RESEARCH-002"],
+      "workstream": "GX-077"
+    },
+    {
+      "id": "HF-CORE-001",
+      "name": "Galaxy Neural Foundry",
+      "domain": "neural",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CAP-001", "GX-POLICY-001"],
+      "workstream": "HF-000"
+    },
+    {
+      "id": "HF-001",
+      "name": "Hub Genome",
+      "domain": "neural",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/WORK_QUEUE.md"],
+      "dependencies": ["HF-000", "GX-001"],
+      "workstream": "HF-001"
+    },
+    {
+      "id": "HF-002",
+      "name": "Capability Firewall",
+      "domain": "security",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-001", "GX-001"],
+      "workstream": "HF-002"
+    },
+    {
+      "id": "HF-003",
+      "name": "Galaxy Combine",
+      "domain": "evaluation",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-002"],
+      "workstream": "HF-003"
+    },
+    {
+      "id": "HF-004",
+      "name": "Research Grid and Experiment Receipts",
+      "domain": "research-execution",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-003"],
+      "workstream": "HF-004"
+    },
+    {
+      "id": "HF-005",
+      "name": "Latent Sports Atlas",
+      "domain": "retrieval",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-003"],
+      "workstream": "HF-005"
+    },
+    {
+      "id": "HF-006",
+      "name": "Time-Series Shadow League",
+      "domain": "forecasting",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-003", "GX-004"],
+      "workstream": "HF-006"
+    },
+    {
+      "id": "HF-007",
+      "name": "Dataset Genome",
+      "domain": "data",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-001", "GX-001"],
+      "workstream": "HF-007"
+    },
+    {
+      "id": "HF-008",
+      "name": "Space Forge and MCP Gateway",
+      "domain": "tools",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-002", "GX-SEC-001"],
+      "workstream": "HF-008"
+    },
+    {
+      "id": "HF-009",
+      "name": "Edge Cortex",
+      "domain": "edge",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-003"],
+      "workstream": "HF-009"
+    },
+    {
+      "id": "HF-010",
+      "name": "Multimodal Scene Lab and Hypergraph",
+      "domain": "multimodal",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-003", "GX-001"],
+      "workstream": "HF-010/GX-032"
+    },
+    {
+      "id": "HF-011",
+      "name": "Adapter Constellation",
+      "domain": "neural",
+      "status": "OWNER_GATE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-003", "HF-007"],
+      "workstream": "HF-011"
+    },
+    {
+      "id": "HF-013",
+      "name": "Model Franchise, Chemistry and Draft Market",
+      "domain": "model-ecology",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-003"],
+      "workstream": "HF-013"
+    },
+    {
+      "id": "HF-014",
+      "name": "Hugging Face Reflex",
+      "domain": "drift",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-001", "HF-002", "HF-003"],
+      "workstream": "HF-014"
+    },
+    {
+      "id": "HF-015",
+      "name": "Galaxy Commons",
+      "domain": "research-commons",
+      "status": "OWNER_GATE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["HF-003", "GX-035"],
+      "workstream": "HF-015/GX-065"
+    },
+    {
+      "id": "GX-RESEARCH-001",
+      "name": "Research Cortex",
+      "domain": "research",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CAP-001"],
+      "workstream": "GX-035"
+    },
+    {
+      "id": "GX-RESEARCH-002",
+      "name": "Unknown-Unknown Radar",
+      "domain": "research",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-RESEARCH-001"],
+      "workstream": "future opportunity graph"
+    },
+    {
+      "id": "GX-RESEARCH-003",
+      "name": "Red Queen Laboratory",
+      "domain": "autonomous-science",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/01-intelligence-and-science.md"],
+      "dependencies": ["GX-POLICY-002", "GX-RESEARCH-001", "GX-FAILURE-001"],
+      "workstream": "GX-006"
+    },
+    {
+      "id": "GX-RESEARCH-004",
+      "name": "Scientific Law Foundry",
+      "domain": "science",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/atlas/01-intelligence-and-science.md"],
+      "dependencies": ["GX-001", "GX-002", "GX-004"],
+      "workstream": "GX-006"
+    },
+    {
+      "id": "GX-RESEARCH-005",
+      "name": "Science-to-Product Compiler",
+      "domain": "productization",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-RESEARCH-004", "GX-CORE-007"],
+      "workstream": "GX-007"
+    },
+    {
+      "id": "GX-FAILURE-001",
+      "name": "Failure Atlas and Negative Knowledge",
+      "domain": "learning",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-002", "HF-003"],
+      "workstream": "GX-023/GX-024"
+    },
+    {
+      "id": "GX-AGENT-001",
+      "name": "Agent Foundry and Agent Civilization",
+      "domain": "agents",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CAP-001", "GX-SEC-001"],
+      "workstream": "GX-012"
+    },
+    {
+      "id": "GX-AGENT-002",
+      "name": "Self-Evolution Tree and Agent Trace Lab",
+      "domain": "agents",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-AGENT-001", "GX-FAILURE-001"],
+      "workstream": "GX-012/GX-013/GX-014"
+    },
+    {
+      "id": "GX-PRODUCT-001",
+      "name": "Product Twin",
+      "domain": "product",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-OBS-001"],
+      "workstream": "GX-061/GX-062"
+    },
+    {
+      "id": "GX-PRODUCT-002",
+      "name": "Decision Twin and Academy",
+      "domain": "human",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-DECISION-001", "GX-LOCAL-001"],
+      "workstream": "GX-044/GX-051"
+    },
+    {
+      "id": "GX-PRODUCT-003",
+      "name": "Interface Genome and Dynamic Interface Compiler",
+      "domain": "interface",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-RESEARCH-005", "GX-PRODUCT-001"],
+      "workstream": "GX-060/GX-061/GX-062"
+    },
+    {
+      "id": "GX-WORLD-001",
+      "name": "Galaxy Twin",
+      "domain": "world-interface",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001", "GX-CORE-002", "GX-CORE-006"],
+      "workstream": "future Twin convergence"
+    },
+    {
+      "id": "GX-WORLD-002",
+      "name": "Dynasty Studio and Multi-Fidelity World Foundry",
+      "domain": "simulation",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-006", "GX-CORE-010"],
+      "workstream": "GX-040/GX-042"
+    },
+    {
+      "id": "GX-WORLD-003",
+      "name": "Causal Pressure Field and Market Twin",
+      "domain": "market-simulation",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001", "GX-CORE-006", "GX-MEASURE-001"],
+      "workstream": "GX-032/GX-040"
+    },
+    {
+      "id": "GX-HUMAN-001",
+      "name": "Athlete and Human Performance Twin",
+      "domain": "human-performance",
+      "status": "OWNER_GATE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-MEASURE-001", "GX-PRIVACY-001"],
+      "workstream": "GX-043"
+    },
+    {
+      "id": "GX-INSTITUTION-001",
+      "name": "Sports Economy and Institutional Twin",
+      "domain": "institutions",
+      "status": "RESEARCH_ONLY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001", "GX-WORLD-002"],
+      "workstream": "GX-076"
+    },
+    {
+      "id": "GX-POLICY-001",
+      "name": "Semantic Provenance and Policy Fabric",
+      "domain": "policy",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/atlas/01-intelligence-and-science.md"],
+      "dependencies": ["GX-000"],
+      "workstream": "GX-001"
+    },
+    {
+      "id": "GX-POLICY-002",
+      "name": "Causal Constitution and Verified Intelligence Kernel",
+      "domain": "verification",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/atlas/01-intelligence-and-science.md", "docs/genesis/DECISIONS.md"],
+      "dependencies": ["GX-000"],
+      "workstream": "GX-003/GX-006"
+    },
+    {
+      "id": "GX-DECISION-001",
+      "name": "Credal, Conformal and Robust Decision Layer",
+      "domain": "decision",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/atlas/01-intelligence-and-science.md"],
+      "dependencies": ["GX-000", "calibration"],
+      "workstream": "GX-004"
+    },
+    {
+      "id": "GX-MEASURE-001",
+      "name": "Galaxy Metrology Institute and Instrument Credibility Kernel",
+      "domain": "measurement",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/05-metrology-context-execution-and-resilience.md"],
+      "dependencies": ["GX-001"],
+      "workstream": "GX-067"
+    },
+    {
+      "id": "GX-ASSUME-001",
+      "name": "Assumption Graph",
+      "domain": "epistemics",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/05-metrology-context-execution-and-resilience.md"],
+      "dependencies": ["GX-001", "GX-002"],
+      "workstream": "GX-066"
+    },
+    {
+      "id": "GX-CONTEXT-001",
+      "name": "Context Compiler and Cognitive Cache",
+      "domain": "context",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/05-metrology-context-execution-and-resilience.md"],
+      "dependencies": ["GX-REPO-001"],
+      "workstream": "GX-068"
+    },
+    {
+      "id": "GX-PLAN-001",
+      "name": "Metacortex Plan Superoptimizer",
+      "domain": "planning",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/05-metrology-context-execution-and-resilience.md"],
+      "dependencies": ["GX-CORE-009", "GX-POLICY-001"],
+      "workstream": "GX-069"
+    },
+    {
+      "id": "GX-EXEC-004",
+      "name": "Hardware-Aware Execution Compiler",
+      "domain": "execution",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/05-metrology-context-execution-and-resilience.md"],
+      "dependencies": ["GX-PLAN-001", "GX-SEC-001"],
+      "workstream": "GX-070"
+    },
+    {
+      "id": "GX-RESILIENCE-001",
+      "name": "Resilience and Chaos Twin",
+      "domain": "resilience",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/05-metrology-context-execution-and-resilience.md"],
+      "dependencies": ["GX-000", "GX-OBS-001"],
+      "workstream": "GX-071"
+    },
+    {
+      "id": "GX-DRIFT-001",
+      "name": "Rights, Artifact and Policy Drift Reflex",
+      "domain": "drift",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/06-cloud-supply-chain-and-institutional-intelligence.md"],
+      "dependencies": ["GX-POLICY-001", "GX-OBS-001"],
+      "workstream": "GX-072"
+    },
+    {
+      "id": "GX-CLOUD-001",
+      "name": "Multi-Cloud Capability Mesh",
+      "domain": "cloud",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/CLOUD_CAPABILITY_MESH.md", "docs/genesis/atlas/06-cloud-supply-chain-and-institutional-intelligence.md"],
+      "dependencies": ["GX-CAP-001", "GX-PLAN-001"],
+      "workstream": "GX-073"
+    },
+    {
+      "id": "GX-OBS-001",
+      "name": "Cognitive Observability Fabric",
+      "domain": "observability",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/05-metrology-context-execution-and-resilience.md"],
+      "dependencies": ["GX-CORE-008", "GX-CORE-007"],
+      "workstream": "GX-075"
+    },
+    {
+      "id": "GX-QD-001",
+      "name": "Quality-Diversity Research Archive",
+      "domain": "evolution",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/06-cloud-supply-chain-and-institutional-intelligence.md"],
+      "dependencies": ["GX-FAILURE-001", "GX-RESEARCH-003"],
+      "workstream": "GX-074"
+    },
+    {
+      "id": "GX-CYBERNETIC-001",
+      "name": "Cybernetic Governor",
+      "domain": "control",
+      "status": "RESEARCH_ONLY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/atlas/05-metrology-context-execution-and-resilience.md"],
+      "dependencies": ["GX-CORE-009", "GX-CORE-010", "GX-OBS-001"],
+      "workstream": "GX-078"
+    },
+    {
+      "id": "GX-COHERENCE-001",
+      "name": "Coherence and Entropy Governor",
+      "domain": "governance",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-REPO-001", "GX-OBS-001"],
+      "workstream": "GX-079"
+    },
+    {
+      "id": "GX-CONSISTENCY-001",
+      "name": "Global Consistency and Contextuality Lab",
+      "domain": "mathematical-research",
+      "status": "RESEARCH_ONLY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CORE-001", "GX-ASSUME-001", "GX-MEASURE-001"],
+      "workstream": "GX-080"
+    },
+    {
+      "id": "GX-SEC-001",
+      "name": "Capability Sandbox",
+      "domain": "security",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/WORK_QUEUE.md"],
+      "dependencies": ["GX-001"],
+      "workstream": "GX-050"
+    },
+    {
+      "id": "GX-PRIVACY-001",
+      "name": "Private Intelligence Federation",
+      "domain": "privacy",
+      "status": "OWNER_GATE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-CAP-001", "GX-SEC-001"],
+      "workstream": "GX-053"
+    },
+    {
+      "id": "GX-LOCAL-001",
+      "name": "Local-First Personal Intelligence",
+      "domain": "privacy",
+      "status": "OWNER_GATE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-PRODUCT-002", "GX-SEC-001"],
+      "workstream": "GX-051"
+    },
+    {
+      "id": "GX-EDGE-001",
+      "name": "Edge Swarm",
+      "domain": "edge",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-SEC-001", "HF-009", "GX-EXEC-004"],
+      "workstream": "GX-052"
+    },
+    {
+      "id": "GX-MEDIA-001",
+      "name": "Media Authenticity Ledger",
+      "domain": "media",
+      "status": "BLOCKED_BY_DEPENDENCY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-001", "HF-010"],
+      "workstream": "GX-055"
+    },
+    {
+      "id": "GX-REVOCATION-001",
+      "name": "Revocation and Machine Unlearning",
+      "domain": "governance",
+      "status": "RESEARCH_ONLY",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-POLICY-001", "GX-DRIFT-001"],
+      "workstream": "future rights lifecycle"
+    },
+    {
+      "id": "GX-CONTRIB-001",
+      "name": "Epistemic Contribution Market",
+      "domain": "incentives",
+      "status": "OWNER_GATE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-020", "GX-034"],
+      "workstream": "GX-063"
+    },
+    {
+      "id": "GX-BENCH-001",
+      "name": "Benchmark and Bounty Network",
+      "domain": "evaluation",
+      "status": "OWNER_GATE",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md"],
+      "dependencies": ["GX-FAILURE-001", "GX-034"],
+      "workstream": "GX-064"
+    },
+    {
+      "id": "GX-SCOUT-001",
+      "name": "Research Lens and Scout Nodes",
+      "domain": "edge-product",
+      "status": "PRESERVED_RND",
+      "canonicalDocs": ["docs/genesis/COMPLETE_CANON.md", "docs/genesis/ORIGIN_SOURCE_MAP.md"],
+      "dependencies": ["GX-CORE-003", "GX-EDGE-001"],
+      "workstream": "future browser/mobile program"
+    }
+  ]
+}
