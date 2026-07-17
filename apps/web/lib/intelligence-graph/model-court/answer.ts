@@ -143,6 +143,7 @@ export async function answerModelCourtQuestion(
       temperature: 0.1,
       system: SYSTEM_PROMPT,
       user: buildPromptUser(input),
+      cache: { system: true },
     });
     const policyFailures = evaluateModelCourtAnswerPolicy(result.text);
     if (policyFailures.length > 0) {

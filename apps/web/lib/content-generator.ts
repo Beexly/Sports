@@ -136,6 +136,7 @@ Respond ONLY with valid JSON in this exact format:
       maxTokens: 2000,
       system: systemPrompt,
       user: userPrompt,
+      cache: { system: true },
     });
     try {
       parsed = parseGeneratedBlogResponse(result.text);

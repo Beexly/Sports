@@ -35,6 +35,7 @@ model User {
   subscription  Subscription?
   alerts        Alert[]
   claudeApiCalls ClaudeApiCallRecord[]
+  watchlistEntries Watchlist[]
 
   @@index([email])
   @@map("users")
@@ -237,6 +238,7 @@ model Game {
   gateDecisions       GateDecision[]
   creatorAssets       CreatorAsset[]
   claudeApiCalls      ClaudeApiCallRecord[]
+  oddsLineSnapshots   OddsLineSnapshot[]
 
   @@index([sportId])
   @@index([commenceTime])
@@ -321,6 +323,39 @@ model Odds {
   // avoids sorting the whole per-game partition.
   @@index([gameId, fetchedAt])
   @@map("odds")
+}
+
+// OddsLineSnapshot — forward line archive for the Glass Ledger (handoff §2 P0):
+// timestamped OPENING / INTERIM / CLOSING odds snapshots, one row per
+// (game, market, book, side) capture. Purely additive and INERT by default —
+// gated by LINE_ARCHIVE_ENABLED (see
+// packages/ingestion-pipeline/src/line-archive.ts). Persists odds the existing
+// refresh cycle already fetched from The Odds API; adds no new upstream calls.
+//
+// Phase is stamped at write time:
+//   - "OPEN"     the first snapshot ever persisted for (gameId, market)
+//   - "INTERIM"  every later mid-cycle capture before kickoff
+//   - "CLOSE"    re-tagged onto the last pre-kickoff row per (market, book,
+//                side) by the settle-time pass (markClosingSnapshots) — that
+//                pass exists but is NOT wired into settle-sport.ts yet.
+model OddsLineSnapshot {
+  id         String   @id @default(cuid())
+  gameId     String
+  capturedAt DateTime
+  phase      String   // "OPEN" | "INTERIM" | "CLOSE"
+  book       String
+  market     String   // "SPREAD" | "MONEYLINE" | "TOTAL"
+  side       String
+  price      Float    // price at capture, in the source's native odds format
+  line       Float?   // points line at capture (spread/total); null for moneyline
+  source     String
+  createdAt  DateTime @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId, market, capturedAt])
+  @@index([phase, capturedAt])
+  @@map("odds_line_snapshots")
 }
 
 // ============================================================
@@ -726,6 +761,42 @@ model Alert {
 
   @@index([userId])
   @@map("alerts")
+}
+
+// ============================================================
+// WATCHLIST
+// ============================================================
+
+// User-owned follow list: a team or player the user wants to track. This is
+// the retention primitive — the per-entity subscribe/follow loop — that
+// gates the GRADED-only alert layer (never an ungraded tip; see
+// apps/web/lib/watchlist/alert-eligibility.ts). Following itself is not
+// FK-constrained to Team/Player: entityType selects which table entityId
+// refers to (polymorphic reference), matching this schema's existing
+// denormalized-reference convention (e.g. TeamGameLog.teamName) rather than
+// a dual-FK union. entityType is a plain String (not a native Postgres
+// enum) guarded by a CHECK constraint in the migration — Postgres has no
+// `CREATE TYPE ... IF NOT EXISTS`, so a brand-new native enum type would not
+// be safely re-appliable; this mirrors the existing convention of
+// OddsLineSnapshot.phase / Pick.clvVerdict, which are also String columns
+// for small fixed value sets rather than native enums.
+//
+// Founder-applied migration — see
+// packages/db/prisma/migrations/20260717120000_add_watchlist. Application
+// code (apps/web/lib/watchlist/db.ts) fails gracefully (503, not 500) when
+// this table is absent, exactly like OddsLineSnapshot.
+model Watchlist {
+  id         String   @id @default(cuid())
+  userId     String
+  entityType String   // "TEAM" | "PLAYER"
+  entityId   String   // Team.id or Player.id, depending on entityType
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, entityType, entityId])
+  @@index([userId])
+  @@map("watchlist_entries")
 }
 
 // ============================================================

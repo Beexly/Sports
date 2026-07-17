@@ -115,6 +115,69 @@ describe("evidence readiness matrix", () => {
     );
   });
 
+  // FIX 7: model.trueEv was unconditionally blocked by fiat. It now accepts
+  // an optional edgeLabVerdict artifact (the edge-lab honesty-engine's
+  // logit-pool β verdict + tuned tau) and activates iff the verdict is the
+  // REAL "adds information" string from edge-lab/logit-pool.ts AND tau is
+  // non-null. Absent artifact must be byte-identical to today's behavior.
+  const trueEvReadyEvidence = [
+    evidence("ODDS"),
+    evidence("RATINGS", { activationStatus: "ACTIVE", sampleSize: 500 }),
+  ];
+
+  it("default (no edgeLabVerdict): trueEv stays blocked exactly as before", () => {
+    const matrix = buildEvidenceReadinessMatrix({
+      now: NOW,
+      evidence: trueEvReadyEvidence,
+    });
+
+    const trueEv = matrix.rows.find((row) => row.key === "model.trueEv")!;
+    expect(trueEv.status).toBe("BLOCKED");
+    expect(trueEv.canContributeToScore).toBe(false);
+    expect(trueEv.blockers).toContain(
+      "True EV stays blocked until independent fair probability is active."
+    );
+  });
+
+  it("edgeLabVerdict artifact (MODEL_ADDS_INFORMATION + tuned tau): trueEv goes ACTIVE", () => {
+    const matrix = buildEvidenceReadinessMatrix({
+      now: NOW,
+      evidence: trueEvReadyEvidence,
+      edgeLabVerdict: { logitPoolVerdict: "MODEL_ADDS_INFORMATION", tunedTau: 0.02 },
+    });
+
+    const trueEv = matrix.rows.find((row) => row.key === "model.trueEv")!;
+    expect(trueEv.status).toBe("ACTIVE");
+    expect(trueEv.blockers).not.toContain(
+      "True EV stays blocked until independent fair probability is active."
+    );
+  });
+
+  it("FIRE_NOTHING edgeLabVerdict artifact: trueEv stays blocked", () => {
+    const matrix = buildEvidenceReadinessMatrix({
+      now: NOW,
+      evidence: trueEvReadyEvidence,
+      edgeLabVerdict: { logitPoolVerdict: "FIRE_NOTHING", tunedTau: null },
+    });
+
+    const trueEv = matrix.rows.find((row) => row.key === "model.trueEv")!;
+    expect(trueEv.status).toBe("BLOCKED");
+    expect(trueEv.blockers).toContain(
+      "True EV stays blocked until independent fair probability is active."
+    );
+  });
+
+  it("adds-information verdict but null tau (honest fire-nothing tau): trueEv stays blocked", () => {
+    const matrix = buildEvidenceReadinessMatrix({
+      now: NOW,
+      evidence: trueEvReadyEvidence,
+      edgeLabVerdict: { logitPoolVerdict: "MODEL_ADDS_INFORMATION", tunedTau: null },
+    });
+
+    const trueEv = matrix.rows.find((row) => row.key === "model.trueEv")!;
+    expect(trueEv.status).toBe("BLOCKED");
+  });
+
   it("normalizes 0-100 trust scores for source adapters that emit percentages", () => {
     const matrix = buildEvidenceReadinessMatrix({
       now: NOW,

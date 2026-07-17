@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /**
@@ -368,6 +368,91 @@ describe("processSport", () => {
 
     expect(result.status).toBe("success");
     expect(result.picks).toBe(1);
+  });
+
+  // Nested (not a sibling describe) so it inherits the outer beforeEach above,
+  // which resets every `mocks.*` call history and default resolved values
+  // before each test — without it, mocks.getOdds call counts leak across
+  // tests in this block.
+  describe("EU Pinnacle line archive leg — double gate", () => {
+    const ORIGINAL_ENABLED = process.env["LINE_ARCHIVE_ENABLED"];
+    const ORIGINAL_EU_PINNACLE = process.env["LINE_ARCHIVE_EU_PINNACLE"];
+
+    beforeEach(() => {
+      delete process.env["LINE_ARCHIVE_ENABLED"];
+      delete process.env["LINE_ARCHIVE_EU_PINNACLE"];
+    });
+
+    afterEach(() => {
+      delete process.env["LINE_ARCHIVE_ENABLED"];
+      delete process.env["LINE_ARCHIVE_EU_PINNACLE"];
+      if (ORIGINAL_ENABLED !== undefined) process.env["LINE_ARCHIVE_ENABLED"] = ORIGINAL_ENABLED;
+      if (ORIGINAL_EU_PINNACLE !== undefined) {
+        process.env["LINE_ARCHIVE_EU_PINNACLE"] = ORIGINAL_EU_PINNACLE;
+      }
+    });
+
+    it("makes exactly one Odds API request per sport when both flags are off (the default)", async () => {
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.getOdds).toHaveBeenCalledTimes(1);
+    });
+
+    it("makes a second request (regions=eu, bookmakers=pinnacle) only when both flags are true", async () => {
+      process.env["LINE_ARCHIVE_ENABLED"] = "true";
+      process.env["LINE_ARCHIVE_EU_PINNACLE"] = "true";
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.getOdds).toHaveBeenCalledTimes(2);
+      expect(mocks.getOdds).toHaveBeenNthCalledWith(
+        2,
+        SPORT.key,
+        ["h2h", "spreads", "totals"],
+        { regions: "eu", bookmakers: ["pinnacle"] },
+      );
+    });
+
+    it("does not make the second request when only one of the two flags is true", async () => {
+      process.env["LINE_ARCHIVE_ENABLED"] = "true"; // LINE_ARCHIVE_EU_PINNACLE left unset
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.getOdds).toHaveBeenCalledTimes(1);
+    });
+
+    it("a Pinnacle-leg fetch failure is swallowed with a warning and never blocks the main run", async () => {
+      process.env["LINE_ARCHIVE_ENABLED"] = "true";
+      process.env["LINE_ARCHIVE_EU_PINNACLE"] = "true";
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      // First call (main US-region fetch) succeeds; second call (the eu/pinnacle
+      // leg, distinguished by the presence of the 3rd `options` arg) fails.
+      mocks.getOdds.mockImplementation(
+        (async (
+          _sport: string,
+          _markets: string[],
+          options?: { regions: string; bookmakers: string[] },
+        ) => {
+          if (options) {
+            throw new Error("eu region rate limited");
+          }
+          return { data: [{ raw: true }], remainingRequests: 400 };
+        }) as typeof mocks.getOdds,
+      );
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.picks).toBe(1);
+      expect(mocks.pickUpsert).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("EU Pinnacle line archive failed"),
+      );
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("eu region rate limited"));
+
+      warnSpy.mockRestore();
+    });
   });
 });
 

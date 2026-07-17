@@ -47,10 +47,16 @@ describe("Studio Claude generation", () => {
     expect(fetchImpl).toHaveBeenCalledOnce();
     const calls = fetchImpl.mock.calls as unknown as Array<[string, RequestInit]>;
     const requestBody = JSON.parse(String(calls[0]?.[1].body)) as {
-      system: string;
+      system: string | Array<{ type: string; text: string; cache_control?: { type: string } }>;
       messages: Array<{ content: string }>;
     };
-    expect(requestBody.system).toContain("X (Twitter) thread");
+    // cache:{system:true} sends the system prompt as a cache_control block array
+    // (~0.1× input cost on reuse) — the template prompt must still be inside it.
+    const systemText =
+      typeof requestBody.system === "string"
+        ? requestBody.system
+        : requestBody.system.map((b) => b.text).join("\n");
+    expect(systemText).toContain("X (Twitter) thread");
     expect(requestBody.messages[0]?.content).toContain("https://galaxysportsedge.com");
   });
 

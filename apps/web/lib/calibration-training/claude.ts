@@ -104,6 +104,7 @@ export async function generateCalibrationWeeklyInsight(
       temperature: 0.1,
       system: CALIBRATION_INSIGHT_SYSTEM_PROMPT,
       user: buildCalibrationInsightUserPrompt(input),
+      cache: { system: true },
     });
     const insightText = normalizeInsightText(result.text);
     const policy = evaluateCalibrationInsightPolicy(insightText);

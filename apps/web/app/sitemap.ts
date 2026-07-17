@@ -24,6 +24,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/picks", priority: 0.9, changeFrequency: "hourly" },
   { path: "/house", priority: 0.8, changeFrequency: "weekly" },
   { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/how-we-make-money", priority: 0.6, changeFrequency: "monthly" },
   { path: "/performance", priority: 0.7, changeFrequency: "daily" },
   { path: "/journal", priority: 0.7, changeFrequency: "weekly" },
   { path: "/pricing", priority: 0.7, changeFrequency: "monthly" },
@@ -76,6 +77,11 @@ const ROUTES: ReadonlyArray<{
   { path: "/stats/ask", priority: 0.5, changeFrequency: "weekly" },
   { path: "/stats/proof", priority: 0.5, changeFrequency: "weekly" },
   { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/tools", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/tools/ev-calculator", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/tools/no-vig-calculator", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/tools/odds-converter", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/tools/parlay-calculator", priority: 0.6, changeFrequency: "monthly" },
 ];
 
 /** Load upcoming + recent games for preview page URLs (bounded, DB-safe). */

@@ -1271,10 +1271,21 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
           <span className="rounded border border-titanium/40 bg-obsidian/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-ion-3">
             Store: {memory.store}
           </span>
+          <span
+            className={[
+              "rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
+              memory.writePath === "WIRED_ACTIVE"
+                ? "border-accent-800/50 bg-accent-950/30 text-accent-400"
+                : "border-titanium/40 bg-obsidian/60 text-ion-3",
+            ].join(" ")}
+          >
+            Write: {memory.writePath === "WIRED_ACTIVE" ? "Active" : "Gated off"}
+          </span>
         </div>
       </div>
 
       <p className="mb-3 text-xs leading-relaxed text-ion-2">{memory.truth}</p>
+      <p className="mb-3 text-xs leading-relaxed text-ion-3">{memory.writePathTruth}</p>
 
       <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-7">
         {[

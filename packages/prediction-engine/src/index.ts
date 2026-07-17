@@ -148,6 +148,8 @@ export {
   getEvidenceFactorDefinition,
 } from "./evidence-readiness-matrix.js";
 export type {
+  BuildEvidenceReadinessMatrixInput,
+  EdgeLabVerdictInput,
   EvidenceFactorDefinition,
   EvidenceFactorKey,
   EvidenceMatrixRow,

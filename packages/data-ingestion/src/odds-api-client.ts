@@ -185,14 +185,27 @@ export class OddsApiClient {
 
   async getOdds(
     sportKey: SupportedSportKey,
-    markets: Market[]
+    markets: Market[],
+    // Optional override of the default US-region request — e.g. the Pinnacle
+    // closing-line leg (packages/ingestion-pipeline/src/pinnacle-line-archive.ts)
+    // passes { regions: "eu", bookmakers: ["pinnacle"] }. Omitted entirely (every
+    // call site before that leg existed), this produces the exact same request
+    // as before: regions=ODDS_REGION, no bookmakers filter.
+    options?: { regions?: string; bookmakers?: readonly string[] }
   ): Promise<OddsApiFetchResult<OddsApiEvent[]>> {
-    return this.fetch<OddsApiEvent[]>(`/sports/${sportKey}/odds`, {
-      regions: ODDS_REGION,
+    const params: Record<string, string> = {
+      regions: options?.regions ?? ODDS_REGION,
       markets: markets.join(","),
       oddsFormat: ODDS_FORMAT,
       dateFormat: "iso",
-    });
+    };
+    // The Odds API: `bookmakers` takes precedence over `regions` for book
+    // selection when both are present; `regions` is left set above regardless
+    // (harmless, and keeps the request shape uniform).
+    if (options?.bookmakers && options.bookmakers.length > 0) {
+      params["bookmakers"] = options.bookmakers.join(",");
+    }
+    return this.fetch<OddsApiEvent[]>(`/sports/${sportKey}/odds`, params);
   }
 
   async getScores(

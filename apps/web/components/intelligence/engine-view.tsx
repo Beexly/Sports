@@ -6,14 +6,13 @@ import { KpiCard } from "@/components/ui/kpi-card";
 import { SourceError } from "@/components/ui/source-error";
 import {
   formatSigned,
-  hitRateClass as hitRateClassBase,
-  hitRateTone,
   liftClass as liftClassBase,
   liftTone,
   signedClass as signedClassBase,
   toneClass as toneClassBase,
   type SignalTone,
 } from "@/lib/intelligence/colors";
+import { describeHitRate } from "@/lib/intelligence/hit-rate-display";
 
 // Row / payload TYPES only (no loaders) — types are erased at runtime, so importing
 // them into a client component costs nothing and never drags a loader across the
@@ -58,7 +57,6 @@ import type { SleeperTrending, TrendingRow } from "@/lib/integrations/sleeper";
 // (emerald-700/rose-700) that drop to ~2:1 on dark.
 const tcd = (tone: SignalTone): string => toneClassBase(tone, "dark");
 const scd = (value: number | null, invert = false): string => signedClassBase(value, invert, "dark");
-const hcd = (rate: number | null): string => hitRateClassBase(rate, 0.55, 0.45, "dark");
 const lcd = (lift: number | null): string => liftClassBase(lift, 0.02, "dark");
 
 function Note({ children }: { children: ReactNode }): JSX.Element {
@@ -77,9 +75,6 @@ function SubHead({ kicker, title, note }: { kicker: string; title: string; note?
 
 function pct(n: number): string {
   return `${Math.round(n * 100)}%`;
-}
-function pctNullable(v: number | null): string {
-  return v == null ? "—" : `${Math.round(v * 100)}%`;
 }
 function corr(v: number | null): string {
   return v == null ? "—" : v.toFixed(2);
@@ -796,6 +791,24 @@ function WaiverTrendsView({ t }: { t: SleeperTrending }): JSX.Element {
 // PROOF / PREDICTIVENESS — 3 KPI cards + up to 3 stacked backtest tables (special)
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Substantiation guard (public-number-audit-2026-07-16, finding #5): a raw
+// buy-low/sell-high hit-rate at n=3 is one flip away from a fabricated-looking
+// "100%" headline. Below MIN_HIT_RATE_SAMPLE we show only the honest sample
+// count, no percentage, no tone color. At/above it, the tone is driven by the
+// Wilson 95% LOWER BOUND, not the point estimate — see hit-rate-display.ts.
+function HitRateCell({ rate, n }: { rate: number | null; n: number }): JSX.Element {
+  const d = describeHitRate(rate, n);
+  if (d.status === "insufficient") {
+    return <span className="text-ion-2">{d.label}</span>;
+  }
+  return (
+    <span className={tcd(d.tone)}>
+      {d.pct}%
+      <span className="ml-1 text-xs text-ion-2">LCB {d.lcbPct}% · n={d.n}</span>
+    </span>
+  );
+}
+
 function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
   return [
     { key: "label", label: "Group", render: (r) => <span className="font-semibold text-ion-white">{r.label}</span> },
@@ -816,28 +829,18 @@ function proofColumns(): Column<PredictivenessSplit & { label: string }>[] {
       label: "Buy-low ✓",
       align: "right",
       numeric: true,
-      tooltip: "fraction of buy-low calls whose per-game rose",
+      tooltip: "fraction of buy-low calls whose per-game rose (min n=25; Wilson 95% LCB drives the color)",
       sortValue: (r) => r.buyLowHitRate,
-      render: (r) => (
-        <span className={hcd(r.buyLowHitRate)}>
-          {pctNullable(r.buyLowHitRate)}
-          <span className="ml-1 text-xs text-ion-2">n={r.buyLowN}</span>
-        </span>
-      ),
+      render: (r) => <HitRateCell rate={r.buyLowHitRate} n={r.buyLowN} />,
     },
     {
       key: "sellHighHitRate",
       label: "Sell-high ✓",
       align: "right",
       numeric: true,
-      tooltip: "fraction of sell-high calls whose per-game fell",
+      tooltip: "fraction of sell-high calls whose per-game fell (min n=25; Wilson 95% LCB drives the color)",
       sortValue: (r) => r.sellHighHitRate,
-      render: (r) => (
-        <span className={hcd(r.sellHighHitRate)}>
-          {pctNullable(r.sellHighHitRate)}
-          <span className="ml-1 text-xs text-ion-2">n={r.sellHighN}</span>
-        </span>
-      ),
+      render: (r) => <HitRateCell rate={r.sellHighHitRate} n={r.sellHighN} />,
     },
   ];
 }
@@ -868,6 +871,11 @@ function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
   if (p.status === "source-error") {
     return <SourceError variant="dark" reason={p.error ?? "UNKNOWN"} />;
   }
+  // Substantiation guard: the headline sell-high number never travels without
+  // its Wilson LCB, and never colors off the point estimate. See HitRateCell
+  // above and lib/intelligence/hit-rate-display.ts.
+  const sellHigh = describeHitRate(p.overall.sellHighHitRate, p.overall.sellHighN);
+  const buyLow = describeHitRate(p.overall.buyLowHitRate, p.overall.buyLowN);
   return (
     <div className="flex flex-col gap-6">
       <section className="grid gap-4 sm:grid-cols-3">
@@ -887,9 +895,13 @@ function ProofView({ p }: { p: PredictivenessProof }): JSX.Element {
         <KpiCard
           variant="dark"
           label="Sell-high hit-rate"
-          value={pctNullable(p.overall.sellHighHitRate)}
-          tone={hitRateTone(p.overall.sellHighHitRate)}
-          sublabel={`n=${p.overall.sellHighN} calls · buy-low ${pctNullable(p.overall.buyLowHitRate)} (n=${p.overall.buyLowN}) · vs 50% coin flip`}
+          value={sellHigh.status === "rated" ? `${sellHigh.pct}%` : "—"}
+          tone={sellHigh.status === "rated" ? sellHigh.tone : undefined}
+          sublabel={
+            sellHigh.status === "rated"
+              ? `n=${sellHigh.n} calls · LCB ${sellHigh.lcbPct}% · buy-low ${buyLow.label} · vs 50% coin flip`
+              : `${sellHigh.label} · buy-low ${buyLow.label} · vs 50% coin flip`
+          }
         />
       </section>
 

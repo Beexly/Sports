@@ -18,6 +18,22 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     storage_allowed: true,
   },
   {
+    attribution_required: false,
+    attribution_text: null,
+    commercial_display_allowed: false,
+    derived_analytics_allowed: false,
+    evidence_urls: ["https://www.sports-reference.com/termsofuse.html"],
+    model_training_allowed: false,
+    notes:
+      "Permission required (2026-07-16 verdict: YELLOW internal / RED public — HOLD). " +
+      "Sportradar-licensed PFR content scraped by nflverse; SRL ToU §5(i)/§5(j) bar substitute " +
+      "stores and ML training. FTN charting is the approved trench/coverage alternative.",
+    source_id: "pfr-advstats-via-nflverse",
+    source_name: "PFR advanced stats (pfr_advstats release via nflverse)",
+    status: "permission_required",
+    storage_allowed: false,
+  },
+  {
     attribution_required: true,
     attribution_text: "Weather data by Open-Meteo.com (CC-BY-4.0)",
     commercial_display_allowed: true,
@@ -57,6 +73,34 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     storage_allowed: true,
   },
   {
+    attribution_required: true,
+    attribution_text: "Expected points data from ffverse/ffopportunity (CC-BY-SA-4.0)",
+    commercial_display_allowed: false,
+    derived_analytics_allowed: true,
+    evidence_urls: ["https://github.com/ffverse/ffopportunity#readme"],
+    model_training_allowed: true,
+    notes:
+      "CC-BY-SA-4.0 (share-alike): internal analysis/storage/derived analytics cleared; PUBLISHED derivation excluded until legal SA-scope review (mirrors the web registry ruling in #117).",
+    source_id: "ffverse-ffopportunity",
+    source_name: "ffverse ffopportunity (Expected Fantasy Points data)",
+    status: "approved_open_license",
+    storage_allowed: true,
+  },
+  {
+    attribution_required: true,
+    attribution_text: "ADP data via FantasyFootballCalculator.com",
+    commercial_display_allowed: true,
+    derived_analytics_allowed: true,
+    evidence_urls: ["https://help.fantasyfootballcalculator.com/article/42-adp-rest-api"],
+    model_training_allowed: true,
+    notes:
+      "Free for personal and commercial use per FFC's API docs; attribution requested; once-per-day data cadence honored by the adapter's cache.",
+    source_id: "ffc-adp",
+    source_name: "Fantasy Football Calculator ADP REST API",
+    status: "approved_api",
+    storage_allowed: true,
+  },
+  {
     attribution_required: false,
     attribution_text: null,
     commercial_display_allowed: true,
@@ -92,6 +136,21 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     notes: "Permission required; not part of the GSE NFL modeling foundation.",
     source_id: "fpl-api",
     source_name: "Fantasy Premier League API",
+    status: "permission_required",
+    storage_allowed: false,
+  },
+  {
+    attribution_required: false,
+    attribution_text: null,
+    commercial_display_allowed: false,
+    derived_analytics_allowed: false,
+    evidence_urls: ["https://www.fantasypros.com/api/"],
+    model_training_allowed: false,
+    notes:
+      "Permission required; Free and Premium API tiers are personal/non-commercial only. Commercial " +
+      "tier license required before any automation or metric use.",
+    source_id: "fantasypros-com",
+    source_name: "FantasyPros Public API (fantasypros.com)",
     status: "permission_required",
     storage_allowed: false,
   },

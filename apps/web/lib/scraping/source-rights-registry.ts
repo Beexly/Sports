@@ -134,7 +134,61 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     evidence_urls: ["https://github.com/nflverse/nflverse-data/blob/master/LICENSE"],
     unlock_condition: null,
     vendor_contact: null,
-    notes: "CC-BY-4.0: attribution required in all outputs, no share-alike. (The one exception, nflverse FTN charting/participation data, is CC-BY-SA-4.0 and is not ingested here.)",
+    notes:
+      "CC-BY-4.0: attribution required in all outputs, no share-alike. SCOPE CARVE-OUTS " +
+      "(verdict 2026-07-16, reports/rights/pfr-advstats-verdict-2026-07-16.md): this blanket " +
+      "approval covers nflverse's OWN compiled/derived releases (pbp, player_stats, games, " +
+      "rosters). It does NOT cover (a) pfr_advstats — see the dedicated permission_required " +
+      "entry; (b) nextgen_stats via nflverse — same third-party-sourced, no-explicit-grant " +
+      "pattern, use with the same caution; (c) FTN charting/participation — CC-BY-SA-4.0 with " +
+      "attribution to FTN Data via nflverse (share-alike scope for PUBLIC display of derived " +
+      "metrics needs the same legal review as ffverse; internal modeling with attribution is " +
+      "clean and is the approved route for trench/coverage signals).",
+  },
+
+  {
+    source_id: "pfr-advstats-via-nflverse",
+    source_name: "PFR advanced stats (pfr_advstats release via nflverse)",
+    source_url: "https://github.com/nflverse/nflverse-data/releases/tag/pfr_advstats",
+    terms_url: "https://www.sports-reference.com/termsofuse.html",
+    robots_url: "https://www.pro-football-reference.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "open_dataset",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "high",
+    technical_controls_detected: true,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-07-16",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.sports-reference.com/termsofuse.html",
+      "https://www.sports-reference.com/data_use.html",
+      "https://raw.githubusercontent.com/nflverse/nflreadr/main/R/load_pfr_advstats.R",
+    ],
+    unlock_condition:
+      "Written confirmation from Sports Reference LLC (not nflverse — they cannot grant rights " +
+      "over Sportradar-licensed content) covering BOTH redistribution/derived use AND the " +
+      "ToU §5(j) machine-learning restriction; or a paid license via SRL's bulk-data path " +
+      "($5,000 minimum) / their named vendors (Sports Info Solutions, Sports Direct/Gracenote).",
+    vendor_contact: "https://www.sports-reference.com/data_use.html",
+    notes:
+      "Verdict 2026-07-16: YELLOW internal / RED public — HOLD both. The data is " +
+      "Sportradar-licensed content displayed on PFR and scraped by nflverse; nflverse's " +
+      "repo-level CC-BY-4.0 is self-declared and its own loader docs carry no license note for " +
+      "this release. SRL ToU §5(i) bans material-substitute data stores; §5(j) " +
+      "explicitly bans using site statistics to train/score prediction models, with no " +
+      "internal-use carve-out. Clean alternative for trench/coverage signals: FTN charting via " +
+      "load_ftn_charting (explicit CC-BY-SA-4.0 from the rights holder).",
   },
 
   {
@@ -454,6 +508,52 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "Adapter built (lib/data-sources/free-adapters/fpl.ts) and gated. DO NOT ingest until written " +
       "consent obtained or a licensed alternative source is used. EPL is not yet a core Sport type; " +
       "adding it is gated on this clearance.",
+  },
+
+  // ── Permission required ──────────────────────────────────────────────────────
+  {
+    source_id: "fantasypros-com",
+    source_name: "FantasyPros Public API (fantasypros.com)",
+    source_url: "https://api.fantasypros.com/public/v2",
+    terms_url: "https://www.fantasypros.com/api/",
+    robots_url: "https://www.fantasypros.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "none",
+    copyright_expression_risk: "medium",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-07-16",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.fantasypros.com/api/",
+      "https://www.fantasypros.com/robots.txt",
+    ],
+    unlock_condition:
+      "Signed commercial license via FantasyPros' custom-priced Commercial API tier — the only tier " +
+      "that grants a commercial license and redistribution rights. Contact FantasyPros to negotiate " +
+      "Commercial tier terms.",
+    vendor_contact: "https://www.fantasypros.com/api/",
+    notes:
+      "FantasyPros' public API (api.fantasypros.com/public/v2) licenses BOTH the Free ($0, 100 " +
+      "calls/day) and Premium tiers for personal, NON-COMMERCIAL use only, explicitly excluding " +
+      "historical player stats and player images; only their custom-priced Commercial tier grants a " +
+      "commercial license and redistribution rights. robots.txt disallows /api/, /json/, /xml/, " +
+      "/ajax/, and /ranker/ paths. Automation is permitted ONLY via the documented public API under a " +
+      "signed commercial license, never via the disallowed paths. The stub adapter " +
+      "(lib/statking/sources/adapters/fantasyProsAdapter.ts) is correctly marked " +
+      "license_or_partner_required and MUST stay stubbed until this entry's status changes. " +
+      "Reviewed 2026-07-16.",
   },
 
   // ── Vendor candidate ─────────────────────────────────────────────────────────

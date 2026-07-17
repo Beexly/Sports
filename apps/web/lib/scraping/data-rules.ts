@@ -150,6 +150,10 @@ export const DATA_RULES: readonly DataFieldRule[] = [
   },
   {
     category: "proprietary",
+    // Note: The Odds API's own licensed closing/decision-time lines captured via
+    // packages/ingestion-pipeline/src/line-archive.ts are exempt from this example — that is a
+    // distinct approved_api relationship (see source-rights-registry the-odds-api entry); this
+    // category targets unlicensed third-party proprietary feeds.
     example: "Sportradar prediction, official closing line via licensed feed",
     extractionAllowed: false,
     storageAllowed: false,

@@ -19,6 +19,7 @@ const PRODUCT_LINKS = [
   { label: "Podcast", href: "/podcast" },
   { label: "The Studio", href: "/fantasy/studio" },
   { label: "The Academy", href: "/academy" },
+  { label: "Free Calculators", href: "/tools" },
 ] as const;
 
 const COMPANY_LINKS = [
@@ -30,6 +31,7 @@ const COMPANY_LINKS = [
   { label: "Receipts · Calibration", href: "/performance" },
   { label: "Closing Line Value", href: "/clv" },
   { label: "Methodology", href: "/methodology" },
+  { label: "How We Make Money", href: "/how-we-make-money" },
   { label: "The Vault", href: "/vault" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },

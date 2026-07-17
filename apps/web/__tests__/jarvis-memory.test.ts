@@ -8,7 +8,7 @@
  * the test below verifies that export is present and is async.
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
@@ -419,6 +419,85 @@ describe("buildLiveMemoryStatus (async, mocked DB)", () => {
       expect(result.healthScore).toBeNull();
     }
   });
+
+  /**
+   * Honesty regression pin (2026-07-17): buildLiveMemoryStatus() used to
+   * report `wired: true` / "store healthy" whenever its COUNT queries
+   * resolved without throwing — but @sports/db's stub client (active
+   * whenever DATABASE_URL is unset/sentinel) resolves every count() to 0
+   * without touching a real database. That silently overstated activation in
+   * the default/no-DB environment. buildLiveMemoryStatus() now checks
+   * isStubMode() first and short-circuits to the not-wired posture.
+   *
+   * We force isStubMode() → true here rather than assuming the ambient
+   * environment is stub: local test runs leave DATABASE_URL unset (stub), but
+   * CI's "Test, type-check, lint, Prisma" job runs the suite against a real
+   * Postgres (db:push), so isStubMode() is false there and the un-forced call
+   * would take the wired branch. Forcing stub mode exercises the exact
+   * short-circuit this pin protects, deterministically in both environments.
+   */
+  it("under the stub db reports the honest not-wired posture, never a fake 'wired: true'", async () => {
+    vi.resetModules();
+    vi.doMock("@sports/db", async () => {
+      const actual = await vi.importActual<typeof import("@sports/db")>("@sports/db");
+      return { ...actual, isStubMode: () => true };
+    });
+    try {
+      const { buildLiveMemoryStatus: buildUnderStub } = await import(
+        "@/lib/jarvis/intelligence-state"
+      );
+      const result = await buildUnderStub();
+      expect(result.wired).toBe(false);
+      expect(result.store).toBe("Not Connected");
+      expect(result.truth).toMatch(/no persistent memory/i);
+      expect(result.candidatesAwaitingApproval).toBeNull();
+      expect(result.healthScore).toBeNull();
+    } finally {
+      vi.doUnmock("@sports/db");
+      vi.resetModules();
+    }
+  });
+});
+
+// ─── Spec: write-path status never overstates activation ────────────────────
+
+describe("memory write-path status (buildMemoryStatus / buildLiveMemoryStatus)", () => {
+  const ORIGINAL_ENV = process.env["JARVIS_MEMORY_WRITE_ENABLED"];
+
+  afterEach(() => {
+    if (ORIGINAL_ENV === undefined) {
+      delete process.env["JARVIS_MEMORY_WRITE_ENABLED"];
+    } else {
+      process.env["JARVIS_MEMORY_WRITE_ENABLED"] = ORIGINAL_ENV;
+    }
+  });
+
+  it("buildMemoryStatus() reports writePath WIRED_GATED_OFF by default", () => {
+    delete process.env["JARVIS_MEMORY_WRITE_ENABLED"];
+    const m = buildMemoryStatus();
+    expect(m.writePath).toBe("WIRED_GATED_OFF");
+    expect(m.writePathTruth).toMatch(/gated OFF/i);
+  });
+
+  it("buildLiveMemoryStatus() reports writePath WIRED_GATED_OFF by default (stub db)", async () => {
+    delete process.env["JARVIS_MEMORY_WRITE_ENABLED"];
+    const m = await buildLiveMemoryStatus();
+    expect(m.writePath).toBe("WIRED_GATED_OFF");
+  });
+
+  it("buildMemoryStatus() reports writePath WIRED_ACTIVE once the flag is 'true'", () => {
+    process.env["JARVIS_MEMORY_WRITE_ENABLED"] = "true";
+    const m = buildMemoryStatus();
+    expect(m.writePath).toBe("WIRED_ACTIVE");
+    expect(m.writePathTruth).toMatch(/ACTIVE/);
+  });
+
+  it("writePath is independent of read-connectivity `wired` — both can be WIRED_GATED_OFF simultaneously with `wired: false`", () => {
+    delete process.env["JARVIS_MEMORY_WRITE_ENABLED"];
+    const m = buildMemoryStatus();
+    expect(m.wired).toBe(false);
+    expect(m.writePath).toBe("WIRED_GATED_OFF");
+  });
 });
 
 // ─── Source pin: cockpit page calls buildLiveMemoryStatus ────────────────────
@@ -464,6 +543,53 @@ describe("linkMemoryToAgentRun — P2025 not-found is not masked as connectivity
     const p2025Count = (src.match(/P2025/g) ?? []).length;
     // At minimum: confirmMemory, rejectMemory, expireMemory, linkMemoryToAgentRun
     expect(p2025Count).toBeGreaterThanOrEqual(4);
+  });
+});
+
+// ─── Honesty reconciliation: write path is present but gated OFF ────────────
+
+/**
+ * apps/web/lib/jarvis/memory/write-gate.ts adds an autonomous write entry
+ * point (recordMemoryEvent()) that did not exist before. No existing test in
+ * this suite asserted the ABSENCE of a memory write function — the "memory
+ * is not activated" honesty claims here and in JARVIS_MEMORY_PROTOCOL.md
+ * were always about default-OFF activation, not about the write code not
+ * existing. These pins make that reconciliation explicit: the write path is
+ * present in source, but default-gated OFF, so no writes occur unless a
+ * founder sets JARVIS_MEMORY_WRITE_ENABLED=true.
+ */
+describe("write path — present in source, gated OFF by default", () => {
+  it("write-gate.ts exists and exports recordMemoryEvent", () => {
+    const src = fs.readFileSync(
+      path.resolve(__dirname, "../lib/jarvis/memory/write-gate.ts"),
+      "utf-8"
+    );
+    expect(src).toMatch(/export async function recordMemoryEvent/);
+    expect(src).toMatch(/JARVIS_MEMORY_WRITE_ENABLED/);
+  });
+
+  it("recordMemoryEvent defaults to disabled with zero DB writes (no env override)", async () => {
+    delete process.env["JARVIS_MEMORY_WRITE_ENABLED"];
+    const { recordMemoryEvent } = await import("@/lib/jarvis/memory/write-gate");
+    const db = {
+      jarvisMemoryEvent: {
+        findFirst: vi.fn(),
+        create: vi.fn(),
+      },
+    };
+    const result = await recordMemoryEvent({
+      db,
+      memory_type: "decision",
+      scope: "test",
+      title: "t",
+      summary: "s",
+      source_type: "test",
+      actor: "test",
+      owner: "test",
+      confidence: 50,
+    });
+    expect(result).toEqual({ enabled: false, recorded: false });
+    expect(db.jarvisMemoryEvent.create).not.toHaveBeenCalled();
   });
 });
 

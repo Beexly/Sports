@@ -73,6 +73,7 @@ export async function callClaudeForStudioAsset(
       temperature: dryRun.prompt.temperature,
       system: dryRun.prompt.system,
       user: dryRun.prompt.user,
+      cache: { system: true },
     });
     const policyFailures = evaluateStudioGeneratedBodyPolicy(input.templateKind, result.text);
     if (policyFailures.length > 0) {

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Shell, HeroStat, BarChart, ScoreRing, InsightCard, SectionHeader, StatusRibbon } from "./_components";
 import { loadSummary, loadActiveMetricManifest, rankPlayers } from "@/lib/statking/product";
+import { loadKingStandard } from "@/lib/statking/king-standard-loader";
+import { KING_DIMENSION_LABELS, KING_DIMENSION_ORDER, isMeasured } from "@/lib/statking/king-standard";
 import { glossaryEntry } from "@/lib/glossary";
 
 export const metadata = {
@@ -9,12 +11,10 @@ export const metadata = {
   alternates: { canonical: "/stats" },
 };
 
-const KING_DIMENSIONS: Array<{ label: string; score: number; max: number }> = [
-  { label: "Source Coverage", score: 40, max: 100 },
-  { label: "Live Feeds",      score: 10, max: 100 },
-  { label: "Proof Archive",   score:  5, max: 100 },
-  { label: "Metric Depth",    score: 65, max: 100 },
-];
+// King Standard's Proof Archive and Live Feeds dimensions read live DB state
+// (settled-pick counts, ingestion freshness) — this page must not be
+// statically frozen at build time. See lib/statking/king-standard-loader.ts.
+export const dynamic = "force-dynamic";
 
 const SURFACES: Array<{ label: string; href: string; note: string }> = [
   { label: "Players",          href: "/stats/players",      note: "GPI rankings" },
@@ -32,11 +32,13 @@ const SURFACES: Array<{ label: string; href: string; note: string }> = [
   { label: "Expert Board",     href: "/stats/expert-board", note: "Analyst signals" },
 ];
 
-export default function Page() {
+export default async function Page() {
   const s = loadSummary();
   const m = loadActiveMetricManifest();
   const top5 = rankPlayers().slice(0, 5);
   const maxGpi: number = top5[0]?.galaxy_player_index ?? 1;
+  const king = await loadKingStandard();
+  const overallMeasured = king.overall.score !== null;
 
   return (
     <Shell title="Galaxy StatKing" eyebrow="NFL intelligence">
@@ -44,29 +46,47 @@ export default function Page() {
 
       <div className="border border-mineral bg-eclipse p-6 flex flex-col sm:flex-row items-start gap-8">
         <div className="shrink-0">
-          <ScoreRing score={61} label="King Standard" size={140} />
+          <ScoreRing
+            score={king.overall.score ?? 0}
+            notMeasured={!overallMeasured}
+            label="King Standard"
+            size={140}
+          />
         </div>
         <div className="flex-1 min-w-0 space-y-4">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-ion-2">Overall rating</p>
-            <p className="mt-1 text-2xl font-bold text-ion-white">King Standard: 61 / 100</p>
-            <p className="mt-1 text-sm text-ion-1">
-              Autonomous foundation: real sources, rights-gated, fixture-backed
+            <p className="mt-1 text-2xl font-bold text-ion-white">
+              {overallMeasured ? `King Standard: ${king.overall.score} / 100` : "King Standard: not yet measured"}
             </p>
+            <p className="mt-1 text-sm text-ion-1">{king.overall.basis}</p>
           </div>
-          <div className="space-y-2.5">
-            {KING_DIMENSIONS.map(({ label, score, max }) => {
-              const pct: number = max > 0 ? Math.min(100, Math.round((score / max) * 100)) : 0;
+          <div className="space-y-3">
+            {KING_DIMENSION_ORDER.map((key) => {
+              const dimension = king.dimensions[key];
+              const label = KING_DIMENSION_LABELS[key];
+              const measured = isMeasured(dimension);
               return (
-                <div key={label} className="flex items-center gap-3">
-                  <span className="w-36 shrink-0 text-xs text-ion-1">{label}</span>
-                  <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-carbon border border-mineral">
-                    <div
-                      className="h-full rounded-full bg-orbital-cyan"
-                      style={{ width: `${pct}%` }}
-                    />
+                <div key={key} className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <span className="w-36 shrink-0 text-xs text-ion-1">{label}</span>
+                    <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-carbon border border-mineral">
+                      {measured && (
+                        <div
+                          className="h-full rounded-full bg-orbital-cyan"
+                          style={{ width: `${dimension.score}%` }}
+                        />
+                      )}
+                    </div>
+                    <span className="w-24 shrink-0 text-right text-xs font-mono tabular-nums text-ion-white">
+                      {measured ? dimension.score : (
+                        <span className="font-sans normal-case text-ion-3">not measured</span>
+                      )}
+                    </span>
                   </div>
-                  <span className="w-8 text-right text-xs font-mono tabular-nums text-ion-white">{score}</span>
+                  <p className="pl-[9.75rem] text-[11px] leading-snug text-ion-2">
+                    {measured ? dimension.basis : dimension.reason}
+                  </p>
                 </div>
               );
             })}
@@ -98,9 +118,9 @@ export default function Page() {
       </div>
 
       <InsightCard
-        eyebrow="King Standard · 61 / 100"
+        eyebrow={`King Standard · ${king.overall.basis}`}
         headline="Autonomous foundation, not yet finished King of Stats"
-        body="Source trust is seeded. Coverage is sample-level. Freshness is fixture-backed. Proof archive is empty: no live predictions yet. 61 is an honest score for a real, working foundation. 90+ requires live feeds, licenses, and settled picks."
+        body="Every score above is computed from real state at request time, not asserted. A dimension without a live signal to compute from (yet) renders as 'not measured' instead of a number — never a placeholder guess. 90+ requires live feeds, licenses, and a settled-pick archive that clears the platform's own readiness floor."
         tone="warn"
       />
 

@@ -29,7 +29,12 @@ import {
   type AgentCouncilMember,
   type CouncilSeatCounts,
 } from "./agent-council";
-import { db } from "@sports/db";
+import { db, isStubMode } from "@sports/db";
+import {
+  getMemoryWritePathStatus,
+  getMemoryWritePathTruth,
+  type MemoryWritePathStatus,
+} from "./memory/write-gate";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -83,6 +88,11 @@ export interface NotWiredMemoryStatus {
   readonly stale: null;
   readonly expired: null;
   readonly healthScore: null;
+  /** Write-path posture (see ./memory/write-gate.ts). Independent of read
+   *  connectivity above — the write gate can exist and stay OFF regardless
+   *  of whether the read side is wired. Never overstates activation. */
+  readonly writePath: MemoryWritePathStatus;
+  readonly writePathTruth: string;
 }
 
 /** Live posture: returned by buildLiveMemoryStatus() when DB counts succeed. */
@@ -107,6 +117,11 @@ export interface WiredMemoryStatus {
    * 100 = no issues; lower = more unresolved conflicts/stale/pending candidates.
    */
   readonly healthScore: number;
+  /** Write-path posture (see ./memory/write-gate.ts). Independent of read
+   *  connectivity above — being able to COUNT rows says nothing about
+   *  whether the autonomous write gate is open. Never overstates activation. */
+  readonly writePath: MemoryWritePathStatus;
+  readonly writePathTruth: string;
 }
 
 /**
@@ -236,6 +251,8 @@ export function buildMemoryStatus(): MemoryStatus {
     stale: null,
     expired: null,
     healthScore: null,
+    writePath: getMemoryWritePathStatus(),
+    writePathTruth: getMemoryWritePathTruth(),
   };
 }
 
@@ -258,8 +275,20 @@ export function getOperatingLoop(): readonly OperatingPhasePosture[] {
  *
  * Any DB error (unavailable, not yet migrated, etc.) → returns the existing sync
  * buildMemoryStatus() not-wired posture unchanged. Never throws.
+ *
+ * Stub-mode honesty guard: when @sports/db is running its in-memory stub
+ * client (DATABASE_URL unset/sentinel — see packages/db/src/index.ts), every
+ * COUNT resolves to 0 without ever touching a real database. Reporting
+ * `wired: true` / "store healthy" off those fake zeros would overstate
+ * activation exactly as much as a thrown error masked as "wired" would — so
+ * stub mode is treated the same as "DB unavailable" and short-circuits to
+ * the not-wired posture before any query runs.
  */
 export async function buildLiveMemoryStatus(): Promise<MemoryStatus> {
+  if (isStubMode()) {
+    return buildMemoryStatus();
+  }
+
   try {
     const [candidates, conflicted, stale, expired] = await Promise.all([
       db.jarvisMemoryEvent.count({ where: { memory_state: "candidate" } }),
@@ -292,6 +321,8 @@ export async function buildLiveMemoryStatus(): Promise<MemoryStatus> {
       stale,
       expired,
       healthScore,
+      writePath: getMemoryWritePathStatus(),
+      writePathTruth: getMemoryWritePathTruth(),
     };
 
     return wiredStatus;

@@ -31,7 +31,7 @@ import {
   getAtsForm,
   getHeadToHeadForm,
 } from "@sports/data-ingestion";
-import type { SupportedSportKey } from "@sports/data-ingestion";
+import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
 import {
   scoreGames,
@@ -44,10 +44,18 @@ import type { ReadinessGates } from "@sports/prediction-engine";
 function sha256Hex(input: string): string {
   return createHash("sha256").update(input, "utf8").digest("hex");
 }
-import type { OddsInput, GameContextInput, EvidenceRecord, SignalCategory } from "@sports/types";
+import type {
+  OddsInput,
+  GameContextInput,
+  EvidenceRecord,
+  SignalCategory,
+  OddsApiEvent,
+} from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
+import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archive.js";
+import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 
 export interface SportConfig {
   key: SupportedSportKey;
@@ -241,6 +249,31 @@ export async function processSport(
       gameRecords[game.externalId] = record;
     }
 
+    // Pinnacle closing-line leg of the Glass Ledger forward line archive
+    // (packages/ingestion-pipeline/src/pinnacle-line-archive.ts). DOUBLE-GATED
+    // — no-ops (fetchOdds is never invoked, zero DB calls) unless BOTH
+    // LINE_ARCHIVE_ENABLED=true AND LINE_ARCHIVE_EU_PINNACLE=true; the default
+    // everywhere today is off, so this is inert. When both flags are on, it
+    // makes AT MOST ONE extra Odds API request for this sport this cycle
+    // (regions=eu, bookmakers=pinnacle) through this same `client`/`normalizer`
+    // — no new HTTP client, no new API-key handling. Never throws — any
+    // failure is caught internally and surfaced as `error` below.
+    const pinnacleResult = await capturePinnacleLineSnapshotsIfEnabled({
+      db,
+      sport: sport.key,
+      markets: [...MARKETS],
+      gameRecords,
+      capturedAt: fetchedAt,
+      fetchOdds: (sportKey, markets, options) =>
+        client.getOdds(sportKey as SupportedSportKey, [...markets] as Market[], options),
+      normalizeOdds: (events, at) => normalizer.normalizeOdds(events as OddsApiEvent[], at),
+    });
+    if (pinnacleResult.error) {
+      console.warn(
+        `${logPrefix} EU Pinnacle line archive failed for ${sport.key}: ${pinnacleResult.error}`
+      );
+    }
+
     // Ingest all odds records
     let oddsInserted = 0;
     // Batch the odds inserts: one createMany round-trip instead of one INSERT per
@@ -280,6 +313,19 @@ export async function processSport(
       if (!gameRecord) continue;
 
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
+
+      // Archive OPEN/INTERIM odds snapshots for the Glass Ledger (handoff §2 P0).
+      // Inert by default — captureLineSnapshotsIfEnabled no-ops (zero DB calls)
+      // unless LINE_ARCHIVE_ENABLED=true, and never throws, so it can never block
+      // or fail this refresh path. Persists odds already fetched above; adds no
+      // new Odds API calls.
+      await captureLineSnapshotsIfEnabled({
+        db,
+        gameId: gameRecord.id,
+        capturedAt: fetchedAt,
+        rows: toLineSnapshotRows(gameOdds),
+      });
+
       const bookmakerCoverageMax = new Set(gameOdds.map((o) => o.bookmaker)).size;
 
       const spreadOdds = gameOdds.filter((o) => o.market === "SPREADS" && o.spread !== undefined);

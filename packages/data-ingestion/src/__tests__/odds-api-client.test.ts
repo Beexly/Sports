@@ -120,3 +120,39 @@ describe("OddsApiClient upstream resilience", () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("OddsApiClient#getOdds region/bookmaker override (Pinnacle EU leg)", () => {
+  it("defaults to regions=<ODDS_REGION> with no bookmakers filter when options is omitted", async () => {
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { "x-requests-remaining": "100", "x-requests-used": "1" },
+      })
+    );
+
+    await client.getOdds("americanfootball_nfl", ["h2h", "spreads", "totals"]);
+
+    const calledUrl = new URL(spy.mock.calls[0]?.[0] as string);
+    expect(calledUrl.searchParams.get("regions")).toBe("us");
+    expect(calledUrl.searchParams.has("bookmakers")).toBe(false);
+    expect(calledUrl.searchParams.get("markets")).toBe("h2h,spreads,totals");
+  });
+
+  it("sends regions=eu and bookmakers=pinnacle when passed via options", async () => {
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { "x-requests-remaining": "100", "x-requests-used": "1" },
+      })
+    );
+
+    await client.getOdds("americanfootball_nfl", ["h2h", "spreads", "totals"], {
+      regions: "eu",
+      bookmakers: ["pinnacle"],
+    });
+
+    const calledUrl = new URL(spy.mock.calls[0]?.[0] as string);
+    expect(calledUrl.searchParams.get("regions")).toBe("eu");
+    expect(calledUrl.searchParams.get("bookmakers")).toBe("pinnacle");
+  });
+});

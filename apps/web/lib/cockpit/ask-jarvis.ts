@@ -708,6 +708,7 @@ function answerMemoryStatus(_summary: OwnerSummary): JarvisAnswer {
     supportingState: [
       `Memory wired: ${memory.wired ? "YES" : "NO"}`,
       `Truth: ${memory.truth}`,
+      `Write path: ${memory.writePath} — ${memory.writePathTruth}`,
       "Protocol docs (designed, version-controlled):",
       ...memory.protocolDocs.map((d) => `  • ${d}`),
     ],

@@ -31,7 +31,7 @@ docs/ai/jarvis/JARVIS_OPERATOR_BRIEF.md
 |---|---|---|---|
 | (a) Operational truth | Picks, settlements, gates, ingestion timestamps, decision queue | PostgreSQL, read via Jarvis assessment → OwnerSummary on every cockpit load | **LIVE** — already how Jarvis "knows" the platform |
 | (b) Architectural truth | What Jarvis is, capability statuses, council charters, this protocol | These markdown docs, version-controlled in git | **LIVE** — durable via git history; updated by reviewed commits |
-| (c) Episodic memory | Owner decisions + outcomes over time ("we opened the picks gate on X because Y; result Z") | Future Postgres table or mem0 | **NOT_WIRED** — zero code |
+| (c) Episodic memory | Owner decisions + outcomes over time ("we opened the picks gate on X because Y; result Z") | Postgres table (`JarvisMemoryEvent`) | **BUILT, GATED OFF** — schema, state machine, guards, manual actions, and an env-gated autonomous write path (`recordMemoryEvent()`) all exist in code; `JARVIS_MEMORY_WRITE_ENABLED` defaults `"false"` and no production caller invokes the autonomous path yet, so the claim below still holds |
 
 Tiers (a) and (b) mean Jarvis is never amnesiac about *state* or *architecture* — it is amnesiac only about *episodes*: what the owner decided, why, and how it turned out. That is the gap tier (c) closes.
 
@@ -88,16 +88,23 @@ Registry `nextAction` (authoritative): *"Wire mem0 or Postgres-based episodic me
 | Sensitivity guards | `apps/web/lib/jarvis/memory/guards.ts` | Blocks `public_claim_rule`/high/legal/hr/spend from `confirmed` without owner approval |
 | Error types | `apps/web/lib/jarvis/memory/errors.ts` | `MemoryStoreUnavailableError`, `MemoryTransitionError`, `MemoryGuardError` |
 | Server actions | `apps/web/lib/jarvis/memory/actions.ts` | `createMemoryCandidate`, `confirmMemory`, `rejectMemory`, `expireMemory`, `supersedeMemory` (single transaction), `recallRelevantMemory`, `listMemoryByState`, `listMemoryConflicts`, `linkMemoryToDecision` |
-| Live status builder | `apps/web/lib/jarvis/intelligence-state.ts` — `buildLiveMemoryStatus()` | Async: runs cheap COUNT queries; returns `WiredMemoryStatus` with real counts + health score on success, falls back to not-wired posture on any DB error |
-| Cockpit panel | `apps/web/app/cockpit/page.tsx` — `MemoryProtocolZone` | Calls `await buildLiveMemoryStatus()`; renders wired/not-wired honestly from the returned posture |
-| Tests | `apps/web/__tests__/jarvis-memory.test.ts` | Pure-logic tests (no live DB): 8 states, transition law, terminal state enforcement, sensitive-category guard, supersession trail, conservative conflict detection, health formula, `buildLiveMemoryStatus` surface |
+| Live status builder | `apps/web/lib/jarvis/intelligence-state.ts` — `buildLiveMemoryStatus()` | Async: runs cheap COUNT queries; returns `WiredMemoryStatus` with real counts + health score on success, falls back to not-wired posture on any DB error **or when `@sports/db` is running its stub client** (see below) |
+| Gated write path | `apps/web/lib/jarvis/memory/write-gate.ts` — `recordMemoryEvent()` | The autonomous entry point. Hard-gated on `JARVIS_MEMORY_WRITE_ENABLED` (default `"false"`), mirrors `packages/ingestion-pipeline/src/line-archive.ts`'s `captureLineSnapshotsIfEnabled` pattern exactly: zero DB interaction when off, failure-isolated (never throws) when on. Writes always land as `memory_state="candidate"` through the same state-machine contract as `actions.ts#createMemoryCandidate`. **As of 2026-07-17, nothing in production calls this function yet** — it exists so a founder can wire a real trigger (a gate flip, a settlement, an owner decision) later and flip the flag independently. |
+| Write-path status reporting | `apps/web/lib/jarvis/intelligence-state.ts` — `writePath` / `writePathTruth` fields on `MemoryStatus` | Both `buildMemoryStatus()` and `buildLiveMemoryStatus()` report `"WIRED_GATED_OFF"` by default (`"WIRED_ACTIVE"` once the flag is `"true"`) — a signal independent of read-connectivity `wired`, so the panel can never conflate "the DB is reachable" with "autonomous writes are happening" |
+| Cockpit panel | `apps/web/app/cockpit/page.tsx` — `MemoryProtocolZone` | Calls `await buildLiveMemoryStatus()`; renders wired/not-wired and the write-path badge honestly from the returned posture |
+| Tests | `apps/web/__tests__/jarvis-memory.test.ts`, `apps/web/__tests__/jarvis-memory-write-gate.test.ts` | Pure-logic tests (no live DB): 8 states, transition law, terminal state enforcement, sensitive-category guard, supersession trail, conservative conflict detection, health formula, `buildLiveMemoryStatus` surface, and the write-gate's default-off/enabled/failure-isolation contract |
+
+### Stub-mode honesty guard (2026-07-17)
+
+`buildLiveMemoryStatus()` originally reported `wired: true` / "store healthy" whenever its COUNT queries resolved without throwing — but `@sports/db`'s stub client (active whenever `DATABASE_URL` is unset/sentinel, which includes local dev, CI, and most test runs; see `packages/db/src/index.ts`) resolves every `count()` to `0` without touching a real database. That meant the default/no-DB environment silently claimed a wired, healthy memory store. `buildLiveMemoryStatus()` now checks `isStubMode()` first and short-circuits to the not-wired posture, matching the same idiom used across the cockpit (`isStubMode()` gating in `apps/web/lib/board/state.ts`, `apps/web/lib/cockpit/jarvis-data.ts`, etc.).
 
 ### Pending (requires owner action)
 
 | Item | Blocker |
 |---|---|
 | Production migration | `DATABASE_URL` must point to a real Postgres and `npm run db:migrate` must be run by the owner |
-| `wired: true` in live cockpit | Depends on production migration above |
+| `wired: true` in live cockpit | Depends on production migration above (and a non-stub `DATABASE_URL`) |
 | `lastWritten` / `lastRecalled` timestamps | Timestamp telemetry not yet instrumented; both fields return `null` in `WiredMemoryStatus` |
 | Capability registry promotion to `DESIGNED` | Update `capability-registry.ts` once the owner confirms the production migration is live |
 | `REMEMBER` phase → `PARTIAL` | Update `intelligence-state.ts` operating loop after first confirmed memory is written in production |
+| `writePath: "WIRED_ACTIVE"` | Owner sets `JARVIS_MEMORY_WRITE_ENABLED="true"` — only once a real production caller invokes `recordMemoryEvent()` for a real event, per the promotion criteria above |
