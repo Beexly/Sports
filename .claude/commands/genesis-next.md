@@ -14,11 +14,19 @@ MAXIMUM VERIFIED CAPABILITY PER TOKEN
 
 Do not ask the founder questions. Do not perform a broad audit. Do not reread the whole docs tree. Do not begin a second workstream.
 
-## 0. Establish reality
+## 0. Establish reality and validate the package
 
 Run concise Git checks. Detect a dirty tree before editing.
 
 When unrelated work is in progress, create a separate Git worktree and implementation branch rather than modifying or stashing another agent’s work. Never reset, discard or overwrite uncommitted changes.
+
+If `scripts/genesis/validate-package.mjs` exists, run:
+
+```bash
+node scripts/genesis/validate-package.mjs
+```
+
+Do not begin implementation when the package validator fails. Repair only the control-package defect, rerun validation, then continue.
 
 Verify current main and relevant PR/branch assets. Old docs and PR descriptions are leads, not authority.
 
@@ -108,6 +116,7 @@ Use repository-native commands and the selected contract. Never report green wit
 Always include:
 
 ```text
+node scripts/genesis/validate-package.mjs
 git diff --check
 secret scan
 relevant tests
