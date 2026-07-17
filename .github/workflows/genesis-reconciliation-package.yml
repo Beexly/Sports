@@ -1,0 +1,37 @@
+name: Galaxy Genesis Reconciliation Package
+
+on:
+  pull_request:
+    paths:
+      - ".claude/commands/genesis-reconcile.md"
+      - "docs/genesis/BRANCH_RECONCILIATION_CONTRACT.md"
+      - "docs/genesis/BRANCH_RECONCILIATION_SEED.md"
+      - "scripts/genesis/validate-reconciliation-package.mjs"
+      - ".github/workflows/genesis-reconciliation-package.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".claude/commands/genesis-reconcile.md"
+      - "docs/genesis/BRANCH_RECONCILIATION_CONTRACT.md"
+      - "docs/genesis/BRANCH_RECONCILIATION_SEED.md"
+      - "scripts/genesis/validate-reconciliation-package.mjs"
+      - ".github/workflows/genesis-reconciliation-package.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate stranded-work accounting package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate reconciliation package
+        run: node scripts/genesis/validate-reconciliation-package.mjs
