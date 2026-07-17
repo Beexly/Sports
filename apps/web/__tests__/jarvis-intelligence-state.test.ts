@@ -209,6 +209,12 @@ describe("memory status", () => {
     expect(memory.truth).toMatch(/no persistent memory/i);
   });
 
+  it("write path is gated OFF by default — independent of, and as honest as, read-wired status", () => {
+    const memory = buildMemoryStatus();
+    expect(memory.writePath).toBe("WIRED_GATED_OFF");
+    expect(memory.writePathTruth).toMatch(/gated OFF/i);
+  });
+
   it("lists the five version-controlled protocol docs", () => {
     const memory = buildMemoryStatus();
     expect(memory.protocolDocs.length).toBe(5);
