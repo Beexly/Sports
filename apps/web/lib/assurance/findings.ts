@@ -121,14 +121,19 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
   }
   const shadowRouterSrc = readIfExists(ctx, "apps/web/lib/ai-routing/router.ts");
   if (shadowRouterSrc !== null) {
-    // G-13: the live-enable flag name is EXTRACTED from the router source —
-    // the first version hardcoded a flag name that existed nowhere in the
-    // codebase, a fabricated evidence claim.
-    const flagMatch =
-      shadowRouterSrc.match(/process\.env\[\s*"([A-Z0-9_]+)"\s*\]/) ??
-      shadowRouterSrc.match(/process\.env\.([A-Z0-9_]+)/);
-    const liveFlag = flagMatch?.[1] ?? null;
     const shadowSrc = readIfExists(ctx, "apps/web/lib/ai-routing/shadow.ts");
+    // FIX 3 (external review): the live-enable flag lives in shadow.ts
+    // (isRouterShadowEnabled() reads AI_MODEL_ROUTER_SHADOW_ENABLED) — NOT in
+    // router.ts, which touches no env var at all (recommendRoute() is pure
+    // policy). Extracting from shadowRouterSrc therefore always matched
+    // nothing and this finding always emitted the FALSE fallback claim "no
+    // enable flag / promotion is code-review-only", even though a real,
+    // default-off gate exists. Extract from shadow.ts and cite shadow.ts.
+    const flagMatch =
+      shadowSrc?.match(/process\.env\[\s*"([A-Z0-9_]+)"\s*\]/) ??
+      shadowSrc?.match(/process\.env\.([A-Z0-9_]+)/) ??
+      null;
+    const liveFlag = flagMatch?.[1] ?? null;
     findings.push({
       id: "model-router-shadow-only",
       category: "model_routing",
@@ -142,11 +147,11 @@ export function deriveFindings(ctx: EvidenceContext): readonly AssuranceFinding[
               : "shadow module unreadable or renamed — advisory claim not content-verified",
         },
         {
-          path: "apps/web/lib/ai-routing/router.ts",
+          path: "apps/web/lib/ai-routing/shadow.ts",
           observation:
             liveFlag !== null
-              ? `content-verified: router gates on ${liveFlag} (extracted from source)`
-              : "content-verified: no env live-flag found in router.ts — promotion is code-review only",
+              ? `content-verified: shadowRecommend is gated by ${liveFlag} (extracted from source), default off`
+              : "content-verified: no env live-flag found in shadow.ts — promotion is code-review only",
         },
         {
           path: "apps/web/lib/claude-api/messages.ts",

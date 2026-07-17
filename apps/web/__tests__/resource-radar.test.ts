@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { execFileSync } from "node:child_process";
 import {
   RADAR_SNAPSHOT,
   validateSnapshot,
@@ -355,6 +356,67 @@ describe("radar — Codex #76 regressions", () => {
     };
     const problems = validateSnapshot(tampered);
     expect(problems.some((p) => p.includes("unknown risk"))).toBe(true);
+  });
+
+  it("FIX 4 (external review): validateSnapshot rejects shape-only-valid but calendar-invalid observedAt dates", () => {
+    // The exact bypass: 2026-99-99 and 2026-02-30 both match
+    // /^\d{4}-\d{2}-\d{2}$/ but are not real dates. Left unchecked,
+    // Date.UTC() normalizes them into a far-future date instead of
+    // rejecting them, which made dossier.ts's staleness math never fire.
+    for (const badDate of ["2026-99-99", "2026-02-30"]) {
+      const tampered = {
+        ...RADAR_SNAPSHOT,
+        observations: [
+          { ...getObservations()[0]!, observedAt: badDate },
+          ...getObservations().slice(1),
+        ],
+      };
+      const problems = validateSnapshot(tampered);
+      expect(problems.some((p) => p.includes("bad observedAt")), badDate).toBe(true);
+    }
+    // A real calendar date must still pass (no false positives).
+    const clean = {
+      ...RADAR_SNAPSHOT,
+      observations: [
+        { ...getObservations()[0]!, observedAt: "2026-02-28" },
+        ...getObservations().slice(1),
+      ],
+    };
+    expect(validateSnapshot(clean).some((p) => p.includes("bad observedAt"))).toBe(false);
+  });
+
+  it("FIX 4: validateSnapshot also rejects a calendar-invalid snapshot-level observedAt", () => {
+    for (const badDate of ["2026-99-99", "2026-02-30"]) {
+      const problems = validateSnapshot({ ...RADAR_SNAPSHOT, observedAt: badDate });
+      expect(problems.some((p) => p.includes("bad observedAt")), badDate).toBe(true);
+    }
+  });
+
+  it("FIX 4: the importer's isValidCalendarDate rejects the same bypass inputs and accepts real dates", async () => {
+    const { isValidCalendarDate } = await import(
+      /* @vite-ignore */ "../../../scripts/resource-radar-import.mjs"
+    );
+    expect(isValidCalendarDate("2026-99-99")).toBe(false);
+    expect(isValidCalendarDate("2026-02-30")).toBe(false);
+    expect(isValidCalendarDate("2026-07-16")).toBe(true);
+    expect(isValidCalendarDate("2028-02-29")).toBe(true); // real leap day
+    expect(isValidCalendarDate("2026-02-29")).toBe(false); // 2026 is not a leap year
+  });
+
+  it("FIX 4: the importer script rejects both bypass dates on the CLI without touching the fixture directory", () => {
+    const scriptPath = join(__dirname, "..", "..", "..", "scripts", "resource-radar-import.mjs");
+    const csvPath = join(__dirname, "..", "..", "..", "docs", "rnd", "radar-snapshots", "2026-07-11.csv");
+    for (const badDate of ["2026-99-99", "2026-02-30"]) {
+      expect(() =>
+        execFileSync("node", [scriptPath, csvPath, badDate], { stdio: "pipe" })
+      ).toThrow();
+    }
+    // The pinned fixture must be untouched by the rejected runs above.
+    const latest = read("lib/resource-intelligence/radar/generated/latest.json");
+    const digest = createHash("sha256").update(latest, "utf8").digest("hex");
+    expect(`sha256:${digest}`).toBe(
+      "sha256:74dcddc01c0f07aa26f22868773248d9c424ba2d7a65f422910bf3e96f38f619"
+    );
   });
 
   it("G-3: validateSnapshot is WIRED at module load and getObservations fails closed on problems", () => {

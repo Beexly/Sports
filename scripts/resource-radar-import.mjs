@@ -15,23 +15,42 @@
  * - The raw posture string is preserved; an 8-value normalized posture is
  *   derived by prefix rules (see normalizePosture) so free-text postures like
  *   "PROTOTYPE_RIGHTS_CLEARED" stay visible while policy code gets an enum.
+ *
+ * The pure helpers (including isValidCalendarDate) are exported and unit
+ * tested directly; the side-effecting CLI body only runs when this file is
+ * executed directly (see the import.meta.url guard at the bottom), so an
+ * `import` from a test never touches argv, stdout, or the filesystem.
  */
 
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
-const [, , csvPathArg, observedAt] = process.argv;
-if (!csvPathArg || !/^\d{4}-\d{2}-\d{2}$/.test(observedAt ?? "")) {
-  console.error("Usage: node scripts/resource-radar-import.mjs <snapshot.csv> <YYYY-MM-DD>");
-  process.exit(1);
+/**
+ * Real calendar validation — NOT shape-only. `2026-99-99` and `2026-02-30`
+ * both match `/^\d{4}-\d{2}-\d{2}$/` but are not real dates. Left unchecked,
+ * Date.UTC() SILENTLY NORMALIZES an out-of-range month/day into a real (and
+ * often wildly-future) date instead of throwing, which is exactly how a
+ * shape-only check let a bogus date flow into the committed snapshot and
+ * made downstream staleness math (dossier.ts's Date.UTC-based daysBetween)
+ * read the runaway date as "not stale" forever. Round-trip through
+ * Date.UTC and require every parsed field to equal the field we fed in —
+ * an out-of-range month or a day that overflows into the next month fails
+ * the round trip and is rejected.
+ * @param {string} s
+ * @returns {boolean}
+ */
+export function isValidCalendarDate(s) {
+  if (typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const [y, m, d] = s.split("-").map(Number);
+  if (m < 1 || m > 12) return false;
+  if (d < 1 || d > 31) return false;
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
 }
 
-const csvPath = resolve(csvPathArg);
-const csvText = readFileSync(csvPath, "utf8");
-
 // Minimal RFC-4180 CSV parser (quoted fields, embedded commas/quotes).
-function parseCsv(text) {
+export function parseCsv(text) {
   const rows = [];
   let row = [];
   let field = "";
@@ -56,9 +75,9 @@ function parseCsv(text) {
   return rows;
 }
 
-const WINDOWS = ["daily", "weekly", "monthly", "targeted"];
+export const WINDOWS = ["daily", "weekly", "monthly", "targeted"];
 
-function normalizeRepository(raw) {
+export function normalizeRepository(raw) {
   const trimmed = raw.trim().replace(/\.git$/i, "").replace(/\s+/g, " ");
   if (/^[\w.-]+\/[\w.-]+$/.test(trimmed)) return trimmed.toLowerCase();
   // Non-repo concept (screenshot reference, product concept): stable slug.
@@ -68,7 +87,7 @@ function normalizeRepository(raw) {
 // Mirrors apps/web/lib/resource-intelligence/radar/normalize.ts EXACTLY.
 // Fail-closed fallback (G-4): an unrecognized posture string gates as
 // OWNER_REVIEW instead of silently becoming watch-only OBSERVE.
-function normalizePosture(raw) {
+export function normalizePosture(raw) {
   const p = raw.trim().toUpperCase();
   if (p.startsWith("QUARANTINE")) return "QUARANTINE";
   if (p.startsWith("OWNER") ) return "OWNER_REVIEW";
@@ -81,97 +100,115 @@ function normalizePosture(raw) {
   return "OWNER_REVIEW";
 }
 
-function toIntOrNull(s) {
+export function toIntOrNull(s) {
   const t = (s ?? "").trim();
   if (t === "" || t === "N/A") return null;
   const n = Number(t);
   return Number.isFinite(n) ? Math.trunc(n) : null;
 }
 
-function toStrOrNull(s) {
+export function toStrOrNull(s) {
   const t = (s ?? "").trim();
   return t === "" || t === "N/A" || t === "Unknown" ? null : t;
 }
 
-function sourceKind(window, repoRaw) {
+export function sourceKind(window, repoRaw) {
   if (window !== "targeted") return "GITHUB_TRENDING";
   const lower = repoRaw.toLowerCase();
   if (lower.includes("screenshot") || lower.includes("concept")) return "OWNER_SCREENSHOT";
   return "PRIMARY_REPO";
 }
 
-const rows = parseCsv(csvText);
-const header = rows[0].map((h) => h.trim());
-const expected = ["window", "repo", "trend_gain", "total_stars", "language", "license", "category", "gse_mapping", "posture", "risk", "reason"];
-if (JSON.stringify(header) !== JSON.stringify(expected)) {
-  console.error(`CSV header mismatch.\n  expected: ${expected.join(",")}\n  got:      ${header.join(",")}`);
-  process.exit(1);
-}
-
 // Closed risk set. An unknown label (typo or expanded value like
 // "BLOCKED_RIGHTS") must FAIL the import, not flow into the fixture — the
 // runtime policy caps exact values only, so a novel label would silently
 // skip the hard caps.
-const RISKS = ["LOW", "MEDIUM", "HIGH", "CRITICAL", "BLOCKED"];
+export const RISKS = ["LOW", "MEDIUM", "HIGH", "CRITICAL", "BLOCKED"];
 
-const observations = rows.slice(1).map((r) => {
-  const [window, repo, trendGain, totalStars, language, license, category, gseMapping, posture, risk, reason] = r;
-  if (!WINDOWS.includes(window.trim())) {
-    console.error(`Unknown window "${window}" for repo "${repo}"`);
+/** The CLI body. Only invoked when this file is run directly (see guard below). */
+function main() {
+  const [, , csvPathArg, observedAt] = process.argv;
+  if (!csvPathArg || !isValidCalendarDate(observedAt ?? "")) {
+    console.error("Usage: node scripts/resource-radar-import.mjs <snapshot.csv> <YYYY-MM-DD (real calendar date)>");
     process.exit(1);
   }
-  if (!RISKS.includes(risk.trim().toUpperCase())) {
-    console.error(`Unknown risk "${risk}" for repo "${repo}" — allowed: ${RISKS.join(", ")}`);
+
+  const csvPath = resolve(csvPathArg);
+  const csvText = readFileSync(csvPath, "utf8");
+
+  const rows = parseCsv(csvText);
+  const header = rows[0].map((h) => h.trim());
+  const expected = ["window", "repo", "trend_gain", "total_stars", "language", "license", "category", "gse_mapping", "posture", "risk", "reason"];
+  if (JSON.stringify(header) !== JSON.stringify(expected)) {
+    console.error(`CSV header mismatch.\n  expected: ${expected.join(",")}\n  got:      ${header.join(",")}`);
     process.exit(1);
   }
-  return {
-    id: `${window.trim()}:${normalizeRepository(repo)}`,
-    window: window.trim(),
-    repository: repo.trim(),
-    normalizedRepository: normalizeRepository(repo),
+
+  const observations = rows.slice(1).map((r) => {
+    const [window, repo, trendGain, totalStars, language, license, category, gseMapping, posture, risk, reason] = r;
+    if (!WINDOWS.includes(window.trim())) {
+      console.error(`Unknown window "${window}" for repo "${repo}"`);
+      process.exit(1);
+    }
+    if (!RISKS.includes(risk.trim().toUpperCase())) {
+      console.error(`Unknown risk "${risk}" for repo "${repo}" — allowed: ${RISKS.join(", ")}`);
+      process.exit(1);
+    }
+    return {
+      id: `${window.trim()}:${normalizeRepository(repo)}`,
+      window: window.trim(),
+      repository: repo.trim(),
+      normalizedRepository: normalizeRepository(repo),
+      observedAt,
+      totalStars: toIntOrNull(totalStars),
+      trendGain: toIntOrNull(trendGain),
+      language: toStrOrNull(language),
+      license: toStrOrNull(license),
+      category: category.trim(),
+      gseMapping: gseMapping.trim(),
+      proposedPosture: posture.trim(),
+      normalizedPosture: normalizePosture(posture),
+      risk: risk.trim().toUpperCase(),
+      reason: reason.trim(),
+      sourceKind: sourceKind(window.trim(), repo),
+    };
+  });
+
+  observations.sort((a, b) =>
+    WINDOWS.indexOf(a.window) - WINDOWS.indexOf(b.window) ||
+    a.normalizedRepository.localeCompare(b.normalizedRepository)
+  );
+
+  const snapshot = {
+    schemaVersion: 1,
     observedAt,
-    totalStars: toIntOrNull(totalStars),
-    trendGain: toIntOrNull(trendGain),
-    language: toStrOrNull(language),
-    license: toStrOrNull(license),
-    category: category.trim(),
-    gseMapping: gseMapping.trim(),
-    proposedPosture: posture.trim(),
-    normalizedPosture: normalizePosture(posture),
-    risk: risk.trim().toUpperCase(),
-    reason: reason.trim(),
-    sourceKind: sourceKind(window.trim(), repo),
+    sourceFile: csvPath.split("/").slice(-1)[0],
+    sourceSha256: createHash("sha256").update(csvText, "utf8").digest("hex"),
+    observationCount: observations.length,
+    observations,
   };
-});
 
-observations.sort((a, b) =>
-  WINDOWS.indexOf(a.window) - WINDOWS.indexOf(b.window) ||
-  a.normalizedRepository.localeCompare(b.normalizedRepository)
-);
+  const generatedDir = resolve(
+    dirname(new URL(import.meta.url).pathname),
+    "..",
+    "apps/web/lib/resource-intelligence/radar/generated"
+  );
+  mkdirSync(generatedDir, { recursive: true });
+  const json = JSON.stringify(snapshot, null, 2) + "\n";
+  // Dated file = immutable history; latest.json = the runtime pointer the
+  // module imports. Writing both means a new import is live without editing
+  // snapshot.ts (Codex P2 on #76) — and the dated file keeps provenance.
+  const datedPath = resolve(generatedDir, `${observedAt}.json`);
+  const latestPath = resolve(generatedDir, "latest.json");
+  writeFileSync(datedPath, json, "utf8");
+  writeFileSync(latestPath, json, "utf8");
+  console.log(`[radar-import] wrote ${observations.length} observations -> ${datedPath}`);
+  console.log(`[radar-import] runtime pointer updated -> ${latestPath}`);
+  console.log(`[radar-import] source sha256 ${snapshot.sourceSha256}`);
+}
 
-const snapshot = {
-  schemaVersion: 1,
-  observedAt,
-  sourceFile: csvPath.split("/").slice(-1)[0],
-  sourceSha256: createHash("sha256").update(csvText, "utf8").digest("hex"),
-  observationCount: observations.length,
-  observations,
-};
-
-const generatedDir = resolve(
-  dirname(new URL(import.meta.url).pathname),
-  "..",
-  "apps/web/lib/resource-intelligence/radar/generated"
-);
-mkdirSync(generatedDir, { recursive: true });
-const json = JSON.stringify(snapshot, null, 2) + "\n";
-// Dated file = immutable history; latest.json = the runtime pointer the
-// module imports. Writing both means a new import is live without editing
-// snapshot.ts (Codex P2 on #76) — and the dated file keeps provenance.
-const datedPath = resolve(generatedDir, `${observedAt}.json`);
-const latestPath = resolve(generatedDir, "latest.json");
-writeFileSync(datedPath, json, "utf8");
-writeFileSync(latestPath, json, "utf8");
-console.log(`[radar-import] wrote ${observations.length} observations -> ${datedPath}`);
-console.log(`[radar-import] runtime pointer updated -> ${latestPath}`);
-console.log(`[radar-import] source sha256 ${snapshot.sourceSha256}`);
+// Run as a script (not when imported by a test) — same guard pattern as
+// scripts/vercel-skip-build.mjs.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}

@@ -133,6 +133,34 @@ describe("assurance — findings carry evidence, validation, and fix", () => {
     expect(foundryUnused.evidence[0]!.observation).toContain("derived from registry state");
   });
 
+  it("FIX 3 (external review): the shadow-only finding names the REAL flag and cites shadow.ts, not router.ts", () => {
+    // The bug: the flag AI_MODEL_ROUTER_SHADOW_ENABLED lives in shadow.ts
+    // (isRouterShadowEnabled), but the old code grepped router.ts — which
+    // has no env var at all — so it always emitted the false "no enable
+    // flag / promotion is code-review-only" claim. This test exercises the
+    // exact bypass: the finding must now cite shadow.ts and name the real
+    // flag, and must NOT emit the false-absence fallback text.
+    const finding = deriveFindings(CTX).find((f) => f.id === "model-router-shadow-only");
+    expect(finding).toBeDefined();
+    const flagEvidence = finding!.evidence.find((e) =>
+      e.observation.includes("AI_MODEL_ROUTER_SHADOW_ENABLED")
+    );
+    expect(flagEvidence, JSON.stringify(finding!.evidence)).toBeDefined();
+    expect(flagEvidence!.path).toBe("apps/web/lib/ai-routing/shadow.ts");
+    expect(flagEvidence!.observation).toMatch(/content-verified/i);
+    expect(flagEvidence!.observation).toMatch(/default off/i);
+    // The old false-fallback claim must never appear once the flag exists.
+    expect(
+      finding!.evidence.some((e) => /no env live-flag found/i.test(e.observation))
+    ).toBe(false);
+    // router.ts must not be (mis)cited as the source of the flag claim.
+    expect(
+      finding!.evidence.some(
+        (e) => e.path === "apps/web/lib/ai-routing/router.ts" && /live-flag|gated by/i.test(e.observation)
+      )
+    ).toBe(false);
+  });
+
   it("G-14: the grade gate compares UNROUNDED coverage; rounding is display-only", () => {
     const src = read("lib/assurance/build-report.ts");
     expect(src).toMatch(/const rawCoverage = weightedCoverage\(\)/);

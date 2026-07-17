@@ -195,6 +195,47 @@ describe("foundry — dangerous permission findings", () => {
       ).toBe(true);
     }
   });
+
+  it("FIX 1 (external review): snake_case/kebab-case shell tools no longer dodge sandbox-for-shell via the \\b boundary gap", () => {
+    // The exact bypass: "exec_command" contains no \b-delimited "exec"
+    // because "_" is a word character, so the un-normalized regex missed it.
+    for (const tool of ["exec_command", "run-shell"]) {
+      const bad = withHash({ ...base, allowedTools: [tool], sandboxRequired: false });
+      const findings = scanManifest(bad, REPO_ROOT).findings;
+      expect(findings.some((x) => x.rule === "sandbox-for-shell" && x.severity === "BLOCK"), tool).toBe(true);
+    }
+  });
+
+  it("FIX 2 (external review): install/clone/vendor tools block despite not matching the OLD verb set", () => {
+    // The exact bypass named in the finding: these three tools reached a
+    // clean no-external-actions scan under the prior denylist even though
+    // the Foundry contract forbids any manifest from authorizing an
+    // external action.
+    for (const tool of ["install_dependency", "clone_repo", "vendor_package"]) {
+      const bad = withHash({ ...base, allowedTools: [tool] });
+      const findings = scanManifest(bad, REPO_ROOT).findings;
+      expect(findings.some((x) => x.rule === "no-external-actions" && x.severity === "BLOCK"), tool).toBe(true);
+    }
+  });
+
+  it("FIX 2: a tool absent from the reviewed allowlist blocks even when it spells no denylisted verb at all", () => {
+    // Proves the allowlist layer is load-bearing independently of the
+    // denylist — a wholly novel, verb-free tool name must still fail closed.
+    const bad = withHash({ ...base, allowedTools: ["frobnicate_widget"] });
+    const finding = scanManifest(bad, REPO_ROOT).findings.find((x) => x.rule === "no-external-actions");
+    expect(finding).toBeDefined();
+    expect(finding!.severity).toBe("BLOCK");
+    expect(finding!.detail).toContain("not on the reviewed allowlist");
+  });
+
+  it("FIX 1+2: the real seed manifests' tools stay clean (allowlist calibrated to the actual registry vocabulary)", () => {
+    for (const m of SKILL_MANIFESTS) {
+      expect(
+        scanManifest(m, REPO_ROOT).findings.some((x) => x.rule === "no-external-actions"),
+        m.id
+      ).toBe(false);
+    }
+  });
 });
 
 describe("foundry — council authority mismatch", () => {

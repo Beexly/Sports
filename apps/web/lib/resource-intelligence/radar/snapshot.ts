@@ -25,6 +25,27 @@ const SOURCE_KINDS: readonly RadarSourceKind[] = [
 ];
 
 /**
+ * Real calendar validation — NOT shape-only. Mirrors
+ * scripts/resource-radar-import.mjs's isValidCalendarDate EXACTLY (same
+ * round-trip logic, duplicated because the importer is a plain Node script
+ * and this module is TypeScript compiled into the app). `2026-99-99` and
+ * `2026-02-30` both match `/^\d{4}-\d{2}-\d{2}$/` but are not real dates:
+ * unchecked, Date.UTC() silently NORMALIZES an out-of-range month/day into a
+ * real (often far-future) date instead of rejecting it, which is exactly how
+ * a shape-only check let a bogus observedAt reach dossier.ts's Date.UTC-based
+ * staleness math and made a dossier read as "not stale" forever. Round-trip
+ * through Date.UTC and require every parsed field to equal the field fed in.
+ */
+function isValidCalendarDate(s: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const [y, m, d] = s.split("-").map(Number) as [number, number, number];
+  if (m < 1 || m > 12) return false;
+  if (d < 1 || d > 31) return false;
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
+}
+
+/**
  * Runtime validation — the fixture is data, so it gets checked like data.
  * Enum fields are checked against the closed sets: the JSON cast cannot
  * catch a hand-edited "BLOCKED_RIGHTS", and the policy caps exact values
@@ -37,6 +58,7 @@ export function validateSnapshot(s: RadarSnapshot): string[] {
   if (s.observationCount !== s.observations.length) {
     problems.push(`observationCount ${s.observationCount} != observations.length ${s.observations.length}`);
   }
+  if (!isValidCalendarDate(s.observedAt)) problems.push(`snapshot: bad observedAt "${s.observedAt}"`);
   const seen = new Set<string>();
   for (const o of s.observations) {
     if (!WINDOWS.includes(o.window)) problems.push(`${o.id}: bad window`);
@@ -46,7 +68,7 @@ export function validateSnapshot(s: RadarSnapshot): string[] {
     if (o.id !== `${o.window}:${o.normalizedRepository}`) problems.push(`${o.id}: id mismatch`);
     if (seen.has(o.id)) problems.push(`${o.id}: duplicate observation id`);
     seen.add(o.id);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(o.observedAt)) problems.push(`${o.id}: bad observedAt`);
+    if (!isValidCalendarDate(o.observedAt)) problems.push(`${o.id}: bad observedAt "${o.observedAt}"`);
   }
   return problems;
 }

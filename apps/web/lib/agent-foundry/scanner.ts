@@ -20,8 +20,13 @@ import HASH_LEDGER from "./manifest-hashes.json";
 
 // G-7: money-movement and broadcast verbs a tool/artifact name could smuggle
 // in (tweet/dm/sell/buy/trade/transfer/withdraw/mint/swap/invoice) block too.
+// FIX 2 (external review, supply-chain finding): install/clone/vendor/
+// download/upload close a real gap the prior set missed — a manifest naming
+// `install_dependency`, `clone_repo`, or `vendor_package` reached APPROVED-
+// eligible scans despite the Foundry contract that a manifest never
+// authorizes an external action (docs/ai/AGENT_FOUNDRY_POLICY.md).
 const EXTERNAL_ACTION_VERBS =
-  /\b(publish|send|email|post|bet|wager|charge|refund|deploy|migrate|delete|purchase|tweet|dm|sell|buy|trade|transfer|withdraw|mint|swap|invoice)\b/i;
+  /\b(publish|send|email|post|bet|wager|charge|refund|deploy|migrate|delete|purchase|tweet|dm|sell|buy|trade|transfer|withdraw|mint|swap|invoice|install|clone|vendor|download|upload)\b/i;
 
 const CREDENTIAL_SHAPES =
   /\b(DATABASE_URL|DIRECT_URL|STRIPE_SECRET_KEY|STRIPE_WEBHOOK_SECRET|ANTHROPIC_API_KEY|THE_ODDS_API_KEY|NEXTAUTH_SECRET|REDIS_URL)\b/;
@@ -33,7 +38,35 @@ const INJECTION_PATTERNS: readonly RegExp[] = [
   /​|‌|‍|⁠/, // zero-width characters
 ];
 
-const SHELL_OR_WRITE_TOOLS = /\b(shell|bash|exec|write_file|edit_file|fs_write)\b/i;
+// FIX 1 (external review): snake_case/kebab-case tool names hide verbs from
+// \b-anchored word matches — "exec_command" does NOT contain a boundary-
+// delimited "exec" because "_" is a word character, so `\bexec\b` never
+// fires. Normalize every tool name (underscores/hyphens → spaces) before
+// ANY verb-shaped rule tests it — applied identically here and in
+// no-external-actions below, not just for "exec". CamelCase ("spawnProcess")
+// is deliberately NOT split: this scanner does not claim camelCase coverage,
+// and an honest "we don't cover this yet" beats a false sense of coverage.
+function normalizeToolSurface(text: string): string {
+  return text.replace(/[_-]/g, " ").toLowerCase();
+}
+
+const SHELL_OR_WRITE_TOOLS = /\b(shell|bash|exec|write file|edit file|fs write)\b/i;
+
+// FIX 2 (external review): a denylist of verbs can only catch verbs someone
+// thought to enumerate — this same review found three (install/clone/vendor)
+// the prior EXTERNAL_ACTION_VERBS set missed, and the next one will find
+// more. The registry's three seed manifests (registry.ts) declare exactly
+// five distinct tool names today, and adding a new one already requires a
+// reviewed diff — hash-intact forces a manifest-hashes.json ledger update in
+// the SAME change (see registry.ts). Requiring the tool name to also be
+// added here is therefore not extra process friction, it is that same
+// review made to fail CLOSED instead of open: an unrecognized tool name
+// blocks regardless of what verb it does or doesn't spell, closing this
+// bypass class permanently rather than reactively. This runs alongside (not
+// instead of) the denylist above for defense in depth.
+const ALLOWED_TOOL_NAMES: ReadonlySet<string> = new Set(
+  ["read_file", "grep", "list_files", "run_radar_import", "git_diff_readonly"].map(normalizeToolSurface)
+);
 
 /** repoRoot is null when the runtime cannot reach the repository tree
  * (serverless). Rules must then say "unverifiable", never claim absence. */
@@ -80,7 +113,7 @@ const RULES: Readonly<Record<string, Rule>> = {
     return out;
   },
   "sandbox-for-shell": (m) =>
-    m.allowedTools.some((t) => SHELL_OR_WRITE_TOOLS.test(t)) && !m.sandboxRequired
+    m.allowedTools.some((t) => SHELL_OR_WRITE_TOOLS.test(normalizeToolSurface(t))) && !m.sandboxRequired
       ? [f(m.id, "sandbox-for-shell", "BLOCK", "shell/filesystem-write tool without sandboxRequired")]
       : [],
   "no-credential-references": (m) => {
@@ -90,13 +123,23 @@ const RULES: Readonly<Record<string, Rule>> = {
       : [];
   },
   "no-external-actions": (m) => {
-    // snake_case/kebab-case tool names hide verbs from \b — split them first.
+    // snake_case/kebab-case tool names hide verbs from \b — normalize first
+    // (FIX 1: shared with sandbox-for-shell via normalizeToolSurface).
     const surfaces = [...m.allowedTools, ...m.allowedOutputArtifacts]
-      .join(" ")
-      .replace(/[_-]/g, " ");
-    return EXTERNAL_ACTION_VERBS.test(surfaces)
-      ? [f(m.id, "no-external-actions", "BLOCK", "an allowed tool/output names an external action verb")]
-      : [];
+      .map(normalizeToolSurface)
+      .join(" ");
+    const verbHit = EXTERNAL_ACTION_VERBS.test(surfaces);
+    // FIX 2: positive allowlist, independent of the verb denylist above —
+    // any tool not on the reviewed list blocks, whether or not it spells a
+    // verb this file's authors anticipated.
+    const unknownTools = m.allowedTools.filter((t) => !ALLOWED_TOOL_NAMES.has(normalizeToolSurface(t)));
+    if (!verbHit && unknownTools.length === 0) return [];
+    const reasons: string[] = [];
+    if (verbHit) reasons.push("an allowed tool/output names an external action verb");
+    if (unknownTools.length > 0) {
+      reasons.push(`tool(s) not on the reviewed allowlist: ${unknownTools.join(", ")}`);
+    }
+    return [f(m.id, "no-external-actions", "BLOCK", reasons.join("; "))];
   },
   "audit-enabled": (m) =>
     m.auditLogEnabled ? [] : [f(m.id, "audit-enabled", "BLOCK", "audit logging disabled")],
