@@ -3128,3 +3128,40 @@ stitching) — recorded here so no backtest can slip past it.
   `claude/happy-goodall-8lkxrb`'s dispositions ahead of the routine 24-branch batch-triage findings for the
   same two branches (which independently run in a currently in-flight workflow and will be folded in without
   contradicting this entry).
+
+## DEC-055 — Recovery Wave R11: 12 deletion receipts issued (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: closes Wave R11 — `reports/reconciliation/DELETION_RECEIPTS.md` previously held only
+  "candidates, not receipts" for the 12 branches proven pure-ancestors of `origin/main` in an earlier pass.
+  Per `docs/genesis/BRANCH_RECONCILIATION_CONTRACT.md` invariant #8 ("No branch deletion without a deletion
+  receipt. The receipt must prove all unique useful changes are merged, deliberately archived, or explicitly
+  rejected with reasons."), writing the receipt itself is a distinct, low-risk, agent-doable step, separate
+  from deletion (which stays founder-only, never performed by this agent).
+- Method: `git fetch origin`, then for each of the 12 candidate branches, independently re-verified (not
+  inherited from the prior candidate list without re-checking) via `git merge-base --is-ancestor <branch>
+  origin/main` and `git rev-list --count origin/main..<branch>`.
+- **All 12 re-confirmed**: ancestor-of-main = true, 0 commits ahead, for every branch. This is the
+  contract's strongest evidence tier (exact commit-graph ancestry) — proves every commit on each branch is
+  already reachable from `main`'s current tip, i.e. zero unique content exists on any of them.
+- One branch, `claude/blissful-hamilton-d7edx1`, is independently corroborated by DEC-054's
+  `docs/strategy/BRANCH_RECONCILIATION.md` discovery: that June planning doc named this exact branch as
+  carrying the de-paywall pivot + `postinstall: prisma generate` fix, "merging to `main` first" during a
+  prod firefight. Its confirmed 0-commits-ahead ancestor status today is live proof that merge did happen.
+- Wrote the 12 actual receipts (branch, head SHA, ancestor status, commits-ahead, disposition = "merged, no
+  unique content") into `DELETION_RECEIPTS.md`, replacing the "empty by design / candidates only" framing.
+  Each receipt explicitly states it is proof, not deletion authorization, and warns that a receipt should be
+  re-verified immediately before any future deletion if significant time has passed (a force-push or history
+  rewrite on any of these refs — unlikely but not impossible — would invalidate it).
+- Evidence: 12 `git merge-base --is-ancestor` + `git rev-list --count` command pairs, all run this session,
+  exact output captured in the receipt table.
+- Alternatives rejected: leaving the document in "candidates only" state — rejected because the contract's
+  own invariant #8 asks specifically for a receipt as the deletion precondition, and producing it now (while
+  explicitly not deleting anything) is strictly more useful to a founder who later decides to clean up than
+  leaving the proof undone; deleting the branches directly — never considered, outside this agent's authority
+  under every standing instruction this campaign has operated under.
+- Reversibility: N/A — no branches touched, no code changed; this entry and the receipt document only.
+- Protected zones: none.
+- Files: `docs/frontier/DECISION_REGISTER.md`, `reports/reconciliation/DELETION_RECEIPTS.md`,
+  `reports/reconciliation/RECOVERY_WAVES.md` (R11 row marked DONE).
+- Supersedes: none. Closes Wave R11.

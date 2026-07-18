@@ -464,7 +464,8 @@ R7    Blocked on #127
 R8    Groups A+B DONE (DEC-043/044). Group A2 core files OWNER_GATE (OG-009, DEC-045); Group C OWNER_GATE (OG-008)
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
-R11   Deletion receipts for the 12 proven-ancestor branches
+R11   DONE (2026-07-18) — 12 deletion receipts issued in DELETION_RECEIPTS.md, re-verified ancestry;
+      deletion itself stays founder-only
 R11.5 114/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047, dfs-optimizer-edge DEC-048,
       consensus-accuracy-engine DEC-049, 8-branch slice DEC-050 incl. live refund-window fix, 30-branch
       slice + accounting correction DEC-051 incl. unlanded secret finding, 26-branch slice DEC-052 incl.
