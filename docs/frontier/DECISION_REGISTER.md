@@ -2970,3 +2970,61 @@ stitching) — recorded here so no backtest can slip past it.
 - Supersedes: none. Running total after this slice: **88 (walking in) + 26 (this slice) = 114 of 138**
   long-tail branches individually evidenced. Remaining pool is 24 branches, all with 13+ novel files
   (several 100+), the next R11.5 slice — each needs its own dedicated, individually-scoped pass.
+
+## DEC-053 — Correction: `warp-nebula.tsx` is a superseded regression, not a recovery candidate
+  (2026-07-18)
+
+- Date: 2026-07-18
+- **Corrects DEC-051 and DEC-052, which both named the `warp-nebula.tsx`/`warp-nebula-lazy.tsx` asset
+  (found byte-identical across 10 independent stranded branches) as "the strongest RECOVER_WHOLE candidate
+  in the long tail." That characterization was wrong. Real evidence, found while scoping a future freeze
+  contract for it (not part of the branch-by-branch triage method): `pdcswh` already built, shipped, and
+  then twice superseded this exact concept, and currently enforces a regression test that forbids it.**
+- Evidence, in order of discovery:
+  1. `apps/web/components/landing/cinematic-entrance.tsx` (present on `pdcswh` today) opens with its own
+     header comment: *"Rebuilt 2026-06 for calm + clarity + zero lag. The previous version flew the visitor
+     through a real-time WebGL warp tunnel (16k Three.js particles) past ten waypoints that swept by faster
+     than they could be read... It looked busy, the copy was unreadable, and it stuttered on laptops and
+     integrated GPUs."* This is a precise description of `warp-nebula.tsx` itself (a ~16,000-particle
+     Three.js tunnel-flight nebula) — `pdcswh`'s own history already tried this exact pattern and explicitly
+     replaced it for performance and readability reasons.
+  2. `cinematic-entrance.tsx` (the REPLACEMENT for the warp version) is itself not imported anywhere in the
+     app (`grep -rln "CinematicEntrance"` finds only the component file and one test) — it was itself
+     superseded by a second generation.
+  3. The currently-live entrance is `apps/web/components/landing/montage-entrance.tsx`, imported into
+     `apps/web/app/page.tsx` (`<MontageEntrance />`), whose own header comment calls it *"Galaxy Sports
+     Edge's single cinematic cold-open... The official approved brand reveal (Brand Bible v1.0)"* — a
+     produced MP4 reveal, not a real-time particle simulation.
+  4. `apps/web/__tests__/homepage-doctrine-hero.test.ts:57` contains a live regression assertion:
+     `expect(page).not.toContain("CinematicEntrance")` — `pdcswh` actively enforces, in CI, that the
+     warp-tunnel's own direct successor stays OUT of the homepage. Landing `warp-nebula.tsx` (two
+     generations further back, with the specific documented problems the successor was built to fix) would
+     contradict both an explicit design decision and its enforced regression guard.
+- **Corrected disposition: `warp-nebula.tsx`/`warp-nebula-lazy.tsx` is ARCHIVE_ONLY across all 10 branches
+  that carry it** (the 3 from DEC-051 plus the 7 from DEC-052) — not a recovery candidate. The 10-branch
+  convergence is better read as: many independent sessions forked around the same May/June period, before
+  the warp-tunnel's performance/readability problems were discovered and fixed, so they all inherited the
+  same now-obsolete asset — convergence here is a symptom of a common ancestor, not independent validation
+  of ongoing value. This does not change any branch's OTHER dispositions from DEC-051/052 (e.g.
+  `claude/laughing-thompson-x9xr6f`'s NFL-coaches feature, `claude/happy-euler-trkihe`'s tracker-segments
+  feature, or the presenter-image/test-suite findings) — only the `warp-nebula` component itself.
+- **Process note, recorded honestly per this campaign's DEC-051 precedent (fix forward, disclose, do not
+  silently rewrite an already-pushed entry):** the branch-triage method used throughout R11.5 (diff a
+  stranded branch against `pdcswh` HEAD, read the novel files) correctly identifies content `pdcswh` LACKS,
+  but cannot by itself detect content `pdcswh` HAD and deliberately REMOVED — that requires checking the
+  live tree's own history/comments for the same concept, which this pass did only after the fact, prompted
+  by scoping a "which page would mount this" freeze-contract question for what was assumed to be a genuine
+  candidate. Recommend this additional check (grep pdcswh's own git log / component headers for the asset's
+  concept, not just its exact filename) become standard practice before naming any future long-tail asset a
+  RECOVER_WHOLE candidate, not just before actually porting one.
+- Alternatives rejected: leaving DEC-051/052's characterization uncorrected since "no code was ever
+  landed" — rejected because the ledger's purpose is to be a reliable guide for FUTURE sessions deciding
+  what to build next; an uncorrected "strongest candidate" label pointing at a known-bad pattern would waste
+  a future session's effort discovering the same thing again, or worse, result in it being ported without
+  this check.
+- Reversibility: N/A — no code changed (this entry and the disposition table only).
+- Protected zones: none (public landing-page UX, not a protected zone) — this is a design/performance
+  correction, not a policy one.
+- Files: `docs/frontier/DECISION_REGISTER.md`, `reports/reconciliation/RECOVERY_WAVES.md` only.
+- Supersedes: the `warp-nebula` RECOVER_WHOLE characterization in DEC-051 and DEC-052. All other findings in
+  both entries stand unchanged.

@@ -425,6 +425,21 @@ Running total after this slice: **88 of 138** long-tail branches individually ev
 
 Running total after this slice: **114 of 138** long-tail branches individually evidenced.
 
+**Correction (2026-07-18, DEC-053): `warp-nebula.tsx` is ARCHIVE_ONLY, not a recovery candidate.** DEC-051
+and DEC-052 both mischaracterized this asset as "the strongest RECOVER_WHOLE candidate in the long tail."
+While scoping a freeze contract for it, direct evidence on `pdcswh` itself reversed that call: `pdcswh`
+already built this exact real-time WebGL warp-tunnel concept, then explicitly replaced it — the current
+`cinematic-entrance.tsx`'s own header comment describes the warp-tunnel version verbatim as the thing it
+was "rebuilt... for calm + clarity + zero lag" to fix ("stuttered on laptops and integrated GPUs," "looked
+busy," "copy was unreadable"). That successor was itself superseded by a second generation, the currently-
+live `montage-entrance.tsx` (an approved brand MP4 reveal). `pdcswh` even enforces a live regression test
+(`homepage-doctrine-hero.test.ts:57`, `expect(page).not.toContain("CinematicEntrance")`) keeping the warp
+tunnel's own direct successor OFF the homepage. The 10-branch convergence on `warp-nebula.tsx` is better
+read as a common-ancestor artifact (many sessions forked before the problem was discovered and fixed), not
+independent validation. Full evidence and process note in DEC-053. All other DEC-051/052 dispositions
+(the NFL-coaches feature, tracker-segments feature, clean setup-script candidates, protected-zone flags,
+etc.) are unaffected.
+
 **Next slice:** the remaining 24-branch pool, all with 13+ novel files each (several 100+):
 `claude/keen-ptolemy-*` cluster, `codex/galaxy-dynasty-studio-rescue-v2`, `safety/sports-wip-2026-06-04`,
 `claude/compassionate-ramanujan-qqt5nb`, `fix/overnight-codex-feature-gates-260524`, `codex/autonomy-
