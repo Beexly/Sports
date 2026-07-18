@@ -79,19 +79,38 @@ higher-numbered waves in this same sequence.
    full `apps/web` suite 634/8,592 green. Committed and pushed to `claude/galaxy-sports-edge-pdcswh`, tracked
    by the existing accounting PR #129 (converges with PR #123's own eventual founder disposition). Protected
    zones: entitlements, auth — mandatory red-team (completed).
-4. **#86 — picks stuck PENDING forever.** No terminal-state sweep for cancelled/postponed/feed-missed games;
-   `daysFrom` still 2 not 3. Protected zones: settlement, data integrity.
+4. **DONE (2026-07-18, DEC-038) — #86 — picks stuck PENDING forever.** `settle-sport.ts` rewritten: shared
+   `settleCompletedGame()` extracted so the live feed loop and a new `catchUpSweep()` grade identically;
+   `catchUpSweep()` runs unconditionally after the feed pass (even on feed error — DB-only, must keep healing
+   through an outage) with two arms — HEAL (any FINAL-with-both-scores game whose picks are still PENDING, no
+   age cutoff) and VOID (picks past a 72h `commenceTime` horizon with no gradeable outcome, terminally closed
+   via an atomic `updateMany` scoped to `PENDING`, mirrors sportsbook "no action" grading). Required manual
+   reconciliation, not blind `git apply` — the historical branch forked before both DEC-035's own `take:240`
+   fix and an unrelated `awayTeamName`-required-arg change already on `pdcswh`. Self-initiated 16-file ripple
+   audit (VOID now reachable in volume for the first time) found 14/16 already correct, fixed 1
+   (`brief/compose.ts`'s admin-only settlement text now reconciles with a `V` term), resolved 2 as moot
+   (watchlist alerts are fully inert behind a default-off flag; the calibration replay-provenance route is
+   hardcoded to an empty array, so it never serves real data regardless of its missing auth check). gse-red-team
+   CONFIRMED clean on all 7 settlement-correctness review points, zero findings. `settle-sport.test.ts` 29/29,
+   `brief-compose.test.ts` 3/3, full `apps/web` suite 634/8,595 (was 634/8,592), guardrails 17/17, workspace
+   typecheck clean. Committed and pushed to `claude/galaxy-sports-edge-pdcswh`, tracked by the existing
+   accounting PR #129. Was: a game that goes FINAL but whose picks the feed loop never revisits (a missed poll
+   window) or a cancelled/postponed game left its picks PENDING forever with zero path to a terminal state,
+   silently understating the public "settled" population. Protected zones: settlement, data integrity, public
+   claims — mandatory red-team (completed).
 5. **#84 — orphaned CLV grades.** A crash between settle-write and CLV-write permanently drops that pick from
-   the public beat-close-rate sample, with no healing sweep. Protected zones: CLV, public claims.
+   the public beat-close-rate sample, with no healing sweep. Must sequence after item 4 above — also touches
+   `settle-sport.ts`'s settlement path; contract against the file state DEC-038 established, not the historical
+   PR's stale base. Protected zones: CLV, public claims.
 6. **#89 — outage on `/api/promotions` masked as an honest empty response.** Depends on #87's `outage-gate.ts`
-   (also RECOVER_WHOLE, not itself in the live-defect-6 but a direct dependency). Protected zones: data
-   reliability, public claims.
+   (also RECOVER_WHOLE, not itself in the live-defect-6 but a direct dependency, not yet recovered). Protected
+   zones: data reliability, public claims.
 
 **Method for each:** FREEZE CONTRACT (re-derive the exact fix against CURRENT main, not the stale PR diff —
 main has advanced since these PRs were authored) → CODE (port the fix, re-verified against today's file
 state) → TARGETED TEST → mandatory red-team (all six touch a protected zone) → FINAL VERIFY → ledgers → commit
-→ push → bounded recovery PR (never merged to main by this agent). **Not performed this pass** — each is its
-own "one bounded recovery wave," per the contract's own law, not a single mega-wave covering all six at once.
+→ push → bounded recovery PR (never merged to main by this agent). Items 1-4 DONE (DEC-035/036/037/038); items
+5-6 remain, each its own "one bounded recovery wave," per the contract's own law, not a single mega-wave.
 
 ## Wave R1 — Security hardening (#123)
 

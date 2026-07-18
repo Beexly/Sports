@@ -120,7 +120,11 @@ export async function loadEngineStory(now = new Date()): Promise<EngineStory> {
         }),
         db.pick.count({
           where: {
-            result: { in: ["WIN", "LOSS", "PUSH", "VOID"] },
+            // GRADED results only — VOID is no action (cancelled game), not a
+            // settled record entry. The M-F9 sweep (PR #86) made VOID reachable
+            // in volume; counting voids here would inflate the public
+            // "settled" number with bets that never happened.
+            result: { in: ["WIN", "LOSS", "PUSH"] },
             ...OFFICIAL_PICK_FILTER,
           },
         }),

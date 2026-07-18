@@ -81,10 +81,16 @@ function formatLine(value: number): string {
   return value > 0 ? `+${value}` : `${value}`;
 }
 
-function mapPickResult(result: PickResultValue): "W" | "L" | "PUSH" | "PENDING" {
+function mapPickResult(result: PickResultValue): "W" | "L" | "PUSH" | "VOID" | "PENDING" {
   if (result === "WIN") return "W";
   if (result === "LOSS") return "L";
-  if (result === "PUSH" || result === "VOID") return "PUSH";
+  if (result === "PUSH") return "PUSH";
+  // VOID is NO ACTION — never collapse it into PUSH. A push claims a graded
+  // tie; a void means the bet never happened (cancelled/postponed game). The
+  // M-F9 sweep (PR #86) made VOID reachable in volume: a postponed slate
+  // rendered as a pile of public "PUSH" settlement posts would fabricate
+  // outcomes. plan.ts blocks VOID from settlement posts entirely.
+  if (result === "VOID") return "VOID";
   return "PENDING";
 }
 

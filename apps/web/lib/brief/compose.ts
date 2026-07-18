@@ -159,10 +159,11 @@ export function composeBrief(input: ComposeBriefInput): ComposedBrief {
   const wins = settled.filter((s) => s.result === "WIN").length;
   const losses = settled.filter((s) => s.result === "LOSS").length;
   const pushes = settled.filter((s) => s.result === "PUSH").length;
+  const voids = settled.filter((s) => s.result === "VOID").length;
   const settledText =
     settled.length === 0
       ? "Nothing settled since the last brief."
-      : `Settled ${settled.length}: ${wins}W-${losses}L${pushes ? `-${pushes}P` : ""}.`;
+      : `Settled ${settled.length}: ${wins}W-${losses}L${pushes ? `-${pushes}P` : ""}${voids ? `-${voids}V (no action)` : ""}.`;
 
   // ── Content ideas — only angles the data actually supports ───────
   const ideas: string[] = [];

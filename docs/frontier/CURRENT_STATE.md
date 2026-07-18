@@ -1,7 +1,7 @@
 # GSE Frontier Current State
 
 **Status:** ACTIVE
-**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-037)
+**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-038)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
 **Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE + §2 smoke CLOSED (DEC-014/023); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016); W005 Intelligence Watch v0 DONE (DEC-021); W007 Branching Reality v0 DONE (DEC-024); W009 Hypothesis-to-Instrument v0 DONE (DEC-025). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Phase 3 (W005) DONE. Full-session audit pass DONE (DEC-022). W-WEATHER §2 smoke gate DONE (DEC-023). W007 DONE (DEC-024) — SportsIR's 6th and final DECLARED primitive (Branch) is now ADAPTED, so ALL 12 SportsIR primitives have real evidence. W009 DONE (DEC-025) — verified both listed dependencies real (harness + W004) before building; wraps the backtest harness's own already-audited climatology signal into a versioned instrument, adds a second `SportsIrClaim` source. W006 re-checked and confirmed still genuinely BLOCKED (GG-001/genesis-kernel hasn't landed). W010 dependency re-verified genuinely absent (DEC-026) — stays BLOCKED, no telemetry baseline exists to build on. Remaining work: Task #8/#13's larger mandates (Task #13 now has a concrete scoped next slice identified — see Verified facts; Task #8 scoping in progress) and W008 (still BLOCKED on W006).
@@ -40,6 +40,33 @@
 - DEC-035 (Recovery Wave R0.6, item 1/6: #92 settle/refresh TOCTOU race) DONE: re-derived the historical PR #92 fix onto CURRENT `main` (not blind-patched — `clv-capture.ts` had drifted since #92's authoring, manually re-integrated). `process-sport.ts`'s unconditional `db.pick.upsert` replaced with an atomic `updateMany` scoped to `result:"PENDING"` (a losing race writes zero rows) plus a race-safe `create`-with-P2002-catch for new picks plus a `wrotePickPayload` gate so immutable sidecars never mint from an unpublished payload. `settle-sport.ts`'s closing-odds `take: 80` → `take: 240` (wide consensus closes were being truncated). `clv-capture.ts` gained `MAX_CLOSE_AGE_MS` (6h default) so CLV is never graded against a dead feed's stale price. gse-red-team CONFIRMED clean on 5/9 review points via direct schema inspection (atomicity, P2002-safety, sidecar-gate correctness, index-served `take:240`, no other settlement/CLV semantics changed); the remaining 4 points (refresh-cadence-vs-cutoff sanity, other callers, test honesty, actual test execution) were resolved directly rather than re-dispatched — 30min refresh cadence is 12x smaller than the 6h cutoff (never trips on a healthy feed), only one production caller exists, the new tests are non-vacuous. Zero CONFIRMED findings. 44/44 + 127/127 (ingestion-pipeline) and 13/13 + 1462/1462 (prediction-engine) all green (up from 42/125/10/1459 pre-fix); tsc clean across every workspace; guardrails 17/17. Closes R0.6 item 1 of 6; items 2-6 (#82, #93, #86, #84, #89) remain future bounded waves.
 - DEC-036 (Recovery Wave R0.6, item 2/6: #82 prod-DB fail-open) DONE: re-derived the historical PR #82 fix onto CURRENT `main` (byte-identical to the historical merge-base, applied directly). `packages/db/src/index.ts`'s `buildClient()` now throws BEFORE activating the stub Prisma client if `VERCEL_ENV==="production"` or `PRODUCTION_RUNTIME==="true"` (deliberately not `NODE_ENV`, which is `"production"` on every `next build` including DB-less CI/local builds) unless the explicit `ALLOW_STUB_DB_IN_PRODUCTION=true` escape hatch is set. `/api/health` now uses the pre-existing `isStubMode()` export to report an honest `error` (not a vacuous `ok`) when the stub is active. Companion `PRODUCTION_RUNTIME=true` declarations added to all 3 worker Dockerfiles + oracle-vps compose.yml so the guard actually trips in the self-hosted path. gse-red-team CONFIRMED clean on 5/9 points and surfaced a genuinely important unprompted finding: a THIRD, FOUNDER-AUTHORED fix attempt for this exact defect exists on a separate unmerged branch (`codex/gse-frontier-recovery-2026-07-13` lineage, commit `3c8df41e`, author Garrett Baxley) using a simpler `NODE_ENV`-only gate that would break every DB-less build — recorded as `COLLISION-7a`/`COLLISION-7b` in `FILE_SYMBOL_OWNERSHIP.csv` for founder awareness on a future wave, not silently overridden. Remaining 4 review points (Vercel-env-semantics sanity, escape-hatch-default grep, Dockerfile/compose placement, test order-independence) resolved directly: zero stray `ALLOW_STUB_DB_IN_PRODUCTION` default anywhere in the repo, all 3 Dockerfiles + compose.yml verified correct via direct read + real YAML parse, the new test file passed 10/10 on two independent runs. Zero CONFIRMED findings. `packages/db` 23/23 (was 13), `apps/web` health-route 10/10 (was 9); tsc clean; guardrails 17/17. Closes R0.6 item 2 of 6; items 3-6 (#93, #86, #84, #89) remain future bounded waves.
 - DEC-037 (Recovery Wave R0.6, item 3/6: #93 cockpit per-page ADMIN, converges with seed Wave R1/PR #123) DONE: re-derived historical PR #123 onto CURRENT `main` via a verified-clean `git apply` (only 1 of 32 target files had drifted since the branch's older base, and the drift didn't overlap the fix's insertion point; one ancillary historical file was correctly excluded — confirmed already-on-main via a different superseded lineage). New `apps/web/lib/cockpit/require-admin.ts` (`requireCockpitAdmin()`) called as the first statement in all 32 `apps/web/app/cockpit/**/page.tsx` files (several needed non-async→async conversion). New source-scan test (36 tests) makes a future cockpit page that forgets the guard fail CI automatically. gse-red-team **CONFIRMED CLEAN on all 9 review points, zero findings** — spot-checked 10+ pages including every async-conversion and dynamic-route file, confirmed the guard's `redirect("/")` for a signed-in non-admin carries no loop risk (disproven vs. the layout's own documented incident, which was specifically about redirecting to `/auth/signin`), confirmed `auth()` fails closed and no `try/catch` anywhere swallows the guard, confirmed the drift-merge is clean, confirmed the source-scan test has real per-file teeth. Flagged (not a defect) that ~20 `apps/web/app/api/cockpit/**` route handlers remain a separate, unaudited surface for a future item. Full `apps/web` suite 634/8,592 green; `test:cockpit` 279/279; `test:brand-safety` 3053/3053; tsc clean. Closes R0.6 item 3 of 6; items 4-6 (#86, #84, #89) remain future bounded waves — #86 already thoroughly scoped (a real `settle-sport.ts` refactor that must be manually reconciled with DEC-035's own `take:240` fix in the same function).
+- DEC-038 (Recovery Wave R0.6, item 4/6: #86 picks-stuck-PENDING-forever) DONE: manually reconciled the
+  historical PR #86 catch-up sweep against CURRENT `settle-sport.ts` (blind `git apply` was unsafe — the
+  historical branch forked before both this session's own DEC-035 `take:240` fix AND an unrelated, earlier
+  `main` change requiring `awayTeamName` as calculatePickResult/gradePickClv's 8th arg; rewrote the file in
+  full via `Write`, combining both). New `settleCompletedGame()` shared by the live feed loop and a new
+  `catchUpSweep()` (runs unconditionally after the feed pass, even on feed error — DB-only, must keep healing
+  through an outage): HEAL arm settles any FINAL-with-both-scores game whose picks are still PENDING (no age
+  cutoff — always an anomaly); VOID arm terminally closes picks past a 72h `commenceTime` horizon
+  (`VOID_STALE_HOURS`, matches `SCORES_DAYS_FROM=3`) via an atomic `updateMany` scoped to `PENDING`. Self-
+  initiated 16-file ripple audit (VOID now reachable in volume for the first time) found 14/16 files already
+  correct, 1 fixed (`brief/compose.ts`'s settlement text silently didn't reconcile once VOID rows appeared —
+  added a `-${voids}V (no action)` term, 2 new tests), 2 resolved as moot (`watchlist/alert-dispatch.ts` never
+  actually sends any message today — fully inert behind a default-off flag with zero channel wired;
+  `calibration/replay-provenance/route.ts` is unauthenticated but hardcoded to `buildReplayableProvenanceFeed([]
+  , ...)` — no real data has ever flowed through it, same flagged-off-but-reachable doctrine as
+  OTS_ANCHOR_ENABLED elsewhere). gse-red-team **CONFIRMED CLEAN on all 7 settlement-correctness review points,
+  zero findings** — manual reconciliation verified byte-correct, double-settle safety across a feed+heal
+  collision confirmed structurally safe, VOID query's Prisma `NOT` semantics confirmed correct, 72h/3-day
+  alignment has one immaterial theoretical edge (not exploitable against a live game), postponed-game self-
+  correction confirmed (commenceTime read live, never cached), VOID terminality confirmed (every query scopes
+  to PENDING), failure-isolation counters confirmed accurate on a mid-loop throw. `settle-sport.test.ts` 29/29
+  (18 pre-existing + 11 new); `brief-compose.test.ts` 3/3 (1 pre-existing + 2 new); full workspace typecheck
+  clean; guardrails 17/17; full `apps/web` suite 634/8,595 (was 634/8,592 — +3 reconciles to the 2 new
+  brief-compose tests plus a net +1 from the ancillary `public-roi-policy.test.ts` patch strengthening VOID
+  exclusion from a folded assertion to its own dedicated null-for-every-price test). Closes R0.6 item 4 of 6.
+  Item 5 (#84, orphaned CLV grades) must sequence after this — also touches `settle-sport.ts`'s settlement
+  path. Item 6 (#89) stays blocked on #87 (`outage-gate.ts`, not yet recovered).
 
 ## Owner gates
 
@@ -53,15 +80,17 @@ Signal + campaign PR #129), B (Waiver War Room, UX mechanical sweep, weather pre
 (queue-drain sweep), C2 (drain receipt, DEC-032), C3 (GX-R00 reconciliation inventory, DEC-031),
 C4 (whole-campaign meta-audit, DEC-033, zero findings). Recovery Wave R0.5 (DEC-034) is also DONE:
 resolved the #76-96 content-landing gap with real evidence — 5 SUPERSEDED, 16 RECOVER_WHOLE, 6 of
-those 16 are LIVE defects on `main` today. Per `CONTINUOUS_EXECUTION_CONTRACT.md` §9, a campaign
-stop report (C5) requires BOTH the live queue AND the reconciliation recovery queue to be
-exhausted — R0.6 (recovering the 6 live-defect fixes, priority-ordered #92>#82>#93>#86>#84>#89)
-is real, dependency-ready, non-owner-gated work still on the table, so C5 has NOT been emitted;
-the next session/pass should continue with Wave R0.6's highest-priority item (#92, the
-settle/refresh TOCTOU race — protected zone: settlement/CLV, mandatory red-team) as its own
-bounded FREEZE-CONTRACT-through-PR loop, one live-defect fix at a time, per the contract's "one
-bounded recovery wave at a time" law. W006 remains correctly BLOCKED (GG-001/genesis-kernel still
-only on unmerged draft PR #127); W008 stays blocked on W006; W010 stays BLOCKED (DEC-026,
-dependency verified genuinely absent). Task #8's UX mandate and Task #13's full "10x
-transformation" mandate remain large, standing arcs with their next concrete slice always
-identified rather than left open-ended (per this session's "no silent scope-shrink" discipline).
+those 16 are LIVE defects on `main` today. Wave R0.6 items 1-4 of 6 are now DONE (#92 DEC-035, #82
+DEC-036, #93 DEC-037, #86 DEC-038 — each independently red-teamed with zero confirmed findings).
+Per `CONTINUOUS_EXECUTION_CONTRACT.md` §9, a campaign stop report (C5) requires BOTH the live queue
+AND the reconciliation recovery queue to be exhausted — R0.6 items 5-6 (#84 orphaned CLV grades,
+#89 outage-masking) are real, dependency-ready, non-owner-gated work still on the table, so C5 has
+NOT been emitted; the next session/pass should continue with #84 (protected zones: CLV, public
+claims — mandatory red-team), sequenced after #86 since both touch `settle-sport.ts`'s settlement
+path, as its own bounded FREEZE-CONTRACT-through-PR loop, per the contract's "one bounded recovery
+wave at a time" law. #89 remains blocked behind #87 (`outage-gate.ts`), which itself needs recovery
+first. W006 remains correctly BLOCKED (GG-001/genesis-kernel still only on unmerged draft PR #127);
+W008 stays blocked on W006; W010 stays BLOCKED (DEC-026, dependency verified genuinely absent).
+Task #8's UX mandate and Task #13's full "10x transformation" mandate remain large, standing arcs
+with their next concrete slice always identified rather than left open-ended (per this session's
+"no silent scope-shrink" discipline).

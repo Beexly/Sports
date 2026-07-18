@@ -1564,3 +1564,129 @@ stitching) — recorded here so no backtest can slip past it.
   remain future bounded waves — #86 already thoroughly scoped this session (a substantial `settle-sport.ts`
   refactor extracting a shared `settleCompletedGame()` function plus a new catch-up HEAL/VOID sweep; must be
   manually reconciled with this session's own DEC-035 `take:240` fix in the same function, not blind-applied).
+
+## DEC-038 — Recovery Wave R0.6.4: picks-stuck-PENDING-forever catch-up sweep (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Recovery Wave R0.6, item 4 of 6. Ports historical PR #86's `settle-sport.ts` catch-up sweep onto
+  CURRENT `main` (via `pdcswh`). Was: a game that goes `FINAL` with recorded scores but whose picks the live
+  scores-feed loop never revisits (a missed poll window, a feed hiccup on the one cycle that mattered) leaves
+  those picks `PENDING` forever — no other code path ever re-checks them. Same defect class for a
+  cancelled/postponed/no-data game: its picks are also permanently `PENDING` with zero path to a terminal
+  state. Both silently corrupt the public "settled" population (an eligible pick that never resolves is
+  invisible to every win-rate/ROI/calibration computation, understating `n` without anyone knowing).
+- Contract frozen before coding: the historical branch forked BEFORE two independently-landed changes on
+  `pdcswh`'s current tip — (a) this session's own DEC-035 fix inside the same function (`take:80`→`take:240`
+  on the closing-odds query), and (b) an unrelated, earlier-landed `main` change making `awayTeamName` a
+  REQUIRED 8th positional argument to both `calculatePickResult()` and `gradePickClv()`
+  (`packages/prediction-engine/src/settlement.ts`). Confirmed via `git diff <merge-base> origin/main` and a
+  direct grep of the current function signatures — the historical file's own extracted logic still had
+  `take:80` and omitted `awayTeamName` at both call sites. Blind `git apply` would have either failed outright
+  or silently reintroduced the take:80 regression and a typecheck failure. Decision: manually rewrote
+  `packages/ingestion-pipeline/src/settle-sport.ts` in full (via `Write`, not `git apply`), combining the
+  historical branch's new structure (shared `settleCompletedGame()` extraction + `catchUpSweep()`) with both
+  required corrections already-live on `pdcswh`.
+- Code: `settleCompletedGame(ctx, game, homeScore, awayScore)` extracted from the live scores-feed loop's inline
+  settlement body so the feed loop AND the new sweep share identical grading logic — "the same no-drift rule
+  this module exists to enforce between worker and cron," now also enforced between live and catch-up paths.
+  `catchUpSweep(ctx)` runs two independent arms, unconditionally, after the feed pass (in a try/catch that
+  captures but does not re-throw `feedError`, so an API outage never blocks the sweep — the sweep is DB-only
+  and must keep healing even when the feed can't be reached): **HEAL** — any `FINAL` game with both scores
+  recorded that still has `PENDING` picks (no age cutoff; this is always an anomaly, however old) gets settled
+  via the same `settleCompletedGame()`. **VOID** — any pick whose game passed `commenceTime + 72h`
+  (`VOID_STALE_HOURS`) with no gradeable `FINAL`+both-scores outcome gets terminally closed via an atomic
+  `db.pick.updateMany({where:{id, result:"PENDING"}, data:{result:"VOID", settledAt}})` — mirrors sportsbook
+  "no action" grading convention, matches `SCORES_DAYS_FROM=3`'s own 72h lookback horizon. `settleSport()`
+  returns `picksVoided` alongside the existing counts; `status:"failed"` (when the feed pass threw) still
+  reports honest sweep-derived counts rather than zeroing them.
+- Ripple-effect self-initiated audit: since this fix makes VOID a live, frequently-reached terminal state for
+  the first time (previously theoretical), any other code that counts/filters settled picks without excluding
+  VOID is now a live risk of inflating a public claim. Read all 16 repo-wide matches on `SettledResult`/`VOID`
+  personally plus via a dispatched `gse-red-team` pass; both converged on the same 14-of-16 clean / 2 needing
+  follow-up split. The two follow-ups were resolved directly this session (see below), leaving zero open items.
+- Independent review: one `gse-red-team` pass (again went idle without a stall notification — resumed via
+  direct `SendMessage` on the known `agentId`). **Zero CONFIRMED findings across all 7 settlement-correctness
+  review points**: (1) the take:240/awayTeamName manual reconciliation is byte-correct — only one `take:` in
+  the file, `awayTeamName` threaded at both call sites, extracted logic identical to what DEC-035 already
+  established on HEAD. (2) double-settle safety across a feed+heal collision in one run is structurally safe
+  (heal's query only sees rows still `PENDING` after the feed loop's sequential `await` completes) and
+  race-safe under concurrent invocations (`updateMany` scoped to `PENDING`, `count===0`→no-op). (3) the VOID
+  arm's Prisma `NOT:{status:"FINAL",homeScore:{not:null},awayScore:{not:null}}` correctly excludes only rows
+  where all three are simultaneously true (standard implicit-AND-within-one-object semantics), matching the
+  "no gradeable outcome" comment. (4) 72h VOID horizon vs. `SCORES_DAYS_FROM=3` has one immaterial theoretical
+  edge (anchored to `commenceTime` vs. the feed's own lookback anchored to completion time) that only matters
+  for a game already anomalous through the entire ~69h pre-horizon window — no exploitable gap for a normally-
+  progressing game. (5) postponed/rescheduled games self-correct because `commenceTime` is read live from the
+  DB on every sweep invocation, never cached. (6) VOID is genuinely terminal — every query in the module scopes
+  to `result:"PENDING"`, so a VOID row structurally can never be re-graded by a late-arriving score. (7)
+  `gamesHealed`/`picksSettled`/`picksVoided` counters sit outside the try/catch, so a mid-loop failure still
+  returns accurate partial counts, never a silent reset or double-count.
+- Follow-ups resolved directly (all three touched neither settlement correctness nor a public claim):
+  1. **Watchlist alert wording (red-team's unresolved #7)** — read `apps/web/lib/watchlist/alert-dispatch.ts`
+     in full. Moot: `dispatchWatchlistAlert` is gated behind `WATCHLIST_ALERTS_ENABLED` (default off), has zero
+     SMTP/push client wired anywhere in the repo, and unconditionally returns
+     `{sent:false, outcome:"no_channel_wired"}` for every eligible case today with a `TODO(founder)` marking
+     the real integration point. No message — VOID-worded or otherwise — is ever actually dispatched to
+     anyone. No fix needed.
+  2. **Calibration replay-provenance route auth (red-team's unresolved #14)** — read
+     `apps/web/app/api/calibration/replay-provenance/route.ts` and `lib/calibration/replayable-provenance.ts`
+     in full. The route is unauthenticated but calls `buildReplayableProvenanceFeed([], new Date(), {enabled})`
+     with a **hardcoded empty array literal** — no real settled-pick data has ever been wired into this
+     endpoint. It can only ever report `chain.valid` on zero events and `status: enabled ? "SHADOW_READY" :
+     "FLAGGED_OFF"`, both already-public flag-state facts, plus a static "draftOnly" note. Same
+     flagged-off-but-reachable doctrine as `OTS_ANCHOR_ENABLED`/`LINE_ARCHIVE_ENABLED` elsewhere in the
+     codebase: safe to leave publicly reachable while inert. Adding ADMIN gating would be unrelated scope
+     creep for this recovery item, not a fix to anything this PR touches. No live risk; no fix needed.
+  3. **`apps/web/lib/brief/compose.ts` display arithmetic (red-team's #12, confirmed real but low-severity)** —
+     `composeBrief`'s settlement summary computed `wins`/`losses`/`pushes` but not `voids`, so
+     `Settled ${settled.length}: ${wins}W-${losses}L-${pushes}P` silently didn't reconcile once `settled`
+     started containing VOID rows in volume (which this exact fix causes, for the first time, on the one
+     caller — the ADMIN-gated `/cockpit/brief` page). Fixed: added a `voids` count and a conditional `-${voids}V
+     (no action)` term so the leading total always reconciles with the breakdown; omitted entirely when zero
+     (matches the existing `pushes` idiom). Two new tests added to `apps/web/__tests__/brief-compose.test.ts`
+     (`M-F10`: 3-row fixture with 1 VOID asserts the exact reconciled string; a zero-VOID fixture asserts the
+     `V` term is omitted). Internal-only (admin-gated), never reached a customer or a public claim before or
+     after this fix — fixed anyway per "no silent scope-shrink," since it was directly caused by this exact
+     change and was small and contained.
+- Evidence: `cd packages/ingestion-pipeline && npx vitest run src/__tests__/settle-sport.test.ts` → 29/29
+  (18 pre-existing + 11 new `describe("catch-up sweep (M-F9)")` tests); `cd apps/web && npx vitest run
+  __tests__/brief-compose.test.ts` → 3/3 (1 pre-existing + 2 new); full workspace `npm run typecheck` → clean,
+  every workspace (`@sports/web`, `@sports/db`, `@sports/ingestion-pipeline`, `@sports/prediction-engine`, all
+  four workers, etc.); `npm run guardrails` → 17/17 green; full `apps/web` suite → 634 files / 8,595 tests, all
+  green (was 634/8,592 pre-fix — the +3 delta reconciles exactly to the 2 new `brief-compose.test.ts` tests plus
+  a net +1 from the ancillary `public-roi-policy.test.ts` patch, which strengthens `unitsForPick("VOID", ...)`
+  from a lone assertion folded into another test to its own dedicated 3-assertion test asserting `null` — not
+  `0` — for every VOID price combination, i.e. VOID is fully excluded from the graded ROI sample, not merely
+  zeroed); `git diff --check` clean; `secret-scan.mjs` (explicit paths, all 10 changed files) clean.
+- Ancillary files ported alongside the core fix (each independently confirmed by both my own read and the
+  red-team's triage as correctly treating VOID as "no action," never a graded outcome):
+  `apps/web/app/api/cron/settle-picks/route.ts` (surfaces `picksVoided` in the per-sport and aggregate JSON
+  response), `apps/web/lib/bot-outbox/plan.ts` + `records.ts` (blocks VOID from ever generating a public
+  settlement post — `blockedSettlementReason` returns `"voided-no-action"`; `planSettlementOutbox` throws if a
+  VOID somehow reaches render), `apps/web/lib/engine/load-engine-story.ts` (narrows a `result:{in:[...]}`
+  filter from `[WIN,LOSS,PUSH,VOID]` to `[WIN,LOSS,PUSH]` — VOID is "no action," not a settled record entry),
+  `apps/web/lib/performance/public-roi-policy.ts` + its test (VOID → `null`, excluded from the graded ROI
+  sample entirely, never a 0).
+- Alternatives rejected: blind `git apply` of the historical diff — rejected outright once the drift analysis
+  (above) proved it would either fail or reintroduce a fixed bug and a type error. Excluding VOID from the
+  `/cockpit/brief` query instead of fixing the display string — rejected because the admin morning brief
+  legitimately wants VOID visibility (an operator should see the sweep is voiding stale picks); the honest fix
+  is to count it correctly, not to hide it. Deferring the `brief/compose.ts` fix as a named follow-up instead
+  of fixing now — rejected because the change was small, contained to one file plus its test, low-risk, and
+  directly caused by this exact PR (deferring a self-caused, already-diagnosed, cheap fix would be scope-
+  shrink without a real reason).
+- Reversibility: revert commit if any regression surfaces. Never merged to `main` — founder-merge-only, tracked
+  by the existing accounting PR #129.
+- Protected zones: settlement, CLV, data integrity, public claims — mandatory red-team (completed, zero
+  findings across all 7 core points plus the 16-file ripple audit).
+- Files: `packages/ingestion-pipeline/src/settle-sport.ts` (rewritten),
+  `packages/ingestion-pipeline/src/__tests__/settle-sport.test.ts`,
+  `apps/web/app/api/cron/settle-picks/route.ts`, `apps/web/lib/bot-outbox/plan.ts`,
+  `apps/web/lib/bot-outbox/records.ts`, `apps/web/lib/engine/load-engine-story.ts`,
+  `apps/web/lib/performance/public-roi-policy.ts`, `apps/web/__tests__/public-roi-policy.test.ts`,
+  `apps/web/lib/brief/compose.ts` (this session's own follow-up fix),
+  `apps/web/__tests__/brief-compose.test.ts` (this session's own follow-up fix).
+- Supersedes: none. Closes R0.6 item 4 of 6. Item 5 (#84, orphaned CLV grades) must be sequenced after this one
+  — it also touches `settle-sport.ts`'s settlement path and should be contracted against the file state this
+  entry just established, not the historical PR's stale base. Item 6 (#89) remains blocked on #87's
+  `outage-gate.ts`, not yet itself recovered.
