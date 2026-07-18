@@ -22,6 +22,10 @@
  *   6. Catch-up sweep (M-F9): heal FINAL games whose recorded scores never
  *      reached their picks, then VOID picks whose game has no gradeable outcome
  *      after the stale horizon — no pick may stay PENDING forever.
+ *   7. CLV heal (M-F4): heal any already-settled pick whose CLV grade never
+ *      got written (a crash between the settle write and the CLV write) — no
+ *      settled pick's grade may be lost forever just because its game aged
+ *      out of the scores feed's lookback window.
  *
  * Errors are caught and returned as status:"failed" — never thrown — so one bad
  * sport cannot abort the remaining sports in the caller's loop.
@@ -83,6 +87,8 @@ export interface SettleSportResult {
   picksSettled: number;
   /** Picks terminally VOIDed by the stale sweep (no gradeable outcome). */
   picksVoided: number;
+  /** Already-settled picks whose orphaned CLV grade was healed (M-F4). */
+  clvGradesHealed: number;
   error?: string;
 }
 
@@ -113,6 +119,102 @@ interface SettleContext {
 }
 
 /**
+ * Fetch the closing-line snapshot for CLV grading — the last odds batch
+ * before kickoff, derived from the timestamped odds history. Guarded: a
+ * fetch failure must never block settlement or a CLV heal; callers treat a
+ * null return as "no close available" (CLV stays ungraded, never an error).
+ */
+async function fetchClosingSnapshot(
+  game: { readonly id: string; readonly commenceTime: Date },
+  logPrefix: string,
+): Promise<ReturnType<typeof deriveClosingSnapshotFromOdds> | null> {
+  try {
+    const closingOdds = await db.odds.findMany({
+      where: { gameId: game.id, fetchedAt: { lte: game.commenceTime } },
+      orderBy: { fetchedAt: "desc" },
+      // Must cover the ENTIRE closing batch (all rows sharing the max
+      // fetchedAt): rows are bookmaker x market, and wide coverage can
+      // exceed 80 rows in ONE batch (27+ books x 3 markets), which the old
+      // take:80 truncated arbitrarily mid-batch — a consensus close missing
+      // whichever books fell past the cap (M-F7). 240 covers 80 books x 3
+      // markets while keeping the read bounded; older batches beyond the
+      // cap are irrelevant (only the latest batch is the close).
+      take: 240,
+      select: {
+        market: true,
+        fetchedAt: true,
+        spread: true,
+        total: true,
+        homePrice: true,
+        awayPrice: true,
+      },
+    });
+    return deriveClosingSnapshotFromOdds(closingOdds, game.commenceTime);
+  } catch (clvErr) {
+    console.warn(
+      `${logPrefix} Closing-line fetch failed for game ${game.id}: ` +
+      `${clvErr instanceof Error ? clvErr.message : clvErr}`,
+    );
+    return null;
+  }
+}
+
+/**
+ * Grade Closing-Line Value against the immutable lock snapshot
+ * (clvLockLine/clvLockPrice, captured at publish) and write it.
+ *
+ * Grade-once (M-F4): the write is a conditional `updateMany` keyed on
+ * `clvGradedAt` still null, mirroring settle-once's PENDING-scoped write —
+ * so a concurrent grader (the live path, the FINAL heal arm, or a later
+ * orphan re-run all racing the same pick) can never overwrite an existing
+ * verdict with a grade against a second, different close.
+ *
+ * Additive and guarded — never throws. Returns true only when a grade was
+ * actually written (false for no close, no grade, or the losing side of a
+ * grade-once race).
+ */
+async function gradeAndRecordClv(
+  game: { readonly homeTeamName: string; readonly awayTeamName: string },
+  pick: SettleablePick,
+  closingSnapshot: ReturnType<typeof deriveClosingSnapshotFromOdds> | null,
+  gradedAt: Date,
+  logPrefix: string,
+): Promise<boolean> {
+  if (!closingSnapshot?.capturedAt) return false;
+  try {
+    const grade = gradePickClv({
+      pickType: pick.pickType as PickKind,
+      selection: pick.selection,
+      homeTeamName: game.homeTeamName,
+      awayTeamName: game.awayTeamName,
+      lockLine: pick.clvLockLine,
+      lockPrice: pick.clvLockPrice,
+      close: closingSnapshot,
+    });
+    if (!grade) return false;
+    const graded = await db.pick.updateMany({
+      where: { id: pick.id, clvGradedAt: null },
+      data: {
+        clvCloseLine: grade.closeLine,
+        clvClosePrice: grade.closePrice,
+        clvKind: grade.kind,
+        clvValue: grade.value,
+        clvVerdict: grade.verdict,
+        clvCapturedAt: closingSnapshot.capturedAt,
+        clvGradedAt: gradedAt,
+      },
+    });
+    return graded.count > 0;
+  } catch (clvErr) {
+    console.warn(
+      `${logPrefix} CLV grading failed for pick ${pick.id}: ` +
+      `${clvErr instanceof Error ? clvErr.message : clvErr}`,
+    );
+    return false;
+  }
+}
+
+/**
  * Settle every pending pick on ONE completed game from its final scores, grade
  * CLV, record signal snapshots, and write the TeamGameLog entries.
  *
@@ -139,35 +241,7 @@ async function settleCompletedGame(
   // Closing-line snapshot for CLV grading — the last odds batch before
   // kickoff, derived from the timestamped Odds history. Fetched once per
   // game and guarded: a CLV failure must never block settlement.
-  let closingSnapshot: ReturnType<typeof deriveClosingSnapshotFromOdds> | null = null;
-  try {
-    const closingOdds = await db.odds.findMany({
-      where: { gameId: game.id, fetchedAt: { lte: game.commenceTime } },
-      orderBy: { fetchedAt: "desc" },
-      // Must cover the ENTIRE closing batch (all rows sharing the max
-      // fetchedAt): rows are bookmaker x market, and wide coverage can
-      // exceed 80 rows in ONE batch (27+ books x 3 markets), which the old
-      // take:80 truncated arbitrarily mid-batch — a consensus close missing
-      // whichever books fell past the cap (M-F7). 240 covers 80 books x 3
-      // markets while keeping the read bounded; older batches beyond the
-      // cap are irrelevant (only the latest batch is the close).
-      take: 240,
-      select: {
-        market: true,
-        fetchedAt: true,
-        spread: true,
-        total: true,
-        homePrice: true,
-        awayPrice: true,
-      },
-    });
-    closingSnapshot = deriveClosingSnapshotFromOdds(closingOdds, game.commenceTime);
-  } catch (clvErr) {
-    console.warn(
-      `${logPrefix} Closing-line fetch failed for game ${game.id}: ` +
-      `${clvErr instanceof Error ? clvErr.message : clvErr}`,
-    );
-  }
+  const closingSnapshot = await fetchClosingSnapshot(game, logPrefix);
 
   for (const pick of game.picks) {
     // Grade against the LOCKED line (the number we published, receipted, and
@@ -201,40 +275,11 @@ async function settleCompletedGame(
 
     // Grade Closing-Line Value against the immutable lock snapshot
     // (clvLockLine/clvLockPrice, captured at publish). Additive and
-    // guarded — never blocks settlement. Returns null (and we skip) when
-    // there is no close or no lock to compare.
-    if (closingSnapshot?.capturedAt) {
-      try {
-        const grade = gradePickClv({
-          pickType: pick.pickType as PickKind,
-          selection: pick.selection,
-          homeTeamName: game.homeTeamName,
-          awayTeamName: game.awayTeamName,
-          lockLine: pick.clvLockLine,
-          lockPrice: pick.clvLockPrice,
-          close: closingSnapshot,
-        });
-        if (grade) {
-          await db.pick.update({
-            where: { id: pick.id },
-            data: {
-              clvCloseLine: grade.closeLine,
-              clvClosePrice: grade.closePrice,
-              clvKind: grade.kind,
-              clvValue: grade.value,
-              clvVerdict: grade.verdict,
-              clvCapturedAt: closingSnapshot.capturedAt,
-              clvGradedAt: settledAt,
-            },
-          });
-        }
-      } catch (clvErr) {
-        console.warn(
-          `${logPrefix} CLV grading failed for pick ${pick.id}: ` +
-          `${clvErr instanceof Error ? clvErr.message : clvErr}`,
-        );
-      }
-    }
+    // guarded — never blocks settlement. A missed grade here (no close, a
+    // transient failure, or a race lost to a concurrent grader) is not
+    // fatal: the CLV-heal sweep arm below re-attempts it on every future
+    // cycle until it succeeds (M-F4).
+    await gradeAndRecordClv(game, pick, closingSnapshot, settledAt, logPrefix);
 
     // Record settlement outcome in the PickSignalSnapshot — real result tied
     // to the signal conditions present at prediction time. eligibleForLearning
@@ -311,12 +356,113 @@ async function settleCompletedGame(
   return picksSettled;
 }
 
+/** The pick + parent-game fields an orphaned CLV heal actually consumes. */
+interface OrphanedClvPick extends SettleablePick {
+  readonly result: "WIN" | "LOSS" | "PUSH";
+  readonly settledAt: Date | null;
+  readonly game: {
+    readonly id: string;
+    readonly homeTeamName: string;
+    readonly awayTeamName: string;
+    readonly commenceTime: Date;
+    readonly dataQualityScore: number;
+  };
+}
+
 /**
- * Catch-up sweep (M-F9) — the feed-independent half of settlement.
+ * CLV heal (M-F4) — a settled pick whose CLV grade was orphaned.
+ *
+ * Settlement writes the result, then grades CLV, then records the signal
+ * snapshot. A crash (or a race loss where the *winner* then crashed) between
+ * the settle write and the CLV write leaves a pick with `result != PENDING`
+ * and `clvGradedAt: null`. No query anywhere in this module ever re-reads a
+ * non-PENDING pick, so that grade — the input to the public beat-close rate
+ * and the ESTABLISHED pricing-phase gate — would otherwise be lost forever
+ * the moment the pick's game ages out of the scores feed's lookback window.
+ *
+ * The recorded RESULT is immutable truth and is never re-derived here
+ * (re-running settlement against a possibly-different feed could contradict
+ * an already-published grade) — only the missing CLV grade, and defensively
+ * the settlement snapshot (via the same idempotent write used at first
+ * settlement, in case that write was orphaned too), are healed. Grouped by
+ * game so a shared closing-odds fetch is not repeated per pick. Feed-
+ * independent, DB-only, no age cutoff — symmetric with the HEAL arm above:
+ * an orphan is an anomaly whenever it exists.
+ *
+ * Returns the number of picks whose CLV grade was actually written this
+ * call (a close that still can't be derived is not a failure — it is
+ * retried on the next sweep, exactly like a normal settle with no close).
+ */
+async function healOrphanedClvGrades(ctx: SettleContext): Promise<number> {
+  const { sport, gates, logPrefix } = ctx;
+  let picksHealed = 0;
+
+  const orphans = (await db.pick.findMany({
+    where: {
+      result: { in: ["WIN", "LOSS", "PUSH"] },
+      clvGradedAt: null,
+      game: { sport: { key: sport.key } },
+    },
+    include: { game: true },
+  })) as unknown as readonly OrphanedClvPick[];
+
+  const byGame = new Map<string, OrphanedClvPick[]>();
+  for (const pick of orphans) {
+    const list = byGame.get(pick.gameId) ?? [];
+    list.push(pick);
+    byGame.set(pick.gameId, list);
+  }
+
+  for (const [gameId, picks] of byGame) {
+    // Every list here was built by at least one push above; never empty.
+    const [firstPick] = picks;
+    if (!firstPick) continue;
+    const game = firstPick.game;
+    const closingSnapshot = await fetchClosingSnapshot(game, logPrefix);
+    const healedAt = new Date();
+
+    for (const pick of picks) {
+      const graded = await gradeAndRecordClv(game, pick, closingSnapshot, healedAt, logPrefix);
+      if (graded) {
+        picksHealed++;
+        console.warn(
+          `${logPrefix} Healed orphaned CLV grade for pick ${pick.id} on game ${gameId} ` +
+          `(the settled result was never lost — only its CLV grade had gone missing).`,
+        );
+      }
+
+      // Defensive: the same crash that orphaned the CLV write could also have
+      // orphaned the PickSignalSnapshot outcome write. recordPickSettlementSnapshot
+      // writes only where settlementResult is still null, so re-invoking it for
+      // an already-recorded snapshot is a safe, idempotent no-op.
+      try {
+        await recordPickSettlementSnapshot({
+          db,
+          pick,
+          result: pick.result,
+          settledAt: pick.settledAt ?? healedAt,
+          // The query scopes to WIN/LOSS/PUSH only — always a decisive result.
+          isEligibleForLearning: gates.canLearnFromOutcomes && !pick.isBootstrap,
+          gameDataQualityScore: game.dataQualityScore,
+        });
+      } catch (snapErr) {
+        console.warn(
+          `${logPrefix} Snapshot heal failed for orphaned pick ${pick.id}: ` +
+          `${snapErr instanceof Error ? snapErr.message : snapErr}`,
+        );
+      }
+    }
+  }
+
+  return picksHealed;
+}
+
+/**
+ * Catch-up sweep (M-F9 + M-F4) — the feed-independent half of settlement.
  *
  * The scores feed only reaches back SCORES_DAYS_FROM days, so any game that
- * slips past that window can never settle from the loop above. Two honest
- * terminal paths, in order:
+ * slips past that window can never settle — or be CLV-healed — from the live
+ * loop above. Three honest paths, in order:
  *
  *   (a) HEAL: a FINAL game with both scores recorded but picks still PENDING
  *       (a crash between the score write and pick settlement, or a settle run
@@ -330,16 +476,26 @@ async function settleCompletedGame(
  *       VOIDed. Never learning-eligible, excluded from all records; the
  *       game's status is left untouched (we don't fabricate CANCELED).
  *
+ *   (c) CLV-HEAL: an already-settled pick whose CLV grade was orphaned by a
+ *       crash between the settle write and the CLV write gets its grade
+ *       (re-)attempted now. Settlement result is never re-derived.
+ *
  * Guarded: a sweep failure logs and returns partial counts — it must never
  * take down the feed settlement that already succeeded.
  */
 async function catchUpSweep(
   ctx: SettleContext,
-): Promise<{ gamesHealed: number; picksSettled: number; picksVoided: number }> {
+): Promise<{
+  gamesHealed: number;
+  picksSettled: number;
+  picksVoided: number;
+  clvGradesHealed: number;
+}> {
   const { sport, logPrefix } = ctx;
   let gamesHealed = 0;
   let picksSettled = 0;
   let picksVoided = 0;
+  let clvGradesHealed = 0;
 
   try {
     // (a) HEAL — recorded outcome that never reached the picks.
@@ -418,6 +574,9 @@ async function catchUpSweep(
         `outcome within ${VOID_STALE_HOURS}h.`,
       );
     }
+
+    // (c) CLV-HEAL — a settled pick whose CLV grade never got written.
+    clvGradesHealed = await healOrphanedClvGrades(ctx);
   } catch (sweepErr) {
     console.warn(
       `${logPrefix} Catch-up sweep failed for ${sport.key} (feed settlement unaffected): ` +
@@ -425,7 +584,7 @@ async function catchUpSweep(
     );
   }
 
-  return { gamesHealed, picksSettled, picksVoided };
+  return { gamesHealed, picksSettled, picksVoided, clvGradesHealed };
 }
 
 /**
@@ -451,6 +610,7 @@ export async function settleSport(
   let gamesSettled = 0;
   let picksSettled = 0;
   let picksVoided = 0;
+  let clvGradesHealed = 0;
   let feedError: string | null = null;
 
   // The feed pass and the catch-up sweep are INDEPENDENT halves. The feed pass
@@ -511,6 +671,7 @@ export async function settleSport(
   gamesSettled += sweep.gamesHealed;
   picksSettled += sweep.picksSettled;
   picksVoided += sweep.picksVoided;
+  clvGradesHealed += sweep.clvGradesHealed;
 
   // A feed failure still reports status:"failed" (the caller's error contract
   // is unchanged) — but with whatever the sweep accomplished counted honestly.
@@ -521,9 +682,17 @@ export async function settleSport(
       gamesSettled,
       picksSettled,
       picksVoided,
+      clvGradesHealed,
       error: feedError,
     };
   }
 
-  return { sport: sport.key, status: "success", gamesSettled, picksSettled, picksVoided };
+  return {
+    sport: sport.key,
+    status: "success",
+    gamesSettled,
+    picksSettled,
+    picksVoided,
+    clvGradesHealed,
+  };
 }

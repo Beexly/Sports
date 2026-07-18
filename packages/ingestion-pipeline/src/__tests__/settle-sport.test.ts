@@ -28,6 +28,7 @@ const mocks = vi.hoisted(() => ({
   oddsFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   pickUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  pickFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   openingLineFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   snapshotUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   snapshotFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -42,7 +43,7 @@ vi.mock("@sports/db", () => ({
       update: mocks.gameUpdate,
     },
     odds: { findMany: mocks.oddsFindMany },
-    pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany },
+    pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany, findMany: mocks.pickFindMany },
     openingLine: { findUnique: mocks.openingLineFindUnique },
     pickSignalSnapshot: {
       updateMany: mocks.snapshotUpdateMany,
@@ -132,8 +133,9 @@ describe("settleSport", () => {
     mocks.getScores.mockResolvedValue({ data: ["raw"] });
     mocks.normalizeScores.mockReturnValue([completedScore()]);
     mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()]));
-    // Catch-up sweep default: nothing to heal, nothing stale.
+    // Catch-up sweep default: nothing to heal, nothing stale, no CLV orphans.
     mocks.gameFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([]);
     mocks.gameUpdate.mockResolvedValue({});
     mocks.oddsFindMany.mockResolvedValue([]);
     mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
@@ -591,9 +593,13 @@ describe("settleSport", () => {
 
       await settleSport(SPORT, "key", gates());
 
-      expect(mocks.pickUpdate).toHaveBeenCalledWith(
+      // Grade-once (M-F4): the CLV write is a conditional updateMany keyed
+      // on clvGradedAt still null, so a concurrent grader (or a later
+      // orphan re-run) can never overwrite an existing verdict with a
+      // grade against a second close.
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { id: "pick-1" },
+          where: { id: "pick-1", clvGradedAt: null },
           data: expect.objectContaining({
             clvCloseLine: -4,
             clvVerdict: "BEAT_CLOSE",
@@ -602,6 +608,8 @@ describe("settleSport", () => {
           }),
         })
       );
+      // The old unconditional CLV write is never used again.
+      expect(mocks.pickUpdate).not.toHaveBeenCalled();
     });
 
     it("skips CLV writes when no close can be derived", async () => {
@@ -610,10 +618,159 @@ describe("settleSport", () => {
       await settleSport(SPORT, "key", gates());
 
       expect(mocks.gradePickClv).not.toHaveBeenCalled();
-      // Settlement goes through updateMany; pick.update is CLV-only, so with no
-      // close it is never called.
+      // Settlement goes through updateMany (once, the settle write); with no
+      // close there is no second (CLV) updateMany.
       expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
       expect(mocks.pickUpdate).not.toHaveBeenCalled();
+    });
+
+    it("M-F4: grade-once — a concurrent grader losing the CLV updateMany race is a harmless no-op", async () => {
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt: new Date() });
+      mocks.gradePickClv.mockReturnValue({
+        closeLine: -4,
+        closePrice: -112,
+        kind: "LINE",
+        value: 0.5,
+        verdict: "BEAT_CLOSE",
+      });
+      // Settle write succeeds (count 1), but the CLV write loses its race —
+      // some other grader already wrote a verdict, so clvGradedAt is no
+      // longer null and this updateMany matches zero rows.
+      mocks.pickUpdateMany
+        .mockResolvedValueOnce({ count: 1 }) // settle write
+        .mockResolvedValueOnce({ count: 0 }); // CLV write, race lost
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      // Settlement itself is unaffected — it already committed.
+      expect(result.picksSettled).toBe(1);
+      expect(mocks.pickUpdate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("CLV heal — orphaned grades (M-F4)", () => {
+    function orphanedPick(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+      return {
+        ...pendingPick(),
+        result: "WIN",
+        settledAt: new Date("2026-06-10T20:00:00.000Z"),
+        clvGradedAt: null,
+        game: dbGame([]),
+        ...overrides,
+      };
+    }
+
+    beforeEach(() => {
+      // Isolate the orphan-heal arm from the live feed's own default PENDING
+      // settle (which otherwise also touches "pick-1" and would confound
+      // calculatePickResult/picksSettled assertions below).
+      mocks.normalizeScores.mockReturnValue([]);
+    });
+
+    it("reads settled-but-ungraded picks, scoped to this sport, via a dedicated query", async () => {
+      await settleSport(SPORT, "key", gates());
+
+      expect(mocks.pickFindMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            result: { in: ["WIN", "LOSS", "PUSH"] },
+            clvGradedAt: null,
+            game: { sport: { key: SPORT.key } },
+          },
+        })
+      );
+    });
+
+    it("grades an orphan's CLV WITHOUT re-running settlement math", async () => {
+      const capturedAt = new Date("2026-06-10T20:55:00.000Z");
+      mocks.pickFindMany.mockResolvedValue([orphanedPick()]);
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt });
+      mocks.gradePickClv.mockReturnValue({
+        closeLine: -4,
+        closePrice: null,
+        kind: "LINE",
+        value: 0.5,
+        verdict: "BEAT_CLOSE",
+      });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      // The recorded result is immutable truth — never re-derived.
+      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+      // Only the grade-once CLV write happens for the orphan.
+      expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "pick-1", clvGradedAt: null },
+          data: expect.objectContaining({ clvVerdict: "BEAT_CLOSE" }),
+        })
+      );
+      // A healed orphan is not double-counted as a fresh settlement.
+      expect(result.picksSettled).toBe(0);
+      expect(result.clvGradesHealed).toBe(1);
+    });
+
+    it("re-records the settlement snapshot defensively for a healed orphan (idempotent no-op if already recorded)", async () => {
+      mocks.pickFindMany.mockResolvedValue([orphanedPick()]);
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt: new Date() });
+      mocks.gradePickClv.mockReturnValue({
+        closeLine: -4,
+        closePrice: null,
+        kind: "LINE",
+        value: 0.5,
+        verdict: "BEAT_CLOSE",
+      });
+
+      await settleSport(SPORT, "key", gates());
+
+      expect(mocks.snapshotUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { pickId: "pick-1", settlementResult: null },
+          data: expect.objectContaining({ settlementResult: "WIN" }),
+        })
+      );
+    });
+
+    it("groups orphans by game so the closing-odds fetch runs once per game, not once per pick", async () => {
+      mocks.pickFindMany.mockResolvedValue([
+        orphanedPick({ id: "pick-1" }),
+        orphanedPick({ id: "pick-2" }),
+      ]);
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
+      mocks.oddsFindMany.mockClear();
+
+      await settleSport(SPORT, "key", gates());
+
+      expect(mocks.oddsFindMany).toHaveBeenCalledTimes(1);
+    });
+
+    it("an orphan with no derivable close is retried, not given up on — no clvGradesHealed credit this cycle", async () => {
+      mocks.pickFindMany.mockResolvedValue([orphanedPick()]);
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(mocks.gradePickClv).not.toHaveBeenCalled();
+      expect(result.clvGradesHealed).toBe(0);
+      // The pick's own result is untouched — never re-derived or VOIDed.
+      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+    });
+
+    it("the CLV heal still runs when the scores feed fails — feed-independent, DB-only", async () => {
+      mocks.getScores.mockRejectedValue(new Error("quota exhausted"));
+      mocks.pickFindMany.mockResolvedValue([orphanedPick()]);
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt: new Date() });
+      mocks.gradePickClv.mockReturnValue({
+        closeLine: -4,
+        closePrice: null,
+        kind: "LINE",
+        value: 0.5,
+        verdict: "BEAT_CLOSE",
+      });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("failed");
+      expect(result.clvGradesHealed).toBe(1);
     });
   });
 });

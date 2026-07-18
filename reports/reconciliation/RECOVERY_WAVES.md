@@ -98,10 +98,25 @@ higher-numbered waves in this same sequence.
    window) or a cancelled/postponed game left its picks PENDING forever with zero path to a terminal state,
    silently understating the public "settled" population. Protected zones: settlement, data integrity, public
    claims — mandatory red-team (completed).
-5. **#84 — orphaned CLV grades.** A crash between settle-write and CLV-write permanently drops that pick from
-   the public beat-close-rate sample, with no healing sweep. Must sequence after item 4 above — also touches
-   `settle-sport.ts`'s settlement path; contract against the file state DEC-038 established, not the historical
-   PR's stale base. Protected zones: CLV, public claims.
+5. **DONE (2026-07-18, DEC-039) — #84 — orphaned CLV grades.** `settle-sport.ts`'s CLV write changed from
+   unconditional `db.pick.update` to conditional `updateMany` scoped to `clvGradedAt:null` ("grade-once,"
+   mirroring the existing settle-once pattern), via two extracted helpers (`fetchClosingSnapshot`,
+   `gradeAndRecordClv`). New `healOrphanedClvGrades()` wired in as a third feed-independent arm inside
+   DEC-038's `catchUpSweep()` — finds picks with a decisive result but `clvGradedAt:null`, groups by game,
+   grades CLV WITHOUT ever re-deriving the settlement result, and defensively re-invokes the already-idempotent
+   settlement-snapshot write. Re-derived against the CURRENT architecture rather than blind-ported: the
+   historical PR threaded orphan detection into the live feed's own per-game query, which can never reach an
+   orphan whose game aged out of the 3-day scores lookback — the exact blind-spot class DEC-038 already
+   eliminated for stuck-PENDING picks. No consumer-side ripple audit required (unlike #86) since this
+   introduces no new/newly-reachable result state, only fills in previously-null CLV fields on picks already
+   WIN/LOSS/PUSH — confirmed `clv-coverage.ts`/`public-clv-policy.ts` already treat `clvVerdict:{not:null}` as
+   eligibility. gse-red-team CONFIRMED clean on all 9 code-correctness review points, zero findings (resumed
+   once via the agent-stall protocol). `settle-sport.test.ts` 36/36, full `ingestion-pipeline` suite 145/145,
+   guardrails 17/17, workspace typecheck clean. Committed and pushed to `claude/galaxy-sports-edge-pdcswh`,
+   tracked by the existing accounting PR #129. Was: a crash between the settlement-result write and the CLV
+   write left a pick permanently ungraded once its game aged out of the scores feed's lookback — silently
+   shrinking the public beat-close-rate sample one crash at a time. Protected zones: settlement, CLV, public
+   claims — mandatory red-team (completed).
 6. **#89 — outage on `/api/promotions` masked as an honest empty response.** Depends on #87's `outage-gate.ts`
    (also RECOVER_WHOLE, not itself in the live-defect-6 but a direct dependency, not yet recovered). Protected
    zones: data reliability, public claims.
@@ -109,8 +124,8 @@ higher-numbered waves in this same sequence.
 **Method for each:** FREEZE CONTRACT (re-derive the exact fix against CURRENT main, not the stale PR diff —
 main has advanced since these PRs were authored) → CODE (port the fix, re-verified against today's file
 state) → TARGETED TEST → mandatory red-team (all six touch a protected zone) → FINAL VERIFY → ledgers → commit
-→ push → bounded recovery PR (never merged to main by this agent). Items 1-4 DONE (DEC-035/036/037/038); items
-5-6 remain, each its own "one bounded recovery wave," per the contract's own law, not a single mega-wave.
+→ push → bounded recovery PR (never merged to main by this agent). Items 1-5 DONE
+(DEC-035/036/037/038/039); item 6 remains, blocked behind #87 which needs its own recovery first.
 
 ## Wave R1 — Security hardening (#123)
 

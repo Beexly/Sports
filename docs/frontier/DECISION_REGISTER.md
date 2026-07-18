@@ -1690,3 +1690,98 @@ stitching) — recorded here so no backtest can slip past it.
   — it also touches `settle-sport.ts`'s settlement path and should be contracted against the file state this
   entry just established, not the historical PR's stale base. Item 6 (#89) remains blocked on #87's
   `outage-gate.ts`, not yet itself recovered.
+
+## DEC-039 — Recovery Wave R0.6.5: orphaned CLV grades heal (M-F4) (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Recovery Wave R0.6, item 5 of 6. Ports historical PR #84's "grade-once + orphan CLV heal" fix
+  onto CURRENT `settle-sport.ts` (as DEC-038 just left it, commit `d160cf92`) — sequenced after item 4 per
+  DEC-038's own note, since both touch the same settlement path. Was: settlement writes the pick result, then
+  grades CLV, then records a snapshot, in that order; a crash (or a race loss where the *winner* then
+  crashed) between the result write and the CLV write leaves a pick with `result` in `WIN`/`LOSS`/`PUSH` but
+  `clvGradedAt: null` forever — no query anywhere in the module ever re-reads a non-`PENDING` pick, so that
+  grade (the input to the public beat-close rate and the ESTABLISHED pricing-phase gate) is silently and
+  permanently lost the moment the pick's game ages out of the 3-day scores-feed lookback window.
+- Contract frozen before coding: historical PR #84 (branch `claude/hotfix-clv-regrade-orphans`, base `main`
+  `821d0ca3`) threaded orphan-detection into the LIVE FEED loop's own `db.game.findUnique` query (an `OR`
+  between `result:"PENDING"` and `result IN (WIN,LOSS,PUSH) AND clvGradedAt IS NULL`), and its CLV write was
+  still the pre-#92 unconditional `db.pick.update`, not the atomic `updateMany` DEC-035 later established for
+  the settle write. Direct diff against CURRENT main/`pdcswh` confirmed both premises are stale: (1) the live
+  feed's per-game query only ever sees games The Odds API CURRENTLY reports — an orphan whose game aged out of
+  the 3-day lookback (exactly the population most likely to need healing, since it's had the longest to crash)
+  could NEVER be reached by the historical design; (2) DEC-038 already introduced a feed-independent
+  `catchUpSweep()` with HEAL/VOID arms for the symmetric stuck-PENDING problem. Decision: did not blind-port
+  the historical diff. Re-derived the fix's INTENT (heal orphaned CLV grades, never re-run settlement math)
+  against the CURRENT architecture: added a third feed-independent arm "(c) CLV-HEAL" inside `catchUpSweep()`,
+  removing the exact same blind spot #86/DEC-038 already removed for stuck-PENDING picks, rather than
+  reintroducing a narrower, feed-coupled version of the same class of bug this session already fixed once.
+- Code: extracted `fetchClosingSnapshot(game, logPrefix)` and `gradeAndRecordClv(game, pick, closingSnapshot,
+  gradedAt, logPrefix)` from `settleCompletedGame`'s previously-inline CLV block (pure refactor for the fetch;
+  the write itself changed from unconditional `db.pick.update({where:{id}, ...})` to conditional
+  `db.pick.updateMany({where:{id, clvGradedAt:null}, ...})`, returning whether a row was actually written —
+  "grade-once," mirroring the existing "settle-once" `updateMany` pattern, so a concurrent grader — the live
+  path, the FINAL-heal arm, or a later orphan re-run all racing the same pick — can never overwrite an
+  existing verdict with a grade against a second, different close). New `healOrphanedClvGrades(ctx)`: queries
+  `db.pick.findMany({where:{result:{in:["WIN","LOSS","PUSH"]}, clvGradedAt:null, game:{sport:{key}}},
+  include:{game:true}})`, groups by `gameId` (one closing-odds fetch per game, not per pick), and for each
+  orphan calls `gradeAndRecordClv` — `calculatePickResult` is never called, the recorded `result` is never
+  re-derived — plus defensively re-invokes the already-idempotent `recordPickSettlementSnapshot` in case that
+  write was orphaned by the same crash. Wired in as arm (c), sequential after (a) HEAL and (b) VOID inside the
+  existing try block, so a mid-arm throw still preserves whatever (a)/(b) already accumulated (same pattern
+  DEC-038 established). `SettleSportResult`/`catchUpSweep`'s return type gained `clvGradesHealed: number`,
+  threaded through both of `settleSport()`'s return paths and `/api/cron/settle-picks`'s per-sport + aggregate
+  JSON response.
+- No consumer-side ripple audit required, unlike DEC-038's #86: this fix introduces no new/newly-reachable
+  enum state — it only fills in previously-null `clvGradedAt`/`clvVerdict`/etc. on picks that were already
+  `WIN`/`LOSS`/`PUSH`. Spot-checked (myself and independently by the red-team) that `apps/web/lib/performance/
+  clv-coverage.ts` and `public-clv-policy.ts` both already treat `clvVerdict: {not: null}` as the eligibility
+  signal — they will honestly see a larger, previously-lost sample after this fix, never a differently-defined
+  one. `apps/web/lib/tracker/clv.ts` is an unrelated client-side personal bet-ledger (operates on user-entered
+  objects, not DB picks) — not a consumer.
+- Independent review: one `gse-red-team` pass, which stalled mid-investigation without a final synthesis after
+  its 9th of 11 review points (a variant of this session's established agent-stall protocol — resumed via a
+  direct `SendMessage` on the known `agentId` with an explicit "stop investigating, write the synthesis now,
+  text only" directive). **Zero CONFIRMED findings across all 9 code-correctness review points**: (1)
+  grade-once write confirmed via direct grep — zero remaining `db.pick.update(` singular calls in the file.
+  (2) confirmed `calculatePickResult` has exactly one call site (inside `settleCompletedGame`, never inside
+  `healOrphanedClvGrades`). (3) per-game grouping confirmed correct, and the dedicated test proven non-vacuous
+  (would fail if the fetch moved inside the per-pick loop). (4) concurrent double-heal confirmed safe — the
+  `updateMany`'s `clvGradedAt:null` scope means only one racer's write can ever match, and `clvGradesHealed`
+  only increments on an actual write. (5) the defensive snapshot re-invocation confirmed a TRUE no-op for an
+  already-recorded snapshot by direct read of `writeSettlementSnapshotOnce`'s early-return logic, never an
+  overwrite. (6) the no-give-up-ever retry design for a permanently ungradeable orphan confirmed as an
+  accepted, explicitly-commented, bounded-cost tradeoff (cheap scoped query, low volume), not a resource bug.
+  (7) same-cycle interaction between arm (a) HEAL and arm (c) CLV-HEAL confirmed harmless either way (grade-
+  once protects the write regardless of whether a pick settled by (a) is also matched by (c) later in the same
+  sweep). (8) failure isolation confirmed — `clvGradesHealed` and its siblings are `let`-declared outside the
+  try block, so a mid-arm-c throw preserves (a)/(b)'s already-accumulated counts (same verified pattern as
+  DEC-038). (9) ripple check independently corroborated the same conclusion this session already reached (see
+  above), also confirming `tracker/clv.ts` is unrelated. Points 10-11 (test execution, typecheck) were
+  explicitly not re-run by the agent per the stop directive — already independently satisfied by my own
+  direct execution both before dispatch and again after the review returned (see Evidence).
+- Evidence: `cd packages/ingestion-pipeline && npx vitest run src/__tests__/settle-sport.test.ts` → 36/36 (29
+  pre-existing + 7 new: one grade-once-race regression test in the existing "CLV grading" block, six in a new
+  "CLV heal — orphaned grades (M-F4)" block — reads the dedicated query, grades without re-deriving settlement,
+  re-records the snapshot defensively, groups by game, retries (never gives up) on an undrivable close, and
+  runs even when the live feed fails); `cd packages/ingestion-pipeline && npx vitest run` (full package) →
+  145/145 across 12 files; full workspace `npm run typecheck` → clean, every workspace, re-run twice (once
+  before red-team dispatch, once after it returned — no interleaved edits, both clean); `npm run guardrails` →
+  17/17 green; `git diff --check` clean; `secret-scan.mjs --all` clean (part of guardrails).
+- Alternatives rejected: blind-porting the historical diff's feed-coupled orphan detection — rejected once the
+  drift analysis (above) proved it would reintroduce the exact blind-spot class DEC-038 already eliminated for
+  stuck-PENDING picks, for old orphans specifically (the population most in need of healing). Keeping the
+  historical PR's unconditional `db.pick.update` CLV write — rejected as a known race (the PR's own body names
+  this as part of M-F4's fix, "grade-once now mirrors settle-once"); ported the stronger, already-established
+  `updateMany`-scoped pattern instead of the historical file's own version of it.
+- Reversibility: strictly additive (new arm, conditional write replacing an unconditional one — the condition
+  can only ever REJECT a write the old code would have accepted, never accept one it would have rejected).
+  Revert commit if any regression surfaces. Never merged to `main` — founder-merge-only, tracked by the
+  existing accounting PR #129.
+- Protected zones: settlement, CLV, public claims (beat-close rate, ESTABLISHED pricing-phase gate eligibility)
+  — mandatory red-team (completed, zero findings).
+- Files: `packages/ingestion-pipeline/src/settle-sport.ts`,
+  `packages/ingestion-pipeline/src/__tests__/settle-sport.test.ts`,
+  `apps/web/app/api/cron/settle-picks/route.ts`.
+- Supersedes: none. Closes R0.6 item 5 of 6. Item 6 (#89, `/api/promotions` outage masked as an empty
+  response) remains blocked on #87's `outage-gate.ts`, which is not yet itself recovered — that dependency
+  must be resolved first, or #89 re-scoped as its own freeze contract that includes recovering #87.
