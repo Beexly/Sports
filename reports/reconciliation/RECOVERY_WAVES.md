@@ -117,15 +117,29 @@ higher-numbered waves in this same sequence.
    write left a pick permanently ungraded once its game aged out of the scores feed's lookback — silently
    shrinking the public beat-close-rate sample one crash at a time. Protected zones: settlement, CLV, public
    claims — mandatory red-team (completed).
-6. **#89 — outage on `/api/promotions` masked as an honest empty response.** Depends on #87's `outage-gate.ts`
-   (also RECOVER_WHOLE, not itself in the live-defect-6 but a direct dependency, not yet recovered). Protected
-   zones: data reliability, public claims.
+6. **IN PROGRESS — #89 — outage on `/api/promotions` masked as an honest empty response.** Depended on #87's
+   `outage-gate.ts`. **Prerequisite #87 DONE (2026-07-18, DEC-040)**: new `outage-gate.ts` gives a DB-read
+   failure on `/api/picks`/`/api/clv` its own distinct `reason:"backend_outage"` 503 body instead of reusing
+   the deliberate-bootstrap-gate body; `prod-probe.mjs` fails it by name; `docs/launch-runbook.md` documents
+   all three dark-state discriminators. 6 of 7 non-test files were byte-identical to current main and applied
+   via clean `git apply`; `apps/web/app/picks/page.tsx` had drifted 266 lines (an independently-shipped
+   paywall feature) and was manually reconciled — a new amber `kind==="outage"` branch woven into the
+   existing gated/stale ternary, distinct from and mutually exclusive with the page's own pre-existing
+   fetchError-based outage block. Ripple check found 4 other `bootstrapGateResponse` consumers all correctly
+   scoped to deliberate gating only (no other live instance of this defect; they do lack any outage-vs-gate
+   distinction of their own, a narrower gap explicitly out of scope for both #87 and #89). gse-red-team
+   CONFIRMED clean across all 9 review points plus its own 8-point protected-zone checklist, zero findings —
+   including a reproduced non-vacuousness spot check. `apps/web` suite 635/8,604, guardrails 17/17, typecheck
+   clean. Committed and pushed to `claude/galaxy-sports-edge-pdcswh`, tracked by PR #129. **#89 itself
+   (5 more surfaces: `/api/calibration`, `/api/picks/daily-slate`, `/api/promotions`, game-room loader,
+   proof-of-record loader) is next** — its own freeze contract, code, tests, and red-team pass, now unblocked.
+   Protected zones: data reliability, public claims.
 
 **Method for each:** FREEZE CONTRACT (re-derive the exact fix against CURRENT main, not the stale PR diff —
 main has advanced since these PRs were authored) → CODE (port the fix, re-verified against today's file
 state) → TARGETED TEST → mandatory red-team (all six touch a protected zone) → FINAL VERIFY → ledgers → commit
 → push → bounded recovery PR (never merged to main by this agent). Items 1-5 DONE
-(DEC-035/036/037/038/039); item 6 remains, blocked behind #87 which needs its own recovery first.
+(DEC-035/036/037/038/039); item 6's prerequisite #87 DONE (DEC-040); #89 itself remains, next.
 
 ## Wave R1 — Security hardening (#123)
 

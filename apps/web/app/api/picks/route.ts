@@ -11,6 +11,7 @@ import {
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
 } from "@/lib/data-reliability/public-freshness-gate";
+import { outageGateResponse } from "@/lib/data-reliability/outage-gate";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 
@@ -74,12 +75,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       : {}),
   };
 
-  // Fail OPEN on a DB error — a transient blip on the primary query must not
-  // black out a fresh surface. The sibling count below already falls back, and
-  // the stale-check fails open too; an unwrapped throw here would 500 the public
-  // endpoint instead of honestly returning the bootstrap/collecting state. So on
-  // a primary-query failure, collapse to the same dark/"collecting" 503 the
-  // bootstrap gate returns rather than leaking a stack trace.
+  // Fail SOFT on a DB error — an unwrapped throw here would 500 the public
+  // endpoint with a stack trace. But fail soft HONESTLY (T-picks-outage, states
+  // doctrine): a primary-query failure is an OUTAGE and must return the distinct
+  // outage body, never the bootstrap/"collecting" body — an outage dressed as
+  // deliberate gating pages nobody and sends the operator to the env flags
+  // instead of the database. The sibling count below still falls back to a safe
+  // value, and the stale-check fails open; only the primary read is load-bearing.
   const picks = await db.pick
     .findMany({
       where: {
@@ -115,7 +117,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     })
     .catch(() => null);
   if (picks === null) {
-    return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
+    return NextResponse.json(outageGateResponse("Public picks"), { status: 503 });
   }
 
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when

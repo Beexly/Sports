@@ -39,7 +39,11 @@ function between(src: string, startMarker: string, endMarker: string): string {
 }
 
 // The three dark-board states, sliced to their own boundaries.
-const outageBlock = between(pageSrc, 'data-testid="picks-outage-state"', "{/* Empty state */}");
+const outageBlock = between(
+  pageSrc,
+  'data-testid="picks-outage-state"',
+  "{/* Empty state — the three designed dark states"
+);
 // Anchor the gate slice to its branch CONDITION (not the headline text, which is
 // also name-dropped in the outage block's explanatory comment above it).
 const gateBlock = between(

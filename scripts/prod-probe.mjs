@@ -347,10 +347,41 @@ function validateIngestionFreshness(json) {
   return "";
 }
 
-function validatePublicPicksGate(status, json) {
-  if (status === 503 && json?.bootstrapMode === true && typeof json.error === "string") {
-    return "";
+/**
+ * The public dark-state 503s are THREE distinguishable states (states
+ * doctrine, T-picks-outage), and the probe must classify each so the right
+ * runbook fires:
+ *   - bootstrapMode:true          → deliberate env gating       → PASS (expected)
+ *   - reason:"stale_data"         → freshness kill switch held  → PASS, but ONLY
+ *                                   on surfaces that actually emit it (allowStale;
+ *                                   today that is /api/picks alone — a stale_data
+ *                                   body on any other surface is a misrouted or
+ *                                   copy-pasted response and must FAIL, not be
+ *                                   green-lit). Freshness itself is independently
+ *                                   probed via validateIngestionFreshness.
+ *   - reason:"backend_outage"     → the DB read itself FAILED   → FAIL, by name —
+ *                                   this is the page-someone state, and it must
+ *                                   never be reported as a generic shape mismatch
+ *                                   (that hides the diagnosis the body carries).
+ */
+function classifyDarkState(status, json, { allowStale = false } = {}) {
+  if (status !== 503) return null;
+  if (json?.reason === "backend_outage") {
+    return "OUTAGE: backend read failed (reason=backend_outage) — check /api/health database check and the DB provider, not the env flags.";
   }
+  if (json?.bootstrapMode === true && typeof json.error === "string") return "";
+  if (json?.reason === "stale_data" && typeof json.error === "string") {
+    return allowStale
+      ? ""
+      : "Misrouted stale_data 503: this surface does not emit the stale-data gate.";
+  }
+  return null;
+}
+
+function validatePublicPicksGate(status, json) {
+  // /api/picks is the ONLY emitter of the stale-data kill switch today.
+  const darkState = classifyDarkState(status, json, { allowStale: true });
+  if (darkState !== null) return darkState;
   if (status === 200 && json?.success === true && Array.isArray(json.data)) {
     if (!json.meta || typeof json.meta.total !== "number") {
       return "Missing meta.total number on public picks payload.";
@@ -361,9 +392,8 @@ function validatePublicPicksGate(status, json) {
 }
 
 function validatePerformanceGate(status, json) {
-  if (status === 503 && json?.bootstrapMode === true && typeof json.error === "string") {
-    return "";
-  }
+  const darkState = classifyDarkState(status, json);
+  if (darkState !== null) return darkState;
   if (status === 200 && json?.success === true && json.data?.overall) {
     return "";
   }

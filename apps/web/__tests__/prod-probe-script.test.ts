@@ -84,6 +84,37 @@ describe("scripts/prod-probe.mjs", () => {
     expect(src).toMatch(/trust gate probes failed/);
   });
 
+  it("classifies all THREE dark-state 503 bodies — outage FAILS BY NAME, never as a generic shape mismatch (states doctrine)", () => {
+    // The shared classifier both gate validators route through.
+    expect(src).toMatch(/classifyDarkState/);
+    // Deliberate states pass: bootstrap gate and the stale-data kill switch.
+    expect(src).toMatch(/bootstrapMode === true/);
+    expect(src).toMatch(/reason === "stale_data"/);
+    // The outage state fails WITH its diagnosis (right runbook), not the
+    // generic "Unexpected ... response" fallthrough.
+    expect(src).toMatch(/reason === "backend_outage"/);
+    expect(src).toMatch(/OUTAGE: backend read failed/);
+    // Both gate validators consult the classifier.
+    expect(src).toMatch(/validatePublicPicksGate[\s\S]*?classifyDarkState[\s\S]*?validatePerformanceGate[\s\S]*?classifyDarkState/);
+  });
+
+  it("accepts a stale_data 503 ONLY on the picks probe — the sole surface that emits it (Codex on PR #87)", () => {
+    // /api/picks is today's only staleDataGateResponse emitter. A stale_data
+    // body on any other surface (e.g. the performance gate) is a misrouted or
+    // copy-pasted response and must FAIL the probe, not be green-lit as a
+    // deliberate dark state.
+    expect(src).toMatch(/allowStale = false/);
+    expect(src).toMatch(/Misrouted stale_data 503/);
+    // The picks validator opts in; the performance validator's FUNCTION BODY
+    // does not (extracted precisely — a spanning [\s\S] match would leak into
+    // the neighboring validator and pin nothing).
+    const picksBody = src.match(/function validatePublicPicksGate\([\s\S]*?\n\}/)?.[0] ?? "";
+    const perfBody = src.match(/function validatePerformanceGate\([\s\S]*?\n\}/)?.[0] ?? "";
+    expect(picksBody).toContain("classifyDarkState(status, json, { allowStale: true })");
+    expect(perfBody).toContain("classifyDarkState(status, json)");
+    expect(perfBody).not.toContain("allowStale: true");
+  });
+
   it("exits non-zero when /api/health is unhealthy", () => {
     expect(src).toMatch(/process\.exit\(1\)/);
   });

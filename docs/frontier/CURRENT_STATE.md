@@ -1,7 +1,7 @@
 # GSE Frontier Current State
 
 **Status:** ACTIVE
-**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-039)
+**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-040)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
 **Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE + §2 smoke CLOSED (DEC-014/023); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016); W005 Intelligence Watch v0 DONE (DEC-021); W007 Branching Reality v0 DONE (DEC-024); W009 Hypothesis-to-Instrument v0 DONE (DEC-025). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Phase 3 (W005) DONE. Full-session audit pass DONE (DEC-022). W-WEATHER §2 smoke gate DONE (DEC-023). W007 DONE (DEC-024) — SportsIR's 6th and final DECLARED primitive (Branch) is now ADAPTED, so ALL 12 SportsIR primitives have real evidence. W009 DONE (DEC-025) — verified both listed dependencies real (harness + W004) before building; wraps the backtest harness's own already-audited climatology signal into a versioned instrument, adds a second `SportsIrClaim` source. W006 re-checked and confirmed still genuinely BLOCKED (GG-001/genesis-kernel hasn't landed). W010 dependency re-verified genuinely absent (DEC-026) — stays BLOCKED, no telemetry baseline exists to build on. Remaining work: Task #8/#13's larger mandates (Task #13 now has a concrete scoped next slice identified — see Verified facts; Task #8 scoping in progress) and W008 (still BLOCKED on W006).
@@ -92,6 +92,29 @@
   suite 145/145; full workspace typecheck clean (re-run twice, no interleaved edits); guardrails 17/17; `git
   diff --check` clean. Closes R0.6 item 5 of 6. Item 6 (#89) remains blocked on #87 (`outage-gate.ts`, not yet
   recovered).
+- DEC-040 (Recovery Wave R0.6, prerequisite for item 6: #87 outage-state discriminator, T-picks-outage) DONE:
+  `/api/picks` and `/api/clv` no longer dress a DB-read outage as deliberate bootstrap gating. New
+  `apps/web/lib/data-reliability/outage-gate.ts` exports `outageGateResponse()` — a THIRD, mutually distinct
+  503 body (`reason:"backend_outage"`) alongside `bootstrapGateResponse` (`bootstrapMode:true`) and
+  `staleDataGateResponse` (`reason:"stale_data"`); both routes' DB-catch fallback now returns it instead of
+  the bootstrap body, while their deliberate readiness-gate checks are untouched. `scripts/prod-probe.mjs`
+  gained a shared `classifyDarkState()` that fails `backend_outage` by name and correctly rejects a misrouted
+  `stale_data` body on any surface but `/api/picks`. 6 of 7 non-test target files were byte-identical between
+  the historical merge-base and current main (applied via verified-clean `git apply`); `apps/web/app/picks
+  /page.tsx` had drifted 266 lines (an independently-shipped free-tier paywall/teaser feature) and was
+  manually reconciled — a new `kind==="outage"` amber branch woven into the existing gated/stale ternary,
+  distinct from (and mutually exclusive with) the page's own pre-existing fetchError-based outage block.
+  Ripple check (self + red-team, independently converging): 4 other `bootstrapGateResponse` consumers
+  (`/api/blog`, `/api/performance`, `/api/picks/[id]/audit`, `/api/picks/[id]/explain`) all use it only for
+  deliberate gating, never a DB-catch fallback — no other live instance of this defect, though these 4 do
+  still lack ANY dedicated outage-vs-gate distinction for their own reads (a narrower, explicitly out-of-scope
+  gap for both #87 and #89, recorded not fixed). gse-red-team (resumed twice via the stall protocol — once
+  before its highest-risk check, once after announcing but not yet writing its synthesis) **CONFIRMED CLEAN
+  across all 9 review points plus its own 8-point protected-zone checklist, zero findings** — including a
+  reproduced non-vacuousness spot check (reverted the fix, watched a real test fail, restored it). `apps/web`
+  suite 635/8,604 (was 634/8,595); `tsc --noEmit` clean (apps/web + full workspace); guardrails 17/17; `git
+  diff --check` clean aside from pre-existing CRLF line endings in `picks/route.ts` (confirmed already present
+  on `HEAD` before this patch, not introduced by it). Unblocks R0.6 item 6 (#89) as the next bounded step.
 
 ## Owner gates
 

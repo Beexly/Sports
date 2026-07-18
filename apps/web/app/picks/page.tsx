@@ -41,8 +41,11 @@ interface PicksResponse {
   bootstrap?: {
     message: string;
     hint?: string;
-    /** Which gate darkened the board: history-gated launch vs stale-data pause. */
-    kind: "gated" | "stale";
+    /**
+     * Which state darkened the board: history-gated launch, stale-data pause,
+     * or a backend outage (reason:"backend_outage" — the read itself failed).
+     */
+    kind: "gated" | "stale" | "outage";
   };
 }
 
@@ -91,11 +94,19 @@ async function fetchPicks(
       hint?: string;
     } | null;
 
-    // Both graceful dark states share the shape: the bootstrap/history gate
-    // (bootstrapMode) and the stale-data kill switch (reason: "stale_data",
-    // distinct body since the 2026-07-10 incident). Render both as a calm
-    // board state, never an error page.
-    if (body?.bootstrapMode || body?.reason === "stale_data") {
+    // All THREE designed dark states share the shape (states doctrine): the
+    // bootstrap/history gate (bootstrapMode:true), the stale-data kill switch
+    // (reason:"stale_data", distinct body since the 2026-07-10 incident), and
+    // a backend outage (reason:"backend_outage" — the API's own DB read
+    // failed). Each renders as a DESIGNED board state with its own copy —
+    // never an error page. Before the outage branch existed, a
+    // backend_outage body fell through to the throw below and customers saw
+    // the literal string "Failed to fetch picks: 503" (T-picks-outage).
+    if (
+      body?.bootstrapMode ||
+      body?.reason === "stale_data" ||
+      body?.reason === "backend_outage"
+    ) {
       return {
         success: false,
         data: [],
@@ -107,7 +118,12 @@ async function fetchPicks(
         bootstrap: {
           message: body.error ?? "Today's Board is collecting live history.",
           hint: body.hint,
-          kind: body?.reason === "stale_data" ? "stale" : "gated",
+          kind:
+            body?.reason === "stale_data"
+              ? "stale"
+              : body?.reason === "backend_outage"
+                ? "outage"
+                : "gated",
         },
       };
     }
@@ -375,12 +391,34 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </div>
           )}
 
-          {/* Empty state */}
+          {/* Empty state — the three designed dark states (gated / stale /
+              outage). The outage variant is amber and says so plainly (states
+              doctrine, T-picks-outage): an outage rendered as a calm
+              "collecting" board would be dressing a failure as intent. This
+              is a DIFFERENT state than the "Backend-outage state" block above
+              — that one fires when the fetch itself throws (a network fault);
+              this one fires when /api/picks responds with a 503 body carrying
+              reason:"backend_outage" (the DB read behind the API failed but
+              the API itself answered). */}
           {!fetchError && bootstrapState && picks.length === 0 && (
-            <div className="rounded-xl border border-cyan-400/25 bg-cyan-950/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10">
+            <div
+              className={
+                bootstrapState.kind === "outage"
+                  ? "rounded-xl border border-amber-400/25 bg-amber-950/10 p-8 text-center shadow-[0_0_28px_rgba(251,191,36,0.10)]"
+                  : "rounded-xl border border-cyan-400/25 bg-cyan-950/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]"
+              }
+            >
+              <div
+                className={
+                  bootstrapState.kind === "outage"
+                    ? "mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-amber-400/30 bg-amber-400/10"
+                    : "mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10"
+                }
+              >
                 <svg
-                  className="h-7 w-7 text-cyan-200"
+                  className={
+                    bootstrapState.kind === "outage" ? "h-7 w-7 text-amber-200" : "h-7 w-7 text-cyan-200"
+                  }
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
@@ -394,24 +432,38 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   />
                 </svg>
               </div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
-                {bootstrapState.kind === "stale"
-                  ? "Freshness guard active"
-                  : "Signal gate collecting"}
+              <p
+                className={
+                  bootstrapState.kind === "outage"
+                    ? "text-[11px] font-bold uppercase tracking-[0.22em] text-amber-200"
+                    : "text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200"
+                }
+              >
+                {bootstrapState.kind === "outage"
+                  ? "Temporary interruption"
+                  : bootstrapState.kind === "stale"
+                    ? "Freshness guard active"
+                    : "Signal gate collecting"}
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
-                {bootstrapState.kind === "stale"
-                  ? "The board is paused while fresh odds land."
-                  : "The board is live. Public picks are still gated."}
+                {bootstrapState.kind === "outage"
+                  ? "The board is temporarily unavailable."
+                  : bootstrapState.kind === "stale"
+                    ? "The board is paused while fresh odds land."
+                    : "The board is live. Public picks are still gated."}
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
-                {bootstrapState.kind === "stale"
-                  ? "Our freshness guard holds the board rather than show you " +
-                    "lines that have gone stale. It reopens automatically on the " +
-                    "next successful odds refresh — no stale data, ever."
-                  : "We're building up odds and settlement history before we " +
-                    "publish picks. That keeps the record clean and weak signals " +
-                    "off the board."}
+                {bootstrapState.kind === "outage"
+                  ? "We hit a problem reading the board just now. Nothing is " +
+                    "wrong with your account and no picks were lost — the " +
+                    "board comes back automatically. Try refreshing in a minute."
+                  : bootstrapState.kind === "stale"
+                    ? "Our freshness guard holds the board rather than show you " +
+                      "lines that have gone stale. It reopens automatically on the " +
+                      "next successful odds refresh — no stale data, ever."
+                    : "We're building up odds and settlement history before we " +
+                      "publish picks. That keeps the record clean and weak signals " +
+                      "off the board."}
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link

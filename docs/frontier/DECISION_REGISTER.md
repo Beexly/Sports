@@ -1785,3 +1785,118 @@ stitching) — recorded here so no backtest can slip past it.
 - Supersedes: none. Closes R0.6 item 5 of 6. Item 6 (#89, `/api/promotions` outage masked as an empty
   response) remains blocked on #87's `outage-gate.ts`, which is not yet itself recovered — that dependency
   must be resolved first, or #89 re-scoped as its own freeze contract that includes recovering #87.
+
+## DEC-040 — Recovery Wave R0.6, prerequisite for item 6: outage-state discriminator (#87, T-picks-outage) (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Recovery Wave R0.6's final item (#89, `/api/promotions` outage masked as an empty response) is
+  stacked on historical PR #87 ("uses its outage-gate module. Merge #87 first, then retarget/merge this." —
+  #89's own body) — #87 was itself one of R0.5's 16 RECOVER_WHOLE findings, not one of the 6 named live-defect
+  items, but a hard prerequisite. Recovers #87 as its own bounded item first.
+- Was: `/api/picks` and `/api/clv` are public, unauthenticated routes. On a primary DB-read failure (a genuine
+  backend outage), both caught the error and returned the SAME 503 body used for deliberate bootstrap/env
+  gating (`bootstrapGateResponse`, `{bootstrapMode:true}`) — an outage dressed as intent. A monitor or
+  on-call engineer reading "disabled in bootstrap mode" during a real outage checks environment flags instead
+  of the database — the wrong runbook (mirrors a real 2026-07-10 incident that already produced the same fix
+  for a separate "stale data" state, `staleDataGateResponse`).
+- Contract frozen before coding: fetched historical PR #87 (branch `claude/hotfix-picks-outage-state`, base
+  `main` `821d0ca3`). Diffed all 7 non-test target files between that base and current main:
+  `apps/web/app/api/clv/route.ts`, `apps/web/app/api/picks/route.ts`, `scripts/prod-probe.mjs`,
+  `docs/launch-runbook.md`, plus the 3 associated test files — **zero drift, byte-identical**. Only
+  `apps/web/app/picks/page.tsx` had drifted (266 lines): main independently shipped a free-tier
+  paywall/teaser feature (`totalAvailableToday`, `hitDailyLimit`, `dailyPickLimit`, `tier`, `lockedByPaywall`,
+  `activeSportLabel`, `teaserSize`, an extended `PaywallBanner` signature) since #87 was authored — none of
+  which existed when #87 was written, and whose own "Error state" JSX block #87's historical patch also
+  touches. Decision: applied the 8 zero-drift files via a verified-clean `git apply` of the exact historical
+  diff (`git diff 821d0ca3 d8e76090 -- <7 files>`, confirmed `--check` clean before applying); manually
+  reconciled `page.tsx` by hand rather than attempting `git apply` on a 266-line-drifted file.
+- Code: new `apps/web/lib/data-reliability/outage-gate.ts` exports `outageGateResponse(featureName)` →
+  `{error, reason:"backend_outage", bootstrapMode:false, hint}` — a THIRD dark-state body, mutually
+  distinguishable from `bootstrapGateResponse` (`bootstrapMode:true`, no `reason`) and `staleDataGateResponse`
+  (`reason:"stale_data"`). `/api/clv` and `/api/picks` now return `outageGateResponse(...)` (not
+  `bootstrapGateResponse`) specifically on the DB-read `.catch()` path; the deliberate readiness-gate check
+  earlier in each handler is untouched, still returning the genuine bootstrap body. `scripts/prod-probe.mjs`
+  gained a shared `classifyDarkState(status, json, {allowStale})` used by both `validatePublicPicksGate`
+  (`allowStale:true` — the sole surface that emits `stale_data` today) and `validatePerformanceGate`
+  (`allowStale` defaults false, so a misrouted `stale_data` body there correctly FAILS the probe rather than
+  being silently accepted) — `backend_outage` fails BY NAME on either validator, never as a generic shape
+  mismatch. `docs/launch-runbook.md` documents all three 503 discriminators.
+- `page.tsx` manual reconciliation (the highest-risk part of this port): `PicksResponse.bootstrap.kind`
+  extended from `"gated" | "stale"` to `"gated" | "stale" | "outage"`; `fetchPicks()`'s dark-state check
+  extended to also admit `reason === "backend_outage"` (previously it fell through to
+  `throw new Error(...)`, surfacing the literal string "Failed to fetch picks: 503" to customers — the exact
+  gap #87 exists to close); the pre-existing bootstrapState empty-state JSX block (already branching on
+  `kind === "stale"` vs the gated default, cyan-styled) gained a third amber-styled branch for
+  `kind === "outage"` ("Temporary interruption" / "The board is temporarily unavailable." / reassuring body
+  copy), woven in as a clean 3-way ternary across container/icon/headline/title/body — the two ALREADY-PRE-
+  EXISTING free-tier-paywall states (`lockedByPaywall`, `PaywallBanner`) are untouched and remain correctly
+  ordered. This is a DIFFERENT code path from the page's own pre-existing "Backend-outage state" block (fires
+  on `fetchError`, i.e. the fetch itself threw — a network-level fault) — the two outage variants are
+  mutually exclusive at render time (complementary on `fetchError`), never simultaneously visible, and
+  intentionally worded distinctly from each other to avoid reading as a duplicate/confusing state to a future
+  maintainer. One pre-existing, unrelated test (`picks-states-conversion.test.ts`, part of the already-shipped
+  paywall feature) had its `between()` helper's end-marker updated from the now-absent exact string
+  `"{/* Empty state */}"` to the prefix `"{/* Empty state — the three designed dark states"` — same source
+  position, same underlying slice boundary, not a weakened assertion (re-confirmed: all 16 of that file's
+  tests, including non-trivial content checks on the sliced block, still pass).
+- Ripple check: grepped every consumer of `bootstrapGateResponse`/`staleDataGateResponse`/`bootstrapMode`
+  across `apps/web`, `packages`, `scripts`, `workers` (independently, myself, before dispatching red-team, and
+  again by the red-team itself). Four other routes (`/api/blog`, `/api/performance`, `/api/picks/[id]/audit`,
+  `/api/picks/[id]/explain`) use `bootstrapGateResponse` — but ONLY for their own deliberate readiness-gate
+  check at the top of the handler, never inside a DB-failure `.catch()`. The "DB failure reuses the bootstrap
+  body" anti-pattern was specific to `/api/clv` and `/api/picks`; no other route silently carries the same
+  live defect. These four routes DO still lack ANY dedicated outage-vs-gate distinction for their own DB
+  reads (they simply have no `.catch()` fallback at all, so a DB failure there throws an unhandled 500 rather
+  than dressing as bootstrap gating) — a DIFFERENT, narrower gap than T-picks-outage, not itself a live
+  instance of this defect, out of scope for both #87 and #89 (#89's own 5-surface list is `/api/calibration`,
+  `/api/picks/daily-slate`, `/api/promotions`, the game-room loader, the proof-of-record loader — none of
+  these four). Recorded here for completeness, not fixed — no silent scope-shrink, but also no unrequested
+  scope-growth beyond this freeze contract's boundary.
+- Independent review: one `gse-red-team` pass, resumed twice via the standing agent-stall protocol (first
+  stall: went idle right before its highest-risk check, point 5's `page.tsx` read; second stall: announced
+  "now the final synthesis" but made one more tool call instead of writing it — a new variant of the
+  established stall pattern, resolved with an explicit hard "no more tool calls" directive). **Zero CONFIRMED
+  findings across all 9 review points and the reviewer's own 8-point adversarial protected-zone checklist**:
+  three-state discriminator bodies confirmed genuinely non-overlapping by direct read of all three response
+  builders; no stack-trace leak (curated static strings only, the caught error is discarded before the null
+  check); route correctness confirmed (deliberate gating path untouched, only the DB-catch fallback changed);
+  `classifyDarkState`'s `allowStale` scoping confirmed per-surface-correct by direct source read, not just the
+  test's own assertions; the `page.tsx` reconciliation confirmed clean on all four sub-checks (mutual
+  exclusivity of the two outage code paths verified by direct condition read, the 3-way ternary confirmed
+  correct for all three `kind` values, the full four-block render-order chain confirmed exactly-one-renders by
+  construction, and the "no picks were lost" copy claim confirmed accurate against the actual failure mode — a
+  failed READ, never a write); the test-marker edit confirmed to preserve the same non-vacuous invariant, not
+  weakened; the ripple check independently reproduced the same conclusion this session already reached.
+  Non-vacuousness spot check performed by the reviewer itself: reverted the outage-catch line back to
+  `bootstrapGateResponse`, re-ran `picks-outage-state.test.ts`, confirmed a real failure, then restored the
+  file byte-identical.
+- Evidence: `cd apps/web && npx vitest run __tests__/picks-outage-state.test.ts __tests__/api-clv-route.test.ts
+  __tests__/prod-probe-script.test.ts __tests__/picks-states-conversion.test.ts` → 4 files / 41/41 passed (5 +
+  4 + 16 + 16, per-file); full `apps/web` suite → 635 files / 8,604 tests, all green (was 634/8,595 pre-fix —
+  the +9 delta reconciles to the 5 new `picks-outage-state.test.ts` tests plus 2 new in
+  `prod-probe-script.test.ts` plus the reworded/net-unchanged-count `api-clv-route.test.ts` case plus 1 net
+  addition elsewhere in the same run); `npx tsc --noEmit` clean (apps/web); full workspace `npm run typecheck`
+  clean, every workspace; `npm run guardrails` → 17/17 green; `git diff --check` clean aside from pre-existing
+  CRLF line endings in `apps/web/app/api/picks/route.ts` (confirmed via `git show HEAD` that the WHOLE file
+  was already CRLF before this patch touched it — not introduced by this change, not a real defect); secret
+  scan (part of guardrails) clean.
+- Alternatives rejected: blind `git apply` of the full historical diff including `page.tsx` — rejected once
+  the 266-line drift was confirmed; would have either failed outright or silently reverted the already-shipped
+  paywall feature. Threading `kind==="outage"` styling as a wholly separate render branch instead of extending
+  the existing gated/stale ternary — rejected as unnecessary duplication once the existing block's structure
+  proved to already generalize cleanly to a third case. Reusing the pre-existing `fetchError` block's exact
+  "Temporarily unavailable" copy for the new `kind==="outage"` branch — rejected in favor of distinct wording
+  ("Temporary interruption") so two adjacent-but-different states never read as duplicated/confusing to a
+  future maintainer, even though they can never render simultaneously.
+- Reversibility: strictly additive (a new response body, a new probe classifier, extended page-state
+  branching) — never removes or weakens deliberate bootstrap/stale gating. Revert commit if any regression
+  surfaces. Never merged to `main` — founder-merge-only, tracked by the existing accounting PR #129.
+- Protected zones: public customer-facing surfaces (frontend-trust doctrine — honest states, no fabricated
+  claims), data reliability/observability — mandatory red-team (completed, zero findings).
+- Files: `apps/web/lib/data-reliability/outage-gate.ts` (new), `apps/web/app/api/clv/route.ts`,
+  `apps/web/app/api/picks/route.ts`, `apps/web/app/picks/page.tsx`, `scripts/prod-probe.mjs`,
+  `docs/launch-runbook.md`, `apps/web/__tests__/picks-outage-state.test.ts` (new),
+  `apps/web/__tests__/api-clv-route.test.ts`, `apps/web/__tests__/prod-probe-script.test.ts`,
+  `apps/web/__tests__/picks-states-conversion.test.ts`.
+- Supersedes: none. Unblocks R0.6 item 6 (#89) — its own freeze contract, code, tests, and red-team pass are
+  the next bounded step, sequenced immediately after this one lands.
