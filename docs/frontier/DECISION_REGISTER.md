@@ -3393,3 +3393,73 @@ stitching) — recorded here so no backtest can slip past it.
   named, not-yet-actioned follow-up (founder-awareness-adjacent, not a blocker). 4 more RECOVER_WHOLE_
   CANDIDATEs from DEC-056 remain: the per-route error/not-found bundle, History+Schedule Lab, the
   multi-market-ensemble/synthetic-fade modules, and the journal-retraction tombstone route.
+
+## DEC-058 — Task #76 (2/5): per-route error boundaries + dynamic-segment not-found pages ported
+  (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: the second of 5 RECOVER_WHOLE_CANDIDATEs named in DEC-056. Ports
+  `claude/funny-lovelace-cjaj4b`'s 6 per-route `error.tsx` boundaries and 4 dynamic-segment `not-found.tsx`
+  pages, closing a confirmed gap: `pdcswh` had only a generic root `error.tsx`/`not-found.tsx`, so a runtime
+  error or bad slug/id on `/board`, `/brief`, `/performance`, `/picks`, `/today`, `/trends`,
+  `/blog/[slug]`, `/journal/[slug]`, `/performance/losses/[id]`, or `/room/[gameId]` fell through to
+  generic, non-specific messaging. Directly serves the standing owner task #8 ("Grandpa-simple + cinematic
+  UX pass on customer surfaces").
+- Code: 6 new `error.tsx` files (`app/board`, `app/brief`, `app/performance`, `app/picks`, `app/today`,
+  `app/trends`) and 4 new `not-found.tsx` files (`app/blog/[slug]`, `app/journal/[slug]`,
+  `app/performance/losses/[id]`, `app/room/[gameId]`).
+- Adapted, not copied verbatim:
+  - `error.tsx` files: the source branch's `text-gray-200` ambient wrapper class was swapped to `text-ion`
+    (a real, already-live design token, confirmed via `tailwind.config.ts` and existing usage in
+    `app/trends/page.tsx`/`app/stats/_components.tsx`) — the only change needed, since raw `red-900`/
+    `red-950`/`red-200`/`red-300` (the alert-specific colors) are outside `palette-cohesion.test.ts`'s
+    `gray|slate`-only regex and already have live precedent (`app/cockpit/integrity/page.tsx`).
+  - `not-found.tsx` files: rewritten to use `pdcswh`'s own established 404 idiom (`btn-primary`/
+    `btn-secondary`/`text-ink-300`/`text-accent-300`/`bg-obsidian`), modeled directly on the existing root
+    `app/not-found.tsx`, rather than the source branch's raw `bg-white/10`/`border-gray-700`/`text-gray-300`
+    — achieves both design-token compliance and closer brand consistency in the same motion.
+  - `command-palette.test.ts`: ported from the same source branch, but its `REQUIRED_ROUTES` list
+    (`/picks`, `/brief`, `/performance`, `/today`, `/trends`, `/players`, `/pricing`, `/dashboard`) was
+    verified NOT to match `pdcswh`'s actual live `command-palette.tsx` `COMMANDS` array — 6 of those 8
+    routes are absent from the palette entirely (the site's top-level nav/command-palette structure evolved
+    to a different set of surfaces: `/board`, `/observatory`, `/intelligence`, `/the-beat`, etc. — the
+    underlying pages themselves still exist, just aren't in the quick-nav). Reconciled `REQUIRED_ROUTES` to
+    6 routes independently confirmed live in the actual `COMMANDS` array (`/board`, `/pricing`,
+    `/dashboard`, `/fantasy`, `/track`, `/methodology`) rather than copying stale content or dropping the
+    check — the red-team independently re-verified this reconciliation was honest, not a weakened test.
+  - `critical-routes-shape.test.ts`: rather than a new duplicate test file for the 6 error boundaries,
+    extended that file's existing `ERROR_BOUNDARIES` array (previously just `app/error.tsx`,
+    `app/cockpit/error.tsx`) and added a new `NOT_FOUND_PAGES` array + describe block following its
+    established file-existence/shape-check idiom exactly.
+- Independent review: one `gse-red-team` pass, stalled twice with only a mid-investigation text fragment as
+  its "result" both times (a new variant of the stall pattern — not zero output, but incomplete output
+  mistaken by the harness for a final answer) — resumed twice via the standing agent-stall protocol, which
+  produced a complete synthesis on the third attempt. **Zero confirmed findings** — every claim in the
+  contract was independently re-verified rather than assumed: all 16 linked/checked route directories
+  confirmed to exist; page-specific copy ("Mission Control", "Trend Lab", "Calibration page", "Player Lab")
+  cross-checked against live `page.tsx` metadata/titles and found accurate, not stale branch-era naming;
+  the `journal/[slug]` retraction path traced through `lib/journal/load.ts` and confirmed the generic
+  not-found copy doesn't contradict any public retraction-specific messaging (none exists outside
+  `/cockpit`); heading hierarchy confirmed correct (`<h2>` in `error.tsx` files nesting inside a page's own
+  `<h1>`, `<h1>` in `not-found.tsx` files which replace the whole route); every error boundary confirmed to
+  offer both a working `reset()` and a live escape-hatch link, no dead ends.
+- Evidence: `cd apps/web && npx tsc --noEmit` clean; `npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0`
+  clean; targeted tests (`critical-routes-shape.test.ts` ×43, `command-palette.test.ts` ×14,
+  `palette-cohesion.test.ts` ×2) 59/59 green; full `apps/web` suite 8812/8812 green across 649 files;
+  `npm run guardrails` 17/17 green; `npm run build` succeeded; `git diff --check` clean.
+- Alternatives rejected: dropping `command-palette.test.ts`'s route-presence check entirely since the
+  source branch's list didn't match — rejected because the test's intent (guard against silently removing a
+  critical nav entry) is still valuable; reconciling it to real content preserves that intent instead of
+  discarding it; writing a brand-new test file for the error boundaries — rejected in favor of extending
+  `critical-routes-shape.test.ts`'s existing, purpose-built idiom, avoiding duplicate test infrastructure.
+- Reversibility: 10 new files (delete to roll back) + 2 test-file extensions (git-revertable) — single
+  revert commit undoes the whole item. No migrations, no schema change, no protected-zone code.
+- Protected zones: none (client-side presentational error/404 routes) — red-teamed anyway per this
+  campaign's standing rule for new public-facing customer surfaces.
+- Files: `apps/web/app/{board,brief,performance,picks,today,trends}/error.tsx`,
+  `apps/web/app/blog/[slug]/not-found.tsx`, `apps/web/app/journal/[slug]/not-found.tsx`,
+  `apps/web/app/performance/losses/[id]/not-found.tsx`, `apps/web/app/room/[gameId]/not-found.tsx`,
+  `apps/web/__tests__/critical-routes-shape.test.ts`, `apps/web/__tests__/command-palette.test.ts`.
+- Supersedes: none. Closes candidate 2/5 of task #76. 3 more RECOVER_WHOLE_CANDIDATEs remain: History+
+  Schedule Lab, the multi-market-ensemble/synthetic-fade modules, and the journal-retraction tombstone
+  route.

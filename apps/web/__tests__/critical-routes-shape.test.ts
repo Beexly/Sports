@@ -52,6 +52,23 @@ const CRITICAL_API_ROUTES = [
 const ERROR_BOUNDARIES = [
   "app/error.tsx",
   "app/cockpit/error.tsx",
+  "app/board/error.tsx",
+  "app/brief/error.tsx",
+  "app/performance/error.tsx",
+  "app/picks/error.tsx",
+  "app/today/error.tsx",
+  "app/trends/error.tsx",
+];
+
+// Next.js only serves a page-specific 404 for dynamic segments that ship a
+// not-found.tsx; without one, a bad slug/id falls through to the generic
+// root app/not-found.tsx with no surface-specific guidance.
+const NOT_FOUND_PAGES = [
+  "app/not-found.tsx",
+  "app/blog/[slug]/not-found.tsx",
+  "app/journal/[slug]/not-found.tsx",
+  "app/performance/losses/[id]/not-found.tsx",
+  "app/room/[gameId]/not-found.tsx",
 ];
 
 describe("critical pages — exist and look complete", () => {
@@ -96,6 +113,24 @@ describe("error boundaries — present so runtime crashes render cleanly", () =>
       const src = readFileSync(full, "utf8");
       expect(src, `${f} must be a client component`).toMatch(/^"use client";/);
       expect(src, `${f} must accept (error, reset)`).toMatch(/reset:\s*\(\)\s*=>\s*void/);
+    });
+  }
+});
+
+describe("not-found pages — dynamic segments render honest 404s, not the generic default", () => {
+  for (const f of NOT_FOUND_PAGES) {
+    it(`${f} exists, exports default, is not truncated`, () => {
+      const full = resolve(repoRoot, f);
+      expect(existsSync(full), `${f} must exist`).toBe(true);
+      const src = readFileSync(full, "utf8");
+      expect(src.length, `${f} must have non-trivial content`).toBeGreaterThan(80);
+      expect(src, `${f} must export default`).toMatch(/export\s+default\s+/);
+      const trimmed = src.replace(/\s+$/, "");
+      const lastChar = trimmed[trimmed.length - 1];
+      expect(
+        ["}", ")", ";", ">"].includes(lastChar!),
+        `${f} appears truncated — ends with "${lastChar}"`
+      ).toBe(true);
     });
   }
 });
