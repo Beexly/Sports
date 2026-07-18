@@ -3028,3 +3028,103 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: `docs/frontier/DECISION_REGISTER.md`, `reports/reconciliation/RECOVERY_WAVES.md` only.
 - Supersedes: the `warp-nebula` RECOVER_WHOLE characterization in DEC-051 and DEC-052. All other findings in
   both entries stand unchanged.
+
+## DEC-054 — MAJOR FINDING: a pre-existing, never-executed branch reconciliation plan already lives on
+  `pdcswh`, naming 3 of the long-tail branches with explicit disposition (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: discovered while independently spot-checking the one surviving finding from the first
+  24-branch investigation workflow (`claude/laughing-wozniak-gyryjx`, which came back
+  `RECOVER_WHOLE_CANDIDATE` for a substantial DFS product build). This is the single most consequential
+  finding of Wave R11.5 — it reframes 3 branches from routine batch-triage subjects into pre-authorized,
+  independently-confirmed-still-relevant recovery targets, and surfaces that this exact reconciliation work
+  was already scoped by an earlier session and never carried out.
+- **The discovery, in order:**
+  1. `apps/web/lib/platform/integrity-ledger.ts` — `pdcswh`'s own honest capability-tracking ledger (BUILT /
+     WIRED / PROVEN / PUBLIC_SAFE per system, explicitly "the antidote to drift") — has a `model-promotion`
+     entry: `builtStatus: "PARTIAL", wiredStatus: "NO", provenStatus: "NO"`, with
+     `ownerGate: "lives on claude/laughing-wozniak-gyryjx — cherry-pick onto trunk per
+     BRANCH_RECONCILIATION.md"` and `nextAction: "cherry-pick the promoter; gate promotion on
+     no-calibration-regression + sample floor."` This is a direct, named, in-repo pointer to a specific
+     stranded branch as a known-missing-capability's source.
+  2. `docs/strategy/BRANCH_RECONCILIATION.md` — present on `pdcswh` today (dated 2026-06-22, authored by a
+     "proven-edge session"), a complete one-page reconciliation plan that explicitly inventories and
+     dispositions branches, including THREE that are also in R11.5's long-tail set:
+     - **`claude/laughing-wozniak-gyryjx`**: *"OOS split harness + champion/challenger promoter
+       (`oos-split.ts`, `model-promoter.ts`, 14 tests); the 6 cockpit 'intelligence/fantasy' pages; DFS
+       optimizer... **Cherry-pick the OOS promoter onto trunk** (it's the genuinely-missing piece and is
+       built on the same primitives). Evaluate the cockpit/DFS pages separately."* Listed under §6 as
+       **"Agent-doable on trunk."**
+     - **`claude/happy-goodall-8lkxrb`**: *"`apps/web/lib/gse/` decision-intelligence layer (~25 pure/typed,
+       DB-free modules, 118 tests: trust-loop, drift, promotion-readiness, Black-Litterman, Glicko2,
+       Dixon-Coles, etc.); the Revenue Activation Plan doc... **Lands on top later** as the decision/UX/
+       scoring-math layer — adapter by adapter onto the real pipeline, never a blind merge (see §5)."*
+     - **`research/proven-edge`**: named as **the designated trunk for the whole "moat" initiative** —
+       *"Trunk for the moat = `research/proven-edge`... built on the real `packages/prediction-engine` +
+       `apps/web/lib/performance` primitives that actually ship in production (CLV grading, calibration,
+       devig, Merkle proof-of-record)."*
+  3. **Independently re-verified, not taken on the document's word — both still-relevant candidates confirmed
+     genuinely still missing from `pdcswh` today, three-plus weeks after the plan was written:**
+     - `grep`/`find` for `model-promoter.ts`, `oos-split.ts`, or any champion/challenger auto-promotion
+       mechanism on `pdcswh`: none found. The only adjacent capability, `apps/web/lib/model/model-court.ts`
+       (a live, tested, wired process-governance gate), explicitly assumes an underlying promoter exists —
+       its own header comment: *"This is the process discipline around the statistical promoter (champion/
+       challenger): the promoter measures, the court governs."* The measurer itself is still absent.
+     - `apps/web/lib/gse/` on `pdcswh` today contains only 6 files (`content-drafts.ts`,
+       `no-bet-methodology.ts`, 4 waitlist files) — none of the ~25 decision-intelligence modules
+       (`trust-loop`, `drift`, `promotion-readiness`, Black-Litterman, Glicko2, Dixon-Coles) the
+       reconciliation doc describes for `happy-goodall-8lkxrb`. Confirmed still genuinely missing.
+     - `research/proven-edge`'s designated "trunk" role appears **largely already absorbed** by `pdcswh`'s
+       own subsequent independent evolution: `pick-proof-receipt.ts`, `proof-of-record.ts`,
+       `clv-capture.ts`, `clv-decomposition.ts`, `probability-calibration.ts`, and `calibration-apply.ts`
+       all already exist on `pdcswh` (visible in `packages/prediction-engine/src/` today) — consistent with
+       this campaign's own extensive CLV/calibration/proof work (DEC-029 through DEC-034 "Glass Ledger,"
+       task #4's CLV decomposition, and more) having independently reached or superseded what this June
+       document proposed. `research/proven-edge` was already separately triaged in DEC-052 (8 novel files:
+       `GSE_INTERNAL_MASTER.md`, `GSE_PUBLIC_OVERVIEW.md`, `gse-method-spec.ts`/`gse-score.ts` + 2 tests) and
+       flagged as prediction-engine-methodology protected zone, not read further — that disposition stands;
+       this entry adds the context that its "trunk" ambition specifically looks superseded, not that its
+       remaining novel files (the methodology docs/spec) have been individually evaluated.
+- **What this means for R11.5 and for the campaign:**
+  - **`claude/laughing-wozniak-gyryjx` is upgraded from a routine triage subject to the single
+    highest-confidence recovery candidate found in this entire 138-branch reconciliation** — not because an
+    agent judged it valuable, but because `pdcswh`'s own tooling (the integrity ledger) and an earlier
+    session's own written plan both already say so, and this pass independently re-confirmed the gap is
+    still real. Its full novel-file list (spot-checked directly, not agent-reported): a self-contained
+    `apps/web/lib/dfs/*` product tree (optimizer/solver, parsers, simulation, late-swap, calibration/
+    autopsy, narrative signals, portfolio analytics, lineup thesis — 15 `/api/dfs/*` routes, 6 cockpit
+    pages) with **zero path overlap** with `pdcswh`'s existing DFS work (`apps/web/lib/fantasy/dfs-*.ts`,
+    a single `/api/dfs/salaries` route) — confirmed complementary, not duplicate. Plus
+    `packages/prediction-engine/src/model-promoter.ts` + `oos-split.ts` (the explicitly-named missing
+    piece) + `packages/types/src/dfs.ts`. Also carries genuine business-sensitive content (owner report,
+    revenue playbook, competitive intelligence, DFS-affiliate legal/compliance docs) that must stay
+    unread/flagged per this wave's standing sensitivity rule.
+  - **`claude/happy-goodall-8lkxrb` is confirmed a still-valid, pre-authorized RECOVER_WHOLE candidate** for
+    its `lib/gse/` decision-intelligence layer, per the existing doc's own landing plan (§5: adapters onto
+    the real pipeline, one capability at a time, gated on consuming real persisted data and not duplicating
+    a canonical §4 concept).
+  - **NOT executed in this pass.** Both are real, multi-file ports touching the model/calibration protected
+    zone (model-promotion is explicitly named in `CLAUDE.md`'s and this session's own standing "never...
+    change protected... calibration... MODEL_VERSION policy" boundary). Even though
+    `BRANCH_RECONCILIATION.md` §6 itself calls the promoter cherry-pick "agent-doable," this session's
+    external standing instructions are the controlling authority and are stricter — a capability that
+    governs how the live model's predictions get promoted deserves its own full FREEZE CONTRACT → CODE →
+    TARGETED TEST → RED-TEAM cycle (the same rigor DEC-048/049 gave smaller, non-protected-zone ports),
+    not a same-pass port folded into a triage sweep. **This is named as the campaign's single highest-value
+    next dedicated-port target once the current 24-branch triage closes.**
+- Alternatives rejected: cherry-picking `model-promoter.ts`/`oos-split.ts` immediately since the repo's own
+  document authorizes it — rejected because "agent-doable" in a June planning doc does not override this
+  session's own explicit, more conservative standing boundary on calibration/MODEL_VERSION-adjacent changes;
+  trusting the first workflow run's single surviving agent-reported disposition without independent
+  verification — rejected per this campaign's "reproduce before ruling" discipline, especially given that
+  same workflow run failed 17/18 agents and its one success deserved the same scrutiny as any other claim.
+- Reversibility: N/A — no code changed (this entry only; the reconciliation doc itself is pre-existing,
+  untouched).
+- Protected zones: model-promotion/calibration (named explicitly, not touched); DFS-affiliate legal/business
+  content (named, not read).
+- Files: `docs/frontier/DECISION_REGISTER.md` only (does not modify `docs/strategy/BRANCH_RECONCILIATION.md`
+  or `integrity-ledger.ts`, both pre-existing and left as-is).
+- Supersedes: none — adds authoritative context to `claude/laughing-wozniak-gyryjx` and
+  `claude/happy-goodall-8lkxrb`'s dispositions ahead of the routine 24-branch batch-triage findings for the
+  same two branches (which independently run in a currently in-flight workflow and will be folded in without
+  contradicting this entry).
