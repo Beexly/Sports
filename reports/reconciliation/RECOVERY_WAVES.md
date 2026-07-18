@@ -496,6 +496,41 @@ R11.5 CLOSED (2026-07-18, DEC-056) — 138/138 long-tail branches individually e
       4b (real integration risk found in each, not a file-copy). 5/5 DONE (DEC-061, the LAST of the 5
       named candidates): multi-market-ensemble.ts + synthetic-fade.ts ported into
       packages/prediction-engine from `claude/pensive-brown-yql6ld` — dark, unwired, zero live callers,
-      MODEL_VERSION unchanged, mandatory protected-zone red-team clean. All 5 DEC-056
-      RECOVER_WHOLE_CANDIDATEs are now closed except the explicitly-deferred candidate 4b sub-slice.
+      MODEL_VERSION unchanged, mandatory protected-zone red-team clean.
+      Task #76 CLOSED (2026-07-18, DEC-064): candidate 4b (Mock Draft simulator) landed into
+      `/fantasy/draft` as a second tab; a real entitlement-forwarding regression (canUseFantasyFull
+      silently dropped) was fixed during the port, and red-team caught + fixed two more real defects
+      before commit (a high-severity draft soft-lock against the 30-player illustrative pool, and a
+      missing live-but-empty-pool honesty guard). All 5 of DEC-056's named RECOVER_WHOLE_CANDIDATEs are
+      now fully closed. roster-import/FantasyCoach/Late-Swap remain named backlog, each needing its own
+      freeze contract — Late-Swap specifically has a documented gotcha (DEC-064): the source branch's
+      `late-swap-panel.tsx` calls `lateSwap(lineup, scratched, ...)`, but pdcswh's real `lateSwap`
+      (`lib/fantasy/dfs-exact.ts`) treats its second argument as the LOCKED/KEPT set, not the scratched
+      set — a verbatim port would invert the feature's behavior (locking the scratched players and
+      re-optimizing everyone else). It also references a `LateSwapResult` object type
+      (`swapped`/`changedSlots`/`salaryDelta`/`projDelta`) that doesn't exist on pdcswh's `lateSwap`,
+      which returns a plain player array — needs a real adapter, not a drop-in port.
+      Task #75 (2026-07-18): the `laughing-wozniak-gyryjx` model-promoter — named by DEC-054 as the
+      single highest-value next port — was investigated and found broken at the code level: a
+      hardcoded `computeClvMean() → 0.5` stub and a champion/challenger Brier comparison that reads the
+      same field for both sides (so `brierImprovement` is mathematically always exactly 0, meaning the
+      promoter can never actually promote a challenger). **Declined outright (DEC-062)** — never to be
+      ported as-is, dark or wired; this corrects DEC-054's recommendation with code-level evidence.
+      `oos-split.ts` (the promoter's one dependency) was independently verified honest, real, and
+      deterministic on its own merits and shipped standalone, dark, zero live callers (DEC-063) — one
+      real `tsc` type error was found and fixed during that port. Remaining under task #75: the 91-file
+      DFS product tree and `happy-goodall-8lkxrb`'s 25-module `lib/gse` layer, both still unscoped and
+      deliberately not attempted given their size — each needs its own dedicated freeze-contract cycle.
+
+## Campaign pivot: Launch Convergence (2026-07-18)
+
+`claude/galaxy-sports-edge-pdcswh` / PR #129 is now FROZEN as an evidence and recovery-accounting
+source, not a release vehicle — see `reports/reconciliation/PR129_FREEZE_RECEIPT.md` for the full
+receipt and rationale. Task #75's remaining scope (DFS tree, `lib/gse`), Task #76's remaining
+sub-features (roster-import, FantasyCoach, Late-Swap), and Task #77's 8 NEEDS_DEDICATED_REVIEW
+branches all stay preserved here as backlog with their evidence and dependencies intact — they may
+be pulled forward only if fresh production analysis proves one resolves a P0/P1 launch or revenue
+blocker. All new work moves to Launch Convergence workstreams (LC-000 through LC-008,
+`.claude/skills/gse-launch/SKILL.md`) on a fresh branch cut from `origin/main`, tracked under
+`reports/launch/*`.
 ```

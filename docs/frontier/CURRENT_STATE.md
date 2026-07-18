@@ -1,10 +1,31 @@
 # GSE Frontier Current State
 
-**Status:** ACTIVE
-**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-043)
-**Base SHA:** `c179a78` (origin/main, PR #120)
-**Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
-**Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE + §2 smoke CLOSED (DEC-014/023); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016); W005 Intelligence Watch v0 DONE (DEC-021); W007 Branching Reality v0 DONE (DEC-024); W009 Hypothesis-to-Instrument v0 DONE (DEC-025). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Phase 3 (W005) DONE. Full-session audit pass DONE (DEC-022). W-WEATHER §2 smoke gate DONE (DEC-023). W007 DONE (DEC-024) — SportsIR's 6th and final DECLARED primitive (Branch) is now ADAPTED, so ALL 12 SportsIR primitives have real evidence. W009 DONE (DEC-025) — verified both listed dependencies real (harness + W004) before building; wraps the backtest harness's own already-audited climatology signal into a versioned instrument, adds a second `SportsIrClaim` source. W006 re-checked and confirmed still genuinely BLOCKED (GG-001/genesis-kernel hasn't landed). W010 dependency re-verified genuinely absent (DEC-026) — stays BLOCKED, no telemetry baseline exists to build on. Remaining work: Task #8/#13's larger mandates (Task #13 now has a concrete scoped next slice identified — see Verified facts; Task #8 scoping in progress) and W008 (still BLOCKED on W006).
+**Status:** FROZEN as evidence/recovery source as of 2026-07-18 — see "Campaign pivot" note below.
+**Last verified (recovery-wave narrative below):** 2026-07-18, command evidence through DEC-043. This
+narrative section was NOT kept current past DEC-043 in real time — the authoritative, current-through
+record for everything after it is `docs/frontier/DECISION_REGISTER.md` (DEC-044 through DEC-064) and
+`reports/reconciliation/RECOVERY_WAVES.md`. Do not treat gaps in this file's prose as gaps in the work;
+verify against the Decision Register and live `git log` before relying on anything below.
+**Base SHA:** `c179a78` (origin/main, PR #120) — stale; re-verify current `origin/main` HEAD before any
+Launch Convergence decision, do not reuse this SHA.
+**Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` — FROZEN 2026-07-18 as an evidence and
+recovery-accounting source (PR #129), not a release vehicle. Only ledger corrections, security
+containment, and explicitly launch-critical fixes may land on it from this point forward. See
+`reports/reconciliation/PR129_FREEZE_RECEIPT.md`.
+**Active workstream:** none on `pdcswh` — Recovery Waves R0.5, R0.6, R8 (Groups A/B; Group A2/C stay
+OWNER_GATE), R11, and R11.5 are all CLOSED (DEC-034 through DEC-056). Task #76's 5 named
+RECOVER_WHOLE_CANDIDATEs are fully closed (DEC-057/058/059/060/061/064). Task #75's model-promoter is
+declined with code-level evidence (DEC-062); its honest dependency `oos-split.ts` shipped standalone
+(DEC-063). Remaining named backlog (Task #75's DFS tree + `lib/gse`, Task #76's roster-import/
+FantasyCoach/Late-Swap, Task #77's 8 NEEDS_DEDICATED_REVIEW branches) is preserved with evidence in
+`RECOVERY_WAVES.md` and pulled forward only if fresh production analysis proves a P0/P1 launch/revenue
+blocker. **The campaign has pivoted to Launch Convergence** (`.claude/skills/gse-launch/SKILL.md`,
+LC-000 through LC-008) on a fresh branch cut from `origin/main` — see
+`reports/launch/PRODUCTION_REALITY_SNAPSHOT.md` for current status.
+
+## Original narrative (pre-pivot, stops at DEC-043 — historical record, not current)
+
+W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE + §2 smoke CLOSED (DEC-014/023); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016); W005 Intelligence Watch v0 DONE (DEC-021); W007 Branching Reality v0 DONE (DEC-024); W009 Hypothesis-to-Instrument v0 DONE (DEC-025). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Phase 3 (W005) DONE. Full-session audit pass DONE (DEC-022). W-WEATHER §2 smoke gate DONE (DEC-023). W007 DONE (DEC-024) — SportsIR's 6th and final DECLARED primitive (Branch) is now ADAPTED, so ALL 12 SportsIR primitives have real evidence. W009 DONE (DEC-025) — verified both listed dependencies real (harness + W004) before building; wraps the backtest harness's own already-audited climatology signal into a versioned instrument, adds a second `SportsIrClaim` source. W006 re-checked and confirmed still genuinely BLOCKED (GG-001/genesis-kernel hasn't landed). W010 dependency re-verified genuinely absent (DEC-026) — stays BLOCKED, no telemetry baseline exists to build on. Remaining work: Task #8/#13's larger mandates (Task #13 now has a concrete scoped next slice identified — see Verified facts; Task #8 scoping in progress) and W008 (still BLOCKED on W006).
 
 ## Verified facts
 

@@ -1,5 +1,15 @@
 # GSE Frontier Workstream Queue
 
+**Status note (2026-07-18):** This file tracks the original W000–W010 workstream series only; it does
+not cover the later Recovery Wave (R0–R11.5) or Task #75/76/77 series, which live in
+`reports/reconciliation/RECOVERY_WAVES.md` and `docs/frontier/DECISION_REGISTER.md` (DEC-034 onward).
+The W-series below is CLOSED/FROZEN as of this note: W001–W005, W007, W009 are DONE; W006, W008, W010
+stay BLOCKED on unmet dependencies (re-verify before trusting — not re-checked since W010's DEC-026).
+`claude/galaxy-sports-edge-pdcswh` (which carried all of this work plus the later Recovery Wave series)
+is now FROZEN as an evidence/recovery source, not a release vehicle — see
+`reports/reconciliation/PR129_FREEZE_RECEIPT.md`. New work moves to Launch Convergence
+(`.claude/skills/gse-launch/SKILL.md`) on a fresh branch from `origin/main`.
+
 | ID | Status | Workstream | Dependency | Primary leverage | Protected zones |
 |---|---|---|---|---|---|
 | W000 | DONE (slice 1) / REPEATABLE | Recover Existing Assets | none | Prevent duplicate code; restore stranded correctness and frontier substrate | varies by selected PR |
