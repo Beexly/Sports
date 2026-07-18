@@ -2447,3 +2447,102 @@ stitching) — recorded here so no backtest can slip past it.
   can cite. R11.5's remaining slices (name-pattern clusters beyond `magical-volta`, and the recency-based
   subset — branches with a last-commit date on/after 2026-07-01) remain open, dependency-ready,
   non-owner-gated next items.
+
+## DEC-047 — Recovery Wave R11.5, second slice: the 43-branch recency subset (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: R11.5's second bounded slice — the 43 long-tail branches (excluding `magical-volta-*`, already
+  triaged in DEC-046) with a last-commit date on/after 2026-07-01, per `BRANCH_PR_LEDGER.json`'s
+  `longTailEntries`. Documentation-only pass (no code changes) — every RECOVER_WHOLE candidate found needs
+  its own dedicated freeze contract with dependency-compatibility verification before landing, mirroring the
+  DEC-045 precedent of not forcing a port just because a branch was reached during triage.
+- Method: for every branch, `git merge-base --is-ancestor origin/<branch> HEAD` (all 43 returned exit 1 —
+  none are literal ancestors, so ancestry alone doesn't triage this set, unlike the R11 wave's 12
+  proven-ancestor branches), then `git diff --name-status --diff-filter=A HEAD origin/<branch>` (files
+  genuinely absent from `pdcswh` — the same method that worked cleanly for DEC-046), then `git diff
+  --shortstat` for scale, then direct content reads for anything with a nonzero novel-file count.
+- **20 branches — ALREADY_ON_PDCSWH (high confidence, real evidence).** The 13 `codex/api-v1-*`-named
+  branches plus 7 same-lineage branches under different names (`codex/commercial-revenue-core`,
+  `codex/media-revenue-studio`, `codex/media-revenue-metric-api-closeout`, `codex/fable-nfl-evidence-
+  integration`, `codex/evidence-api-v1-shadow-seam`, `codex/api-persistence-shadow-adapter`, `codex/api-
+  consumer-registry-shadow`) are ONE single incremental lineage (confirmed via 3 separate `merge-base
+  --is-ancestor` checks against the lineage's tip, `codex/api-v1-disposable-rehearsal-packet` — all exit 0),
+  and every one shows ZERO files present on the branch tip that are absent from `pdcswh` (`git diff --name-
+  status --diff-filter=A` returns empty). Spot-checked `apps/web/lib/api/v1/consumer-registry.ts` directly:
+  byte-identical between the branch tip and `pdcswh` HEAD (both 285 lines, empty diff). `pdcswh` has 17
+  `api-v1*` test files vs. the branch's 16 — a superset, not a gap. This entire cluster (a staged, disciplined
+  "public API v1" build with shadow/dormant/disposable-rehearsal safety patterns matching this campaign's
+  own vocabulary) was independently absorbed into `pdcswh` at some earlier point in its own history; `scripts/
+  guardrails/api-v1-boundary.mjs` — this exact guardrail — is already running in every `npm run guardrails`
+  invocation this session.
+- **23 branches — ALREADY_ON_PDCSWH (evidence-based extrapolation, not exhaustively verified).** All 23
+  show exactly ONE novel file: `apps/web/lib/source-rights/source-rights-registry.ts`. Sampled 6 of the 23
+  directly (`picks-states-conversion`, `webhook-billing-hardening`, `nfl-pbp-expected-metrics-wiring`,
+  `salvage-settlement-guardrails`, `canonical-host-www`, `honest-degraded-states`) — all 6 are byte-identical:
+  an 18-line re-export shim pointing to `@/lib/scraping/source-rights-registry` (confirmed `pdcswh` already
+  has the canonical file at that path). `pdcswh`'s own independent history consolidated this file from `lib/
+  source-rights/` to `lib/scraping/` at some point; these 23 branches all predate that consolidation and are
+  small, early-stage feature attempts (1-14 commits ahead of a nearby merge-base) that got abandoned almost
+  immediately after forking. `git diff --shortstat` across all 23 shows a tightly clustered, consistent range
+  (1,028-1,668 insertions, 56K-92K deletions each vs. `pdcswh` HEAD) with no outlier suggesting hidden
+  modified-file content beyond the shim — but the other 17 of the 23 were NOT individually content-reviewed
+  beyond this diff-stat sanity check, recorded honestly rather than silently claimed as fully verified.
+- **`claude/crypto-payments` — new OWNER_GATE candidate, NOT investigated further.** 11 novel files: a full
+  alternative payment rail (Coinbase Commerce webhook route, `/api/billing/crypto-checkout`, a `crypto-pass`
+  billing module, 2 Prisma migrations adding a crypto payment provider and a commerce charge ledger). Squarely
+  a billing/payments protected zone (`CLAUDE.md`'s documented payment stack is Stripe-only; crypto payments
+  are not a currently-documented capability) AND includes database migrations, which this campaign's own
+  rules (`CONTINUOUS_EXECUTION_CONTRACT.md` §8) reserve for founder action. Not evaluated for implementation
+  quality or completeness — the decision of whether to accept crypto payments at all is a founder product/
+  business call, not something to investigate toward a port.
+- **`codex/galaxy-dynasty-v2-autonomous` — ARCHIVE_ONLY.** 27 novel files: a 3D "Galaxy Dynasty" city/game
+  experience (GLB game-asset chunks, Higgsfield-generated models, a `/galaxy-dynasty` page, game-QA
+  screenshots and smoke tests). Large, self-contained, product-scope question (is a 3D game surface still a
+  planned feature? not addressed anywhere in current `CLAUDE.md`) — joins the already-`ARCHIVE_ONLY` #52
+  (`claude/gracious-albattani-f63wx1`, "Galaxy Dynasty world-graph") as a second, later, differently-scoped
+  attempt at the same product concept.
+- **`claude/magical-feynman-j9180p` — ARCHIVE_ONLY, groups with the Dynasty cluster.** 9 novel files: dynasty
+  progression/profile-loader BACKEND logic (`lib/dynasty/dynasty-progression.ts`, `load-dynasty-profile.ts`,
+  `/api/dynasty/me`, `/dynasty` page) — distinct in kind from `galaxy-dynasty-v2-autonomous`'s 3D assets. This
+  is now a THIRD independent "Dynasty" attempt found across this reconciliation campaign (#52, `galaxy-
+  dynasty-v2-autonomous`, this branch) — recorded together as a cluster needing one dedicated future
+  reconciliation pass (which attempt, if any, is the canonical basis) rather than picked apart piecemeal here.
+- **`claude/dfs-optimizer-edge` — RECOVER_WHOLE candidate, next bounded item, NOT ported this pass.** 17
+  novel files. Read `dfs-optimizer-edge.ts`'s header directly: it imports `optimizeOne`/`metrics`/`objOf`
+  FROM `./dfs-optimizer` — the exact file `pdcswh` already has (task #36's "DFS dominance" exact DP solver,
+  already shipped) — confirming this is an ADDITIVE layer, not a rival/superseded attempt. Adds `dfs-exact.ts`
+  (cash-game exact optimizer) and, most notably, `dfs-correlation.ts` (GPP/tournament lineup selection via
+  simulated-ceiling ranking under correlation + ownership leverage — ownership-leverage-aware tournament
+  strategy `pdcswh`'s current cash-game-only optimizer does not have). Not ported this pass: 17 files including
+  competitive-intel docs need a proper freeze contract, and `dfs-optimizer.ts`/`dfs-slate.ts`/`lib/
+  integrations/dfs.ts` (files this branch's code imports from) need their own current-HEAD drift check first,
+  same discipline as Wave R8 Group A's 4-file check.
+- **`claude/consensus-accuracy-engine` — RECOVER_WHOLE candidate, not yet investigated for dependency
+  compatibility.** 8 novel files: fantasy consensus-rankings + expert-accuracy tracking
+  (`consensus-rankings.ts`, `expert-accuracy.ts` + tests). Plausible, self-contained fantasy-analytics value;
+  not yet checked against `pdcswh`'s current fantasy module shape.
+- **8 branches — NOT YET CHECKED this pass, explicitly excluded rather than silently dropped:**
+  `claude/intraday-odds-scheduler` (3 novel files), `claude/galaxy-sports-edge-audit-outqdi` (3),
+  `claude/freshness-badge` (3), `claude/odds-freshness-diagnostics` (2), `claude/night-shift` (2), `claude/
+  launch-review-fixes` (2), `claude/humanize-polish` (2), `claude/design-critique-zd94h2` (2). Small enough
+  (2-3 novel files each) to be cheap for a future continuation of this same slice.
+- Evidence: every claim above is from a directly-run `git` command in this session (`merge-base
+  --is-ancestor`, `diff --name-status --diff-filter=A`, `diff --shortstat`, `diff` on specific file pairs,
+  `cat-file -e` existence checks) — none inherited from an agent report, continuing the DEC-046 process
+  lesson of reproducing before ruling.
+- Alternatives rejected: porting `dfs-optimizer-edge` or `consensus-accuracy-engine` immediately, since they
+  were reached during triage — rejected in favor of naming them as scoped future items with their own freeze
+  contracts, consistent with the campaign's "smallest coherent implementation" and "no rushed untested feature
+  ports under diminishing session budget" discipline.
+- Reversibility: N/A — no code changed this pass.
+- Protected zones: `claude/crypto-payments` (billing/payments + migrations, OWNER_GATE candidate, no further
+  action without founder input).
+- Files: none changed. Documentation-only triage entry.
+- Supersedes: none. Wave R11.5 status: `magical-volta-*` cluster (DEC-046) and this 43-branch recency subset
+  (DEC-047) both triaged. Two RECOVER_WHOLE candidates named for future bounded items (`dfs-optimizer-edge`,
+  `consensus-accuracy-engine`); one new OWNER_GATE candidate (`claude/crypto-payments`, pending a founder
+  decision on whether to even pursue crypto payments before any further investigation); a 3-way Dynasty
+  cluster (#52, `galaxy-dynasty-v2-autonomous`, `magical-feynman-j9180p`) needing one dedicated future
+  reconciliation pass; 8 small branches not yet checked; ~43 other long-tail branches beyond this 43 +
+  22 (`magical-volta`) = 65 triaged remain in the tail (per `BRANCH_PR_LEDGER.json`'s 138 total long-tail
+  count) for a future slice.

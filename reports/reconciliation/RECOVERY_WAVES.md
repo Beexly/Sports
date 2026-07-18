@@ -308,8 +308,43 @@ were unique to the branch when they were actually unique to `pdcswh` — the opp
 above was independently re-verified with direct `git` commands per the "reviewer-disagreement rule: reproduce
 before ruling," not inherited from the scout's report.
 
-**Next slice:** the recency-based subset (74 branches, last-commit ≥ 2026-07-01) and remaining name-pattern
-clusters beyond `magical-volta-*`.
+**Second slice DONE (2026-07-18, DEC-047): the 43-branch recency subset (excl. `magical-volta-*`).** Method:
+`merge-base --is-ancestor` (all 43 exit 1 — ancestry alone doesn't triage this set), `diff --name-status
+--diff-filter=A` (novel-file detection), `diff --shortstat` (scale), direct content reads for anything novel.
+- **20 branches ALREADY_ON_PDCSWH** (real evidence): the 13 `codex/api-v1-*` branches + 7 same-lineage
+  branches under different names are ONE incremental lineage (3 `merge-base --is-ancestor` checks confirm),
+  zero novel files vs `pdcswh`, and a spot-checked file is byte-identical — `pdcswh` already absorbed this
+  entire "public API v1" build (the `api-v1-boundary.mjs` guardrail from this lineage runs in every
+  `npm run guardrails` this session).
+- **23 branches ALREADY_ON_PDCSWH** (evidence-based extrapolation, 6/23 directly sampled): all share exactly
+  one novel file, a stale re-export shim (`lib/source-rights/source-rights-registry.ts` → `lib/scraping/
+  source-rights-registry.ts`, the path `pdcswh` already consolidated to) — 6 sampled are byte-identical shims;
+  the other 17 verified only via consistent `diff --shortstat` scale, not individually content-reviewed.
+- **`claude/crypto-payments` — new OWNER_GATE candidate**: a full alternative Coinbase-Commerce payment rail
+  + 2 DB migrations. Billing/payments protected zone, not evaluated further — a founder product decision, not
+  an agent one.
+- **`codex/galaxy-dynasty-v2-autonomous` + `claude/magical-feynman-j9180p` — ARCHIVE_ONLY, join a 3-way
+  Dynasty cluster with #52** (`claude/gracious-albattani-f63wx1`): three independent, never-reconciled
+  attempts at a "Galaxy Dynasty" product concept (world-graph, 3D city/game, progression backend). Needs one
+  dedicated future reconciliation pass, not piecemeal picking here.
+- **`claude/dfs-optimizer-edge` — RECOVER_WHOLE candidate, next bounded item.** Builds additively on `pdcswh`'s
+  already-shipped exact DP DFS optimizer (task #36); adds a genuinely new GPP/tournament correlation +
+  ownership-leverage layer `pdcswh` doesn't have. Needs its own freeze contract (17 files, 3 pre-existing
+  dependency files need a drift check first).
+- **`claude/consensus-accuracy-engine` — RECOVER_WHOLE candidate**, not yet checked for dependency
+  compatibility: fantasy consensus-rankings + expert-accuracy tracking (8 files).
+- **8 branches not yet checked** (2-3 novel files each, cheap for a future continuation): `intraday-odds-
+  scheduler`, `galaxy-sports-edge-audit-outqdi`, `freshness-badge`, `odds-freshness-diagnostics`, `night-
+  shift`, `launch-review-fixes`, `humanize-polish`, `design-critique-zd94h2`.
+
+**Process note (both slices):** a `gse-scout` agent dispatched for the first slice stalled twice and its
+eventual report contained one factually-backwards claim, caught via direct re-verification. The second slice
+was done via direct `git` commands throughout (no agent dispatch), continuing that same "reproduce before
+ruling" discipline.
+
+**Next slice:** the 2 named RECOVER_WHOLE candidates (`dfs-optimizer-edge`, `consensus-accuracy-engine`) each
+need their own freeze contract; the 8 not-yet-checked small branches; remaining long-tail branches beyond the
+65 now triaged (of 138 total long-tail entries per `BRANCH_PR_LEDGER.json`).
 
 ## Recommended order (refreshed)
 
@@ -329,5 +364,5 @@ R8    Groups A+B DONE (DEC-043/044). Group A2 core files OWNER_GATE (OG-009, DEC
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   Deletion receipts for the 12 proven-ancestor branches
-R11.5 Long-tail triage (138 branches remaining after R0.5's 21 resolutions)
+R11.5 65/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047); dfs-optimizer-edge + consensus-accuracy-engine next
 ```
