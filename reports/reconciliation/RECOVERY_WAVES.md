@@ -51,8 +51,10 @@ higher-numbered waves in this same sequence.
    `result:"PENDING"` + a race-safe `create`-with-P2002-catch + a sidecar-mint gate; `settle-sport.ts`'s
    `take:80`→`take:240`; `clv-capture.ts` gained `MAX_CLOSE_AGE_MS` (6h). gse-red-team CONFIRMED clean, zero
    findings. 44/44 + 127/127 (ingestion-pipeline), 13/13 + 1462/1462 (prediction-engine), guardrails 17/17.
-   Committed on `claude/galaxy-sports-edge-pdcswh`, pushed, bounded recovery PR opened (founder-merge-only —
-   never merged to `main` by this agent). Was: `process-sport.ts:483`'s check-then-act could let a refresh
+   Committed (`7c1276f8`) and pushed to `claude/galaxy-sports-edge-pdcswh`, tracked by the existing accounting
+   PR #129 (per Wave R5's own ruling against splitting this branch into separate PRs — DEC-numbered ledger
+   entries substitute for per-workstream PR boundaries); founder-merge-only, never merged to `main` by this
+   agent. Was: `process-sport.ts:483`'s check-then-act could let a refresh
    overwrite a just-settled pick's published grade; no `MAX_CLOSE_AGE_MS` guard existed. Highest severity:
    directly threatened settlement correctness and CLV integrity, the platform's core money-truth surface.
    Protected zones: settlement, CLV — mandatory red-team (completed).
