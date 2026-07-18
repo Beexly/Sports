@@ -1,0 +1,440 @@
+{
+  "schemaVersion": "1.0.0",
+  "product": "Galaxy Sports Edge",
+  "program": "Launch and Revenue Convergence",
+  "evidenceAsOf": "2026-07-18T17:18:00Z",
+  "canonicalHost": "https://www.galaxysportsedge.com",
+  "productionCommitObserved": "0e56c4770e715630eaaac974702336447e367b5a",
+  "statusVocabulary": [
+    "PASS",
+    "PARTIAL",
+    "FAIL",
+    "UNKNOWN",
+    "BLOCKED",
+    "OWNER_GATE",
+    "EVIDENCE_GATED",
+    "CLOSED_BY_DESIGN",
+    "NOT_APPLICABLE"
+  ],
+  "terminalRule": "All eligible gates PASS; evidence-dependent gates PASS or CLOSED_BY_DESIGN; founder/external gates have explicit OWNER_GATE packets; no UNKNOWN remains on a launch-critical gate.",
+  "gates": [
+    {
+      "id": "LR-GATE-001",
+      "name": "Production host and deployment health",
+      "class": "HEALTH",
+      "criticality": "P0",
+      "status": "PASS",
+      "mayAutoOpen": false,
+      "currentEvidence": [
+        "Canonical host returned HTTP 200",
+        "Observed Vercel production deployment state READY",
+        "Connected Vercel runtime-error query returned no errors for the preceding 24-hour window"
+      ],
+      "requiredEvidence": [
+        "Repeat during release-candidate and post-deploy verification",
+        "Two consecutive unattended sentinel passes"
+      ],
+      "owner": "platform",
+      "rollback": "Promote the last verified production deployment"
+    },
+    {
+      "id": "LR-GATE-002",
+      "name": "Production commit equals approved release candidate",
+      "class": "DEPLOYMENT",
+      "criticality": "P0",
+      "status": "FAIL",
+      "mayAutoOpen": false,
+      "currentEvidence": [
+        "Production served commit 0e56c4770e715630eaaac974702336447e367b5a",
+        "Active recovery work in PR #129 is not included in that deployment"
+      ],
+      "requiredEvidence": [
+        "Approved release commit recorded",
+        "Production deployment reports the same commit",
+        "Post-deploy smoke and sentinel evidence"
+      ],
+      "owner": "founder-release",
+      "rollback": "Promote the last verified production deployment"
+    },
+    {
+      "id": "LR-GATE-003",
+      "name": "Proof API health and reproducibility",
+      "class": "PROOF",
+      "criticality": "P0",
+      "status": "PASS",
+      "mayAutoOpen": false,
+      "currentEvidence": [
+        "/llms.txt, ledger, receipts, verification spec, and OpenAPI returned HTTP 200",
+        "A sampled receipt leaf hash was independently recomputed and matched"
+      ],
+      "requiredEvidence": [
+        "Automated known-answer and receipt-hash checks in Sentinel v2",
+        "Post-release verification against the approved production commit"
+      ],
+      "owner": "proof",
+      "rollback": "Revert to the last verified proof-surface release"
+    },
+    {
+      "id": "LR-GATE-004",
+      "name": "Public proof-ledger publication",
+      "class": "PROOF",
+      "criticality": "P1",
+      "status": "EVIDENCE_GATED",
+      "mayAutoOpen": false,
+      "currentEvidence": [
+        "/api/proof/ledger is healthy but returns published:false because PUBLISH_LEDGER is unset"
+      ],
+      "requiredEvidence": [
+        "Approved public population definition",
+        "Proof semantics and copy independently reviewed",
+        "No bootstrap, seed, or ineligible rows",
+        "Rollback and incident plan",
+        "Founder approval"
+      ],
+      "owner": "founder-proof",
+      "rollback": "Unset PUBLISH_LEDGER and retain the honest gated response"
+    },
+    {
+      "id": "LR-GATE-005",
+      "name": "Unattended Nightly Sentinel coverage",
+      "class": "OPERATIONS",
+      "criticality": "P0",
+      "status": "FAIL",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Scheduled Claude sentinel executed zero checks because WebFetch required interactive provenance approval"
+      ],
+      "requiredEvidence": [
+        "Repo-native allowlisted fetch implementation",
+        "Retries, timeouts, JSON and Markdown receipts",
+        "Cryptographic and claim-hygiene checks",
+        "Scheduled execution with two consecutive green runs"
+      ],
+      "owner": "reliability",
+      "rollback": "Disable only the broken schedule while preserving manual probe commands"
+    },
+    {
+      "id": "LR-GATE-006",
+      "name": "Pricing, checkout, FAQ, and Terms refund consistency",
+      "class": "LEGAL_REVENUE_TRUTH",
+      "criticality": "P0",
+      "status": "FAIL",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Pricing promises a 3-day money-back guarantee",
+        "Production Terms describe refunds as discretionary",
+        "DEC-050 records a branch fix that is not deployed"
+      ],
+      "requiredEvidence": [
+        "One canonical refund contract",
+        "Cross-surface source and regression test",
+        "Approved legal/commercial wording",
+        "Production probe after deployment"
+      ],
+      "owner": "revenue-truth",
+      "rollback": "Withhold the stronger promise until every surface and operational process agrees"
+    },
+    {
+      "id": "LR-GATE-007",
+      "name": "Production analytics configuration",
+      "class": "OBSERVABILITY",
+      "criticality": "P1",
+      "status": "FAIL",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Production HTML initializes Microsoft Clarity with the literal identifier undefined",
+        "Cloudflare analytics beacon is present"
+      ],
+      "requiredEvidence": [
+        "Valid identifier or intentional script omission",
+        "Build/runtime test preventing undefined identifiers",
+        "Verified session/event arrival",
+        "Consent and privacy behavior confirmed"
+      ],
+      "owner": "product-analytics",
+      "rollback": "Omit the optional analytics integration when configuration is absent"
+    },
+    {
+      "id": "LR-GATE-008",
+      "name": "Paid-plan promise-to-runtime parity",
+      "class": "REVENUE_TRUTH",
+      "criticality": "P0",
+      "status": "UNKNOWN",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Pricing publicly promises premium tools and real-time email/push alerts",
+        "No end-to-end production entitlement and delivery evidence was established in this baseline"
+      ],
+      "requiredEvidence": [
+        "Sentence-level paid-promise inventory",
+        "Canonical entitlement mapping",
+        "Implementation and dependency path",
+        "End-to-end test for every promised capability",
+        "Honest degraded/unavailable state",
+        "Production account verification"
+      ],
+      "owner": "revenue-product",
+      "rollback": "Withhold or revise any promise lacking production proof"
+    },
+    {
+      "id": "LR-GATE-009",
+      "name": "Stripe test-mode checkout lifecycle",
+      "class": "REVENUE",
+      "criticality": "P0",
+      "status": "UNKNOWN",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Repository contains substantial billing, webhook, paywall, and entitlement hardening",
+        "A current end-to-end checkout-to-entitlement receipt was not established in this baseline"
+      ],
+      "requiredEvidence": [
+        "Checkout success and cancel paths",
+        "Signed webhook verification",
+        "Idempotency and replay behavior",
+        "Subscription upgrade, downgrade, cancel, refund, and restore",
+        "Entitlement convergence",
+        "Customer portal behavior",
+        "No secret material in logs or receipts"
+      ],
+      "owner": "billing-engineering",
+      "rollback": "Disable checkout entry while preserving account and public free surfaces"
+    },
+    {
+      "id": "LR-GATE-010",
+      "name": "Stripe live transaction and payout readiness",
+      "class": "REVENUE",
+      "criticality": "P0",
+      "status": "OWNER_GATE",
+      "mayAutoOpen": false,
+      "currentEvidence": [
+        "Live credential, price, webhook, tax, payout, and dashboard configuration were not inspected or mutated"
+      ],
+      "requiredEvidence": [
+        "Owner confirms live account and payout readiness",
+        "Live price IDs match public plan copy",
+        "Production webhook endpoint and secret configured",
+        "Owner-approved low-risk live purchase",
+        "Entitlement and cancellation verified",
+        "Refund/support procedure verified"
+      ],
+      "owner": "founder-billing",
+      "rollback": "Disable live checkout and preserve the test-mode path"
+    },
+    {
+      "id": "LR-GATE-011",
+      "name": "Authentication and account lifecycle in production",
+      "class": "IDENTITY",
+      "criticality": "P0",
+      "status": "UNKNOWN",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Public sign-in and account entry points are rendered",
+        "A complete production sign-in, session, account, entitlement, and sign-out receipt was not established"
+      ],
+      "requiredEvidence": [
+        "New and returning user flows",
+        "Session expiry and revocation",
+        "Role and ADMIN enforcement",
+        "OAuth/email callback correctness",
+        "Account deletion/privacy behavior",
+        "Production browser evidence"
+      ],
+      "owner": "identity",
+      "rollback": "Disable account-dependent conversion paths while preserving public read-only surfaces"
+    },
+    {
+      "id": "LR-GATE-012",
+      "name": "Production schema and migration convergence",
+      "class": "DATA",
+      "criticality": "P0",
+      "status": "OWNER_GATE",
+      "mayAutoOpen": false,
+      "currentEvidence": [
+        "Several additive migration lanes remain founder-gated",
+        "No production migration was authorized or executed during this baseline"
+      ],
+      "requiredEvidence": [
+        "Migration ledger reconciled",
+        "Shadow database validation",
+        "Production drift diff reviewed",
+        "Backup and rollback plan",
+        "Founder-approved migrate deploy",
+        "Post-migration probes"
+      ],
+      "owner": "founder-data",
+      "rollback": "Use additive compatibility and restore from verified backup when necessary"
+    },
+    {
+      "id": "LR-GATE-013",
+      "name": "Schedulers, ingestion, settlement, and data freshness",
+      "class": "ENGINE_OPERATIONS",
+      "criticality": "P0",
+      "status": "UNKNOWN",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Public site displays current data and settled-record counts",
+        "A complete scheduler inventory and fresh production-run receipt was not established"
+      ],
+      "requiredEvidence": [
+        "Every cron/worker has owner, cadence, last success, freshness SLO, and alert",
+        "Ingestion and settlement idempotency",
+        "No immortal pending picks",
+        "Honest outage and stale-data states",
+        "Fresh production run receipts"
+      ],
+      "owner": "data-reliability",
+      "rollback": "Fail closed or show an honest stale/unavailable state"
+    },
+    {
+      "id": "LR-GATE-014",
+      "name": "Public performance and win-rate claims",
+      "class": "CLAIM_GOVERNANCE",
+      "criticality": "P0",
+      "status": "EVIDENCE_GATED",
+      "mayAutoOpen": false,
+      "currentEvidence": [
+        "Trust and proof guardrails exist",
+        "Publication eligibility depends on population, sample, calibration, and founder policy"
+      ],
+      "requiredEvidence": [
+        "Canonical eligible population",
+        "Minimum sample and calibration thresholds",
+        "Seed/bootstrap exclusion",
+        "Reproducible proof receipt",
+        "Claim language review",
+        "Founder approval"
+      ],
+      "owner": "founder-claims",
+      "rollback": "Withhold the metric and preserve methodology/proof explanations"
+    },
+    {
+      "id": "LR-GATE-015",
+      "name": "Email and push alert delivery",
+      "class": "REVENUE_FEATURE",
+      "criticality": "P0",
+      "status": "UNKNOWN",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Real-time email and push alerts are presented as an Elite benefit",
+        "Current draft-only doctrine prohibits uncontrolled outbound publishing/sending"
+      ],
+      "requiredEvidence": [
+        "Explicit user opt-in",
+        "Entitlement check",
+        "Draft/approval or permitted automated-send policy",
+        "Provider configuration",
+        "Deduplication and rate limits",
+        "Unsubscribe and preference controls",
+        "End-to-end delivery receipt"
+      ],
+      "owner": "notifications",
+      "rollback": "Withhold the paid promise and keep alert generation draft-only"
+    },
+    {
+      "id": "LR-GATE-016",
+      "name": "News sitemap publication intent",
+      "class": "SEO_CONTENT",
+      "criticality": "P2",
+      "status": "PARTIAL",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "/news-sitemap.xml returns valid XML with an empty URL set"
+      ],
+      "requiredEvidence": [
+        "Confirm whether zero eligible news URLs is intentional",
+        "If not intentional, repair content eligibility or sitemap generation",
+        "Search-console and crawl validation"
+      ],
+      "owner": "content-seo",
+      "rollback": "Serve a valid empty sitemap rather than fabricated or ineligible URLs"
+    },
+    {
+      "id": "LR-GATE-017",
+      "name": "Branch, PR, and capability accounting",
+      "class": "RELEASE_GOVERNANCE",
+      "criticality": "P0",
+      "status": "PARTIAL",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "User-provided campaign receipt reports 114 of 138 long-tail branches evidenced through DEC-052",
+        "Twenty-four sensitive branches remain in task #74",
+        "Some branch-local state and PR summaries lag the latest decision ledger"
+      ],
+      "requiredEvidence": [
+        "138 of 138 branches have evidence-backed disposition",
+        "Every open PR has a current disposition",
+        "Every unique useful unit has one canonical owner",
+        "Current state, queue, decision register, recovery matrix, and PR body agree",
+        "Deletion receipts for any branch removal"
+      ],
+      "owner": "release-governance",
+      "rollback": "Preserve branches and classify UNKNOWN rather than delete or supersede without proof"
+    },
+    {
+      "id": "LR-GATE-018",
+      "name": "Release-candidate verification",
+      "class": "RELEASE",
+      "criticality": "P0",
+      "status": "BLOCKED",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "No single approved release-candidate commit currently represents the reconciled product",
+        "PR #129 is an accounting/recovery container and must not be merged wholesale"
+      ],
+      "requiredEvidence": [
+        "Bounded release branch and commit",
+        "Focused and full tests",
+        "Typecheck and zero-warning lint",
+        "All applicable guardrails",
+        "Build, secret scan, Prisma validation when applicable",
+        "Independent review and protected-zone red team",
+        "Browser, accessibility, and responsive QA",
+        "Two stable preview deployments"
+      ],
+      "owner": "release-conductor",
+      "rollback": "Discard the candidate branch without affecting production"
+    },
+    {
+      "id": "LR-GATE-019",
+      "name": "Revenue funnel observability",
+      "class": "REVENUE_OBSERVABILITY",
+      "criticality": "P1",
+      "status": "UNKNOWN",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Pricing and checkout calls-to-action are public",
+        "A verified end-to-end funnel event sequence was not established",
+        "Clarity configuration is currently defective"
+      ],
+      "requiredEvidence": [
+        "Plan-view, CTA, checkout-start, checkout-complete, entitlement-active, cancellation, and refund events",
+        "Privacy-safe identifiers",
+        "Deduplication and test-event separation",
+        "Dashboard or query proving event arrival",
+        "Conversion and failure funnel"
+      ],
+      "owner": "growth-reliability",
+      "rollback": "Remove optional broken analytics rather than report false coverage"
+    },
+    {
+      "id": "LR-GATE-020",
+      "name": "Post-launch observation and rollback readiness",
+      "class": "OPERATIONS",
+      "criticality": "P0",
+      "status": "BLOCKED",
+      "mayAutoOpen": true,
+      "currentEvidence": [
+        "Cannot begin until a release candidate is approved and deployed"
+      ],
+      "requiredEvidence": [
+        "24-hour and 7-day observation windows",
+        "Runtime, checkout, webhook, entitlement, ingestion, settlement, proof, and data-freshness metrics",
+        "Incident owner and rollback command",
+        "No unresolved P0/P1 regression",
+        "Post-launch receipt"
+      ],
+      "owner": "launch-operations",
+      "rollback": "Promote the last verified deployment and close affected gates"
+    }
+  ]
+}
