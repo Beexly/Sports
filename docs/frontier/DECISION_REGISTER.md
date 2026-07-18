@@ -3881,3 +3881,68 @@ stitching) — recorded here so no backtest can slip past it.
   these branches); only the assumption that the promoter itself is functional and safe to port is
   corrected here, per the established "fix forward, disclose the correction, never silently rewrite an
   already-pushed entry" rule (DEC-051, DEC-053).
+
+## DEC-063 — Task #75 (partial): `oos-split.ts` ported standalone into packages/prediction-engine,
+  dark, after independent re-verification of DEC-062's honesty judgment (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: task #75, continuing directly from DEC-062. `oos-split.ts` (the out-of-sample split
+  harness `model-promoter.ts` depended on) was identified during that investigation as honest, real,
+  deterministic code — unlike its declined consumer — and independently valuable on its own merits
+  (real Brier/accuracy calibration split by a time boundary into in-sample vs out-of-sample cohorts,
+  overfit detection). This entry ports it standalone, with the same protected-zone rigor as every other
+  `packages/prediction-engine` change this campaign.
+- Code: `packages/prediction-engine/src/oos-split.ts` (new) — `computeOosSplit(picks, config)` splits
+  settled picks by an immutable time boundary and computes real calibration for each cohort via the
+  already-existing `computeWindowCalibration` (`calibration-drift.ts`); `segmentOosSplit` additionally
+  breaks the OOS cohort down by pick type. `packages/prediction-engine/src/__tests__/oos-split.test.ts`
+  (new, 8 tests — 7 ported + 1 added, see below). `packages/prediction-engine/src/index.ts` — one new
+  barrel-export block appended (matching the established "dark" pattern from DEC-061/DEC-057-060),
+  documenting in-line that this module's would-be consumer was declined and that this harness was
+  ported standalone on independently-verified merit.
+- **A real bug was found and fixed during the port, not just copied through.** The source branch's
+  `oos-split.ts` failed `tsc --noEmit` on `pdcswh`'s stricter config:
+  `healthSummary = ... Math.abs(deltaStr) === "0.0" ...` called `Math.abs()` on `deltaStr`, a `string`
+  (the result of `.toFixed(1)`), not the intended numeric delta. Fixed by taking the absolute value of
+  the numeric `brierDelta * 100` before formatting:
+  `Math.abs(brierDelta * 100).toFixed(1) === "0.0"`. Added a new test ("reports an even health summary
+  when OOS and in-sample Brier match") with two identical cohorts (`brierDelta === 0` exactly) asserting
+  the literal expected string — a real regression test for the exact line that was buggy, not a
+  restatement of what the code already did.
+- Independent review: one `gse-red-team` pass — completed cleanly with no stall, zero confirmed
+  findings. Independently re-verified (not trusted from the port's own framing): read `oos-split.ts` end
+  to end and confirmed no stub/hardcoded/tautological logic anywhere (the exact defect class that
+  disqualified `model-promoter.ts`); traced the type-error fix by hand across 5 boundary cases
+  (`brierDelta` of exactly 0, a tiny positive delta, a tiny negative delta, a real 0.3% delta each
+  direction) and confirmed correct "even" vs "X% better/worse" behavior in every case; re-ran an
+  independent repo-wide grep confirming zero live callers; re-ran `tsc --noEmit` and the full
+  `packages/prediction-engine` suite directly rather than trusting the description; confirmed probability
+  clamping (`Math.max(0, Math.min(1, ...))`) is applied at all 3 construction sites before any value
+  reaches calibration math; confirmed the module's "cohort boundary is immutable" docstring is honest
+  framing of a caller obligation for a pure function, not a false claim of code-enforced state; confirmed
+  the new export block is a pure, collision-free append.
+- Evidence: `cd packages/prediction-engine && npx vitest run src/__tests__/oos-split.test.ts` 8/8 green;
+  full `packages/prediction-engine` suite 148/148 files, 1495/1495 tests green; whole-workspace
+  `npm run typecheck` clean across all 12 packages; `npm run guardrails` 17/17 green; `apps/web`
+  production build succeeded; full `apps/web` suite 653/653 files, 8855/8855 tests green (unaffected, as
+  expected); `git diff --check` clean.
+- Alternatives rejected: leaving the `Math.abs(deltaStr)` type error unfixed and simply not exporting
+  the `healthSummary`-producing code path — rejected as a worse outcome than fixing a small, well-
+  understood, independently-verified bug in code already being ported; treating the type error as a
+  reason to decline the whole module the way `model-promoter.ts` was declined — rejected because a type
+  error is a mechanical defect with an obvious, verifiable fix, categorically different from fabricated
+  statistics with no honest fix available short of a full feature rebuild.
+- Reversibility: 2 new files (module + test — delete to roll back) + 1 additive `index.ts` export-block
+  append (git-revertable) — single revert commit undoes the whole item. No migration, no live path
+  touched, no `MODEL_VERSION` change.
+- Protected zones: `packages/prediction-engine` (calibration/model-governance-adjacent) — full dedicated
+  rigor applied per this campaign's standing protected-zone discipline, consistent with DEC-061 and
+  DEC-062.
+- Files: `packages/prediction-engine/src/oos-split.ts`,
+  `packages/prediction-engine/src/__tests__/oos-split.test.ts`,
+  `packages/prediction-engine/src/index.ts`.
+- Supersedes: none. Task #75 now has one component permanently declined (`model-promoter.ts`, DEC-062)
+  and one component landed (`oos-split.ts`, this entry). Remaining open under task #75: the 91-file DFS
+  product tree on `claude/laughing-wozniak-gyryjx` and `happy-goodall-8lkxrb`'s 25-module `lib/gse`
+  layer, both deliberately out of scope this pass given their size — each needs its own dedicated
+  freeze-contract cycle in a future session, per DEC-054's original judgment.

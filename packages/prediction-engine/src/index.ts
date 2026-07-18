@@ -1035,3 +1035,23 @@ export type {
   SyntheticPublicLean,
   FadeContribution,
 } from "./synthetic-fade.js";
+
+// Out-of-sample split harness — divides settled picks into in-sample (training)
+// and out-of-sample (test) cohorts by an immutable time boundary, and reports
+// calibration health for each. Pure, no I/O, no stubs — real Brier/accuracy via
+// the existing calibration-drift.js primitives. Dark: not wired into any live
+// governance path. (A champion/challenger promoter was evaluated as this
+// module's consumer and declined — DEC-062 — for fabricated CLV and a
+// structurally-tied Brier comparison; this harness itself was independently
+// verified honest and is ported standalone, on its own merits.)
+export {
+  computeOosSplit,
+  segmentOosSplit,
+} from "./oos-split.js";
+export type {
+  SettledPickRecord,
+  OosSplitConfig,
+  OosSplitResult,
+  OosSegment,
+  SegmentedOosSplit,
+} from "./oos-split.js";
