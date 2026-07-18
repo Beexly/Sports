@@ -5,6 +5,7 @@ import {
   type MediaLane,
   type MediaLaneStatus,
 } from "@/lib/media/control-plane";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -67,6 +68,7 @@ function statusLabel(status: MediaLaneStatus): string {
 }
 
 export default async function CockpitMediaPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const [control, legacy] = await Promise.all([
     Promise.resolve(readMediaControlPlane(process.env as Record<string, string | undefined>)),
     loadLegacyMediaItems(),

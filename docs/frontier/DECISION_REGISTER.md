@@ -1497,3 +1497,70 @@ stitching) — recorded here so no backtest can slip past it.
   `package-lock.json`, `reports/reconciliation/FILE_SYMBOL_OWNERSHIP.csv` (all modified/new).
 - Supersedes: none. Closes R0.6 item 2 of 6; items 3-6 (#93/converges-with-#123, #86, #84, #89) remain future
   bounded waves.
+
+## DEC-037 — Recovery Wave R0.6.3: cockpit per-page ADMIN defense-in-depth (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Recovery Wave R0.6, item 3 of 6. Ports historical PR #123 (`claude/cockpit-page-auth-rebased`,
+  never merged, confirmed still-live via R0.5) forward onto the CURRENT `main` tip. This item converges with
+  the seed's own Wave R1 (both target the same #93/#123 gap) — treated as one unit, not two.
+- Contract frozen before coding: the historical branch was based on an OLDER main tip (`e9fab35`, PR #118)
+  than current `main` (`0e56c477`, PR #119). Diffed all 32 target `page.tsx` files + `require-admin.ts` between
+  that old base and current `main` before touching anything: only ONE file
+  (`apps/web/app/cockpit/page.tsx`, the root cockpit page) had drifted, and that drift (an unrelated
+  memory-write-path status display deep in a `MemoryProtocolZone` helper) doesn't overlap with this fix's
+  insertion point (import + first line of the component). A second historical file
+  (`packages/prediction-engine/.../source-rights-registry-fixtures.ts`) was confirmed via direct grep to
+  already be on `main` via an unrelated, already-superseded lineage — deliberately excluded from this port,
+  not an accidental omission.
+- Decision: applied the historical diff via `git apply` (verified `--check` clean first) for the in-scope
+  files only. New `apps/web/lib/cockpit/require-admin.ts` exports `requireCockpitAdmin()`: unauthenticated →
+  redirect to sign-in; authenticated non-admin → redirect to `/`; admin → no-op. All 32
+  `apps/web/app/cockpit/**/page.tsx` files now call `await requireCockpitAdmin();` as the first statement in
+  their exported page component (several needed a non-async→async conversion to support the `await`).
+  New source-scan test `apps/web/__tests__/cockpit-page-auth.test.ts` (36 tests) recursively walks the cockpit
+  page tree and asserts every discovered `page.tsx` both imports and calls the guard — so a future cockpit page
+  that forgets it fails CI automatically, not on review hope — plus 3 unit tests pinning the helper's own
+  redirect behavior. `apps/web/package.json` updated to include the new test in both `test:cockpit` and
+  `test:brand-safety` aggregate scripts.
+- Independent review: one `gse-red-team` pass (went idle without a stall notification this time — a variant
+  of the session's standing agent-stall protocol; resumed via a direct `SendMessage` using the already-known
+  agentId rather than waiting on a notification that hadn't fired). **Zero CONFIRMED findings across all 9
+  review points**, each backed by direct evidence: (1) spot-checked 10+ of the 32 pages (including every
+  non-async→async conversion and every dynamic-route page) — `await requireCockpitAdmin();` is genuinely the
+  first statement before any data fetch in every case; found one harmless belt-and-suspenders redundant inline
+  check in `film-room/page.tsx`, not a defect. (2) The layout's own documented `ERR_TOO_MANY_REDIRECTS`
+  incident was specifically about redirecting to `/auth/signin` (which bounces signed-in users back via
+  `callbackUrl`); `require-admin.ts`'s `redirect("/")` for a signed-in non-admin has no such loop path — `/`
+  itself contains no redirect logic. Disproven as a concern, not a bug. (3) `auth()` never throws (wraps its
+  real implementation in try/catch, returns `null` on any failure — fails closed); confirmed no `try/catch`
+  anywhere wraps the guard call site across all 32 files. (4) `apps/web/app/api/cockpit/**` (~20 route handlers)
+  is a genuinely separate, unaudited surface — correctly out of scope for this page-level fix, flagged as the
+  next logical hardening item rather than a silent gap this PR claims to close. (5) The root page's
+  drift-merged content renders well after the guard, no shadowing or leak-before-check. (6) the excluded
+  fixtures-file decision independently re-confirmed correct. (7) the source-scan test's `it.each` genuinely
+  generates one real per-file assertion at collection time (not a loophole); the loose `>=30` sanity floor is
+  correctly scoped as a catastrophic-failure backstop, not a substitute for the per-file checks. (8) scope
+  confined to exactly the described files. (9) all test/typecheck commands re-run directly and green.
+- Evidence: `npx vitest run __tests__/cockpit-page-auth.test.ts` 36/36; `npm run test:cockpit` 24 files/279
+  tests (was 279 per PR #123's own original body — reconfirmed, not regressed); `npm run test:brand-safety` 20
+  files/3053 tests; full `apps/web` suite run once whole (before the red-team pass, as its own gate): 634 files
+  / 8,592 tests, all green (was 633/8,551 pre-fix — the delta reconciles to the 36 new cockpit-page-auth tests
+  plus 5 other tests from concurrent DEC-035/036 work already landed this session); `npx tsc --noEmit` clean;
+  `git diff --check` clean; `secret-scan.mjs` (explicit paths) clean.
+- Alternatives rejected: re-deriving all 32 page insertions by hand instead of a verified `git apply` — rejected
+  as needless risk/effort once drift analysis proved the patch would apply cleanly; the manual-verification
+  effort went into confirming the ONE drifted file and the TWO ancillary files' status instead. Porting the
+  excluded fixtures-file change "to be safe" — rejected once direct grep proved it already on main via a
+  different, already-superseded lineage (re-adding it would risk a duplicate/conflicting entry).
+- Reversibility: strictly additive defense-in-depth (adds a redirect-before-render check; never removes or
+  weakens the existing layout-level check). Revert commit if any regression surfaces. Never merged to `main` —
+  founder-merge-only, tracked by the existing accounting PR #129 (converges with founder-owned PR #123's own
+  eventual disposition per `RECOVERY_WAVES.md`'s Group F entry).
+- Protected zones: entitlements, auth — red-teamed. Zero settlement/CLV/billing/pricing logic touched.
+- Files: `apps/web/lib/cockpit/require-admin.ts` (new), `apps/web/__tests__/cockpit-page-auth.test.ts` (new),
+  `apps/web/package.json`, all 32 `apps/web/app/cockpit/**/page.tsx` files (all modified).
+- Supersedes: none. Closes R0.6 item 3 of 6 (converges with the seed's Wave R1). Items 4-6 (#86, #84, #89)
+  remain future bounded waves — #86 already thoroughly scoped this session (a substantial `settle-sport.ts`
+  refactor extracting a shared `settleCompletedGame()` function plus a new catch-up HEAL/VOID sweep; must be
+  manually reconciled with this session's own DEC-035 `take:240` fix in the same function, not blind-applied).

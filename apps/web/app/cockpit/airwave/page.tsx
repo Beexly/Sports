@@ -12,6 +12,7 @@ import {
 import { readIntelligenceControlPlane } from "@/lib/airwave/intelligence-control-plane";
 import type { IntakeLaneState } from "@/lib/airwave/intake-contract";
 import type { ClaimCandidateOperatorStatus } from "@/lib/airwave/claim-extraction-contract";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +60,7 @@ function punditName(id: string): string {
 }
 
 export default async function CockpitAirwavePage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const [control, intake] = await Promise.all([
     Promise.resolve(readAirwaveControlPlane(process.env as Record<string, string | undefined>)),
     readAirwaveIntakeReadiness(process.env as Record<string, string | undefined>),

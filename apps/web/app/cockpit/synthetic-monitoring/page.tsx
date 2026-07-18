@@ -6,6 +6,7 @@ import {
   type SyntheticCheckStatus,
   type SyntheticSeverity,
 } from "@/lib/synthetic-monitoring/dashboard";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,7 @@ const SEVERITY_STYLES: Readonly<Record<SyntheticSeverity, string>> = {
 };
 
 export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const dashboard = await loadSyntheticMonitoringDashboardFromDisk();
 
   return (

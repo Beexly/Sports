@@ -18,6 +18,7 @@ import type {
   ModerationReasonCode,
   ModerationReportStatus,
 } from "@prisma/client";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -118,6 +119,7 @@ function slaClass(deadline: Date): string {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function CockpitModerationPage(): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const [reports, appeals] = await Promise.all([loadReports(), loadAppeals()]);
 
   const dbUnavailable = reports === null || appeals === null;

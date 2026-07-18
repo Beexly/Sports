@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db } from "@sports/db";
 import { getReadinessGates, buildCalibrator, DEFAULT_MIN_CALIBRATION_SAMPLE } from "@sports/prediction-engine";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 /**
  * Cockpit calibration — live data binding, rebuilt. Preserves the
@@ -45,6 +46,7 @@ const MARKET_BASELINE = {
 } as const;
 
 export default async function CockpitCalibrationPage() {
+  await requireCockpitAdmin();
   const gates = getReadinessGates();
 
   // Defensive counts — page renders zeros in stub mode / DB outage.

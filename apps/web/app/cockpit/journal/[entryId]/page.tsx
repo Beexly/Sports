@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadJournalEntryDetail, type JournalEntryDetail } from "@/lib/journal/load";
 import { JournalEntryEditor } from "./journal-entry-editor";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -136,6 +137,7 @@ export default async function CockpitJournalEntryPage({
 }: {
   readonly params: Params;
 }): Promise<JSX.Element> {
+  await requireCockpitAdmin();
   const entry = await loadJournalEntryDetail(params.entryId);
   if (!entry) notFound();
 

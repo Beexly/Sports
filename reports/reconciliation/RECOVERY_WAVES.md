@@ -71,10 +71,14 @@ higher-numbered waves in this same sequence.
    production `DATABASE_URL` silently dropped writes while `/api/health` reported healthy — an operational
    blind spot that could mask a total outage. Protected zones: production integrity, observability — mandatory
    red-team (completed).
-3. **#93 — cockpit per-page ADMIN.** Already tracked as open PR #123 (`RECOVER_WHOLE` per Group F above) — this
-   wave's action is to re-verify #123's rebase against the CURRENT main tip (same as Wave R1, below; R0.6 and
-   R1 converge on the same unit of work) rather than re-deriving #93 from scratch. Protected zones: entitlements,
-   auth.
+3. **DONE (2026-07-18, DEC-037) — #93 — cockpit per-page ADMIN.** Re-verified PR #123's rebase against the
+   CURRENT main tip: only 1 of 32 target files had drifted (non-overlapping), applied via a verified-clean
+   `git apply`. New `apps/web/lib/cockpit/require-admin.ts` called first in all 32 cockpit `page.tsx` files;
+   new 36-test source-scan suite makes a future page that forgets the guard fail CI automatically. gse-red-team
+   CONFIRMED CLEAN on all 9 review points, zero findings. `test:cockpit` 279/279, `test:brand-safety` 3053/3053,
+   full `apps/web` suite 634/8,592 green. Committed and pushed to `claude/galaxy-sports-edge-pdcswh`, tracked
+   by the existing accounting PR #129 (converges with PR #123's own eventual founder disposition). Protected
+   zones: entitlements, auth — mandatory red-team (completed).
 4. **#86 — picks stuck PENDING forever.** No terminal-state sweep for cancelled/postponed/feed-missed games;
    `daysFrom` still 2 not 3. Protected zones: settlement, data integrity.
 5. **#84 — orphaned CLV grades.** A crash between settle-write and CLV-write permanently drops that pick from
@@ -91,10 +95,10 @@ own "one bounded recovery wave," per the contract's own law, not a single mega-w
 
 ## Wave R1 — Security hardening (#123)
 
-Per-page Cockpit ADMIN checks. Seed disposition `RECOVER_WHOLE` stands, but the branch's zero-conflict-rebase
-claim was made against an older main tip; main has since advanced (through #119/#120 at minimum). Re-verifying
-the rebase against the CURRENT main tip, then re-running `test:cockpit`/`test:brand-safety`/full web suite, is
-the concrete next action — not performed this pass.
+**DONE (2026-07-18) — converged with R0.6 item 3 above (DEC-037).** Per-page Cockpit ADMIN checks re-verified
+against the CURRENT main tip and landed. The founder's own disposition of PR #123 itself (close as
+superseded-by-this-port, or keep separately for its own review trail) remains an OWNER_GATE — this wave did
+not close or modify PR #123, only ported its content forward onto `pdcswh`.
 
 ## Wave R2 — Genesis shadow kernel (#127)
 
@@ -183,8 +187,8 @@ first; (3) for each, apply the SAME comparison-method tiers used in R0.5 before 
 R0    Land #128 (founder-merge-only; agent work complete)
 R0.5  DONE (2026-07-18) — Verify #76-96 PR-content gap: 5 SUPERSEDED, 16 RECOVER_WHOLE
 R0.6  Recover the 6 live-defect fixes from R0.5 (#92 > #82 > #93 > #86 > #84 > #89)
-      — items 1-2 (#92, #82) DONE (DEC-035/036, 2026-07-18); items 3-6 NOT performed this pass
-R1    Re-verify #123 rebase against current main tip (converges with R0.6 item 3)
+      — items 1-3 (#92, #82, #93) DONE (DEC-035/036/037, 2026-07-18); items 4-6 NOT performed this pass
+R1    DONE (2026-07-18) — converged with R0.6 item 3 (DEC-037); PR #123's own disposition stays OWNER_GATE
 R2    #127 founder decision (agent work complete)
 R3    Done
 R4    Done (this pass)

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { db } from "@sports/db";
 import { AGENTS } from "@/lib/cockpit/agents";
 import type { CockpitTaskStatus } from "@prisma/client";
+import { requireCockpitAdmin } from "@/lib/cockpit/require-admin";
 
 // Operator data is read per request; never statically prerendered.
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ const STATUS_GROUPS: ReadonlyArray<{
 ];
 
 export default async function CockpitTasksPage() {
+  await requireCockpitAdmin();
   const tasks = await db.cockpitTask
     .findMany({
       orderBy: [{ priority: "desc" }, { updatedAt: "desc" }],
