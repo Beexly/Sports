@@ -404,12 +404,33 @@ counts 1-2 (cheapest tier first).**
 
 Running total after this slice: **88 of 138** long-tail branches individually evidenced.
 
-**Next slice:** the remaining 50-branch pool (novel-file counts 3 to 701). Several of those
-(`claude/keen-ptolemy-*` cluster, `codex/galaxy-dynasty-studio-rescue-v2`, `safety/sports-wip-2026-06-04`,
+**Next slice DONE (2026-07-18, DEC-052): 26 more branches, novel-file counts 3-11.**
+- **11 more ARCHIVE_ONLY** — a different noise signature this time: a self-describing
+  `_overnight_quarantine/*` cluster (stale git locks + partial-install debris from a local Windows rebuild
+  session, its own README says "safe to remove"), not the source-rights shim.
+- **The `warp-nebula` RECOVER_WHOLE candidate cluster grows from 3 to 10 branches** — 7 more independently
+  carry the identical asset, several bundled with additional distinct novel content of their own (an NFL
+  coaches feature, a tracker-segmentation feature, presenter image assets, test suites). Ten independent
+  convergences on the same unshipped asset makes it the strongest recovery candidate in the long tail.
+- **New clean setup-script RECOVER_WHOLE candidate**: `claude/debug-previous-fix-g06Wz`'s cross-platform
+  `setup.sh`/`.cmd`/`.ps1` trio — verified no hardcoded secret (copies from `.env.example` instead, unlike
+  DEC-051's `local.sh` finding).
+- **Several protected-zone / sensitive items named but deliberately NOT investigated beyond filenames**:
+  an `NgsVisualizer.tsx` (NGS licensed-data display, a guardrail-policed area), a branch touching
+  `settle-results.ts` (settlement protected zone), a `gse-score.ts`/`gse-method-spec.ts` pair (prediction-
+  engine methodology protected zone), a corporate-structure/business-strategy doc cluster (sensitive
+  founder-owned business content, not read), and a "presenter" image-asset branch (human-appearing stock
+  images, licensing/product-direction unclear — flagged for founder awareness, images not opened). Full
+  per-branch detail and rationale for each in DEC-052.
+
+Running total after this slice: **114 of 138** long-tail branches individually evidenced.
+
+**Next slice:** the remaining 24-branch pool, all with 13+ novel files each (several 100+):
+`claude/keen-ptolemy-*` cluster, `codex/galaxy-dynasty-studio-rescue-v2`, `safety/sports-wip-2026-06-04`,
 `claude/compassionate-ramanujan-qqt5nb`, `fix/overnight-codex-feature-gates-260524`, `codex/autonomy-
-release-command-center-2026-05-28`) have 100+ novel files each and need dedicated, individually-scoped
-triage passes, not a batch sweep. `intraday-odds-scheduler` stays open as a standing OWNER_GATE candidate,
-not a blocker.
+release-command-center-2026-05-28`, and others — each needs its own dedicated, individually-scoped triage
+pass, not a batch sweep. `intraday-odds-scheduler` and the `local.sh` hardcoded-key finding stay open for
+founder review, neither a blocker.
 
 ## Recommended order (refreshed)
 
@@ -429,8 +450,9 @@ R8    Groups A+B DONE (DEC-043/044). Group A2 core files OWNER_GATE (OG-009, DEC
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   Deletion receipts for the 12 proven-ancestor branches
-R11.5 88/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047, dfs-optimizer-edge DEC-048,
+R11.5 114/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047, dfs-optimizer-edge DEC-048,
       consensus-accuracy-engine DEC-049, 8-branch slice DEC-050 incl. live refund-window fix, 30-branch
-      slice + accounting correction DEC-051 incl. unlanded secret finding); intraday-odds-scheduler +
-      local.sh hardcoded-key finding both open for founder review; next: remaining 50-branch pool
+      slice + accounting correction DEC-051 incl. unlanded secret finding, 26-branch slice DEC-052 incl.
+      several protected-zone/sensitive items flagged for founder review); next: remaining 24-branch pool
+      (13+ novel files each, several 100+, individually-scoped passes only)
 ```

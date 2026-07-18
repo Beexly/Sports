@@ -2868,3 +2868,105 @@ stitching) — recorded here so no backtest can slip past it.
   `claude/compassionate-ramanujan-qqt5nb`, `fix/overnight-codex-feature-gates-260524`,
   `codex/autonomy-release-command-center-2026-05-28`) have 100+ novel files and need dedicated,
   individually-scoped triage passes, not a batch sweep.
+
+## DEC-052 — Recovery Wave R11.5: 26-branch slice (novel-file counts 3-11); several sensitive/protected-zone
+  items flagged, none investigated beyond filenames (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: continues R11.5 into the next-cheapest tier of the remaining pool (novel-file counts 3-11,
+  26 branches) using the same method — `git diff --name-status --diff-filter=A` against `pdcswh`, then
+  targeted content reads only where a disposition genuinely required it.
+- **11 branches — ARCHIVE_ONLY, confirmed noise.** All 11 carry only the same 5-file
+  `_overnight_quarantine/*` cluster (`README.md`, `api-picks-elite.test.ts.bad`, 3 `index.lock*` variants).
+  Read the quarantine `README.md` directly: it self-describes as "files/dirs renamed out of the way during
+  the overnight rebuild because the sandbox ACL would not let me delete them... safe to remove," referencing
+  a Windows path (`C:\Users\Garrett\Documents\Claude\Projects\AI Sports`) — confirmed operational debris
+  from a local rebuild session, not product content. Branches: `airwave/gse-gsn-overnight-intelligence-v1`,
+  `claude/edge-map-rebuild-2026-06-04`, `claude/festive-cray-knb0xp`, `claude/gracious-cori-zwqiqs`,
+  `claude/vigilant-archimedes-8m5fry`, `codex/doctrine-fonts-worldclass-hero-2026-05-29`, `codex/homepage-
+  finish-doctrine-2026-05-30`, `galaxy/fable5-2026-public-world-v1`, `jarvis/command-interface-v1`,
+  `jarvis/command-interface-v2`, `jarvis/intelligence-os-foundation-v1`. (Several more branches in this
+  same tier carry this identical quarantine cluster ALONGSIDE other novel content — for those, only the
+  quarantine part is noise; see below.)
+- **`claude/warp-nebula` asset cluster grows to 10 branches total.** Beyond the 3 named in DEC-051
+  (`adoring-knuth-mhg8m4`, `friendly-fermat-fy99m2`, `codex/upgrade-galaxy-statking-to-nfl-intelligence-
+  system`), this slice finds the same byte-identical `warp-nebula.tsx`/`warp-nebula-lazy.tsx` pair in 7 more:
+  `claude/brave-hamilton-g7mlqd`, `claude/wonderful-ptolemy-qh7pnq`, `garrett/resource-dump-2026-06-15`
+  (carries nothing else beyond this + the quarantine noise), `claude/laughing-thompson-x9xr6f`,
+  `claude/happy-euler-trkihe`, `claude/eloquent-goldberg-der80z`, `claude/nifty-hopper-au7wib` (the last 4
+  also carry additional distinct novel content, itemized below). Ten independent branches converging on the
+  same asset strengthens rather than weakens the case that this is a genuinely wanted, still-unshipped
+  feature — still not ported this pass (same reasoning as DEC-051: needs its own freeze contract, a chosen
+  mount point, and a dedup check against the existing hero visual tier), but now recorded as the strongest
+  RECOVER_WHOLE candidate in the long tail.
+- **`claude/debug-previous-fix-g06Wz` — clean cross-platform setup-script trio, new RECOVER_WHOLE
+  candidate.** `scripts/setup.sh`/`setup.cmd`/`setup.ps1` — verified NO hardcoded secret literal in any of
+  the 3 (grepped for `ODDS_API_KEY`/`sk_live`/inline key patterns; the only match is a print statement
+  telling the user to set `THE_ODDS_API_KEY` themselves) — unlike `fix-local-setup-PmnyX`'s `local.sh`
+  (DEC-051), which hardcoded a live-shaped key. Copies from `.env.example` instead. Plausible complement or
+  improvement to `local.sh` (adds Windows support); not ported — needs comparison against `scripts/local.sh`
+  and existing `scripts/morning-setup.mjs` to avoid landing a duplicate.
+- **The following are named with real evidence and explicitly NOT investigated further this pass — several
+  touch protected zones or sensitive business content, and this campaign's rule is to flag rather than
+  casually read/port anything in that category:**
+  - `claude/laughing-thompson-x9xr6f` — `apps/web/app/api/nfl/coaches/route.ts` + `apps/web/lib/nfl/
+    coaches.ts` (an NFL-coaches data feature) + warp-nebula. Plausible real feature; needs its own review.
+  - `claude/happy-euler-trkihe` — `apps/web/lib/tracker/segments.ts` + test (a tracker-segmentation
+    feature) + warp-nebula + quarantine noise. Plausible real feature; needs its own review.
+  - `gse-goldmine-2026-06-27` — `GOLDMINE_MANIFEST.md` + `apps/web/components/cockpit/NgsVisualizer.tsx`.
+    **Flagged as data-rights protected zone**: this repo's own `no-raw-ngs-export.mjs` guardrail exists
+    specifically to police NGS (NFL Next Gen Stats, licensed data) export/display claims — a component
+    named `NgsVisualizer` needs to pass through that same scrutiny before any evaluation, not be casually
+    read. Filename only recorded here; content not read this pass.
+  - `claude/debug-previous-fix-WYyxi` — `.github/dependabot.yml`, the setup-script trio (same as
+    `debug-previous-fix-g06Wz`), plus core lib files: `apps/web/lib/auth-actions.ts`, `picks-data.ts`,
+    `slate-data.ts`, and **`packages/ingestion-pipeline/src/settle-results.ts`** — settlement is an explicit
+    protected zone per this campaign's own rules. Not read beyond the filename list; needs a
+    dedicated, individually-scoped freeze contract before any comparison to current settlement code.
+  - `research/proven-edge` — `docs/GSE_INTERNAL_MASTER.md`, `docs/GSE_PUBLIC_OVERVIEW.md`,
+    `packages/prediction-engine/src/gse-method-spec.ts` + `gse-score.ts` + 2 tests. Prediction-engine
+    scoring/methodology is a protected zone; not read beyond filenames. Possibly an early precursor to the
+    already-live `docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md` / `docs/ip/GSE_METRIC_IP_LEDGER.md` — needs a
+    dedicated compatibility check, not assumed either superseded or valuable.
+  - `claude/galaxy-sports-corporate-structure-Cni9A` — `docs/corporate-structure.md`, `docs/galaxy-sports-
+    edge-master-action-plan.md`, and 3 product specs (`email-lifecycle-spec.md`, `referral-attribution-
+    spec.md`, `stripe-webhook-decisioning-spec.md`). **Flagged as sensitive business content — filenames
+    only, content deliberately NOT read.** Corporate-structure documents are founder-owned business
+    information; recording existence and location for founder awareness is the correct scope for an agent,
+    not evaluating or summarizing the content.
+  - `claude/eloquent-goldberg-der80z` — warp-nebula, `apps/web/components/motion/constellation-field.tsx`,
+    5 "presenter" `.webp` image files (`alt-girl`, `blonde-casual-chic`, `blonde-cheer`, `blonde-gameday`,
+    `blonde-sundress`), `docs/ops/OVERNIGHT_PROMPT.md`. **Flagged as sensitive — human-appearing image
+    assets for an apparent "presenter"/spokesperson feature not mentioned anywhere in current `CLAUDE.md`.**
+    Images not opened; filenames only. This needs explicit founder awareness (licensing/provenance of the
+    images, whether a presenter persona is even an intended product direction) before any technical
+    evaluation, not a code-quality judgment from this agent.
+  - `claude/dazzling-newton-NFI8X` — `apps/web/components/hero/signal-breach-intro.tsx` +
+    `docs/experience-director-audit-2026.md`. Named, not read beyond filenames.
+  - `claude/clever-bohr-po46pm` — `docs/ai-ops/current-handoff.md` + `usage-conservation-stack.md`. Likely
+    stale operational handoff notes from an earlier session; low priority, named not read.
+  - `fix/overnight-operator-doc-guards-260524` — `apps/web/__tests__/operator-docs-safety.test.ts`.
+    Possibly a legitimate safety-test addition; named, not read this pass.
+  - `claude/nifty-hopper-au7wib` — warp-nebula, `constellation-field.tsx`, 4 real test files
+    (`board-signature-interaction.test.ts`, `public-cosmic-cohesion.test.ts`, `top-routes-seo-metadata.
+    test.ts`, `ux-contrast.test.ts`), and `docs/ops/{LESSONS,NIGHT_AUDIT,NIGHT_QUEUE,OVERNIGHT_PROMPT}.md`.
+    The 4 test files look like a promising a11y/SEO/UX-coverage RECOVER_WHOLE candidate; named, not read
+    beyond confirming the filenames this pass.
+- Evidence: every disposition is from a directly-run `git diff --name-status --diff-filter=A` and, only
+  where needed to confirm noise-vs-signal, a direct `git show` read (the quarantine `README.md`, the
+  3 setup-script files' grep for secret literals) — no content read for anything flagged as sensitive/
+  protected-zone above.
+- Alternatives rejected: reading `corporate-structure.md` or the presenter images to give a fuller
+  disposition — rejected because this campaign's own scope is technical reconciliation, not business-content
+  or brand/likeness judgment calls that belong to the founder; opening `NgsVisualizer.tsx` or
+  `settle-results.ts` to assess quality before a dedicated freeze contract — rejected for the same reason
+  DEC-045 reclassified Group A2 as OWNER_GATE rather than porting on inspection: protected-zone content gets
+  a scoped contract first, not an ad hoc read.
+- Reversibility: N/A — no code changed this pass (documentation/ledger only).
+- Protected zones: settlement (`settle-results.ts`), prediction-engine scoring methodology
+  (`gse-score.ts`/`gse-method-spec.ts`), NGS licensed-data display (`NgsVisualizer.tsx`), and sensitive
+  business/corporate content are all named above and explicitly deferred, not evaluated.
+- Files: `docs/frontier/DECISION_REGISTER.md`, `reports/reconciliation/RECOVERY_WAVES.md` only.
+- Supersedes: none. Running total after this slice: **88 (walking in) + 26 (this slice) = 114 of 138**
+  long-tail branches individually evidenced. Remaining pool is 24 branches, all with 13+ novel files
+  (several 100+), the next R11.5 slice — each needs its own dedicated, individually-scoped pass.
