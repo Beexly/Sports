@@ -19,6 +19,7 @@ import {
 import { CommandPalette } from "@/components/ui/command-palette";
 import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
+import { WebVitalsReporter } from "@/components/web-vitals-reporter";
 import { SentientShell } from "@/components/motion/sentient-shell";
 import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 
@@ -225,6 +226,7 @@ export default function RootLayout({
         <SentientShell />
         <PageExplainerAuto />
         <SentryClientInit />
+        <WebVitalsReporter />
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
         {process.env["NEXT_PUBLIC_ANALYTICS_ENABLED"] === "true" && (

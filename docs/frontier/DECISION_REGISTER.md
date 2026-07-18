@@ -3313,3 +3313,83 @@ stitching) — recorded here so no backtest can slip past it.
   (`crypto-payments`, `intraday-odds-scheduler`, the `fix-local-setup-PmnyX` hardcoded key, and now the two
   "monetization-v3"/succession-planning-bearing branches plus `determined-keller-dUcdG`'s legal-IP registers)
   — none of which block a future session from picking up any dependency-ready item next.
+
+## DEC-057 — Task #76 (1/5): Core Web Vitals RUM beacon + root error/loading boundary ported
+  (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: the first of 5 RECOVER_WHOLE_CANDIDATEs named in DEC-056. Ports
+  `claude/gse-moat-aplus-clv-2026-06-03`'s 5-file bundle, which closes 3 real, currently-open gaps this
+  repo's own `PRODUCTION_QUALITY_AUDIT.md` documents: P0 item #2 ("`web-vitals` RUM beacon in `layout.tsx`
+  → `/api/vitals`"), P1 item #6 ("`app/global-error.tsx` + `loading.tsx` skeletons"), and P1 item #9
+  ("Lighthouse CI budgets"). Verified before porting: zero `web-vitals`/`onLCP`/`PerformanceObserver` hits
+  and no root `global-error.tsx`/`loading.tsx`/`lighthouserc.json` existed on `pdcswh` prior to this pass.
+- Code: `apps/web/app/api/vitals/route.ts` (new — first-party CWV log sink), `apps/web/components/
+  web-vitals-reporter.tsx` (new — client beacon using `navigator.sendBeacon`), `apps/web/app/global-error.tsx`
+  (new — the Next.js root-layout error boundary; `apps/web/app/error.tsx` cannot reach layout-level throws),
+  `apps/web/app/loading.tsx` (new — root Suspense skeleton), `apps/web/lighthouserc.json` (new — inert
+  config, deliberately NOT wired into `.github/workflows/` this pass, matching this campaign's caution
+  around CI-pipeline mutation), `apps/web/app/layout.tsx` (mounts `<WebVitalsReporter />` beside the
+  existing `<SentryClientInit />`), `apps/web/package.json` (+`"web-vitals": "^5.3.0"`),
+  `apps/web/__tests__/web-vitals.test.ts` (new, 33 tests).
+- Adapted, not copied verbatim: `global-error.tsx`'s colors swapped from the source branch's approximate
+  hex to `pdcswh`'s exact `BRAND_COLORS.obsidianBlack`/`ionWhite` tokens; wired the same
+  `captureError`/`initObservability` Sentry calls the existing `app/error.tsx` already uses (the source
+  branch only had a bare `console.error`) — low-risk since those are plain no-op-safe functions, not
+  components, so the "no project imports in the root error boundary" safety property is preserved.
+- **Self-caught regression before red-team**: `loading.tsx`'s ported Tailwind classes (`bg-gray-950`,
+  `border-gray-700`, `bg-gray-800`) failed the full-suite run — an enforced, repo-wide
+  `palette-cohesion.test.ts` guard (not previously known to this session) forbids legacy Tailwind gray in
+  favor of the design-token dark scale. Fixed to `bg-carbon`/`border-white/10`/`bg-white/10`/`bg-white/5`,
+  matching the established `tool-page-skeleton.tsx` idiom. Full suite re-run confirmed green afterward.
+- Independent review: one `gse-red-team` pass, stalled once with zero tool calls after its final read
+  (`/api/waitlist/route.ts`, examined as a rate-limit precedent) — resumed via the standing agent-stall
+  protocol ("STOP investigating, call ReportFindings now"), which produced full findings on the next turn.
+  **2 CONFIRMED findings, both fixed:**
+  1. `rating` was accepted as any string (only `typeof === "string"` checked) despite the real `web-vitals`
+     library only ever emitting 3 values (`good`/`needs-improvement`/`poor`), and neither `rating` nor
+     `path` were stripped of control characters before interpolation into a `console.info` template string
+     — since `/api/vitals` is public and unauthenticated, a direct POST (bypassing the beacon) could forge
+     multi-line or ANSI-laden log entries. Fixed: `rating` now validated against a literal 3-value `Set`
+     (default `"unknown"`); both `rating` and `path` pass through a `[\x00-\x1f\x7f]` control-character
+     strip before logging.
+  2. No rate limiting, inconsistent with the repo's own established pattern for public unauthenticated POST
+     endpoints (`/api/waitlist/route.ts` calls `consumeRateLimit("waitlist", ip, 5, 60_000)`). Combined with
+     finding #1's unbounded-length risk, this made a real log-flooding vector, not just a theoretical one.
+     Fixed: `consumeRateLimit("vitals", ip, 120, 60_000)`, a generous per-IP threshold since this is
+     best-effort telemetry (fires once per real metric per real page view), not a form. Rate-limited
+     requests still return 204 (fail-open/silent, matching the endpoint's own documented "never surfaces to
+     the user" design), so the fix cannot itself become a new failure mode visible to a real visitor.
+  - All other review points (PII/privacy, `global-error.tsx`'s production information-disclosure posture,
+    reduced-motion compliance, design-token consistency, protected-zone/doctrine checks) came back clean —
+    verified against the existing `app/error.tsx`, `globals.css`'s reduced-motion rule, and
+    `tool-page-skeleton.tsx` as comparison baselines, not asserted from the ported branch's own claims.
+- Added 4 new tests directly reproducing the 2 confirmed findings (rating-enum rejection, control-character
+  stripping/log-forging, rate-limit enforcement, rate-limit per-IP isolation) plus the existing 6 tests updated
+  for per-test IP isolation (`resetRateLimits()` in `beforeEach`, matching `api-rate-limit.test.ts`'s own
+  isolation pattern for the shared in-memory limiter).
+- Evidence: `cd apps/web && npx tsc --noEmit` clean; `npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0`
+  clean; targeted tests (`web-vitals.test.ts` ×33, `observability.test.ts` ×12, `api-rate-limit.test.ts` ×8,
+  `palette-cohesion.test.ts` ×2) 55/55 green; full `apps/web` suite 8767/8767 green across 648 files;
+  `npm run guardrails` 17/17 green; `npm run build` succeeded (both before and after the red-team fixes);
+  `git diff --check` clean.
+- Alternatives rejected: wiring `lighthouserc.json` into a new/existing GitHub Actions workflow to fully
+  close audit item #9 — rejected for the same reason `intraday-odds-scheduler` (DEC-050) was deferred as
+  OWNER_GATE rather than landed: CI-pipeline configuration changes build cost/timing for every future PR,
+  which this session's own caution pattern reserves for founder awareness, not a same-pass port; leaving
+  `rating` unvalidated since the source branch shipped it that way — rejected once independently confirmed
+  as a real, exploitable log-injection surface on a public unauthenticated endpoint.
+- Reversibility: 5 new files (delete to roll back) + 3 small additive changes to existing files
+  (`layout.tsx`'s 2-line mount, `package.json`'s 1-line dependency, `package-lock.json`'s corresponding
+  entries) — single revert commit undoes the whole item. No migrations, no schema change, no new protected
+  entitlement/auth/billing surface.
+- Protected zones: none (public CWV telemetry + generic error/loading boundaries) — red-teamed anyway per
+  this campaign's standing rule for any new public-facing surface, consistent with DEC-049's precedent.
+- Files: `apps/web/app/api/vitals/route.ts`, `apps/web/components/web-vitals-reporter.tsx`,
+  `apps/web/app/global-error.tsx`, `apps/web/app/loading.tsx`, `apps/web/lighthouserc.json`,
+  `apps/web/app/layout.tsx`, `apps/web/package.json`, `package-lock.json`,
+  `apps/web/__tests__/web-vitals.test.ts`.
+- Supersedes: none. Closes candidate 1/5 of task #76. `lighthouserc.json`'s CI-wiring remains an explicit,
+  named, not-yet-actioned follow-up (founder-awareness-adjacent, not a blocker). 4 more RECOVER_WHOLE_
+  CANDIDATEs from DEC-056 remain: the per-route error/not-found bundle, History+Schedule Lab, the
+  multi-market-ensemble/synthetic-fade modules, and the journal-retraction tombstone route.
