@@ -1412,3 +1412,88 @@ stitching) — recorded here so no backtest can slip past it.
   `packages/prediction-engine/src/__tests__/clv-capture.test.ts` (all modified).
 - Supersedes: none. Closes R0.6 item 1 of 6; items 2-6 (#82, #93/converges-with-#123, #86, #84, #89) remain
   future bounded waves per `RECOVERY_WAVES.md`.
+
+## DEC-036 — Recovery Wave R0.6.2: production DB fail-closed + honest health check (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Recovery Wave R0.6, item 2 of 6. Ports historical PR #82 (`claude/hotfix-prod-db-fail-closed`,
+  never merged, confirmed still-live via R0.5) forward onto the CURRENT `main` tip. Contract frozen before
+  coding: `packages/db/src/index.ts`'s `buildClient()` and `apps/web/app/api/health/route.ts` were confirmed
+  byte-identical between the historical merge-base and current `main` (safe direct application); `isStubMode()`
+  was already exported on current `main` (pre-existing, unrelated to this fix) so no new export was needed.
+- Decision: implemented two changes —
+  1. `packages/db/src/index.ts`: when the stub Prisma client would activate, a new guard now throws BEFORE
+     falling through to the stub if `VERCEL_ENV==="production"` or `PRODUCTION_RUNTIME==="true"` — deliberately
+     NOT `NODE_ENV`, since that is `"production"` during every `next build` including CI/local builds that
+     legitimately have no database. An explicit escape hatch (`ALLOW_STUB_DB_IN_PRODUCTION=true`) stays
+     available for a deliberate no-database demo deployment. The pre-existing `console.error`-and-continue
+     fallback (for `NODE_ENV==="production"` contexts without either new signal — CI builds, self-hosted
+     runners not yet declaring the signal) is left unchanged after the new throw check.
+  2. `apps/web/app/api/health/route.ts`: the database check now branches on the pre-existing `isStubMode()`
+     export — stub mode reports `status:"error"` with an honest "no database configured" detail (a static
+     string, no connection-string leak) instead of the stub's vacuous `$queryRaw` pass reporting `ok`.
+  Companion infrastructure declarations ported so the guard actually trips in the self-hosted deployment path
+  (Vercel's `VERCEL_ENV` alone doesn't cover it): all three `workers/*/Dockerfile` gained
+  `ENV PRODUCTION_RUNTIME=true`; `docker/oracle-vps/compose.yml` gained the same declaration on all three
+  worker services' `environment:` blocks. `packages/db/package.json` gained a `test`/`test:watch` script +
+  `vitest` devDependency (the package had no test runner wired at all before this).
+  New test file `packages/db/src/__tests__/prod-fail-closed.test.ts` (10 tests) — exercises the full
+  throw/no-throw matrix across `VERCEL_ENV`/`PRODUCTION_RUNTIME`/`ALLOW_STUB_DB_IN_PRODUCTION`/a real
+  `DATABASE_URL`, plus a source-scan sub-suite that greps the three Dockerfiles + compose.yml to confirm they
+  actually declare the signal ("the guard is only as good as the declaration"). `apps/web/__tests__/health-route.test.ts`
+  gained one new test for the honest stub-mode 503.
+- Independent review: one `gse-red-team` pass (stalled mid-investigation once, resumed via the session's
+  standing agent-stall protocol). CONFIRMED clean on 5 of 9 points via direct code/schema inspection: (1) the
+  throw is unreachable unless `isStubDbUrl(url)` is already true, and that function cannot misclassify a real
+  `postgres://` URL; (4) `isStubMode()`/throw state stay consistent — the stub-mode global is only set AFTER the
+  throw check, so a real-DB path never sets it; (5) the health-route error detail is a static string with no
+  connection-string leak; (8) zero settlement/CLV/billing files touched. The review also surfaced a genuinely
+  important, unprompted discovery: `buildClient()` runs at module top level, so on Vercel this guard can fail
+  the production BUILD itself (not just a runtime request) when DB env vars are runtime-only-scoped — traced to
+  be an intentional, precedented design choice (the historical commit's own message cites parity with the
+  fail-closed migration gate from PR #72), not a regression.
+  The review ran out of time on points 2 (Vercel env semantics, partially verified — internally consistent but
+  not cross-checked against Vercel's own docs, no browsing tool available to the reviewer), 3 (escape-hatch
+  default-on check), 6 (Dockerfile/compose.yml exact placement), 7 (test order-independence), and did not run
+  the test suites (point 9) — all four resolved directly rather than re-dispatching: (3) `grep -rn
+  ALLOW_STUB_DB_IN_PRODUCTION` across the full repo found matches ONLY in the fix's own two files (`index.ts`,
+  `prod-fail-closed.test.ts`) — no stray default anywhere; (6) read the three Dockerfiles' final content
+  directly (the `ENV` line sits immediately before `CMD`, nothing overrides it after) and parsed
+  `compose.yml` with a real YAML parser confirming all three worker services set `PRODUCTION_RUNTIME: "true"`;
+  (7) ran `prod-fail-closed.test.ts` twice independently, 10/10 both times, no order-dependence; (9) already run
+  directly (see Evidence).
+  **A genuinely important unprompted finding, independently re-verified**: `git show 3c8df41e` confirmed a
+  THIRD, FOUNDER-AUTHORED fix attempt for this exact defect exists on a separate, unmerged branch lineage
+  (`codex/gse-frontier-recovery-2026-07-13`/`review-recovery`/`verify-lens`, commit `3c8df41e`, author Garrett
+  Baxley, 2026-07-14) — a simpler `NODE_ENV==="production"` throw with no `VERCEL_ENV`/`PRODUCTION_RUNTIME`
+  distinction, which would break every `next build` (including CI/local builds without a database) — exactly
+  the failure mode this fix's more careful gate was designed to avoid. NOT overridden, judged, or silently
+  discarded: recorded as `COLLISION-7a`/`COLLISION-7b` in `FILE_SYMBOL_OWNERSHIP.csv` so a future reconciliation
+  wave recovering that branch lineage doesn't silently regress this fix by picking up the founder's own simpler
+  but build-breaking variant without review.
+- Evidence: `npx vitest run` — `packages/db` full suite 23/23 (13 pre-existing `is-stub-db-url.test.ts` + 10 new,
+  was 13 before); `apps/web` `health-route.test.ts` 10/10 (was 9); root `npm run typecheck` exit 0 across every
+  workspace; `git diff --check` clean; `secret-scan.mjs` (explicit paths) clean on all 10 changed/new files;
+  `npm run guardrails` 17/17 green; `git merge-base --is-ancestor 3c8df41e origin/main` confirmed NOT an
+  ancestor (the divergent variant is genuinely unmerged, not already superseding this fix).
+- Alternatives rejected: silently picking a "winner" between this fix and the founder's own `3c8df41e` variant
+  — rejected; that is a founder decision (whose own commit it partly is), not an agent's to make unilaterally.
+  Adding the `3c8df41e` NODE_ENV-based logic as a second, redundant guard "to be safe" — rejected as it would
+  reintroduce the exact build-breaking failure mode this fix avoids.
+- Reversibility: the throw is a strict behavior addition (crashes loudly instead of silently degrading) gated
+  behind an explicit escape hatch; revert commit if any regression surfaces (e.g., a real Vercel deployment
+  whose DB env vars are runtime-only-scoped and now fails to build — flagged as a known, intentional tradeoff
+  above, not a bug, but worth founder awareness). Never merged to `main` — founder-merge-only per every standing
+  directive.
+- Protected zones: production integrity, observability — red-teamed. No settlement/CLV/billing/entitlement
+  logic touched.
+- Minor aside (not fixed, out of scope for this item): `FILE_SYMBOL_OWNERSHIP.csv` has pre-existing unescaped-
+  comma quoting issues in 5 rows predating this session's edit (rows for COLLISION-2d/3d/4c/5b/6c) that make the
+  file not strictly CSV-parser-clean, though human-readable. Noted for a future documentation-hygiene pass, not
+  fixed here to stay scoped to the production-DB recovery item.
+- Files: `packages/db/src/index.ts`, `apps/web/app/api/health/route.ts`, `packages/db/package.json`,
+  `packages/db/src/__tests__/prod-fail-closed.test.ts` (new), `apps/web/__tests__/health-route.test.ts`,
+  `workers/{data-refresh,pick-generation,content-publishing}/Dockerfile`, `docker/oracle-vps/compose.yml`,
+  `package-lock.json`, `reports/reconciliation/FILE_SYMBOL_OWNERSHIP.csv` (all modified/new).
+- Supersedes: none. Closes R0.6 item 2 of 6; items 3-6 (#93/converges-with-#123, #86, #84, #89) remain future
+  bounded waves.

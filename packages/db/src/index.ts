@@ -175,14 +175,39 @@ function buildClient(): PrismaClient {
   const force = process.env["FORCE_REAL_PRISMA"] === "true";
 
   if (!force && isStubDbUrl(url)) {
+    // FAIL CLOSED in the production runtime (adversarial finding O-1.7): a
+    // stub client in production means every write is silently dropped and
+    // every read is empty while jobs report success — data loss dressed as
+    // health. A console.error alone was warn-and-continue. Two production
+    // signals trip the guard, neither of them NODE_ENV (which is
+    // "production" during every `next build`, including CI and local builds
+    // that legitimately have no database):
+    //   - VERCEL_ENV==="production" — Vercel production builds/runtime.
+    //   - PRODUCTION_RUNTIME==="true" — the explicit declaration baked into
+    //     the production worker images (workers/*/Dockerfile, oracle-vps
+    //     compose), which run NODE_ENV=production outside Vercel and would
+    //     otherwise silently drop every refresh/settlement write.
+    // The escape hatch must be EXPLICIT, never a default.
+    const productionRuntime =
+      process.env["VERCEL_ENV"] === "production" ||
+      process.env["PRODUCTION_RUNTIME"] === "true";
+    if (productionRuntime && process.env["ALLOW_STUB_DB_IN_PRODUCTION"] !== "true") {
+      throw new Error(
+        "[@sports/db] REFUSING to activate the stub Prisma client in the production " +
+          "runtime: DATABASE_URL is unset or a sentinel, so every write would be " +
+          "silently dropped and every read would return empty results while jobs " +
+          "report success. Set DATABASE_URL (or let the Neon integration provide " +
+          "POSTGRES_PRISMA_URL). For a deliberate no-database demo deployment, set " +
+          "ALLOW_STUB_DB_IN_PRODUCTION=true explicitly."
+      );
+    }
     if (!globalForPrisma.prismaStubMode) {
       const detail = isDemoPicksEnabled()
         ? "DEMO_PICKS_ENABLED=true — pick.findMany returns sample data."
         : "All reads return empty results.";
       if (process.env["NODE_ENV"] === "production") {
-        // Never silent in prod: a stub client here means DATABASE_URL is
-        // unset/sentinel and FORCE_REAL_PRISMA!=true, so every write is
-        // dropped and every read is empty while jobs still report success.
+        // Non-Vercel production contexts (CI builds, self-hosted runners)
+        // still get the loud CRITICAL instead of the throw.
         // eslint-disable-next-line no-console
         console.error(
           "[@sports/db] CRITICAL: stub Prisma client active in production. " +

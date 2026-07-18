@@ -58,9 +58,19 @@ higher-numbered waves in this same sequence.
    overwrite a just-settled pick's published grade; no `MAX_CLOSE_AGE_MS` guard existed. Highest severity:
    directly threatened settlement correctness and CLV integrity, the platform's core money-truth surface.
    Protected zones: settlement, CLV — mandatory red-team (completed).
-2. **#82 — prod DB fail-open + fake-healthy health check.** A misconfigured production `DATABASE_URL` silently
-   drops writes while `/api/health` reports healthy — an operational blind spot that could mask a total outage.
-   Protected zones: production integrity, observability.
+2. **DONE (2026-07-18, DEC-036) — #82 — prod DB fail-open + fake-healthy health check.**
+   `packages/db/src/index.ts`'s `buildClient()` now throws before activating the stub client when
+   `VERCEL_ENV==="production"` or `PRODUCTION_RUNTIME==="true"` (explicit `ALLOW_STUB_DB_IN_PRODUCTION=true`
+   escape hatch available); `/api/health` reports honest `error` via the pre-existing `isStubMode()` export
+   instead of a vacuous `ok`; all 3 worker Dockerfiles + oracle-vps compose.yml declare `PRODUCTION_RUNTIME=true`
+   so the guard actually trips in the self-hosted path. gse-red-team CONFIRMED clean, zero findings, and
+   surfaced a founder-authored divergent fix attempt on a separate unmerged branch (commit `3c8df41e`) —
+   recorded as `COLLISION-7a`/`COLLISION-7b` in `FILE_SYMBOL_OWNERSHIP.csv`, not silently overridden. 23/23
+   (packages/db) + 10/10 (health-route) green, guardrails 17/17. Committed and pushed to
+   `claude/galaxy-sports-edge-pdcswh`, tracked by the existing accounting PR #129. Was: a misconfigured
+   production `DATABASE_URL` silently dropped writes while `/api/health` reported healthy — an operational
+   blind spot that could mask a total outage. Protected zones: production integrity, observability — mandatory
+   red-team (completed).
 3. **#93 — cockpit per-page ADMIN.** Already tracked as open PR #123 (`RECOVER_WHOLE` per Group F above) — this
    wave's action is to re-verify #123's rebase against the CURRENT main tip (same as Wave R1, below; R0.6 and
    R1 converge on the same unit of work) rather than re-deriving #93 from scratch. Protected zones: entitlements,
@@ -173,7 +183,7 @@ first; (3) for each, apply the SAME comparison-method tiers used in R0.5 before 
 R0    Land #128 (founder-merge-only; agent work complete)
 R0.5  DONE (2026-07-18) — Verify #76-96 PR-content gap: 5 SUPERSEDED, 16 RECOVER_WHOLE
 R0.6  Recover the 6 live-defect fixes from R0.5 (#92 > #82 > #93 > #86 > #84 > #89)
-      — item 1 (#92) DONE (DEC-035, 2026-07-18); items 2-6 NOT performed this pass
+      — items 1-2 (#92, #82) DONE (DEC-035/036, 2026-07-18); items 3-6 NOT performed this pass
 R1    Re-verify #123 rebase against current main tip (converges with R0.6 item 3)
 R2    #127 founder decision (agent work complete)
 R3    Done
