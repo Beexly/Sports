@@ -1,0 +1,57 @@
+name: Nightly Sentinel v2
+
+# Repo-native, read-only production monitor. Complements Daily Smoke Test
+# (scripts/smoke-prod.sh) rather than duplicating it: this run additionally
+# covers the proof surface (including a live recomputation of the published
+# GSE-PickCommit-v1 known-answer vectors and Merkle root against
+# /api/proof/verification-spec.json), llms.txt, news-sitemap.xml, and a
+# public-claim-hygiene scan of live homepage/pricing HTML.
+#
+# scripts/launch/nightly-sentinel.mjs never logs in and never mutates
+# anything on the target site. Exit codes: 0 SHIP / 1 WATCH / 2 FAIL.
+#
+# On FAIL, the runner files or updates one issue labeled
+# "nightly-sentinel-failure" (see fileOrUpdateIssue in the script) so
+# repeated failures accumulate as comments on one issue instead of
+# spawning a duplicate-alert storm.
+
+on:
+  schedule:
+    - cron: "0 15 * * *" # 15:00 UTC = ~11:00am ET / 8:00am PT
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-sentinel
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sentinel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run nightly sentinel
+        id: sentinel
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENTINEL_ARTIFACT_PATH: nightly-sentinel-result.json
+        run: node scripts/launch/nightly-sentinel.mjs
+
+      - name: Upload result artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-sentinel-result
+          path: nightly-sentinel-result.json
+          retention-days: 30

@@ -99,10 +99,11 @@
       "canonicalOwner": "This campaign (agent-buildable) -- directly addressed by LC-002 Nightly Sentinel v2.",
       "dependencies": "None blocking -- LC-002 is dependency-ready today.",
       "smallestSafeFix": "Build a bounded, repo-native Node runner (no Claude-WebFetch dependency) plus an approved scheduled GitHub Actions workflow checking the endpoint list the gse-launch skill specifies (/llms.txt, /api/health, /api/proof/*, /news-sitemap.xml, /robots.txt, /, /tools, /sealed, /how-we-make-money, /watchlist, public-claim hygiene).",
-      "verification": "Fixture-server tests with planted failures; confirm the runner distinguishes runner failure, transport failure, and assertion failure; confirm it produces one actionable alert without duplicate storms.",
-      "rollback": "Disable the scheduled workflow; no production code path depends on it.",
-      "reEntryCondition": "N/A -- this is the next queued Launch Convergence workstream (LC-002).",
-      "status": "AGENT_BUILDABLE_NEXT"
+      "verification": "51 fixture-server + dependency-injected-fetch tests (node --test scripts/launch/nightly-sentinel-checks.test.mjs scripts/launch/nightly-sentinel.test.mjs), all passing; a real dry-run against live production (2026-07-18T23:04 UTC) correctly reported WATCH (news-sitemap zero-URL WARN, matching LB-006) with zero FAIL and zero secret-shaped strings in the JSON artifact; independently reviewed by gse-verifier (1 confirmed finding, fixed) and gse-red-team (2 confirmed findings, both fixed: artifact-redaction gap, Merkle-root-missing overclaim).",
+      "rollback": "Disable the scheduled workflow (.github/workflows/nightly-sentinel.yml); no production code path depends on it.",
+      "reEntryCondition": "N/A -- closed.",
+      "status": "CLOSED",
+      "closedBy": "LC-002, claude/gse-launch-convergence, scripts/launch/nightly-sentinel*.mjs + .github/workflows/nightly-sentinel.yml"
     },
     {
       "id": "LB-006 (PROD-004)",
@@ -135,10 +136,12 @@
       "status": "NOT_TESTED_NEEDS_ACCESS"
     }
   ],
+  "lc001Status": "SATISFIED_BY_LC000 -- every blocker row already carries the full LC-001 field set (classification from the exact taxonomy above, evidence, impact, blastRadius, canonicalOwner, dependencies, smallestSafeFix, verification, rollback, reEntryCondition). No separate Blocker Graph artifact was built; this ledger IS the Blocker Graph. Re-open LC-001 as a distinct pass only if a future snapshot's evidence no longer maps cleanly onto this taxonomy.",
   "summary": {
     "readyForOwnerActionNow": ["LB-001", "LB-002"],
     "ownerGatePendingPolicyDecision": ["LB-003"],
-    "agentBuildableNext": ["LB-005"],
+    "agentBuildableNext": [],
+    "closedThisSession": ["LB-005"],
     "needsInvestigation": ["LB-006"],
     "needsAccessNotAvailableThisSession": ["LB-007"],
     "totalConfirmedLiveDefects": 6,
