@@ -99,10 +99,11 @@ for (const capability of [
 for (const boundary of [
   "Stripe test mode",
   "explicit founder authorization",
-  "EVIDENCE_ACCRUAL",
-  "RIGHTS_LEGAL_OR_HIGH_RISK",
+  "EVIDENCE_GATED",
+  "CLOSED_BY_DESIGN",
+  "OWNER_GATE",
 ]) {
-  if (!skill.includes(boundary) && !contract.includes(boundary)) {
+  if (!skill.includes(boundary) && !contract.includes(boundary) && !appendix.includes(boundary)) {
     errors.push(`production activation package is missing boundary: ${boundary}`);
   }
 }
