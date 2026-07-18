@@ -327,10 +327,15 @@ before ruling," not inherited from the scout's report.
   Dynasty cluster with #52** (`claude/gracious-albattani-f63wx1`): three independent, never-reconciled
   attempts at a "Galaxy Dynasty" product concept (world-graph, 3D city/game, progression backend). Needs one
   dedicated future reconciliation pass, not piecemeal picking here.
-- **`claude/dfs-optimizer-edge` — RECOVER_WHOLE candidate, next bounded item.** Builds additively on `pdcswh`'s
-  already-shipped exact DP DFS optimizer (task #36); adds a genuinely new GPP/tournament correlation +
-  ownership-leverage layer `pdcswh` doesn't have. Needs its own freeze contract (17 files, 3 pre-existing
-  dependency files need a drift check first).
+- **`claude/dfs-optimizer-edge` — DONE (2026-07-18, DEC-048).** Ported as 3 new files (`dfs-exact.ts`,
+  `dfs-correlation.ts`, `dfs-optimizer-edge.ts` + tests) plus a 4-line strictly-additive change to `pdcswh`'s
+  existing `dfs-optimizer.ts` (2 new `export` keywords, 2 new one-line exports — zero existing behavior
+  changed). Found and fixed a real compatibility break during the port: the branch's `benchmark()` compared
+  against a "restart-limited heuristic" `optimizeOne` that no longer exists on `pdcswh` (task #36 already
+  replaced it with an exact DP solver) — reframed as a cross-check between two independently-implemented
+  exact solvers, which must agree if both are correct, and empirically do (verified by red-team, not just
+  claimed). Zero red-team findings across 10 review points. Zero live wiring — lands as available library
+  capability, same shadow posture as several other items this campaign.
 - **`claude/consensus-accuracy-engine` — RECOVER_WHOLE candidate**, not yet checked for dependency
   compatibility: fantasy consensus-rankings + expert-accuracy tracking (8 files).
 - **8 branches not yet checked** (2-3 novel files each, cheap for a future continuation): `intraday-odds-
@@ -342,9 +347,9 @@ eventual report contained one factually-backwards claim, caught via direct re-ve
 was done via direct `git` commands throughout (no agent dispatch), continuing that same "reproduce before
 ruling" discipline.
 
-**Next slice:** the 2 named RECOVER_WHOLE candidates (`dfs-optimizer-edge`, `consensus-accuracy-engine`) each
-need their own freeze contract; the 8 not-yet-checked small branches; remaining long-tail branches beyond the
-65 now triaged (of 138 total long-tail entries per `BRANCH_PR_LEDGER.json`).
+**Next slice:** `claude/consensus-accuracy-engine`'s freeze contract (the remaining named RECOVER_WHOLE
+candidate); the 8 not-yet-checked small branches; remaining long-tail branches beyond the 65 now triaged (of
+138 total long-tail entries per `BRANCH_PR_LEDGER.json`).
 
 ## Recommended order (refreshed)
 

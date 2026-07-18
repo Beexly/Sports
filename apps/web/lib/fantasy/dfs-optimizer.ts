@@ -56,8 +56,10 @@ export type OptOpts = {
 };
 
 const FLEX_POS: readonly DfsPos[] = ["RB", "WR", "TE"];
+export const eligible = (p: DfsPlayer, slot: DfsPos | "FLEX"): boolean =>
+  slot === "FLEX" ? FLEX_POS.includes(p.pos) : p.pos === slot;
 
-function objVal(p: DfsPlayer, mode: Mode): number {
+export function objVal(p: DfsPlayer, mode: Mode): number {
   if (mode === "cash") return p.proj;
   if (mode === "gpp") return p.ceiling;
   return leverage(p) * 6 + p.ceiling * 0.45; // leverage: contrarian ceiling
@@ -65,7 +67,9 @@ function objVal(p: DfsPlayer, mode: Mode): number {
 
 export type Lineup = readonly DfsPlayer[];
 
-const salaryOf = (lu: Lineup) => lu.reduce((s, p) => s + p.salary, 0);
+export const objOf = (lu: Lineup, mode: Mode) => lu.reduce((s, p) => s + objVal(p, mode), 0);
+
+export const salaryOf = (lu: Lineup) => lu.reduce((s, p) => s + p.salary, 0);
 
 function qbStackCount(lu: Lineup): { team: string | null; stacked: number } {
   const qb = lu.find((p) => p.pos === "QB");

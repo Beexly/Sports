@@ -2546,3 +2546,75 @@ stitching) — recorded here so no backtest can slip past it.
   reconciliation pass; 8 small branches not yet checked; ~43 other long-tail branches beyond this 43 +
   22 (`magical-volta`) = 65 triaged remain in the tail (per `BRANCH_PR_LEDGER.json`'s 138 total long-tail
   count) for a future slice.
+
+## DEC-048 — Recovery Wave R11.5 follow-on: `dfs-optimizer-edge` ported (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: the first of two RECOVER_WHOLE candidates named in DEC-047. Ports a GPP (tournament)
+  correlation-aware DFS lineup layer from the historical `claude/dfs-optimizer-edge` branch onto `pdcswh`'s
+  already-shipped exact cash-game DFS optimizer (task #36, `apps/web/lib/fantasy/dfs-optimizer.ts`).
+- Contract frozen after a dependency drift-check on the 3 files the ported code imports from:
+  `dfs-slate.ts` and `lib/integrations/dfs.ts` are byte-identical between the branch and `pdcswh` HEAD (zero
+  adaptation); `dfs-optimizer.ts` itself had drifted substantially (462-line diff) because `pdcswh`'s own
+  independent history already replaced the historical branch's randomized-restart heuristic optimizer with
+  an exact dynamic-program solver (the same task #36) — a strictly better, already-shipped, already-tested
+  implementation that this port must not regress.
+- Code: 3 new files — `apps/web/lib/fantasy/dfs-exact.ts` (an independently-implemented exact DP solver:
+  single/multi-lineup optimum, k-best diverse-pool generation, a legality/objective-preserving "late-swap"
+  operation), `dfs-correlation.ts` (Monte-Carlo-style GPP tournament ranking under player correlation —
+  shared team/game/idiosyncratic normal draws so same-team and same-game players' simulated outcomes co-move
+  correctly — and ownership leverage, which a naive point-sum objective cannot compute), `dfs-optimizer-
+  edge.ts` (`selectGppLineups()`, the production GPP path: exact diverse pool → correlation-aware ranking →
+  top N with full glass-box metrics; `bestStackPair()`, a same-team QB+pass-catcher finder; and a `benchmark()`
+  diagnostic, see below) — plus their 3 test files, all ported near-verbatim.
+- `apps/web/lib/fantasy/dfs-optimizer.ts` (pdcswh's existing file) received exactly 4 purely-additive lines:
+  `objVal` and `salaryOf` (previously private) gained the `export` keyword; two new one-line exports were
+  added, `eligible(p, slot)` (reusing the file's own existing `FLEX_POS` constant — zero new logic) and
+  `objOf(lineup, mode)` (a one-line reduce wrapper around `objVal`). Zero changes to any existing function
+  body, export signature, or behavior — confirmed via direct diff read, independently re-confirmed by
+  red-team.
+- **A real compatibility break found and fixed, not papered over.** The historical branch's `benchmark()`
+  compared the new engine against "the incumbent heuristic" via `optimizeOne(opts, undefined, restarts,
+  slate)` — a 4-argument call assuming a randomized-restart local-search heuristic. `pdcswh`'s current
+  `optimizeOne` is `(opts, decay, slate)`: 3 arguments, no restarts, because it's ALREADY the exact DP solver
+  (no heuristic left to benchmark against). Reframed the comparison honestly: `Benchmark.cash` changed from
+  `{..., heuristicBest, heuristicWorst, optimalityGap}` to `{..., incumbentObjective,
+  objectiveGapVsIncumbent}` — cross-checking two INDEPENDENTLY-IMPLEMENTED exact solvers for the same
+  combinatorial optimum, which must agree if both are correct (disagreement would expose a real bug in
+  either). Two tests adapted to match, in the STRICTER direction per `.claude/rules/tests-and-claims.md`
+  ("do not weaken assertions... to make new code pass"): `toBeGreaterThanOrEqual` (exact ≥ weak heuristic)
+  became `toBeCloseTo(x, 6)` (exact ≈ independent exact) — a near-equality check is strictly harder to pass
+  than a one-sided inequality, and it empirically passes, which is itself a meaningful new correctness proof
+  neither solver had before (two independent implementations of the same optimization problem agreeing to
+  6 decimal places). A third call site (a late-swap test using `optimizeOne` only to generate a starting
+  lineup, unrelated to the heuristic-comparison logic) just had the now-nonexistent `restarts` argument
+  dropped.
+- Independent review: one `gse-red-team` pass, resumed once via the standing agent-stall protocol. **Zero
+  CONFIRMED or PLAUSIBLE findings across all 10 review points**, including empirically re-running the exact-
+  vs-incumbent cross-check tests directly (41/41 passed) rather than trusting the description, hand-verifying
+  `dfs-correlation.ts`'s correlation math (confirmed `team² + game² ≤ 1` holds for every position so the
+  idiosyncratic-variance term never goes negative/NaN, confirmed shared per-team/per-game normal draws are
+  the mathematically correct way to induce correlated simulation outcomes), confirming zero live wiring
+  (grep across all of `apps/web` finds only the module's own files and tests), and confirming the founder-
+  gated illustrative-slate pattern (`activeDfsSlate()`, unmodified) is used as the default parameter
+  everywhere the new code reads a slate. One non-blocking observation noted (not a finding): `dfs-exact.ts`'s
+  header cites specific patent numbers with a "design-around, confirm FTO with counsel" note — a pre-existing
+  documentation style already used in `dfs-optimizer.ts`, not a new legal-clearance claim, and carries no
+  production risk given zero live consumers.
+- Evidence: `cd apps/web && npx tsc --noEmit` clean; targeted DFS tests 41/41 green (`dfs-optimizer.test.ts`
+  22/22 pre-existing unaffected, `dfs-exact.test.ts`, `dfs-correlation.test.ts`, `dfs-optimizer-edge.test.ts`
+  all new and green); full `apps/web` suite → 644 files / 8,701 tests, all green (was 641/8,670 before this
+  item); `npm run guardrails` → 17/17 green; `git diff --check` clean.
+- Alternatives rejected: overwriting `pdcswh`'s current exact-DP `dfs-optimizer.ts` with the historical
+  branch's older randomized-heuristic version — rejected outright as a severe regression of already-shipped,
+  already-tested work; dropping the `benchmark()` diagnostic entirely instead of adapting it — rejected since
+  the honest reframe (cross-check between two independent exact solvers) preserves genuine value and is a
+  stronger correctness proof than the original heuristic comparison, not a lesser one.
+- Reversibility: 6 new files (delete to roll back) + a 4-line strictly-additive change to one existing file
+  (single revert commit). No migrations, no new routes, no live wiring — zero customer-facing behavior change.
+- Protected zones: fantasy/DFS is real-money-contest-adjacent; mandatory red-team completed, zero findings,
+  explicit focus on the founder-gated illustrative-slate default and zero live wiring.
+- Files: `apps/web/lib/fantasy/dfs-exact.ts` (new) + test, `dfs-correlation.ts` (new) + test,
+  `dfs-optimizer-edge.ts` (new) + test, `dfs-optimizer.ts` (4-line additive modification).
+- Supersedes: none. Closes the `dfs-optimizer-edge` item from DEC-047. `consensus-accuracy-engine` (task #70)
+  and the 8 not-yet-checked small branches (task #71) remain the next R11.5 follow-on items.
