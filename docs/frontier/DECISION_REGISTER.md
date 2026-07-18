@@ -2365,3 +2365,85 @@ stitching) — recorded here so no backtest can slip past it.
   forward, (b) whether `/api/picks`'s stale-data check should fail open or closed, and (c) which outage-gate
   mechanism (`outageGateResponse` vs `backendOutageResponse`) is canonical — or explicitly approves porting
   the historical branch's version wholesale after reviewing this entry's evidence.
+
+## DEC-046 — Recovery Wave R11.5, first slice: `claude/magical-volta-*` cluster triaged, real asset recovered (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: R11.5 (long-tail branch triage), first bounded slice per `RECOVERY_WAVES.md`'s recommended
+  method — the 22-branch `claude/magical-volta-<random>` cluster (daily branches, 2026-05-24 through
+  2026-06-14, per the existing `BRANCH_PR_LEDGER.json` long-tail metadata).
+- Process note: a `gse-scout` agent was dispatched for this investigation and stalled twice (acknowledged
+  the task, made a handful of tool calls, then stopped without a report) before producing a report on its
+  third resume. That report's directional conclusion (the cluster is an abandoned daily-snapshot job, safe
+  to archive) held up, but one of its specific evidentiary claims — that `.claude/agents/gse-*.md` and
+  `.claude/commands/*.md` were content "unique to `4kilty` [the newest branch], NOT in pdcswh" — was
+  independently re-verified and found to be **backwards**: `git diff --stat HEAD origin/claude/magical-
+  volta-4kilty -- .claude/agents/` showed ZERO lines (because `git cat-file -e origin/claude/magical-volta-
+  4kilty:.claude/agents/gse-red-team.md` confirms the file is **absent from `4kilty` entirely** — it exists
+  only on `pdcswh`, the opposite of the scout's claim), and the `.claude/commands/*.md` diff was 100%
+  deletions (files `pdcswh` has that `4kilty` lacks), not insertions. Per this campaign's standing
+  "reviewer-disagreement rule: reproduce the finding directly before ruling," every specific claim below is
+  from directly-run `git` commands in this session, not inherited from the scout's report.
+- Verified findings (real evidence, this session, not the scout's):
+  - `git merge-base --is-ancestor origin/claude/magical-volta-KSe4E origin/claude/magical-volta-4kilty` →
+    exit 1 (the oldest branch in the series is NOT an ancestor of the newest — confirms non-linear,
+    divergent daily snapshots, not one continuous lineage).
+  - `git merge-base --is-ancestor origin/claude/magical-volta-4kilty HEAD` → exit 1 (the newest/most-
+    complete branch in the cluster is not an ancestor of `pdcswh` — nothing in this cluster has been
+    absorbed by simple history inclusion).
+  - `git diff --stat HEAD origin/claude/magical-volta-4kilty` → 2,655 files changed, 10,368 insertions(+),
+    270,110 deletions(-) — `pdcswh` is overwhelmingly the superset by volume.
+  - `git diff --name-status --diff-filter=A HEAD origin/claude/magical-volta-4kilty` (files present on
+    `4kilty` with NO corresponding path on `pdcswh` at all — the only files genuinely impossible to already
+    be covered) → exactly 5: `apps/web/__tests__/content-publisher-kill-switch.test.ts`,
+    `apps/web/__tests__/pricing-drift-guard.test.ts`, `apps/web/components/landing/warp-nebula-lazy.tsx`,
+    `apps/web/components/landing/warp-nebula.tsx`, `coordination/OVERNIGHT_RUN_20260614.md` (a run log, not
+    real content).
+  - `content-publisher-kill-switch.test.ts`: SUPERSEDED. `pdcswh` already has the identical
+    `INTERNAL_CALIBRATION_ONLY` kill-switch mechanism in `workers/content-publishing/src/index.ts` AND an
+    equivalent test at `workers/content-publishing/src/__tests__/index.test.ts` (different path, same
+    coverage) — confirmed by reading both files directly.
+  - `warp-nebula.tsx`/`warp-nebula-lazy.tsx`: a decorative Three.js particle-nebula landing-page component
+    (16,000-particle spiral, `prefers-reduced-motion` aware per its own header comment), wired into a
+    `cinematic-entrance.tsx` on that same branch. Seen but not evaluated further this pass — purely
+    decorative, not load-bearing, lower priority than the two test files; recorded honestly as unchased
+    rather than silently dropped.
+  - **`pricing-drift-guard.test.ts`: RECOVER_WHOLE — genuinely missing, genuinely valuable, ported this
+    pass.** `pdcswh`'s existing `pricing-phases.test.ts` only unit-tests the `PRICING_PHASES` data structure
+    itself; it does NOT do the codebase-wide source-scan this test does (walks `app/`, `components/`, `lib/`
+    for any hardcoded literal matching a known `PRICING_PHASES` price string outside the canonical
+    `pricing-phases.ts` file). Ported verbatim, then run against the live `pdcswh` tree BEFORE deciding to
+    land it — it found a genuine, live violation: `apps/web/lib/pricing/promo-codes.ts:64`'s `GALAXYFOUNDING`
+    promo's `offer` string hardcoded `"Founding rate: Pro $99/yr, Elite $179/yr..."` as a literal instead of
+    deriving it from `PRICING_PHASES`. Fixed in the same pass (matches CLAUDE.md's own "single source of
+    truth" pricing-ladder rule): added `import { PRICING_PHASES } from "./pricing-phases"`, looked up the
+    FOUNDING phase specifically via `PRICING_PHASES.find((p) => p.id === "FOUNDING")` (mirroring the existing
+    pattern in `phase-readiness.ts`) — not `getCurrentPricingPhase()`, since this promo describes the
+    FOUNDING rate specifically, which stays fixed forever per the grandfather guarantee regardless of
+    whatever phase is currently live — and interpolated the annual prices into the offer string. The promo
+    itself remains `active: false, ownerApproved: false` (fully inert, no live billing effect) — this is a
+    drift-safety fix, not a live pricing change.
+- Code: `apps/web/__tests__/pricing-drift-guard.test.ts` (new, ported verbatim from
+  `claude/magical-volta-4kilty`), `apps/web/lib/pricing/promo-codes.ts` (4-line additive fix: 1 import, 1
+  constant, 1 string interpolation — the promo's other 90+ lines and every other promo code untouched).
+- Evidence: `cd apps/web && npx vitest run __tests__/pricing-drift-guard.test.ts __tests__/pricing-value-
+  architecture.test.ts __tests__/pricing-phases.test.ts` → 28/28 green (2 new, 26 pre-existing unaffected);
+  `npx tsc --noEmit` clean; `npm run guardrails` → 17/17 green; full `apps/web` suite confirmed green (exact
+  count in the commit); `git diff --check` clean.
+- Alternatives rejected: adding `promo-codes.ts` to the test's `ALLOW_LIST` instead of fixing the hardcode —
+  rejected because the whole point of the canonical pricing ladder (per CLAUDE.md) is that nothing outside
+  `pricing-phases.ts` should hardcode a price, and this promo is exactly the kind of copy that would silently
+  go stale on a phase advance if exempted.
+- Reversibility: trivially revertible (one new test file, a 4-line change to one existing file, zero runtime/
+  billing behavior change since the promo stays inert).
+- Protected zones: pricing/subscription-tier copy (CLAUDE.md's named pricing ladder) — low-risk since the
+  fix only changes how an already-inert promo's description is computed, not any live price or billing path.
+- Files: `apps/web/__tests__/pricing-drift-guard.test.ts` (new), `apps/web/lib/pricing/promo-codes.ts`
+  (modified).
+- Supersedes: none. Disposition for the full 22-branch cluster: **ARCHIVE_ONLY** (all 22 are abandoned,
+  divergent daily snapshots superseded by `pdcswh`'s independent evolution) EXCEPT the one recovered asset
+  above, now landed. No deletion receipts written this pass (deletion itself is founder-gated and a separate
+  explicit step per the reconciliation contract); this entry is the evidence a future receipt-writing pass
+  can cite. R11.5's remaining slices (name-pattern clusters beyond `magical-volta`, and the recency-based
+  subset — branches with a last-commit date on/after 2026-07-01) remain open, dependency-ready,
+  non-owner-gated next items.

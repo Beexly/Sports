@@ -13,6 +13,7 @@
  */
 
 import type { ValueTierId } from "./value-architecture";
+import { PRICING_PHASES } from "./pricing-phases";
 
 export type PromoOfferKind = "percent_off_annual" | "founding_rate" | "upgrade_incentive" | "content_unlock";
 
@@ -40,6 +41,12 @@ export interface PromoCode {
 
 const RG = "Informational only. Subscriptions are for sports intelligence and education, not a guarantee of profit. 21+. Play responsibly.";
 
+// The GALAXYFOUNDING promo describes the FOUNDING phase's rate specifically (it
+// stays fixed forever per the grandfather guarantee, independent of whatever
+// phase is currently live) — derived from pricing-phases.ts, never hardcoded,
+// so the two can never drift apart.
+const FOUNDING_PHASE = PRICING_PHASES.find((p) => p.id === "FOUNDING")!;
+
 export const PROMO_CODES: readonly PromoCode[] = [
   {
     code: "FOUNDING50",
@@ -61,7 +68,7 @@ export const PROMO_CODES: readonly PromoCode[] = [
   {
     code: "GALAXYFOUNDING",
     audience: "Founding members during the launch window",
-    offer: "Founding rate: Pro $99/yr, Elite $179/yr (owner-approved founding discount)",
+    offer: `Founding rate: Pro $${FOUNDING_PHASE.pro.annual}/yr, Elite $${FOUNDING_PHASE.elite.annual}/yr (owner-approved founding discount)`,
     offerKind: "founding_rate",
     eligiblePlans: ["PRO", "ELITE"],
     window: "Launch / limited founding period",

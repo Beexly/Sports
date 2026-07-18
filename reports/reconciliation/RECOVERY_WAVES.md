@@ -282,12 +282,34 @@ BEFORE any deletion action, as its own explicit step, not bundled into inventory
 ## Wave R11.5 — NEW: triage the 159-branch long tail
 
 Not in the original seed sequencing (the seed's known groups covered the PR-backed subset only). Recommended
-method for a future pass: (1) name-pattern clustering — branches matching `claude/magical-volta-*` (≈25
-branches, per this pass's raw listing) share a naming pattern strongly suggestive of duplicate/abandoned
-agent-session artifacts, a hypothesis to verify via content-diff, not asserted as fact here; (2) recency
-triage — the 74 branches with a last-commit date on/after 2026-07-01 are the higher-signal subset to review
-first; (3) for each, apply the SAME comparison-method tiers used in R0.5 before assigning any
-`SUPERSEDED`/`ARCHIVE_ONLY`/`DELETE_AFTER_PROOF` disposition.
+method: (1) name-pattern clustering — branches matching `claude/magical-volta-*`; (2) recency triage — the 74
+branches with a last-commit date on/after 2026-07-01 are the higher-signal subset to review first; (3) for
+each, apply the SAME comparison-method tiers used in R0.5 before assigning any `SUPERSEDED`/`ARCHIVE_ONLY`/
+`DELETE_AFTER_PROOF` disposition.
+
+**First slice DONE (2026-07-18, DEC-046): the 22-branch `claude/magical-volta-*` cluster.** Real
+`git merge-base --is-ancestor`/`git diff` evidence (not name-pattern inference) confirms: 22 daily branches
+(2026-05-24 through 2026-06-14), non-linear/divergent (oldest is not an ancestor of newest), none an ancestor
+of `pdcswh`, `pdcswh` overwhelmingly the content superset (2,655 files differ vs the newest branch, 270K
+deletions vs 10K insertions going `pdcswh`→branch). Only 5 files exist in the newest branch (`4kilty`) with
+no corresponding path on `pdcswh` at all: 2 already-superseded test files (equivalent coverage already exists
+on `pdcswh` under different paths), 2 decorative landing-page visual components (seen, not evaluated further
+this pass), and one run-log artifact. **One genuine asset recovered and landed**:
+`apps/web/__tests__/pricing-drift-guard.test.ts` — a codebase-wide source-scan test (no hardcoded price
+strings outside `pricing-phases.ts`) that `pdcswh` did not have. Running it against the live tree before
+landing found a real violation (`lib/pricing/promo-codes.ts`'s `GALAXYFOUNDING` offer string hardcoded the
+FOUNDING-phase annual prices as a literal) — fixed in the same pass by deriving the string from
+`PRICING_PHASES` instead. Disposition for the full cluster: **ARCHIVE_ONLY** except the one recovered asset,
+now landed; no deletion receipts written yet (deletion stays founder-gated, a separate explicit step).
+
+**Process note:** the `gse-scout` agent dispatched for this slice stalled twice before reporting, and its
+eventual report contained one factually-backwards claim (said `.claude/agents/`/`.claude/commands/` files
+were unique to the branch when they were actually unique to `pdcswh` — the opposite). Every claim recorded
+above was independently re-verified with direct `git` commands per the "reviewer-disagreement rule: reproduce
+before ruling," not inherited from the scout's report.
+
+**Next slice:** the recency-based subset (74 branches, last-commit ≥ 2026-07-01) and remaining name-pattern
+clusters beyond `magical-volta-*`.
 
 ## Recommended order (refreshed)
 
