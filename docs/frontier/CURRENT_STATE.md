@@ -1,7 +1,7 @@
 # GSE Frontier Current State
 
 **Status:** ACTIVE
-**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-040)
+**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-041)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
 **Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE + §2 smoke CLOSED (DEC-014/023); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016); W005 Intelligence Watch v0 DONE (DEC-021); W007 Branching Reality v0 DONE (DEC-024); W009 Hypothesis-to-Instrument v0 DONE (DEC-025). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Phase 3 (W005) DONE. Full-session audit pass DONE (DEC-022). W-WEATHER §2 smoke gate DONE (DEC-023). W007 DONE (DEC-024) — SportsIR's 6th and final DECLARED primitive (Branch) is now ADAPTED, so ALL 12 SportsIR primitives have real evidence. W009 DONE (DEC-025) — verified both listed dependencies real (harness + W004) before building; wraps the backtest harness's own already-audited climatology signal into a versioned instrument, adds a second `SportsIrClaim` source. W006 re-checked and confirmed still genuinely BLOCKED (GG-001/genesis-kernel hasn't landed). W010 dependency re-verified genuinely absent (DEC-026) — stays BLOCKED, no telemetry baseline exists to build on. Remaining work: Task #8/#13's larger mandates (Task #13 now has a concrete scoped next slice identified — see Verified facts; Task #8 scoping in progress) and W008 (still BLOCKED on W006).
@@ -115,6 +115,28 @@
   suite 635/8,604 (was 634/8,595); `tsc --noEmit` clean (apps/web + full workspace); guardrails 17/17; `git
   diff --check` clean aside from pre-existing CRLF line endings in `picks/route.ts` (confirmed already present
   on `HEAD` before this patch, not introduced by it). Unblocks R0.6 item 6 (#89) as the next bounded step.
+- DEC-041 (Recovery Wave R0.6, item 6/6: #89 T-outage-sweep) DONE — **closes Wave R0.6 entirely.** Extends #87's
+  outage-gate fix to `/api/calibration`, `/api/picks/daily-slate`, `/api/promotions`, and the game-room loader
+  (`model-court` route + `/room/[gameId]` page). 4 of 8 non-test files byte-identical to the historical base,
+  applied directly. `daily-slate/route.ts` manually reconciled around an unrelated already-landed
+  `recentRecord` honesty fix, left untouched. The game-room trio — entitlements-adjacent, highest risk — had
+  ALL drifted (this branch's own already-landed `GameRoomViewer` gating didn't exist when #89 was authored);
+  reconciled with the ONLY change being `.catch(() => null)` removed from `db.game.findUnique`, every
+  downstream entitlement-gating line confirmed byte-identical. A fifth target, the proof-of-record loader, was
+  found ALREADY independently fixed on this branch via a different (resolved-flag, not throw-based) mechanism
+  with its own existing test coverage — confirmed genuinely equivalent (arguably stronger, defense-in-depth)
+  by both this session and the red-team, excluded from the port rather than double-patched. Self-caught and
+  corrected a drift-check methodology error mid-contract: initial comparisons were against `origin/main`, but
+  `pdcswh` is a superset branch whose own landed work (W004/intelligence-playback) had independently rewritten
+  the game-room loader far beyond main — re-ran every drift check against the correct base (`HEAD`) before
+  reconciling. gse-red-team (resumed twice via the stall protocol, both times mid-final-check) **CONFIRMED
+  CLEAN across all 7 review points plus its own 8-point protected-zone checklist, zero findings** — explicitly
+  including a full re-read of the 238-line `loadGameRoom` function confirming no entitlement leak or
+  behavioral drift beyond the intended failure-propagation change. Targeted suite 6 files/70 tests green; full
+  `apps/web` suite 636/8,616 (was 635/8,604 — the +12 delta is exactly the new `outage-sweep.test.ts`);
+  workspace typecheck clean; guardrails 17/17. **All 6 of Wave R0.6's live-defect items (#92 DEC-035, #82
+  DEC-036, #93 DEC-037, #86 DEC-038, #84 DEC-039, #87+#89 DEC-040/041) are now DONE, each independently
+  red-teamed with zero confirmed findings across every pass.**
 
 ## Owner gates
 
@@ -128,16 +150,23 @@ Signal + campaign PR #129), B (Waiver War Room, UX mechanical sweep, weather pre
 (queue-drain sweep), C2 (drain receipt, DEC-032), C3 (GX-R00 reconciliation inventory, DEC-031),
 C4 (whole-campaign meta-audit, DEC-033, zero findings). Recovery Wave R0.5 (DEC-034) is also DONE:
 resolved the #76-96 content-landing gap with real evidence — 5 SUPERSEDED, 16 RECOVER_WHOLE, 6 of
-those 16 are LIVE defects on `main` today. Wave R0.6 items 1-5 of 6 are now DONE (#92 DEC-035, #82
-DEC-036, #93 DEC-037, #86 DEC-038, #84 DEC-039 — each independently red-teamed with zero confirmed
-findings). Per `CONTINUOUS_EXECUTION_CONTRACT.md` §9, a campaign stop report (C5) requires BOTH the
-live queue AND the reconciliation recovery queue to be exhausted — R0.6 item 6 (#89, `/api/promotions`
-outage masked as an empty response) is the LAST item in this wave, but it is blocked behind #87
-(`outage-gate.ts`, itself RECOVER_WHOLE and not yet recovered) — the next session/pass should first
-determine whether #87 is independently recoverable (its own freeze contract) before #89 can be
-attempted; if #87 is genuinely a prerequisite, recovering it first is the correct next bounded item,
-not a scope violation of "#89 only." W006 remains correctly BLOCKED (GG-001/genesis-kernel still only on unmerged draft PR #127);
-W008 stays blocked on W006; W010 stays BLOCKED (DEC-026, dependency verified genuinely absent).
-Task #8's UX mandate and Task #13's full "10x transformation" mandate remain large, standing arcs
-with their next concrete slice always identified rather than left open-ended (per this session's
-"no silent scope-shrink" discipline).
+those 16 are LIVE defects on `main` today. **Recovery Wave R0.6 is now fully DONE — all 6 of 6
+live-defect items closed** (#92 DEC-035, #82 DEC-036, #93 DEC-037, #86 DEC-038, #84 DEC-039, #87+#89
+DEC-040/041 — each independently red-teamed with zero confirmed findings across every pass). Per
+`CONTINUOUS_EXECUTION_CONTRACT.md` §9 (re-read directly from commit `acf80259` this session, not
+assumed from memory), a campaign stop report (C5) requires BOTH the live queue AND the reconciliation
+recovery queue to be exhausted. Checked every remaining wave in `RECOVERY_WAVES.md` against that bar:
+R0/R2/R6/R7/R9/R10 are genuinely founder-blocked (merge/migration decisions only an owner can make);
+R5 explicitly asks for a founder decision before an agent spends git-history-surgery effort. **R8 and
+R11.5 are NOT owner-gated** — R8 has a concrete, already-named next action ("diff
+`codex/gse-frontier-recovery-2026-07-13` against current `pdcswh` HEAD to isolate `market-values`
+canonical types + `lib/market/*`, cockpit selected-game playback, fantasy public gate, and
+Twin/Brain/autopsy/Studio projections" per `RECOVERY_MATRIX.md` row #112); R11.5 has a recommended
+triage method for the 138-branch long tail. C5 is therefore NOT yet appropriate — the next
+session/pass should begin Wave R8's freeze contract (diff first, then classify each recoverable asset
+RECOVER_WHOLE/RECOVER_PARTIAL/SUPERSEDED/OWNER_GATE per the same evidence-backed method R0.5 already
+established), per the contract's "one bounded capability at a time" law. W006 remains correctly
+BLOCKED (GG-001/genesis-kernel still only on unmerged draft PR #127); W008 stays blocked on W006; W010
+stays BLOCKED (DEC-026, dependency verified genuinely absent). Task #8's UX mandate and Task #13's
+full "10x transformation" mandate remain large, standing arcs with their next concrete slice always
+identified rather than left open-ended (per this session's "no silent scope-shrink" discipline).

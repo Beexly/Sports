@@ -49,6 +49,15 @@ function sha256(payload: string): string {
   return createHash("sha256").update(payload).digest("hex");
 }
 
+/**
+ * Load a game room. Returns null ONLY for a genuinely missing game — a DB-read
+ * failure THROWS (T-outage-sweep, states doctrine). Collapsing the two would
+ * let a caller dress an outage as non-existence (a model-court API answering
+ * 404 "game-not-found", or a room page rendering notFound(), while the
+ * database is down). Callers translate the throw into their own honest
+ * failure state (an outage 503; the page's error boundary — an error screen
+ * is honest, a fabricated 404 is not).
+ */
 export async function loadGameRoom(
   gameId: string,
   viewer: GameRoomViewer = FAIL_CLOSED_VIEWER,
@@ -116,8 +125,7 @@ export async function loadGameRoom(
           take: 120,
         },
       },
-    })
-    .catch(() => null);
+    });
 
   if (!game) return null;
 

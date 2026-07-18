@@ -7,6 +7,14 @@ export interface CalibrationReportPayload {
     updatedAt: string;
     isCollecting: boolean;
     publicMessage: string;
+    /**
+     * True ONLY when the DB read itself failed (T-outage-sweep, states
+     * doctrine): "collecting" is a deliberate young-record state; a failed
+     * read is an OUTAGE and must be machine-distinguishable. Server pages
+     * that embed this loader keep rendering the calm degraded panel; the
+     * /api/calibration route turns it into the distinct outage 503.
+     */
+    readFailed?: true;
   };
   meta: { gated: boolean; isSampleData: boolean };
 }
@@ -46,13 +54,19 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
     .catch(() => null);
 
   if (picks === null) {
+    // OUTAGE, not "collecting": the read failed. Pages embedding this loader
+    // still get a render-safe payload (never crash home/board/house/proof on
+    // a DB blip), but the state carries the readFailed discriminator so the
+    // API surface and monitors never mistake a failure for the deliberate
+    // young-record state (T-outage-sweep).
     const report = computeCalibration([]);
     return {
       data: {
         ...report,
         updatedAt: now.toISOString(),
         isCollecting: true,
-        publicMessage: "Calibration is temporarily unavailable; building history from settled canonical picks.",
+        publicMessage: "Calibration is temporarily unavailable.",
+        readFailed: true,
       },
       meta: { gated: false, isSampleData: false },
     };

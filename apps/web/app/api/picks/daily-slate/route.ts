@@ -8,6 +8,7 @@ import {
 } from "@sports/db";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { outageGateResponse } from "@/lib/data-reliability/outage-gate";
 
 /**
  * Daily slate API — stub-safe and demo-aware.
@@ -70,46 +71,54 @@ export async function GET() {
     ...excludeSeedInProd,
   };
 
-  const totalPicks = await db.pick.count({ where: baseWhere }).catch(() => 0);
-
   const samples = demoActive ? getSamplePicks() : [];
+  let totalPicks: number;
   let totalGames: number;
   let freePickCount: number;
   // Sport breakdown accumulator (demo counts samples; prod counts real picks).
   const sportCount = new Map<string, number>();
-  if (demoActive) {
-    totalGames = new Set(samples.map((p) => p.gameId)).size;
-    freePickCount = samples.filter((p) => p.tier === "FREE").length;
-    for (const p of samples) {
-      sportCount.set(p.game.sport.name, (sportCount.get(p.game.sport.name) ?? 0) + 1);
-    }
-  } else {
-    // Production: derive the counts from the REAL DB, not the (empty) demo array.
-    // Deriving totalGames/free/premium from `samples` in prod published a
-    // self-contradictory "Games Today: 0" next to a non-zero Total Picks and
-    // mislabelled every FREE-tier pick as premium (premium = total − 0).
-    //
-    // ONE scan over today's published picks feeds BOTH the distinct-game count
-    // AND the per-sport breakdown (was two separate findMany calls on this public
-    // path). Prisma groupBy can't traverse the pick→game→sport relation, so a
-    // narrowed select + in-process tally is the correct shape; a day's slate is
-    // bounded. On a DB error, fall back to empty — never fabricate.
-    freePickCount = await db.pick
-      .count({ where: { ...baseWhere, tier: "FREE" } })
-      .catch(() => 0);
-    const rows = await db.pick
-      .findMany({
+  try {
+    totalPicks = demoActive ? samples.length : await db.pick.count({ where: baseWhere });
+    if (demoActive) {
+      totalGames = new Set(samples.map((p) => p.gameId)).size;
+      freePickCount = samples.filter((p) => p.tier === "FREE").length;
+      for (const p of samples) {
+        sportCount.set(p.game.sport.name, (sportCount.get(p.game.sport.name) ?? 0) + 1);
+      }
+    } else {
+      // Production: derive the counts from the REAL DB, not the (empty) demo array.
+      // Deriving totalGames/free/premium from `samples` in prod published a
+      // self-contradictory "Games Today: 0" next to a non-zero Total Picks and
+      // mislabelled every FREE-tier pick as premium (premium = total − 0).
+      //
+      // ONE scan over today's published picks feeds BOTH the distinct-game count
+      // AND the per-sport breakdown (was two separate findMany calls on this public
+      // path). Prisma groupBy can't traverse the pick→game→sport relation, so a
+      // narrowed select + in-process tally is the correct shape; a day's slate is
+      // bounded.
+      freePickCount = await db.pick.count({ where: { ...baseWhere, tier: "FREE" } });
+      const rows = await db.pick.findMany({
         where: baseWhere,
         select: { gameId: true, game: { select: { sport: { select: { name: true } } } } },
-      })
-      .catch(() => [] as { gameId: string; game: { sport: { name: string } } }[]);
-    const gameIds = new Set<string>();
-    for (const row of rows) {
-      gameIds.add(row.gameId);
-      const name = row.game.sport.name;
-      sportCount.set(name, (sportCount.get(name) ?? 0) + 1);
+      });
+      const gameIds = new Set<string>();
+      for (const row of rows) {
+        gameIds.add(row.gameId);
+        const name = row.game.sport.name;
+        sportCount.set(name, (sportCount.get(name) ?? 0) + 1);
+      }
+      totalGames = gameIds.size;
     }
-    totalGames = gameIds.size;
+  } catch {
+    // A failed primary read is an OUTAGE (T-outage-sweep, states doctrine) —
+    // previously these reads fell back to 0/[] and published a healthy-looking,
+    // freshly-stamped EMPTY slate during a DB failure. The /picks page's
+    // fetchSlate already tolerates a non-OK response (renders without the
+    // SlateBar), so failing honestly costs nothing.
+    return NextResponse.json(outageGateResponse("Daily slate"), {
+      status: 503,
+      headers: { "cache-control": "no-store" },
+    });
   }
   const premiumPickCount = Math.max(0, totalPicks - freePickCount);
   const sportBreakdown = Array.from(sportCount.entries())

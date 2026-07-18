@@ -117,29 +117,35 @@ higher-numbered waves in this same sequence.
    write left a pick permanently ungraded once its game aged out of the scores feed's lookback — silently
    shrinking the public beat-close-rate sample one crash at a time. Protected zones: settlement, CLV, public
    claims — mandatory red-team (completed).
-6. **IN PROGRESS — #89 — outage on `/api/promotions` masked as an honest empty response.** Depended on #87's
-   `outage-gate.ts`. **Prerequisite #87 DONE (2026-07-18, DEC-040)**: new `outage-gate.ts` gives a DB-read
-   failure on `/api/picks`/`/api/clv` its own distinct `reason:"backend_outage"` 503 body instead of reusing
-   the deliberate-bootstrap-gate body; `prod-probe.mjs` fails it by name; `docs/launch-runbook.md` documents
-   all three dark-state discriminators. 6 of 7 non-test files were byte-identical to current main and applied
-   via clean `git apply`; `apps/web/app/picks/page.tsx` had drifted 266 lines (an independently-shipped
-   paywall feature) and was manually reconciled — a new amber `kind==="outage"` branch woven into the
-   existing gated/stale ternary, distinct from and mutually exclusive with the page's own pre-existing
-   fetchError-based outage block. Ripple check found 4 other `bootstrapGateResponse` consumers all correctly
-   scoped to deliberate gating only (no other live instance of this defect; they do lack any outage-vs-gate
-   distinction of their own, a narrower gap explicitly out of scope for both #87 and #89). gse-red-team
-   CONFIRMED clean across all 9 review points plus its own 8-point protected-zone checklist, zero findings —
-   including a reproduced non-vacuousness spot check. `apps/web` suite 635/8,604, guardrails 17/17, typecheck
-   clean. Committed and pushed to `claude/galaxy-sports-edge-pdcswh`, tracked by PR #129. **#89 itself
-   (5 more surfaces: `/api/calibration`, `/api/picks/daily-slate`, `/api/promotions`, game-room loader,
-   proof-of-record loader) is next** — its own freeze contract, code, tests, and red-team pass, now unblocked.
-   Protected zones: data reliability, public claims.
+6. **DONE (2026-07-18, DEC-040 + DEC-041) — #89 — outage on `/api/promotions` masked as an honest empty
+   response, plus 4 sibling surfaces.** Prerequisite #87 (DEC-040): new `outage-gate.ts` gives a DB-read
+   failure on `/api/picks`/`/api/clv` its own distinct `reason:"backend_outage"` 503 body; `prod-probe.mjs`
+   fails it by name; `docs/launch-runbook.md` documents all three dark-state discriminators. 6 of 7 non-test
+   files byte-identical to current main, applied via clean `git apply`; `apps/web/app/picks/page.tsx` had
+   drifted 266 lines (an independently-shipped paywall feature) and was manually reconciled. Ripple check
+   found 4 other `bootstrapGateResponse` consumers all correctly scoped to deliberate gating only.
+   #89 itself (DEC-041): extended the fix to `/api/calibration`, `/api/picks/daily-slate`, `/api/promotions`,
+   and the game-room loader (`model-court` route + `/room/[gameId]` page). 4 of 8 non-test files byte-identical
+   to the historical base, applied directly. `daily-slate/route.ts` manually reconciled around an unrelated,
+   already-landed `recentRecord` honesty fix. The game-room trio — entitlements-adjacent, highest risk — had
+   ALL drifted (this branch's own already-landed `GameRoomViewer` gating postdates #89's authoring); reconciled
+   by hand with the ONLY change being `.catch(() => null)` removed from `db.game.findUnique`, every downstream
+   entitlement-gating line confirmed byte-identical. A fifth target, the proof-of-record loader, was found
+   ALREADY independently fixed on this branch via a different (resolved-flag, not throw-based) mechanism with
+   its own existing test coverage — confirmed genuinely equivalent (arguably stronger) by both this session and
+   the red-team, excluded from the port. Self-caught and corrected a drift-check methodology error mid-contract
+   (initial comparisons were against `origin/main`; `pdcswh` is a superset branch — re-ran every check against
+   `HEAD`). gse-red-team CONFIRMED clean across both passes (9+7 review points, two 8-point protected-zone
+   checklists), zero findings total, each pass resumed via the agent-stall protocol. `apps/web` suite 636/8,616,
+   guardrails 17/17, workspace typecheck clean. Committed and pushed to `claude/galaxy-sports-edge-pdcswh`,
+   tracked by PR #129. **Closes Wave R0.6 entirely.** Protected zones: data reliability, public claims,
+   entitlements (game-room trio).
 
 **Method for each:** FREEZE CONTRACT (re-derive the exact fix against CURRENT main, not the stale PR diff —
 main has advanced since these PRs were authored) → CODE (port the fix, re-verified against today's file
 state) → TARGETED TEST → mandatory red-team (all six touch a protected zone) → FINAL VERIFY → ledgers → commit
-→ push → bounded recovery PR (never merged to main by this agent). Items 1-5 DONE
-(DEC-035/036/037/038/039); item 6's prerequisite #87 DONE (DEC-040); #89 itself remains, next.
+→ push → bounded recovery PR (never merged to main by this agent). **All 6 items DONE**
+(DEC-035/036/037/038/039/040/041). Wave R0.6 is fully drained.
 
 ## Wave R1 — Security hardening (#123)
 
@@ -234,8 +240,8 @@ first; (3) for each, apply the SAME comparison-method tiers used in R0.5 before 
 ```text
 R0    Land #128 (founder-merge-only; agent work complete)
 R0.5  DONE (2026-07-18) — Verify #76-96 PR-content gap: 5 SUPERSEDED, 16 RECOVER_WHOLE
-R0.6  Recover the 6 live-defect fixes from R0.5 (#92 > #82 > #93 > #86 > #84 > #89)
-      — items 1-3 (#92, #82, #93) DONE (DEC-035/036/037, 2026-07-18); items 4-6 NOT performed this pass
+R0.6  DONE (2026-07-18) — all 6 live-defect fixes recovered (#92 > #82 > #93 > #86 > #84 > #87+#89)
+      — DEC-035/036/037/038/039/040/041, each independently red-teamed with zero confirmed findings
 R1    DONE (2026-07-18) — converged with R0.6 item 3 (DEC-037); PR #123's own disposition stays OWNER_GATE
 R2    #127 founder decision (agent work complete)
 R3    Done

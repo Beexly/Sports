@@ -24,6 +24,10 @@ export default async function GameRoomPage({
   // Resolve the viewer's entitlements server-side (anonymous → FREE, fail-closed)
   // and pass them into the shared loader so premium picks, confidence, the paid
   // factor trail, and line movement never enter an un-entitled payload.
+  //
+  // loadGameRoom returns null ONLY for a genuinely missing game; a DB-read
+  // failure THROWS (T-outage-sweep) and deliberately propagates to the app
+  // error boundary — an error screen is honest, a fabricated 404 is not.
   const viewer = await getViewerEntitlements();
   const room = await loadGameRoom(params.gameId, {
     canSeePremiumPicks: viewer.canSeePremiumPicks,

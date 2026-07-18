@@ -1900,3 +1900,96 @@ stitching) — recorded here so no backtest can slip past it.
   `apps/web/__tests__/picks-states-conversion.test.ts`.
 - Supersedes: none. Unblocks R0.6 item 6 (#89) — its own freeze contract, code, tests, and red-team pass are
   the next bounded step, sequenced immediately after this one lands.
+
+## DEC-041 — Recovery Wave R0.6, final item: T-outage-sweep (#89), closes Wave R0.6 (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Recovery Wave R0.6, item 6 of 6 — the last live-defect item in the wave. Historical PR #89
+  extends #87's `outage-gate.ts` fix to 5 more public surfaces the adversarial verify workflow on #87 found
+  carrying the same "DB failure dressed as a healthy/deliberate state" anti-pattern: `/api/calibration`,
+  `/api/picks/daily-slate`, `/api/promotions`, the game-room loader, and the proof-of-record loader.
+- Contract frozen before coding — and re-frozen mid-way once the correct base was identified. Fetched
+  historical PR #89 (branch `claude/hotfix-outage-sweep`, stacked on `claude/hotfix-picks-outage-state`
+  `d8e76090` — #87's own head, not raw pre-#87 `main`). Initial drift check compared against `origin/main`;
+  self-caught that this was the wrong target (`pdcswh` is a superset branch — this session's own W004/
+  intelligence-playback work had independently rewritten `game-room/load.ts` far beyond what `origin/main`
+  shows), re-ran every drift check against `HEAD` (current `pdcswh` tip) instead. Correct picture: 4 of 8
+  non-test files were byte-identical to `d8e76090` (`calibration/route.ts`, `promotions/route.ts`,
+  `calibration/report.ts`, `prod-probe.mjs` — the last of these confirmed identical to #87's own already-landed
+  version too) — applied via a verified-clean `git apply`. Four files had drifted and were manually
+  reconciled; one target (proof-of-record) turned out to already be fixed by an independently-landed,
+  equally-honest mechanism and was excluded entirely — see below.
+- **`apps/web/app/api/picks/daily-slate/route.ts`** (45-line drift): an unrelated, already-landed honesty fix
+  (removing a fabricated all-zero `recentRecord` placeholder, `public-number-audit-2026-07-16` finding #7) sat
+  textually right after this route's pick/game-count computation, non-overlapping with #89's own patch region.
+  Applied the historical try/catch restructuring (wrapping the count/breakdown computation, removing the
+  per-query `.catch(() => 0/[])` fallbacks, returning `outageGateResponse("Daily slate")` on any failure) by
+  hand, leaving the `recentRecord` fix completely untouched below it.
+- **The game-room trio** (`lib/game-room/load.ts`, `api/room/[gameId]/model-court/route.ts`,
+  `app/room/[gameId]/page.tsx`) had ALL drifted since #89 was authored — this branch's own already-landed
+  entitlements-gating work (`GameRoomViewer`: `canSeePremiumPicks`/`canSeeConfidence`/`canSeeFactorBreakdown`/
+  `canSeeLineMovement`, threaded through `loadGameRoom(gameId, viewer, now)`'s 3-arg signature) didn't exist
+  when #89 was written. This is a protected, entitlements-adjacent zone — reconciled with maximum care: the
+  ONLY change to `load.ts` is removing `.catch(() => null)` from the `db.game.findUnique(...)` call (a DB
+  failure now throws instead of collapsing into the same `null` a genuinely-missing game returns); every
+  downstream entitlement-gating line (premium-pick filtering, confidence/line-movement/factor-breakdown
+  nulling) is byte-identical to before. `model-court/route.ts`'s existing 4-field `loadGameRoom(...)` call is
+  wrapped in try/catch → `outageGateResponse("Model Court")`, passing the exact same viewer object, nothing
+  added or removed from it. `room/[gameId]/page.tsx` received only #89's own explanatory comment (no
+  functional change) — the throw now propagates to the segment's dedicated `apps/web/app/room/error.tsx`
+  boundary (a branded page, not a raw crash screen), confirmed a reasonable choice for this entitled surface.
+- **Proof-of-record loader — excluded, confirmed SUPERSEDED, not ported.** Drift analysis found
+  `apps/web/lib/proof/load-proof-of-record.ts` + `apps/web/app/proof/page.tsx` already independently fixed on
+  this branch, via a DIFFERENT mechanism than #89's throw-based approach: the loader catches the failure into
+  a resolved `ledgerUnreachable: boolean` flag (never throwing) instead of removing its `.catch()`; on that
+  flag it returns `generatedAt:"", merkleRoot:"", totalSettled:0` — explicitly never the fabricated
+  `sha256("")` empty-set root reserved for the genuinely-empty-but-reachable branch. `/proof/page.tsx` reads
+  the flag AND carries its own defensive try/catch (belt-and-suspenders — never an error boundary on this
+  honesty surface), rendering a distinct "temporarily unreachable" card. Already has dedicated test coverage
+  (`honest-degraded-states.test.ts`, `states-matrix-slice.test.ts`). Confirmed (myself, then independently by
+  red-team) this closes the exact same gap #89 targets — arguably with MORE defense-in-depth (a resolved
+  flag plus a page-level fallback) than a bare throw would provide. Not touched; #89's historical test
+  assertions for this specific surface (which assume a throw) were not ported, since they'd assert behavior
+  this branch's own already-landed design deliberately does not have.
+- Independent review: one `gse-red-team` pass, resumed twice via the standing agent-stall protocol (both times
+  mid-investigation right before its final check — once before reading the game-room error boundary, once
+  before running the closing typecheck — resolved with explicit "finish this one check then write the
+  synthesis" directives). **Zero CONFIRMED findings across all 7 review points and the reviewer's own 8-point
+  adversarial protected-zone checklist**: all four zero-drift files confirmed behaving exactly as described
+  (deliberate/gated 200 states untouched, only genuine DB failures return 503); the `daily-slate` reconciliation
+  confirmed to leave both the unrelated stale-kill-switch fail-open path and the `recentRecord` honesty fix
+  genuinely undisturbed; the game-room trio — the highest-risk, entitlements-adjacent part — confirmed to
+  introduce NO leak and NO behavioral drift beyond the intended failure-propagation change (read the full
+  238-line `loadGameRoom` function and confirmed every entitlement-gating line byte-identical); the new tests
+  confirmed non-vacuous via direct reversion reasoning on 4 separate lines; the proof-of-record SUPERSEDED
+  disposition independently re-confirmed correct by reading both files in full; typecheck confirmed clean.
+- Evidence: `cd apps/web && npx vitest run __tests__/outage-sweep.test.ts __tests__/prod-probe-script.test.ts
+  __tests__/daily-slate-route.test.ts __tests__/daily-slate-stale-kill-switch.test.ts
+  __tests__/honest-degraded-states.test.ts __tests__/states-matrix-slice.test.ts` → 6 files / 70 tests, all
+  green (independently re-run by both this session and the red-team); full `apps/web` suite → 636 files /
+  8,616 tests, all green (was 635/8,604 pre-fix — the +12 delta reconciles exactly to the new
+  `outage-sweep.test.ts` file); `npx tsc --noEmit` clean (apps/web, re-run 3 times across the session with no
+  interleaved edits between the last run and commit); full workspace `npm run typecheck` clean, every
+  workspace; `npm run guardrails` → 17/17 green; `git diff --check` clean aside from the same pre-existing
+  CRLF-line-ending file already documented in DEC-040 (untouched by this diff).
+- Alternatives rejected: blind `git apply` of the historical diff onto the drifted game-room trio — rejected
+  once the entitlements-gating drift was confirmed; the risk of silently reverting or duplicating already-
+  landed paid-tier logic in a protected zone was judged too high for anything but a hand-verified, line-by-
+  line reconciliation. Porting #89's proof-of-record throw-based fix on top of the already-landed flag-based
+  one — rejected as redundant and risky (two competing failure-handling mechanisms on the same read would be
+  a maintenance hazard, and the flag-based design was independently confirmed to already close the gap).
+- Reversibility: strictly additive/tightening (new outage 503s, a `.catch()` removal that can only make a
+  failure MORE visible, never less) — never removes or weakens any deliberate gated/empty state. Revert commit
+  if any regression surfaces. Never merged to `main` — founder-merge-only, tracked by the existing accounting
+  PR #129.
+- Protected zones: public customer-facing surfaces (frontend-trust doctrine), data reliability/observability,
+  and entitlements (the game-room trio touches a PRO/ELITE-gated data path) — mandatory red-team (completed,
+  zero findings).
+- Files: `apps/web/app/api/calibration/route.ts`, `apps/web/app/api/picks/daily-slate/route.ts`,
+  `apps/web/app/api/promotions/route.ts`, `apps/web/app/api/room/[gameId]/model-court/route.ts`,
+  `apps/web/app/room/[gameId]/page.tsx`, `apps/web/lib/calibration/report.ts`,
+  `apps/web/lib/game-room/load.ts`, `scripts/prod-probe.mjs`, `apps/web/__tests__/outage-sweep.test.ts` (new).
+- Supersedes: none (proof-of-record disposition is EXCLUDED, not superseded-and-overwritten — its own
+  already-landed fix stands as-is). **Closes Recovery Wave R0.6 entirely — all 6 live-defect items (#92, #82,
+  #93, #86, #84, and #87/#89 together) are now DONE, each independently red-teamed with zero confirmed
+  findings.**
