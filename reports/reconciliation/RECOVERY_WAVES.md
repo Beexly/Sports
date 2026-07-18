@@ -376,9 +376,40 @@ retroactively across 3 already-pushed files. The final 8-branch slice's red-team
 output at all (a new failure mode vs. every earlier stall, which returned partial text) before succeeding on
 a third resume under the same protocol.
 
-**Next slice:** remaining long-tail branches beyond the 73 now triaged (of 138 total long-tail entries per
-`BRANCH_PR_LEDGER.json`). `intraday-odds-scheduler` stays open as a standing OWNER_GATE candidate, not a
-blocker.
+**Accounting correction (2026-07-18, DEC-051):** the running "65/138" → "73/138" headline carried in this
+section through the previous revision was arithmetically wrong — it inherited DEC-047's "43-branch" summary
+number without adding back 13 more branches that same DEC-047 pass separately named and dispositioned with
+real evidence in the same breath (`crypto-payments`, the 2-branch Dynasty cluster, `dfs-optimizer-edge`,
+`consensus-accuracy-engine`), and DEC-047's "13 `codex/api-v1-*`" claim itself overcounts by 3 (`git branch
+-r` confirms only 10 branches carry that exact prefix). Recomputed from first principles: the precise,
+individually-evidenced total walking into the next slice was **58**, not 73.
+
+**Next slice DONE (2026-07-18, DEC-051): 30 more branches from the 80-branch remaining pool, novel-file
+counts 1-2 (cheapest tier first).**
+- **17 ALREADY_ON_PDCSWH, individually confirmed** — the same stale `lib/source-rights/source-rights-
+  registry.ts` re-export shim DEC-047 found in 6 sampled branches of a 23-branch cluster it could not fully
+  verify. This slice individually confirms (byte-identical `md5sum`, consistent `--shortstat` signature) the
+  other 17, closing that gap with real evidence.
+- **9 more ARCHIVE_ONLY**, same stale typecheck-log-pair noise pattern.
+- **New RECOVER_WHOLE candidate named, not ported**: 3 branches (`adoring-knuth-mhg8m4`, `friendly-fermat-
+  fy99m2`, `codex/upgrade-galaxy-statking-to-nfl-intelligence-system`) independently carry a byte-identical
+  `warp-nebula.tsx`/`warp-nebula-lazy.tsx` pair — a Three.js particle-nebula landing visual built to the same
+  discipline as `pdcswh`'s already-live `ShaderAurora`/`ConsensusEngine3D` hero components. Needs its own
+  freeze contract (which page, dedup check), not a rushed port.
+- **Real finding, deliberately NOT landed**: `claude/fix-local-setup-PmnyX`'s otherwise-useful `scripts/
+  local.sh` one-command dev bootstrap hardcodes a live-shaped `THE_ODDS_API_KEY` value in its generated
+  `.env` template (every other credential in the same template is an explicit placeholder). A real
+  `CLAUDE.md` rule-4 ("no secrets in code") violation — recorded for founder awareness, not silently
+  sanitized-and-landed or silently dropped. Full detail in DEC-051.
+
+Running total after this slice: **88 of 138** long-tail branches individually evidenced.
+
+**Next slice:** the remaining 50-branch pool (novel-file counts 3 to 701). Several of those
+(`claude/keen-ptolemy-*` cluster, `codex/galaxy-dynasty-studio-rescue-v2`, `safety/sports-wip-2026-06-04`,
+`claude/compassionate-ramanujan-qqt5nb`, `fix/overnight-codex-feature-gates-260524`, `codex/autonomy-
+release-command-center-2026-05-28`) have 100+ novel files each and need dedicated, individually-scoped
+triage passes, not a batch sweep. `intraday-odds-scheduler` stays open as a standing OWNER_GATE candidate,
+not a blocker.
 
 ## Recommended order (refreshed)
 
@@ -398,7 +429,8 @@ R8    Groups A+B DONE (DEC-043/044). Group A2 core files OWNER_GATE (OG-009, DEC
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   Deletion receipts for the 12 proven-ancestor branches
-R11.5 73/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047, dfs-optimizer-edge DEC-048,
-      consensus-accuracy-engine DEC-049, final 8-branch slice DEC-050 incl. live refund-window fix);
-      intraday-odds-scheduler open OWNER_GATE candidate; next: remaining long-tail beyond 73
+R11.5 88/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047, dfs-optimizer-edge DEC-048,
+      consensus-accuracy-engine DEC-049, 8-branch slice DEC-050 incl. live refund-window fix, 30-branch
+      slice + accounting correction DEC-051 incl. unlanded secret finding); intraday-odds-scheduler +
+      local.sh hardcoded-key finding both open for founder review; next: remaining 50-branch pool
 ```

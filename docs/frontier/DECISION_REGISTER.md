@@ -2778,3 +2778,93 @@ stitching) — recorded here so no backtest can slip past it.
 - Supersedes: none. Closes task #71 and Wave R11.5's 8-branch tail. `claude/intraday-odds-scheduler`
   remains an open OWNER_GATE candidate (not a blocker on anything else). Remaining long-tail branches beyond
   the 73 now triaged (of 138 total per `BRANCH_PR_LEDGER.json`) are the next available R11.5 slice.
+
+## DEC-051 — Recovery Wave R11.5: accounting correction + next 30-branch slice; one real secret
+  finding (not landed) (2026-07-18)
+
+- Date: 2026-07-18
+- **Accounting correction, recorded honestly rather than silently fixed.** Before starting this slice,
+  recomputed the running R11.5 total from first principles (build the precise set of every individually-named,
+  individually-evidenced branch across DEC-046 through DEC-050, then `set`-subtract from the full 138-branch
+  `longTailEntries` list) rather than trusting the prior "73/138" headline, which turned out to be wrong in
+  two ways: (1) DEC-047's own "13 `codex/api-v1-*`-named branches" claim overcounts by 3 — `git branch -r`
+  confirms only 10 branches with that exact prefix exist repo-wide (11 total including
+  `codex/evidence-api-v1-shadow-seam`, which DEC-047 already counted separately in its "7 same-lineage"
+  group); (2) the running "65/138" then "73/138" headlines were carried forward from DEC-047's own "43-branch"
+  summary number without ever adding back the 13 additional branches that same DEC-047 pass separately named
+  and dispositioned in the same breath (`crypto-payments`, the 2-branch Dynasty cluster, `dfs-optimizer-edge`,
+  `consensus-accuracy-engine`) — real, evidenced dispositions that simply weren't in the "43" headline's
+  arithmetic. The true precisely-evidenced count walking into this slice was **58**, not 73. Recorded here
+  per this campaign's own standing rule (DEC-049's retroactive lint-fix precedent): fix forward, disclose the
+  correction, do not silently rewrite an already-pushed, append-only entry.
+- Method for this slice: computed the exact 80-branch remaining pool (138 minus the 58 precisely-known), then
+  `git diff --name-status --diff-filter=A` against `pdcswh` for every branch in the pool, sorted by novel-file
+  count ascending (cheapest/most tractable first). Processed the 1-novel-file tier (17 branches) and the
+  2-novel-file tier (13 branches) in full — 30 branches, real evidence for every one.
+- **17 branches — ALREADY_ON_PDCSWH, now individually confirmed (closes a gap DEC-047 flagged).** Every one
+  of the 17 has exactly one novel file, `apps/web/lib/source-rights/source-rights-registry.ts` — spot-checked
+  4 by `md5sum` against DEC-047's own known-good sample (`claude/picks-states-conversion`): byte-identical
+  (`eec522b6...`). `git diff --shortstat` for 5 of the 17 shows the same signature range DEC-047 documented
+  for this cluster (1,355-1,678 insertions / 65K-73K deletions vs. `pdcswh`). DEC-047 named this cluster as
+  "23 branches, only 6 sampled, the other 17 NOT individually content-reviewed" — this pass individually
+  confirms exactly those missing 17, closing the gap with real evidence rather than extrapolation. Branches:
+  `claude/add-ladder-events-migration`, `claude/checkout-consent-disclosure`, `claude/fantasy-august-draft-
+  pool`, `claude/glass-ledger-edge-engine`, `claude/hotfix-audit-paywall-leak`, `claude/legal-last-updated-
+  honesty`, `claude/money-path-test-gaps`, `claude/nfl-expected-points-metrics`, `claude/paywall-enforcement-
+  audit`, `claude/picks-paywall-copy-truth`, `claude/premium-analytics-rate-limit`, `claude/preview-line-
+  movement-gate`, `claude/preview-sport-slug-urls`, `claude/stripe-entitlement-reconcile`, `claude/trends-
+  engine-ingestion`, `codex/sunday-frontier-maxforce-2026-07-05`, `docs/competitive-landscape-2026-07`. (Note:
+  several of these names closely resemble already-completed tasks in this campaign — e.g.
+  `nfl-expected-points-metrics` vs. task #27's NFL PBP wiring, `trends-engine-ingestion` vs. task #24 — real
+  evidence confirms they are early, abandoned, content-empty snapshots, not duplicates of live work.)
+- **9 branches — ARCHIVE_ONLY, zero recoverable content.** Same stale
+  `handoff/codex/typecheck-prisma-baseline/*.log` pair seen throughout this wave, nothing else:
+  `claude/codex-fixes-launch-53`, `claude/gse-no-claim-waitlist`, `claude/gse-project-review-m6vrza`,
+  `claude/phase5-secret-scan-ci-all-mode`, `claude/test-suite-hermetic-local`, `claude/trust-surface-
+  correctness-fixes`, `design/2026-flagship`, `feat/sentient-interface`, `feat/sentient-interface-v2`.
+- **`claude/adoring-knuth-mhg8m4`, `claude/friendly-fermat-fy99m2`,
+  `codex/upgrade-galaxy-statking-to-nfl-intelligence-system` — new RECOVER_WHOLE candidate named, NOT
+  ported this pass.** All 3 independently carry byte-identical copies (`md5sum` confirmed) of the same
+  2-file asset: `warp-nebula.tsx` (a deterministic, ~16K-particle Three.js nebula flythrough for a landing-
+  page cinematic entrance) + `warp-nebula-lazy.tsx` (its `next/dynamic` `ssr:false` boundary). Read in full:
+  follows the exact same documented discipline as `pdcswh`'s already-live `ShaderAurora`/`ConsensusEngine3D`
+  hero components (`apps/web/components/hero/*`, confirmed present) — deterministic `mulberry32` seed (no
+  hydration drift), `prefers-reduced-motion` → one static frame, WebGL-unavailable → renders nothing, pauses
+  when tab hidden, DPR clamped, full dispose on unmount, decorative only. Not wired into any page on any of
+  the 3 branches. A plausible, well-built sibling asset — not ported this pass because it needs its own
+  freeze contract (which page mounts it, confirm zero duplication with the existing hero visual tier) rather
+  than a rushed port, consistent with this campaign's standing restraint discipline.
+- **`claude/fix-local-setup-PmnyX` — investigated, explicitly NOT ported: contains a hardcoded API key.**
+  2 novel files, `scripts/local.sh` + `scripts/README.md` — a generically useful one-command local dev
+  bootstrap (Docker Compose up, `.env` generation, Prisma generate/push/seed, then run app + worker).
+  Read `local.sh` in full. Every other credential in its generated `.env` heredoc is an explicit placeholder
+  (`sk_test_placeholder`, `pk_test_placeholder`, `whsec_placeholder`, blank `GOOGLE_CLIENT_ID`/`SECRET`,
+  blank `ANTHROPIC_API_KEY`) — but `THE_ODDS_API_KEY` is hardcoded to a concrete 32-character hex literal,
+  not a placeholder. This is a real `CLAUDE.md` rule-4 ("no secrets in code") violation: landing this file
+  as-is would commit what is shaped exactly like a live API credential into git history. The string does not
+  appear anywhere in the current `pdcswh` tree (`grep` confirmed empty). Not evaluated further and explicitly
+  not ported — this is a founder-relevant finding (the key may need rotating if it was ever live), not
+  something to silently drop or silently sanitize-and-land without disclosure. No further git-history search
+  performed (a full `git log -S` across all 138 branches timed out and was abandoned rather than run
+  unbounded).
+- Evidence: every disposition above is from a directly-run `git diff --name-status --diff-filter=A` /
+  `git diff --shortstat` / `git show <ref>:<path> | md5sum` / direct file read this session — none inherited
+  from an agent report or prior extrapolation, continuing this campaign's "reproduce before ruling" discipline.
+- Alternatives rejected: porting `warp-nebula.tsx` immediately since it was already fully read and looks
+  ready — rejected for the same reason DEC-047 deferred `dfs-optimizer-edge`/`consensus-accuracy-engine`
+  rather than rush-porting them mid-triage; landing `local.sh` with the hardcoded key stripped out silently —
+  rejected because silently sanitizing and landing would bury a real secret-hygiene finding that the founder
+  should see, not just have quietly fixed on their behalf.
+- Reversibility: N/A — no code changed this pass (documentation/ledger only).
+- Protected zones: none touched (no code landed). The `local.sh` finding is itself a protected-zone-adjacent
+  observation (secrets-in-code), recorded per policy rather than acted on unilaterally.
+- Files: `docs/frontier/DECISION_REGISTER.md`, `reports/reconciliation/RECOVERY_WAVES.md` only.
+- Supersedes: corrects (does not delete) DEC-047's "13 `codex/api-v1-*`" branch-count claim and every
+  downstream "65/138"/"73/138" running-total headline through DEC-050 — the underlying dispositions in those
+  entries remain correct, only the aggregate arithmetic was off. True running total after this slice:
+  **58 (precise, walking in) + 30 (this slice) = 88 of 138** long-tail branches individually evidenced.
+  Remaining 50-branch pool (novel-file counts from 3 up to 701) is the next R11.5 slice; several of those
+  (`claude/keen-ptolemy-*` cluster, `codex/galaxy-dynasty-studio-rescue-v2`, `safety/sports-wip-2026-06-04`,
+  `claude/compassionate-ramanujan-qqt5nb`, `fix/overnight-codex-feature-gates-260524`,
+  `codex/autonomy-release-command-center-2026-05-28`) have 100+ novel files and need dedicated,
+  individually-scoped triage passes, not a batch sweep.
