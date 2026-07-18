@@ -1993,3 +1993,99 @@ stitching) — recorded here so no backtest can slip past it.
   already-landed fix stands as-is). **Closes Recovery Wave R0.6 entirely — all 6 live-defect items (#92, #82,
   #93, #86, #84, and #87/#89 together) are now DONE, each independently red-teamed with zero confirmed
   findings.**
+
+## DEC-042 — Recovery Wave R8: freeze-contract classification of residual #112 playback assets (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Reconciliation Wave R8 (per `RECOVERY_MATRIX.md` row #112 and `RECOVERY_WAVES.md`'s own named
+  next action), the first genuinely dependency-ready, non-owner-gated reconciliation item after Wave R0.6
+  closed — confirmed by re-reading `CONTINUOUS_EXECUTION_CONTRACT.md` §9 directly (fetched from commit
+  `acf80259`, not assumed from memory) and auditing every remaining wave in `RECOVERY_WAVES.md`: R0/R2/R6/R7/
+  R9/R10 are genuinely founder-blocked; R5 explicitly asks for a founder decision. Only R8 and R11.5 are not.
+- Scope: `RECOVERY_MATRIX.md` row #112 names four still-recoverable asset groups from the historical `#112`
+  draft PR lineage (spine + Game Room consumer already ported as W001, DEC-\*): "`market-values` canonical
+  types + `lib/market/*`, cockpit selected-game playback, fantasy public gate, Twin/Brain/autopsy/Studio
+  projections."
+- Contract frozen — this pass is CLASSIFICATION ONLY, not porting, per the recovery-wave law's own "stop after
+  one inventory or recovery wave" discipline and because one of the four groups surfaced a genuine, non-trivial
+  founder-authored collision requiring OWNER_GATE treatment before any of the four groups can be safely coded.
+  Fetched branch `codex/gse-frontier-recovery-2026-07-13` (head `9b6da1ae`). Diffing the WHOLE branch against
+  `pdcswh` HEAD showed 608 files / +9,634 / −56,079 — codex is a much older, smaller snapshot missing most of
+  this session's own accumulated work (W001-W009 etc.), so a whole-branch diff is not a usable signal; scoped
+  every check to the four named asset-path groups instead.
+- **Group A — `market-values` canonical types + `lib/market/*` — RECOVER_WHOLE candidate, not yet coded.**
+  `packages/types/src/market-values.ts` (289 lines, new) + its test (174 lines, new) are genuinely absent from
+  `pdcswh`. `apps/web/lib/market/` gains 6 new files (`format-clv.ts`, `project-public-market.ts`,
+  `format-committed-market.ts` + their tests) and modifies 4 already-existing files (`best-line.ts`,
+  `game-market-read.ts`, `pick-death-clock.ts`, `load-line-shop-board.ts`) that will need their own drift
+  check against codex's fork point before any port — not yet performed. Next bounded step: diff those 4 files
+  specifically, then freeze-contract the whole group as its own item.
+- **Group B — cockpit selected-game playback — RECOVER_WHOLE candidate, not yet coded.** 8 new files, all
+  genuinely absent: `components/cockpit/selected-game-playback.tsx` (258 lines) + its test (300 lines),
+  `lib/cockpit/load-selected-game-playback.ts` (105 lines), `app/cockpit/market-twin/[gameId]/page.tsx` (20
+  lines, new dynamic route), a QA browser script, and 2 reference screenshots. `apps/web/app/cockpit/
+  market-twin/page.tsx` (already exists on `pdcswh`) gains a 6-line "Open governed playback" link to the new
+  `[gameId]` route — currently dead without it. Next bounded step: freeze-contract this group as its own item
+  (smaller and lower-risk than Group A — no modifications to existing business logic, only new additive files
+  plus one small link).
+- **Group C — fantasy public gate + `/fantasy/studio` admin-gate — COLLISION, NOT PORTED, OWNER_GATE
+  required.** `apps/web/lib/fantasy/public-gate.ts` (new), a `middleware.ts` change adding a redirect gate via
+  `isPublicFantasyToolPath()`/`fantasyGateDestination()` and adding `/fantasy/studio` to `PROTECTED_ROUTES`,
+  and a `fantasy/studio/page.tsx` change adding an admin-only auth check — all trace to ONE commit,
+  `2724e78a` ("fix(fantasy): gate public tools on real data"), confirmed via `git show` to be authored by
+  **Garrett Baxley (the founder)**, 2026-07-15 14:31 -0500. Confirmed via `git merge-base --is-ancestor
+  2724e78a HEAD` that this commit is NOT an ancestor of `pdcswh` — it exists only on
+  `codex/gse-frontier-recovery-2026-07-13` and two sibling lineages (`review-recovery`, `verify-lens`).
+  Critically: `pdcswh`'s OWN current `middleware.ts` carries an explicit code comment, introduced in an
+  earlier, independent commit (`c12decfc`, `git log -S` confirmed), documenting a DELIBERATE removal of a
+  similarly-shaped middleware-level `/fantasy/*` redirect gate for a concrete, named bug: "It bounced every
+  `/fantasy/*` tool back to the hub... and looped against the hub's legacy `?tool=` redirect." Blindly porting
+  the founder's `2724e78a` gate would reintroduce a middleware-level `/fantasy/*` redirect of the same general
+  mechanism as the one `pdcswh` explicitly removed for that reason — NOT proven to be the identical bug, but
+  close enough in shape that porting without founder review risks resurrecting it. Recorded as
+  `COLLISION-8a`/`COLLISION-8b` in `FILE_SYMBOL_OWNERSHIP.csv`, exactly the scenario `COLLISION-7b`'s own note
+  (DEC-036) anticipated when it flagged that a future wave recovering this exact branch lineage must not
+  silently regress prior work. NOT overridden, judged, or silently discarded — new OWNER_GATE entry below.
+- **Noise — not a recoverable asset.** `apps/web/lib/studio/claude.ts` and its test show `codex` LACKING a
+  `cache: {system: true}` prompt-caching optimization that `pdcswh`'s own independent lineage already has —
+  `pdcswh` is ahead here, not behind; nothing to recover. `apps/web/app/cockpit/market-twin/[gameId]/page.tsx`
+  (Group B) is the actual substance behind the RECOVERY_MATRIX's "Twin" mention; no separate "Brain/autopsy"
+  files were found under those names — the closest existing concept (`lossAutopsy`) is already covered by this
+  session's own landed W004 SportsIR work, not a distinct residual asset.
+- Evidence: `git fetch origin codex/gse-frontier-recovery-2026-07-13`; `git merge-base FETCH_HEAD HEAD` /
+  `git merge-base FETCH_HEAD origin/main` (both `7c747679`); `git diff --stat HEAD FETCH_HEAD -- <path>` run
+  separately for each of the four named groups plus the two noise files; `git log -S "..." --oneline HEAD --
+  apps/web/middleware.ts`; `git merge-base --is-ancestor 2724e78a HEAD` (exit 1, confirmed NOT an ancestor);
+  `git branch -a --contains 2724e78a`; `git log -1 --format="%an %ad %s" 2724e78a`. All commands run directly
+  this session, not inferred.
+- Alternatives rejected: blind-porting all four groups in one pass — rejected, both because Group C's
+  collision must resolve before it's safe to touch `middleware.ts`/`fantasy/studio/page.tsx` at all, and
+  because the recovery-wave law scopes each bounded capability as its own freeze-contract/code/test/red-team
+  loop, not a mega-port. Silently dropping Group C once the collision was found — rejected as a "no silent
+  scope-shrink" violation; recorded faithfully instead. Silently porting Group C anyway on the theory that
+  "founder code should win" — rejected because the founder's own commit predates, and does not account for,
+  `pdcswh`'s own later, evidence-documented bug-driven removal; only the founder can resolve which design
+  is correct going forward.
+- Reversibility: this pass makes no product-code changes at all — ledger/documentation only. Fully reversible
+  by construction.
+- Protected zones: entitlements, public surfaces (Group C touches both) — no code touched this pass, so no
+  red-team dispatch was required; Groups A/B/C will each need their own red-team pass when actually coded.
+- Files: `reports/reconciliation/FILE_SYMBOL_OWNERSHIP.csv` (two new rows, `COLLISION-8a`/`COLLISION-8b`).
+- Supersedes: none. Does not close Wave R8 — Groups A and B remain to be freeze-contracted and coded as their
+  own bounded items; Group C stays OWNER_GATE pending founder decision.
+
+### New owner gate — OG-008 (Group C, fantasy public gate)
+
+- **Decision:** whether to port the founder's own `2724e78a` fantasy-public-gate + `/fantasy/studio` admin-gate
+  commit (from `codex/gse-frontier-recovery-2026-07-13`) onto `pdcswh`, and if so, how to reconcile it with
+  `pdcswh`'s own later, independent removal of a similarly-shaped gate for a documented redirect-loop bug.
+- **Why founder:** this is the founder's own authored code, on a branch this agent has no authority to judge as
+  "wrong" relative to a different lineage's later architectural decision — both are legitimate engineering
+  positions, and only the founder can say which reflects current intent.
+- **Safe default:** do nothing. `pdcswh`'s current per-page honest live/illustrative-status design stays as-is;
+  `/fantasy/studio` remains reachable without the admin gate this commit would have added.
+- **Work around gate:** none — Groups A and B (independent of this collision) proceed as their own separate
+  items in the meantime.
+- **Re-entry condition:** founder confirms (a) whether `/fantasy/studio` should be admin-gated, and (b) whether
+  the middleware-level `/fantasy/*` redirect should be reintroduced, and if so, with the redirect-loop bug
+  `c12decfc` fixed first (verify it doesn't reappear before landing).

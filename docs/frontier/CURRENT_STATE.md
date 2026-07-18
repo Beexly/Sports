@@ -137,11 +137,27 @@
   workspace typecheck clean; guardrails 17/17. **All 6 of Wave R0.6's live-defect items (#92 DEC-035, #82
   DEC-036, #93 DEC-037, #86 DEC-038, #84 DEC-039, #87+#89 DEC-040/041) are now DONE, each independently
   red-teamed with zero confirmed findings across every pass.**
+- DEC-042 (Wave R8 classification pass) DONE — coding NOT yet performed. Diffed `codex/gse-frontier-
+  recovery-2026-07-13` against `pdcswh` HEAD, scoped to `RECOVERY_MATRIX.md` row #112's four named residual
+  asset groups. **Group A** (`market-values` canonical types + `lib/market/*`) and **Group B** (cockpit
+  selected-game playback) are both RECOVER_WHOLE candidates, not yet freeze-contracted or coded — Group B is
+  lower-risk (purely additive, no existing-file modifications) and is the recommended next bounded step.
+  **Group C** (fantasy public gate + `/fantasy/studio` admin-gate) is a genuine COLLISION: traces to a
+  founder-authored commit (`2724e78a`, Garrett Baxley, 2026-07-15) confirmed NOT an ancestor of `pdcswh`, that
+  would reintroduce a middleware-level `/fantasy/*` redirect gate of the same shape as one `pdcswh`'s own
+  independent lineage deliberately removed (`c12decfc`) for a documented redirect-loop bug — recorded as
+  `COLLISION-8a`/`8b` and new **OG-008**, not ported. This is exactly the scenario `COLLISION-7b` (DEC-036)
+  anticipated when it flagged that a future wave recovering this exact branch lineage must not silently
+  regress prior work. No red-team dispatch needed (no product code touched this pass — ledger-only).
 
 ## Owner gates
 
 - OG-001 (DEC-005): merging #119/#121–#124 to main and applying #122's additive migrations are founder-only. PRs stay open; #119's content is additionally de-risked on this branch.
 - Merging PR #127 (genesis-kernel) and PR #128 (guardrail fix) to main are founder-only, as with every prior workstream this session.
+- OG-008 (DEC-042): whether to port the founder's own `2724e78a` fantasy-public-gate + `/fantasy/studio`
+  admin-gate commit from `codex/gse-frontier-recovery-2026-07-13`, and how to reconcile it with `pdcswh`'s own
+  later, independent removal of a similarly-shaped gate for a documented redirect-loop bug. Safe default: do
+  nothing — `pdcswh`'s current per-page honest-state design stays as-is.
 
 ## Next action
 
@@ -158,15 +174,16 @@ assumed from memory), a campaign stop report (C5) requires BOTH the live queue A
 recovery queue to be exhausted. Checked every remaining wave in `RECOVERY_WAVES.md` against that bar:
 R0/R2/R6/R7/R9/R10 are genuinely founder-blocked (merge/migration decisions only an owner can make);
 R5 explicitly asks for a founder decision before an agent spends git-history-surgery effort. **R8 and
-R11.5 are NOT owner-gated** — R8 has a concrete, already-named next action ("diff
-`codex/gse-frontier-recovery-2026-07-13` against current `pdcswh` HEAD to isolate `market-values`
-canonical types + `lib/market/*`, cockpit selected-game playback, fantasy public gate, and
-Twin/Brain/autopsy/Studio projections" per `RECOVERY_MATRIX.md` row #112); R11.5 has a recommended
-triage method for the 138-branch long tail. C5 is therefore NOT yet appropriate — the next
-session/pass should begin Wave R8's freeze contract (diff first, then classify each recoverable asset
-RECOVER_WHOLE/RECOVER_PARTIAL/SUPERSEDED/OWNER_GATE per the same evidence-backed method R0.5 already
-established), per the contract's "one bounded capability at a time" law. W006 remains correctly
-BLOCKED (GG-001/genesis-kernel still only on unmerged draft PR #127); W008 stays blocked on W006; W010
-stays BLOCKED (DEC-026, dependency verified genuinely absent). Task #8's UX mandate and Task #13's
-full "10x transformation" mandate remain large, standing arcs with their next concrete slice always
-identified rather than left open-ended (per this session's "no silent scope-shrink" discipline).
+R11.5 are NOT owner-gated.** R8's classification pass is DONE (DEC-042): Group A (`market-values` +
+`lib/market/*`) and Group B (cockpit selected-game playback) are both RECOVER_WHOLE, not yet coded;
+Group C (fantasy public gate) hit a genuine founder-vs-lineage collision and is now OG-008,
+correctly NOT ported. C5 is therefore still NOT appropriate — real, dependency-ready,
+non-owner-gated work remains. **The next session/pass should freeze-contract and code Wave R8 Group B
+first** (lowest risk — purely additive, no modifications to existing business logic), then Group A
+(needs a 4-file drift check on already-existing `lib/market/*` files before its own freeze contract),
+each as its own bounded FREEZE-CONTRACT-through-PR loop with mandatory red-team. R11.5's long-tail
+triage remains available as an alternative next item if R8 stalls. W006 remains correctly BLOCKED
+(GG-001/genesis-kernel still only on unmerged draft PR #127); W008 stays blocked on W006; W010 stays
+BLOCKED (DEC-026, dependency verified genuinely absent). Task #8's UX mandate and Task #13's full "10x
+transformation" mandate remain large, standing arcs with their next concrete slice always identified
+rather than left open-ended (per this session's "no silent scope-shrink" discipline).

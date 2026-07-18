@@ -202,10 +202,32 @@ possible until the founder merges #127.
 
 ## Wave R8 — Compare #112 vs #129, recover residual playback value
 
-Not performed this pass. Concrete next action: diff `codex/gse-frontier-recovery-2026-07-13` against current
-`pdcswh` HEAD to isolate `market-values` canonical types + `lib/market/*`, cockpit selected-game playback,
-fantasy public gate, and Twin/Brain/autopsy/Studio projections (per `RECOVERY_MATRIX.md` row #112) — the
-specific residual assets RECOVERY_MATRIX already named as still-recoverable.
+**Classification pass DONE (2026-07-18, DEC-042); coding NOT yet performed.** Diffed
+`codex/gse-frontier-recovery-2026-07-13` against `pdcswh` HEAD, scoped to the four named asset groups (a
+whole-branch diff is 608 files / +9,634 / −56,079 and not a usable signal — codex is a much older snapshot
+missing most of this session's own accumulated work):
+
+- **Group A — `market-values` canonical types + `lib/market/*`.** RECOVER_WHOLE candidate. `packages/types/
+  src/market-values.ts` (289 lines) + test, 6 new `lib/market/*` files, and 4 already-existing `lib/market/*`
+  files needing their own drift check (`best-line.ts`, `game-market-read.ts`, `pick-death-clock.ts`,
+  `load-line-shop-board.ts`) — not yet freeze-contracted.
+- **Group B — cockpit selected-game playback.** RECOVER_WHOLE candidate, lower risk than A (no modifications
+  to existing business logic). 8 new files (component, loader, tests, QA script, 2 screenshots, a new
+  `market-twin/[gameId]/page.tsx` dynamic route) plus a 6-line additive link on the already-existing
+  `market-twin/page.tsx`. Not yet freeze-contracted.
+- **Group C — fantasy public gate + `/fantasy/studio` admin-gate.** **COLLISION — OWNER_GATE (OG-008), NOT
+  ported.** Traces to one founder-authored commit (`2724e78a`, Garrett Baxley, 2026-07-15) that is NOT an
+  ancestor of `pdcswh` and would reintroduce a middleware-level `/fantasy/*` redirect gate of the same shape
+  as one `pdcswh`'s own independent lineage deliberately removed (commit `c12decfc`) for a documented
+  redirect-loop bug. Recorded as `COLLISION-8a`/`COLLISION-8b` in `FILE_SYMBOL_OWNERSHIP.csv`. Blocked on
+  founder decision — see OG-008 in `DECISION_REGISTER.md`.
+- **Noise (not recoverable):** `lib/studio/claude.ts` + its test — `pdcswh` is already ahead of `codex` here
+  (has a prompt-caching optimization `codex` lacks). No separate "Brain/autopsy" files found under those
+  names; the closest concept (`lossAutopsy`) is already covered by this session's own landed W004 work.
+
+**Next bounded step:** freeze-contract and code Group B first (lowest risk, purely additive), then Group A
+(needs the 4-file drift check on already-existing `lib/market/*` files first). Group C stays OWNER_GATE until
+the founder resolves OG-008.
 
 ## Wave R9 — Validate #122 in the protected migration lane
 
