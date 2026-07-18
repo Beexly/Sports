@@ -1038,3 +1038,93 @@ stitching) — recorded here so no backtest can slip past it.
   apps/web/app/airwave/loading.tsx (new), apps/web/app/dashboard/loading.tsx (new),
   apps/web/__tests__/states-matrix-slice.test.ts (extended).
 - Supersedes: none.
+
+## DEC-030 — W-WEATHER-REC's last open item: strict as-of previous-runs loader wiring (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: W-WEATHER-REC's remaining unscoped item — "wiring `previous-runs-api` into the
+  feature store before any real historical admission run." Dependency-ready: DEC-023's live
+  smoke gate (`scripts/weather-integration-smoke.mjs`) already empirically confirmed
+  Open-Meteo's `previous-runs-api` serves genuinely distinct forecast runs per hour via
+  `_previous_dayN`, the correct leak-safe target the vendored loader's `historical-forecast-api`
+  backtest path cannot offer (it stitches runs into one continuous series with no per-hour
+  issuance selection).
+- Decision: new module `packages/prediction-engine/src/edge-lab/loaders/weather-previous-runs.ts`
+  — `getAsOfGameWeatherPreviousRuns(query, deps)`, the SAME `GameWeatherQuery → WeatherFeatures`
+  contract as the vendored `getAsOfGameWeather` (leak-guard throw, honest `unavailable`
+  degradations, identical indoor neutralization), so the existing `toGameWeatherForecast`
+  adapter and `buildWeatherFeatureRows` leak gate consume it UNCHANGED — one canonical
+  downstream path, two honest upstream sources. Reuses the vendored loader's own
+  `__internals.utcHourBucket`/`candidateSignals` (zero duplicated math). The vendored loader
+  itself (`weather-edge.ts`) is untouched — confirmed via `git diff`, per DEC-014's "behavioral
+  edits forbidden." Run selection follows DEC-023's documented conservative rule: N =
+  max(1, ceil(exactLeadHours / 24)), never a smaller N, capped at the API's documented 7-day
+  window (degrading to honest `unavailable` beyond it, never a leaky smaller N).
+- Self-caught defect (found and fixed BEFORE either independent review completed, then
+  independently re-confirmed once the fix was verified live on disk): the first cut computed
+  `leadTimeHours` via `Math.round()` and fed THAT rounded value into the day-selection
+  `ceil()` — a genuine, non-degenerate leak. A live doc check (performed independently by the
+  gse-verifier pass) confirmed Open-Meteo's `_previous_dayN` semantics are a FIXED per-hour
+  offset (`_previous_day1` = the run initialized exactly ~24h before the valid hour), so a
+  24.4h exact lead rounding to 24h and selecting `_previous_day1` would select a run
+  initialized ~24 minutes AFTER the true freeze instant — a real lookahead in a recurring
+  ~30-minute band at every 24h boundary (24.0-24.5h, 48.0-48.5h, ...). The downstream leak gate
+  does NOT catch this class of error: `toGameWeatherForecast` stamps `forecastIssuedAt` from
+  the QUERY's own `asOfUtc`, not from any true API run-issuance time, so a wrong-day selection
+  would flow straight through silently. Fixed by computing an unrounded `exactLeadHours` and
+  feeding that into `previousDayN`'s `ceil()`; the rounded value is now used ONLY for the
+  human-readable `provenance.leadTimeHours` display field. Two regression tests added: a pure
+  boundary test (`previousDayN(24.4)` must be 2, never 1) and an end-to-end test with a mocked
+  `fetchJson` asserting the built URL requests `_previous_day2` not `_previous_day1` for a
+  24.4h-lead query — both independently verified (by re-introducing the bug, confirming the
+  tests fail, then restoring the fix and confirming they pass) rather than merely asserted.
+- Independent review: gse-verifier independently fetched Open-Meteo's own live documentation
+  to confirm the `_previous_dayN` semantics (the load-bearing fact the whole fix rests on) and
+  confirmed the `ceil()` formula is provably conservative given those real semantics; also
+  confirmed zero modification to the vendored loader, zero duplicated math, and (after the fix
+  landed) 27/27 tests green + `tsc --noEmit` clean. gse-red-team's first pass read the
+  pre-fix file (a genuine timing race it flagged honestly in its own report — "no agent message
+  overrides verified facts") and correctly reproduced the exact same leak/finding
+  independently from first principles, which is itself strong independent confirmation that
+  the bug (and the fix) are real and correctly characterized; a direct re-read of the file
+  on disk after its report confirmed the fix is in place and the file matches the
+  already-fixed state, not the stale one the red-team read. Minor red-team nit (a forward
+  reference to "DEC-028" before that entry existed) corrected to the actual DEC-030 this entry
+  occupies.
+- Also self-flagged proactively (not raised by either reviewer): DEC-023's smoke empirically
+  verified distinct-run behavior only through `_previous_day3`; days 4-7 are Open-Meteo's
+  documented but not independently live-verified capability. Documented honestly in-code with
+  a safe fallback (an absent day4-7 field degrades to the same honest `unavailable` any other
+  missing-field case uses — never fabricated) and a named cheap follow-up (extend the smoke to
+  N=4..7) before relying on that range in a real admission run.
+- Evidence: 12 tests in the new suite + the existing 8 `weather-edge.test.ts` + 7
+  `nfl-weather.test.ts` all green (27 total); `tsc --noEmit` clean in
+  `packages/prediction-engine`; `npm run guardrails` 17/17 green (re-run after a
+  `banned.guaranteed-outcome` trust-gate hit on the word "guaranteed" in an early doc-comment
+  draft — reworded to "issued <= asOfUtc by construction" before commit, confirmed by re-running
+  trust-gate directly); `git diff` on `weather-edge.ts`/`features/*` empty; Open-Meteo's
+  `open-meteo` source-rights-registry entry (`approved_open_license`, CC-BY-4.0, commercial
+  display allowed, attribution required) confirmed consistent with the module's stated
+  rights posture; zero production callers (grep), module performs no I/O of its own
+  (injected `fetchJson` only) — bulk historical admission runs against the hosted free tier
+  remain OWNER_GATE (self-host or licensed tier required for production scale, per the
+  registry's own unlock condition).
+- OWNER_GATE: a real historical weather-admission run (bulk previous-runs calls at hosted-tier
+  scale, and/or the actual feature-store trials-registry admission decision) requires a
+  founder self-host/license call for the hosted API's commercial terms. Safe default: this
+  module ships wired but uncalled by any production path; re-entry condition is a founder
+  decision to either self-host Open-Meteo or purchase its commercial tier, after which a
+  bounded follow-on workstream would wire this loader into a real
+  `recordFeatureAdmissionTrial` run.
+- Alternatives rejected: keeping the rounded `leadTimeHours` for selection with a wider safety
+  margin (e.g. always rounding UP) instead of fixing the root cause — papering over exact
+  arithmetic with an ad hoc margin is exactly the kind of fragile fix this session's own
+  discipline rejects when the precise, provably-correct fix is equally cheap.
+- Reversibility: purely additive, zero existing files' behavior changed (vendored loader
+  untouched, zero live callers).
+- Protected zones: data, model claims — full independent verifier + red-team review completed;
+  the one real finding was self-caught before either review, then independently corroborated
+  by both.
+- Files: packages/prediction-engine/src/edge-lab/loaders/weather-previous-runs.ts (new),
+  packages/prediction-engine/src/edge-lab/__tests__/weather-previous-runs.test.ts (new).
+- Supersedes: none.
