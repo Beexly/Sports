@@ -2618,3 +2618,71 @@ stitching) — recorded here so no backtest can slip past it.
   `dfs-optimizer-edge.ts` (new) + test, `dfs-optimizer.ts` (4-line additive modification).
 - Supersedes: none. Closes the `dfs-optimizer-edge` item from DEC-047. `consensus-accuracy-engine` (task #70)
   and the 8 not-yet-checked small branches (task #71) remain the next R11.5 follow-on items.
+
+## DEC-049 — Recovery Wave R11.5 follow-on: `consensus-accuracy-engine` ported; retroactive lint-gap fix (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: the second of two RECOVER_WHOLE candidates named in DEC-047. Ports a fantasy consensus-
+  rankings + expert-accuracy-grading capability from the historical `claude/consensus-accuracy-engine`
+  branch onto `pdcswh`.
+- Contract frozen after a dependency check on the one file the ported code touches, `apps/web/lib/fantasy/
+  players.ts`: the drift there is purely additive (`pdcswh`'s current `Player` type is a strict superset,
+  gaining 3 new optional fields — `injuryDisplay`, `adp`, `adpDelta` — nothing removed or renamed), so the
+  ported code compiled cleanly with zero adaptation.
+- Code: 5 new files — `apps/web/lib/fantasy/consensus-rankings.ts` (aggregates multiple ranking sources into
+  one board via a Borda-style point scheme; makes accuracy-weighting the DEFAULT rather than an opt-in filter,
+  falling back to equal weight — flagged in the output, never silently — when no grading history exists),
+  `expert-accuracy.ts` (grades any ranked source against realized outcomes by converting each source's
+  preseason rank into an implied point projection via the rank-slot's own realized production curve, then
+  scoring by the gap from what actually happened; documents two deliberate divergences from FantasyPros'
+  publicly-documented methodology, both closing gaps their own FAQ describes), plus 3 test files. Both files'
+  headers are explicit that they build on FantasyPros' publicly-disclosed CONCEPT with attribution, not a
+  claim to replicate their undisclosed proprietary formula — GSE's own Borda point scale and omission-penalty
+  rule are original.
+- Independent review: one `gse-red-team` pass, resumed once via the standing agent-stall protocol. Found
+  **2 CONFIRMED findings, both fixed**:
+  1. An unused `PLAYERS` import in `consensus-integration.test.ts` — passes `tsc`/`vitest`/`guardrails` but
+     fails `npm run lint` (a required CI step none of those three commands run). Fixed by removing the
+     unused import.
+  2. `ConsensusRow.avgRank`'s doc comment claimed "points-weighted average implied rank," but the
+     implementation computes a plain unweighted mean, and `best`/`worst`/`sourcesCounted`/`avgRank` all
+     count every source that ranked a player — including ones weighted to 0 by `accuracyWeightedConsensus`
+     — while `points` (the actual ranking score) IS correctly weighted. Red-team independently reproduced
+     this with a throwaway test (deleted afterward, tree confirmed clean). Resolved as a doc-and-naming fix,
+     not a behavior change: `avgRank`/`best`/`worst`/`sourcesCounted` are legitimately meant to be raw,
+     unweighted transparency stats ("what did the sources actually say," visible even when a source's
+     opinion is down-weighted to near zero in the actual score) — the bug was the misleading claim, not the
+     computation. Corrected the `ConsensusRow` type's doc comments to say so explicitly, and renamed the
+     local `weightedAvg` variable to `plainAvgRank` so the code doesn't relabel itself into the same trap
+     later.
+- **A broader process gap this review surfaced, fixed retroactively.** The red-team's finding #1 exposed
+  that this session's verification loop for every prior item (DEC-046, DEC-048) ran `tsc --noEmit`, targeted
+  `vitest`, and `npm run guardrails` — but never a full-workspace `npx eslint . --max-warnings=0`, which is
+  what CI's `npm run lint` step actually runs and none of the other three commands cover. Ran it for the
+  first time this pass and found 3 MORE pre-existing lint errors, all in already-committed, already-pushed
+  work from earlier this session: `apps/web/__tests__/pricing-drift-guard.test.ts` (DEC-046) used a
+  CommonJS `require("fs")` inside a function instead of an ES import (`no-require-imports`); `apps/web/lib/
+  fantasy/dfs-exact.ts` and `dfs-optimizer-edge.ts` (both DEC-048) each had one unused type/value import
+  left over from the historical branch's original import list. All 4 errors (this item's 1 + the 3
+  retroactive ones) fixed in this same pass; `npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0` now
+  clean across the whole `apps/web` workspace. Recorded honestly here rather than silently folded into
+  DEC-046/048's history, since those entries are append-only and already pushed — this entry is the fix
+  record for both.
+- Evidence: `cd apps/web && npx tsc --noEmit` clean; `npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0`
+  clean (0 errors, was 4); targeted tests 57/57 green across all 8 touched/new test files (consensus ×3,
+  dfs ×4, pricing-drift-guard ×1); full `apps/web` suite confirmed green (exact count in the commit); `npm
+  run guardrails` → 17/17 green; `git diff --check` clean.
+- Alternatives rejected: changing `avgRank`'s computation to be genuinely points-weighted instead of fixing
+  the doc comment — rejected because the raw/unweighted transparency framing for `best`/`worst`/
+  `sourcesCounted`/`avgRank` is a legitimate, defensible design (show what sources actually said, separately
+  from the down-weighted score), and guessing at a "correct" weighted formula with no clear specification
+  risked a wider, less-understood behavior change than the situation warranted.
+- Reversibility: 5 new files (delete to roll back) + zero changes to any existing file for the core port;
+  the retroactive lint fixes are each single-line, trivially revertible.
+- Protected zones: none directly (zero live wiring, confirmed by red-team); dispatched red-team anyway for
+  consistency with this session's standard rigor on every substantive port.
+- Files: `apps/web/lib/fantasy/consensus-rankings.ts` (new) + test, `expert-accuracy.ts` (new) + test,
+  `consensus-integration.test.ts` (new) — plus the retroactive fixes to `apps/web/__tests__/pricing-drift-
+  guard.test.ts`, `apps/web/lib/fantasy/dfs-exact.ts`, `apps/web/lib/fantasy/dfs-optimizer-edge.ts`.
+- Supersedes: none. Closes the `consensus-accuracy-engine` item from DEC-047 and both named RECOVER_WHOLE
+  candidates. Task #71 (8 not-yet-checked small branches) is the next R11.5 follow-on item.

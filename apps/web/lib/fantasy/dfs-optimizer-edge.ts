@@ -28,7 +28,7 @@ import {
   type Lineup,
   type LineupMetrics,
 } from "./dfs-optimizer";
-import { optimizeExact, diversePool, lateSwap, type ExactResult } from "./dfs-exact";
+import { optimizeExact, diversePool } from "./dfs-exact";
 import { rankByTournamentScore, simulateLineups, type SimStats } from "./dfs-correlation";
 import { type DfsPlayer } from "./dfs-slate";
 import { activeDfsSlate } from "@/lib/integrations/dfs";

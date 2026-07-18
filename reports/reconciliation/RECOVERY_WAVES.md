@@ -336,20 +336,27 @@ before ruling," not inherited from the scout's report.
   exact solvers, which must agree if both are correct, and empirically do (verified by red-team, not just
   claimed). Zero red-team findings across 10 review points. Zero live wiring — lands as available library
   capability, same shadow posture as several other items this campaign.
-- **`claude/consensus-accuracy-engine` — RECOVER_WHOLE candidate**, not yet checked for dependency
-  compatibility: fantasy consensus-rankings + expert-accuracy tracking (8 files).
+- **`claude/consensus-accuracy-engine` — DONE (2026-07-18, DEC-049).** Ported as 5 new files
+  (`consensus-rankings.ts`, `expert-accuracy.ts` + 3 tests), zero changes to any existing file (the one
+  dependency, `players.ts`, had drifted purely additively). Red-team found 2 confirmed findings, both fixed:
+  an unused import failing `npm run lint` (not caught by `tsc`/`vitest`/`guardrails`), and a misleading doc
+  comment on `ConsensusRow.avgRank` (claimed points-weighted, was actually a plain mean by design — fixed
+  the doc, not the behavior, since the raw/unweighted transparency framing is legitimate). The lint-gap
+  finding also surfaced 3 more pre-existing lint errors in already-committed DEC-046/DEC-048 work, fixed
+  retroactively in the same pass — see DEC-049 for the full record.
 - **8 branches not yet checked** (2-3 novel files each, cheap for a future continuation): `intraday-odds-
   scheduler`, `galaxy-sports-edge-audit-outqdi`, `freshness-badge`, `odds-freshness-diagnostics`, `night-
   shift`, `launch-review-fixes`, `humanize-polish`, `design-critique-zd94h2`.
 
-**Process note (both slices):** a `gse-scout` agent dispatched for the first slice stalled twice and its
+**Process note (all slices):** a `gse-scout` agent dispatched for the first slice stalled twice and its
 eventual report contained one factually-backwards claim, caught via direct re-verification. The second slice
-was done via direct `git` commands throughout (no agent dispatch), continuing that same "reproduce before
-ruling" discipline.
+was done via direct `git` commands throughout (no agent dispatch). The `dfs-optimizer-edge` and `consensus-
+accuracy-engine` follow-ons each needed one red-team resume via the standing agent-stall protocol; the latter
+also surfaced a genuine gap in this session's own verification loop (no full-workspace lint run), fixed
+retroactively across 3 already-pushed files.
 
-**Next slice:** `claude/consensus-accuracy-engine`'s freeze contract (the remaining named RECOVER_WHOLE
-candidate); the 8 not-yet-checked small branches; remaining long-tail branches beyond the 65 now triaged (of
-138 total long-tail entries per `BRANCH_PR_LEDGER.json`).
+**Next slice:** the 8 not-yet-checked small branches; remaining long-tail branches beyond the 65 now triaged
+(of 138 total long-tail entries per `BRANCH_PR_LEDGER.json`).
 
 ## Recommended order (refreshed)
 

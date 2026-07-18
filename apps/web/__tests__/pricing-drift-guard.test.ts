@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "fs";
+import { readdirSync, readFileSync, statSync } from "fs";
 import { resolve } from "path";
 import { PRICING_PHASES } from "../lib/pricing/pricing-phases";
 
@@ -51,7 +51,6 @@ function isAllowed(relPath: string): boolean {
 }
 
 function scanDir(dir: string, base: string): Array<{ file: string; line: number; text: string }> {
-  const { readdirSync, statSync } = require("fs");
   const hits: Array<{ file: string; line: number; text: string }> = [];
 
   let entries: string[];

@@ -22,7 +22,7 @@
  */
 
 import { DFS_SLOTS, SALARY_CAP, type DfsPlayer, type DfsPos } from "./dfs-slate";
-import { eligible, objVal, salaryOf, type Mode, type OptOpts } from "./dfs-optimizer";
+import { eligible, objVal, salaryOf, type Mode } from "./dfs-optimizer";
 import { activeDfsSlate } from "@/lib/integrations/dfs";
 
 export type ExactInput = {
