@@ -440,12 +440,26 @@ independent validation. Full evidence and process note in DEC-053. All other DEC
 (the NFL-coaches feature, tracker-segments feature, clean setup-script candidates, protected-zone flags,
 etc.) are unaffected.
 
-**Next slice:** the remaining 24-branch pool, all with 13+ novel files each (several 100+):
-`claude/keen-ptolemy-*` cluster, `codex/galaxy-dynasty-studio-rescue-v2`, `safety/sports-wip-2026-06-04`,
-`claude/compassionate-ramanujan-qqt5nb`, `fix/overnight-codex-feature-gates-260524`, `codex/autonomy-
-release-command-center-2026-05-28`, and others — each needs its own dedicated, individually-scoped triage
-pass, not a batch sweep. `intraday-odds-scheduler` and the `local.sh` hardcoded-key finding stay open for
-founder review, neither a blocker.
+**FINAL SLICE DONE (2026-07-18, DEC-056) — Wave R11.5 CLOSED, 138/138.** A 24-agent parallel workflow
+(default agent type, one branch per agent, after a first attempt failed 17/18 agents on a `gse-scout`
+structured-output infrastructure issue and was retried) investigated the entire remaining 24-branch pool.
+26 findings (one branch split into 3 concept clusters): 7 ARCHIVE_ONLY, 4 ALREADY_ON_PDCSWH, 5
+RECOVER_WHOLE_CANDIDATE (newly named — Core-Web-Vitals/error-boundary bundle, per-route error/not-found
+pages, History+Schedule Lab + fantasy tools, multi-market-ensemble + synthetic-fade, journal-retraction
+tombstone), 8 NEEDS_DEDICATED_REVIEW, 2 SENSITIVE_FLAGGED_NOT_EVALUATED (two branches carrying a
+"monetization-v3" corpus that includes founder succession/deceased-member protocols — flagged by filename
+only, not read). Independently re-confirmed the exact `pdcswh` commit pair for `warp-nebula.tsx`'s build
+(`94901a9f`) and removal (`cb55f1b3`), further corroborating DEC-053. Found and correctly declined to port a
+genuine compliance violation (a `scores24.live` proprietary-prediction scraper with anti-bot evasion
+tooling, on `claude/sports-prediction-platform-6F7Wa`). The Dynasty cluster grows to a 3rd/4th attempt
+(`codex/galaxy-dynasty-studio-rescue-v2`, the most functionally real one found). Full detail in DEC-056.
+
+**Wave R11.5 status: CLOSED.** All 138 long-tail branches individually evidenced. Open follow-on items
+(none blocking): task #75 (pre-authorized `laughing-wozniak-gyryjx`/`happy-goodall-8lkxrb` dedicated port),
+5 new RECOVER_WHOLE_CANDIDATEs, 8 NEEDS_DEDICATED_REVIEW branches, the Dynasty cluster's own pending
+reconciliation pass, and the accumulated OWNER_GATE/founder-awareness items (`crypto-payments`,
+`intraday-odds-scheduler`, `fix-local-setup-PmnyX`'s hardcoded key, the two succession-planning-bearing
+branches, `determined-keller-dUcdG`'s legal-IP registers).
 
 ## Recommended order (refreshed)
 
@@ -466,9 +480,11 @@ R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   DONE (2026-07-18) — 12 deletion receipts issued in DELETION_RECEIPTS.md, re-verified ancestry;
       deletion itself stays founder-only
-R11.5 114/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047, dfs-optimizer-edge DEC-048,
-      consensus-accuracy-engine DEC-049, 8-branch slice DEC-050 incl. live refund-window fix, 30-branch
-      slice + accounting correction DEC-051 incl. unlanded secret finding, 26-branch slice DEC-052 incl.
-      several protected-zone/sensitive items flagged for founder review); next: remaining 24-branch pool
-      (13+ novel files each, several 100+, individually-scoped passes only)
+R11.5 CLOSED (2026-07-18, DEC-056) — 138/138 long-tail branches individually evidenced (magical-volta
+      DEC-046, recency subset DEC-047, dfs-optimizer-edge DEC-048, consensus-accuracy-engine DEC-049,
+      8-branch slice DEC-050 incl. live refund-window fix, 30-branch slice + accounting correction DEC-051,
+      26-branch slice DEC-052, warp-nebula correction DEC-053, major pre-authorized finding DEC-054, final
+      24-branch slice DEC-056 incl. 5 new RECOVER_WHOLE_CANDIDATEs + 1 declined compliance violation).
+      Follow-on: task #75 (dedicated port) + 5 new candidates + 8 NEEDS_DEDICATED_REVIEW branches +
+      accumulated OWNER_GATE items — none blocking further campaign work
 ```

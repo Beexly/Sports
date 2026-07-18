@@ -3165,3 +3165,151 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: `docs/frontier/DECISION_REGISTER.md`, `reports/reconciliation/DELETION_RECEIPTS.md`,
   `reports/reconciliation/RECOVERY_WAVES.md` (R11 row marked DONE).
 - Supersedes: none. Closes Wave R11.
+
+## DEC-056 — Recovery Wave R11.5 CLOSED: final 24-branch pool triaged, 138/138 long-tail branches
+  individually evidenced (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: closes Wave R11.5 in full. The final 24-branch pool (novel-file counts 13-701) was
+  investigated via a 24-agent parallel workflow after a first attempt failed 17/18 agents (structured-output
+  tool-call failures with the narrow `gse-scout` agent type at 18-way concurrency — a systemic infrastructure
+  issue, not individual stalls). Retried with the default workflow agent type, one branch per agent, and
+  updated guardrails instructing every agent to check `pdcswh`'s own tree/history for the CONCEPT (not just
+  the filename) before naming anything a recovery candidate — directly incorporating the DEC-053 lesson.
+  **All 24 agents succeeded this time** (0 errors, 0 empty results, 564 tool calls, ~2.1M subagent tokens).
+- **Running total: 114 (walking in) + 24 branches this slice = 138 of 138.** Every long-tail branch in
+  `BRANCH_PR_LEDGER.json` now has an individually-evidenced disposition. Wave R11.5 is CLOSED.
+- **Disposition breakdown (26 findings across 24 branches — `funny-lovelace-cjaj4b` split into 3 distinct
+  concept clusters by its own investigating agent):** 7 ARCHIVE_ONLY, 4 ALREADY_ON_PDCSWH, 5
+  RECOVER_WHOLE_CANDIDATE, 8 NEEDS_DEDICATED_REVIEW, 2 SENSITIVE_FLAGGED_NOT_EVALUATED.
+- **Strong independent reconfirmation of DEC-053's `warp-nebula` correction, with exact commit evidence.**
+  Two agents independently found the precise history: `pdcswh` built the WebGL warp-tunnel at commit
+  `94901a9f` ("feat(unseen): WebGL particle tier — the BlueYard-class warp nebula", 2026-06-11) and
+  explicitly ripped it out 6 days later at `cb55f1b3` ("Calm the homepage intro and Jarvis cockpit",
+  2026-06-17 — commit message: *"the previous version... stuttered... Removed the orphaned warp-nebula
+  components"*). Both SHAs independently re-verified this pass (`git log -1`, `git show --stat`) — real,
+  exact, on `pdcswh`'s own history. `warp-nebula.tsx` surfaced on 3 more branches this slice
+  (`serene-hopper-rtjsfq`, `funny-lovelace-cjaj4b`, `review-pending-requests-k46ywu`, the latter also citing
+  `cb55f1b3` independently) — all correctly dispositioned ARCHIVE_ONLY per DEC-053, no re-litigation.
+- **`laughing-wozniak-gyryjx` and `happy-goodall-8lkxrb` correctly deferred to DEC-054, not re-decided.**
+  Both investigating agents recognized (via the updated guardrails) that DEC-054 already named these two
+  branches with authoritative in-repo evidence (`integrity-ledger.ts` + `BRANCH_RECONCILIATION.md`) and a
+  pending campaign task (#75), and reported "reconfirm rather than re-decide" instead of independently
+  re-litigating the disposition — exactly the intended behavior. `laughing-wozniak-gyryjx`'s agent added
+  detail confirming DEC-054: its DFS lifecycle features (late-swap, simulation, DK-CSV import, portfolio
+  analytics, lineup thesis) are real, working, and type-coupled to the branch's own superseded solver
+  (needs adaptation, not a drop-in port, when task #75 executes); its core optimizer solver itself was
+  correctly superseded by pdcswh's exact-DP `dfs-optimizer.ts`, whose own docstring explicitly rejects the
+  hill-climb/local-search approach the branch used.
+- **5 new RECOVER_WHOLE_CANDIDATEs named (not ported — each needs its own freeze contract):**
+  1. `claude/gse-moat-aplus-clv-2026-06-03`'s 5-file Core-Web-Vitals + root error/loading boundary bundle
+     (`api/vitals/route.ts`, `web-vitals-reporter.tsx`, `global-error.tsx`, `loading.tsx`, `lighthouserc.json`)
+     — verified it closes real, currently-open P1 gaps `pdcswh`'s own `PRODUCTION_QUALITY_AUDIT.md` names
+     ("No root `app/global-error.tsx`", "no field measurement... web-vitals", "No Lighthouse CI"); confirmed
+     zero web-vitals/`onLCP`/`PerformanceObserver` hits and no root `global-error.tsx`/`loading.tsx`/
+     `lighthouserc.json` exist on `pdcswh` today.
+  2. `claude/funny-lovelace-cjaj4b`'s 6 per-route `error.tsx` + 4 per-segment `not-found.tsx` pages +
+     `command-palette.test.ts` — confirmed real gap (pdcswh has only generic root error/not-found), aligns
+     directly with the standing owner task "Grandpa-simple + cinematic UX pass on customer surfaces" (#8).
+     Flagged caveat: the test's `REQUIRED_ROUTES` list would fail against `pdcswh`'s live `COMMANDS` array as
+     committed — a future port must reconcile route lists, not copy the test verbatim.
+  3. `claude/adoring-babbage-gq7v77`'s History Lab (MLB via Lahman CC-BY-SA, NFL via nflverse, real data, no
+     fabrication), Schedule Lab (strength-of-schedule), Mock Draft simulator, universal roster paste-import
+     (ESPN/Yahoo gap-filler complementing `pdcswh`'s Sleeper-only sync), Contest Simulator, lightweight
+     FantasyCoach tooltips, and a Late-Swap UI surfacing an already-exported-but-unwired `dfs-exact.ts`
+     function — verified none exist on `pdcswh` under any name. Explicitly excludes 3 sub-clusters from this
+     recommendation: a "Line Room" duplicating `pdcswh`'s shipped Line Shop/Market Fair Board, `warp-nebula`
+     (ARCHIVE_ONLY per above), and `lib/fantasy/matchup.ts` — its own code comments admit the defense-tier
+     table is **synthetic/fabricated data**, a direct violation of `CLAUDE.md`'s "no fake data" rule; must
+     never be ported as-is.
+  4. `claude/pensive-brown-yql6ld`'s `multi-market-ensemble.ts` (precision-weighted inverse-variance market
+     fusion) and `synthetic-fade.ts` (hard-capped glass-box public-lean signal) — verified genuinely missing
+     via concept grep (no `fadeNudge`/`publicLean`/`leanIndex` anywhere on `pdcswh`), and `pdcswh`'s own
+     `edge-engine.ts:161` still uses the flat `weight ?? 1` blending that `multi-market-ensemble.ts`'s own
+     docstring names as the exact gap it closes. Pure functions, no I/O, outside the protected-zone naming
+     pattern — the rest of that branch (calibration-ladder, proof-export) stays NEEDS_DEDICATED_REVIEW.
+  5. `claude/review-pending-requests-k46ywu`'s journal-retraction HTTP 410 tombstone route +
+     `revalidateJournalDistribution` cache-invalidation helper (closes a real gap: `pdcswh`'s
+     `/journal/[slug]` currently 404s retracted entries with no RSS/sitemap/archive invalidation), plus
+     `stat-distribution.ts` (a test-pinned "which systems consume which nflverse dataset" audit contract with
+     no `pdcswh` equivalent) and `scripts/web-session-setup.sh` (small, safe, idempotent dev-container
+     bootstrap, no protected-zone contact).
+- **A genuine compliance violation found, correctly NOT ported, worth flagging clearly.**
+  `claude/sports-prediction-platform-6F7Wa` carries a `scraper/` subsystem (its own `package.json` names it
+  `@sports/scores24-collector`) built specifically to extract scores24.live's "computer-generated
+  predictions." `CLAUDE.md`'s source-rights registry classifies scores24.live `permission_required`
+  (written consent from Kiito OÜ required; manual research only otherwise) and its data-rules explicitly
+  forbid extracting "proprietary predictions." The scraper's own README documents anti-bot evasion
+  (non-headless mode to defeat Cloudflare JS challenges, startup delays, a residential-proxy suggestion) —
+  precisely the evasion tooling `CLAUDE.md`'s "Do not build evasion" rule forbids adding to any tool
+  registry. Never ported; the investigating agent's own recommendation ("should never be ported as-is given
+  the explicit proprietary-prediction extraction and anti-bot evasion design") is adopted here.
+- **Two more branches carry large, sensitive, deeply personal business-continuity content — flagged, not
+  read.** `fix/overnight-codex-feature-gates-260524` (237/318 novel files) and
+  `codex/autonomy-release-command-center-2026-05-28` (237/336 novel files) both center on a
+  `docs/monetization-v3/` corpus that goes beyond the ordinary "business strategy" sensitivity category seen
+  elsewhere this wave: it includes a **"founder-unavailability protocol"** and a **"deceased-member
+  protocol"** (succession/continuity planning for the founder personally), a "founder financial discipline"
+  doc, a "founder capacity ledger," investor-inbound logs and response templates, and legal
+  partnership-agreement templates. Filenames and one-line categories only were recorded
+  (`sensitiveContentNoted`); no content was read or summarized beyond that, per this wave's standing rule.
+  The ~20-25% of each branch that is ordinary code (a paid "Galaxy Vault" founder-community product —
+  Discord + Stripe + referrals + seats) is real and technical but inseparably bundled with, and only
+  meaningful in light of, the sensitive corpus, and itself touches billing/entitlement protected zones — not
+  evaluated further. `claude/determined-keller-dUcdG` separately carries its own sensitive cluster
+  (`docs/legal-ip/TRADE_SECRET_INVENTORY.md`, `INVENTION_DISCLOSURES.md`, `COPYRIGHT_ASSETS.md`,
+  `CONTRACTOR_ACCESS_RULES.md`) — same treatment, flagged not read.
+- **The "Galaxy Dynasty" cluster grows to a 3rd/4th independent attempt.**
+  `codex/galaxy-dynasty-studio-rescue-v2` (230 novel files) is the most functionally real Dynasty attempt
+  found across this entire campaign: a working `@sports/galaxy-engine` package with real passing Vitest
+  coverage (District Registry, Room Registry, Sports Weather world-graph), 15 API routes, 20 UI pages, and
+  its own honest self-diagnosis of an earlier failed 3D "Galaxy City" pivot
+  (`experiments/failed-galaxy-city/`, `FAILURE_REPORT_GALAXY_CITY.md`). Touches entitlements
+  (`lib/galaxy/entitlement.ts`, GSE Pro tier gate), auth/session (`lib/galaxy/session.ts`), and a
+  Stripe-test-mode-only cosmetic-store checkout scaffold — flagged by path, not evaluated for correctness.
+  Joins the existing ARCHIVE_ONLY Dynasty cluster (2 prior attempts) as the priority candidate for that
+  cluster's still-pending dedicated reconciliation pass. A related sibling,
+  `codex/galaxy-dynasty-v2-autonomous`, was noted as referencing Unreal-Engine-specific terminology
+  ("lumen nanite streaming," "v12 streaming physics suite") inside what is nominally a Next.js repo — flagged
+  as worth its own skeptical look in that future pass, not investigated further here.
+- **8 branches marked NEEDS_DEDICATED_REVIEW for protected-zone entanglement, each with real, substantial,
+  non-trivial content that a future freeze-contract-level pass should individually assess** (full detail,
+  file lists, and exact protected-zone citations for each are in the workflow transcript,
+  `wf_f9f30ca5-447/journal.jsonl`, and summarized per-branch above/below): `serene-hopper-rtjsfq` ("v9.0.0
+  Provenance Fusion" — Entity Graph, Merkle decision-record, broadcast-rights gate, falsification loop;
+  modifies `schema.prisma` with no migration file); `sports-prediction-platform-6F7Wa`'s non-scraper pieces
+  (`settle-picks.ts`, a TheSportsDB fallback client, a playoff-context inferrer); `awesome-sagan-LOyCa`'s
+  Stripe-billing-bypass "comp" admin tier (2 migrations, RBAC role-grant route, a conflicting WEEKLY-billing
+  pricing model); `happy-goodall-8lkxrb` (reconfirmed per DEC-054, task #75); `laughing-wozniak-gyryjx`
+  (reconfirmed per DEC-054, task #75); `codex/galaxy-dynasty-studio-rescue-v2` (above);
+  `claude/determined-keller-dUcdG` (a 112-commit "Galaxy Kernel" trust/evidence UX + Evidence Vault + Signal
+  Ledger build with an unapproved-but-implemented ADR, a competing pricing registry, and calibration-adjacent
+  backtest code); `claude/keen-ptolemy-t38f1g` (an unrelated-by-ancestry "market physics" R&D exploration,
+  446 files, 9 new files directly inside `packages/prediction-engine/src`); `safety/sports-wip-2026-06-04`
+  (a 30-commit "safety/" WIP-checkpoint line already flagged by name in `pdcswh`'s own prior consolidation
+  map as "audit before adopting" — a handful of plausible small candidates — `beat-the-model.tsx`,
+  `json-humanizer.tsx`, `llms.txt` — sit inside ~500 files of superseded planning docs and confirmed debris).
+- Evidence: 564 tool calls across 24 agents, every disposition backed by a directly-run `git diff
+  --name-status --diff-filter=A`, `git show`, `git log`, `git merge-base --is-ancestor`, or `grep`/concept
+  search against `pdcswh`'s live tree — full commands recorded per-finding in the workflow journal. Two
+  specific claims (the `warp-nebula` build/removal commit SHAs) independently re-verified by this agent
+  directly (`git log -1`, `git show --stat`) before being written into this permanent entry, per the
+  session's standing "reproduce before ruling" discipline.
+- Alternatives rejected: treating the first workflow attempt's 17/18 failure as acceptable partial coverage
+  and moving on — rejected in favor of diagnosing the failure mode (agent-type/schema-compliance issue, not
+  content difficulty) and retrying properly, consistent with this session's "no silent scope-shrink" rule;
+  porting any of the 5 new RECOVER_WHOLE_CANDIDATEs immediately since they were fully characterized — rejected
+  for the same reason DEC-047/048/049 deferred similar finds: each deserves its own freeze contract, not a
+  rushed same-pass port.
+- Reversibility: N/A — no code changed this pass; documentation only.
+- Protected zones: extensively touched by findings (settlement, calibration, proof, entitlements, billing,
+  source-rights, migrations, prediction-engine scoring methodology) — all named, none evaluated for
+  correctness or ported, per policy throughout.
+- Files: `docs/frontier/DECISION_REGISTER.md`, `reports/reconciliation/RECOVERY_WAVES.md`.
+- Supersedes: none. **Closes Wave R11.5 — 138 of 138 long-tail branches individually evidenced.** Remaining
+  open items from this wave: task #75 (the pre-authorized `laughing-wozniak-gyryjx`/`happy-goodall-8lkxrb`
+  dedicated port), 5 newly-named RECOVER_WHOLE_CANDIDATEs, 8 NEEDS_DEDICATED_REVIEW branches, the growing
+  Dynasty cluster's own pending reconciliation pass, and 4 OWNER_GATE/founder-awareness items
+  (`crypto-payments`, `intraday-odds-scheduler`, the `fix-local-setup-PmnyX` hardcoded key, and now the two
+  "monetization-v3"/succession-planning-bearing branches plus `determined-keller-dUcdG`'s legal-IP registers)
+  — none of which block a future session from picking up any dependency-ready item next.
