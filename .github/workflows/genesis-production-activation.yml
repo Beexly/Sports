@@ -1,0 +1,36 @@
+name: Galaxy Genesis Production Activation Package
+
+on:
+  pull_request:
+    paths:
+      - ".claude/skills/gse-launch/**"
+      - "docs/genesis/PRODUCTION_ACTIVATION_CONTRACT.md"
+      - "scripts/genesis/validate-production-activation-package.mjs"
+      - ".github/workflows/genesis-production-activation.yml"
+  push:
+    branches:
+      - "research/galaxy-genesis-metacortex-2026-07-17"
+    paths:
+      - ".claude/skills/gse-launch/**"
+      - "docs/genesis/PRODUCTION_ACTIVATION_CONTRACT.md"
+      - "scripts/genesis/validate-production-activation-package.mjs"
+      - ".github/workflows/genesis-production-activation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate queue-first production activation package
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate production activation package
+        run: node scripts/genesis/validate-production-activation-package.mjs
