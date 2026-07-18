@@ -5,6 +5,10 @@ on:
     paths:
       - ".claude/skills/gse-launch/**"
       - "docs/genesis/PRODUCTION_ACTIVATION_CONTRACT.md"
+      - "docs/genesis/LIVE_PRODUCTION_BASELINE_2026-07-18.md"
+      - "docs/genesis/LAUNCH_GATE_MATRIX.json"
+      - "docs/genesis/LAUNCH_REVENUE_CONVERGENCE_CONTRACT.md"
+      - "docs/genesis/PACKAGE_INVENTORY.md"
       - "scripts/genesis/validate-production-activation-package.mjs"
       - ".github/workflows/genesis-production-activation.yml"
   push:
@@ -13,6 +17,10 @@ on:
     paths:
       - ".claude/skills/gse-launch/**"
       - "docs/genesis/PRODUCTION_ACTIVATION_CONTRACT.md"
+      - "docs/genesis/LIVE_PRODUCTION_BASELINE_2026-07-18.md"
+      - "docs/genesis/LAUNCH_GATE_MATRIX.json"
+      - "docs/genesis/LAUNCH_REVENUE_CONVERGENCE_CONTRACT.md"
+      - "docs/genesis/PACKAGE_INVENTORY.md"
       - "scripts/genesis/validate-production-activation-package.mjs"
       - ".github/workflows/genesis-production-activation.yml"
   workflow_dispatch:
