@@ -3946,3 +3946,102 @@ stitching) — recorded here so no backtest can slip past it.
   product tree on `claude/laughing-wozniak-gyryjx` and `happy-goodall-8lkxrb`'s 25-module `lib/gse`
   layer, both deliberately out of scope this pass given their size — each needs its own dedicated
   freeze-contract cycle in a future session, per DEC-054's original judgment.
+
+## DEC-064 — Task #76 (4b/5): Mock Draft simulator ported into `/fantasy/draft`, one entitlement fix
+  applied during the port and one soft-lock bug caught and fixed by red-team before landing (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: the deliberately-deferred remainder of candidate 4/5's original DEC-056 cluster (History
+  Lab + Schedule Lab shipped standalone as DEC-060; Contest Simulator permanently excluded — see DEC-060
+  — for conflicting with the deliberately-sealed `/fantasy/contests` "Contest Bay"). Mock Draft was named
+  as the next-lowest-risk remaining piece: one integration point into an already-live page
+  (`/fantasy/draft`), not a sealed surface, not a multi-page integration like FantasyCoach or Late-Swap
+  would need.
+- Code: `lib/fantasy/mock-draft.ts` (new) — pure snake-draft simulation: AI opponents pick from the top
+  available by VOR with a small LCG-weighted randomization window; `gradeDraft` scores the user's roster
+  by total VOR, positional balance, and bye-stack risk. `lib/fantasy/mock-draft.test.ts` (new, 14 tests).
+  `components/fantasy/mock-draft-room.tsx` (new) — Setup → Draft → Results client UI, pool-injectable
+  (falls back to the pre-existing illustrative `PLAYERS` demo pool, same pattern as `draft-assistant.tsx`
+  already uses). `components/fantasy/draft-page-tabs.tsx` (new) — a tab switcher composing the
+  pre-existing `DraftAssistant` and the new `MockDraftRoom`. `app/fantasy/draft/page.tsx` (modified) —
+  swapped the bare `<DraftAssistant>` render for `<DraftPageTabs>`, adding a Mock Draft tab alongside the
+  existing live Draft Assistant.
+- **A real entitlement-forwarding regression was caught and fixed during the port, not shipped.** The
+  source branch's `DraftPageTabs` forwarded only `pool` to `DraftAssistant`, silently dropping
+  `canUseFantasyFull` — and `DraftAssistant`'s own prop default is `canUseFantasyFull = false`
+  (fail-closed). Ported verbatim, every PRO/ELITE viewer would have been silently downgraded to the
+  FREE-tier board depth the moment they used the tabs wrapper instead of the bare component. Fixed by
+  adding `canUseFantasyFull?: boolean` to `DraftPageTabs`'s own props and threading it through to
+  `DraftAssistant`, verified end to end (`page.tsx` → `DraftPageTabs` → `DraftAssistant`).
+- **Two more real, confirmed defects were found by the red-team review and fixed before landing** (not
+  shipped-then-patched — this is the state of the code that was actually committed):
+  1. **High severity — draft soft-lock.** The illustrative demo pool (`lib/fantasy/players.ts`) has only
+     30 players; the Setup screen's *smallest* offered config is 8 teams × 10 rounds = 80 total picks —
+     every combination the UI offers exceeds the illustrative pool's size. `advanceAI`'s original
+     `if (!id) break;` on pool exhaustion left `state.finished` permanently `false` with picks
+     remaining — a draft against the default demo data (the common case, since live projections require
+     a registered founder-gated provider) could never reach the Results screen. Empirically reproduced by
+     the red-team before the fix, and now covered by a new regression test
+     ("ends honestly instead of stalling when the pool runs out before every round fills") that runs the
+     exact reachable shape (8 teams × 4 rounds against a 30-player pool) and asserts the draft terminates
+     with `finished: true`. Fixed by adding an `endedEarly: boolean` field to `MockDraftState` and making
+     both `recordPick` and `advanceAI` end the draft honestly (`finished: true, endedEarly: true`) the
+     moment the pool empties, instead of only checking pick-count against the configured round total.
+     `MockDraftRoom`'s Results screen now shows an explicit "Draft ended early — the player pool ran out
+     before all N rounds could fill" note when this happens, rather than silently presenting a
+     shorter-than-requested draft as a normal completion.
+  2. **Medium severity — inconsistent illustrative-data honesty.** `draft-assistant.tsx` already guards
+     against a live-but-empty gated pool (`pool != null && pool.length === 0`) with the shared
+     `<LivePoolEmpty />` component, per this codebase's "real data or an honest 'source unavailable'
+     state — never a silent fall-back to the illustrative pool presented as live" doctrine.
+     `mock-draft-room.tsx`'s `universe = pool ?? PLAYERS` only falls back on `null`/`undefined`, so a
+     live-but-empty `[]` pool (a real, reachable state per `graded-pool.ts`'s empty-live-result path)
+     silently produced a blank, unexplained draft board instead of falling into the honest empty state its
+     sibling tab already shows for the identical condition. Fixed by adding the same `LivePoolEmpty` guard
+     to `MockDraftRoom`, mirroring `draft-assistant.tsx`'s exact pattern.
+- Independent review: one `gse-red-team` pass, stalled twice on an identical stated-intention sentence
+  with zero output (a new variant of the stall pattern — the same non-answer text verbatim on two
+  consecutive turns despite 16 and 31 tool calls respectively) — resumed via three escalating
+  `SendMessage` nudges, the third an explicit "your next message must be the report, no more tool calls"
+  instruction, which produced the complete report. The report itself independently ran the shipped code
+  (a throwaway in-repo vitest file, created and deleted, not left in the tree) to empirically reproduce
+  the soft-lock rather than reasoning about it in the abstract — the campaign's "reproduce before ruling"
+  discipline applied by the reviewer itself, not just by this agent afterward. Verdict on the two
+  fix-claims already in the port (the `gradeDraft` `_cfg` rename, the unused `teamAtOverall` import
+  removal): both independently confirmed correct and non-breaking. Verdict on the `canUseFantasyFull`
+  fix: confirmed real, necessary, and correctly landed — no regression. Verdict on gated-pool leakage
+  into the Mock Draft tab: confirmed clean (the same already-paywall-filtered `gatedPool` flows to both
+  tabs, no ungated second reference exists). Verdict on real-data-only / no-overclaim language: confirmed
+  clean.
+- Evidence: `cd apps/web && npx vitest run lib/fantasy/mock-draft.test.ts` 14/14 green (13 ported + 1 new
+  regression test); `npx tsc --noEmit` clean; `npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0`
+  clean repo-wide; full `apps/web` suite 654/654 files, 8879/8879 tests green (one unrelated
+  `api-v1-boundary-guard.test.ts` timeout on the first full-suite run under concurrent red-team CPU
+  contention, re-verified passing in isolation at 26s — reran the full suite clean on the post-fix
+  commit); `npm run guardrails` 17/17 green; `npm run build` succeeded, `/fantasy/draft` and the new
+  component files compiled clean; `git diff --check` clean.
+- Alternatives rejected: capping the Setup screen's offered team/round combinations to whatever the
+  currently-injected pool can support — rejected in favor of making the state machine itself handle
+  exhaustion honestly, since that fix is robust to ANY pool size (illustrative or a small live pool on a
+  given day) rather than requiring the UI to separately track and enforce a size constraint that could
+  drift out of sync with the underlying data; silently truncating the draft without any visible signal —
+  rejected as a direct violation of the "empty, stale, unavailable states are explicit and honest" rule.
+- Reversibility: 4 new files (2 lib, 2 component — delete to roll back) + 1 modified page (git-revertable)
+  — single revert commit undoes the whole item. No migration, no protected-zone code (no
+  settlement/CLV/billing/auth touched), though the entitlement-forwarding fix sits directly adjacent to
+  real paywall enforcement and was treated with matching rigor.
+- Protected zones: none directly, but the page composes with `DraftAssistant`'s real PRO/ELITE board-depth
+  gate, so the entitlement-forwarding correctness was verified with the same rigor a protected-zone change
+  would receive.
+- Files: `apps/web/lib/fantasy/mock-draft.ts`, `apps/web/lib/fantasy/mock-draft.test.ts`,
+  `apps/web/components/fantasy/mock-draft-room.tsx`, `apps/web/components/fantasy/draft-page-tabs.tsx`,
+  `apps/web/app/fantasy/draft/page.tsx`.
+- Supersedes: none. Closes candidate 4b/5 of task #76 — all 5 of DEC-056's named RECOVER_WHOLE_CANDIDATEs
+  are now fully closed (DEC-057, DEC-058, DEC-059, DEC-060, DEC-061, this entry). Remaining named but
+  deliberately not ported from the same source branch's cluster: universal roster paste-import
+  (`roster-import.ts` — pure lib exists, no UI in the source branch, needs real integration design into
+  `/fantasy/connect`) and FantasyCoach tooltips (needs mounting into 5 separate existing tool pages) and
+  Late-Swap UI (needs deep integration into the existing `DfsOptimizer` component's internal state, plus
+  an import-path fix — `lateSwap` actually lives in `dfs-exact.ts` on `pdcswh`, not `dfs-optimizer.ts` as
+  the source branch imports it) — each still needs its own dedicated freeze-contract pass in a future
+  session.

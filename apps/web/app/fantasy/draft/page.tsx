@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
-import { DraftAssistant } from "@/components/fantasy/draft-assistant";
+import { DraftPageTabs } from "@/components/fantasy/draft-page-tabs";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
@@ -11,7 +11,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Draft Assistant · Galaxy Fantasy",
   description:
-    "A glass-box draft board: VOR, tiers, best-available, and live pick recommendations with the reasoning: need, tier cliffs, value, and bye stacking.",
+    "A glass-box draft board: VOR, tiers, best-available, and live pick recommendations with the reasoning: need, tier cliffs, value, and bye stacking. Plus a Mock Draft room to practice against AI opponents before your real draft.",
   alternates: { canonical: "/fantasy/draft" },
 };
 
@@ -40,7 +40,7 @@ export default async function DraftPage() {
       attribution={pool ? getLiveProjectionsMeta().attribution ?? FANTASY_DATA_ATTRIBUTION : undefined}
       wide
     >
-      <DraftAssistant pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
+      <DraftPageTabs pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />
     </FantasyShell>
   );
 }
