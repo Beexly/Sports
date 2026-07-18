@@ -3463,3 +3463,100 @@ stitching) — recorded here so no backtest can slip past it.
 - Supersedes: none. Closes candidate 2/5 of task #76. 3 more RECOVER_WHOLE_CANDIDATEs remain: History+
   Schedule Lab, the multi-market-ensemble/synthetic-fade modules, and the journal-retraction tombstone
   route.
+
+## DEC-059 — Task #76 (3/5): journal-retraction HTTP 410 tombstone route + revalidation wired to the
+  existing retract endpoint (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: the third of 5 RECOVER_WHOLE_CANDIDATEs named in DEC-056. Ports the journal-retraction
+  tombstone mechanism recovered from `claude/review-pending-requests-k46ywu`, closing a confirmed gap:
+  `pdcswh` already has a working ADMIN-gated retract endpoint
+  (`app/api/cockpit/journal/[id]/retract/route.ts`, pre-existing) and the Prisma schema already carries
+  `RETRACTED`/`retractedAt`/`retractionReason` (confirmed, no migration needed), but a retracted entry's
+  public page (`/journal/[slug]`) fell through to a plain, generic `notFound()` (404) — indistinguishable
+  from a slug that never existed — and the retract endpoint never invalidated any cache, so `/journal`,
+  the RSS feed, and the sitemap could keep listing a just-retracted entry until their next natural ISR
+  window. Neither gap is cosmetic: retraction is the platform's public-correction mechanism (a real
+  trust surface, not decoration), so an entry that's supposedly "pulled" silently persisting in listings,
+  or reading as an ordinary 404 instead of a disclosed retraction, both undercut the point of retracting
+  it at all.
+- Code: `lib/journal/load.ts` gained `RetractedJournalEntry` (title + retractedAt only — deliberately
+  excludes body/coldOpen/retractionReason so a future field added to the richer `PublicJournalEntry`
+  type can never leak into the public tombstone by accident) and `loadRetractedJournalEntry(slug)`
+  (Prisma `select`, not the full row, so the reason structurally cannot reach this path). New
+  `lib/journal/revalidate.ts` exports `revalidateJournalDistribution(slug?)`, invalidating
+  `/journal`, `/journal/rss.xml`, `/sitemap.xml`, and (with a slug) the entry's own `/journal/<slug>`
+  and `/journal/retracted/<slug>` paths — each call individually try/caught so cache invalidation can
+  never fail the underlying DB transition. New `app/journal/retracted/[slug]/route.ts`: a public,
+  unauthenticated GET handler answering a real HTTP 410 Gone with an inline-styled tombstone page
+  (title + retraction date, `noindex`, `no-store`) for a retracted slug; 308-redirects to the live
+  canonical URL if the slug is actually still published (defends the tombstone path from ever serving
+  live content); 404 for a slug that never existed. `app/journal/[slug]/page.tsx` modified: a slug that
+  fails `loadPublicJournalEntry` now checks `loadRetractedJournalEntry` before giving up — a match
+  triggers `permanentRedirect` to the new tombstone path (308) instead of a bare `notFound()` (404);
+  only genuinely-unknown slugs still 404. `app/api/cockpit/journal/[id]/retract/route.ts` modified: the
+  entry lookup now also selects `slug` (needed to target per-entry revalidation), and a successful
+  retraction now calls `revalidateJournalDistribution(entry.slug)` and surfaces the revalidated paths as
+  a new, additive `distribution: { revalidatedPaths }` response field.
+- Adapted, not copied verbatim:
+  - The source branch's tombstone route read `SITE_URL` from a locally-defined
+    `process.env["NEXT_PUBLIC_APP_URL"] ?? "https://www.galaxysportsedge.com"` fallback. Replaced with an
+    import of the canonical `SITE_URL` from `@/lib/seo/site-url` (the repo's own documented single
+    source of truth for the public host, matching `rss.xml/route.ts`'s existing import) rather than
+    re-deriving a second, parallel definition of the same constant.
+  - The retract route's response shape (`{success, data, policy}`) does not match what the ported test
+    originally assumed (`{success, distribution: {revalidatedPaths}}`) — confirmed by reading the live
+    route before writing any code, then reading its one real consumer
+    (`app/cockpit/journal/[entryId]/journal-entry-editor.tsx`, which reads `payload.success`/
+    `payload.error`/`payload.data.retractedAt`). Added `distribution` as a fourth, purely additive field
+    alongside the existing `data`/`policy` rather than renaming/restructuring the response to match the
+    source test's assumption, preserving the live cockpit UI's contract untouched.
+  - The ported test file (`journal-retraction-distribution.test.ts`) needed no assertion changes once
+    the route was built to the additive shape above — it passed unmodified against the adapted response.
+- Independent review: one `gse-red-team` pass, stalled once mid-investigation (an incomplete "let me also
+  check..." fragment as its apparent stopping point, the same non-zero-but-incomplete stall variant seen
+  in DEC-058) — resumed via the standing agent-stall `SendMessage` nudge, which produced a complete
+  12-point verification synthesis. **Zero confirmed findings.** Directly reproduced/read rather than
+  assumed: `guardPublicJournalTitle` does NOT itself HTML-escape (it's a banned-phrase content filter
+  only, `public-guard.ts:55-60`), meaning the tombstone route's own `escapeHtml()` calls on `title` and
+  the formatted `retractedAt` string are load-bearing, not redundant — confirmed both are present;
+  confirmed `retractionReason` is structurally unreachable from the tombstone path (`select` omits it);
+  confirmed the ADMIN gate on the retract POST is byte-for-byte unchanged in the diff; confirmed the new
+  `distribution` field carries only public, non-secret path literals; assessed the ISR staleness window
+  on `/journal/[slug]` (300s revalidate) as closed in practice because `revalidatePath` targets that
+  exact path synchronously in the same request as the DB write; confirmed
+  `revalidatePath("/journal/retracted/<slug>")` is a harmless no-op against a `force-dynamic` route
+  (never cached, so nothing to invalidate) rather than a bug; confirmed the two-query TOCTOU window in
+  `page.tsx` (publish-check then retract-check) has a worst case of a wrong error code for one request,
+  never live/gated content served as retracted-safe or vice versa; confirmed `retractedAt: null` is
+  branch-handled without crashing; reconfirmed the Prisma schema fields/enum exist with no migration
+  needed; confirmed the cockpit editor UI's existing field reads are untouched; confirmed the tombstone
+  redirect's `new URL(`/journal/${slug}`, SITE_URL)` has no open-redirect vector since `[slug]` (not
+  `[...slug]`) can never carry a literal `/` and the host is a fixed constant, never attacker-influenced.
+- Evidence: `cd apps/web && npx vitest run __tests__/journal-retraction-distribution.test.ts` 8/8 green;
+  `npx tsc --noEmit` clean; `npx eslint app/journal/retracted/[slug]/route.ts app/journal/[slug]/page.tsx
+  app/api/cockpit/journal/[id]/retract/route.ts lib/journal/load.ts lib/journal/revalidate.ts
+  __tests__/journal-retraction-distribution.test.ts --max-warnings=0` clean; full `apps/web` suite
+  650/650 files, 8824/8824 tests green; `npm run guardrails` 17/17 green; `npm run build` succeeded,
+  `/journal/retracted/[slug]` present in the route manifest; `git diff --check` clean.
+- Alternatives rejected: copying the source test's assumed `{success, distribution: {...}}`-only response
+  shape verbatim and dropping `data`/`policy` — rejected because it would silently break the live cockpit
+  retraction UI's existing field reads, a real regression the "reconcile, don't copy verbatim" discipline
+  exists to prevent; defining a second local `SITE_URL` fallback in the new route instead of importing
+  the canonical one — rejected as a direct violation of this repo's documented single-source-of-truth
+  rule for the public host.
+- Reversibility: 2 new files (`revalidate.ts`, the tombstone `route.ts`) + 1 new test file (delete to roll
+  back) + 3 modified files (`load.ts`, `page.tsx`, the retract `route.ts` — git-revertable, each change
+  additive) — single revert commit undoes the whole item. No migration (schema already supported
+  retraction before this port).
+- Protected zones: none directly (no settlement/CLV/billing/entitlement/migration touched), but the
+  ADMIN-gated retract endpoint and a public content-distribution/retraction mechanism both warranted the
+  same red-team rigor as a protected zone would — applied per this campaign's standing rule for new
+  public-facing trust surfaces, not skipped as merely presentational.
+- Files: `apps/web/lib/journal/load.ts`, `apps/web/lib/journal/revalidate.ts`,
+  `apps/web/app/journal/retracted/[slug]/route.ts`, `apps/web/app/journal/[slug]/page.tsx`,
+  `apps/web/app/api/cockpit/journal/[id]/retract/route.ts`,
+  `apps/web/__tests__/journal-retraction-distribution.test.ts`.
+- Supersedes: none. Closes candidate 3/5 of task #76. 2 more RECOVER_WHOLE_CANDIDATEs remain: History+
+  Schedule Lab (`claude/adoring-babbage-gq7v77`) and the multi-market-ensemble/synthetic-fade modules
+  (`claude/pensive-brown-yql6ld`).

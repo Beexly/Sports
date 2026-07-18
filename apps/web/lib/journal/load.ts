@@ -54,6 +54,16 @@ export interface PublicJournalEntry {
   readonly publishedAt: string;
 }
 
+/**
+ * Deliberately minimal — a retraction tombstone shows the title and when it
+ * was retracted, never the withdrawn body/coldOpen. Reusing `PublicJournalEntry`
+ * here would risk a future field added to that type leaking retracted content.
+ */
+export interface RetractedJournalEntry {
+  readonly title: string;
+  readonly retractedAt: string | null;
+}
+
 function wordCount(markdown: string): number {
   return markdown.trim().split(/\s+/).filter(Boolean).length;
 }
@@ -204,4 +214,22 @@ export async function loadPublicJournalEntry(slug: string): Promise<PublicJourna
 
   if (!row) return null;
   return toPublicEntry(row);
+}
+
+/** Title + retraction timestamp only, for the public 410 tombstone. Never the body. */
+export async function loadRetractedJournalEntry(
+  slug: string
+): Promise<RetractedJournalEntry | null> {
+  const row = await db.modelJournalEntry
+    .findFirst({
+      where: { slug, status: "RETRACTED" },
+      select: { title: true, retractedAt: true },
+    })
+    .catch(() => null);
+
+  if (!row) return null;
+  return {
+    title: guardPublicJournalTitle(row.title),
+    retractedAt: row.retractedAt?.toISOString() ?? null,
+  };
 }

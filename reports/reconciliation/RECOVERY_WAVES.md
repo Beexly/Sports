@@ -487,4 +487,9 @@ R11.5 CLOSED (2026-07-18, DEC-056) — 138/138 long-tail branches individually e
       24-branch slice DEC-056 incl. 5 new RECOVER_WHOLE_CANDIDATEs + 1 declined compliance violation).
       Follow-on: task #75 (dedicated port) + 5 new candidates + 8 NEEDS_DEDICATED_REVIEW branches +
       accumulated OWNER_GATE items — none blocking further campaign work
+      Task #76 progress (porting the 5 new RECOVER_WHOLE_CANDIDATEs): 3/5 DONE — Core Web Vitals RUM
+      beacon + root error/loading boundary (DEC-057), per-route error boundaries + dynamic-segment
+      not-found pages (DEC-058), journal-retraction HTTP 410 tombstone + revalidation (DEC-059). 2
+      remain: History+Schedule Lab (`claude/adoring-babbage-gq7v77`), multi-market-ensemble/
+      synthetic-fade modules (`claude/pensive-brown-yql6ld`).
 ```

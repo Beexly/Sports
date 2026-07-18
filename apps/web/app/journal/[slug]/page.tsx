@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
-import { loadPublicJournalEntry, type PublicJournalEntry } from "@/lib/journal/load";
+import {
+  loadPublicJournalEntry,
+  loadRetractedJournalEntry,
+  type PublicJournalEntry,
+} from "@/lib/journal/load";
 import { formatDate } from "@/lib/utils";
 import { BRAND_NAME } from "@/lib/brand";
 import { SITE_URL } from "@/lib/seo/sports-jsonld";
@@ -128,7 +132,14 @@ export default async function JournalEntryPage({
   readonly params: { readonly slug: string };
 }): Promise<JSX.Element> {
   const entry = await loadPublicJournalEntry(params.slug);
-  if (!entry) notFound();
+  if (!entry) {
+    // A retracted slug still exists — it just isn't publishable. Next.js
+    // pages can't answer with HTTP 410 directly, so route retracted slugs
+    // to the dedicated tombstone Route Handler, which can and does.
+    const retracted = await loadRetractedJournalEntry(params.slug);
+    if (retracted) permanentRedirect(`/journal/retracted/${params.slug}`);
+    notFound();
+  }
 
   const articleJsonLd = {
     "@context": "https://schema.org",
