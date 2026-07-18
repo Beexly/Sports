@@ -211,10 +211,15 @@ missing most of this session's own accumulated work):
   src/market-values.ts` (289 lines) + test, 6 new `lib/market/*` files, and 4 already-existing `lib/market/*`
   files needing their own drift check (`best-line.ts`, `game-market-read.ts`, `pick-death-clock.ts`,
   `load-line-shop-board.ts`) — not yet freeze-contracted.
-- **Group B — cockpit selected-game playback.** RECOVER_WHOLE candidate, lower risk than A (no modifications
-  to existing business logic). 8 new files (component, loader, tests, QA script, 2 screenshots, a new
-  `market-twin/[gameId]/page.tsx` dynamic route) plus a 6-line additive link on the already-existing
-  `market-twin/page.tsx`. Not yet freeze-contracted.
+- **Group B — cockpit selected-game playback. DONE (2026-07-18, DEC-043).** Ported as 5 new files
+  (`lib/cockpit/load-selected-game-playback.ts`, `app/cockpit/market-twin/[gameId]/page.tsx`,
+  `components/cockpit/selected-game-playback.tsx`, its test, a manual-QA script) plus a 6-line additive
+  link on the already-existing `market-twin/page.tsx`. The 2 reference screenshots from the historical
+  branch were deliberately NOT ported (stale run-artifacts, not build/test dependencies). Zero drift on
+  new files; gated behind the existing `requireCockpitAdmin()` call (first statement in the new page);
+  hardcoded all-true `OPERATOR_VIEWER` confirmed unreachable outside that gate. Independent red-team:
+  zero findings across all 8 review points. `cockpit-page-auth.test.ts`'s recursive source-scan
+  live-verified to auto-extend to the new page (36→37 tests) with no additional test-writing.
 - **Group C — fantasy public gate + `/fantasy/studio` admin-gate.** **COLLISION — OWNER_GATE (OG-008), NOT
   ported.** Traces to one founder-authored commit (`2724e78a`, Garrett Baxley, 2026-07-15) that is NOT an
   ancestor of `pdcswh` and would reintroduce a middleware-level `/fantasy/*` redirect gate of the same shape
@@ -225,9 +230,10 @@ missing most of this session's own accumulated work):
   (has a prompt-caching optimization `codex` lacks). No separate "Brain/autopsy" files found under those
   names; the closest concept (`lossAutopsy`) is already covered by this session's own landed W004 work.
 
-**Next bounded step:** freeze-contract and code Group B first (lowest risk, purely additive), then Group A
-(needs the 4-file drift check on already-existing `lib/market/*` files first). Group C stays OWNER_GATE until
-the founder resolves OG-008.
+**Next bounded step:** freeze-contract and code Group A (needs the 4-file drift check on already-existing
+`lib/market/*` files first — `best-line.ts`, `game-market-read.ts`, `pick-death-clock.ts`,
+`load-line-shop-board.ts` — against current pdcswh HEAD before deciding direct-apply vs. manual
+reconciliation). Group C stays OWNER_GATE until the founder resolves OG-008.
 
 ## Wave R9 — Validate #122 in the protected migration lane
 
@@ -271,7 +277,7 @@ R4    Done (this pass)
 R5    Founder decision on literal PR-splitting of #129 vs. existing per-workstream docs
 R6    #121 rebase pending founder merge-order call
 R7    Blocked on #127
-R8    Diff #112 vs #129 residual value
+R8    Group B DONE (DEC-043) — Group A next (4-file drift check); Group C OWNER_GATE (OG-008)
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   Deletion receipts for the 12 proven-ancestor branches

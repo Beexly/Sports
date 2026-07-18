@@ -206,6 +206,12 @@ export default async function CockpitMarketTwinPage(): Promise<JSX.Element> {
                   value={row.contextComputedAt ? fromNow(row.contextComputedAt) : "—"}
                 />
               </dl>
+              <Link
+                href={`/cockpit/market-twin/${row.gameId}`}
+                className="w-fit rounded-lg border border-orbital-cyan/30 px-3 py-2 text-xs font-semibold text-orbital-cyan hover:border-orbital-cyan/60 hover:text-ion-white"
+              >
+                Open governed playback
+              </Link>
             </li>
           ))}
         </ul>

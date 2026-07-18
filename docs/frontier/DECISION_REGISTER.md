@@ -2089,3 +2089,76 @@ stitching) — recorded here so no backtest can slip past it.
 - **Re-entry condition:** founder confirms (a) whether `/fantasy/studio` should be admin-gated, and (b) whether
   the middleware-level `/fantasy/*` redirect should be reintroduced, and if so, with the redirect-loop bug
   `c12decfc` fixed first (verify it doesn't reappear before landing).
+
+## DEC-043 — Recovery Wave R8, Group B: cockpit selected-game playback (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Wave R8's second bounded item, following the DEC-042 classification pass. Ports the "cockpit
+  selected-game playback" asset from `RECOVERY_MATRIX.md` row #112 — confirmed during coding that this is also
+  the substance behind that row's separately-listed "Twin/Brain/autopsy/Studio projections" phrase (one UI
+  surface, not a distinct fourth group).
+- Contract frozen: all 5 target files confirmed genuinely absent from `pdcswh` (`ls` check on each path before
+  touching anything); the diff against `codex/gse-frontier-recovery-2026-07-13` (head `9b6da1ae`) applied via
+  a verified-clean `git apply` (`--check` passed first) — zero drift, zero manual reconciliation, unlike
+  several of Wave R0.6's items. Every dependency the ported code calls into was confirmed to already exist on
+  `pdcswh` with a matching shape BEFORE applying the patch: `requireCockpitAdmin()` (DEC-037, byte-identical
+  logic, doc-comment-only diff, confirmed via direct diff), `buildPlaybackConsumerBundle()` +
+  `PlaybackConsumerBundle` (this session's own earlier `intelligence-playback` work), `GameRoomViewer` (already
+  has the exact 4-field shape the loader's `OPERATOR_VIEWER` constant needs).
+- Code: new `apps/web/lib/cockpit/load-selected-game-playback.ts` — `loadSelectedGamePlayback(routeGameId)`
+  validates the route param via a zod-branded schema (rejecting malformed input before any DB call), calls
+  `loadGameRoom(gameId, OPERATOR_VIEWER)` with a hardcoded ALL-TRUE `GameRoomViewer` (this loader is designed
+  to be called ONLY from an admin-gated page, never a public path), and returns a discriminated union
+  (`UNAVAILABLE` with `INVALID_GAME_ID`/`GAME_NOT_FOUND`/`PLAYBACK_NOT_CAPTURED`/`PLAYBACK_WITHHELD` reasons, or
+  `AVAILABLE` wrapping `buildPlaybackConsumerBundle(...)`). New `apps/web/app/cockpit/market-twin/[gameId]/
+  page.tsx` calls `await requireCockpitAdmin();` as its first statement, before any data load. New
+  `apps/web/components/cockpit/selected-game-playback.tsx` is a pure presentational switch over the
+  discriminant with an exhaustive `assertNever` default. `apps/web/app/cockpit/market-twin/page.tsx`
+  (already-existing) gained one additive 6-line link to the new route — no existing logic touched.
+  `apps/web/__tests__/cockpit-selected-game-playback.test.tsx` (8 tests) + `scripts/qa/cockpit-selected-game-
+  playback-browser.mjs` (manual QA script, not part of CI) applied verbatim. The historical branch's 2
+  reference screenshots were NOT ported — they are stale run-artifacts the QA script regenerates on demand,
+  not a build or test dependency.
+- Verified live (before red-team dispatch) that this session's own DEC-037 CI enforcement genuinely extends to
+  a brand-new cockpit page with zero additional work: `cockpit-page-auth.test.ts`'s recursive directory-walk
+  discovery picked up the new `[gameId]/page.tsx` automatically (36→37 tests) and confirmed it calls the guard
+  — proving the "a future page that forgets it fails CI" design goal from DEC-037 actually holds under a real
+  new page, not just the 32 pages it was built against.
+- Independent review: one `gse-red-team` pass, resumed once via the standing agent-stall protocol (stalled
+  right before its non-vacuousness test-reversion check). **Zero CONFIRMED findings across all 8 review
+  points, including the highest-risk one** — the hardcoded all-true `OPERATOR_VIEWER` entitlement object was
+  confirmed provably unreachable outside the admin gate: exactly 3 references to `loadSelectedGamePlayback`
+  exist in the whole `apps/web` tree (its own definition, the gated page, its test) and `requireCockpitAdmin()`
+  fails closed via Next's `redirect()` throwing internally, confirmed as the literal first statement before
+  any data fetch. Route-param validation, `WITHHELD`-before-bundle-construction ordering, honest `??`
+  fallback labels (never fabricated data), the additive-only `market-twin/page.tsx` edit, and both local and
+  full-workspace typecheck were all independently confirmed. Two specific tests were traced to a genuine
+  would-fail-on-revert outcome (the `WITHHELD` guard test and the admin-gate-rejection test).
+- Evidence: `cd apps/web && npx vitest run __tests__/cockpit-selected-game-playback.test.tsx` → 8/8 (also
+  independently re-run by the red-team); `cd apps/web && npx vitest run __tests__/cockpit-page-auth.test.ts` →
+  37/37 (was 36); full `apps/web` suite → 637 files / 8,635 tests, all green (was 636/8,616 — the +19 delta is
+  larger than the naive +9 estimate of "1 new test file (8) + 1 existing scan file's count (+1)" because
+  several OTHER pre-existing `it.each`-based cockpit-page scans — confirmed present:
+  `cockpit-stub-safety.test.ts`, `route-smoke.test.ts`, and others — also automatically picked up the new page
+  and each gained tests too; zero failures either way, so the larger delta is a good sign, not a discrepancy
+  worth chasing further); `npx tsc --noEmit` clean (apps/web, independently re-run twice — once before red-team
+  dispatch, once by the red-team itself); full workspace `npm run typecheck` clean; `npm run guardrails` →
+  17/17 green; `git diff --check` clean aside from the same pre-existing CRLF file already documented in
+  DEC-040 (untouched by this diff).
+- Alternatives rejected: porting the 2 reference PNG screenshots — rejected as unnecessary; they are QA-script
+  run output, not a source or test dependency, and would be stale/misleading if committed without ever being
+  regenerated against the actual ported UI.
+- Reversibility: strictly additive (5 new files, one 6-line link on an existing file) — trivially revertible.
+  Revert commit if any regression surfaces. Never merged to `main` — founder-merge-only, tracked by the
+  existing accounting PR #129.
+- Protected zones: entitlements (cockpit/admin-only surface consuming full paid-tier data via a hardcoded
+  all-access viewer object) — mandatory red-team (completed, zero findings, explicit focus on leak risk).
+- Files: `apps/web/lib/cockpit/load-selected-game-playback.ts` (new),
+  `apps/web/app/cockpit/market-twin/[gameId]/page.tsx` (new),
+  `apps/web/components/cockpit/selected-game-playback.tsx` (new),
+  `apps/web/app/cockpit/market-twin/page.tsx` (additive edit),
+  `apps/web/__tests__/cockpit-selected-game-playback.test.tsx` (new),
+  `scripts/qa/cockpit-selected-game-playback-browser.mjs` (new).
+- Supersedes: none. Closes Wave R8 Group B. Group A (`market-values` canonical types + `lib/market/*`) remains
+  the next bounded item — needs its own freeze contract including a drift check on 4 already-existing
+  `lib/market/*` files. Group C stays OWNER_GATE (OG-008) pending founder decision.

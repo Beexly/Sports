@@ -1,7 +1,7 @@
 # GSE Frontier Current State
 
 **Status:** ACTIVE
-**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-041)
+**Last verified:** 2026-07-18 (this session, command evidence in DEC-001/DEC-004, extended through DEC-043)
 **Base SHA:** `c179a78` (origin/main, PR #120)
 **Active branch/worktree:** `claude/galaxy-sports-edge-pdcswh` (pushed; superset of main)
 **Active workstream:** none — W002 DONE (DEC-009); W-OTS DONE all 3 slices (DEC-010/011/013); W-MCP DONE slice 1 + Phase 2.1 + Phase 2.3 (DEC-012/017/019); W-WEATHER-REC DONE + §2 smoke CLOSED (DEC-014/023); W003 Reality Receipt v0 DONE + Phase 2.2 Merkle-inclusion leg (DEC-015/018); W004 SportsIR v0 DONE (DEC-016); W005 Intelligence Watch v0 DONE (DEC-021); W007 Branching Reality v0 DONE (DEC-024); W009 Hypothesis-to-Instrument v0 DONE (DEC-025). Master plan approved 2026-07-17 (founder). GG-000 Genesis Convergence Map DONE on PR #126 (docs-only). GX-000/GG-001 unified genesis-kernel build DONE on its own branch, draft PR #127 open (founder-gated merge); a separate unrelated pre-existing CI bug found + fixed as PR #128 (also founder-gated). Phase 2 follow-ups: 2.1/2.2/2.3/2.4 DONE. Phase 3 (W005) DONE. Full-session audit pass DONE (DEC-022). W-WEATHER §2 smoke gate DONE (DEC-023). W007 DONE (DEC-024) — SportsIR's 6th and final DECLARED primitive (Branch) is now ADAPTED, so ALL 12 SportsIR primitives have real evidence. W009 DONE (DEC-025) — verified both listed dependencies real (harness + W004) before building; wraps the backtest harness's own already-audited climatology signal into a versioned instrument, adds a second `SportsIrClaim` source. W006 re-checked and confirmed still genuinely BLOCKED (GG-001/genesis-kernel hasn't landed). W010 dependency re-verified genuinely absent (DEC-026) — stays BLOCKED, no telemetry baseline exists to build on. Remaining work: Task #8/#13's larger mandates (Task #13 now has a concrete scoped next slice identified — see Verified facts; Task #8 scoping in progress) and W008 (still BLOCKED on W006).
@@ -149,6 +149,23 @@
   `COLLISION-8a`/`8b` and new **OG-008**, not ported. This is exactly the scenario `COLLISION-7b` (DEC-036)
   anticipated when it flagged that a future wave recovering this exact branch lineage must not silently
   regress prior work. No red-team dispatch needed (no product code touched this pass — ledger-only).
+- DEC-043 (Wave R8 Group B: cockpit selected-game playback) DONE. Ports the "Twin/Brain/autopsy/Studio" +
+  "cockpit selected-game playback" assets from `RECOVERY_MATRIX.md` row #112 (confirmed to be the SAME one UI
+  surface, not two groups). 5 new files (`load-selected-game-playback.ts`, `market-twin/[gameId]/page.tsx`,
+  `selected-game-playback.tsx` component, its test, a QA script) applied via a verified-clean `git apply` —
+  zero drift, zero manual reconciliation. Every dependency the ported code calls into (`requireCockpitAdmin()`
+  from DEC-037, `buildPlaybackConsumerBundle()`/`PlaybackConsumerBundle`, `GameRoomViewer`) was confirmed to
+  already exist on `pdcswh` with a matching shape before applying. The loader uses a hardcoded all-true
+  `OPERATOR_VIEWER` entitlement object — safe ONLY because `requireCockpitAdmin()` is the literal first
+  statement in the one page that calls it, confirmed by grep to be its only consumer in the whole `apps/web`
+  tree. Live-verified DEC-037's CI enforcement genuinely extends to a brand-new cockpit page automatically
+  (`cockpit-page-auth.test.ts` 36→37, zero extra work needed). gse-red-team (resumed once via the stall
+  protocol) **CONFIRMED CLEAN on all 8 review points including the highest-risk entitlement-leak check, zero
+  findings** — traced 2 specific tests to a genuine would-fail-on-revert outcome. Dedicated test 8/8; full
+  `apps/web` suite 637/8,635 (was 636/8,616); guardrails 17/17; both local and workspace typecheck clean.
+  Committed and pushed to `claude/galaxy-sports-edge-pdcswh`, tracked by PR #129. Closes Wave R8 Group B. Group
+  A (`market-values` + `lib/market/*`) is next — needs its own freeze contract including a drift check on 4
+  already-existing `lib/market/*` files. Group C stays OWNER_GATE (OG-008).
 
 ## Owner gates
 
@@ -175,14 +192,17 @@ recovery queue to be exhausted. Checked every remaining wave in `RECOVERY_WAVES.
 R0/R2/R6/R7/R9/R10 are genuinely founder-blocked (merge/migration decisions only an owner can make);
 R5 explicitly asks for a founder decision before an agent spends git-history-surgery effort. **R8 and
 R11.5 are NOT owner-gated.** R8's classification pass is DONE (DEC-042): Group A (`market-values` +
-`lib/market/*`) and Group B (cockpit selected-game playback) are both RECOVER_WHOLE, not yet coded;
-Group C (fantasy public gate) hit a genuine founder-vs-lineage collision and is now OG-008,
-correctly NOT ported. C5 is therefore still NOT appropriate — real, dependency-ready,
-non-owner-gated work remains. **The next session/pass should freeze-contract and code Wave R8 Group B
-first** (lowest risk — purely additive, no modifications to existing business logic), then Group A
-(needs a 4-file drift check on already-existing `lib/market/*` files before its own freeze contract),
-each as its own bounded FREEZE-CONTRACT-through-PR loop with mandatory red-team. R11.5's long-tail
-triage remains available as an alternative next item if R8 stalls. W006 remains correctly BLOCKED
+`lib/market/*`) and Group B (cockpit selected-game playback) are both RECOVER_WHOLE; Group C (fantasy
+public gate) hit a genuine founder-vs-lineage collision and is now OG-008, correctly NOT ported.
+**Wave R8 Group B is now DONE (DEC-043)** — cockpit selected-game playback (Twin/Brain/autopsy/Studio
+projections) ported as 5 new files behind the existing `requireCockpitAdmin()` gate, zero drift, zero
+red-team findings, CI enforcement (`cockpit-page-auth.test.ts`) live-verified to auto-extend to the
+new page. C5 is therefore still NOT appropriate — real, dependency-ready, non-owner-gated work
+remains. **The next session/pass should freeze-contract and code Wave R8 Group A**
+(`market-values` canonical types + `lib/market/*` — needs a 4-file drift check on already-existing
+`lib/market/*` files against current pdcswh HEAD before its own freeze contract), as its own bounded
+FREEZE-CONTRACT-through-PR loop with mandatory red-team. R11.5's long-tail triage remains available
+as an alternative next item if R8 Group A stalls. W006 remains correctly BLOCKED
 (GG-001/genesis-kernel still only on unmerged draft PR #127); W008 stays blocked on W006; W010 stays
 BLOCKED (DEC-026, dependency verified genuinely absent). Task #8's UX mandate and Task #13's full "10x
 transformation" mandate remain large, standing arcs with their next concrete slice always identified
