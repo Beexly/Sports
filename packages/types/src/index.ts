@@ -20,6 +20,7 @@ export type RiskLevel =
 export * from "./ladder.js";
 export * from "./heartbeat.js";
 export * from "./sports-ir.js";
+export * from "./market-values.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
@@ -463,6 +464,7 @@ export interface BookmakerOddsInput {
   market: "H2H" | "SPREADS" | "TOTALS";
   homePrice?: number;
   awayPrice?: number;
+  drawPrice?: number;
   spread?: number;
   homeSpreadPrice?: number;
   awaySpreadPrice?: number;
@@ -639,16 +641,18 @@ export interface AuditPayloadSummary {
 }
 
 // Pick Death Clock — market movement since publish, PRICE SPACE only
-// (points / American prices). Never fair-prob, never EV, never a
+// (points). Never fair-prob, never EV, never a
 // time-to-zero: those stay hard-gated on pick surfaces.
 export interface AuditDeathClock {
-  metric: "spread_points" | "total_points" | "moneyline_price";
-  atPublish: number;       // median across books at/just before publish
-  latest: number;          // median across the same books, latest capture
-  delta: number;           // latest − atPublish, signed, market units
+  metric: "spread_points" | "total_points";
+  atPublish: number;       // observed quote nearest publish-time reference
+  latest: number;          // observed quote nearest latest reference
+  referenceAtPublish: number; // publish-time median; may be non-executable
+  referenceLatest: number; // latest median; may be non-executable
+  delta: number;           // referenceLatest − referenceAtPublish, points
   direction: "toward_pick" | "away_from_pick" | "flat";
   minutesSincePublish: number;
-  ratePerHour: number;     // |delta| per hour, market units
+  ratePerHour: number;     // |reference delta| per hour, points
   booksUsed: number;
   latestCaptureAt: string; // ISO timestamp
 }

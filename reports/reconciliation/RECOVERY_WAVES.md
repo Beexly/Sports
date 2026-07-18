@@ -207,10 +207,23 @@ possible until the founder merges #127.
 whole-branch diff is 608 files / +9,634 / −56,079 and not a usable signal — codex is a much older snapshot
 missing most of this session's own accumulated work):
 
-- **Group A — `market-values` canonical types + `lib/market/*`.** RECOVER_WHOLE candidate. `packages/types/
-  src/market-values.ts` (289 lines) + test, 6 new `lib/market/*` files, and 4 already-existing `lib/market/*`
-  files needing their own drift check (`best-line.ts`, `game-market-read.ts`, `pick-death-clock.ts`,
-  `load-line-shop-board.ts`) — not yet freeze-contracted.
+- **Group A — `market-values` canonical types + `lib/market/*`. DONE (2026-07-18, DEC-044).** Ported
+  `packages/types/src/market-values.ts` (289 lines) + test (canonical sport-aware American-odds/market-point
+  normalization) and fixed the 4 already-existing `lib/market/*` files (`best-line.ts`, `game-market-read.ts`,
+  `pick-death-clock.ts`, `load-line-shop-board.ts`) to use it — all applied via a verified-clean `git apply`.
+  Fixes two real live bugs: (1) pick'em (0-value) spreads were silently dropped by the old `isNum`/`isPrice`
+  helpers; (2) the death clock's MONEYLINE metric took a mathematically unsound median of raw American odds
+  and has been disabled outright (returns `null`) rather than showing a meaningless number. `packages/types/
+  src/index.ts` needed 3 manual (non-`git apply`) additive edits — a new `market-values.js` export alongside
+  the pre-existing `sports-ir.js` export (the historical branch's diff would have deleted that line; a false
+  collision caught before applying), an additive `drawPrice` field, and `AuditDeathClock`'s metric union
+  narrowed to match. The one real live caller of the death clock (`api/picks/[id]/audit/route.ts`, PRO/ELITE-
+  gated) got a 2-line change; tier-gating logic confirmed byte-identical otherwise. 3 new formatting utilities
+  (`format-clv.ts`, `project-public-market.ts`, `format-committed-market.ts`) landed deliberately unwired
+  (grep-verified zero live callers) — their consumer-surface wiring across 6 public pages is a new named
+  follow-up, "R8 Group A2," not yet freeze-contracted. Independent red-team: zero findings across all 7 review
+  points, including the highest-risk sport-name-matching check (all 7 seeded `Sport` rows match a
+  normalization policy branch).
 - **Group B — cockpit selected-game playback. DONE (2026-07-18, DEC-043).** Ported as 5 new files
   (`lib/cockpit/load-selected-game-playback.ts`, `app/cockpit/market-twin/[gameId]/page.tsx`,
   `components/cockpit/selected-game-playback.tsx`, its test, a manual-QA script) plus a 6-line additive
@@ -230,10 +243,11 @@ missing most of this session's own accumulated work):
   (has a prompt-caching optimization `codex` lacks). No separate "Brain/autopsy" files found under those
   names; the closest concept (`lossAutopsy`) is already covered by this session's own landed W004 work.
 
-**Next bounded step:** freeze-contract and code Group A (needs the 4-file drift check on already-existing
-`lib/market/*` files first — `best-line.ts`, `game-market-read.ts`, `pick-death-clock.ts`,
-`load-line-shop-board.ts` — against current pdcswh HEAD before deciding direct-apply vs. manual
-reconciliation). Group C stays OWNER_GATE until the founder resolves OG-008.
+**Next bounded step:** freeze-contract Group A2 (wire the 3 unwired formatting utilities into
+`api/picks/route.ts`, `api/verify/route.ts`, `preview/[sport]/[slug]/page.tsx`, 2 trust-ledger components, and
+`load-proof-of-record.ts` — a materially larger, higher-risk change touching live public pick-display/verify/
+proof surfaces that needs its own careful contract and red-team pass, deliberately not bundled into Group A).
+Group C stays OWNER_GATE until the founder resolves OG-008.
 
 ## Wave R9 — Validate #122 in the protected migration lane
 
@@ -277,7 +291,7 @@ R4    Done (this pass)
 R5    Founder decision on literal PR-splitting of #129 vs. existing per-workstream docs
 R6    #121 rebase pending founder merge-order call
 R7    Blocked on #127
-R8    Group B DONE (DEC-043) — Group A next (4-file drift check); Group C OWNER_GATE (OG-008)
+R8    Groups A+B DONE (DEC-043/044) — Group A2 (consumer wiring) next; Group C OWNER_GATE (OG-008)
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   Deletion receipts for the 12 proven-ancestor branches

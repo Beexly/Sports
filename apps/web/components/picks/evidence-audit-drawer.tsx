@@ -628,17 +628,13 @@ function formatClockAge(minutes: number): string {
   return `${Math.floor(minutes / 60)}h ${minutes % 60}m ago`;
 }
 
-function clockMetricLabel(
-  metric: "spread_points" | "total_points" | "moneyline_price"
-): string {
-  if (metric === "spread_points") return "Spread (home line)";
-  if (metric === "total_points") return "Total";
-  return "Side price (American)";
+function clockMetricLabel(metric: "spread_points" | "total_points"): string {
+  return metric === "spread_points" ? "Spread (home line)" : "Total";
 }
 
 function formatClockNumber(
   value: number,
-  metric: "spread_points" | "total_points" | "moneyline_price"
+  metric: "spread_points" | "total_points"
 ): string {
   if (metric === "total_points") return `${value}`;
   return value > 0 ? `+${value}` : `${value}`;

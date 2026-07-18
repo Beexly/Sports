@@ -102,11 +102,32 @@ describe("buildBestLines — empties + formatting", () => {
     expect(best.moneyline.away).toEqual({ bookmaker: "A", price: -110 });
   });
 
+  it("quarantines unsupported prices and non-tradable points", () => {
+    const best = buildBestLines([
+      row({ bookmaker: "A", market: "H2H", homePrice: -7750 }),
+      row({ bookmaker: "B", market: "SPREADS", spread: -3.2, homeSpreadPrice: -110 }),
+      row({ bookmaker: "C", market: "TOTALS", total: 8.954545454545455, overPrice: -110 }),
+    ]);
+    expect(best.moneyline.home).toBeNull();
+    expect(best.spread.home).toBeNull();
+    expect(best.total.over).toBeNull();
+    expect(best.bookCount).toBe(0);
+  });
+
+  it("supports quarter-point soccer offers when the sport does", () => {
+    const best = buildBestLines([
+      row({ bookmaker: "A", market: "SPREADS", spread: -0.25, homeSpreadPrice: -110 }),
+    ], "MLS");
+    expect(best.spread.home).toEqual({ bookmaker: "A", price: -110, line: -0.25 });
+  });
+
   it("formats prices and lines for display", () => {
     expect(formatAmerican(150)).toBe("+150");
     expect(formatAmerican(-110)).toBe("-110");
     expect(formatLine(-3.5, "spread")).toBe("-3.5");
     expect(formatLine(3, "spread")).toBe("+3");
     expect(formatLine(45.5, "total")).toBe("45.5");
+    expect(formatAmerican(-7750)).toBe("N/A");
+    expect(formatLine(8.954545454545455, "total")).toBe("N/A");
   });
 });

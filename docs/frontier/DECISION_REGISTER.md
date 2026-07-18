@@ -2162,3 +2162,111 @@ stitching) — recorded here so no backtest can slip past it.
 - Supersedes: none. Closes Wave R8 Group B. Group A (`market-values` canonical types + `lib/market/*`) remains
   the next bounded item — needs its own freeze contract including a drift check on 4 already-existing
   `lib/market/*` files. Group C stays OWNER_GATE (OG-008) pending founder decision.
+
+## DEC-044 — Recovery Wave R8, Group A: market-values canonical types + lib/market/* (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Wave R8's third bounded item, following DEC-042 (classification) and DEC-043 (Group B). Ports
+  the canonical sport-aware market-value normalization module from `codex/gse-frontier-recovery-2026-07-13`
+  (head `9b6da1ae`) plus its 4 already-existing `lib/market/*` consumers, fixing two real, currently-live
+  correctness bugs.
+- Contract frozen before coding: drift-checked all 4 already-existing `apps/web/lib/market/*` files (`best-
+  line.ts`, `game-market-read.ts`, `pick-death-clock.ts`, `load-line-shop-board.ts`) against current `pdcswh`
+  HEAD via `git diff HEAD FETCH_HEAD`, plus their test files and the one real live caller of the death clock
+  (`apps/web/app/api/picks/[id]/audit/route.ts`) — all applied cleanly via a verified `git apply --check`.
+  Traced every caller of `buildBestLines`/`buildH2hMarketRead`/`buildPickDeathClock` in the whole `apps/web`
+  tree before touching anything, confirming `buildH2hMarketRead`'s 3 real callers (`get-slate-twin.ts`,
+  `load-market-fair-board.ts`, `load-proof-of-record.ts`) need zero changes since its external signature is
+  unchanged.
+- Two real, currently-live correctness bugs fixed:
+  1. **Pick'em (0-value) spreads were silently dropped.** The old `isNum`/`isPrice` helpers in `best-line.ts`
+     and `game-market-read.ts` explicitly excluded `value === 0`, treating a legitimate, common pick'em line
+     as absent data. `normalizeMarketPoint`/`normalizeAmericanOdds` (new `packages/types/src/market-values.ts`,
+     289 lines) correctly keep 0 spreads (`formatSignedMarketPoint` renders `"PK"`) while still rejecting
+     genuinely bad data (non-finite, non-tick-aligned, or out-of-bounds values).
+  2. **Mathematically unsound MONEYLINE death-clock median.** The old `pick-death-clock.ts` took a naive
+     median of raw American odds prices, which is not meaningful — American odds are discontinuous/non-linear
+     around the pick'em boundary. The ported version disables the MONEYLINE metric outright (`metricPlan()`
+     returns `null` for `MONEYLINE`/`H2H`, so `buildPickDeathClock` returns `null` for those picks) with an
+     honest in-code explanation, rather than continuing to show a number that doesn't mean what it claims.
+     SPREAD/TOTAL clocks gain sport-aware point-tick consensus with separate `referenceAtPublish`/
+     `referenceLatest` (the aggregation reference, may be non-executable) and `atPublish`/`latest` (nearest
+     real executable quote) fields.
+- Code: new `packages/types/src/market-values.ts` + test (41 tests) — canonical American-odds/market-point
+  normalization, sport-aware tick sizing (0.25 soccer, 0.5 baseball/hockey/basketball/football), consensus
+  builders, formatters. `packages/types/src/index.ts` was edited **manually, not via `git apply`**, because
+  the historical branch's diff would have silently deleted `export * from "./sports-ir.js";` (that export
+  doesn't exist in the older codex snapshot — a false collision, not a real one, caught before applying):
+  added `export * from "./market-values.js";` as a new line while keeping the sports-ir export byte-identical;
+  added `drawPrice?: number` to `BookmakerOddsInput` (additive); narrowed `AuditDeathClock.metric` to drop
+  `"moneyline_price"` and added the 2 new reference fields, consistent with the death-clock change above.
+  `best-line.ts`, `game-market-read.ts`, `pick-death-clock.ts`, `load-line-shop-board.ts` and their tests
+  applied verbatim via `git apply`. `apps/web/app/api/picks/[id]/audit/route.ts` — the one real live caller of
+  `buildPickDeathClock` (a PRO/ELITE-gated paywalled audit surface) — got a 2-line change adding `sport` to
+  the Prisma include and passing it into the death-clock call; every other line, including all tier-gating
+  logic, is byte-identical. `apps/web/components/picks/evidence-audit-drawer.tsx` got a small polish cleanup
+  (not from the historical branch, done independently): narrowed two local helper signatures that still
+  referenced the now-impossible `"moneyline_price"` metric value.
+  Also ported 3 new, self-contained formatting utilities — `apps/web/lib/market/format-clv.ts`,
+  `project-public-market.ts`, `format-committed-market.ts` (+ tests) — that consume `market-values.ts`. These
+  land **deliberately unwired** in this pass (grep-verified zero callers anywhere in `apps/web` outside their
+  own test files): on the historical branch they're also wired into `apps/web/app/api/picks/route.ts`,
+  `apps/web/app/api/verify/route.ts`, `apps/web/app/preview/[sport]/[slug]/page.tsx`,
+  `apps/web/components/trust-ledger/pick-ledger-row.tsx`, `apps/web/components/trust-ledger/verify-
+  console.tsx`, and `apps/web/lib/proof/load-proof-of-record.ts` — a combined ~920-line diff across live
+  public pick-display/verify/proof surfaces. That wiring was explicitly excluded as a materially larger,
+  higher-risk, protected-public-claim workstream needing its own freeze contract, not silently dropped —
+  recorded below as the named follow-up ("R8 Group A2").
+  `apps/web/__tests__/audit-route-paywall.test.ts` needed a 1-line mock-fixture fix (`sport: { name: "NFL" }`
+  added to `pickFixture()`'s `game` object) discovered only on the full-suite run — this file's drift wasn't
+  in the initial freeze-contract file enumeration; caught, fixed, and reverified (5/5) before final gates.
+  `apps/web/__tests__/proof-of-record-surface.test.ts`'s ported diff asserted the excluded consumer wiring and
+  was reverted to its pre-patch HEAD state (confirmed 0-line diff against HEAD, 33/33 passing) rather than
+  landing 2 false-negative tests.
+- Independent review: one `gse-red-team` pass, resumed twice via the standing agent-stall protocol (stalled
+  mid-investigation both times; second resume used the hard "STOP investigating, report now" directive).
+  **Zero CONFIRMED or PLAUSIBLE findings across all 7 review points**, including the two highest-risk ones:
+  (a) entitlement/tier-gating logic in the audit route confirmed byte-identical beyond the 2-line `sport`
+  addition; (b) sport-name matching against real seed data — `packages/db/prisma/seed.ts` creates exactly 7
+  `Sport` rows (`NFL`, `NCAAF`, `NBA`, `NCAAB`, `MLB`, `NHL`, `MLS`) and every one matches a `pointPolicy()`
+  branch, so no seeded sport silently degrades to empty best-line/death-clock output; `Game.sportId` is a
+  required (non-nullable) FK per `schema.prisma`, so the defensive `game.sport?.name ?? ""` fallback in
+  `load-line-shop-board.ts` is unreachable in practice. Also independently confirmed: the 3 new formatting
+  utilities are provably unwired (grep across all of `apps/web`); the MONEYLINE death-clock removal is a
+  genuine correctness fix with no surviving caller/test dependency on a non-null MONEYLINE clock, and the sole
+  live consumer (`evidence-audit-drawer.tsx`) already guards on `audit.deathClock &&` so a null clock renders
+  nothing; `normalizeMarketPoint`/`normalizeAmericanOdds` correctly accept 0-value spreads while still
+  rejecting non-finite, non-tick-aligned, and out-of-bounds values (verified against the module's own test
+  assertions, not just its source).
+- Evidence: `cd apps/web && npx tsc --noEmit` clean; `cd packages/types && npx tsc --noEmit` clean; targeted
+  tests green (`market-values.test.ts` 41/41; `format-clv.test.ts` 4/4; `project-public-market.test.ts` 9/9;
+  `format-committed-market.test.ts` 2/2; `best-line.test.ts` 11/11; `pick-death-clock.test.ts` 13/13;
+  `market-fair-board.test.ts` 13/13; `proof-of-record-surface.test.ts` 33/33; `audit-route-paywall.test.ts`
+  5/5); full `apps/web` suite → 640 files / 8,668 tests, all green (was 637/8,635 before this item — the delta
+  matches 3 new apps/web test files plus test-count growth in the 4 drifted test files); full workspace
+  `npm run typecheck` clean; `npm run guardrails` → 17/17 green; `git diff --check` clean aside from the same
+  pre-existing CRLF file already documented in DEC-040 (untouched by this diff).
+- Alternatives rejected: porting the full consumer wiring (`api/picks/route.ts`, `api/verify/route.ts`,
+  `preview/[sport]/[slug]/page.tsx`, the 2 trust-ledger components, `load-proof-of-record.ts`) in this same
+  pass — rejected as a materially larger (~920-line), higher-risk change touching live public pick-display,
+  verify-console, and proof-of-record surfaces that deserves its own freeze contract and red-team pass rather
+  than riding in on "port the math library."
+- Reversibility: every file is either brand-new (delete to roll back) or has a clean, isolated diff against
+  HEAD (single revert commit). No migrations, no data writes, no runtime behavior change outside the 4
+  lib/market files + audit route + drawer polish + shared types file. Never merged to `main` — founder-merge-
+  only, tracked by the existing accounting PR #129.
+- Protected zones: the paywalled audit route (PRO/ELITE entitlement-adjacent) and CLV-display-adjacent new
+  formatting utilities (unwired) — mandatory red-team (completed, zero findings).
+- Files: `packages/types/src/market-values.ts` (new) + test, `apps/web/lib/market/format-clv.ts` (new) +
+  test, `project-public-market.ts` (new) + test, `format-committed-market.ts` (new) + test,
+  `apps/web/lib/market/best-line.ts` + test, `game-market-read.ts`, `pick-death-clock.ts`,
+  `load-line-shop-board.ts`, `packages/types/src/index.ts`, `apps/web/app/api/picks/[id]/audit/route.ts`,
+  `apps/web/components/picks/evidence-audit-drawer.tsx`, `apps/web/__tests__/pick-death-clock.test.ts`,
+  `market-fair-board.test.ts`, `audit-route-paywall.test.ts`.
+- Supersedes: none. Closes Wave R8 Group A. **New named follow-up: "R8 Group A2"** — wiring
+  `formatCanonicalClv`/`projectCanonicalClv`/`projectPublicMarket`/`formatCommittedMarket` into
+  `api/picks/route.ts`, `api/verify/route.ts`, `preview/[sport]/[slug]/page.tsx`, the 2 trust-ledger
+  components, and `load-proof-of-record.ts` — not yet freeze-contracted, deliberately excluded from this item.
+  With Groups A and B both DONE, Wave R8's only remaining open item is Group C, which stays OWNER_GATE (OG-008)
+  pending founder decision. R8 Group A2 and R11.5 (long-tail branch triage) are the two dependency-ready,
+  non-owner-gated items remaining in the reconciliation queue.

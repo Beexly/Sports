@@ -48,6 +48,15 @@ describe("buildH2hMarketRead", () => {
       ]),
     ).toBeNull();
   });
+
+  it("rejects decimal, cents-like, fractional, and extreme price units", () => {
+    expect(buildH2hMarketRead([
+      row("book-a", 1.91, 2.05, "2026-06-12T12:00:00Z"),
+      row("book-b", -39, 105, "2026-06-12T12:00:00Z"),
+      row("book-c", -110.5, 105, "2026-06-12T12:00:00Z"),
+      row("book-d", -7750, 5000, "2026-06-12T12:00:00Z"),
+    ])).toBeNull();
+  });
 });
 
 describe("capture-window drift — the Line Death Clock heartbeat", () => {

@@ -194,15 +194,23 @@ R5 explicitly asks for a founder decision before an agent spends git-history-sur
 R11.5 are NOT owner-gated.** R8's classification pass is DONE (DEC-042): Group A (`market-values` +
 `lib/market/*`) and Group B (cockpit selected-game playback) are both RECOVER_WHOLE; Group C (fantasy
 public gate) hit a genuine founder-vs-lineage collision and is now OG-008, correctly NOT ported.
-**Wave R8 Group B is now DONE (DEC-043)** — cockpit selected-game playback (Twin/Brain/autopsy/Studio
+**Wave R8 Group B is DONE (DEC-043)** — cockpit selected-game playback (Twin/Brain/autopsy/Studio
 projections) ported as 5 new files behind the existing `requireCockpitAdmin()` gate, zero drift, zero
 red-team findings, CI enforcement (`cockpit-page-auth.test.ts`) live-verified to auto-extend to the
-new page. C5 is therefore still NOT appropriate — real, dependency-ready, non-owner-gated work
-remains. **The next session/pass should freeze-contract and code Wave R8 Group A**
-(`market-values` canonical types + `lib/market/*` — needs a 4-file drift check on already-existing
-`lib/market/*` files against current pdcswh HEAD before its own freeze contract), as its own bounded
-FREEZE-CONTRACT-through-PR loop with mandatory red-team. R11.5's long-tail triage remains available
-as an alternative next item if R8 Group A stalls. W006 remains correctly BLOCKED
+new page. **Wave R8 Group A is now also DONE (DEC-044)** — the canonical `market-values` normalization
+module plus its 4 already-existing `lib/market/*` consumers, fixing two real live bugs (silently
+dropped pick'em/0-value spreads; a mathematically unsound MONEYLINE death-clock median), red-teamed
+zero findings across all 7 review points including the highest-risk sport-name-matching check (all 7
+seeded sports match a normalization policy branch). Group A's 3 new formatting utilities landed
+deliberately unwired — their consumer-surface wiring across 6 live public pages is recorded as a new
+named follow-up, "R8 Group A2," not yet freeze-contracted. C5 is therefore still NOT appropriate —
+real, dependency-ready, non-owner-gated work remains. **The next session/pass should freeze-contract
+Wave R8 Group A2** (wiring the 3 formatting utilities into `api/picks/route.ts`, `api/verify/route.ts`,
+`preview/[sport]/[slug]/page.tsx`, 2 trust-ledger components, and `load-proof-of-record.ts` — a
+materially larger, higher-risk change touching live public pick-display/verify/proof surfaces that
+needs its own careful contract and red-team pass). R11.5's long-tail triage remains available as an
+alternative next item if R8 Group A2 stalls. Group C stays OWNER_GATE (OG-008) pending founder
+decision. W006 remains correctly BLOCKED
 (GG-001/genesis-kernel still only on unmerged draft PR #127); W008 stays blocked on W006; W010 stays
 BLOCKED (DEC-026, dependency verified genuinely absent). Task #8's UX mandate and Task #13's full "10x
 transformation" mandate remain large, standing arcs with their next concrete slice always identified

@@ -59,7 +59,8 @@ export async function loadLineShopBoard(now = new Date()): Promise<LineShopBoard
         total: o.total,
         overPrice: o.overPrice,
         underPrice: o.underPrice,
-      }))
+      })),
+      game.sport?.name ?? "",
     );
 
     // A real shop needs at least two books, and at least one usable price.
