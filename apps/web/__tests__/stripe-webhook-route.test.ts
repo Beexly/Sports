@@ -14,6 +14,9 @@ import type Stripe from "stripe";
 const mocks = vi.hoisted(() => ({
   constructEvent: vi.fn<(body: string, sig: string, secret: string) => Stripe.Event>(),
   subscriptionsRetrieve: vi.fn<(id: string) => Promise<unknown>>(),
+  subscriptionsCancel: vi.fn<(id: string) => Promise<unknown>>(),
+  chargesRetrieve: vi.fn<(id: string) => Promise<unknown>>(),
+  invoicesRetrieve: vi.fn<(id: string) => Promise<unknown>>(),
   webhookEventFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   webhookEventCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
   subscriptionUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -24,7 +27,9 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/stripe", () => ({
   stripe: {
     webhooks: { constructEvent: mocks.constructEvent },
-    subscriptions: { retrieve: mocks.subscriptionsRetrieve },
+    subscriptions: { retrieve: mocks.subscriptionsRetrieve, cancel: mocks.subscriptionsCancel },
+    charges: { retrieve: mocks.chargesRetrieve },
+    invoices: { retrieve: mocks.invoicesRetrieve },
   },
 }));
 
@@ -100,6 +105,9 @@ describe("POST /api/webhooks/stripe", () => {
   beforeEach(() => {
     mocks.constructEvent.mockReset();
     mocks.subscriptionsRetrieve.mockReset();
+    mocks.subscriptionsCancel.mockReset();
+    mocks.chargesRetrieve.mockReset();
+    mocks.invoicesRetrieve.mockReset();
     mocks.webhookEventFindUnique.mockReset();
     mocks.webhookEventCreate.mockReset();
     mocks.subscriptionUpsert.mockReset();
@@ -810,6 +818,254 @@ describe("POST /api/webhooks/stripe", () => {
       const res = await POST(webhookRequest());
       expect(res.status).toBe(200);
       expect(mocks.subscriptionUpdateMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("charge.refunded", () => {
+    it("cancels the subscription on a FULL refund when the charge's invoice matches the customer's current subscription", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: "cus_123", invoice: "in_1" }),
+      );
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        stripeSubscriptionId: "sub_123",
+        status: "ACTIVE",
+      });
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: "active" });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.invoicesRetrieve).toHaveBeenCalledWith("in_1");
+      expect(mocks.subscriptionsCancel).toHaveBeenCalledWith("sub_123");
+    });
+
+    it("does NOT cancel on a PARTIAL refund (refunded: false), and never even resolves the invoice", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: false, amount_refunded: 500, customer: "cus_123", invoice: "in_1" }),
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.invoicesRetrieve).not.toHaveBeenCalled();
+      expect(mocks.subscriptionFindUnique).not.toHaveBeenCalled();
+      expect(mocks.subscriptionsCancel).not.toHaveBeenCalled();
+    });
+
+    it("does nothing when the charge has no invoice (not tied to any subscription, e.g. a one-time payment)", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: "cus_123", invoice: null }),
+      );
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.invoicesRetrieve).not.toHaveBeenCalled();
+      expect(mocks.subscriptionFindUnique).not.toHaveBeenCalled();
+      expect(mocks.subscriptionsCancel).not.toHaveBeenCalled();
+    });
+
+    it("does NOT cancel a DIFFERENT subscription the customer has since moved to (resubscribe race — Codex-style adversarial regression)", async () => {
+      // The refunded charge belongs to sub_OLD (a now-defunct subscription).
+      // Between the refund and this webhook's delivery, the customer
+      // independently cancelled sub_OLD and resubscribed as sub_NEW, which
+      // is genuinely active and paying. The row must NEVER be cancelled just
+      // because it happens to be on the customer at delivery time.
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: "cus_123", invoice: "in_old" }),
+      );
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_OLD" });
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        stripeSubscriptionId: "sub_NEW",
+        status: "ACTIVE",
+      });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionsRetrieve).not.toHaveBeenCalled();
+      expect(mocks.subscriptionsCancel).not.toHaveBeenCalled();
+    });
+
+    it("does nothing when there is no subscription on record for the customer", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: "cus_no_sub", invoice: "in_1" }),
+      );
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+      mocks.subscriptionFindUnique.mockResolvedValue(null);
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionsRetrieve).not.toHaveBeenCalled();
+      expect(mocks.subscriptionsCancel).not.toHaveBeenCalled();
+    });
+
+    it("does nothing when the subscription is already CANCELED on record", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: "cus_123", invoice: "in_1" }),
+      );
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        stripeSubscriptionId: "sub_123",
+        status: "CANCELED",
+      });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionsRetrieve).not.toHaveBeenCalled();
+      expect(mocks.subscriptionsCancel).not.toHaveBeenCalled();
+    });
+
+    it("does nothing when Stripe's live subscription is already canceled (re-retrieved fresh, not trusted from our DB)", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: "cus_123", invoice: "in_1" }),
+      );
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+      mocks.subscriptionFindUnique.mockResolvedValue({
+        stripeSubscriptionId: "sub_123",
+        status: "ACTIVE", // our DB is stale
+      });
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: "canceled" }); // Stripe's live truth
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionsCancel).not.toHaveBeenCalled();
+    });
+
+    it("resolves the customer id from an expanded customer object", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: { id: "cus_expanded" }, invoice: "in_1" }),
+      );
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+      mocks.subscriptionFindUnique.mockResolvedValue({ stripeSubscriptionId: "sub_123", status: "ACTIVE" });
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: "active" });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionFindUnique).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { stripeCustomerId: "cus_expanded" } }),
+      );
+    });
+
+    it("resolves an expanded invoice/subscription object, not just plain id strings", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: "cus_123", invoice: { id: "in_1" } }),
+      );
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: { id: "sub_123" } });
+      mocks.subscriptionFindUnique.mockResolvedValue({ stripeSubscriptionId: "sub_123", status: "ACTIVE" });
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: "active" });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.invoicesRetrieve).toHaveBeenCalledWith("in_1");
+      expect(mocks.subscriptionsCancel).toHaveBeenCalledWith("sub_123");
+    });
+
+    it("fails closed (500) when the Stripe cancel call itself throws, so Stripe retries", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.refunded", { id: "ch_1", refunded: true, customer: "cus_123", invoice: "in_1" }, "evt_cancel_fails"),
+      );
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+      mocks.subscriptionFindUnique.mockResolvedValue({ stripeSubscriptionId: "sub_123", status: "ACTIVE" });
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: "active" });
+      mocks.subscriptionsCancel.mockRejectedValue(new Error("stripe api unreachable"));
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(500);
+      expect(mocks.webhookEventCreate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("charge.dispute.created", () => {
+    it("re-retrieves the charge to resolve the customer and invoice, then cancels the matching subscription", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.dispute.created", { id: "dp_1", charge: "ch_1" }),
+      );
+      mocks.chargesRetrieve.mockResolvedValue({ id: "ch_1", customer: "cus_123", invoice: "in_1" });
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+      mocks.subscriptionFindUnique.mockResolvedValue({ stripeSubscriptionId: "sub_123", status: "ACTIVE" });
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: "active" });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.chargesRetrieve).toHaveBeenCalledWith("ch_1");
+      expect(mocks.subscriptionsCancel).toHaveBeenCalledWith("sub_123");
+    });
+
+    it("resolves an expanded dispute.charge object, not just a plain id string", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.dispute.created", { id: "dp_1", charge: { id: "ch_1" } }),
+      );
+      mocks.chargesRetrieve.mockResolvedValue({ id: "ch_1", customer: "cus_123", invoice: "in_1" });
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+      mocks.subscriptionFindUnique.mockResolvedValue({ stripeSubscriptionId: "sub_123", status: "ACTIVE" });
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: "active" });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.chargesRetrieve).toHaveBeenCalledWith("ch_1");
+      expect(mocks.subscriptionsCancel).toHaveBeenCalledWith("sub_123");
+    });
+
+    it("does nothing when the disputed charge has no associated customer", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.dispute.created", { id: "dp_1", charge: "ch_1" }),
+      );
+      mocks.chargesRetrieve.mockResolvedValue({ id: "ch_1", customer: null });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionFindUnique).not.toHaveBeenCalled();
+      expect(mocks.subscriptionsCancel).not.toHaveBeenCalled();
+    });
+
+    it("does NOT cancel a DIFFERENT subscription the customer has since moved to", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("charge.dispute.created", { id: "dp_1", charge: "ch_1" }),
+      );
+      mocks.chargesRetrieve.mockResolvedValue({ id: "ch_1", customer: "cus_123", invoice: "in_old" });
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_OLD" });
+      mocks.subscriptionFindUnique.mockResolvedValue({ stripeSubscriptionId: "sub_NEW", status: "ACTIVE" });
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.subscriptionsCancel).not.toHaveBeenCalled();
+    });
+
+    it("processing a dispute then a refund for the same already-cancelled subscription only cancels once (idempotent convergence)", async () => {
+      // Two independent events for the same customer/subscription arriving in
+      // sequence. The first cancels; the second must see the now-CANCELED
+      // row (or Stripe's now-canceled live state) and no-op rather than
+      // erroring or double-cancelling.
+      mocks.chargesRetrieve.mockResolvedValue({ id: "ch_1", customer: "cus_123", invoice: "in_1" });
+      mocks.invoicesRetrieve.mockResolvedValue({ subscription: "sub_123" });
+
+      mocks.constructEvent.mockReturnValue(stripeEvent("charge.dispute.created", { id: "dp_1", charge: "ch_1" }, "evt_dispute"));
+      mocks.subscriptionFindUnique.mockResolvedValue({ stripeSubscriptionId: "sub_123", status: "ACTIVE" });
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: "active" });
+      expect((await POST(webhookRequest())).status).toBe(200);
+      expect(mocks.subscriptionsCancel).toHaveBeenCalledTimes(1);
+
+      // The customer.subscription.deleted event that Stripe would fire from
+      // that cancellation isn't simulated here (it's already covered by the
+      // existing describe("customer.subscription.deleted") tests) -- instead
+      // this models the DB having already converged by the time the second
+      // event arrives, which is the realistic steady state a moment later.
+      mocks.constructEvent.mockReturnValue(stripeEvent("charge.refunded", { id: "ch_2", refunded: true, customer: "cus_123", invoice: "in_1" }, "evt_refund"));
+      mocks.subscriptionFindUnique.mockResolvedValue({ stripeSubscriptionId: "sub_123", status: "CANCELED" });
+      expect((await POST(webhookRequest())).status).toBe(200);
+      expect(mocks.subscriptionsCancel).toHaveBeenCalledTimes(1); // still just once
     });
   });
 

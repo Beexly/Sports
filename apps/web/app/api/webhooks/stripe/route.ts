@@ -183,10 +183,113 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       break;
     }
 
+    case "charge.refunded": {
+      const charge = event.data.object as Stripe.Charge;
+      // Only a FULL refund ends the subscription. A partial refund is a
+      // goodwill credit, not grounds to end service -- the refund POLICY
+      // itself (unconditional vs. discretionary) is a separate, still-open
+      // founder decision (LB-003). This only reacts to a refund that already
+      // happened by not continuing to bill/serve after the full charge was
+      // returned -- a correctness fix, not a policy call.
+      if (charge.refunded && charge.customer) {
+        const customerId = typeof charge.customer === "string" ? charge.customer : charge.customer.id;
+        const subscriptionId = await resolveSubscriptionIdForCharge(charge);
+        await cancelSubscriptionForRevokedCharge(customerId, subscriptionId, `charge ${charge.id} fully refunded`);
+      }
+      break;
+    }
+
+    case "charge.dispute.created": {
+      // A chargeback: the money is now contested/frozen. Re-retrieve the
+      // charge fresh (same "never trust the embedded snapshot" discipline as
+      // the subscription handlers above) to resolve its customer.
+      const dispute = event.data.object as Stripe.Dispute;
+      const chargeId = typeof dispute.charge === "string" ? dispute.charge : dispute.charge?.id;
+      if (chargeId) {
+        const charge = await stripe.charges.retrieve(chargeId);
+        if (charge.customer) {
+          const customerId = typeof charge.customer === "string" ? charge.customer : charge.customer.id;
+          const subscriptionId = await resolveSubscriptionIdForCharge(charge);
+          await cancelSubscriptionForRevokedCharge(customerId, subscriptionId, `dispute ${dispute.id} created on charge ${chargeId}`);
+        }
+      }
+      break;
+    }
+
     default:
       // Unhandled event type — ignore
       break;
   }
+}
+
+/**
+ * Resolves the subscription id a charge actually belongs to (via its
+ * invoice), or null if the charge isn't tied to any subscription (e.g. a
+ * one-time payment). `Charge.invoice` is a plain id in a webhook payload, not
+ * an expanded object, so this needs one extra retrieve to read
+ * `Invoice.subscription`.
+ */
+async function resolveSubscriptionIdForCharge(charge: Stripe.Charge): Promise<string | null> {
+  if (!charge.invoice) return null;
+  const invoiceId = typeof charge.invoice === "string" ? charge.invoice : charge.invoice.id;
+  const invoice = await stripe.invoices.retrieve(invoiceId);
+  if (!invoice.subscription) return null;
+  return typeof invoice.subscription === "string" ? invoice.subscription : invoice.subscription.id;
+}
+
+/**
+ * Cancels the customer's live Stripe subscription in reaction to a refund or
+ * dispute that already happened. Deliberately does NOT write to our DB here:
+ * the cancellation itself fires a `customer.subscription.deleted` event,
+ * which the existing handler above (and the reconciliation backstop) already
+ * converge to FREE/CANCELED -- keeping exactly one entitlement-write path
+ * rather than duplicating it for a second trigger.
+ */
+async function cancelSubscriptionForRevokedCharge(
+  customerId: string,
+  expectedSubscriptionId: string | null,
+  reason: string,
+): Promise<void> {
+  if (!expectedSubscriptionId) {
+    // The charge isn't tied to any subscription -- nothing to cancel.
+    return;
+  }
+
+  const existing = await db.subscription.findUnique({
+    where: { stripeCustomerId: customerId },
+    select: { stripeSubscriptionId: true, status: true },
+  });
+  if (!existing?.stripeSubscriptionId || existing.status === "CANCELED") {
+    // Nothing on record to cancel, or already terminal.
+    return;
+  }
+
+  // The customer's row may have moved on to a DIFFERENT, unrelated
+  // subscription since this charge was created -- Stripe delivers webhooks
+  // unordered, and a customer can cancel + resubscribe between the refund
+  // and this event's delivery (the same threat model the out-of-order and
+  // superseded-subscription guards in syncSubscription above exist for).
+  // Only ever cancel the subscription THIS charge actually belongs to, never
+  // "whatever happens to be on the row right now" -- otherwise a refund on a
+  // long-dead subscription could cancel a brand-new, currently-paying one.
+  if (existing.stripeSubscriptionId !== expectedSubscriptionId) {
+    console.warn(
+      `[stripe] ${reason}: charge belongs to subscription ${expectedSubscriptionId}, but customer ${customerId}'s ` +
+        `current row tracks ${existing.stripeSubscriptionId} -- not cancelling (likely a resubscribe since the charge)`,
+    );
+    return;
+  }
+
+  // Re-retrieve fresh rather than trust any embedded snapshot: a dispute or
+  // refund can arrive after the member independently cancelled, in which
+  // case there's nothing left to cancel.
+  const current = await stripe.subscriptions.retrieve(existing.stripeSubscriptionId);
+  if (current.status === "canceled") {
+    return;
+  }
+
+  console.warn(`[stripe] cancelling subscription ${existing.stripeSubscriptionId} for customer ${customerId}: ${reason}`);
+  await stripe.subscriptions.cancel(existing.stripeSubscriptionId);
 }
 
 async function syncSubscription(stripeSubscription: Stripe.Subscription): Promise<void> {
