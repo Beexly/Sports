@@ -243,11 +243,23 @@ missing most of this session's own accumulated work):
   (has a prompt-caching optimization `codex` lacks). No separate "Brain/autopsy" files found under those
   names; the closest concept (`lossAutopsy`) is already covered by this session's own landed W004 work.
 
-**Next bounded step:** freeze-contract Group A2 (wire the 3 unwired formatting utilities into
-`api/picks/route.ts`, `api/verify/route.ts`, `preview/[sport]/[slug]/page.tsx`, 2 trust-ledger components, and
-`load-proof-of-record.ts` — a materially larger, higher-risk change touching live public pick-display/verify/
-proof surfaces that needs its own careful contract and red-team pass, deliberately not bundled into Group A).
-Group C stays OWNER_GATE until the founder resolves OG-008.
+**Group A2 investigated, reclassified (2026-07-18, DEC-045).** A freeze-contract attempt on the "wire the 3
+formatting utilities into 6 files" follow-up read the actual `git diff HEAD FETCH_HEAD` content (not just
+line-count stats) and found it is not a clean additive port. `api/picks/route.ts` bundles the market-values
+wiring with a reversion of this session's own already-shipped DEC-040/041 outage-gate fix and a swap of the
+calibration-display mechanism — both protected-zone changes needing founder input. `load-proof-of-record.ts`
+restructures the public CLV/proof JSON contract; `pick-ledger-row.tsx` (new) depends on that restructuring.
+**`api/picks/route.ts` + `api/verify/route.ts` + their dependents are now OWNER_GATE (OG-009)** — see
+`DECISION_REGISTER.md`. `verify-console.tsx` (depends on `api/verify/route.ts`'s shape) and
+`preview/[sport]/[slug]/page.tsx` (keyword-scanned clean of calibration/CLV terms, but not yet fully read
+line-by-line) remain plausible RECOVER_WHOLE candidates for a future, narrower, individually-scoped freeze
+contract — not bundled with the owner-gated pieces.
+
+**Next bounded step:** R11.5 (long-tail branch triage) is the next dependency-ready, non-owner-gated item. A
+future session could also attempt a solo freeze contract for `api/verify/route.ts`'s separable
+`relationMatchesPayload` proof-integrity idea (without the calibration bundling), or for
+`preview/[sport]/[slug]/page.tsx` alone once fully read. Group C stays OWNER_GATE until the founder resolves
+OG-008; Group A2's core files stay OWNER_GATE until the founder resolves OG-009.
 
 ## Wave R9 — Validate #122 in the protected migration lane
 
@@ -291,7 +303,7 @@ R4    Done (this pass)
 R5    Founder decision on literal PR-splitting of #129 vs. existing per-workstream docs
 R6    #121 rebase pending founder merge-order call
 R7    Blocked on #127
-R8    Groups A+B DONE (DEC-043/044) — Group A2 (consumer wiring) next; Group C OWNER_GATE (OG-008)
+R8    Groups A+B DONE (DEC-043/044). Group A2 core files OWNER_GATE (OG-009, DEC-045); Group C OWNER_GATE (OG-008)
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   Deletion receipts for the 12 proven-ancestor branches

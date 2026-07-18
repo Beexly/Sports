@@ -2270,3 +2270,98 @@ stitching) — recorded here so no backtest can slip past it.
   With Groups A and B both DONE, Wave R8's only remaining open item is Group C, which stays OWNER_GATE (OG-008)
   pending founder decision. R8 Group A2 and R11.5 (long-tail branch triage) are the two dependency-ready,
   non-owner-gated items remaining in the reconciliation queue.
+  **Correction (see DEC-045): "Group A2" as described above was scoped from `git diff --stat` line counts
+  only, before reading the actual diff content. A subsequent freeze-contract attempt read the real diffs and
+  found this framing wrong — Group A2 is not a simple wiring task and is now OWNER_GATE (OG-009) for its two
+  highest-risk files.**
+
+## DEC-045 — Recovery Wave R8, Group A2 investigation: NOT a simple wiring task, new OWNER_GATE (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: attempted freeze contract for "R8 Group A2" (the follow-up DEC-044 recorded for wiring the 3
+  unwired market-values formatting utilities into 6 live public surfaces). This entry corrects that
+  framing and records what was actually found.
+- What happened: DEC-044 scoped Group A2 from `git diff --stat` line counts against the 6 files
+  (`api/picks/route.ts`, `api/verify/route.ts`, `preview/[sport]/[slug]/page.tsx`, `pick-ledger-row.tsx`
+  [new], `verify-console.tsx`, `load-proof-of-record.ts`) without reading their actual content — a real
+  process gap, caught and corrected here rather than compounded by proceeding blind. When this session
+  began Group A2's freeze contract and actually read each diff (`git diff HEAD FETCH_HEAD -- <path>`), it
+  found that at least 3 of the 6 files bundle the market-values wiring together with substantial,
+  independently-evolved changes to protected zones — not a clean additive port:
+  - **`apps/web/app/api/picks/route.ts`** (the flagship public picks endpoint): the historical branch's
+    version REPLACES this session's own already-shipped, already-red-teamed DEC-040/041 outage-gate fix
+    (`outageGateResponse` from `lib/data-reliability/outage-gate.ts`, closing Wave R0.6) with a different,
+    older mechanism (`backendOutageResponse` from `lib/data-reliability/public-freshness-gate.ts`), and
+    flips the stale-data-check failure posture from fail-OPEN (pdcswh's current, deliberate choice — "a
+    transient blip must not black out a fresh surface") to fail-CLOSED. It also swaps the confidence-display
+    mechanism from pdcswh's `honestConfidence`/`getPublicCalibrator` (`lib/calibration/public-confidence`)
+    to a different `committedProbabilityDisplay` (`lib/calibration/honest-confidence`) reading directly off
+    `proofReceipt.modelProb` — a genuine calibration-semantics change, which `CLAUDE.md` explicitly requires
+    an owner gate for ("change ... calibration ... without the required owner gate"). It also adds unrelated
+    new capability (per-sport freshness filtering, a more honest daily-limit-count mechanism) mixed into the
+    same diff.
+  - **`apps/web/app/api/verify/route.ts`**: adds a genuinely valuable proof-integrity strengthening
+    (`relationMatchesPayload` — checks the hash-covered payload's `pickId`/`gameId`/`sport` actually match
+    the DB relation the receipt is bound to, closing a "hash matches but relation was swapped" gap) bundled
+    with the market-values wiring — proof-protected-zone territory needing its own dedicated red-team, not a
+    drive-by port.
+  - **`apps/web/lib/proof/load-proof-of-record.ts`**: restructures the public `ProofPickRow` contract —
+    `clvVerdict`/`clvValue` become a nested `clv: ProofClvRead | null` (via `projectCanonicalClv`), and
+    `consensusAtSettle`/`modelVsMarketPp` (an at-publish-time model-vs-market disagreement metric) are
+    replaced entirely by a different concept, `latestMarketConsensus` — a public-facing CLV/proof JSON
+    contract change, not additive wiring.
+  - **`apps/web/components/trust-ledger/pick-ledger-row.tsx`** (new file, missing entirely from `pdcswh`):
+    tightly coupled to `load-proof-of-record.ts`'s new shape (`row.clv`, `row.publicMarket`,
+    `row.clv.capturedAt`) — cannot be ported independently of that file's restructuring.
+  - **`apps/web/components/trust-ledger/verify-console.tsx`**: the one genuinely clean, additive,
+    self-contained diff of the six — but it consumes `committed.selection` instead of `committed.line`,
+    making it dependent on `api/verify/route.ts`'s shape change, not portable alone.
+  - **`apps/web/app/preview/[sport]/[slug]/page.tsx`**: keyword-scanned for `clv`/`consensus`/`calibrat`
+    with no hits beyond `projectPublicMarket` itself — the most likely candidate to be genuinely isolated,
+    but not yet fully read line-by-line; not confirmed safe.
+- Decision: **Group A2, as a single 6-file bundle, is NOT executed.** `api/picks/route.ts` and
+  `api/verify/route.ts` (and by extension `load-proof-of-record.ts` and `pick-ledger-row.tsx`, which depend
+  on the same restructured shapes) are reclassified **OWNER_GATE (OG-009)** — specifically the
+  calibration-mechanism swap and the outage-gate-reversion in `api/picks/route.ts`, which this agent has no
+  authority to resolve unilaterally per `CLAUDE.md`'s explicit calibration/CLV/proof protected-zone rule.
+  `verify-console.tsx` and `preview/[sport]/[slug]/page.tsx` remain plausible RECOVER_WHOLE candidates but
+  need their own individually-scoped freeze contracts (the former blocked on `api/verify/route.ts`'s
+  disposition; the latter needs a full line-by-line read, not yet done) — not bundled with the owner-gated
+  pieces.
+- Evidence: `git diff HEAD FETCH_HEAD -- <each of the 6 paths>` read in full or keyword-scanned as described
+  above; `git status --short` confirms zero working-tree changes from this investigation (no code was
+  touched — this is a pure scoping/discovery entry).
+- Alternatives rejected: proceeding to apply the 6-file diff bundle as DEC-044 originally implied — rejected
+  outright once the content (not just the line-count stat) was read, since it would have silently reverted
+  a freshly-shipped, freshly-red-teamed fix (DEC-040/041) and changed calibration-display semantics without
+  founder input.
+- Reversibility: N/A — no code changed.
+- Protected zones: calibration (`CLAUDE.md` explicit owner-gate rule), CLV display contract, proof
+  verification logic, and this session's own already-shipped outage-gate fix.
+- Files: none changed. This is a documentation-only, scoping-correction entry.
+
+### New owner gate — OG-009 (Group A2's `api/picks/route.ts` + `api/verify/route.ts` cluster)
+
+- **Decision needed:** should the platform adopt the historical `codex/gse-frontier-recovery-2026-07-13`
+  branch's confidence-calibration display mechanism (`committedProbabilityDisplay` reading
+  `proofReceipt.modelProb` directly) in place of `pdcswh`'s current `honestConfidence`/`getPublicCalibrator`
+  audited-calibrator mechanism on the public `/api/picks` endpoint? Separately: should the stale-data-check
+  failure posture on `/api/picks` change from fail-OPEN to fail-CLOSED, and should this session's own
+  DEC-040/041 outage-gate fix be replaced by the older `backendOutageResponse` mechanism?
+- **Why founder:** `CLAUDE.md` explicitly requires an owner gate before changing calibration, CLV, or proof
+  semantics. The stale-data fail-open/fail-closed posture and the choice between two outage-gate mechanisms
+  are both live-correctness/reliability decisions on the platform's single highest-traffic public endpoint —
+  not something an autonomous agent should resolve by picking whichever branch happens to be older or newer.
+- **Safe default:** do nothing. `pdcswh`'s current `honestConfidence`/`getPublicCalibrator` calibration
+  display, fail-open stale-data posture, and DEC-040/041 `outageGateResponse` outage handling all remain
+  exactly as they are — already shipped, already red-teamed, already closing Wave R0.6.
+- **Work around gate:** `verify-console.tsx` and `preview/[sport]/[slug]/page.tsx` can still be investigated
+  and potentially ported independently once their own dependencies are confirmed non-owner-gated (see
+  Decision above for `verify-console.tsx`'s blocker). `api/verify/route.ts`'s `relationMatchesPayload`
+  proof-integrity strengthening is a genuinely separable, non-calibration idea that could be extracted and
+  freeze-contracted on its own, without the market-values/calibration bundling — a future session could
+  attempt that narrower slice.
+- **Re-entry condition:** founder confirms (a) which calibration-display mechanism is canonical going
+  forward, (b) whether `/api/picks`'s stale-data check should fail open or closed, and (c) which outage-gate
+  mechanism (`outageGateResponse` vs `backendOutageResponse`) is canonical — or explicitly approves porting
+  the historical branch's version wholesale after reviewing this entry's evidence.

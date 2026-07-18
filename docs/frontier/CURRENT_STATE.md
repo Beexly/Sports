@@ -175,6 +175,11 @@
   admin-gate commit from `codex/gse-frontier-recovery-2026-07-13`, and how to reconcile it with `pdcswh`'s own
   later, independent removal of a similarly-shaped gate for a documented redirect-loop bug. Safe default: do
   nothing — `pdcswh`'s current per-page honest-state design stays as-is.
+- OG-009 (DEC-045): whether to adopt `codex/gse-frontier-recovery-2026-07-13`'s confidence-calibration
+  display mechanism, stale-data fail-open/fail-closed posture, and outage-gate mechanism on `/api/picks`
+  in place of `pdcswh`'s own already-shipped `honestConfidence`/`getPublicCalibrator` calibration, fail-open
+  posture, and DEC-040/041 `outageGateResponse` outage handling. Safe default: do nothing — `pdcswh`'s
+  current mechanisms (already red-teamed, already closing Wave R0.6) stay as-is.
 
 ## Next action
 
@@ -202,15 +207,23 @@ module plus its 4 already-existing `lib/market/*` consumers, fixing two real liv
 dropped pick'em/0-value spreads; a mathematically unsound MONEYLINE death-clock median), red-teamed
 zero findings across all 7 review points including the highest-risk sport-name-matching check (all 7
 seeded sports match a normalization policy branch). Group A's 3 new formatting utilities landed
-deliberately unwired — their consumer-surface wiring across 6 live public pages is recorded as a new
-named follow-up, "R8 Group A2," not yet freeze-contracted. C5 is therefore still NOT appropriate —
-real, dependency-ready, non-owner-gated work remains. **The next session/pass should freeze-contract
-Wave R8 Group A2** (wiring the 3 formatting utilities into `api/picks/route.ts`, `api/verify/route.ts`,
-`preview/[sport]/[slug]/page.tsx`, 2 trust-ledger components, and `load-proof-of-record.ts` — a
-materially larger, higher-risk change touching live public pick-display/verify/proof surfaces that
-needs its own careful contract and red-team pass). R11.5's long-tail triage remains available as an
-alternative next item if R8 Group A2 stalls. Group C stays OWNER_GATE (OG-008) pending founder
-decision. W006 remains correctly BLOCKED
+deliberately unwired — their consumer-surface wiring across 6 live public pages was recorded as a new
+named follow-up, "R8 Group A2." **That framing was corrected in DEC-045**: a freeze-contract attempt on
+Group A2 read the actual diffs (not just `git diff --stat` line counts) and found that at least 3 of the
+6 files bundle the market-values wiring together with substantial, independently-evolved changes to
+protected zones — `api/picks/route.ts`'s historical version would silently REVERT this session's own
+already-shipped DEC-040/041 outage-gate fix and swap in a different calibration-display mechanism;
+`load-proof-of-record.ts` restructures the public CLV/proof JSON contract; `pick-ledger-row.tsx` depends
+on that restructuring. **Group A2's `api/picks/route.ts` + `api/verify/route.ts` cluster (and its
+dependents `load-proof-of-record.ts`/`pick-ledger-row.tsx`) is now OWNER_GATE (OG-009)** — the
+calibration-mechanism and outage-gate-mechanism choices are not this agent's to make per `CLAUDE.md`'s
+explicit protected-zone rule. `verify-console.tsx` and `preview/[sport]/[slug]/page.tsx` remain plausible
+RECOVER_WHOLE candidates but need their own individually-scoped freeze contracts (not yet done). C5 is
+therefore still NOT appropriate — R11.5's long-tail branch triage is the next dependency-ready,
+non-owner-gated item; a future session could also attempt `api/verify/route.ts`'s separable
+`relationMatchesPayload` proof-integrity idea or a solo `preview/[sport]/[slug]/page.tsx` read, each as
+its own narrow freeze contract. Group C stays OWNER_GATE (OG-008) pending founder decision; Group A2's
+core files stay OWNER_GATE (OG-009) pending founder decision. W006 remains correctly BLOCKED
 (GG-001/genesis-kernel still only on unmerged draft PR #127); W008 stays blocked on W006; W010 stays
 BLOCKED (DEC-026, dependency verified genuinely absent). Task #8's UX mandate and Task #13's full "10x
 transformation" mandate remain large, standing arcs with their next concrete slice always identified
