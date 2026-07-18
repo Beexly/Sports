@@ -4,7 +4,7 @@
  * Sits between the hero and the signal-preview-queue. Three explicit
  * promises that lower signup friction:
  *  1. No credit card required for free.
- *  2. 7-day refund window on every paid plan.
+ *  2. 3-day refund window on every paid plan.
  *  3. One inbox — replies go to the founder personally.
  *
  * No banned phrases. Each promise maps to a fact already enforced in
@@ -17,7 +17,7 @@ const PROMISES = [
     body: "Google sign-in and you're in. The Free tier never asks for billing.",
   },
   {
-    title: "7-day refund window.",
+    title: "3-day refund window.",
     body: "Every paid plan. Cancel from your dashboard, no questions, no churn forms.",
   },
   {

@@ -2686,3 +2686,95 @@ stitching) — recorded here so no backtest can slip past it.
   guard.test.ts`, `apps/web/lib/fantasy/dfs-exact.ts`, `apps/web/lib/fantasy/dfs-optimizer-edge.ts`.
 - Supersedes: none. Closes the `consensus-accuracy-engine` item from DEC-047 and both named RECOVER_WHOLE
   candidates. Task #71 (8 not-yet-checked small branches) is the next R11.5 follow-on item.
+
+## DEC-050 — Recovery Wave R11.5 follow-on: 8 remaining small branches triaged; live refund-window
+  contradiction found and fixed (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: closes out the 8-branch tail named at the end of DEC-047/DEC-049 — the last unchecked slice of
+  the 43-branch recency subset before the long-tail triage totals can be updated.
+- Method: real evidence for every branch — `git diff --name-status --diff-filter=A origin/pdcswh origin/<branch>`
+  to find novel files, then direct content reads of anything novel (never name-pattern inference alone).
+- **5 branches ARCHIVE_ONLY, zero recoverable content**: `claude/odds-freshness-diagnostics`,
+  `claude/night-shift`, `claude/launch-review-fixes`, `claude/humanize-polish`,
+  `claude/design-critique-zd94h2`. Each has exactly zero novel files vs `pdcswh` beyond the same two stale
+  `handoff/codex/typecheck-prisma-baseline/*.log` run-log artifacts that appear on nearly every long-tail
+  branch checked this wave (confirmed noise, not evidence of anything unrecovered).
+- **`claude/freshness-badge` — ARCHIVE_ONLY.** One novel file, `handoff/claude/overnight-2026-07-01/
+  MORNING-BRIEF.md` — a dated overnight handoff status note, not a code asset. Read in full; nothing in it
+  describes work absent from `pdcswh`.
+- **`claude/intraday-odds-scheduler` — NEW OWNER_GATE candidate, not landed.** One novel file:
+  `.github/workflows/refresh-odds-schedule.yml`, a well-built GitHub Actions scheduled workflow that would
+  add 6 intraday crons (9am-7:30pm ET) hitting the live production `/api/cron/refresh-odds` route with a
+  `CRON_SECRET` bearer token, on top of Vercel's existing single daily cron, so published picks price off
+  lines no more than ~2-3h old instead of up to 24h old, with the workflow's own comment noting
+  `ODDS_FRESHNESS_MAX_HOURS` could then be tightened from 12 toward 4. The design fails closed (skips with
+  exit 0 if the repo secret is unset; only transport/auth failures fail the job) and touches no product code.
+  Not landed anyway: this is CI/CD pipeline configuration with a real production cost/behavior footprint (6x
+  the daily call volume to The Odds API, a new repo secret to provision and rotate, and a cron cadence
+  decision that only takes effect once merged to the default branch — GitHub Actions `schedule` triggers
+  never fire on a non-default branch, so nothing activates by landing this on `pdcswh`, but it is still an
+  infrastructure decision, not a code-correctness one). Same treatment as `claude/crypto-payments`
+  (DEC-047): recorded here with full content for founder review, not evaluated further by this campaign.
+- **`claude/galaxy-sports-edge-audit-outqdi` — the one branch with real, actionable content.** Its novel
+  file `PUBLIC_FINDINGS_FOR_GROK.md` is a self-audit naming 3 specific "launch-blocker" claims with
+  file:line citations. Each was independently re-verified against live `pdcswh` HEAD rather than trusted:
+  - Blocker 1 (a stale/incorrect claim about the free-tier pick count) — **already fixed** on `pdcswh`;
+    current code matches the audit's own recommended fix.
+  - Blocker 3 (a claim about missing loading-state handling on a specific dashboard surface) — **already
+    fixed** on `pdcswh`; the named component already has the honest loading/empty/error states the audit
+    asked for.
+  - **Blocker 2 — genuinely still live: a Terms/pricing refund-policy contradiction.** `/pricing`,
+    `tier-gate-panel.tsx`, `/faq`, and `trust-claims.ts`'s canonical approved-claims registry all promised an
+    unconditional 3-day money-back guarantee, while `/terms` §5 said refunds were "at our discretion" with
+    no fixed window and said nothing about the founding-rate grandfather guarantee prominently promised on
+    `/pricing`. Grep-sweeping for the underlying "3-day vs 7-day" number after the initial fix surfaced the
+    contradiction was wider than the one file the audit named: `tier-gate-panel.tsx:108`,
+    `start-in-sixty.tsx` (dead/unimported component, fixed anyway to prevent a future landmine — both its
+    rendered title and its header comment), and `trust-claims.ts`'s `pricing.money-back-window` registry
+    entry all still said "7-day." Resolved which number is authoritative using the registry's own
+    `LAST_REVIEW = "2026-05-18"` timestamp (older than every other date signal touching this claim) plus the
+    preponderance of "3-day" mentions on `/pricing` itself, the most purchase-decision-critical surface —
+    concluding "3-day" is current and every "7-day" instance is stale drift, not the reverse.
+- Contract frozen, then code: rewrote `/terms` §5 from one paragraph into three — (1) the existing
+  auto-renewal/cancellation text, unchanged in substance; (2) an explicit, unconditional 3-day money-back
+  window matching `/pricing`/`/faq`, discretionary only outside that window; (3) the founding-rate
+  grandfather guarantee, newly codified in the Terms, with a "without a lapse in billing" caveat verified
+  (not assumed) against `price-ids.ts`'s actual Stripe mechanism: `checkoutPriceId()` always returns the
+  CURRENT price at checkout time, and only an EXISTING subscription's original price id is recognized as
+  grandfathered by `tierForPriceId()` — so a canceled-then-resubscribed customer genuinely would re-enter at
+  the current, non-founding price, making the caveat a true statement of the system's actual behavior, not
+  invented language. Fixed the 3 additional live "7-day" instances found via the grep sweep (above). Bumped
+  `legal-dates.ts`'s `TERMS_LAST_UPDATED` from `2026-06-20` to `2026-07-18` with a doc comment naming exactly
+  what legal text changed and why, per the file's own governing rule that this constant is a static,
+  hand-maintained record of genuine text revisions, never render-time. Updated `legal-dates.test.ts`'s 4
+  pinned date assertions to match (`PRIVACY_LAST_UPDATED`-related assertions untouched — that document did
+  not change).
+- Independent review: one `gse-red-team` pass on `/terms`, stalled twice with zero synthesis output (unlike
+  every earlier stall this session, which returned partial text) — escalated via the standing agent-stall
+  protocol (gentle nudge, then an explicit "STOP investigating, call ReportFindings now" directive), which
+  produced a synthesis on the third resume. **2 CONFIRMED findings, both fixed** (the live `tier-gate-panel.tsx`
+  "7-day" contradiction and the un-bumped `TERMS_LAST_UPDATED`, both described above) and **1 PLAUSIBLE
+  finding** (the "lapse in billing" caveat's factual grounding), independently self-verified as accurate by
+  reading `price-ids.ts`/`pricing-phases.ts` directly rather than taken on the red-team's word alone.
+- Evidence: `cd apps/web && npx tsc --noEmit` clean; `npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0`
+  clean (0 errors); targeted tests (`legal-dates.test.ts`, `no-em-dash-copy.test.ts`,
+  `public-copy-scanner.test.ts`, `trust-claims.test.ts`, `numeric-performance-claims.test.ts`) 64/64 green;
+  full `apps/web` suite 8725/8725 green across 647 files; `npm run guardrails` 17/17 green; `npm run build`
+  succeeded; `git diff --check` clean.
+- Alternatives rejected: fixing only the one line the audit document named — rejected once the grep sweep
+  showed the same false claim live in 3 more places, which would have landed a fix that still contradicted
+  itself elsewhere; treating the grandfather-guarantee addition as scope creep to defer — rejected because
+  `/pricing` already prominently promises it and the Terms' total silence on it was itself part of the same
+  cross-page contradiction the audit was flagging, not a separate feature.
+- Reversibility: 6 files touched, all textual (Terms copy, 2 UI copy strings, 1 trust-claims registry string,
+  1 date constant + its test) — single revert commit undoes the whole item. No migrations, no schema change,
+  no new routes.
+- Protected zones: public legal/pricing copy and the approved-claims registry are both protected surfaces;
+  mandatory red-team completed per policy.
+- Files: `apps/web/app/terms/page.tsx`, `apps/web/components/pricing/tier-gate-panel.tsx`,
+  `apps/web/components/home/start-in-sixty.tsx`, `apps/web/lib/trust-claims.ts`,
+  `apps/web/lib/legal-dates.ts`, `apps/web/__tests__/legal-dates.test.ts`.
+- Supersedes: none. Closes task #71 and Wave R11.5's 8-branch tail. `claude/intraday-odds-scheduler`
+  remains an open OWNER_GATE candidate (not a blocker on anything else). Remaining long-tail branches beyond
+  the 73 now triaged (of 138 total per `BRANCH_PR_LEDGER.json`) are the next available R11.5 slice.

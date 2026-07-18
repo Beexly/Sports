@@ -344,19 +344,41 @@ before ruling," not inherited from the scout's report.
   the doc, not the behavior, since the raw/unweighted transparency framing is legitimate). The lint-gap
   finding also surfaced 3 more pre-existing lint errors in already-committed DEC-046/DEC-048 work, fixed
   retroactively in the same pass — see DEC-049 for the full record.
-- **8 branches not yet checked** (2-3 novel files each, cheap for a future continuation): `intraday-odds-
-  scheduler`, `galaxy-sports-edge-audit-outqdi`, `freshness-badge`, `odds-freshness-diagnostics`, `night-
-  shift`, `launch-review-fixes`, `humanize-polish`, `design-critique-zd94h2`.
+- **8 branches DONE (2026-07-18, DEC-050) — the final slice of this subset.** Real
+  `diff --name-status --diff-filter=A` evidence per branch, not name-pattern inference:
+  - **5 ARCHIVE_ONLY, zero recoverable content**: `odds-freshness-diagnostics`, `night-shift`,
+    `launch-review-fixes`, `humanize-polish`, `design-critique-zd94h2` — each has zero novel files vs
+    `pdcswh` beyond the same two stale `handoff/codex/typecheck-prisma-baseline/*.log` artifacts seen on
+    nearly every long-tail branch this wave.
+  - **`freshness-badge` — ARCHIVE_ONLY.** One novel file, a dated overnight `MORNING-BRIEF.md` handoff note;
+    read in full, nothing describes work absent from `pdcswh`.
+  - **`intraday-odds-scheduler` — NEW OWNER_GATE candidate, not landed.** One novel file: a well-built
+    GitHub Actions workflow adding 6 intraday odds-refresh crons hitting live production, fails closed if
+    its repo secret is unset. Real production cost/cadence decision (CI/CD pipeline config, external API
+    call volume) — recorded with full content in DEC-050 for founder review, same treatment as
+    `crypto-payments` (DEC-047).
+  - **`galaxy-sports-edge-audit-outqdi` — the one branch with real content.** Its `PUBLIC_FINDINGS_FOR_GROK.md`
+    self-audit named 3 launch-blockers; independently re-verified against live `pdcswh`: 2 already fixed,
+    1 (a Terms-vs-pricing refund-window contradiction, "at our discretion" vs. everywhere else's
+    unconditional 3-day guarantee, plus a missing founding-rate grandfather clause) genuinely still live.
+    Fixed — and a grep sweep for the underlying "3-day vs 7-day" number found the same stale claim live in
+    3 more places (`tier-gate-panel.tsx`, dead-code `start-in-sixty.tsx`, and `trust-claims.ts`'s canonical
+    approved-claims registry) — all fixed coherently in the same pass, plus the required
+    `TERMS_LAST_UPDATED` bump. Red-team: 2 confirmed findings (both above), 1 plausible finding
+    self-verified true by reading the actual Stripe price-persistence mechanism. Full detail in DEC-050.
 
 **Process note (all slices):** a `gse-scout` agent dispatched for the first slice stalled twice and its
 eventual report contained one factually-backwards claim, caught via direct re-verification. The second slice
 was done via direct `git` commands throughout (no agent dispatch). The `dfs-optimizer-edge` and `consensus-
 accuracy-engine` follow-ons each needed one red-team resume via the standing agent-stall protocol; the latter
 also surfaced a genuine gap in this session's own verification loop (no full-workspace lint run), fixed
-retroactively across 3 already-pushed files.
+retroactively across 3 already-pushed files. The final 8-branch slice's red-team stalled twice with zero
+output at all (a new failure mode vs. every earlier stall, which returned partial text) before succeeding on
+a third resume under the same protocol.
 
-**Next slice:** the 8 not-yet-checked small branches; remaining long-tail branches beyond the 65 now triaged
-(of 138 total long-tail entries per `BRANCH_PR_LEDGER.json`).
+**Next slice:** remaining long-tail branches beyond the 73 now triaged (of 138 total long-tail entries per
+`BRANCH_PR_LEDGER.json`). `intraday-odds-scheduler` stays open as a standing OWNER_GATE candidate, not a
+blocker.
 
 ## Recommended order (refreshed)
 
@@ -376,5 +398,7 @@ R8    Groups A+B DONE (DEC-043/044). Group A2 core files OWNER_GATE (OG-009, DEC
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   Deletion receipts for the 12 proven-ancestor branches
-R11.5 65/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047); dfs-optimizer-edge + consensus-accuracy-engine next
+R11.5 73/138 long-tail triaged (magical-volta DEC-046, recency subset DEC-047, dfs-optimizer-edge DEC-048,
+      consensus-accuracy-engine DEC-049, final 8-branch slice DEC-050 incl. live refund-window fix);
+      intraday-odds-scheduler open OWNER_GATE candidate; next: remaining long-tail beyond 73
 ```
