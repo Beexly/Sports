@@ -6,21 +6,24 @@ This file tells coding and research agents where every kind of information lives
 
 ```text
 /gse-autopilot continue
+/gse-launch continue
 /genesis-next GX-000
 /genesis-reconcile inventory
 ```
 
-Use `/gse-autopilot continue` as the normal campaign entrypoint. It continues the repository's live current queue through review, code, improvement, independent review, polish, verification, ledger updates, commit and push. It transitions to reconciliation only after the active queue is genuinely drained.
+Use `/gse-autopilot continue` as the normal active-development entrypoint. It continues the repository's live current queue through review, code, improvement, independent review, polish, verification, ledger updates, commit and push.
+
+Use `/gse-launch continue` only after the queue-drain gate, except when a verified live P0/P1 production correctness, security, billing, legal/revenue-truth, or outage defect is inserted under the active priority law. It drives production truth, release convergence, revenue proof, monitoring, safe gate opening, deployment qualification, and post-launch observation.
 
 Use `/genesis-next` for one explicitly selected dependency-ordered Genesis implementation workstream.
 
-Use `/genesis-reconcile` only after the queue-drain gate passes, or for a narrowly requested emergency accounting/verification pass. It handles branches, PRs, commits, migrations, and duplicate systems that may be stranded, stale, superseded, or unaccounted for.
+Use `/genesis-reconcile` after the queue-drain gate, or for a narrowly requested emergency accounting/verification pass. It handles branches, PRs, commits, migrations, and duplicate systems that may be stranded, stale, superseded, or unaccounted for.
 
 ## Queue-first continuous execution
 
 | File | Purpose | Read when |
 |---|---|---|
-| `docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md` | campaign law for preserving and draining the current queue before reconciliation | every autonomous continuation campaign |
+| `docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md` | campaign law for preserving and draining the current queue before reconciliation or launch convergence | every autonomous continuation campaign |
 | `.claude/commands/gse-autopilot.md` | token-efficient continuous conductor | run with `continue`, `status`, or `verify` |
 
 The campaign loop is:
@@ -40,7 +43,29 @@ REVIEW
 → CONTINUE
 ```
 
-Historical plans provide intent and dependencies. Live code, Git state, active tasks, tests, and queue ledgers determine what is actually next.
+Historical plans provide intent and dependencies. Live code, Git state, active tasks, tests, deployment state, and queue ledgers determine what is actually next.
+
+## Production, launch, and revenue convergence
+
+| File | Purpose | Read when |
+|---|---|---|
+| `docs/genesis/PRODUCTION_ACTIVATION_CONTRACT.md` | canonical queue-first L0-L11 production and revenue campaign authority | after queue drain or for a verified live P0/P1 launch defect |
+| `.claude/skills/gse-launch/SKILL.md` | selective-context launch conductor | run with `continue`, `status`, `verify`, or `owner-packet` |
+| `docs/genesis/LAUNCH_GATE_MATRIX.json` | machine-readable current gate status, evidence, owner, rollback, and terminal rule | every launch/revenue slice; refresh evidence before mutation |
+| `docs/genesis/LIVE_PRODUCTION_BASELINE_2026-07-18.md` | point-in-time seed from live Vercel and public-surface checks | orientation only; never treat as current without a fresh probe |
+| `docs/genesis/LAUNCH_REVENUE_CONVERGENCE_CONTRACT.md` | requirements appendix for paid-promise parity, release manifest, deterministic sentinel receipts, gate convergence, and 24h/7d observation | when implementing or verifying the matching L-phase; it is not a competing queue |
+| `scripts/genesis/validate-production-activation-package.mjs` | machine-checks the launch control package | before any gse-launch campaign and in CI |
+
+Canonical authority rule:
+
+```text
+PRODUCTION_ACTIVATION_CONTRACT.md owns phase order
+LAUNCH_GATE_MATRIX.json owns current gate projection
+LIVE_PRODUCTION_BASELINE is historical evidence
+LAUNCH_REVENUE_CONVERGENCE_CONTRACT is an acceptance-detail appendix
+```
+
+“Open all gates” means all technically and legally eligible gates pass, evidence gates remain honest, owner gates have exact packets, and no launch-critical unknown or hidden blocker remains. It never means setting every flag to true.
 
 ## First-run mandatory files
 
@@ -53,7 +78,7 @@ Historical plans provide intent and dependencies. Live code, Git state, active t
 | `docs/genesis/DECISIONS.md` | binding Genesis decisions |
 | `docs/genesis/CANON_MANIFEST.json` | machine-readable lookup for only the systems involved |
 
-Do not load the complete canon during a normal implementation campaign.
+Do not load the complete canon during a normal implementation or launch campaign.
 
 ## Branch and PR reconciliation
 
@@ -83,7 +108,9 @@ A branch counter is never enough to prove work is missing or safe to delete. The
 | `docs/genesis/CODEBASE_TWIN_SPEC.md` | repository semantic twin architecture |
 | `docs/genesis/FIRST_BUILD_CONTRACT.md` | bounded GX-000 vertical slice |
 | `docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md` | multi-workstream queue-drain and continuation law |
+| `docs/genesis/PRODUCTION_ACTIVATION_CONTRACT.md` | production/revenue activation and release convergence |
 | `.claude/commands/gse-autopilot.md` | queue-first autonomous campaign command |
+| `.claude/skills/gse-launch/SKILL.md` | queue-preserving production and revenue campaign skill |
 | `.claude/commands/genesis-next.md` | token-efficient single-workstream implementation command |
 | `.claude/commands/genesis-reconcile.md` | token-efficient stranded-work accounting and recovery command |
 
@@ -123,18 +150,18 @@ A branch counter is never enough to prove work is missing or safe to delete. The
 ## Agent loading algorithm
 
 ```text
-1. inspect live branch, worktrees, uncommitted work, tasks and PR state
-2. identify the active or next dependency-ready queue item
-3. read only compact current-state ledgers and its frozen contract
-4. query CANON_MANIFEST.json only for affected systems and dependencies
-5. inspect exact code, tests, history and reusable branch assets
-6. freeze one bounded implementation contract
-7. review → code → test → independent review → improve → polish
-8. run final applicable gates
-9. update queue/state/decision/recovery ledgers and receipts
-10. commit, push and update the correct PR
-11. immediately select the next dependency-ready queue item
-12. only after the queue-drain gate, run reconciliation inventory and recovery waves
+1. inspect live branch, worktrees, uncommitted work, tasks, PRs, deployment, and production state
+2. decide current queue, reconciliation, Genesis, or launch mode
+3. identify the active or next dependency-ready item
+4. read only compact state, the canonical contract, and its selected slice
+5. query CANON_MANIFEST.json only for affected systems and dependencies
+6. inspect exact code, tests, history, reusable branch assets, and current runtime evidence
+7. freeze one bounded implementation/recovery/launch contract
+8. review → code → test → independent review → improve → polish
+9. run final applicable gates
+10. update queues, state, decisions, recovery, launch reports, and gate evidence
+11. commit, push and update the correct PR
+12. immediately select the next dependency-ready item
 13. stop only at a genuine hard boundary
 ```
 
@@ -159,6 +186,15 @@ A workstream is incomplete until it has:
 - ledger updates;
 - commit, push, PR/accounting state and receipt.
 
+A launch-critical gate is incomplete until it has:
+
+- current evidence;
+- owner and classification;
+- required prerequisites;
+- validation and rollback;
+- public behavior impact;
+- no unsupported promise or hidden unknown.
+
 A branch or PR is unaccounted for until it has:
 
 - a live ledger entry;
@@ -170,4 +206,4 @@ A branch or PR is unaccounted for until it has:
 
 The package is intentionally large enough to preserve ambition and modular enough to avoid charging every coding session for that ambition.
 
-The archive is loaded only when needed. Live task state, active contracts, compact ledgers, the manifest, reconciliation ledger and exact code evidence drive normal work.
+The archive is loaded only when needed. Live task state, active contracts, compact ledgers, the manifest, gate matrix, launch/reconciliation reports, and exact code/runtime evidence drive normal work.
