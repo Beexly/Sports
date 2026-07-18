@@ -3,8 +3,10 @@
 **Generated:** 2026-07-18 22:30 UTC
 **Full machine-readable record:** `LAUNCH_BLOCKER_LEDGER.json`
 
-Seven items, evidence-backed, classified. **Zero P0_CORRECTNESS_SECURITY findings this pass.**
-Two items have a clean, low-risk, immediate owner action available today.
+Eight items, evidence-backed, classified. **One confirmed P0_CORRECTNESS_SECURITY finding**
+(LB-008, added by LC-003 — see `SECURITY_RESIDUE.md`; a secrets-hygiene exposure on an unlanded
+branch, not a live production code defect). Three items have a clean, low-risk, immediate owner
+action available today.
 
 | ID | Title | Class | Status |
 |---|---|---|---|
@@ -15,8 +17,9 @@ Two items have a clean, low-risk, immediate owner action available today.
 | LB-005 | Nightly Sentinel has zero unattended coverage | P1_DATA_ENGINE | **CLOSED — LC-002 shipped, verified, live dry-run WATCH** |
 | LB-006 | `news-sitemap.xml` is empty | P2_TRUST_UX | Needs investigation (may be intentional) |
 | LB-007 | Production DB migration convergence unverified | P1_DATA_ENGINE | Needs access this session doesn't have |
+| LB-008 | Live-shaped `THE_ODDS_API_KEY` on a still-public unlanded branch | P0_CORRECTNESS_SECURITY | **Ready for owner action — fingerprint compare, rotate if it matches** |
 
-## The two immediate owner actions
+## The three immediate owner actions
 
 **LB-001 — Merge PR #128.** A 4-line, comment-only, already-verified fix
 (`mergeable_state: clean`, base identical to current `main` HEAD). This single merge takes
@@ -30,6 +33,16 @@ explain a host-header-independent apex result). Set the env var to
 `https://www.galaxysportsedge.com` and confirm Google Cloud Console's Authorized redirect URIs
 include the matching `www` callback. Real, currently-live risk to Google sign-in for real
 users.
+
+**LB-008 — Compare fingerprints, rotate `THE_ODDS_API_KEY` only if it matches.** A live-shaped
+32-hex-character value is hardcoded on a still-public, unlanded branch
+(`claude/fix-local-setup-PmnyX`). First confirm the variable is populated
+(`echo -n "$THE_ODDS_API_KEY" | wc -c` should print 32), then run
+`echo -n "$THE_ODDS_API_KEY" | sha256sum` against the real production value and compare to
+`076035217a9d4263f44f8d27e9a9916401c6a3046037719f48bb9ca378e0600f` — rotate at
+the-odds-api.com only if it matches. Avoid typing the raw key into an interactive shell where
+avoidable (shell-history risk) — see `SECURITY_RESIDUE.md` for the full safe procedure and exact
+OWNER_GATE.
 
 ## LC-001 status: satisfied by LC-000
 
@@ -49,13 +62,14 @@ dependencies, smallest safe fix, verification, and rollback for every item above
 
 Agent-side: LC-002 (Nightly Sentinel v2) shipped, closing LB-005 -- see `scripts/launch/nightly-sentinel*.mjs`
 and `.github/workflows/nightly-sentinel.yml`. A live dry-run reported WATCH (news-sitemap
-zero-URL WARN, matching LB-006 below; zero FAIL). Next up: LC-003 (Security Residue -- the
-live-shaped `THE_ODDS_API_KEY` found on an unlanded historical branch) and LB-006's short
+zero-URL WARN, matching LB-006 below; zero FAIL). LC-003 (Security Residue) shipped, closing
+LB-008's investigation and the scanner gap it found -- see `SECURITY_RESIDUE.md` and the new
+`odds-api.key.embedded` rule in `scripts/guardrails/secret-scan.mjs`. Next up: LB-006's short
 investigation (does the news-content pipeline actually have zero eligible items right now, or
 is something silently failing to publish?) before it's classified as a real defect or closed as
-intentional.
+intentional, then LC-004 (Revenue Canary, Stripe test-mode only).
 
-Owner-side: LB-001 and LB-002 first (both are fast, safe, and unblock CI + auth confidence);
-LB-003's refund-policy decision whenever convenient (not urgent-urgent, but real revenue-trust
-exposure exists until decided); LB-007 whenever DB access is available to a session that can
-verify it.
+Owner-side: LB-001, LB-002, and LB-008 first (all three are fast, safe, and either unblock CI +
+auth confidence or close a secrets-hygiene exposure); LB-003's refund-policy decision whenever
+convenient (not urgent-urgent, but real revenue-trust exposure exists until decided); LB-007
+whenever DB access is available to a session that can verify it.

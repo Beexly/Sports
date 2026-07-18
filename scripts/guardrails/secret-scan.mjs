@@ -46,6 +46,21 @@ const SECRET_RULES = [
   { id: "github.pat.fine-grained", re: /\bgithub_pat_[A-Za-z0-9_]{50,}\b/ },
   { id: "slack.token", re: /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/ },
   { id: "neon.api-key", re: /\bnapi_[A-Za-z0-9]{40,}\b/ },
+  // The Odds API issues unprefixed hex keys, so there's no provider-prefix
+  // signature to key off (unlike sk_live_/ghp_/etc above) -- a blanket
+  // bare-hex rule would drown in false positives on git SHAs and hashes
+  // elsewhere in the tree. Anchor on the env-var NAME immediately preceding
+  // an assignment instead (found via LC-003: a live-shaped key was hardcoded
+  // in scripts/local.sh on an unlanded branch, claude/fix-local-setup-PmnyX,
+  // and this exact shape was NOT caught by any existing rule).
+  // ["'\]]* absorbs optional bracket-notation syntax (process.env["KEY"] =)
+  // between the name and the separator; [:=]+ absorbs both `=` and `:=`
+  // (Makefile/walrus-style). Known residual gap: this scan is line-based
+  // (see scanText below) like every other rule here, so a value split
+  // across a line boundary (YAML block-scalar style) is NOT caught --
+  // accepted rather than restructuring the whole line-based scan engine
+  // for one rule.
+  { id: "odds-api.key.embedded", re: /\bTHE_ODDS_API_KEY\b["'\]]*\s*[:=]+\s*["']?[A-Za-z0-9]{20,}["']?/ },
   { id: "private-key-block", re: /-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----/ },
   // A Postgres/Redis connection URL that embeds a password AND points at a
   // real remote host (not localhost / docker service names). Dev strings

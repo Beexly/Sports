@@ -1,0 +1,60 @@
+{
+  "reportVersion": "1.0",
+  "generatedAt": "2026-07-18T23:20:00Z",
+  "generatedBy": "gse-launch LC-003, session_01Q3YhetHK7fVCm1JAQTizNR",
+  "boundary": "This report never prints, uses, or tests the raw secret value. Only a SHA-256 fingerprint, length, and charset are recorded. No live API call was made against the-odds-api.com with this or any other credential.",
+  "finding": {
+    "id": "SR-001",
+    "title": "Live-shaped THE_ODDS_API_KEY hardcoded in scripts/local.sh on an unlanded historical branch",
+    "sourceBranch": "claude/fix-local-setup-PmnyX",
+    "sourceBranchStatus": "still present on origin (github.com/Beexly/Sports) at time of this report -- NOT merged to main, NOT on the frozen claude/galaxy-sports-edge-pdcswh recovery branch, NOT deleted",
+    "sourceCommit": "27e85eaba0efdfbee9504bc9ac43055d261e80da",
+    "sourceCommitDate": "2026-04-22T05:00:07Z",
+    "sourceCommitAuthor": "Claude (noreply@anthropic.com)",
+    "sourceCommitMessageExcerpt": "writes .env with working local Postgres/Redis URLs, a freshly generated NEXTAUTH_SECRET, and the embedded Odds API key",
+    "file": "scripts/local.sh",
+    "line": 64,
+    "originalDiscovery": "First flagged during Recovery Wave R11.5 (DEC-051 on claude/galaxy-sports-edge-pdcswh), which explicitly declined to port this branch's local.sh for exactly this reason. This LC-003 pass is the first to fingerprint, hash-search, and produce an owner rotation action for it -- DEC-051 named the finding but did not go further.",
+    "keyProperties": {
+      "lengthChars": 32,
+      "charset": "lowercase hex only",
+      "sha256Fingerprint": "076035217a9d4263f44f8d27e9a9916401c6a3046037719f48bb9ca378e0600f",
+      "matchesLiveShape": true,
+      "note": "32 lowercase-hex characters matches The Odds API's published key format exactly. Value itself never printed, used, or tested in this or any prior session per standing hard-never-list instruction."
+    },
+    "reachableHistoryDuplicateSearch": {
+      "method": "git log --all --oneline -S<value> -- . (pickaxe search across every reachable branch in this repo's local git object store; only commit hashes/subjects are ever surfaced, never file content)",
+      "result": "Exactly one match: commit 27e85eaba0efdfbee9504bc9ac43055d261e80da on claude/fix-local-setup-PmnyX itself. Zero other reachable commits/branches contain this value.",
+      "scopeCaveat": "Search is bounded to branches this local git object store has ever fetched (a large but not necessarily complete set of the remote's branches, and does not cover forks or any deleted/unreachable remote refs GitHub itself may still retain in its own reflog/backup systems, which this session has no way to query)."
+    },
+    "scannerCoverageVerification": {
+      "priorState": "NOT CAUGHT. secret-scan.mjs's SECRET_RULES had zero rules that would match an unprefixed, bare hex-string credential of any length -- confirmed structurally by testing every existing rule against a same-shape synthetic placeholder (not the real value) before any code change.",
+      "whyNoBlanketFix": "The Odds API issues unprefixed hex keys (no provider signature like sk_live_/ghp_/etc to key off). A blanket bare-hex-string rule would match git SHAs, MD5/SHA hashes, and other benign hex content throughout the tree and be unusable due to false-positive volume.",
+      "fixApplied": "Added one new rule (`odds-api.key.embedded`) to scripts/guardrails/secret-scan.mjs, anchored on the THE_ODDS_API_KEY environment-variable NAME immediately preceding an assignment (`=`, `:`, or `:=`, optionally through bracket-notation like `process.env[\"THE_ODDS_API_KEY\"] =`, optionally quoted, followed by 20+ alphanumeric characters) rather than the value's shape alone -- precise, not blanket. An independent red-team pass on this exact fix found the FIRST version (plain `[:=]`, no bracket handling) was bypassable via colon-equals syntax and bracket-notation env access -- both fixed in the version now landed and re-verified below.",
+      "knownResidualGap": "This scan (like every rule in secret-scan.mjs) is line-based: it matches within one physical line only. A value split across a line boundary (e.g. a YAML block-scalar) is NOT caught. Not fixed here -- would require restructuring the shared line-based scan engine for one rule, out of proportion to the risk given this codebase has no YAML config surface for this credential today.",
+      "verification": [
+        "node scripts/guardrails/secret-scan.mjs --all across the full current tree (3800 tracked files) after adding the rule: OK, zero new false positives against every existing legitimate THE_ODDS_API_KEY reference (all either empty, placeholder-shaped, doc-referenced, or a bracket-style test fixture whose fake value contains hyphens that break the required 20-contiguous-alphanumeric-character run).",
+        "A synthetic fixture file containing THE_ODDS_API_KEY assigned to a fake 32-char sequential-hex placeholder <32-hex-chars-not-real> (same shape/length as the real key, not the real value) correctly triggers the new rule and fails the scan with exit code 1.",
+        "Two additional synthetic fixtures proving the red-team-identified bypasses are now closed: the same fake placeholder assigned via colon-equals syntax, and via bracket-notation (process.env[<key-name>] = <placeholder>;) -- both now correctly fail the scan; a fixture using the existing hyphenated test-fixture shape already present elsewhere in this repo's own test suite correctly stays clean, confirming no regression against real test conventions."
+      ]
+    },
+    "classification": "P0_CORRECTNESS_SECURITY",
+    "blastRadius": "Anyone with read access to github.com/Beexly/Sports can currently view this branch and its commit, and therefore this value, in plaintext. If this repository is ever made public, or a collaborator/contractor with narrower intended access is added, exposure widens. No evidence this key has been used maliciously; no evidence it is still valid; validity cannot be disproven from this session (no live test was performed, per the hard-never-list instruction to never print, use, or test the historical live-shaped key).",
+    "quarantine": "claude/fix-local-setup-PmnyX is recorded here as QUARANTINED: not ported, not to be ported, not to be checked out into any working tree, not to be merged, in its current form. Any FUTURE recovery of this branch's genuinely useful content (the local-dev-bootstrap idea itself is reasonable -- see DEC-051's evaluation of the surrounding script) must first strip THE_ODDS_API_KEY entirely (source from .env.example / an environment variable, exactly like the sibling scripts/local.sh alternative claude/debug-previous-fix-g06Wz already does correctly per DEC-052) and must not carry this commit's history forward without a fresh, key-free commit.",
+    "ownerAction": {
+      "id": "OG-LC-003",
+      "decision": "Rotate (or explicitly confirm-not-needed) THE_ODDS_API_KEY at the-odds-api.com, given a live-shaped 32-character hex value matching this exact credential's format has been sitting in a still-public GitHub branch since 2026-04-22 and its validity cannot be disproven without live-testing it (which this campaign will not do without founder authorization).",
+      "whyFounderAuthorityRequired": "Only the founder holds the-odds-api.com account credentials; rotating an API key is an external, billable-account-affecting action no agent can or should take autonomously.",
+      "exactActionAndLocation": "In the Vercel dashboard (Project -> Settings -> Environment Variables -> production), reveal THE_ODDS_API_KEY's current value and copy it -- do not type or paste it into a shell command yourself if you can avoid it, since an interactively-typed `export THE_ODDS_API_KEY=<value>` lands the raw key in your shell history file even though the fingerprint command below is itself safe. If you must set it in a terminal, prefix the command with a leading space (most shells with HISTCONTROL=ignorespace / HIST_IGNORE_SPACE skip history for space-prefixed lines) or use `read -s THE_ODDS_API_KEY` to enter it without echo or history. Then run `echo -n \"$THE_ODDS_API_KEY\" | wc -c` FIRST and confirm it prints 32 -- a 0 here means the variable is empty/unset, and comparing an empty value's hash would falsely read as 'no match, no exposure' even though nothing was actually checked. Only then run `echo -n \"$THE_ODDS_API_KEY\" | sha256sum` (prints only a hash, never the key) and compare the result to 076035217a9d4263f44f8d27e9a9916401c6a3046037719f48bb9ca378e0600f above. If it matches, rotate the key at the-odds-api.com's dashboard and update THE_ODDS_API_KEY in the Vercel production environment plus any other environment (local .env files, CI secrets) that currently holds the old value.",
+      "safeNonDestructiveDefault": "If the fingerprint does NOT match AND the length check confirmed the variable was actually populated (32 chars) -- i.e. production is already running a different, never-exposed key -- no rotation is required. A non-match with a 0-length variable means nothing was actually checked, not that the key is safe.",
+      "workCompletedAroundGate": "Scanner gap closed (odds-api.key.embedded rule added and verified, see above) so this exact shape cannot land silently again; source branch quarantined in this ledger; fingerprint computed and recorded so the founder can compare without ever needing this session to reveal or re-derive the value.",
+      "verification": "After rotation (if performed): confirm THE_ODDS_API_KEY in Vercel production differs in fingerprint from 076035217a9d4263f44f8d27e9a9916401c6a3046037719f48bb9ca378e0600f, and confirm /api/health's ingestion check still reports ok (i.e. the new key works).",
+      "rollback": "The-odds-api.com typically allows reverting to a prior key within a short grace window if the new key breaks something; consult their dashboard. Standard API-key-rotation rollback, not code-related.",
+      "reEntryCondition": "N/A once the fingerprint comparison is done and, if needed, rotation completes -- this is a single-shot founder action."
+    }
+  },
+  "otherEmbeddedCredentialSweep": {
+    "method": "Cross-referenced every branch flagged in DEC-051/DEC-052's R11.5 sweep for the same class of finding (a hardcoded, non-placeholder credential in an unlanded branch's novel content). Only one such finding exists in those records: SR-001 above. claude/debug-previous-fix-g06Wz (DEC-052) was explicitly verified clean (no hardcoded secret literal in any of its 3 setup scripts) at the time of that pass.",
+    "scopeCaveat": "This is a targeted cross-reference against prior sessions' own findings, not a fresh independent secret-scan of all ~138 historical branches' full content -- that would be a much larger undertaking (the R11.5 sweep itself explicitly abandoned an unbounded `git log -S` across all 138 branches as too slow). If a fresh full-history credential sweep is wanted, it should be scoped as its own dedicated LC-level workstream given the token cost."
+  }
+}

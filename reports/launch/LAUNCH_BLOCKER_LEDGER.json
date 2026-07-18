@@ -134,18 +134,40 @@
       "rollback": "N/A -- read-only verification step.",
       "reEntryCondition": "Awaiting an environment/session with production DB access.",
       "status": "NOT_TESTED_NEEDS_ACCESS"
+    },
+    {
+      "id": "LB-008 (SR-001)",
+      "title": "Live-shaped THE_ODDS_API_KEY hardcoded on an unlanded, still-public GitHub branch",
+      "classification": "P0_CORRECTNESS_SECURITY",
+      "evidence": [
+        "reports/launch/SECURITY_RESIDUE.{json,md} (LC-003, this session): scripts/local.sh:64 on claude/fix-local-setup-PmnyX, commit 27e85eaba0efdfbee9504bc9ac43055d261e80da (2026-04-22), still present on origin",
+        "mcp__github__get_commit confirms the branch/commit is live on GitHub right now; the commit message itself says 'the embedded Odds API key'",
+        "32-lowercase-hex value, SHA-256 fingerprint 076035217a9d4263f44f8d27e9a9916401c6a3046037719f48bb9ca378e0600f (value itself never printed/used/tested)",
+        "git log --all -S<value> found exactly one match (the source commit) -- no duplicate exposure elsewhere in reachable history"
+      ],
+      "impact": "Anyone with read access to the GitHub repo can currently view this value in plaintext. Validity cannot be disproven without live-testing it, which this campaign will not do without founder authorization.",
+      "blastRadius": "Bounded to whoever has repo read access today; widens if the repo is ever made public or a narrower-access collaborator is added.",
+      "canonicalOwner": "Founder (the-odds-api.com account access)",
+      "dependencies": "None. Independently actionable today via fingerprint comparison (see OG-LC-003).",
+      "smallestSafeFix": "Compare the live production key's SHA-256 fingerprint to the one recorded above (never paste the live key anywhere); rotate only if it matches.",
+      "verification": "Post-rotation (if performed): new key's fingerprint differs from the recorded one; /api/health ingestion check still reports ok.",
+      "rollback": "Standard the-odds-api.com key-rotation rollback via their dashboard grace window.",
+      "reEntryCondition": "N/A -- single-shot founder action.",
+      "status": "READY_FOR_OWNER_ACTION",
+      "agentSideWorkAlreadyDone": "Scanner gap closed this session (scripts/guardrails/secret-scan.mjs's new odds-api.key.embedded rule, verified against the full tree with zero false positives); source branch quarantined; fingerprint computed."
     }
   ],
   "lc001Status": "SATISFIED_BY_LC000 -- every blocker row already carries the full LC-001 field set (classification from the exact taxonomy above, evidence, impact, blastRadius, canonicalOwner, dependencies, smallestSafeFix, verification, rollback, reEntryCondition). No separate Blocker Graph artifact was built; this ledger IS the Blocker Graph. Re-open LC-001 as a distinct pass only if a future snapshot's evidence no longer maps cleanly onto this taxonomy.",
   "summary": {
-    "readyForOwnerActionNow": ["LB-001", "LB-002"],
+    "readyForOwnerActionNow": ["LB-001", "LB-002", "LB-008"],
     "ownerGatePendingPolicyDecision": ["LB-003"],
     "agentBuildableNext": [],
     "closedThisSession": ["LB-005"],
     "needsInvestigation": ["LB-006"],
     "needsAccessNotAvailableThisSession": ["LB-007"],
-    "totalConfirmedLiveDefects": 6,
-    "zeroConfirmedP0CorrectnessSecurityFindings": true,
-    "note": "No P0_CORRECTNESS_SECURITY item was found this pass. LB-001 and LB-002 are the two items with a clear, immediate, low-risk owner action available today."
+    "totalConfirmedLiveDefects": 7,
+    "totalConfirmedLiveDefectsCountingConvention": "Counts LB-001 through LB-006 and LB-008 (every item independently evidenced by a direct fetch/curl/git-diff/fingerprint this session or a cross-referenced prior session) but excludes LB-007, which has zero evidence gathered (NOT_TESTED_NEEDS_ACCESS -- no DB credentials available) and is a flagged risk area, not a confirmed defect. An independent gse-red-team pass on this exact figure (LC-003) could not fully re-derive the pre-existing baseline of 6 from the diff alone and flagged it as open; re-deriving it directly from the blockers array here resolves it: LB-001..006 = 6, LB-007 excluded by the stated convention, so 6 -> 7 after LB-008 is correct.",
+    "zeroConfirmedP0CorrectnessSecurityFindings": false,
+    "note": "LC-000's original pass found zero P0_CORRECTNESS_SECURITY items. LC-003 (this session) found one: LB-008, a live-shaped credential exposed on a still-public unlanded branch -- not a production code defect, but real secrets-hygiene exposure with a precise, low-risk owner action (fingerprint compare, rotate only if it matches). LB-001, LB-002, and LB-008 all have a clear, immediate, low-risk owner action available today. LB-008's finding, scanner fix, and owner instructions were independently red-teamed; the fingerprint was confirmed correct, two real scanner-rule bypasses (colon-equals, bracket-notation) were found and closed, and two real gaps in the owner instructions (shell-history leak risk, false-assurance-from-unset-variable) were found and closed -- see SECURITY_RESIDUE.{json,md} for the full before/after."
   }
 }
