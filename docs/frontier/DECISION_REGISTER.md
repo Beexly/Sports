@@ -1197,4 +1197,88 @@ stitching) — recorded here so no backtest can slip past it.
   RECOVERY_WAVES.md,DELETION_RECEIPTS.md} (new), scripts/genesis/{audit-work-inventory.mjs,
   audit-work-inventory.test.mjs} (new), package.json (new `genesis:work-inventory` script),
   .github/workflows/ci.yml (new test step for the audit script's unit tests).
+
+## DEC-032 — Queue-drain receipt: tamper-evident precondition proof (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Batch C item C2 (Master Plan v3). Formalizes, as its own explicit artifact issued after the fact,
+  that `.claude/commands/genesis-reconcile.md` §0's queue-drain precondition was genuinely true BEFORE the
+  DEC-031 reconciliation inventory began — mirroring the contract's own discipline for deletion receipts
+  (issued as their own step, never silently bundled into the action they gate).
+- Decision: `reports/reconciliation/QUEUE_DRAIN_RECEIPT.md` — a full six-clause self-check against
+  `docs/genesis/CONTINUOUS_EXECUTION_CONTRACT.md` §4's drain law (each clause TRUE with cited evidence: no
+  partially-implemented workstream, no dependency-ready IN_PROGRESS/QUEUED/NEXT item, all completed items have
+  tests/ledgers/commit/push/PR state, all owner gates recorded with non-destructive defaults, all worktrees
+  clean); a SHA-256 content-hash attestation table for the three canonical frontier ledgers
+  (`CURRENT_STATE.md`/`WORKSTREAM_QUEUE.md`/`DECISION_REGISTER.md`) computed at receipt time, so a future
+  session or founder review can re-hash and mechanically detect drift; a full OWNER_GATE recap enumerating
+  seven distinct founder-only gates (PR #129 merge; PR #127/#128/#123/#121/#122/#124/#112/#52 dispositions;
+  PR #122/OTS migration application; provider/flag env flips; the Open-Meteo hosted-tier bulk admission
+  decision; GX-001/GG-002 start signal; the 12 proven-ancestor-branch deletions).
+- Evidence: the receipt file itself (140 lines); `sha256sum` run immediately before writing it, matching the
+  working-tree state committed at DEC-031's own commit `604b5b15`.
+- Alternatives rejected: skipping the receipt as redundant since the precondition was independently
+  demonstrable from the DEC-031 entry's own text — rejected because the contract requires the receipt to exist
+  as its own reviewable, independently re-hashable artifact, not just be inferable from prose elsewhere.
+- Reversibility: fully additive; zero product code touched.
+- Protected zones: none.
+- Files: `reports/reconciliation/QUEUE_DRAIN_RECEIPT.md` (new).
+- Commit: `0e2166dc`. Pushed to `origin/claude/galaxy-sports-edge-pdcswh`.
+- Supersedes: none.
+
+## DEC-033 — Whole-campaign meta-audit: independent re-verification of Batches A-C (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Batch C item C4 (Master Plan v3). The DEC-022 pattern applied to the full Master Plan v3 scope
+  (commits `c1cbda7d`..`0e2166dc`: DEC-027 Real Waiver Signal, DEC-028 Waiver War Room, DEC-029 UX mechanical
+  sweep, DEC-030 weather previous-runs, DEC-031 reconciliation inventory, DEC-032 queue-drain receipt) — a
+  from-scratch, no-trust-inherited independent re-verification pass, explicitly instructed to be skeptical
+  rather than confirmatory.
+- Decision: dispatched two rounds of independent `gse-verifier` passes (agent-stall protocol applied to both —
+  each stopped mid-investigation once and was resumed via a "stop investigating, write the synthesis now"
+  nudge, per this session's established recovery pattern).
+  - Round 1 (broad sweep): re-ran `tsc --noEmit` (all workspaces, clean), `eslint --max-warnings=0` (clean),
+    `npm run guardrails` (17/17 green), `git diff --check` on the full commit range (clean), and independently
+    re-derived — not merely re-read — every material claim in DEC-027 through DEC-031 against live code:
+    the `roster-advice-panel.tsx` state-check ordering (source-error before the generic `!res.ok` check;
+    401/403/429 handled), the `Team` import path, `waiver-war-room.ts`'s dominant-side tally logic, the
+    `player-model.ts` cache's read-AND-write wiring, the route's `clear`-field omission, the five new
+    `loading.tsx` files + `room/error.tsx`, and — the highest-stakes single item in the whole campaign —
+    independently traced the entire `weather-previous-runs.ts` call chain confirming `previousDayN()` receives
+    the UNROUNDED `exactLeadHours`, not the rounded display-only `leadTimeHours`, with no path routing a
+    rounded value into the leak-sensitive day-selection math. Spot-checked 3 random `BRANCH_PR_LEDGER.json`
+    entries against independent evidence rather than trusting the ledger's own text. Live `sha256sum` of the
+    three frontier ledgers matched DEC-032's receipt table exactly (0e2166dc is HEAD; no drift possible).
+    Zero CRITICAL FINDINGS; protected-zone diff scan (Stripe/billing/migrations/settlement/CLV/calibration/
+    MODEL_VERSION/source-rights/publish-path patterns) clean across all 32 changed files. This round was
+    explicitly time-boxed before three gates completed (full `npm test`, `npm run build`,
+    `audit-work-inventory` script+test) — reported honestly as NOT RUN rather than silently omitted or assumed
+    green.
+  - Round 2 (the three gates Round 1 didn't reach, dispatched as three parallel `gse-verifier` agents):
+    (a) `node --test scripts/genesis/audit-work-inventory.test.mjs` — 6/6 pass; live
+    `node scripts/genesis/audit-work-inventory.mjs` — 184 live remote branches, 184 ledger-known refs, zero
+    invisible/stale, exit 0, zero drift since the DEC-031 snapshot. (b) full production build mirroring CI
+    exactly (`db:generate` then `npm run build` with the CI placeholder env vars) — exit 0, 214/214 pages,
+    only pre-existing benign warnings (Sentry/OTel `require-in-the-middle` critical-dependency notice; expected
+    Prisma connection errors against the unreachable placeholder DB during static generation, which do not
+    fail the build). (c) full `npm test` (all 9 workspaces) — exit 0, 10,360 passed / 1 skipped / 0 failed
+    across 813 test files; the single skip independently traced to
+    `packages/crypto/src/__tests__/ots-anchor.test.ts`'s `describe.skipIf(process.env["OTS_LIVE_SMOKE"] !== "1")`
+    block — the file's own header comment documents this is the live-calendar-network test, deliberately
+    opt-in-only, "real network never runs in CI" — confirmed benign by reading the source, not assumed from
+    the skip count alone.
+- Evidence: two full agent transcripts (Round 1 broad sweep + Round 2's three parallel gate runs); this
+  session's own live re-fetch of PR #129/#128/#127/#125/#124/#123/#122/#121/#112/#52 confirming all remain
+  open/unmerged (no OWNER_GATE was silently crossed at any point in the campaign).
+- CRITICAL FINDINGS: none, across either round.
+- Alternatives rejected: treating Round 1's "PASS with disclosed gaps" as sufficient to close C4 without
+  Round 2 — rejected because the master plan's C4 contract explicitly requires "all suites... build," and the
+  session's own standing discipline (this exact DEC-022 pattern) is to close disclosed gaps rather than accept
+  a partial audit as the final one.
+- Reversibility: fully additive; zero product code touched; zero fixes were needed (nothing to revert).
+- Protected zones: none directly; the audit's own scope covered every protected zone the batch's commits
+  touch, and confirmed none were crossed.
+- Files: none changed by this workstream itself beyond this ledger entry and the corresponding CURRENT_STATE.md
+  update.
+- Supersedes: none.
 - Supersedes: none.
