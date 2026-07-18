@@ -3772,3 +3772,112 @@ stitching) — recorded here so no backtest can slip past it.
   Task #76 is now 4a-of-5-plus-5/5 done — the only remaining open item under task #76 is candidate 4b
   (Mock Draft simulator + universal roster paste-import + FantasyCoach + Late-Swap UI, all from
   `claude/adoring-babbage-gq7v77`, deferred in DEC-060 with named reasons, not silently dropped).
+
+## DEC-062 — CORRECTION to DEC-054: `model-promoter.ts` (`claude/laughing-wozniak-gyryjx`) is a
+  non-functional scaffold with fabricated stats — DECLINED, never to be ported as-is; `oos-split.ts`
+  is real and independently portable; DFS product tree + `lib/gse` layer remain out of scope this
+  pass (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: task #75, "dedicated port: `laughing-wozniak-gyryjx` model-promoter +
+  `happy-goodall-8lkxrb` lib/gse (HIGH PRIORITY)" — began the freeze-contract investigative phase
+  DEC-054 explicitly called for ("a capability that governs how the live model's predictions get
+  promoted deserves its own full FREEZE CONTRACT → CODE → TARGETED TEST → RED-TEAM cycle"). This entry
+  is the FREEZE CONTRACT phase's outcome for the highest-risk piece (the promoter itself) — and it
+  overturns DEC-054's assumption that this was simply a "genuinely-missing piece" ready to
+  cherry-pick. Applying this campaign's own "reproduce before ruling" discipline (never trust a
+  document's or a prior DEC's characterization without independently reading the actual code) caught
+  what neither `docs/strategy/BRANCH_RECONCILIATION.md` nor DEC-054 had checked: whether the promoter's
+  internals actually work.
+- **The finding — direct code read of `packages/prediction-engine/src/model-promoter.ts` on
+  `claude/laughing-wozniak-gyryjx`:**
+  1. `computeClvMean(picks, floor)` (the function computing Closing-Line Value, the metric the
+     module's own docstring says promotion is "always CLV-gated" on) is a hardcoded stub: `// Stub:
+     assume model captured 50% of the closing edge on average` / `return 0.5;` — for EVERY input,
+     regardless of the actual picks passed in. This is fabricated data presented as a computed metric
+     — a direct `CLAUDE.md` "no fabricated stats" violation, structurally identical to the
+     `lib/fantasy/matchup.ts` violation already declined in DEC-056, except here it sits inside
+     model-promotion logic, not a fantasy display panel.
+  2. The champion-vs-challenger Brier comparison is tied by construction: `const champOosBrier =
+     oosSplit.outOfSample.brier; const challengerOosBrier = oosSplit.outOfSample.brier;` — both
+     variables read the SAME field, so `brierImprovement = champOosBrier - challengerOosBrier` is
+     mathematically always exactly `0` on every call. Since the promotion gate requires
+     `brierImprovement >= brierThreshold` (default `0.02`), and `0` can never meet a positive
+     threshold, **this function can never promote a challenger through its real comparison path** —
+     directly contradicting its own docstring's central claim ("Promotes a challenger to champion only
+     when it demonstrates... Better OOS Brier/CLV than the champion").
+  3. The module's own source comments confirm awareness of both gaps as unfinished work — not hidden
+     bugs, but explicitly labeled placeholders: `// This is a placeholder; real CLV grading uses actual
+     closing snapshots` and `// Stub: champion performance (in real code, fetch from persistence)`.
+  4. Its own test suite (`model-promoter.test.ts`) confirms the feature was never actually validated
+     against real promotion behavior: the fixture data uses `Math.random()` (non-deterministic — a
+     direct violation of this repo's own `.claude/rules/tests-and-claims.md` "test deterministic domain
+     logic directly" standard), and the one test titled "promotes challenger when OOS health passes and
+     Brier improves by threshold" contains the comment "May or may not promote depending on random
+     outcomes" with an assertion that is tautologically true for any outcome:
+     `expect(decision.reason === "no_challenger_data" || decision.reason === "challenger_beats_champion"
+     || decision.reason === "challenger_failed_oos").toBe(true)` — an OR across literally every possible
+     enum value the function can return, meaning this test cannot fail regardless of what the function
+     computes. This is not merely an unfinished feature; it is a feature whose own test suite was
+     written to never catch that it doesn't work.
+- **`oos-split.ts` is a different story — independently verified real and correct.** Unlike the
+  promoter, `computeOosSplit`/`segmentOosSplit` are honest, deterministic, no-stub functions: real
+  time-boundary cohort splitting, real calibration computed via the already-existing
+  `computeWindowCalibration`/`WindowCalibration` from `calibration-drift.ts` (confirmed present on
+  `pdcswh` today, matching shape), honest `isValid`/`healthSummary` gating on real sample-size
+  thresholds. This module's only flaw is being purpose-built to feed the broken promoter — on its own
+  merits it is a legitimate, portable primitive (e.g. for a future cockpit "OOS vs in-sample
+  calibration health" view). NOT ported this pass (out of scope: it was investigated only as a
+  dependency of the promoter, not independently freeze-contracted as its own item) but recorded here as
+  a real, still-open, lower-priority candidate distinct from the promoter's disposition.
+- **Disposition: `model-promoter.ts` is DECLINED — never to be ported as-is, in whole or adapted, dark
+  or wired.** Even a "dark, unwired" port (the pattern used successfully for DEC-061's
+  multi-market-ensemble/synthetic-fade) is inappropriate here: those modules were independently
+  verified to be mathematically honest before porting; this one is verified to be mathematically
+  decorative. Landing fabricated-CLV, always-zero-improvement logic inside `packages/prediction-engine`
+  — even inert — creates exactly the risk this campaign's protected-zone rule exists to prevent: a
+  future agent or human, trusting the module's own confident docstring ("Proof is always CLV-gated,"
+  "OOS + in-sample health checked before promotion") without re-reading the implementation, could wire
+  it into a real promotion decision believing it does what it claims.
+- **DFS product tree (91 novel files on this branch) and `happy-goodall-8lkxrb`'s `lib/gse/` layer
+  (~25 modules, 118 tests) remain untouched, out of scope for this pass.** DEC-054's characterization of
+  their existence and non-overlap with `pdcswh` stands unchanged (not re-verified in this entry — that
+  remains a separate freeze-contract undertaking). Given the size of both (a 91-file product surface
+  spanning 15 API routes and 6 cockpit pages; a 25-module decision-intelligence layer requiring, per the
+  source repo's own landing plan, "adapter by adapter onto the real pipeline, never a blind merge"),
+  neither is attempted in this pass. This is a deliberate, named scope decision, not a silent drop:
+  task #75 remains open, now narrower (promoter permanently declined; `oos-split.ts`, the DFS tree, and
+  `lib/gse` all remain live candidates for a future dedicated pass, each needing its own freeze
+  contract).
+- Independent review: none dispatched this entry — this is a read-only investigation and disposition
+  entry, no code was written or changed. The finding itself constitutes its own verification: every
+  claim above cites an exact line/comment from the source branch's own code, independently re-readable.
+- Evidence: direct reads of `packages/prediction-engine/src/model-promoter.ts`,
+  `packages/prediction-engine/src/oos-split.ts`, and
+  `packages/prediction-engine/src/__tests__/model-promoter.test.ts` on
+  `origin/claude/laughing-wozniak-gyryjx`; confirmed `computeWindowCalibration`/`WindowCalibration`
+  already exist on `pdcswh` in `calibration-drift.ts`; confirmed `model-promoter.ts`/`oos-split.ts` do
+  not exist anywhere on `pdcswh` today (`find` returned nothing); confirmed `model-court.ts` (the real,
+  live, tested governance gate already on `pdcswh`) still explicitly assumes an external promoter feeds
+  it, unchanged since DEC-054.
+- Alternatives rejected: porting `model-promoter.ts` with the two stubs fixed in the same pass —
+  rejected because implementing real CLV grading and a real champion-vs-challenger comparison from
+  scratch is itself a full protected-zone feature build (not a port), well outside a "recover stranded
+  work" pass, and doing it hastily here risks introducing an unreviewed net-new promotion mechanism
+  through the back door of a recovery task; porting it dark/unwired anyway since DEC-061 established
+  that pattern — rejected per the reasoning above (dark-porting requires the underlying logic be
+  honest, which this is not); silently dropping the whole `laughing-wozniak-gyryjx`/`happy-goodall-
+  8lkxrb` task #75 without this level of detail — rejected as it would waste the one piece of
+  genuinely valuable, immediately-reusable code found (`oos-split.ts`) and would repeat DEC-054's
+  original mistake of trusting characterization over direct code reading.
+- Reversibility: N/A — no code changed, investigation-and-disposition entry only.
+- Protected zones: `packages/prediction-engine` (model-promotion / MODEL_VERSION policy) — the entire
+  point of this entry is protecting that zone from a bad port; treated with maximum caution, per
+  CLAUDE.md's Prediction Engine Rules and this campaign's strictest standing boundary.
+- Files: `docs/frontier/DECISION_REGISTER.md` only. No product code touched.
+- Supersedes: corrects DEC-054's characterization of `claude/laughing-wozniak-gyryjx`'s model-promoter
+  as ready for a same-pattern port — DEC-054's discovery of the integrity-ledger pointer and the
+  `BRANCH_RECONCILIATION.md` plan both stand as accurate (the plan genuinely exists and genuinely names
+  these branches); only the assumption that the promoter itself is functional and safe to port is
+  corrected here, per the established "fix forward, disclose the correction, never silently rewrite an
+  already-pushed entry" rule (DEC-051, DEC-053).
