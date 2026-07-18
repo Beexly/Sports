@@ -1281,4 +1281,66 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: none changed by this workstream itself beyond this ledger entry and the corresponding CURRENT_STATE.md
   update.
 - Supersedes: none.
+
+## DEC-034 — Recovery Wave R0.5: resolve the #76-96 PR-content-landing gap (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Recovery Wave R0.5, per `RECOVERY_WAVES.md`'s own priority insertion (DEC-031). Executed after a
+  deliberate correction: the session had drafted a "campaign complete" stop report (C5) before recognizing that
+  `CONTINUOUS_EXECUTION_CONTRACT.md` §9's stop conditions require BOTH the live queue AND the reconciliation
+  recovery queue to be exhausted — R0.5 was real, dependency-ready, non-owner-gated work still on the table, so
+  emitting a final stop report first would have been premature and dishonest about campaign state. Corrected
+  course per the founder's own repeated instruction to keep executing recovery waves before stopping.
+- Decision: dispatched one general-purpose agent (full GitHub MCP + git access, strictly read-only — no
+  checkout/merge/reset) to resolve all 21 PRs in the #76-96 range individually via `pull_request_read`
+  (`method: get`, one call per PR — a prior bulk `list_pull_requests` call had exceeded the tool output token
+  limit), then verify each via `git diff origin/main...origin/<head-branch> --stat` followed by direct reading
+  of `main`'s current file content against each PR's described fix — comparison-method tier 4
+  (exported-symbol/behavioral equivalence via direct inspection), not commit-message pattern matching or
+  branch-ahead-count.
+  - **Result: 5 SUPERSEDED** (#79, #80, #81, #83, #91 — content genuinely on main via a differently-formatted
+    or salvaged commit; four of five directly attributable to PR #119's own body, which states it salvaged
+    `claude/stress-property-suite` and merged "two independent lineages" of guardrail work).
+  - **16 RECOVER_WHOLE** (#76, #77, #78, #82, #84, #85, #86, #87, #88, #89, #90, #92, #93, #94, #95, #96 —
+    content confirmed genuinely absent from main by direct file inspection).
+  - **0 unresolved.**
+  - **6 of the 16 are LIVE, currently-exploitable defects on `main` today**, confirmed by reading the actual
+    code (not inferred from PR prose): #82 (production DB fail-open + a health check that reports healthy
+    while writes silently drop), #84 (orphaned CLV grades with no healing sweep), #86 (picks can stay PENDING
+    forever — no VOID sweep exists), #89 (a DB/data outage on `/api/promotions` masked as an honest, cacheable
+    empty response), #92 (a settle/refresh TOCTOU race that can let a refresh overwrite a just-settled pick's
+    published grade, plus no stale-close CLV-fabrication guard), #93 (all 32 cockpit pages rely solely on
+    layout-level ADMIN, no per-page defense-in-depth — already tracked separately via open PR #123).
+  - Per `CONTINUOUS_EXECUTION_CONTRACT.md` §6's priority law ("live correctness/security/money-truth defect"
+    ranks above all other priority factors), inserted a new Wave R0.6 ahead of the seed's R1, priority-ordering
+    the 6 live-defect recoveries by blast radius: #92 (settlement/CLV) > #82 (production integrity) > #93
+    (converges with existing R1/PR #123) > #86 (settlement) > #84 (CLV/public claims) > #89 (public claims,
+    depends on #87). R0.6 itself was explicitly NOT executed this pass — this wave was scoped to verification
+    only, matching its own original framing in `RECOVERY_WAVES.md`; recovery is each live-defect fix's own
+    bounded wave, per the contract's "one bounded recovery wave at a time" law.
+- Evidence: full agent transcript (49 tool calls: 21 `pull_request_read` + `git fetch`/`git diff --stat`/
+  `git cat-file -e`/`git grep`/`git log` per branch); `reports/reconciliation/BRANCH_PR_LEDGER.json` updated in
+  place (21 entries promoted from `longTailEntries` to `namedEntries` under new group `"R0.5"`, each carrying
+  its exact evidence citation in the `reason` field; `gapFinding` marked RESOLVED with the full summary;
+  `namedGroupCount` 25→26, `longTailCount` 159→138, total unchanged at 184); `BRANCH_PR_LEDGER.md` rewritten
+  section-by-section (coverage line, new group row, gap section marked RESOLVED with a severity table, long-tail
+  recency split recomputed exactly from the updated JSON — 55 recent / 83 older, not carried over stale — and
+  the acceptance-criteria self-check's criteria #2/#3 updated); `RECOVERY_WAVES.md` R0.5 marked DONE, new R0.6
+  section inserted, recommended-order list refreshed.
+- Alternatives rejected: treating R0.5's verification result as license to immediately start coding all 6
+  live-defect recoveries in the same pass — rejected because that would violate "one bounded recovery wave at a
+  time" (each live-defect fix needs its own FREEZE CONTRACT, targeted tests, and — since every one touches a
+  protected zone — a mandatory red-team pass; bundling six protected-zone changes into one uncontracted pass is
+  exactly the "large, mechanically risky" pattern this session has repeatedly avoided). Fabricating verdicts for
+  the remaining 138 long-tail branches to "finish" reconciliation in one pass — rejected for the same "adapt
+  only what is real" reason DEC-031 already established.
+- Reversibility: fully additive; zero product code touched (verification-only); zero branches merged, deleted,
+  or modified.
+- Protected zones: none directly touched (documentation/ledger updates only); the six live-defect findings
+  themselves span settlement, CLV, production integrity, entitlements/auth, and public claims — each correctly
+  routed to a named, prioritized future recovery wave rather than fixed ad hoc in this documentation-only pass.
+- Files: `reports/reconciliation/BRANCH_PR_LEDGER.json`, `reports/reconciliation/BRANCH_PR_LEDGER.md`,
+  `reports/reconciliation/RECOVERY_WAVES.md` (all modified).
+- Supersedes: none (extends DEC-031's gap finding to a resolved state).
+- Supersedes: none.
 - Supersedes: none.

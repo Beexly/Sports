@@ -3,12 +3,12 @@
   "generatedAt": "2026-07-18T02:35:00Z",
   "generatedBy": "gse-autopilot reconciliation inventory pass (session_01Q3YhetHK7fVCm1JAQTizNR)",
   "totalRemoteBranches": 185,
-  "namedGroupCount": 25,
-  "longTailCount": 159,
+  "namedGroupCount": 26,
+  "longTailCount": 138,
   "gapFinding": {
-    "finding": "PR-reference squash-commit sweep of origin/main's history (git log --oneline | grep -oE '\\(#[0-9]+\\)') found PR numbers 97-120 (except closed #101, and #112 which is correctly still open) all present as literal '(#N)' squash-commit references on main -- i.e. real, mechanical proof their content landed. PR numbers 76-96 are ABSENT from that same sweep despite most being state=closed, merged=false (e.g. #91 hotfix-stripe-event-ordering, #92 hotfix-settle-refresh-races, #93 hotfix-cockpit-page-auth, #94 hotfix-proof-count-utc-bounds, #95 hotfix-vacuous-stub-tests, #96 model-accuracy-leaderboard). This does NOT prove the content is missing -- it may have landed via a differently-formatted commit message, been absorbed into a later PR's diff, or been genuinely superseded -- but it also does not prove the content IS on main, unlike #97-120 where the evidence is direct. This is a real gap this pass surfaces rather than resolves.",
-    "recommendedAction": "A dedicated content-diff pass (git diff against current main for each of #76-96's source branches, or symbol-level comparison per the contract's method tiers 2-4) before any deletion receipt for these branches -- named explicitly as the next reconciliation wave in RECOVERY_WAVES.md.",
-    "affectedPrRange": "76-96 (exact subset requiring diff-level verification; task list item #22 'Close G-3/G-4 + G-2/G-6/G-10..G-14 + G-15/G-18 on frontier branches #76/#77/#78' suggests at least #76-78 were separately, deliberately closed by name -- reducing but not eliminating the unverified range)"
+    "finding": "RESOLVED (Recovery Wave R0.5, 2026-07-18): all 21 PRs in the 76-96 range individually resolved via pull_request_read + git diff origin/main...origin/<head-branch> --stat, then verified by directly reading main's current file content (not commit-message pattern matching). Result: 5 SUPERSEDED (content genuinely landed on main via differently-formatted/salvaged commits -- #79/#83/#91 explicitly attributable to PR #119's own stated salvage of claude/stress-property-suite and a guardrail-lineage merge; #80/#81 functionally identical but via an unidentified commit) and 16 RECOVER_WHOLE (content confirmed genuinely absent from main by direct file inspection, not merely un-squash-matched): #76,#77,#78,#82,#84,#85,#86,#87,#88,#89,#90,#92,#93,#94,#95,#96. Six of the sixteen (#82,#84,#86,#89,#92,#93) describe LIVE, currently-exploitable defects on main (not just missing features) -- see DECISION_REGISTER.md DEC-034 and RECOVERY_WAVES.md Wave R0.6 for the priority-ordered recovery sequencing this finding drives, per the contract's own live-correctness/security-defect priority law (CONTINUOUS_EXECUTION_CONTRACT.md section 6).",
+    "recommendedAction": "DONE this pass (verification). Next: Wave R0.6 -- port the 6 live-defect fixes forward as bounded, red-teamed recovery PRs, priority-ordered by exploitability, before the lower-severity purely-additive gaps (#76/77/78 frontier tooling, #90/96 fantasy modules, #85/87/88/89 lower-severity honesty fixes, #94/95 proof/test hygiene).",
+    "affectedPrRange": "76-96 -- RESOLVED, see namedEntries group R0.5 for all 21 individual verdicts with evidence citations."
   },
   "namedEntries": [
     {
@@ -435,6 +435,413 @@
       "commitsAhead": 0,
       "commitsBehind": 165,
       "lastUpdated": "2026-06-22T22:05:39+00:00"
+    },
+    {
+      "ref": "claude/nfl-pbp-expected-metrics-xb069r",
+      "associatedPrs": [
+        76
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "Truth reconciliation + R&D Radar (resource-intelligence/radar). R0.5 verified via git diff origin/main...origin/<branch> --stat: 41 files, +4075/-58, non-empty. Confirmed genuinely absent by direct file read: apps/web/lib/jarvis/capability-registry.ts:113 on main still reads the stale \"No CLV tracking, no line movement alerts\" claim this PR fixed; apps/web/lib/resource-intelligence/radar/{dossier,policy,score,snapshot,queries,normalize}.ts entirely absent (main's existing resource-intelligence/{classify,cockpit,parse,pipeline}.ts is an older, narrower, unrelated module).",
+      "protectedZones": [],
+      "group": "R0.5",
+      "headSha": "411d7f5ef5aa28c74953aed831ec50ffb5366a8d",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 6,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-12T02:58:48+00:00"
+    },
+    {
+      "ref": "claude/frontier-agent-foundry-2026-07-11",
+      "associatedPrs": [
+        77
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "Agent Foundry + AI Setup Assurance, stacked on #76. R0.5: git diff --stat 63 files, +6607/-58. apps/web/lib/agent-foundry/ and apps/web/lib/assurance/ confirmed absent from main via git cat-file -e (registry.ts, build-report.ts fail).",
+      "protectedZones": [],
+      "group": "R0.5",
+      "headSha": "13eb5ad0577c40e2d847d046c29d8f30c47cf422",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 13,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-12T02:59:16+00:00"
+    },
+    {
+      "ref": "claude/frontier-model-router-shadow-2026-07-11",
+      "associatedPrs": [
+        78
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "AI Model Portfolio Router, shadow-only, stacked on #77. R0.5: git diff --stat 74 files, +7464/-58. apps/web/lib/ai-routing/router.ts confirmed absent from main via git cat-file -e.",
+      "protectedZones": [
+        "model/public interpretation (shadow-only recommender, not yet reviewed for live-wiring safety)"
+      ],
+      "group": "R0.5",
+      "headSha": "4cdd2a383b4b8012dfaf0764da06ccfe76b21447",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 18,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-12T03:01:11+00:00"
+    },
+    {
+      "ref": "claude/hotfix-clv-settlement-billing-integrity",
+      "associatedPrs": [
+        79
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "salvaged_into_119",
+      "status": "SUPERSEDED",
+      "reason": "R0.5: git diff --stat shows 11 files, +413/-14 vs main, but all 4 described fixes independently confirmed PRESENT in main's current code (different, unidentified commit): scoring.ts:56 has averageAmericanPrices()/impliedProbabilityToAmerican(); api/picks/[id]/audit/route.ts:243-244 has preMortem:null,fragility:null for FREE; api/webhooks/stripe/route.ts:174,178 excludes status:{not:\"CANCELED\"} on both payment_failed updateMany clauses; settlement.ts:123 throws instead of a silent PUSH fallthrough. Directly attributable to PR #119's own body, which states it salvaged content from claude/stress-property-suite (#83, a stack-mate of #79).",
+      "protectedZones": [
+        "CLV",
+        "billing",
+        "settlement"
+      ],
+      "group": "R0.5",
+      "headSha": "237f033350869d596640414287510eed7e07310b",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 33,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-12T05:40:08+00:00"
+    },
+    {
+      "ref": "claude/hotfix-slate-freeze-frontrun",
+      "associatedPrs": [
+        80
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "unknown_commit",
+      "status": "SUPERSEDED",
+      "reason": "R0.5: git diff --stat 3 files, +130/-7 vs main, but packages/ingestion-pipeline/src/freeze-slate-commitments.ts:145-192 on main already has the identical fix: NEXT_RUN_UTC_HOUR=10, NEXT_RUN_MARGIN_HOURS=2, and the literal reason string \"deferred: own-day run can still freeze it\" -- byte-for-byte functional match delivered via a different, unidentified commit (not explained by #119's stated salvage list, unlike #79/#81/#83/#91).",
+      "protectedZones": [
+        "proof",
+        "data timing"
+      ],
+      "group": "R0.5",
+      "headSha": "d58a200e6867780840fa09ee631e7ca669129c10",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 1,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T09:15:42+00:00"
+    },
+    {
+      "ref": "claude/guardrail-hardening",
+      "associatedPrs": [
+        81
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "salvaged_into_119",
+      "status": "SUPERSEDED",
+      "reason": "R0.5: git diff --stat 10 files, +1010/-98 vs main, but confirmed present: .github/workflows/ci.yml:5 has branches:[main,\"claude/*\",\"sports-intelligence-os-*\"] on the pull_request trigger; scripts/guardrails/secret-scan.mjs:106-125 has stagedContent() reading git show :path (closes the exact staged-vs-working-tree bypass). PR #119's own body explicitly names this as a \"union of two independent lineages, stronger-of-each per file.\"",
+      "protectedZones": [
+        "CI/guardrails"
+      ],
+      "group": "R0.5",
+      "headSha": "793901cf65ddb7120024e9ff131292e898ea51f4",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 4,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-12T05:12:07+00:00"
+    },
+    {
+      "ref": "claude/hotfix-prod-db-fail-closed",
+      "associatedPrs": [
+        82
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "LIVE GAP, HIGH SEVERITY. R0.5: git diff --stat 10 files, +231/-15. Confirmed NOT superseded by direct read: packages/db/src/index.ts:182-195 still only console.error()s (never throws) when NODE_ENV=production and stub mode is active -- no VERCEL_ENV gate, no escape-hatch env var found anywhere (git grep zero matches). apps/web/app/api/health/route.ts has no stub-specific 503 branch -- a stub client's $queryRaw still reports database:ok. A misconfigured/missing production DATABASE_URL can silently drop writes while health reports healthy. This is the O-1.7 finding, still live on main.",
+      "protectedZones": [
+        "data",
+        "production integrity",
+        "observability"
+      ],
+      "group": "R0.5",
+      "headSha": "9233eee1e9b0562ea5d045cb6ce051de02bf2e56",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 2,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T10:42:37+00:00"
+    },
+    {
+      "ref": "claude/stress-property-suite",
+      "associatedPrs": [
+        83
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "salvaged_into_119",
+      "status": "SUPERSEDED",
+      "reason": "R0.5: git diff --stat 19 files, +914/-71 vs main, but core substance confirmed present: packages/prediction-engine/src/settlement.ts:69 has selectionIsHomeSide(); clv-capture.ts:162,167 makes awayTeamName a required param; property-stress.test.ts exists on main. Directly attributable to PR #119's stated salvage of this exact branch name.",
+      "protectedZones": [
+        "settlement"
+      ],
+      "group": "R0.5",
+      "headSha": "645c02c5d4a28a594efa444c5488fce707b2b9f0",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 10,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T13:56:54+00:00"
+    },
+    {
+      "ref": "claude/hotfix-clv-regrade-orphans",
+      "associatedPrs": [
+        84
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "LIVE GAP, HIGH SEVERITY (M-F4). R0.5: git diff --stat 2 files, +128/-35. Confirmed NOT superseded: packages/ingestion-pipeline/src/settle-sport.ts:88 still reads only include:{picks:{where:{result:\"PENDING\"}}} -- no second query for orphans (result IN (WIN,LOSS,PUSH) AND clvGradedAt IS NULL). A crash between the settle-write and the CLV-write still permanently drops that pick from the public beat-close-rate sample, with no sweep to heal it.",
+      "protectedZones": [
+        "CLV",
+        "data integrity",
+        "public claims (beat-close-rate sample)"
+      ],
+      "group": "R0.5",
+      "headSha": "eb1cbca14edce712f31a39041992293ad8aa76ff",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 1,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T14:01:48+00:00"
+    },
+    {
+      "ref": "claude/hotfix-fabricated-record",
+      "associatedPrs": [
+        85
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "R0.5: git diff --stat 3 files, +138/-4. Confirmed NOT superseded: apps/web/app/api/picks/daily-slate/route.ts:125 still hardcodes recentRecord=null with a comment noting no real graded win/loss/push source is wired. Main fails SAFE (never fabricates a 0-0-0), so this is not itself a live integrity violation, but the real value-add (compute the true 7-day record via groupBy when the gate is open) was never delivered.",
+      "protectedZones": [
+        "public claims (track-record display)"
+      ],
+      "group": "R0.5",
+      "headSha": "5b369e41b8bc5f5b304e9594e8ded6e60893bb9b",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 1,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T14:27:01+00:00"
+    },
+    {
+      "ref": "claude/hotfix-void-stale-picks",
+      "associatedPrs": [
+        86
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "LIVE GAP, HIGH SEVERITY (M-F9). R0.5: git diff --stat 8 files, +684/-186. Confirmed NOT superseded: packages/ingestion-pipeline/src/settle-sport.ts:80 still calls getScores(sport.key, 2) -- daysFrom is still 2, not 3; git grep for a VOID-writing sweep across all .ts on main returns nothing. Cancelled/postponed/feed-missed picks can still stay PENDING forever with no terminal state.",
+      "protectedZones": [
+        "settlement",
+        "data integrity"
+      ],
+      "group": "R0.5",
+      "headSha": "80f1c33671db0e4bcb3794ad1e5eaf7464a0642d",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 2,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T15:24:28+00:00"
+    },
+    {
+      "ref": "claude/hotfix-picks-outage-state",
+      "associatedPrs": [
+        87
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "R0.5: git diff --stat 9 files, +353/-46. apps/web/lib/data-reliability/outage-gate.ts confirmed absent from main via git cat-file -e. /api/picks and /api/clv still cannot distinguish a genuine DB/data outage from deliberate bootstrap gating.",
+      "protectedZones": [
+        "data reliability",
+        "public claims (honest unavailable states)"
+      ],
+      "group": "R0.5",
+      "headSha": "d8e76090b433a40bdf5cf23c84688bcdaa623ec2",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 3,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T16:06:33+00:00"
+    },
+    {
+      "ref": "claude/hotfix-fantasy-upsell-price",
+      "associatedPrs": [
+        88
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "R0.5: git diff --stat 8 files, +78/-11. apps/web/components/fantasy/fantasy-upsell.tsx:20 still hardcodes \"Unlock the full suite - from $49/yr ->\" with zero reference to getCurrentPricingPhase(). Currently correct only by coincidence (matches the FOUNDING rate in CLAUDE.md); will silently go stale at the next pricing-phase step-up.",
+      "protectedZones": [
+        "public claims (pricing display)"
+      ],
+      "group": "R0.5",
+      "headSha": "267ff0e28dbe23d41a37e939a90fdbcdda3e1b2a",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 1,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T16:02:42+00:00"
+    },
+    {
+      "ref": "claude/hotfix-outage-sweep",
+      "associatedPrs": [
+        89
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "R0.5: git diff --stat 18 files, +740/-109. Depends on #87's outage-gate.ts (absent). Confirmed still-live: apps/web/app/api/promotions/route.ts:44 still has .catch(()=>[] as ...) -- a DB/data outage is dressed as an empty, CDN-cacheable \"no offers\" response rather than an honest unavailable state.",
+      "protectedZones": [
+        "data reliability",
+        "public claims"
+      ],
+      "group": "R0.5",
+      "headSha": "1973497cb45b5125515c70b6d32465488447f9dc",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 4,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T16:23:00+00:00"
+    },
+    {
+      "ref": "claude/fantasy-engine-foundation",
+      "associatedPrs": [
+        90
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "Fantasy Engine foundation (glass-box scheme-PROE/Log5/accuracy engine). R0.5: git diff --stat 50 files, +7228/-0 (purely additive). packages/fantasy-engine/src/index.ts confirmed absent from main via git cat-file -e. Superseded in spirit but not content by PR #121's later, independently-verified revival of the same substrate (see DEC-031's Group F) -- #121 remains the live disposition; #90 is the historical origin, not separately recoverable content.",
+      "protectedZones": [],
+      "group": "R0.5",
+      "headSha": "7ca998b95121aef112dd6080ae526e1353e389f8",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 9,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T21:13:53+00:00"
+    },
+    {
+      "ref": "claude/hotfix-stripe-event-ordering",
+      "associatedPrs": [
+        91
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "unknown_commit",
+      "status": "SUPERSEDED",
+      "reason": "R0.5: git diff --stat 2 files, +198/-61 vs main, but apps/web/app/api/webhooks/stripe/route.ts:104-111 already handles customer.subscription.created/updated by re-retrieving and re-syncing the subscription, with a comment almost word-for-word matching this PR's stated rationale (\"Stripe does not guarantee delivery order\"). Fully delivered via a different, unidentified commit.",
+      "protectedZones": [
+        "billing"
+      ],
+      "group": "R0.5",
+      "headSha": "3a0cdd31b6495e46c9975a85e68cf195d2529c13",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 2,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T18:42:16+00:00"
+    },
+    {
+      "ref": "claude/hotfix-settle-refresh-races",
+      "associatedPrs": [
+        92
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "LIVE GAP, HIGH SEVERITY (M-F6/M-F7). R0.5: git diff --stat 5 files, +248/-52. Confirmed NOT superseded: packages/ingestion-pipeline/src/process-sport.ts:483 still has the check-then-act pattern if(existingPick && existingPick.result!==\"PENDING\") -- no atomic updateMany scoped to PENDING, so the settle/refresh TOCTOU race is still exploitable; settle-sport.ts:128 still has take:80 (not 240), so wide-book closes can still be silently truncated; no MAX_CLOSE_AGE_MS exists in clv-capture.ts to guard against stale-close CLV fabrication.",
+      "protectedZones": [
+        "settlement",
+        "CLV"
+      ],
+      "group": "R0.5",
+      "headSha": "856b3177dcf58278d9bc7f859583f58768686f0b",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 2,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T18:47:20+00:00"
+    },
+    {
+      "ref": "claude/hotfix-cockpit-page-auth",
+      "associatedPrs": [
+        93
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "LIVE GAP, HIGH SEVERITY (G-1). R0.5: git diff --stat 34 files, +177/-4. Confirmed NOT superseded: sampled cockpit/page.tsx, agents/page.tsx, history/page.tsx, calibration/page.tsx -- zero have a per-page ADMIN check; only apps/web/app/cockpit/layout.tsx:100 (session.user.role!==\"ADMIN\") exists; requireCockpitAdmin() helper confirmed absent from main. NOTE: this exact gap is independently addressed by the currently-open, unmerged PR #123 (\"per-page ADMIN checks on all 32 cockpit pages, scan-enforced\", RECOVER_WHOLE per DEC-031 Group A/RECOVERY_WAVES.md Wave R1) -- #123 is the live disposition for this gap; #93 is the historical origin PR, already correctly tracked separately, not additional undelivered scope.",
+      "protectedZones": [
+        "entitlements",
+        "auth",
+        "admin surface"
+      ],
+      "group": "R0.5",
+      "headSha": "f505b2e13ab6e5a749ad0b422b34dcf181dfc284",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 1,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T21:09:59+00:00"
+    },
+    {
+      "ref": "claude/hotfix-proof-count-utc-bounds",
+      "associatedPrs": [
+        94
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "R0.5: git diff --stat 8 files, +117/-18. Confirmed NOT superseded: apps/web/lib/board/state.ts:74 still uses start.setHours(0,0,0,0) (server-local midnight, not Date.UTC) -- on a non-UTC host the board's \"today\" would diverge from the engine's UTC game-day; packages/prediction-engine/src/proof-of-record.ts has no commitmentDigest() function -- the Merkle count-binding ambiguity remains unenforced.",
+      "protectedZones": [
+        "proof"
+      ],
+      "group": "R0.5",
+      "headSha": "8d856a18c629a6149929713ec8147a8a58a77d59",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 2,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-11T22:08:19+00:00"
+    },
+    {
+      "ref": "claude/hotfix-vacuous-stub-tests",
+      "associatedPrs": [
+        95
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "R0.5: git diff --stat 3 files, +388/-1 (test-only). apps/web/__tests__/board-loaders-populated.test.ts and daily-slate-populated.test.ts both confirmed absent from main. The board/slate suppression-logic tests remain vacuously green against the always-empty stub client.",
+      "protectedZones": [
+        "test coverage"
+      ],
+      "group": "R0.5",
+      "headSha": "dc1e3a3c454cb84d7f50f3a09b069bbf146978c4",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 2,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-12T02:30:11+00:00"
+    },
+    {
+      "ref": "claude/model-accuracy-leaderboard",
+      "associatedPrs": [
+        96
+      ],
+      "prState": "closed_not_merged",
+      "mergeMethod": "none",
+      "status": "RECOVER_WHOLE",
+      "reason": "R0.5: git diff --stat 53 files, +8031/-0 (purely additive). Depends on #90 (fantasy-engine, absent). apps/web/lib/cockpit/model-accuracy-board.ts and apps/web/app/cockpit/model-accuracy/page.tsx confirmed absent from main via git cat-file -e.",
+      "protectedZones": [
+        "model claims",
+        "cockpit admin surface"
+      ],
+      "group": "R0.5",
+      "headSha": "f109b5e79413ef65da299106e22dc56d7c00044a",
+      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
+      "commitsAhead": 11,
+      "commitsBehind": 22,
+      "lastUpdated": "2026-07-12T17:40:40+00:00"
     }
   ],
   "longTailEntries": [
@@ -767,321 +1174,6 @@
       "commitsAhead": 1,
       "commitsBehind": 22,
       "lastUpdated": "2026-07-12T18:45:56+00:00"
-    },
-    {
-      "ref": "claude/model-accuracy-leaderboard",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "f109b5e79413ef65da299106e22dc56d7c00044a",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 11,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-12T17:40:40+00:00"
-    },
-    {
-      "ref": "claude/hotfix-clv-settlement-billing-integrity",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "237f033350869d596640414287510eed7e07310b",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 33,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-12T05:40:08+00:00"
-    },
-    {
-      "ref": "claude/guardrail-hardening",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "793901cf65ddb7120024e9ff131292e898ea51f4",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 4,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-12T05:12:07+00:00"
-    },
-    {
-      "ref": "claude/frontier-model-router-shadow-2026-07-11",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "4cdd2a383b4b8012dfaf0764da06ccfe76b21447",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 18,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-12T03:01:11+00:00"
-    },
-    {
-      "ref": "claude/frontier-agent-foundry-2026-07-11",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "13eb5ad0577c40e2d847d046c29d8f30c47cf422",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 13,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-12T02:59:16+00:00"
-    },
-    {
-      "ref": "claude/nfl-pbp-expected-metrics-xb069r",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "411d7f5ef5aa28c74953aed831ec50ffb5366a8d",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 6,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-12T02:58:48+00:00"
-    },
-    {
-      "ref": "claude/hotfix-vacuous-stub-tests",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "dc1e3a3c454cb84d7f50f3a09b069bbf146978c4",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 2,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-12T02:30:11+00:00"
-    },
-    {
-      "ref": "claude/hotfix-proof-count-utc-bounds",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "8d856a18c629a6149929713ec8147a8a58a77d59",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 2,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T22:08:19+00:00"
-    },
-    {
-      "ref": "claude/fantasy-engine-foundation",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "7ca998b95121aef112dd6080ae526e1353e389f8",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 9,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T21:13:53+00:00"
-    },
-    {
-      "ref": "claude/hotfix-cockpit-page-auth",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "f505b2e13ab6e5a749ad0b422b34dcf181dfc284",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 1,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T21:09:59+00:00"
-    },
-    {
-      "ref": "claude/hotfix-settle-refresh-races",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "856b3177dcf58278d9bc7f859583f58768686f0b",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 2,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T18:47:20+00:00"
-    },
-    {
-      "ref": "claude/hotfix-stripe-event-ordering",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "3a0cdd31b6495e46c9975a85e68cf195d2529c13",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 2,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T18:42:16+00:00"
-    },
-    {
-      "ref": "claude/hotfix-outage-sweep",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "1973497cb45b5125515c70b6d32465488447f9dc",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 4,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T16:23:00+00:00"
-    },
-    {
-      "ref": "claude/hotfix-picks-outage-state",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "d8e76090b433a40bdf5cf23c84688bcdaa623ec2",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 3,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T16:06:33+00:00"
-    },
-    {
-      "ref": "claude/hotfix-fantasy-upsell-price",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "267ff0e28dbe23d41a37e939a90fdbcdda3e1b2a",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 1,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T16:02:42+00:00"
-    },
-    {
-      "ref": "claude/hotfix-void-stale-picks",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "80f1c33671db0e4bcb3794ad1e5eaf7464a0642d",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 2,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T15:24:28+00:00"
-    },
-    {
-      "ref": "claude/hotfix-fabricated-record",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "5b369e41b8bc5f5b304e9594e8ded6e60893bb9b",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 1,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T14:27:01+00:00"
-    },
-    {
-      "ref": "claude/hotfix-clv-regrade-orphans",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "eb1cbca14edce712f31a39041992293ad8aa76ff",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 1,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T14:01:48+00:00"
-    },
-    {
-      "ref": "claude/stress-property-suite",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "645c02c5d4a28a594efa444c5488fce707b2b9f0",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 10,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T13:56:54+00:00"
-    },
-    {
-      "ref": "claude/hotfix-prod-db-fail-closed",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "9233eee1e9b0562ea5d045cb6ce051de02bf2e56",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 2,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T10:42:37+00:00"
-    },
-    {
-      "ref": "claude/hotfix-slate-freeze-frontrun",
-      "associatedPrs": [],
-      "prState": "no_open_pr",
-      "mergeMethod": "unknown",
-      "status": "UNKNOWN",
-      "reason": "No PR, no ledger-group reference, not an ancestor of main. Real git metadata captured (head/merge-base/ahead-behind/last-updated) but NO content-level review performed this pass -- status is honestly UNKNOWN pending dedicated review, not a fabricated verdict.",
-      "protectedZones": [],
-      "group": "long_tail",
-      "headSha": "d58a200e6867780840fa09ee631e7ca669129c10",
-      "mergeBaseWithMain": "821d0ca3f41db5d73202f0540c95a7f54c8846ce",
-      "commitsAhead": 1,
-      "commitsBehind": 22,
-      "lastUpdated": "2026-07-11T09:15:42+00:00"
     },
     {
       "ref": "claude/dfs-optimizer-edge",

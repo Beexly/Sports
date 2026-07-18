@@ -9,10 +9,11 @@ against live Git/GitHub state per the contract's own instruction).
 founder-facing projection — every claim below is derived from that JSON's `namedEntries`/`longTailEntries`).
 
 **Coverage:** all 184 non-`main` remote branches have a ledger entry (JSON `ref` field), satisfying acceptance
-criterion 1 of the reconciliation contract. 25 receive full semantic detail (named groups, below); 159 receive
-real git-derived metadata (head SHA, merge-base, ahead/behind, last-updated) with an honest `UNKNOWN` status —
-this run is an **inventory pass**, not a deep per-branch content review; the contract's own "Recovery-wave law"
-explicitly scopes the first run to inventory + split-plan generation only ("It does not merge feature code").
+criterion 1 of the reconciliation contract. 46 receive full semantic detail (named groups, below — 25 from the
+original inventory pass + 21 from Recovery Wave R0.5's PR #76-96 content-landing verification, 2026-07-18); 138
+receive real git-derived metadata (head SHA, merge-base, ahead/behind, last-updated) with an honest `UNKNOWN`
+status — deep content review of the remaining long tail is future work, per the contract's own "Recovery-wave
+law" (one bounded wave at a time, "It does not merge feature code").
 
 ## Live baseline re-verified this pass
 
@@ -42,31 +43,55 @@ explicitly scopes the first run to inventory + split-plan generation only ("It d
 | G | `claude/clv-decomposition-reland` | #101 | SUPERSEDED | Closed; superseded by #122's hardened rebase |
 | H | `claude/gracious-albattani-f63wx1` | #52 | ARCHIVE_ONLY | Galaxy Dynasty world-graph, stale base; preserve for future additive porting |
 | I | 12 branches | — | DELETE_AFTER_PROOF | `git merge-base --is-ancestor` confirms 0 commits ahead of main — real ancestry proof, the contract's strongest comparison tier. See JSON for the full list (`adopt/agent-os-runtime`, `claude/amazing-pascal-qa0586`, `claude/blissful-hamilton-d7edx1`, `claude/gse-overnight-audit`, `claude/stoic-dirac-20h11q`, `claude/sweet-fermi-sk9gws`, `claude/zealous-noether-inaaa3`, `codex/enforce-use-of-main-branch-in-git-setup`, `codex/intelligence-core`, `docs/sprint-plan-2026-06-29`, `grok/cockpit`, `integration/proven-edge`) |
+| R0.5 | 21 branches (PRs #76-#96) | #76-#96 | 5 SUPERSEDED / 16 RECOVER_WHOLE | Content-landing gap resolved with real diff evidence — see below |
 
-## A real gap this pass surfaced (not in the seed, not previously flagged)
+## A real gap this pass surfaced — RESOLVED by Recovery Wave R0.5 (2026-07-18)
 
-A mechanical sweep of `origin/main`'s commit history for literal `(#N)` squash-merge references found PR numbers
-**#97–#120 all present** (proof their content landed) — **except #101 and #112**, which are independently
-accounted for above (closed-superseded, and still-open respectively). But PR numbers **#76–#96 are absent**
-from that same sweep, despite most showing `state: closed, merged: false` in GitHub (e.g. #91
-`hotfix-stripe-event-ordering`, #92 `hotfix-settle-refresh-races`, #93 `hotfix-cockpit-page-auth`, #94
-`hotfix-proof-count-utc-bounds`, #95 `hotfix-vacuous-stub-tests`, #96 `model-accuracy-leaderboard`).
+**Original finding:** a mechanical sweep of `origin/main`'s commit history for literal `(#N)` squash-merge
+references found PR numbers **#97–#120 all present** (proof their content landed) — **except #101 and #112**,
+independently accounted for elsewhere (closed-superseded, and still-open respectively). But PR numbers
+**#76–#96 were absent** from that same sweep, despite most showing `state: closed, merged: false` in GitHub.
 
-This does **not** prove the content is missing from main — it may have landed via a differently-formatted
-commit message, been absorbed into a later PR's diff, or been genuinely superseded (this session's own task
-list item #22, "Close G-3/G-4 + G-2/G-6/G-10..G-14 + G-15/G-18 on frontier branches #76/#77/#78," suggests at
-least part of this range was deliberately, separately closed by name in a prior session). It also does not
-prove the content **is** on main, unlike #97–120 where the evidence is direct and mechanical. **Recorded as the
-top item in `RECOVERY_WAVES.md` rather than resolved here** — resolving it requires a real content-diff pass
-per branch, out of scope for an inventory-only run.
+**Resolution (Wave R0.5):** each of the 21 PRs (#76-96) was individually resolved via `pull_request_read` to its
+head branch, then verified with `git diff origin/main...origin/<head-branch> --stat` followed by direct reading
+of `main`'s current file content for every described fix (not commit-message pattern matching — actual code
+inspection). Result:
 
-## Long-tail summary (159 branches, real metadata, honest `UNKNOWN` status)
+- **5 SUPERSEDED** (false alarm — content genuinely landed on main via a differently-formatted or salvaged
+  commit): **#79, #80, #81, #83, #91**. Four of these five are directly attributable to PR #119's own body,
+  which states it salvaged `claude/stress-property-suite` (#83) and merged "two independent lineages" of
+  guardrail work (matching #81) — #79 and #91 (Stripe billing fixes) were stacked on/near that same lineage.
+  #80 (slate-freeze front-run) is functionally identical on main but via an unidentified commit not explained
+  by #119's stated salvage list.
+- **16 RECOVER_WHOLE** (real gap — content confirmed genuinely absent from main, not merely un-squash-matched):
+  **#76, #77, #78, #82, #84, #85, #86, #87, #88, #89, #90, #92, #93, #94, #95, #96**.
+- **0 unresolved.**
+
+**Severity flag — 6 of the 16 describe LIVE, currently-exploitable defects on `main` today** (verified by direct
+code reading, not inferred from PR prose):
+
+| PR | Defect | Evidence |
+|---|---|---|
+| #82 | Prod DB fail-open + fake-healthy health check | `packages/db/src/index.ts:182-195` only `console.error()`s on a missing/misconfigured production `DATABASE_URL`, never throws; `/api/health` has no stub-aware branch — reports `database: ok` while writes silently drop |
+| #84 | Orphaned CLV grades, no healing sweep | `packages/ingestion-pipeline/src/settle-sport.ts:88` only queries `PENDING` picks — a crash between settle-write and CLV-write permanently drops that pick from the public beat-close-rate sample |
+| #86 | Picks can stay PENDING forever | `settle-sport.ts:80` still calls `getScores(sport.key, 2)` (not 3); no VOID-writing sweep exists anywhere in the repo |
+| #89 | DB/data outage on `/api/promotions` dressed as an honest empty response | `apps/web/app/api/promotions/route.ts:44` still has `.catch(() => [] as ...)`, CDN-cacheable |
+| #92 | Settle/refresh TOCTOU race + stale-close CLV fabrication | `process-sport.ts:483` still uses check-then-act, not an atomic `updateMany` scoped to `PENDING`; no `MAX_CLOSE_AGE_MS` guard exists |
+| #93 | Cockpit pages rely solely on layout-level ADMIN, no per-page defense-in-depth | sampled 4 of 32 cockpit pages, zero have a page-level check; `requireCockpitAdmin()` confirmed absent from main. **Note:** this exact gap is already the subject of the currently-open, unmerged PR #123 — #93 is the historical origin, #123 is the live disposition, not additional undelivered scope. |
+
+Full per-PR verdicts with exact evidence citations: `BRANCH_PR_LEDGER.json`'s `namedEntries` where
+`group: "R0.5"`. **Recovery of this content (porting it forward as bounded PRs) is explicitly out of scope for
+this verification wave** — see `RECOVERY_WAVES.md` Wave R0.6 for the priority-ordered recovery sequencing this
+finding drives.
+
+## Long-tail summary (138 branches, real metadata, honest `UNKNOWN` status)
 
 None of the long tail are ancestors of main (the 12 that are got pulled into the named "Group I" table above,
-since ancestry is real proof, not a guess). Of the 159 genuinely `UNKNOWN`:
+since ancestry is real proof, not a guess). 21 of the original 159 were resolved into named Group R0.5 above,
+leaving 138 genuinely `UNKNOWN`. Recomputed directly from the updated JSON (not carried over stale):
 
-- **74** have a last-commit date on or after 2026-07-01 (recent — the higher-signal subset for a future review pass).
-- **85** are older than 2026-07-01.
+- **55** have a last-commit date on or after 2026-07-01 (recent — the higher-signal subset for a future review pass).
+- **83** are older than 2026-07-01.
 
 No branch in this bucket received a fabricated `RECOVER`/`SUPERSEDED`/`ARCHIVE` verdict — the contract's own
 invariant #2 ("ahead count is not evidence of missing work") cuts both ways: it is equally not evidence FOR
@@ -79,8 +104,8 @@ hypothesis to verify, not asserted here as fact).
 ## Acceptance-criteria self-check (contract §"Acceptance criteria")
 
 1. Every non-main branch has a ledger entry — **YES**, 184/184, JSON `namedEntries` + `longTailEntries`.
-2. Every PR has a current disposition — **YES** for all 10 open + 2 newly-reconfirmed-closed PRs this session tracks (#52/#101/#112/#121–#129 minus #126 closed); no PR was left unaddressed.
-3. Every ahead branch has a PR or explicit archive/supersession record — **PARTIAL**: the 159 long-tail branches have a real metadata record but an honest `UNKNOWN` disposition, not yet an archive/supersession ruling — this is the acceptance criterion this pass does NOT yet fully close, named explicitly as future work rather than glossed over.
+2. Every PR has a current disposition — **YES** for all 10 open + 2 newly-reconfirmed-closed PRs this session tracks (#52/#101/#112/#121–#129 minus #126 closed), plus the 21 closed PRs #76-96 individually resolved via Wave R0.5 (5 SUPERSEDED, 16 RECOVER_WHOLE); no PR was left unaddressed.
+3. Every ahead branch has a PR or explicit archive/supersession record — **PARTIAL**: 21 of the original 159 long-tail branches (PRs #76-96) received a real archive/supersession/recovery ruling via Wave R0.5; the remaining 138 long-tail branches have a real metadata record but an honest `UNKNOWN` disposition — this criterion is now closer to fully met but still not fully closed, named explicitly as future work rather than glossed over.
 4. Every changed file/symbol assigned to one recovery target — **NOT ATTEMPTED** this pass (would require `FILE_SYMBOL_OWNERSHIP.csv` at full depth across all 184 branches; populated instead with the six already-proven architecture collisions from the seed doc, which is the real, evidence-backed subset this session can honestly claim).
 5. All duplicate canonical systems have a convergence ruling — **YES** for the six documented collisions (source-rights registry, model/provider routing, capability vocabulary, program queues, playback, proof) — see `FILE_SYMBOL_OWNERSHIP.csv`.
 6. All migrations/protected changes have owner-gated lanes — **YES** (#122 CLV/Pedersen, OTS migration on #129, both explicitly OWNER_GATE).

@@ -1,13 +1,14 @@
 # Recovery Waves — Reconciliation Plan
 
-**Status:** inventory pass complete (this session, 2026-07-18). Per the reconciliation contract's own
-"Recovery-wave law," this run performs inventory and generates the split plan only — it does not merge feature
-code, and per `.claude/commands/genesis-reconcile.md` §8 ("Stop after one inventory or recovery wave"), no
-recovery wave was executed in this same pass beyond what was already independently re-verified as evidence.
+**Status:** inventory pass complete + one verification wave (R0.5) complete, both this session (2026-07-18). Per
+the reconciliation contract's own "Recovery-wave law," each wave is its own bounded pass — R0.5 was scoped to
+verification only (resolving whether #76-96's content landed on main, not porting any missing content forward).
+Per `.claude/commands/genesis-reconcile.md` §8 ("Stop after one inventory or recovery wave"), actual code
+recovery (Wave R0.6) is intentionally NOT performed in this same pass.
 
 Sequencing below is the seed doc's own `R0`-`R11` order, refreshed against this pass's live findings. It changes
-only where fresh evidence demonstrates a stronger dependency or urgent correctness/security defect — one such
-change is made below (R0.5) and explicitly justified.
+only where fresh evidence demonstrates a stronger dependency or urgent correctness/security defect — two such
+changes are made below (R0.5, now DONE, and its own child R0.6) and explicitly justified.
 
 ## Wave R0 — Restore trustworthy CI baseline (#128)
 
@@ -15,29 +16,60 @@ change is made below (R0.5) and explicitly justified.
 pass — same-day): `commercial-copy-scan` OK, `trust-gate` OK, `secret-scan` OK, `git diff --check` clean. One
 file, four lines, comment-only. No agent action remains — merging is founder-only.
 
-## Wave R0.5 — NEW, evidence-driven insertion: verify the #76-96 PR-content gap
+## Wave R0.5 — DONE (2026-07-18): verify the #76-96 PR-content gap
 
 **Why inserted here, ahead of R1:** this reconciliation pass's own mechanical PR-reference sweep of `main`'s
-commit history (see `BRANCH_PR_LEDGER.md`'s "A real gap this pass surfaced") found PR numbers **#76-96** absent
-from the squash-commit trail that #97-120 all show clearly. Several of these are named hotfixes for
-**settlement race conditions, cockpit auth, and proof-count bounds** — exactly the class of "live
-correctness/security defect" the queue-drain contract's own priority law (`CONTINUOUS_EXECUTION_CONTRACT.md`
-§6: "live correctness / security / money-truth defect" ranks above all other priority factors) says should
-reorder the queue when fresh evidence reveals it. This wave does NOT conclude anything is broken — it is
-explicitly a verification wave to determine, with real diff evidence, whether #76-96's content:
-(a) landed on main via a differently-formatted commit, (b) was absorbed into a later PR's diff, or
-(c) is genuinely absent and needs recovery.
+commit history found PR numbers **#76-96** absent from the squash-commit trail that #97-120 all show clearly.
+Several of these are named hotfixes for **settlement race conditions, cockpit auth, and proof-count bounds** —
+exactly the class of "live correctness/security defect" the queue-drain contract's own priority law
+(`CONTINUOUS_EXECUTION_CONTRACT.md` §6) says should reorder the queue when fresh evidence reveals it.
 
-**Method:** for each of `claude/hotfix-stripe-event-ordering` (#91), `claude/hotfix-settle-refresh-races` (#92),
-`claude/hotfix-cockpit-page-auth` (#93), `claude/hotfix-proof-count-utc-bounds` (#94),
-`claude/hotfix-vacuous-stub-tests` (#95), plus the full #76-90/#96 range (branch names not yet resolved to PR
-numbers 1:1 — the GitHub PR list only confirms #91-96's branch refs; #76-90's exact branch refs need a
-`search_pull_requests` pass this inventory did not run), diff the source branch against current `main` using
-the contract's comparison-method tiers 2-4 (patch-id, blob identity, exported-symbol/behavioral equivalence) —
-not branch-ahead-count. Record each as `ON_MAIN_EQUIVALENT` (content present, different commit shape) or
-`RECOVER_WHOLE`/`RECOVER_PARTIAL` (content genuinely missing) in the ledger.
+**Method used:** each of the 21 PRs (#76-96) was resolved to its head branch via `pull_request_read`, then
+`git diff origin/main...origin/<head-branch> --stat` was run, followed by direct reading of `main`'s current
+file content against each PR's described fix (comparison-method tier 4: exported-symbol/behavioral
+equivalence via direct inspection — not branch-ahead-count, not commit-message pattern matching alone).
 
-**Not performed this pass** — this is the single highest-priority NEXT reconciliation wave.
+**Result: 5 SUPERSEDED, 16 RECOVER_WHOLE, 0 unresolved.** Full verdicts with evidence citations are in
+`BRANCH_PR_LEDGER.json`'s `namedEntries` (`group: "R0.5"`) and `BRANCH_PR_LEDGER.md`'s dedicated section.
+**6 of the 16 RECOVER_WHOLE verdicts are LIVE, currently-exploitable defects on `main`** (#82 prod-DB
+fail-open, #84 orphaned CLV grades, #86 picks stuck PENDING forever, #89 outage masked as empty response, #92
+settle/refresh TOCTOU race, #93 cockpit per-page ADMIN gap — the last already tracked separately via open PR
+#123). This wave was scoped to **verification only** per its own original framing — recovery (porting the
+content forward as bounded PRs) is Wave R0.6, below, priority-ordered by the contract's own live-defect law.
+
+## Wave R0.6 — NEW, evidence-driven insertion: recover the 6 live-defect fixes from R0.5
+
+**Why inserted here, ahead of R1:** these are not speculative gaps — R0.5 confirmed by direct code inspection
+that each of the following is exploitable on `main` **today**. `CONTINUOUS_EXECUTION_CONTRACT.md` §6 ranks
+"live correctness / security / money-truth defect" above all other priority factors, including previously
+higher-numbered waves in this same sequence.
+
+**Priority order (most severe first, by blast radius):**
+
+1. **#92 — settle/refresh TOCTOU race + stale-close CLV fabrication.** `process-sport.ts:483`'s check-then-act
+   can let a refresh overwrite a just-settled pick's published grade; no `MAX_CLOSE_AGE_MS` guard exists.
+   Highest severity: directly threatens settlement correctness and CLV integrity, the platform's core
+   money-truth surface. Protected zones: settlement, CLV — mandatory red-team.
+2. **#82 — prod DB fail-open + fake-healthy health check.** A misconfigured production `DATABASE_URL` silently
+   drops writes while `/api/health` reports healthy — an operational blind spot that could mask a total outage.
+   Protected zones: production integrity, observability.
+3. **#93 — cockpit per-page ADMIN.** Already tracked as open PR #123 (`RECOVER_WHOLE` per Group F above) — this
+   wave's action is to re-verify #123's rebase against the CURRENT main tip (same as Wave R1, below; R0.6 and
+   R1 converge on the same unit of work) rather than re-deriving #93 from scratch. Protected zones: entitlements,
+   auth.
+4. **#86 — picks stuck PENDING forever.** No terminal-state sweep for cancelled/postponed/feed-missed games;
+   `daysFrom` still 2 not 3. Protected zones: settlement, data integrity.
+5. **#84 — orphaned CLV grades.** A crash between settle-write and CLV-write permanently drops that pick from
+   the public beat-close-rate sample, with no healing sweep. Protected zones: CLV, public claims.
+6. **#89 — outage on `/api/promotions` masked as an honest empty response.** Depends on #87's `outage-gate.ts`
+   (also RECOVER_WHOLE, not itself in the live-defect-6 but a direct dependency). Protected zones: data
+   reliability, public claims.
+
+**Method for each:** FREEZE CONTRACT (re-derive the exact fix against CURRENT main, not the stale PR diff —
+main has advanced since these PRs were authored) → CODE (port the fix, re-verified against today's file
+state) → TARGETED TEST → mandatory red-team (all six touch a protected zone) → FINAL VERIFY → ledgers → commit
+→ push → bounded recovery PR (never merged to main by this agent). **Not performed this pass** — each is its
+own "one bounded recovery wave," per the contract's own law, not a single mega-wave covering all six at once.
 
 ## Wave R1 — Security hardening (#123)
 
@@ -131,8 +163,9 @@ first; (3) for each, apply the SAME comparison-method tiers used in R0.5 before 
 
 ```text
 R0    Land #128 (founder-merge-only; agent work complete)
-R0.5  Verify #76-96 PR-content gap (NEW — correctness/security priority)
-R1    Re-verify #123 rebase against current main tip
+R0.5  DONE (2026-07-18) — Verify #76-96 PR-content gap: 5 SUPERSEDED, 16 RECOVER_WHOLE
+R0.6  Recover the 6 live-defect fixes from R0.5 (#92 > #82 > #93 > #86 > #84 > #89) — NOT performed this pass
+R1    Re-verify #123 rebase against current main tip (converges with R0.6 item 3)
 R2    #127 founder decision (agent work complete)
 R3    Done
 R4    Done (this pass)
@@ -143,5 +176,5 @@ R8    Diff #112 vs #129 residual value
 R9    Fresh #122 drift proof + red-team
 R10   Blocked on #127
 R11   Deletion receipts for the 12 proven-ancestor branches
-R11.5 Long-tail triage (159 branches)
+R11.5 Long-tail triage (138 branches remaining after R0.5's 21 resolutions)
 ```
