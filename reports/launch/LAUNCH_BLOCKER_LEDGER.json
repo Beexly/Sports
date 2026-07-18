@@ -1,0 +1,148 @@
+{
+  "ledgerVersion": "1.0",
+  "generatedAt": "2026-07-18T22:30:00Z",
+  "generatedBy": "gse-launch LC-000/LC-001 seed, session_01Q3YhetHK7fVCm1JAQTizNR",
+  "classificationTaxonomy": [
+    "P0_CORRECTNESS_SECURITY",
+    "P1_DEPLOYMENT_AUTH",
+    "P1_REVENUE",
+    "P1_DATA_ENGINE",
+    "P2_TRUST_UX",
+    "PROOF_GATED",
+    "OWNER_GATE",
+    "EXTERNAL_BLOCKER",
+    "INTENTIONAL_CLOSED"
+  ],
+  "blockers": [
+    {
+      "id": "LB-001",
+      "title": "main CI red: commercial-copy-scan self-trigger on its own doc comment",
+      "classification": "P1_DEPLOYMENT_AUTH",
+      "subclass": "CI reliability -- every PR against main inherits this failure regardless of its own diff",
+      "evidence": [
+        "mcp__github__actions_list(list_workflow_runs, workflow=ci.yml, branch=main): latest run 29589031971 on head_sha 0e56c477, conclusion=failure",
+        "mcp__github__get_job_logs(run_id=29589031971, failed_only=true): both failing jobs ('All guardrails', 'Test, type-check, lint, Prisma') fail on the identical [commercial-copy-scan] FAIL - apps/web/app/tools/page.tsx:17-18 [commercial-copy.tout:risk free]",
+        "PR #128 body: fix already written, verified (commercial-copy-scan/trust-gate/secret-scan all shown green post-fix), and independently confirms this reproduces off main's base commit alone, unrelated to any PR diff"
+      ],
+      "impact": "No PR against main can show a fully-green CI run until this lands. Does not affect the live production site (production is already built and deployed from an older, CI-green commit of this same code path -- this is a forward-looking CI-reliability blocker, not a live incident).",
+      "blastRadius": "All future PRs targeting main. Zero blast radius on already-deployed production.",
+      "canonicalOwner": "Founder (merge authority on main)",
+      "dependencies": "None. Independently mergeable today.",
+      "smallestSafeFix": "Merge PR #128 as-is (1 file, 4 lines, comment-only, mergeable_state: clean, base SHA == current main HEAD).",
+      "verification": "Re-run CI on main post-merge; confirm 'All guardrails' and 'Test, type-check, lint, Prisma' both conclude success.",
+      "rollback": "git revert of a 4-line comment-only commit.",
+      "reEntryCondition": "N/A -- terminal, single-shot fix.",
+      "status": "READY_FOR_OWNER_ACTION"
+    },
+    {
+      "id": "LB-002",
+      "title": "Live Google OAuth signin/callback URLs on apex host, not canonical www host",
+      "classification": "P1_DEPLOYMENT_AUTH",
+      "evidence": [
+        "curl -s https://www.galaxysportsedge.com/api/auth/providers (this session) -> signinUrl and callbackUrl both read https://galaxysportsedge.com/... (apex, no www) despite the request itself targeting www",
+        "apps/web/lib/auth.ts:25 sets trustHost: true, which does not explain host-header-independent apex URLs -- points to an explicit NEXTAUTH_URL/AUTH_URL environment override",
+        "CLAUDE.md's own documented environment-variable table: 'NEXTAUTH_URL ... Must be the exact live canonical host WITH www ... (identical to NEXT_PUBLIC_APP_URL)'"
+      ],
+      "impact": "If Google Cloud Console's registered redirect URI is www-only (per CLAUDE.md's own OPERATOR instructions), real users attempting Google sign-in receive an OAuth error instead of signing in. If apex is also registered, sign-in may nominally work but violates the single-canonical-host doctrine with unassessed cookie/session risk.",
+      "blastRadius": "Every user attempting Google OAuth sign-in on the live site, right now, until fixed.",
+      "canonicalOwner": "Founder (Vercel production environment variables + Google Cloud Console OAuth client)",
+      "dependencies": "None. Independently actionable today.",
+      "smallestSafeFix": "Set NEXTAUTH_URL/AUTH_URL to https://www.galaxysportsedge.com on Vercel (production scope); confirm Google Cloud Console's Authorized redirect URIs includes https://www.galaxysportsedge.com/api/auth/callback/google.",
+      "verification": "Re-fetch /api/auth/providers after the change; confirm both URLs read the www host. Ideally follow with one real (or test-account) Google sign-in round-trip.",
+      "rollback": "Revert the environment variable to its prior value.",
+      "reEntryCondition": "N/A -- terminal action once done.",
+      "status": "READY_FOR_OWNER_ACTION",
+      "note": "Not caught by the prior 17:18 UTC baseline (docs/genesis/LIVE_PRODUCTION_BASELINE_2026-07-18.md) -- new finding this session."
+    },
+    {
+      "id": "LB-003 (PROD-001)",
+      "title": "Refund promise contradiction: pricing promises unconditional 3-day guarantee, Terms says discretionary-only",
+      "classification": "P1_REVENUE",
+      "evidence": [
+        "Live /pricing (this session): 'No free trial, but every paid plan has a 3-day money-back window. Cancel any time from your dashboard.'",
+        "Live /terms Section 5 (this session): 'we do not pro-rate refunds for partial periods. We may offer occasional refunds at our discretion within the period stated at checkout.'"
+      ],
+      "impact": "A paying customer who reads the pricing page and requests a refund within 3 days has a reasonable expectation of an unconditional refund; the Terms page, if actually enforced as written, would let support decline it. Real legal/commercial/trust exposure on the revenue path.",
+      "blastRadius": "Every paid-tier signup; realized only if/when a refund is requested and support follows the Terms language over the pricing promise.",
+      "canonicalOwner": "Founder (legal/commercial policy decision: which promise is the real one)",
+      "dependencies": "A canonical refund policy decision must be made before code can consistently reflect it everywhere (pricing, checkout, FAQ, tier panels, Terms, support copy).",
+      "smallestSafeFix": "Not this agent's call to make -- OWNER_GATE on the policy decision itself. Once decided, the mechanical fix (one canonical constant threaded through every surface + a cross-surface consistency test) is low-risk and already scoped in the prior baseline's 'Required disposition' section.",
+      "verification": "After the fix lands and deploys: automated cross-surface test asserting pricing/checkout/FAQ/tier-panel/Terms/support copy all cite the identical refund policy.",
+      "rollback": "Standard code revert once implemented.",
+      "reEntryCondition": "Founder decides the canonical refund policy (unconditional 3-day, or discretionary, or some third option).",
+      "status": "OWNER_GATE_PENDING_POLICY_DECISION",
+      "priorFixRecorded": "DEC-050 on the frozen pdcswh branch recorded a fix, but it is not in production (production runs main, not pdcswh)."
+    },
+    {
+      "id": "LB-004 (PROD-002)",
+      "title": "Microsoft Clarity configured with literal undefined project identifier",
+      "classification": "P2_TRUST_UX",
+      "evidence": ["curl of https://www.galaxysportsedge.com/ (this session) -> literal 'clarity.ms/tag/' with no identifier appended"],
+      "impact": "Analytics script executes but cannot report real session data to Clarity -- false confidence that product analytics are being collected.",
+      "blastRadius": "All product-analytics decision-making that assumes Clarity data exists.",
+      "canonicalOwner": "Founder (provide the correct Clarity project ID, or approve omitting the script)",
+      "dependencies": "None.",
+      "smallestSafeFix": "Provide a valid Clarity project identifier via the approved environment path, or omit the script entirely when unset. Add a build/runtime guard preventing `clarity.ms/tag/undefined` from ever rendering again.",
+      "verification": "Confirm a real event/session reaches the Clarity dashboard for the intended property; add a regression test asserting the identifier is never the literal string 'undefined'.",
+      "rollback": "Trivial -- revert an env var or a conditional-render change.",
+      "reEntryCondition": "N/A",
+      "status": "READY_FOR_OWNER_ACTION_OR_CODE_FIX"
+    },
+    {
+      "id": "LB-005 (PROD-003)",
+      "title": "Nightly Sentinel has zero unattended monitoring coverage",
+      "classification": "P1_DATA_ENGINE",
+      "subclass": "Monitoring architecture, not a site defect",
+      "evidence": ["Prior baseline (docs/genesis/LIVE_PRODUCTION_BASELINE_2026-07-18.md, PR #125): scheduled sentinel blocked because every Claude WebFetch call required interactive approval with no human approver present in the scheduled environment."],
+      "impact": "Production currently has no automated, unattended proof-of-health beyond whatever ad hoc checks a human runs. A real incident could go undetected between manual checks.",
+      "blastRadius": "Detection latency for any future production incident.",
+      "canonicalOwner": "This campaign (agent-buildable) -- directly addressed by LC-002 Nightly Sentinel v2.",
+      "dependencies": "None blocking -- LC-002 is dependency-ready today.",
+      "smallestSafeFix": "Build a bounded, repo-native Node runner (no Claude-WebFetch dependency) plus an approved scheduled GitHub Actions workflow checking the endpoint list the gse-launch skill specifies (/llms.txt, /api/health, /api/proof/*, /news-sitemap.xml, /robots.txt, /, /tools, /sealed, /how-we-make-money, /watchlist, public-claim hygiene).",
+      "verification": "Fixture-server tests with planted failures; confirm the runner distinguishes runner failure, transport failure, and assertion failure; confirm it produces one actionable alert without duplicate storms.",
+      "rollback": "Disable the scheduled workflow; no production code path depends on it.",
+      "reEntryCondition": "N/A -- this is the next queued Launch Convergence workstream (LC-002).",
+      "status": "AGENT_BUILDABLE_NEXT"
+    },
+    {
+      "id": "LB-006 (PROD-004)",
+      "title": "news-sitemap.xml serves an empty URL set",
+      "classification": "P2_TRUST_UX",
+      "evidence": ["curl of https://www.galaxysportsedge.com/news-sitemap.xml (this session) -> <urlset ...></urlset>, zero <url> entries"],
+      "impact": "Ambiguous by itself. Could be correct (no eligible news content exists right now) or could indicate an ingestion/publication gap in the news-content pipeline.",
+      "blastRadius": "SEO/news-discovery surface only, no correctness/revenue/security exposure identified.",
+      "canonicalOwner": "This campaign (agent-investigable) -- needs a source-side check, not an owner decision, unless investigation finds a real gap.",
+      "dependencies": "None.",
+      "smallestSafeFix": "Not yet determined -- first step is investigation: does the CMS/content pipeline have eligible unpublished news items that should be appearing here? If genuinely zero eligible items exist, this is INTENTIONAL_CLOSED, not a defect.",
+      "verification": "Once the underlying query/source is identified, confirm the sitemap correctly reflects whatever the true eligible-item count is.",
+      "rollback": "N/A pending investigation.",
+      "reEntryCondition": "N/A",
+      "status": "NEEDS_INVESTIGATION"
+    },
+    {
+      "id": "LB-007",
+      "title": "Production database migration convergence unverified",
+      "classification": "P1_DATA_ENGINE",
+      "evidence": ["29 sequential migration files exist on main's checked-out source (packages/db/prisma/migrations/), latest 20260717120000_add_watchlist. No production database credentials or migration-status query available this session."],
+      "impact": "Unknown. Could be fully converged (likely, given /api/health reports database ok) or could have silent drift. This is the single largest unverified category in this pass.",
+      "blastRadius": "Potentially any write path if drift exists; currently unmeasured.",
+      "canonicalOwner": "Whoever has production database / Vercel environment access for a migration-status query.",
+      "dependencies": "Requires DB credentials or a Vercel-side migration-status check not available in this session's sandboxed environment.",
+      "smallestSafeFix": "Run `prisma migrate status` (or the project's `db:migrate:status` script) against the production database from an environment with real credentials; compare applied migrations against the 29 files on main.",
+      "verification": "Migration status output shows zero pending/drifted migrations.",
+      "rollback": "N/A -- read-only verification step.",
+      "reEntryCondition": "Awaiting an environment/session with production DB access.",
+      "status": "NOT_TESTED_NEEDS_ACCESS"
+    }
+  ],
+  "summary": {
+    "readyForOwnerActionNow": ["LB-001", "LB-002"],
+    "ownerGatePendingPolicyDecision": ["LB-003"],
+    "agentBuildableNext": ["LB-005"],
+    "needsInvestigation": ["LB-006"],
+    "needsAccessNotAvailableThisSession": ["LB-007"],
+    "totalConfirmedLiveDefects": 6,
+    "zeroConfirmedP0CorrectnessSecurityFindings": true,
+    "note": "No P0_CORRECTNESS_SECURITY item was found this pass. LB-001 and LB-002 are the two items with a clear, immediate, low-risk owner action available today."
+  }
+}

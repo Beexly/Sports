@@ -1,0 +1,247 @@
+{
+  "snapshotVersion": "1.0",
+  "generatedAt": "2026-07-18T22:30:00Z",
+  "generatedBy": "gse-launch LC-000, session_01Q3YhetHK7fVCm1JAQTizNR",
+  "targetHost": "https://www.galaxysportsedge.com",
+  "boundary": "Point-in-time observation. Not a permanent health claim. Not authorization to change production. Classifications: PROVEN | FAILED | BLOCKED | OWNER_GATE | NOT_TESTED.",
+  "repository": {
+    "mainSha": "0e56c4770e715630eaaac974702336447e367b5a",
+    "mainCommitTitle": "fix(settlement): correct side-derivation mis-grade + close scanner/CI bypasses (#119)",
+    "mainCommitAuthor": "Beexly (baxley.garrett@gmail.com), founder-authorized merge, 2026-07-17",
+    "status": "PROVEN",
+    "evidence": "git log -1 origin/main; mcp__github__get_commit",
+    "branchProtection": {
+      "status": "NOT_TESTED",
+      "note": "Not queried this pass -- requires a repo-admin-scoped API call not yet made. Add to LC-001."
+    }
+  },
+  "ci": {
+    "workflows": [
+      "CI (.github/workflows/ci.yml)",
+      "Daily Smoke Test (.github/workflows/daily-smoke.yml)",
+      "External Cron - Galaxy Sports Edge (.github/workflows/external-cron.yml)",
+      "FABLE Evidence (.github/workflows/fable-evidence.yml)",
+      "Galaxy Genesis Package (.github/workflows/genesis-package.yml)",
+      "Galaxy Genesis Production Activation Package (.github/workflows/genesis-production-activation.yml)",
+      "Galaxy Genesis Reconciliation Package (.github/workflows/genesis-reconciliation-package.yml)",
+      "Green Gate (.github/workflows/green-gate.yml)",
+      "Create/Delete Branch for Pull Request (.github/workflows/neon_workflow.yml)"
+    ],
+    "latestMainRun": {
+      "status": "FAILED",
+      "runId": 29589031971,
+      "headSha": "0e56c4770e715630eaaac974702336447e367b5a",
+      "createdAt": "2026-07-17T14:41:35Z",
+      "conclusion": "failure",
+      "failedJobs": [
+        {
+          "name": "All guardrails",
+          "failingStep": "Run all guardrails",
+          "rootCause": "commercial-copy-scan.mjs flags apps/web/app/tools/page.tsx:17-18, its own doc-comment example of a banned phrase ('risk-free/etc') describing the trust-gate guardrail. False positive, zero user-facing effect.",
+          "fixAvailable": true,
+          "fixPr": 128
+        },
+        {
+          "name": "Test, type-check, lint, Prisma",
+          "failingStep": "Run tests (all workspaces)",
+          "rootCause": "Same root cause as above: __tests__/guardrails.test.ts > Phase 9 guardrails > commercial-copy-scan exits 0 on launch-facing revenue surfaces (1 of 44 tests in that file). Lint and type-check both passed individually in this same run.",
+          "fixAvailable": true,
+          "fixPr": 128
+        }
+      ],
+      "buildJob": {
+        "status": "skipped",
+        "reason": "Skipped because the preceding test job failed."
+      },
+      "status": "PROVEN",
+      "evidence": "mcp__github__actions_list(list_workflow_runs, branch=main) + mcp__github__actions_list(list_workflow_jobs) + mcp__github__get_job_logs(failed_only=true) on run 29589031971"
+    },
+    "previousMainRun": {
+      "headSha": "c179a781a8de7029176acee9271a5b04a0a59d09",
+      "conclusion": "success",
+      "createdAt": "2026-07-17T05:05:43Z",
+      "note": "The commit immediately before current main HEAD was CI-green. The regression was introduced by the same commit that fixed the settlement bug (#119), which evidently did not itself trip the guardrail -- the guardrail script's false positive on tools/page.tsx predates #119 per PR #127's and PR #128's own bodies (both dated 2026-07-17, found while opening #127)."
+    },
+    "localTypecheckAndTestReproduction": {
+      "status": "PROVEN",
+      "note": "Reproduced main's clean typecheck locally in an isolated worktree (see Environment Note below): npm run typecheck --workspace=apps/web exits 0 once the Prisma client is regenerated against main's own schema. This confirms the CI failure is exactly and only the commercial-copy-scan false positive, not a broader main-HEAD regression.",
+      "environmentNote": "A naive `ln -s pdcswh/node_modules new-worktree/node_modules` silently resolves @sports/* workspace packages back to pdcswh's source (npm workspace symlinks are relative and resolve against their real target's location, not the access path) and reuses a Prisma Client generated against pdcswh's schema. This produced a phantom local typecheck error (PickDeathClock vs AuditDeathClock field mismatch) that does not exist in main's actual source. Fixed by symlinking only third-party packages and creating fresh @sports/* symlinks + a locally-regenerated Prisma Client scoped to the new worktree. Record this as a standing gotcha for any future worktree created this way under this session's disk constraints (761MB free at session start)."
+    }
+  },
+  "recommendedOwnerAction": {
+    "id": "OG-LC-001",
+    "decision": "Merge PR #128 (fix/tools-page-commercial-copy-scan -> main)",
+    "whyAuthorityRequired": "Merging to main is founder-only under every standing rule this campaign operates under.",
+    "exactActionAndLocation": "https://github.com/Beexly/Sports/pull/128 -- 1 file, 4 lines, comment-only. mergeable_state: clean. Base SHA identical to current main HEAD (no rebase needed).",
+    "safeNonDestructiveDefault": "Leave PR #128 open and main CI red until merged; no code elsewhere depends on this passing.",
+    "workCompletedAroundGate": "None needed -- the fix already exists, is already verified in the PR's own body (commercial-copy-scan/trust-gate/secret-scan all shown green post-fix), and this session independently re-confirmed the failure signature matches exactly.",
+    "verification": "After merge, re-run CI on main and confirm 'All guardrails' and 'Test, type-check, lint, Prisma' both go green.",
+    "rollback": "git revert of a 4-line comment-only commit; trivial.",
+    "reEntryCondition": "N/A -- this is the terminal action, not a gated dependency of further work."
+  },
+  "deployment": {
+    "platform": "Vercel",
+    "status": "PROVEN",
+    "evidence": "curl -I https://www.galaxysportsedge.com/ -> server: Vercel header",
+    "productionDeploymentSha": {
+      "status": "PROVEN (inferred)",
+      "value": "0e56c4770e715630eaaac974702336447e367b5a",
+      "evidence": "Matches the prior LIVE_PRODUCTION_BASELINE_2026-07-18.md (17:18 UTC, from PR #125's branch, docs/genesis/) which states production is READY and serving this exact SHA; independently consistent with this session's own /api/health and content checks at 22:00-22:30 UTC showing no observable drift.",
+      "caveat": "Not confirmed via a direct Vercel API/dashboard deployment-list query this session -- inferred from the prior baseline plus consistent live behavior, not independently re-queried against Vercel's own API."
+    },
+    "rollbackCandidate": {
+      "status": "NOT_TESTED",
+      "note": "No prior production deployment SHA was queried this pass. Vercel typically retains prior deployments for instant rollback; not verified this session."
+    }
+  },
+  "domainsAndRouting": {
+    "apexRedirect": {
+      "status": "PROVEN",
+      "evidence": "curl -sI https://galaxysportsedge.com/ -> HTTP/2 307, location: https://www.galaxysportsedge.com/",
+      "result": "Apex correctly 307-redirects to the canonical www host at the platform/DNS layer, matching CLAUDE.md's documented requirement."
+    },
+    "wwwHost": {
+      "status": "PROVEN",
+      "evidence": "curl -sI https://www.galaxysportsedge.com/ -> HTTP/2 200, HSTS, X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Permissions-Policy set",
+      "result": "Canonical host live with reasonable baseline security headers."
+    }
+  },
+  "auth": {
+    "oauthProviderUrls": {
+      "status": "FAILED",
+      "evidence": "curl -s https://www.galaxysportsedge.com/api/auth/providers -> {\"google\":{\"signinUrl\":\"https://galaxysportsedge.com/api/auth/signin/google\",\"callbackUrl\":\"https://galaxysportsedge.com/api/auth/callback/google\"}}",
+      "finding": "Live Google OAuth signinUrl and callbackUrl are on the APEX host (no www), not the canonical https://www.galaxysportsedge.com host CLAUDE.md mandates for NEXTAUTH_URL. This is the exact 'specific required check' the gse-launch skill calls out: compare the canonical www host against the live auth provider's signin/callback URLs.",
+      "rootCauseAssessment": "apps/web/lib/auth.ts:25 sets `trustHost: true` (NextAuth v5), which would normally derive the URL from the incoming request's Host header -- but the request in this test was made directly to www.galaxysportsedge.com and the response still returned apex URLs, meaning something is overriding host-based inference. Most likely explanation: the production NEXTAUTH_URL (or AUTH_URL) environment variable on Vercel is set to the apex form. This is an operator/environment configuration issue, not a code bug -- CLAUDE.md's own environment-variables section already documents the correct value ('Must be the exact live canonical host WITH www').",
+      "riskAssessment": "If Google Cloud Console's Authorized redirect URIs list only registers the www callback (per CLAUDE.md's own OPERATOR instructions), real users attempting Google sign-in would receive an OAuth error (redirect_uri_mismatch) rather than a successful sign-in. If the apex IS also registered, sign-in may nominally work but violates the single-canonical-host doctrine and risks cookie-domain/session inconsistencies. Either way this is a genuine, currently-live, unresolved auth-adjacent risk.",
+      "classification": "P1_DEPLOYMENT_AUTH"
+    },
+    "signinFlow": {
+      "status": "NOT_TESTED",
+      "note": "Did not attempt an actual OAuth round-trip (would require real Google credentials and is out of scope for a read-only snapshot)."
+    },
+    "cookieBehavior": {
+      "status": "NOT_TESTED",
+      "note": "Not probed this pass; requires an authenticated session to inspect Set-Cookie domain/SameSite/Secure attributes meaningfully."
+    }
+  },
+  "recommendedOwnerActionAuth": {
+    "id": "OG-LC-002",
+    "decision": "Set the production NEXTAUTH_URL (or AUTH_URL) environment variable to exactly https://www.galaxysportsedge.com on Vercel, and confirm Google Cloud Console's Authorized redirect URIs list includes https://www.galaxysportsedge.com/api/auth/callback/google.",
+    "whyAuthorityRequired": "Production environment variables and the Google Cloud Console OAuth client are both operator/founder-controlled surfaces this agent cannot access or modify.",
+    "exactActionAndLocation": "Vercel project settings -> Environment Variables -> NEXTAUTH_URL / AUTH_URL (production scope). Google Cloud Console -> APIs & Services -> Credentials -> OAuth 2.0 Client -> Authorized redirect URIs.",
+    "safeNonDestructiveDefault": "Leave as-is; Google sign-in may already work today if the apex callback happens to also be registered (unverified) -- but this must not be assumed safe without confirmation.",
+    "workCompletedAroundGate": "None -- this is purely an environment/console configuration action with no code change.",
+    "verification": "Re-fetch https://www.galaxysportsedge.com/api/auth/providers after the change and confirm signinUrl/callbackUrl both read https://www.galaxysportsedge.com/...",
+    "rollback": "Revert the environment variable to its prior value; no data or code changes involved.",
+    "reEntryCondition": "N/A"
+  },
+  "database": {
+    "connectivity": {
+      "status": "PROVEN (indirect)",
+      "evidence": "/api/health -> checks.database.status = \"ok\"",
+      "caveat": "Confirmed via the application's own health check, not a direct database connection from this session (no DB credentials available here)."
+    },
+    "migrations": {
+      "status": "NOT_TESTED",
+      "migrationCountOnMain": 29,
+      "latestMigration": "20260717120000_add_watchlist",
+      "note": "Migration files present and sequential on main's checked-out source (packages/db/prisma/migrations/). Whether the production database has all 29 applied, and whether any out-of-band drift exists, was NOT verified this session -- no production database credentials or migration-status query available. This is the single largest unverified category in this snapshot and should be the first target of a future LC-000 refresh with appropriate access."
+    }
+  },
+  "scheduledJobs": {
+    "status": "NOT_TESTED",
+    "note": "External Cron (Galaxy Sports Edge) and Daily Smoke Test workflows exist in .github/workflows/ but individual run history/success rate was not queried this pass (GitHub Actions API responses for workflow-run lists exceeded tool output limits and required file-based slicing; deprioritized in favor of higher-signal checks this pass). /api/health's ingestion.lastSuccessAt (25 minutes old at observation time) is indirect evidence a recent ingestion job succeeded."
+  },
+  "ingestion": {
+    "status": "PROVEN (indirect, single sample)",
+    "evidence": "/api/health -> checks.ingestion = {status: \"ok\", lastSuccessAt: \"2026-07-18T22:00:22.445Z\", ageMinutes: 25}",
+    "caveat": "Single point-in-time sample. Does not prove sustained cadence or catch intermittent failures."
+  },
+  "criticalEndpoints": {
+    "/api/health": { "status": "PROVEN", "httpStatus": 200, "note": "ok:true, database ok, ingestion fresh" },
+    "/api/proof/ledger": { "status": "PROVEN", "httpStatus": 200, "note": "Honestly gated -- PUBLISH_LEDGER unset, ledger unpublished by design" },
+    "/pricing": { "status": "PROVEN", "httpStatus": 200, "note": "Live, but see PROD-001 refund contradiction below" },
+    "/terms": { "status": "PROVEN", "httpStatus": 200, "note": "Live, but see PROD-001 refund contradiction below" },
+    "/news-sitemap.xml": { "status": "PROVEN", "httpStatus": 200, "note": "200 but empty <urlset> -- see PROD-004" },
+    "/robots.txt": { "status": "NOT_TESTED", "note": "Confirmed live in the prior 17:18 UTC baseline; not re-fetched this session." },
+    "/llms.txt": { "status": "NOT_TESTED", "note": "Confirmed live in the prior 17:18 UTC baseline; not re-fetched this session." },
+    "/api/proof/receipts": { "status": "NOT_TESTED", "note": "Confirmed live with a matching recomputed receipt hash in the prior 17:18 UTC baseline; not re-fetched this session." },
+    "/api/proof/verification-spec.json": { "status": "NOT_TESTED", "note": "Confirmed live in the prior baseline; not re-fetched this session." },
+    "/api/proof/openapi.json": { "status": "NOT_TESTED", "note": "Confirmed live in the prior baseline; not re-fetched this session." }
+  },
+  "confirmedProductionDefects": [
+    {
+      "id": "PROD-001",
+      "title": "Refund promise contradiction between pricing and Terms",
+      "status": "PROVEN, still live",
+      "evidence": "Pricing (fetched this session): 'No free trial, but every paid plan has a 3-day money-back window. Cancel any time from your dashboard.' Terms Section 5 (fetched this session): 'we do not pro-rate refunds for partial periods. We may offer occasional refunds at our discretion within the period stated at checkout.'",
+      "assessment": "Unconditional 3-day guarantee (pricing) vs. discretionary-only (Terms) -- a real, currently-live legal/commercial inconsistency on the revenue path.",
+      "priorFixRecorded": "DEC-050 on the frozen pdcswh branch records a fix for this, but that fix is not in production (production serves main, not pdcswh).",
+      "classification": "P1_REVENUE"
+    },
+    {
+      "id": "PROD-002",
+      "title": "Microsoft Clarity configured with undefined project identifier",
+      "status": "PROVEN, still live",
+      "evidence": "curl of https://www.galaxysportsedge.com/ this session -> literal string 'clarity.ms/tag/' with no identifier appended.",
+      "assessment": "Analytics script loads but cannot report real session data -- false confidence in product analytics.",
+      "classification": "P2_TRUST_UX"
+    },
+    {
+      "id": "PROD-003",
+      "title": "Nightly Sentinel has zero unattended coverage",
+      "status": "PROVEN (per prior baseline; not independently re-tested this session)",
+      "evidence": "Prior baseline (docs/genesis/LIVE_PRODUCTION_BASELINE_2026-07-18.md, PR #125): scheduled sentinel blocked because every Claude WebFetch call required interactive approval with no human approver in the scheduled environment.",
+      "assessment": "Monitoring-architecture gap, not a site defect. Directly addressed by the gse-launch skill's LC-002 (Nightly Sentinel v2 -- repo-native, read-only, no interactive-permission dependency).",
+      "classification": "P1_DATA_ENGINE"
+    },
+    {
+      "id": "PROD-004",
+      "title": "news-sitemap.xml serves an empty URL set",
+      "status": "PROVEN, still live",
+      "evidence": "curl of https://www.galaxysportsedge.com/news-sitemap.xml this session -> <urlset ...></urlset>, zero <url> entries.",
+      "assessment": "Ambiguous by itself -- could be correct (no eligible news content exists) or could indicate an ingestion/publication gap. Needs a source-side check (does the CMS/content pipeline have eligible unpublished items?) before classifying as a defect vs. expected-empty.",
+      "classification": "P2_TRUST_UX"
+    },
+    {
+      "id": "PROD-005",
+      "title": "OAuth signin/callback URLs on apex host, not canonical www",
+      "status": "PROVEN, still live -- NEW finding this session, not in the prior 17:18 UTC baseline",
+      "evidence": "See auth.oauthProviderUrls above.",
+      "classification": "P1_DEPLOYMENT_AUTH"
+    }
+  ],
+  "stripe": {
+    "status": "NOT_TESTED",
+    "note": "No Stripe MCP account query or live-mode/test-mode check performed this session -- deferred to a dedicated LC-004 Revenue Canary pass, which needs explicit test-mode scoping and must not risk any live-mode mutation. CLAUDE.md documents STRIPE_TERMS_CONSENT_ENABLED as default-off and the per-interval price-ID env-var scheme; neither was verified against the live Stripe dashboard this session."
+  },
+  "sourceRights": {
+    "status": "NOT_TESTED",
+    "note": "apps/web/lib/scraping/source-rights-registry.ts and clearance-engine.ts exist and are well-documented in CLAUDE.md/DECISION_REGISTER.md from the recovery campaign, but no fresh registry-vs-live-ingestion cross-check was performed this session."
+  },
+  "gatesAndFlags": {
+    "status": "PARTIAL",
+    "confirmedGates": [
+      { "flag": "PUBLISH_LEDGER", "state": "unset (OFF)", "evidence": "/api/proof/ledger response, this session" },
+      { "flag": "STRIPE_TERMS_CONSENT_ENABLED", "state": "NOT_TESTED", "note": "Documented default-off in CLAUDE.md; not queried live." },
+      { "flag": "OTS_ANCHOR_ENABLED", "state": "NOT_TESTED", "note": "Documented default-off per DECISION_REGISTER.md history; not queried live." },
+      { "flag": "AI_MODEL_ROUTER_SHADOW_ENABLED", "state": "NOT_TESTED", "note": "Exists only on unmerged PR #124, not in production main." }
+    ],
+    "note": "A full gate/flag inventory is deferred to LC-006 Gate Matrix, which requires a dedicated grep-and-classify pass across the whole codebase."
+  },
+  "observability": {
+    "sentry": {
+      "status": "NOT_TESTED",
+      "note": "Per DEC-030/W010 history from the recovery campaign: Sentry capture code exists but is documented as dormant (no SENTRY_DSN committed as of that check). Not re-verified against current production this session."
+    },
+    "clarityAnalytics": {
+      "status": "FAILED",
+      "note": "See PROD-002 above."
+    }
+  },
+  "openPullRequests": {
+    "status": "PROVEN",
+    "note": "9 open PRs against main as of this session: #52 (Galaxy Dynasty, stale base), #112 (frontier playback, draft), #121 (fantasy engine), #122 (CLV/Pedersen re-land, needs migration), #123 (cockpit per-page ADMIN), #124 (frontier intelligence fabric), #125 (Genesis canon + launch framework, draft), #127 (GX-000 genesis-kernel, draft), #128 (commercial-copy-scan fix, clean/mergeable), #129 (this campaign's own frozen recovery branch, draft). None merged this session. The gse-launch skill explicitly directs NOT to bulk-merge #129/#112/#121/#122/#124/#125/#127/#52 -- PR #128 is the one clean exception, a genuinely mechanical, zero-risk, already-verified fix.",
+    "notableDiscovery": "PR #125 ('docs(genesis): canon, autonomous execution, reconciliation, and production activation') carries its own docs/genesis/LIVE_PRODUCTION_BASELINE_2026-07-18.md dated 17:18 UTC today, independently establishing much of the same production baseline this snapshot re-confirms, plus PROD-001 through PROD-004 (this session independently found PROD-005). This is a docs-only PR (42 files, 11,421 additions, zero deletions per its own body) -- not adopted wholesale this session, but its findings were cross-checked and cited above rather than duplicated blind."
+  }
+}

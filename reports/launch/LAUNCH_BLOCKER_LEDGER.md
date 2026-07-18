@@ -1,0 +1,49 @@
+# Galaxy Sports Edge — Launch Blocker Ledger (LC-000/LC-001 seed)
+
+**Generated:** 2026-07-18 22:30 UTC
+**Full machine-readable record:** `LAUNCH_BLOCKER_LEDGER.json`
+
+Seven items, evidence-backed, classified. **Zero P0_CORRECTNESS_SECURITY findings this pass.**
+Two items have a clean, low-risk, immediate owner action available today.
+
+| ID | Title | Class | Status |
+|---|---|---|---|
+| LB-001 | `main` CI red on `commercial-copy-scan` self-trigger | P1_DEPLOYMENT_AUTH | **Ready for owner action — merge PR #128** |
+| LB-002 | Live OAuth signin/callback on apex host, not `www` | P1_DEPLOYMENT_AUTH | **Ready for owner action — env var + Google Console** |
+| LB-003 | Refund promise contradiction (pricing vs. Terms) | P1_REVENUE | Owner-gated on a policy decision |
+| LB-004 | Clarity analytics tag has literal `undefined` ID | P2_TRUST_UX | Ready for owner action or code fix |
+| LB-005 | Nightly Sentinel has zero unattended coverage | P1_DATA_ENGINE | Agent-buildable next (LC-002) |
+| LB-006 | `news-sitemap.xml` is empty | P2_TRUST_UX | Needs investigation (may be intentional) |
+| LB-007 | Production DB migration convergence unverified | P1_DATA_ENGINE | Needs access this session doesn't have |
+
+## The two immediate owner actions
+
+**LB-001 — Merge PR #128.** A 4-line, comment-only, already-verified fix
+(`mergeable_state: clean`, base identical to current `main` HEAD). This single merge takes
+`main`'s CI from red to green. Nothing else depends on it.
+
+**LB-002 — Fix the production `NEXTAUTH_URL`/`AUTH_URL`.** Live `/api/auth/providers` returns
+Google OAuth `signinUrl`/`callbackUrl` on the apex host (`galaxysportsedge.com`), not the
+canonical `www` host CLAUDE.md requires. Root cause is almost certainly a Vercel production
+environment variable, not application code (`apps/web/lib/auth.ts`'s `trustHost: true` doesn't
+explain a host-header-independent apex result). Set the env var to
+`https://www.galaxysportsedge.com` and confirm Google Cloud Console's Authorized redirect URIs
+include the matching `www` callback. Real, currently-live risk to Google sign-in for real
+users.
+
+## Full detail
+
+See `LAUNCH_BLOCKER_LEDGER.json` for evidence, impact, blast radius, canonical owner,
+dependencies, smallest safe fix, verification, and rollback for every item above.
+
+## What's next
+
+Agent-side: LC-002 (Nightly Sentinel v2) is dependency-ready today and directly closes LB-005.
+LB-006 needs a short investigation (does the news-content pipeline actually have zero eligible
+items right now, or is something silently failing to publish?) before it's classified as a real
+defect or closed as intentional.
+
+Owner-side: LB-001 and LB-002 first (both are fast, safe, and unblock CI + auth confidence);
+LB-003's refund-policy decision whenever convenient (not urgent-urgent, but real revenue-trust
+exposure exists until decided); LB-007 whenever DB access is available to a session that can
+verify it.
