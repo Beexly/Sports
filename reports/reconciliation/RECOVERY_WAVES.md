@@ -46,10 +46,16 @@ higher-numbered waves in this same sequence.
 
 **Priority order (most severe first, by blast radius):**
 
-1. **#92 — settle/refresh TOCTOU race + stale-close CLV fabrication.** `process-sport.ts:483`'s check-then-act
-   can let a refresh overwrite a just-settled pick's published grade; no `MAX_CLOSE_AGE_MS` guard exists.
-   Highest severity: directly threatens settlement correctness and CLV integrity, the platform's core
-   money-truth surface. Protected zones: settlement, CLV — mandatory red-team.
+1. **DONE (2026-07-18, DEC-035) — #92 — settle/refresh TOCTOU race + stale-close CLV fabrication.**
+   `process-sport.ts`'s check-then-act unconditional upsert replaced with an atomic `updateMany` scoped to
+   `result:"PENDING"` + a race-safe `create`-with-P2002-catch + a sidecar-mint gate; `settle-sport.ts`'s
+   `take:80`→`take:240`; `clv-capture.ts` gained `MAX_CLOSE_AGE_MS` (6h). gse-red-team CONFIRMED clean, zero
+   findings. 44/44 + 127/127 (ingestion-pipeline), 13/13 + 1462/1462 (prediction-engine), guardrails 17/17.
+   Committed on `claude/galaxy-sports-edge-pdcswh`, pushed, bounded recovery PR opened (founder-merge-only —
+   never merged to `main` by this agent). Was: `process-sport.ts:483`'s check-then-act could let a refresh
+   overwrite a just-settled pick's published grade; no `MAX_CLOSE_AGE_MS` guard existed. Highest severity:
+   directly threatened settlement correctness and CLV integrity, the platform's core money-truth surface.
+   Protected zones: settlement, CLV — mandatory red-team (completed).
 2. **#82 — prod DB fail-open + fake-healthy health check.** A misconfigured production `DATABASE_URL` silently
    drops writes while `/api/health` reports healthy — an operational blind spot that could mask a total outage.
    Protected zones: production integrity, observability.
@@ -164,7 +170,8 @@ first; (3) for each, apply the SAME comparison-method tiers used in R0.5 before 
 ```text
 R0    Land #128 (founder-merge-only; agent work complete)
 R0.5  DONE (2026-07-18) — Verify #76-96 PR-content gap: 5 SUPERSEDED, 16 RECOVER_WHOLE
-R0.6  Recover the 6 live-defect fixes from R0.5 (#92 > #82 > #93 > #86 > #84 > #89) — NOT performed this pass
+R0.6  Recover the 6 live-defect fixes from R0.5 (#92 > #82 > #93 > #86 > #84 > #89)
+      — item 1 (#92) DONE (DEC-035, 2026-07-18); items 2-6 NOT performed this pass
 R1    Re-verify #123 rebase against current main tip (converges with R0.6 item 3)
 R2    #127 founder decision (agent work complete)
 R3    Done

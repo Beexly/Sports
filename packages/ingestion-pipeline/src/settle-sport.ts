@@ -125,7 +125,14 @@ export async function settleSport(
           const closingOdds = await db.odds.findMany({
             where: { gameId: game.id, fetchedAt: { lte: game.commenceTime } },
             orderBy: { fetchedAt: "desc" },
-            take: 80,
+            // Must cover the ENTIRE closing batch (all rows sharing the max
+            // fetchedAt): rows are bookmaker x market, and wide coverage can
+            // exceed 80 rows in ONE batch (27+ books x 3 markets), which the old
+            // take:80 truncated arbitrarily mid-batch — a consensus close missing
+            // whichever books fell past the cap (M-F7). 240 covers 80 books x 3
+            // markets while keeping the read bounded; older batches beyond the
+            // cap are irrelevant (only the latest batch is the close).
+            take: 240,
             select: {
               market: true,
               fetchedAt: true,

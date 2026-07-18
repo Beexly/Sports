@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   deriveClosingSnapshotFromOdds,
   gradePickClv,
+  MAX_CLOSE_AGE_MS,
   type ClosingOddsRow,
   type ClosingSnapshot,
 } from "../clv-capture.js";
@@ -58,6 +59,40 @@ describe("deriveClosingSnapshotFromOdds", () => {
     );
     expect(snap.capturedAt?.getTime()).toBe(COMMENCE.getTime());
     expect(snap.mlHomePrice).toBe(-110);
+  });
+
+  it("M-F7: a batch older than the close-age bound is NOT a close — empty snapshot, no fabricated CLV", () => {
+    // The feed died 7 hours before kickoff; its last batch is market state from
+    // hours earlier, not a closing line. Grading against it would invent a close.
+    const snap = deriveClosingSnapshotFromOdds(
+      [row({ market: "H2H", fetchedAt: t("2026-04-15T11:00:00Z"), homePrice: -150, awayPrice: 130 })],
+      COMMENCE,
+    );
+    expect(snap.capturedAt).toBeNull();
+    expect(snap.mlHomePrice).toBeNull();
+    expect(snap.bookmakerCount).toBe(0);
+  });
+
+  it("M-F7: a batch exactly at the close-age bound is still eligible (<=)", () => {
+    const atBound = new Date(COMMENCE.getTime() - MAX_CLOSE_AGE_MS);
+    const snap = deriveClosingSnapshotFromOdds(
+      [row({ market: "H2H", fetchedAt: atBound, homePrice: -120, awayPrice: 100 })],
+      COMMENCE,
+    );
+    expect(snap.capturedAt?.getTime()).toBe(atBound.getTime());
+    expect(snap.mlHomePrice).toBe(-120);
+  });
+
+  it("M-F7: the close-age bound is overridable per call", () => {
+    const twoHoursOld = new Date(COMMENCE.getTime() - 2 * 60 * 60 * 1000);
+    const rows = [row({ market: "H2H", fetchedAt: twoHoursOld, homePrice: -120, awayPrice: 100 })];
+    expect(
+      deriveClosingSnapshotFromOdds(rows, COMMENCE, { maxCloseAgeMs: 60 * 60 * 1000 }).capturedAt,
+    ).toBeNull();
+    expect(
+      deriveClosingSnapshotFromOdds(rows, COMMENCE, { maxCloseAgeMs: 3 * 60 * 60 * 1000 })
+        .capturedAt?.getTime(),
+    ).toBe(twoHoursOld.getTime());
   });
 });
 

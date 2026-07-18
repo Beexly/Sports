@@ -82,18 +82,35 @@ function avg(values: readonly number[]): number | null {
 }
 
 /**
+ * Maximum age of "the close" relative to kickoff (M-F7). If the newest odds
+ * batch before kickoff is OLDER than this, the feed had been dead for many
+ * refresh cycles and that batch is not a closing line — it is whatever the
+ * market looked like hours earlier. Grading CLV against it would fabricate a
+ * close, so the derivation returns the empty snapshot instead (CLV verdict
+ * stays null — we never invent a close). Refresh cadence is at most a few
+ * hours off-peak, so six hours means multiple consecutive missed cycles.
+ */
+export const MAX_CLOSE_AGE_MS = 6 * 60 * 60 * 1000;
+
+/**
  * Derive the closing-line snapshot for a game: the most recent odds batch at or
  * before `commenceTime`, averaged across books. Returns an all-null snapshot
- * (capturedAt null) when no odds were recorded before kickoff — in which case we
- * cannot honestly grade CLV.
+ * (capturedAt null) when no odds were recorded before kickoff, or when the
+ * newest eligible batch is older than `maxCloseAgeMs` (a dead feed, not a
+ * close) — in which case we cannot honestly grade CLV.
  */
 export function deriveClosingSnapshotFromOdds(
   rows: readonly ClosingOddsRow[],
   commenceTime: Date,
+  opts: { readonly maxCloseAgeMs?: number } = {},
 ): ClosingSnapshot {
   const cutoff = commenceTime.getTime();
+  const maxAge = opts.maxCloseAgeMs ?? MAX_CLOSE_AGE_MS;
   const eligible = rows.filter(
-    (r) => r.fetchedAt instanceof Date && r.fetchedAt.getTime() <= cutoff,
+    (r) =>
+      r.fetchedAt instanceof Date &&
+      r.fetchedAt.getTime() <= cutoff &&
+      cutoff - r.fetchedAt.getTime() <= maxAge,
   );
 
   const empty: ClosingSnapshot = {

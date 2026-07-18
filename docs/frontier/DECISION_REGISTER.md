@@ -1342,5 +1342,73 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: `reports/reconciliation/BRANCH_PR_LEDGER.json`, `reports/reconciliation/BRANCH_PR_LEDGER.md`,
   `reports/reconciliation/RECOVERY_WAVES.md` (all modified).
 - Supersedes: none (extends DEC-031's gap finding to a resolved state).
-- Supersedes: none.
-- Supersedes: none.
+
+## DEC-035 — Recovery Wave R0.6.1: settle/refresh TOCTOU race fix, re-derived onto current main (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: Recovery Wave R0.6, item 1 of 6 (highest priority by blast radius per DEC-034's ordering).
+  Ports historical PR #92 (`claude/hotfix-settle-refresh-races`, never merged, confirmed still-live via R0.5)
+  forward onto the CURRENT `main` tip, since `main` has advanced (through PR #119/#120) since #92 was authored
+  at merge-base `821d0ca3`.
+- Contract frozen before coding: the pick-upsert `else` branch in `process-sport.ts` and the `take: 80` line in
+  `settle-sport.ts` were confirmed byte-identical between the historical merge-base and current `main` (safe
+  direct application); `clv-capture.ts`'s `deriveClosingSnapshotFromOdds` had drifted substantially (now
+  requires `awayTeamName`, uses `selectionIsHomeSide()`/`averageAmericanPrices()` from DEC-034's SUPERSEDED
+  #79/#83/#91 salvage) — manually re-derived rather than blind-patched.
+- Decision: implemented three changes —
+  1. `process-sport.ts`: replaced the unconditional `db.pick.upsert(...)` refresh/create path with (a) an
+     atomic `db.pick.updateMany({ where: { id, result: "PENDING" }, ... })` for existing picks — a losing race
+     against a concurrent settlement write now writes zero rows instead of clobbering a just-settled pick's
+     published grade; (b) `db.pick.create(...)` wrapped in try/catch for a new-pick's P2002 unique-constraint
+     conflict, adopting the winner's row rather than upserting over it; (c) a `wrotePickPayload` gate skipping
+     the immutable `PickSignalSnapshot`/`PickProofReceipt` mints whenever this run did not actually write the
+     pick payload (frozen/side-flip/lost-race), so provenance is never minted from an unpublished payload.
+  2. `settle-sport.ts`: closing-odds query `take: 80` → `take: 240` (a wide consensus close — 27+ books x 3
+     markets — can exceed 80 rows in one batch, silently truncating whichever books fell past the old cap).
+  3. `clv-capture.ts`: `deriveClosingSnapshotFromOdds` gained an optional `maxCloseAgeMs` (default
+     `MAX_CLOSE_AGE_MS = 6h`, exported); odds rows older than that relative to kickoff are excluded from being
+     treated as "the close," preventing CLV fabrication against a dead feed's stale last-known price.
+  - Test files updated to match (`process-sport.test.ts`: mocks rewired `pick.upsert` → `pick.create`/
+    `pick.updateMany`, two new regression tests for the mid-refresh-settlement race and the P2002 create-race
+    adoption; `clv-capture.test.ts`: three new tests for the close-age boundary, ported near-verbatim from the
+    historical branch's own well-reasoned test additions).
+- Independent review: one `gse-red-team` pass (two rounds — first stalled mid-investigation, resumed via the
+  session's standing agent-stall protocol). CONFIRMED clean on 5 of 9 review points via direct schema/diff
+  inspection: (1) `updateMany` scoped to `result:"PENDING"` compiles to a single atomic Postgres `UPDATE...WHERE`
+  — genuinely closes the race; (2) `isUniquePickConflict()` cannot false-positive, since `Pick` has exactly one
+  unique constraint (`@@unique([gameId, pickType])`) per the live Prisma schema; (3) the sidecar gate skips
+  exactly the two immutable-mint blocks and nothing else (traced to end of loop body), and the common
+  first-create case still mints normally; (4) `take: 240` stays index-served (`Odds` has `@@index([gameId,
+  fetchedAt])`), not a performance regression; (8) no other settlement-terminality/CLV-sign/write-once semantics
+  silently changed elsewhere in the diffed files. The review ran out of time before checking points 5-7 and 9 —
+  resolved directly rather than re-dispatching: (5) the live refresh cadence is `REFRESH_INTERVAL_MS = 30min`
+  (`workers/data-refresh/src/index.ts`), 12x smaller than the new 6h cutoff, so a healthy feed never trips it —
+  the existing 24h `quietBoardHorizonHours` governs a different pipeline stage (pre-kickoff fetch scheduling)
+  and is not in tension with a post-hoc close-staleness guard; (6) `grep -rn deriveClosingSnapshotFromOdds`
+  found exactly one production caller (`settle-sport.ts`; the one other hit, in
+  `apps/web/lib/performance/clv-coverage.ts`, is prose in an operator remediation message, not a call site);
+  (7) the new regression tests are non-vacuous — each asserts a specific behavioral outcome tied to the exact
+  race/boundary condition, not a mock-shape re-assertion; (9) already run directly (see Evidence).
+- Evidence: `npx vitest run` — `process-sport.test.ts` + `settle-sport.test.ts` 44/44 (was 42 before the 2 new
+  tests); full `packages/ingestion-pipeline` suite 127/127 (was 125); `clv-capture.test.ts` 13/13 (was 10);
+  full `packages/prediction-engine` suite 1462/1462 (was 1459); root `npm run typecheck` exit 0 across every
+  workspace including `apps/web`; `git diff --check` clean; `secret-scan.mjs` (explicit paths, not directory
+  mode) clean on all 5 changed files; `npm run guardrails` 17/17 green.
+- Alternatives rejected: blind-patching the historical branch's diff via `git apply`/cherry-pick — rejected for
+  `clv-capture.ts` specifically because the function signature and surrounding logic had genuinely drifted
+  (would produce a corrupted merge or silently drop the #79/#83/#91-derived `averageAmericanPrices`/
+  `selectionIsHomeSide` logic); bundling all 6 R0.6 live-defect fixes into one pass — rejected per DEC-034's
+  own "one bounded recovery wave at a time" ruling.
+- Reversibility: the `updateMany`/`create`-with-catch pattern is strictly behavior-narrowing (never writes more
+  than the old unconditional upsert did, only refuses to write in the race case); revert commit if any
+  regression surfaces. Never merged to `main` — this branch's PRs stay founder-merge-only per every standing
+  directive.
+- Protected zones: settlement, CLV — red-teamed per the repo's own protected-money-truth doctrine (exact
+  invariant stated before editing; behavior compared against the base SHA via direct diff, not prose memory;
+  no settlement terminality, CLV sign/close derivation, or write-once field semantics silently changed).
+- Files: `packages/ingestion-pipeline/src/process-sport.ts`, `packages/ingestion-pipeline/src/settle-sport.ts`,
+  `packages/ingestion-pipeline/src/__tests__/process-sport.test.ts`,
+  `packages/prediction-engine/src/clv-capture.ts`,
+  `packages/prediction-engine/src/__tests__/clv-capture.test.ts` (all modified).
+- Supersedes: none. Closes R0.6 item 1 of 6; items 2-6 (#82, #93/converges-with-#123, #86, #84, #89) remain
+  future bounded waves per `RECOVERY_WAVES.md`.
