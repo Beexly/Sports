@@ -1128,3 +1128,73 @@ stitching) — recorded here so no backtest can slip past it.
 - Files: packages/prediction-engine/src/edge-lab/loaders/weather-previous-runs.ts (new),
   packages/prediction-engine/src/edge-lab/__tests__/weather-previous-runs.test.ts (new).
 - Supersedes: none.
+
+## DEC-031 — GX-R00 branch/PR reconciliation: exhaustive inventory pass (2026-07-17)
+
+- Date: 2026-07-17 (session continues past local midnight into 2026-07-18 wall-clock)
+- Workstream: GX-R00 (`docs/genesis/BRANCH_RECONCILIATION_CONTRACT.md`, read in full from PR #125's branch
+  before acting, per this session's own "adapt only what is real" discipline — not improvised). Entered only
+  after the live queue was genuinely drained (Batches A/B complete, DEC-027 through DEC-030), matching both
+  `CONTINUOUS_EXECUTION_CONTRACT.md` §4's queue-drain law and `.claude/commands/genesis-reconcile.md` §0's
+  explicit precondition.
+- Decision: produced the contract's required first-run outputs — inventory and split-plan only, no feature-code
+  recovery, per the contract's own "Recovery-wave law" and the reconcile command's §8 "Stop after one inventory
+  or recovery wave." All 184 non-`main` remote branches enumerated via real `git branch -r`/`merge-base`/
+  `rev-list` calls (not estimated): 25 received full semantic detail (the contract's named collision Groups
+  A-I, cross-referenced against this session's own DEC-001..DEC-030 history plus live-refreshed PR bodies for
+  every open PR: #52/#101(closed)/#112/#121/#122/#123/#124/#125/#126(closed)/#127/#128/#129); 159 received real
+  git-derived metadata (head SHA, merge-base, ahead/behind, last-updated) with an HONEST `UNKNOWN` disposition
+  — no fabricated `RECOVER`/`SUPERSEDED`/`ARCHIVE` verdict for content never actually read. 12 branches proven
+  pure ancestors of `main` (0 commits ahead, `git merge-base --is-ancestor` true) — the contract's own strongest
+  comparison-method tier — flagged as deletion-receipt candidates (receipt not written; the contract requires
+  the receipt to exist as its own explicit step before any deletion, never bundled into inventory).
+- A genuine, previously-unflagged gap self-discovered via a mechanical evidence sweep (not asserted, computed):
+  `git log origin/main --oneline | grep -oE '\(#[0-9]+\)'` shows PR numbers #97-120 all present as literal
+  squash-commit references on main (real proof their content landed) except #101/#112 (independently
+  accounted for elsewhere) — but PR numbers #76-96 are ABSENT from that same sweep despite most being
+  `state:closed, merged:false` in GitHub, including real correctness/security-flavored hotfixes (#91
+  stripe-event-ordering, #92 settle-refresh-races, #93 cockpit-page-auth, #94 proof-count-utc-bounds, #95
+  vacuous-stub-tests). This is NOT proof the content is missing (could have landed via a differently-formatted
+  commit or been absorbed into a later PR), but it is also not proof it's present — recorded as Wave R0.5 in
+  `RECOVERY_WAVES.md`, inserted ahead of the seed's own R1 per the queue-priority law's own "live
+  correctness/security defect" ranking, rather than silently left for a future session to rediscover.
+  Both PR #101 and PR #126 independently re-verified CLOSED via live `pull_request_read` calls this pass
+  (`closed_at: 2026-07-17T20:4x`), confirming the seed's claims rather than trusting them — matching this
+  session's repeated discipline of verifying seed/handoff documents against live state before acting on them.
+- Evidence: `reports/reconciliation/BRANCH_PR_LEDGER.json` (machine-readable, all 184 entries, JSON-validated),
+  `BRANCH_PR_LEDGER.md` (founder-facing projection incl. a self-check against all 10 of the contract's own
+  acceptance criteria — 6 fully met, 2 partially met and honestly marked so, 2 not attempted and named as such,
+  never claimed complete when it wasn't), `FILE_SYMBOL_OWNERSHIP.csv` (the six architecture collisions the seed
+  doc already proved — source-rights registry duplicate, model/provider routing overlap, capability-vocabulary
+  multiplication, parallel program queues, playback overlap, proof-fabric overlap — each row citing the exact
+  file/commit/PR evidence, not re-asserted from memory), `RECOVERY_WAVES.md` (the seed's R0-R11 sequence
+  refreshed with this pass's live findings + the new R0.5/R11.5 insertions), `DELETION_RECEIPTS.md` (correctly
+  empty — zero deletions performed or receipted this pass). New deterministic, read-only
+  `scripts/genesis/audit-work-inventory.mjs` — enumerates live branches via git, cross-references the ledger,
+  exits nonzero on invisible work; its pure `classify()` function is unit-tested in isolation (6 tests,
+  hermetic fixtures, no real git calls) mirroring the existing `scripts/vercel-skip-build.test.mjs` split
+  between pure-logic and impure-I/O testing. Run live against the just-built ledger: 184/184 branches matched,
+  zero invisible work, exit 0 — the script's own core claim is self-verified, not merely asserted. Wired as
+  `npm run genesis:work-inventory`; its test file wired into CI (`node --test
+  scripts/genesis/audit-work-inventory.test.mjs`) alongside the existing `vercel-skip-build` pattern —
+  deliberately NOT wiring the live audit itself into CI, since it shells out to `git merge-base`/`rev-list`
+  against real remote branches, which would be flaky under CI's shallow (`fetch-depth: 1`) checkout, the same
+  reasoning this session has applied to `git diff origin/main`-based CI assertions before.
+  `git diff --check` clean; `secret-scan.mjs` explicit-paths mode (not directory mode, which silently no-ops on
+  a directory argument — caught and corrected mid-pass) clean on all 7 new/changed files.
+- Alternatives rejected: fabricating deep RECOVER/SUPERSEDE verdicts for all 159 long-tail branches to
+  superficially satisfy "every branch classified" (would violate this session's own "adapt only what is real"
+  discipline and the contract's own invariant #2 against ahead-count-as-evidence); attempting literal
+  content-diff review of all 184 branches in one pass (the contract's own Recovery-wave law explicitly scopes
+  the first run to inventory-only; attempting more would either take the rest of the session with high error
+  risk or produce shallow, low-confidence verdicts presented as authoritative — neither acceptable); wiring
+  the live audit script into CI (real flakiness risk under shallow checkouts, not a genuine safety gain).
+- Reversibility: fully additive; zero product code touched; zero branches deleted, closed, or merged.
+- Protected zones: none directly (accounting/documentation only), though the underlying branches being
+  inventoried span every protected zone this repo has (settlement, CLV, migrations, proof, rights,
+  entitlements) — each is correctly routed to its OWNER_GATE or ACTIVE_PR disposition rather than touched.
+- Files: reports/reconciliation/{BRANCH_PR_LEDGER.json,BRANCH_PR_LEDGER.md,FILE_SYMBOL_OWNERSHIP.csv,
+  RECOVERY_WAVES.md,DELETION_RECEIPTS.md} (new), scripts/genesis/{audit-work-inventory.mjs,
+  audit-work-inventory.test.mjs} (new), package.json (new `genesis:work-inventory` script),
+  .github/workflows/ci.yml (new test step for the audit script's unit tests).
+- Supersedes: none.

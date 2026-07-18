@@ -82,6 +82,9 @@ jobs:
       - name: Run Vercel skip-gate tests
         run: node --test scripts/vercel-skip-build.test.mjs
 
+      - name: Run Genesis reconciliation audit tests
+        run: node --test scripts/genesis/audit-work-inventory.test.mjs
+
   # --------------------------------------------------------------
   # 2. Build
   # --------------------------------------------------------------
