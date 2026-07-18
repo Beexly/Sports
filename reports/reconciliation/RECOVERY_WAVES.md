@@ -493,6 +493,9 @@ R11.5 CLOSED (2026-07-18, DEC-056) — 138/138 long-tail branches individually e
       DONE (DEC-060): History Lab + Schedule Lab ported from `claude/adoring-babbage-gq7v77`; Contest
       Simulator newly excluded (conflicts with the deliberately-sealed `/fantasy/contests` "Contest
       Bay" surface); Mock Draft/roster-import/FantasyCoach/Late-Swap from the same branch deferred to
-      4b (real integration risk found in each, not a file-copy). 5/5 remains: multi-market-ensemble/
-      synthetic-fade modules (`claude/pensive-brown-yql6ld`).
+      4b (real integration risk found in each, not a file-copy). 5/5 DONE (DEC-061, the LAST of the 5
+      named candidates): multi-market-ensemble.ts + synthetic-fade.ts ported into
+      packages/prediction-engine from `claude/pensive-brown-yql6ld` — dark, unwired, zero live callers,
+      MODEL_VERSION unchanged, mandatory protected-zone red-team clean. All 5 DEC-056
+      RECOVER_WHOLE_CANDIDATEs are now closed except the explicitly-deferred candidate 4b sub-slice.
 ```

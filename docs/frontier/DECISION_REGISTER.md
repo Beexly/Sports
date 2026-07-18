@@ -3686,3 +3686,89 @@ stitching) — recorded here so no backtest can slip past it.
   (Mock Draft + roster-import + FantasyCoach + Late-Swap, all from the same source branch) remains open
   as a named follow-on. Candidate 5/5 (multi-market-ensemble/synthetic-fade,
   `claude/pensive-brown-yql6ld`) remains open, unchanged from DEC-059's accounting.
+
+## DEC-061 — Task #76 (5/5, LAST): multi-market-ensemble + synthetic-fade ported into
+  packages/prediction-engine, dark and unwired (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: the fifth and final RECOVER_WHOLE_CANDIDATE named in DEC-056 (`claude/pensive-brown-
+  yql6ld`). Ports `multi-market-ensemble.ts` (precision-weighted inverse-variance fusion of independent
+  market/model probability estimates) and `synthetic-fade.ts` (a hard-capped, glass-box public-lean
+  signal) into `packages/prediction-engine` — pdcswh's protected-zone prediction-scoring package, so
+  this port was treated with full protected-zone rigor (dedicated freeze-contract reasoning, mandatory
+  red-team) even though both modules are pure, unwired, and additive by design.
+- Code: `packages/prediction-engine/src/multi-market-ensemble.ts` (new, ported verbatim — no adaptation
+  needed) — `precisionWeightedEnsemble(estimates)` fuses independent probability estimates of the same
+  outcome via inverse-variance weighting (weight ∝ 1/σ²); `estimatorSigma(reliability)` derives a
+  source's standard error from hold/liquidity/staleness/sample-size; `independentEstimatesForSide`/
+  `ensembleForSide` are adapter helpers over the app's real `IndependentMarketFairValue[]` type
+  (`@sports/types`). Its own docstring: "Additive: it changes no existing behaviour — it produces
+  better inputs for the engine that already exists. Wiring it into live scoring stays a founder-gated
+  MODEL_VERSION step, like every other estimator." `packages/prediction-engine/src/synthetic-fade.ts`
+  (new, ported verbatim) — `syntheticPublicLean(input)` computes a transparent "how heavily does the
+  public lean onto this side" signal from public facts only (favouritism, popularity, primetime, star
+  narrative), hard-capped to `fadeNudge ∈ [-0.01, +0.01]` and `confidence ∈ [0, 0.2]`, always carrying
+  a mandatory `label: "simulated audience model — not betting data"`. Its own docstring: "EXPERIMENTAL
+  + gated OFF: it must demonstrate CLV correlation on a walk-forward backtest before a founder-gated
+  MODEL_VERSION step lets it touch any published number. Until then it is cockpit-only." Three new test
+  files ported verbatim (25 tests total: 12 + 7 + 6, the third — `ensemble-adapter.test.ts` — actually
+  tests the adapter functions inside `multi-market-ensemble.ts` despite its filename).
+  `packages/prediction-engine/src/index.ts` — two new barrel-export blocks appended after the file's
+  existing final export, matching the established pattern already used for other "dark, not wired into
+  live scoring" modules in the same file (e.g. the SimHash block immediately above); nothing else in
+  the file touched, reordered, or removed.
+- Pre-port verification (before writing any code): confirmed `IndependentEstimate` (defined in
+  `edge-engine.ts`) and `IndependentMarketFairValue` (defined in `packages/types`) are both real,
+  pre-existing types the new module only imports, not redefines; confirmed `edge-engine.ts:161,170`
+  really do use the flat `weight ?? 1` blending the module's docstring names as the exact gap it
+  closes; confirmed via repo-wide grep that zero files outside the two new modules, their tests, and
+  the `index.ts` export block reference either module or any of their exported symbol names — i.e. this
+  is genuinely inert/unwired, not a "looks unwired but actually has one caller" situation.
+- Independent review: one `gse-red-team` pass, stalled once mid-investigation (resumed via the standing
+  `SendMessage` nudge). **Zero confirmed findings.** Directly reproduced rather than assumed: re-ran the
+  zero-live-callers grep independently (repo-wide, not just the paths from the pre-port check) and
+  confirmed the same result; verified the inverse-variance math line-by-line (weight formula, combined
+  variance, no possible divide-by-zero since `estimatorSigma` is unconditionally clamped to
+  `[0.01, 0.5]`, and the zero-valid-estimates case has an explicit early-return guard); verified every
+  hard cap in `synthetic-fade.ts` is enforced by a `clamp()` call as the literal final step, and that
+  every adversarial numeric input (`marketImpliedProb`, `mediaLean`) is `Number.isFinite`-guarded before
+  any arithmetic touches it, so NaN can never reach the cap; verified `SYNTHETIC_FADE_LABEL` is returned
+  unconditionally on the module's single `return` path, no code path can omit it; checked the
+  `IndependentEstimate[]` (mutable) vs `readonly IndependentEstimate[]` (in `EdgeInput`) type direction
+  and confirmed it's the safe direction, not a suppressed type error (re-ran `tsc --noEmit` directly,
+  zero output); confirmed the tunable heuristic constants (`SIGMA_BASE`, `HOLD_COEF`, weighting
+  coefficients) are honestly labeled as documented-not-fitted heuristics in both files, matching this
+  codebase's existing precedent (`market-read.ts`'s "gravity constants"), not fabricated data dressed up
+  as real; confirmed the two new `index.ts` export blocks are a pure append with zero name collisions
+  against the file's other 178 exports; re-ran `model-freeze.mjs` and `sealed-holdout-open-scan.mjs`
+  directly, both pass unchanged.
+- Evidence: `cd packages/prediction-engine && npx vitest run src/__tests__/multi-market-ensemble.test.ts
+  src/__tests__/synthetic-fade.test.ts src/__tests__/ensemble-adapter.test.ts` 25/25 green; full
+  `packages/prediction-engine` suite 147/147 files, 1487/1487 tests green; whole-workspace
+  `npm run typecheck` clean across all 12 packages (web, crypto, data-ingestion, db, galaxy-proof-mcp,
+  ingestion-pipeline, prediction-engine, types, and 4 workers); `npm run guardrails` 17/17 green
+  (including `model-freeze` and `sealed-holdout-open-scan` specifically re-checked); `apps/web`
+  production build succeeded; full `apps/web` suite 653/653 files, 8855/8855 tests green (unaffected, as
+  expected — this candidate touches only `packages/prediction-engine`); `git diff --check` clean.
+- Alternatives rejected: skipping the mandatory red-team because the module claims to be inert —
+  rejected because an "unwired" claim from ported code must be independently verified, never trusted,
+  in a protected zone; this campaign's own standing rule. Modifying `edge-engine.ts` itself to actually
+  wire the precision-weighted blend into live scoring — rejected as a founder-gated MODEL_VERSION step
+  per both modules' own explicit docstrings, well outside this pass's authority.
+- Reversibility: 5 new files (2 modules + 3 tests — delete to roll back) + 1 additive export-block
+  append to `index.ts` (git-revertable) — single revert commit undoes the whole item. No migration, no
+  schema change, no live scoring path touched, no MODEL_VERSION change.
+- Protected zones: `packages/prediction-engine` (prediction-engine scoring methodology) — mandatory
+  dedicated freeze-contract pass and red-team applied, per CLAUDE.md's Prediction Engine Rules and this
+  campaign's standing protected-zone discipline. Confirmed zero wiring into any live scoring path;
+  `MODEL_VERSION` (v5.1.0) unchanged.
+- Files: `packages/prediction-engine/src/multi-market-ensemble.ts`,
+  `packages/prediction-engine/src/synthetic-fade.ts`,
+  `packages/prediction-engine/src/__tests__/multi-market-ensemble.test.ts`,
+  `packages/prediction-engine/src/__tests__/synthetic-fade.test.ts`,
+  `packages/prediction-engine/src/__tests__/ensemble-adapter.test.ts`,
+  `packages/prediction-engine/src/index.ts`.
+- Supersedes: none. Closes candidate 5/5 (the LAST) of the 5 RECOVER_WHOLE_CANDIDATEs named in DEC-056.
+  Task #76 is now 4a-of-5-plus-5/5 done — the only remaining open item under task #76 is candidate 4b
+  (Mock Draft simulator + universal roster paste-import + FantasyCoach + Late-Swap UI, all from
+  `claude/adoring-babbage-gq7v77`, deferred in DEC-060 with named reasons, not silently dropped).

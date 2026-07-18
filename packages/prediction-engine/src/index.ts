@@ -997,3 +997,41 @@ export type {
   Drive,
   DriveResult,
 } from "./expected-metrics/index.js";
+
+// Multi-market true-probability ensemble — precision-weighted (inverse-variance)
+// fusion of independent estimators (book consensus, Kalshi/Polymarket exchanges,
+// Poisson/Elo/ML) into a sharper fair probability + a cross-market divergence
+// signal. Drop-in `independents` for edge-engine.assessEdge. Pure + tested;
+// founder-gated like every estimator — wiring it into live scoring is a
+// MODEL_VERSION step, not something this export enables by itself.
+export {
+  estimatorSigma,
+  precisionWeightedEnsemble,
+  independentEstimatesForSide,
+  ensembleForSide,
+  DEFAULT_SOURCE_RELIABILITY,
+  SIGMA_BASE,
+} from "./multi-market-ensemble.js";
+export type {
+  EstimatorReliability,
+  MarketEstimate,
+  EnsembleResult,
+  SideEstimateOptions,
+} from "./multi-market-ensemble.js";
+
+// Synthetic public-lean / fade — a glass-box, transparent weighted proxy over
+// public-attractor facts (favouritism, popularity, primetime, star narrative)
+// producing a capped, labelled contrarian nudge. EXPERIMENTAL + gated OFF (must
+// earn CLV correlation before any MODEL_VERSION step lets it touch a published
+// number); never originates a pick; same hard-capped posture as narrative-signal.
+export {
+  syntheticPublicLean,
+  MAX_FADE_NUDGE,
+  MAX_CONFIDENCE,
+  SYNTHETIC_FADE_LABEL,
+} from "./synthetic-fade.js";
+export type {
+  PublicLeanInput,
+  SyntheticPublicLean,
+  FadeContribution,
+} from "./synthetic-fade.js";
