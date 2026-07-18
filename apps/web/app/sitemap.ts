@@ -67,6 +67,8 @@ const ROUTES: ReadonlyArray<{
   { path: "/nflverse", priority: 0.6, changeFrequency: "weekly" },
   { path: "/mlb", priority: 0.5, changeFrequency: "weekly" },
   { path: "/nhl", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/history", priority: 0.5, changeFrequency: "weekly" },
+  { path: "/sos", priority: 0.5, changeFrequency: "weekly" },
   { path: "/weather", priority: 0.5, changeFrequency: "daily" },
   { path: "/fantasy", priority: 0.6, changeFrequency: "weekly" },
   { path: "/the-beat", priority: 0.6, changeFrequency: "weekly" },

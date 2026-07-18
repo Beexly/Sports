@@ -3560,3 +3560,129 @@ stitching) — recorded here so no backtest can slip past it.
 - Supersedes: none. Closes candidate 3/5 of task #76. 2 more RECOVER_WHOLE_CANDIDATEs remain: History+
   Schedule Lab (`claude/adoring-babbage-gq7v77`) and the multi-market-ensemble/synthetic-fade modules
   (`claude/pensive-brown-yql6ld`).
+
+## DEC-060 — Task #76 (4a/5): History Lab + Schedule Lab ported; Contest Simulator newly excluded
+  (deliberately-sealed surface); Mock Draft/roster-import/FantasyCoach/Late-Swap deferred to 4b
+  (2026-07-18)
+
+- Date: 2026-07-18
+- Workstream: a deliberately NARROWED first slice of the fourth of 5 RECOVER_WHOLE_CANDIDATEs named
+  in DEC-056 (`claude/adoring-babbage-gq7v77`, DEC-056 named it a 7-part cluster: History Lab, Schedule
+  Lab, Mock Draft simulator, universal roster paste-import, Contest Simulator, FantasyCoach tooltips,
+  Late-Swap UI). Deep scoping this pass (direct reads, not agent-trusted — the dispatched `gse-scout`
+  stalled 3 times on this branch and was abandoned in favor of doing the investigation directly) found
+  the cluster's real integration complexity was larger than DEC-056 characterized, and surfaced one new
+  disqualifying finding DEC-056 missed. Rather than rush the full 7-part cluster or silently drop the
+  harder pieces, this pass ships only the two lowest-risk, fully self-contained parts now and records
+  the rest as an explicit, named follow-on (no silent scope-shrink).
+- **New finding this pass — Contest Simulator conflicts with a deliberately-sealed surface.**
+  `apps/web/app/fantasy/contests/page.tsx` is NOT a placeholder pdcswh forgot to build — its own
+  docstring says "THE CONTEST BAY, sealed... Cinematic under-construction door... No vendor names, no
+  compliance posture, no internal status leaks... something competitive is being built behind this
+  door." Wiring the branch's real, working Monte-Carlo Contest Simulator (`contest-sim.ts` +
+  `contest-simulator.tsx`) into that route would directly contradict a deliberate, still-standing
+  product decision to keep this surface's contents secret pending a real launch — the same
+  "check the CONCEPT, not just the filename" discipline DEC-053 established for `warp-nebula.tsx`
+  (a component's absence from the live route doesn't mean the slot is unclaimed; it may be
+  deliberately sealed under different code). Treated as OWNER_GATE-adjacent. NOT ported, and not
+  recommended for porting without a founder decision to unseal that surface.
+- Code: `apps/web/lib/lahman/franchise-history.ts` (+ test) — ported verbatim (already used the
+  established `@sports/data-ingestion` `assertIngestible`/`fetchWithFailover`/`parseCsv` idiom); rolls
+  the Lahman `Teams.csv` (CC-BY-SA, open license) up to per-MLB-franchise all-time record, World
+  Series titles, pennants, best season. `apps/web/lib/nflverse/franchise-history.ts` (+ test) and
+  `apps/web/lib/nflverse/schedule-lab.ts` (+ test) — ADAPTED, not copied verbatim (see below); roll
+  nflverse `games.csv` (CC-BY-4.0) into per-NFL-franchise records and NFL strength-of-schedule
+  (opponent strength from the already-existing `@/lib/intelligence/team-environment` neutral-script
+  EPA percentiles). `apps/web/app/history/page.tsx` and `apps/web/app/sos/page.tsx` (new pages) —
+  ported verbatim; both already used pdcswh's real design tokens (`BRAND_COLORS`, `ink-*`, `mineral`,
+  `eclipse`, `Nav`/`Footer`), confirmed via grep before porting. `apps/web/app/sitemap.ts` — added
+  `/history` and `/sos` at priority 0.5/weekly, matching the existing pattern for similar content pages
+  (`/mlb`, `/nhl`).
+- Adapted, not copied verbatim: the source branch's `nflverse/franchise-history.ts` and
+  `nflverse/schedule-lab.ts` used a raw `fetch` + hand-rolled `AbortController` timeout + a naive local
+  CSV parser, bypassing the shared ingestion helpers every OTHER file in `lib/nflverse/` already uses
+  (confirmed by reading `qbr.ts`, `combine.ts`, `edge-signals.ts` first). Rewrote both to call
+  `assertIngestible("nflverse")` + `fetchWithFailover(withMirrors(url), fetcher, {timeoutMs})` + the
+  shared quote-aware `parseCsv` + `NFLVERSE_BASE`, all from `@sports/data-ingestion` — the pure roll-up
+  logic (`buildNflFranchiseHistory`, `buildTeamSchedules`, `buildScheduleLabRows`, `opponentStrength`)
+  is byte-identical to the source branch; only the I/O wrapper changed. This closes a real gap the
+  branch itself had: its bespoke nflverse fetchers had no source-registry clearance check at all.
+- **Explicitly excluded, with reasons (no silent scope-shrink):**
+  - Contest Simulator (`contest-sim.ts`, `contest-simulator.tsx`) — deliberately-sealed surface
+    conflict, see above. New finding this pass.
+  - "Line Room" (`app/odds/page.tsx`, `lib/odds/board-loader.ts`, `lib/odds/comparison.ts` + test) —
+    confirmed by direct read (its own page title is literally "Line Room — Odds Comparison & Best
+    Price") to duplicate pdcswh's already-shipped Line Shop (`components/observatory/line-shop-board.tsx`
+    + `lib/market/load-line-shop-board.ts`) and Market Fair Board. Per DEC-056's original instruction.
+  - `warp-nebula.tsx`/`warp-nebula-lazy.tsx` — ARCHIVE_ONLY, DEC-053.
+  - `lib/fantasy/matchup.ts` (+ test) — fabricated/synthetic defense-tier data, DEC-056.
+  - `docs/COMPETITOR_PARITY_MATRIX.md` — not sensitive, but stale/inaccurate relative to pdcswh's
+    current state (dated "NEW 2026-06-12", references the excluded Line Room as already shipped); not
+    worth porting as a stale document.
+  - `_overnight_quarantine/*` — scratch junk from the source branch's own workspace, never port.
+- **Deferred to a follow-on slice (4b), not silently dropped:**
+  - Mock Draft simulator (`mock-draft.ts` + test, `mock-draft-room.tsx`, `draft-page-tabs.tsx`) — real
+    integration risk found: the branch's `draft-page-tabs.tsx` calls `<DraftAssistant pool={pool} />`
+    without forwarding `canUseFantasyFull`, which defaults to `false` (fail-closed) on pdcswh's real
+    `DraftAssistant` — porting it as-is would silently downgrade every PRO/ELITE viewer to the free
+    board depth on `/fantasy/draft`. Needs a real fix, not a file copy. (Confirmed pdcswh's existing
+    `lib/fantasy/players.ts` `PLAYERS`/`ILLUSTRATIVE_NOTE` illustrative-pool pattern — which
+    `MockDraftRoom` falls back to when no real pool is injected — is pre-existing, already-governed
+    infrastructure used by 15 other components, not something this port would introduce.)
+  - Universal roster paste-import (`roster-import.ts` + test) — a clean, real, honest-unmatched pure
+    lib, but the source branch itself never wired a UI to it; needs real integration design into
+    `/fantasy/connect` alongside the existing Sleeper sync, not a drop-in port.
+  - FantasyCoach (`coach.ts` + test, `fantasy-coach.tsx`) — pure educational glossary content, zero
+    compliance risk, but needs mounting into 5 separate existing tool pages (dfs/draft/trade/lineup/
+    waivers), each its own integration point.
+  - Late-Swap UI (`late-swap-panel.tsx`) — needs deep integration into the existing `DfsOptimizer`
+    component's internal state (its generated lineup + slate), plus an import fix: the branch imports
+    `lateSwap` from `@/lib/fantasy/dfs-optimizer`, but on pdcswh that function actually lives in
+    `@/lib/fantasy/dfs-exact` (confirmed signature match: `lateSwap(current, lockedIds, mode, slate)`
+    identical in both) — `metrics` does come from `dfs-optimizer` as imported. DEC-056 was right that
+    this surfaces an "already-exported-but-unwired" function; it named the wrong module.
+- Independent review: one `gse-red-team` pass, stalled once mid-investigation (resumed via the standing
+  `SendMessage` nudge). **Zero confirmed findings.** Directly reproduced rather than assumed:
+  `"lahman-db"`/`"nflverse"` are both real, pre-existing `cleared-with-attribution` registry entries
+  (not newly invented); `assertIngestible()` is the first statement before any fetch in all three
+  loaders; the 4 pure roll-up functions contain no hardcoded/synthetic data anywhere; `parseCsv`'s
+  `{records}` return shape is destructured correctly everywhere it replaced the old local parser with
+  no field-name mismatch; all 4 load functions (including the pre-existing `loadTeamEnvironment`) return
+  an honest `source-error` state with zero rows on any failure, never fabricated/zeroed data; both new
+  pages correctly branch on `status`/`rows.length` before rendering; zero `gray-`/`slate-` classes;
+  sitemap entries collide with nothing. One item flagged for awareness, not a confirmed finding: the
+  NFL half of the History Lab page has no formal CC-BY-4.0 attribution text block (only an inline
+  "nflverse final scores" caption) — verified this matches pdcswh's existing site-wide practice
+  (checked `app/nflverse/page.tsx`, nflverse's own dedicated page, which has the same gap), so it's a
+  pre-existing minor completeness gap, not a regression this port introduced; not fixed unilaterally
+  here since doing so only on this page while every other nflverse-sourced page still lacks it would be
+  inconsistent, not an improvement.
+- Evidence: `cd apps/web && npx vitest run lib/lahman/franchise-history.test.ts
+  lib/nflverse/franchise-history.test.ts lib/nflverse/schedule-lab.test.ts` 13/13 green; targeted
+  `palette-cohesion`/`critical-routes-shape`/`data-first-public-surfaces` 51/51 green; `npx tsc --noEmit`
+  clean; `npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0` clean repo-wide; full `apps/web` suite
+  653/653 files, 8855/8855 tests green; `npm run guardrails` 17/17 green; `npm run build` succeeded
+  twice, `/history` and `/sos` present in the route manifest both times; `git diff --check` clean.
+- Alternatives rejected: shipping the full 7-part cluster in one pass — rejected because Mock Draft's
+  entitlement-forwarding bug and Late-Swap's deep component-state integration both need real design
+  attention the remaining session budget couldn't give safely, and rushing either risks landing a real
+  paywall regression or a half-wired feature; silently dropping the harder 5 pieces without naming them
+  — rejected as a scope-shrink violation; porting Contest Simulator's pure simulation library without
+  wiring a UI (the "build the lib, leave it unwired" pattern used for `dfs-exact.ts` and
+  `consensus-accuracy-engine` earlier in this campaign) — rejected because the sealed Contest Bay's own
+  stated purpose is "no internal status leaks," and an unwired-but-present Monte-Carlo contest engine in
+  the tree is itself a status leak about what's coming, unlike e.g. `dfs-exact.ts` which was building
+  toward an already-open, non-secret DFS surface.
+- Reversibility: 8 new files (2 libs + 2 tests × 2 sports, 2 pages — delete to roll back) + 1
+  two-line sitemap addition (git-revertable) — single revert commit undoes the whole item. No
+  migration, no schema change, no protected-zone code, no auth/entitlement/billing touch.
+- Protected zones: none (public, unauthenticated, read-only content pages) — red-teamed anyway per
+  this campaign's standing rule, given the real-data/source-rights compliance surface involved.
+- Files: `apps/web/lib/lahman/franchise-history.ts`, `apps/web/lib/lahman/franchise-history.test.ts`,
+  `apps/web/lib/nflverse/franchise-history.ts`, `apps/web/lib/nflverse/franchise-history.test.ts`,
+  `apps/web/lib/nflverse/schedule-lab.ts`, `apps/web/lib/nflverse/schedule-lab.test.ts`,
+  `apps/web/app/history/page.tsx`, `apps/web/app/sos/page.tsx`, `apps/web/app/sitemap.ts`.
+- Supersedes: none. Closes candidate 4a/5 of task #76 (History Lab + Schedule Lab only). Candidate 4b
+  (Mock Draft + roster-import + FantasyCoach + Late-Swap, all from the same source branch) remains open
+  as a named follow-on. Candidate 5/5 (multi-market-ensemble/synthetic-fade,
+  `claude/pensive-brown-yql6ld`) remains open, unchanged from DEC-059's accounting.
