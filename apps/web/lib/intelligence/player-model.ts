@@ -213,12 +213,35 @@ export function buildPlayerModel(records: readonly CsvRecord[], activeSeason: nu
   return { profiles: ranked, throughWeek };
 }
 
+/**
+ * Short in-process TTL cache for the LIVE (default-fetcher) path only. The
+ * source asset is multi-MB and refreshes weekly, so 10 minutes is far inside
+ * epistemic safety — this exists because two sibling premium routes
+ * (roster-advice + waiver-war-room) each load the model per request, and an
+ * uncached multi-MB fetch behind a per-minute rate limiter is a
+ * cost-amplification vector (red-team finding, DEC-028). Mirrors the
+ * module-cache pattern adp-source.ts and the Sleeper player map already use.
+ * Injected fetchers (tests) BYPASS the cache entirely so every existing test
+ * keeps its exact behavior; failures are never cached (stay retryable).
+ */
+const PLAYER_MODEL_CACHE_TTL_MS = 10 * 60 * 1000;
+const playerModelCache = new Map<number, { readonly expiresAt: number; readonly value: PlayerModel }>();
+
+export function resetPlayerModelCacheForTests(): void {
+  playerModelCache.clear();
+}
+
 export async function loadPlayerModel({
   season = latestNflverseInspectionSeason(),
   timeoutMs = 15000,
   fetcher = fetch,
 }: { season?: number; timeoutMs?: number; fetcher?: FetchLike } = {}): Promise<PlayerModel> {
   assertIngestible("nflverse");
+  const useCache = fetcher === fetch;
+  if (useCache) {
+    const hit = playerModelCache.get(season);
+    if (hit && hit.expiresAt > Date.now() && hit.value.status === "live") return hit.value;
+  }
   const url = nflverseUrl("player_stats_week", season);
   try {
     // cache:no-store — these assets are multi-MB and refresh weekly; they must
@@ -229,7 +252,7 @@ export async function loadPlayerModel({
     const hasSeason = records.some((r) => r["season"] === String(season) && r["season_type"] === "REG");
     const activeSeason = hasSeason ? season : records.reduce((m, r) => Math.max(m, num(r["season"])), 0);
     const { profiles, throughWeek } = buildPlayerModel(records, activeSeason);
-    return {
+    const value: PlayerModel = {
       generatedAt: new Date().toISOString(),
       status: "live",
       season: activeSeason,
@@ -242,6 +265,11 @@ export async function loadPlayerModel({
       sourceUrl: url,
       error: null,
     };
+    // Live results only — a failure is never cached (stays retryable). Keyed
+    // by the REQUESTED season so a fallback-resolved season still caches under
+    // the key the next identical call will look up.
+    if (useCache) playerModelCache.set(season, { expiresAt: Date.now() + PLAYER_MODEL_CACHE_TTL_MS, value });
+    return value;
   } catch (error) {
     return {
       generatedAt: new Date().toISOString(),

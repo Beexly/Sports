@@ -910,3 +910,131 @@ stitching) — recorded here so no backtest can slip past it.
   apps/web/app/intelligence/engines/page.tsx,
   apps/web/__tests__/roster-advice-panel.test.tsx (new).
 - Supersedes: none.
+
+## DEC-028 — Task #13 slice: Waiver War Room (bye collisions + model-vs-market disagreement) (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: Task #13 (Fantasy Engine 10x), second slice on the same real-data foundation
+  DEC-027 established. Composes three already-live, cleared data paths that had never been
+  joined against a real synced roster: `apps/web/lib/fantasy/adp-source.ts` (FFC ADP, real
+  per-player bye weeks, `approved_api`), `apps/web/lib/intelligence/player-model.ts` (real
+  nflverse process grades), and `apps/web/lib/integrations/sleeper.ts`'s `loadSleeperTrending`
+  (real Sleeper waiver add/drop momentum).
+- Decision: added `apps/web/lib/fantasy/waiver-war-room.ts` — two pure functions.
+  `byeCollisions` joins a roster to FFC rows by `adpJoinKey` (name+position, never name alone,
+  reused not reimplemented) and groups real byes into collision weeks (bye<=0 = "no bye
+  joined" per this repo's established convention, routed to `unknown`, never a fabricated
+  Week-0 group). `marketDisagreements` tallies BOTH Sleeper lists per player BEFORE judging
+  direction, judges by the DOMINANT side (ties skipped as ambiguous — a player added in 900
+  leagues and dropped in 5 is being added, never reported as "the market is leaving"), and
+  reports only the two genuine conflict classes (model buy-low + market net-dropping; model
+  sell-high + market net-adding) — agreement is corroboration and is NOT reported, mirroring
+  Worldline's conflict-detection doctrine (W007). New route
+  `apps/web/app/api/fantasy/waiver-war-room/route.ts`: `requirePremiumApiRateLimited` gates
+  before any body parse or loader call; the three loaders run in parallel; each of the two
+  response legs (byes, disagreements) degrades to its OWN honest `source-error` independently
+  — a failed leg never masquerades as a computed "all clear," and never blocks the other leg.
+  New client panel `apps/web/components/fantasy/waiver-war-room-panel.tsx`, same
+  server-side-only entitlement doctrine as DEC-027's `RosterAdvicePanel` (401/403/429/error/
+  per-leg-source-error, zero motion, zero client-side tier logic), wired into
+  `sleeper-connect.tsx` alongside it.
+- Independent review: gse-verifier CONFIRMED all checks (hand-derived the dominance-tally and
+  bye-0 logic, confirmed the final sort's `localeCompare` tail makes ordering fully
+  deterministic despite `Map` iteration order, confirmed zero duplication of
+  `adpJoinKey`/loader logic, confirmed `roster-advice.ts`/`player-model.ts`/`sleeper.ts`/other
+  existing routes untouched). gse-red-team found 4 real findings, all fixed: (1) HIGH —
+  `loadPlayerModel()` has NO cache (fresh multi-MB uncached nflverse CSV fetch+parse every
+  call) yet the new route permitted 120 req/min via the generic
+  `requirePremiumApiRateLimited` ceiling — 20x the accepted budget the sibling
+  `roster-advice` route already set for the identical compute (30/5min) — a real
+  cost-amplification/impolite-load vector; (2) the two panels (RosterAdvicePanel +
+  WaiverWarRoomPanel) now both independently trigger that same uncached fetch per league
+  selection, doubling the dominant cost term; (1)+(2) fixed together with ONE change: a
+  10-minute in-process TTL cache added to `loadPlayerModel` itself (mirrors the existing
+  `adp-source.ts`/Sleeper-player-map cache pattern; live results only, failures never cached,
+  injected test fetchers bypass the cache entirely so the two existing `player-model`/
+  `roster-advice` test suites needed zero changes and stayed green); (3) a missing regression
+  test for a failed disagreements leg (the byes-leg-failure honesty was tested, its mirror
+  wasn't) — added, and confirmed it would have caught a regression; (4) two copy overclaims —
+  "No week has two or more of your players on bye" asserted a fact about the whole roster when
+  only matched players were checked (reworded "matched players"), and "they currently agree"
+  asserted agreement the code never actually establishes for ambiguous 50/50 churn or in-line
+  signals (reworded "no conflicts to report"); a third wording nit (unverified "N leagues"
+  unit on the Sleeper trending count) was also tightened to "N recent adds/drops across
+  Sleeper leagues" rather than asserting a per-league unit this repo has no other precedent
+  for. Also confirmed clean: FFC/Sleeper attribution renders on every surface displaying their
+  data (both ok and source-error byes legs); no rights-registry bypass (the route calls the
+  existing clearance-gated `loadFfcAdp`, no direct fetch); no premium leak; no client-side
+  entitlement drift; the unrendered `clear` (single-bye, non-colliding) field was dropped from
+  the route response entirely rather than shipped as an unrendered per-player data-export
+  vector.
+- Evidence: 13 new tests (8 pure-lib + 5 panel, later +2 more from the cache/test-mirror fixes
+  = ultimately 19 targeted incl. the states-matrix additions counted separately in this
+  session); full targeted re-run after all fixes: `waiver-war-room.test.ts` 8,
+  `waiver-war-room-panel.test.tsx` 5 (all edited for the copy fixes),
+  `player-model.test.ts` 6, `roster-advice.test.ts` 7 — all green, confirming the cache
+  change didn't alter any existing model/route behavior; `tsc --noEmit` clean;
+  `eslint --max-warnings=0` clean on every touched file.
+- Alternatives rejected: lowering only the new route's rate-limit bucket instead of caching
+  (would have left the roster-advice route's OWN identical uncached-fetch cost unaddressed,
+  and DEC-027's panel would still double-pay on every league switch); reporting market
+  direction by mere presence in either Sleeper list (silently produces the "5 drops out of 900
+  adds reported as a market exit" dishonesty the dominance rule exists to prevent).
+- Reversibility: additive; the `loadPlayerModel` cache is a pure performance/cost change with
+  an explicit test-bypass for injected fetchers, reverting it drops back to zero caching with
+  zero behavior change to any consumer.
+- Protected zones: entitlements, public claims, source rights (FFC/Sleeper attribution) — full
+  verifier + red-team pass completed pre-commit, all confirmed findings fixed and re-gated.
+- Files: apps/web/lib/fantasy/waiver-war-room.ts (new),
+  apps/web/lib/fantasy/waiver-war-room.test.ts (new),
+  apps/web/app/api/fantasy/waiver-war-room/route.ts (new),
+  apps/web/components/fantasy/waiver-war-room-panel.tsx (new),
+  apps/web/components/fantasy/sleeper-connect.tsx (wiring),
+  apps/web/__tests__/waiver-war-room-panel.test.tsx (new),
+  apps/web/lib/intelligence/player-model.ts (additive TTL cache).
+- Supersedes: none.
+
+## DEC-029 — Task #8 slice: UX mechanical sweep (loading states + game-room error boundary) (2026-07-17)
+
+- Date: 2026-07-17
+- Workstream: Task #8 (Grandpa-simple + cinematic UX pass), first concrete slice this session
+  after a read-only scout returned an evidence-backed gap list rather than a vague mandate.
+  Confirmed via direct file reads (not just the scout's claim) that the repo's global
+  reduced-motion, skip-link, and states doctrine is otherwise comprehensive (~35 files carry
+  `prefers-reduced-motion` guards; `apps/web/__tests__/states-matrix-slice.test.ts` already
+  pins the pattern for `picks`/`performance`/`clv`/`proof`).
+- Decision: five force-dynamic, request-time-loader customer routes were missing the
+  established `loading.tsx` skeleton pattern this repo already uses everywhere else —
+  `apps/web/app/room/[gameId]` (multi-loader, entitlement-gated Game Room — the clearest miss,
+  paints a blank frame on a slow load), `house`, `observatory`, `airwave`, `dashboard`. Added
+  one `loading.tsx` per route, byte-structure-identical to the existing `board/loading.tsx`
+  pattern (`ToolPageSkeleton` with an honest per-route label; no new component). Also added
+  `apps/web/app/room/error.tsx`, a segment error boundary modeled exactly on the existing
+  `apps/web/app/players/error.tsx` (same `captureError`/`initObservability` wiring, same
+  prod/dev detail split, retry via `reset()`, branded Nav/Footer chrome) — `/room` composes
+  several loaders (entitlements, market pulse, evidence timeline, playback) and previously had
+  no boundary closer than the root, which would have dropped all chrome on a render throw.
+  Explicitly left unchanged: `apps/web/app/dashboard/page.tsx`'s signed-out branch — it already
+  has an honest "Continue to sign in" CTA with a correct `callbackUrl`, and BOTH its signed-in
+  and signed-out branches render without the shared `Nav`/`Footer` components (a bespoke inline
+  header instead), so adding chrome to only one branch would have been a new inconsistency, not
+  a fix.
+- Independent review: gse-verifier CONFIRMED all checks — pattern conformance against
+  `board/loading.tsx` and `players/error.tsx`, correct Next.js error-boundary segment semantics
+  (`room/error.tsx` catches `/room/[gameId]` as a descendant segment), all five target routes
+  confirmed genuinely `force-dynamic`, and the dashboard non-change reasoning independently
+  verified by reading the file rather than trusting the rationale as given.
+- Evidence: `states-matrix-slice.test.ts` extended with the five new routes + the error-boundary
+  assertion, 19/19 green; `tsc --noEmit` clean; `eslint --max-warnings=0` clean;
+  `git diff --check` clean; full-suite guardrails 17/17 (unaffected — no copy/entitlement
+  surface touched).
+- Alternatives rejected: adding Nav/Footer only to dashboard's signed-out branch (would create
+  a new visual inconsistency with the signed-in branch, not fix one).
+- Reversibility: purely additive route-level files; zero product logic touched.
+- Protected zones: none directly (pure UX/observability scaffolding); reviewed anyway per this
+  session's standing discipline for customer-facing changes.
+- Files: apps/web/app/room/[gameId]/loading.tsx (new), apps/web/app/room/error.tsx (new),
+  apps/web/app/house/loading.tsx (new), apps/web/app/observatory/loading.tsx (new),
+  apps/web/app/airwave/loading.tsx (new), apps/web/app/dashboard/loading.tsx (new),
+  apps/web/__tests__/states-matrix-slice.test.ts (extended).
+- Supersedes: none.

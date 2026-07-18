@@ -18,6 +18,7 @@ import type { StandingRow } from "@/lib/integrations/sleeper-sync";
 import { connectorsByStatus, type ConnectorStatus } from "@/lib/integrations/connectors";
 import { BRAND_COLORS } from "@/lib/brand";
 import { RosterAdvicePanel } from "./roster-advice-panel";
+import { WaiverWarRoomPanel } from "./waiver-war-room-panel";
 
 const POS_HEX: Record<string, string> = { QB: "#00E5FF", RB: "#7B61FF", WR: "#FF38C7", TE: "#F5F7FF", DEF: "#9fb3c8", K: "#E0A800" };
 
@@ -177,6 +178,7 @@ export function SleeperConnect() {
               <RosterGroup title="Starters" players={view.you.starters} avail={avail} />
               <RosterGroup title="Bench" players={view.you.bench} avail={avail} dim />
               <RosterAdvicePanel you={view.you} />
+              <WaiverWarRoomPanel you={view.you} />
             </>
           ) : (
             <p className="mt-4 text-sm text-ink-400">Standings imported. Enter the username that owns a team in this league to resolve your roster.</p>

@@ -96,7 +96,7 @@ describe("states matrix — outage is not a verdict, absence is not an outage", 
 });
 
 describe("states matrix — loading skeletons on data-heavy routes", () => {
-  it.each(["picks", "performance", "clv", "proof"])(
+  it.each(["picks", "performance", "clv", "proof", "room/[gameId]", "house", "observatory", "airwave", "dashboard"])(
     "app/%s/loading.tsx exists and uses the house skeleton",
     (route) => {
       const p = join(__dirname, "..", "app", route, "loading.tsx");
@@ -104,6 +104,15 @@ describe("states matrix — loading skeletons on data-heavy routes", () => {
       expect(readFileSync(p, "utf8")).toContain("ToolPageSkeleton");
     },
   );
+
+  it("the force-dynamic game room also carries a segment error boundary with branded chrome", () => {
+    const p = join(__dirname, "..", "app", "room", "error.tsx");
+    expect(existsSync(p)).toBe(true);
+    const src = readFileSync(p, "utf8");
+    expect(src).toContain("captureError");
+    expect(src).toContain("<Nav />");
+    expect(src).toContain("reset()");
+  });
 });
 
 describe("states matrix — pricing explainer cards never render headed-but-empty", () => {
