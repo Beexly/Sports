@@ -57,16 +57,39 @@ Effective state of node X, given own state and dependency states:
    ignorance is contagious through hard edges; a green light built on an
    unmeasured dependency is a lie.
 4. else **degraded/stale** (max rank; union of tags and reasons) if own or any
-   hard dep carries rank 1, or any SOFT dep composes rank ≥ 1 — soft deps
-   contribute at most one notch (cap at degraded) and never gate, never
+   hard dep carries rank 1, or any SOFT dep composes to ANY non-healthy state
+   — **not only severity-rank ≥ 1.** "Rank" is a Severity-axis concept (§1);
+   Certainty (unknown) is a separate axis, so a soft dep that composes
+   **unknown** (missing/expired evidence) is not literally "rank ≥ 1" under a
+   narrow reading, but it MUST still cap the dependent at degraded — silently
+   leaving the dependent healthy just because the axis label differs would
+   contradict the rule's own point (an enhancing signal going dark still
+   degrades). Precisely: impaired, unavailable, gated, AND unknown soft deps
+   each contribute exactly one "degraded" tag; own/hard-dep-sourced tags
+   (e.g. "stale") are real and propagate as-is, but a soft dep's specific
+   tag granularity or composed kind is never propagated through the edge —
+   only the capped "degraded" notch is. Soft deps never gate, never
    unknown-ify, never disable.
 5. else **healthy**.
 
+**Own-state derivation priority (evidence → OwnState, before composition):**
+a single evidence record can, in principle, carry conflicting fields (e.g.
+`unavailable: true` alongside a non-open `intent`). Resolve in this order:
+(a) fresh, evidenced `unavailable` first — matching composition rule
+1-before-2, a real currently-evidenced outage is never masked as merely
+intentional darkness; (b) `intent` (gating) next, and unconditionally —
+gating is a structural/config fact, not decaying evidence, so it must NOT be
+short-circuited by a stale or missing `observedAt`; a gate stays honestly
+gated even if it hasn't been re-read recently; (c) only then does the
+observedAt/freshness-horizon check run, decaying stale or missing severity
+evidence to unknown exactly as below.
+
 **Evidence decay:** every evidence ref carries `observedAt` + a freshness
-horizon. Evidence past horizon decays to **unknown** automatically. This is the
-epistemic heart: the Twin knows when it no longer knows, without anyone turning
-anything red by hand. (Direct generalization of OP-003's
-absence-of-coverage-is-not-green invariant, applied over time.)
+horizon. Evidence past horizon decays to **unknown** automatically — this
+applies to SEVERITY evidence (unavailable/degraded/stale), not to gating
+(see above). This is the epistemic heart: the Twin knows when it no longer
+knows, without anyone turning anything red by hand. (Direct generalization
+of OP-003's absence-of-coverage-is-not-green invariant, applied over time.)
 
 **Determinism:** composition is a pure function of (registry, evidence set,
 now). Same inputs ⇒ same graph. Property test: composition is monotone — worse
