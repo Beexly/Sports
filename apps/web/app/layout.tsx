@@ -21,6 +21,10 @@ import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
 import { SentientShell } from "@/components/motion/sentient-shell";
 import { PageExplainerAuto } from "@/components/explainers/page-explainer";
+import {
+  shouldRenderCloudflareAnalytics,
+  shouldRenderMicrosoftClarity,
+} from "@/lib/analytics/provider-gating";
 
 // Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3):
 // geometric, futuristic, uppercase for impact. Loaded ONCE (weights 500-900);
@@ -227,25 +231,34 @@ export default function RootLayout({
         <SentryClientInit />
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
-        {process.env["NEXT_PUBLIC_ANALYTICS_ENABLED"] === "true" && (
-          <>
-            {/* Cloudflare Web Analytics — beacon, no cookies */}
-            <Script
-              id="cf-beacon"
-              src="https://static.cloudflareinsights.com/beacon.min.js"
-              data-cf-beacon={`{"token":"${process.env["NEXT_PUBLIC_CF_BEACON_TOKEN"]}"}`}
-              strategy="afterInteractive"
-            />
+        {/* Each provider gates on its OWN identifier, not just the master flag
+            (OP-004): a missing token must fail that provider silently, never
+            emit a malformed request (e.g. a Clarity tag literally named
+            "undefined") and never take down a sibling provider whose token
+            IS configured. See lib/analytics/provider-gating.ts. */}
+        {shouldRenderCloudflareAnalytics(
+          process.env["NEXT_PUBLIC_ANALYTICS_ENABLED"],
+          process.env["NEXT_PUBLIC_CF_BEACON_TOKEN"],
+        ) && (
+          <Script
+            id="cf-beacon"
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={`{"token":"${process.env["NEXT_PUBLIC_CF_BEACON_TOKEN"]}"}`}
+            strategy="afterInteractive"
+          />
+        )}
 
-            {/* Microsoft Clarity — heatmaps + session recordings */}
-            <Script id="ms-clarity" strategy="afterInteractive">
-              {`(function(c,l,a,r,i,t,y){
+        {shouldRenderMicrosoftClarity(
+          process.env["NEXT_PUBLIC_ANALYTICS_ENABLED"],
+          process.env["NEXT_PUBLIC_CLARITY_PROJECT_ID"],
+        ) && (
+          <Script id="ms-clarity" strategy="afterInteractive">
+            {`(function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
                 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
                 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
               })(window,document,"clarity","script","${process.env["NEXT_PUBLIC_CLARITY_PROJECT_ID"]}");`}
-            </Script>
-          </>
+          </Script>
         )}
       </body>
     </html>
