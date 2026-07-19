@@ -117,7 +117,28 @@ export async function checkHealth(fetchImpl, baseUrl, timeoutMs) {
   if (json.checks?.ingestion?.status !== "ok") {
     return { id, severity: SEVERITY.WARN, detail: `${url} ingestion check not ok: ${JSON.stringify(json.checks?.ingestion)}` };
   }
-  return { id, severity: SEVERITY.PASS, detail: `${url} -> ok, db ok, ingestion ${json.checks.ingestion.ageMinutes}min old` };
+  // Settlement health (LC-005): deliberately kept out of `ok`/`checks` by the
+  // route itself (a settlement lag shouldn't 503 the whole health check), so
+  // the sentinel reads it explicitly. Reuses the platform's own canonical
+  // evaluator (apps/web/lib/performance/settlement-health.ts, also live on
+  // the /admin/clv dashboard) rather than a second invented threshold.
+  // CRITICAL (5+ overdue, the platform's own default threshold) is a FAIL --
+  // a real, systemic settlement failure, not one postponed game. DEGRADED
+  // (some overdue, below that) is a WARN.
+  const sh = json.dataIntegrity?.settlementHealth;
+  const shReported = sh && typeof sh.health === "string";
+  if (shReported && sh.health === "CRITICAL") {
+    return { id, severity: SEVERITY.FAIL, category: CATEGORY.ASSERTION, detail: `${url} settlement health CRITICAL: ${sh.overduePending}/${sh.commencedTotal} commenced picks overdue (grace ${sh.graceHours}h)` };
+  }
+  if (shReported && sh.health === "DEGRADED") {
+    return { id, severity: SEVERITY.WARN, detail: `${url} settlement health DEGRADED: ${sh.overduePending}/${sh.commencedTotal} commenced picks overdue (grace ${sh.graceHours}h)` };
+  }
+  // Distinguish "confirmed healthy" from "field not present" (an older
+  // deploy without this check) rather than claiming a verification that
+  // didn't happen -- the same overclaim class LC-002's Merkle-root check
+  // was fixed for.
+  const shSuffix = shReported ? `, settlement ${sh.health}` : "";
+  return { id, severity: SEVERITY.PASS, detail: `${url} -> ok, db ok, ingestion ${json.checks.ingestion.ageMinutes}min old${shSuffix}` };
 }
 
 export async function checkProofLedger(fetchImpl, baseUrl, timeoutMs) {

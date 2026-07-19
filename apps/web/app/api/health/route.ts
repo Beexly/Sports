@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { REFRESH_STALE_AFTER_MINUTES } from "@/lib/data-reliability/refresh-sla";
+import { loadSettlementHealth } from "@/lib/performance/settlement-health";
 
 // A no-arg GET handler is statically cached by Next 14 unless it opts out —
 // which served hours-old "healthy" snapshots from the Vercel edge (observed
@@ -58,8 +59,23 @@ export async function GET(): Promise<NextResponse> {
 
   const allOk = Object.values(checks).every((c) => c.status === "ok");
 
+  // Settlement health (reuses the canonical evaluator, apps/web/lib/performance/
+  // settlement-health.ts -- already live on the /admin/clv dashboard). Deliberately
+  // kept OUT of `checks`/`allOk`: a settlement lag is real and actionable, but
+  // flipping the whole health check to 503 for it risks cascading into anything
+  // that treats this endpoint as a readiness/traffic gate, for a signal that's a
+  // data-quality problem, not "the service is down." Surfaced here so monitoring
+  // (Nightly Sentinel) can pick it up without changing overall service-health
+  // semantics or introducing a second, differently-thresholded implementation.
+  let settlementHealth: Awaited<ReturnType<typeof loadSettlementHealth>> | { error: string };
+  try {
+    settlementHealth = await loadSettlementHealth(db);
+  } catch {
+    settlementHealth = { error: "failed to query" };
+  }
+
   return NextResponse.json(
-    { ok: allOk, status: allOk ? "healthy" : "degraded", checks },
+    { ok: allOk, status: allOk ? "healthy" : "degraded", checks, dataIntegrity: { settlementHealth } },
     { status: allOk ? 200 : 503 }
   );
 }

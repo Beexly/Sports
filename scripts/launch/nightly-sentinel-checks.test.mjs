@@ -63,10 +63,20 @@ async function withServer(routes, fn) {
   }
 }
 
-function healthBody({ ok = true, db = "ok", ingestion = "ok", ingestionAge = 5 } = {}) {
+function healthBody({
+  ok = true,
+  db = "ok",
+  ingestion = "ok",
+  ingestionAge = 5,
+  settlementHealthBand = "HEALTHY",
+  overduePending = 0,
+  commencedTotal = 10,
+  graceHours = 6,
+} = {}) {
   return JSON.stringify({
     ok,
     checks: { database: { status: db }, ingestion: { status: ingestion, ageMinutes: ingestionAge } },
+    dataIntegrity: { settlementHealth: { health: settlementHealthBand, overduePending, commencedTotal, graceHours, clean: overduePending === 0 } },
   });
 }
 
@@ -103,6 +113,39 @@ test("checkHealth: PASS when ok/db/ingestion are all healthy", async () => {
     const result = await checkHealth(fetch, baseUrl, 2000);
     assert.equal(result.severity, SEVERITY.PASS);
   });
+});
+
+test("checkHealth: WARN when settlement health is DEGRADED", async () => {
+  await withServer(
+    { "/api/health": { status: 200, body: healthBody({ settlementHealthBand: "DEGRADED", overduePending: 2 }) } },
+    async (baseUrl) => {
+      const result = await checkHealth(fetch, baseUrl, 2000);
+      assert.equal(result.severity, SEVERITY.WARN);
+      assert.match(result.detail, /DEGRADED/);
+    },
+  );
+});
+
+test("checkHealth: FAIL when settlement health is CRITICAL (systemic, not one postponed game)", async () => {
+  await withServer(
+    { "/api/health": { status: 200, body: healthBody({ settlementHealthBand: "CRITICAL", overduePending: 6 }) } },
+    async (baseUrl) => {
+      const result = await checkHealth(fetch, baseUrl, 2000);
+      assert.equal(result.severity, SEVERITY.FAIL);
+      assert.equal(result.category, CATEGORY.ASSERTION);
+      assert.match(result.detail, /CRITICAL/);
+    },
+  );
+});
+
+test("checkHealth: PASS when settlement health is NO_DATA (nothing has commenced yet, not a false alarm)", async () => {
+  await withServer(
+    { "/api/health": { status: 200, body: healthBody({ settlementHealthBand: "NO_DATA", commencedTotal: 0 }) } },
+    async (baseUrl) => {
+      const result = await checkHealth(fetch, baseUrl, 2000);
+      assert.equal(result.severity, SEVERITY.PASS);
+    },
+  );
 });
 
 test("checkHealth: FAIL when the database check is not ok", async () => {
