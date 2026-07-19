@@ -61,23 +61,49 @@ two occurrences — not a wider sweep needed.
 | `/how-we-make-money` | 1/1/1 | 12/12 | no page error | not measured (browser crashed mid-check, see below) |
 | `/verify` | 1/1/1 | 12/12 | no page error | none |
 | `/journal` | 1/1/1 | 12/12 | no page error | none |
+| `/`* | 1/1/1 | 12/12 | no page error | none |
+| `/tools`* | 1/1/1 | 12/12 | no page error | none |
+| `/track`* | 1/1/1 | 12/12 | no page error | none |
 
-All five load with `main`/`nav`/`h1` landmarks present, complete a 12-step keyboard tab walk
+All eight load with `main`/`nav`/`h1` landmarks present, complete a 12-step keyboard tab walk
 without getting stuck, and raise no page error when `prefers-reduced-motion: reduce` is emulated.
 
-## What's honestly NOT_TESTED
+\* Re-tested 2026-07-19 (OP-005 follow-up pass) — see below; the original 2026-07-19 01:30 UTC
+pass recorded these three as NOT_TESTED because headless Chromium crashed before they could be
+checked.
 
-`/`, `/tools`, and `/track` could not be fully checked this pass: headless Chromium crashed
-(`Target crashed`) partway through each, consistently correlated with Next.js's default `<Link>`
-prefetch behavior aggressively prefetching dozens of on-page links simultaneously
-(`net::ERR_INSUFFICIENT_RESOURCES` observed immediately before each crash) combined with this
-sandbox's memory/`/dev/shm` constraints (already worked around once via
+## `/`, `/tools`, `/track` — re-tested 2026-07-19 (OP-005)
+
+**Original result (this same day, earlier pass):** `/`, `/tools`, and `/track` could not be fully
+checked: headless Chromium crashed (`Target crashed`) partway through each, consistently
+correlated with Next.js's default `<Link>` prefetch behavior aggressively prefetching dozens of
+on-page links simultaneously (`net::ERR_INSUFFICIENT_RESOURCES` observed immediately before each
+crash) combined with this sandbox's memory/`/dev/shm` constraints (already worked around once via
 `--disable-dev-shm-usage`, `--no-sandbox`, `--js-flags=--max-old-space-size=512` for the pages
 that did complete). All three DID return HTTP 200 and their `main`/`nav`/`h1` landmarks were
-confirmed present before the crash on two of the three. This reads as a resource-constrained
-*headless test environment* artifact — dense nav pages under real desktop/mobile Chrome have far
-higher per-origin connection and memory headroom — not evidence of a real user-facing defect, but
-it is recorded honestly as unverified rather than assumed clean.
+confirmed present before the crash on two of the three.
+
+**Re-run result:** In a later container for this same LC-008 evidence gap (OP-005), Chromium was
+confirmed operational (`/opt/pw-browsers/chromium` launches cleanly via `@playwright/test`) and
+all three pages were driven end-to-end with no crash, at both desktop (1280x800) and mobile
+(375x812) viewports, against `npm run dev` (not a production `next start` build — disk headroom in
+this container did not allow a fresh production build alongside the already-installed
+`node_modules`; this is a methodological difference from the original pass worth noting, though it
+does not change rendered DOM landmark/heading/link structure). Results, honestly reported:
+
+| Page | Landmarks (main/nav/h1) | Keyboard (12-tab walk) | First Tab = skip link | Reduced motion | 375px overflow | Missing `alt` | Empty-name clickables | Console/page errors |
+|---|---|---|---|---|---|---|---|---|
+| `/` | 1/1/1 | 12/12 | yes | no page error | none (scrollWidth 375 = clientWidth 375) | 0 of 3 images | 0 of 94 | none |
+| `/tools` | 1/1/1 | 12/12 | yes | no page error | none (scrollWidth 375 = clientWidth 375) | 0 of 2 images | 0 of 83 | none |
+| `/track` | 1/1/1 | 12/12 | yes | no page error | none (scrollWidth 375 = clientWidth 375) | 0 of 2 images | 0 of 79 | none |
+
+No defects found on any of the three pages under this pass. This resolves the LC-008 evidence gap:
+all nine pages in the original method's page list (`/`, `/pricing`, `/tools`, `/watchlist`,
+`/sealed`, `/how-we-make-money`, `/verify`, `/journal`, `/track`) now have a completed browser QA
+result, eight clean and one (`/how-we-make-money`) with its 375px-overflow measurement still not
+captured (unrelated to this pass — see its table row above). Chromium was stable throughout this
+run with no `Target crashed` or `ERR_INSUFFICIENT_RESOURCES` errors observed; the original crash
+reads as a transient/prior-container resource constraint, not a reproducible defect in these pages.
 
 No axe-core or other automated WCAG ruleset was run this pass (not an existing repo dependency;
 the established convention here is source-level role/aria pinning tests, e.g.
