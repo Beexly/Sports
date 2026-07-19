@@ -392,7 +392,11 @@ function runnerStatusFromArtifact(
   artifact: SyntheticProbeArtifact | null
 ): SyntheticMonitoringDashboard["runnerStatus"] {
   if (process.env.SYNTHETIC_MONITORING_ENABLED === "false") return "paused";
-  if (!artifact) return "healthy";
+  // OP-003 fail-open fix: an absent artifact means the runner has not run —
+  // that is NOT evidence of health. Previously this returned "healthy",
+  // which read absence of coverage as green. "paused" is the honest existing
+  // state (the runner isn't running), not a new enum member.
+  if (!artifact) return "paused";
   return artifact.ok ? "healthy" : "degraded";
 }
 

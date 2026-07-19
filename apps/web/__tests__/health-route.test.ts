@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { REFRESH_STALE_AFTER_MINUTES } from "@/lib/data-reliability/refresh-sla";
+import { resetNflverseTableCacheForTests } from "@sports/data-ingestion";
 
 /**
  * /api/health source-level contract.
@@ -78,10 +79,13 @@ describe("/api/health — freshness threshold (executed)", () => {
     dbMocks.ingestionRunFindFirst.mockReset();
     // DB ping always healthy so the ingestion check drives the outcome.
     dbMocks.queryRaw.mockResolvedValue([{ "?column?": 1 }]);
+    resetNflverseTableCacheForTests();
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+    resetNflverseTableCacheForTests();
   });
 
   function minutesAgo(m: number): Date {
@@ -116,5 +120,103 @@ describe("/api/health — freshness threshold (executed)", () => {
     expect(body.ok).toBe(true);
     expect(body.status).toBe("healthy");
     expect(body.checks.ingestion.status).toBe("ok");
+  });
+});
+
+/**
+ * OP-003 — additive capability surface. These cases ADD coverage; none of the
+ * assertions above are modified.
+ */
+describe("/api/health — capabilities (OP-003, additive)", () => {
+  beforeEach(() => {
+    dbMocks.queryRaw.mockReset();
+    dbMocks.ingestionRunFindFirst.mockReset();
+    dbMocks.queryRaw.mockResolvedValue([{ "?column?": 1 }]);
+    resetNflverseTableCacheForTests();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+    resetNflverseTableCacheForTests();
+  });
+
+  function minutesAgo(m: number): Date {
+    return new Date(Date.now() - m * 60 * 1000);
+  }
+
+  it("includes a capabilities array with the 4 expected capability ids", async () => {
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    expect(Array.isArray(body.capabilities)).toBe(true);
+    const ids = body.capabilities.map((c: { capabilityId: string }) => c.capabilityId);
+    expect(ids).toEqual(
+      expect.arrayContaining(["database", "ingestion", "settlement", "nflverse-reports"])
+    );
+  });
+
+  it("reports nflverse-reports as 'unknown' when the table cache stats are zeroed", async () => {
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+    resetNflverseTableCacheForTests();
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    const nflverse = body.capabilities.find(
+      (c: { capabilityId: string }) => c.capabilityId === "nflverse-reports"
+    );
+    expect(nflverse.status).toBe("unknown");
+    expect(nflverse.evidence).toBe("none");
+  });
+
+  it("returns deployment.sha as null when no deploy-sha env var is set", async () => {
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+    delete process.env["VERCEL_GIT_COMMIT_SHA"];
+    delete process.env["GIT_COMMIT_SHA"];
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    expect(body.deployment.sha).toBeNull();
+  });
+
+  it("returns deployment.sha from VERCEL_GIT_COMMIT_SHA when set", async () => {
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+    vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "deadbeef");
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    expect(body.deployment.sha).toBe("deadbeef");
+  });
+
+  it("a non-healthy capability does not flip ok/allOk or the HTTP status", async () => {
+    // Ingestion stale enough to be an "error" check (so allOk would already be
+    // false through the existing mechanism) — capabilities must never be the
+    // THING that flips readiness; readiness is driven solely by `checks`.
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({
+      completedAt: minutesAgo(10),
+    });
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    // Settlement/nflverse capabilities are "unknown" in this unit-test runtime
+    // (no live DB, no nflverse fetches) — confirm that non-healthy capability
+    // entries coexist with an ok/200 response driven only by `checks`.
+    const nonHealthy = body.capabilities.filter(
+      (c: { status: string }) => c.status !== "healthy"
+    );
+    expect(nonHealthy.length).toBeGreaterThan(0);
+    expect(res.status).toBe(200);
+    expect(body.ok).toBe(true);
   });
 });
