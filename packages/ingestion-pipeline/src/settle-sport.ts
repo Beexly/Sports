@@ -54,6 +54,35 @@ export interface SettleSportResult {
   error?: string;
 }
 
+/** A team reference as carried by a settled Game — `id` is nullable because
+ *  `Game.homeTeamId`/`awayTeamId` are optional FKs (see schema.prisma). */
+export interface GradedPickTeamRef {
+  readonly id: string | null;
+  readonly name: string;
+}
+
+/**
+ * The graded-event data handed to `onPickGraded`, AFTER that pick's
+ * settlement write has already committed. Pure data — no db handle, no
+ * Prisma types — so this package (which apps consume, never the reverse)
+ * stays framework/app-agnostic. A caller (e.g. the watchlist alert
+ * settlement hook in apps/web) turns this into whatever notification it
+ * wants without this package knowing anything about watchlists or alerts.
+ */
+export interface GradedPickHookEvent {
+  readonly pickId: string;
+  readonly pickType: string;
+  readonly selection: string;
+  readonly result: "WIN" | "LOSS" | "PUSH";
+  readonly settledAt: Date;
+  readonly sportKey: string;
+  readonly homeTeam: GradedPickTeamRef;
+  readonly awayTeam: GradedPickTeamRef;
+}
+
+/** Optional post-grading hook — see the `onPickGraded` param doc below. */
+export type OnPickGradedHook = (event: GradedPickHookEvent) => Promise<void> | void;
+
 /**
  * Settle all completed games for one sport.
  *
@@ -61,12 +90,21 @@ export interface SettleSportResult {
  * @param apiKey    - The Odds API key
  * @param gates     - Readiness gates (read once per cycle by the caller)
  * @param logPrefix - Log prefix for distinguishing caller context, e.g. "[settlement]"
+ * @param onPickGraded - Optional hook invoked once per pick, immediately
+ *   AFTER that pick's settlement write commits (never inside it, never able
+ *   to affect it) — the read-then-notify seam for e.g. watchlist alerts.
+ *   Purely additive: omitted by both existing callers today (the worker and
+ *   a caller that doesn't pass it), so settlement's numeric/grading
+ *   behavior is byte-for-byte unchanged when this is absent. ALWAYS invoked
+ *   inside a try/catch here — a throwing hook is logged and swallowed,
+ *   never allowed to fail or abort settlement of this or any other pick.
  */
 export async function settleSport(
   sport: SettleSportConfig,
   apiKey: string,
   gates: ReadinessGates,
   logPrefix: string = "[settlement]",
+  onPickGraded?: OnPickGradedHook,
 ): Promise<SettleSportResult> {
   // Bootstrap provenance for any TeamGameLog written during settlement.
   const isBootstrap = !gates.canPersistCanonicalHistory;
@@ -172,6 +210,34 @@ export async function settleSport(
             data: { result, settledAt },
           });
           if (settled.count === 0) continue;
+
+          // Post-grading notify hook — fires AFTER the settlement write
+          // above has already committed, so a notification failure can
+          // never roll back or block the real settlement. Purely additive
+          // read-then-notify: never touches result/settledAt/CLV. Wrapped
+          // here (in addition to onPickGraded's own internal isolation) as
+          // defense in depth — a throwing hook must never abort this pick's
+          // remaining settlement steps (CLV grading, snapshot recording)
+          // or any other pick/game/sport in this run.
+          if (onPickGraded) {
+            try {
+              await onPickGraded({
+                pickId: pick.id,
+                pickType: pick.pickType,
+                selection: pick.selection,
+                result,
+                settledAt,
+                sportKey: sport.key,
+                homeTeam: { id: game.homeTeamId, name: game.homeTeamName },
+                awayTeam: { id: game.awayTeamId, name: game.awayTeamName },
+              });
+            } catch (hookErr) {
+              console.warn(
+                `${logPrefix} onPickGraded hook failed for pick ${pick.id}: ` +
+                  `${hookErr instanceof Error ? hookErr.message : hookErr}`,
+              );
+            }
+          }
 
           // Grade Closing-Line Value against the immutable lock snapshot
           // (clvLockLine/clvLockPrice, captured at publish). Additive and

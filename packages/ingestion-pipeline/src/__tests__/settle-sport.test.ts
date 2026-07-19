@@ -352,6 +352,75 @@ describe("settleSport", () => {
       expect(result.status).toBe("success");
       expect(result.gamesSettled).toBe(1);
     });
+
+    it("a throwing onPickGraded hook never blocks settlement (still success, still settles, CLV still grades)", async () => {
+      const capturedAt = new Date("2026-06-10T16:55:00.000Z");
+      mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt });
+      mocks.gradePickClv.mockReturnValue({
+        closeLine: -4,
+        closePrice: -112,
+        kind: "LINE",
+        value: 0.5,
+        verdict: "BEAT_CLOSE",
+      });
+      const onPickGraded = vi.fn().mockRejectedValue(new Error("watchlist notify exploded"));
+
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", onPickGraded);
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(onPickGraded).toHaveBeenCalledTimes(1);
+      // The settlement write and the downstream CLV grade both still landed —
+      // the hook throwing happened strictly AFTER the settlement write and
+      // did not stop the steps that follow it in the same pick's loop.
+      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+      expect(mocks.pickUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ clvVerdict: "BEAT_CLOSE" }) }),
+      );
+    });
+  });
+
+  describe("onPickGraded hook", () => {
+    it("is omitted by default — zero behavior change when not passed", async () => {
+      const result = await settleSport(SPORT, "key", gates());
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+    });
+
+    it("fires once per settled pick, AFTER the settlement write, with the graded event data", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick({ id: "pick-1" })], { homeTeamId: "team-home", awayTeamId: "team-away" }),
+      );
+      const onPickGraded = vi.fn().mockResolvedValue(undefined);
+
+      await settleSport(SPORT, "key", gates(), "[settlement]", onPickGraded);
+
+      expect(onPickGraded).toHaveBeenCalledTimes(1);
+      expect(onPickGraded).toHaveBeenCalledWith({
+        pickId: "pick-1",
+        pickType: "SPREAD",
+        selection: "Chiefs -3.5",
+        result: "WIN",
+        settledAt: expect.any(Date),
+        sportKey: SPORT.key,
+        homeTeam: { id: "team-home", name: "Chiefs" },
+        awayTeam: { id: "team-away", name: "Bills" },
+      });
+      // pickUpdateMany (the settlement write) must have already resolved
+      // before onPickGraded was invoked — enforced by call order below.
+      const updateManyOrder = mocks.pickUpdateMany.mock.invocationCallOrder[0];
+      const hookOrder = onPickGraded.mock.invocationCallOrder[0];
+      expect(updateManyOrder).toBeLessThan(hookOrder as number);
+    });
+
+    it("is never invoked for a pick that lost the settle race (updateMany count 0)", async () => {
+      mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
+      const onPickGraded = vi.fn();
+
+      await settleSport(SPORT, "key", gates(), "[settlement]", onPickGraded);
+
+      expect(onPickGraded).not.toHaveBeenCalled();
+    });
   });
 
   describe("CLV grading", () => {

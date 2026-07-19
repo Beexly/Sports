@@ -25,9 +25,11 @@
 import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { db } from "@sports/db";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import { settleSport, freezeSlateCommitments, type SlateFreezeResult } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { notifyWatchlistFollowersForGradedPick } from "@/lib/watchlist/settlement-hook";
 
 export const dynamic = "force-dynamic";
 // Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
@@ -76,7 +78,21 @@ export async function GET(request: Request) {
   }> = [];
 
   for (const sport of sportsToProcess) {
-    const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks]");
+    // The watchlist alert fan-out (apps/web/lib/watchlist/settlement-hook.ts)
+    // is wired ONLY here — this route, not workers/data-refresh's own
+    // settleSport() call, is the documented guaranteed-production
+    // settlement path (see this file's module doc comment). The worker
+    // lives in a separate workspace with no dependency edge to apps/web
+    // (correct layering: a background worker package must not depend on
+    // the Next app), so it cannot import this hook; it keeps calling
+    // settleSport() without a 5th argument, which is a no-op-safe default.
+    const result = await settleSport(
+      sport,
+      apiKey,
+      gates,
+      "[cron:settle-picks]",
+      (event) => notifyWatchlistFollowersForGradedPick(db, event),
+    );
     results.push({
       sport: result.sport,
       ok: result.status === "success",

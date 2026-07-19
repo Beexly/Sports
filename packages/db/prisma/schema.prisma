@@ -36,6 +36,7 @@ model User {
   alerts        Alert[]
   claudeApiCalls ClaudeApiCallRecord[]
   watchlistEntries Watchlist[]
+  pushSubscriptions PushSubscription[]
 
   @@index([email])
   @@map("users")
@@ -797,6 +798,34 @@ model Watchlist {
   @@unique([userId, entityType, entityId])
   @@index([userId])
   @@map("watchlist_entries")
+}
+
+// One browser/device Web Push subscription for a user — the free, no-vendor
+// channel half of the Elite "real-time email & push alerts" feature (see
+// apps/web/lib/watchlist/channels/web-push-channel.ts). `endpoint` is
+// globally unique (it IS the push service's per-device subscription URL),
+// so it doubles as the natural upsert/delete key; `p256dh`/`auth` are the
+// two keys the browser's PushSubscription.toJSON() returns, required to
+// encrypt a payload for that endpoint. A user may have many rows (one per
+// device/browser they've granted permission on).
+//
+// Founder-applied migration — see
+// packages/db/prisma/migrations/20260719120000_add_push_subscriptions,
+// following the exact Watchlist precedent above. Application code
+// (apps/web/lib/push/subscription-db.ts) fails gracefully when this table
+// is absent, exactly like Watchlist/OddsLineSnapshot.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
 }
 
 // ============================================================
