@@ -12,6 +12,7 @@ import {
   type TwinObservation,
 } from "../as-of.js";
 import { buildSeedRegistry, SEED_CAPABILITY_IDS } from "../seed-registry.js";
+import { op003ToOwnEvidence } from "../adapt-op003.js";
 
 const HORIZON = 5 * 60 * 1000; // 5 minutes
 
@@ -86,6 +87,54 @@ describe("observation validation — recordedAt >= observedAt", () => {
       expect(e.capabilityId).toBe("cap:offender");
       expect(e.observedAt).toEqual(observedAt);
       expect(e.recordedAt).toEqual(recordedAt);
+    }
+  });
+
+  it("rejects an Invalid Date observedAt loudly (NaN would otherwise pass every comparison silently)", () => {
+    const bad = mkObs("cap:x", new Date("garbage"), new Date("2026-07-19T12:00:00.000Z"));
+    expect(() => assertValidObservation(bad)).toThrow(TwinObservationError);
+    expect(() => assertValidObservation(bad)).toThrow(/observedAt is an Invalid Date/);
+  });
+
+  it("rejects an Invalid Date recordedAt loudly", () => {
+    const bad = mkObs("cap:x", new Date("2026-07-19T12:00:00.000Z"), new Date("garbage"));
+    expect(() => assertValidObservation(bad)).toThrow(/recordedAt is an Invalid Date/);
+  });
+
+  it("rejects an Invalid Date NESTED evidence.observedAt (a NaN age would read as permanently fresh in the frozen decay)", () => {
+    const t = new Date("2026-07-19T12:00:00.000Z");
+    const bad = mkObs("cap:x", t, t, { observedAt: new Date("garbage") });
+    expect(() => assertValidObservation(bad)).toThrow(/evidence\.observedAt is an Invalid Date/);
+  });
+
+  it("rejects a nested evidence.observedAt that postdates recordedAt (evidence cannot be newer than the moment it was recorded)", () => {
+    const t = new Date("2026-07-19T12:00:00.000Z");
+    const future = new Date("2026-07-19T12:30:00.000Z");
+    const bad = mkObs("cap:x", t, t, { observedAt: future });
+    expect(() => assertValidObservation(bad)).toThrow(/postdates recordedAt/);
+    // null nested evidence stays valid (no-evidence semantics).
+    const nullEvidence = mkObs("cap:x", t, t, { observedAt: null });
+    expect(() => assertValidObservation(nullEvidence)).not.toThrow();
+  });
+
+  it("foldObservationsAsOf validates the WHOLE stream up front: an invalid observation that would be INVISIBLE at the cut still throws", () => {
+    const t = new Date("2026-07-19T12:00:00.000Z");
+    const cut = new Date("2026-07-19T11:00:00.000Z"); // both observations invisible at this cut
+    const valid = mkObs("cap:a", t, t);
+    const invalid = mkObs("cap:b", t, new Date("2026-07-19T09:00:00.000Z")); // recordedAt < observedAt
+    expect(() => foldObservationsAsOf([valid, invalid], cut)).toThrow(TwinObservationError);
+  });
+
+  it("with multiple invalid observations, the FIRST in input order surfaces (documented promise)", () => {
+    const t = new Date("2026-07-19T12:00:00.000Z");
+    const early = new Date("2026-07-19T09:00:00.000Z");
+    const firstBad = mkObs("cap:first", t, early);
+    const secondBad = mkObs("cap:second", t, early);
+    try {
+      foldObservationsAsOf([firstBad, secondBad], t);
+      expect.unreachable();
+    } catch (err) {
+      expect((err as TwinObservationError).capabilityId).toBe("cap:first");
     }
   });
 });
@@ -296,6 +345,56 @@ describe("AsOfMode", () => {
     expect(foldObservationsAsOf([lateObservation], asOf).has("cap:x")).toBe(false);
   });
 
+  it('"evidence" mode: winner selection stays latest-observedAt-primary even when future-recorded rows participate (mutation tripwire — last-write-wins in this mode must fail)', () => {
+    // Only in "evidence" mode do rows recorded after asOf participate, so
+    // this is the one mode where winner selection among mixed-recordedAt
+    // rows is exercised. Probe: observed 10:00, recorded 10:05. Backfill:
+    // observed 09:00, recorded 10:10 (after the cut — visible here ONLY
+    // because mode is "evidence"). The probe must still win: most-recent-
+    // EVIDENCE, never last-write-wins, in every mode.
+    const probe = mkObs(
+      "cap:x",
+      new Date("2026-07-19T10:00:00.000Z"),
+      new Date("2026-07-19T10:05:00.000Z"),
+      {},
+    );
+    const lateRecordedBackfill = mkObs(
+      "cap:x",
+      new Date("2026-07-19T09:00:00.000Z"),
+      new Date("2026-07-19T10:10:00.000Z"),
+      { unavailable: true },
+    );
+    const cut = new Date("2026-07-19T10:07:00.000Z"); // backfill not yet recorded
+
+    expect(
+      foldObservationsAsOf([lateRecordedBackfill, probe], cut, "evidence").get("cap:x"),
+    ).toEqual(probe.evidence);
+    expect(foldObservationsAsOf([probe, lateRecordedBackfill], cut, "evidence").get("cap:x")).toEqual(
+      probe.evidence,
+    );
+
+    // And when the future-recorded row is the LATEST evidence, it wins in
+    // "evidence" mode (hindsight) while staying invisible in "both".
+    const newerFutureRecorded = mkObs(
+      "cap:y",
+      new Date("2026-07-19T10:06:00.000Z"),
+      new Date("2026-07-19T10:20:00.000Z"),
+      { severityTags: ["degraded"] },
+    );
+    const olderRecorded = mkObs(
+      "cap:y",
+      new Date("2026-07-19T10:00:00.000Z"),
+      new Date("2026-07-19T10:01:00.000Z"),
+      {},
+    );
+    expect(
+      foldObservationsAsOf([olderRecorded, newerFutureRecorded], cut, "evidence").get("cap:y"),
+    ).toEqual(newerFutureRecorded.evidence);
+    expect(foldObservationsAsOf([olderRecorded, newerFutureRecorded], cut, "both").get("cap:y")).toEqual(
+      olderRecorded.evidence,
+    );
+  });
+
   it('"both" and "transaction" select identical sets for valid input (recordedAt >= observedAt makes the observedAt condition redundant)', () => {
     const t1 = new Date("2026-07-19T12:00:00.000Z");
     const t2 = new Date("2026-07-19T12:04:00.000Z");
@@ -353,6 +452,91 @@ describe("templatesFromSeed / materializeNodesAsOf", () => {
     const composed = composeGraphAsOf(templates, [observation], asOf);
     expect(composed.get("cap:observed")?.kind).toBe("impaired");
     expect(composed.get("cap:silent")?.kind).toBe("unknown");
+  });
+
+  it("PINNED: observations whose capabilityId matches no template are IGNORED — evidence cannot create capabilities, and the intended node stays honestly unknown", () => {
+    const asOf = new Date("2026-07-19T12:00:00.000Z");
+    const templates: CapabilityTemplate[] = [
+      { id: "db:primary", deps: [] },
+      { id: "route:/picks", deps: [{ id: "db:primary", kind: "hard" }] },
+    ];
+    // Typo'd probe id: fold winner exists for "db:primry" but no template.
+    const typoObservation = mkObs("db:primry", asOf, asOf, {});
+    const picksObservation = mkObs("route:/picks", asOf, asOf, {});
+
+    const nodes = materializeNodesAsOf(templates, [typoObservation, picksObservation], asOf);
+    expect(nodes.map((n) => n.id)).toEqual(["db:primary", "route:/picks"]); // no stray node created
+    const composed = composeGraphAsOf(templates, [typoObservation, picksObservation], asOf);
+    expect(composed.get("db:primary")?.kind).toBe("unknown");
+    expect(composed.get("db:primary")?.reasons).toContain("no_observation_as_of:db:primary");
+    expect(composed.get("route:/picks")?.kind).toBe("unknown"); // contagion through the hard dep
+    expect(composed.has("db:primry")).toBe(false);
+  });
+
+  it("PINNED: a template dep pointing at an id with NO template composes via composeGraph's missing_dependency path — observations for the missing id cannot rescue it", () => {
+    const asOf = new Date("2026-07-19T12:00:00.000Z");
+    const templates: CapabilityTemplate[] = [
+      { id: "parent", deps: [{ id: "dep:x", kind: "hard" }] },
+    ];
+    const observations = [mkObs("parent", asOf, asOf, {}), mkObs("dep:x", asOf, asOf, {})];
+    const composed = composeGraphAsOf(templates, observations, asOf);
+    expect(composed.get("parent")?.kind).toBe("unknown");
+    expect(composed.get("parent")?.reasons.some((r) => r.includes("missing_dependency:dep:x"))).toBe(
+      true,
+    );
+  });
+
+  it("PINNED: duplicate template ids follow composeGraph's own last-wins resolution (mirrored, not invented here)", () => {
+    const asOf = new Date("2026-07-19T12:00:00.000Z");
+    const templates: CapabilityTemplate[] = [
+      { id: "dep:a", deps: [] },
+      { id: "dep:b", deps: [] },
+      { id: "cap:x", deps: [{ id: "dep:a", kind: "hard" }] },
+      { id: "cap:x", deps: [{ id: "dep:b", kind: "hard" }] }, // duplicate — LAST wins
+    ];
+    const observations = [
+      mkObs("dep:a", asOf, asOf, { unavailable: true }),
+      mkObs("dep:b", asOf, asOf, {}),
+      mkObs("cap:x", asOf, asOf, {}),
+    ];
+    const composed = composeGraphAsOf(templates, observations, asOf);
+    // If the FIRST duplicate governed, cap:x would be unavailable via dep:a.
+    expect(composed.get("cap:x")?.kind).toBe("healthy");
+  });
+
+  it("integration with the OP-003 adapter: a NEWER 'unknown' wire reading displaces older fresh healthy evidence in the fold (newer evidence about coverage wins, even when it asserts ignorance)", () => {
+    const asOf = new Date("2026-07-19T12:00:00.000Z");
+    const templates: CapabilityTemplate[] = [{ id: "db:primary", deps: [] }];
+
+    const healthyAt1150 = new Date("2026-07-19T11:50:00.000Z");
+    const unknownPolledAt1155 = new Date("2026-07-19T11:55:00.000Z");
+    const observations: TwinObservation[] = [
+      {
+        capabilityId: "db:primary",
+        observedAt: healthyAt1150,
+        recordedAt: healthyAt1150,
+        evidence: op003ToOwnEvidence(
+          { capabilityId: "db:primary", status: "healthy", observedAt: healthyAt1150.toISOString() },
+          60 * 60 * 1000, // fresh well past asOf — decay is not what decides this
+        ),
+      },
+      {
+        capabilityId: "db:primary",
+        observedAt: unknownPolledAt1155,
+        recordedAt: unknownPolledAt1155,
+        // Adapter forces evidence.observedAt null for "unknown" — the nested
+        // null is valid (no-evidence semantics), the OUTER timestamps drive
+        // the fold.
+        evidence: op003ToOwnEvidence({ capabilityId: "db:primary", status: "unknown", evidence: "none" }),
+      },
+    ];
+
+    const composed = composeGraphAsOf(templates, observations, asOf);
+    expect(composed.get("db:primary")?.kind).toBe("unknown");
+    // And reconstructing BEFORE the unknown poll still shows healthy — the
+    // as-of layer keeps both truths available.
+    const earlier = composeGraphAsOf(templates, observations, new Date("2026-07-19T11:52:00.000Z"));
+    expect(earlier.get("db:primary")?.kind).toBe("healthy");
   });
 
   it("materializeNodesAsOf respects the mode parameter", () => {

@@ -66,12 +66,14 @@ export class TwinObservationError extends Error {
   public readonly observedAt: Date;
   public readonly recordedAt: Date;
 
-  constructor(observation: Pick<TwinObservation, "capabilityId" | "observedAt" | "recordedAt">) {
+  constructor(
+    observation: Pick<TwinObservation, "capabilityId" | "observedAt" | "recordedAt">,
+    reason: string,
+  ) {
+    // String(date) never throws, even for Invalid Date — toISOString() would.
     super(
-      `epistemic-twin: observation for "${observation.capabilityId}" has recordedAt ` +
-        `(${observation.recordedAt.toISOString()}) before observedAt ` +
-        `(${observation.observedAt.toISOString()}) — a fact can be recorded late, ` +
-        `never before it was true.`,
+      `epistemic-twin: observation for "${observation.capabilityId}" rejected: ${reason} ` +
+        `(observedAt=${String(observation.observedAt)}, recordedAt=${String(observation.recordedAt)})`,
     );
     this.name = "TwinObservationError";
     this.capabilityId = observation.capabilityId;
@@ -80,10 +82,50 @@ export class TwinObservationError extends Error {
   }
 }
 
-/** Throws `TwinObservationError` iff `recordedAt < observedAt`. Pure, no clock reads. */
+function isInvalidDate(date: Date): boolean {
+  return Number.isNaN(date.getTime());
+}
+
+/**
+ * Throws `TwinObservationError` on any temporally-impossible or corrupt
+ * observation. Pure, no clock reads. Rejected outright (NaN timestamps would
+ * otherwise pass every `<` comparison silently and then be invisible — or,
+ * worse, visible — at arbitrary cuts):
+ *   1. Invalid `observedAt` or `recordedAt` (NaN-valued Date).
+ *   2. `recordedAt < observedAt` — you can learn a fact late, never before
+ *      it was true.
+ *   3. `evidence.observedAt` (when a Date) that is Invalid, or later than
+ *      `recordedAt` — the nested timestamp drives freshness decay in the
+ *      frozen core, where a NaN age compares false against every horizon and
+ *      would read as permanently fresh. Recording evidence whose own
+ *      timestamp postdates the recording moment is the same impossibility as
+ *      rule 2. (Equality with the outer `observedAt` remains a convention,
+ *      not an invariant — only validity and ordering are enforced.)
+ */
 export function assertValidObservation(observation: TwinObservation): void {
+  if (isInvalidDate(observation.observedAt)) {
+    throw new TwinObservationError(observation, "observedAt is an Invalid Date");
+  }
+  if (isInvalidDate(observation.recordedAt)) {
+    throw new TwinObservationError(observation, "recordedAt is an Invalid Date");
+  }
   if (observation.recordedAt.getTime() < observation.observedAt.getTime()) {
-    throw new TwinObservationError(observation);
+    throw new TwinObservationError(
+      observation,
+      "recordedAt precedes observedAt — a fact can be recorded late, never before it was true",
+    );
+  }
+  const nested = observation.evidence.observedAt;
+  if (nested !== null) {
+    if (isInvalidDate(nested)) {
+      throw new TwinObservationError(observation, "evidence.observedAt is an Invalid Date");
+    }
+    if (nested.getTime() > observation.recordedAt.getTime()) {
+      throw new TwinObservationError(
+        observation,
+        "evidence.observedAt postdates recordedAt — evidence cannot be newer than the moment it was recorded",
+      );
+    }
   }
 }
 
@@ -249,6 +291,16 @@ function noObservationEvidence(template: CapabilityTemplate): OwnEvidence {
  * templates: each template's evidence is the fold winner, or the synthetic
  * no-observation evidence (composes unknown — absence of coverage is not
  * green) when nothing is visible. Pure; no clock reads.
+ *
+ * Two deliberate boundary behaviors (chosen, and test-pinned):
+ * - Observations whose `capabilityId` matches NO template are IGNORED: the
+ *   template registry defines the graph; evidence cannot create
+ *   capabilities. A typo'd probe id therefore leaves its intended node
+ *   honestly unknown (`no_observation_as_of:<id>`), never green.
+ * - Duplicate template ids produce duplicate nodes, and the frozen
+ *   `composeGraph` resolves them last-wins (its `byId` map overwrites).
+ *   This mirrors composeGraph's own semantics rather than inventing a
+ *   different rule here.
  */
 export function materializeNodesAsOf(
   templates: readonly CapabilityTemplate[],

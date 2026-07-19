@@ -28,7 +28,7 @@
  * across the package boundary.
  */
 
-import type { CapabilityStatus, GatedIntent, Intent, OwnEvidence, SeverityTag } from "./axes.js";
+import type { CapabilityStatus, Intent, OwnEvidence, SeverityTag } from "./axes.js";
 
 /** Mirror of the OP-003 CapabilityStatus wire enum (alias — not a ninth enum). */
 export type CapabilityStatusWire = CapabilityStatus;
@@ -36,24 +36,29 @@ export type CapabilityStatusWire = CapabilityStatus;
 const DEFAULT_FRESHNESS_MS = 5 * 60 * 1000; // 5 minutes — matches seed-registry's default.
 
 /**
- * An OP-003 wire atom for one capability: the 7-value status, an optional
- * capability id (pass-through identification for callers mapping atom arrays
- * onto graph nodes — not used by the mapping itself), an optional
- * human-readable reason, an optional evidence-kind tag describing what
- * produced the reading (e.g. "probe", "counter", "flag" — provenance only,
- * carried into `OwnEvidence.reasons`), and the observation timestamp.
+ * An OP-003 wire atom for one capability. Field names deliberately mirror
+ * OP-003's `CapabilityState` (apps/web/lib/health/capability-state.ts)
+ * EXACTLY — `capabilityId`, `status`, `reason`, `observedAt`, `evidence` —
+ * so a `CapabilityState` value passes straight in with zero silent field
+ * loss (every field lines up by name; nothing is structurally dropped).
  *
- * `observedAt` accepts `Date | string | null` (and may be omitted): wire
- * payloads serialize timestamps as ISO strings. A missing/null/unparseable
- * timestamp maps to `observedAt: null` — evidence-missing semantics (decays
- * through `decayEvidence`'s existing null branch). A garbage string is
- * treated as NO evidence, never coerced into a fabricated timestamp.
+ * - `capabilityId` — pass-through identification for callers mapping atom
+ *   arrays onto graph nodes; not used by the mapping itself.
+ * - `evidence` — what produced the reading (wire values today: "probe" |
+ *   "derived" | "none"; typed as string so future kinds like "counter" or
+ *   "sentinel" don't break the boundary). Provenance only, carried into
+ *   `OwnEvidence.reasons` as `evidence_kind:<value>`.
+ * - `observedAt` accepts `Date | string | null` (and may be omitted): wire
+ *   payloads serialize timestamps as ISO strings. A missing/null/unparseable
+ *   timestamp maps to `observedAt: null` — evidence-missing semantics (decays
+ *   through `decayEvidence`'s existing null branch). A garbage string is
+ *   treated as NO evidence, never coerced into a fabricated timestamp.
  */
 export interface Op003CapabilityAtom {
-  readonly id?: string;
+  readonly capabilityId?: string;
   readonly status: CapabilityStatusWire;
   readonly reason?: string;
-  readonly evidenceKind?: string;
+  readonly evidence?: string;
   readonly observedAt?: Date | string | null;
 }
 
@@ -73,8 +78,8 @@ function coerceObservedAt(value: Date | string | null | undefined): Date | null 
 
 function provenanceReasons(atom: Op003CapabilityAtom): string[] {
   const reasons: string[] = [];
-  if (atom.evidenceKind) {
-    reasons.push(`evidence_kind:${atom.evidenceKind}`);
+  if (atom.evidence) {
+    reasons.push(`evidence_kind:${atom.evidence}`);
   }
   if (atom.reason) {
     reasons.push(atom.reason);
@@ -127,6 +132,21 @@ function evidenceFor(
  *                        semantics unconditionally: an "unknown" wire
  *                        reading asserts "no evidence", so it cannot also
  *                        carry a timestamp for evidence that doesn't exist.
+ *   - anything else  -> (runtime guard; unreachable for statically-typed
+ *                        callers) unknown-composing evidence with an
+ *                        `unrecognized_status:<value>` reason. This is a
+ *                        WIRE boundary whose enum is synced by hand with
+ *                        apps/web — if the two vocabularies ever drift, an
+ *                        out-of-vocabulary atom must compose honest unknown,
+ *                        not crash downstream on undefined.
+ *
+ * Round-trip caveat (test-pinned): the round-trip law holds when the atom
+ * carries a timestamp fresh relative to compose-time `now`. A NON-"unknown"
+ * atom with a missing/null/unparseable timestamp composes "unknown", not its
+ * wire status — the frozen core checks evidence-missing BEFORE intent, and
+ * no timestamp means no evidence. Producers of gate/flag readings must stamp
+ * the read time as `observedAt` (a flag read IS evidence observed at read
+ * time); fabricating one here is forbidden.
  */
 export function op003ToOwnEvidence(
   atom: Op003CapabilityAtom,
@@ -138,7 +158,7 @@ export function op003ToOwnEvidence(
     case "proof_gated":
     case "owner_gated":
       return evidenceFor(atom, freshnessHorizonMs, {
-        intent: atom.status as GatedIntent,
+        intent: atom.status,
       });
     case "unavailable":
       return evidenceFor(atom, freshnessHorizonMs, { unavailable: true });
@@ -148,5 +168,18 @@ export function op003ToOwnEvidence(
       return evidenceFor(atom, freshnessHorizonMs, { severityTags: ["stale"] });
     case "healthy":
       return evidenceFor(atom, freshnessHorizonMs, {});
+    default: {
+      // Statically `never` (the switch above is exhaustive over the union),
+      // but runtime-reachable for wire payloads cast past the type system.
+      const unrecognized: never = atom.status;
+      return {
+        observedAt: null,
+        freshnessHorizonMs,
+        intent: "open",
+        severityTags: [],
+        unavailable: false,
+        reasons: [`unrecognized_status:${String(unrecognized)}`, ...provenanceReasons(atom)],
+      };
+    }
   }
 }
