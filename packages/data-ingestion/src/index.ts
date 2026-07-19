@@ -81,8 +81,21 @@ export {
   fetchWithFailover,
   withMirrors,
   nflverseMirror,
+  type FetchLike,
   type FailoverResult,
 } from "./fetch-failover.js";
+export {
+  fetchNflverseTableCached,
+  resetNflverseTableCacheForTests,
+  nflverseTableCacheStats,
+  NflverseArtifactTooLargeError,
+  NFLVERSE_MAX_RAW_BYTES,
+  NFLVERSE_MAX_TEXT_BYTES,
+  NFLVERSE_PROJECTIONS,
+  NFLVERSE_TABLE_TTLS,
+  type NflverseTableRequest,
+  type NflverseTableResult,
+} from "./nflverse-cache.js";
 export {
   SOURCE_REGISTRY,
   getSource,

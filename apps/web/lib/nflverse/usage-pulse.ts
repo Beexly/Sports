@@ -1,5 +1,4 @@
-import { gunzipSync } from "node:zlib";
-import { fetchWithFailover, nflverseUrl, parseCsv, withMirrors, type NflverseDatasetKey } from "@sports/data-ingestion";
+import { fetchNflverseTableCached, nflverseUrl } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 
 export interface NflverseUsagePlayerRow {
@@ -90,26 +89,6 @@ function qbAgeBucket(age: number | null): NflverseQbAgeRow["qbAgeBucket"] {
   if (age >= 34) return "34+";
   if (age >= 30) return "30-33";
   return "under-30";
-}
-
-async function fetchCsvTable({
-  key,
-  season,
-  fetcher,
-  timeoutMs,
-}: {
-  key: NflverseDatasetKey;
-  season: number;
-  fetcher: FetchLike;
-  timeoutMs: number;
-}): Promise<{ readonly url: string; readonly records: readonly CsvRecord[] }> {
-  const url = nflverseUrl(key, season);
-  // Primary GitHub CDN with a community mirror fallback so a primary outage
-  // doesn't stop ingestion.
-  const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs });
-  const buffer = Buffer.from(await response.arrayBuffer());
-  const text = url.endsWith(".gz") ? gunzipSync(buffer).toString("utf8") : buffer.toString("utf8");
-  return { url, records: parseCsv(text).records };
 }
 
 function rosterMap(records: readonly CsvRecord[]): Map<string, RosterProfile> {
@@ -248,9 +227,16 @@ export async function loadNflverseUsagePulse({
   }
 
   try {
-    const stats = await fetchCsvTable({ key: "player_stats_week", season, fetcher, timeoutMs });
+    const statsResult = await fetchNflverseTableCached({ key: "player_stats_week", season, fetcher, timeoutMs });
+    const stats = { url: statsResult.url, records: statsResult.table.records };
     const activeSeason = resolveActiveSeason(stats.records, season);
-    const rosters = await fetchCsvTable({ key: "rosters", season: activeSeason, fetcher, timeoutMs });
+    const rostersResult = await fetchNflverseTableCached({
+      key: "rosters",
+      season: activeSeason,
+      fetcher,
+      timeoutMs,
+    });
+    const rosters = { url: rostersResult.url, records: rostersResult.table.records };
     const seasonRows = stats.records.filter(
       (row) => row["season"] === String(activeSeason) && row["season_type"] === "REG",
     );
