@@ -83,8 +83,8 @@ export default function TermsPage() {
             </Para>
             <Para>
               Your subscription price is locked for the life of your
-              subscription at the founding rate you joined at. When prices
-              rise for new members, yours never does, for as long as you stay
+              subscription at the rate you joined at. When prices rise for
+              new members, yours never does, for as long as you stay
               subscribed without a lapse in billing.
             </Para>
 
