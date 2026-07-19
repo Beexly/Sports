@@ -4045,3 +4045,137 @@ stitching) — recorded here so no backtest can slip past it.
   an import-path fix — `lateSwap` actually lives in `dfs-exact.ts` on `pdcswh`, not `dfs-optimizer.ts` as
   the source branch imports it) — each still needs its own dedicated freeze-contract pass in a future
   session.
+
+## DEC-065 — Task #77: dedicated freeze-contract reviews for `claude/keen-ptolemy-t38f1g` and
+  `safety/sports-wip-2026-06-04` (2 of the 8 NEEDS_DEDICATED_REVIEW branches); ledger-only per the
+  pdcswh freeze (2026-07-19)
+
+- Date: 2026-07-19
+- Workstream: task #77 (DEC-056's 8 NEEDS_DEDICATED_REVIEW branches). A 2-agent parallel workflow
+  (`wf_16469c79-721`) dispatched dedicated, read-only freeze-contract reviews against each branch — no
+  checkout/switch/stash/reset, `git show`/`git log`/`git diff <base>...<branch>`/`git merge-base`/`git
+  grep` only, working tree stayed on `claude/promotion-gate` throughout (independently confirmed by
+  both agents' own anomaly logs). This entry is filed as a **ledger correction** — pure documentation,
+  no code changed — which is explicitly permitted on `claude/galaxy-sports-edge-pdcswh` post-freeze per
+  `reports/reconciliation/PR129_FREEZE_RECEIPT.md` ("ledger corrections, security containment,
+  explicitly launch-critical fixes only"). Nothing from either branch was ported this pass.
+- **`claude/keen-ptolemy-t38f1g` — MIXED, 4 slices.** First, a correction to DEC-056 itself: DEC-056
+  claimed this branch was "UNRELATED BY ANCESTRY to main," but `git merge-base origin/main
+  origin/claude/keen-ptolemy-t38f1g` returns `67c4522a` (PR #53, 2026-06-24), a real common ancestor —
+  the branch diverged into a self-contained "market physics" R&D universe after that point, it isn't
+  ancestry-disconnected. Four dispositions:
+  1. **SUPERSEDED** — the `packages/prediction-engine` discovery/FDR core (`multiple-testing.ts`,
+     `candidate-registry.ts`, `discovery-engine.ts`, `projection-features.ts`, `workers/nightly-
+     discovery/*`). A well-tested, propose-only nightly signal-discovery loop (fixed candidate family +
+     Benjamini-Hochberg FDR + cross-night Bonferroni), but main has since independently shipped superior
+     live equivalents of every piece: `edge-lab/trials-registry.ts`'s hash-chained BH-FDR registry
+     (more rigorous — tamper-evident vs. a plain array), the general cohort-based `trend-discovery.ts`
+     (already exported, shipped via task #24), and the half-life/shrinkage idioms `projection-
+     features.ts` reinvents are pervasive across 4+ already-shipped main files. Nothing here supplies a
+     capability main lacks.
+  2. **OWNER_GATE** — the CLV/closing-line research cluster (`closing-line-forecaster.ts`, `clv-
+     feasibility.ts`, `entry-timing.ts`, `prop-rush-edge.ts`, 9 `scripts/backtest/*.ts` files,
+     `RESEARCH_LOG_2026-06-25.md`, `PROP_FINDINGS.md`). Directly protected-zone: reasons about the
+     "CLV ≥ 52.4% ESTABLISHED rung" from this repo's own pricing ladder, imports `clv.ts`'s
+     `computeSpreadClv`/`computeTotalClv` directly, and `prop-rush-edge.ts` hardcodes specific historical
+     win-rate/CI numbers (54.1% pooled, 61.8% on ≥70-yd lines, n=2,061) presented as "the one validated
+     market inefficiency." Mitigating factor: the backing `scripts/backtest/prop-rush-deepdive.ts`
+     genuinely fetches real nflverse CSVs and reuses cached real Odds API historical snapshots (not a
+     stub), and `RESEARCH_LOG_2026-06-25.md` documents 4 killed theories alongside the 1 survivor — a
+     pattern of honest negative-result reporting. But none of it has been independently re-run against
+     main's CLV/settlement code, which has moved ~108-156 commits since divergence; the module is wired
+     into the package's public barrel ready to be imported. Founder must decide: independently re-verify
+     from scratch against current `settle-sport.ts`/`clv.ts`, or archive as unverified R&D.
+  3. **ARCHIVE** — `packages/data-genesis` (22 files, a bespoke "law layer for synthetic intelligence":
+     SyntheticSignal wrapping, StructuredDoubt/MetaDoubt audits, calibration receipts) + its
+     `prediction-engine` adapter. Zero consumers beyond its own adapter; `packages/data-genesis` does not
+     exist on main; the adapter binds to `EdgeAssessment`/`ClvGrade` types that have evolved
+     substantially since divergence (stale contracts). Main has independently converged on narrower,
+     shipped answers to the same "is a derived signal trustworthy enough to promote" problem
+     (`packages/epistemic-twin`'s severity/certainty/intent composition law; `packages/prediction-
+     engine/src/promotion/`'s empirical-Bernstein + Welch CLV non-inferiority gate). Best preserved as a
+     documented pointer, not mined.
+  4. **ARCHIVE** — `packages/engine` (122 files: Galileo/Einstein/Genesis/Discovery/Fantasy-Twin "market
+     physics" instrumentation) + the "Frontier Institution" satellite cluster (`packages/decision-field-
+     runtime` 65 files, `packages/data-intelligence` 35, `packages/decision-factory` 11, `packages/nfl-
+     stat-universe` 15, `packages/galileo-week` 9, `packages/autonomy` 6, plus tied `apps/web` UI and a
+     27-file `docs/gse-packet` planning bundle). Zero presence on main (verified via `git ls-tree` on
+     every package directory — 0 files each — and symbol greps for `ConservationViolationResidual`/
+     `buildMarketTwin`/`runDiscoveryNight` — 0 hits, confirming no leakage via any route). Internally
+     coherent and its own status docs self-certify shadow-only, but the docs also admit key pieces are
+     "gated on line-movement data" that was never actually plugged in — i.e., never validated against
+     real markets. Given the scale (122+ files) and that main's team has since built its own
+     independently-evolved, actually-shipped discovery/promotion/proof infrastructure (Glass Ledger
+     P0-P3, `trials-registry.ts`, `promotion/`, `epistemic-twin`) without reference to any of this,
+     recommend a pointer-only archive rather than mining individual files.
+- **`safety/sports-wip-2026-06-04` — MIXED, 5 slices.**
+  1. **OWNER_GATE** — `beat-the-model.tsx`/`page.tsx`/test (477+214+286 lines). A complete, tested,
+     feature-flagged-off (default OFF) free anonymous localStorage "trust/fade the model" pick'em,
+     type-compatible with main's live `PublicPick`/`PickResult` with zero drift, reading only the
+     already server-gated `/api/picks`. Not a clean recovery, though: main independently committed to
+     and began building a DIFFERENT "Beat the Model" design under the same name — a Brier-scored,
+     leaderboard, virtual-coin contest engine (`packages/prediction-engine/src/contest-scoring.ts`,
+     landed via a different stranded branch and already recovered per DEC-046), named as the Phase-1
+     plan in `docs/strategy/gaming-and-engagement-expansion.md`. No UI is wired to that engine yet, so
+     main doesn't have a *shipped* competing feature — but it has a *decided, partially-built,
+     incompatible* one under the identical route/name. Founder must choose: ship this branch's simple
+     v0 as an interim, or hold the route for a UI built directly against `contest-scoring.ts`.
+  2. **SUPERSEDED** — `json-humanizer.tsx`/`json-raw-actions.tsx` (a generic raw-JSON-to-table/card
+     kit). Its sole call site (`apps/web/app/cockpit/brief/page.tsx`, a "previously a stub" JSON-dump
+     page per the branch's own docstring) has been fully rebuilt on main into a real DB-backed dashboard
+     with bespoke cards; main has zero raw-JSON-dump render surfaces left anywhere in `apps/web/app`.
+  3. **SUPERSEDED** — static `public/llms.txt` (hand-written, no freshness mechanism, hardcodes the bare
+     apex domain). Main already serves `/llms.txt` dynamically from `app/llms.txt/route.ts`, composed
+     live off the same Reality-Receipt proof stack with a 300s cache — the branch's version would both
+     violate CLAUDE.md rule #5 (no stale data) and the canonical-host rule (must be `www`, never apex,
+     never in app code).
+  4. **SUPERSEDED** — found during the required "anything else small/self-contained" sweep:
+     `api/live`+`api/ready`+`lib/health/checks.ts` (superseded by main's consolidated `api/health/
+     route.ts` — real DB check, ingestion-SLA freshness, settlement-health band, capability-state,
+     deploy SHA) and `global-error.tsx` + homegrown `lib/observability/{index,logger,capture}.ts`
+     (superseded by main's real Sentry integration plus an already-existing `app/error.tsx`).
+  5. **ARCHIVE** — the remaining 763-path diff is 62% markdown planning docs (471 files) and 71% sits
+     under `docs/`, `handoff/`, `reports/`, `memory/`, or `logs/` — confirming DEC-056's "~500 files of
+     debris" characterization almost exactly. The remainder is either protected-zone territory this
+     freeze contract forbids evaluating without a founder gate (`settle.ts`, `closing-line.ts`, `void-
+     sweep.ts`, `independent-estimator.ts`, `world-model.ts`, `gate-decisions.ts`, `provider-registry/
+     status.ts`, two Prisma migrations) or multi-file subsystems out of "small/self-contained" scope
+     with likely main-side conflicts (a `packages/brand`+`ui-brand`+`emails`+`social-formatters` bundle
+     abutting the protected public-copy zone; a podcast pipeline whose URL space collides with main's
+     already-existing, differently-scoped `app/podcast/page.tsx` + statking podcast-discovery system).
+     None of these were named as plausible candidates by DEC-056 and, per this task's scope (the 3 named
+     files plus a light sweep, not a full second dedicated review), were not evaluated further.
+- Independent verification note: mid-review on the second agent, `origin/main` moved under it (other
+  agents were landing commits concurrently) and `FETCH_HEAD` was externally repointed between tool
+  calls — both agents re-derived and pinned their target branch to an explicit SHA for every comparison
+  rather than trusting a ref, and the safety-wip agent explicitly re-ran its six file-existence checks
+  and the health/observability/podcast sweep against the final main SHA before reporting. No checkout/
+  switch/stash/reset was used by either agent at any point.
+- Evidence: 97 tool calls across 2 agents (52 + 45), 316,813 subagent tokens; every disposition backed
+  by a directly-run `git show`/`git log`/`git diff --name-status`/`git merge-base --is-ancestor`/`git
+  grep` command, cited per-finding in the workflow journal
+  (`wf_16469c79-721/journal.jsonl`). Full agent transcripts preserved there.
+- Alternatives rejected: porting any of the SUPERSEDED-adjacent small files (e.g. `json-humanizer.tsx`)
+  anyway on the theory a generic UI kit is always safe — rejected because main has already eliminated
+  every surface that kit would apply to, so landing it would add dead code, not recover a gap; treating
+  the `prop-rush-edge.ts` hardcoded win-rate table as usable evidence since a real backtest script
+  backs it — rejected per CLAUDE.md's "no fabricated stats" rule and this campaign's standing discipline
+  that unverified-by-this-pass numbers are not trusted numbers, regardless of how plausible the backing
+  script looks.
+- Reversibility: N/A — no code changed this pass; documentation only.
+- Protected zones: extensively named (CLV/settlement/pricing-ladder logic in both branches, Prisma
+  migrations, billing-adjacent contest-scoring naming collision) — all flagged, none evaluated for
+  correctness or ported, per policy.
+- Files: `docs/frontier/DECISION_REGISTER.md`, `reports/reconciliation/RECOVERY_WAVES.md`.
+- Supersedes: corrects DEC-056's ancestry claim for `claude/keen-ptolemy-t38f1g` (see above); does not
+  alter any prior disposition's substance.
+- **Task #77 status: 2 of 8 originally-named NEEDS_DEDICATED_REVIEW branches now individually reviewed
+  this task (`keen-ptolemy-t38f1g`, `safety/sports-wip-2026-06-04`); 2 more (`happy-goodall-8lkxrb`,
+  `laughing-wozniak-gyryjx`) were already covered under task #75 (DEC-054/062/063). The remaining 4 —
+  `serene-hopper-rtjsfq`, `sports-prediction-platform-6F7Wa`'s non-scraper pieces, `awesome-sagan-
+  LOyCa`'s comp-tier admin cluster, `codex/galaxy-dynasty-studio-rescue-v2`, and `claude/determined-
+  keller-dUcdG`'s Galaxy Kernel build (5 named, DEC-056 counted 8 total across both tasks) — remain
+  unreviewed.** Per the campaign pivot below and `PR129_FREEZE_RECEIPT.md`, these stay preserved as
+  backlog with their DEC-056 evidence intact; they are not pursued further on `pdcswh` unless fresh
+  production analysis proves one resolves a P0/P1 Launch Convergence blocker. This is recorded here
+  explicitly rather than silently dropped, per this campaign's standing no-silent-scope-shrink rule.

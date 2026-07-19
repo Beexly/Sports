@@ -521,6 +521,21 @@ R11.5 CLOSED (2026-07-18, DEC-056) — 138/138 long-tail branches individually e
       real `tsc` type error was found and fixed during that port. Remaining under task #75: the 91-file
       DFS product tree and `happy-goodall-8lkxrb`'s 25-module `lib/gse` layer, both still unscoped and
       deliberately not attempted given their size — each needs its own dedicated freeze-contract cycle.
+      Task #77 (2026-07-19, DEC-065, ledger-only per the freeze below): 2 of the remaining 6
+      NEEDS_DEDICATED_REVIEW branches individually reviewed — `claude/keen-ptolemy-t38f1g` (MIXED: FDR/
+      discovery core SUPERSEDED by main's own `trials-registry.ts`/`trend-discovery.ts`; CLV/closing-
+      line research cluster OWNER_GATE, unverified against 108-156 commits of settlement drift;
+      `packages/data-genesis` and the 122-file `packages/engine` "market physics" universe both
+      ARCHIVE, zero presence on main, superseded in concept by shipped `epistemic-twin`/`promotion/`
+      infra; also corrects DEC-056's false "unrelated by ancestry" claim — real merge-base at PR #53)
+      and `safety/sports-wip-2026-06-04` (MIXED: `beat-the-model.tsx` OWNER_GATE — collides in name/
+      route with the already-recovered, differently-designed `contest-scoring.ts` Phase-1 engine;
+      `json-humanizer.tsx`, static `llms.txt`, and `api/live`+`api/ready`+observability trio all
+      SUPERSEDED by better main-side equivalents; remaining ~500 files confirmed debris/protected-zone
+      per DEC-056). Nothing ported — pure ledger entries, permitted post-freeze. 5 branches
+      (`serene-hopper-rtjsfq`, `sports-prediction-platform-6F7Wa`, `awesome-sagan-LOyCa`,
+      `codex/galaxy-dynasty-studio-rescue-v2`, `claude/determined-keller-dUcdG` — DEC-056 counted 8
+      total across tasks #75/#77) stay unreviewed backlog per the campaign pivot.
 
 ## Campaign pivot: Launch Convergence (2026-07-18)
 
