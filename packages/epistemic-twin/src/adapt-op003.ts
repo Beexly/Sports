@@ -140,13 +140,24 @@ function evidenceFor(
  *                        out-of-vocabulary atom must compose honest unknown,
  *                        not crash downstream on undefined.
  *
- * Round-trip caveat (test-pinned): the round-trip law holds when the atom
- * carries a timestamp fresh relative to compose-time `now`. A NON-"unknown"
- * atom with a missing/null/unparseable timestamp composes "unknown", not its
- * wire status — the frozen core checks evidence-missing BEFORE intent, and
- * no timestamp means no evidence. Producers of gate/flag readings must stamp
- * the read time as `observedAt` (a flag read IS evidence observed at read
- * time); fabricating one here is forbidden.
+ * Round-trip caveat for SEVERITY statuses (test-pinned): the round-trip law
+ * for "unavailable"/"degraded"/"stale"/"healthy" holds only when the atom
+ * carries a timestamp fresh relative to compose-time `now` — these are
+ * decaying evidence in the frozen core (`decayEvidence` checks
+ * evidence-missing/expired before examining severity), so a missing/null/
+ * unparseable timestamp composes "unknown" for these statuses, not the wire
+ * status. Producers of severity/probe readings must stamp the read time as
+ * `observedAt`; fabricating one here is forbidden.
+ *
+ * GATED statuses ("proof_gated"/"owner_gated") are the exception, matching
+ * the frozen core's own documented invariant (`OwnEvidence.intent`: gating
+ * "does not expire the way severity evidence does"): `decayEvidence` checks
+ * intent BEFORE the evidence-missing/expired branches, so a gated atom
+ * round-trips correctly EVEN with a missing/null/unparseable `observedAt` —
+ * a feature-flag read needs no observation timestamp to be structurally
+ * true. `observedAt` is still accepted and coerced for gated atoms (for
+ * provenance/audit trail), it just isn't load-bearing for the gated
+ * composition outcome the way it is for severity statuses.
  */
 export function op003ToOwnEvidence(
   atom: Op003CapabilityAtom,

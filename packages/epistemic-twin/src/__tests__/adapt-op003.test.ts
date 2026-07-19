@@ -201,12 +201,24 @@ describe("op003ToOwnEvidence — per-status mapping detail", () => {
     expect(toCapabilityStatus(composeOne("cap:test", own, []))).toBe("unknown");
   });
 
-  it("PINNED: a non-unknown atom WITHOUT a timestamp composes unknown, not its wire status (no timestamp = no evidence; producers must stamp the read time)", () => {
-    for (const status of ["proof_gated", "owner_gated", "unavailable", "degraded", "stale", "healthy"] as const) {
+  it("PINNED: a SEVERITY atom (non-gated, non-unknown) WITHOUT a timestamp composes unknown, not its wire status (no timestamp = no evidence; producers must stamp the read time)", () => {
+    for (const status of ["unavailable", "degraded", "stale", "healthy"] as const) {
       const evidence = op003ToOwnEvidence({ status });
       expect(evidence.observedAt).toBeNull();
       const own = decayEvidence(evidence, NOW);
       expect(own.kind).toBe("unknown");
+    }
+  });
+
+  it("PINNED: a GATED atom WITHOUT a timestamp still round-trips to gated — gating is structural, it needs no observation timestamp (matches the frozen core's intent-does-not-decay invariant)", () => {
+    for (const status of ["proof_gated", "owner_gated"] as const) {
+      const evidence = op003ToOwnEvidence({ status });
+      expect(evidence.observedAt).toBeNull();
+      const own = decayEvidence(evidence, NOW);
+      expect(own.kind).toBe("gated");
+      if (own.kind === "gated") {
+        expect(own.intent).toBe(status);
+      }
     }
   });
 
