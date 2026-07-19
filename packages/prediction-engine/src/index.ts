@@ -997,3 +997,32 @@ export type {
   Drive,
   DriveResult,
 } from "./expected-metrics/index.js";
+
+// Model Promotion Gate — pure eligibility evaluator (paired-Brier EB-LCB +
+// CLV non-inferiority + walk-forward integrity). DARK: exported for
+// discoverability only, nothing else imports it, no MODEL_VERSION touch.
+// See docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md and ./promotion/index.js.
+export {
+  pairedBrierLcb,
+  standardNormalQuantile,
+  zCritOneSided,
+  welchOneSidedNonInferiority,
+  PromotionIntegrityError,
+  validateWalkForwardIntegrity,
+  computeWindowHash,
+  evaluatePromotion,
+  recomputePromotionDecision,
+} from "./promotion/index.js";
+export type {
+  PairedBrierLcbResult,
+  ClvNonInferiorityOptions,
+  ClvNonInferiorityResult,
+  ClvRow,
+  Leg1Result,
+  Leg2Result,
+  PairedBrierRow,
+  PromotionDecision,
+  PromotionInput,
+  RegisteredWindow,
+  Verdict,
+} from "./promotion/index.js";
