@@ -38,6 +38,17 @@ const optionalImport = new Function(
   "return import(specifier)"
 ) as DynamicImport;
 
+// These two optional driver packages are dynamically import()-ed specifically so this
+// file still compiles and runs identically even if the packages are not installed;
+// importing their real types statically would break that guarantee at type-check time,
+// so these interfaces describe only the exact shape this file actually uses.
+interface NeonPoolCtor {
+  new (config: { connectionString: string }): unknown;
+}
+interface PrismaNeonCtor {
+  new (pool: unknown): unknown;
+}
+
 export interface NeonAdapterClient {
   client: PrismaClient;
   source: "neon-serverless";
@@ -54,14 +65,12 @@ export async function tryBuildNeonServerlessClient(): Promise<NeonAdapterClient 
   if (!url) return null;
 
   // Dynamic imports — fail closed if deps are not installed.
-  let Pool: unknown;
-  let PrismaNeon: unknown;
+  let Pool: NeonPoolCtor | undefined;
+  let PrismaNeon: PrismaNeonCtor | undefined;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const neon = (await optionalImport("@neondatabase/serverless")) as any;
+    const neon = (await optionalImport("@neondatabase/serverless")) as { Pool: NeonPoolCtor };
     Pool = neon.Pool;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const adapter = (await optionalImport("@prisma/adapter-neon")) as any;
+    const adapter = (await optionalImport("@prisma/adapter-neon")) as { PrismaNeon: PrismaNeonCtor };
     PrismaNeon = adapter.PrismaNeon;
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -76,10 +85,8 @@ export async function tryBuildNeonServerlessClient(): Promise<NeonAdapterClient 
   if (!Pool || !PrismaNeon) return null;
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const pool = new (Pool as any)({ connectionString: url });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const adapter = new (PrismaNeon as any)(pool);
+    const pool = new Pool({ connectionString: url });
+    const adapter = new PrismaNeon(pool);
 
     // Late-bind PrismaClient so we don't break tsc when the preview
     // feature isn't enabled (the `adapter` option only exists when

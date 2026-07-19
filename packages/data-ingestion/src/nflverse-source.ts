@@ -405,12 +405,27 @@ function maxSeasonIn(table: CsvTable): number {
   return max;
 }
 
-async function fetchPerSeasonPlayerStatsWeek(season: number): Promise<CsvTable | null> {
-  const url = `${NFLVERSE_BASE}/stats_player/stats_player_week_${season}.csv`;
+function perSeasonPlayerStatsWeekUrl(season: number): string {
+  return `${NFLVERSE_BASE}/stats_player/stats_player_week_${season}.csv`;
+}
+
+/**
+ * Fetch + filter one per-season `stats_player_week_<season>.csv` file (offense
+ * REG/POST rows only), through an injectable `fetchText` callback so callers
+ * can share this filtering logic across different fetch pipelines (plain
+ * noStoreFetch for {@link fetchNflverse}; failover + size caps + column
+ * projection for the cached artifact layer in `nflverse-cache.ts`). Best
+ * effort by design: any `fetchText` rejection is swallowed and yields `null`,
+ * matching the "never worse than the combined asset alone" contract.
+ */
+async function fetchPerSeasonPlayerStatsWeekWith(
+  season: number,
+  fetchText: (url: string) => Promise<string>,
+  options: ParseCsvOptions,
+): Promise<CsvTable | null> {
+  const url = perSeasonPlayerStatsWeekUrl(season);
   try {
-    const res = await noStoreFetch(url);
-    if (!res.ok) return null;
-    const table = parseCsv(await decodeDatasetText(res));
+    const table = parseCsv(await fetchText(url), options);
     const records = table.records.filter((row) => {
       const position = (row["position"] ?? "").toUpperCase();
       const seasonType = (row["season_type"] ?? "REG").toUpperCase();
@@ -422,11 +437,23 @@ async function fetchPerSeasonPlayerStatsWeek(season: number): Promise<CsvTable |
   }
 }
 
-/** Fetch + parse a dataset asset into row records. */
-export async function fetchNflverse(key: NflverseDatasetKey, season: number, variant?: string): Promise<CsvTable> {
-  const table = parseCsv(await fetchNflverseText(key, season, variant));
-  if (key !== "player_stats_week" || !Number.isFinite(season)) return table;
-
+/**
+ * Shared merge core: given an already-parsed `player_stats_week` table and a
+ * target season, backfills any season(s) the combined asset lags behind by
+ * fetching per-season files through the injected `fetchText`. Used by both
+ * {@link fetchNflverse} (plain noStoreFetch, full-record parse) and the cached
+ * artifact layer in `nflverse-cache.ts` (failover + size caps + column
+ * projection), so the merge semantics — offense positions only, REG/POST
+ * season types only, best-effort skip on a missing/failed per-season file, and
+ * the `covered === 0` untrusted-table bail-out — stay byte-identical between
+ * the two callers.
+ */
+export async function mergePlayerStatsWeekCurrency(
+  table: CsvTable,
+  season: number,
+  fetchText: (url: string) => Promise<string>,
+  options: ParseCsvOptions = {},
+): Promise<CsvTable> {
   const covered = maxSeasonIn(table);
   // maxSeasonIn floors at 0, so covered===0 means NO row had a parseable `season`
   // (e.g. an nflverse column rename — the same drift class this adapter documents).
@@ -439,8 +466,20 @@ export async function fetchNflverse(key: NflverseDatasetKey, season: number, var
 
   const records = [...table.records];
   for (let extraSeason = covered + 1; extraSeason <= season; extraSeason++) {
-    const perSeason = await fetchPerSeasonPlayerStatsWeek(extraSeason);
+    const perSeason = await fetchPerSeasonPlayerStatsWeekWith(extraSeason, fetchText, options);
     if (perSeason && perSeason.records.length > 0) records.push(...perSeason.records);
   }
   return { header: table.header, records };
+}
+
+/** Fetch + parse a dataset asset into row records. */
+export async function fetchNflverse(key: NflverseDatasetKey, season: number, variant?: string): Promise<CsvTable> {
+  const table = parseCsv(await fetchNflverseText(key, season, variant));
+  if (key !== "player_stats_week" || !Number.isFinite(season)) return table;
+
+  return mergePlayerStatsWeekCurrency(table, season, async (url) => {
+    const res = await noStoreFetch(url);
+    if (!res.ok) throw new Error(`nflverse fetch failed (${res.status}) for ${url}`);
+    return decodeDatasetText(res);
+  });
 }

@@ -128,15 +128,62 @@ function nowIso(): string {
 
 // ─── Scoreboard ───────────────────────────────────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parseGame(event: any, fetchedAt: string): EspnGame | null {
+interface EspnRawTeamRef {
+  id?: unknown;
+  displayName?: unknown;
+  abbreviation?: unknown;
+}
+interface EspnRawCompetitor {
+  homeAway?: string;
+  team?: EspnRawTeamRef;
+  score?: unknown;
+  records?: Array<{ summary?: unknown }>;
+}
+interface EspnRawEvent {
+  id?: unknown;
+  date?: unknown;
+  name?: unknown;
+  shortName?: unknown;
+  status?: { type?: { state?: unknown } };
+  competitions?: Array<{ competitors?: EspnRawCompetitor[] }>;
+}
+interface EspnScoreboardRaw {
+  events?: unknown[];
+}
+interface EspnTeamsRaw {
+  sports?: Array<{ leagues?: Array<{ teams?: unknown[] }> }>;
+}
+interface EspnRawTeamEntry {
+  team?: {
+    id?: unknown;
+    abbreviation?: unknown;
+    displayName?: unknown;
+    shortDisplayName?: unknown;
+    location?: unknown;
+    color?: unknown;
+  };
+}
+interface EspnRawPlayer {
+  id?: unknown;
+  fullName?: unknown;
+  position?: { abbreviation?: unknown };
+  jersey?: unknown;
+  status?: { type?: unknown };
+}
+interface EspnRosterRaw {
+  team?: { displayName?: unknown };
+  athletes?: Array<{ items?: EspnRawPlayer[] }>;
+}
+
+function parseGame(rawEvent: unknown, fetchedAt: string): EspnGame | null {
   try {
+    const event = rawEvent as EspnRawEvent;
     const competition = event?.competitions?.[0];
-    const home = competition?.competitors?.find((c: { homeAway: string }) => c.homeAway === "home");
-    const away = competition?.competitors?.find((c: { homeAway: string }) => c.homeAway === "away");
+    const home = competition?.competitors?.find((c) => c.homeAway === "home");
+    const away = competition?.competitors?.find((c) => c.homeAway === "away");
     if (!home || !away) return null;
 
-    const stateType: string = event?.status?.type?.state ?? "pre";
+    const stateType: string = String(event?.status?.type?.state ?? "pre");
     const status: EspnGame["status"] =
       stateType === "in" ? "in" : stateType === "post" ? "post" : "pre";
 
@@ -198,8 +245,7 @@ export async function fetchEspnScoreboard(
     return { ok: false, status: "parse-error", message: "Failed to parse ESPN response as JSON.", sport, league, dataQuality: "fallback", source: "espn-public" };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const events: unknown[] = (data as any)?.events ?? [];
+  const events: unknown[] = (data as EspnScoreboardRaw | null | undefined)?.events ?? [];
   const games = events
     .map((e) => parseGame(e, fetchedAt))
     .filter((g): g is EspnGame => g !== null);
@@ -247,12 +293,10 @@ export async function fetchEspnTeams(
     return { ok: false, status: "parse-error", message: "Failed to parse ESPN response as JSON.", sport, league, dataQuality: "fallback", source: "espn-public" };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawTeams: unknown[] = (data as any)?.sports?.[0]?.leagues?.[0]?.teams ?? [];
+  const rawTeams: unknown[] = (data as EspnTeamsRaw | null | undefined)?.sports?.[0]?.leagues?.[0]?.teams ?? [];
   const teams: EspnTeam[] = rawTeams
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .map((entry: any) => {
-      const t = entry?.team;
+    .map((entry) => {
+      const t = (entry as EspnRawTeamEntry)?.team;
       if (!t) return null;
       return {
         id: String(t.id ?? ""),
@@ -309,19 +353,14 @@ export async function fetchEspnRoster(
     return { ok: false, status: "parse-error", message: "Failed to parse ESPN response as JSON.", sport, league, dataQuality: "fallback", source: "espn-public" };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const d = data as any;
-  const teamName: string = d?.team?.displayName ?? "Unknown";
+  const d = data as EspnRosterRaw | null | undefined;
+  const teamName: string = String(d?.team?.displayName ?? "Unknown");
   const allPlayers: EspnRosterPlayer[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const groups: unknown[] = d?.athletes ?? [];
+  const groups: Array<{ items?: EspnRawPlayer[] }> = d?.athletes ?? [];
 
   for (const group of groups) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const items: unknown[] = (group as any)?.items ?? [];
-    for (const p of items) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const player = p as any;
+    const items: EspnRawPlayer[] = group?.items ?? [];
+    for (const player of items) {
       allPlayers.push({
         id: String(player?.id ?? ""),
         fullName: String(player?.fullName ?? ""),

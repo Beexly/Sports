@@ -243,6 +243,20 @@ describe("synthetic monitoring dashboard", () => {
     expect(boardCheck?.history.slice(-3)).toEqual(["pending", "passing", "failing"]);
   });
 
+  // OP-003 absence-of-coverage-is-not-green fix: `runnerStatusFromArtifact()`
+  // used to return "healthy" when no monitoring artifact existed at all —
+  // absence of coverage reading as green. It must report "paused" (the
+  // existing, honest enum member for "the runner is not running"), not a
+  // fabricated healthy reading.
+  it("reports the runner as paused (not healthy) when no artifact exists at all", () => {
+    const dashboard = loadSyntheticMonitoringDashboard(
+      new Date("2026-05-22T18:07:00.000Z"),
+      null
+    );
+
+    expect(dashboard.runnerStatus).toBe("paused");
+  });
+
   it("parses synthetic issue-queue entries for cockpit display", () => {
     const issues = parseSyntheticIssuesFromMarkdown(`# Issue Queue
 

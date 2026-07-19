@@ -36,8 +36,7 @@ const config: NextAuthConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        token.role = ((user as any).role as UserRole) ?? "USER";
+        token.role = (user as unknown as { role?: UserRole }).role ?? "USER";
       } else if (token.email) {
         // Re-resolve the DB role on every refresh (not only when it is unset) so a
         // role change — e.g. an ADMIN downgraded to USER — propagates within the
@@ -75,15 +74,21 @@ const config: NextAuthConfig = {
   pages: { signIn: "/auth/signin", error: "/auth/error" },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const nextAuth = NextAuth(config) as any;
+interface NextAuthInstance {
+  handlers: {
+    GET: (req: Request) => Promise<Response>;
+    POST: (req: Request) => Promise<Response>;
+  };
+  auth: () => Promise<Session | null>;
+  signIn: (...args: unknown[]) => Promise<void>;
+  signOut: (...args: unknown[]) => Promise<void>;
+}
 
-export const handlers = nextAuth.handlers as {
-  GET: (req: Request) => Promise<Response>;
-  POST: (req: Request) => Promise<Response>;
-};
+const nextAuth = NextAuth(config) as unknown as NextAuthInstance;
 
-const realAuth = nextAuth.auth as () => Promise<Session | null>;
+export const handlers = nextAuth.handlers;
+
+const realAuth = nextAuth.auth;
 
 /**
  * Dev-mode admin bypass.
@@ -105,8 +110,7 @@ export const auth: () => Promise<Session | null> = async () => {
         image: null,
         role: "ADMIN",
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any as Session;
+    } as unknown as Session;
   }
   try {
     return await realAuth();
@@ -124,8 +128,8 @@ export const auth: () => Promise<Session | null> = async () => {
   }
 };
 
-export const signIn = nextAuth.signIn as (...args: unknown[]) => Promise<void>;
-export const signOut = nextAuth.signOut as (...args: unknown[]) => Promise<void>;
+export const signIn = nextAuth.signIn;
+export const signOut = nextAuth.signOut;
 
 declare module "next-auth" {
   interface Session {

@@ -997,3 +997,14 @@ export type {
   Drive,
   DriveResult,
 } from "./expected-metrics/index.js";
+
+// Model Promotion Gate — pure eligibility evaluator (paired-Brier EB-LCB +
+// CLV non-inferiority + walk-forward integrity). DARK, and deliberately NOT
+// re-exported from this barrel: window-hash.ts uses node:crypto, and this
+// barrel is imported by CLIENT components (e.g. simulation-cloud.tsx ->
+// lib/sim/score-distribution.ts), so a barrel export drags node:crypto into
+// the browser bundle and breaks the Next build (verified on Vercel deploy
+// dpl_CgarwjnVmeV7). The future server-side consumer (the founder-registered
+// trial harness) imports the submodule path directly:
+//   import { evaluatePromotion } from "@sports/prediction-engine/src/promotion/index.js"
+// See docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md.
