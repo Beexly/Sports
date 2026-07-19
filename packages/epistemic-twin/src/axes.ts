@@ -210,10 +210,31 @@ export function composeOne(id: string, own: OwnState, deps: readonly ResolvedDep
   const hardDeps = deps.filter((d) => d.edge.kind === "hard");
   const softDeps = deps.filter((d) => d.edge.kind === "soft");
 
-  // Rule 1: unavailable — own OR any hard dep.
+  // Rule 1a: own unavailable — this node's OWN fresh evidence says it is
+  // down. Checked first: real, currently-evidenced own unavailability
+  // outranks everything, including this node's own gating (decayEvidence
+  // already resolved that priority upstream — see its own doc comment).
   if (own.kind === "unavailable") {
     return { id, kind: "unavailable", reasons: own.reasons };
   }
+
+  // Rule 1b (own gated escapes hard-dep-unavailable — moved ahead of the
+  // hard-dep unavailable check below): if THIS node's own evidence says
+  // gated, it stays gated even when a hard dependency happens to be
+  // unavailable. Contract §1's own invariant: "reporting a founder-gated
+  // capability as unavailable would be dishonest alarm" — that reasoning
+  // applies with full force here too. A hard dep's real outage is still
+  // fully visible in ITS OWN composed entry in the graph; it is not lost,
+  // merely not allowed to overwrite THIS node's own intentional-darkness
+  // status. (This is narrower than swapping rule 1/2 order generally: a
+  // HARD-DEP-sourced gate below still loses to a HARD-DEP-sourced
+  // unavailable, per rule 1c/2b — only OWN gating gets this escape.)
+  if (own.kind === "gated") {
+    return { id, kind: "gated", intent: own.intent, reasons: own.reasons };
+  }
+
+  // Rule 1c: a hard dep composing unavailable propagates (own is neither
+  // unavailable nor gated at this point).
   const hardUnavailable = hardDeps.find((d) => d.composed.kind === "unavailable");
   if (hardUnavailable) {
     return {
@@ -226,10 +247,8 @@ export function composeOne(id: string, own: OwnState, deps: readonly ResolvedDep
     };
   }
 
-  // Rule 2: gated — own OR any hard dep. Provenance chain in reasons.
-  if (own.kind === "gated") {
-    return { id, kind: "gated", intent: own.intent, reasons: own.reasons };
-  }
+  // Rule 2b: a hard dep composing gated propagates (own is healthy/impaired/
+  // unknown at this point, and no hard dep is unavailable).
   const hardGated = hardDeps.find((d) => d.composed.kind === "gated");
   if (hardGated && hardGated.composed.kind === "gated") {
     return {

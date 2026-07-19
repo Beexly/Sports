@@ -203,6 +203,41 @@ describe("composeOne — rule 2: gated, with provenance", () => {
     const result = composeOne("x", own, [{ edge: { id: "dep", kind: "soft" }, composed: dep }]);
     expect(result.kind).not.toBe("gated");
   });
+
+  it("PINNED: own gated escapes an unavailable HARD dependency — never report an intentionally-dark capability as unavailable just because a dependency also has a real outage (contract §1: 'reporting a founder-gated capability as unavailable would be dishonest alarm')", () => {
+    const own: OwnState = { kind: "gated", intent: "owner_gated", reasons: ["flag_off"] };
+    const hardDep: ComposedState = { id: "dep", kind: "unavailable", reasons: ["real_outage"] };
+    const result = composeOne("x", own, [{ edge: { id: "dep", kind: "hard" }, composed: hardDep }]);
+    expect(result.kind).toBe("gated");
+    if (result.kind === "gated") {
+      expect(result.intent).toBe("owner_gated");
+    }
+  });
+
+  it("own gated escapes even when unavailable AND gated hard deps are both present (own-gated wins outright, no fallthrough)", () => {
+    const own: OwnState = { kind: "gated", intent: "proof_gated", reasons: [] };
+    const hardUnavailable: ComposedState = { id: "dep-down", kind: "unavailable", reasons: [] };
+    const hardGated: ComposedState = { id: "dep-gated", kind: "gated", intent: "owner_gated", reasons: [] };
+    const result = composeOne("x", own, [
+      { edge: { id: "dep-down", kind: "hard" }, composed: hardUnavailable },
+      { edge: { id: "dep-gated", kind: "hard" }, composed: hardGated },
+    ]);
+    expect(result.kind).toBe("gated");
+    if (result.kind === "gated") {
+      expect(result.intent).toBe("proof_gated"); // OWN intent, not the hard dep's
+    }
+  });
+
+  it("scope check: a HARD-DEP-sourced unavailable still beats a HARD-DEP-sourced gated when OWN is neither (the escape is only for OWN gating, not general gated-over-unavailable)", () => {
+    const own: OwnState = { kind: "healthy", reasons: [] };
+    const hardUnavailable: ComposedState = { id: "dep-down", kind: "unavailable", reasons: [] };
+    const hardGated: ComposedState = { id: "dep-gated", kind: "gated", intent: "owner_gated", reasons: [] };
+    const result = composeOne("x", own, [
+      { edge: { id: "dep-down", kind: "hard" }, composed: hardUnavailable },
+      { edge: { id: "dep-gated", kind: "hard" }, composed: hardGated },
+    ]);
+    expect(result.kind).toBe("unavailable"); // unchanged from before this fix
+  });
 });
 
 describe("composeOne — rule 3: unknown contagion through hard edges", () => {
