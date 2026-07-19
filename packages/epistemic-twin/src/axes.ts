@@ -148,6 +148,33 @@ export class TwinCycleError extends Error {
 export function decayEvidence(evidence: OwnEvidence, now: Date): OwnState {
   const baseReasons = evidence.reasons ? [...evidence.reasons] : [];
 
+  // Fresh, evidenced unavailability is checked FIRST, ahead of gating —
+  // matching composeOne's own rule order (rule 1: unavailable, rule 2:
+  // gated). A real, currently-evidenced outage must never be masked by an
+  // incidentally-set gate flag on the same evidence record: reporting an
+  // actual outage as merely "intentionally gated" would hide the outage,
+  // the mirror-image failure of the contract's stated worry about the
+  // reverse case. This only fires when the unavailable evidence is itself
+  // fresh (an expired/never-observed claim of unavailability carries no
+  // more weight than any other stale severity evidence — see below).
+  if (
+    evidence.unavailable &&
+    evidence.observedAt !== null &&
+    now.getTime() - evidence.observedAt.getTime() <= evidence.freshnessHorizonMs
+  ) {
+    return { kind: "unavailable", reasons: baseReasons };
+  }
+
+  // Gating is a structural/config fact (e.g. a feature flag read), not
+  // decaying evidence — per this module's own OwnEvidence.intent doc, "it
+  // does not expire the way severity evidence does." Checked BEFORE the
+  // observedAt/freshness gate below (not after) so a gate whose flag hasn't
+  // been re-read in a while does not silently decay into "unknown" — the
+  // config fact stays true until something actually changes it.
+  if (evidence.intent !== "open") {
+    return { kind: "gated", intent: evidence.intent, reasons: baseReasons };
+  }
+
   if (evidence.observedAt === null) {
     return { kind: "unknown", reasons: [...baseReasons, "evidence_missing"] };
   }
@@ -157,18 +184,10 @@ export function decayEvidence(evidence: OwnEvidence, now: Date): OwnState {
     return { kind: "unknown", reasons: [...baseReasons, "evidence_expired"] };
   }
 
-  // Evidence is fresh (certainty=evidenced) — intent and severity are now
-  // meaningful. Gating takes priority over severity tags in own state,
-  // matching the composition law's rule ordering (gated checked before
-  // degraded/stale for the aggregate too).
-  if (evidence.intent !== "open") {
-    return { kind: "gated", intent: evidence.intent, reasons: baseReasons };
-  }
-
-  if (evidence.unavailable) {
-    return { kind: "unavailable", reasons: baseReasons };
-  }
-
+  // Evidence is fresh (certainty=evidenced), intent is open, and the fresh-
+  // unavailable check above already didn't fire (unavailable is either
+  // false, or true-but-not-fresh — the latter decays to unknown just like
+  // any other stale severity evidence, via the age check above).
   const tags = evidence.severityTags ?? [];
   if (tags.length > 0) {
     return { kind: "impaired", tags: [...tags], reasons: baseReasons };
@@ -241,10 +260,15 @@ export function composeOne(id: string, own: OwnState, deps: readonly ResolvedDep
   }
 
   // Rule 4: degraded/stale — max rank, union of tags+reasons. Own/hard rank-1
-  // contributes its real tags. Soft deps contribute AT MOST one notch: any
-  // soft dep composing to rank >= 1 (impaired, OR — capped down from —
-  // gated/unknown/unavailable) adds a "degraded" tag, never propagating the
-  // dep's actual kind, never gating, never unknown-ifying, never disabling.
+  // contributes its real tags (own/hard deps are load-bearing — the actual
+  // freshness/functional distinction matters). Soft deps contribute AT MOST
+  // one notch, capped to a plain "degraded" tag REGARDLESS of the dep's own
+  // tags or kind — an enhancing soft edge going stale, degraded, gated,
+  // unknown, or unavailable never propagates its own kind OR its own tag
+  // granularity (e.g. a soft dep that is impaired-with-only-"stale" still
+  // contributes "degraded", not "stale" — "stale" is reserved for genuine
+  // own/hard-sourced freshness impairment); soft deps never gate, never
+  // unknown-ify, never disable.
   const tags = new Set<SeverityTag>();
   const reasons4: string[] = [];
 
@@ -259,12 +283,7 @@ export function composeOne(id: string, own: OwnState, deps: readonly ResolvedDep
     }
   }
   for (const d of softDeps) {
-    if (d.composed.kind === "impaired") {
-      d.composed.tags.forEach((t) => tags.add(t));
-      reasons4.push(`soft_dep_impaired:${d.edge.id}`);
-    } else if (d.composed.kind !== "healthy") {
-      // soft dep is unavailable/gated/unknown — cap at "degraded", never
-      // propagate the real kind (that would gate/unknown-ify/disable us).
+    if (d.composed.kind !== "healthy") {
       tags.add("degraded");
       reasons4.push(`soft_dep_${d.composed.kind}:${d.edge.id}`);
     }

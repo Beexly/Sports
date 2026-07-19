@@ -81,36 +81,49 @@ export type SeedCapabilityId = (typeof SEED_CAPABILITY_IDS)[number];
 
 /**
  * Builds the seed registry with all-healthy, freshly-observed evidence at
- * `now`. Callers (tests, and the future consumer PR) can post-process the
- * returned array to flip individual nodes' evidence for scenario testing.
+ * `now`. Every node gets its OWN evidence object (a fresh `healthyEvidence(now)`
+ * call per node, not one shared instance) — a caller mutating one node's
+ * evidence in place (or the array/Date fields inside it) must never affect
+ * any other node.
+ *
+ * SAFETY NOTE for consumers: this all-healthy baseline, including the
+ * `gate:*` nodes, is a demo/test topology fixture, NOT a safe default for
+ * production reads. `gate:PUBLISH_LEDGER` and `gate:SEALED_ENGINE_ENABLED`
+ * are real founder-controlled flags that default CLOSED in production
+ * (see `apps/web/lib/ledger/ledger-view.ts`); a future consumer that composes
+ * this registry directly without overriding gate evidence from the real
+ * flag state will report founder-gated capabilities as falsely healthy/open.
+ * Callers (tests, and the future consumer PR) MUST post-process the returned
+ * array with real evidence per node before treating a composed result as
+ * authoritative — see `materializeNodesAsOf`/`templatesFromSeed` in
+ * `as-of.ts`, which discard this fixture's evidence entirely and hydrate
+ * every node from an observation log instead.
  */
 export function buildSeedRegistry(now: Date): CapabilityNode[] {
-  const evidence = healthyEvidence(now);
-
   return [
     {
       id: "db:primary",
       label: "Primary Postgres database",
       deps: [],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "source:nflverse",
       label: "nflverse data source (OP-002 cache)",
       deps: [],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "gate:PUBLISH_LEDGER",
       label: "PUBLISH_LEDGER feature gate",
       deps: [],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "gate:SEALED_ENGINE_ENABLED",
       label: "SEALED_ENGINE_ENABLED feature gate",
       deps: [],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "ingestion",
@@ -119,7 +132,7 @@ export function buildSeedRegistry(now: Date): CapabilityNode[] {
         { id: "db:primary", kind: "hard" },
         { id: "source:nflverse", kind: "soft" },
       ],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "engine:settlement",
@@ -129,31 +142,31 @@ export function buildSeedRegistry(now: Date): CapabilityNode[] {
         { id: "ingestion", kind: "hard" },
         { id: "gate:SEALED_ENGINE_ENABLED", kind: "hard" },
       ],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "route:/nflverse",
       label: "/nflverse route",
       deps: [{ id: "source:nflverse", kind: "hard" }],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "report:nflverse-pbp",
       label: "nflverse play-by-play report",
       deps: [{ id: "source:nflverse", kind: "soft" }],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "report:nflverse-ngs",
       label: "nflverse Next Gen Stats report",
       deps: [{ id: "source:nflverse", kind: "soft" }],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "report:nflverse-ftn",
       label: "nflverse FTN charting report",
       deps: [{ id: "source:nflverse", kind: "soft" }],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "proof:slate-commitment",
@@ -162,7 +175,7 @@ export function buildSeedRegistry(now: Date): CapabilityNode[] {
         { id: "engine:settlement", kind: "hard" },
         { id: "gate:PUBLISH_LEDGER", kind: "hard" },
       ],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "route:/home",
@@ -171,7 +184,7 @@ export function buildSeedRegistry(now: Date): CapabilityNode[] {
         { id: "db:primary", kind: "hard" },
         { id: "source:nflverse", kind: "soft" },
       ],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "route:/picks",
@@ -181,13 +194,13 @@ export function buildSeedRegistry(now: Date): CapabilityNode[] {
         { id: "ingestion", kind: "hard" },
         { id: "source:nflverse", kind: "soft" },
       ],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "route:/checkout",
       label: "Checkout route",
       deps: [{ id: "db:primary", kind: "hard" }],
-      evidence,
+      evidence: healthyEvidence(now),
     },
     {
       id: "revenue:checkout",
@@ -196,7 +209,7 @@ export function buildSeedRegistry(now: Date): CapabilityNode[] {
         { id: "route:/checkout", kind: "hard" },
         { id: "db:primary", kind: "hard" },
       ],
-      evidence,
+      evidence: healthyEvidence(now),
     },
   ];
 }

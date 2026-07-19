@@ -114,6 +114,29 @@ describe("decayEvidence", () => {
     expect(fresh.kind).not.toBe("unknown");
     expect(expired.kind).toBe("unknown");
   });
+
+  it("PINNED: fresh unavailable evidence wins over a simultaneously-set gate intent (matches composeOne's rule 1-before-2 priority — a real fresh outage is never masked as mere intentional darkness)", () => {
+    const result = decayEvidence(evidence({ unavailable: true, intent: "owner_gated" }), NOW);
+    expect(result).toEqual({ kind: "unavailable", reasons: [] });
+  });
+
+  it("PINNED: gated intent survives observedAt going stale — gating is a structural/config fact, it does not expire like severity evidence (matches OwnEvidence.intent's own doc comment)", () => {
+    const observedAt = new Date(NOW.getTime() - HORIZON - 1); // well past the horizon
+    const result = decayEvidence(evidence({ observedAt, intent: "proof_gated" }), NOW);
+    expect(result).toEqual({ kind: "gated", intent: "proof_gated", reasons: [] });
+  });
+
+  it("PINNED: gated intent survives a null observedAt (never-observed) — the config fact needs no timestamp to be true", () => {
+    const result = decayEvidence(evidence({ observedAt: null, intent: "owner_gated" }), NOW);
+    expect(result).toEqual({ kind: "gated", intent: "owner_gated", reasons: [] });
+  });
+
+  it("a STALE unavailable claim (not fresh) decays to unknown like any other stale severity evidence, and does NOT win over a fresh-independent gate", () => {
+    const staleObservedAt = new Date(NOW.getTime() - HORIZON - 1);
+    // unavailable alone, stale, open intent -> unknown (not unavailable).
+    const staleUnavailable = decayEvidence(evidence({ observedAt: staleObservedAt, unavailable: true }), NOW);
+    expect(staleUnavailable.kind).toBe("unknown");
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -231,11 +254,24 @@ describe("composeOne — rule 4: degraded/stale, tag union, soft one-notch cap",
     }
   });
 
-  it("a soft dep composing rank>=1 (impaired) caps the dependent at degraded — one notch, never more", () => {
+  it("PINNED: a soft dep composing impaired-with-ONLY-stale caps the dependent at exactly 'degraded' — the dep's own tag granularity (e.g. bare 'stale') is never propagated through a soft edge", () => {
     const own: OwnState = { kind: "healthy", reasons: [] };
     const dep: ComposedState = { id: "dep", kind: "impaired", tags: ["stale"], reasons: [] };
     const result = composeOne("x", own, [{ edge: { id: "dep", kind: "soft" }, composed: dep }]);
     expect(result.kind).toBe("impaired");
+    if (result.kind === "impaired") {
+      expect(result.tags).toEqual(["degraded"]); // NOT ["stale"] — soft edges cap, never propagate.
+    }
+  });
+
+  it("a soft dep composing impaired-with-degraded also caps at exactly 'degraded' (idempotent — not a second/duplicate tag)", () => {
+    const own: OwnState = { kind: "healthy", reasons: [] };
+    const dep: ComposedState = { id: "dep", kind: "impaired", tags: ["degraded"], reasons: [] };
+    const result = composeOne("x", own, [{ edge: { id: "dep", kind: "soft" }, composed: dep }]);
+    expect(result.kind).toBe("impaired");
+    if (result.kind === "impaired") {
+      expect(result.tags).toEqual(["degraded"]);
+    }
   });
 
   it("a soft dep that is UNAVAILABLE still only degrades the dependent one notch, never disables", () => {
