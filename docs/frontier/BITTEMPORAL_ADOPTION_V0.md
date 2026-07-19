@@ -1,8 +1,11 @@
 # Bitemporal Adoption v0 — Design Record
 
-**Status:** v0 SHIPPED as a pure in-memory layer (`packages/epistemic-twin/src/as-of.ts`,
-PR #139, stacked on the Twin core from PR #137). Persistence is **founder-gated**
-(Phase 1 below). Index strategy is **parked** (Phase 2 below — do not build).
+**Status:** v0 CODE-COMPLETE and reviewed as a pure in-memory layer
+(`packages/epistemic-twin/src/as-of.ts`, PR #139, stacked on the Twin core
+from PR #137) — **not yet merged to `main`** as of this writing; the
+implementation this document describes exists only on those branches until
+the merge train lands them. Persistence is **founder-gated** (Phase 1
+below). Index strategy is **parked** (Phase 2 below — do not build).
 **Companion contracts:** `OPERATIONAL_EPISTEMIC_TWIN_CONTRACT.md` (lands with PR #134).
 
 ## 1. Why bitemporal, in one incident
@@ -83,8 +86,9 @@ time).
 
 ## 6. Adoption ladder
 
-- **v0 (DONE, PR #139):** pure, dark, in-memory. No persistence, no consumers.
-  The composition law and the as-of law are fully test-pinned (132 tests).
+- **v0 (code-complete, reviewed, PR #139 — pending merge):** pure, dark,
+  in-memory. No persistence, no consumers. The composition law and the
+  as-of law are fully test-pinned (138+ tests as of the latest review pass).
 - **Phase 1 (FOUNDER GATE — do not build without explicit authorization):**
   a Prisma `CapabilityObservation` append-only table persisting the observation
   log (`capabilityId`, `observedAt`, `recordedAt DEFAULT now()`, status/evidence
