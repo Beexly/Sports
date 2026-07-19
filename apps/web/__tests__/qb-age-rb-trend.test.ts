@@ -5,6 +5,7 @@ import {
   loadQbAgeRbTrendReport,
   resetQbAgeRbTrendCacheForTests,
 } from "@/lib/nflverse/qb-age-rb-trend";
+import { resetNflverseTableCacheForTests } from "@sports/data-ingestion";
 
 const PLAYER_STATS = [
   "player_id,player_display_name,position,recent_team,season,week,season_type,attempts,targets",
@@ -71,6 +72,7 @@ describe("QB-age RB target-share trend report", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     resetQbAgeRbTrendCacheForTests();
+    resetNflverseTableCacheForTests();
   });
 
   it("computes a real cohort report from nflverse-shaped CSV rows", async () => {
@@ -120,5 +122,74 @@ describe("QB-age RB target-share trend report", () => {
     expect(report.trends).toHaveLength(0);
     expect(report.quality.observationsUsed).toBe(0);
     expect(report.canPowerScoring).toBe(false);
+  });
+
+  // Regression for the OP-002 nflverse shared-cache port: this loader now
+  // routes player_stats_week through fetchNflverseTableCached, which
+  // unconditionally applies the same per-season backfill merge that only
+  // fetchNflverse (the ingestion-job path) used to have. When the combined
+  // asset lags the requested season (the normal production case — nflverse
+  // ships the newest season only as a per-season file until the combined
+  // asset catches up), the merge must pull those newer rows in, not silently
+  // drop them the way the pre-OP-002 loader did.
+  it("merges current-season backfill rows past what the combined player_stats asset covers", async () => {
+    const NEW_TEAM_STATS = [
+      "player_id,player_display_name,position,recent_team,season,week,season_type,attempts,targets",
+      "new-qb-1,New QB 1,QB,NEW1,2025,1,REG,40,0",
+      "new-rb-1,New RB 1,RB,NEW1,2025,1,REG,0,30",
+    ].join("\n");
+    const NEW_PLAYERS = [
+      "gsis_id,display_name,birth_date",
+      "old-qb-1,Old QB 1,1986-01-01",
+      "old-qb-2,Old QB 2,1986-02-01",
+      "old-qb-3,Old QB 3,1986-03-01",
+      "young-qb-1,Young QB 1,1998-01-01",
+      "young-qb-2,Young QB 2,1998-02-01",
+      "young-qb-3,Young QB 3,1998-03-01",
+      "new-qb-1,New QB 1,1985-01-01",
+    ].join("\n");
+    const NEW_SCHEDULES = [
+      "game_id,season,game_type,week,gameday,away_team,home_team,away_qb_id,home_qb_id,away_qb_name,home_qb_name",
+      "2024_01_OLD1_X,2024,REG,1,2024-09-08,OLD1,X,old-qb-1,,Old QB 1,",
+      "2024_01_OLD2_X,2024,REG,1,2024-09-08,OLD2,X,old-qb-2,,Old QB 2,",
+      "2024_01_OLD3_X,2024,REG,1,2024-09-08,OLD3,X,old-qb-3,,Old QB 3,",
+      "2024_01_YNG1_X,2024,REG,1,2024-09-08,YNG1,X,young-qb-1,,Young QB 1,",
+      "2024_01_YNG2_X,2024,REG,1,2024-09-08,YNG2,X,young-qb-2,,Young QB 2,",
+      "2024_01_YNG3_X,2024,REG,1,2024-09-08,YNG3,X,young-qb-3,,Young QB 3,",
+      "2025_01_NEW1_X,2025,REG,1,2025-09-07,NEW1,X,new-qb-1,,New QB 1,",
+    ].join("\n");
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("stats_player_week_2025.csv")) return csvResponse(NEW_TEAM_STATS);
+      if (url.includes("player_stats.csv.gz")) return gzResponse(PLAYER_STATS);
+      if (url.includes("players.csv")) return csvResponse(NEW_PLAYERS);
+      if (url.includes("games.csv")) return csvResponse(NEW_SCHEDULES);
+      return new Response("missing", { status: 404 });
+    });
+
+    const report = await loadQbAgeRbTrendReport({
+      fetcher,
+      season: 2025,
+      minSampleSize: 1,
+      alpha: 0.05,
+      cacheTtlMs: 0,
+    });
+
+    // The combined asset only covers 2024; the 2025 per-season backfill file
+    // must be merged in for the new team's week to be observable at all.
+    expect(report.status).toBe("live");
+    expect(report.seasonRange.end).toBe(2025);
+    expect(
+      report.quality.scheduleTeamRows,
+      "the 2025 game's two team-sides must be walked, proving the merged season reached the schedule join",
+    ).toBe(14); // 6 old-fixture games x 2 sides + 1 new 2025 game x 2 sides
+    // The per-season file is fetched exactly once (single-flight through the
+    // shared cache), not once per loader — proven at the module level by
+    // nflverse-cache.test.ts; this test only proves the merge output reaches
+    // this loader's computed report.
+    const perSeasonCalls = fetcher.mock.calls.filter(([input]) =>
+      String(input).includes("stats_player_week_2025.csv"),
+    );
+    expect(perSeasonCalls).toHaveLength(1);
   });
 });

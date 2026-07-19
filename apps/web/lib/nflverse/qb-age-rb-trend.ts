@@ -1,6 +1,6 @@
-import { gunzipSync } from "node:zlib";
-import { fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { fetchNflverseTableCached, nflverseUrl } from "@sports/data-ingestion";
 import { discoverCohortTrends, range, type Observation, type Trend } from "@sports/prediction-engine";
+import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 
 type CsvRecord = Readonly<Record<string, string>>;
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
@@ -79,19 +79,6 @@ function ageOnDate(birthDate: string | undefined, gameDate: string | undefined):
     (game.getUTCMonth() === birth.getUTCMonth() && game.getUTCDate() < birth.getUTCDate());
   if (beforeBirthday) age -= 1;
   return age;
-}
-
-async function fetchCsvRecords(url: string, fetcher: FetchLike, timeoutMs: number): Promise<readonly CsvRecord[]> {
-  // Route through mirror failover so a primary GitHub outage falls back to the
-  // community proxy instead of failing the whole report (matches the other loaders).
-  const { response } = await fetchWithFailover(withMirrors(url), fetcher, {
-    timeoutMs,
-    init: { cache: "no-store" },
-  });
-  if (!response.ok) throw new Error(`nflverse fetch failed (${response.status}) for ${url}`);
-  const buffer = Buffer.from(await response.arrayBuffer());
-  const text = url.endsWith(".gz") ? gunzipSync(buffer).toString("utf8") : buffer.toString("utf8");
-  return parseCsv(text).records;
 }
 
 function playerBirthDateMap(players: readonly CsvRecord[]): Map<string, string> {
@@ -222,18 +209,23 @@ export async function loadQbAgeRbTrendReport({
   minSampleSize = 300,
   alpha = 0.01,
   fetcher = fetch,
+  season = latestNflverseInspectionSeason(),
 }: {
   timeoutMs?: number;
   cacheTtlMs?: number;
   minSampleSize?: number;
   alpha?: number;
   fetcher?: FetchLike;
+  season?: number;
 } = {}): Promise<QbAgeRbTrendReport> {
   const now = Date.now();
   if (cacheTtlMs > 0 && fetcher === fetch && qbAgeTrendCache && qbAgeTrendCache.expiresAt > now) {
     return qbAgeTrendCache.value;
   }
 
+  // Published sourceUrls stay the season-invariant combined-asset URLs — the
+  // report shape and values are unchanged regardless of the internally
+  // requested season (see fetchNflverseTableCached's shared cache key).
   const sourceUrls = {
     playerStats: nflverseUrl("player_stats_week", 0),
     players: nflverseUrl("players", 0),
@@ -241,11 +233,14 @@ export async function loadQbAgeRbTrendReport({
   };
 
   try {
-    const [playerStats, players, schedules] = await Promise.all([
-      fetchCsvRecords(sourceUrls.playerStats, fetcher, timeoutMs),
-      fetchCsvRecords(sourceUrls.players, fetcher, timeoutMs),
-      fetchCsvRecords(sourceUrls.schedules, fetcher, timeoutMs),
+    const [playerStatsTable, playersTable, schedulesTable] = await Promise.all([
+      fetchNflverseTableCached({ key: "player_stats_week", season, fetcher, timeoutMs }),
+      fetchNflverseTableCached({ key: "players", season: 0, fetcher, timeoutMs }),
+      fetchNflverseTableCached({ key: "schedules", season: 0, fetcher, timeoutMs }),
     ]);
+    const playerStats = playerStatsTable.table.records;
+    const players = playersTable.table.records;
+    const schedules = schedulesTable.table.records;
     const { observations, quality } = buildObservations({ playerStats, players, schedules });
     const trends = discoverCohortTrends(observations, {
       feature: "qbAge",
