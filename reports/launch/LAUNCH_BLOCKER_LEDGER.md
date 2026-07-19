@@ -1,12 +1,13 @@
 # Galaxy Sports Edge — Launch Blocker Ledger (LC-000/LC-001 seed)
 
-**Generated:** 2026-07-18 22:30 UTC
+**Generated:** 2026-07-18 22:30 UTC (last updated 2026-07-19, LB-006/LB-009)
 **Full machine-readable record:** `LAUNCH_BLOCKER_LEDGER.json`
 
-Eight items, evidence-backed, classified. **One confirmed P0_CORRECTNESS_SECURITY finding**
+Nine items, evidence-backed, classified. **Two confirmed P0_CORRECTNESS_SECURITY findings**
 (LB-008, added by LC-003 — see `SECURITY_RESIDUE.md`; a secrets-hygiene exposure on an unlanded
-branch, not a live production code defect). Three items have a clean, low-risk, immediate owner
-action available today.
+branch, not a live production code defect — and LB-009, a real but never-yet-exercised gap in the
+Model Journal public read-time guard, found and fixed this session). Three items have a clean,
+low-risk, immediate owner action available today.
 
 | ID | Title | Class | Status |
 |---|---|---|---|
@@ -15,9 +16,10 @@ action available today.
 | LB-003 | Refund promise contradiction (pricing vs. Terms) | P1_REVENUE | Owner-gated on a policy decision |
 | LB-004 | Clarity analytics tag has literal `undefined` ID | P2_TRUST_UX | Ready for owner action or code fix |
 | LB-005 | Nightly Sentinel has zero unattended coverage | P1_DATA_ENGINE | **CLOSED — LC-002 shipped, verified, live dry-run WATCH** |
-| LB-006 | `news-sitemap.xml` is empty | P2_TRUST_UX | Needs investigation (may be intentional) |
+| LB-006 | `news-sitemap.xml` is empty | INTENTIONAL_CLOSED | **CLOSED — correct output of a founder-hardened publish barrier, not a defect; OWNER_GATE recorded** |
 | LB-007 | Production DB migration convergence unverified | P1_DATA_ENGINE | Needs access this session doesn't have |
 | LB-008 | Live-shaped `THE_ODDS_API_KEY` on a still-public unlanded branch | P0_CORRECTNESS_SECURITY | **Ready for owner action — fingerprint compare, rotate if it matches** |
+| LB-009 | Model Journal public guard missed numeric performance claims | P0_CORRECTNESS_SECURITY | **CLOSED — fixed, tested, never actually exercised in production (LB-006)** |
 
 ## The three immediate owner actions
 
@@ -61,15 +63,25 @@ dependencies, smallest safe fix, verification, and rollback for every item above
 ## What's next
 
 Agent-side: LC-002 (Nightly Sentinel v2) shipped, closing LB-005 -- see `scripts/launch/nightly-sentinel*.mjs`
-and `.github/workflows/nightly-sentinel.yml`. A live dry-run reported WATCH (news-sitemap
-zero-URL WARN, matching LB-006 below; zero FAIL). LC-003 (Security Residue) shipped, closing
+and `.github/workflows/nightly-sentinel.yml`. LC-003 (Security Residue) shipped, closing
 LB-008's investigation and the scanner gap it found -- see `SECURITY_RESIDUE.md` and the new
-`odds-api.key.embedded` rule in `scripts/guardrails/secret-scan.mjs`. Next up: LB-006's short
-investigation (does the news-content pipeline actually have zero eligible items right now, or
-is something silently failing to publish?) before it's classified as a real defect or closed as
-intentional, then LC-004 (Revenue Canary, Stripe test-mode only).
+`odds-api.key.embedded` rule in `scripts/guardrails/secret-scan.mjs`. LC-004 (Revenue Canary,
+Stripe test-mode static audit) and LC-005 (Data and Engine Canary) and LC-006 (Gate Matrix) all
+shipped. LB-006's investigation is now closed: root-caused to `ModelJournalEntry` having no code
+path anywhere that ever sets `status: "PUBLISHED"` -- confirmed this is **deliberate**, not a gap.
+An attempted fix (a new admin-gated `/publish` cockpit route) was built, tripped the
+`draft-only.mjs` CI guardrail (a founder-hardened invariant that blocks ANY application code from
+performing a publish-side write), and was fully reverted rather than weakened. See LB-006's entry
+in the JSON ledger for the full evidence chain and the recorded OWNER_GATE. While investigating,
+gse-red-team found and this session fixed a real, independent gap (LB-009): the Model Journal
+public read-time guard (`apps/web/lib/journal/public-guard.ts`) used a word-list-only scan that
+would have let a numeric fabricated stat ("71% cover rate") through unredacted the moment any
+entry is ever published -- now uses the same `scanPublicCopyForClaims` fix already proven for the
+Blog guard. Next up: LC-007 (Focused Release Candidates) and LC-008 (Release Acceptance).
 
 Owner-side: LB-001, LB-002, and LB-008 first (all three are fast, safe, and either unblock CI +
 auth confidence or close a secrets-hygiene exposure); LB-003's refund-policy decision whenever
-convenient (not urgent-urgent, but real revenue-trust exposure exists until decided); LB-007
-whenever DB access is available to a session that can verify it.
+convenient (not urgent-urgent, but real revenue-trust exposure exists until decided); LB-006's new
+OWNER_GATE whenever the founder wants Model Journal content to actually go live (direct DB action,
+or explicit authorization to add a reviewed exemption to `draft-only.mjs`); LB-007 whenever DB
+access is available to a session that can verify it.

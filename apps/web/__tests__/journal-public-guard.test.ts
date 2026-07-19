@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { guardPublicJournalBody } from "@/lib/journal/public-guard";
+import { guardPublicJournalBody, guardPublicJournalTitle } from "@/lib/journal/public-guard";
 import { scanForBannedPhrases } from "@/lib/trust-claims";
 
 describe("guardPublicJournalBody", () => {
@@ -81,5 +81,48 @@ describe("guardPublicJournalBody", () => {
     // NOT join them (avoids over-blocking legitimate content).
     const twoParagraphs = ["...for a home side that looks sure.", "", "Thing is, the line moved."].join("\n");
     expect(guardPublicJournalBody(twoParagraphs).safe).toBe(true);
+  });
+
+  // gse-red-team, LB-006 investigation (this session): a numeric performance
+  // claim ("closed 12-3 ATS, a 71% cover rate") contains no banned WORD, only
+  // numbers, so the old scanForBannedPhrases-only guard let it through
+  // unredacted -- mirrors apps/web/__tests__/blog-public-guard.test.ts's
+  // identical regression for the blog guard. CLAUDE.md rule #2: no fabricated
+  // stats reaching a public surface.
+  describe("numeric performance claims (no banned word, only numbers)", () => {
+    it("the fixture contains no banned word, only a numeric claim", () => {
+      const dirty = "The model closed 12-3 ATS this cycle, a 71% cover rate, and is up +14 units on the season.";
+      expect(scanForBannedPhrases(dirty)).toHaveLength(0);
+    });
+
+    it("fails safe on a numeric-claim body (percent + record + units, no banned word)", () => {
+      const dirty = "The model closed 12-3 ATS this cycle, a 71% cover rate, and is up +14 units on the season.";
+      const result = guardPublicJournalBody(dirty);
+
+      expect(result.safe).toBe(false);
+      expect(result.body).not.toContain("71%");
+      expect(result.body).not.toContain("12-3 ATS");
+      expect(result.body).not.toContain("+14 units");
+      expect(result.body).toBe(
+        "This Journal entry is being re-reviewed before publication and is temporarily unavailable."
+      );
+    });
+
+    it("guardPublicJournalTitle also catches a numeric-claim title", () => {
+      const dirtyTitle = "Week 12 Recap: 71% Cover Rate and Climbing";
+      expect(scanForBannedPhrases(dirtyTitle)).toHaveLength(0);
+
+      const guarded = guardPublicJournalTitle(dirtyTitle);
+      expect(guarded).not.toContain("71%");
+      expect(guarded).toBe("Model Journal entry");
+    });
+
+    it("still passes clean prose with an unrelated number through unchanged", () => {
+      // A bare number with no performance word nearby must not over-trigger.
+      const clean = "The model considered 30% of available snaps before locking the line.";
+      const result = guardPublicJournalBody(clean);
+      expect(result.safe).toBe(true);
+      expect(result.body).toBe(clean);
+    });
   });
 });

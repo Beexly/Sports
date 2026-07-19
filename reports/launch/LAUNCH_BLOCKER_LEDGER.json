@@ -108,17 +108,27 @@
     {
       "id": "LB-006 (PROD-004)",
       "title": "news-sitemap.xml serves an empty URL set",
-      "classification": "P2_TRUST_UX",
-      "evidence": ["curl of https://www.galaxysportsedge.com/news-sitemap.xml (this session) -> <urlset ...></urlset>, zero <url> entries"],
-      "impact": "Ambiguous by itself. Could be correct (no eligible news content exists right now) or could indicate an ingestion/publication gap in the news-content pipeline.",
-      "blastRadius": "SEO/news-discovery surface only, no correctness/revenue/security exposure identified.",
-      "canonicalOwner": "This campaign (agent-investigable) -- needs a source-side check, not an owner decision, unless investigation finds a real gap.",
-      "dependencies": "None.",
-      "smallestSafeFix": "Not yet determined -- first step is investigation: does the CMS/content pipeline have eligible unpublished news items that should be appearing here? If genuinely zero eligible items exist, this is INTENTIONAL_CLOSED, not a defect.",
-      "verification": "Once the underlying query/source is identified, confirm the sitemap correctly reflects whatever the true eligible-item count is.",
-      "rollback": "N/A pending investigation.",
-      "reEntryCondition": "N/A",
-      "status": "NEEDS_INVESTIGATION"
+      "classification": "INTENTIONAL_CLOSED",
+      "subclass": "Deliberate, founder-hardened publish barrier -- not a defect",
+      "evidence": [
+        "curl of https://www.galaxysportsedge.com/news-sitemap.xml (prior session) -> <urlset ...></urlset>, zero <url> entries",
+        "Root-caused this session: apps/web/lib/journal/load.ts loadPublicJournalEntries()/loadPublicJournalEntry() (the only readers behind news-sitemap.xml, RSS, /journal, /journal/[slug]) filter strictly on ModelJournalEntry.status === \"PUBLISHED\"",
+        "Repo-wide grep for `modelJournalEntry` (excluding node_modules/tests) returns exactly 6 files: create (-> DRAFT), PATCH edit (DRAFT/REVIEW_PENDING only), submit (-> REVIEW_PENDING), retract (PUBLISHED -> RETRACTED only), public-guard.ts, load.ts -- none ever write status:\"PUBLISHED\". The pre-existing test apps/web/__tests__/cockpit-journal-route.test.ts:109 was itself titled 'wires Journal compliance scan before publish transitions exist', confirming this was a known, named gap in application code.",
+        "First attempted this as a code fix: built POST /api/cockpit/journal/[id]/publish (ADMIN-gated, REVIEW_PENDING precondition, fresh compliance re-scan of the DB-sourced body) plus an editor Publish button. `npx vitest run` from apps/web then failed the draft-only guardrail test: scripts/guardrails/draft-only.mjs FAILed with 4 hits, all in the new route file (status:\"PUBLISHED\" / publishedAt:new Date() inside Prisma data: blocks) -- a REQUIRED CI job (.github/workflows/ci.yml) that fails the build on ANY apps/web|components|lib|workers|packages file performing a 'publish-side write', per its own doc comment: 'the read side is the legitimate way to render a manually-published row'",
+        "git log on draft-only.mjs: hardened in commit 0e56c4770e715630eaaac974702336447e367b5a ('close scanner/CI bypasses (#119)'), a founder-authorized merge (2026-07-17) that deliberately stripped bypass-comment exemptions so no code path -- including an admin-gated one -- can carve out an exception",
+        "Same pattern independently confirmed in the parallel ContentDraft/ContentReview system (apps/web/lib/content-engine/types.ts, .../persist-draft.ts:61-62, .../review/route.ts): publishedAt is hard-pinned null and never written by any route either. Two independently-built content pipelines share the identical invariant -- application code may draft/edit/scan/review, but the PUBLISHED flip is deliberately kept outside CI-scanned application code.",
+        "Independently corroborated by gse-verifier this session (confirmed draft-only.mjs is required+deliberately hardened) before the attempted fix (route file + editor button + test file) was fully reverted -- git status --short / git diff --stat both empty, confirmed clean"
+      ],
+      "impact": "None on correctness/security/revenue. The empty news-sitemap.xml is the CORRECT, intended behavior of a deliberately hardened publish barrier, not a pipeline defect -- zero Model Journal entries have ever been published out-of-band, so zero should appear. SEO upside (Google News eligibility) stays unrealized until the founder publishes an entry through the intended out-of-band mechanism.",
+      "blastRadius": "SEO/news-discovery surface only. No correctness/revenue/security exposure.",
+      "canonicalOwner": "Founder -- publishing Model Journal content is an intentional out-of-band action, not an agent-buildable code path.",
+      "dependencies": "None blocking further campaign work. Closed as intentional; does not gate LC-007/LC-008.",
+      "smallestSafeFix": "N/A -- no code fix exists to make. An in-app Publish route/button would require deliberately weakening a founder-hardened CI guardrail explicitly designed to prevent exactly that, which is squarely inside this campaign's own never-auto-publish / never-open-gates-without-founder-authorization boundary.",
+      "verification": "npx vitest run (apps/web) reproduces the draft-only guardrail FAIL when the publish route exists, and OK (0 hits) with it removed. Working tree confirmed clean after revert.",
+      "rollback": "N/A -- no code change shipped for this finding.",
+      "reEntryCondition": "OWNER_GATE. Decision: whether/how Model Journal entries should ever reach PUBLISHED. Why founder authority is required: the only path that doesn't weaken a founder-hardened CI invariant is an out-of-band action outside application code (e.g. a direct DB/Prisma Studio update on a REVIEW_PENDING row) -- or the founder could explicitly authorize a new, narrowly-scoped in-app publish mechanism with a deliberate, reviewed exemption in draft-only.mjs, but broadening that guardrail's allowlist is a founder decision, not an autonomous one. Safe non-destructive default: leave news-sitemap.xml/RSS/journal empty (current, correct state) until the founder chooses a path. Work completed around the gate: root-caused and documented the exact mechanism (this entry); no code changed. Re-entry condition: founder specifies which mechanism they want.",
+      "status": "CLOSED",
+      "closedBy": "Investigation only, claude/gse-launch-convergence -- reclassified INTENTIONAL_CLOSED after reproducing the guardrail's deliberate block; no code shipped"
     },
     {
       "id": "LB-007",
@@ -155,6 +165,27 @@
       "reEntryCondition": "N/A -- single-shot founder action.",
       "status": "READY_FOR_OWNER_ACTION",
       "agentSideWorkAlreadyDone": "Scanner gap closed this session (scripts/guardrails/secret-scan.mjs's new odds-api.key.embedded rule, verified against the full tree with zero false positives); source branch quarantined; fingerprint computed."
+    },
+    {
+      "id": "LB-009",
+      "title": "Model Journal public read-time guard missed numeric performance claims (word-list scan only)",
+      "classification": "P0_CORRECTNESS_SECURITY",
+      "subclass": "Latent/dormant at time of discovery -- fixed proactively, not a live incident",
+      "evidence": [
+        "Found by gse-red-team during the LB-006 investigation: apps/web/lib/journal/public-guard.ts's guardPublicJournalBody/guardPublicJournalTitle called scanForBannedPhrases (apps/web/lib/trust-claims.ts:446) -- a fixed banned-WORD list only. A body like 'The model closed 12-3 ATS this cycle, a 71% cover rate' contains no banned word, only numbers, so it passed the guard unredacted.",
+        "apps/web/lib/blog/public-guard.ts already solved this exact problem for Blog content (public-number-audit-2026-07-16, finding #6) by using scanPublicCopyForClaims (apps/web/lib/trust-claims.ts:624), which adds scanForNumericPerformanceClaims (ROI-of-N%, win-loss records, units-profit claims, percent-near-a-performance-word) on top of the word list -- apps/web/__tests__/blog-public-guard.test.ts already proves this exact regression is closed for Blog. The Model Journal guard was never given the same fix.",
+        "Reproduced directly: 'The model closed 12-3 ATS this cycle, a 71% cover rate, and is up +14 units on the season.' returns zero hits from scanForBannedPhrases (confirmed in apps/web/__tests__/journal-public-guard.test.ts's new test) -- proving the gap was real, not theoretical."
+      ],
+      "impact": "None realized: zero ModelJournalEntry rows have ever reached PUBLISHED (see LB-006), so this guard has never actually been exercised against real content in production. This was a live gap in shipped, reachable code (not a reverted/hypothetical route) that would have let a fabricated numeric stat (CLAUDE.md rule #2: no fabricated stats) reach /journal, /journal/[slug], RSS, and news-sitemap.xml the moment any entry is ever published by whatever mechanism the founder eventually chooses (see LB-006's OWNER_GATE) -- fixed proactively, before it could matter, rather than left for whenever LB-006 is re-entered.",
+      "blastRadius": "Public Model Journal surfaces only, and only once/if the founder ever publishes an entry (LB-006 is CLOSED/OWNER_GATE, zero publish path exists in application code today).",
+      "canonicalOwner": "This campaign (agent-buildable, fixed this session).",
+      "dependencies": "None.",
+      "smallestSafeFix": "Swap scanForBannedPhrases -> scanPublicCopyForClaims in apps/web/lib/journal/public-guard.ts (both functions return the same BannedPhraseHit[] shape; drop-in), mirroring the identical, already-proven blog-guard fix.",
+      "verification": "apps/web/__tests__/journal-public-guard.test.ts: 4 new tests (numeric-claim body redacted, numeric-claim title redacted, clean unrelated-number prose still passes, fixture-contains-no-banned-word sanity check) -- all passing alongside the 5 pre-existing tests in the same file (9/9). npx tsc --noEmit and eslint --max-warnings=0 both clean. node scripts/guardrails/draft-only.mjs still OK (this is a read-time guard change, not a publish-write -- does not touch that invariant).",
+      "rollback": "git revert of a 2-line import/call swap plus its test additions; no schema/route/behavior-contract change.",
+      "reEntryCondition": "N/A -- closed.",
+      "status": "CLOSED",
+      "closedBy": "claude/gse-launch-convergence, apps/web/lib/journal/public-guard.ts + apps/web/__tests__/journal-public-guard.test.ts, found by gse-red-team during the LB-006 investigation"
     }
   ],
   "lc001Status": "SATISFIED_BY_LC000 -- every blocker row already carries the full LC-001 field set (classification from the exact taxonomy above, evidence, impact, blastRadius, canonicalOwner, dependencies, smallestSafeFix, verification, rollback, reEntryCondition). No separate Blocker Graph artifact was built; this ledger IS the Blocker Graph. Re-open LC-001 as a distinct pass only if a future snapshot's evidence no longer maps cleanly onto this taxonomy.",
@@ -162,12 +193,12 @@
     "readyForOwnerActionNow": ["LB-001", "LB-002", "LB-008"],
     "ownerGatePendingPolicyDecision": ["LB-003"],
     "agentBuildableNext": [],
-    "closedThisSession": ["LB-005"],
-    "needsInvestigation": ["LB-006"],
+    "closedThisSession": ["LB-005", "LB-006", "LB-009"],
+    "needsInvestigation": [],
     "needsAccessNotAvailableThisSession": ["LB-007"],
-    "totalConfirmedLiveDefects": 7,
-    "totalConfirmedLiveDefectsCountingConvention": "Counts LB-001 through LB-006 and LB-008 (every item independently evidenced by a direct fetch/curl/git-diff/fingerprint this session or a cross-referenced prior session) but excludes LB-007, which has zero evidence gathered (NOT_TESTED_NEEDS_ACCESS -- no DB credentials available) and is a flagged risk area, not a confirmed defect. An independent gse-red-team pass on this exact figure (LC-003) could not fully re-derive the pre-existing baseline of 6 from the diff alone and flagged it as open; re-deriving it directly from the blockers array here resolves it: LB-001..006 = 6, LB-007 excluded by the stated convention, so 6 -> 7 after LB-008 is correct.",
+    "totalConfirmedLiveDefects": 8,
+    "totalConfirmedLiveDefectsCountingConvention": "Counts LB-001 through LB-006 and LB-008 through LB-009 (every item independently evidenced by a direct fetch/curl/git-diff/fingerprint/code-trace this session or a cross-referenced prior session) but excludes LB-007, which has zero evidence gathered (NOT_TESTED_NEEDS_ACCESS -- no DB credentials available) and is a flagged risk area, not a confirmed defect. LB-006 counts here even though its final disposition is INTENTIONAL_CLOSED/OWNER_GATE, not a code defect -- the counting convention tracks confirmed, evidenced findings regardless of whether the resolution was a code fix or a correct-as-designed determination.",
     "zeroConfirmedP0CorrectnessSecurityFindings": false,
-    "note": "LC-000's original pass found zero P0_CORRECTNESS_SECURITY items. LC-003 (this session) found one: LB-008, a live-shaped credential exposed on a still-public unlanded branch -- not a production code defect, but real secrets-hygiene exposure with a precise, low-risk owner action (fingerprint compare, rotate only if it matches). LB-001, LB-002, and LB-008 all have a clear, immediate, low-risk owner action available today. LB-008's finding, scanner fix, and owner instructions were independently red-teamed; the fingerprint was confirmed correct, two real scanner-rule bypasses (colon-equals, bracket-notation) were found and closed, and two real gaps in the owner instructions (shell-history leak risk, false-assurance-from-unset-variable) were found and closed -- see SECURITY_RESIDUE.{json,md} for the full before/after."
+    "note": "LC-000's original pass found zero P0_CORRECTNESS_SECURITY items. LC-003 found LB-008 (live-shaped credential exposure, owner rotation action pending). This session's LB-006 investigation found LB-009 (Model Journal public read-time guard missed numeric performance claims -- fixed, see below) and, more importantly, discovered that LB-006 itself is NOT a defect: the empty news-sitemap.xml is the correct output of a deliberately founder-hardened CI guardrail (scripts/guardrails/draft-only.mjs, hardened in founder-authorized commit 0e56c477) that blocks ANY application code -- including an admin-gated cockpit route -- from ever setting a content row to PUBLISHED. An attempted code fix (a new /publish route) was built, caught this guardrail, and was fully reverted rather than weakened or bypassed; LB-006 is now CLOSED as INTENTIONAL_CLOSED with an OWNER_GATE recorded for how the founder wants to actually publish Model Journal content. LB-001, LB-002, and LB-008 all have a clear, immediate, low-risk owner action available today. LB-008's finding, scanner fix, and owner instructions were independently red-teamed; the fingerprint was confirmed correct, two real scanner-rule bypasses (colon-equals, bracket-notation) were found and closed, and two real gaps in the owner instructions (shell-history leak risk, false-assurance-from-unset-variable) were found and closed -- see SECURITY_RESIDUE.{json,md} for the full before/after. LB-006/LB-009 were independently verified (gse-verifier confirmed the draft-only guardrail is deliberately hardened; gse-red-team found LB-009 directly) before this ledger was finalized."
   }
 }
