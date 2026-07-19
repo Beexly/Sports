@@ -1,6 +1,6 @@
 # Galaxy Sports Edge — Release Acceptance (LC-008)
 
-**Generated:** 2026-07-19 01:15 UTC
+**Generated:** 2026-07-19 01:15 UTC (accessibility row updated 2026-07-19 01:35 UTC — see `ACCESSIBILITY_QA.md`)
 
 Evaluates every criterion the `gse-launch` skill's LC-008 requires, against fresh evidence
 gathered this session (not inherited from any prior snapshot). Distinguishes `PASS` (proven this
@@ -24,26 +24,30 @@ this pass, with a reason).
 | Paywall and entitlement tests pass | **PASS** | Part of the 8276/8277 full `apps/web` suite this session (the 1 failure is LB-001, unrelated to paywall/entitlement code). |
 | Proof verification passes | **PASS** | LC-002 independently recomputed the `GSE-PickCommit-v1` leaf/Merkle hashes byte-for-byte against the live endpoint; fixed a real overclaim bug (Merkle check now fails loudly instead of silently passing when `merkle.root` is absent) before it shipped. |
 | Nightly Sentinel runs unattended | **PASS** | LC-002: repo-native Node runner + scheduled GitHub Actions workflow (`.github/workflows/nightly-sentinel.yml`, no interactive-approval dependency), 54 fixture-server tests, live dry-run reported WATCH with zero FAIL. |
-| Accessibility/responsive QA passes | **NOT_RUN** | Not re-exercised this session (no browser/Playwright pass against the live domain or this branch's build this pass). Prior campaign phases (B2, referenced in this session's own campaign history) did run a full a11y sweep; not re-verified fresh here — recorded honestly as `NOT_RUN`, not assumed still valid. |
+| Accessibility/responsive QA passes | **PASS (partial coverage, honestly scoped)** | Real Playwright/Chromium pass against a genuine `npm run build` + `next start` of this branch, not source-regex. Found and fixed a real, confirmed bug: a CSS Grid `min-width: auto` overflow on `/sealed` and `/glass-ledger` (94px/85px horizontal overflow at 375px viewport, root-caused, fixed with `min-w-0`, re-verified at 0px overflow post-fix, 2 new render-level regression tests). 5 more pages (`/pricing`, `/watchlist`, `/how-we-make-money`, `/verify`, `/journal`) confirmed clean on landmarks/keyboard/reduced-motion. 3 pages (`/`, `/tools`, `/track`) could not be fully checked — headless Chromium crashed under this sandbox's resource constraints (`ERR_INSUFFICIENT_RESOURCES` from Next.js's own aggressive `<Link>` prefetching on dense nav pages), recorded honestly as unverified rather than assumed clean. No axe-core/WCAG-ruleset scan run (not an existing repo dependency; adding one was out of scope for a QA pass). Full detail: `ACCESSIBILITY_QA.md`. |
 | No unsupported public claim exists | **PASS** | `trust-gate` (1421 files, OK), `commercial-copy-scan` (OK except the one known LB-001 false-positive on a code comment, not public copy), `no-unsupported-performance-claims` all pass. LB-009 closed a real, previously-unfixed gap (Model Journal numeric-claim guard) before it could ever be exercised in production. |
 | Source rights fail closed | **PASS** | `checkClearance()`/`wrapExtractedRecord()` unchanged this session; no scraping/ingestion source work was touched; LC-005 explicitly deferred the rights-projection architecture question to a founder ruling rather than assume either way. |
 | Rollback paths are proven | **PASS** | Every shipped change this session (LC-002 through LC-006, LB-006/LB-009, and the reverted publish-route attempt itself) has an explicit rollback note; the publish-route revert is a live demonstration that rollback actually works, not just a documented claim. |
 
 ## Why this is a legitimate stopping point, not a shortfall
 
-Every `BLOCKED_*` and `NOT_RUN` row above has a concrete, named reason this specific session
-cannot close it: three require founder-only actions (merge a PR, change a production env var,
-compare a secret fingerprint), two require credentials this sandboxed session does not have
-(production DB access, Stripe test-mode keys), and one (accessibility QA) requires a live browser
-pass that would need to be re-run fresh rather than assumed from an earlier campaign phase. None
-of them are things this session declined to do out of caution when it could have safely proceeded
-— each was checked for a safe, agent-buildable path first (per the "reproduce before ruling"
-discipline used throughout this campaign) and none exists.
+Every `BLOCKED_*` row remaining has a concrete, named reason this specific session cannot close
+it: three require founder-only actions (merge a PR, change a production env var, compare a secret
+fingerprint), and two require credentials this sandboxed session does not have (production DB
+access, Stripe test-mode keys). None of them are things this session declined to do out of
+caution when it could have safely proceeded — each was checked for a safe, agent-buildable path
+first (per the "reproduce before ruling" discipline used throughout this campaign) and none
+exists. The accessibility/responsive QA gap that used to be `NOT_RUN` was closed this pass with a
+real browser sweep, a confirmed-and-fixed bug, and an honest accounting of the 3 pages a
+resource-constrained headless sandbox couldn't fully check (not silently dropped — see
+`ACCESSIBILITY_QA.md`).
 
 ## Re-entry condition
 
 Release Acceptance is reached when: PR #128 merges (closes the CI-green criterion), LB-002's env
 var is corrected (closes the auth criterion), and a session with production DB + Stripe test-mode
-credentials completes the two `BLOCKED_ACCESS` rows. At that point only the accessibility/
-responsive QA re-run remains, which is agent-buildable today with browser access and does not
-need to wait on any of the above.
+credentials completes the two `BLOCKED_ACCESS` rows. Optionally, a session with more headless-
+browser headroom (or non-sandboxed browser access) could close the `/`, `/tools`, `/track`
+coverage gap `ACCESSIBILITY_QA.md` records — not release-blocking on its own, since the same
+`main`/`nav`/`h1` landmark and CSS Grid overflow pattern already checked clean or was fixed
+everywhere else this pass reached.

@@ -82,6 +82,28 @@ describe("/sealed — SEALED_ENGINE_ENABLED unset (default): honest 'being built
     expect(text).toContain("scripts/edge-lab/recompute.ts");
   });
 
+  it("keeps the verify-path cards from blowing out the page width on narrow viewports", async () => {
+    // Regression: the "Live re-fold" / "Offline recompute" cards sit in a
+    // `grid sm:grid-cols-2` with a `whitespace-pre` <code> command inside.
+    // CSS Grid items default to `min-width: auto`, so the unbreakable command
+    // string forced the card (and the whole page) wider than the viewport on
+    // mobile even though the <code> element itself has overflow-x-auto —
+    // confirmed via a real 375px-viewport Playwright measurement
+    // (scrollWidth 469 vs clientWidth 375). `min-w-0` on the grid item is the
+    // fix; pin it so it can't silently regress.
+    const { default: SealedPage } = await import("@/app/sealed/page");
+    const { container } = render(await SealedPage());
+
+    const liveRefoldHeading = Array.from(container.querySelectorAll("h3")).find(
+      (el) => el.textContent === "Live re-fold"
+    );
+    const offlineRecomputeHeading = Array.from(container.querySelectorAll("h3")).find(
+      (el) => el.textContent === "Offline recompute"
+    );
+    expect(liveRefoldHeading?.parentElement?.className).toContain("min-w-0");
+    expect(offlineRecomputeHeading?.parentElement?.className).toContain("min-w-0");
+  });
+
   it("refuses fabrication explicitly and never uses banned performance language", async () => {
     const { default: SealedPage } = await import("@/app/sealed/page");
     const { container } = render(await SealedPage());

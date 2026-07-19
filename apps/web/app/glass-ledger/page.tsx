@@ -411,7 +411,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
 
           <div className="mt-10 grid gap-5 sm:grid-cols-3">
             {SEALED_VAULT_SECTIONS.map((section, i) => (
-              <article key={section.title} className="surface-card p-6">
+              <article key={section.title} className="surface-card min-w-0 p-6">
                 <span aria-hidden="true" className="font-mono text-2xl tabular-nums text-orbital-cyan">
                   0{i + 1}
                 </span>

@@ -90,6 +90,21 @@ describe("/ledger — PUBLISH_LEDGER unset (default): honest unpublished state",
     expect(text).toContain("scripts/edge-lab/recompute.ts");
   });
 
+  it("keeps the vault-section cards from blowing out the page width on narrow viewports", async () => {
+    // Regression: the sealed-vault `grid sm:grid-cols-3` cards embed a
+    // `whitespace-pre` <code> command ("Independently re-computable"). Grid
+    // items default to `min-width: auto`, so the unbreakable command string
+    // forced the card wider than the viewport on mobile — the same confirmed
+    // bug as /sealed's verify-path cards (see sealed-slate-page.test.tsx).
+    // `min-w-0` on the grid item is the fix; pin it so it can't regress.
+    const { container } = render(await LedgerPage());
+
+    const heading = Array.from(container.querySelectorAll("h2")).find(
+      (el) => el.textContent === "Independently re-computable"
+    );
+    expect(heading?.parentElement?.className).toContain("min-w-0");
+  });
+
   it("carries the ALL-picks-default / transparency-tool sentence", async () => {
     const { container } = render(await LedgerPage());
     const text = container.textContent ?? "";

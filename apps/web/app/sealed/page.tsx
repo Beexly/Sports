@@ -168,7 +168,7 @@ function VerifyPlaque(): JSX.Element {
         machine.
       </p>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-mineral bg-eclipse/50 p-4">
+        <div className="min-w-0 rounded-xl border border-mineral bg-eclipse/50 p-4">
           <h3 className="text-sm font-semibold text-white">Live re-fold</h3>
           <p className="mt-1 text-xs leading-5 text-ion-2">
             The verifier re-folds the whole slate from its public receipt fingerprints and confirms
@@ -178,7 +178,7 @@ function VerifyPlaque(): JSX.Element {
             GET /api/verify/slate?slateKey=SPORT:YYYY-MM-DD
           </code>
         </div>
-        <div className="rounded-xl border border-mineral bg-eclipse/50 p-4">
+        <div className="min-w-0 rounded-xl border border-mineral bg-eclipse/50 p-4">
           <h3 className="text-sm font-semibold text-white">Offline recompute</h3>
           <p className="mt-1 text-xs leading-5 text-ion-2">
             Export the chain and replay every hash link and every settled figure with the open,
