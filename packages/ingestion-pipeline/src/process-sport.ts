@@ -37,6 +37,7 @@ import {
   scoreGames,
   buildPickSignalSnapshot,
   buildPickProofReceipt,
+  selectionIsHomeSide,
 } from "@sports/prediction-engine";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
@@ -56,6 +57,7 @@ import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
 import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archive.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
+import { bookLineDispersion } from "./book-dispersion.js";
 
 export interface SportConfig {
   key: SupportedSportKey;
@@ -128,6 +130,48 @@ export function pickSelectionSide(pickType: string, selection: string): string {
   // SPREAD: strip the trailing points token (e.g. "-3.5", "+7").
   const lastSpace = trimmed.lastIndexOf(" ");
   return lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed;
+}
+
+/**
+ * Book-line dispersion at lock for one game, per pick kind, captured once while
+ * every book's line is in hand. MONEYLINE is split by SIDE because home and away
+ * American prices are not complementary (vig): an away-ML pick must persist the
+ * AWAY side's disagreement, not the home side's, or the CLV decomposition's
+ * liquidity regressor is permanently corrupted for away-ML picks. `homeTeam` and
+ * `awayTeam` let the capture resolve a pick's ML side via the canonical,
+ * boundary-aware `selectionIsHomeSide` (not the spaced-prefix heuristic).
+ */
+interface GameDispersion {
+  readonly SPREAD: number | null;
+  readonly TOTAL: number | null;
+  readonly moneylineHome: number | null;
+  readonly moneylineAway: number | null;
+  readonly homeTeam: string;
+  readonly awayTeam: string;
+}
+
+/**
+ * The book-line disagreement to persist as a pick's write-once
+ * `bookDisagreementAtLock`. SPREAD/TOTAL dispersion is side-agnostic. MONEYLINE
+ * resolves to the side the pick is actually on using the canonical
+ * `selectionIsHomeSide` (boundary-aware, most-specific-match — the same side
+ * resolution settlement uses; see packages/prediction-engine/src/settlement.ts)
+ * — home → the home dispersion, otherwise the away dispersion. Returns null
+ * when the game's dispersion was not captured or fewer than two books quoted
+ * the relevant side (the per-side `<2 books → null` semantics are preserved).
+ */
+export function bookDisagreementForPick(
+  pick: { readonly pickType: string; readonly selection: string },
+  disp: GameDispersion | undefined,
+): number | null {
+  if (!disp) return null;
+  if (pick.pickType === "SPREAD") return disp.SPREAD;
+  if (pick.pickType === "TOTAL") return disp.TOTAL;
+  if (pick.pickType === "MONEYLINE") {
+    const pickedHome = selectionIsHomeSide(pick.selection, disp.homeTeam, disp.awayTeam);
+    return pickedHome ? disp.moneylineHome : disp.moneylineAway;
+  }
+  return null;
 }
 
 export async function processSport(
@@ -308,6 +352,11 @@ export async function processSport(
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
 
+    // gameId -> per-kind book-line dispersion at lock, filled in the game loop
+    // and read at pick creation (a separate loop over scoredPicks below).
+    // MONEYLINE is stored per side (home/away are not complementary).
+    const dispersionByGame = new Map<string, GameDispersion>();
+
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
@@ -324,6 +373,21 @@ export async function processSport(
         gameId: gameRecord.id,
         capturedAt: fetchedAt,
         rows: toLineSnapshotRows(gameOdds),
+      });
+
+      // Capture the book-line dispersion (max−min across books) per kind NOW,
+      // while every book's line for this game is in hand. It is the CLV
+      // decomposition's liquidity regressor (bookDisagreementAtLock) and cannot
+      // be honestly reconstructed later; persisted write-once at pick creation.
+      // MONEYLINE is captured for BOTH sides (home/away prices carry vig and are
+      // not complementary); the capture below selects the published side.
+      dispersionByGame.set(gameRecord.id, {
+        SPREAD: bookLineDispersion("SPREAD", gameOdds),
+        TOTAL: bookLineDispersion("TOTAL", gameOdds),
+        moneylineHome: bookLineDispersion("MONEYLINE", gameOdds, "home"),
+        moneylineAway: bookLineDispersion("MONEYLINE", gameOdds, "away"),
+        homeTeam: game.homeTeam,
+        awayTeam: game.awayTeam,
       });
 
       const bookmakerCoverageMax = new Set(gameOdds.map((o) => o.bookmaker)).size;
@@ -520,6 +584,16 @@ export async function processSport(
             // points line. Graded against the closing line at settlement.
             clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
             clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
+            // Book-line dispersion at lock — the CLV decomposition's liquidity
+            // regressor, captured write-once (absent from `update`, like the CLV
+            // lock). For MONEYLINE this resolves to the PUBLISHED side (home vs
+            // away) via the canonical selectionIsHomeSide, so an away-ML pick
+            // locks the away side's disagreement. null when <2 books quoted the
+            // relevant side at publish.
+            bookDisagreementAtLock: bookDisagreementForPick(
+              pick,
+              dispersionByGame.get(pick.gameId),
+            ),
             ...pickUpdateData,
           },
           update: {

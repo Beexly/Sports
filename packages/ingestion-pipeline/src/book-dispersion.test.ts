@@ -24,7 +24,7 @@ describe("bookLineDispersion", () => {
     expect(bookLineDispersion("TOTAL", odds)).toBeCloseTo(1.0, 10); // 9 - 8
   });
 
-  it("MONEYLINE: dispersion of home implied probability across books", () => {
+  it("MONEYLINE: dispersion of home implied probability across books (default side = home)", () => {
     // -150 → 0.6, +150 → 0.4 ; dispersion = 0.2
     const odds = [
       row({ market: "H2H", homePrice: -150 }),
@@ -33,6 +33,35 @@ describe("bookLineDispersion", () => {
     const d = bookLineDispersion("MONEYLINE", odds);
     expect(d).not.toBeNull();
     expect(d!).toBeCloseTo(0.2, 10);
+  });
+
+  it("MONEYLINE: measures the PUBLISHED side — away dispersion uses away prices, not home", () => {
+    // Books AGREE exactly on the home price (both -150 → 0.6) but DISAGREE on the
+    // away price. American odds carry vig, so home/away are NOT complementary: the
+    // home side shows 0 dispersion while the away side shows real disagreement.
+    // A home-hardcoded implementation would persist 0 for an away-ML pick here.
+    const odds = [
+      row({ market: "H2H", homePrice: -150, awayPrice: 130 }),
+      row({ market: "H2H", homePrice: -150, awayPrice: 110 }),
+    ];
+    // home: both -150 → 0.6 → dispersion exactly 0
+    expect(bookLineDispersion("MONEYLINE", odds, "home")).toBe(0);
+    // away: +130 → 100/230, +110 → 100/210 → real dispersion > 0
+    const away = bookLineDispersion("MONEYLINE", odds, "away");
+    expect(away).not.toBeNull();
+    expect(away!).toBeGreaterThan(0);
+    expect(away!).toBeCloseTo(100 / 210 - 100 / 230, 10);
+  });
+
+  it("MONEYLINE: < 2 books quoting a side → null for THAT side (per-side null semantics)", () => {
+    // Two H2H rows, but only ONE carries an away price. The away side has a single
+    // valid quote → null; the home side has two quotes → a real value (here 0).
+    const odds = [
+      row({ market: "H2H", homePrice: -150, awayPrice: 130 }),
+      row({ market: "H2H", homePrice: -150 }), // no away price → skipped for away
+    ];
+    expect(bookLineDispersion("MONEYLINE", odds, "away")).toBeNull(); // only 1 away quote
+    expect(bookLineDispersion("MONEYLINE", odds, "home")).toBe(0); // 2 home quotes, agree
   });
 
   it("returns null when only one book quotes the kind (no disagreement to measure)", () => {
