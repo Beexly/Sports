@@ -11,6 +11,11 @@ export const WINDOW_START = Date.parse("2026-02-01T00:00:00.000Z");
 export const WINDOW_END = Date.parse("2026-04-01T00:00:00.000Z");
 export const WINDOW_REGISTERED_AT = "2026-01-15T00:00:00.000Z";
 
+/** The pre-registered event universe evt-0..evt-(n-1), matching makeBrierRows ids. */
+export function eventUniverse(n: number): string[] {
+  return Array.from({ length: n }, (_, i) => `evt-${i}`);
+}
+
 export function baseWindow(overrides: Partial<RegisteredWindow> = {}): RegisteredWindow {
   return {
     windowId: "w-test",
@@ -24,6 +29,10 @@ export function baseWindow(overrides: Partial<RegisteredWindow> = {}): Registere
     minClvN: 100,
     concurrentChallengers: 1,
     alpha: 0.05,
+    // Matches the suite's standard makeBrierRows(600, ...) fixtures: full
+    // coverage of a 600-event registered universe.
+    registeredEventIds: eventUniverse(600),
+    coverageFloor: 0.95,
     ...overrides,
   };
 }

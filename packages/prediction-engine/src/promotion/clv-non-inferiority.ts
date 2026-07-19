@@ -52,6 +52,14 @@ function mean(xs: readonly number[]): number {
   return s / xs.length;
 }
 
+/** Sample variance (ddof = 1); 0 when n < 2. */
+function sampleVariance(xs: readonly number[], m: number): number {
+  if (xs.length < 2) return 0;
+  let s = 0;
+  for (const x of xs) s += (x - m) ** 2;
+  return s / (xs.length - 1);
+}
+
 export function welchOneSidedNonInferiority(
   challengerClv: readonly number[],
   championClv: readonly number[],
@@ -79,6 +87,44 @@ export function welchOneSidedNonInferiority(
       reason:
         `insufficient graded CLV rows (need >= ${options.minN} per side, got ` +
         `champion=${nChampion}, challenger=${nChallenger})`,
+    };
+  }
+
+  // Degenerate zero-variance case: when BOTH samples are constant, the
+  // Welch standard error is 0 and welchCompare returns the neutral
+  // {z: 0, pValue: 1}, which would fail the leg even when the observed
+  // constant means differ decisively. With >= minN identical values per
+  // side there is no sampling-noise model left to test — the evidence is
+  // deterministic (common with flat or heavily-rounded CLV grades), so
+  // decide by direct comparison of the non-inferiority statistic instead
+  // of reporting "no evidence".
+  const varChallenger = sampleVariance(challengerClv, meanChallenger);
+  const varChampion = sampleVariance(championClv, meanChampion);
+  // "Zero" up to float summation residue: a sample of identical stored CLV
+  // values can yield a variance around 1e-36 rather than exactly 0 (mean
+  // round-off), while any REAL spread in graded CLV (values differing by
+  // even 1e-7 across >= minN rows) produces variance many orders above this
+  // threshold. 1e-24 cleanly separates the two regimes.
+  const ZERO_VARIANCE = 1e-24;
+  if (varChallenger <= ZERO_VARIANCE && varChampion <= ZERO_VARIANCE) {
+    const statistic = meanChallenger - meanChampion + options.epsilon;
+    const degeneratePass = statistic > 0;
+    return {
+      nChampion,
+      nChallenger,
+      meanChampion,
+      meanChallenger,
+      z: degeneratePass ? Infinity : -Infinity,
+      oneSidedP: degeneratePass ? 0 : 1,
+      zCrit,
+      epsilon: options.epsilon,
+      alphaAdj: options.alphaAdj,
+      minN: options.minN,
+      pass: degeneratePass,
+      reason: degeneratePass
+        ? undefined
+        : `zero-variance samples with mean(challenger) - mean(champion) + epsilon = ${statistic.toFixed(6)} <= 0 ` +
+          "(deterministic inferiority beyond the margin)",
     };
   }
 

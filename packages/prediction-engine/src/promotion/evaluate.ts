@@ -37,12 +37,18 @@ export function evaluatePromotion(input: PromotionInput, now: string): Promotion
   const m = window.concurrentChallengers;
   const alphaAdj = window.alpha / m;
 
-  // Leg 1 — paired Brier differential, empirical-Bernstein LCB.
+  // Leg 1 — paired Brier differential, empirical-Bernstein LCB, plus the
+  // coverage requirement over the pre-registered event universe (integrity
+  // has already rejected out-of-universe and duplicate event ids, so `n`
+  // counts distinct registered events).
   const diffs = brierRows.map(
     (r) => (r.championProb - r.outcome) ** 2 - (r.challengerProb - r.outcome) ** 2,
   );
   const eb = pairedBrierLcb(diffs, alphaAdj);
-  const leg1Pass = eb.n >= window.nMin && eb.lcb > window.deltaPrac;
+  const registeredEvents = window.registeredEventIds.length;
+  const coverage = eb.n / registeredEvents;
+  const coveragePass = coverage >= window.coverageFloor;
+  const leg1Pass = eb.n >= window.nMin && coveragePass && eb.lcb > window.deltaPrac;
   const leg1: Leg1Result = {
     n: eb.n,
     meanD: eb.meanD,
@@ -50,12 +56,18 @@ export function evaluatePromotion(input: PromotionInput, now: string): Promotion
     lcb: eb.lcb,
     deltaPrac: window.deltaPrac,
     nMin: window.nMin,
+    registeredEvents,
+    coverage,
+    coverageFloor: window.coverageFloor,
     pass: leg1Pass,
     reason: leg1Pass
       ? undefined
       : eb.n < window.nMin
         ? `n=${eb.n} < N_min=${window.nMin}`
-        : `lcb=${eb.lcb.toFixed(6)} <= deltaPrac=${window.deltaPrac}`,
+        : !coveragePass
+          ? `coverage=${coverage.toFixed(4)} < coverageFloor=${window.coverageFloor} — the paired sample ` +
+            "does not cover the registered event universe (challenger abstention/cherry-picking)"
+          : `lcb=${eb.lcb.toFixed(6)} <= deltaPrac=${window.deltaPrac}`,
   };
 
   // Leg 2 — CLV non-inferiority, unpaired Welch, over the shadow-lane rows.

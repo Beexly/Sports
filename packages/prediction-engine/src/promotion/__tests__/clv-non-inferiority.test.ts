@@ -46,6 +46,31 @@ describe("welchOneSidedNonInferiority", () => {
     expect(result.zCrit).not.toBeCloseTo(1.64485, 2); // not the skeleton's hardcoded alpha=0.05 value
   });
 
+  it("zero-variance samples decide deterministically instead of failing on a degenerate SE=0 Welch test", () => {
+    // 100 challenger rows all at +0.02 vs 100 champion rows all at 0: no
+    // sampling-noise model applies; the observed non-inferiority statistic
+    // (+0.02 + epsilon) is deterministic evidence, not "no evidence".
+    const challenger = Array.from({ length: 100 }, () => 0.02);
+    const champion = Array.from({ length: 100 }, () => 0);
+    const pass = welchOneSidedNonInferiority(challenger, champion, {
+      epsilon: 0.0005,
+      alphaAdj: 0.05,
+      minN: 100,
+    });
+    expect(pass.pass).toBe(true);
+    expect(pass.oneSidedP).toBe(0);
+
+    // ...and deterministic INFERIORITY beyond the margin still fails.
+    const worse = Array.from({ length: 100 }, () => -0.02);
+    const fail = welchOneSidedNonInferiority(worse, champion, {
+      epsilon: 0.0005,
+      alphaAdj: 0.05,
+      minN: 100,
+    });
+    expect(fail.pass).toBe(false);
+    expect(fail.reason).toMatch(/zero-variance/);
+  });
+
   it("a tighter alphaAdj (Bonferroni) can flip an otherwise-passing result to fail", () => {
     // Constructed (and verified numerically) so the one-sided p lands at
     // ~0.01296 — strictly between 0.01 and 0.05 — so alpha=0.05 passes and

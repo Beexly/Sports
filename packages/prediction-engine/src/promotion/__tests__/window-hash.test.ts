@@ -15,6 +15,8 @@ const window: RegisteredWindow = {
   minClvN: 100,
   concurrentChallengers: 1,
   alpha: 0.05,
+  registeredEventIds: ["evt-1", "evt-2"],
+  coverageFloor: 0.95,
 };
 
 describe("computeWindowHash", () => {
@@ -31,6 +33,7 @@ describe("computeWindowHash", () => {
       window: {
         alpha: window.alpha,
         concurrentChallengers: window.concurrentChallengers,
+        coverageFloor: window.coverageFloor,
         deltaPrac: window.deltaPrac,
         end: window.end,
         epsilonClv: window.epsilonClv,
@@ -38,6 +41,7 @@ describe("computeWindowHash", () => {
         minClvN: window.minClvN,
         nMin: window.nMin,
         registeredAt: window.registeredAt,
+        registeredEventIds: window.registeredEventIds,
         start: window.start,
         windowId: window.windowId,
       },
@@ -56,6 +60,7 @@ describe("computeWindowHash", () => {
     const reordered: RegisteredWindow = {
       alpha: window.alpha,
       concurrentChallengers: window.concurrentChallengers,
+      coverageFloor: window.coverageFloor,
       deltaPrac: window.deltaPrac,
       end: window.end,
       epsilonClv: window.epsilonClv,
@@ -63,6 +68,7 @@ describe("computeWindowHash", () => {
       minClvN: window.minClvN,
       nMin: window.nMin,
       registeredAt: window.registeredAt,
+      registeredEventIds: window.registeredEventIds,
       start: window.start,
       windowId: window.windowId,
     };

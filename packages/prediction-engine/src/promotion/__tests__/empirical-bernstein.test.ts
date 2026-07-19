@@ -27,21 +27,23 @@ describe("pairedBrierLcb", () => {
     //       = 0.0158113883 * 1.21472497...
     //       = 0.0192064558...
     //
-    // term2 = 7 * ln(2/delta) / (3 * (n - 1))
-    //       = 7 * 3.68887945411 / (3 * 4)
-    //       = 25.8221561788 / 12
-    //       = 2.15184634823...
+    // term2 = (b - a) * 7 * ln(2/delta) / (3 * (n - 1)),  (b - a) = 2 because
+    //         the Brier differential spans [-1, 1] (range width 2 — the
+    //         Maurer–Pontil additive penalty scales with the range)
+    //       = 2 * 7 * 3.68887945411 / (3 * 4)
+    //       = 51.6443123576 / 12
+    //       = 4.30369269647...
     //
     // LCB = dbar - term1 - term2
-    //     = 0.01 - 0.0192064558 - 2.1518463482
-    //     = -2.1610528041 (approx)
+    //     = 0.01 - 0.0192064558 - 4.3036926965
+    //     = -4.3128991523 (approx)
     const diffs = [0.01, 0.03, -0.01, 0.02, 0.0];
     const result = pairedBrierLcb(diffs, 0.05);
 
     expect(result.n).toBe(5);
     expect(result.meanD).toBeCloseTo(0.01, 10);
     expect(result.stdD).toBeCloseTo(0.015811388300841896, 10);
-    expect(result.lcb).toBeCloseTo(-2.1610528040595276, 9);
+    expect(result.lcb).toBeCloseTo(-4.312899152292657, 9);
 
     // n = 5 is tiny — the 7*ln(2/delta)/(3(n-1)) term dominates and swamps
     // the mean, which is exactly why the contract requires n >= N_min = 500

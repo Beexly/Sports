@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { evaluatePromotion, recomputePromotionDecision } from "../evaluate.js";
 import { PromotionIntegrityError } from "../integrity.js";
 import type { PromotionInput } from "../types.js";
-import { baseWindow, deterministicOutcome, makeBrierRows, makeClvRows } from "./fixtures.js";
+import { baseWindow, deterministicOutcome, eventUniverse, makeBrierRows, makeClvRows } from "./fixtures.js";
 
 const NOW = "2026-04-02T00:00:00.000Z";
 
@@ -147,14 +147,15 @@ describe("evaluatePromotion — Bonferroni adjustment (contract §4)", () => {
   it("with concurrentChallengers=5, a challenger passing at alpha=0.05 unadjusted fails at alpha/5=0.01", () => {
     // championProb fixed at 0.5, outcome fixed at 1 ⇒ (p_C - y)^2 = 0.25 always.
     // challengerProb is back-solved so that d_i = 0.25 - (p_K - 1)^2 follows
-    // d_i(i) = 0.02 + 0.03*sin(i * 2.399963), a fixture verified numerically
-    // (see empirical-bernstein hand computation) to give:
-    //   LCB(delta=0.05) ≈ +0.00326  (> deltaPrac = 0.002 ⇒ Leg 1 passes)
-    //   LCB(delta=0.01) ≈ -0.00348  (<= deltaPrac ⇒ Leg 1 fails)
+    // d_i(i) = 0.034 + 0.03*sin(i * 2.399963), a fixture verified numerically
+    // against the range-corrected empirical-Bernstein bound (additive
+    // penalty × range width 2) to give:
+    //   LCB(delta=0.05) ≈ +0.00289  (> deltaPrac = 0.002 ⇒ Leg 1 passes)
+    //   LCB(delta=0.01) ≈ -0.01012  (<= deltaPrac ⇒ Leg 1 fails)
     const championProb = () => 0.5;
     const outcome = (): 0 | 1 => 1;
     const challengerProb = (i: number) => {
-      const d = 0.02 + 0.03 * Math.sin(i * 2.399963);
+      const d = 0.034 + 0.03 * Math.sin(i * 2.399963);
       return 1 - Math.sqrt(Math.max(0, 0.25 - d));
     };
     const brierRows = makeBrierRows(600, championProb, challengerProb, outcome);
@@ -208,5 +209,43 @@ describe("evaluatePromotion — Leg 3 integrity is enforced before any statistic
       clvRows: [],
     };
     expect(() => evaluatePromotion(input, NOW)).toThrow(PromotionIntegrityError);
+  });
+});
+
+describe("coverage over the registered event universe (anti-cherry-picking)", () => {
+  const championProb = (i: number) => 0.5 + 0.05 * Math.sin(i);
+  const challengerProb = (i: number) => 0.5 + 0.049 * Math.sin(i);
+  const outcome = deterministicOutcome(() => 0.5);
+
+  it("a paired sample covering less than coverageFloor of the registered universe fails Leg 1 with a coverage reason", () => {
+    // 520 rows over a 600-event universe = 86.7% coverage < 95% floor,
+    // even though n=520 satisfies nMin=500.
+    const brierRows = makeBrierRows(520, championProb, challengerProb, outcome);
+    const input: PromotionInput = {
+      window: baseWindow(),
+      championId: "champ",
+      challengerId: "chal",
+      codeRevision: "test-rev",
+      brierRows,
+      clvRows: makeClvRows(120, () => 0.01, () => 0.01),
+    };
+    const decision = evaluatePromotion(input, NOW);
+    expect(decision.leg1.pass).toBe(false);
+    expect(decision.leg1.coverage).toBeCloseTo(520 / 600, 10);
+    expect(decision.leg1.reason).toMatch(/coverage/);
+    expect(decision.verdict).toBe("NOT_ELIGIBLE");
+  });
+
+  it("a row for an event outside the registered universe throws (integrity, not a soft failure)", () => {
+    const brierRows = makeBrierRows(600, championProb, challengerProb, outcome);
+    const input: PromotionInput = {
+      window: baseWindow({ registeredEventIds: eventUniverse(599) }), // evt-599 not registered
+      championId: "champ",
+      challengerId: "chal",
+      codeRevision: "test-rev",
+      brierRows,
+      clvRows: [],
+    };
+    expect(() => evaluatePromotion(input, NOW)).toThrow(/pre-registered event universe/);
   });
 });

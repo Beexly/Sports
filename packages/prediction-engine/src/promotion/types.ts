@@ -78,6 +78,23 @@ export type RegisteredWindow = {
   readonly concurrentChallengers: number;
   /** Base significance level before Bonferroni adjustment. Contract default: 0.05. */
   readonly alpha: number;
+  /**
+   * Pre-registered event universe for this market family and window: the
+   * FULL set of event ids the challenger is expected to cover, committed
+   * (and window-hashed) before the window opens. Anti-cherry-picking: a
+   * challenger cannot be evaluated on a favorable overlap subset — rows for
+   * events outside this set are an integrity violation, and coverage below
+   * `coverageFloor` fails Leg 1. Must be non-empty.
+   */
+  readonly registeredEventIds: readonly string[];
+  /**
+   * Minimum fraction of `registeredEventIds` that must appear in the paired
+   * Brier sample for Leg 1 to pass (0 < coverageFloor <= 1). Contract
+   * default: 0.95 — a challenger that abstains from more than 5% of the
+   * registered universe is not evaluated on the family it would replace the
+   * champion for.
+   */
+  readonly coverageFloor: number;
 };
 
 export type PromotionInput = {
@@ -100,6 +117,13 @@ export type Leg1Result = {
   readonly lcb: number;
   readonly deltaPrac: number;
   readonly nMin: number;
+  /** Size of the pre-registered event universe for this window. */
+  readonly registeredEvents: number;
+  /** n / registeredEvents — fraction of the registered universe covered by
+   * the paired sample (duplicate event ids are an integrity throw upstream,
+   * so n counts distinct events). */
+  readonly coverage: number;
+  readonly coverageFloor: number;
   readonly pass: boolean;
   readonly reason?: string;
 };
