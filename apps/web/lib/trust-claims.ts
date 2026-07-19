@@ -216,7 +216,7 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
   {
     id: "pricing.money-back-window",
     copy:
-      "Paid plans include a 7-day refund window. This applies to billing, not to any sports outcome.",
+      "Paid plans include a 3-day refund window. This applies to billing, not to any sports outcome.",
     category: "PRICING",
     status: "APPROVED",
     evidence: "BILLING_POLICY",
@@ -499,7 +499,7 @@ function escapeRegex(s: string): string {
 /**
  * Words that turn a nearby number into a PERFORMANCE claim, as opposed to an
  * unrelated statistic. This is a fixed enumerated word list, NOT a prefix/
- * stem match — a stem match on "win" would also catch "window" ("7-day
+ * stem match — a stem match on "win" would also catch "window" ("3-day
  * refund window" is a real approved trust-claim, not a performance claim).
  */
 const PERFORMANCE_WORDS = [

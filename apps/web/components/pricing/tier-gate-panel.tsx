@@ -105,7 +105,7 @@ export function TierGatePanel({
         </div>
 
         <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.24em] text-ion-3">
-          founding rate · locked for life · 7-day refund window
+          founding rate · locked for life · 3-day refund window
         </p>
       </div>
     </section>

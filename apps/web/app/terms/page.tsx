@@ -72,9 +72,20 @@ export default function TermsPage() {
               Paid plans renew automatically on the interval you select
               (monthly or annual) until canceled. You can cancel from your
               account dashboard at any time. Cancellation takes effect at the
-              end of the current billing period; we do not pro-rate refunds for
-              partial periods. We may offer occasional refunds at our
-              discretion within the period stated at checkout.
+              end of the current billing period; we do not pro-rate refunds
+              for partial periods.
+            </Para>
+            <Para>
+              Every paid plan includes a 3-day money-back window: cancel and
+              request a refund within 3 days of your initial charge for any
+              plan or interval and we will refund it, no questions asked.
+              Outside that window, refunds are at our discretion.
+            </Para>
+            <Para>
+              Your subscription price is locked for the life of your
+              subscription at the rate you joined at. When prices rise for
+              new members, yours never does, for as long as you stay
+              subscribed without a lapse in billing.
             </Para>
 
             <Heading>6. Acceptable use</Heading>
