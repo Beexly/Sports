@@ -33,12 +33,12 @@ afterEach(() => {
 
 describe("legal-dates constants", () => {
   it("exposes static ISO calendar dates", () => {
-    expect(TERMS_LAST_UPDATED).toBe("2026-06-20");
+    expect(TERMS_LAST_UPDATED).toBe("2026-07-18");
     expect(PRIVACY_LAST_UPDATED).toBe("2026-07-01");
   });
 
   it("formats a fixed date into the page's human-readable style", () => {
-    expect(formatLegalDate(TERMS_LAST_UPDATED)).toBe("June 20, 2026");
+    expect(formatLegalDate(TERMS_LAST_UPDATED)).toBe("July 18, 2026");
     expect(formatLegalDate(PRIVACY_LAST_UPDATED)).toBe("July 1, 2026");
   });
 
@@ -55,7 +55,7 @@ describe("legal-dates constants", () => {
     });
 
     // The static values stay pinned to their true revision dates...
-    expect(formatLegalDate(TERMS_LAST_UPDATED)).toBe("June 20, 2026");
+    expect(formatLegalDate(TERMS_LAST_UPDATED)).toBe("July 18, 2026");
     expect(formatLegalDate(PRIVACY_LAST_UPDATED)).toBe("July 1, 2026");
 
     // ...and crucially do NOT equal a freshly-computed "today".
@@ -70,7 +70,7 @@ describe("legal-dates constants", () => {
     vi.setSystemTime(new Date("2020-12-31T23:59:59Z"));
     const atPast = formatLegalDate(TERMS_LAST_UPDATED);
     expect(atFuture).toBe(atPast);
-    expect(atFuture).toBe("June 20, 2026");
+    expect(atFuture).toBe("July 18, 2026");
   });
 });
 

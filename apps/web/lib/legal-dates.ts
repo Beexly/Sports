@@ -19,12 +19,17 @@
  */
 
 /**
- * Terms of Service — legal text last revised 2026-06-20 (the date the v1
- * terms were authored). The later 2026-07-01 edit only added an
- * `id="main-content"` accessibility hook to `<main>`; it did not touch the
- * legal text, so the "last updated" date must not move for it.
+ * Terms of Service — legal text last revised 2026-07-18: Section 5
+ * (Subscriptions and billing) was rewritten to state the 3-day money-back
+ * window as an unconditional guarantee (previously "at our discretion",
+ * which contradicted the unconditional promise already live on /pricing and
+ * /faq) and to codify the founding-rate grandfather guarantee, which
+ * previously appeared nowhere in the Terms despite being prominently
+ * promised on /pricing. The v1 terms were originally authored 2026-06-20;
+ * the intervening 2026-07-01 edit only added an `id="main-content"`
+ * accessibility hook to `<main>` and did not move this date.
  */
-export const TERMS_LAST_UPDATED = "2026-06-20";
+export const TERMS_LAST_UPDATED = "2026-07-18";
 
 /**
  * Privacy Policy — legal text last revised 2026-07-01 (copy edits to the
