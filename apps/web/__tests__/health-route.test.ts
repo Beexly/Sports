@@ -13,6 +13,14 @@ import { resetNflverseTableCacheForTests } from "@sports/data-ingestion";
 
 const repoRoot = resolve(__dirname, "..");
 const src = readFileSync(resolve(repoRoot, "app/api/health/route.ts"), "utf8");
+// Leaf-capability probes (DB ping, ingestion freshness, settlement,
+// nflverse) were extracted into their own module so the epistemic-twin
+// cron/agent guard can share them instead of duplicating the probe logic —
+// see capability-graph.ts's fetchLiveCapabilityGraph. The source-level
+// assertions about probe mechanics below now target that module directly;
+// route.ts's own assertions stay about its own remaining responsibilities
+// (handler shape, caching opt-out, response envelope).
+const probesSrc = readFileSync(resolve(repoRoot, "lib/health/live-capability-probes.ts"), "utf8");
 
 describe("/api/health", () => {
   it("exports a GET handler", () => {
@@ -32,24 +40,24 @@ describe("/api/health", () => {
   });
 
   it("wraps the DB ping in try/catch (so a DB outage doesn't 500 the health probe)", () => {
-    expect(src).toMatch(/try\s*\{[\s\S]*\$queryRaw[\s\S]*\}\s*catch/);
+    expect(probesSrc).toMatch(/try\s*\{[\s\S]*\$queryRaw[\s\S]*\}\s*catch/);
   });
 
   it("checks ingestion last-success freshness so a stuck pipeline reports unhealthy", () => {
-    expect(src).toMatch(/ingestionRun/);
-    expect(src).toMatch(/status:\s*["']SUCCESS["']/);
-    expect(src).toMatch(/ageMinutes/);
-    expect(src).toMatch(/lastSuccessAt/);
+    expect(probesSrc).toMatch(/ingestionRun/);
+    expect(probesSrc).toMatch(/status:\s*["']SUCCESS["']/);
+    expect(probesSrc).toMatch(/ageMinutes/);
+    expect(probesSrc).toMatch(/lastSuccessAt/);
   });
 
   it("does not write to the DB (read-only probe)", () => {
-    expect(src).not.toMatch(/\.create\(|\.update\(|\.delete\(|\.upsert\(/);
+    expect(probesSrc).not.toMatch(/\.create\(|\.update\(|\.delete\(|\.upsert\(/);
   });
 
   it("uses the shared stale threshold, not a hard-coded 2h", () => {
     // Guards against re-introducing the old magic number that caused false 503s.
-    expect(src).toMatch(/REFRESH_STALE_AFTER_MINUTES/);
-    expect(src).not.toMatch(/ageHours\s*>\s*2/);
+    expect(probesSrc).toMatch(/REFRESH_STALE_AFTER_MINUTES/);
+    expect(probesSrc).not.toMatch(/ageHours\s*>\s*2/);
   });
 });
 
@@ -195,6 +203,19 @@ describe("/api/health — capabilities (OP-003, additive)", () => {
     const body = await res.json();
 
     expect(body.deployment.sha).toBe("deadbeef");
+  });
+
+  it("includes a capabilityGraph with the full 15-node epistemic-twin seed registry (P2, additive)", async () => {
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    expect(Array.isArray(body.capabilityGraph)).toBe(true);
+    expect(body.capabilityGraph).toHaveLength(15);
+    const ids = body.capabilityGraph.map((e: { capabilityId: string }) => e.capabilityId);
+    expect(ids).toEqual(expect.arrayContaining(["db:primary", "source:nflverse", "route:/nflverse"]));
   });
 
   it("a non-healthy capability does not flip ok/allOk or the HTTP status", async () => {
