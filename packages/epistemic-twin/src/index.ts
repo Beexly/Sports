@@ -31,3 +31,16 @@ export type {
 
 export { buildSeedRegistry, SEED_CAPABILITY_IDS } from "./seed-registry.js";
 export type { SeedCapabilityId } from "./seed-registry.js";
+
+export {
+  TwinObservationError,
+  assertValidObservation,
+  foldObservationsAsOf,
+  templatesFromSeed,
+  materializeNodesAsOf,
+  composeGraphAsOf,
+} from "./as-of.js";
+export type { TwinObservation, AsOfMode, CapabilityTemplate } from "./as-of.js";
+
+export { op003ToOwnEvidence } from "./adapt-op003.js";
+export type { Op003CapabilityAtom, CapabilityStatusWire } from "./adapt-op003.js";
