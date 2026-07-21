@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   findCapabilitiesByName,
+  getAdditionalClaudePlugins,
   getCapabilityInventory,
   summarizeCapabilityInventory,
   validateCapabilityInventory,
@@ -12,8 +13,11 @@ describe("NOVA Claude and ChatGPT capability inventory", () => {
     const entries = getCapabilityInventory();
     const summary = summarizeCapabilityInventory(entries);
     expect(summary).toEqual({
-      total: 183,
-      claudePlugins: 85,
+      total: 293,
+      claudePlugins: 195,
+      claudePluginSkills: 1925,
+      additionalClaudePlugins: 110,
+      largeClaudePluginBundles: 4,
       claudeConnectors: 46,
       claudeSkills: 12,
       chatgptApps: 26,
@@ -23,6 +27,23 @@ describe("NOVA Claude and ChatGPT capability inventory", () => {
     });
     expect(validateCapabilityInventory(entries)).toEqual([]);
     expect(entries.every((entry) => entry.executionAuthority === false)).toBe(true);
+  });
+
+  it("preserves all 110 additional plugin records and their metadata", () => {
+    const additions = getAdditionalClaudePlugins();
+    expect(additions).toHaveLength(110);
+    expect(additions.reduce((total, entry) => total + (entry.skillCount ?? 0), 0)).toBe(1243);
+    expect(additions.every((entry) => entry.captureBatch === "ADDITIONAL_USER_CAPTURE")).toBe(true);
+    expect(additions.every((entry) => entry.lastUpdated?.startsWith("2026-"))).toBe(true);
+    expect(additions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "Ecc", author: "Affaan Mustafa", skillCount: 363 }),
+        expect.objectContaining({ name: "Posthog", author: "PostHog", skillCount: 129 }),
+        expect.objectContaining({ name: "AWS Startup Advisor", author: "Amazon Web Services", skillCount: 5 }),
+        expect.objectContaining({ name: "Prompt governance", author: "Alireza Rezvani", skillCount: 1 }),
+        expect.objectContaining({ name: "Finance skills", author: "Alireza Rezvani", skillCount: 3 }),
+      ]),
+    );
   });
 
   it("preserves verification differences between user-reported Claude inventory and runtime-visible ChatGPT tools", () => {
@@ -50,5 +71,10 @@ describe("NOVA Claude and ChatGPT capability inventory", () => {
     const linear = findCapabilitiesByName("Linear");
     expect(linear.some((entry) => entry.surface === "CLAUDE_PLUGIN")).toBe(true);
     expect(linear.some((entry) => entry.surface === "CHATGPT_APP")).toBe(true);
+
+    const vercel = findCapabilitiesByName("Vercel");
+    expect(vercel.some((entry) => entry.surface === "CLAUDE_PLUGIN")).toBe(true);
+    expect(vercel.some((entry) => entry.surface === "CLAUDE_CONNECTOR")).toBe(true);
+    expect(vercel.some((entry) => entry.surface === "CHATGPT_APP")).toBe(true);
   });
 });
