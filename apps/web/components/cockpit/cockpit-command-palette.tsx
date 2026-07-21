@@ -37,6 +37,7 @@ export const COCKPIT_COMMANDS: readonly CockpitCommand[] = [
   { label: "Overview", href: "/cockpit", group: "Command", keywords: "jarvis launch assessment home" },
   { label: "Command Center", href: "/cockpit/command-center", group: "Command", keywords: "ranked owner attention" },
   { label: "NOVA", href: "/cockpit/nova", group: "Command", keywords: "ai opportunity monetization platforms models credits partnerships affiliates revenue" },
+  { label: "Founder OS", href: "/cockpit/nova/founder", group: "Command", keywords: "founder personal efficiency what why when how daily brief first cash local models" },
   { label: "Daily brief", href: "/cockpit/brief", group: "Command", keywords: "today slate snapshot" },
   { label: "Tasks", href: "/cockpit/tasks", group: "Command", keywords: "queue status" },
   { label: "Review", href: "/cockpit/review", group: "Command", keywords: "needs review blocked" },
@@ -196,50 +197,39 @@ export function CockpitCommandPalette() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={onInputKey}
-            placeholder="Jump to a cockpit view — NOVA, tasks, calibration, airwave…"
+            placeholder="Jump to a cockpit view — Founder OS, NOVA, tasks, calibration…"
             className="flex-1 bg-transparent font-mono text-sm text-ion-white outline-none placeholder:text-ion-3"
-            aria-label="Search cockpit commands"
           />
-          <kbd
-            className="rounded px-1.5 py-0.5 text-[10px] text-ion-3"
-            style={{ background: "rgba(255,255,255,0.06)" }}
-          >
-            esc
-          </kbd>
+          <kbd className="rounded bg-carbon/70 px-1.5 py-0.5 font-mono text-[10px] text-ion-3">ESC</kbd>
         </div>
-
-        <div className="max-h-[52vh] overflow-y-auto p-2">
-          {results.length === 0 && (
-            <p className="px-3 py-6 text-center text-sm text-ion-3">No matches.</p>
+        <div className="max-h-[55vh] overflow-y-auto p-2">
+          {groups.length === 0 ? (
+            <p className="px-3 py-8 text-center text-sm text-ion-3">No cockpit views match.</p>
+          ) : (
+            groups.map((group) => (
+              <div key={group.name} className="mb-2 last:mb-0">
+                <p className="px-3 pb-1 pt-2 text-[9px] font-bold uppercase tracking-[0.18em] text-ion-3">
+                  {group.name}
+                </p>
+                {group.items.map(({ c, i }) => (
+                  <button
+                    key={c.href}
+                    type="button"
+                    onMouseEnter={() => setActive(i)}
+                    onClick={() => go(c.href)}
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-colors"
+                    style={{
+                      background: i === active ? "rgba(35,216,255,0.09)" : "transparent",
+                      color: i === active ? "#d9f8ff" : "#aab7c5",
+                    }}
+                  >
+                    <span>{c.label}</span>
+                    <span className="font-mono text-[10px] text-ion-3">{c.href}</span>
+                  </button>
+                ))}
+              </div>
+            ))
           )}
-          {groups.map((g) => (
-            <div key={g.name} className="mb-1">
-              <p className="px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">
-                {g.name}
-              </p>
-              {g.items.map(({ c, i }) => (
-                <button
-                  key={c.href}
-                  type="button"
-                  onMouseEnter={() => setActive(i)}
-                  onClick={() => go(c.href)}
-                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm"
-                  style={{
-                    background:
-                      active === i ? `${BRAND_COLORS.orbitalCyan}14` : "transparent",
-                    color: active === i ? "#fff" : "#c8d2dd",
-                  }}
-                >
-                  <span className="flex-1 truncate">{c.label}</span>
-                  {active === i && (
-                    <span aria-hidden style={{ color: BRAND_COLORS.orbitalCyan }}>
-                      ↵
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          ))}
         </div>
       </div>
     </div>
