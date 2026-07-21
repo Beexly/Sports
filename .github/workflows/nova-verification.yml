@@ -4,13 +4,22 @@ on:
   push:
     branches:
       - codex/nova-ai-opportunity-engine-2026-07-21
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - ".github/workflows/nova-verification.yml"
+      - "apps/web/**/nova*"
+      - "apps/web/lib/opportunity-engine/**"
+      - "data/nova/**"
+      - "docs/ai/nova/**"
+      - "scripts/nova/**"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: nova-verification-${{ github.ref }}
+  group: nova-verification-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
