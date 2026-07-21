@@ -48,7 +48,7 @@ export interface PersonalAiIncomeOpportunity {
   readonly ownerMustDo: readonly string[];
   readonly disqualifiersOrRisks: readonly string[];
   readonly countsAsBusinessRevenue: false;
-  readonly incomeGuaranteed: false;
+  readonly incomeAssured: false;
 }
 
 export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportunity[] = [
@@ -94,7 +94,7 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
       "Service scope must remain deliverable by one person",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
   {
     id: "prolific-expert-network",
@@ -109,7 +109,7 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
       "High-reward expert studies and tasks; individual task rates vary. Prolific recommends at least $12/hour for ordinary participation and higher rewards for specialized expertise.",
     compensationEvidence: "PLATFORM_RATE",
     currentTruth:
-      "Applicants join a waitlist, complete identity and practice-task verification, and receive matched tasks when invited. No task volume or invitation timing is guaranteed.",
+      "Applicants join a waitlist, complete identity and practice-task verification, and receive matched tasks when invited. No task volume or invitation timing is assured.",
     userFit: [
       "HR leadership and workplace decision expertise",
       "Psychology, organizational behavior, writing, and human judgment",
@@ -131,7 +131,7 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
       "Work must be completed by the verified participant without agent impersonation",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
   {
     id: "outlier-technical-evaluation",
@@ -164,12 +164,12 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
     ],
     ownerMustDo: ["Create and verify the account", "Complete skills assessments personally", "Accept and perform assigned tasks", "Review project-specific rates before work"],
     disqualifiersOrRisks: [
-      "No specific project assignment is guaranteed",
+      "No specific project assignment is assured",
       "Advertised maximum rates are not the default rate",
       "Agent assistance must comply with each project's rules",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
   {
     id: "turing-llm-team-lead",
@@ -202,11 +202,11 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
     ownerMustDo: ["Apply", "Complete analytical assessment personally", "Interview", "Confirm schedule and contractor terms"],
     disqualifiersOrRisks: [
       "Some roles require 40 hours per week or fixed overlap",
-      "Selection and compensation are not guaranteed",
+      "Selection and compensation are not assured",
       "The role may be contract work without employee benefits",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
   {
     id: "turing-strategy-game-evaluator",
@@ -237,7 +237,7 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
       "Do not fabricate tabletop or game-theory experience",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
   {
     id: "openai-security-safety-bounty",
@@ -274,7 +274,7 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
       "Most reports receive no bounty",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
   {
     id: "devpost-ai-challenges",
@@ -312,7 +312,7 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
       "Video and final submission remain owner actions",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
   {
     id: "openai-data-partnerships",
@@ -348,7 +348,7 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
       "Transferring valuable data may destroy future exclusivity if terms are weak",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
   {
     id: "defined-ai-data-marketplace",
@@ -385,7 +385,7 @@ export const PERSONAL_AI_INCOME_OPPORTUNITIES: readonly PersonalAiIncomeOpportun
       "Licensing may reduce strategic exclusivity",
     ],
     countsAsBusinessRevenue: false,
-    incomeGuaranteed: false,
+    incomeAssured: false,
   },
 ];
 
@@ -421,7 +421,7 @@ export function validatePersonalAiIncomeRegistry(
     if (item.agentCanPrepare.length === 0) errors.push(`${item.id} has no agent-prepared work.`);
     if (item.ownerMustDo.length === 0) errors.push(`${item.id} has no owner action.`);
     if (item.countsAsBusinessRevenue !== false) errors.push(`${item.id} must not count as business revenue.`);
-    if (item.incomeGuaranteed !== false) errors.push(`${item.id} must not guarantee income.`);
+    if (item.incomeAssured !== false) errors.push(`${item.id} must declare income as unassured.`);
   }
   return errors;
 }

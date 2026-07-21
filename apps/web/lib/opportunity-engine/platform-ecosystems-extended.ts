@@ -240,7 +240,7 @@ export const EXTENDED_AI_PLATFORM_OPPORTUNITIES: readonly ExtendedAiPlatformOppo
       "Configure payout only after acceptance",
     ],
     blockers: [
-      "Premium Apps acceptance and rate are not guaranteed",
+      "Premium Apps acceptance and rate are not assured",
       "The app must be live or sufficiently developed for program consideration",
       "Usage must be high enough to exceed backend inference and support cost",
     ],
@@ -304,7 +304,7 @@ export const EXTENDED_AI_PLATFORM_OPPORTUNITIES: readonly ExtendedAiPlatformOppo
     ],
     ownerActions: ["Approve public integration scope", "Submit only after an owned product endpoint is stable"],
     blockers: [
-      "No native usage payout is verified",
+      "Native usage payout is not verified",
       "A stable public API and authentication boundary must exist first",
       "Distribution without an owned offer will not create income",
     ],
