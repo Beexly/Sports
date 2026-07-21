@@ -18,3 +18,7 @@ export * from "./source-fetch";
 export * from "./source-monitor";
 export * from "./platform-ecosystems";
 export * from "./platform-ecosystems-extended";
+export * from "./personal-ai-income";
+export * from "./source-intake";
+export * from "./capability-inventory";
+export * from "./founder-command";
