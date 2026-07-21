@@ -12,7 +12,7 @@ describe("NOVA Claude and ChatGPT capability inventory", () => {
     const entries = getCapabilityInventory();
     const summary = summarizeCapabilityInventory(entries);
     expect(summary).toEqual({
-      total: 168,
+      total: 183,
       claudePlugins: 85,
       claudeConnectors: 46,
       claudeSkills: 12,
