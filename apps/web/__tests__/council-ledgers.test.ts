@@ -21,6 +21,22 @@ import { resolve } from "path";
 import { LedgerStoreUnavailableError } from "@/lib/jarvis/ledgers";
 import { buildLedgerStatus, buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { AGENT_COUNCIL } from "@/lib/jarvis/agent-council";
+import { UnauthenticatedError, ForbiddenError } from "@/lib/auth/actor";
+
+// ─── Mock auth() — default to a valid ADMIN session so existing seat/confidence/
+// review-state tests exercise validation logic, not the auth gate itself. The
+// dedicated "actor authorization" describe block below overrides this per-test
+// to exercise the no-session and non-admin paths.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const mockAuth = vi.fn();
+vi.mock("@/lib/auth", () => ({
+  auth: () => mockAuth(),
+}));
+
+function mockAdminSession() {
+  mockAuth.mockResolvedValue({ user: { id: "admin-1", email: "admin@gsn.example", role: "ADMIN" } });
+}
 
 // ─── Mock the db client ───────────────────────────────────────────────────────
 
@@ -47,6 +63,13 @@ vi.mock("@sports/db", () => ({
   isStubMode: vi.fn().mockReturnValue(false),
   isDemoPicksEnabled: vi.fn().mockReturnValue(false),
 }));
+
+// Default every test to an authenticated admin caller — the dedicated "actor
+// authorization" block below overrides mockAuth per-test to exercise the
+// unauthenticated/non-admin paths.
+beforeEach(() => {
+  mockAdminSession();
+});
 
 // ─── 1. Seat validation ───────────────────────────────────────────────────────
 
@@ -236,13 +259,17 @@ describe("review-states law", () => {
       prohibited_actions_checked: true,
       created_at: new Date(),
       updated_at: new Date(),
+      actor_user_id: null,
+      actor_email: null,
+      reviewer_user_id: null,
+      reviewer_email: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
     await reviewSubagentRun("run-abc", "scout", "accepted");
     expect(updateSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: { parent_review_status: "accepted" },
+        data: expect.objectContaining({ parent_review_status: "accepted" }),
       })
     );
   });
@@ -264,13 +291,17 @@ describe("review-states law", () => {
       prohibited_actions_checked: true,
       created_at: new Date(),
       updated_at: new Date(),
+      actor_user_id: null,
+      actor_email: null,
+      reviewer_user_id: null,
+      reviewer_email: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
     await reviewSubagentRun("run-def", "scout", "rejected");
     expect(updateSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: { parent_review_status: "rejected" },
+        data: expect.objectContaining({ parent_review_status: "rejected" }),
       })
     );
   });
@@ -292,13 +323,17 @@ describe("review-states law", () => {
       prohibited_actions_checked: true,
       created_at: new Date(),
       updated_at: new Date(),
+      actor_user_id: null,
+      actor_email: null,
+      reviewer_user_id: null,
+      reviewer_email: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
     await reviewSubagentRun("run-ghi", "tal", "edited");
     expect(updateSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: { parent_review_status: "edited" },
+        data: expect.objectContaining({ parent_review_status: "edited" }),
       })
     );
   });
@@ -320,6 +355,10 @@ describe("review-states law", () => {
       prohibited_actions_checked: true,
       created_at: new Date(),
       updated_at: new Date(),
+      actor_user_id: null,
+      actor_email: null,
+      reviewer_user_id: null,
+      reviewer_email: null,
     });
 
     // TAL is not the parent seat for this run (scout is)
@@ -509,5 +548,100 @@ describe("agent council panel", () => {
 
   it("panel accepts a ledger prop", () => {
     expect(panelText).toContain("ledger: LedgerStatus");
+  });
+});
+
+// ─── 8. Actor authorization — the auth boundary itself ────────────────────────
+//
+// Every other describe block in this file relies on the top-level beforeEach
+// defaulting to an admin session so it can test seat/confidence/review-state
+// logic in isolation. These tests exercise that boundary directly: no session,
+// a non-admin session, and — critically — that auth runs BEFORE any domain
+// validation, so an unauthorized caller learns nothing about whether their
+// input was even well-formed.
+
+describe("actor authorization", () => {
+  const validHandoff = {
+    sourceSeat: "jarvis",
+    targetSeat: "scout",
+    reason: "test",
+    taskType: "test",
+    evidenceText: "n/a",
+    authorityTier: 1,
+  };
+
+  it("logHandoff rejects with UnauthenticatedError when there is no session", async () => {
+    mockAuth.mockResolvedValue(null);
+    await expect(logHandoff(validHandoff)).rejects.toThrow(UnauthenticatedError);
+  });
+
+  it("logHandoff rejects with ForbiddenError for a non-admin session", async () => {
+    mockAuth.mockResolvedValue({ user: { id: "u1", email: "user@example.com", role: "USER" } });
+    await expect(logHandoff(validHandoff)).rejects.toThrow(ForbiddenError);
+  });
+
+  it("logHandoff checks auth BEFORE seat validation — an unauthenticated caller never learns their seat was invalid", async () => {
+    mockAuth.mockResolvedValue(null);
+    await expect(
+      logHandoff({ ...validHandoff, sourceSeat: "TOTALLY_INVALID_SEAT" })
+    ).rejects.toThrow(UnauthenticatedError);
+    // Specifically NOT the seat-validation error message.
+    await expect(
+      logHandoff({ ...validHandoff, sourceSeat: "TOTALLY_INVALID_SEAT" })
+    ).rejects.not.toThrow(/Unknown agent seat/);
+  });
+
+  it("logSubagentRun rejects with UnauthenticatedError when there is no session", async () => {
+    mockAuth.mockResolvedValue(null);
+    await expect(
+      logSubagentRun({
+        subagentId: "scout-injury-context",
+        parentSeat: "scout",
+        task: "t",
+        inputContext: "{}",
+        outputArtifactRef: "ref",
+        confidence: 80,
+        uncertainty: "low",
+        prohibitedActionsChecked: true,
+      })
+    ).rejects.toThrow(UnauthenticatedError);
+  });
+
+  it("logSubagentRun rejects with ForbiddenError for a non-admin session", async () => {
+    mockAuth.mockResolvedValue({ user: { id: "u1", email: "user@example.com", role: "USER" } });
+    await expect(
+      logSubagentRun({
+        subagentId: "scout-injury-context",
+        parentSeat: "scout",
+        task: "t",
+        inputContext: "{}",
+        outputArtifactRef: "ref",
+        confidence: 80,
+        uncertainty: "low",
+        prohibitedActionsChecked: true,
+      })
+    ).rejects.toThrow(ForbiddenError);
+  });
+
+  it("reviewSubagentRun rejects with UnauthenticatedError when there is no session", async () => {
+    mockAuth.mockResolvedValue(null);
+    await expect(reviewSubagentRun("run-1", "scout", "accepted")).rejects.toThrow(UnauthenticatedError);
+  });
+
+  it("reviewSubagentRun rejects with ForbiddenError for a non-admin session", async () => {
+    mockAuth.mockResolvedValue({ user: { id: "u1", email: "user@example.com", role: "USER" } });
+    await expect(reviewSubagentRun("run-1", "scout", "accepted")).rejects.toThrow(ForbiddenError);
+  });
+
+  it("an authenticated admin session persists as the audit-trail actor on logHandoff", async () => {
+    mockAdminSession();
+    const { db } = await import("@sports/db");
+    const createSpy = vi.spyOn(db.agentHandoff, "create");
+    await logHandoff(validHandoff);
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ actor_user_id: "admin-1", actor_email: "admin@gsn.example" }),
+      })
+    );
   });
 });

@@ -22,6 +22,7 @@
 import { db } from "@sports/db";
 import { Prisma } from "@sports/db";
 import { AGENT_COUNCIL } from "./agent-council";
+import { requireAdminActor } from "@/lib/auth/actor";
 
 // ─── Typed error ──────────────────────────────────────────────────────────────
 
@@ -108,6 +109,7 @@ export interface LogHandoffInput {
  * starts as "pending" and is updated via outcome resolution.
  */
 export async function logHandoff(input: LogHandoffInput) {
+  const actor = await requireAdminActor();
   assertValidSeat(input.sourceSeat, "sourceSeat");
   assertValidSeat(input.targetSeat, "targetSeat");
 
@@ -123,6 +125,8 @@ export async function logHandoff(input: LogHandoffInput) {
         authority_tier: input.authorityTier,
         status: "pending",
         owner_approval_required: input.ownerApprovalRequired ?? false,
+        actor_user_id: actor.userId,
+        actor_email: actor.email,
       },
     });
   } catch (err) {
@@ -177,6 +181,7 @@ export interface LogSubagentRunInput {
  * accepted / rejected / edited. Until then the output is a draft.
  */
 export async function logSubagentRun(input: LogSubagentRunInput) {
+  const actor = await requireAdminActor();
   assertValidSeat(input.parentSeat, "parentSeat");
   assertValidConfidence(input.confidence, "confidence");
 
@@ -193,6 +198,8 @@ export async function logSubagentRun(input: LogSubagentRunInput) {
         evidence: input.evidence ?? [],
         prohibited_actions_checked: input.prohibitedActionsChecked,
         parent_review_status: "pending_review",
+        actor_user_id: actor.userId,
+        actor_email: actor.email,
       },
     });
   } catch (err) {
@@ -215,6 +222,7 @@ export async function reviewSubagentRun(
   reviewerSeat: string,
   decision: SubagentReviewDecision
 ) {
+  const actor = await requireAdminActor();
   assertValidSeat(reviewerSeat, "reviewerSeat");
 
   try {
@@ -241,7 +249,11 @@ export async function reviewSubagentRun(
 
     return await db.subagentRun.update({
       where: { id: runId },
-      data: { parent_review_status: decision },
+      data: {
+        parent_review_status: decision,
+        reviewer_user_id: actor.userId,
+        reviewer_email: actor.email,
+      },
     });
   } catch (err) {
     if (err instanceof Error && err.message.startsWith("Seat ")) throw err;

@@ -16,6 +16,7 @@
 
 import { db } from "@sports/db";
 import { Prisma } from "@sports/db";
+import { requireAdminActor } from "@/lib/auth/actor";
 import type {
   ModerationActionKind,
   ModerationAppealStatus,
@@ -123,6 +124,7 @@ export async function fileReport(input: FileReportInput): Promise<ModerationRepo
  *   - time-boxed actions carry an expiry
  */
 export async function takeAction(input: TakeActionInput): Promise<ModerationAction> {
+  await requireAdminActor();
   // Law: every action requires actor + reason
   assertActionLoggable(input.actor, input.reason);
 
@@ -231,6 +233,7 @@ export async function appealAction(input: AppealActionInput): Promise<Moderation
  *   - reviewer must NOT be the same actor as the original action (different-reviewer rule)
  */
 export async function decideAppeal(input: DecideAppealInput): Promise<ModerationAppeal> {
+  await requireAdminActor();
   if (!input.reviewer.trim()) {
     throw new ModerationValidationError("Reviewer must be a non-empty identifier.");
   }
@@ -293,6 +296,7 @@ export interface OpenReportRow {
 }
 
 export async function listOpenReports(): Promise<OpenReportRow[]> {
+  await requireAdminActor();
   try {
     const rows = await db.moderationReport.findMany({
       where: { status: { in: ["OPEN", "UNDER_REVIEW", "ESCALATED"] } },
@@ -328,6 +332,7 @@ export interface ActionRow {
 }
 
 export async function listActions(targetUserId: string): Promise<ActionRow[]> {
+  await requireAdminActor();
   try {
     const rows = await db.moderationAction.findMany({
       where: { targetUserId },
@@ -366,6 +371,7 @@ export interface AuditLogRow {
  * Supports forensic queries ("what happened to this message?").
  */
 export async function auditLog(contentRef: string): Promise<AuditLogRow[]> {
+  await requireAdminActor();
   try {
     const rows = await db.moderationAction.findMany({
       where: { contentRef },

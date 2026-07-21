@@ -1132,6 +1132,12 @@ model AgentHandoff {
   created_at             DateTime              @default(now())
   updated_at             DateTime              @updatedAt
 
+  /// Audit trail: the authenticated admin session that logged this handoff.
+  /// Nullable + additive — rows written before this column existed have no
+  /// value here, not a fabricated one.
+  actor_user_id          String?
+  actor_email            String?
+
   @@index([source_seat, created_at])
   @@index([target_seat, created_at])
   @@index([status])
@@ -1163,6 +1169,15 @@ model SubagentRun {
   parent_review_status     SubagentParentReviewStatus @default(pending_review)
   created_at               DateTime                   @default(now())
   updated_at               DateTime                   @updatedAt
+
+  /// Audit trail: the authenticated admin session that logged this run.
+  /// Nullable + additive — see AgentHandoff.actor_user_id for the same rule.
+  actor_user_id            String?
+  actor_email              String?
+  /// Audit trail: the authenticated admin session that reviewed this run.
+  /// Distinct from parent_seat (the agent identity) — this is the human.
+  reviewer_user_id         String?
+  reviewer_email           String?
 
   /// Memory events linked to this run (optional, created by linkMemoryToAgentRun).
   memory_events JarvisMemoryEvent[] @relation("MemoryAgentRunLink")
