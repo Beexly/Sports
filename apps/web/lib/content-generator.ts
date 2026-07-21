@@ -17,6 +17,7 @@ import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
 import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
+import type { LlmDispatchRecord } from "@/lib/claude-api/cost-policy";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -128,16 +129,21 @@ Respond ONLY with valid JSON in this exact format:
   }
 
   let parsed: ParsedBlogGeneration;
+  let dispatch: LlmDispatchRecord | null = null;
   try {
-    const result = await callClaude({
-      apiKey,
-      fetchImpl: options.fetchImpl,
-      model: modelName,
-      maxTokens: 2000,
-      system: systemPrompt,
-      user: userPrompt,
-      cache: { system: true },
-    });
+    const result = await callClaude(
+      {
+        apiKey,
+        fetchImpl: options.fetchImpl,
+        model: modelName,
+        maxTokens: 2000,
+        system: systemPrompt,
+        user: userPrompt,
+        cache: { system: true },
+      },
+      undefined,
+      { onDispatch: (record) => { dispatch = record; } },
+    );
     try {
       parsed = parseGeneratedBlogResponse(result.text);
     } catch {
@@ -149,6 +155,7 @@ Respond ONLY with valid JSON in this exact format:
         durationMs: result.durationMs,
         success: false,
         errorKind: "PARSE_ERROR",
+        dispatch,
       });
       throw new Error("Could not parse JSON from Claude response");
     }
@@ -163,6 +170,7 @@ Respond ONLY with valid JSON in this exact format:
         durationMs: result.durationMs,
         success: false,
         errorKind: `POLICY_${policy.reason ?? "UNKNOWN"}`,
+        dispatch,
       });
       throw new Error("Generated blog post failed policy validation.");
     }
@@ -175,6 +183,7 @@ Respond ONLY with valid JSON in this exact format:
       durationMs: result.durationMs,
       success: true,
       errorKind: null,
+      dispatch,
     });
   } catch (error) {
     if (error instanceof ClaudeMessagesError) {
@@ -186,6 +195,7 @@ Respond ONLY with valid JSON in this exact format:
         durationMs: error.durationMs,
         success: false,
         errorKind: `HTTP_${error.status}`,
+        dispatch,
       });
     }
     throw error;
@@ -282,6 +292,7 @@ async function maybeRecordBlogUsage(args: {
   readonly durationMs: number;
   readonly success: boolean;
   readonly errorKind: string | null;
+  readonly dispatch: LlmDispatchRecord | null;
 }): Promise<void> {
   if (!args.options.recordUsage) return;
 
@@ -298,6 +309,7 @@ async function maybeRecordBlogUsage(args: {
       durationMs: args.durationMs,
       success: args.success,
       errorKind: args.errorKind,
+      dispatch: args.dispatch,
     },
     args.options.usageClient
   );

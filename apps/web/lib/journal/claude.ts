@@ -5,6 +5,7 @@ import {
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
+import type { LlmDispatchRecord } from "@/lib/claude-api/cost-policy";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -79,17 +80,22 @@ export async function generateModelJournalDraftMarkdown(
   }
 
   const userPrompt = buildJournalDraftPromptUser(weekData);
+  let dispatch: LlmDispatchRecord | null = null;
   try {
-    const result = await callClaude({
-      apiKey: options.apiKey,
-      fetchImpl: options.fetchImpl,
-      model: modelName,
-      maxTokens: 3000,
-      temperature: 0.2,
-      system: JOURNAL_DRAFTING_SYSTEM_PROMPT,
-      user: userPrompt,
-      cache: { system: true },
-    });
+    const result = await callClaude(
+      {
+        apiKey: options.apiKey,
+        fetchImpl: options.fetchImpl,
+        model: modelName,
+        maxTokens: 3000,
+        temperature: 0.2,
+        system: JOURNAL_DRAFTING_SYSTEM_PROMPT,
+        user: userPrompt,
+        cache: { system: true },
+      },
+      undefined,
+      { onDispatch: (record) => { dispatch = record; } },
+    );
     const policyFailures = evaluateModelJournalDraftPolicy(result.text, {
       promptText: userPrompt,
       counts: weekData.counts,
@@ -103,6 +109,7 @@ export async function generateModelJournalDraftMarkdown(
         durationMs: result.durationMs,
         success: false,
         errorKind: `POLICY_${policyFailures[0]}`,
+        dispatch,
       });
       throw new ModelJournalGenerationError(`Model Journal draft failed policy validation: ${policyFailures.join(", ")}`);
     }
@@ -115,6 +122,7 @@ export async function generateModelJournalDraftMarkdown(
       durationMs: result.durationMs,
       success: true,
       errorKind: null,
+      dispatch,
     });
     return result.text;
   } catch (error) {
@@ -127,6 +135,7 @@ export async function generateModelJournalDraftMarkdown(
         durationMs: error.durationMs,
         success: false,
         errorKind: `HTTP_${error.status}`,
+        dispatch,
       });
     }
     throw new ModelJournalGenerationError(error instanceof Error ? error.message : "Model Journal draft failed.");
@@ -184,6 +193,7 @@ async function maybeRecordJournalUsage(args: {
   readonly durationMs: number;
   readonly success: boolean;
   readonly errorKind: string | null;
+  readonly dispatch: LlmDispatchRecord | null;
 }): Promise<void> {
   if (!args.options.recordUsage) return;
 
@@ -200,6 +210,7 @@ async function maybeRecordJournalUsage(args: {
       durationMs: args.durationMs,
       success: args.success,
       errorKind: args.errorKind,
+      dispatch: args.dispatch,
     },
     args.options.usageClient
   );

@@ -5,6 +5,7 @@ import {
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
+import type { LlmDispatchRecord } from "@/lib/claude-api/cost-policy";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -95,17 +96,22 @@ export async function generateCalibrationWeeklyInsight(
     }
   }
 
+  let dispatch: LlmDispatchRecord | null = null;
   try {
-    const result = await callClaude({
-      apiKey: options.apiKey,
-      fetchImpl: options.fetchImpl,
-      model: modelName,
-      maxTokens: 120,
-      temperature: 0.1,
-      system: CALIBRATION_INSIGHT_SYSTEM_PROMPT,
-      user: buildCalibrationInsightUserPrompt(input),
-      cache: { system: true },
-    });
+    const result = await callClaude(
+      {
+        apiKey: options.apiKey,
+        fetchImpl: options.fetchImpl,
+        model: modelName,
+        maxTokens: 120,
+        temperature: 0.1,
+        system: CALIBRATION_INSIGHT_SYSTEM_PROMPT,
+        user: buildCalibrationInsightUserPrompt(input),
+        cache: { system: true },
+      },
+      undefined,
+      { onDispatch: (record) => { dispatch = record; } },
+    );
     const insightText = normalizeInsightText(result.text);
     const policy = evaluateCalibrationInsightPolicy(insightText);
     if (!policy.allowed) {
@@ -118,6 +124,7 @@ export async function generateCalibrationWeeklyInsight(
         durationMs: result.durationMs,
         success: false,
         errorKind: `POLICY_${policy.reason ?? "UNKNOWN"}`,
+        dispatch,
       });
       throw new CalibrationInsightGenerationError("Calibration insight failed policy validation.");
     }
@@ -131,6 +138,7 @@ export async function generateCalibrationWeeklyInsight(
       durationMs: result.durationMs,
       success: true,
       errorKind: null,
+      dispatch,
     });
 
     return {
@@ -149,6 +157,7 @@ export async function generateCalibrationWeeklyInsight(
         durationMs: error.durationMs,
         success: false,
         errorKind: `HTTP_${error.status}`,
+        dispatch,
       });
     }
     throw new CalibrationInsightGenerationError(
@@ -224,6 +233,7 @@ async function maybeRecordCalibrationUsage(args: {
   readonly durationMs: number;
   readonly success: boolean;
   readonly errorKind: string | null;
+  readonly dispatch: LlmDispatchRecord | null;
 }): Promise<void> {
   if (!args.options.recordUsage) return;
 
@@ -240,6 +250,7 @@ async function maybeRecordCalibrationUsage(args: {
       durationMs: args.durationMs,
       success: args.success,
       errorKind: args.errorKind,
+      dispatch: args.dispatch,
     },
     args.options.usageClient
   );

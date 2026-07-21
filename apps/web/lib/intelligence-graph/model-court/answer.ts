@@ -5,6 +5,7 @@ import {
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
+import type { LlmDispatchRecord } from "@/lib/claude-api/cost-policy";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -134,17 +135,22 @@ export async function answerModelCourtQuestion(
     }
   }
 
+  let dispatch: LlmDispatchRecord | null = null;
   try {
-    const result = await callClaude({
-      apiKey: options.apiKey,
-      fetchImpl: options.fetchImpl,
-      model: modelName,
-      maxTokens: 1200,
-      temperature: 0.1,
-      system: SYSTEM_PROMPT,
-      user: buildPromptUser(input),
-      cache: { system: true },
-    });
+    const result = await callClaude(
+      {
+        apiKey: options.apiKey,
+        fetchImpl: options.fetchImpl,
+        model: modelName,
+        maxTokens: 1200,
+        temperature: 0.1,
+        system: SYSTEM_PROMPT,
+        user: buildPromptUser(input),
+        cache: { system: true },
+      },
+      undefined,
+      { onDispatch: (record) => { dispatch = record; } },
+    );
     const policyFailures = evaluateModelCourtAnswerPolicy(result.text);
     if (policyFailures.length > 0) {
       await maybeRecordModelCourtUsage({
@@ -156,6 +162,7 @@ export async function answerModelCourtQuestion(
         durationMs: result.durationMs,
         success: false,
         errorKind: `POLICY_${policyFailures[0]}`,
+        dispatch,
       });
       throw new ModelCourtAnswerError(`Model Court answer failed policy validation: ${policyFailures.join(", ")}`);
     }
@@ -169,6 +176,7 @@ export async function answerModelCourtQuestion(
       durationMs: result.durationMs,
       success: true,
       errorKind: null,
+      dispatch,
     });
 
     return {
@@ -188,6 +196,7 @@ export async function answerModelCourtQuestion(
         durationMs: error.durationMs,
         success: false,
         errorKind: `HTTP_${error.status}`,
+        dispatch,
       });
     }
     throw new ModelCourtAnswerError(error instanceof Error ? error.message : "Model Court answer failed.");
@@ -366,6 +375,7 @@ async function maybeRecordModelCourtUsage(args: {
   readonly durationMs: number;
   readonly success: boolean;
   readonly errorKind: string | null;
+  readonly dispatch: LlmDispatchRecord | null;
 }): Promise<void> {
   if (!args.options.recordUsage) return;
 
@@ -382,6 +392,7 @@ async function maybeRecordModelCourtUsage(args: {
       durationMs: args.durationMs,
       success: args.success,
       errorKind: args.errorKind,
+      dispatch: args.dispatch,
     },
     args.options.usageClient
   );

@@ -13,6 +13,7 @@ import {
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
+import type { LlmDispatchRecord } from "@/lib/claude-api/cost-policy";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -90,6 +91,7 @@ export async function draftLossAutopsy(
     durationMs: number;
     success: boolean;
     errorKind: string | null;
+    dispatch: LlmDispatchRecord | null;
   }): Promise<void> => {
     if (options.recordUsage === false) return;
     try {
@@ -106,6 +108,7 @@ export async function draftLossAutopsy(
           durationMs: args.durationMs,
           success: args.success,
           errorKind: args.errorKind,
+          dispatch: args.dispatch,
         },
         options.usageClient,
       );
@@ -114,17 +117,22 @@ export async function draftLossAutopsy(
     }
   };
 
+  let dispatch: LlmDispatchRecord | null = null;
   try {
-    const result = await callClaude({
-      apiKey: options.apiKey,
-      fetchImpl: options.fetchImpl,
-      model: modelName,
-      maxTokens: 800,
-      temperature: 0.2,
-      system: LOSS_AUTOPSY_SYSTEM,
-      user: buildLossAutopsyUser(grounded.context),
-      cache: { system: true },
-    });
+    const result = await callClaude(
+      {
+        apiKey: options.apiKey,
+        fetchImpl: options.fetchImpl,
+        model: modelName,
+        maxTokens: 800,
+        temperature: 0.2,
+        system: LOSS_AUTOPSY_SYSTEM,
+        user: buildLossAutopsyUser(grounded.context),
+        cache: { system: true },
+      },
+      undefined,
+      { onDispatch: (record) => { dispatch = record; } },
+    );
 
     const parsed = parseLossAutopsyDraft(result.text);
     if (!parsed.ok) {
@@ -135,6 +143,7 @@ export async function draftLossAutopsy(
         durationMs: result.durationMs,
         success: false,
         errorKind: `PARSE_${parsed.failures[0]}`,
+        dispatch,
       });
       throw new LossAutopsyDraftError(
         `Draft failed validation: ${parsed.failures.join(", ")}`,
@@ -149,6 +158,7 @@ export async function draftLossAutopsy(
       durationMs: result.durationMs,
       success: true,
       errorKind: null,
+      dispatch,
     });
 
     return { draft: parsed.draft, modelName: result.modelName };
@@ -162,6 +172,7 @@ export async function draftLossAutopsy(
         durationMs: error.durationMs,
         success: false,
         errorKind: `HTTP_${error.status}`,
+        dispatch,
       });
     }
     throw new LossAutopsyDraftError(

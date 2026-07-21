@@ -12,6 +12,7 @@ import {
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
+import type { LlmDispatchRecord } from "@/lib/claude-api/cost-policy";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -94,6 +95,7 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
     durationMs: number;
     success: boolean;
     errorKind: string | null;
+    dispatch: LlmDispatchRecord | null;
   }): Promise<void> => {
     if (options.recordUsage === false) return;
     try {
@@ -110,6 +112,7 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
           durationMs: args.durationMs,
           success: args.success,
           errorKind: args.errorKind,
+          dispatch: args.dispatch,
         },
         options.usageClient,
       );
@@ -118,17 +121,22 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
     }
   };
 
+  let dispatch: LlmDispatchRecord | null = null;
   try {
-    const result = await callClaude({
-      apiKey: options.apiKey,
-      fetchImpl: options.fetchImpl,
-      model: modelName,
-      maxTokens: 450,
-      temperature: 0.1,
-      system: buildExplainSystem(options.register ?? DEFAULT_EXPLAIN_REGISTER),
-      user: buildExplainUser({ context: grounded.context, question: options.question }),
-      cache: { system: true },
-    });
+    const result = await callClaude(
+      {
+        apiKey: options.apiKey,
+        fetchImpl: options.fetchImpl,
+        model: modelName,
+        maxTokens: 450,
+        temperature: 0.1,
+        system: buildExplainSystem(options.register ?? DEFAULT_EXPLAIN_REGISTER),
+        user: buildExplainUser({ context: grounded.context, question: options.question }),
+        cache: { system: true },
+      },
+      undefined,
+      { onDispatch: (record) => { dispatch = record; } },
+    );
 
     const failures = evaluatePickExplanationPolicy(result.text);
     if (failures.length > 0) {
@@ -139,6 +147,7 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
         durationMs: result.durationMs,
         success: false,
         errorKind: `POLICY_${failures[0]}`,
+        dispatch,
       });
       throw new PickExplanationError(
         `Explanation failed policy validation: ${failures.join(", ")}`,
@@ -153,6 +162,7 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
       durationMs: result.durationMs,
       success: true,
       errorKind: null,
+      dispatch,
     });
 
     return { text: result.text.trim(), modelName: result.modelName };
@@ -166,6 +176,7 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
         durationMs: error.durationMs,
         success: false,
         errorKind: `HTTP_${error.status}`,
+        dispatch,
       });
     }
     throw new PickExplanationError(
