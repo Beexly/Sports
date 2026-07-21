@@ -133,7 +133,11 @@ export async function fetchOpportunitySourceSnapshot(
 
   let url: URL;
   try {
-    url = new URL(source.url);
+    const sourceUrl =
+      source.id === "mcp-official-registry" && source.url === "https://registry.modelcontextprotocol.io/"
+        ? "https://registry.modelcontextprotocol.io/v0.1/servers?limit=100"
+        : source.url;
+    url = new URL(sourceUrl);
   } catch {
     return failedResult(source, prior, checkedAt, "Source URL is invalid.", null);
   }
