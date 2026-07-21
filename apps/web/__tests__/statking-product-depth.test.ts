@@ -28,6 +28,12 @@ describe('StatKing product depth', () => {
     expect(askStatKing('top YouTube sources').title).toContain('YouTube');
   });
 
+  it('Ask StatKing gives an honest miss for an unrecognized query instead of silently answering a different question', () => {
+    const answer = askStatKing('who is going to win the puppy bowl');
+    expect(answer.rows.length).toBe(0);
+    expect(answer.title).not.toContain('Best players');
+  });
+
   it('loads source targets and media snapshots', () => {
     expect(loadSourceTargets().top_50_easiest_wins.length).toBe(50);
     expect(loadMediaItems().filter((item) => item.rights_mode === 'metadata_only').length).toBeGreaterThan(0);

@@ -87,7 +87,12 @@ export function askStatKing(query: string) {
   if (q.includes("mirage")) return { title: "Mirage risk players", rows: players.sort((a,b)=>b.mirage_risk-a.mirage_risk).slice(0,5) };
   if (q.includes("youtube")) return { title: "Top YouTube sources", rows: loadMediaItems().filter(i=>i.platform==="youtube").slice(0,5) };
   if (q.includes("source") || q.includes("activation")) return { title: "Sources needing activation", rows: loadSourceTargets().top_50_easiest_wins.slice(0,5) };
-  return { title: "Best players by Galaxy Player Index", rows: rankPlayers().slice(0,5) };
+  if (q.includes("best") || q.includes("top") || q.includes("rank") || q.includes("qb")) return { title: "Best players by Galaxy Player Index", rows: rankPlayers().slice(0,5) };
+  // Honest miss: an unrecognized query must not silently answer a different
+  // question than the one asked (CLAUDE.md — no fabricated/misattributed
+  // stats). page.tsx's own empty-rows state already renders "No results
+  // matched" for this case.
+  return { title: "No match for that question", rows: [] };
 }
 export function loadIntegrityStatus() { return readJson<{commands:Array<Record<string, unknown>>; final_recommendation:string; merge_safety:string}>("data/statking/integrity/integrity_status.json"); }
 export function loadRightsLedger() { return readJson<{rights_count:number; rights:Array<Record<string, unknown>>}>("data/statking/rights/rights_ledger.json"); }
