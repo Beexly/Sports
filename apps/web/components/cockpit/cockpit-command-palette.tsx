@@ -36,6 +36,7 @@ export const COCKPIT_COMMANDS: readonly CockpitCommand[] = [
   // Command
   { label: "Overview", href: "/cockpit", group: "Command", keywords: "jarvis launch assessment home" },
   { label: "Command Center", href: "/cockpit/command-center", group: "Command", keywords: "ranked owner attention" },
+  { label: "NOVA", href: "/cockpit/nova", group: "Command", keywords: "ai opportunity monetization platforms models credits partnerships affiliates revenue" },
   { label: "Daily brief", href: "/cockpit/brief", group: "Command", keywords: "today slate snapshot" },
   { label: "Tasks", href: "/cockpit/tasks", group: "Command", keywords: "queue status" },
   { label: "Review", href: "/cockpit/review", group: "Command", keywords: "needs review blocked" },
@@ -195,7 +196,7 @@ export function CockpitCommandPalette() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={onInputKey}
-            placeholder="Jump to a cockpit view — tasks, calibration, airwave…"
+            placeholder="Jump to a cockpit view — NOVA, tasks, calibration, airwave…"
             className="flex-1 bg-transparent font-mono text-sm text-ion-white outline-none placeholder:text-ion-3"
             aria-label="Search cockpit commands"
           />
