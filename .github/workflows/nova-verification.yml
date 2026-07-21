@@ -1,0 +1,100 @@
+name: NOVA Verification
+
+on:
+  push:
+    branches:
+      - codex/nova-ai-opportunity-engine-2026-07-21
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nova-verification-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused-verification:
+    name: Focused NOVA tests and guardrails
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Run focused NOVA Vitest suite
+        id: nova-tests
+        shell: bash
+        run: |
+          set +e
+          cd apps/web
+          npx vitest run __tests__/nova*.test.ts --reporter=verbose 2>&1 | tee ../../nova-tests.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Run NOVA deterministic runtime tests
+        id: nova-runtime
+        shell: bash
+        run: |
+          set +e
+          node --test scripts/nova/nova-intelligence.test.mjs 2>&1 | tee nova-runtime-tests.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Run trust gate with retained output
+        id: trust-gate
+        shell: bash
+        run: |
+          set +e
+          node scripts/guardrails/trust-gate.mjs 2>&1 | tee nova-trust-gate.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Write verification summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "# NOVA focused verification"
+            echo
+            echo "- NOVA Vitest exit: ${{ steps.nova-tests.outputs.exit_code }}"
+            echo "- NOVA runtime exit: ${{ steps.nova-runtime.outputs.exit_code }}"
+            echo "- Trust gate exit: ${{ steps.trust-gate.outputs.exit_code }}"
+            echo "- Commit: ${{ github.sha }}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-verification-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            nova-tests.log
+            nova-runtime-tests.log
+            nova-trust-gate.log
+
+      - name: Enforce focused verification
+        if: always()
+        shell: bash
+        run: |
+          test "${{ steps.nova-tests.outputs.exit_code }}" = "0"
+          test "${{ steps.nova-runtime.outputs.exit_code }}" = "0"
+          test "${{ steps.trust-gate.outputs.exit_code }}" = "0"
