@@ -91,27 +91,41 @@ export async function settleSport(
 
       const bothScores = score.homeScore !== null && score.awayScore !== null;
 
-      // Never write scores unless BOTH are present. A completed-but-scoreless
-      // feed row (Odds API drops the scores array for an older completed game,
-      // a PPD/cancelled game flagged completed=true, or a team-name lookup miss)
-      // must NOT overwrite a previously-recorded FINAL score with null — that
-      // would erase a published outcome and leave an inconsistent FINAL-with-null
-      // state that score-verification / settlement / backtest consumers read as
-      // the result. Gate the whole data object: an empty update is a harmless
-      // no-op that preserves the existing recorded score and status.
+      if (!bothScores) {
+        // Completed feed row with no scores: PPD/cancelled game. If the game is
+        // not already FINAL (no previously-recorded result), mark it POSTPONED
+        // and void any pending picks so they never sit PENDING indefinitely.
+        // Guard on SCHEDULED/LIVE only — never overwrite an existing FINAL.
+        if (game.status === "SCHEDULED" || game.status === "LIVE") {
+          await db.game.update({
+            where: { id: game.id },
+            data: { status: "POSTPONED" as const },
+          });
+          if (game.picks.length > 0) {
+            const voidedAt = new Date();
+            await db.pick.updateMany({
+              where: { gameId: game.id, result: "PENDING" },
+              data: { result: "VOID" as const, settledAt: voidedAt },
+            });
+            picksSettled += game.picks.length;
+          }
+          gamesSettled++;
+        }
+        continue;
+      }
+
+      // Both scores present — record the final outcome.
       await db.game.update({
         where: { id: game.id },
-        data: bothScores
-          ? {
-              homeScore: score.homeScore,
-              awayScore: score.awayScore,
-              status: "FINAL" as const,
-            }
-          : {},
+        data: {
+          homeScore: score.homeScore,
+          awayScore: score.awayScore,
+          status: "FINAL" as const,
+        },
       });
 
-      // The inline null-check (not the bothScores boolean) is what narrows the
-      // score types to `number` for the settlement math below.
+      // Inline null-check for TypeScript narrowing — scores are guaranteed non-null
+      // here because the !bothScores path above does `continue` first.
       if (score.homeScore !== null && score.awayScore !== null) {
         // Settle pick results — always runs, regardless of bootstrap mode.
         // Real game outcomes are source truth and must be recorded.
