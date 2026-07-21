@@ -29,6 +29,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
       { href: "/cockpit", label: "Overview", hint: "Jarvis launch assessment" },
       { href: "/cockpit/command-center", label: "Command Center", hint: "Ranked owner attention" },
       { href: "/cockpit/nova", label: "NOVA", hint: "AI opportunity economy" },
+      { href: "/cockpit/nova/founder", label: "Founder OS", hint: "What · why · when · how" },
       { href: "/cockpit/brief", label: "Daily brief", hint: "Today's slate snapshot" },
       { href: "/cockpit/tasks", label: "Tasks", hint: "Queue by status" },
       { href: "/cockpit/review", label: "Review", hint: "Needs-review + blocked" },
