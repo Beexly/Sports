@@ -12,16 +12,20 @@ export type CapabilityConnectionState =
   | "RECONNECT_REQUIRED"
   | "NOT_CONNECTED"
   | "RUNTIME_VISIBLE";
-export type CapabilityCaptureBatch = "INITIAL_USER_CAPTURE" | "ADDITIONAL_USER_CAPTURE" | "CHATGPT_RUNTIME_CAPTURE";
+export type CapabilityCaptureBatch =
+  | "INITIAL_USER_CAPTURE"
+  | "ADDITIONAL_USER_CAPTURE"
+  | "CHATGPT_RUNTIME_CAPTURE";
 
-type CapturedPluginTuple = readonly [name: string, author: string, skillCount: number, lastUpdated: string];
-
-const INITIAL_CLAUDE_PLUGINS = inventoryData.claude.plugins as readonly CapturedPluginTuple[];
-const ADDITIONAL_CLAUDE_PLUGINS = additionData.plugins as readonly CapturedPluginTuple[];
-const ALL_CLAUDE_PLUGINS: readonly CapturedPluginTuple[] = [
-  ...INITIAL_CLAUDE_PLUGINS,
-  ...ADDITIONAL_CLAUDE_PLUGINS,
+type CapturedPluginTuple = readonly [
+  name: string,
+  author: string,
+  skillCount: number,
+  lastUpdated: string,
 ];
+
+const INITIAL_CLAUDE_PLUGINS = inventoryData.claude.plugins as unknown as readonly CapturedPluginTuple[];
+const ADDITIONAL_CLAUDE_PLUGINS = additionData.plugins as unknown as readonly CapturedPluginTuple[];
 
 export interface CapabilityInventoryEntry {
   readonly id: string;
@@ -187,7 +191,12 @@ export function validateCapabilityInventory(
   if (summary.additionalClaudePlugins !== additionData.counts.plugins) {
     errors.push("Additional Claude plugin count drifted from the latest capture.");
   }
-  if (summary.claudeConnectors !== inventoryData.counts.claudeConnectedConnectors + inventoryData.counts.claudeReconnectRequired + inventoryData.counts.claudeNotConnectedOrUnavailable) {
+  if (
+    summary.claudeConnectors !==
+    inventoryData.counts.claudeConnectedConnectors +
+      inventoryData.counts.claudeReconnectRequired +
+      inventoryData.counts.claudeNotConnectedOrUnavailable
+  ) {
     errors.push("Claude connector count drifted from captured inventory.");
   }
   if (summary.claudeSkills !== inventoryData.counts.claudePersonalSkills) {
