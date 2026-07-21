@@ -22,6 +22,12 @@ import { LedgerStoreUnavailableError } from "@/lib/jarvis/ledgers";
 import { buildLedgerStatus, buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { AGENT_COUNCIL } from "@/lib/jarvis/agent-council";
 
+// ─── Mock auth — functions are "use server" and require admin session ─────────
+
+vi.mock("@/lib/auth", () => ({
+  auth: vi.fn().mockResolvedValue({ user: { role: "ADMIN", id: "test-admin" } }),
+}));
+
 // ─── Mock the db client ───────────────────────────────────────────────────────
 
 vi.mock("@sports/db", () => ({
