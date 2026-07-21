@@ -36,7 +36,7 @@ jobs:
           POSTGRES_PASSWORD: sports_test
           POSTGRES_DB: sports_test
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U sports -d sports_test"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
