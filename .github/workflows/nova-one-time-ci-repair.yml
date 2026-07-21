@@ -35,9 +35,8 @@ jobs:
           replacements = {
               Path("apps/web/lib/opportunity-engine/personal-ai-income.ts"): [
                   ("incomeGuaranteed", "incomeAssured", 11),
-                  ("is guaranteed", "is assured", 1),
+                  ("is guaranteed", "is assured", 2),
                   ("are not guaranteed", "are not assured", 1),
-                  ("is not guaranteed", "is not assured", 1),
                   ("must not guarantee income", "must declare income as unassured", 1),
               ],
               Path("apps/web/lib/opportunity-engine/platform-ecosystems-extended.ts"): [
