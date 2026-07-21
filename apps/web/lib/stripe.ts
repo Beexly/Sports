@@ -101,8 +101,34 @@ export async function getOrCreateStripeCustomer(
   return customer.id;
 }
 
+/** A per-intent checkout-attempt token: a UUID the caller mints once per user
+ * checkout intent and reuses only when retrying that same intent. */
+const CHECKOUT_ATTEMPT_ID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export class CheckoutAttemptIdError extends Error {
+  readonly code = "INVALID_CHECKOUT_ATTEMPT_ID" as const;
+  constructor() {
+    super("checkoutAttemptId must be a UUID minted once per checkout intent.");
+    this.name = "CheckoutAttemptIdError";
+  }
+}
+
 /**
  * Create a Stripe Checkout Session for subscription upgrade.
+ *
+ * Idempotency is keyed on a per-intent `checkoutAttemptId` (a UUID the caller
+ * mints once per user checkout intent), NOT on user+price. Stripe replays the
+ * response for a repeated idempotency key within its 24h window, so a key that
+ * is stable per (user, price) — as an earlier draft used — is wrong two ways:
+ *   1. It REPLAYS a stale Checkout Session when the user legitimately starts a
+ *      new checkout for the same plan within 24h (e.g. abandoned the first).
+ *   2. It COLLAPSES two genuinely distinct purchase intents (e.g. resubscribe
+ *      after cancellation) into one, hiding the second from Stripe.
+ * A fresh per-intent id fixes both while still deduping a true retry of the
+ * SAME intent (same id → Stripe safely returns the same session, no double
+ * charge). userId is folded into the key so two users can never collide even
+ * if a client supplies a duplicate id.
  */
 export async function createCheckoutSession({
   customerId,
@@ -110,13 +136,18 @@ export async function createCheckoutSession({
   userId,
   successUrl,
   cancelUrl,
+  checkoutAttemptId,
 }: {
   customerId: string;
   priceId: string;
   userId: string;
   successUrl: string;
   cancelUrl: string;
+  checkoutAttemptId: string;
 }): Promise<Stripe.Checkout.Session> {
+  if (!CHECKOUT_ATTEMPT_ID_PATTERN.test(checkoutAttemptId)) {
+    throw new CheckoutAttemptIdError();
+  }
   const params: Stripe.Checkout.SessionCreateParams = {
     customer: customerId,
     payment_method_types: ["card"],
@@ -155,7 +186,9 @@ export async function createCheckoutSession({
     params.consent_collection = { terms_of_service: "required" };
   }
 
-  return stripe.checkout.sessions.create(params);
+  return stripe.checkout.sessions.create(params, {
+    idempotencyKey: `gse-checkout-${userId}-${checkoutAttemptId}`,
+  });
 }
 
 /**

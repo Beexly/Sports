@@ -24,7 +24,10 @@ import type Stripe from "stripe";
 const stripeMocks = vi.hoisted(() => ({
   create:
     vi.fn<
-      (params: Stripe.Checkout.SessionCreateParams) => Promise<Stripe.Checkout.Session>
+      (
+        params: Stripe.Checkout.SessionCreateParams,
+        options?: { idempotencyKey?: string },
+      ) => Promise<Stripe.Checkout.Session>
     >(),
 }));
 
@@ -45,6 +48,7 @@ const ARGS = {
   userId: "user_test_1",
   successUrl: "https://app.example.com/dashboard?upgraded=true",
   cancelUrl: "https://app.example.com/pricing",
+  checkoutAttemptId: "11111111-1111-4111-8111-111111111111",
 } as const;
 
 function lastCreateParams(): Stripe.Checkout.SessionCreateParams {
@@ -151,5 +155,22 @@ describe("createCheckoutSession — negative-option compliance", () => {
     expect(params.cancel_url).toBe(ARGS.cancelUrl);
     expect(params.metadata).toEqual({ userId: "user_test_1" });
     expect(params.subscription_data?.metadata).toEqual({ userId: "user_test_1" });
+  });
+
+  it("keys idempotency on userId + the per-intent attempt id (not user+price)", async () => {
+    await createCheckoutSession({ ...ARGS });
+    const options = stripeMocks.create.mock.calls[0]![1];
+    expect(options?.idempotencyKey).toBe(
+      `gse-checkout-${ARGS.userId}-${ARGS.checkoutAttemptId}`,
+    );
+    // The price id must NOT appear in the key — that was the collapse-bug.
+    expect(options?.idempotencyKey).not.toContain(ARGS.priceId);
+  });
+
+  it("rejects a malformed checkoutAttemptId before calling Stripe", async () => {
+    await expect(
+      createCheckoutSession({ ...ARGS, checkoutAttemptId: "nope" }),
+    ).rejects.toThrow(/checkoutAttemptId/);
+    expect(stripeMocks.create).not.toHaveBeenCalled();
   });
 });

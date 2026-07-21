@@ -91,13 +91,41 @@ describe("POST /api/subscriptions/checkout", () => {
     expect(res.status).toBe(200);
     expect(body.url).toBe("https://checkout.stripe.com/s/123");
     expect(mocks.getOrCreateStripeCustomer).toHaveBeenCalledWith("user_1", "pro@example.com", "Pro User");
-    expect(mocks.createCheckoutSession).toHaveBeenCalledWith({
-      customerId: "cus_123",
-      priceId: "price_pro_monthly",
-      userId: "user_1",
-      successUrl: "https://app.example.com/dashboard?upgraded=true",
-      cancelUrl: "https://app.example.com/pricing",
-    });
+    expect(mocks.createCheckoutSession).toHaveBeenCalledWith(
+      expect.objectContaining({
+        customerId: "cus_123",
+        priceId: "price_pro_monthly",
+        userId: "user_1",
+        successUrl: "https://app.example.com/dashboard?upgraded=true",
+        cancelUrl: "https://app.example.com/pricing",
+        checkoutAttemptId: expect.stringMatching(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+        ),
+      }),
+    );
+  });
+
+  it("mints a fresh checkoutAttemptId per request when the client omits one", async () => {
+    await POST(checkoutRequest({ tier: "PRO" }));
+    await POST(checkoutRequest({ tier: "PRO" }));
+    const firstArg = mocks.createCheckoutSession.mock.calls[0]![0] as { checkoutAttemptId: string };
+    const secondArg = mocks.createCheckoutSession.mock.calls[1]![0] as { checkoutAttemptId: string };
+    // Two token-less requests are two distinct intents — distinct ids, never
+    // collapsed (the exact bug of a static user+price idempotency key).
+    expect(firstArg.checkoutAttemptId).not.toBe(secondArg.checkoutAttemptId);
+  });
+
+  it("passes a client-supplied checkoutAttemptId through unchanged (so a true retry dedupes)", async () => {
+    const clientToken = "22222222-2222-4222-8222-222222222222";
+    await POST(checkoutRequest({ tier: "PRO", checkoutAttemptId: clientToken }));
+    const arg = mocks.createCheckoutSession.mock.calls[0]![0] as { checkoutAttemptId: string };
+    expect(arg.checkoutAttemptId).toBe(clientToken);
+  });
+
+  it("rejects a malformed client checkoutAttemptId with 400 (never forwards garbage to Stripe)", async () => {
+    const res = await POST(checkoutRequest({ tier: "PRO", checkoutAttemptId: "not-a-uuid" }));
+    expect(res.status).toBe(400);
+    expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
   });
 
   it("blocks a second checkout for an already-subscribed user (409, no Stripe call)", async () => {

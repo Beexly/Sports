@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -53,6 +53,12 @@ export function SubscribeButton({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Per-intent idempotency token: minted once for this button mount (= this
+  // pricing-page visit's decision to buy this plan) and reused across retries
+  // of a failed attempt, so a network retry dedupes at Stripe instead of
+  // double-creating a session. A successful checkout navigates away (unmount),
+  // so the next visit mints a fresh token = a genuinely new intent.
+  const checkoutAttemptId = useRef<string | null>(null);
   // Unique id so assistive tech can announce the recurring-billing disclosure as
   // the button's description (aria-describedby). useId keeps it unique even when
   // several SubscribeButtons render on the same /pricing page.
@@ -69,11 +75,13 @@ export function SubscribeButton({
   async function handleClick() {
     setError(null);
     setLoading(true);
+    // Mint the per-intent token on first attempt; reuse it on retry.
+    checkoutAttemptId.current ??= crypto.randomUUID();
     try {
       const res = await fetch("/api/subscriptions/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier, interval }),
+        body: JSON.stringify({ tier, interval, checkoutAttemptId: checkoutAttemptId.current }),
       });
 
       if (res.status === 401) {

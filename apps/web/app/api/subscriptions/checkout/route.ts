@@ -12,6 +12,12 @@ import {
 const CheckoutSchema = z.object({
   tier: z.enum(["FANTASY", "PRO", "ELITE"]),
   interval: z.enum(["month", "year"]).default("month"),
+  // Per-intent idempotency token the client mints once per Subscribe click and
+  // reuses across network retries of THAT click. Optional: a client that omits
+  // it (or sends a malformed one) gets a fresh server-minted id, i.e. each such
+  // request is treated as a distinct intent — the safe default, never collapsing
+  // two genuine intents. Supplying it is what makes a true client retry dedupe.
+  checkoutAttemptId: z.string().uuid().optional(),
 });
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -38,6 +44,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const { tier, interval } = parsed.data;
+  // Reuse the client's per-intent token when present (safe cross-retry dedup);
+  // otherwise mint one so each token-less request is its own distinct intent.
+  const checkoutAttemptId = parsed.data.checkoutAttemptId ?? crypto.randomUUID();
   const priceId = getStripePriceId(tier, interval);
   if (!priceId) {
     return NextResponse.json(
@@ -94,6 +103,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       userId: session.user.id,
       successUrl: `${appUrl}/dashboard?upgraded=true`,
       cancelUrl: `${appUrl}/pricing`,
+      checkoutAttemptId,
     });
 
     return NextResponse.json({ url: checkoutSession.url });
