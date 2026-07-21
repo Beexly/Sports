@@ -76,10 +76,19 @@ vi.mock("@sports/data-ingestion", () => ({
   getHeadToHeadForm: mocks.getHeadToHeadForm,
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  scoreGames: mocks.scoreGames,
-  buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
-}));
+vi.mock("@sports/prediction-engine", async () => {
+  // selectionIsHomeSide is the REAL, canonical (#119) implementation — not a
+  // hand-rolled test double — so these tests prove the actual side-resolution
+  // boundary logic, not a stand-in for it.
+  const actual = await vi.importActual<typeof import("@sports/prediction-engine")>(
+    "@sports/prediction-engine",
+  );
+  return {
+    scoreGames: mocks.scoreGames,
+    buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
+    selectionIsHomeSide: actual.selectionIsHomeSide,
+  };
+});
 
 vi.mock("../source-snapshot.js", () => ({
   recordSourceSnapshot: vi.fn().mockResolvedValue(undefined),
@@ -237,6 +246,158 @@ describe("processSport", () => {
     expect(mocks.ingestionRunUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ status: "SUCCESS", gamesUpserted: 0, oddsInserted: 0 }),
+      }),
+    );
+  });
+
+  it("captures bookDisagreementAtLock (max-min book spread) write-once at pick creation", async () => {
+    // Three books quoting the SPREAD for the game: -3, -3.5, -2.5 -> dispersion 1.0.
+    mocks.normalizeGames.mockReturnValue([normalizedGame()]);
+    mocks.normalizeOdds.mockReturnValue([
+      { gameExternalId: "ext-1", bookmaker: "a", market: "SPREADS", spread: -3 },
+      { gameExternalId: "ext-1", bookmaker: "b", market: "SPREADS", spread: -3.5 },
+      { gameExternalId: "ext-1", bookmaker: "c", market: "SPREADS", spread: -2.5 },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+    // scoredPick default is a SPREAD pick on game-1 (= gameUpsert id).
+
+    await processSport(SPORT, "key", gates());
+
+    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
+    expect(call.create["bookDisagreementAtLock"]).toBeCloseTo(1.0, 10);
+    // Write-once: never in the update path (immutable lock-time measurement).
+    const upd = (mocks.pickUpsert.mock.calls[0]![0] as { update: Record<string, unknown> }).update;
+    expect(upd).not.toHaveProperty("bookDisagreementAtLock");
+  });
+
+  it("captures an AWAY moneyline pick's bookDisagreementAtLock from the AWAY side, not home (write-once)", async () => {
+    // normalizedGame default: home "Chiefs", away "Bills". Books AGREE on the home
+    // price (both -150 → 0.6, dispersion 0) but DISAGREE on the away price. The
+    // published pick is the AWAY team (Bills), so the lock must reflect the AWAY
+    // side's dispersion (> 0). A home-hardcoded capture would (wrongly) persist 0.
+    mocks.normalizeGames.mockReturnValue([normalizedGame()]);
+    mocks.normalizeOdds.mockReturnValue([
+      { gameExternalId: "ext-1", bookmaker: "a", market: "H2H", homePrice: -150, awayPrice: 130 },
+      { gameExternalId: "ext-1", bookmaker: "b", market: "H2H", homePrice: -150, awayPrice: 110 },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickType: "MONEYLINE", selection: "Bills ML (+120)", line: 120 }),
+    ]);
+
+    await processSport(SPORT, "key", gates());
+
+    const call = mocks.pickUpsert.mock.calls[0]![0] as {
+      create: Record<string, unknown>;
+      update: Record<string, unknown>;
+    };
+    const awayDispersion = 100 / 210 - 100 / 230; // away implied-prob spread (+110 vs +130)
+    expect(call.create["bookDisagreementAtLock"]).toBeCloseTo(awayDispersion, 10);
+    expect(call.create["bookDisagreementAtLock"] as number).toBeGreaterThan(0);
+    // Guard against the home-side regression: the home dispersion here is exactly 0.
+    expect(call.create["bookDisagreementAtLock"]).not.toBe(0);
+    // Write-once: never in the update path (immutable lock-time measurement).
+    expect(call.update).not.toHaveProperty("bookDisagreementAtLock");
+  });
+
+  it("resolves an away ML pick to the AWAY dispersion even when the away team name is a SPACED PREFIX of the home team (#119 regression class)", async () => {
+    // Fable/#119 bug class: a spaced-prefix heuristic (pickSelectionSide) would
+    // match "St. Louis City SC" (the away team) against the home team string
+    // "St. Louis City SC 2" and mis-derive the side. The canonical
+    // selectionIsHomeSide is boundary-aware and prefers the MOST SPECIFIC match:
+    // the away selection "St. Louis City SC ML (+150)" must resolve to the away
+    // dispersion, not home.
+    mocks.normalizeGames.mockReturnValue([
+      normalizedGame({ homeTeam: "St. Louis City SC 2", awayTeam: "St. Louis City SC" }),
+    ]);
+    mocks.normalizeOdds.mockReturnValue([
+      { gameExternalId: "ext-1", bookmaker: "a", market: "H2H", homePrice: -150, awayPrice: 130 },
+      { gameExternalId: "ext-1", bookmaker: "b", market: "H2H", homePrice: -150, awayPrice: 110 },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({
+        pickType: "MONEYLINE",
+        selection: "St. Louis City SC ML (+130)",
+        line: 130,
+      }),
+    ]);
+
+    await processSport(SPORT, "key", gates());
+
+    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
+    const awayDispersion = 100 / 210 - 100 / 230;
+    expect(call.create["bookDisagreementAtLock"]).toBeCloseTo(awayDispersion, 10);
+    expect(call.create["bookDisagreementAtLock"]).not.toBe(0);
+  });
+
+  it("resolves a selection EXACTLY equal to the home team to the HOME dispersion (#119 regression class)", async () => {
+    mocks.normalizeGames.mockReturnValue([
+      normalizedGame({ homeTeam: "St. Louis City SC 2", awayTeam: "St. Louis City SC" }),
+    ]);
+    mocks.normalizeOdds.mockReturnValue([
+      { gameExternalId: "ext-1", bookmaker: "a", market: "H2H", homePrice: -150, awayPrice: 130 },
+      { gameExternalId: "ext-1", bookmaker: "b", market: "H2H", homePrice: -150, awayPrice: 110 },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({
+        pickType: "MONEYLINE",
+        selection: "St. Louis City SC 2 ML (-150)",
+        line: -150,
+      }),
+    ]);
+
+    await processSport(SPORT, "key", gates());
+
+    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
+    // Both books agree on the home price (-150) → home dispersion is exactly 0.
+    expect(call.create["bookDisagreementAtLock"]).toBe(0);
+  });
+
+  it("writes null bookDisagreementAtLock when fewer than two books quote the kind", async () => {
+    mocks.normalizeGames.mockReturnValue([normalizedGame()]);
+    mocks.normalizeOdds.mockReturnValue([
+      { gameExternalId: "ext-1", bookmaker: "a", market: "SPREADS", spread: -3 },
+    ]);
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+    await processSport(SPORT, "key", gates());
+
+    const call = mocks.pickUpsert.mock.calls[0]![0] as { create: Record<string, unknown> };
+    expect(call.create["bookDisagreementAtLock"]).toBeNull();
+  });
+
+  it("MIGRATION SAFETY: a pre-migration missing-column write failure fails the run gracefully, never throws", async () => {
+    // Reproduces the exact historical outage (#69/#70 -> #71): a Prisma Client
+    // generated from a schema.prisma that declares bookDisagreementAtLock, run
+    // against a database where the additive migration has not yet been applied
+    // (the founder applies migrations manually; a deploy can land ahead of the
+    // apply). Prisma surfaces this as a runtime Postgres error on the INSERT —
+    // not a TypeScript-catchable precondition — so the only safety net is
+    // processSport's function-level catch. It MUST swallow this into a FAILED
+    // run and never let it escape as an unhandled rejection/throw, which is
+    // what would turn a missing column into a 500 for any caller that awaits
+    // this (the admin trigger-refresh route, the cron worker).
+    mocks.pickUpsert.mockRejectedValue(
+      Object.assign(
+        new Error(
+          "The column `picks.bookDisagreementAtLock` does not exist in the current database.",
+        ),
+        { code: "P2022" },
+      ),
+    );
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(result.status).toBe("failed");
+    expect(result.error).toMatch(/bookDisagreementAtLock.*does not exist/);
+    expect(mocks.ingestionRunUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          status: "FAILED",
+          errorMessage: expect.stringContaining("bookDisagreementAtLock"),
+        }),
       }),
     );
   });
