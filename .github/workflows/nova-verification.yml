@@ -26,7 +26,7 @@ jobs:
   focused-verification:
     name: Focused NOVA tests and guardrails
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Check out branch
@@ -65,6 +65,26 @@ jobs:
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit 0
 
+      - name: Run web lint with retained output
+        id: web-lint
+        shell: bash
+        run: |
+          set +e
+          npm run lint --workspace=apps/web 2>&1 | tee nova-web-lint.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Run web typecheck with retained output
+        id: web-typecheck
+        shell: bash
+        run: |
+          set +e
+          npm run typecheck --workspace=apps/web 2>&1 | tee nova-web-typecheck.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
       - name: Run trust gate with retained output
         id: trust-gate
         shell: bash
@@ -84,6 +104,8 @@ jobs:
             echo
             echo "- NOVA Vitest exit: ${{ steps.nova-tests.outputs.exit_code }}"
             echo "- NOVA runtime exit: ${{ steps.nova-runtime.outputs.exit_code }}"
+            echo "- Web lint exit: ${{ steps.web-lint.outputs.exit_code }}"
+            echo "- Web typecheck exit: ${{ steps.web-typecheck.outputs.exit_code }}"
             echo "- Trust gate exit: ${{ steps.trust-gate.outputs.exit_code }}"
             echo "- Commit: ${{ github.sha }}"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -98,6 +120,8 @@ jobs:
           path: |
             nova-tests.log
             nova-runtime-tests.log
+            nova-web-lint.log
+            nova-web-typecheck.log
             nova-trust-gate.log
 
       - name: Enforce focused verification
@@ -106,4 +130,6 @@ jobs:
         run: |
           test "${{ steps.nova-tests.outputs.exit_code }}" = "0"
           test "${{ steps.nova-runtime.outputs.exit_code }}" = "0"
+          test "${{ steps.web-lint.outputs.exit_code }}" = "0"
+          test "${{ steps.web-typecheck.outputs.exit_code }}" = "0"
           test "${{ steps.trust-gate.outputs.exit_code }}" = "0"
