@@ -9,3 +9,7 @@ export * from "./learning";
 export * from "./lifecycle";
 export * from "./source-registry";
 export * from "./nova-agent";
+export * from "./source-schedule";
+export * from "./source-adapters";
+export * from "./monetization";
+export * from "./training-rights";
