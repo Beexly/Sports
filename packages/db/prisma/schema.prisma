@@ -205,6 +205,19 @@ model Game {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
+  // ── Settlement quarantine (completed-but-scoreless corroboration) ──
+  // How many distinct settlement runs saw this game reported completed=true but
+  // with no usable score while still SCHEDULED/LIVE. Never acted on from a single
+  // sighting (a transient feed drop or a team-name-mapping miss looks identical to
+  // a real postponement); corroboration across runs is required. Additive default
+  // 0 — existing rows read as "never quarantined".
+  scorelessCompletedSightings Int       @default(0)
+  // Set once the sightings cross the corroboration threshold, marking the game for
+  // OWNER review. Deliberately does NOT void picks or change status — auto-voiding
+  // a paid user's pick from an inferred (never explicit) source status is an
+  // owner-gated decision, not one this pipeline makes. Null = not flagged.
+  settlementReviewFlaggedAt   DateTime?
+
   // ── Scheduling / fatigue context (computed from game history) ──
   restDaysHome        Int?     // calendar days since home team's prior game
   restDaysAway        Int?     // calendar days since away team's prior game

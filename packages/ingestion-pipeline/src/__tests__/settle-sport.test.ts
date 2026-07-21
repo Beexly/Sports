@@ -63,7 +63,7 @@ vi.mock("@sports/prediction-engine", () => ({
     pick.clvLockLine ?? pick.line,
 }));
 
-import { settleSport } from "../settle-sport.js";
+import { settleSport, SCORELESS_QUARANTINE_THRESHOLD } from "../settle-sport.js";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
 
@@ -194,7 +194,14 @@ describe("settleSport", () => {
     expect(mocks.gameUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
         where: { id: "game-1" },
-        data: { homeScore: 27, awayScore: 20, status: "FINAL" },
+        data: {
+          homeScore: 27,
+          awayScore: 20,
+          status: "FINAL",
+          // Scores arriving clears any quarantine counter — it was just feed lag.
+          scorelessCompletedSightings: 0,
+          settlementReviewFlaggedAt: null,
+        },
       })
     );
     expect(mocks.pickUpdateMany).toHaveBeenCalledWith(
@@ -233,6 +240,86 @@ describe("settleSport", () => {
     // No settlement math ran for a scoreless game.
     expect(mocks.calculatePickResult).not.toHaveBeenCalled();
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+  });
+
+  describe("scoreless-completed quarantine (owner-review, never auto-void)", () => {
+    beforeEach(() => {
+      // A game reported completed=true but scoreless while still SCHEDULED.
+      mocks.normalizeScores.mockReturnValue([
+        completedScore({ homeScore: null, awayScore: null }),
+      ]);
+    });
+
+    it("first sighting increments the counter atomically, never voids picks or changes status", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick()], {
+          status: "SCHEDULED",
+          scorelessCompletedSightings: 0,
+          settlementReviewFlaggedAt: null,
+        }),
+      );
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({ status: "success", gamesQuarantined: 0 });
+      const updateData = (mocks.gameUpdate.mock.calls[0]?.[0] as { data: Record<string, unknown> }).data;
+      // Atomic increment; NO status change, NO flag yet (below threshold), NO pick void.
+      expect(updateData).toEqual({ scorelessCompletedSightings: { increment: 1 } });
+      expect(updateData.status).toBeUndefined();
+      expect(updateData.settlementReviewFlaggedAt).toBeUndefined();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+    });
+
+    it("crossing the corroboration threshold flags for owner review but STILL never voids picks", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick()], {
+          status: "SCHEDULED",
+          // One below threshold; this sighting is the Nth.
+          scorelessCompletedSightings: SCORELESS_QUARANTINE_THRESHOLD - 1,
+          settlementReviewFlaggedAt: null,
+        }),
+      );
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.gamesQuarantined).toBe(1);
+      const updateData = (mocks.gameUpdate.mock.calls[0]?.[0] as { data: Record<string, unknown> }).data;
+      expect(updateData.scorelessCompletedSightings).toEqual({ increment: 1 });
+      expect(updateData.settlementReviewFlaggedAt).toBeInstanceOf(Date);
+      // The owner decides whether to void — the pipeline must not.
+      expect(updateData.status).toBeUndefined();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it("does not re-flag a game already flagged for review", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick()], {
+          status: "SCHEDULED",
+          scorelessCompletedSightings: SCORELESS_QUARANTINE_THRESHOLD + 5,
+          settlementReviewFlaggedAt: new Date("2026-06-11T00:00:00.000Z"),
+        }),
+      );
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.gamesQuarantined).toBe(0);
+      const updateData = (mocks.gameUpdate.mock.calls[0]?.[0] as { data: Record<string, unknown> }).data;
+      // Still counts the sighting, but does not re-stamp the flag.
+      expect(updateData).toEqual({ scorelessCompletedSightings: { increment: 1 } });
+    });
+
+    it("leaves an already-terminal game untouched (no-op), never re-quarantining it", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick()], { status: "FINAL", scorelessCompletedSightings: 0, settlementReviewFlaggedAt: null }),
+      );
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.gamesQuarantined).toBe(0);
+      const updateData = (mocks.gameUpdate.mock.calls[0]?.[0] as { data: Record<string, unknown> }).data;
+      expect(updateData).toEqual({});
+    });
   });
 
   it("is idempotent: a pick already settled by a concurrent run is skipped", async () => {

@@ -51,8 +51,23 @@ export interface SettleSportResult {
   status: "success" | "failed";
   gamesSettled: number;
   picksSettled: number;
+  /** Games newly flagged for owner review this run (scoreless-completed
+   *  corroboration crossed the threshold). Never voids picks — see below. */
+  gamesQuarantined: number;
   error?: string;
 }
+
+/**
+ * Distinct settlement runs that must all report a game completed-but-scoreless
+ * (while it is still SCHEDULED/LIVE) before it is flagged for owner review. A
+ * single sighting is never enough: a transient Odds-API score drop or a
+ * team-name-mapping miss is byte-identical to a real postponement, so acting on
+ * one observation would wrongly void a settleable game's picks. Even at the
+ * threshold the pipeline only FLAGS for review — it never infers POSTPONED or
+ * voids picks, because auto-voiding a paid user's pick from a status the feed
+ * never states explicitly is an owner decision, not a pipeline one.
+ */
+export const SCORELESS_QUARANTINE_THRESHOLD = 3;
 
 /**
  * Settle all completed games for one sport.
@@ -75,6 +90,7 @@ export async function settleSport(
 
   let gamesSettled = 0;
   let picksSettled = 0;
+  let gamesQuarantined = 0;
 
   try {
     const { data: scores } = await client.getScores(sport.key, 2);
@@ -97,18 +113,52 @@ export async function settleSport(
       // must NOT overwrite a previously-recorded FINAL score with null — that
       // would erase a published outcome and leave an inconsistent FINAL-with-null
       // state that score-verification / settlement / backtest consumers read as
-      // the result. Gate the whole data object: an empty update is a harmless
-      // no-op that preserves the existing recorded score and status.
-      await db.game.update({
-        where: { id: game.id },
-        data: bothScores
-          ? {
-              homeScore: score.homeScore,
-              awayScore: score.awayScore,
-              status: "FINAL" as const,
-            }
-          : {},
-      });
+      // the result.
+      if (bothScores) {
+        // Scores arrived — record the FINAL result and clear any quarantine
+        // counter: a game we briefly saw scoreless was just feed lag, not a
+        // postponement.
+        await db.game.update({
+          where: { id: game.id },
+          data: {
+            homeScore: score.homeScore,
+            awayScore: score.awayScore,
+            status: "FINAL" as const,
+            scorelessCompletedSightings: 0,
+            settlementReviewFlaggedAt: null,
+          },
+        });
+      } else if (game.status === "SCHEDULED" || game.status === "LIVE") {
+        // Completed-but-scoreless while still open. QUARANTINE: record the
+        // sighting, never act on one. Picks stay PENDING (unchanged from the
+        // prior safe behaviour) — the corroboration only FLAGS for owner review;
+        // it never voids picks or infers a POSTPONED status (see
+        // SCORELESS_QUARANTINE_THRESHOLD). Atomic increment so concurrent
+        // settlement runs can't lose a sighting.
+        const nextSightings = game.scorelessCompletedSightings + 1;
+        const crossesThreshold =
+          nextSightings >= SCORELESS_QUARANTINE_THRESHOLD && game.settlementReviewFlaggedAt === null;
+        await db.game.update({
+          where: { id: game.id },
+          data: {
+            scorelessCompletedSightings: { increment: 1 },
+            ...(crossesThreshold ? { settlementReviewFlaggedAt: new Date() } : {}),
+          },
+        });
+        if (crossesThreshold) {
+          gamesQuarantined++;
+          console.warn(
+            `${logPrefix} ${sport.key}: game ${game.id} (${game.externalId}) reported ` +
+              `completed-but-scoreless ${nextSightings}× while still ${game.status} — flagged for ` +
+              `owner review. Picks left PENDING; NOT auto-voided (no explicit source status).`,
+          );
+        }
+        continue;
+      } else {
+        // Already terminal (FINAL/POSTPONED/CANCELED). No-op: never touch a
+        // recorded outcome from a later scoreless feed row.
+        await db.game.update({ where: { id: game.id }, data: {} });
+      }
 
       // The inline null-check (not the bothScores boolean) is what narrows the
       // score types to `number` for the settlement math below.
@@ -275,10 +325,10 @@ export async function settleSport(
       }
     }
 
-    return { sport: sport.key, status: "success", gamesSettled, picksSettled };
+    return { sport: sport.key, status: "success", gamesSettled, picksSettled, gamesQuarantined };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`${logPrefix} ${sport.key} failed: ${message}`);
-    return { sport: sport.key, status: "failed", gamesSettled, picksSettled, error: message };
+    return { sport: sport.key, status: "failed", gamesSettled, picksSettled, gamesQuarantined, error: message };
   }
 }

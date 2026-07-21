@@ -72,6 +72,7 @@ export async function GET(request: Request) {
     ok: boolean;
     gamesSettled: number;
     picksSettled: number;
+    gamesQuarantined: number;
     error?: string;
   }> = [];
 
@@ -82,6 +83,7 @@ export async function GET(request: Request) {
       ok: result.status === "success",
       gamesSettled: result.gamesSettled,
       picksSettled: result.picksSettled,
+      gamesQuarantined: result.gamesQuarantined,
       ...(result.error ? { error: result.error } : {}),
     });
     // Brief pause to avoid bursting the upstream API quota.
@@ -112,6 +114,9 @@ export async function GET(request: Request) {
   const okCount = results.filter((r) => r.ok).length;
   const gamesSettled = results.reduce((sum, r) => sum + r.gamesSettled, 0);
   const picksSettled = results.reduce((sum, r) => sum + r.picksSettled, 0);
+  // Games newly flagged for owner review (completed-but-scoreless corroboration).
+  // Surfaced so a non-zero count is visible in the cron response, never silent.
+  const gamesQuarantined = results.reduce((sum, r) => sum + r.gamesQuarantined, 0);
 
   return NextResponse.json({
     ok: okCount === results.length,
@@ -120,6 +125,7 @@ export async function GET(request: Request) {
     totalCount: results.length,
     gamesSettled,
     picksSettled,
+    gamesQuarantined,
     requestedSport: requestedSport ?? null,
     bootstrapMode: gates.isBootstrapMode,
     results,
