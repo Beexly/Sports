@@ -1,4 +1,4 @@
-import intakeData from "../../../../../data/nova/user-supplied-source-intake.json";
+import intakeData from "../../../../data/nova/user-supplied-source-intake.json";
 
 export type UserSourceIntakeKind = "instagram" | "hubspot_tracking_redirect";
 
