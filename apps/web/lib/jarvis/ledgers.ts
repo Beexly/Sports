@@ -110,13 +110,13 @@ export interface LogHandoffInput {
  * starts as "pending" and is updated via outcome resolution.
  */
 export async function logHandoff(input: LogHandoffInput) {
+  assertValidSeat(input.sourceSeat, "sourceSeat");
+  assertValidSeat(input.targetSeat, "targetSeat");
+
   const session = await auth();
   if (!isAdminSession(session)) {
     throw new LedgerStoreUnavailableError("Unauthorized: admin session required.");
   }
-
-  assertValidSeat(input.sourceSeat, "sourceSeat");
-  assertValidSeat(input.targetSeat, "targetSeat");
 
   try {
     return await db.agentHandoff.create({
@@ -184,13 +184,13 @@ export interface LogSubagentRunInput {
  * accepted / rejected / edited. Until then the output is a draft.
  */
 export async function logSubagentRun(input: LogSubagentRunInput) {
+  assertValidSeat(input.parentSeat, "parentSeat");
+  assertValidConfidence(input.confidence, "confidence");
+
   const session = await auth();
   if (!isAdminSession(session)) {
     throw new LedgerStoreUnavailableError("Unauthorized: admin session required.");
   }
-
-  assertValidSeat(input.parentSeat, "parentSeat");
-  assertValidConfidence(input.confidence, "confidence");
 
   try {
     return await db.subagentRun.create({
@@ -227,12 +227,12 @@ export async function reviewSubagentRun(
   reviewerSeat: string,
   decision: SubagentReviewDecision
 ) {
+  assertValidSeat(reviewerSeat, "reviewerSeat");
+
   const session = await auth();
   if (!isAdminSession(session)) {
     throw new LedgerStoreUnavailableError("Unauthorized: admin session required.");
   }
-
-  assertValidSeat(reviewerSeat, "reviewerSeat");
 
   try {
     const existing = await db.subagentRun.findUniqueOrThrow({ where: { id: runId } });
