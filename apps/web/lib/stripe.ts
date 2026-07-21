@@ -155,7 +155,9 @@ export async function createCheckoutSession({
     params.consent_collection = { terms_of_service: "required" };
   }
 
-  return stripe.checkout.sessions.create(params);
+  return stripe.checkout.sessions.create(params, {
+    idempotencyKey: `gse-checkout-${userId}-${priceId}`,
+  });
 }
 
 /**

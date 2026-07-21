@@ -22,6 +22,8 @@
 import { db } from "@sports/db";
 import { Prisma } from "@sports/db";
 import { AGENT_COUNCIL } from "./agent-council";
+import { auth } from "@/lib/auth";
+import { isAdminSession } from "@/lib/auth/require-admin";
 
 // ─── Typed error ──────────────────────────────────────────────────────────────
 
@@ -108,6 +110,11 @@ export interface LogHandoffInput {
  * starts as "pending" and is updated via outcome resolution.
  */
 export async function logHandoff(input: LogHandoffInput) {
+  const session = await auth();
+  if (!isAdminSession(session)) {
+    throw new LedgerStoreUnavailableError("Unauthorized: admin session required.");
+  }
+
   assertValidSeat(input.sourceSeat, "sourceSeat");
   assertValidSeat(input.targetSeat, "targetSeat");
 
@@ -177,6 +184,11 @@ export interface LogSubagentRunInput {
  * accepted / rejected / edited. Until then the output is a draft.
  */
 export async function logSubagentRun(input: LogSubagentRunInput) {
+  const session = await auth();
+  if (!isAdminSession(session)) {
+    throw new LedgerStoreUnavailableError("Unauthorized: admin session required.");
+  }
+
   assertValidSeat(input.parentSeat, "parentSeat");
   assertValidConfidence(input.confidence, "confidence");
 
@@ -215,6 +227,11 @@ export async function reviewSubagentRun(
   reviewerSeat: string,
   decision: SubagentReviewDecision
 ) {
+  const session = await auth();
+  if (!isAdminSession(session)) {
+    throw new LedgerStoreUnavailableError("Unauthorized: admin session required.");
+  }
+
   assertValidSeat(reviewerSeat, "reviewerSeat");
 
   try {
