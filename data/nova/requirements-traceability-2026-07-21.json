@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-21T21:45:00.000Z",
+  "canonical": {
+    "product": "Galaxy Sports Edge",
+    "company": "Galaxy Sports Network",
+    "agent": "NOVA",
+    "repository": "Beexly/Sports",
+    "branch": "codex/nova-ai-opportunity-engine-2026-07-21",
+    "pullRequest": 146
+  },
+  "stateDefinitions": {
+    "IMPLEMENTED": "Code and focused tests exist on the branch.",
+    "PARTIAL": "A typed or visible foundation exists, but production wiring or outcome evidence is incomplete.",
+    "READY": "The task is fully specified for the coding agent but not yet implemented.",
+    "OWNER_GATED": "Internal preparation may exist, but the next material action requires the owner.",
+    "PLANNED": "The requirement is documented but has not reached a coding-ready or implemented state."
+  },
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "requirement": "Tie NOVA into the GSE website and preserve GSE/GSN as the canonical product and company.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "apps/web/app/cockpit/nova/page.tsx",
+        "apps/web/app/cockpit/nova/founder/page.tsx",
+        "apps/web/app/cockpit/layout.tsx",
+        "apps/web/components/cockpit/cockpit-command-palette.tsx"
+      ],
+      "tests": ["apps/web/__tests__/cockpit-nav-coverage.test.ts"],
+      "next": "Validate authenticated browser rendering and keep all NOVA routes internal-only."
+    },
+    {
+      "id": "REQ-002",
+      "requirement": "Keep the human in command and prevent autonomous installs, spending, applications, outreach, publication, deployment, data sharing, and production mutation.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "apps/web/lib/jarvis/nova-agent.ts",
+        "apps/web/lib/opportunity-engine/policy.ts",
+        "apps/web/lib/opportunity-engine/founder-command.ts"
+      ],
+      "tests": [
+        "apps/web/__tests__/nova-agent-contract.test.ts",
+        "apps/web/__tests__/nova-founder-command.test.ts"
+      ],
+      "next": "Preserve deny-by-default authority in every new persistence, tool, and connector surface."
+    },
+    {
+      "id": "REQ-003",
+      "requirement": "Give the coding agent complete what, why, when, how, acceptance, evidence, agent-owned, and owner-only instructions.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/founder-work-seed.ts",
+        "apps/web/lib/opportunity-engine/founder-command.ts"
+      ],
+      "tests": ["apps/web/__tests__/nova-founder-work-seed.test.ts"],
+      "next": "Use the ranked founder queue rather than reconstructing work from chat history."
+    },
+    {
+      "id": "REQ-004",
+      "requirement": "Improve founder efficiency through bounded daily decisions, owner-minute accounting, model-role separation, memory layers, and nightly autopsy.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/founder-command.ts",
+        "apps/web/app/cockpit/nova/founder/page.tsx"
+      ],
+      "tests": ["apps/web/__tests__/nova-founder-command.test.ts"],
+      "next": "Persist daily briefs and autopsies only after the schema and privacy review are approved."
+    },
+    {
+      "id": "REQ-005",
+      "requirement": "Bound work in progress to one revenue implementation, two experiments, one urgent risk response, and five daily decisions.",
+      "state": "IMPLEMENTED",
+      "codeRefs": ["apps/web/lib/opportunity-engine/founder-command.ts"],
+      "tests": ["apps/web/__tests__/nova-founder-command.test.ts"],
+      "next": "Enforce the same limits in future persistence and worker code."
+    },
+    {
+      "id": "REQ-006",
+      "requirement": "Create an immediate first-cash path that uses Garrett's HR, judgment, writing, and AI systems expertise without mislabeling personal income as GSN revenue.",
+      "state": "PARTIAL",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/personal-ai-income.ts",
+        "apps/web/lib/opportunity-engine/founder-work-seed.ts",
+        "apps/web/app/cockpit/nova/founder/page.tsx"
+      ],
+      "tests": ["apps/web/__tests__/nova-founder-work-seed.test.ts"],
+      "next": "Build and validate the fixed-scope AI Opportunity, Cost, and Workflow Audit offer; owner must approve price, payment, outreach, and contracts."
+    },
+    {
+      "id": "REQ-007",
+      "requirement": "Remove Claude or Codex subscription exhaustion as a complete development stoppage through a local coding lane.",
+      "state": "READY",
+      "codeRefs": ["apps/web/lib/opportunity-engine/founder-work-seed.ts"],
+      "tests": ["apps/web/__tests__/nova-founder-work-seed.test.ts"],
+      "next": "Capture hardware truth, select one local runtime and model, use isolated worktrees, and benchmark one bounded repository task."
+    },
+    {
+      "id": "REQ-008",
+      "requirement": "Account for all 11 Instagram discoveries and 17 HubSpot newsletter redirects without promoting them to evidence or leaking tracking tokens.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "data/nova/user-supplied-source-intake.json",
+        "apps/web/lib/opportunity-engine/source-intake.ts"
+      ],
+      "tests": ["apps/web/__tests__/nova-user-source-intake.test.ts"],
+      "next": "Resolve topics and canonical destinations privately, then replace useful claims with primary evidence."
+    },
+    {
+      "id": "REQ-009",
+      "requirement": "Account for the full user-reported Claude plugin inventory, including the latest 110 additions.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "data/nova/ai-capability-inventory-2026-07-21.json",
+        "data/nova/ai-capability-inventory-additions-2026-07-21.json",
+        "apps/web/lib/opportunity-engine/capability-inventory.ts"
+      ],
+      "tests": ["apps/web/__tests__/nova-capability-inventory.test.ts"],
+      "next": "Runtime-verify only the small task-relevant subset before use; inventory is not approval."
+    },
+    {
+      "id": "REQ-010",
+      "requirement": "Account for current ChatGPT apps, connectors, and installed skill packs without claiming the list is globally complete.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "data/nova/ai-capability-inventory-2026-07-21.json",
+        "apps/web/lib/opportunity-engine/capability-inventory.ts"
+      ],
+      "tests": ["apps/web/__tests__/nova-capability-inventory.test.ts"],
+      "next": "Refresh the runtime inventory when the available app surface changes."
+    },
+    {
+      "id": "REQ-011",
+      "requirement": "Prevent plugin sprawl, context bloat, and supply-chain risk by selecting at most three task-relevant capabilities and holding autonomous, self-modifying, massive, unknown, or sensitive candidates.",
+      "state": "IMPLEMENTED",
+      "codeRefs": ["apps/web/lib/opportunity-engine/capability-governor.ts"],
+      "tests": ["apps/web/__tests__/nova-capability-governor.test.ts"],
+      "next": "Inspect exact skill files and permissions before invoking any selected candidate."
+    },
+    {
+      "id": "REQ-012",
+      "requirement": "Add observability and evaluation for source quality, model use, tool calls, cost, owner attention, latency, and outcomes before increasing autonomy.",
+      "state": "READY",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/founder-work-seed.ts",
+        "apps/web/lib/opportunity-engine/capability-governor.ts"
+      ],
+      "tests": ["apps/web/__tests__/nova-capability-governor.test.ts"],
+      "next": "Implement local-first telemetry and compare Langfuse, SigNoz, Honeycomb, Grafana, PostHog, and ClickHouse through reversible trials."
+    },
+    {
+      "id": "REQ-013",
+      "requirement": "Treat grants and startup credits as sequential truth states and route only activated balances to compatible workloads.",
+      "state": "PARTIAL",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/source-registry.ts",
+        "apps/web/lib/opportunity-engine/lifecycle.ts",
+        "apps/web/lib/opportunity-engine/founder-work-seed.ts"
+      ],
+      "tests": [
+        "apps/web/__tests__/nova-opportunity-engine.test.ts",
+        "apps/web/__tests__/nova-opportunity-source-system.test.ts"
+      ],
+      "next": "Add persistence for application, approval, activation, balance, covered service, expiration, and cash-displacement evidence."
+    },
+    {
+      "id": "REQ-014",
+      "requirement": "Build a read-only NOVA ChatGPT app and Codex-compatible plugin surface for briefs, opportunities, sources, credits, and founder decisions.",
+      "state": "READY",
+      "codeRefs": ["apps/web/lib/opportunity-engine/founder-work-seed.ts"],
+      "tests": ["apps/web/__tests__/nova-founder-work-seed.test.ts"],
+      "next": "Create a dedicated MCP server and widget after read models and authentication boundaries are stable."
+    },
+    {
+      "id": "REQ-015",
+      "requirement": "Package NOVA workflows as a portable vendor-neutral skill pack across Claude, ChatGPT/Codex, Copilot, and Grok Build.",
+      "state": "READY",
+      "codeRefs": ["apps/web/lib/opportunity-engine/founder-work-seed.ts"],
+      "tests": ["apps/web/__tests__/nova-founder-work-seed.test.ts"],
+      "next": "Define the canonical skill contract and progressive context-loading fixtures before writing vendor wrappers."
+    },
+    {
+      "id": "REQ-016",
+      "requirement": "Turn the deterministic NOVA core into a production-wired system with persistence, scheduling, receipts, and JARVIS review integration.",
+      "state": "PARTIAL",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/pipeline.ts",
+        "apps/web/lib/opportunity-engine/source-monitor.ts",
+        "scripts/nova/run-cycle.mjs",
+        "scripts/nova/install-windows-task.ps1"
+      ],
+      "tests": [
+        "apps/web/__tests__/nova-source-monitor.test.ts",
+        "scripts/nova/nova-intelligence.test.mjs"
+      ],
+      "next": "Design additive Prisma models, transaction boundaries, idempotency, scheduler locks, retention, and review receipts before enabling production workers."
+    },
+    {
+      "id": "REQ-017",
+      "requirement": "Separate verified facts, inference, assumptions, contradictions, unknowns, lifecycle states, and money states.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/evidence.ts",
+        "apps/web/lib/opportunity-engine/lifecycle.ts",
+        "apps/web/lib/opportunity-engine/policy.ts"
+      ],
+      "tests": ["apps/web/__tests__/nova-opportunity-engine.test.ts"],
+      "next": "Preserve these transitions in persistence and APIs; never allow direct jumps to shipped, approved, activated, or paid."
+    },
+    {
+      "id": "REQ-018",
+      "requirement": "Learn from measured outcomes without allowing automatic production-weight changes or unsupported self-learning claims.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/learning.ts",
+        "apps/web/lib/opportunity-engine/founder-command.ts"
+      ],
+      "tests": [
+        "apps/web/__tests__/nova-opportunity-engine.test.ts",
+        "apps/web/__tests__/nova-founder-command.test.ts"
+      ],
+      "next": "Persist outcome evidence and require independent review before any scoring or policy change."
+    },
+    {
+      "id": "REQ-019",
+      "requirement": "Keep estimates, eligibility, credits, awards, invoices, and paid cash economically distinct.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "apps/web/lib/opportunity-engine/monetization.ts",
+        "apps/web/lib/opportunity-engine/lifecycle.ts",
+        "apps/web/lib/opportunity-engine/personal-ai-income.ts"
+      ],
+      "tests": [
+        "apps/web/__tests__/nova-opportunity-source-system.test.ts",
+        "apps/web/__tests__/nova-opportunity-engine.test.ts"
+      ],
+      "next": "Carry truth-state labels through every dashboard, export, application packet, and revenue report."
+    },
+    {
+      "id": "REQ-020",
+      "requirement": "Create retained diagnostics so the coding agent can repair failures from evidence instead of rerunning blind.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [".github/workflows/nova-verification.yml"],
+      "tests": [],
+      "next": "Keep focused tests, runtime tests, lint, typecheck, and trust-gate logs as short-lived artifacts."
+    },
+    {
+      "id": "REQ-021",
+      "requirement": "Use context efficiently by loading mission and architecture first, then only task-relevant code, tests, and prior decisions.",
+      "state": "IMPLEMENTED",
+      "codeRefs": [
+        "apps/web/app/cockpit/nova/founder/page.tsx",
+        "apps/web/lib/opportunity-engine/capability-governor.ts"
+      ],
+      "tests": ["apps/web/__tests__/nova-capability-governor.test.ts"],
+      "next": "Benchmark context size, repair rate, time, and quality before making the retrieval pattern a production routing rule."
+    },
+    {
+      "id": "REQ-022",
+      "requirement": "Keep the branch and PR draft until focused and repository-wide validation support review readiness.",
+      "state": "PARTIAL",
+      "codeRefs": [
+        ".github/workflows/nova-verification.yml",
+        "docs/ai/nova/NOVA_PHASE_2_AUTONOMOUS_INTELLIGENCE_DIRECTIVE_2026-07-21.md"
+      ],
+      "tests": [],
+      "next": "Resolve branch-caused failures, run full CI and build, review changed files, update the PR truth, and only then consider merge readiness."
+    }
+  ]
+}
