@@ -2,11 +2,12 @@ import Link from "next/link";
 import { StatusTile } from "@/components/cockpit/status-tile";
 import {
   AI_PLATFORM_OPPORTUNITIES,
+  EXTENDED_AI_PLATFORM_OPPORTUNITIES,
   NOVA_AGENT,
   NOVA_SUBAGENTS,
-  summarizeAiPlatformEcosystem,
-  type AiPlatformOpportunity,
+  combinePlatformOpportunities,
   type PlatformOpportunityState,
+  type PlatformOpportunityView,
   type PlatformPriority,
 } from "@/lib/opportunity-engine";
 
@@ -42,14 +43,33 @@ const STATE_STYLE: Readonly<Record<PlatformOpportunityState, string>> = {
   VERIFY_REQUIRED: "border-rose-400/30 bg-rose-950/40 text-rose-100",
 };
 
+function isUrgent(opportunity: PlatformOpportunityView, now: Date): boolean {
+  if (!opportunity.expiresAt) return opportunity.state === "LIVE_DEADLINE";
+  const expiry = Date.parse(opportunity.expiresAt);
+  return (
+    Number.isFinite(expiry) &&
+    expiry >= now.getTime() &&
+    expiry - now.getTime() <= 7 * 24 * 60 * 60 * 1000
+  );
+}
+
 export default function CockpitNovaPage(): JSX.Element {
   const now = new Date();
-  const summary = summarizeAiPlatformEcosystem(AI_PLATFORM_OPPORTUNITIES, now);
-  const ranked = [...AI_PLATFORM_OPPORTUNITIES].sort(
-    (a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority] || a.platformName.localeCompare(b.platformName),
+  const allOpportunities = combinePlatformOpportunities(
+    AI_PLATFORM_OPPORTUNITIES,
+    EXTENDED_AI_PLATFORM_OPPORTUNITIES,
   );
-  const ownerQueue = ranked.filter((item) => item.priority === "P0" || item.priority === "P1");
+  const ranked = [...allOpportunities].sort(
+    (a, b) =>
+      PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority] ||
+      a.platformName.localeCompare(b.platformName),
+  );
+  const ownerQueue = ranked.filter(
+    (item) => item.priority === "P0" || item.priority === "P1",
+  );
   const directPayment = ranked.filter((item) => item.nativePaymentAvailable);
+  const applicationCount = ranked.filter((item) => item.state === "LIVE_APPLICATION").length;
+  const urgentCount = ranked.filter((item) => isUrgent(item, now)).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -69,9 +89,9 @@ export default function CockpitNovaPage(): JSX.Element {
           </Link>
         </div>
         <p className="max-w-4xl text-sm text-ion-2">
-          Tracks AI models, coding systems, marketplaces, creator programs, partner networks,
-          credits, data channels, and product opportunities. Every item separates build leverage,
-          distribution, native payment, qualification, coding work, and owner authority.
+          Tracks language and coding models, developer marketplaces, creator programs, partner
+          networks, credits, APIs, data channels, and product opportunities. Every item separates
+          build leverage, distribution, native payment, qualification, coding work, and owner authority.
         </p>
       </header>
 
@@ -80,8 +100,8 @@ export default function CockpitNovaPage(): JSX.Element {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-amber-200">Current truth</p>
             <p className="mt-1 text-sm text-ion-1">
-              The deterministic NOVA core and platform registry are implemented. Production persistence,
-              scheduled monitoring, candidate synthesis, and external execution remain unwired.
+              The deterministic NOVA core, platform registry, and internal command surface are implemented.
+              Production persistence, scheduled monitoring, candidate synthesis, and external execution remain unwired.
             </p>
           </div>
           <span className="rounded-full border border-amber-400/40 px-2.5 py-1 font-mono text-[10px] text-amber-100">
@@ -95,10 +115,10 @@ export default function CockpitNovaPage(): JSX.Element {
       </section>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatusTile label="Mapped opportunities" value={String(summary.total)} tone="neutral" />
-        <StatusTile label="Native payment routes" value={String(summary.directPayout + summary.transactional)} tone="good" />
-        <StatusTile label="Open applications" value={String(summary.applications)} tone="info" />
-        <StatusTile label="Urgent deadlines" value={String(summary.urgent)} tone={summary.urgent > 0 ? "warn" : "neutral"} />
+        <StatusTile label="Mapped opportunities" value={String(ranked.length)} tone="neutral" />
+        <StatusTile label="Native payment routes" value={String(directPayment.length)} tone="good" />
+        <StatusTile label="Open applications" value={String(applicationCount)} tone="info" />
+        <StatusTile label="Urgent deadlines" value={String(urgentCount)} tone={urgentCount > 0 ? "warn" : "neutral"} />
       </section>
 
       <section className="overflow-hidden rounded-lg border border-red-400/30 bg-obsidian/60">
@@ -175,7 +195,7 @@ export default function CockpitNovaPage(): JSX.Element {
       <section className="overflow-hidden rounded-lg border border-titanium/40 bg-obsidian/60">
         <div className="border-b border-titanium/40 px-4 py-3">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-3">Complete registry</p>
-          <h2 className="mt-1 text-lg font-semibold text-ion-white">AI platform opportunities</h2>
+          <h2 className="mt-1 text-lg font-semibold text-ion-white">AI and developer platform opportunities</h2>
         </div>
         <div className="grid gap-3 p-4 xl:grid-cols-2">
           {ranked.map((item) => (
@@ -191,7 +211,7 @@ function OpportunityCard({
   opportunity,
   compact = false,
 }: {
-  readonly opportunity: AiPlatformOpportunity;
+  readonly opportunity: PlatformOpportunityView;
   readonly compact?: boolean;
 }): JSX.Element {
   return (
