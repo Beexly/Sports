@@ -95,7 +95,7 @@ export function buildExperiment(
       "Exact source URLs, capture dates, operative terms, and content fingerprints",
       "Commands, inputs, versions, configuration, and deterministic test output",
       "Before/after quality, latency, reliability, token use, cash cost, and owner time",
-      "Rights, security, privacy, jurisdiction, and vendor-lock-in findings",
+      "Rights, security, privacy, jurisdiction, and vendor-dependence findings",
       "Revenue, savings, credit, or distribution evidence in its actual lifecycle state",
     ],
     rollbackPlan:
