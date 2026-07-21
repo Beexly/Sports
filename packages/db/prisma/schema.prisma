@@ -1401,6 +1401,14 @@ model ClaudeApiCallRecord {
   errorKind        String?
   observedAt       DateTime @default(now())
 
+  /// LlmDispatchRecord telemetry (lib/claude-api/cost-policy.ts) — nullable,
+  /// populated only at call sites wired to callClaude's onDispatch hook.
+  costMode          String?
+  providerRequested String?
+  providerUsed      String?
+  billingPool       String?
+  fallbackReason    String?
+
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
   game Game? @relation(fields: [gameId], references: [id], onDelete: SetNull)
 
@@ -1408,6 +1416,7 @@ model ClaudeApiCallRecord {
   @@index([surface, observedAt])
   @@index([userId])
   @@index([gameId])
+  @@index([providerUsed])
   @@map("claude_api_call_records")
 }
 

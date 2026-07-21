@@ -137,7 +137,15 @@ export async function callClaude(
     throw new CostPolicyBlockedError(costMode, reason);
   }
 
-  const result = await callClaudeMessages(request);
-  emit(record(providerRequested, "anthropic", "anthropic_direct", result.modelName ?? modelRequested, fallbackReason));
-  return result;
+  try {
+    const result = await callClaudeMessages(request);
+    emit(record(providerRequested, "anthropic", "anthropic_direct", result.modelName ?? modelRequested, fallbackReason));
+    return result;
+  } catch (error) {
+    // Emit even when the direct Anthropic call itself fails, so a caller catching
+    // ClaudeMessagesError still gets an accurate dispatch record (e.g. "fell back
+    // from bedrock, and the fallback call also failed") instead of losing it silently.
+    emit(record(providerRequested, "anthropic", "anthropic_direct", modelRequested, fallbackReason));
+    throw error;
+  }
 }

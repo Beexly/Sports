@@ -172,4 +172,20 @@ describe("callClaude — cost policy enforcement", () => {
     expect(records[0]).toMatchObject({ providerUsed: "anthropic", billingPool: "anthropic_direct" });
     expect(records[0]?.fallbackReason).toContain("bedrock");
   });
+
+  it("emits a dispatch record even when the direct Anthropic call itself throws", async () => {
+    // Bedrock fails (config error, no fetch), then the Anthropic fallback ALSO fails —
+    // a caller catching the thrown ClaudeMessagesError must still see a dispatch record,
+    // not lose it because the final call errored after passing the emit() point.
+    const fetchImpl = vi.fn(
+      async () => ({ ok: false, status: 500, json: async () => ({}), text: async () => "anthropic down" }) as unknown as Response,
+    );
+    const envNoMap = { ...CREDS, BEDROCK_MODEL_MAP: "" };
+    const records: LlmDispatchRecord[] = [];
+    await expect(
+      callClaude(baseReq(fetchImpl as unknown as typeof fetch), envNoMap, { onDispatch: (r) => records.push(r) }),
+    ).rejects.toThrow();
+    expect(records).toHaveLength(1);
+    expect(records[0]).toMatchObject({ providerUsed: "anthropic", billingPool: "anthropic_direct" });
+  });
 });

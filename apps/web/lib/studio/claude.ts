@@ -10,6 +10,7 @@ import {
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
+import type { LlmDispatchRecord } from "@/lib/claude-api/cost-policy";
 import {
   recordClaudeApiCall,
   type ClaudeUsageStoreDb,
@@ -64,17 +65,22 @@ export async function callClaudeForStudioAsset(
   }
 
   const modelName = options.model ?? "claude-sonnet-4-6";
+  let dispatch: LlmDispatchRecord | null = null;
   try {
-    const result = await callClaude({
-      apiKey: options.apiKey,
-      fetchImpl: options.fetchImpl,
-      model: modelName,
-      maxTokens: dryRun.prompt.maxTokens,
-      temperature: dryRun.prompt.temperature,
-      system: dryRun.prompt.system,
-      user: dryRun.prompt.user,
-      cache: { system: true },
-    });
+    const result = await callClaude(
+      {
+        apiKey: options.apiKey,
+        fetchImpl: options.fetchImpl,
+        model: modelName,
+        maxTokens: dryRun.prompt.maxTokens,
+        temperature: dryRun.prompt.temperature,
+        system: dryRun.prompt.system,
+        user: dryRun.prompt.user,
+        cache: { system: true },
+      },
+      undefined,
+      { onDispatch: (record) => { dispatch = record; } },
+    );
     const policyFailures = evaluateStudioGeneratedBodyPolicy(input.templateKind, result.text);
     if (policyFailures.length > 0) {
       await maybeRecordStudioUsage({
@@ -86,6 +92,7 @@ export async function callClaudeForStudioAsset(
         durationMs: result.durationMs,
         success: false,
         errorKind: `POLICY_${policyFailures[0]}`,
+        dispatch,
       });
       throw new StudioGenerationError(`Studio generated asset failed policy validation: ${policyFailures.join(", ")}`);
     }
@@ -99,10 +106,14 @@ export async function callClaudeForStudioAsset(
       durationMs: result.durationMs,
       success: true,
       errorKind: null,
+      dispatch,
     });
     return result.text;
   } catch (error) {
     if (error instanceof ClaudeMessagesError) {
+      // The onDispatch callback above already fired (it runs before callClaude's final
+      // HTTP call), so `dispatch` still reflects which provider was actually attempted
+      // even though that attempt then failed at the HTTP layer.
       await maybeRecordStudioUsage({
         input,
         options,
@@ -112,6 +123,7 @@ export async function callClaudeForStudioAsset(
         durationMs: error.durationMs,
         success: false,
         errorKind: `HTTP_${error.status}`,
+        dispatch,
       });
     }
     throw new StudioGenerationError(error instanceof Error ? error.message : "Claude API error");
@@ -151,6 +163,7 @@ async function maybeRecordStudioUsage(args: {
   readonly durationMs: number;
   readonly success: boolean;
   readonly errorKind: string | null;
+  readonly dispatch: LlmDispatchRecord | null;
 }): Promise<void> {
   if (!args.options.recordUsage) return;
 
@@ -167,6 +180,7 @@ async function maybeRecordStudioUsage(args: {
       durationMs: args.durationMs,
       success: args.success,
       errorKind: args.errorKind,
+      dispatch: args.dispatch,
     },
     args.options.usageClient
   );
