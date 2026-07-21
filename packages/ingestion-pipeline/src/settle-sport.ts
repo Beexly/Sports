@@ -92,11 +92,10 @@ export async function settleSport(
       const bothScores = score.homeScore !== null && score.awayScore !== null;
 
       if (!bothScores) {
-        // Completed feed row with no scores: PPD/cancelled game. If the game is
-        // not already FINAL (no previously-recorded result), mark it POSTPONED
-        // and void any pending picks so they never sit PENDING indefinitely.
-        // Guard on SCHEDULED/LIVE only — never overwrite an existing FINAL.
+        // Completed feed row with no scores.
         if (game.status === "SCHEDULED" || game.status === "LIVE") {
+          // PPD/cancelled while still in-progress: mark POSTPONED and void
+          // any pending picks so they never sit PENDING indefinitely.
           await db.game.update({
             where: { id: game.id },
             data: { status: "POSTPONED" as const },
@@ -110,6 +109,11 @@ export async function settleSport(
             picksSettled += game.picks.length;
           }
           gamesSettled++;
+        } else {
+          // Game already in a terminal state (FINAL/POSTPONED/CANCELED) or
+          // scores transiently dropped by the feed. No-op update: never null
+          // out previously-recorded scores, never flip status to FINAL.
+          await db.game.update({ where: { id: game.id }, data: {} });
         }
         continue;
       }
