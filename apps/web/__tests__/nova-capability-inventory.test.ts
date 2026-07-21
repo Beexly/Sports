@@ -61,18 +61,24 @@ describe("NOVA Claude and ChatGPT capability inventory", () => {
   });
 
   it("finds overlapping capabilities across surfaces without conflating them", () => {
-    const canva = findCapabilitiesByName("Canva");
+    const canva = findCapabilitiesByName("Canva").filter(
+      (entry) => entry.name.toLowerCase() === "canva",
+    );
     expect(canva.map((entry) => entry.surface).sort()).toEqual([
       "CHATGPT_APP",
       "CLAUDE_CONNECTOR",
       "CLAUDE_PLUGIN",
     ]);
 
-    const linear = findCapabilitiesByName("Linear");
+    const linear = findCapabilitiesByName("Linear").filter(
+      (entry) => entry.name.toLowerCase() === "linear",
+    );
     expect(linear.some((entry) => entry.surface === "CLAUDE_PLUGIN")).toBe(true);
     expect(linear.some((entry) => entry.surface === "CHATGPT_APP")).toBe(true);
 
-    const vercel = findCapabilitiesByName("Vercel");
+    const vercel = findCapabilitiesByName("Vercel").filter(
+      (entry) => entry.name.toLowerCase() === "vercel",
+    );
     expect(vercel.some((entry) => entry.surface === "CLAUDE_PLUGIN")).toBe(true);
     expect(vercel.some((entry) => entry.surface === "CLAUDE_CONNECTOR")).toBe(true);
     expect(vercel.some((entry) => entry.surface === "CHATGPT_APP")).toBe(true);
