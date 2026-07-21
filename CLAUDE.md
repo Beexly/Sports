@@ -205,3 +205,45 @@ Each cycle must:
 7. Self-audit remaining gaps
 
 A task is NOT complete until: tests pass, types pass, build succeeds.
+
+## Coding Principles (Karpathy / ECC)
+
+1. **Think before coding** — state assumptions explicitly; ask if uncertain rather than guessing
+2. **Simplicity first** — minimum code that solves the problem; nothing speculative or future-proofed
+3. **Surgical changes** — touch only what is required; preserve existing style; don't clean up unrelated code
+4. **Goal-driven execution** — define verifiable success criteria first; loop until verified
+
+## Slash Commands Reference
+
+Core workflow (from ECC + GSN-native):
+
+| Command | Purpose |
+|---|---|
+| `/plan` | Implementation planning — no code until user approves |
+| `/multi-plan` | Multi-model parallel analysis for complex features |
+| `/code-review` | Local diff or PR review with severity-ranked findings |
+| `/build-fix` | Incremental error resolution — one error at a time |
+| `/refactor-clean` | Dead code removal with SAFE/CAUTION/DANGER risk levels |
+| `/quality-gate` | Full suite: typecheck + lint + guardrails + tests |
+| `/test-coverage` | Coverage analysis toward 80%+ target |
+| `/tdd` | Red-Green-Refactor TDD cycle |
+| `/checkpoint` | Save and verify workflow state |
+| `/learn` | Extract session patterns to reusable skill files |
+| `/security-pentest` | OWASP-focused static security analysis |
+| `/push-safe` | Pre-push safety gate before any `git push` |
+| `/hallmark` | Anti-slop UI audit/redesign (58-gate verification) |
+| `/market-research` | Sports market intelligence — Reddit/Twitter/Polymarket |
+| `/audit` | Full architecture + correctness audit (read-only) |
+| `/audit-auth` | Auth flow and session security |
+| `/audit-db` | Database schema, query safety, migration posture |
+| `/preflight` | Pre-launch readiness check |
+| `/safety-check` | Secrets, scraping clearance, regulatory posture |
+
+## Design Rules (Hallmark)
+
+- All colors/fonts must reference named CSS variables from `apps/web/styles/design-tokens.css` — never inline hex
+- No two adjacent page sections share the same layout archetype
+- No italic display/heading type — use weight or color for emphasis
+- No invented metrics — use real data or explicit `[PLACEHOLDER]` markers
+- Mobile verified at 320/375/414/768px; no horizontal scroll
+- Touch targets ≥ 44×44px
