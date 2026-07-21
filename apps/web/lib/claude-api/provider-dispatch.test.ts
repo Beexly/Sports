@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { callClaude, resolveAnthropicModelId } from "./provider-dispatch";
+import { CostPolicyBlockedError, CostPolicyConfigError, resolveLlmCostMode } from "./cost-policy";
+import type { LlmDispatchRecord } from "./cost-policy";
 import type { ClaudeMessagesRequest } from "./messages";
 
 const CREDS = {
@@ -92,5 +94,82 @@ describe("callClaude — provider routing", () => {
     expect(fetchImpl).toHaveBeenCalledTimes(2);
     expect((fetchImpl.mock.calls[1] as unknown as [string])[0]).toBe("https://api.anthropic.com/v1/messages");
     expect(result.text).toBe("anthropic-direct");
+  });
+});
+
+describe("resolveLlmCostMode", () => {
+  it("defaults to normal and accepts aliases", () => {
+    expect(resolveLlmCostMode({})).toBe("normal");
+    expect(resolveLlmCostMode({ LLM_COST_MODE: "credits-only" })).toBe("credits-only");
+    expect(resolveLlmCostMode({ LLM_COST_MODE: "credits_only" })).toBe("credits-only");
+    expect(resolveLlmCostMode({ LLM_COST_MODE: "ZERO_CASH" })).toBe("zero-cash");
+  });
+
+  it("throws on unrecognized values instead of silently enabling cash billing", () => {
+    expect(() => resolveLlmCostMode({ LLM_COST_MODE: "free-please" })).toThrow(CostPolicyConfigError);
+  });
+});
+
+describe("callClaude — cost policy enforcement", () => {
+  it("credits-only: Bedrock success routes normally and records the aws_activate pool", async () => {
+    const fetchImpl = vi.fn(async () => bedrockResponse());
+    const records: LlmDispatchRecord[] = [];
+    const result = await callClaude(
+      baseReq(fetchImpl as unknown as typeof fetch),
+      { ...CREDS, LLM_COST_MODE: "credits-only" },
+      { onDispatch: (r) => records.push(r) },
+    );
+    expect(result.text).toBe("via-bedrock");
+    expect(records).toHaveLength(1);
+    expect(records[0]).toMatchObject({
+      costMode: "credits-only",
+      providerRequested: "bedrock",
+      providerUsed: "bedrock",
+      billingPool: "aws_activate",
+      fallbackReason: null,
+    });
+  });
+
+  it("credits-only: a Bedrock runtime failure FAILS CLOSED — no billable Anthropic call is made", async () => {
+    const fetchImpl = vi.fn(
+      async () => ({ ok: false, status: 500, json: async () => ({}), text: async () => "boom" }) as unknown as Response,
+    );
+    const records: LlmDispatchRecord[] = [];
+    await expect(
+      callClaude(
+        baseReq(fetchImpl as unknown as typeof fetch),
+        { ...CREDS, LLM_COST_MODE: "credits-only" },
+        { onDispatch: (r) => records.push(r) },
+      ),
+    ).rejects.toThrow(CostPolicyBlockedError);
+    // Only the (failed) Bedrock fetch fired — the Anthropic endpoint was never touched.
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect((fetchImpl.mock.calls[0] as unknown as [string])[0]).toContain("bedrock-runtime");
+    expect(records[0]).toMatchObject({ providerUsed: "blocked", billingPool: "blocked" });
+    expect(records[0]?.fallbackReason).toContain("bedrock");
+  });
+
+  it("zero-cash: with no credit provider selected, the call is blocked before any fetch", async () => {
+    const fetchImpl = vi.fn(async () => anthropicResponse());
+    await expect(
+      callClaude(baseReq(fetchImpl as unknown as typeof fetch), { LLM_COST_MODE: "zero-cash" }),
+    ).rejects.toThrow(CostPolicyBlockedError);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("normal: fallback still works and the dispatch record captures the fallback reason", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockImplementationOnce(async () => ({ ok: false, status: 500, json: async () => ({}), text: async () => "boom" }) as unknown as Response)
+      .mockImplementationOnce(async () => anthropicResponse());
+    const records: LlmDispatchRecord[] = [];
+    const result = await callClaude(
+      baseReq(fetchImpl as unknown as typeof fetch),
+      { ...CREDS, LLM_COST_MODE: "normal" },
+      { onDispatch: (r) => records.push(r) },
+    );
+    expect(result.text).toBe("anthropic-direct");
+    expect(records[0]).toMatchObject({ providerUsed: "anthropic", billingPool: "anthropic_direct" });
+    expect(records[0]?.fallbackReason).toContain("bedrock");
   });
 });
