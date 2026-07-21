@@ -22,3 +22,4 @@ export * from "./personal-ai-income";
 export * from "./source-intake";
 export * from "./capability-inventory";
 export * from "./founder-command";
+export * from "./founder-work-seed";
