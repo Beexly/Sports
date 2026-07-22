@@ -19,6 +19,7 @@ const mocks = vi.hoisted(() => ({
   subscriptionUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   subscriptionUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  checkoutAttemptUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
 }));
 
 vi.mock("@/lib/stripe", () => ({
@@ -41,6 +42,9 @@ vi.mock("@sports/db", () => ({
       upsert: mocks.subscriptionUpsert,
       updateMany: mocks.subscriptionUpdateMany,
       findUnique: mocks.subscriptionFindUnique,
+    },
+    checkoutAttempt: {
+      updateMany: mocks.checkoutAttemptUpdateMany,
     },
   },
 }));
@@ -105,6 +109,7 @@ describe("POST /api/webhooks/stripe", () => {
     mocks.subscriptionUpsert.mockReset();
     mocks.subscriptionUpdateMany.mockReset();
     mocks.subscriptionFindUnique.mockReset();
+    mocks.checkoutAttemptUpdateMany.mockReset();
 
     process.env["STRIPE_WEBHOOK_SECRET"] = "whsec_test";
     process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] = PRO_MONTHLY;
@@ -116,6 +121,7 @@ describe("POST /api/webhooks/stripe", () => {
     mocks.subscriptionUpsert.mockResolvedValue({ id: "s_1" });
     mocks.subscriptionUpdateMany.mockResolvedValue({ count: 1 });
     mocks.subscriptionFindUnique.mockResolvedValue(null);
+    mocks.checkoutAttemptUpdateMany.mockResolvedValue({ count: 1 });
   });
 
   describe("out-of-order delivery", () => {
@@ -588,6 +594,97 @@ describe("POST /api/webhooks/stripe", () => {
       const res = await POST(webhookRequest());
       expect(res.status).toBe(200);
       expect(mocks.subscriptionsRetrieve).not.toHaveBeenCalled();
+    });
+
+    it("reconciles the durable CheckoutAttempt: COMPLETED + subscription id attached", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("checkout.session.completed", {
+          id: "cs_live_1",
+          subscription: "sub_123",
+          metadata: { userId: "user_1", checkoutAttemptId: "ca_11111111-2222-4333-8444-555566667777" },
+        })
+      );
+      mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+
+      const res = await POST(webhookRequest());
+      expect(res.status).toBe(200);
+      expect(mocks.checkoutAttemptUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            OR: [
+              { id: "ca_11111111-2222-4333-8444-555566667777" },
+              { stripeSessionId: "cs_live_1" },
+            ],
+          },
+          data: expect.objectContaining({
+            status: "COMPLETED",
+            stripeSubscriptionId: "sub_123",
+            completedAt: expect.any(Date),
+          }),
+        })
+      );
+    });
+
+    it("falls back to the stripeSessionId lookup when metadata carries no attempt id", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("checkout.session.completed", {
+          id: "cs_live_2",
+          subscription: "sub_123",
+          metadata: { userId: "user_1" },
+        })
+      );
+      mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+
+      const res = await POST(webhookRequest());
+      expect(res.status).toBe(200);
+      expect(mocks.checkoutAttemptUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { OR: [{ stripeSessionId: "cs_live_2" }] },
+        })
+      );
+    });
+
+    it("tolerates an UNKNOWN attempt id — warns, still acks 200, sync unaffected", async () => {
+      mocks.checkoutAttemptUpdateMany.mockResolvedValue({ count: 0 });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      try {
+        mocks.constructEvent.mockReturnValue(
+          stripeEvent("checkout.session.completed", {
+            id: "cs_live_3",
+            subscription: "sub_123",
+            metadata: { checkoutAttemptId: "ca_99999999-8888-4777-8666-555544443333" },
+          })
+        );
+        mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+
+        const res = await POST(webhookRequest());
+        expect(res.status).toBe(200);
+        expect(mocks.subscriptionUpsert).toHaveBeenCalled(); // entitlement sync intact
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("unknown checkout attempt"));
+      } finally {
+        warn.mockRestore();
+      }
+    });
+
+    it("a reconciliation DB failure never fails the webhook (no Stripe retry storm)", async () => {
+      mocks.checkoutAttemptUpdateMany.mockRejectedValue(new Error("db down"));
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      try {
+        mocks.constructEvent.mockReturnValue(
+          stripeEvent("checkout.session.completed", {
+            id: "cs_live_4",
+            subscription: "sub_123",
+            metadata: { checkoutAttemptId: "ca_11111111-2222-4333-8444-555566667777" },
+          })
+        );
+        mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+
+        const res = await POST(webhookRequest());
+        expect(res.status).toBe(200);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("reconciliation failed"));
+      } finally {
+        warn.mockRestore();
+      }
     });
   });
 

@@ -24,7 +24,10 @@ import type Stripe from "stripe";
 const stripeMocks = vi.hoisted(() => ({
   create:
     vi.fn<
-      (params: Stripe.Checkout.SessionCreateParams) => Promise<Stripe.Checkout.Session>
+      (
+        params: Stripe.Checkout.SessionCreateParams,
+        options?: Stripe.RequestOptions,
+      ) => Promise<Stripe.Checkout.Session>
     >(),
 }));
 
@@ -36,13 +39,18 @@ vi.mock("stripe", () => {
 });
 
 import { createCheckoutSession } from "@/lib/stripe";
+import { CheckoutAttemptIdError } from "@/lib/billing/checkout-attempt";
 
 const CONSENT_FLAG = "STRIPE_TERMS_CONSENT_ENABLED";
+
+// Durable checkout-attempt id (Phase 1P) — required by createCheckoutSession.
+const ATTEMPT_ID = "ca_9f1c2d3e-4a5b-4c6d-8e7f-0123456789ab";
 
 const ARGS = {
   customerId: "cus_test_1",
   priceId: "price_test_1",
   userId: "user_test_1",
+  attemptId: ATTEMPT_ID,
   successUrl: "https://app.example.com/dashboard?upgraded=true",
   cancelUrl: "https://app.example.com/pricing",
 } as const;
@@ -149,7 +157,40 @@ describe("createCheckoutSession — negative-option compliance", () => {
     expect(params.customer).toBe("cus_test_1");
     expect(params.success_url).toBe(ARGS.successUrl);
     expect(params.cancel_url).toBe(ARGS.cancelUrl);
-    expect(params.metadata).toEqual({ userId: "user_test_1" });
-    expect(params.subscription_data?.metadata).toEqual({ userId: "user_test_1" });
+    expect(params.metadata).toEqual({ userId: "user_test_1", checkoutAttemptId: ATTEMPT_ID });
+    expect(params.subscription_data?.metadata).toEqual({
+      userId: "user_test_1",
+      checkoutAttemptId: ATTEMPT_ID,
+    });
+  });
+
+  describe("durable checkout attempt (Phase 1P)", () => {
+    it("stamps the attempt id into session AND subscription metadata for webhook reconciliation", async () => {
+      await createCheckoutSession({ ...ARGS });
+
+      const params = lastCreateParams();
+      expect(params.metadata?.["checkoutAttemptId"]).toBe(ATTEMPT_ID);
+      expect(params.subscription_data?.metadata?.["checkoutAttemptId"]).toBe(ATTEMPT_ID);
+    });
+
+    it("derives the Stripe idempotency key from userId + attempt id (durable across retries)", async () => {
+      await createCheckoutSession({ ...ARGS });
+
+      const call = stripeMocks.create.mock.calls[0];
+      expect(call).toBeDefined();
+      expect(call![1]).toEqual({
+        idempotencyKey: `gse-checkout-user_test_1-${ATTEMPT_ID}`,
+      });
+    });
+
+    it("throws a typed CheckoutAttemptIdError on a malformed attempt id — no Stripe call", async () => {
+      await expect(
+        createCheckoutSession({ ...ARGS, attemptId: "not-an-attempt-id" }),
+      ).rejects.toBeInstanceOf(CheckoutAttemptIdError);
+      await expect(
+        createCheckoutSession({ ...ARGS, attemptId: "" }),
+      ).rejects.toBeInstanceOf(CheckoutAttemptIdError);
+      expect(stripeMocks.create).not.toHaveBeenCalled();
+    });
   });
 });

@@ -93,6 +93,11 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         );
         await syncSubscription(subscription);
       }
+      // Reconcile the durable CheckoutAttempt (Phase 1P). Best-effort by
+      // design: an unknown attempt id (pre-rollout session, replay, manual
+      // Dashboard checkout) is a warn, never a webhook failure — the
+      // subscription sync above is the entitlement-critical path.
+      await reconcileCheckoutAttempt(session);
       break;
     }
 
@@ -186,6 +191,49 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     default:
       // Unhandled event type — ignore
       break;
+  }
+}
+
+/**
+ * Mark the durable CheckoutAttempt for a completed Checkout Session as
+ * COMPLETED and attach the resulting subscription id. Looks the attempt up by
+ * the id stamped into session metadata at creation time OR by stripeSessionId
+ * (covers an attempt whose metadata write raced the completion). NEVER throws:
+ * attempt reconciliation is bookkeeping — a lookup miss or DB hiccup must not
+ * 500 the webhook and trigger a Stripe retry storm.
+ */
+async function reconcileCheckoutAttempt(session: Stripe.Checkout.Session): Promise<void> {
+  try {
+    const attemptId = session.metadata?.["checkoutAttemptId"];
+    const lookups: Record<string, unknown>[] = [];
+    if (attemptId) lookups.push({ id: attemptId });
+    if (session.id) lookups.push({ stripeSessionId: session.id });
+    if (lookups.length === 0) return;
+
+    const subscriptionId =
+      typeof session.subscription === "string"
+        ? session.subscription
+        : session.subscription?.id ?? null;
+
+    const updated = await db.checkoutAttempt.updateMany({
+      where: { OR: lookups },
+      data: {
+        status: "COMPLETED",
+        completedAt: new Date(),
+        ...(subscriptionId ? { stripeSubscriptionId: subscriptionId } : {}),
+      },
+    });
+    if (updated.count === 0) {
+      console.warn(
+        `[stripe] checkout.session.completed for unknown checkout attempt ` +
+          `${attemptId ?? "(none)"} (session ${session.id}) — nothing to reconcile`,
+      );
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.warn(
+      `[stripe] checkout-attempt reconciliation failed for session ${session.id}: ${message}`,
+    );
   }
 }
 
