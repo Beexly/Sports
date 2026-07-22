@@ -1,14 +1,17 @@
 /**
  * Moderation server actions — DB-backed operations for the graduated action ladder.
  *
- * TRUST MODEL (Phase 1A — Trusted Actor)
- * --------------------------------------
+ * TRUST MODEL (Phase 1A/1B — Trusted Actor)
+ * -----------------------------------------
  * Every identity that gets persisted or compared is derived server-side from a
  * TrustedActor, NEVER from a caller-supplied request field. Concretely:
- *   - fileReport (authenticated): reporterUserId comes from the session actor.
- *   - fileAnonymousReport: a SEPARATE explicit contract — reporterUserId is
- *     always null (never a caller-supplied authenticated id) and is guarded by
- *     an anti-abuse rate limiter.
+ *   - fileReport (authenticated): reporterUserId comes from the session actor,
+ *     and a smaller per-user durable abuse limit applies (directive 4.1.9).
+ *   - Anonymous reporting is NOT on this "use server" RPC surface at all. It
+ *     lives exclusively at POST /api/moderation/anonymous-report (see
+ *     lib/community/anonymous-report-handler.ts), where the rate-limit key is
+ *     derived server-side from trusted request facts — never from a
+ *     caller-supplied fingerprint.
  *   - appealAction: the appellant is the session actor, and the action being
  *     appealed MUST belong to that user (ownership proof) — a caller cannot
  *     consume another user's single allowed appeal.
@@ -16,12 +19,19 @@
  *     actor's stable subject id. Callers have NO authority over identity fields.
  *     The different-reviewer rule compares trusted stable ids.
  *
+ * AUDIT RECEIPTS (directive 4.3): every write persists an immutable
+ * ActorReceipt (the full TrustedActor audit contract) BEFORE the audit row and
+ * stores its id on the row (reporterReceiptId / actorReceiptId /
+ * appellantReceiptId / reviewerReceiptId). Receipt failure aborts the write
+ * (fail closed) — see lib/auth/actor-receipt.ts.
+ *
  * Auth is resolved BEFORE any sensitive validation (an unauthorized caller
  * never learns whether their input was well-formed).
  *
  * Error contract:
- *   - ModerationStoreUnavailableError: DB is unreachable or query fails.
+ *   - ModerationStoreUnavailableError: DB/receipt/limiter store unreachable.
  *   - ModerationValidationError (from moderation.ts): ladder/business-rule failure.
+ *   - ReportRateLimitedError (from report-abuse-policy.ts): abuse quota hit.
  *   - UnauthenticatedError / ForbiddenError / InvalidActorError (from auth/actor).
  *
  * Policy source: docs/legal/COMMUNITY_MODERATION_POLICY.md
@@ -54,11 +64,14 @@ import {
   requireAdminActor,
   requireSessionActor,
   ForbiddenError,
+  type TrustedActor,
 } from "@/lib/auth/actor";
+import { persistActorReceipt } from "@/lib/auth/actor-receipt";
+import { PostgresDurableRateLimiter } from "@/lib/community/durable-rate-limiter";
 import {
-  checkAnonymousReportQuota,
-  type AnonReportLimiterConfig,
-} from "@/lib/community/anon-report-limiter";
+  ReportRateLimitedError,
+  checkAuthenticatedReportQuota,
+} from "@/lib/community/report-abuse-policy";
 
 // ── Local error ───────────────────────────────────────────────────────────────
 
@@ -90,21 +103,6 @@ export interface FileReportInput {
   surface: string;
   reason: ModerationReasonCode;
   notes?: string;
-}
-
-/**
- * Anonymous report — a SEPARATE, explicit contract. reporterUserId is always
- * persisted as null. `clientFingerprint` feeds the anti-abuse rate limiter and
- * is NOT an identity claim.
- */
-export interface FileAnonymousReportInput {
-  targetUserId: string;
-  contentRef: string;
-  surface: string;
-  reason: ModerationReasonCode;
-  notes?: string;
-  /** Opaque source fingerprint (hashed IP / device token) for rate-limiting. */
-  clientFingerprint?: string | null;
 }
 
 /**
@@ -144,19 +142,46 @@ export interface DecideAppealInput {
   status: Extract<ModerationAppealStatus, "UPHELD" | "OVERTURNED">;
 }
 
+// ── Internal helpers (not exported — this is a "use server" module) ───────────
+
+/**
+ * Persists the immutable ActorReceipt for `actor` (directive 4.3), wrapping
+ * receipt-store failure into this module's store-failure taxonomy. The receipt
+ * is written BEFORE the audit row it vouches for; failure aborts the write.
+ */
+async function requireReceiptId(actor: TrustedActor): Promise<string> {
+  try {
+    return await persistActorReceipt(actor);
+  } catch (err) {
+    throw new ModerationStoreUnavailableError(err);
+  }
+}
+
 // ── fileReport (authenticated) ─────────────────────────────────────────────────
 
 /**
  * File a moderation report as an authenticated user. The reporter identity is
- * derived from the session — a caller cannot claim to be another user.
+ * derived from the session — a caller cannot claim to be another user. A
+ * smaller per-user durable abuse limit applies (directive 4.1.9), keyed by the
+ * trusted subject id; limiter-store failure fails closed.
  */
 export async function fileReport(input: FileReportInput): Promise<ModerationReport> {
   const actor = await requireSessionActor();
+
+  try {
+    await checkAuthenticatedReportQuota(new PostgresDurableRateLimiter(db), actor.subjectId);
+  } catch (err) {
+    if (err instanceof ReportRateLimitedError) throw err;
+    throw new ModerationStoreUnavailableError(err);
+  }
+
+  const reporterReceiptId = await requireReceiptId(actor);
   try {
     return await db.moderationReport.create({
       data: {
         reporterUserId: actor.subjectId,
         reporterActorType: actor.actorType,
+        reporterReceiptId,
         targetUserId: input.targetUserId,
         contentRef: input.contentRef,
         surface: input.surface,
@@ -170,38 +195,10 @@ export async function fileReport(input: FileReportInput): Promise<ModerationRepo
   }
 }
 
-// ── fileAnonymousReport (unauthenticated, explicit) ────────────────────────────
-
-/**
- * File an anonymous moderation report. reporterUserId is ALWAYS null — this
- * path can never be used to attribute a report to an authenticated user.
- * Guarded by a fingerprint-keyed anti-abuse rate limiter.
- */
-export async function fileAnonymousReport(
-  input: FileAnonymousReportInput,
-  limiterConfig?: AnonReportLimiterConfig
-): Promise<ModerationReport> {
-  // Anti-abuse seam runs first — throws AnonymousReportRateLimitError on abuse
-  // or on a missing fingerprint (fail closed).
-  checkAnonymousReportQuota(input.clientFingerprint ?? null, limiterConfig);
-
-  try {
-    return await db.moderationReport.create({
-      data: {
-        reporterUserId: null,
-        reporterActorType: null,
-        targetUserId: input.targetUserId,
-        contentRef: input.contentRef,
-        surface: input.surface,
-        reason: input.reason,
-        notes: input.notes ?? null,
-        status: "OPEN",
-      },
-    });
-  } catch (err) {
-    throw new ModerationStoreUnavailableError(err);
-  }
-}
+// NOTE: there is deliberately NO fileAnonymousReport here. Anonymous reporting
+// was removed from the "use server" RPC surface (directive 4.1.1) — its only
+// entry point is POST /api/moderation/anonymous-report, where the rate-limit
+// key is derived server-side from trusted request facts.
 
 // ── takeAction ────────────────────────────────────────────────────────────────
 
@@ -230,6 +227,7 @@ export async function takeAction(input: TakeActionInput): Promise<ModerationActi
   // SUSPEND must always be time-boxed; an open-ended suspend is a de-facto BAN
   assertSuspendTimeBoxed(input.action, expiresAt);
 
+  const actorReceiptId = await requireReceiptId(actor);
   try {
     return await db.moderationAction.create({
       data: {
@@ -237,6 +235,7 @@ export async function takeAction(input: TakeActionInput): Promise<ModerationActi
         actorType: actor.actorType,
         actorEmail: actor.emailSnapshot,
         policyVersion: actor.policyVersion,
+        actorReceiptId,
         targetUserId: input.targetUserId,
         action: input.action,
         reason: input.reason,
@@ -311,11 +310,13 @@ export async function appealAction(input: AppealActionInput): Promise<Moderation
 
   const slaDeadline = computeAppealDeadline(new Date());
 
+  const appellantReceiptId = await requireReceiptId(actor);
   try {
     return await db.moderationAppeal.create({
       data: {
         actionId: input.actionId,
         appellantId: actor.subjectId,
+        appellantReceiptId,
         grounds: input.grounds,
         status: "PENDING",
         slaDeadline,
@@ -372,6 +373,7 @@ export async function decideAppeal(input: DecideAppealInput): Promise<Moderation
     );
   }
 
+  const reviewerReceiptId = await requireReceiptId(reviewer);
   try {
     return await db.moderationAppeal.update({
       where: { id: input.appealId },
@@ -381,6 +383,7 @@ export async function decideAppeal(input: DecideAppealInput): Promise<Moderation
         reviewerType: reviewer.actorType,
         reviewerEmail: reviewer.emailSnapshot,
         policyVersion: reviewer.policyVersion,
+        reviewerReceiptId,
         decision: input.decision,
         decidedAt: new Date(),
       },

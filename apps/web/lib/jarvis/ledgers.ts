@@ -15,7 +15,9 @@
  *
  * Background / non-interactive callers (workers, cron) must NOT go through this
  * "use server" surface. They import ./ledgers-core.ts directly and pass a
- * governed SERVICE / SYSTEM actor from serviceActor()/systemActor().
+ * GOVERNED SERVICE / SYSTEM actor from resolveServiceActor() (allowlisted
+ * principal + verified credential context + operation scope — the raw
+ * constructors are deprecated and guard-enforced to tests).
  */
 
 "use server";
@@ -58,14 +60,19 @@ export async function logSubagentRun(input: LogSubagentRunInput) {
 /**
  * Record the parent seat's review decision for a subagent run (interactive
  * admin path — reviewing is HUMAN-only).
+ *
+ * `reviewerSeatLabel` is a NON-AUTHORITATIVE workflow label (directive 4.4):
+ * authority is the authenticated HUMAN admin actor resolved here, which the
+ * audit path records (reviewer_subject_id + reviewer_receipt_id). The label is
+ * validated only for workflow consistency against the run's parent seat.
  */
 export async function reviewSubagentRun(
   runId: string,
-  reviewerSeat: string,
+  reviewerSeatLabel: string,
   decision: SubagentReviewDecision
 ) {
   const actor = await requireAdminActor();
-  return reviewSubagentRunAs(actor, runId, reviewerSeat, decision);
+  return reviewSubagentRunAs(actor, runId, reviewerSeatLabel, decision);
 }
 
 /** Returns the most recent handoffs, newest first (admin-gated). */

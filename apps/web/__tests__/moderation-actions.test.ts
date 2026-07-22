@@ -1,5 +1,5 @@
 /**
- * Moderation server-action tests — Trusted Actor Model (Phase 1A).
+ * Moderation server-action tests — Trusted Actor Model (Phase 1A/1B).
  *
  * The negative tests are the point:
  *   - impersonation via a caller-supplied reporter id is UNREPRESENTABLE
@@ -10,8 +10,11 @@
  *     UNREPRESENTABLE (no such input field; identity comes from the session);
  *   - the different-reviewer rule is enforced on TRUSTED stable ids;
  *   - non-admin callers are denied admin-gated actions;
- *   - the anonymous-report path always persists reporterUserId = null and is
- *     rate-limited.
+ *   - anonymous reporting is NOT on this RPC surface at all (removed per
+ *     directive 4.1 — see anonymous-report-route.test.ts for its route tests);
+ *   - authenticated reports carry a smaller durable per-user abuse limit that
+ *     fails CLOSED when the limiter store is unavailable;
+ *   - every write persists an immutable ActorReceipt and references it.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
@@ -43,22 +46,29 @@ vi.mock("@sports/db", () => ({
       findUnique: vi.fn(),
       update: vi.fn(),
     },
+    actorReceipt: {
+      create: vi.fn(),
+    },
+    // Durable rate limiter (authenticated per-user abuse limit). The default
+    // arms an "allowed" response; per-test overrides simulate deny/unavailable.
+    $queryRawUnsafe: vi.fn(),
   },
   Prisma: { PrismaClientKnownRequestError: class extends Error {} },
 }));
 
 import {
   fileReport,
-  fileAnonymousReport,
   takeAction,
   appealAction,
   decideAppeal,
   listOpenReports,
   listActions,
   auditLog,
+  ModerationStoreUnavailableError,
 } from "@/lib/community/moderation-actions";
 import { UnauthenticatedError, ForbiddenError, InvalidActorError } from "@/lib/auth/actor";
-import { resetAnonymousReportLimiter } from "@/lib/community/anon-report-limiter";
+import { ReportRateLimitedError } from "@/lib/community/report-abuse-policy";
+import { db } from "@sports/db";
 
 const SUSPEND_ACTION = {
   id: "a1",
@@ -76,8 +86,10 @@ const SUSPEND_ACTION = {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  resetAnonymousReportLimiter();
   mockAdminSession();
+  // Default: receipt store works and the durable limiter allows.
+  vi.mocked(db.actorReceipt.create).mockResolvedValue({ id: "receipt-1" } as never);
+  vi.mocked(db.$queryRawUnsafe).mockResolvedValue([{ count: 1 }] as never);
 });
 
 // ─── Admin-gated actions reject unauthenticated / non-admin callers ────────────
@@ -194,42 +206,97 @@ describe("fileReport derives the reporter from the session", () => {
   });
 });
 
-// ─── Anonymous report: always null reporter + rate limited ─────────────────────
+// ─── Anonymous reporting is OFF the RPC surface (directive 4.1.1) ──────────────
 
-describe("fileAnonymousReport", () => {
-  it("always persists reporterUserId = null, even with a session present", async () => {
-    mockAdminSession("admin-1");
-    const { db } = await import("@sports/db");
-    const createSpy = vi.spyOn(db.moderationReport, "create").mockResolvedValue({} as never);
-    await fileAnonymousReport({
-      targetUserId: "u2",
-      contentRef: "c1",
-      surface: "chat",
-      reason: "OTHER",
-      clientFingerprint: "fp-1",
-    });
-    const arg = createSpy.mock.calls[0]![0] as { data: { reporterUserId: string | null } };
-    expect(arg.data.reporterUserId).toBeNull();
+describe("anonymous reporting is not a server action", () => {
+  it("moderation-actions exports no fileAnonymousReport (route handler is the only entry)", async () => {
+    const mod: Record<string, unknown> = await import("@/lib/community/moderation-actions");
+    expect(mod["fileAnonymousReport"]).toBeUndefined();
+  });
+});
+
+// ─── Authenticated per-user abuse limit (directive 4.1.9) ──────────────────────
+
+describe("fileReport durable per-user abuse limit", () => {
+  const body = { targetUserId: "u2", contentRef: "c1", surface: "chat", reason: "OTHER" as const };
+
+  it("keys the durable limiter by the TRUSTED session subject id", async () => {
+    mockUserSession("reporter-real");
+    vi.spyOn(db.moderationReport, "create").mockResolvedValue({} as never);
+    await fileReport(body);
+    const rawCall = vi.mocked(db.$queryRawUnsafe).mock.calls[0]!;
+    // params: sql, scope, key, windowStart, limit
+    expect(rawCall[1]).toBe("auth-report:user");
+    expect(rawCall[2]).toBe("reporter-real");
   });
 
-  it("rejects a missing fingerprint (fail closed) and never writes", async () => {
-    const { db } = await import("@sports/db");
+  it("rejects with ReportRateLimitedError when the per-user quota is exhausted, and never writes", async () => {
+    mockUserSession("flooder");
+    // Atomic conditional upsert returns no row => denied.
+    vi.mocked(db.$queryRawUnsafe).mockResolvedValue([] as never);
     const createSpy = vi.spyOn(db.moderationReport, "create");
-    await expect(
-      fileAnonymousReport({ targetUserId: "u2", contentRef: "c1", surface: "chat", reason: "OTHER" })
-    ).rejects.toThrow(/fingerprint/i);
+    const receiptSpy = vi.spyOn(db.actorReceipt, "create");
+    await expect(fileReport(body)).rejects.toThrow(ReportRateLimitedError);
+    expect(createSpy).not.toHaveBeenCalled();
+    expect(receiptSpy).not.toHaveBeenCalled();
+  });
+
+  it("fails CLOSED (store error, not silent allow) when the limiter store is unavailable", async () => {
+    mockUserSession("reporter-real");
+    vi.mocked(db.$queryRawUnsafe).mockRejectedValue(new Error("connection refused"));
+    const createSpy = vi.spyOn(db.moderationReport, "create");
+    await expect(fileReport(body)).rejects.toThrow(ModerationStoreUnavailableError);
     expect(createSpy).not.toHaveBeenCalled();
   });
 
-  it("rate-limits a flood from one fingerprint", async () => {
-    const { db } = await import("@sports/db");
-    vi.spyOn(db.moderationReport, "create").mockResolvedValue({} as never);
-    const cfg = { maxPerWindow: 3, windowMs: 60_000 };
-    const body = { targetUserId: "u2", contentRef: "c1", surface: "chat", reason: "OTHER" as const, clientFingerprint: "flooder" };
-    await fileAnonymousReport(body, cfg);
-    await fileAnonymousReport(body, cfg);
-    await fileAnonymousReport(body, cfg);
-    await expect(fileAnonymousReport(body, cfg)).rejects.toThrow(/too many/i);
+  it("fails CLOSED when the store is a stub (non-row result), never unlimited", async () => {
+    mockUserSession("reporter-real");
+    // The stub prisma client returns undefined for $-methods — not rows.
+    vi.mocked(db.$queryRawUnsafe).mockResolvedValue(undefined as never);
+    const createSpy = vi.spyOn(db.moderationReport, "create");
+    await expect(fileReport(body)).rejects.toThrow(ModerationStoreUnavailableError);
+    expect(createSpy).not.toHaveBeenCalled();
+  });
+});
+
+// ─── Actor receipts (directive 4.3) referenced from audit rows ─────────────────
+
+describe("immutable actor receipts on moderation writes", () => {
+  it("fileReport persists a receipt BEFORE the report and references it", async () => {
+    mockUserSession("reporter-real");
+    const receiptSpy = vi
+      .spyOn(db.actorReceipt, "create")
+      .mockResolvedValue({ id: "receipt-42" } as never);
+    const createSpy = vi.spyOn(db.moderationReport, "create").mockResolvedValue({} as never);
+    await fileReport({ targetUserId: "u2", contentRef: "c1", surface: "chat", reason: "OTHER" });
+    expect(receiptSpy).toHaveBeenCalledTimes(1);
+    const receiptData = receiptSpy.mock.calls[0]![0] as { data: Record<string, unknown> };
+    expect(receiptData.data["subjectId"]).toBe("reporter-real");
+    expect(receiptData.data["authMethod"]).toBe("SESSION");
+    const arg = createSpy.mock.calls[0]![0] as { data: { reporterReceiptId: string } };
+    expect(arg.data.reporterReceiptId).toBe("receipt-42");
+    expect(receiptSpy.mock.invocationCallOrder[0]!).toBeLessThan(
+      createSpy.mock.invocationCallOrder[0]!
+    );
+  });
+
+  it("takeAction references the admin actor's receipt id", async () => {
+    mockAdminSession("admin-real");
+    vi.spyOn(db.actorReceipt, "create").mockResolvedValue({ id: "receipt-77" } as never);
+    const createSpy = vi.spyOn(db.moderationAction, "create").mockResolvedValue({} as never);
+    await takeAction({ targetUserId: "u1", action: "NUDGE", reason: "OTHER" });
+    const arg = createSpy.mock.calls[0]![0] as { data: { actorReceiptId: string } };
+    expect(arg.data.actorReceiptId).toBe("receipt-77");
+  });
+
+  it("takeAction FAILS CLOSED when the receipt store is unavailable — no audit row without its receipt", async () => {
+    mockAdminSession("admin-real");
+    vi.spyOn(db.actorReceipt, "create").mockRejectedValue(new Error("receipt store down"));
+    const createSpy = vi.spyOn(db.moderationAction, "create");
+    await expect(
+      takeAction({ targetUserId: "u1", action: "NUDGE", reason: "OTHER" })
+    ).rejects.toThrow(ModerationStoreUnavailableError);
+    expect(createSpy).not.toHaveBeenCalled();
   });
 });
 

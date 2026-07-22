@@ -24,9 +24,19 @@ import { AGENT_COUNCIL } from "@/lib/jarvis/agent-council";
 import {
   UnauthenticatedError,
   ForbiddenError,
-  serviceActor,
-  systemActor,
+  resolveServiceActor,
+  type VerifiedCredentialContext,
 } from "@/lib/auth/actor";
+// Raw (ungoverned) constructors are deliberately imported from the
+// test-internal module: these tests prove the DENIAL paths hold even for an
+// actor minted outside resolveServiceActor's governance.
+import { serviceActor, systemActor } from "@/lib/auth/actor-test-internal";
+
+const TEST_CREDENTIAL: VerifiedCredentialContext = {
+  method: "TEST_HARNESS",
+  verifiedBy: "__tests__/council-ledgers",
+  verifiedAt: new Date(),
+};
 
 // ─── Mock auth() — default to a valid ADMIN session so the seat/confidence/
 // review-state tests exercise validation logic, not the auth gate itself. The
@@ -63,16 +73,24 @@ vi.mock("@sports/db", () => ({
       findUniqueOrThrow: vi.fn(),
       update: vi.fn(),
     },
+    actorReceipt: {
+      create: vi.fn(),
+    },
   },
   isStubMode: vi.fn().mockReturnValue(false),
   isDemoPicksEnabled: vi.fn().mockReturnValue(false),
 }));
 
+import { db } from "@sports/db";
+
 // Default every test to an authenticated admin caller — the dedicated "actor
 // authorization" block overrides mockAuth per-test to exercise the
-// unauthenticated / non-admin / wrong-actor-type paths.
+// unauthenticated / non-admin / wrong-actor-type paths. Also (re-)arm the
+// actor-receipt store: a nested describe calls vi.resetAllMocks(), so the
+// default implementation must be restored before every test.
 beforeEach(() => {
   mockAdminSession();
+  vi.mocked(db.actorReceipt.create).mockResolvedValue({ id: "receipt-1" } as never);
 });
 
 // ─── 1. Seat validation ───────────────────────────────────────────────────────
@@ -271,6 +289,8 @@ describe("review-states law", () => {
       reviewer_type: null,
       reviewer_email: null,
       policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
@@ -306,6 +326,8 @@ describe("review-states law", () => {
       reviewer_type: null,
       reviewer_email: null,
       policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
@@ -341,6 +363,8 @@ describe("review-states law", () => {
       reviewer_type: null,
       reviewer_email: null,
       policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
@@ -376,6 +400,8 @@ describe("review-states law", () => {
       reviewer_type: null,
       reviewer_email: null,
       policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
     });
 
     // TAL is not the parent seat for this run (scout is)
@@ -653,11 +679,15 @@ describe("trusted-actor authorization", () => {
 // permits all actor types; reviewSubagentRunAs is HUMAN-only.
 
 describe("service/system actors on core write paths", () => {
-  it("a SERVICE actor may log a handoff and is recorded as actor_type SERVICE", async () => {
-    const { db } = await import("@sports/db");
+  it("a GOVERNED SERVICE actor (resolveServiceActor) may log a handoff and is recorded as actor_type SERVICE", async () => {
     const createSpy = vi.spyOn(db.agentHandoff, "create");
     createSpy.mockClear();
-    const actor = serviceActor({ subjectId: "service:pick-generation", runId: "run-42" });
+    const actor = resolveServiceActor({
+      principalId: "service:pick-generation-worker",
+      verifiedCredentialContext: TEST_CREDENTIAL,
+      operation: "jarvis:log-handoff",
+      runId: "run-42",
+    });
     await logHandoffAs(actor, {
       sourceSeat: "jarvis",
       targetSeat: "scout",
@@ -669,7 +699,7 @@ describe("service/system actors on core write paths", () => {
     expect(createSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          actor_subject_id: "service:pick-generation",
+          actor_subject_id: "service:pick-generation-worker",
           actor_type: "SERVICE",
         }),
       })

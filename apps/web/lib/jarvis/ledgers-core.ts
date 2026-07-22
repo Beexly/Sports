@@ -7,9 +7,19 @@
  * because this module is imported by trusted server code — the interactive
  * "use server" wrappers in ./ledgers.ts (which resolve a HUMAN admin actor via
  * requireAdminActor) and background/non-interactive paths (workers, cron)
- * which mint a governed SERVICE / SYSTEM actor via serviceActor()/systemActor().
- * A browser RPC call can never reach these functions with a forged actor,
- * because they are not part of the "use server" surface.
+ * which obtain a GOVERNED SERVICE / SYSTEM actor via resolveServiceActor()
+ * (allowlisted principal + verified credential context + operation scope; the
+ * raw constructors are deprecated and guard-enforced to tests). A browser RPC
+ * call can never reach these functions with a forged actor, because they are
+ * not part of the "use server" surface.
+ *
+ * AUDIT RECEIPTS (directive 4.3): every write persists an immutable
+ * ActorReceipt (the full TrustedActor audit contract — see
+ * @/lib/auth/actor-receipt) BEFORE the ledger row and stores its id
+ * (actor_receipt_id / reviewer_receipt_id). Receipt failure aborts the write.
+ *
+ * SEAT IDENTITY (directive 4.4): a reviewer's "seat" is a NON-AUTHORITATIVE
+ * workflow label — see reviewSubagentRunAs.
  *
  * Design rules (unchanged from the original ledgers module):
  *   - Seats are validated against AGENT_COUNCIL ids — unknown seats are rejected.
@@ -24,6 +34,7 @@ import { db } from "@sports/db";
 import { Prisma } from "@sports/db";
 import { AGENT_COUNCIL } from "./agent-council";
 import { assertActorType, type TrustedActor } from "@/lib/auth/actor";
+import { persistActorReceipt } from "@/lib/auth/actor-receipt";
 
 // ─── Typed error ──────────────────────────────────────────────────────────────
 
@@ -73,6 +84,19 @@ function wrapDbError(err: unknown): never {
   throw new LedgerStoreUnavailableError(err);
 }
 
+/**
+ * Persists the immutable ActorReceipt (directive 4.3) BEFORE the ledger row it
+ * vouches for, wrapping receipt-store failure into this module's typed store
+ * error. Receipt failure aborts the audited write (fail closed).
+ */
+async function persistReceiptOrFail(actor: TrustedActor): Promise<string> {
+  try {
+    return await persistActorReceipt(actor);
+  } catch (err) {
+    wrapDbError(err);
+  }
+}
+
 // ─── Handoff ledger ───────────────────────────────────────────────────────────
 
 export interface LogHandoffInput {
@@ -102,6 +126,7 @@ export async function logHandoffAs(actor: TrustedActor, input: LogHandoffInput) 
   assertValidSeat(input.sourceSeat, "sourceSeat");
   assertValidSeat(input.targetSeat, "targetSeat");
 
+  const actorReceiptId = await persistReceiptOrFail(actor);
   try {
     return await db.agentHandoff.create({
       data: {
@@ -118,6 +143,7 @@ export async function logHandoffAs(actor: TrustedActor, input: LogHandoffInput) 
         actor_type: actor.actorType,
         actor_email: actor.emailSnapshot,
         policy_version: actor.policyVersion,
+        actor_receipt_id: actorReceiptId,
       },
     });
   } catch (err) {
@@ -160,6 +186,7 @@ export async function logSubagentRunAs(actor: TrustedActor, input: LogSubagentRu
   assertValidSeat(input.parentSeat, "parentSeat");
   assertValidConfidence(input.confidence, "confidence");
 
+  const actorReceiptId = await persistReceiptOrFail(actor);
   try {
     return await db.subagentRun.create({
       data: {
@@ -177,6 +204,7 @@ export async function logSubagentRunAs(actor: TrustedActor, input: LogSubagentRu
         actor_type: actor.actorType,
         actor_email: actor.emailSnapshot,
         policy_version: actor.policyVersion,
+        actor_receipt_id: actorReceiptId,
       },
     });
   } catch (err) {
@@ -191,18 +219,29 @@ export type SubagentReviewDecision = "accepted" | "rejected" | "edited";
  *
  * Reviewing is a HUMAN-only operation: a subagent run is a draft awaiting a
  * human parent seat's judgement, so a SERVICE/SYSTEM actor may NOT decide it.
- * Only the parent seat (by codename or id) that spawned the run may review it.
+ *
+ * SEAT IDENTITY RULE (directive 4.4 — explicit): `reviewerSeatLabel` is a
+ * NON-AUTHORITATIVE workflow label. It does NOT authenticate the seat and it
+ * confers NO authority. Authority comes solely from the authenticated HUMAN
+ * admin actor (`actor`), whose stable subject id — and its immutable
+ * ActorReceipt — are what the audit path records as the deciding authority
+ * (reviewer_subject_id / reviewer_receipt_id). Any owner/admin human is
+ * authorized to review on behalf of a parent seat; the label is validated only
+ * for workflow consistency (it must name the run's parent seat, by id or
+ * codename), never as an identity claim.
+ *
  * Status moves from pending_review → accepted | rejected | edited.
  */
 export async function reviewSubagentRunAs(
   actor: TrustedActor,
   runId: string,
-  reviewerSeat: string,
+  reviewerSeatLabel: string,
   decision: SubagentReviewDecision
 ) {
   assertActorType(actor, ["HUMAN"], "reviewSubagentRun");
-  assertValidSeat(reviewerSeat, "reviewerSeat");
+  assertValidSeat(reviewerSeatLabel, "reviewerSeatLabel");
 
+  const reviewerReceiptId = await persistReceiptOrFail(actor);
   try {
     const existing = await db.subagentRun.findUniqueOrThrow({ where: { id: runId } });
 
@@ -211,15 +250,16 @@ export async function reviewSubagentRunAs(
       throw new Error(`Run ${runId} has an unrecognised parent seat "${existing.parent_seat}".`);
     }
 
-    // The reviewer seat must be the parent seat (id or codename form).
+    // Workflow-consistency check ONLY (not authority): the seat label must be
+    // the run's parent seat (id or codename form).
     const reviewerMatches =
-      existing.parent_seat === reviewerSeat ||
-      AGENT_COUNCIL.find((s) => s.codename === reviewerSeat)?.id === existing.parent_seat ||
-      AGENT_COUNCIL.find((s) => s.id === reviewerSeat)?.codename === existing.parent_seat;
+      existing.parent_seat === reviewerSeatLabel ||
+      AGENT_COUNCIL.find((s) => s.codename === reviewerSeatLabel)?.id === existing.parent_seat ||
+      AGENT_COUNCIL.find((s) => s.id === reviewerSeatLabel)?.codename === existing.parent_seat;
 
     if (!reviewerMatches) {
       throw new Error(
-        `Seat "${reviewerSeat}" is not the parent seat for run ${runId}. ` +
+        `Seat "${reviewerSeatLabel}" is not the parent seat for run ${runId}. ` +
         `Only the parent seat ("${existing.parent_seat}") may review this run.`
       );
     }
@@ -232,6 +272,7 @@ export async function reviewSubagentRunAs(
         reviewer_type: actor.actorType,
         reviewer_email: actor.emailSnapshot,
         policy_version: actor.policyVersion,
+        reviewer_receipt_id: reviewerReceiptId,
       },
     });
   } catch (err) {
