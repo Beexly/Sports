@@ -32,7 +32,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { isAbsolute, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 
@@ -807,5 +807,19 @@ function main() {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main();
+  if (process.argv.slice(2).includes("--heads")) {
+    // Multi-head scan mode (directive section 14.6): delegate to the
+    // multi-head builder in a child process. (A dynamic import would deadlock:
+    // multihead-inventory.mjs imports helpers from this module, which would
+    // still be mid-evaluation.)
+    const { spawnSync } = await import("node:child_process");
+    const child = spawnSync(
+      process.execPath,
+      [join(dirname(process.argv[1]), "multihead-inventory.mjs"), ...process.argv.slice(2)],
+      { stdio: "inherit" },
+    );
+    process.exit(child.status ?? EXIT.USAGE_OR_INTERNAL);
+  } else {
+    main();
+  }
 }

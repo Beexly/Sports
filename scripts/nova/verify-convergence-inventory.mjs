@@ -31,11 +31,107 @@ import {
   deriveArtifacts,
   sha256Hex,
 } from "./build-convergence-inventory.mjs";
+import {
+  MULTIHEAD_ARTIFACT_NAMES,
+  buildMultiHeadInventory,
+  deriveMultiHeadArtifacts,
+} from "./multihead-inventory.mjs";
 
 const EXIT = Object.freeze({ OK: 0, MISMATCH: 1, INCOMPLETE: 2, USAGE: 3 });
 
+/** Compare recorded receipt hashes and committed artifacts against re-derived artifacts. */
+function compareArtifacts({ outDir, receipt, expected, failures }) {
+  const recorded = new Map();
+  for (const a of receipt.artifacts ?? []) {
+    recorded.set(a.path.split("/").pop(), a.sha256);
+  }
+  for (const [name, freshHash] of expected) {
+    const recordedHash = recorded.get(name);
+    if (!recordedHash) {
+      failures.push(`receipt has no artifact hash for ${name}`);
+      continue;
+    }
+    if (recordedHash !== freshHash) {
+      failures.push(
+        `receipt hash for ${name} (${recordedHash}) != re-derived hash (${freshHash})`,
+      );
+    }
+    let committedHash;
+    try {
+      committedHash = sha256Hex(readFileSync(join(outDir, name), "utf8"));
+    } catch (err) {
+      failures.push(`cannot read committed artifact ${name}: ${err.message}`);
+      continue;
+    }
+    if (committedHash !== freshHash) {
+      failures.push(
+        `committed ${name} hash (${committedHash}) != re-derived hash (${freshHash})`,
+      );
+    }
+  }
+}
+
+/**
+ * Verify a multi-head receipt: re-derive the multi-head inventory from the
+ * base SHA and head SHAs recorded in the receipt, then compare hashes.
+ */
+export function verifyMultiHead({ repoPath, outDir, manifestPath, receipt }) {
+  const failures = [];
+  const baseSha = receipt.base?.baseSha;
+  const headInputs = receipt.headInputs ?? [];
+  if (!baseSha || headInputs.length === 0 || headInputs.some((h) => !h.sha || !h.label)) {
+    return {
+      exitCode: EXIT.USAGE,
+      failures: ["multi-head receipt missing base.baseSha or headInputs[].{label,sha}"],
+    };
+  }
+
+  let buildResult;
+  try {
+    buildResult = buildMultiHeadInventory({
+      repoPath,
+      baseRef: baseSha,
+      // Re-derive from the recorded SHAs, never from branch names — the
+      // artifacts must be a function of commit identity.
+      heads: headInputs.map((h) => ({ label: h.label, ref: h.sha })),
+      manifestPath,
+    });
+  } catch (err) {
+    return { exitCode: EXIT.USAGE, failures: [`multi-head re-derivation failed: ${err.message}`] };
+  }
+  if (!buildResult.scanComplete) {
+    return {
+      exitCode: EXIT.INCOMPLETE,
+      failures: buildResult.inventory.unparsedFiles.map(
+        (u) => `re-derivation incomplete (fail closed): [${u.head}] ${u.path} — ${u.reason}`,
+      ),
+    };
+  }
+
+  const rederived = deriveMultiHeadArtifacts(buildResult);
+  const expected = new Map([
+    [MULTIHEAD_ARTIFACT_NAMES.inventoryJson, sha256Hex(rederived.inventoryJson)],
+    [MULTIHEAD_ARTIFACT_NAMES.inventoryMd, sha256Hex(rederived.inventoryMd)],
+  ]);
+  compareArtifacts({ outDir, receipt, expected, failures });
+  return { exitCode: failures.length === 0 ? EXIT.OK : EXIT.MISMATCH, failures };
+}
+
 export function verify({ repoPath, outDir, manifestPath }) {
   const failures = [];
+  // Multi-head receipts are self-identifying (mode: "multi-head"); check for
+  // one first so a single --out flag verifies whichever receipt lives there.
+  const multiReceiptPath = join(outDir, MULTIHEAD_ARTIFACT_NAMES.receiptJson);
+  let multiReceipt = null;
+  try {
+    multiReceipt = JSON.parse(readFileSync(multiReceiptPath, "utf8"));
+  } catch {
+    multiReceipt = null;
+  }
+  if (multiReceipt && multiReceipt.mode === "multi-head") {
+    return verifyMultiHead({ repoPath, outDir, manifestPath, receipt: multiReceipt });
+  }
+
   const receiptPath = join(outDir, ARTIFACT_NAMES.receiptJson);
   let receipt;
   try {
@@ -75,35 +171,7 @@ export function verify({ repoPath, outDir, manifestPath }) {
     [ARTIFACT_NAMES.inventoryMd, sha256Hex(rederived.inventoryMd)],
   ]);
 
-  const recorded = new Map();
-  for (const a of receipt.artifacts ?? []) {
-    recorded.set(a.path.split("/").pop(), a.sha256);
-  }
-
-  for (const [name, freshHash] of expected) {
-    const recordedHash = recorded.get(name);
-    if (!recordedHash) {
-      failures.push(`receipt has no artifact hash for ${name}`);
-      continue;
-    }
-    if (recordedHash !== freshHash) {
-      failures.push(
-        `receipt hash for ${name} (${recordedHash}) != re-derived hash (${freshHash})`,
-      );
-    }
-    let committedHash;
-    try {
-      committedHash = sha256Hex(readFileSync(join(outDir, name), "utf8"));
-    } catch (err) {
-      failures.push(`cannot read committed artifact ${name}: ${err.message}`);
-      continue;
-    }
-    if (committedHash !== freshHash) {
-      failures.push(
-        `committed ${name} hash (${committedHash}) != re-derived hash (${freshHash})`,
-      );
-    }
-  }
+  compareArtifacts({ outDir, receipt, expected, failures });
 
   return { exitCode: failures.length === 0 ? EXIT.OK : EXIT.MISMATCH, failures };
 }
