@@ -47,7 +47,7 @@ function isMoneyBearing(candidate: OpportunityCandidate): boolean {
     candidate.revenueLanes.some((lane) => lane !== "none") ||
     candidate.economics.potentialRevenue != null ||
     candidate.economics.potentialSavings != null ||
-    candidate.economics.availableCredits != null
+    candidate.economics.scenarioAvailableCreditsUsd != null
   );
 }
 
