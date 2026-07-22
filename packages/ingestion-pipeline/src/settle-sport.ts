@@ -82,6 +82,9 @@ export interface SettleSportResult {
   observationsRecorded: number;
   /** SCORELESS_COMPLETED anomalies newly opened this run. */
   anomaliesOpened: number;
+  /** Previously RESOLVED/DISMISSED anomalies reopened this run because the
+   *  condition recurred with new post-resolution evidence. */
+  anomaliesReopened: number;
   /** Anomalies promoted OPEN→OWNER_REVIEW this run (each promotion also
    *  created its exactly-once SettlementDecision receipt). */
   anomaliesPromoted: number;
@@ -125,6 +128,7 @@ export async function settleSport(
   let picksSettled = 0;
   let observationsRecorded = 0;
   let anomaliesOpened = 0;
+  let anomaliesReopened = 0;
   let anomaliesPromoted = 0;
   let anomaliesResolved = 0;
   let outboxAppended = 0;
@@ -213,6 +217,14 @@ export async function settleSport(
           });
           if (evidence.observationRecorded) observationsRecorded++;
           if (evidence.anomalyOpened) anomaliesOpened++;
+          if (evidence.anomalyReopened) {
+            anomaliesReopened++;
+            console.warn(
+              `${logPrefix} ${sport.key}: game ${game.id} (${game.externalId}) — previously ` +
+                `resolved/dismissed SCORELESS_COMPLETED anomaly REOPENED: the condition recurred ` +
+                `with new post-resolution evidence (SYSTEM REOPENED event appended).`,
+            );
+          }
           if (evidence.anomalyPromoted) {
             anomaliesPromoted++;
             console.warn(
@@ -536,6 +548,7 @@ export async function settleSport(
       picksSettled,
       observationsRecorded,
       anomaliesOpened,
+      anomaliesReopened,
       anomaliesPromoted,
       anomaliesResolved,
       outboxAppended,
@@ -550,6 +563,7 @@ export async function settleSport(
       picksSettled,
       observationsRecorded,
       anomaliesOpened,
+      anomaliesReopened,
       anomaliesPromoted,
       anomaliesResolved,
       outboxAppended,

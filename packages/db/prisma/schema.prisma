@@ -930,7 +930,11 @@ model SettlementObservation {
 // CONFLICT). state: OPEN | OWNER_REVIEW | RESOLVED | DISMISSED. Resolution
 // (e.g. scores arriving later) marks the row RESOLVED with an actor +
 // reason — it never deletes the row, the observations, or the decision
-// receipt (that was #157's history-destruction bug).
+// receipt (that was #157's history-destruction bug). A RESOLVED/DISMISSED
+// anomaly whose condition RECURS is REOPENED (state back to OPEN, SYSTEM
+// REOPENED decision event appended); resolvedAt is deliberately KEPT on the
+// reopened row as the corroboration boundary — only observations recorded
+// after the last resolution can drive a re-promotion.
 model SettlementAnomaly {
   id               String    @id @default(cuid())
   gameId           String
@@ -1031,18 +1035,21 @@ model SettlementDecision {
 // attempts left and stale CLAIMED rows are re-claimable.
 // Parent event statuses (hardening 6.4): PENDING (appended by settlement,
 // not yet expanded) → EXPANDED (immutable payload + per-recipient
-// PickSettlementDelivery children materialized) → DELIVERED (every child
-// reached a TERMINAL state — which may honestly include failures; the
-// per-channel truth lives on the children, never collapsed into a fake
-// parent success). The parent is COMPLETE only when all children are
-// terminal; a partial failure never closes the event.
+// PickSettlementDelivery children materialized) → then, once EVERY child
+// reached a TERMINAL state, exactly one honest terminal:
+//   DELIVERED               — no child ended PERMANENT_FAILED/DEAD_LETTER
+//   COMPLETED_WITH_FAILURES — at least one child failed terminally; the
+//                             parent never asserts a delivery that did not
+//                             happen (per-channel truth stays on children)
+// The parent is COMPLETE only when all children are terminal; a partial
+// failure never closes the event.
 model PickSettlementEvent {
   id                       String     @id @default(cuid())
   pickId                   String     @unique
   gameId                   String
   result                   PickResult
   settledAt                DateTime
-  status                   String     @default("PENDING") // PENDING | EXPANDED | DELIVERED | FAILED (legacy)
+  status                   String     @default("PENDING") // PENDING | EXPANDED | DELIVERED | COMPLETED_WITH_FAILURES | FAILED (legacy)
   claimedAt                DateTime?
   deliveredAt              DateTime?
   // Set only when every child delivery reached a terminal state (6.4).
@@ -1072,13 +1079,19 @@ model PickSettlementEvent {
 //   PENDING          — materialized, not yet attempted
 //   CLAIMED          — leased by a worker (leaseToken fencing)
 //   DELIVERED        — terminal success; NEVER resent
-//   SUPPRESSED       — terminal: deliberately not sent (tier-ineligible,
-//                      alerts disabled, channel unconfigured)
+//   SUPPRESSED       — terminal: a POLICY decision not to send
+//                      (tier-ineligible, alerts disabled, payload expired).
+//                      NEVER an infrastructure condition: an unconfigured
+//                      channel or failed entitlements lookup retries/defers
+//                      instead — infra failures must not become terminal
+//                      policy states (6.9)
 //   NO_RECIPIENT     — terminal: no destination existed (no verified email /
 //                      no push subscription) — recorded honestly, no retry
-//   RETRYABLE_FAILED — transient failure; retried with backoff+jitter
+//   RETRYABLE_FAILED — transient failure (including channel-unconfigured);
+//                      retried with backoff+jitter
 //   PERMANENT_FAILED — terminal rejection (e.g. expired push subscription)
-//   DEAD_LETTER      — attempts exhausted; owner-queue escalation
+//   DEAD_LETTER      — attempts exhausted; durable owner-queue escalation
+//                      via OutboxDeadLetterReceipt
 // A stale worker can never overwrite a newer claimant: every result write is
 // scoped to (id, leaseToken, status: CLAIMED) and claims bump claimVersion.
 model PickSettlementDelivery {
@@ -1106,10 +1119,36 @@ model PickSettlementDelivery {
 
   event PickSettlementEvent @relation(fields: [eventId], references: [id], onDelete: Restrict)
 
+  deadLetterReceipt OutboxDeadLetterReceipt?
+
   @@unique([eventId, userId, channel, destinationId])
   @@index([status, nextAttemptAt])
   @@index([eventId])
   @@map("pick_settlement_deliveries")
+}
+
+// Durable owner-queue escalation for dead-lettered deliveries (hardening
+// 6.5) — the outbox analogue of OwnerDecisionRequest. Appended exactly once
+// per delivery (unique deliveryId) the moment it reaches DEAD_LETTER, so an
+// exhausted delivery is a durable owner work item, not just a transient
+// health-endpoint reason string. Append-only from pipeline code; the owner
+// stamps acknowledgedAt when triaged.
+model OutboxDeadLetterReceipt {
+  id             String    @id @default(cuid())
+  deliveryId     String    @unique
+  eventId        String
+  userId         String
+  channel        String
+  reason         Json      // { errorCode, errorClass, attemptCount }
+  createdAt      DateTime  @default(now())
+  acknowledgedAt DateTime?
+
+  // RESTRICT (6.2): the receipt is evidence of an owed-but-undelivered
+  // alert and must survive its delivery row.
+  delivery PickSettlementDelivery @relation(fields: [deliveryId], references: [id], onDelete: Restrict)
+
+  @@index([acknowledgedAt, createdAt])
+  @@map("outbox_dead_letter_receipts")
 }
 
 // Durable post-settlement work state (hardening 6.10): CLV grading, signal-

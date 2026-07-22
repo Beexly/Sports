@@ -1,7 +1,8 @@
 /**
  * Hardening-unit tests for directive section 6 (PR #161):
- *   6.1 durable run identity + corroboration rule (distinct snapshots OR
- *       minimum temporal separation)
+ *   6.1 durable run identity + corroboration rule (distinct PER-GAME
+ *       payloads OR minimum temporal separation — never the sport-wide
+ *       snapshot fingerprint, which churns on every live-window poll)
  *   6.3 append-only owner decision events over anomalies
  *
  * Pure-function and structural-db tests; the real-Postgres constraint and
@@ -30,60 +31,66 @@ const T0 = new Date("2026-07-22T12:00:00Z");
 const min = (m: number) => new Date(T0.getTime() + m * 60_000);
 
 describe("countCorroboratingRuns (6.1)", () => {
-  it("distinct snapshot fingerprints corroborate regardless of spacing", () => {
+  it("distinct PER-GAME payloads corroborate regardless of spacing", () => {
     const { corroboratingRunIds } = countCorroboratingRuns([
-      { settlementRunId: "r1", sourceSnapshotFingerprint: "a", observedAt: min(0) },
-      { settlementRunId: "r2", sourceSnapshotFingerprint: "b", observedAt: min(1) },
-      { settlementRunId: "r3", sourceSnapshotFingerprint: "c", observedAt: min(2) },
+      { settlementRunId: "r1", payloadFingerprint: "a", observedAt: min(0) },
+      { settlementRunId: "r2", payloadFingerprint: "b", observedAt: min(1) },
+      { settlementRunId: "r3", payloadFingerprint: "c", observedAt: min(2) },
     ]);
     expect(corroboratingRunIds).toEqual(["r1", "r2", "r3"]);
   });
 
-  it("identical snapshots seconds apart corroborate ONCE — a retry storm can never promote", () => {
+  it("a LIVE-WINDOW retry storm can never promote: distinct run ids, identical per-game payload, minutes apart corroborate ONCE", () => {
+    // This is the realistic storm: every poll during a live window carries a
+    // DISTINCT whole-feed snapshot (an unrelated game's score ticked), which
+    // mints a fresh run id each time — but the anomalous game's OWN payload
+    // (completed=true, null scores) is byte-identical. Distinctness is keyed
+    // on the per-game payload, so the storm reduces to temporal separation
+    // and can never reach the threshold in minutes.
     const { corroboratingRunIds, distinctRunCount } = countCorroboratingRuns([
-      { settlementRunId: "r1", sourceSnapshotFingerprint: "same", observedAt: min(0) },
-      { settlementRunId: "r2", sourceSnapshotFingerprint: "same", observedAt: min(1) },
-      { settlementRunId: "r3", sourceSnapshotFingerprint: "same", observedAt: min(2) },
-      { settlementRunId: "r4", sourceSnapshotFingerprint: "same", observedAt: min(3) },
+      { settlementRunId: "r1", payloadFingerprint: "same", observedAt: min(0) },
+      { settlementRunId: "r2", payloadFingerprint: "same", observedAt: min(1) },
+      { settlementRunId: "r3", payloadFingerprint: "same", observedAt: min(2) },
+      { settlementRunId: "r4", payloadFingerprint: "same", observedAt: min(3) },
     ]);
     expect(distinctRunCount).toBe(4);
     expect(corroboratingRunIds).toEqual(["r1"]);
   });
 
-  it("identical snapshots DO corroborate once genuinely separated in time", () => {
+  it("identical payloads DO corroborate once genuinely separated in time", () => {
     const sep = MIN_CORROBORATION_SEPARATION_MINUTES;
     const { corroboratingRunIds } = countCorroboratingRuns([
-      { settlementRunId: "r1", sourceSnapshotFingerprint: "same", observedAt: min(0) },
-      { settlementRunId: "r2", sourceSnapshotFingerprint: "same", observedAt: min(sep) },
-      { settlementRunId: "r3", sourceSnapshotFingerprint: "same", observedAt: min(2 * sep) },
+      { settlementRunId: "r1", payloadFingerprint: "same", observedAt: min(0) },
+      { settlementRunId: "r2", payloadFingerprint: "same", observedAt: min(sep) },
+      { settlementRunId: "r3", payloadFingerprint: "same", observedAt: min(2 * sep) },
     ]);
     expect(corroboratingRunIds).toEqual(["r1", "r2", "r3"]);
   });
 
   it("duplicate observations within one run collapse to the run's earliest sighting", () => {
     const { corroboratingRunIds, distinctRunCount } = countCorroboratingRuns([
-      { settlementRunId: "r1", sourceSnapshotFingerprint: "a", observedAt: min(5) },
-      { settlementRunId: "r1", sourceSnapshotFingerprint: "a", observedAt: min(0) },
-      { settlementRunId: "r1", sourceSnapshotFingerprint: "a", observedAt: min(9) },
+      { settlementRunId: "r1", payloadFingerprint: "a", observedAt: min(5) },
+      { settlementRunId: "r1", payloadFingerprint: "a", observedAt: min(0) },
+      { settlementRunId: "r1", payloadFingerprint: "a", observedAt: min(9) },
     ]);
     expect(distinctRunCount).toBe(1);
     expect(corroboratingRunIds).toEqual(["r1"]);
   });
 
-  it("legacy rows with a null fingerprint fail closed onto temporal separation only", () => {
+  it("a payload flip-flop (a → b → a) counts the repeat payload only via separation", () => {
     const { corroboratingRunIds } = countCorroboratingRuns([
-      { settlementRunId: "r1", sourceSnapshotFingerprint: null, observedAt: min(0) },
-      { settlementRunId: "r2", sourceSnapshotFingerprint: null, observedAt: min(1) },
-      { settlementRunId: "r3", sourceSnapshotFingerprint: null, observedAt: min(MIN_CORROBORATION_SEPARATION_MINUTES) },
+      { settlementRunId: "r1", payloadFingerprint: "a", observedAt: min(0) },
+      { settlementRunId: "r2", payloadFingerprint: "b", observedAt: min(1) },
+      // "a" again 1 minute later: already seen, not separated — no credit.
+      { settlementRunId: "r3", payloadFingerprint: "a", observedAt: min(2) },
     ]);
-    // r2 (1 minute later, no distinct fingerprint) never corroborates.
-    expect(corroboratingRunIds).toEqual(["r1", "r3"]);
+    expect(corroboratingRunIds).toEqual(["r1", "r2"]);
   });
 
   it("is deterministic regardless of input order", () => {
     const rows = [
-      { settlementRunId: "r2", sourceSnapshotFingerprint: "b", observedAt: min(1) },
-      { settlementRunId: "r1", sourceSnapshotFingerprint: "a", observedAt: min(0) },
+      { settlementRunId: "r2", payloadFingerprint: "b", observedAt: min(1) },
+      { settlementRunId: "r1", payloadFingerprint: "a", observedAt: min(0) },
     ];
     const a = countCorroboratingRuns(rows);
     const b = countCorroboratingRuns([...rows].reverse());

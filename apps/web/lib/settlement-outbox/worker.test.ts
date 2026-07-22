@@ -16,7 +16,10 @@ import {
   getSettlementOutboxHealth,
   latencyPercentiles,
   computeNextAttemptAt,
+  selectFairDeliveryBatch,
+  EVENT_PAYLOAD_SCHEMA_VERSION,
   OUTBOX_MAX_ATTEMPTS,
+  OUTBOX_MAX_PAYLOAD_AGE_MS,
   TERMINAL_DELIVERY_STATUSES,
   type OutboxDeps,
 } from "./worker";
@@ -134,6 +137,7 @@ interface FakeDbSeed {
   watchlists?: Row[];
   users?: Row[];
   subscriptions?: Row[];
+  deadLetterReceipts?: Row[];
 }
 
 function makeDb(seed: FakeDbSeed) {
@@ -143,6 +147,7 @@ function makeDb(seed: FakeDbSeed) {
   const watchlists = makeTable(seed.watchlists ?? []);
   const users = makeTable(seed.users ?? []);
   const subscriptions = makeTable(seed.subscriptions ?? []);
+  const deadLetterReceipts = makeTable(seed.deadLetterReceipts ?? [], ["deliveryId"]);
   return {
     pickSettlementEvent: events,
     pickSettlementDelivery: deliveries,
@@ -153,7 +158,8 @@ function makeDb(seed: FakeDbSeed) {
     watchlist: watchlists,
     user: users,
     pushSubscription: subscriptions,
-    _tables: { events, deliveries, watchlists, users, subscriptions },
+    outboxDeadLetterReceipt: deadLetterReceipts,
+    _tables: { events, deliveries, watchlists, users, subscriptions, deadLetterReceipts },
   };
 }
 
@@ -237,7 +243,13 @@ describe("expansion (6.4/6.6)", () => {
     const payload = event["payload"] as Row;
     expect(payload["selection"]).toBe("Lakers -3.5");
     expect(payload["result"]).toBe("WIN");
-    expect(payload["schemaVersion"]).toBe(1);
+    expect(payload["schemaVersion"]).toBe(EVENT_PAYLOAD_SCHEMA_VERSION);
+    // v2 payload polish (6.6/6.9): content version, locale, deep link path
+    // and the model/pick receipt are frozen at expansion.
+    expect(payload["contentVersion"]).toBe(1);
+    expect(payload["locale"]).toBe("en-US");
+    expect(String(payload["deepLinkPath"])).toContain("game-1");
+    expect(payload["pickReceipt"]).toMatchObject({ modelVersion: null });
     expect(event["recipientsMaterializedAt"]).toBeInstanceOf(Date);
 
     // 2 push destinations + 1 email destination = 3 delivery rows.
@@ -424,6 +436,13 @@ describe("delivery + lease fencing (6.5)", () => {
       expect(d["status"]).toBe("DEAD_LETTER");
       expect(d["attemptCount"]).toBe(OUTBOX_MAX_ATTEMPTS);
     }
+    // Durable owner-queue escalation (6.5): exactly one receipt per
+    // dead-lettered delivery, never duplicated by later drains.
+    const receipts = db._tables.deadLetterReceipts.rows;
+    expect(receipts).toHaveLength(db._tables.deliveries.rows.length);
+    expect(new Set(receipts.map((r) => r["deliveryId"])).size).toBe(receipts.length);
+    await drainSettlementOutbox(db, failingDeps, cursor);
+    expect(db._tables.deadLetterReceipts.rows).toHaveLength(receipts.length);
   });
 
   it("stale CLAIMED below the cap → RETRYABLE_FAILED with backoff; AT the cap → DEAD_LETTER, never PENDING", async () => {
@@ -659,6 +678,194 @@ describe("latency + backoff primitives (6.5/6.8)", () => {
     const jittered = computeNextAttemptAt(1, base, () => 0.999).getTime() - base.getTime();
     expect(jittered).toBeGreaterThan(a1);
     expect(jittered).toBeLessThanOrEqual(a1 + 30_000);
+  });
+});
+
+describe("infrastructure vs policy honesty (6.9)", () => {
+  it("a transient entitlements failure DEFERS expansion — never a terminal SUPPRESSED — and recovers", async () => {
+    const db = seedFollowerWorld();
+    let failing = true;
+    const deps = eliteDeps({
+      getEntitlements: async () => {
+        if (failing) throw new Error("entitlements db blip");
+        return { canGetAlerts: true };
+      },
+    });
+
+    const first = await drainSettlementOutbox(db, deps, NOW);
+    // The failure is surfaced, the event stays PENDING, and NO terminal
+    // policy rows were written for a user who may be fully entitled.
+    expect(first.errors.join(" ")).toContain("entitlements unavailable");
+    expect(first.suppressed).toBe(0);
+    expect((db._tables.events.rows[0] as Row)["status"]).toBe("PENDING");
+    expect(db._tables.deliveries.rows).toHaveLength(0);
+
+    // Infrastructure recovers → the SAME event expands and delivers.
+    failing = false;
+    const second = await drainSettlementOutbox(db, deps, new Date(NOW.getTime() + 60_000));
+    expect(second.errors).toEqual([]);
+    expect(second.expandedEvents).toBe(1);
+    expect(second.delivered).toBe(2);
+  });
+
+  it("an unconfigured channel is RETRYABLE_FAILED infrastructure, not SUPPRESSED — and delivers after the config returns", async () => {
+    const db = seedFollowerWorld();
+    let configured = false;
+    const deps = eliteDeps({
+      pushConfigured: () => configured,
+      emailConfigured: () => configured,
+    });
+
+    await drainSettlementOutbox(db, deps, NOW);
+    for (const d of db._tables.deliveries.rows) {
+      expect(d["status"]).toBe("RETRYABLE_FAILED");
+      expect(d["lastErrorCode"]).toBe("channel_not_configured");
+      expect(d["lastErrorClass"]).toBe("infrastructure");
+    }
+
+    // The bad deploy is fixed → the owed deliveries actually go out.
+    configured = true;
+    const later = new Date(NOW.getTime() + 3 * 60 * 60 * 1000);
+    const summary = await drainSettlementOutbox(db, deps, later);
+    expect(summary.delivered).toBe(2);
+    for (const d of db._tables.deliveries.rows) {
+      expect(d["status"]).toBe("DELIVERED");
+    }
+  });
+
+  it("a payload past the maximum age is SUPPRESSED as payload_expired — stale alerts are policy, not infrastructure", async () => {
+    const staleSettledAt = new Date(NOW.getTime() - OUTBOX_MAX_PAYLOAD_AGE_MS - 60_000);
+    const db = makeDb({
+      events: [
+        decisiveEvent({
+          status: "EXPANDED",
+          settledAt: staleSettledAt,
+          payload: {
+            schemaVersion: 1,
+            selection: "X",
+            result: "WIN",
+            homeTeam: { id: "t", name: "T" },
+            awayTeam: { id: null, name: "A" },
+          },
+        }),
+      ],
+      deliveries: [
+        {
+          id: "d-old",
+          eventId: "evt-1",
+          userId: "u",
+          channel: "email",
+          destinationId: "h",
+          idempotencyKey: "k-old",
+          status: "PENDING",
+          attemptCount: 0,
+          claimVersion: 0,
+          attemptHistory: [],
+          createdAt: staleSettledAt,
+        },
+      ],
+    });
+    let sends = 0;
+    const summary = await drainSettlementOutbox(
+      db,
+      eliteDeps({
+        sendEmail: async () => {
+          sends++;
+          return { sent: true, detail: "sent", classification: "sent" };
+        },
+      }),
+      NOW,
+    );
+    expect(sends).toBe(0);
+    expect(summary.expiredPayload).toBe(1);
+    expect(summary.suppressed).toBe(1);
+    const row = db._tables.deliveries.rows[0] as Row;
+    expect(row["status"]).toBe("SUPPRESSED");
+    expect(row["lastErrorCode"]).toBe("payload_expired");
+    expect(row["lastErrorClass"]).toBe("policy");
+  });
+});
+
+describe("honest parent terminal status (6.4)", () => {
+  function expandedEventWithChildren(childStatuses: string[]) {
+    return makeDb({
+      events: [
+        decisiveEvent({
+          status: "EXPANDED",
+          payload: {
+            schemaVersion: 1,
+            selection: "X",
+            result: "WIN",
+            homeTeam: { id: "t", name: "T" },
+            awayTeam: { id: null, name: "A" },
+          },
+        }),
+      ],
+      deliveries: childStatuses.map((status, i) => ({
+        id: `d-${i}`,
+        eventId: "evt-1",
+        userId: "u",
+        channel: "push",
+        destinationId: `s-${i}`,
+        idempotencyKey: `k-${i}`,
+        status,
+        attemptCount: status === "DEAD_LETTER" ? OUTBOX_MAX_ATTEMPTS : 1,
+        claimVersion: 1,
+        attemptHistory: [],
+        createdAt: NOW,
+      })),
+    });
+  }
+
+  it("all children dead-lettered/failed → COMPLETED_WITH_FAILURES, never DELIVERED, no deliveredAt", async () => {
+    const db = expandedEventWithChildren(["DEAD_LETTER", "PERMANENT_FAILED"]);
+    const summary = await drainSettlementOutbox(db, eliteDeps(), NOW);
+    const event = db._tables.events.rows[0] as Row;
+    expect(summary.completedEvents).toBe(1);
+    expect(summary.completedWithFailures).toBe(1);
+    expect(event["status"]).toBe("COMPLETED_WITH_FAILURES");
+    expect(event["completedAt"]).toBeInstanceOf(Date);
+    expect(event["deliveredAt"]).toBeUndefined();
+  });
+
+  it("mixed success + terminal failure → COMPLETED_WITH_FAILURES with deliveredAt (a real delivery DID happen)", async () => {
+    const db = expandedEventWithChildren(["DELIVERED", "DEAD_LETTER"]);
+    await drainSettlementOutbox(db, eliteDeps(), NOW);
+    const event = db._tables.events.rows[0] as Row;
+    expect(event["status"]).toBe("COMPLETED_WITH_FAILURES");
+    expect(event["deliveredAt"]).toBeInstanceOf(Date);
+  });
+
+  it("suppressed/no-recipient-only children still close as DELIVERED (no terminal failure occurred)", async () => {
+    const db = expandedEventWithChildren(["SUPPRESSED", "NO_RECIPIENT"]);
+    const summary = await drainSettlementOutbox(db, eliteDeps(), NOW);
+    const event = db._tables.events.rows[0] as Row;
+    expect(summary.completedWithFailures).toBe(0);
+    expect(event["status"]).toBe("DELIVERED");
+  });
+});
+
+describe("batch fairness (6.5)", () => {
+  it("round-robins the batch across events so one large event cannot starve later ones", () => {
+    const rows = [
+      ...Array.from({ length: 10 }, (_, i) => ({ eventId: "evt-big", id: `big-${i}` })),
+      { eventId: "evt-small-1", id: "s1" },
+      { eventId: "evt-small-2", id: "s2" },
+    ];
+    const batch = selectFairDeliveryBatch(rows, 4);
+    expect(batch).toHaveLength(4);
+    const eventsInBatch = new Set(batch.map((r) => r.eventId));
+    expect(eventsInBatch.has("evt-small-1")).toBe(true);
+    expect(eventsInBatch.has("evt-small-2")).toBe(true);
+  });
+
+  it("returns everything unchanged when under the limit, and is deterministic", () => {
+    const rows = [
+      { eventId: "a", id: "1" },
+      { eventId: "b", id: "2" },
+    ];
+    expect(selectFairDeliveryBatch(rows, 50)).toEqual(rows);
+    expect(selectFairDeliveryBatch(rows, 50)).toEqual(selectFairDeliveryBatch(rows, 50));
   });
 });
 

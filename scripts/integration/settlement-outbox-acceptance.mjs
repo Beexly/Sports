@@ -19,7 +19,10 @@
  *   E. claim fencing: N concurrent status+version-scoped claim updates on
  *      one delivery admit EXACTLY ONE winner;
  *   F. promotion exactly-once: N concurrent OwnerDecisionRequest inserts
- *      for one anomaly leave EXACTLY ONE row.
+ *      (and upserts — the re-promotion refresh path) for one anomaly leave
+ *      EXACTLY ONE row;
+ *   G. dead-letter owner receipts are exactly-once per delivery and
+ *      RESTRICT-protected.
  *
  * Usage:  node scripts/integration/settlement-outbox-acceptance.mjs
  * Env:    OUTBOX_PG_PORT (default 5436)
@@ -99,14 +102,22 @@ try {
   record("schema materialized on fresh Postgres (db push)", push.status === 0, push.status === 0 ? "" : (push.stderr + push.stdout).slice(-400));
   if (push.status !== 0) throw new Error("schema push failed — aborting acceptance");
 
-  // Migration RE-APPLY safety (IF NOT EXISTS doctrine): the hardening
-  // migration must be byte-safe to run twice.
+  // Migration RE-APPLY safety (IF NOT EXISTS doctrine): both hardening
+  // migrations must be byte-safe to run twice against a database that
+  // already has their objects (the db-push above already created them).
   const migSql = path.join(
     ROOT,
     "packages/db/prisma/migrations/20260722183000_harden_settlement_evidence_outbox/migration.sql",
   );
   const reapply = spawnSync(`${PGBIN}/psql`, ["-h", "127.0.0.1", "-p", String(PORT), "-U", "postgres", "-d", DBNAME, "-v", "ON_ERROR_STOP=1", "-f", migSql], { encoding: "utf8" });
   record("hardening migration re-applies cleanly", reapply.status === 0, reapply.status === 0 ? "" : reapply.stderr.slice(-300));
+
+  const deadLetterMigSql = path.join(
+    ROOT,
+    "packages/db/prisma/migrations/20260722213000_outbox_dead_letter_receipts/migration.sql",
+  );
+  const deadLetterReapply = spawnSync(`${PGBIN}/psql`, ["-h", "127.0.0.1", "-p", String(PORT), "-U", "postgres", "-d", DBNAME, "-v", "ON_ERROR_STOP=1", "-f", deadLetterMigSql], { encoding: "utf8" });
+  record("dead-letter-receipt migration re-applies cleanly", deadLetterReapply.status === 0, deadLetterReapply.status === 0 ? "" : deadLetterReapply.stderr.slice(-300));
 
   const require = createRequire(path.join(ROOT, "packages/db/package.json"));
   const { PrismaClient } = require("@prisma/client");
@@ -311,6 +322,61 @@ try {
     "F: 100 concurrent promotions → ONE OwnerDecisionRequest (unique anomalyId)",
     created === 1 && requestRows.length === 1,
     `created=${created} rows=${requestRows.length}`,
+  );
+
+  // F2. production now UPSERTS the request (re-promotion after a reopen
+  // refreshes the same row): concurrent upserts still leave EXACTLY ONE row.
+  await Promise.allSettled(
+    Array.from({ length: 50 }, (_, i) =>
+      db.ownerDecisionRequest.upsert({
+        where: { anomalyId: anomaly.id },
+        create: {
+          anomalyId: anomaly.id,
+          requestKind: "SCORELESS_COMPLETED_REVIEW",
+          context: { acceptance: true, upsert: i },
+        },
+        update: {
+          requestKind: "SCORELESS_COMPLETED_REVIEW",
+          context: { acceptance: true, upsert: i },
+        },
+      }),
+    ),
+  );
+  const requestRowsAfterUpsert = await db.ownerDecisionRequest.findMany({
+    where: { anomalyId: anomaly.id },
+  });
+  record(
+    "F2: 50 concurrent request UPSERTS → still ONE row (re-promotion refresh path)",
+    requestRowsAfterUpsert.length === 1,
+    `rows=${requestRowsAfterUpsert.length}`,
+  );
+
+  // ── G. dead-letter owner receipt exactly-once (6.5) ─────────────────────
+  const receiptRow = {
+    deliveryId: target.id,
+    eventId: event.id,
+    userId: "acc-user-1",
+    channel: "push",
+    reason: { errorCode: "attempt_cap_reached", errorClass: "infrastructure", attemptCount: 5 },
+  };
+  await Promise.all(
+    Array.from({ length: 25 }, () =>
+      db.outboxDeadLetterReceipt.createMany({ data: [receiptRow], skipDuplicates: true }),
+    ),
+  );
+  const receiptRows = await db.outboxDeadLetterReceipt.findMany({
+    where: { deliveryId: target.id },
+  });
+  let receiptDeleteBlocked = false;
+  try {
+    await db.pickSettlementDelivery.delete({ where: { id: target.id } });
+  } catch {
+    receiptDeleteBlocked = true;
+  }
+  record(
+    "G: 25 concurrent dead-letter receipts → ONE row; delivery delete BLOCKED by RESTRICT",
+    receiptRows.length === 1 && receiptDeleteBlocked,
+    `rows=${receiptRows.length} restricted=${receiptDeleteBlocked}`,
   );
 
   await db.$disconnect();
