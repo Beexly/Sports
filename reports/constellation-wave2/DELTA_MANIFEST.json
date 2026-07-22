@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-07-22T08:40:00Z",
+  "mainSHA": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+  "activeDraftPRs": [158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 152, 154, 153, 130, 129, 127, 125, 124, 123, 121, 112, 52],
+  "recoveryWaveStatus": {
+    "wave1_units_158_159_160_161": "COMPLETE — all 4 hardened, verified, pushed",
+    "wave2_authority_inversion_162_163_164_prd": "IN_PROGRESS — background chain agent rebuilding 163→164→PR-D on corrected #162 head",
+    "wave3_s2_s3_s4": "PENDING — blocked on wave2",
+    "wave5_integration": "PENDING — blocked on wave1-3"
+  },
+  "noDuplicateProof": "grep -ri 'formal/|context-compiler|portfolio-solver|process-twin' across repo (excluding node_modules/.git) found only docs/gse/formal (a docs directory, no code). No existing packages/gse-formal, no existing Context Compiler implementation, no existing OR-Tools bridge, no existing Process Twin. New units below are additive only — nothing renamed, nothing reopened.",
+  "prismaSeedStatus": {
+    "originalHypothesis_from_directive": "ESM/CJS ts-node config mismatch — INCORRECT, checked and ruled out",
+    "actualRootCause": "packages/db/prisma/seed.ts is corrupted by a merge/paste error: seedPicks() ends cleanly at line 1330, but is immediately followed (lines 1332-1339) by a stray, premature `main().catch().finally()` invocation that does not belong there — main() is not even declared yet at that point in original source order semantics, and this stray call bisects what was a single `cockpit.create(...)` call, leaving orphaned dead code (`approved: false, ],  });`) at lines 1340-1343 that breaks TS parsing (ERR_INVALID_TYPESCRIPT_SYNTAX at line 1341). Additionally, seedDailyBrief (correct copy at line 584) and seedContentDrafts (correct copy at line 734) are BOTH duplicated verbatim-ish later in the file (lines 1513, 1553) — classic unresolved-merge duplication, not a config issue.",
+    "status": "BLOCKED → FIX DISPATCHED to W2-01 agent with corrected diagnosis"
+  },
+  "newBranches": ["labs/w2-01-seed-fix", "labs/w2-02-formal-invariant-foundry", "labs/w2-03-property-chaos-harness", "labs/w2-04-context-compiler-v0"],
+  "safetyConstraints": [
+    "all new work lands under labs/ branches only, or docs/labs/ paths inside those branches",
+    "no merge to main, no deploy, no prisma migrate deploy against any non-disposable database, no billing, no external send/outreach",
+    "each unit self-verifies (real tool runs, not narrative claims) and reports pass/fail honestly, including which parts of the original directive's tool list were unavailable in this environment and had to be scoped down or stubbed with an honest TODO rather than fabricated"
+  ]
+}

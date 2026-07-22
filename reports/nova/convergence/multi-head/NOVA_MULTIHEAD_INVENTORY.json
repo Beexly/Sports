@@ -1,0 +1,1402 @@
+{
+  "base": {
+    "baseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4"
+  },
+  "collisionScan": {
+    "collisions": [
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditAdmissibilityReason"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditAllocationState"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditApplicationState"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditBalanceState"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditCashOverageBehavior"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditGrantSnapshot"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditGrantState"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/types.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditProgramState"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditScopeRequest"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditSnapshotAdmissibility"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditSnapshotReconciliationState"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditSnapshotValidationResult"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/nova/s1-domain-contracts",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s2-capability-governor",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          },
+          {
+            "label": "origin/nova/s3-source-runtime",
+            "paths": [
+              "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "CreditSnapshotViolation"
+      },
+      {
+        "heads": [
+          {
+            "label": "origin/feat/ai-control-plane-contracts",
+            "paths": [
+              "apps/web/lib/auth/actor.ts"
+            ]
+          },
+          {
+            "label": "origin/security/trusted-actor-model",
+            "paths": [
+              "apps/web/lib/auth/actor.ts"
+            ]
+          }
+        ],
+        "rule": "cross-head-guarded-symbol",
+        "symbol": "TrustedActor"
+      },
+      {
+        "heads": [
+          {
+            "blockHash": "42ddf554db4b6db678150505f611c00c68393b1e24623f0a65af9709026b7b1e",
+            "label": "origin/feat/ai-control-plane-contracts",
+            "type": "model"
+          },
+          {
+            "blockHash": "e143cf0a9cf11a6e82dc4f491172fdf38a998459e861ab44bf6c5adfce98d7f0",
+            "label": "origin/security/trusted-actor-model",
+            "type": "model"
+          }
+        ],
+        "rule": "cross-head-prisma-divergent-definition",
+        "symbol": "AgentHandoff"
+      },
+      {
+        "heads": [
+          {
+            "blockHash": "d56072d883939f48eed73f8ec075da99f504fa8caf685ba1695b6143fe39d532",
+            "label": "origin/feat/ai-control-plane-contracts",
+            "type": "model"
+          },
+          {
+            "blockHash": "25980a717cfc43c45d48ed32562061b4e9ff6b2ccd9dc1e159d005ca938a8194",
+            "label": "origin/security/trusted-actor-model",
+            "type": "model"
+          }
+        ],
+        "rule": "cross-head-prisma-divergent-definition",
+        "symbol": "ModerationAction"
+      },
+      {
+        "heads": [
+          {
+            "blockHash": "3e1f9a2dc89aeff6da8cc7c6406d79310f9854b75b76e0b3a6cee042c8b24d2d",
+            "label": "origin/feat/ai-control-plane-contracts",
+            "type": "model"
+          },
+          {
+            "blockHash": "a4c0d78c99b6f1f1e3a3a7af7e74f93358a32bb74186ceb4c04ceda05524f76b",
+            "label": "origin/security/trusted-actor-model",
+            "type": "model"
+          }
+        ],
+        "rule": "cross-head-prisma-divergent-definition",
+        "symbol": "ModerationAppeal"
+      },
+      {
+        "heads": [
+          {
+            "blockHash": "9c75873324353c9b5325fec8942d841dc0ef311853f853a4a3320c504d6e0362",
+            "label": "origin/feat/ai-control-plane-contracts",
+            "type": "model"
+          },
+          {
+            "blockHash": "e4c95baa5357c2ef59a638ce180dd0ec49bb00e8cd3c351769b79518cbdd45b7",
+            "label": "origin/security/trusted-actor-model",
+            "type": "model"
+          }
+        ],
+        "rule": "cross-head-prisma-divergent-definition",
+        "symbol": "ModerationReport"
+      },
+      {
+        "heads": [
+          {
+            "blockHash": "25fad1b705bfa7e2884073c6f0573b6a5eeb6b710ec3a38432aaedd8f1c7fd7b",
+            "label": "origin/feat/ai-control-plane-contracts",
+            "type": "model"
+          },
+          {
+            "blockHash": "40b739d723f305ed07e216aae8e15e686dfcc2dccf76afb198705ca9d9837fcd",
+            "label": "origin/security/trusted-actor-model",
+            "type": "model"
+          }
+        ],
+        "rule": "cross-head-prisma-divergent-definition",
+        "symbol": "SubagentRun"
+      },
+      {
+        "heads": [
+          {
+            "blockHash": "39a4bc6e2a93c12d7a1f15e8974d19437de77dcc9558dd2f57f4a853b5a60028",
+            "label": "origin/payments/durable-checkout-attempt",
+            "type": "model"
+          },
+          {
+            "blockHash": "1e62045c00ad2e57b2e76c44ef2365df3c0f44c7979d5d4af4473c806fdb81f2",
+            "label": "origin/settlement/evidence-outbox",
+            "type": "model"
+          }
+        ],
+        "rule": "cross-head-prisma-divergent-definition",
+        "symbol": "User"
+      }
+    ],
+    "complete": true,
+    "ruleIds": [
+      "cross-head-env-var-collision",
+      "cross-head-guarded-symbol",
+      "cross-head-migration-order-interleaved",
+      "cross-head-migration-timestamp-duplicate",
+      "cross-head-prisma-divergent-definition",
+      "cross-head-prisma-redeclared",
+      "cross-head-route-collision"
+    ],
+    "status": "COMPLETE_COLLISIONS_FOUND"
+  },
+  "heads": [
+    {
+      "changedFileCount": 23,
+      "guardedSymbols": [
+        {
+          "kind": "interface",
+          "name": "AiAttemptSummary",
+          "path": "apps/web/lib/ai-control-plane/contracts.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiAuthorityNarrowing",
+          "path": "apps/web/lib/ai-control-plane/contracts.ts"
+        },
+        {
+          "kind": "class",
+          "name": "AiControlPlaneError",
+          "path": "apps/web/lib/ai-control-plane/errors.ts"
+        },
+        {
+          "kind": "type",
+          "name": "AiDispatchFn",
+          "path": "apps/web/lib/ai-control-plane/executor.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiDispatchOutcome",
+          "path": "apps/web/lib/ai-control-plane/executor.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiDispatchPlan",
+          "path": "apps/web/lib/ai-control-plane/executor.ts"
+        },
+        {
+          "kind": "type",
+          "name": "AiEnvClass",
+          "path": "apps/web/lib/ai-control-plane/cost-mode.ts"
+        },
+        {
+          "kind": "type",
+          "name": "AiErrorCode",
+          "path": "apps/web/lib/ai-control-plane/errors.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiExecutor",
+          "path": "apps/web/lib/ai-control-plane/executor.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiInvocationCorrelation",
+          "path": "apps/web/lib/ai-control-plane/contracts.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiPolicySource",
+          "path": "apps/web/lib/ai-control-plane/executor.ts"
+        },
+        {
+          "kind": "type",
+          "name": "AiSurface",
+          "path": "apps/web/lib/ai-control-plane/contracts.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiTaskInvocationRequest",
+          "path": "apps/web/lib/ai-control-plane/contracts.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiTaskPolicyDefinition",
+          "path": "apps/web/lib/ai-control-plane/contracts.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "AiTaskResult",
+          "path": "apps/web/lib/ai-control-plane/contracts.ts"
+        },
+        {
+          "kind": "type",
+          "name": "TrustedActor",
+          "path": "apps/web/lib/auth/actor.ts"
+        }
+      ],
+      "headSha": "4c8af90fe14386168fcda7afc3e6c25412211600",
+      "label": "origin/feat/ai-control-plane-contracts",
+      "mergeBaseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+      "newEnvVars": [
+        {
+          "name": "AI_ENV_CLASS",
+          "paths": [
+            "apps/web/lib/ai-control-plane/executor.ts"
+          ]
+        },
+        {
+          "name": "EMERGENCY_OVERRIDE_ID",
+          "paths": [
+            "apps/web/lib/ai-control-plane/executor.ts"
+          ]
+        },
+        {
+          "name": "EMERGENCY_REASON",
+          "paths": [
+            "apps/web/lib/ai-control-plane/executor.ts"
+          ]
+        },
+        {
+          "name": "EMERGENCY_RELIABILITY_UNTIL",
+          "paths": [
+            "apps/web/lib/ai-control-plane/executor.ts"
+          ]
+        },
+        {
+          "name": "LLM_COST_MODE",
+          "paths": [
+            "apps/web/lib/ai-control-plane/executor.ts"
+          ]
+        },
+        {
+          "name": "NODE_ENV",
+          "paths": [
+            "apps/web/lib/ai-control-plane/executor.ts"
+          ]
+        },
+        {
+          "name": "VERCEL_ENV",
+          "paths": [
+            "apps/web/lib/ai-control-plane/executor.ts"
+          ]
+        }
+      ],
+      "newMigrations": [
+        {
+          "dir": "20260722120000_add_trusted_actor_audit",
+          "headBlobSha": "ee5bb43af49ef654eec47beeb64b0af4dac3987d",
+          "path": "packages/db/prisma/migrations/20260722120000_add_trusted_actor_audit/migration.sql",
+          "timestamp": "20260722120000"
+        }
+      ],
+      "prismaNew": [
+        {
+          "blockHash": "42ddf554db4b6db678150505f611c00c68393b1e24623f0a65af9709026b7b1e",
+          "existedAtBase": true,
+          "name": "AgentHandoff",
+          "type": "model"
+        },
+        {
+          "blockHash": "d56072d883939f48eed73f8ec075da99f504fa8caf685ba1695b6143fe39d532",
+          "existedAtBase": true,
+          "name": "ModerationAction",
+          "type": "model"
+        },
+        {
+          "blockHash": "3e1f9a2dc89aeff6da8cc7c6406d79310f9854b75b76e0b3a6cee042c8b24d2d",
+          "existedAtBase": true,
+          "name": "ModerationAppeal",
+          "type": "model"
+        },
+        {
+          "blockHash": "9c75873324353c9b5325fec8942d841dc0ef311853f853a4a3320c504d6e0362",
+          "existedAtBase": true,
+          "name": "ModerationReport",
+          "type": "model"
+        },
+        {
+          "blockHash": "25fad1b705bfa7e2884073c6f0573b6a5eeb6b710ec3a38432aaedd8f1c7fd7b",
+          "existedAtBase": true,
+          "name": "SubagentRun",
+          "type": "model"
+        }
+      ],
+      "routes": [],
+      "unparsedFiles": []
+    },
+    {
+      "changedFileCount": 15,
+      "guardedSymbols": [
+        {
+          "kind": "type",
+          "name": "CreditAdmissibilityReason",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditAllocationState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditApplicationState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditBalanceState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditCashOverageBehavior",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditGrantSnapshot",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditGrantState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditProgramState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditScopeRequest",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditSnapshotAdmissibility",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditSnapshotReconciliationState",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditSnapshotValidationResult",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditSnapshotViolation",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        }
+      ],
+      "headSha": "f0cab9cf2b70840bd8546d495f3ae45ac269df2b",
+      "label": "origin/nova/s1-domain-contracts",
+      "mergeBaseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+      "newEnvVars": [],
+      "newMigrations": [],
+      "prismaNew": [],
+      "routes": [],
+      "unparsedFiles": []
+    },
+    {
+      "changedFileCount": 27,
+      "guardedSymbols": [
+        {
+          "kind": "type",
+          "name": "CreditAdmissibilityReason",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditAllocationState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditApplicationState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditBalanceState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditCashOverageBehavior",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditGrantSnapshot",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditGrantState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditProgramState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditScopeRequest",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditSnapshotAdmissibility",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditSnapshotReconciliationState",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditSnapshotValidationResult",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditSnapshotViolation",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        }
+      ],
+      "headSha": "225a64bb584e27176f4ecf9487922ac25743dee5",
+      "label": "origin/nova/s2-capability-governor",
+      "mergeBaseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+      "newEnvVars": [],
+      "newMigrations": [],
+      "prismaNew": [],
+      "routes": [],
+      "unparsedFiles": []
+    },
+    {
+      "changedFileCount": 30,
+      "guardedSymbols": [
+        {
+          "kind": "type",
+          "name": "CreditAdmissibilityReason",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditAllocationState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditApplicationState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditBalanceState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditCashOverageBehavior",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditGrantSnapshot",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditGrantState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditProgramState",
+          "path": "apps/web/lib/opportunity-engine/types.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditScopeRequest",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditSnapshotAdmissibility",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditSnapshotReconciliationState",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "CreditSnapshotValidationResult",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        },
+        {
+          "kind": "type",
+          "name": "CreditSnapshotViolation",
+          "path": "apps/web/lib/opportunity-engine/credit-snapshot.ts"
+        }
+      ],
+      "headSha": "a7e2c1a83a7b817c9c5affa6a4eaf025da91ce6e",
+      "label": "origin/nova/s3-source-runtime",
+      "mergeBaseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+      "newEnvVars": [],
+      "newMigrations": [],
+      "prismaNew": [],
+      "routes": [],
+      "unparsedFiles": []
+    },
+    {
+      "changedFileCount": 10,
+      "guardedSymbols": [],
+      "headSha": "6bf296fb0817f2704a057b2d37509b4eb90fb1f0",
+      "label": "origin/payments/durable-checkout-attempt",
+      "mergeBaseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+      "newEnvVars": [
+        {
+          "name": "STRIPE_TERMS_CONSENT_ENABLED",
+          "paths": [
+            "apps/web/lib/billing/checkout-attempt.ts"
+          ]
+        }
+      ],
+      "newMigrations": [],
+      "prismaNew": [
+        {
+          "blockHash": "c8c4cb7c518d075507e4013f294b870542eb7e6bc0109560b17cf18184f26814",
+          "existedAtBase": false,
+          "name": "CheckoutAttempt",
+          "type": "model"
+        },
+        {
+          "blockHash": "e467f3d7deba5b7662706241caed0a702df500e58bb158e5745cf278bed3e01d",
+          "existedAtBase": false,
+          "name": "CheckoutAttemptStatus",
+          "type": "enum"
+        },
+        {
+          "blockHash": "39a4bc6e2a93c12d7a1f15e8974d19437de77dcc9558dd2f57f4a853b5a60028",
+          "existedAtBase": true,
+          "name": "User",
+          "type": "model"
+        }
+      ],
+      "routes": [
+        {
+          "kind": "api",
+          "path": "apps/web/app/api/subscriptions/checkout/route.ts",
+          "routePath": "/api/subscriptions/checkout"
+        },
+        {
+          "kind": "api",
+          "path": "apps/web/app/api/webhooks/stripe/route.ts",
+          "routePath": "/api/webhooks/stripe"
+        }
+      ],
+      "unparsedFiles": []
+    },
+    {
+      "changedFileCount": 29,
+      "guardedSymbols": [
+        {
+          "kind": "type",
+          "name": "TrustedActor",
+          "path": "apps/web/lib/auth/actor.ts"
+        }
+      ],
+      "headSha": "afa2792b0c8740bbb7861f39c1f8511a83ec3752",
+      "label": "origin/security/trusted-actor-model",
+      "mergeBaseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+      "newEnvVars": [
+        {
+          "name": "PR159_PG_URL",
+          "paths": [
+            "apps/web/__tests__/actor-hardening-db.integration.test.ts"
+          ]
+        }
+      ],
+      "newMigrations": [
+        {
+          "dir": "20260722120000_add_trusted_actor_audit",
+          "headBlobSha": "ee5bb43af49ef654eec47beeb64b0af4dac3987d",
+          "path": "packages/db/prisma/migrations/20260722120000_add_trusted_actor_audit/migration.sql",
+          "timestamp": "20260722120000"
+        },
+        {
+          "dir": "20260722150000_add_actor_receipts_and_durable_rate_limits",
+          "headBlobSha": "86696826980ade64049c51593c8dc0eae7d12e3a",
+          "path": "packages/db/prisma/migrations/20260722150000_add_actor_receipts_and_durable_rate_limits/migration.sql",
+          "timestamp": "20260722150000"
+        }
+      ],
+      "prismaNew": [
+        {
+          "blockHash": "fe282f3e18ee3f22a9ee02448631877960bbcfca059bfa0fa167038ad25800f8",
+          "existedAtBase": false,
+          "name": "ActorReceipt",
+          "type": "model"
+        },
+        {
+          "blockHash": "e143cf0a9cf11a6e82dc4f491172fdf38a998459e861ab44bf6c5adfce98d7f0",
+          "existedAtBase": true,
+          "name": "AgentHandoff",
+          "type": "model"
+        },
+        {
+          "blockHash": "25980a717cfc43c45d48ed32562061b4e9ff6b2ccd9dc1e159d005ca938a8194",
+          "existedAtBase": true,
+          "name": "ModerationAction",
+          "type": "model"
+        },
+        {
+          "blockHash": "a4c0d78c99b6f1f1e3a3a7af7e74f93358a32bb74186ceb4c04ceda05524f76b",
+          "existedAtBase": true,
+          "name": "ModerationAppeal",
+          "type": "model"
+        },
+        {
+          "blockHash": "e4c95baa5357c2ef59a638ce180dd0ec49bb00e8cd3c351769b79518cbdd45b7",
+          "existedAtBase": true,
+          "name": "ModerationReport",
+          "type": "model"
+        },
+        {
+          "blockHash": "14dee3f99b479953c3d0c47ca36e8909484babfefaa5ba297fe8afc39a3aa212",
+          "existedAtBase": false,
+          "name": "RateLimitCounter",
+          "type": "model"
+        },
+        {
+          "blockHash": "40b739d723f305ed07e216aae8e15e686dfcc2dccf76afb198705ca9d9837fcd",
+          "existedAtBase": true,
+          "name": "SubagentRun",
+          "type": "model"
+        }
+      ],
+      "routes": [
+        {
+          "kind": "api",
+          "path": "apps/web/app/api/moderation/anonymous-report/route.ts",
+          "routePath": "/api/moderation/anonymous-report"
+        }
+      ],
+      "unparsedFiles": []
+    },
+    {
+      "changedFileCount": 34,
+      "guardedSymbols": [
+        {
+          "kind": "interface",
+          "name": "OutboxDrainSummary",
+          "path": "apps/web/lib/settlement-outbox/worker.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "OutboxEventRow",
+          "path": "apps/web/lib/settlement-outbox/worker.ts"
+        },
+        {
+          "kind": "type",
+          "name": "OutboxNotifyFn",
+          "path": "apps/web/lib/settlement-outbox/worker.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "SettlementEvidenceDb",
+          "path": "packages/ingestion-pipeline/src/settlement-evidence.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "SettlementEvidenceTx",
+          "path": "packages/ingestion-pipeline/src/settlement-evidence.ts"
+        },
+        {
+          "kind": "interface",
+          "name": "SettlementOutboxDb",
+          "path": "apps/web/lib/settlement-outbox/worker.ts"
+        }
+      ],
+      "headSha": "034fdf334e9e679aa1331da17e20b754d719d77f",
+      "label": "origin/settlement/evidence-outbox",
+      "mergeBaseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+      "newEnvVars": [
+        {
+          "name": "NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+          "paths": [
+            "apps/web/lib/push/use-push-subscription.ts"
+          ]
+        }
+      ],
+      "newMigrations": [
+        {
+          "dir": "20260719120000_add_push_subscriptions",
+          "headBlobSha": "4f28bc57e2fae16ed9f1aba51659f0a84d6fdbae",
+          "path": "packages/db/prisma/migrations/20260719120000_add_push_subscriptions/migration.sql",
+          "timestamp": "20260719120000"
+        },
+        {
+          "dir": "20260722090000_add_settlement_evidence_outbox",
+          "headBlobSha": "65d2fa729e9afe3be44d5e70f5d4a70fb9b1ed0b",
+          "path": "packages/db/prisma/migrations/20260722090000_add_settlement_evidence_outbox/migration.sql",
+          "timestamp": "20260722090000"
+        }
+      ],
+      "prismaNew": [
+        {
+          "blockHash": "16e1b6362722013afc9b8483a05cd2b36fb076f456cde19d661194f7ec6eac9e",
+          "existedAtBase": true,
+          "name": "Game",
+          "type": "model"
+        },
+        {
+          "blockHash": "8d4809392e39dd25b5e772591f354b943645e660c3c7f4f7de8ddd04efe1a922",
+          "existedAtBase": true,
+          "name": "Pick",
+          "type": "model"
+        },
+        {
+          "blockHash": "1b2e2ca3aaaf3be551a5ced58d6d4d8f194d3283b28515b5ab2495d48eeb6d0d",
+          "existedAtBase": false,
+          "name": "PickSettlementEvent",
+          "type": "model"
+        },
+        {
+          "blockHash": "10fe620a6ee57f6b6467002ccc3d4743e85d1b8dece23da21bd3c36d2f01850e",
+          "existedAtBase": false,
+          "name": "PushSubscription",
+          "type": "model"
+        },
+        {
+          "blockHash": "59cd0f4da0480b6073ae05671f936d91089361d4b6e7a5601d171be16cb38b87",
+          "existedAtBase": false,
+          "name": "SettlementAnomaly",
+          "type": "model"
+        },
+        {
+          "blockHash": "4a278c8400fda17a2e50e9548b1dd42122422d5c43d84095ea9cca19c58ec72a",
+          "existedAtBase": false,
+          "name": "SettlementDecision",
+          "type": "model"
+        },
+        {
+          "blockHash": "d76d96a0d98c8c6313f6d19a744dc072b4d5d83222f6bf1392ac955dcf80436f",
+          "existedAtBase": false,
+          "name": "SettlementObservation",
+          "type": "model"
+        },
+        {
+          "blockHash": "1e62045c00ad2e57b2e76c44ef2365df3c0f44c7979d5d4af4473c806fdb81f2",
+          "existedAtBase": true,
+          "name": "User",
+          "type": "model"
+        }
+      ],
+      "routes": [
+        {
+          "kind": "api",
+          "path": "apps/web/app/api/cron/deliver-settlement-alerts/route.ts",
+          "routePath": "/api/cron/deliver-settlement-alerts"
+        },
+        {
+          "kind": "api",
+          "path": "apps/web/app/api/cron/settle-picks/route.ts",
+          "routePath": "/api/cron/settle-picks"
+        },
+        {
+          "kind": "api",
+          "path": "apps/web/app/api/push/subscribe/route.ts",
+          "routePath": "/api/push/subscribe"
+        },
+        {
+          "kind": "api",
+          "path": "apps/web/app/api/push/unsubscribe/route.ts",
+          "routePath": "/api/push/unsubscribe"
+        }
+      ],
+      "unparsedFiles": []
+    }
+  ],
+  "manifest": {
+    "path": "scripts/nova/convergence-owners.json",
+    "sha256": "c5872fb7df89d26972338db83fa60e673ab78b7810fa530e376d39b5f2f6c2e5"
+  },
+  "mode": "multi-head",
+  "ownershipMatrix": {
+    "forbiddenPrefixes": {
+      "Ai": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "Credit": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "Outbox": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "Settlement": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "TrustedActor": [
+        "origin/feat/ai-control-plane-contracts",
+        "origin/security/trusted-actor-model"
+      ]
+    },
+    "guardedSymbols": {
+      "AiAttemptSummary": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiAuthorityNarrowing": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiControlPlaneError": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiDispatchFn": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiDispatchOutcome": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiDispatchPlan": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiEnvClass": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiErrorCode": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiExecutor": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiInvocationCorrelation": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiPolicySource": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiSurface": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiTaskInvocationRequest": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiTaskPolicyDefinition": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "AiTaskResult": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "CreditAdmissibilityReason": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditAllocationState": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditApplicationState": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditBalanceState": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditCashOverageBehavior": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditGrantSnapshot": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditGrantState": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditProgramState": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditScopeRequest": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditSnapshotAdmissibility": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditSnapshotReconciliationState": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditSnapshotValidationResult": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "CreditSnapshotViolation": [
+        "origin/nova/s1-domain-contracts",
+        "origin/nova/s2-capability-governor",
+        "origin/nova/s3-source-runtime"
+      ],
+      "OutboxDrainSummary": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "OutboxEventRow": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "OutboxNotifyFn": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "SettlementEvidenceDb": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "SettlementEvidenceTx": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "SettlementOutboxDb": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "TrustedActor": [
+        "origin/feat/ai-control-plane-contracts",
+        "origin/security/trusted-actor-model"
+      ]
+    },
+    "newEnvVars": {
+      "AI_ENV_CLASS": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "EMERGENCY_OVERRIDE_ID": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "EMERGENCY_REASON": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "EMERGENCY_RELIABILITY_UNTIL": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "LLM_COST_MODE": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "NEXT_PUBLIC_VAPID_PUBLIC_KEY": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "NODE_ENV": [
+        "origin/feat/ai-control-plane-contracts"
+      ],
+      "PR159_PG_URL": [
+        "origin/security/trusted-actor-model"
+      ],
+      "STRIPE_TERMS_CONSENT_ENABLED": [
+        "origin/payments/durable-checkout-attempt"
+      ],
+      "VERCEL_ENV": [
+        "origin/feat/ai-control-plane-contracts"
+      ]
+    },
+    "prismaNames": {
+      "ActorReceipt": [
+        "origin/security/trusted-actor-model"
+      ],
+      "AgentHandoff": [
+        "origin/feat/ai-control-plane-contracts",
+        "origin/security/trusted-actor-model"
+      ],
+      "CheckoutAttempt": [
+        "origin/payments/durable-checkout-attempt"
+      ],
+      "CheckoutAttemptStatus": [
+        "origin/payments/durable-checkout-attempt"
+      ],
+      "Game": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "ModerationAction": [
+        "origin/feat/ai-control-plane-contracts",
+        "origin/security/trusted-actor-model"
+      ],
+      "ModerationAppeal": [
+        "origin/feat/ai-control-plane-contracts",
+        "origin/security/trusted-actor-model"
+      ],
+      "ModerationReport": [
+        "origin/feat/ai-control-plane-contracts",
+        "origin/security/trusted-actor-model"
+      ],
+      "Pick": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "PickSettlementEvent": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "PushSubscription": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "RateLimitCounter": [
+        "origin/security/trusted-actor-model"
+      ],
+      "SettlementAnomaly": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "SettlementDecision": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "SettlementObservation": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "SubagentRun": [
+        "origin/feat/ai-control-plane-contracts",
+        "origin/security/trusted-actor-model"
+      ],
+      "User": [
+        "origin/payments/durable-checkout-attempt",
+        "origin/settlement/evidence-outbox"
+      ]
+    },
+    "routes": {
+      "api /api/cron/deliver-settlement-alerts": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "api /api/cron/settle-picks": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "api /api/moderation/anonymous-report": [
+        "origin/security/trusted-actor-model"
+      ],
+      "api /api/push/subscribe": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "api /api/push/unsubscribe": [
+        "origin/settlement/evidence-outbox"
+      ],
+      "api /api/subscriptions/checkout": [
+        "origin/payments/durable-checkout-attempt"
+      ],
+      "api /api/webhooks/stripe": [
+        "origin/payments/durable-checkout-attempt"
+      ]
+    }
+  },
+  "schemaVersion": 1,
+  "unparsedFiles": []
+}

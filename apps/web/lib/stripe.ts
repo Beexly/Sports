@@ -1,6 +1,18 @@
 import Stripe from "stripe";
 import { getCurrentPricingPhase, type BillingInterval } from "@/lib/pricing/pricing-phases";
 import { checkoutPriceId, currentPriceId } from "@/lib/billing/price-ids";
+import {
+  CheckoutAttemptIdError,
+  isValidCheckoutAttemptId,
+  stripeIdempotencyKeyForAttempt,
+} from "@/lib/billing/checkout-attempt";
+import {
+  repairUnresolvedCheckoutAttempts,
+  type CheckoutAttemptRepairDb,
+  type CheckoutAttemptRepairReport,
+  type CheckoutSessionLookup,
+  type RepairSessionView,
+} from "@/lib/billing/checkout-attempt-repair";
 
 export type { BillingInterval };
 
@@ -103,20 +115,36 @@ export async function getOrCreateStripeCustomer(
 
 /**
  * Create a Stripe Checkout Session for subscription upgrade.
+ *
+ * Requires a DURABLE checkout-attempt id (see lib/billing/checkout-attempt.ts):
+ *  - it derives the Stripe idempotency key, so an unknown-network-outcome
+ *    retry against the same attempt replays the SAME session instead of
+ *    minting a duplicate;
+ *  - it is stamped into BOTH session metadata and subscription_data.metadata,
+ *    so the checkout.session.completed webhook can reconcile the attempt row.
+ * A malformed attempt id is a typed CheckoutAttemptIdError (programmer /
+ * caller error), never a silent tokenless session.
  */
 export async function createCheckoutSession({
   customerId,
   priceId,
   userId,
+  attemptId,
   successUrl,
   cancelUrl,
 }: {
   customerId: string;
   priceId: string;
   userId: string;
+  attemptId: string;
   successUrl: string;
   cancelUrl: string;
 }): Promise<Stripe.Checkout.Session> {
+  if (typeof attemptId !== "string" || !isValidCheckoutAttemptId(attemptId)) {
+    throw new CheckoutAttemptIdError(
+      "createCheckoutSession requires a valid durable checkout-attempt id (ca_<uuid>).",
+    );
+  }
   const params: Stripe.Checkout.SessionCreateParams = {
     customer: customerId,
     payment_method_types: ["card"],
@@ -124,9 +152,9 @@ export async function createCheckoutSession({
     mode: "subscription",
     success_url: successUrl,
     cancel_url: cancelUrl,
-    metadata: { userId },
+    metadata: { userId, checkoutAttemptId: attemptId },
     subscription_data: {
-      metadata: { userId },
+      metadata: { userId, checkoutAttemptId: attemptId },
     },
     // Honest recurring-billing line rendered NEAR THE SUBMIT BUTTON on the
     // Stripe-hosted page. Unlike custom_text.terms_of_service_acceptance (removed),
@@ -155,7 +183,111 @@ export async function createCheckoutSession({
     params.consent_collection = { terms_of_service: "required" };
   }
 
-  return stripe.checkout.sessions.create(params);
+  // Durable idempotency: the key derives from (userId, attemptId) — stable
+  // across reloads/devices — so within Stripe's ~24h window a retried attempt
+  // replays the ORIGINAL session instead of creating a second one.
+  return stripe.checkout.sessions.create(params, {
+    idempotencyKey: stripeIdempotencyKeyForAttempt(userId, attemptId),
+  });
+}
+
+/**
+ * Best-effort retrieval of an attempt's existing Checkout Session URL for an
+ * idempotent retry. Returns the URL only while the session is still OPEN
+ * (completed/expired sessions have nothing safe to redirect to); returns null
+ * on any error so the caller falls through to the idempotent create path.
+ */
+export async function retrieveOpenCheckoutSessionUrl(
+  sessionId: string,
+): Promise<string | null> {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    if (session.status === "open" && session.url) return session.url;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Stripe lookup adapter for the checkout-attempt repair job (directive 5.6).
+ * `listSessionsByCustomerSince` paginates the customer's Checkout Sessions to
+ * EXHAUSTION down to the cutoff — completeness is what lets the repair job
+ * treat "no session found" as proof of absence. `retrieveSession` maps a
+ * definitive resource_missing to null; every other failure throws so the
+ * repair job leaves the attempt unresolved (fail closed) for the next pass.
+ */
+export function stripeCheckoutSessionLookup(): CheckoutSessionLookup {
+  const toView = (session: Stripe.Checkout.Session): RepairSessionView => ({
+    id: session.id,
+    status: session.status ?? "open",
+    metadataAttemptId: session.metadata?.["checkoutAttemptId"] ?? null,
+    subscriptionId:
+      typeof session.subscription === "string"
+        ? session.subscription
+        : session.subscription?.id ?? null,
+  });
+
+  return {
+    async listSessionsByCustomerSince(customerId, since) {
+      const sinceEpoch = Math.floor(since.getTime() / 1000);
+      const views: RepairSessionView[] = [];
+      let startingAfter: string | undefined;
+      // Stripe lists sessions newest-first; stop once a page dips below the
+      // cutoff. Hard page cap guards against a pathological account.
+      for (let page = 0; page < 20; page++) {
+        const batch = await stripe.checkout.sessions.list({
+          customer: customerId,
+          limit: 100,
+          ...(startingAfter ? { starting_after: startingAfter } : {}),
+        });
+        let reachedCutoff = false;
+        for (const session of batch.data) {
+          if (session.created < sinceEpoch) {
+            reachedCutoff = true;
+            break;
+          }
+          views.push(toView(session));
+        }
+        if (reachedCutoff || !batch.has_more || batch.data.length === 0) return views;
+        startingAfter = batch.data[batch.data.length - 1]!.id;
+      }
+      throw new Error(
+        `checkout-session listing for customer did not terminate within the page cap`,
+      );
+    },
+    async retrieveSession(sessionId) {
+      try {
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        return toView(session);
+      } catch (err) {
+        const code = (err as { code?: unknown }).code;
+        if (code === "resource_missing") return null;
+        throw err;
+      }
+    },
+  };
+}
+
+/**
+ * Production entrypoint for the checkout-attempt repair job (directive 5.3 /
+ * 5.6). Invoked on a schedule by the cron route
+ * `/api/cron/repair-checkout-attempts` (declared in `vercel.json`) and
+ * callable server-side by an operator. Fails closed via the durable-write
+ * guard before touching Stripe. Unresolved ambiguity is surfaced to the
+ * DURABLE owner queue (deduplicated CockpitTask review items), not just logs.
+ */
+export async function runCheckoutAttemptRepair(): Promise<CheckoutAttemptRepairReport> {
+  const { db, requireDurableWriteStore } = await import("@sports/db");
+  requireDurableWriteStore("stripe-checkout");
+  const { cockpitCheckoutRepairOwnerQueue } = await import(
+    "@/lib/billing/checkout-repair-owner-queue"
+  );
+  return repairUnresolvedCheckoutAttempts({
+    db: db as unknown as CheckoutAttemptRepairDb,
+    stripeSessions: stripeCheckoutSessionLookup(),
+    ownerQueue: cockpitCheckoutRepairOwnerQueue(db) ?? undefined,
+  });
 }
 
 /**

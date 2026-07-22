@@ -19,6 +19,9 @@ const WHITELIST_FILES = new Set([
   "scripts/check-deploy-readiness.mjs",
   "scripts/rotate-anthropic-key.mjs",
   "scripts/guardrails/claude-api-usage.mjs",
+  // The AI transport import-boundary guard names the raw endpoint patterns it
+  // forbids in its own source, and its fixtures embed them as offender samples.
+  "scripts/guardrails/ai-transport-import-boundary.mjs",
 ]);
 
 const WHITELIST_DIRS = new Set([
@@ -53,6 +56,8 @@ function shouldSkipDir(name) {
 function isWhitelistedFile(relPath) {
   const normalized = relPath.split(sep).join("/");
   if (WHITELIST_FILES.has(normalized)) return true;
+  // Guardrail fixtures are intentional offender samples used to prove detection.
+  if (normalized.startsWith("scripts/guardrails/fixtures/")) return true;
   if (normalized.endsWith(".test.ts") || normalized.endsWith(".test.tsx")) return true;
   if (normalized.endsWith(".spec.ts") || normalized.endsWith(".spec.tsx")) return true;
   return false;

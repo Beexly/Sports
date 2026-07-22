@@ -1,7 +1,54 @@
 export { processSport } from "./process-sport.js";
 export type { SportConfig, ProcessSportResult } from "./process-sport.js";
-export { settleSport } from "./settle-sport.js";
-export type { SettleSportConfig, SettleSportResult } from "./settle-sport.js";
+export {
+  settleSport,
+  SCORELESS_COMPLETED_ANOMALY,
+  SCORELESS_REVIEW_THRESHOLD,
+} from "./settle-sport.js";
+export type { SettleSportConfig, SettleSportResult, SettleSportOptions } from "./settle-sport.js";
+export {
+  recordScorelessCompletedEvidence,
+  fingerprintScorePayload,
+  countCorroboratingRuns,
+  MIN_CORROBORATION_SEPARATION_MINUTES,
+  OWNER_DECISION_KINDS,
+  SYSTEM_DECISION_KINDS,
+} from "./settlement-evidence.js";
+export type {
+  ScorelessEvidenceInput,
+  ScorelessEvidenceOutcome,
+  SettlementEvidenceDb,
+  SettlementEvidenceTx,
+  OwnerDecisionKind,
+  CorroborationObservation,
+} from "./settlement-evidence.js";
+export {
+  computeScheduledWindow,
+  fingerprintSourceSnapshot,
+  getOrCreateSettlementRun,
+  settlementRunIdempotencyKey,
+} from "./settlement-run.js";
+export type {
+  SettlementRunDb,
+  SettlementRunIdentity,
+  ResolvedSettlementRun,
+} from "./settlement-run.js";
+export { recordOwnerSettlementDecision } from "./settlement-decisions.js";
+export type {
+  OwnerActorReceipt,
+  OwnerDecisionOutcome,
+  SettlementDecisionDb,
+} from "./settlement-decisions.js";
+export {
+  enqueuePostSettlementWork,
+  markPostSettlementWorkDone,
+  markPostSettlementWorkFailed,
+  POST_SETTLEMENT_WORK_KINDS,
+} from "./post-settlement-work.js";
+export type {
+  PostSettlementWorkKind,
+  PostSettlementWorkDelegate,
+} from "./post-settlement-work.js";
 export { recordPickSettlementSnapshot } from "./settlement-snapshots.js";
 export type {
   RecordSettlementSnapshotInput,

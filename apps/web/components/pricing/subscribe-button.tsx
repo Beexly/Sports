@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -57,6 +57,13 @@ export function SubscribeButton({
   // the button's description (aria-describedby). useId keeps it unique even when
   // several SubscribeButtons render on the same /pricing page.
   const disclosureId = useId();
+  // Per-visit checkout-intent HINT (Phase 1P). The server owns the durable
+  // CheckoutAttempt — this UUID only lets it recognize "same click retried"
+  // (double-click, network blip, reload-and-retry within this mount) and hand
+  // back the same Stripe session. Keyed by (tier, interval) so a surviving
+  // component whose plan/interval props change NEVER reuses an intent id with
+  // different Stripe parameters (the server would 409 that anyway).
+  const intentRef = useRef<{ key: string; id: string } | null>(null);
 
   // Interval-appropriate recurring amount, pulled from the pricing-phases source
   // (never hardcoded). Falls back to the amount shown on the plan if a price prop
@@ -70,10 +77,14 @@ export function SubscribeButton({
     setError(null);
     setLoading(true);
     try {
+      const intentKey = `${tier}:${interval}`;
+      if (!intentRef.current || intentRef.current.key !== intentKey) {
+        intentRef.current = { key: intentKey, id: crypto.randomUUID() };
+      }
       const res = await fetch("/api/subscriptions/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier, interval }),
+        body: JSON.stringify({ tier, interval, clientIntentId: intentRef.current.id }),
       });
 
       if (res.status === 401) {
