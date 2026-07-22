@@ -46,6 +46,9 @@ jobs:
     env:
       DATABASE_URL: "postgresql://sports:sports_test@localhost:5432/sports_test"
       DIRECT_URL: "postgresql://sports:sports_test@localhost:5432/sports_test"
+      # §10.9: makes the real-Postgres budget acceptance suite MANDATORY in CI
+      # (it installs its own schema + CHECK constraints from the migration SQL).
+      AI_BUDGET_PG_URL: "postgresql://sports:sports_test@localhost:5432/sports_test"
       NEXTAUTH_SECRET: "test-secret-do-not-use-in-production"
       NEXTAUTH_URL: "http://localhost:3000"
 
@@ -81,6 +84,17 @@ jobs:
 
       - name: Run Vercel skip-gate tests
         run: node --test scripts/vercel-skip-build.test.mjs
+
+      # §10.9: the budget acceptance run is mandatory and its evidence is
+      # RETAINED — a missing artifact fails the build.
+      - name: Upload budget acceptance artifact (§10.9)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-budget-acceptance
+          path: apps/web/test-artifacts/ai-budget-acceptance.json
+          retention-days: 90
+          if-no-files-found: error
 
   # --------------------------------------------------------------
   # 2. Build
@@ -227,6 +241,30 @@ jobs:
 
       - name: Run API v1 boundary guardrail
         run: node scripts/guardrails/api-v1-boundary.mjs
+
+  ai-transport-import-boundary:
+    name: AI transport import boundary
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # The AST-based guard imports the `typescript` compiler, so deps must be
+      # installed (the previous regex guard needed none).
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run AI transport import-boundary mutation tests
+        run: node --test scripts/guardrails/ai-transport-import-boundary.test.mjs
+
+      - name: Run AI transport import-boundary guardrail
+        run: node scripts/guardrails/ai-transport-import-boundary.mjs
 
   guardrails:
     name: All guardrails

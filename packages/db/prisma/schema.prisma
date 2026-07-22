@@ -36,6 +36,8 @@ model User {
   alerts        Alert[]
   claudeApiCalls ClaudeApiCallRecord[]
   watchlistEntries Watchlist[]
+  checkoutAttempts CheckoutAttempt[]
+  pushSubscriptions PushSubscription[]
 
   @@index([email])
   @@map("users")
@@ -127,6 +129,113 @@ model WebhookEvent {
 
   @@index([stripeEventId])
   @@map("webhook_events")
+}
+
+// Lifecycle of a durable checkout attempt (see CheckoutAttempt).
+enum CheckoutAttemptStatus {
+  CREATED // attempt row exists; no Stripe request dispatched yet
+  REQUEST_IN_FLIGHT // ONE request holds the claim and is talking to Stripe right now
+  SESSION_CREATED // a Stripe Checkout Session was created for this attempt
+  AMBIGUOUS // Stripe outcome unknown (network/5xx) — key retained; reconciliation resolves
+  COMPLETED // checkout.session.completed reconciled by the webhook/repair
+  FAILED // definitive rejection or configuration failure; a retry mints a FRESH attempt
+  EXPIRED // past expiresAt / checkout.session.expired; never reused
+  CANCELED // operator/owner-cancelled attempt; never reused
+}
+
+// Classification of the last Stripe session-create error (see
+// apps/web/lib/billing/stripe-outcome.ts). AMBIGUOUS outcomes retain the
+// attempt AND its idempotency key; only reconciliation may release them.
+enum CheckoutOutcomeClass {
+  DEFINITIVE_REJECTION // Stripe processed the request and definitively refused
+  AMBIGUOUS_NETWORK_OUTCOME // request may or may not have committed at Stripe
+  RETRIABLE_NO_REQUEST_SENT // provably no state change at Stripe; same key retriable
+  CONFIGURATION_FAILURE // our credentials/params are wrong; retrying cannot help
+}
+
+// Durable checkout attempt — the server-side source of truth for checkout
+// idempotency. A client may send a clientIntentId (a per-visit UUID hint);
+// the SERVER owns the attempt id, binds it to an immutable request
+// fingerprint (the FULL canonical commercial request — see
+// apps/web/lib/billing/checkout-attempt.ts), persists the Stripe idempotency
+// key, and stamps the attempt id into Checkout Session + subscription
+// metadata so webhooks and the repair job can reconcile.
+// Component lifetime is NEVER the source of truth: reload, another device,
+// or an unknown-network-outcome retry all converge on this row.
+//
+// AUDIT IDENTITY (immutable): `originalClientIntentId` is written once at
+// creation and NEVER cleared. `activeClientIntentId` is the separate
+// active-key column: it either equals the original intent id (attempt holds
+// the intent) or is NULL (a terminal attempt released the intent so a fresh
+// generation can claim it). History is never erased. Both invariants are
+// DB-enforced via CHECK constraints in the migration
+// (packages/db/prisma/migrations/20260722130000_add_checkout_attempt).
+//
+// RETENTION (financial audit record): the User FK is NULLABLE with
+// ON DELETE SET NULL, and subjectUserId/subjectEmail are immutable snapshots
+// taken at creation — deleting a user account never deletes the payment
+// audit trail, and the subject stays identifiable for audit/tax purposes.
+model CheckoutAttempt {
+  id                     String                @id @default(cuid())
+  // Immutable audit copy of the client-supplied intent hint (UUID), or null
+  // for a token-less request (each such request is its own intent).
+  originalClientIntentId String?
+  // Active-key column for the create-or-retrieve race. Equals
+  // originalClientIntentId while this attempt owns the intent; set to NULL
+  // when a terminal (FAILED/EXPIRED/CANCELED) attempt releases it.
+  // Postgres treats NULLs as distinct, so the compound unique below only
+  // bites while an attempt actually holds an intent.
+  activeClientIntentId   String?
+  // Nullable FK: user deletion detaches the row (SET NULL), never cascades.
+  userId                 String?
+  // Immutable subject snapshot for retention — survives user deletion.
+  subjectUserId          String
+  subjectEmail           String?
+  customerId             String?
+  tier                   SubscriptionTier
+  // Billing interval: "month" | "year" (matches BillingInterval in the app).
+  interval               String
+  priceId                String
+  currency               String                @default("usd")
+  quantity               Int                   @default(1)
+  // sha256 over the canonical-JSON commercial request (user, tier, interval,
+  // priceId, currency, quantity, trial terms, promotion policy, tax
+  // behavior, commercial-terms version, consent requirement, origin class,
+  // metadata version). Same intent id + different fingerprint is a hard
+  // 409 — an idempotency key may never be reused with changed parameters.
+  requestFingerprint     String
+  fingerprintVersion     String                @default("v2")
+  status                 CheckoutAttemptStatus @default(CREATED)
+  // Classification of the last Stripe session-create error, if any.
+  lastOutcomeClass       CheckoutOutcomeClass?
+  // The exact Stripe idempotency key minted for this attempt, persisted so
+  // ambiguous retries and the repair job always reuse/see the same key.
+  stripeIdempotencyKey   String                @unique
+  stripeSessionId        String?
+  // Filled by the checkout.session.completed webhook on reconciliation.
+  stripeSubscriptionId   String?
+  // Machine-readable kind of the last failure (e.g. "stripe_session_create_failed").
+  lastErrorKind          String?
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  completedAt            DateTime?
+  // ~24h from creation, matching Stripe's idempotency-key retention window.
+  expiresAt              DateTime
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Race safety: two concurrent requests with the same (userId, intent)
+  // converge on ONE row via this constraint (create + catch-P2002-then-fetch),
+  // never check-then-insert. Keyed on the ACTIVE key so terminal attempts
+  // keep their original intent id in originalClientIntentId forever.
+  @@unique([userId, activeClientIntentId])
+  // Webhook reconciliation lookup.
+  @@index([stripeSessionId])
+  @@index([userId])
+  @@index([subjectUserId])
+  // Repair-job scan: unresolved (REQUEST_IN_FLIGHT/AMBIGUOUS) attempts by age.
+  @@index([status, expiresAt])
+  @@map("checkout_attempts")
 }
 
 // ============================================================
@@ -239,6 +348,9 @@ model Game {
   creatorAssets       CreatorAsset[]
   claudeApiCalls      ClaudeApiCallRecord[]
   oddsLineSnapshots   OddsLineSnapshot[]
+  settlementObservations SettlementObservation[]
+  settlementAnomalies    SettlementAnomaly[]
+  pickSettlementEvents   PickSettlementEvent[]
 
   @@index([sportId])
   @@index([commenceTime])
@@ -456,6 +568,7 @@ model Pick {
   gateDecisions  GateDecision[]
   creatorAssets  CreatorAsset[]
   proofReceipt   PickProofReceipt?
+  settlementEvent PickSettlementEvent?
 
   // One active pick per game per pick type — enforced at DB level to prevent
   // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
@@ -813,6 +926,360 @@ model Watchlist {
   @@map("watchlist_entries")
 }
 
+// One browser/device Web Push subscription for a user — the free, no-vendor
+// channel half of the Elite "real-time email & push alerts" feature (see
+// apps/web/lib/watchlist/channels/web-push-channel.ts). `endpoint` is
+// globally unique (it IS the push service's per-device subscription URL),
+// so it doubles as the natural upsert/delete key; `p256dh`/`auth` are the
+// two keys the browser's PushSubscription.toJSON() returns, required to
+// encrypt a payload for that endpoint. A user may have many rows (one per
+// device/browser they've granted permission on).
+//
+// Founder-applied migration — see
+// packages/db/prisma/migrations/20260719120000_add_push_subscriptions,
+// following the exact Watchlist precedent above. Application code
+// (apps/web/lib/push/subscription-db.ts) fails gracefully when this table
+// is absent, exactly like Watchlist/OddsLineSnapshot.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+
+
+// ============================================================
+// SETTLEMENT EVIDENCE + TRANSACTIONAL OUTBOX (Phase 1E)
+// ============================================================
+// Converges the two rejected designs: #157's in-place sighting counter
+// (not atomic, retries counted as corroboration, score arrival destroyed
+// history) and #144's in-loop settlement notification hook (fail-isolated
+// but not durable). Evidence is APPEND-ONLY: observations are never
+// deleted or reset; anomalies are RESOLVED, never erased; decisions are
+// immutable receipts. State-machine columns are plain Strings (not native
+// Postgres enums) per this schema's established convention for new value
+// sets (see Watchlist.entityType / OddsLineSnapshot.phase rationale above):
+// founder-applied migrations must be safely re-appliable and Postgres has
+// no `CREATE TYPE ... IF NOT EXISTS`.
+
+// One deduplicated sighting of a settlement-relevant source row. The
+// compound unique (gameId, settlementRunId, payloadFingerprint) is the
+// retry firewall: re-processing the same run/payload is a no-op insert
+// (createMany skipDuplicates → INSERT ON CONFLICT DO NOTHING), so a retry
+// can NEVER count as fresh corroboration. Corroboration is always derived
+// by COUNT(DISTINCT settlementRunId) over these rows — never an in-place
+// counter (that was #157's atomicity bug). Append-only: no code path may
+// delete or mutate these rows.
+// Durable settlement-run identity (hardening 6.1). settleSport() previously
+// minted `randomUUID()` per call, so a scheduler retry / process restart /
+// duplicate invocation got a fresh run id and counted as fresh corroboration.
+// The run is now created-or-retrieved (upsert on the externally derivable
+// idempotencyKey = source + sport + scheduledWindow + sourceSnapshotFingerprint)
+// BEFORE any evidence write — retries of the same scheduled invocation over
+// the same source snapshot reuse the SAME run id and corroborate nothing.
+model SettlementRun {
+  id                        String   @id @default(cuid())
+  idempotencyKey            String   @unique // source:sport:scheduledWindow:sourceSnapshotFingerprint
+  source                    String
+  sport                     String
+  scheduledWindow           String            // e.g. "2026-07-22T18Z" (UTC hour bucket from the scheduler)
+  sourceSnapshotFingerprint String            // sha256 over the normalized source response for this run
+  startedAt                 DateTime @default(now())
+  lastReusedAt              DateTime?
+
+  @@index([sport, scheduledWindow])
+  @@map("settlement_runs")
+}
+
+model SettlementObservation {
+  id                        String   @id @default(cuid())
+  gameId                    String
+  source                    String                 // upstream feed, e.g. "the-odds-api"
+  settlementRunId           String                 // durable SettlementRun.id (stable across scheduler retries)
+  payloadFingerprint        String                 // sha256 over the normalized source row content
+  // sha256 over the WHOLE normalized source snapshot for the run (6.1):
+  // corroboration requires distinct snapshots or minimum temporal separation,
+  // so rapid same-snapshot retries can never promote an anomaly. Nullable for
+  // pre-hardening rows only.
+  sourceSnapshotFingerprint String?
+  observedSourceStatus      String                 // e.g. "completed-scoreless"
+  homeScorePresent          Boolean
+  awayScorePresent          Boolean
+  mappingStatus             String                 // "matched" — game resolved by externalId
+  freshnessState            String                 // e.g. "within-settlement-window" (daysFrom=2 fetch)
+  observedAt                DateTime               // when the sighting happened (feed read time)
+  // Source-provided event timestamp, retained verbatim when the feed sends
+  // one (6.1). Distinct from observedAt (our read time) and recordedAt (row
+  // insert time).
+  sourceObservedAt          DateTime?
+  recordedAt                DateTime @default(now())
+
+  // RESTRICT (6.2): append-only evidence must not silently vanish because a
+  // parent game row was deleted. Deleting a game with evidence is an owner-
+  // level operation that must first resolve the evidence trail explicitly.
+  game Game @relation(fields: [gameId], references: [id], onDelete: Restrict)
+
+  @@unique([gameId, settlementRunId, payloadFingerprint])
+  @@index([gameId])
+  @@map("settlement_observations")
+}
+
+// At most ONE anomaly row per (gameId, anomalyType) — the compound unique
+// enforces the single-open-anomaly invariant at the constraint level (at
+// most one row total, hence at most one OPEN), and makes the race-safe
+// upsert-by-unique pattern possible (Prisma compiles it to INSERT ... ON
+// CONFLICT). state: OPEN | OWNER_REVIEW | RESOLVED | DISMISSED. Resolution
+// (e.g. scores arriving later) marks the row RESOLVED with an actor +
+// reason — it never deletes the row, the observations, or the decision
+// receipt (that was #157's history-destruction bug). A RESOLVED/DISMISSED
+// anomaly whose condition RECURS is REOPENED (state back to OPEN, SYSTEM
+// REOPENED decision event appended); resolvedAt is deliberately KEPT on the
+// reopened row as the corroboration boundary — only observations recorded
+// after the last resolution can drive a re-promotion.
+model SettlementAnomaly {
+  id               String    @id @default(cuid())
+  gameId           String
+  anomalyType      String                     // e.g. "SCORELESS_COMPLETED"
+  state            String    @default("OPEN") // OPEN | OWNER_REVIEW | RESOLVED | DISMISSED
+  firstSeenAt      DateTime  @default(now())
+  lastSeenAt       DateTime  @default(now())
+  // Derived from COUNT(DISTINCT settlementRunId) over SettlementObservation
+  // at last evidence write — stored for query convenience only, never the
+  // source of truth for threshold decisions.
+  distinctRunCount Int       @default(1)
+  resolutionActor  String?                    // e.g. "settlement-pipeline" | an owner user id
+  resolvedAt       DateTime?
+  resolutionReason String?                    // e.g. "scores-arrived"
+
+  // RESTRICT (6.2): anomaly history is evidence — never cascade-erased.
+  game           Game                      @relation(fields: [gameId], references: [id], onDelete: Restrict)
+  decision       SettlementDecision?
+  reviewRequest  OwnerDecisionRequest?
+  decisionEvents SettlementDecisionEvent[]
+
+  @@unique([gameId, anomalyType])
+  @@index([state])
+  @@map("settlement_anomalies")
+}
+
+// The idempotent owner-review QUEUE REQUEST (hardening 6.3). Previously the
+// promotion consumed the single SettlementDecision row with a synthetic
+// "REVIEW_REQUESTED" kind, leaving nowhere for the ACTUAL owner decision to
+// live. The request is exactly-once per anomaly (unique anomalyId); real
+// decisions are append-only SettlementDecisionEvent rows.
+model OwnerDecisionRequest {
+  id          String   @id @default(cuid())
+  anomalyId   String   @unique
+  requestKind String                 // e.g. "SCORELESS_COMPLETED_REVIEW"
+  context     Json                   // game, sightings, corroborating runs at promotion time
+  createdAt   DateTime @default(now())
+
+  anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Restrict)
+
+  @@map("owner_decision_requests")
+}
+
+// Append-only decision history (hardening 6.3). Every state-affecting act on
+// an anomaly — the SYSTEM promotion, SYSTEM score-arrival resolution, and
+// every real OWNER decision (ACKNOWLEDGED, WAIT_FOR_SOURCE, MARK_POSTPONED,
+// VOID_PICKS, DISMISS_ANOMALY, RESOLVE_SCORES_ARRIVED) — appends one event
+// carrying the actor receipt and the prior/next state. Rows are NEVER
+// updated or deleted. A SYSTEM event may never impersonate an owner: the
+// actorType is part of the receipt.
+model SettlementDecisionEvent {
+  id           String   @id @default(cuid())
+  anomalyId    String
+  decisionKind String                 // REVIEW_REQUESTED | ACKNOWLEDGED | WAIT_FOR_SOURCE | MARK_POSTPONED | VOID_PICKS | DISMISS_ANOMALY | RESOLVE_SCORES_ARRIVED
+  actorType    String                 // OWNER | SYSTEM
+  actorReceipt Json                   // {actorType, subjectId, requestId?/runId?, observedAt}
+  priorState   String                 // anomaly state before this event
+  nextState    String                 // anomaly state after this event
+  reason       String?
+  evidence     Json?
+  createdAt    DateTime @default(now())
+
+  anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Restrict)
+
+  @@index([anomalyId, createdAt])
+  @@map("settlement_decision_events")
+}
+
+// Durable owner-decision receipt, created EXACTLY ONCE when an anomaly is
+// promoted to OWNER_REVIEW. The unique FK on anomalyId IS the exactly-once
+// guarantee: under a double-promotion race the second transaction cannot
+// create a second receipt (unique violation aborts it), and the
+// state-guarded promotion (updateMany where state=OPEN) means it never
+// tries. Immutable: never updated or deleted by pipeline code.
+model SettlementDecision {
+  id           String   @id @default(cuid())
+  anomalyId    String   @unique
+  decisionKind String                 // e.g. "REVIEW_REQUESTED"
+  context      Json                   // game, sightings, distinct runs at promotion time
+  createdAt    DateTime @default(now())
+
+  // RESTRICT (6.2): a decision receipt is evidence and must survive.
+  anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Restrict)
+
+  @@map("settlement_decisions")
+}
+
+// Transactional outbox for pick-settlement notifications. A row is
+// appended in the SAME database transaction as the pick's PENDING→result
+// update, so a settlement can never commit without its event (and an event
+// can never exist for an uncommitted settlement) — this replaces #144's
+// in-loop onPickGraded hook, which was fail-isolated but not durable (a
+// crash after the pick update lost the notification; a blind retry risked
+// duplicates). pickId is unique: pick settlement is already idempotent
+// (updateMany scoped to result:PENDING), so one settlement = one event.
+// Delivery state machine (worker-driven, OUTSIDE the settlement
+// transaction): PENDING → CLAIMED → DELIVERED | FAILED; FAILED rows with
+// attempts left and stale CLAIMED rows are re-claimable.
+// Parent event statuses (hardening 6.4): PENDING (appended by settlement,
+// not yet expanded) → EXPANDED (immutable payload + per-recipient
+// PickSettlementDelivery children materialized) → then, once EVERY child
+// reached a TERMINAL state, exactly one honest terminal:
+//   DELIVERED               — no child ended PERMANENT_FAILED/DEAD_LETTER
+//   COMPLETED_WITH_FAILURES — at least one child failed terminally; the
+//                             parent never asserts a delivery that did not
+//                             happen (per-channel truth stays on children)
+// The parent is COMPLETE only when all children are terminal; a partial
+// failure never closes the event.
+model PickSettlementEvent {
+  id                       String     @id @default(cuid())
+  pickId                   String     @unique
+  gameId                   String
+  result                   PickResult
+  settledAt                DateTime
+  status                   String     @default("PENDING") // PENDING | EXPANDED | DELIVERED | COMPLETED_WITH_FAILURES | FAILED (legacy)
+  claimedAt                DateTime?
+  deliveredAt              DateTime?
+  // Set only when every child delivery reached a terminal state (6.4).
+  completedAt              DateTime?
+  // Immutable event-time payload (6.6): selection, pick type, team ids/names,
+  // result, sport, settled time and schema version — frozen at expansion so
+  // later mutations of pick/game rows can never rewrite what was announced.
+  payload                  Json?
+  // When the settlement-time recipient set was materialized into child rows.
+  recipientsMaterializedAt DateTime?
+  attemptCount             Int        @default(0)
+  channelOutcomes          Json?                          // legacy per-channel detail (pre-delivery-rows)
+  createdAt                DateTime   @default(now())
+
+  // RESTRICT (6.2): the outbox trail is evidence of what was owed/sent.
+  pick Pick @relation(fields: [pickId], references: [id], onDelete: Restrict)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Restrict)
+
+  deliveries PickSettlementDelivery[]
+
+  @@index([status, claimedAt])
+  @@map("pick_settlement_events")
+}
+
+// One delivery row per follower x channel x destination x event (hardening
+// 6.4/6.5). States:
+//   PENDING          — materialized, not yet attempted
+//   CLAIMED          — leased by a worker (leaseToken fencing)
+//   DELIVERED        — terminal success; NEVER resent
+//   SUPPRESSED       — terminal: a POLICY decision not to send
+//                      (tier-ineligible, alerts disabled, payload expired).
+//                      NEVER an infrastructure condition: an unconfigured
+//                      channel or failed entitlements lookup retries/defers
+//                      instead — infra failures must not become terminal
+//                      policy states (6.9)
+//   NO_RECIPIENT     — terminal: no destination existed (no verified email /
+//                      no push subscription) — recorded honestly, no retry
+//   RETRYABLE_FAILED — transient failure (including channel-unconfigured);
+//                      retried with backoff+jitter
+//   PERMANENT_FAILED — terminal rejection (e.g. expired push subscription)
+//   DEAD_LETTER      — attempts exhausted; durable owner-queue escalation
+//                      via OutboxDeadLetterReceipt
+// A stale worker can never overwrite a newer claimant: every result write is
+// scoped to (id, leaseToken, status: CLAIMED) and claims bump claimVersion.
+model PickSettlementDelivery {
+  id                 String    @id @default(cuid())
+  eventId            String
+  userId             String
+  channel            String              // "push" | "email"
+  destinationId      String              // push subscription id, or sha256(email) — never a raw address
+  destinationVersion Int       @default(1)
+  idempotencyKey     String    @unique   // eventId:userId:channel:destinationId
+  status             String    @default("PENDING")
+  attemptCount       Int       @default(0)
+  claimVersion       Int       @default(0)
+  leaseToken         String?
+  leaseOwner         String?
+  leaseExpiresAt     DateTime?
+  nextAttemptAt      DateTime?
+  lastErrorCode      String?
+  lastErrorClass     String?             // "retryable" | "permanent" | "infrastructure"
+  attemptHistory     Json?               // append-only array of attempt records
+  latencyMs          Int?                // deliveredAt - event.settledAt (6.8)
+  deliveredAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  event PickSettlementEvent @relation(fields: [eventId], references: [id], onDelete: Restrict)
+
+  deadLetterReceipt OutboxDeadLetterReceipt?
+
+  @@unique([eventId, userId, channel, destinationId])
+  @@index([status, nextAttemptAt])
+  @@index([eventId])
+  @@map("pick_settlement_deliveries")
+}
+
+// Durable owner-queue escalation for dead-lettered deliveries (hardening
+// 6.5) — the outbox analogue of OwnerDecisionRequest. Appended exactly once
+// per delivery (unique deliveryId) the moment it reaches DEAD_LETTER, so an
+// exhausted delivery is a durable owner work item, not just a transient
+// health-endpoint reason string. Append-only from pipeline code; the owner
+// stamps acknowledgedAt when triaged.
+model OutboxDeadLetterReceipt {
+  id             String    @id @default(cuid())
+  deliveryId     String    @unique
+  eventId        String
+  userId         String
+  channel        String
+  reason         Json      // { errorCode, errorClass, attemptCount }
+  createdAt      DateTime  @default(now())
+  acknowledgedAt DateTime?
+
+  // RESTRICT (6.2): the receipt is evidence of an owed-but-undelivered
+  // alert and must survive its delivery row.
+  delivery PickSettlementDelivery @relation(fields: [deliveryId], references: [id], onDelete: Restrict)
+
+  @@index([acknowledgedAt, createdAt])
+  @@map("outbox_dead_letter_receipts")
+}
+
+// Durable post-settlement work state (hardening 6.10): CLV grading, signal-
+// snapshot outcome and TeamGameLog writes happen OUTSIDE the settlement
+// transaction. These rows are appended IN the settlement transaction, so a
+// crash after pick settlement leaves a repairable PENDING record instead of
+// relying on an accidental rerun. subjectId is the pick id (CLV_GRADE,
+// SNAPSHOT_OUTCOME) or the game id (TEAM_GAME_LOG).
+model PostSettlementWork {
+  id           String    @id @default(cuid())
+  subjectId    String
+  kind         String              // CLV_GRADE | SNAPSHOT_OUTCOME | TEAM_GAME_LOG
+  status       String    @default("PENDING") // PENDING | DONE | FAILED
+  attemptCount Int       @default(0)
+  lastError    String?
+  createdAt    DateTime  @default(now())
+  completedAt  DateTime?
+
+  @@unique([subjectId, kind])
+  @@index([status])
+  @@map("post_settlement_work")
+}
+
 // ============================================================
 // PERFORMANCE TRACKING
 // ============================================================
@@ -1132,6 +1599,17 @@ model AgentHandoff {
   created_at             DateTime              @default(now())
   updated_at             DateTime              @updatedAt
 
+  /// Trusted-actor audit trail: the governed actor (HUMAN admin session, or a
+  /// SERVICE/SYSTEM identity for background paths) that logged this handoff.
+  /// Nullable + additive — rows written before these columns existed have no
+  /// value here, not a fabricated one.
+  actor_subject_id       String?
+  actor_type             String?
+  actor_email            String?
+  policy_version         String?
+  /// Immutable ActorReceipt id (directive 4.3). Additive + nullable.
+  actor_receipt_id       String?
+
   @@index([source_seat, created_at])
   @@index([target_seat, created_at])
   @@index([status])
@@ -1163,6 +1641,23 @@ model SubagentRun {
   parent_review_status     SubagentParentReviewStatus @default(pending_review)
   created_at               DateTime                   @default(now())
   updated_at               DateTime                   @updatedAt
+
+  /// Trusted-actor audit trail: the governed actor that logged this run
+  /// (HUMAN admin session, or SERVICE/SYSTEM for background agent paths).
+  /// Nullable + additive — see AgentHandoff for the same rule.
+  actor_subject_id         String?
+  actor_type               String?
+  actor_email              String?
+  /// Trusted-actor audit trail: the HUMAN actor that reviewed this run.
+  /// Distinct from parent_seat (the agent identity) — this is the human.
+  reviewer_subject_id      String?
+  reviewer_type            String?
+  reviewer_email           String?
+  policy_version           String?
+  /// Immutable ActorReceipt ids (directive 4.3): logging actor + reviewing
+  /// human. Additive + nullable.
+  actor_receipt_id         String?
+  reviewer_receipt_id      String?
 
   /// Memory events linked to this run (optional, created by linkMemoryToAgentRun).
   memory_events JarvisMemoryEvent[] @relation("MemoryAgentRunLink")
@@ -1996,10 +2491,61 @@ enum ModerationAppealStatus {
   EXPIRED
 }
 
+// Immutable actor receipt (directive 4.3) — the COMPLETE TrustedActor audit
+// contract persisted once per audited write. Audit rows reference the receipt
+// by id (plain string reference, no FK relation: receipts are append-only and
+// never deleted, and a relation would couple their lifecycle to mutable
+// domain rows). Written by lib/auth/actor-receipt.ts ONLY; never updated.
+model ActorReceipt {
+  id               String   @id @default(cuid())
+  actorType        String   // HUMAN | SERVICE | SYSTEM
+  subjectId        String   // stable principal id — never empty
+  authMethod       String   // SESSION | SERVICE_CREDENTIAL | SYSTEM_INVARIANT
+  authorityScope   String   // ADMIN | USER | SERVICE | SYSTEM
+  tenant           String?
+  project          String?
+  requestId        String?
+  runId            String?
+  observedAt       DateTime // when the actor was minted at the choke point
+  emailSnapshot    String?  // display/audit only, never authority
+  policyVersion    String   // ACTOR_POLICY_VERSION at mint time
+  operation        String?  // SERVICE/SYSTEM: registry-scoped operation
+  credentialMethod String?  // SERVICE/SYSTEM: how the credential was verified
+  createdAt        DateTime @default(now())
+
+  @@index([subjectId, observedAt])
+  @@index([createdAt])
+  @@map("actor_receipts")
+}
+
+// Durable fixed-window rate-limit counters (directive 4.1) — shared by every
+// app instance; consumed via ONE atomic conditional upsert (see
+// apps/web/lib/community/durable-rate-limiter.ts). Keys are opaque (HMAC
+// digests / internal ids) — NEVER raw IPs. Retention is bounded: rows are
+// meaningless after their window and are pruned within 48h
+// (RATE_COUNTER_MAX_RETENTION_MS), supported by the window_start index.
+model RateLimitCounter {
+  scope       String
+  key         String
+  windowStart DateTime @map("window_start")
+  count       Int
+  updatedAt   DateTime @map("updated_at")
+
+  @@id([scope, key, windowStart])
+  @@index([windowStart])
+  @@map("rate_limit_counters")
+}
+
 // A report filed by a user or automated system against content.
 model ModerationReport {
   id           String                  @id @default(cuid())
-  reporterUserId String?               // null for automated/system reports
+  reporterUserId String?               // null for automated/system/anonymous reports
+  // Trusted-actor audit: reporter's actor type ("HUMAN" for authenticated
+  // reports; null for anonymous/system). Additive + nullable.
+  reporterActorType String?
+  // Immutable ActorReceipt id (directive 4.3) for authenticated reports; null
+  // for anonymous reports (no actor exists on that path). Additive + nullable.
+  reporterReceiptId String?
   targetUserId  String
   contentRef   String                  // opaque ref: "message:<id>", "parlay:<id>", etc.
   surface      String                  // e.g. "sunday_couch", "brotherhood_table"
@@ -2024,7 +2570,15 @@ model ModerationReport {
 // Every action MUST have actor + reason — enforced in the service layer.
 model ModerationAction {
   id           String               @id @default(cuid())
-  actor        String               // free-text operator/system id — NEVER empty
+  actor        String               // trusted actor stable subject id — NEVER empty
+  // Trusted-actor audit trail: the acting operator's actor type + email
+  // snapshot + policy version. Additive + nullable.
+  actorType    String?
+  actorEmail   String?
+  policyVersion String?
+  // Immutable ActorReceipt id (directive 4.3) — the complete audit contract
+  // for the acting operator. Additive + nullable (pre-receipt rows keep null).
+  actorReceiptId String?
   targetUserId String
   contentRef   String?              // optional: the specific content actioned
   surface      String?
@@ -2057,7 +2611,16 @@ model ModerationAppeal {
   status       ModerationAppealStatus @default(PENDING)
   // The reviewer must NOT be the same actor who took the original action.
   // Enforced in the service layer (canReview check).
-  decidedBy    String?               // free-text reviewer id
+  decidedBy    String?               // trusted reviewer stable subject id
+  // Trusted-actor audit trail: reviewer's actor type + email snapshot +
+  // policy version. Additive + nullable.
+  reviewerType String?
+  reviewerEmail String?
+  policyVersion String?
+  // Immutable ActorReceipt ids (directive 4.3): the appellant's receipt at
+  // filing and the reviewer's receipt at decision. Additive + nullable.
+  appellantReceiptId String?
+  reviewerReceiptId  String?
   decision     String?               @db.Text
   decidedAt    DateTime?
   // SLA: appeal must be decided within 7 days of filing.
@@ -2533,4 +3096,311 @@ model Signal {
   @@index([entityType, entityId])
   @@index([category])
   @@map("signals")
+}
+
+// ============================================================
+// AI CONTROL PLANE — INVOCATION / ATTEMPT / FINANCIAL ATTRIBUTION LEDGER
+// (Phase 2 PR-B, blueprint §B)
+//
+// Additive, dormant telemetry. These three tables record every AI task
+// invocation, each provider attempt within it, and the pre-call financial
+// attribution — WITHOUT ever claiming settlement. They are written only by
+// the `executeAiTask` facade (apps/web/lib/ai-control-plane/execute.ts),
+// which no call site uses yet, so this changes zero runtime behavior.
+//
+// Enum-like columns are plain String with an inline value list, matching the
+// documented convention of OddsLineSnapshot.phase / Watchlist.entityType
+// (Postgres has no `CREATE TYPE ... IF NOT EXISTS`, so native enums are not
+// safely re-appliable in an IF-NOT-EXISTS additive migration).
+//
+// Two structural invariants live in the shape itself:
+//   - provider ≠ payer (#151): `providerUsed` is nullable and is written ONLY
+//     after transport dispatch begins; a failed provider is its own attempt
+//     row (status FAILED) and can never be recorded as having "served" the
+//     request. Dispatch writes `estimatedGrossUsd` + a pre-call `fundingLabel`
+//     only; `reconciledLabel` / `billedUsd` stay null (a later reconciliation
+//     PR is the sole writer of confirmed settlement).
+//   - execution_status ≠ telemetry_status: `AiInvocation.telemetryStatus` is a
+//     separate column so a degraded ledger write never mutates the execution
+//     verdict.
+// ============================================================
+
+model AiInvocation {
+  id              String    @id @default(cuid())
+  requestId       String // caller-supplied idempotency handle
+  taskClass       String
+  surface         String
+  entity          String // "GSE" | "GSN" | "XXX" | "PERSONAL"
+  dataClass       String // serialized data-policy tag set (comma-joined)
+  costMode        String // effective cost mode at execution
+  envClass        String // "production" | "preview" | "development" | "test"
+  envClassSource  String // "explicit" | "derived" (or "UNRESOLVED" on early blocks)
+  policyVersion   String
+  actorType       String // "HUMAN" | "SERVICE" | "SYSTEM" (TrustedActor, #159)
+  actorSubjectId  String
+  status          String // "RUNNING" | "SUCCEEDED" | "FAILED" | "AMBIGUOUS" | "POLICY_BLOCKED" | "BUDGET_BLOCKED" | "BLOCKED"
+  telemetryStatus String    @default("OK") // "OK" | "DEGRADED" — separate from status
+  createdAt       DateTime  @default(now())
+  completedAt     DateTime?
+
+  // ── §9.2 atomic claim / lease fencing ──────────────────────────────────
+  requestFingerprint  String // sha256 of the canonicalized request payload
+  executionOwnerToken String? // fencing token of the live claim owner (NULL when terminal/BLOCKED)
+  leaseExpiresAt      DateTime? // live-claim lease; expired ⇒ eligible for fenced steal
+  heartbeatAt         DateTime?
+  stealCount          Int       @default(0)
+
+  // ── §9.2 durable terminal result (replay source) ───────────────────────
+  resultRef  String? // external result reference, if the payload lives elsewhere
+  resultHash String? // sha256 of the canonicalized output
+  resultJson Json? // the original validated output, replayed on terminal replay
+
+  // ── §9.6 non-dispatchable blocked decisions ────────────────────────────
+  // These fields are durable incident history: a CONFIGURATION_BLOCKED row
+  // reclaimed after the config is fixed KEEPS them even once status moves on.
+  blockedReasonCode String? // "POLICY_BLOCKED" | "BUDGET_BLOCKED" | "CONFIGURATION_BLOCKED"
+  blockedDetail     String?
+
+  attempts     AiAttempt[]
+  attribution  AiFinancialAttribution[]
+  recovery     AiTelemetryRecovery[]
+  reservations AiBudgetReservation[]
+
+  // Same (requestId, taskClass) replays; the unique key is the atomicity
+  // anchor of the create-or-claim (INSERT .. ON CONFLICT DO NOTHING).
+  @@unique([requestId, taskClass])
+  @@index([taskClass, createdAt])
+  @@map("ai_invocations")
+}
+
+model AiAttempt {
+  id                String    @id @default(cuid())
+  invocationId      String
+  ordinal           Int // 0-based try order; a fallback is always ordinal+1
+  providerRequested String // provider we intended to dispatch to
+  providerUsed      String? // null until transport actually dispatched (#151)
+  providerAccount   String?
+  region            String?
+  modelRequested    String
+  modelResolved     String?
+  substitutionId    String? // FK into the approved-substitution registry (PR E)
+  providerRequestId String? // vendor-side id for later reconciliation
+  status            String // "DISPATCHED" | "SUCCEEDED" | "FAILED" | "TIMEOUT" | "AMBIGUOUS"
+  errorCode         String?
+  startedAt         DateTime
+  endedAt           DateTime?
+  inputTokens       Int?
+  outputTokens      Int?
+  cacheReadTokens   Int?
+  cacheWriteTokens  Int?
+  pricingVersion    String?
+
+  // ── §9.4 durable pre-dispatch attempt semantics ────────────────────────
+  requestFingerprint String // fingerprint recorded BEFORE transport
+  policyVersion      String // policy version recorded BEFORE transport
+  attemptNonce       String // per-attempt lease/nonce
+  resultHash         String? // sha256 of the output this attempt produced
+
+  // RESTRICT: attempt rows are execution evidence; deleting an invocation
+  // may never silently erase them (§6.2 doctrine).
+  invocation   AiInvocation             @relation(fields: [invocationId], references: [id], onDelete: Restrict)
+  attributions AiFinancialAttribution[]
+
+  @@unique([invocationId, ordinal])
+  @@index([invocationId])
+  @@map("ai_attempts")
+}
+
+model AiFinancialAttribution {
+  id                    String    @id @default(cuid())
+  invocationId          String
+  attemptId             String? // real FK into ai_attempts (§9.5)
+  estimatedGrossUsd     Decimal   @db.Decimal(12, 6)
+  // Pre-call funding intent — NEVER a claim of settlement:
+  //   "CASH_EXPECTED" | "CREDIT_ELIGIBLE_UNCONFIRMED"
+  //   | "CREDIT_EXPECTED_FROM_ACTIVE_GRANT" | "LOCAL_RESOURCE"
+  //   | "EXTERNAL_FREE_ALLOWANCE_UNCONFIRMED" | "BLOCKED"
+  fundingLabel          String
+  // Post-billing reconciliation ONLY (a later PR writes this; the dispatch
+  // writer's create path has no reconciliation fields — §9.5):
+  //   "CREDIT_APPLIED_CONFIRMED" | "CASH_CHARGED_CONFIRMED"
+  //   | "NO_VENDOR_CHARGE_CONFIRMED" | "UNRECONCILED"
+  reconciledLabel       String?
+  creditGrantSnapshotId String? // only ever set from a grant snapshot, never inferred from a model id
+  billedUsd             Decimal?  @db.Decimal(12, 6)
+  reconciledAt          DateTime?
+
+  // §9.5 versioned attribution: exactly ONE current attribution per
+  // invocation (partial unique index in the migration SQL) and a full
+  // version history under (invocationId, version).
+  version   Int     @default(1)
+  isCurrent Boolean @default(true)
+
+  // RESTRICT: financial attribution is settlement evidence; no cascade may
+  // erase it (§6.2 doctrine).
+  invocation AiInvocation @relation(fields: [invocationId], references: [id], onDelete: Restrict)
+  attempt    AiAttempt?   @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+
+  @@unique([invocationId, version])
+  @@index([invocationId])
+  @@map("ai_financial_attributions")
+}
+
+// §9.7 minimal durable recovery queue for post-success telemetry: when the
+// authoritative finalize cannot land AFTER a successful (paid) provider
+// call, the pipeline queues the finalize payload here instead of EVER
+// retrying the paid call. Hardened outbox semantics: lease-fenced claim,
+// attempt cap, explicit delivered/abandoned terminals — never silent drop.
+model AiTelemetryRecovery {
+  id             String    @id @default(cuid())
+  invocationId   String
+  kind           String // "FINALIZE_SUCCESS" | "FINALIZE_AMBIGUOUS" | "FINALIZE_FAILURE" | "ATTEMPT_TELEMETRY"
+  payload        Json
+  attempts       Int       @default(0)
+  maxAttempts    Int       @default(10)
+  leaseOwner     String?
+  leaseExpiresAt DateTime?
+  createdAt      DateTime  @default(now())
+  deliveredAt    DateTime?
+  abandonedAt    DateTime?
+
+  // RESTRICT: these rows exist precisely to preserve writes that could not
+  // land — a cascade would silently drop them with the parent (§6.2 doctrine).
+  invocation AiInvocation @relation(fields: [invocationId], references: [id], onDelete: Restrict)
+
+  @@index([deliveredAt, leaseExpiresAt])
+  @@index([invocationId])
+  @@map("ai_telemetry_recovery")
+}
+
+// ============================================================
+// AI CONTROL PLANE — atomic budget reservations
+// (Phase 2 PR-C, blueprint §C, hardened per directive §10)
+//
+// Additive, dormant budget primitives. A budget WINDOW is a named cap over
+// some scope dimension (request, day, month, surface, provider account,
+// entity, emergency override). Every billable AI invocation RESERVES the
+// worst case of its ENTIRE attempt plan against every policy-required window
+// BEFORE dispatch, then provisionally settles the actual (releasing the held
+// remainder), moves to a RECONCILIATION_HOLD on an ambiguous charge, or
+// releases the whole hold on a proven-clean failure.
+//
+// The cap invariant lives in the DATABASE, not the app (§10.2):
+//   reservedUsd + provisionalUsd + confirmedBilledUsd <= capUsd
+// is enforced BOTH by the engine's single conditional UPDATE (see
+// apps/web/lib/ai-control-plane/budget.ts) AND by a table CHECK constraint in
+// the additive migration. An over-cap state is representable ONLY together
+// with the explicit OVERAGE_LOCKED circuit breaker (a real charge that
+// exceeded its hold is preserved, never truncated; the window then refuses
+// every further reserve and an owner incident fires).
+//
+// §10.7: reserved / provisional / confirmed billed / confirmed credit /
+// released / disputed are tracked as SEPARATE columns — a worst-case hold is
+// never reported as a settled actual.
+//
+// Enum-like columns are plain String with an inline value list guarded by a
+// CHECK constraint in the additive migration — the documented convention of
+// OddsLineSnapshot.phase / Watchlist.entityType / the AI ledger tables.
+// NOTE: `prisma db push` does not emit CHECK constraints; the PG acceptance
+// test applies the migration SQL directly and proves the CHECKs fire.
+// ============================================================
+
+model AiBudgetWindow {
+  // Deterministic id resolved ONLY from a policy-registry scope template
+  // (§10.5), e.g. 'entity:GSE:daily:2026-07-22'. Call sites never compose
+  // arbitrary window ids.
+  id                 String   @id
+  scopeKind          String // "REQUEST" | "DAILY" | "MONTHLY" | "SURFACE" | "PROVIDER_ACCOUNT" | "ENTITY" | "EMERGENCY_OVERRIDE"
+  state              String   @default("ACTIVE") // "ACTIVE" | "OVERAGE_LOCKED" (§10.2 circuit breaker)
+  capUsd             Decimal  @db.Decimal(12, 6)
+  reservedUsd        Decimal  @default(0) @db.Decimal(12, 6) // HELD + RECONCILIATION_HOLD worst-case holds
+  provisionalUsd     Decimal  @default(0) @db.Decimal(12, 6) // provisionally settled actuals (pre-reconciliation)
+  confirmedBilledUsd Decimal  @default(0) @db.Decimal(12, 6) // reconciled billed actuals
+  confirmedCreditUsd Decimal  @default(0) @db.Decimal(12, 6) // reconciled credit-covered spend (not cash)
+  releasedUsd        Decimal  @default(0) @db.Decimal(12, 6) // cumulative released/expired holds (audit counter)
+  disputedUsd        Decimal  @default(0) @db.Decimal(12, 6) // amounts under RECONCILIATION_HOLD (also still in reservedUsd)
+  updatedAt          DateTime @default(now())
+
+  reservations AiBudgetReservation[]
+
+  @@map("ai_budget_windows")
+}
+
+model AiBudgetReservation {
+  id           String @id @default(cuid())
+  invocationId String
+  windowId     String
+  // §10.6 idempotency key: (invocationId, windowId, reservationVersion) is
+  // UNIQUE; a duplicate reserve returns the existing hold, never double-holds.
+  reservationVersion Int @default(1)
+  amountUsd    Decimal @db.Decimal(12, 6) // worst case of the ENTIRE attempt plan (§10.4)
+  // §10.1 lifecycle: "HELD" | "PROVISIONALLY_SETTLED" | "RECONCILIATION_HOLD"
+  //                | "CONFIRMED_SETTLED" | "RELEASED" | "EXPIRED"
+  state          String
+  provisionalUsd Decimal? @db.Decimal(12, 6) // actual applied pre-reconciliation (PROVISIONALLY_SETTLED)
+  confirmedUsd   Decimal? @db.Decimal(12, 6) // reconciled amount (CONFIRMED_SETTLED only, CHECK-enforced)
+  confirmedKind  String? // "BILLED" | "CREDIT" — required exactly when confirmedUsd is set
+  overage        Boolean  @default(false) // §10.2: provisional actual exceeded the hold
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+  expiresAt      DateTime // sweeper deadline; the sweeper still verifies authoritative attempt state (§10.1)
+
+  // §10.6: BOTH parent FKs RESTRICT — financial evidence is never silently
+  // deleted out from under a hold, including by deleting the window itself.
+  window     AiBudgetWindow @relation(fields: [windowId], references: [id], onDelete: Restrict)
+  invocation AiInvocation   @relation(fields: [invocationId], references: [id], onDelete: Restrict)
+
+  @@unique([invocationId, windowId, reservationVersion])
+  @@index([invocationId])
+  @@index([windowId])
+  @@index([state, expiresAt])
+  @@map("ai_budget_reservations")
+}
+
+// ============================================================
+// AI CONTROL PLANE — atomic credit-grant authorization
+// (Phase 2 PR-D, directive §11.3)
+//
+// PR-D does NOT own credit-grant snapshots (NOVA/S5 does — see
+// apps/web/lib/opportunity-engine/credit-snapshot.ts, the sole canonical
+// `CreditGrantSnapshot` contract). These two tables are PR-D's OWN local
+// reservation ledger: an additive, dormant hold mechanism that prevents a
+// double-spend across concurrent `CreditAuthorizationPort.authorize()` calls
+// against the SAME grant, mirroring the AiBudgetWindow/AiBudgetReservation
+// pattern above exactly. The ledger's cap is not stored — it is supplied
+// fresh on every authorize() call from the admitting snapshot's CURRENT
+// spendable balance (remainingMinorUnits - reservedMinorUnits), so this
+// table never claims to know NOVA's balance; it only prevents PR-D's own
+// concurrent authorizers from over-committing against whatever balance was
+// last observed. No cash/credit mode is enabled anywhere; this is dormant
+// and additive (mirrors the budget doctrine comment above).
+// ============================================================
+
+model CreditGrantReservationLedger {
+  // NOVA's CreditGrantSnapshot.grantId — not an FK (the snapshot table is
+  // materialized by NOVA/S5, a different persistence unit; PR-D's ledger
+  // must not create a hard dependency on S5's schema landing first).
+  grantId            String   @id
+  reservedMinorUnits BigInt   @default(0)
+  updatedAt          DateTime @default(now())
+
+  reservations CreditGrantReservation[]
+
+  @@map("credit_grant_reservation_ledger")
+}
+
+model CreditGrantReservation {
+  id                 String    @id @default(cuid())
+  grantId            String
+  amountMinorUnits   BigInt // worst-case estimate HELD against the grant
+  state              String // "HELD" | "SETTLED" | "RELEASED" | "EXPIRED"
+  settledMinorUnits  BigInt? // confirmed actual, set only on SETTLED
+  createdAt          DateTime  @default(now())
+  expiresAt          DateTime // auto-release safety net (a future sweep, mirrors budget.ts)
+
+  ledger CreditGrantReservationLedger @relation(fields: [grantId], references: [grantId], onDelete: Cascade)
+
+  @@index([grantId])
+  @@index([state, expiresAt])
+  @@map("credit_grant_reservations")
 }

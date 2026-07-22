@@ -47,6 +47,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
     items: [
       { href: "/cockpit/agents", label: "Agents", hint: "Six operator roles" },
       { href: "/cockpit/memory", label: "Memory", hint: "Memory review queue" },
+      { href: "/cockpit/nova", label: "NOVA", hint: "Founder OS overview" },
     ],
   },
   {

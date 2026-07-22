@@ -1,0 +1,113 @@
+{
+  "artifacts": [
+    {
+      "path": "reports/nova/convergence/multi-head/NOVA_MULTIHEAD_INVENTORY.json",
+      "sha256": "82e789d037d386974e5dbc253318e374ad06bdf6fa448c426dfdc4cc198b0f35"
+    },
+    {
+      "path": "reports/nova/convergence/multi-head/NOVA_MULTIHEAD_INVENTORY.md",
+      "sha256": "69ea6fcd2df3deb81b406e7e83864d5f07a21aa95d9cd45914fcd10386150c4f"
+    }
+  ],
+  "base": {
+    "baseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4"
+  },
+  "collisionCount": 20,
+  "collisionScanStatus": "COMPLETE_COLLISIONS_FOUND",
+  "commandVersions": {
+    "git": "git version 2.43.0",
+    "node": "v22.22.2",
+    "typescript": "5.9.3"
+  },
+  "exitCode": 1,
+  "generatedAt": "2026-07-22T06:31:28.601Z",
+  "generator": "scripts/nova/multihead-inventory.mjs",
+  "headCount": 7,
+  "headFreshness": [
+    {
+      "expectedSha": "4c8af90fe14386168fcda7afc3e6c25412211600",
+      "label": "origin/feat/ai-control-plane-contracts",
+      "resolvedSha": "4c8af90fe14386168fcda7afc3e6c25412211600",
+      "status": "MATCHES_EXPECTED"
+    },
+    {
+      "expectedSha": "f0cab9cf2b70840bd8546d495f3ae45ac269df2b",
+      "label": "origin/nova/s1-domain-contracts",
+      "resolvedSha": "f0cab9cf2b70840bd8546d495f3ae45ac269df2b",
+      "status": "MATCHES_EXPECTED"
+    },
+    {
+      "expectedSha": "225a64bb584e27176f4ecf9487922ac25743dee5",
+      "label": "origin/nova/s2-capability-governor",
+      "resolvedSha": "225a64bb584e27176f4ecf9487922ac25743dee5",
+      "status": "MATCHES_EXPECTED"
+    },
+    {
+      "expectedSha": "a7e2c1a83a7b817c9c5affa6a4eaf025da91ce6e",
+      "label": "origin/nova/s3-source-runtime",
+      "resolvedSha": "a7e2c1a83a7b817c9c5affa6a4eaf025da91ce6e",
+      "status": "MATCHES_EXPECTED"
+    },
+    {
+      "expectedSha": "6bf296fb0817f2704a057b2d37509b4eb90fb1f0",
+      "label": "origin/payments/durable-checkout-attempt",
+      "resolvedSha": "6bf296fb0817f2704a057b2d37509b4eb90fb1f0",
+      "status": "MATCHES_EXPECTED"
+    },
+    {
+      "expectedSha": "afa2792b0c8740bbb7861f39c1f8511a83ec3752",
+      "label": "origin/security/trusted-actor-model",
+      "resolvedSha": "afa2792b0c8740bbb7861f39c1f8511a83ec3752",
+      "status": "MATCHES_EXPECTED"
+    },
+    {
+      "expectedSha": "034fdf334e9e679aa1331da17e20b754d719d77f",
+      "label": "origin/settlement/evidence-outbox",
+      "resolvedSha": "034fdf334e9e679aa1331da17e20b754d719d77f",
+      "status": "MATCHES_EXPECTED"
+    }
+  ],
+  "headInputs": [
+    {
+      "label": "origin/feat/ai-control-plane-contracts",
+      "ref": "origin/feat/ai-control-plane-contracts",
+      "sha": "4c8af90fe14386168fcda7afc3e6c25412211600"
+    },
+    {
+      "label": "origin/nova/s1-domain-contracts",
+      "ref": "origin/nova/s1-domain-contracts",
+      "sha": "f0cab9cf2b70840bd8546d495f3ae45ac269df2b"
+    },
+    {
+      "label": "origin/nova/s2-capability-governor",
+      "ref": "origin/nova/s2-capability-governor",
+      "sha": "225a64bb584e27176f4ecf9487922ac25743dee5"
+    },
+    {
+      "label": "origin/nova/s3-source-runtime",
+      "ref": "origin/nova/s3-source-runtime",
+      "sha": "a7e2c1a83a7b817c9c5affa6a4eaf025da91ce6e"
+    },
+    {
+      "label": "origin/payments/durable-checkout-attempt",
+      "ref": "origin/payments/durable-checkout-attempt",
+      "sha": "6bf296fb0817f2704a057b2d37509b4eb90fb1f0"
+    },
+    {
+      "label": "origin/security/trusted-actor-model",
+      "ref": "origin/security/trusted-actor-model",
+      "sha": "afa2792b0c8740bbb7861f39c1f8511a83ec3752"
+    },
+    {
+      "label": "origin/settlement/evidence-outbox",
+      "ref": "origin/settlement/evidence-outbox",
+      "sha": "034fdf334e9e679aa1331da17e20b754d719d77f"
+    }
+  ],
+  "manifestSha256": "c5872fb7df89d26972338db83fa60e673ab78b7810fa530e376d39b5f2f6c2e5",
+  "mode": "multi-head",
+  "notes": [],
+  "repositoryDirty": true,
+  "schemaVersion": 1,
+  "unparsedFileCount": 0
+}
