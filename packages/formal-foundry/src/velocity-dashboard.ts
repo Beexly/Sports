@@ -1,6 +1,12 @@
 /**
  * GSE Formal Foundry — Velocity Dashboard
  * Tracks safe iteration metrics.
+ *
+ * Silent by design (fixed: `updateVelocity` used to `console.table` its
+ * whole state as a side effect on every call — removed for the same reason
+ * as safety-ledger.ts: this repo's dormant/lab-only packages do not narrate
+ * themselves to the console as a side effect of normal operation; a caller
+ * reads state via `getVelocitySnapshot()`).
  */
 
 import type { VelocityMetrics } from "./types";
@@ -25,7 +31,6 @@ export function updateVelocity(change: {
       (VelocityMetricsState.averageProofLatencyMs * (n - 1) + change.latencyMs) / n;
   }
   VelocityMetricsState.lastProofDate = new Date().toISOString().slice(0, 10);
-  console.table(VelocityMetricsState);
 }
 
 export function getVelocitySnapshot(): VelocityMetrics {

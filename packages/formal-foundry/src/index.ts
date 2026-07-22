@@ -38,7 +38,12 @@ export async function initializeFoundry(options: {
 }
 
 /**
- * Smoke-test helper (run after Apalache explorer is up).
+ * Manual, explicitly-invoked dev smoke-test helper (run after a real
+ * Apalache explorer server is up — NOT invoked automatically by anything in
+ * this package). Prints to the console by design: unlike `SafetyLedger`/
+ * `VelocityDashboard`, which stay silent during normal operation (see those
+ * files' headers), a caller invoking THIS function by name is explicitly
+ * asking for console output.
  */
 export async function smokeTest() {
   console.log("Formal Foundry smoke test");
