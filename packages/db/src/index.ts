@@ -247,4 +247,20 @@ export function isStubMode(): boolean {
 export { isDemoPicksEnabled, getSamplePicks, SAMPLE_PICK_COUNT };
 export type { SamplePick } from "./sample-picks.js";
 
+// Durable-write capability gate (fail-closed guard for protected writes that
+// precede external side effects — e.g. Stripe checkout). See
+// durable-write-guard.ts for the contract.
+export {
+  DURABLE_WRITE_CAPABILITIES,
+  DurableWriteStoreUnavailableError,
+  evaluateDurableWriteStore,
+  requireDurableWriteStore,
+} from "./durable-write-guard.js";
+export type {
+  DurableWriteCapability,
+  DurableWriteDenialReason,
+  DurableWriteStoreEvaluation,
+  DurableWriteStoreEvaluationInput,
+} from "./durable-write-guard.js";
+
 export * from "@prisma/client";
