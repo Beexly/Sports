@@ -21,6 +21,26 @@ import { resolve } from "path";
 import { LedgerStoreUnavailableError } from "@/lib/jarvis/ledgers";
 import { buildLedgerStatus, buildLiveLedgerStatus } from "@/lib/jarvis/ledger-types";
 import { AGENT_COUNCIL } from "@/lib/jarvis/agent-council";
+import {
+  UnauthenticatedError,
+  ForbiddenError,
+  serviceActor,
+  systemActor,
+} from "@/lib/auth/actor";
+
+// ─── Mock auth() — default to a valid ADMIN session so the seat/confidence/
+// review-state tests exercise validation logic, not the auth gate itself. The
+// dedicated "actor authorization" describe block overrides this per-test.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const mockAuth = vi.fn();
+vi.mock("@/lib/auth", () => ({
+  auth: () => mockAuth(),
+}));
+
+function mockAdminSession() {
+  mockAuth.mockResolvedValue({ user: { id: "admin-1", email: "admin@gsn.example", role: "ADMIN" } });
+}
 
 // ─── Mock the db client ───────────────────────────────────────────────────────
 
@@ -48,6 +68,13 @@ vi.mock("@sports/db", () => ({
   isDemoPicksEnabled: vi.fn().mockReturnValue(false),
 }));
 
+// Default every test to an authenticated admin caller — the dedicated "actor
+// authorization" block overrides mockAuth per-test to exercise the
+// unauthenticated / non-admin / wrong-actor-type paths.
+beforeEach(() => {
+  mockAdminSession();
+});
+
 // ─── 1. Seat validation ───────────────────────────────────────────────────────
 
 // We test the seat-validation logic via the ledgers module's exported functions.
@@ -56,6 +83,7 @@ vi.mock("@sports/db", () => ({
 // function's top, so we don't need the db at all for the rejection path).
 
 import { logHandoff, logSubagentRun, reviewSubagentRun } from "@/lib/jarvis/ledgers";
+import { logHandoffAs, reviewSubagentRunAs } from "@/lib/jarvis/ledgers-core";
 
 describe("seat validation", () => {
   it("rejects an unknown sourceSeat in logHandoff", async () => {
@@ -236,13 +264,20 @@ describe("review-states law", () => {
       prohibited_actions_checked: true,
       created_at: new Date(),
       updated_at: new Date(),
+      actor_subject_id: null,
+      actor_type: null,
+      actor_email: null,
+      reviewer_subject_id: null,
+      reviewer_type: null,
+      reviewer_email: null,
+      policy_version: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
     await reviewSubagentRun("run-abc", "scout", "accepted");
     expect(updateSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: { parent_review_status: "accepted" },
+        data: expect.objectContaining({ parent_review_status: "accepted" }),
       })
     );
   });
@@ -264,13 +299,20 @@ describe("review-states law", () => {
       prohibited_actions_checked: true,
       created_at: new Date(),
       updated_at: new Date(),
+      actor_subject_id: null,
+      actor_type: null,
+      actor_email: null,
+      reviewer_subject_id: null,
+      reviewer_type: null,
+      reviewer_email: null,
+      policy_version: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
     await reviewSubagentRun("run-def", "scout", "rejected");
     expect(updateSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: { parent_review_status: "rejected" },
+        data: expect.objectContaining({ parent_review_status: "rejected" }),
       })
     );
   });
@@ -292,13 +334,20 @@ describe("review-states law", () => {
       prohibited_actions_checked: true,
       created_at: new Date(),
       updated_at: new Date(),
+      actor_subject_id: null,
+      actor_type: null,
+      actor_email: null,
+      reviewer_subject_id: null,
+      reviewer_type: null,
+      reviewer_email: null,
+      policy_version: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
     await reviewSubagentRun("run-ghi", "tal", "edited");
     expect(updateSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: { parent_review_status: "edited" },
+        data: expect.objectContaining({ parent_review_status: "edited" }),
       })
     );
   });
@@ -320,6 +369,13 @@ describe("review-states law", () => {
       prohibited_actions_checked: true,
       created_at: new Date(),
       updated_at: new Date(),
+      actor_subject_id: null,
+      actor_type: null,
+      actor_email: null,
+      reviewer_subject_id: null,
+      reviewer_type: null,
+      reviewer_email: null,
+      policy_version: null,
     });
 
     // TAL is not the parent seat for this run (scout is)
@@ -332,17 +388,19 @@ describe("review-states law", () => {
 // ─── 2b. P2025 masking — reviewSubagentRun ────────────────────────────────────
 
 describe("reviewSubagentRun — P2025 not-found is not masked as connectivity failure", () => {
-  it("source pin: P2025 guard is present in reviewSubagentRun, before wrapDbError", () => {
+  it("source pin: P2025 guard is present in reviewSubagentRunAs, before wrapDbError", () => {
+    // The write implementation (incl. the P2025 guard) now lives in the core
+    // module; ledgers.ts is a thin auth-resolving wrapper over it.
     const src = readFileSync(
-      resolve(__dirname, "../lib/jarvis/ledgers.ts"),
+      resolve(__dirname, "../lib/jarvis/ledgers-core.ts"),
       "utf-8"
     );
     // P2025 check must exist in the file
     expect(src).toMatch(/P2025/);
     // The guard must throw a plain Error (not wrapped as LedgerStoreUnavailableError)
     expect(src).toMatch(/throw new Error\([^)]*not found/i);
-    // The P2025 guard must appear before wrapDbError in reviewSubagentRun
-    const reviewFnIdx = src.indexOf("export async function reviewSubagentRun");
+    // The P2025 guard must appear before wrapDbError in reviewSubagentRunAs
+    const reviewFnIdx = src.indexOf("export async function reviewSubagentRunAs");
     const p2025Idx = src.indexOf("P2025", reviewFnIdx);
     const wrapIdx = src.indexOf("wrapDbError", reviewFnIdx);
     expect(p2025Idx).toBeGreaterThan(reviewFnIdx);
@@ -351,7 +409,7 @@ describe("reviewSubagentRun — P2025 not-found is not masked as connectivity fa
 
   it("source pin: P2025 guard checks PrismaClientKnownRequestError instanceof + code", () => {
     const src = readFileSync(
-      resolve(__dirname, "../lib/jarvis/ledgers.ts"),
+      resolve(__dirname, "../lib/jarvis/ledgers-core.ts"),
       "utf-8"
     );
     expect(src).toContain("PrismaClientKnownRequestError");
@@ -509,5 +567,137 @@ describe("agent council panel", () => {
 
   it("panel accepts a ledger prop", () => {
     expect(panelText).toContain("ledger: LedgerStatus");
+  });
+});
+
+// ─── 8. Trusted-actor authorization — the auth boundary itself ────────────────
+//
+// Every other block relies on the top-level beforeEach admin session so it can
+// test seat/confidence/review-state logic in isolation. These tests exercise
+// the boundary directly: no session, non-admin session, wrong actor type, and
+// that auth runs BEFORE any domain validation.
+
+describe("trusted-actor authorization", () => {
+  const validHandoff = {
+    sourceSeat: "jarvis",
+    targetSeat: "scout",
+    reason: "test",
+    taskType: "test",
+    evidenceText: "n/a",
+    authorityTier: 1,
+  };
+
+  it("logHandoff rejects with UnauthenticatedError when there is no session", async () => {
+    mockAuth.mockResolvedValue(null);
+    await expect(logHandoff(validHandoff)).rejects.toThrow(UnauthenticatedError);
+  });
+
+  it("logHandoff rejects with ForbiddenError for a non-admin session", async () => {
+    mockAuth.mockResolvedValue({ user: { id: "u1", email: "user@example.com", role: "USER" } });
+    await expect(logHandoff(validHandoff)).rejects.toThrow(ForbiddenError);
+  });
+
+  it("logHandoff checks auth BEFORE seat validation — an unauthenticated caller never learns their seat was invalid", async () => {
+    mockAuth.mockResolvedValue(null);
+    await expect(
+      logHandoff({ ...validHandoff, sourceSeat: "TOTALLY_INVALID_SEAT" })
+    ).rejects.toThrow(UnauthenticatedError);
+    await expect(
+      logHandoff({ ...validHandoff, sourceSeat: "TOTALLY_INVALID_SEAT" })
+    ).rejects.not.toThrow(/Unknown agent seat/);
+  });
+
+  it("logSubagentRun rejects with UnauthenticatedError when there is no session", async () => {
+    mockAuth.mockResolvedValue(null);
+    await expect(
+      logSubagentRun({
+        subagentId: "scout-injury-context",
+        parentSeat: "scout",
+        task: "t",
+        inputContext: "{}",
+        outputArtifactRef: "ref",
+        confidence: 80,
+        uncertainty: "low",
+        prohibitedActionsChecked: true,
+      })
+    ).rejects.toThrow(UnauthenticatedError);
+  });
+
+  it("reviewSubagentRun rejects with ForbiddenError for a non-admin session", async () => {
+    mockAuth.mockResolvedValue({ user: { id: "u1", email: "user@example.com", role: "USER" } });
+    await expect(reviewSubagentRun("run-1", "scout", "accepted")).rejects.toThrow(ForbiddenError);
+  });
+
+  it("an authenticated admin persists as the trusted audit actor on logHandoff", async () => {
+    mockAdminSession();
+    const { db } = await import("@sports/db");
+    const createSpy = vi.spyOn(db.agentHandoff, "create");
+    createSpy.mockClear();
+    await logHandoff(validHandoff);
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          actor_subject_id: "admin-1",
+          actor_type: "HUMAN",
+          actor_email: "admin@gsn.example",
+        }),
+      })
+    );
+  });
+});
+
+// ─── 9. SERVICE / SYSTEM actors on background (core) write paths ───────────────
+//
+// Background/non-interactive callers do NOT go through the "use server" surface;
+// they call the core functions with a governed SERVICE/SYSTEM actor. logHandoff
+// permits all actor types; reviewSubagentRunAs is HUMAN-only.
+
+describe("service/system actors on core write paths", () => {
+  it("a SERVICE actor may log a handoff and is recorded as actor_type SERVICE", async () => {
+    const { db } = await import("@sports/db");
+    const createSpy = vi.spyOn(db.agentHandoff, "create");
+    createSpy.mockClear();
+    const actor = serviceActor({ subjectId: "service:pick-generation", runId: "run-42" });
+    await logHandoffAs(actor, {
+      sourceSeat: "jarvis",
+      targetSeat: "scout",
+      reason: "background routing",
+      taskType: "pick-research",
+      evidenceText: "n/a",
+      authorityTier: 1,
+    });
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          actor_subject_id: "service:pick-generation",
+          actor_type: "SERVICE",
+        }),
+      })
+    );
+  });
+
+  it("a SERVICE actor is DENIED reviewing a subagent run (HUMAN-only) with ForbiddenError", async () => {
+    const actor = serviceActor({ subjectId: "service:auto-reviewer" });
+    await expect(
+      reviewSubagentRunAs(actor, "run-1", "scout", "accepted")
+    ).rejects.toThrow(ForbiddenError);
+  });
+
+  it("a SYSTEM actor is DENIED reviewing a subagent run (HUMAN-only)", async () => {
+    const actor = systemActor({ subjectId: "system:sweep" });
+    await expect(
+      reviewSubagentRunAs(actor, "run-1", "scout", "accepted")
+    ).rejects.toThrow(ForbiddenError);
+  });
+
+  it("the HUMAN-only denial happens before any db read", async () => {
+    const { db } = await import("@sports/db");
+    const findSpy = vi.spyOn(db.subagentRun, "findUniqueOrThrow");
+    findSpy.mockClear();
+    const actor = serviceActor({ subjectId: "service:auto-reviewer" });
+    await expect(
+      reviewSubagentRunAs(actor, "run-1", "scout", "accepted")
+    ).rejects.toThrow(ForbiddenError);
+    expect(findSpy).not.toHaveBeenCalled();
   });
 });

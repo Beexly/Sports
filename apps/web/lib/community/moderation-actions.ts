@@ -1,13 +1,28 @@
 /**
  * Moderation server actions — DB-backed operations for the graduated action ladder.
  *
+ * TRUST MODEL (Phase 1A — Trusted Actor)
+ * --------------------------------------
+ * Every identity that gets persisted or compared is derived server-side from a
+ * TrustedActor, NEVER from a caller-supplied request field. Concretely:
+ *   - fileReport (authenticated): reporterUserId comes from the session actor.
+ *   - fileAnonymousReport: a SEPARATE explicit contract — reporterUserId is
+ *     always null (never a caller-supplied authenticated id) and is guarded by
+ *     an anti-abuse rate limiter.
+ *   - appealAction: the appellant is the session actor, and the action being
+ *     appealed MUST belong to that user (ownership proof) — a caller cannot
+ *     consume another user's single allowed appeal.
+ *   - takeAction / decideAppeal: the actor / reviewer are the trusted admin
+ *     actor's stable subject id. Callers have NO authority over identity fields.
+ *     The different-reviewer rule compares trusted stable ids.
+ *
+ * Auth is resolved BEFORE any sensitive validation (an unauthorized caller
+ * never learns whether their input was well-formed).
+ *
  * Error contract:
  *   - ModerationStoreUnavailableError: DB is unreachable or query fails.
- *   - ModerationValidationError (from moderation.ts): actor/reason missing, ladder
- *     violation, or business-rule failure (appeal-once, different-reviewer, etc.).
- *
- * "Every action is logged" is law: takeAction will throw rather than persist without
- * an actor + reason.
+ *   - ModerationValidationError (from moderation.ts): ladder/business-rule failure.
+ *   - UnauthenticatedError / ForbiddenError / InvalidActorError (from auth/actor).
  *
  * Policy source: docs/legal/COMMUNITY_MODERATION_POLICY.md
  */
@@ -35,6 +50,15 @@ import {
   computeAppealDeadline,
   ModerationValidationError,
 } from "@/lib/community/moderation";
+import {
+  requireAdminActor,
+  requireSessionActor,
+  ForbiddenError,
+} from "@/lib/auth/actor";
+import {
+  checkAnonymousReportQuota,
+  type AnonReportLimiterConfig,
+} from "@/lib/community/anon-report-limiter";
 
 // ── Local error ───────────────────────────────────────────────────────────────
 
@@ -55,8 +79,12 @@ export class ModerationStoreUnavailableError extends Error {
 
 // ── Input types ───────────────────────────────────────────────────────────────
 
+/**
+ * Authenticated report. NOTE: there is intentionally NO reporterUserId field —
+ * the reporter identity is derived from the session, never accepted from the
+ * caller. Spoofing another user as the reporter is therefore not expressible.
+ */
 export interface FileReportInput {
-  reporterUserId?: string;
   targetUserId: string;
   contentRef: string;
   surface: string;
@@ -64,8 +92,26 @@ export interface FileReportInput {
   notes?: string;
 }
 
+/**
+ * Anonymous report — a SEPARATE, explicit contract. reporterUserId is always
+ * persisted as null. `clientFingerprint` feeds the anti-abuse rate limiter and
+ * is NOT an identity claim.
+ */
+export interface FileAnonymousReportInput {
+  targetUserId: string;
+  contentRef: string;
+  surface: string;
+  reason: ModerationReasonCode;
+  notes?: string;
+  /** Opaque source fingerprint (hashed IP / device token) for rate-limiting. */
+  clientFingerprint?: string | null;
+}
+
+/**
+ * takeAction input. NOTE: there is intentionally NO `actor` field — the acting
+ * operator is the trusted admin session, not a caller-supplied string.
+ */
 export interface TakeActionInput {
-  actor: string;
   targetUserId: string;
   action: ModerationActionKind;
   reason: ModerationReasonCode;
@@ -77,30 +123,73 @@ export interface TakeActionInput {
   expiresAt?: Date;
 }
 
+/**
+ * appealAction input. NOTE: there is intentionally NO appellantId — the
+ * appellant is the session actor, and ownership of the appealed action is
+ * proven server-side.
+ */
 export interface AppealActionInput {
   actionId: string;
-  appellantId: string;
   grounds: string;
 }
 
+/**
+ * decideAppeal input. NOTE: there is intentionally NO `reviewer` field — the
+ * reviewer is the trusted admin session. The different-reviewer rule compares
+ * the trusted reviewer's stable id against the original action's stored actor.
+ */
 export interface DecideAppealInput {
   appealId: string;
-  reviewer: string;
   decision: string;
   status: Extract<ModerationAppealStatus, "UPHELD" | "OVERTURNED">;
 }
 
-// ── fileReport ────────────────────────────────────────────────────────────────
+// ── fileReport (authenticated) ─────────────────────────────────────────────────
 
 /**
- * File a moderation report against a piece of content.
- * reporterUserId is optional (null = automated/system report).
+ * File a moderation report as an authenticated user. The reporter identity is
+ * derived from the session — a caller cannot claim to be another user.
  */
 export async function fileReport(input: FileReportInput): Promise<ModerationReport> {
+  const actor = await requireSessionActor();
   try {
     return await db.moderationReport.create({
       data: {
-        reporterUserId: input.reporterUserId ?? null,
+        reporterUserId: actor.subjectId,
+        reporterActorType: actor.actorType,
+        targetUserId: input.targetUserId,
+        contentRef: input.contentRef,
+        surface: input.surface,
+        reason: input.reason,
+        notes: input.notes ?? null,
+        status: "OPEN",
+      },
+    });
+  } catch (err) {
+    throw new ModerationStoreUnavailableError(err);
+  }
+}
+
+// ── fileAnonymousReport (unauthenticated, explicit) ────────────────────────────
+
+/**
+ * File an anonymous moderation report. reporterUserId is ALWAYS null — this
+ * path can never be used to attribute a report to an authenticated user.
+ * Guarded by a fingerprint-keyed anti-abuse rate limiter.
+ */
+export async function fileAnonymousReport(
+  input: FileAnonymousReportInput,
+  limiterConfig?: AnonReportLimiterConfig
+): Promise<ModerationReport> {
+  // Anti-abuse seam runs first — throws AnonymousReportRateLimitError on abuse
+  // or on a missing fingerprint (fail closed).
+  checkAnonymousReportQuota(input.clientFingerprint ?? null, limiterConfig);
+
+  try {
+    return await db.moderationReport.create({
+      data: {
+        reporterUserId: null,
+        reporterActorType: null,
         targetUserId: input.targetUserId,
         contentRef: input.contentRef,
         surface: input.surface,
@@ -117,14 +206,18 @@ export async function fileReport(input: FileReportInput): Promise<ModerationRepo
 // ── takeAction ────────────────────────────────────────────────────────────────
 
 /**
- * Record a moderation action against a user.
- * Validates:
- *   - actor and reason are non-empty (throws ModerationValidationError)
+ * Record a moderation action against a user. The acting operator is the trusted
+ * admin session — NOT a caller-supplied string. Validates:
+ *   - reason is non-empty (throws ModerationValidationError)
  *   - time-boxed actions carry an expiry
  */
 export async function takeAction(input: TakeActionInput): Promise<ModerationAction> {
-  // Law: every action requires actor + reason
-  assertActionLoggable(input.actor, input.reason);
+  // Auth FIRST — a HUMAN admin actor. Its stable subject id is the actor.
+  const actor = await requireAdminActor();
+
+  // Law: every action requires actor + reason. actor is the trusted subject id
+  // (guaranteed non-empty), so this now only meaningfully guards `reason`.
+  assertActionLoggable(actor.subjectId, input.reason);
 
   // Compute expiry for time-boxed actions
   let expiresAt: Date | null | undefined = input.expiresAt ?? null;
@@ -140,7 +233,10 @@ export async function takeAction(input: TakeActionInput): Promise<ModerationActi
   try {
     return await db.moderationAction.create({
       data: {
-        actor: input.actor,
+        actor: actor.subjectId,
+        actorType: actor.actorType,
+        actorEmail: actor.emailSnapshot,
+        policyVersion: actor.policyVersion,
         targetUserId: input.targetUserId,
         action: input.action,
         reason: input.reason,
@@ -160,13 +256,17 @@ export async function takeAction(input: TakeActionInput): Promise<ModerationActi
 // ── appealAction ─────────────────────────────────────────────────────────────
 
 /**
- * File an appeal against a SUSPEND or BAN action.
- * Enforces:
+ * File an appeal against a SUSPEND or BAN action. The appellant is the session
+ * actor, and the appealed action MUST belong to that user — a caller cannot
+ * consume another user's single allowed appeal. Enforces:
+ *   - the caller owns the appealed action (targetUserId === appellant)
  *   - only SUSPEND/BAN are appealable
  *   - one appeal per action
  */
 export async function appealAction(input: AppealActionInput): Promise<ModerationAppeal> {
-  // Load the action to verify it is appealable
+  const actor = await requireSessionActor();
+
+  // Load the action to verify ownership + appealability
   let action: ModerationAction;
   try {
     const found = await db.moderationAction.findUnique({
@@ -179,6 +279,13 @@ export async function appealAction(input: AppealActionInput): Promise<Moderation
   } catch (err) {
     if (err instanceof ModerationValidationError) throw err;
     throw new ModerationStoreUnavailableError(err);
+  }
+
+  // Ownership proof: only the user the action was taken against may appeal it.
+  if (action.targetUserId !== actor.subjectId) {
+    throw new ForbiddenError(
+      "You may only appeal a moderation action taken against your own account."
+    );
   }
 
   if (!appealable(action.action)) {
@@ -208,7 +315,7 @@ export async function appealAction(input: AppealActionInput): Promise<Moderation
     return await db.moderationAppeal.create({
       data: {
         actionId: input.actionId,
-        appellantId: input.appellantId,
+        appellantId: actor.subjectId,
         grounds: input.grounds,
         status: "PENDING",
         slaDeadline,
@@ -226,14 +333,14 @@ export async function appealAction(input: AppealActionInput): Promise<Moderation
 // ── decideAppeal ─────────────────────────────────────────────────────────────
 
 /**
- * Decide an appeal. Enforces:
+ * Decide an appeal. The reviewer is the trusted admin session. Enforces:
  *   - appeal must be PENDING or UNDER_REVIEW
- *   - reviewer must NOT be the same actor as the original action (different-reviewer rule)
+ *   - reviewer must NOT be the same actor as the original action
+ *     (different-reviewer rule, compared on TRUSTED STABLE IDS — a fabricated
+ *     reviewer string can no longer bypass it).
  */
 export async function decideAppeal(input: DecideAppealInput): Promise<ModerationAppeal> {
-  if (!input.reviewer.trim()) {
-    throw new ModerationValidationError("Reviewer must be a non-empty identifier.");
-  }
+  const reviewer = await requireAdminActor();
 
   // Load appeal + original action
   let appeal: (ModerationAppeal & { action: ModerationAction }) | null;
@@ -256,10 +363,12 @@ export async function decideAppeal(input: DecideAppealInput): Promise<Moderation
     );
   }
 
-  // Different-reviewer rule
-  if (!canReview(appeal.action.actor, input.reviewer)) {
+  // Different-reviewer rule — compares the original action's stored actor
+  // (itself a trusted subject id) against this reviewer's trusted subject id.
+  if (!canReview(appeal.action.actor, reviewer.subjectId)) {
     throw new ModerationValidationError(
-      `Reviewer ${input.reviewer} was the original actor on this action. A different reviewer must decide the appeal.`
+      `Reviewer ${reviewer.subjectId} was the original actor on this action. ` +
+        `A different reviewer must decide the appeal.`
     );
   }
 
@@ -268,7 +377,10 @@ export async function decideAppeal(input: DecideAppealInput): Promise<Moderation
       where: { id: input.appealId },
       data: {
         status: input.status,
-        decidedBy: input.reviewer,
+        decidedBy: reviewer.subjectId,
+        reviewerType: reviewer.actorType,
+        reviewerEmail: reviewer.emailSnapshot,
+        policyVersion: reviewer.policyVersion,
         decision: input.decision,
         decidedAt: new Date(),
       },
@@ -293,6 +405,7 @@ export interface OpenReportRow {
 }
 
 export async function listOpenReports(): Promise<OpenReportRow[]> {
+  await requireAdminActor();
   try {
     const rows = await db.moderationReport.findMany({
       where: { status: { in: ["OPEN", "UNDER_REVIEW", "ESCALATED"] } },
@@ -328,6 +441,7 @@ export interface ActionRow {
 }
 
 export async function listActions(targetUserId: string): Promise<ActionRow[]> {
+  await requireAdminActor();
   try {
     const rows = await db.moderationAction.findMany({
       where: { targetUserId },
@@ -366,6 +480,7 @@ export interface AuditLogRow {
  * Supports forensic queries ("what happened to this message?").
  */
 export async function auditLog(contentRef: string): Promise<AuditLogRow[]> {
+  await requireAdminActor();
   try {
     const rows = await db.moderationAction.findMany({
       where: { contentRef },
