@@ -1132,6 +1132,17 @@ model AgentHandoff {
   created_at             DateTime              @default(now())
   updated_at             DateTime              @updatedAt
 
+  /// Trusted-actor audit trail: the governed actor (HUMAN admin session, or a
+  /// SERVICE/SYSTEM identity for background paths) that logged this handoff.
+  /// Nullable + additive — rows written before these columns existed have no
+  /// value here, not a fabricated one.
+  actor_subject_id       String?
+  actor_type             String?
+  actor_email            String?
+  policy_version         String?
+  /// Immutable ActorReceipt id (directive 4.3). Additive + nullable.
+  actor_receipt_id       String?
+
   @@index([source_seat, created_at])
   @@index([target_seat, created_at])
   @@index([status])
@@ -1163,6 +1174,23 @@ model SubagentRun {
   parent_review_status     SubagentParentReviewStatus @default(pending_review)
   created_at               DateTime                   @default(now())
   updated_at               DateTime                   @updatedAt
+
+  /// Trusted-actor audit trail: the governed actor that logged this run
+  /// (HUMAN admin session, or SERVICE/SYSTEM for background agent paths).
+  /// Nullable + additive — see AgentHandoff for the same rule.
+  actor_subject_id         String?
+  actor_type               String?
+  actor_email              String?
+  /// Trusted-actor audit trail: the HUMAN actor that reviewed this run.
+  /// Distinct from parent_seat (the agent identity) — this is the human.
+  reviewer_subject_id      String?
+  reviewer_type            String?
+  reviewer_email           String?
+  policy_version           String?
+  /// Immutable ActorReceipt ids (directive 4.3): logging actor + reviewing
+  /// human. Additive + nullable.
+  actor_receipt_id         String?
+  reviewer_receipt_id      String?
 
   /// Memory events linked to this run (optional, created by linkMemoryToAgentRun).
   memory_events JarvisMemoryEvent[] @relation("MemoryAgentRunLink")
@@ -1996,10 +2024,61 @@ enum ModerationAppealStatus {
   EXPIRED
 }
 
+// Immutable actor receipt (directive 4.3) — the COMPLETE TrustedActor audit
+// contract persisted once per audited write. Audit rows reference the receipt
+// by id (plain string reference, no FK relation: receipts are append-only and
+// never deleted, and a relation would couple their lifecycle to mutable
+// domain rows). Written by lib/auth/actor-receipt.ts ONLY; never updated.
+model ActorReceipt {
+  id               String   @id @default(cuid())
+  actorType        String   // HUMAN | SERVICE | SYSTEM
+  subjectId        String   // stable principal id — never empty
+  authMethod       String   // SESSION | SERVICE_CREDENTIAL | SYSTEM_INVARIANT
+  authorityScope   String   // ADMIN | USER | SERVICE | SYSTEM
+  tenant           String?
+  project          String?
+  requestId        String?
+  runId            String?
+  observedAt       DateTime // when the actor was minted at the choke point
+  emailSnapshot    String?  // display/audit only, never authority
+  policyVersion    String   // ACTOR_POLICY_VERSION at mint time
+  operation        String?  // SERVICE/SYSTEM: registry-scoped operation
+  credentialMethod String?  // SERVICE/SYSTEM: how the credential was verified
+  createdAt        DateTime @default(now())
+
+  @@index([subjectId, observedAt])
+  @@index([createdAt])
+  @@map("actor_receipts")
+}
+
+// Durable fixed-window rate-limit counters (directive 4.1) — shared by every
+// app instance; consumed via ONE atomic conditional upsert (see
+// apps/web/lib/community/durable-rate-limiter.ts). Keys are opaque (HMAC
+// digests / internal ids) — NEVER raw IPs. Retention is bounded: rows are
+// meaningless after their window and are pruned within 48h
+// (RATE_COUNTER_MAX_RETENTION_MS), supported by the window_start index.
+model RateLimitCounter {
+  scope       String
+  key         String
+  windowStart DateTime @map("window_start")
+  count       Int
+  updatedAt   DateTime @map("updated_at")
+
+  @@id([scope, key, windowStart])
+  @@index([windowStart])
+  @@map("rate_limit_counters")
+}
+
 // A report filed by a user or automated system against content.
 model ModerationReport {
   id           String                  @id @default(cuid())
-  reporterUserId String?               // null for automated/system reports
+  reporterUserId String?               // null for automated/system/anonymous reports
+  // Trusted-actor audit: reporter's actor type ("HUMAN" for authenticated
+  // reports; null for anonymous/system). Additive + nullable.
+  reporterActorType String?
+  // Immutable ActorReceipt id (directive 4.3) for authenticated reports; null
+  // for anonymous reports (no actor exists on that path). Additive + nullable.
+  reporterReceiptId String?
   targetUserId  String
   contentRef   String                  // opaque ref: "message:<id>", "parlay:<id>", etc.
   surface      String                  // e.g. "sunday_couch", "brotherhood_table"
@@ -2024,7 +2103,15 @@ model ModerationReport {
 // Every action MUST have actor + reason — enforced in the service layer.
 model ModerationAction {
   id           String               @id @default(cuid())
-  actor        String               // free-text operator/system id — NEVER empty
+  actor        String               // trusted actor stable subject id — NEVER empty
+  // Trusted-actor audit trail: the acting operator's actor type + email
+  // snapshot + policy version. Additive + nullable.
+  actorType    String?
+  actorEmail   String?
+  policyVersion String?
+  // Immutable ActorReceipt id (directive 4.3) — the complete audit contract
+  // for the acting operator. Additive + nullable (pre-receipt rows keep null).
+  actorReceiptId String?
   targetUserId String
   contentRef   String?              // optional: the specific content actioned
   surface      String?
@@ -2057,7 +2144,16 @@ model ModerationAppeal {
   status       ModerationAppealStatus @default(PENDING)
   // The reviewer must NOT be the same actor who took the original action.
   // Enforced in the service layer (canReview check).
-  decidedBy    String?               // free-text reviewer id
+  decidedBy    String?               // trusted reviewer stable subject id
+  // Trusted-actor audit trail: reviewer's actor type + email snapshot +
+  // policy version. Additive + nullable.
+  reviewerType String?
+  reviewerEmail String?
+  policyVersion String?
+  // Immutable ActorReceipt ids (directive 4.3): the appellant's receipt at
+  // filing and the reviewer's receipt at decision. Additive + nullable.
+  appellantReceiptId String?
+  reviewerReceiptId  String?
   decision     String?               @db.Text
   decidedAt    DateTime?
   // SLA: appeal must be decided within 7 days of filing.
