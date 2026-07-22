@@ -36,6 +36,7 @@ model User {
   alerts        Alert[]
   claudeApiCalls ClaudeApiCallRecord[]
   watchlistEntries Watchlist[]
+  checkoutAttempts CheckoutAttempt[]
 
   @@index([email])
   @@map("users")
@@ -127,6 +128,67 @@ model WebhookEvent {
 
   @@index([stripeEventId])
   @@map("webhook_events")
+}
+
+// Lifecycle of a durable checkout attempt (see CheckoutAttempt).
+enum CheckoutAttemptStatus {
+  CREATED // attempt row exists; no Stripe session yet
+  SESSION_CREATED // a Stripe Checkout Session was created for this attempt
+  COMPLETED // checkout.session.completed reconciled by the webhook
+  FAILED // Stripe session creation failed; a retry mints a FRESH attempt
+  EXPIRED // past expiresAt (Stripe's ~24h idempotency window); never reused
+}
+
+// Durable checkout attempt — the server-side source of truth for checkout
+// idempotency. A client may send a clientIntentId (a per-visit UUID hint);
+// the SERVER owns the attempt id, binds it to an immutable request
+// fingerprint (user + tier + interval + priceId + currency + commercial
+// terms), derives the Stripe idempotency key from it, and stamps it into
+// Checkout Session + subscription metadata so webhooks can reconcile.
+// Component lifetime is NEVER the source of truth: reload, another device,
+// or an unknown-network-outcome retry all converge on this row.
+model CheckoutAttempt {
+  id                   String                @id @default(cuid())
+  // Optional client-supplied intent hint (UUID). Nullable: a token-less
+  // request mints its own attempt (each such request is its own intent).
+  // Postgres treats NULLs as distinct, so the compound unique below only
+  // bites when a clientIntentId is actually present — exactly the
+  // create-or-retrieve race that must be made safe.
+  clientIntentId       String?
+  userId               String
+  customerId           String?
+  tier                 SubscriptionTier
+  // Billing interval: "month" | "year" (matches BillingInterval in the app).
+  interval             String
+  priceId              String
+  currency             String                @default("usd")
+  // sha256 over the canonical request (user, tier, interval, priceId,
+  // currency, current commercial terms). Same intent id + different
+  // fingerprint is a hard 409 — an idempotency key may never be reused
+  // with changed Stripe parameters.
+  requestFingerprint   String
+  status               CheckoutAttemptStatus @default(CREATED)
+  stripeSessionId      String?
+  // Filled by the checkout.session.completed webhook on reconciliation.
+  stripeSubscriptionId String?
+  // Machine-readable kind of the last failure (e.g. "stripe_session_create_failed").
+  lastErrorKind        String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  completedAt          DateTime?
+  // ~24h from creation, matching Stripe's idempotency-key retention window.
+  expiresAt            DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Race safety: two concurrent requests with the same (userId, clientIntentId)
+  // converge on ONE row via this constraint (create + catch-P2002-then-fetch),
+  // never check-then-insert.
+  @@unique([userId, clientIntentId])
+  // Webhook reconciliation lookup.
+  @@index([stripeSessionId])
+  @@index([userId])
+  @@map("checkout_attempts")
 }
 
 // ============================================================

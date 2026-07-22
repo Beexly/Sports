@@ -1,6 +1,11 @@
 import Stripe from "stripe";
 import { getCurrentPricingPhase, type BillingInterval } from "@/lib/pricing/pricing-phases";
 import { checkoutPriceId, currentPriceId } from "@/lib/billing/price-ids";
+import {
+  CheckoutAttemptIdError,
+  isValidCheckoutAttemptId,
+  stripeIdempotencyKeyForAttempt,
+} from "@/lib/billing/checkout-attempt";
 
 export type { BillingInterval };
 
@@ -103,20 +108,36 @@ export async function getOrCreateStripeCustomer(
 
 /**
  * Create a Stripe Checkout Session for subscription upgrade.
+ *
+ * Requires a DURABLE checkout-attempt id (see lib/billing/checkout-attempt.ts):
+ *  - it derives the Stripe idempotency key, so an unknown-network-outcome
+ *    retry against the same attempt replays the SAME session instead of
+ *    minting a duplicate;
+ *  - it is stamped into BOTH session metadata and subscription_data.metadata,
+ *    so the checkout.session.completed webhook can reconcile the attempt row.
+ * A malformed attempt id is a typed CheckoutAttemptIdError (programmer /
+ * caller error), never a silent tokenless session.
  */
 export async function createCheckoutSession({
   customerId,
   priceId,
   userId,
+  attemptId,
   successUrl,
   cancelUrl,
 }: {
   customerId: string;
   priceId: string;
   userId: string;
+  attemptId: string;
   successUrl: string;
   cancelUrl: string;
 }): Promise<Stripe.Checkout.Session> {
+  if (typeof attemptId !== "string" || !isValidCheckoutAttemptId(attemptId)) {
+    throw new CheckoutAttemptIdError(
+      "createCheckoutSession requires a valid durable checkout-attempt id (ca_<uuid>).",
+    );
+  }
   const params: Stripe.Checkout.SessionCreateParams = {
     customer: customerId,
     payment_method_types: ["card"],
@@ -124,9 +145,9 @@ export async function createCheckoutSession({
     mode: "subscription",
     success_url: successUrl,
     cancel_url: cancelUrl,
-    metadata: { userId },
+    metadata: { userId, checkoutAttemptId: attemptId },
     subscription_data: {
-      metadata: { userId },
+      metadata: { userId, checkoutAttemptId: attemptId },
     },
     // Honest recurring-billing line rendered NEAR THE SUBMIT BUTTON on the
     // Stripe-hosted page. Unlike custom_text.terms_of_service_acceptance (removed),
@@ -155,7 +176,30 @@ export async function createCheckoutSession({
     params.consent_collection = { terms_of_service: "required" };
   }
 
-  return stripe.checkout.sessions.create(params);
+  // Durable idempotency: the key derives from (userId, attemptId) — stable
+  // across reloads/devices — so within Stripe's ~24h window a retried attempt
+  // replays the ORIGINAL session instead of creating a second one.
+  return stripe.checkout.sessions.create(params, {
+    idempotencyKey: stripeIdempotencyKeyForAttempt(userId, attemptId),
+  });
+}
+
+/**
+ * Best-effort retrieval of an attempt's existing Checkout Session URL for an
+ * idempotent retry. Returns the URL only while the session is still OPEN
+ * (completed/expired sessions have nothing safe to redirect to); returns null
+ * on any error so the caller falls through to the idempotent create path.
+ */
+export async function retrieveOpenCheckoutSessionUrl(
+  sessionId: string,
+): Promise<string | null> {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    if (session.status === "open" && session.url) return session.url;
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 /**
