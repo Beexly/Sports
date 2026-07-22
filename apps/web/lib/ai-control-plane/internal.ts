@@ -45,3 +45,55 @@ export type { ResolveCostModeInput, ResolvedEnvClass } from "./cost-mode";
 // Receipt-store seam for tests (in-memory stores) and the future durable
 // store implementation.
 export { failClosedReceiptStore, verifyEmergencyOverride } from "./emergency";
+
+// §9 invocation pipeline internals: the authoritative claim store, the
+// non-blocking observability sink + recovery queue, the exact per-provider
+// dispatch adapters, and the ledgered dispatch factory. Production reaches
+// all of this ONLY through the sealed singleton in executor.ts.
+export {
+  createPgControlStore,
+  prismaSqlClient,
+  type AuthoritativeControlStore,
+  type ControlSqlClient,
+  type ClaimInvocationInput,
+  type ClaimOutcome,
+  type StartAttemptInput,
+  type AttemptFailureInput,
+  type AttributionCreateInput,
+  type FinalizeSuccessInput,
+  type FinalizeFailureInput,
+  type BlockedInvocationInput,
+} from "./control-store";
+export {
+  ObservabilitySink,
+  claimRecoveryBatch,
+  markRecoveryDelivered,
+  abandonExhaustedRecovery,
+  type RecoveryEnqueueInput,
+  type RecoveryKind,
+  type RecoveryQueueRow,
+} from "./observability";
+export {
+  dispatchAnthropicDirect,
+  dispatchBedrock,
+  dispatchVertex,
+  dispatchCerebras,
+  dispatchLocal,
+  createProviderDispatchers,
+  type ProviderDispatchFn,
+  type ProviderDispatchPayload,
+  type ProviderDispatchOutcome,
+} from "./dispatch";
+export {
+  createLedgeredDispatch,
+  computeRequestFingerprint,
+  canonicalJson,
+  sha256Hex,
+  deriveProviderPayload,
+  type LedgeredDispatchDeps,
+  type TaskPromptInput,
+} from "./invocation-pipeline";
+export type {
+  BlockedDecisionRecord,
+  BlockedDecisionRecorder,
+} from "./executor";
