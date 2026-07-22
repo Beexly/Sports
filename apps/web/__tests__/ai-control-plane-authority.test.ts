@@ -56,7 +56,22 @@ import {
   type AiDispatchPlan,
   type SealedAiExecutorDependencies,
 } from "@/lib/ai-control-plane/internal";
+import type { CreditAuthorizationPort } from "@/lib/ai-control-plane/credit-port";
 import { serviceActor, type HumanActor } from "@/lib/auth/actor";
+
+// Test-injected credit adapter (§10.8): what an S5 implementation would
+// provide. Production seals the fail-closed port instead — asserted below.
+const permissiveCreditPort: CreditAuthorizationPort = {
+  authorizeAndReserve: async (request) => ({
+    creditReservationId: `credit:${request.requestId}`,
+    requestId: request.requestId,
+    grantAllocationRef: "grant:test",
+    heldUsd: request.worstCaseUsd,
+  }),
+  settleProvisional: async () => {},
+  reconcile: async () => {},
+  release: async () => {},
+};
 
 const NOW = new Date("2026-07-22T12:00:00.000Z");
 const FUTURE = new Date("2026-07-23T12:00:00.000Z");
@@ -695,6 +710,7 @@ function makeDeps(
         replayed: false,
       };
     },
+    credit: permissiveCreditPort,
     ...overrides,
   };
   return { deps, plans };

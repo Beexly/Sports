@@ -88,6 +88,42 @@ export type {
 } from "./cost-mode";
 export { isRecognizedCostMode, LEGACY_COST_MODE_ALIASES } from "./cost-mode";
 
+// Budget VOCABULARY + pure helpers (§10). The MUTATING reservation engine
+// (reserve/settle/release/confirm/sweep) is deliberately NOT exported here:
+// call sites may never choose their own budget windows (§10.5) — cash holds
+// happen ONLY inside the sealed executor's §9 pipeline. Tests and future
+// control-plane-internal wiring reach the engine through internal.ts.
+export {
+  requiresCashReservation,
+  estimateAttemptPlanWorstCaseUsd,
+  resolveRequiredBudgetWindows,
+  usdToMicros,
+  microsToUsd,
+  toUsdString,
+  CONTROL_PLANE_PRICING_VERSION,
+  KNOWN_PRICING_VERSIONS,
+} from "./budget";
+export type {
+  BudgetScopeKind,
+  ReservationState,
+  BudgetWindowState,
+  ConfirmedSettlementKind,
+  BudgetScopeContext,
+  ResolvedBudgetWindow,
+  AttemptPlanWorstCaseInput,
+  BudgetOverageIncident,
+  OwnerIncidentSink,
+} from "./budget";
+
+// §10.8: the credit-authorization PORT — the contract S5 implements against
+// NOVA-owned persistence. Only the fail-closed port exists in this repo, and
+// it is sealed into the production executor (never exported as a value here).
+export type {
+  CreditAuthorizationPort,
+  CreditAuthorizationRequest,
+  CreditReservation,
+} from "./credit-port";
+
 // Typed errors (§A.4).
 export type { AiErrorCode } from "./errors";
 export {

@@ -1,65 +1,92 @@
 /**
  * AI control-plane budget reservations — the atomic reservation engine
- * (blueprint §C).
+ * (blueprint §C, hardened per directive §10).
  *
- * The one guarantee that makes concurrency safe lives in the DATABASE, not in
- * this file: a reservation is a SINGLE conditional UPDATE
+ * THE CAP INVARIANT IS A DATABASE PROPERTY (§10.2), enforced twice:
  *
- *     UPDATE "ai_budget_windows"
- *     SET "reservedUsd" = "reservedUsd" + $amount, "updatedAt" = now()
- *     WHERE id = $window AND "reservedUsd" + "settledUsd" + $amount <= "capUsd"
- *     RETURNING id;
+ *   1. App/SQL guard — a reservation is a SINGLE conditional UPDATE
  *
- * — never a read-then-write. Postgres row locking serializes concurrent writers
- * on the same window row, and the WHERE guard admits EXACTLY the set of holds
- * that still fit under `capUsd`. So N concurrent `reserve()` calls against a cap
- * that fits M can authorize at most M; the rest see zero rows updated and are
- * refused with `BudgetBlocked`. The post-storm invariant
- * `reservedUsd + settledUsd <= capUsd` therefore holds by construction — a
- * property a mock can never prove, which is why the acceptance test runs against
- * real Postgres.
+ *        UPDATE "ai_budget_windows"
+ *           SET "reservedUsd" = "reservedUsd" + $amount
+ *         WHERE id = $window
+ *           AND "state" = 'ACTIVE'
+ *           AND "reservedUsd" + "provisionalUsd" + "confirmedBilledUsd"
+ *               + $amount <= "capUsd"
  *
- * Multi-scope reservation (a spend counts against its daily AND monthly AND
- * surface caps at once) acquires every window in a FIXED lexicographic id order
- * inside ONE interactive transaction. Fixed ordering is deadlock-free; the
- * transaction makes it all-or-nothing — if ANY window's conditional update
- * matches zero rows the whole transaction rolls back and `BudgetBlocked` is
- * thrown, so no partial holds ever leak.
+ *      — never a read-then-write. Postgres row locking serializes concurrent
+ *      writers; the WHERE guard admits EXACTLY the set of holds that fit.
+ *   2. DB CHECK — the migration adds
+ *      `reserved + provisional + confirmedBilled <= cap OR state =
+ *      'OVERAGE_LOCKED'` plus nonnegativity CHECKs, so even a buggy writer
+ *      cannot produce a silent negative or over-cap row.
  *
- * DORMANT + additive: nothing imports this at runtime yet, and NO cash cost
- * mode is enabled anywhere. `db` is accepted as `unknown` and cast to a small
- * hand-written delegate surface (`BudgetDb`) — NOT the generated PrismaClient
- * type — because the two budget models are founder-applied and their Prisma
- * Client delegates do not exist until `prisma generate` runs against a schema
- * that includes them. This mirrors apps/web/lib/ai-control-plane/ledger.ts.
+ * RESERVATION LIFECYCLE (§10.1):
  *
- * Parameterization: amounts are ALWAYS passed as bound query parameters
- * (`$executeRawUnsafe(sql, ...values)` / `$queryRawUnsafe(sql, ...values)` send
- * values over the wire as typed parameters, never string-interpolated) and cast
- * `::numeric` in-SQL so Decimal arithmetic is exact. No amount is ever
- * concatenated into a SQL string.
+ *   HELD ──────────────┬─ settleProvisional ──► PROVISIONALLY_SETTLED
+ *                      ├─ holdForReconciliation ► RECONCILIATION_HOLD
+ *                      ├─ release ─────────────► RELEASED
+ *                      └─ sweepExpired ────────► EXPIRED (proven-clean only)
+ *   PROVISIONALLY_SETTLED ─ confirmSettlement ► CONFIRMED_SETTLED
+ *   RECONCILIATION_HOLD ─── confirmSettlement ► CONFIRMED_SETTLED
+ *
+ * An AMBIGUOUS-after-dispatch charge moves to RECONCILIATION_HOLD and keeps
+ * its money reserved. The sweeper's state gate skips everything not HELD, and
+ * for stale HELD rows it queries the AUTHORITATIVE attempt ledger — a hold
+ * whose invocation may have dispatched (any attempt DISPATCHED / SUCCEEDED /
+ * TIMEOUT / AMBIGUOUS, or the invocation itself AMBIGUOUS) is converted to
+ * RECONCILIATION_HOLD, never released. No caller-provided exclusion list
+ * exists, because none would be sufficient.
+ *
+ * IDEMPOTENCY (§10.6): reserve is keyed by the DB-unique
+ * (invocationId, windowId, reservationVersion); a duplicate reserve returns
+ * the existing hold. settle/release/hold-for-reconciliation are idempotent
+ * no-ops when the reservation is already in the target state with the same
+ * amounts.
+ *
+ * EXACT DECIMALS (§10.6): every USD amount crosses this module as an exact
+ * decimal STRING (validated, ≤ 6 dp) or an integer count of micro-USD
+ * (bigint). Amounts are bound query parameters cast `::numeric` in-SQL; float
+ * arithmetic never touches money.
+ *
+ * DORMANT + additive: nothing production-reachable enables a cash mode. `db`
+ * is accepted as `unknown` and cast to the raw-SQL `BudgetDb` seam because
+ * the budget models are founder-applied.
  */
 
 import { BudgetBlocked } from "./errors";
 import type { CostMode } from "./cost-mode";
 
-/** Scope dimension a budget window caps. */
+// ─── Vocabulary ───────────────────────────────────────────────────────────────
+
+/** Scope dimension a budget window caps (§10.5). */
 export type BudgetScopeKind =
   | "REQUEST"
   | "DAILY"
   | "MONTHLY"
   | "SURFACE"
   | "PROVIDER_ACCOUNT"
-  | "ENTITY";
+  | "ENTITY"
+  | "EMERGENCY_OVERRIDE";
 
-/** Lifecycle of a single reservation hold. */
-export type ReservationState = "HELD" | "SETTLED" | "RELEASED" | "EXPIRED";
+/** Lifecycle of a single reservation hold (§10.1). */
+export type ReservationState =
+  | "HELD"
+  | "PROVISIONALLY_SETTLED"
+  | "RECONCILIATION_HOLD"
+  | "CONFIRMED_SETTLED"
+  | "RELEASED"
+  | "EXPIRED";
+
+/** Window circuit-breaker state (§10.2). */
+export type BudgetWindowState = "ACTIVE" | "OVERAGE_LOCKED";
+
+/** How a reconciled settlement was covered (§10.7). */
+export type ConfirmedSettlementKind = "BILLED" | "CREDIT";
 
 /**
- * Minimal Prisma-delegate-shaped surface the engine depends on. Any object with
- * these raw-query methods works, including the real generated PrismaClient (and
- * an interactive-transaction `tx`). `$executeRawUnsafe` returns the affected row
- * count; `$queryRawUnsafe` returns the selected rows.
+ * Minimal Prisma-delegate-shaped surface the engine depends on. Any object
+ * with these raw-query methods works, including the real generated
+ * PrismaClient (and an interactive-transaction `tx`).
  */
 export interface BudgetDb {
   $executeRawUnsafe(query: string, ...values: unknown[]): Promise<number>;
@@ -67,32 +94,318 @@ export interface BudgetDb {
   $transaction<T>(fn: (tx: BudgetDb) => Promise<T>): Promise<T>;
 }
 
+// ─── Exact decimal money (§10.6) ──────────────────────────────────────────────
+
+const USD_DECIMAL_PATTERN = /^\d+(\.\d{1,6})?$/;
+const MICROS_PER_USD = 1_000_000n;
+
+/**
+ * Parse a USD amount into exact micro-USD. Accepts a nonnegative decimal
+ * string with ≤ 6 dp, or a number that round-trips exactly at 6 dp (policy
+ * caps are validated to ≤ 6 dp upstream). Anything else fails closed.
+ */
+export function usdToMicros(value: string | number, label = "amount"): bigint {
+  let text: string;
+  if (typeof value === "number") {
+    if (!Number.isFinite(value) || value < 0) {
+      throw new BudgetBlocked(`${label} must be a finite number >= 0.`);
+    }
+    text = value.toFixed(6);
+    // toFixed rounds; refuse a value that does not round-trip exactly.
+    if (Number(text) !== value) {
+      throw new BudgetBlocked(
+        `${label} has more than 6 decimal places (${value}) — exact Decimal ` +
+          "handling refuses lossy amounts.",
+      );
+    }
+  } else {
+    text = value.trim();
+  }
+  if (!USD_DECIMAL_PATTERN.test(text)) {
+    throw new BudgetBlocked(
+      `${label} "${text}" is not a nonnegative decimal with at most 6 decimal places.`,
+    );
+  }
+  const [whole = "0", frac = ""] = text.split(".");
+  return (
+    BigInt(whole) * MICROS_PER_USD + BigInt((frac + "000000").slice(0, 6))
+  );
+}
+
+/** Format exact micro-USD back into a canonical 6-dp decimal string. */
+export function microsToUsd(micros: bigint): string {
+  if (micros < 0n) {
+    throw new BudgetBlocked("negative money amounts are unrepresentable.");
+  }
+  const whole = micros / MICROS_PER_USD;
+  const frac = (micros % MICROS_PER_USD).toString().padStart(6, "0");
+  return `${whole}.${frac}`;
+}
+
+/** Canonicalize any accepted USD representation to the 6-dp string form. */
+export function toUsdString(value: string | number, label = "amount"): string {
+  return microsToUsd(usdToMicros(value, label));
+}
+
+// ─── Lane rule ────────────────────────────────────────────────────────────────
+
+/**
+ * Which cost modes require a CASH reservation before dispatch (blueprint §C
+ * lane rule). ONLY the two billable modes reserve:
+ *
+ *   - BUDGETED_CASH         → reserve (cash within caps)
+ *   - EMERGENCY_RELIABILITY → reserve (owner-enabled cash escalation)
+ *
+ * NO_BILLABLE_EXTERNAL never takes a cash hold (no external billable call
+ * occurs). CONFIRMED_CREDITS_ONLY spends against confirmed credits and is
+ * gated by the CreditAuthorizationPort (§10.8) — which itself reserves
+ * against NOVA-owned credit truth, not this cash engine.
+ */
+export function requiresCashReservation(mode: CostMode): boolean {
+  return mode === "BUDGETED_CASH" || mode === "EMERGENCY_RELIABILITY";
+}
+
+// ─── Worst case of the ENTIRE attempt plan (§10.4) ────────────────────────────
+
+/**
+ * The pricing version this engine estimates under. Reserving against an
+ * un-priceable call is forbidden (fail closed); token-precise per-model
+ * pricing is a later PR — what §10.4 locks in is that the reservation covers
+ * EVERY attempt the authority permits, not just the first.
+ */
+export const CONTROL_PLANE_PRICING_VERSION = "2026-07-22.1" as const;
+
+/** The pricing versions this build recognizes. */
+export const KNOWN_PRICING_VERSIONS: ReadonlySet<string> = new Set([
+  CONTROL_PLANE_PRICING_VERSION,
+]);
+
+/** Input to {@link estimateAttemptPlanWorstCaseUsd}. */
+export interface AttemptPlanWorstCaseInput {
+  /**
+   * The FULL permitted provider-route walk, in fallback order — every attempt
+   * that may incur a charge. "local" carries no vendor cash cost.
+   */
+  readonly routes: readonly string[];
+  /**
+   * Ceiling of a single attempt's vendor cash (input + output + cache + tool
+   * pricing all bounded by the authority's per-attempt cap).
+   */
+  readonly perAttemptCeilingUsd: string | number;
+  /** Pricing version the estimate is computed under. Missing → fail closed. */
+  readonly pricingVersion?: string;
+  /** Recognized pricing versions; defaults to {@link KNOWN_PRICING_VERSIONS}. */
+  readonly knownPricingVersions?: ReadonlySet<string>;
+  /**
+   * Provider-specific per-attempt minimum charges. An attempt's worst case is
+   * max(perAttemptCeilingUsd, minimum).
+   */
+  readonly providerMinimumUsd?: Readonly<Record<string, string | number>>;
+}
+
+/**
+ * Worst-case cash of the ENTIRE attempt plan (§10.4): the sum, over every
+ * permitted billable attempt (retry/fallback count included), of that
+ * attempt's ceiling — covering the worst real-world path, e.g. an ambiguous
+ * (possibly charged) attempt FOLLOWED by a successful fallback: both are in
+ * the sum because both routes are in the plan.
+ *
+ * FAIL CLOSED: a missing or unknown pricing version throws `BudgetBlocked` —
+ * a billable invocation must never hold (and therefore never dispatch)
+ * against an un-priceable call.
+ *
+ * Returns an exact 6-dp decimal string.
+ */
+export function estimateAttemptPlanWorstCaseUsd(
+  input: AttemptPlanWorstCaseInput,
+): string {
+  const version = input.pricingVersion?.trim();
+  if (version === undefined || version === "") {
+    throw new BudgetBlocked(
+      "cannot estimate worst-case cost: no pricing version is set. A billable " +
+        "invocation must fail closed rather than reserve against an un-priceable call.",
+    );
+  }
+  const known = input.knownPricingVersions ?? KNOWN_PRICING_VERSIONS;
+  if (!known.has(version)) {
+    throw new BudgetBlocked(
+      `cannot estimate worst-case cost: pricing version "${version}" is not ` +
+        "recognized. A billable invocation fails closed on unknown pricing.",
+    );
+  }
+  const ceiling = usdToMicros(input.perAttemptCeilingUsd, "perAttemptCeilingUsd");
+  let total = 0n;
+  for (const route of input.routes) {
+    if (route === "local") continue; // no vendor cash cost
+    const rawMin = input.providerMinimumUsd?.[route];
+    const minimum =
+      rawMin === undefined ? 0n : usdToMicros(rawMin, `providerMinimumUsd.${route}`);
+    total += ceiling > minimum ? ceiling : minimum;
+  }
+  return microsToUsd(total);
+}
+
+// ─── Required budget scopes come from policy (§10.5) ──────────────────────────
+
+/** Context the executor resolves scope templates against. Never caller-chosen. */
+export interface BudgetScopeContext {
+  readonly entity: string;
+  readonly surface: string;
+  readonly requestId: string;
+  readonly providerAccount?: string;
+  readonly emergencyOverrideId?: string;
+  /** Clock used to derive the UTC daily/monthly window keys. */
+  readonly now: Date;
+}
+
+/** A window id resolved from a policy template, with its classified kind. */
+export interface ResolvedBudgetWindow {
+  readonly windowId: string;
+  readonly scopeKind: BudgetScopeKind;
+}
+
+const PLACEHOLDER_PATTERN = /\{([a-zA-Z][a-zA-Z0-9]*)\}/g;
+
+function utcDayKey(now: Date): string {
+  return now.toISOString().slice(0, 10);
+}
+function utcMonthKey(now: Date): string {
+  return now.toISOString().slice(0, 7);
+}
+
+function classifyScopeKind(template: string): BudgetScopeKind {
+  const segments = template.split(":");
+  if (segments.includes("daily")) return "DAILY";
+  if (segments.includes("monthly")) return "MONTHLY";
+  const head = segments[0];
+  switch (head) {
+    case "request":
+      return "REQUEST";
+    case "surface":
+      return "SURFACE";
+    case "provider-account":
+      return "PROVIDER_ACCOUNT";
+    case "entity":
+      return "ENTITY";
+    case "emergency":
+    case "emergency-override":
+      return "EMERGENCY_OVERRIDE";
+    default:
+      throw new BudgetBlocked(
+        `budget scope template "${template}" has an unclassifiable scope kind — ` +
+          "failing closed rather than guessing a cap dimension.",
+      );
+  }
+}
+
+/**
+ * Resolve the policy registry's required budget-scope templates into concrete
+ * window ids (§10.5). Call sites never choose window ids: the ONLY inputs are
+ * the registry templates and the executor-derived context.
+ *
+ * FAIL CLOSED:
+ *   - an EMPTY template list under a billable mode is refused by the caller
+ *     (there is no such thing as an unscoped cash spend);
+ *   - an unknown placeholder, or a placeholder whose context value is missing
+ *     (e.g. {providerAccount} with no account resolved), throws BudgetBlocked;
+ *   - time-scoped templates get a deterministic UTC window key appended so
+ *     the SAME scope always maps to the SAME row.
+ */
+export function resolveRequiredBudgetWindows(
+  templates: readonly string[],
+  ctx: BudgetScopeContext,
+): readonly ResolvedBudgetWindow[] {
+  const substitutions: Record<string, string | undefined> = {
+    entity: ctx.entity,
+    surface: ctx.surface,
+    requestId: ctx.requestId,
+    providerAccount: ctx.providerAccount,
+    emergencyOverrideId: ctx.emergencyOverrideId,
+  };
+  const resolved: ResolvedBudgetWindow[] = [];
+  const seen = new Set<string>();
+  for (const template of templates) {
+    const scopeKind = classifyScopeKind(template);
+    const substituted = template.replace(
+      PLACEHOLDER_PATTERN,
+      (_match, name: string) => {
+        const value = substitutions[name];
+        if (value === undefined || value === "") {
+          throw new BudgetBlocked(
+            `budget scope template "${template}" requires "{${name}}" but the ` +
+              "executor context has no value for it — failing closed.",
+          );
+        }
+        return value;
+      },
+    );
+    let windowId = substituted;
+    if (scopeKind === "DAILY") windowId = `${substituted}:${utcDayKey(ctx.now)}`;
+    if (scopeKind === "MONTHLY")
+      windowId = `${substituted}:${utcMonthKey(ctx.now)}`;
+    if (!seen.has(windowId)) {
+      seen.add(windowId);
+      resolved.push({ windowId, scopeKind });
+    }
+  }
+  return resolved;
+}
+
+// ─── Owner incidents (§10.2) ──────────────────────────────────────────────────
+
+/** An overage incident the owner must see. */
+export interface BudgetOverageIncident {
+  readonly kind: "BUDGET_OVERAGE_LOCKED";
+  readonly invocationId: string;
+  readonly windowId: string;
+  readonly reservationId: string;
+  readonly heldUsd: string;
+  readonly actualUsd: string;
+  readonly at: Date;
+}
+
+/**
+ * Non-throwing owner-incident sink. Implementations MUST swallow their own
+ * failures — an incident-report failure never un-settles a real charge.
+ */
+export type OwnerIncidentSink = (
+  incident: BudgetOverageIncident,
+) => Promise<void>;
+
+// ─── Reserve (§10.2/§10.4/§10.6) ──────────────────────────────────────────────
+
 /** Input to {@link reserve}. */
 export interface ReserveInput {
-  /** One or more window ids to hold against. Acquired in fixed lexicographic order. */
+  /** Window ids resolved from policy (§10.5). Acquired in lexicographic order. */
   readonly windowIds: readonly string[];
-  /** Worst-case estimate to hold against EACH window (same spend, many scopes). */
-  readonly amountUsd: number;
-  /** The invocation this hold belongs to. */
+  /** Worst case of the ENTIRE attempt plan, held against EACH window (§10.4). */
+  readonly amountUsd: string | number;
+  /** The invocation this hold belongs to (FK-enforced, §10.6). */
   readonly invocationId: string;
+  /** Idempotency version (§10.6); defaults to 1. */
+  readonly reservationVersion?: number;
   /** Injected clock. */
   readonly now: Date;
-  /** Auto-release safety-net deadline (sweepExpired releases HELD rows past this). */
+  /** Sweep deadline (the sweeper still verifies attempt state, §10.1). */
   readonly expiresAt: Date;
   /** Deterministic id factory (tests inject). Defaults to a random id. */
   readonly idFactory?: () => string;
 }
 
-/** One created hold row (returned per acquired window). */
+/** One hold row (per acquired window). */
 export interface ReservationHandle {
   readonly reservationId: string;
   readonly windowId: string;
+  /** True when this call found the hold already present (idempotent replay). */
+  readonly reused: boolean;
 }
 
-/** Result of a successful {@link reserve}: one handle per window, all HELD. */
+/** Result of a successful {@link reserve}. */
 export interface ReserveResult {
   readonly invocationId: string;
-  readonly amountUsd: number;
+  readonly reservationVersion: number;
+  /** Canonical 6-dp decimal string. */
+  readonly amountUsd: string;
   readonly reservations: readonly ReservationHandle[];
 }
 
@@ -102,85 +415,28 @@ function randomId(): string {
   return `res_${Date.now().toString(36)}_${Math.random().toString(36).slice(2)}`;
 }
 
-/**
- * Which cost modes require a CASH reservation before dispatch (blueprint §C
- * lane rule). ONLY the two billable modes reserve:
- *
- *   - BUDGETED_CASH        → reserve (cash within caps)
- *   - EMERGENCY_RELIABILITY→ reserve (owner-enabled cash escalation)
- *
- * The non-billable lanes NEVER take a cash hold and bypass reservation entirely:
- *
- *   - NO_BILLABLE_EXTERNAL   → no external billable call occurs
- *   - CONFIRMED_CREDITS_ONLY → spend is against confirmed credits, not cash
- *                              (credit accounting is PR-D; no cash cap applies)
- *
- * (A LOCAL / free-allowance provider lane likewise carries no cash cost.)
- */
-export function requiresCashReservation(mode: CostMode): boolean {
-  return mode === "BUDGETED_CASH" || mode === "EMERGENCY_RELIABILITY";
-}
-
-/** Input to {@link estimateWorstCaseUsd}. */
-export interface WorstCaseEstimateInput {
-  /** The task's hard cap on vendor cash — the conservative worst case to hold. */
-  readonly maxVendorCashUsd: number;
-  /** Pricing version the estimate is computed under. Missing → fail closed. */
-  readonly pricingVersion?: string;
-  /**
-   * Recognized pricing versions. When provided, a `pricingVersion` outside this
-   * set fails closed (BudgetBlocked). When omitted, only presence is required.
-   */
-  readonly knownPricingVersions?: ReadonlySet<string>;
+interface ExistingReservationRow {
+  readonly id: string;
+  readonly amountUsd: string;
+  readonly state: string;
 }
 
 /**
- * Worst-case cash estimate to reserve, computed under a pricing version.
+ * Reserve the worst-case amount against every window, all-or-nothing.
  *
- * FAIL CLOSED (blueprint §C): a missing or unknown pricing version throws
- * `BudgetBlocked` — for a BILLABLE mode we must never hold (and therefore never
- * dispatch) against an un-priceable call. Callers invoke this ONLY for billable
- * modes; non-billable lanes skip reservation (see {@link requiresCashReservation}).
+ * Zero-dollar rule (§10.3): a zero (or negative) amount authorizes NOTHING
+ * billable — it is refused outright, never "trivially reserved".
  *
- * The worst case is the task's declared `maxVendorCashUsd` cap: we cannot know
- * the exact token cost pre-call, so we hold the ceiling and settle the remainder
- * back afterward. (Token-precise estimation is a later pricing PR; the fail-closed
- * pricing-version gate is what PR-C locks in.)
- */
-export function estimateWorstCaseUsd(input: WorstCaseEstimateInput): number {
-  const version = input.pricingVersion?.trim();
-  if (version === undefined || version === "") {
-    throw new BudgetBlocked(
-      "cannot estimate worst-case cost: no pricing version is set. A billable " +
-        "invocation must fail closed rather than reserve against an un-priceable call.",
-    );
-  }
-  if (input.knownPricingVersions && !input.knownPricingVersions.has(version)) {
-    throw new BudgetBlocked(
-      `cannot estimate worst-case cost: pricing version "${version}" is not recognized. ` +
-        "A billable invocation fails closed on unknown pricing.",
-    );
-  }
-  if (
-    typeof input.maxVendorCashUsd !== "number" ||
-    !Number.isFinite(input.maxVendorCashUsd) ||
-    input.maxVendorCashUsd < 0
-  ) {
-    throw new BudgetBlocked(
-      "cannot estimate worst-case cost: maxVendorCashUsd must be a finite number >= 0.",
-    );
-  }
-  return input.maxVendorCashUsd;
-}
-
-/**
- * Reserve `amountUsd` against every window in `windowIds`, all-or-nothing.
+ * Idempotent (§10.6): the insert is `ON CONFLICT (invocationId, windowId,
+ * reservationVersion) DO NOTHING`; when the hold already exists in HELD with
+ * the same amount the existing handle is returned and the window is NOT
+ * charged again. A same-key duplicate with a different amount or a
+ * non-HELD state is a hard conflict.
  *
- * Acquires the windows in FIXED lexicographic id order inside one interactive
- * transaction (deadlock-free). Each window is held via the atomic conditional
- * UPDATE; a zero-row result means the cap would be exceeded, which throws
- * `BudgetBlocked` and rolls the whole transaction back (no partial holds leak).
- * On success, one HELD `AiBudgetReservation` row exists per window.
+ * Atomic (§10.2): windows are acquired in fixed lexicographic order inside
+ * ONE transaction; each window is charged by the single conditional UPDATE
+ * (`state = 'ACTIVE'` — an OVERAGE_LOCKED window admits nothing) and a
+ * zero-row result rolls the whole transaction back. No partial holds leak.
  */
 export async function reserve(
   db: unknown,
@@ -188,13 +444,24 @@ export async function reserve(
 ): Promise<ReserveResult> {
   const budgetDb = db as BudgetDb;
   const idFactory = input.idFactory ?? randomId;
-  const amount = input.amountUsd;
-
-  if (typeof amount !== "number" || !Number.isFinite(amount) || amount < 0) {
-    throw new BudgetBlocked("reserve: amountUsd must be a finite number >= 0.");
+  const version = input.reservationVersion ?? 1;
+  if (!Number.isInteger(version) || version < 1) {
+    throw new BudgetBlocked("reserve: reservationVersion must be an integer >= 1.");
   }
+  const amountMicros = usdToMicros(input.amountUsd, "reserve.amountUsd");
+  if (amountMicros <= 0n) {
+    // §10.3: zero dollars authorizes nothing billable.
+    throw new BudgetBlocked(
+      "reserve: a zero-dollar reservation authorizes nothing billable — " +
+        "refusing to create an empty hold that would admit a cash dispatch.",
+    );
+  }
+  const amount = microsToUsd(amountMicros);
   if (input.windowIds.length === 0) {
-    throw new BudgetBlocked("reserve: at least one windowId is required.");
+    throw new BudgetBlocked(
+      "reserve: at least one required budget window is mandatory for a " +
+        "billable invocation (§10.5) — an unscoped cash spend is unrepresentable.",
+    );
   }
 
   // Fixed lexicographic order (dedup) → deadlock-free multi-window acquisition.
@@ -203,211 +470,650 @@ export async function reserve(
   const handles = await budgetDb.$transaction(async (tx) => {
     const created: ReservationHandle[] = [];
     for (const windowId of orderedWindowIds) {
-      // THE atomic guard. One statement; row lock + WHERE admits only holds that
-      // still fit under capUsd. Zero rows updated ⇒ the cap would be exceeded.
+      const reservationId = idFactory();
+      let inserted: number;
+      try {
+        inserted = await tx.$executeRawUnsafe(
+          `INSERT INTO "ai_budget_reservations"
+             ("id", "invocationId", "windowId", "reservationVersion",
+              "amountUsd", "state", "createdAt", "updatedAt", "expiresAt")
+           VALUES ($1, $2, $3, $4, $5::numeric, 'HELD', $6, $6, $7)
+           ON CONFLICT ("invocationId", "windowId", "reservationVersion")
+           DO NOTHING`,
+          reservationId,
+          input.invocationId,
+          windowId,
+          version,
+          amount,
+          input.now,
+          input.expiresAt,
+        );
+      } catch (error) {
+        // FK violation: the window is not provisioned, or the invocation row
+        // does not exist. Both fail closed (§10.5/§10.6).
+        throw new BudgetBlocked(
+          `reserve: cannot hold against window "${windowId}" for invocation ` +
+            `"${input.invocationId}" — the required window or invocation row ` +
+            `does not exist (fail closed): ${String(
+              error instanceof Error ? error.message : error,
+            )}`,
+        );
+      }
+
+      if (inserted === 0) {
+        // §10.6 idempotent replay: the (invocation, window, version) hold
+        // already exists. Reuse it ONLY when it matches exactly.
+        const rows = await tx.$queryRawUnsafe<ExistingReservationRow[]>(
+          `SELECT "id", "amountUsd"::text AS "amountUsd", "state"
+             FROM "ai_budget_reservations"
+            WHERE "invocationId" = $1 AND "windowId" = $2
+              AND "reservationVersion" = $3
+            FOR UPDATE`,
+          input.invocationId,
+          windowId,
+          version,
+        );
+        const existing = rows[0];
+        if (
+          existing &&
+          existing.state === "HELD" &&
+          usdToMicros(existing.amountUsd) === amountMicros
+        ) {
+          created.push({ reservationId: existing.id, windowId, reused: true });
+          continue; // window already charged by the original reserve
+        }
+        throw new BudgetBlocked(
+          `reserve: duplicate reservation key (invocation "${input.invocationId}", ` +
+            `window "${windowId}", version ${version}) exists in state ` +
+            `"${existing?.state ?? "MISSING"}" with a different amount — ` +
+            "refusing a conflicting duplicate reserve.",
+        );
+      }
+
+      // THE atomic cap guard (§10.2). One statement; row lock + WHERE admits
+      // only holds that fit under capUsd on an ACTIVE (not OVERAGE_LOCKED)
+      // window. Zero rows updated ⇒ blocked ⇒ whole transaction rolls back.
       const affected = await tx.$executeRawUnsafe(
         `UPDATE "ai_budget_windows"
-           SET "reservedUsd" = "reservedUsd" + $1::numeric,
-               "updatedAt" = now()
-         WHERE "id" = $2
-           AND "reservedUsd" + "settledUsd" + $1::numeric <= "capUsd"`,
+            SET "reservedUsd" = "reservedUsd" + $1::numeric,
+                "updatedAt" = now()
+          WHERE "id" = $2
+            AND "state" = 'ACTIVE'
+            AND "reservedUsd" + "provisionalUsd" + "confirmedBilledUsd"
+                + $1::numeric <= "capUsd"`,
         amount,
         windowId,
       );
       if (affected !== 1) {
-        // Either the window is missing (0 rows) or the cap would be exceeded.
-        // Throwing rolls the whole transaction back — no window keeps a hold.
         throw new BudgetBlocked(
           `budget window "${windowId}" cannot admit a hold of ${amount} USD ` +
-            `(cap exceeded or window missing); no partial holds were taken.`,
+            "(cap exceeded, window OVERAGE_LOCKED, or window missing); no " +
+            "partial holds were taken.",
         );
       }
-
-      const reservationId = idFactory();
-      await tx.$executeRawUnsafe(
-        `INSERT INTO "ai_budget_reservations"
-           ("id", "invocationId", "windowId", "amountUsd", "state", "createdAt", "expiresAt")
-         VALUES ($1, $2, $3, $4::numeric, 'HELD', $5, $6)`,
-        reservationId,
-        input.invocationId,
-        windowId,
-        amount,
-        input.now,
-        input.expiresAt,
-      );
-      created.push({ reservationId, windowId });
+      created.push({ reservationId, windowId, reused: false });
     }
     return created;
   });
 
-  return { invocationId: input.invocationId, amountUsd: amount, reservations: handles };
+  return {
+    invocationId: input.invocationId,
+    reservationVersion: version,
+    amountUsd: amount,
+    reservations: handles,
+  };
 }
 
-/** Row shape read back when settling/releasing a reservation. */
-interface ReservationRow {
+// ─── Shared row loading ───────────────────────────────────────────────────────
+
+interface InvocationReservationRow {
+  readonly id: string;
   readonly windowId: string;
-  readonly amountUsd: string | number;
+  readonly amountUsd: string;
+  readonly provisionalUsd: string | null;
+  readonly confirmedUsd: string | null;
+  readonly confirmedKind: string | null;
   readonly state: string;
 }
 
-async function loadHeldReservation(
+async function loadInvocationReservations(
   tx: BudgetDb,
-  reservationId: string,
-  op: "settle" | "release",
-): Promise<{ windowId: string; amount: string }> {
-  // Lock the reservation row so a concurrent settle/release/sweep can't race.
-  const rows = await tx.$queryRawUnsafe<ReservationRow[]>(
-    `SELECT "windowId", "amountUsd"::text AS "amountUsd", "state"
+  invocationId: string,
+  reservationVersion: number,
+): Promise<InvocationReservationRow[]> {
+  // Lock the rows so concurrent settle/release/sweep serialize. Window-id
+  // order matches reserve's acquisition order (deadlock-free).
+  return tx.$queryRawUnsafe<InvocationReservationRow[]>(
+    `SELECT "id", "windowId", "amountUsd"::text AS "amountUsd",
+            "provisionalUsd"::text AS "provisionalUsd",
+            "confirmedUsd"::text AS "confirmedUsd",
+            "confirmedKind", "state"
        FROM "ai_budget_reservations"
-      WHERE "id" = $1
+      WHERE "invocationId" = $1 AND "reservationVersion" = $2
+      ORDER BY "windowId"
       FOR UPDATE`,
-    reservationId,
+    invocationId,
+    reservationVersion,
   );
-  const row = rows[0];
-  if (!row) {
-    throw new BudgetBlocked(`${op}: reservation "${reservationId}" does not exist.`);
-  }
-  if (row.state !== "HELD") {
-    // Double-settle / settle-after-release / release-after-settle are guarded:
-    // only a HELD reservation can transition. Idempotency is the caller's job.
-    throw new BudgetBlocked(
-      `${op}: reservation "${reservationId}" is ${row.state}, not HELD; ` +
-        `refusing to ${op} it twice.`,
-    );
-  }
-  return { windowId: row.windowId, amount: String(row.amountUsd) };
+}
+
+function invariantBreach(op: string, detail: string): never {
+  // A guarded window update matched zero rows: the DB state contradicts the
+  // locked reservation rows. Never retried, never silently absorbed.
+  throw new BudgetBlocked(
+    `${op}: budget-window invariant breach (${detail}). The window row ` +
+      "refused a guarded update that the locked reservation rows imply must " +
+      "fit — refusing to continue against inconsistent financial state.",
+  );
+}
+
+// ─── Provisional settlement (§10.2/§10.7) ─────────────────────────────────────
+
+/** Input to {@link settleProvisional}. */
+export interface SettleProvisionalInput {
+  readonly invocationId: string;
+  readonly reservationVersion?: number;
+  /** The provisional ACTUAL spend (never the worst-case cap, §10.7). */
+  readonly actualUsd: string | number;
+  readonly now: Date;
+  /** §10.2: fires on actual > hold. Non-throwing by contract. */
+  readonly incidents?: OwnerIncidentSink;
+}
+
+/** Result of {@link settleProvisional}. */
+export interface SettleProvisionalResult {
+  /** True when the actual exceeded the hold on at least one window (§10.2). */
+  readonly overage: boolean;
+  readonly settledReservationIds: readonly string[];
 }
 
 /**
- * Settle a HELD reservation with the ACTUAL spend (blueprint §C):
- *   - move the reservation HELD → SETTLED (recording `settledUsd = actualUsd`),
- *   - add `actualUsd` to the window's `settledUsd`,
- *   - subtract the originally-held `amountUsd` from the window's `reservedUsd`
- *     (releasing the worst-case remainder).
+ * Provisionally settle every HELD reservation of an invocation with the
+ * ACTUAL spend (§10.7: provisional, NOT confirmed — reconciliation confirms
+ * later):
+ *   - reservation HELD → PROVISIONALLY_SETTLED (provisionalUsd = actual);
+ *   - window: reservedUsd -= hold, provisionalUsd += actual.
  *
- * All three happen in one transaction. Double-settle is guarded: a reservation
- * not in HELD state throws `BudgetBlocked`.
- */
-export async function settle(
-  db: unknown,
-  reservationId: string,
-  actualUsd: number,
-): Promise<void> {
-  const budgetDb = db as BudgetDb;
-  if (typeof actualUsd !== "number" || !Number.isFinite(actualUsd) || actualUsd < 0) {
-    throw new BudgetBlocked("settle: actualUsd must be a finite number >= 0.");
-  }
-  await budgetDb.$transaction(async (tx) => {
-    const { windowId, amount } = await loadHeldReservation(tx, reservationId, "settle");
-    await tx.$executeRawUnsafe(
-      `UPDATE "ai_budget_windows"
-          SET "reservedUsd" = "reservedUsd" - $1::numeric,
-              "settledUsd"  = "settledUsd"  + $2::numeric,
-              "updatedAt"   = now()
-        WHERE "id" = $3`,
-      amount,
-      actualUsd,
-      windowId,
-    );
-    await tx.$executeRawUnsafe(
-      `UPDATE "ai_budget_reservations"
-          SET "state" = 'SETTLED', "settledUsd" = $1::numeric
-        WHERE "id" = $2 AND "state" = 'HELD'`,
-      actualUsd,
-      reservationId,
-    );
-  });
-}
-
-/**
- * Release a HELD reservation without a charge (blueprint §C): move HELD →
- * RELEASED and subtract the held `amountUsd` from the window's `reservedUsd`.
- * Used when the invocation failed / was blocked before it spent. Guarded the
- * same way as {@link settle} — only a HELD reservation can be released.
- */
-export async function release(db: unknown, reservationId: string): Promise<void> {
-  const budgetDb = db as BudgetDb;
-  await budgetDb.$transaction(async (tx) => {
-    const { windowId, amount } = await loadHeldReservation(tx, reservationId, "release");
-    await tx.$executeRawUnsafe(
-      `UPDATE "ai_budget_windows"
-          SET "reservedUsd" = "reservedUsd" - $1::numeric,
-              "updatedAt"   = now()
-        WHERE "id" = $2`,
-      amount,
-      windowId,
-    );
-    await tx.$executeRawUnsafe(
-      `UPDATE "ai_budget_reservations"
-          SET "state" = 'RELEASED'
-        WHERE "id" = $1 AND "state" = 'HELD'`,
-      reservationId,
-    );
-  });
-}
-
-/** Summary of a {@link sweepExpired} pass. */
-export interface SweepResult {
-  readonly releasedReservationIds: readonly string[];
-}
-
-/**
- * Safety-net sweep: RELEASE stale HELD reservations whose `expiresAt` has passed
- * (blueprint §C). Each released hold subtracts its `amountUsd` from its window's
- * `reservedUsd`, so an abandoned invocation never permanently sequesters budget.
+ * OVERAGE (§10.2): when actual > hold the REAL charge is preserved (the full
+ * actual lands in provisionalUsd — never truncated to fit the cap), the
+ * window moves to OVERAGE_LOCKED in the SAME statement (blocking every
+ * further reserve — the circuit breaker), and the owner-incident sink fires
+ * after commit. Silent over-cap state is impossible: the DB CHECK admits
+ * over-cap ONLY together with OVERAGE_LOCKED.
  *
- * AMBIGUOUS exclusion (blueprint §C): a reservation whose invocation attempt is
- * AMBIGUOUS (we cannot prove whether the vendor charged us) must NEVER be
- * auto-released — releasing it could free budget for a spend that actually
- * happened, i.e. a double-spend. It holds until a receipt reconciles it. PR-C
- * has no reconciliation yet, so the mechanism is a STATE gate: the sweep only
- * touches rows still in `HELD`. When an attempt is AMBIGUOUS, its reservation is
- * transitioned OUT of `HELD` into a dedicated non-swept state by the (later)
- * reconciliation PR; a caller that already knows an invocation is ambiguous can
- * pass its ids in `excludeInvocationIds` to keep those holds even while HELD.
+ * Idempotent (§10.6): reservations already PROVISIONALLY_SETTLED with the
+ * same actual are skipped; a different actual is a hard conflict.
  */
-export async function sweepExpired(
+export async function settleProvisional(
   db: unknown,
-  now: Date,
-  opts: { readonly excludeInvocationIds?: readonly string[] } = {},
-): Promise<SweepResult> {
+  input: SettleProvisionalInput,
+): Promise<SettleProvisionalResult> {
   const budgetDb = db as BudgetDb;
-  const excluded = new Set(opts.excludeInvocationIds ?? []);
+  const version = input.reservationVersion ?? 1;
+  const actualMicros = usdToMicros(input.actualUsd, "settle.actualUsd");
+  const actual = microsToUsd(actualMicros);
 
-  return budgetDb.$transaction(async (tx) => {
-    // Lock the candidate stale HELD rows. The AMBIGUOUS exclusion is applied in
-    // application code (below) rather than in SQL so no array parameter is bound
-    // — a reservation whose invocation is AMBIGUOUS is skipped, never released.
-    const staleAll = await tx.$queryRawUnsafe<
-      Array<{ id: string; windowId: string; amountUsd: string | number; invocationId: string }>
-    >(
-      `SELECT "id", "windowId", "amountUsd"::text AS "amountUsd", "invocationId"
-         FROM "ai_budget_reservations"
-        WHERE "state" = 'HELD'
-          AND "expiresAt" <= $1
-        FOR UPDATE`,
-      now,
-    );
-    const stale = staleAll.filter((r) => !excluded.has(r.invocationId));
+  const incidents: BudgetOverageIncident[] = [];
+  const settledIds: string[] = [];
 
-    const releasedReservationIds: string[] = [];
-    for (const row of stale) {
-      await tx.$executeRawUnsafe(
+  await budgetDb.$transaction(async (tx) => {
+    const rows = await loadInvocationReservations(tx, input.invocationId, version);
+    if (rows.length === 0) {
+      throw new BudgetBlocked(
+        `settle: no reservation exists for invocation "${input.invocationId}" ` +
+          `version ${version}.`,
+      );
+    }
+    for (const row of rows) {
+      if (row.state === "PROVISIONALLY_SETTLED") {
+        if (
+          row.provisionalUsd !== null &&
+          usdToMicros(row.provisionalUsd) === actualMicros
+        ) {
+          continue; // idempotent replay
+        }
+        throw new BudgetBlocked(
+          `settle: reservation "${row.id}" is already provisionally settled ` +
+            `with a DIFFERENT amount (${row.provisionalUsd} ≠ ${actual}) — ` +
+            "refusing a conflicting duplicate settle.",
+        );
+      }
+      if (row.state !== "HELD") {
+        throw new BudgetBlocked(
+          `settle: reservation "${row.id}" is ${row.state}, not HELD — only a ` +
+            "held reservation can be provisionally settled.",
+        );
+      }
+      const heldMicros = usdToMicros(row.amountUsd);
+      const overage = actualMicros > heldMicros;
+      // §10.2 app guard + conditional SQL + (backstop) DB CHECK, one statement.
+      const affected = await tx.$executeRawUnsafe(
         `UPDATE "ai_budget_windows"
             SET "reservedUsd" = "reservedUsd" - $1::numeric,
-                "updatedAt"   = now()
+                "provisionalUsd" = "provisionalUsd" + $2::numeric,
+                "state" = CASE WHEN $3 THEN 'OVERAGE_LOCKED' ELSE "state" END,
+                "updatedAt" = now()
+          WHERE "id" = $4
+            AND "reservedUsd" >= $1::numeric`,
+        row.amountUsd,
+        actual,
+        overage,
+        row.windowId,
+      );
+      if (affected !== 1) {
+        invariantBreach(
+          "settle",
+          `window "${row.windowId}" reservedUsd < held ${row.amountUsd}`,
+        );
+      }
+      await tx.$executeRawUnsafe(
+        `UPDATE "ai_budget_reservations"
+            SET "state" = 'PROVISIONALLY_SETTLED',
+                "provisionalUsd" = $1::numeric,
+                "overage" = $2,
+                "updatedAt" = $3
+          WHERE "id" = $4 AND "state" = 'HELD'`,
+        actual,
+        overage,
+        input.now,
+        row.id,
+      );
+      settledIds.push(row.id);
+      if (overage) {
+        incidents.push({
+          kind: "BUDGET_OVERAGE_LOCKED",
+          invocationId: input.invocationId,
+          windowId: row.windowId,
+          reservationId: row.id,
+          heldUsd: row.amountUsd,
+          actualUsd: actual,
+          at: input.now,
+        });
+      }
+    }
+  });
+
+  // Owner incidents AFTER commit — the lock + preserved charge are already
+  // durable; a sink failure never un-settles the real charge.
+  if (input.incidents) {
+    for (const incident of incidents) {
+      try {
+        await input.incidents(incident);
+      } catch {
+        // Non-throwing by contract.
+      }
+    }
+  }
+
+  return { overage: incidents.length > 0, settledReservationIds: settledIds };
+}
+
+// ─── Release (§10.1/§10.6) ────────────────────────────────────────────────────
+
+/** Input to {@link release} / {@link holdForReconciliation}. */
+export interface ReservationSelector {
+  readonly invocationId: string;
+  readonly reservationVersion?: number;
+  readonly now: Date;
+}
+
+/**
+ * Release every HELD reservation of an invocation without a charge (§10.1:
+ * FAILED_NO_CHARGE / pre-dispatch blocks). Window: reservedUsd -= hold,
+ * releasedUsd += hold. Idempotent: already-RELEASED/EXPIRED rows are skipped;
+ * settled or reconciliation-held rows are a hard conflict (money that may
+ * have moved is never "released").
+ */
+export async function release(
+  db: unknown,
+  input: ReservationSelector,
+): Promise<void> {
+  const budgetDb = db as BudgetDb;
+  const version = input.reservationVersion ?? 1;
+  await budgetDb.$transaction(async (tx) => {
+    const rows = await loadInvocationReservations(tx, input.invocationId, version);
+    if (rows.length === 0) {
+      throw new BudgetBlocked(
+        `release: no reservation exists for invocation "${input.invocationId}" ` +
+          `version ${version}.`,
+      );
+    }
+    for (const row of rows) {
+      if (row.state === "RELEASED" || row.state === "EXPIRED") continue; // idempotent
+      if (row.state !== "HELD") {
+        throw new BudgetBlocked(
+          `release: reservation "${row.id}" is ${row.state} — a settled or ` +
+            "reconciliation-held reservation can never be released without " +
+            "authoritative reconciliation.",
+        );
+      }
+      const affected = await tx.$executeRawUnsafe(
+        `UPDATE "ai_budget_windows"
+            SET "reservedUsd" = "reservedUsd" - $1::numeric,
+                "releasedUsd" = "releasedUsd" + $1::numeric,
+                "updatedAt" = now()
+          WHERE "id" = $2
+            AND "reservedUsd" >= $1::numeric`,
+        row.amountUsd,
+        row.windowId,
+      );
+      if (affected !== 1) {
+        invariantBreach(
+          "release",
+          `window "${row.windowId}" reservedUsd < held ${row.amountUsd}`,
+        );
+      }
+      await tx.$executeRawUnsafe(
+        `UPDATE "ai_budget_reservations"
+            SET "state" = 'RELEASED', "updatedAt" = $1
+          WHERE "id" = $2 AND "state" = 'HELD'`,
+        input.now,
+        row.id,
+      );
+    }
+  });
+}
+
+// ─── Reconciliation hold (§10.1) ──────────────────────────────────────────────
+
+/**
+ * Move every HELD reservation of an invocation to RECONCILIATION_HOLD
+ * (§10.1: AMBIGUOUS_AFTER_DISPATCH). The money STAYS in reservedUsd (the cap
+ * keeps counting it); disputedUsd mirrors it for §10.7 reporting. The sweeper
+ * can never touch it — only authoritative reconciliation
+ * ({@link confirmSettlement}) resolves it. Idempotent.
+ */
+export async function holdForReconciliation(
+  db: unknown,
+  input: ReservationSelector,
+): Promise<void> {
+  const budgetDb = db as BudgetDb;
+  const version = input.reservationVersion ?? 1;
+  await budgetDb.$transaction(async (tx) => {
+    const rows = await loadInvocationReservations(tx, input.invocationId, version);
+    if (rows.length === 0) {
+      throw new BudgetBlocked(
+        `holdForReconciliation: no reservation exists for invocation ` +
+          `"${input.invocationId}" version ${version}.`,
+      );
+    }
+    for (const row of rows) {
+      if (row.state === "RECONCILIATION_HOLD") continue; // idempotent
+      if (row.state !== "HELD") {
+        throw new BudgetBlocked(
+          `holdForReconciliation: reservation "${row.id}" is ${row.state}, ` +
+            "not HELD.",
+        );
+      }
+      await tx.$executeRawUnsafe(
+        `UPDATE "ai_budget_windows"
+            SET "disputedUsd" = "disputedUsd" + $1::numeric,
+                "updatedAt" = now()
           WHERE "id" = $2`,
-        String(row.amountUsd),
+        row.amountUsd,
         row.windowId,
       );
       await tx.$executeRawUnsafe(
         `UPDATE "ai_budget_reservations"
-            SET "state" = 'EXPIRED'
-          WHERE "id" = $1 AND "state" = 'HELD'`,
+            SET "state" = 'RECONCILIATION_HOLD', "updatedAt" = $1
+          WHERE "id" = $2 AND "state" = 'HELD'`,
+        input.now,
         row.id,
       );
-      releasedReservationIds.push(row.id);
     }
-    return { releasedReservationIds };
+  });
+}
+
+// ─── Confirmed settlement (§10.7 — driven by later reconciliation PRs) ────────
+
+/** Input to {@link confirmSettlement}. */
+export interface ConfirmSettlementInput {
+  readonly invocationId: string;
+  readonly reservationVersion?: number;
+  /** The reconciled amount from the authoritative receipt. */
+  readonly confirmedUsd: string | number;
+  /** BILLED cash or covered by CREDIT (§10.7 — tracked separately). */
+  readonly kind: ConfirmedSettlementKind;
+  readonly now: Date;
+}
+
+/**
+ * Confirm settlement from an authoritative receipt: PROVISIONALLY_SETTLED or
+ * RECONCILIATION_HOLD → CONFIRMED_SETTLED. Window movement:
+ *   - from PROVISIONALLY_SETTLED: provisionalUsd -= provisional,
+ *     confirmed{Billed,Credit}Usd += confirmed;
+ *   - from RECONCILIATION_HOLD: reservedUsd -= hold, disputedUsd -= hold,
+ *     confirmed{Billed,Credit}Usd += confirmed.
+ * Idempotent on an identical confirmed amount + kind. The DB cap CHECK is the
+ * backstop; a confirmation that would exceed the cap surfaces as a hard
+ * error, never a silent write.
+ */
+export async function confirmSettlement(
+  db: unknown,
+  input: ConfirmSettlementInput,
+): Promise<void> {
+  const budgetDb = db as BudgetDb;
+  const version = input.reservationVersion ?? 1;
+  const confirmedMicros = usdToMicros(input.confirmedUsd, "confirm.confirmedUsd");
+  const confirmed = microsToUsd(confirmedMicros);
+  const confirmedColumn =
+    input.kind === "BILLED" ? "confirmedBilledUsd" : "confirmedCreditUsd";
+
+  await budgetDb.$transaction(async (tx) => {
+    const rows = await loadInvocationReservations(tx, input.invocationId, version);
+    if (rows.length === 0) {
+      throw new BudgetBlocked(
+        `confirm: no reservation exists for invocation "${input.invocationId}" ` +
+          `version ${version}.`,
+      );
+    }
+    for (const row of rows) {
+      if (row.state === "CONFIRMED_SETTLED") {
+        if (
+          row.confirmedUsd !== null &&
+          usdToMicros(row.confirmedUsd) === confirmedMicros &&
+          row.confirmedKind === input.kind
+        ) {
+          continue; // idempotent replay
+        }
+        throw new BudgetBlocked(
+          `confirm: reservation "${row.id}" is already confirmed with a ` +
+            "different amount or kind — refusing a conflicting duplicate.",
+        );
+      }
+      if (row.state === "PROVISIONALLY_SETTLED") {
+        const provisional = row.provisionalUsd ?? "0";
+        const affected = await tx.$executeRawUnsafe(
+          `UPDATE "ai_budget_windows"
+              SET "provisionalUsd" = "provisionalUsd" - $1::numeric,
+                  "${confirmedColumn}" = "${confirmedColumn}" + $2::numeric,
+                  "updatedAt" = now()
+            WHERE "id" = $3
+              AND "provisionalUsd" >= $1::numeric`,
+          provisional,
+          confirmed,
+          row.windowId,
+        );
+        if (affected !== 1) {
+          invariantBreach(
+            "confirm",
+            `window "${row.windowId}" provisionalUsd < ${provisional}`,
+          );
+        }
+      } else if (row.state === "RECONCILIATION_HOLD") {
+        const affected = await tx.$executeRawUnsafe(
+          `UPDATE "ai_budget_windows"
+              SET "reservedUsd" = "reservedUsd" - $1::numeric,
+                  "disputedUsd" = "disputedUsd" - $1::numeric,
+                  "${confirmedColumn}" = "${confirmedColumn}" + $2::numeric,
+                  "updatedAt" = now()
+            WHERE "id" = $3
+              AND "reservedUsd" >= $1::numeric
+              AND "disputedUsd" >= $1::numeric`,
+          row.amountUsd,
+          confirmed,
+          row.windowId,
+        );
+        if (affected !== 1) {
+          invariantBreach(
+            "confirm",
+            `window "${row.windowId}" reserved/disputed < held ${row.amountUsd}`,
+          );
+        }
+      } else {
+        throw new BudgetBlocked(
+          `confirm: reservation "${row.id}" is ${row.state} — only a ` +
+            "provisionally settled or reconciliation-held reservation can be " +
+            "confirmed.",
+        );
+      }
+      await tx.$executeRawUnsafe(
+        `UPDATE "ai_budget_reservations"
+            SET "state" = 'CONFIRMED_SETTLED',
+                "confirmedUsd" = $1::numeric,
+                "confirmedKind" = $2,
+                "updatedAt" = $3
+          WHERE "id" = $4
+            AND "state" IN ('PROVISIONALLY_SETTLED', 'RECONCILIATION_HOLD')`,
+        confirmed,
+        input.kind,
+        input.now,
+        row.id,
+      );
+    }
+  });
+}
+
+// ─── The sweeper (§10.1) ──────────────────────────────────────────────────────
+
+/** Summary of a {@link sweepExpired} pass. */
+export interface SweepResult {
+  /** Stale holds proven clean (no dispatch could have charged) — released. */
+  readonly expiredReservationIds: readonly string[];
+  /** Stale holds whose invocation may have charged — moved to RECONCILIATION_HOLD. */
+  readonly movedToReconciliationIds: readonly string[];
+}
+
+interface StaleHoldRow {
+  readonly id: string;
+  readonly windowId: string;
+  readonly invocationId: string;
+  readonly amountUsd: string;
+}
+
+interface AttemptEvidenceRow {
+  readonly invocationStatus: string | null;
+  readonly possiblyCharged: boolean;
+}
+
+/**
+ * Safety-net sweep for stale HELD reservations past `expiresAt` (§10.1).
+ *
+ * THE SWEEPER QUERIES THE AUTHORITATIVE ATTEMPT LEDGER — no caller-provided
+ * exclusion list exists, because none would be sufficient. For each stale
+ * hold it checks, inside the same transaction:
+ *
+ *   - the invocation's own status, and
+ *   - whether ANY attempt row is DISPATCHED (in-flight or crashed
+ *     mid-dispatch), SUCCEEDED (charged), TIMEOUT or AMBIGUOUS (possibly
+ *     charged).
+ *
+ * If the invocation is AMBIGUOUS, missing, or any attempt possibly charged,
+ * the hold is converted to RECONCILIATION_HOLD (money stays reserved) — the
+ * sweeper CANNOT release it, and neither can any later sweep (the state gate
+ * only selects HELD). Only a hold whose ledger proves no charge could exist
+ * (no dispatched attempt at all, or every attempt failed cleanly before
+ * charging) is expired and its money released.
+ *
+ * This is also the §10.9 crash-recovery path: a crash between reserve and
+ * dispatch leaves a clean ledger → the hold expires and frees the budget; a
+ * crash between dispatch and settle leaves a DISPATCHED/SUCCEEDED attempt →
+ * the hold converts to RECONCILIATION_HOLD and the money stays locked until
+ * reconciliation.
+ */
+export async function sweepExpired(db: unknown, now: Date): Promise<SweepResult> {
+  const budgetDb = db as BudgetDb;
+
+  return budgetDb.$transaction(async (tx) => {
+    const stale = await tx.$queryRawUnsafe<StaleHoldRow[]>(
+      `SELECT "id", "windowId", "invocationId", "amountUsd"::text AS "amountUsd"
+         FROM "ai_budget_reservations"
+        WHERE "state" = 'HELD'
+          AND "expiresAt" <= $1
+        ORDER BY "windowId"
+        FOR UPDATE`,
+      now,
+    );
+
+    const expiredReservationIds: string[] = [];
+    const movedToReconciliationIds: string[] = [];
+
+    for (const row of stale) {
+      // AUTHORITATIVE attempt-state query (§10.1) — never a caller list.
+      const evidence = await tx.$queryRawUnsafe<AttemptEvidenceRow[]>(
+        `SELECT
+           (SELECT i."status" FROM "ai_invocations" i
+             WHERE i."id" = $1) AS "invocationStatus",
+           EXISTS (
+             SELECT 1 FROM "ai_attempts" a
+              WHERE a."invocationId" = $1
+                AND a."status" IN ('DISPATCHED', 'SUCCEEDED', 'TIMEOUT', 'AMBIGUOUS')
+           ) AS "possiblyCharged"`,
+        row.invocationId,
+      );
+      const verdict = evidence[0];
+      const mustHold =
+        verdict === undefined ||
+        verdict.invocationStatus === null || // missing evidence → fail closed
+        verdict.invocationStatus === "AMBIGUOUS" ||
+        verdict.possiblyCharged;
+
+      if (mustHold) {
+        await tx.$executeRawUnsafe(
+          `UPDATE "ai_budget_windows"
+              SET "disputedUsd" = "disputedUsd" + $1::numeric,
+                  "updatedAt" = now()
+            WHERE "id" = $2`,
+          row.amountUsd,
+          row.windowId,
+        );
+        await tx.$executeRawUnsafe(
+          `UPDATE "ai_budget_reservations"
+              SET "state" = 'RECONCILIATION_HOLD', "updatedAt" = $1
+            WHERE "id" = $2 AND "state" = 'HELD'`,
+          now,
+          row.id,
+        );
+        movedToReconciliationIds.push(row.id);
+        continue;
+      }
+
+      const affected = await tx.$executeRawUnsafe(
+        `UPDATE "ai_budget_windows"
+            SET "reservedUsd" = "reservedUsd" - $1::numeric,
+                "releasedUsd" = "releasedUsd" + $1::numeric,
+                "updatedAt" = now()
+          WHERE "id" = $2
+            AND "reservedUsd" >= $1::numeric`,
+        row.amountUsd,
+        row.windowId,
+      );
+      if (affected !== 1) {
+        invariantBreach(
+          "sweep",
+          `window "${row.windowId}" reservedUsd < held ${row.amountUsd}`,
+        );
+      }
+      await tx.$executeRawUnsafe(
+        `UPDATE "ai_budget_reservations"
+            SET "state" = 'EXPIRED', "updatedAt" = $1
+          WHERE "id" = $2 AND "state" = 'HELD'`,
+        now,
+        row.id,
+      );
+      expiredReservationIds.push(row.id);
+    }
+
+    return { expiredReservationIds, movedToReconciliationIds };
   });
 }

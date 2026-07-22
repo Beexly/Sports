@@ -56,6 +56,7 @@ import {
   type ControlSqlClient,
   type ProviderDispatchFn,
   type SealedAiExecutorDependencies,
+  failClosedCreditAuthorizationPort,
 } from "@/lib/ai-control-plane/internal";
 import { getTaskPolicy } from "@/lib/ai-control-plane/policy-registry";
 import { resolveEffectiveAuthority } from "@/lib/ai-control-plane/validation";
@@ -830,6 +831,9 @@ describe("§9.6 blocked decisions become durable non-dispatchable incidents", ()
       now: () => NOW,
       policies: { getTaskPolicy },
       receipts: failClosedReceiptStore,
+      // §10.8: the fail-closed port — no test in this suite reaches a
+      // credit-funded dispatch, and if one did it would (correctly) block.
+      credit: failClosedCreditAuthorizationPort,
       recordBlocked: async (record) => {
         await mem.recordBlockedInvocation({
           invocationId: `blocked-${record.request.requestId}`,

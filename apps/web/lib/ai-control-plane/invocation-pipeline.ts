@@ -47,6 +47,19 @@ import type { AuthoritativeControlStore } from "./control-store";
 import type { ObservabilitySink } from "./observability";
 import type { ProviderDispatchFn, ProviderDispatchPayload } from "./dispatch";
 import type { ProviderRouteId } from "./contracts";
+import type { OwnerIncidentSink } from "./budget";
+import {
+  CONTROL_PLANE_PRICING_VERSION,
+  estimateAttemptPlanWorstCaseUsd,
+  holdForReconciliation,
+  release as releaseBudgetHold,
+  requiresCashReservation,
+  reserve as reserveBudgetHold,
+  resolveRequiredBudgetWindows,
+  settleProvisional,
+  toUsdString,
+  usdToMicros,
+} from "./budget";
 
 // ─── Canonical fingerprint (§9.2) ─────────────────────────────────────────────
 
@@ -155,6 +168,19 @@ export function deriveProviderPayload(
 
 // ─── The pipeline ─────────────────────────────────────────────────────────────
 
+/**
+ * Budget seam (§10): the raw-SQL database the reservation engine writes to,
+ * plus the non-throwing owner-incident sink for §10.2 overages. When a plan's
+ * cost mode requires a cash reservation and this seam is absent, the pipeline
+ * FAILS CLOSED — a billable dispatch without a budget store is impossible.
+ */
+export interface BudgetSeam {
+  readonly db: unknown;
+  readonly incidents?: OwnerIncidentSink;
+  /** Hold TTL before the attempt-state-aware sweeper may act; default 15 min. */
+  readonly holdTtlMs?: number;
+}
+
 export interface LedgeredDispatchDeps {
   readonly store: AuthoritativeControlStore;
   /** Built fresh per invocation so DEGRADED state never leaks across calls. */
@@ -165,9 +191,12 @@ export interface LedgeredDispatchDeps {
   readonly idFactory?: () => string;
   /** Claim lease duration; default 120s. */
   readonly leaseMs?: number;
+  /** §10 budget reservations. Absent + billable mode = fail closed. */
+  readonly budget?: BudgetSeam;
 }
 
 const DEFAULT_LEASE_MS = 120_000;
+const DEFAULT_HOLD_TTL_MS = 15 * 60_000;
 
 function replayTerminal(
   outcome: Extract<
@@ -291,6 +320,84 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
       fundingLabel: plan.fundingLabel,
     });
 
+    // ── §10 budget reservation: the worst case of the ENTIRE attempt plan
+    // (§10.4), against every policy-required window (§10.5), BEFORE any
+    // attempt row exists. A failure here dispatches NOTHING and finalizes the
+    // invocation BUDGET_BLOCKED.
+    let budgetHeld = false;
+    const finalizeBudgetBlocked = async (): Promise<void> => {
+      try {
+        await deps.store.finalizeFailure({
+          invocationId,
+          ownerToken,
+          status: "BUDGET_BLOCKED",
+          now: deps.now(),
+        });
+      } catch (error) {
+        observability.markDegraded(
+          `finalizeFailure(BUDGET_BLOCKED) failed for invocation ${invocationId}`,
+          error,
+        );
+      }
+    };
+    if (requiresCashReservation(plan.costMode)) {
+      try {
+        if (deps.budget === undefined) {
+          throw new BudgetBlocked(
+            "billable cost mode with no budget store wired — a cash dispatch " +
+              "without an atomic reservation is impossible (§10). Failing closed.",
+          );
+        }
+        // §10.3: a zero-dollar cap authorizes NOTHING billable.
+        if (usdToMicros(plan.maxVendorCashUsd, "maxVendorCashUsd") <= 0n) {
+          throw new BudgetBlocked(
+            "maxVendorCashUsd = 0 authorizes no billable provider call (§10.3) " +
+              "— a zero cap means no cash authorization exists at all.",
+          );
+        }
+        // §10.5: required windows come from the POLICY REGISTRY, never a
+        // call-site-chosen window id. Missing/empty scopes fail closed.
+        const windows = resolveRequiredBudgetWindows(
+          authority.requiredBudgetScopes,
+          {
+            entity: request.entity,
+            surface: authority.surface,
+            requestId: request.requestId,
+            now: deps.now(),
+          },
+        );
+        if (windows.length === 0) {
+          throw new BudgetBlocked(
+            `task class "${request.taskClass}" grants no required budget ` +
+              "scopes — an unscoped cash spend is unrepresentable (§10.5).",
+          );
+        }
+        // §10.4: reserve the worst case of EVERY permitted attempt.
+        const worstCaseUsd = estimateAttemptPlanWorstCaseUsd({
+          routes: authority.permittedProviderRoutes,
+          perAttemptCeilingUsd: plan.maxVendorCashUsd,
+          pricingVersion: CONTROL_PLANE_PRICING_VERSION,
+        });
+        const reserveNow = deps.now();
+        await reserveBudgetHold(deps.budget.db, {
+          windowIds: windows.map((w) => w.windowId),
+          amountUsd: worstCaseUsd,
+          invocationId,
+          reservationVersion: 1,
+          now: reserveNow,
+          expiresAt: new Date(
+            reserveNow.getTime() +
+              (deps.budget.holdTtlMs ?? DEFAULT_HOLD_TTL_MS),
+          ),
+          idFactory,
+        });
+        budgetHeld = true;
+      } catch (error) {
+        await finalizeBudgetBlocked();
+        throw error;
+      }
+    }
+
     // ── Provider walk: control-plane-owned fallback order (§9.3).
     const summaries: AiAttemptSummary[] = [];
     const routes = authority.permittedProviderRoutes;
@@ -364,6 +471,28 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
           });
           telemetryStatus = "DEGRADED";
         }
+        // §10.7: PROVISIONAL settlement of the actual (bounded by the
+        // per-attempt ceiling) — never reported as confirmed; the held
+        // remainder for the untaken fallback attempts is freed. A budget-store
+        // hiccup after a successful PAID call never converts the success into
+        // an error: the hold stays and the attempt-state-aware sweeper
+        // preserves it as a RECONCILIATION_HOLD (§10.1) instead of releasing.
+        if (budgetHeld && deps.budget !== undefined) {
+          try {
+            await settleProvisional(deps.budget.db, {
+              invocationId,
+              actualUsd: toUsdString(plan.maxVendorCashUsd, "maxVendorCashUsd"),
+              now: deps.now(),
+              incidents: deps.budget.incidents,
+            });
+          } catch (error) {
+            observability.markDegraded(
+              `budget settleProvisional failed for invocation ${invocationId}`,
+              error,
+            );
+            telemetryStatus = "DEGRADED";
+          }
+        }
         summaries.push({
           ordinal,
           providerRequested: route,
@@ -406,6 +535,24 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
       lastErrorCode = outcome.errorCode;
 
       if (outcome.kind === "TIMEOUT" || outcome.kind === "AMBIGUOUS") {
+        // §10.1: AMBIGUOUS_AFTER_DISPATCH retains the hold — the money moves
+        // to RECONCILIATION_HOLD (unsweepable; resolved only by authoritative
+        // reconciliation). If even this transition fails, the hold simply
+        // stays HELD and the sweeper's attempt-state query converts it —
+        // there is NO path on which an ambiguous charge frees its budget.
+        if (budgetHeld && deps.budget !== undefined) {
+          try {
+            await holdForReconciliation(deps.budget.db, {
+              invocationId,
+              now: deps.now(),
+            });
+          } catch (error) {
+            observability.markDegraded(
+              `budget holdForReconciliation failed for invocation ${invocationId}`,
+              error,
+            );
+          }
+        }
         // We cannot prove the vendor did not charge — never spend the same
         // funds on another route. Finalize AMBIGUOUS and stop.
         await deps.store.finalizeFailure({
@@ -422,7 +569,23 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
       }
     }
 
-    // Every permitted route failed cleanly (no charge proven or possible).
+    // Every permitted route failed cleanly (no charge proven or possible) —
+    // §10.1 FAILED_NO_CHARGE: release the entire hold. If the release itself
+    // fails, the stale hold is recovered by the sweeper AFTER it re-proves
+    // the clean ledger (§10.9 crash recovery) — never by trusting this caller.
+    if (budgetHeld && deps.budget !== undefined) {
+      try {
+        await releaseBudgetHold(deps.budget.db, {
+          invocationId,
+          now: deps.now(),
+        });
+      } catch (error) {
+        observability.markDegraded(
+          `budget release failed for invocation ${invocationId}`,
+          error,
+        );
+      }
+    }
     try {
       await deps.store.finalizeFailure({
         invocationId,
