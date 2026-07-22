@@ -56,6 +56,16 @@ export type CreditSnapshotReconciliationState =
  * Immutable observation: `observedAt` is when the provider-side fact was
  * seen, `recordedAt` when NOVA persisted it, and the snapshot stays
  * admissible only within `freshnessHorizonMs` of `observedAt`.
+ *
+ * SOLE CANONICAL SNAPSHOT CONTRACT. This interface — exported, with its
+ * validators, through the S1 barrel (`lib/opportunity-engine/index.ts`) — is
+ * the ONE definition of a credit-grant snapshot. Known consumer:
+ * `feat/ai-control-plane-credit-admission` (PR-D), which must IMPORT this
+ * type and its validators from the S1 index and must never redefine,
+ * re-declare, or structurally clone them. S3's evidence/reconciler
+ * implementation writes snapshots that must validate against the shared
+ * conformance fixtures in
+ * `fixtures/credit-grant-snapshot.conformance.json`.
  */
 export interface CreditGrantSnapshot {
   /** Credit program the grant came from (e.g. "gcp-startup-credits"). */

@@ -98,10 +98,16 @@ export type MoneyState =
  * Mapping to `MoneyState` (documented invariant, enforced by
  * `moneyStateSupportsCreditGrant()` in `lifecycle.ts`):
  * - A grant existing in ANY `CreditGrantState` presumes its parent
- *   opportunity's `moneyState` has reached at least `"approved"` in
- *   `MONEY_STATE_ORDER`.
+ *   opportunity's `moneyState` is one of the ENUMERATED grant-evidence
+ *   states — exactly `"approved"` or `"activated"`. Later money states
+ *   (`"earned"`/`"invoiced"`/`"paid"`) are receivable-side realization
+ *   facts, NOT grant evidence, despite following `"approved"` in the broad
+ *   money lifecycle.
  * - Grant consumption progresses forward only:
- *   `approved -> activated -> partially_consumed -> exhausted`.
+ *   `approved -> activated -> partially_consumed -> exhausted`, with
+ *   `activated -> exhausted` also legal directly (a single confirmed
+ *   allocation consuming the full grant — no fabricated intermediate
+ *   `partially_consumed` observation is required).
  * - `"expired"` and `"revoked"` are terminal and reachable from any
  *   non-terminal state; `"exhausted"` is also terminal (fully consumed).
  */
@@ -309,7 +315,19 @@ export interface OpportunityEconomics {
   /** Revenue and savings remain ranges; null means there is no defensible estimate. */
   readonly potentialRevenue?: EconomicRange | null;
   readonly potentialSavings?: EconomicRange | null;
-  readonly availableCredits?: EconomicRange | null;
+  /**
+   * SCENARIO/DISCOVERY VALUE ONLY — never an authorization input.
+   *
+   * A modeled estimate of credits an opportunity MIGHT make available, used
+   * for scoring and prioritization narratives. It can NEVER authorize
+   * workload, count as runway, or feed any admission decision: the sole
+   * admissible credit evidence is a receipted `CreditGrantSnapshot`
+   * (`credit-snapshot.ts`) evaluated through
+   * `evaluateCreditSnapshotAdmissibility`. Admission-path modules must not
+   * reference this field (enforced by
+   * `__tests__/nova-scenario-credits-non-authorizing.test.ts`).
+   */
+  readonly scenarioAvailableCreditsUsd?: EconomicRange | null;
   readonly requiredCashUsd: number;
   readonly requiredOwnerHours: number;
   readonly expectedDaysToFirstEvidence: number;

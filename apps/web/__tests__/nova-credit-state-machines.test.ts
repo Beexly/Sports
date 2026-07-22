@@ -222,7 +222,9 @@ describe("NOVA credit-application state machine (directive §11.1)", () => {
 describe("NOVA credit-grant state machine — exhaustive matrix (directive §11.1)", () => {
   const EXPECTED: Readonly<Record<CreditGrantState, readonly CreditGrantState[]>> = {
     approved: ["activated", "expired", "revoked"],
-    activated: ["partially_consumed", "expired", "revoked"],
+    // activated -> exhausted directly is legal: one confirmed allocation can
+    // consume the full grant with no intermediate partial_consumed observation.
+    activated: ["partially_consumed", "exhausted", "expired", "revoked"],
     partially_consumed: ["exhausted", "expired", "revoked"],
     exhausted: [],
     expired: [],

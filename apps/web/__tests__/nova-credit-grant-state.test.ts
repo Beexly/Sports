@@ -31,10 +31,16 @@ describe("NOVA credit-grant state refinement (freeze §5.2)", () => {
     expect(canTransitionCreditGrantState("partially_consumed", "approved")).toBe(false);
   });
 
-  it("rejects skipping consumption states", () => {
+  it("allows activated -> exhausted directly (single full-consumption allocation)", () => {
+    // A single confirmed allocation can consume the entire grant in one
+    // settlement; no fabricated intermediate partial_consumed is required.
+    expect(canTransitionCreditGrantState("activated", "exhausted")).toBe(true);
+    expect(() => assertCreditGrantStateTransition("activated", "exhausted")).not.toThrow();
+  });
+
+  it("rejects skipping activation evidence", () => {
     expect(canTransitionCreditGrantState("approved", "partially_consumed")).toBe(false);
     expect(canTransitionCreditGrantState("approved", "exhausted")).toBe(false);
-    expect(canTransitionCreditGrantState("activated", "exhausted")).toBe(false);
   });
 
   it("reaches expired and revoked from any non-terminal state", () => {
@@ -63,8 +69,11 @@ describe("NOVA credit-grant state refinement (freeze §5.2)", () => {
     expect(() => assertCreditGrantStateTransition("approved", "activated")).not.toThrow();
   });
 
-  it("presumes the parent opportunity moneyState is at least approved", () => {
-    const supporting: readonly MoneyState[] = ["approved", "activated", "earned", "invoiced", "paid"];
+  it("accepts exactly the enumerated grant-evidence money states: approved and activated", () => {
+    const supporting: readonly MoneyState[] = ["approved", "activated"];
+    // earned/invoiced/paid follow "approved" in the broad MoneyState lifecycle
+    // but are receivable-side realization facts, NOT operational grant
+    // evidence — their exclusion is the point of the enumeration.
     const nonSupporting: readonly MoneyState[] = [
       "not_applicable",
       "hypothetical",
@@ -72,6 +81,9 @@ describe("NOVA credit-grant state refinement (freeze §5.2)", () => {
       "eligibility_unverified",
       "eligible",
       "applied",
+      "earned",
+      "invoiced",
+      "paid",
       "expired",
       "rejected",
     ];

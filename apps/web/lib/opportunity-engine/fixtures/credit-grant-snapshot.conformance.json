@@ -1,0 +1,511 @@
+{
+  "description": "S1 conformance fixtures for the canonical CreditGrantSnapshot evidence contract (directive \u00a711.2). S3's reconciler/evidence implementation MUST produce snapshots that reproduce these exact validation and admissibility verdicts through the S1 validators exported from lib/opportunity-engine/index.ts. feat/ai-control-plane-credit-admission consumes the same contract read-only and must not redefine it.",
+  "contractSchemaVersion": "credit-grant-snapshot@1",
+  "evaluationAt": "2026-07-21T12:00:00.000Z",
+  "defaultScopeRequest": {
+    "product": "vertex-ai",
+    "model": "gemini-3-pro",
+    "region": "us-central1"
+  },
+  "snapshotCases": [
+    {
+      "name": "valid-partially-consumed-admissible",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": true,
+        "reasons": []
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0042",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": "proj-nova",
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 3000000,
+        "grantState": "partially_consumed",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2027-01-15T00:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai",
+          "compute-engine"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1",
+          "us-east1"
+        ],
+        "exclusions": [
+          "marketplace-third-party"
+        ],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8842",
+        "sourceReceiptHash": "sha256:2f1a9c",
+        "reconciliationState": "reconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      }
+    },
+    {
+      "name": "valid-activated-untouched-admissible",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": true,
+        "reasons": []
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0043",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 25000000,
+        "reservedMinorUnits": 0,
+        "grantState": "activated",
+        "activatedAt": "2026-07-01T00:00:00.000Z",
+        "expiresAt": "2027-07-01T00:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "*"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "blocks_usage_at_zero",
+        "observedAt": "2026-07-21T11:30:00.000Z",
+        "recordedAt": "2026-07-21T11:30:01.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8901",
+        "sourceReceiptHash": "sha256:77ab21",
+        "reconciliationState": "unreconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      },
+      "note": "unreconciled must still admit: a first receipted observation bootstraps"
+    },
+    {
+      "name": "missing-receipt-fails-closed",
+      "expected": {
+        "valid": false,
+        "violations": [
+          "missing_source_receipt"
+        ],
+        "admissible": false,
+        "reasons": [
+          "snapshot_invalid"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0042",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": "proj-nova",
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 3000000,
+        "grantState": "partially_consumed",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2027-01-15T00:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "",
+        "sourceReceiptHash": "sha256:2f1a9c",
+        "reconciliationState": "reconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      },
+      "note": "no receipt, no snapshot"
+    },
+    {
+      "name": "exhausted-not-consumable",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": false,
+        "reasons": [
+          "grant_state_not_consumable",
+          "no_spendable_balance"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0044",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 0,
+        "reservedMinorUnits": 0,
+        "grantState": "exhausted",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2027-01-15T00:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8907",
+        "sourceReceiptHash": "sha256:1c0ffe",
+        "reconciliationState": "reconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      },
+      "note": "activated -> exhausted directly (single full-consumption allocation) is a legal history for this snapshot"
+    },
+    {
+      "name": "unknown-expiry-fails-closed",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": false,
+        "reasons": [
+          "grant_expiry_unknown"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0045",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 0,
+        "grantState": "activated",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": null,
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8908",
+        "sourceReceiptHash": "sha256:9e11ow",
+        "reconciliationState": "reconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      }
+    },
+    {
+      "name": "expired-grant-refused",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": false,
+        "reasons": [
+          "grant_expired"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0046",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 0,
+        "grantState": "activated",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2026-07-21T11:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8909",
+        "sourceReceiptHash": "sha256:de4d00",
+        "reconciliationState": "reconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      }
+    },
+    {
+      "name": "stale-snapshot-refused",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": false,
+        "reasons": [
+          "snapshot_stale"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0047",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 0,
+        "grantState": "activated",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2027-01-15T00:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-20T10:00:00.000Z",
+        "recordedAt": "2026-07-20T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8910",
+        "sourceReceiptHash": "sha256:0ldnews",
+        "reconciliationState": "reconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      },
+      "note": "observed 26h before evaluationAt, outside the 6h horizon"
+    },
+    {
+      "name": "unobserved-scope-covers-nothing",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": false,
+        "reasons": [
+          "scope_not_covered"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0048",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 0,
+        "grantState": "activated",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2027-01-15T00:00:00.000Z",
+        "eligibleProducts": [],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8911",
+        "sourceReceiptHash": "sha256:5c0p3",
+        "reconciliationState": "reconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      },
+      "note": "empty eligibleProducts = scope never observed = covers nothing"
+    },
+    {
+      "name": "drifted-reconciliation-refused",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": false,
+        "reasons": [
+          "reconciliation_drifted"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0049",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 0,
+        "grantState": "activated",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2027-01-15T00:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8912",
+        "sourceReceiptHash": "sha256:dr1f7",
+        "reconciliationState": "drifted",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      }
+    },
+    {
+      "name": "fully-reserved-no-spendable-balance",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": false,
+        "reasons": [
+          "no_spendable_balance"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0050",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 18000000,
+        "grantState": "partially_consumed",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2027-01-15T00:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8913",
+        "sourceReceiptHash": "sha256:re53rv",
+        "reconciliationState": "reconciled",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      },
+      "note": "spendable = remaining - reserved = 0"
+    }
+  ],
+  "opportunityEvidenceExamples": [
+    {
+      "id": "ev-gcp-credit-terms-2026-07",
+      "sourceId": "src-gcp-startup-program",
+      "tier": "vendor_terms_or_program_rules",
+      "title": "Google for Startups Cloud Program terms",
+      "url": "https://cloud.google.com/startup",
+      "observedAt": "2026-07-21T09:00:00.000Z",
+      "publishedAt": "2026-06-01T00:00:00.000Z",
+      "contentFingerprint": "sha256:aa10b2",
+      "supports": [
+        "credit-program-open",
+        "credit-eligibility-criteria"
+      ],
+      "rightsStatus": "public_metadata_only",
+      "directEvidence": true
+    },
+    {
+      "id": "ev-provider-billing-export-2026-07-21",
+      "sourceId": "src-gcp-billing-export",
+      "tier": "official_primary",
+      "title": "Provider billing export \u2014 credit balance line items",
+      "url": "https://console.cloud.google.com/billing/export",
+      "observedAt": "2026-07-21T10:00:00.000Z",
+      "contentFingerprint": "sha256:bb42c9",
+      "supports": [
+        "credit-grant-balance-observation"
+      ],
+      "rightsStatus": "cleared",
+      "directEvidence": true
+    }
+  ]
+}

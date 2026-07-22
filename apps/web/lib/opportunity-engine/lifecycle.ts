@@ -69,20 +69,31 @@ export function assertMoneyStateTransition(from: MoneyState, to: MoneyState): vo
 
 /**
  * Credit-grant sub-state machine (freeze §5.2). Mirrors the `MoneyState`
- * pattern: forward-only consumption with no state skipping, terminal states
- * absorbing, and `expired`/`revoked` reachable from any non-terminal state.
+ * pattern: forward-only consumption, terminal states absorbing, and
+ * `expired`/`revoked` reachable from any non-terminal state.
+ *
+ * The map is explicit (not positional stepping) because consumption is NOT
+ * strictly one-step: `activated -> exhausted` is a legal direct transition —
+ * a single confirmed allocation can consume the full grant in one settlement,
+ * in which case no intermediate `partially_consumed` observation ever exists
+ * and requiring one would force fabricating an unobserved state. What remains
+ * forbidden is skipping ACTIVATION evidence: `approved -> partially_consumed`
+ * and `approved -> exhausted` stay invalid because nothing can be consumed
+ * from a grant that was never activated.
  *
  * The sibling credit machines (program/application/balance/allocation) and
  * the explicit `CreditGrantState -> MoneyState` ceiling adapter live in
  * `credit.ts` (directive §11.1); the receipted `CreditGrantSnapshot`
  * contract lives in `credit-snapshot.ts` (§11.2).
  */
-const CREDIT_GRANT_CONSUMPTION_ORDER: readonly CreditGrantState[] = [
-  "approved",
-  "activated",
-  "partially_consumed",
-  "exhausted",
-];
+const CREDIT_GRANT_TRANSITIONS: Readonly<Record<CreditGrantState, readonly CreditGrantState[]>> = {
+  approved: ["activated", "expired", "revoked"],
+  activated: ["partially_consumed", "exhausted", "expired", "revoked"],
+  partially_consumed: ["exhausted", "expired", "revoked"],
+  exhausted: [],
+  expired: [],
+  revoked: [],
+};
 
 const CREDIT_GRANT_TERMINAL_STATES: ReadonlySet<CreditGrantState> = new Set([
   "exhausted",
@@ -95,27 +106,43 @@ export function isCreditGrantStateTerminal(state: CreditGrantState): boolean {
 }
 
 /**
- * A credit grant may exist (in any `CreditGrantState`) only while its parent
- * opportunity's `moneyState` has reached at least `"approved"` in
- * `MONEY_STATE_ORDER`. Terminal money states (`expired`/`rejected`) and every
- * pre-approval state cannot carry a live grant sub-state.
+ * The exact `MoneyState`s that constitute operational credit-grant evidence.
+ * This is an ENUMERATION, not a positional check against `MONEY_STATE_ORDER`:
+ * appearing after `"approved"` in the broad money lifecycle is ordering
+ * coincidence, not grant evidence.
+ *
+ * - `"approved"`: the award decision is on record — a grant exists in its own
+ *   `approved` sub-state, so the parent money state legitimately carries a
+ *   grant sub-state machine.
+ * - `"activated"`: the grant is live and consumable — the only other money
+ *   state whose meaning IS a grant-domain fact.
+ *
+ * Excluded deliberately:
+ * - `"earned"`, `"invoiced"`, `"paid"`: receivable-side REALIZATION states.
+ *   They assert that value was realized or billed for the opportunity as a
+ *   whole; they say nothing about a credit grant being operationally live.
+ *   Credits are cost avoidance and can never be invoiced or paid (see
+ *   `credit.ts` module doc), so these states are not grant evidence despite
+ *   sitting after `"approved"` in `MONEY_STATE_ORDER`.
+ * - `"expired"`, `"rejected"`: terminal money states cannot carry a live
+ *   grant sub-state.
+ * - Every pre-approval state: no award decision exists yet.
+ */
+const GRANT_EVIDENCE_MONEY_STATES: ReadonlySet<MoneyState> = new Set(["approved", "activated"]);
+
+/**
+ * Whether the parent opportunity's `moneyState` is itself operational
+ * evidence that a credit grant exists (see
+ * `GRANT_EVIDENCE_MONEY_STATES` for the per-state justification).
  */
 export function moneyStateSupportsCreditGrant(moneyState: MoneyState): boolean {
-  const approvedIndex = MONEY_STATE_ORDER.indexOf("approved");
-  const index = MONEY_STATE_ORDER.indexOf(moneyState);
-  return index >= approvedIndex;
+  return GRANT_EVIDENCE_MONEY_STATES.has(moneyState);
 }
 
 export function canTransitionCreditGrantState(from: CreditGrantState, to: CreditGrantState): boolean {
   if (CREDIT_GRANT_TERMINAL_STATES.has(from)) return false;
-  if (to === "expired" || to === "revoked") return true;
   if (from === to) return true;
-  const fromIndex = CREDIT_GRANT_CONSUMPTION_ORDER.indexOf(from);
-  const toIndex = CREDIT_GRANT_CONSUMPTION_ORDER.indexOf(to);
-  if (fromIndex < 0 || toIndex < 0) return false;
-  // Do not skip consumption states: a grant cannot become exhausted without
-  // first recording activation and partial consumption evidence.
-  return toIndex === fromIndex + 1;
+  return CREDIT_GRANT_TRANSITIONS[from].includes(to);
 }
 
 export function assertCreditGrantStateTransition(from: CreditGrantState, to: CreditGrantState): void {
