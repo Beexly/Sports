@@ -46,6 +46,20 @@ import { getCurrentPricingPhaseId } from "@/lib/pricing/pricing-phases";
 // so reusing it would be a silent fresh request under a stale identity.
 export const CHECKOUT_ATTEMPT_TTL_MS = 24 * 60 * 60 * 1000;
 
+// A Stripe Checkout Session lives at most ~24h after ITS creation. The last
+// session an attempt could possibly have created is one minted right at the
+// attempt TTL, so only past (expiresAt + this window) is "every session this
+// attempt could have created has itself died" provable on time alone.
+export const CHECKOUT_SESSION_MAX_LIFETIME_MS = 24 * 60 * 60 * 1000;
+
+// Minimum quiet time (since the attempt's last write) before ANY
+// reconciliation — inline or batch — may consult Stripe and treat "no session
+// found" as proof of absence. A request claimed moments ago may still be
+// mid-flight at Stripe: listing before its create commits would "prove" a
+// session absent that is about to exist. Shared truth for the repair job's
+// REPAIR_MIN_AGE_MS and the inline past-TTL reconcile guard.
+export const CHECKOUT_RECONCILE_MIN_AGE_MS = 10 * 60 * 1000;
+
 export type CheckoutAttemptStatus =
   | "CREATED"
   | "REQUEST_IN_FLIGHT"
@@ -137,6 +151,22 @@ export class CheckoutAttemptPersistenceError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "CheckoutAttemptPersistenceError";
+  }
+}
+
+/**
+ * An unresolved attempt (REQUEST_IN_FLIGHT / AMBIGUOUS / SESSION_CREATED) is
+ * past its TTL but its true outcome at Stripe could not be proven right now —
+ * a session it created may STILL be open and payable, so minting a fresh
+ * generation (fresh Stripe key → possible second payable session) is
+ * forbidden (directive 5.3). Mapped to a typed 409; the repair cron owns the
+ * durable resolution.
+ */
+export class CheckoutAttemptUnresolvedError extends Error {
+  readonly kind = "checkout_attempt_unresolved" as const;
+  constructor(message: string) {
+    super(message);
+    this.name = "CheckoutAttemptUnresolvedError";
   }
 }
 
@@ -284,6 +314,16 @@ export interface GetOrCreateCheckoutAttemptInput {
   currency: string;
   quantity?: number;
   requestFingerprint: string;
+  /**
+   * Inline single-attempt reconciliation against Stripe's authoritative
+   * state (see reconcileOneCheckoutAttempt in checkout-attempt-repair.ts).
+   * Invoked at most once when an UNRESOLVED attempt (REQUEST_IN_FLIGHT /
+   * AMBIGUOUS / SESSION_CREATED) is found past its TTL: elapsed time alone is
+   * NEVER proof that its session does not exist (directive 5.3). Must throw
+   * on transport failure. When omitted, such attempts fail closed with
+   * CheckoutAttemptUnresolvedError.
+   */
+  reconcileUnresolved?: (attempt: CheckoutAttemptRecord) => Promise<void>;
   /** Injectable clock for tests. */
   now?: Date;
 }
@@ -334,8 +374,14 @@ function assertDurablyCreated(
  * - live attempt, diff fp      → CheckoutIntentConflictError (→ 409)
  * - AMBIGUOUS attempt, same fp → returned as-is: the retry reuses the SAME
  *                                attempt and the SAME Stripe idempotency key
- * - FAILED/EXPIRED/CANCELED or past-TTL attempt → release its ACTIVE key
- *   (original intent id stays on the row forever), mint a fresh generation
+ * - FAILED/EXPIRED/CANCELED, past-TTL CREATED, or past-(TTL + session
+ *   lifetime) attempt → PROVEN dead: release its ACTIVE key (original intent
+ *   id stays on the row forever), mint a fresh generation
+ * - unresolved past-TTL attempt (REQUEST_IN_FLIGHT/AMBIGUOUS/SESSION_CREATED)
+ *   → reconcile inline against Stripe (input.reconcileUnresolved) — released
+ *   only on proof of absence/expiry; a still-open session is returned as-is;
+ *   otherwise CheckoutAttemptUnresolvedError (fail closed, never a fresh key
+ *   on elapsed time alone — directive 5.3)
  * - COMPLETED attempt          → returned as-is (caller refuses a new session)
  */
 export async function getOrCreateCheckoutAttempt(
@@ -382,10 +428,12 @@ export async function getOrCreateCheckoutAttempt(
   }
 
   // Bounded convergence loop: each iteration either creates the row, returns
-  // the existing live row, conflicts (throw), or releases a dead row and
-  // retries. Two concurrent expired-retries can interleave once; three
+  // the existing live row, conflicts/fails-closed (throw), reconciles an
+  // unresolved past-TTL row (at most once), or releases a proven-dead row and
+  // retries. Two concurrent expired-retries can interleave once; four
   // iterations are ample.
-  for (let attemptNo = 0; attemptNo < 3; attemptNo++) {
+  const reconciled = new Set<string>();
+  for (let attemptNo = 0; attemptNo < 4; attemptNo++) {
     const data = buildCreateData();
     let created: unknown;
     let createdOk = false;
@@ -414,16 +462,31 @@ export async function getOrCreateCheckoutAttempt(
     }
     const existing = existingRaw as CheckoutAttemptRecord;
 
+    const pastTtl = new Date(existing.expiresAt).getTime() <= now.getTime();
+
+    // A dead attempt releases ONLY its active key so a FRESH generation —
+    // with a fresh Stripe idempotency key — can claim the intent.
+    // originalClientIntentId is IMMUTABLE and stays on the row: terminal
+    // history remains fully traceable (directive 5.4).
+    //
+    // "Dead" is a PROVEN condition, never elapsed time alone (directive 5.3):
+    //  - terminal statuses (FAILED/EXPIRED/CANCELED) were proven when set;
+    //  - CREATED past TTL never claimed the Stripe call — no session can
+    //    exist, so time alone IS proof;
+    //  - REQUEST_IN_FLIGHT/AMBIGUOUS/SESSION_CREATED past TTL may have a
+    //    session still open (a session created late in the attempt's life
+    //    outlives the attempt TTL by up to a full session lifetime). Those
+    //    are dead on time alone only past expiresAt + session lifetime;
+    //    inside that window they require Stripe reconciliation (below).
+    const provablyBeyondAnySession =
+      new Date(existing.expiresAt).getTime() + CHECKOUT_SESSION_MAX_LIFETIME_MS <=
+      now.getTime();
     const dead =
       existing.status === "EXPIRED" ||
       existing.status === "FAILED" ||
       existing.status === "CANCELED" ||
-      new Date(existing.expiresAt).getTime() <= now.getTime();
+      (pastTtl && (existing.status === "CREATED" || provablyBeyondAnySession));
     if (dead) {
-      // Release ONLY the active key from the dead attempt so a FRESH
-      // generation — with a fresh Stripe idempotency key — can claim the
-      // intent. originalClientIntentId is IMMUTABLE and stays on the row:
-      // terminal history remains fully traceable (directive 5.4).
       const terminalStatus =
         existing.status === "FAILED" || existing.status === "CANCELED"
           ? existing.status
@@ -433,6 +496,47 @@ export async function getOrCreateCheckoutAttempt(
         data: { activeClientIntentId: null, status: terminalStatus },
       });
       continue;
+    }
+
+    if (pastTtl) {
+      // Unresolved past-TTL attempt: a fresh generation is only allowed after
+      // reconciliation PROVES the original absent or expired. Reconcile
+      // inline at most once, then re-read the row: a proven-terminal result
+      // is released on the next iteration; a still-open session is returned
+      // as-is (the route replays its URL); anything unproven fails closed.
+      // Min-age guard (mirrors the repair job's REPAIR_MIN_AGE_MS): a row
+      // written to very recently may belong to a request STILL mid-flight at
+      // Stripe — listing sessions before its create commits would "prove"
+      // absent a session that is about to exist. Fail closed instead.
+      const lastWriteAt = (existing as { updatedAt?: Date | string }).updatedAt;
+      const quietLongEnough =
+        lastWriteAt != null &&
+        now.getTime() - new Date(lastWriteAt).getTime() >= CHECKOUT_RECONCILE_MIN_AGE_MS;
+      if (input.reconcileUnresolved && quietLongEnough && !reconciled.has(existing.id)) {
+        reconciled.add(existing.id);
+        await input.reconcileUnresolved(existing);
+        continue;
+      }
+      if (
+        existing.status === "COMPLETED" ||
+        (existing.status === "SESSION_CREATED" && existing.stripeSessionId)
+      ) {
+        // COMPLETED: the intent is done forever — the route refuses a new
+        // session. SESSION_CREATED: reconciliation (or the expiry webhook)
+        // confirmed the bound session still open/payable — reuse it; never
+        // mint a second payable session.
+        if (existing.requestFingerprint !== input.requestFingerprint) {
+          throw new CheckoutIntentConflictError(
+            "This checkout intent was already started with different parameters. " +
+              "Refresh and try again.",
+          );
+        }
+        return { attempt: existing, reused: true };
+      }
+      throw new CheckoutAttemptUnresolvedError(
+        "A previous checkout attempt for this intent has an unresolved outcome. " +
+          "It is being reconciled — please retry shortly.",
+      );
     }
 
     if (existing.requestFingerprint !== input.requestFingerprint) {

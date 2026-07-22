@@ -6,6 +6,7 @@ import {
   type CheckoutSessionLookup,
   type RepairSessionView,
 } from "@/lib/billing/checkout-attempt-repair";
+import { CHECKOUT_SESSION_MAX_LIFETIME_MS } from "@/lib/billing/checkout-attempt";
 
 /**
  * Checkout-attempt repair job (directive 5.3 / 5.6) — the DURABLE
@@ -218,26 +219,161 @@ describe("repairUnresolvedCheckoutAttempts", () => {
     expect(db.rows[0]!["activeClientIntentId"]).toBeNull();
   });
 
-  it("an unresolvable attempt with no customer id closes as EXPIRED only after its TTL lapses", async () => {
-    const past = attemptRow({
+  it("no customer id: EXPIRED only past expiresAt + a FULL session lifetime (time is proof only then)", async () => {
+    // Past TTL but a session minted late in the attempt's life could STILL be
+    // open — elapsed time alone is not proof yet (directive 5.3).
+    const pastTtlOnly = attemptRow({
       customerId: null,
       expiresAt: new Date(NOW.getTime() - 1000),
     });
-    const fresh = attemptRow({
+    // Past TTL + full session lifetime: every session this attempt could have
+    // created has itself died — time IS proof now.
+    const beyondAnySession = attemptRow({
       id: "ca_22222222-3333-4444-8555-666677778888",
       activeClientIntentId: null,
       originalClientIntentId: null,
       customerId: null,
+      expiresAt: new Date(NOW.getTime() - CHECKOUT_SESSION_MAX_LIFETIME_MS - 1000),
     });
-    const db = makeDb([past, fresh]);
+    // Within TTL: wait, do not guess.
+    const fresh = attemptRow({
+      id: "ca_33333333-4444-4555-8666-777788889999",
+      activeClientIntentId: null,
+      originalClientIntentId: null,
+      customerId: null,
+    });
+    const db = makeDb([pastTtlOnly, beyondAnySession, fresh]);
     const report = await repairUnresolvedCheckoutAttempts(
       { db, stripeSessions: lookup({}) },
       { now: NOW },
     );
     expect(report.expired).toBe(1);
-    expect(report.unresolved).toBe(1);
-    expect(db.rows[0]!["status"]).toBe("EXPIRED");
+    expect(report.unresolved).toBe(2);
+    expect(db.rows[0]!["status"]).toBe("AMBIGUOUS"); // held — a session may still be payable
+    expect(db.rows[0]!["activeClientIntentId"]).toBe(INTENT);
+    expect(db.rows[1]!["status"]).toBe("EXPIRED");
+    expect(db.rows[1]!["activeClientIntentId"]).toBeNull();
+    expect(db.rows[2]!["status"]).toBe("AMBIGUOUS");
+  });
+
+  it("a correctly bound, STILL-OPEN session past attempt TTL is counted openPastTtl and left untouched", async () => {
+    const row = attemptRow({
+      status: "SESSION_CREATED",
+      stripeSessionId: "cs_bound",
+      expiresAt: new Date(NOW.getTime() - 1000),
+    });
+    const db = makeDb([row]);
+    const report = await repairUnresolvedCheckoutAttempts(
+      {
+        db,
+        stripeSessions: lookup({
+          retrieved: { cs_bound: session({ id: "cs_bound", status: "open" }) },
+        }),
+      },
+      { now: NOW },
+    );
+    // NOT counted as a repair success — nothing was repaired.
+    expect(report.rebound).toBe(0);
+    expect(report.openPastTtl).toBe(1);
+    expect(db.rows[0]!["status"]).toBe("SESSION_CREATED");
+    expect(db.rows[0]!["stripeSessionId"]).toBe("cs_bound");
+    expect(db.rows[0]!["activeClientIntentId"]).toBe(INTENT); // key retained — session payable
+  });
+
+  it("a bound session Stripe reports missing with NO metadata match converges FAILED (no infinite rescan)", async () => {
+    const row = attemptRow({
+      status: "SESSION_CREATED",
+      stripeSessionId: "cs_ghost", // retrieveSession → null (resource_missing)
+      expiresAt: new Date(NOW.getTime() - 1000),
+    });
+    const db = makeDb([row]);
+    const report = await repairUnresolvedCheckoutAttempts(
+      { db, stripeSessions: lookup({ listed: [] }) },
+      { now: NOW },
+    );
+    expect(report.provenAbsent).toBe(1);
+    expect(db.rows[0]!["status"]).toBe("FAILED");
     expect(db.rows[0]!["activeClientIntentId"]).toBeNull();
-    expect(db.rows[1]!["status"]).toBe("AMBIGUOUS"); // within TTL: wait, do not guess
+    expect(db.rows[0]!["lastErrorKind"]).toBe("repair_proven_absent");
+  });
+
+  it("counts a concurrently-advanced row as raced, never as a fake success", async () => {
+    const row = attemptRow({ status: "AMBIGUOUS" });
+    const db = makeDb([row]);
+    // Between the scan and the update another writer completes the attempt.
+    const innerUpdateMany = db.checkoutAttempt.updateMany.bind(db.checkoutAttempt);
+    db.checkoutAttempt.updateMany = async (args) => {
+      row["status"] = "COMPLETED"; // webhook won the race
+      return innerUpdateMany(args);
+    };
+    const report = await repairUnresolvedCheckoutAttempts(
+      { db, stripeSessions: lookup({ listed: [] }) },
+      { now: NOW },
+    );
+    expect(report.provenAbsent).toBe(0);
+    expect(report.raced).toBe(1);
+    expect(db.rows[0]!["status"]).toBe("COMPLETED");
+  });
+
+  it("surfaces unresolved attempts to the DURABLE owner queue (directive 5.3)", async () => {
+    const held = attemptRow({
+      customerId: null,
+      expiresAt: new Date(NOW.getTime() - 1000), // past TTL, within session lifetime
+    });
+    const errored = attemptRow({
+      id: "ca_44444444-5555-4666-8777-888899990000",
+      activeClientIntentId: null,
+      originalClientIntentId: null,
+    });
+    const db = makeDb([held, errored]);
+    const surfaced: Array<{ attemptId: string; status: string; reason: string }> = [];
+    const report = await repairUnresolvedCheckoutAttempts(
+      {
+        db,
+        stripeSessions: {
+          async listSessionsByCustomerSince(customerId) {
+            if (customerId === "cus_1") throw new Error("stripe down");
+            return [];
+          },
+          async retrieveSession() {
+            return null;
+          },
+        },
+        ownerQueue: {
+          async surfaceUnresolvedAttempt(entry) {
+            surfaced.push(entry);
+          },
+        },
+      },
+      { now: NOW },
+    );
+    expect(report.unresolved).toBe(1);
+    expect(report.errors).toBe(1);
+    expect(surfaced).toHaveLength(2);
+    expect(surfaced.map((s) => s.attemptId).sort()).toEqual(
+      [held["id"], errored["id"]].map(String).sort(),
+    );
+  });
+
+  it("an owner-queue write failure never aborts or masks the pass", async () => {
+    const held = attemptRow({
+      customerId: null,
+      expiresAt: new Date(NOW.getTime() - 1000),
+    });
+    const db = makeDb([held]);
+    const report = await repairUnresolvedCheckoutAttempts(
+      {
+        db,
+        stripeSessions: lookup({}),
+        ownerQueue: {
+          async surfaceUnresolvedAttempt() {
+            throw new Error("queue down");
+          },
+        },
+      },
+      { now: NOW },
+    );
+    expect(report.unresolved).toBe(1);
+    expect(db.rows[0]!["status"]).toBe("AMBIGUOUS"); // reconciliation state unaffected
   });
 });

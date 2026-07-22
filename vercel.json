@@ -26,6 +26,10 @@
     {
       "path": "/api/cron/ingest-player-stats",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/repair-checkout-attempts",
+      "schedule": "30 8 * * *"
     }
   ],
   "headers": [

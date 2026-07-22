@@ -1,9 +1,12 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
   CHECKOUT_ATTEMPT_TTL_MS,
+  CHECKOUT_RECONCILE_MIN_AGE_MS,
+  CHECKOUT_SESSION_MAX_LIFETIME_MS,
   CLAIMABLE_STATUSES,
   CheckoutAttemptIdError,
   CheckoutAttemptPersistenceError,
+  CheckoutAttemptUnresolvedError,
   CheckoutIntentConflictError,
   bindCheckoutSessionToAttempt,
   claimCheckoutAttemptForStripeRequest,
@@ -502,5 +505,183 @@ describe("claim / outcome / bind state machine (5.3)", () => {
     expect(await bindCheckoutSessionToAttempt(db, attempt.id, "cs_2", "cus_1")).toBe(false);
     expect(db.rows[0]!.status).toBe("COMPLETED");
     expect(db.rows[0]!.stripeSessionId).toBe("cs_1");
+  });
+});
+
+describe("past-TTL unresolved attempts (directive 5.3 — never released on time alone)", () => {
+  // Helper: create an attempt, then force it into `status` with `expiresAt`.
+  async function seedPastTtl(
+    db: ReturnType<typeof makeFakeDb>,
+    status: string,
+    expiresAgoMs: number,
+    extra: Record<string, unknown> = {},
+  ) {
+    const first = await getOrCreateCheckoutAttempt(db, baseInput());
+    Object.assign(db.rows[0]!, {
+      status,
+      expiresAt: new Date(Date.now() - expiresAgoMs),
+      // Quiet long enough for the min-age reconcile guard (the row's last
+      // write is far in the past, as it always is for a real past-TTL row).
+      updatedAt: new Date(Date.now() - CHECKOUT_RECONCILE_MIN_AGE_MS - 60_000),
+      ...extra,
+    });
+    return first.attempt;
+  }
+
+  it.each(["REQUEST_IN_FLIGHT", "AMBIGUOUS", "SESSION_CREATED"] as const)(
+    "a past-TTL %s attempt WITHOUT a reconciler fails closed — no release, no fresh key",
+    async (status) => {
+      const db = makeFakeDb();
+      const first = await seedPastTtl(db, status, 1000);
+      await expect(getOrCreateCheckoutAttempt(db, baseInput())).rejects.toBeInstanceOf(
+        CheckoutAttemptUnresolvedError,
+      );
+      // Nothing was released and no second generation exists.
+      expect(db.rows).toHaveLength(1);
+      expect(db.rows[0]!.activeClientIntentId).toBe(INTENT);
+      expect(db.rows[0]!.status).toBe(status);
+      expect(db.rows[0]!.stripeIdempotencyKey).toBe(first.stripeIdempotencyKey);
+    },
+  );
+
+  it("a past-TTL AMBIGUOUS attempt is released only after reconciliation PROVES absence", async () => {
+    const db = makeFakeDb();
+    const first = await seedPastTtl(db, "AMBIGUOUS", 1000);
+    let reconciledId: string | null = null;
+    const retry = await getOrCreateCheckoutAttempt(
+      db,
+      baseInput({
+        reconcileUnresolved: async (attempt: CheckoutAttemptRecord) => {
+          reconciledId = attempt.id;
+          // Simulate the repair proving the session absent at Stripe.
+          await db.checkoutAttempt.updateMany({
+            where: { id: attempt.id },
+            data: {
+              status: "FAILED",
+              activeClientIntentId: null,
+              lastErrorKind: "repair_proven_absent",
+            },
+          });
+        },
+      }),
+    );
+    expect(reconciledId).toBe(first.id);
+    // Fresh generation with a FRESH Stripe key; history intact on the old row.
+    expect(retry.reused).toBe(false);
+    expect(retry.attempt.id).not.toBe(first.id);
+    expect(retry.attempt.stripeIdempotencyKey).not.toBe(first.stripeIdempotencyKey);
+    const dead = db.rows.find((r) => r.id === first.id)!;
+    expect(dead.status).toBe("FAILED");
+    expect(dead.originalClientIntentId).toBe(INTENT);
+    expect(dead.activeClientIntentId).toBeNull();
+  });
+
+  it("a past-TTL attempt whose session is STILL OPEN is returned as-is — never a second payable session", async () => {
+    const db = makeFakeDb();
+    const first = await seedPastTtl(db, "AMBIGUOUS", 1000);
+    const retry = await getOrCreateCheckoutAttempt(
+      db,
+      baseInput({
+        reconcileUnresolved: async (attempt: CheckoutAttemptRecord) => {
+          // Simulate the repair finding the session open and rebinding it.
+          await db.checkoutAttempt.updateMany({
+            where: { id: attempt.id },
+            data: { status: "SESSION_CREATED", stripeSessionId: "cs_open" },
+          });
+        },
+      }),
+    );
+    expect(retry.reused).toBe(true);
+    expect(retry.attempt.id).toBe(first.id);
+    expect(retry.attempt.status).toBe("SESSION_CREATED");
+    expect(retry.attempt.stripeSessionId).toBe("cs_open");
+    expect(db.rows).toHaveLength(1); // no fresh generation
+  });
+
+  it("reconciliation that cannot prove anything leaves the attempt held (fail closed)", async () => {
+    const db = makeFakeDb();
+    await seedPastTtl(db, "AMBIGUOUS", 1000);
+    await expect(
+      getOrCreateCheckoutAttempt(
+        db,
+        baseInput({
+          reconcileUnresolved: async () => {
+            /* Stripe consulted; nothing provable — row left untouched. */
+          },
+        }),
+      ),
+    ).rejects.toBeInstanceOf(CheckoutAttemptUnresolvedError);
+    expect(db.rows).toHaveLength(1);
+    expect(db.rows[0]!.activeClientIntentId).toBe(INTENT);
+  });
+
+  it("a row written to moments ago is NOT reconciled (min-age guard) — its request may still be mid-flight", async () => {
+    const db = makeFakeDb();
+    await seedPastTtl(db, "REQUEST_IN_FLIGHT", 1000, {
+      updatedAt: new Date(Date.now() - 1000), // claimed just now
+    });
+    let reconcileCalled = false;
+    await expect(
+      getOrCreateCheckoutAttempt(
+        db,
+        baseInput({
+          reconcileUnresolved: async () => {
+            reconcileCalled = true;
+          },
+        }),
+      ),
+    ).rejects.toBeInstanceOf(CheckoutAttemptUnresolvedError);
+    // Stripe was never consulted — a session-create may still be committing.
+    expect(reconcileCalled).toBe(false);
+    expect(db.rows[0]!.activeClientIntentId).toBe(INTENT);
+  });
+
+  it("a reconciler transport failure propagates — never treated as proof", async () => {
+    const db = makeFakeDb();
+    await seedPastTtl(db, "AMBIGUOUS", 1000);
+    await expect(
+      getOrCreateCheckoutAttempt(
+        db,
+        baseInput({
+          reconcileUnresolved: async () => {
+            throw new Error("stripe unreachable");
+          },
+        }),
+      ),
+    ).rejects.toThrow("stripe unreachable");
+    expect(db.rows[0]!.activeClientIntentId).toBe(INTENT);
+  });
+
+  it("beyond expiresAt + session lifetime, elapsed time IS proof — released without Stripe", async () => {
+    const db = makeFakeDb();
+    const first = await seedPastTtl(
+      db,
+      "AMBIGUOUS",
+      CHECKOUT_SESSION_MAX_LIFETIME_MS + 1000,
+    );
+    const retry = await getOrCreateCheckoutAttempt(db, baseInput());
+    expect(retry.reused).toBe(false);
+    expect(retry.attempt.id).not.toBe(first.id);
+    const dead = db.rows.find((r) => r.id === first.id)!;
+    expect(dead.status).toBe("EXPIRED");
+    expect(dead.activeClientIntentId).toBeNull();
+    expect(dead.originalClientIntentId).toBe(INTENT);
+  });
+
+  it("a past-TTL CREATED attempt never talked to Stripe — safe to release on time alone", async () => {
+    const db = makeFakeDb();
+    const first = await seedPastTtl(db, "CREATED", 1000);
+    const retry = await getOrCreateCheckoutAttempt(db, baseInput());
+    expect(retry.attempt.id).not.toBe(first.id);
+    expect(db.rows.find((r) => r.id === first.id)!.status).toBe("EXPIRED");
+  });
+
+  it("a past-TTL COMPLETED attempt stays COMPLETED and is returned as-is", async () => {
+    const db = makeFakeDb();
+    const first = await seedPastTtl(db, "COMPLETED", 1000);
+    const retry = await getOrCreateCheckoutAttempt(db, baseInput());
+    expect(retry.reused).toBe(true);
+    expect(retry.attempt.id).toBe(first.id);
+    expect(retry.attempt.status).toBe("COMPLETED");
   });
 });

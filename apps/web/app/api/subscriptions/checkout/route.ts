@@ -8,9 +8,11 @@ import {
   getOrCreateStripeCustomer,
   createCheckoutSession,
   retrieveOpenCheckoutSessionUrl,
+  stripeCheckoutSessionLookup,
 } from "@/lib/stripe";
 import {
   CheckoutAttemptPersistenceError,
+  CheckoutAttemptUnresolvedError,
   CheckoutIntentConflictError,
   bindCheckoutSessionToAttempt,
   claimCheckoutAttemptForStripeRequest,
@@ -21,6 +23,11 @@ import {
   recordCheckoutAttemptOutcome,
   type CheckoutAttemptDb,
 } from "@/lib/billing/checkout-attempt";
+import {
+  reconcileOneCheckoutAttempt,
+  type CheckoutAttemptRepairDb,
+  type RepairableCheckoutAttempt,
+} from "@/lib/billing/checkout-attempt-repair";
 import {
   classifyStripeSessionCreateError,
   transitionForOutcome,
@@ -191,12 +198,39 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         priceId,
         currency: CHECKOUT_CURRENCY,
         requestFingerprint,
+        // Directive 5.3: an unresolved attempt past its TTL is NEVER released
+        // on elapsed time alone — reconcile it inline against Stripe's
+        // authoritative state (proof of absence/expiry releases the key; a
+        // still-open session is replayed; anything unproven fails closed).
+        reconcileUnresolved: (unresolved) =>
+          reconcileOneCheckoutAttempt(
+            {
+              db: db as unknown as CheckoutAttemptRepairDb,
+              stripeSessions: stripeCheckoutSessionLookup(),
+            },
+            unresolved as RepairableCheckoutAttempt,
+            new Date(),
+          ).then(() => undefined),
       });
     } catch (err) {
       if (err instanceof CheckoutIntentConflictError) {
         return NextResponse.json(
           { error: err.message, code: "checkout_intent_conflict" },
           { status: 409 },
+        );
+      }
+      if (err instanceof CheckoutAttemptUnresolvedError) {
+        // A prior attempt's outcome could not be proven right now (Stripe
+        // unreachable, or reconciliation left it unresolved). A session it
+        // created may still be payable — NEVER mint a fresh key here. The
+        // repair cron owns durable resolution; the client may retry.
+        return NextResponse.json(
+          {
+            error:
+              "A previous checkout for this session is still being confirmed with the payment provider. Please retry in a minute.",
+            code: "checkout_attempt_unresolved",
+          },
+          { status: 409, headers: { "Retry-After": "60" } },
         );
       }
       if (err instanceof CheckoutAttemptPersistenceError) {

@@ -271,16 +271,22 @@ export function stripeCheckoutSessionLookup(): CheckoutSessionLookup {
 
 /**
  * Production entrypoint for the checkout-attempt repair job (directive 5.3 /
- * 5.6). Callable server-side (operator invocation or a future cron — wiring
- * deliberately DORMANT). Fails closed via the durable-write guard before
- * touching Stripe.
+ * 5.6). Invoked on a schedule by the cron route
+ * `/api/cron/repair-checkout-attempts` (declared in `vercel.json`) and
+ * callable server-side by an operator. Fails closed via the durable-write
+ * guard before touching Stripe. Unresolved ambiguity is surfaced to the
+ * DURABLE owner queue (deduplicated CockpitTask review items), not just logs.
  */
 export async function runCheckoutAttemptRepair(): Promise<CheckoutAttemptRepairReport> {
   const { db, requireDurableWriteStore } = await import("@sports/db");
   requireDurableWriteStore("stripe-checkout");
+  const { cockpitCheckoutRepairOwnerQueue } = await import(
+    "@/lib/billing/checkout-repair-owner-queue"
+  );
   return repairUnresolvedCheckoutAttempts({
     db: db as unknown as CheckoutAttemptRepairDb,
     stripeSessions: stripeCheckoutSessionLookup(),
+    ownerQueue: cockpitCheckoutRepairOwnerQueue(db) ?? undefined,
   });
 }
 

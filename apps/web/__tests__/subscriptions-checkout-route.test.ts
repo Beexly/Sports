@@ -16,6 +16,9 @@ const mocks = vi.hoisted(() => ({
   getOrCreateStripeCustomer: vi.fn<(userId: string, email: string, name?: string | null) => Promise<string>>(),
   createCheckoutSession: vi.fn<(args: unknown) => Promise<{ id: string; url: string | null }>>(),
   retrieveOpenCheckoutSessionUrl: vi.fn<(sessionId: string) => Promise<string | null>>(),
+  // Reconciliation lookup used by the inline past-TTL repair path (5.3).
+  retrieveSession: vi.fn<(sessionId: string) => Promise<unknown>>(),
+  listSessionsByCustomerSince: vi.fn<(customerId: string, since: Date) => Promise<unknown[]>>(),
 }));
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
@@ -24,6 +27,10 @@ vi.mock("@/lib/stripe", () => ({
   getOrCreateStripeCustomer: mocks.getOrCreateStripeCustomer,
   createCheckoutSession: mocks.createCheckoutSession,
   retrieveOpenCheckoutSessionUrl: mocks.retrieveOpenCheckoutSessionUrl,
+  stripeCheckoutSessionLookup: () => ({
+    retrieveSession: mocks.retrieveSession,
+    listSessionsByCustomerSince: mocks.listSessionsByCustomerSince,
+  }),
 }));
 const dbMock = vi.hoisted(() => ({
   subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -121,6 +128,10 @@ describe("POST /api/subscriptions/checkout", () => {
     mocks.getOrCreateStripeCustomer.mockResolvedValue("cus_123");
     mocks.retrieveOpenCheckoutSessionUrl.mockResolvedValue(null);
     mocks.createCheckoutSession.mockResolvedValue({ id: "cs_123", url: "https://checkout.stripe.com/s/123" });
+    mocks.retrieveSession.mockReset();
+    mocks.listSessionsByCustomerSince.mockReset();
+    mocks.retrieveSession.mockResolvedValue(null);
+    mocks.listSessionsByCustomerSince.mockResolvedValue([]);
   });
 
   it("returns 401 for unauthenticated requests", async () => {
@@ -327,6 +338,9 @@ describe("POST /api/subscriptions/checkout", () => {
         stripeSubscriptionId: null,
         lastErrorKind: null,
         expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        // Last write far in the past — quiet enough for the min-age
+        // reconcile guard in the past-TTL tests.
+        updatedAt: new Date(Date.now() - 60 * 60 * 1000),
         ...overrides,
       };
     }
@@ -373,19 +387,28 @@ describe("POST /api/subscriptions/checkout", () => {
       expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
     });
 
-    it("an EXPIRED attempt is never reused — the retry mints a fresh attempt + fresh session", async () => {
+    it("a past-TTL attempt whose session Stripe PROVES expired mints a fresh attempt + fresh session", async () => {
       const expired = liveAttempt({ expiresAt: new Date(Date.now() - 1000) });
-      // First create collides with the stale row; after it is released the
-      // second create succeeds.
+      // First create collides with the stale row; the inline reconciliation
+      // asks Stripe, which proves the bound session expired → the key is
+      // released and the second create succeeds. Time alone NEVER releases
+      // an unresolved attempt (see the unresolved tests below).
       dbMock.attemptCreate
         .mockRejectedValueOnce(p2002())
         .mockImplementation(async ({ data }) => ({ ...data }));
       dbMock.attemptFindUnique.mockResolvedValueOnce(expired);
+      mocks.retrieveSession.mockResolvedValue({
+        id: "cs_original",
+        status: "expired",
+        metadataAttemptId: expired["id"],
+        subscriptionId: null,
+      });
 
       const res = await POST(checkoutRequest({ tier: "PRO", clientIntentId: INTENT_ID }));
       const body = await res.json();
 
       expect(res.status).toBe(200);
+      expect(mocks.retrieveSession).toHaveBeenCalledWith("cs_original");
       expect(body.url).toBe("https://checkout.stripe.com/s/123");
       // The dead row released ONLY its ACTIVE key under a terminal status —
       // originalClientIntentId is immutable and never part of the release.
@@ -406,6 +429,73 @@ describe("POST /api/subscriptions/checkout", () => {
       expect(mocks.createCheckoutSession).toHaveBeenCalledTimes(1);
       const attemptId = (mocks.createCheckoutSession.mock.calls[0]![0] as { attemptId: string }).attemptId;
       expect(attemptId).not.toBe(expired["id"]);
+    });
+
+    it("a past-TTL attempt whose session is STILL OPEN replays that session — never a second payable session", async () => {
+      const stale = liveAttempt({ expiresAt: new Date(Date.now() - 1000) });
+      dbMock.attemptCreate.mockRejectedValue(p2002());
+      // First fetch: the stale row; after reconciliation confirms the session
+      // open, the loop re-reads the (unchanged) row and replays it.
+      dbMock.attemptFindUnique.mockResolvedValue(stale);
+      mocks.retrieveSession.mockResolvedValue({
+        id: "cs_original",
+        status: "open",
+        metadataAttemptId: stale["id"],
+        subscriptionId: null,
+      });
+      mocks.retrieveOpenCheckoutSessionUrl.mockResolvedValue(
+        "https://checkout.stripe.com/s/original",
+      );
+
+      const res = await POST(checkoutRequest({ tier: "PRO", clientIntentId: INTENT_ID }));
+      const body = await res.json();
+
+      expect(res.status).toBe(200);
+      expect(body.url).toBe("https://checkout.stripe.com/s/original");
+      // The whole point: NO second session, NO fresh idempotency key.
+      expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+    });
+
+    it("a past-TTL AMBIGUOUS attempt Stripe cannot prove anything about is a 409, never a fresh key (5.3)", async () => {
+      const ambiguous = liveAttempt({
+        status: "AMBIGUOUS",
+        stripeSessionId: null,
+        customerId: null, // nothing to search under → reconciliation cannot prove
+        expiresAt: new Date(Date.now() - 1000),
+      });
+      dbMock.attemptCreate.mockRejectedValue(p2002());
+      dbMock.attemptFindUnique.mockResolvedValue(ambiguous);
+
+      const res = await POST(checkoutRequest({ tier: "PRO", clientIntentId: INTENT_ID }));
+      const body = await res.json();
+
+      expect(res.status).toBe(409);
+      expect(body.code).toBe("checkout_attempt_unresolved");
+      expect(res.headers.get("Retry-After")).toBe("60");
+      expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+      // The active key was never released on elapsed time alone.
+      expect(dbMock.attemptUpdateMany).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ activeClientIntentId: null }),
+        }),
+      );
+    });
+
+    it("a Stripe transport failure during inline reconciliation is a 500, not a silent release", async () => {
+      const stale = liveAttempt({ expiresAt: new Date(Date.now() - 1000) });
+      dbMock.attemptCreate.mockRejectedValue(p2002());
+      dbMock.attemptFindUnique.mockResolvedValue(stale);
+      mocks.retrieveSession.mockRejectedValue(new Error("stripe unreachable"));
+
+      const res = await POST(checkoutRequest({ tier: "PRO", clientIntentId: INTENT_ID }));
+
+      expect(res.status).toBe(500);
+      expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+      expect(dbMock.attemptUpdateMany).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ activeClientIntentId: null }),
+        }),
+      );
     });
 
     it("a COMPLETED attempt refuses a new session with 409 (post-payment, pre-sync window)", async () => {
