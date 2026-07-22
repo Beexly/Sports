@@ -1,0 +1,19 @@
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Config: LiveModelDispatchUnderAmbiguityInductive.smoke.cfg
+Constants: |Invocations|=1, |Attempts|=1, |Fingerprints|=2, |Actors|=2,
+           |TrustedActors|=1, VerifiedBalance=1, RequestCost=1
+
+=== WITHOUT PendingImpliesHeld (CTI #1) ===
+Error: Invariant AmbiguousExposureHeldUntilTrustedResolution is violated.
+State 1: attemptOutcome=Pending, state=Unstarted, dispatched=FALSE
+State 2: ResolveDispatchOutcome(a1,"Ambiguous") -> Ambiguous + Unstarted
+43748 states generated, 43742 distinct, depth 2
+
+=== WITH PendingImpliesHeld + AttemptAssignedImpliesDispatched + NotReleasedConsistent ===
+Finished computing initial states: 16530 distinct states generated.
+Model checking completed. No error has been found.
+34550 states generated, 16530 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+Finished in 06s
+
+CLAIM: IndInvAttempt1 (with CTI#1 glue) is inductive for the 1-attempt smoke constants.
