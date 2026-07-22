@@ -11,7 +11,10 @@
  *      (real claim store + real budget engine, fake transport) stay within
  *      the cap: exactly the set that fits authorizes, the rest are
  *      BUDGET_BLOCKED with NO attempt dispatched, and the post-storm
- *      invariant holds;
+ *      invariant holds; AND (Decision A permanent-consume) a SECOND storm
+ *      against the same window, after the first wave's successes settled,
+ *      sees only the reduced spendable balance and admits strictly FEWER —
+ *      settled spend is consumed from the cap forever, never re-admitted;
  *   4. §10.2 actual > hold: the real charge is preserved over-cap, the window
  *      locks, further reserves are refused;
  *   5. §10.9 crash recovery: a crash between reserve and dispatch frees the
@@ -466,6 +469,53 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     );
     expect(holds.rows[0].n).toBe(0);
 
+    // ── PERMANENT-CONSUME SECOND WAVE (Decision A) ────────────────────────
+    // The first wave's 60 successes SETTLED $3.00 of provisional spend. That
+    // settlement is a PERMANENT consumption of the window's cap — the atomic
+    // cap guard admits a new hold only when
+    //   reserved + provisional + confirmedBilled + amount <= cap,
+    // so settled spend never returns headroom. A SECOND storm of 100 against
+    // the SAME window must therefore see only the reduced $3.00 balance and
+    // admit exactly 30 more (30 × $0.10 worst-case = the remaining $3.00),
+    // never re-admitting the $3.00 already consumed. This is the real-Postgres
+    // analog of the credit port's permanent-consume settled ledger: once
+    // settled, spend is gone from the spendable balance forever.
+    const outcomes2 = await Promise.allSettled(
+      Array.from({ length: 100 }, (_, i) =>
+        dispatch(billablePlan(`req-storm2-${i}-${randomUUID().slice(0, 8)}`)),
+      ),
+    );
+    const completed2 = outcomes2.filter(
+      (o) => o.status === "fulfilled" && o.value.kind === "COMPLETED",
+    ).length;
+    const budgetBlocked2 = outcomes2.filter(
+      (o) => o.status === "rejected" && o.reason instanceof BudgetBlocked,
+    ).length;
+    const otherErrors2 = outcomes2.filter(
+      (o) => o.status === "rejected" && !(o.reason instanceof BudgetBlocked),
+    );
+
+    expect(otherErrors2).toEqual([]);
+    // The consumed $3.00 is gone: only $3.00 remains, funding 30 of 100 — the
+    // second wave admits FEWER than the first (30 < 60), never re-admitting
+    // the settled amount.
+    expect(completed2).toBe(30);
+    expect(budgetBlocked2).toBe(70);
+    expect(completed2).toBeLessThan(completed);
+
+    const w2 = await windowRow(resolvedId);
+    // Cumulative settled: 90 successes × $0.05 = $4.50 provisional, never > cap.
+    expect(usdToMicros(w2.provisionalUsd)).toBe(usdToMicros("4.50"));
+    expect(usdToMicros(w2.reservedUsd)).toBe(0n);
+    expect(w2.invariant).toBe(true);
+    // No leaked holds survive the second wave either.
+    const holds2 = await pool.query(
+      `SELECT count(*)::int AS n FROM "ai_budget_reservations"
+        WHERE "state" = 'HELD' AND "windowId" = $1`,
+      [resolvedId],
+    );
+    expect(holds2.rows[0].n).toBe(0);
+
     artifact["concurrent100"] = {
       cap: "6.000000",
       perPlanWorstCase: "0.100000",
@@ -473,6 +523,15 @@ suite("§10.9 budget acceptance against real Postgres", () => {
       budgetBlocked,
       otherErrors: otherErrors.length,
       window: w,
+      // Decision A permanent-consume proof: the settled first wave reduces the
+      // spendable balance permanently, so the second wave admits fewer.
+      permanentConsumeSecondWave: {
+        completed: completed2,
+        budgetBlocked: budgetBlocked2,
+        otherErrors: otherErrors2.length,
+        window: w2,
+        provenReadmissionOfConsumedSpend: false,
+      },
     };
   }, 120_000);
 

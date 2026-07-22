@@ -724,6 +724,115 @@ describe("concurrency: simultaneous authorizeAndReserve calls cannot exceed the 
       .reduce((sum, r) => sum + usdStringToMinorUnitsCeil(r.value.heldUsd, "held"), 0);
     expect(admittedHeld).toBe(heldTotal); // ledger == sum of admitted holds
   });
+
+  it("permanent-consume under concurrency: settling the first admitted wave PERMANENTLY reduces the balance, so a second concurrent wave admits FEWER and never re-admits the consumed spend (Decision A)", async () => {
+    // Spendable: $600 (60_000 minor units). This is the credit-port analog of
+    // the real-Postgres 100-concurrent second-wave proof: settled spend is
+    // gone from the grant's spendable balance FOREVER (spendable - held -
+    // settled), so sequential authorize->settle cycles can never cumulatively
+    // overspend a static snapshot.
+    const snapshot = validSnapshot({ remainingMinorUnits: 600_00, reservedMinorUnits: 0 });
+    const port = createInMemoryCreditAuthorizationPort({
+      store: {
+        async findCovering() {
+          await new Promise((resolve) => setTimeout(resolve, Math.random() * 5));
+          return [snapshot];
+        },
+      },
+      scopeFor: () => scopeOf(),
+    });
+
+    // Wave 1: ten concurrent $100 authorizes; exactly 6 fit the $600 balance.
+    const wave1 = await Promise.allSettled(
+      Array.from({ length: 10 }, (_, i) =>
+        port.authorizeAndReserve(portRequest({ requestId: `req-w1-${i}` })),
+      ),
+    );
+    const admitted1 = wave1.filter(
+      (r): r is PromiseFulfilledResult<CreditReservation> => r.status === "fulfilled",
+    );
+    expect(admitted1).toHaveLength(6);
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(60_000);
+
+    // Settle every admitted reservation at the FULL held $100 — the whole
+    // $600 is now PERMANENTLY consumed (settled), holds return to zero.
+    for (const r of admitted1) {
+      await port.settleProvisional(r.value.creditReservationId, "100.000000", NOW);
+    }
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(60_000);
+
+    // Wave 2: ten MORE concurrent $100 authorizes against the SAME static
+    // snapshot. Settled spend gave back NO headroom, so every one refuses —
+    // the consumed $600 is never re-admitted.
+    const wave2 = await Promise.allSettled(
+      Array.from({ length: 10 }, (_, i) =>
+        port.authorizeAndReserve(portRequest({ requestId: `req-w2-${i}` })),
+      ),
+    );
+    const admitted2 = wave2.filter((r) => r.status === "fulfilled");
+    const refused2 = wave2.filter((r) => r.status === "rejected");
+    expect(admitted2).toHaveLength(0);
+    expect(refused2).toHaveLength(10);
+    expect(admitted2.length).toBeLessThan(admitted1.length); // strictly fewer
+    for (const r of refused2) {
+      expect((r as PromiseRejectedResult).reason).toBeInstanceOf(BudgetBlocked);
+      expect((r as PromiseRejectedResult).reason.message).toMatch(/insufficient-headroom/);
+    }
+    // The ledger never exceeded the balance: nothing held, exactly $600 settled.
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(60_000);
+  });
+
+  it("permanent-consume with a PARTIAL settle wave: a second wave admits only the freed remainder, never the consumed portion (Decision A)", async () => {
+    // Spendable $600. Wave 1 admits 6 × $100. Settle each at $50 (half) → $300
+    // permanently consumed, $300 of headroom returns. A second wave of ten
+    // $100 authorizes then admits EXACTLY 3 (the freed $300), never the
+    // consumed $300.
+    const snapshot = validSnapshot({ remainingMinorUnits: 600_00, reservedMinorUnits: 0 });
+    const port = createInMemoryCreditAuthorizationPort({
+      store: {
+        async findCovering() {
+          await new Promise((resolve) => setTimeout(resolve, Math.random() * 5));
+          return [snapshot];
+        },
+      },
+      scopeFor: () => scopeOf(),
+    });
+
+    const wave1 = await Promise.allSettled(
+      Array.from({ length: 10 }, (_, i) =>
+        port.authorizeAndReserve(portRequest({ requestId: `req-p1-${i}` })),
+      ),
+    );
+    const admitted1 = wave1.filter(
+      (r): r is PromiseFulfilledResult<CreditReservation> => r.status === "fulfilled",
+    );
+    expect(admitted1).toHaveLength(6);
+    for (const r of admitted1) {
+      await port.settleProvisional(r.value.creditReservationId, "50.000000", NOW);
+    }
+    // $300 settled (permanent), $300 of headroom freed.
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(30_000);
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+
+    const wave2 = await Promise.allSettled(
+      Array.from({ length: 10 }, (_, i) =>
+        port.authorizeAndReserve(portRequest({ requestId: `req-p2-${i}` })),
+      ),
+    );
+    const admitted2 = wave2.filter(
+      (r): r is PromiseFulfilledResult<CreditReservation> => r.status === "fulfilled",
+    );
+    // Exactly the freed $300 funds 3 more; the consumed $300 is never re-admitted.
+    expect(admitted2).toHaveLength(3);
+    expect(admitted2.length).toBeLessThan(admitted1.length);
+    // Ledger invariant: held + settled never exceeds the $600 spendable balance.
+    const held = port.state.heldMinorUnitsByGrant.get("grant-2026-0099") ?? 0;
+    const settled = port.state.settledMinorUnitsByGrant.get("grant-2026-0099") ?? 0;
+    expect(held + settled).toBeLessThanOrEqual(60_000);
+    expect(held + settled).toBe(60_000); // 30_000 settled + 30_000 held (3×$100)
+  });
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
