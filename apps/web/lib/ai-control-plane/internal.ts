@@ -102,3 +102,59 @@ export type {
   BlockedDecisionRecord,
   BlockedDecisionRecorder,
 } from "./executor";
+
+// §10 budget reservation ENGINE (mutating). Internal-only: production cash
+// holds happen exclusively inside the sealed executor's §9 pipeline; call
+// sites may never choose their own budget windows (§10.5). Tests drive the
+// engine directly against in-memory fakes and the disposable Postgres.
+export {
+  reserve,
+  settleProvisional,
+  release,
+  holdForReconciliation,
+  confirmSettlement,
+  sweepExpired,
+  CONTROL_PLANE_PROVIDER_MINIMUM_USD,
+} from "./budget";
+export type {
+  AttemptUsage,
+  AttemptActualPricer,
+  BudgetDb,
+  ReserveInput,
+  ReserveResult,
+  ReservationHandle,
+  SettleProvisionalInput,
+  SettleProvisionalResult,
+  ReservationSelector,
+  ConfirmSettlementInput,
+  SweepResult,
+} from "./budget";
+export type { BudgetSeam } from "./invocation-pipeline";
+
+// §10.8: the fail-closed credit port VALUE (tests assert its behavior; the
+// production executor seals it as the only credit authority).
+export { failClosedCreditAuthorizationPort } from "./credit-port";
+
+// §11.3 (PR-D): the credit ADMISSION layer over S1's canonical
+// CreditGrantSnapshot, and the FAKE atomic in-memory adapter of the §10.8
+// CreditAuthorizationPort. Internal-only: production has no credit snapshot
+// store and seals the fail-closed port; tests drive admission and the fake
+// adapter directly.
+export {
+  admitCreditFunded,
+  evaluateCreditAdmission,
+  createInMemoryCreditAuthorizationPort,
+  usdStringToMinorUnitsCeil,
+} from "./credit-admission";
+export type {
+  AdmitCreditFundedInput,
+  CreditAdmissionDecision,
+  CreditAdmissionRefusalReason,
+  CreditAdmissionScope,
+  CreditSnapshotStore,
+  InMemoryCreditAuthorizationPort,
+  InMemoryCreditAuthorizationPortConfig,
+  InMemoryCreditPortState,
+  InMemoryCreditReservationRecord,
+  InMemoryCreditReservationState,
+} from "./credit-admission";

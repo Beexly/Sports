@@ -207,7 +207,7 @@ export interface FinalizeSuccessInput {
 export interface FinalizeFailureInput {
   readonly invocationId: string;
   readonly ownerToken: string;
-  readonly status: "FAILED" | "AMBIGUOUS";
+  readonly status: "FAILED" | "AMBIGUOUS" | "BUDGET_BLOCKED";
   readonly now: Date;
 }
 

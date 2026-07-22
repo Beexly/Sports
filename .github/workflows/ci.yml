@@ -46,6 +46,9 @@ jobs:
     env:
       DATABASE_URL: "postgresql://sports:sports_test@localhost:5432/sports_test"
       DIRECT_URL: "postgresql://sports:sports_test@localhost:5432/sports_test"
+      # §10.9: makes the real-Postgres budget acceptance suite MANDATORY in CI
+      # (it installs its own schema + CHECK constraints from the migration SQL).
+      AI_BUDGET_PG_URL: "postgresql://sports:sports_test@localhost:5432/sports_test"
       NEXTAUTH_SECRET: "test-secret-do-not-use-in-production"
       NEXTAUTH_URL: "http://localhost:3000"
 
@@ -81,6 +84,17 @@ jobs:
 
       - name: Run Vercel skip-gate tests
         run: node --test scripts/vercel-skip-build.test.mjs
+
+      # §10.9: the budget acceptance run is mandatory and its evidence is
+      # RETAINED — a missing artifact fails the build.
+      - name: Upload budget acceptance artifact (§10.9)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-budget-acceptance
+          path: apps/web/test-artifacts/ai-budget-acceptance.json
+          retention-days: 90
+          if-no-files-found: error
 
   # --------------------------------------------------------------
   # 2. Build
