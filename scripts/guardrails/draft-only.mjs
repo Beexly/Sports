@@ -31,6 +31,16 @@ const WHITELIST_FILES = new Set([
   "packages/db/prisma/schema.prisma",
   "packages/db/prisma/seed.ts",
   "scripts/guardrails/draft-only.mjs",
+  // Founder-approved exception (see CLAUDE.md's Elite tier — "real-time
+  // email & push alerts"): this is a per-USER transactional notification
+  // channel, not the autonomous social/email/SMS content-publishing path
+  // this guardrail exists to catch. It is triple-gated (WATCHLIST_ALERTS_ENABLED
+  // kill switch, GRADED-only picks, Elite-only recipients — see
+  // apps/web/lib/watchlist/alert-dispatch.ts) and fail-isolated/no-op unless
+  // RESEND_API_KEY + ALERTS_EMAIL_FROM are both founder-provisioned. It sends
+  // exactly one plain-text alert to a NextAuth-VERIFIED address per settled
+  // pick a user follows — never content, never bulk, never autonomous copy.
+  "apps/web/lib/watchlist/channels/email-channel.ts",
 ]);
 
 const WHITELIST_DIRS = new Set([

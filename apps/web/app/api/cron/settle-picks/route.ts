@@ -25,9 +25,19 @@
 import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { db } from "@sports/db";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
-import { settleSport, freezeSlateCommitments, type SlateFreezeResult } from "@sports/ingestion-pipeline";
+import {
+  settleSport,
+  freezeSlateCommitments,
+  computeScheduledWindow,
+  type SlateFreezeResult,
+} from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
+import {
+  drainSettlementOutbox,
+  type OutboxDrainSummary,
+} from "@/lib/settlement-outbox/worker";
 
 export const dynamic = "force-dynamic";
 // Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
@@ -72,16 +82,34 @@ export async function GET(request: Request) {
     ok: boolean;
     gamesSettled: number;
     picksSettled: number;
+    observationsRecorded: number;
+    anomaliesOpened: number;
+    anomaliesPromoted: number;
+    anomaliesResolved: number;
+    outboxAppended: number;
     error?: string;
   }> = [];
 
+  // Externally supplied scheduler-invocation window (hardening 6.1): every
+  // retry of THIS scheduled invocation resolves to the same settlement-run
+  // identity inside settleSport, so retries can never fabricate evidence
+  // corroboration.
+  const scheduledWindow = computeScheduledWindow();
+
   for (const sport of sportsToProcess) {
-    const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks]");
+    const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks]", {
+      scheduledWindow,
+    });
     results.push({
       sport: result.sport,
       ok: result.status === "success",
       gamesSettled: result.gamesSettled,
       picksSettled: result.picksSettled,
+      observationsRecorded: result.observationsRecorded,
+      anomaliesOpened: result.anomaliesOpened,
+      anomaliesPromoted: result.anomaliesPromoted,
+      anomaliesResolved: result.anomaliesResolved,
+      outboxAppended: result.outboxAppended,
       ...(result.error ? { error: result.error } : {}),
     });
     // Brief pause to avoid bursting the upstream API quota.
@@ -108,10 +136,35 @@ export async function GET(request: Request) {
     );
   }
 
+  // DRAIN-AFTER-SETTLEMENT (hardening 6.8): kick the outbox immediately so
+  // event→delivery latency is bounded by this cron's own runtime instead of
+  // waiting for the next deliver-settlement-alerts schedule. The durable
+  // retry worker remains the safety net; this is purely a latency win.
+  // Non-fatal: a drain failure never fails settlement (which already
+  // committed durably).
+  let alertDrain: OutboxDrainSummary | null = null;
+  try {
+    alertDrain = await drainSettlementOutbox(db);
+  } catch (drainErr) {
+    console.warn(
+      `[cron:settle-picks] post-settlement outbox drain failed: ` +
+        `${drainErr instanceof Error ? drainErr.message : drainErr}`,
+    );
+  }
+
   const elapsedMs = Date.now() - startedAt;
   const okCount = results.filter((r) => r.ok).length;
   const gamesSettled = results.reduce((sum, r) => sum + r.gamesSettled, 0);
   const picksSettled = results.reduce((sum, r) => sum + r.picksSettled, 0);
+  // Settlement-evidence telemetry (Phase 1E): surfaced so a non-zero count —
+  // especially a promotion to OWNER_REVIEW — is visible in the cron response,
+  // never silent. The durable receipts live in the SettlementDecision table;
+  // these are per-run counters only.
+  const observationsRecorded = results.reduce((sum, r) => sum + r.observationsRecorded, 0);
+  const anomaliesOpened = results.reduce((sum, r) => sum + r.anomaliesOpened, 0);
+  const anomaliesPromoted = results.reduce((sum, r) => sum + r.anomaliesPromoted, 0);
+  const anomaliesResolved = results.reduce((sum, r) => sum + r.anomaliesResolved, 0);
+  const outboxAppended = results.reduce((sum, r) => sum + r.outboxAppended, 0);
 
   return NextResponse.json({
     ok: okCount === results.length,
@@ -120,9 +173,15 @@ export async function GET(request: Request) {
     totalCount: results.length,
     gamesSettled,
     picksSettled,
+    observationsRecorded,
+    anomaliesOpened,
+    anomaliesPromoted,
+    anomaliesResolved,
+    outboxAppended,
     requestedSport: requestedSport ?? null,
     bootstrapMode: gates.isBootstrapMode,
     results,
     freeze,
+    alertDrain,
   });
 }

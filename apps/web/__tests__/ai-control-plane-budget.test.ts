@@ -73,6 +73,7 @@ import {
   BudgetBlocked,
   AmbiguousCharge,
   ProviderUnavailable,
+  PolicyBlocked,
 } from "@/lib/ai-control-plane/errors";
 import { getTaskPolicy } from "@/lib/ai-control-plane/policy-registry";
 import { resolveEffectiveAuthority } from "@/lib/ai-control-plane/validation";
@@ -1261,13 +1262,21 @@ describe("§10 pipeline: reserve before dispatch, settle after", () => {
 
   it("non-billable modes never touch the budget store", async () => {
     const h = pipelineHarness({ outcomes: [OK] });
-    await h.dispatch(
-      billablePlan({
-        costMode: "CONFIRMED_CREDITS_ONLY",
-        fundingLabel: "CREDIT_ELIGIBLE_UNCONFIRMED",
-        maxVendorCashUsd: 0,
-      }),
-    );
+    // CONFIRMED_CREDITS_ONLY doesn't reserve against the CASH budget store —
+    // but with directive §11.3's credit admission (PR #166) now merged, this
+    // harness's `deps.creditStore`/`deps.creditPort` are unset, so the
+    // pipeline fails closed with PolicyBlocked BEFORE ever reaching a budget
+    // reservation. Either way the assertion this test exists to prove holds:
+    // the budget store is never touched for this mode.
+    await expect(
+      h.dispatch(
+        billablePlan({
+          costMode: "CONFIRMED_CREDITS_ONLY",
+          fundingLabel: "CREDIT_ELIGIBLE_UNCONFIRMED",
+          maxVendorCashUsd: 0,
+        }),
+      ),
+    ).rejects.toThrow(PolicyBlocked);
     expect(h.f.state.reservations.size).toBe(0);
   });
 

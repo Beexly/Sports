@@ -54,6 +54,7 @@ import {
   type ClaimInvocationInput,
   type ClaimOutcome,
   type ControlSqlClient,
+  type RouteCreditAuthorizationPort,
   type ProviderDispatchFn,
   type SealedAiExecutorDependencies,
   failClosedCreditAuthorizationPort,
@@ -368,6 +369,28 @@ function neverDispatcher(calls: string[]): ProviderDispatchFn {
   };
 }
 
+/**
+ * This suite predates credit admission (§11.3) and its default plan mode
+ * (CONFIRMED_CREDITS_ONLY, see `makePlan`) exercises §9 pipeline mechanics
+ * that have nothing to do with credit-specific behavior — so the harness
+ * wires a trivial ALWAYS-ADMITS port rather than a real ledger fixture
+ * (that lifecycle is exhaustively covered by
+ * ai-control-plane-credit-admission.test.ts). `findCovering` is never
+ * actually consulted by this fake — it bypasses `admitCreditFunded`
+ * entirely — so its return value is irrelevant.
+ */
+const alwaysAdmitCreditPort: RouteCreditAuthorizationPort = {
+  async authorize() {
+    return {
+      admitted: true,
+      handle: { reservationId: "stub-reservation", grantId: "stub-grant" },
+      detail: "stub: always admits (this suite tests §9, not §11.3)",
+    };
+  },
+  async settle() {},
+  async release() {},
+};
+
 interface Harness {
   store: MemStore;
   dispatchCalls: string[];
@@ -428,6 +451,10 @@ function makeHarness(args?: {
     now: args?.now ?? (() => NOW),
     idFactory: () => `id-${(idCounter += 1)}`,
     leaseMs: 120_000,
+    // makePlan()'s default costMode is CONFIRMED_CREDITS_ONLY; wire the
+    // always-admit stub so this §9-focused suite isn't gated by §11.3.
+    creditStore: { async findCovering() { return []; } },
+    creditPort: alwaysAdmitCreditPort,
   });
   return { store, dispatchCalls, queueRows, dispatch };
 }

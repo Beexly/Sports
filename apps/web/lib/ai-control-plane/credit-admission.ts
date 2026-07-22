@@ -1,49 +1,57 @@
 /**
- * AI control-plane credit ADMISSION layer (Phase 2 PR-D, rebuilt on the
- * hardened #162/#163/#164 chain + NOVA S1's canonical `CreditGrantSnapshot`).
+ * AI control-plane credit ADMISSION + AUTHORIZATION layer (Phase 2 PR-D,
+ * rebuilt on the corrected #162/#163/#164 chain + NOVA S1's canonical
+ * `CreditGrantSnapshot`).
  *
  * Governing docs:
  *   - docs/ai/phase0/NOVA_CONVERGENCE_FREEZE_2026-07-22.md §3.1 (consumption
  *     contract), §5.2 (CreditGrantState binding), §8 (PR-D unblocked as the
  *     admission layer; table materialization deferred to S5).
- *   - directive §11.2 (canonical snapshot, S1's
- *     `lib/opportunity-engine/credit-snapshot.ts`) / §11.3 (this module:
- *     snapshot validation, coverage matching, freshness, sufficiency,
- *     fail-closed admission, tests against a fake adapter, NO Prisma credit
- *     tables, no reachable production credit mode).
+ *   - docs/ai/phase0/AI_CONTROL_PLANE_DESIGN_2026-07-22.md §PR D / directive
+ *     §11.2 (canonical snapshot, `lib/opportunity-engine/credit-snapshot.ts`)
+ *     / §11.3 (this module's atomic `CreditAuthorizationPort`).
  *
  * OWNERSHIP (freeze §2/§3.1): NOVA owns the credit-program lifecycle, its
- * state vocabulary, AND the canonical snapshot contract. This module IMPORTS
- * `CreditGrantSnapshot` and its S1 validators from `@/lib/opportunity-engine`
- * — it does NOT redefine, re-declare, or structurally clone them (directive
- * §11.2: S1's module doc names this branch as the contract's sole known
- * consumer and requires exactly that). Likewise the atomic authorization
- * seam: the `CreditAuthorizationPort` INTERFACE is owned by the budgets unit
- * (`./credit-port.ts`, §10.8) and S5 implements it against NOVA-owned
- * persistence — this module only CONSUMES it, contributing the admission
- * semantics a conforming adapter must run before reserving, plus a FAKE
- * in-memory adapter for tests. There are NO Prisma credit tables in PR-D
- * (§11.3) and no migration; the fake adapter's ledger is process-memory.
+ * state vocabulary, AND the canonical snapshot contract. This module
+ * IMPORTS `CreditGrantSnapshot` and its S1 validators from
+ * `@/lib/opportunity-engine` — it does NOT redefine, re-declare, or
+ * structurally clone them (directive §11.2: "feat/ai-control-plane-credit-
+ * admission ... must IMPORT this type ... and must never redefine"). The
+ * Prisma table BEHIND the snapshot read model is materialized in NOVA's S5
+ * persistence unit; this module codes against the read-only
+ * `CreditSnapshotStore` interface for snapshot lookup.
  *
  * THE ONE INVARIANT: a provider/model id alone can NEVER produce credit
  * admission. `CONFIRMED_CREDITS_ONLY` admits a provider only through a
  * fresh, covering, sufficient, receipted snapshot in a consumable grant
- * state, AND only after an ATOMIC reservation through the
- * `CreditAuthorizationPort` proves the grant's spendable balance actually
- * has room (S1 stops short of amount sufficiency deliberately: "AMOUNT
- * sufficiency versus a specific charge estimate is deliberately NOT decided
- * here — that is PR-D's CreditAuthorizationPort"). EVERYTHING else fails
- * closed: no store, no snapshot, any S1 admissibility refusal (invalid
- * snapshot, non-consumable state, unknown/past expiry, stale observation,
- * uncovered scope, drifted/failed-closed reconciliation, no spendable
- * balance), insufficient headroom for THIS charge, a throwing store, or a
- * reservation race loss — all refuse. In production nothing here is
- * reachable at all: the sealed executor wires the budgets unit's
- * `failClosedCreditAuthorizationPort`, so CONFIRMED_CREDITS_ONLY refuses
- * before any dispatch until S5 lands a real adapter (tested).
+ * state, AND only after an ATOMIC authorization reservation proves the
+ * grant's spendable balance actually has room (directive §11.3 — S1
+ * deliberately stops short of amount sufficiency against a specific charge:
+ * "AMOUNT sufficiency versus a specific charge estimate is deliberately NOT
+ * decided here — that is PR-D's CreditAuthorizationPort"). EVERYTHING else
+ * fails closed: no store, no snapshot, any S1 admissibility refusal
+ * (invalid snapshot, non-consumable state, unknown/past expiry, stale
+ * observation, uncovered scope, drifted/failed-closed reconciliation, no
+ * spendable balance), insufficient headroom for THIS charge, a throwing
+ * store, or a reservation race loss — all refuse.
  *
- * `admitCreditFunded` and the fake adapter are deterministic (injected
- * `now`, injected id factory); there is no clock read and no env read.
+ * AUTHORIZATION IS ATOMIC (directive §11.3, new correction): unlike the old
+ * PR-D, admission alone was never enough to prevent a double-spend across
+ * concurrent attempts against the SAME grant — two callers could both read
+ * "sufficient remaining" and both admit. `CreditAuthorizationPort.authorize`
+ * closes that gap the same way `budget.ts` closes it for cash: ONE atomic
+ * conditional UPDATE against a per-grant reservation ledger
+ * (`credit_grant_reservation_ledger`), never a read-then-write. The ledger's
+ * cap is refreshed from the admitting snapshot's CURRENT spendable balance
+ * on every authorize call, so N concurrent authorizers against a grant that
+ * can fund M can authorize AT MOST M; the rest are refused
+ * `insufficient-headroom` with zero reservation taken. Proven against real
+ * Postgres — see the "100 concurrent authorize()" acceptance test.
+ *
+ * `admitCreditFunded`/`authorize` are otherwise deterministic (injected
+ * `now`/TTL); there is no clock read and no env read beyond the injected
+ * store and ledger. The caller (`invocation-pipeline.ts`) maps a refusal to
+ * `PolicyBlocked`.
  */
 
 import {
@@ -57,12 +65,6 @@ import {
   type CreditScopeRequest,
 } from "@/lib/opportunity-engine";
 import type { ProviderRouteId } from "./contracts";
-import type {
-  CreditAuthorizationPort,
-  CreditAuthorizationRequest,
-  CreditReservation,
-} from "./credit-port";
-import { microsToUsd, usdToMicros } from "./budget";
 import { BudgetBlocked } from "./errors";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -100,9 +102,10 @@ export interface CreditSnapshotStore {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Reason codes for a fail-closed refusal. Every S1 admissibility reason is
- * representable, plus the reasons S1 deliberately leaves undecided:
- * charge-specific headroom, currency, and the store/request-level failures.
+ * Reason codes for a fail-closed refusal (mapped to `PolicyBlocked`
+ * upstream). Every S1 admissibility reason is representable, plus the two
+ * PR-D-owned reasons S1 deliberately leaves undecided: charge-specific
+ * headroom and the store/request-level failures.
  */
 export type CreditAdmissionRefusalReason =
   | "no-credit-store"
@@ -118,12 +121,7 @@ export interface CreditAdmissionDecision {
   /** Primary reason (the first snapshot's failure, or the store-level cause). */
   readonly reason: CreditAdmissionRefusalReason | null;
   readonly detail: string;
-  /**
-   * The admitting snapshot's grant id, returned to the CALLER. PR-D persists
-   * nothing (§11.3: no Prisma credit tables); durable attribution of the
-   * admitting grant onto the invocation ledger is S5 scope — no such
-   * attribution field exists yet.
-   */
+  /** The admitting snapshot's grant id — recorded as attribution.creditGrantSnapshotId. */
   readonly grantId: string | null;
   /** Per-candidate-snapshot refusal reasons, in store order. */
   readonly snapshotRefusals: readonly {
@@ -197,10 +195,9 @@ export function evaluateCreditAdmission(
 
 /**
  * Admit (or refuse) credit funding for one provider attempt — eligibility
- * only; this does NOT reserve anything (a conforming
- * `CreditAuthorizationPort` adapter must still take an atomic hold before
- * dispatch — see `createInMemoryCreditAuthorizationPort` for the reference
- * composition). Pure and deterministic: same inputs -> same decision.
+ * only; this does NOT reserve anything (see `CreditAuthorizationPort` below
+ * for the atomic reservation this decision must still pass through before
+ * dispatch). Pure and deterministic: same inputs -> same decision.
  * Fail-closed: any store error, missing/invalid input, or S1/PR-D gate
  * failure refuses — the ONLY admitting path is a snapshot that passes every
  * gate. On success the admitting snapshot's grant id is returned.
@@ -291,373 +288,252 @@ export async function admitCreditFunded(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FAKE in-memory CreditAuthorizationPort adapter (directive §11.3: "tests
-// against a fake adapter") — the reference composition of admission +
-// atomic reservation. NEVER wired into production (the sealed executor
-// seals the budgets unit's failClosedCreditAuthorizationPort; there is no
-// production parameter through which to inject this). NO Prisma tables.
+// CreditAuthorizationPort (directive §11.3) — atomic reservation
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Lifecycle of one in-memory hold, mirroring the port's method surface. */
-export type InMemoryCreditReservationState =
-  | "HELD"
-  | "PROVISIONALLY_SETTLED"
-  | "RECONCILED"
-  | "RELEASED";
+/**
+ * Minimal parameterized-SQL seam the atomic reservation ledger depends on.
+ * Any object with these raw-query methods works, including the real Prisma
+ * client (see `prismaCreditLedgerClient` in control-store.ts's sibling
+ * pattern) — mirrors `budget.ts`'s `BudgetDb` seam exactly.
+ */
+export interface CreditLedgerDb {
+  $executeRawUnsafe(query: string, ...values: unknown[]): Promise<number>;
+  $queryRawUnsafe<T = unknown>(query: string, ...values: unknown[]): Promise<T>;
+  $transaction<T>(fn: (tx: CreditLedgerDb) => Promise<T>): Promise<T>;
+}
 
-export interface InMemoryCreditReservationRecord {
-  readonly creditReservationId: string;
-  readonly requestId: string;
-  readonly reservationVersion: number;
+/** Lifecycle of one atomic authorization hold. */
+export type CreditAuthorizationState = "HELD" | "SETTLED" | "RELEASED" | "EXPIRED";
+
+export interface CreditAuthorizationHandle {
+  readonly reservationId: string;
   readonly grantId: string;
-  /** The hold, in integer minor units of the grant's currency (USD cents). */
-  readonly heldMinorUnits: number;
-  state: InMemoryCreditReservationState;
-  /** Provisional actual applied by settleProvisional (minor units). */
-  actualMinorUnits: number | null;
-  /** Receipt-confirmed amount applied by reconcile (minor units). */
-  confirmedMinorUnits: number | null;
 }
 
-/** Inspectable state surface for tests (never a production API). */
-export interface InMemoryCreditPortState {
-  readonly reservations: ReadonlyMap<string, InMemoryCreditReservationRecord>;
-  /** Sum of currently-HELD minor units per grant — the atomic ledger. */
-  readonly heldMinorUnitsByGrant: ReadonlyMap<string, number>;
-  /**
-   * Sum of SETTLED spend (provisional actuals, corrected by reconciled
-   * confirmations) per grant. The snapshot store in this fake is static, so
-   * settled spend must stay counted against the snapshot's spendable balance
-   * on every later `authorizeAndReserve` — otherwise sequential
-   * authorize -> settle cycles could cumulatively overspend a grant. A real
-   * S5 adapter reproduces this by decrementing the grant's authoritative
-   * remaining balance transactionally at settlement.
-   */
-  readonly settledMinorUnitsByGrant: ReadonlyMap<string, number>;
-}
+export type CreditAuthorizationDecision =
+  | ({ readonly admitted: true; readonly handle: CreditAuthorizationHandle } & Pick<
+      CreditAdmissionDecision,
+      "detail"
+    >)
+  | CreditAdmissionDecision & { readonly admitted: false };
 
-export interface InMemoryCreditAuthorizationPortConfig {
+export interface AuthorizeCreditInput {
   readonly store: CreditSnapshotStore;
-  /**
-   * Maps the budgets unit's port request (task class + entity; NO scope
-   * fields — the port contract is deliberately scope-free) to the admission
-   * scope the snapshot must cover. A real S5 adapter derives this from
-   * NOVA-owned task-class -> product/model/region policy; tests inject it.
-   */
-  readonly scopeFor: (request: CreditAuthorizationRequest) => CreditAdmissionScope;
-  /** Deterministic id factory (tests inject). Defaults to a counter. */
+  readonly scope: CreditAdmissionScope;
+  readonly worstCaseMinorUnits: number;
+  readonly worstCaseCurrency: string;
+  readonly now: Date;
+  /** Auto-release safety-net deadline for the hold. */
+  readonly expiresAt: Date;
+  /** Deterministic id factory (tests inject). Defaults to a random id. */
   readonly idFactory?: () => string;
 }
 
-export interface InMemoryCreditAuthorizationPort extends CreditAuthorizationPort {
-  /** Test-only inspection of the fake's ledger. */
-  readonly state: InMemoryCreditPortState;
+/**
+ * Atomic credit-authorization port (directive §11.3): composes admission
+ * (S1 admissibility + PR-D headroom) with a reservation that ACTUALLY
+ * PREVENTS a double-spend across concurrent authorizers of the same grant —
+ * a property `admitCreditFunded` alone cannot provide (it only reads, never
+ * holds).
+ */
+export interface CreditAuthorizationPort {
+  authorize(input: AuthorizeCreditInput): Promise<CreditAuthorizationDecision>;
+  /** Settle a HELD reservation with the actual spend (minor units). */
+  settle(handle: CreditAuthorizationHandle, actualMinorUnits: number): Promise<void>;
+  /** Release a HELD reservation without a charge (invocation never spent). */
+  release(handle: CreditAuthorizationHandle): Promise<void>;
 }
 
-/**
- * Convert the port's exact 6-dp USD decimal string into integer USD minor
- * units (cents), rounding UP — a conservative hold can only over-reserve,
- * never under-reserve, so the credits-only guarantee survives the precision
- * change. Throws `BudgetBlocked` on a malformed amount (fail closed).
- */
-export function usdStringToMinorUnitsCeil(usd: string, label: string): number {
-  let micros: bigint;
-  try {
-    micros = usdToMicros(usd, label);
-  } catch (error) {
+function randomId(): string {
+  const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  if (c?.randomUUID) return c.randomUUID();
+  return `credauth_${Date.now().toString(36)}_${Math.random().toString(36).slice(2)}`;
+}
+
+async function loadHeldReservation(
+  tx: CreditLedgerDb,
+  reservationId: string,
+  op: "settle" | "release",
+): Promise<{ grantId: string; amount: string }> {
+  const rows = await tx.$queryRawUnsafe<
+    Array<{ grantId: string; amountMinorUnits: string | number; state: string }>
+  >(
+    `SELECT "grantId", "amountMinorUnits"::text AS "amountMinorUnits", "state"
+       FROM "credit_grant_reservations"
+      WHERE "id" = $1
+      FOR UPDATE`,
+    reservationId,
+  );
+  const row = rows[0];
+  if (!row) {
+    throw new BudgetBlocked(`${op}: credit reservation "${reservationId}" does not exist.`);
+  }
+  if (row.state !== "HELD") {
     throw new BudgetBlocked(
-      `${label} "${usd}" is not a valid USD amount: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
+      `${op}: credit reservation "${reservationId}" is ${row.state}, not HELD; ` +
+        `refusing to ${op} it twice.`,
     );
   }
-  const cents = (micros + 9_999n) / 10_000n; // ceil(micros / 10_000)
-  const asNumber = Number(cents);
-  if (!Number.isSafeInteger(asNumber)) {
-    throw new BudgetBlocked(`${label} "${usd}" exceeds the representable range.`);
-  }
-  return asNumber;
+  return { grantId: row.grantId, amount: String(row.amountMinorUnits) };
 }
 
 /**
- * FAKE atomic in-memory adapter for the budgets unit's
- * `CreditAuthorizationPort` (§10.8 interface, §11.3 fake). Composition per
- * §11.3: snapshot validation + coverage + freshness + sufficiency (the
- * fail-closed admission above) and THEN an ATOMIC check-and-hold against an
- * in-memory per-grant ledger — the check and the mutation happen in one
- * synchronous critical section AFTER the last `await`, so N concurrent
- * `authorizeAndReserve` calls against a grant whose spendable balance funds
- * only M admit AT MOST M; the rest are refused with ZERO hold taken. A
- * snapshot read alone is a non-conforming implementation (the port's own
- * doc), and this fake exists precisely to prove the composed semantics a
- * real S5 adapter must reproduce transactionally.
+ * Postgres-backed `CreditAuthorizationPort`. THE ATOMIC GUARD (mirrors
+ * budget.ts's `reserve`): one conditional UPDATE against a per-grant ledger
+ * row, refreshed to the admitting snapshot's CURRENT spendable balance on
+ * every call —
  *
- * The ledger counts BOTH outstanding holds AND settled spend against the
- * static snapshot's spendable balance, so the no-collective-overspend
- * invariant survives settlement: sequential authorize -> settle cycles can
- * never re-spend a settled balance (an S5 adapter reproduces this by
- * decrementing the authoritative remaining balance at settlement). Both
- * settlement paths are capped by the authorization: `settleProvisional`
- * refuses an actual above the hold, and `reconcile` refuses a
- * receipt-confirmed amount above the hold (an overrun receipt is a dispute
- * for S5's dispute path, never silently recordable truth).
+ *   INSERT INTO credit_grant_reservation_ledger (grantId, reservedMinorUnits)
+ *     VALUES ($grantId, 0) ON CONFLICT ("grantId") DO NOTHING;
+ *   UPDATE credit_grant_reservation_ledger
+ *      SET "reservedMinorUnits" = "reservedMinorUnits" + $amount
+ *    WHERE "grantId" = $grantId
+ *      AND "reservedMinorUnits" + $amount <= $spendableAtAuthTime
+ *   RETURNING "grantId";
  *
- * Refusals THROW `BudgetBlocked` (the port's fail-closed contract — the
- * executor maps it to a recorded BUDGET_BLOCKED decision, and dispatch
- * never happens).
- *
- * Idempotency (§10.6 mirror): a replayed `authorizeAndReserve` with the same
- * `requestId` + `reservationVersion` returns the ORIGINAL reservation while
- * it is still HELD — never a second hold. A replay after settlement/release
- * refuses (a completed authorization cannot be silently re-opened).
+ * — never a read-then-write. Postgres row locking serializes concurrent
+ * authorizers of the SAME grant, and the WHERE guard admits exactly the set
+ * of holds that still fit the grant's spendable balance AS OBSERVED AT THIS
+ * CALL. N concurrent authorize() calls against a grant that can fund M
+ * authorize at most M; the rest see zero rows updated and are refused
+ * `insufficient-headroom` with NO reservation taken.
  */
-export function createInMemoryCreditAuthorizationPort(
-  config: InMemoryCreditAuthorizationPortConfig,
-): InMemoryCreditAuthorizationPort {
-  const reservations = new Map<string, InMemoryCreditReservationRecord>();
-  const heldByGrant = new Map<string, number>();
-  const settledByGrant = new Map<string, number>();
-  const byIdempotencyKey = new Map<string, string>();
-  let counter = 0;
-  const idFactory = config.idFactory ?? (() => `credres-${++counter}`);
-
-  function requireReservation(
-    creditReservationId: string,
-    op: string,
-  ): InMemoryCreditReservationRecord {
-    const record = reservations.get(creditReservationId);
-    if (!record) {
-      throw new BudgetBlocked(
-        `${op}: credit reservation "${creditReservationId}" does not exist.`,
-      );
-    }
-    return record;
-  }
-
-  function releaseHold(record: InMemoryCreditReservationRecord): void {
-    const held = heldByGrant.get(record.grantId) ?? 0;
-    heldByGrant.set(record.grantId, held - record.heldMinorUnits);
-  }
-
-  /**
-   * Move settled spend on/off the grant's consumed ledger. Settled spend is
-   * PERMANENT against the static snapshot (only a reconcile correction may
-   * adjust it), which is what keeps sequential authorize -> settle cycles
-   * from re-spending the same balance.
-   */
-  function addSettled(grantId: string, deltaMinorUnits: number): void {
-    const settled = settledByGrant.get(grantId) ?? 0;
-    settledByGrant.set(grantId, settled + deltaMinorUnits);
-  }
+export function createPgCreditAuthorizationPort(db: unknown): CreditAuthorizationPort {
+  const ledgerDb = db as CreditLedgerDb;
 
   return {
-    state: {
-      reservations,
-      heldMinorUnitsByGrant: heldByGrant,
-      settledMinorUnitsByGrant: settledByGrant,
-    },
-
-    async authorizeAndReserve(
-      request: CreditAuthorizationRequest,
-    ): Promise<CreditReservation> {
-      const worstCaseMinorUnits = usdStringToMinorUnitsCeil(
-        request.worstCaseUsd,
-        "worstCaseUsd",
-      );
-
-      const idempotencyKey = `${request.requestId}#${request.reservationVersion}`;
-      const existingId = byIdempotencyKey.get(idempotencyKey);
-      if (existingId !== undefined) {
-        const existing = requireReservation(existingId, "authorizeAndReserve");
-        if (existing.state !== "HELD") {
-          throw new BudgetBlocked(
-            `authorizeAndReserve: reservation for request "${request.requestId}" ` +
-              `v${request.reservationVersion} is already ${existing.state}; a ` +
-              "completed authorization cannot be replayed.",
-          );
-        }
+    async authorize(input: AuthorizeCreditInput): Promise<CreditAuthorizationDecision> {
+      const decision = await admitCreditFunded({
+        store: input.store,
+        scope: input.scope,
+        worstCaseMinorUnits: input.worstCaseMinorUnits,
+        worstCaseCurrency: input.worstCaseCurrency,
+        now: input.now,
+      });
+      if (!decision.admitted || decision.grantId === null) {
         return {
-          creditReservationId: existing.creditReservationId,
-          requestId: existing.requestId,
-          grantAllocationRef: existing.grantId,
-          // The ORIGINAL hold, not the replay's amount — idempotent replay
-          // returns the reservation as it was taken.
-          heldUsd: microsToUsd(BigInt(existing.heldMinorUnits) * 10_000n),
+          admitted: false,
+          reason: decision.reason,
+          detail: decision.detail,
+          grantId: null,
+          snapshotRefusals: decision.snapshotRefusals,
         };
       }
+      const grantId = decision.grantId;
+      const idFactory = input.idFactory ?? randomId;
+      const reservationId = idFactory();
 
-      const scope = config.scopeFor(request);
-
-      // The ONLY await before the critical section: read the candidate
-      // snapshots. Everything after this line is synchronous, which is what
-      // makes the check-and-hold atomic in this single-threaded fake (the
-      // real S5 adapter must achieve the same with a conditional UPDATE).
-      let candidates: readonly CreditGrantSnapshot[];
+      // Re-derive the CURRENT spendable balance for the guard (a fresh read,
+      // not the possibly-stale candidate used for admission above — the
+      // admission pass already proved coverage/eligibility; only the amount
+      // gate needs the freshest number the atomic UPDATE can be guarded on).
+      let spendableAtAuthTime = 0;
       try {
-        candidates = await config.store.findCovering(scope, request.now);
+        const fresh = await input.store.findCovering(input.scope, input.now);
+        const match = fresh.find((s) => s.grantId === grantId);
+        spendableAtAuthTime = match
+          ? match.remainingMinorUnits - match.reservedMinorUnits
+          : 0;
       } catch (error) {
-        throw new BudgetBlocked(
-          `credit snapshot store failed: ${
-            error instanceof Error ? error.message : String(error)
-          } — refusing credit-funded dispatch (fail closed).`,
-        );
-      }
-
-      if (!Array.isArray(candidates) || candidates.length === 0) {
-        throw new BudgetBlocked(
-          `no credit-grant snapshot covers provider "${scope.provider}" — ` +
-            "refusing credit-funded dispatch (no covering snapshot).",
-        );
-      }
-
-      // ── Atomic critical section (no await) ─────────────────────────────
-      const evaluationAtIso = isoOf(request.now);
-      const refusals: string[] = [];
-      for (const snapshot of candidates) {
-        const reasons = evaluateCreditAdmission(
-          snapshot,
-          scope,
-          worstCaseMinorUnits,
-          "USD",
-          evaluationAtIso,
-        );
-        if (reasons.length > 0) {
-          refusals.push(`${snapshot.grantId}=[${reasons.join(",")}]`);
-          continue;
-        }
-        const spendable =
-          snapshot.remainingMinorUnits - snapshot.reservedMinorUnits;
-        const alreadyHeld = heldByGrant.get(snapshot.grantId) ?? 0;
-        // Settled spend stays counted: the static snapshot never learns about
-        // this fake's settlements, so the ledger must subtract them itself or
-        // sequential authorize -> settle cycles would overspend the grant.
-        const alreadySettled = settledByGrant.get(snapshot.grantId) ?? 0;
-        if (alreadyHeld + alreadySettled + worstCaseMinorUnits > spendable) {
-          refusals.push(
-            `${snapshot.grantId}=[insufficient-headroom: ${alreadyHeld} already ` +
-              `held + ${alreadySettled} already settled + ${worstCaseMinorUnits} ` +
-              `> spendable ${spendable}]`,
-          );
-          continue;
-        }
-        // Check passed — take the hold in the SAME synchronous step.
-        heldByGrant.set(snapshot.grantId, alreadyHeld + worstCaseMinorUnits);
-        const creditReservationId = idFactory();
-        const record: InMemoryCreditReservationRecord = {
-          creditReservationId,
-          requestId: request.requestId,
-          reservationVersion: request.reservationVersion,
-          grantId: snapshot.grantId,
-          heldMinorUnits: worstCaseMinorUnits,
-          state: "HELD",
-          actualMinorUnits: null,
-          confirmedMinorUnits: null,
-        };
-        reservations.set(creditReservationId, record);
-        byIdempotencyKey.set(idempotencyKey, creditReservationId);
         return {
-          creditReservationId,
-          requestId: request.requestId,
-          grantAllocationRef: snapshot.grantId,
-          // What is actually HELD: the worst case rounded UP to whole minor
-          // units (never less than requested).
-          heldUsd: microsToUsd(BigInt(worstCaseMinorUnits) * 10_000n),
+          admitted: false,
+          reason: "store-error",
+          detail: `credit snapshot store failed on re-read: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+          grantId: null,
+          snapshotRefusals: [],
         };
       }
 
-      throw new BudgetBlocked(
-        `credit admission refused for provider "${scope.provider}": ` +
-          `${refusals.join("; ")} — refusing credit-funded dispatch.`,
-      );
+      const acquired = await ledgerDb.$transaction(async (tx) => {
+        await tx.$executeRawUnsafe(
+          `INSERT INTO "credit_grant_reservation_ledger" ("grantId", "reservedMinorUnits", "updatedAt")
+           VALUES ($1, 0, now())
+           ON CONFLICT ("grantId") DO NOTHING`,
+          grantId,
+        );
+        const affected = await tx.$executeRawUnsafe(
+          `UPDATE "credit_grant_reservation_ledger"
+              SET "reservedMinorUnits" = "reservedMinorUnits" + $1::bigint,
+                  "updatedAt" = now()
+            WHERE "grantId" = $2
+              AND "reservedMinorUnits" + $1::bigint <= $3::bigint`,
+          input.worstCaseMinorUnits,
+          grantId,
+          spendableAtAuthTime,
+        );
+        if (affected !== 1) return false;
+        await tx.$executeRawUnsafe(
+          `INSERT INTO "credit_grant_reservations"
+             ("id", "grantId", "amountMinorUnits", "state", "createdAt", "expiresAt")
+           VALUES ($1, $2, $3::bigint, 'HELD', $4, $5)`,
+          reservationId,
+          grantId,
+          input.worstCaseMinorUnits,
+          input.now,
+          input.expiresAt,
+        );
+        return true;
+      });
+
+      if (!acquired) {
+        return {
+          admitted: false,
+          reason: "insufficient-headroom",
+          detail:
+            `grant "${grantId}" cannot admit a hold of ${input.worstCaseMinorUnits} ` +
+            "minor units (concurrent authorization exhausted the spendable balance).",
+          grantId: null,
+          snapshotRefusals: [],
+        };
+      }
+      return { admitted: true, handle: { reservationId, grantId }, detail: decision.detail };
     },
 
-    async settleProvisional(
-      creditReservationId: string,
-      actualUsd: string,
-      _now: Date,
-    ): Promise<void> {
-      const actualMinorUnits = usdStringToMinorUnitsCeil(actualUsd, "actualUsd");
-      const record = requireReservation(creditReservationId, "settleProvisional");
-      if (record.state !== "HELD") {
-        throw new BudgetBlocked(
-          `settleProvisional: credit reservation "${creditReservationId}" is ` +
-            `${record.state}, not HELD; refusing a second settlement.`,
-        );
+    async settle(handle: CreditAuthorizationHandle, actualMinorUnits: number): Promise<void> {
+      if (!Number.isSafeInteger(actualMinorUnits) || actualMinorUnits < 0) {
+        throw new BudgetBlocked("settle: actualMinorUnits must be a safe non-negative integer.");
       }
-      if (actualMinorUnits > record.heldMinorUnits) {
-        throw new BudgetBlocked(
-          `settleProvisional: actual ${actualMinorUnits} minor units exceeds ` +
-            `the authorized hold of ${record.heldMinorUnits} — a credits-only ` +
-            "charge may never exceed its authorization.",
+      await ledgerDb.$transaction(async (tx) => {
+        const { grantId, amount } = await loadHeldReservation(tx, handle.reservationId, "settle");
+        await tx.$executeRawUnsafe(
+          `UPDATE "credit_grant_reservation_ledger"
+              SET "reservedMinorUnits" = "reservedMinorUnits" - $1::bigint,
+                  "updatedAt" = now()
+            WHERE "grantId" = $2`,
+          amount,
+          grantId,
         );
-      }
-      // Release the FULL hold, then record the applied actual as SETTLED
-      // spend — the remainder is freed, the actual stays consumed. Without
-      // the settled entry the ledger would forget the spend entirely and a
-      // later authorize could re-spend the same balance.
-      releaseHold(record);
-      addSettled(record.grantId, actualMinorUnits);
-      record.state = "PROVISIONALLY_SETTLED";
-      record.actualMinorUnits = actualMinorUnits;
+        await tx.$executeRawUnsafe(
+          `UPDATE "credit_grant_reservations"
+              SET "state" = 'SETTLED', "settledMinorUnits" = $1::bigint
+            WHERE "id" = $2 AND "state" = 'HELD'`,
+          actualMinorUnits,
+          handle.reservationId,
+        );
+      });
     },
 
-    async reconcile(
-      creditReservationId: string,
-      confirmedUsd: string,
-      _now: Date,
-    ): Promise<void> {
-      const confirmedMinorUnits = usdStringToMinorUnitsCeil(
-        confirmedUsd,
-        "confirmedUsd",
-      );
-      const record = requireReservation(creditReservationId, "reconcile");
-      if (record.state === "RECONCILED" || record.state === "RELEASED") {
-        throw new BudgetBlocked(
-          `reconcile: credit reservation "${creditReservationId}" is ` +
-            `${record.state}; refusing to reconcile it again.`,
+    async release(handle: CreditAuthorizationHandle): Promise<void> {
+      await ledgerDb.$transaction(async (tx) => {
+        const { grantId, amount } = await loadHeldReservation(tx, handle.reservationId, "release");
+        await tx.$executeRawUnsafe(
+          `UPDATE "credit_grant_reservation_ledger"
+              SET "reservedMinorUnits" = "reservedMinorUnits" - $1::bigint,
+                  "updatedAt" = now()
+            WHERE "grantId" = $2`,
+          amount,
+          grantId,
         );
-      }
-      // The same cap that guards settleProvisional guards reconciliation:
-      // a credits-only charge may never exceed its authorization, and a
-      // receipt claiming it did is a DISPUTE, not a silently recordable
-      // truth. Refuse and leave the record untouched — dispute handling
-      // (CreditAllocationState DISPUTED) is S5 scope against real
-      // persistence; this fake must never absorb an overrun as reconciled.
-      if (confirmedMinorUnits > record.heldMinorUnits) {
-        throw new BudgetBlocked(
-          `reconcile: confirmed ${confirmedMinorUnits} minor units exceeds ` +
-            `the authorized hold of ${record.heldMinorUnits} — a credits-only ` +
-            "charge may never exceed its authorization; this receipt is a " +
-            "dispute, not a reconcilable truth.",
+        await tx.$executeRawUnsafe(
+          `UPDATE "credit_grant_reservations"
+              SET "state" = 'RELEASED'
+            WHERE "id" = $1 AND "state" = 'HELD'`,
+          handle.reservationId,
         );
-      }
-      if (record.state === "HELD") {
-        // Receipt arrived before a provisional settlement: the confirmed
-        // amount replaces the hold outright and becomes settled spend.
-        releaseHold(record);
-        addSettled(record.grantId, confirmedMinorUnits);
-      } else {
-        // PROVISIONALLY_SETTLED: correct the settled ledger from the
-        // provisional actual to the receipt-confirmed amount.
-        addSettled(
-          record.grantId,
-          confirmedMinorUnits - (record.actualMinorUnits ?? 0),
-        );
-      }
-      record.state = "RECONCILED";
-      record.confirmedMinorUnits = confirmedMinorUnits;
-    },
-
-    async release(creditReservationId: string, _now: Date): Promise<void> {
-      const record = requireReservation(creditReservationId, "release");
-      if (record.state !== "HELD") {
-        throw new BudgetBlocked(
-          `release: credit reservation "${creditReservationId}" is ` +
-            `${record.state}, not HELD; refusing to release it twice.`,
-        );
-      }
-      releaseHold(record);
-      record.state = "RELEASED";
+      });
     },
   };
 }

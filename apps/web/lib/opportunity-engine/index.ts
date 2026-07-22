@@ -1,16 +1,17 @@
 /**
- * NOVA opportunity engine — S1 deterministic domain contracts, S2 capability
- * governance, and S3 source-registry/evidence domain modules.
+ * NOVA opportunity engine — S1 domain contracts, S2 capability governance,
+ * S3 source-registry/evidence domain modules, and S4 Founder OS/agent
+ * surfaces.
  *
- * This barrel exports the S1 split-unit modules of the frozen #146 split
- * (`docs/ai/phase0/NOVA_CONVERGENCE_FREEZE_2026-07-22.md` §5.3), the S2
- * capability-governance surface, and, from the S3 split unit, the pure
- * source-domain modules (`source-registry`, `change-detection`, `evidence`).
- * The operational failed-closed polling runtime lives in `scripts/nova/`
- * (see `docs/ai/nova/S3_SOURCE_RUNTIME.md`) and is deliberately NOT exported
- * here — runtime receipts are artifacts, not importable domain state.
- * Founder OS/agent surfaces (S4) — `founder-command`, `founder-work-seed`,
- * `nova-agent`, `nova-subagents`.
+ * This barrel exports the S1, S2, S3, and S4 split-unit modules of the
+ * frozen #146 split (`docs/ai/phase0/NOVA_CONVERGENCE_FREEZE_2026-07-22.md`
+ * §5.3). From S3, only the pure source-domain modules (`source-registry`,
+ * `change-detection`, `evidence`) are exported — the operational
+ * failed-closed polling runtime lives in `scripts/nova/` (see
+ * `docs/ai/nova/S3_SOURCE_RUNTIME.md`) and is deliberately NOT exported here;
+ * runtime receipts are artifacts, not importable domain state. S4 adds
+ * `founder-command`, `founder-work-seed`, `nova-agent`, and
+ * `nova-subagents`.
  */
 export * from "./types";
 export * from "./lifecycle";

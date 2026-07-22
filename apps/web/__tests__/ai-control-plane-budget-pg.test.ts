@@ -127,7 +127,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     await pool.query(`CREATE SCHEMA ${SCHEMA}`);
     for (const dir of [
       "20260722140000_add_ai_control_plane_ledger",
-      "20260722150000_add_ai_budget_reservations",
+      "20260722150001_add_ai_budget_reservations",
     ]) {
       const ddl = readFileSync(join(MIGRATIONS_DIR, dir, "migration.sql"), "utf8");
       await pool.query(ddl);

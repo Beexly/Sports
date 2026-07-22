@@ -132,29 +132,41 @@ export type {
 export type { BudgetSeam } from "./invocation-pipeline";
 
 // §10.8: the fail-closed credit port VALUE (tests assert its behavior; the
-// production executor seals it as the only credit authority).
+// production executor seals it as the only credit authority at the OUTER
+// (§8, whole-plan) gate).
+//
+// NOTE (unresolved architecture duplication, flagged for owner review): this
+// whole-plan-level CreditAuthorizationPort (authorizeAndReserve /
+// settleProvisional / reconcile / release, called ONCE before dispatch) and
+// credit-admission.ts's PER-ROUTE CreditAuthorizationPort (authorize /
+// settle / release, called once per provider attempt inside the §9 walk)
+// are two independently-designed solutions to the same CONFIRMED_CREDITS_ONLY
+// admission problem. Both remain wired today; production stays fail-closed
+// either way (this port is sealed to failClosedCreditAuthorizationPort, and
+// the §9 port's creditStore is deliberately left unset), so there is no live
+// double-spend risk — but the duplication itself should be resolved by an
+// owner decision about which layer is the intended long-term design before
+// a real S5 adapter is wired to either one.
 export { failClosedCreditAuthorizationPort } from "./credit-port";
 
-// §11.3 (PR-D): the credit ADMISSION layer over S1's canonical
-// CreditGrantSnapshot, and the FAKE atomic in-memory adapter of the §10.8
-// CreditAuthorizationPort. Internal-only: production has no credit snapshot
-// store and seals the fail-closed port; tests drive admission and the fake
-// adapter directly.
+// §11.3 credit admission + atomic authorization (PER-ROUTE, §9 pipeline):
+// NOVA S1's canonical CreditGrantSnapshot is imported (never redefined) by
+// credit-admission.ts, which is itself re-exported here — same sealing
+// rationale as budget.ts above. Production reaches this ONLY through the
+// ledgered dispatch pipeline, itself sealed inside executor.ts.
 export {
   admitCreditFunded,
+  createPgCreditAuthorizationPort,
   evaluateCreditAdmission,
-  createInMemoryCreditAuthorizationPort,
-  usdStringToMinorUnitsCeil,
+  type AdmitCreditFundedInput,
+  type AuthorizeCreditInput,
+  type CreditAdmissionDecision,
+  type CreditAdmissionRefusalReason,
+  type CreditAdmissionScope,
+  type CreditAuthorizationDecision,
+  type CreditAuthorizationHandle,
+  type CreditAuthorizationState,
+  type CreditLedgerDb,
+  type CreditSnapshotStore,
 } from "./credit-admission";
-export type {
-  AdmitCreditFundedInput,
-  CreditAdmissionDecision,
-  CreditAdmissionRefusalReason,
-  CreditAdmissionScope,
-  CreditSnapshotStore,
-  InMemoryCreditAuthorizationPort,
-  InMemoryCreditAuthorizationPortConfig,
-  InMemoryCreditPortState,
-  InMemoryCreditReservationRecord,
-  InMemoryCreditReservationState,
-} from "./credit-admission";
+export type { CreditAuthorizationPort as RouteCreditAuthorizationPort } from "./credit-admission";
