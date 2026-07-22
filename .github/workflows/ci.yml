@@ -228,8 +228,8 @@ jobs:
       - name: Run API v1 boundary guardrail
         run: node scripts/guardrails/api-v1-boundary.mjs
 
-  ai-control-plane-boundary:
-    name: AI control-plane import boundary
+  ai-transport-import-boundary:
+    name: AI transport import boundary
     runs-on: ubuntu-latest
 
     steps:
@@ -241,8 +241,16 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Run AI control-plane import-boundary guardrail
-        run: node scripts/guardrails/ai-control-plane-boundary.mjs
+      # The AST-based guard imports the `typescript` compiler, so deps must be
+      # installed (the previous regex guard needed none).
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run AI transport import-boundary mutation tests
+        run: node --test scripts/guardrails/ai-transport-import-boundary.test.mjs
+
+      - name: Run AI transport import-boundary guardrail
+        run: node scripts/guardrails/ai-transport-import-boundary.mjs
 
   guardrails:
     name: All guardrails
