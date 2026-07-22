@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createPgControlStore } from "../../../../../wt/pr163/apps/web/lib/ai-control-plane/control-store";
-import { createPgCreditAuthorizationPort } from "../../../../../wt/prd/apps/web/lib/ai-control-plane/credit-admission";
+import { createPgControlStore } from "../../../apps/web/lib/ai-control-plane/control-store";
+import { createPgCreditAuthorizationPort } from "../../../apps/web/lib/ai-control-plane/credit-admission";
 import { InMemoryControlSql } from "../adapters/in-memory-control-sql";
 import { InMemoryCreditLedgerDb } from "../adapters/in-memory-credit-ledger";
 import { FixtureCreditSnapshotStore, FIXTURE_SCOPE } from "../adapters/fixture-credit-snapshot-store";

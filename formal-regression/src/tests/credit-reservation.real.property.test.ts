@@ -1,7 +1,7 @@
 /**
  * Property-based regression tests against the REAL, unmodified
  * `createPgCreditAuthorizationPort` from
- * `/workspace/wt/prd/apps/web/lib/ai-control-plane/credit-admission.ts`
+ * `apps/web (this repo, same worktree)/lib/ai-control-plane/credit-admission.ts`
  * (branch feat/ai-control-plane-credit-admission), driving it through the
  * `InMemoryCreditLedgerDb` test-double SQL adapter and a fixture
  * `CreditSnapshotStore` modeled on S1's own conformance fixture.
@@ -12,7 +12,7 @@
  */
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { createPgCreditAuthorizationPort } from "../../../../../wt/prd/apps/web/lib/ai-control-plane/credit-admission";
+import { createPgCreditAuthorizationPort } from "../../../apps/web/lib/ai-control-plane/credit-admission";
 import { InMemoryCreditLedgerDb } from "../adapters/in-memory-credit-ledger";
 import { FixtureCreditSnapshotStore, FIXTURE_SCOPE } from "../adapters/fixture-credit-snapshot-store";
 
@@ -108,7 +108,19 @@ describe("flagship no-double-spend property (real credit-admission.ts)", () => {
     );
   });
 
-  it("release() frees headroom for a LATER attempt (settle keeps it consumed)", async () => {
+  // NOTE: this test exercises release() only. Its title previously claimed
+  // "(settle keeps it consumed)" as an established fact, but no test in this
+  // file (or in apps/web/__tests__/ai-control-plane-credit-admission.test.ts)
+  // ever calls settle() and asserts headroom afterward — and the real
+  // Postgres-backed settle() does NOT keep the reservation's minor units
+  // consumed against the grant's ledger; it frees them back, identically to
+  // release() (see apps/web/__tests__/ai-control-plane-credit-admission.test.ts,
+  // "settle/release against real Postgres: reserved returns to 0 either
+  // way"). Whether settle() *should* instead permanently consume balance
+  // (as the TLA+ spec models it) is an open owner decision — see
+  // reports/wave5/OWNER_PACKET_2026-07-22.md, formal-verification-soundness
+  // finding 1. This title no longer asserts the untested, contradicted claim.
+  it("release() frees headroom for a LATER attempt", async () => {
     const now = NOW;
     const ledger = new InMemoryCreditLedgerDb();
     const port = createPgCreditAuthorizationPort(ledger);

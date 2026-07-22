@@ -5,7 +5,7 @@
  * production SQL boundary; it is a hand-written in-memory stand-in for
  * Postgres that speaks the exact `ControlSqlClient` interface defined by
  * the REAL, unmodified `control-store.ts`
- * (`/workspace/wt/pr163/apps/web/lib/ai-control-plane/control-store.ts`).
+ * (`apps/web (this repo, same worktree)/lib/ai-control-plane/control-store.ts`).
  *
  * The code actually being tested by these property tests is
  * `createPgControlStore(sql)` from that real file, imported verbatim — this
@@ -23,7 +23,7 @@
  * will stop matching and every affected method throws a descriptive error
  * (`Unrecognized query`) rather than silently doing the wrong thing.
  */
-import type { ControlSqlClient } from "../../../../../wt/pr163/apps/web/lib/ai-control-plane/control-store";
+import type { ControlSqlClient } from "../../../apps/web/lib/ai-control-plane/control-store";
 
 interface InvocationRow {
   id: string;
