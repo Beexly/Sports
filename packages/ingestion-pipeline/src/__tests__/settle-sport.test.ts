@@ -36,10 +36,18 @@ const mocks = vi.hoisted(() => ({
   obsCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   obsFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   anomalyFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  anomalyFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   anomalyUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   anomalyUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   decisionCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
   outboxCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  // Hardening 6.1/6.3/6.10 — durable run identity, owner request + decision
+  // events, post-settlement work state.
+  runUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  ownerRequestCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  decisionEventCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  workCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  workUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   // Deletion tripwires — Phase 1E evidence is append-only. These exist on
   // the mock ONLY so the suite can assert they are NEVER invoked.
   obsDelete: vi.fn(),
@@ -66,6 +74,7 @@ vi.mock("@sports/db", () => {
   };
   const settlementAnomaly = {
     findUnique: mocks.anomalyFindUnique,
+    findMany: mocks.anomalyFindMany,
     upsert: mocks.anomalyUpsert,
     updateMany: mocks.anomalyUpdateMany,
     delete: mocks.anomalyDelete,
@@ -76,13 +85,29 @@ vi.mock("@sports/db", () => {
     delete: mocks.decisionDelete,
     deleteMany: mocks.decisionDeleteMany,
   };
+  const ownerDecisionRequest = { create: mocks.ownerRequestCreate };
+  const settlementDecisionEvent = { create: mocks.decisionEventCreate };
   const pickSettlementEvent = {
     create: mocks.outboxCreate,
     delete: mocks.outboxDelete,
     deleteMany: mocks.outboxDeleteMany,
   };
+  const settlementRun = { upsert: mocks.runUpsert };
+  const postSettlementWork = {
+    createMany: mocks.workCreateMany,
+    updateMany: mocks.workUpdateMany,
+  };
   const pick = { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany };
-  const tx = { pick, settlementObservation, settlementAnomaly, settlementDecision, pickSettlementEvent };
+  const tx = {
+    pick,
+    settlementObservation,
+    settlementAnomaly,
+    settlementDecision,
+    ownerDecisionRequest,
+    settlementDecisionEvent,
+    pickSettlementEvent,
+    postSettlementWork,
+  };
   mocks.transaction.mockImplementation(async (fn: (t: unknown) => Promise<unknown>) => fn(tx));
   return {
     db: {
@@ -99,7 +124,11 @@ vi.mock("@sports/db", () => {
       settlementObservation,
       settlementAnomaly,
       settlementDecision,
+      ownerDecisionRequest,
+      settlementDecisionEvent,
       pickSettlementEvent,
+      settlementRun,
+      postSettlementWork,
     },
   };
 });
@@ -193,23 +222,43 @@ describe("settleSport", () => {
         settlementObservation: { createMany: mocks.obsCreateMany, findMany: mocks.obsFindMany },
         settlementAnomaly: {
           findUnique: mocks.anomalyFindUnique,
+          findMany: mocks.anomalyFindMany,
           upsert: mocks.anomalyUpsert,
           updateMany: mocks.anomalyUpdateMany,
         },
         settlementDecision: { create: mocks.decisionCreate },
+        ownerDecisionRequest: { create: mocks.ownerRequestCreate },
+        settlementDecisionEvent: { create: mocks.decisionEventCreate },
         pickSettlementEvent: { create: mocks.outboxCreate },
+        postSettlementWork: {
+          createMany: mocks.workCreateMany,
+          updateMany: mocks.workUpdateMany,
+        },
       }),
     );
 
     // Evidence/outbox defaults: a fresh first sighting (1 distinct run, new
-    // anomaly), no anomaly to resolve, outbox append succeeds.
+    // anomaly), no anomaly to resolve, outbox append succeeds. The durable
+    // run identity (6.1) resolves to run-1.
+    mocks.runUpsert.mockResolvedValue({ id: "run-1", startedAt: new Date() });
     mocks.obsCreateMany.mockResolvedValue({ count: 1 });
-    mocks.obsFindMany.mockResolvedValue([{ settlementRunId: "run-1" }]);
+    mocks.obsFindMany.mockResolvedValue([
+      {
+        settlementRunId: "run-1",
+        sourceSnapshotFingerprint: "snap-1",
+        observedAt: new Date("2026-06-11T00:00:00Z"),
+      },
+    ]);
     mocks.anomalyFindUnique.mockResolvedValue(null);
+    mocks.anomalyFindMany.mockResolvedValue([]);
     mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN" });
     mocks.anomalyUpdateMany.mockResolvedValue({ count: 0 });
     mocks.decisionCreate.mockResolvedValue({});
+    mocks.ownerRequestCreate.mockResolvedValue({});
+    mocks.decisionEventCreate.mockResolvedValue({});
     mocks.outboxCreate.mockResolvedValue({});
+    mocks.workCreateMany.mockResolvedValue({ count: 2 });
+    mocks.workUpdateMany.mockResolvedValue({ count: 1 });
 
     // Healthy defaults: one completed game, one pending pick, no CLV close.
     mocks.getScores.mockResolvedValue({ data: ["raw"] });
@@ -540,7 +589,7 @@ describe("settleSport", () => {
       expect(mocks.outboxCreate).not.toHaveBeenCalled();
     });
 
-    it("mints one settlementRunId per settleSport() call and stamps every observation with it", async () => {
+    it("resolves ONE durable settlement run (create-or-retrieve by idempotency key) and stamps every observation with it (6.1)", async () => {
       mocks.normalizeScores.mockReturnValue([
         completedScore({ externalId: "ext-1", homeScore: null, awayScore: null }),
         completedScore({ externalId: "ext-2", homeScore: null, awayScore: null }),
@@ -549,14 +598,64 @@ describe("settleSport", () => {
         .mockResolvedValueOnce(dbGame([pendingPick()], { id: "game-1", status: "SCHEDULED" }))
         .mockResolvedValueOnce(dbGame([pendingPick()], { id: "game-2", status: "LIVE" }));
 
-      await settleSport(SPORT, "key", gates());
+      await settleSport(SPORT, "key", gates(), "[t]", { scheduledWindow: "2026-06-11T00Z" });
+
+      // The run is created-or-retrieved BEFORE evidence writes, keyed on
+      // source + sport + scheduledWindow + sourceSnapshotFingerprint — so a
+      // scheduler retry upserts into the SAME row instead of minting a new
+      // random id (the pre-hardening corroboration hole).
+      expect(mocks.runUpsert).toHaveBeenCalledTimes(1);
+      const upsertArgs = mocks.runUpsert.mock.calls[0]![0] as {
+        where: { idempotencyKey: string };
+        create: Record<string, unknown>;
+      };
+      expect(upsertArgs.where.idempotencyKey).toMatch(
+        /^the-odds-api:americanfootball_nfl:2026-06-11T00Z:[0-9a-f]{64}$/,
+      );
+      expect(upsertArgs.create["scheduledWindow"]).toBe("2026-06-11T00Z");
 
       const runIds = mocks.obsCreateMany.mock.calls.map(
         (c) => ((c[0] as { data: Array<Record<string, unknown>> }).data[0]!)["settlementRunId"],
       );
       expect(runIds).toHaveLength(2);
-      expect(runIds[0]).toBe(runIds[1]); // same run
-      expect(String(runIds[0])).toMatch(/^[0-9a-f-]{36}$/); // crypto.randomUUID
+      expect(runIds[0]).toBe("run-1"); // the DURABLE id from the upsert
+      expect(runIds[1]).toBe("run-1"); // same run for every observation
+      // And each observation carries the run's whole-snapshot fingerprint.
+      const snapFps = mocks.obsCreateMany.mock.calls.map(
+        (c) =>
+          ((c[0] as { data: Array<Record<string, unknown>> }).data[0]!)[
+            "sourceSnapshotFingerprint"
+          ],
+      );
+      expect(String(snapFps[0])).toMatch(/^[0-9a-f]{64}$/);
+      expect(snapFps[0]).toBe(snapFps[1]);
+    });
+
+    it("rapid same-snapshot retries can NEVER promote: distinct run ids with one fingerprint and no temporal separation corroborate once (6.1)", async () => {
+      // Three DIFFERENT run ids (e.g. retries that crossed a window
+      // boundary), but byte-identical source snapshots seconds apart.
+      const at = new Date("2026-06-11T00:00:00Z");
+      mocks.obsFindMany.mockResolvedValue([
+        { settlementRunId: "run-1", sourceSnapshotFingerprint: "same-snap", observedAt: at },
+        {
+          settlementRunId: "run-2",
+          sourceSnapshotFingerprint: "same-snap",
+          observedAt: new Date(at.getTime() + 5_000),
+        },
+        {
+          settlementRunId: "run-3",
+          sourceSnapshotFingerprint: "same-snap",
+          observedAt: new Date(at.getTime() + 10_000),
+        },
+      ]);
+      mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN" });
+      mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN" });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesPromoted).toBe(0);
+      expect(mocks.ownerRequestCreate).not.toHaveBeenCalled();
+      expect(mocks.decisionEventCreate).not.toHaveBeenCalled();
     });
 
     it("a retried run/payload adds NO corroboration (unique-violation no-op path)", async () => {
@@ -564,8 +663,16 @@ describe("settleSport", () => {
       // derivation still sees only the runs that genuinely observed it.
       mocks.obsCreateMany.mockResolvedValue({ count: 0 });
       mocks.obsFindMany.mockResolvedValue([
-        { settlementRunId: "run-1" },
-        { settlementRunId: "run-2" },
+        {
+          settlementRunId: "run-1",
+          sourceSnapshotFingerprint: "snap-1",
+          observedAt: new Date("2026-06-11T00:00:00Z"),
+        },
+        {
+          settlementRunId: "run-2",
+          sourceSnapshotFingerprint: "snap-2",
+          observedAt: new Date("2026-06-11T01:00:00Z"),
+        },
       ]);
       mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN" });
 
@@ -574,7 +681,8 @@ describe("settleSport", () => {
       expect(result.observationsRecorded).toBe(0);
       expect(result.anomaliesOpened).toBe(0);
       expect(result.anomaliesPromoted).toBe(0);
-      // 2 distinct runs < threshold(3): promotion never attempted, no receipt.
+      // 2 corroborating runs < threshold(3): promotion never attempted.
+      expect(mocks.ownerRequestCreate).not.toHaveBeenCalled();
       expect(mocks.decisionCreate).not.toHaveBeenCalled();
       // Corroboration is DERIVED (distinct run ids), never an in-place
       // increment anywhere.
@@ -584,11 +692,23 @@ describe("settleSport", () => {
       expect(anyIncrement).toBe(false);
     });
 
-    it("crossing the threshold promotes exactly once and creates exactly one SettlementDecision receipt", async () => {
+    it("crossing the threshold (3 GENUINELY DISTINCT snapshots) promotes exactly once: idempotent OwnerDecisionRequest + SYSTEM decision event (6.1/6.3)", async () => {
       mocks.obsFindMany.mockResolvedValue([
-        { settlementRunId: "run-1" },
-        { settlementRunId: "run-2" },
-        { settlementRunId: "run-3" },
+        {
+          settlementRunId: "run-1",
+          sourceSnapshotFingerprint: "snap-1",
+          observedAt: new Date("2026-06-11T00:00:00Z"),
+        },
+        {
+          settlementRunId: "run-2",
+          sourceSnapshotFingerprint: "snap-2",
+          observedAt: new Date("2026-06-11T01:00:00Z"),
+        },
+        {
+          settlementRunId: "run-3",
+          sourceSnapshotFingerprint: "snap-3",
+          observedAt: new Date("2026-06-11T02:00:00Z"),
+        },
       ]);
       mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN" });
       mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN" });
@@ -606,17 +726,34 @@ describe("settleSport", () => {
           data: expect.objectContaining({ state: "OWNER_REVIEW" }),
         }),
       );
-      // Exactly one durable receipt, tied to the anomaly by the unique FK.
-      expect(mocks.decisionCreate).toHaveBeenCalledTimes(1);
-      expect(mocks.decisionCreate).toHaveBeenCalledWith(
+      // ONE idempotent queue request (unique anomalyId is the backstop)...
+      expect(mocks.ownerRequestCreate).toHaveBeenCalledTimes(1);
+      expect(mocks.ownerRequestCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            anomalyId: "anomaly-1",
+            requestKind: "SCORELESS_COMPLETED_REVIEW",
+            context: expect.objectContaining({ corroboratingRunCount: 3, threshold: 3 }),
+          }),
+        }),
+      );
+      // ...plus ONE append-only SYSTEM decision event carrying the actor
+      // receipt and prior/next state — it requests review, it decides
+      // nothing, and it never impersonates an owner.
+      expect(mocks.decisionEventCreate).toHaveBeenCalledTimes(1);
+      expect(mocks.decisionEventCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
             anomalyId: "anomaly-1",
             decisionKind: "REVIEW_REQUESTED",
-            context: expect.objectContaining({ distinctRunCount: 3, threshold: 3 }),
+            actorType: "SYSTEM",
+            priorState: "OPEN",
+            nextState: "OWNER_REVIEW",
           }),
         }),
       );
+      // The legacy single-decision table is no longer consumed at promotion.
+      expect(mocks.decisionCreate).not.toHaveBeenCalled();
       // STILL never voids or infers: picks untouched.
       expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
     });
@@ -626,9 +763,21 @@ describe("settleSport", () => {
       // anomaly as still OPEN, but the concurrent winner promoted it between
       // the read and the guarded update — so the guard matches 0 rows.
       mocks.obsFindMany.mockResolvedValue([
-        { settlementRunId: "run-1" },
-        { settlementRunId: "run-2" },
-        { settlementRunId: "run-3" },
+        {
+          settlementRunId: "run-1",
+          sourceSnapshotFingerprint: "snap-1",
+          observedAt: new Date("2026-06-11T00:00:00Z"),
+        },
+        {
+          settlementRunId: "run-2",
+          sourceSnapshotFingerprint: "snap-2",
+          observedAt: new Date("2026-06-11T01:00:00Z"),
+        },
+        {
+          settlementRunId: "run-3",
+          sourceSnapshotFingerprint: "snap-3",
+          observedAt: new Date("2026-06-11T02:00:00Z"),
+        },
       ]);
       mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN" });
       mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN" });
@@ -637,16 +786,22 @@ describe("settleSport", () => {
       const result = await settleSport(SPORT, "key", gates());
 
       expect(result.anomaliesPromoted).toBe(0);
+      expect(mocks.ownerRequestCreate).not.toHaveBeenCalled();
+      expect(mocks.decisionEventCreate).not.toHaveBeenCalled();
       expect(mocks.decisionCreate).not.toHaveBeenCalled();
     });
 
     it("an anomaly already in OWNER_REVIEW is never re-promoted and never gets a second receipt", async () => {
       mocks.obsFindMany.mockResolvedValue([
-        { settlementRunId: "run-1" },
-        { settlementRunId: "run-2" },
-        { settlementRunId: "run-3" },
-        { settlementRunId: "run-4" },
-      ]);
+        ["run-1", "snap-1", 0],
+        ["run-2", "snap-2", 1],
+        ["run-3", "snap-3", 2],
+        ["run-4", "snap-4", 3],
+      ].map(([run, snap, h]) => ({
+        settlementRunId: run as string,
+        sourceSnapshotFingerprint: snap as string,
+        observedAt: new Date(Date.UTC(2026, 5, 11, h as number)),
+      })));
       mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OWNER_REVIEW" });
       mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OWNER_REVIEW" });
 
@@ -654,10 +809,11 @@ describe("settleSport", () => {
 
       expect(result.anomaliesPromoted).toBe(0);
       // No promotion attempt at all (the guard is not even exercised) and
-      // certainly no receipt.
+      // certainly no second request or receipt.
       expect(mocks.anomalyUpdateMany).not.toHaveBeenCalledWith(
         expect.objectContaining({ data: expect.objectContaining({ state: "OWNER_REVIEW" }) }),
       );
+      expect(mocks.ownerRequestCreate).not.toHaveBeenCalled();
       expect(mocks.decisionCreate).not.toHaveBeenCalled();
     });
 
@@ -713,26 +869,37 @@ describe("settleSport", () => {
   });
 
   describe("anomaly resolution — real scores arrive later (Phase 1E)", () => {
-    it("marks OPEN/OWNER_REVIEW anomalies RESOLVED with reason scores-arrived; evidence and receipt survive", async () => {
-      // Default fixtures: completed game WITH scores.
+    it("marks OPEN/OWNER_REVIEW anomalies RESOLVED and appends a SYSTEM decision event with the true prior state (6.3)", async () => {
+      // Default fixtures: completed game WITH scores; one anomaly open.
+      mocks.anomalyFindMany.mockResolvedValue([{ id: "anomaly-1", state: "OWNER_REVIEW" }]);
       mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 });
 
       const result = await settleSport(SPORT, "key", gates());
 
       expect(result.anomaliesResolved).toBe(1);
+      // State-scoped exactly-once transition...
       expect(mocks.anomalyUpdateMany).toHaveBeenCalledWith({
-        where: {
-          gameId: "game-1",
-          anomalyType: SCORELESS_COMPLETED_ANOMALY,
-          state: { in: ["OPEN", "OWNER_REVIEW"] },
-        },
+        where: { id: "anomaly-1", state: "OWNER_REVIEW" },
         data: {
           state: "RESOLVED",
-          resolutionActor: "settlement-pipeline",
+          resolutionActor: "system:settlement-pipeline",
           resolutionReason: "scores-arrived",
           resolvedAt: expect.any(Date),
         },
       });
+      // ...with an append-only SYSTEM event recording prior/next state. A
+      // SYSTEM resolution never impersonates an owner.
+      expect(mocks.decisionEventCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            anomalyId: "anomaly-1",
+            decisionKind: "RESOLVE_SCORES_ARRIVED",
+            actorType: "SYSTEM",
+            priorState: "OWNER_REVIEW",
+            nextState: "RESOLVED",
+          }),
+        }),
+      );
       // Resolution NEVER deletes the history (the rejected #157 reset it).
       expect(mocks.obsDeleteMany).not.toHaveBeenCalled();
       expect(mocks.decisionDeleteMany).not.toHaveBeenCalled();
@@ -740,8 +907,18 @@ describe("settleSport", () => {
       expect(result.picksSettled).toBe(1);
     });
 
+    it("the resolution race loser (updateMany count 0) appends NO decision event", async () => {
+      mocks.anomalyFindMany.mockResolvedValue([{ id: "anomaly-1", state: "OPEN" }]);
+      mocks.anomalyUpdateMany.mockResolvedValue({ count: 0 }); // concurrent run won
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesResolved).toBe(0);
+      expect(mocks.decisionEventCreate).not.toHaveBeenCalled();
+    });
+
     it("a resolution failure never blocks settlement", async () => {
-      mocks.anomalyUpdateMany.mockRejectedValue(new Error("anomaly table locked"));
+      mocks.anomalyFindMany.mockRejectedValue(new Error("anomaly table locked"));
 
       const result = await settleSport(SPORT, "key", gates());
 
@@ -776,6 +953,18 @@ describe("settleSport", () => {
           status: "PENDING",
         },
       });
+      // Durable post-settlement work-state rides in the SAME transaction
+      // (6.10): CLV + snapshot work is recorded before the commit, so a
+      // crash before those side tasks leaves a repairable PENDING row.
+      expect(mocks.workCreateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: [
+            { subjectId: "pick-1", kind: "CLV_GRADE" },
+            { subjectId: "pick-1", kind: "SNAPSHOT_OUTCOME" },
+          ],
+          skipDuplicates: true,
+        }),
+      );
     });
 
     it("the settle-race loser (updateMany count 0) appends NO outbox row", async () => {
@@ -803,10 +992,17 @@ describe("settleSport", () => {
           settlementObservation: { createMany: mocks.obsCreateMany, findMany: mocks.obsFindMany },
           settlementAnomaly: {
             findUnique: mocks.anomalyFindUnique,
+            findMany: mocks.anomalyFindMany,
             upsert: mocks.anomalyUpsert,
             updateMany: mocks.anomalyUpdateMany,
           },
           settlementDecision: { create: mocks.decisionCreate },
+          ownerDecisionRequest: { create: mocks.ownerRequestCreate },
+          settlementDecisionEvent: { create: mocks.decisionEventCreate },
+          postSettlementWork: {
+            createMany: mocks.workCreateMany,
+            updateMany: mocks.workUpdateMany,
+          },
         });
       });
 

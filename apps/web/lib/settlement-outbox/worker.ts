@@ -1,45 +1,98 @@
 /**
- * Settlement outbox worker — drains PickSettlementEvent rows and delivers
- * watchlist notifications through the real channels (Phase 1E).
+ * Settlement outbox worker — hardened per directive section 6 (PR #161).
  *
- * WHY THIS LIVES IN apps/web AND NOT packages/ingestion-pipeline: the
- * channel senders (lib/watchlist/channels/{web-push,email}-channel.ts),
- * the follower matching (lib/watchlist/settlement-hook.ts), the push
- * subscription store (lib/push/subscription-db.ts) and the tier gate
- * (lib/entitlements.ts, which pulls in auth/Stripe context) are all
- * web-app modules, and the workspace dependency edge only points
- * apps/web → packages/* — a pipeline package must never import the Next
- * app. So the pipeline owns the DURABLE half (appending the outbox row in
- * the same transaction as the pick settlement) and this worker owns the
- * DELIVERY half, invoked by the deliver-settlement-alerts cron route.
+ * TWO-LAYER MODEL (6.4): the durable PickSettlementEvent appended by
+ * settlement is EXPANDED into one PickSettlementDelivery row per
+ * follower x channel x destination. The parent event is complete only when
+ * EVERY child delivery reached a terminal state — a partial failure never
+ * closes the event, and a delivered recipient is NEVER resent because a
+ * different recipient failed. (The pre-hardening worker marked the whole
+ * event DELIVERED even when every real channel send failed inside the
+ * never-throwing notify fan-out — failures were permanently closed.)
  *
- * Delivery contract (all outside any settlement transaction):
- *   - CLAIM is atomic: updateMany scoped to the row's current status —
- *     two concurrent drains cannot both claim the same event (the loser's
- *     count === 0 and it skips). attemptCount increments on claim, so
- *     every attempt is counted even if the worker dies mid-send.
- *   - CRASH RECOVERY: a worker that dies after claiming leaves the row
- *     CLAIMED. Rows CLAIMED longer than STALE_CLAIM_MINUTES are reclaimed
- *     to PENDING at the start of every drain — no event is ever stranded.
- *   - RETRY: FAILED rows with attemptCount < OUTBOX_MAX_ATTEMPTS are
- *     re-claimable; at the cap they stay FAILED as an honest dead-letter
- *     record (never deleted).
- *   - DUPLICATE SAFETY: the channels themselves are at-least-once (a crash
- *     between send and DELIVERED re-sends on reclaim) — acceptable for a
- *     notification; the SETTLEMENT is exactly-once (unique pickId, written
- *     transactionally by the pipeline) and this worker never touches picks.
- *   - Per-channel outcomes are persisted onto the event row (channelOutcomes
- *     JSON), so every delivery attempt leaves a durable, inspectable trace.
+ * DELIVERY STATE MACHINE (states on PickSettlementDelivery):
+ *   PENDING → CLAIMED → DELIVERED
+ *                     → RETRYABLE_FAILED (backoff+jitter, re-claimable)
+ *                     → PERMANENT_FAILED (e.g. expired push subscription —
+ *                       which is also REMOVED per 6.9)
+ *                     → DEAD_LETTER (attempt cap reached — owner-visible)
+ *   PENDING → SUPPRESSED | NO_RECIPIENT at expansion (honest terminal
+ *   records: tier-ineligible / alerts disabled / nothing to send to).
+ *
+ * LEASE FENCING (6.5): every claim writes a fresh leaseToken/leaseOwner/
+ *   leaseExpiresAt and bumps claimVersion; every result write is scoped to
+ *   (id, leaseToken, status: CLAIMED) so a stale worker can never overwrite
+ *   a newer claimant's result. A stale claim AT the attempt cap goes to
+ *   DEAD_LETTER — never back to PENDING — so the cap is a true invariant.
+ *
+ * EVENT-TIME FACTS (6.6): the event payload (selection, pick type, teams,
+ *   result, sport, settled time, schema version) is frozen onto the event
+ *   at expansion, and the recipient set is materialized at expansion (the
+ *   settlement-time follower set within scheduler granularity): a user who
+ *   follows AFTER settlement never receives the historical alert, and a
+ *   user who unfollows after the event keeps the delivery that was already
+ *   owed. Destination ADDRESSES are re-resolved at send time (no raw email
+ *   on the row — destinationId is a hash), fail-closed when gone.
+ *
+ * IDEMPOTENCY: each delivery carries a per-channel idempotencyKey
+ *   (eventId:userId:channel:destinationId, unique) — expansion retries and
+ *   races dedupe via createMany(skipDuplicates), and DELIVERED rows are
+ *   never re-claimable.
  */
 
-import type {
-  GradedPickNotifyEvent,
-  WatchlistNotifySummary,
-} from "@/lib/watchlist/settlement-hook";
+import { randomUUID, createHash } from "node:crypto";
+import { getUserEntitlements } from "@/lib/entitlements";
+import { isWatchlistAlertsEnabled } from "@/lib/watchlist/alert-dispatch";
+import {
+  isWebPushConfigured,
+  sendWebPushAlert,
+  type WebPushSendResult,
+} from "@/lib/watchlist/channels/web-push-channel";
+import {
+  isEmailConfigured,
+  sendAlertEmail,
+  type EmailSendResult,
+} from "@/lib/watchlist/channels/email-channel";
 
 export const OUTBOX_MAX_ATTEMPTS = 5;
-export const STALE_CLAIM_MINUTES = 10;
+export const DELIVERY_LEASE_MINUTES = 5;
 export const OUTBOX_BATCH_SIZE = 25;
+export const DELIVERY_BATCH_SIZE = 50;
+export const EVENT_PAYLOAD_SCHEMA_VERSION = 1;
+
+/** Base backoff minute-steps; capped at 60 minutes, plus 0–30s jitter. */
+export function computeNextAttemptAt(
+  attemptCount: number,
+  now: Date,
+  random: () => number = Math.random,
+): Date {
+  const backoffMinutes = Math.min(60, 2 ** Math.max(0, attemptCount - 1));
+  const jitterMs = Math.floor(random() * 30_000);
+  return new Date(now.getTime() + backoffMinutes * 60_000 + jitterMs);
+}
+
+export const TERMINAL_DELIVERY_STATUSES = [
+  "DELIVERED",
+  "SUPPRESSED",
+  "NO_RECIPIENT",
+  "PERMANENT_FAILED",
+  "DEAD_LETTER",
+] as const;
+
+const NON_TERMINAL_DELIVERY_STATUSES = ["PENDING", "CLAIMED", "RETRYABLE_FAILED"];
+
+/** Immutable event-time payload frozen at expansion (6.6). */
+export interface FrozenEventPayload {
+  readonly schemaVersion: number;
+  readonly pickId: string;
+  readonly pickType: string;
+  readonly selection: string;
+  readonly result: "WIN" | "LOSS" | "PUSH";
+  readonly settledAt: string;
+  readonly sportKey: string;
+  readonly homeTeam: { readonly id: string | null; readonly name: string };
+  readonly awayTeam: { readonly id: string | null; readonly name: string };
+}
 
 export interface OutboxEventRow {
   readonly id: string;
@@ -48,123 +101,318 @@ export interface OutboxEventRow {
   readonly result: string;
   readonly settledAt: Date;
   readonly status: string;
-  readonly attemptCount: number;
+  readonly payload: unknown;
 }
 
-interface OutboxPickRow {
+export interface DeliveryRow {
   readonly id: string;
-  readonly pickType: string;
-  readonly selection: string;
-  readonly game: {
-    readonly id: string;
-    readonly homeTeamId: string | null;
-    readonly awayTeamId: string | null;
-    readonly homeTeamName: string;
-    readonly awayTeamName: string;
-    readonly sport: { readonly key: string } | null;
-  } | null;
+  readonly eventId: string;
+  readonly userId: string;
+  readonly channel: string;
+  readonly destinationId: string;
+  readonly status: string;
+  readonly attemptCount: number;
+  readonly claimVersion: number;
+  readonly attemptHistory: unknown;
 }
 
 /** Minimal Prisma-delegate-shaped surface — same defensive-cast doctrine as
- *  apps/web/lib/watchlist/db.ts and apps/web/lib/push/subscription-db.ts. */
+ *  the rest of apps/web/lib. */
 export interface SettlementOutboxDb {
   pickSettlementEvent: {
     updateMany(args: {
       where: Record<string, unknown>;
       data: Record<string, unknown>;
     }): Promise<{ count: number }>;
-    update(args: {
-      where: { id: string };
-      data: Record<string, unknown>;
-    }): Promise<unknown>;
     findMany(args: {
       where: Record<string, unknown>;
-      orderBy: { createdAt: "asc" };
-      take: number;
+      orderBy?: Record<string, unknown>;
+      take?: number;
+      select?: Record<string, unknown>;
     }): Promise<OutboxEventRow[]>;
+  };
+  pickSettlementDelivery: {
+    createMany(args: {
+      data: Array<Record<string, unknown>>;
+      skipDuplicates: boolean;
+    }): Promise<{ count: number }>;
+    updateMany(args: {
+      where: Record<string, unknown>;
+      data: Record<string, unknown>;
+    }): Promise<{ count: number }>;
+    findMany(args: {
+      where: Record<string, unknown>;
+      orderBy?: Record<string, unknown>;
+      take?: number;
+    }): Promise<DeliveryRow[]>;
   };
   pick: {
     findUnique(args: {
       where: { id: string };
       select: Record<string, unknown>;
-    }): Promise<OutboxPickRow | null>;
+    }): Promise<{
+      id: string;
+      pickType: string;
+      selection: string;
+      game: {
+        id: string;
+        homeTeamId: string | null;
+        awayTeamId: string | null;
+        homeTeamName: string;
+        awayTeamName: string;
+        sport: { key: string } | null;
+      } | null;
+    } | null>;
+  };
+  watchlist: {
+    findMany(args: {
+      where: Record<string, unknown>;
+    }): Promise<Array<{ id: string; userId: string; entityType: string; entityId: string }>>;
+  };
+  user: {
+    findMany(args: {
+      where: Record<string, unknown>;
+      select: Record<string, unknown>;
+    }): Promise<Array<{ id: string; email: string | null; emailVerified: Date | null }>>;
+  };
+  pushSubscription: {
+    findMany(args: {
+      where: Record<string, unknown>;
+    }): Promise<Array<{ id: string; userId: string; endpoint: string; p256dh: string; auth: string }>>;
+    deleteMany(args: { where: Record<string, unknown> }): Promise<{ count: number }>;
   };
 }
 
-/** The notify seam — production passes notifyWatchlistFollowersForGradedPick;
- *  tests pass a mock. Kept injectable so the worker's claim/state machine is
- *  testable without the channel stack. */
-export type OutboxNotifyFn = (
-  db: unknown,
-  event: GradedPickNotifyEvent,
-) => Promise<WatchlistNotifySummary>;
+/** Injectable side-effect seam — production defaults are the real channel
+ *  modules; tests pass fakes. */
+export interface OutboxDeps {
+  readonly getEntitlements: (userId: string) => Promise<{ canGetAlerts: boolean } | null>;
+  readonly sendPush: (
+    subscription: { endpoint: string; p256dh: string; auth: string },
+    payload: { title: string; body: string },
+  ) => Promise<WebPushSendResult>;
+  readonly sendEmail: (to: string, subject: string, body: string) => Promise<EmailSendResult>;
+  readonly pushConfigured: () => boolean;
+  readonly emailConfigured: () => boolean;
+  readonly alertsEnabled: () => boolean;
+  readonly leaseOwner: string;
+  readonly random: () => number;
+}
+
+export function defaultOutboxDeps(): OutboxDeps {
+  return {
+    getEntitlements: (userId) =>
+      getUserEntitlements(userId)
+        .then((e) => ({ canGetAlerts: e.canGetAlerts }))
+        .catch(() => null),
+    sendPush: (subscription, payload) => sendWebPushAlert(subscription, payload),
+    sendEmail: (to, subject, body) => sendAlertEmail(to, subject, body),
+    pushConfigured: () => isWebPushConfigured(),
+    emailConfigured: () => isEmailConfigured(),
+    alertsEnabled: () => isWatchlistAlertsEnabled(),
+    leaseOwner: `worker:${process.pid}:${randomUUID().slice(0, 8)}`,
+    random: Math.random,
+  };
+}
+
+export interface LatencyPercentiles {
+  readonly p50: number | null;
+  readonly p95: number | null;
+  readonly p99: number | null;
+}
+
+/** Nearest-rank percentile over the sample; null on an empty sample —
+ *  never a fabricated zero (6.8). */
+export function latencyPercentiles(samples: readonly number[]): LatencyPercentiles {
+  if (samples.length === 0) return { p50: null, p95: null, p99: null };
+  const sorted = [...samples].sort((a, b) => a - b);
+  const rank = (p: number) => sorted[Math.min(sorted.length - 1, Math.ceil((p / 100) * sorted.length) - 1)] as number;
+  return { p50: rank(50), p95: rank(95), p99: rank(99) };
+}
 
 export interface OutboxDrainSummary {
-  reclaimed: number;
+  expandedEvents: number;
+  deliveriesMaterialized: number;
+  reclaimedStale: number;
+  deadLetteredStale: number;
   claimed: number;
   delivered: number;
-  failed: number;
-  /** Candidates lost to a concurrent drain's claim (updateMany count 0). */
+  retryableFailed: number;
+  permanentFailed: number;
+  deadLettered: number;
+  suppressed: number;
+  noRecipient: number;
   skippedRace: number;
+  lostLease: number;
+  completedEvents: number;
+  /** Event-settledAt → delivery latency for deliveries DELIVERED in this
+   *  pass (6.8). */
+  latency: LatencyPercentiles;
+  /** Drain-level failures — NEVER swallowed into a green summary (6.7). */
+  errors: string[];
 }
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+function sha256Hex(input: string): string {
+  return createHash("sha256").update(input, "utf8").digest("hex");
+}
+
+function isFrozenPayload(value: unknown): value is FrozenEventPayload {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "schemaVersion" in value &&
+    "selection" in value &&
+    "result" in value
+  );
+}
+
 /**
- * One drain pass: reclaim stale claims, claim up to OUTBOX_BATCH_SIZE
- * deliverable events, deliver each, and record the outcome. Never throws —
- * a broken event is marked FAILED (with the error recorded) and the drain
- * moves on; a broken drain-level step returns the partial summary.
+ * One drain pass:
+ *   1. stale-lease recovery (cap-aware: at max attempts → DEAD_LETTER),
+ *   2. expansion of PENDING events into per-recipient delivery rows,
+ *   3. claim + send + token-scoped result for due deliveries,
+ *   4. parent-event completion sweep (all children terminal).
+ * Never throws; drain-level failures are returned in `errors` so the cron
+ * can report degraded health honestly (6.7).
  */
 export async function drainSettlementOutbox(
   dbArg: unknown,
-  notify: OutboxNotifyFn,
+  depsArg?: Partial<OutboxDeps>,
   now: Date = new Date(),
 ): Promise<OutboxDrainSummary> {
   const db = dbArg as SettlementOutboxDb;
+  const deps: OutboxDeps = { ...defaultOutboxDeps(), ...depsArg };
   const summary: OutboxDrainSummary = {
-    reclaimed: 0,
+    expandedEvents: 0,
+    deliveriesMaterialized: 0,
+    reclaimedStale: 0,
+    deadLetteredStale: 0,
     claimed: 0,
     delivered: 0,
-    failed: 0,
+    retryableFailed: 0,
+    permanentFailed: 0,
+    deadLettered: 0,
+    suppressed: 0,
+    noRecipient: 0,
     skippedRace: 0,
+    lostLease: 0,
+    completedEvents: 0,
+    latency: { p50: null, p95: null, p99: null },
+    errors: [],
   };
+  const latencySamples: number[] = [];
 
+  // ── 1. Stale-lease recovery (6.5) ───────────────────────────────────────
   try {
-    // 1. Crash recovery: CLAIMED rows older than the stale window go back
-    // to PENDING. (attemptCount already counted the dead attempt at claim
-    // time, so a crash-looping event still runs out of attempts.)
-    const staleCutoff = new Date(now.getTime() - STALE_CLAIM_MINUTES * 60_000);
-    const reclaimed = await db.pickSettlementEvent.updateMany({
-      where: { status: "CLAIMED", claimedAt: { lt: staleCutoff } },
-      data: { status: "PENDING", claimedAt: null },
+    const stale = await db.pickSettlementDelivery.findMany({
+      where: { status: "CLAIMED", leaseExpiresAt: { lt: now } },
+      take: DELIVERY_BATCH_SIZE,
     });
-    summary.reclaimed = reclaimed.count;
+    for (const row of stale) {
+      const atCap = row.attemptCount >= OUTBOX_MAX_ATTEMPTS;
+      const recovered = await db.pickSettlementDelivery.updateMany({
+        // claimVersion-scoped: never clobber a row a newer worker re-claimed
+        // between our read and this write.
+        where: {
+          id: row.id,
+          status: "CLAIMED",
+          claimVersion: row.claimVersion,
+          leaseExpiresAt: { lt: now },
+        },
+        data: atCap
+          ? {
+              status: "DEAD_LETTER",
+              leaseToken: null,
+              leaseOwner: null,
+              leaseExpiresAt: null,
+              lastErrorCode: "stale_claim_at_attempt_cap",
+              lastErrorClass: "infrastructure",
+            }
+          : {
+              status: "RETRYABLE_FAILED",
+              leaseToken: null,
+              leaseOwner: null,
+              leaseExpiresAt: null,
+              nextAttemptAt: computeNextAttemptAt(row.attemptCount, now, deps.random),
+              lastErrorCode: "stale_claim",
+              lastErrorClass: "infrastructure",
+            },
+      });
+      if (recovered.count === 1) {
+        if (atCap) summary.deadLetteredStale++;
+        else summary.reclaimedStale++;
+      }
+    }
+  } catch (err) {
+    summary.errors.push(`stale-recovery: ${errorMessage(err)}`);
+  }
 
-    // 2. Candidates: fresh PENDING rows plus FAILED rows with attempts left.
-    const candidates = await db.pickSettlementEvent.findMany({
-      where: {
-        OR: [
-          { status: "PENDING" },
-          { status: "FAILED", attemptCount: { lt: OUTBOX_MAX_ATTEMPTS } },
-        ],
-      },
+  // ── 2. Expansion (6.4/6.6) ──────────────────────────────────────────────
+  try {
+    const pendingEvents = await db.pickSettlementEvent.findMany({
+      where: { status: "PENDING" },
       orderBy: { createdAt: "asc" },
       take: OUTBOX_BATCH_SIZE,
     });
+    for (const event of pendingEvents) {
+      try {
+        const created = await expandEvent(db, deps, event, now);
+        if (created !== null) {
+          summary.expandedEvents++;
+          summary.deliveriesMaterialized += created.materialized;
+          summary.suppressed += created.suppressed;
+          summary.noRecipient += created.noRecipient;
+        }
+      } catch (err) {
+        summary.errors.push(`expand ${event.id}: ${errorMessage(err)}`);
+      }
+    }
+  } catch (err) {
+    summary.errors.push(`expansion-query: ${errorMessage(err)}`);
+  }
 
-    for (const candidate of candidates) {
-      // 3. Atomic claim — scoped to the status we read, so a concurrent
-      // drain that already claimed (or delivered) this row makes this a
-      // count-0 no-op and we skip it.
-      const claim = await db.pickSettlementEvent.updateMany({
-        where: { id: candidate.id, status: candidate.status },
+  // ── 3. Delivery (6.5/6.9) ───────────────────────────────────────────────
+  try {
+    const due = await db.pickSettlementDelivery.findMany({
+      where: {
+        OR: [
+          { status: "PENDING" },
+          { status: "RETRYABLE_FAILED", nextAttemptAt: { lte: now } },
+        ],
+      },
+      orderBy: { createdAt: "asc" },
+      take: DELIVERY_BATCH_SIZE,
+    });
+
+    // Batch the event payload lookups (6.9 — no per-row N+1 on events).
+    const eventIds = [...new Set(due.map((d) => d.eventId))];
+    const events =
+      eventIds.length === 0
+        ? []
+        : await db.pickSettlementEvent.findMany({ where: { id: { in: eventIds } } });
+    const eventById = new Map(events.map((e) => [e.id, e]));
+
+    for (const candidate of due) {
+      const leaseToken = randomUUID();
+      // Snapshot BEFORE the claim increments it (the claim's increment is
+      // atomic in the database; this local copy is only for cap math).
+      const attemptNumber = candidate.attemptCount + 1;
+      const priorHistory = Array.isArray(candidate.attemptHistory)
+        ? (candidate.attemptHistory as unknown[])
+        : [];
+      const claim = await db.pickSettlementDelivery.updateMany({
+        where: { id: candidate.id, status: candidate.status, claimVersion: candidate.claimVersion },
         data: {
           status: "CLAIMED",
-          claimedAt: now,
+          leaseToken,
+          leaseOwner: deps.leaseOwner,
+          leaseExpiresAt: new Date(now.getTime() + DELIVERY_LEASE_MINUTES * 60_000),
           attemptCount: { increment: 1 },
+          claimVersion: { increment: 1 },
         },
       });
       if (claim.count === 0) {
@@ -173,55 +421,146 @@ export async function drainSettlementOutbox(
       }
       summary.claimed++;
 
+      let finalStatus: string;
+      let errorCode: string | null = null;
+      let errorClass: string | null = null;
       try {
-        const outcome = await deliverOne(db, candidate, notify);
-        await db.pickSettlementEvent.update({
-          where: { id: candidate.id },
-          data: {
-            status: "DELIVERED",
-            deliveredAt: new Date(),
-            channelOutcomes: outcome,
-          },
-        });
-        summary.delivered++;
-      } catch (deliverErr) {
-        summary.failed++;
-        try {
-          await db.pickSettlementEvent.update({
-            where: { id: candidate.id },
-            data: {
-              status: "FAILED",
-              channelOutcomes: { error: errorMessage(deliverErr) },
-            },
-          });
-        } catch (markErr) {
-          // Row stays CLAIMED; the stale-claim reclaim recovers it.
-          console.warn(
-            `[settlement-outbox] could not mark event ${candidate.id} FAILED: ` +
-              errorMessage(markErr),
-          );
-        }
+        const event = eventById.get(candidate.eventId);
+        const outcome = await deliverOne(db, deps, candidate, event ?? null);
+        finalStatus = outcome.status;
+        errorCode = outcome.errorCode ?? null;
+        errorClass = outcome.errorClass ?? null;
+      } catch (err) {
+        finalStatus = "RETRYABLE_FAILED";
+        errorCode = "delivery_exception";
+        errorClass = "infrastructure";
+        summary.errors.push(`deliver ${candidate.id}: ${errorMessage(err)}`);
+      }
+
+      // Cap enforcement: a retryable failure at the cap dead-letters (6.5).
+      if (finalStatus === "RETRYABLE_FAILED" && attemptNumber >= OUTBOX_MAX_ATTEMPTS) {
+        finalStatus = "DEAD_LETTER";
+        errorCode = errorCode ?? "attempt_cap_reached";
+      }
+
+      const deliveredAt = finalStatus === "DELIVERED" ? new Date() : null;
+      const event = eventById.get(candidate.eventId);
+      const latencyMs =
+        deliveredAt && event ? Math.max(0, deliveredAt.getTime() - event.settledAt.getTime()) : null;
+
+      const historyEntry = {
+        attempt: attemptNumber,
+        at: now.toISOString(),
+        status: finalStatus,
+        ...(errorCode ? { errorCode } : {}),
+      };
+
+      // TOKEN-SCOPED result write (6.5): only the holder of the lease can
+      // record the outcome; a stale worker's write matches zero rows.
+      const recorded = await db.pickSettlementDelivery.updateMany({
+        where: { id: candidate.id, leaseToken, status: "CLAIMED" },
+        data: {
+          status: finalStatus,
+          leaseToken: null,
+          leaseOwner: null,
+          leaseExpiresAt: null,
+          lastErrorCode: errorCode,
+          lastErrorClass: errorClass,
+          attemptHistory: [...priorHistory, historyEntry],
+          ...(finalStatus === "RETRYABLE_FAILED"
+            ? { nextAttemptAt: computeNextAttemptAt(attemptNumber, now, deps.random) }
+            : { nextAttemptAt: null }),
+          ...(deliveredAt ? { deliveredAt } : {}),
+          ...(latencyMs !== null ? { latencyMs } : {}),
+        },
+      });
+      if (recorded.count === 0) {
+        summary.lostLease++;
+        continue;
+      }
+
+      switch (finalStatus) {
+        case "DELIVERED":
+          summary.delivered++;
+          if (latencyMs !== null) latencySamples.push(latencyMs);
+          break;
+        case "RETRYABLE_FAILED":
+          summary.retryableFailed++;
+          break;
+        case "PERMANENT_FAILED":
+          summary.permanentFailed++;
+          break;
+        case "DEAD_LETTER":
+          summary.deadLettered++;
+          break;
+        case "SUPPRESSED":
+          summary.suppressed++;
+          break;
+        case "NO_RECIPIENT":
+          summary.noRecipient++;
+          break;
       }
     }
-  } catch (drainErr) {
-    console.warn(`[settlement-outbox] drain pass failed: ${errorMessage(drainErr)}`);
+  } catch (err) {
+    summary.errors.push(`delivery-pass: ${errorMessage(err)}`);
   }
 
+  // ── 4. Parent completion sweep (6.4) ────────────────────────────────────
+  try {
+    const expanded = await db.pickSettlementEvent.findMany({
+      where: { status: "EXPANDED" },
+      orderBy: { createdAt: "asc" },
+      take: 100,
+    });
+    for (const event of expanded) {
+      const open = await db.pickSettlementDelivery.findMany({
+        where: { eventId: event.id, status: { in: NON_TERMINAL_DELIVERY_STATUSES } },
+        take: 1,
+      });
+      if (open.length > 0) continue;
+      const completed = await db.pickSettlementEvent.updateMany({
+        where: { id: event.id, status: "EXPANDED" },
+        data: { status: "DELIVERED", completedAt: new Date(), deliveredAt: new Date() },
+      });
+      if (completed.count === 1) summary.completedEvents++;
+    }
+  } catch (err) {
+    summary.errors.push(`completion-sweep: ${errorMessage(err)}`);
+  }
+
+  summary.latency = latencyPercentiles(latencySamples);
   return summary;
 }
 
-/** Delivers one claimed event. Throws on infrastructure failure (missing
- *  pick/game, notify blowing up) — the caller records FAILED. */
-async function deliverOne(
+interface ExpansionResult {
+  materialized: number;
+  suppressed: number;
+  noRecipient: number;
+}
+
+/** Expands one PENDING event: freeze the payload, materialize the
+ *  settlement-time recipient set into delivery rows (idempotent via the
+ *  unique idempotencyKey + skipDuplicates), and move the event to EXPANDED
+ *  (or straight to DELIVERED for non-decisive/no-recipient events). */
+async function expandEvent(
   db: SettlementOutboxDb,
+  deps: OutboxDeps,
   event: OutboxEventRow,
-  notify: OutboxNotifyFn,
-): Promise<Record<string, unknown>> {
-  // VOID settlements are receipts, not alerts — the GRADED-only doctrine
-  // (alert-eligibility.ts) only alerts decisive outcomes. Mark delivered
-  // with an honest skip note instead of pretending a send happened.
+  now: Date,
+): Promise<ExpansionResult | null> {
+  // VOID settlements are receipts, not alerts (GRADED-only doctrine).
   if (event.result !== "WIN" && event.result !== "LOSS" && event.result !== "PUSH") {
-    return { skipped: "non_decisive_result", result: event.result };
+    const closed = await db.pickSettlementEvent.updateMany({
+      where: { id: event.id, status: "PENDING" },
+      data: {
+        status: "DELIVERED",
+        completedAt: now,
+        deliveredAt: now,
+        recipientsMaterializedAt: now,
+        channelOutcomes: { skipped: "non_decisive_result", result: event.result },
+      },
+    });
+    return closed.count === 1 ? { materialized: 0, suppressed: 0, noRecipient: 0 } : null;
   }
 
   const pick = await db.pick.findUnique({
@@ -246,19 +585,343 @@ async function deliverOne(
     throw new Error(`pick ${event.pickId} (or its game) no longer exists`);
   }
 
-  const notifySummary = await notify(db, {
+  const payload: FrozenEventPayload = {
+    schemaVersion: EVENT_PAYLOAD_SCHEMA_VERSION,
     pickId: event.pickId,
     pickType: pick.pickType,
     selection: pick.selection,
-    result: event.result,
-    settledAt: event.settledAt,
+    result: event.result as "WIN" | "LOSS" | "PUSH",
+    settledAt: event.settledAt.toISOString(),
     sportKey: pick.game.sport?.key ?? "unknown",
     homeTeam: { id: pick.game.homeTeamId, name: pick.game.homeTeamName },
     awayTeam: { id: pick.game.awayTeamId, name: pick.game.awayTeamName },
-  });
-
-  return {
-    followersMatched: notifySummary.followersMatched,
-    dispatches: notifySummary.dispatches,
   };
+
+  const teamIds = [pick.game.homeTeamId, pick.game.awayTeamId].filter(
+    (id): id is string => id !== null,
+  );
+  const followers =
+    teamIds.length === 0
+      ? []
+      : await db.watchlist.findMany({
+          where: { entityType: "TEAM", entityId: { in: teamIds } },
+        });
+
+  // Batched recipient resolution (6.9 — one user query, one subscription
+  // query for the whole event, entitlements resolved concurrently).
+  const userIds = [...new Set(followers.map((f) => f.userId))];
+  const users =
+    userIds.length === 0
+      ? []
+      : await db.user.findMany({
+          where: { id: { in: userIds } },
+          select: { id: true, email: true, emailVerified: true },
+        });
+  const userById = new Map(users.map((u) => [u.id, u]));
+  const subscriptions =
+    userIds.length === 0
+      ? []
+      : await db.pushSubscription.findMany({ where: { userId: { in: userIds } } });
+  const subsByUser = new Map<string, typeof subscriptions>();
+  for (const sub of subscriptions) {
+    const list = subsByUser.get(sub.userId) ?? [];
+    list.push(sub);
+    subsByUser.set(sub.userId, list);
+  }
+  const entitlementsByUser = new Map(
+    await Promise.all(
+      userIds.map(
+        async (id) => [id, await deps.getEntitlements(id)] as const,
+      ),
+    ),
+  );
+
+  const alertsEnabled = deps.alertsEnabled();
+  const rows: Array<Record<string, unknown>> = [];
+  let suppressed = 0;
+  let noRecipient = 0;
+
+  for (const userId of userIds) {
+    const user = userById.get(userId);
+    if (!user) continue; // stale watchlist row (user deleted) — no delivery owed
+    const entitlements = entitlementsByUser.get(userId) ?? null;
+    const eligible = alertsEnabled && entitlements !== null && entitlements.canGetAlerts;
+    const suppressCode = !alertsEnabled
+      ? "alerts_disabled"
+      : entitlements === null
+        ? "entitlements_unavailable"
+        : !entitlements.canGetAlerts
+          ? "tier_ineligible"
+          : null;
+
+    const mkRow = (
+      channel: string,
+      destinationId: string,
+      status: string,
+      errorCode: string | null,
+    ) => ({
+      eventId: event.id,
+      userId,
+      channel,
+      destinationId,
+      idempotencyKey: `${event.id}:${userId}:${channel}:${destinationId}`,
+      status,
+      attemptCount: 0,
+      claimVersion: 0,
+      ...(errorCode ? { lastErrorCode: errorCode, lastErrorClass: "policy" } : {}),
+      attemptHistory: [],
+    });
+
+    // Push: one delivery per stored subscription (destination identity).
+    const subs = subsByUser.get(userId) ?? [];
+    if (!eligible) {
+      rows.push(mkRow("push", "none", "SUPPRESSED", suppressCode));
+      suppressed++;
+    } else if (subs.length === 0) {
+      rows.push(mkRow("push", "none", "NO_RECIPIENT", "no_push_subscriptions"));
+      noRecipient++;
+    } else {
+      for (const sub of subs) rows.push(mkRow("push", sub.id, "PENDING", null));
+    }
+
+    // Email: one delivery to the verified address (destination = hash —
+    // never a raw address on the row).
+    const verifiedEmail = user.emailVerified ? user.email : null;
+    if (!eligible) {
+      rows.push(mkRow("email", "none", "SUPPRESSED", suppressCode));
+      suppressed++;
+    } else if (!verifiedEmail) {
+      rows.push(mkRow("email", "none", "NO_RECIPIENT", "no_verified_email"));
+      noRecipient++;
+    } else {
+      rows.push(mkRow("email", sha256Hex(verifiedEmail), "PENDING", null));
+    }
+  }
+
+  if (rows.length > 0) {
+    await db.pickSettlementDelivery.createMany({ data: rows, skipDuplicates: true });
+  }
+
+  const moved = await db.pickSettlementEvent.updateMany({
+    where: { id: event.id, status: "PENDING" },
+    data: {
+      status: "EXPANDED",
+      payload: payload as unknown as Record<string, unknown>,
+      recipientsMaterializedAt: now,
+    },
+  });
+  if (moved.count === 0) return null; // a concurrent expander won — rows deduped
+  return { materialized: rows.length, suppressed, noRecipient };
+}
+
+interface DeliveryOutcome {
+  status: "DELIVERED" | "RETRYABLE_FAILED" | "PERMANENT_FAILED" | "SUPPRESSED" | "NO_RECIPIENT";
+  errorCode?: string;
+  errorClass?: "retryable" | "permanent" | "infrastructure" | "policy";
+}
+
+/** Sends ONE claimed delivery through its channel, using the frozen event
+ *  payload. Destination addresses are resolved fresh (fail-closed when
+ *  gone); an expired push subscription is removed (6.9). */
+async function deliverOne(
+  db: SettlementOutboxDb,
+  deps: OutboxDeps,
+  delivery: DeliveryRow,
+  event: OutboxEventRow | null,
+): Promise<DeliveryOutcome> {
+  if (!event || !isFrozenPayload(event.payload)) {
+    // Expansion always freezes the payload before children exist; a missing
+    // payload is an infrastructure anomaly, retried up to the cap.
+    return { status: "RETRYABLE_FAILED", errorCode: "missing_event_payload", errorClass: "infrastructure" };
+  }
+  const payload = event.payload;
+  const team =
+    payload.homeTeam.id !== null ? payload.homeTeam : payload.awayTeam;
+  const message = `${team.name}: ${payload.selection} graded ${payload.result}.`;
+
+  if (delivery.channel === "push") {
+    if (!deps.pushConfigured()) {
+      return { status: "SUPPRESSED", errorCode: "channel_not_configured", errorClass: "policy" };
+    }
+    const subs = await db.pushSubscription.findMany({
+      where: { id: delivery.destinationId, userId: delivery.userId },
+    });
+    const sub = subs[0];
+    if (!sub) {
+      return { status: "PERMANENT_FAILED", errorCode: "subscription_removed", errorClass: "permanent" };
+    }
+    const result = await deps.sendPush(
+      { endpoint: sub.endpoint, p256dh: sub.p256dh, auth: sub.auth },
+      { title: "GalaxySportsEdge — pick graded", body: message },
+    );
+    if (result.sent) return { status: "DELIVERED" };
+    if (result.classification === "expired") {
+      // 404/410 — the push service says this subscription is gone. Remove
+      // it so no future event fans out to a dead endpoint (6.9).
+      try {
+        await db.pushSubscription.deleteMany({ where: { id: sub.id } });
+      } catch (err) {
+        console.warn(
+          `[settlement-outbox] could not remove expired subscription ${sub.id}: ${errorMessage(err)}`,
+        );
+      }
+      return { status: "PERMANENT_FAILED", errorCode: "subscription_expired", errorClass: "permanent" };
+    }
+    if (result.classification === "permanent") {
+      return {
+        status: "PERMANENT_FAILED",
+        errorCode: `push_rejected_${result.statusCode ?? "unknown"}`,
+        errorClass: "permanent",
+      };
+    }
+    if (result.classification === "not_configured") {
+      return { status: "SUPPRESSED", errorCode: "channel_not_configured", errorClass: "policy" };
+    }
+    return {
+      status: "RETRYABLE_FAILED",
+      errorCode: `push_transient_${result.statusCode ?? "network"}`,
+      errorClass: "retryable",
+    };
+  }
+
+  if (delivery.channel === "email") {
+    if (!deps.emailConfigured()) {
+      return { status: "SUPPRESSED", errorCode: "channel_not_configured", errorClass: "policy" };
+    }
+    const users = await db.user.findMany({
+      where: { id: delivery.userId },
+      select: { id: true, email: true, emailVerified: true },
+    });
+    const user = users[0];
+    const verifiedEmail = user?.emailVerified ? user.email : null;
+    if (!verifiedEmail || sha256Hex(verifiedEmail) !== delivery.destinationId) {
+      // The materialized destination no longer exists (email removed,
+      // unverified, or changed). Honest terminal record — never mail a
+      // different address than the one the delivery was owed to.
+      return { status: "PERMANENT_FAILED", errorCode: "destination_gone", errorClass: "permanent" };
+    }
+    const result = await deps.sendEmail(
+      verifiedEmail,
+      "GalaxySportsEdge — your watchlist pick graded",
+      message,
+    );
+    if (result.sent) return { status: "DELIVERED" };
+    if (result.classification === "permanent") {
+      return { status: "PERMANENT_FAILED", errorCode: result.errorName ?? "email_rejected", errorClass: "permanent" };
+    }
+    if (result.classification === "not_configured") {
+      return { status: "SUPPRESSED", errorCode: "channel_not_configured", errorClass: "policy" };
+    }
+    return { status: "RETRYABLE_FAILED", errorCode: result.errorName ?? "email_transient", errorClass: "retryable" };
+  }
+
+  return { status: "PERMANENT_FAILED", errorCode: `unknown_channel_${delivery.channel}`, errorClass: "permanent" };
+}
+
+// ── Honest queue health (6.7) ─────────────────────────────────────────────
+
+export interface OutboxHealth {
+  readonly ok: boolean;
+  readonly degraded: boolean;
+  readonly reasons: string[];
+  readonly queueDepth: number;
+  readonly oldestPendingAgeMs: number | null;
+  readonly deliveryCounts: Record<string, number>;
+  readonly eventCounts: Record<string, number>;
+}
+
+const HEALTH_DELIVERY_STATUSES = [
+  "PENDING",
+  "CLAIMED",
+  "RETRYABLE_FAILED",
+  "DELIVERED",
+  "SUPPRESSED",
+  "NO_RECIPIENT",
+  "PERMANENT_FAILED",
+  "DEAD_LETTER",
+];
+const HEALTH_EVENT_STATUSES = ["PENDING", "EXPANDED", "DELIVERED", "FAILED"];
+
+interface CountingDb {
+  pickSettlementEvent: {
+    count(args: { where: Record<string, unknown> }): Promise<number>;
+    findMany(args: {
+      where: Record<string, unknown>;
+      orderBy: Record<string, unknown>;
+      take: number;
+      select: Record<string, unknown>;
+    }): Promise<Array<{ createdAt: Date }>>;
+  };
+  pickSettlementDelivery: {
+    count(args: { where: Record<string, unknown> }): Promise<number>;
+  };
+}
+
+/** Per-state counts, queue depth and oldest-pending age. `ok` is false when
+ *  the health query itself fails or dead letters exist; `degraded` when
+ *  retryable backlog or old pendings exist. Absence of evidence is never
+ *  green: a thrown query returns ok:false. */
+export async function getSettlementOutboxHealth(
+  dbArg: unknown,
+  now: Date = new Date(),
+  maxPendingAgeMs: number = 6 * 60 * 60 * 1000,
+): Promise<OutboxHealth> {
+  const db = dbArg as CountingDb;
+  const reasons: string[] = [];
+  try {
+    const deliveryCounts: Record<string, number> = {};
+    for (const status of HEALTH_DELIVERY_STATUSES) {
+      deliveryCounts[status] = await db.pickSettlementDelivery.count({ where: { status } });
+    }
+    const eventCounts: Record<string, number> = {};
+    for (const status of HEALTH_EVENT_STATUSES) {
+      eventCounts[status] = await db.pickSettlementEvent.count({ where: { status } });
+    }
+    const oldest = await db.pickSettlementEvent.findMany({
+      where: { status: { in: ["PENDING", "EXPANDED"] } },
+      orderBy: { createdAt: "asc" },
+      take: 1,
+      select: { createdAt: true },
+    });
+    const oldestPendingAgeMs = oldest[0]
+      ? Math.max(0, now.getTime() - oldest[0].createdAt.getTime())
+      : null;
+
+    const queueDepth =
+      (eventCounts["PENDING"] ?? 0) +
+      (deliveryCounts["PENDING"] ?? 0) +
+      (deliveryCounts["RETRYABLE_FAILED"] ?? 0) +
+      (deliveryCounts["CLAIMED"] ?? 0);
+
+    if ((deliveryCounts["DEAD_LETTER"] ?? 0) > 0) {
+      reasons.push(`${deliveryCounts["DEAD_LETTER"]} dead-lettered deliveries need owner review`);
+    }
+    if (oldestPendingAgeMs !== null && oldestPendingAgeMs > maxPendingAgeMs) {
+      reasons.push(`oldest unfinished event is ${Math.round(oldestPendingAgeMs / 60_000)}m old`);
+    }
+    if ((deliveryCounts["RETRYABLE_FAILED"] ?? 0) > 0) {
+      reasons.push(`${deliveryCounts["RETRYABLE_FAILED"]} deliveries awaiting retry`);
+    }
+
+    const deadLetters = (deliveryCounts["DEAD_LETTER"] ?? 0) > 0;
+    return {
+      ok: !deadLetters,
+      degraded: reasons.length > 0,
+      reasons,
+      queueDepth,
+      oldestPendingAgeMs,
+      deliveryCounts,
+      eventCounts,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      degraded: true,
+      reasons: [`health query failed: ${errorMessage(err)}`],
+      queueDepth: -1,
+      oldestPendingAgeMs: null,
+      deliveryCounts: {},
+      eventCounts: {},
+    };
+  }
 }

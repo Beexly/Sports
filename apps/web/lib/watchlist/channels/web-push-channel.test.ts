@@ -57,7 +57,7 @@ describe("isWebPushConfigured", () => {
 describe("sendWebPushAlert", () => {
   it("no-ops honestly when unconfigured — never calls the SDK", async () => {
     const result = await sendWebPushAlert(SUBSCRIPTION, PAYLOAD, {});
-    expect(result).toEqual({ sent: false, detail: "not_configured" });
+    expect(result).toEqual({ sent: false, detail: "not_configured", classification: "not_configured" });
     expect(mocks.sendNotification).not.toHaveBeenCalled();
   });
 
@@ -66,13 +66,13 @@ describe("sendWebPushAlert", () => {
       ...FULL_ENV,
       VAPID_SUBJECT: undefined,
     });
-    expect(result).toEqual({ sent: false, detail: "not_configured" });
+    expect(result).toEqual({ sent: false, detail: "not_configured", classification: "not_configured" });
     expect(mocks.sendNotification).not.toHaveBeenCalled();
   });
 
   it("sends via web-push when fully configured", async () => {
     const result = await sendWebPushAlert(SUBSCRIPTION, PAYLOAD, FULL_ENV);
-    expect(result).toEqual({ sent: true, detail: "sent" });
+    expect(result).toEqual({ sent: true, detail: "sent", classification: "sent" });
     expect(mocks.setVapidDetails).toHaveBeenCalledWith("mailto:ops@example.com", "pub", "priv");
     expect(mocks.sendNotification).toHaveBeenCalledWith(
       { endpoint: SUBSCRIPTION.endpoint, keys: { p256dh: "key1", auth: "key2" } },
@@ -82,9 +82,33 @@ describe("sendWebPushAlert", () => {
 
   it("fail-isolated: a rejected sendNotification never throws, reports send_failed", async () => {
     mocks.sendNotification.mockRejectedValue(new Error("410 Gone — subscription expired"));
+    await expect(sendWebPushAlert(SUBSCRIPTION, PAYLOAD, FULL_ENV)).resolves.toMatchObject({
+      sent: false,
+      detail: "send_failed",
+    });
+  });
+
+  it("classifies a 410 statusCode as expired so the caller can remove the subscription (6.9)", async () => {
+    const gone = Object.assign(new Error("410 Gone"), { statusCode: 410 });
+    mocks.sendNotification.mockRejectedValue(gone);
     await expect(sendWebPushAlert(SUBSCRIPTION, PAYLOAD, FULL_ENV)).resolves.toEqual({
       sent: false,
       detail: "send_failed",
+      classification: "expired",
+      statusCode: 410,
+    });
+  });
+
+  it("classifies 5xx as retryable and 403 as permanent (6.9)", async () => {
+    mocks.sendNotification.mockRejectedValue(Object.assign(new Error("503"), { statusCode: 503 }));
+    await expect(sendWebPushAlert(SUBSCRIPTION, PAYLOAD, FULL_ENV)).resolves.toMatchObject({
+      classification: "retryable",
+      statusCode: 503,
+    });
+    mocks.sendNotification.mockRejectedValue(Object.assign(new Error("403"), { statusCode: 403 }));
+    await expect(sendWebPushAlert(SUBSCRIPTION, PAYLOAD, FULL_ENV)).resolves.toMatchObject({
+      classification: "permanent",
+      statusCode: 403,
     });
   });
 
@@ -92,9 +116,10 @@ describe("sendWebPushAlert", () => {
     mocks.setVapidDetails.mockImplementation(() => {
       throw new Error("bad key");
     });
-    await expect(sendWebPushAlert(SUBSCRIPTION, PAYLOAD, FULL_ENV)).resolves.toEqual({
+    await expect(sendWebPushAlert(SUBSCRIPTION, PAYLOAD, FULL_ENV)).resolves.toMatchObject({
       sent: false,
       detail: "send_failed",
+      classification: "retryable",
     });
   });
 });

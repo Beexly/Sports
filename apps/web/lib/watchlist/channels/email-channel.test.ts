@@ -47,7 +47,7 @@ describe("isEmailConfigured", () => {
 describe("sendAlertEmail", () => {
   it("no-ops honestly when unconfigured — never constructs the SDK client", async () => {
     const result = await sendAlertEmail("user@example.com", "subj", "body", {});
-    expect(result).toEqual({ sent: false, detail: "not_configured" });
+    expect(result).toEqual({ sent: false, detail: "not_configured", classification: "not_configured" });
     expect(Resend).not.toHaveBeenCalled();
   });
 
@@ -58,7 +58,7 @@ describe("sendAlertEmail", () => {
       "Chiefs -3.5 graded WIN.",
       FULL_ENV,
     );
-    expect(result).toEqual({ sent: true, detail: "sent" });
+    expect(result).toEqual({ sent: true, detail: "sent", classification: "sent" });
     expect(Resend).toHaveBeenCalledWith("re_test_key");
     expect(mocks.send).toHaveBeenCalledWith({
       from: "alerts@example.com",
@@ -72,13 +72,13 @@ describe("sendAlertEmail", () => {
     mocks.send.mockResolvedValue({ data: null, error: { message: "invalid from address" } });
     await expect(
       sendAlertEmail("user@example.com", "subj", "body", FULL_ENV),
-    ).resolves.toEqual({ sent: false, detail: "send_failed" });
+    ).resolves.toMatchObject({ sent: false, detail: "send_failed" });
   });
 
   it("fail-isolated: a rejected send() never throws", async () => {
     mocks.send.mockRejectedValue(new Error("network blip"));
     await expect(
       sendAlertEmail("user@example.com", "subj", "body", FULL_ENV),
-    ).resolves.toEqual({ sent: false, detail: "send_failed" });
+    ).resolves.toMatchObject({ sent: false, detail: "send_failed" });
   });
 });

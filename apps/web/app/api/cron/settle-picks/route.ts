@@ -25,9 +25,19 @@
 import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { db } from "@sports/db";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
-import { settleSport, freezeSlateCommitments, type SlateFreezeResult } from "@sports/ingestion-pipeline";
+import {
+  settleSport,
+  freezeSlateCommitments,
+  computeScheduledWindow,
+  type SlateFreezeResult,
+} from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
+import {
+  drainSettlementOutbox,
+  type OutboxDrainSummary,
+} from "@/lib/settlement-outbox/worker";
 
 export const dynamic = "force-dynamic";
 // Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
@@ -80,8 +90,16 @@ export async function GET(request: Request) {
     error?: string;
   }> = [];
 
+  // Externally supplied scheduler-invocation window (hardening 6.1): every
+  // retry of THIS scheduled invocation resolves to the same settlement-run
+  // identity inside settleSport, so retries can never fabricate evidence
+  // corroboration.
+  const scheduledWindow = computeScheduledWindow();
+
   for (const sport of sportsToProcess) {
-    const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks]");
+    const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks]", {
+      scheduledWindow,
+    });
     results.push({
       sport: result.sport,
       ok: result.status === "success",
@@ -118,6 +136,22 @@ export async function GET(request: Request) {
     );
   }
 
+  // DRAIN-AFTER-SETTLEMENT (hardening 6.8): kick the outbox immediately so
+  // event→delivery latency is bounded by this cron's own runtime instead of
+  // waiting for the next deliver-settlement-alerts schedule. The durable
+  // retry worker remains the safety net; this is purely a latency win.
+  // Non-fatal: a drain failure never fails settlement (which already
+  // committed durably).
+  let alertDrain: OutboxDrainSummary | null = null;
+  try {
+    alertDrain = await drainSettlementOutbox(db);
+  } catch (drainErr) {
+    console.warn(
+      `[cron:settle-picks] post-settlement outbox drain failed: ` +
+        `${drainErr instanceof Error ? drainErr.message : drainErr}`,
+    );
+  }
+
   const elapsedMs = Date.now() - startedAt;
   const okCount = results.filter((r) => r.ok).length;
   const gamesSettled = results.reduce((sum, r) => sum + r.gamesSettled, 0);
@@ -148,5 +182,6 @@ export async function GET(request: Request) {
     bootstrapMode: gates.isBootstrapMode,
     results,
     freeze,
+    alertDrain,
   });
 }

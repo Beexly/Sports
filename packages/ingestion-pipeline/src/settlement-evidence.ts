@@ -1,36 +1,39 @@
 /**
  * Settlement evidence — append-only observations, race-safe anomaly
- * lifecycle, and exactly-once owner-decision receipts (Phase 1E).
+ * lifecycle, idempotent owner-review requests and append-only decision
+ * history (Phase 1E, hardened per directive section 6).
  *
- * Replaces the rejected in-place counter design (PR #157). Every one of
- * that design's failure modes is closed structurally here:
+ * Structural guarantees:
  *
- *   1. NOT ATOMIC (read-count-then-increment): corroboration is never a
- *      stored counter that gets incremented. It is DERIVED inside one
- *      database transaction by counting DISTINCT settlementRunId over the
- *      append-only SettlementObservation rows. Concurrent runs cannot
- *      double-count, miss, or miscount — the rows themselves are the truth.
- *   2. RETRIES COUNTED AS CORROBORATION: observations carry the run id and
- *      a deterministic payload fingerprint, and the table has a compound
- *      unique on (gameId, settlementRunId, payloadFingerprint). Inserts go
- *      through createMany(skipDuplicates) — Postgres INSERT ... ON CONFLICT
- *      DO NOTHING — so a retry of the same run/payload is a no-op insert
- *      and can never add a distinct run.
- *   3. HISTORY DESTROYED ON RESOLUTION: nothing here (or anywhere in the
- *      pipeline) deletes or resets observations, anomalies, or decisions.
- *      Score arrival RESOLVES the anomaly (state + reason + timestamp);
- *      the evidence trail and the decision receipt survive it.
- *   4. NO DURABLE OWNER RECEIPT: crossing the review threshold creates a
- *      SettlementDecision row exactly once — the unique FK on anomalyId is
- *      the exactly-once guarantee, and the promotion itself is guarded by
- *      an updateMany scoped to state:"OPEN" so only one transaction can
- *      win the promotion race (the loser matches 0 rows and never attempts
- *      the receipt insert).
+ *   1. NOT A COUNTER: corroboration is DERIVED inside one database
+ *      transaction from the append-only SettlementObservation rows.
+ *      Concurrent runs cannot double-count, miss, or miscount.
+ *   2. RETRIES NEVER CORROBORATE (6.1): observations carry a DURABLE
+ *      settlement-run id (SettlementRun, upserted on the externally stable
+ *      idempotency key source+sport+scheduledWindow+snapshotFingerprint —
+ *      see settlement-run.ts), and the compound unique
+ *      (gameId, settlementRunId, payloadFingerprint) makes a retried
+ *      run/payload a no-op insert. On top of that, corroboration requires
+ *      runs with DISTINCT source-snapshot fingerprints OR minimum temporal
+ *      separation (MIN_CORROBORATION_SEPARATION_MINUTES) — so even retries
+ *      that cross a scheduling-window boundary (fresh run id, same source
+ *      bytes, seconds apart) can never promote an anomaly.
+ *   3. HISTORY IS APPEND-ONLY: nothing here deletes or resets
+ *      observations, anomalies, requests, or decision events. Score
+ *      arrival RESOLVES the anomaly and appends a SYSTEM decision event;
+ *      the evidence trail survives.
+ *   4. REQUEST != DECISION (6.3): crossing the review threshold creates
+ *      one idempotent OwnerDecisionRequest (unique anomalyId) and appends
+ *      one SYSTEM SettlementDecisionEvent (REVIEW_REQUESTED, prior/next
+ *      state, actor receipt). Actual owner decisions (ACKNOWLEDGED /
+ *      WAIT_FOR_SOURCE / MARK_POSTPONED / VOID_PICKS / DISMISS_ANOMALY /
+ *      RESOLVE_SCORES_ARRIVED) append further events — they never consume
+ *      or overwrite the request, and a SYSTEM event never impersonates an
+ *      owner (actorType is part of the receipt).
  *
  * The pipeline still NEVER infers POSTPONED, NEVER voids picks, and leaves
  * already-terminal games untouched — promotion only flags the anomaly for
- * OWNER review. Auto-voiding a paid user's pick from a status the feed
- * never states explicitly is an owner decision, not a pipeline one.
+ * OWNER review.
  */
 
 import { createHash } from "node:crypto";
@@ -39,19 +42,27 @@ import { createHash } from "node:crypto";
  *  game is still SCHEDULED/LIVE". */
 export const SCORELESS_COMPLETED_ANOMALY = "SCORELESS_COMPLETED";
 
-/**
- * Distinct settlement runs that must all observe a game completed-but-
- * scoreless before its anomaly is promoted to OWNER_REVIEW. A single
- * sighting is never enough: a transient Odds-API score drop or a
- * team-name-mapping miss is byte-identical to a real postponement.
- * (Same threshold value the rejected #157 used — the threshold was fine;
- * the counter mechanics were not.)
- */
+/** Corroborating settlement runs required before OWNER_REVIEW promotion. */
 export const SCORELESS_REVIEW_THRESHOLD = 3;
 
-/** Deterministic sha256 fingerprint over the normalized source row content.
- *  Key order is fixed by construction, so the same source payload always
- *  produces the same fingerprint (the dedupe key's third component). */
+/** Minimum temporal separation between two runs sharing a source-snapshot
+ *  fingerprint for BOTH to count as corroboration (6.1). Distinct
+ *  snapshots corroborate regardless of spacing; identical snapshots only
+ *  corroborate when genuinely separated in time. */
+export const MIN_CORROBORATION_SEPARATION_MINUTES = 30;
+
+/** Decision kinds an OWNER may append (6.3). */
+export const OWNER_DECISION_KINDS = [
+  "ACKNOWLEDGED",
+  "WAIT_FOR_SOURCE",
+  "MARK_POSTPONED",
+  "VOID_PICKS",
+  "DISMISS_ANOMALY",
+  "RESOLVE_SCORES_ARRIVED",
+] as const;
+export type OwnerDecisionKind = (typeof OWNER_DECISION_KINDS)[number];
+
+/** Deterministic sha256 fingerprint over the normalized source row content. */
 export function fingerprintScorePayload(payload: {
   readonly externalId: string;
   readonly completed: boolean;
@@ -67,6 +78,61 @@ export function fingerprintScorePayload(payload: {
   return createHash("sha256").update(canonical, "utf8").digest("hex");
 }
 
+// ── Corroboration rule (pure, unit-tested) ──────────────────────────────
+
+export interface CorroborationObservation {
+  readonly settlementRunId: string;
+  readonly sourceSnapshotFingerprint: string | null;
+  readonly observedAt: Date;
+}
+
+/**
+ * Counts CORROBORATING runs over the observation rows (6.1):
+ *   - one earliest sighting per distinct run id;
+ *   - runs sorted by observedAt ascending, greedily selected;
+ *   - a run corroborates iff its source-snapshot fingerprint is distinct
+ *     from every already-selected run's, OR it is at least
+ *     `minSeparationMs` after the last selected run;
+ *   - legacy rows with a null snapshot fingerprint rely on temporal
+ *     separation only (fail-closed: null never matches "distinct").
+ * Pure and deterministic — callable inside the evidence transaction and
+ * directly by tests.
+ */
+export function countCorroboratingRuns(
+  rows: readonly CorroborationObservation[],
+  minSeparationMs: number = MIN_CORROBORATION_SEPARATION_MINUTES * 60_000,
+): { corroboratingRunIds: string[]; distinctRunCount: number } {
+  const earliestByRun = new Map<string, CorroborationObservation>();
+  for (const row of rows) {
+    const existing = earliestByRun.get(row.settlementRunId);
+    if (!existing || row.observedAt.getTime() < existing.observedAt.getTime()) {
+      earliestByRun.set(row.settlementRunId, row);
+    }
+  }
+  const runs = [...earliestByRun.values()].sort(
+    (a, b) => a.observedAt.getTime() - b.observedAt.getTime(),
+  );
+
+  const selected: CorroborationObservation[] = [];
+  const seenFingerprints = new Set<string>();
+  for (const run of runs) {
+    const fp = run.sourceSnapshotFingerprint;
+    const distinctSnapshot = fp !== null && !seenFingerprints.has(fp);
+    const last = selected[selected.length - 1];
+    const separated =
+      last === undefined ||
+      run.observedAt.getTime() - last.observedAt.getTime() >= minSeparationMs;
+    if (distinctSnapshot || separated) {
+      selected.push(run);
+      if (fp !== null) seenFingerprints.add(fp);
+    }
+  }
+  return {
+    corroboratingRunIds: selected.map((r) => r.settlementRunId),
+    distinctRunCount: runs.length,
+  };
+}
+
 // ── Structural db surface (mirrors settlement-snapshots.ts's doctrine) ──
 
 interface ObservationCreateData {
@@ -74,17 +140,30 @@ interface ObservationCreateData {
   source: string;
   settlementRunId: string;
   payloadFingerprint: string;
+  sourceSnapshotFingerprint: string | null;
   observedSourceStatus: string;
   homeScorePresent: boolean;
   awayScorePresent: boolean;
   mappingStatus: string;
   freshnessState: string;
   observedAt: Date;
+  sourceObservedAt: Date | null;
 }
 
 interface AnomalyRow {
   readonly id: string;
   readonly state: string;
+}
+
+export interface SettlementDecisionEventCreateData {
+  anomalyId: string;
+  decisionKind: string;
+  actorType: "OWNER" | "SYSTEM";
+  actorReceipt: unknown;
+  priorState: string;
+  nextState: string;
+  reason?: string | null;
+  evidence?: unknown;
 }
 
 export interface SettlementEvidenceTx {
@@ -95,9 +174,18 @@ export interface SettlementEvidenceTx {
     }): Promise<{ count: number }>;
     findMany(args: {
       where: { gameId: string; observedSourceStatus: string };
-      distinct: ["settlementRunId"];
-      select: { settlementRunId: true };
-    }): Promise<Array<{ settlementRunId: string }>>;
+      select: {
+        settlementRunId: true;
+        sourceSnapshotFingerprint: true;
+        observedAt: true;
+      };
+    }): Promise<
+      Array<{
+        settlementRunId: string;
+        sourceSnapshotFingerprint: string | null;
+        observedAt: Date;
+      }>
+    >;
   };
   settlementAnomaly: {
     findUnique(args: {
@@ -122,10 +210,13 @@ export interface SettlementEvidenceTx {
       data: { state: "OWNER_REVIEW"; lastSeenAt: Date };
     }): Promise<{ count: number }>;
   };
-  settlementDecision: {
+  ownerDecisionRequest: {
     create(args: {
-      data: { anomalyId: string; decisionKind: string; context: unknown };
+      data: { anomalyId: string; requestKind: string; context: unknown };
     }): Promise<unknown>;
+  };
+  settlementDecisionEvent: {
+    create(args: { data: SettlementDecisionEventCreateData }): Promise<unknown>;
   };
 }
 
@@ -138,7 +229,10 @@ export interface ScorelessEvidenceInput {
   readonly gameId: string;
   readonly externalId: string;
   readonly gameStatus: string;
+  /** DURABLE run id from getOrCreateSettlementRun (settlement-run.ts). */
   readonly settlementRunId: string;
+  /** sha256 over the run's whole normalized source snapshot (6.1). */
+  readonly sourceSnapshotFingerprint: string;
   readonly source: string;
   readonly payload: {
     readonly externalId: string;
@@ -147,54 +241,51 @@ export interface ScorelessEvidenceInput {
     readonly awayScore: number | null;
   };
   readonly observedAt: Date;
+  /** Source-provided event timestamp, retained verbatim when available. */
+  readonly sourceObservedAt?: Date | null;
   /** Review threshold — defaults to SCORELESS_REVIEW_THRESHOLD (3). */
   readonly threshold?: number;
+  /** Minimum same-snapshot separation — defaults to
+   *  MIN_CORROBORATION_SEPARATION_MINUTES. */
+  readonly minSeparationMinutes?: number;
 }
 
 export interface ScorelessEvidenceOutcome {
-  /** True when this run/payload was a genuinely new observation (false for
-   *  a retry — the unique-violation no-op path). */
+  /** True when this run/payload was a genuinely new observation. */
   readonly observationRecorded: boolean;
-  /** COUNT(DISTINCT settlementRunId) after this write. */
+  /** Corroborating runs per the 6.1 rule (distinct snapshot OR separated). */
+  readonly corroboratingRunCount: number;
+  /** Raw COUNT(DISTINCT settlementRunId) — telemetry only. */
   readonly distinctRunCount: number;
-  /** True when the anomaly row was created by this call (best-effort
-   *  telemetry; the row itself is constraint-guaranteed unique). */
+  /** True when the anomaly row was created by this call. */
   readonly anomalyOpened: boolean;
   /** True when THIS transaction won the OPEN→OWNER_REVIEW promotion and
-   *  created the decision receipt. Guaranteed at-most-once per anomaly. */
+   *  created the idempotent OwnerDecisionRequest + appended the SYSTEM
+   *  REVIEW_REQUESTED decision event. At-most-once per anomaly. */
   readonly anomalyPromoted: boolean;
 }
 
 /**
  * Records one completed-but-scoreless sighting inside ONE database
- * transaction:
- *   (a) insert-or-noop the deduplicated observation,
- *   (b) derive distinct corroborating runs by counting DISTINCT
- *       settlementRunId (never an in-place counter),
- *   (c) upsert exactly one anomaly row per (gameId, anomalyType) —
- *       race-safe: the compound unique makes Prisma compile the upsert to
- *       INSERT ... ON CONFLICT, so concurrent transactions cannot create
- *       two rows,
- *   (d) if distinct runs >= threshold and the anomaly is still OPEN,
- *       promote it to OWNER_REVIEW (updateMany guarded on state:"OPEN" —
- *       only one racer matches) and create the SettlementDecision receipt
- *       (unique anomalyId FK — double-promotion is structurally impossible).
+ * transaction: insert-or-noop the deduplicated observation, derive
+ * corroboration per the 6.1 rule, race-safely upsert the single anomaly,
+ * and (at threshold) promote OPEN→OWNER_REVIEW exactly once with an
+ * idempotent OwnerDecisionRequest and an append-only SYSTEM decision event.
  *
  * Never voids picks, never changes Game.status, never deletes anything.
- * Throws on database failure — the caller (settle-sport) isolates it so an
- * evidence failure cannot abort settlement of other games.
+ * Throws on database failure — the caller (settle-sport) isolates it.
  */
 export async function recordScorelessCompletedEvidence(
   input: ScorelessEvidenceInput,
 ): Promise<ScorelessEvidenceOutcome> {
   const threshold = input.threshold ?? SCORELESS_REVIEW_THRESHOLD;
+  const minSeparationMs =
+    (input.minSeparationMinutes ?? MIN_CORROBORATION_SEPARATION_MINUTES) * 60_000;
   const now = input.observedAt;
   const payloadFingerprint = fingerprintScorePayload(input.payload);
 
   return input.db.$transaction(async (tx) => {
-    // (a) Insert-or-noop: ON CONFLICT DO NOTHING via skipDuplicates, so a
-    // retry of the same (game, run, payload) records nothing and — because
-    // corroboration is derived from the rows — corroborates nothing.
+    // (a) Insert-or-noop: ON CONFLICT DO NOTHING via skipDuplicates.
     const inserted = await tx.settlementObservation.createMany({
       data: [
         {
@@ -202,31 +293,37 @@ export async function recordScorelessCompletedEvidence(
           source: input.source,
           settlementRunId: input.settlementRunId,
           payloadFingerprint,
+          sourceSnapshotFingerprint: input.sourceSnapshotFingerprint,
           observedSourceStatus: SCORELESS_COMPLETED_ANOMALY,
           homeScorePresent: input.payload.homeScore !== null,
           awayScorePresent: input.payload.awayScore !== null,
           mappingStatus: "matched",
           freshnessState: "within-settlement-window",
           observedAt: input.observedAt,
+          sourceObservedAt: input.sourceObservedAt ?? null,
         },
       ],
       skipDuplicates: true,
     });
     const observationRecorded = inserted.count > 0;
 
-    // (b) Corroboration = COUNT(DISTINCT settlementRunId) over the
-    // append-only evidence — derived fresh inside this transaction.
-    const distinctRuns = await tx.settlementObservation.findMany({
+    // (b) Corroboration per the hardened rule — derived fresh in-tx.
+    const rows = await tx.settlementObservation.findMany({
       where: { gameId: input.gameId, observedSourceStatus: SCORELESS_COMPLETED_ANOMALY },
-      distinct: ["settlementRunId"],
-      select: { settlementRunId: true },
+      select: {
+        settlementRunId: true,
+        sourceSnapshotFingerprint: true,
+        observedAt: true,
+      },
     });
-    const distinctRunCount = distinctRuns.length;
+    const { corroboratingRunIds, distinctRunCount } = countCorroboratingRuns(
+      rows,
+      minSeparationMs,
+    );
+    const corroboratingRunCount = corroboratingRunIds.length;
 
-    // (c) Exactly one anomaly row per (gameId, anomalyType). The prior
-    // findUnique is telemetry only (did WE open it?) — correctness rests on
-    // the compound unique + native upsert. The update branch never touches
-    // `state`, so it can never demote OWNER_REVIEW (or un-resolve RESOLVED).
+    // (c) Exactly one anomaly row per (gameId, anomalyType) — race-safe
+    // upsert on the compound unique; update branch never touches `state`.
     const existing = await tx.settlementAnomaly.findUnique({
       where: {
         gameId_anomalyType: { gameId: input.gameId, anomalyType: SCORELESS_COMPLETED_ANOMALY },
@@ -251,38 +348,65 @@ export async function recordScorelessCompletedEvidence(
     const anomalyOpened = existing === null;
 
     // (d) Threshold promotion — exactly once. The state-scoped updateMany
-    // is the race gate (only one concurrent transaction matches the OPEN
-    // row); the decision's unique anomalyId FK is the constraint backstop.
+    // is the race gate; OwnerDecisionRequest's unique anomalyId is the
+    // constraint backstop. The SYSTEM decision event is appended with an
+    // honest actor receipt — it requests review, it decides nothing.
     let anomalyPromoted = false;
-    if (distinctRunCount >= threshold && anomaly.state === "OPEN") {
+    if (corroboratingRunCount >= threshold && anomaly.state === "OPEN") {
       const promoted = await tx.settlementAnomaly.updateMany({
         where: { id: anomaly.id, state: "OPEN" },
         data: { state: "OWNER_REVIEW", lastSeenAt: now },
       });
       if (promoted.count === 1) {
-        await tx.settlementDecision.create({
+        const context = {
+          gameId: input.gameId,
+          externalId: input.externalId,
+          gameStatusAtPromotion: input.gameStatus,
+          anomalyType: SCORELESS_COMPLETED_ANOMALY,
+          corroboratingRunCount,
+          distinctRunCount,
+          corroboratingRunIds,
+          threshold,
+          minSeparationMs,
+          promotedAt: now.toISOString(),
+          note:
+            "Owner review requested: feed reports completed=true with no usable score " +
+            "across the corroboration threshold. Picks left PENDING — never auto-voided.",
+        };
+        await tx.ownerDecisionRequest.create({
+          data: {
+            anomalyId: anomaly.id,
+            requestKind: "SCORELESS_COMPLETED_REVIEW",
+            context,
+          },
+        });
+        await tx.settlementDecisionEvent.create({
           data: {
             anomalyId: anomaly.id,
             decisionKind: "REVIEW_REQUESTED",
-            context: {
-              gameId: input.gameId,
-              externalId: input.externalId,
-              gameStatusAtPromotion: input.gameStatus,
-              anomalyType: SCORELESS_COMPLETED_ANOMALY,
-              distinctRunCount,
-              corroboratingRunIds: distinctRuns.map((r) => r.settlementRunId),
-              threshold,
-              promotedAt: now.toISOString(),
-              note:
-                "Owner review requested: feed reports completed=true with no usable score " +
-                "across the corroboration threshold. Picks left PENDING — never auto-voided.",
+            actorType: "SYSTEM",
+            actorReceipt: {
+              actorType: "SYSTEM",
+              subjectId: "system:settlement-pipeline",
+              runId: input.settlementRunId,
+              observedAt: now.toISOString(),
             },
+            priorState: "OPEN",
+            nextState: "OWNER_REVIEW",
+            reason: "corroboration-threshold-reached",
+            evidence: context,
           },
         });
         anomalyPromoted = true;
       }
     }
 
-    return { observationRecorded, distinctRunCount, anomalyOpened, anomalyPromoted };
+    return {
+      observationRecorded,
+      corroboratingRunCount,
+      distinctRunCount,
+      anomalyOpened,
+      anomalyPromoted,
+    };
   });
 }

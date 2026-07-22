@@ -24,7 +24,6 @@
  * sport cannot abort the remaining sports in the caller's loop.
  */
 
-import { randomUUID } from "node:crypto";
 import { db } from "@sports/db";
 import {
   OddsApiClient,
@@ -46,11 +45,31 @@ import {
   SCORELESS_REVIEW_THRESHOLD,
   type SettlementEvidenceDb,
 } from "./settlement-evidence.js";
+import {
+  computeScheduledWindow,
+  fingerprintSourceSnapshot,
+  getOrCreateSettlementRun,
+  type SettlementRunDb,
+} from "./settlement-run.js";
+import {
+  enqueuePostSettlementWork,
+  markPostSettlementWorkDone,
+  markPostSettlementWorkFailed,
+  type PostSettlementWorkDelegate,
+} from "./post-settlement-work.js";
 
 export interface SettleSportConfig {
   key: SupportedSportKey;
   name: string;
   displayName: string;
+}
+
+/** Scheduler-supplied invocation identity (hardening 6.1). The cron route /
+ *  worker loop passes its scheduled window so retries of the SAME scheduled
+ *  invocation resolve to the SAME durable SettlementRun. When omitted, the
+ *  UTC hour bucket is used — still stable across rapid retries. */
+export interface SettleSportOptions {
+  readonly scheduledWindow?: string;
 }
 
 export interface SettleSportResult {
@@ -95,6 +114,7 @@ export async function settleSport(
   apiKey: string,
   gates: ReadinessGates,
   logPrefix: string = "[settlement]",
+  options: SettleSportOptions = {},
 ): Promise<SettleSportResult> {
   // Bootstrap provenance for any TeamGameLog written during settlement.
   const isBootstrap = !gates.canPersistCanonicalHistory;
@@ -109,14 +129,27 @@ export async function settleSport(
   let anomaliesResolved = 0;
   let outboxAppended = 0;
 
-  // One settlement run id per settleSport() call. Every observation this
-  // run records carries it, so corroboration (COUNT DISTINCT settlementRunId)
-  // counts RUNS, not sightings — and a retried run can never corroborate.
-  const settlementRunId = randomUUID();
-
   try {
     const { data: scores } = await client.getScores(sport.key, 2);
     const normalized = normalizer.normalizeScores(scores);
+
+    // DURABLE settlement-run identity (hardening 6.1): created-or-retrieved
+    // BEFORE any evidence write, keyed on externally stable facts —
+    // source + sport + scheduledWindow + sourceSnapshotFingerprint. A
+    // scheduler retry / process restart / duplicate invocation over the same
+    // source snapshot resolves to the SAME run id, so its observations
+    // dedupe into the same run and can never fabricate corroboration.
+    // (Previously this was `randomUUID()` per call — the "retried run can
+    // never corroborate" claim was only true within one process.)
+    const scheduledWindow = options.scheduledWindow ?? computeScheduledWindow();
+    const sourceSnapshotFingerprint = fingerprintSourceSnapshot(normalized);
+    const run = await getOrCreateSettlementRun(db as unknown as SettlementRunDb, {
+      source: OBSERVATION_SOURCE,
+      sport: sport.key,
+      scheduledWindow,
+      sourceSnapshotFingerprint,
+    });
+    const settlementRunId = run.id;
 
     for (const score of normalized) {
       if (!score.completed) continue;
@@ -168,6 +201,7 @@ export async function settleSport(
             externalId: game.externalId,
             gameStatus: game.status,
             settlementRunId,
+            sourceSnapshotFingerprint,
             source: OBSERVATION_SOURCE,
             payload: {
               externalId: score.externalId,
@@ -183,9 +217,10 @@ export async function settleSport(
             anomaliesPromoted++;
             console.warn(
               `${logPrefix} ${sport.key}: game ${game.id} (${game.externalId}) reported ` +
-                `completed-but-scoreless across ${evidence.distinctRunCount} distinct runs ` +
-                `while still ${game.status} — anomaly promoted to OWNER_REVIEW with a ` +
-                `durable SettlementDecision receipt. Picks left PENDING; NOT auto-voided.`,
+                `completed-but-scoreless across ${evidence.corroboratingRunCount} corroborating ` +
+                `runs while still ${game.status} — anomaly promoted to OWNER_REVIEW with an ` +
+                `idempotent OwnerDecisionRequest + SYSTEM decision event. ` +
+                `Picks left PENDING; NOT auto-voided.`,
             );
           }
         } catch (evidenceErr) {
@@ -206,20 +241,52 @@ export async function settleSport(
         // anomaly history survives (the rejected #157 reset-and-clear
         // behavior destroyed it). Idempotent (updateMany) and non-fatal.
         try {
-          const resolved = await db.settlementAnomaly.updateMany({
+          // Resolve each anomaly individually so the append-only SYSTEM
+          // decision event (6.3) records the true prior state, and the
+          // state-scoped updateMany keeps resolution exactly-once under a
+          // concurrent-run race (the loser matches zero rows and appends
+          // no event). SYSTEM resolution never impersonates an owner.
+          const openAnomalies = await db.settlementAnomaly.findMany({
             where: {
               gameId: game.id,
               anomalyType: SCORELESS_COMPLETED_ANOMALY,
               state: { in: ["OPEN", "OWNER_REVIEW"] },
             },
-            data: {
-              state: "RESOLVED",
-              resolutionActor: "settlement-pipeline",
-              resolutionReason: "scores-arrived",
-              resolvedAt: new Date(),
-            },
+            select: { id: true, state: true },
           });
-          anomaliesResolved += resolved.count;
+          for (const anomaly of openAnomalies) {
+            const resolvedAt = new Date();
+            const resolved = await db.$transaction(async (tx) => {
+              const updated = await tx.settlementAnomaly.updateMany({
+                where: { id: anomaly.id, state: anomaly.state },
+                data: {
+                  state: "RESOLVED",
+                  resolutionActor: "system:settlement-pipeline",
+                  resolutionReason: "scores-arrived",
+                  resolvedAt,
+                },
+              });
+              if (updated.count === 0) return 0;
+              await tx.settlementDecisionEvent.create({
+                data: {
+                  anomalyId: anomaly.id,
+                  decisionKind: "RESOLVE_SCORES_ARRIVED",
+                  actorType: "SYSTEM",
+                  actorReceipt: {
+                    actorType: "SYSTEM",
+                    subjectId: "system:settlement-pipeline",
+                    runId: settlementRunId,
+                    observedAt: resolvedAt.toISOString(),
+                  },
+                  priorState: anomaly.state,
+                  nextState: "RESOLVED",
+                  reason: "scores-arrived",
+                },
+              });
+              return updated.count;
+            });
+            anomaliesResolved += resolved;
+          }
         } catch (resolveErr) {
           console.warn(
             `${logPrefix} Anomaly resolution failed for game ${game.id}: ` +
@@ -307,6 +374,17 @@ export async function settleSport(
                 status: "PENDING",
               },
             });
+            // Durable post-settlement work-state (6.10): the CLV grade and
+            // snapshot outcome owed for this settled pick are recorded IN
+            // the settlement transaction, so a crash before they run leaves
+            // a repairable PENDING row — never a silent gap.
+            await enqueuePostSettlementWork(
+              tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
+              [
+                { subjectId: pick.id, kind: "CLV_GRADE" },
+                { subjectId: pick.id, kind: "SNAPSHOT_OUTCOME" },
+              ],
+            );
             return updated;
           });
           if (settled.count === 0) continue;
@@ -316,6 +394,8 @@ export async function settleSport(
           // (clvLockLine/clvLockPrice, captured at publish). Additive and
           // guarded — never blocks settlement. Returns null (and we skip) when
           // there is no close or no lock to compare.
+          const workDelegate = db.postSettlementWork as unknown as PostSettlementWorkDelegate;
+
           if (closingSnapshot?.capturedAt) {
             try {
               const grade = gradePickClv({
@@ -341,12 +421,20 @@ export async function settleSport(
                   },
                 });
               }
+              // "No grade owed" (no lock / no close) is completed work too.
+              await markPostSettlementWorkDone(workDelegate, pick.id, "CLV_GRADE", settledAt);
             } catch (clvErr) {
               console.warn(
                 `${logPrefix} CLV grading failed for pick ${pick.id}: ` +
                 `${clvErr instanceof Error ? clvErr.message : clvErr}`,
               );
+              await markPostSettlementWorkFailed(workDelegate, pick.id, "CLV_GRADE", clvErr);
             }
+          } else {
+            // No closing snapshot derivable: nothing gradeable — record the
+            // work as done with honest semantics rather than leaving a
+            // forever-PENDING row.
+            await markPostSettlementWorkDone(workDelegate, pick.id, "CLV_GRADE", settledAt);
           }
 
           // Record settlement outcome in the PickSignalSnapshot — real result tied
@@ -372,12 +460,14 @@ export async function settleSport(
                 "prediction-time snapshot was missing.",
               );
             }
+            await markPostSettlementWorkDone(workDelegate, pick.id, "SNAPSHOT_OUTCOME", settledAt);
           } catch (snapErr) {
             // Non-fatal: snapshot update failure must never kill settlement.
             console.warn(
               `${logPrefix} Snapshot outcome update failed for pick ${pick.id}: ` +
               `${snapErr instanceof Error ? snapErr.message : snapErr}`,
             );
+            await markPostSettlementWorkFailed(workDelegate, pick.id, "SNAPSHOT_OUTCOME", snapErr);
           }
           picksSettled++;
         }
@@ -389,6 +479,20 @@ export async function settleSport(
           where: { gameId_market: { gameId: game.id, market: "SPREADS" } },
         });
 
+        // Durable work-state for the game-level log write (6.10). Enqueued
+        // just-in-time (idempotent unique (subjectId, kind)) so a crash mid-
+        // write leaves a repairable record.
+        try {
+          await enqueuePostSettlementWork(
+            db.postSettlementWork as unknown as PostSettlementWorkDelegate,
+            [{ subjectId: game.id, kind: "TEAM_GAME_LOG" }],
+          );
+        } catch (enqueueErr) {
+          console.warn(
+            `${logPrefix} Could not enqueue TEAM_GAME_LOG work for ${game.id}: ` +
+            `${enqueueErr instanceof Error ? enqueueErr.message : enqueueErr}`,
+          );
+        }
         try {
           await settleGameLogs({
             gameId: game.id,
@@ -403,10 +507,21 @@ export async function settleSport(
             gameDataQualityScore: game.dataQualityScore,
             minDataQualityThreshold: gates.minDataQualityForGameLog,
           });
+          await markPostSettlementWorkDone(
+            db.postSettlementWork as unknown as PostSettlementWorkDelegate,
+            game.id,
+            "TEAM_GAME_LOG",
+          );
         } catch (settleErr) {
           console.warn(
             `${logPrefix} GameLog failed for ${game.id}: ` +
             `${settleErr instanceof Error ? settleErr.message : settleErr}`,
+          );
+          await markPostSettlementWorkFailed(
+            db.postSettlementWork as unknown as PostSettlementWorkDelegate,
+            game.id,
+            "TEAM_GAME_LOG",
+            settleErr,
           );
         }
 

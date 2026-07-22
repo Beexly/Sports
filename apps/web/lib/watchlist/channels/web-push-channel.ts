@@ -38,9 +38,36 @@ export interface WebPushAlertPayload {
 
 export type WebPushSendDetail = "sent" | "not_configured" | "send_failed";
 
+/** Honest failure taxonomy (hardening 6.9):
+ *  - "expired": the push service says the subscription is gone (404/410) —
+ *    the caller should REMOVE the stored subscription; permanent.
+ *  - "permanent": rejected and retrying cannot help (400/401/403).
+ *  - "retryable": transient (408/429/5xx/network) — safe to retry later.
+ */
+export type WebPushSendClassification =
+  | "sent"
+  | "not_configured"
+  | "expired"
+  | "retryable"
+  | "permanent";
+
 export interface WebPushSendResult {
   readonly sent: boolean;
   readonly detail: WebPushSendDetail;
+  readonly classification: WebPushSendClassification;
+  /** Push-service HTTP status when one was returned. */
+  readonly statusCode?: number;
+}
+
+/** Maps a push-service HTTP status to the failure taxonomy. Unknown /
+ *  absent statuses classify as retryable — the conservative default that
+ *  never silently drops a possibly-deliverable alert (the attempt cap dead-
+ *  letters a truly broken destination). */
+export function classifyWebPushStatus(statusCode: number | undefined): WebPushSendClassification {
+  if (statusCode === undefined) return "retryable";
+  if (statusCode === 404 || statusCode === 410) return "expired";
+  if (statusCode === 400 || statusCode === 401 || statusCode === 403) return "permanent";
+  return "retryable";
 }
 
 type PushEnv = Record<string, string | undefined>;
@@ -67,7 +94,7 @@ export async function sendWebPushAlert(
 ): Promise<WebPushSendResult> {
   try {
     if (!isWebPushConfigured(env)) {
-      return { sent: false, detail: "not_configured" };
+      return { sent: false, detail: "not_configured", classification: "not_configured" };
     }
 
     webPush.setVapidDetails(
@@ -84,12 +111,24 @@ export async function sendWebPushAlert(
       JSON.stringify(payload),
     );
 
-    return { sent: true, detail: "sent" };
-  } catch {
-    // Covers: push-service rejection (expired/invalid subscription, 4xx/5xx),
-    // network failure, or a malformed subscription. The caller (dispatch
-    // fan-out) treats every non-sent subscription the same way — it never
-    // blocks the rest of the fan-out or the settlement job that triggered it.
-    return { sent: false, detail: "send_failed" };
+    return { sent: true, detail: "sent", classification: "sent" };
+  } catch (error) {
+    // Push-service rejection (expired/invalid subscription, 4xx/5xx),
+    // network failure, or a malformed subscription. Never throws — but the
+    // failure is now CLASSIFIED (6.9) so the outbox delivery machine can
+    // remove expired subscriptions, stop retrying permanent rejections, and
+    // back off on transient ones.
+    const statusCode =
+      typeof error === "object" && error !== null && "statusCode" in error
+        ? Number((error as { statusCode: unknown }).statusCode)
+        : undefined;
+    return {
+      sent: false,
+      detail: "send_failed",
+      classification: classifyWebPushStatus(
+        Number.isFinite(statusCode) ? statusCode : undefined,
+      ),
+      ...(Number.isFinite(statusCode) ? { statusCode } : {}),
+    };
   }
 }

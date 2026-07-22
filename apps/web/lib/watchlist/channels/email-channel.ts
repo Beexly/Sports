@@ -16,10 +16,27 @@ import { Resend } from "resend";
 
 export type EmailSendDetail = "sent" | "not_configured" | "send_failed";
 
+/** Honest failure taxonomy (hardening 6.9). Resend validation errors
+ *  (rejected address, bad payload) are permanent; everything else —
+ *  rate limits, 5xx, network exceptions — is retryable. */
+export type EmailSendClassification =
+  | "sent"
+  | "not_configured"
+  | "retryable"
+  | "permanent";
+
 export interface EmailSendResult {
   readonly sent: boolean;
   readonly detail: EmailSendDetail;
+  readonly classification: EmailSendClassification;
+  readonly errorName?: string;
 }
+
+const PERMANENT_RESEND_ERROR_NAMES = new Set([
+  "validation_error",
+  "invalid_to_address",
+  "invalid_from_address",
+]);
 
 type EmailEnv = Record<string, string | undefined>;
 
@@ -44,7 +61,7 @@ export async function sendAlertEmail(
 ): Promise<EmailSendResult> {
   try {
     if (!isEmailConfigured(env)) {
-      return { sent: false, detail: "not_configured" };
+      return { sent: false, detail: "not_configured", classification: "not_configured" };
     }
 
     const resend = new Resend(env["RESEND_API_KEY"] as string);
@@ -58,11 +75,17 @@ export async function sendAlertEmail(
     // The Resend SDK reports delivery failures via `result.error` rather
     // than a thrown rejection — both paths must be treated as "not sent".
     if (result.error) {
-      return { sent: false, detail: "send_failed" };
+      const errorName = result.error.name ?? "unknown";
+      return {
+        sent: false,
+        detail: "send_failed",
+        classification: PERMANENT_RESEND_ERROR_NAMES.has(errorName) ? "permanent" : "retryable",
+        errorName,
+      };
     }
 
-    return { sent: true, detail: "sent" };
+    return { sent: true, detail: "sent", classification: "sent" };
   } catch {
-    return { sent: false, detail: "send_failed" };
+    return { sent: false, detail: "send_failed", classification: "retryable" };
   }
 }

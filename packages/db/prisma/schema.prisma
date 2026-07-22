@@ -869,21 +869,54 @@ model PushSubscription {
 // by COUNT(DISTINCT settlementRunId) over these rows — never an in-place
 // counter (that was #157's atomicity bug). Append-only: no code path may
 // delete or mutate these rows.
-model SettlementObservation {
-  id                   String   @id @default(cuid())
-  gameId               String
-  source               String                 // upstream feed, e.g. "the-odds-api"
-  settlementRunId      String                 // minted once per settleSport() call (crypto.randomUUID)
-  payloadFingerprint   String                 // sha256 over the normalized source row content
-  observedSourceStatus String                 // e.g. "completed-scoreless"
-  homeScorePresent     Boolean
-  awayScorePresent     Boolean
-  mappingStatus        String                 // "matched" — game resolved by externalId
-  freshnessState       String                 // e.g. "within-settlement-window" (daysFrom=2 fetch)
-  observedAt           DateTime               // when the sighting happened (feed read time)
-  recordedAt           DateTime @default(now())
+// Durable settlement-run identity (hardening 6.1). settleSport() previously
+// minted `randomUUID()` per call, so a scheduler retry / process restart /
+// duplicate invocation got a fresh run id and counted as fresh corroboration.
+// The run is now created-or-retrieved (upsert on the externally derivable
+// idempotencyKey = source + sport + scheduledWindow + sourceSnapshotFingerprint)
+// BEFORE any evidence write — retries of the same scheduled invocation over
+// the same source snapshot reuse the SAME run id and corroborate nothing.
+model SettlementRun {
+  id                        String   @id @default(cuid())
+  idempotencyKey            String   @unique // source:sport:scheduledWindow:sourceSnapshotFingerprint
+  source                    String
+  sport                     String
+  scheduledWindow           String            // e.g. "2026-07-22T18Z" (UTC hour bucket from the scheduler)
+  sourceSnapshotFingerprint String            // sha256 over the normalized source response for this run
+  startedAt                 DateTime @default(now())
+  lastReusedAt              DateTime?
 
-  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  @@index([sport, scheduledWindow])
+  @@map("settlement_runs")
+}
+
+model SettlementObservation {
+  id                        String   @id @default(cuid())
+  gameId                    String
+  source                    String                 // upstream feed, e.g. "the-odds-api"
+  settlementRunId           String                 // durable SettlementRun.id (stable across scheduler retries)
+  payloadFingerprint        String                 // sha256 over the normalized source row content
+  // sha256 over the WHOLE normalized source snapshot for the run (6.1):
+  // corroboration requires distinct snapshots or minimum temporal separation,
+  // so rapid same-snapshot retries can never promote an anomaly. Nullable for
+  // pre-hardening rows only.
+  sourceSnapshotFingerprint String?
+  observedSourceStatus      String                 // e.g. "completed-scoreless"
+  homeScorePresent          Boolean
+  awayScorePresent          Boolean
+  mappingStatus             String                 // "matched" — game resolved by externalId
+  freshnessState            String                 // e.g. "within-settlement-window" (daysFrom=2 fetch)
+  observedAt                DateTime               // when the sighting happened (feed read time)
+  // Source-provided event timestamp, retained verbatim when the feed sends
+  // one (6.1). Distinct from observedAt (our read time) and recordedAt (row
+  // insert time).
+  sourceObservedAt          DateTime?
+  recordedAt                DateTime @default(now())
+
+  // RESTRICT (6.2): append-only evidence must not silently vanish because a
+  // parent game row was deleted. Deleting a game with evidence is an owner-
+  // level operation that must first resolve the evidence trail explicitly.
+  game Game @relation(fields: [gameId], references: [id], onDelete: Restrict)
 
   @@unique([gameId, settlementRunId, payloadFingerprint])
   @@index([gameId])
@@ -913,12 +946,57 @@ model SettlementAnomaly {
   resolvedAt       DateTime?
   resolutionReason String?                    // e.g. "scores-arrived"
 
-  game     Game                @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  decision SettlementDecision?
+  // RESTRICT (6.2): anomaly history is evidence — never cascade-erased.
+  game           Game                      @relation(fields: [gameId], references: [id], onDelete: Restrict)
+  decision       SettlementDecision?
+  reviewRequest  OwnerDecisionRequest?
+  decisionEvents SettlementDecisionEvent[]
 
   @@unique([gameId, anomalyType])
   @@index([state])
   @@map("settlement_anomalies")
+}
+
+// The idempotent owner-review QUEUE REQUEST (hardening 6.3). Previously the
+// promotion consumed the single SettlementDecision row with a synthetic
+// "REVIEW_REQUESTED" kind, leaving nowhere for the ACTUAL owner decision to
+// live. The request is exactly-once per anomaly (unique anomalyId); real
+// decisions are append-only SettlementDecisionEvent rows.
+model OwnerDecisionRequest {
+  id          String   @id @default(cuid())
+  anomalyId   String   @unique
+  requestKind String                 // e.g. "SCORELESS_COMPLETED_REVIEW"
+  context     Json                   // game, sightings, corroborating runs at promotion time
+  createdAt   DateTime @default(now())
+
+  anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Restrict)
+
+  @@map("owner_decision_requests")
+}
+
+// Append-only decision history (hardening 6.3). Every state-affecting act on
+// an anomaly — the SYSTEM promotion, SYSTEM score-arrival resolution, and
+// every real OWNER decision (ACKNOWLEDGED, WAIT_FOR_SOURCE, MARK_POSTPONED,
+// VOID_PICKS, DISMISS_ANOMALY, RESOLVE_SCORES_ARRIVED) — appends one event
+// carrying the actor receipt and the prior/next state. Rows are NEVER
+// updated or deleted. A SYSTEM event may never impersonate an owner: the
+// actorType is part of the receipt.
+model SettlementDecisionEvent {
+  id           String   @id @default(cuid())
+  anomalyId    String
+  decisionKind String                 // REVIEW_REQUESTED | ACKNOWLEDGED | WAIT_FOR_SOURCE | MARK_POSTPONED | VOID_PICKS | DISMISS_ANOMALY | RESOLVE_SCORES_ARRIVED
+  actorType    String                 // OWNER | SYSTEM
+  actorReceipt Json                   // {actorType, subjectId, requestId?/runId?, observedAt}
+  priorState   String                 // anomaly state before this event
+  nextState    String                 // anomaly state after this event
+  reason       String?
+  evidence     Json?
+  createdAt    DateTime @default(now())
+
+  anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Restrict)
+
+  @@index([anomalyId, createdAt])
+  @@map("settlement_decision_events")
 }
 
 // Durable owner-decision receipt, created EXACTLY ONCE when an anomaly is
@@ -934,7 +1012,8 @@ model SettlementDecision {
   context      Json                   // game, sightings, distinct runs at promotion time
   createdAt    DateTime @default(now())
 
-  anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Cascade)
+  // RESTRICT (6.2): a decision receipt is evidence and must survive.
+  anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Restrict)
 
   @@map("settlement_decisions")
 }
@@ -950,24 +1029,108 @@ model SettlementDecision {
 // Delivery state machine (worker-driven, OUTSIDE the settlement
 // transaction): PENDING → CLAIMED → DELIVERED | FAILED; FAILED rows with
 // attempts left and stale CLAIMED rows are re-claimable.
+// Parent event statuses (hardening 6.4): PENDING (appended by settlement,
+// not yet expanded) → EXPANDED (immutable payload + per-recipient
+// PickSettlementDelivery children materialized) → DELIVERED (every child
+// reached a TERMINAL state — which may honestly include failures; the
+// per-channel truth lives on the children, never collapsed into a fake
+// parent success). The parent is COMPLETE only when all children are
+// terminal; a partial failure never closes the event.
 model PickSettlementEvent {
-  id              String     @id @default(cuid())
-  pickId          String     @unique
-  gameId          String
-  result          PickResult
-  settledAt       DateTime
-  status          String     @default("PENDING") // PENDING | CLAIMED | DELIVERED | FAILED
-  claimedAt       DateTime?
-  deliveredAt     DateTime?
-  attemptCount    Int        @default(0)
-  channelOutcomes Json?                          // per-channel delivery detail from the worker
-  createdAt       DateTime   @default(now())
+  id                       String     @id @default(cuid())
+  pickId                   String     @unique
+  gameId                   String
+  result                   PickResult
+  settledAt                DateTime
+  status                   String     @default("PENDING") // PENDING | EXPANDED | DELIVERED | FAILED (legacy)
+  claimedAt                DateTime?
+  deliveredAt              DateTime?
+  // Set only when every child delivery reached a terminal state (6.4).
+  completedAt              DateTime?
+  // Immutable event-time payload (6.6): selection, pick type, team ids/names,
+  // result, sport, settled time and schema version — frozen at expansion so
+  // later mutations of pick/game rows can never rewrite what was announced.
+  payload                  Json?
+  // When the settlement-time recipient set was materialized into child rows.
+  recipientsMaterializedAt DateTime?
+  attemptCount             Int        @default(0)
+  channelOutcomes          Json?                          // legacy per-channel detail (pre-delivery-rows)
+  createdAt                DateTime   @default(now())
 
-  pick Pick @relation(fields: [pickId], references: [id], onDelete: Cascade)
-  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  // RESTRICT (6.2): the outbox trail is evidence of what was owed/sent.
+  pick Pick @relation(fields: [pickId], references: [id], onDelete: Restrict)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Restrict)
+
+  deliveries PickSettlementDelivery[]
 
   @@index([status, claimedAt])
   @@map("pick_settlement_events")
+}
+
+// One delivery row per follower x channel x destination x event (hardening
+// 6.4/6.5). States:
+//   PENDING          — materialized, not yet attempted
+//   CLAIMED          — leased by a worker (leaseToken fencing)
+//   DELIVERED        — terminal success; NEVER resent
+//   SUPPRESSED       — terminal: deliberately not sent (tier-ineligible,
+//                      alerts disabled, channel unconfigured)
+//   NO_RECIPIENT     — terminal: no destination existed (no verified email /
+//                      no push subscription) — recorded honestly, no retry
+//   RETRYABLE_FAILED — transient failure; retried with backoff+jitter
+//   PERMANENT_FAILED — terminal rejection (e.g. expired push subscription)
+//   DEAD_LETTER      — attempts exhausted; owner-queue escalation
+// A stale worker can never overwrite a newer claimant: every result write is
+// scoped to (id, leaseToken, status: CLAIMED) and claims bump claimVersion.
+model PickSettlementDelivery {
+  id                 String    @id @default(cuid())
+  eventId            String
+  userId             String
+  channel            String              // "push" | "email"
+  destinationId      String              // push subscription id, or sha256(email) — never a raw address
+  destinationVersion Int       @default(1)
+  idempotencyKey     String    @unique   // eventId:userId:channel:destinationId
+  status             String    @default("PENDING")
+  attemptCount       Int       @default(0)
+  claimVersion       Int       @default(0)
+  leaseToken         String?
+  leaseOwner         String?
+  leaseExpiresAt     DateTime?
+  nextAttemptAt      DateTime?
+  lastErrorCode      String?
+  lastErrorClass     String?             // "retryable" | "permanent" | "infrastructure"
+  attemptHistory     Json?               // append-only array of attempt records
+  latencyMs          Int?                // deliveredAt - event.settledAt (6.8)
+  deliveredAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  event PickSettlementEvent @relation(fields: [eventId], references: [id], onDelete: Restrict)
+
+  @@unique([eventId, userId, channel, destinationId])
+  @@index([status, nextAttemptAt])
+  @@index([eventId])
+  @@map("pick_settlement_deliveries")
+}
+
+// Durable post-settlement work state (hardening 6.10): CLV grading, signal-
+// snapshot outcome and TeamGameLog writes happen OUTSIDE the settlement
+// transaction. These rows are appended IN the settlement transaction, so a
+// crash after pick settlement leaves a repairable PENDING record instead of
+// relying on an accidental rerun. subjectId is the pick id (CLV_GRADE,
+// SNAPSHOT_OUTCOME) or the game id (TEAM_GAME_LOG).
+model PostSettlementWork {
+  id           String    @id @default(cuid())
+  subjectId    String
+  kind         String              // CLV_GRADE | SNAPSHOT_OUTCOME | TEAM_GAME_LOG
+  status       String    @default("PENDING") // PENDING | DONE | FAILED
+  attemptCount Int       @default(0)
+  lastError    String?
+  createdAt    DateTime  @default(now())
+  completedAt  DateTime?
+
+  @@unique([subjectId, kind])
+  @@index([status])
+  @@map("post_settlement_work")
 }
 
 // ============================================================

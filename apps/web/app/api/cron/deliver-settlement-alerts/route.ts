@@ -26,8 +26,10 @@
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
-import { drainSettlementOutbox } from "@/lib/settlement-outbox/worker";
-import { notifyWatchlistFollowersForGradedPick } from "@/lib/watchlist/settlement-hook";
+import {
+  drainSettlementOutbox,
+  getSettlementOutboxHealth,
+} from "@/lib/settlement-outbox/worker";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -38,11 +40,22 @@ export async function GET(request: Request) {
   if (denied) return denied;
 
   const startedAt = Date.now();
-  const summary = await drainSettlementOutbox(db, notifyWatchlistFollowersForGradedPick);
+  const summary = await drainSettlementOutbox(db);
+  const health = await getSettlementOutboxHealth(db);
 
-  return NextResponse.json({
-    ok: true,
-    elapsedMs: Date.now() - startedAt,
-    ...summary,
-  });
+  // HONEST health (6.7): a swallowed drain-level failure or a dead-lettered
+  // delivery must never render this response green. `ok` reflects the real
+  // drain + queue state; `degraded` carries the reasons.
+  const ok = summary.errors.length === 0 && health.ok;
+
+  return NextResponse.json(
+    {
+      ok,
+      degraded: !ok || health.degraded,
+      elapsedMs: Date.now() - startedAt,
+      ...summary,
+      health,
+    },
+    { status: ok ? 200 : 503 },
+  );
 }
