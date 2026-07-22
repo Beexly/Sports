@@ -1,0 +1,17 @@
+{
+  "discoveredBy": "fast-check property test, src/tests/reference-model.property.test.ts (SameIdDifferentFingerprintNeverExecutes)",
+  "discoveredAt": "2026-07-22",
+  "subjectUnderTest": "src/reference/claim-reference.ts (ReferenceClaimStore) — the small reference/test-double model, NOT production code",
+  "seed": -1492685023,
+  "fastCheckPath": "0:0:0:0:1:0:0:0:0:0:0",
+  "shrunkCounterexample": {
+    "fpA": " ",
+    "fpB": "!"
+  },
+  "originalAssertionThatFailed": "expect(store.claim(\"actor-2\", \"inv-1\", fpB)).toBe(\"conflict\")",
+  "actualValue": "in-progress",
+  "rootCause": "ReferenceClaimStore.claim() checked `row.owner !== null` (an active-owner guard) BEFORE checking whether the incoming fingerprint matched the bound fingerprint. So a same-id/different-fingerprint request arriving while the invocation ALREADY has an active owner reports outcome \"in-progress\" instead of \"conflict\" — a label/branch ordering difference from the literal TLA+ ClaimOwner guard order, and from this harness's own naive test expectation of a single canonical outcome label.",
+  "severityAssessment": "NOT a safety violation. Both \"in-progress\" and \"conflict\" outcomes refuse the request: neither claims ownership under the mismatched fingerprint, and neither is a state a fingerprint-mismatched caller can reach a dispatch from. The actual invariant under test (SameIdDifferentFingerprintNeverExecutes: a same-id/different-fingerprint request never claims and never dispatches) held throughout — only the specific outcome-label assertion in the test itself was too strict / wrong about which label to expect in this branch.",
+  "fix": "Rewrote the test to assert the actual safety invariant directly (second claim() call is never \"claimed\", the original owner/fingerprint binding is unchanged, and a dispatch attempt by the rejected actor never succeeds) instead of asserting one specific outcome label. Left ReferenceClaimStore's guard ordering as-is since it does not affect any checked invariant — documented the ordering explicitly in a comment on the regression test so a future reader does not reintroduce the same over-strict assertion.",
+  "regressionTest": "src/tests/reference-model.property.test.ts > 'reference model: claim/dispatch invariants' > 'SameIdDifferentFingerprintNeverExecutes: a fingerprint mismatch never claims ownership nor gets dispatched' — runs permanently as part of the suite (fast-check numRuns default, minimized shrink retained via fixed property generators)."
+}
