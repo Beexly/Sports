@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-07-22T14:05:00Z",
+  "baseCommitSHA": "cb09bd5da51f3f90968cdf2555fa4763b2cd6096",
+  "baseCommitBranch": "labs/constellation-wave3",
+  "baseCommitDescription": "HEAD of origin/main fast-forwarded, then merged with origin/labs/w2-02-formal-invariant-foundry and origin/labs/w2-03-property-chaos-harness (both merges were clean, no conflicts — two independent additive lab branches).",
+  "owner": "baxley.garrett@gmail.com",
+  "activationStatus": "DORMANT_LAB_ONLY",
+  "reversible": true,
+  "consumedExisting": [
+    {
+      "path": "formal/ai-invocation/InvocationClaim.tla",
+      "how": "Read in full; instantiated (via TLA+ INSTANCE, qualified as IC!...) — not copied, not modified. Reused its real CONSTANTS (Invocations, Attempts, Fingerprints, Actors), VARIABLES (claimOwner, invocationFp, dispatched, attemptOf, attemptOutcome, invocationStatus, rejectedRequests), and operators (ClaimOwner, ReleaseClaim, Dispatch, Resolve, and the invariant AmbiguousAttemptStopsFallback, re-exported as BaseAmbiguousAttemptStopsFallback and checked again over the composed state space). NOTE (added 2026-07-22 post-review): this file appears as an ADDED line in a diff of this branch against origin/main taken before labs/w2-02-formal-invariant-foundry was itself merged (via PR #173) — that merge lineage is exactly what baseCommitDescription above records. It is genuinely NOT authored by this PR; a downstream delta-review tool diffing purely against a pre-#173 origin/main should treat it as already-reviewed content from the sibling PR, not skip review of it as if it were untouched pre-existing code."
+    },
+    {
+      "path": "formal/credit-budget/CreditReservation.tla",
+      "how": "Read in full; instantiated (via TLA+ INSTANCE, qualified as CR!...) — not copied, not modified. Reused its real CONSTANTS (Attempts — deliberately the SAME identifier as InvocationClaim's Attempts, VerifiedBalance, RequestCost), VARIABLES (reserved, state, admittedCount), and operators (Authorize, Settle, Release, and the invariants LedgerNeverExceedsBalance / NeverOverAdmit, re-exported as BaseLedgerNeverExceedsBalance / BaseNeverOverAdmit and checked again over the composed state space). NOTE (added 2026-07-22 post-review): this file appears as an ADDED line in a diff of this branch against origin/main taken before labs/w2-02-formal-invariant-foundry was itself merged (via PR #173) — that merge lineage is exactly what baseCommitDescription above records. It is genuinely NOT authored by this PR; a downstream delta-review tool diffing purely against a pre-#173 origin/main should treat it as already-reviewed content from the sibling PR, not skip review of it as if it were untouched pre-existing code."
+    },
+    {
+      "path": "formal/README.md",
+      "how": "Read to understand the existing toolchain, receipt format, and 'implementation mapping is descriptive only / nothing modified' convention, followed identically here."
+    },
+    {
+      "path": "COMPLIANCE_AND_RESPONSIBLE_GAMING.md",
+      "how": "Read in full before writing any code, to independently confirm GSE's regulatory posture (paid analytics subscription; does not accept wagers, hold funds, or settle bets) before proceeding — see terminologyCorrectionNote below."
+    }
+  ],
+  "newAssets": [
+    "formal/live-sports/LiveModelDispatchUnderAmbiguity.tla",
+    "formal/live-sports/LiveModelDispatchUnderAmbiguity.cfg",
+    "reports/constellation-wave3/formal-receipts/LiveModelDispatchUnderAmbiguity.tlc-receipt.txt",
+    "reports/constellation-wave3/DELTA_MANIFEST.json"
+  ],
+  "whyNotDuplicate": "grep across formal/, formal-regression/, apps/web/lib/ai-control-plane/ for 'live-sports', 'LiveModelDispatchUnderAmbiguity', 'ExposureHold', 'TrustedRelease' found no existing module before this change — this is the first composition of the two independent W2-02 specs into a single checked model. Nothing renamed, nothing reopened, no existing spec body edited (InvocationClaim.tla and CreditReservation.tla are byte-for-byte unmodified — verified via `git diff` against the merge commit showing zero changes to either file).",
+  "whatIsNewVsBaseSpecs": [
+    "DispatchUnderExposureHold: new cross-module guard requiring an attempt's credit reservation to already be HELD before a provider dispatch may fire for it (wires CreditReservation!Authorize before InvocationClaim!Dispatch — neither base spec alone enforces this ordering).",
+    "SettleOnConfirmedCharge / ReleaseOnCleanFailure / TrustedReleaseAmbiguousHold: three new, outcome-gated replacements for the base CreditReservation!Settle / !Release actions, so that an Ambiguous provider outcome's credit hold can be released ONLY via an explicit trusted-actor action (actor \\in TrustedActors) and never automatically.",
+    "AmbiguousExposureHeldUntilTrustedResolution: new invariant formalizing 'ambiguous outcome holds its exposure; only a trusted actor can release it' at the credit-ledger layer, extending the intent of InvocationClaim's AmbiguousAttemptStopsFallback (which only froze the dispatch layer) to the money layer.",
+    "ReservedNeverExceedsBudgetWindowCap / AvailableBudgetNeverNegative: new invariants restating and re-checking CreditReservation's LedgerNeverExceedsBalance guarantee in wave-3 vocabulary over the larger composed state space.",
+    "NoDispatchWithoutExposureHold: new invariant checking the DispatchUnderExposureHold guard holds globally, not just locally."
+  ],
+  "verification": {
+    "toolchain": "Real tla2tools.jar (TLC2 Version 2026.07.18.145032), same artifact source as the W2-02 foundry (https://nightly.tlapl.us/dist/tla2tools.jar — GitHub release assets are blocked by this session's egress policy), run under OpenJDK 21.0.10 already present in the environment.",
+    "command": "java -DTLA-Library=<abs>/formal/ai-invocation:<abs>/formal/credit-budget -cp tla2tools.jar tlc2.TLC -workers auto -deadlock -config LiveModelDispatchUnderAmbiguity.cfg LiveModelDispatchUnderAmbiguity.tla",
+    "bound": "Invocations={i1,i2}, Attempts={a1,a2,a3} (shared across both instantiated modules), Fingerprints={fp1,fp2}, Actors={act1,act2}, TrustedActors={act1}, VerifiedBalance=2, RequestCost=1",
+    "result": "Model checking completed. No error has been found. 1,306,029 states generated, 323,194 distinct states found, search depth 21. All 8 configured invariants (TypeOK, AmbiguousExposureHeldUntilTrustedResolution, ReservedNeverExceedsBudgetWindowCap, AvailableBudgetNeverNegative, NoDispatchWithoutExposureHold, BaseLedgerNeverExceedsBalance, BaseNeverOverAdmit, BaseAmbiguousAttemptStopsFallback) held in every reachable state. Full real log: reports/constellation-wave3/formal-receipts/LiveModelDispatchUnderAmbiguity.tlc-receipt.txt.",
+    "apalache": "NOT RUN. Checked for an Apalache binary/jar already present in the environment (none found) and for a non-GitHub, project-operated download mirror analogous to nightly.tlapl.us for TLA+ (none known/found — apalache-mc's GitHub Releases returned HTTP 403 through the egress proxy, and there is no separate Apalache download host to try). Reporting this honestly rather than fabricating an Apalache run or receipt."
+  },
+  "terminologyCorrectionNote": "This delivery supersedes an earlier draft that reportedly used gambling-adjacent vocabulary ('cashout', 'exposure-hold' in the wagering sense, 'provider-ambiguity' framed as a bet outcome). Before writing any code in this session, the two real base specs (InvocationClaim.tla, CreditReservation.tla) and COMPLIANCE_AND_RESPONSIBLE_GAMING.md were independently read and cross-checked: the base specs' own header comments confirm they model apps/web/lib/ai-control-plane/invocation-pipeline.ts and credit-admission.ts — real AI-provider (LLM API) dispatch and spend-admission code, not bet settlement — and the compliance doc confirms GSE 'does not accept wagers, hold customer funds, or settle bets.' Given that grounding, this module was written using only AI-model-dispatch / credit-budget vocabulary throughout (dispatch, provider outcome, spend exposure, exposure hold, budget-window cap, trusted-actor resolution) and was grepped, after writing, for wagering/settlement-of-bets terms (bettor, wager, stake, odds, payout, bet, sportsbook, moneyline, spread-as-a-bet, parlay, cashout, exposure-hold-as-wagering-term); the only matches are in the module's own scope-note doc comment, which explicitly cites COMPLIANCE_AND_RESPONSIBLE_GAMING.md for contrast (to state what this module is NOT), which is the one permitted context for those words. No such vocabulary appears in any CONSTANT, VARIABLE, or operator name."
+}

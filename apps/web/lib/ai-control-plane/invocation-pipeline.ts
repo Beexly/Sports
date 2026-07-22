@@ -16,18 +16,34 @@
  *        - terminal replay                         → original persisted result
  *          (or the honest typed error the original run ended with) — never a
  *          second dispatch, never `output: undefined` under a success claim.
- *   3. One pre-dispatch financial attribution (estimate + funding intent
+ *   3. Atomic budget reservation (blueprint §C) — BILLABLE modes only
+ *      (BUDGETED_CASH / EMERGENCY_RELIABILITY). The policy's
+ *      `requiredBudgetScopes` templates are resolved to concrete window ids
+ *      and the worst-case cash (`plan.maxVendorCashUsd`) is HELD against
+ *      every one, all-or-nothing, before any attribution or attempt row
+ *      exists. A reservation failure finalizes the ALREADY-CLAIMED
+ *      invocation BUDGET_BLOCKED and throws — no attribution, no attempt,
+ *      no dispatch. Non-billable lanes skip this step entirely.
+ *   4. One pre-dispatch financial attribution (estimate + funding intent
  *      only; the create path has no reconciliation fields — §9.5).
- *   4. Walk `authority.permittedProviderRoutes` IN ORDER — the control plane
+ *   5. Walk `authority.permittedProviderRoutes` IN ORDER — the control plane
  *      alone owns fallback (§9.3). Per route: authoritative attempt row
  *      BEFORE transport (§9.4; a refused attempt row blocks dispatch), then
  *      ONE exact provider adapter. Clean failures advance to the next route;
  *      TIMEOUT/AMBIGUOUS stops the walk (never re-spend ambiguous funds) and
  *      finalizes AMBIGUOUS.
- *   5. Success: finalize durable state (result JSON + hash for replay). If
+ *   6. Success: finalize durable state (result JSON + hash for replay). If
  *      that write fails or is fenced AFTER the paid call, the result is STILL
  *      returned and a durable recovery entry is queued (§9.7/§9.8) — a
  *      successful provider call is never retried because of telemetry.
+ *      Budget close-out mirrors this: SETTLE the hold on success (worst-case
+ *      remainder released back to the window), RELEASE it on a clean FAILED
+ *      exhaustion. An AMBIGUOUS/TIMEOUT stop NEVER releases the hold — we
+ *      cannot prove the vendor did not charge, so the funds stay reserved
+ *      until reconciliation (mirrors budget.ts's own sweepExpired doctrine).
+ *      Budget close-out failures are best-effort and NEVER convert a
+ *      successful paid call into an error (the expiry sweep is the safety
+ *      net) — mirrors the ObservabilitySink isolation rule.
  */
 
 import { createHash, randomUUID } from "node:crypto";
@@ -43,6 +59,12 @@ import {
   ProviderUnavailable,
   StoreUnavailable,
 } from "./errors";
+import {
+  type CreditAdmissionScope,
+  type CreditAuthorizationHandle,
+  type CreditAuthorizationPort,
+  type CreditSnapshotStore,
+} from "./credit-admission";
 import type { AuthoritativeControlStore } from "./control-store";
 import type { ObservabilitySink } from "./observability";
 import type { ProviderDispatchFn, ProviderDispatchPayload } from "./dispatch";
@@ -61,6 +83,32 @@ import {
   toUsdString,
   usdToMicros,
 } from "./budget";
+
+// ─── Exact-decimal USD → credit minor-units (cents) conversion ────────────────
+
+/**
+ * Convert a USD amount to credit "minor units" (cents) using the same
+ * exact-decimal validation as the rest of the codebase's money handling
+ * (budget.ts's `usdToMicros`), rounded UP to the nearest cent so a worst-case
+ * hold or a settled actual is never understated by float error.
+ *
+ * Replaces the previous `Math.round(usd * 100)`, which is float arithmetic:
+ * for a value with more than 2 decimal places, or one that lands near an
+ * IEEE-754 representation boundary, `x * 100` can be off by a fractional
+ * amount that rounds to the wrong integer cent. `usdToMicros` already
+ * refuses lossy amounts (more than 6 decimal places) and returns an exact
+ * BigInt micro-dollar count; ceiling-dividing that by 10_000 (1 cent =
+ * 10_000 micro-dollars) gives an exact, never-understated cent count with no
+ * float step in between.
+ */
+function usdToCreditMinorUnitsCeil(usd: number, label: string): number {
+  const micros = usdToMicros(usd, label);
+  const minorUnits = (micros + 9_999n) / 10_000n;
+  if (minorUnits > BigInt(Number.MAX_SAFE_INTEGER)) {
+    throw new BudgetBlocked(`${label} is too large to represent as a safe-integer minor-unit count.`);
+  }
+  return Number(minorUnits);
+}
 
 // ─── Canonical fingerprint (§9.2) ─────────────────────────────────────────────
 
@@ -210,10 +258,29 @@ export interface LedgeredDispatchDeps {
   readonly leaseMs?: number;
   /** §10 budget reservations. Absent + billable mode = fail closed. */
   readonly budget?: BudgetSeam;
+
+  // ── Credit admission + atomic authorization (directive §11.3) — CONFIRMED_CREDITS_ONLY ONLY
+  /**
+   * Read-only NOVA credit-grant snapshot store (S5 materializes the real
+   * implementation). REQUIRED for CONFIRMED_CREDITS_ONLY: absent store fails
+   * closed (`PolicyBlocked`, "no-credit-store") with zero dispatch — a
+   * provider/model id alone can never produce credit admission.
+   */
+  readonly creditStore?: CreditSnapshotStore;
+  /**
+   * Atomic reservation port (`credit-admission.ts`'s
+   * `CreditAuthorizationPort`) preventing a double-spend across concurrent
+   * authorizers of the same grant. REQUIRED alongside `creditStore` for
+   * CONFIRMED_CREDITS_ONLY.
+   */
+  readonly creditPort?: CreditAuthorizationPort;
+  /** Auto-release safety-net deadline for a credit hold; default 15 minutes. */
+  readonly creditHoldMs?: number;
 }
 
 const DEFAULT_LEASE_MS = 120_000;
 const DEFAULT_HOLD_TTL_MS = 15 * 60_000;
+const DEFAULT_CREDIT_HOLD_MS = 15 * 60_000;
 
 function replayTerminal(
   outcome: Extract<
@@ -261,6 +328,58 @@ function replayTerminal(
         `Replay of invocation ${outcome.invocationId}: original decision was ` +
           `${outcome.status} — non-dispatchable.`,
       );
+  }
+}
+
+/**
+ * Best-effort release of the invocation's §10 budget hold. Used on every "no
+ * charge occurred / could have occurred" exit from the pipeline AFTER a
+ * reservation was taken (attribution failure, a pre-transport
+ * StoreUnavailable, or full route exhaustion). Never throws — a release
+ * failure is logged and left to the expiry sweep, exactly like the
+ * settle-on-success path.
+ */
+async function releaseReservationBestEffort(
+  budgetHeld: boolean,
+  deps: LedgeredDispatchDeps,
+  observability: ObservabilitySink,
+  invocationId: string,
+): Promise<void> {
+  if (!budgetHeld || deps.budget === undefined) return;
+  try {
+    await releaseBudgetHold(deps.budget.db, {
+      invocationId,
+      now: deps.now(),
+    });
+  } catch (error) {
+    observability.markDegraded(
+      `budget release failed for invocation ${invocationId} ` +
+        "(expiry sweep will reclaim the hold)",
+      error,
+    );
+  }
+}
+
+/**
+ * Best-effort release of one credit authorization hold (directive §11.3).
+ * Same never-throws, log-and-move-on contract as
+ * {@link releaseReservationBestEffort}.
+ */
+async function releaseCreditHoldBestEffort(
+  handle: CreditAuthorizationHandle | null,
+  deps: LedgeredDispatchDeps,
+  observability: ObservabilitySink,
+  invocationId: string,
+): Promise<void> {
+  if (!handle || !deps.creditPort) return;
+  try {
+    await deps.creditPort.release(handle);
+  } catch (error) {
+    observability.markDegraded(
+      `credit release of reservation ${handle.reservationId} failed for ` +
+        `invocation ${invocationId} (expiry sweep will reclaim the hold)`,
+      error,
+    );
   }
 }
 
@@ -329,18 +448,10 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
 
     const { invocationId, nextOrdinal } = claim;
 
-    // ── One pre-dispatch attribution: estimate + intent only (§9.5).
-    await deps.store.createAttribution({
-      attributionId: idFactory(),
-      invocationId,
-      estimatedGrossUsd: plan.maxVendorCashUsd,
-      fundingLabel: plan.fundingLabel,
-    });
-
     // ── §10 budget reservation: the worst case of the ENTIRE attempt plan
     // (§10.4), against every policy-required window (§10.5), BEFORE any
-    // attempt row exists. A failure here dispatches NOTHING and finalizes the
-    // invocation BUDGET_BLOCKED.
+    // attribution/attempt row exists. A failure here dispatches NOTHING and
+    // finalizes the already-ACQUIRED claim BUDGET_BLOCKED.
     let budgetHeld = false;
     const finalizeBudgetBlocked = async (): Promise<void> => {
       try {
@@ -420,6 +531,50 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
       }
     }
 
+    // ── One pre-dispatch attribution: estimate + intent only (§9.5).
+    try {
+      await deps.store.createAttribution({
+        attributionId: idFactory(),
+        invocationId,
+        estimatedGrossUsd: plan.maxVendorCashUsd,
+        fundingLabel: plan.fundingLabel,
+      });
+    } catch (error) {
+      await releaseReservationBestEffort(budgetHeld, deps, observability, invocationId);
+      throw error;
+    }
+
+    // ── Credit admission pre-flight (directive §11.3) — CONFIRMED_CREDITS_ONLY
+    // ONLY. Fails closed BEFORE any attempt row: a provider/model id alone can
+    // never produce credit admission, so an unconfigured store/port is a
+    // systemic misconfiguration, not a per-route refusal.
+    if (plan.costMode === "CONFIRMED_CREDITS_ONLY") {
+      if (!deps.creditStore || !deps.creditPort) {
+        try {
+          await deps.store.finalizeFailure({
+            invocationId,
+            ownerToken,
+            status: "POLICY_BLOCKED",
+            blockedDetail:
+              "CONFIRMED_CREDITS_ONLY requires an injected credit store and " +
+              "authorization port; neither was configured.",
+            now: deps.now(),
+          });
+        } catch (storeError) {
+          observability.markDegraded(
+            `finalizeFailure(POLICY_BLOCKED) failed for invocation ${invocationId}`,
+            storeError,
+          );
+        }
+        await releaseReservationBestEffort(budgetHeld, deps, observability, invocationId);
+        throw new PolicyBlocked(
+          "no-credit-store: CONFIRMED_CREDITS_ONLY requires an injected credit " +
+            "snapshot store and authorization port; a provider/model id alone " +
+            "can never produce credit admission — failing closed with zero dispatch.",
+        );
+      }
+    }
+
     // ── Provider walk: control-plane-owned fallback order (§9.3).
     const summaries: AiAttemptSummary[] = [];
     const routes = authority.permittedProviderRoutes;
@@ -430,20 +585,100 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
       const ordinal = nextOrdinal + i;
       const attemptId = idFactory();
 
+      // ── Credit authorization for THIS route (directive §11.3) — atomic,
+      // CONFIRMED_CREDITS_ONLY only. A refusal skips transport for this route
+      // entirely (advances to the next route exactly like a clean provider
+      // failure); it never takes a hold. An admitted route's hold is settled
+      // on that route's SUCCEEDED outcome or released on its clean failure
+      // below — never on an AMBIGUOUS/TIMEOUT outcome (unproven charge; same
+      // doctrine as the invocation-level budget hold).
+      let creditHandle: CreditAuthorizationHandle | null = null;
+      if (plan.costMode === "CONFIRMED_CREDITS_ONLY") {
+        const creditScope: CreditAdmissionScope = {
+          provider: route,
+          product: authority.surface,
+          model: modelRequested,
+          region: null,
+        };
+        const authorization = await deps.creditPort!.authorize({
+          store: deps.creditStore!,
+          scope: creditScope,
+          // No per-token pricing yet (mirrors budget.ts): the worst case IS
+          // the plan's cash ceiling, converted to integer cents — the only
+          // currency an AI control-plane policy cap is denominated in today.
+          worstCaseMinorUnits: usdToCreditMinorUnitsCeil(plan.maxVendorCashUsd, "maxVendorCashUsd"),
+          worstCaseCurrency: "USD",
+          now: deps.now(),
+          expiresAt: new Date(deps.now().getTime() + (deps.creditHoldMs ?? DEFAULT_CREDIT_HOLD_MS)),
+          idFactory,
+        });
+        if (!authorization.admitted) {
+          const errorCode = `CREDIT_BLOCKED:${authorization.reason ?? "unknown"}`;
+          try {
+            await deps.store.startAttempt({
+              attemptId,
+              invocationId,
+              ownerToken,
+              ordinal,
+              providerRequested: route,
+              modelRequested,
+              requestFingerprint,
+              policyVersion: authority.policyVersion,
+              attemptNonce: idFactory(),
+              now: deps.now(),
+            });
+          } catch (error) {
+            await releaseReservationBestEffort(budgetHeld, deps, observability, invocationId);
+            throw error;
+          }
+          await deps.store.recordAttemptFailure({
+            attemptId,
+            invocationId,
+            ownerToken,
+            status: "FAILED",
+            providerUsed: null, // transport never began
+            errorCode,
+            now: deps.now(),
+          });
+          summaries.push({
+            ordinal,
+            providerRequested: route,
+            providerUsed: null,
+            modelRequested,
+            modelResolved: null,
+            status: "FAILED",
+            errorCode,
+          });
+          lastErrorCode = errorCode;
+          continue; // next route — no dispatch, no hold ever taken
+        }
+        creditHandle = authorization.handle;
+      }
+
       // Authoritative attempt row BEFORE transport (§9.4) — throws
       // StoreUnavailable (blocking dispatch) if the store or the lease is gone.
-      await deps.store.startAttempt({
-        attemptId,
-        invocationId,
-        ownerToken,
-        ordinal,
-        providerRequested: route,
-        modelRequested,
-        requestFingerprint,
-        policyVersion: authority.policyVersion,
-        attemptNonce: idFactory(),
-        now: deps.now(),
-      });
+      // An unexpected failure here means NO transport occurred for this
+      // route, so (for a billable mode) the hold is released the same as any
+      // other never-charged exit — best-effort; the expiry sweep is the
+      // ultimate safety net.
+      try {
+        await deps.store.startAttempt({
+          attemptId,
+          invocationId,
+          ownerToken,
+          ordinal,
+          providerRequested: route,
+          modelRequested,
+          requestFingerprint,
+          policyVersion: authority.policyVersion,
+          attemptNonce: idFactory(),
+          now: deps.now(),
+        });
+      } catch (error) {
+        await releaseReservationBestEffort(budgetHeld, deps, observability, invocationId);
+        await releaseCreditHoldBestEffort(creditHandle, deps, observability, invocationId);
+        throw error;
+      }
 
       const outcome = await deps.dispatchers[route](payload);
 
@@ -552,6 +787,22 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
           modelResolved: outcome.modelResolved,
           status: "SUCCEEDED",
         });
+        // Credit close-out (directive §11.3, CONFIRMED_CREDITS_ONLY only):
+        // same best-effort settle doctrine as the budget hold above.
+        if (creditHandle) {
+          try {
+            await deps.creditPort!.settle(
+              creditHandle,
+              usdToCreditMinorUnitsCeil(plan.maxVendorCashUsd, "maxVendorCashUsd"),
+            );
+          } catch (error) {
+            observability.markDegraded(
+              `credit settle of reservation ${creditHandle.reservationId} failed ` +
+                `for invocation ${invocationId} (expiry sweep will reclaim the hold)`,
+              error,
+            );
+          }
+        }
         return {
           kind: "COMPLETED",
           invocationId,
@@ -605,25 +856,76 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
           }
         }
         // We cannot prove the vendor did not charge — never spend the same
-        // funds on another route. Finalize AMBIGUOUS and stop.
-        await deps.store.finalizeFailure({
+        // funds on another route. Finalize AMBIGUOUS and stop. The finalize
+        // is GUARDED: a store failure here must never swallow the
+        // AmbiguousCharge verdict (the caller would see a retryable-looking
+        // store error while the durable "charge unproven" record is lost).
+        // Instead: mark degraded, queue a durable FINALIZE_AMBIGUOUS recovery
+        // entry (§9.7), and STILL raise AmbiguousCharge. The attempt row
+        // already durably carries the AMBIGUOUS/TIMEOUT status, so even
+        // before recovery drains, the claim-steal path refuses to
+        // re-dispatch this invocation. The budget AND credit holds are
+        // DELIBERATELY NOT released here: an unproven charge must never free
+        // budget/credit that may have actually been spent (a double-spend
+        // risk). They stay HELD until reconciliation; the expiry sweep's
+        // AMBIGUOUS exclusion is the caller's job once this invocation's
+        // status is known (mirrors budget.ts's doctrine).
+        const finalizeInput = {
           invocationId,
           ownerToken,
-          status: "AMBIGUOUS",
+          status: "AMBIGUOUS" as const,
           now: deps.now(),
-        });
+        };
+        try {
+          const applied = await deps.store.finalizeFailure(finalizeInput);
+          if (!applied) {
+            observability.markDegraded(
+              `finalizeFailure(AMBIGUOUS) fenced out for invocation ${invocationId}`,
+              null,
+            );
+            await observability.enqueueRecovery({
+              id: idFactory(),
+              invocationId,
+              kind: "FINALIZE_AMBIGUOUS",
+              payload: { ...finalizeInput, now: finalizeInput.now.toISOString() },
+            });
+          }
+        } catch (error) {
+          observability.markDegraded(
+            `finalizeFailure(AMBIGUOUS) failed for invocation ${invocationId}`,
+            error,
+          );
+          await observability.enqueueRecovery({
+            id: idFactory(),
+            invocationId,
+            kind: "FINALIZE_AMBIGUOUS",
+            payload: { ...finalizeInput, now: finalizeInput.now.toISOString() },
+          });
+        }
         throw new AmbiguousCharge(
           `Attempt ${ordinal} on route "${route}" ended ${outcome.kind} after ` +
             "dispatch — the charge state is unproven; reconciliation required " +
             "before any re-spend.",
         );
       }
+
+      // Clean FAILED (this route, transport attempted and cleanly refused/
+      // errored, no charge possible): release THIS route's credit hold
+      // right away — unlike the invocation-spanning budget hold, a credit
+      // authorization is per-route and its grant's headroom should be freed
+      // for the NEXT route's authorize() attempt within the same walk.
+      await releaseCreditHoldBestEffort(creditHandle, deps, observability, invocationId);
     }
 
-    // Every permitted route failed cleanly (no charge proven or possible) —
-    // §10.1 FAILED_NO_CHARGE: release the entire hold. If the release itself
-    // fails, the stale hold is recovered by the sweeper AFTER it re-proves
-    // the clean ledger (§10.9 crash recovery) — never by trusting this caller.
+    // Every permitted route failed cleanly (no charge proven or possible).
+    // Guarded the same way: losing this finalize must not replace the honest
+    // ProviderUnavailable verdict, and the durable FAILED terminal is
+    // recovered via the §9.7 queue instead of relying on a lease-expiry steal.
+    //
+    // §10.1 FAILED_NO_CHARGE: release the entire budget hold. If the release
+    // itself fails, the stale hold is recovered by the sweeper AFTER it
+    // re-proves the clean ledger (§10.9 crash recovery) — never by trusting
+    // this caller.
     if (budgetHeld && deps.budget !== undefined) {
       try {
         await releaseBudgetHold(deps.budget.db, {
@@ -637,19 +939,37 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
         );
       }
     }
+    const failedFinalizeInput = {
+      invocationId,
+      ownerToken,
+      status: "FAILED" as const,
+      now: deps.now(),
+    };
     try {
-      await deps.store.finalizeFailure({
-        invocationId,
-        ownerToken,
-        status: "FAILED",
-        now: deps.now(),
-      });
+      const applied = await deps.store.finalizeFailure(failedFinalizeInput);
+      if (!applied) {
+        observability.markDegraded(
+          `finalizeFailure(FAILED) fenced out for invocation ${invocationId}`,
+          null,
+        );
+      }
     } catch (error) {
       observability.markDegraded(
-        `finalizeFailure failed for invocation ${invocationId}`,
+        `finalizeFailure(FAILED) failed for invocation ${invocationId}`,
         error,
       );
+      await observability.enqueueRecovery({
+        id: idFactory(),
+        invocationId,
+        kind: "FINALIZE_FAILURE",
+        payload: {
+          ...failedFinalizeInput,
+          now: failedFinalizeInput.now.toISOString(),
+        },
+      });
     }
+    // No charge occurred on any route — release the whole hold.
+    await releaseReservationBestEffort(budgetHeld, deps, observability, invocationId);
     throw new ProviderUnavailable(
       `All ${routes.length} permitted provider route(s) failed for task ` +
         `"${request.taskClass}"` +

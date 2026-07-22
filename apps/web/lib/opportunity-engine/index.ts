@@ -1,11 +1,17 @@
 /**
- * NOVA opportunity engine — S1 deterministic domain contracts only.
+ * NOVA opportunity engine — S1 domain contracts, S2 capability governance,
+ * S3 source-registry/evidence domain modules, and S4 Founder OS/agent
+ * surfaces.
  *
- * This barrel intentionally exports ONLY the S1 split-unit modules of the
+ * This barrel exports the S1, S2, S3, and S4 split-unit modules of the
  * frozen #146 split (`docs/ai/phase0/NOVA_CONVERGENCE_FREEZE_2026-07-22.md`
- * §5.3). Source registry/runtime/evidence (S3), capability governance (S2),
- * and Founder OS/agent surfaces (S4) land in their own split units and are
- * re-added here as they merge.
+ * §5.3). From S3, only the pure source-domain modules (`source-registry`,
+ * `change-detection`, `evidence`) are exported — the operational
+ * failed-closed polling runtime lives in `scripts/nova/` (see
+ * `docs/ai/nova/S3_SOURCE_RUNTIME.md`) and is deliberately NOT exported here;
+ * runtime receipts are artifacts, not importable domain state. S4 adds
+ * `founder-command`, `founder-work-seed`, `nova-agent`, and
+ * `nova-subagents`.
  */
 export * from "./types";
 export * from "./lifecycle";
@@ -17,3 +23,35 @@ export * from "./pipeline";
 export * from "./experiment";
 export * from "./learning";
 export * from "./monetization";
+export * from "./source-registry";
+export * from "./change-detection";
+export * from "./evidence";
+export * from "./capability-provenance";
+export * from "./capability-source-schema";
+export * from "./capability-inventory";
+export * from "./capability-governance";
+// capability-governor: explicit re-export list. The legacy pre-governance
+// shortlist `routeCapabilities` (and its record types) is deliberately NOT on
+// the public barrel — it consults no permission manifests, no supply-chain
+// state, and no provenance hashes, so only the fail-closed
+// `selectInspectionCandidates` path is the public governance surface.
+// `routeCapabilities` stays importable solely from
+// "./capability-governor" for its documented pre-governance tests.
+export {
+  classifyCapabilityTrust,
+  detectCapabilityRisk,
+  MAX_INSPECTION_CANDIDATES,
+  selectInspectionCandidates,
+  type CapabilityIneligibilityReason,
+  type CapabilityInspectionCandidate,
+  type CapabilityInspectionRecommendation,
+  type CapabilityRiskFlag,
+  type CapabilityTaskClass,
+  type CapabilityTrustTier,
+  type IneligibleCapabilityRecord,
+  type InspectionSelectionInput,
+} from "./capability-governor";
+export * from "./founder-command";
+export * from "./nova-agent";
+export * from "./nova-subagents";
+export * from "./founder-work-seed";

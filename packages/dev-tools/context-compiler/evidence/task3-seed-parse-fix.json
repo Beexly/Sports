@@ -1,0 +1,286 @@
+{
+  "acceptanceConditions": [
+    {
+      "checkCommand": "npx tsc --noEmit -p packages/db/tsconfig.json",
+      "statement": "\"packages/db/prisma/seed.ts\" type-checks with no new errors at the compiled sha's tsconfig."
+    },
+    {
+      "checkCommand": "npm run test --workspace=apps/web -- calibration-cockpit.test.ts",
+      "statement": "Relevant test \"apps/web/__tests__/calibration-cockpit.test.ts\" passes."
+    },
+    {
+      "checkCommand": "npm run test --workspace=apps/web -- seed-exclusion-consistency.test.ts",
+      "statement": "Relevant test \"apps/web/__tests__/seed-exclusion-consistency.test.ts\" passes."
+    },
+    {
+      "checkCommand": "npm run test --workspace=apps/web -- seed-picks-wiring.test.ts",
+      "statement": "Relevant test \"apps/web/__tests__/seed-picks-wiring.test.ts\" passes."
+    },
+    {
+      "statement": "The objective's change ships with a passing, non-trivial automated test covering the fixed behavior."
+    }
+  ],
+  "contentHash": "22ef9da5e833b6cbda6de7933c2bf48b4cf5919c0c6612f6750b9feb0aff4a51",
+  "dependencyEdges": [
+    {
+      "from": "apps/web/__tests__/calibration-cockpit.test.ts",
+      "kind": "imported-by",
+      "to": "packages/db/prisma/seed.ts"
+    },
+    {
+      "from": "apps/web/__tests__/calibration-cockpit.test.ts",
+      "kind": "tests",
+      "to": "packages/db/prisma/seed.ts"
+    },
+    {
+      "from": "apps/web/__tests__/seed-exclusion-consistency.test.ts",
+      "kind": "imported-by",
+      "to": "packages/db/prisma/seed.ts"
+    },
+    {
+      "from": "apps/web/__tests__/seed-exclusion-consistency.test.ts",
+      "kind": "tests",
+      "to": "packages/db/prisma/seed.ts"
+    },
+    {
+      "from": "apps/web/__tests__/seed-picks-wiring.test.ts",
+      "kind": "imported-by",
+      "to": "packages/db/prisma/seed.ts"
+    },
+    {
+      "from": "apps/web/__tests__/seed-picks-wiring.test.ts",
+      "kind": "tests",
+      "to": "packages/db/prisma/seed.ts"
+    },
+    {
+      "from": "packages/db/prisma/seed.ts",
+      "kind": "tested-by",
+      "to": "apps/web/__tests__/calibration-cockpit.test.ts"
+    },
+    {
+      "from": "packages/db/prisma/seed.ts",
+      "kind": "tested-by",
+      "to": "apps/web/__tests__/seed-exclusion-consistency.test.ts"
+    },
+    {
+      "from": "packages/db/prisma/seed.ts",
+      "kind": "tested-by",
+      "to": "apps/web/__tests__/seed-picks-wiring.test.ts"
+    }
+  ],
+  "forbiddenActions": [
+    {
+      "source": "compiler-derived: scope fence over targetFiles",
+      "statement": "Do not modify files outside {packages/db/prisma/seed.ts} and their captured dependency edges without recompiling this pack to expand scope."
+    },
+    {
+      "source": "compiler-derived: symbol-text heuristic scan of the target file at the compiled sha",
+      "statement": "\"packages/db/prisma/seed.ts\" contains auth/guard/assertion logic (matched /auth|guard|assert|valid/i) — do not change the pass/fail outcome of any existing guard, only its ordering/execution context, unless the objective explicitly requires a behavior change."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "No fake or fabricated data/stats anywhere in the change."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "Authorization/entitlement enforcement must be server-side only, never a frontend-only gate."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "No secrets committed to code; environment variables only."
+    },
+    {
+      "source": "lab charter: additive-only lab work constraints governing this compile run",
+      "statement": "No destructive git operations (force-push, reset --hard on shared branches) and no `prisma migrate deploy` against a non-disposable database."
+    }
+  ],
+  "knownCollisions": [],
+  "objective": "Remove the unresolved merge/paste corruption (stray main() calls + orphaned duplicate seed fragments) blocking prisma/seed.ts from parsing",
+  "priorDecisionsAndFailures": [
+    {
+      "category": "decision",
+      "date": "2026-06-01T20:26:26+00:00",
+      "sha": "109e57571f89f25de22162784cc049b653c5dddb",
+      "subject": "Add /performance proof OG card; scrub stray test cruft from seed.ts",
+      "touchedFiles": [
+        "packages/db/prisma/seed.ts"
+      ]
+    },
+    {
+      "category": "decision",
+      "date": "2026-04-07T23:44:54+00:00",
+      "sha": "18acbd99122a28fd07b0a7602a9de1e807d58bea",
+      "subject": "feat: initial sports prediction platform implementation",
+      "touchedFiles": [
+        "packages/db/prisma/seed.ts"
+      ]
+    },
+    {
+      "category": "decision",
+      "date": "2026-05-21T19:56:22-05:00",
+      "sha": "1fa122c3de6e4024ed29ccc8c6ef138ca0969218",
+      "subject": "Galaxy Sports Edge: evidence engine, mission control, live infra",
+      "touchedFiles": [
+        "packages/db/prisma/seed.ts"
+      ]
+    },
+    {
+      "category": "decision",
+      "date": "2026-05-20T18:09:57-05:00",
+      "sha": "493a1d8871415117673d937aede86a161928dcaf",
+      "subject": "Launch night: pickpilotapp.bet wiring, /about /press /observatory /vault, social row, SEO, OG image, logo assets, smoke test, automation + operator docs",
+      "touchedFiles": [
+        "packages/db/prisma/seed.ts"
+      ]
+    },
+    {
+      "category": "decision",
+      "date": "2026-06-21T23:07:38+00:00",
+      "sha": "6c4350002fa570f31c8d9cccb4328e2e70625b17",
+      "subject": "Launch hardening: prod seed guard + suspicious-URL promo gate",
+      "touchedFiles": [
+        "packages/db/prisma/seed.ts"
+      ]
+    },
+    {
+      "category": "failure",
+      "date": "2026-07-22T08:48:43+00:00",
+      "sha": "c24588f31d0b6ed8261ba023c2e10596a98560f8",
+      "subject": "fix(db): remove unresolved merge corruption from prisma/seed.ts (W2-01)",
+      "touchedFiles": [
+        "packages/db/prisma/seed.ts"
+      ]
+    }
+  ],
+  "relevantPrHeads": [],
+  "relevantSymbols": [
+    {
+      "contentSha256": "865bc7f48169153fa61af056dc656426e466d2be88d87b4d489436a8b936e941",
+      "endLine": 732,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "const",
+      "startLine": 731,
+      "symbolName": "AFFILIATE_DISCLOSURE_LINE"
+    },
+    {
+      "contentSha256": "4d732b1bbd8197df9534005696a04b9c059cd0aa15aa47af894940445e6a7f6f",
+      "endLine": 729,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "const",
+      "startLine": 728,
+      "symbolName": "RESPONSIBLE_GAMING_LINE"
+    },
+    {
+      "contentSha256": "21fda10c3d5625c44cba039df85276b901b979381af571947c843200eff0a011",
+      "endLine": 52,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "const",
+      "startLine": 9,
+      "symbolName": "SPORTS"
+    },
+    {
+      "contentSha256": "ead1b2fa5117c322d153d6efce9bab33d22620ec0bef5bc7ae451edf7bd8d3c9",
+      "endLine": 1037,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "interface",
+      "startLine": 1033,
+      "symbolName": "SeedPickResult"
+    },
+    {
+      "contentSha256": "32201a011d2e07a48bc0ef08d8eab57dc06cfe7ac1cb590a5bd444d711f71bfb",
+      "endLine": 7,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "const",
+      "startLine": 7,
+      "symbolName": "db"
+    },
+    {
+      "contentSha256": "cab7d48eb7f63c5bff60d7339cd9877f64133423b7eedb435f3fe7dea199e362",
+      "endLine": 139,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "function",
+      "startLine": 54,
+      "symbolName": "main"
+    },
+    {
+      "contentSha256": "dd74772c4b8386b75b697e3777a18e1488a1b892d3b4920e00237fbec6193c83",
+      "endLine": 373,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "function",
+      "startLine": 176,
+      "symbolName": "seedCockpit"
+    },
+    {
+      "contentSha256": "2ec67f5c735b435698f5e4676b80a24aa0f5078a2ee0d4cb3acbe2ae72ddbb39",
+      "endLine": 1021,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "function",
+      "startLine": 734,
+      "symbolName": "seedContentDrafts"
+    },
+    {
+      "contentSha256": "595dbd776b92ec1a3bfa12f0aece16550804c65b4c36b56b8506781577d4cb52",
+      "endLine": 716,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "function",
+      "startLine": 584,
+      "symbolName": "seedDailyBrief"
+    },
+    {
+      "contentSha256": "e29bb3961195b81ea2ecb66295c8336526bcd1f015d29cc0d3427074887d78b5",
+      "endLine": 166,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "function",
+      "startLine": 141,
+      "symbolName": "seedDevAdmin"
+    },
+    {
+      "contentSha256": "3acc84329bab813bd709598b44813bf0de15b731c71b538ffc505383e324eb79",
+      "endLine": 1331,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "function",
+      "startLine": 1039,
+      "symbolName": "seedPicks"
+    },
+    {
+      "contentSha256": "d176ac35291c2a5a488866d295faa65796a8e20c2836b3e430c98832217438d4",
+      "endLine": 574,
+      "exported": false,
+      "file": "packages/db/prisma/seed.ts",
+      "kind": "function",
+      "startLine": 382,
+      "symbolName": "seedPromotions"
+    }
+  ],
+  "relevantTests": [
+    {
+      "file": "apps/web/__tests__/calibration-cockpit.test.ts",
+      "matchedBy": "imports target via \"prisma/seed\" (git grep at c24588f31d0b)"
+    },
+    {
+      "file": "apps/web/__tests__/seed-exclusion-consistency.test.ts",
+      "matchedBy": "imports target via \"prisma/seed\" (git grep at c24588f31d0b)"
+    },
+    {
+      "file": "apps/web/__tests__/seed-picks-wiring.test.ts",
+      "matchedBy": "imports target via \"prisma/seed\" (git grep at c24588f31d0b)"
+    }
+  ],
+  "repoHead": {
+    "branch": "c24588f3",
+    "remote": "http://local_proxy@127.0.0.1:41729/git/beexly/sports",
+    "sha": "c24588f31d0b6ed8261ba023c2e10596a98560f8"
+  },
+  "schemaVersion": "0.1.0"
+}

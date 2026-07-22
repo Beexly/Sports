@@ -24,9 +24,19 @@ import { AGENT_COUNCIL } from "@/lib/jarvis/agent-council";
 import {
   UnauthenticatedError,
   ForbiddenError,
-  serviceActor,
-  systemActor,
+  resolveServiceActor,
+  type VerifiedCredentialContext,
 } from "@/lib/auth/actor";
+// Raw (ungoverned) constructors are deliberately imported from the
+// test-internal module: these tests prove the DENIAL paths hold even for an
+// actor minted outside resolveServiceActor's governance.
+import { serviceActor, systemActor } from "@/lib/auth/actor-test-internal";
+
+const TEST_CREDENTIAL: VerifiedCredentialContext = {
+  method: "TEST_HARNESS",
+  verifiedBy: "__tests__/council-ledgers",
+  verifiedAt: new Date(),
+};
 
 // ─── Mock auth() — default to a valid ADMIN session so the seat/confidence/
 // review-state tests exercise validation logic, not the auth gate itself. The
@@ -44,35 +54,55 @@ function mockAdminSession() {
 
 // ─── Mock the db client ───────────────────────────────────────────────────────
 
-vi.mock("@sports/db", () => ({
-  db: {
-    agentHandoff: {
-      count: vi.fn().mockResolvedValue(0),
-      create: vi.fn(),
-      findMany: vi.fn().mockResolvedValue([]),
+vi.mock("@sports/db", () => {
+  /** Structural stand-in for Prisma.PrismaClientKnownRequestError (code-carrying). */
+  class MockPrismaClientKnownRequestError extends Error {
+    readonly code: string;
+    constructor(message: string, opts: { code: string; clientVersion?: string }) {
+      super(message);
+      this.name = "PrismaClientKnownRequestError";
+      this.code = opts.code;
+    }
+  }
+  return {
+    db: {
+      agentHandoff: {
+        count: vi.fn().mockResolvedValue(0),
+        create: vi.fn(),
+        findMany: vi.fn().mockResolvedValue([]),
+      },
+      subagentRun: {
+        count: vi.fn().mockResolvedValue(0),
+        create: vi.fn(),
+        findMany: vi.fn().mockResolvedValue([]),
+        findUniqueOrThrow: vi.fn(),
+        update: vi.fn(),
+      },
+      jarvisMemoryEvent: {
+        count: vi.fn().mockResolvedValue(0),
+        findUniqueOrThrow: vi.fn(),
+        update: vi.fn(),
+      },
+      actorReceipt: {
+        create: vi.fn(),
+      },
     },
-    subagentRun: {
-      count: vi.fn().mockResolvedValue(0),
-      create: vi.fn(),
-      findMany: vi.fn().mockResolvedValue([]),
-      findUniqueOrThrow: vi.fn(),
-      update: vi.fn(),
-    },
-    jarvisMemoryEvent: {
-      count: vi.fn().mockResolvedValue(0),
-      findUniqueOrThrow: vi.fn(),
-      update: vi.fn(),
-    },
-  },
-  isStubMode: vi.fn().mockReturnValue(false),
-  isDemoPicksEnabled: vi.fn().mockReturnValue(false),
-}));
+    Prisma: { PrismaClientKnownRequestError: MockPrismaClientKnownRequestError },
+    isStubMode: vi.fn().mockReturnValue(false),
+    isDemoPicksEnabled: vi.fn().mockReturnValue(false),
+  };
+});
+
+import { db } from "@sports/db";
 
 // Default every test to an authenticated admin caller — the dedicated "actor
 // authorization" block overrides mockAuth per-test to exercise the
-// unauthenticated / non-admin / wrong-actor-type paths.
+// unauthenticated / non-admin / wrong-actor-type paths. Also (re-)arm the
+// actor-receipt store: a nested describe calls vi.resetAllMocks(), so the
+// default implementation must be restored before every test.
 beforeEach(() => {
   mockAdminSession();
+  vi.mocked(db.actorReceipt.create).mockResolvedValue({ id: "receipt-1" } as never);
 });
 
 // ─── 1. Seat validation ───────────────────────────────────────────────────────
@@ -83,7 +113,11 @@ beforeEach(() => {
 // function's top, so we don't need the db at all for the rejection path).
 
 import { logHandoff, logSubagentRun, reviewSubagentRun } from "@/lib/jarvis/ledgers";
-import { logHandoffAs, reviewSubagentRunAs } from "@/lib/jarvis/ledgers-core";
+import {
+  logHandoffAs,
+  reviewSubagentRunAs,
+  SubagentRunAlreadyDecidedError,
+} from "@/lib/jarvis/ledgers-core";
 
 describe("seat validation", () => {
   it("rejects an unknown sourceSeat in logHandoff", async () => {
@@ -271,6 +305,8 @@ describe("review-states law", () => {
       reviewer_type: null,
       reviewer_email: null,
       policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
@@ -306,6 +342,8 @@ describe("review-states law", () => {
       reviewer_type: null,
       reviewer_email: null,
       policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
@@ -341,6 +379,8 @@ describe("review-states law", () => {
       reviewer_type: null,
       reviewer_email: null,
       policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
     });
 
     const updateSpy = vi.spyOn(db.subagentRun, "update");
@@ -376,11 +416,100 @@ describe("review-states law", () => {
       reviewer_type: null,
       reviewer_email: null,
       policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
     });
 
     // TAL is not the parent seat for this run (scout is)
     await expect(reviewSubagentRun("run-xyz", "tal", "accepted")).rejects.toThrow(
       /not the parent seat/
+    );
+  });
+
+  it("REFUSES to overwrite an already-decided run — decision + reviewer attribution are immutable", async () => {
+    const { db } = await import("@sports/db");
+    vi.mocked(db.subagentRun.update).mockClear();
+    vi.mocked(db.actorReceipt.create).mockClear();
+
+    vi.mocked(db.subagentRun.findUniqueOrThrow).mockResolvedValueOnce({
+      id: "run-decided",
+      parent_seat: "scout",
+      parent_review_status: "accepted", // already decided by an earlier reviewer
+      subagent_id: "scout-injury-context",
+      task: "t",
+      input_context: "{}",
+      output_artifact_ref: "ref",
+      confidence: 80,
+      uncertainty: "low",
+      evidence: [],
+      prohibited_actions_checked: true,
+      created_at: new Date(),
+      updated_at: new Date(),
+      actor_subject_id: null,
+      actor_type: null,
+      actor_email: null,
+      reviewer_subject_id: "admin-earlier",
+      reviewer_type: "HUMAN",
+      reviewer_email: "earlier@gsn.example",
+      policy_version: "v1",
+      actor_receipt_id: null,
+      reviewer_receipt_id: "receipt-earlier",
+    });
+
+    await expect(reviewSubagentRun("run-decided", "scout", "rejected")).rejects.toThrow(
+      SubagentRunAlreadyDecidedError
+    );
+    // The earlier decision was never touched…
+    expect(db.subagentRun.update).not.toHaveBeenCalled();
+    // …and no orphan receipt was minted for the refused overwrite.
+    expect(db.actorReceipt.create).not.toHaveBeenCalled();
+  });
+
+  it("a concurrent decision between read and write is NOT overwritten (atomic WHERE → P2025 → AlreadyDecided)", async () => {
+    const { db, Prisma } = await import("@sports/db");
+
+    vi.mocked(db.subagentRun.findUniqueOrThrow).mockResolvedValueOnce({
+      id: "run-race",
+      parent_seat: "scout",
+      parent_review_status: "pending_review", // pending at read time…
+      subagent_id: "scout-injury-context",
+      task: "t",
+      input_context: "{}",
+      output_artifact_ref: "ref",
+      confidence: 80,
+      uncertainty: "low",
+      evidence: [],
+      prohibited_actions_checked: true,
+      created_at: new Date(),
+      updated_at: new Date(),
+      actor_subject_id: null,
+      actor_type: null,
+      actor_email: null,
+      reviewer_subject_id: null,
+      reviewer_type: null,
+      reviewer_email: null,
+      policy_version: null,
+      actor_receipt_id: null,
+      reviewer_receipt_id: null,
+    });
+    // …but the guarded UPDATE (WHERE parent_review_status = 'pending_review')
+    // matches no row because a concurrent reviewer decided first.
+    vi.mocked(db.subagentRun.update).mockRejectedValueOnce(
+      new Prisma.PrismaClientKnownRequestError("No record found", {
+        code: "P2025",
+        clientVersion: "5.22.0",
+      })
+    );
+
+    await expect(reviewSubagentRun("run-race", "scout", "accepted")).rejects.toThrow(
+      SubagentRunAlreadyDecidedError
+    );
+  });
+
+  it("source pin: the review UPDATE carries the atomic pending_review guard in its WHERE", () => {
+    const src = readFileSync(resolve(__dirname, "../lib/jarvis/ledgers-core.ts"), "utf-8");
+    expect(src).toMatch(
+      /where:\s*\{\s*id:\s*runId,\s*parent_review_status:\s*"pending_review"\s*\}/
     );
   });
 });
@@ -653,11 +782,15 @@ describe("trusted-actor authorization", () => {
 // permits all actor types; reviewSubagentRunAs is HUMAN-only.
 
 describe("service/system actors on core write paths", () => {
-  it("a SERVICE actor may log a handoff and is recorded as actor_type SERVICE", async () => {
-    const { db } = await import("@sports/db");
+  it("a GOVERNED SERVICE actor (resolveServiceActor) may log a handoff and is recorded as actor_type SERVICE", async () => {
     const createSpy = vi.spyOn(db.agentHandoff, "create");
     createSpy.mockClear();
-    const actor = serviceActor({ subjectId: "service:pick-generation", runId: "run-42" });
+    const actor = resolveServiceActor({
+      principalId: "service:pick-generation-worker",
+      verifiedCredentialContext: TEST_CREDENTIAL,
+      operation: "jarvis:log-handoff",
+      runId: "run-42",
+    });
     await logHandoffAs(actor, {
       sourceSeat: "jarvis",
       targetSeat: "scout",
@@ -669,7 +802,7 @@ describe("service/system actors on core write paths", () => {
     expect(createSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          actor_subject_id: "service:pick-generation",
+          actor_subject_id: "service:pick-generation-worker",
           actor_type: "SERVICE",
         }),
       })

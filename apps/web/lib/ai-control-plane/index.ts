@@ -67,6 +67,15 @@ export type {
 // The single sealed production entry point (§8.2).
 export { executeAiTask } from "./executor";
 
+// §9.7 recovery-queue drain (cron route entry point). Grants no authority and
+// performs no provider dispatch — it only completes already-authorized
+// finalizations stranded by post-dispatch store failures, so exporting it does
+// not widen the sealed executor boundary.
+export {
+  drainAiTelemetryRecoveryProduction,
+  type DrainSummary,
+} from "./recovery-drainer";
+
 // Validation helpers that are safe to expose (pure, no env/dispatch access).
 export {
   validateInvocationRequest,

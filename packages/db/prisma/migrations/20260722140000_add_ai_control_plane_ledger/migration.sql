@@ -80,10 +80,13 @@ BEGIN
     ALTER TABLE "ai_invocations" ADD CONSTRAINT "ai_invocations_blocked_nondispatchable_check"
       CHECK ("status" <> 'BLOCKED' OR ("executionOwnerToken" IS NULL AND "leaseExpiresAt" IS NULL));
   END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_invocations_blocked_reason_check') THEN
-    ALTER TABLE "ai_invocations" ADD CONSTRAINT "ai_invocations_blocked_reason_check"
-      CHECK (("status" = 'BLOCKED') = ("blockedReasonCode" IS NOT NULL));
-  END IF;
+  -- §9.6: a BLOCKED row always carries a reason. ONE-WAY implication only:
+  -- a CONFIGURATION_BLOCKED row reclaimed after the config was fixed keeps
+  -- its blockedReasonCode/blockedDetail as durable incident history even
+  -- after its status moves on (the incident record is never erased).
+  ALTER TABLE "ai_invocations" DROP CONSTRAINT IF EXISTS "ai_invocations_blocked_reason_check";
+  ALTER TABLE "ai_invocations" ADD CONSTRAINT "ai_invocations_blocked_reason_check"
+    CHECK ("status" <> 'BLOCKED' OR "blockedReasonCode" IS NOT NULL);
 END $$;
 
 -- CreateTable: AiAttempt (§9.4 durable attempt semantics)
@@ -220,14 +223,18 @@ CREATE TABLE IF NOT EXISTS "ai_telemetry_recovery" (
 
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_telemetry_recovery_kind_check') THEN
-    ALTER TABLE "ai_telemetry_recovery" ADD CONSTRAINT "ai_telemetry_recovery_kind_check"
-      CHECK ("kind" IN ('FINALIZE_SUCCESS', 'ATTEMPT_TELEMETRY'));
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_telemetry_recovery_invocationId_fkey') THEN
-    ALTER TABLE "ai_telemetry_recovery" ADD CONSTRAINT "ai_telemetry_recovery_invocationId_fkey"
-      FOREIGN KEY ("invocationId") REFERENCES "ai_invocations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-  END IF;
+  ALTER TABLE "ai_telemetry_recovery" DROP CONSTRAINT IF EXISTS "ai_telemetry_recovery_kind_check";
+  ALTER TABLE "ai_telemetry_recovery" ADD CONSTRAINT "ai_telemetry_recovery_kind_check"
+    CHECK ("kind" IN ('FINALIZE_SUCCESS', 'FINALIZE_AMBIGUOUS', 'FINALIZE_FAILURE', 'ATTEMPT_TELEMETRY'));
+  -- Evidence preservation (§6.2 doctrine): RESTRICT, never CASCADE. The
+  -- recovery queue exists precisely to preserve writes that could not land —
+  -- a cascading delete of the parent invocation would silently drop exactly
+  -- those undelivered writes (and a BLOCKED invocation, having no attempt or
+  -- attribution children to RESTRICT on, would otherwise be freely deletable
+  -- together with its recovery rows).
+  ALTER TABLE "ai_telemetry_recovery" DROP CONSTRAINT IF EXISTS "ai_telemetry_recovery_invocationId_fkey";
+  ALTER TABLE "ai_telemetry_recovery" ADD CONSTRAINT "ai_telemetry_recovery_invocationId_fkey"
+    FOREIGN KEY ("invocationId") REFERENCES "ai_invocations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 END $$;
 
 -- CreateIndex — the atomic-claim anchor (§9.2): ON CONFLICT target.

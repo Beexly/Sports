@@ -7,9 +7,19 @@
  * because this module is imported by trusted server code — the interactive
  * "use server" wrappers in ./ledgers.ts (which resolve a HUMAN admin actor via
  * requireAdminActor) and background/non-interactive paths (workers, cron)
- * which mint a governed SERVICE / SYSTEM actor via serviceActor()/systemActor().
- * A browser RPC call can never reach these functions with a forged actor,
- * because they are not part of the "use server" surface.
+ * which obtain a GOVERNED SERVICE / SYSTEM actor via resolveServiceActor()
+ * (allowlisted principal + verified credential context + operation scope; the
+ * raw constructors are deprecated and guard-enforced to tests). A browser RPC
+ * call can never reach these functions with a forged actor, because they are
+ * not part of the "use server" surface.
+ *
+ * AUDIT RECEIPTS (directive 4.3): every write persists an immutable
+ * ActorReceipt (the full TrustedActor audit contract — see
+ * @/lib/auth/actor-receipt) BEFORE the ledger row and stores its id
+ * (actor_receipt_id / reviewer_receipt_id). Receipt failure aborts the write.
+ *
+ * SEAT IDENTITY (directive 4.4): a reviewer's "seat" is a NON-AUTHORITATIVE
+ * workflow label — see reviewSubagentRunAs.
  *
  * Design rules (unchanged from the original ledgers module):
  *   - Seats are validated against AGENT_COUNCIL ids — unknown seats are rejected.
@@ -24,6 +34,7 @@ import { db } from "@sports/db";
 import { Prisma } from "@sports/db";
 import { AGENT_COUNCIL } from "./agent-council";
 import { assertActorType, type TrustedActor } from "@/lib/auth/actor";
+import { persistActorReceipt } from "@/lib/auth/actor-receipt";
 
 // ─── Typed error ──────────────────────────────────────────────────────────────
 
@@ -73,6 +84,19 @@ function wrapDbError(err: unknown): never {
   throw new LedgerStoreUnavailableError(err);
 }
 
+/**
+ * Persists the immutable ActorReceipt (directive 4.3) BEFORE the ledger row it
+ * vouches for, wrapping receipt-store failure into this module's typed store
+ * error. Receipt failure aborts the audited write (fail closed).
+ */
+async function persistReceiptOrFail(actor: TrustedActor): Promise<string> {
+  try {
+    return await persistActorReceipt(actor);
+  } catch (err) {
+    wrapDbError(err);
+  }
+}
+
 // ─── Handoff ledger ───────────────────────────────────────────────────────────
 
 export interface LogHandoffInput {
@@ -102,6 +126,7 @@ export async function logHandoffAs(actor: TrustedActor, input: LogHandoffInput) 
   assertValidSeat(input.sourceSeat, "sourceSeat");
   assertValidSeat(input.targetSeat, "targetSeat");
 
+  const actorReceiptId = await persistReceiptOrFail(actor);
   try {
     return await db.agentHandoff.create({
       data: {
@@ -118,6 +143,7 @@ export async function logHandoffAs(actor: TrustedActor, input: LogHandoffInput) 
         actor_type: actor.actorType,
         actor_email: actor.emailSnapshot,
         policy_version: actor.policyVersion,
+        actor_receipt_id: actorReceiptId,
       },
     });
   } catch (err) {
@@ -160,6 +186,7 @@ export async function logSubagentRunAs(actor: TrustedActor, input: LogSubagentRu
   assertValidSeat(input.parentSeat, "parentSeat");
   assertValidConfidence(input.confidence, "confidence");
 
+  const actorReceiptId = await persistReceiptOrFail(actor);
   try {
     return await db.subagentRun.create({
       data: {
@@ -177,6 +204,7 @@ export async function logSubagentRunAs(actor: TrustedActor, input: LogSubagentRu
         actor_type: actor.actorType,
         actor_email: actor.emailSnapshot,
         policy_version: actor.policyVersion,
+        actor_receipt_id: actorReceiptId,
       },
     });
   } catch (err) {
@@ -187,59 +215,112 @@ export async function logSubagentRunAs(actor: TrustedActor, input: LogSubagentRu
 export type SubagentReviewDecision = "accepted" | "rejected" | "edited";
 
 /**
+ * A review decision is IMMUTABLE: once a run leaves "pending_review" the
+ * decision — and the reviewer attribution (reviewer_subject_id /
+ * reviewer_receipt_id) — can never be silently overwritten by a later call.
+ * Mirrors decideAppeal's already-decided rejection.
+ */
+export class SubagentRunAlreadyDecidedError extends Error {
+  readonly code = "SUBAGENT_RUN_ALREADY_DECIDED" as const;
+
+  constructor(runId: string, status: string) {
+    super(
+      `SubagentRun "${runId}" has already been decided (status: ${status}). ` +
+        "A review decision is immutable and cannot be overwritten."
+    );
+    this.name = "SubagentRunAlreadyDecidedError";
+  }
+}
+
+/**
  * Record the parent seat's review decision for a subagent run.
  *
  * Reviewing is a HUMAN-only operation: a subagent run is a draft awaiting a
  * human parent seat's judgement, so a SERVICE/SYSTEM actor may NOT decide it.
- * Only the parent seat (by codename or id) that spawned the run may review it.
- * Status moves from pending_review → accepted | rejected | edited.
+ *
+ * SEAT IDENTITY RULE (directive 4.4 — explicit): `reviewerSeatLabel` is a
+ * NON-AUTHORITATIVE workflow label. It does NOT authenticate the seat and it
+ * confers NO authority. Authority comes solely from the authenticated HUMAN
+ * admin actor (`actor`), whose stable subject id — and its immutable
+ * ActorReceipt — are what the audit path records as the deciding authority
+ * (reviewer_subject_id / reviewer_receipt_id). Any owner/admin human is
+ * authorized to review on behalf of a parent seat; the label is validated only
+ * for workflow consistency (it must name the run's parent seat, by id or
+ * codename), never as an identity claim.
+ *
+ * Status moves from pending_review → accepted | rejected | edited, and ONLY
+ * from pending_review: an already-decided run throws
+ * SubagentRunAlreadyDecidedError (the guard is enforced twice — a pre-check
+ * for a clear error, and atomically in the UPDATE's WHERE so a concurrent
+ * decision can never be overwritten last-write-wins).
  */
 export async function reviewSubagentRunAs(
   actor: TrustedActor,
   runId: string,
-  reviewerSeat: string,
+  reviewerSeatLabel: string,
   decision: SubagentReviewDecision
 ) {
   assertActorType(actor, ["HUMAN"], "reviewSubagentRun");
-  assertValidSeat(reviewerSeat, "reviewerSeat");
+  assertValidSeat(reviewerSeatLabel, "reviewerSeatLabel");
 
+  let existing;
   try {
-    const existing = await db.subagentRun.findUniqueOrThrow({ where: { id: runId } });
-
-    if (!isValidSeat(existing.parent_seat)) {
-      // Should never happen — parentSeat was validated at creation time.
-      throw new Error(`Run ${runId} has an unrecognised parent seat "${existing.parent_seat}".`);
+    existing = await db.subagentRun.findUniqueOrThrow({ where: { id: runId } });
+  } catch (err) {
+    // P2025: record not found — surface clearly before wrapDbError masks it
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      throw new Error(`SubagentRun "${runId}" not found.`);
     }
+    wrapDbError(err);
+  }
 
-    // The reviewer seat must be the parent seat (id or codename form).
-    const reviewerMatches =
-      existing.parent_seat === reviewerSeat ||
-      AGENT_COUNCIL.find((s) => s.codename === reviewerSeat)?.id === existing.parent_seat ||
-      AGENT_COUNCIL.find((s) => s.id === reviewerSeat)?.codename === existing.parent_seat;
+  if (!isValidSeat(existing.parent_seat)) {
+    // Should never happen — parentSeat was validated at creation time.
+    throw new Error(`Run ${runId} has an unrecognised parent seat "${existing.parent_seat}".`);
+  }
 
-    if (!reviewerMatches) {
-      throw new Error(
-        `Seat "${reviewerSeat}" is not the parent seat for run ${runId}. ` +
-        `Only the parent seat ("${existing.parent_seat}") may review this run.`
-      );
-    }
+  // Workflow-consistency check ONLY (not authority): the seat label must be
+  // the run's parent seat (id or codename form).
+  const reviewerMatches =
+    existing.parent_seat === reviewerSeatLabel ||
+    AGENT_COUNCIL.find((s) => s.codename === reviewerSeatLabel)?.id === existing.parent_seat ||
+    AGENT_COUNCIL.find((s) => s.id === reviewerSeatLabel)?.codename === existing.parent_seat;
 
+  if (!reviewerMatches) {
+    throw new Error(
+      `Seat "${reviewerSeatLabel}" is not the parent seat for run ${runId}. ` +
+      `Only the parent seat ("${existing.parent_seat}") may review this run.`
+    );
+  }
+
+  if (existing.parent_review_status !== "pending_review") {
+    throw new SubagentRunAlreadyDecidedError(runId, existing.parent_review_status);
+  }
+
+  // Receipt AFTER all validation (fewer orphan receipts on rejected calls) but
+  // still BEFORE the ledger write it vouches for (write-ordering rule).
+  const reviewerReceiptId = await persistReceiptOrFail(actor);
+  try {
     return await db.subagentRun.update({
-      where: { id: runId },
+      // parent_review_status in the WHERE makes the pending guard ATOMIC:
+      // if a concurrent reviewer decided the run between the read above and
+      // this write, no row matches and Prisma raises P2025 instead of
+      // overwriting the earlier decision + reviewer attribution.
+      where: { id: runId, parent_review_status: "pending_review" },
       data: {
         parent_review_status: decision,
         reviewer_subject_id: actor.subjectId,
         reviewer_type: actor.actorType,
         reviewer_email: actor.emailSnapshot,
         policy_version: actor.policyVersion,
+        reviewer_receipt_id: reviewerReceiptId,
       },
     });
   } catch (err) {
-    if (err instanceof Error && err.message.startsWith("Seat ")) throw err;
-    if (err instanceof Error && err.message.startsWith("Run ")) throw err;
-    // P2025: record not found — surface clearly before wrapDbError masks it
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
-      throw new Error(`SubagentRun "${runId}" not found.`);
+      // The run existed and was pending at the read above — losing the row
+      // here means a concurrent decision won the race.
+      throw new SubagentRunAlreadyDecidedError(runId, "decided concurrently");
     }
     wrapDbError(err);
   }

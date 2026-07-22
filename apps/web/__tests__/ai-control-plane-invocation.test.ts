@@ -54,6 +54,7 @@ import {
   type ClaimInvocationInput,
   type ClaimOutcome,
   type ControlSqlClient,
+  type RouteCreditAuthorizationPort,
   type ProviderDispatchFn,
   type SealedAiExecutorDependencies,
   failClosedCreditAuthorizationPort,
@@ -169,6 +170,25 @@ class MemStore implements AuthoritativeControlStore {
       };
     }
     if (existing.status !== "RUNNING") {
+      // Mirror of the PG store: a transient CONFIGURATION_BLOCKED row is
+      // reclaimed for one normal dispatch; incident fields stay as history.
+      if (
+        existing.status === "BLOCKED" &&
+        existing.blockedReasonCode === "CONFIGURATION_BLOCKED"
+      ) {
+        existing.status = "RUNNING";
+        existing.executionOwnerToken = input.ownerToken;
+        existing.leaseExpiresAt = expires;
+        const maxOrdinal = this.attempts
+          .filter((a) => a.invocationId === existing.id)
+          .reduce((m, a) => Math.max(m, a.ordinal), -1);
+        return {
+          kind: "ACQUIRED",
+          invocationId: existing.id,
+          stolen: false,
+          nextOrdinal: maxOrdinal + 1,
+        };
+      }
       return {
         kind: "REPLAY_TERMINAL",
         invocationId: existing.id,
@@ -176,17 +196,7 @@ class MemStore implements AuthoritativeControlStore {
         output:
           existing.resultJson === null ? null : JSON.parse(existing.resultJson),
         resultHash: existing.resultHash,
-        attempts: this.attempts
-          .filter((a) => a.invocationId === existing.id)
-          .map((a) => ({
-            ordinal: a.ordinal,
-            providerRequested: a.providerRequested as ProviderRouteId,
-            providerUsed: a.providerUsed as ProviderRouteId | null,
-            modelRequested: a.modelRequested,
-            modelResolved: a.modelResolved,
-            status: a.status as "SUCCEEDED",
-            ...(a.errorCode ? { errorCode: a.errorCode } : {}),
-          })),
+        attempts: this.summariesFor(existing.id),
       };
     }
     const live =
@@ -197,15 +207,52 @@ class MemStore implements AuthoritativeControlStore {
     existing.executionOwnerToken = input.ownerToken;
     existing.leaseExpiresAt = expires;
     existing.stealCount += 1;
-    const maxOrdinal = this.attempts
-      .filter((a) => a.invocationId === existing.id)
-      .reduce((m, a) => Math.max(m, a.ordinal), -1);
+    // Mirror of the PG store's unproven-funds fence: any recorded
+    // AMBIGUOUS/TIMEOUT attempt, or an attempt still open in DISPATCHED,
+    // forces a durable AMBIGUOUS terminal — never a re-dispatch.
+    const invAttempts = this.attempts.filter(
+      (a) => a.invocationId === existing.id,
+    );
+    const unproven = invAttempts.some(
+      (a) =>
+        a.status === "AMBIGUOUS" ||
+        a.status === "TIMEOUT" ||
+        a.status === "DISPATCHED",
+    );
+    if (unproven) {
+      existing.status = "AMBIGUOUS";
+      existing.leaseExpiresAt = null;
+      return {
+        kind: "REPLAY_TERMINAL",
+        invocationId: existing.id,
+        status: "AMBIGUOUS",
+        output:
+          existing.resultJson === null ? null : JSON.parse(existing.resultJson),
+        resultHash: existing.resultHash,
+        attempts: this.summariesFor(existing.id),
+      };
+    }
+    const maxOrdinal = invAttempts.reduce((m, a) => Math.max(m, a.ordinal), -1);
     return {
       kind: "ACQUIRED",
       invocationId: existing.id,
       stolen: true,
       nextOrdinal: maxOrdinal + 1,
     };
+  }
+
+  private summariesFor(invocationId: string) {
+    return this.attempts
+      .filter((a) => a.invocationId === invocationId)
+      .map((a) => ({
+        ordinal: a.ordinal,
+        providerRequested: a.providerRequested as ProviderRouteId,
+        providerUsed: a.providerUsed as ProviderRouteId | null,
+        modelRequested: a.modelRequested,
+        modelResolved: a.modelResolved,
+        status: a.status as "SUCCEEDED",
+        ...(a.errorCode ? { errorCode: a.errorCode } : {}),
+      }));
   }
 
   private held(invocationId: string, ownerToken: string): MemInvocation | null {
@@ -322,6 +369,28 @@ function neverDispatcher(calls: string[]): ProviderDispatchFn {
   };
 }
 
+/**
+ * This suite predates credit admission (§11.3) and its default plan mode
+ * (CONFIRMED_CREDITS_ONLY, see `makePlan`) exercises §9 pipeline mechanics
+ * that have nothing to do with credit-specific behavior — so the harness
+ * wires a trivial ALWAYS-ADMITS port rather than a real ledger fixture
+ * (that lifecycle is exhaustively covered by
+ * ai-control-plane-credit-admission.test.ts). `findCovering` is never
+ * actually consulted by this fake — it bypasses `admitCreditFunded`
+ * entirely — so its return value is irrelevant.
+ */
+const alwaysAdmitCreditPort: RouteCreditAuthorizationPort = {
+  async authorize() {
+    return {
+      admitted: true,
+      handle: { reservationId: "stub-reservation", grantId: "stub-grant" },
+      detail: "stub: always admits (this suite tests §9, not §11.3)",
+    };
+  },
+  async settle() {},
+  async release() {},
+};
+
 interface Harness {
   store: MemStore;
   dispatchCalls: string[];
@@ -382,6 +451,10 @@ function makeHarness(args?: {
     now: args?.now ?? (() => NOW),
     idFactory: () => `id-${(idCounter += 1)}`,
     leaseMs: 120_000,
+    // makePlan()'s default costMode is CONFIRMED_CREDITS_ONLY; wire the
+    // always-admit stub so this §9-focused suite isn't gated by §11.3.
+    creditStore: { async findCovering() { return []; } },
+    creditPort: alwaysAdmitCreditPort,
   });
   return { store, dispatchCalls, queueRows, dispatch };
 }
@@ -497,6 +570,113 @@ describe("§9.2 atomic claim / idempotency semantics", () => {
     });
     expect(applied).toBe(false);
     expect(inv.resultJson).not.toContain("stale write");
+  });
+
+  it("a stale claim with a recorded AMBIGUOUS attempt is forced AMBIGUOUS on steal — never re-dispatched", async () => {
+    const h = makeHarness();
+    const fingerprint = computeRequestFingerprint({
+      taskClass: "brief.daily-summary",
+      entity: "GSE",
+      input: { user: "summarize the slate", maxTokens: 64 },
+      narrowing: null,
+    });
+    // A crashed run: claim, attempt, AMBIGUOUS recorded — but the owner died
+    // BEFORE finalizeFailure, leaving the invocation RUNNING with an expired
+    // lease (the exact §10.1 unproven-funds window).
+    const stale = await h.store.claimInvocation({
+      invocationId: "amb-inv",
+      requestId: "req-invocation-0001",
+      taskClass: "brief.daily-summary",
+      surface: "brief",
+      entity: "GSE",
+      dataClass: "internal",
+      costMode: "CONFIRMED_CREDITS_ONLY",
+      envClass: "test",
+      envClassSource: "explicit",
+      policyVersion: "v",
+      actorType: "SERVICE",
+      actorSubjectId: "s",
+      requestFingerprint: fingerprint,
+      ownerToken: "crashed-owner",
+      leaseMs: 120_000,
+      now: NOW,
+    });
+    expect(stale.kind).toBe("ACQUIRED");
+    await h.store.startAttempt({
+      attemptId: "amb-attempt",
+      invocationId: "amb-inv",
+      ownerToken: "crashed-owner",
+      ordinal: 0,
+      providerRequested: "anthropic-direct",
+      modelRequested: "m",
+      requestFingerprint: fingerprint,
+      policyVersion: "v",
+      attemptNonce: "n",
+      now: NOW,
+    });
+    await h.store.recordAttemptFailure({
+      attemptId: "amb-attempt",
+      invocationId: "amb-inv",
+      ownerToken: "crashed-owner",
+      status: "AMBIGUOUS",
+      providerUsed: "anthropic-direct",
+      errorCode: "SOCKET_DROP",
+      now: NOW,
+    });
+    // 5+ minutes later a replay arrives; the lease is long expired.
+    const later = () => new Date(NOW.getTime() + 300_000);
+    const h2 = makeHarness({ store: h.store, now: later });
+    await expect(h2.dispatch(makePlan())).rejects.toBeInstanceOf(AmbiguousCharge);
+    expect(h2.dispatchCalls).toEqual([]); // unproven funds are NEVER re-spent
+    const inv = [...h.store.invocations.values()][0]!;
+    expect(inv.status).toBe("AMBIGUOUS"); // forced to a durable terminal
+  });
+
+  it("a stale claim with an attempt still open in DISPATCHED (owner died mid-transport) is forced AMBIGUOUS on steal", async () => {
+    const h = makeHarness();
+    const fingerprint = computeRequestFingerprint({
+      taskClass: "brief.daily-summary",
+      entity: "GSE",
+      input: { user: "summarize the slate", maxTokens: 64 },
+      narrowing: null,
+    });
+    await h.store.claimInvocation({
+      invocationId: "open-inv",
+      requestId: "req-invocation-0001",
+      taskClass: "brief.daily-summary",
+      surface: "brief",
+      entity: "GSE",
+      dataClass: "internal",
+      costMode: "CONFIRMED_CREDITS_ONLY",
+      envClass: "test",
+      envClassSource: "explicit",
+      policyVersion: "v",
+      actorType: "SERVICE",
+      actorSubjectId: "s",
+      requestFingerprint: fingerprint,
+      ownerToken: "crashed-owner",
+      leaseMs: 120_000,
+      now: NOW,
+    });
+    await h.store.startAttempt({
+      attemptId: "open-attempt",
+      invocationId: "open-inv",
+      ownerToken: "crashed-owner",
+      ordinal: 0,
+      providerRequested: "anthropic-direct",
+      modelRequested: "m",
+      requestFingerprint: fingerprint,
+      policyVersion: "v",
+      attemptNonce: "n",
+      now: NOW,
+    });
+    // No failure record, no finalize — transport state unknown.
+    const later = () => new Date(NOW.getTime() + 300_000);
+    const h2 = makeHarness({ store: h.store, now: later });
+    await expect(h2.dispatch(makePlan())).rejects.toBeInstanceOf(AmbiguousCharge);
+    expect(h2.dispatchCalls).toEqual([]);
+    const inv = [...h.store.invocations.values()][0]!;
+    expect(inv.status).toBe("AMBIGUOUS");
   });
 
   it("same requestId + different payload → hard conflict, no dispatch (§9.2)", async () => {
@@ -664,6 +844,62 @@ describe("§9.7 observability failure never retries a successful paid call", () 
     expect(outcome.telemetryStatus).toBe("DEGRADED");
     expect(h.queueRows.map((r) => r.kind)).toEqual(["FINALIZE_SUCCESS"]);
     expect(h.dispatchCalls).toEqual(["anthropic-direct"]);
+  });
+
+  it("a store failure during the AMBIGUOUS finalize never swallows the AmbiguousCharge verdict — recovery is queued instead", async () => {
+    const mem = new MemStore();
+    const calls: string[] = [];
+    const flakyStore: AuthoritativeControlStore = {
+      ...memDelegate(mem),
+      finalizeFailure: async () => {
+        throw new StoreUnavailable("store died between failure record and finalize");
+      },
+    };
+    const h = makeHarness({
+      store: flakyStore,
+      dispatchers: {
+        "anthropic-direct": async () => ({
+          kind: "AMBIGUOUS",
+          dispatched: true,
+          errorCode: "SOCKET_DROP",
+        }),
+        bedrock: neverDispatcher(calls),
+      },
+    });
+    // The caller MUST see the ambiguity verdict (never a retryable-looking
+    // StoreUnavailable), and a durable FINALIZE_AMBIGUOUS recovery entry must
+    // be queued so the terminal state is not lost.
+    await expect(h.dispatch(makePlan())).rejects.toBeInstanceOf(AmbiguousCharge);
+    expect(calls).toEqual([]); // the walk still stopped
+    expect(h.queueRows).toEqual([
+      { kind: "FINALIZE_AMBIGUOUS", invocationId: expect.any(String) },
+    ]);
+    // The durable attempt record still carries AMBIGUOUS, so even before the
+    // queue drains, a later steal is forced AMBIGUOUS instead of re-spending.
+    expect(mem.attempts[0]!.status).toBe("AMBIGUOUS");
+  });
+
+  it("a store failure during the all-routes-FAILED finalize keeps the honest ProviderUnavailable and queues FINALIZE_FAILURE", async () => {
+    const mem = new MemStore();
+    const failAll: ProviderDispatchFn = async () => ({
+      kind: "FAILED",
+      dispatched: true,
+      errorCode: "HTTP_529",
+    });
+    const flakyStore: AuthoritativeControlStore = {
+      ...memDelegate(mem),
+      finalizeFailure: async () => {
+        throw new StoreUnavailable("store down at finalize");
+      },
+    };
+    const h = makeHarness({
+      store: flakyStore,
+      dispatchers: { "anthropic-direct": failAll, bedrock: failAll },
+    });
+    await expect(h.dispatch(makePlan())).rejects.toBeInstanceOf(ProviderUnavailable);
+    expect(h.queueRows).toEqual([
+      { kind: "FINALIZE_FAILURE", invocationId: expect.any(String) },
+    ]);
   });
 });
 
@@ -898,6 +1134,45 @@ describe("§9.6 blocked decisions become durable non-dispatchable incidents", ()
     const h = makeHarness({ store: memDelegate(mem) });
     await expect(h.dispatch(makePlan())).rejects.toBeInstanceOf(PolicyBlocked);
     expect(h.dispatchCalls).toEqual([]);
+  });
+
+  it("a transient CONFIGURATION_BLOCKED does NOT permanently poison the idempotency key: once config is fixed, the same request dispatches", async () => {
+    const mem = new MemStore();
+    const request = validRequest();
+    const fingerprint = computeRequestFingerprint({
+      taskClass: request.taskClass,
+      entity: request.entity,
+      input: request.input,
+      narrowing: null,
+    });
+    // A deploy-window config outage recorded a durable BLOCKED incident.
+    await mem.recordBlockedInvocation({
+      invocationId: "cfg-blocked-inv",
+      requestId: request.requestId,
+      taskClass: request.taskClass,
+      surface: "brief",
+      entity: request.entity,
+      dataClass: "internal",
+      costMode: "UNRESOLVED",
+      envClass: "UNRESOLVED",
+      envClassSource: "UNRESOLVED",
+      policyVersion: "UNRESOLVED",
+      actorType: "SERVICE",
+      actorSubjectId: "s",
+      requestFingerprint: fingerprint,
+      blockedReasonCode: "CONFIGURATION_BLOCKED",
+      blockedDetail: "env misconfig during deploy",
+    });
+    // Config fixed; the SAME requestId+payload passes the gates again and
+    // must reclaim the incident row for one normal dispatch.
+    const h = makeHarness({ store: memDelegate(mem) });
+    const outcome = await h.dispatch(makePlan({ request }));
+    expect(outcome.kind).toBe("COMPLETED");
+    expect(h.dispatchCalls).toEqual(["anthropic-direct"]);
+    const row = [...mem.invocations.values()][0]!;
+    expect(row.status).toBe("SUCCEEDED");
+    // The incident record survives as history — never erased.
+    expect(row.blockedReasonCode).toBe("CONFIGURATION_BLOCKED");
   });
 
   it("a recorder failure never masks the authoritative block", async () => {

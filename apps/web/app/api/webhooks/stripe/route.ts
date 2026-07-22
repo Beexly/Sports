@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
-import { db } from "@sports/db";
+import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { tierForPriceId } from "@/lib/billing/price-ids";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
@@ -28,6 +28,28 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.error(`Stripe webhook signature verification failed: ${message}`);
     // Don't echo verifier internals (timestamp/signing detail) back to the caller.
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+  }
+
+  // DURABLE DATABASE IS A HARD PRECONDITION for entitlement writes
+  // (directive 5.2 / section 14): the stub Prisma client would "record" the
+  // event and "sync" the subscription while persisting nothing — silently
+  // acking Stripe and losing the entitlement forever. Fail closed with 503:
+  // Stripe retries the delivery with backoff, which IS the durable path.
+  // Placed after signature verification so only authentic Stripe traffic can
+  // observe store health; the guard records the ops incident line.
+  try {
+    requireDurableWriteStore("stripe-webhook-entitlement");
+  } catch (err) {
+    if (err instanceof DurableWriteStoreUnavailableError) {
+      return NextResponse.json(
+        {
+          error: "Durable store unavailable; retry delivery",
+          code: "durable_write_store_unavailable",
+        },
+        { status: 503 },
+      );
+    }
+    throw err;
   }
 
   // Idempotency: skip already-processed events
@@ -93,6 +115,23 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         );
         await syncSubscription(subscription);
       }
+      // Reconcile the durable CheckoutAttempt (Phase 1P). Best-effort by
+      // design: an unknown attempt id (pre-rollout session, replay, manual
+      // Dashboard checkout) is a warn, never a webhook failure — the
+      // subscription sync above is the entitlement-critical path.
+      await reconcileCheckoutAttempt(session);
+      break;
+    }
+
+    case "checkout.session.expired": {
+      // The Checkout Session lapsed unpaid (Stripe expires them ~24h in, or
+      // on explicit expiry). Converge the durable attempt: terminal EXPIRED,
+      // active intent key RELEASED (originalClientIntentId is immutable and
+      // stays for audit) so the member's next attempt mints a fresh
+      // generation + fresh Stripe idempotency key. Never throws: a miss/DB
+      // hiccup is picked up durably by the repair job, not a webhook 500.
+      const session = event.data.object as Stripe.Checkout.Session;
+      await reconcileExpiredCheckoutAttempt(session);
       break;
     }
 
@@ -186,6 +225,98 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     default:
       // Unhandled event type — ignore
       break;
+  }
+}
+
+/** OR-lookup for a session's attempt: metadata attempt id and/or session id. */
+function attemptLookupsForSession(session: Stripe.Checkout.Session): Record<string, unknown>[] {
+  const attemptId = session.metadata?.["checkoutAttemptId"];
+  const lookups: Record<string, unknown>[] = [];
+  if (attemptId) lookups.push({ id: attemptId });
+  if (session.id) lookups.push({ stripeSessionId: session.id });
+  return lookups;
+}
+
+/**
+ * Mark the durable CheckoutAttempt for a completed Checkout Session as
+ * COMPLETED and attach the resulting subscription id. Looks the attempt up by
+ * the id stamped into session metadata at creation time OR by stripeSessionId
+ * — the metadata path also REPAIRS an attempt whose session bind failed (the
+ * session id is written here). NEVER throws: attempt reconciliation must not
+ * 500 the webhook and trigger a Stripe retry storm — a missed reconcile here
+ * is retried DURABLY by the repair job (lib/billing/checkout-attempt-repair),
+ * which converges completed-but-sync-lagging attempts from Stripe's state.
+ */
+async function reconcileCheckoutAttempt(session: Stripe.Checkout.Session): Promise<void> {
+  try {
+    const attemptId = session.metadata?.["checkoutAttemptId"];
+    const lookups = attemptLookupsForSession(session);
+    if (lookups.length === 0) return;
+
+    const subscriptionId =
+      typeof session.subscription === "string"
+        ? session.subscription
+        : session.subscription?.id ?? null;
+
+    const updated = await db.checkoutAttempt.updateMany({
+      where: { OR: lookups },
+      data: {
+        status: "COMPLETED",
+        completedAt: new Date(),
+        // Repair a failed session bind: completion proves the session's identity.
+        ...(session.id ? { stripeSessionId: session.id } : {}),
+        ...(subscriptionId ? { stripeSubscriptionId: subscriptionId } : {}),
+      },
+    });
+    if (updated.count === 0) {
+      console.warn(
+        `[stripe] checkout.session.completed for unknown checkout attempt ` +
+          `${attemptId ?? "(none)"} (session ${session.id}) — nothing to reconcile`,
+      );
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.warn(
+      `[stripe] checkout-attempt reconciliation failed for session ${session.id}: ${message}`,
+    );
+  }
+}
+
+/**
+ * Converge the durable CheckoutAttempt for an EXPIRED Checkout Session:
+ * status EXPIRED, active intent key released in the SAME update (the
+ * immutable originalClientIntentId keeps the audit trail — directive 5.4).
+ * Only non-terminal states are touched so a completed attempt can never be
+ * regressed by a late expiry event. NEVER throws (same doctrine as
+ * reconcileCheckoutAttempt; the repair job is the durable backstop).
+ */
+async function reconcileExpiredCheckoutAttempt(session: Stripe.Checkout.Session): Promise<void> {
+  try {
+    const lookups = attemptLookupsForSession(session);
+    if (lookups.length === 0) return;
+
+    const updated = await db.checkoutAttempt.updateMany({
+      where: {
+        OR: lookups,
+        status: { in: ["CREATED", "REQUEST_IN_FLIGHT", "SESSION_CREATED", "AMBIGUOUS"] },
+      },
+      data: {
+        status: "EXPIRED",
+        activeClientIntentId: null,
+        lastErrorKind: "session_expired",
+      },
+    });
+    if (updated.count === 0) {
+      console.warn(
+        `[stripe] checkout.session.expired for unknown/terminal checkout attempt ` +
+          `(session ${session.id}) — nothing to reconcile`,
+      );
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.warn(
+      `[stripe] checkout-attempt expiry reconciliation failed for session ${session.id}: ${message}`,
+    );
   }
 }
 
