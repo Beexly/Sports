@@ -31,21 +31,107 @@ const mocks = vi.hoisted(() => ({
   snapshotUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   snapshotFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   snapshotCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  // Phase 1E — settlement evidence + transactional outbox
+  transaction: vi.fn<(fn: (tx: unknown) => Promise<unknown>) => Promise<unknown>>(),
+  obsCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  obsFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
+  anomalyFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  anomalyFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
+  anomalyUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  anomalyUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  decisionCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  outboxCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  // Hardening 6.1/6.3/6.10 — durable run identity, owner request + decision
+  // events, post-settlement work state.
+  runUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  ownerRequestUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  decisionEventCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  workCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  workUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  // Deletion tripwires — Phase 1E evidence is append-only. These exist on
+  // the mock ONLY so the suite can assert they are NEVER invoked.
+  obsDelete: vi.fn(),
+  obsDeleteMany: vi.fn(),
+  anomalyDelete: vi.fn(),
+  anomalyDeleteMany: vi.fn(),
+  decisionDelete: vi.fn(),
+  decisionDeleteMany: vi.fn(),
+  outboxDelete: vi.fn(),
+  outboxDeleteMany: vi.fn(),
 }));
 
-vi.mock("@sports/db", () => ({
-  db: {
-    game: { findUnique: mocks.gameFindUnique, update: mocks.gameUpdate },
-    odds: { findMany: mocks.oddsFindMany },
-    pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany },
-    openingLine: { findUnique: mocks.openingLineFindUnique },
-    pickSignalSnapshot: {
-      updateMany: mocks.snapshotUpdateMany,
-      findUnique: mocks.snapshotFindUnique,
-      create: mocks.snapshotCreate,
+vi.mock("@sports/db", () => {
+  // Shared delegates: the interactive-transaction stub hands BACK the same
+  // delegates, mirroring Prisma's tx client — so assertions on e.g.
+  // pickUpdateMany apply whether the call rode inside $transaction or not,
+  // and the suite can verify which calls happened transactionally by
+  // inspecting mocks.transaction.
+  const settlementObservation = {
+    createMany: mocks.obsCreateMany,
+    findMany: mocks.obsFindMany,
+    delete: mocks.obsDelete,
+    deleteMany: mocks.obsDeleteMany,
+  };
+  const settlementAnomaly = {
+    findUnique: mocks.anomalyFindUnique,
+    findMany: mocks.anomalyFindMany,
+    upsert: mocks.anomalyUpsert,
+    updateMany: mocks.anomalyUpdateMany,
+    delete: mocks.anomalyDelete,
+    deleteMany: mocks.anomalyDeleteMany,
+  };
+  const settlementDecision = {
+    create: mocks.decisionCreate,
+    delete: mocks.decisionDelete,
+    deleteMany: mocks.decisionDeleteMany,
+  };
+  const ownerDecisionRequest = { upsert: mocks.ownerRequestUpsert };
+  const settlementDecisionEvent = { create: mocks.decisionEventCreate };
+  const pickSettlementEvent = {
+    create: mocks.outboxCreate,
+    delete: mocks.outboxDelete,
+    deleteMany: mocks.outboxDeleteMany,
+  };
+  const settlementRun = { upsert: mocks.runUpsert };
+  const postSettlementWork = {
+    createMany: mocks.workCreateMany,
+    updateMany: mocks.workUpdateMany,
+  };
+  const pick = { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany };
+  const tx = {
+    pick,
+    settlementObservation,
+    settlementAnomaly,
+    settlementDecision,
+    ownerDecisionRequest,
+    settlementDecisionEvent,
+    pickSettlementEvent,
+    postSettlementWork,
+  };
+  mocks.transaction.mockImplementation(async (fn: (t: unknown) => Promise<unknown>) => fn(tx));
+  return {
+    db: {
+      $transaction: mocks.transaction,
+      game: { findUnique: mocks.gameFindUnique, update: mocks.gameUpdate },
+      odds: { findMany: mocks.oddsFindMany },
+      pick,
+      openingLine: { findUnique: mocks.openingLineFindUnique },
+      pickSignalSnapshot: {
+        updateMany: mocks.snapshotUpdateMany,
+        findUnique: mocks.snapshotFindUnique,
+        create: mocks.snapshotCreate,
+      },
+      settlementObservation,
+      settlementAnomaly,
+      settlementDecision,
+      ownerDecisionRequest,
+      settlementDecisionEvent,
+      pickSettlementEvent,
+      settlementRun,
+      postSettlementWork,
     },
-  },
-}));
+  };
+});
 
 vi.mock("@sports/data-ingestion", () => ({
   OddsApiClient: vi.fn().mockImplementation(() => ({ getScores: mocks.getScores })),
@@ -63,7 +149,12 @@ vi.mock("@sports/prediction-engine", () => ({
     pick.clvLockLine ?? pick.line,
 }));
 
-import { settleSport } from "../settle-sport.js";
+import {
+  settleSport,
+  SCORELESS_REVIEW_THRESHOLD,
+  SCORELESS_COMPLETED_ANOMALY,
+} from "../settle-sport.js";
+import { fingerprintScorePayload } from "../settlement-evidence.js";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
 
@@ -122,6 +213,52 @@ function dbGame(picks: Record<string, unknown>[], overrides: Record<string, unkn
 describe("settleSport", () => {
   beforeEach(() => {
     for (const mock of Object.values(mocks)) mock.mockReset();
+
+    // Re-arm the transaction stub (mockReset wiped its implementation): the
+    // callback receives the shared tx delegates defined in the vi.mock above.
+    mocks.transaction.mockImplementation(async (fn: (t: unknown) => Promise<unknown>) =>
+      fn({
+        pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany },
+        settlementObservation: { createMany: mocks.obsCreateMany, findMany: mocks.obsFindMany },
+        settlementAnomaly: {
+          findUnique: mocks.anomalyFindUnique,
+          findMany: mocks.anomalyFindMany,
+          upsert: mocks.anomalyUpsert,
+          updateMany: mocks.anomalyUpdateMany,
+        },
+        settlementDecision: { create: mocks.decisionCreate },
+        ownerDecisionRequest: { upsert: mocks.ownerRequestUpsert },
+        settlementDecisionEvent: { create: mocks.decisionEventCreate },
+        pickSettlementEvent: { create: mocks.outboxCreate },
+        postSettlementWork: {
+          createMany: mocks.workCreateMany,
+          updateMany: mocks.workUpdateMany,
+        },
+      }),
+    );
+
+    // Evidence/outbox defaults: a fresh first sighting (1 distinct run, new
+    // anomaly), no anomaly to resolve, outbox append succeeds. The durable
+    // run identity (6.1) resolves to run-1.
+    mocks.runUpsert.mockResolvedValue({ id: "run-1", startedAt: new Date() });
+    mocks.obsCreateMany.mockResolvedValue({ count: 1 });
+    mocks.obsFindMany.mockResolvedValue([
+      {
+        settlementRunId: "run-1",
+        payloadFingerprint: "snap-1",
+        observedAt: new Date("2026-06-11T00:00:00Z"),
+      },
+    ]);
+    mocks.anomalyFindUnique.mockResolvedValue(null);
+    mocks.anomalyFindMany.mockResolvedValue([]);
+    mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
+    mocks.anomalyUpdateMany.mockResolvedValue({ count: 0 });
+    mocks.decisionCreate.mockResolvedValue({});
+    mocks.ownerRequestUpsert.mockResolvedValue({});
+    mocks.decisionEventCreate.mockResolvedValue({});
+    mocks.outboxCreate.mockResolvedValue({});
+    mocks.workCreateMany.mockResolvedValue({ count: 2 });
+    mocks.workUpdateMany.mockResolvedValue({ count: 1 });
 
     // Healthy defaults: one completed game, one pending pick, no CLV close.
     mocks.getScores.mockResolvedValue({ data: ["raw"] });
@@ -391,6 +528,594 @@ describe("settleSport", () => {
       // close it is never called.
       expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
       expect(mocks.pickUpdate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("settlement evidence — completed-but-scoreless (Phase 1E)", () => {
+    beforeEach(() => {
+      // Feed says completed=true but drops the scores while the game is
+      // still open on our side.
+      mocks.normalizeScores.mockReturnValue([
+        completedScore({ homeScore: null, awayScore: null }),
+      ]);
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick()], { status: "SCHEDULED", externalId: "ext-1" }),
+      );
+    });
+
+    it("records a deduplicated observation in one transaction — never a counter, never a status change, never a void", async () => {
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({
+        status: "success",
+        observationsRecorded: 1,
+        anomaliesOpened: 1,
+        anomaliesPromoted: 0,
+      });
+
+      // Everything rode inside $transaction.
+      expect(mocks.transaction).toHaveBeenCalled();
+
+      // Insert-or-noop with the dedupe key components: run id + deterministic
+      // payload fingerprint (skipDuplicates → INSERT ON CONFLICT DO NOTHING).
+      const createArgs = mocks.obsCreateMany.mock.calls[0]![0] as {
+        data: Array<Record<string, unknown>>;
+        skipDuplicates: boolean;
+      };
+      expect(createArgs.skipDuplicates).toBe(true);
+      const row = createArgs.data[0]!;
+      expect(row["gameId"]).toBe("game-1");
+      expect(typeof row["settlementRunId"]).toBe("string");
+      expect(row["payloadFingerprint"]).toBe(
+        fingerprintScorePayload({
+          externalId: "ext-1",
+          completed: true,
+          homeScore: null,
+          awayScore: null,
+        }),
+      );
+      expect(row["observedSourceStatus"]).toBe(SCORELESS_COMPLETED_ANOMALY);
+      expect(row["homeScorePresent"]).toBe(false);
+      expect(row["awayScorePresent"]).toBe(false);
+
+      // The game row itself stays exactly as main left it: an empty no-op
+      // update — no increment column, no flag column, no inferred status.
+      const gameUpdateData = (mocks.gameUpdate.mock.calls[0]![0] as { data: unknown }).data;
+      expect(gameUpdateData).toEqual({});
+
+      // Picks are NEVER touched from a scoreless sighting.
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+      expect(mocks.outboxCreate).not.toHaveBeenCalled();
+    });
+
+    it("resolves ONE durable settlement run (create-or-retrieve by idempotency key) and stamps every observation with it (6.1)", async () => {
+      mocks.normalizeScores.mockReturnValue([
+        completedScore({ externalId: "ext-1", homeScore: null, awayScore: null }),
+        completedScore({ externalId: "ext-2", homeScore: null, awayScore: null }),
+      ]);
+      mocks.gameFindUnique
+        .mockResolvedValueOnce(dbGame([pendingPick()], { id: "game-1", status: "SCHEDULED" }))
+        .mockResolvedValueOnce(dbGame([pendingPick()], { id: "game-2", status: "LIVE" }));
+
+      await settleSport(SPORT, "key", gates(), "[t]", { scheduledWindow: "2026-06-11T00Z" });
+
+      // The run is created-or-retrieved BEFORE evidence writes, keyed on
+      // source + sport + scheduledWindow + sourceSnapshotFingerprint — so a
+      // scheduler retry upserts into the SAME row instead of minting a new
+      // random id (the pre-hardening corroboration hole).
+      expect(mocks.runUpsert).toHaveBeenCalledTimes(1);
+      const upsertArgs = mocks.runUpsert.mock.calls[0]![0] as {
+        where: { idempotencyKey: string };
+        create: Record<string, unknown>;
+      };
+      expect(upsertArgs.where.idempotencyKey).toMatch(
+        /^the-odds-api:americanfootball_nfl:2026-06-11T00Z:[0-9a-f]{64}$/,
+      );
+      expect(upsertArgs.create["scheduledWindow"]).toBe("2026-06-11T00Z");
+
+      const runIds = mocks.obsCreateMany.mock.calls.map(
+        (c) => ((c[0] as { data: Array<Record<string, unknown>> }).data[0]!)["settlementRunId"],
+      );
+      expect(runIds).toHaveLength(2);
+      expect(runIds[0]).toBe("run-1"); // the DURABLE id from the upsert
+      expect(runIds[1]).toBe("run-1"); // same run for every observation
+      // And each observation carries the run's whole-snapshot fingerprint.
+      const snapFps = mocks.obsCreateMany.mock.calls.map(
+        (c) =>
+          ((c[0] as { data: Array<Record<string, unknown>> }).data[0]!)[
+            "sourceSnapshotFingerprint"
+          ],
+      );
+      expect(String(snapFps[0])).toMatch(/^[0-9a-f]{64}$/);
+      expect(snapFps[0]).toBe(snapFps[1]);
+    });
+
+    it("a live-window retry storm can NEVER promote: distinct run ids with one per-game payload and no temporal separation corroborate once (6.1)", async () => {
+      // Three DIFFERENT run ids (e.g. retries that crossed a window
+      // boundary), but byte-identical source snapshots seconds apart.
+      const at = new Date("2026-06-11T00:00:00Z");
+      mocks.obsFindMany.mockResolvedValue([
+        { settlementRunId: "run-1", payloadFingerprint: "same-payload", observedAt: at },
+        {
+          settlementRunId: "run-2",
+          payloadFingerprint: "same-payload",
+          observedAt: new Date(at.getTime() + 5_000),
+        },
+        {
+          settlementRunId: "run-3",
+          payloadFingerprint: "same-payload",
+          observedAt: new Date(at.getTime() + 10_000),
+        },
+      ]);
+      mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
+      mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesPromoted).toBe(0);
+      expect(mocks.ownerRequestUpsert).not.toHaveBeenCalled();
+      expect(mocks.decisionEventCreate).not.toHaveBeenCalled();
+    });
+
+    it("a retried run/payload adds NO corroboration (unique-violation no-op path)", async () => {
+      // The dedupe insert hits ON CONFLICT DO NOTHING: count 0. Distinct-run
+      // derivation still sees only the runs that genuinely observed it.
+      mocks.obsCreateMany.mockResolvedValue({ count: 0 });
+      mocks.obsFindMany.mockResolvedValue([
+        {
+          settlementRunId: "run-1",
+          payloadFingerprint: "snap-1",
+          observedAt: new Date("2026-06-11T00:00:00Z"),
+        },
+        {
+          settlementRunId: "run-2",
+          payloadFingerprint: "snap-2",
+          observedAt: new Date("2026-06-11T01:00:00Z"),
+        },
+      ]);
+      mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.observationsRecorded).toBe(0);
+      expect(result.anomaliesOpened).toBe(0);
+      expect(result.anomaliesPromoted).toBe(0);
+      // 2 corroborating runs < threshold(3): promotion never attempted.
+      expect(mocks.ownerRequestUpsert).not.toHaveBeenCalled();
+      expect(mocks.decisionCreate).not.toHaveBeenCalled();
+      // Corroboration is DERIVED (distinct run ids), never an in-place
+      // increment anywhere.
+      const anyIncrement = mocks.gameUpdate.mock.calls.some((c) =>
+        JSON.stringify(c[0]).includes("increment"),
+      );
+      expect(anyIncrement).toBe(false);
+    });
+
+    it("crossing the threshold (3 GENUINELY DISTINCT per-game payloads) promotes exactly once: idempotent OwnerDecisionRequest + SYSTEM decision event (6.1/6.3)", async () => {
+      mocks.obsFindMany.mockResolvedValue([
+        {
+          settlementRunId: "run-1",
+          payloadFingerprint: "snap-1",
+          observedAt: new Date("2026-06-11T00:00:00Z"),
+        },
+        {
+          settlementRunId: "run-2",
+          payloadFingerprint: "snap-2",
+          observedAt: new Date("2026-06-11T01:00:00Z"),
+        },
+        {
+          settlementRunId: "run-3",
+          payloadFingerprint: "snap-3",
+          observedAt: new Date("2026-06-11T02:00:00Z"),
+        },
+      ]);
+      mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
+      mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
+      mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 }); // won the promotion race
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesPromoted).toBe(1);
+      expect(SCORELESS_REVIEW_THRESHOLD).toBe(3);
+
+      // Promotion is guarded on state:"OPEN" — the race gate.
+      expect(mocks.anomalyUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "anomaly-1", state: "OPEN" },
+          data: expect.objectContaining({ state: "OWNER_REVIEW" }),
+        }),
+      );
+      // ONE idempotent queue request (unique anomalyId is the backstop;
+      // upsert so a re-promotion after a reopen refreshes the SAME row)...
+      expect(mocks.ownerRequestUpsert).toHaveBeenCalledTimes(1);
+      expect(mocks.ownerRequestUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { anomalyId: "anomaly-1" },
+          create: expect.objectContaining({
+            anomalyId: "anomaly-1",
+            requestKind: "SCORELESS_COMPLETED_REVIEW",
+            context: expect.objectContaining({ corroboratingRunCount: 3, threshold: 3 }),
+          }),
+        }),
+      );
+      // ...plus ONE append-only SYSTEM decision event carrying the actor
+      // receipt and prior/next state — it requests review, it decides
+      // nothing, and it never impersonates an owner.
+      expect(mocks.decisionEventCreate).toHaveBeenCalledTimes(1);
+      expect(mocks.decisionEventCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            anomalyId: "anomaly-1",
+            decisionKind: "REVIEW_REQUESTED",
+            actorType: "SYSTEM",
+            priorState: "OPEN",
+            nextState: "OWNER_REVIEW",
+          }),
+        }),
+      );
+      // The legacy single-decision table is no longer consumed at promotion.
+      expect(mocks.decisionCreate).not.toHaveBeenCalled();
+      // STILL never voids or infers: picks untouched.
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it("double-promotion race: the losing transaction (updateMany count 0) never writes a second receipt", async () => {
+      // Both racers derived >=3 distinct runs; this transaction re-read the
+      // anomaly as still OPEN, but the concurrent winner promoted it between
+      // the read and the guarded update — so the guard matches 0 rows.
+      mocks.obsFindMany.mockResolvedValue([
+        {
+          settlementRunId: "run-1",
+          payloadFingerprint: "snap-1",
+          observedAt: new Date("2026-06-11T00:00:00Z"),
+        },
+        {
+          settlementRunId: "run-2",
+          payloadFingerprint: "snap-2",
+          observedAt: new Date("2026-06-11T01:00:00Z"),
+        },
+        {
+          settlementRunId: "run-3",
+          payloadFingerprint: "snap-3",
+          observedAt: new Date("2026-06-11T02:00:00Z"),
+        },
+      ]);
+      mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
+      mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
+      mocks.anomalyUpdateMany.mockResolvedValue({ count: 0 }); // lost the race
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesPromoted).toBe(0);
+      expect(mocks.ownerRequestUpsert).not.toHaveBeenCalled();
+      expect(mocks.decisionEventCreate).not.toHaveBeenCalled();
+      expect(mocks.decisionCreate).not.toHaveBeenCalled();
+    });
+
+    it("an anomaly already in OWNER_REVIEW is never re-promoted and never gets a second receipt", async () => {
+      mocks.obsFindMany.mockResolvedValue([
+        ["run-1", "snap-1", 0],
+        ["run-2", "snap-2", 1],
+        ["run-3", "snap-3", 2],
+        ["run-4", "snap-4", 3],
+      ].map(([run, snap, h]) => ({
+        settlementRunId: run as string,
+        payloadFingerprint: snap as string,
+        observedAt: new Date(Date.UTC(2026, 5, 11, h as number)),
+      })));
+      mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OWNER_REVIEW", resolvedAt: null });
+      mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OWNER_REVIEW", resolvedAt: null });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesPromoted).toBe(0);
+      // No promotion attempt at all (the guard is not even exercised) and
+      // certainly no second request or receipt.
+      expect(mocks.anomalyUpdateMany).not.toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ state: "OWNER_REVIEW" }) }),
+      );
+      expect(mocks.ownerRequestUpsert).not.toHaveBeenCalled();
+      expect(mocks.decisionCreate).not.toHaveBeenCalled();
+    });
+
+    it("terminal-game late source regression: FINAL games never enter the evidence path (preserved from main)", async () => {
+      mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()], { status: "FINAL" }));
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({
+        status: "success",
+        gamesSettled: 0,
+        picksSettled: 0,
+        observationsRecorded: 0,
+        anomaliesOpened: 0,
+      });
+      // Exactly main's behavior: the harmless empty update, nothing else.
+      expect((mocks.gameUpdate.mock.calls[0]![0] as { data: unknown }).data).toEqual({});
+      expect(mocks.transaction).not.toHaveBeenCalled();
+      expect(mocks.obsCreateMany).not.toHaveBeenCalled();
+    });
+
+    it("a RESOLVED anomaly whose condition RECURS is REOPENED with an append-only SYSTEM event — never silent forever", async () => {
+      const resolvedAt = new Date("2026-06-10T00:00:00Z");
+      mocks.anomalyFindUnique.mockResolvedValue({
+        id: "anomaly-1",
+        state: "RESOLVED",
+        resolvedAt,
+      });
+      mocks.anomalyUpsert.mockResolvedValue({
+        id: "anomaly-1",
+        state: "RESOLVED",
+        resolvedAt,
+      });
+      mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 }); // reopen wins
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesReopened).toBe(1);
+      // State-scoped reopen from the TRUE prior state...
+      expect(mocks.anomalyUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "anomaly-1", state: "RESOLVED" },
+          data: expect.objectContaining({ state: "OPEN" }),
+        }),
+      );
+      // ...with an append-only SYSTEM REOPENED event (never impersonating
+      // an owner) recording prior/next state.
+      expect(mocks.decisionEventCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            anomalyId: "anomaly-1",
+            decisionKind: "REOPENED",
+            actorType: "SYSTEM",
+            priorState: "RESOLVED",
+            nextState: "OPEN",
+          }),
+        }),
+      );
+      // Corroboration counted ONLY post-resolution evidence: the in-tx
+      // observation query was bounded by the resolvedAt boundary.
+      expect(mocks.obsFindMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ observedAt: { gt: resolvedAt } }),
+        }),
+      );
+      // 1 post-resolution corroborating run < threshold: NOT re-promoted
+      // from the owner's already-ruled-on evidence.
+      expect(result.anomaliesPromoted).toBe(0);
+      expect(mocks.ownerRequestUpsert).not.toHaveBeenCalled();
+    });
+
+    it("a DISMISSED anomaly re-promotes only from POST-dismissal corroboration, refreshing the SAME queue request", async () => {
+      const resolvedAt = new Date("2026-06-10T00:00:00Z");
+      mocks.anomalyFindUnique.mockResolvedValue({
+        id: "anomaly-1",
+        state: "DISMISSED",
+        resolvedAt,
+      });
+      mocks.anomalyUpsert.mockResolvedValue({
+        id: "anomaly-1",
+        state: "DISMISSED",
+        resolvedAt,
+      });
+      mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 }); // reopen + promotion both win
+      // Three genuinely separated post-dismissal runs (the filtered query
+      // only ever returns post-boundary rows).
+      mocks.obsFindMany.mockResolvedValue([
+        {
+          settlementRunId: "run-10",
+          payloadFingerprint: "same-payload",
+          observedAt: new Date("2026-06-11T00:00:00Z"),
+        },
+        {
+          settlementRunId: "run-11",
+          payloadFingerprint: "same-payload",
+          observedAt: new Date("2026-06-11T01:00:00Z"),
+        },
+        {
+          settlementRunId: "run-12",
+          payloadFingerprint: "same-payload",
+          observedAt: new Date("2026-06-11T02:00:00Z"),
+        },
+      ]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesReopened).toBe(1);
+      expect(result.anomaliesPromoted).toBe(1);
+      // The idempotent queue request is UPSERTED — one row per anomaly,
+      // context refreshed for the new promotion; history lives in events.
+      expect(mocks.ownerRequestUpsert).toHaveBeenCalledTimes(1);
+      expect(mocks.ownerRequestUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { anomalyId: "anomaly-1" },
+          update: expect.objectContaining({ requestKind: "SCORELESS_COMPLETED_REVIEW" }),
+        }),
+      );
+      // Both the REOPENED and the REVIEW_REQUESTED events were appended.
+      const kinds = mocks.decisionEventCreate.mock.calls.map(
+        (c) => (c[0] as { data: { decisionKind: string } }).data.decisionKind,
+      );
+      expect(kinds).toEqual(["REOPENED", "REVIEW_REQUESTED"]);
+    });
+
+    it("an evidence write failure is isolated — settlement still succeeds", async () => {
+      mocks.obsCreateMany.mockRejectedValue(new Error("evidence table locked"));
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.observationsRecorded).toBe(0);
+    });
+
+    it("APPEND-ONLY: no delete of observations, anomalies, decisions, or outbox rows — ever", async () => {
+      // Run both the evidence path and (separately re-mocked) a normal
+      // settle+resolve pass, then assert none of the deletion tripwires fired.
+      await settleSport(SPORT, "key", gates());
+      mocks.normalizeScores.mockReturnValue([completedScore()]);
+      mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()], { status: "SCHEDULED" }));
+      mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 });
+      await settleSport(SPORT, "key", gates());
+
+      for (const tripwire of [
+        mocks.obsDelete,
+        mocks.obsDeleteMany,
+        mocks.anomalyDelete,
+        mocks.anomalyDeleteMany,
+        mocks.decisionDelete,
+        mocks.decisionDeleteMany,
+        mocks.outboxDelete,
+        mocks.outboxDeleteMany,
+      ]) {
+        expect(tripwire).not.toHaveBeenCalled();
+      }
+    });
+  });
+
+  describe("anomaly resolution — real scores arrive later (Phase 1E)", () => {
+    it("marks OPEN/OWNER_REVIEW anomalies RESOLVED and appends a SYSTEM decision event with the true prior state (6.3)", async () => {
+      // Default fixtures: completed game WITH scores; one anomaly open.
+      mocks.anomalyFindMany.mockResolvedValue([{ id: "anomaly-1", state: "OWNER_REVIEW", resolvedAt: null }]);
+      mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesResolved).toBe(1);
+      // State-scoped exactly-once transition...
+      expect(mocks.anomalyUpdateMany).toHaveBeenCalledWith({
+        where: { id: "anomaly-1", state: "OWNER_REVIEW" },
+        data: {
+          state: "RESOLVED",
+          resolutionActor: "system:settlement-pipeline",
+          resolutionReason: "scores-arrived",
+          resolvedAt: expect.any(Date),
+        },
+      });
+      // ...with an append-only SYSTEM event recording prior/next state. A
+      // SYSTEM resolution never impersonates an owner.
+      expect(mocks.decisionEventCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            anomalyId: "anomaly-1",
+            decisionKind: "RESOLVE_SCORES_ARRIVED",
+            actorType: "SYSTEM",
+            priorState: "OWNER_REVIEW",
+            nextState: "RESOLVED",
+          }),
+        }),
+      );
+      // Resolution NEVER deletes the history (the rejected #157 reset it).
+      expect(mocks.obsDeleteMany).not.toHaveBeenCalled();
+      expect(mocks.decisionDeleteMany).not.toHaveBeenCalled();
+      // And settlement itself proceeded normally.
+      expect(result.picksSettled).toBe(1);
+    });
+
+    it("the resolution race loser (updateMany count 0) appends NO decision event", async () => {
+      mocks.anomalyFindMany.mockResolvedValue([{ id: "anomaly-1", state: "OPEN", resolvedAt: null }]);
+      mocks.anomalyUpdateMany.mockResolvedValue({ count: 0 }); // concurrent run won
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.anomaliesResolved).toBe(0);
+      expect(mocks.decisionEventCreate).not.toHaveBeenCalled();
+    });
+
+    it("a resolution failure never blocks settlement", async () => {
+      mocks.anomalyFindMany.mockRejectedValue(new Error("anomaly table locked"));
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(result.anomaliesResolved).toBe(0);
+    });
+  });
+
+  describe("transactional outbox (Phase 1E)", () => {
+    it("appends exactly one PickSettlementEvent per settled pick, inside the same transaction as the pick update", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([pendingPick({ id: "pick-1" }), pendingPick({ id: "pick-2" })]),
+      );
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.picksSettled).toBe(2);
+      expect(result.outboxAppended).toBe(2);
+      // One $transaction per pick settle; the same callback performed BOTH
+      // the pick update and the outbox append (mock-proven atomicity — the
+      // real guarantee is Prisma's interactive transaction; the unique
+      // pickId constraint is verified against real Postgres separately).
+      expect(mocks.transaction).toHaveBeenCalledTimes(2);
+      expect(mocks.outboxCreate).toHaveBeenCalledTimes(2);
+      expect(mocks.outboxCreate).toHaveBeenCalledWith({
+        data: {
+          pickId: "pick-1",
+          gameId: "game-1",
+          result: "WIN",
+          settledAt: expect.any(Date),
+          status: "PENDING",
+        },
+      });
+      // Durable post-settlement work-state rides in the SAME transaction
+      // (6.10): CLV + snapshot work is recorded before the commit, so a
+      // crash before those side tasks leaves a repairable PENDING row.
+      expect(mocks.workCreateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: [
+            { subjectId: "pick-1", kind: "CLV_GRADE" },
+            { subjectId: "pick-1", kind: "SNAPSHOT_OUTCOME" },
+          ],
+          skipDuplicates: true,
+        }),
+      );
+    });
+
+    it("the settle-race loser (updateMany count 0) appends NO outbox row", async () => {
+      mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.picksSettled).toBe(0);
+      expect(result.outboxAppended).toBe(0);
+      expect(mocks.outboxCreate).not.toHaveBeenCalled();
+    });
+
+    it("a failed transaction (e.g. outbox append blows up) settles nothing for that pick and counts nothing", async () => {
+      // The whole transaction rejects — pick update and outbox append fail
+      // together (atomicity), and settlement of the SPORT still returns
+      // failed-status honestly at the sport level... no: a per-pick throw is
+      // caught at the sport level try/catch, reported as failed.
+      mocks.outboxCreate.mockRejectedValue(new Error("outbox insert failed"));
+      mocks.transaction.mockImplementation(async (fn: (t: unknown) => Promise<unknown>) => {
+        // Simulate Prisma rolling back the interactive tx: the callback's
+        // rejection propagates and nothing committed.
+        return fn({
+          pick: { update: mocks.pickUpdate, updateMany: mocks.pickUpdateMany },
+          pickSettlementEvent: { create: mocks.outboxCreate },
+          settlementObservation: { createMany: mocks.obsCreateMany, findMany: mocks.obsFindMany },
+          settlementAnomaly: {
+            findUnique: mocks.anomalyFindUnique,
+            findMany: mocks.anomalyFindMany,
+            upsert: mocks.anomalyUpsert,
+            updateMany: mocks.anomalyUpdateMany,
+          },
+          settlementDecision: { create: mocks.decisionCreate },
+          ownerDecisionRequest: { upsert: mocks.ownerRequestUpsert },
+          settlementDecisionEvent: { create: mocks.decisionEventCreate },
+          postSettlementWork: {
+            createMany: mocks.workCreateMany,
+            updateMany: mocks.workUpdateMany,
+          },
+        });
+      });
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("failed");
+      expect(result.picksSettled).toBe(0);
+      expect(result.outboxAppended).toBe(0);
     });
   });
 });
