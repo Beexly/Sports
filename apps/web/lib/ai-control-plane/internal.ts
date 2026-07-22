@@ -64,6 +64,18 @@ export {
   type FinalizeFailureInput,
   type BlockedInvocationInput,
 } from "./control-store";
+// Track A (exactly-once runtime handoff 2026-07-22): the idempotent
+// event-ledger read helpers. The write side is inline in control-store.ts's
+// finalizeSuccess/finalizeFailure/recordAttemptFailure — see event-ledger.ts's
+// own doc comment for why it is not duplicated here.
+export {
+  deriveControlEventId,
+  alreadyProcessed,
+  markProcessed,
+  readRecentEvents,
+  type ControlEventRow,
+  type MarkProcessedResult,
+} from "./event-ledger";
 export {
   ObservabilitySink,
   claimRecoveryBatch,

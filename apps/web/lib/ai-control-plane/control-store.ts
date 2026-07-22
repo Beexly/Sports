@@ -580,20 +580,43 @@ export function createPgControlStore(
     },
 
     async startAttempt(input: StartAttemptInput): Promise<void> {
+      // Same same-statement ledger pattern as the finalize paths: the
+      // `ledger` CTE is gated on the attempt INSERT actually happening
+      // (`att`), so a fenced-out or expired-lease caller writes NEITHER the
+      // attempt row NOR the ATTEMPT_STARTED event. This is the one non-
+      // terminal event Track A emits, and it exists specifically so a
+      // projection over a ledger window can SEE a pending (DISPATCHED,
+      // not-yet-terminal) attempt — without it, a window of only terminal
+      // events could never witness the two-attempts-Pending-on-one-
+      // invocation CTI class the projection is meant to detect. The event id
+      // (`${attemptId}:ATTEMPT_STARTED`) is permanently unique: an attempt id
+      // is inserted at most once (the `ai_attempts` (invocationId, ordinal)
+      // unique key + this fenced INSERT), so a retried startAttempt for the
+      // same attemptId matches zero rows in `att` and writes zero ledger rows.
       const rows = await sql.query<{ id: string }>(
-        `INSERT INTO "ai_attempts"
-           ("id", "invocationId", "ordinal", "providerRequested",
-            "providerUsed", "modelRequested", "status", "startedAt",
-            "requestFingerprint", "policyVersion", "attemptNonce")
-         SELECT $1, $2, $3, $4, NULL, $5, 'DISPATCHED', $6, $7, $8, $9
-          WHERE EXISTS (
-            SELECT 1 FROM "ai_invocations"
-             WHERE "id" = $2
-               AND "status" = 'RUNNING'
-               AND "executionOwnerToken" = $10
-               AND "leaseExpiresAt" > $6
-          )
-         RETURNING "id"`,
+        `WITH att AS (
+           INSERT INTO "ai_attempts"
+             ("id", "invocationId", "ordinal", "providerRequested",
+              "providerUsed", "modelRequested", "status", "startedAt",
+              "requestFingerprint", "policyVersion", "attemptNonce")
+           SELECT $1, $2, $3, $4, NULL, $5, 'DISPATCHED', $6, $7, $8, $9
+            WHERE EXISTS (
+              SELECT 1 FROM "ai_invocations"
+               WHERE "id" = $2
+                 AND "status" = 'RUNNING'
+                 AND "executionOwnerToken" = $10
+                 AND "leaseExpiresAt" > $6
+            )
+           RETURNING "id"
+         ), ledger AS (
+           INSERT INTO "control_event_ledger"
+             ("eventId", "source", "sourceId", "eventType", "payload")
+           SELECT $11, 'ai_attempt', $1, 'ATTEMPT_STARTED', $12::jsonb
+            WHERE EXISTS (SELECT 1 FROM att)
+           ON CONFLICT ("eventId") DO NOTHING
+           RETURNING "eventId"
+         )
+         SELECT "id" FROM att`,
         [
           input.attemptId,
           input.invocationId,
@@ -605,6 +628,15 @@ export function createPgControlStore(
           input.policyVersion,
           input.attemptNonce,
           input.ownerToken,
+          `${input.attemptId}:ATTEMPT_STARTED`,
+          JSON.stringify({
+            attemptId: input.attemptId,
+            invocationId: input.invocationId,
+            ordinal: input.ordinal,
+            providerRequested: input.providerRequested,
+            requestFingerprint: input.requestFingerprint,
+            status: "DISPATCHED",
+          }),
         ],
       );
       if (rows.length === 0) {
@@ -616,13 +648,31 @@ export function createPgControlStore(
     },
 
     async recordAttemptFailure(input: AttemptFailureInput): Promise<void> {
+      // Same same-statement ledger pattern: `ledger` gated on `att`. Unlike
+      // the two finalize functions, this UPDATE is not itself guarded to
+      // fire only once per attemptId (it sets status unconditionally once
+      // fenced), so the deterministic `${attemptId}:ATTEMPT_FAILED` key +
+      // `ON CONFLICT DO NOTHING` is what actually carries the idempotency
+      // here — a retried call for the same attemptId re-applies the same
+      // UPDATE (harmless — it is idempotent by value) but writes the ledger
+      // row at most once.
       const rows = await sql.query<{ id: string }>(
-        `UPDATE "ai_attempts" a
-            SET "status" = $1, "providerUsed" = $2, "errorCode" = $3, "endedAt" = $4
-          FROM "ai_invocations" i
-          WHERE a."id" = $5 AND i."id" = a."invocationId"
-            AND i."executionOwnerToken" = $6
-          RETURNING a."id"`,
+        `WITH att AS (
+           UPDATE "ai_attempts" a
+              SET "status" = $1, "providerUsed" = $2, "errorCode" = $3, "endedAt" = $4
+             FROM "ai_invocations" i
+            WHERE a."id" = $5 AND i."id" = a."invocationId"
+              AND i."executionOwnerToken" = $6
+           RETURNING a."id", a."invocationId"
+         ), ledger AS (
+           INSERT INTO "control_event_ledger"
+             ("eventId", "source", "sourceId", "eventType", "payload")
+           SELECT $7, 'ai_attempt', $5, 'ATTEMPT_FAILED', $8::jsonb
+            WHERE EXISTS (SELECT 1 FROM att)
+           ON CONFLICT ("eventId") DO NOTHING
+           RETURNING "eventId"
+         )
+         SELECT "id" FROM att`,
         [
           input.status,
           input.providerUsed,
@@ -630,6 +680,14 @@ export function createPgControlStore(
           input.now,
           input.attemptId,
           input.ownerToken,
+          `${input.attemptId}:ATTEMPT_FAILED`,
+          JSON.stringify({
+            attemptId: input.attemptId,
+            invocationId: input.invocationId,
+            status: input.status,
+            providerUsed: input.providerUsed,
+            errorCode: input.errorCode,
+          }),
         ],
       );
       if (rows.length === 0) {
@@ -659,12 +717,23 @@ export function createPgControlStore(
     },
 
     async finalizeSuccess(input: FinalizeSuccessInput): Promise<boolean> {
-      // ONE data-modifying statement: the invocation finalization and the
-      // winning attempt's post-dispatch facts (§9.4) commit atomically — a
-      // partial commit can never leave a SUCCEEDED invocation whose winning
-      // attempt is stuck DISPATCHED with no provider-served record. The
-      // attempt CTE is gated on the invocation CTE, so a fenced-out owner
-      // updates NEITHER row.
+      // ONE data-modifying statement: the invocation finalization, the
+      // winning attempt's post-dispatch facts (§9.4), AND the idempotent
+      // event-ledger row (Track A, exactly-once runtime handoff 2026-07-22)
+      // commit atomically — a partial commit can never leave a SUCCEEDED
+      // invocation whose winning attempt is stuck DISPATCHED with no
+      // provider-served record, NOR a ledger row for a finalize that didn't
+      // actually apply. Both the `att` and `ledger` CTEs are gated on `inv`,
+      // so a fenced-out owner writes NEITHER of them. The ledger's event id
+      // is deterministic (`${invocationId}:FINALIZED_SUCCESS`) and permanent
+      // — an invocation can only ever transition out of RUNNING once (the
+      // `inv` CTE's own WHERE guard), so this key can never collide across
+      // two DIFFERENT logical events; `ON CONFLICT DO NOTHING` guards the
+      // remaining case of the exact same call being retried after this
+      // statement already committed (e.g. the caller's own network hiccup
+      // reading the reply) — that retry's `inv` CTE matches zero rows
+      // (status is no longer RUNNING), so `ledger` matches zero rows too:
+      // no duplicate, no partial state, nothing to reconcile.
       const rows = await sql.query<{ invApplied: boolean }>(
         `WITH inv AS (
            UPDATE "ai_invocations"
@@ -682,6 +751,13 @@ export function createPgControlStore(
                   "resultHash" = $3
             WHERE "id" = $11 AND EXISTS (SELECT 1 FROM inv)
             RETURNING "id"
+         ), ledger AS (
+           INSERT INTO "control_event_ledger"
+             ("eventId", "source", "sourceId", "eventType", "payload")
+           SELECT $12, 'ai_invocation', $4, 'FINALIZED_SUCCESS', $13::jsonb
+            WHERE EXISTS (SELECT 1 FROM inv)
+           ON CONFLICT ("eventId") DO NOTHING
+           RETURNING "eventId"
          )
          SELECT EXISTS (SELECT 1 FROM inv) AS "invApplied"`,
         [
@@ -696,6 +772,14 @@ export function createPgControlStore(
           input.inputTokens,
           input.outputTokens,
           input.attemptId,
+          `${input.invocationId}:FINALIZED_SUCCESS`,
+          JSON.stringify({
+            invocationId: input.invocationId,
+            attemptId: input.attemptId,
+            providerUsed: input.providerUsed,
+            modelResolved: input.modelResolved,
+            resultHash: input.resultHash,
+          }),
         ],
       );
       return rows[0]?.invApplied === true; // false = fenced out
@@ -713,13 +797,40 @@ export function createPgControlStore(
       // self-describing; `input.blockedDetail` is accepted for caller-side
       // logging (see invocation-pipeline.ts) but intentionally not
       // persisted on this row.
+      // Same same-statement ledger pattern as finalizeSuccess above: the
+      // `ledger` CTE is gated on `inv` (this invocation transitioning out of
+      // RUNNING exactly once), and its event id
+      // (`${invocationId}:FINALIZED_${status}`) is permanently unique for the
+      // same reason — a retried call whose `inv` matches zero rows also
+      // writes zero ledger rows.
       const updated = await sql.query<{ id: string }>(
-        `UPDATE "ai_invocations"
-            SET "status" = $1, "completedAt" = $2, "leaseExpiresAt" = NULL
-          WHERE "id" = $3 AND "status" = 'RUNNING'
-            AND "executionOwnerToken" = $4
-          RETURNING "id"`,
-        [input.status, input.now, input.invocationId, input.ownerToken],
+        `WITH inv AS (
+           UPDATE "ai_invocations"
+              SET "status" = $1, "completedAt" = $2, "leaseExpiresAt" = NULL
+            WHERE "id" = $3 AND "status" = 'RUNNING'
+              AND "executionOwnerToken" = $4
+            RETURNING "id"
+         ), ledger AS (
+           INSERT INTO "control_event_ledger"
+             ("eventId", "source", "sourceId", "eventType", "payload")
+           SELECT $5, 'ai_invocation', $3, 'FINALIZED_' || $1, $6::jsonb
+            WHERE EXISTS (SELECT 1 FROM inv)
+           ON CONFLICT ("eventId") DO NOTHING
+           RETURNING "eventId"
+         )
+         SELECT "id" FROM inv`,
+        [
+          input.status,
+          input.now,
+          input.invocationId,
+          input.ownerToken,
+          `${input.invocationId}:FINALIZED_${input.status}`,
+          JSON.stringify({
+            invocationId: input.invocationId,
+            status: input.status,
+            ...(input.blockedDetail ? { blockedDetail: input.blockedDetail } : {}),
+          }),
+        ],
       );
       return updated.length > 0;
     },
