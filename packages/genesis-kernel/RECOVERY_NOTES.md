@@ -24,8 +24,8 @@ blobs. Exactly one file was modified:
 
 Root wiring (outside the package): `package.json` gained the same
 `genesis:scan` / `genesis:plan` / `test:genesis` scripts #127 added, plus a
-`test:genesis-kernel` alias; `package-lock.json` re-registered the workspace
-via `npm install --package-lock-only` (same 12-line shape as #127's diff).
+`test:genesis-kernel` alias; the npm lockfile re-registered the workspace
+via a lockfile-only `npm install` (same 12-line shape as #127's diff).
 
 ## Purity verification (performed at recovery time)
 
