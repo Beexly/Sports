@@ -3,9 +3,9 @@
 Deterministic branch inventory produced by `scripts/nova/build-convergence-inventory.mjs`.
 
 - base: c19a00d86fe45d7e093f3f9ec688d2614e7f87b4
-- head: b6ef59c90866b121136b96bccc97e017af6b363a
+- head: a6fc11766e18d09651269c3d945ecacb1857b8d0
 - merge-base: c19a00d86fe45d7e093f3f9ec688d2614e7f87b4
-- changed files: 332
+- changed files: 352
 - collision scan: **COMPLETE_COLLISIONS_FOUND**
 
 ## Collisions
@@ -65,25 +65,32 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 
 | status | path | head blob |
 | --- | --- | --- |
-| M | `.env.example` | 41eea29591788d97cad1049bc473b5b06957b798 |
+| M | `.env.example` | e4554800ca4870cc188c7679e71e981a6f080fd2 |
 | M | `.github/workflows/ci.yml` | 45b41456d6313e068bd18b99b7663ad20569099e |
 | A | `.github/workflows/nova-convergence-inventory.yml` | fdc317d4ab8bbad8ef7109511470e9e234aae6a1 |
 | A | `apps/web/.gitignore` | 014f9c3ec2ecde21cb4bcae2a6de18f12fdcd470 |
-| A | `apps/web/__tests__/actor-governance.test.ts` | 4e24a8c4d3618e5d0f375935a1f91b55a3f18828 |
+| A | `apps/web/__tests__/actor-governance.test.ts` | 2c0a267d9a60e87402302c4a1d19b8d8d6cd6ac0 |
 | A | `apps/web/__tests__/actor-hardening-db.integration.test.ts` | 48db69110172a3728e6af8d7167b2a31c83ae3b2 |
 | A | `apps/web/__tests__/actor-minting-boundary.test.ts` | 1c2e489da0cd4465de4aa3f25c04922d7a239de5 |
 | A | `apps/web/__tests__/ai-control-plane-authority.test.ts` | f953740b6c24a14fd500af7b489bb5c75b4e906a |
-| A | `apps/web/__tests__/ai-control-plane-budget-pg.test.ts` | 809f6caa0bd9a4ca0197c2f955e3726035a62b79 |
-| A | `apps/web/__tests__/ai-control-plane-budget.test.ts` | d8625034492003e1e8eaa4e7cc37f18c8a35141b |
+| A | `apps/web/__tests__/ai-control-plane-budget-pg.test.ts` | 5ff7aab905763e675dd358aaf7b9c10757fc5473 |
+| A | `apps/web/__tests__/ai-control-plane-budget.test.ts` | e9594e1394bda312e11ea1a111c3642765a69c12 |
 | A | `apps/web/__tests__/ai-control-plane-claim-pg.test.ts` | 559c351483e0abf940b72815f9a304bab20f2e51 |
 | A | `apps/web/__tests__/ai-control-plane-cost-mode.test.ts` | d0f7a03d773146d4cc58a1df65d82d2a409703a1 |
 | A | `apps/web/__tests__/ai-control-plane-credit-admission.test.ts` | 90b5cabc2f77d8880c956fbd2a35780a46f32365 |
 | A | `apps/web/__tests__/ai-control-plane-invocation.test.ts` | 7535c357ca8da7b3b059973b686df266839f7764 |
 | A | `apps/web/__tests__/ai-control-plane-sealing-guard.test.ts` | 830a016b4fbdfad82bf7e061c714dad4207a4ffc |
 | A | `apps/web/__tests__/ai-provider-registry.test.ts` | c06c385b6d17ccc2a53c4e24693149f8fc698838 |
-| A | `apps/web/__tests__/anonymous-report-route.test.ts` | 618a87ce35bdc09636b707fec5987f091b4070d3 |
-| A | `apps/web/__tests__/checkout-attempt.test.ts` | fa134517f530533630e148c633bee4f0c2a2a06b |
-| M | `apps/web/__tests__/council-ledgers.test.ts` | c6e4f0e98972e6aa59332d5ca82ddb5271f6951b |
+| A | `apps/web/__tests__/anonymous-report-route.test.ts` | a3373555eae478157374baf318437870b9729c8b |
+| A | `apps/web/__tests__/canonical-json.test.ts` | 23dc6554cda92a6244d3ac2e17dbf971672f4eec |
+| A | `apps/web/__tests__/checkout-attempt-db.integration.test.ts` | a2ad85c70177ab76e7d079bfa0041e6c51dea4df |
+| A | `apps/web/__tests__/checkout-attempt-repair.test.ts` | ae8a03308548a9af0056bc2b9d6189233bdfa4c9 |
+| A | `apps/web/__tests__/checkout-attempt.test.ts` | 88650da7be9be55c6726d1cd7a3b24a3ab64156e |
+| A | `apps/web/__tests__/checkout-live-mode-guard.test.ts` | 33d4cdce112f16f6f4ed9e1ed5dc32c558fe501c |
+| A | `apps/web/__tests__/checkout-repair-owner-queue.test.ts` | 542a441c96e7484a77c2f98b1f1f916b02dc62b2 |
+| M | `apps/web/__tests__/council-ledgers.test.ts` | c24924294080c354dbbead000702e9a7f3b95c24 |
+| A | `apps/web/__tests__/cron-prune-rate-limits.test.ts` | ea55556ad3b9ff7c69b9884df68d1059a2b82419 |
+| A | `apps/web/__tests__/durable-write-store.test.ts` | 5e9c50fb7ad1fb1151b8de3382457818d770ae91 |
 | A | `apps/web/__tests__/moderation-actions.test.ts` | da4edaaa5725e86633626c7c802f73cabeaaa72f |
 | A | `apps/web/__tests__/nova-agent.test.ts` | df1e80d0d643ecb65a47f61a4c443b889ddeafed |
 | A | `apps/web/__tests__/nova-capability-governance.test.ts` | 5868734eeaa1039db6c29fc1139b9da890ed091a |
@@ -101,23 +108,27 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `apps/web/__tests__/nova-source-evidence.test.ts` | 0d4143180e7e5d9e1da8c35c628d9809c53cf4cd |
 | A | `apps/web/__tests__/nova-subagents.test.ts` | ecb2c72e8a071999f39a6dbac5c2166afeb44024 |
 | A | `apps/web/__tests__/push-subscribe-api.test.ts` | f3ec77c31c9b5427a7447bcc1c87db83c554dead |
+| A | `apps/web/__tests__/repair-checkout-attempts-cron-route.test.ts` | bcccb5f5636e6f9adec5b289ef82eac089af3143 |
 | M | `apps/web/__tests__/stripe-checkout-consent.test.ts` | 293ff2985bcfebf85bfca086afcd00b7bf87297e |
-| M | `apps/web/__tests__/stripe-webhook-route.test.ts` | 13084c1ff7aa654bb318471364adcaf183133011 |
-| M | `apps/web/__tests__/subscriptions-checkout-route.test.ts` | f5c86173475fe8a818cd4912dcdc8a0e8a598985 |
+| A | `apps/web/__tests__/stripe-outcome.test.ts` | 0e040436a4f7e2bd992b22416f271150d21366ec |
+| M | `apps/web/__tests__/stripe-webhook-route.test.ts` | eb8cae7403aced1dd2f8f2d74b656557c40a0ecf |
+| M | `apps/web/__tests__/subscriptions-checkout-route.test.ts` | 3c2f6d4c2a42938760849f097840c687c170cd9a |
 | A | `apps/web/app/api/cron/deliver-settlement-alerts/route.ts` | 85918bd0f4d2855a608407f3cb34f7426c184701 |
 | A | `apps/web/app/api/cron/drain-ai-telemetry-recovery/route.ts` | eb0a7d6024417fb585fb1abb0960db193b9d536a |
+| A | `apps/web/app/api/cron/prune-rate-limits/route.ts` | 9fa09e8e6e7d643665bcc84dad1695301a49c59d |
+| A | `apps/web/app/api/cron/repair-checkout-attempts/route.ts` | 48a800aa6843626220f12e504e9e20170dfaa7f9 |
 | M | `apps/web/app/api/cron/settle-picks/route.ts` | 2d6e87f4d4fb3a1f69a3c23fbc4f55ff95677626 |
 | A | `apps/web/app/api/moderation/anonymous-report/route.ts` | ae4016be825f58e00cf6858e0743798ce2743725 |
 | A | `apps/web/app/api/push/subscribe/route.ts` | 441c6df298a5772bd969d14cf6af5d74ca8f0774 |
 | A | `apps/web/app/api/push/unsubscribe/route.ts` | 50c94230f8b4d6c7cade53bbcdefaf441d6ad2b2 |
-| M | `apps/web/app/api/subscriptions/checkout/route.ts` | 36acf9107d7fc04e9b857f0c9cdec77fb0d677da |
-| M | `apps/web/app/api/webhooks/stripe/route.ts` | 208271b17c21da4fc1ff9cb73f07528f29394d9a |
+| M | `apps/web/app/api/subscriptions/checkout/route.ts` | fd627c1594b8506745c1501005f7d5f20388b2d7 |
+| M | `apps/web/app/api/webhooks/stripe/route.ts` | 31865e6926431a3fb2962a657eae14326ab5b918 |
 | M | `apps/web/app/cockpit/layout.tsx` | bf2a54e82be8b69f5da59f769283b67e9a82ec7a |
 | A | `apps/web/app/cockpit/nova/founder/page.tsx` | 7cab42c120d5aa428c47650782c51e04e64893ff |
 | A | `apps/web/app/cockpit/nova/page.tsx` | 08c59e1b943b4a52c041559635487d417e9f1f9d |
 | M | `apps/web/components/pricing/subscribe-button.tsx` | 296b83db9b2fc0e6bca3c1511d47d3c945bdfd81 |
 | A | `apps/web/components/push/push-alert-opt-in.tsx` | 05e27a66b51db33f6de7b42746c3774afc051b36 |
-| A | `apps/web/lib/ai-control-plane/budget.ts` | 50a75a3f111705e6f407e102ebd9335031960ec7 |
+| A | `apps/web/lib/ai-control-plane/budget.ts` | e4af74b4b2e94a98562ee06eedeb29391d75fef7 |
 | A | `apps/web/lib/ai-control-plane/contracts.ts` | 3d6afd50686affbfdbf72254324c0d9fa0af5f56 |
 | A | `apps/web/lib/ai-control-plane/control-store.ts` | af45ab40908633f011b19cc0fa1035f12468c5c3 |
 | A | `apps/web/lib/ai-control-plane/cost-mode.ts` | 54aabfe84c1b24ac220f290cc81e3a5cb4cdc995 |
@@ -126,10 +137,10 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `apps/web/lib/ai-control-plane/dispatch.ts` | 047815667f1d156922b77d7ff21b1e73e016da62 |
 | A | `apps/web/lib/ai-control-plane/emergency.ts` | 4e0da01f3a616bf322ed873ff91e285548c78b8b |
 | A | `apps/web/lib/ai-control-plane/errors.ts` | 8906455ab8c0802fd925ac3242a90fa3c7db419a |
-| A | `apps/web/lib/ai-control-plane/executor.ts` | c19d00b89fe76237c893a49b25fbb790f10ee2f5 |
+| A | `apps/web/lib/ai-control-plane/executor.ts` | b65ec8999188a9dde3f94a4af5b6b4e2fe0f32ea |
 | A | `apps/web/lib/ai-control-plane/index.ts` | a39cc99521f25c92dfa15ef6568b18feade29531 |
-| A | `apps/web/lib/ai-control-plane/internal.ts` | 731e43e5b8f48b630dd7ed8b91a8c63afd59e682 |
-| A | `apps/web/lib/ai-control-plane/invocation-pipeline.ts` | 338cd1f048d599334846a39295fee05bea9c01f9 |
+| A | `apps/web/lib/ai-control-plane/internal.ts` | 41049eb5ba0fdf86e1a5f3a037b9c8cd122a58ca |
+| A | `apps/web/lib/ai-control-plane/invocation-pipeline.ts` | 45121fa4a80496015047cb401145c51d172c3382 |
 | A | `apps/web/lib/ai-control-plane/observability.ts` | 1a700230d317b3f53de1d6983890cb3dbe073977 |
 | A | `apps/web/lib/ai-control-plane/policy-registry.ts` | 836867949900ecebc846dc31899f2eb17a9b17e2 |
 | A | `apps/web/lib/ai-control-plane/provider-registry.data.ts` | 18b65d2bc831e216d5fbfbbf8d7361660c7b5442 |
@@ -137,14 +148,18 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `apps/web/lib/ai-control-plane/validation.ts` | 1a20293a28a005ddc2af6c98bc5abe25b8f58dba |
 | A | `apps/web/lib/auth/actor-receipt.ts` | 62d9bf1e0a4891e2828d31650f58f2d6d944519d |
 | A | `apps/web/lib/auth/actor-test-internal.ts` | 921ed4d93b5494ddae83104e148d6ce78f6e1150 |
-| A | `apps/web/lib/auth/actor.ts` | 50a0018960e4825768ca250ae41ff3bed977da0c |
-| A | `apps/web/lib/billing/checkout-attempt.ts` | 49f914af0d41bd7ea382f4a8dbbd7f156b78b305 |
-| A | `apps/web/lib/community/anonymous-report-handler.ts` | ff29cdcda1024190399caaa25ac452a7f83b3b5a |
-| A | `apps/web/lib/community/durable-rate-limiter.ts` | a97c0b1507d7699c7b758bec39d888b3ea4fb542 |
+| A | `apps/web/lib/auth/actor.ts` | cc77bb415580de3f663ecbf92a71b37e1acb0679 |
+| A | `apps/web/lib/billing/canonical-json.ts` | 8b500295e5bd42a764365148c51360889f8ba900 |
+| A | `apps/web/lib/billing/checkout-attempt-repair.ts` | 809ca31cd05d8e95f4867f442ebe5cc1a60559a1 |
+| A | `apps/web/lib/billing/checkout-attempt.ts` | bd859ca8bb06b5993fa7be046a25fb9f32f020a6 |
+| A | `apps/web/lib/billing/checkout-repair-owner-queue.ts` | adbd72c4609425eab2558d0f7c00070e006a5d63 |
+| A | `apps/web/lib/billing/stripe-outcome.ts` | 1e6c515e2a2658e2327e96df7cc33dc725d6ffc3 |
+| A | `apps/web/lib/community/anonymous-report-handler.ts` | 9c44b9929bff30e1a8f0c7fae6bbb96cbbdb098c |
+| A | `apps/web/lib/community/durable-rate-limiter.ts` | f0e2e8b26c0d19753adb587d894a945e4fd39278 |
 | M | `apps/web/lib/community/moderation-actions.ts` | a3ac79140cc9ebd3cdd5cbc7d0a56dad9943e1df |
 | A | `apps/web/lib/community/report-abuse-policy.ts` | e771ae148217b8af44497f2c5466e4506f88346b |
-| A | `apps/web/lib/jarvis/ledgers-core.ts` | 4d990cef859ecbf7e51fb4fbf1a9e4183da84906 |
-| M | `apps/web/lib/jarvis/ledgers.ts` | 669c68815400d49e88f6cc70d1527f3fc13d6839 |
+| A | `apps/web/lib/jarvis/ledgers-core.ts` | 8f6d8c85201ed96d6b87ddb26b517ae7bff60f48 |
+| M | `apps/web/lib/jarvis/ledgers.ts` | 43a79572ba126745580680a8aa93de81399423b5 |
 | A | `apps/web/lib/nova/founder-os-dashboard.ts` | abe5d7148822e1e15632b5d1f46b9a8de8944ef3 |
 | A | `apps/web/lib/opportunity-engine/capability-governance.ts` | dddd3bd36e8b2e7de4c0d9b75a72de96f48d1eaf |
 | A | `apps/web/lib/opportunity-engine/capability-governor.ts` | 7ba7d8320fa9a0ffdb12ecad1e2bc1693a341bb2 |
@@ -175,9 +190,9 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `apps/web/lib/push/subscription-db.ts` | 5c4c220e676127d1089e4dc73360c4acd1a308ad |
 | A | `apps/web/lib/push/use-push-subscription.ts` | 257b80831e16f813ef76b400f96320d5c7eae4b4 |
 | A | `apps/web/lib/push/validation.ts` | 8f3ea4514917290a8a4614001793d1313c533d83 |
-| A | `apps/web/lib/settlement-outbox/worker.test.ts` | a5ae87fe28d56b76d8f0e6249e563f8023bb1867 |
+| A | `apps/web/lib/settlement-outbox/worker.test.ts` | 51f739d419baf2e699c46b28747afd51373a6e1d |
 | A | `apps/web/lib/settlement-outbox/worker.ts` | 4d0db192a0d9591d580ca8f9e8051461a595b23f |
-| M | `apps/web/lib/stripe.ts` | 08fa20be0ab085b2010407680636d8abd36d35fc |
+| M | `apps/web/lib/stripe.ts` | 85517cb8f309ed4a7b9bbd4f16404c407de4bbac |
 | M | `apps/web/lib/watchlist/alert-dispatch.test.ts` | 12542ab3e23679d48fa51dbc982b14e36e6b02a8 |
 | M | `apps/web/lib/watchlist/alert-dispatch.ts` | bcc36d1a08fa97afa6bf797d46b3349d7429f1cc |
 | A | `apps/web/lib/watchlist/channels/email-channel.test.ts` | 1d5a580641b3eb1a5daf748f0e328e7c7d52bb9d |
@@ -208,6 +223,7 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `docs/ai/phase0/PR145_COMPLETE_DISPOSITION_2026-07-21.json` | 369d54dd212a986f84f95c0749bbca1048cb4f20 |
 | A | `docs/ai/phase0/PR145_PR146_CONVERGENCE_MAP_2026-07-21.md` | a03c606ffa8c13f927d06874e3804d1f92467bb4 |
 | A | `docs/ai/phase0/REVISED_PR_STACK_2026-07-21.md` | 277302c889b644970068f19bff28dc1079310034 |
+| A | `docs/payments/checkout-attempt.md` | af449306b0f331983862d9bc5439406438a3d561 |
 | A | `formal-regression/.gitignore` | c2658d7d1b31848c3b71960543cb0368e56cd4c7 |
 | A | `formal-regression/README.md` | f0ed183518d0ab54777c642f4df0861b93f86c07 |
 | A | `formal-regression/docker/docker-compose.chaos.yml` | 5ef0d360d65a36979d96cdfdb2967b3d2692f90c |
@@ -223,7 +239,7 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `formal-regression/src/tests/0-smoke.test.ts` | a08cdef3fe79b54597c7b1af8a7386184422365a |
 | A | `formal-regression/src/tests/chaos-deterministic-fault-injection.test.ts` | d884b3b6459491ef4e63ab1277057af562e771fb |
 | A | `formal-regression/src/tests/chaos-network.integration.test.ts` | 77cecb366786b843e549d344611bff34635a4d9f |
-| A | `formal-regression/src/tests/credit-reservation.real.property.test.ts` | 39fc6bfe2d0f23b3994c3c0367c1c98e9aeb7dba |
+| A | `formal-regression/src/tests/credit-reservation.real.property.test.ts` | 7f9b2c6d2e5d2fbbd66e56c2cf7b25eefdd155ec |
 | A | `formal-regression/src/tests/invocation-claim.real.property.test.ts` | 5d30777d71a51c983f432e79c1a84d1c4b1e615b |
 | A | `formal-regression/src/tests/reference-model.property.test.ts` | acaad924961e91557c78f4b180de0e3e30adbd89 |
 | A | `formal-regression/tsconfig.json` | a8fd6d33e20d0e838d5bd9c69412d9232b1f9097 |
@@ -241,14 +257,17 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `packages/db/prisma/migrations/20260719120000_add_push_subscriptions/migration.sql` | 4f28bc57e2fae16ed9f1aba51659f0a84d6fdbae |
 | A | `packages/db/prisma/migrations/20260722090000_add_settlement_evidence_outbox/migration.sql` | 65d2fa729e9afe3be44d5e70f5d4a70fb9b1ed0b |
 | A | `packages/db/prisma/migrations/20260722120000_add_trusted_actor_audit/migration.sql` | ee5bb43af49ef654eec47beeb64b0af4dac3987d |
+| A | `packages/db/prisma/migrations/20260722130000_add_checkout_attempt/migration.sql` | c51c58ecc23d23ccb552c3a9b16112ce0cb82091 |
 | A | `packages/db/prisma/migrations/20260722140000_add_ai_control_plane_ledger/migration.sql` | cf48df9706705457112c5fe7f654583d4d477c2a |
 | A | `packages/db/prisma/migrations/20260722150000_add_actor_receipts_and_durable_rate_limits/migration.sql` | 86696826980ade64049c51593c8dc0eae7d12e3a |
-| A | `packages/db/prisma/migrations/20260722150000_add_ai_budget_reservations/migration.sql` | b296cd4a2cccf9d3bc7c972e58e4733e8d4bdcf8 |
+| A | `packages/db/prisma/migrations/20260722150001_add_ai_budget_reservations/migration.sql` | f7386d9937fd4bdf72c349cc58be77a8d463ddbd |
 | A | `packages/db/prisma/migrations/20260722160000_add_credit_grant_authorization/migration.sql` | 3b01c306dec2cb82214be817ab72b0051613e7c1 |
 | A | `packages/db/prisma/migrations/20260722183000_harden_settlement_evidence_outbox/migration.sql` | 9935f4dd7f5a215205f4c195d14908e6cddfb5b3 |
 | A | `packages/db/prisma/migrations/20260722213000_outbox_dead_letter_receipts/migration.sql` | 9f02de23268a2e3694abd2becd7be07d329d1bd2 |
-| M | `packages/db/prisma/schema.prisma` | f5b3b3b3629a3a53bd00181d5542fa79a9940e77 |
+| M | `packages/db/prisma/schema.prisma` | 9d3feb805e4ca89bd9b6ed06407d30e15166b632 |
 | M | `packages/db/prisma/seed.ts` | a48aebb94d4ed551b2840264cfe4ef63bea1b864 |
+| A | `packages/db/src/durable-write-guard.ts` | 6908b0b4663b0c7b844d10ab1f08cc70920cd11c |
+| M | `packages/db/src/index.ts` | acab11e447bb952a640f22b0bbc2abb7bdd1d813 |
 | A | `packages/dev-tools/context-compiler/.gitignore` | b9470778764f72c5257a3361590d2994547f90e1 |
 | A | `packages/dev-tools/context-compiler/README.md` | 034faf0f2de7a411b5c29653373dd226c93e1ac9 |
 | A | `packages/dev-tools/context-compiler/evidence/benchmark-run.txt` | 5cb961f2a844317155da50716707861844b71bc4 |
@@ -315,13 +334,14 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `reports/ai/call-site-inventory.md` | a5333c097a27a33cb4df03e2c3ebf2a4858e9330 |
 | A | `reports/constellation-wave2/DELTA_MANIFEST.json` | adb90732b397522db959c362cd40f2a56b4c383f |
 | A | `reports/constellation-wave2/PRISMA-SAFETY-INVESTIGATION.md` | 70e830b264ea0140685b37cca9478160aa2de732 |
-| A | `reports/nova/convergence/NOVA_CONVERGENCE_INVENTORY.json` | 57ffdba14f0d91df78fcba12f2616e0071e7f431 |
-| A | `reports/nova/convergence/NOVA_CONVERGENCE_INVENTORY.md` | a233a294245480b88c33c1543dd1583036e503a4 |
-| A | `reports/nova/convergence/NOVA_CONVERGENCE_RECEIPT.json` | 229c9fe529405b87df996a45f459660f045dd52e |
+| A | `reports/nova/convergence/NOVA_CONVERGENCE_INVENTORY.json` | 4d59b384521c00bf30b9ea0802400d4c8323566d |
+| A | `reports/nova/convergence/NOVA_CONVERGENCE_INVENTORY.md` | 5754516d931d8741dbff1fbe2b877b2b4b5a0571 |
+| A | `reports/nova/convergence/NOVA_CONVERGENCE_RECEIPT.json` | 40d9b86fa1b7d52a4d9b33b671844b628d8b6b24 |
 | A | `reports/nova/convergence/multi-head/NOVA_MULTIHEAD_INVENTORY.json` | 03f9dbd73261d741319cde54a2063cbbb4e49879 |
 | A | `reports/nova/convergence/multi-head/NOVA_MULTIHEAD_INVENTORY.md` | 046b9e7e4b081c841eefb96bb7bcb65ec744e2d6 |
 | A | `reports/nova/convergence/multi-head/NOVA_MULTIHEAD_RECEIPT.json` | f327acba022546d0c3de64241b4f190cda051388 |
 | A | `reports/nova/source-runtime/.gitignore` | dd9fe066342317425be80c4359d7b23ff49e5ce6 |
+| A | `reports/wave5/OWNER_PACKET_2026-07-22.md` | 008cd7ab6dd4fe1f4874eb0f1bd9f6ff0d442aef |
 | A | `scripts/ai/build-call-site-inventory.mjs` | ae0af253f82f7981a5e61ea242ceab486cc2788e |
 | A | `scripts/ai/build-call-site-inventory.test.mjs` | 269d9bf39776b6c13fae971534e609480eec62db |
 | A | `scripts/ai/fixtures/call-site-inventory/alias-call.ts` | d1bad68c4d2597602f92dcdde5707c692c258420 |
@@ -334,7 +354,7 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `scripts/ai/fixtures/call-site-inventory/zod-validated.ts` | 19ae3af12ac128a181ebc2fbbe74f37d7dcf1333 |
 | A | `scripts/guardrails/actor-minting-boundary.mjs` | 1fedbe44c12d607afd40752ca7731b9961ddaa32 |
 | A | `scripts/guardrails/ai-control-plane-sealing.mjs` | 82342b55462ac587b4cd51e57d788a8279bf0345 |
-| A | `scripts/guardrails/ai-transport-import-boundary.mjs` | 4855dd9f7fc782df52864cdadcdbf4fcb04446c6 |
+| A | `scripts/guardrails/ai-transport-import-boundary.mjs` | 9d4e9ef8ed776ff56f9df09ad9c0f35e1f5e1225 |
 | A | `scripts/guardrails/ai-transport-import-boundary.test.mjs` | f58d33ceeaf6a7d2730e9710ef8c5bad1a749aa5 |
 | M | `scripts/guardrails/claude-api-usage.mjs` | f3949746c33c0b9db2b8a0a428763da29655aae3 |
 | M | `scripts/guardrails/draft-only.mjs` | b2ed3e3b2e3df21ef457293684ce326e3ecc38fb |
@@ -396,7 +416,7 @@ Deterministic branch inventory produced by `scripts/nova/build-convergence-inven
 | A | `tools/labs/prisma-safety/PRISMA_SAFETY_PATTERNS.md` | 12aedfc26a1dad007434cb222e1acfc4b583b4cc |
 | A | `tools/labs/prisma-safety/introspection-target.prisma` | dfc43c6a5e2f2b79928ab596ca2cadbfc11568e2 |
 | A | `tools/labs/prisma-safety/investigation.md` | 3b7fb9fcd39cae6dbc3eead9cee3e1a2d72aac57 |
-| M | `vercel.json` | a74b0cb66ae64616ff8e74782bedc6802ecbfb64 |
+| M | `vercel.json` | 923ceb241e1a8f79e1d4a40afc50f7b3dfbce160 |
 
 ## Exported TypeScript symbols (changed files, head)
 
@@ -452,11 +472,39 @@ _no exports_
 
 _no exports_
 
+### `apps/web/__tests__/canonical-json.test.ts`
+
+_no exports_
+
+### `apps/web/__tests__/checkout-attempt-db.integration.test.ts`
+
+_no exports_
+
+### `apps/web/__tests__/checkout-attempt-repair.test.ts`
+
+_no exports_
+
 ### `apps/web/__tests__/checkout-attempt.test.ts`
 
 _no exports_
 
+### `apps/web/__tests__/checkout-live-mode-guard.test.ts`
+
+_no exports_
+
+### `apps/web/__tests__/checkout-repair-owner-queue.test.ts`
+
+_no exports_
+
 ### `apps/web/__tests__/council-ledgers.test.ts`
+
+_no exports_
+
+### `apps/web/__tests__/cron-prune-rate-limits.test.ts`
+
+_no exports_
+
+### `apps/web/__tests__/durable-write-store.test.ts`
 
 _no exports_
 
@@ -528,7 +576,15 @@ _no exports_
 
 _no exports_
 
+### `apps/web/__tests__/repair-checkout-attempts-cron-route.test.ts`
+
+_no exports_
+
 ### `apps/web/__tests__/stripe-checkout-consent.test.ts`
+
+_no exports_
+
+### `apps/web/__tests__/stripe-outcome.test.ts`
 
 _no exports_
 
@@ -548,6 +604,18 @@ _no exports_
 - `maxDuration` (const)
 
 ### `apps/web/app/api/cron/drain-ai-telemetry-recovery/route.ts`
+
+- `GET` (function)
+- `dynamic` (const)
+- `fetchCache` (const)
+- `maxDuration` (const)
+
+### `apps/web/app/api/cron/prune-rate-limits/route.ts`
+
+- `GET` (function)
+- `dynamic` (const)
+
+### `apps/web/app/api/cron/repair-checkout-attempts/route.ts`
 
 - `GET` (function)
 - `dynamic` (const)
@@ -609,13 +677,16 @@ _no exports_
 
 ### `apps/web/lib/ai-control-plane/budget.ts`
 
+- `AttemptActualPricer` (type)
 - `AttemptPlanWorstCaseInput` (interface)
+- `AttemptUsage` (interface)
 - `BudgetDb` (interface)
 - `BudgetOverageIncident` (interface)
 - `BudgetScopeContext` (interface)
 - `BudgetScopeKind` (type)
 - `BudgetWindowState` (type)
 - `CONTROL_PLANE_PRICING_VERSION` (const)
+- `CONTROL_PLANE_PROVIDER_MINIMUM_USD` (const)
 - `ConfirmSettlementInput` (interface)
 - `ConfirmedSettlementKind` (type)
 - `KNOWN_PRICING_VERSIONS` (const)
@@ -872,7 +943,9 @@ _no exports_
 - `AiDispatchPlan` (reexport)
 - `AiExecutor` (reexport)
 - `AiPolicySource` (reexport)
+- `AttemptActualPricer` (reexport)
 - `AttemptFailureInput` (reexport)
+- `AttemptUsage` (reexport)
 - `AttributionCreateInput` (reexport)
 - `AuthoritativeControlStore` (reexport)
 - `AuthorizeCreditInput` (reexport)
@@ -881,6 +954,7 @@ _no exports_
 - `BlockedInvocationInput` (reexport)
 - `BudgetDb` (reexport)
 - `BudgetSeam` (reexport)
+- `CONTROL_PLANE_PROVIDER_MINIMUM_USD` (reexport)
 - `ClaimInvocationInput` (reexport)
 - `ClaimOutcome` (reexport)
 - `ConfirmSettlementInput` (reexport)
@@ -1080,23 +1154,67 @@ _no exports_
 - `systemActor` (function)
 - `toAdminActorView` (function)
 
+### `apps/web/lib/billing/canonical-json.ts`
+
+- `CanonicalJsonError` (class)
+- `CanonicalJsonValue` (type)
+- `canonicalJsonStringify` (function)
+- `sha256CanonicalJson` (function)
+
+### `apps/web/lib/billing/checkout-attempt-repair.ts`
+
+- `CheckoutAttemptReconcileOutcome` (type)
+- `CheckoutAttemptRepairDb` (interface)
+- `CheckoutAttemptRepairDeps` (interface)
+- `CheckoutAttemptRepairReport` (interface)
+- `CheckoutRepairOwnerQueue` (interface)
+- `CheckoutSessionLookup` (interface)
+- `REPAIR_MIN_AGE_MS` (const)
+- `RepairSessionView` (interface)
+- `RepairableCheckoutAttempt` (type)
+- `reconcileOneCheckoutAttempt` (function)
+- `repairUnresolvedCheckoutAttempts` (function)
+
 ### `apps/web/lib/billing/checkout-attempt.ts`
 
 - `CHECKOUT_ATTEMPT_TTL_MS` (const)
+- `CHECKOUT_RECONCILE_MIN_AGE_MS` (const)
+- `CHECKOUT_SESSION_MAX_LIFETIME_MS` (const)
+- `CLAIMABLE_STATUSES` (const)
 - `CheckoutAttemptDb` (interface)
 - `CheckoutAttemptIdError` (class)
+- `CheckoutAttemptPersistenceError` (class)
 - `CheckoutAttemptRecord` (interface)
 - `CheckoutAttemptStatus` (type)
+- `CheckoutAttemptUnresolvedError` (class)
+- `CheckoutCommercialParams` (interface)
 - `CheckoutIntentConflictError` (class)
 - `GetOrCreateCheckoutAttemptInput` (interface)
 - `GetOrCreateCheckoutAttemptResult` (interface)
+- `REQUEST_FINGERPRINT_VERSION` (const)
+- `bindCheckoutSessionToAttempt` (function)
+- `claimCheckoutAttemptForStripeRequest` (function)
 - `computeRequestFingerprint` (function)
+- `currentCheckoutCommercialParams` (function)
 - `currentCommercialTermsVersion` (function)
 - `getOrCreateCheckoutAttempt` (function)
 - `isValidCheckoutAttemptId` (function)
 - `isValidClientIntentId` (function)
 - `mintCheckoutAttemptId` (function)
+- `recordCheckoutAttemptOutcome` (function)
 - `stripeIdempotencyKeyForAttempt` (function)
+
+### `apps/web/lib/billing/checkout-repair-owner-queue.ts`
+
+- `cockpitCheckoutRepairOwnerQueue` (function)
+
+### `apps/web/lib/billing/stripe-outcome.ts`
+
+- `CheckoutOutcomeClass` (type)
+- `OutcomeAttemptStatus` (type)
+- `OutcomeTransition` (interface)
+- `classifyStripeSessionCreateError` (function)
+- `transitionForOutcome` (function)
 
 ### `apps/web/lib/community/anonymous-report-handler.ts`
 
@@ -1155,6 +1273,7 @@ _no exports_
 - `LogHandoffInput` (interface)
 - `LogSubagentRunInput` (interface)
 - `SubagentReviewDecision` (type)
+- `SubagentRunAlreadyDecidedError` (class)
 - `listPendingSubagentReviews` (function)
 - `listRecentHandoffs` (function)
 - `logHandoffAs` (function)
@@ -1167,6 +1286,7 @@ _no exports_
 - `LogHandoffInput` (reexport)
 - `LogSubagentRunInput` (reexport)
 - `SubagentReviewDecision` (reexport)
+- `SubagentRunAlreadyDecidedError` (reexport)
 - `listPendingSubagentReviews` (function)
 - `listRecentHandoffs` (function)
 - `logHandoff` (function)
@@ -1571,7 +1691,9 @@ _no exports_
 - `getOrCreateStripeCustomer` (function)
 - `getStripePriceId` (function)
 - `retrieveOpenCheckoutSessionUrl` (function)
+- `runCheckoutAttemptRepair` (function)
 - `stripe` (const)
+- `stripeCheckoutSessionLookup` (function)
 
 ### `apps/web/lib/watchlist/alert-dispatch.test.ts`
 
@@ -1629,6 +1751,36 @@ _no exports_
 ### `packages/db/prisma/seed.ts`
 
 _no exports_
+
+### `packages/db/src/durable-write-guard.ts`
+
+- `DURABLE_WRITE_CAPABILITIES` (const)
+- `DurableWriteCapability` (type)
+- `DurableWriteDenialReason` (type)
+- `DurableWriteStoreEvaluation` (type)
+- `DurableWriteStoreEvaluationInput` (interface)
+- `DurableWriteStoreUnavailableError` (class)
+- `evaluateDurableWriteStore` (function)
+- `requireDurableWriteStore` (function)
+
+### `packages/db/src/index.ts`
+
+- `* from @prisma/client` (star-reexport)
+- `DURABLE_WRITE_CAPABILITIES` (reexport)
+- `DurableWriteCapability` (reexport)
+- `DurableWriteDenialReason` (reexport)
+- `DurableWriteStoreEvaluation` (reexport)
+- `DurableWriteStoreEvaluationInput` (reexport)
+- `DurableWriteStoreUnavailableError` (reexport)
+- `SAMPLE_PICK_COUNT` (reexport)
+- `SamplePick` (reexport)
+- `db` (const)
+- `evaluateDurableWriteStore` (reexport)
+- `getSamplePicks` (reexport)
+- `isDemoPicksEnabled` (reexport)
+- `isStubDbUrl` (function)
+- `isStubMode` (function)
+- `requireDurableWriteStore` (reexport)
 
 ### `packages/dev-tools/context-compiler/src/benchmark.ts`
 
@@ -2147,8 +2299,8 @@ _no exports_
 ## Prisma (head)
 
 - models: 85
-- enums: 60
-- changed migration files: 9
+- enums: 61
+- changed migration files: 10
 
 ## Semantic-domain candidates
 

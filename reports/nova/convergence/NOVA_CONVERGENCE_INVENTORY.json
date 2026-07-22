@@ -1,5 +1,5 @@
 {
-  "changedFileCount": 332,
+  "changedFileCount": 352,
   "collisionScan": {
     "collisions": [
       {
@@ -462,7 +462,7 @@
   },
   "files": [
     {
-      "headBlobSha": "41eea29591788d97cad1049bc473b5b06957b798",
+      "headBlobSha": "e4554800ca4870cc188c7679e71e981a6f080fd2",
       "path": ".env.example",
       "status": "M"
     },
@@ -482,7 +482,7 @@
       "status": "A"
     },
     {
-      "headBlobSha": "4e24a8c4d3618e5d0f375935a1f91b55a3f18828",
+      "headBlobSha": "2c0a267d9a60e87402302c4a1d19b8d8d6cd6ac0",
       "path": "apps/web/__tests__/actor-governance.test.ts",
       "status": "A"
     },
@@ -502,12 +502,12 @@
       "status": "A"
     },
     {
-      "headBlobSha": "809f6caa0bd9a4ca0197c2f955e3726035a62b79",
+      "headBlobSha": "5ff7aab905763e675dd358aaf7b9c10757fc5473",
       "path": "apps/web/__tests__/ai-control-plane-budget-pg.test.ts",
       "status": "A"
     },
     {
-      "headBlobSha": "d8625034492003e1e8eaa4e7cc37f18c8a35141b",
+      "headBlobSha": "e9594e1394bda312e11ea1a111c3642765a69c12",
       "path": "apps/web/__tests__/ai-control-plane-budget.test.ts",
       "status": "A"
     },
@@ -542,19 +542,54 @@
       "status": "A"
     },
     {
-      "headBlobSha": "618a87ce35bdc09636b707fec5987f091b4070d3",
+      "headBlobSha": "a3373555eae478157374baf318437870b9729c8b",
       "path": "apps/web/__tests__/anonymous-report-route.test.ts",
       "status": "A"
     },
     {
-      "headBlobSha": "fa134517f530533630e148c633bee4f0c2a2a06b",
+      "headBlobSha": "23dc6554cda92a6244d3ac2e17dbf971672f4eec",
+      "path": "apps/web/__tests__/canonical-json.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "a2ad85c70177ab76e7d079bfa0041e6c51dea4df",
+      "path": "apps/web/__tests__/checkout-attempt-db.integration.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "ae8a03308548a9af0056bc2b9d6189233bdfa4c9",
+      "path": "apps/web/__tests__/checkout-attempt-repair.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "88650da7be9be55c6726d1cd7a3b24a3ab64156e",
       "path": "apps/web/__tests__/checkout-attempt.test.ts",
       "status": "A"
     },
     {
-      "headBlobSha": "c6e4f0e98972e6aa59332d5ca82ddb5271f6951b",
+      "headBlobSha": "33d4cdce112f16f6f4ed9e1ed5dc32c558fe501c",
+      "path": "apps/web/__tests__/checkout-live-mode-guard.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "542a441c96e7484a77c2f98b1f1f916b02dc62b2",
+      "path": "apps/web/__tests__/checkout-repair-owner-queue.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "c24924294080c354dbbead000702e9a7f3b95c24",
       "path": "apps/web/__tests__/council-ledgers.test.ts",
       "status": "M"
+    },
+    {
+      "headBlobSha": "ea55556ad3b9ff7c69b9884df68d1059a2b82419",
+      "path": "apps/web/__tests__/cron-prune-rate-limits.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "5e9c50fb7ad1fb1151b8de3382457818d770ae91",
+      "path": "apps/web/__tests__/durable-write-store.test.ts",
+      "status": "A"
     },
     {
       "headBlobSha": "da4edaaa5725e86633626c7c802f73cabeaaa72f",
@@ -642,17 +677,27 @@
       "status": "A"
     },
     {
+      "headBlobSha": "bcccb5f5636e6f9adec5b289ef82eac089af3143",
+      "path": "apps/web/__tests__/repair-checkout-attempts-cron-route.test.ts",
+      "status": "A"
+    },
+    {
       "headBlobSha": "293ff2985bcfebf85bfca086afcd00b7bf87297e",
       "path": "apps/web/__tests__/stripe-checkout-consent.test.ts",
       "status": "M"
     },
     {
-      "headBlobSha": "13084c1ff7aa654bb318471364adcaf183133011",
+      "headBlobSha": "0e040436a4f7e2bd992b22416f271150d21366ec",
+      "path": "apps/web/__tests__/stripe-outcome.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "eb8cae7403aced1dd2f8f2d74b656557c40a0ecf",
       "path": "apps/web/__tests__/stripe-webhook-route.test.ts",
       "status": "M"
     },
     {
-      "headBlobSha": "f5c86173475fe8a818cd4912dcdc8a0e8a598985",
+      "headBlobSha": "3c2f6d4c2a42938760849f097840c687c170cd9a",
       "path": "apps/web/__tests__/subscriptions-checkout-route.test.ts",
       "status": "M"
     },
@@ -664,6 +709,16 @@
     {
       "headBlobSha": "eb0a7d6024417fb585fb1abb0960db193b9d536a",
       "path": "apps/web/app/api/cron/drain-ai-telemetry-recovery/route.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "9fa09e8e6e7d643665bcc84dad1695301a49c59d",
+      "path": "apps/web/app/api/cron/prune-rate-limits/route.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "48a800aa6843626220f12e504e9e20170dfaa7f9",
+      "path": "apps/web/app/api/cron/repair-checkout-attempts/route.ts",
       "status": "A"
     },
     {
@@ -687,12 +742,12 @@
       "status": "A"
     },
     {
-      "headBlobSha": "36acf9107d7fc04e9b857f0c9cdec77fb0d677da",
+      "headBlobSha": "fd627c1594b8506745c1501005f7d5f20388b2d7",
       "path": "apps/web/app/api/subscriptions/checkout/route.ts",
       "status": "M"
     },
     {
-      "headBlobSha": "208271b17c21da4fc1ff9cb73f07528f29394d9a",
+      "headBlobSha": "31865e6926431a3fb2962a657eae14326ab5b918",
       "path": "apps/web/app/api/webhooks/stripe/route.ts",
       "status": "M"
     },
@@ -722,7 +777,7 @@
       "status": "A"
     },
     {
-      "headBlobSha": "50a75a3f111705e6f407e102ebd9335031960ec7",
+      "headBlobSha": "e4af74b4b2e94a98562ee06eedeb29391d75fef7",
       "path": "apps/web/lib/ai-control-plane/budget.ts",
       "status": "A"
     },
@@ -767,7 +822,7 @@
       "status": "A"
     },
     {
-      "headBlobSha": "c19d00b89fe76237c893a49b25fbb790f10ee2f5",
+      "headBlobSha": "b65ec8999188a9dde3f94a4af5b6b4e2fe0f32ea",
       "path": "apps/web/lib/ai-control-plane/executor.ts",
       "status": "A"
     },
@@ -777,12 +832,12 @@
       "status": "A"
     },
     {
-      "headBlobSha": "731e43e5b8f48b630dd7ed8b91a8c63afd59e682",
+      "headBlobSha": "41049eb5ba0fdf86e1a5f3a037b9c8cd122a58ca",
       "path": "apps/web/lib/ai-control-plane/internal.ts",
       "status": "A"
     },
     {
-      "headBlobSha": "338cd1f048d599334846a39295fee05bea9c01f9",
+      "headBlobSha": "45121fa4a80496015047cb401145c51d172c3382",
       "path": "apps/web/lib/ai-control-plane/invocation-pipeline.ts",
       "status": "A"
     },
@@ -822,22 +877,42 @@
       "status": "A"
     },
     {
-      "headBlobSha": "50a0018960e4825768ca250ae41ff3bed977da0c",
+      "headBlobSha": "cc77bb415580de3f663ecbf92a71b37e1acb0679",
       "path": "apps/web/lib/auth/actor.ts",
       "status": "A"
     },
     {
-      "headBlobSha": "49f914af0d41bd7ea382f4a8dbbd7f156b78b305",
+      "headBlobSha": "8b500295e5bd42a764365148c51360889f8ba900",
+      "path": "apps/web/lib/billing/canonical-json.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "809ca31cd05d8e95f4867f442ebe5cc1a60559a1",
+      "path": "apps/web/lib/billing/checkout-attempt-repair.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "bd859ca8bb06b5993fa7be046a25fb9f32f020a6",
       "path": "apps/web/lib/billing/checkout-attempt.ts",
       "status": "A"
     },
     {
-      "headBlobSha": "ff29cdcda1024190399caaa25ac452a7f83b3b5a",
+      "headBlobSha": "adbd72c4609425eab2558d0f7c00070e006a5d63",
+      "path": "apps/web/lib/billing/checkout-repair-owner-queue.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "1e6c515e2a2658e2327e96df7cc33dc725d6ffc3",
+      "path": "apps/web/lib/billing/stripe-outcome.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "9c44b9929bff30e1a8f0c7fae6bbb96cbbdb098c",
       "path": "apps/web/lib/community/anonymous-report-handler.ts",
       "status": "A"
     },
     {
-      "headBlobSha": "a97c0b1507d7699c7b758bec39d888b3ea4fb542",
+      "headBlobSha": "f0e2e8b26c0d19753adb587d894a945e4fd39278",
       "path": "apps/web/lib/community/durable-rate-limiter.ts",
       "status": "A"
     },
@@ -852,12 +927,12 @@
       "status": "A"
     },
     {
-      "headBlobSha": "4d990cef859ecbf7e51fb4fbf1a9e4183da84906",
+      "headBlobSha": "8f6d8c85201ed96d6b87ddb26b517ae7bff60f48",
       "path": "apps/web/lib/jarvis/ledgers-core.ts",
       "status": "A"
     },
     {
-      "headBlobSha": "669c68815400d49e88f6cc70d1527f3fc13d6839",
+      "headBlobSha": "43a79572ba126745580680a8aa93de81399423b5",
       "path": "apps/web/lib/jarvis/ledgers.ts",
       "status": "M"
     },
@@ -1012,7 +1087,7 @@
       "status": "A"
     },
     {
-      "headBlobSha": "a5ae87fe28d56b76d8f0e6249e563f8023bb1867",
+      "headBlobSha": "51f739d419baf2e699c46b28747afd51373a6e1d",
       "path": "apps/web/lib/settlement-outbox/worker.test.ts",
       "status": "A"
     },
@@ -1022,7 +1097,7 @@
       "status": "A"
     },
     {
-      "headBlobSha": "08fa20be0ab085b2010407680636d8abd36d35fc",
+      "headBlobSha": "85517cb8f309ed4a7b9bbd4f16404c407de4bbac",
       "path": "apps/web/lib/stripe.ts",
       "status": "M"
     },
@@ -1177,6 +1252,11 @@
       "status": "A"
     },
     {
+      "headBlobSha": "af449306b0f331983862d9bc5439406438a3d561",
+      "path": "docs/payments/checkout-attempt.md",
+      "status": "A"
+    },
+    {
       "headBlobSha": "c2658d7d1b31848c3b71960543cb0368e56cd4c7",
       "path": "formal-regression/.gitignore",
       "status": "A"
@@ -1252,7 +1332,7 @@
       "status": "A"
     },
     {
-      "headBlobSha": "39fc6bfe2d0f23b3994c3c0367c1c98e9aeb7dba",
+      "headBlobSha": "7f9b2c6d2e5d2fbbd66e56c2cf7b25eefdd155ec",
       "path": "formal-regression/src/tests/credit-reservation.real.property.test.ts",
       "status": "A"
     },
@@ -1342,6 +1422,11 @@
       "status": "A"
     },
     {
+      "headBlobSha": "c51c58ecc23d23ccb552c3a9b16112ce0cb82091",
+      "path": "packages/db/prisma/migrations/20260722130000_add_checkout_attempt/migration.sql",
+      "status": "A"
+    },
+    {
       "headBlobSha": "cf48df9706705457112c5fe7f654583d4d477c2a",
       "path": "packages/db/prisma/migrations/20260722140000_add_ai_control_plane_ledger/migration.sql",
       "status": "A"
@@ -1352,8 +1437,8 @@
       "status": "A"
     },
     {
-      "headBlobSha": "b296cd4a2cccf9d3bc7c972e58e4733e8d4bdcf8",
-      "path": "packages/db/prisma/migrations/20260722150000_add_ai_budget_reservations/migration.sql",
+      "headBlobSha": "f7386d9937fd4bdf72c349cc58be77a8d463ddbd",
+      "path": "packages/db/prisma/migrations/20260722150001_add_ai_budget_reservations/migration.sql",
       "status": "A"
     },
     {
@@ -1372,13 +1457,23 @@
       "status": "A"
     },
     {
-      "headBlobSha": "f5b3b3b3629a3a53bd00181d5542fa79a9940e77",
+      "headBlobSha": "9d3feb805e4ca89bd9b6ed06407d30e15166b632",
       "path": "packages/db/prisma/schema.prisma",
       "status": "M"
     },
     {
       "headBlobSha": "a48aebb94d4ed551b2840264cfe4ef63bea1b864",
       "path": "packages/db/prisma/seed.ts",
+      "status": "M"
+    },
+    {
+      "headBlobSha": "6908b0b4663b0c7b844d10ab1f08cc70920cd11c",
+      "path": "packages/db/src/durable-write-guard.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "acab11e447bb952a640f22b0bbc2abb7bdd1d813",
+      "path": "packages/db/src/index.ts",
       "status": "M"
     },
     {
@@ -1712,17 +1807,17 @@
       "status": "A"
     },
     {
-      "headBlobSha": "57ffdba14f0d91df78fcba12f2616e0071e7f431",
+      "headBlobSha": "4d59b384521c00bf30b9ea0802400d4c8323566d",
       "path": "reports/nova/convergence/NOVA_CONVERGENCE_INVENTORY.json",
       "status": "A"
     },
     {
-      "headBlobSha": "a233a294245480b88c33c1543dd1583036e503a4",
+      "headBlobSha": "5754516d931d8741dbff1fbe2b877b2b4b5a0571",
       "path": "reports/nova/convergence/NOVA_CONVERGENCE_INVENTORY.md",
       "status": "A"
     },
     {
-      "headBlobSha": "229c9fe529405b87df996a45f459660f045dd52e",
+      "headBlobSha": "40d9b86fa1b7d52a4d9b33b671844b628d8b6b24",
       "path": "reports/nova/convergence/NOVA_CONVERGENCE_RECEIPT.json",
       "status": "A"
     },
@@ -1744,6 +1839,11 @@
     {
       "headBlobSha": "dd9fe066342317425be80c4359d7b23ff49e5ce6",
       "path": "reports/nova/source-runtime/.gitignore",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "008cd7ab6dd4fe1f4874eb0f1bd9f6ff0d442aef",
+      "path": "reports/wave5/OWNER_PACKET_2026-07-22.md",
       "status": "A"
     },
     {
@@ -1807,7 +1907,7 @@
       "status": "A"
     },
     {
-      "headBlobSha": "4855dd9f7fc782df52864cdadcdbf4fcb04446c6",
+      "headBlobSha": "9d4e9ef8ed776ff56f9df09ad9c0f35e1f5e1225",
       "path": "scripts/guardrails/ai-transport-import-boundary.mjs",
       "status": "A"
     },
@@ -2117,7 +2217,7 @@
       "status": "A"
     },
     {
-      "headBlobSha": "a74b0cb66ae64616ff8e74782bedc6802ecbfb64",
+      "headBlobSha": "923ceb241e1a8f79e1d4a40afc50f7b3dfbce160",
       "path": "vercel.json",
       "status": "M"
     }
@@ -2267,6 +2367,75 @@
         {
           "object": "subagent_runs",
           "op": "ALTER TABLE"
+        }
+      ]
+    },
+    {
+      "path": "packages/db/prisma/migrations/20260722130000_add_checkout_attempt/migration.sql",
+      "statements": [
+        {
+          "object": "CheckoutAttemptStatus",
+          "op": "CREATE TYPE"
+        },
+        {
+          "object": "CheckoutOutcomeClass",
+          "op": "CREATE TYPE"
+        },
+        {
+          "object": "checkout_attempts",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "checkout_attempts",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "checkout_attempts",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "checkout_attempts",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "checkout_attempts",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "checkout_attempts",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "checkout_attempts",
+          "op": "CREATE TABLE"
+        },
+        {
+          "object": "checkout_attempts",
+          "op": "DROP TABLE"
+        },
+        {
+          "object": "checkout_attempts_status_expiresAt_idx",
+          "op": "CREATE INDEX"
+        },
+        {
+          "object": "checkout_attempts_stripeIdempotencyKey_key",
+          "op": "CREATE INDEX"
+        },
+        {
+          "object": "checkout_attempts_stripeSessionId_idx",
+          "op": "CREATE INDEX"
+        },
+        {
+          "object": "checkout_attempts_subjectUserId_idx",
+          "op": "CREATE INDEX"
+        },
+        {
+          "object": "checkout_attempts_userId_activeClientIntentId_key",
+          "op": "CREATE INDEX"
+        },
+        {
+          "object": "checkout_attempts_userId_idx",
+          "op": "CREATE INDEX"
         }
       ]
     },
@@ -2561,8 +2730,28 @@
       ]
     },
     {
-      "path": "packages/db/prisma/migrations/20260722150000_add_ai_budget_reservations/migration.sql",
+      "path": "packages/db/prisma/migrations/20260722150001_add_ai_budget_reservations/migration.sql",
       "statements": [
+        {
+          "object": "above",
+          "op": "CREATE TABLE"
+        },
+        {
+          "object": "ai_budget_reservations",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "ai_budget_reservations",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "ai_budget_reservations",
+          "op": "ALTER TABLE"
+        },
+        {
+          "object": "ai_budget_reservations",
+          "op": "ALTER TABLE"
+        },
         {
           "object": "ai_budget_reservations",
           "op": "CREATE TABLE"
@@ -3865,10 +4054,16 @@
           "valueCount": 4
         },
         {
-          "blockHash": "e467f3d7deba5b7662706241caed0a702df500e58bb158e5745cf278bed3e01d",
+          "blockHash": "e130233f9f811115fd7e214c7c89089cc8ff9f37976541e9138e55ee2a57bc77",
           "name": "CheckoutAttemptStatus",
           "schemaPath": "packages/db/prisma/schema.prisma",
-          "valueCount": 5
+          "valueCount": 8
+        },
+        {
+          "blockHash": "1c8fa7305d8df637b55902a34fdd1df4c2d1b338cc304253467e7bea90820cae",
+          "name": "CheckoutOutcomeClass",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
         },
         {
           "blockHash": "5ef67f540935d8cfbe3d437c472abecac40f01e77fcf85125cc31ed6d296a889",
@@ -4215,7 +4410,7 @@
           "schemaPath": "packages/db/prisma/schema.prisma"
         },
         {
-          "blockHash": "1fc811d748e0dd55ec2c757afa2dd1ae151ce549e89ec92c58104e86fd43f0b0",
+          "blockHash": "c1975294bd499a4437dedba71a7d4308fa2f509c431fca07850e34e89f9e51b6",
           "fieldCount": 15,
           "indexes": [
             "@@index([invocationId])",
@@ -4295,12 +4490,14 @@
           "schemaPath": "packages/db/prisma/schema.prisma"
         },
         {
-          "blockHash": "c8c4cb7c518d075507e4013f294b870542eb7e6bc0109560b17cf18184f26814",
-          "fieldCount": 18,
+          "blockHash": "a5d2cfd9d887192755120aa1a92533b42cc8af6d287658522e9c4d45fd31e771",
+          "fieldCount": 25,
           "indexes": [
+            "@@index([status, expiresAt])",
             "@@index([stripeSessionId])",
+            "@@index([subjectUserId])",
             "@@index([userId])",
-            "@@unique([userId, clientIntentId])"
+            "@@unique([userId, activeClientIntentId])"
           ],
           "name": "CheckoutAttempt",
           "schemaPath": "packages/db/prisma/schema.prisma"
@@ -5054,7 +5251,7 @@
   },
   "refs": {
     "baseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
-    "headSha": "b6ef59c90866b121136b96bccc97e017af6b363a",
+    "headSha": "a6fc11766e18d09651269c3d945ecacb1857b8d0",
     "mergeBaseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4"
   },
   "schemaVersion": 1,
@@ -6043,7 +6240,7 @@
   ],
   "tsExports": [
     {
-      "headBlobSha": "4e24a8c4d3618e5d0f375935a1f91b55a3f18828",
+      "headBlobSha": "2c0a267d9a60e87402302c4a1d19b8d8d6cd6ac0",
       "path": "apps/web/__tests__/actor-governance.test.ts",
       "symbols": []
     },
@@ -6063,12 +6260,12 @@
       "symbols": []
     },
     {
-      "headBlobSha": "809f6caa0bd9a4ca0197c2f955e3726035a62b79",
+      "headBlobSha": "5ff7aab905763e675dd358aaf7b9c10757fc5473",
       "path": "apps/web/__tests__/ai-control-plane-budget-pg.test.ts",
       "symbols": []
     },
     {
-      "headBlobSha": "d8625034492003e1e8eaa4e7cc37f18c8a35141b",
+      "headBlobSha": "e9594e1394bda312e11ea1a111c3642765a69c12",
       "path": "apps/web/__tests__/ai-control-plane-budget.test.ts",
       "symbols": []
     },
@@ -6103,18 +6300,53 @@
       "symbols": []
     },
     {
-      "headBlobSha": "618a87ce35bdc09636b707fec5987f091b4070d3",
+      "headBlobSha": "a3373555eae478157374baf318437870b9729c8b",
       "path": "apps/web/__tests__/anonymous-report-route.test.ts",
       "symbols": []
     },
     {
-      "headBlobSha": "fa134517f530533630e148c633bee4f0c2a2a06b",
+      "headBlobSha": "23dc6554cda92a6244d3ac2e17dbf971672f4eec",
+      "path": "apps/web/__tests__/canonical-json.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "a2ad85c70177ab76e7d079bfa0041e6c51dea4df",
+      "path": "apps/web/__tests__/checkout-attempt-db.integration.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "ae8a03308548a9af0056bc2b9d6189233bdfa4c9",
+      "path": "apps/web/__tests__/checkout-attempt-repair.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "88650da7be9be55c6726d1cd7a3b24a3ab64156e",
       "path": "apps/web/__tests__/checkout-attempt.test.ts",
       "symbols": []
     },
     {
-      "headBlobSha": "c6e4f0e98972e6aa59332d5ca82ddb5271f6951b",
+      "headBlobSha": "33d4cdce112f16f6f4ed9e1ed5dc32c558fe501c",
+      "path": "apps/web/__tests__/checkout-live-mode-guard.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "542a441c96e7484a77c2f98b1f1f916b02dc62b2",
+      "path": "apps/web/__tests__/checkout-repair-owner-queue.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "c24924294080c354dbbead000702e9a7f3b95c24",
       "path": "apps/web/__tests__/council-ledgers.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "ea55556ad3b9ff7c69b9884df68d1059a2b82419",
+      "path": "apps/web/__tests__/cron-prune-rate-limits.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "5e9c50fb7ad1fb1151b8de3382457818d770ae91",
+      "path": "apps/web/__tests__/durable-write-store.test.ts",
       "symbols": []
     },
     {
@@ -6203,17 +6435,27 @@
       "symbols": []
     },
     {
+      "headBlobSha": "bcccb5f5636e6f9adec5b289ef82eac089af3143",
+      "path": "apps/web/__tests__/repair-checkout-attempts-cron-route.test.ts",
+      "symbols": []
+    },
+    {
       "headBlobSha": "293ff2985bcfebf85bfca086afcd00b7bf87297e",
       "path": "apps/web/__tests__/stripe-checkout-consent.test.ts",
       "symbols": []
     },
     {
-      "headBlobSha": "13084c1ff7aa654bb318471364adcaf183133011",
+      "headBlobSha": "0e040436a4f7e2bd992b22416f271150d21366ec",
+      "path": "apps/web/__tests__/stripe-outcome.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "eb8cae7403aced1dd2f8f2d74b656557c40a0ecf",
       "path": "apps/web/__tests__/stripe-webhook-route.test.ts",
       "symbols": []
     },
     {
-      "headBlobSha": "f5c86173475fe8a818cd4912dcdc8a0e8a598985",
+      "headBlobSha": "3c2f6d4c2a42938760849f097840c687c170cd9a",
       "path": "apps/web/__tests__/subscriptions-checkout-route.test.ts",
       "symbols": []
     },
@@ -6242,6 +6484,42 @@
     {
       "headBlobSha": "eb0a7d6024417fb585fb1abb0960db193b9d536a",
       "path": "apps/web/app/api/cron/drain-ai-telemetry-recovery/route.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "GET"
+        },
+        {
+          "kind": "const",
+          "name": "dynamic"
+        },
+        {
+          "kind": "const",
+          "name": "fetchCache"
+        },
+        {
+          "kind": "const",
+          "name": "maxDuration"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "9fa09e8e6e7d643665bcc84dad1695301a49c59d",
+      "path": "apps/web/app/api/cron/prune-rate-limits/route.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "GET"
+        },
+        {
+          "kind": "const",
+          "name": "dynamic"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "48a800aa6843626220f12e504e9e20170dfaa7f9",
+      "path": "apps/web/app/api/cron/repair-checkout-attempts/route.ts",
       "symbols": [
         {
           "kind": "function",
@@ -6326,7 +6604,7 @@
       ]
     },
     {
-      "headBlobSha": "36acf9107d7fc04e9b857f0c9cdec77fb0d677da",
+      "headBlobSha": "fd627c1594b8506745c1501005f7d5f20388b2d7",
       "path": "apps/web/app/api/subscriptions/checkout/route.ts",
       "symbols": [
         {
@@ -6336,7 +6614,7 @@
       ]
     },
     {
-      "headBlobSha": "208271b17c21da4fc1ff9cb73f07528f29394d9a",
+      "headBlobSha": "31865e6926431a3fb2962a657eae14326ab5b918",
       "path": "apps/web/app/api/webhooks/stripe/route.ts",
       "symbols": [
         {
@@ -6408,12 +6686,20 @@
       ]
     },
     {
-      "headBlobSha": "50a75a3f111705e6f407e102ebd9335031960ec7",
+      "headBlobSha": "e4af74b4b2e94a98562ee06eedeb29391d75fef7",
       "path": "apps/web/lib/ai-control-plane/budget.ts",
       "symbols": [
         {
+          "kind": "type",
+          "name": "AttemptActualPricer"
+        },
+        {
           "kind": "interface",
           "name": "AttemptPlanWorstCaseInput"
+        },
+        {
+          "kind": "interface",
+          "name": "AttemptUsage"
         },
         {
           "kind": "interface",
@@ -6438,6 +6724,10 @@
         {
           "kind": "const",
           "name": "CONTROL_PLANE_PRICING_VERSION"
+        },
+        {
+          "kind": "const",
+          "name": "CONTROL_PLANE_PROVIDER_MINIMUM_USD"
         },
         {
           "kind": "interface",
@@ -6994,7 +7284,7 @@
       ]
     },
     {
-      "headBlobSha": "c19d00b89fe76237c893a49b25fbb790f10ee2f5",
+      "headBlobSha": "b65ec8999188a9dde3f94a4af5b6b4e2fe0f32ea",
       "path": "apps/web/lib/ai-control-plane/executor.ts",
       "symbols": [
         {
@@ -7370,7 +7660,7 @@
       ]
     },
     {
-      "headBlobSha": "731e43e5b8f48b630dd7ed8b91a8c63afd59e682",
+      "headBlobSha": "41049eb5ba0fdf86e1a5f3a037b9c8cd122a58ca",
       "path": "apps/web/lib/ai-control-plane/internal.ts",
       "symbols": [
         {
@@ -7399,7 +7689,15 @@
         },
         {
           "kind": "reexport",
+          "name": "AttemptActualPricer"
+        },
+        {
+          "kind": "reexport",
           "name": "AttemptFailureInput"
+        },
+        {
+          "kind": "reexport",
+          "name": "AttemptUsage"
         },
         {
           "kind": "reexport",
@@ -7432,6 +7730,10 @@
         {
           "kind": "reexport",
           "name": "BudgetSeam"
+        },
+        {
+          "kind": "reexport",
+          "name": "CONTROL_PLANE_PROVIDER_MINIMUM_USD"
         },
         {
           "kind": "reexport",
@@ -7716,7 +8018,7 @@
       ]
     },
     {
-      "headBlobSha": "338cd1f048d599334846a39295fee05bea9c01f9",
+      "headBlobSha": "45121fa4a80496015047cb401145c51d172c3382",
       "path": "apps/web/lib/ai-control-plane/invocation-pipeline.ts",
       "symbols": [
         {
@@ -8056,7 +8358,7 @@
       ]
     },
     {
-      "headBlobSha": "50a0018960e4825768ca250ae41ff3bed977da0c",
+      "headBlobSha": "cc77bb415580de3f663ecbf92a71b37e1acb0679",
       "path": "apps/web/lib/auth/actor.ts",
       "symbols": [
         {
@@ -8174,12 +8476,96 @@
       ]
     },
     {
-      "headBlobSha": "49f914af0d41bd7ea382f4a8dbbd7f156b78b305",
+      "headBlobSha": "8b500295e5bd42a764365148c51360889f8ba900",
+      "path": "apps/web/lib/billing/canonical-json.ts",
+      "symbols": [
+        {
+          "kind": "class",
+          "name": "CanonicalJsonError"
+        },
+        {
+          "kind": "type",
+          "name": "CanonicalJsonValue"
+        },
+        {
+          "kind": "function",
+          "name": "canonicalJsonStringify"
+        },
+        {
+          "kind": "function",
+          "name": "sha256CanonicalJson"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "809ca31cd05d8e95f4867f442ebe5cc1a60559a1",
+      "path": "apps/web/lib/billing/checkout-attempt-repair.ts",
+      "symbols": [
+        {
+          "kind": "type",
+          "name": "CheckoutAttemptReconcileOutcome"
+        },
+        {
+          "kind": "interface",
+          "name": "CheckoutAttemptRepairDb"
+        },
+        {
+          "kind": "interface",
+          "name": "CheckoutAttemptRepairDeps"
+        },
+        {
+          "kind": "interface",
+          "name": "CheckoutAttemptRepairReport"
+        },
+        {
+          "kind": "interface",
+          "name": "CheckoutRepairOwnerQueue"
+        },
+        {
+          "kind": "interface",
+          "name": "CheckoutSessionLookup"
+        },
+        {
+          "kind": "const",
+          "name": "REPAIR_MIN_AGE_MS"
+        },
+        {
+          "kind": "interface",
+          "name": "RepairSessionView"
+        },
+        {
+          "kind": "type",
+          "name": "RepairableCheckoutAttempt"
+        },
+        {
+          "kind": "function",
+          "name": "reconcileOneCheckoutAttempt"
+        },
+        {
+          "kind": "function",
+          "name": "repairUnresolvedCheckoutAttempts"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "bd859ca8bb06b5993fa7be046a25fb9f32f020a6",
       "path": "apps/web/lib/billing/checkout-attempt.ts",
       "symbols": [
         {
           "kind": "const",
           "name": "CHECKOUT_ATTEMPT_TTL_MS"
+        },
+        {
+          "kind": "const",
+          "name": "CHECKOUT_RECONCILE_MIN_AGE_MS"
+        },
+        {
+          "kind": "const",
+          "name": "CHECKOUT_SESSION_MAX_LIFETIME_MS"
+        },
+        {
+          "kind": "const",
+          "name": "CLAIMABLE_STATUSES"
         },
         {
           "kind": "interface",
@@ -8190,12 +8576,24 @@
           "name": "CheckoutAttemptIdError"
         },
         {
+          "kind": "class",
+          "name": "CheckoutAttemptPersistenceError"
+        },
+        {
           "kind": "interface",
           "name": "CheckoutAttemptRecord"
         },
         {
           "kind": "type",
           "name": "CheckoutAttemptStatus"
+        },
+        {
+          "kind": "class",
+          "name": "CheckoutAttemptUnresolvedError"
+        },
+        {
+          "kind": "interface",
+          "name": "CheckoutCommercialParams"
         },
         {
           "kind": "class",
@@ -8210,8 +8608,24 @@
           "name": "GetOrCreateCheckoutAttemptResult"
         },
         {
+          "kind": "const",
+          "name": "REQUEST_FINGERPRINT_VERSION"
+        },
+        {
+          "kind": "function",
+          "name": "bindCheckoutSessionToAttempt"
+        },
+        {
+          "kind": "function",
+          "name": "claimCheckoutAttemptForStripeRequest"
+        },
+        {
           "kind": "function",
           "name": "computeRequestFingerprint"
+        },
+        {
+          "kind": "function",
+          "name": "currentCheckoutCommercialParams"
         },
         {
           "kind": "function",
@@ -8235,12 +8649,52 @@
         },
         {
           "kind": "function",
+          "name": "recordCheckoutAttemptOutcome"
+        },
+        {
+          "kind": "function",
           "name": "stripeIdempotencyKeyForAttempt"
         }
       ]
     },
     {
-      "headBlobSha": "ff29cdcda1024190399caaa25ac452a7f83b3b5a",
+      "headBlobSha": "adbd72c4609425eab2558d0f7c00070e006a5d63",
+      "path": "apps/web/lib/billing/checkout-repair-owner-queue.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "cockpitCheckoutRepairOwnerQueue"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "1e6c515e2a2658e2327e96df7cc33dc725d6ffc3",
+      "path": "apps/web/lib/billing/stripe-outcome.ts",
+      "symbols": [
+        {
+          "kind": "type",
+          "name": "CheckoutOutcomeClass"
+        },
+        {
+          "kind": "type",
+          "name": "OutcomeAttemptStatus"
+        },
+        {
+          "kind": "interface",
+          "name": "OutcomeTransition"
+        },
+        {
+          "kind": "function",
+          "name": "classifyStripeSessionCreateError"
+        },
+        {
+          "kind": "function",
+          "name": "transitionForOutcome"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "9c44b9929bff30e1a8f0c7fae6bbb96cbbdb098c",
       "path": "apps/web/lib/community/anonymous-report-handler.ts",
       "symbols": [
         {
@@ -8266,7 +8720,7 @@
       ]
     },
     {
-      "headBlobSha": "a97c0b1507d7699c7b758bec39d888b3ea4fb542",
+      "headBlobSha": "f0e2e8b26c0d19753adb587d894a945e4fd39278",
       "path": "apps/web/lib/community/durable-rate-limiter.ts",
       "symbols": [
         {
@@ -8420,7 +8874,7 @@
       ]
     },
     {
-      "headBlobSha": "4d990cef859ecbf7e51fb4fbf1a9e4183da84906",
+      "headBlobSha": "8f6d8c85201ed96d6b87ddb26b517ae7bff60f48",
       "path": "apps/web/lib/jarvis/ledgers-core.ts",
       "symbols": [
         {
@@ -8438,6 +8892,10 @@
         {
           "kind": "type",
           "name": "SubagentReviewDecision"
+        },
+        {
+          "kind": "class",
+          "name": "SubagentRunAlreadyDecidedError"
         },
         {
           "kind": "function",
@@ -8462,7 +8920,7 @@
       ]
     },
     {
-      "headBlobSha": "669c68815400d49e88f6cc70d1527f3fc13d6839",
+      "headBlobSha": "43a79572ba126745580680a8aa93de81399423b5",
       "path": "apps/web/lib/jarvis/ledgers.ts",
       "symbols": [
         {
@@ -8480,6 +8938,10 @@
         {
           "kind": "reexport",
           "name": "SubagentReviewDecision"
+        },
+        {
+          "kind": "reexport",
+          "name": "SubagentRunAlreadyDecidedError"
         },
         {
           "kind": "function",
@@ -9745,7 +10207,7 @@
       ]
     },
     {
-      "headBlobSha": "a5ae87fe28d56b76d8f0e6249e563f8023bb1867",
+      "headBlobSha": "51f739d419baf2e699c46b28747afd51373a6e1d",
       "path": "apps/web/lib/settlement-outbox/worker.test.ts",
       "symbols": []
     },
@@ -9860,7 +10322,7 @@
       ]
     },
     {
-      "headBlobSha": "08fa20be0ab085b2010407680636d8abd36d35fc",
+      "headBlobSha": "85517cb8f309ed4a7b9bbd4f16404c407de4bbac",
       "path": "apps/web/lib/stripe.ts",
       "symbols": [
         {
@@ -9896,8 +10358,16 @@
           "name": "retrieveOpenCheckoutSessionUrl"
         },
         {
+          "kind": "function",
+          "name": "runCheckoutAttemptRepair"
+        },
+        {
           "kind": "const",
           "name": "stripe"
+        },
+        {
+          "kind": "function",
+          "name": "stripeCheckoutSessionLookup"
         }
       ]
     },
@@ -10049,6 +10519,114 @@
       "headBlobSha": "a48aebb94d4ed551b2840264cfe4ef63bea1b864",
       "path": "packages/db/prisma/seed.ts",
       "symbols": []
+    },
+    {
+      "headBlobSha": "6908b0b4663b0c7b844d10ab1f08cc70920cd11c",
+      "path": "packages/db/src/durable-write-guard.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "DURABLE_WRITE_CAPABILITIES"
+        },
+        {
+          "kind": "type",
+          "name": "DurableWriteCapability"
+        },
+        {
+          "kind": "type",
+          "name": "DurableWriteDenialReason"
+        },
+        {
+          "kind": "type",
+          "name": "DurableWriteStoreEvaluation"
+        },
+        {
+          "kind": "interface",
+          "name": "DurableWriteStoreEvaluationInput"
+        },
+        {
+          "kind": "class",
+          "name": "DurableWriteStoreUnavailableError"
+        },
+        {
+          "kind": "function",
+          "name": "evaluateDurableWriteStore"
+        },
+        {
+          "kind": "function",
+          "name": "requireDurableWriteStore"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "acab11e447bb952a640f22b0bbc2abb7bdd1d813",
+      "path": "packages/db/src/index.ts",
+      "symbols": [
+        {
+          "kind": "star-reexport",
+          "name": "* from @prisma/client"
+        },
+        {
+          "kind": "reexport",
+          "name": "DURABLE_WRITE_CAPABILITIES"
+        },
+        {
+          "kind": "reexport",
+          "name": "DurableWriteCapability"
+        },
+        {
+          "kind": "reexport",
+          "name": "DurableWriteDenialReason"
+        },
+        {
+          "kind": "reexport",
+          "name": "DurableWriteStoreEvaluation"
+        },
+        {
+          "kind": "reexport",
+          "name": "DurableWriteStoreEvaluationInput"
+        },
+        {
+          "kind": "reexport",
+          "name": "DurableWriteStoreUnavailableError"
+        },
+        {
+          "kind": "reexport",
+          "name": "SAMPLE_PICK_COUNT"
+        },
+        {
+          "kind": "reexport",
+          "name": "SamplePick"
+        },
+        {
+          "kind": "const",
+          "name": "db"
+        },
+        {
+          "kind": "reexport",
+          "name": "evaluateDurableWriteStore"
+        },
+        {
+          "kind": "reexport",
+          "name": "getSamplePicks"
+        },
+        {
+          "kind": "reexport",
+          "name": "isDemoPicksEnabled"
+        },
+        {
+          "kind": "function",
+          "name": "isStubDbUrl"
+        },
+        {
+          "kind": "function",
+          "name": "isStubMode"
+        },
+        {
+          "kind": "reexport",
+          "name": "requireDurableWriteStore"
+        }
+      ]
     },
     {
       "headBlobSha": "6918d63da9e7716392da099585e15f6751ed1b0d",
