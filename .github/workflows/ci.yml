@@ -228,6 +228,22 @@ jobs:
       - name: Run API v1 boundary guardrail
         run: node scripts/guardrails/api-v1-boundary.mjs
 
+  ai-control-plane-boundary:
+    name: AI control-plane import boundary
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Run AI control-plane import-boundary guardrail
+        run: node scripts/guardrails/ai-control-plane-boundary.mjs
+
   guardrails:
     name: All guardrails
     runs-on: ubuntu-latest
