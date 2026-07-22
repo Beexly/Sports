@@ -16,10 +16,17 @@
  *                         → 404 (default OFF; existence not advertised).
  *   2. Body validation  — strict schema; unknown fields (including any
  *                         client-supplied fingerprint) → 400.
- *   3. Source identity  — platform-set client IP (x-real-ip, else
- *                         x-forwarded-for first hop — Vercel overwrites both;
- *                         revisit if self-hosting behind other proxies).
- *                         No derivable source → 400 (an unattributable
+ *   3. Source identity  — deployment-aware, fail closed:
+ *                         on Vercel (VERCEL env set) the platform OVERWRITES
+ *                         x-real-ip / x-forwarded-for, so x-real-ip (else the
+ *                         XFF first hop) is trusted; OFF Vercel those headers
+ *                         follow append semantics (the first hop is
+ *                         attacker-supplied), so NOTHING is trusted unless ops
+ *                         explicitly names the proxy-set header via
+ *                         MODERATION_REPORT_TRUSTED_IP_HEADER (for
+ *                         x-forwarded-for the LAST hop — the one appended by
+ *                         the nearest trusted proxy — is used).
+ *                         No derivable trusted source → 400 (an unattributable
  *                         anonymous report cannot be rate-limited).
  *   4. Server secret    — MODERATION_REPORT_HMAC_SECRET missing/short → 503
  *                         (config failure; never a hardcoded fallback).
@@ -94,19 +101,56 @@ export interface AnonymousReportHandlerDeps {
 // ─── Source-identity derivation (trusted request facts only) ──────────────────
 
 /**
- * Platform-observed client IP. On Vercel both headers are set by the edge and
- * cannot be spoofed by the client; nothing here reads a client-declared
- * fingerprint. Returns null when no platform header is present.
+ * Platform-observed client IP — the deployment assumption is ENFORCED, not
+ * assumed (previously a comment said "revisit if self-hosting"; now the code
+ * does):
+ *
+ *   - ON VERCEL (`VERCEL` env var set, as the platform always does): the edge
+ *     OVERWRITES `x-real-ip` and `x-forwarded-for`, so `x-real-ip` (else the
+ *     XFF FIRST hop) is platform truth and cannot be client-spoofed.
+ *   - OFF VERCEL: standard proxies APPEND to `x-forwarded-for`, which makes
+ *     the first hop attacker-supplied (one source could rotate fingerprints
+ *     per request and bypass the per-source quota). Therefore NO header is
+ *     trusted unless ops explicitly declares which header their own proxy
+ *     sets, via `MODERATION_REPORT_TRUSTED_IP_HEADER`:
+ *       - `x-forwarded-for` → the LAST hop is used (the value appended by the
+ *         nearest trusted proxy);
+ *       - any other named header (e.g. `x-real-ip` overwritten by nginx) →
+ *         its value verbatim.
+ *     Unconfigured self-hosting returns null → the route fails closed (400)
+ *     instead of silently weakening the primary anti-flood dimension.
+ *
+ * Nothing here ever reads a client-declared fingerprint.
  */
-export function deriveTrustedSourceIp(request: Request): string | null {
-  const realIp = request.headers.get("x-real-ip")?.trim();
-  if (realIp) return realIp;
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const firstHop = forwarded.split(",")[0]?.trim();
-    if (firstHop) return firstHop;
+export function deriveTrustedSourceIp(
+  request: Request,
+  env: Readonly<Record<string, string | undefined>>
+): string | null {
+  const onVercel = Boolean(env["VERCEL"]?.trim());
+  if (onVercel) {
+    const realIp = request.headers.get("x-real-ip")?.trim();
+    if (realIp) return realIp;
+    const forwarded = request.headers.get("x-forwarded-for");
+    if (forwarded) {
+      const firstHop = forwarded.split(",")[0]?.trim();
+      if (firstHop) return firstHop;
+    }
+    return null;
   }
-  return null;
+
+  // Off-Vercel: only a header the operator explicitly vouches for.
+  const trustedHeaderName = env["MODERATION_REPORT_TRUSTED_IP_HEADER"]?.trim().toLowerCase();
+  if (!trustedHeaderName) return null;
+  const value = request.headers.get(trustedHeaderName);
+  if (!value) return null;
+  if (trustedHeaderName === "x-forwarded-for") {
+    // Append semantics: the LAST hop is the one the trusted proxy added.
+    const hops = value.split(",");
+    const lastHop = hops[hops.length - 1]?.trim();
+    return lastHop || null;
+  }
+  const verbatim = value.trim();
+  return verbatim || null;
 }
 
 // ─── Handler factory ──────────────────────────────────────────────────────────
@@ -138,7 +182,7 @@ export function createAnonymousReportHandler(
     const body = parsed.data;
 
     // 3. Server-derived source identity (never caller-supplied).
-    const sourceIp = deriveTrustedSourceIp(request);
+    const sourceIp = deriveTrustedSourceIp(request, deps.env);
     if (!sourceIp) {
       // Unattributable anonymous traffic cannot be rate-limited → fail closed.
       return json(400, { error: "Request source could not be determined." });

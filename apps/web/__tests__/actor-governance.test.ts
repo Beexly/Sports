@@ -129,6 +129,27 @@ describe("resolveServiceActor credential context", () => {
       )
     ).toThrow(InvalidServiceCredentialError);
   });
+
+  it("REFUSES the TEST_HARNESS method in production (enforced, not documentation-only)", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    try {
+      expect(() => resolveServiceActor(params())).toThrow(InvalidServiceCredentialError);
+      expect(() => resolveServiceActor(params())).toThrow(/TEST_HARNESS.*forbidden in production/);
+      // A genuine production credential method still resolves.
+      const actor = resolveServiceActor(
+        params({
+          verifiedCredentialContext: {
+            method: "CRON_BEARER",
+            verifiedBy: "lib/cron/authorize",
+            verifiedAt: new Date(),
+          },
+        })
+      );
+      expect(actor.credentialMethod).toBe("CRON_BEARER");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
 });
 
 // ─── Operation scope ──────────────────────────────────────────────────────────

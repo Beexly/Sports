@@ -77,6 +77,9 @@ const ENABLED_ENV = {
   ANONYMOUS_MODERATION_REPORTS_ENABLED: "true",
   MODERATION_REPORT_HMAC_SECRET: "test-secret-of-adequate-length",
   NODE_ENV: "test",
+  // Vercel deployment marker: the platform overwrites x-real-ip / XFF, which
+  // is the precondition for trusting them (see deriveTrustedSourceIp).
+  VERCEL: "1",
 } as const;
 
 interface Harness {
@@ -200,16 +203,55 @@ describe("anonymous-fingerprint spoof resistance", () => {
     expect(persisted).toHaveLength(0);
   });
 
-  it("deriveTrustedSourceIp prefers x-real-ip and falls back to the first x-forwarded-for hop", () => {
+  it("ON Vercel: deriveTrustedSourceIp prefers x-real-ip and falls back to the first x-forwarded-for hop", () => {
+    const env = { VERCEL: "1" };
     const withBoth = new Request("https://x.test", {
       headers: { "x-real-ip": "203.0.113.7", "x-forwarded-for": "198.51.100.1, 10.0.0.1" },
     });
-    expect(deriveTrustedSourceIp(withBoth)).toBe("203.0.113.7");
+    expect(deriveTrustedSourceIp(withBoth, env)).toBe("203.0.113.7");
     const xffOnly = new Request("https://x.test", {
       headers: { "x-forwarded-for": "198.51.100.1, 10.0.0.1" },
     });
-    expect(deriveTrustedSourceIp(xffOnly)).toBe("198.51.100.1");
-    expect(deriveTrustedSourceIp(new Request("https://x.test"))).toBeNull();
+    expect(deriveTrustedSourceIp(xffOnly, env)).toBe("198.51.100.1");
+    expect(deriveTrustedSourceIp(new Request("https://x.test"), env)).toBeNull();
+  });
+
+  it("OFF Vercel with no trusted-header config: forwarding headers are NOT trusted (spoofable first hop rejected)", () => {
+    const env = {}; // no VERCEL, no MODERATION_REPORT_TRUSTED_IP_HEADER
+    const spoofable = new Request("https://x.test", {
+      headers: { "x-real-ip": "6.6.6.6", "x-forwarded-for": "6.6.6.1, 10.0.0.1" },
+    });
+    expect(deriveTrustedSourceIp(spoofable, env)).toBeNull();
+  });
+
+  it("OFF Vercel with x-forwarded-for declared trusted: the LAST hop (trusted-proxy-appended) is used, never the client-controlled first hop", () => {
+    const env = { MODERATION_REPORT_TRUSTED_IP_HEADER: "x-forwarded-for" };
+    const appended = new Request("https://x.test", {
+      headers: { "x-forwarded-for": "attacker-chosen, 203.0.113.9" },
+    });
+    expect(deriveTrustedSourceIp(appended, env)).toBe("203.0.113.9");
+  });
+
+  it("OFF Vercel with a proxy-overwritten header declared trusted: its value is used verbatim", () => {
+    const env = { MODERATION_REPORT_TRUSTED_IP_HEADER: "x-real-ip" };
+    const req = new Request("https://x.test", {
+      headers: { "x-real-ip": "203.0.113.10", "x-forwarded-for": "attacker-chosen" },
+    });
+    expect(deriveTrustedSourceIp(req, env)).toBe("203.0.113.10");
+  });
+
+  it("OFF Vercel unconfigured, the HANDLER fails closed with 400 — per-source quota cannot be rotated away", async () => {
+    const { handler, persisted } = buildHarness({
+      env: {
+        ANONYMOUS_MODERATION_REPORTS_ENABLED: "true",
+        MODERATION_REPORT_HMAC_SECRET: ENABLED_ENV.MODERATION_REPORT_HMAC_SECRET,
+        NODE_ENV: "test",
+        // no VERCEL, no trusted-header declaration
+      },
+    });
+    const res = await handler(post(VALID_BODY, { "x-forwarded-for": "rotating-1, 10.0.0.1" }));
+    expect(res.status).toBe(400);
+    expect(persisted).toHaveLength(0);
   });
 });
 
