@@ -188,3 +188,5 @@ the control plane consumes, never redefines.
   their SUPERSEDED-by-#162/#163 status recorded on their threads.
 - The merge train (owner packet §2, Decision A) is unchanged; this freeze
   adds S1→S6 after the Phase 2 stack.
+
+> **Hardening addendum (2026-07-22):** draft-state language, PR-D sequencing, concept-vs-defect freeze scope, and the inventory-agent failure receipt are corrected append-only in `NOVA_CONVERGENCE_FREEZE_HARDENING_ADDENDUM_2026-07-22.md`.
