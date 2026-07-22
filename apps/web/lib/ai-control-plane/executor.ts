@@ -55,6 +55,7 @@ import type { EmergencyReceiptStore } from "./emergency";
 import { failClosedReceiptStore, verifyEmergencyOverride } from "./emergency";
 import {
   CONTROL_PLANE_PRICING_VERSION,
+  CONTROL_PLANE_PROVIDER_MINIMUM_USD,
   estimateAttemptPlanWorstCaseUsd,
   requiresCashReservation,
 } from "./budget";
@@ -329,6 +330,9 @@ export function createAiExecutor(
             routes: authority.permittedProviderRoutes,
             perAttemptCeilingUsd: maxVendorCashUsd,
             pricingVersion: CONTROL_PLANE_PRICING_VERSION,
+            // §10.4: provider per-attempt minimums are wired here too — the
+            // credit worst case must cover them just like the cash one.
+            providerMinimumUsd: CONTROL_PLANE_PROVIDER_MINIMUM_USD,
           });
           await deps.credit.authorizeAndReserve({
             requestId: request.requestId,

@@ -3345,9 +3345,9 @@ model AiBudgetReservation {
   updatedAt      DateTime @default(now())
   expiresAt      DateTime // sweeper deadline; the sweeper still verifies authoritative attempt state (§10.1)
 
-  window     AiBudgetWindow @relation(fields: [windowId], references: [id], onDelete: Cascade)
-  // §10.6: FK to the invocation. RESTRICT — financial evidence is never
-  // silently deleted out from under a hold.
+  // §10.6: BOTH parent FKs RESTRICT — financial evidence is never silently
+  // deleted out from under a hold, including by deleting the window itself.
+  window     AiBudgetWindow @relation(fields: [windowId], references: [id], onDelete: Restrict)
   invocation AiInvocation   @relation(fields: [invocationId], references: [id], onDelete: Restrict)
 
   @@unique([invocationId, windowId, reservationVersion])

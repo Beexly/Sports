@@ -114,8 +114,11 @@ export {
   holdForReconciliation,
   confirmSettlement,
   sweepExpired,
+  CONTROL_PLANE_PROVIDER_MINIMUM_USD,
 } from "./budget";
 export type {
+  AttemptUsage,
+  AttemptActualPricer,
   BudgetDb,
   ReserveInput,
   ReserveResult,

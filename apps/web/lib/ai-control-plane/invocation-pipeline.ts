@@ -69,9 +69,10 @@ import type { AuthoritativeControlStore } from "./control-store";
 import type { ObservabilitySink } from "./observability";
 import type { ProviderDispatchFn, ProviderDispatchPayload } from "./dispatch";
 import type { ProviderRouteId } from "./contracts";
-import type { OwnerIncidentSink } from "./budget";
+import type { AttemptActualPricer, OwnerIncidentSink } from "./budget";
 import {
   CONTROL_PLANE_PRICING_VERSION,
+  CONTROL_PLANE_PROVIDER_MINIMUM_USD,
   estimateAttemptPlanWorstCaseUsd,
   holdForReconciliation,
   release as releaseBudgetHold,
@@ -201,6 +202,22 @@ export interface BudgetSeam {
   readonly incidents?: OwnerIncidentSink;
   /** Hold TTL before the attempt-state-aware sweeper may act; default 15 min. */
   readonly holdTtlMs?: number;
+  /**
+   * §10.7: prices a successful attempt's ACTUAL vendor cash from real token
+   * usage. Wired by the sealed composition root (never a caller). When absent
+   * or unable to price, the pipeline settles the CONSERVATIVE per-attempt
+   * ceiling instead — over-counting, never under-counting — and the amount
+   * stays provisional until reconciliation. A priced actual above the hold is
+   * preserved in full and drives the §10.2 OVERAGE_LOCKED circuit breaker.
+   */
+  readonly priceActual?: AttemptActualPricer;
+  /**
+   * §10.4 provider per-attempt minimums fed into the worst-case estimate.
+   * Defaults to the control-plane-owned
+   * {@link CONTROL_PLANE_PROVIDER_MINIMUM_USD} registry; overridable only by
+   * the sealed composition root (a test seam, not caller policy).
+   */
+  readonly providerMinimumUsd?: Readonly<Record<string, string | number>>;
 }
 
 export interface LedgeredDispatchDeps {
@@ -462,6 +479,11 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
           routes: authority.permittedProviderRoutes,
           perAttemptCeilingUsd: plan.maxVendorCashUsd,
           pricingVersion: CONTROL_PLANE_PRICING_VERSION,
+          // §10.4: provider per-attempt minimums are IN EFFECT at this — the
+          // only — production cash call site, from the control-plane-owned
+          // registry unless the sealed composition root overrides.
+          providerMinimumUsd:
+            deps.budget.providerMinimumUsd ?? CONTROL_PLANE_PROVIDER_MINIMUM_USD,
         });
         const reserveNow = deps.now();
         await reserveBudgetHold(deps.budget.db, {
@@ -680,17 +702,46 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
           });
           telemetryStatus = "DEGRADED";
         }
-        // §10.7: PROVISIONAL settlement of the actual (bounded by the
-        // per-attempt ceiling) — never reported as confirmed; the held
-        // remainder for the untaken fallback attempts is freed. A budget-store
-        // hiccup after a successful PAID call never converts the success into
-        // an error: the hold stays and the attempt-state-aware sweeper
-        // preserves it as a RECONCILIATION_HOLD (§10.1) instead of releasing.
+        // §10.7: PROVISIONAL settlement of the attempt's ACTUAL cost. When
+        // the composition root wires a token pricer, the real token-priced
+        // actual settles — including an actual ABOVE the hold, which is
+        // preserved in full and trips the §10.2 OVERAGE_LOCKED circuit
+        // breaker through this production path. Without a pricer (or when it
+        // cannot price this attempt) the CONSERVATIVE per-attempt ceiling
+        // settles instead — over-counting, never under-counting — and either
+        // way the amount stays provisional (never confirmed) until
+        // reconciliation. A budget-store hiccup after a successful PAID call
+        // never converts the success into an error: the hold stays and the
+        // attempt-state-aware sweeper preserves it as a RECONCILIATION_HOLD
+        // (§10.1) instead of releasing.
         if (budgetHeld && deps.budget !== undefined) {
+          let actualUsd = toUsdString(plan.maxVendorCashUsd, "maxVendorCashUsd");
+          if (deps.budget.priceActual !== undefined) {
+            try {
+              const priced = deps.budget.priceActual({
+                providerUsed: outcome.providerUsed,
+                modelResolved: outcome.modelResolved,
+                inputTokens: outcome.inputTokens,
+                outputTokens: outcome.outputTokens,
+              });
+              if (priced !== null) {
+                actualUsd = toUsdString(priced, "priceActual");
+              }
+            } catch (error) {
+              // A broken pricer never turns a paid success into an error and
+              // never under-counts: fall back to the conservative ceiling.
+              observability.markDegraded(
+                `budget priceActual failed for invocation ${invocationId} — ` +
+                  "settling the conservative per-attempt ceiling instead",
+                error,
+              );
+              telemetryStatus = "DEGRADED";
+            }
+          }
           try {
             await settleProvisional(deps.budget.db, {
               invocationId,
-              actualUsd: toUsdString(plan.maxVendorCashUsd, "maxVendorCashUsd"),
+              actualUsd,
               now: deps.now(),
               incidents: deps.budget.incidents,
             });
