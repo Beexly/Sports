@@ -9,8 +9,8 @@
  * The operational failed-closed polling runtime lives in `scripts/nova/`
  * (see `docs/ai/nova/S3_SOURCE_RUNTIME.md`) and is deliberately NOT exported
  * here — runtime receipts are artifacts, not importable domain state.
- * Founder OS/agent surfaces (S4) land in their own split unit and are
- * re-added here as they merge.
+ * Founder OS/agent surfaces (S4) — `founder-command`, `founder-work-seed`,
+ * `nova-agent`, `nova-subagents`.
  */
 export * from "./types";
 export * from "./lifecycle";
@@ -50,3 +50,7 @@ export {
   type IneligibleCapabilityRecord,
   type InspectionSelectionInput,
 } from "./capability-governor";
+export * from "./founder-command";
+export * from "./nova-agent";
+export * from "./nova-subagents";
+export * from "./founder-work-seed";
