@@ -24,6 +24,7 @@
  * sport cannot abort the remaining sports in the caller's loop.
  */
 
+import { randomUUID } from "node:crypto";
 import { db } from "@sports/db";
 import {
   OddsApiClient,
@@ -39,6 +40,12 @@ import {
 } from "@sports/prediction-engine";
 import type { ReadinessGates, PickKind } from "@sports/prediction-engine";
 import { recordPickSettlementSnapshot } from "./settlement-snapshots.js";
+import {
+  recordScorelessCompletedEvidence,
+  SCORELESS_COMPLETED_ANOMALY,
+  SCORELESS_REVIEW_THRESHOLD,
+  type SettlementEvidenceDb,
+} from "./settlement-evidence.js";
 
 export interface SettleSportConfig {
   key: SupportedSportKey;
@@ -51,8 +58,29 @@ export interface SettleSportResult {
   status: "success" | "failed";
   gamesSettled: number;
   picksSettled: number;
+  /** New deduplicated completed-but-scoreless sightings recorded this run
+   *  (retries of the same run/payload insert nothing and count nothing). */
+  observationsRecorded: number;
+  /** SCORELESS_COMPLETED anomalies newly opened this run. */
+  anomaliesOpened: number;
+  /** Anomalies promoted OPEN→OWNER_REVIEW this run (each promotion also
+   *  created its exactly-once SettlementDecision receipt). */
+  anomaliesPromoted: number;
+  /** Anomalies resolved this run because real scores arrived. Evidence and
+   *  decision receipts are preserved — resolution never deletes anything. */
+  anomaliesResolved: number;
+  /** PickSettlementEvent outbox rows appended this run — always in the same
+   *  transaction as the pick's PENDING→result update. */
+  outboxAppended: number;
   error?: string;
 }
+
+/** Upstream feed identifier stamped on every settlement observation. */
+const OBSERVATION_SOURCE = "the-odds-api";
+
+// Re-export the evidence constants so callers/tests can reference the
+// threshold and anomaly type through the settlement entry point.
+export { SCORELESS_COMPLETED_ANOMALY, SCORELESS_REVIEW_THRESHOLD };
 
 /**
  * Settle all completed games for one sport.
@@ -75,6 +103,16 @@ export async function settleSport(
 
   let gamesSettled = 0;
   let picksSettled = 0;
+  let observationsRecorded = 0;
+  let anomaliesOpened = 0;
+  let anomaliesPromoted = 0;
+  let anomaliesResolved = 0;
+  let outboxAppended = 0;
+
+  // One settlement run id per settleSport() call. Every observation this
+  // run records carries it, so corroboration (COUNT DISTINCT settlementRunId)
+  // counts RUNS, not sightings — and a retried run can never corroborate.
+  const settlementRunId = randomUUID();
 
   try {
     const { data: scores } = await client.getScores(sport.key, 2);
@@ -110,9 +148,85 @@ export async function settleSport(
           : {},
       });
 
+      // ── Settlement evidence (Phase 1E) ─────────────────────────────────
+      // A completed-but-scoreless sighting on a still-open game is recorded
+      // as append-only, deduplicated EVIDENCE — never acted on. One db
+      // transaction: insert-or-noop the observation, derive corroboration
+      // by counting DISTINCT run ids, race-safely upsert the single
+      // SCORELESS_COMPLETED anomaly, and (at >= SCORELESS_REVIEW_THRESHOLD
+      // distinct runs) promote it to OWNER_REVIEW exactly once with a
+      // durable SettlementDecision receipt. Picks stay PENDING, status is
+      // never inferred, terminal games never enter this path (the empty
+      // update above remains their whole story — unchanged from before).
+      // Failure-isolated: a broken evidence write must never abort
+      // settlement of the remaining games.
+      if (!bothScores && (game.status === "SCHEDULED" || game.status === "LIVE")) {
+        try {
+          const evidence = await recordScorelessCompletedEvidence({
+            db: db as unknown as SettlementEvidenceDb,
+            gameId: game.id,
+            externalId: game.externalId,
+            gameStatus: game.status,
+            settlementRunId,
+            source: OBSERVATION_SOURCE,
+            payload: {
+              externalId: score.externalId,
+              completed: score.completed,
+              homeScore: score.homeScore,
+              awayScore: score.awayScore,
+            },
+            observedAt: new Date(),
+          });
+          if (evidence.observationRecorded) observationsRecorded++;
+          if (evidence.anomalyOpened) anomaliesOpened++;
+          if (evidence.anomalyPromoted) {
+            anomaliesPromoted++;
+            console.warn(
+              `${logPrefix} ${sport.key}: game ${game.id} (${game.externalId}) reported ` +
+                `completed-but-scoreless across ${evidence.distinctRunCount} distinct runs ` +
+                `while still ${game.status} — anomaly promoted to OWNER_REVIEW with a ` +
+                `durable SettlementDecision receipt. Picks left PENDING; NOT auto-voided.`,
+            );
+          }
+        } catch (evidenceErr) {
+          console.warn(
+            `${logPrefix} Settlement evidence write failed for game ${game.id}: ` +
+              `${evidenceErr instanceof Error ? evidenceErr.message : evidenceErr}`,
+          );
+        }
+      }
+
       // The inline null-check (not the bothScores boolean) is what narrows the
       // score types to `number` for the settlement math below.
       if (score.homeScore !== null && score.awayScore !== null) {
+        // Real scores arrived: RESOLVE any open SCORELESS_COMPLETED anomaly
+        // for this game (it was feed lag after all, or the owner review is
+        // now moot). Resolution marks state/reason/timestamp only —
+        // observations and the decision receipt are NEVER deleted, so the
+        // anomaly history survives (the rejected #157 reset-and-clear
+        // behavior destroyed it). Idempotent (updateMany) and non-fatal.
+        try {
+          const resolved = await db.settlementAnomaly.updateMany({
+            where: {
+              gameId: game.id,
+              anomalyType: SCORELESS_COMPLETED_ANOMALY,
+              state: { in: ["OPEN", "OWNER_REVIEW"] },
+            },
+            data: {
+              state: "RESOLVED",
+              resolutionActor: "settlement-pipeline",
+              resolutionReason: "scores-arrived",
+              resolvedAt: new Date(),
+            },
+          });
+          anomaliesResolved += resolved.count;
+        } catch (resolveErr) {
+          console.warn(
+            `${logPrefix} Anomaly resolution failed for game ${game.id}: ` +
+              `${resolveErr instanceof Error ? resolveErr.message : resolveErr}`,
+          );
+        }
+
         // Settle pick results — always runs, regardless of bootstrap mode.
         // Real game outcomes are source truth and must be recorded.
         const settledAt = new Date();
@@ -167,11 +281,36 @@ export async function settleSport(
           // result:"PENDING" makes the write a no-op for the loser of the race
           // (count===0) — so the first settlement and its settledAt stay
           // immutable and CLV is never re-graded against a second close.
-          const settled = await db.pick.updateMany({
-            where: { id: pick.id, result: "PENDING" },
-            data: { result, settledAt },
+          //
+          // TRANSACTIONAL OUTBOX: the PickSettlementEvent append rides in
+          // the SAME transaction as the pick-result update, so a settlement
+          // can never commit without its notification event and an event can
+          // never exist for a settlement that rolled back. (The rejected
+          // #144 fired its notification hook in-loop after the commit —
+          // fail-isolated but not durable: a crash lost the notification, a
+          // blind retry risked duplicates.) The unique pickId on the outbox
+          // means one settlement = one event, backed by the same PENDING-
+          // scoped idempotency: the race loser's count===0 skips the append.
+          // Delivery happens elsewhere (the outbox worker), never here.
+          const settled = await db.$transaction(async (tx) => {
+            const updated = await tx.pick.updateMany({
+              where: { id: pick.id, result: "PENDING" },
+              data: { result, settledAt },
+            });
+            if (updated.count === 0) return updated;
+            await tx.pickSettlementEvent.create({
+              data: {
+                pickId: pick.id,
+                gameId: game.id,
+                result,
+                settledAt,
+                status: "PENDING",
+              },
+            });
+            return updated;
           });
           if (settled.count === 0) continue;
+          outboxAppended++;
 
           // Grade Closing-Line Value against the immutable lock snapshot
           // (clvLockLine/clvLockPrice, captured at publish). Additive and
@@ -275,10 +414,31 @@ export async function settleSport(
       }
     }
 
-    return { sport: sport.key, status: "success", gamesSettled, picksSettled };
+    return {
+      sport: sport.key,
+      status: "success",
+      gamesSettled,
+      picksSettled,
+      observationsRecorded,
+      anomaliesOpened,
+      anomaliesPromoted,
+      anomaliesResolved,
+      outboxAppended,
+    };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`${logPrefix} ${sport.key} failed: ${message}`);
-    return { sport: sport.key, status: "failed", gamesSettled, picksSettled, error: message };
+    return {
+      sport: sport.key,
+      status: "failed",
+      gamesSettled,
+      picksSettled,
+      observationsRecorded,
+      anomaliesOpened,
+      anomaliesPromoted,
+      anomaliesResolved,
+      outboxAppended,
+      error: message,
+    };
   }
 }

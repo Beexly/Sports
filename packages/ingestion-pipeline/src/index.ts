@@ -1,7 +1,18 @@
 export { processSport } from "./process-sport.js";
 export type { SportConfig, ProcessSportResult } from "./process-sport.js";
-export { settleSport } from "./settle-sport.js";
+export {
+  settleSport,
+  SCORELESS_COMPLETED_ANOMALY,
+  SCORELESS_REVIEW_THRESHOLD,
+} from "./settle-sport.js";
 export type { SettleSportConfig, SettleSportResult } from "./settle-sport.js";
+export { recordScorelessCompletedEvidence, fingerprintScorePayload } from "./settlement-evidence.js";
+export type {
+  ScorelessEvidenceInput,
+  ScorelessEvidenceOutcome,
+  SettlementEvidenceDb,
+  SettlementEvidenceTx,
+} from "./settlement-evidence.js";
 export { recordPickSettlementSnapshot } from "./settlement-snapshots.js";
 export type {
   RecordSettlementSnapshotInput,

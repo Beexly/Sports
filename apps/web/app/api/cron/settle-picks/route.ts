@@ -72,6 +72,11 @@ export async function GET(request: Request) {
     ok: boolean;
     gamesSettled: number;
     picksSettled: number;
+    observationsRecorded: number;
+    anomaliesOpened: number;
+    anomaliesPromoted: number;
+    anomaliesResolved: number;
+    outboxAppended: number;
     error?: string;
   }> = [];
 
@@ -82,6 +87,11 @@ export async function GET(request: Request) {
       ok: result.status === "success",
       gamesSettled: result.gamesSettled,
       picksSettled: result.picksSettled,
+      observationsRecorded: result.observationsRecorded,
+      anomaliesOpened: result.anomaliesOpened,
+      anomaliesPromoted: result.anomaliesPromoted,
+      anomaliesResolved: result.anomaliesResolved,
+      outboxAppended: result.outboxAppended,
       ...(result.error ? { error: result.error } : {}),
     });
     // Brief pause to avoid bursting the upstream API quota.
@@ -112,6 +122,15 @@ export async function GET(request: Request) {
   const okCount = results.filter((r) => r.ok).length;
   const gamesSettled = results.reduce((sum, r) => sum + r.gamesSettled, 0);
   const picksSettled = results.reduce((sum, r) => sum + r.picksSettled, 0);
+  // Settlement-evidence telemetry (Phase 1E): surfaced so a non-zero count —
+  // especially a promotion to OWNER_REVIEW — is visible in the cron response,
+  // never silent. The durable receipts live in the SettlementDecision table;
+  // these are per-run counters only.
+  const observationsRecorded = results.reduce((sum, r) => sum + r.observationsRecorded, 0);
+  const anomaliesOpened = results.reduce((sum, r) => sum + r.anomaliesOpened, 0);
+  const anomaliesPromoted = results.reduce((sum, r) => sum + r.anomaliesPromoted, 0);
+  const anomaliesResolved = results.reduce((sum, r) => sum + r.anomaliesResolved, 0);
+  const outboxAppended = results.reduce((sum, r) => sum + r.outboxAppended, 0);
 
   return NextResponse.json({
     ok: okCount === results.length,
@@ -120,6 +139,11 @@ export async function GET(request: Request) {
     totalCount: results.length,
     gamesSettled,
     picksSettled,
+    observationsRecorded,
+    anomaliesOpened,
+    anomaliesPromoted,
+    anomaliesResolved,
+    outboxAppended,
     requestedSport: requestedSport ?? null,
     bootstrapMode: gates.isBootstrapMode,
     results,

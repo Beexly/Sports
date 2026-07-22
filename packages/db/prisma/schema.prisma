@@ -36,6 +36,7 @@ model User {
   alerts        Alert[]
   claudeApiCalls ClaudeApiCallRecord[]
   watchlistEntries Watchlist[]
+  pushSubscriptions PushSubscription[]
 
   @@index([email])
   @@map("users")
@@ -239,6 +240,9 @@ model Game {
   creatorAssets       CreatorAsset[]
   claudeApiCalls      ClaudeApiCallRecord[]
   oddsLineSnapshots   OddsLineSnapshot[]
+  settlementObservations SettlementObservation[]
+  settlementAnomalies    SettlementAnomaly[]
+  pickSettlementEvents   PickSettlementEvent[]
 
   @@index([sportId])
   @@index([commenceTime])
@@ -456,6 +460,7 @@ model Pick {
   gateDecisions  GateDecision[]
   creatorAssets  CreatorAsset[]
   proofReceipt   PickProofReceipt?
+  settlementEvent PickSettlementEvent?
 
   // One active pick per game per pick type — enforced at DB level to prevent
   // duplicate inserts from concurrent worker runs (TOCTOU race prevention).
@@ -811,6 +816,158 @@ model Watchlist {
   @@unique([userId, entityType, entityId])
   @@index([userId])
   @@map("watchlist_entries")
+}
+
+// One browser/device Web Push subscription for a user — the free, no-vendor
+// channel half of the Elite "real-time email & push alerts" feature (see
+// apps/web/lib/watchlist/channels/web-push-channel.ts). `endpoint` is
+// globally unique (it IS the push service's per-device subscription URL),
+// so it doubles as the natural upsert/delete key; `p256dh`/`auth` are the
+// two keys the browser's PushSubscription.toJSON() returns, required to
+// encrypt a payload for that endpoint. A user may have many rows (one per
+// device/browser they've granted permission on).
+//
+// Founder-applied migration — see
+// packages/db/prisma/migrations/20260719120000_add_push_subscriptions,
+// following the exact Watchlist precedent above. Application code
+// (apps/web/lib/push/subscription-db.ts) fails gracefully when this table
+// is absent, exactly like Watchlist/OddsLineSnapshot.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+
+
+// ============================================================
+// SETTLEMENT EVIDENCE + TRANSACTIONAL OUTBOX (Phase 1E)
+// ============================================================
+// Converges the two rejected designs: #157's in-place sighting counter
+// (not atomic, retries counted as corroboration, score arrival destroyed
+// history) and #144's in-loop settlement notification hook (fail-isolated
+// but not durable). Evidence is APPEND-ONLY: observations are never
+// deleted or reset; anomalies are RESOLVED, never erased; decisions are
+// immutable receipts. State-machine columns are plain Strings (not native
+// Postgres enums) per this schema's established convention for new value
+// sets (see Watchlist.entityType / OddsLineSnapshot.phase rationale above):
+// founder-applied migrations must be safely re-appliable and Postgres has
+// no `CREATE TYPE ... IF NOT EXISTS`.
+
+// One deduplicated sighting of a settlement-relevant source row. The
+// compound unique (gameId, settlementRunId, payloadFingerprint) is the
+// retry firewall: re-processing the same run/payload is a no-op insert
+// (createMany skipDuplicates → INSERT ON CONFLICT DO NOTHING), so a retry
+// can NEVER count as fresh corroboration. Corroboration is always derived
+// by COUNT(DISTINCT settlementRunId) over these rows — never an in-place
+// counter (that was #157's atomicity bug). Append-only: no code path may
+// delete or mutate these rows.
+model SettlementObservation {
+  id                   String   @id @default(cuid())
+  gameId               String
+  source               String                 // upstream feed, e.g. "the-odds-api"
+  settlementRunId      String                 // minted once per settleSport() call (crypto.randomUUID)
+  payloadFingerprint   String                 // sha256 over the normalized source row content
+  observedSourceStatus String                 // e.g. "completed-scoreless"
+  homeScorePresent     Boolean
+  awayScorePresent     Boolean
+  mappingStatus        String                 // "matched" — game resolved by externalId
+  freshnessState       String                 // e.g. "within-settlement-window" (daysFrom=2 fetch)
+  observedAt           DateTime               // when the sighting happened (feed read time)
+  recordedAt           DateTime @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, settlementRunId, payloadFingerprint])
+  @@index([gameId])
+  @@map("settlement_observations")
+}
+
+// At most ONE anomaly row per (gameId, anomalyType) — the compound unique
+// enforces the single-open-anomaly invariant at the constraint level (at
+// most one row total, hence at most one OPEN), and makes the race-safe
+// upsert-by-unique pattern possible (Prisma compiles it to INSERT ... ON
+// CONFLICT). state: OPEN | OWNER_REVIEW | RESOLVED | DISMISSED. Resolution
+// (e.g. scores arriving later) marks the row RESOLVED with an actor +
+// reason — it never deletes the row, the observations, or the decision
+// receipt (that was #157's history-destruction bug).
+model SettlementAnomaly {
+  id               String    @id @default(cuid())
+  gameId           String
+  anomalyType      String                     // e.g. "SCORELESS_COMPLETED"
+  state            String    @default("OPEN") // OPEN | OWNER_REVIEW | RESOLVED | DISMISSED
+  firstSeenAt      DateTime  @default(now())
+  lastSeenAt       DateTime  @default(now())
+  // Derived from COUNT(DISTINCT settlementRunId) over SettlementObservation
+  // at last evidence write — stored for query convenience only, never the
+  // source of truth for threshold decisions.
+  distinctRunCount Int       @default(1)
+  resolutionActor  String?                    // e.g. "settlement-pipeline" | an owner user id
+  resolvedAt       DateTime?
+  resolutionReason String?                    // e.g. "scores-arrived"
+
+  game     Game                @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  decision SettlementDecision?
+
+  @@unique([gameId, anomalyType])
+  @@index([state])
+  @@map("settlement_anomalies")
+}
+
+// Durable owner-decision receipt, created EXACTLY ONCE when an anomaly is
+// promoted to OWNER_REVIEW. The unique FK on anomalyId IS the exactly-once
+// guarantee: under a double-promotion race the second transaction cannot
+// create a second receipt (unique violation aborts it), and the
+// state-guarded promotion (updateMany where state=OPEN) means it never
+// tries. Immutable: never updated or deleted by pipeline code.
+model SettlementDecision {
+  id           String   @id @default(cuid())
+  anomalyId    String   @unique
+  decisionKind String                 // e.g. "REVIEW_REQUESTED"
+  context      Json                   // game, sightings, distinct runs at promotion time
+  createdAt    DateTime @default(now())
+
+  anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Cascade)
+
+  @@map("settlement_decisions")
+}
+
+// Transactional outbox for pick-settlement notifications. A row is
+// appended in the SAME database transaction as the pick's PENDING→result
+// update, so a settlement can never commit without its event (and an event
+// can never exist for an uncommitted settlement) — this replaces #144's
+// in-loop onPickGraded hook, which was fail-isolated but not durable (a
+// crash after the pick update lost the notification; a blind retry risked
+// duplicates). pickId is unique: pick settlement is already idempotent
+// (updateMany scoped to result:PENDING), so one settlement = one event.
+// Delivery state machine (worker-driven, OUTSIDE the settlement
+// transaction): PENDING → CLAIMED → DELIVERED | FAILED; FAILED rows with
+// attempts left and stale CLAIMED rows are re-claimable.
+model PickSettlementEvent {
+  id              String     @id @default(cuid())
+  pickId          String     @unique
+  gameId          String
+  result          PickResult
+  settledAt       DateTime
+  status          String     @default("PENDING") // PENDING | CLAIMED | DELIVERED | FAILED
+  claimedAt       DateTime?
+  deliveredAt     DateTime?
+  attemptCount    Int        @default(0)
+  channelOutcomes Json?                          // per-channel delivery detail from the worker
+  createdAt       DateTime   @default(now())
+
+  pick Pick @relation(fields: [pickId], references: [id], onDelete: Cascade)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([status, claimedAt])
+  @@map("pick_settlement_events")
 }
 
 // ============================================================
