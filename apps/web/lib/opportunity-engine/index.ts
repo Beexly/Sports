@@ -16,5 +16,8 @@ export * from "./pipeline";
 export * from "./experiment";
 export * from "./learning";
 export * from "./monetization";
+export * from "./capability-provenance";
+export * from "./capability-source-schema";
 export * from "./capability-inventory";
+export * from "./capability-governance";
 export * from "./capability-governor";

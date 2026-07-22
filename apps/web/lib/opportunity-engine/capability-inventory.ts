@@ -1,5 +1,10 @@
 import inventoryData from "../../../../data/nova/ai-capability-inventory-2026-07-21.json";
 import additionData from "../../../../data/nova/ai-capability-inventory-additions-2026-07-21.json";
+import {
+  computeCapabilityProvenanceHash,
+  isWellFormedCapabilityProvenanceHash,
+  type CapabilityProvenanceSourceDocument,
+} from "./capability-provenance";
 
 export type CapabilityInventorySurface =
   | "CLAUDE_PLUGIN"
@@ -27,6 +32,16 @@ type CapturedPluginTuple = readonly [
 const INITIAL_CLAUDE_PLUGINS = inventoryData.claude.plugins as unknown as readonly CapturedPluginTuple[];
 const ADDITIONAL_CLAUDE_PLUGINS = additionData.plugins as unknown as readonly CapturedPluginTuple[];
 
+/** Capture-document identities used as provenance-hash source material. */
+const INITIAL_CAPTURE_DOCUMENT: CapabilityProvenanceSourceDocument = {
+  schemaVersion: inventoryData.schemaVersion,
+  capturedAt: inventoryData.capturedAt,
+};
+const ADDITIONAL_CAPTURE_DOCUMENT: CapabilityProvenanceSourceDocument = {
+  schemaVersion: additionData.schemaVersion,
+  capturedAt: additionData.capturedAt,
+};
+
 export interface CapabilityInventoryEntry {
   readonly id: string;
   readonly name: string;
@@ -37,7 +52,31 @@ export interface CapabilityInventoryEntry {
   readonly skillCount?: number;
   readonly lastUpdated?: string;
   readonly verificationState: "CAPTURED_NOT_RUNTIME_VERIFIED" | "RUNTIME_VISIBLE_2026_07_21";
+  /**
+   * Deterministic hash of this record's exact captured source material
+   * (capability-provenance.ts). Governance records pin this value; a
+   * mismatch means the capture drifted and the governor fails closed.
+   */
+  readonly provenanceHash: string;
   readonly executionAuthority: false;
+}
+
+type CapabilityInventoryEntrySeed = Omit<CapabilityInventoryEntry, "provenanceHash">;
+
+function captureDocumentFor(
+  captureBatch: CapabilityCaptureBatch,
+): CapabilityProvenanceSourceDocument {
+  return captureBatch === "ADDITIONAL_USER_CAPTURE"
+    ? ADDITIONAL_CAPTURE_DOCUMENT
+    : INITIAL_CAPTURE_DOCUMENT;
+}
+
+/** Seals a captured record with the provenance hash of its source material. */
+function sealEntry(seed: CapabilityInventoryEntrySeed): CapabilityInventoryEntry {
+  return {
+    ...seed,
+    provenanceHash: computeCapabilityProvenanceHash(seed, captureDocumentFor(seed.captureBatch)),
+  };
 }
 
 export interface CapabilityInventorySummary {
@@ -64,18 +103,20 @@ function addClaudePlugin(
   captureBatch: Extract<CapabilityCaptureBatch, "INITIAL_USER_CAPTURE" | "ADDITIONAL_USER_CAPTURE">,
 ): void {
   const [name, author, skillCount, lastUpdated] = tuple;
-  entries.push({
-    id: stableId("CLAUDE_PLUGIN", name),
-    name,
-    surface: "CLAUDE_PLUGIN",
-    state: "USER_REPORTED_CONNECTED",
-    captureBatch,
-    author,
-    skillCount,
-    lastUpdated,
-    verificationState: "CAPTURED_NOT_RUNTIME_VERIFIED",
-    executionAuthority: false,
-  });
+  entries.push(
+    sealEntry({
+      id: stableId("CLAUDE_PLUGIN", name),
+      name,
+      surface: "CLAUDE_PLUGIN",
+      state: "USER_REPORTED_CONNECTED",
+      captureBatch,
+      author,
+      skillCount,
+      lastUpdated,
+      verificationState: "CAPTURED_NOT_RUNTIME_VERIFIED",
+      executionAuthority: false,
+    }),
+  );
 }
 
 export function getCapabilityInventory(): readonly CapabilityInventoryEntry[] {
@@ -90,15 +131,17 @@ export function getCapabilityInventory(): readonly CapabilityInventoryEntry[] {
 
   const addClaudeConnectors = (names: readonly string[], state: CapabilityConnectionState): void => {
     for (const name of names) {
-      entries.push({
-        id: stableId("CLAUDE_CONNECTOR", name),
-        name,
-        surface: "CLAUDE_CONNECTOR",
-        state,
-        captureBatch: "INITIAL_USER_CAPTURE",
-        verificationState: "CAPTURED_NOT_RUNTIME_VERIFIED",
-        executionAuthority: false,
-      });
+      entries.push(
+        sealEntry({
+          id: stableId("CLAUDE_CONNECTOR", name),
+          name,
+          surface: "CLAUDE_CONNECTOR",
+          state,
+          captureBatch: "INITIAL_USER_CAPTURE",
+          verificationState: "CAPTURED_NOT_RUNTIME_VERIFIED",
+          executionAuthority: false,
+        }),
+      );
     }
   };
   addClaudeConnectors(inventoryData.claude.connectors.connected, "USER_REPORTED_CONNECTED");
@@ -106,39 +149,45 @@ export function getCapabilityInventory(): readonly CapabilityInventoryEntry[] {
   addClaudeConnectors(inventoryData.claude.connectors.notConnectedOrUnavailable, "NOT_CONNECTED");
 
   for (const name of inventoryData.claude.personalSkills) {
-    entries.push({
-      id: stableId("CLAUDE_SKILL", name),
-      name,
-      surface: "CLAUDE_SKILL",
-      state: "USER_REPORTED_CONNECTED",
-      captureBatch: "INITIAL_USER_CAPTURE",
-      verificationState: "CAPTURED_NOT_RUNTIME_VERIFIED",
-      executionAuthority: false,
-    });
+    entries.push(
+      sealEntry({
+        id: stableId("CLAUDE_SKILL", name),
+        name,
+        surface: "CLAUDE_SKILL",
+        state: "USER_REPORTED_CONNECTED",
+        captureBatch: "INITIAL_USER_CAPTURE",
+        verificationState: "CAPTURED_NOT_RUNTIME_VERIFIED",
+        executionAuthority: false,
+      }),
+    );
   }
 
   for (const name of inventoryData.chatgpt.appsAndConnectors) {
-    entries.push({
-      id: stableId("CHATGPT_APP", name),
-      name,
-      surface: "CHATGPT_APP",
-      state: "RUNTIME_VISIBLE",
-      captureBatch: "CHATGPT_RUNTIME_CAPTURE",
-      verificationState: "RUNTIME_VISIBLE_2026_07_21",
-      executionAuthority: false,
-    });
-  }
-  for (const names of Object.values(inventoryData.chatgpt.installedSkillPacks)) {
-    for (const name of names) {
-      entries.push({
-        id: stableId("CHATGPT_SKILL", name),
+    entries.push(
+      sealEntry({
+        id: stableId("CHATGPT_APP", name),
         name,
-        surface: "CHATGPT_SKILL",
+        surface: "CHATGPT_APP",
         state: "RUNTIME_VISIBLE",
         captureBatch: "CHATGPT_RUNTIME_CAPTURE",
         verificationState: "RUNTIME_VISIBLE_2026_07_21",
         executionAuthority: false,
-      });
+      }),
+    );
+  }
+  for (const names of Object.values(inventoryData.chatgpt.installedSkillPacks)) {
+    for (const name of names) {
+      entries.push(
+        sealEntry({
+          id: stableId("CHATGPT_SKILL", name),
+          name,
+          surface: "CHATGPT_SKILL",
+          state: "RUNTIME_VISIBLE",
+          captureBatch: "CHATGPT_RUNTIME_CAPTURE",
+          verificationState: "RUNTIME_VISIBLE_2026_07_21",
+          executionAuthority: false,
+        }),
+      );
     }
   }
 
@@ -173,6 +222,7 @@ export function validateCapabilityInventory(
 ): readonly string[] {
   const errors: string[] = [];
   const ids = new Set<string>();
+  const provenanceHashes = new Set<string>();
   for (const entry of entries) {
     if (!entry.name.trim()) errors.push(`${entry.id} has no name.`);
     if (ids.has(entry.id)) errors.push(`Duplicate capability id: ${entry.id}`);
@@ -180,6 +230,21 @@ export function validateCapabilityInventory(
     if (entry.executionAuthority !== false) errors.push(`${entry.id} cannot grant execution authority.`);
     if (entry.surface === "CLAUDE_PLUGIN" && (!entry.lastUpdated || entry.skillCount === undefined)) {
       errors.push(`${entry.id} is missing the captured plugin metadata.`);
+    }
+    if (!isWellFormedCapabilityProvenanceHash(entry.provenanceHash)) {
+      errors.push(`${entry.id} has a malformed provenance hash.`);
+    } else {
+      const expectedHash = computeCapabilityProvenanceHash(
+        entry,
+        captureDocumentFor(entry.captureBatch),
+      );
+      if (entry.provenanceHash !== expectedHash) {
+        errors.push(`${entry.id} provenance hash does not match its captured source material.`);
+      }
+      if (provenanceHashes.has(entry.provenanceHash)) {
+        errors.push(`${entry.id} provenance hash collides with another capability record.`);
+      }
+      provenanceHashes.add(entry.provenanceHash);
     }
   }
 

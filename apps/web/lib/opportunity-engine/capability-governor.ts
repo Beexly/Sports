@@ -1,7 +1,49 @@
+/**
+ * NOVA S2 — capability governor (inspection-only).
+ *
+ * Two layers live here:
+ *
+ * 1. `routeCapabilities` — the #146-extracted, captured-metadata shortlist.
+ *    It ranks task-fit candidates from name/author/skill-count capture data
+ *    alone and is explicitly pre-governance: it consults no permission
+ *    manifests and no supply-chain state.
+ * 2. `selectInspectionCandidates` — the hardened, fail-closed governed
+ *    selection. It admits a capability only when a governance ledger record
+ *    exists with a declared permission manifest, a known supply-chain state,
+ *    and a pinned provenance hash that still matches the captured inventory
+ *    record. Anything less is INELIGIBLE with an exact reason code.
+ *
+ * Both layers produce recommendation records only. The governor selects at
+ * most three inspection candidates per run (`MAX_INSPECTION_CANDIDATES`) and
+ * cannot activate anything: this module — and all of S2 — exports no
+ * activation, enablement, connection, or execution API, and every returned
+ * record is plain data (no callables). Activation is an owner action
+ * performed outside this codebase.
+ *
+ * Determinism contract: no clocks (`generatedAt` is a caller-supplied
+ * parameter), no randomness, no I/O; identical inputs yield identical
+ * recommendation records.
+ */
+
 import {
   getCapabilityInventory,
   type CapabilityInventoryEntry,
 } from "./capability-inventory";
+import {
+  CAPABILITY_ROLLBACK_PLANS,
+  CAPABILITY_STOP_CONDITION_PROFILES,
+  CAPABILITY_SUPPLY_CHAIN_STATES,
+  CAPABILITY_VERSION_DRIFT_STATES,
+  estimateCapabilityContextCost,
+  getCapabilityGovernanceRecords,
+  validateCapabilityObservedPerformance,
+  validateCapabilityPermissionManifest,
+  type CapabilityContextCostEstimate,
+  type CapabilityGovernanceRecord,
+  type CapabilityRollbackPlan,
+  type CapabilityStopCondition,
+} from "./capability-governance";
+import { isWellFormedCapabilityProvenanceHash } from "./capability-provenance";
 
 export type CapabilityTaskClass =
   | "GSE_REPOSITORY_IMPLEMENTATION"
@@ -293,6 +335,13 @@ function hardHold(
   return false;
 }
 
+/**
+ * #146-extracted, PRE-GOVERNANCE shortlist over captured metadata only.
+ * It consults no permission manifests, no supply-chain state, and no
+ * provenance hashes. For the fail-closed governed selection, use
+ * `selectInspectionCandidates`. Like everything in S2, this returns a
+ * recommendation record and can activate nothing.
+ */
 export function routeCapabilities(
   taskClass: CapabilityTaskClass,
   options: {
@@ -354,6 +403,308 @@ export function routeCapabilities(
       "Load no more than three capabilities for one task and prefer one primary plus one independent reviewer.",
       "Do not activate autonomous loops, self-modifying skills, massive bundles, external communication, deployment, financial, or legal actions without a separate decision gate.",
       "Measure task outcome, context overhead, latency, cost, and repair rate before retaining a capability in the default route.",
+    ],
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Hardened, fail-closed governed selection (S2 directive, 2026-07-22).
+// ---------------------------------------------------------------------------
+
+/** The governor may never recommend more than three inspection candidates per run. */
+export const MAX_INSPECTION_CANDIDATES = 3;
+
+export type CapabilityIneligibilityReason =
+  | "NO_GOVERNANCE_RECORD"
+  | "DUPLICATE_GOVERNANCE_RECORD"
+  | "MISSING_PERMISSION_MANIFEST"
+  | "INVALID_PERMISSION_MANIFEST"
+  | "UNKNOWN_SUPPLY_CHAIN_STATE"
+  | "UNKNOWN_VERSION_DRIFT_STATE"
+  | "MISSING_PROVENANCE_HASH"
+  | "PROVENANCE_HASH_MISMATCH"
+  | "UNKNOWN_STOP_CONDITION_PROFILE"
+  | "UNKNOWN_ROLLBACK_PLAN"
+  | "MALFORMED_OBSERVED_PERFORMANCE";
+
+export interface CapabilityInspectionCandidate {
+  readonly capabilityId: string;
+  readonly entry: CapabilityInventoryEntry;
+  readonly governance: CapabilityGovernanceRecord;
+  readonly trustTier: CapabilityTrustTier;
+  readonly trustEvidence: "CAPTURED_AUTHOR_LABEL_ONLY";
+  readonly riskFlags: readonly CapabilityRiskFlag[];
+  readonly taskFitRank: number;
+  readonly score: number;
+  readonly contextCostEstimate: CapabilityContextCostEstimate;
+  readonly stopConditions: readonly CapabilityStopCondition[];
+  readonly rollbackPlan: CapabilityRollbackPlan;
+  readonly disposition: "INSPECT_BEFORE_USE" | "HOLD";
+  readonly reasons: readonly string[];
+  readonly executionAuthority: false;
+}
+
+export interface IneligibleCapabilityRecord {
+  readonly capabilityId: string;
+  readonly name: string;
+  readonly taskFitRank: number;
+  readonly reasons: readonly CapabilityIneligibilityReason[];
+  /** Ineligibility is always fail-closed: no fallback admission path exists. */
+  readonly failClosed: true;
+}
+
+/**
+ * The governor's entire output: a recommendation record. It grants nothing,
+ * activates nothing, and contains no callables — consuming it can only ever
+ * inform a human inspection decision.
+ */
+export interface CapabilityInspectionRecommendation {
+  readonly recordKind: "CAPABILITY_INSPECTION_RECOMMENDATION";
+  readonly schemaVersion: 1;
+  readonly runId: string;
+  readonly generatedAt: string;
+  readonly taskClass: CapabilityTaskClass;
+  readonly maxSelected: number;
+  readonly selectionCap: typeof MAX_INSPECTION_CANDIDATES;
+  readonly selected: readonly CapabilityInspectionCandidate[];
+  readonly held: readonly CapabilityInspectionCandidate[];
+  readonly ineligible: readonly IneligibleCapabilityRecord[];
+  /** Task-preference names with no matching captured inventory entry. */
+  readonly unresolvedPreferences: readonly string[];
+  readonly autoActivationAllowed: false;
+  readonly externalActionsAllowed: false;
+  readonly activationApiExported: false;
+  readonly policy: readonly string[];
+}
+
+export interface InspectionSelectionInput {
+  readonly taskClass: CapabilityTaskClass;
+  /** Caller-supplied timestamp — the governor never reads a clock. */
+  readonly generatedAt: string;
+  /** Caller-supplied run identity for the recommendation record. */
+  readonly runId: string;
+  /** 0..3; requesting more than MAX_INSPECTION_CANDIDATES throws. */
+  readonly maxSelected?: number;
+  readonly inventory?: readonly CapabilityInventoryEntry[];
+  readonly governanceRecords?: readonly CapabilityGovernanceRecord[];
+  readonly allowThirdPartyCandidates?: boolean;
+}
+
+/**
+ * Fail-closed governance eligibility. Every rule that cannot be positively
+ * verified produces an exact ineligibility reason; there is no default-allow
+ * branch anywhere in this function.
+ */
+function governanceIneligibilityReasons(
+  entry: CapabilityInventoryEntry,
+  record: CapabilityGovernanceRecord | undefined,
+  hasDuplicateRecords: boolean,
+): readonly CapabilityIneligibilityReason[] {
+  if (!record) return ["NO_GOVERNANCE_RECORD"];
+  const reasons: CapabilityIneligibilityReason[] = [];
+  if (hasDuplicateRecords) reasons.push("DUPLICATE_GOVERNANCE_RECORD");
+  if (record.permissionManifest === null || record.permissionManifest === undefined) {
+    reasons.push("MISSING_PERMISSION_MANIFEST");
+  } else if (validateCapabilityPermissionManifest(record.permissionManifest).length > 0) {
+    reasons.push("INVALID_PERMISSION_MANIFEST");
+  }
+  if (
+    !CAPABILITY_SUPPLY_CHAIN_STATES.has(record.supplyChainState) ||
+    record.supplyChainState === "UNKNOWN"
+  ) {
+    reasons.push("UNKNOWN_SUPPLY_CHAIN_STATE");
+  }
+  if (
+    !CAPABILITY_VERSION_DRIFT_STATES.has(record.versionDriftState) ||
+    record.versionDriftState === "UNKNOWN"
+  ) {
+    reasons.push("UNKNOWN_VERSION_DRIFT_STATE");
+  }
+  if (
+    !record.sourceProvenanceHash ||
+    !isWellFormedCapabilityProvenanceHash(record.sourceProvenanceHash) ||
+    !entry.provenanceHash ||
+    !isWellFormedCapabilityProvenanceHash(entry.provenanceHash)
+  ) {
+    reasons.push("MISSING_PROVENANCE_HASH");
+  } else if (record.sourceProvenanceHash !== entry.provenanceHash) {
+    reasons.push("PROVENANCE_HASH_MISMATCH");
+  }
+  if (!(record.stopConditionProfile in CAPABILITY_STOP_CONDITION_PROFILES)) {
+    reasons.push("UNKNOWN_STOP_CONDITION_PROFILE");
+  }
+  if (!(record.rollbackPlanId in CAPABILITY_ROLLBACK_PLANS)) {
+    reasons.push("UNKNOWN_ROLLBACK_PLAN");
+  }
+  const performance = record.observedPerformance as
+    | CapabilityGovernanceRecord["observedPerformance"]
+    | undefined;
+  if (
+    !performance ||
+    typeof performance !== "object" ||
+    validateCapabilityObservedPerformance(performance).length > 0
+  ) {
+    reasons.push("MALFORMED_OBSERVED_PERFORMANCE");
+  }
+  return reasons;
+}
+
+/**
+ * Selects at most `MAX_INSPECTION_CANDIDATES` inspection candidates for one
+ * task class from the governed capability population.
+ *
+ * Selection is deterministic: candidates are ranked by score (descending),
+ * then task-fit rank (ascending), then capability id (ascending). The order
+ * of the supplied governance records never affects the output.
+ *
+ * The return value is a recommendation record only. Nothing here — or
+ * anywhere in S2 — can activate, enable, connect, or execute a capability.
+ */
+export function selectInspectionCandidates(
+  input: InspectionSelectionInput,
+): CapabilityInspectionRecommendation {
+  if (!(input.taskClass in TASK_PREFERENCES)) {
+    throw new TypeError(`Unknown capability task class: ${String(input.taskClass)}`);
+  }
+  if (typeof input.generatedAt !== "string" || !Number.isFinite(Date.parse(input.generatedAt))) {
+    throw new TypeError("generatedAt must be a caller-supplied ISO timestamp string.");
+  }
+  if (typeof input.runId !== "string" || !input.runId.trim()) {
+    throw new TypeError("runId must be a non-empty string.");
+  }
+  const maxSelected = input.maxSelected ?? MAX_INSPECTION_CANDIDATES;
+  if (!Number.isInteger(maxSelected) || maxSelected < 0 || maxSelected > MAX_INSPECTION_CANDIDATES) {
+    throw new RangeError(
+      `maxSelected must be an integer between 0 and ${MAX_INSPECTION_CANDIDATES}; the governor never selects more than ${MAX_INSPECTION_CANDIDATES} inspection candidates per run.`,
+    );
+  }
+
+  const inventory = input.inventory ?? getCapabilityInventory();
+  const governanceRecords = input.governanceRecords ?? getCapabilityGovernanceRecords();
+
+  const recordsById = new Map<string, CapabilityGovernanceRecord>();
+  const duplicateRecordIds = new Set<string>();
+  for (const record of governanceRecords) {
+    if (recordsById.has(record.capabilityId)) {
+      duplicateRecordIds.add(record.capabilityId);
+    } else {
+      recordsById.set(record.capabilityId, record);
+    }
+  }
+
+  const preferenceOrder = TASK_PREFERENCES[input.taskClass];
+  const plugins = inventory.filter((entry) => entry.surface === "CLAUDE_PLUGIN");
+  const byName = new Map(plugins.map((entry) => [normalized(entry.name), entry]));
+
+  const eligibleCandidates: CapabilityInspectionCandidate[] = [];
+  const heldCandidates: CapabilityInspectionCandidate[] = [];
+  const ineligible: IneligibleCapabilityRecord[] = [];
+  const unresolvedPreferences: string[] = [];
+
+  preferenceOrder.forEach((name, index) => {
+    const entry = byName.get(normalized(name));
+    const taskFitRank = index + 1;
+    if (!entry) {
+      unresolvedPreferences.push(name);
+      return;
+    }
+
+    const governance = recordsById.get(entry.id);
+    const ineligibilityReasons = governanceIneligibilityReasons(
+      entry,
+      governance,
+      duplicateRecordIds.has(entry.id),
+    );
+    if (ineligibilityReasons.length > 0 || !governance) {
+      ineligible.push({
+        capabilityId: entry.id,
+        name: entry.name,
+        taskFitRank,
+        reasons: ineligibilityReasons,
+        failClosed: true,
+      });
+      return;
+    }
+
+    const trustTier = classifyCapabilityTrust(entry);
+    const riskFlags = detectCapabilityRisk(entry);
+    const thirdPartyHeld = trustTier === "THIRD_PARTY" && input.allowThirdPartyCandidates !== true;
+    const held = hardHold(entry, trustTier, riskFlags) || thirdPartyHeld;
+    const fitScore = Math.max(0, 50 - index * 5);
+    const score = fitScore + trustScore(trustTier) - riskPenalty(riskFlags);
+    const candidate: CapabilityInspectionCandidate = {
+      capabilityId: entry.id,
+      entry,
+      governance,
+      trustTier,
+      trustEvidence: "CAPTURED_AUTHOR_LABEL_ONLY",
+      riskFlags,
+      taskFitRank,
+      score,
+      contextCostEstimate: estimateCapabilityContextCost(entry),
+      stopConditions: CAPABILITY_STOP_CONDITION_PROFILES[governance.stopConditionProfile],
+      rollbackPlan: CAPABILITY_ROLLBACK_PLANS[governance.rollbackPlanId],
+      disposition: held ? "HOLD" : "INSPECT_BEFORE_USE",
+      reasons: [
+        `task preference rank ${taskFitRank}`,
+        `captured author tier ${trustTier}`,
+        `permission manifest basis ${governance.permissionManifest?.basis ?? "MISSING"}`,
+        `supply-chain state ${governance.supplyChainState}`,
+        `version drift state ${governance.versionDriftState}`,
+        riskFlags.length > 0
+          ? `risk flags: ${riskFlags.join(", ")}`
+          : "no name-based risk flags detected",
+        held
+          ? "held pending explicit inspection or connection decision"
+          : "eligible for source inspection only",
+      ],
+      executionAuthority: false,
+    };
+    if (held) {
+      heldCandidates.push(candidate);
+    } else {
+      eligibleCandidates.push(candidate);
+    }
+  });
+
+  const ranked = [...eligibleCandidates].sort(
+    (left, right) =>
+      right.score - left.score ||
+      left.taskFitRank - right.taskFitRank ||
+      left.capabilityId.localeCompare(right.capabilityId, "en"),
+  );
+  const selected = ranked.slice(0, maxSelected);
+  const selectedIds = new Set(selected.map((candidate) => candidate.capabilityId));
+  const held = [
+    ...heldCandidates,
+    ...ranked.filter((candidate) => !selectedIds.has(candidate.capabilityId)),
+  ].sort(
+    (left, right) =>
+      left.taskFitRank - right.taskFitRank ||
+      left.capabilityId.localeCompare(right.capabilityId, "en"),
+  );
+
+  return {
+    recordKind: "CAPABILITY_INSPECTION_RECOMMENDATION",
+    schemaVersion: 1,
+    runId: input.runId,
+    generatedAt: input.generatedAt,
+    taskClass: input.taskClass,
+    maxSelected,
+    selectionCap: MAX_INSPECTION_CANDIDATES,
+    selected,
+    held,
+    ineligible,
+    unresolvedPreferences,
+    autoActivationAllowed: false,
+    externalActionsAllowed: false,
+    activationApiExported: false,
+    policy: [
+      "This record is a recommendation for human inspection only; it grants no authority and activates nothing.",
+      "A capability without a declared permission manifest, a known supply-chain state, and a matching pinned provenance hash is ineligible — fail closed, no exceptions.",
+      "The governor never selects more than three inspection candidates per run.",
+      "Activation, connection, and execution are owner actions performed outside this codebase; S2 exports no API that can perform them.",
+      "Observed-performance fields start at zero observations and may only ever be filled by real measurements.",
     ],
   };
 }
