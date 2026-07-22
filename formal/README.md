@@ -158,6 +158,48 @@ no-double-spend property has to survive.
 generated, 348 distinct states explored, search depth 9. Full log:
 `CreditReservation.tlc-receipt.txt`.
 
+## Induction layer (added after the bounded receipts above)
+
+Both modules' safety invariants are now proved INDUCTIVE — not just
+bounded-model-checked — using TLC alone, via the standard recipe: a sibling
+module (`CreditReservationInductive.tla`, `InvocationClaimInductive.tla`;
+the original specs are untouched) defines a candidate `IndInv` whose leading
+conjuncts constrain every variable to a finite set, the candidate is used as
+the INIT predicate so TLC enumerates EVERY state satisfying it (reachable or
+not), and every conjunct is checked as an invariant on all successors —
+exactly the inductive step `IndInv /\ [Next]_vars => IndInv'`, checked
+exhaustively. A companion `*.base.cfg` run of the original `Spec` with the
+same conjuncts subsumes the base case `Init => IndInv`. Together with
+`IndInv => Safety` (the safety properties are conjuncts), this proves the
+safety invariants in ALL reachable states at ANY depth for the checked
+constants — strictly stronger than the bounded receipts above, though NOT a
+parameterized proof for all constants (that would need Apalache or TLAPS,
+neither available in this environment).
+
+The candidates were strengthened through a REAL counterexample-to-induction
+loop — four genuine CTIs across the two modules, each recorded verbatim with
+diagnosis and the weakest-blocking-predicate decision in:
+
+- `credit-budget/INDUCTIVE_STRENGTHENING_LOG.md` (2 CTIs, final `IndInv` =
+  typing + both safety properties + `AdmittedCountBoundedByStarted` +
+  `CommittedCoveredByReserved`)
+- `ai-invocation/INDUCTIVE_STRENGTHENING_LOG.md` (2 CTIs, final `IndInv` =
+  `TypeOK` + all five safety properties + `AtMostOnePendingPerInvocation` +
+  `RejectedImpliesBound`; the CTI loop iterated at a documented 2-attempt
+  shrink of the reachability model's 3-attempt bound — single-threaded
+  INIT enumeration is ~24x slower at 3 attempts — and the final candidate
+  was then ALSO closure-checked at the original 3-attempt bound:
+  12,787,200 candidate states, 49,190,400 transitions, no error)
+
+Failed candidates are kept in the modules with their `.cfg` files
+(`*.attempt1.cfg`, `*.attempt2.cfg`) so every logged run is reproducible;
+receipts of the closing runs are in `*Inductive.tlc-receipt.txt`. The
+method, generalization discipline, effort regimes, and honest scoping are
+written up in `INDUCTION_DOCTRINE.md`. The composed
+`live-sports/LiveModelDispatchUnderAmbiguity.tla` module's induction is the
+designated NEXT step (compositional, on top of the base modules' IndInvs) —
+deliberately not attempted in the same session.
+
 ## What this scaffold intentionally does NOT cover
 
 - Multi-window fixed-order acquisition (a single spend counting against
