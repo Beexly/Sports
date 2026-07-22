@@ -3310,3 +3310,51 @@ model AiBudgetReservation {
   @@index([state, expiresAt])
   @@map("ai_budget_reservations")
 }
+
+// ============================================================
+// AI CONTROL PLANE — atomic credit-grant authorization
+// (Phase 2 PR-D, directive §11.3)
+//
+// PR-D does NOT own credit-grant snapshots (NOVA/S5 does — see
+// apps/web/lib/opportunity-engine/credit-snapshot.ts, the sole canonical
+// `CreditGrantSnapshot` contract). These two tables are PR-D's OWN local
+// reservation ledger: an additive, dormant hold mechanism that prevents a
+// double-spend across concurrent `CreditAuthorizationPort.authorize()` calls
+// against the SAME grant, mirroring the AiBudgetWindow/AiBudgetReservation
+// pattern above exactly. The ledger's cap is not stored — it is supplied
+// fresh on every authorize() call from the admitting snapshot's CURRENT
+// spendable balance (remainingMinorUnits - reservedMinorUnits), so this
+// table never claims to know NOVA's balance; it only prevents PR-D's own
+// concurrent authorizers from over-committing against whatever balance was
+// last observed. No cash/credit mode is enabled anywhere; this is dormant
+// and additive (mirrors the budget doctrine comment above).
+// ============================================================
+
+model CreditGrantReservationLedger {
+  // NOVA's CreditGrantSnapshot.grantId — not an FK (the snapshot table is
+  // materialized by NOVA/S5, a different persistence unit; PR-D's ledger
+  // must not create a hard dependency on S5's schema landing first).
+  grantId            String   @id
+  reservedMinorUnits BigInt   @default(0)
+  updatedAt          DateTime @default(now())
+
+  reservations CreditGrantReservation[]
+
+  @@map("credit_grant_reservation_ledger")
+}
+
+model CreditGrantReservation {
+  id                 String    @id @default(cuid())
+  grantId            String
+  amountMinorUnits   BigInt // worst-case estimate HELD against the grant
+  state              String // "HELD" | "SETTLED" | "RELEASED" | "EXPIRED"
+  settledMinorUnits  BigInt? // confirmed actual, set only on SETTLED
+  createdAt          DateTime  @default(now())
+  expiresAt          DateTime // auto-release safety net (a future sweep, mirrors budget.ts)
+
+  ledger CreditGrantReservationLedger @relation(fields: [grantId], references: [grantId], onDelete: Cascade)
+
+  @@index([grantId])
+  @@index([state, expiresAt])
+  @@map("credit_grant_reservations")
+}

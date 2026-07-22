@@ -414,14 +414,21 @@ async function productionControlStore(): Promise<
 
 /** Production dispatch: the full §9 ledgered invocation pipeline. */
 const productionDispatch: AiDispatchFn = async (plan) => {
-  const [{ createLedgeredDispatch }, { createProviderDispatchers }, controlStoreModule, dbModule, observabilityModule] =
-    await Promise.all([
-      import("./invocation-pipeline"),
-      import("./dispatch"),
-      import("./control-store"),
-      import("@sports/db"),
-      import("./observability"),
-    ]);
+  const [
+    { createLedgeredDispatch },
+    { createProviderDispatchers },
+    controlStoreModule,
+    dbModule,
+    observabilityModule,
+    { createPgCreditAuthorizationPort },
+  ] = await Promise.all([
+    import("./invocation-pipeline"),
+    import("./dispatch"),
+    import("./control-store"),
+    import("@sports/db"),
+    import("./observability"),
+    import("./credit-admission"),
+  ]);
   const sqlForQueue = controlStoreModule.prismaSqlClient(dbModule.db);
   const store = await productionControlStore();
   const dispatch = createLedgeredDispatch({
@@ -442,6 +449,15 @@ const productionDispatch: AiDispatchFn = async (plan) => {
         );
       },
     },
+    // Credit authorization (§11.3): the atomic reservation port is wired
+    // (dormant — no reservation happens without a matching creditStore), but
+    // `creditStore` is deliberately left UNSET here — NOVA's S5 unit has not
+    // yet materialized a real `CreditSnapshotStore` implementation. Until it
+    // does, CONFIRMED_CREDITS_ONLY fails closed in production (no store
+    // configured -> PolicyBlocked, zero dispatch) exactly as designed: a
+    // provider/model id alone can never produce credit admission, and
+    // neither can an absent store. Wiring the real store is a follow-up PR.
+    creditPort: createPgCreditAuthorizationPort(dbModule.db),
   });
   return dispatch(plan);
 };

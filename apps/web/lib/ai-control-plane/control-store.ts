@@ -207,7 +207,24 @@ export interface FinalizeSuccessInput {
 export interface FinalizeFailureInput {
   readonly invocationId: string;
   readonly ownerToken: string;
-  readonly status: "FAILED" | "AMBIGUOUS" | "BUDGET_BLOCKED";
+  /**
+   * "BUDGET_BLOCKED" is the §C budget-reservation refusal: the claim was
+   * ACQUIRED (an invocation row and owner token exist) but the atomic
+   * reservation against the required budget window(s) failed before any
+   * attempt row was written — no provider was ever dispatched. Distinct from
+   * `recordBlockedInvocation`'s "BLOCKED" status, which is written for a
+   * decision made BEFORE a claim exists (§9.6) and is structurally
+   * token-less; a BUDGET_BLOCKED row DID hold a live claim.
+   *
+   * "POLICY_BLOCKED" is the analogous post-claim credit-admission refusal
+   * (directive §11.3, PR-D): CONFIRMED_CREDITS_ONLY with no credit store
+   * configured, or every permitted provider route refused credit
+   * authorization — the claim was ACQUIRED but no route was ever admitted,
+   * so no attempt/transport occurred.
+   */
+  readonly status: "FAILED" | "AMBIGUOUS" | "BUDGET_BLOCKED" | "POLICY_BLOCKED";
+  /** Set for BUDGET_BLOCKED/POLICY_BLOCKED (audit detail); ignored for FAILED/AMBIGUOUS. */
+  readonly blockedDetail?: string;
   readonly now: Date;
 }
 
@@ -685,6 +702,17 @@ export function createPgControlStore(
     },
 
     async finalizeFailure(input: FinalizeFailureInput): Promise<boolean> {
+      // NOTE: "blockedReasonCode"/"blockedDetail" are NOT written here even
+      // for BUDGET_BLOCKED/POLICY_BLOCKED — the migration's
+      // `ai_invocations_blocked_reason_check` CHECK constraint requires
+      // those columns to be set IFF `status = 'BLOCKED'` (the literal
+      // pre-claim §9.6 status). A BUDGET_BLOCKED/POLICY_BLOCKED row DID hold
+      // a live claim (it has an id + a — now cleared — owner token), so it
+      // is deliberately NOT the same status as a pre-claim BLOCKED decision,
+      // and must not set those columns. The status value itself is
+      // self-describing; `input.blockedDetail` is accepted for caller-side
+      // logging (see invocation-pipeline.ts) but intentionally not
+      // persisted on this row.
       const updated = await sql.query<{ id: string }>(
         `UPDATE "ai_invocations"
             SET "status" = $1, "completedAt" = $2, "leaseExpiresAt" = NULL
