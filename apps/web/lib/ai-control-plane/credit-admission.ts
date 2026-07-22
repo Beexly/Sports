@@ -118,7 +118,12 @@ export interface CreditAdmissionDecision {
   /** Primary reason (the first snapshot's failure, or the store-level cause). */
   readonly reason: CreditAdmissionRefusalReason | null;
   readonly detail: string;
-  /** The admitting snapshot's grant id — recorded as attribution.creditGrantSnapshotId. */
+  /**
+   * The admitting snapshot's grant id, returned to the CALLER. PR-D persists
+   * nothing (§11.3: no Prisma credit tables); durable attribution of the
+   * admitting grant onto the invocation ledger is S5 scope — no such
+   * attribution field exists yet.
+   */
   readonly grantId: string | null;
   /** Per-candidate-snapshot refusal reasons, in store order. */
   readonly snapshotRefusals: readonly {
@@ -319,6 +324,16 @@ export interface InMemoryCreditPortState {
   readonly reservations: ReadonlyMap<string, InMemoryCreditReservationRecord>;
   /** Sum of currently-HELD minor units per grant — the atomic ledger. */
   readonly heldMinorUnitsByGrant: ReadonlyMap<string, number>;
+  /**
+   * Sum of SETTLED spend (provisional actuals, corrected by reconciled
+   * confirmations) per grant. The snapshot store in this fake is static, so
+   * settled spend must stay counted against the snapshot's spendable balance
+   * on every later `authorizeAndReserve` — otherwise sequential
+   * authorize -> settle cycles could cumulatively overspend a grant. A real
+   * S5 adapter reproduces this by decrementing the grant's authoritative
+   * remaining balance transactionally at settlement.
+   */
+  readonly settledMinorUnitsByGrant: ReadonlyMap<string, number>;
 }
 
 export interface InMemoryCreditAuthorizationPortConfig {
@@ -377,6 +392,16 @@ export function usdStringToMinorUnitsCeil(usd: string, label: string): number {
  * doc), and this fake exists precisely to prove the composed semantics a
  * real S5 adapter must reproduce transactionally.
  *
+ * The ledger counts BOTH outstanding holds AND settled spend against the
+ * static snapshot's spendable balance, so the no-collective-overspend
+ * invariant survives settlement: sequential authorize -> settle cycles can
+ * never re-spend a settled balance (an S5 adapter reproduces this by
+ * decrementing the authoritative remaining balance at settlement). Both
+ * settlement paths are capped by the authorization: `settleProvisional`
+ * refuses an actual above the hold, and `reconcile` refuses a
+ * receipt-confirmed amount above the hold (an overrun receipt is a dispute
+ * for S5's dispute path, never silently recordable truth).
+ *
  * Refusals THROW `BudgetBlocked` (the port's fail-closed contract — the
  * executor maps it to a recorded BUDGET_BLOCKED decision, and dispatch
  * never happens).
@@ -391,6 +416,7 @@ export function createInMemoryCreditAuthorizationPort(
 ): InMemoryCreditAuthorizationPort {
   const reservations = new Map<string, InMemoryCreditReservationRecord>();
   const heldByGrant = new Map<string, number>();
+  const settledByGrant = new Map<string, number>();
   const byIdempotencyKey = new Map<string, string>();
   let counter = 0;
   const idFactory = config.idFactory ?? (() => `credres-${++counter}`);
@@ -413,8 +439,23 @@ export function createInMemoryCreditAuthorizationPort(
     heldByGrant.set(record.grantId, held - record.heldMinorUnits);
   }
 
+  /**
+   * Move settled spend on/off the grant's consumed ledger. Settled spend is
+   * PERMANENT against the static snapshot (only a reconcile correction may
+   * adjust it), which is what keeps sequential authorize -> settle cycles
+   * from re-spending the same balance.
+   */
+  function addSettled(grantId: string, deltaMinorUnits: number): void {
+    const settled = settledByGrant.get(grantId) ?? 0;
+    settledByGrant.set(grantId, settled + deltaMinorUnits);
+  }
+
   return {
-    state: { reservations, heldMinorUnitsByGrant: heldByGrant },
+    state: {
+      reservations,
+      heldMinorUnitsByGrant: heldByGrant,
+      settledMinorUnitsByGrant: settledByGrant,
+    },
 
     async authorizeAndReserve(
       request: CreditAuthorizationRequest,
@@ -487,10 +528,15 @@ export function createInMemoryCreditAuthorizationPort(
         const spendable =
           snapshot.remainingMinorUnits - snapshot.reservedMinorUnits;
         const alreadyHeld = heldByGrant.get(snapshot.grantId) ?? 0;
-        if (alreadyHeld + worstCaseMinorUnits > spendable) {
+        // Settled spend stays counted: the static snapshot never learns about
+        // this fake's settlements, so the ledger must subtract them itself or
+        // sequential authorize -> settle cycles would overspend the grant.
+        const alreadySettled = settledByGrant.get(snapshot.grantId) ?? 0;
+        if (alreadyHeld + alreadySettled + worstCaseMinorUnits > spendable) {
           refusals.push(
             `${snapshot.grantId}=[insufficient-headroom: ${alreadyHeld} already ` +
-              `held + ${worstCaseMinorUnits} > spendable ${spendable}]`,
+              `held + ${alreadySettled} already settled + ${worstCaseMinorUnits} ` +
+              `> spendable ${spendable}]`,
           );
           continue;
         }
@@ -545,7 +591,12 @@ export function createInMemoryCreditAuthorizationPort(
             "charge may never exceed its authorization.",
         );
       }
+      // Release the FULL hold, then record the applied actual as SETTLED
+      // spend — the remainder is freed, the actual stays consumed. Without
+      // the settled entry the ledger would forget the spend entirely and a
+      // later authorize could re-spend the same balance.
       releaseHold(record);
+      addSettled(record.grantId, actualMinorUnits);
       record.state = "PROVISIONALLY_SETTLED";
       record.actualMinorUnits = actualMinorUnits;
     },
@@ -566,10 +617,32 @@ export function createInMemoryCreditAuthorizationPort(
             `${record.state}; refusing to reconcile it again.`,
         );
       }
+      // The same cap that guards settleProvisional guards reconciliation:
+      // a credits-only charge may never exceed its authorization, and a
+      // receipt claiming it did is a DISPUTE, not a silently recordable
+      // truth. Refuse and leave the record untouched — dispute handling
+      // (CreditAllocationState DISPUTED) is S5 scope against real
+      // persistence; this fake must never absorb an overrun as reconciled.
+      if (confirmedMinorUnits > record.heldMinorUnits) {
+        throw new BudgetBlocked(
+          `reconcile: confirmed ${confirmedMinorUnits} minor units exceeds ` +
+            `the authorized hold of ${record.heldMinorUnits} — a credits-only ` +
+            "charge may never exceed its authorization; this receipt is a " +
+            "dispute, not a reconcilable truth.",
+        );
+      }
       if (record.state === "HELD") {
         // Receipt arrived before a provisional settlement: the confirmed
-        // amount replaces the hold outright.
+        // amount replaces the hold outright and becomes settled spend.
         releaseHold(record);
+        addSettled(record.grantId, confirmedMinorUnits);
+      } else {
+        // PROVISIONALLY_SETTLED: correct the settled ledger from the
+        // provisional actual to the receipt-confirmed amount.
+        addSettled(
+          record.grantId,
+          confirmedMinorUnits - (record.actualMinorUnits ?? 0),
+        );
       }
       record.state = "RECONCILED";
       record.confirmedMinorUnits = confirmedMinorUnits;

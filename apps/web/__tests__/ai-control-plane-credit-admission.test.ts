@@ -56,7 +56,7 @@ import type {
   CreditAuthorizationRequest,
   CreditReservation,
 } from "@/lib/ai-control-plane/credit-port";
-import { BudgetBlocked } from "@/lib/ai-control-plane/errors";
+import { AmbiguousCharge, BudgetBlocked } from "@/lib/ai-control-plane/errors";
 import { getTaskPolicy } from "@/lib/ai-control-plane/policy-registry";
 import type { AiTaskInvocationRequest } from "@/lib/ai-control-plane/contracts";
 import { serviceActor } from "@/lib/auth/actor";
@@ -457,17 +457,56 @@ describe("createInMemoryCreditAuthorizationPort — fake adapter of the §10.8 p
     expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(1);
   });
 
-  it("settleProvisional releases the hold, records the actual, and is guarded against replay", async () => {
+  it("settleProvisional releases the hold, records the actual as SETTLED spend, and is guarded against replay", async () => {
     const port = fakePort(validSnapshot());
     const r = await port.authorizeAndReserve(portRequest());
     await port.settleProvisional(r.creditReservationId, "42.500000", NOW);
     expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+    // The applied actual is NOT erased from the ledger — it moves to settled.
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(4_250);
     const record = port.state.reservations.get(r.creditReservationId)!;
     expect(record.state).toBe("PROVISIONALLY_SETTLED");
     expect(record.actualMinorUnits).toBe(4_250);
     await expect(
       port.settleProvisional(r.creditReservationId, "42.500000", NOW),
     ).rejects.toBeInstanceOf(BudgetBlocked);
+  });
+
+  it("settled spend stays counted: a full-spend settle EXHAUSTS the grant — a later authorize refuses", async () => {
+    // Regression: the fake used to erase settled spend from the ledger, so
+    // authorize($100) -> settle($100) -> authorize($100) double-spent a
+    // $100 grant against the static snapshot.
+    const port = fakePort(
+      validSnapshot({ remainingMinorUnits: 100_00, reservedMinorUnits: 0 }),
+    );
+    const r1 = await port.authorizeAndReserve(portRequest({ requestId: "req-1" }));
+    await port.settleProvisional(r1.creditReservationId, "100.000000", NOW);
+    await expect(
+      port.authorizeAndReserve(portRequest({ requestId: "req-2" })),
+    ).rejects.toThrow(/insufficient-headroom/);
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(10_000);
+    expect(port.state.reservations.size).toBe(1);
+  });
+
+  it("a partial settle frees ONLY the remainder: headroom = spendable - held - settled", async () => {
+    // Grant spendable $100. Hold $100, settle $40 -> $60 of headroom remains:
+    // a $60 authorize fits exactly, one more cent refuses.
+    const port = fakePort(
+      validSnapshot({ remainingMinorUnits: 100_00, reservedMinorUnits: 0 }),
+    );
+    const r1 = await port.authorizeAndReserve(portRequest({ requestId: "req-1" }));
+    await port.settleProvisional(r1.creditReservationId, "40.000000", NOW);
+    await port.authorizeAndReserve(
+      portRequest({ requestId: "req-2", worstCaseUsd: "60.000000" }),
+    );
+    await expect(
+      port.authorizeAndReserve(
+        portRequest({ requestId: "req-3", worstCaseUsd: "0.010000" }),
+      ),
+    ).rejects.toThrow(/insufficient-headroom/);
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(6_000);
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(4_000);
   });
 
   it("settleProvisional refuses an actual ABOVE the authorized hold (credits-only can never overrun)", async () => {
@@ -495,7 +534,7 @@ describe("createInMemoryCreditAuthorizationPort — fake adapter of the §10.8 p
     ).rejects.toBeInstanceOf(BudgetBlocked);
   });
 
-  it("reconcile confirms a provisional settlement from a receipt; double-reconcile is guarded", async () => {
+  it("reconcile confirms a provisional settlement from a receipt and CORRECTS the settled ledger; double-reconcile is guarded", async () => {
     const port = fakePort(validSnapshot());
     const r = await port.authorizeAndReserve(portRequest());
     await port.settleProvisional(r.creditReservationId, "42.500000", NOW);
@@ -503,17 +542,51 @@ describe("createInMemoryCreditAuthorizationPort — fake adapter of the §10.8 p
     const record = port.state.reservations.get(r.creditReservationId)!;
     expect(record.state).toBe("RECONCILED");
     expect(record.confirmedMinorUnits).toBe(4_248);
+    // Settled spend corrected from the provisional 4_250 to the receipt truth.
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(4_248);
     await expect(
       port.reconcile(r.creditReservationId, "42.480000", NOW),
     ).rejects.toBeInstanceOf(BudgetBlocked);
   });
 
-  it("reconcile directly from HELD releases the hold (receipt beat the provisional)", async () => {
+  it("reconcile directly from HELD releases the hold and records the confirmed amount as settled spend", async () => {
     const port = fakePort(validSnapshot());
     const r = await port.authorizeAndReserve(portRequest());
     await port.reconcile(r.creditReservationId, "10.000000", NOW);
     expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(1_000);
     expect(port.state.reservations.get(r.creditReservationId)!.state).toBe("RECONCILED");
+  });
+
+  it("reconcile refuses a confirmed amount ABOVE the authorized hold (from HELD) — an overrun receipt is a dispute", async () => {
+    const port = fakePort(validSnapshot({ remainingMinorUnits: 5_000_00 }));
+    const r = await port.authorizeAndReserve(
+      portRequest({ worstCaseUsd: "50.000000" }),
+    );
+    await expect(
+      port.reconcile(r.creditReservationId, "500.000000", NOW),
+    ).rejects.toThrow(/exceeds the authorized hold/);
+    // The refusal left the record untouched: still HELD, hold intact,
+    // nothing recorded as confirmed, nothing settled.
+    const record = port.state.reservations.get(r.creditReservationId)!;
+    expect(record.state).toBe("HELD");
+    expect(record.confirmedMinorUnits).toBeNull();
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(5_000);
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099") ?? 0).toBe(0);
+  });
+
+  it("reconcile refuses a confirmed amount ABOVE the hold from PROVISIONALLY_SETTLED too", async () => {
+    const port = fakePort(validSnapshot());
+    const r = await port.authorizeAndReserve(portRequest());
+    await port.settleProvisional(r.creditReservationId, "42.500000", NOW);
+    await expect(
+      port.reconcile(r.creditReservationId, "100.010000", NOW),
+    ).rejects.toThrow(/exceeds the authorized hold/);
+    const record = port.state.reservations.get(r.creditReservationId)!;
+    expect(record.state).toBe("PROVISIONALLY_SETTLED");
+    expect(record.confirmedMinorUnits).toBeNull();
+    // The provisional settled spend is unchanged by the refusal.
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(4_250);
   });
 
   it("release/reconcile/settle of an unknown reservation id refuse (nothing to mutate)", async () => {
@@ -699,18 +772,111 @@ describe("executor: CONFIRMED_CREDITS_ONLY consumes the port and stays fail-clos
     expect(deps.dispatched).toEqual([]); // the transport seam was never reached
   });
 
-  it("with the FAKE adapter and a covering admissible snapshot: authorizes, then dispatches", async () => {
+  it("with the FAKE adapter and a covering admissible snapshot: authorizes, dispatches, then SETTLES the hold (no leak)", async () => {
     const port = fakePort(validSnapshot());
     const deps = executorDeps({ credit: port });
     const executor = createAiExecutor(deps);
     const result = await executor.executeAiTask(request);
     expect(result.status).toBe("SUCCEEDED");
     expect(result.fundingLabel).toBe("CREDIT_ELIGIBLE_UNCONFIRMED");
+    expect(result.telemetryStatus).toBe("OK");
     expect(deps.dispatched).toEqual(["req-credit-exec-1"]);
     expect(port.state.reservations.size).toBe(1);
     const record = [...port.state.reservations.values()][0]!;
-    expect(record.state).toBe("HELD");
+    // The hold is NOT left leaked as HELD: the completed dispatch settles it
+    // provisionally at the conservative full hold (the executor has no
+    // token-priced actual; receipt reconciliation corrects downward in S5).
+    expect(record.state).toBe("PROVISIONALLY_SETTLED");
     expect(record.grantId).toBe("grant-2026-0099");
+    expect(record.actualMinorUnits).toBe(record.heldMinorUnits);
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(
+      record.heldMinorUnits,
+    );
+  });
+
+  it("a dispatch failure (clean, no charge) RELEASES the credit hold and rethrows the original error", async () => {
+    const port = fakePort(validSnapshot());
+    const deps = executorDeps({
+      credit: port,
+      dispatch: async () => {
+        throw new Error("transport exploded before any charge");
+      },
+    });
+    const executor = createAiExecutor(deps);
+    await expect(executor.executeAiTask(request)).rejects.toThrow(
+      /transport exploded/,
+    );
+    const record = [...port.state.reservations.values()][0]!;
+    expect(record.state).toBe("RELEASED");
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099") ?? 0).toBe(0);
+  });
+
+  it("an AMBIGUOUS charge KEEPS the credit hold (an unproven charge never frees its funds)", async () => {
+    const port = fakePort(validSnapshot());
+    const deps = executorDeps({
+      credit: port,
+      dispatch: async () => {
+        throw new AmbiguousCharge("timeout after dispatch — charge unproven");
+      },
+    });
+    const executor = createAiExecutor(deps);
+    await expect(executor.executeAiTask(request)).rejects.toBeInstanceOf(
+      AmbiguousCharge,
+    );
+    const record = [...port.state.reservations.values()][0]!;
+    expect(record.state).toBe("HELD"); // quarantined for reconciliation, not released
+    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(
+      record.heldMinorUnits,
+    );
+  });
+
+  it("an IN_PROGRESS verdict leaves the shared reservation HELD for the live claim owner to complete", async () => {
+    const port = fakePort(validSnapshot());
+    const deps = executorDeps({
+      credit: port,
+      dispatch: async (plan) => ({
+        kind: "IN_PROGRESS",
+        invocationId: `inv:${plan.request.requestId}`,
+      }),
+    });
+    const executor = createAiExecutor(deps);
+    const result = await executor.executeAiTask(request);
+    expect(result.status).toBe("IN_PROGRESS");
+    const record = [...port.state.reservations.values()][0]!;
+    expect(record.state).toBe("HELD");
+  });
+
+  it("a settlement failure never converts the completed dispatch into an error — it degrades telemetry", async () => {
+    const port = fakePort(validSnapshot());
+    const failingSettle: typeof port = {
+      ...port,
+      settleProvisional: async () => {
+        throw new Error("credit authority unavailable at settlement");
+      },
+    };
+    const deps = executorDeps({ credit: failingSettle });
+    const executor = createAiExecutor(deps);
+    const result = await executor.executeAiTask(request);
+    expect(result.status).toBe("SUCCEEDED");
+    expect(result.telemetryStatus).toBe("DEGRADED");
+    // The hold stays (conservative: strands credits, never overspends).
+    expect([...port.state.reservations.values()][0]!.state).toBe("HELD");
+  });
+
+  it("a RETRY of a request whose authorization already settled refuses fail-closed (documented §10.6-mirror limit until S5)", async () => {
+    const port = fakePort(validSnapshot());
+    const deps = executorDeps({ credit: port });
+    const executor = createAiExecutor(deps);
+    await executor.executeAiTask(request); // completes and settles v1
+    // The port's replay-after-settlement guard refuses re-authorization —
+    // conservative (never a double hold, never a double spend); replaying
+    // the persisted result needs S5's ledger-aware real adapter.
+    await expect(executor.executeAiTask(request)).rejects.toThrow(
+      /cannot be replayed/,
+    );
+    expect(deps.dispatched).toEqual(["req-credit-exec-1"]); // no second dispatch
   });
 
   it("with the FAKE adapter but NO covering snapshot: refuses BEFORE dispatch", async () => {

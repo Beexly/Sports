@@ -34,7 +34,12 @@
  *      with the effective permitted modes.
  *   6. If the effective mode is EMERGENCY_RELIABILITY, verify the durable
  *      owner-decision receipt (§8.6) and clamp spend to its ceiling.
- *   7. Refuse plans with no fundable route (funding label BLOCKED).
+ *   7. Refuse plans with no fundable route (funding label BLOCKED) — before
+ *      any credit hold exists.
+ *   7.5 CONFIRMED_CREDITS_ONLY: take an atomic credit hold through the
+ *      CreditAuthorizationPort (§10.8) and complete its lifecycle on every
+ *      dispatch outcome (settle on COMPLETED, release on clean failure,
+ *      retain on ambiguous charge — no leaked holds).
  *   8. Dispatch through the sealed dependency (§9 pipeline).
  *
  * §9.6: any PolicyBlocked / BudgetBlocked / ConfigurationError raised by the
@@ -59,9 +64,10 @@ import {
   estimateAttemptPlanWorstCaseUsd,
   requiresCashReservation,
 } from "./budget";
-import type { CreditAuthorizationPort } from "./credit-port";
+import type { CreditAuthorizationPort, CreditReservation } from "./credit-port";
 import { failClosedCreditAuthorizationPort } from "./credit-port";
 import {
+  AmbiguousCharge,
   BudgetBlocked,
   ConfigurationError,
   PolicyBlocked,
@@ -319,34 +325,11 @@ export function createAiExecutor(
           );
         }
 
-        // 6.6 (§10.8): CONFIRMED_CREDITS_ONLY spend must be atomically
-        // reserved against NOVA-owned credit truth through the
-        // CreditAuthorizationPort — a fresh snapshot read is not enough under
-        // concurrency. Production seals the fail-closed port (no adapter
-        // exists yet), so this mode is UNREACHABLE in production until S5
-        // lands a real adapter.
-        if (mode === "CONFIRMED_CREDITS_ONLY") {
-          const worstCaseUsd = estimateAttemptPlanWorstCaseUsd({
-            routes: authority.permittedProviderRoutes,
-            perAttemptCeilingUsd: maxVendorCashUsd,
-            pricingVersion: CONTROL_PLANE_PRICING_VERSION,
-            // §10.4: provider per-attempt minimums are wired here too — the
-            // credit worst case must cover them just like the cash one.
-            providerMinimumUsd: CONTROL_PLANE_PROVIDER_MINIMUM_USD,
-          });
-          await deps.credit.authorizeAndReserve({
-            requestId: request.requestId,
-            taskClass: authority.taskClass,
-            entity: request.entity,
-            worstCaseUsd,
-            reservationVersion: 1,
-            now,
-          });
-        }
-
         // 7. A plan with no fundable route must never reach transport: under
         // NO_BILLABLE_EXTERNAL with no permitted "local" route there is nothing
-        // the transport may legally do — fail closed BEFORE the dispatch seam.
+        // the transport may legally do — fail closed BEFORE the dispatch seam,
+        // and BEFORE any credit hold could be taken for a plan that can never
+        // dispatch (a refused plan must leave zero reservations behind).
         const fundingLabel = deriveFundingLabel(mode, authority);
         if (fundingLabel === "BLOCKED") {
           throw new PolicyBlocked(
@@ -356,17 +339,101 @@ export function createAiExecutor(
           );
         }
 
+        // 7.5 (§10.8): CONFIRMED_CREDITS_ONLY spend must be atomically
+        // reserved against NOVA-owned credit truth through the
+        // CreditAuthorizationPort — a fresh snapshot read is not enough under
+        // concurrency. Production seals the fail-closed port (no adapter
+        // exists yet), so this mode is UNREACHABLE in production until S5
+        // lands a real adapter. The reservation's lifecycle is COMPLETED
+        // below on every dispatch outcome: settled on COMPLETED, released on
+        // a clean failure, retained (quarantined) on an ambiguous charge —
+        // no path leaves a hold leaked. Known fail-closed consequence of
+        // reservationVersion 1: a RETRY of a request whose authorization
+        // already settled refuses (the port's replay-after-settlement guard,
+        // mirroring the cash engine's §10.6 hard conflict) instead of
+        // replaying the persisted result; S5's real adapter, which can prove
+        // terminal replay against the invocation ledger, lifts this.
+        let creditReservation: CreditReservation | null = null;
+        if (mode === "CONFIRMED_CREDITS_ONLY") {
+          const worstCaseUsd = estimateAttemptPlanWorstCaseUsd({
+            routes: authority.permittedProviderRoutes,
+            perAttemptCeilingUsd: maxVendorCashUsd,
+            pricingVersion: CONTROL_PLANE_PRICING_VERSION,
+            // §10.4: provider per-attempt minimums are wired here too — the
+            // credit worst case must cover them just like the cash one.
+            providerMinimumUsd: CONTROL_PLANE_PROVIDER_MINIMUM_USD,
+          });
+          creditReservation = await deps.credit.authorizeAndReserve({
+            requestId: request.requestId,
+            taskClass: authority.taskClass,
+            entity: request.entity,
+            worstCaseUsd,
+            reservationVersion: 1,
+            now,
+          });
+          // The reservation is retained for the lifecycle below. Durable
+          // attribution of grantAllocationRef onto the invocation ledger is
+          // S5 scope — no attribution field exists in PR-D (§11.3: no Prisma
+          // credit tables).
+        }
+
         // 8. Dispatch through the sealed seam (§9: atomic claim, exact
-        // provider adapters, durable attempts, recovery queue).
-        const outcome = await deps.dispatch({
-          request,
-          authority,
-          costMode: mode,
-          maxVendorCashUsd,
-          fundingLabel,
-          envClass,
-          envClassSource,
-        });
+        // provider adapters, durable attempts, recovery queue). A taken
+        // credit hold is resolved on EVERY path out of dispatch.
+        let outcome: AiDispatchOutcome;
+        try {
+          outcome = await deps.dispatch({
+            request,
+            authority,
+            costMode: mode,
+            maxVendorCashUsd,
+            fundingLabel,
+            envClass,
+            envClassSource,
+          });
+        } catch (error) {
+          if (creditReservation !== null && !(error instanceof AmbiguousCharge)) {
+            // Clean failure (no charge proven or possible): free the hold —
+            // mirroring the cash engine's §10.1 FAILED_NO_CHARGE release. An
+            // AMBIGUOUS charge instead KEEPS the hold (§10.1: an unproven
+            // charge never frees its funds; S5 reconciliation resolves it).
+            try {
+              await deps.credit.release(
+                creditReservation.creditReservationId,
+                deps.now(),
+              );
+            } catch {
+              // Never mask the dispatch failure. The unfreed hold fails in
+              // the conservative direction: strands credits, never
+              // overspends.
+            }
+          }
+          throw error;
+        }
+
+        // 8.5: settle the credit hold on a COMPLETED dispatch. The executor
+        // has no token-priced actual at this altitude, so the CONSERVATIVE
+        // full hold settles provisionally (over-counting, never
+        // under-counting — the cash pipeline's exact §10.7 fallback);
+        // receipt-driven reconciliation (S5) corrects it downward. An
+        // IN_PROGRESS verdict leaves the hold HELD: the live claim owner
+        // shares this reservation via idempotent replay and completes it.
+        let creditSettlementDegraded = false;
+        if (creditReservation !== null && outcome.kind === "COMPLETED") {
+          try {
+            await deps.credit.settleProvisional(
+              creditReservation.creditReservationId,
+              creditReservation.heldUsd,
+              deps.now(),
+            );
+          } catch {
+            // A settlement failure never converts a completed dispatch into
+            // an error (§9.8 analog); the hold stays and is surfaced as
+            // degraded telemetry. Conservative direction: strands credits,
+            // never overspends.
+            creditSettlementDegraded = true;
+          }
+        }
 
         if (outcome.kind === "IN_PROGRESS") {
           // Another live execution owns the claim: honest verdict, nothing
@@ -389,7 +456,9 @@ export function createAiExecutor(
           fundingLabel,
           policyVersion: authority.policyVersion,
           status: "SUCCEEDED",
-          telemetryStatus: outcome.telemetryStatus,
+          telemetryStatus: creditSettlementDegraded
+            ? "DEGRADED"
+            : outcome.telemetryStatus,
           replayed: outcome.replayed,
         };
       } catch (error) {
