@@ -445,6 +445,54 @@ describe("delivery + lease fencing (6.5)", () => {
     expect(db._tables.deadLetterReceipts.rows).toHaveLength(receipts.length);
   });
 
+  it("a dead-letter receipt write failure never aborts the drain, still marks DEAD_LETTER, and is captured in summary.errors", async () => {
+    const db = seedFollowerWorld();
+    const failingDeps = eliteDeps({
+      sendPush: async () => ({
+        sent: false,
+        detail: "send_failed",
+        classification: "retryable",
+        statusCode: 500,
+      }),
+      sendEmail: async () => ({ sent: false, detail: "send_failed", classification: "retryable" }),
+    });
+    // Simulate the escalation write itself breaking (wrong column, FK/unique
+    // constraint violation, connection blip) — appendDeadLetterReceipt's
+    // try/catch (worker.ts) must swallow this into summary.errors, never let
+    // it abort the drain loop or block the delivery from reaching
+    // DEAD_LETTER.
+    db.outboxDeadLetterReceipt.createMany = async () => {
+      throw new Error("simulated dead-letter-receipt write failure");
+    };
+    let cursor = NOW;
+    const allErrors: string[] = [];
+    for (let i = 0; i < OUTBOX_MAX_ATTEMPTS + 3; i++) {
+      const pass = await drainSettlementOutbox(db, failingDeps, cursor);
+      allErrors.push(...pass.errors);
+      cursor = new Date(cursor.getTime() + 2 * 60 * 60 * 1000);
+    }
+    // (1) The delivery loop was never aborted or skipped by the throwing
+    // escalation write — every delivery still reaches DEAD_LETTER.
+    for (const d of db._tables.deliveries.rows) {
+      expect(d["status"]).toBe("DEAD_LETTER");
+      expect(d["attemptCount"]).toBe(OUTBOX_MAX_ATTEMPTS);
+    }
+    // (2) No escalation receipt was actually persisted (the write kept
+    // throwing), so the durable owner-queue table stays empty — this is the
+    // failure this test proves the harness can now detect, since nothing
+    // else in this suite exercises a throwing outboxDeadLetterReceipt store.
+    expect(db._tables.deadLetterReceipts.rows).toHaveLength(0);
+    // (3) The failure is captured, never silently dropped: across the
+    // passes that dead-lettered a delivery, one error is reported per
+    // delivery whose escalation write failed — never swallowed into
+    // nothing.
+    expect(allErrors.length).toBe(db._tables.deliveries.rows.length);
+    for (const err of allErrors) {
+      expect(err).toContain("dead-letter-receipt");
+      expect(err).toContain("simulated dead-letter-receipt write failure");
+    }
+  });
+
   it("stale CLAIMED below the cap → RETRYABLE_FAILED with backoff; AT the cap → DEAD_LETTER, never PENDING", async () => {
     const staleLease = new Date(NOW.getTime() - 60_000);
     const db = makeDb({

@@ -84,6 +84,32 @@ import {
   usdToMicros,
 } from "./budget";
 
+// ─── Exact-decimal USD → credit minor-units (cents) conversion ────────────────
+
+/**
+ * Convert a USD amount to credit "minor units" (cents) using the same
+ * exact-decimal validation as the rest of the codebase's money handling
+ * (budget.ts's `usdToMicros`), rounded UP to the nearest cent so a worst-case
+ * hold or a settled actual is never understated by float error.
+ *
+ * Replaces the previous `Math.round(usd * 100)`, which is float arithmetic:
+ * for a value with more than 2 decimal places, or one that lands near an
+ * IEEE-754 representation boundary, `x * 100` can be off by a fractional
+ * amount that rounds to the wrong integer cent. `usdToMicros` already
+ * refuses lossy amounts (more than 6 decimal places) and returns an exact
+ * BigInt micro-dollar count; ceiling-dividing that by 10_000 (1 cent =
+ * 10_000 micro-dollars) gives an exact, never-understated cent count with no
+ * float step in between.
+ */
+function usdToCreditMinorUnitsCeil(usd: number, label: string): number {
+  const micros = usdToMicros(usd, label);
+  const minorUnits = (micros + 9_999n) / 10_000n;
+  if (minorUnits > BigInt(Number.MAX_SAFE_INTEGER)) {
+    throw new BudgetBlocked(`${label} is too large to represent as a safe-integer minor-unit count.`);
+  }
+  return Number(minorUnits);
+}
+
 // ─── Canonical fingerprint (§9.2) ─────────────────────────────────────────────
 
 /** Deterministic JSON: object keys sorted at every depth, arrays in order. */
@@ -580,7 +606,7 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
           // No per-token pricing yet (mirrors budget.ts): the worst case IS
           // the plan's cash ceiling, converted to integer cents — the only
           // currency an AI control-plane policy cap is denominated in today.
-          worstCaseMinorUnits: Math.round(plan.maxVendorCashUsd * 100),
+          worstCaseMinorUnits: usdToCreditMinorUnitsCeil(plan.maxVendorCashUsd, "maxVendorCashUsd"),
           worstCaseCurrency: "USD",
           now: deps.now(),
           expiresAt: new Date(deps.now().getTime() + (deps.creditHoldMs ?? DEFAULT_CREDIT_HOLD_MS)),
@@ -765,7 +791,10 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
         // same best-effort settle doctrine as the budget hold above.
         if (creditHandle) {
           try {
-            await deps.creditPort!.settle(creditHandle, Math.round(plan.maxVendorCashUsd * 100));
+            await deps.creditPort!.settle(
+              creditHandle,
+              usdToCreditMinorUnitsCeil(plan.maxVendorCashUsd, "maxVendorCashUsd"),
+            );
           } catch (error) {
             observability.markDegraded(
               `credit settle of reservation ${creditHandle.reservationId} failed ` +
