@@ -1,7 +1,7 @@
 /**
  * A fixture `CreditSnapshotStore` whose ONE snapshot is modeled directly on
  * the real S1 conformance fixture
- * `/workspace/wt/prd/apps/web/lib/opportunity-engine/fixtures/credit-grant-snapshot.conformance.json`
+ * `apps/web (this repo, same worktree)/lib/opportunity-engine/fixtures/credit-grant-snapshot.conformance.json`
  * case `"valid-partially-consumed-admissible"` — same shape, same
  * `grantState`/`reconciliationState`/expiry/freshness posture, so it passes
  * the REAL `evaluateCreditSnapshotAdmissibility` (S1) admissibility gates
@@ -17,7 +17,7 @@ import type {
   CreditAdmissionScope,
   CreditGrantSnapshot,
   CreditSnapshotStore,
-} from "../../../../../wt/prd/apps/web/lib/ai-control-plane/credit-admission";
+} from "../../../apps/web/lib/ai-control-plane/credit-admission";
 
 export function makeFixtureSnapshot(overrides: {
   grantId: string;

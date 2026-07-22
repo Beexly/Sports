@@ -1,7 +1,7 @@
 /**
  * Property-based regression tests against the REAL, unmodified
  * `createPgCreditAuthorizationPort` from
- * `/workspace/wt/prd/apps/web/lib/ai-control-plane/credit-admission.ts`
+ * `apps/web (this repo, same worktree)/lib/ai-control-plane/credit-admission.ts`
  * (branch feat/ai-control-plane-credit-admission), driving it through the
  * `InMemoryCreditLedgerDb` test-double SQL adapter and a fixture
  * `CreditSnapshotStore` modeled on S1's own conformance fixture.
@@ -12,7 +12,7 @@
  */
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { createPgCreditAuthorizationPort } from "../../../../../wt/prd/apps/web/lib/ai-control-plane/credit-admission";
+import { createPgCreditAuthorizationPort } from "../../../apps/web/lib/ai-control-plane/credit-admission";
 import { InMemoryCreditLedgerDb } from "../adapters/in-memory-credit-ledger";
 import { FixtureCreditSnapshotStore, FIXTURE_SCOPE } from "../adapters/fixture-credit-snapshot-store";
 

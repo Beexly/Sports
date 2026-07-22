@@ -23,7 +23,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { execSync, spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createPgControlStore } from "../../../../../wt/pr163/apps/web/lib/ai-control-plane/control-store";
+import { createPgControlStore } from "../../../apps/web/lib/ai-control-plane/control-store";
 import { InMemoryControlSql } from "../adapters/in-memory-control-sql";
 
 const LIVE = process.env.CHAOS_LIVE === "1";

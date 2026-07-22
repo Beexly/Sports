@@ -5,7 +5,7 @@
  * production database boundary; it is a hand-written in-memory stand-in
  * for Postgres that speaks the exact `CreditLedgerDb` interface defined by
  * the REAL, unmodified `credit-admission.ts`
- * (`/workspace/wt/prd/apps/web/lib/ai-control-plane/credit-admission.ts`).
+ * (`apps/web (this repo, same worktree)/lib/ai-control-plane/credit-admission.ts`).
  *
  * The code actually under test is `createPgCreditAuthorizationPort(db)`
  * from that real file, imported verbatim — this adapter only stands in for
@@ -24,7 +24,7 @@
  * concurrent `$transaction` callback touching the same tables — matching a
  * real Postgres transaction's isolation from other connections.
  */
-import type { CreditLedgerDb } from "../../../../../wt/prd/apps/web/lib/ai-control-plane/credit-admission";
+import type { CreditLedgerDb } from "../../../apps/web/lib/ai-control-plane/credit-admission";
 
 interface LedgerRow {
   grantId: string;

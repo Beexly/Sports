@@ -1,7 +1,7 @@
 /**
  * Property-based regression tests against the REAL, unmodified
  * `createPgControlStore` from
- * `/workspace/wt/pr163/apps/web/lib/ai-control-plane/control-store.ts`
+ * `apps/web (this repo, same worktree)/lib/ai-control-plane/control-store.ts`
  * (branch feat/ai-control-plane-ledger), driving it through the
  * `InMemoryControlSql` test-double SQL adapter. Covers the invariants
  * formalized in W2-02's `InvocationClaim.tla`:
@@ -12,7 +12,7 @@
  */
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { createPgControlStore } from "../../../../../wt/pr163/apps/web/lib/ai-control-plane/control-store";
+import { createPgControlStore } from "../../../apps/web/lib/ai-control-plane/control-store";
 import { InMemoryControlSql } from "../adapters/in-memory-control-sql";
 
 const NOW = new Date("2026-07-22T00:00:00.000Z");
