@@ -5,6 +5,10 @@ import {
   isWellFormedCapabilityProvenanceHash,
   type CapabilityProvenanceSourceDocument,
 } from "./capability-provenance";
+import {
+  validateCapabilityAdditionsDocument,
+  validateCapabilityCaptureDocument,
+} from "./capability-source-schema";
 
 export type CapabilityInventorySurface =
   | "CLAUDE_PLUGIN"
@@ -119,7 +123,8 @@ function addClaudePlugin(
   );
 }
 
-export function getCapabilityInventory(): readonly CapabilityInventoryEntry[] {
+/** Builds (but does not validate) the sealed inventory from the raw captures. */
+function buildCapabilityInventory(): readonly CapabilityInventoryEntry[] {
   const entries: CapabilityInventoryEntry[] = [];
 
   for (const tuple of INITIAL_CLAUDE_PLUGINS) {
@@ -192,6 +197,52 @@ export function getCapabilityInventory(): readonly CapabilityInventoryEntry[] {
   }
 
   return entries;
+}
+
+/** Memoized fail-closed load result — validated exactly once per process. */
+let validatedInventory: readonly CapabilityInventoryEntry[] | null = null;
+
+/**
+ * Returns the validated capability inventory. Fail closed, matching the
+ * governance-ledger loader (`getCapabilityGovernanceRecords`): on first use
+ * the raw capture documents are schema-validated
+ * (`validateCapabilityCaptureDocument` / `validateCapabilityAdditionsDocument`)
+ * and the sealed entries are validated (`validateCapabilityInventory`); any
+ * violation throws instead of returning a partial or guessed inventory. The
+ * validated result is memoized and frozen.
+ */
+export function getCapabilityInventory(): readonly CapabilityInventoryEntry[] {
+  if (validatedInventory) return validatedInventory;
+
+  const captureIssues = validateCapabilityCaptureDocument(inventoryData);
+  if (captureIssues.length > 0) {
+    throw new Error(
+      `NOVA capability capture document failed validation (${captureIssues.length} issue(s)): ${captureIssues
+        .slice(0, 5)
+        .join(" | ")}`,
+    );
+  }
+  const additionsIssues = validateCapabilityAdditionsDocument(additionData);
+  if (additionsIssues.length > 0) {
+    throw new Error(
+      `NOVA capability additions document failed validation (${additionsIssues.length} issue(s)): ${additionsIssues
+        .slice(0, 5)
+        .join(" | ")}`,
+    );
+  }
+
+  const entries = buildCapabilityInventory();
+  const inventoryIssues = validateCapabilityInventory(entries);
+  if (inventoryIssues.length > 0) {
+    throw new Error(
+      `NOVA capability inventory failed validation (${inventoryIssues.length} issue(s)): ${inventoryIssues
+        .slice(0, 5)
+        .join(" | ")}`,
+    );
+  }
+
+  validatedInventory = Object.freeze(entries.map((entry) => Object.freeze(entry)));
+  return validatedInventory;
 }
 
 export function summarizeCapabilityInventory(

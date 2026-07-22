@@ -36,6 +36,21 @@ describe("NOVA Claude and ChatGPT capability inventory", () => {
     expect(entries.every((entry) => entry.executionAuthority === false)).toBe(true);
   });
 
+  it("validates the load path fail-closed exactly once: memoized, frozen, already-validated result", () => {
+    // getCapabilityInventory() validates the raw capture documents and the
+    // sealed entries on first use and throws on any violation; the fact that
+    // it returns at all means the shipped captures passed. The validated
+    // result is memoized (same frozen instance every call) so no caller can
+    // ever observe an unvalidated or mutated inventory.
+    const first = getCapabilityInventory();
+    expect(getCapabilityInventory()).toBe(first);
+    expect(Object.isFrozen(first)).toBe(true);
+    for (const entry of first) {
+      expect(Object.isFrozen(entry)).toBe(true);
+    }
+    expect(validateCapabilityInventory(first)).toEqual([]);
+  });
+
   it("preserves all 110 additional plugin records and their metadata", () => {
     const additions = getAdditionalClaudePlugins();
     expect(additions).toHaveLength(110);

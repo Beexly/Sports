@@ -4,6 +4,8 @@ import governanceData from "../../../data/nova/capability-governance-2026-07-22.
 import {
   CAPABILITY_ROLLBACK_PLANS,
   CAPABILITY_STOP_CONDITION_PROFILES,
+  CAPABILITY_VERSION_DRIFT_STATES,
+  DRIFT_ELIGIBLE_VERSION_DRIFT_STATES,
   estimateCapabilityContextCost,
   expectedRollbackPlanIdForSurface,
   findCapabilityGovernanceRecord,
@@ -52,12 +54,12 @@ describe("NOVA capability governance ledger data", () => {
     expect(validateCapabilityGovernanceCoverage(records, inventory)).toEqual([]);
   });
 
-  it("declares only honest baseline facts: worst-case scopes, unreviewed supply chain, zero observations", () => {
+  it("declares only honest baseline facts: worst-case scopes, unreviewed supply chain, unmonitored drift, zero observations", () => {
     const records = getCapabilityGovernanceRecords();
     for (const record of records) {
       expect(record.permissionManifest).toEqual(BASELINE_MANIFEST);
       expect(record.supplyChainState).toBe("UNREVIEWED");
-      expect(record.versionDriftState).toBe("NONE_OBSERVED_SINCE_CAPTURE");
+      expect(record.versionDriftState).toBe("UNMONITORED_SINCE_CAPTURE");
       expect(record.maintenanceOwner).toBe("owner:founder");
       expect(record.observedPerformance).toEqual({
         state: "NO_OBSERVATIONS",
@@ -67,6 +69,24 @@ describe("NOVA capability governance ledger data", () => {
         lastObservedAt: null,
       });
     }
+  });
+
+  it("bans the self-certifying no-drift value from the drift vocabulary", () => {
+    expect([...CAPABILITY_VERSION_DRIFT_STATES].sort()).toEqual([
+      "STALE_CAPTURE",
+      "UNKNOWN",
+      "UNMONITORED_SINCE_CAPTURE",
+      "UPDATE_OBSERVED",
+    ]);
+    expect(CAPABILITY_VERSION_DRIFT_STATES.has("NONE_OBSERVED_SINCE_CAPTURE")).toBe(false);
+    // Only real monitoring observations are drift-eligible; absence of
+    // monitoring (UNMONITORED_SINCE_CAPTURE) fails closed like UNKNOWN.
+    expect([...DRIFT_ELIGIBLE_VERSION_DRIFT_STATES].sort()).toEqual([
+      "STALE_CAPTURE",
+      "UPDATE_OBSERVED",
+    ]);
+    expect(DRIFT_ELIGIBLE_VERSION_DRIFT_STATES.has("UNMONITORED_SINCE_CAPTURE")).toBe(false);
+    expect(DRIFT_ELIGIBLE_VERSION_DRIFT_STATES.has("UNKNOWN")).toBe(false);
   });
 
   it("pins each record's rollback plan to the capability's surface", () => {

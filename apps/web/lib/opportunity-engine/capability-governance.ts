@@ -17,10 +17,13 @@
  *   was made against, so capture drift invalidates the declaration.
  *
  * The shipped ledger (`data/nova/capability-governance-2026-07-22.json`) is a
- * baseline: every scope is a worst-case assumption pending inspection and
- * every supply-chain state is UNREVIEWED. That is deliberate honesty — the
+ * baseline: every scope is a worst-case assumption pending inspection, every
+ * supply-chain state is UNREVIEWED, and every version-drift state is
+ * UNMONITORED_SINCE_CAPTURE (no drift-monitoring process exists, so no record
+ * may self-certify "no drift observed"). That is deliberate honesty — the
  * ledger asserts what has NOT been verified, and the governor treats those
- * assumptions as binding risk posture, not as approval.
+ * assumptions as binding risk posture, not as approval: the shipped baseline
+ * makes every capability drift-INELIGIBLE until real monitoring exists.
  *
  * Pure TypeScript + JSON data. No Prisma, no I/O, no clocks, no randomness.
  * Nothing in this module (or anywhere in S2) can activate a capability.
@@ -111,8 +114,16 @@ export type CapabilitySupplyChainState =
   | "UNREVIEWED"
   | "UNKNOWN";
 
+/**
+ * Version-drift vocabulary. There is deliberately NO
+ * "no drift observed" value: no drift-monitoring process exists yet, so a
+ * record can only honestly say `UNMONITORED_SINCE_CAPTURE` — which the
+ * governor treats as drift-INELIGIBLE, exactly like `UNKNOWN` (fail closed).
+ * Nothing is drift-eligible until a real monitoring process records either
+ * `UPDATE_OBSERVED` or `STALE_CAPTURE`.
+ */
 export type CapabilityVersionDriftState =
-  | "NONE_OBSERVED_SINCE_CAPTURE"
+  | "UNMONITORED_SINCE_CAPTURE"
   | "UPDATE_OBSERVED"
   | "STALE_CAPTURE"
   | "UNKNOWN";
@@ -124,10 +135,20 @@ export const CAPABILITY_SUPPLY_CHAIN_STATES: ReadonlySet<string> = new Set([
   "UNKNOWN",
 ]);
 export const CAPABILITY_VERSION_DRIFT_STATES: ReadonlySet<string> = new Set([
-  "NONE_OBSERVED_SINCE_CAPTURE",
+  "UNMONITORED_SINCE_CAPTURE",
   "UPDATE_OBSERVED",
   "STALE_CAPTURE",
   "UNKNOWN",
+]);
+
+/**
+ * Drift states the governor may treat as eligible. `UNMONITORED_SINCE_CAPTURE`
+ * and `UNKNOWN` are excluded: absence of monitoring is not evidence of
+ * stability, so both fail closed.
+ */
+export const DRIFT_ELIGIBLE_VERSION_DRIFT_STATES: ReadonlySet<string> = new Set([
+  "UPDATE_OBSERVED",
+  "STALE_CAPTURE",
 ]);
 
 /**

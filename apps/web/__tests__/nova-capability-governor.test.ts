@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
+import * as opportunityEngineBarrel from "@/lib/opportunity-engine";
 import * as capabilityGovernance from "@/lib/opportunity-engine/capability-governance";
 import * as capabilityGovernor from "@/lib/opportunity-engine/capability-governor";
 import * as capabilityInventoryModule from "@/lib/opportunity-engine/capability-inventory";
@@ -124,6 +125,19 @@ const NOW = "2026-07-22T12:00:00.000Z";
 const RUN_ID = "s2-governor-test-run";
 const COMMIT_COMMANDS_ID = "claude_plugin:commit-commands";
 
+/**
+ * The shipped baseline ledger is honestly UNMONITORED_SINCE_CAPTURE, which the
+ * governor fails closed on. Selection-mechanics tests therefore run against a
+ * monitored variant of the ledger (a real drift observation on every record);
+ * baseline honesty has its own dedicated tests below.
+ */
+function monitoredRecords(): readonly CapabilityGovernanceRecord[] {
+  return getCapabilityGovernanceRecords().map((record) => ({
+    ...record,
+    versionDriftState: "UPDATE_OBSERVED" as const,
+  }));
+}
+
 function select(
   overrides: Partial<InspectionSelectionInput> = {},
 ): ReturnType<typeof selectInspectionCandidates> {
@@ -131,6 +145,7 @@ function select(
     taskClass: "GSE_REPOSITORY_IMPLEMENTATION",
     generatedAt: NOW,
     runId: RUN_ID,
+    governanceRecords: monitoredRecords(),
     ...overrides,
   });
 }
@@ -139,7 +154,7 @@ function withMutatedRecord(
   capabilityId: string,
   mutate: (record: CapabilityGovernanceRecord) => CapabilityGovernanceRecord,
 ): readonly CapabilityGovernanceRecord[] {
-  return getCapabilityGovernanceRecords().map((record) =>
+  return monitoredRecords().map((record) =>
     record.capabilityId === capabilityId ? mutate(record) : record,
   );
 }
@@ -180,7 +195,7 @@ describe("NOVA governed inspection selection — recommendation record shape", (
     expect(() => assertNoFunctions(select(), "record")).not.toThrow();
   });
 
-  it("selects the same governed set as the captured-metadata shortlist when the full baseline ledger applies", () => {
+  it("selects the same governed set as the captured-metadata shortlist once drift is actually monitored", () => {
     const recommendation = select();
     expect(recommendation.selected.map((candidate) => candidate.entry.name)).toEqual([
       "Commit commands",
@@ -192,6 +207,7 @@ describe("NOVA governed inspection selection — recommendation record shape", (
       expect(candidate.executionAuthority).toBe(false);
       expect(candidate.governance.permissionManifest).not.toBeNull();
       expect(candidate.governance.supplyChainState).toBe("UNREVIEWED");
+      expect(candidate.governance.versionDriftState).toBe("UPDATE_OBSERVED");
       expect(candidate.governance.sourceProvenanceHash).toBe(candidate.entry.provenanceHash);
       expect(candidate.stopConditions.length).toBeGreaterThanOrEqual(5);
       expect(candidate.rollbackPlan.id).toBe("DISABLE_PLUGIN_V1");
@@ -207,7 +223,7 @@ describe("NOVA governed inspection selection — ranking determinism", () => {
   });
 
   it("is insensitive to the order of the supplied governance records", () => {
-    const records = getCapabilityGovernanceRecords();
+    const records = monitoredRecords();
     const reversed = [...records].reverse();
     expect(select({ governanceRecords: reversed })).toEqual(select({ governanceRecords: records }));
   });
@@ -346,6 +362,30 @@ describe("NOVA governed inspection selection — fail-closed disqualification", 
     ]);
   });
 
+  it("disqualifies UNMONITORED_SINCE_CAPTURE drift — absence of monitoring fails closed like UNKNOWN", () => {
+    const recommendation = select({
+      governanceRecords: withMutatedRecord(COMMIT_COMMANDS_ID, (record) => ({
+        ...record,
+        versionDriftState: "UNMONITORED_SINCE_CAPTURE",
+      })),
+    });
+    expect(ineligibleFor(recommendation, COMMIT_COMMANDS_ID)?.reasons).toEqual([
+      "VERSION_DRIFT_UNMONITORED",
+    ]);
+    expect(ineligibleFor(recommendation, COMMIT_COMMANDS_ID)?.failClosed).toBe(true);
+  });
+
+  it("treats the shipped baseline ledger as fully drift-ineligible: nothing selects until monitoring exists", () => {
+    const recommendation = select({ governanceRecords: getCapabilityGovernanceRecords() });
+    expect(recommendation.selected).toEqual([]);
+    expect(recommendation.held).toEqual([]);
+    expect(recommendation.ineligible.length).toBeGreaterThan(0);
+    for (const record of recommendation.ineligible) {
+      expect(record.reasons).toEqual(["VERSION_DRIFT_UNMONITORED"]);
+      expect(record.failClosed).toBe(true);
+    }
+  });
+
   it("keeps observed-update drift eligible — that is exactly what inspection is for", () => {
     const recommendation = select({
       governanceRecords: withMutatedRecord(COMMIT_COMMANDS_ID, (record) => ({
@@ -433,7 +473,7 @@ describe("NOVA governed inspection selection — fail-closed disqualification", 
   });
 
   it("disqualifies a capability with duplicate governance records", () => {
-    const records = getCapabilityGovernanceRecords();
+    const records = monitoredRecords();
     const duplicate = records.find((record) => record.capabilityId === COMMIT_COMMANDS_ID);
     expect(duplicate).toBeDefined();
     const recommendation = select({ governanceRecords: [...records, duplicate!] });
@@ -506,6 +546,17 @@ describe("NOVA S2 structural no-activation guarantees", () => {
         ).toBe(false);
       }
     }
+  });
+
+  it("bans the ungoverned legacy shortlist from the public barrel — only the fail-closed selection is public", () => {
+    // routeCapabilities is a documented pre-governance layer: it consults no
+    // permission manifests, supply-chain state, or provenance hashes. It stays
+    // importable from the capability-governor module for its tests, but the
+    // public barrel must expose only the governed selection path.
+    expect(Object.keys(opportunityEngineBarrel)).not.toContain("routeCapabilities");
+    expect(typeof capabilityGovernor.routeCapabilities).toBe("function");
+    expect(typeof opportunityEngineBarrel.selectInspectionCandidates).toBe("function");
+    expect(opportunityEngineBarrel.MAX_INSPECTION_CANDIDATES).toBe(MAX_INSPECTION_CANDIDATES);
   });
 
   it("uses no clocks and no randomness anywhere in the S2 modules — timestamps are parameters", () => {

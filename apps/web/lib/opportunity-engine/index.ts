@@ -20,4 +20,24 @@ export * from "./capability-provenance";
 export * from "./capability-source-schema";
 export * from "./capability-inventory";
 export * from "./capability-governance";
-export * from "./capability-governor";
+// capability-governor: explicit re-export list. The legacy pre-governance
+// shortlist `routeCapabilities` (and its record types) is deliberately NOT on
+// the public barrel — it consults no permission manifests, no supply-chain
+// state, and no provenance hashes, so only the fail-closed
+// `selectInspectionCandidates` path is the public governance surface.
+// `routeCapabilities` stays importable solely from
+// "./capability-governor" for its documented pre-governance tests.
+export {
+  classifyCapabilityTrust,
+  detectCapabilityRisk,
+  MAX_INSPECTION_CANDIDATES,
+  selectInspectionCandidates,
+  type CapabilityIneligibilityReason,
+  type CapabilityInspectionCandidate,
+  type CapabilityInspectionRecommendation,
+  type CapabilityRiskFlag,
+  type CapabilityTaskClass,
+  type CapabilityTrustTier,
+  type IneligibleCapabilityRecord,
+  type InspectionSelectionInput,
+} from "./capability-governor";

@@ -34,6 +34,7 @@ import {
   CAPABILITY_STOP_CONDITION_PROFILES,
   CAPABILITY_SUPPLY_CHAIN_STATES,
   CAPABILITY_VERSION_DRIFT_STATES,
+  DRIFT_ELIGIBLE_VERSION_DRIFT_STATES,
   estimateCapabilityContextCost,
   getCapabilityGovernanceRecords,
   validateCapabilityObservedPerformance,
@@ -421,6 +422,7 @@ export type CapabilityIneligibilityReason =
   | "INVALID_PERMISSION_MANIFEST"
   | "UNKNOWN_SUPPLY_CHAIN_STATE"
   | "UNKNOWN_VERSION_DRIFT_STATE"
+  | "VERSION_DRIFT_UNMONITORED"
   | "MISSING_PROVENANCE_HASH"
   | "PROVENANCE_HASH_MISMATCH"
   | "UNKNOWN_STOP_CONDITION_PROFILE"
@@ -519,6 +521,10 @@ function governanceIneligibilityReasons(
     record.versionDriftState === "UNKNOWN"
   ) {
     reasons.push("UNKNOWN_VERSION_DRIFT_STATE");
+  } else if (!DRIFT_ELIGIBLE_VERSION_DRIFT_STATES.has(record.versionDriftState)) {
+    // UNMONITORED_SINCE_CAPTURE: no drift-monitoring process exists, so the
+    // record cannot certify drift posture — fail closed, exactly like UNKNOWN.
+    reasons.push("VERSION_DRIFT_UNMONITORED");
   }
   if (
     !record.sourceProvenanceHash ||
@@ -701,7 +707,8 @@ export function selectInspectionCandidates(
     activationApiExported: false,
     policy: [
       "This record is a recommendation for human inspection only; it grants no authority and activates nothing.",
-      "A capability without a declared permission manifest, a known supply-chain state, and a matching pinned provenance hash is ineligible — fail closed, no exceptions.",
+      "A capability without a declared permission manifest, a known supply-chain state, a monitored version-drift state, and a matching pinned provenance hash is ineligible — fail closed, no exceptions.",
+      "UNMONITORED_SINCE_CAPTURE drift is ineligible exactly like UNKNOWN: nothing is drift-eligible until a real drift-monitoring process exists.",
       "The governor never selects more than three inspection candidates per run.",
       "Activation, connection, and execution are owner actions performed outside this codebase; S2 exports no API that can perform them.",
       "Observed-performance fields start at zero observations and may only ever be filled by real measurements.",
