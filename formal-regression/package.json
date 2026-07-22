@@ -1,0 +1,17 @@
+{
+  "name": "formal-regression",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "W2-03: property-based + chaos-style regression harness for the invariants formalized in W2-02 (labs/w2-03-property-chaos-harness).",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "fast-check": "^3.23.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  }
+}
