@@ -84,7 +84,7 @@ import {
   usdToMicros,
 } from "./budget";
 
-// ─── Exact-decimal USD → credit minor-units (cents) conversion ────────────────────────
+// ─── Exact-decimal USD → credit minor-units (cents) conversion ────────────────
 
 /**
  * Convert a USD amount to credit "minor units" (cents) using the same
@@ -110,7 +110,7 @@ function usdToCreditMinorUnitsCeil(usd: number, label: string): number {
   return Number(minorUnits);
 }
 
-// ─── Canonical fingerprint (§9.2) ───────────────────────────────────────────
+// ─── Canonical fingerprint (§9.2) ─────────────────────────────────────────────
 
 /** Deterministic JSON: object keys sorted at every depth, arrays in order. */
 export function canonicalJson(value: unknown): string {
@@ -153,7 +153,7 @@ export function computeRequestFingerprint(args: {
   );
 }
 
-// ─── Task payload derivation ────────────────────────────────────────────────
+// ─── Task payload derivation ──────────────────────────────────────────────────
 
 const MAX_TASK_TOKENS = 64_000;
 const DEFAULT_TASK_TOKENS = 1_024;
@@ -215,7 +215,7 @@ export function deriveProviderPayload(
   };
 }
 
-// ─── The pipeline ────────────────────────────────────────────────────────
+// ─── The pipeline ─────────────────────────────────────────────────────────────
 
 /**
  * Budget seam (§10): the raw-SQL database the reservation engine writes to,
