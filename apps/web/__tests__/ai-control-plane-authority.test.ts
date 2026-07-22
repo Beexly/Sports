@@ -674,9 +674,12 @@ function makeDeps(
     // The real versioned registry by default — what production wires.
     policies: { getTaskPolicy },
     receipts: failClosedReceiptStore,
+    recordBlocked: async () => {},
     dispatch: async (plan) => {
       plans.push(plan);
       return {
+        kind: "COMPLETED",
+        invocationId: `inv:${plan.request.requestId}`,
         output: { ok: true },
         attempts: [
           {
@@ -688,6 +691,8 @@ function makeDeps(
             status: "SUCCEEDED",
           },
         ],
+        telemetryStatus: "OK",
+        replayed: false,
       };
     },
     ...overrides,

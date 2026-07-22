@@ -3051,3 +3051,177 @@ model Signal {
   @@index([category])
   @@map("signals")
 }
+
+// ============================================================
+// AI CONTROL PLANE — INVOCATION / ATTEMPT / FINANCIAL ATTRIBUTION LEDGER
+// (Phase 2 PR-B, blueprint §B)
+//
+// Additive, dormant telemetry. These three tables record every AI task
+// invocation, each provider attempt within it, and the pre-call financial
+// attribution — WITHOUT ever claiming settlement. They are written only by
+// the `executeAiTask` facade (apps/web/lib/ai-control-plane/execute.ts),
+// which no call site uses yet, so this changes zero runtime behavior.
+//
+// Enum-like columns are plain String with an inline value list, matching the
+// documented convention of OddsLineSnapshot.phase / Watchlist.entityType
+// (Postgres has no `CREATE TYPE ... IF NOT EXISTS`, so native enums are not
+// safely re-appliable in an IF-NOT-EXISTS additive migration).
+//
+// Two structural invariants live in the shape itself:
+//   - provider ≠ payer (#151): `providerUsed` is nullable and is written ONLY
+//     after transport dispatch begins; a failed provider is its own attempt
+//     row (status FAILED) and can never be recorded as having "served" the
+//     request. Dispatch writes `estimatedGrossUsd` + a pre-call `fundingLabel`
+//     only; `reconciledLabel` / `billedUsd` stay null (a later reconciliation
+//     PR is the sole writer of confirmed settlement).
+//   - execution_status ≠ telemetry_status: `AiInvocation.telemetryStatus` is a
+//     separate column so a degraded ledger write never mutates the execution
+//     verdict.
+// ============================================================
+
+model AiInvocation {
+  id              String    @id @default(cuid())
+  requestId       String // caller-supplied idempotency handle
+  taskClass       String
+  surface         String
+  entity          String // "GSE" | "GSN" | "XXX" | "PERSONAL"
+  dataClass       String // serialized data-policy tag set (comma-joined)
+  costMode        String // effective cost mode at execution
+  envClass        String // "production" | "preview" | "development" | "test"
+  envClassSource  String // "explicit" | "derived" (or "UNRESOLVED" on early blocks)
+  policyVersion   String
+  actorType       String // "HUMAN" | "SERVICE" | "SYSTEM" (TrustedActor, #159)
+  actorSubjectId  String
+  status          String // "RUNNING" | "SUCCEEDED" | "FAILED" | "AMBIGUOUS" | "POLICY_BLOCKED" | "BUDGET_BLOCKED" | "BLOCKED"
+  telemetryStatus String    @default("OK") // "OK" | "DEGRADED" — separate from status
+  createdAt       DateTime  @default(now())
+  completedAt     DateTime?
+
+  // ── §9.2 atomic claim / lease fencing ──────────────────────────────────
+  requestFingerprint  String // sha256 of the canonicalized request payload
+  executionOwnerToken String? // fencing token of the live claim owner (NULL when terminal/BLOCKED)
+  leaseExpiresAt      DateTime? // live-claim lease; expired ⇒ eligible for fenced steal
+  heartbeatAt         DateTime?
+  stealCount          Int       @default(0)
+
+  // ── §9.2 durable terminal result (replay source) ───────────────────────
+  resultRef  String? // external result reference, if the payload lives elsewhere
+  resultHash String? // sha256 of the canonicalized output
+  resultJson Json? // the original validated output, replayed on terminal replay
+
+  // ── §9.6 non-dispatchable blocked decisions ────────────────────────────
+  // These fields are durable incident history: a CONFIGURATION_BLOCKED row
+  // reclaimed after the config is fixed KEEPS them even once status moves on.
+  blockedReasonCode String? // "POLICY_BLOCKED" | "BUDGET_BLOCKED" | "CONFIGURATION_BLOCKED"
+  blockedDetail     String?
+
+  attempts    AiAttempt[]
+  attribution AiFinancialAttribution[]
+  recovery    AiTelemetryRecovery[]
+
+  // Same (requestId, taskClass) replays; the unique key is the atomicity
+  // anchor of the create-or-claim (INSERT .. ON CONFLICT DO NOTHING).
+  @@unique([requestId, taskClass])
+  @@index([taskClass, createdAt])
+  @@map("ai_invocations")
+}
+
+model AiAttempt {
+  id                String    @id @default(cuid())
+  invocationId      String
+  ordinal           Int // 0-based try order; a fallback is always ordinal+1
+  providerRequested String // provider we intended to dispatch to
+  providerUsed      String? // null until transport actually dispatched (#151)
+  providerAccount   String?
+  region            String?
+  modelRequested    String
+  modelResolved     String?
+  substitutionId    String? // FK into the approved-substitution registry (PR E)
+  providerRequestId String? // vendor-side id for later reconciliation
+  status            String // "DISPATCHED" | "SUCCEEDED" | "FAILED" | "TIMEOUT" | "AMBIGUOUS"
+  errorCode         String?
+  startedAt         DateTime
+  endedAt           DateTime?
+  inputTokens       Int?
+  outputTokens      Int?
+  cacheReadTokens   Int?
+  cacheWriteTokens  Int?
+  pricingVersion    String?
+
+  // ── §9.4 durable pre-dispatch attempt semantics ────────────────────────
+  requestFingerprint String // fingerprint recorded BEFORE transport
+  policyVersion      String // policy version recorded BEFORE transport
+  attemptNonce       String // per-attempt lease/nonce
+  resultHash         String? // sha256 of the output this attempt produced
+
+  // RESTRICT: attempt rows are execution evidence; deleting an invocation
+  // may never silently erase them (§6.2 doctrine).
+  invocation   AiInvocation             @relation(fields: [invocationId], references: [id], onDelete: Restrict)
+  attributions AiFinancialAttribution[]
+
+  @@unique([invocationId, ordinal])
+  @@index([invocationId])
+  @@map("ai_attempts")
+}
+
+model AiFinancialAttribution {
+  id                    String    @id @default(cuid())
+  invocationId          String
+  attemptId             String? // real FK into ai_attempts (§9.5)
+  estimatedGrossUsd     Decimal   @db.Decimal(12, 6)
+  // Pre-call funding intent — NEVER a claim of settlement:
+  //   "CASH_EXPECTED" | "CREDIT_ELIGIBLE_UNCONFIRMED"
+  //   | "CREDIT_EXPECTED_FROM_ACTIVE_GRANT" | "LOCAL_RESOURCE"
+  //   | "EXTERNAL_FREE_ALLOWANCE_UNCONFIRMED" | "BLOCKED"
+  fundingLabel          String
+  // Post-billing reconciliation ONLY (a later PR writes this; the dispatch
+  // writer's create path has no reconciliation fields — §9.5):
+  //   "CREDIT_APPLIED_CONFIRMED" | "CASH_CHARGED_CONFIRMED"
+  //   | "NO_VENDOR_CHARGE_CONFIRMED" | "UNRECONCILED"
+  reconciledLabel       String?
+  creditGrantSnapshotId String? // only ever set from a grant snapshot, never inferred from a model id
+  billedUsd             Decimal?  @db.Decimal(12, 6)
+  reconciledAt          DateTime?
+
+  // §9.5 versioned attribution: exactly ONE current attribution per
+  // invocation (partial unique index in the migration SQL) and a full
+  // version history under (invocationId, version).
+  version   Int     @default(1)
+  isCurrent Boolean @default(true)
+
+  // RESTRICT: financial attribution is settlement evidence; no cascade may
+  // erase it (§6.2 doctrine).
+  invocation AiInvocation @relation(fields: [invocationId], references: [id], onDelete: Restrict)
+  attempt    AiAttempt?   @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+
+  @@unique([invocationId, version])
+  @@index([invocationId])
+  @@map("ai_financial_attributions")
+}
+
+// §9.7 minimal durable recovery queue for post-success telemetry: when the
+// authoritative finalize cannot land AFTER a successful (paid) provider
+// call, the pipeline queues the finalize payload here instead of EVER
+// retrying the paid call. Hardened outbox semantics: lease-fenced claim,
+// attempt cap, explicit delivered/abandoned terminals — never silent drop.
+model AiTelemetryRecovery {
+  id             String    @id @default(cuid())
+  invocationId   String
+  kind           String // "FINALIZE_SUCCESS" | "FINALIZE_AMBIGUOUS" | "FINALIZE_FAILURE" | "ATTEMPT_TELEMETRY"
+  payload        Json
+  attempts       Int       @default(0)
+  maxAttempts    Int       @default(10)
+  leaseOwner     String?
+  leaseExpiresAt DateTime?
+  createdAt      DateTime  @default(now())
+  deliveredAt    DateTime?
+  abandonedAt    DateTime?
+
+  // RESTRICT: these rows exist precisely to preserve writes that could not
+  // land — a cascade would silently drop them with the parent (§6.2 doctrine).
+  invocation AiInvocation @relation(fields: [invocationId], references: [id], onDelete: Restrict)
+
+  @@index([deliveredAt, leaseExpiresAt])
+  @@index([invocationId])
+  @@map("ai_telemetry_recovery")
+}

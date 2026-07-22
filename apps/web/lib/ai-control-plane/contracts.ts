@@ -355,9 +355,23 @@ export interface AiAttemptSummary {
  */
 export interface AiTaskResult<TOutput = unknown> {
   readonly invocationId: string;
+  /**
+   * The validated output. Defined ONLY when `status` is "SUCCEEDED" — an
+   * IN_PROGRESS verdict carries no output and never fabricates one (§9.2).
+   */
   readonly output: TOutput;
   readonly attempts: readonly AiAttemptSummary[];
   readonly fundingLabel: FundingLabel;
   /** The policy version that governed this invocation (audit). */
   readonly policyVersion: string;
+  /**
+   * Execution verdict (§9.2): "SUCCEEDED" for a completed dispatch or a
+   * terminal replay of the original result; "IN_PROGRESS" when another live
+   * execution holds the claim (nothing was dispatched by THIS call).
+   */
+  readonly status: "SUCCEEDED" | "IN_PROGRESS";
+  /** Telemetry health — SEPARATE from the execution verdict (§9.1). */
+  readonly telemetryStatus: "OK" | "DEGRADED";
+  /** True when the result is the original persisted result replayed (§9.2). */
+  readonly replayed: boolean;
 }
