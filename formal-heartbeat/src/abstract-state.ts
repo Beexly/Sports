@@ -45,6 +45,58 @@ export type ReleaseReason =
   | "TrustedAmbiguousResolution";
 
 /**
+ * ==========================================================================
+ * EXTENSION (Wave 3 batch1-ext): projected shapes for two additional
+ * RUNTIME-ONLY heartbeat invariants. These are NOT variables of the
+ * LiveModelDispatchUnderAmbiguity.tla spec (they are not TLC-checked); they
+ * are projected observation streams the Formal Heartbeat re-checks at runtime,
+ * grounded in real repo code (see events.ts citations).
+ * ==========================================================================
+ */
+
+/** Projected authority/grant decision (from events.ts ObservedAuthorityDecision;
+ *  founder-command.ts FounderQueueDecision + autonomy-ladder owner-only boundary). */
+export type AuthorityDecisionKind =
+  | "ACKNOWLEDGED"
+  | "ASSIGNED_TO_AGENT"
+  | "APPROVED"
+  | "REJECTED"
+  | "DEFERRED"
+  | "DISMISSED"
+  | "AUTONOMY_GRANT";
+
+export interface AuthorityDecisionRecord {
+  readonly decisionId: string;
+  readonly workItemId: string;
+  readonly decisionKind: AuthorityDecisionKind;
+  /** Actor subjectId that approved/granted (FounderQueueActorReceipt.subjectId). */
+  readonly approver: string;
+  /** Identity the authority was conferred to. */
+  readonly grantee: string;
+  readonly approverActorType: "OWNER" | "SYSTEM";
+  /** Owner-only action kind authorized, or null. */
+  readonly actionKind: string | null;
+}
+
+/** Projected settlement-outbox delivery status (from events.ts
+ *  ObservedDeliveryStatus; settlement-outbox worker.ts state machine). */
+export type DeliveryStatus =
+  | "PENDING"
+  | "CLAIMED"
+  | "RETRYABLE_FAILED"
+  | "DELIVERED"
+  | "SUPPRESSED"
+  | "NO_RECIPIENT"
+  | "PERMANENT_FAILED"
+  | "DEAD_LETTER";
+
+export interface DeliveryObservationRecord {
+  readonly deliveryId: string;
+  readonly status: DeliveryStatus;
+  readonly sequence: number;
+}
+
+/**
  * One projected abstract state == one observed composed snapshot of the AI
  * control plane, expressed in the spec's variables. Records are keyed by the
  * (symbolic) invocation / attempt / actor identifiers.
@@ -95,4 +147,11 @@ export interface AbstractState {
   readonly fingerprints: readonly string[];
   /** Universe of actors present (spec CONSTANT Actors). */
   readonly actors: readonly string[];
+
+  // ---- EXTENSION: runtime-only observation streams (not spec variables) ----
+  /** Observed authority/grant decisions (NoSelfApproval). Empty when none. */
+  readonly authorityDecisions: readonly AuthorityDecisionRecord[];
+  /** Observed settlement-outbox delivery states
+   *  (OutboxDeliveryFailureCannotBecomeDelivered). Empty when none. */
+  readonly deliveryObservations: readonly DeliveryObservationRecord[];
 }

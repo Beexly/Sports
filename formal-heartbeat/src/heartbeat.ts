@@ -20,6 +20,13 @@
  *     - NeverOverAdmit                      (BaseNeverOverAdmit)
  *     - AmbiguousAttemptStopsFallback       (BaseAmbiguousAttemptStopsFallback)
  *
+ *   EXTENSION invariants (batch1-ext) — RUNTIME-DETECTION-ONLY, grounded in
+ *   real repo code but NOT part of the TLA+ spec and NOT TLC-checked:
+ *     - NoSelfApproval (founder-command.ts FounderQueueDecision owner-vs-agent
+ *       split + PR #175 autonomy-ladder owner-only boundary)
+ *     - OutboxDeliveryFailureCannotBecomeDelivered (settlement-outbox
+ *       worker.ts delivery state machine, PR #161)
+ *
  * It BURNS a "cognitive SLO error budget" by feeding each per-state invariant
  * check as a Bernoulli observation (0 = pass, 1 = violation) into the
  * e-process kernel (e-process.ts). The null hypothesis is that the invariant-
@@ -51,7 +58,10 @@ export type InvariantName =
   | "NoDispatchWithoutExposureHold"
   | "BaseLedgerNeverExceedsBalance"
   | "BaseNeverOverAdmit"
-  | "BaseAmbiguousAttemptStopsFallback";
+  | "BaseAmbiguousAttemptStopsFallback"
+  // EXTENSION (batch1-ext): two runtime-only invariants (not TLC-checked).
+  | "NoSelfApproval"
+  | "OutboxDeliveryFailureCannotBecomeDelivered";
 
 export const INVARIANT_NAMES: readonly InvariantName[] = [
   "AmbiguousExposureHeldUntilTrustedResolution",
@@ -61,6 +71,8 @@ export const INVARIANT_NAMES: readonly InvariantName[] = [
   "BaseLedgerNeverExceedsBalance",
   "BaseNeverOverAdmit",
   "BaseAmbiguousAttemptStopsFallback",
+  "NoSelfApproval",
+  "OutboxDeliveryFailureCannotBecomeDelivered",
 ];
 
 /** A single invariant evaluation over one abstract state. */
@@ -172,6 +184,78 @@ function checkAmbiguousAttemptStopsFallback(s: AbstractState): string {
   return "";
 }
 
+// --------------------------------------------------------------------------
+// EXTENSION invariants (batch1-ext): runtime-only, grounded in real repo code.
+// NOT part of LiveModelDispatchUnderAmbiguity.tla; NOT TLC-checked. Each does
+// real logic over the projected observation stream and yields a witness.
+// --------------------------------------------------------------------------
+
+/** Decision kinds that CONFER authority/approval (a "grant"). Non-conferring
+ *  kinds (ACKNOWLEDGED/REJECTED/DEFERRED/DISMISSED) are not self-approvable. */
+const AUTHORITY_CONFERRING_DECISIONS: ReadonlySet<string> = new Set([
+  "APPROVED",
+  "ASSIGNED_TO_AGENT",
+  "AUTONOMY_GRANT",
+]);
+
+/**
+ * NoSelfApproval — an authority/grant decision whose approver identity equals
+ * its grantee identity is a violation. Grounds: the FounderQueueDecision
+ * OWNER-vs-agent actor split (founder-command.ts — an OWNER actor decides on
+ * an agent's work item) and PR #175's autonomy-ladder owner-only boundary
+ * (autonomy-ladder.ts — an OWNER_ONLY grant can never be auto-approved by the
+ * acting agent). Self-approval collapses that separation of duties.
+ */
+function checkNoSelfApproval(s: AbstractState): string {
+  for (const d of s.authorityDecisions) {
+    if (!AUTHORITY_CONFERRING_DECISIONS.has(d.decisionKind)) continue;
+    if (d.approver === "" || d.grantee === "") continue;
+    if (d.approver === d.grantee) {
+      const action = d.actionKind ? ` actionKind=${d.actionKind}` : "";
+      return `decision ${d.decisionId} (${d.decisionKind}${action}) on workItem ${d.workItemId}: approver == grantee == "${d.approver}" (self-approval; approver identity must differ from grantee — the owner-vs-agent separation in founder-command.ts / the autonomy-ladder owner-only boundary is broken)`;
+    }
+  }
+  return "";
+}
+
+const TERMINAL_DELIVERY_FAILURES: ReadonlySet<string> = new Set([
+  "PERMANENT_FAILED",
+  "DEAD_LETTER",
+]);
+
+/**
+ * OutboxDeliveryFailureCannotBecomeDelivered — for one per-recipient delivery,
+ * once it has reached a terminal FAILURE (PERMANENT_FAILED / DEAD_LETTER) it
+ * must never LATER be observed DELIVERED. Grounds: the settlement-outbox
+ * delivery state machine (settlement-outbox/worker.ts, PR #161) — those two
+ * are terminal states, DELIVERED rows are never re-claimable, and a stale
+ * claim at the attempt cap dead-letters rather than returning to PENDING. The
+ * check groups the window's delivery observations by deliveryId, reads them in
+ * `sequence` order, and flags a terminal-failure followed by a later DELIVERED.
+ */
+function checkOutboxDeliveryFailureCannotBecomeDelivered(s: AbstractState): string {
+  const bySubject = new Map<string, { status: string; sequence: number }[]>();
+  for (const o of s.deliveryObservations) {
+    const list = bySubject.get(o.deliveryId);
+    if (list) list.push({ status: o.status, sequence: o.sequence });
+    else bySubject.set(o.deliveryId, [{ status: o.status, sequence: o.sequence }]);
+  }
+  for (const [deliveryId, events] of bySubject) {
+    const ordered = [...events].sort((a, b) => a.sequence - b.sequence);
+    let firstFailure: { status: string; sequence: number } | null = null;
+    for (const ev of ordered) {
+      if (firstFailure === null && TERMINAL_DELIVERY_FAILURES.has(ev.status)) {
+        firstFailure = ev;
+        continue;
+      }
+      if (firstFailure !== null && ev.status === "DELIVERED") {
+        return `delivery ${deliveryId}: reached terminal-failure ${firstFailure.status} at sequence ${firstFailure.sequence} but was later observed DELIVERED at sequence ${ev.sequence} (a terminal failed/dead-letter delivery must never become DELIVERED — settlement-outbox worker.ts TERMINAL_DELIVERY_STATUSES)`;
+      }
+    }
+  }
+  return "";
+}
+
 const PREDICATES: ReadonlyArray<{
   name: InvariantName;
   fn: (s: AbstractState) => string;
@@ -183,6 +267,11 @@ const PREDICATES: ReadonlyArray<{
   { name: "BaseLedgerNeverExceedsBalance", fn: checkLedgerNeverExceedsBalance },
   { name: "BaseNeverOverAdmit", fn: checkNeverOverAdmit },
   { name: "BaseAmbiguousAttemptStopsFallback", fn: checkAmbiguousAttemptStopsFallback },
+  { name: "NoSelfApproval", fn: checkNoSelfApproval },
+  {
+    name: "OutboxDeliveryFailureCannotBecomeDelivered",
+    fn: checkOutboxDeliveryFailureCannotBecomeDelivered,
+  },
 ];
 
 /** Evaluate all invariants over a single abstract state. */

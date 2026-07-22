@@ -24,6 +24,8 @@
 import {
   AbstractState,
   AttemptOutcome,
+  AuthorityDecisionRecord,
+  DeliveryObservationRecord,
   InvocationStatus,
   NO_FP,
   NO_INV,
@@ -34,6 +36,8 @@ import {
 import {
   ObservedAttempt,
   ObservedAttemptStatus,
+  ObservedAuthorityDecision,
+  ObservedDeliveryTransition,
   ObservedReservationState,
   ObservedWindow,
 } from "./events.js";
@@ -93,6 +97,57 @@ const EVER_ADMITTED: ReadonlySet<ReservationState> = new Set([
 
 function sortedUnique(values: Iterable<string>): string[] {
   return [...new Set(values)].sort();
+}
+
+/**
+ * Project observed authority/grant decisions 1:1 into the abstract record,
+ * sorted by decisionId for determinism. approver/grantee identities are kept
+ * verbatim (the NoSelfApproval check compares them for equality).
+ */
+function projectAuthorityDecisions(
+  decisions: readonly ObservedAuthorityDecision[],
+): AuthorityDecisionRecord[] {
+  return decisions
+    .map((d): AuthorityDecisionRecord => ({
+      decisionId: d.decisionId,
+      workItemId: d.workItemId,
+      decisionKind: d.decisionKind,
+      approver: d.approverSubjectId,
+      grantee: d.granteeSubjectId,
+      approverActorType: d.approverActorType,
+      actionKind: d.actionKind ?? null,
+    }))
+    .sort((a, b) => (a.decisionId < b.decisionId ? -1 : a.decisionId > b.decisionId ? 1 : 0));
+}
+
+/**
+ * Project observed per-recipient delivery states 1:1, sorted by
+ * (deliveryId, sequence, status) for determinism. The
+ * OutboxDeliveryFailureCannotBecomeDelivered check groups by deliveryId and
+ * reads the per-subject status order from `sequence`.
+ */
+function projectDeliveryObservations(
+  observations: readonly ObservedDeliveryTransition[],
+): DeliveryObservationRecord[] {
+  return observations
+    .map((o): DeliveryObservationRecord => ({
+      deliveryId: o.deliveryId,
+      status: o.status,
+      sequence: o.sequence,
+    }))
+    .sort((a, b) =>
+      a.deliveryId !== b.deliveryId
+        ? a.deliveryId < b.deliveryId
+          ? -1
+          : 1
+        : a.sequence !== b.sequence
+          ? a.sequence - b.sequence
+          : a.status < b.status
+            ? -1
+            : a.status > b.status
+              ? 1
+              : 0,
+    );
 }
 
 /**
@@ -221,6 +276,8 @@ export function projectWindow(window: ObservedWindow): AbstractState {
     attempts: attemptIds,
     fingerprints,
     actors,
+    authorityDecisions: projectAuthorityDecisions(window.authorityDecisions ?? []),
+    deliveryObservations: projectDeliveryObservations(window.deliveryObservations ?? []),
   };
 }
 

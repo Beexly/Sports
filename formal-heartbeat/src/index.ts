@@ -7,3 +7,4 @@ export * from "./abstract-state.js";
 export * from "./events.js";
 export * from "./projection.js";
 export * from "./heartbeat.js";
+export * from "./receipt-export.js";

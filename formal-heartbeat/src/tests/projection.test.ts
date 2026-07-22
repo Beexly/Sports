@@ -167,6 +167,76 @@ describe("projectWindow — trusted ambiguous release", () => {
   });
 });
 
+describe("projectWindow — extension observation streams", () => {
+  it("defaults the extension streams to empty arrays when absent", () => {
+    const s = projectWindow(WINDOW);
+    expect(s.authorityDecisions).toEqual([]);
+    expect(s.deliveryObservations).toEqual([]);
+  });
+
+  it("projects authority decisions 1:1, sorted by decisionId, actionKind defaulting null", () => {
+    const s = projectWindow({
+      ...WINDOW,
+      authorityDecisions: [
+        {
+          decisionId: "dec-b",
+          workItemId: "wi-2",
+          decisionKind: "ASSIGNED_TO_AGENT",
+          approverActorType: "OWNER",
+          approverSubjectId: "owner:g",
+          granteeSubjectId: "agent:x",
+          actionKind: "PRODUCTION_DEPLOY",
+        },
+        {
+          decisionId: "dec-a",
+          workItemId: "wi-1",
+          decisionKind: "APPROVED",
+          approverActorType: "OWNER",
+          approverSubjectId: "owner:g",
+          granteeSubjectId: "agent:y",
+        },
+      ],
+    });
+    expect(s.authorityDecisions.map((d) => d.decisionId)).toEqual(["dec-a", "dec-b"]);
+    expect(s.authorityDecisions[0]?.approver).toBe("owner:g");
+    expect(s.authorityDecisions[0]?.grantee).toBe("agent:y");
+    expect(s.authorityDecisions[0]?.actionKind).toBeNull();
+    expect(s.authorityDecisions[1]?.actionKind).toBe("PRODUCTION_DEPLOY");
+  });
+
+  it("projects delivery observations sorted by (deliveryId, sequence)", () => {
+    const s = projectWindow({
+      ...WINDOW,
+      deliveryObservations: [
+        { deliveryId: "d2", status: "DELIVERED", sequence: 1 },
+        { deliveryId: "d1", status: "CLAIMED", sequence: 1 },
+        { deliveryId: "d1", status: "PENDING", sequence: 0 },
+      ],
+    });
+    expect(
+      s.deliveryObservations.map((o) => `${o.deliveryId}@${o.sequence}`),
+    ).toEqual(["d1@0", "d1@1", "d2@1"]);
+  });
+
+  it("is deterministic on the extension streams (same input -> equal output)", () => {
+    const w: ObservedWindow = {
+      ...WINDOW,
+      authorityDecisions: [
+        {
+          decisionId: "dec-a",
+          workItemId: "wi-1",
+          decisionKind: "APPROVED",
+          approverActorType: "OWNER",
+          approverSubjectId: "owner:g",
+          granteeSubjectId: "agent:y",
+        },
+      ],
+      deliveryObservations: [{ deliveryId: "d1", status: "DELIVERED", sequence: 0 }],
+    };
+    expect(JSON.stringify(projectWindow(w))).toBe(JSON.stringify(projectWindow(w)));
+  });
+});
+
 describe("emitConstInit — deterministic, valid TLA+ ConstInit fragment", () => {
   it("projecting twice yields byte-identical ConstInit output", () => {
     const a = emitConstInit(projectWindow(WINDOW));

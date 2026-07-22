@@ -61,8 +61,8 @@ describe("Formal Heartbeat — a clean window passes and does not burn budget", 
     expect(result.budgetExhausted).toBe(false);
     // all-clean stream only lowers wealth
     expect(result.budgetWealth).toBeLessThan(1);
-    // 7 invariants checked over 1 state
-    expect(result.totalChecks).toBe(7);
+    // 9 invariants checked over 1 state (7 spec-derived + 2 batch1-ext runtime)
+    expect(result.totalChecks).toBe(9);
   });
 
   it("stays clean over a long window of many clean states", () => {
@@ -182,5 +182,201 @@ describe("Formal Heartbeat — violations drive the e-process toward reject (any
     const snapshot = JSON.stringify(cleanState);
     runHeartbeat([cleanState, cleanState], cfg);
     expect(JSON.stringify(cleanState)).toBe(snapshot);
+  });
+});
+
+// --------------------------------------------------------------------------
+// EXTENSION invariant 1: NoSelfApproval
+// (founder-command.ts FounderQueueDecision owner-vs-agent split +
+//  PR #175 autonomy-ladder owner-only boundary)
+// --------------------------------------------------------------------------
+
+/** A window whose authority decision has a DISTINCT approver and grantee
+ *  (an OWNER deciding on an agent's work item — the healthy case). */
+const CLEAN_AUTHORITY_WINDOW: ObservedWindow = {
+  ...CLEAN_WINDOW,
+  authorityDecisions: [
+    {
+      decisionId: "dec-1",
+      workItemId: "wi-1",
+      decisionKind: "APPROVED",
+      approverActorType: "OWNER",
+      approverSubjectId: "owner:garrett",
+      granteeSubjectId: "agent:nova",
+    },
+    {
+      // ASSIGNED_TO_AGENT by owner to a different agent — still fine.
+      decisionId: "dec-2",
+      workItemId: "wi-2",
+      decisionKind: "ASSIGNED_TO_AGENT",
+      approverActorType: "OWNER",
+      approverSubjectId: "owner:garrett",
+      granteeSubjectId: "agent:jarvis",
+      actionKind: "PRODUCTION_DEPLOY",
+    },
+  ],
+};
+
+describe("Formal Heartbeat — NoSelfApproval", () => {
+  it("a window whose grants all have distinct approver/grantee passes", () => {
+    const s = projectWindow(CLEAN_AUTHORITY_WINDOW);
+    const v = checkState(s, 0).violations.find((c) => c.invariant === "NoSelfApproval");
+    expect(v).toBeUndefined();
+  });
+
+  it("a non-conferring self-referential decision (ACKNOWLEDGED) is NOT flagged", () => {
+    // ACKNOWLEDGED is not an authority grant, so approver == grantee is benign.
+    const s = projectWindow({
+      ...CLEAN_WINDOW,
+      authorityDecisions: [
+        {
+          decisionId: "ack-1",
+          workItemId: "wi-9",
+          decisionKind: "ACKNOWLEDGED",
+          approverActorType: "OWNER",
+          approverSubjectId: "owner:garrett",
+          granteeSubjectId: "owner:garrett",
+        },
+      ],
+    });
+    const v = checkState(s, 0).violations.find((c) => c.invariant === "NoSelfApproval");
+    expect(v).toBeUndefined();
+  });
+
+  it("detects a self-approval: approver identity equals grantee on an APPROVED grant", () => {
+    const s = projectWindow({
+      ...CLEAN_WINDOW,
+      authorityDecisions: [
+        {
+          decisionId: "dec-self",
+          workItemId: "wi-self",
+          decisionKind: "APPROVED",
+          approverActorType: "SYSTEM",
+          approverSubjectId: "agent:nova",
+          granteeSubjectId: "agent:nova", // self-approval
+          actionKind: "BILLING_CHANGE",
+        },
+      ],
+    });
+    const v = checkState(s, 0).violations.find((c) => c.invariant === "NoSelfApproval");
+    expect(v).toBeDefined();
+    expect(v?.detail).toContain("dec-self");
+    expect(v?.detail).toContain("agent:nova");
+    expect(v?.detail).toContain("self-approval");
+  });
+
+  it("a window of self-approvals drives the e-process toward reject", () => {
+    const cfg = makeEProcessConfig({ nullRate: 0.05, alpha: 0.1 });
+    const bad = projectWindow({
+      ...CLEAN_WINDOW,
+      authorityDecisions: [
+        {
+          decisionId: "dec-self",
+          workItemId: "wi-self",
+          decisionKind: "AUTONOMY_GRANT",
+          approverActorType: "SYSTEM",
+          approverSubjectId: "agent:nova",
+          granteeSubjectId: "agent:nova",
+        },
+      ],
+    });
+    const window = Array.from({ length: 40 }, () => bad);
+    const result = runHeartbeat(window, cfg);
+    expect(result.totalViolations).toBeGreaterThanOrEqual(40);
+    expect(result.budgetExhausted).toBe(true);
+  });
+});
+
+// --------------------------------------------------------------------------
+// EXTENSION invariant 2: OutboxDeliveryFailureCannotBecomeDelivered
+// (settlement-outbox worker.ts delivery state machine, PR #161)
+// --------------------------------------------------------------------------
+
+/** A window with two well-behaved deliveries: one fails terminally and STAYS
+ *  failed; one is delivered cleanly. Neither violates the invariant. */
+const CLEAN_DELIVERY_WINDOW: ObservedWindow = {
+  ...CLEAN_WINDOW,
+  deliveryObservations: [
+    { deliveryId: "evt1:u1:push:d1", status: "PENDING", sequence: 0 },
+    { deliveryId: "evt1:u1:push:d1", status: "CLAIMED", sequence: 1 },
+    { deliveryId: "evt1:u1:push:d1", status: "PERMANENT_FAILED", sequence: 2 },
+    { deliveryId: "evt1:u2:email:d2", status: "PENDING", sequence: 0 },
+    { deliveryId: "evt1:u2:email:d2", status: "CLAIMED", sequence: 1 },
+    { deliveryId: "evt1:u2:email:d2", status: "DELIVERED", sequence: 2 },
+  ],
+};
+
+describe("Formal Heartbeat — OutboxDeliveryFailureCannotBecomeDelivered", () => {
+  it("a window where failed deliveries stay failed passes", () => {
+    const s = projectWindow(CLEAN_DELIVERY_WINDOW);
+    const v = checkState(s, 0).violations.find(
+      (c) => c.invariant === "OutboxDeliveryFailureCannotBecomeDelivered",
+    );
+    expect(v).toBeUndefined();
+  });
+
+  it("DELIVERED then a later PERMANENT_FAILED for a DIFFERENT subject is not a violation", () => {
+    // Ordering matters per-subject: this exercises that grouping is per delivery.
+    const s = projectWindow({
+      ...CLEAN_WINDOW,
+      deliveryObservations: [
+        { deliveryId: "a", status: "DELIVERED", sequence: 5 },
+        { deliveryId: "b", status: "PERMANENT_FAILED", sequence: 9 },
+      ],
+    });
+    const v = checkState(s, 0).violations.find(
+      (c) => c.invariant === "OutboxDeliveryFailureCannotBecomeDelivered",
+    );
+    expect(v).toBeUndefined();
+  });
+
+  it("detects a terminal-failure → DELIVERED transition for one subject", () => {
+    const s = projectWindow({
+      ...CLEAN_WINDOW,
+      deliveryObservations: [
+        { deliveryId: "evt1:u1:push:d1", status: "CLAIMED", sequence: 0 },
+        { deliveryId: "evt1:u1:push:d1", status: "DEAD_LETTER", sequence: 1 },
+        { deliveryId: "evt1:u1:push:d1", status: "DELIVERED", sequence: 2 },
+      ],
+    });
+    const v = checkState(s, 0).violations.find(
+      (c) => c.invariant === "OutboxDeliveryFailureCannotBecomeDelivered",
+    );
+    expect(v).toBeDefined();
+    expect(v?.detail).toContain("evt1:u1:push:d1");
+    expect(v?.detail).toContain("DEAD_LETTER");
+    expect(v?.detail).toContain("DELIVERED");
+  });
+
+  it("detection is order-driven: it uses `sequence`, not observation array order", () => {
+    // Feed the DELIVERED row BEFORE the failure row in the array, but the
+    // failure has a LOWER sequence — still a violation once ordered.
+    const s = projectWindow({
+      ...CLEAN_WINDOW,
+      deliveryObservations: [
+        { deliveryId: "x", status: "DELIVERED", sequence: 3 },
+        { deliveryId: "x", status: "PERMANENT_FAILED", sequence: 1 },
+      ],
+    });
+    const v = checkState(s, 0).violations.find(
+      (c) => c.invariant === "OutboxDeliveryFailureCannotBecomeDelivered",
+    );
+    expect(v).toBeDefined();
+    expect(v?.detail).toContain("PERMANENT_FAILED");
+  });
+
+  it("a window of failure→delivered subjects drives the e-process toward reject", () => {
+    const cfg = makeEProcessConfig({ nullRate: 0.05, alpha: 0.1 });
+    const bad = projectWindow({
+      ...CLEAN_WINDOW,
+      deliveryObservations: [
+        { deliveryId: "d", status: "DEAD_LETTER", sequence: 0 },
+        { deliveryId: "d", status: "DELIVERED", sequence: 1 },
+      ],
+    });
+    const window = Array.from({ length: 40 }, () => bad);
+    const result = runHeartbeat(window, cfg);
+    expect(result.totalViolations).toBeGreaterThanOrEqual(40);
+    expect(result.budgetExhausted).toBe(true);
   });
 });
