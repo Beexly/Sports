@@ -130,7 +130,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     await pool.query(`CREATE SCHEMA ${SCHEMA}`);
     for (const dir of [
       "20260722140000_add_ai_control_plane_ledger",
-      "20260722150000_add_ai_budget_reservations",
+      "20260722150001_add_ai_budget_reservations",
     ]) {
       const ddl = readFileSync(join(MIGRATIONS_DIR, dir, "migration.sql"), "utf8");
       await pool.query(ddl);
@@ -199,7 +199,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     return res.rows[0];
   }
 
-  // ── 1. The DB CHECK constraints themselves (§10.2/§10.9) ───────────────────
+  // ── 1. The DB CHECK constraints themselves (§10.2/§10.9) ───────────────────────
 
   it("DB cap CHECK: an over-cap write on an ACTIVE window is REJECTED by Postgres", async () => {
     await seedWindow("chk-cap", "1.000000");
@@ -329,7 +329,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
       "both directions rejected by CHECK constraint";
   });
 
-  // ── 2. §10.2 overage on real PG ────────────────────────────────────────────
+  // ── 2. §10.2 overage on real PG ────────────────────────────────
 
   it("actual > hold preserves the charge over-cap, locks the window, blocks further reserves", async () => {
     await seedWindow("ovr-w", "0.200000");
@@ -367,7 +367,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     };
   });
 
-  // ── 3. 100 concurrent END-TO-END invocations (§10.9) ──────────────────────
+  // ── 3. 100 concurrent END-TO-END invocations (§10.9) ──────────────────
 
   function billablePlan(requestId: string): AiDispatchPlan {
     const request: AiTaskInvocationRequest = {
@@ -469,7 +469,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     );
     expect(holds.rows[0].n).toBe(0);
 
-    // ── PERMANENT-CONSUME SECOND WAVE (Decision A) ────────────────────────
+    // ── PERMANENT-CONSUME SECOND WAVE (Decision A) ──────────────────────
     // The first wave's 60 successes SETTLED $3.00 of provisional spend. That
     // settlement is a PERMANENT consumption of the window's cap — the atomic
     // cap guard admits a new hold only when
@@ -535,7 +535,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     };
   }, 120_000);
 
-  // ── 4. §10.9 crash recovery ───────────────────────────────────────────────
+  // ── 4. §10.9 crash recovery ────────────────────────────────
 
   it("crash between reserve and dispatch: the sweeper frees the hold after proving a clean ledger", async () => {
     await seedWindow("crash-clean", "1.000000");
