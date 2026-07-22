@@ -1132,6 +1132,15 @@ model AgentHandoff {
   created_at             DateTime              @default(now())
   updated_at             DateTime              @updatedAt
 
+  /// Trusted-actor audit trail: the governed actor (HUMAN admin session, or a
+  /// SERVICE/SYSTEM identity for background paths) that logged this handoff.
+  /// Nullable + additive — rows written before these columns existed have no
+  /// value here, not a fabricated one.
+  actor_subject_id       String?
+  actor_type             String?
+  actor_email            String?
+  policy_version         String?
+
   @@index([source_seat, created_at])
   @@index([target_seat, created_at])
   @@index([status])
@@ -1163,6 +1172,19 @@ model SubagentRun {
   parent_review_status     SubagentParentReviewStatus @default(pending_review)
   created_at               DateTime                   @default(now())
   updated_at               DateTime                   @updatedAt
+
+  /// Trusted-actor audit trail: the governed actor that logged this run
+  /// (HUMAN admin session, or SERVICE/SYSTEM for background agent paths).
+  /// Nullable + additive — see AgentHandoff for the same rule.
+  actor_subject_id         String?
+  actor_type               String?
+  actor_email              String?
+  /// Trusted-actor audit trail: the HUMAN actor that reviewed this run.
+  /// Distinct from parent_seat (the agent identity) — this is the human.
+  reviewer_subject_id      String?
+  reviewer_type            String?
+  reviewer_email           String?
+  policy_version           String?
 
   /// Memory events linked to this run (optional, created by linkMemoryToAgentRun).
   memory_events JarvisMemoryEvent[] @relation("MemoryAgentRunLink")
@@ -1999,7 +2021,10 @@ enum ModerationAppealStatus {
 // A report filed by a user or automated system against content.
 model ModerationReport {
   id           String                  @id @default(cuid())
-  reporterUserId String?               // null for automated/system reports
+  reporterUserId String?               // null for automated/system/anonymous reports
+  // Trusted-actor audit: reporter's actor type ("HUMAN" for authenticated
+  // reports; null for anonymous/system). Additive + nullable.
+  reporterActorType String?
   targetUserId  String
   contentRef   String                  // opaque ref: "message:<id>", "parlay:<id>", etc.
   surface      String                  // e.g. "sunday_couch", "brotherhood_table"
@@ -2024,7 +2049,12 @@ model ModerationReport {
 // Every action MUST have actor + reason — enforced in the service layer.
 model ModerationAction {
   id           String               @id @default(cuid())
-  actor        String               // free-text operator/system id — NEVER empty
+  actor        String               // trusted actor stable subject id — NEVER empty
+  // Trusted-actor audit trail: the acting operator's actor type + email
+  // snapshot + policy version. Additive + nullable.
+  actorType    String?
+  actorEmail   String?
+  policyVersion String?
   targetUserId String
   contentRef   String?              // optional: the specific content actioned
   surface      String?
@@ -2057,7 +2087,12 @@ model ModerationAppeal {
   status       ModerationAppealStatus @default(PENDING)
   // The reviewer must NOT be the same actor who took the original action.
   // Enforced in the service layer (canReview check).
-  decidedBy    String?               // free-text reviewer id
+  decidedBy    String?               // trusted reviewer stable subject id
+  // Trusted-actor audit trail: reviewer's actor type + email snapshot +
+  // policy version. Additive + nullable.
+  reviewerType String?
+  reviewerEmail String?
+  policyVersion String?
   decision     String?               @db.Text
   decidedAt    DateTime?
   // SLA: appeal must be decided within 7 days of filing.
