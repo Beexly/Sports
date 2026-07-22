@@ -31,8 +31,35 @@ describe("scenarioAvailableCreditsUsd is non-authorizing", () => {
   });
 
   it("the admission evaluator takes exactly snapshot + scope + instant — no economics parameter", () => {
-    // Arity 3: (snapshot, request, evaluationAtIso). Nothing else can be fed in.
+    // Function.length only counts formals before the first defaulted/rest
+    // parameter, so on its own it could be satisfied by a signature like
+    // (snapshot, request, evaluationAtIso, economics = undefined). Keep it as
+    // a cheap smoke check...
     expect(evaluateCreditSnapshotAdmissibility.length).toBe(3);
+
+    // ...but enforce the real guarantee at the source level: the declared
+    // parameter list is exactly the three named inputs, with no defaulted or
+    // rest parameters through which anything else could be fed in.
+    const source = readFileSync(path.join(ENGINE_DIR, "credit-snapshot.ts"), "utf8");
+    const signature = source.match(
+      /export function evaluateCreditSnapshotAdmissibility\(([^)]*)\)/,
+    );
+    const paramList = signature?.[1] ?? "";
+    expect(paramList.length).toBeGreaterThan(0);
+    const params = paramList
+      .split(",")
+      .map((p) => p.trim())
+      .filter((p) => p.length > 0);
+    expect(params.map((p) => (p.split(":")[0] ?? "").trim())).toEqual([
+      "snapshot",
+      "request",
+      "evaluationAtIso",
+    ]);
+    for (const param of params) {
+      expect(param.includes("="), param).toBe(false);
+      expect(param.includes("..."), param).toBe(false);
+      expect(param.includes("?"), param).toBe(false);
+    }
   });
 
   it("the field's contract doc marks it scenario-only and names the enforcement", () => {

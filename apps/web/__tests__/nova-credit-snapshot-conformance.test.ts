@@ -101,17 +101,9 @@ describe("credit-grant-snapshot conformance fixtures (shared with S3)", () => {
 
   it("covers both an admissible and every fail-closed refusal reason at least once", () => {
     const seen = new Set(fixtures.snapshotCases.flatMap((c) => c.expected.reasons));
-    const allReasons: readonly CreditAdmissibilityReason[] = [
-      "snapshot_invalid",
-      "grant_state_not_consumable",
-      "grant_expiry_unknown",
-      "grant_expired",
-      "snapshot_stale",
-      "scope_not_covered",
-      "reconciliation_drifted",
-      "no_spendable_balance",
-    ];
-    for (const reason of allReasons) {
+    // Derived from the exported runtime union — cannot drift from the type.
+    expect(s1.CREDIT_ADMISSIBILITY_REASONS.length).toBe(9);
+    for (const reason of s1.CREDIT_ADMISSIBILITY_REASONS) {
       expect(seen.has(reason), reason).toBe(true);
     }
     expect(fixtures.snapshotCases.some((c) => c.expected.admissible)).toBe(true);

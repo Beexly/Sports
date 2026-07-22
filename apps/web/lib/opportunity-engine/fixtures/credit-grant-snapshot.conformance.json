@@ -429,6 +429,53 @@
       }
     },
     {
+      "name": "failed-closed-reconciliation-refused",
+      "expected": {
+        "valid": true,
+        "violations": [],
+        "admissible": false,
+        "reasons": [
+          "reconciliation_failed_closed"
+        ]
+      },
+      "snapshot": {
+        "programId": "gcp-startup-credits",
+        "applicationId": "app-2026-0042",
+        "grantId": "grant-2026-0051",
+        "provider": "google_cloud",
+        "billingAccountId": "billing-acct-01",
+        "billingProjectId": null,
+        "currency": "USD",
+        "originalAwardMinorUnits": 25000000,
+        "remainingMinorUnits": 18000000,
+        "reservedMinorUnits": 0,
+        "grantState": "activated",
+        "activatedAt": "2026-01-15T00:00:00.000Z",
+        "expiresAt": "2027-01-15T00:00:00.000Z",
+        "eligibleProducts": [
+          "vertex-ai"
+        ],
+        "eligibleModels": [
+          "*"
+        ],
+        "eligibleRegions": [
+          "us-central1"
+        ],
+        "exclusions": [],
+        "cashOverageBehavior": "converts_to_paid_usage",
+        "observedAt": "2026-07-21T10:00:00.000Z",
+        "recordedAt": "2026-07-21T10:00:05.000Z",
+        "freshnessHorizonMs": 21600000,
+        "sourceReceiptId": "receipt-8914",
+        "sourceReceiptHash": "sha256:fa11c1",
+        "reconciliationState": "failed_closed",
+        "attestedBy": "nova-reconciler@2026-07",
+        "schemaVersion": "credit-grant-snapshot@1",
+        "policyVersion": "credit-policy@1"
+      },
+      "note": "a reconciliation run that failed must refuse admission outright, not fall back to the last good posture"
+    },
+    {
       "name": "fully-reserved-no-spendable-balance",
       "expected": {
         "valid": true,

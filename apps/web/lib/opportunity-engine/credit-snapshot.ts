@@ -169,17 +169,26 @@ export interface CreditSnapshotValidationResult {
   readonly violations: readonly CreditSnapshotViolation[];
 }
 
-/** Reason codes for a fail-closed non-admissibility verdict. */
-export type CreditAdmissibilityReason =
-  | "snapshot_invalid"
-  | "grant_state_not_consumable"
-  | "grant_expiry_unknown"
-  | "grant_expired"
-  | "snapshot_stale"
-  | "scope_not_covered"
-  | "reconciliation_drifted"
-  | "reconciliation_failed_closed"
-  | "no_spendable_balance";
+/**
+ * Reason codes for a fail-closed non-admissibility verdict, in the
+ * deterministic order the admission checks run. This runtime constant is the
+ * single source of truth: `CreditAdmissibilityReason` is derived from it, so
+ * conformance suites can enumerate every reachable refusal reason without a
+ * hand-copied list that could drift from the type.
+ */
+export const CREDIT_ADMISSIBILITY_REASONS = [
+  "snapshot_invalid",
+  "grant_state_not_consumable",
+  "grant_expiry_unknown",
+  "grant_expired",
+  "snapshot_stale",
+  "scope_not_covered",
+  "reconciliation_drifted",
+  "reconciliation_failed_closed",
+  "no_spendable_balance",
+] as const;
+
+export type CreditAdmissibilityReason = (typeof CREDIT_ADMISSIBILITY_REASONS)[number];
 
 export interface CreditSnapshotAdmissibility {
   readonly admissible: boolean;
