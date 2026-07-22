@@ -6,6 +6,13 @@ import {
   isValidCheckoutAttemptId,
   stripeIdempotencyKeyForAttempt,
 } from "@/lib/billing/checkout-attempt";
+import {
+  repairUnresolvedCheckoutAttempts,
+  type CheckoutAttemptRepairDb,
+  type CheckoutAttemptRepairReport,
+  type CheckoutSessionLookup,
+  type RepairSessionView,
+} from "@/lib/billing/checkout-attempt-repair";
 
 export type { BillingInterval };
 
@@ -200,6 +207,81 @@ export async function retrieveOpenCheckoutSessionUrl(
   } catch {
     return null;
   }
+}
+
+/**
+ * Stripe lookup adapter for the checkout-attempt repair job (directive 5.6).
+ * `listSessionsByCustomerSince` paginates the customer's Checkout Sessions to
+ * EXHAUSTION down to the cutoff — completeness is what lets the repair job
+ * treat "no session found" as proof of absence. `retrieveSession` maps a
+ * definitive resource_missing to null; every other failure throws so the
+ * repair job leaves the attempt unresolved (fail closed) for the next pass.
+ */
+export function stripeCheckoutSessionLookup(): CheckoutSessionLookup {
+  const toView = (session: Stripe.Checkout.Session): RepairSessionView => ({
+    id: session.id,
+    status: session.status ?? "open",
+    metadataAttemptId: session.metadata?.["checkoutAttemptId"] ?? null,
+    subscriptionId:
+      typeof session.subscription === "string"
+        ? session.subscription
+        : session.subscription?.id ?? null,
+  });
+
+  return {
+    async listSessionsByCustomerSince(customerId, since) {
+      const sinceEpoch = Math.floor(since.getTime() / 1000);
+      const views: RepairSessionView[] = [];
+      let startingAfter: string | undefined;
+      // Stripe lists sessions newest-first; stop once a page dips below the
+      // cutoff. Hard page cap guards against a pathological account.
+      for (let page = 0; page < 20; page++) {
+        const batch = await stripe.checkout.sessions.list({
+          customer: customerId,
+          limit: 100,
+          ...(startingAfter ? { starting_after: startingAfter } : {}),
+        });
+        let reachedCutoff = false;
+        for (const session of batch.data) {
+          if (session.created < sinceEpoch) {
+            reachedCutoff = true;
+            break;
+          }
+          views.push(toView(session));
+        }
+        if (reachedCutoff || !batch.has_more || batch.data.length === 0) return views;
+        startingAfter = batch.data[batch.data.length - 1]!.id;
+      }
+      throw new Error(
+        `checkout-session listing for customer did not terminate within the page cap`,
+      );
+    },
+    async retrieveSession(sessionId) {
+      try {
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        return toView(session);
+      } catch (err) {
+        const code = (err as { code?: unknown }).code;
+        if (code === "resource_missing") return null;
+        throw err;
+      }
+    },
+  };
+}
+
+/**
+ * Production entrypoint for the checkout-attempt repair job (directive 5.3 /
+ * 5.6). Callable server-side (operator invocation or a future cron — wiring
+ * deliberately DORMANT). Fails closed via the durable-write guard before
+ * touching Stripe.
+ */
+export async function runCheckoutAttemptRepair(): Promise<CheckoutAttemptRepairReport> {
+  const { db, requireDurableWriteStore } = await import("@sports/db");
+  requireDurableWriteStore("stripe-checkout");
+  return repairUnresolvedCheckoutAttempts({
+    db: db as unknown as CheckoutAttemptRepairDb,
+    stripeSessions: stripeCheckoutSessionLookup(),
+  });
 }
 
 /**

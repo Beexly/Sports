@@ -12,6 +12,12 @@ import type Stripe from "stripe";
  */
 
 const mocks = vi.hoisted(() => ({
+  // vi.mock factories are hoisted above imports, so the error class used by
+  // the @sports/db mock must be minted inside vi.hoisted as well.
+  DurableWriteStoreUnavailableError: class extends Error {
+    readonly kind = "durable_write_store_unavailable" as const;
+    readonly httpStatus = 503 as const;
+  },
   constructEvent: vi.fn<(body: string, sig: string, secret: string) => Stripe.Event>(),
   subscriptionsRetrieve: vi.fn<(id: string) => Promise<unknown>>(),
   webhookEventFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -20,6 +26,7 @@ const mocks = vi.hoisted(() => ({
   subscriptionUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   checkoutAttemptUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+  requireDurableWriteStore: vi.fn<(capability: string) => void>(),
 }));
 
 vi.mock("@/lib/stripe", () => ({
@@ -30,6 +37,8 @@ vi.mock("@/lib/stripe", () => ({
 }));
 
 vi.mock("@sports/db", () => ({
+  requireDurableWriteStore: mocks.requireDurableWriteStore,
+  DurableWriteStoreUnavailableError: mocks.DurableWriteStoreUnavailableError,
   db: {
     // $transaction([...]) executes the array of prisma promises atomically in prod;
     // the mock just awaits them so the underlying updateMany calls are recorded.
@@ -110,6 +119,8 @@ describe("POST /api/webhooks/stripe", () => {
     mocks.subscriptionUpdateMany.mockReset();
     mocks.subscriptionFindUnique.mockReset();
     mocks.checkoutAttemptUpdateMany.mockReset();
+    mocks.requireDurableWriteStore.mockReset();
+    mocks.requireDurableWriteStore.mockReturnValue(undefined);
 
     process.env["STRIPE_WEBHOOK_SECRET"] = "whsec_test";
     process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] = PRO_MONTHLY;
@@ -502,6 +513,40 @@ describe("POST /api/webhooks/stripe", () => {
     });
   });
 
+  describe("durable-write guard (5.2 / section 14 — entitlement writes fail closed)", () => {
+    it("asserts the stripe-webhook-entitlement capability after signature verification", async () => {
+      mocks.constructEvent.mockReturnValue(stripeEvent("unhandled.event", {}));
+
+      const res = await POST(webhookRequest());
+
+      expect(res.status).toBe(200);
+      expect(mocks.requireDurableWriteStore).toHaveBeenCalledWith("stripe-webhook-entitlement");
+    });
+
+    it("returns 503 (so Stripe retries) with ZERO entitlement writes when the store is not durable", async () => {
+      armSubscriptionEvent("customer.subscription.updated", stripeSubscription());
+      mocks.requireDurableWriteStore.mockImplementation(() => {
+        throw new mocks.DurableWriteStoreUnavailableError("stub client active");
+      });
+
+      const res = await POST(webhookRequest());
+      const body = await res.json();
+
+      expect(res.status).toBe(503);
+      expect(body.code).toBe("durable_write_store_unavailable");
+      expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
+      expect(mocks.subscriptionUpdateMany).not.toHaveBeenCalled();
+      expect(mocks.webhookEventCreate).not.toHaveBeenCalled();
+      expect(mocks.checkoutAttemptUpdateMany).not.toHaveBeenCalled();
+    });
+
+    it("an unsigned request never reaches the guard (no store-health probing)", async () => {
+      const res = await POST(webhookRequest("{}", null));
+      expect(res.status).toBe(400);
+      expect(mocks.requireDurableWriteStore).not.toHaveBeenCalled();
+    });
+  });
+
   describe("idempotency", () => {
     it("skips events that were already processed", async () => {
       armSubscriptionEvent("customer.subscription.updated", stripeSubscription(), "evt_dup");
@@ -682,6 +727,78 @@ describe("POST /api/webhooks/stripe", () => {
         const res = await POST(webhookRequest());
         expect(res.status).toBe(200);
         expect(warn).toHaveBeenCalledWith(expect.stringContaining("reconciliation failed"));
+      } finally {
+        warn.mockRestore();
+      }
+    });
+  });
+
+  describe("checkout.session.expired (5.6)", () => {
+    it("converges the attempt: EXPIRED + active key RELEASED, original intent untouched", async () => {
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("checkout.session.expired", {
+          id: "cs_expired_1",
+          metadata: { userId: "user_1", checkoutAttemptId: "ca_11111111-2222-4333-8444-555566667777" },
+        })
+      );
+
+      const res = await POST(webhookRequest());
+      expect(res.status).toBe(200);
+      expect(mocks.checkoutAttemptUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            OR: [
+              { id: "ca_11111111-2222-4333-8444-555566667777" },
+              { stripeSessionId: "cs_expired_1" },
+            ],
+            // Only non-terminal states converge — a COMPLETED attempt can
+            // never be regressed by a late expiry event.
+            status: { in: ["CREATED", "REQUEST_IN_FLIGHT", "SESSION_CREATED", "AMBIGUOUS"] },
+          }),
+          data: expect.objectContaining({
+            status: "EXPIRED",
+            activeClientIntentId: null,
+            lastErrorKind: "session_expired",
+          }),
+        })
+      );
+      // The immutable audit identity is NEVER part of the release.
+      const call = mocks.checkoutAttemptUpdateMany.mock.calls[0]![0] as {
+        data: Record<string, unknown>;
+      };
+      expect(call.data).not.toHaveProperty("originalClientIntentId");
+    });
+
+    it("tolerates an unknown/terminal attempt — warns, still acks 200", async () => {
+      mocks.checkoutAttemptUpdateMany.mockResolvedValue({ count: 0 });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      try {
+        mocks.constructEvent.mockReturnValue(
+          stripeEvent("checkout.session.expired", { id: "cs_expired_2", metadata: {} })
+        );
+
+        const res = await POST(webhookRequest());
+        expect(res.status).toBe(200);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("checkout.session.expired"));
+      } finally {
+        warn.mockRestore();
+      }
+    });
+
+    it("an expiry-reconciliation DB failure never fails the webhook (repair job is the durable backstop)", async () => {
+      mocks.checkoutAttemptUpdateMany.mockRejectedValue(new Error("db down"));
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      try {
+        mocks.constructEvent.mockReturnValue(
+          stripeEvent("checkout.session.expired", {
+            id: "cs_expired_3",
+            metadata: { checkoutAttemptId: "ca_11111111-2222-4333-8444-555566667777" },
+          })
+        );
+
+        const res = await POST(webhookRequest());
+        expect(res.status).toBe(200);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("expiry reconciliation failed"));
       } finally {
         warn.mockRestore();
       }

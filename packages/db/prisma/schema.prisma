@@ -132,62 +132,108 @@ model WebhookEvent {
 
 // Lifecycle of a durable checkout attempt (see CheckoutAttempt).
 enum CheckoutAttemptStatus {
-  CREATED // attempt row exists; no Stripe session yet
+  CREATED // attempt row exists; no Stripe request dispatched yet
+  REQUEST_IN_FLIGHT // ONE request holds the claim and is talking to Stripe right now
   SESSION_CREATED // a Stripe Checkout Session was created for this attempt
-  COMPLETED // checkout.session.completed reconciled by the webhook
-  FAILED // Stripe session creation failed; a retry mints a FRESH attempt
-  EXPIRED // past expiresAt (Stripe's ~24h idempotency window); never reused
+  AMBIGUOUS // Stripe outcome unknown (network/5xx) — key retained; reconciliation resolves
+  COMPLETED // checkout.session.completed reconciled by the webhook/repair
+  FAILED // definitive rejection or configuration failure; a retry mints a FRESH attempt
+  EXPIRED // past expiresAt / checkout.session.expired; never reused
+  CANCELED // operator/owner-cancelled attempt; never reused
+}
+
+// Classification of the last Stripe session-create error (see
+// apps/web/lib/billing/stripe-outcome.ts). AMBIGUOUS outcomes retain the
+// attempt AND its idempotency key; only reconciliation may release them.
+enum CheckoutOutcomeClass {
+  DEFINITIVE_REJECTION // Stripe processed the request and definitively refused
+  AMBIGUOUS_NETWORK_OUTCOME // request may or may not have committed at Stripe
+  RETRIABLE_NO_REQUEST_SENT // provably no state change at Stripe; same key retriable
+  CONFIGURATION_FAILURE // our credentials/params are wrong; retrying cannot help
 }
 
 // Durable checkout attempt — the server-side source of truth for checkout
 // idempotency. A client may send a clientIntentId (a per-visit UUID hint);
 // the SERVER owns the attempt id, binds it to an immutable request
-// fingerprint (user + tier + interval + priceId + currency + commercial
-// terms), derives the Stripe idempotency key from it, and stamps it into
-// Checkout Session + subscription metadata so webhooks can reconcile.
+// fingerprint (the FULL canonical commercial request — see
+// apps/web/lib/billing/checkout-attempt.ts), persists the Stripe idempotency
+// key, and stamps the attempt id into Checkout Session + subscription
+// metadata so webhooks and the repair job can reconcile.
 // Component lifetime is NEVER the source of truth: reload, another device,
 // or an unknown-network-outcome retry all converge on this row.
+//
+// AUDIT IDENTITY (immutable): `originalClientIntentId` is written once at
+// creation and NEVER cleared. `activeClientIntentId` is the separate
+// active-key column: it either equals the original intent id (attempt holds
+// the intent) or is NULL (a terminal attempt released the intent so a fresh
+// generation can claim it). History is never erased. Both invariants are
+// DB-enforced via CHECK constraints in the migration
+// (packages/db/prisma/migrations/20260722130000_add_checkout_attempt).
+//
+// RETENTION (financial audit record): the User FK is NULLABLE with
+// ON DELETE SET NULL, and subjectUserId/subjectEmail are immutable snapshots
+// taken at creation — deleting a user account never deletes the payment
+// audit trail, and the subject stays identifiable for audit/tax purposes.
 model CheckoutAttempt {
-  id                   String                @id @default(cuid())
-  // Optional client-supplied intent hint (UUID). Nullable: a token-less
-  // request mints its own attempt (each such request is its own intent).
+  id                     String                @id @default(cuid())
+  // Immutable audit copy of the client-supplied intent hint (UUID), or null
+  // for a token-less request (each such request is its own intent).
+  originalClientIntentId String?
+  // Active-key column for the create-or-retrieve race. Equals
+  // originalClientIntentId while this attempt owns the intent; set to NULL
+  // when a terminal (FAILED/EXPIRED/CANCELED) attempt releases it.
   // Postgres treats NULLs as distinct, so the compound unique below only
-  // bites when a clientIntentId is actually present — exactly the
-  // create-or-retrieve race that must be made safe.
-  clientIntentId       String?
-  userId               String
-  customerId           String?
-  tier                 SubscriptionTier
+  // bites while an attempt actually holds an intent.
+  activeClientIntentId   String?
+  // Nullable FK: user deletion detaches the row (SET NULL), never cascades.
+  userId                 String?
+  // Immutable subject snapshot for retention — survives user deletion.
+  subjectUserId          String
+  subjectEmail           String?
+  customerId             String?
+  tier                   SubscriptionTier
   // Billing interval: "month" | "year" (matches BillingInterval in the app).
-  interval             String
-  priceId              String
-  currency             String                @default("usd")
-  // sha256 over the canonical request (user, tier, interval, priceId,
-  // currency, current commercial terms). Same intent id + different
-  // fingerprint is a hard 409 — an idempotency key may never be reused
-  // with changed Stripe parameters.
-  requestFingerprint   String
-  status               CheckoutAttemptStatus @default(CREATED)
-  stripeSessionId      String?
+  interval               String
+  priceId                String
+  currency               String                @default("usd")
+  quantity               Int                   @default(1)
+  // sha256 over the canonical-JSON commercial request (user, tier, interval,
+  // priceId, currency, quantity, trial terms, promotion policy, tax
+  // behavior, commercial-terms version, consent requirement, origin class,
+  // metadata version). Same intent id + different fingerprint is a hard
+  // 409 — an idempotency key may never be reused with changed parameters.
+  requestFingerprint     String
+  fingerprintVersion     String                @default("v2")
+  status                 CheckoutAttemptStatus @default(CREATED)
+  // Classification of the last Stripe session-create error, if any.
+  lastOutcomeClass       CheckoutOutcomeClass?
+  // The exact Stripe idempotency key minted for this attempt, persisted so
+  // ambiguous retries and the repair job always reuse/see the same key.
+  stripeIdempotencyKey   String                @unique
+  stripeSessionId        String?
   // Filled by the checkout.session.completed webhook on reconciliation.
-  stripeSubscriptionId String?
+  stripeSubscriptionId   String?
   // Machine-readable kind of the last failure (e.g. "stripe_session_create_failed").
-  lastErrorKind        String?
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  completedAt          DateTime?
+  lastErrorKind          String?
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  completedAt            DateTime?
   // ~24h from creation, matching Stripe's idempotency-key retention window.
-  expiresAt            DateTime
+  expiresAt              DateTime
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  // Race safety: two concurrent requests with the same (userId, clientIntentId)
+  // Race safety: two concurrent requests with the same (userId, intent)
   // converge on ONE row via this constraint (create + catch-P2002-then-fetch),
-  // never check-then-insert.
-  @@unique([userId, clientIntentId])
+  // never check-then-insert. Keyed on the ACTIVE key so terminal attempts
+  // keep their original intent id in originalClientIntentId forever.
+  @@unique([userId, activeClientIntentId])
   // Webhook reconciliation lookup.
   @@index([stripeSessionId])
   @@index([userId])
+  @@index([subjectUserId])
+  // Repair-job scan: unresolved (REQUEST_IN_FLIGHT/AMBIGUOUS) attempts by age.
+  @@index([status, expiresAt])
   @@map("checkout_attempts")
 }
 
