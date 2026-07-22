@@ -1,0 +1,6 @@
+# NOVA S3 source-runtime artifacts are append-only local JSON receipts
+# (runs/, checkpoints/, events/, alerts/, briefs/, state.json, run-lease.json,
+# active-run.json). They are runtime evidence, not source code — keep them out
+# of version control while keeping the directory anchored.
+*
+!.gitignore
