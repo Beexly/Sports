@@ -1,7 +1,7 @@
 # Wave 5 Owner Promotion Packet — 2026-07-22 (revised)
 
 **Branch:** `integration/gse-nova-control-plane-premerge-2026-07-22`
-**HEAD:** `31e732786cea6e444de9c37b0aabff01e4a03370` *(update if further commits land — see `git log -1` for the true tip)*
+**HEAD at time of writing:** `fb2e662201725e5064480415f10b259838d02a0c` (the packet-rewrite commit itself — by definition the branch tip the moment this file was committed; run `git log -1` for the true current tip if further commits have landed since)
 **Worktree:** `/workspace/wt/wave5-integration`
 
 **This revision supersedes the version of this packet committed at `fb0d76cc`.** That version was synthesized from a truncated lens-results feed (only ~6 of 12 lenses' full detail were available to it) and from a branch state that had gone stale relative to several source PR branches. Both gaps are closed here:
