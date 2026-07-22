@@ -76,12 +76,15 @@ function asNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
-/** Policy refusal — becomes a HELD outcome, never a promotion. */
+/** Policy refusal — becomes a HELD outcome, never a promotion. Carries the
+ * bytes already received before the refusal so budget accounting can charge
+ * them: a refused fetch still consumed the network budget. */
 class PolicyHoldError extends Error {
-  constructor(holdReason, message) {
+  constructor(holdReason, message, receivedBytes = 0) {
     super(message ?? holdReason);
     this.name = "PolicyHoldError";
     this.holdReason = holdReason;
+    this.receivedBytes = receivedBytes;
   }
 }
 
@@ -231,7 +234,7 @@ async function readBoundedBody(response, maxBytes) {
       const receivedCheck = checkSizePolicy({ receivedBytes: total, maxBytes });
       if (!receivedCheck.allowed) {
         await reader.cancel("NOVA byte ceiling exceeded");
-        throw new PolicyHoldError(receivedCheck.reason, `Response exceeded ${maxBytes} bytes.`);
+        throw new PolicyHoldError(receivedCheck.reason, `Response exceeded ${maxBytes} bytes.`, total);
       }
       chunks.push(Buffer.from(value));
     }
@@ -510,6 +513,7 @@ export async function pollSource(source, options = {}) {
         completedAt,
         outcome: "FAILED",
         holdReason: null,
+        receivedBytes: fetched.bytes,
         receipt: null,
         http: null,
         summary: null,
@@ -521,6 +525,7 @@ export async function pollSource(source, options = {}) {
       completedAt,
       outcome: fetched.unchanged ? "NOT_MODIFIED" : "FETCHED",
       holdReason: null,
+      receivedBytes: fetched.bytes,
       receipt,
       http: {
         status: fetched.status,
@@ -543,6 +548,7 @@ export async function pollSource(source, options = {}) {
         completedAt,
         outcome: "HELD",
         holdReason: error.holdReason,
+        receivedBytes: Number(error.receivedBytes) || 0,
         receipt: null,
         http: null,
         summary: null,
@@ -554,6 +560,7 @@ export async function pollSource(source, options = {}) {
       completedAt,
       outcome: "FAILED",
       holdReason: null,
+      receivedBytes: Number(error?.receivedBytes) || 0,
       receipt: null,
       http: null,
       summary: null,

@@ -1,5 +1,73 @@
 import { createHash } from "node:crypto";
 
+/**
+ * Event verification vocabulary (exact, closed):
+ *
+ *   OBSERVED         — seen once via secondary (or unknown) authority.
+ *   OBSERVED_PRIMARY — seen once via a primary source. A SINGLE fetch of a
+ *                      primary source is an observation, not verification:
+ *                      evidence quality is deliberately < 1.
+ *   VERIFIED         — corroborated. Reachable ONLY via `corroborateEvent()`
+ *                      with either two distinct snapshot observations or an
+ *                      explicit named validation. NEVER born from one fetch.
+ */
+export const EVENT_VERIFICATION_STATES = Object.freeze(["OBSERVED", "OBSERVED_PRIMARY", "VERIFIED"]);
+
+/** Evidence quality per verification state. OBSERVED_PRIMARY is strictly
+ * below 1: one fetch of a primary source never counts as full evidence. */
+export const EVIDENCE_QUALITY_BY_STATE = Object.freeze({
+  VERIFIED: 1,
+  OBSERVED_PRIMARY: 0.7,
+  OBSERVED: 0.35,
+});
+
+function birthVerificationState(source) {
+  return source?.authority === "primary" ? "OBSERVED_PRIMARY" : "OBSERVED";
+}
+
+/**
+ * Promote a single-observation event to VERIFIED. The ONLY path to
+ * VERIFIED. Requires an OBSERVED_PRIMARY event plus corroboration:
+ *
+ * - kind "DISTINCT_SNAPSHOTS": at least two DISTINCT snapshot/receipt
+ *   hashes (two independent observations of the same change), or
+ * - kind "EXPLICIT_VALIDATION": a named validator and a validation time.
+ *
+ * Anything else throws. `verified: true` is set here and nowhere else.
+ */
+export function corroborateEvent(event, corroboration) {
+  if (!event || typeof event !== "object") throw new Error("corroborateEvent requires an event object");
+  if (event.verificationState !== "OBSERVED_PRIMARY") {
+    throw new Error("only OBSERVED_PRIMARY events can be corroborated to VERIFIED");
+  }
+  const claim = corroboration ?? {};
+  if (claim.kind === "DISTINCT_SNAPSHOTS") {
+    const hashes = new Set(
+      (Array.isArray(claim.snapshotHashes) ? claim.snapshotHashes : []).filter(
+        (hash) => typeof hash === "string" && hash.trim().length > 0,
+      ),
+    );
+    if (hashes.size < 2) {
+      throw new Error("DISTINCT_SNAPSHOTS corroboration requires at least two distinct snapshot hashes");
+    }
+  } else if (claim.kind === "EXPLICIT_VALIDATION") {
+    if (typeof claim.validatedBy !== "string" || claim.validatedBy.trim().length === 0) {
+      throw new Error("EXPLICIT_VALIDATION corroboration requires a named validator");
+    }
+    if (!Number.isFinite(Date.parse(claim.validatedAt))) {
+      throw new Error("EXPLICIT_VALIDATION corroboration requires a parseable validatedAt time");
+    }
+  } else {
+    throw new Error("corroboration.kind must be DISTINCT_SNAPSHOTS or EXPLICIT_VALIDATION");
+  }
+  return {
+    ...event,
+    verificationState: "VERIFIED",
+    verified: true,
+    corroboration: { ...claim },
+  };
+}
+
 const URGENCY = Object.freeze({
   SECURITY: 100,
   BREAKING_CHANGE: 95,
@@ -122,7 +190,8 @@ export function diffSnapshots(source, previousSnapshot, currentSnapshot, now = n
         previousHash: prior?.hash ?? null,
         currentHash: item.hash,
         evidenceAuthority: source.authority,
-        verified: source.authority === "primary",
+        verificationState: birthVerificationState(source),
+        verified: false,
       });
     }
 
@@ -142,6 +211,7 @@ export function diffSnapshots(source, previousSnapshot, currentSnapshot, now = n
         previousHash: item.hash,
         currentHash: null,
         evidenceAuthority: source.authority,
+        verificationState: "OBSERVED",
         verified: false,
         caution: "An item disappearing from a bounded feed is not proof of deprecation; verify manually.",
       });
@@ -169,7 +239,8 @@ export function diffSnapshots(source, previousSnapshot, currentSnapshot, now = n
     previousHash,
     currentHash,
     evidenceAuthority: source.authority,
-    verified: source.authority === "primary",
+    verificationState: birthVerificationState(source),
+    verified: false,
   });
   return events;
 }
@@ -184,10 +255,17 @@ function normalizedProjects(projectFits) {
     : [];
 }
 
+function eventVerificationState(event) {
+  if (EVENT_VERIFICATION_STATES.includes(event?.verificationState)) return event.verificationState;
+  // Legacy events without a verificationState: `verified` may only be true
+  // via corroborateEvent, so it maps to VERIFIED; otherwise OBSERVED.
+  return event?.verified === true ? "VERIFIED" : "OBSERVED";
+}
+
 export function scoreOpportunity(input) {
   const event = input.event;
   const fits = normalizedProjects(input.projectFits);
-  const evidenceQuality = event.verified ? 1 : 0.35;
+  const evidenceQuality = EVIDENCE_QUALITY_BY_STATE[eventVerificationState(event)];
   const bestFit = fits.reduce((max, fit) => Math.max(max, Number(fit.fitScore) || 0), 0) / 100;
   const reuse = clamp((fits.filter((fit) => (Number(fit.fitScore) || 0) >= 50).length - 1) / 4, 0, 1);
   const timeToValueDays = Math.max(0, Number(input.timeToValueDays) || 0);
@@ -241,7 +319,7 @@ export function scoreOpportunity(input) {
 export function buildOpportunityCandidate(input, now = new Date()) {
   const score = scoreOpportunity(input);
   const fits = normalizedProjects(input.projectFits);
-  const status = input.event.verified ? "VERIFIED" : "OBSERVED";
+  const status = eventVerificationState(input.event);
   return {
     id: `nova-${sha256({ eventId: input.event.id, projects: fits.map((fit) => fit.projectId) }).slice(0, 20)}`,
     eventId: input.event.id,

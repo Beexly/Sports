@@ -73,11 +73,13 @@ export const ALERT_SCHEMA_VERSION = 1;
  *
  * S3 CONSUMES the deterministic convergence-inventory tooling; it does not
  * rebuild it. The tooling is owned by the `nova/convergence-inventory-tooling`
- * unit and is referenced here strictly by npm script name. When a split,
- * collision, or registry-change question needs repository facts, run:
- *
- *   npm run nova:inventory          (build the deterministic inventory+receipt)
- *   npm run nova:inventory:verify   (verify a previously built inventory)
+ * unit and is referenced here strictly by npm script name (`nova:inventory` /
+ * `nova:inventory:verify`). Those scripts are NOT guaranteed to exist on the
+ * branch this code runs on: the capability's resolvability MUST be checked
+ * against the actual `package.json` scripts at run time via
+ * `resolveConvergenceInventoryCapability()` and recorded honestly on every
+ * run receipt. A declared-but-absent script is recorded as
+ * `DECLARED_NOT_RESOLVABLE_ON_THIS_BRANCH`, never as a working capability.
  *
  * A model may interpret the resulting receipt; it may not manufacture it.
  */
@@ -89,6 +91,34 @@ export const CONVERGENCE_INVENTORY_CAPABILITY = Object.freeze({
   integration: "NPM_SCRIPT_NAME_ONLY",
   rebuiltInS3: false,
 });
+
+export const CAPABILITY_RESOLUTION_STATUSES = Object.freeze([
+  "RESOLVABLE_AT_RUNTIME",
+  "DECLARED_NOT_RESOLVABLE_ON_THIS_BRANCH",
+]);
+
+/**
+ * Resolve the declared convergence-inventory capability against the npm
+ * scripts actually present at run time (the caller reads `package.json` and
+ * passes its `scripts` object). Fail closed: unless BOTH declared scripts
+ * exist, the capability is recorded as
+ * `DECLARED_NOT_RESOLVABLE_ON_THIS_BRANCH` — the receipt never claims a
+ * runnable capability that this branch cannot actually run.
+ */
+export function resolveConvergenceInventoryCapability(npmScripts) {
+  const scripts = isPlainObject(npmScripts) ? npmScripts : {};
+  const buildResolvable = isNonEmptyString(scripts[CONVERGENCE_INVENTORY_CAPABILITY.buildNpmScript]);
+  const verifyResolvable = isNonEmptyString(scripts[CONVERGENCE_INVENTORY_CAPABILITY.verifyNpmScript]);
+  return Object.freeze({
+    ...CONVERGENCE_INVENTORY_CAPABILITY,
+    status:
+      buildResolvable && verifyResolvable ? "RESOLVABLE_AT_RUNTIME" : "DECLARED_NOT_RESOLVABLE_ON_THIS_BRANCH",
+    scriptPresence: Object.freeze({
+      [CONVERGENCE_INVENTORY_CAPABILITY.buildNpmScript]: buildResolvable,
+      [CONVERGENCE_INVENTORY_CAPABILITY.verifyNpmScript]: verifyResolvable,
+    }),
+  });
+}
 
 /**
  * Immutable doctrine record: the historical NOVA live source validation
@@ -133,6 +163,39 @@ function isIsoTime(value) {
 
 function isInteger(value, minimum) {
   return Number.isInteger(value) && value >= minimum;
+}
+
+// ---------------------------------------------------------------------------
+// Timeout floors — a configured timeout may never derive an insta-abort
+// ---------------------------------------------------------------------------
+
+/** Minimum accepted `--source-timeout-ms`. The worker timeout is derived as
+ * `sourceTimeoutMs - WORKER_TIMEOUT_HEADROOM_MS`, so this floor guarantees
+ * the derived worker timeout is >= MIN_WORKER_TIMEOUT_MS. */
+export const MIN_SOURCE_TIMEOUT_MS = 2_000;
+export const MIN_WORKER_TIMEOUT_MS = 1_000;
+export const WORKER_TIMEOUT_HEADROOM_MS = 1_000;
+
+/**
+ * Derive the per-source worker timeout from the configured hard source
+ * timeout and the registry policy default. A derived timeout of zero or
+ * less is a CONFIGURATION ERROR, never a silently accepted insta-abort:
+ * this throws instead of returning anything below MIN_WORKER_TIMEOUT_MS.
+ */
+export function deriveWorkerTimeoutMs(sourceTimeoutMs, policyDefaultTimeoutMs) {
+  if (!isInteger(sourceTimeoutMs, MIN_SOURCE_TIMEOUT_MS)) {
+    throw new Error(
+      `Configuration error: sourceTimeoutMs must be an integer >= ${MIN_SOURCE_TIMEOUT_MS} (got ${String(sourceTimeoutMs)}).`,
+    );
+  }
+  const candidate = sourceTimeoutMs - WORKER_TIMEOUT_HEADROOM_MS;
+  const derived = isInteger(policyDefaultTimeoutMs, 1) ? Math.min(candidate, policyDefaultTimeoutMs) : candidate;
+  if (!isInteger(derived, MIN_WORKER_TIMEOUT_MS)) {
+    throw new Error(
+      `Configuration error: derived worker timeout ${String(derived)}ms is below the ${MIN_WORKER_TIMEOUT_MS}ms floor.`,
+    );
+  }
+  return derived;
 }
 
 export function contentTypeBase(value) {
@@ -506,8 +569,10 @@ export function salvageCheckpoints(runId, checkpoints) {
 
 /**
  * Plan the remainder of an interrupted run: the originally planned sources,
- * in original order, minus every salvaged source. Re-polling a salvaged
- * source inside the successor run is impossible by construction.
+ * in original order, minus every salvaged source. Wired into
+ * `runNovaCycle()` recovery: the successor run's selection is filtered
+ * through this plan, so a salvaged source is structurally excluded from
+ * re-polling regardless of whether its cadence makes it look due again.
  */
 export function planResume({ plannedSourceIds, salvagedSourceIds }) {
   const done = new Set(salvagedSourceIds ?? []);

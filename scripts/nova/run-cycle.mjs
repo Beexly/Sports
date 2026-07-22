@@ -34,10 +34,18 @@
  * Historical NOVA source-validation receipts remain FAILED_CLOSED — see
  * HISTORICAL_SOURCE_VALIDATION_DOCTRINE in `source-runtime-core.mjs`.
  *
+ * FAIL-CLOSED SOURCE SELECTION: by default only sources that are BOTH
+ * enabled:true AND validationState "live_validated" are polled. Candidate
+ * sources require the explicit, owner-gated `--include-candidates` flag.
+ * validationState "disabled" and "retired" sources are NEVER polled.
+ *
  * Deterministic convergence-inventory capability: this runtime CONSUMES
  * the tooling owned by `nova/convergence-inventory-tooling` strictly by
- * npm script name (`npm run nova:inventory` / `npm run nova:inventory:verify`)
- * and records that capability on every run receipt. It never rebuilds it.
+ * npm script name (`npm run nova:inventory` / `npm run nova:inventory:verify`).
+ * Whether those scripts actually exist is checked against `package.json` at
+ * run time and recorded honestly on every run receipt
+ * (`DECLARED_NOT_RESOLVABLE_ON_THIS_BRANCH` when absent). It never rebuilds
+ * the tooling and never claims a capability this branch cannot run.
  *
  * Scraping posture: read-only conditional HTTPS GETs of registry-
  * allowlisted official metadata sources. Any extraction beyond that must
@@ -53,7 +61,7 @@ import { fileURLToPath } from "node:url";
 
 import { deduplicateEvents, diffSnapshots, routeEvent, sha256 } from "./change-intelligence.mjs";
 import {
-  CONVERGENCE_INVENTORY_CAPABILITY,
+  MIN_SOURCE_TIMEOUT_MS,
   RUN_RECORD_SCHEMA_VERSION,
   buildSourceFailureAlert,
   classifySourceResult,
@@ -61,10 +69,13 @@ import {
   createCheckpointRecord,
   createLease,
   createRunRecord,
+  deriveWorkerTimeoutMs,
   failCloseRunRecord,
   isRunTerminal,
   leaseStatus,
   nextConsecutiveFailureCount,
+  planResume,
+  resolveConvergenceInventoryCapability,
   salvageCheckpoints,
   shouldEmitFailureAlert,
 } from "./source-runtime-core.mjs";
@@ -89,6 +100,17 @@ function finiteInteger(value, fallback, minimum = 1) {
   return Number.isInteger(parsed) && parsed >= minimum ? parsed : fallback;
 }
 
+/** An explicitly provided value below the floor is a configuration error,
+ * never a silent fallback — silently substituting a different timeout hides
+ * the misconfiguration the operator needs to see. */
+function strictInteger(flag, value, minimum) {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < minimum) {
+    throw new Error(`Configuration error: ${flag} must be an integer >= ${minimum} (got ${String(value)}).`);
+  }
+  return parsed;
+}
+
 export function parseArgs(argv) {
   const args = {
     registryPath: DEFAULT_REGISTRY_PATH,
@@ -99,7 +121,11 @@ export function parseArgs(argv) {
     sourceTimeoutMs: 25_000,
     cycleTimeoutMs: 5 * 60_000,
     lockStaleMs: 30 * 60_000,
-    enabledOnly: false,
+    // FAIL CLOSED by default: only enabled + live_validated sources are
+    // pollable. Candidate polling requires the explicit, owner-gated
+    // --include-candidates flag.
+    enabledOnly: true,
+    includeCandidates: false,
     dryRun: false,
     sourceIds: [],
   };
@@ -110,14 +136,19 @@ export function parseArgs(argv) {
     else if (arg === "--max-sources") args.maxSources = finiteInteger(argv[++index], args.maxSources);
     else if (arg === "--request-budget") args.requestBudget = finiteInteger(argv[++index], args.requestBudget);
     else if (arg === "--byte-budget") args.byteBudget = finiteInteger(argv[++index], args.byteBudget);
-    else if (arg === "--source-timeout-ms") args.sourceTimeoutMs = finiteInteger(argv[++index], args.sourceTimeoutMs, 1_000);
-    else if (arg === "--cycle-timeout-ms") args.cycleTimeoutMs = finiteInteger(argv[++index], args.cycleTimeoutMs, 5_000);
+    else if (arg === "--source-timeout-ms") {
+      args.sourceTimeoutMs = strictInteger("--source-timeout-ms", argv[++index], MIN_SOURCE_TIMEOUT_MS);
+    } else if (arg === "--cycle-timeout-ms") args.cycleTimeoutMs = finiteInteger(argv[++index], args.cycleTimeoutMs, 5_000);
     else if (arg === "--lock-stale-ms") args.lockStaleMs = finiteInteger(argv[++index], args.lockStaleMs, 60_000);
     else if (arg === "--enabled-only") args.enabledOnly = true;
+    else if (arg === "--include-candidates") args.includeCandidates = true;
     else if (arg === "--dry-run") args.dryRun = true;
     else if (arg === "--source") args.sourceIds.push(String(argv[++index] ?? "").trim());
     else if (arg === "--help") args.help = true;
     else throw new Error(`Unknown argument: ${arg}`);
+  }
+  if (args.includeCandidates && argv.includes("--enabled-only")) {
+    throw new Error("Configuration error: --enabled-only and --include-candidates are mutually exclusive.");
   }
   return args;
 }
@@ -263,12 +294,13 @@ function sanitizedWorkerEnv() {
   return Object.fromEntries(keys.flatMap((key) => (process.env[key] ? [[key, process.env[key]]] : [])));
 }
 
-function failedWorkerResult(error) {
+function failedWorkerResult(error, receivedBytes = 0) {
   return {
     outcome: "FAILED",
     holdReason: null,
     receipt: null,
     error,
+    receivedBytes,
     installAttempted: false,
     executeAttempted: false,
   };
@@ -315,7 +347,10 @@ async function runWorker(payload, timeoutMs, maxOutputBytes = 2 * 1024 * 1024) {
       clearTimeout(timer);
       if (timedOut || oversized) {
         resolvePromise(
-          failedWorkerResult(timedOut ? `Worker exceeded ${timeoutMs}ms.` : `Worker output exceeded ${maxOutputBytes} bytes.`),
+          failedWorkerResult(
+            timedOut ? `Worker exceeded ${timeoutMs}ms.` : `Worker output exceeded ${maxOutputBytes} bytes.`,
+            outputBytes,
+          ),
         );
         return;
       }
@@ -346,11 +381,27 @@ function sourceIsDue(sourceState, now) {
   return !Number.isFinite(due) || due <= now.getTime();
 }
 
+/**
+ * FAIL-CLOSED pollability gate:
+ *
+ * - validationState "disabled" or "retired" is NEVER pollable — not via
+ *   --include-candidates and not via an explicit --source request;
+ * - by default a source is pollable ONLY when it is BOTH enabled:true AND
+ *   validationState "live_validated";
+ * - anything else (candidates, enabled:false) requires the explicit,
+ *   owner-gated --include-candidates flag.
+ */
+export function isPollableSource(source, args) {
+  if (!source || typeof source !== "object") return false;
+  if (source.validationState === "disabled" || source.validationState === "retired") return false;
+  if (source.enabled === true && source.validationState === "live_validated") return true;
+  return args?.includeCandidates === true;
+}
+
 function selectSources(registry, state, args, now) {
   const requested = new Set(args.sourceIds.filter(Boolean));
   return registry.sources
-    .filter((source) => source.validationState !== "retired")
-    .filter((source) => !args.enabledOnly || source.enabled)
+    .filter((source) => isPollableSource(source, args))
     .filter((source) => requested.size === 0 || requested.has(source.id))
     .filter((source) => sourceIsDue(state.sources[source.id], now))
     .sort((left, right) => {
@@ -405,7 +456,10 @@ function decorateEvents(source, events) {
     sourceName: source.name,
     projectScopes: source.projectScopes,
     route: routeEvent(event),
-    lifecycleState: event.verified ? "VERIFIED" : "OBSERVED",
+    // A single fetch never births VERIFIED: the lifecycle state mirrors the
+    // event's verification state (OBSERVED / OBSERVED_PRIMARY); VERIFIED is
+    // reachable only via corroborateEvent().
+    lifecycleState: event.verificationState ?? (event.verified === true ? "VERIFIED" : "OBSERVED"),
     integrationAuthority: "NONE",
   }));
 }
@@ -634,6 +688,7 @@ function buildBrief(runId, generatedAt, events, sourceResults) {
       source: event.sourceName,
       projectScopes: event.projectScopes,
       verified: event.verified,
+      verificationState: event.verificationState ?? null,
       immediate: event.route.immediate,
       ownerDecisionRequired: event.route.ownerApprovalRequired,
       nextAction: "Map project fit and build the smallest evidence-backed decision test.",
@@ -686,6 +741,13 @@ export async function runNovaCycle(args, dependencies = {}) {
   const validation = validateRegistry(registry);
   if (!validation.valid) throw new Error(`NOVA source registry is invalid:\n${validation.errors.join("\n")}`);
   const threshold = registry.policy.failureAlertThreshold;
+  // A 0/negative derived worker timeout is a configuration error — fail
+  // here, before any lease/state/network work, never as an insta-abort.
+  const workerTimeoutMs = deriveWorkerTimeoutMs(args.sourceTimeoutMs, registry.policy.defaultTimeoutMs);
+  // Capability honesty: check whether the declared convergence-inventory
+  // npm scripts actually exist at run time and record the result verbatim.
+  const packageJson = await readJson(resolve(REPO_ROOT, "package.json"), {});
+  const convergenceInventoryCapability = resolveConvergenceInventoryCapability(packageJson?.scripts);
 
   const statePath = resolve(args.runtimeDir, "state.json");
   const state = await readJson(statePath, defaultState());
@@ -706,7 +768,9 @@ export async function runNovaCycle(args, dependencies = {}) {
   }
 
   // Recovery precedes selection: salvaged checkpoints advance per-source
-  // state, so the selector naturally skips every salvaged source.
+  // state, and planResume() structurally excludes every salvaged source
+  // from this run's selection — regardless of whether the salvaged state's
+  // cadence happens to make the source look due again.
   const salvageSummary = await recoverInterruptedRun({
     runtimeDir: args.runtimeDir,
     state,
@@ -715,7 +779,14 @@ export async function runNovaCycle(args, dependencies = {}) {
     recoveredBy: runId,
   });
 
-  const selected = selectSources(registry, state, args, startedAtDate);
+  const dueSources = selectSources(registry, state, args, startedAtDate);
+  const resumableIds = new Set(
+    planResume({
+      plannedSourceIds: dueSources.map((source) => source.id),
+      salvagedSourceIds: salvageSummary?.salvagedSourceIds ?? [],
+    }),
+  );
+  const selected = dueSources.filter((source) => resumableIds.has(source.id));
   let run = createRunRecord({
     runId,
     startedAt,
@@ -749,7 +820,7 @@ export async function runNovaCycle(args, dependencies = {}) {
     const result = await runWorkerImpl(
       {
         source,
-        timeoutMs: Math.min(args.sourceTimeoutMs - 1_000, registry.policy.defaultTimeoutMs),
+        timeoutMs: workerTimeoutMs,
         maxBytes: Math.min(registry.policy.defaultMaxBytes, remainingBytes),
         maxRedirects: registry.policy.maxRedirects,
         redirectPolicy: registry.policy.redirectPolicy,
@@ -762,7 +833,15 @@ export async function runNovaCycle(args, dependencies = {}) {
 
     const classification = classifySourceResult(result);
     const observedAt = nowIso(clock);
-    const bytes = classification.promotable ? Number(result.receipt?.contentLength) || 0 : 0;
+    // Byte budget charges ALL received bytes — FAILED and HELD included. A
+    // source that streams data and then fails still consumed the budget;
+    // charging only promotable results would let a hostile/broken source
+    // pull unbounded bytes across a cycle.
+    const bytes = Math.max(
+      Number(result?.receipt?.contentLength) || 0,
+      Number(result?.http?.bytes) || 0,
+      Number(result?.receivedBytes) || 0,
+    );
     consumedBytes += bytes;
 
     let nextSourceState;
@@ -845,7 +924,7 @@ export async function runNovaCycle(args, dependencies = {}) {
     alertIds: alerts.map((alert) => alert.id),
     requestsUsed: sourceResults.length,
     bytesUsed: consumedBytes,
-    convergenceInventoryCapability: CONVERGENCE_INVENTORY_CAPABILITY,
+    convergenceInventoryCapability,
   };
 
   await writeOnceJson(resolve(args.runtimeDir, "runs", `${runId}.json`), runReceipt);
@@ -859,12 +938,15 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
     console.log("Usage: node scripts/nova/run-cycle.mjs [options]");
-    console.log("  --enabled-only              Poll only sources explicitly enabled in the registry");
+    console.log("  (default)                   FAIL CLOSED: poll only enabled + live_validated sources");
+    console.log("  --include-candidates        OWNER-GATED: also poll candidate (not yet live-validated)");
+    console.log("                              sources; disabled/retired sources are NEVER polled");
+    console.log("  --enabled-only              Explicitly restate the fail-closed default");
     console.log("  --source ID                 Restrict to one source; repeatable");
     console.log("  --max-sources N             Maximum selected sources per cycle (default 12)");
     console.log("  --request-budget N          Hard request ceiling (default 12)");
     console.log("  --byte-budget N             Aggregate response-byte ceiling (default 12 MiB)");
-    console.log("  --source-timeout-ms N       Hard child-process timeout per source");
+    console.log(`  --source-timeout-ms N       Hard child-process timeout per source (integer >= ${MIN_SOURCE_TIMEOUT_MS})`);
     console.log("  --cycle-timeout-ms N        Total cycle deadline");
     console.log("  --lock-stale-ms N           Age after which a corrupt lease may be taken over");
     console.log("  --runtime-dir PATH          Append-only runtime artifact directory");

@@ -10,7 +10,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  EVENT_VERIFICATION_STATES,
+  EVIDENCE_QUALITY_BY_STATE,
   buildOpportunityCandidate,
+  corroborateEvent,
   deduplicateEvents,
   diffSnapshots,
   routeEvent,
@@ -192,6 +195,15 @@ test("pollSource classifies a policy refusal as HELD with a hold reason and no r
   assert.equal(result.summary, null);
 });
 
+test("pollSource reports the bytes received before a byte-ceiling HELD so budgets can charge them", async () => {
+  const fetchImpl = async () =>
+    new Response("1234567890", { status: 200, headers: { "content-type": "application/json" } });
+  const result = await pollSource(source, { fetchImpl, maxBytes: 5 });
+  assert.equal(result.outcome, "HELD");
+  assert.equal(result.holdReason, "received_bytes_exceed_ceiling");
+  assert.equal(result.receivedBytes, 10, "the streamed bytes are reported even though the result is HELD");
+});
+
 test("pollSource yields a schema-valid receipt with effective vs recorded time on success", async () => {
   const payload = JSON.stringify([
     { id: 1, tag_name: "v1", name: "One", published_at: "2026-07-01T00:00:00Z", html_url: "https://api.example.com/r/1" },
@@ -243,7 +255,7 @@ test("GitHub release summaries retain metadata but not release bodies", () => {
   assert.equal(Object.hasOwn(summary[0], "body"), false);
 });
 
-test("diffSnapshots emits one verified event for a new primary release", () => {
+test("a new primary release from ONE fetch is OBSERVED_PRIMARY, never born VERIFIED", () => {
   const events = diffSnapshots(
     source,
     { summary: [{ id: "1", tag: "v1", name: "Initial", publishedAt: "2026-07-20T00:00:00Z" }] },
@@ -257,9 +269,116 @@ test("diffSnapshots emits one verified event for a new primary release", () => {
   );
   const added = events.find((event) => event.kind === "NEW_ITEM" && event.itemId === "2");
   assert.ok(added);
-  assert.equal(added.verified, true);
+  assert.equal(added.verificationState, "OBSERVED_PRIMARY");
+  assert.equal(added.verified, false, "a single observation is never VERIFIED");
   assert.equal(added.eventClass, "SECURITY");
   assert.equal(added.urgency, 100);
+});
+
+test("VERIFIED is unreachable from a single fetch for every event kind and authority", () => {
+  for (const authority of ["primary", "secondary"]) {
+    const src = { ...source, authority };
+    const events = [
+      ...diffSnapshots(src, { summary: [{ id: "1", title: "Old" }] }, { summary: [{ id: "2", title: "New" }] }),
+      ...diffSnapshots(
+        { ...src, parser: "structured_page_delta" },
+        { summary: { title: "Before", headings: [] }, summaryHash: "h1" },
+        { summary: { title: "After", headings: [] }, summaryHash: "h2" },
+      ),
+    ];
+    assert.ok(events.length >= 2, `${authority}: fixture emits events`);
+    for (const event of events) {
+      assert.notEqual(event.verificationState, "VERIFIED", `${authority}/${event.kind}`);
+      assert.equal(event.verified, false, `${authority}/${event.kind}`);
+      assert.ok(EVENT_VERIFICATION_STATES.includes(event.verificationState), `${authority}/${event.kind}`);
+    }
+  }
+});
+
+test("corroborateEvent promotes OBSERVED_PRIMARY to VERIFIED only with two DISTINCT snapshots", () => {
+  const [event] = diffSnapshots(source, { summary: [] }, { summary: [{ id: "1", tag: "v1", name: "One" }] });
+  assert.equal(event.verificationState, "OBSERVED_PRIMARY");
+
+  const verified = corroborateEvent(event, { kind: "DISTINCT_SNAPSHOTS", snapshotHashes: ["sha256:a", "sha256:b"] });
+  assert.equal(verified.verificationState, "VERIFIED");
+  assert.equal(verified.verified, true);
+  assert.equal(verified.corroboration.kind, "DISTINCT_SNAPSHOTS");
+
+  // The same snapshot observed twice is ONE observation, not corroboration.
+  assert.throws(() => corroborateEvent(event, { kind: "DISTINCT_SNAPSHOTS", snapshotHashes: ["sha256:a", "sha256:a"] }));
+  assert.throws(() => corroborateEvent(event, { kind: "DISTINCT_SNAPSHOTS", snapshotHashes: ["sha256:a"] }));
+  assert.throws(() => corroborateEvent(event, { kind: "DISTINCT_SNAPSHOTS", snapshotHashes: [] }));
+  assert.throws(() => corroborateEvent(event, {}));
+  assert.throws(() => corroborateEvent(event, { kind: "TRUST_ME" }));
+});
+
+test("corroborateEvent accepts an explicit named validation and refuses anonymous ones", () => {
+  const [event] = diffSnapshots(source, { summary: [] }, { summary: [{ id: "1", tag: "v1", name: "One" }] });
+  const verified = corroborateEvent(event, {
+    kind: "EXPLICIT_VALIDATION",
+    validatedBy: "owner:garrett",
+    validatedAt: "2026-07-22T00:00:00.000Z",
+  });
+  assert.equal(verified.verificationState, "VERIFIED");
+  assert.throws(() => corroborateEvent(event, { kind: "EXPLICIT_VALIDATION", validatedBy: "", validatedAt: "2026-07-22T00:00:00.000Z" }));
+  assert.throws(() => corroborateEvent(event, { kind: "EXPLICIT_VALIDATION", validatedBy: "owner:garrett", validatedAt: "garbage" }));
+});
+
+test("secondary observations can never be corroborated to VERIFIED", () => {
+  const secondary = { ...source, authority: "secondary" };
+  const [event] = diffSnapshots(secondary, { summary: [] }, { summary: [{ id: "1", title: "New model" }] });
+  assert.equal(event.verificationState, "OBSERVED");
+  assert.throws(
+    () => corroborateEvent(event, { kind: "DISTINCT_SNAPSHOTS", snapshotHashes: ["sha256:a", "sha256:b"] }),
+    /OBSERVED_PRIMARY/,
+  );
+});
+
+test("evidence quality: OBSERVED_PRIMARY sits strictly between OBSERVED and VERIFIED and below 1", () => {
+  assert.equal(EVIDENCE_QUALITY_BY_STATE.VERIFIED, 1);
+  assert.ok(EVIDENCE_QUALITY_BY_STATE.OBSERVED_PRIMARY < 1, "one primary fetch is never full evidence");
+  assert.ok(EVIDENCE_QUALITY_BY_STATE.OBSERVED_PRIMARY > EVIDENCE_QUALITY_BY_STATE.OBSERVED);
+
+  const base = {
+    projectFits: [{ projectId: "GSE", fitScore: 90 }],
+    expectedAnnualNetValue: 10000,
+    timeToValueDays: 7,
+    implementationHours: 8,
+    reversibility: 0.9,
+    risk: 0.1,
+    maintenanceBurden: 0.1,
+    founderAttentionCost: 0.1,
+    competitiveHalfLifeDays: 90,
+  };
+  const eventFor = (verificationState) => ({
+    id: "event-q",
+    verificationState,
+    verified: verificationState === "VERIFIED",
+    urgency: 70,
+    sourceId: source.id,
+    eventClass: "MODEL_RELEASE",
+    observedAt: "2026-07-21T00:00:00Z",
+    evidenceAuthority: "primary",
+  });
+  const observed = scoreOpportunity({ ...base, event: eventFor("OBSERVED") });
+  const observedPrimary = scoreOpportunity({ ...base, event: eventFor("OBSERVED_PRIMARY") });
+  const verified = scoreOpportunity({ ...base, event: eventFor("VERIFIED") });
+  assert.equal(observedPrimary.components.evidenceQuality, EVIDENCE_QUALITY_BY_STATE.OBSERVED_PRIMARY);
+  assert.ok(observed.score <= observedPrimary.score);
+  assert.ok(observedPrimary.score <= verified.score);
+});
+
+test("an opportunity candidate from a single primary observation reports OBSERVED_PRIMARY status", () => {
+  const [event] = diffSnapshots(source, { summary: [] }, { summary: [{ id: "1", tag: "v1", name: "One" }] });
+  const candidate = buildOpportunityCandidate({
+    event,
+    projectFits: [{ projectId: "GSE", fitScore: 80 }],
+    expectedAnnualNetValue: 1000,
+    timeToValueDays: 10,
+    implementationHours: 2,
+  });
+  assert.equal(candidate.status, "OBSERVED_PRIMARY");
+  assert.equal(candidate.verifiedChange, false);
 });
 
 test("unchanged snapshots emit no change events", () => {

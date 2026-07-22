@@ -25,11 +25,14 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 
 import { sha256 } from "./change-intelligence.mjs";
-import { acquireRunLease, runNovaCycle, writeOnceJson } from "./run-cycle.mjs";
+import { acquireRunLease, isPollableSource, parseArgs, runNovaCycle, writeOnceJson } from "./run-cycle.mjs";
 import {
   ALERT_SCHEMA_VERSION,
+  CAPABILITY_RESOLUTION_STATUSES,
   CHECKPOINT_SCHEMA_VERSION,
   CONVERGENCE_INVENTORY_CAPABILITY,
+  MIN_SOURCE_TIMEOUT_MS,
+  MIN_WORKER_TIMEOUT_MS,
   HISTORICAL_SOURCE_VALIDATION_DOCTRINE,
   PROMOTABLE_OUTCOMES,
   RECEIPT_SCHEMA_VERSION,
@@ -42,6 +45,7 @@ import {
   createCheckpointRecord,
   createLease,
   createRunRecord,
+  deriveWorkerTimeoutMs,
   effectiveLagMinutes,
   evaluateRedirectHop,
   failCloseRunRecord,
@@ -52,6 +56,7 @@ import {
   nextConsecutiveFailureCount,
   planResume,
   receiptFreshness,
+  resolveConvergenceInventoryCapability,
   salvageCheckpoints,
   shouldEmitFailureAlert,
   validateCheckpointRecord,
@@ -507,6 +512,237 @@ test("the convergence-inventory capability is consumed by npm script name only, 
   assert.equal(CONVERGENCE_INVENTORY_CAPABILITY.rebuiltInS3, false);
 });
 
+test("capability resolution is honest: declared scripts absent at run time -> DECLARED_NOT_RESOLVABLE_ON_THIS_BRANCH", () => {
+  // Case 1: both scripts exist -> resolvable.
+  const resolvable = resolveConvergenceInventoryCapability({
+    "nova:inventory": "node scripts/nova/inventory.mjs",
+    "nova:inventory:verify": "node scripts/nova/inventory.mjs --verify",
+  });
+  assert.equal(resolvable.status, "RESOLVABLE_AT_RUNTIME");
+  assert.deepEqual(resolvable.scriptPresence, { "nova:inventory": true, "nova:inventory:verify": true });
+
+  // Case 2: scripts missing (this branch) -> honestly not resolvable.
+  for (const scripts of [{}, null, undefined, { "nova:inventory": "node x.mjs" }, { "nova:inventory:verify": "" }]) {
+    const unresolved = resolveConvergenceInventoryCapability(scripts);
+    assert.equal(unresolved.status, "DECLARED_NOT_RESOLVABLE_ON_THIS_BRANCH", JSON.stringify(scripts));
+  }
+  // The status vocabulary is closed.
+  assert.deepEqual([...CAPABILITY_RESOLUTION_STATUSES], [
+    "RESOLVABLE_AT_RUNTIME",
+    "DECLARED_NOT_RESOLVABLE_ON_THIS_BRANCH",
+  ]);
+});
+
+// ---------------------------------------------------------------------------
+// Timeout floors — configuration errors, never insta-aborts
+// ---------------------------------------------------------------------------
+
+test("deriveWorkerTimeoutMs enforces the floor and rejects insta-abort configurations", () => {
+  assert.equal(MIN_SOURCE_TIMEOUT_MS, 2_000);
+  assert.equal(deriveWorkerTimeoutMs(2_000, 10_000), 1_000, "the minimum accepted source timeout derives exactly the worker floor");
+  assert.equal(deriveWorkerTimeoutMs(25_000, 10_000), 10_000, "the policy default caps the derived timeout");
+  assert.equal(deriveWorkerTimeoutMs(5_000, 60_000), 4_000);
+  // The exact defect: an accepted 1000ms source timeout used to derive 0ms.
+  assert.throws(() => deriveWorkerTimeoutMs(1_000, 10_000), /Configuration error/);
+  for (const bad of [0, -5, 1_999, null, undefined, "2000", 2_000.5]) {
+    assert.throws(() => deriveWorkerTimeoutMs(bad, 10_000), /Configuration error/, String(bad));
+  }
+  assert.ok(deriveWorkerTimeoutMs(2_000, 10_000) >= MIN_WORKER_TIMEOUT_MS);
+});
+
+test("parseArgs rejects --source-timeout-ms below the floor instead of silently substituting", () => {
+  assert.equal(parseArgs(["--source-timeout-ms", "2000"]).sourceTimeoutMs, 2_000);
+  for (const bad of ["1000", "0", "-1", "abc", "1999"]) {
+    assert.throws(() => parseArgs(["--source-timeout-ms", bad]), /Configuration error/, bad);
+  }
+});
+
+test("a cycle with an insta-abort timeout configuration fails as a configuration error before any run state", async (t) => {
+  const runtime = await makeRuntime([makeSource("alpha")]);
+  t.after(() => rm(runtime.dir, { recursive: true, force: true }));
+  await assert.rejects(
+    runNovaCycle(cycleArgs(runtime, { sourceTimeoutMs: 1_000 }), {
+      clock: steppingClock("2026-07-22T10:00:00.000Z"),
+      runWorkerImpl: async () => {
+        throw new Error("must never reach the worker");
+      },
+    }),
+    /Configuration error/,
+  );
+  await assert.rejects(stat(resolve(runtime.runtimeDir, "active-run.json")), "no run record is created");
+});
+
+// ---------------------------------------------------------------------------
+// Fail-closed source selection
+// ---------------------------------------------------------------------------
+
+test("parseArgs defaults fail closed: enabledOnly true, includeCandidates false, and the flags are exclusive", () => {
+  const defaults = parseArgs([]);
+  assert.equal(defaults.enabledOnly, true);
+  assert.equal(defaults.includeCandidates, false);
+  assert.equal(parseArgs(["--include-candidates"]).includeCandidates, true);
+  assert.equal(parseArgs(["--enabled-only"]).enabledOnly, true);
+  assert.throws(() => parseArgs(["--enabled-only", "--include-candidates"]), /mutually exclusive/);
+});
+
+test("isPollableSource: only enabled + live_validated by default; candidates need the owner gate; disabled/retired never", () => {
+  const closed = { includeCandidates: false };
+  const ownerGated = { includeCandidates: true };
+  const live = makeSource("live", { enabled: true, validationState: "live_validated" });
+  const candidate = makeSource("candidate");
+  const enabledCandidate = makeSource("bad", { enabled: true, validationState: "candidate" });
+  const disabled = makeSource("disabled", { validationState: "disabled" });
+  const retired = makeSource("retired", { validationState: "retired" });
+  const enabledDisabled = makeSource("worse", { enabled: true, validationState: "disabled" });
+
+  assert.equal(isPollableSource(live, closed), true);
+  assert.equal(isPollableSource(candidate, closed), false, "candidates are not pollable by default");
+  assert.equal(isPollableSource(enabledCandidate, closed), false, "enabled without live_validated is not pollable");
+  assert.equal(isPollableSource(candidate, ownerGated), true, "the owner gate admits candidates");
+  for (const args of [closed, ownerGated]) {
+    assert.equal(isPollableSource(disabled, args), false, "disabled is never pollable");
+    assert.equal(isPollableSource(retired, args), false, "retired is never pollable");
+    assert.equal(isPollableSource(enabledDisabled, args), false, "enabled cannot override disabled");
+  }
+});
+
+test("a default cycle polls nothing from a registry of candidates (fail closed)", async (t) => {
+  const runtime = await makeRuntime([makeSource("alpha"), makeSource("beta")]);
+  t.after(() => rm(runtime.dir, { recursive: true, force: true }));
+  const { runReceipt } = await runNovaCycle(cycleArgs(runtime, { includeCandidates: false }), {
+    clock: steppingClock("2026-07-22T10:00:00.000Z"),
+    runWorkerImpl: async () => {
+      throw new Error("the fail-closed default must not poll a candidate source");
+    },
+  });
+  assert.deepEqual(runReceipt.selectedSourceIds, []);
+  assert.deepEqual(runReceipt.sourceResults, []);
+});
+
+test("a default cycle polls an enabled live_validated source", async (t) => {
+  const runtime = await makeRuntime([
+    makeSource("live", { enabled: true, validationState: "live_validated" }),
+    makeSource("candidate"),
+  ]);
+  t.after(() => rm(runtime.dir, { recursive: true, force: true }));
+  const { runReceipt } = await runNovaCycle(cycleArgs(runtime, { includeCandidates: false }), {
+    clock: steppingClock("2026-07-22T10:00:00.000Z"),
+    runWorkerImpl: async (payload) => fetchedWorkerResult(payload.source, ["v1"], "2026-07-22T10:00:00.500Z"),
+  });
+  assert.deepEqual(runReceipt.sourceResults.map((result) => result.sourceId), ["live"]);
+});
+
+test("disabled and retired sources are never polled — not even owner-gated or explicitly requested", async (t) => {
+  const runtime = await makeRuntime([
+    makeSource("disabled", { validationState: "disabled" }),
+    makeSource("retired", { validationState: "retired" }),
+  ]);
+  t.after(() => rm(runtime.dir, { recursive: true, force: true }));
+  const { runReceipt } = await runNovaCycle(
+    cycleArgs(runtime, { includeCandidates: true, sourceIds: ["disabled", "retired"] }),
+    {
+      clock: steppingClock("2026-07-22T10:00:00.000Z"),
+      runWorkerImpl: async () => {
+        throw new Error("disabled/retired sources must never reach the worker");
+      },
+    },
+  );
+  assert.deepEqual(runReceipt.selectedSourceIds, []);
+  assert.deepEqual(runReceipt.sourceResults, []);
+});
+
+// ---------------------------------------------------------------------------
+// Byte budget charges every received byte
+// ---------------------------------------------------------------------------
+
+test("a failing oversized source depletes the byte budget even though nothing was promoted", async (t) => {
+  const runtime = await makeRuntime([makeSource("alpha"), makeSource("beta")]);
+  t.after(() => rm(runtime.dir, { recursive: true, force: true }));
+
+  const byteBudget = 4_096;
+  const polled = [];
+  const { runReceipt } = await runNovaCycle(cycleArgs(runtime, { byteBudget }), {
+    clock: steppingClock("2026-07-22T10:00:00.000Z"),
+    runWorkerImpl: async (payload) => {
+      polled.push(payload.source.id);
+      return { ...failedWorkerResult(payload.source, "2026-07-22T10:00:00.500Z"), receivedBytes: byteBudget };
+    },
+  });
+
+  assert.deepEqual(polled, ["alpha"], "the depleted budget stops the cycle before the second source");
+  assert.equal(runReceipt.sourceResults.length, 1);
+  assert.equal(runReceipt.sourceResults[0].outcome, "FAILED");
+  assert.equal(runReceipt.sourceResults[0].bytes, byteBudget, "FAILED bytes are charged");
+  assert.equal(runReceipt.bytesUsed, byteBudget);
+});
+
+test("HELD results also charge their received bytes against the budget", async (t) => {
+  const runtime = await makeRuntime([makeSource("alpha"), makeSource("beta")]);
+  t.after(() => rm(runtime.dir, { recursive: true, force: true }));
+
+  const byteBudget = 2_000;
+  const { runReceipt } = await runNovaCycle(cycleArgs(runtime, { byteBudget }), {
+    clock: steppingClock("2026-07-22T10:00:00.000Z"),
+    runWorkerImpl: async (payload) => ({
+      sourceId: payload.source.id,
+      outcome: "HELD",
+      holdReason: "received_bytes_exceed_ceiling",
+      receivedBytes: 1_500,
+      receipt: null,
+      error: "Response exceeded the byte ceiling.",
+    }),
+  });
+  assert.equal(runReceipt.sourceResults.length, 2, "1500 + 1500 crosses the 2000 budget after the second source");
+  assert.equal(runReceipt.bytesUsed, 3_000);
+  assert.ok(runReceipt.sourceResults.every((result) => result.bytes === 1_500));
+});
+
+// ---------------------------------------------------------------------------
+// Structural salvage exclusion (planResume wired into recovery)
+// ---------------------------------------------------------------------------
+
+test("a salvaged source is structurally excluded from the successor run even when its cadence makes it due again", async (t) => {
+  const sources = [makeSource("alpha"), makeSource("beta")];
+  const runtime = await makeRuntime(sources);
+  t.after(() => rm(runtime.dir, { recursive: true, force: true }));
+
+  await seedBaseline(runtime, sources, ["v1"]);
+
+  await assert.rejects(
+    runNovaCycle(cycleArgs(runtime), {
+      clock: steppingClock("2026-07-22T10:00:00.000Z"),
+      runWorkerImpl: async (payload) => fetchedWorkerResult(payload.source, ["v1", "v2"], "2026-07-22T10:00:00.500Z"),
+      onCheckpointWritten: (sourceId) => {
+        if (sourceId === "alpha") throw new Error("crash after alpha checkpoint");
+      },
+    }),
+    /crash after alpha checkpoint/,
+  );
+
+  // Successor starts THREE DAYS later: alpha's salvaged cadence (60 min)
+  // makes it look due again, so cadence alone would re-poll it. planResume
+  // must exclude it structurally.
+  const { runReceipt } = await runNovaCycle(cycleArgs(runtime), {
+    clock: steppingClock("2026-07-25T10:00:00.000Z"),
+    runWorkerImpl: async (payload) => fetchedWorkerResult(payload.source, ["v1", "v2"], "2026-07-25T10:00:00.500Z"),
+  });
+
+  assert.deepEqual(runReceipt.salvage.salvagedSourceIds, ["alpha"]);
+  assert.deepEqual(
+    runReceipt.sourceResults.map((result) => result.sourceId),
+    ["beta"],
+    "the salvaged source is excluded from the successor run regardless of cadence",
+  );
+  // No double count: alpha's v2 event appears exactly once across all logs.
+  const eventFiles = await readdir(resolve(runtime.runtimeDir, "events"));
+  const allEvents = [];
+  for (const name of eventFiles) {
+    allEvents.push(...(await readJsonl(resolve(runtime.runtimeDir, "events", name))));
+  }
+  const ids = allEvents.map((event) => event.id);
+  assert.equal(new Set(ids).size, ids.length, "no duplicate event ids across all logs");
+});
+
 // ---------------------------------------------------------------------------
 // Cycle integration: temp runtime dirs, fake workers, crash points
 // ---------------------------------------------------------------------------
@@ -561,6 +797,9 @@ async function makeRuntime(sources, policyOverrides = {}) {
   return { dir, registryPath, runtimeDir };
 }
 
+/** Test fixtures use candidate sources, so the fixture args opt in via the
+ * owner-gated include-candidates path; the fail-closed default itself is
+ * covered by dedicated tests below. */
 function cycleArgs({ registryPath, runtimeDir }, overrides = {}) {
   return {
     registryPath,
@@ -571,7 +810,8 @@ function cycleArgs({ registryPath, runtimeDir }, overrides = {}) {
     sourceTimeoutMs: 25_000,
     cycleTimeoutMs: 5 * 60_000,
     lockStaleMs: 30 * 60_000,
-    enabledOnly: false,
+    enabledOnly: true,
+    includeCandidates: true,
     dryRun: false,
     sourceIds: [],
     ...overrides,
@@ -670,7 +910,14 @@ test("a full cycle writes an append-only COMPLETED receipt, checkpoints, brief, 
   assert.equal(runReceipt.installAttempted, false);
   assert.equal(runReceipt.executeDiscoveredCodeAttempted, false);
   assert.equal(runReceipt.billableModelCalls, 0);
-  assert.deepEqual(runReceipt.convergenceInventoryCapability, CONVERGENCE_INVENTORY_CAPABILITY);
+  // Capability honesty: the receipt records the capability resolved against
+  // the ACTUAL package.json at run time, never the bare declaration.
+  const repoPackageJson = JSON.parse(await readFile(new URL("../../package.json", import.meta.url), "utf8"));
+  assert.deepEqual(
+    runReceipt.convergenceInventoryCapability,
+    resolveConvergenceInventoryCapability(repoPackageJson.scripts),
+  );
+  assert.ok(CAPABILITY_RESOLUTION_STATUSES.includes(runReceipt.convergenceInventoryCapability.status));
 
   // Artifacts on disk.
   const runOnDisk = await readJsonFile(resolve(runtime.runtimeDir, "runs", `${runReceipt.runId}.json`));
