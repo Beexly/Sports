@@ -8,7 +8,9 @@
 --
 -- Purely additive and idempotent: every statement is IF NOT EXISTS / guarded
 -- so it is byte-safe to (re)apply anytime — same hardening doctrine as
--- 20260722140000_add_ai_control_plane_ledger. Zero destructive statements.
+-- 20260722140000_add_ai_control_plane_ledger. Zero data-destructive
+-- statements (the tail's constraint drop+re-add pairs touch only constraint
+-- definitions, never rows, and re-validate all existing rows on re-add).
 --
 -- Enum-like columns are plain TEXT guarded by CHECK constraints, not native
 -- Postgres enums, mirroring the existing convention.
@@ -112,20 +114,29 @@ CREATE TABLE IF NOT EXISTS "ai_budget_reservations" (
     CONSTRAINT "ai_budget_reservations_version_check"
       CHECK ("reservationVersion" >= 1),
     -- §10.7: provisional/confirmed fields exist ONLY in the states that mean
-    -- them — a worst-case hold can never masquerade as a settled actual.
+    -- them — a worst-case hold can never masquerade as a settled actual —
+    -- AND a PROVISIONALLY_SETTLED row must CARRY its provisional amount (a
+    -- settled-without-an-amount row is unrepresentable, so window arithmetic
+    -- can never under-decrement provisional money). provisionalUsd MAY remain
+    -- on CONFIRMED_SETTLED (audit trail of the pre-reconciliation amount) but
+    -- is NOT required there: a row confirmed straight from
+    -- RECONCILIATION_HOLD never had one.
     CONSTRAINT "ai_budget_reservations_provisional_state_check"
-      CHECK ("provisionalUsd" IS NULL OR "state" IN ('PROVISIONALLY_SETTLED', 'CONFIRMED_SETTLED')),
+      CHECK (("provisionalUsd" IS NULL OR "state" IN ('PROVISIONALLY_SETTLED', 'CONFIRMED_SETTLED'))
+         AND ("state" <> 'PROVISIONALLY_SETTLED' OR "provisionalUsd" IS NOT NULL)),
     CONSTRAINT "ai_budget_reservations_confirmed_state_check"
       CHECK (("state" = 'CONFIRMED_SETTLED') = ("confirmedUsd" IS NOT NULL)),
     CONSTRAINT "ai_budget_reservations_confirmed_kind_check"
       CHECK (("confirmedUsd" IS NULL) = ("confirmedKind" IS NULL)),
     CONSTRAINT "ai_budget_reservations_confirmed_kind_enum_check"
       CHECK ("confirmedKind" IS NULL OR "confirmedKind" IN ('BILLED', 'CREDIT')),
-    -- §10.6: relational integrity. The window FK cascades (a window owns its
-    -- holds); the invocation FK RESTRICTs — financial evidence must never be
-    -- silently deleted out from under a hold.
+    -- §10.6: relational integrity. BOTH parents RESTRICT — financial evidence
+    -- must never be silently deleted out from under a hold, and that doctrine
+    -- covers the window side too: deleting an ai_budget_windows row must NOT
+    -- cascade away its RECONCILIATION_HOLD / CONFIRMED_SETTLED reservation
+    -- evidence. A window with any reservation history is undeletable.
     CONSTRAINT "ai_budget_reservations_windowId_fkey"
-      FOREIGN KEY ("windowId") REFERENCES "ai_budget_windows"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+      FOREIGN KEY ("windowId") REFERENCES "ai_budget_windows"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "ai_budget_reservations_invocationId_fkey"
       FOREIGN KEY ("invocationId") REFERENCES "ai_invocations"("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -142,3 +153,22 @@ CREATE INDEX IF NOT EXISTS "ai_budget_reservations_windowId_idx" ON "ai_budget_r
 
 -- CreateIndex: supports the sweepExpired scan (HELD past expiresAt).
 CREATE INDEX IF NOT EXISTS "ai_budget_reservations_state_expiresAt_idx" ON "ai_budget_reservations"("state", "expiresAt");
+
+-- ── Draft-lineage drift remediation (idempotent) ──
+-- A database that applied an EARLIER draft of this file may still carry
+--   (a) ON DELETE CASCADE on the window FK, and
+--   (b) the one-directional provisional-state CHECK.
+-- Re-issuing drop+add here aligns any such database with the constraints the
+-- CREATE TABLE above declares; on a fresh apply this is a semantic no-op.
+-- Both ADDs validate existing rows, so drift can never survive silently.
+ALTER TABLE "ai_budget_reservations"
+  DROP CONSTRAINT IF EXISTS "ai_budget_reservations_windowId_fkey";
+ALTER TABLE "ai_budget_reservations"
+  ADD CONSTRAINT "ai_budget_reservations_windowId_fkey"
+    FOREIGN KEY ("windowId") REFERENCES "ai_budget_windows"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ai_budget_reservations"
+  DROP CONSTRAINT IF EXISTS "ai_budget_reservations_provisional_state_check";
+ALTER TABLE "ai_budget_reservations"
+  ADD CONSTRAINT "ai_budget_reservations_provisional_state_check"
+    CHECK (("provisionalUsd" IS NULL OR "state" IN ('PROVISIONALLY_SETTLED', 'CONFIRMED_SETTLED'))
+       AND ("state" <> 'PROVISIONALLY_SETTLED' OR "provisionalUsd" IS NOT NULL));

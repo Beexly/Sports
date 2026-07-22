@@ -180,6 +180,43 @@ export const KNOWN_PRICING_VERSIONS: ReadonlySet<string> = new Set([
   CONTROL_PLANE_PRICING_VERSION,
 ]);
 
+/**
+ * Control-plane-owned per-attempt provider minimum charges (§10.4), keyed by
+ * provider route id, in USD. This registry — never a caller-supplied map — is
+ * what BOTH production call sites (the §9 pipeline's cash reservation and the
+ * executor's §10.8 credit reservation) feed into
+ * {@link estimateAttemptPlanWorstCaseUsd}, so a vendor-imposed per-request
+ * minimum recorded here immediately raises the reserved worst case
+ * everywhere. No route carries such a minimum under pricing version
+ * {@link CONTROL_PLANE_PRICING_VERSION}, so the map is empty — the WIRING is
+ * what this constant locks in, not invented numbers.
+ */
+export const CONTROL_PLANE_PROVIDER_MINIMUM_USD: Readonly<
+  Record<string, string>
+> = Object.freeze({});
+
+// ─── Token-priced provisional actual (§10.7) ──────────────────────────────────
+
+/** One successful attempt's REAL usage, as reported by the provider. */
+export interface AttemptUsage {
+  readonly providerUsed: string;
+  readonly modelResolved: string;
+  readonly inputTokens: number | null;
+  readonly outputTokens: number | null;
+}
+
+/**
+ * Prices ONE successful attempt's ACTUAL vendor cash from its real token
+ * usage (§10.7: the amount that provisionally settles must be the actual, not
+ * the worst-case cap). Returns an exact USD amount, or `null` when this
+ * pricer cannot price the attempt (unknown model, missing token counts) — the
+ * pipeline then falls back to the CONSERVATIVE per-attempt ceiling, which
+ * over-counts (never under-counts) and stays labeled provisional until
+ * reconciliation. The priced actual is NEVER truncated to the hold: a real
+ * charge above the hold flows into the §10.2 overage path (OVERAGE_LOCKED).
+ */
+export type AttemptActualPricer = (usage: AttemptUsage) => string | null;
+
 /** Input to {@link estimateAttemptPlanWorstCaseUsd}. */
 export interface AttemptPlanWorstCaseInput {
   /**
@@ -922,7 +959,15 @@ export async function confirmSettlement(
         );
       }
       if (row.state === "PROVISIONALLY_SETTLED") {
-        const provisional = row.provisionalUsd ?? "0";
+        if (row.provisionalUsd === null) {
+          // Unrepresentable under the biconditional DB CHECK — if it ever
+          // appears, refuse loudly rather than under-decrement window money.
+          invariantBreach(
+            "confirm",
+            `reservation "${row.id}" is PROVISIONALLY_SETTLED with NULL provisionalUsd`,
+          );
+        }
+        const provisional = row.provisionalUsd;
         const affected = await tx.$executeRawUnsafe(
           `UPDATE "ai_budget_windows"
               SET "provisionalUsd" = "provisionalUsd" - $1::numeric,

@@ -274,6 +274,58 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     );
   });
 
+  it("window FK is RESTRICT: deleting a window can NEVER cascade away reservation evidence", async () => {
+    await seedWindow("chk-fk-w", "5.000000");
+    await seedInvocation("inv-fk-w");
+    await pool.query(
+      `INSERT INTO "ai_budget_reservations"
+         ("id", "invocationId", "windowId", "reservationVersion",
+          "amountUsd", "state", "expiresAt")
+       VALUES ('chk-fk-r', 'inv-fk-w', 'chk-fk-w', 1, 0.100000, 'HELD', now())`,
+    );
+    await expect(
+      pool.query(`DELETE FROM "ai_budget_windows" WHERE "id" = 'chk-fk-w'`),
+    ).rejects.toThrow(/ai_budget_reservations_windowId_fkey/);
+    // The reservation row survived the attempted delete.
+    const survivors = await pool.query(
+      `SELECT "id" FROM "ai_budget_reservations" WHERE "windowId" = 'chk-fk-w'`,
+    );
+    expect(survivors.rowCount).toBe(1);
+    artifact["windowFkRestrict"] =
+      "DELETE of a window with reservations rejected by RESTRICT FK";
+    // Clean up the raw row (bypassed the engine; no window money backs it).
+    await pool.query(
+      `DELETE FROM "ai_budget_reservations" WHERE "windowId" = 'chk-fk-w'`,
+    );
+  });
+
+  it("provisional-state CHECK is biconditional: a settled-without-an-amount row is unrepresentable", async () => {
+    await seedWindow("chk-prov", "5.000000");
+    await seedInvocation("inv-prov");
+    // Direction 1: PROVISIONALLY_SETTLED MUST carry provisionalUsd.
+    await expect(
+      pool.query(
+        `INSERT INTO "ai_budget_reservations"
+           ("id", "invocationId", "windowId", "reservationVersion",
+            "amountUsd", "state", "provisionalUsd", "expiresAt")
+         VALUES ('chk-prov-r1', 'inv-prov', 'chk-prov', 1,
+                 0.100000, 'PROVISIONALLY_SETTLED', NULL, now())`,
+      ),
+    ).rejects.toThrow(/ai_budget_reservations_provisional_state_check/);
+    // Direction 2: a worst-case HELD row may NOT carry a provisional amount.
+    await expect(
+      pool.query(
+        `INSERT INTO "ai_budget_reservations"
+           ("id", "invocationId", "windowId", "reservationVersion",
+            "amountUsd", "state", "provisionalUsd", "expiresAt")
+         VALUES ('chk-prov-r2', 'inv-prov', 'chk-prov', 2,
+                 0.100000, 'HELD', 0.050000, now())`,
+      ),
+    ).rejects.toThrow(/ai_budget_reservations_provisional_state_check/);
+    artifact["provisionalStateCheckBiconditional"] =
+      "both directions rejected by CHECK constraint";
+  });
+
   // ── 2. §10.2 overage on real PG ────────────────────────────────────────────
 
   it("actual > hold preserves the charge over-cap, locks the window, blocks further reserves", async () => {

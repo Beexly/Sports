@@ -40,6 +40,8 @@ import {
   microsToUsd,
   toUsdString,
   CONTROL_PLANE_PRICING_VERSION,
+  CONTROL_PLANE_PROVIDER_MINIMUM_USD,
+  type AttemptActualPricer,
 } from "@/lib/ai-control-plane/budget";
 import {
   reserve,
@@ -989,6 +991,10 @@ function pipelineHarness(opts: {
   outcomes: DispatchOutcomeShape[];
   capUsd?: string;
   seedWindows?: boolean;
+  /** §10.7 token pricer wired into the budget seam (composition-root seam). */
+  priceActual?: AttemptActualPricer;
+  /** §10.4 provider minimums wired into the budget seam. */
+  providerMinimumUsd?: Readonly<Record<string, string | number>>;
 }) {
   const f = makeFakeBudgetDb();
   if (opts.seedWindows !== false) {
@@ -1076,6 +1082,12 @@ function pipelineHarness(opts: {
       incidents: async (i) => {
         incidents.push(i);
       },
+      ...(opts.priceActual !== undefined
+        ? { priceActual: opts.priceActual }
+        : {}),
+      ...(opts.providerMinimumUsd !== undefined
+        ? { providerMinimumUsd: opts.providerMinimumUsd }
+        : {}),
     },
   });
 
@@ -1257,6 +1269,103 @@ describe("§10 pipeline: reserve before dispatch, settle after", () => {
       }),
     );
     expect(h.f.state.reservations.size).toBe(0);
+  });
+
+  it("§10.7: a wired token pricer settles the REAL actual, not the ceiling", async () => {
+    const seen: Parameters<AttemptActualPricer>[0][] = [];
+    const h = pipelineHarness({
+      outcomes: [OK],
+      priceActual: (usage) => {
+        seen.push(usage);
+        return "0.012345";
+      },
+    });
+    const outcome = await h.dispatch(billablePlan());
+    expect(outcome.kind).toBe("COMPLETED");
+    // The pricer saw the attempt's REAL usage.
+    expect(seen).toEqual([
+      {
+        providerUsed: "anthropic-direct",
+        modelResolved: "test-model",
+        inputTokens: 10,
+        outputTokens: 10,
+      },
+    ]);
+    const w = h.f.state.windows.get("entity:GSE:daily:2026-07-22")!;
+    expect(w.reservedUsd).toBe(0n);
+    expect(w.provisionalUsd).toBe(usdToMicros("0.012345")); // token-priced
+    expect(h.incidents).toHaveLength(0);
+    const r = [...h.f.state.reservations.values()][0]!;
+    expect(r.state).toBe("PROVISIONALLY_SETTLED");
+  });
+
+  it("§10.2: a token-priced actual ABOVE the hold trips OVERAGE_LOCKED through the PRODUCTION pipeline", async () => {
+    const h = pipelineHarness({
+      outcomes: [OK],
+      priceActual: () => "0.250000", // hold is 0.10 (2 routes × 0.05)
+    });
+    const outcome = await h.dispatch(billablePlan());
+    // The paid success is never converted into an error by the overage.
+    expect(outcome.kind).toBe("COMPLETED");
+    const w = h.f.state.windows.get("entity:GSE:daily:2026-07-22")!;
+    expect(w.state).toBe("OVERAGE_LOCKED"); // circuit breaker
+    expect(w.provisionalUsd).toBe(usdToMicros("0.25")); // REAL charge preserved
+    expect(h.incidents).toHaveLength(1);
+    expect(h.incidents[0]!.kind).toBe("BUDGET_OVERAGE_LOCKED");
+  });
+
+  it("§10.7: a pricer that cannot price (null) falls back to the CONSERVATIVE ceiling", async () => {
+    const h = pipelineHarness({ outcomes: [OK], priceActual: () => null });
+    const outcome = await h.dispatch(billablePlan());
+    expect(outcome.kind).toBe("COMPLETED");
+    if (outcome.kind === "COMPLETED") {
+      expect(outcome.telemetryStatus).toBe("OK");
+    }
+    const w = h.f.state.windows.get("entity:GSE:daily:2026-07-22")!;
+    expect(w.provisionalUsd).toBe(usdToMicros("0.05")); // per-attempt ceiling
+  });
+
+  it("§10.7: a THROWING pricer degrades telemetry and settles the ceiling — never an error, never an under-count", async () => {
+    const h = pipelineHarness({
+      outcomes: [OK],
+      priceActual: () => {
+        throw new Error("pricing table unavailable");
+      },
+    });
+    const outcome = await h.dispatch(billablePlan());
+    expect(outcome.kind).toBe("COMPLETED");
+    if (outcome.kind === "COMPLETED") {
+      expect(outcome.telemetryStatus).toBe("DEGRADED");
+    }
+    const w = h.f.state.windows.get("entity:GSE:daily:2026-07-22")!;
+    expect(w.provisionalUsd).toBe(usdToMicros("0.05")); // conservative fallback
+  });
+
+  it("§10.4: provider per-attempt minimums RAISE the reserved worst case at the pipeline call site", async () => {
+    const h = pipelineHarness({
+      outcomes: [OK],
+      providerMinimumUsd: { "anthropic-direct": "0.300000" },
+    });
+    await h.dispatch(billablePlan());
+    const r = [...h.f.state.reservations.values()][0]!;
+    // max(0.05, 0.30) + 0.05 for the second billable route.
+    expect(r.amountUsd).toBe(usdToMicros("0.35"));
+  });
+
+  it("§10.4: the control-plane minimum registry is wired by DEFAULT and honestly empty (no invented prices)", () => {
+    expect(Object.isFrozen(CONTROL_PLANE_PROVIDER_MINIMUM_USD)).toBe(true);
+    expect(Object.keys(CONTROL_PLANE_PROVIDER_MINIMUM_USD)).toHaveLength(0);
+    // With the registry as-is, the estimate equals the plain per-route sum —
+    // the moment a real vendor minimum lands in the registry, both production
+    // call sites pick it up with no further wiring.
+    expect(
+      estimateAttemptPlanWorstCaseUsd({
+        routes: ["anthropic-direct", "bedrock"],
+        perAttemptCeilingUsd: "0.05",
+        pricingVersion: CONTROL_PLANE_PRICING_VERSION,
+        providerMinimumUsd: CONTROL_PLANE_PROVIDER_MINIMUM_USD,
+      }),
+    ).toBe("0.100000");
   });
 });
 
