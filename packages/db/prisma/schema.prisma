@@ -2739,3 +2739,63 @@ model AiTelemetryRecovery {
   @@index([invocationId])
   @@map("ai_telemetry_recovery")
 }
+
+// ============================================================
+// AI CONTROL PLANE — atomic budget reservations
+// (Phase 2 PR-C, blueprint §C)
+//
+// Additive, dormant budget primitives. A budget WINDOW is a named cap over
+// some scope dimension (a request, a day, a month, a surface, a provider
+// account, an entity). Every billable AI invocation RESERVES its worst-case
+// cost against one or more windows BEFORE dispatch, then SETTLES the actual
+// (releasing the held remainder) or RELEASES the whole hold on failure.
+//
+// The one invariant that makes concurrency safe lives in the DB, not the app:
+//   reservedUsd + settledUsd <= capUsd   is enforced by a single CONDITIONAL
+//   UPDATE (see apps/web/lib/ai-control-plane/budget.ts). Reservation is an
+//   atomic `UPDATE ... WHERE reservedUsd + settledUsd + amount <= capUsd`,
+//   never a read-then-write — so N concurrent reservers can never oversubscribe
+//   a cap (Postgres row locking + the WHERE guard admits exactly the set that
+//   fits). No call site uses these yet; this changes zero runtime behavior and
+//   NO cash mode is enabled anywhere.
+//
+// Enum-like columns are plain String with an inline value list guarded by a
+// CHECK constraint in the additive migration — the documented convention of
+// OddsLineSnapshot.phase / Watchlist.entityType / the PR-B AI ledger tables
+// (Postgres has no `CREATE TYPE ... IF NOT EXISTS`, so native enums are not
+// safely re-appliable in an IF-NOT-EXISTS additive migration).
+// ============================================================
+
+model AiBudgetWindow {
+  // Deterministic, human-readable id, e.g.
+  //   'monthly:2026-07:surface:pick-explainer' or 'daily:2026-07-22:entity:GSE'.
+  // The caller composes it so the SAME scope always maps to the SAME row.
+  id          String   @id
+  scopeKind   String // "REQUEST" | "DAILY" | "MONTHLY" | "SURFACE" | "PROVIDER_ACCOUNT" | "ENTITY"
+  capUsd      Decimal  @db.Decimal(12, 6)
+  reservedUsd Decimal  @default(0) @db.Decimal(12, 6) // sum of HELD worst-case holds
+  settledUsd  Decimal  @default(0) @db.Decimal(12, 6) // sum of confirmed actuals
+  updatedAt   DateTime @default(now())
+
+  reservations AiBudgetReservation[]
+
+  @@map("ai_budget_windows")
+}
+
+model AiBudgetReservation {
+  id           String    @id @default(cuid())
+  invocationId String // the AiInvocation this hold belongs to (not an FK: budgets may outlive/precede the ledger row)
+  windowId     String
+  amountUsd    Decimal   @db.Decimal(12, 6) // worst-case estimate HELD against the window
+  state        String // "HELD" | "SETTLED" | "RELEASED" | "EXPIRED"
+  settledUsd   Decimal?  @db.Decimal(12, 6) // confirmed actual, set only on SETTLED
+  createdAt    DateTime  @default(now())
+  expiresAt    DateTime // auto-release safety net (sweepExpired)
+
+  window AiBudgetWindow @relation(fields: [windowId], references: [id], onDelete: Cascade)
+
+  @@index([invocationId])
+  @@index([windowId])
+  @@index([state, expiresAt])
+  @@map("ai_budget_reservations")
+}
