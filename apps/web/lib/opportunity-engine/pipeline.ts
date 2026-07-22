@@ -29,10 +29,16 @@ export const DEFAULT_PORTFOLIO_POLICY: PortfolioPolicy = {
   maxConcurrentExperiments: 3,
 };
 
+/**
+ * Deterministic: the evaluation instant `now` is a mandatory parameter here
+ * and throughout the S1 evaluators (scoring/policy/portfolio/learning) —
+ * never a hidden clock read — matching the discipline of the credit modules,
+ * where the evaluation instant is always injected.
+ */
 export function evaluateOpportunity(
   candidate: OpportunityCandidate,
   assessEvidence: EvidenceAssessor,
-  now: Date = new Date(),
+  now: Date,
 ): OpportunityDecision {
   const evidence = assessEvidence(candidate, now);
   const held = findHardBlockers(candidate, evidence, now).length > 0;
@@ -119,7 +125,7 @@ export function buildOpportunityPortfolio(
   candidates: readonly OpportunityCandidate[],
   assessEvidence: EvidenceAssessor,
   policy: PortfolioPolicy = DEFAULT_PORTFOLIO_POLICY,
-  now: Date = new Date(),
+  now: Date,
 ): OpportunityPortfolio {
   if (!Number.isInteger(policy.maxConcurrentExperiments) || policy.maxConcurrentExperiments < 0) {
     throw new RangeError("maxConcurrentExperiments must be a non-negative integer.");

@@ -73,7 +73,7 @@ function groupBy(
 
 export function buildLearningReport(
   outcomes: readonly OpportunityOutcome[],
-  now: Date = new Date(),
+  now: Date,
 ): LearningReport {
   const byClassMap = groupBy(outcomes, (outcome) => [outcome.opportunityClass]);
   const bySourceMap = groupBy(outcomes, (outcome) => outcome.sourceIds);

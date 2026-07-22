@@ -70,7 +70,10 @@ function bandFor(score: number, held: boolean): PriorityBand {
 function expiryUrgencyBonus(candidate: OpportunityCandidate, now: Date): number {
   if (!candidate.expiresAt) return 0;
   const expires = Date.parse(candidate.expiresAt);
-  if (!Number.isFinite(expires)) return 0;
+  // Fail closed on ambiguity, matching findHardBlockers in policy.ts and
+  // isCreditGrantSnapshotExpired in credit-snapshot.ts: a present-but-
+  // unparsable expiry reads as already expired, never as "no expiry".
+  if (!Number.isFinite(expires)) return -25;
   const days = (expires - now.getTime()) / (24 * 60 * 60 * 1000);
   if (days < 0) return -25;
   if (days <= 3) return 8;
@@ -83,7 +86,7 @@ export function scoreOpportunity(
   candidate: OpportunityCandidate,
   evidence: EvidenceAssessment,
   held: boolean,
-  now: Date = new Date(),
+  now: Date,
 ): OpportunityScore {
   const positiveBase = weightedScore<keyof OpportunitySignals>(candidate.signals, POSITIVE_WEIGHTS);
   const riskScore = weightedScore<keyof OpportunityRisks>(candidate.risks, RISK_WEIGHTS);

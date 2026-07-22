@@ -228,6 +228,31 @@ describe("NOVA opportunity policy", () => {
     );
   });
 
+  it("rejects an opportunity whose expiry has passed", () => {
+    const decision = evaluateOpportunity(
+      candidateFixture({ expiresAt: "2026-07-20T12:00:00.000Z" }),
+      assessFixtureEvidence,
+      NOW,
+    );
+    expect(decision.policy.disposition).toBe("REJECT");
+    expect(decision.policy.blockedReasons.join(" ")).toMatch(/has expired/i);
+    expect(decision.score.priorityBand).toBe("HELD");
+  });
+
+  it("fails closed on a present-but-unparsable expiry timestamp", () => {
+    // Same rule as isCreditGrantSnapshotExpired: unparsable expiry reads as
+    // expired, never as "no expiry" — corrupt data must not widen access.
+    const decision = evaluateOpportunity(
+      candidateFixture({ expiresAt: "not-a-timestamp" }),
+      assessFixtureEvidence,
+      NOW,
+    );
+    expect(decision.policy.disposition).toBe("REJECT");
+    expect(decision.policy.blockedReasons.join(" ")).toMatch(/unparsable.*expired/i);
+    expect(decision.score.priorityBand).toBe("HELD");
+    expect(decision.score.reasons.join(" ")).toMatch(/appears expired/i);
+  });
+
   it("preserves a direct-revenue and a cost experiment when capacity is scarce", () => {
     const direct = candidateFixture({
       id: "direct",

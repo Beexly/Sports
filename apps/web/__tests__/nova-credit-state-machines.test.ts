@@ -9,11 +9,13 @@ import {
   assertCreditApplicationStateTransition,
   assertCreditBalanceStateTransition,
   assertCreditProgramStateTransition,
+  assertMoneyStateTransition,
   canTransitionCreditAllocationState,
   canTransitionCreditApplicationState,
   canTransitionCreditBalanceState,
   canTransitionCreditGrantState,
   canTransitionCreditProgramState,
+  canTransitionMoneyState,
   creditAllocationStateToMoneyState,
   creditApplicationStateToMoneyState,
   creditBalanceStateToMoneyState,
@@ -34,8 +36,15 @@ import {
 } from "@/lib/opportunity-engine";
 
 /**
- * Every expected matrix below is RESTATED literally from the S1 spec
- * (directive §11.1) rather than imported from the module under test, so a
+ * PROVENANCE. Directive §11.1 supplies the five credit vocabulary NAMES and
+ * minimum state LISTS for the application/grant/allocation machines only; it
+ * specifies no transition matrices, and no states at all for the
+ * program/balance machines. The state lists asserted below therefore carry
+ * spec authority where §11.1 defines them, while every transition EDGE (e.g.
+ * closed -> open reopening, frozen semantics, applied_confirmed -> disputed,
+ * released as the sole allocation terminal) is this unit's own design
+ * decision, documented in credit.ts. Each expected matrix is typed out here
+ * independently rather than imported from the module under test, so a
  * drifting transition map fails these tests instead of silently re-deriving
  * them. Shared machine rules: self-transition (idempotent restatement)
  * allowed on non-terminal states only; a terminal state is absorbing.
@@ -77,6 +86,48 @@ const ALL_MONEY_STATES: readonly MoneyState[] = [
 
 /** Absorbing `MoneyState`s (see `canTransitionMoneyState` in lifecycle.ts). */
 const TERMINAL_MONEY_STATES: ReadonlySet<MoneyState> = new Set(["paid", "expired", "rejected"]);
+
+describe("MoneyState machine — exhaustive matrix (lifecycle.ts)", () => {
+  // Forward-only, no skipping: each non-terminal state may advance one step
+  // along MONEY_STATE_ORDER or fall to rejected/expired; paid, rejected, and
+  // expired are absorbing terminals with no outgoing edges at all.
+  const EXPECTED: Readonly<Record<MoneyState, readonly MoneyState[]>> = {
+    not_applicable: ["hypothetical", "rejected", "expired"],
+    hypothetical: ["discovered", "rejected", "expired"],
+    discovered: ["eligibility_unverified", "rejected", "expired"],
+    eligibility_unverified: ["eligible", "rejected", "expired"],
+    eligible: ["applied", "rejected", "expired"],
+    applied: ["approved", "rejected", "expired"],
+    approved: ["activated", "rejected", "expired"],
+    activated: ["earned", "rejected", "expired"],
+    earned: ["invoiced", "rejected", "expired"],
+    invoiced: ["paid", "rejected", "expired"],
+    paid: [],
+    rejected: [],
+    expired: [],
+  };
+
+  it("matches the exact transition matrix", () => {
+    checkExactMatrix(ALL_MONEY_STATES, EXPECTED, [...TERMINAL_MONEY_STATES], canTransitionMoneyState);
+  });
+
+  it("keeps terminal states absorbing — a terminal cause can never be rewritten", () => {
+    expect(canTransitionMoneyState("rejected", "expired")).toBe(false);
+    expect(canTransitionMoneyState("expired", "rejected")).toBe(false);
+    expect(canTransitionMoneyState("rejected", "rejected")).toBe(false);
+    expect(canTransitionMoneyState("expired", "expired")).toBe(false);
+    expect(canTransitionMoneyState("paid", "paid")).toBe(false);
+    expect(canTransitionMoneyState("paid", "rejected")).toBe(false);
+    expect(canTransitionMoneyState("paid", "expired")).toBe(false);
+  });
+
+  it("throws a descriptive error on invalid transitions and passes on valid ones", () => {
+    expect(() => assertMoneyStateTransition("rejected", "expired")).toThrow(
+      /invalid money-state transition: rejected -> expired/i,
+    );
+    expect(() => assertMoneyStateTransition("invoiced", "paid")).not.toThrow();
+  });
+});
 
 describe("NOVA credit-program state machine (directive §11.1)", () => {
   const EXPECTED: Readonly<Record<CreditProgramState, readonly CreditProgramState[]>> = {

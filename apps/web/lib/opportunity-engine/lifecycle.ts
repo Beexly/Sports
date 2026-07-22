@@ -46,8 +46,12 @@ export function assertLifecycleTransition(
 }
 
 export function canTransitionMoneyState(from: MoneyState, to: MoneyState): boolean {
-  if (to === "rejected" || to === "expired") return from !== "paid";
+  // Terminal states absorb FIRST: paid/rejected/expired allow no further
+  // transition at all — no self-restatement and no rewriting one terminal
+  // cause into another (e.g. rejected -> expired). This check must precede
+  // the to-terminal rule below, or terminal causes become cross-writable.
   if (from === "rejected" || from === "expired" || from === "paid") return false;
+  if (to === "rejected" || to === "expired") return true;
   if (from === to) return true;
   const fromIndex = MONEY_STATE_ORDER.indexOf(from);
   const toIndex = MONEY_STATE_ORDER.indexOf(to);

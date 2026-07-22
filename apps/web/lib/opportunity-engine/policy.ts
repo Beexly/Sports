@@ -25,7 +25,7 @@ function uniqueReviewers(reviewers: readonly CouncilReviewer[]): readonly Counci
 export function findHardBlockers(
   candidate: OpportunityCandidate,
   evidence: EvidenceAssessment,
-  now: Date = new Date(),
+  now: Date,
 ): readonly string[] {
   const blocked: string[] = [];
 
@@ -55,7 +55,14 @@ export function findHardBlockers(
   }
   if (candidate.expiresAt) {
     const expiry = Date.parse(candidate.expiresAt);
-    if (Number.isFinite(expiry) && expiry < now.getTime()) blocked.push("Opportunity has expired.");
+    if (!Number.isFinite(expiry)) {
+      // Fail closed on ambiguity, matching isCreditGrantSnapshotExpired in
+      // credit-snapshot.ts: a present-but-unparsable expiry reads as expired,
+      // never as "no expiry".
+      blocked.push("Opportunity expiry timestamp is unparsable; treated as expired.");
+    } else if (expiry < now.getTime()) {
+      blocked.push("Opportunity has expired.");
+    }
   }
   return blocked;
 }
@@ -153,7 +160,7 @@ export function decidePolicy(
   candidate: OpportunityCandidate,
   evidence: EvidenceAssessment,
   score: OpportunityScore,
-  now: Date = new Date(),
+  now: Date,
 ): OpportunityPolicyDecision {
   const blockedReasons = findHardBlockers(candidate, evidence, now);
   return {
