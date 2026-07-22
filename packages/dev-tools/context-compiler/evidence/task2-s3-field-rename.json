@@ -1,0 +1,127 @@
+{
+  "acceptanceConditions": [
+    {
+      "checkCommand": "npx tsc --noEmit -p apps/web/tsconfig.json",
+      "statement": "\"apps/web/lib/opportunity-engine/evidence.ts\" type-checks with no new errors at the compiled sha's tsconfig."
+    },
+    {
+      "statement": "The objective's change ships with a passing, non-trivial automated test covering the fixed behavior."
+    }
+  ],
+  "contentHash": "5561d157666d0009d169a85d78dd159ea88cd11f8fea5cf627a242b89ab5386b",
+  "dependencyEdges": [
+    {
+      "from": "apps/web/lib/opportunity-engine/evidence.ts",
+      "kind": "imports",
+      "to": "apps/web/lib/opportunity-engine/types.ts"
+    }
+  ],
+  "forbiddenActions": [
+    {
+      "source": "compiler-derived: scope fence over targetFiles",
+      "statement": "Do not modify files outside {apps/web/lib/opportunity-engine/evidence.ts} and their captured dependency edges without recompiling this pack to expand scope."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "No fake or fabricated data/stats anywhere in the change."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "Authorization/entitlement enforcement must be server-side only, never a frontend-only gate."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "No secrets committed to code; environment variables only."
+    },
+    {
+      "source": "lab charter: additive-only lab work constraints governing this compile run",
+      "statement": "No destructive git operations (force-push, reset --hard on shared branches) and no `prisma migrate deploy` against a non-disposable database."
+    }
+  ],
+  "knownCollisions": [],
+  "objective": "Rebase S3's isMoneyBearing() onto S1's renamed scenarioAvailableCreditsUsd field (was availableCredits) in opportunity-engine evidence code",
+  "priorDecisionsAndFailures": [
+    {
+      "category": "failure",
+      "date": "2026-07-22T07:02:55+00:00",
+      "sha": "228f04f680a5d2d105facdd6c7e3013df4d881be",
+      "subject": "fix(nova): rebase S3 onto S1's renamed scenarioAvailableCreditsUsd field",
+      "touchedFiles": [
+        "apps/web/lib/opportunity-engine/evidence.ts"
+      ]
+    },
+    {
+      "category": "decision",
+      "date": "2026-07-22T05:00:41+00:00",
+      "sha": "43c09d09e2a32099f037d885fec2aeb08064b868",
+      "subject": "feat(nova): S3 — source registry/runtime with failed-closed evidence receipts",
+      "touchedFiles": [
+        "apps/web/lib/opportunity-engine/evidence.ts"
+      ]
+    }
+  ],
+  "relevantPrHeads": [],
+  "relevantSymbols": [
+    {
+      "contentSha256": "31bc074d026591df3d6187a344784ed3bee1a21ad2b603f208e9a253d670743c",
+      "endLine": 36,
+      "exported": false,
+      "file": "apps/web/lib/opportunity-engine/evidence.ts",
+      "kind": "const",
+      "startLine": 31,
+      "symbolName": "PRIMARY_TIERS"
+    },
+    {
+      "contentSha256": "67250e3c6274c6a5fa4934204d141b38f1c3141decf2e25b5297329e19fe3303",
+      "endLine": 29,
+      "exported": false,
+      "file": "apps/web/lib/opportunity-engine/evidence.ts",
+      "kind": "const",
+      "startLine": 21,
+      "symbolName": "TIER_WEIGHT"
+    },
+    {
+      "contentSha256": "e009f90867857bb4ba4f656b7561ebba5459d8359fc5f568fa12b7268cdb9d92",
+      "endLine": 112,
+      "exported": true,
+      "file": "apps/web/lib/opportunity-engine/evidence.ts",
+      "kind": "function",
+      "startLine": 61,
+      "symbolName": "assessEvidence"
+    },
+    {
+      "contentSha256": "1817b9e5ae88a3f1021f48643d79465925276fbb386000687c0132eb3da732e6",
+      "endLine": 52,
+      "exported": false,
+      "file": "apps/web/lib/opportunity-engine/evidence.ts",
+      "kind": "function",
+      "startLine": 44,
+      "symbolName": "isMoneyBearing"
+    },
+    {
+      "contentSha256": "5c2ec690a2d54d37db7e0f2550c6eaa56c9cabe3ee3fd68d55aa51fd3eeaa8a7",
+      "endLine": 59,
+      "exported": false,
+      "file": "apps/web/lib/opportunity-engine/evidence.ts",
+      "kind": "function",
+      "startLine": 54,
+      "symbolName": "isMoneyEvidence"
+    },
+    {
+      "contentSha256": "e86f139bc479c6296c0b8d3563af559693b7f21633a7f67e43ed07301ad4304b",
+      "endLine": 42,
+      "exported": false,
+      "file": "apps/web/lib/opportunity-engine/evidence.ts",
+      "kind": "function",
+      "startLine": 38,
+      "symbolName": "parseTime"
+    }
+  ],
+  "relevantTests": [],
+  "repoHead": {
+    "branch": "228f04f6",
+    "remote": "http://local_proxy@127.0.0.1:41729/git/beexly/sports",
+    "sha": "228f04f680a5d2d105facdd6c7e3013df4d881be"
+  },
+  "schemaVersion": "0.1.0"
+}
