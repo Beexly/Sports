@@ -67,6 +67,11 @@ export function assertMoneyStateTransition(from: MoneyState, to: MoneyState): vo
  * Credit-grant sub-state machine (freeze §5.2). Mirrors the `MoneyState`
  * pattern: forward-only consumption with no state skipping, terminal states
  * absorbing, and `expired`/`revoked` reachable from any non-terminal state.
+ *
+ * The sibling credit machines (program/application/balance/allocation) and
+ * the explicit `CreditGrantState -> MoneyState` ceiling adapter live in
+ * `credit.ts` (directive §11.1); the receipted `CreditGrantSnapshot`
+ * contract lives in `credit-snapshot.ts` (§11.2).
  */
 const CREDIT_GRANT_CONSUMPTION_ORDER: readonly CreditGrantState[] = [
   "approved",

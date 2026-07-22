@@ -113,6 +113,99 @@ export type CreditGrantState =
   | "expired"
   | "revoked";
 
+/**
+ * Lifecycle of a credit PROGRAM itself (e.g. a cloud provider's startup-credit
+ * program), independent of any application NOVA files against it (directive
+ * §11.1). A program being `open` never implies money: the money-state ceiling
+ * for every program state is at most `"discovered"` — see
+ * `creditProgramStateToMoneyState()` in `credit.ts`.
+ *
+ * - `announced`: published by the provider but not yet accepting applications.
+ * - `open`: accepting applications.
+ * - `suspended`: temporarily not accepting applications (reversible).
+ * - `closed`: current application window closed; may reopen (`closed -> open`).
+ * - `discontinued`: terminated by the provider — terminal and absorbing.
+ */
+export type CreditProgramState =
+  | "announced"
+  | "open"
+  | "suspended"
+  | "closed"
+  | "discontinued";
+
+/**
+ * Lifecycle of ONE application NOVA files against a credit program (directive
+ * §11.1). Deliberately reuses `MoneyState` words where the meaning is
+ * identical, but the two are NOT interchangeable: this machine ends at
+ * `approved` (a success terminal that hands off to `CreditGrantState`),
+ * while `MoneyState` continues into activation/earning/invoicing/payment.
+ * The explicit adapter is `creditApplicationStateToMoneyState()` in
+ * `credit.ts`.
+ *
+ * Forward chain (one step at a time, no skipping proof-bearing states):
+ * `discovered -> eligibility_unverified -> eligible -> applied -> approved`.
+ * `rejected`/`expired` are terminal and reachable from any non-terminal state.
+ */
+export type CreditApplicationState =
+  | "discovered"
+  | "eligibility_unverified"
+  | "eligible"
+  | "applied"
+  | "approved"
+  | "rejected"
+  | "expired";
+
+/**
+ * Observed provider-side balance record of ONE awarded grant (directive
+ * §11.1). Distinct from `CreditGrantState` (NOVA's own consumption ledger
+ * view): the balance machine models the provider's operational posture,
+ * including the reversible `frozen` hold that `CreditGrantState` and
+ * `MoneyState` deliberately cannot represent. Adapter:
+ * `creditBalanceStateToMoneyState()` in `credit.ts`.
+ *
+ * - `provisioned`: balance record exists; credits not yet usable.
+ * - `active`: credits usable.
+ * - `frozen`: provider hold — reversible back to `active`.
+ * - `depleted`: balance reached zero — terminal.
+ * - `expired`: validity window passed — terminal.
+ * - `revoked`: provider withdrew the balance — terminal.
+ */
+export type CreditBalanceState =
+  | "provisioned"
+  | "active"
+  | "frozen"
+  | "depleted"
+  | "expired"
+  | "revoked";
+
+/**
+ * Lifecycle of ONE earmarked slice of a grant's balance (directive §11.1) —
+ * the reservation vocabulary PR-D's admission/reservation port consumes.
+ * `MoneyState` cannot represent reservation semantics at all, which is one
+ * reason the vocabularies are not interchangeable; adapter:
+ * `creditAllocationStateToMoneyState()` in `credit.ts`.
+ *
+ * "No atomic reservation, no activation" (directive §11.2) is encoded in the
+ * transition map: an allocation can never reach `provisional` (usage
+ * observed) without first passing through `reserved`.
+ *
+ * - `available`: earmark exists; not yet reserved.
+ * - `reserved`: atomically reserved for a workload.
+ * - `provisional`: usage occurred; provider confirmation pending.
+ * - `applied_confirmed`: provider confirmed the credit applied. Absorbing
+ *   except for `disputed` (post-confirmation reconciliation mismatch).
+ * - `released`: slice returned to the pool without (net) consumption —
+ *   terminal.
+ * - `disputed`: local/provider mismatch under reconciliation (reversible).
+ */
+export type CreditAllocationState =
+  | "available"
+  | "reserved"
+  | "provisional"
+  | "applied_confirmed"
+  | "released"
+  | "disputed";
+
 export type OpportunityLifecycleState =
   | "observed"
   | "verified"

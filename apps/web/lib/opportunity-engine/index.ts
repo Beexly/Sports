@@ -9,6 +9,8 @@
  */
 export * from "./types";
 export * from "./lifecycle";
+export * from "./credit";
+export * from "./credit-snapshot";
 export * from "./scoring";
 export * from "./policy";
 export * from "./pipeline";
