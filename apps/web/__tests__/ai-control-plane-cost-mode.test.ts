@@ -1,4 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+// `@/lib/auth/actor` (the TrustedActor constructors) imports the NextAuth
+// module for session resolution; mock it so importing serviceActor stays pure.
+vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
 import {
   resolveEnvClass,
   resolveCostMode,
@@ -23,7 +27,8 @@ import {
   isAiControlPlaneError,
   type AiErrorCode,
 } from "@/lib/ai-control-plane/errors";
-import { executeAiTask } from "@/lib/ai-control-plane/contracts";
+import { executeAiTask } from "@/lib/ai-control-plane";
+import { serviceActor } from "@/lib/auth/actor";
 
 /**
  * Phase 2 PR-A — fail-closed cost-mode resolver + contracts + typed errors.
@@ -196,16 +201,42 @@ describe("resolveCostMode — legacy aliases map to canonical", () => {
 });
 
 describe("resolveCostMode — EMERGENCY_RELIABILITY", () => {
-  it("valid: mode + future until + reason → EMERGENCY_RELIABILITY", () => {
+  // §8.6: env vars may only REFERENCE a durable owner-decision receipt.
+  const OVERRIDE_ID = "ovr-2026-07-22-primary-outage";
+
+  it("valid: mode + future until + reason + override-id reference → EMERGENCY_RELIABILITY", () => {
     expect(
       resolveCostMode({
         envClass: "production",
         rawMode: "EMERGENCY_RELIABILITY",
         emergencyUntil: FUTURE,
         emergencyReason: "primary provider outage",
+        emergencyOverrideId: OVERRIDE_ID,
         now: NOW,
       }),
     ).toBe("EMERGENCY_RELIABILITY");
+  });
+
+  it("missing override-id reference → ConfigurationError (env cannot create authority)", () => {
+    expect(() =>
+      resolveCostMode({
+        envClass: "production",
+        rawMode: "EMERGENCY_RELIABILITY",
+        emergencyUntil: FUTURE,
+        emergencyReason: "outage",
+        now: NOW,
+      }),
+    ).toThrow(ConfigurationError);
+    expect(() =>
+      resolveCostMode({
+        envClass: "production",
+        rawMode: "EMERGENCY_RELIABILITY",
+        emergencyUntil: FUTURE,
+        emergencyReason: "outage",
+        emergencyOverrideId: "   ",
+        now: NOW,
+      }),
+    ).toThrow(/EMERGENCY_OVERRIDE_ID/);
   });
 
   it("expired until → ConfigurationError", () => {
@@ -215,6 +246,7 @@ describe("resolveCostMode — EMERGENCY_RELIABILITY", () => {
         rawMode: "EMERGENCY_RELIABILITY",
         emergencyUntil: PAST,
         emergencyReason: "outage",
+        emergencyOverrideId: OVERRIDE_ID,
         now: NOW,
       }),
     ).toThrow(ConfigurationError);
@@ -227,6 +259,7 @@ describe("resolveCostMode — EMERGENCY_RELIABILITY", () => {
         rawMode: "EMERGENCY_RELIABILITY",
         emergencyUntil: NOW.toISOString(),
         emergencyReason: "outage",
+        emergencyOverrideId: OVERRIDE_ID,
         now: NOW,
       }),
     ).toThrow(ConfigurationError);
@@ -258,6 +291,7 @@ describe("resolveCostMode — EMERGENCY_RELIABILITY", () => {
         envClass: "production",
         rawMode: "EMERGENCY_RELIABILITY",
         emergencyReason: "outage",
+        emergencyOverrideId: OVERRIDE_ID,
         now: NOW,
       }),
     ).toThrow(ConfigurationError);
@@ -270,6 +304,7 @@ describe("resolveCostMode — EMERGENCY_RELIABILITY", () => {
         rawMode: "EMERGENCY_RELIABILITY",
         emergencyUntil: "not-a-date",
         emergencyReason: "outage",
+        emergencyOverrideId: OVERRIDE_ID,
         now: NOW,
       }),
     ).toThrow(ConfigurationError);
@@ -424,10 +459,24 @@ describe("typed errors — code + retriable flags", () => {
   });
 });
 
-describe("executeAiTask — deferred to PR B (typed stub throws)", () => {
-  it("throws not-implemented", () => {
-    // Cast: the stub never inspects the argument. It throws synchronously today
-    // (PR B replaces the body with real async dispatch).
-    expect(() => executeAiTask({} as never)).toThrow(/not implemented/);
+describe("executeAiTask — sealed production entry point fails closed pre-transport", () => {
+  it("a fully valid request still fails closed before any provider call", async () => {
+    // The public entry point takes NO dependency parameters (§8.2). In this
+    // test env the sealed singleton resolves envClass=test → mode
+    // NO_BILLABLE_EXTERNAL, under which the policy has no fundable ("local")
+    // route — the executor refuses to dispatch (PolicyBlocked) BEFORE the
+    // sealed dispatch seam (which itself throws until the stacked
+    // invocation/attempt PR wires transport). No billable call can possibly
+    // occur through this surface today.
+    const actor = serviceActor({ subjectId: "service:test-harness" });
+    await expect(
+      executeAiTask({
+        taskClass: "brief.daily-summary",
+        requestId: "req-cost-mode-seal-check-001",
+        actor,
+        entity: "GSE",
+        input: { date: "2026-07-22" },
+      }),
+    ).rejects.toThrow(/no fundable provider route/);
   });
 });

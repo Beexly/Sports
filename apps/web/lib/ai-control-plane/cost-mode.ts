@@ -6,9 +6,11 @@
  * ConfigurationError that fails the deploy — the system can never silently
  * become cash-capable.
  *
- * This module is PURE and additive. It reads plain env-shaped inputs, takes an
- * injected `now`, and throws typed ConfigurationError. Nothing imports it at
- * runtime yet (PR A ships it; later PRs wire it).
+ * This module is PURE. It reads plain env-shaped inputs, takes an injected
+ * `now`, and throws typed ConfigurationError. The SEALED executor
+ * (executor.ts) is its production consumer; the env-taking functions here are
+ * exported to tests/tooling via internal.ts only — index.ts deliberately does
+ * not re-export them (directive §8.2).
  */
 
 import { ConfigurationError } from "./errors";
@@ -84,6 +86,15 @@ export interface EnvLike {
   readonly AI_ENV_CLASS?: string;
   readonly VERCEL_ENV?: string;
   readonly NODE_ENV?: string;
+  readonly LLM_COST_MODE?: string;
+  readonly EMERGENCY_RELIABILITY_UNTIL?: string;
+  readonly EMERGENCY_REASON?: string;
+  /**
+   * REFERENCE to a durable owner-decision receipt (§8.6). The env var may only
+   * name an override id — it can never create one. The executor verifies the
+   * referenced receipt against the sealed EmergencyReceiptStore.
+   */
+  readonly EMERGENCY_OVERRIDE_ID?: string;
 }
 
 const VALID_ENV_CLASSES: ReadonlySet<string> = new Set<AiEnvClass>([
@@ -147,6 +158,14 @@ export interface ResolveCostModeInput {
   readonly emergencyUntil?: string;
   /** Non-empty reason string required for EMERGENCY_RELIABILITY. */
   readonly emergencyReason?: string;
+  /**
+   * Non-empty durable owner-decision receipt REFERENCE required for
+   * EMERGENCY_RELIABILITY (§8.6). Resolution here only checks the reference is
+   * present; the executor must additionally verify the receipt itself
+   * (existence, expiry, revocation, scope) via the sealed receipt store before
+   * any authority is honored.
+   */
+  readonly emergencyOverrideId?: string;
   /** Injected clock — NEVER Date.now() inline, so resolution is deterministic. */
   readonly now: Date;
 }
@@ -164,12 +183,22 @@ export interface ResolveCostModeInput {
  *   | test        | NO_BILLABLE_EXTERNAL    | ConfigurationError  |
  *
  * A recognized mode is returned as-is, EXCEPT EMERGENCY_RELIABILITY which
- * additionally requires a non-expired `emergencyUntil` AND a non-empty
- * `emergencyReason`; missing/expired either → ConfigurationError. This mode can
- * never be produced from a bare env var.
+ * additionally requires a non-expired `emergencyUntil`, a non-empty
+ * `emergencyReason`, AND a non-empty `emergencyOverrideId` referencing a
+ * durable owner-decision receipt (§8.6); any of them missing/expired →
+ * ConfigurationError. This mode can never be produced from a bare env var,
+ * and even a well-formed reference grants nothing until the executor verifies
+ * the receipt against the sealed store.
  */
 export function resolveCostMode(input: ResolveCostModeInput): CostMode {
-  const { envClass, rawMode, emergencyUntil, emergencyReason, now } = input;
+  const {
+    envClass,
+    rawMode,
+    emergencyUntil,
+    emergencyReason,
+    emergencyOverrideId,
+    now,
+  } = input;
   const raw = rawMode?.trim();
 
   // Unset mode.
@@ -196,7 +225,13 @@ export function resolveCostMode(input: ResolveCostModeInput): CostMode {
   }
 
   if (normalized === "EMERGENCY_RELIABILITY") {
-    return resolveEmergency({ raw, emergencyUntil, emergencyReason, now });
+    return resolveEmergency({
+      raw,
+      emergencyUntil,
+      emergencyReason,
+      emergencyOverrideId,
+      now,
+    });
   }
 
   return normalized;
@@ -206,14 +241,24 @@ function resolveEmergency(args: {
   readonly raw: string;
   readonly emergencyUntil?: string;
   readonly emergencyReason?: string;
+  readonly emergencyOverrideId?: string;
   readonly now: Date;
 }): CostMode {
-  const { emergencyUntil, emergencyReason, now } = args;
+  const { emergencyUntil, emergencyReason, emergencyOverrideId, now } = args;
 
   const reason = emergencyReason?.trim();
   if (reason === undefined || reason === "") {
     throw new ConfigurationError(
       "EMERGENCY_RELIABILITY requires a non-empty EMERGENCY_REASON.",
+    );
+  }
+
+  const overrideId = emergencyOverrideId?.trim();
+  if (overrideId === undefined || overrideId === "") {
+    throw new ConfigurationError(
+      "EMERGENCY_RELIABILITY requires EMERGENCY_OVERRIDE_ID referencing a " +
+        "durable owner-decision receipt (§8.6); environment variables may " +
+        "only reference an approved override, never create one.",
     );
   }
 

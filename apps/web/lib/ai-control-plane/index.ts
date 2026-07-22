@@ -1,50 +1,92 @@
 /**
- * Public surface of the provider-neutral AI control plane (Phase 2 PR-A).
+ * PUBLIC surface of the provider-neutral AI control plane (directive §8).
  *
- * PR A ships CONTRACTS + the fail-closed cost-mode resolver + typed errors,
- * with exhaustive unit tests. It is PURE and additive — imported by NOBODY at
- * runtime yet, so it changes zero runtime behavior. Later PRs (B–E) wire the
- * ledger, budget reservations, credit truth, and provider hardening.
+ * AUTHORITY INVERSION (§8.1): callers describe WHAT they want
+ * (`AiTaskInvocationRequest`); the versioned in-code policy registry decides
+ * WHAT THEY MAY DO (`AiTaskPolicyDefinition`). A caller can narrow its
+ * granted authority, never widen it.
+ *
+ * SEALED SURFACE (§8.2): this index deliberately does NOT export:
+ *   - `createAiExecutor` / `SealedAiExecutorDependencies` (DI factory),
+ *   - the env-taking resolvers (`resolveEnvClass`, `resolveCostMode`,
+ *     `effectiveMode`),
+ *   - the receipt store seam.
+ * Those live in `internal.ts` (clearly marked test/internal). Production code
+ * gets exactly one executable entry point: `executeAiTask(request)`, whose
+ * env, dispatch, and receipt store are sealed inside `executor.ts`.
+ *
+ * MERGE ORDER: PR #159 (Trusted Actor model) must merge to main before this
+ * PR — `AiTaskInvocationRequest.actor` is a `TrustedActor` from
+ * `@/lib/auth/actor` (see contracts.ts).
  */
 
-// Task & result contracts (§A.2).
+// The inverted task contracts (§8.1) + data policy tags (§8.5).
 export type {
-  AiTaskClass,
+  AiSurface,
   ClaudeSurface,
+  RegisteredAiTaskClass,
   Entity,
-  DataClassification,
-  ProviderId,
+  DataPolicy,
+  DataPolicyTag,
+  ProviderRouteId,
+  ProviderId, // deprecated alias of ProviderRouteId — see contracts.ts
   ReasoningTier,
   LatencyClass,
   CapabilityFloor,
   ModelSubstitution,
+  ModelSubstitutionId,
   OutputValidationPolicy,
   RetentionPolicy,
-  ActorRef,
-  AiTaskRequest,
+  BudgetScopeTemplate,
+  AiInvocationCorrelation,
+  AiAuthorityNarrowing,
+  AiTaskInvocationRequest,
+  AiTaskPolicyDefinition,
+  EffectiveAuthority,
   FundingLabel,
   AiAttemptSummary,
   AiTaskResult,
 } from "./contracts";
-export { executeAiTask } from "./contracts";
 
-// Cost modes + fail-closed resolver (§A.3).
+// The versioned owner policy registry (§8.1).
+export {
+  POLICY_REGISTRY_VERSION,
+  REGISTERED_AI_TASK_CLASSES,
+  getTaskPolicy,
+  isRegisteredTaskClass,
+  assertPolicyRegistryWellFormed,
+} from "./policy-registry";
+
+// Emergency authority receipts (§8.6) — types only; the store seam and
+// verification live in internal.ts / the sealed executor.
+export type {
+  EmergencyOverrideReceipt,
+  EmergencyReceiptStore,
+} from "./emergency";
+
+// The single sealed production entry point (§8.2).
+export { executeAiTask } from "./executor";
+
+// Validation helpers that are safe to expose (pure, no env/dispatch access).
+export {
+  validateInvocationRequest,
+  resolveEffectiveAuthority,
+  scanForSecretMaterial,
+  containsPaymentCardLikeNumber,
+  REQUEST_ID_PATTERN,
+  MAX_INPUT_BYTES,
+} from "./validation";
+
+// Cost-mode VOCABULARY (types + pure recognizers). The env-taking resolvers
+// are intentionally NOT exported here (§8.2) — see internal.ts.
 export type {
   CostMode,
   OrderedCostMode,
   AiEnvClass,
   EnvClassSource,
-  ResolvedEnvClass,
   EnvLike,
-  ResolveCostModeInput,
 } from "./cost-mode";
-export {
-  resolveEnvClass,
-  resolveCostMode,
-  effectiveMode,
-  isRecognizedCostMode,
-  LEGACY_COST_MODE_ALIASES,
-} from "./cost-mode";
+export { isRecognizedCostMode, LEGACY_COST_MODE_ALIASES } from "./cost-mode";
 
 // Typed errors (§A.4).
 export type { AiErrorCode } from "./errors";
