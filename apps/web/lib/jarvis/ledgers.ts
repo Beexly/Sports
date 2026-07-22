@@ -30,14 +30,15 @@ import {
   listRecentHandoffs as listRecentHandoffsCore,
   listPendingSubagentReviews as listPendingSubagentReviewsCore,
   LedgerStoreUnavailableError,
+  SubagentRunAlreadyDecidedError,
   type LogHandoffInput,
   type LogSubagentRunInput,
   type SubagentReviewDecision,
 } from "./ledgers-core";
 
-// Re-export the typed error + input types so existing importers of
+// Re-export the typed errors + input types so existing importers of
 // "@/lib/jarvis/ledgers" keep working unchanged.
-export { LedgerStoreUnavailableError };
+export { LedgerStoreUnavailableError, SubagentRunAlreadyDecidedError };
 export type { LogHandoffInput, LogSubagentRunInput, SubagentReviewDecision };
 
 /**

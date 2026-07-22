@@ -31,9 +31,9 @@
  * NEVER a raw IP or email. Rows are only meaningful for their window; the
  * retention bound is RATE_COUNTER_MAX_RETENTION_MS (48h) and
  * `pruneExpiredRateLimitCounters` deletes older rows (indexed on
- * window_start). Wiring the prune into a cron is an ops step; until then the
- * bound is documented and the table's growth is limited to distinct keys per
- * window within retention.
+ * window_start). The prune is WIRED, not aspirational: the daily cron route
+ * /api/cron/prune-rate-limits (schedule in apps/web/vercel.json) runs it under
+ * the governed "system:rate-limit-retention" principal.
  */
 
 export class RateLimitStoreUnavailableError extends Error {

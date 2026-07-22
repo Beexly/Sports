@@ -215,6 +215,24 @@ export async function logSubagentRunAs(actor: TrustedActor, input: LogSubagentRu
 export type SubagentReviewDecision = "accepted" | "rejected" | "edited";
 
 /**
+ * A review decision is IMMUTABLE: once a run leaves "pending_review" the
+ * decision — and the reviewer attribution (reviewer_subject_id /
+ * reviewer_receipt_id) — can never be silently overwritten by a later call.
+ * Mirrors decideAppeal's already-decided rejection.
+ */
+export class SubagentRunAlreadyDecidedError extends Error {
+  readonly code = "SUBAGENT_RUN_ALREADY_DECIDED" as const;
+
+  constructor(runId: string, status: string) {
+    super(
+      `SubagentRun "${runId}" has already been decided (status: ${status}). ` +
+        "A review decision is immutable and cannot be overwritten."
+    );
+    this.name = "SubagentRunAlreadyDecidedError";
+  }
+}
+
+/**
  * Record the parent seat's review decision for a subagent run.
  *
  * Reviewing is a HUMAN-only operation: a subagent run is a draft awaiting a
@@ -230,7 +248,11 @@ export type SubagentReviewDecision = "accepted" | "rejected" | "edited";
  * for workflow consistency (it must name the run's parent seat, by id or
  * codename), never as an identity claim.
  *
- * Status moves from pending_review → accepted | rejected | edited.
+ * Status moves from pending_review → accepted | rejected | edited, and ONLY
+ * from pending_review: an already-decided run throws
+ * SubagentRunAlreadyDecidedError (the guard is enforced twice — a pre-check
+ * for a clear error, and atomically in the UPDATE's WHERE so a concurrent
+ * decision can never be overwritten last-write-wins).
  */
 export async function reviewSubagentRunAs(
   actor: TrustedActor,
@@ -241,31 +263,50 @@ export async function reviewSubagentRunAs(
   assertActorType(actor, ["HUMAN"], "reviewSubagentRun");
   assertValidSeat(reviewerSeatLabel, "reviewerSeatLabel");
 
+  let existing;
+  try {
+    existing = await db.subagentRun.findUniqueOrThrow({ where: { id: runId } });
+  } catch (err) {
+    // P2025: record not found — surface clearly before wrapDbError masks it
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
+      throw new Error(`SubagentRun "${runId}" not found.`);
+    }
+    wrapDbError(err);
+  }
+
+  if (!isValidSeat(existing.parent_seat)) {
+    // Should never happen — parentSeat was validated at creation time.
+    throw new Error(`Run ${runId} has an unrecognised parent seat "${existing.parent_seat}".`);
+  }
+
+  // Workflow-consistency check ONLY (not authority): the seat label must be
+  // the run's parent seat (id or codename form).
+  const reviewerMatches =
+    existing.parent_seat === reviewerSeatLabel ||
+    AGENT_COUNCIL.find((s) => s.codename === reviewerSeatLabel)?.id === existing.parent_seat ||
+    AGENT_COUNCIL.find((s) => s.id === reviewerSeatLabel)?.codename === existing.parent_seat;
+
+  if (!reviewerMatches) {
+    throw new Error(
+      `Seat "${reviewerSeatLabel}" is not the parent seat for run ${runId}. ` +
+      `Only the parent seat ("${existing.parent_seat}") may review this run.`
+    );
+  }
+
+  if (existing.parent_review_status !== "pending_review") {
+    throw new SubagentRunAlreadyDecidedError(runId, existing.parent_review_status);
+  }
+
+  // Receipt AFTER all validation (fewer orphan receipts on rejected calls) but
+  // still BEFORE the ledger write it vouches for (write-ordering rule).
   const reviewerReceiptId = await persistReceiptOrFail(actor);
   try {
-    const existing = await db.subagentRun.findUniqueOrThrow({ where: { id: runId } });
-
-    if (!isValidSeat(existing.parent_seat)) {
-      // Should never happen — parentSeat was validated at creation time.
-      throw new Error(`Run ${runId} has an unrecognised parent seat "${existing.parent_seat}".`);
-    }
-
-    // Workflow-consistency check ONLY (not authority): the seat label must be
-    // the run's parent seat (id or codename form).
-    const reviewerMatches =
-      existing.parent_seat === reviewerSeatLabel ||
-      AGENT_COUNCIL.find((s) => s.codename === reviewerSeatLabel)?.id === existing.parent_seat ||
-      AGENT_COUNCIL.find((s) => s.id === reviewerSeatLabel)?.codename === existing.parent_seat;
-
-    if (!reviewerMatches) {
-      throw new Error(
-        `Seat "${reviewerSeatLabel}" is not the parent seat for run ${runId}. ` +
-        `Only the parent seat ("${existing.parent_seat}") may review this run.`
-      );
-    }
-
     return await db.subagentRun.update({
-      where: { id: runId },
+      // parent_review_status in the WHERE makes the pending guard ATOMIC:
+      // if a concurrent reviewer decided the run between the read above and
+      // this write, no row matches and Prisma raises P2025 instead of
+      // overwriting the earlier decision + reviewer attribution.
+      where: { id: runId, parent_review_status: "pending_review" },
       data: {
         parent_review_status: decision,
         reviewer_subject_id: actor.subjectId,
@@ -276,11 +317,10 @@ export async function reviewSubagentRunAs(
       },
     });
   } catch (err) {
-    if (err instanceof Error && err.message.startsWith("Seat ")) throw err;
-    if (err instanceof Error && err.message.startsWith("Run ")) throw err;
-    // P2025: record not found — surface clearly before wrapDbError masks it
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025") {
-      throw new Error(`SubagentRun "${runId}" not found.`);
+      // The run existed and was pending at the read above — losing the row
+      // here means a concurrent decision won the race.
+      throw new SubagentRunAlreadyDecidedError(runId, "decided concurrently");
     }
     wrapDbError(err);
   }

@@ -314,6 +314,11 @@ export async function requireAdminActor(ctx: AuditContext = {}): Promise<HumanAc
  *   - SYSTEM_INVARIANT  — an in-process invariant/maintenance path with no
  *                         external trigger at all.
  *   - TEST_HARNESS      — test code only; never a production verification.
+ *                         ENFORCED, not just documented: presenting it while
+ *                         NODE_ENV === "production" throws
+ *                         InvalidServiceCredentialError (fail closed, same
+ *                         posture as the InMemoryDurableRateLimiter
+ *                         constructor).
  */
 export type ServiceCredentialMethod =
   | "CRON_BEARER"
@@ -432,6 +437,13 @@ function assertVerifiedCredentialContext(
   if (!SERVICE_CREDENTIAL_METHODS.has(ctx.method)) {
     throw new InvalidServiceCredentialError(
       `Unrecognised service credential method "${String(ctx.method)}".`
+    );
+  }
+  if (ctx.method === "TEST_HARNESS" && process.env["NODE_ENV"] === "production") {
+    // The doc contract says "test code only; never a production verification" —
+    // enforce it rather than trusting every future caller to remember.
+    throw new InvalidServiceCredentialError(
+      'Credential method "TEST_HARNESS" is forbidden in production.'
     );
   }
   if (typeof ctx.verifiedBy !== "string" || ctx.verifiedBy.trim() === "") {
