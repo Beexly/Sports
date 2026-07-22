@@ -1,0 +1,3920 @@
+{
+  "changedFileCount": 70,
+  "collisionScan": {
+    "collisions": [
+      {
+        "canonicalOwner": "CONTROL_PLANE",
+        "declaredInDomain": "NOVA",
+        "forbiddenPrefix": "Ai",
+        "kind": "interface",
+        "path": "apps/web/lib/opportunity-engine/platform-ecosystems.ts",
+        "rule": "forbidden-prefix-outside-owner",
+        "symbol": "AiPlatformEcosystemSummary"
+      },
+      {
+        "canonicalOwner": "CONTROL_PLANE",
+        "declaredInDomain": "NOVA",
+        "forbiddenPrefix": "Ai",
+        "kind": "type",
+        "path": "apps/web/lib/opportunity-engine/platform-ecosystems.ts",
+        "rule": "forbidden-prefix-outside-owner",
+        "symbol": "AiPlatformId"
+      },
+      {
+        "canonicalOwner": "CONTROL_PLANE",
+        "declaredInDomain": "NOVA",
+        "forbiddenPrefix": "Ai",
+        "kind": "interface",
+        "path": "apps/web/lib/opportunity-engine/platform-ecosystems.ts",
+        "rule": "forbidden-prefix-outside-owner",
+        "symbol": "AiPlatformOpportunity"
+      }
+    ],
+    "complete": true,
+    "ruleIds": [
+      "duplicate-guarded-export",
+      "forbidden-prefix-outside-owner",
+      "prisma-name-redeclared"
+    ],
+    "status": "COMPLETE_COLLISIONS_FOUND"
+  },
+  "files": [
+    {
+      "headBlobSha": "d02c10831f5dab94072212370376271d1d7ea38d",
+      "path": ".github/workflows/nova-verification.yml",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "d6b7ef32c8478a48c3994dcadc86837f4371184d",
+      "path": ".nova-runtime/.gitignore",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "2dc55e97b330318b30f2cdc3df867d9ccfb0101d",
+      "path": "apps/web/__tests__/nova-agent-contract.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "f4f771f9258252a288c0577eeef77132fa0e28d5",
+      "path": "apps/web/__tests__/nova-capability-governor.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "3529ddb24617cabc34e36d5d7951a79df0d8bdac",
+      "path": "apps/web/__tests__/nova-capability-inventory.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "ed9218ec47dc76c895b5b05917c22364382c6e0d",
+      "path": "apps/web/__tests__/nova-founder-command.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "61928dc950af2f5e0dafd68848335cbf4e043078",
+      "path": "apps/web/__tests__/nova-founder-work-seed.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "804ad0348c6f3bc767fce2a04ea663a4b43f8c48",
+      "path": "apps/web/__tests__/nova-mcp-endpoint.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "752df0798262310f59370750b010f88774bed60b",
+      "path": "apps/web/__tests__/nova-opportunity-engine.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "9709c33f94e8fb895ce534f72c848d2599cca8a7",
+      "path": "apps/web/__tests__/nova-opportunity-source-system.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "56b02cab33a828b1139920a513dbf8b29dd6e6b3",
+      "path": "apps/web/__tests__/nova-platform-ecosystems-extended.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "7c43fa5896f6dd73e0a9d81550d59798de6037c6",
+      "path": "apps/web/__tests__/nova-platform-ecosystems.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "408437a3f1ecd9e7db0aab33051c78ae8e1a6b53",
+      "path": "apps/web/__tests__/nova-requirements-traceability.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "a4a63cff503611791dfd0980e6e93b92a309f32e",
+      "path": "apps/web/__tests__/nova-source-fetch.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "aeaa930c8c0aa6efe097f448dc0bee555f3d88b6",
+      "path": "apps/web/__tests__/nova-source-monitor.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "31a62f91e4e7c6bdec57617e60588c41dcd61f0d",
+      "path": "apps/web/__tests__/nova-subagents.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "fa6ad0d35c207ff2979083b29622141b8c9a2d02",
+      "path": "apps/web/__tests__/nova-user-source-intake.test.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "6b5374d6a40320090e4de0236f0f4aaaf6874efc",
+      "path": "apps/web/app/cockpit/layout.tsx",
+      "status": "M"
+    },
+    {
+      "headBlobSha": "297fead65973cbf4ecf794e3d8bb2fd88856746b",
+      "path": "apps/web/app/cockpit/nova/founder/page.tsx",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "512d31f3529178c15a9c7c7bb686172fab6b9291",
+      "path": "apps/web/app/cockpit/nova/page.tsx",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "8b138478dad9d3f10cc96bb310e16868513462f2",
+      "path": "apps/web/components/cockpit/cockpit-command-palette.tsx",
+      "status": "M"
+    },
+    {
+      "headBlobSha": "fc54c6e57dad26cedd7997fe14ff21e211d22877",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "d1348d753c3824cc7c9404e082f9598d220680b5",
+      "path": "apps/web/lib/opportunity-engine/capability-governor.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "ac9cfb645da7af7532701fabea0a0eef44dfcdbc",
+      "path": "apps/web/lib/opportunity-engine/capability-inventory.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "01458a3ecef50ba831010d935acfde260470ac4e",
+      "path": "apps/web/lib/opportunity-engine/change-detection.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "f12e65ebc0ae3c5c2d0406b61b0942f11f2eac37",
+      "path": "apps/web/lib/opportunity-engine/evidence.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "52f844ae230e1182bfd3c62301c5f427861b986f",
+      "path": "apps/web/lib/opportunity-engine/experiment.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "901b4135a4684b106f6ed857701f1aa2ab9ed237",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "7571cf1dbba4fc4bb216575cadde49422b892419",
+      "path": "apps/web/lib/opportunity-engine/founder-work-seed.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "063728b59c6177ca8e9af2219285d68963eff265",
+      "path": "apps/web/lib/opportunity-engine/index.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "880d1b2e76e82c459e8c99b5bddb4a4fc3eb2f6f",
+      "path": "apps/web/lib/opportunity-engine/learning.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "aaaf63828d34d02779c0d35f1f72e4a8410c8f5e",
+      "path": "apps/web/lib/opportunity-engine/lifecycle.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "423708ee3eb5a80ea1972015b8f846170d228d34",
+      "path": "apps/web/lib/opportunity-engine/monetization.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "0e14a5b855e614ff721964e82a0df1fabd0ce085",
+      "path": "apps/web/lib/opportunity-engine/nova-agent.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "b0c5916a92defa8a5c766a702cf598ce1fb734d1",
+      "path": "apps/web/lib/opportunity-engine/nova-subagents.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "a9e612138a06857a9f934d6e0ffe9c7931fa5e20",
+      "path": "apps/web/lib/opportunity-engine/personal-ai-income.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "5f8c377133f31c41364f7002f0506c8510032504",
+      "path": "apps/web/lib/opportunity-engine/pipeline.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "4ac05310e96d79a14925c7db1ea677918e40e9d2",
+      "path": "apps/web/lib/opportunity-engine/platform-ecosystems-extended.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "2555f1d159742909424dd117b3b78c02c71cd7c1",
+      "path": "apps/web/lib/opportunity-engine/platform-ecosystems.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "c04c8c6405ee30f591bb20e2a117b1293f75675e",
+      "path": "apps/web/lib/opportunity-engine/policy.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "c505cf49aded1eacfe8e24a8b3e207bafcace89b",
+      "path": "apps/web/lib/opportunity-engine/requirements-traceability.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "b1876d7f8da7f67b1ee6ae88290466713aa21a31",
+      "path": "apps/web/lib/opportunity-engine/scoring.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "e064a01f363b32e24cacff9742aeb0ecb53e22c7",
+      "path": "apps/web/lib/opportunity-engine/source-adapters.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "6f7075971f686546481d40955beff126f4c80b1b",
+      "path": "apps/web/lib/opportunity-engine/source-fetch.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "c8340df938c5687d73a16e6f81423579a0106b70",
+      "path": "apps/web/lib/opportunity-engine/source-intake.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "6181ed7ef4d37d383850775025793425e2e4aabc",
+      "path": "apps/web/lib/opportunity-engine/source-monitor.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "6c5531fc2f1817a7e354ece6e222ad79c9f21e88",
+      "path": "apps/web/lib/opportunity-engine/source-registry.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "e0badd1fb65e628ba5c5e3f5d336f2e19fbc0625",
+      "path": "apps/web/lib/opportunity-engine/source-schedule.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "54d84fe06044946f5a0143ddcb02050b9836738a",
+      "path": "apps/web/lib/opportunity-engine/training-rights.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "78af1adee3b75d234b08083fbb1bb661d00cf753",
+      "path": "apps/web/lib/opportunity-engine/types.ts",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "dfc294edfe4aa52a249f5da661842ee6ce24285f",
+      "path": "data/nova/ai-capability-inventory-2026-07-21.json",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "ecc0e368f2726b35407bea7703809a5e5acf7070",
+      "path": "data/nova/ai-capability-inventory-additions-2026-07-21.json",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "ef17a65169c7c6236962d3274473a7433f873962",
+      "path": "data/nova/official-source-registry.json",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "985e60ed1cc8e544d4f0f598cdd232a528d1aa32",
+      "path": "data/nova/requirements-traceability-2026-07-21.json",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "72f8f04659c0532810fb6d7a5158d9d834813577",
+      "path": "data/nova/user-supplied-source-intake.json",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "5c85a38ef53bbeeff6d385496936d34b8bbc87f0",
+      "path": "docs/ai/nova/CODEX_NOVA_EXECUTION_HANDOFF_2026-07-21.md",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "d3103948e461ff82178de5fbdc90213f0f0fc994",
+      "path": "docs/ai/nova/CODEX_START_PROMPT_2026-07-21.md",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "e7cf51ea9063e3f26ca40c09c68e50a456e912cb",
+      "path": "docs/ai/nova/NOVA_AI_OPPORTUNITY_ENGINE_2026-07-21.md",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "3353797f939586a5d9ee9a3b94365e6106c81e91",
+      "path": "docs/ai/nova/NOVA_PHASE_2_AUTONOMOUS_INTELLIGENCE_DIRECTIVE_2026-07-21.md",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "32e6b32127b50482ef95f8e65250158a025cd98e",
+      "path": "docs/ai/nova/README.md",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "72e00fdb5744aa38a6c917e443af1a23753dbf98",
+      "path": "docs/submissions/openai-build-week-2026/CODEX_FINAL_EXTENSION_PROMPT.md",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "4014ad03627eee37017ae52806a642044af8b443",
+      "path": "docs/submissions/openai-build-week-2026/NOVA_SUBMISSION_PACKET.md",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "a6d70963ca592c9c34cacbae25d5c81fd818d9a2",
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "headBlobSha": "4674ac1becbe3e15049e0f9d4808372d550e8165",
+      "path": "scripts/nova/change-intelligence.mjs",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "7886144aed6afd715ddd85ada0d139f6fb5c6f2f",
+      "path": "scripts/nova/install-windows-task.ps1",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "2772c8e5784e8a4ad22b36db1fae984b6c1a049d",
+      "path": "scripts/nova/nova-intelligence.test.mjs",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "41fbf2b53ab87d092e5274c2c3f39e37ffd811af",
+      "path": "scripts/nova/run-cycle.mjs",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "962213a907a1783bed770646adffb1687f0bb41a",
+      "path": "scripts/nova/run-cycle.ps1",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "80bdc828e8c3e8741b4308b24c8f3b055cb5d255",
+      "path": "scripts/nova/source-doctor.mjs",
+      "status": "A"
+    },
+    {
+      "headBlobSha": "1b85fa0e6f46ed941563f8a12d4b5f967c10c855",
+      "path": "scripts/nova/source-worker.mjs",
+      "status": "A"
+    }
+  ],
+  "manifest": {
+    "path": "scripts/nova/convergence-owners.json",
+    "sha256": "c5872fb7df89d26972338db83fa60e673ab78b7810fa530e376d39b5f2f6c2e5"
+  },
+  "migrations": [],
+  "prisma": {
+    "base": {
+      "enums": [
+        {
+          "blockHash": "5637bc8bc84552a7b8c1d84eefbaee37f882fce5d850135e3769900af9a95910",
+          "name": "AgentHandoffRiskLevel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "cae536bac5f5f3f009e2dd07bcd7faaabcdd8e426b284bc52ab1e0b68d24c503",
+          "name": "AgentHandoffStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "8d13535024a95ef780e042877e335a4a483c278e93ca1910b8f478c48521abd3",
+          "name": "AlertChannel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 2
+        },
+        {
+          "blockHash": "af2bada87231e5602b2a0511d067ba753694e0110404ee909e85b0ac2d9b9432",
+          "name": "AtsResult",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "1a26698de4cadc4de5cf0db1c946897eff10b4f23d7c5d31784074cdd91dbbb9",
+          "name": "BriefSectionType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 11
+        },
+        {
+          "blockHash": "e77e1cf77f05014184ac4ae112506b2d31a968c8293886d5e321c2fc12c9a49f",
+          "name": "BriefStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "cba3dc794b40de9adfe5f549b18cb7b0226871e55212754d421112a73319dc2f",
+          "name": "BriefVisibility",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "44939958b1b216ddbc2780aa2de3eee92ea4a7415041c7f02ed4c4c4af863d06",
+          "name": "CalibrationProposalKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "d02d6e10a17be86a4177905886ce4a7d70c31b54d914318c65370b878d747132",
+          "name": "CalibrationProposalStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "5ef67f540935d8cfbe3d437c472abecac40f01e77fcf85125cc31ed6d296a889",
+          "name": "CockpitComplianceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "30585cc311b01f6cae19f1c19738ec7ff0812a878f21b9c30a68ec0acc43676a",
+          "name": "CockpitRiskLevel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "bb220cfb57017c06c73dbc8cb7a37384ff72e5ac2caf2e36581d2e4768f7c413",
+          "name": "CockpitTaskStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 8
+        },
+        {
+          "blockHash": "e6632d68b9acd180c6f23185045db2a5b3a8e85076ea724cccd600b13a45d121",
+          "name": "ContentComplianceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "39ddc0ae1c02df2054fcee0982509e0db5baa40675c6f16a250dc0f681406c45",
+          "name": "ContentDraftStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 8
+        },
+        {
+          "blockHash": "fc64dfaac5b9715a09ca2e14762c10374ebd33a0f63364bb4d0d600504399cf6",
+          "name": "ContentDraftType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 12
+        },
+        {
+          "blockHash": "cba3dc794b40de9adfe5f549b18cb7b0226871e55212754d421112a73319dc2f",
+          "name": "ContentDraftVisibility",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "a52ab4d77b4d06dc61f4b80248186ed877d84c052881e2be0454a4be207f344a",
+          "name": "ContentPerformanceGateStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "ea678a597ce8a0d66e0a1434012134e27ba0037afcae13f64c18e796b4c375f5",
+          "name": "ContentReviewDecision",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "699d90eea379059fdb7ce6e08573a5ca73c782956d7d5a70b94758c0f4fbfc56",
+          "name": "ContentSourceCoverageStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "77fc289fa9120493931726e34237c3959ff029b6782322bf2c8a74f11158130c",
+          "name": "ContentSourceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "e533956a4bd5a20f136a7dffac68e173989c1495c4521bacca512b363a338a90",
+          "name": "ContentSourceTrustLevel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "8f80885437765a09b9a01d7449a6cb4119c4f3296e4e17cb20086578ad578f35",
+          "name": "ContentSourceType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 9
+        },
+        {
+          "blockHash": "83a1c1155ee506a30f5610f23a8f6fe9054a798f236aba33e52826e948f290d4",
+          "name": "ContentStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "286c0544933aa050283fbf4ec72a4b3f987aa8350a11d1fecf3431921c0ab0b5",
+          "name": "CreatorAssetComplianceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "37c66fbf0c7ea41bad352abe23b6108591087b495302193ec8c014824ae411ca",
+          "name": "CreatorAssetKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 8
+        },
+        {
+          "blockHash": "4a05dcac1d33e740e620c10cc2e9cdb87689f6d3cc106ced0c8f3fb04542e8dd",
+          "name": "CreatorAssetStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "14a0de7c2f9d7668547358d9722b1a8ce65a2844ae86232dd167b07697d9ad41",
+          "name": "GameLogResult",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "945a1c37af640829436d813bf5def9af4fe0db909df97450dcc5ce9a8f323ba2",
+          "name": "GameStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "05938170cf102471dd1da355f14f80585e76b1f40fb1defeaea12c3ee6fe7c8e",
+          "name": "GateDecisionStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "4ff274df1a48b4512a82ec49f133a6ee60a8c3f0728571895685c058f040cb62",
+          "name": "IngestionStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "3e819d7ed0043da277c9c53c34e4790739616e6b807fddc51740a02153f51770",
+          "name": "LossAutopsyStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "4c39c2508c4a9611a288d56b97d3385ce0a88ae8246a10eb6efa038a429d38a1",
+          "name": "LossRootCause",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 9
+        },
+        {
+          "blockHash": "9fa9402c62167fd3e1eac2b2eaad271ee89890003491379c70060029d50e5d90",
+          "name": "MemoryState",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 8
+        },
+        {
+          "blockHash": "df4ad3ca1030bd737465aa7762ba2019aa87c9dca731ccc41aedcf1e639caa04",
+          "name": "MemoryType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 10
+        },
+        {
+          "blockHash": "8f0334ea3e474058be2b7741248b7920bac791b05364c41519ef44b992a1a4ed",
+          "name": "ModelJournalEntryStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "bbb34fc98f528ac2edb2e245081205b6fd3b51fabb2b52cdd7a8fae4b32b6b53",
+          "name": "ModerationActionKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "75a12b96bf305dc530c3fc5f891ad190445311b912448b6d9f95bde075834f3e",
+          "name": "ModerationAppealStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "4f025fc47e43aec0d913dd8b72f21aae602e1ac5521c615b453c590fd1c6f43a",
+          "name": "ModerationReasonCode",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 16
+        },
+        {
+          "blockHash": "41a71bcb954b9b0e9a1e5351979dc39ab47cdbfa55871a165469d6c2f306025e",
+          "name": "ModerationReportStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "ac0d569b4fd0d76863285fe0e5359491500b18bc01dbd5923eef9aeb552e3679",
+          "name": "OddsMarket",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "eb694bc3c15dee37dbfc76c4fdb0402e574a8f876249ab2b4dc56ba27035c4af",
+          "name": "OperatorAgent",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "4b15220833d78d97e0905d252284651bd2bdd4c6a96ba4922f7c26872cbb4dd8",
+          "name": "PickGrade",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "76a56e7095e7b210aa6d065a5a068e8026f2a4c382712e76bcec07b91cb887c0",
+          "name": "PickResult",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "991c60bbd1295326596d220600aa4ee4c076f16964b5cbc8689109e6e3087ca9",
+          "name": "PickTier",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 2
+        },
+        {
+          "blockHash": "2a73e20bae99242282716955c6caa49b2bbe61f815b0e047e8298c017d47973f",
+          "name": "PickType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "f9c3de688b87be2496f113ad94c09ef16da8ef3a1455ff078462035c775ce523",
+          "name": "PromotionAffiliateType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "744ebc86e097c98549cff8e9c8e188c070ec4c36638415b24c80259329e7329c",
+          "name": "PromotionComplianceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "ed1577a2de220581b78cbacaf3443f766086aec636577bdcda873d9c2b7693af",
+          "name": "PromotionOfferCategory",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 7
+        },
+        {
+          "blockHash": "719d8109775e98cd5de4fff9095c4339cc054b9e9f076a5e18967061ea7790c1",
+          "name": "PromotionStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 7
+        },
+        {
+          "blockHash": "0b4b16f5ce29deb2dffff670ec40641ae9d3f51d00d061878c5b39bc0ab81818",
+          "name": "PublishReadinessStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "e5f661c0c3d5ca41fab1305d496292656499fc0ae765c4baa7ea0349320baae8",
+          "name": "RiskLevel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "beb47bc804f18c58a377569860bb79d8afa6b6837139ac65855a8ca77a40d935",
+          "name": "SignalCategory",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 14
+        },
+        {
+          "blockHash": "5afa93c562a242745fd2152ce2672da48efe869f35b3125f07d9d052ca6bd5cf",
+          "name": "SourceArtifactKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "90d6f26714482313db31d63246cac95efb2fa9fa6837a170263743f98c150bd8",
+          "name": "SourceFreshnessStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "ec38ea155a2b1e50d3c3fd408d6ea5df149aa24e6d931f95cb3782b19fb6c6b0",
+          "name": "SourceSnapshotKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 10
+        },
+        {
+          "blockHash": "826e1e34bc2f3249ef4fe05ca6447836ea036a08f2c6b8cd551d0d6aa9d0f7cd",
+          "name": "SubagentParentReviewStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "d8b17a3bef4b086c0ed10e0e2784be30ef5186cdc48f29c3d5dc1cc63246c686",
+          "name": "SubscriptionStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "e73d55097ef65cbe5ed52601f1089c327219ddced0e36a40c765b26cf576b580",
+          "name": "SubscriptionTier",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "8b6d840adb05bd99e3de0e2adf1a68041c512f174f39d803ff138359b21c9182",
+          "name": "UserRole",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 2
+        }
+      ],
+      "models": [
+        {
+          "blockHash": "04731ee08b954277437ff080969e6f9e74eac2f4254b2228e6874357fd9f46f0",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([userId])",
+            "@@unique([provider, providerAccountId])"
+          ],
+          "name": "Account",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "85213ed0b9e30ecf1d7caad80290b0472080fc2f7571fa444510b48ed05d7a09",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([created_at])",
+            "@@index([source_seat, created_at])",
+            "@@index([status])",
+            "@@index([target_seat, created_at])"
+          ],
+          "name": "AgentHandoff",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "730033ad0166da7ff00c8fc3a3b22687706b01cd3c39e34a50d1ce04d712c22e",
+          "fieldCount": 9,
+          "indexes": [
+            "@@index([userId])"
+          ],
+          "name": "Alert",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "21d3c02939593670090cdb083f79d0e8641c09bbc32c930665a355596dcf87c9",
+          "fieldCount": 17,
+          "indexes": [
+            "@@index([publishedAt])",
+            "@@index([sport])",
+            "@@index([status])"
+          ],
+          "name": "BlogPost",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "f139cbc9b923499fe2461a5a25dcf80dca93fa13c4422ef3719a9de7aba2c5cb",
+          "fieldCount": 10,
+          "indexes": [
+            "@@index([createdAt])",
+            "@@index([modelVersion])",
+            "@@index([status])"
+          ],
+          "name": "CalibrationProposal",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "b33b5192d38583b42b9c2fece5e5d8afeb935c2180b1c5923a023fed7a445a14",
+          "fieldCount": 8,
+          "indexes": [],
+          "name": "ClaudeApiBudget",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "87fe35328097a1b3fbb1817881673d04d7cda484bceafd60e7a16c1f21537102",
+          "fieldCount": 15,
+          "indexes": [
+            "@@index([gameId])",
+            "@@index([observedAt])",
+            "@@index([surface, observedAt])",
+            "@@index([userId])"
+          ],
+          "name": "ClaudeApiCallRecord",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "d3cffcc625b533843905e9165e37ffc3dbc305fd1b46918d61e4921b8954ee22",
+          "fieldCount": 8,
+          "indexes": [
+            "@@index([taskId, createdAt])"
+          ],
+          "name": "CockpitDecision",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1b217f0529f5440aa3ad7a255d0e60c46a08245fbc3bc853cd22bec4ee96d648",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([complianceStatus])",
+            "@@index([qaStatus])"
+          ],
+          "name": "CockpitMediaItem",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a2dbc018c4ca3ca3fe5ee09f8fca3e0019abc1222a2a0eff804012af92ec9511",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([assignedAgent])",
+            "@@index([createdAt])",
+            "@@index([priority])",
+            "@@index([status])"
+          ],
+          "name": "CockpitTask",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "b0d175fc37bb71e893547b867d77a43c8fcb53e0714a4c2e9a450bcbe756f4ae",
+          "fieldCount": 28,
+          "indexes": [
+            "@@index([complianceStatus])",
+            "@@index([contentType])",
+            "@@index([createdAt])",
+            "@@index([sourceCoverageStatus])",
+            "@@index([status])",
+            "@@index([visibility])"
+          ],
+          "name": "ContentDraft",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "9702fed4f21a9f991ea10a12ba061e8dafa9eea800656d0b56c5fb61d430adfe",
+          "fieldCount": 8,
+          "indexes": [
+            "@@index([draftId, createdAt])"
+          ],
+          "name": "ContentReview",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "377024a6c424fb980e5768e3664ed246b83d22287add623e477465ce56432885",
+          "fieldCount": 11,
+          "indexes": [
+            "@@index([draftId])",
+            "@@index([sourceType])",
+            "@@index([trustLevel])"
+          ],
+          "name": "ContentSource",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "c913c8ccc4260ad274643802ce377b2c745922b7ebfec79139c91d6dcb0982b8",
+          "fieldCount": 20,
+          "indexes": [
+            "@@index([complianceStatus])",
+            "@@index([gameId, generatedAt])",
+            "@@index([pickId])",
+            "@@index([status])",
+            "@@index([templateKind])"
+          ],
+          "name": "CreatorAsset",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "593577984483c8cebac7586f81b90137c1f01b31c3ac9ea7c34aea0d849c8e02",
+          "fieldCount": 18,
+          "indexes": [
+            "@@index([status])",
+            "@@index([visibility])",
+            "@@unique([briefDate])"
+          ],
+          "name": "DailyBrief",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "886a5a85fe2e953a1ea75ea50488fcbc2f993d0a0636777b7961333db7b78879",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([briefId, sortOrder])"
+          ],
+          "name": "DailyBriefItem",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "0a24656043bcda1fd2167fa846f9576f30c0a9a6abafdae9011beb9f976523de",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([briefId, sortOrder])"
+          ],
+          "name": "DailyBriefSection",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "fb09cdb304a57c17bf06151d6c54d9263d207a1d4d9f706c3753c6866d6bdafd",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([playerId])",
+            "@@index([season, week, team])"
+          ],
+          "name": "DepthChartEntry",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "6267ef0f20b131715d16b65726c703b017eccc818aa86b04f7b776dea29af865",
+          "fieldCount": 43,
+          "indexes": [
+            "@@index([commenceTime])",
+            "@@index([sportId])",
+            "@@index([status])"
+          ],
+          "name": "Game",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "2882a1bd19db1e4a929c0048995062355aaab9ec7b2c53dcaa4e3105ddae6525",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([fetchedAt])",
+            "@@index([gameId, sourceCategory])",
+            "@@unique([gameId, sourceName, signalKey])"
+          ],
+          "name": "GameSignal",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a0cdabf883990e63dde1eb040566e599ce23570a1d28fb78ed3d0a337871e959",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([gameId])",
+            "@@index([isBootstrap])",
+            "@@index([pickId])",
+            "@@index([status, evaluatedAt])"
+          ],
+          "name": "GateDecision",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "5b7046e872f9458a7d909b5bbf0aed2cf312b04d522811bb86d56ed20796af0e",
+          "fieldCount": 17,
+          "indexes": [
+            "@@index([season, week])",
+            "@@index([season])"
+          ],
+          "name": "HistoricalGame",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "e5fd80179ae0783cb7d6dacac81f06cc8777419bdec7ff464051ddc7b577878d",
+          "fieldCount": 10,
+          "indexes": [
+            "@@index([startedAt])",
+            "@@index([status, completedAt])",
+            "@@index([status])"
+          ],
+          "name": "IngestionRun",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a0eaad808404ab6974fdad4de62abca270476a0d4031ef9fc68eac81a746ea77",
+          "fieldCount": 15,
+          "indexes": [
+            "@@index([playerId])",
+            "@@index([season, week])"
+          ],
+          "name": "Injury",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "382aa4dc9bafebd3e27a9add154a9b100eafbdd35cbf11071555d4b68b0f7f73",
+          "fieldCount": 16,
+          "indexes": [
+            "@@index([decision_date])",
+            "@@index([status])"
+          ],
+          "name": "JarvisDecision",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "f2c45c184c5faa6e6efe09b09915ebde3280356ee0b6accaff6ea1f086402b0c",
+          "fieldCount": 31,
+          "indexes": [
+            "@@index([created_at])",
+            "@@index([memory_state])",
+            "@@index([memory_type])",
+            "@@index([scope])"
+          ],
+          "name": "JarvisMemoryEvent",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "644e0383da53d4fecc7041cd44ba2bc85560d6cc02a6a3b9bc2e14034aa13a45",
+          "fieldCount": 9,
+          "indexes": [
+            "@@index([modelVersion])",
+            "@@index([occurredAt])",
+            "@@index([sourceEventId])",
+            "@@index([track])",
+            "@@index([type])"
+          ],
+          "name": "LadderEvent",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "275a0c113c31f9fc679012105ac7e338e7969c9a4f1ddc772a87c5739d7bf5e3",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([sportId])"
+          ],
+          "name": "League",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1028d6769c10940df3208782ec0f319c433efc82586e8d813a74efcf63f7612f",
+          "fieldCount": 17,
+          "indexes": [
+            "@@index([authoredAt])",
+            "@@index([rootCause])",
+            "@@index([status])"
+          ],
+          "name": "LossAutopsy",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "7aa3be4961480235b3dcf4d9c51e9220a8fea669ed2a2b2b7ea3aec72e63ad3c",
+          "fieldCount": 22,
+          "indexes": [
+            "@@index([publishedAt])",
+            "@@index([status])",
+            "@@unique([isoYear, isoWeek])"
+          ],
+          "name": "ModelJournalEntry",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "c0c934142b4cce837ecc031f274d215c7665dc74f947e82e8b2b7e07ac0e23a0",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([action])",
+            "@@index([expiresAt])",
+            "@@index([reportId])",
+            "@@index([targetUserId, createdAt])"
+          ],
+          "name": "ModerationAction",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "bdca6291c52cf54e0c67edd8f87f1691ed9336ce691feebb2d33fccce7f1e30b",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([appellantId])",
+            "@@index([status, slaDeadline])"
+          ],
+          "name": "ModerationAppeal",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "5261f993af2468e7310919286ee6a4935027d9964ed25d9fbf135a73b871bc5d",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([reason])",
+            "@@index([status, createdAt])",
+            "@@index([surface])",
+            "@@index([targetUserId])"
+          ],
+          "name": "ModerationReport",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "74524518780ba71593ca3e2db9902d6f20ad840807680cab7e2f63dfa230456b",
+          "fieldCount": 35,
+          "indexes": [
+            "@@index([season, week])",
+            "@@index([statType, season])",
+            "@@unique([gsisId, season, week, seasonType, statType])"
+          ],
+          "name": "NextGenStat",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "88b562e2ad938e9d1450a7fd2327c76d4c201090026fc1245322ed0968656e7f",
+          "fieldCount": 18,
+          "indexes": [
+            "@@index([fetchedAt])",
+            "@@index([gameId, fetchedAt])",
+            "@@index([gameId])",
+            "@@index([ingestionRunId])"
+          ],
+          "name": "Odds",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "d982079f5345743a686c8503a7f6f5116b425acc135ba881aa5500080d8df7ad",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([gameId, market, capturedAt])",
+            "@@index([phase, capturedAt])"
+          ],
+          "name": "OddsLineSnapshot",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1b048dc3f973303c79ef642231b606dc1502a261bb285d5087d73c0c1253ecb4",
+          "fieldCount": 9,
+          "indexes": [
+            "@@index([gameId])",
+            "@@unique([gameId, market])"
+          ],
+          "name": "OpeningLine",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "00cfb9321e83bb0d80523684e647771248a46039137d0a36a3ae05f02d2562f3",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([sport])",
+            "@@unique([sport, pickType, tier, modelVersion, period])"
+          ],
+          "name": "PerformanceSummary",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "4ecf67e379d887c15adbb2eb2986513d966aea8b75f4bbbe00ca2cbe86a34341",
+          "fieldCount": 34,
+          "indexes": [
+            "@@index([season, week])",
+            "@@index([statType, season])",
+            "@@unique([pfrPlayerId, gameKey, statType])"
+          ],
+          "name": "PfrAdvStat",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "cbdf910666d90785e87053b69ad4f9d06e00374c7265220414a22fd10b4a43e4",
+          "fieldCount": 39,
+          "indexes": [
+            "@@index([clvVerdict])",
+            "@@index([generatedAt])",
+            "@@index([isFeatured])",
+            "@@index([pickGrade])",
+            "@@index([result])",
+            "@@index([settledAt])",
+            "@@index([tier])",
+            "@@unique([gameId, pickType])"
+          ],
+          "name": "Pick",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "dd46e4f5b364e78e3377f8d7c31e947f4b2cb116514cb1b7cef606919365a11b",
+          "fieldCount": 16,
+          "indexes": [
+            "@@index([contentHash])",
+            "@@index([slateKey])"
+          ],
+          "name": "PickProofReceipt",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "3d8602e2e003e128352b5b5e271abf9bd0fcc5fac5c591953b57d105fbeb2d7b",
+          "fieldCount": 38,
+          "indexes": [
+            "@@index([capturedAt])",
+            "@@index([eligibleForLearning])",
+            "@@index([gameId])",
+            "@@index([isBootstrap])"
+          ],
+          "name": "PickSignalSnapshot",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a15b4533f3dc6e460140a5a02b724a50d07c43ac97f3bf02c2c4ccddb274d6f5",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([position])",
+            "@@index([recentTeam])"
+          ],
+          "name": "Player",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "be82a47891587567e50effdd82a186a39ef6a8ff285e07bc51b6eb6af6869ac1",
+          "fieldCount": 22,
+          "indexes": [
+            "@@index([playerId])",
+            "@@index([season, week])",
+            "@@unique([playerId, season, week, seasonType])"
+          ],
+          "name": "PlayerGameStat",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "d8c60ea486942fdf2493db9829e75079b418f62bfb1a799d200fd2e2a23b262c",
+          "fieldCount": 16,
+          "indexes": [
+            "@@index([season])",
+            "@@unique([gsisId, season])"
+          ],
+          "name": "PlayerRushProfile",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "3b95eb322bbe3ceb769c5d258e8845784ab1703f4278b80b85a9c54ac12d2777",
+          "fieldCount": 24,
+          "indexes": [
+            "@@index([complianceStatus])",
+            "@@index([expiresAt])",
+            "@@index([sportsbookKey])",
+            "@@index([status])"
+          ],
+          "name": "Promotion",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "7bb705f3264baf5166a3b60da7f64e0257e60c25d70f37d1ce60dcf494e2119b",
+          "fieldCount": 5,
+          "indexes": [
+            "@@index([userId])"
+          ],
+          "name": "Session",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1d8a69548f1c0addbf3f1b81f1f91a80856f843bd1522c204246c9d44b5d6b4d",
+          "fieldCount": 15,
+          "indexes": [
+            "@@index([category])",
+            "@@index([entityType, entityId])",
+            "@@unique([entityType, entityId, key, season, week])"
+          ],
+          "name": "Signal",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "405413b149c2cf4f2e702c97abd4553d861bcbd3e67b86628fe6f6e39dd46eac",
+          "fieldCount": 7,
+          "indexes": [
+            "@@index([committedAt])"
+          ],
+          "name": "SlateCommitment",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "55bf0903933bf71ed051760b13941aa4f955c7068063c54070015fb57a579edf",
+          "fieldCount": 20,
+          "indexes": [
+            "@@index([playerId])",
+            "@@index([season, week])"
+          ],
+          "name": "SnapCount",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "5c15ea5a294322949fbf6a58781b9df75d2823e3458593948baea6a2000b41d3",
+          "fieldCount": 9,
+          "indexes": [
+            "@@index([artifactKind, artifactId])",
+            "@@index([generatedAt])",
+            "@@index([readiness])"
+          ],
+          "name": "SourceCoverageReport",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "240804818d95bead6b389c2635abf89b19e3fdb09d1bdb481c28caa58cea91bb",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([externalId])",
+            "@@index([fetchedAt])",
+            "@@index([payloadHash])",
+            "@@index([provider, sourceKind])",
+            "@@index([sport])"
+          ],
+          "name": "SourceSnapshot",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "83bcaf4974273c4a25ba5630a987be6c1b8834c175af10d4187faa4099e296e4",
+          "fieldCount": 8,
+          "indexes": [],
+          "name": "Sport",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "ec54af575c63c86989924e66b63819ec632be8adba20be00c7ffe458d610133a",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([created_at])",
+            "@@index([parent_review_status])",
+            "@@index([parent_seat, created_at])",
+            "@@index([subagent_id, created_at])"
+          ],
+          "name": "SubagentRun",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "b9ae2cf0a471fc773b34360f92b8d33fbaa55f5300f64e8304963f8b998eaadb",
+          "fieldCount": 18,
+          "indexes": [
+            "@@index([stripeCustomerId])",
+            "@@index([stripeSubscriptionId])"
+          ],
+          "name": "Subscription",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "67a1acb045fb26d055abee75767e8abfcb6307e5fa27b7d909109dbef81f054d",
+          "fieldCount": 10,
+          "indexes": [
+            "@@index([leagueId])",
+            "@@index([name])"
+          ],
+          "name": "Team",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1c887fca80ddc026021ac9e7374e12fb912caa8785fbc192e923c59e36d740cc",
+          "fieldCount": 16,
+          "indexes": [
+            "@@index([season, week])",
+            "@@index([team, season])",
+            "@@unique([team, gameKey])"
+          ],
+          "name": "TeamGameEfficiency",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "32145a5e65cf9f2f026e8eb2bc5b7fd894f20d6794e2a8ffb177485324e35537",
+          "fieldCount": 15,
+          "indexes": [
+            "@@index([gameId])",
+            "@@index([teamName, sport, gameDate])",
+            "@@unique([gameId, teamName])"
+          ],
+          "name": "TeamGameLog",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "5275b50c2e32f8941d7b4dbc6da4a351652ed19fbca287642eee4417ce5e72ee",
+          "fieldCount": 35,
+          "indexes": [
+            "@@index([season, week])",
+            "@@unique([team, season, week, seasonType])"
+          ],
+          "name": "TeamWeekStat",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "d5875f181713f60b7fcf71ae803a4e9f679f8889816b1a4826ea0652596a3c13",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([email])"
+          ],
+          "name": "User",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "fae20d9b842a44eadf3f99f93105cb09789547aea65e819f159d46afbe209ee1",
+          "fieldCount": 3,
+          "indexes": [
+            "@@unique([identifier, token])"
+          ],
+          "name": "VerificationToken",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a6e9eadd61ebbfd49460124543bb5bc4c742d4fd7982eecd5825ba1e78e29023",
+          "fieldCount": 6,
+          "indexes": [
+            "@@index([userId])",
+            "@@unique([userId, entityType, entityId])"
+          ],
+          "name": "Watchlist",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "9346b0004b7cb0205102aa58a3d69a24c71597eb4814a4bd021138151a40583c",
+          "fieldCount": 7,
+          "indexes": [
+            "@@index([stripeEventId])"
+          ],
+          "name": "WebhookEvent",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        }
+      ]
+    },
+    "head": {
+      "enums": [
+        {
+          "blockHash": "5637bc8bc84552a7b8c1d84eefbaee37f882fce5d850135e3769900af9a95910",
+          "name": "AgentHandoffRiskLevel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "cae536bac5f5f3f009e2dd07bcd7faaabcdd8e426b284bc52ab1e0b68d24c503",
+          "name": "AgentHandoffStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "8d13535024a95ef780e042877e335a4a483c278e93ca1910b8f478c48521abd3",
+          "name": "AlertChannel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 2
+        },
+        {
+          "blockHash": "af2bada87231e5602b2a0511d067ba753694e0110404ee909e85b0ac2d9b9432",
+          "name": "AtsResult",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "1a26698de4cadc4de5cf0db1c946897eff10b4f23d7c5d31784074cdd91dbbb9",
+          "name": "BriefSectionType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 11
+        },
+        {
+          "blockHash": "e77e1cf77f05014184ac4ae112506b2d31a968c8293886d5e321c2fc12c9a49f",
+          "name": "BriefStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "cba3dc794b40de9adfe5f549b18cb7b0226871e55212754d421112a73319dc2f",
+          "name": "BriefVisibility",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "44939958b1b216ddbc2780aa2de3eee92ea4a7415041c7f02ed4c4c4af863d06",
+          "name": "CalibrationProposalKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "d02d6e10a17be86a4177905886ce4a7d70c31b54d914318c65370b878d747132",
+          "name": "CalibrationProposalStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "5ef67f540935d8cfbe3d437c472abecac40f01e77fcf85125cc31ed6d296a889",
+          "name": "CockpitComplianceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "30585cc311b01f6cae19f1c19738ec7ff0812a878f21b9c30a68ec0acc43676a",
+          "name": "CockpitRiskLevel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "bb220cfb57017c06c73dbc8cb7a37384ff72e5ac2caf2e36581d2e4768f7c413",
+          "name": "CockpitTaskStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 8
+        },
+        {
+          "blockHash": "e6632d68b9acd180c6f23185045db2a5b3a8e85076ea724cccd600b13a45d121",
+          "name": "ContentComplianceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "39ddc0ae1c02df2054fcee0982509e0db5baa40675c6f16a250dc0f681406c45",
+          "name": "ContentDraftStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 8
+        },
+        {
+          "blockHash": "fc64dfaac5b9715a09ca2e14762c10374ebd33a0f63364bb4d0d600504399cf6",
+          "name": "ContentDraftType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 12
+        },
+        {
+          "blockHash": "cba3dc794b40de9adfe5f549b18cb7b0226871e55212754d421112a73319dc2f",
+          "name": "ContentDraftVisibility",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "a52ab4d77b4d06dc61f4b80248186ed877d84c052881e2be0454a4be207f344a",
+          "name": "ContentPerformanceGateStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "ea678a597ce8a0d66e0a1434012134e27ba0037afcae13f64c18e796b4c375f5",
+          "name": "ContentReviewDecision",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "699d90eea379059fdb7ce6e08573a5ca73c782956d7d5a70b94758c0f4fbfc56",
+          "name": "ContentSourceCoverageStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "77fc289fa9120493931726e34237c3959ff029b6782322bf2c8a74f11158130c",
+          "name": "ContentSourceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "e533956a4bd5a20f136a7dffac68e173989c1495c4521bacca512b363a338a90",
+          "name": "ContentSourceTrustLevel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "8f80885437765a09b9a01d7449a6cb4119c4f3296e4e17cb20086578ad578f35",
+          "name": "ContentSourceType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 9
+        },
+        {
+          "blockHash": "83a1c1155ee506a30f5610f23a8f6fe9054a798f236aba33e52826e948f290d4",
+          "name": "ContentStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "286c0544933aa050283fbf4ec72a4b3f987aa8350a11d1fecf3431921c0ab0b5",
+          "name": "CreatorAssetComplianceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "37c66fbf0c7ea41bad352abe23b6108591087b495302193ec8c014824ae411ca",
+          "name": "CreatorAssetKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 8
+        },
+        {
+          "blockHash": "4a05dcac1d33e740e620c10cc2e9cdb87689f6d3cc106ced0c8f3fb04542e8dd",
+          "name": "CreatorAssetStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "14a0de7c2f9d7668547358d9722b1a8ce65a2844ae86232dd167b07697d9ad41",
+          "name": "GameLogResult",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "945a1c37af640829436d813bf5def9af4fe0db909df97450dcc5ce9a8f323ba2",
+          "name": "GameStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "05938170cf102471dd1da355f14f80585e76b1f40fb1defeaea12c3ee6fe7c8e",
+          "name": "GateDecisionStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "4ff274df1a48b4512a82ec49f133a6ee60a8c3f0728571895685c058f040cb62",
+          "name": "IngestionStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "3e819d7ed0043da277c9c53c34e4790739616e6b807fddc51740a02153f51770",
+          "name": "LossAutopsyStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "4c39c2508c4a9611a288d56b97d3385ce0a88ae8246a10eb6efa038a429d38a1",
+          "name": "LossRootCause",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 9
+        },
+        {
+          "blockHash": "9fa9402c62167fd3e1eac2b2eaad271ee89890003491379c70060029d50e5d90",
+          "name": "MemoryState",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 8
+        },
+        {
+          "blockHash": "df4ad3ca1030bd737465aa7762ba2019aa87c9dca731ccc41aedcf1e639caa04",
+          "name": "MemoryType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 10
+        },
+        {
+          "blockHash": "8f0334ea3e474058be2b7741248b7920bac791b05364c41519ef44b992a1a4ed",
+          "name": "ModelJournalEntryStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "bbb34fc98f528ac2edb2e245081205b6fd3b51fabb2b52cdd7a8fae4b32b6b53",
+          "name": "ModerationActionKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "75a12b96bf305dc530c3fc5f891ad190445311b912448b6d9f95bde075834f3e",
+          "name": "ModerationAppealStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "4f025fc47e43aec0d913dd8b72f21aae602e1ac5521c615b453c590fd1c6f43a",
+          "name": "ModerationReasonCode",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 16
+        },
+        {
+          "blockHash": "41a71bcb954b9b0e9a1e5351979dc39ab47cdbfa55871a165469d6c2f306025e",
+          "name": "ModerationReportStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "ac0d569b4fd0d76863285fe0e5359491500b18bc01dbd5923eef9aeb552e3679",
+          "name": "OddsMarket",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "eb694bc3c15dee37dbfc76c4fdb0402e574a8f876249ab2b4dc56ba27035c4af",
+          "name": "OperatorAgent",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "4b15220833d78d97e0905d252284651bd2bdd4c6a96ba4922f7c26872cbb4dd8",
+          "name": "PickGrade",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "76a56e7095e7b210aa6d065a5a068e8026f2a4c382712e76bcec07b91cb887c0",
+          "name": "PickResult",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "991c60bbd1295326596d220600aa4ee4c076f16964b5cbc8689109e6e3087ca9",
+          "name": "PickTier",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 2
+        },
+        {
+          "blockHash": "2a73e20bae99242282716955c6caa49b2bbe61f815b0e047e8298c017d47973f",
+          "name": "PickType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 3
+        },
+        {
+          "blockHash": "f9c3de688b87be2496f113ad94c09ef16da8ef3a1455ff078462035c775ce523",
+          "name": "PromotionAffiliateType",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "744ebc86e097c98549cff8e9c8e188c070ec4c36638415b24c80259329e7329c",
+          "name": "PromotionComplianceStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "ed1577a2de220581b78cbacaf3443f766086aec636577bdcda873d9c2b7693af",
+          "name": "PromotionOfferCategory",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 7
+        },
+        {
+          "blockHash": "719d8109775e98cd5de4fff9095c4339cc054b9e9f076a5e18967061ea7790c1",
+          "name": "PromotionStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 7
+        },
+        {
+          "blockHash": "0b4b16f5ce29deb2dffff670ec40641ae9d3f51d00d061878c5b39bc0ab81818",
+          "name": "PublishReadinessStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "e5f661c0c3d5ca41fab1305d496292656499fc0ae765c4baa7ea0349320baae8",
+          "name": "RiskLevel",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "beb47bc804f18c58a377569860bb79d8afa6b6837139ac65855a8ca77a40d935",
+          "name": "SignalCategory",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 14
+        },
+        {
+          "blockHash": "5afa93c562a242745fd2152ce2672da48efe869f35b3125f07d9d052ca6bd5cf",
+          "name": "SourceArtifactKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "90d6f26714482313db31d63246cac95efb2fa9fa6837a170263743f98c150bd8",
+          "name": "SourceFreshnessStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 5
+        },
+        {
+          "blockHash": "ec38ea155a2b1e50d3c3fd408d6ea5df149aa24e6d931f95cb3782b19fb6c6b0",
+          "name": "SourceSnapshotKind",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 10
+        },
+        {
+          "blockHash": "826e1e34bc2f3249ef4fe05ca6447836ea036a08f2c6b8cd551d0d6aa9d0f7cd",
+          "name": "SubagentParentReviewStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "d8b17a3bef4b086c0ed10e0e2784be30ef5186cdc48f29c3d5dc1cc63246c686",
+          "name": "SubscriptionStatus",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 6
+        },
+        {
+          "blockHash": "e73d55097ef65cbe5ed52601f1089c327219ddced0e36a40c765b26cf576b580",
+          "name": "SubscriptionTier",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 4
+        },
+        {
+          "blockHash": "8b6d840adb05bd99e3de0e2adf1a68041c512f174f39d803ff138359b21c9182",
+          "name": "UserRole",
+          "schemaPath": "packages/db/prisma/schema.prisma",
+          "valueCount": 2
+        }
+      ],
+      "models": [
+        {
+          "blockHash": "04731ee08b954277437ff080969e6f9e74eac2f4254b2228e6874357fd9f46f0",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([userId])",
+            "@@unique([provider, providerAccountId])"
+          ],
+          "name": "Account",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "85213ed0b9e30ecf1d7caad80290b0472080fc2f7571fa444510b48ed05d7a09",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([created_at])",
+            "@@index([source_seat, created_at])",
+            "@@index([status])",
+            "@@index([target_seat, created_at])"
+          ],
+          "name": "AgentHandoff",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "730033ad0166da7ff00c8fc3a3b22687706b01cd3c39e34a50d1ce04d712c22e",
+          "fieldCount": 9,
+          "indexes": [
+            "@@index([userId])"
+          ],
+          "name": "Alert",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "21d3c02939593670090cdb083f79d0e8641c09bbc32c930665a355596dcf87c9",
+          "fieldCount": 17,
+          "indexes": [
+            "@@index([publishedAt])",
+            "@@index([sport])",
+            "@@index([status])"
+          ],
+          "name": "BlogPost",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "f139cbc9b923499fe2461a5a25dcf80dca93fa13c4422ef3719a9de7aba2c5cb",
+          "fieldCount": 10,
+          "indexes": [
+            "@@index([createdAt])",
+            "@@index([modelVersion])",
+            "@@index([status])"
+          ],
+          "name": "CalibrationProposal",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "b33b5192d38583b42b9c2fece5e5d8afeb935c2180b1c5923a023fed7a445a14",
+          "fieldCount": 8,
+          "indexes": [],
+          "name": "ClaudeApiBudget",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "87fe35328097a1b3fbb1817881673d04d7cda484bceafd60e7a16c1f21537102",
+          "fieldCount": 15,
+          "indexes": [
+            "@@index([gameId])",
+            "@@index([observedAt])",
+            "@@index([surface, observedAt])",
+            "@@index([userId])"
+          ],
+          "name": "ClaudeApiCallRecord",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "d3cffcc625b533843905e9165e37ffc3dbc305fd1b46918d61e4921b8954ee22",
+          "fieldCount": 8,
+          "indexes": [
+            "@@index([taskId, createdAt])"
+          ],
+          "name": "CockpitDecision",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1b217f0529f5440aa3ad7a255d0e60c46a08245fbc3bc853cd22bec4ee96d648",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([complianceStatus])",
+            "@@index([qaStatus])"
+          ],
+          "name": "CockpitMediaItem",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a2dbc018c4ca3ca3fe5ee09f8fca3e0019abc1222a2a0eff804012af92ec9511",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([assignedAgent])",
+            "@@index([createdAt])",
+            "@@index([priority])",
+            "@@index([status])"
+          ],
+          "name": "CockpitTask",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "b0d175fc37bb71e893547b867d77a43c8fcb53e0714a4c2e9a450bcbe756f4ae",
+          "fieldCount": 28,
+          "indexes": [
+            "@@index([complianceStatus])",
+            "@@index([contentType])",
+            "@@index([createdAt])",
+            "@@index([sourceCoverageStatus])",
+            "@@index([status])",
+            "@@index([visibility])"
+          ],
+          "name": "ContentDraft",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "9702fed4f21a9f991ea10a12ba061e8dafa9eea800656d0b56c5fb61d430adfe",
+          "fieldCount": 8,
+          "indexes": [
+            "@@index([draftId, createdAt])"
+          ],
+          "name": "ContentReview",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "377024a6c424fb980e5768e3664ed246b83d22287add623e477465ce56432885",
+          "fieldCount": 11,
+          "indexes": [
+            "@@index([draftId])",
+            "@@index([sourceType])",
+            "@@index([trustLevel])"
+          ],
+          "name": "ContentSource",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "c913c8ccc4260ad274643802ce377b2c745922b7ebfec79139c91d6dcb0982b8",
+          "fieldCount": 20,
+          "indexes": [
+            "@@index([complianceStatus])",
+            "@@index([gameId, generatedAt])",
+            "@@index([pickId])",
+            "@@index([status])",
+            "@@index([templateKind])"
+          ],
+          "name": "CreatorAsset",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "593577984483c8cebac7586f81b90137c1f01b31c3ac9ea7c34aea0d849c8e02",
+          "fieldCount": 18,
+          "indexes": [
+            "@@index([status])",
+            "@@index([visibility])",
+            "@@unique([briefDate])"
+          ],
+          "name": "DailyBrief",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "886a5a85fe2e953a1ea75ea50488fcbc2f993d0a0636777b7961333db7b78879",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([briefId, sortOrder])"
+          ],
+          "name": "DailyBriefItem",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "0a24656043bcda1fd2167fa846f9576f30c0a9a6abafdae9011beb9f976523de",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([briefId, sortOrder])"
+          ],
+          "name": "DailyBriefSection",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "fb09cdb304a57c17bf06151d6c54d9263d207a1d4d9f706c3753c6866d6bdafd",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([playerId])",
+            "@@index([season, week, team])"
+          ],
+          "name": "DepthChartEntry",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "6267ef0f20b131715d16b65726c703b017eccc818aa86b04f7b776dea29af865",
+          "fieldCount": 43,
+          "indexes": [
+            "@@index([commenceTime])",
+            "@@index([sportId])",
+            "@@index([status])"
+          ],
+          "name": "Game",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "2882a1bd19db1e4a929c0048995062355aaab9ec7b2c53dcaa4e3105ddae6525",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([fetchedAt])",
+            "@@index([gameId, sourceCategory])",
+            "@@unique([gameId, sourceName, signalKey])"
+          ],
+          "name": "GameSignal",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a0cdabf883990e63dde1eb040566e599ce23570a1d28fb78ed3d0a337871e959",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([gameId])",
+            "@@index([isBootstrap])",
+            "@@index([pickId])",
+            "@@index([status, evaluatedAt])"
+          ],
+          "name": "GateDecision",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "5b7046e872f9458a7d909b5bbf0aed2cf312b04d522811bb86d56ed20796af0e",
+          "fieldCount": 17,
+          "indexes": [
+            "@@index([season, week])",
+            "@@index([season])"
+          ],
+          "name": "HistoricalGame",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "e5fd80179ae0783cb7d6dacac81f06cc8777419bdec7ff464051ddc7b577878d",
+          "fieldCount": 10,
+          "indexes": [
+            "@@index([startedAt])",
+            "@@index([status, completedAt])",
+            "@@index([status])"
+          ],
+          "name": "IngestionRun",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a0eaad808404ab6974fdad4de62abca270476a0d4031ef9fc68eac81a746ea77",
+          "fieldCount": 15,
+          "indexes": [
+            "@@index([playerId])",
+            "@@index([season, week])"
+          ],
+          "name": "Injury",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "382aa4dc9bafebd3e27a9add154a9b100eafbdd35cbf11071555d4b68b0f7f73",
+          "fieldCount": 16,
+          "indexes": [
+            "@@index([decision_date])",
+            "@@index([status])"
+          ],
+          "name": "JarvisDecision",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "f2c45c184c5faa6e6efe09b09915ebde3280356ee0b6accaff6ea1f086402b0c",
+          "fieldCount": 31,
+          "indexes": [
+            "@@index([created_at])",
+            "@@index([memory_state])",
+            "@@index([memory_type])",
+            "@@index([scope])"
+          ],
+          "name": "JarvisMemoryEvent",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "644e0383da53d4fecc7041cd44ba2bc85560d6cc02a6a3b9bc2e14034aa13a45",
+          "fieldCount": 9,
+          "indexes": [
+            "@@index([modelVersion])",
+            "@@index([occurredAt])",
+            "@@index([sourceEventId])",
+            "@@index([track])",
+            "@@index([type])"
+          ],
+          "name": "LadderEvent",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "275a0c113c31f9fc679012105ac7e338e7969c9a4f1ddc772a87c5739d7bf5e3",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([sportId])"
+          ],
+          "name": "League",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1028d6769c10940df3208782ec0f319c433efc82586e8d813a74efcf63f7612f",
+          "fieldCount": 17,
+          "indexes": [
+            "@@index([authoredAt])",
+            "@@index([rootCause])",
+            "@@index([status])"
+          ],
+          "name": "LossAutopsy",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "7aa3be4961480235b3dcf4d9c51e9220a8fea669ed2a2b2b7ea3aec72e63ad3c",
+          "fieldCount": 22,
+          "indexes": [
+            "@@index([publishedAt])",
+            "@@index([status])",
+            "@@unique([isoYear, isoWeek])"
+          ],
+          "name": "ModelJournalEntry",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "c0c934142b4cce837ecc031f274d215c7665dc74f947e82e8b2b7e07ac0e23a0",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([action])",
+            "@@index([expiresAt])",
+            "@@index([reportId])",
+            "@@index([targetUserId, createdAt])"
+          ],
+          "name": "ModerationAction",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "bdca6291c52cf54e0c67edd8f87f1691ed9336ce691feebb2d33fccce7f1e30b",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([appellantId])",
+            "@@index([status, slaDeadline])"
+          ],
+          "name": "ModerationAppeal",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "5261f993af2468e7310919286ee6a4935027d9964ed25d9fbf135a73b871bc5d",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([reason])",
+            "@@index([status, createdAt])",
+            "@@index([surface])",
+            "@@index([targetUserId])"
+          ],
+          "name": "ModerationReport",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "74524518780ba71593ca3e2db9902d6f20ad840807680cab7e2f63dfa230456b",
+          "fieldCount": 35,
+          "indexes": [
+            "@@index([season, week])",
+            "@@index([statType, season])",
+            "@@unique([gsisId, season, week, seasonType, statType])"
+          ],
+          "name": "NextGenStat",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "88b562e2ad938e9d1450a7fd2327c76d4c201090026fc1245322ed0968656e7f",
+          "fieldCount": 18,
+          "indexes": [
+            "@@index([fetchedAt])",
+            "@@index([gameId, fetchedAt])",
+            "@@index([gameId])",
+            "@@index([ingestionRunId])"
+          ],
+          "name": "Odds",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "d982079f5345743a686c8503a7f6f5116b425acc135ba881aa5500080d8df7ad",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([gameId, market, capturedAt])",
+            "@@index([phase, capturedAt])"
+          ],
+          "name": "OddsLineSnapshot",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1b048dc3f973303c79ef642231b606dc1502a261bb285d5087d73c0c1253ecb4",
+          "fieldCount": 9,
+          "indexes": [
+            "@@index([gameId])",
+            "@@unique([gameId, market])"
+          ],
+          "name": "OpeningLine",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "00cfb9321e83bb0d80523684e647771248a46039137d0a36a3ae05f02d2562f3",
+          "fieldCount": 13,
+          "indexes": [
+            "@@index([sport])",
+            "@@unique([sport, pickType, tier, modelVersion, period])"
+          ],
+          "name": "PerformanceSummary",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "4ecf67e379d887c15adbb2eb2986513d966aea8b75f4bbbe00ca2cbe86a34341",
+          "fieldCount": 34,
+          "indexes": [
+            "@@index([season, week])",
+            "@@index([statType, season])",
+            "@@unique([pfrPlayerId, gameKey, statType])"
+          ],
+          "name": "PfrAdvStat",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "cbdf910666d90785e87053b69ad4f9d06e00374c7265220414a22fd10b4a43e4",
+          "fieldCount": 39,
+          "indexes": [
+            "@@index([clvVerdict])",
+            "@@index([generatedAt])",
+            "@@index([isFeatured])",
+            "@@index([pickGrade])",
+            "@@index([result])",
+            "@@index([settledAt])",
+            "@@index([tier])",
+            "@@unique([gameId, pickType])"
+          ],
+          "name": "Pick",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "dd46e4f5b364e78e3377f8d7c31e947f4b2cb116514cb1b7cef606919365a11b",
+          "fieldCount": 16,
+          "indexes": [
+            "@@index([contentHash])",
+            "@@index([slateKey])"
+          ],
+          "name": "PickProofReceipt",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "3d8602e2e003e128352b5b5e271abf9bd0fcc5fac5c591953b57d105fbeb2d7b",
+          "fieldCount": 38,
+          "indexes": [
+            "@@index([capturedAt])",
+            "@@index([eligibleForLearning])",
+            "@@index([gameId])",
+            "@@index([isBootstrap])"
+          ],
+          "name": "PickSignalSnapshot",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a15b4533f3dc6e460140a5a02b724a50d07c43ac97f3bf02c2c4ccddb274d6f5",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([position])",
+            "@@index([recentTeam])"
+          ],
+          "name": "Player",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "be82a47891587567e50effdd82a186a39ef6a8ff285e07bc51b6eb6af6869ac1",
+          "fieldCount": 22,
+          "indexes": [
+            "@@index([playerId])",
+            "@@index([season, week])",
+            "@@unique([playerId, season, week, seasonType])"
+          ],
+          "name": "PlayerGameStat",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "d8c60ea486942fdf2493db9829e75079b418f62bfb1a799d200fd2e2a23b262c",
+          "fieldCount": 16,
+          "indexes": [
+            "@@index([season])",
+            "@@unique([gsisId, season])"
+          ],
+          "name": "PlayerRushProfile",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "3b95eb322bbe3ceb769c5d258e8845784ab1703f4278b80b85a9c54ac12d2777",
+          "fieldCount": 24,
+          "indexes": [
+            "@@index([complianceStatus])",
+            "@@index([expiresAt])",
+            "@@index([sportsbookKey])",
+            "@@index([status])"
+          ],
+          "name": "Promotion",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "7bb705f3264baf5166a3b60da7f64e0257e60c25d70f37d1ce60dcf494e2119b",
+          "fieldCount": 5,
+          "indexes": [
+            "@@index([userId])"
+          ],
+          "name": "Session",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1d8a69548f1c0addbf3f1b81f1f91a80856f843bd1522c204246c9d44b5d6b4d",
+          "fieldCount": 15,
+          "indexes": [
+            "@@index([category])",
+            "@@index([entityType, entityId])",
+            "@@unique([entityType, entityId, key, season, week])"
+          ],
+          "name": "Signal",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "405413b149c2cf4f2e702c97abd4553d861bcbd3e67b86628fe6f6e39dd46eac",
+          "fieldCount": 7,
+          "indexes": [
+            "@@index([committedAt])"
+          ],
+          "name": "SlateCommitment",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "55bf0903933bf71ed051760b13941aa4f955c7068063c54070015fb57a579edf",
+          "fieldCount": 20,
+          "indexes": [
+            "@@index([playerId])",
+            "@@index([season, week])"
+          ],
+          "name": "SnapCount",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "5c15ea5a294322949fbf6a58781b9df75d2823e3458593948baea6a2000b41d3",
+          "fieldCount": 9,
+          "indexes": [
+            "@@index([artifactKind, artifactId])",
+            "@@index([generatedAt])",
+            "@@index([readiness])"
+          ],
+          "name": "SourceCoverageReport",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "240804818d95bead6b389c2635abf89b19e3fdb09d1bdb481c28caa58cea91bb",
+          "fieldCount": 12,
+          "indexes": [
+            "@@index([externalId])",
+            "@@index([fetchedAt])",
+            "@@index([payloadHash])",
+            "@@index([provider, sourceKind])",
+            "@@index([sport])"
+          ],
+          "name": "SourceSnapshot",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "83bcaf4974273c4a25ba5630a987be6c1b8834c175af10d4187faa4099e296e4",
+          "fieldCount": 8,
+          "indexes": [],
+          "name": "Sport",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "ec54af575c63c86989924e66b63819ec632be8adba20be00c7ffe458d610133a",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([created_at])",
+            "@@index([parent_review_status])",
+            "@@index([parent_seat, created_at])",
+            "@@index([subagent_id, created_at])"
+          ],
+          "name": "SubagentRun",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "b9ae2cf0a471fc773b34360f92b8d33fbaa55f5300f64e8304963f8b998eaadb",
+          "fieldCount": 18,
+          "indexes": [
+            "@@index([stripeCustomerId])",
+            "@@index([stripeSubscriptionId])"
+          ],
+          "name": "Subscription",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "67a1acb045fb26d055abee75767e8abfcb6307e5fa27b7d909109dbef81f054d",
+          "fieldCount": 10,
+          "indexes": [
+            "@@index([leagueId])",
+            "@@index([name])"
+          ],
+          "name": "Team",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "1c887fca80ddc026021ac9e7374e12fb912caa8785fbc192e923c59e36d740cc",
+          "fieldCount": 16,
+          "indexes": [
+            "@@index([season, week])",
+            "@@index([team, season])",
+            "@@unique([team, gameKey])"
+          ],
+          "name": "TeamGameEfficiency",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "32145a5e65cf9f2f026e8eb2bc5b7fd894f20d6794e2a8ffb177485324e35537",
+          "fieldCount": 15,
+          "indexes": [
+            "@@index([gameId])",
+            "@@index([teamName, sport, gameDate])",
+            "@@unique([gameId, teamName])"
+          ],
+          "name": "TeamGameLog",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "5275b50c2e32f8941d7b4dbc6da4a351652ed19fbca287642eee4417ce5e72ee",
+          "fieldCount": 35,
+          "indexes": [
+            "@@index([season, week])",
+            "@@unique([team, season, week, seasonType])"
+          ],
+          "name": "TeamWeekStat",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "d5875f181713f60b7fcf71ae803a4e9f679f8889816b1a4826ea0652596a3c13",
+          "fieldCount": 14,
+          "indexes": [
+            "@@index([email])"
+          ],
+          "name": "User",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "fae20d9b842a44eadf3f99f93105cb09789547aea65e819f159d46afbe209ee1",
+          "fieldCount": 3,
+          "indexes": [
+            "@@unique([identifier, token])"
+          ],
+          "name": "VerificationToken",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "a6e9eadd61ebbfd49460124543bb5bc4c742d4fd7982eecd5825ba1e78e29023",
+          "fieldCount": 6,
+          "indexes": [
+            "@@index([userId])",
+            "@@unique([userId, entityType, entityId])"
+          ],
+          "name": "Watchlist",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        },
+        {
+          "blockHash": "9346b0004b7cb0205102aa58a3d69a24c71597eb4814a4bd021138151a40583c",
+          "fieldCount": 7,
+          "indexes": [
+            "@@index([stripeEventId])"
+          ],
+          "name": "WebhookEvent",
+          "schemaPath": "packages/db/prisma/schema.prisma"
+        }
+      ]
+    }
+  },
+  "refs": {
+    "baseSha": "c19a00d86fe45d7e093f3f9ec688d2614e7f87b4",
+    "headSha": "fbc3cfe0ccea23d5d9657248ac374945c1dec9c4",
+    "mergeBaseSha": "bf931ab949934faea4208e7746f2325c2d9acb50"
+  },
+  "schemaVersion": 1,
+  "semanticDomainCandidates": [
+    {
+      "candidateDomains": [
+        "CONTROL_PLANE"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/platform-ecosystems.ts",
+      "pathDomain": "NOVA",
+      "symbol": "AiPlatformEcosystemSummary"
+    },
+    {
+      "candidateDomains": [
+        "CONTROL_PLANE"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/opportunity-engine/platform-ecosystems.ts",
+      "pathDomain": "NOVA",
+      "symbol": "AiPlatformId"
+    },
+    {
+      "candidateDomains": [
+        "CONTROL_PLANE"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/platform-ecosystems.ts",
+      "pathDomain": "NOVA",
+      "symbol": "AiPlatformOpportunity"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "pathDomain": "NOVA",
+      "symbol": "FounderDailyBrief"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "pathDomain": "NOVA",
+      "symbol": "FounderOperatingPolicy"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "pathDomain": "NOVA",
+      "symbol": "FounderQueueDecision"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "pathDomain": "NOVA",
+      "symbol": "FounderWorkAuthority"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "pathDomain": "NOVA",
+      "symbol": "FounderWorkItem"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "pathDomain": "NOVA",
+      "symbol": "FounderWorkLane"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "pathDomain": "NOVA",
+      "symbol": "FounderWorkState"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaAction"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaActionContext"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaActionDecision"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaAgentProfile"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaAlert"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaAllowedAction"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaCouncilPacket"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaCycleInput"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaCycleResult"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaEventClass"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaForbiddenAction"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaHandoff"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaReviewRoute"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaRunMode"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaRuntimeStatus"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/source-monitor.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaSourceMonitorInput"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/source-monitor.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaSourceMonitorResult"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaSubagentCodename"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaSubagentProfile"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/nova-subagents.ts",
+      "pathDomain": "NOVA",
+      "symbol": "NovaSubagentTemplate"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/types.ts",
+      "pathDomain": "NOVA",
+      "symbol": "OpportunitySource"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/source-fetch.ts",
+      "pathDomain": "NOVA",
+      "symbol": "OpportunitySourceCheckpoint"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/source-fetch.ts",
+      "pathDomain": "NOVA",
+      "symbol": "OpportunitySourceFetchOptions"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/source-fetch.ts",
+      "pathDomain": "NOVA",
+      "symbol": "OpportunitySourceFetchResult"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "type",
+      "path": "apps/web/lib/opportunity-engine/source-fetch.ts",
+      "pathDomain": "NOVA",
+      "symbol": "OpportunitySourceFetchStatus"
+    },
+    {
+      "candidateDomains": [
+        "NOVA"
+      ],
+      "kind": "interface",
+      "path": "apps/web/lib/opportunity-engine/source-schedule.ts",
+      "pathDomain": "NOVA",
+      "symbol": "OpportunitySourceRunState"
+    }
+  ],
+  "tsExports": [
+    {
+      "headBlobSha": "2dc55e97b330318b30f2cdc3df867d9ccfb0101d",
+      "path": "apps/web/__tests__/nova-agent-contract.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "f4f771f9258252a288c0577eeef77132fa0e28d5",
+      "path": "apps/web/__tests__/nova-capability-governor.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "3529ddb24617cabc34e36d5d7951a79df0d8bdac",
+      "path": "apps/web/__tests__/nova-capability-inventory.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "ed9218ec47dc76c895b5b05917c22364382c6e0d",
+      "path": "apps/web/__tests__/nova-founder-command.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "61928dc950af2f5e0dafd68848335cbf4e043078",
+      "path": "apps/web/__tests__/nova-founder-work-seed.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "804ad0348c6f3bc767fce2a04ea663a4b43f8c48",
+      "path": "apps/web/__tests__/nova-mcp-endpoint.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "752df0798262310f59370750b010f88774bed60b",
+      "path": "apps/web/__tests__/nova-opportunity-engine.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "9709c33f94e8fb895ce534f72c848d2599cca8a7",
+      "path": "apps/web/__tests__/nova-opportunity-source-system.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "56b02cab33a828b1139920a513dbf8b29dd6e6b3",
+      "path": "apps/web/__tests__/nova-platform-ecosystems-extended.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "7c43fa5896f6dd73e0a9d81550d59798de6037c6",
+      "path": "apps/web/__tests__/nova-platform-ecosystems.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "408437a3f1ecd9e7db0aab33051c78ae8e1a6b53",
+      "path": "apps/web/__tests__/nova-requirements-traceability.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "a4a63cff503611791dfd0980e6e93b92a309f32e",
+      "path": "apps/web/__tests__/nova-source-fetch.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "aeaa930c8c0aa6efe097f448dc0bee555f3d88b6",
+      "path": "apps/web/__tests__/nova-source-monitor.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "31a62f91e4e7c6bdec57617e60588c41dcd61f0d",
+      "path": "apps/web/__tests__/nova-subagents.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "fa6ad0d35c207ff2979083b29622141b8c9a2d02",
+      "path": "apps/web/__tests__/nova-user-source-intake.test.ts",
+      "symbols": []
+    },
+    {
+      "headBlobSha": "6b5374d6a40320090e4de0236f0f4aaaf6874efc",
+      "path": "apps/web/app/cockpit/layout.tsx",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "default"
+        },
+        {
+          "kind": "const",
+          "name": "metadata"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "297fead65973cbf4ecf794e3d8bb2fd88856746b",
+      "path": "apps/web/app/cockpit/nova/founder/page.tsx",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "default"
+        },
+        {
+          "kind": "const",
+          "name": "dynamic"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "512d31f3529178c15a9c7c7bb686172fab6b9291",
+      "path": "apps/web/app/cockpit/nova/page.tsx",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "default"
+        },
+        {
+          "kind": "const",
+          "name": "dynamic"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "8b138478dad9d3f10cc96bb310e16868513462f2",
+      "path": "apps/web/components/cockpit/cockpit-command-palette.tsx",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "COCKPIT_COMMANDS"
+        },
+        {
+          "kind": "type",
+          "name": "CockpitCommand"
+        },
+        {
+          "kind": "function",
+          "name": "CockpitCommandPalette"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "fc54c6e57dad26cedd7997fe14ff21e211d22877",
+      "path": "apps/web/lib/jarvis/nova-agent.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "NOVA_AGENT_PROFILE"
+        },
+        {
+          "kind": "const",
+          "name": "NOVA_ALLOWED_ACTIONS"
+        },
+        {
+          "kind": "const",
+          "name": "NOVA_FORBIDDEN_ACTIONS"
+        },
+        {
+          "kind": "const",
+          "name": "NOVA_SUBAGENTS"
+        },
+        {
+          "kind": "type",
+          "name": "NovaAction"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaActionContext"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaActionDecision"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaAgentProfile"
+        },
+        {
+          "kind": "type",
+          "name": "NovaAllowedAction"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaCouncilPacket"
+        },
+        {
+          "kind": "type",
+          "name": "NovaEventClass"
+        },
+        {
+          "kind": "type",
+          "name": "NovaForbiddenAction"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaReviewRoute"
+        },
+        {
+          "kind": "type",
+          "name": "NovaRunMode"
+        },
+        {
+          "kind": "type",
+          "name": "NovaRuntimeStatus"
+        },
+        {
+          "kind": "type",
+          "name": "NovaSubagentCodename"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaSubagentProfile"
+        },
+        {
+          "kind": "function",
+          "name": "buildNovaCouncilPacket"
+        },
+        {
+          "kind": "function",
+          "name": "buildNovaReviewRoute"
+        },
+        {
+          "kind": "function",
+          "name": "decideNovaAction"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "d1348d753c3824cc7c9404e082f9598d220680b5",
+      "path": "apps/web/lib/opportunity-engine/capability-governor.ts",
+      "symbols": [
+        {
+          "kind": "type",
+          "name": "CapabilityRiskFlag"
+        },
+        {
+          "kind": "interface",
+          "name": "CapabilityRoute"
+        },
+        {
+          "kind": "type",
+          "name": "CapabilityTaskClass"
+        },
+        {
+          "kind": "type",
+          "name": "CapabilityTrustTier"
+        },
+        {
+          "kind": "interface",
+          "name": "GovernedCapabilityCandidate"
+        },
+        {
+          "kind": "function",
+          "name": "classifyCapabilityTrust"
+        },
+        {
+          "kind": "function",
+          "name": "detectCapabilityRisk"
+        },
+        {
+          "kind": "function",
+          "name": "routeCapabilities"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "ac9cfb645da7af7532701fabea0a0eef44dfcdbc",
+      "path": "apps/web/lib/opportunity-engine/capability-inventory.ts",
+      "symbols": [
+        {
+          "kind": "type",
+          "name": "CapabilityCaptureBatch"
+        },
+        {
+          "kind": "type",
+          "name": "CapabilityConnectionState"
+        },
+        {
+          "kind": "interface",
+          "name": "CapabilityInventoryEntry"
+        },
+        {
+          "kind": "interface",
+          "name": "CapabilityInventorySummary"
+        },
+        {
+          "kind": "type",
+          "name": "CapabilityInventorySurface"
+        },
+        {
+          "kind": "function",
+          "name": "findCapabilitiesByName"
+        },
+        {
+          "kind": "function",
+          "name": "getAdditionalClaudePlugins"
+        },
+        {
+          "kind": "function",
+          "name": "getCapabilityInventory"
+        },
+        {
+          "kind": "function",
+          "name": "summarizeCapabilityInventory"
+        },
+        {
+          "kind": "function",
+          "name": "validateCapabilityInventory"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "01458a3ecef50ba831010d935acfde260470ac4e",
+      "path": "apps/web/lib/opportunity-engine/change-detection.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "detectMaterialChanges"
+        },
+        {
+          "kind": "function",
+          "name": "observationKey"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "f12e65ebc0ae3c5c2d0406b61b0942f11f2eac37",
+      "path": "apps/web/lib/opportunity-engine/evidence.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "assessEvidence"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "52f844ae230e1182bfd3c62301c5f427861b986f",
+      "path": "apps/web/lib/opportunity-engine/experiment.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "buildExperiment"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "901b4135a4684b106f6ed857701f1aa2ab9ed237",
+      "path": "apps/web/lib/opportunity-engine/founder-command.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "FOUNDER_OPERATING_POLICY"
+        },
+        {
+          "kind": "interface",
+          "name": "FounderDailyBrief"
+        },
+        {
+          "kind": "interface",
+          "name": "FounderOperatingPolicy"
+        },
+        {
+          "kind": "interface",
+          "name": "FounderQueueDecision"
+        },
+        {
+          "kind": "type",
+          "name": "FounderWorkAuthority"
+        },
+        {
+          "kind": "interface",
+          "name": "FounderWorkItem"
+        },
+        {
+          "kind": "type",
+          "name": "FounderWorkLane"
+        },
+        {
+          "kind": "type",
+          "name": "FounderWorkState"
+        },
+        {
+          "kind": "interface",
+          "name": "NightlyAutopsy"
+        },
+        {
+          "kind": "interface",
+          "name": "NightlyAutopsyInput"
+        },
+        {
+          "kind": "function",
+          "name": "buildFounderDailyBrief"
+        },
+        {
+          "kind": "function",
+          "name": "buildFounderQueue"
+        },
+        {
+          "kind": "function",
+          "name": "buildNightlyAutopsy"
+        },
+        {
+          "kind": "function",
+          "name": "scoreFounderWork"
+        },
+        {
+          "kind": "function",
+          "name": "validateFounderWorkItem"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "7571cf1dbba4fc4bb216575cadde49422b892419",
+      "path": "apps/web/lib/opportunity-engine/founder-work-seed.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "FOUNDER_WORK_SEED"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "063728b59c6177ca8e9af2219285d68963eff265",
+      "path": "apps/web/lib/opportunity-engine/index.ts",
+      "symbols": [
+        {
+          "kind": "star-reexport",
+          "name": "* from ./capability-governor"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./capability-inventory"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./change-detection"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./evidence"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./experiment"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./founder-command"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./founder-work-seed"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./learning"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./lifecycle"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./monetization"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./nova-agent"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./nova-subagents"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./personal-ai-income"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./pipeline"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./platform-ecosystems"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./platform-ecosystems-extended"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./policy"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./requirements-traceability"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./scoring"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./source-adapters"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./source-fetch"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./source-intake"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./source-monitor"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./source-registry"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./source-schedule"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./training-rights"
+        },
+        {
+          "kind": "star-reexport",
+          "name": "* from ./types"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "880d1b2e76e82c459e8c99b5bddb4a4fc3eb2f6f",
+      "path": "apps/web/lib/opportunity-engine/learning.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "buildLearningReport"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "aaaf63828d34d02779c0d35f1f72e4a8410c8f5e",
+      "path": "apps/web/lib/opportunity-engine/lifecycle.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "assertLifecycleTransition"
+        },
+        {
+          "kind": "function",
+          "name": "assertMoneyStateTransition"
+        },
+        {
+          "kind": "function",
+          "name": "canTransitionLifecycle"
+        },
+        {
+          "kind": "function",
+          "name": "canTransitionMoneyState"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "423708ee3eb5a80ea1972015b8f846170d228d34",
+      "path": "apps/web/lib/opportunity-engine/monetization.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "MONETIZATION_LANES"
+        },
+        {
+          "kind": "interface",
+          "name": "MonetizationLaneDefinition"
+        },
+        {
+          "kind": "function",
+          "name": "getMonetizationLane"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "0e14a5b855e614ff721964e82a0df1fabd0ce085",
+      "path": "apps/web/lib/opportunity-engine/nova-agent.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "NOVA_AGENT"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaAlert"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaCycleInput"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaCycleResult"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaHandoff"
+        },
+        {
+          "kind": "function",
+          "name": "runNovaCycle"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "b0c5916a92defa8a5c766a702cf598ce1fb734d1",
+      "path": "apps/web/lib/opportunity-engine/nova-subagents.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "NOVA_SUBAGENTS"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaSubagentTemplate"
+        },
+        {
+          "kind": "function",
+          "name": "getNovaSubagent"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "a9e612138a06857a9f934d6e0ffe9c7931fa5e20",
+      "path": "apps/web/lib/opportunity-engine/personal-ai-income.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "PERSONAL_AI_INCOME_OPPORTUNITIES"
+        },
+        {
+          "kind": "interface",
+          "name": "PersonalAiIncomeOpportunity"
+        },
+        {
+          "kind": "interface",
+          "name": "PersonalAiIncomeSummary"
+        },
+        {
+          "kind": "type",
+          "name": "PersonalIncomeOpportunityState"
+        },
+        {
+          "kind": "type",
+          "name": "PersonalIncomePriority"
+        },
+        {
+          "kind": "type",
+          "name": "PersonalIncomeType"
+        },
+        {
+          "kind": "function",
+          "name": "summarizePersonalAiIncome"
+        },
+        {
+          "kind": "function",
+          "name": "validatePersonalAiIncomeRegistry"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "5f8c377133f31c41364f7002f0506c8510032504",
+      "path": "apps/web/lib/opportunity-engine/pipeline.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "DEFAULT_PORTFOLIO_POLICY"
+        },
+        {
+          "kind": "interface",
+          "name": "PortfolioPolicy"
+        },
+        {
+          "kind": "function",
+          "name": "buildOpportunityPortfolio"
+        },
+        {
+          "kind": "function",
+          "name": "evaluateOpportunity"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "4ac05310e96d79a14925c7db1ea677918e40e9d2",
+      "path": "apps/web/lib/opportunity-engine/platform-ecosystems-extended.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "EXTENDED_AI_PLATFORM_OPPORTUNITIES"
+        },
+        {
+          "kind": "type",
+          "name": "ExtendedAiPlatformId"
+        },
+        {
+          "kind": "interface",
+          "name": "ExtendedAiPlatformOpportunity"
+        },
+        {
+          "kind": "interface",
+          "name": "PlatformOpportunityView"
+        },
+        {
+          "kind": "function",
+          "name": "combinePlatformOpportunities"
+        },
+        {
+          "kind": "function",
+          "name": "validateExtendedPlatformEcosystem"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "2555f1d159742909424dd117b3b78c02c71cd7c1",
+      "path": "apps/web/lib/opportunity-engine/platform-ecosystems.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "AI_PLATFORM_OPPORTUNITIES"
+        },
+        {
+          "kind": "interface",
+          "name": "AiPlatformEcosystemSummary"
+        },
+        {
+          "kind": "type",
+          "name": "AiPlatformId"
+        },
+        {
+          "kind": "interface",
+          "name": "AiPlatformOpportunity"
+        },
+        {
+          "kind": "type",
+          "name": "PlatformOpportunityChannel"
+        },
+        {
+          "kind": "type",
+          "name": "PlatformOpportunityState"
+        },
+        {
+          "kind": "type",
+          "name": "PlatformPriority"
+        },
+        {
+          "kind": "type",
+          "name": "PlatformValueType"
+        },
+        {
+          "kind": "function",
+          "name": "getAiPlatformOpportunitiesByPriority"
+        },
+        {
+          "kind": "function",
+          "name": "getAiPlatformOpportunity"
+        },
+        {
+          "kind": "function",
+          "name": "summarizeAiPlatformEcosystem"
+        },
+        {
+          "kind": "function",
+          "name": "validateAiPlatformEcosystem"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "c04c8c6405ee30f591bb20e2a117b1293f75675e",
+      "path": "apps/web/lib/opportunity-engine/policy.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "decidePolicy"
+        },
+        {
+          "kind": "function",
+          "name": "findHardBlockers"
+        },
+        {
+          "kind": "function",
+          "name": "requiredReviewsFor"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "c505cf49aded1eacfe8e24a8b3e207bafcace89b",
+      "path": "apps/web/lib/opportunity-engine/requirements-traceability.ts",
+      "symbols": [
+        {
+          "kind": "type",
+          "name": "RequirementState"
+        },
+        {
+          "kind": "interface",
+          "name": "RequirementsTraceabilitySummary"
+        },
+        {
+          "kind": "interface",
+          "name": "TracedRequirement"
+        },
+        {
+          "kind": "function",
+          "name": "getTracedRequirement"
+        },
+        {
+          "kind": "function",
+          "name": "getTracedRequirements"
+        },
+        {
+          "kind": "function",
+          "name": "summarizeRequirementsTraceability"
+        },
+        {
+          "kind": "function",
+          "name": "validateRequirementsTraceability"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "b1876d7f8da7f67b1ee6ae88290466713aa21a31",
+      "path": "apps/web/lib/opportunity-engine/scoring.ts",
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "scoreOpportunity"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "e064a01f363b32e24cacff9742aeb0ecb53e22c7",
+      "path": "apps/web/lib/opportunity-engine/source-adapters.ts",
+      "symbols": [
+        {
+          "kind": "interface",
+          "name": "ParsedOpportunitySnapshot"
+        },
+        {
+          "kind": "function",
+          "name": "parseOpportunitySourcePayload"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "6f7075971f686546481d40955beff126f4c80b1b",
+      "path": "apps/web/lib/opportunity-engine/source-fetch.ts",
+      "symbols": [
+        {
+          "kind": "interface",
+          "name": "OpportunitySourceCheckpoint"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunitySourceFetchOptions"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunitySourceFetchResult"
+        },
+        {
+          "kind": "type",
+          "name": "OpportunitySourceFetchStatus"
+        },
+        {
+          "kind": "function",
+          "name": "fetchOpportunitySourceSnapshot"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "c8340df938c5687d73a16e6f81423579a0106b70",
+      "path": "apps/web/lib/opportunity-engine/source-intake.ts",
+      "symbols": [
+        {
+          "kind": "type",
+          "name": "UserSourceIntakeKind"
+        },
+        {
+          "kind": "interface",
+          "name": "UserSourceIntakeSummary"
+        },
+        {
+          "kind": "interface",
+          "name": "UserSourceReviewItem"
+        },
+        {
+          "kind": "function",
+          "name": "buildUserSourceReviewQueue"
+        },
+        {
+          "kind": "function",
+          "name": "summarizeUserSuppliedSourceIntake"
+        },
+        {
+          "kind": "function",
+          "name": "validateUserSuppliedSourceIntake"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "6181ed7ef4d37d383850775025793425e2e4aabc",
+      "path": "apps/web/lib/opportunity-engine/source-monitor.ts",
+      "symbols": [
+        {
+          "kind": "interface",
+          "name": "NovaSourceMonitorInput"
+        },
+        {
+          "kind": "interface",
+          "name": "NovaSourceMonitorResult"
+        },
+        {
+          "kind": "function",
+          "name": "runNovaSourceMonitor"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "6c5531fc2f1817a7e354ece6e222ad79c9f21e88",
+      "path": "apps/web/lib/opportunity-engine/source-registry.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "DEFAULT_OPPORTUNITY_SOURCES"
+        },
+        {
+          "kind": "function",
+          "name": "enabledOpportunitySources"
+        },
+        {
+          "kind": "function",
+          "name": "getOpportunitySource"
+        },
+        {
+          "kind": "function",
+          "name": "validateSourceRegistry"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "e0badd1fb65e628ba5c5e3f5d336f2e19fbc0625",
+      "path": "apps/web/lib/opportunity-engine/source-schedule.ts",
+      "symbols": [
+        {
+          "kind": "const",
+          "name": "DEFAULT_SCHEDULE_POLICY"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunitySchedulePolicy"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunitySourceRunState"
+        },
+        {
+          "kind": "interface",
+          "name": "ScheduledOpportunitySource"
+        },
+        {
+          "kind": "function",
+          "name": "scheduleOpportunitySources"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "54d84fe06044946f5a0143ddcb02050b9836738a",
+      "path": "apps/web/lib/opportunity-engine/training-rights.ts",
+      "symbols": [
+        {
+          "kind": "interface",
+          "name": "DataAssetRightsRecord"
+        },
+        {
+          "kind": "type",
+          "name": "DataAssetUse"
+        },
+        {
+          "kind": "interface",
+          "name": "DataAssetUseDecision"
+        },
+        {
+          "kind": "function",
+          "name": "evaluateDataAssetUse"
+        }
+      ]
+    },
+    {
+      "headBlobSha": "78af1adee3b75d234b08083fbb1bb661d00cf753",
+      "path": "apps/web/lib/opportunity-engine/types.ts",
+      "symbols": [
+        {
+          "kind": "type",
+          "name": "ChangeKind"
+        },
+        {
+          "kind": "type",
+          "name": "CouncilReviewer"
+        },
+        {
+          "kind": "interface",
+          "name": "EconomicRange"
+        },
+        {
+          "kind": "interface",
+          "name": "EvidenceAssessment"
+        },
+        {
+          "kind": "type",
+          "name": "EvidenceTier"
+        },
+        {
+          "kind": "interface",
+          "name": "ExperimentBudget"
+        },
+        {
+          "kind": "interface",
+          "name": "LearningBucket"
+        },
+        {
+          "kind": "interface",
+          "name": "LearningReport"
+        },
+        {
+          "kind": "interface",
+          "name": "MaterialChange"
+        },
+        {
+          "kind": "type",
+          "name": "MoneyState"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityCandidate"
+        },
+        {
+          "kind": "type",
+          "name": "OpportunityClass"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityDecision"
+        },
+        {
+          "kind": "type",
+          "name": "OpportunityDisposition"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityEconomics"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityEvidence"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityExperiment"
+        },
+        {
+          "kind": "type",
+          "name": "OpportunityLifecycleState"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityObservation"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityOutcome"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityPolicyDecision"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityPortfolio"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityRisks"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunityScore"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunitySignals"
+        },
+        {
+          "kind": "interface",
+          "name": "OpportunitySource"
+        },
+        {
+          "kind": "type",
+          "name": "PriorityBand"
+        },
+        {
+          "kind": "type",
+          "name": "RevenueLane"
+        },
+        {
+          "kind": "type",
+          "name": "RightsStatus"
+        },
+        {
+          "kind": "type",
+          "name": "SecurityPosture"
+        },
+        {
+          "kind": "type",
+          "name": "SourceAuthority"
+        },
+        {
+          "kind": "type",
+          "name": "SourceTransport"
+        }
+      ]
+    }
+  ],
+  "unparsedFiles": []
+}
