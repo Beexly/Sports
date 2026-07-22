@@ -102,3 +102,32 @@ export type {
   BlockedDecisionRecord,
   BlockedDecisionRecorder,
 } from "./executor";
+
+// §10 budget reservation ENGINE (mutating). Internal-only: production cash
+// holds happen exclusively inside the sealed executor's §9 pipeline; call
+// sites may never choose their own budget windows (§10.5). Tests drive the
+// engine directly against in-memory fakes and the disposable Postgres.
+export {
+  reserve,
+  settleProvisional,
+  release,
+  holdForReconciliation,
+  confirmSettlement,
+  sweepExpired,
+} from "./budget";
+export type {
+  BudgetDb,
+  ReserveInput,
+  ReserveResult,
+  ReservationHandle,
+  SettleProvisionalInput,
+  SettleProvisionalResult,
+  ReservationSelector,
+  ConfirmSettlementInput,
+  SweepResult,
+} from "./budget";
+export type { BudgetSeam } from "./invocation-pipeline";
+
+// §10.8: the fail-closed credit port VALUE (tests assert its behavior; the
+// production executor seals it as the only credit authority).
+export { failClosedCreditAuthorizationPort } from "./credit-port";

@@ -54,6 +54,13 @@ import { effectiveMode, resolveCostMode, resolveEnvClass } from "./cost-mode";
 import type { EmergencyReceiptStore } from "./emergency";
 import { failClosedReceiptStore, verifyEmergencyOverride } from "./emergency";
 import {
+  CONTROL_PLANE_PRICING_VERSION,
+  estimateAttemptPlanWorstCaseUsd,
+  requiresCashReservation,
+} from "./budget";
+import type { CreditAuthorizationPort } from "./credit-port";
+import { failClosedCreditAuthorizationPort } from "./credit-port";
+import {
   BudgetBlocked,
   ConfigurationError,
   PolicyBlocked,
@@ -156,6 +163,12 @@ export interface SealedAiExecutorDependencies {
   readonly dispatch: AiDispatchFn;
   /** §9.6 blocked-decision persistence. MUST be non-throwing (best-effort). */
   readonly recordBlocked: BlockedDecisionRecorder;
+  /**
+   * §10.8 credit authorization. Production seals the FAIL-CLOSED port
+   * (`failClosedCreditAuthorizationPort`) until S5 lands a real NOVA-backed
+   * adapter — CONFIRMED_CREDITS_ONLY is therefore unreachable in production.
+   */
+  readonly credit: CreditAuthorizationPort;
 }
 
 export interface AiExecutor {
@@ -295,6 +308,38 @@ export function createAiExecutor(
           maxVendorCashUsd = Math.min(maxVendorCashUsd, receipt.maxSpendUsd);
         }
 
+        // 6.5 (§10.3): a zero-dollar cash cap AUTHORIZES NOTHING BILLABLE.
+        // Defense in depth — the §9 pipeline re-checks before reserving.
+        if (requiresCashReservation(mode) && maxVendorCashUsd <= 0) {
+          throw new BudgetBlocked(
+            `Task class "${authority.taskClass}" resolved to billable mode ` +
+              `${mode} with maxVendorCashUsd = ${maxVendorCashUsd} — a zero ` +
+              "cap means NO cash authorization exists; refusing to dispatch.",
+          );
+        }
+
+        // 6.6 (§10.8): CONFIRMED_CREDITS_ONLY spend must be atomically
+        // reserved against NOVA-owned credit truth through the
+        // CreditAuthorizationPort — a fresh snapshot read is not enough under
+        // concurrency. Production seals the fail-closed port (no adapter
+        // exists yet), so this mode is UNREACHABLE in production until S5
+        // lands a real adapter.
+        if (mode === "CONFIRMED_CREDITS_ONLY") {
+          const worstCaseUsd = estimateAttemptPlanWorstCaseUsd({
+            routes: authority.permittedProviderRoutes,
+            perAttemptCeilingUsd: maxVendorCashUsd,
+            pricingVersion: CONTROL_PLANE_PRICING_VERSION,
+          });
+          await deps.credit.authorizeAndReserve({
+            requestId: request.requestId,
+            taskClass: authority.taskClass,
+            entity: request.entity,
+            worstCaseUsd,
+            reservationVersion: 1,
+            now,
+          });
+        }
+
         // 7. A plan with no fundable route must never reach transport: under
         // NO_BILLABLE_EXTERNAL with no permitted "local" route there is nothing
         // the transport may legally do — fail closed BEFORE the dispatch seam.
@@ -384,6 +429,19 @@ const productionDispatch: AiDispatchFn = async (plan) => {
     observability: () => new observabilityModule.ObservabilitySink(sqlForQueue),
     dispatchers: createProviderDispatchers(),
     now: () => new Date(),
+    // §10: the budget seam. The engine writes through the real Prisma client;
+    // overage incidents surface through the observability sink (non-throwing).
+    budget: {
+      db: dbModule.db,
+      incidents: async (incident) => {
+        new observabilityModule.ObservabilitySink(sqlForQueue).markDegraded(
+          `BUDGET_OVERAGE_LOCKED: window ${incident.windowId} locked — ` +
+            `invocation ${incident.invocationId} actual ${incident.actualUsd} ` +
+            `exceeded hold ${incident.heldUsd}`,
+          null,
+        );
+      },
+    },
   });
   return dispatch(plan);
 };
@@ -450,6 +508,9 @@ function sealedProductionExecutor(): AiExecutor {
       receipts: failClosedReceiptStore,
       dispatch: productionDispatch,
       recordBlocked: productionRecordBlocked,
+      // §10.8: no real credit adapter exists — CONFIRMED_CREDITS_ONLY is
+      // unreachable in production, fail-closed.
+      credit: failClosedCreditAuthorizationPort,
     });
   }
   return sealedSingleton;
