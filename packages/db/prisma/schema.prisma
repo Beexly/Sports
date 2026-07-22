@@ -2628,6 +2628,8 @@ model AiInvocation {
   resultJson Json? // the original validated output, replayed on terminal replay
 
   // ── §9.6 non-dispatchable blocked decisions ────────────────────────────
+  // These fields are durable incident history: a CONFIGURATION_BLOCKED row
+  // reclaimed after the config is fixed KEEPS them even once status moves on.
   blockedReasonCode String? // "POLICY_BLOCKED" | "BUDGET_BLOCKED" | "CONFIGURATION_BLOCKED"
   blockedDetail     String?
 
@@ -2723,7 +2725,7 @@ model AiFinancialAttribution {
 model AiTelemetryRecovery {
   id             String    @id @default(cuid())
   invocationId   String
-  kind           String // "FINALIZE_SUCCESS" | "ATTEMPT_TELEMETRY"
+  kind           String // "FINALIZE_SUCCESS" | "FINALIZE_AMBIGUOUS" | "FINALIZE_FAILURE" | "ATTEMPT_TELEMETRY"
   payload        Json
   attempts       Int       @default(0)
   maxAttempts    Int       @default(10)
@@ -2733,7 +2735,9 @@ model AiTelemetryRecovery {
   deliveredAt    DateTime?
   abandonedAt    DateTime?
 
-  invocation AiInvocation @relation(fields: [invocationId], references: [id], onDelete: Cascade)
+  // RESTRICT: these rows exist precisely to preserve writes that could not
+  // land — a cascade would silently drop them with the parent (§6.2 doctrine).
+  invocation AiInvocation @relation(fields: [invocationId], references: [id], onDelete: Restrict)
 
   @@index([deliveredAt, leaseExpiresAt])
   @@index([invocationId])

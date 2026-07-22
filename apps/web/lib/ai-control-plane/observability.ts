@@ -19,7 +19,11 @@
 
 import type { ControlSqlClient } from "./control-store";
 
-export type RecoveryKind = "FINALIZE_SUCCESS" | "ATTEMPT_TELEMETRY";
+export type RecoveryKind =
+  | "FINALIZE_SUCCESS"
+  | "FINALIZE_AMBIGUOUS"
+  | "FINALIZE_FAILURE"
+  | "ATTEMPT_TELEMETRY";
 
 export interface RecoveryEnqueueInput {
   readonly id: string;
@@ -105,8 +109,13 @@ export class ObservabilitySink {
 
 /**
  * Claim a batch of undelivered, unleased (or lease-expired), non-abandoned
- * recovery entries with a fencing lease. Atomic single UPDATE; two drainers
- * can never claim the same row for overlapping leases.
+ * recovery entries with a fencing lease. Atomic single UPDATE whose candidate
+ * SELECT takes row locks with SKIP LOCKED — under READ COMMITTED, a plain
+ * `WHERE id IN (SELECT … LIMIT n)` would let two concurrent drainers pick the
+ * same candidate rows and (via EvalPlanQual re-check) overwrite each other's
+ * fresh leases; FOR UPDATE SKIP LOCKED makes concurrent claimers partition
+ * the queue instead, so two drainers can never claim the same row for
+ * overlapping leases.
  */
 export async function claimRecoveryBatch(
   sql: ControlSqlClient,
@@ -130,6 +139,7 @@ export async function claimRecoveryBatch(
            AND "attempts" < "maxAttempts"
          ORDER BY "createdAt" ASC
          LIMIT $4
+         FOR UPDATE SKIP LOCKED
       )
       RETURNING "id", "invocationId", "kind", "payload", "attempts"`,
     [args.drainerToken, leaseUntil, args.now, args.limit],

@@ -74,6 +74,11 @@ export {
   type RecoveryQueueRow,
 } from "./observability";
 export {
+  drainAiTelemetryRecovery,
+  type DrainOptions,
+  type DrainSummary,
+} from "./recovery-drainer";
+export {
   dispatchAnthropicDirect,
   dispatchBedrock,
   dispatchVertex,

@@ -24,10 +24,23 @@
  *                                      UPDATE guarded on the OBSERVED owner
  *                                      token AND the expired lease; losing the
  *                                      race yields IN_PROGRESS, winning yields
- *                                      ACQUIRED with a fresh owner token that
- *                                      fences out every write of the stale
- *                                      owner (all subsequent writes are
- *                                      conditioned on the owner token).
+ *                                      a fresh owner token that fences out
+ *                                      every write of the stale owner (all
+ *                                      subsequent writes are conditioned on
+ *                                      the owner token). The winner then
+ *                                      inspects the recorded attempt history:
+ *                                      any AMBIGUOUS/TIMEOUT attempt, or an
+ *                                      attempt still open in DISPATCHED,
+ *                                      means the vendor charge is unproven —
+ *                                      the invocation is forced to a durable
+ *                                      AMBIGUOUS terminal and returned as
+ *                                      REPLAY_TERMINAL, never re-acquired for
+ *                                      dispatch. Only cleanly-failed (or
+ *                                      attempt-less) claims yield ACQUIRED.
+ *       BLOCKED + CONFIGURATION_BLOCKED reason → atomically reclaimed to
+ *                                      RUNNING for one normal dispatch (the
+ *                                      incident fields stay on the row); all
+ *                                      other BLOCKED rows replay terminally.
  *
  * The concurrency claim is proven against REAL Postgres (unique index + ON
  * CONFLICT), not a mock — see
@@ -272,6 +285,7 @@ interface ExistingRow {
   readonly leaseExpiresAt: Date | null;
   readonly resultJson: unknown;
   readonly resultHash: string | null;
+  readonly blockedReasonCode: string | null;
 }
 
 interface AttemptRow {
@@ -326,7 +340,7 @@ export function createPgControlStore(
   ): Promise<ExistingRow> {
     const rows = await sql.query<ExistingRow>(
       `SELECT "id", "status", "requestFingerprint", "executionOwnerToken",
-              "leaseExpiresAt", "resultJson", "resultHash"
+              "leaseExpiresAt", "resultJson", "resultHash", "blockedReasonCode"
          FROM "ai_invocations"
         WHERE "requestId" = $1 AND "taskClass" = $2`,
       [requestId, taskClass],
@@ -339,6 +353,28 @@ export function createPgControlStore(
       );
     }
     return row;
+  }
+
+  async function readAttempts(
+    invocationId: string,
+  ): Promise<readonly AttemptRow[]> {
+    return sql.query<AttemptRow>(
+      `SELECT "ordinal", "providerRequested", "providerUsed",
+              "modelRequested", "modelResolved", "status", "errorCode"
+         FROM "ai_attempts"
+        WHERE "invocationId" = $1
+        ORDER BY "ordinal" ASC`,
+      [invocationId],
+    );
+  }
+
+  async function nextFreeOrdinal(invocationId: string): Promise<number> {
+    const maxRows = await sql.query<{ max: number | string | null }>(
+      `SELECT MAX("ordinal") AS max FROM "ai_attempts" WHERE "invocationId" = $1`,
+      [invocationId],
+    );
+    const rawMax = maxRows[0]?.max ?? null;
+    return rawMax === null ? 0 : Number(rawMax) + 1;
   }
 
   return {
@@ -393,21 +429,49 @@ export function createPgControlStore(
         };
       }
       if (existing.status !== "RUNNING") {
-        const attemptRows = await sql.query<AttemptRow>(
-          `SELECT "ordinal", "providerRequested", "providerUsed",
-                  "modelRequested", "modelResolved", "status", "errorCode"
-             FROM "ai_attempts"
-            WHERE "invocationId" = $1
-            ORDER BY "ordinal" ASC`,
-          [existing.id],
-        );
+        // A transient CONFIGURATION_BLOCKED must not permanently poison the
+        // (requestId, taskClass) idempotency key (§9.6: the block is a durable
+        // INCIDENT record, not a forever execution veto). Once the config is
+        // fixed and the SAME request (same fingerprint) passes every authority
+        // gate again, the BLOCKED row is atomically reclaimed for one normal
+        // dispatch. The incident facts (blockedReasonCode/blockedDetail)
+        // remain on the row as history — never erased. POLICY_BLOCKED and
+        // BUDGET_BLOCKED rows stay terminal: those verdicts are replayed, not
+        // retried, until their own recovery paths (§10) exist.
+        if (
+          existing.status === "BLOCKED" &&
+          existing.blockedReasonCode === "CONFIGURATION_BLOCKED"
+        ) {
+          const reclaimed = await sql.query<{ id: string }>(
+            `UPDATE "ai_invocations"
+                SET "status" = 'RUNNING',
+                    "executionOwnerToken" = $1,
+                    "leaseExpiresAt" = $2,
+                    "heartbeatAt" = $3
+              WHERE "id" = $4
+                AND "status" = 'BLOCKED'
+                AND "blockedReasonCode" = 'CONFIGURATION_BLOCKED'
+              RETURNING "id"`,
+            [input.ownerToken, expires, input.now, existing.id],
+          );
+          if (reclaimed.length > 0) {
+            return {
+              kind: "ACQUIRED",
+              invocationId: existing.id,
+              stolen: false,
+              nextOrdinal: await nextFreeOrdinal(existing.id),
+            };
+          }
+          // Lost the reclaim race — another caller owns the retry.
+          return { kind: "IN_PROGRESS", invocationId: existing.id };
+        }
         return {
           kind: "REPLAY_TERMINAL",
           invocationId: existing.id,
           status: existing.status,
           output: parseResultJson(existing.resultJson),
           resultHash: existing.resultHash,
-          attempts: toSummaries(attemptRows),
+          attempts: toSummaries(await readAttempts(existing.id)),
         };
       }
       const leaseLive =
@@ -442,17 +506,59 @@ export function createPgControlStore(
         // Lost the steal race — someone else owns it now.
         return { kind: "IN_PROGRESS", invocationId: existing.id };
       }
-      const maxRows = await sql.query<{ max: number | string | null }>(
-        `SELECT MAX("ordinal") AS max FROM "ai_attempts" WHERE "invocationId" = $1`,
-        [existing.id],
+
+      // ── Unproven-funds fence (§9.2 recovery protocol / §10.1 direction).
+      // We now hold the lease, so the stale owner is fenced out of every
+      // further write. Inspect the RECORDED attempt history BEFORE handing
+      // this claim back for dispatch: an AMBIGUOUS or TIMEOUT attempt means
+      // the vendor charge state is unproven, and an attempt still sitting in
+      // DISPATCHED means the previous owner crashed somewhere around
+      // transport — also unproven. Re-dispatching any of these would re-spend
+      // funds whose original charge was never disproven. Instead, force the
+      // invocation to a durable AMBIGUOUS terminal (the reconciliation-hold
+      // state) and return it as a terminal replay — NEVER as ACQUIRED.
+      // Only claims whose every recorded attempt failed CLEANLY (or that have
+      // no attempts at all) may be re-acquired for dispatch.
+      const attempts = await readAttempts(existing.id);
+      const unproven = attempts.some(
+        (a) =>
+          a.status === "AMBIGUOUS" ||
+          a.status === "TIMEOUT" ||
+          a.status === "DISPATCHED",
       );
-      const rawMax = maxRows[0]?.max ?? null;
-      const nextOrdinal = rawMax === null ? 0 : Number(rawMax) + 1;
+      if (unproven) {
+        const finalized = await sql.query<{ id: string }>(
+          `UPDATE "ai_invocations"
+              SET "status" = 'AMBIGUOUS', "completedAt" = $1,
+                  "leaseExpiresAt" = NULL
+            WHERE "id" = $2 AND "status" = 'RUNNING'
+              AND "executionOwnerToken" = $3
+            RETURNING "id"`,
+          [input.now, existing.id, input.ownerToken],
+        );
+        if (finalized.length === 0) {
+          // Our own fence was raced (should not happen — we hold the token).
+          return { kind: "IN_PROGRESS", invocationId: existing.id };
+        }
+        return {
+          kind: "REPLAY_TERMINAL",
+          invocationId: existing.id,
+          status: "AMBIGUOUS",
+          output: parseResultJson(existing.resultJson),
+          resultHash: existing.resultHash,
+          attempts: toSummaries(attempts),
+        };
+      }
+
+      const rawMax = attempts.reduce<number>(
+        (m, a) => Math.max(m, a.ordinal),
+        -1,
+      );
       return {
         kind: "ACQUIRED",
         invocationId: existing.id,
         stolen: true,
-        nextOrdinal,
+        nextOrdinal: rawMax + 1,
       };
     },
 
@@ -536,42 +642,46 @@ export function createPgControlStore(
     },
 
     async finalizeSuccess(input: FinalizeSuccessInput): Promise<boolean> {
-      const updated = await sql.query<{ id: string }>(
-        `UPDATE "ai_invocations"
-            SET "status" = 'SUCCEEDED', "completedAt" = $1,
-                "resultJson" = $2::jsonb, "resultHash" = $3,
-                "leaseExpiresAt" = NULL
-          WHERE "id" = $4 AND "status" = 'RUNNING'
-            AND "executionOwnerToken" = $5
-          RETURNING "id"`,
+      // ONE data-modifying statement: the invocation finalization and the
+      // winning attempt's post-dispatch facts (§9.4) commit atomically — a
+      // partial commit can never leave a SUCCEEDED invocation whose winning
+      // attempt is stuck DISPATCHED with no provider-served record. The
+      // attempt CTE is gated on the invocation CTE, so a fenced-out owner
+      // updates NEITHER row.
+      const rows = await sql.query<{ invApplied: boolean }>(
+        `WITH inv AS (
+           UPDATE "ai_invocations"
+              SET "status" = 'SUCCEEDED', "completedAt" = $1,
+                  "resultJson" = $2::jsonb, "resultHash" = $3,
+                  "leaseExpiresAt" = NULL
+            WHERE "id" = $4 AND "status" = 'RUNNING'
+              AND "executionOwnerToken" = $5
+            RETURNING "id"
+         ), att AS (
+           UPDATE "ai_attempts"
+              SET "status" = 'SUCCEEDED', "providerUsed" = $6,
+                  "modelResolved" = $7, "providerRequestId" = $8,
+                  "inputTokens" = $9, "outputTokens" = $10, "endedAt" = $1,
+                  "resultHash" = $3
+            WHERE "id" = $11 AND EXISTS (SELECT 1 FROM inv)
+            RETURNING "id"
+         )
+         SELECT EXISTS (SELECT 1 FROM inv) AS "invApplied"`,
         [
           input.now,
           input.resultJson,
           input.resultHash,
           input.invocationId,
           input.ownerToken,
-        ],
-      );
-      if (updated.length === 0) return false; // fenced out
-      await sql.query(
-        `UPDATE "ai_attempts"
-            SET "status" = 'SUCCEEDED', "providerUsed" = $1,
-                "modelResolved" = $2, "providerRequestId" = $3,
-                "inputTokens" = $4, "outputTokens" = $5, "endedAt" = $6,
-                "resultHash" = $7
-          WHERE "id" = $8`,
-        [
           input.providerUsed,
           input.modelResolved,
           input.providerRequestId,
           input.inputTokens,
           input.outputTokens,
-          input.now,
-          input.resultHash,
           input.attemptId,
         ],
       );
-      return true;
+      return rows[0]?.invApplied === true; // false = fenced out
     },
 
     async finalizeFailure(input: FinalizeFailureInput): Promise<boolean> {

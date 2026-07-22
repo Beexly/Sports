@@ -407,13 +407,47 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
 
       if (outcome.kind === "TIMEOUT" || outcome.kind === "AMBIGUOUS") {
         // We cannot prove the vendor did not charge — never spend the same
-        // funds on another route. Finalize AMBIGUOUS and stop.
-        await deps.store.finalizeFailure({
+        // funds on another route. Finalize AMBIGUOUS and stop. The finalize
+        // is GUARDED: a store failure here must never swallow the
+        // AmbiguousCharge verdict (the caller would see a retryable-looking
+        // store error while the durable "charge unproven" record is lost).
+        // Instead: mark degraded, queue a durable FINALIZE_AMBIGUOUS recovery
+        // entry (§9.7), and STILL raise AmbiguousCharge. The attempt row
+        // already durably carries the AMBIGUOUS/TIMEOUT status, so even
+        // before recovery drains, the claim-steal path refuses to
+        // re-dispatch this invocation.
+        const finalizeInput = {
           invocationId,
           ownerToken,
-          status: "AMBIGUOUS",
+          status: "AMBIGUOUS" as const,
           now: deps.now(),
-        });
+        };
+        try {
+          const applied = await deps.store.finalizeFailure(finalizeInput);
+          if (!applied) {
+            observability.markDegraded(
+              `finalizeFailure(AMBIGUOUS) fenced out for invocation ${invocationId}`,
+              null,
+            );
+            await observability.enqueueRecovery({
+              id: idFactory(),
+              invocationId,
+              kind: "FINALIZE_AMBIGUOUS",
+              payload: { ...finalizeInput, now: finalizeInput.now.toISOString() },
+            });
+          }
+        } catch (error) {
+          observability.markDegraded(
+            `finalizeFailure(AMBIGUOUS) failed for invocation ${invocationId}`,
+            error,
+          );
+          await observability.enqueueRecovery({
+            id: idFactory(),
+            invocationId,
+            kind: "FINALIZE_AMBIGUOUS",
+            payload: { ...finalizeInput, now: finalizeInput.now.toISOString() },
+          });
+        }
         throw new AmbiguousCharge(
           `Attempt ${ordinal} on route "${route}" ended ${outcome.kind} after ` +
             "dispatch — the charge state is unproven; reconciliation required " +
@@ -423,18 +457,37 @@ export function createLedgeredDispatch(deps: LedgeredDispatchDeps): AiDispatchFn
     }
 
     // Every permitted route failed cleanly (no charge proven or possible).
+    // Guarded the same way: losing this finalize must not replace the honest
+    // ProviderUnavailable verdict, and the durable FAILED terminal is
+    // recovered via the §9.7 queue instead of relying on a lease-expiry steal.
+    const failedFinalizeInput = {
+      invocationId,
+      ownerToken,
+      status: "FAILED" as const,
+      now: deps.now(),
+    };
     try {
-      await deps.store.finalizeFailure({
-        invocationId,
-        ownerToken,
-        status: "FAILED",
-        now: deps.now(),
-      });
+      const applied = await deps.store.finalizeFailure(failedFinalizeInput);
+      if (!applied) {
+        observability.markDegraded(
+          `finalizeFailure(FAILED) fenced out for invocation ${invocationId}`,
+          null,
+        );
+      }
     } catch (error) {
       observability.markDegraded(
-        `finalizeFailure failed for invocation ${invocationId}`,
+        `finalizeFailure(FAILED) failed for invocation ${invocationId}`,
         error,
       );
+      await observability.enqueueRecovery({
+        id: idFactory(),
+        invocationId,
+        kind: "FINALIZE_FAILURE",
+        payload: {
+          ...failedFinalizeInput,
+          now: failedFinalizeInput.now.toISOString(),
+        },
+      });
     }
     throw new ProviderUnavailable(
       `All ${routes.length} permitted provider route(s) failed for task ` +
