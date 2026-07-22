@@ -587,6 +587,126 @@ describe("createPgCreditAuthorizationPort — atomic reserve/settle/release", ()
     if (second.admitted) return;
     expect(second.reason).toBe("insufficient-headroom");
   });
+
+  it("Decision A — settling PERMANENTLY consumes spend: a second wave against a store that correctly reflects settlement never re-admits it", async () => {
+    // createPgCreditAuthorizationPort's own ledger (above) only guards the
+    // CURRENT hold total against a snapshot's spendable headroom re-read at
+    // authorize time — it does not itself remember settled history. Decision
+    // A's permanent-consume guarantee therefore falls on whatever backs
+    // `CreditSnapshotStore.findCovering`: a real implementation MUST fold
+    // settled ledger spend into `remainingMinorUnits` (the same way
+    // `budget.ts`'s single-window cash cap folds `provisionalUsd` into its
+    // own atomic guard). This test builds the smallest store that does that
+    // correctly and proves the composition — port arithmetic + a
+    // settlement-aware store — never re-admits consumed spend. A store that
+    // forgot to decrement `remainingMinorUnits` after settlement would fail
+    // this test (over-admit on the second wave), which is exactly the
+    // regression Decision A rules against.
+    const { db } = makeInMemoryCreditLedgerDb();
+    const port = createPgCreditAuthorizationPort(db);
+    const grantId = "g-decision-a";
+    let remainingMinorUnits = 600_00; // $600.00 spendable
+    const store: CreditSnapshotStore = {
+      async findCovering() {
+        return [validSnapshot({ grantId, remainingMinorUnits, reservedMinorUnits: 0 })];
+      },
+    };
+
+    // Wave 1: ten sequential $100 authorizes; exactly 6 fit the $600 balance.
+    const wave1: Array<{ handle: Awaited<ReturnType<CreditAuthorizationPort["authorize"]>> }> = [];
+    for (let i = 0; i < 10; i++) {
+      const decision = await port.authorize({
+        store,
+        scope: scopeOf(),
+        worstCaseMinorUnits: 100_00,
+        worstCaseCurrency: "USD",
+        now: NOW,
+        expiresAt: new Date(NOW.getTime() + 60_000),
+        idFactory: seqId,
+      });
+      wave1.push({ handle: decision });
+    }
+    const admitted1 = wave1.filter((r) => r.handle.admitted);
+    expect(admitted1).toHaveLength(6);
+
+    // Settle every admitted reservation at the full $100 held, and — as any
+    // correct real store implementation must — fold the settled amount out
+    // of the spendable balance PERMANENTLY.
+    for (const r of admitted1) {
+      if (!r.handle.admitted) continue;
+      await port.settle(r.handle.handle, 100_00);
+      remainingMinorUnits -= 100_00;
+    }
+    expect(remainingMinorUnits).toBe(0); // the whole $600 is now settled, gone for good
+
+    // Wave 2: ten MORE $100 authorizes against the now-zero balance. None
+    // are admitted — the consumed $600 is never re-admitted.
+    for (let i = 0; i < 10; i++) {
+      const decision = await port.authorize({
+        store,
+        scope: scopeOf(),
+        worstCaseMinorUnits: 100_00,
+        worstCaseCurrency: "USD",
+        now: NOW,
+        expiresAt: new Date(NOW.getTime() + 60_000),
+        idFactory: seqId,
+      });
+      expect(decision.admitted).toBe(false);
+    }
+  });
+
+  it("Decision A — a PARTIAL settle wave frees only the remainder, never the consumed portion", async () => {
+    const { db } = makeInMemoryCreditLedgerDb();
+    const port = createPgCreditAuthorizationPort(db);
+    const grantId = "g-decision-a-partial";
+    let remainingMinorUnits = 600_00;
+    const store: CreditSnapshotStore = {
+      async findCovering() {
+        return [validSnapshot({ grantId, remainingMinorUnits, reservedMinorUnits: 0 })];
+      },
+    };
+
+    const admitted1: Array<Extract<Awaited<ReturnType<CreditAuthorizationPort["authorize"]>>, { admitted: true }>> = [];
+    for (let i = 0; i < 10; i++) {
+      const decision = await port.authorize({
+        store,
+        scope: scopeOf(),
+        worstCaseMinorUnits: 100_00,
+        worstCaseCurrency: "USD",
+        now: NOW,
+        expiresAt: new Date(NOW.getTime() + 60_000),
+        idFactory: seqId,
+      });
+      if (decision.admitted) admitted1.push(decision);
+    }
+    expect(admitted1).toHaveLength(6);
+
+    // Settle each at HALF the held amount: $300 permanently consumed, $300
+    // of headroom correctly freed by the store.
+    for (const r of admitted1) {
+      await port.settle(r.handle, 50_00);
+      remainingMinorUnits -= 50_00;
+    }
+    expect(remainingMinorUnits).toBe(300_00);
+
+    // A second wave of ten $100 authorizes admits EXACTLY 3 — the freed
+    // $300 — never the consumed $300.
+    let admitted2 = 0;
+    for (let i = 0; i < 10; i++) {
+      const decision = await port.authorize({
+        store,
+        scope: scopeOf(),
+        worstCaseMinorUnits: 100_00,
+        worstCaseCurrency: "USD",
+        now: NOW,
+        expiresAt: new Date(NOW.getTime() + 60_000),
+        idFactory: seqId,
+      });
+      if (decision.admitted) admitted2++;
+    }
+    expect(admitted2).toBe(3);
+    expect(admitted2).toBeLessThan(admitted1.length);
+  });
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
