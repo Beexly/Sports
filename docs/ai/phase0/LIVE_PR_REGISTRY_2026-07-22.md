@@ -95,3 +95,43 @@ NOVA live-source validation remains **`FAILED_CLOSED`**. The supplied ecosystem
 snapshot records that no live source receipt existed, and the validation report
 records that the command produced no receipt. No reproducible immutable receipt
 has been produced since. Do not describe NOVA source validation as passing.
+
+---
+
+## 2026-07-22 addendum — C0 truth registration (append-only)
+
+Appended by the CONSTELLATION §15-C0 unit. Rows and notes above are NOT
+rewritten; this section supersedes only the specific heads it names. All heads
+below were verified live via `git ls-remote origin` and the GitHub PR list on
+2026-07-22. `main` remains **`c19a00d`** (re-verified). All rows carry
+`IMPLEMENTED_ON_DRAFT_BRANCH`, `NOT_MERGED`, `NOT_CUMULATIVELY_VALIDATED`,
+`NOT_PRODUCTION_ACTIVE`.
+
+### New rows
+
+| PR | Branch @ head (verified) | Base | State | Disposition |
+|----|--------------------------|------|-------|-------------|
+| #167 | `nova/convergence-inventory-tooling` @ `5c5d754` | main | open/draft | NOVA deterministic convergence inventory + receipt tooling; launched this wave |
+| #168 | `nova/s2-capability-governor` @ `225a64b` | main | open/draft | NOVA S2 — capability inventory + governor (freeze §4, precondition S1/#165); launched this wave |
+| #169 | `nova/s3-source-runtime` @ `a7e2c1a` | main | open/draft | NOVA S3 — source registry/runtime with failed-closed evidence receipts (freeze §4); launched this wave |
+| #170 | `jarvis/genesis-kernel-recovery` @ `bbb7f9f` | main | open/draft | Genesis Kernel plan-compiler recovery (J lane). The C0 tasking listed this branch as "PR pending"; verification found the PR already open as **#170** |
+
+### Head refreshes (branches whose heads moved since the table above)
+
+| PR | Old head (table above) | New head (verified 2026-07-22) | Why |
+|----|------------------------|--------------------------------|-----|
+| #152 | `aa61929` | `098fbf3` | freeze hardening addendum committed to the truth branch |
+| #158 | `39bd416` | `9c1218f` | correction work on the import guard |
+| #159 | `ef80280` | `afa2792` | Phase 1A hardening corrections |
+| #160 | `6bf296f` | `52d7dba` | Phase 1P hardening corrections |
+| #162 | `2392d5c` | `4c8af90` | **head moved: authority inversion (caller-authored → registry-owned policy) + adversarial-review fixes** |
+| #165 | `2feafc1` | `d52e3c9` | S1 contract work continued (14.1 in progress) |
+
+Unchanged heads re-verified: #161 `034fdf3`, #163 `b9d0d05`, #164 `f1d85d2`,
+#166 `785886a`, #146 `fbc3cfe`, #153 `61fd7dc`, #154 `e498cdf`.
+
+New heads are drafts like everything else here: a moved head does NOT imply
+re-verified CI; per-PR `CORRECT_BEFORE_OWNER_PACKET` gates in the table above
+remain open until their recovery units report with receipts. See
+`CONSTELLATION_MASTER_PLAN_REGISTRATION_2026-07-22.md` §4 for the 14.x
+correction mapping.
