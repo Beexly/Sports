@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "description": "Canonical ownership manifest for the NOVA convergence freeze (NOVA_CONVERGENCE_FREEZE_2026-07-22.md). Consumed by scripts/nova/build-convergence-inventory.mjs. Ownership here is frozen at the concept level; implementations remain provisional until hardening gates pass.",
+  "domains": {
+    "NOVA": {
+      "owns": [
+        "credit lifecycle",
+        "opportunity sources / source registry",
+        "Founder OS",
+        "owner queue"
+      ],
+      "pathPrefixes": [
+        "apps/web/lib/opportunity-engine/",
+        "apps/web/lib/jarvis/",
+        "apps/web/app/cockpit/nova/",
+        "apps/web/app/api/nova/",
+        "apps/web/__tests__/nova-",
+        "packages/nova/",
+        "scripts/nova/",
+        "docs/ai/nova/",
+        ".nova-runtime/"
+      ],
+      "symbolPrefixes": ["Credit", "Nova", "Founder", "OwnerQueue", "OpportunitySource"]
+    },
+    "CONTROL_PLANE": {
+      "owns": [
+        "Ai invocation ledger",
+        "Ai budget windows / reservations",
+        "Ai financial attribution"
+      ],
+      "pathPrefixes": [
+        "packages/ai-control-plane/",
+        "apps/web/lib/ai-control-plane/",
+        "apps/web/lib/ai/"
+      ],
+      "symbolPrefixes": ["Ai"]
+    },
+    "SETTLEMENT": {
+      "owns": ["Settlement evidence", "settlement state machine"],
+      "pathPrefixes": [
+        "packages/settlement/",
+        "apps/web/lib/settlement/",
+        "workers/settlement/"
+      ],
+      "symbolPrefixes": ["Settlement"]
+    },
+    "SHARED_INFRA": {
+      "owns": ["TrustedActor identity", "transactional outbox"],
+      "pathPrefixes": [
+        "packages/shared-infra/",
+        "apps/web/lib/trusted-actor/",
+        "apps/web/lib/outbox/"
+      ],
+      "symbolPrefixes": ["TrustedActor", "Outbox"]
+    }
+  },
+  "forbiddenPrefixes": [
+    { "prefix": "Ai", "canonicalOwner": "CONTROL_PLANE" },
+    { "prefix": "Credit", "canonicalOwner": "NOVA" },
+    { "prefix": "Settlement", "canonicalOwner": "SETTLEMENT" },
+    { "prefix": "TrustedActor", "canonicalOwner": "SHARED_INFRA" },
+    { "prefix": "Outbox", "canonicalOwner": "SHARED_INFRA" }
+  ],
+  "prismaSchemaPaths": ["packages/db/prisma/schema.prisma"],
+  "migrationsDirs": ["packages/db/prisma/migrations"],
+  "sourceDirs": ["apps", "packages", "workers", "lib", "scripts"]
+}
