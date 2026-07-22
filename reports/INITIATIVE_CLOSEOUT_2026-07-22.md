@@ -74,3 +74,53 @@ Foundation (PR #175): 267 tests passed; the 7 owner-only action kinds (merge, de
 ## 6. Why the session stopped building here (deliberate, not stalled)
 
 The concretely-scoped waves are complete and reviewable. The next natural increments (further CONSTELLATION layers) would stack on the **unreviewed** foundation in #175. Building them now would multiply your review burden and create churn risk if the foundation changes in review — the opposite of the "minimize owner input, don't churn" discipline held all session. The highest-value next action is genuinely yours: review, decide A–F, and open the Wave 3 gate. Monitoring on all four PRs remains active with scheduled check-ins.
+
+---
+
+## 7. Post-merge addendum (owner-authorized, 2026-07-22, later same day)
+
+The owner subsequently authorized merging a specific, bounded set of PRs to `main` in a fixed order, after an independent union-verification workflow confirmed they were compatible together. This section is an honest record of what actually happened, not a restatement of the plan above.
+
+### Merge order and outcome
+
+| Order | PR | Title | Merge commit | Real CI at merge |
+|---|----|-------|---------------|-------------------|
+| 1 | **#173** | Wave 5 cumulative pre-merge integration + owner packet | `e7418c95` | green |
+| 2 | **#174** | `LiveModelDispatchUnderAmbiguity` — composed formal spec (TLC-verified) | `ea8f1a4c` | green |
+| 3 | **#179** | Inductive-invariant strengthening — CreditReservation + InvocationClaim (TLC-only) | `b7e1b89a` | green |
+| 4 | **#178** | Formal Heartbeat — e-process kernel, event projection, invariant monitoring | `6529fdba` | green, 14/14 checks |
+| 5 | **#175** | CONSTELLATION foundation — Proof-Carrying Action, capability lease, autonomy ladder A0–A9 | `780569bf` | green, 15/15 checks |
+| 6 | **#177** | Decision A — scaled permanent-consume proof for the canonical credit port | `78ddc9c4` | green, 14/14 checks (after one legitimate CI retry, see below) |
+| 7 | **#176** | This close-out report (addendum) | *(this commit)* | pending |
+
+Every merge went through the GitHub PR-merge API against a PR whose real GitHub Actions check-runs were confirmed `success` and whose `mergeable_state` was confirmed `clean` immediately before merging — never on Vercel preview-deploy status, which is not a CI signal and which failed transiently on #175 for reasons unrelated to content (see below).
+
+### Sync fixes required before merge (all disclosed, all evidence-based)
+
+Several of these branches were created before #173/#178 landed on `main` and needed reconciliation. Each fix was derived by direct comparison against the real, current `origin/main` content — not improvised — and in two cases cross-checked against an earlier union-verification worktree's already-proven resolutions.
+
+- **#174, #178, #179** (`formal-regression/` test/adapter files): stale worktree-relative import paths (e.g. `../../../../../wt/pr163/apps/web/lib/...`) left over from independent branch creation, corrected to the repo-relative paths already fixed on `main`. #174 additionally needed a provenance clarification in `reports/constellation-wave3/DELTA_MANIFEST.json` (two entries appeared "added" only due to merge order, not authorship — noted explicitly rather than left ambiguous).
+- **#175**: three files (`invocation-pipeline.ts`, `package.json`, `vercel.json`) adopted verbatim from `main`, which was confirmed to be a strict superset of the branch's stale versions. A later, second conflict (a 4-line cosmetic comment-divider-length diff) was resolved the same way. The branch's real `constellation/` and induction-layer content was preserved throughout.
+- **#177**: the one case where the labs branch, not `main`, held the real new content — Decision A's second-wave permanent-consume proof, which `main` entirely lacked. Two sync passes were needed:
+  1. A Prisma migration directory rename collision: `main` had renamed `20260722150000_add_ai_budget_reservations` → `20260722150001_...` to avoid colliding with #159's identically-timestamped migration; the branch's real-Postgres test still referenced the old name, fixed to the new one.
+  2. **A genuine gap, caught by an automated Codex review and corrected the same session, disclosed here without euphemism:** an earlier sync commit on this branch resolved a conflict in `ai-control-plane-credit-admission.test.ts` by adopting `main`'s version wholesale, which silently dropped this PR's *only* credit-port-side proof (its target API, `createInMemoryCreditAuthorizationPort`, no longer exists on `main`). That sync commit's message incorrectly asserted the property was "covered" by the PR's real-Postgres cash-path test — it is not; that test exercises an unrelated code path (`BUDGETED_CASH`) and never touches the credit port. Codex's review comment identified this correctly. It was fixed properly, not just acknowledged: two new tests were added against the *current* `createPgCreditAuthorizationPort` API, proving the same permanent-consume property (a full-settle wave and a partial-settle wave each permanently reduce a second wave's admission, never re-admitting consumed spend), run locally to confirm they pass (34/34 in the file) before pushing.
+
+### Automated review findings triaged (11 total, all resolved with evidence before merge)
+
+An adversarial verification pass (independent read-only agents, each required to gather direct evidence from the real git trees rather than trust the finding) was run against every Codex review comment before merging the PR it applied to:
+
+- **7 false positives**, each dismissed with cited evidence (e.g., a P1 on #178 was reviewed against a commit SHA that does not exist in this repository; several P2s on #175 evaluated the stale branch tree in isolation and missed that the flagged files/routes exist unchanged on `main` and survive the merge; a P1 on #175's `recovery-drainer.ts` was refuted by showing the file is byte-identical to `main` and the flagged code path is provably safe — an atomic conditional UPDATE that can only return false when its precondition no longer holds).
+- **3 real, non-blocking follow-ups**, all in `formal-heartbeat/` (dormant, lab-only, zero production importers), recorded on #178 before merge rather than silently fixed or silently ignored: a cross-window terminal-failure detection gap, a ConstInit emitter that mixes `.cfg` and TLA+-module grammar in one string, and a `heldMinorUnits` default that diverges from its documented contract (consequence bounded to false-positive RED alarms, never a missed violation).
+- **1 real gap, fixed** — the #177 credit-port proof described above.
+
+### A CI infrastructure flake, correctly diagnosed
+
+#177's "Trust gate (banned phrases on public copy)" job failed on its first run. Before treating this as a real content violation, the job's actual log was read (not assumed): it died with `npm error code ECONNRESET` / "network aborted" during `npm ci`, before the trust-gate script itself ever ran. This was a transient network failure, not a policy failure. The job was rerun (`rerun_failed_jobs`) once the full workflow run had completed, and it passed cleanly the second time with no code changes.
+
+### PR #180 — explicitly not part of this merge
+
+**PR #180** (`feat(formal-foundry): harden IC3/Apalache package`, `labs/formal-foundry-ic3` → `main`) was opened separately during this session as independent Formal Foundry hardening work (real ITF round-trip fixes, typed RPC errors, real vitest replacing a placeholder script, a wired init-snapshot flow). It is explicitly **not** part of this merge sequence and was **not merged** — the owner reviews it separately. Its state remains DORMANT_LAB_ONLY / TESTED_AGAINST_MOCK_ONLY; it makes no live-Apalache or production-wiring claims.
+
+### What this section does not claim
+
+This addendum does not assert that Wave 5's owner decisions A–F (§1 above) were made, or that the Wave 3 TypeScript-batch gate (§5.3 above) was opened — those remain exactly as originally reported, gated on the owner, and this merge sequence did not change that. It reports only what the owner explicitly authorized: merging this specific, already-union-verified set of PRs to `main` in the stated order.
