@@ -5,17 +5,25 @@
  *   - `executeAiTask(request)` is the public surface (re-exported by
  *     index.ts). It runs against a lazily-built SINGLETON whose dependencies
  *     are sealed in this module: a frozen snapshot of the real process env,
- *     the real clock, the fail-closed emergency receipt store, and a dispatch
- *     that refuses to run (provider dispatch is wired by the stacked
- *     invocation/attempt PR). Production code has NO parameter through which
- *     to inject an alternate env, dispatch, store, budget window, or pricing.
+ *     the real clock, the versioned in-code policy registry, the fail-closed
+ *     emergency receipt store, and a dispatch that refuses to run (provider
+ *     dispatch is wired by the stacked invocation/attempt PR). Production
+ *     code has NO parameter through which to inject an alternate env, policy
+ *     source, dispatch, store, budget window, or pricing.
  *   - `createAiExecutor(sealedDependencies)` is the dependency-injected
- *     factory. It is exported ONLY through `internal.ts` (clearly marked
- *     test/internal); index.ts deliberately does not re-export it or the
- *     dependency types.
+ *     factory. It is DEFINED here (the singleton needs it) but its sanctioned
+ *     import path is `internal.ts` (clearly marked test/internal); index.ts
+ *     deliberately does not re-export it or the dependency types. The
+ *     boundary is MACHINE-ENFORCED, not convention: the guard
+ *     `scripts/guardrails/ai-control-plane-sealing.mjs`
+ *     (`npm run guard:ai-control-plane-sealing`, part of `npm run
+ *     guardrails`) fails the build if any production module deep-imports
+ *     internal.ts, this module, or the env-taking resolvers.
  *
  * AUTHORITY PIPELINE (every call, in order, all fail-closed):
- *   1. Resolve owner policy by registered task class (registry §8.1).
+ *   1. Resolve owner policy by registered task class (registry §8.1), then
+ *      re-validate it structurally and check key consistency (defense in
+ *      depth for any future non-in-code policy source).
  *   2. Resolve env class; production rejects "unversioned" policy (§8.4).
  *   3. Validate the invocation request (§8.4: request-id format, TrustedActor
  *      structure, entity, input size/serializability, secret-material scan,
@@ -31,6 +39,7 @@
 
 import type {
   AiTaskInvocationRequest,
+  AiTaskPolicyDefinition,
   AiTaskResult,
   EffectiveAuthority,
   FundingLabel,
@@ -45,6 +54,7 @@ import {
   assertPolicyVersionAllowed,
   resolveEffectiveAuthority,
   validateInvocationRequest,
+  validatePolicyDefinition,
 } from "./validation";
 
 // ─── Dispatch seam (implemented by the stacked invocation/attempt PR) ─────────
@@ -70,12 +80,27 @@ export type AiDispatchFn = (plan: AiDispatchPlan) => Promise<AiDispatchOutcome>;
 // ─── Sealed dependencies ──────────────────────────────────────────────────────
 
 /**
+ * Policy resolution seam. Production wires the real versioned registry
+ * (`policy-registry.ts`) — the ONLY policy source reachable through
+ * `executeAiTask` (§8.1). Tests (via internal.ts, the guard-enforced sole
+ * import path) may wire fixture policies to exercise pipeline branches the
+ * deliberately-conservative shipped registry cannot reach yet — e.g. a policy
+ * opted into EMERGENCY_RELIABILITY. Whatever this returns is STILL structurally
+ * re-validated and key-consistency-checked by the executor, so an injected or
+ * future non-in-code source can never smuggle a malformed or mislabeled grant.
+ */
+export interface AiPolicySource {
+  getTaskPolicy(taskClass: string): AiTaskPolicyDefinition;
+}
+
+/**
  * The complete dependency surface of the executor. Constructed in exactly two
  * places: the sealed production singleton below, and tests via internal.ts.
  */
 export interface SealedAiExecutorDependencies {
   readonly env: EnvLike;
   readonly now: () => Date;
+  readonly policies: AiPolicySource;
   readonly receipts: EmergencyReceiptStore;
   readonly dispatch: AiDispatchFn;
 }
@@ -110,7 +135,9 @@ function deriveFundingLabel(
 /**
  * Builds an executor over the given sealed dependencies. NOT exported from
  * index.ts — production reaches the singleton through `executeAiTask` below;
- * tests reach this through internal.ts.
+ * tests reach this through internal.ts (the only import path the sealing
+ * guard `scripts/guardrails/ai-control-plane-sealing.mjs` permits outside
+ * this package).
  */
 export function createAiExecutor(
   sealedDependencies: SealedAiExecutorDependencies,
@@ -122,7 +149,17 @@ export function createAiExecutor(
       request: AiTaskInvocationRequest,
     ): Promise<AiTaskResult<TOutput>> {
       // 1. Owner policy by registered task class — the ONLY policy source.
-      const policy = getTaskPolicy(request.taskClass);
+      // Defense in depth: whatever the source returns is re-validated
+      // structurally, and its key consistency is checked so a policy source
+      // can never answer for one task class with another class's grants.
+      const policy = deps.policies.getTaskPolicy(request.taskClass);
+      if (policy.taskClass !== request.taskClass) {
+        throw new ConfigurationError(
+          `Policy source returned a policy for task class "${policy.taskClass}" ` +
+            `when asked for "${request.taskClass}" — refusing mismatched authority.`,
+        );
+      }
+      validatePolicyDefinition(policy);
 
       // 2. Environment class + policy-version gate.
       const { envClass } = resolveEnvClass(deps.env);
@@ -222,6 +259,8 @@ function sealedProductionExecutor(): AiExecutor {
     sealedSingleton = createAiExecutor({
       env,
       now: () => new Date(),
+      // The versioned in-code registry — production's ONLY policy source.
+      policies: { getTaskPolicy },
       receipts: failClosedReceiptStore,
       dispatch: dispatchNotWired,
     });

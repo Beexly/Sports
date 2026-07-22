@@ -96,14 +96,40 @@ describe("resolveEnvClass", () => {
     });
   });
 
+  it("derives production from NODE_ENV=production on NON-Vercel deploys (self-hosted/Docker)", () => {
+    // Regression: this used to derive 'development', silently bypassing the
+    // production-only gates (explicit LLM_COST_MODE, the §8.4 'unversioned'
+    // policy ban) on any deploy platform that only sets NODE_ENV.
+    expect(resolveEnvClass({ NODE_ENV: "production" })).toEqual({
+      envClass: "production",
+      source: "derived",
+    });
+  });
+
+  it("VERCEL_ENV classifies preview/development even though their builds run NODE_ENV=production", () => {
+    expect(resolveEnvClass({ NODE_ENV: "production", VERCEL_ENV: "preview" })).toEqual(
+      { envClass: "preview", source: "derived" },
+    );
+    expect(
+      resolveEnvClass({ NODE_ENV: "production", VERCEL_ENV: "development" }),
+    ).toEqual({ envClass: "development", source: "derived" });
+  });
+
+  it("an unrecognized VERCEL_ENV falls through to NODE_ENV (production stays fail-closed)", () => {
+    expect(
+      resolveEnvClass({ VERCEL_ENV: "staging", NODE_ENV: "production" }),
+    ).toEqual({ envClass: "production", source: "derived" });
+  });
+
   it("derives development otherwise", () => {
     expect(resolveEnvClass({})).toEqual({
       envClass: "development",
       source: "derived",
     });
-    expect(resolveEnvClass({ NODE_ENV: "production", VERCEL_ENV: "preview" })).toEqual(
-      { envClass: "development", source: "derived" },
-    );
+    expect(resolveEnvClass({ NODE_ENV: "docker" })).toEqual({
+      envClass: "development",
+      source: "derived",
+    });
   });
 
   it("VERCEL_ENV=production takes precedence over NODE_ENV=test in derivation", () => {

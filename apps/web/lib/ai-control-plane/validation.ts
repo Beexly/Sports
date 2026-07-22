@@ -401,7 +401,23 @@ function validateCapabilityFloorShape(
   }
 }
 
-function validateUsdAmount(
+/**
+ * USD amount validation: finite, ≥ 0, ≤ the global ceiling, and at most 6
+ * decimal places (micro-USD precision).
+ *
+ * The decimal-place check is a ROUND-TRIP comparison, not an exact float
+ * compare. `value * 1e6 === Math.round(value * 1e6)` is wrong in IEEE-754:
+ * e.g. `2.01 * 1e6 === 2010000.0000000002`, so thousands of ordinary cent
+ * amounts would be spuriously rejected. Instead we round to integer micro-USD
+ * and check the quotient reproduces `value` exactly: that holds precisely
+ * when `value` is the double nearest some ≤6-decimal-place amount (the
+ * division is correctly rounded, so `n / 1e6` IS that nearest double), and
+ * fails for any amount needing more than 6 decimal places.
+ *
+ * Exported for tests (the cent-sweep regression test); NOT re-exported by the
+ * public index.
+ */
+export function validateUsdAmount(
   value: number,
   label: string,
   fail: (msg: string) => never,
@@ -412,8 +428,9 @@ function validateUsdAmount(
   if (value > MAX_VENDOR_CASH_USD_CEILING) {
     fail(`${label} exceeds the global ceiling of ${MAX_VENDOR_CASH_USD_CEILING} USD`);
   }
-  // At most 6 decimal places (micro-USD precision).
-  if (Math.round(value * 1e6) !== value * 1e6) {
+  // At most 6 decimal places (micro-USD precision), via exact round-trip.
+  const microUsd = Math.round(value * 1e6);
+  if (microUsd / 1e6 !== value) {
     fail(`${label} has more than 6 decimal places`);
   }
 }

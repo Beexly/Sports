@@ -32,7 +32,12 @@ import { ConfigurationError, PolicyBlocked } from "./errors";
 export interface EmergencyOverrideReceipt {
   /** One-time override id the environment may reference. */
   readonly id: string;
-  /** The owner (HUMAN TrustedActor) who approved the escalation. */
+  /**
+   * The owner who approved the escalation. ENFORCED at verification (not just
+   * documented): must be a HUMAN, session-derived, ADMIN-scope TrustedActor
+   * with a non-empty subjectId — a SERVICE/SYSTEM "approval" or a missing
+   * approver fails verification (`ConfigurationError`).
+   */
   readonly approvedByActor: TrustedActor;
   /** Non-empty reason code / rationale for the audit trail. */
   readonly reason: string;
@@ -86,6 +91,10 @@ export interface VerifyEmergencyOverrideInput {
  *     (the environment references a decision that cannot be proven);
  *   - revoked or expired → `ConfigurationError` (the decision no longer
  *     stands);
+ *   - structurally malformed receipt — empty reason, invalid maxSpendUsd, or
+ *     an `approvedByActor` that is not an owner-grade HUMAN TrustedActor →
+ *     `ConfigurationError` (the record cannot prove an owner decision; this
+ *     matters once a DB-backed store deserializes untyped rows);
  *   - live receipt whose scope excludes `taskClass` → `PolicyBlocked`
  *     (a real decision exists but does not cover this task).
  *
@@ -123,6 +132,13 @@ export async function verifyEmergencyOverride(
         "receipt exists; failing closed.",
     );
   }
+
+  // Structural validation FIRST: lifecycle/scope fields are only meaningful
+  // on a record that provably is a well-formed owner decision. This guards
+  // the future DB-backed store, whose deserialized rows are untyped at the
+  // boundary.
+  assertReceiptStructurallyValid(receipt, id);
+
   if (receipt.revoked) {
     throw new ConfigurationError(
       `Emergency override "${id}" has been revoked by the owner; failing closed.`,
@@ -141,17 +157,98 @@ export async function verifyEmergencyOverride(
     );
   }
 
+  return receipt;
+}
+
+/**
+ * A receipt is only evidence of an owner decision if it is structurally one:
+ * non-empty reason, a valid spend ceiling, a real expiry/revocation record,
+ * an explicit scope list, and — the §8.6 contract — an `approvedByActor`
+ * that is an owner-grade HUMAN TrustedActor (session-derived, ADMIN
+ * authority, non-empty stable subject id). A receipt "approved" by a
+ * SERVICE/SYSTEM actor, or missing the approver entirely, is NOT an owner
+ * decision and must never grant emergency spend. Throws ConfigurationError.
+ */
+function assertReceiptStructurallyValid(
+  receipt: EmergencyOverrideReceipt,
+  id: string,
+): void {
+  const malformed = (detail: string): never => {
+    throw new ConfigurationError(
+      `Emergency override "${id}" is structurally malformed (${detail}); ` +
+        "failing closed.",
+    );
+  };
+
+  if (typeof receipt.reason !== "string" || receipt.reason.trim() === "") {
+    malformed("empty reason");
+  }
   if (
-    typeof receipt.reason !== "string" ||
-    receipt.reason.trim() === "" ||
+    typeof receipt.maxSpendUsd !== "number" ||
     !Number.isFinite(receipt.maxSpendUsd) ||
     receipt.maxSpendUsd < 0
   ) {
-    throw new ConfigurationError(
-      `Emergency override "${id}" is structurally malformed (empty reason or ` +
-        "invalid maxSpendUsd); failing closed.",
-    );
+    malformed("invalid maxSpendUsd");
+  }
+  if (typeof receipt.revoked !== "boolean") {
+    malformed("revoked flag is not a boolean");
+  }
+  if (
+    !(receipt.expiresAt instanceof Date) ||
+    Number.isNaN(receipt.expiresAt.getTime())
+  ) {
+    malformed("expiresAt is not a valid Date");
+  }
+  if (
+    typeof receipt.scope !== "object" ||
+    receipt.scope === null ||
+    !Array.isArray(receipt.scope.taskClasses)
+  ) {
+    malformed("scope.taskClasses is not an explicit array");
   }
 
-  return receipt;
+  // The approving actor: an owner (HUMAN) decision, per the receipt contract.
+  // Deliberately checked as UNKNOWN data — the static TrustedActor type says
+  // nothing about what a DB row actually contained.
+  const approverRaw: unknown = receipt.approvedByActor;
+  if (typeof approverRaw !== "object" || approverRaw === null) {
+    malformed("approvedByActor is missing — no owner approval is recorded");
+  }
+  const approver = approverRaw as {
+    readonly actorType?: unknown;
+    readonly authMethod?: unknown;
+    readonly authorityScope?: unknown;
+    readonly subjectId?: unknown;
+    readonly policyVersion?: unknown;
+  };
+  if (approver.actorType !== "HUMAN") {
+    malformed(
+      `approvedByActor.actorType is "${String(approver.actorType)}" — only a ` +
+        "HUMAN owner decision can approve emergency authority",
+    );
+  }
+  if (approver.authMethod !== "SESSION") {
+    malformed(
+      `approvedByActor.authMethod is "${String(approver.authMethod)}" — a ` +
+        "HUMAN approval must be session-derived",
+    );
+  }
+  if (approver.authorityScope !== "ADMIN") {
+    malformed(
+      `approvedByActor.authorityScope is "${String(approver.authorityScope)}" ` +
+        "— emergency approval requires owner (ADMIN) authority",
+    );
+  }
+  if (
+    typeof approver.subjectId !== "string" ||
+    approver.subjectId.trim() === ""
+  ) {
+    malformed("approvedByActor.subjectId is empty — the approver is untraceable");
+  }
+  if (
+    typeof approver.policyVersion !== "string" ||
+    approver.policyVersion.trim() === ""
+  ) {
+    malformed("approvedByActor.policyVersion is empty");
+  }
 }

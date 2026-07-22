@@ -10,19 +10,22 @@
  *
  * Allowed importers:
  *   - tests (apps/web/__tests__/**) — to drive the executor with fake
- *     clocks, fake dispatch, and in-memory receipt stores;
+ *     clocks, fake dispatch, fixture policy sources, and in-memory receipt
+ *     stores;
  *   - future control-plane-internal modules within this directory.
  *
- * If an import-boundary guard is added for this package (see the stacked
- * import-guard branch), THIS file's test-only importers are the only entries
- * that belong on its allowlist. Any production `import ... from
- * ".../ai-control-plane/internal"` (or a deep import of ./executor,
- * ./cost-mode resolvers) is a review-rejectable authority bypass.
+ * This boundary is MACHINE-ENFORCED (§8.2 "guard the production export
+ * surface"): `scripts/guardrails/ai-control-plane-sealing.mjs` (run as
+ * `npm run guard:ai-control-plane-sealing`, part of `npm run guardrails`)
+ * fails the build when any module outside apps/web/__tests__/** or this
+ * directory imports this file — or deep-imports ./executor, ./cost-mode, or
+ * ./emergency. Any such production import is an authority bypass.
  */
 
 export {
   createAiExecutor,
   type AiExecutor,
+  type AiPolicySource,
   type SealedAiExecutorDependencies,
   type AiDispatchFn,
   type AiDispatchPlan,

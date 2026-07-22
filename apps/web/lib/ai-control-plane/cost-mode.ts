@@ -112,9 +112,20 @@ const VALID_ENV_CLASSES: ReadonlySet<string> = new Set<AiEnvClass>([
  *     rather than silently falling back — a typo'd class must not downgrade
  *     production into a permissive default.
  *   - Otherwise derive conservatively (source: 'derived'):
- *       VERCEL_ENV=production → 'production'
- *       NODE_ENV=test         → 'test'
- *       else                  → 'development'
+ *       VERCEL_ENV=production  → 'production'
+ *       VERCEL_ENV=preview     → 'preview'
+ *       VERCEL_ENV=development → 'development'
+ *       NODE_ENV=test          → 'test'
+ *       NODE_ENV=production    → 'production'
+ *       else                   → 'development'
+ *
+ * NODE_ENV=production maps to 'production' so a NON-Vercel production deploy
+ * (self-hosted/Docker with only NODE_ENV set) still gets the production-only
+ * gates: an unset LLM_COST_MODE fails the deploy instead of silently
+ * defaulting, and the §8.4 ban on policyVersion "unversioned" applies. The
+ * VERCEL_ENV checks run FIRST because Vercel preview builds also run with
+ * NODE_ENV=production — a preview must classify as 'preview', not
+ * 'production'.
  */
 export function resolveEnvClass(env: EnvLike): ResolvedEnvClass {
   const explicit = env.AI_ENV_CLASS?.trim();
@@ -128,11 +139,23 @@ export function resolveEnvClass(env: EnvLike): ResolvedEnvClass {
     return { envClass: explicit as AiEnvClass, source: "explicit" };
   }
 
-  if (env.VERCEL_ENV?.trim().toLowerCase() === "production") {
+  const vercelEnv = env.VERCEL_ENV?.trim().toLowerCase();
+  if (vercelEnv === "production") {
     return { envClass: "production", source: "derived" };
   }
-  if (env.NODE_ENV?.trim().toLowerCase() === "test") {
+  if (vercelEnv === "preview") {
+    return { envClass: "preview", source: "derived" };
+  }
+  if (vercelEnv === "development") {
+    return { envClass: "development", source: "derived" };
+  }
+
+  const nodeEnv = env.NODE_ENV?.trim().toLowerCase();
+  if (nodeEnv === "test") {
     return { envClass: "test", source: "derived" };
+  }
+  if (nodeEnv === "production") {
+    return { envClass: "production", source: "derived" };
   }
   return { envClass: "development", source: "derived" };
 }

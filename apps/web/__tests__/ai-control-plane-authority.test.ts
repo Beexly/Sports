@@ -38,6 +38,7 @@ import {
   validateDataPolicy,
   validateInvocationRequest,
   validatePolicyDefinition,
+  validateUsdAmount,
 } from "@/lib/ai-control-plane/validation";
 import {
   ConfigurationError,
@@ -55,13 +56,32 @@ import {
   type AiDispatchPlan,
   type SealedAiExecutorDependencies,
 } from "@/lib/ai-control-plane/internal";
-import { serviceActor } from "@/lib/auth/actor";
+import { serviceActor, type HumanActor } from "@/lib/auth/actor";
 
 const NOW = new Date("2026-07-22T12:00:00.000Z");
 const FUTURE = new Date("2026-07-23T12:00:00.000Z");
 const PAST = new Date("2026-07-21T12:00:00.000Z");
 
 const ACTOR = serviceActor({ subjectId: "service:authority-tests" });
+
+/**
+ * An owner-grade HUMAN actor as the emergency-receipt contract requires
+ * (§8.6: the approver must be a session-derived ADMIN human). Built as a
+ * literal — receipts are deserialized records, not live sessions.
+ */
+const OWNER_ACTOR: HumanActor = {
+  actorType: "HUMAN",
+  subjectId: "user-owner-0001",
+  authMethod: "SESSION",
+  authorityScope: "ADMIN",
+  tenant: null,
+  project: null,
+  requestId: null,
+  runId: null,
+  observedAt: NOW,
+  emailSnapshot: null,
+  policyVersion: "1a",
+};
 
 function validRequest(
   overrides: Partial<AiTaskInvocationRequest> = {},
@@ -81,7 +101,7 @@ function receipt(
 ): EmergencyOverrideReceipt {
   return {
     id: "ovr-outage-001",
-    approvedByActor: ACTOR,
+    approvedByActor: OWNER_ACTOR,
     reason: "primary provider outage",
     scope: { taskClasses: ["brief.daily-summary"] },
     maxSpendUsd: 25,
@@ -168,6 +188,59 @@ describe("policy registry — versioned owner authority (§8.1)", () => {
       assertPolicyVersionAllowed("2026-07-22.1", "production"),
     ).not.toThrow();
     expect(() => assertPolicyVersionAllowed("", "test")).toThrow(ConfigurationError);
+  });
+});
+
+// ─── 1b. USD amount validation (FP regression) ────────────────────────────────
+
+describe("validateUsdAmount — decimal-place check is FP-safe", () => {
+  const fail = (msg: string): never => {
+    throw new InvalidInput(msg);
+  };
+
+  it("accepts EVERY cent-denominated amount in [0, $1000] (regression: exact float compare rejected 2384 of them)", () => {
+    // 2.01 * 1e6 === 2010000.0000000002 in IEEE-754; the old exact comparison
+    // spuriously rejected such values. The round-trip check must accept all.
+    for (let cents = 0; cents <= 100_000; cents++) {
+      validateUsdAmount(cents / 100, "sweep", fail);
+    }
+  });
+
+  it("accepts the specific formerly-rejected cent values", () => {
+    for (const usd of [2.01, 2.03, 4.1, 999.99]) {
+      expect(() => validateUsdAmount(usd, "cap", fail)).not.toThrow();
+    }
+  });
+
+  it("accepts micro-USD precision (exactly 6 decimal places)", () => {
+    for (const usd of [0.000001, 0.123456, 999.999999]) {
+      expect(() => validateUsdAmount(usd, "cap", fail)).not.toThrow();
+    }
+  });
+
+  it("rejects more than 6 decimal places", () => {
+    for (const usd of [0.0000001, 2.0100001, 0.1234567, 1.0000000000000002]) {
+      expect(() => validateUsdAmount(usd, "cap", fail)).toThrow(
+        /more than 6 decimal places/,
+      );
+    }
+  });
+
+  it("rejects negative, non-finite, and above-ceiling values", () => {
+    for (const usd of [-0.01, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(() => validateUsdAmount(usd, "cap", fail)).toThrow(InvalidInput);
+    }
+    expect(() => validateUsdAmount(1000.01, "cap", fail)).toThrow(/ceiling/);
+  });
+
+  it("a policy with a valid cent-denominated cash cap loads (registry-path regression)", () => {
+    const good = getTaskPolicy("brief.daily-summary");
+    expect(() =>
+      validatePolicyDefinition({ ...good, maxVendorCashUsd: 2.01 }),
+    ).not.toThrow();
+    expect(() =>
+      validatePolicyDefinition({ ...good, maxVendorCashUsd: 2.0000001 }),
+    ).toThrow(ConfigurationError);
   });
 });
 
@@ -505,6 +578,57 @@ describe("emergency authority — durable owner-decision receipts (§8.6)", () =
     ).rejects.toThrow(ConfigurationError);
   });
 
+  it("a SERVICE-actor 'approval' is NOT an owner decision → fail closed", async () => {
+    const r = receipt({ approvedByActor: ACTOR }); // ACTOR is a SERVICE actor
+    await expect(
+      verifyEmergencyOverride({ ...base, store: storeWith(r), overrideId: r.id }),
+    ).rejects.toThrow(/only a HUMAN owner decision/);
+  });
+
+  it("a missing approvedByActor (untyped DB row) → fail closed", async () => {
+    const r = receipt({
+      approvedByActor: undefined as unknown as EmergencyOverrideReceipt["approvedByActor"],
+    });
+    await expect(
+      verifyEmergencyOverride({ ...base, store: storeWith(r), overrideId: r.id }),
+    ).rejects.toThrow(/approvedByActor is missing/);
+  });
+
+  it("a HUMAN approver without ADMIN authority → fail closed", async () => {
+    const r = receipt({
+      approvedByActor: { ...OWNER_ACTOR, authorityScope: "USER" },
+    });
+    await expect(
+      verifyEmergencyOverride({ ...base, store: storeWith(r), overrideId: r.id }),
+    ).rejects.toThrow(/requires owner \(ADMIN\) authority/);
+  });
+
+  it("a HUMAN approver with a non-session auth method → fail closed", async () => {
+    const r = receipt({
+      approvedByActor: {
+        ...OWNER_ACTOR,
+        authMethod: "SERVICE_CREDENTIAL",
+      } as unknown as EmergencyOverrideReceipt["approvedByActor"],
+    });
+    await expect(
+      verifyEmergencyOverride({ ...base, store: storeWith(r), overrideId: r.id }),
+    ).rejects.toThrow(/must be session-derived/);
+  });
+
+  it("an approver with an empty subjectId is untraceable → fail closed", async () => {
+    const r = receipt({ approvedByActor: { ...OWNER_ACTOR, subjectId: "  " } });
+    await expect(
+      verifyEmergencyOverride({ ...base, store: storeWith(r), overrideId: r.id }),
+    ).rejects.toThrow(/subjectId is empty/);
+  });
+
+  it("structural malformation is checked before lifecycle: a malformed REVOKED receipt still reports malformation", async () => {
+    const r = receipt({ approvedByActor: ACTOR, revoked: true });
+    await expect(
+      verifyEmergencyOverride({ ...base, store: storeWith(r), overrideId: r.id }),
+    ).rejects.toThrow(/only a HUMAN owner decision/);
+  });
+
   it("the production default store misses every id (emergency unreachable)", async () => {
     await expect(failClosedReceiptStore.getReceipt("anything")).resolves.toBeNull();
   });
@@ -547,6 +671,8 @@ function makeDeps(
     // fail-closed path is covered by its own test below.
     env: { AI_ENV_CLASS: "test", LLM_COST_MODE: "CONFIRMED_CREDITS_ONLY" },
     now: () => NOW,
+    // The real versioned registry by default — what production wires.
+    policies: { getTaskPolicy },
     receipts: failClosedReceiptStore,
     dispatch: async (plan) => {
       plans.push(plan);
@@ -567,6 +693,37 @@ function makeDeps(
     ...overrides,
   };
   return { deps, plans };
+}
+
+/**
+ * A structurally valid FIXTURE policy that opts brief.daily-summary into
+ * EMERGENCY_RELIABILITY with a non-zero cash cap. The shipped registry
+ * deliberately grants this to no task class, so the executor's emergency
+ * verify+clamp branch can only be exercised by injecting a policy source
+ * through the internal DI seam — exactly what that seam exists for. The
+ * executor still re-validates whatever the source returns.
+ */
+function emergencyOptedInPolicy(maxVendorCashUsd: number): AiTaskPolicyDefinition {
+  return {
+    ...getTaskPolicy("brief.daily-summary"),
+    permittedModes: [
+      "NO_BILLABLE_EXTERNAL",
+      "CONFIRMED_CREDITS_ONLY",
+      "EMERGENCY_RELIABILITY",
+    ],
+    maxVendorCashUsd,
+  };
+}
+
+/** Env vars referencing a live emergency override (reference ≠ authority). */
+function emergencyEnv(overrideId: string) {
+  return {
+    AI_ENV_CLASS: "test",
+    LLM_COST_MODE: "EMERGENCY_RELIABILITY",
+    EMERGENCY_RELIABILITY_UNTIL: FUTURE.toISOString(),
+    EMERGENCY_REASON: "provider outage",
+    EMERGENCY_OVERRIDE_ID: overrideId,
+  };
 }
 
 describe("executor pipeline (internal DI) — authority resolved, then dispatch", () => {
@@ -667,24 +824,18 @@ describe("executor pipeline (internal DI) — authority resolved, then dispatch"
     expect(result.fundingLabel).toBe("CREDIT_ELIGIBLE_UNCONFIRMED");
   });
 
-  it("emergency mode WITH an opted-in narrowed policy verifies the receipt and clamps spend", async () => {
-    // No registered policy permits EMERGENCY_RELIABILITY yet (conservative
-    // v1 registry), so the executor-level receipt path is exercised through
-    // verifyEmergencyOverride above. This test pins the invariant that a task
-    // NOT opted into emergency cannot be dragged into it by the environment.
+  it("an emergency environment cannot drag a task that did NOT opt into emergency", async () => {
+    // The shipped registry policy does not permit EMERGENCY_RELIABILITY, so
+    // even with a live, verifiable receipt in the store the task runs under
+    // its own highest permitted ordered mode — never the emergency mode.
     const { deps, plans } = makeDeps({
-      env: {
-        AI_ENV_CLASS: "test",
-        LLM_COST_MODE: "EMERGENCY_RELIABILITY",
-        EMERGENCY_RELIABILITY_UNTIL: FUTURE.toISOString(),
-        EMERGENCY_REASON: "provider outage",
-        EMERGENCY_OVERRIDE_ID: receipt().id,
-      },
+      env: emergencyEnv(receipt().id),
       receipts: storeWith(receipt()),
     });
     const executor = createAiExecutor(deps);
     await executor.executeAiTask(validRequest());
     expect(plans[0]!.costMode).not.toBe("EMERGENCY_RELIABILITY");
+    expect(plans[0]!.costMode).toBe("CONFIRMED_CREDITS_ONLY");
   });
 
   it("caller narrowing propagates into the dispatch plan (less authority honored)", async () => {
@@ -713,6 +864,135 @@ describe("executor pipeline (internal DI) — authority resolved, then dispatch"
         validRequest({ narrowing: { permittedModes: ["NO_BILLABLE_EXTERNAL"] } }),
       ),
     ).rejects.toThrow(PolicyBlocked);
+    expect(plans).toHaveLength(0);
+  });
+
+  it("policy source answering with a DIFFERENT task class's policy → fail closed, no dispatch", async () => {
+    const { deps, plans } = makeDeps({
+      policies: { getTaskPolicy: () => getTaskPolicy("content.editorial-draft") },
+    });
+    const executor = createAiExecutor(deps);
+    await expect(executor.executeAiTask(validRequest())).rejects.toThrow(
+      /refusing mismatched authority/,
+    );
+    expect(plans).toHaveLength(0);
+  });
+
+  it("a malformed policy from the source is re-validated and rejected, no dispatch", async () => {
+    const { deps, plans } = makeDeps({
+      policies: {
+        getTaskPolicy: () => ({
+          ...getTaskPolicy("brief.daily-summary"),
+          permittedProviderRoutes: [],
+        }),
+      },
+    });
+    const executor = createAiExecutor(deps);
+    await expect(executor.executeAiTask(validRequest())).rejects.toThrow(
+      ConfigurationError,
+    );
+    expect(plans).toHaveLength(0);
+  });
+});
+
+// ─── 7. Emergency verify + clamp THROUGH the executor (§8.6) ──────────────────
+
+describe("executor emergency branch — receipt verified and spend clamped end-to-end", () => {
+  it("opted-in policy + live receipt: runs under EMERGENCY_RELIABILITY, spend clamped to the RECEIPT ceiling", async () => {
+    const r = receipt({ maxSpendUsd: 25 });
+    const { deps, plans } = makeDeps({
+      env: emergencyEnv(r.id),
+      policies: { getTaskPolicy: () => emergencyOptedInPolicy(50) },
+      receipts: storeWith(r),
+    });
+    const executor = createAiExecutor(deps);
+    const result = await executor.executeAiTask(validRequest());
+    expect(plans).toHaveLength(1);
+    expect(plans[0]!.costMode).toBe("EMERGENCY_RELIABILITY");
+    // min(policy cap 50, receipt ceiling 25) = 25.
+    expect(plans[0]!.maxVendorCashUsd).toBe(25);
+    expect(plans[0]!.fundingLabel).toBe("CASH_EXPECTED");
+    expect(result.fundingLabel).toBe("CASH_EXPECTED");
+  });
+
+  it("clamp is a true min: a generous receipt can never raise the POLICY cap", async () => {
+    const r = receipt({ maxSpendUsd: 25 });
+    const { deps, plans } = makeDeps({
+      env: emergencyEnv(r.id),
+      policies: { getTaskPolicy: () => emergencyOptedInPolicy(10) },
+      receipts: storeWith(r),
+    });
+    const executor = createAiExecutor(deps);
+    await executor.executeAiTask(validRequest());
+    expect(plans[0]!.maxVendorCashUsd).toBe(10);
+  });
+
+  it("caller narrowing of the cash cap still applies under emergency (min of all three)", async () => {
+    const r = receipt({ maxSpendUsd: 25 });
+    const { deps, plans } = makeDeps({
+      env: emergencyEnv(r.id),
+      policies: { getTaskPolicy: () => emergencyOptedInPolicy(50) },
+      receipts: storeWith(r),
+    });
+    const executor = createAiExecutor(deps);
+    await executor.executeAiTask(
+      validRequest({ narrowing: { maxVendorCashUsd: 5 } }),
+    );
+    expect(plans[0]!.maxVendorCashUsd).toBe(5);
+  });
+
+  it("opted-in policy but the referenced receipt does not exist → fail closed, no dispatch", async () => {
+    const { deps, plans } = makeDeps({
+      env: emergencyEnv("ovr-not-in-store"),
+      policies: { getTaskPolicy: () => emergencyOptedInPolicy(50) },
+      receipts: failClosedReceiptStore,
+    });
+    const executor = createAiExecutor(deps);
+    await expect(executor.executeAiTask(validRequest())).rejects.toThrow(
+      /no such owner-decision receipt/,
+    );
+    expect(plans).toHaveLength(0);
+  });
+
+  it("opted-in policy + revoked receipt → fail closed, no dispatch", async () => {
+    const r = receipt({ revoked: true });
+    const { deps, plans } = makeDeps({
+      env: emergencyEnv(r.id),
+      policies: { getTaskPolicy: () => emergencyOptedInPolicy(50) },
+      receipts: storeWith(r),
+    });
+    const executor = createAiExecutor(deps);
+    await expect(executor.executeAiTask(validRequest())).rejects.toThrow(
+      /revoked/,
+    );
+    expect(plans).toHaveLength(0);
+  });
+
+  it("opted-in policy + receipt scoped to OTHER task classes → PolicyBlocked, no dispatch", async () => {
+    const r = receipt({ scope: { taskClasses: ["content.editorial-draft"] } });
+    const { deps, plans } = makeDeps({
+      env: emergencyEnv(r.id),
+      policies: { getTaskPolicy: () => emergencyOptedInPolicy(50) },
+      receipts: storeWith(r),
+    });
+    const executor = createAiExecutor(deps);
+    await expect(executor.executeAiTask(validRequest())).rejects.toThrow(
+      PolicyBlocked,
+    );
+    expect(plans).toHaveLength(0);
+  });
+
+  it("opted-in policy + receipt 'approved' by a SERVICE actor → fail closed, no dispatch (§8.6 owner contract)", async () => {
+    const r = receipt({ approvedByActor: ACTOR });
+    const { deps, plans } = makeDeps({
+      env: emergencyEnv(r.id),
+      policies: { getTaskPolicy: () => emergencyOptedInPolicy(50) },
+      receipts: storeWith(r),
+    });
+    const executor = createAiExecutor(deps);
+    await expect(executor.executeAiTask(validRequest())).rejects.toThrow(
+      /only a HUMAN owner decision/,
+    );
     expect(plans).toHaveLength(0);
   });
 });
