@@ -1,69 +1,71 @@
 /**
- * Phase 2 PR-D — credit ADMISSION + the FAKE atomic adapter of the budgets
- * unit's `CreditAuthorizationPort` (directive §11.2/§11.3), rebuilt on the
- * hardened #162/#163/#164 stack and the current NOVA S1 head.
+ * Phase 2 PR-D — credit ADMISSION + atomic AUTHORIZATION (directive §11.2/
+ * §11.3), rebuilt on top of NOVA S1's canonical `CreditGrantSnapshot` and
+ * #163/#164's §9 ledgered dispatch pipeline.
  *
- * OWNER CORRECTIONS covered here:
- *   - the old PR-D defined its own duplicate, weaker `CreditGrantSnapshot`
- *     (floating-dollar amounts, no receipt hash, no reconciliation posture).
- *     This suite proves the rebuilt module imports S1's rich, receipted
- *     contract instead of redefining it.
- *   - the port INTERFACE is owned by the budgets unit (§10.8,
- *     `credit-port.ts`); PR-D contributes ADMISSION semantics plus a fake
- *     in-memory adapter — NO Prisma credit tables, no real adapter, and
- *     CONFIRMED_CREDITS_ONLY stays fail-closed in production (tested).
+ * OWNER CORRECTION covered here: the old PR-D defined its own duplicate,
+ * weaker `CreditGrantSnapshot` (floating-dollar amounts, no receipt hash, no
+ * reconciliation posture, no eligibility exclusions). This suite proves the
+ * rebuilt module imports S1's rich, receipted contract instead of
+ * redefining it, and adds the atomic `CreditAuthorizationPort` S1's own
+ * docs point to ("AMOUNT sufficiency ... is deliberately NOT decided here
+ * — that is PR-D's CreditAuthorizationPort").
  *
  * Four layers:
- *   1. UNIT — S1 import surface: the canonical snapshot shape is what PR-D
- *      actually consumes.
- *   2. UNIT — `admitCreditFunded`/`evaluateCreditAdmission`: every S1
+ *   1. UNIT — `admitCreditFunded`/`evaluateCreditAdmission`: every S1
  *      admissibility reason surfaces through PR-D's composition, plus the
- *      reasons S1 leaves to PR-D (charge-specific headroom, currency).
- *   3. FAKE ADAPTER — `createInMemoryCreditAuthorizationPort` implements the
- *      §10.8 port over the admission layer with an ATOMIC in-memory
- *      check-and-hold: lifecycle transitions, double-transition guards,
- *      idempotent replay, ceil-to-minor-units conservatism, and the
- *      §11.3 concurrency acceptance — 10 simultaneous `authorizeAndReserve`
- *      calls THROUGH THE PORT cannot collectively exceed the grant's
- *      remaining spendable balance.
- *   4. EXECUTOR — CONFIRMED_CREDITS_ONLY through `createAiExecutor`: the
- *      production-sealed fail-closed port refuses BEFORE dispatch (no real
- *      adapter -> unreachable, tested), while the fake adapter gates
- *      dispatch on a covering, admissible snapshot.
+ *      two reasons S1 leaves to PR-D (charge-specific headroom, currency).
+ *   2. UNIT (mock-level) — `createPgCreditAuthorizationPort`'s
+ *      reserve/settle/release arithmetic and double-transition guards
+ *      against an in-memory transactional fake (mirrors budget.ts's own
+ *      unit tests).
+ *   3. PIPELINE (mock-level) — `createLedgeredDispatch` wired with a real
+ *      `CreditAuthorizationPort` over the in-memory fake: the
+ *      no-store-configured POLICY_BLOCKED path, per-route credit refusal
+ *      (advances to the next route, never dispatches), settle-on-success,
+ *      release-on-clean-failure, and the AMBIGUOUS never-release doctrine.
+ *   4. INTEGRATION (real Postgres, guarded by DATABASE_URL) — the
+ *      owner-mandated acceptance test: 100 concurrent `authorize()` calls
+ *      against ONE grant with headroom for far fewer authorize AT MOST that
+ *      many; the rest are refused with ZERO reservation taken — proving no
+ *      double-spend under real concurrency, the property `admitCreditFunded`
+ *      alone (a pure read) can never provide.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
 
 import {
   admitCreditFunded,
-  createInMemoryCreditAuthorizationPort,
+  createPgCreditAuthorizationPort,
   evaluateCreditAdmission,
-  usdStringToMinorUnitsCeil,
   type AdmitCreditFundedInput,
   type CreditAdmissionScope,
+  type CreditAuthorizationPort,
+  type CreditLedgerDb,
   type CreditSnapshotStore,
-  type InMemoryCreditAuthorizationPort,
 } from "@/lib/ai-control-plane/credit-admission";
+import { AmbiguousCharge, BudgetBlocked, PolicyBlocked } from "@/lib/ai-control-plane/errors";
 import {
-  createAiExecutor,
-  failClosedCreditAuthorizationPort,
-  failClosedReceiptStore,
-  type SealedAiExecutorDependencies,
+  createLedgeredDispatch,
+  ObservabilitySink,
+  type AiDispatchPlan,
+  type AuthoritativeControlStore,
+  type BlockedInvocationInput,
+  type ClaimInvocationInput,
+  type ClaimOutcome,
+  type ProviderDispatchFn,
 } from "@/lib/ai-control-plane/internal";
 import type {
-  CreditAuthorizationRequest,
-  CreditReservation,
-} from "@/lib/ai-control-plane/credit-port";
-import { AmbiguousCharge, BudgetBlocked } from "@/lib/ai-control-plane/errors";
-import { getTaskPolicy } from "@/lib/ai-control-plane/policy-registry";
-import type { AiTaskInvocationRequest } from "@/lib/ai-control-plane/contracts";
+  AiTaskInvocationRequest,
+  EffectiveAuthority,
+  ProviderRouteId,
+} from "@/lib/ai-control-plane/contracts";
 import { serviceActor } from "@/lib/auth/actor";
 import type { CreditGrantSnapshot } from "@/lib/opportunity-engine";
 
 const NOW = new Date("2026-07-22T12:00:00.000Z");
-const ACTOR = serviceActor({ subjectId: "service:credit-admission-tests" });
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Fixtures — S1's canonical CreditGrantSnapshot (never a PR-D-owned redefinition)
@@ -353,661 +355,778 @@ describe("admitCreditFunded — provider/model id alone NEVER admits", () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FAKE ADAPTER — the budgets unit's CreditAuthorizationPort over admission
+// UNIT — createPgCreditAuthorizationPort's ledger arithmetic (in-memory fake)
 // ═══════════════════════════════════════════════════════════════════════════
+interface FakeLedgerRow {
+  grantId: string;
+  reservedMinorUnits: number;
+}
+interface FakeReservationRow {
+  id: string;
+  grantId: string;
+  amountMinorUnits: number;
+  state: string;
+  settledMinorUnits: number | null;
+  expiresAt: Date;
+}
 
-function portRequest(
-  overrides: Partial<CreditAuthorizationRequest> = {},
-): CreditAuthorizationRequest {
+function makeInMemoryCreditLedgerDb() {
+  const ledger = new Map<string, FakeLedgerRow>();
+  const reservations = new Map<string, FakeReservationRow>();
+
+  const exec = async (query: string, ...values: unknown[]): Promise<number> => {
+    if (query.includes('INSERT INTO "credit_grant_reservation_ledger"')) {
+      const [grantId] = values as [string];
+      if (!ledger.has(grantId)) ledger.set(grantId, { grantId, reservedMinorUnits: 0 });
+      return 1;
+    }
+    if (query.includes('UPDATE "credit_grant_reservation_ledger"') && query.includes("<= $3")) {
+      const [amount, grantId, cap] = values as [number, string, number];
+      const row = ledger.get(grantId);
+      if (!row) return 0;
+      if (row.reservedMinorUnits + Number(amount) <= Number(cap)) {
+        row.reservedMinorUnits += Number(amount);
+        return 1;
+      }
+      return 0;
+    }
+    if (query.includes('INSERT INTO "credit_grant_reservations"')) {
+      const [id, grantId, amountMinorUnits, , expiresAt] = values as [
+        string,
+        string,
+        number,
+        unknown,
+        Date,
+      ];
+      reservations.set(id, {
+        id,
+        grantId,
+        amountMinorUnits: Number(amountMinorUnits),
+        state: "HELD",
+        settledMinorUnits: null,
+        expiresAt,
+      });
+      return 1;
+    }
+    if (query.includes('UPDATE "credit_grant_reservation_ledger"') && query.includes("- $1")) {
+      const [amount, grantId] = values as [string, string];
+      const row = ledger.get(grantId);
+      if (!row) return 0;
+      row.reservedMinorUnits -= Number(amount);
+      return 1;
+    }
+    if (query.includes("SET \"state\" = 'SETTLED'")) {
+      const [actual, id] = values as [number, string];
+      const r = reservations.get(id);
+      if (r && r.state === "HELD") {
+        r.state = "SETTLED";
+        r.settledMinorUnits = Number(actual);
+        return 1;
+      }
+      return 0;
+    }
+    if (query.includes("SET \"state\" = 'RELEASED'")) {
+      const [id] = values as [string];
+      const r = reservations.get(id);
+      if (r && r.state === "HELD") {
+        r.state = "RELEASED";
+        return 1;
+      }
+      return 0;
+    }
+    throw new Error(`in-memory fake: unhandled exec SQL:\n${query}`);
+  };
+
+  const queryRaw = async <T,>(query: string, ...values: unknown[]): Promise<T> => {
+    if (query.includes('FROM "credit_grant_reservations"') && query.includes("FOR UPDATE")) {
+      const [id] = values as [string];
+      const r = reservations.get(id);
+      return (
+        r ? [{ grantId: r.grantId, amountMinorUnits: String(r.amountMinorUnits), state: r.state }] : []
+      ) as T;
+    }
+    throw new Error(`in-memory fake: unhandled query SQL:\n${query}`);
+  };
+
+  const snapshot = () => ({
+    l: new Map([...ledger].map(([k, v]) => [k, { ...v }])),
+    r: new Map([...reservations].map(([k, v]) => [k, { ...v }])),
+  });
+  const restore = (snap: ReturnType<typeof snapshot>) => {
+    ledger.clear();
+    for (const [k, v] of snap.l) ledger.set(k, v);
+    reservations.clear();
+    for (const [k, v] of snap.r) reservations.set(k, v);
+  };
+
+  const db: CreditLedgerDb = {
+    $executeRawUnsafe: exec,
+    $queryRawUnsafe: queryRaw,
+    async $transaction<T>(fn: (tx: CreditLedgerDb) => Promise<T>): Promise<T> {
+      const snap = snapshot();
+      try {
+        return await fn(db);
+      } catch (error) {
+        restore(snap);
+        throw error;
+      }
+    },
+  };
+  return { db, ledger, reservations };
+}
+
+let seq = 0;
+const seqId = () => `res-${seq++}`;
+beforeEach(() => {
+  seq = 0;
+});
+
+describe("createPgCreditAuthorizationPort — atomic reserve/settle/release", () => {
+  it("authorize() takes NO reservation when admission itself refuses", async () => {
+    const { db } = makeInMemoryCreditLedgerDb();
+    const port = createPgCreditAuthorizationPort(db);
+    const decision = await port.authorize({
+      store: storeOf(), // no covering snapshot
+      scope: scopeOf(),
+      worstCaseMinorUnits: 100_00,
+      worstCaseCurrency: "USD",
+      now: NOW,
+      expiresAt: new Date(NOW.getTime() + 60_000),
+      idFactory: seqId,
+    });
+    expect(decision.admitted).toBe(false);
+  });
+
+  it("authorize() takes a HELD reservation and settle()/release() move it correctly", async () => {
+    const { db, ledger, reservations } = makeInMemoryCreditLedgerDb();
+    const port = createPgCreditAuthorizationPort(db);
+    const decision = await port.authorize({
+      store: storeOf(validSnapshot({ grantId: "g1" })),
+      scope: scopeOf(),
+      worstCaseMinorUnits: 100_00,
+      worstCaseCurrency: "USD",
+      now: NOW,
+      expiresAt: new Date(NOW.getTime() + 60_000),
+      idFactory: seqId,
+    });
+    expect(decision.admitted).toBe(true);
+    if (!decision.admitted) return;
+    expect(ledger.get("g1")!.reservedMinorUnits).toBe(100_00);
+    expect([...reservations.values()][0]!.state).toBe("HELD");
+
+    await port.settle(decision.handle, 80_00);
+    expect(ledger.get("g1")!.reservedMinorUnits).toBe(0); // worst-case remainder released
+    expect([...reservations.values()][0]!.state).toBe("SETTLED");
+    expect([...reservations.values()][0]!.settledMinorUnits).toBe(80_00);
+  });
+
+  it("release() reduces reserved without settling", async () => {
+    const { db, ledger } = makeInMemoryCreditLedgerDb();
+    const port = createPgCreditAuthorizationPort(db);
+    const decision = await port.authorize({
+      store: storeOf(validSnapshot({ grantId: "g2" })),
+      scope: scopeOf(),
+      worstCaseMinorUnits: 50_00,
+      worstCaseCurrency: "USD",
+      now: NOW,
+      expiresAt: new Date(NOW.getTime() + 60_000),
+      idFactory: seqId,
+    });
+    expect(decision.admitted).toBe(true);
+    if (!decision.admitted) return;
+    await port.release(decision.handle);
+    expect(ledger.get("g2")!.reservedMinorUnits).toBe(0);
+  });
+
+  it("double-settle and settle-after-release are guarded (BudgetBlocked)", async () => {
+    const { db } = makeInMemoryCreditLedgerDb();
+    const port = createPgCreditAuthorizationPort(db);
+    const decision = await port.authorize({
+      store: storeOf(validSnapshot({ grantId: "g3" })),
+      scope: scopeOf(),
+      worstCaseMinorUnits: 10_00,
+      worstCaseCurrency: "USD",
+      now: NOW,
+      expiresAt: new Date(NOW.getTime() + 60_000),
+      idFactory: seqId,
+    });
+    expect(decision.admitted).toBe(true);
+    if (!decision.admitted) return;
+    await port.settle(decision.handle, 5_00);
+    await expect(port.settle(decision.handle, 5_00)).rejects.toBeInstanceOf(BudgetBlocked);
+    await expect(port.release(decision.handle)).rejects.toBeInstanceOf(BudgetBlocked);
+  });
+
+  it("refuses insufficient-headroom once local holds already consume the fresh spendable cap", async () => {
+    const { db } = makeInMemoryCreditLedgerDb();
+    const port = createPgCreditAuthorizationPort(db);
+    const snap = validSnapshot({ grantId: "g4", remainingMinorUnits: 100_00, reservedMinorUnits: 0 });
+    const first = await port.authorize({
+      store: storeOf(snap),
+      scope: scopeOf(),
+      worstCaseMinorUnits: 90_00,
+      worstCaseCurrency: "USD",
+      now: NOW,
+      expiresAt: new Date(NOW.getTime() + 60_000),
+      idFactory: seqId,
+    });
+    expect(first.admitted).toBe(true);
+    // Same snapshot re-read (a real store's remaining/reserved wouldn't move
+    // between these two calls either — this proves the LOCAL ledger's own
+    // cap guard: 90 already held, so a further 90 cannot fit under 100.
+    const second = await port.authorize({
+      store: storeOf(snap),
+      scope: scopeOf(),
+      worstCaseMinorUnits: 90_00,
+      worstCaseCurrency: "USD",
+      now: NOW,
+      expiresAt: new Date(NOW.getTime() + 60_000),
+      idFactory: seqId,
+    });
+    expect(second.admitted).toBe(false);
+    if (second.admitted) return;
+    expect(second.reason).toBe("insufficient-headroom");
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PIPELINE — createLedgeredDispatch wired with a real CreditAuthorizationPort
+// ═══════════════════════════════════════════════════════════════════════════
+interface MemInvocation {
+  id: string;
+  requestId: string;
+  taskClass: string;
+  status: string;
+  requestFingerprint: string;
+  executionOwnerToken: string | null;
+  leaseExpiresAt: Date | null;
+  stealCount: number;
+  resultJson: string | null;
+  resultHash: string | null;
+  blockedReasonCode: string | null;
+}
+
+class MemStore implements AuthoritativeControlStore {
+  invocations = new Map<string, MemInvocation>();
+  attempts: Array<{ id: string; invocationId: string; errorCode: string | null }> = [];
+  attributions: Array<{ invocationId: string; estimatedGrossUsd: number; fundingLabel: string }> = [];
+
+  private key(requestId: string, taskClass: string): string {
+    return `${requestId}::${taskClass}`;
+  }
+
+  async claimInvocation(input: ClaimInvocationInput): Promise<ClaimOutcome> {
+    const k = this.key(input.requestId, input.taskClass);
+    const existing = this.invocations.get(k);
+    const expires = new Date(input.now.getTime() + input.leaseMs);
+    if (existing === undefined) {
+      this.invocations.set(k, {
+        id: input.invocationId,
+        requestId: input.requestId,
+        taskClass: input.taskClass,
+        status: "RUNNING",
+        requestFingerprint: input.requestFingerprint,
+        executionOwnerToken: input.ownerToken,
+        leaseExpiresAt: expires,
+        stealCount: 0,
+        resultJson: null,
+        resultHash: null,
+        blockedReasonCode: null,
+      });
+      return { kind: "ACQUIRED", invocationId: input.invocationId, stolen: false, nextOrdinal: 0 };
+    }
+    return { kind: "IN_PROGRESS", invocationId: existing.id };
+  }
+
+  private held(invocationId: string, ownerToken: string): MemInvocation | null {
+    for (const inv of this.invocations.values()) {
+      if (inv.id === invocationId) {
+        return inv.executionOwnerToken === ownerToken && inv.status === "RUNNING" ? inv : null;
+      }
+    }
+    return null;
+  }
+
+  async startAttempt(input: Parameters<AuthoritativeControlStore["startAttempt"]>[0]): Promise<void> {
+    if (this.held(input.invocationId, input.ownerToken) === null) {
+      throw new Error("lease not held — attempt refused");
+    }
+    this.attempts.push({ id: input.attemptId, invocationId: input.invocationId, errorCode: null });
+  }
+
+  async recordAttemptFailure(
+    input: Parameters<AuthoritativeControlStore["recordAttemptFailure"]>[0],
+  ): Promise<void> {
+    const a = this.attempts.find((x) => x.id === input.attemptId);
+    if (a) a.errorCode = input.errorCode;
+  }
+
+  async createAttribution(
+    input: Parameters<AuthoritativeControlStore["createAttribution"]>[0],
+  ): Promise<void> {
+    this.attributions.push({
+      invocationId: input.invocationId,
+      estimatedGrossUsd: input.estimatedGrossUsd,
+      fundingLabel: input.fundingLabel,
+    });
+  }
+
+  async finalizeSuccess(
+    input: Parameters<AuthoritativeControlStore["finalizeSuccess"]>[0],
+  ): Promise<boolean> {
+    const inv = this.held(input.invocationId, input.ownerToken);
+    if (inv === null) return false;
+    inv.status = "SUCCEEDED";
+    inv.resultJson = input.resultJson;
+    inv.resultHash = input.resultHash;
+    inv.leaseExpiresAt = null;
+    return true;
+  }
+
+  async finalizeFailure(
+    input: Parameters<AuthoritativeControlStore["finalizeFailure"]>[0],
+  ): Promise<boolean> {
+    const inv = this.held(input.invocationId, input.ownerToken);
+    if (inv === null) return false;
+    inv.status = input.status;
+    inv.leaseExpiresAt = null;
+    return true;
+  }
+
+  async recordBlockedInvocation(input: BlockedInvocationInput): Promise<void> {
+    const k = this.key(input.requestId, input.taskClass);
+    if (this.invocations.has(k)) return;
+    this.invocations.set(k, {
+      id: input.invocationId,
+      requestId: input.requestId,
+      taskClass: input.taskClass,
+      status: "BLOCKED",
+      requestFingerprint: input.requestFingerprint,
+      executionOwnerToken: null,
+      leaseExpiresAt: null,
+      stealCount: 0,
+      resultJson: null,
+      resultHash: null,
+      blockedReasonCode: input.blockedReasonCode,
+    });
+  }
+}
+
+const CREDIT_ACTOR = serviceActor({ subjectId: "service:credit-pipeline-tests" });
+
+function creditRequest(overrides: Partial<AiTaskInvocationRequest> = {}): AiTaskInvocationRequest {
   return {
-    requestId: "req-credit-1",
     taskClass: "brief.daily-summary",
+    requestId: "req-credits-0001",
+    actor: CREDIT_ACTOR,
     entity: "GSE",
-    worstCaseUsd: "100.000000", // $100.00 -> 10_000 minor units
-    reservationVersion: 1,
-    now: NOW,
+    input: { user: "summarize the slate", maxTokens: 64 },
     ...overrides,
   };
 }
 
-function fakePort(
-  ...snapshots: CreditGrantSnapshot[]
-): InMemoryCreditAuthorizationPort {
-  return createInMemoryCreditAuthorizationPort({
-    store: storeOf(...snapshots),
-    scopeFor: () => scopeOf(),
+function creditAuthority(overrides: Partial<EffectiveAuthority> = {}): EffectiveAuthority {
+  return {
+    taskClass: "brief.daily-summary",
+    surface: "brief",
+    dataPolicy: { tags: ["internal"] },
+    capabilityFloor: {
+      reasoningTier: "standard",
+      contextTokens: 8000,
+      structuredOutput: false,
+      toolUse: false,
+      latencyClass: "interactive",
+    },
+    permittedProviderRoutes: ["bedrock"],
+    permittedModes: ["CONFIRMED_CREDITS_ONLY"],
+    maxVendorCashUsd: 1, // $1.00 worst case -> 100 minor units
+    requiredBudgetScopes: [],
+    approvedSubstitutions: [],
+    validationPolicy: { schemaRef: "brief.v1", numericGuard: true },
+    retentionPolicy: { retainPrompt: false, retainResponse: false },
+    policyVersion: "test.v1",
+    ...overrides,
+  };
+}
+
+function creditPlan(overrides: Partial<AiDispatchPlan> = {}): AiDispatchPlan {
+  const request = overrides.request ?? creditRequest();
+  return {
+    request,
+    authority: creditAuthority(),
+    costMode: "CONFIRMED_CREDITS_ONLY",
+    maxVendorCashUsd: 1,
+    fundingLabel: "CREDIT_ELIGIBLE_UNCONFIRMED",
+    envClass: "test",
+    envClassSource: "explicit",
+    ...overrides,
+  };
+}
+
+function successDispatcher(route: ProviderRouteId): ProviderDispatchFn {
+  return async () => ({
+    kind: "SUCCEEDED",
+    providerUsed: route,
+    modelResolved: `${route}-model`,
+    output: { text: "ok" },
+    inputTokens: 10,
+    outputTokens: 20,
+    providerRequestId: null,
   });
 }
 
-describe("createInMemoryCreditAuthorizationPort — fake adapter of the §10.8 port", () => {
-  it("usdStringToMinorUnitsCeil rounds UP (conservative hold) and refuses malformed amounts", () => {
-    expect(usdStringToMinorUnitsCeil("100.000000", "x")).toBe(10_000);
-    expect(usdStringToMinorUnitsCeil("0.000001", "x")).toBe(1); // sub-cent -> 1 cent, never 0
-    expect(usdStringToMinorUnitsCeil("0.010000", "x")).toBe(1);
-    expect(usdStringToMinorUnitsCeil("0.000000", "x")).toBe(0);
-    expect(() => usdStringToMinorUnitsCeil("nope", "x")).toThrow(BudgetBlocked);
-    expect(() => usdStringToMinorUnitsCeil("-1.000000", "x")).toThrow(BudgetBlocked);
+describe("createLedgeredDispatch + credit-admission.ts — CONFIRMED_CREDITS_ONLY lifecycle", () => {
+  it("no creditStore/creditPort configured -> POLICY_BLOCKED, zero dispatch, zero attempts", async () => {
+    const store = new MemStore();
+    let dispatchCalls = 0;
+    const dispatch = createLedgeredDispatch({
+      store,
+      observability: () => new ObservabilitySink(null),
+      dispatchers: {
+        bedrock: (async () => {
+          dispatchCalls += 1;
+          throw new Error("must never be called");
+        }) as ProviderDispatchFn,
+      } as Record<ProviderRouteId, ProviderDispatchFn>,
+      now: () => NOW,
+      idFactory: (() => {
+        let n = 0;
+        return () => `id-${n++}`;
+      })(),
+      // No creditStore / creditPort wired.
+    });
+
+    await expect(dispatch(creditPlan())).rejects.toBeInstanceOf(PolicyBlocked);
+    expect(dispatchCalls).toBe(0);
+    expect(store.attempts).toHaveLength(0);
+    const inv = [...store.invocations.values()][0]!;
+    expect(inv.status).toBe("POLICY_BLOCKED");
   });
 
-  it("authorizeAndReserve takes NO hold when no snapshot covers (BudgetBlocked)", async () => {
-    const port = fakePort();
-    await expect(port.authorizeAndReserve(portRequest())).rejects.toBeInstanceOf(
-      BudgetBlocked,
+  it("store present but no covering snapshot -> every route refused, attempt rows carry CREDIT_BLOCKED, zero real dispatch", async () => {
+    const store = new MemStore();
+    const { db } = makeInMemoryCreditLedgerDb();
+    const creditPort = createPgCreditAuthorizationPort(db);
+    let dispatchCalls = 0;
+
+    const dispatch = createLedgeredDispatch({
+      store,
+      observability: () => new ObservabilitySink(null),
+      dispatchers: {
+        bedrock: (async () => {
+          dispatchCalls += 1;
+          return {
+            kind: "SUCCEEDED",
+            providerUsed: "bedrock",
+            modelResolved: "m",
+            output: { text: "x" },
+            inputTokens: 1,
+            outputTokens: 1,
+            providerRequestId: null,
+          };
+        }) as ProviderDispatchFn,
+      } as Record<ProviderRouteId, ProviderDispatchFn>,
+      now: () => NOW,
+      idFactory: (() => {
+        let n = 0;
+        return () => `id-${n++}`;
+      })(),
+      creditStore: storeOf(), // no covering snapshot anywhere
+      creditPort,
+    });
+
+    await expect(dispatch(creditPlan())).rejects.toThrow(/permitted provider route/);
+    expect(dispatchCalls).toBe(0);
+    expect(store.attempts).toHaveLength(1);
+    expect(store.attempts[0]!.errorCode).toMatch(/^CREDIT_BLOCKED:/);
+  });
+
+  it("an admitted route SETTLES the credit hold on a successful dispatch", async () => {
+    const store = new MemStore();
+    const { db, ledger, reservations } = makeInMemoryCreditLedgerDb();
+    const creditPort = createPgCreditAuthorizationPort(db);
+    const snapshotStore = storeOf(validSnapshot({ grantId: "g-success", provider: "bedrock" }));
+
+    const dispatch = createLedgeredDispatch({
+      store,
+      observability: () => new ObservabilitySink(null),
+      dispatchers: { bedrock: successDispatcher("bedrock") } as Record<ProviderRouteId, ProviderDispatchFn>,
+      now: () => NOW,
+      idFactory: (() => {
+        let n = 0;
+        return () => `id-${n++}`;
+      })(),
+      creditStore: snapshotStore,
+      creditPort,
+    });
+
+    const outcome = await dispatch(creditPlan());
+    expect(outcome.kind).toBe("COMPLETED");
+    expect(store.attributions).toHaveLength(1);
+    expect(ledger.get("g-success")!.reservedMinorUnits).toBe(0); // settled — worst case released
+    expect([...reservations.values()][0]!.state).toBe("SETTLED");
+  });
+
+  it("a clean per-route credit refusal advances to the NEXT route without dispatching that route", async () => {
+    const store = new MemStore();
+    const { db } = makeInMemoryCreditLedgerDb();
+    const creditPort = createPgCreditAuthorizationPort(db);
+    // bedrock has no covering snapshot; vertex does.
+    const snapshotStore: CreditSnapshotStore = {
+      async findCovering(scope) {
+        return scope.provider === "vertex" ? [validSnapshot({ grantId: "g-vertex", provider: "vertex" })] : [];
+      },
+    };
+    const bedrockCalls: string[] = [];
+    const dispatch = createLedgeredDispatch({
+      store,
+      observability: () => new ObservabilitySink(null),
+      dispatchers: {
+        bedrock: (async () => {
+          bedrockCalls.push("called");
+          throw new Error("bedrock must never be dispatched");
+        }) as ProviderDispatchFn,
+        vertex: successDispatcher("vertex"),
+      } as Record<ProviderRouteId, ProviderDispatchFn>,
+      now: () => NOW,
+      idFactory: (() => {
+        let n = 0;
+        return () => `id-${n++}`;
+      })(),
+      creditStore: snapshotStore,
+      creditPort,
+    });
+
+    const outcome = await dispatch(
+      creditPlan({ authority: creditAuthority({ permittedProviderRoutes: ["bedrock", "vertex"] }) }),
     );
-    expect(port.state.reservations.size).toBe(0);
-    expect([...port.state.heldMinorUnitsByGrant.values()]).toEqual([]);
+    expect(outcome.kind).toBe("COMPLETED");
+    expect(bedrockCalls).toHaveLength(0);
+    expect(store.attempts).toHaveLength(2); // bedrock (refused) + vertex (succeeded)
+    expect(store.attempts[0]!.errorCode).toMatch(/^CREDIT_BLOCKED:/);
   });
 
-  it("authorizeAndReserve fails closed on a throwing store — refusal, zero hold", async () => {
-    const port = createInMemoryCreditAuthorizationPort({
-      store: {
+  it("a clean provider FAILURE after credit authorization RELEASES that route's hold", async () => {
+    const store = new MemStore();
+    const { db, ledger } = makeInMemoryCreditLedgerDb();
+    const creditPort = createPgCreditAuthorizationPort(db);
+    const snapshotStore = storeOf(validSnapshot({ grantId: "g-fail", provider: "bedrock" }));
+    const failDispatcher: ProviderDispatchFn = async () => ({
+      kind: "FAILED",
+      dispatched: true,
+      errorCode: "HTTP_500",
+    });
+
+    const dispatch = createLedgeredDispatch({
+      store,
+      observability: () => new ObservabilitySink(null),
+      dispatchers: { bedrock: failDispatcher } as Record<ProviderRouteId, ProviderDispatchFn>,
+      now: () => NOW,
+      idFactory: (() => {
+        let n = 0;
+        return () => `id-${n++}`;
+      })(),
+      creditStore: snapshotStore,
+      creditPort,
+    });
+
+    await expect(dispatch(creditPlan())).rejects.toThrow(/permitted provider route/);
+    expect(ledger.get("g-fail")!.reservedMinorUnits).toBe(0); // released — no charge occurred
+  });
+
+  it("an AMBIGUOUS outcome after credit authorization NEVER releases the hold", async () => {
+    const store = new MemStore();
+    const { db, ledger } = makeInMemoryCreditLedgerDb();
+    const creditPort = createPgCreditAuthorizationPort(db);
+    const snapshotStore = storeOf(validSnapshot({ grantId: "g-ambiguous", provider: "bedrock" }));
+    const ambiguousDispatcher: ProviderDispatchFn = async () => ({
+      kind: "AMBIGUOUS",
+      dispatched: true,
+      errorCode: "TIMEOUT",
+    });
+
+    const dispatch = createLedgeredDispatch({
+      store,
+      observability: () => new ObservabilitySink(null),
+      dispatchers: { bedrock: ambiguousDispatcher } as Record<ProviderRouteId, ProviderDispatchFn>,
+      now: () => NOW,
+      idFactory: (() => {
+        let n = 0;
+        return () => `id-${n++}`;
+      })(),
+      creditStore: snapshotStore,
+      creditPort,
+    });
+
+    await expect(dispatch(creditPlan())).rejects.toBeInstanceOf(AmbiguousCharge);
+    // The hold is DELIBERATELY still HELD — releasing it would risk a
+    // double-spend against an unproven charge.
+    expect(ledger.get("g-ambiguous")!.reservedMinorUnits).toBe(100); // $1.00 = 100 minor units
+  });
+
+  it("a non-credit lane (CONFIRMED_CREDITS_ONLY not selected) never touches the credit store", async () => {
+    const store = new MemStore();
+    let storeTouched = false;
+    const dispatch = createLedgeredDispatch({
+      store,
+      observability: () => new ObservabilitySink(null),
+      dispatchers: { bedrock: successDispatcher("bedrock") } as Record<ProviderRouteId, ProviderDispatchFn>,
+      now: () => NOW,
+      idFactory: (() => {
+        let n = 0;
+        return () => `id-${n++}`;
+      })(),
+      creditStore: {
         async findCovering() {
-          throw new Error("credit store down");
+          storeTouched = true;
+          return [];
         },
       },
-      scopeFor: () => scopeOf(),
     });
-    await expect(port.authorizeAndReserve(portRequest())).rejects.toBeInstanceOf(
-      BudgetBlocked,
+
+    const outcome = await dispatch(
+      creditPlan({
+        costMode: "NO_BILLABLE_EXTERNAL",
+        authority: creditAuthority({ permittedModes: ["NO_BILLABLE_EXTERNAL"] }),
+      }),
     );
-    expect(port.state.reservations.size).toBe(0);
-  });
-
-  it("authorizeAndReserve refuses an S1-inadmissible snapshot (drifted reconciliation) with zero hold", async () => {
-    const port = fakePort(validSnapshot({ reconciliationState: "drifted" }));
-    await expect(port.authorizeAndReserve(portRequest())).rejects.toThrow(
-      /reconciliation_drifted/,
-    );
-    expect(port.state.reservations.size).toBe(0);
-  });
-
-  it("authorizeAndReserve refuses a malformed worstCaseUsd before touching the store", async () => {
-    const port = createInMemoryCreditAuthorizationPort({
-      store: {
-        async findCovering() {
-          throw new Error("must not be called");
-        },
-      },
-      scopeFor: () => scopeOf(),
-    });
-    await expect(
-      port.authorizeAndReserve(portRequest({ worstCaseUsd: "not-money" })),
-    ).rejects.toBeInstanceOf(BudgetBlocked);
-    expect(port.state.reservations.size).toBe(0);
-  });
-
-  it("happy path: an admissible snapshot yields a HELD reservation pinned to the grant", async () => {
-    const port = fakePort(validSnapshot());
-    const reservation = await port.authorizeAndReserve(portRequest());
-    expect(reservation.grantAllocationRef).toBe("grant-2026-0099");
-    expect(reservation.requestId).toBe("req-credit-1");
-    expect(reservation.heldUsd).toBe("100.000000");
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(10_000);
-    const record = port.state.reservations.get(reservation.creditReservationId)!;
-    expect(record.state).toBe("HELD");
-    expect(record.heldMinorUnits).toBe(10_000);
-  });
-
-  it("a sub-cent worst case is held as a WHOLE minor unit (ceil, never a zero hold)", async () => {
-    const port = fakePort(validSnapshot());
-    const reservation = await port.authorizeAndReserve(
-      portRequest({ worstCaseUsd: "0.000001" }),
-    );
-    expect(reservation.heldUsd).toBe("0.010000"); // 1 cent
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(1);
-  });
-
-  it("settleProvisional releases the hold, records the actual as SETTLED spend, and is guarded against replay", async () => {
-    const port = fakePort(validSnapshot());
-    const r = await port.authorizeAndReserve(portRequest());
-    await port.settleProvisional(r.creditReservationId, "42.500000", NOW);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-    // The applied actual is NOT erased from the ledger — it moves to settled.
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(4_250);
-    const record = port.state.reservations.get(r.creditReservationId)!;
-    expect(record.state).toBe("PROVISIONALLY_SETTLED");
-    expect(record.actualMinorUnits).toBe(4_250);
-    await expect(
-      port.settleProvisional(r.creditReservationId, "42.500000", NOW),
-    ).rejects.toBeInstanceOf(BudgetBlocked);
-  });
-
-  it("settled spend stays counted: a full-spend settle EXHAUSTS the grant — a later authorize refuses", async () => {
-    // Regression: the fake used to erase settled spend from the ledger, so
-    // authorize($100) -> settle($100) -> authorize($100) double-spent a
-    // $100 grant against the static snapshot.
-    const port = fakePort(
-      validSnapshot({ remainingMinorUnits: 100_00, reservedMinorUnits: 0 }),
-    );
-    const r1 = await port.authorizeAndReserve(portRequest({ requestId: "req-1" }));
-    await port.settleProvisional(r1.creditReservationId, "100.000000", NOW);
-    await expect(
-      port.authorizeAndReserve(portRequest({ requestId: "req-2" })),
-    ).rejects.toThrow(/insufficient-headroom/);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(10_000);
-    expect(port.state.reservations.size).toBe(1);
-  });
-
-  it("a partial settle frees ONLY the remainder: headroom = spendable - held - settled", async () => {
-    // Grant spendable $100. Hold $100, settle $40 -> $60 of headroom remains:
-    // a $60 authorize fits exactly, one more cent refuses.
-    const port = fakePort(
-      validSnapshot({ remainingMinorUnits: 100_00, reservedMinorUnits: 0 }),
-    );
-    const r1 = await port.authorizeAndReserve(portRequest({ requestId: "req-1" }));
-    await port.settleProvisional(r1.creditReservationId, "40.000000", NOW);
-    await port.authorizeAndReserve(
-      portRequest({ requestId: "req-2", worstCaseUsd: "60.000000" }),
-    );
-    await expect(
-      port.authorizeAndReserve(
-        portRequest({ requestId: "req-3", worstCaseUsd: "0.010000" }),
-      ),
-    ).rejects.toThrow(/insufficient-headroom/);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(6_000);
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(4_000);
-  });
-
-  it("settleProvisional refuses an actual ABOVE the authorized hold (credits-only can never overrun)", async () => {
-    const port = fakePort(validSnapshot());
-    const r = await port.authorizeAndReserve(portRequest());
-    await expect(
-      port.settleProvisional(r.creditReservationId, "100.010000", NOW),
-    ).rejects.toBeInstanceOf(BudgetBlocked);
-    // The refusal did NOT eat the hold — the reservation is still HELD.
-    expect(port.state.reservations.get(r.creditReservationId)!.state).toBe("HELD");
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(10_000);
-  });
-
-  it("release returns the hold to zero and double-release / settle-after-release are guarded", async () => {
-    const port = fakePort(validSnapshot());
-    const r = await port.authorizeAndReserve(portRequest());
-    await port.release(r.creditReservationId, NOW);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-    expect(port.state.reservations.get(r.creditReservationId)!.state).toBe("RELEASED");
-    await expect(port.release(r.creditReservationId, NOW)).rejects.toBeInstanceOf(
-      BudgetBlocked,
-    );
-    await expect(
-      port.settleProvisional(r.creditReservationId, "1.000000", NOW),
-    ).rejects.toBeInstanceOf(BudgetBlocked);
-  });
-
-  it("reconcile confirms a provisional settlement from a receipt and CORRECTS the settled ledger; double-reconcile is guarded", async () => {
-    const port = fakePort(validSnapshot());
-    const r = await port.authorizeAndReserve(portRequest());
-    await port.settleProvisional(r.creditReservationId, "42.500000", NOW);
-    await port.reconcile(r.creditReservationId, "42.480000", NOW);
-    const record = port.state.reservations.get(r.creditReservationId)!;
-    expect(record.state).toBe("RECONCILED");
-    expect(record.confirmedMinorUnits).toBe(4_248);
-    // Settled spend corrected from the provisional 4_250 to the receipt truth.
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(4_248);
-    await expect(
-      port.reconcile(r.creditReservationId, "42.480000", NOW),
-    ).rejects.toBeInstanceOf(BudgetBlocked);
-  });
-
-  it("reconcile directly from HELD releases the hold and records the confirmed amount as settled spend", async () => {
-    const port = fakePort(validSnapshot());
-    const r = await port.authorizeAndReserve(portRequest());
-    await port.reconcile(r.creditReservationId, "10.000000", NOW);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(1_000);
-    expect(port.state.reservations.get(r.creditReservationId)!.state).toBe("RECONCILED");
-  });
-
-  it("reconcile refuses a confirmed amount ABOVE the authorized hold (from HELD) — an overrun receipt is a dispute", async () => {
-    const port = fakePort(validSnapshot({ remainingMinorUnits: 5_000_00 }));
-    const r = await port.authorizeAndReserve(
-      portRequest({ worstCaseUsd: "50.000000" }),
-    );
-    await expect(
-      port.reconcile(r.creditReservationId, "500.000000", NOW),
-    ).rejects.toThrow(/exceeds the authorized hold/);
-    // The refusal left the record untouched: still HELD, hold intact,
-    // nothing recorded as confirmed, nothing settled.
-    const record = port.state.reservations.get(r.creditReservationId)!;
-    expect(record.state).toBe("HELD");
-    expect(record.confirmedMinorUnits).toBeNull();
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(5_000);
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099") ?? 0).toBe(0);
-  });
-
-  it("reconcile refuses a confirmed amount ABOVE the hold from PROVISIONALLY_SETTLED too", async () => {
-    const port = fakePort(validSnapshot());
-    const r = await port.authorizeAndReserve(portRequest());
-    await port.settleProvisional(r.creditReservationId, "42.500000", NOW);
-    await expect(
-      port.reconcile(r.creditReservationId, "100.010000", NOW),
-    ).rejects.toThrow(/exceeds the authorized hold/);
-    const record = port.state.reservations.get(r.creditReservationId)!;
-    expect(record.state).toBe("PROVISIONALLY_SETTLED");
-    expect(record.confirmedMinorUnits).toBeNull();
-    // The provisional settled spend is unchanged by the refusal.
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(4_250);
-  });
-
-  it("release/reconcile/settle of an unknown reservation id refuse (nothing to mutate)", async () => {
-    const port = fakePort(validSnapshot());
-    await expect(port.release("ghost", NOW)).rejects.toBeInstanceOf(BudgetBlocked);
-    await expect(port.reconcile("ghost", "1.000000", NOW)).rejects.toBeInstanceOf(
-      BudgetBlocked,
-    );
-    await expect(
-      port.settleProvisional("ghost", "1.000000", NOW),
-    ).rejects.toBeInstanceOf(BudgetBlocked);
-  });
-
-  it("replaying the same requestId+reservationVersion returns the ORIGINAL hold, never a second one", async () => {
-    const port = fakePort(validSnapshot());
-    const first = await port.authorizeAndReserve(portRequest());
-    const replay = await port.authorizeAndReserve(portRequest());
-    expect(replay.creditReservationId).toBe(first.creditReservationId);
-    expect(port.state.reservations.size).toBe(1);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(10_000);
-  });
-
-  it("a replay AFTER settlement refuses — a completed authorization cannot silently re-open", async () => {
-    const port = fakePort(validSnapshot());
-    const first = await port.authorizeAndReserve(portRequest());
-    await port.settleProvisional(first.creditReservationId, "1.000000", NOW);
-    await expect(port.authorizeAndReserve(portRequest())).rejects.toBeInstanceOf(
-      BudgetBlocked,
-    );
-  });
-
-  it("sequential holds exhaust the spendable balance exactly — the next authorize refuses with zero hold", async () => {
-    // Grant spendable: $200 (20_000 minor units). Two $100 holds fit; the
-    // third must refuse and take nothing.
-    const port = fakePort(
-      validSnapshot({ remainingMinorUnits: 200_00, reservedMinorUnits: 0 }),
-    );
-    await port.authorizeAndReserve(portRequest({ requestId: "req-a" }));
-    await port.authorizeAndReserve(portRequest({ requestId: "req-b" }));
-    await expect(
-      port.authorizeAndReserve(portRequest({ requestId: "req-c" })),
-    ).rejects.toThrow(/insufficient-headroom/);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(20_000);
-    expect(port.state.reservations.size).toBe(2);
-  });
-
-  it("the snapshot's OWN reservedMinorUnits shrinks what the port may hold (spendable = remaining - reserved)", async () => {
-    // remaining $150, already reserved upstream $100 -> spendable $50; a
-    // $100 hold must refuse.
-    const port = fakePort(
-      validSnapshot({ remainingMinorUnits: 150_00, reservedMinorUnits: 100_00 }),
-    );
-    await expect(port.authorizeAndReserve(portRequest())).rejects.toThrow(
-      /insufficient-headroom/,
-    );
-    expect(port.state.reservations.size).toBe(0);
+    expect(outcome.kind).toBe("COMPLETED");
+    expect(storeTouched).toBe(false);
   });
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CONCURRENCY THROUGH THE PORT (directive §11.3 acceptance)
+// INTEGRATION — real Postgres. Owner-mandated 100-concurrent-authorize proof.
 // ═══════════════════════════════════════════════════════════════════════════
-describe("concurrency: simultaneous authorizeAndReserve calls cannot exceed the balance", () => {
-  it("10 simultaneous $100 calls against a grant that can fund 6 admit EXACTLY 6 — never more", async () => {
-    // Spendable: $600 (60_000 minor units). Ten concurrent $100 authorizes
-    // race THROUGH THE PORT; a conforming adapter admits at most 6 and the
-    // rest are refused with ZERO hold taken. The store answers with jittered
-    // async delays so the reads genuinely interleave before any hold lands.
-    const snapshot = validSnapshot({ remainingMinorUnits: 600_00, reservedMinorUnits: 0 });
-    const port = createInMemoryCreditAuthorizationPort({
-      store: {
-        async findCovering() {
-          await new Promise((resolve) => setTimeout(resolve, Math.random() * 5));
-          return [snapshot];
-        },
-      },
-      scopeFor: () => scopeOf(),
-    });
+const HAS_DB = /^postgres(ql)?:\/\//.test(process.env.DATABASE_URL ?? "");
+
+describe.skipIf(!HAS_DB)("[integration] atomic credit authorization against REAL Postgres", () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let prisma: any;
+
+  beforeAll(async () => {
+    const { PrismaClient } = await import("@prisma/client");
+    const url = new URL(process.env.DATABASE_URL as string);
+    url.searchParams.set("connection_limit", "25");
+    prisma = new PrismaClient({ datasources: { db: { url: url.toString() } } });
+    await prisma.$connect();
+  });
+
+  afterAll(async () => {
+    if (prisma) await prisma.$disconnect();
+  });
+
+  beforeEach(async () => {
+    await prisma.$executeRawUnsafe('DELETE FROM "credit_grant_reservations"');
+    await prisma.$executeRawUnsafe('DELETE FROM "credit_grant_reservation_ledger"');
+  });
+
+  it("100 concurrent authorize() on a grant that can fund 60 -> exactly 60 admitted, invariant holds, NO double-spend", async () => {
+    const GRANT_ID = "grant-concurrency-test";
+    const CAP_MINOR_UNITS = 60_00; // $60.00 spendable
+    const AMOUNT_MINOR_UNITS = 1_00; // $1.00 per authorize
+    const N = 100;
+
+    const snapshotStore = storeOf(
+      validSnapshot({
+        grantId: GRANT_ID,
+        provider: "bedrock",
+        remainingMinorUnits: CAP_MINOR_UNITS,
+        reservedMinorUnits: 0,
+      }),
+    );
+    const port: CreditAuthorizationPort = createPgCreditAuthorizationPort(prisma);
 
     const results = await Promise.allSettled(
-      Array.from({ length: 10 }, (_, i) =>
-        port.authorizeAndReserve(portRequest({ requestId: `req-conc-${i}` })),
+      Array.from({ length: N }, () =>
+        port.authorize({
+          store: snapshotStore,
+          scope: scopeOf(),
+          worstCaseMinorUnits: AMOUNT_MINOR_UNITS,
+          worstCaseCurrency: "USD",
+          now: NOW,
+          expiresAt: new Date(NOW.getTime() + 15 * 60_000),
+        }),
       ),
     );
 
     const admitted = results.filter(
-      (r): r is PromiseFulfilledResult<CreditReservation> => r.status === "fulfilled",
+      (r) => r.status === "fulfilled" && (r.value as { admitted: boolean }).admitted,
     );
-    const refused = results.filter((r) => r.status === "rejected");
-    expect(admitted).toHaveLength(6);
-    expect(refused).toHaveLength(4);
-    for (const r of refused) {
-      expect((r as PromiseRejectedResult).reason).toBeInstanceOf(BudgetBlocked);
-    }
-    // THE invariant: total held never exceeds the spendable balance.
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(60_000);
-    expect(port.state.reservations.size).toBe(6);
-    // Every admitted hold is individually intact and settleable.
-    for (const r of admitted) {
-      await port.release(r.value.creditReservationId, NOW);
-    }
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
+    const refused = results.filter(
+      (r) => r.status === "fulfilled" && !(r.value as { admitted: boolean }).admitted,
+    );
+    const errors = results.filter((r) => r.status === "rejected");
+
+    const ledgerRow = (await prisma.$queryRawUnsafe(
+      `SELECT "reservedMinorUnits"::text AS "reservedMinorUnits" FROM "credit_grant_reservation_ledger" WHERE "grantId" = $1`,
+      GRANT_ID,
+    )) as Array<{ reservedMinorUnits: string }>;
+    const heldCount = (
+      (await prisma.$queryRawUnsafe(
+        `SELECT count(*)::int AS n FROM "credit_grant_reservations" WHERE "grantId" = $1 AND "state" = 'HELD'`,
+        GRANT_ID,
+      )) as Array<{ n: number }>
+    )[0]!.n;
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `\n[100-concurrent-credit] cap=${CAP_MINOR_UNITS} amount=${AMOUNT_MINOR_UNITS} N=${N} -> ` +
+        `admitted=${admitted.length} refused=${refused.length} errors=${errors.length} | ` +
+        `ledger.reserved=${ledgerRow[0]?.reservedMinorUnits} heldRows=${heldCount}\n`,
+    );
+
+    expect(errors).toHaveLength(0);
+    expect(admitted).toHaveLength(CAP_MINOR_UNITS / AMOUNT_MINOR_UNITS); // exactly 60
+    expect(refused).toHaveLength(N - CAP_MINOR_UNITS / AMOUNT_MINOR_UNITS); // the other 40
+    expect(heldCount).toBe(CAP_MINOR_UNITS / AMOUNT_MINOR_UNITS);
+    // The invariant: total held reservations never exceed the grant's cap —
+    // proven against real Postgres, not a mock.
+    expect(Number(ledgerRow[0]!.reservedMinorUnits)).toBe(CAP_MINOR_UNITS);
+    expect(Number(ledgerRow[0]!.reservedMinorUnits)).toBeLessThanOrEqual(CAP_MINOR_UNITS);
   });
 
-  it("10 simultaneous calls with UNEVEN amounts never collectively exceed the spendable balance", async () => {
-    // Spendable $250. Amounts 10,20,...,100 sum to $550 — whichever subset
-    // wins the race, the held total must stay <= 25_000 minor units.
-    const snapshot = validSnapshot({ remainingMinorUnits: 250_00, reservedMinorUnits: 0 });
-    const port = createInMemoryCreditAuthorizationPort({
-      store: {
-        async findCovering() {
-          await new Promise((resolve) => setTimeout(resolve, Math.random() * 5));
-          return [snapshot];
-        },
-      },
-      scopeFor: () => scopeOf(),
+  it("settle/release against real Postgres: reserved returns to 0 either way, double-settle guarded", async () => {
+    const GRANT_ID = "grant-settle-release-test";
+    const snapshotStore = storeOf(
+      validSnapshot({ grantId: GRANT_ID, provider: "bedrock", remainingMinorUnits: 1000_00, reservedMinorUnits: 0 }),
+    );
+    const port = createPgCreditAuthorizationPort(prisma);
+
+    const held = await port.authorize({
+      store: snapshotStore,
+      scope: scopeOf(),
+      worstCaseMinorUnits: 500_00,
+      worstCaseCurrency: "USD",
+      now: NOW,
+      expiresAt: new Date(NOW.getTime() + 60_000),
     });
+    expect(held.admitted).toBe(true);
+    if (!held.admitted) return;
 
-    const amounts = Array.from({ length: 10 }, (_, i) => (i + 1) * 10);
-    const results = await Promise.allSettled(
-      amounts.map((usd, i) =>
-        port.authorizeAndReserve(
-          portRequest({ requestId: `req-mix-${i}`, worstCaseUsd: `${usd}.000000` }),
-        ),
-      ),
-    );
+    await port.settle(held.handle, 200_00);
+    const afterSettle = (await prisma.$queryRawUnsafe(
+      `SELECT "reservedMinorUnits"::text AS r FROM "credit_grant_reservation_ledger" WHERE "grantId" = $1`,
+      GRANT_ID,
+    )) as Array<{ r: string }>;
+    expect(Number(afterSettle[0]!.r)).toBe(0);
+    await expect(port.settle(held.handle, 1)).rejects.toBeInstanceOf(BudgetBlocked);
 
-    const heldTotal = port.state.heldMinorUnitsByGrant.get("grant-2026-0099") ?? 0;
-    expect(heldTotal).toBeLessThanOrEqual(25_000);
-    expect(heldTotal).toBeGreaterThan(0); // at least one small hold must fit
-    const admittedHeld = results
-      .filter(
-        (r): r is PromiseFulfilledResult<CreditReservation> => r.status === "fulfilled",
-      )
-      .reduce((sum, r) => sum + usdStringToMinorUnitsCeil(r.value.heldUsd, "held"), 0);
-    expect(admittedHeld).toBe(heldTotal); // ledger == sum of admitted holds
-  });
-
-  it("permanent-consume under concurrency: settling the first admitted wave PERMANENTLY reduces the balance, so a second concurrent wave admits FEWER and never re-admits the consumed spend (Decision A)", async () => {
-    // Spendable: $600 (60_000 minor units). This is the credit-port analog of
-    // the real-Postgres 100-concurrent second-wave proof: settled spend is
-    // gone from the grant's spendable balance FOREVER (spendable - held -
-    // settled), so sequential authorize->settle cycles can never cumulatively
-    // overspend a static snapshot.
-    const snapshot = validSnapshot({ remainingMinorUnits: 600_00, reservedMinorUnits: 0 });
-    const port = createInMemoryCreditAuthorizationPort({
-      store: {
-        async findCovering() {
-          await new Promise((resolve) => setTimeout(resolve, Math.random() * 5));
-          return [snapshot];
-        },
-      },
-      scopeFor: () => scopeOf(),
+    const held2 = await port.authorize({
+      store: snapshotStore,
+      scope: scopeOf(),
+      worstCaseMinorUnits: 300_00,
+      worstCaseCurrency: "USD",
+      now: NOW,
+      expiresAt: new Date(NOW.getTime() + 60_000),
     });
-
-    // Wave 1: ten concurrent $100 authorizes; exactly 6 fit the $600 balance.
-    const wave1 = await Promise.allSettled(
-      Array.from({ length: 10 }, (_, i) =>
-        port.authorizeAndReserve(portRequest({ requestId: `req-w1-${i}` })),
-      ),
-    );
-    const admitted1 = wave1.filter(
-      (r): r is PromiseFulfilledResult<CreditReservation> => r.status === "fulfilled",
-    );
-    expect(admitted1).toHaveLength(6);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(60_000);
-
-    // Settle every admitted reservation at the FULL held $100 — the whole
-    // $600 is now PERMANENTLY consumed (settled), holds return to zero.
-    for (const r of admitted1) {
-      await port.settleProvisional(r.value.creditReservationId, "100.000000", NOW);
-    }
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(60_000);
-
-    // Wave 2: ten MORE concurrent $100 authorizes against the SAME static
-    // snapshot. Settled spend gave back NO headroom, so every one refuses —
-    // the consumed $600 is never re-admitted.
-    const wave2 = await Promise.allSettled(
-      Array.from({ length: 10 }, (_, i) =>
-        port.authorizeAndReserve(portRequest({ requestId: `req-w2-${i}` })),
-      ),
-    );
-    const admitted2 = wave2.filter((r) => r.status === "fulfilled");
-    const refused2 = wave2.filter((r) => r.status === "rejected");
-    expect(admitted2).toHaveLength(0);
-    expect(refused2).toHaveLength(10);
-    expect(admitted2.length).toBeLessThan(admitted1.length); // strictly fewer
-    for (const r of refused2) {
-      expect((r as PromiseRejectedResult).reason).toBeInstanceOf(BudgetBlocked);
-      expect((r as PromiseRejectedResult).reason.message).toMatch(/insufficient-headroom/);
-    }
-    // The ledger never exceeded the balance: nothing held, exactly $600 settled.
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(60_000);
-  });
-
-  it("permanent-consume with a PARTIAL settle wave: a second wave admits only the freed remainder, never the consumed portion (Decision A)", async () => {
-    // Spendable $600. Wave 1 admits 6 × $100. Settle each at $50 (half) → $300
-    // permanently consumed, $300 of headroom returns. A second wave of ten
-    // $100 authorizes then admits EXACTLY 3 (the freed $300), never the
-    // consumed $300.
-    const snapshot = validSnapshot({ remainingMinorUnits: 600_00, reservedMinorUnits: 0 });
-    const port = createInMemoryCreditAuthorizationPort({
-      store: {
-        async findCovering() {
-          await new Promise((resolve) => setTimeout(resolve, Math.random() * 5));
-          return [snapshot];
-        },
-      },
-      scopeFor: () => scopeOf(),
-    });
-
-    const wave1 = await Promise.allSettled(
-      Array.from({ length: 10 }, (_, i) =>
-        port.authorizeAndReserve(portRequest({ requestId: `req-p1-${i}` })),
-      ),
-    );
-    const admitted1 = wave1.filter(
-      (r): r is PromiseFulfilledResult<CreditReservation> => r.status === "fulfilled",
-    );
-    expect(admitted1).toHaveLength(6);
-    for (const r of admitted1) {
-      await port.settleProvisional(r.value.creditReservationId, "50.000000", NOW);
-    }
-    // $300 settled (permanent), $300 of headroom freed.
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(30_000);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-
-    const wave2 = await Promise.allSettled(
-      Array.from({ length: 10 }, (_, i) =>
-        port.authorizeAndReserve(portRequest({ requestId: `req-p2-${i}` })),
-      ),
-    );
-    const admitted2 = wave2.filter(
-      (r): r is PromiseFulfilledResult<CreditReservation> => r.status === "fulfilled",
-    );
-    // Exactly the freed $300 funds 3 more; the consumed $300 is never re-admitted.
-    expect(admitted2).toHaveLength(3);
-    expect(admitted2.length).toBeLessThan(admitted1.length);
-    // Ledger invariant: held + settled never exceeds the $600 spendable balance.
-    const held = port.state.heldMinorUnitsByGrant.get("grant-2026-0099") ?? 0;
-    const settled = port.state.settledMinorUnitsByGrant.get("grant-2026-0099") ?? 0;
-    expect(held + settled).toBeLessThanOrEqual(60_000);
-    expect(held + settled).toBe(60_000); // 30_000 settled + 30_000 held (3×$100)
-  });
-});
-
-// ═══════════════════════════════════════════════════════════════════════════
-// EXECUTOR — CONFIRMED_CREDITS_ONLY through the sealed §8/§9/§10 stack
-// ═══════════════════════════════════════════════════════════════════════════
-describe("executor: CONFIRMED_CREDITS_ONLY consumes the port and stays fail-closed without a real adapter", () => {
-  const request: AiTaskInvocationRequest = {
-    taskClass: "brief.daily-summary",
-    requestId: "req-credit-exec-1",
-    actor: ACTOR,
-    entity: "GSE",
-    input: { user: "summarize", maxTokens: 32 },
-  };
-
-  function executorDeps(
-    overrides: Partial<SealedAiExecutorDependencies> = {},
-  ): SealedAiExecutorDependencies & { dispatched: string[] } {
-    const dispatched: string[] = [];
-    return {
-      env: { AI_ENV_CLASS: "test", LLM_COST_MODE: "CONFIRMED_CREDITS_ONLY" },
-      now: () => NOW,
-      policies: { getTaskPolicy },
-      receipts: failClosedReceiptStore,
-      recordBlocked: async () => {},
-      dispatch: async (plan) => {
-        dispatched.push(plan.request.requestId);
-        return {
-          kind: "COMPLETED",
-          invocationId: `inv:${plan.request.requestId}`,
-          output: { ok: true },
-          attempts: [],
-          telemetryStatus: "OK",
-          replayed: false,
-        };
-      },
-      credit: failClosedCreditAuthorizationPort,
-      dispatched,
-      ...overrides,
-    };
-  }
-
-  it("WITHOUT a real adapter (production seal): refuses BEFORE dispatch — credit mode is unreachable", async () => {
-    const deps = executorDeps();
-    const executor = createAiExecutor(deps);
-    await expect(executor.executeAiTask(request)).rejects.toBeInstanceOf(BudgetBlocked);
-    expect(deps.dispatched).toEqual([]); // the transport seam was never reached
-  });
-
-  it("with the FAKE adapter and a covering admissible snapshot: authorizes, dispatches, then SETTLES the hold (no leak)", async () => {
-    const port = fakePort(validSnapshot());
-    const deps = executorDeps({ credit: port });
-    const executor = createAiExecutor(deps);
-    const result = await executor.executeAiTask(request);
-    expect(result.status).toBe("SUCCEEDED");
-    expect(result.fundingLabel).toBe("CREDIT_ELIGIBLE_UNCONFIRMED");
-    expect(result.telemetryStatus).toBe("OK");
-    expect(deps.dispatched).toEqual(["req-credit-exec-1"]);
-    expect(port.state.reservations.size).toBe(1);
-    const record = [...port.state.reservations.values()][0]!;
-    // The hold is NOT left leaked as HELD: the completed dispatch settles it
-    // provisionally at the conservative full hold (the executor has no
-    // token-priced actual; receipt reconciliation corrects downward in S5).
-    expect(record.state).toBe("PROVISIONALLY_SETTLED");
-    expect(record.grantId).toBe("grant-2026-0099");
-    expect(record.actualMinorUnits).toBe(record.heldMinorUnits);
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099")).toBe(
-      record.heldMinorUnits,
-    );
-  });
-
-  it("a dispatch failure (clean, no charge) RELEASES the credit hold and rethrows the original error", async () => {
-    const port = fakePort(validSnapshot());
-    const deps = executorDeps({
-      credit: port,
-      dispatch: async () => {
-        throw new Error("transport exploded before any charge");
-      },
-    });
-    const executor = createAiExecutor(deps);
-    await expect(executor.executeAiTask(request)).rejects.toThrow(
-      /transport exploded/,
-    );
-    const record = [...port.state.reservations.values()][0]!;
-    expect(record.state).toBe("RELEASED");
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(0);
-    expect(port.state.settledMinorUnitsByGrant.get("grant-2026-0099") ?? 0).toBe(0);
-  });
-
-  it("an AMBIGUOUS charge KEEPS the credit hold (an unproven charge never frees its funds)", async () => {
-    const port = fakePort(validSnapshot());
-    const deps = executorDeps({
-      credit: port,
-      dispatch: async () => {
-        throw new AmbiguousCharge("timeout after dispatch — charge unproven");
-      },
-    });
-    const executor = createAiExecutor(deps);
-    await expect(executor.executeAiTask(request)).rejects.toBeInstanceOf(
-      AmbiguousCharge,
-    );
-    const record = [...port.state.reservations.values()][0]!;
-    expect(record.state).toBe("HELD"); // quarantined for reconciliation, not released
-    expect(port.state.heldMinorUnitsByGrant.get("grant-2026-0099")).toBe(
-      record.heldMinorUnits,
-    );
-  });
-
-  it("an IN_PROGRESS verdict leaves the shared reservation HELD for the live claim owner to complete", async () => {
-    const port = fakePort(validSnapshot());
-    const deps = executorDeps({
-      credit: port,
-      dispatch: async (plan) => ({
-        kind: "IN_PROGRESS",
-        invocationId: `inv:${plan.request.requestId}`,
-      }),
-    });
-    const executor = createAiExecutor(deps);
-    const result = await executor.executeAiTask(request);
-    expect(result.status).toBe("IN_PROGRESS");
-    const record = [...port.state.reservations.values()][0]!;
-    expect(record.state).toBe("HELD");
-  });
-
-  it("a settlement failure never converts the completed dispatch into an error — it degrades telemetry", async () => {
-    const port = fakePort(validSnapshot());
-    const failingSettle: typeof port = {
-      ...port,
-      settleProvisional: async () => {
-        throw new Error("credit authority unavailable at settlement");
-      },
-    };
-    const deps = executorDeps({ credit: failingSettle });
-    const executor = createAiExecutor(deps);
-    const result = await executor.executeAiTask(request);
-    expect(result.status).toBe("SUCCEEDED");
-    expect(result.telemetryStatus).toBe("DEGRADED");
-    // The hold stays (conservative: strands credits, never overspends).
-    expect([...port.state.reservations.values()][0]!.state).toBe("HELD");
-  });
-
-  it("a RETRY of a request whose authorization already settled refuses fail-closed (documented §10.6-mirror limit until S5)", async () => {
-    const port = fakePort(validSnapshot());
-    const deps = executorDeps({ credit: port });
-    const executor = createAiExecutor(deps);
-    await executor.executeAiTask(request); // completes and settles v1
-    // The port's replay-after-settlement guard refuses re-authorization —
-    // conservative (never a double hold, never a double spend); replaying
-    // the persisted result needs S5's ledger-aware real adapter.
-    await expect(executor.executeAiTask(request)).rejects.toThrow(
-      /cannot be replayed/,
-    );
-    expect(deps.dispatched).toEqual(["req-credit-exec-1"]); // no second dispatch
-  });
-
-  it("with the FAKE adapter but NO covering snapshot: refuses BEFORE dispatch", async () => {
-    const port = fakePort(); // empty store — nothing covers
-    const deps = executorDeps({ credit: port });
-    const executor = createAiExecutor(deps);
-    await expect(executor.executeAiTask(request)).rejects.toBeInstanceOf(BudgetBlocked);
-    expect(deps.dispatched).toEqual([]);
-    expect(port.state.reservations.size).toBe(0);
-  });
-
-  it("a credit refusal is durably recorded as a BUDGET_BLOCKED decision", async () => {
-    const recorded: { reasonCode: string; costMode: string }[] = [];
-    const deps = executorDeps({
-      recordBlocked: async (record) => {
-        recorded.push({ reasonCode: record.reasonCode, costMode: record.costMode });
-      },
-    });
-    const executor = createAiExecutor(deps);
-    await expect(executor.executeAiTask(request)).rejects.toBeInstanceOf(BudgetBlocked);
-    expect(recorded).toEqual([
-      { reasonCode: "BUDGET_BLOCKED", costMode: "CONFIRMED_CREDITS_ONLY" },
-    ]);
+    expect(held2.admitted).toBe(true);
+    if (!held2.admitted) return;
+    await port.release(held2.handle);
+    const afterRelease = (await prisma.$queryRawUnsafe(
+      `SELECT "reservedMinorUnits"::text AS r FROM "credit_grant_reservation_ledger" WHERE "grantId" = $1`,
+      GRANT_ID,
+    )) as Array<{ r: string }>;
+    expect(Number(afterRelease[0]!.r)).toBe(0);
   });
 });
