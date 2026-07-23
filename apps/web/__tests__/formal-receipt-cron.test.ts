@@ -162,6 +162,9 @@ suite("Track B — formal-receipt job against real Postgres", () => {
       // SrqcVersion once per pass and write a FormalIncident row per newly
       // logged violation — so the job now needs these two tables present.
       "20260722230000_add_formal_incident_srqc_version",
+      // W1 — runFormalReceiptPass now writes one SrqcShadowMetric row per
+      // pass (clean or not), see shadow-metrics.ts.
+      "20260723130000_add_srqc_shadow_metric",
     ]) {
       const ddl = readFileSync(join(MIGRATIONS_DIR, dir, "migration.sql"), "utf8");
       await pool.query(ddl);
@@ -182,7 +185,7 @@ suite("Track B — formal-receipt job against real Postgres", () => {
     // Each test uses a window keyed off `new Date()`, and windows inside the
     // same fast test run can overlap in wall-clock time — truncate between
     // tests so one test's rows can never leak into another's window.
-    await pool.query(`TRUNCATE "processed_event", "control_event_ledger"`);
+    await pool.query(`TRUNCATE "processed_event", "control_event_ledger", "srqc_shadow_metric"`);
   });
 
   async function insertEvent(

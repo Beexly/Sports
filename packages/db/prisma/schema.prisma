@@ -3515,6 +3515,35 @@ model SrqcVersion {
 }
 
 // ============================================================
+// W1 — SHADOW METRICS (continuous operating evidence, on top of the
+// versioned envelope; Wave 1 Foundation item, owner-authorized.)
+//
+// One row per Track B (formal-receipt-job.ts) detection pass, WHETHER OR NOT
+// that pass witnessed a violation. Where FormalIncident is written only on a
+// newly-witnessed CTI, SrqcShadowMetric is written on EVERY
+// runFormalReceiptPass invocation — the base-rate counterpart to the
+// violation log, not a replacement for it.
+//
+// PURE OBSERVATION: no field here is read by admitUnderSRQC or any other
+// admission/control-plane decision; the row is written strictly AFTER the
+// pass has already computed its (unaffected) SHADOW-mode admission result.
+// Deleting this table changes no runtime behavior.
+model SrqcShadowMetric {
+  id               String   @id @default(cuid())
+  windowSince      DateTime // sinceInclusive of the pass this row summarizes
+  windowUntil      DateTime // untilExclusive of the pass this row summarizes
+  eventsSeen       Int // total control_event_ledger rows read in the window
+  ge2Count         Int // # projected invocations with pendingCountClass === "GE2"
+  rejectedUnbound  Int // # projected invocations with hasRejectedFp && !fingerprintBound
+  admitWouldRefuse Int // # projected invocations that would REFUSE under ENFORCE-mode isViolation() — computed in SHADOW, never gates admission
+  srqcVersion      Int? // soft int reference to SrqcVersion.version active at pass time — NOT a hard FK, same convention as FormalIncident.srqcVersion
+  createdAt        DateTime @default(now())
+
+  @@index([windowSince])
+  @@map("srqc_shadow_metric")
+}
+
+// ============================================================
 // CTI-CANDIDATE MINER (M6 — online CTI-candidate miner, detection-only,
 // self-refinement input; on top of Track A + Track B + the versioned
 // envelope, same branch by owner authorization.)
