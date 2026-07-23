@@ -334,7 +334,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-plasma text-eclipse"
+                    ? "bg-plasma text-plasma-ink"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -360,7 +360,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-plasma text-eclipse"
+                    ? "bg-plasma text-plasma-ink"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -386,7 +386,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-plasma text-eclipse"
+                    ? "bg-plasma text-plasma-ink"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -412,7 +412,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-plasma text-eclipse"
+                    ? "bg-plasma text-plasma-ink"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -449,7 +449,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 className={[
                   "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-plasma text-eclipse"
+                    ? "bg-plasma text-plasma-ink"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >

@@ -315,7 +315,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive
-                        ? "border-plasma bg-plasma text-eclipse shadow-[0_0_18px_rgba(217,70,239,0.35)]"
+                        ? "border-plasma bg-plasma text-plasma-ink shadow-[0_0_18px_rgba(217,70,239,0.35)]"
                         : "border-titanium bg-carbon text-ion-1 hover:border-plasma hover:text-ion-white",
                     ].join(" ")}
                   >
