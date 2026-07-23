@@ -131,6 +131,10 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     for (const dir of [
       "20260722140000_add_ai_control_plane_ledger",
       "20260722150001_add_ai_budget_reservations",
+      // Track A: control-store's finalize/startAttempt statements now fold an
+      // idempotent control_event_ledger INSERT into their existing CTEs, so
+      // this dedicated schema must carry that table too.
+      "20260722220000_add_control_event_ledger",
     ]) {
       const ddl = readFileSync(join(MIGRATIONS_DIR, dir, "migration.sql"), "utf8");
       await pool.query(ddl);

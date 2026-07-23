@@ -3404,3 +3404,68 @@ model CreditGrantReservation {
   @@index([state, expiresAt])
   @@map("credit_grant_reservations")
 }
+
+// ============================================================
+// AI CONTROL PLANE — idempotent event ledger + processed_event
+// (Exactly-once runtime substrate, 2026-07-22 handoff, Track A)
+//
+// A generic, append-only record of control-plane outcomes that matter to
+// DOWNSTREAM SINKS (Formal Heartbeat receipt export, future side-effect
+// workers) — distinct in purpose from `AiInvocation`'s own
+// (requestId, taskClass) claim-table idempotency, which governs whether the
+// SAME invocation is dispatched twice. This ledger is per-EVENT (an
+// invocation can emit several: finalized-success, finalized-failure,
+// attempt-failed, ...) and exists so a PULL-based consumer reading the
+// ledger can process each event AT MOST ONCE per sink, via
+// `processed_event`, regardless of how many times the consumer's own run is
+// retried/replayed.
+//
+// `eventId` is a deterministic string derived from the source row's own
+// permanent identity + event type (e.g. `${invocationId}:FINALIZED_SUCCESS`)
+// — never a random UUID, never wall-clock-derived. Writes happen in the
+// SAME SQL statement as the authoritative state transition they record: see
+// control-store.ts's finalizeSuccess / finalizeFailure / recordAttemptFailure,
+// each of which folds an `INSERT ... ON CONFLICT ("eventId") DO NOTHING`
+// ledger CTE into its existing fenced-update CTE, gated so the ledger row is
+// written if and only if the real state transition actually applied. A
+// retried call whose fencing no longer matches (already-terminal
+// invocation, already-owner-fenced-out) writes neither the state change nor
+// the ledger row — so double delivery of the same logical call is safe by
+// construction, not by best-effort convention.
+model ControlEventLedger {
+  // Deterministic, caller-derived id — see the same-statement CTE writes in
+  // control-store.ts's finalizeSuccess / finalizeFailure /
+  // recordAttemptFailure. Never wall-clock, never a random UUID generated
+  // by the writer.
+  eventId   String   @id
+  // Monotonic insertion-order tiebreaker for same-millisecond createdAt rows.
+  // Per-invocation events are inserted by separate sequential statements, so a
+  // larger seq means inserted-later (causal order). readRecentEvents orders by
+  // (createdAt, seq) so the order-sensitive SRQC projection never observes a
+  // FINALIZED_SUCCESS before its own ATTEMPT_STARTED on a createdAt tie.
+  seq       BigInt   @unique @default(autoincrement())
+  source    String // "ai_invocation" | "ai_attempt" | "credit" | "formal_heartbeat" | ...
+  sourceId  String // invocationId / attemptId / window key / etc.
+  eventType String
+  payload   Json
+  createdAt DateTime @default(now())
+
+  processed ProcessedEvent[]
+
+  @@index([source, sourceId])
+  @@index([createdAt])
+  @@map("control_event_ledger")
+}
+
+// One (event, sink) pair a consumer has finished acting on. Presence alone
+// is the idempotency gate — no other column is read for that check.
+model ProcessedEvent {
+  eventId String
+  sink    String // "formal_heartbeat" | "safety_ledger" | "receipt_export" | ...
+  at      DateTime @default(now())
+
+  event ControlEventLedger @relation(fields: [eventId], references: [eventId], onDelete: Restrict)
+
+  @@id([eventId, sink])
+  @@map("processed_event")
+}
