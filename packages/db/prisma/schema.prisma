@@ -3658,3 +3658,44 @@ model ProductActivation {
   @@unique([userId, day, surface])
   @@map("product_activation")
 }
+
+// ─── Compliance Control Monitor (CCM) + ISMS alignment kit ──────────────────
+// Additive, independent of SRQC/admitUnderSRQC and of packages/governed.
+// These tables back @sports/compliance's continuous control checks: each run
+// persists evidence objects (ComplianceEvidence), the aggregated pass/fail
+// outcome (ComplianceCheckRun), and — one per failing control — an
+// exception to track to closure (ComplianceException). Internal alignment
+// tooling only; see docs/compliance/README.md for the non-claims disclaimer.
+model ComplianceEvidence {
+  id          String   @id @default(cuid())
+  controlId   String
+  source      String
+  collectedAt DateTime @default(now())
+  contentHash String
+  uri         String?
+  meta        Json?
+
+  @@index([controlId, collectedAt])
+  @@map("compliance_evidence")
+}
+
+model ComplianceCheckRun {
+  id      String   @id @default(cuid())
+  at      DateTime @default(now())
+  ok      Boolean
+  results Json
+
+  @@map("compliance_check_run")
+}
+
+model ComplianceException {
+  id        String    @id @default(cuid())
+  controlId String
+  detail    String
+  status    String    @default("open")
+  createdAt DateTime  @default(now())
+  closedAt  DateTime?
+
+  @@index([status, controlId])
+  @@map("compliance_exception")
+}
