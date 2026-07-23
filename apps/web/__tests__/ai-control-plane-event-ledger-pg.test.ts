@@ -43,9 +43,12 @@ import {
   createPgControlStore,
   alreadyProcessed,
   markProcessed,
+  claimForProcessing,
   deriveControlEventId,
+  readRecentEvents,
   type AuthoritativeControlStore,
   type ControlSqlClient,
+  type ClaimInvocationInput,
 } from "@/lib/ai-control-plane/internal";
 
 const HAS_DB = /^postgres(ql)?:\/\//.test(process.env.DATABASE_URL ?? "");
@@ -429,5 +432,221 @@ suite("Track A — control event ledger acceptance against real Postgres", () =>
     await runSideEffectOnce();
     await runSideEffectOnce();
     expect(sideEffectRuns).toBe(1);
+  });
+
+  // ── F1: the steal/unproven-funds fence emits FINALIZED_AMBIGUOUS ──────────
+  async function seedExpiredInvocation(id: string): Promise<void> {
+    await pool.query(
+      `INSERT INTO "ai_invocations"
+         ("id", "requestId", "taskClass", "surface", "entity", "dataClass",
+          "costMode", "envClass", "envClassSource", "policyVersion",
+          "actorType", "actorSubjectId", "status", "requestFingerprint",
+          "executionOwnerToken", "leaseExpiresAt")
+       VALUES ($1, $2, 'brief.daily-summary', 'brief', 'GSE', 'internal',
+               'NO_BILLABLE_EXTERNAL', 'test', 'explicit', '2026-07-22.1',
+               'SERVICE', 'service:ledger-test', 'RUNNING', $3, $4,
+               now() - interval '1 hour')`,
+      [id, `req-${id}`, "a".repeat(64), "original-owner-token"],
+    );
+  }
+
+  function stealerClaimInput(
+    invocationId: string,
+    overrides: Partial<ClaimInvocationInput> = {},
+  ): ClaimInvocationInput {
+    return {
+      invocationId: randomUUID(),
+      requestId: `req-${invocationId}`,
+      taskClass: "brief.daily-summary",
+      surface: "brief",
+      entity: "GSE",
+      dataClass: "internal",
+      costMode: "NO_BILLABLE_EXTERNAL",
+      envClass: "test",
+      envClassSource: "explicit",
+      policyVersion: "2026-07-22.1",
+      actorType: "SERVICE",
+      actorSubjectId: "service:ledger-test",
+      requestFingerprint: "a".repeat(64),
+      ownerToken: "stealer-owner-token",
+      leaseMs: 120_000,
+      now: new Date(),
+      ...overrides,
+    };
+  }
+
+  it("F1: stealing an expired RUNNING invocation with an unproven (DISPATCHED) attempt writes exactly one FINALIZED_AMBIGUOUS ledger row", async () => {
+    const invocationId = randomUUID();
+    const attemptId = randomUUID();
+    await seedExpiredInvocation(invocationId);
+    await seedAttempt(attemptId, invocationId); // DISPATCHED == unproven
+
+    const outcome = await store.claimInvocation(stealerClaimInput(invocationId));
+    // Unproven funds → forced to AMBIGUOUS terminal, returned as replay.
+    expect(outcome.kind).toBe("REPLAY_TERMINAL");
+    expect(
+      outcome.kind === "REPLAY_TERMINAL" ? outcome.status : null,
+    ).toBe("AMBIGUOUS");
+
+    const expectedId = deriveControlEventId({
+      sourceId: invocationId,
+      eventType: "FINALIZED_AMBIGUOUS",
+    });
+    const rows = await ledgerRows(expectedId);
+    expect(rows).toHaveLength(1);
+    expect((rows[0] as { eventType: string }).eventType).toBe(
+      "FINALIZED_AMBIGUOUS",
+    );
+    expect((rows[0] as { source: string }).source).toBe("ai_invocation");
+    // Provenance reason is carried on the payload.
+    expect(
+      (rows[0] as { payload: { reason?: string } }).payload.reason,
+    ).toBe("stolen-unproven-funds-fence");
+
+    // The invocation is now durably AMBIGUOUS.
+    const inv = await pool.query(
+      `SELECT "status" FROM "ai_invocations" WHERE "id" = $1`,
+      [invocationId],
+    );
+    expect(inv.rows[0].status).toBe("AMBIGUOUS");
+  });
+
+  // ── F3: startAttempt is retry-safe (idempotent on the same attemptId) ─────
+  it("F3: calling startAttempt twice with identical input does not throw and writes exactly one attempt + one ATTEMPT_STARTED ledger row", async () => {
+    const invocationId = randomUUID();
+    const attemptId = randomUUID();
+    await seedInvocation(invocationId); // RUNNING, live lease, OWNER_TOKEN
+
+    const input = {
+      attemptId,
+      invocationId,
+      ownerToken: OWNER_TOKEN,
+      ordinal: 0,
+      providerRequested: "anthropic-direct",
+      modelRequested: "test-model",
+      requestFingerprint: "a".repeat(64),
+      policyVersion: "2026-07-22.1",
+      attemptNonce: randomUUID(),
+      now: new Date(),
+    };
+
+    await expect(store.startAttempt(input)).resolves.toBeUndefined();
+    // Second identical call: benign idempotent retry — must NOT throw.
+    await expect(store.startAttempt(input)).resolves.toBeUndefined();
+
+    const attemptCount = await pool.query(
+      `SELECT count(*)::int AS n FROM "ai_attempts" WHERE "id" = $1`,
+      [attemptId],
+    );
+    expect(attemptCount.rows[0].n).toBe(1);
+
+    const expectedId = deriveControlEventId({
+      sourceId: attemptId,
+      eventType: "ATTEMPT_STARTED",
+    });
+    expect(await ledgerRows(expectedId)).toHaveLength(1);
+  });
+
+  it("F3: startAttempt with a genuinely lost fence (wrong owner token) still throws", async () => {
+    const invocationId = randomUUID();
+    const attemptId = randomUUID();
+    await seedInvocation(invocationId);
+
+    await expect(
+      store.startAttempt({
+        attemptId,
+        invocationId,
+        ownerToken: "not-the-owner",
+        ordinal: 0,
+        providerRequested: "anthropic-direct",
+        modelRequested: "test-model",
+        requestFingerprint: "a".repeat(64),
+        policyVersion: "2026-07-22.1",
+        attemptNonce: randomUUID(),
+        now: new Date(),
+      }),
+    ).rejects.toThrow();
+
+    // No attempt row, no ledger row written on a genuine fence loss.
+    const attemptCount = await pool.query(
+      `SELECT count(*)::int AS n FROM "ai_attempts" WHERE "id" = $1`,
+      [attemptId],
+    );
+    expect(attemptCount.rows[0].n).toBe(0);
+  });
+
+  // ── F6: same-millisecond events are read back in insertion (seq) order ─────
+  it("F6: readRecentEvents returns two same-createdAt rows in insertion (seq) order", async () => {
+    const since = new Date(Date.now() - 60_000);
+    const until = new Date(Date.now() + 60_000);
+    const stamp = new Date(); // one identical createdAt for both rows
+    const sourceId = randomUUID();
+    const firstId = `${sourceId}:ATTEMPT_STARTED`;
+    const secondId = `${sourceId}:FINALIZED_SUCCESS`;
+
+    // Insert ATTEMPT_STARTED first, FINALIZED_SUCCESS second — but with the
+    // SAME explicit createdAt, so ordering can only be recovered from seq.
+    await pool.query(
+      `INSERT INTO "control_event_ledger"
+         ("eventId", "source", "sourceId", "eventType", "payload", "createdAt")
+       VALUES ($1, 'ai_attempt', $2, 'ATTEMPT_STARTED', '{}'::jsonb, $3)`,
+      [firstId, sourceId, stamp],
+    );
+    await pool.query(
+      `INSERT INTO "control_event_ledger"
+         ("eventId", "source", "sourceId", "eventType", "payload", "createdAt")
+       VALUES ($1, 'ai_invocation', $2, 'FINALIZED_SUCCESS', '{}'::jsonb, $3)`,
+      [secondId, sourceId, stamp],
+    );
+
+    const events = await readRecentEvents(sql, {
+      sinceInclusive: since,
+      untilExclusive: until,
+    });
+    const mine = events.filter((e) => e.sourceId === sourceId);
+    expect(mine).toHaveLength(2);
+    // Insertion order preserved despite identical createdAt.
+    expect(mine[0]!.eventType).toBe("ATTEMPT_STARTED");
+    expect(mine[1]!.eventType).toBe("FINALIZED_SUCCESS");
+    expect(BigInt(mine[0]!.seq)).toBeLessThan(BigInt(mine[1]!.seq));
+  });
+
+  // ── F4: claim-first is race-free (exactly one winner) ─────────────────────
+  it("F4: two concurrent claimForProcessing calls for the same (eventId, sink) → exactly one 'claimed'", async () => {
+    const invocationId = randomUUID();
+    const attemptId = randomUUID();
+    await seedInvocation(invocationId);
+    await seedAttempt(attemptId, invocationId);
+    await store.finalizeSuccess({
+      invocationId,
+      ownerToken: OWNER_TOKEN,
+      attemptId,
+      providerUsed: "anthropic-direct",
+      modelResolved: "test-model",
+      providerRequestId: null,
+      inputTokens: null,
+      outputTokens: null,
+      resultJson: JSON.stringify({ ok: true }),
+      resultHash: "hash-1",
+      now: new Date(),
+    });
+    const eventId = deriveControlEventId({
+      sourceId: invocationId,
+      eventType: "FINALIZED_SUCCESS",
+    });
+    const sink = "concurrent_consumer";
+
+    const [a, b] = await Promise.all([
+      claimForProcessing(sql, eventId, sink),
+      claimForProcessing(sql, eventId, sink),
+    ]);
+    expect([a, b].filter((x) => x === "claimed")).toHaveLength(1);
+    expect([a, b].filter((x) => x === "already_claimed")).toHaveLength(1);
+
+    const rows = await pool.query(
+      `SELECT count(*)::int AS n FROM "processed_event" WHERE "eventId" = $1 AND "sink" = $2`,
+      [eventId, sink],
+    );
+    expect(rows.rows[0].n).toBe(1);
   });
 });

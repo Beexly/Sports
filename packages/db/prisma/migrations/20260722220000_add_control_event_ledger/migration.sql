@@ -8,8 +8,15 @@
 -- these tables).
 
 -- CreateTable
+-- `seq` is a monotonic BIGSERIAL insertion-order tiebreaker: control_event_ledger
+-- rows are inserted by separate sequential SQL statements per invocation, so a
+-- larger seq means "inserted later" — i.e. it reflects causal order even when two
+-- events land in the SAME TIMESTAMP(3) createdAt millisecond. readRecentEvents
+-- orders by (createdAt, seq) so the order-sensitive SRQC projection can never see
+-- a FINALIZED_SUCCESS ahead of its own ATTEMPT_STARTED on a same-millisecond tie.
 CREATE TABLE IF NOT EXISTS "control_event_ledger" (
     "eventId" TEXT NOT NULL,
+    "seq" BIGSERIAL NOT NULL,
     "source" TEXT NOT NULL,
     "sourceId" TEXT NOT NULL,
     "eventType" TEXT NOT NULL,
@@ -18,6 +25,9 @@ CREATE TABLE IF NOT EXISTS "control_event_ledger" (
 
     CONSTRAINT "control_event_ledger_pkey" PRIMARY KEY ("eventId")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX IF NOT EXISTS "control_event_ledger_seq_key" ON "control_event_ledger"("seq");
 
 -- CreateIndex
 CREATE INDEX IF NOT EXISTS "control_event_ledger_source_sourceId_idx" ON "control_event_ledger"("source", "sourceId");

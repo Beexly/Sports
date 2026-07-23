@@ -40,7 +40,7 @@ function finalized(
   invocationId: string,
   eventType:
     | "FINALIZED_SUCCESS"
-    | "FINALIZED_FAILURE"
+    | "FINALIZED_FAILED"
     | "FINALIZED_AMBIGUOUS"
     | "FINALIZED_BUDGET_BLOCKED"
     | "FINALIZED_POLICY_BLOCKED",
@@ -50,6 +50,18 @@ function finalized(
     source: "ai_invocation",
     sourceId: invocationId,
     payload: { invocationId },
+  };
+}
+
+function finalizedSuccess(
+  invocationId: string,
+  attemptId?: string,
+): ProjectableEvent {
+  return {
+    eventType: "FINALIZED_SUCCESS",
+    source: "ai_invocation",
+    sourceId: invocationId,
+    payload: attemptId ? { invocationId, attemptId } : { invocationId },
   };
 }
 
@@ -135,6 +147,57 @@ describe("SRQC projection stub (seed of α)", () => {
     expect(cti.decision).toBe("ADMIT"); // stub never refuses — no behavior change
     expect(cti.violations).toHaveLength(1);
     expect(cti.violations[0]!.pendingCountClass).toBe("GE2");
+  });
+
+  it("F5: a FINALIZED_FAILED (the REAL emitted failure event name) is terminal → claim TERMINAL, ZERO pending", () => {
+    // control-store.ts's finalizeFailure emits `'FINALIZED_' || status` with
+    // status=FAILED, so the real event name is FINALIZED_FAILED (not
+    // FINALIZED_FAILURE). A window of ATTEMPT_STARTED + FINALIZED_FAILED for a
+    // failed-then-terminalized attempt must project TERMINAL / ZERO, not be
+    // left OPEN because the projection failed to recognize the event name.
+    const states = projectWindow([
+      started("inv-1", "att-1"),
+      attemptFailed("inv-1", "att-1"),
+      finalized("inv-1", "FINALIZED_FAILED"),
+    ]);
+    expect(states).toHaveLength(1);
+    expect(states[0]!.claimPhase).toBe("TERMINAL");
+    expect(states[0]!.pendingCountClass).toBe("ZERO");
+    expect(states[0]!.exposurePhase).toBe("NONE");
+  });
+
+  it("F5: FINALIZED_FAILED with the winning attempt never separately failed → still TERMINAL", () => {
+    const states = projectWindow([
+      started("inv-1", "att-1"),
+      finalized("inv-1", "FINALIZED_FAILED"),
+    ]);
+    expect(states[0]!.claimPhase).toBe("TERMINAL");
+  });
+
+  it("F2: FINALIZED_SUCCESS closes its winning attempt (payload.attemptId) → ZERO pending, TERMINAL", () => {
+    // The success path emits ATTEMPT_STARTED then FINALIZED_SUCCESS for the
+    // WINNING attempt — no ATTEMPT_FAILED for it. The projection must read the
+    // attemptId from the FINALIZED_SUCCESS payload and close that attempt, so
+    // a settled success reports ZERO pending (not a spurious ONE).
+    const states = projectWindow([
+      started("inv-1", "att-1"),
+      finalizedSuccess("inv-1", "att-1"),
+    ]);
+    expect(states).toHaveLength(1);
+    expect(states[0]!.pendingCountClass).toBe("ZERO");
+    expect(states[0]!.claimPhase).toBe("TERMINAL");
+    expect(states[0]!.exposurePhase).toBe("NONE");
+  });
+
+  it("F2: FINALIZED_SUCCESS with NO attemptId in payload degrades gracefully (does not crash; claim TERMINAL)", () => {
+    const states = projectWindow([
+      started("inv-1", "att-1"),
+      finalizedSuccess("inv-1"), // older payload without attemptId
+    ]);
+    expect(states[0]!.claimPhase).toBe("TERMINAL");
+    // Winning attempt cannot be closed without its id — this legacy shape
+    // still reports the attempt pending, but must not throw.
+    expect(states[0]!.pendingCountClass).toBe("ONE");
   });
 
   it("a rejected fingerprint is carried as hasRejectedFp (RejectedImpliesBound: only ever on a bound id)", () => {

@@ -72,9 +72,11 @@ export {
   deriveControlEventId,
   alreadyProcessed,
   markProcessed,
+  claimForProcessing,
   readRecentEvents,
   type ControlEventRow,
   type MarkProcessedResult,
+  type ClaimForProcessingResult,
 } from "./event-ledger";
 export {
   ObservabilitySink,

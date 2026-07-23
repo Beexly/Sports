@@ -23,7 +23,7 @@
  *   ATTEMPT_STARTED     (source ai_attempt)   — a DISPATCHED attempt begins
  *   ATTEMPT_FAILED      (source ai_attempt)   — that attempt reached a terminal failure
  *   FINALIZED_SUCCESS   (source ai_invocation)
- *   FINALIZED_FAILURE / _AMBIGUOUS / _BUDGET_BLOCKED / _POLICY_BLOCKED
+ *   FINALIZED_FAILED / _AMBIGUOUS / _BUDGET_BLOCKED / _POLICY_BLOCKED
  *                       (source ai_invocation) — the invocation reached terminal
  */
 
@@ -76,9 +76,17 @@ export interface ProjectableEvent {
   };
 }
 
+// These are the EXACT event-type strings control-store.ts emits for a
+// terminal invocation transition. `finalizeSuccess` emits the literal
+// "FINALIZED_SUCCESS"; `finalizeFailure` emits `'FINALIZED_' || status` with
+// status ∈ {FAILED, AMBIGUOUS, BUDGET_BLOCKED, POLICY_BLOCKED}, so the real
+// failure event name is FINALIZED_FAILED (NOT FINALIZED_FAILURE). The
+// claimInvocation steal/unproven-funds fence also emits FINALIZED_AMBIGUOUS.
+// This set must match those emitted names exactly or a settled invocation is
+// mis-projected as still OPEN.
 const TERMINAL_INVOCATION_EVENTS = new Set([
   "FINALIZED_SUCCESS",
-  "FINALIZED_FAILURE",
+  "FINALIZED_FAILED",
   "FINALIZED_AMBIGUOUS",
   "FINALIZED_BUDGET_BLOCKED",
   "FINALIZED_POLICY_BLOCKED",
@@ -139,6 +147,19 @@ export function projectWindow(
       a.terminalAttempts.add(attemptId);
     } else if (TERMINAL_INVOCATION_EVENTS.has(e.eventType)) {
       a.claimTerminal = true;
+      // The success path emits ATTEMPT_STARTED then FINALIZED_SUCCESS for the
+      // WINNING attempt — there is no ATTEMPT_FAILED for it — so the winning
+      // attempt would otherwise stay in `startedAttempts` and report a
+      // spurious ONE-pending on a settled success. finalizeSuccess carries the
+      // winning attemptId in its payload; close that attempt here. Degrade
+      // gracefully if an older payload lacks it (nothing to close — do not
+      // crash).
+      if (e.eventType === "FINALIZED_SUCCESS") {
+        const winningAttemptId = e.payload.attemptId;
+        if (typeof winningAttemptId === "string") {
+          a.terminalAttempts.add(winningAttemptId);
+        }
+      }
       // An AMBIGUOUS terminal is the "held until trusted resolution" state;
       // any other terminal releases the abstract exposure.
       a.exposure =

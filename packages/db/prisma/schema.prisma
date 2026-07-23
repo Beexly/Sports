@@ -3438,6 +3438,12 @@ model ControlEventLedger {
   // recordAttemptFailure. Never wall-clock, never a random UUID generated
   // by the writer.
   eventId   String   @id
+  // Monotonic insertion-order tiebreaker for same-millisecond createdAt rows.
+  // Per-invocation events are inserted by separate sequential statements, so a
+  // larger seq means inserted-later (causal order). readRecentEvents orders by
+  // (createdAt, seq) so the order-sensitive SRQC projection never observes a
+  // FINALIZED_SUCCESS before its own ATTEMPT_STARTED on a createdAt tie.
+  seq       BigInt   @unique @default(autoincrement())
   source    String // "ai_invocation" | "ai_attempt" | "credit" | "formal_heartbeat" | ...
   sourceId  String // invocationId / attemptId / window key / etc.
   eventType String

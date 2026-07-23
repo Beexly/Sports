@@ -544,14 +544,42 @@ export function createPgControlStore(
           a.status === "DISPATCHED",
       );
       if (unproven) {
+        // Same same-statement ledger CTE pattern as finalizeFailure: the
+        // AMBIGUOUS terminalization and its FINALIZED_AMBIGUOUS ledger row
+        // commit atomically, gated on the UPDATE actually applying (`inv`).
+        // The deterministic event id `${existing.id}:FINALIZED_AMBIGUOUS` is
+        // the SAME id finalizeFailure(AMBIGUOUS) would derive, so if both the
+        // steal fence and an explicit finalize ever terminalize the same
+        // invocation to AMBIGUOUS, ON CONFLICT dedups to a single terminal
+        // event — exactly one, which is correct.
         const finalized = await sql.query<{ id: string }>(
-          `UPDATE "ai_invocations"
-              SET "status" = 'AMBIGUOUS', "completedAt" = $1,
-                  "leaseExpiresAt" = NULL
-            WHERE "id" = $2 AND "status" = 'RUNNING'
-              AND "executionOwnerToken" = $3
-            RETURNING "id"`,
-          [input.now, existing.id, input.ownerToken],
+          `WITH inv AS (
+             UPDATE "ai_invocations"
+                SET "status" = 'AMBIGUOUS', "completedAt" = $1,
+                    "leaseExpiresAt" = NULL
+              WHERE "id" = $2 AND "status" = 'RUNNING'
+                AND "executionOwnerToken" = $3
+              RETURNING "id"
+           ), ledger AS (
+             INSERT INTO "control_event_ledger"
+               ("eventId", "source", "sourceId", "eventType", "payload")
+             SELECT $4, 'ai_invocation', $2, 'FINALIZED_AMBIGUOUS', $5::jsonb
+              WHERE EXISTS (SELECT 1 FROM inv)
+             ON CONFLICT ("eventId") DO NOTHING
+             RETURNING "eventId"
+           )
+           SELECT "id" FROM inv`,
+          [
+            input.now,
+            existing.id,
+            input.ownerToken,
+            `${existing.id}:FINALIZED_AMBIGUOUS`,
+            JSON.stringify({
+              invocationId: existing.id,
+              status: "AMBIGUOUS",
+              reason: "stolen-unproven-funds-fence",
+            }),
+          ],
         );
         if (finalized.length === 0) {
           // Our own fence was raced (should not happen — we hold the token).
@@ -590,9 +618,17 @@ export function createPgControlStore(
       // events could never witness the two-attempts-Pending-on-one-
       // invocation CTI class the projection is meant to detect. The event id
       // (`${attemptId}:ATTEMPT_STARTED`) is permanently unique: an attempt id
-      // is inserted at most once (the `ai_attempts` (invocationId, ordinal)
-      // unique key + this fenced INSERT), so a retried startAttempt for the
-      // same attemptId matches zero rows in `att` and writes zero ledger rows.
+      // is inserted at most once, so a retried startAttempt for the same
+      // attemptId matches zero rows in `att` and writes zero ledger rows.
+      //
+      // Retry-safety (Track A fix): the attempt INSERT carries
+      // `ON CONFLICT ("id") DO NOTHING`. A benign retry with the SAME
+      // attemptId (e.g. the caller re-driving after a transient error, the
+      // attempt row already committed) no longer hits a duplicate-key error;
+      // it simply inserts zero rows, so the `ledger` CTE (gated on `att`)
+      // no-ops too — ATTEMPT_STARTED is never double-written. Because zero
+      // returned rows is now AMBIGUOUS between "fence lost" and "benign
+      // retry", the follow-up SELECT below disambiguates.
       const rows = await sql.query<{ id: string }>(
         `WITH att AS (
            INSERT INTO "ai_attempts"
@@ -607,6 +643,7 @@ export function createPgControlStore(
                  AND "executionOwnerToken" = $10
                  AND "leaseExpiresAt" > $6
             )
+           ON CONFLICT ("id") DO NOTHING
            RETURNING "id"
          ), ledger AS (
            INSERT INTO "control_event_ledger"
@@ -640,6 +677,22 @@ export function createPgControlStore(
         ],
       );
       if (rows.length === 0) {
+        // Zero inserted rows: either the fence guard failed (genuine fence
+        // loss — must throw so dispatch cannot proceed), or the attempt row
+        // with this id already exists (benign idempotent retry — return
+        // normally). Disambiguate with a targeted read for THIS invocation's
+        // attempt id.
+        const existingAttempt = await sql.query<{ id: string }>(
+          `SELECT "id" FROM "ai_attempts"
+            WHERE "id" = $1 AND "invocationId" = $2`,
+          [input.attemptId, input.invocationId],
+        );
+        if (existingAttempt.length > 0) {
+          // The attempt already exists for this invocation — the INSERT
+          // no-op'd on the PK, not on a lost fence. Idempotent retry: the
+          // ATTEMPT_STARTED event was already written by the first call.
+          return;
+        }
         throw new StoreUnavailable(
           "Attempt authorization refused: this execution no longer holds a " +
             "live lease on the invocation (fenced or expired). Dispatch is blocked.",
