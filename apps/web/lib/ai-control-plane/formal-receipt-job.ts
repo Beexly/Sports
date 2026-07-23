@@ -73,6 +73,8 @@ import type { ControlEventRow } from "./event-ledger";
 import { projectWindow } from "./srqc-projection";
 import type { ProjectableEvent, PendingCountClass } from "./srqc-projection";
 import { recordFormalIncident, getActiveSrqcVersion } from "./formal-incident";
+import { recordShadowWindow } from "./shadow-metrics";
+import type { ShadowWindowSummary } from "./shadow-metrics";
 import type { ControlSqlClient } from "./control-store";
 
 /** Sink for the per-event "examined by Track B" audit-trail bookkeeping. */
@@ -102,6 +104,10 @@ export interface FormalReceiptSummary {
    *  `violationsNewlyLogged` by construction — the incident write is gated on
    *  the same exactly-once `processed_event` mark as the log line. */
   readonly incidentsWritten: number;
+  /** W1 — continuous operating evidence for this pass, written whether or
+   *  not this pass witnessed a violation. Pure observation: no field here
+   *  is read by admitUnderSRQC or any admission decision. */
+  readonly shadowMetric: ShadowWindowSummary;
 }
 
 function toProjectable(row: ControlEventRow): ProjectableEvent {
@@ -240,6 +246,17 @@ export async function runFormalReceiptPass(
     if (result === "marked") eventsNewlyMarkedProcessed += 1;
   }
 
+  // W1 — record continuous operating evidence for this pass, reusing the
+  // projection and active-version lookup already computed above (no second
+  // ledger read). Written on EVERY pass, clean or not — see shadow-metrics.ts.
+  const shadowMetric = await recordShadowWindow(sql, {
+    windowSinceInclusive: input.sinceInclusive,
+    windowUntilExclusive: input.untilExclusive,
+    eventsSeen: rows.length,
+    projected: projectedStates,
+    srqcVersion: activeSrqcVersion,
+  });
+
   return {
     windowSinceInclusive: input.sinceInclusive.toISOString(),
     windowUntilExclusive: input.untilExclusive.toISOString(),
@@ -248,6 +265,7 @@ export async function runFormalReceiptPass(
     violationsDetected,
     violationsNewlyLogged,
     incidentsWritten,
+    shadowMetric,
   };
 }
 

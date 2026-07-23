@@ -233,9 +233,11 @@ export interface SrqcAdmissionResult {
 }
 
 /** The IndInv negation predicate — the EXACT condition cti-miner.ts's
- *  `isIndInvViolation` filters on, kept inline here so the pure admission core
- *  imports nothing at runtime. */
-function isViolation(s: AbstractControlState): boolean {
+ *  `isIndInvViolation` filters on, and the EXACT condition
+ *  `admitUnderSRQC`'s ENFORCE branch REFUSEs on. Exported (no behavior
+ *  change) so other pure observers of a projected window — e.g. W1's shadow
+ *  metrics — can reuse the identical predicate instead of re-deriving it. */
+export function isViolation(s: AbstractControlState): boolean {
   return (
     s.pendingCountClass === "GE2" || (s.hasRejectedFp && !s.fingerprintBound)
   );

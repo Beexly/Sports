@@ -72,6 +72,9 @@ suite("Versioned envelope — FormalIncident + SrqcVersion against real Postgres
       "20260722140000_add_ai_control_plane_ledger",
       "20260722220000_add_control_event_ledger",
       "20260722230000_add_formal_incident_srqc_version",
+      // W1 — runFormalReceiptPass now writes one SrqcShadowMetric row per
+      // pass (clean or not), see shadow-metrics.ts.
+      "20260723130000_add_srqc_shadow_metric",
     ]) {
       const ddl = readFileSync(join(MIGRATIONS_DIR, dir, "migration.sql"), "utf8");
       await pool.query(ddl);
@@ -90,7 +93,7 @@ suite("Versioned envelope — FormalIncident + SrqcVersion against real Postgres
 
   beforeEach(async () => {
     await pool.query(
-      `TRUNCATE "processed_event", "control_event_ledger", "formal_incident", "srqc_version"`,
+      `TRUNCATE "processed_event", "control_event_ledger", "formal_incident", "srqc_version", "srqc_shadow_metric"`,
     );
   });
 
