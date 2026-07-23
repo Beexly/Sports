@@ -3469,3 +3469,47 @@ model ProcessedEvent {
   @@id([eventId, sink])
   @@map("processed_event")
 }
+
+// ============================================================
+// VERSIONED ENVELOPE — FormalIncident + SrqcVersion
+// (Exactly-once runtime substrate, 2026-07-22 handoff, on top of Track A +
+// Track B, same branch by owner authorization.)
+//
+// FormalIncident is the DURABLE row-store for an abstract CTI the Track B
+// detection pass witnessed — a state the Formal Foundry's proofs say is
+// unreachable (pendingCountClass GE2, or a rejected fingerprint with no
+// bound id). It is written AT MOST ONCE per witness event, reusing Track B's
+// EXISTING exactly-once gate: the insert is co-located with the
+// `processed_event` mark on sink "formal_receipt_violation", so a re-run of
+// the job over the same window never writes a second incident. This is still
+// DETECTION-ONLY: `admitUnderSRQC` (srqc-projection.ts) remains always-ADMIT
+// and nothing here gates a control-plane decision.
+//
+// SrqcVersion is the human-activated certificate-version register. A row is
+// minted as "candidate", promoted to "active" ONLY by an explicit admin
+// script (scripts/activate-srqc-version.mjs) — never by CI/cron — and an
+// incident stamps the active version (if any) so a later reader can tell
+// which certificate generation was live when the incident was recorded.
+model FormalIncident {
+  id            String   @id @default(cuid())
+  violationKind String // "GE2_PENDING" | "REJECTED_FP_UNBOUND"
+  abstractState Json
+  eventIds      Json // the witnessEventId(s) this incident is gated on
+  srqcVersion   Int? // soft int reference to SrqcVersion.version — NOT a hard FK
+  status        String   @default("open") // "open" | "acknowledged" | "closed"
+  createdAt     DateTime @default(now())
+
+  @@index([status, createdAt])
+  @@map("formal_incident")
+}
+
+model SrqcVersion {
+  version               Int       @id
+  indInvHash            String
+  refinementReceiptHash String?
+  status                String // "candidate" | "active" | "superseded"
+  activatedAt           DateTime?
+  notes                 String?
+
+  @@map("srqc_version")
+}

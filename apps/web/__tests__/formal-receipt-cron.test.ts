@@ -158,6 +158,10 @@ suite("Track B — formal-receipt job against real Postgres", () => {
     for (const dir of [
       "20260722140000_add_ai_control_plane_ledger",
       "20260722220000_add_control_event_ledger",
+      // The versioned-envelope pass made runFormalReceiptPass read the active
+      // SrqcVersion once per pass and write a FormalIncident row per newly
+      // logged violation — so the job now needs these two tables present.
+      "20260722230000_add_formal_incident_srqc_version",
     ]) {
       const ddl = readFileSync(join(MIGRATIONS_DIR, dir, "migration.sql"), "utf8");
       await pool.query(ddl);

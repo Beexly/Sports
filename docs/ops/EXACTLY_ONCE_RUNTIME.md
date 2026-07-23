@@ -130,20 +130,64 @@ so the daily-plus-overlap window is the right cost/benefit call, not an
 oversight. Auth is the same `cronAuthError` bearer-token check as every
 other `/api/cron/*` route.
 
+## Versioned envelope (FormalIncident + SrqcVersion)
+
+Two additive tables, on top of Track A + Track B (same branch, owner
+authorized). Migration
+`20260722230000_add_formal_incident_srqc_version`; writers in
+`apps/web/lib/ai-control-plane/formal-incident.ts`, exported through the
+sealed `internal.ts` barrel.
+
+- **`formal_incident`** is the DURABLE row-store for an abstract CTI Track B's
+  projection witnessed — a state the Formal Foundry's proofs forbid
+  (`pendingCountClass = GE2` → `violationKind = "GE2_PENDING"`, or a rejected
+  fingerprint with no bound id → `"REJECTED_FP_UNBOUND"`). It records
+  `abstractState`, the `eventIds` the incident is gated on, the active
+  `srqcVersion` (if any), and a `status` (`open`/`acknowledged`/`closed`).
+- **`srqc_version`** is the human-activated certificate-version register:
+  `version` PK, `indInvHash`, optional `refinementReceiptHash`, a
+  `candidate`/`active`/`superseded` `status`, and `activatedAt`.
+
+**Incident-writing reuses Track B's exactly-once gate — no new dedup
+mechanism.** In `formal-receipt-job.ts` the `recordFormalIncident` call is
+co-located INSIDE the same branch that is gated on the
+`markProcessed(sql, witnessEventId, FORMAL_RECEIPT_VIOLATION_SINK)` mark
+returning `"marked"` — the exact point a violation is *newly* logged. So
+double-running the job over the same window writes the incident at most once.
+As a belt-and-suspenders second layer, the row `id` is derived from
+`${witnessEventId}:${violationKind}` and inserted `ON CONFLICT (id) DO
+NOTHING`, so even a stray double-call cannot produce two rows. The active
+SrqcVersion is read ONCE per pass and reused for every incident, never a
+round-trip per violation.
+
+**SrqcVersion activation is script-only / human.** Promotion from `candidate`
+to `active` happens exclusively via `scripts/activate-srqc-version.mjs`, run
+by hand by an operator with a chosen `DATABASE_URL`. There is intentionally NO
+CI job or cron route wired to it, and none should be added — activation is a
+human decision about which certificate generation is live. The script
+supersedes the current active and activates the target in one CTE
+(supersede-then-activate), so there is never a window with zero active
+versions and never more than one.
+
+**Still detection-only.** This adds durable records and a version register; it
+changes NO control-plane decision. `admitUnderSRQC` (`srqc-projection.ts`)
+remains always-ADMIT, and there is no ENFORCE path anywhere — that is a later,
+separately-gated mission. `srqc-projection.ts` and `formal-heartbeat/` are
+untouched by this pass.
+
 ## What remains lab-only / deferred
 
 - **Formal Heartbeat stays dormant.** `formal-heartbeat/` is not wired to any
-  production I/O by this change (Track A or B). The `processed_event` gate
-  exists so a future receipt-export consumer *can* be made effectively-once,
-  and Track B is now the first such consumer for detection purposes — but no
-  Formal-Heartbeat-authored consumer is activated here.
-- **No `FormalIncident` / `SrqcVersion` tables.** The handoff sketched these
-  for later phases (a durable incident row-store on abstract CTI candidates;
-  a human-activated certificate version). They are deliberately **not** added
-  yet, in EITHER Track A or Track B — empty tables with no writer are dead
-  schema, and Track B's detection artifact is log-only by design for this
-  pass. They come in the pass that builds the code that writes them (handoff
-  execution-order steps 4–5), not before.
+  production I/O by this change (Track A, B, or the versioned envelope). The
+  `processed_event` gate exists so a future receipt-export consumer *can* be
+  made effectively-once, and Track B is now the first such consumer for
+  detection purposes — but no Formal-Heartbeat-authored consumer is activated
+  here.
+- **No ENFORCE path.** The `FormalIncident` / `SrqcVersion` tables now exist
+  and are written (see above), but they are detection/record-keeping only. No
+  code gates a control-plane admission on a certificate version or an open
+  incident; `admitUnderSRQC` stays always-ADMIT. Wiring ENFORCE is a separate,
+  later, explicitly-gated mission.
 - **No Iceberg, Kafka, Flink, Airflow.** Tracks C and D remain deferred until
   a concrete scale/latency measurement forces them; the DB-primary ledger is
   the substrate they would fan out from, per the handoff's own dual-path

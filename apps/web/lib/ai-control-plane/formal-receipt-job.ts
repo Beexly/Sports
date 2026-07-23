@@ -17,12 +17,17 @@
  *     `ai_attempts`, calls no provider, and cannot alter control-plane
  *     behavior. `admitUnderSRQC` (srqc-projection.ts) is not called here and
  *     remains always-ADMIT on every live path regardless.
- *   - NO new incident table. A `FormalIncident` durable-row sink was
- *     explicitly deferred in the handoff that authorized this pass — this
- *     job's only artifact is the log line plus the exactly-once bookkeeping
- *     rows it writes to the EXISTING `processed_event` table (sinks
- *     `"formal_receipt"` and `"formal_receipt_violation"`, both already
- *     covered by the Track A migration — no schema change in this pass).
+ *   - Durable `FormalIncident` row-store (versioned-envelope pass, on top of
+ *     Track A + Track B): when a violation is NEWLY logged, this job ALSO
+ *     appends one `formal_incident` row via `recordFormalIncident`. That write
+ *     is co-located with — and gated by — the SAME exactly-once
+ *     `processed_event` mark (sink `"formal_receipt_violation"`) that gates the
+ *     log line, so an incident is written AT MOST ONCE per witnessEventId; no
+ *     second, independent dedup mechanism is introduced. It remains
+ *     detection-only: the row records a witnessed abstract CTI, it does not
+ *     gate any control-plane decision. The other bookkeeping rows this job
+ *     writes go to the EXISTING `processed_event` table (sinks
+ *     `"formal_receipt"` and `"formal_receipt_violation"`).
  *   - Formal Heartbeat (`formal-heartbeat/`) is NOT imported here and is not
  *     made stateful by this module — this file does its own tiny, local
  *     projection-shape check against `srqc-projection.ts`'s ALREADY-PURE
@@ -67,6 +72,7 @@ import { readRecentEvents, alreadyProcessed, markProcessed } from "./event-ledge
 import type { ControlEventRow } from "./event-ledger";
 import { projectWindow } from "./srqc-projection";
 import type { ProjectableEvent, PendingCountClass } from "./srqc-projection";
+import { recordFormalIncident, getActiveSrqcVersion } from "./formal-incident";
 import type { ControlSqlClient } from "./control-store";
 
 /** Sink for the per-event "examined by Track B" audit-trail bookkeeping. */
@@ -92,6 +98,10 @@ export interface FormalReceiptSummary {
   readonly violationsDetected: readonly FormalReceiptViolation[];
   /** How many of `violationsDetected` actually emitted a NEW log line this run. */
   readonly violationsNewlyLogged: number;
+  /** How many `formal_incident` rows were newly written this run. Equal to
+   *  `violationsNewlyLogged` by construction — the incident write is gated on
+   *  the same exactly-once `processed_event` mark as the log line. */
+  readonly incidentsWritten: number;
 }
 
 function toProjectable(row: ControlEventRow): ProjectableEvent {
@@ -162,8 +172,16 @@ export async function runFormalReceiptPass(
     if (invId !== null) lastRowByInvocation.set(invId, row);
   });
 
+  // Read the active certificate version ONCE per pass and reuse it for every
+  // incident written below — never one round-trip per violation. Null when no
+  // SrqcVersion row is active (the common case today: activation is a
+  // human/script-only decision, see formal-incident.ts).
+  const activeSrqc = await getActiveSrqcVersion(sql);
+  const activeSrqcVersion = activeSrqc?.version ?? null;
+
   const violationsDetected: FormalReceiptViolation[] = [];
   let violationsNewlyLogged = 0;
+  let incidentsWritten = 0;
   for (const invocationId of violatingIds) {
     const state = stateByInvocation.get(invocationId);
     const witness = lastRowByInvocation.get(invocationId);
@@ -192,6 +210,27 @@ export async function runFormalReceiptPass(
       });
       await markProcessed(sql, witness.eventId, FORMAL_RECEIPT_VIOLATION_SINK);
       violationsNewlyLogged += 1;
+
+      // Co-located with the exactly-once mark above: the durable incident row
+      // is written in the SAME newly-logged branch, so double-running the job
+      // over the same window writes it at most once (the row id is also
+      // idempotent on the witness — belt and suspenders; see
+      // recordFormalIncident).
+      await recordFormalIncident(sql, {
+        violationKind:
+          violation.pendingCountClass === "GE2"
+            ? "GE2_PENDING"
+            : "REJECTED_FP_UNBOUND",
+        abstractState: {
+          invocationId: violation.invocationId,
+          pendingCountClass: violation.pendingCountClass,
+          hasRejectedFp: violation.hasRejectedFp,
+          fingerprintBound: violation.fingerprintBound,
+        },
+        eventIds: [violation.witnessEventId],
+        srqcVersion: activeSrqcVersion,
+      });
+      incidentsWritten += 1;
     }
   }
 
@@ -208,6 +247,7 @@ export async function runFormalReceiptPass(
     eventsNewlyMarkedProcessed,
     violationsDetected,
     violationsNewlyLogged,
+    incidentsWritten,
   };
 }
 
