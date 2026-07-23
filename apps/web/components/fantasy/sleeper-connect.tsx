@@ -16,20 +16,25 @@ import { useEffect, useState } from "react";
 import { SLEEPER_READONLY_NOTE, type League, type Team } from "@/lib/integrations/sleeper";
 import type { StandingRow } from "@/lib/integrations/sleeper-sync";
 import { connectorsByStatus, type ConnectorStatus } from "@/lib/integrations/connectors";
-import { BRAND_COLORS } from "@/lib/brand";
 
-const POS_HEX: Record<string, string> = { QB: "#00E5FF", RB: "#7B61FF", WR: "#FF38C7", TE: "#F5F7FF", DEF: "#9fb3c8", K: "#E0A800" };
+// Position identity (design tokens) — the same accent poles the draft tools use.
+// Plasma here is identity (WR), never a warning.
+const POS_TONE: Record<string, string> = { QB: "var(--orbital-cyan)", RB: "var(--ultraviolet)", WR: "var(--plasma)", TE: "var(--ion-white)", DEF: "var(--ion-1)", K: "var(--caution)" };
 
-const STATUS_HEX: Record<ConnectorStatus, string> = {
-  live: BRAND_COLORS.orbitalCyan,
-  "oauth-gated": BRAND_COLORS.softUltraviolet,
-  "licensed-feed": "#E0A800",
-  unavailable: "#9fb3c8",
+// Connector status: live = a real data read (cyan), OAuth = gated depth
+// (ultraviolet), licensed-feed = pending review (caution), unavailable = muted.
+const STATUS_TONE: Record<ConnectorStatus, string> = {
+  live: "var(--orbital-cyan)",
+  "oauth-gated": "var(--ultraviolet)",
+  "licensed-feed": "var(--caution)",
+  unavailable: "var(--ion-2)",
 };
 
 type LeagueView = { league: League; standings: readonly StandingRow[]; you: Team | null };
 type Avail = Record<string, { rec: "play" | "watchlist" | "no-bet"; band: number }>;
-const AVAIL_HEX: Record<"play" | "watchlist" | "no-bet", string> = { play: BRAND_COLORS.orbitalCyan, watchlist: "#E0A800", "no-bet": BRAND_COLORS.ionMagenta };
+// Availability verdicts are semantic: play = verify, watchlist = caution,
+// no-bet = alert. Never plasma for a risk state.
+const AVAIL_TONE: Record<"play" | "watchlist" | "no-bet", string> = { play: "var(--verify)", watchlist: "var(--caution)", "no-bet": "var(--alert)" };
 
 export function SleeperConnect() {
   const [username, setUsername] = useState("");
@@ -115,40 +120,40 @@ export function SleeperConnect() {
   return (
     <div className="space-y-5">
       {/* read-only guarantee */}
-      <div className="flex flex-wrap items-center gap-3 rounded-lg border p-3" style={{ borderColor: `${BRAND_COLORS.orbitalCyan}44`, background: `${BRAND_COLORS.orbitalCyan}0a` }}>
-        <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.orbitalCyan}1c`, color: BRAND_COLORS.orbitalCyan }}>Read-only</span>
-        <span className="text-xs text-ink-300">{SLEEPER_READONLY_NOTE}</span>
+      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-orbital-cyan/25 bg-orbital-cyan/5 p-3">
+        <span className="rounded-full bg-orbital-cyan/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-orbital-cyan">Read-only</span>
+        <span className="text-xs text-ion-1">{SLEEPER_READONLY_NOTE}</span>
       </div>
 
       {/* connect form */}
       <div className="surface-card flex flex-wrap items-end gap-3 p-4">
-        <label className="text-xs text-ink-400">
+        <label className="text-xs text-ion-1">
           Sleeper username
           <input value={username} onChange={(e) => setUsername(e.target.value)} onKeyDown={(e) => e.key === "Enter" && connect()}
-            placeholder="your_sleeper_handle" className="mt-1 block w-56 rounded-md border bg-transparent px-3 py-2 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
+            placeholder="your_sleeper_handle" className="mt-1 block w-56 rounded-md border border-mineral bg-transparent px-3 py-2 text-sm text-ion-white" />
         </label>
-        <label className="text-xs text-ink-400">
+        <label className="text-xs text-ion-1">
           Season
           <input value={season} onChange={(e) => setSeason(e.target.value.replace(/\D/g, "").slice(0, 4))}
-            className="mt-1 block w-24 rounded-md border bg-transparent px-3 py-2 text-sm text-white" style={{ borderColor: BRAND_COLORS.steelGray }} />
+            className="mt-1 block w-24 rounded-md border border-mineral bg-transparent px-3 py-2 text-sm text-ion-white" />
         </label>
         <button type="button" onClick={connect} disabled={busy || !username.trim()} aria-busy={busy} className="btn btn-primary disabled:opacity-50">
           {busy ? "Connecting…" : "Connect league"}
         </button>
       </div>
 
-      {error && <p role="alert" className="rounded-lg border p-3 text-sm" style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, color: BRAND_COLORS.ionMagenta }}>{error}</p>}
+      {error && <p role="alert" className="rounded-lg border border-alert/30 p-3 text-sm text-alert">{error}</p>}
 
       {/* league picker */}
       {leagues && leagues.length > 0 && !view && (
         <div className="surface-card p-4">
-          <p className="mb-2 text-xs uppercase tracking-[0.18em] text-ink-500">Pick a league</p>
+          <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">Pick a league</p>
           <div className="space-y-2">
             {leagues.map((l) => (
               <button key={l.id} type="button" onClick={() => pick(l)} disabled={busy}
-                className="flex w-full items-center justify-between rounded-lg border p-3 text-left transition-colors hover:bg-white/5" style={{ borderColor: BRAND_COLORS.steelGray }}>
-                <span className="text-sm font-semibold text-white">{l.name}</span>
-                <span className="text-xs text-ink-500">{l.size}-team · {l.status.replace(/_/g, " ")}</span>
+                className="flex w-full items-center justify-between rounded-lg border border-mineral p-3 text-left transition-colors hover:bg-white/5">
+                <span className="text-sm font-semibold text-ion-white">{l.name}</span>
+                <span className="text-xs text-ion-2">{l.size}-team · {l.status.replace(/_/g, " ")}</span>
               </button>
             ))}
           </div>
@@ -159,9 +164,9 @@ export function SleeperConnect() {
       {view && (
         <div className="surface-card p-5">
           <div className="flex flex-wrap items-center gap-3">
-            <p className="font-display text-xl text-white">{view.league.name}</p>
-            <span className="text-xs text-ink-500">{view.league.size}-team · {view.league.status.replace(/_/g, " ")}</span>
-            <button type="button" onClick={() => setView(null)} className="ml-auto text-xs text-ink-400 underline-offset-2 hover:underline">← Pick another league</button>
+            <p className="font-display text-xl text-ion-white">{view.league.name}</p>
+            <span className="text-xs text-ion-2">{view.league.size}-team · {view.league.status.replace(/_/g, " ")}</span>
+            <button type="button" onClick={() => setView(null)} className="ml-auto text-xs text-ion-1 underline-offset-2 hover:underline">← Pick another league</button>
           </div>
 
           {view.standings.length > 0 && <Standings rows={view.standings} />}
@@ -169,25 +174,25 @@ export function SleeperConnect() {
           {view.you ? (
             <>
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                <p className="text-sm font-semibold text-white">Your roster</p>
-                <span className="font-mono text-xs text-ink-400">{view.you.record} · {view.you.points} pts</span>
-                <span className="text-[10px] text-ink-600">availability overlay: real injury status + game weather (never a body claim)</span>
+                <p className="text-sm font-semibold text-ion-white">Your roster</p>
+                <span className="font-mono text-xs tabular-nums text-ion-1">{view.you.record} · {view.you.points} pts</span>
+                <span className="text-[10px] text-ion-2">availability overlay: real injury status + game weather (never a body claim)</span>
               </div>
               <RosterGroup title="Starters" players={view.you.starters} avail={avail} />
               <RosterGroup title="Bench" players={view.you.bench} avail={avail} dim />
             </>
           ) : (
-            <p className="mt-4 text-sm text-ink-400">Standings imported. Enter the username that owns a team in this league to resolve your roster.</p>
+            <p className="mt-4 text-sm text-ion-1">Standings imported. Enter the username that owns a team in this league to resolve your roster.</p>
           )}
 
-          <div className="mt-4 rounded-lg border p-3" style={{ borderColor: `${BRAND_COLORS.softUltraviolet}44`, background: `${BRAND_COLORS.softUltraviolet}0a` }}>
-            <p className="text-xs" style={{ color: BRAND_COLORS.softUltraviolet }}>League imported (read-only).</p>
-            <p className="mt-1 text-[11px] leading-relaxed text-ink-400">
+          <div className="mt-4 rounded-lg border border-ultraviolet/25 bg-ultraviolet/5 p-3">
+            <p className="text-xs text-ultraviolet">League imported (read-only).</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-ion-1">
               Live lineup, waiver, and trade recommendations on these real players activate when the licensed
               projections source is wired behind the founder gate. The GM Autopilot then drives this roster:
               still proposal-only, with every move explained, ledgered, and human-approved.
             </p>
-            <a href="/fantasy/autopilot" className="mt-2 inline-block text-sm font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>See how the Autopilot would drive it →</a>
+            <a href="/fantasy/autopilot" className="mt-2 inline-block text-sm font-medium text-orbital-cyan">See how the Autopilot would drive it →</a>
           </div>
         </div>
       )}
@@ -199,10 +204,10 @@ export function SleeperConnect() {
 
 function Standings({ rows }: { rows: readonly StandingRow[] }) {
   return (
-    <div className="mt-4 overflow-hidden rounded-lg border" style={{ borderColor: BRAND_COLORS.steelGray }}>
+    <div className="mt-4 overflow-hidden rounded-lg border border-mineral">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="text-[10px] uppercase tracking-wider text-ink-600">
+          <tr className="font-mono text-[10px] uppercase tracking-wider text-ion-2">
             <th className="px-3 py-2 font-medium">#</th>
             <th className="px-3 py-2 font-medium">Team</th>
             <th className="px-3 py-2 text-right font-medium">Record</th>
@@ -211,14 +216,14 @@ function Standings({ rows }: { rows: readonly StandingRow[] }) {
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.rosterId} className="border-t" style={{ borderColor: BRAND_COLORS.steelGray, background: r.isYou ? `${BRAND_COLORS.orbitalCyan}0f` : "transparent" }}>
-              <td className="px-3 py-2 font-mono text-xs text-ink-500">{r.rank}</td>
+            <tr key={r.rosterId} className="border-t border-mineral" style={{ background: r.isYou ? "color-mix(in srgb, var(--orbital-cyan) 6%, transparent)" : "transparent" }}>
+              <td className="px-3 py-2 font-mono text-xs tabular-nums text-ion-2">{r.rank}</td>
               <td className="px-3 py-2">
-                <span className={r.isYou ? "font-semibold text-white" : "text-ink-200"}>{r.teamName}</span>
-                {r.isYou && <span className="ml-2 text-[9px] font-bold uppercase tracking-wider" style={{ color: BRAND_COLORS.orbitalCyan }}>You</span>}
+                <span className={r.isYou ? "font-semibold text-ion-white" : "text-ion-1"}>{r.teamName}</span>
+                {r.isYou && <span className="ml-2 font-mono text-[9px] font-bold uppercase tracking-wider text-orbital-cyan">You</span>}
               </td>
-              <td className="px-3 py-2 text-right font-mono text-xs text-ink-300">{r.record}</td>
-              <td className="px-3 py-2 text-right font-mono text-xs text-ink-300">{r.points}</td>
+              <td className="px-3 py-2 text-right font-mono text-xs tabular-nums text-ion-1">{r.record}</td>
+              <td className="px-3 py-2 text-right font-mono text-xs tabular-nums text-ion-1">{r.points}</td>
             </tr>
           ))}
         </tbody>
@@ -231,23 +236,24 @@ function RosterGroup({ title, players, avail, dim }: { title: string; players: T
   if (players.length === 0) return null;
   return (
     <div className="mt-4" style={{ opacity: dim ? 0.7 : 1 }}>
-      <p className="mb-2 text-[10px] uppercase tracking-wider text-ink-600">{title}</p>
+      <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-ion-2">{title}</p>
       <div className="space-y-1">
         {players.map((p) => {
-          const hex = POS_HEX[p.pos] ?? "#9fb3c8";
+          const tone = POS_TONE[p.pos] ?? "var(--ion-1)";
           const a = avail[p.name.toLowerCase()];
           const flag = a && a.rec !== "play" ? a : null;
           return (
             <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1">
-              <span className="w-9 rounded px-1 py-0.5 text-center text-[9px] font-bold" style={{ color: hex, background: `${hex}1c` }}>{p.pos}</span>
-              <span className="flex-1 truncate text-sm text-white">{p.name}</span>
+              <span className="w-9 rounded px-1 py-0.5 text-center font-mono text-[9px] font-bold" style={{ color: tone, background: `color-mix(in srgb, ${tone} 11%, transparent)` }}>{p.pos}</span>
+              <span className="flex-1 truncate text-sm text-ion-white">{p.name}</span>
               {flag && (
-                <span className="rounded px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider" style={{ color: AVAIL_HEX[flag.rec], background: `${AVAIL_HEX[flag.rec]}1c` }} title={`Confidence band widened ~${Math.round(flag.band * 100)}% by public availability + conditions`}>
+                <span className="rounded px-1 py-0.5 font-mono text-[8px] font-bold uppercase tracking-wider" style={{ color: AVAIL_TONE[flag.rec], background: `color-mix(in srgb, ${AVAIL_TONE[flag.rec]} 11%, transparent)` }} title={`Confidence band widened ~${Math.round(flag.band * 100)}% by public availability + conditions`}>
                   {flag.rec} +{Math.round(flag.band * 100)}%
                 </span>
               )}
-              {p.injury && <span className="text-[10px] font-semibold uppercase" style={{ color: BRAND_COLORS.ionMagenta }}>{p.injury}</span>}
-              <span className="font-mono text-[10px] text-ink-600">{p.team}</span>
+              {/* injury is a risk state — alert, never plasma */}
+              {p.injury && <span className="font-mono text-[10px] font-semibold uppercase text-alert">{p.injury}</span>}
+              <span className="font-mono text-[10px] text-ion-2">{p.team}</span>
             </div>
           );
         })}
@@ -260,8 +266,8 @@ function ConnectorMatrix() {
   const groups = connectorsByStatus();
   return (
     <div className="surface-card p-5">
-      <p className="text-xs uppercase tracking-[0.18em] text-ink-500">What else can I connect?</p>
-      <p className="mt-1 text-[11px] leading-relaxed text-ink-400">
+      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">What else can I connect?</p>
+      <p className="mt-1 text-[11px] leading-relaxed text-ion-1">
         The honest matrix. Sleeper syncs today; everything else is shown with its real legal status. We
         never scrape closed platforms or use unofficial private-cookie endpoints. When something can't be
         synced, we say so and explain why.
@@ -270,18 +276,18 @@ function ConnectorMatrix() {
         {groups.map((g) => (
           <div key={g.status}>
             <div className="mb-2 flex items-center gap-2">
-              <span className="inline-block h-2 w-2 rounded-full" style={{ background: STATUS_HEX[g.status] }} />
-              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: STATUS_HEX[g.status] }}>{g.label}</span>
+              <span className="inline-block h-2 w-2 rounded-full" style={{ background: STATUS_TONE[g.status] }} />
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider" style={{ color: STATUS_TONE[g.status] }}>{g.label}</span>
             </div>
             <div className="grid gap-2 sm:grid-cols-2">
               {g.items.map((c) => (
-                <div key={c.key} className="rounded-lg border p-3" style={{ borderColor: BRAND_COLORS.steelGray }}>
+                <div key={c.key} className="rounded-lg border border-mineral p-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-white">{c.name}</span>
-                    <span className="text-[9px] uppercase tracking-wider text-ink-600">{c.kind.replace("-", " ")}</span>
+                    <span className="text-sm font-semibold text-ion-white">{c.name}</span>
+                    <span className="font-mono text-[9px] uppercase tracking-wider text-ion-2">{c.kind.replace("-", " ")}</span>
                   </div>
-                  <p className="mt-1 text-[11px] leading-relaxed text-ink-400">{c.enables}</p>
-                  <p className="mt-1.5 text-[10px] leading-relaxed text-ink-600">{c.path ?? c.why}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-ion-1">{c.enables}</p>
+                  <p className="mt-1.5 text-[10px] leading-relaxed text-ion-2">{c.path ?? c.why}</p>
                 </div>
               ))}
             </div>
