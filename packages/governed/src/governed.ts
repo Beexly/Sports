@@ -42,24 +42,40 @@ export function createGoverned(deps: GovernedDeps) {
           ? [...gateOut.reasons, "SHADOW_WOULD_REFUSE"]
           : gateOut.reasons,
       budget: gateOut.budget,
-      receiptUrl: deps.receiptBaseUrl ? `${deps.receiptBaseUrl}/receipts/${receiptId}` : undefined,
+      // The only receipt lookup route this package's app wiring adds is
+      // `GET /api/receipts/[id]` (no `/receipts/[id]` page/rewrite exists),
+      // so the public link must point at the API path or every receiptUrl
+      // is dead.
+      receiptUrl: deps.receiptBaseUrl ? `${deps.receiptBaseUrl}/api/receipts/${receiptId}` : undefined,
     };
 
     if (effective === "REFUSE") {
       const signer = await deps.getSigner();
       const signed = signReceiptEd25519({ ...base, decision: "REFUSE" }, signer);
       const p = await deps.persistReceipt(signed);
+      // `controlEventId` (like `receiptUrl`) is deliberately excluded from
+      // `canonicalReceiptPayload` — see receipt-canonical.ts. Stamping it
+      // on AFTER signing is therefore safe: it never changes the signed
+      // byte sequence, so a persister-assigned id can't break verification.
       return { ok: false, decision: "REFUSE", receipt: { ...signed, controlEventId: p.controlEventId } };
     }
+
+    // Sign + persist the ADMIT decision BEFORE calling run(). If run() were
+    // called first and threw, the admission decision would never be
+    // recorded even though the gate already admitted it — a silent gap in
+    // the audit ledger for every admitted-but-failing call. Persisting
+    // first means an admitted call always has a receipt, regardless of
+    // whether its own execution later fails.
+    const signer = await deps.getSigner();
+    const signed = signReceiptEd25519(base, signer);
+    const p = await deps.persistReceipt(signed);
+    const receipt = { ...signed, controlEventId: p.controlEventId };
 
     // run() executes ONLY when the effective decision is ADMIT — in SHADOW
     // mode that's always true, even when the gate itself said it would
     // REFUSE (that's the shadow-observability point: nothing is blocked,
     // the would-be refusal is only recorded).
     const value = await run();
-    const signer = await deps.getSigner();
-    const signed = signReceiptEd25519(base, signer);
-    const p = await deps.persistReceipt(signed);
-    return { ok: true, decision: "ADMIT", value, receipt: { ...signed, controlEventId: p.controlEventId } };
+    return { ok: true, decision: "ADMIT", value, receipt };
   };
 }

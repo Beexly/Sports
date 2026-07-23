@@ -16,13 +16,21 @@ export const dynamic = "force-dynamic";
 function looksLikeSignedReceipt(x: unknown): x is SignedGovernedReceipt {
   if (typeof x !== "object" || x === null) return false;
   const r = x as Record<string, unknown>;
+  if (typeof r.action !== "object" || r.action === null) return false;
+  const action = r.action as Record<string, unknown>;
   return (
     typeof r.receiptId === "string" &&
     typeof r.at === "string" &&
     typeof r.decision === "string" &&
+    Array.isArray(r.reasons) &&
+    typeof action.tool === "string" &&
+    typeof action.argsDigest === "string" &&
+    typeof action.agentId === "string" &&
     typeof r.signature === "object" &&
     r.signature !== null &&
-    typeof (r.signature as Record<string, unknown>).kid === "string"
+    typeof (r.signature as Record<string, unknown>).kid === "string" &&
+    typeof (r.signature as Record<string, unknown>).alg === "string" &&
+    typeof (r.signature as Record<string, unknown>).sig === "string"
   );
 }
 

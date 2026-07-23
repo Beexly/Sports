@@ -25,6 +25,18 @@ async function seed(): Promise<KeyringStore> {
   const kid = process.env.GOVERNED_SIGNING_KID;
   const privateKeyPem = process.env.GOVERNED_SIGNING_PRIVATE_KEY_PEM;
   const publicKeyPem = process.env.GOVERNED_SIGNING_PUBLIC_KEY_PEM;
+  const providedCount = [kid, privateKeyPem, publicKeyPem].filter(Boolean).length;
+  if (providedCount > 0 && providedCount < 3) {
+    // Partial config is almost certainly a missing/misspelled env var, not
+    // an intentional "use an ephemeral key" choice. Fail loudly instead of
+    // silently minting a process-local key that stops verifying across
+    // restarts or other instances — that failure mode is much harder to
+    // notice than a startup error.
+    throw new Error(
+      "Partial GOVERNED_SIGNING_* configuration: set all three of GOVERNED_SIGNING_KID, " +
+        "GOVERNED_SIGNING_PRIVATE_KEY_PEM, and GOVERNED_SIGNING_PUBLIC_KEY_PEM, or none of them.",
+    );
+  }
   if (kid && privateKeyPem && publicKeyPem) {
     const rec: KeyRecord = {
       kid,

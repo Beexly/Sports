@@ -22,9 +22,10 @@ export function verifyReceiptEd25519(
   publicKeyPem: string,
 ): { ok: true } | { ok: false; reason: string } {
   if (signed.signature.alg !== "ed25519") return { ok: false, reason: "alg" };
-  // receiptUrl is excluded from the signed payload by design (see
-  // receipt-canonical.ts); dropping it here before re-deriving the payload
-  // keeps verification correct even when receiptUrl was populated later.
+  // receiptUrl and controlEventId are both excluded from the signed payload
+  // by design (see receipt-canonical.ts) — canonicalReceiptPayload ignores
+  // them even if present on `rest`, so verification stays correct whether
+  // or not either was populated after signing.
   const { signature, receiptUrl: _receiptUrl, ...rest } = signed;
   const payload = canonicalReceiptPayload(rest);
   try {

@@ -75,4 +75,26 @@ describe("createGoverned", () => {
       console.log("ADMIT receipt (plain):\n" + JSON.stringify(result.receipt, null, 2));
     }
   });
+
+  it("receiptUrl points at the real /api/receipts/[id] route", async () => {
+    const { deps } = await makeDeps({ decision: "ADMIT", reasons: [] });
+    const governed = createGoverned(deps);
+    const result = await governed("tool.read", {}, baseCtx("SHADOW"), async () => "ok");
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.receipt.receiptUrl).toBe(`https://example.test/api/receipts/${result.receipt.receiptId}`);
+    }
+  });
+
+  it("ADMIT receipt is persisted BEFORE run() executes, so a throwing run() still leaves a receipt", async () => {
+    const { deps, persisted } = await makeDeps({ decision: "ADMIT", reasons: [] });
+    const governed = createGoverned(deps);
+    const run = vi.fn(async () => {
+      throw new Error("boom");
+    });
+
+    await expect(governed("tool.write", {}, baseCtx("SHADOW"), run)).rejects.toThrow("boom");
+    expect(persisted).toHaveLength(1);
+    expect(persisted[0]?.decision).toBe("ADMIT");
+  });
 });

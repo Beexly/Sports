@@ -89,10 +89,15 @@ export function createGovernedSrqcGate(deps: GovernedGateDeps) {
 
     const untilExclusive = now();
     const sinceInclusive = new Date(untilExclusive.getTime() - windowMs);
+    // No `source` filter: the GE2 (two-concurrently-pending) violation is
+    // built from `ATTEMPT_STARTED`/`ATTEMPT_FAILED` events, which are
+    // `source: "ai_attempt"`, not `"ai_invocation"`. Filtering to just
+    // ai_invocation drops every attempt event before projection, so the gate
+    // would never observe a real two-pending window and would ADMIT under
+    // ENFORCE instead of REFUSE. Read the whole window across both sources.
     const events = await readRecentEvents(deps.sql, {
       sinceInclusive,
       untilExclusive,
-      source: "ai_invocation",
     });
 
     const mode: SrqcMode = resolveSrqcModeFromEnv();
