@@ -29,7 +29,7 @@ export function SimpleTable({ rows }: { rows: Array<Record<string, unknown>> }) 
 export function HeroStat({ label, value, delta, sublabel, tone = "cyan" }: { label: string; value: string | number; delta?: string; sublabel?: string; tone?: "cyan" | "amber" | "alert"; }) {
   const vc = { cyan: "text-orbital-cyan", amber: "text-caution", alert: "text-alert" }[tone];
   const dc = { cyan: "text-orbital-cyan/70", amber: "text-caution/70", alert: "text-alert/70" }[tone];
-  return <div className="border border-mineral bg-eclipse p-6 flex flex-col gap-1"><p className="text-xs uppercase tracking-[0.2em] text-ion-2">{label}</p><p className={`text-5xl font-bold tabular-nums ${vc}`}>{value}</p>{delta && <p className={`text-sm font-medium ${dc}`}>{delta}</p>}{sublabel && <p className="mt-1 text-sm text-ion-1">{sublabel}</p>}</div>;
+  return <div className="border border-mineral bg-eclipse p-6 flex flex-col gap-1"><p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2">{label}</p><p className={`font-numerals text-5xl font-bold tabular-nums ${vc}`}>{value}</p>{delta && <p className={`text-sm font-medium ${dc}`}>{delta}</p>}{sublabel && <p className="mt-1 text-sm text-ion-1">{sublabel}</p>}</div>;
 }
 
 export function BarChart({ items }: { items: Array<{ label: string; value: number; max: number; tone?: "cyan" | "amber" | "alert" }> }) {
@@ -47,21 +47,21 @@ export function BarChart({ items }: { items: Array<{ label: string; value: numbe
 export function ScoreRing({ score, label, size = 120, notMeasured = false }: { score: number; label?: string; size?: number; notMeasured?: boolean }) {
   const inner = Math.round(size * 0.74);
   if (notMeasured) {
-    return <div className="flex flex-col items-center gap-2"><div className="relative flex items-center justify-center rounded-full border-2 border-dashed border-mineral" style={{ width: size, height: size }}><div className="absolute flex items-center justify-center rounded-full bg-carbon" style={{ width: inner, height: inner }}><span className="text-2xl font-bold text-ion-2" aria-hidden="true">—</span></div></div>{label && <p className="text-xs uppercase tracking-[0.2em] text-ion-2 text-center">{label} <span className="text-ion-3">(not yet measured)</span></p>}</div>;
+    return <div className="flex flex-col items-center gap-2"><div className="relative flex items-center justify-center rounded-full border-2 border-dashed border-mineral" style={{ width: size, height: size }}><div className="absolute flex items-center justify-center rounded-full bg-carbon" style={{ width: inner, height: inner }}><span className="text-2xl font-bold text-ion-2" aria-hidden="true">—</span></div></div>{label && <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 text-center">{label} <span className="text-ion-3">(not yet measured)</span></p>}</div>;
   }
   const pct = Math.min(100, Math.max(0, score));
-  const color = pct >= 70 ? "#00E5FF" : pct >= 40 ? "#FFB454" : "#FF6470";
-  return <div className="flex flex-col items-center gap-2"><div className="relative flex items-center justify-center rounded-full" style={{ width: size, height: size, background: `conic-gradient(${color} ${pct}%, #3B3158 ${pct}%)` }}><div className="absolute flex items-center justify-center rounded-full bg-carbon" style={{ width: inner, height: inner }}><span className="text-2xl font-bold tabular-nums text-ion-white">{score}</span></div></div>{label && <p className="text-xs uppercase tracking-[0.2em] text-ion-2 text-center">{label}</p>}</div>;
+  const color = pct >= 70 ? "var(--orbital-cyan)" : pct >= 40 ? "var(--caution)" : "var(--alert)";
+  return <div className="flex flex-col items-center gap-2"><div className="relative flex items-center justify-center rounded-full" style={{ width: size, height: size, background: `conic-gradient(${color} ${pct}%, var(--mineral) ${pct}%)` }}><div className="absolute flex items-center justify-center rounded-full bg-carbon" style={{ width: inner, height: inner }}><span className="font-numerals text-2xl font-bold tabular-nums text-ion-white">{score}</span></div></div>{label && <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 text-center">{label}</p>}</div>;
 }
 
 export function InsightCard({ eyebrow, headline, body, tone = "neutral", children }: { eyebrow?: string; headline: string; body: string; tone?: "good" | "warn" | "bad" | "neutral"; children?: React.ReactNode; }) {
   const bdr = { good: "border-orbital-cyan", warn: "border-caution", bad: "border-alert", neutral: "border-mineral" }[tone];
   const ec = { good: "text-orbital-cyan", warn: "text-caution", bad: "text-alert", neutral: "text-ion-2" }[tone];
-  return <div className={`border ${bdr} bg-eclipse p-5 space-y-2`}>{eyebrow && <p className={`text-xs uppercase tracking-[0.2em] ${ec}`}>{eyebrow}</p>}<p className="text-base font-semibold text-ion-white">{headline}</p><p className="text-sm text-ion-1 leading-relaxed">{body}</p>{children && <div className="mt-1">{children}</div>}</div>;
+  return <div className={`border ${bdr} bg-eclipse p-5 space-y-2`}>{eyebrow && <p className={`font-mono text-xs uppercase tracking-[0.2em] ${ec}`}>{eyebrow}</p>}<p className="text-base font-semibold text-ion-white">{headline}</p><p className="text-sm text-ion-1 leading-relaxed">{body}</p>{children && <div className="mt-1">{children}</div>}</div>;
 }
 
 export function SectionHeader({ eyebrow, title, action }: { eyebrow?: string; title: string; action?: { label: string; href: string } }) {
-  return <div className="flex items-end justify-between border-b border-mineral pb-3"><div>{eyebrow && <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-1">{eyebrow}</p>}<h2 className="text-2xl font-semibold text-ion-white">{title}</h2></div>{action && <a href={action.href} className="text-sm text-orbital-cyan hover:text-ion-white transition-colors">{action.label} →</a>}</div>;
+  return <div className="flex items-end justify-between border-b border-mineral pb-3"><div>{eyebrow && <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-1">{eyebrow}</p>}<h2 className="text-2xl font-semibold text-ion-white">{title}</h2></div>{action && <Link href={action.href} className="text-sm text-orbital-cyan hover:text-ion-white transition-colors">{action.label} →</Link>}</div>;
 }
 
 export function DataTable({ rows, maxRows = 200 }: { rows: Array<Record<string, unknown>>; maxRows?: number }) {

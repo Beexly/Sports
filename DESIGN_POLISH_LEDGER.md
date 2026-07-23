@@ -18,7 +18,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[✓]` audited, alread
 | 4 | Member area | /dashboard, /watchlist | [x] | dashboard fully retokenized (predated token system): plasma CTAs, confidence-ladder bar, mono eyebrows, NUMERIC_TEXT_CLASS, honest empty state; watchlist inviting empty state + honest setup-vs-outage split. Note: no account/settings page exists |
 | 5 | Tools suite | /tools, /tools/ev-calculator, /tools/no-vig-calculator, /tools/odds-converter, /tools/parlay-calculator | [x] | negative EV was plasma → alert; focus-ring suppression removed on all inputs; aria-live results; inline hex/BRAND_COLORS purged; mono eyebrows + NUMERIC_TEXT_CLASS |
 | 6 | Analysis tools | /optimizer, /parlay-mri, /trends, /weather, /data | [x] | parlay-genome verdict ladder off plasma-as-negative (cyan/UV/caution/alert); focus rings restored; aria-live vitals; sr-only table captions; TREND LAB eyebrow; optimizer+data already clean. Note: ~25 other pages still import BRAND_COLORS — covered by their own groups |
-| 7 | Sport verticals | /nflverse, /nhl, /mlb, /stats (landing) | [ ] | plates wired 2026-07-23 |
+| 7 | Sport verticals | /nflverse, /nhl, /mlb, /stats (landing) | [x] | plate wiring verified; N/A→STAT_PLACEHOLDER; sr-only captions + tabular-nums on all tables; nflverse eyebrow + CC-BY Attribution added; stats landing double-arrow bug fixed; ScoreRing hexes → CSS vars |
 | 8 | Players suite | /players + /players/* (9 routes) | [ ] | |
 | 9 | Stats suite A | /stats/players, /stats/teams, /stats/compare, /stats/comps, /stats/depth, /stats/player/[id] | [ ] | |
 | 10 | Stats suite B | /stats/scheme, /stats/scouting, /stats/trenches, /stats/injuries, /stats/watchlist, /stats/alerts, /stats/ask, /stats/expert-board, /stats/proof | [ ] | |
@@ -49,3 +49,4 @@ Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
 - 2026-07-23 05:45 — Cycle 4 (member area) done: 2 files, 146 targeted + 92 guard tests green.
 - 2026-07-23 05:55 — Cycle 5 (tools suite) done: 12 files, 100 targeted + 40 tangential tests green.
 - 2026-07-23 06:05 — Cycle 6 (analysis tools) done: 5 files, 69 targeted + 3,312 guard tests green.
+- 2026-07-23 06:15 — Cycle 7 (sport verticals) done: 5 files, 102 targeted + 3,259 guard tests green.

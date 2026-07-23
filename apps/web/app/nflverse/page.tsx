@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { NUMERIC_TEXT_CLASS, STAT_PLACEHOLDER } from "@/lib/format/stat";
 import {
   loadBirthdayUsageTrendReport,
   type BirthdayUsageComparison,
@@ -26,11 +28,11 @@ function fmtNumber(value: number): string {
 }
 
 function fmtDecimal(value: number | null, digits = 2): string {
-  return value === null ? "N/A" : value.toFixed(digits);
+  return value === null ? STAT_PLACEHOLDER : value.toFixed(digits);
 }
 
 function fmtPercent(value: number | null): string {
-  return value === null ? "N/A" : `${(value * 100).toFixed(1)}%`;
+  return value === null ? STAT_PLACEHOLDER : `${(value * 100).toFixed(1)}%`;
 }
 
 function fmtSignedPercent(value: number): string {
@@ -78,7 +80,8 @@ export default async function NflversePage(): Promise<JSX.Element> {
       <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
           <div>
-            <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">NFL · usage pulse</p>
+            <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
               Real NFL rows before real claims.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
@@ -106,7 +109,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
                   Usage pulse
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold text-ion-white">
-                  {pulse.status === "live" ? `Season ${pulse.season}, week ${pulse.week ?? "N/A"}` : "Source unavailable"}
+                  {pulse.status === "live" ? `Season ${pulse.season}, week ${pulse.week ?? STAT_PLACEHOLDER}` : "Source unavailable"}
                 </h2>
               </div>
               <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
@@ -149,7 +152,11 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 </p>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[1080px] text-left text-sm">
+                <table className="w-full min-w-[1080px] text-left text-sm tabular-nums">
+                  <caption className="sr-only">
+                    Top NFL player opportunity rows for the latest regular-season week: targets, carries, target and
+                    air-yard shares, WOPR, PPR points, and age
+                  </caption>
                   <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
                       <th scope="col" className="px-4 py-3">Player</th>
@@ -183,7 +190,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
                         <td className="px-4 py-3 font-mono text-ion">{fmtPercent(row.airYardsShare)}</td>
                         <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.wopr)}</td>
                         <td className="px-4 py-3 font-mono text-ion">{fmtDecimal(row.fantasyPointsPpr, 1)}</td>
-                        <td className="px-4 py-3 font-mono text-ion">{row.age ?? "N/A"}</td>
+                        <td className="px-4 py-3 font-mono text-ion">{row.age ?? STAT_PLACEHOLDER}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -206,7 +213,11 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 </p>
               </div>
               <div className="overflow-x-auto border border-mineral">
-                <table className="w-full min-w-[760px] text-left text-sm">
+                <table className="w-full min-w-[760px] text-left text-sm tabular-nums">
+                  <caption className="sr-only">
+                    Latest-week quarterback age context by team: age bucket, pass attempts, running back targets, and
+                    RB target share
+                  </caption>
                   <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
                       <th scope="col" className="px-4 py-3">Team</th>
@@ -268,7 +279,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 )}
                 <p className="mt-5 text-sm leading-6 text-ion-1">
                   The result uses {fmtNumber(qbAgeTrend.quality.observationsUsed)} team-week observations from{" "}
-                  {qbAgeTrend.seasonRange.start ?? "N/A"}-{qbAgeTrend.seasonRange.end ?? "N/A"}. It measures
+                  {qbAgeTrend.seasonRange.start ?? STAT_PLACEHOLDER}-{qbAgeTrend.seasonRange.end ?? STAT_PLACEHOLDER}. It measures
                   running back targets divided by team pass attempts, grouped by the starting quarterback&apos;s age
                   on game day.
                 </p>
@@ -281,7 +292,11 @@ export default async function NflversePage(): Promise<JSX.Element> {
               </div>
 
               <div className="overflow-x-auto border border-mineral">
-                <table className="w-full min-w-[760px] text-left text-sm">
+                <table className="w-full min-w-[760px] text-left text-sm tabular-nums">
+                  <caption className="sr-only">
+                    QB-age cohorts versus the field: sample sizes, RB target share means, lift, p-value, and
+                    significance gate
+                  </caption>
                   <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
                       <th scope="col" className="px-4 py-3">Cohort</th>
@@ -333,10 +348,10 @@ export default async function NflversePage(): Promise<JSX.Element> {
                       {row.season} week {row.week}
                     </p>
                     <h3 className="mt-2 font-semibold text-ion-white">{row.qbName}</h3>
-                    <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ion-2">
+                    <p className="mt-1 font-mono text-xs uppercase tracking-[0.14em] text-ion-2">
                       {row.team} vs {row.opponent} / age {row.qbAge}
                     </p>
-                    <p className="mt-4 font-numerals text-2xl font-semibold text-ion-white">
+                    <p className={`mt-4 text-2xl font-semibold text-ion-white ${NUMERIC_TEXT_CLASS}`}>
                       {fmtPercent(row.rbTargetShare)}
                     </p>
                     <p className="mt-1 text-xs text-ion-2">
@@ -377,7 +392,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 )}
                 <p className="mt-5 text-sm leading-6 text-ion-1">
                   The test compares RB/WR/TE game opportunities against each player&apos;s prior four-game average.
-                  Across {birthdayTrend.seasonRange.start ?? "N/A"}-{birthdayTrend.seasonRange.end ?? "N/A"}, birthday
+                  Across {birthdayTrend.seasonRange.start ?? STAT_PLACEHOLDER}-{birthdayTrend.seasonRange.end ?? STAT_PLACEHOLDER}, birthday
                   windows and 50-game career milestones both fail the significance gate.
                 </p>
                 <div className="mt-5 border border-mineral bg-carbon p-4">
@@ -389,7 +404,11 @@ export default async function NflversePage(): Promise<JSX.Element> {
               </div>
 
               <div className="overflow-x-auto border border-mineral">
-                <table className="w-full min-w-[820px] text-left text-sm">
+                <table className="w-full min-w-[820px] text-left text-sm tabular-nums">
+                  <caption className="sr-only">
+                    Birthday and milestone usage checks versus each player&apos;s baseline: sample sizes, means,
+                    deltas, p-values, and gate outcome
+                  </caption>
                   <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
                       <th scope="col" className="px-4 py-3">Check</th>
@@ -432,6 +451,7 @@ export default async function NflversePage(): Promise<JSX.Element> {
                 <SourceUrl label="Players" href={birthdayTrend.sourceUrls.players} />
                 <SourceUrl label="Schedules" href={birthdayTrend.sourceUrls.schedules} />
               </div>
+              <Attribution sourceIds={["nflverse"]} className="mt-4" />
             </section>
           </>
         )}
@@ -445,7 +465,7 @@ function Metric({ label, value }: { label: string; value: string }): JSX.Element
   return (
     <div className="border border-mineral bg-carbon px-3 py-2">
       <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
-      <dd className="mt-1 font-numerals text-xl font-semibold tabular-nums text-ion-white">{value}</dd>
+      <dd className={`mt-1 text-xl font-semibold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{value}</dd>
     </div>
   );
 }
