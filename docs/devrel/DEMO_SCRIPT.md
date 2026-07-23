@@ -24,13 +24,13 @@ npx tsx scripts/demo/force-governed-refuse.mjs
 Actual output (captured from a real run):
 
 ```
-[demo] signing key: 6cd4e0fe-b335-4bd5-a18b-472688c28d8e
+[demo] signing key: e3e24a59-1154-4de9-886a-6b0b3b39e1f0
 decision: REFUSE
-receiptId: 8463545e-c314-4e5d-bd37-4c76ef290b49
-receiptUrl: http://localhost:3000/receipts/8463545e-c314-4e5d-bd37-4c76ef290b49
+receiptId: bdbe80e9-dda2-49bd-accd-0886f48f14be
+receiptUrl: http://localhost:3000/api/receipts/bdbe80e9-dda2-49bd-accd-0886f48f14be
 {
-  "receiptId": "8463545e-c314-4e5d-bd37-4c76ef290b49",
-  "at": "2026-07-23T03:08:12.439Z",
+  "receiptId": "bdbe80e9-dda2-49bd-accd-0886f48f14be",
+  "at": "2026-07-23T20:34:14.082Z",
   "policyVersion": 1,
   "policyHash": "demo-hash",
   "action": {
@@ -40,11 +40,11 @@ receiptUrl: http://localhost:3000/receipts/8463545e-c314-4e5d-bd37-4c76ef290b49
   },
   "decision": "REFUSE",
   "reasons": ["srqc_violation:GE2"],
-  "receiptUrl": "http://localhost:3000/receipts/8463545e-c314-4e5d-bd37-4c76ef290b49",
+  "receiptUrl": "http://localhost:3000/api/receipts/bdbe80e9-dda2-49bd-accd-0886f48f14be",
   "signature": {
     "alg": "ed25519",
-    "sig": "_F8UGuW3l7O-Vc-ivXxLJoWKE4DANCnozF2Y5PnbmpIQ2RsCu5Sk6dfxFhARanIIIFTokHrB4tB9sBJV5Am4Bg",
-    "kid": "6cd4e0fe-b335-4bd5-a18b-472688c28d8e"
+    "sig": "JdZHEjm8Lpl8fVztBJyP_WmWq2fVyk63FS1qZdv7pBb8V0Ct3MLnhxSRazJjVMMLQKhylTgofU3nAdVS0Ry6Dg",
+    "kid": "e3e24a59-1154-4de9-886a-6b0b3b39e1f0"
   }
 }
 ```

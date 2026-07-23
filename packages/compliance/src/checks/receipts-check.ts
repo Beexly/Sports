@@ -2,13 +2,12 @@ import type { ControlCheckResult, EvidenceObject } from "../types";
 import { makeEvidence } from "../evidence";
 
 /**
- * Local shape mirroring the sibling `feat/governed-receipts` branch's
- * `SignedGovernedReceipt` (packages/governed, not merged yet — not
- * importable here). Fields kept intentionally close so the swap-over is a
- * mechanical rename, not a redesign.
- *
- * TODO(governed-receipts): swap for the real @sports/governed
- * `SignedGovernedReceipt` export once feat/governed-receipts merges.
+ * Local shape mirroring `@sports/governed`'s `SignedGovernedReceipt`
+ * (packages/governed, merged in #188). Deliberately NOT imported from
+ * `@sports/governed` — this package has zero dependencies by design (see
+ * package.json) so its checks stay testable and reusable without pulling in
+ * signing/keyring machinery. The caller (scripts/compliance/run-ccm.ts) maps
+ * real `AgentReceipt` rows into this shape.
  */
 export type ReceiptRow = {
   id: string;
@@ -19,11 +18,11 @@ export type ReceiptRow = {
 };
 
 /**
- * TODO(governed-receipts): swap for the real @sports/governed
- * `verifyReceiptEd25519(signed, publicKeyPem) => {ok:true}|{ok:false,reason}`
- * once feat/governed-receipts merges. Until then this is an injected seam so
- * callers (and tests) can mock verification without a real receipt store or
- * key material.
+ * Injected verification seam — callers (and tests) can mock verification
+ * without a real receipt store or key material. The real caller
+ * (scripts/compliance/run-ccm.ts) wires this to
+ * `verifyReceiptAgainstKeyring` from `@sports/governed`, using the receipt's
+ * `raw` field to recover the full signed shape.
  */
 export type VerifyFn = (row: ReceiptRow) => Promise<{ ok: boolean; reason?: string }>;
 

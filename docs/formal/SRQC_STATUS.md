@@ -3,7 +3,8 @@
 This document is the one place that says, plainly, what has actually been
 proved, what has actually been built, and what is still open, for the
 Self-Refining Quotient Certificate (SRQC) effort in the AI/agent control
-plane. It is written against `main` as of commit `0c18e091` (merge of #185).
+plane. It is written against `main` as of commit `1c3308b1` (merge of #194,
+which also folds in #186, #187, #188, #191, #192, #193 — see §5 and §9).
 Every SHA, receipt number, and grep result below was re-checked against the
 files in this tree while writing this document, not copied from an earlier
 handoff. Where something could not be verified, that is stated instead of
@@ -129,20 +130,23 @@ documented constant bounds** — `QUOTIENT.md` §4 states this plainly ("the
 induction does not run at §3's reachability bound"). Do not read one number
 as corroborating the other.
 
-**Pending-class quotient / cutoff matrix (W4):** this work exists as commit
-`f8db2a3e` ("formal: machine-checked pending-class quotient/cutoff (W4)")
-and a second identical-message commit `3bf0533f`, both on the **open,
-unmerged** branch `formal/feat/quotient-pending-class` (PR #186) — **not**
-on `main` as of this writing (`git merge-base --is-ancestor f8db2a3e
-origin/main` returns false). Its commit message claims a controlled-vs-
-uncontrolled TLC pair (`PendingClassQuotient.tla`, `NextControlled` vs
-`Next` over a finite `InvIds` set: 25 generated / 8 distinct states for the
-controlled, admission-guarded case with no error; a real CTI reaching
-`GE2` for the uncontrolled case) plus an explicit TLAPS-defer NON-CLAIMS
-note. That is what the commit message says it did — it has not been
-independently re-verified against `main` in this pass because it is not on
-`main`, and its numbers are reported here only as "claimed by the open PR,"
-not as proved-on-main.
+**Pending-class quotient / cutoff matrix (W4):** merged via #186
+(`1605a4c6`) and now on `main`. Re-run directly in this pass, not just
+read from the receipt files:
+`formal/abstract/PendingClassQuotient.tla` with `InvIds = {i1, i2, i3}`:
+- Controlled (`NextControlled`, admission-guarded): `25 states generated,
+  8 distinct states found, 0 states left on queue`, depth 4, `AtMostOne`
+  holds — no error.
+- Uncontrolled (`Next`, no admission guard): `Invariant AtMostOne is
+  violated` — TLC finds a real counterexample reaching `pendingClass = GE2`
+  for `i1` after two `StartAttempt(i1)` transitions (`11 states generated,
+  11 distinct states found, 2 states left on queue`, depth 4).
+
+This is the load-bearing-control demonstration promised by the earlier
+commit message: the admission guard checked in the controlled run is not
+vacuous — remove it and TLC finds a real path to `GE2`. It is still a
+finite-`InvIds` (3-element) model check, not a TLAPS proof (see §6);
+TLAPS/Apalache remain unavailable in this environment.
 
 ---
 
@@ -204,6 +208,19 @@ enforces):
 | M5 — SHADOW/ENFORCE mode for `admitUnderSRQC` (#183) | `6fee6fa3` |
 | M6 — CTI-candidate miner, detection-only (#184, merge commit) | `fce9cef3` |
 | M1 + M2 + M7 — formal refinement + compositional induction + quotient writeup (#185, merge commit) | `0c18e091` |
+| W4 — pending-class quotient/cutoff matrix, `PendingClassQuotient.tla` (#186, merge commit) | `1605a4c6` |
+| KERNEL v1 — on-policy proposal loop, detection/ranking-only (#187, merge commit) | `417d988a` |
+| Governed Receipts + Keyring — `packages/governed`, `AgentReceipt`, `/api/receipts/*` (#188, merge commit) | `61ac843f` |
+| R1 + R6 + R8 — Cash OS, Runway dashboard, Independence gates (#191, squash) | `c5a3a09e` |
+| SOC 2 CCM + ISO 27001 alignment kit, `@sports/compliance` (#192, squash) | `1596bb82` |
+| R3 + R5 — moat/gravity-packet scoring, platform usage meter (#193, squash) | `0285338e` |
+| EU AI Act evidence pack + ENFORCE ramp safety rails (#194, squash) | `1c3308b1` |
+
+Note: #191–#194 are commercial/compliance/governance-evidence work, not
+formal-methods artifacts — they land in this table for SHA traceability
+only; none of them touch `formal/`, `srqc-projection.ts`, or
+`admitUnderSRQC`. `@sports/compliance` (#192) monitors receipts, it does
+not gate them (see its own NON-CLAIMS in `docs/compliance/README.md`).
 
 Formal receipt files (all under `formal/`):
 - `formal/abstract/AbstractClaimExposure.tlc-receipt.txt`
@@ -216,6 +233,9 @@ Formal receipt files (all under `formal/`):
   a real, kept-in-tree TLC FAIL counterexample from earlier development:
   `InvocationClaim.counterexample-found-during-development.txt`)
 - `formal/credit-budget/CreditReservation.tlc-receipt.txt` (+ inductive variant)
+- `formal/abstract/PendingClassQuotient.controlled.tlc-receipt.txt`,
+  `formal/abstract/PendingClassQuotient.uncontrolled.tlc-receipt.txt` (W4,
+  #186)
 - Writeups: `formal/abstract/REFINEMENT.md`, `formal/abstract/QUOTIENT.md`,
   `formal/abstract/ABSTRACT_STRENGTHENING_LOG.md`,
   `formal/live-sports/INDUCTIVE_STRENGTHENING_LOG.md`,
@@ -229,12 +249,11 @@ Formal receipt files (all under `formal/`):
 
 - **Not a parameterized (∀N) proof.** Every TLC result in §3 is a
   fixed-constant / finite-cutoff model-check, not a TLAPS-machine-checked
-  universal statement. A cutoff-matrix-plus-TLAPS-defer artifact
-  (`PendingClassQuotient.tla`) is claimed by the open, unmerged PR #186
-  (`formal/feat/quotient-pending-class`) — it is not on `main` as of this
-  writing, and even that artifact's own commit message describes a
-  TLAPS defer, not a completed TLAPS proof (TLAPS is unavailable in this
-  environment regardless — see below).
+  universal statement. `PendingClassQuotient.tla` (#186, now on `main`) is
+  a controlled-vs-uncontrolled cutoff matrix at a fixed 3-element `InvIds`,
+  not a TLAPS-machine-checked universal statement over unbounded N — it
+  defers TLAPS explicitly, and TLAPS is unavailable in this environment
+  regardless (see below).
 - **Not automatic `.tla` editing by any job.** `cti-miner.ts`'s own header
   states it "NEVER edits, generates, or writes any `.tla` file (or any
   spec)." Every spec change in this repository has been human-authored;
@@ -347,47 +366,67 @@ are real-Postgres integration tests gated on `DATABASE_URL` and are skipped
 without it — confirmed in this pass: without `DATABASE_URL` set, 30 tests
 ran and passed, 26 were skipped.
 
-**Replay script:** no dedicated SRQC ledger-replay script exists on `main`
-as of this writing. An offline projection-replay script
-(`scripts/srqc-replay.ts`) is claimed by the open, unmerged PR #187
-(`feat/srqc-kernel-v1`) — see §9. It is not available to run against `main`
-today.
+**Replay script:** `scripts/srqc-replay.ts` (from #187, now on `main`) is
+an offline, read-only projection-replay tool — pure `projectWindow` fold, no
+database or spec touched. Re-run in this pass against a synthetic two-
+`ATTEMPT_STARTED` window on one invocation:
+
+```bash
+npx tsx scripts/srqc-replay.ts window.json
+```
+
+Real output: projected `pendingCountClass: "GE2"`, `violationCount: 1`,
+process exit code `1` — matches the tool's own documented contract ("exits
+1 if ANY violation was projected, else 0").
 
 ---
 
-## 9. In-flight work (open PRs, not yet on `main`)
+## 9. Since this document was first written (#186, #187, #188 merged; #191–#194 added)
 
-None of the following is on `main`. Descriptions below are what each
-branch's own commit messages claim, not independently re-verified content
-— they are listed here so the reader knows they exist and what they say
-they add, nothing more.
+Everything below was independently spot-checked against `main` in this
+pass (file existence, a real TLC re-run, a real replay-script run — see
+§3 and §8), not just copied from commit messages.
 
-- **#186 — `formal/feat/quotient-pending-class`** — "formal: machine-checked
-  pending-class quotient/cutoff (W4)." Claims a new
-  `PendingClassQuotient.tla` isolating the `pendingCountClass`
-  counter-abstraction over a finite `InvIds` set, a controlled-vs-
-  uncontrolled TLC receipt pair (controlled: invariant holds; uncontrolled:
-  a real CTI reaches `GE2`, showing the admission guard is load-bearing),
-  and an appended "Machine-checked pending-class quotient (W4)" section in
-  `QUOTIENT.md` with explicit NON-CLAIMS (finite `InvIds`, TLAPS/Apalache
-  still unavailable).
-- **#187 — `feat/srqc-kernel-v1`** — "KERNEL v1 — on-policy proposal loop."
-  Claims a closed on-policy self-refinement loop stacked on the CTI miner
-  and `SrqcVersion` envelope: an `ind_inv_proposal` table and
-  `emitProposalsFromOpenCtis` emitter, a ranking-only
-  `evaluateWindowWithSkills` / `runSkillAugmentedCti` pair, an extended
-  `admitUnderSRQC` (still SHADOW-default / lab-only ENFORCE) with an
-  `admitUnderSRQCWithVersion` logging wrapper, a script-only
+- **#186 — `formal/feat/quotient-pending-class`, merge `1605a4c6`.**
+  `PendingClassQuotient.tla` (+ `.cfg`/`.uncontrolled.cfg`) is on `main`;
+  re-run in this pass with real TLC output (§3). `QUOTIENT.md` carries the
+  appended W4 section with its NON-CLAIMS (finite `InvIds`, TLAPS/Apalache
+  still unavailable — confirmed, see §6).
+- **#187 — `feat/srqc-kernel-v1`, merge `417d988a`.** Adds a closed
+  on-policy self-refinement loop stacked on the CTI miner and `SrqcVersion`
+  envelope: `ind_inv_proposal` table + `emitProposalsFromOpenCtis` emitter,
+  a ranking-only `evaluateWindowWithSkills` / `runSkillAugmentedCti` pair,
+  an extended `admitUnderSRQC` (still SHADOW-default / lab-only ENFORCE)
+  with an `admitUnderSRQCWithVersion` logging wrapper, a script-only
   `acceptProposalAndActivate` as the sole version-activation path, a
-  discrete-Laplace DP metrics publisher, and an offline
-  `scripts/srqc-replay.ts` replay tool — described in its own commit
-  message as detection/ranking-only with no control-plane behavior change.
-- **#188 — `feat/governed-receipts`** — "Governed Receipts + Keyring."
-  Claims signed, publicly verifiable receipts (ed25519) for gated AI/agent
-  tool calls via a new `packages/governed` package, a keyring with
-  rotate/retire/revoke, an additive `AgentReceipt` Prisma model wiring
-  `admitUnderSRQC` and `readRecentEvents` into a `GateOutput` contract, new
-  `/api/receipts/*` routes, and compliance-posture docs — its own commit
-  message states SHADOW is the default posture (a REFUSE only takes effect
-  when the caller explicitly passes `ctx.mode: "ENFORCE"`) and that
-  `formal/**` and `cti-miner.ts` are untouched.
+  discrete-Laplace DP metrics publisher, and `scripts/srqc-replay.ts`
+  (re-run in this pass, §8) — detection/ranking-only, no control-plane
+  behavior change; not independently re-verified beyond what §8 exercises.
+- **#188 — `feat/governed-receipts`, merge `61ac843f`.** Signed, publicly
+  verifiable receipts (ed25519) for gated AI/agent tool calls via
+  `packages/governed`: `signReceiptEd25519`/`verifyReceiptEd25519`, a
+  keyring with rotate/retire/revoke (`verifyReceiptAgainstKeyring` checks
+  revocation, not just cryptographic validity), an additive `AgentReceipt`
+  Prisma model, `GET /api/receipts/[id]`, `POST /api/receipts/verify`, and
+  `GET /.well-known/receipt-keys.json`. SHADOW remains the default posture
+  — a REFUSE only takes effect when the caller explicitly passes
+  `ctx.mode: "ENFORCE"`; `formal/**` and `cti-miner.ts` are untouched.
+  `docs/devrel/DEMO_SCRIPT.md` walks force-REFUSE → open receipt → verify
+  signature end to end; re-run fresh in this pass (real receiptId
+  `bdbe80e9-dda2-49bd-accd-0886f48f14be`, real signature).
+- **#191–#194 — commercial/compliance/governance-evidence work, not
+  formal-methods artifacts.** Cash OS/Runway/Independence gates (#191),
+  SOC 2 CCM + ISO 27001 alignment kit (#192, `@sports/compliance` —
+  monitors receipts via `AgentReceipt`, does not gate them), moat/gravity-
+  packet scoring + platform usage meter (#193), EU AI Act evidence pack +
+  ENFORCE ramp safety rails (#194, `enforce-gate.ts`'s `canRampEnforce()`
+  is a pure predicate — confirmed still unconsumed by any production
+  route/worker/cron as of #194's own PR description). None of the four
+  touch `formal/`, `srqc-projection.ts`, or `admitUnderSRQC`.
+
+**Nothing else is currently open against the SRQC pipeline.** Checked
+`gh`-equivalent open-PR listing for this repo in this pass: the only open
+PR with a formal-adjacent title is #180 (`feat(formal-foundry): ...
+IC3/Apalache package`), which is a separate `formal-foundry` package, not
+this document's SRQC pipeline — not further investigated here since it is
+out of this document's scope.
