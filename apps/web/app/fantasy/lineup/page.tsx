@@ -4,7 +4,6 @@ import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Start-Sit Helper · Galaxy Fantasy",
@@ -27,7 +26,7 @@ export default async function LineupPage() {
   return (
     <FantasyShell
       eyebrow="Start-Sit Helper"
-      accent={BRAND_COLORS.ionMagenta}
+      accent="plasma"
       title={<>Start the points. Skip the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>guessing</span>.</>}
       intro="The strongest start/sit call for the roster you already have, with the leverage of every call (how much you'd lose starting the next-best bench option) and a floor-to-ceiling band. Mark a player out and watch it re-rank."
       note={pool

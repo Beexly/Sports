@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
-import { BRAND_COLORS } from "@/lib/brand";
+import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { loadSourceLiveEvidence } from "@/lib/data-sources/live-evidence";
 
 export const dynamic = "force-dynamic";
@@ -66,7 +66,7 @@ const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[]
 
 const STATUS_TONE: Record<ToolStatus, string> = {
   live: "text-orbital-cyan",
-  "partly live": "text-soft-ultraviolet",
+  "partly live": "text-ultraviolet",
   gated: "text-ion-2",
 };
 
@@ -82,24 +82,24 @@ export default async function FantasyHubPage({
 
   const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
   const qbAgeLift = evidence.summary.qbAge34Lift;
-  const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "UNKNOWN";
+  const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "—";
   const latestWeek =
     evidence.summary.latestUsageSeason && evidence.summary.latestUsageWeek
       ? `${evidence.summary.latestUsageSeason} W${evidence.summary.latestUsageWeek}`
-      : "UNKNOWN";
+      : "—";
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="relative isolate flex min-h-screen flex-col bg-obsidian">
       <GeneratedPlate assetId="fantasy-constellation" className="-z-10 opacity-25" />
       <Nav />
       <main id="main-content" className="flex-1">
         <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
             <div>
-              <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-6xl">
+              <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
                 Real roster first. No fake projections.
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-ink-300">
+              <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
                 Galaxy Fantasy is being rebuilt around the same rule as the picks product:
                 if the data is not real, the advice stays locked. You can connect your real
                 league roster now; projection-driven recommendations open only after the
@@ -121,7 +121,7 @@ export default async function FantasyHubPage({
               </div>
             </div>
             <div className="border border-mineral bg-eclipse p-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Fantasy readiness
               </p>
               <dl className="mt-5 grid grid-cols-3 gap-3">
@@ -129,7 +129,7 @@ export default async function FantasyHubPage({
                 <ReadinessMetric label="Projections" value="gated" />
                 <ReadinessMetric label="Actions" value="no-write" />
               </dl>
-              <p className="mt-4 text-sm leading-6 text-ink-300">
+              <p className="mt-4 text-sm leading-6 text-ion-1">
                 This page no longer presents fictional player pools as the primary product.
                 Demo tools can remain internal methodology references, but the public path is data-first.
               </p>
@@ -140,13 +140,13 @@ export default async function FantasyHubPage({
         <section className="border-b border-mineral px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-orbital-cyan">
                 Real NFL usage backbone
               </p>
-              <h2 className="mt-2 font-display text-3xl font-semibold text-white">
+              <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white">
                 Fantasy starts with rows, then earns recommendations.
               </h2>
-              <p className="mt-3 text-sm leading-6 text-ink-300">
+              <p className="mt-3 text-sm leading-6 text-ion-1">
                 The free-first layer is already reading live player-week usage, roster, and
                 schedule files. It can prove usage context and reject weak narrative angles today;
                 it still cannot unlock projection-driven lineup, waiver, trade, DFS, or pick'em
@@ -182,7 +182,7 @@ export default async function FantasyHubPage({
               />
               <EvidenceMetric
                 label="Rejected narratives"
-                value={evidence.summary.birthdayUsageConclusion ?? "UNKNOWN"}
+                value={evidence.summary.birthdayUsageConclusion ?? "—"}
                 detail={`${formatCount(evidence.summary.birthdayWindowObservations)} birthday-window and ${formatCount(evidence.summary.careerMilestone50Observations)} milestone observations.`}
               />
             </div>
@@ -191,7 +191,7 @@ export default async function FantasyHubPage({
 
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <h2 className="font-display text-3xl font-semibold text-white">Live-first build order</h2>
+            <h2 className="font-display text-3xl font-semibold text-ion-white">Live-first build order</h2>
             <div className="mt-6 grid gap-4 lg:grid-cols-3">
               {LIVE_FIRST.map((item) => (
                 <Link
@@ -199,11 +199,11 @@ export default async function FantasyHubPage({
                   href={item.href}
                   className="surface-card group flex min-h-56 flex-col p-5 transition-transform duration-200 hover:-translate-y-1"
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-orbital-cyan">
                     {item.status}
                   </p>
-                  <h3 className="mt-3 text-xl font-semibold text-white">{item.title}</h3>
-                  <p className="mt-3 flex-1 text-sm leading-6 text-ink-300">{item.body}</p>
+                  <h3 className="mt-3 text-xl font-semibold text-ion-white">{item.title}</h3>
+                  <p className="mt-3 flex-1 text-sm leading-6 text-ion-1">{item.body}</p>
                   <span className="mt-5 text-sm font-semibold text-orbital-cyan">Open</span>
                 </Link>
               ))}
@@ -215,17 +215,17 @@ export default async function FantasyHubPage({
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <h2 className="font-display text-3xl font-semibold text-white">Every tool, with its honest status</h2>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-ink-300">
+                <h2 className="font-display text-3xl font-semibold text-ion-white">Every tool, with its honest status</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
                   One directory, no dead ends. Each tool links straight through and shows whether it&apos;s
                   live, partly live, or gated on a real data feed. Never a design delay, never a fictional input.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-sm font-semibold">
-                <Link href="/fantasy/baseline" className="text-orbital-cyan hover:text-white">
+                <Link href="/fantasy/baseline" className="text-orbital-cyan hover:text-ion-white">
                   LineStar / Elite baseline
                 </Link>
-                <Link href="/integrations" className="text-orbital-cyan hover:text-white">
+                <Link href="/integrations" className="text-orbital-cyan hover:text-ion-white">
                   Data requirements
                 </Link>
               </div>
@@ -233,9 +233,9 @@ export default async function FantasyHubPage({
             <div className="mt-6 overflow-hidden border border-mineral">
               {TOOL_DIRECTORY.map(([tool, requirement, href, status]) => (
                 <Link key={tool} href={href} className="group grid gap-3 border-b border-mineral bg-eclipse px-4 py-3 transition-colors last:border-b-0 hover:bg-carbon sm:grid-cols-[0.42fr_1fr_auto] sm:items-center">
-                  <p className="font-semibold text-white group-hover:text-orbital-cyan">{tool}</p>
-                  <p className="text-sm leading-6 text-ink-300">{requirement}</p>
-                  <span className={`font-mono text-[10px] uppercase tracking-[0.16em] ${STATUS_TONE[status]}`}>
+                  <p className="font-semibold text-ion-white group-hover:text-orbital-cyan">{tool}</p>
+                  <p className="text-sm leading-6 text-ion-1">{requirement}</p>
+                  <span className={`font-mono text-[11px] uppercase tracking-[0.16em] ${STATUS_TONE[status]}`}>
                     {status}
                   </span>
                 </Link>
@@ -250,7 +250,7 @@ export default async function FantasyHubPage({
 }
 
 function formatCount(value: number | null | undefined): string {
-  if (typeof value !== "number" || !Number.isFinite(value)) return "UNKNOWN";
+  if (typeof value !== "number" || !Number.isFinite(value)) return "—";
   return new Intl.NumberFormat("en-US").format(value);
 }
 
@@ -261,8 +261,8 @@ function formatPercent(value: number): string {
 function EvidenceMetric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {
   return (
     <div className="border border-mineral bg-eclipse p-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">{label}</p>
-      <p className="mt-2 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">{label}</p>
+      <p className={`mt-2 text-2xl font-semibold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{value}</p>
       <p className="mt-2 text-xs leading-5 text-ion-2">{detail}</p>
     </div>
   );
@@ -271,8 +271,8 @@ function EvidenceMetric({ label, value, detail }: { label: string; value: string
 function ReadinessMetric({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="border border-mineral bg-carbon px-3 py-2">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
-      <dd className="mt-1 font-numerals text-lg font-semibold text-white">{value}</dd>
+      <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2">{label}</dt>
+      <dd className={`mt-1 text-lg font-semibold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{value}</dd>
     </div>
   );
 }

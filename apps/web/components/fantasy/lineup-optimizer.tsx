@@ -8,10 +8,12 @@
 import { useMemo, useState } from "react";
 import { POS_HEX, type Player } from "@/lib/fantasy/players";
 import { DEFAULT_ROSTER_IDS, rosterFromIds, sampleRoster, optimize, startReason } from "@/lib/fantasy/lineup";
-import { BRAND_COLORS } from "@/lib/brand";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
-const VERDICT_HEX = { anchor: BRAND_COLORS.orbitalCyan, start: BRAND_COLORS.softUltraviolet, close: BRAND_COLORS.ionMagenta } as const;
+// Verdict tones (design tokens): anchor = data-certain (cyan), start = model
+// call (ultraviolet), close = borderline call (caution). Never plasma for a
+// borderline/negative read.
+const VERDICT_TONE = { anchor: "var(--orbital-cyan)", start: "var(--ultraviolet)", close: "var(--caution)" } as const;
 
 /**
  * @param pool When provided, the LIVE graded pool resolved server-side — the
@@ -37,24 +39,24 @@ export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
     <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
       {/* optimal lineup */}
       <div className="surface-card overflow-hidden p-0">
-        <div className="flex items-center justify-between border-b px-5 py-3" style={{ borderColor: BRAND_COLORS.steelGray }}>
-          <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Optimal lineup</p>
-          <p className="font-mono text-sm" style={{ color: BRAND_COLORS.orbitalCyan }}>{opt.total} proj</p>
+        <div className="flex items-center justify-between border-b border-mineral px-5 py-3">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Optimal lineup</p>
+          <p className="font-mono text-sm tabular-nums text-orbital-cyan">{opt.total} proj</p>
         </div>
         <div>
           {opt.starters.map((call) => {
             const c = POS_HEX[call.player.pos];
-            const vc = VERDICT_HEX[call.verdict];
+            const vc = VERDICT_TONE[call.verdict];
             return (
-              <div key={call.slot + call.player.id} className="flex items-center gap-3 border-b px-5 py-3 last:border-b-0" style={{ borderColor: BRAND_COLORS.steelGray }}>
-                <span className="w-10 shrink-0 font-mono text-[11px] font-bold text-ink-400">{call.slot}</span>
+              <div key={call.slot + call.player.id} className="flex items-center gap-3 border-b border-mineral px-5 py-3 last:border-b-0">
+                <span className="w-10 shrink-0 font-mono text-[11px] font-bold text-ion-2">{call.slot}</span>
                 <span className="rounded px-1.5 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{call.player.pos}</span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-white">{call.player.name}</p>
-                  <p className="text-[11px] text-ink-500">{startReason(call)}</p>
+                  <p className="truncate text-sm font-semibold text-ion-white">{call.player.name}</p>
+                  <p className="text-[11px] text-ion-2">{startReason(call)}</p>
                 </div>
-                <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase" style={{ color: vc, background: `${vc}14`, border: `1px solid ${vc}44` }}>{call.verdict}</span>
-                <span className="w-10 shrink-0 text-right font-mono text-sm text-white">{call.player.proj}</span>
+                <span className="shrink-0 rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase" style={{ color: vc, background: `color-mix(in srgb, ${vc} 8%, transparent)`, border: `1px solid color-mix(in srgb, ${vc} 27%, transparent)` }}>{call.verdict}</span>
+                <span className="w-10 shrink-0 text-right font-mono text-sm tabular-nums text-ion-white">{call.player.proj}</span>
               </div>
             );
           })}
@@ -64,34 +66,34 @@ export function LineupOptimizer({ pool }: { pool?: readonly Player[] } = {}) {
       {/* bench + totals + what-if */}
       <div className="space-y-4">
         <div className="surface-card p-5">
-          <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Projected band</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Projected band</p>
           <div className="mt-3 grid grid-cols-3 gap-3 text-center">
-            <div><p className="font-display text-2xl" style={{ color: BRAND_COLORS.ionMagenta }}>{opt.floor}</p><p className="text-[10px] text-ink-500">floor</p></div>
-            <div><p className="font-display text-2xl text-white">{opt.total}</p><p className="text-[10px] text-ink-500">median</p></div>
-            <div><p className="font-display text-2xl" style={{ color: BRAND_COLORS.orbitalCyan }}>{opt.ceiling}</p><p className="text-[10px] text-ink-500">ceiling</p></div>
+            <div><p className="font-numerals text-2xl font-semibold tabular-nums text-ion-1">{opt.floor}</p><p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">floor</p></div>
+            <div><p className="font-numerals text-2xl font-semibold tabular-nums text-ion-white">{opt.total}</p><p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">median</p></div>
+            <div><p className="font-numerals text-2xl font-semibold tabular-nums text-orbital-cyan">{opt.ceiling}</p><p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">ceiling</p></div>
           </div>
         </div>
 
         <div className="surface-card p-5">
-          <p className="mb-2 text-xs uppercase tracking-[0.16em] text-ink-500">Bench · tap any player to mark out</p>
+          <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Bench · tap any player to mark out</p>
           <div className="space-y-1.5">
             {[...fullRoster].sort((a, b) => b.proj - a.proj).map((pl) => {
               const isOut = out.has(pl.id);
               const isStarter = opt.starters.some((c) => c.player.id === pl.id);
               const c = POS_HEX[pl.pos];
               return (
-                <button key={pl.id} type="button" onClick={() => toggleOut(pl.id)} className="flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left hover:bg-white/5 focus-visible:outline-none" style={{ opacity: isOut ? 0.4 : 1 }}>
+                <button key={pl.id} type="button" onClick={() => toggleOut(pl.id)} className="flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left hover:bg-slate/60 focus-visible:outline-none" style={{ opacity: isOut ? 0.4 : 1 }}>
                   <span className="flex items-center gap-2 truncate">
                     <span className="rounded px-1.5 py-0.5 font-mono text-[9px] font-bold" style={{ color: c, background: `${c}18` }}>{pl.pos}</span>
-                    <span className={`truncate text-sm ${isOut ? "text-ink-500 line-through" : "text-white"}`}>{pl.name}</span>
-                    {isStarter && !isOut && <span className="text-[9px] uppercase tracking-wider" style={{ color: BRAND_COLORS.orbitalCyan }}>start</span>}
+                    <span className={`truncate text-sm ${isOut ? "text-ion-3 line-through" : "text-ion-white"}`}>{pl.name}</span>
+                    {isStarter && !isOut && <span className="font-mono text-[9px] uppercase tracking-wider text-orbital-cyan">start</span>}
                   </span>
-                  <span className="font-mono text-[11px] text-ink-500">{isOut ? "OUT" : pl.proj}</span>
+                  <span className="font-mono text-[11px] tabular-nums text-ion-2">{isOut ? "OUT" : pl.proj}</span>
                 </button>
               );
             })}
           </div>
-          <p className="mt-3 text-[10px] text-ink-600">Marking a player out re-solves the optimal lineup instantly.</p>
+          <p className="mt-3 text-xs text-ion-2">Marking a player out re-solves the optimal lineup instantly.</p>
         </div>
       </div>
     </div>

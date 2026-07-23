@@ -5,7 +5,6 @@ import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Trade Analyzer · Galaxy Fantasy",
@@ -30,7 +29,7 @@ export default async function TradePage() {
   return (
     <FantasyShell
       eyebrow="Trade Analyzer"
-      accent={BRAND_COLORS.softUltraviolet}
+      accent="ultraviolet"
       title={<>Know who <span className="gse-editorial" style={{ fontSize: "1.08em" }}>wins</span> the deal.</>}
       intro="Build both sides and the analyzer prices each on value over replacement, projection, trend, and injury risk, then tells you the part that matters: is it fair, does it consolidate your roster into a starter, are you buying risk at a discount, and which side wins the headliner."
       note={pool ? LIVE_NOTE : ILLUSTRATIVE_NOTE}
