@@ -77,6 +77,35 @@ export async function recordFormalIncident(
   );
 }
 
+export type FormalIncidentReviewOutcome = "true_positive" | "false_positive";
+
+export interface RecordFormalIncidentReviewInput {
+  readonly id: string;
+  readonly outcome: FormalIncidentReviewOutcome;
+  readonly reviewedBy: string;
+}
+
+/**
+ * W6 prerequisite — record a human review label on an existing
+ * `formal_incident` row. Orthogonal to `status` (see the model's own doc
+ * comment in schema.prisma): this answers "was the violation real," not
+ * "is anyone still looking at it." Idempotent by construction — a repeat
+ * call simply overwrites the label with the latest reviewer's judgment;
+ * there is no history of prior labels, by design (this is a current-belief
+ * field, not an audit log).
+ */
+export async function recordFormalIncidentReview(
+  sql: ControlSqlClient,
+  input: RecordFormalIncidentReviewInput,
+): Promise<void> {
+  await sql.query(
+    `UPDATE "formal_incident"
+        SET "reviewOutcome" = $2, "reviewedAt" = now(), "reviewedBy" = $3
+      WHERE "id" = $1`,
+    [input.id, input.outcome, input.reviewedBy],
+  );
+}
+
 // ─── SrqcVersion register ───────────────────────────────────────────────────
 
 export interface ActiveSrqcVersion {
