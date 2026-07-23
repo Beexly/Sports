@@ -30,6 +30,7 @@
 import type { ControlSqlClient } from "./control-store";
 import { getActiveSrqcVersion } from "./formal-incident";
 import type { ActiveSrqcVersion } from "./formal-incident";
+import { classifyPendingCount } from "./quotient-map";
 
 // ─── Abstract domain (the seed of α's codomain) ─────────────────────────────
 
@@ -180,8 +181,7 @@ export function projectWindow(
     const pending = [...a.startedAttempts].filter(
       (id) => !a.terminalAttempts.has(id),
     ).length;
-    const pendingCountClass: PendingCountClass =
-      pending <= 0 ? "ZERO" : pending === 1 ? "ONE" : "GE2";
+    const pendingCountClass: PendingCountClass = classifyPendingCount(pending);
     out.push({
       invocationId,
       claimPhase: a.claimTerminal ? "TERMINAL" : "OPEN",
