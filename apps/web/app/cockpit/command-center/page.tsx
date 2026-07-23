@@ -166,7 +166,7 @@ export default async function CommandCenterPage() {
 
       <p data-testid="command-center-generated-at" className="text-[10px] uppercase tracking-widest text-ion-3">
         Generated {new Date(feed.generatedAt).toLocaleString()} · Jarvis {feed.jarvisVersion} ·{" "}
-        <Link href="/cockpit/command-center" prefetch={false} className="text-brand-400 hover:text-brand-300">
+        <Link href="/cockpit/command-center" prefetch={false} className="text-plasma hover:text-plasma-glow">
           refresh
         </Link>
       </p>

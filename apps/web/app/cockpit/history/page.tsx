@@ -201,7 +201,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
               const qs = new URLSearchParams(searchParams as Record<string, string>);
               return `/api/cockpit/history/export${qs.toString() ? `?${qs.toString()}` : ""}`;
             })()}
-            className="self-start rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-1.5 text-xs font-semibold text-ion-1 transition-colors hover:border-brand-700 hover:bg-brand-900/40 hover:text-brand-100 sm:self-end focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950"
+            className="self-start rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-1.5 text-xs font-semibold text-ion-1 transition-colors hover:border-plasma/50 hover:bg-plasma/10 hover:text-plasma-glow sm:self-end focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian"
             download
             aria-label="Download the current ledger view as CSV (admin only)"
           >
@@ -221,7 +221,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         <div className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-6">
           <Stat label="Showing" value={String(visibleCount)} />
           <Stat label="Public-eligible" value={String(eligibleCount)} accent="text-verify" />
-          <Stat label="Learning-eligible" value={String(learningCount)} accent="text-brand-400" />
+          <Stat label="Learning-eligible" value={String(learningCount)} accent="text-plasma" />
           <Stat label="With snapshot" value={String(snapshotCount)} accent="text-ion-1" />
           <Stat label="Wins / Losses" value={`${byResult.WIN} / ${byResult.LOSS}`} />
           <Stat label="Push / Void / Pend" value={`${byResult.PUSH} / ${byResult.VOID} / ${byResult.PENDING}`} accent="text-ion-2" />
@@ -280,7 +280,7 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 </div>
                 <div className="mt-1 h-2 rounded bg-obsidian/70">
                   <div
-                    className="h-2 rounded bg-brand-500"
+                    className="h-2 rounded bg-plasma"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
@@ -332,9 +332,9 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 href={href}
                 aria-current={active ? ("page" as const) : undefined}
                 className={[
-                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
+                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-brand-800 text-ion-white"
+                    ? "bg-plasma text-eclipse"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -358,9 +358,9 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={[
-                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
+                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-brand-800 text-ion-white"
+                    ? "bg-plasma text-eclipse"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -384,9 +384,9 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={[
-                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
+                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-brand-800 text-ion-white"
+                    ? "bg-plasma text-eclipse"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -410,9 +410,9 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={[
-                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
+                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-brand-800 text-ion-white"
+                    ? "bg-plasma text-eclipse"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -447,9 +447,9 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={[
-                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-950",
+                  "rounded px-2 py-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-plasma focus-visible:ring-offset-1 focus-visible:ring-offset-obsidian",
                   active
-                    ? "bg-brand-800 text-ion-white"
+                    ? "bg-plasma text-eclipse"
                     : "bg-obsidian/70 text-ion-2 hover:text-ion-white",
                 ].join(" ")}
               >
@@ -465,7 +465,10 @@ export default async function CockpitHistoryPage({ searchParams }: HistoryPagePr
         data-testid="history-ledger"
         className="overflow-x-auto rounded-2xl border border-titanium/40 bg-eclipse/40"
       >
-        <table className="w-full min-w-[1200px] text-[11px]">
+        <table
+          aria-label={`Historical pick ledger — last ${TAKE} picks, descending by generated time`}
+          className="w-full min-w-[1200px] text-[11px]"
+        >
           <thead className="border-b border-titanium/40 bg-obsidian/50 text-left text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="px-3 py-2">Generated</th>
@@ -604,7 +607,7 @@ function Flag({ tone, children }: { tone: "yellow" | "gray" | "brand" | "green";
   const cls: Record<typeof tone, string> = {
     yellow: "bg-caution/40 text-caution",
     gray: "bg-obsidian/70 text-ion-2",
-    brand: "bg-brand-900/40 text-brand-300",
+    brand: "bg-plasma/40 text-plasma",
     green: "bg-verify/40 text-verify",
   };
   return (

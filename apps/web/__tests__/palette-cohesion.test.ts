@@ -47,7 +47,7 @@ const ALLOWLIST: Record<string, ReadonlySet<string>> = {
 };
 
 const STALE =
-  /\b(?:text|bg|border|divide|ring|from|to|via|placeholder|shadow|fill|stroke|hover:bg|hover:text|hover:border|focus:border|focus:ring)-(?:gray|slate|zinc|neutral|stone|green|yellow|emerald|orange|red|rose|pink|fuchsia|blue|purple|violet|indigo|cyan|sky|teal|lime|amber)-\d{2,3}(?:\/\d+)?\b/g;
+  /\b(?:text|bg|border|divide|ring|ring-offset|from|to|via|placeholder|shadow|fill|stroke|hover:bg|hover:text|hover:border|hover:ring-offset|focus:border|focus:ring|focus:ring-offset|focus-visible:ring-offset)-(?:gray|slate|zinc|neutral|stone|green|yellow|emerald|orange|red|rose|pink|fuchsia|blue|purple|violet|indigo|cyan|sky|teal|lime|amber)-\d{2,3}(?:\/\d+)?\b/g;
 
 function listTsx(dir: string): string[] {
   const acc: string[] = [];

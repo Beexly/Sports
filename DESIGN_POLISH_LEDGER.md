@@ -30,7 +30,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[✓]` audited, alread
 | 16 | Narrative worlds | /house, /academy, /engine, /fable, /human, /deck, /observatory, /intelligence, /cipher, /vault, /content-lab, /integrations, /promotions | [x] | all BRAND_COLORS/ink/brand-* purged; observatory invisible-emphasis fix; promotions plasma CTA w/ dark ink; deck dots → token vars; cipher terminal finished; fable + integrations already clean |
 | 17 | Legal + misc | /terms, /privacy, /responsible-play, /preview/[sport]/[slug] | [x] | responsible-play: fixed a live render-crash bug (BRAND_COLORS used without import) + full token purge + a11y heading fix; preview page eyebrow idiom + heading; terms/privacy already reference-quality |
 | 18 | Game room + today | /room/[gameId], /today, /brief | [x] | room: finished earlier cyan cleanup, dead hover no-ops fixed, heading-level a11y fix; today + brief: BRAND_COLORS inline styles → tokens, plasma CTA idiom |
-| 19 | Cockpit A | /cockpit, /cockpit/command-center, /cockpit/agents, /cockpit/tasks, /cockpit/history | [ ] | tokens done; polish pass |
+| 19 | Cockpit A | /cockpit, /cockpit/command-center, /cockpit/agents, /cockpit/tasks, /cockpit/history | [x] | legacy brand-* aliases → plasma; found + fixed a palette-cohesion CI blind spot (ring-offset-gray-950 slipped past the regex, now closed sitewide); tasks queue reordered urgent-first w/ tone-driven badges; dense table gains aria-label |
 | 20 | Cockpit B | remaining /cockpit/* (~15 routes) | [ ] | tokens done; polish pass |
 | 21 | Admin + statking | /admin/*, /admin/statking/* | [ ] | lowest priority |
 | 22 | Shared chrome | Nav, MobileNav, Footer, shared UI components | [ ] | |
@@ -60,3 +60,4 @@ Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
 - 2026-07-23 07:40 — Cycle 15 (content surfaces) done: 15 files, 307 targeted + 151 tangential tests green.
 - 2026-07-23 07:52 — Cycle 16 (narrative worlds) done: 12 files, 552 targeted + 73 tangential tests green.
 - 2026-07-23 12:45 — Cycles 17+18 (legal/misc/game room) done: 7 files, 80 targeted + 55 tangential tests green. (Session switched Fable 5 → Sonnet 5 mid-loop after hitting a usage limit; loop continues unaffected.)
+- 2026-07-23 12:48 — Cycle 19 (cockpit A) done: 5 files, 333 targeted + 213 tangential tests green. Extended palette-cohesion's STALE regex to cover ring-offset-*/focus-visible:ring-offset-* (closes the gap cycle 19 found).

@@ -477,7 +477,7 @@ export default async function CockpitOverview() {
               </h2>
               <Link
                 href="/cockpit/history"
-                className="text-[11px] text-brand-400 hover:text-brand-300"
+                className="text-[11px] text-plasma hover:text-plasma-glow"
               >
                 Full ledger →
               </Link>
@@ -492,7 +492,7 @@ export default async function CockpitOverview() {
                     <p className="truncate font-medium text-ion-1">
                       {p.selection}
                       {p.isFeatured && (
-                        <span className="ml-2 rounded bg-brand-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-brand-300">
+                        <span className="ml-2 rounded bg-plasma/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-plasma-glow">
                           Featured
                         </span>
                       )}
@@ -557,7 +557,7 @@ export default async function CockpitOverview() {
             href="/cockpit"
             data-testid="cockpit-refresh-link"
             prefetch={false}
-            className="text-brand-400 hover:text-brand-300"
+            className="text-plasma hover:text-plasma-glow"
           >
             refresh
           </Link>
