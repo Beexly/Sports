@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { BRAND_NAME } from "@/lib/brand";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export default function AuthErrorPage({
   searchParams,
@@ -18,15 +20,19 @@ export default function AuthErrorPage({
     errorMessages["Default"]!;
 
   return (
-    <div className="min-h-screen bg-obsidian flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        <div className="bg-carbon border border-titanium rounded-2xl p-8 text-center">
-          <div className="w-16 h-16 bg-alert/10 rounded-full flex items-center justify-center mx-auto mb-6">
+    <div className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-obsidian px-4 py-12">
+      {/* Atmosphere — same calm deep-space plate as /auth/signin */}
+      <GeneratedPlate assetId="intro-galaxy" className="-z-10 opacity-20" />
+
+      <div className="w-full max-w-sm">
+        <div className="rounded-2xl border border-mineral bg-carbon p-8 text-center shadow-2xl shadow-black/60">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-alert/10">
             <svg
-              className="w-8 h-8 text-alert"
+              className="h-8 w-8 text-alert"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -36,19 +42,24 @@ export default function AuthErrorPage({
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-3">Sign-in didn&apos;t go through</h1>
-          <p className="text-ion-2 mb-6">{message}</p>
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+            Member access
+          </p>
+          <h1 className="mt-3 text-2xl font-bold tracking-tight text-ion-white">
+            Sign-in didn&apos;t go through
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-ion-1">{message}</p>
           <Link
             href="/auth/signin"
-            className="inline-block w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl transition-colors"
+            className="mt-6 flex min-h-[44px] w-full items-center justify-center rounded-xl bg-plasma px-4 py-3 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
           >
             Try sign-in again
           </Link>
           <Link
             href="/"
-            className="inline-block mt-3 text-ion-3 hover:text-ion-1 text-sm transition-colors"
+            className="mt-4 inline-block text-sm text-ion-1 transition-colors hover:text-ion-white"
           >
-            Back to Home
+            &larr; Back to {BRAND_NAME}
           </Link>
         </div>
       </div>

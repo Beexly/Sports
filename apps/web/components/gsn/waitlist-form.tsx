@@ -30,7 +30,9 @@ import {
 type Status = "idle" | "submitting" | "done" | "error";
 
 const INPUT_CLASS =
-  "mt-1 w-full rounded-md border border-white/15 bg-transparent px-3 py-2";
+  "mt-1.5 w-full rounded-md border border-mineral bg-eclipse/60 px-3.5 py-2.5 text-ion placeholder:text-ion-3 transition-colors hover:border-mineral-hi";
+
+const LABEL_CLASS = "block text-sm font-medium text-ion-1";
 
 export function WaitlistForm(): JSX.Element {
   const [started, setStarted] = useState(false);
@@ -142,8 +144,8 @@ export function WaitlistForm(): JSX.Element {
 
   if (status === "done") {
     return (
-      <div role="status" className="rounded-lg border border-verify/40 bg-verify/10 p-6">
-        <p className="text-verify">{WAITLIST_COPY.thankYou}</p>
+      <div role="status" className="rounded-xl border border-verify/40 bg-verify/10 p-6">
+        <p className="text-sm leading-6 text-verify sm:text-base">{WAITLIST_COPY.thankYou}</p>
       </div>
     );
   }
@@ -169,7 +171,7 @@ export function WaitlistForm(): JSX.Element {
         </div>
       )}
       <div>
-        <label htmlFor="wl-name" className="block text-sm font-medium">
+        <label htmlFor="wl-name" className={LABEL_CLASS}>
           {WAITLIST_COPY.fields.fullName}
         </label>
         <input
@@ -193,7 +195,7 @@ export function WaitlistForm(): JSX.Element {
       </div>
 
       <div>
-        <label htmlFor="wl-email" className="block text-sm font-medium">
+        <label htmlFor="wl-email" className={LABEL_CLASS}>
           {WAITLIST_COPY.fields.email}
         </label>
         <input
@@ -217,7 +219,7 @@ export function WaitlistForm(): JSX.Element {
       </div>
 
       <div>
-        <label htmlFor="wl-role" className="block text-sm font-medium">
+        <label htmlFor="wl-role" className={LABEL_CLASS}>
           {WAITLIST_COPY.fields.role}
         </label>
         <select
@@ -246,12 +248,13 @@ export function WaitlistForm(): JSX.Element {
       </div>
 
       <fieldset {...ariaFor("sportInterests")}>
-        <legend className="text-sm font-medium">{WAITLIST_COPY.fields.sportInterests}</legend>
+        <legend className={LABEL_CLASS}>{WAITLIST_COPY.fields.sportInterests}</legend>
         <div className="mt-2 flex flex-wrap gap-3">
           {WAITLIST_SPORT_OPTIONS.map((sport) => (
-            <label key={sport} className="inline-flex items-center gap-2 text-sm">
+            <label key={sport} className="inline-flex items-center gap-2 text-sm text-ion">
               <input
                 type="checkbox"
+                className="h-4 w-4 accent-plasma"
                 checked={sports.includes(sport)}
                 onChange={() => toggleSport(sport)}
               />
@@ -267,7 +270,7 @@ export function WaitlistForm(): JSX.Element {
       </fieldset>
 
       <div>
-        <label htmlFor="wl-stack" className="block text-sm font-medium">
+        <label htmlFor="wl-stack" className={LABEL_CLASS}>
           {WAITLIST_COPY.fields.currentStack}
         </label>
         <textarea
@@ -280,7 +283,7 @@ export function WaitlistForm(): JSX.Element {
       </div>
 
       <div>
-        <label htmlFor="wl-weakest" className="block text-sm font-medium">
+        <label htmlFor="wl-weakest" className={LABEL_CLASS}>
           {WAITLIST_COPY.fields.weakestProcess}
         </label>
         <textarea
@@ -305,7 +308,7 @@ export function WaitlistForm(): JSX.Element {
         />
       </div>
 
-      <label className="flex items-start gap-2 text-sm">
+      <label className="flex items-start gap-2.5 text-sm text-ion">
         <input
           type="checkbox"
           checked={consent}
@@ -313,7 +316,7 @@ export function WaitlistForm(): JSX.Element {
             markStarted();
             setConsent(e.target.checked);
           }}
-          className="mt-1"
+          className="mt-1 h-4 w-4 shrink-0 accent-plasma"
           aria-required={true}
           {...ariaFor("consent")}
         />
@@ -335,7 +338,7 @@ export function WaitlistForm(): JSX.Element {
         type="submit"
         disabled={status === "submitting"}
         aria-busy={status === "submitting"}
-        className="rounded-md border border-white/20 px-4 py-2 font-medium disabled:opacity-60"
+        className="inline-flex min-h-[44px] w-full items-center justify-center rounded-xl bg-plasma px-5 py-3 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow disabled:pointer-events-none disabled:opacity-60 sm:w-auto"
       >
         {status === "submitting" ? "Submitting…" : WAITLIST_COPY.submitLabel}
       </button>

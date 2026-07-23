@@ -24,9 +24,8 @@ const SCAN_DIRS = ["app", "components"].map((d) => resolve(webRoot, d));
 // allowed token strings.
 const ALLOWLIST: Record<string, ReadonlySet<string>> = {
   // The Google sign-in button is a white (light) button per Google's own
-  // brand guidelines; its hover is a light gray, and the page's ambient
-  // gradient blends into brand-700.
-  "app/auth/signin/page.tsx": new Set(["hover:bg-gray-100", "to-blue-600"]),
+  // brand guidelines; its hover is a light gray.
+  "app/auth/signin/page.tsx": new Set(["hover:bg-gray-100"]),
   // Twitter/Discord platform icons — third-party brand colors, not status.
   "app/cockpit/bot-outbox/page.tsx": new Set([
     "border-sky-500/40",

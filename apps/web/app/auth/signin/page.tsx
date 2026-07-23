@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth, signIn } from "@/lib/auth";
 import Link from "next/link";
 import { BRAND_NAME } from "@/lib/brand";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 // ─────────────────────────────────────────────
 // Page
@@ -23,20 +24,15 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const errorMessage = getErrorMessage(searchParams.error);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-obsidian px-4">
-      {/* Background glow */}
-      <div
-        className="pointer-events-none fixed inset-x-0 top-0 -z-10 overflow-hidden blur-3xl"
-        aria-hidden="true"
-      >
-        <div className="relative left-1/2 aspect-[1155/678] w-[36rem] -translate-x-1/2 bg-gradient-to-tr from-brand-700 to-blue-600 opacity-10" />
-      </div>
+    <div className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-obsidian px-4 py-12">
+      {/* Atmosphere — calm deep-space plate, truth rendered on top */}
+      <GeneratedPlate assetId="intro-galaxy" className="-z-10 opacity-20" />
 
       {/* Logo */}
       <Link href="/" className="group mb-10 flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 transition-colors group-hover:bg-brand-500">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-plasma transition-colors group-hover:bg-plasma-glow">
           <svg
-            className="h-5 w-5 text-white"
+            className="h-5 w-5 text-plasma-ink"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
@@ -50,23 +46,28 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
             />
           </svg>
         </div>
-        <span className="text-xl font-bold tracking-tight text-white">
+        <span className="text-xl font-bold tracking-tight text-ion-white">
           {BRAND_NAME}
         </span>
       </Link>
 
       {/* Card */}
-      <div className="w-full max-w-sm rounded-2xl border border-titanium bg-carbon p-8 shadow-2xl shadow-black/60">
+      <div className="w-full max-w-sm rounded-2xl border border-mineral bg-carbon p-8 shadow-2xl shadow-black/60">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-white">Sign in to Galaxy Sports Edge</h1>
-          <p className="mt-1.5 text-sm text-ion-2">
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+            Member access
+          </p>
+          <h1 className="mt-3 text-2xl font-bold tracking-tight text-ion-white">
+            Sign in to {BRAND_NAME}
+          </h1>
+          <p className="mt-1.5 text-sm text-ion-1">
             Pick up where you left the signal.
           </p>
         </div>
 
         {/* Error banner */}
         {errorMessage && (
-          <div className="mb-5 rounded-lg border border-alert/40 bg-alert/10 px-4 py-3">
+          <div role="alert" className="mb-5 rounded-lg border border-alert/40 bg-alert/10 px-4 py-3">
             <p className="text-center text-sm text-alert">{errorMessage}</p>
           </div>
         )}
@@ -82,7 +83,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         >
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-xl border border-titanium bg-white px-4 py-3 text-sm font-semibold text-eclipse shadow-sm transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="flex min-h-[44px] w-full items-center justify-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-eclipse shadow-sm transition-colors hover:bg-gray-100"
           >
             {/* Google logo SVG */}
             <svg
@@ -114,11 +115,11 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-titanium" />
+            <div className="w-full border-t border-mineral" />
           </div>
           <div className="relative flex justify-center text-xs">
             <span className="bg-carbon px-3 text-ion-2">
-              Email sign-in coming soon
+              Google is the only sign-in method for now
             </span>
           </div>
         </div>
@@ -128,14 +129,14 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           By signing in you agree to our{" "}
           <Link
             href="/terms"
-            className="text-ion-3 underline underline-offset-2 hover:text-ion-1"
+            className="text-ion-1 underline underline-offset-2 transition-colors hover:text-ion-white"
           >
             Terms of Service
           </Link>{" "}
           and{" "}
           <Link
             href="/privacy"
-            className="text-ion-3 underline underline-offset-2 hover:text-ion-1"
+            className="text-ion-1 underline underline-offset-2 transition-colors hover:text-ion-white"
           >
             Privacy Policy
           </Link>
@@ -146,7 +147,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       {/* Back to home */}
       <Link
         href="/"
-        className="mt-8 text-sm text-ion-2 transition-colors hover:text-ion-2"
+        className="mt-8 text-sm text-ion-1 transition-colors hover:text-ion-white"
       >
         &larr; Back to {BRAND_NAME}
       </Link>
