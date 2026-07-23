@@ -1,0 +1,93 @@
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46787 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 13 and seed 3942327391476472972 with 4 workers on 4 cores with 4020MB heap and 64MB offheap memory [pid: 4099] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/wt-formal-refinement/formal/live-sports/LiveModelDispatchUnderAmbiguityInductive.tla
+Parsing file /tmp/wt-formal-refinement/formal/live-sports/LiveModelDispatchUnderAmbiguity.tla
+Parsing file /tmp/tlc-5345339754156229727/_TLCTrace.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-5345339754156229727/Naturals.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-5345339754156229727/FiniteSets.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-5345339754156229727/TLC.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/wt-formal-refinement/formal/ai-invocation/InvocationClaim.tla
+Parsing file /tmp/tlc-5345339754156229727/Sequences.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/wt-formal-refinement/formal/credit-budget/CreditReservation.tla
+Parsing file /tmp/tlc-5345339754156229727/TLCExt.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-5345339754156229727/Integers.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module InvocationClaim
+Semantic processing of module CreditReservation
+Semantic processing of module LiveModelDispatchUnderAmbiguity
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module LiveModelDispatchUnderAmbiguityInductive
+Linting of module InvocationClaim
+Linting of module CreditReservation
+Linting of module LiveModelDispatchUnderAmbiguity
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module LiveModelDispatchUnderAmbiguityInductive
+Starting... (2026-07-23 00:25:16)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Computed 16384 initial states...
+Computed 32768 initial states...
+Computed 65536 initial states...
+Computed 131072 initial states...
+Computed 262144 initial states...
+Computed 524288 initial states...
+Computed 1048576 initial states...
+Computed 2097152 initial states...
+Computed 4194304 initial states...
+Finished computing initial states: 5845284 distinct states generated at 2026-07-23 00:33:45.
+Error: Invariant AmbiguousExposureHeldUntilTrustedResolution is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ invocationFp = (i1 :> fp1)
+/\ claimOwner = (i1 :> act1)
+/\ releaseReason = (a1 :> "NotReleased" @@ a2 :> "NotReleased")
+/\ invocationStatus = (i1 :> "Open")
+/\ attemptOf = (a1 :> i1 @@ a2 :> i1)
+/\ state = (a1 :> "Unstarted" @@ a2 :> "Unstarted")
+/\ admittedCount = 0
+/\ attemptOutcome = (a1 :> "Pending" @@ a2 :> "Succeeded")
+/\ releaseBy = (a1 :> act1 @@ a2 :> act1)
+/\ dispatched = (a1 :> FALSE @@ a2 :> FALSE)
+/\ reserved = 0
+/\ rejectedRequests = {}
+
+State 2: <ResolveDispatchOutcome(a1,"Ambiguous") line 126, col 5 to line 127, col 77 of module LiveModelDispatchUnderAmbiguity>
+/\ invocationFp = (i1 :> fp1)
+/\ claimOwner = (i1 :> act1)
+/\ releaseReason = (a1 :> "NotReleased" @@ a2 :> "NotReleased")
+/\ invocationStatus = (i1 :> "Ambiguous")
+/\ attemptOf = (a1 :> i1 @@ a2 :> i1)
+/\ state = (a1 :> "Unstarted" @@ a2 :> "Unstarted")
+/\ admittedCount = 0
+/\ attemptOutcome = (a1 :> "Ambiguous" @@ a2 :> "Succeeded")
+/\ releaseBy = (a1 :> act1 @@ a2 :> act1)
+/\ dispatched = (a1 :> FALSE @@ a2 :> FALSE)
+/\ reserved = 0
+/\ rejectedRequests = {}
+
+5845300 states generated, 5845288 distinct states found, 5845280 states left on queue.
+The depth of the complete state graph search is 2.
+Finished in 36min 10s at (2026-07-23 01:01:25)
+Trace exploration spec path: ./LiveModelDispatchUnderAmbiguityInductive_TTrace_1784766315.tla
+EXIT=12
