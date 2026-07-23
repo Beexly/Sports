@@ -22,8 +22,8 @@ export default function Page() {
         { label: "High volatility", value: players.filter(p => p.volatility_score >= 60).length }
       ]} />
 
-      <h2 className="text-2xl font-semibold text-ion-white">Injury &amp; role status</h2>
-      <p className="text-ion-1">
+      <SectionHeader eyebrow="Status" title="Injury &amp; role status" />
+      <p className="-mt-4 text-sm text-ion-1">
         Current status mapped to role and fantasy impact, so a designation reads as a usage consequence, not just a label.
       </p>
       <Badge tone="warn">Official injury designations require a licensed feed; status shown is from public roster signal.</Badge>
@@ -34,9 +34,12 @@ export default function Page() {
               <p className="text-alert font-semibold text-sm mb-1">{String(p.status ?? "")}</p>
               <p className="text-ion-white font-semibold">{p.name}</p>
               <p className="text-xs text-ion-2 mb-2">{p.team} · {p.position}</p>
+              {/* Bars measure magnitude, not danger — neutral fill; the alert
+                  tone stays on the status label and card border, where the
+                  semantics actually live. */}
               <BarChart items={[
-                { label: "Usage impact", value: Number(p.usage_score ?? 0), max: 100, tone: "alert" },
-                { label: "Fantasy impact", value: Number(p.fantasy_edge ?? 0), max: 100, tone: "alert" }
+                { label: "Usage impact", value: Number(p.usage_score ?? 0), max: 100, tone: "neutral" },
+                { label: "Fantasy impact", value: Number(p.fantasy_edge ?? 0), max: 100, tone: "neutral" }
               ]} />
             </div>
           ))}
@@ -44,26 +47,32 @@ export default function Page() {
       ) : (
         <p className="text-sm text-ion-1 py-4 px-4 border border-mineral bg-eclipse/40">No status flags in the current fixture snapshot.</p>
       )}
-      <DataTable
-        rows={flagged.map(p => ({
-          player: String(p.name ?? ""),
-          team: String(p.team ?? ""),
-          position: String(p.position ?? ""),
-          status: String(p.status ?? ""),
-          usage: Number(p.usage_score ?? 0),
-          fantasy_edge: Number(p.fantasy_edge ?? 0),
-          missing_data: Array.isArray(p.missing_data) ? p.missing_data.join("; ") : ""
-        }))}
-        maxRows={50}
-      />
+      {flagged.length > 0 && (
+        <DataTable
+          caption="Flagged players: team, position, status designation, usage, fantasy edge, and missing data fields"
+          rows={flagged.map(p => ({
+            player: String(p.name ?? ""),
+            team: String(p.team ?? ""),
+            position: String(p.position ?? ""),
+            status: String(p.status ?? ""),
+            usage: Number(p.usage_score ?? 0),
+            fantasy_edge: Number(p.fantasy_edge ?? 0),
+            missing_data: Array.isArray(p.missing_data) ? p.missing_data.join("; ") : ""
+          }))}
+          maxRows={50}
+        />
+      )}
 
-      <h2 className="mt-2 text-2xl font-semibold text-ion-white">Movement watch</h2>
-      <p className="text-ion-1">
+      <SectionHeader eyebrow="Movement" title="Movement watch" />
+      <p className="-mt-4 text-sm text-ion-1">
         The players whose role, usage, or trend is moving most: the changes worth acting on before the market catches up.
       </p>
       <Badge tone="warn">Real-time email &amp; push delivery is an Elite feature and owner-gated; this is the underlying signal layer.</Badge>
-      <SectionHeader eyebrow="Top 15 by trend score" title="Usage & Trend Risers" />
-      <div className="space-y-2">
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2">Top {risers.length} by trend score</p>
+      {risers.length === 0 ? (
+        <p className="-mt-4 border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1">No players in the current snapshot, so no movers to rank yet.</p>
+      ) : (
+      <div className="-mt-4 space-y-2">
         {risers.map(p => (
           <Link key={p.player_id} href={"/stats/player/" + p.player_id} className="flex items-center justify-between border border-mineral bg-eclipse p-3 hover:border-orbital-cyan transition-colors">
             <div>
@@ -71,12 +80,13 @@ export default function Page() {
               <p className="text-xs text-ion-2">{p.team} · {p.position}</p>
             </div>
             <div className="text-right">
-              <p className="text-orbital-cyan font-mono text-sm">{p.trend_score}</p>
+              <p className="font-mono text-sm tabular-nums text-orbital-cyan">{p.trend_score}</p>
               <p className="text-xs text-ion-2">trend score</p>
             </div>
           </Link>
         ))}
       </div>
+      )}
     </Shell>
   );
 }

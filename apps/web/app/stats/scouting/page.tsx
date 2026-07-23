@@ -31,30 +31,33 @@ export default function Page() {
         </p>
       ) : (
         <>
-          <SectionHeader title="Approved Notes" />
+          <SectionHeader eyebrow="Display-approved" title="Approved Notes" />
           <div className="grid gap-4 md:grid-cols-2">
             {shown.slice(0, 6).map((n, idx) => (
               <InsightCard
                 key={idx}
-                eyebrow={String(n.note_type ?? "").toUpperCase()}
+                eyebrow={String(n.note_type ?? "").replace(/_/g, " ")}
                 headline={names.get(String(n.entity_id ?? "")) ?? String(n.entity_id ?? "")}
                 body={String(n.note ?? "")}
-                tone="good"
+                tone="neutral"
               />
             ))}
           </div>
           <div>
-            <h2 className="text-2xl font-semibold text-ion-white mb-4">All Public Notes</h2>
-            <DataTable
-              rows={shown.slice(0, 40).map(n => ({
-                type: String(n.note_type ?? ""),
-                entity: String(n.entity_id ?? ""),
-                note: String(n.note ?? ""),
-                confidence: Number(n.confidence ?? 0),
-                tags: Array.isArray(n.tags) ? n.tags.join("; ") : ""
-              }))}
-              maxRows={40}
-            />
+            <SectionHeader eyebrow={shown.length + " approved"} title="All Public Notes" />
+            <div className="mt-4">
+              <DataTable
+                caption="First-party scouting notes: note type, subject, note text, confidence, and tags"
+                rows={shown.slice(0, 40).map(n => ({
+                  type: String(n.note_type ?? ""),
+                  entity: String(n.entity_id ?? ""),
+                  note: String(n.note ?? ""),
+                  confidence: Number(n.confidence ?? 0),
+                  tags: Array.isArray(n.tags) ? n.tags.join("; ") : ""
+                }))}
+                maxRows={40}
+              />
+            </div>
           </div>
         </>
       )}
