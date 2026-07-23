@@ -93,6 +93,24 @@ export {
   type ActiveSrqcVersion,
   type RecordSrqcVersionCandidateInput,
 } from "./formal-incident";
+// M6 (online CTI-candidate miner, detection/mining-only, on top of Track A +
+// Track B + the versioned envelope): the pure abstract-successor relation and
+// inductive-invariant-violation predicate (mirroring AbstractClaimExposure.tla's
+// Next), plus the ledger-window miner that records `cti_candidate` rows one
+// abstract step from a proof-forbidden state, for human/LLM spec refinement. It
+// NEVER edits a .tla file and gates no control-plane decision (see cti-miner.ts).
+export {
+  abstractSuccessors,
+  isIndInvViolation,
+  deriveCtiCandidateId,
+  mineCandidatesFromStates,
+  mineCandidatesFromWindowOffline,
+  recordCtiCandidate,
+  runCtiMinerPass,
+  type AbstractAction,
+  type CtiCandidateRow,
+  type CtiMinerSummary,
+} from "./cti-miner";
 export {
   ObservabilitySink,
   claimRecoveryBatch,
