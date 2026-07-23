@@ -45,24 +45,6 @@ const ALLOWLIST: Record<string, ReadonlySet<string>> = {
     "bg-orange-950/40",
     "text-orange-200",
   ]),
-  // Light/paper-surface "good/bad/warn" directional text, AA-darkened for
-  // white backgrounds. Needs verify-on-light/alert-on-light tokens before
-  // these can be repointed (see WORLD_CLASS_REDESIGN_PLAN.md §2).
-  "app/intelligence/engines/registry.tsx": new Set([
-    "text-emerald-700",
-    "text-rose-700",
-  ]),
-  "components/players/player-lab-table.tsx": new Set([
-    "text-emerald-700",
-    "text-rose-700",
-    "text-amber-700",
-    "border-rose-300",
-    "border-amber-300",
-    "border-sky-300",
-    "text-sky-700",
-    "border-emerald-300",
-  ]),
-  "components/ui/source-error.tsx": new Set(["text-rose-700"]),
 };
 
 const STALE =

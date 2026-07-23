@@ -114,8 +114,8 @@ const PLAYER_MODEL_ENGINE = engine({
     <>
       One canonical profile per player, mined from the full nflverse advanced field set: EPA efficiency, opportunity
       (WOPR, target share), and volume, combined into a position-aware <em>process grade</em>. We compare it to actual
-      production and surface the gap: where the inputs say more is coming (<span className="text-emerald-700 font-semibold">buy-low</span>)
-      or running hot (<span className="text-rose-700 font-semibold">sell-high</span>). The data layer that drives the tools. Not a pick.
+      production and surface the gap: where the inputs say more is coming (<span className="text-verify-on-light font-semibold">buy-low</span>)
+      or running hot (<span className="text-alert-on-light font-semibold">sell-high</span>). The data layer that drives the tools. Not a pick.
     </>
   ),
   api: "/api/intelligence/player-model",
@@ -135,7 +135,7 @@ const PLAYER_MODEL_ENGINE = engine({
       term: "Buy-low: inputs say more is coming",
       definition: (
         <>
-          When the <span className="text-emerald-700 font-semibold">process</span> grade sits well above the actual
+          When the <span className="text-verify-on-light font-semibold">process</span> grade sits well above the actual
           production percentile, the opportunity says the points are coming. Buy-low before it corrects.
         </>
       ),
@@ -144,7 +144,7 @@ const PLAYER_MODEL_ENGINE = engine({
       term: "Sell-high: running hot",
       definition: (
         <>
-          When <span className="text-rose-700 font-semibold">production</span> outruns the process grade, the player
+          When <span className="text-alert-on-light font-semibold">production</span> outruns the process grade, the player
           is converting above his usage. Sell-high before it regresses. In-line means the points are earned by the
           opportunity. Not a pick.
         </>
@@ -194,7 +194,7 @@ const EXPECTED_POINTS_ENGINE = engine({
       term: "Buy-low: expected outruns actual",
       definition: (
         <>
-          When the <span className="text-emerald-700 font-semibold">expected</span> percentile sits well above the
+          When the <span className="text-verify-on-light font-semibold">expected</span> percentile sits well above the
           actual percentile, the usage says the production is coming. Buy-low before it corrects.
         </>
       ),
@@ -203,7 +203,7 @@ const EXPECTED_POINTS_ENGINE = engine({
       term: "Sell-high: actual outruns expected",
       definition: (
         <>
-          When <span className="text-rose-700 font-semibold">actual</span> outruns expected, the player is running hot
+          When <span className="text-alert-on-light font-semibold">actual</span> outruns expected, the player is running hot
           on conversion luck. Sell-high before it regresses. In-line means the points are earned by the opportunity.
         </>
       ),
@@ -374,9 +374,9 @@ const SCORING_ZONE_ENGINE = engine({
       term: "Buy / Sell: equity vs results",
       definition: (
         <>
-          Heavy <span className="text-emerald-700 font-semibold">scoring-zone share</span> with light actual TDs is a
+          Heavy <span className="text-verify-on-light font-semibold">scoring-zone share</span> with light actual TDs is a
           buy; a hot TD rate above the opportunity is a{" "}
-          <span className="text-rose-700 font-semibold">sell</span>. In-line means the scores match the looks.
+          <span className="text-alert-on-light font-semibold">sell</span>. In-line means the scores match the looks.
         </>
       ),
     },
@@ -453,8 +453,8 @@ const OPPORTUNITY_TRANSFER_ENGINE = engine({
       term: "Confidence: how clean the read is",
       definition: (
         <>
-          <span className="text-emerald-700 font-semibold">High</span> when the depth chart and usage agree on one
-          beneficiary; <span className="text-rose-700 font-semibold">low</span> when the touches scatter across a
+          <span className="text-verify-on-light font-semibold">High</span> when the depth chart and usage agree on one
+          beneficiary; <span className="text-alert-on-light font-semibold">low</span> when the touches scatter across a
           committee.
         </>
       ),
@@ -496,8 +496,8 @@ const CLV_ENGINE = engine({
       term: "Self-grading, never a bet",
       definition: (
         <>
-          A backtest against nflverse schedules: did the model <span className="text-emerald-700 font-semibold">beat
-          the close</span> or <span className="text-rose-700 font-semibold">trail</span> it? Forward odds stay gated.
+          A backtest against nflverse schedules: did the model <span className="text-verify-on-light font-semibold">beat
+          the close</span> or <span className="text-alert-on-light font-semibold">trail</span> it? Forward odds stay gated.
           This grades the engine, it does not place a wager.
         </>
       ),
@@ -528,7 +528,7 @@ const WAIVER_TRENDS_ENGINE = engine({
       term: "Adds: ownership rising",
       definition: (
         <>
-          The count of Sleeper leagues that <span className="text-emerald-700 font-semibold">added</span> the player
+          The count of Sleeper leagues that <span className="text-verify-on-light font-semibold">added</span> the player
           over the window. Rising ownership velocity, not a buy call.
         </>
       ),
@@ -537,7 +537,7 @@ const WAIVER_TRENDS_ENGINE = engine({
       term: "Drops: ownership falling",
       definition: (
         <>
-          The count of leagues that <span className="text-rose-700 font-semibold">dropped</span> the player. Falling
+          The count of leagues that <span className="text-alert-on-light font-semibold">dropped</span> the player. Falling
           ownership velocity, not a sell call.
         </>
       ),
@@ -580,7 +580,7 @@ const PROOF_ENGINE = engine({
       definition: (
         <>
           Grade ρ minus baseline ρ (past production → future production).{" "}
-          <span className="text-emerald-700 font-semibold">Positive</span> means the grade adds signal the box score
+          <span className="text-verify-on-light font-semibold">Positive</span> means the grade adds signal the box score
           didn&apos;t already have.
         </>
       ),
@@ -589,8 +589,8 @@ const PROOF_ENGINE = engine({
       term: "Call hit-rate: were buy/sell right?",
       definition: (
         <>
-          Of first-half buy-lows, how many <span className="text-emerald-700 font-semibold">rose</span>; of
-          sell-highs, how many <span className="text-rose-700 font-semibold">fell</span>. Read against the 50% coin
+          Of first-half buy-lows, how many <span className="text-verify-on-light font-semibold">rose</span>; of
+          sell-highs, how many <span className="text-alert-on-light font-semibold">fell</span>. Read against the 50% coin
           flip.
         </>
       ),

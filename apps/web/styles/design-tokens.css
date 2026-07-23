@@ -54,6 +54,12 @@
   --plasma-on-light:      #B0118C;   /* 5.98:1 on paper — PASS */
   --orbital-cyan-on-light:#06748A;   /* 5.11:1 on paper — PASS */
   --ultraviolet-on-light: #5B43C9;   /* 6.40:1 on paper — PASS */
+  /* Semantic-on-light variants — the verify/alert/caution ladder darkened for
+     AA text on paper, so light data surfaces (player lab, engine glossary)
+     never need raw emerald/rose/amber classes. */
+  --verify-on-light:      #0B6B46;   /* 6.17:1 on paper — PASS */
+  --alert-on-light:       #C0122F;   /* 5.87:1 on paper — PASS */
+  --caution-on-light:     #9A4D00;   /* 5.76:1 on paper — PASS */
 
   /* ── PRIMARY SIGNAL — ion magenta ─────────────────────── */
   /* DARK SCALE accents — highlights only, never long prose. */

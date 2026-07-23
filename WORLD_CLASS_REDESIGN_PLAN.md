@@ -125,7 +125,31 @@ can pick one up without re-deriving context — read this file + the relevant
    Small, closes the last real token gap. (~30-45 min)
 2. **Decide the API-costs budget-ladder orange tier** (see §2) — a genuine
    design/product call, not engineering work.
-3. **Asset refresh via Higgsfield** (now free, all models/tools) — this is
+3. **Committing the sport-vertical plates (session 3 handoff — 5-minute task).**
+   Session 3 audited the existing plates (all fine — the small files are just
+   well-compressed dark gradients, no banding) and found the real gap: the
+   sport verticals and fantasy suite had NO plate treatment. Four on-brand
+   plates were generated with Higgsfield (Soul Cinema, 2048×1152, 16:9) and
+   the pages are already wired gradient-first (zero-risk: they render their
+   gradients until the stills are committed). The renders live in the owner's
+   Higgsfield library — this sandbox's network policy blocks the Higgsfield
+   CDN, so they could not be downloaded here. To finish from any machine with
+   normal egress:
+
+   | Manifest id (already wired) | Page | Higgsfield job id |
+   |---|---|---|
+   | `nflverse-gridiron` | /nflverse | `895d7eaf-6e5d-4b2b-927d-4f5eb2edbe12` |
+   | `nhl-icefield` | /nhl | `d2e23623-25a2-476c-9f61-38035b4b9d24` |
+   | `mlb-diamond` | /mlb | `b57c8530-eb7f-4274-995a-6a0e5e8346a0` |
+   | `fantasy-constellation` | /fantasy | `f6ad9d93-95e9-4d21-8bcc-d9282de709ba` |
+
+   Steps: download each PNG from the Higgsfield library → convert
+   (`npx sharp-cli -i in.png -o out.webp --format webp --quality 72`) →
+   commit as `apps/web/public/immersive/<manifest-id>.webp` → add
+   `still: "/immersive/<manifest-id>.webp"` to that id's entry in
+   `apps/web/lib/visual-production/asset-manifest.ts`. Nothing else to touch.
+
+4. **Asset refresh via Higgsfield** (now free, all models/tools) — this is
    genuinely additive, not a rebuild:
    - Audit `lib/visual-production/asset-manifest.ts` for any plate marked
      stale/placeholder/lowest-tier and regenerate at higher quality.
@@ -142,7 +166,7 @@ can pick one up without re-deriving context — read this file + the relevant
      win rates or testimonials, brand-voice banned-word list in `lib/brand.ts:225-233`
      still applies. Content generation is copy/structure only; numbers still
      come from `loadPublicCalibrationReport()` / real data, never from the model.
-4. **P3 items from the 2026-06-01 audit** still open and low-risk: extract a
+5. **P3 items from the 2026-06-01 audit** still open and low-risk: extract a
    shared `<CalibrationViz>` (dedupe the homepage curve vs. `/performance`
    panel), document the dark-only-mode decision as an ADR, floor any remaining
    11px `ion-2` meta text to `ion-1` for AA.

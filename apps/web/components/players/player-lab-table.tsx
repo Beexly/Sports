@@ -86,15 +86,15 @@ const TABLE_TOKENS = {
     rushRead: "text-ink-1",
     consensusRead: "text-ink-1",
     // Directional tone text (good/bad/warn), paper-darkened for AA on white.
-    good: "text-emerald-700",
-    bad: "text-rose-700",
-    warn: "text-amber-700",
+    good: "text-verify-on-light",
+    bad: "text-alert-on-light",
+    warn: "text-caution-on-light",
     // Status badges (border + text), paper palette.
-    badgeOut: "border-rose-300 text-rose-700",
-    badgeDoubtful: "border-amber-300 text-amber-700",
-    badgeQuestionable: "border-sky-300 text-sky-700",
-    badgeAgree: "border-emerald-300 text-emerald-700",
-    badgeDisagree: "border-rose-300 text-rose-700",
+    badgeOut: "border-alert-on-light/40 text-alert-on-light",
+    badgeDoubtful: "border-caution-on-light/40 text-caution-on-light",
+    badgeQuestionable: "border-orbital-cyan-on-light/40 text-orbital-cyan-on-light",
+    badgeAgree: "border-verify-on-light/40 text-verify-on-light",
+    badgeDisagree: "border-alert-on-light/40 text-alert-on-light",
   },
   dark: {
     playerName: "text-ion-white",
@@ -111,7 +111,7 @@ const TABLE_TOKENS = {
     rushRead: "text-ion-1",
     consensusRead: "text-ion-1",
     // Directional tone text — semantic tokens that clear AA on eclipse/carbon
-    // (emerald-700/rose-700/amber-700 drop to ~2:1 on dark and read as mud).
+    // (the on-light darkened variants drop to ~2:1 on dark and read as mud).
     good: "text-verify",
     bad: "text-alert",
     warn: "text-caution",

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { BRAND_COLORS } from "@/lib/brand";
 import { loadSourceLiveEvidence } from "@/lib/data-sources/live-evidence";
 
@@ -88,7 +89,8 @@ export default async function FantasyHubPage({
       : "UNKNOWN";
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="relative isolate flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <GeneratedPlate assetId="fantasy-constellation" className="-z-10 opacity-25" />
       <Nav />
       <main id="main-content" className="flex-1">
         <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">

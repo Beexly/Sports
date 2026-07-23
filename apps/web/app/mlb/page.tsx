@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { loadLahmanMlbTeams, type MlbTeamRow } from "@/lib/lahman/mlb-teams";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +31,8 @@ export default async function MlbPage(): Promise<JSX.Element> {
   const mlb = await loadLahmanMlbTeams();
 
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="relative isolate min-h-screen bg-carbon text-ion">
+      <GeneratedPlate assetId="mlb-diamond" className="-z-10 opacity-20" />
       <Nav />
       <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">

@@ -76,6 +76,10 @@ const config: Config = {
         "plasma-on-light":       "#B0118C", // 5.98:1 on paper — text accent
         "orbital-cyan-on-light": "#06748A", // 5.11:1 on paper — text accent
         "ultraviolet-on-light":  "#5B43C9", // 6.40:1 on paper — text accent
+        // Semantic-on-light — verify/alert/caution darkened for AA on paper.
+        "verify-on-light":       "#0B6B46", // 6.17:1 on paper — text accent
+        "alert-on-light":        "#C0122F", // 5.87:1 on paper — text accent
+        "caution-on-light":      "#9A4D00", // 5.76:1 on paper — text accent
 
         // ── PRIMARY SIGNAL — ion magenta ──────────────────
         plasma: {
