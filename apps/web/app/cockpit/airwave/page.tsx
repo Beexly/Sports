@@ -168,7 +168,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             </dl>
           </div>
           <div className="overflow-hidden rounded-xl border border-titanium/40">
-            <table className="w-full text-left text-xs">
+            <table aria-label="Transcript intake contract check" className="w-full text-left text-xs">
               <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
                 <tr>
                   <th scope="col" className="px-3 py-2">Contract check</th>
@@ -234,7 +234,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             should hold the row in draft until an operator resolves them.
           </p>
           <div className="mt-4 overflow-hidden rounded-xl border border-titanium/40">
-            <table className="w-full text-left text-xs">
+            <table aria-label="Spreadsheet contract — required columns" className="w-full text-left text-xs">
               <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
                 <tr>
                   <th scope="col" className="px-3 py-2">Column</th>
@@ -299,7 +299,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           live named-broadcast data.
         </p>
         <div className="mt-4 overflow-x-auto">
-          <table className="min-w-[920px] w-full text-left text-xs">
+          <table aria-label="Draft claim queue — illustrative demo claims" className="min-w-[920px] w-full text-left text-xs">
             <thead>
               <tr className="border-b border-titanium/40 text-ion-3">
                 <th scope="col" className="py-2 pr-3 font-medium">Aired</th>
@@ -363,7 +363,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           <Metric label="GSE ready" value="0" detail="Approved + GSE-relevant claim type." />
         </div>
         <div className="mt-4 overflow-hidden rounded-xl border border-titanium/40">
-          <table className="w-full text-left text-xs">
+          <table aria-label="Claim review queue — extracted claim candidates" className="w-full text-left text-xs">
             <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
               <tr>
                 <th scope="col" className="px-3 py-2">Status</th>

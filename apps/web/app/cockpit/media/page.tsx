@@ -286,7 +286,7 @@ function LaneCard({ lane }: { lane: MediaLane }): JSX.Element {
           <dd className="mt-1 text-ion-1">{lane.operatorAction}</dd>
         </div>
       </dl>
-      <p className="mt-3 rounded-lg border border-titanium/40 bg-black/20 px-3 py-2 text-xs leading-5 text-ion-3">
+      <p className="mt-3 rounded-lg border border-titanium/40 bg-void/40 px-3 py-2 text-xs leading-5 text-ion-3">
         {lane.riskBoundary}
       </p>
     </article>

@@ -89,7 +89,7 @@ function LifecycleRollupTile({ systems }: { systems: readonly SystemEntry[] }) {
     Draft: "border-titanium bg-carbon/60 text-ion-2",
     Verified: "border-ultraviolet/30 bg-obsidian/50 text-ion-1",
     Priced: "border-caution bg-caution/30 text-caution",
-    Published: "border-orbital-cyan/40 bg-accent-950/20 text-accent-400",
+    Published: "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan",
     Proven: "border-verify bg-verify/40 text-verify",
   };
 

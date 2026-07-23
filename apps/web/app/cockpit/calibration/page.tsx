@@ -172,7 +172,7 @@ export default async function CockpitCalibrationPage() {
           </p>
         ) : (
           <>
-          <table className="w-full text-left">
+          <table aria-label="Confidence band vs realized win rate" className="w-full text-left">
             <thead>
               <tr className="text-[10px] uppercase tracking-widest text-ion-3">
                 <th scope="col" className="py-1 pr-4 font-medium">Confidence band</th>

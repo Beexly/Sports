@@ -284,7 +284,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-[980px] divide-y divide-titanium/30 text-left text-sm">
+          <table aria-label="Source stack — cost, status, proof, and operator action per source" className="min-w-[980px] divide-y divide-titanium/30 text-left text-sm">
             <thead className="bg-eclipse/50 text-[11px] uppercase tracking-wider text-ion-3">
               <tr>
                 <th scope="col" className="px-4 py-3">Source</th>
@@ -359,7 +359,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-[860px] divide-y divide-titanium/30 text-left text-sm">
+          <table aria-label="Scraping rights registry — jurisdiction, rights status, and allowed uses per source" className="min-w-[860px] divide-y divide-titanium/30 text-left text-sm">
             <thead className="bg-eclipse/50 text-[11px] uppercase tracking-wider text-ion-3">
               <tr>
                 <th scope="col" className="px-4 py-3">Source</th>

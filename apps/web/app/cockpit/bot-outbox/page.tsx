@@ -55,7 +55,7 @@ export default async function CockpitBotOutboxPage(): Promise<JSX.Element> {
           <div className="p-6 text-sm text-ion-3">No draftable bot events in the current window.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-titanium/30 text-sm">
+            <table aria-label="Bot outbox draft items — state, channel, and event per draft" className="min-w-full divide-y divide-titanium/30 text-sm">
               <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
                 <tr>
                   <th scope="col" className="px-4 py-3">State</th>

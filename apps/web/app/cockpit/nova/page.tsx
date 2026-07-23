@@ -76,7 +76,7 @@ export default async function CockpitNovaPage(): Promise<JSX.Element> {
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-titanium/30 text-sm">
+          <table aria-label="Founder OS lanes — open, owner-action, and agent-handled counts" className="min-w-full divide-y divide-titanium/30 text-sm">
             <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
               <tr>
                 <th scope="col" className="px-4 py-3">Lane</th>

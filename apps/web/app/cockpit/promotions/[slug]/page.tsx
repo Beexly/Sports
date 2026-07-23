@@ -28,7 +28,7 @@ export default async function CockpitPromotionDetail({
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
+        <p className="text-xs font-semibold uppercase tracking-widest text-plasma">
           {promo.operatorName} · {promo.sportsbookKey}
         </p>
         <h1 className="text-2xl font-bold text-ion-white">{promo.headline}</h1>

@@ -69,7 +69,7 @@ export default async function CockpitFounderQueuePage(): Promise<JSX.Element> {
       ) : (
         <div className="overflow-hidden rounded-lg border border-titanium/40 bg-obsidian/60">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-titanium/30 text-sm">
+            <table aria-label="Owner decision queue — priority, lane, state, and authority per work item" className="min-w-full divide-y divide-titanium/30 text-sm">
               <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
                 <tr>
                   <th scope="col" className="px-4 py-3">Priority</th>

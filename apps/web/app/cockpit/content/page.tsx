@@ -134,7 +134,7 @@ export default async function CockpitContentPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
+        <p className="text-xs font-semibold uppercase tracking-widest text-plasma">
           Ava · Content workflow
         </p>
         <h1 className="text-2xl font-bold text-ion-white">Content drafts</h1>
@@ -166,7 +166,7 @@ export default async function CockpitContentPage() {
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[800px] text-left text-xs">
+            <table aria-label="Content draft queue — status, coverage, compliance, and readiness" className="w-full min-w-[800px] text-left text-xs">
               <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
                 <tr>
                   <th scope="col" className="py-2 pr-3">Title</th>
@@ -219,7 +219,7 @@ export default async function CockpitContentPage() {
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Templates the engine is allowed to emit
         </h2>
-        <table className="w-full text-left text-xs">
+        <table aria-label="Templates the content engine is allowed to emit" className="w-full text-left text-xs">
           <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="py-2 pr-3">Template</th>
@@ -253,7 +253,7 @@ export default async function CockpitContentPage() {
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-3">
           Legacy content policy
         </h2>
-        <table className="w-full text-left text-xs">
+        <table aria-label="Legacy content policy by content kind" className="w-full text-left text-xs">
           <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="py-2 pr-3">Kind</th>
@@ -287,7 +287,7 @@ export default async function CockpitContentPage() {
         {legacy.length === 0 ? (
           <p className="text-xs text-ion-3">No legacy media items.</p>
         ) : (
-          <table className="w-full text-left text-xs">
+          <table aria-label="Legacy media queue — channel, QA, and compliance per item" className="w-full text-left text-xs">
             <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
               <tr>
                 <th scope="col" className="py-2 pr-3">Title</th>

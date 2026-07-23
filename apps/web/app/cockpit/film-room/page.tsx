@@ -27,7 +27,7 @@ export default async function FilmRoomPage() {
     <div className="min-h-screen bg-obsidian/60 px-4 py-10 sm:px-6 lg:px-8 text-ion-1">
       <div className="mx-auto max-w-5xl">
         <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Cockpit · Visual Production</p>
-        <h1 className="mt-1.5 text-3xl font-bold text-ion-white">Film Room</h1>
+        <h1 className="mt-1.5 text-2xl font-bold text-ion-white">Film Room</h1>
         <p className="mt-2 max-w-2xl text-sm text-ion-2">
           Generate atmosphere. Render truth. Paid generation is blocked by default — every claim, stat, label, and
           disclosure is app-rendered on top of any generated media. Nothing here spends until both master switches are on
