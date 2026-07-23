@@ -3548,3 +3548,40 @@ model CtiCandidate {
   @@index([status, createdAt])
   @@map("cti_candidate")
 }
+
+// ============================================================
+// LSRQC KERNEL v1 (closed on-policy self-refinement loop; on top of the
+// CTI-candidate miner + the versioned SrqcVersion envelope, same branch by
+// owner authorization.)
+//
+// An IndInvProposal is a HINDSIGHT SKILL minted ON-POLICY from one or more
+// open CtiCandidate rows: a proposed STRENGTHENING of the currently-active
+// inductive-invariant certificate (SrqcVersion) that would additionally
+// forbid the abstract (before, action) pair whose successor a CtiCandidate
+// showed is proof-forbidden. A proposal is minted only against a live
+// baseline (`activeVersionAtMint` records which one), never in a vacuum —
+// it is a strengthening of the CURRENT certificate.
+//
+// POSTURE (do not let this drift): PROPOSAL / RANKING INPUT ONLY. Minting a
+// proposal changes NO control-plane decision and NEVER activates a version.
+// The ONLY path that flips an SrqcVersion to active is the explicit
+// human/script accept flow (acceptProposalAndActivate → activateSrqcVersion).
+// `admitUnderSRQC` (srqc-projection.ts) remains always-ADMIT in SHADOW (its
+// default); no ENFORCE path is reachable from production. Idempotency is via
+// a UNIQUE (sourceWindowHash, activeVersionAtMint) index + INSERT ... ON
+// CONFLICT DO NOTHING, so re-running the emitter mints no duplicate proposal.
+model IndInvProposal {
+  id                    String   @id @default(cuid())
+  ctiCandidateIds       Json // array of cti_candidate.id this proposal was minted from
+  proposedPredicateText String
+  skillKind             String // "workflow" | "failure_avoidance" | "strengthen"
+  sourceWindowHash      String
+  activeVersionAtMint   Int
+  status                String   @default("open") // open|accepted|rejected
+  acceptedSrqcVersion   Int?
+  createdAt             DateTime @default(now())
+
+  @@unique([sourceWindowHash, activeVersionAtMint])
+  @@index([status, createdAt])
+  @@map("ind_inv_proposal")
+}

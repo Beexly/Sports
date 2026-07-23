@@ -27,6 +27,10 @@
  *                       (source ai_invocation) — the invocation reached terminal
  */
 
+import type { ControlSqlClient } from "./control-store";
+import { getActiveSrqcVersion } from "./formal-incident";
+import type { ActiveSrqcVersion } from "./formal-incident";
+
 // ─── Abstract domain (the seed of α's codomain) ─────────────────────────────
 
 /** Where the invocation's claim sits. */
@@ -214,13 +218,27 @@ export type SrqcMode = "SHADOW" | "ENFORCE";
 
 export interface SrqcAdmissionResult {
   readonly decision: SrqcAdmissionDecision;
-  /** The projected abstract states the decision was (not yet) based on. */
+  /** The projected abstract states the decision was based on. */
   readonly projected: readonly AbstractControlState[];
   /** Abstract states that violate a Formal Foundry invariant, if any. Empty
    *  in every reachable state — a non-empty list is a real signal, surfaced
-   *  for a future certificate / incident emitter to act on (it does NOT
-   *  change the decision in this stub). */
+   *  for a certificate / incident emitter to act on. In SHADOW it does NOT
+   *  change the decision; in ENFORCE a non-empty list REFUSEs. */
   readonly violations: readonly AbstractControlState[];
+  /** The SrqcVersion.version active when this decision was computed, or null
+   *  when no active certificate exists / none was supplied. Observability
+   *  only — the decision does not depend on it (KERNEL v1 addition, layered
+   *  on top of the M5 admission core without changing its behavior). */
+  readonly srqcVersion: number | null;
+}
+
+/** The IndInv negation predicate — the EXACT condition cti-miner.ts's
+ *  `isIndInvViolation` filters on, kept inline here so the pure admission core
+ *  imports nothing at runtime. */
+function isViolation(s: AbstractControlState): boolean {
+  return (
+    s.pendingCountClass === "GE2" || (s.hasRejectedFp && !s.fingerprintBound)
+  );
 }
 
 /**
@@ -240,20 +258,28 @@ export interface SrqcAdmissionResult {
  * This function is PURE: it never reads `process.env` or any ambient config.
  * Mode selection from the environment happens at exactly one call site — the
  * lab helper `evaluateSrqcAdmissionForLab` below — never here.
+ *
+ * `active` (KERNEL v1 addition) is an OPTIONAL certificate reference used
+ * ONLY to stamp `srqcVersion` on the result for observability — it never
+ * affects the decision. Existing one-arg and two-arg callers keep compiling
+ * unchanged (`mode` defaults to SHADOW, `active` defaults to null →
+ * `srqcVersion: null`).
  */
 export function admitUnderSRQC(
   events: readonly ProjectableEvent[],
   mode: SrqcMode = "SHADOW",
+  active: ActiveSrqcVersion | null = null,
 ): SrqcAdmissionResult {
   const projected = projectWindow(events);
-  const violations = projected.filter(
-    (s) =>
-      s.pendingCountClass === "GE2" ||
-      (s.hasRejectedFp && !s.fingerprintBound),
-  );
+  const violations = projected.filter(isViolation);
   const decision: SrqcAdmissionDecision =
     mode === "ENFORCE" && violations.length > 0 ? "REFUSE" : "ADMIT";
-  return { decision, projected, violations };
+  return {
+    decision,
+    projected,
+    violations,
+    srqcVersion: active?.version ?? null,
+  };
 }
 
 // ─── Lab wiring (the ONE place ENFORCE can be reached) ──────────────────────
@@ -271,7 +297,9 @@ export interface SrqcEnvLike {
 /**
  * Resolve the SRQC admission mode from the environment. ENFORCE ONLY when the
  * explicit opt-in flag `SRQC_ENFORCE=1` is present; SHADOW (⇒ always-ADMIT)
- * for every other value, including unset. This is the sole reader of the flag.
+ * for every other value, including unset. This is the sole reader of the flag
+ * on the lab/tooling path — it is NEVER called by the production / C1–C8
+ * admission path (the pure core above takes an already-resolved `mode`).
  */
 export function resolveSrqcModeFromEnv(
   env: SrqcEnvLike = process.env,
@@ -300,4 +328,43 @@ export function evaluateSrqcAdmissionForLab(
 ): SrqcAdmissionResult {
   const mode = resolveSrqcModeFromEnv(env);
   return admitUnderSRQC(events, mode);
+}
+
+// ─── DB-backed admission with version stamping + structured logging ────────
+// (KERNEL v1 addition, layered on top of the M5 admission core.)
+
+/**
+ * Lab/observability admission: load the active certificate version, run the
+ * pure `admitUnderSRQC`, and emit ONE structured JSON log line stamped with
+ * that version. I/O lives HERE (the `sql` read + the log), never in the pure
+ * core. Default mode SHADOW. This is deliberately NOT wired into any C1–C8 /
+ * production readiness path — same posture as `evaluateSrqcAdmissionForLab`
+ * and the rest of the detection-only SRQC surface.
+ */
+export async function admitUnderSRQCWithVersion(
+  sql: ControlSqlClient,
+  events: readonly ProjectableEvent[],
+  mode: SrqcMode = "SHADOW",
+): Promise<SrqcAdmissionResult> {
+  const active = await getActiveSrqcVersion(sql);
+  const result = admitUnderSRQC(events, mode, active);
+  const violationKinds = [
+    ...new Set(
+      result.violations.map((s) =>
+        s.pendingCountClass === "GE2" ? "GE2_PENDING" : "REJECTED_FP_UNBOUND",
+      ),
+    ),
+  ];
+  // eslint-disable-next-line no-console
+  console.log(
+    JSON.stringify({
+      kind: "srqc_admit",
+      srqcVersion: result.srqcVersion,
+      mode,
+      decision: result.decision,
+      violationKinds,
+      at: new Date().toISOString(),
+    }),
+  );
+  return result;
 }
