@@ -14,7 +14,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[✓]` audited, alread
 |---|---|---|---|---|
 | 1 | Auth + waitlist funnel | /auth/signin, /auth/error, /waitlist, /sealed | [x] | intro-galaxy atmosphere on signin/error/waitlist; eyebrows; plasma CTAs; focus-ring override removed; waitlist form tokenized + focal submit; sealed type-floor fixes |
 | 2 | Trust core | /proof, /verify, /calibration, /track, /how-to-verify-a-record | [x] | WIN/verified → verify mint (not cyan); mono eyebrows sitewide idiom; proof-crystal plate on /verify; legacy ink/BRAND_COLORS migrated; meta type floors. Flagged: bet-tracker/staking-calculator legacy tokens for a later cycle |
-| 3 | Performance + ledgers | /performance, /accountability, /clv, /ledger, /glass-ledger | [ ] | |
+| 3 | Performance + ledgers | /performance, /accountability, /clv, /ledger, /glass-ledger | [x] | /ledger fully retokenized (LOSS was plasma — fixed to alert); bet-tracker + staking-calculator off BRAND_COLORS inline styles; WIN→verify sitewide in group; mono eyebrows; NUMERIC_TEXT_CLASS unification; tablet grid fix on /accountability |
 | 4 | Member area | /dashboard, /watchlist, /account settings surfaces | [ ] | |
 | 5 | Tools suite | /tools, /tools/ev-calculator, /tools/no-vig-calculator, /tools/odds-converter, /tools/parlay-calculator | [ ] | |
 | 6 | Analysis tools | /optimizer, /parlay-mri, /trends, /weather, /data | [ ] | |
@@ -45,3 +45,4 @@ Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
 - 2026-07-23 05:1x — Ledger created. Loop armed.
 - 2026-07-23 05:10 — Cycle 1 (auth funnel) done: 5 files, 177 targeted tests + 3,202 guard tests green.
 - 2026-07-23 05:22 — Cycle 2 (trust core) done: 7 files, 250 targeted + 91 guard tests green.
+- 2026-07-23 05:35 — Cycle 3 (performance + ledgers) done: 7 files, 370 targeted + 231 guard tests green.

@@ -58,7 +58,7 @@ function AccountabilityCard({
 }) {
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-mineral bg-eclipse/50 p-6">
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-2">
+      <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-ion-2">
         {eyebrow}
       </p>
       <h2 className="text-xl font-bold text-ion-white">{title}</h2>
@@ -84,7 +84,7 @@ export default function AccountabilityPage() {
       <main id="main-content" className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <header className="border-b border-mineral pb-10">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-orbital-cyan">
+          <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-orbital-cyan">
             Accountability
           </p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
@@ -103,7 +103,7 @@ export default function AccountabilityPage() {
         </header>
 
         {/* Four sections — three original + Proof of Record */}
-        <section className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
+        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <AccountabilityCard
             eyebrow="Loss autopsies"
             title="Hall of Misses"
@@ -147,7 +147,7 @@ export default function AccountabilityPage() {
 
         {/* What these sections cover */}
         <section className="rounded-2xl border border-mineral bg-eclipse/30 p-6">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
             What these surfaces cover
           </h2>
           <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
@@ -177,7 +177,7 @@ export default function AccountabilityPage() {
 
         {/* The commitment */}
         <section className="border-t border-mineral pt-8">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
             The commitment
           </h2>
           <ul className="flex flex-col gap-2 text-sm leading-6 text-ion-1">

@@ -160,7 +160,7 @@ export default async function PerformancePage() {
           minSettledPicksForLearning={gates.minSettledPicksForLearning}
         />
         <div className="mt-12">
-          <h2 className="mb-4 text-center text-sm font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="mb-4 text-center font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
             How we&apos;ll prove it
           </h2>
           <CalibrationPanel />
@@ -233,7 +233,10 @@ export default async function PerformancePage() {
       <main id="main-content" className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <div className="mb-10 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-ion-white sm:text-5xl">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+              Settled-pick audit trail
+            </p>
+            <h1 className="mt-3 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
               Calibration Report
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-ion-1">
@@ -241,7 +244,7 @@ export default async function PerformancePage() {
               losses alike. Picks from our early warm-up period are excluded
               by design. They don&apos;t get to inflate the record.
             </p>
-            <p className="mt-3 text-xs text-ion-3">
+            <p className="mt-3 text-xs text-ion-2">
               Past performance does not guarantee future results.
             </p>
           </div>
@@ -273,12 +276,12 @@ export default async function PerformancePage() {
                 data-testid="performance-methodology"
                 className="mb-8 rounded-2xl border border-mineral bg-eclipse/60 p-5"
               >
-                <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-2">
+                <h2 className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
                   Methodology
                 </h2>
                 <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs text-ion-1 sm:grid-cols-4">
                   <div>
-                    <dt className="text-ion-3">Win rate definition</dt>
+                    <dt className="text-ion-2">Win rate definition</dt>
                     <dd>
                       <code className="rounded bg-titanium px-1 py-0.5 font-mono text-[10px] text-ion-1">
                         wins divided by decided outcomes
@@ -286,11 +289,11 @@ export default async function PerformancePage() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-ion-3">Pushes</dt>
+                    <dt className="text-ion-2">Pushes</dt>
                     <dd>Reported separately, excluded from the denominator</dd>
                   </div>
                   <div>
-                    <dt className="text-ion-3">Sample size</dt>
+                    <dt className="text-ion-2">Sample size</dt>
                     <dd>
                       <span className={NUMERIC_TEXT_CLASS}>
                         {formatCount(overall.totalPicks)}
@@ -299,7 +302,7 @@ export default async function PerformancePage() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-ion-3">Model version</dt>
+                    <dt className="text-ion-2">Model version</dt>
                     <dd>
                       <code className="rounded bg-titanium px-1 py-0.5 font-mono text-[10px] text-ion-1">
                         {modelVersion ?? STAT_PLACEHOLDER}
@@ -308,7 +311,7 @@ export default async function PerformancePage() {
                   </div>
                   {computedAt && (
                     <div className="col-span-2 sm:col-span-4">
-                      <dt className="text-ion-3">Last computed</dt>
+                      <dt className="text-ion-2">Last computed</dt>
                       <dd>{computedAt.toUTCString()}</dd>
                     </div>
                   )}
@@ -318,7 +321,7 @@ export default async function PerformancePage() {
               <section className="mb-12">
                 <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
                   <div className="border-b border-mineral px-6 py-4">
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+                    <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
                       All-Time Overall
                     </h2>
                   </div>
@@ -345,7 +348,7 @@ export default async function PerformancePage() {
                     <OverallStat
                       label="Wins"
                       value={formatCount(overall.wins)}
-                      accent="text-orbital-cyan"
+                      accent="text-verify"
                     />
                     <OverallStat
                       label="Losses"
@@ -359,7 +362,7 @@ export default async function PerformancePage() {
                     />
                   </div>
                   <div className="border-t border-mineral px-6 py-3">
-                    <p className="text-xs text-ion-3">
+                    <p className="text-xs text-ion-2">
                       Based on{" "}
                       <span className={NUMERIC_TEXT_CLASS}>
                         {formatCount(overall.totalPicks)}
@@ -410,25 +413,25 @@ export default async function PerformancePage() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-mineral text-left">
-                          <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                             Period
                           </th>
-                          <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                             Sport
                           </th>
-                          <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                             Type
                           </th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-center font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                             W
                           </th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-center font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                             L
                           </th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-center font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                             P
                           </th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ion-2">
+                          <th scope="col" className="px-4 py-3 text-center font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                             Win%
                           </th>
                         </tr>
@@ -457,7 +460,7 @@ export default async function PerformancePage() {
                                 {s.pickType ?? "All"}
                               </td>
                               <td
-                                className={`px-4 py-3 text-center text-orbital-cyan ${NUMERIC_TEXT_CLASS}`}
+                                className={`px-4 py-3 text-center text-verify ${NUMERIC_TEXT_CLASS}`}
                               >
                                 {s.wins}
                               </td>
@@ -531,7 +534,7 @@ function WithheldStat({ settled, floor }: { settled: number; floor: number }) {
         </svg>
         Withheld
       </span>
-      <span className={`text-[11px] font-medium normal-case tracking-normal text-ion-3 ${NUMERIC_TEXT_CLASS}`}>
+      <span className={`text-[11px] font-medium normal-case tracking-normal text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
         opens at {floor} settled · {settled} so far
       </span>
     </span>
@@ -551,7 +554,7 @@ function OverallStat({
 }) {
   return (
     <div className="flex flex-col items-center gap-1 px-6 py-6 text-center">
-      <dt className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+      <dt className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2">
         {label}
       </dt>
       <dd
@@ -606,9 +609,9 @@ function SportCard({
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-center">
-        <div className="rounded-lg bg-orbital-cyan/10 py-2">
+        <div className="rounded-lg bg-verify/10 py-2">
           <p className="text-xs text-ion-2">W</p>
-          <p className={`text-lg font-bold text-orbital-cyan ${NUMERIC_TEXT_CLASS}`}>
+          <p className={`text-lg font-bold text-verify ${NUMERIC_TEXT_CLASS}`}>
             {wins}
           </p>
         </div>
@@ -626,7 +629,7 @@ function SportCard({
         </div>
       </div>
 
-      <p className="mt-3 text-center text-xs text-ion-3">
+      <p className="mt-3 text-center text-xs text-ion-2">
         <span className={NUMERIC_TEXT_CLASS}>{formatCount(totalPicks)}</span>{" "}
         official live-engine picks
         {band !== null && (
