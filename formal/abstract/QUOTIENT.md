@@ -248,3 +248,66 @@ Matching the repo's honesty norm (`../README.md`, `../INDUCTION_DOCTRINE.md`
   specification and proof artifacts; nothing here touches
   `apps/web`/`packages`, and the mapping to `srqc-projection.ts` /
   `invocation-pipeline.ts` / `credit-admission.ts` is descriptive only.
+
+---
+
+## Machine-checked pending-class quotient (W4)
+
+The prior sections argue the quotient on paper, riding the M1/M2 receipts. This
+section adds a **direct, dedicated TLC model-check** of the pending-class
+dimension in isolation: `PendingClassQuotient.tla` (+ two `.cfg`s, two receipts).
+Every claim below is backed by a receipt file with the actual TLC console output.
+
+### The bijection
+
+The runtime type `AbstractControlState.pendingCountClass ∈ {"ZERO","ONE","GE2"}`
+— produced per invocation by `apps/web/lib/ai-control-plane/srqc-projection.ts`'s
+`projectWindow` — **is** this TLA+ quotient's `PendingClass == {"ZERO","ONE","GE2"}`.
+The abstraction α maps a concrete pending-attempt count `k` (the natural number
+`concretePending(inv)` of §1) to a class, three ways:
+
+| concrete `k` | α(k) | TLA+ `pendingClass[i]` |
+|---|---|---|
+| `0` | `ZERO` | `"ZERO"` |
+| `1` | `ONE`  | `"ONE"`  |
+| `k ≥ 2` | `GE2` | `"GE2"` |
+
+`GE2` is a single **absorbing** class, deliberately **not** normalized away:
+`StartAttempt` walks `ZERO → ONE → GE2` and `GE2` self-loops; `EndAttempt` walks
+`GE2 → ONE → ZERO`. The values are identical strings on both sides of the
+bijection — the model uses the exact runtime enum, never a numeric domain.
+
+### Result
+
+Two exhaustive finite TLC runs at `CONSTANTS InvIds = {i1, i2, i3}`, over
+`pendingClass ∈ [InvIds -> PendingClass]`, `Init = all ZERO`:
+
+| run | NEXT | outcome | states (gen / distinct) | receipt |
+|---|---|---|---|---|
+| **controlled** | `NextControlled` (start admitted **only** from `ZERO`) | `AtMostOne` **HOLDS** — `No error has been found` | 25 / **8** | `PendingClassQuotient.controlled.tlc-receipt.txt` |
+| **uncontrolled** | `Next` (start walks `ZERO→ONE→GE2`) | `AtMostOne` **VIOLATED** — CTI reaches `GE2` | 11 / 11 | `PendingClassQuotient.uncontrolled.tlc-receipt.txt` |
+
+The controlled run's **8** distinct states are exactly `2^|InvIds| = 2^3`: every
+invocation is confined to `{ZERO, ONE}`, so `GE2` is never reached — establishing,
+by exhaustive finite model-check, the documented claim
+`SpecControlled => [](TypeOK /\ AtMostOne)`. The uncontrolled run's
+counterexample tail reaches `pendingClass = (i1 :> "GE2" @@ i2 :> "ZERO" @@
+i3 :> "ZERO")` via `StartAttempt(i1): ZERO → ONE → GE2`, so the `ZERO`-only
+admission guard is **load-bearing** — without it `GE2` is reachable.
+
+### NON-CLAIMS (honesty register)
+
+- **Finite `|InvIds|` only.** Checked at `InvIds = {i1, i2, i3}`. No statement
+  holds for arbitrary `|InvIds|`; this is **not** a ∀N parameterized result and
+  **not** a cutoff theorem (no finite bound is proved sound for all larger
+  instances).
+- **Class-quotient SAFETY model-check, not an injectivity proof.** This checks
+  that the *class* never reaches `GE2` under control; it does **not** prove
+  attempt-id injectivity, nor reconstruct concrete attempt identities — `GE2` is
+  a single collapsed class by construction.
+- **Finite-constant model-check, not a deductive proof.** The THEOREM comment in
+  `PendingClassQuotient.tla` is established by TLC's exhaustive enumeration of the
+  reachable state space at the model constants — honestly a finite-constant
+  model-check, **not** a TLAPS proof.
+- **TLAPS / Apalache unavailable** in this environment (no Z3/SMT). Finite TLC
+  receipts are the entire verification story for this section.

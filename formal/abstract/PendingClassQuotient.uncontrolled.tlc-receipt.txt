@@ -1,0 +1,62 @@
+\* ==========================================================================
+\* RECEIPT: PendingClassQuotient -- UNCONTROLLED run (AtMostOne FAILS, real CTI)
+\* --------------------------------------------------------------------------
+\* Command : java -jar /tmp/tla2tools.jar -config PendingClassQuotient.uncontrolled.cfg \
+\*                -workers auto PendingClassQuotient.tla
+\* CONSTANTS: InvIds = {i1, i2, i3}
+\* INIT Init / NEXT Next / INVARIANT TypeOK / INVARIANT AtMostOne
+\* Result  : Error: Invariant AtMostOne is violated.
+\*           Counterexample reaches a GE2 state:
+\*             State 3: pendingClass = (i1 :> "GE2" @@ i2 :> "ZERO" @@ i3 :> "ZERO")
+\*           via StartAttempt(i1): ZERO -> ONE (State 2) -> GE2 (State 3).
+\* States  : 11 generated, 11 distinct, 2 left on queue; depth 4.
+\* Meaning : Without the ZERO-only admission guard, GE2 is reachable --
+\*           the control checked in the controlled run is load-bearing, not
+\*           vacuous.
+\* Base SHA: c0689a22621d80a9b3e5b8828b75716d4880d9d1 (branch formal/feat/quotient-pending-class off
+\*           origin/formal/abstract-claim-exposure)
+\* TLC     : TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+\* ==========================================================================
+
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=35045 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 87 and seed 2810506231072519010 with 4 workers on 4 cores with 4020MB heap and 64MB offheap memory [pid: 24081] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/wt-quotient/formal/abstract/PendingClassQuotient.tla
+Parsing file /tmp/tlc-11334216027667239466/Naturals.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-11334216027667239466/_TLCTrace.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-11334216027667239466/TLC.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-11334216027667239466/TLCExt.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-11334216027667239466/Sequences.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-11334216027667239466/FiniteSets.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-11334216027667239466/Integers.tla (jar:file:/tmp/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module PendingClassQuotient
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module PendingClassQuotient
+Starting... (2026-07-23 02:07:28)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-07-23 02:07:28.
+Error: Invariant AtMostOne is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+pendingClass = (i1 :> "ZERO" @@ i2 :> "ZERO" @@ i3 :> "ZERO")
+
+State 2: <StartAttempt(i1) line 69, col 5 to line 75, col 63 of module PendingClassQuotient>
+pendingClass = (i1 :> "ONE" @@ i2 :> "ZERO" @@ i3 :> "ZERO")
+
+State 3: <StartAttempt(i1) line 69, col 5 to line 75, col 63 of module PendingClassQuotient>
+pendingClass = (i1 :> "GE2" @@ i2 :> "ZERO" @@ i3 :> "ZERO")
+
+11 states generated, 11 distinct states found, 2 states left on queue.
+The depth of the complete state graph search is 4.
+Finished in 00s at (2026-07-23 02:07:28)
+Trace exploration spec path: ./PendingClassQuotient_TTrace_1784772448.tla
