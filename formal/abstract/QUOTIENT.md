@@ -311,3 +311,27 @@ admission guard is **load-bearing** — without it `GE2` is reachable.
   model-check, **not** a TLAPS proof.
 - **TLAPS / Apalache unavailable** in this environment (no Z3/SMT). Finite TLC
   receipts are the entire verification story for this section.
+
+---
+
+## Cutoff ladder (W4+)
+
+The W4 section above checks the pending-class quotient at a single fixed
+`|InvIds| = 3`. On top of it sits a **finite cutoff ladder**, all real TLC:
+
+- **`CUTOFF_CLAIM.md`** — the load-bearing claim: `AtMostOneFamily.tla`
+  (`SpecC ⇒ [](TypeOK /\ AtMostOne)`) model-checked exhaustively for every
+  `|InvIds| = 1 .. N*`, with **N\* = 8**. Receipts:
+  `../receipts/cutoff-matrix/n1.txt … n8.txt` + `summary.txt`
+  (`N_STAR=8`, `CUTOFF_MATRIX_OK`), produced by
+  `scripts/formal/run-cutoff-matrix.sh`.
+- **`PARAM_STATUS.md`** + **`AtMostOneParam.tla`** — the *deferred* deductive
+  target `ASSUME IsFiniteSet(InvIds) ⇒ THEOREM SpecC => []AtMostOne`.
+  `AtMostOneParam.tla` is an **UNVERIFIED PROOF TARGET** (loud header): tlapm /
+  TLAPS is not available in this environment, so it is not machine-checked. See
+  `../TLAPS_DEFERRED.md`.
+
+**Honest boundary.** The TLC finite cutoff (to N\* = 8) is real and exhaustive
+per cardinality. The TLAPS result over arbitrary finite `InvIds` is a deferred
+target, unavailable here — no `tlapm` log exists and none is fabricated. Absence
+of TLAPS does not invalidate the finite TLC cutoff receipts.
