@@ -190,9 +190,27 @@ export function projectWindow(
   return out;
 }
 
-// ─── Admission stub (always admits; forces the projection shape) ────────────
+// ─── Admission (SHADOW/ENFORCE; SHADOW default preserves always-ADMIT) ──────
 
 export type SrqcAdmissionDecision = "ADMIT" | "REFUSE";
+
+/**
+ * Admission mode (M5, first enforcement-capable step).
+ *
+ * SHADOW (the default): compute the projection and surface any violations in
+ * `.violations`, but ALWAYS return `ADMIT` — byte-for-byte the same behavior
+ * as the pre-M5 always-admit stub. Every existing caller that does not pass a
+ * mode gets SHADOW and is therefore unaffected.
+ *
+ * ENFORCE: return `REFUSE` when (and only when) the projection surfaces at
+ * least one violation; otherwise `ADMIT`. ENFORCE is NOT the default and is
+ * reachable in this repo ONLY through the clearly-labeled lab helper below
+ * (`evaluateSrqcAdmissionForLab`), which itself only selects ENFORCE when the
+ * `SRQC_ENFORCE=1` env flag is set. No production/public/readiness path resolves
+ * this mode, so the live system stays always-ADMIT unless someone explicitly
+ * opts a lab environment into ENFORCE.
+ */
+export type SrqcMode = "SHADOW" | "ENFORCE";
 
 export interface SrqcAdmissionResult {
   readonly decision: SrqcAdmissionDecision;
@@ -206,15 +224,26 @@ export interface SrqcAdmissionResult {
 }
 
 /**
- * The seed of `admitUnderSRQC`. Today it ALWAYS admits — no runtime behavior
- * is gated on it — but it computes the projection every time so the event
- * shape is exercised and any GE2 (forbidden two-Pending) window is surfaced
- * in `violations`. A real certificate would later refuse on a violation; this
- * stub deliberately does not, so it can be introduced with zero behavior
- * change (detection-only, matching the dormant-until-owner-decision posture).
+ * `admitUnderSRQC` — pure admission decision over a ledger window.
+ *
+ * It computes the projection every time so the event shape is exercised and
+ * any GE2 (forbidden two-Pending) window is surfaced in `violations`.
+ *
+ * The `mode` argument (defaulting to SHADOW) decides whether a violation is
+ * merely reported or actually refused:
+ *   - SHADOW (default) ALWAYS returns `ADMIT`, even when `violations` is
+ *     non-empty — detection-only, byte-identical to the pre-M5 stub. This is
+ *     what every caller that omits `mode` gets.
+ *   - ENFORCE returns `REFUSE` iff there is at least one violation, else
+ *     `ADMIT`.
+ *
+ * This function is PURE: it never reads `process.env` or any ambient config.
+ * Mode selection from the environment happens at exactly one call site — the
+ * lab helper `evaluateSrqcAdmissionForLab` below — never here.
  */
 export function admitUnderSRQC(
   events: readonly ProjectableEvent[],
+  mode: SrqcMode = "SHADOW",
 ): SrqcAdmissionResult {
   const projected = projectWindow(events);
   const violations = projected.filter(
@@ -222,5 +251,53 @@ export function admitUnderSRQC(
       s.pendingCountClass === "GE2" ||
       (s.hasRejectedFp && !s.fingerprintBound),
   );
-  return { decision: "ADMIT", projected, violations };
+  const decision: SrqcAdmissionDecision =
+    mode === "ENFORCE" && violations.length > 0 ? "REFUSE" : "ADMIT";
+  return { decision, projected, violations };
+}
+
+// ─── Lab wiring (the ONE place ENFORCE can be reached) ──────────────────────
+
+/**
+ * Minimal structural view of the environment the lab wiring reads. Kept narrow
+ * (only the one flag it consults) so it is satisfied by both `process.env` and
+ * a synthetic test object without pulling in the full `NodeJS.ProcessEnv`.
+ */
+export interface SrqcEnvLike {
+  readonly SRQC_ENFORCE?: string;
+  readonly [key: string]: string | undefined;
+}
+
+/**
+ * Resolve the SRQC admission mode from the environment. ENFORCE ONLY when the
+ * explicit opt-in flag `SRQC_ENFORCE=1` is present; SHADOW (⇒ always-ADMIT)
+ * for every other value, including unset. This is the sole reader of the flag.
+ */
+export function resolveSrqcModeFromEnv(
+  env: SrqcEnvLike = process.env,
+): SrqcMode {
+  return env.SRQC_ENFORCE === "1" ? "ENFORCE" : "SHADOW";
+}
+
+/**
+ * LAB-ONLY admission entry point.
+ *
+ * DANGER / SCOPE: this is the ONLY function in the repo through which the
+ * ENFORCE (REFUSE-capable) path can be reached, and it is deliberately NOT
+ * imported by any production route, worker, cron, executor, or C1–C8
+ * readiness gate — verified by grep at commit time. It exists so a lab
+ * operator can exercise real enforcement behind `SRQC_ENFORCE=1` without
+ * touching any user-facing path.
+ *
+ * Because `resolveSrqcModeFromEnv` returns SHADOW unless `SRQC_ENFORCE=1`, the
+ * default posture even of THIS helper is always-ADMIT; a REFUSE can only occur
+ * in a lab environment that has explicitly set the flag AND fed it a window
+ * that projects a violation.
+ */
+export function evaluateSrqcAdmissionForLab(
+  events: readonly ProjectableEvent[],
+  env: SrqcEnvLike = process.env,
+): SrqcAdmissionResult {
+  const mode = resolveSrqcModeFromEnv(env);
+  return admitUnderSRQC(events, mode);
 }

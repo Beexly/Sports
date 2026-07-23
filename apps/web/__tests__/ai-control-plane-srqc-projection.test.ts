@@ -15,6 +15,8 @@ import { describe, it, expect } from "vitest";
 import {
   projectWindow,
   admitUnderSRQC,
+  evaluateSrqcAdmissionForLab,
+  resolveSrqcModeFromEnv,
   type ProjectableEvent,
 } from "@/lib/ai-control-plane/srqc-projection";
 
@@ -212,5 +214,70 @@ describe("SRQC projection stub (seed of α)", () => {
     ]);
     expect(states[0]!.hasRejectedFp).toBe(true);
     expect(states[0]!.fingerprintBound).toBe(true); // the id is bound the moment any event exists
+  });
+});
+
+describe("M5 SHADOW/ENFORCE admission modes", () => {
+  const geTwoWindow: readonly ProjectableEvent[] = [
+    started("inv-1", "att-1"),
+    started("inv-1", "att-2"), // two concurrently pending → GE2 violation
+  ];
+  const cleanWindow: readonly ProjectableEvent[] = [
+    started("inv-1", "att-1"),
+  ];
+
+  it("SHADOW + a GE2 window → ADMIT with the violation surfaced (shadow NEVER refuses)", () => {
+    const result = admitUnderSRQC(geTwoWindow, "SHADOW");
+    expect(result.decision).toBe("ADMIT");
+    expect(result.violations).toHaveLength(1);
+    expect(result.violations[0]!.pendingCountClass).toBe("GE2");
+  });
+
+  it("ENFORCE + a GE2 window → REFUSE", () => {
+    const result = admitUnderSRQC(geTwoWindow, "ENFORCE");
+    expect(result.decision).toBe("REFUSE");
+    expect(result.violations).toHaveLength(1);
+  });
+
+  it("ENFORCE + a clean window → ADMIT (nothing to refuse)", () => {
+    const result = admitUnderSRQC(cleanWindow, "ENFORCE");
+    expect(result.decision).toBe("ADMIT");
+    expect(result.violations).toHaveLength(0);
+  });
+
+  it("default call (no mode arg) behaves as SHADOW: ADMIT even with a violation — existing callers unaffected", () => {
+    const withMode = admitUnderSRQC(geTwoWindow, "SHADOW");
+    const withoutMode = admitUnderSRQC(geTwoWindow);
+    expect(withoutMode.decision).toBe("ADMIT");
+    expect(withoutMode.violations).toHaveLength(1);
+    // Byte-identical decision to an explicit SHADOW call.
+    expect(withoutMode.decision).toBe(withMode.decision);
+  });
+});
+
+describe("M5 lab wiring (the ONE place ENFORCE is reachable)", () => {
+  const geTwoWindow: readonly ProjectableEvent[] = [
+    started("inv-1", "att-1"),
+    started("inv-1", "att-2"),
+  ];
+
+  it("resolveSrqcModeFromEnv is ENFORCE only when SRQC_ENFORCE === '1'", () => {
+    expect(resolveSrqcModeFromEnv({ SRQC_ENFORCE: "1" })).toBe("ENFORCE");
+    expect(resolveSrqcModeFromEnv({})).toBe("SHADOW"); // unset → SHADOW
+    expect(resolveSrqcModeFromEnv({ SRQC_ENFORCE: "0" })).toBe("SHADOW");
+    expect(resolveSrqcModeFromEnv({ SRQC_ENFORCE: "true" })).toBe("SHADOW");
+    expect(resolveSrqcModeFromEnv({ SRQC_ENFORCE: "" })).toBe("SHADOW");
+  });
+
+  it("lab helper REFUSES a GE2 window only when SRQC_ENFORCE=1; ADMITs (shadow) otherwise", () => {
+    expect(
+      evaluateSrqcAdmissionForLab(geTwoWindow, { SRQC_ENFORCE: "1" }).decision,
+    ).toBe("REFUSE");
+    expect(
+      evaluateSrqcAdmissionForLab(geTwoWindow, {}).decision,
+    ).toBe("ADMIT");
+    expect(
+      evaluateSrqcAdmissionForLab(geTwoWindow, { SRQC_ENFORCE: "0" }).decision,
+    ).toBe("ADMIT");
   });
 });
