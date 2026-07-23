@@ -13,7 +13,7 @@
  *     DATABASE_URL="postgresql://postgres@127.0.0.1:5433/sports_test?schema=public" \
  *     ../../node_modules/.bin/vitest run compliance-store-pg
  */
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
 import { db } from "@sports/db";
 import {
