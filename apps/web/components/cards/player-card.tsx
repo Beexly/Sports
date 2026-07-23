@@ -13,7 +13,11 @@ import Image from "next/image";
 export interface PlayerCardStat {
   readonly label: string;
   readonly value: string;
-  readonly tone?: "cyan" | "plasma" | "uv" | "ion";
+  /**
+   * cyan = data liveness, plasma = earned emphasis (never a negative),
+   * uv = depth/premium, ion = neutral, alert = a genuinely negative signal.
+   */
+  readonly tone?: "cyan" | "plasma" | "uv" | "ion" | "alert";
 }
 
 export interface PlayerCardProps {
@@ -40,6 +44,7 @@ const TONE_TEXT: Record<NonNullable<PlayerCardStat["tone"]>, string> = {
   plasma: "text-plasma",
   uv: "text-ultraviolet",
   ion: "text-ion-white",
+  alert: "text-alert",
 };
 
 export function PlayerCard({

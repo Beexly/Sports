@@ -767,6 +767,12 @@ function SectionBlock({ section, tok, variant }: { section: SectionData; tok: To
         }
       : undefined;
 
+  // sr-only <caption> — the visible <h2> above does not attach to the table,
+  // so AT users navigating table-by-table need the name on the table itself.
+  const caption = [section.eyebrow, section.title, section.blurb]
+    .filter(Boolean)
+    .join(". ");
+
   return (
     <section className="flex flex-col gap-3">
       {section.eyebrow || section.title || section.blurb ? (
@@ -796,6 +802,7 @@ function SectionBlock({ section, tok, variant }: { section: SectionData; tok: To
         minWidth={section.minWidth}
         emptyTitle={section.emptyTitle}
         emptyHint={section.emptyHint}
+        caption={caption || undefined}
         variant={variant}
       />
 

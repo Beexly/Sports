@@ -11,6 +11,7 @@ import { PlayerLensRail } from "@/components/players/player-lens-rail";
 import { PLAYER_VIEWS, resolvePlayerView, type ViewResult } from "@/lib/players/views";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { PlayerCard } from "@/components/cards/player-card";
+import { STAT_PLACEHOLDER } from "@/lib/format/stat";
 import type { PlayerSeasonLine } from "@/lib/nflverse/player-lab";
 
 export const dynamic = "force-dynamic";
@@ -67,7 +68,7 @@ function ProductionSpotlight({ result, season }: { result: ViewResult; season?: 
   const leaders = result.sections.find((s) => s.kind === "production-leaders");
   const top = leaders?.rows?.[0] as PlayerSeasonLine | undefined;
   if (!top) return null;
-  const fmt = (n: number) => (Number.isFinite(n) ? n.toFixed(1) : "—");
+  const fmt = (n: number) => (Number.isFinite(n) ? n.toFixed(1) : STAT_PLACEHOLDER);
   return (
     <div className="flex flex-col gap-4 rounded-ds-lg border border-mineral bg-eclipse/40 p-5 lg:flex-row lg:items-center lg:justify-between">
       <div className="max-w-md">
@@ -91,7 +92,9 @@ function ProductionSpotlight({ result, season }: { result: ViewResult; season?: 
         headlineLabel="PPR / game"
         stats={[
           { label: "Last 5", value: fmt(top.last5PprPerGame), tone: "cyan" },
-          { label: "Form Δ", value: `${top.last5PprDelta >= 0 ? "+" : ""}${fmt(top.last5PprDelta)}`, tone: top.last5PprDelta >= 0 ? "cyan" : "plasma" },
+          // Signed + toned like the table's Δ column: cyan up, alert down.
+          // (Plasma is earned emphasis and never marks a negative.)
+          { label: "Form Δ", value: `${top.last5PprDelta >= 0 ? "+" : ""}${fmt(top.last5PprDelta)}`, tone: top.last5PprDelta >= 0 ? "cyan" : "alert" },
           { label: "Boom%", value: `${Math.round(top.boomRate * 100)}`, tone: "uv" },
           { label: "Games", value: String(top.games), tone: "ion" },
         ]}
@@ -132,7 +135,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           actions={
             <Link
               href={view.jsonHref}
-              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion-white hover:border-orbital-cyan"
+              className="inline-flex min-h-11 items-center justify-center rounded-ds-sm border border-mineral px-5 py-3 text-sm font-semibold text-ion hover:border-orbital-cyan hover:text-ion-white"
               title="The raw rows behind this table, as machine-readable JSON"
             >
               Raw data (JSON)
@@ -176,7 +179,7 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
             <PlayerLabTable sections={result.sections} variant="dark" />
 
             {result.sourceIds.length > 0 ? (
-              <Attribution sourceIds={result.sourceIds} className="!text-ion-2" />
+              <Attribution sourceIds={result.sourceIds} />
             ) : null}
           </>
         )}

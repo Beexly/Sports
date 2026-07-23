@@ -83,6 +83,12 @@ export interface DataTableProps<Row> {
   /** Empty-state copy when there are zero rows (before filtering). */
   emptyTitle?: string;
   emptyHint?: string;
+  /**
+   * Screen-reader table caption (rendered sr-only). Gives the table an
+   * accessible name for AT users who navigate by table; visible headings
+   * outside the table do not attach to it.
+   */
+  caption?: string;
   /** Show the 1-based rank "#" column. */
   showRank?: boolean;
   /** Extra className on the scroll container. */
@@ -287,6 +293,7 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
     rowTitle,
     emptyTitle = "No rows in the source window.",
     emptyHint,
+    caption,
     showRank = false,
     className = "",
     minWidth,
@@ -353,6 +360,7 @@ export function DataTable<Row>(props: DataTableProps<Row>): JSX.Element {
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm" style={tableStyle}>
+          {caption ? <caption className="sr-only">{caption}</caption> : null}
           <thead className={`sticky top-0 z-10 ${t.headBg}`}>
             <tr className={`border-b ${t.headBorder}`}>
               {showRank ? (

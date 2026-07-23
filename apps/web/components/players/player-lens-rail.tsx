@@ -42,7 +42,7 @@ export function PlayerLensRail({
   const href = (slug: string) => buildTabHref(pathname, "view", slug, currentParams);
 
   return (
-    <div className="flex flex-col gap-5" role="navigation" aria-label="Player Lab lenses">
+    <nav className="flex flex-col gap-5" aria-label="Player Lab lenses">
       {/* Primary surfaces */}
       <div className="grid gap-3 sm:grid-cols-2">
         {PRIMARY.map((p) => {
@@ -113,6 +113,6 @@ export function PlayerLensRail({
           <span aria-hidden>→</span>
         </Link>
       </div>
-    </div>
+    </nav>
   );
 }
