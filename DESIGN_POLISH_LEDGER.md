@@ -28,8 +28,8 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[✓]` audited, alread
 | 14 | Marketing story | /about, /how-we-make-money, /vs/tout-services, /faq, /press, /partners, /media-kit, /contact | [x] | how-we-make-money off BRAND_COLORS/inline styles; ink-500 sub-AA meta fixed across group; press card-border bleed fixed; numerals off display font; copy meaning untouched (525 guard tests) |
 | 15 | Content surfaces | /blog, /journal, /the-beat, /podcast, /newsletter, /gsn, /airwave, /changelog, /case-studies/* | [x] | all pages BRAND_COLORS-free; blog paywall card + featured/sport chips re-toned (caution→plasma/UV); journal UV eyebrows; time elements + reading measures; ink-500 contrast failures fixed; empty states bordered. Remaining: dynamic hex tone-maps inside the-beat/galaxy-broadcast/pundit-ledger/transmission components |
 | 16 | Narrative worlds | /house, /academy, /engine, /fable, /human, /deck, /observatory, /intelligence, /cipher, /vault, /content-lab, /integrations, /promotions | [x] | all BRAND_COLORS/ink/brand-* purged; observatory invisible-emphasis fix; promotions plasma CTA w/ dark ink; deck dots → token vars; cipher terminal finished; fable + integrations already clean |
-| 17 | Legal + misc | /terms, /privacy, /responsible-play, /preview/[sport]/[slug] | [ ] | |
-| 18 | Game room + today | /room/[gameId], /today, /brief | [ ] | |
+| 17 | Legal + misc | /terms, /privacy, /responsible-play, /preview/[sport]/[slug] | [x] | responsible-play: fixed a live render-crash bug (BRAND_COLORS used without import) + full token purge + a11y heading fix; preview page eyebrow idiom + heading; terms/privacy already reference-quality |
+| 18 | Game room + today | /room/[gameId], /today, /brief | [x] | room: finished earlier cyan cleanup, dead hover no-ops fixed, heading-level a11y fix; today + brief: BRAND_COLORS inline styles → tokens, plasma CTA idiom |
 | 19 | Cockpit A | /cockpit, /cockpit/command-center, /cockpit/agents, /cockpit/tasks, /cockpit/history | [ ] | tokens done; polish pass |
 | 20 | Cockpit B | remaining /cockpit/* (~15 routes) | [ ] | tokens done; polish pass |
 | 21 | Admin + statking | /admin/*, /admin/statking/* | [ ] | lowest priority |
@@ -59,3 +59,4 @@ Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
 - 2026-07-23 07:28 — Cycle 14 (marketing story) done: 8 files, 525 tests green.
 - 2026-07-23 07:40 — Cycle 15 (content surfaces) done: 15 files, 307 targeted + 151 tangential tests green.
 - 2026-07-23 07:52 — Cycle 16 (narrative worlds) done: 12 files, 552 targeted + 73 tangential tests green.
+- 2026-07-23 12:45 — Cycles 17+18 (legal/misc/game room) done: 7 files, 80 targeted + 55 tangential tests green. (Session switched Fable 5 → Sonnet 5 mid-loop after hitting a usage limit; loop continues unaffected.)

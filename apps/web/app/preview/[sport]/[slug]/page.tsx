@@ -272,10 +272,10 @@ export default async function PreviewPage({ params }: Props) {
 
       <Nav />
 
-      <main id="main-content" className="max-w-3xl mx-auto px-4 py-12 space-y-8">
+      <main id="main-content" className="max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8 space-y-8">
         {/* Header */}
         <header className="space-y-2">
-          <p className="text-sm uppercase tracking-wide text-ion-2">
+          <p className="font-mono text-xs uppercase tracking-[0.16em] text-ion-2">
             {resolution.sport.name.toUpperCase()} · {formattedDate}
           </p>
           <h1 className="text-3xl font-bold text-ion-white">
@@ -287,8 +287,8 @@ export default async function PreviewPage({ params }: Props) {
         {/* Model lean */}
         {pick ? (
           <section className="rounded-lg border border-mineral p-6 space-y-2">
-            <p className="text-xs uppercase tracking-wide text-ion-2">
-              Model Lean
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-ion-2">
+              Model lean
             </p>
             <p className="text-2xl font-semibold">{pick.selection}</p>
             {/* The confidence number is the paid metric (`canSeeConfidence` —
@@ -327,7 +327,7 @@ export default async function PreviewPage({ params }: Props) {
 
         {/* Matchup details */}
         <section className="space-y-3">
-          <h2 className="font-semibold text-lg">Matchup Details</h2>
+          <h2 className="font-display text-lg font-semibold text-ion-white">Matchup details</h2>
           <dl className="text-sm space-y-1.5">
             <div className="flex gap-2">
               <dt className="text-ion-2 w-28 shrink-0">Away</dt>

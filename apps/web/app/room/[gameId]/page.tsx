@@ -35,13 +35,13 @@ export default async function GameRoomPage({
       <Nav />
       <main id="main-content" className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
         <header className="border-b border-titanium pb-8">
-          <Link href="/board" className="text-sm font-semibold text-orbital-cyan hover:text-orbital-cyan">
+          <Link href="/board" className="text-sm font-semibold text-orbital-cyan transition-colors hover:text-ion-white">
             Today&apos;s Board
           </Link>
           <p className="mt-5 font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
             Game Intelligence Room
           </p>
-          <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">{room.node.matchup}</h1>
+          <h1 className="mt-3 text-3xl font-black tracking-tight text-ion-white sm:text-5xl">{room.node.matchup}</h1>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-2">
             A persistent read-only room for market state, evidence history, pre-mortem context,
             lens-safe summaries, and postgame memory.
@@ -94,7 +94,7 @@ export default async function GameRoomPage({
                 {room.timeline.map((item) => (
                   <li key={item.id} className="grid gap-2 px-4 py-3 text-sm sm:grid-cols-[1fr_auto]">
                     <div>
-                      <p className="font-semibold text-white">{item.label}</p>
+                      <p className="font-semibold text-ion-white">{item.label}</p>
                       <p className="mt-1 text-xs text-ion-3">{item.source}</p>
                     </div>
                     <div className="text-left sm:text-right">
@@ -123,7 +123,7 @@ export default async function GameRoomPage({
               </p>
             ) : room.premortem ? (
               <div className="text-sm leading-6 text-ion-1">
-                <h2 className="font-semibold text-white">{room.premortem.headline}</h2>
+                <h3 className="font-semibold text-ion-white">{room.premortem.headline}</h3>
                 <p className="mt-3">{room.premortem.summary}</p>
               </div>
             ) : (
@@ -139,7 +139,7 @@ export default async function GameRoomPage({
             <div className="grid gap-3 sm:grid-cols-2">
               {room.lenses.map((lens) => (
                 <article key={lens.lens} className="border border-titanium bg-obsidian/55 p-4">
-                  <h2 className="font-mono text-xs font-semibold text-orbital-cyan">{lens.lens}</h2>
+                  <h3 className="font-mono text-xs font-semibold text-orbital-cyan">{lens.lens}</h3>
                   <p className="mt-3 text-sm leading-6 text-ion-2">{lens.visibleSummary}</p>
                 </article>
               ))}
@@ -189,7 +189,7 @@ function Metric({ label, value }: { label: string; value: string }): JSX.Element
   return (
     <div className="min-h-20 border border-titanium bg-carbon/60 p-4">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>
-      <p className="mt-2 break-words text-xl font-bold text-white">{value}</p>
+      <p className="mt-2 break-words text-xl font-bold text-ion-white">{value}</p>
     </div>
   );
 }
@@ -209,7 +209,7 @@ function NextStep({ href, label, hint }: { href: string; label: string; hint: st
       href={href}
       className="group block border border-titanium bg-obsidian/55 p-4 transition-colors hover:border-orbital-cyan/40"
     >
-      <p className="font-mono text-xs font-semibold text-orbital-cyan group-hover:text-orbital-cyan">{label}</p>
+      <p className="font-mono text-xs font-semibold text-orbital-cyan">{label}</p>
       <p className="mt-2 text-sm leading-6 text-ion-2">{hint}</p>
     </Link>
   );
