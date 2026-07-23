@@ -1,0 +1,31 @@
+# Dockerfile.tlaps — STUB (no run has been performed with this image)
+#
+# This is a scaffold for a future TLAPS-capable image. It is NOT built or run
+# in this environment, and its existence is NOT evidence of any proof. The
+# owner pins the exact tlapm / zenon / Isabelle versions before any real run.
+#
+# When a real image is built and a genuine `tlapm` run produces a certificate
+# (exit 0, a proved `theorem` line), that log — and only such a real log — may
+# be committed under formal/receipts/tlaps/*.log. Until then, the load-bearing
+# artifact is the TLC cutoff matrix (see formal/abstract/CUTOFF_CLAIM.md).
+
+FROM ubuntu:24.04
+
+# --- Owner pins these before any real run (versions intentionally unset) ---
+#   TLAPM_VERSION   (e.g. tlaps 1.5.0)
+#   ZENON_VERSION
+#   ISABELLE_VERSION (Isabelle2011-1 or the version the pinned tlapm needs)
+#
+# Sketch of the intended install (left as comments; NOT executed as a claim):
+#   RUN apt-get update && apt-get install -y --no-install-recommends \
+#         build-essential ocaml opam wget ca-certificates && \
+#       rm -rf /var/lib/apt/lists/*
+#   RUN wget -O /tmp/tlaps-install.bin \
+#         https://github.com/tlaplus/tlapm/releases/download/<PIN>/... && \
+#       sh /tmp/tlaps-install.bin
+#
+# Intended verification entrypoint (documented, not run here):
+#   tlapm --toolbox 0 0 formal/abstract/AtMostOneParam.tla \
+#     | tee formal/receipts/tlaps/AtMostOneParam.log
+#
+# No CMD/ENTRYPOINT that claims a run — this file is documentation only.
