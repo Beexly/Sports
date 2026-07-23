@@ -42,6 +42,10 @@ export interface AcceptProposalInput {
 interface ProposalRow {
   readonly proposedPredicateText: string;
   readonly skillKind: string;
+  readonly predicateKeys: string[];
+  readonly strength: number;
+  readonly support: number;
+  readonly activeVersionAtMint: number;
 }
 
 /**
@@ -54,7 +58,8 @@ export async function acceptProposalAndActivate(
   input: AcceptProposalInput,
 ): Promise<void> {
   const rows = await sql.query<ProposalRow>(
-    `SELECT "proposedPredicateText", "skillKind"
+    `SELECT "proposedPredicateText", "skillKind", "predicateKeys",
+            "strength", "support", "activeVersionAtMint"
        FROM "ind_inv_proposal"
       WHERE "id" = $1`,
     [input.proposalId],
@@ -72,11 +77,25 @@ export async function acceptProposalAndActivate(
     .update(input.priorIndInvHash ?? "")
     .digest("hex");
 
+  // Provenance carried onto the version register: which proposal, its skill
+  // class, the executable predicate keys it adds, and the ranking evidence
+  // (strength/support) + the baseline it was minted against.
+  const notes = JSON.stringify({
+    fromProposal: input.proposalId,
+    skillKind: proposal.skillKind,
+    predicateKeys: Array.isArray(proposal.predicateKeys)
+      ? proposal.predicateKeys
+      : [],
+    strength: proposal.strength,
+    support: proposal.support,
+    activeVersionAtMint: proposal.activeVersionAtMint,
+  });
+
   await recordSrqcVersionCandidate(sql, {
     version: input.newVersion,
     indInvHash,
     refinementReceiptHash: input.refinementReceiptHash ?? null,
-    notes: `from proposal ${input.proposalId} skillKind=${proposal.skillKind}`,
+    notes,
   });
 
   await activateSrqcVersion(sql, input.newVersion);

@@ -123,10 +123,15 @@ export async function recordSrqcVersionCandidate(
 ): Promise<void> {
   await sql.query(
     `INSERT INTO "srqc_version"
-       ("version", "indInvHash", "refinementReceiptHash", "status")
-     VALUES ($1, $2, $3, 'candidate')
+       ("version", "indInvHash", "refinementReceiptHash", "status", "notes")
+     VALUES ($1, $2, $3, 'candidate', $4)
      ON CONFLICT ("version") DO NOTHING`,
-    [input.version, input.indInvHash, input.refinementReceiptHash ?? null],
+    [
+      input.version,
+      input.indInvHash,
+      input.refinementReceiptHash ?? null,
+      input.notes ?? null,
+    ],
   );
 }
 

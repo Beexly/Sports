@@ -295,6 +295,38 @@ export interface SrqcEnvLike {
 }
 
 /**
+ * PURE sync logged admit (KERNEL v1 addition). Identical to `admitUnderSRQC`
+ * (same pure projection + decision, no env, no I/O beyond ONE structured log)
+ * — it emits a single `console.info` `{kind:"srqc_admit",...}` line and
+ * returns the result. Use it where the caller already has the active
+ * certificate in hand (no DB load); `admitUnderSRQCWithVersion` below is the
+ * DB-loading async convenience. Logging is the only side effect; the decision
+ * remains SHADOW-ADMIT by default and ENFORCE (lab-only) REFUSE-iff-violation.
+ */
+export function admitUnderSRQCLogged(
+  events: readonly ProjectableEvent[],
+  mode: SrqcMode = "SHADOW",
+  active: ActiveSrqcVersion | null = null,
+): SrqcAdmissionResult {
+  const result = admitUnderSRQC(events, mode, active);
+  const violationPending = result.violations.some(
+    (s) => s.pendingCountClass === "GE2",
+  );
+  // eslint-disable-next-line no-console
+  console.info(
+    JSON.stringify({
+      kind: "srqc_admit",
+      decision: result.decision,
+      mode,
+      srqcVersion: result.srqcVersion,
+      violationCount: result.violations.length,
+      violationPending,
+    }),
+  );
+  return result;
+}
+
+/**
  * Resolve the SRQC admission mode from the environment. ENFORCE ONLY when the
  * explicit opt-in flag `SRQC_ENFORCE=1` is present; SHADOW (⇒ always-ADMIT)
  * for every other value, including unset. This is the sole reader of the flag

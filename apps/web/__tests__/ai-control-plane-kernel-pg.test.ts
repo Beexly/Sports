@@ -26,6 +26,7 @@ import { Pool } from "pg";
 
 import {
   admitUnderSRQC,
+  admitUnderSRQCLogged,
   type AbstractControlState,
   type ProjectableEvent,
 } from "@/lib/ai-control-plane/srqc-projection";
@@ -33,12 +34,22 @@ import {
   admitUnderSRQCWithVersion,
   resolveSrqcModeFromEnv,
   emitProposalsFromOpenCtis,
+  rescoreOpenProposals,
   evaluateWindowWithSkills,
   runSkillAugmentedCti,
   acceptProposalAndActivate,
   getActiveSrqcVersion,
   publishSrqcHealthDp,
+  violationCount,
+  delta,
+  multiWindowStats,
+  rankByStrength,
+  softGate,
+  predicateKeysForCti,
+  predsFromKeys,
+  skillKindFromCti,
   type ForbiddenPair,
+  type IndInvPred,
   type SrqcHealthRaw,
   type UniformRng,
   type ControlSqlClient,
@@ -68,6 +79,24 @@ const ONE_PENDING: AbstractControlState = {
 const GE2_AFTER: AbstractControlState = {
   ...ONE_PENDING,
   pendingCountClass: "GE2",
+};
+
+const SAFE_TERMINAL: AbstractControlState = {
+  invocationId: "inv-safe",
+  claimPhase: "TERMINAL",
+  exposurePhase: "NONE",
+  pendingCountClass: "ZERO",
+  fingerprintBound: true,
+  hasRejectedFp: false,
+};
+
+const REJECTED_UNBOUND: AbstractControlState = {
+  invocationId: "inv-rej",
+  claimPhase: "OPEN",
+  exposurePhase: "HELD",
+  pendingCountClass: "ONE",
+  fingerprintBound: false,
+  hasRejectedFp: true,
 };
 
 /** A deterministic seeded uniform rng (mulberry32) for DP tests. */
@@ -114,6 +143,95 @@ describe("kernel pure — skill-augmented CTI ranking", () => {
       { before: ONE_PENDING, action: "StartPending" },
     ]);
     expect(admitUnderSRQC(window).decision).toBe("ADMIT");
+  });
+});
+
+describe("kernel pure — violation-delta ranking core", () => {
+  const GE2_PENDING: AbstractControlState = { ...ONE_PENDING, pendingCountClass: "GE2" };
+
+  it("violationCount uses BASE_INDS: GE2 and rejected-unbound violate, safe does not", () => {
+    expect(violationCount([SAFE_TERMINAL])).toBe(0);
+    expect(violationCount([GE2_PENDING])).toBe(1);
+    expect(violationCount([REJECTED_UNBOUND])).toBe(1);
+    expect(violationCount([GE2_PENDING, REJECTED_UNBOUND, SAFE_TERMINAL])).toBe(2);
+  });
+
+  it("delta counts the ADDITIONAL near-misses a strengthening catches (≥0)", () => {
+    const extra = predsFromKeys(["GE2_FORBIDDEN"]); // forbids OPEN+ONE-pending
+    // ONE_PENDING is not a baseline violation but IS caught by the strengthening.
+    expect(violationCount([ONE_PENDING])).toBe(0);
+    expect(delta([ONE_PENDING], extra)).toBe(1);
+    // A safe terminal is unaffected.
+    expect(delta([SAFE_TERMINAL], extra)).toBe(0);
+    // No extra predicates ⇒ delta 0 by definition.
+    expect(delta([ONE_PENDING], [])).toBe(0);
+  });
+
+  it("multiWindowStats: support = #windows with delta>0, strength = Σ max(0,delta), population variance", () => {
+    const extra = predsFromKeys(["GE2_FORBIDDEN"]);
+    const windows = [
+      [ONE_PENDING], // delta 1
+      [ONE_PENDING, { ...ONE_PENDING, invocationId: "b" }], // delta 2
+      [SAFE_TERMINAL], // delta 0
+    ];
+    const stats = multiWindowStats(windows, extra);
+    expect(stats.deltas).toEqual([1, 2, 0]);
+    expect(stats.support).toBe(2);
+    expect(stats.strength).toBe(3);
+    expect(stats.mean).toBeCloseTo(1, 10);
+    // population variance of [1,2,0] about mean 1 = (0+1+1)/3
+    expect(stats.variance).toBeCloseTo(2 / 3, 10);
+  });
+
+  it("rankByStrength filters below kMin support and sorts DESC by strength", () => {
+    const items = [
+      { id: "weak", support: 3, strength: 1 },
+      { id: "strong", support: 4, strength: 9 },
+      { id: "thin", support: 1, strength: 100 }, // below kMin=2 → dropped
+      { id: "zero", support: 5, strength: 0 }, // strength 0 → dropped
+    ];
+    const ranked = rankByStrength(items, 2);
+    expect(ranked.map((r) => r.id)).toEqual(["strong", "weak"]);
+  });
+
+  it("softGate is monotonic increasing in delta and centered at 0.5 for d=0", () => {
+    expect(softGate(0)).toBeCloseTo(0.5, 10);
+    expect(softGate(1)).toBeGreaterThan(softGate(0));
+    expect(softGate(2)).toBeGreaterThan(softGate(1));
+    expect(softGate(-1)).toBeLessThan(softGate(0));
+  });
+
+  it("predicateKeysForCti / predsFromKeys / skillKindFromCti mapping", () => {
+    expect(predicateKeysForCti(GE2_PENDING)).toEqual(["GE2_FORBIDDEN"]);
+    expect(predicateKeysForCti(REJECTED_UNBOUND)).toEqual(["REJECTED_IMPLIES_BOUND"]);
+    expect(predicateKeysForCti(SAFE_TERMINAL)).toEqual(["STRENGTHEN_GENERIC"]);
+
+    expect(skillKindFromCti(GE2_PENDING)).toBe("failure_avoidance");
+    expect(skillKindFromCti(SAFE_TERMINAL)).toBe("strengthen");
+
+    // GENERIC contributes no extra predicate (advisory only).
+    const generic: IndInvPred[] = predsFromKeys(["STRENGTHEN_GENERIC"]);
+    expect(generic).toHaveLength(0);
+    expect(predsFromKeys(["GE2_FORBIDDEN"])).toHaveLength(1);
+    expect(predsFromKeys(["REJECTED_IMPLIES_BOUND"])).toHaveLength(1);
+  });
+});
+
+describe("kernel pure — admitUnderSRQCLogged (pure sync logged wrapper)", () => {
+  it("returns the same result as the core and emits one console.info srqc_admit line", () => {
+    const ge2 = [started("inv-1", "att-1"), started("inv-1", "att-2")];
+    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+    const r = admitUnderSRQCLogged(ge2, "SHADOW", { version: 4, indInvHash: "h" });
+    expect(r.decision).toBe("ADMIT"); // SHADOW admits even on GE2
+    expect(r.srqcVersion).toBe(4);
+    expect(infoSpy).toHaveBeenCalledTimes(1);
+    const line = JSON.parse((infoSpy.mock.calls[0]![0] as string));
+    expect(line.kind).toBe("srqc_admit");
+    expect(line.decision).toBe("ADMIT");
+    expect(line.srqcVersion).toBe(4);
+    expect(line.violationCount).toBe(1);
+    expect(line.violationPending).toBe(true);
+    infoSpy.mockRestore();
   });
 });
 
@@ -232,6 +350,7 @@ describe("kernel pure — no writes under formal/**", () => {
       "skillAugmentedCti.ts",
       "accept-proposal.ts",
       "srqc-projection.ts",
+      "violation-delta.ts",
       "metrics/dpPublish.ts",
     ];
     for (const f of files) {
@@ -337,23 +456,63 @@ suite("LSRQC KERNEL v1 against real Postgres", () => {
     ).toBe(0);
 
     await activate(1);
-    expect(await emitProposalsFromOpenCtis(sql)).toBe(1);
+    // Supply two windows that each contain a ONE-pending near-miss so the
+    // GE2_FORBIDDEN strengthening scores strength>0 / support=2 at mint time.
+    const nearMissWindows = [[ONE_PENDING], [{ ...ONE_PENDING, invocationId: "y" }]];
+    expect(await emitProposalsFromOpenCtis(sql, nearMissWindows)).toBe(1);
 
     const rows = (
       await pool.query(
-        `SELECT "activeVersionAtMint", "status", "skillKind" FROM "ind_inv_proposal"`,
+        `SELECT "activeVersionAtMint", "status", "skillKind", "predicateKeys",
+                "ctiCandidateIds", "strength", "support", "variance"
+           FROM "ind_inv_proposal"`,
       )
     ).rows;
     expect(rows).toHaveLength(1);
     expect(rows[0].activeVersionAtMint).toBe(1);
     expect(rows[0].status).toBe("open");
-    expect(rows[0].skillKind).toBe("strengthen");
+    // GE2 successor ⇒ failure_avoidance + GE2_FORBIDDEN key.
+    expect(rows[0].skillKind).toBe("failure_avoidance");
+    expect(rows[0].predicateKeys).toEqual(["GE2_FORBIDDEN"]);
+    expect(Array.isArray(rows[0].ctiCandidateIds)).toBe(true);
+    expect(rows[0].ctiCandidateIds).toHaveLength(1);
+    // Two near-miss windows ⇒ strength 2, support 2, variance 0.
+    expect(rows[0].strength).toBe(2);
+    expect(rows[0].support).toBe(2);
+    expect(rows[0].variance).toBe(0);
 
     // Idempotent re-run: same open cti + same active baseline → 0 new.
-    expect(await emitProposalsFromOpenCtis(sql)).toBe(0);
+    expect(await emitProposalsFromOpenCtis(sql, nearMissWindows)).toBe(0);
     expect(
       (await pool.query(`SELECT count(*)::int AS n FROM "ind_inv_proposal"`)).rows[0].n,
     ).toBe(1);
+  });
+
+  it("rescore: recomputes stored stats under current traffic (Prop3 anti-staleness)", async () => {
+    await seedOpenCti(ONE_PENDING);
+    await activate(1);
+    expect(await emitProposalsFromOpenCtis(sql)).toBe(1); // no windows → stats 0
+    let row = (
+      await pool.query(`SELECT "strength", "support" FROM "ind_inv_proposal"`)
+    ).rows[0];
+    expect(row.strength).toBe(0);
+    expect(row.support).toBe(0);
+
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const rescored = await rescoreOpenProposals(
+      sql,
+      [[ONE_PENDING], [{ ...ONE_PENDING, invocationId: "z" }], [SAFE_TERMINAL]],
+      1,
+    );
+    logSpy.mockRestore();
+    expect(rescored).toBe(1);
+
+    row = (
+      await pool.query(`SELECT "strength", "support" FROM "ind_inv_proposal"`)
+    ).rows[0];
+    // Two of three windows have a near-miss ONE-pending ⇒ strength 2, support 2.
+    expect(row.strength).toBe(2);
+    expect(row.support).toBe(2);
   });
 
   it("skill-augmented runner: an open proposal adds delta over the baseline and logs it", async () => {
@@ -385,6 +544,18 @@ suite("LSRQC KERNEL v1 against real Postgres", () => {
 
     const active = await getActiveSrqcVersion(sql);
     expect(active?.version).toBe(2);
+
+    // Provenance notes carry predicateKeys + ranking evidence + baseline.
+    const notesRaw = (
+      await pool.query(`SELECT "notes" FROM "srqc_version" WHERE "version" = 2`)
+    ).rows[0].notes as string;
+    const notes = JSON.parse(notesRaw);
+    expect(notes.fromProposal).toBe(proposalId);
+    expect(notes.skillKind).toBe("failure_avoidance");
+    expect(notes.predicateKeys).toEqual(["GE2_FORBIDDEN"]);
+    expect(notes.activeVersionAtMint).toBe(1);
+    expect(notes).toHaveProperty("strength");
+    expect(notes).toHaveProperty("support");
 
     const p = (
       await pool.query(

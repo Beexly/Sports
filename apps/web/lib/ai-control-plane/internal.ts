@@ -120,12 +120,30 @@ export {
 // activate a version or gate a control-plane decision (see each module).
 export {
   admitUnderSRQCWithVersion,
+  admitUnderSRQCLogged,
   resolveSrqcModeFromEnv,
   type SrqcMode,
   type SrqcAdmissionResult,
   type SrqcAdmissionDecision,
 } from "./srqc-projection";
-export { emitProposalsFromOpenCtis } from "./ctiToProposals";
+export {
+  BASE_INDS,
+  violationCount,
+  delta,
+  multiWindowStats,
+  rankByStrength,
+  softGate,
+  type IndInvPred,
+  type WindowStats,
+} from "./violation-delta";
+export {
+  emitProposalsFromOpenCtis,
+  rescoreOpenProposals,
+  predicateKeysForCti,
+  predsFromKeys,
+  skillKindFromCti,
+  type SkillKind,
+} from "./ctiToProposals";
 export {
   evaluateWindowWithSkills,
   runSkillAugmentedCti,

@@ -29,13 +29,21 @@
  */
 
 import type { ControlSqlClient } from "./control-store";
-import { abstractSuccessors, isIndInvViolation } from "./cti-miner";
+import { abstractSuccessors } from "./cti-miner";
 import type { AbstractAction } from "./cti-miner";
 import { projectWindow } from "./srqc-projection";
 import type {
   AbstractControlState,
   ProjectableEvent,
 } from "./srqc-projection";
+import { BASE_INDS, violationCount } from "./violation-delta";
+
+/** A state violates the baseline IndInv iff `violationCount([s]) > 0`. The
+ *  SINGLE source of truth is `BASE_INDS` in violation-delta.ts — no baseline
+ *  predicate is duplicated in this module. */
+function violatesBaseline(s: AbstractControlState): boolean {
+  return violationCount([s], BASE_INDS) > 0;
+}
 
 /** A forbidden abstract transition prefix, resolved from a cti_candidate
  *  triple linked to an open proposal: the strengthened predicate forbids taking
@@ -81,19 +89,18 @@ export function evaluateWindowWithSkills(
   forbiddenPairs: readonly ForbiddenPair[],
 ): SkillAugmentedEvaluation {
   const projected = projectWindow(events);
-  const ordinaryViolations = projected.filter(isIndInvViolation);
-  const violationsOrdinary = ordinaryViolations.length;
+  const violationsOrdinary = violationCount(projected, BASE_INDS);
 
   let additional = 0;
   for (const s of projected) {
-    if (isIndInvViolation(s)) continue; // already counted as ordinary
+    if (violatesBaseline(s)) continue; // already counted as ordinary
     const successors = abstractSuccessors(s);
     const caught = forbiddenPairs.some(
       (pair) =>
         structuralMatch(s, pair.before) &&
         successors.some(
           (step) =>
-            step.action === pair.action && isIndInvViolation(step.next),
+            step.action === pair.action && violatesBaseline(step.next),
         ),
     );
     if (caught) additional += 1;
