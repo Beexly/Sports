@@ -46,11 +46,11 @@ export default function AboutPage() {
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Why this exists</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">
               Built for people tired of paying for picks from services that
               quietly delete the losses.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg text-ink-300">
+            <p className="mt-6 max-w-2xl text-lg text-ion-1">
               {BRAND_NAME} exists because the sports picks industry runs on a
               quiet trick: tout services publish their wins, scrub their
               losses, and price their access against a record you can&apos;t
@@ -58,23 +58,23 @@ export default function AboutPage() {
               work on every pick and refuses to publish a win-rate it
               can&apos;t honestly back.
             </p>
-            <p className="mt-5 max-w-2xl text-lg text-ink-300">
+            <p className="mt-5 max-w-2xl text-lg text-ion-1">
               {BRAND_NAME} ingests live odds across dozens of sportsbooks,
               scores every matchup for edge, and publishes a calibrated,
               fully-reasoned signal alongside every factor that drove it. The
               bar is simple: if it can&apos;t be explained, it doesn&apos;t
               get published.
             </p>
-            <p className="mt-5 max-w-2xl text-sm font-mono uppercase tracking-widest text-accent-300">
-              - The {BRAND_NAME} team
+            <p className="mt-5 max-w-2xl font-mono text-sm uppercase tracking-[0.18em] text-ion-1">
+              — The {BRAND_NAME} team
             </p>
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral/40 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <p className="eyebrow">Operating principles</p>
-            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+            <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
               The four rules we don&apos;t break.
             </h2>
 
@@ -85,8 +85,8 @@ export default function AboutPage() {
                   className="surface-card flex flex-col gap-3 p-6"
                 >
                   <p className="eyebrow">{p.eyebrow}</p>
-                  <h3 className="font-display text-xl text-white">{p.title}</h3>
-                  <p className="text-sm leading-relaxed text-ink-300">
+                  <h3 className="font-display text-xl text-ion-white">{p.title}</h3>
+                  <p className="text-sm leading-relaxed text-ion-1">
                     {p.body}
                   </p>
                 </article>
@@ -95,18 +95,18 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral/40 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Contact</p>
-            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+            <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
               Every email gets read.
             </h2>
-            <p className="mt-5 text-base text-ink-300">
+            <p className="mt-5 text-base text-ion-1">
               Press, partnerships, product feedback, or you just want to argue
               about a line, write to{" "}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+                className="font-mono text-orbital-cyan underline-offset-4 hover:underline"
               >
                 {SUPPORT_EMAIL}
               </a>

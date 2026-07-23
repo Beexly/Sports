@@ -34,10 +34,10 @@ export default function PressPage() {
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Press</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">
               Press kit
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-ink-300">
+            <p className="mt-5 max-w-2xl text-lg text-ion-1">
               Quick facts, media availability, and ready-to-quote soundbites
               for journalists, podcasters, and analysts covering the sports
               intelligence space.
@@ -45,37 +45,37 @@ export default function PressPage() {
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral/40 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <p className="eyebrow">Quick facts</p>
-            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+            <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
               The basics.
             </h2>
             <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-4 sm:grid-cols-2">
               {FACTS.map((f) => (
                 <div
                   key={f.label}
-                  className="flex flex-col gap-1 border-b border-ink-800/40 py-3"
+                  className="flex flex-col gap-1 border-b border-mineral/30 py-3"
                 >
                   <span className="eyebrow">{f.label}</span>
-                  <span className="text-sm text-ink-200">{f.value}</span>
+                  <span className="text-sm text-ion">{f.value}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral/40 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <p className="eyebrow">Soundbites</p>
-            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+            <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
               Quote-ready.
             </h2>
             <ul className="mt-8 space-y-3">
               {SOUNDBITES.map((q) => (
                 <li
                   key={q}
-                  className="surface-card border-l-2 border-accent-500 px-5 py-4 text-base text-ink-100"
+                  className="surface-card border-l-2 border-l-orbital-cyan/60 px-5 py-4 text-base text-ion"
                 >
                   &ldquo;{q}&rdquo;
                 </li>
@@ -84,18 +84,18 @@ export default function PressPage() {
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral/40 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Media inquiries</p>
-            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+            <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
               Direct line to the desk.
             </h2>
-            <p className="mt-5 text-base text-ink-300">
+            <p className="mt-5 text-base text-ion-1">
               For interviews, embargoed coverage, or a deeper walkthrough of
               the model, write to{" "}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+                className="font-mono text-orbital-cyan underline-offset-4 hover:underline"
               >
                 {SUPPORT_EMAIL}
               </a>
