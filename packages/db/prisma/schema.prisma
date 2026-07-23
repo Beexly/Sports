@@ -3620,3 +3620,41 @@ model AgentReceipt {
   @@index([tool, at])
   @@map("agent_receipt")
 }
+
+// ============================================================
+// COMMERCIAL OPERATING LAYER — Cash OS (R1)
+// (Additive, business-instrumentation only — unrelated to the SRQC/formal
+// work above. See apps/web/lib/growth/cash-os.ts.)
+// ============================================================
+
+// One append-only row per revenue-relevant event (subscription lifecycle,
+// affiliate payout, or a paid pilot invoice). This is the source of truth
+// for MRR and the other CashSnapshot figures — never derived from
+// Subscription state alone, so historical MRR trend stays intact even as
+// subscriptions change tier/cancel.
+model RevenueEvent {
+  id          String   @id @default(cuid())
+  at          DateTime @default(now())
+  kind        String // sub_start | sub_renew | sub_cancel | affiliate_cpa | affiliate_revshare | pilot_invoice
+  amountCents Int
+  currency    String   @default("usd")
+  userId      String?
+  meta        Json?
+
+  @@index([at, kind])
+  @@map("revenue_event")
+}
+
+// Daily, per-surface activation counter for a user (board / optimizer /
+// tracker / receipt). Upserted by recordActivation — one row per
+// (userId, day, surface), incrementing count on repeat visits the same day.
+model ProductActivation {
+  id      String   @id @default(cuid())
+  userId  String
+  day     DateTime // date truncated UTC (midnight)
+  surface String // board | optimizer | tracker | receipt
+  count   Int      @default(1)
+
+  @@unique([userId, day, surface])
+  @@map("product_activation")
+}
