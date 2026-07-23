@@ -1,6 +1,6 @@
 # World-Class Redesign — Plan & Session Log
 
-**Date:** 2026-07-23
+**Date:** 2026-07-23 (updated same day — session 2, cockpit/admin cleanup)
 **Scope:** galaxysportsedge.com (this repo). Full site, marketing + product UI.
 
 ## 0. Reality check before planning further work
@@ -61,28 +61,54 @@ grep -rEn '\b(bg|text|border|...)-(gray|green|yellow|emerald|orange|red|blue-[0-
 ```
 → zero remaining hits outside two flagged exceptions (§2).
 
+## 1b. Session 2 (same day) — cockpit/admin cleanup + the rest of the tail
+
+Session 1 above only swept a narrower hue list (missed `rose`, `orange`, `pink`,
+`sky`, `teal`, `fuchsia`, and had a regex bug that silently failed to match
+`blue-NNN`/`cyan-NNN` three-digit shades). Session 2 fixed the full 51-file
+`cockpit/`+`admin/` surface off every casino hue, **and** went back and found
+real misses in already-"finished" customer-facing files:
+
+- `app/picks/page.tsx` — a second Elite-upsell block using raw `blue-*` (now
+  `ultraviolet`, matching the one already fixed in session 1), plus a
+  cyan/fuchsia dual-accent pick-type selector (now `orbital-cyan`/`plasma`).
+- `app/room/[gameId]/page.tsx`, `app/journal/page.tsx`, `app/ledger/page.tsx`,
+  `components/cipher/cipher-terminal.tsx` — raw `cyan-*` accent color, now
+  `orbital-cyan`.
+
+**Extended `palette-cohesion.test.ts`** (previously gray/slate only) to scan
+the full casino-hue list across `app/**`+`components/**`, with an explicit,
+commented `ALLOWLIST` for every intentional exception below — so none of this
+work can silently regress.
+
 ## 2. Explicitly deferred (needs a decision, not a quick swap)
 
-- **`components/players/player-lab-table.tsx`** (4 spots) and
-  **`app/intelligence/engines/registry.tsx`** (9 spots) use a deliberate
-  `text-emerald-700` / `text-rose-700` "good/bad" pairing on the **light/paper**
-  surface, with an in-code comment noting they're "paper-darkened for AA on
-  white." `DESIGN.md`'s paper scale already has AA-verified
-  `plasma-on-light` / `orbital-cyan-on-light` / `ultraviolet-on-light` tokens
-  but **no `verify-on-light` / `alert-on-light` equivalent yet**. Swapping
-  these needs new tokens picked for AA contrast on `--paper`, not a
+- **`components/players/player-lab-table.tsx`** (8 spots), **`app/intelligence/
+  engines/registry.tsx`** (9 spots), and **`components/ui/source-error.tsx`**
+  (1 spot) use a deliberate `text-emerald-700` / `text-rose-700` / `text-amber-700`
+  / `text-sky-700` "good/bad/warn/info" pairing on the **light/paper** surface,
+  with an in-code comment noting they're "paper-darkened for AA on white."
+  `DESIGN.md`'s paper scale already has AA-verified `plasma-on-light` /
+  `orbital-cyan-on-light` / `ultraviolet-on-light` tokens but **no
+  `verify-on-light` / `alert-on-light` / `caution-on-light` equivalent yet**.
+  Swapping these needs new tokens picked for AA contrast on `--paper`, not a
   find-and-replace — a real (small) design decision. Recommend: add
-  `verify-on-light`/`alert-on-light` to `design-tokens.css` + `tailwind.config.ts`
-  (mint/vermilion darkened for white bg, same method as the existing
-  on-light triad), then repoint these 13 spots.
-- **`app/auth/signin/page.tsx`** white background Google button — left as-is
-  on purpose. White bg is Google's own brand requirement for "Sign in with
-  Google" buttons, not a doctrine violation.
-- **`components/cockpit/*` (37 raw-color spots) and `app/cockpit/**`, `app/admin/**`**
-  — internal ops tooling. `DESIGN.md` §"Cockpit vs Public Surface Differences"
-  already treats cockpit as sharing the system but with different density/
-  exposure rules — it's not customer-facing, so it's real but lower-priority
-  cleanup. Do this in a dedicated pass, not mixed into customer-facing work.
+  `verify-on-light`/`alert-on-light`/`caution-on-light` to `design-tokens.css` +
+  `tailwind.config.ts` (same method as the existing on-light triad), then
+  repoint these ~18 spots. All are allowlisted in `palette-cohesion.test.ts`
+  with this same rationale.
+- **`app/cockpit/api-costs/page.tsx`** budget-status ladder (`green → yellow →
+  orange → red → hard_cap`, 5 distinct escalation tiers) — `orange` sits
+  between `caution` and `alert` and encodes a real, meaningful tier the token
+  system has no slot for. Collapsing it into either neighbor would destroy
+  that distinction. Needs a product-owner decision (new `caution-deep`-style
+  escalation token, or accept a 4-tier system and merge orange into caution).
+  Allowlisted, not fixed.
+- **`app/auth/signin/page.tsx`** white background Google button + its ambient
+  gradient — left as-is on purpose. White bg is Google's own brand requirement
+  for "Sign in with Google" buttons, not a doctrine violation. Allowlisted.
+- **`app/cockpit/bot-outbox/page.tsx`** TWITTER/DISCORD channel badges — sky/
+  indigo are the platforms' own brand colors, not status semantics. Allowlisted.
 - **Governance naming flag from the stale audit** ("resolve GSN vs GSE") turned
   out to be a non-issue on re-check: `lib/brand.ts` already defines `GSN_*` as
   a distinct, intentional brand (Galaxy Sports Network — the newsletter/content
@@ -94,15 +120,12 @@ Ordered by leverage. Each is independently scoped so a different session/model
 can pick one up without re-deriving context — read this file + the relevant
 `grep` command to re-establish scope.
 
-1. **Add `verify-on-light`/`alert-on-light` tokens, repoint `player-lab-table.tsx`
-   + `engines/registry.tsx`.** Small, closes the last real token gap. (~30 min)
-2. **Extend `picks-design-token-integrity.test.ts`** to cover `gray|white|black`
-   and the files touched this session, so this class of drift can't silently
-   regrow. This is what the 2026-06-01 audit recommended as a companion to any
-   re-skin — currently only 3 files are guarded.
-3. **Cockpit token cleanup pass** (37 spots across `components/cockpit/*`) —
-   same mechanical pattern as this session, just internal/lower-urgency.
-4. **Asset refresh via Higgsfield** (now free, all models/tools) — this is
+1. **Add `verify-on-light`/`alert-on-light`/`caution-on-light` tokens, repoint
+   `player-lab-table.tsx` + `engines/registry.tsx` + `source-error.tsx`.**
+   Small, closes the last real token gap. (~30-45 min)
+2. **Decide the API-costs budget-ladder orange tier** (see §2) — a genuine
+   design/product call, not engineering work.
+3. **Asset refresh via Higgsfield** (now free, all models/tools) — this is
    genuinely additive, not a rebuild:
    - Audit `lib/visual-production/asset-manifest.ts` for any plate marked
      stale/placeholder/lowest-tier and regenerate at higher quality.
@@ -119,7 +142,7 @@ can pick one up without re-deriving context — read this file + the relevant
      win rates or testimonials, brand-voice banned-word list in `lib/brand.ts:225-233`
      still applies. Content generation is copy/structure only; numbers still
      come from `loadPublicCalibrationReport()` / real data, never from the model.
-5. **P3 items from the 2026-06-01 audit** still open and low-risk: extract a
+4. **P3 items from the 2026-06-01 audit** still open and low-risk: extract a
    shared `<CalibrationViz>` (dedupe the homepage curve vs. `/performance`
    panel), document the dark-only-mode decision as an ADR, floor any remaining
    11px `ion-2` meta text to `ion-1` for AA.

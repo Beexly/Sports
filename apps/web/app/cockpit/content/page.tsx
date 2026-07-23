@@ -151,9 +151,9 @@ export default async function CockpitContentPage() {
         <p className="mb-3 text-[11px] text-ion-3">
           Performance gate is currently{" "}
           {gates.canExposePerformanceStats ? (
-            <span className="text-green-400">ON</span>
+            <span className="text-verify">ON</span>
           ) : (
-            <span className="text-yellow-400">OFF</span>
+            <span className="text-caution">OFF</span>
           )}
           . Drafts that depend on the gate cannot be approved for public
           visibility while it is OFF.
@@ -192,7 +192,7 @@ export default async function CockpitContentPage() {
                     <td className="py-2 pr-3">{d.affiliateDisclosureIncluded ? "yes" : "—"}</td>
                     <td className="py-2 pr-3">{d.performanceGateStatus}</td>
                     <td className="py-2 pr-3">
-                      <span data-testid={`content-readiness-${d.slug}`} className={d.verdict.readiness === "READY_FOR_REVIEW" ? "text-green-400" : d.verdict.readiness === "BLOCKED" ? "text-red-400" : "text-yellow-400"}>
+                      <span data-testid={`content-readiness-${d.slug}`} className={d.verdict.readiness === "READY_FOR_REVIEW" ? "text-verify" : d.verdict.readiness === "BLOCKED" ? "text-alert" : "text-caution"}>
                         {d.verdict.readiness}
                       </span>
                     </td>
@@ -312,7 +312,7 @@ export default async function CockpitContentPage() {
         )}
       </section>
 
-      <p data-testid="content-no-publish-banner" className="rounded-lg border border-yellow-900/40 bg-yellow-900/10 p-3 text-xs text-yellow-200">
+      <p data-testid="content-no-publish-banner" className="rounded-lg border border-caution/40 bg-caution/10 p-3 text-xs text-caution">
         Internal calibration only. No auto-publish. No auto-send. No automated betting.
         Approval is an internal sign-off; surfacing a draft on the public
         blog still requires a deliberate, audited operator action outside

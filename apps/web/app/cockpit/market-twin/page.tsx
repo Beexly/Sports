@@ -23,20 +23,20 @@ const POSTURE_META: Readonly<
 > = {
   READY_TO_SCORE: {
     label: "Ready to score",
-    chip: "border-emerald-500/40 bg-emerald-500/10 text-emerald-300",
-    dot: "bg-emerald-400",
+    chip: "border-verify/40 bg-verify/10 text-verify",
+    dot: "bg-verify",
     blurb: "5+ books agree and the read is fresh (under 2h) — stable enough to run the model against.",
   },
   CONFLICT: {
     label: "Conflict",
-    chip: "border-rose-500/40 bg-rose-500/10 text-rose-300",
-    dot: "bg-rose-400",
+    chip: "border-alert/40 bg-alert/10 text-alert",
+    dot: "bg-alert",
     blurb: "The line has swung 3+ points — the market disagrees with itself. Let it settle first.",
   },
   WATCH_ONLY: {
     label: "Watch only",
-    chip: "border-amber-500/40 bg-amber-500/10 text-amber-300",
-    dot: "bg-amber-400",
+    chip: "border-caution/40 bg-caution/10 text-caution",
+    dot: "bg-caution",
     blurb: "Some market data, but not enough book coverage or freshness to trust yet.",
   },
   QUIET: {

@@ -31,14 +31,14 @@ const CATEGORY_LABELS: Readonly<Record<CapabilityCategory, string>> = {
 const STATUS_STYLES: Readonly<Record<CapabilityStatus, string>> = {
   ACTIVE: "border-accent-800/50 bg-accent-950/30 text-accent-400",
   DRAFT_ONLY: "border-plasma/40 bg-plasma/10 text-plasma",
-  MANUAL: "border-yellow-900/40 bg-yellow-950/20 text-yellow-300",
+  MANUAL: "border-caution/40 bg-caution/20 text-caution",
   DESIGNED: "border-ultraviolet/30 bg-ultraviolet/10 text-ultraviolet",
   NOT_WIRED: "border-titanium/40 bg-obsidian/60 text-ion-3",
 };
 
 const PHASE_DOT: Readonly<Record<PhaseStatus, string>> = {
   WIRED: "bg-accent-500",
-  PARTIAL: "bg-yellow-300",
+  PARTIAL: "bg-caution",
   NOT_WIRED: "bg-ion-3/30",
 };
 
@@ -177,7 +177,7 @@ function CapabilityRow({ capability }: { capability: JarvisCapability }) {
           risk: {capability.riskLevel.toLowerCase()}
         </span>
         {capability.requiresHumanApproval && (
-          <span className="font-mono text-[8px] uppercase tracking-wider text-yellow-300/70">
+          <span className="font-mono text-[8px] uppercase tracking-wider text-caution/70">
             approval required
           </span>
         )}

@@ -10,11 +10,11 @@ import type { ClaudeBudgetStatus } from "@/lib/claude-api/cost-monitor";
 export const dynamic = "force-dynamic";
 
 const STATUS_STYLES: Readonly<Record<ClaudeBudgetStatus, string>> = {
-  green: "border-emerald-500/30 bg-emerald-950/40 text-emerald-200",
-  yellow: "border-yellow-500/30 bg-yellow-950/40 text-yellow-200",
+  green: "border-verify/30 bg-verify/40 text-verify",
+  yellow: "border-caution/30 bg-caution/40 text-caution",
   orange: "border-orange-500/30 bg-orange-950/40 text-orange-200",
-  red: "border-red-500/30 bg-red-950/40 text-red-200",
-  hard_cap: "border-red-400/50 bg-red-950 text-red-100",
+  red: "border-alert/30 bg-alert/40 text-alert",
+  hard_cap: "border-alert/50 bg-alert text-carbon",
 };
 
 export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
@@ -25,7 +25,7 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-caution">
               Claude API Costs
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Generation Budget Monitor</h1>

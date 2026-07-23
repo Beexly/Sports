@@ -111,9 +111,9 @@ export default async function CockpitPromotionsPage() {
                   </td>
                   <td className="py-2 pr-3">
                     {verdict.publishable ? (
-                      <span className="text-green-400">YES</span>
+                      <span className="text-verify">YES</span>
                     ) : (
-                      <span className="text-yellow-400">NO</span>
+                      <span className="text-caution">NO</span>
                     )}
                   </td>
                   <td className="py-2 pr-3 text-ion-3">

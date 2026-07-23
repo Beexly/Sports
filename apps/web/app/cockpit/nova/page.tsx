@@ -23,7 +23,7 @@ export default async function CockpitNovaPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-caution">
               NOVA
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Founder OS Overview</h1>

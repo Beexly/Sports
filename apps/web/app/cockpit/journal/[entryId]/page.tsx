@@ -12,11 +12,11 @@ interface Params {
 function statusClass(status: string): string {
   switch (status) {
     case "PUBLISHED":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "RETRACTED":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "REVIEW_PENDING":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
@@ -146,7 +146,7 @@ export default async function CockpitJournalEntryPage({
           <Link href="/cockpit/journal" className="text-xs text-ion-3 hover:text-ion-1">
             Back to Journal
           </Link>
-          <p className="mt-3 text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+          <p className="mt-3 text-[10px] font-semibold uppercase tracking-widest text-caution">
             Model Journal
           </p>
           <h1 className="mt-1 text-2xl font-bold text-ion-white">{entry.title}</h1>

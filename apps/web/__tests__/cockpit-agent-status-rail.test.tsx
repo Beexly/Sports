@@ -53,9 +53,9 @@ describe("AgentStatusRail", () => {
     const notWiredLabel = screen.getByText("Not wired");
     const tile = notWiredLabel.closest("[data-testid='status-tile']");
     expect(tile).not.toBeNull();
-    // warn tone carries the yellow tint classes; it must NOT carry the
+    // warn tone carries the caution tint classes; it must NOT carry the
     // good (accent/emerald) tint.
-    expect(tile?.className).toContain("yellow");
+    expect(tile?.className).toContain("caution");
     expect(tile?.className).not.toContain("accent-400");
   });
 

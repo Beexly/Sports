@@ -289,8 +289,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
                       isActive
-                        ? "border-cyan-300 bg-cyan-400 text-eclipse shadow-[0_0_18px_rgba(34,211,238,0.35)]"
-                        : "border-titanium bg-carbon text-ion-1 hover:border-cyan-400 hover:text-white",
+                        ? "border-orbital-cyan bg-orbital-cyan text-eclipse shadow-[0_0_18px_rgba(34,211,238,0.35)]"
+                        : "border-titanium bg-carbon text-ion-1 hover:border-orbital-cyan hover:text-ion-white",
                     ].join(" ")}
                   >
                     {label}
@@ -315,8 +315,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive
-                        ? "border-fuchsia-300 bg-fuchsia-400 text-eclipse shadow-[0_0_18px_rgba(217,70,239,0.35)]"
-                        : "border-titanium bg-carbon text-ion-1 hover:border-fuchsia-400 hover:text-white",
+                        ? "border-plasma bg-plasma text-eclipse shadow-[0_0_18px_rgba(217,70,239,0.35)]"
+                        : "border-titanium bg-carbon text-ion-1 hover:border-plasma hover:text-ion-white",
                     ].join(" ")}
                   >
                     {label}
@@ -377,10 +377,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Empty state */}
           {!fetchError && bootstrapState && picks.length === 0 && (
-            <div className="rounded-xl border border-cyan-400/25 bg-cyan-950/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10">
+            <div className="rounded-xl border border-orbital-cyan/25 bg-orbital-cyan/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-orbital-cyan/30 bg-orbital-cyan/10">
                 <svg
-                  className="h-7 w-7 text-cyan-200"
+                  className="h-7 w-7 text-orbital-cyan"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
@@ -394,7 +394,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                   />
                 </svg>
               </div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-200">
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-orbital-cyan">
                 {bootstrapState.kind === "stale"
                   ? "Freshness guard active"
                   : "Signal gate collecting"}
@@ -416,13 +416,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
                   href="/methodology"
-                  className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-eclipse"
+                  className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
                 >
                   Read methodology
                 </Link>
                 <Link
                   href="/vault"
-                  className="rounded-lg border border-titanium bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-fuchsia-300 hover:text-white"
+                  className="rounded-lg border border-titanium bg-carbon px-4 py-2 text-sm font-semibold text-ion-1 transition-colors hover:border-plasma hover:text-ion-white"
                 >
                   View The Vault
                 </Link>
@@ -438,9 +438,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {!fetchError && !bootstrapState && lockedByPaywall && (
             <div
               data-testid="picks-locked-upgrade"
-              className="rounded-xl border border-blue-800/40 bg-blue-950/20 p-8 text-center"
+              className="rounded-xl border border-ultraviolet/40 bg-ultraviolet/20 p-8 text-center"
             >
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-blue-300">
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-ultraviolet">
                 Full board is a Pro feature
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
@@ -456,7 +456,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <Link
                 href="/pricing"
-                className="mt-6 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                className="mt-6 inline-flex rounded-lg bg-ultraviolet px-6 py-2.5 text-sm font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
               >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
@@ -529,20 +529,20 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               scores), and Pro unlocks the full board. teaserSize comes from
               entitlements.dailyPickLimit, not a hardcoded absolute. */}
           {isFreeTier && picks.length > 0 && (
-            <div className="mt-10 rounded-xl border border-blue-800/40 bg-blue-950/20 p-6 text-center">
-              <p className="text-sm font-semibold text-blue-200">
+            <div className="mt-10 rounded-xl border border-ultraviolet/40 bg-ultraviolet/20 p-6 text-center">
+              <p className="text-sm font-semibold text-ultraviolet">
                 {hasAccount
                   ? entitlements.tier !== "FREE"
                     ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
                     : `You're on Free: a daily teaser of up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
                   : `Today's free teaser: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`}
               </p>
-              <p className="mt-1 text-xs text-blue-300">
+              <p className="mt-1 text-xs text-ultraviolet">
                 Pro unlocks the full board plus the confidence score, the full factor trail, and line movement behind each pick.
               </p>
               <Link
                 href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                className="mt-4 inline-flex rounded-lg bg-ultraviolet px-6 py-2.5 text-sm font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
               >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
@@ -583,7 +583,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
     : null;
 
   return (
-    <div className="mb-6 rounded-xl border border-cyan-400/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
+    <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
       <div className="flex flex-wrap items-center gap-3">
         {/* Games / picks */}
         <StatPill label="Games Today" value={String(slate.totalGames)} />
@@ -621,12 +621,12 @@ function SlateBar({ slate }: { slate: DailySlate }) {
 
       {/* Sport breakdown */}
       {slate.sportBreakdown.length > 1 && (
-        <div className="mt-3 flex flex-wrap gap-2 border-t border-cyan-400/10 pt-3">
+        <div className="mt-3 flex flex-wrap gap-2 border-t border-orbital-cyan/10 pt-3">
           {slate.sportBreakdown.map(({ sport, pickCount }) => (
             <Link
               key={sport}
               href={`/picks?sport=${sport.toLowerCase()}`}
-              className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-eclipse"
+              className="rounded-full border border-orbital-cyan/25 bg-orbital-cyan/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
             >
               {sport} {pickCount}
             </Link>
@@ -648,7 +648,7 @@ function StatPill({
 }) {
   return (
     <div className="min-w-[108px] rounded-lg border border-titanium bg-carbon px-3 py-2 text-left">
-      <p className={`text-lg font-bold ${highlight ? "text-fuchsia-300" : "text-white"}`}>
+      <p className={`text-lg font-bold ${highlight ? "text-plasma" : "text-white"}`}>
         {value}
       </p>
       <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ion-2">{label}</p>
@@ -718,7 +718,7 @@ function PaywallBanner({
         )}
         <Link
           href="/pricing"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-ultraviolet px-4 py-2 text-xs font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
         >
           See plans
         </Link>
@@ -754,7 +754,7 @@ function PicksTrustStrip() {
         </div>
         <Link
           href="/methodology"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300 hover:bg-cyan-300 hover:text-eclipse"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/10 px-4 py-2 text-sm font-semibold text-orbital-cyan transition-colors hover:border-orbital-cyan hover:bg-orbital-cyan hover:text-eclipse"
         >
           Read methodology
         </Link>
@@ -787,7 +787,7 @@ function DatePickerForm({
         type="date"
         name="date"
         defaultValue={currentDate}
-        className="min-h-11 rounded-lg border border-titanium bg-titanium px-3 py-1.5 text-sm text-ion-1 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="min-h-11 rounded-lg border border-titanium bg-titanium px-3 py-1.5 text-sm text-ion-1 focus:border-orbital-cyan focus:outline-none focus:ring-1 focus:ring-orbital-cyan"
       />
       <button
         type="submit"

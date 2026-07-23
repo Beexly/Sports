@@ -16,7 +16,7 @@ import type { LedgerStatus } from "@/lib/jarvis/ledger-types";
 
 const SEAT_STATUS_STYLES: Readonly<Record<CouncilSeatStatus, string>> = {
   DRAFT_ONLY: "border-plasma/40 bg-plasma/10 text-plasma",
-  MANUAL: "border-yellow-900/40 bg-yellow-950/20 text-yellow-300",
+  MANUAL: "border-caution/40 bg-caution/20 text-caution",
   NOT_WIRED: "border-titanium/40 bg-obsidian/60 text-ion-3",
 };
 
@@ -54,7 +54,7 @@ export function AgentCouncilPanel({ ledger }: { ledger: LedgerStatus }) {
             draft-only
           </span>
           <span>
-            <span className="font-bold tabular-nums text-yellow-300">{counts.manual}</span>{" "}
+            <span className="font-bold tabular-nums text-caution">{counts.manual}</span>{" "}
             manual
           </span>
           <span>
@@ -83,13 +83,13 @@ export function AgentCouncilPanel({ ledger }: { ledger: LedgerStatus }) {
             entries · Subagent run ledger:{" "}
             <span className="text-plasma font-bold tabular-nums">{ledger.subagentRunCount}</span>{" "}
             runs ·{" "}
-            <span className="text-yellow-300 font-bold tabular-nums">{ledger.pendingReviewCount}</span>{" "}
+            <span className="text-caution font-bold tabular-nums">{ledger.pendingReviewCount}</span>{" "}
             pending parent review
           </p>
         ) : (
           <p className="font-mono text-[9px] uppercase tracking-widest text-ion-3">
             Handoff ledger · Subagent run ledger:{" "}
-            <span className="text-yellow-300">Not connected</span> — entry types
+            <span className="text-caution">Not connected</span> — entry types
             are defined; the store lands with a later migration. Nothing is
             logged yet and nothing pretends to be.
           </p>
@@ -127,7 +127,7 @@ function DepartmentCard({
             {" · "}
             <span className="text-plasma">{draftSeats.length} draft-only</span>
             {manualSeats.length > 0 && (
-              <>{" · "}<span className="text-yellow-300">{manualSeats.length} manual</span></>
+              <>{" · "}<span className="text-caution">{manualSeats.length} manual</span></>
             )}
             {notWiredSeats.length > 0 && (
               <>{" · "}<span className="text-ion-3">{notWiredSeats.length} not wired</span></>
@@ -135,7 +135,7 @@ function DepartmentCard({
           </p>
         </div>
         {hasOwnerApproval && (
-          <span className="rounded border border-yellow-900/40 bg-yellow-950/20 px-1.5 py-0.5 font-mono text-[8px] font-bold uppercase tracking-widest text-yellow-300">
+          <span className="rounded border border-caution/40 bg-caution/20 px-1.5 py-0.5 font-mono text-[8px] font-bold uppercase tracking-widest text-caution">
             owner approval
           </span>
         )}
@@ -221,7 +221,7 @@ function CouncilSeatCard({ member }: { member: AgentSeat }) {
           </p>
         )}
         {member.ownerApprovalRequired && (
-          <p className="font-mono text-[8px] uppercase tracking-wider text-yellow-400/70">
+          <p className="font-mono text-[8px] uppercase tracking-wider text-caution/70">
             requires owner approval
           </p>
         )}

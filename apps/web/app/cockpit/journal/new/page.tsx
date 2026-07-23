@@ -10,7 +10,7 @@ export default function NewJournalEntryPage(): JSX.Element {
         <Link href="/cockpit/journal" className="text-xs text-ion-3 hover:text-ion-1">
           Back to Journal
         </Link>
-        <p className="mt-4 text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+        <p className="mt-4 text-[10px] font-semibold uppercase tracking-widest text-caution">
           Model Journal
         </p>
         <h1 className="mt-1 text-2xl font-bold text-ion-white">Create Draft</h1>

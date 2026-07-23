@@ -35,8 +35,8 @@ export interface StatusTileProps {
 
 const TONE_STYLES: Record<StatusTone, string> = {
   good: "border-accent-800/50 bg-accent-950/20 text-accent-400",
-  warn: "border-yellow-900/50 bg-yellow-950/20 text-yellow-300",
-  bad: "border-red-900/60 bg-red-950/20 text-red-300",
+  warn: "border-caution/50 bg-caution/20 text-caution",
+  bad: "border-alert/60 bg-alert/20 text-alert",
   info: "border-ultraviolet/30 bg-obsidian/50 text-ion-1",
   neutral: "border-titanium/40 bg-obsidian/50 text-ion-2",
 };

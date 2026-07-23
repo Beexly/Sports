@@ -30,10 +30,10 @@ export default async function AdminPicksPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Picks Management</h1>
+            <h1 className="text-3xl font-bold text-ion-white">Picks Management</h1>
             <p className="text-ion-2 mt-1">{picks.length} picks (last 100)</p>
           </div>
-          <a href="/admin" className="text-ion-2 hover:text-white text-sm transition-colors">
+          <a href="/admin" className="text-ion-2 hover:text-ion-white text-sm transition-colors">
             ← Back to Admin
           </a>
         </div>
@@ -54,7 +54,7 @@ export default async function AdminPicksPage() {
             <tbody>
               {picks.map((pick) => (
                 <tr key={pick.id} className="border-b border-titanium/50 hover:bg-titanium/30">
-                  <td className="px-4 py-3 text-white">
+                  <td className="px-4 py-3 text-ion-white">
                     <div>{pick.game.homeTeamName} vs {pick.game.awayTeamName}</div>
                     <div className="text-xs text-ion-3">{pick.game.sport.name}</div>
                   </td>
@@ -62,9 +62,9 @@ export default async function AdminPicksPage() {
                   <td className="px-4 py-3 text-ion-1 font-medium">{pick.selection}</td>
                   <td className="px-4 py-3">
                     <span className={`font-bold ${
-                      pick.confidence >= 80 ? "text-green-400" :
-                      pick.confidence >= 70 ? "text-blue-400" :
-                      "text-yellow-400"
+                      pick.confidence >= 80 ? "text-verify" :
+                      pick.confidence >= 70 ? "text-orbital-cyan" :
+                      "text-caution"
                     }`}>
                       {pick.confidence}
                     </span>
@@ -72,7 +72,7 @@ export default async function AdminPicksPage() {
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs ${
                       pick.tier === "PREMIUM"
-                        ? "bg-yellow-400/10 text-yellow-400"
+                        ? "bg-caution/10 text-caution"
                         : "bg-titanium text-ion-1"
                     }`}>
                       {pick.tier}
@@ -80,8 +80,8 @@ export default async function AdminPicksPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                      pick.result === "WIN" ? "bg-green-500/10 text-green-400" :
-                      pick.result === "LOSS" ? "bg-red-500/10 text-red-400" :
+                      pick.result === "WIN" ? "bg-verify/10 text-verify" :
+                      pick.result === "LOSS" ? "bg-alert/10 text-alert" :
                       pick.result === "PUSH" ? "bg-titanium text-ion-1" :
                       "bg-titanium text-ion-3"
                     }`}>

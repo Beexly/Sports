@@ -28,13 +28,13 @@ function statusClass(status: string): string {
   switch (status) {
     case "READY":
     case "green":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "GATED":
     case "yellow":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "THIN":
     case "red":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
@@ -142,7 +142,7 @@ export function StudioWorkspace({
                       href={`/cockpit/studio?gameId=${game.id}`}
                       className={`block rounded-lg border px-3 py-2 text-left transition-colors ${
                         selected
-                          ? "border-yellow-500/50 bg-yellow-500/10"
+                          ? "border-caution/50 bg-caution/10"
                           : "border-titanium/40 bg-obsidian/40 hover:bg-carbon/60"
                       }`}
                     >
@@ -198,7 +198,7 @@ export function StudioWorkspace({
                   </div>
 
                   {draft.refusalReason ? (
-                    <p className="mt-4 rounded-md border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-200">
+                    <p className="mt-4 rounded-md border border-alert/30 bg-alert/10 p-3 text-xs text-alert">
                       {draft.refusalReason}
                     </p>
                   ) : (
@@ -214,7 +214,7 @@ export function StudioWorkspace({
                           type="button"
                           onClick={() => void generateDraft(draft.templateKind)}
                           disabled={!canGenerate}
-                          className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-3 py-2 text-xs font-semibold text-yellow-100 transition-colors hover:bg-yellow-500/20 disabled:cursor-not-allowed disabled:border-titanium/40 disabled:bg-eclipse/40 disabled:text-ion-3"
+                          className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-caution/40 bg-caution/10 px-3 py-2 text-xs font-semibold text-caution transition-colors hover:bg-caution/20 disabled:cursor-not-allowed disabled:border-titanium/40 disabled:bg-eclipse/40 disabled:text-ion-3"
                         >
                           {generation.status === "loading" ? (
                             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -226,7 +226,7 @@ export function StudioWorkspace({
                       </div>
 
                       {generation.status === "error" ? (
-                        <p className="rounded-md border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-200">
+                        <p className="rounded-md border border-alert/30 bg-alert/10 p-3 text-xs text-alert">
                           {generation.message}
                         </p>
                       ) : null}
@@ -252,7 +252,7 @@ export function StudioWorkspace({
                           {generatedDraft.compliance.flags.length > 0 ? (
                             <ul className="mt-3 flex flex-col gap-2">
                               {generatedDraft.compliance.flags.map((flag) => (
-                                <li key={flag.id} className="text-xs text-amber-200">
+                                <li key={flag.id} className="text-xs text-caution">
                                   {flag.message}
                                 </li>
                               ))}

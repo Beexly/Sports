@@ -10,16 +10,16 @@ import {
 export const dynamic = "force-dynamic";
 
 const STATUS_STYLES: Readonly<Record<SyntheticCheckStatus, string>> = {
-  passing: "border-emerald-500/30 bg-emerald-950/40 text-emerald-200",
-  warn: "border-yellow-500/30 bg-yellow-950/40 text-yellow-200",
-  failing: "border-red-500/30 bg-red-950/50 text-red-200",
+  passing: "border-verify/30 bg-verify/40 text-verify",
+  warn: "border-caution/30 bg-caution/40 text-caution",
+  failing: "border-alert/30 bg-alert/50 text-alert",
   pending: "border-titanium/40 bg-eclipse/70 text-ion-2",
 };
 
 const SEVERITY_STYLES: Readonly<Record<SyntheticSeverity, string>> = {
-  P1: "text-red-300",
-  P2: "text-yellow-300",
-  P3: "text-sky-300",
+  P1: "text-alert",
+  P2: "text-caution",
+  P3: "text-ion-1",
 };
 
 export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Element> {
@@ -30,7 +30,7 @@ export default async function CockpitSyntheticMonitoringPage(): Promise<JSX.Elem
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-caution">
               Synthetic Monitoring
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Production Verification Runner</h1>
@@ -204,9 +204,9 @@ function ConfigRow({ label, value }: { readonly label: string; readonly value: s
 }
 
 function sparkColor(status: SyntheticCheckStatus): string {
-  if (status === "passing") return "bg-emerald-500";
-  if (status === "warn") return "bg-yellow-400";
-  if (status === "failing") return "bg-red-500";
+  if (status === "passing") return "bg-verify";
+  if (status === "warn") return "bg-caution";
+  if (status === "failing") return "bg-alert";
   return "bg-titanium/40";
 }
 

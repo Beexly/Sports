@@ -17,11 +17,11 @@ import type { JarvisHistorySnapshot } from "@/lib/cockpit/jarvis-history";
  */
 
 const STATUS_TONE: Record<string, string> = {
-  LAUNCH_READY: "bg-green-700 text-green-100",
-  LAUNCH_READY_PENDING_EXTERNAL_CONFIG: "bg-yellow-700 text-yellow-100",
-  NOT_READY_DATA: "bg-red-700 text-red-100",
-  NOT_READY_VALIDATION: "bg-orange-700 text-orange-100",
-  NOT_READY_SAFETY: "bg-red-800 text-red-100",
+  LAUNCH_READY: "bg-verify text-void",
+  LAUNCH_READY_PENDING_EXTERNAL_CONFIG: "bg-caution text-void",
+  NOT_READY_DATA: "bg-alert text-void",
+  NOT_READY_VALIDATION: "bg-caution-deep text-void",
+  NOT_READY_SAFETY: "bg-alert text-void",
   UNKNOWN: "bg-titanium/40 text-ion-1",
 };
 

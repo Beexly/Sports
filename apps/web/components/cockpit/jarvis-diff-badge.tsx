@@ -65,7 +65,7 @@ export function JarvisDiffBadge({ recent, className }: JarvisDiffBadgeProps) {
       data-testid="jarvis-diff-badge"
       data-state="changed"
       className={[
-        "rounded-full bg-yellow-900/40 px-2 py-0.5 text-[10px] font-semibold text-yellow-300",
+        "rounded-full bg-caution/40 px-2 py-0.5 text-[10px] font-semibold text-caution",
         className ?? "",
       ].join(" ")}
       title={changes.join("\n")}

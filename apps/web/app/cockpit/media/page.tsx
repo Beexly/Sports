@@ -25,12 +25,12 @@ type LegacyMediaResult =
   | { readonly status: "unreachable"; readonly rowCount: "UNKNOWN"; readonly items: readonly LegacyMediaItem[] };
 
 const STATUS_TONE: Record<MediaLaneStatus, string> = {
-  ready: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  "draft-only": "border-cyan-500/30 bg-cyan-950/30 text-cyan-200",
-  "db-dependent": "border-blue-500/30 bg-blue-950/30 text-blue-200",
-  "founder-gated": "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  blocked: "border-red-500/30 bg-red-950/30 text-red-200",
-  "manual-export": "border-violet-500/30 bg-violet-950/30 text-violet-200",
+  ready: "border-verify/30 bg-verify/30 text-verify",
+  "draft-only": "border-orbital-cyan/30 bg-orbital-cyan/30 text-orbital-cyan",
+  "db-dependent": "border-orbital-cyan/30 bg-orbital-cyan/30 text-orbital-cyan",
+  "founder-gated": "border-caution/30 bg-caution/30 text-caution",
+  blocked: "border-alert/30 bg-alert/30 text-alert",
+  "manual-export": "border-ultraviolet/30 bg-ultraviolet/30 text-ultraviolet",
 };
 
 async function loadLegacyMediaItems(): Promise<LegacyMediaResult> {
@@ -77,7 +77,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-violet-300">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-ultraviolet">
               Media intelligence
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Media Operating Room</h1>
@@ -106,7 +106,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
 
       <p
         data-testid="media-no-publish-banner"
-        className="rounded-lg border border-yellow-900/40 bg-yellow-950/20 p-4 text-xs leading-relaxed text-yellow-200"
+        className="rounded-lg border border-caution/40 bg-caution/20 p-4 text-xs leading-relaxed text-caution"
       >
         Draft-only. No auto-publish. No social posting. No user communications. No automated
         betting. `scheduledFor` is metadata only; no worker reads it to publish.
@@ -158,9 +158,9 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
             </dl>
           </section>
 
-          <section className="rounded-2xl border border-red-900/50 bg-red-950/20 p-5">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-red-300">Hard boundary</h2>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-red-100/80">
+          <section className="rounded-2xl border border-alert/50 bg-alert/20 p-5">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-alert">Hard boundary</h2>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-alert/80">
               <li>No external publishing path from Media.</li>
               <li>No social posting API from Studio.</li>
               <li>No fabricated beat reports or sourced claims.</li>
@@ -184,7 +184,7 @@ export default async function CockpitMediaPage(): Promise<JSX.Element> {
           </div>
           <span
             data-testid="media-db-status"
-            className={legacy.status === "reachable" ? "rounded border border-emerald-500/30 bg-emerald-950/30 px-2 py-1 text-xs text-emerald-200" : "rounded border border-yellow-500/30 bg-yellow-950/30 px-2 py-1 text-xs text-yellow-200"}
+            className={legacy.status === "reachable" ? "rounded border border-verify/30 bg-verify/30 px-2 py-1 text-xs text-verify" : "rounded border border-caution/30 bg-caution/30 px-2 py-1 text-xs text-caution"}
           >
             {legacy.status === "reachable" ? `${legacy.rowCount} rows` : "UNKNOWN (no DB reachable)"}
           </span>
@@ -295,13 +295,13 @@ function LaneCard({ lane }: { lane: MediaLane }): JSX.Element {
 
 function complianceClass(status: string): string {
   if (status === "CLEAR") {
-    return "rounded-full bg-green-900/40 px-2 py-0.5 text-[10px] font-semibold text-green-200";
+    return "rounded-full bg-verify/40 px-2 py-0.5 text-[10px] font-semibold text-verify";
   }
   if (status === "REVIEW_REQUIRED") {
-    return "rounded-full bg-yellow-900/40 px-2 py-0.5 text-[10px] font-semibold text-yellow-200";
+    return "rounded-full bg-caution/40 px-2 py-0.5 text-[10px] font-semibold text-caution";
   }
   if (status === "HOLD") {
-    return "rounded-full bg-red-900/40 px-2 py-0.5 text-[10px] font-semibold text-red-200";
+    return "rounded-full bg-alert/40 px-2 py-0.5 text-[10px] font-semibold text-alert";
   }
   return "rounded-full bg-obsidian/70 px-2 py-0.5 text-[10px] font-semibold text-ion-1";
 }

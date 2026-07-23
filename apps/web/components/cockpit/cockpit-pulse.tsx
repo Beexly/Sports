@@ -26,24 +26,24 @@ const HEALTH: Record<Health, { word: string; read: string; accent: string; glow:
     read: "Blockers need you first.",
     accent: "#fb7185", // rose-400
     glow: "rgba(244,63,94,0.28)",
-    ring: "border-rose-400/40",
-    chip: "border-rose-400/40 bg-rose-500/10 text-rose-200",
+    ring: "border-alert/40",
+    chip: "border-alert/40 bg-alert/10 text-alert",
   },
   CAUTION: {
     word: "Caution",
     read: "Running clean — capacity is still being wired.",
     accent: "#fbbf24", // amber-400
     glow: "rgba(251,191,36,0.22)",
-    ring: "border-amber-400/40",
-    chip: "border-amber-400/40 bg-amber-500/10 text-amber-200",
+    ring: "border-caution/40",
+    chip: "border-caution/40 bg-caution/10 text-caution",
   },
   UNKNOWN: {
     word: "Standby",
     read: "Awaiting a live signal.",
     accent: "#22d3ee", // cyan-400 / orbital
     glow: "rgba(34,211,238,0.20)",
-    ring: "border-cyan-400/40",
-    chip: "border-cyan-400/40 bg-cyan-500/10 text-cyan-200",
+    ring: "border-orbital-cyan/40",
+    chip: "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan",
   },
 };
 
@@ -51,7 +51,7 @@ function PulseStat({ label, value, sub, hot }: { label: string; value: number; s
   return (
     <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4 transition-colors hover:border-titanium/70">
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-ion-3">{label}</p>
-      <p className={`mt-1 font-mono text-3xl font-semibold tabular-nums ${hot ? "text-amber-300" : "text-ion-white"}`}>{value}</p>
+      <p className={`mt-1 font-mono text-3xl font-semibold tabular-nums ${hot ? "text-caution" : "text-ion-white"}`}>{value}</p>
       <p className="mt-0.5 text-[11px] text-ion-3">{sub}</p>
     </div>
   );

@@ -133,7 +133,7 @@ export default async function CockpitOverview() {
         className={[
           "relative overflow-hidden rounded-3xl border bg-carbon/90 shadow-2xl shadow-black/30",
           ownerSummary?.overallColor === "RED"
-            ? "border-rose-900/40"
+            ? "border-alert/40"
             : ownerSummary?.overallColor === "GREEN"
               ? "border-accent-900/40"
               : "border-titanium/60",
@@ -159,7 +159,7 @@ export default async function CockpitOverview() {
 
             <div className="ml-auto flex flex-wrap items-center gap-2">
               {stubMode && (
-                <span className="rounded bg-yellow-900/40 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-yellow-300">
+                <span className="rounded bg-caution/40 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-caution">
                   Stub Mode · No DB
                 </span>
               )}
@@ -195,8 +195,8 @@ export default async function CockpitOverview() {
                     {ownerSummary.oneLiner}
                   </p>
                   {ownerSummary.criticalWarnings.length > 0 && (
-                    <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-rose-300">
-                      <span className="h-1.5 w-1.5 flex-shrink-0 animate-live-pulse rounded-full bg-rose-400" />
+                    <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-alert">
+                      <span className="h-1.5 w-1.5 flex-shrink-0 animate-live-pulse rounded-full bg-alert" />
                       {ownerSummary.criticalWarnings[0]}
                     </p>
                   )}
@@ -244,10 +244,10 @@ export default async function CockpitOverview() {
 
       {/* ── Synthesis error ───────────────────────────────────────────── */}
       {jarvisError && (
-        <section className="rounded-xl border border-red-900 bg-red-950/30 p-4 text-sm text-red-300">
+        <section className="rounded-xl border border-alert bg-alert/30 p-4 text-sm text-alert">
           <p className="font-semibold">Jarvis synthesis failed.</p>
-          <p className="mt-1 text-red-400/80">{jarvisError}</p>
-          <p className="mt-2 text-xs text-red-400/60">
+          <p className="mt-1 text-alert/80">{jarvisError}</p>
+          <p className="mt-2 text-xs text-alert/60">
             The cockpit still renders. Check the DB connection and ingestion worker logs.
           </p>
         </section>
@@ -319,11 +319,11 @@ export default async function CockpitOverview() {
 
         {/* Safety + config warnings */}
         {assessment && assessment.safetyWarnings.length > 0 && (
-          <section className="mb-4 rounded-2xl border border-red-900/60 bg-red-950/20 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-red-400">
+          <section className="mb-4 rounded-2xl border border-alert/60 bg-alert/20 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-alert">
               Safety warnings
             </h2>
-            <ul className="list-disc space-y-1 pl-5 text-sm text-red-200">
+            <ul className="list-disc space-y-1 pl-5 text-sm text-alert">
               {assessment.safetyWarnings.map((w: string, i: number) => (
                 <li key={i}>{w}</li>
               ))}
@@ -332,11 +332,11 @@ export default async function CockpitOverview() {
         )}
 
         {assessment && assessment.externalConfigWarnings.length > 0 && (
-          <section className="mb-4 rounded-2xl border border-yellow-900/60 bg-yellow-950/20 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-yellow-400">
+          <section className="mb-4 rounded-2xl border border-caution/60 bg-caution/20 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-caution">
               External config warnings
             </h2>
-            <ul className="grid grid-cols-1 gap-1 text-xs text-yellow-200 sm:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-1 text-xs text-caution sm:grid-cols-2">
               {assessment.externalConfigWarnings.map((k: string, i: number) => (
                 <li key={i} className="font-mono">{k}</li>
               ))}
@@ -345,11 +345,11 @@ export default async function CockpitOverview() {
         )}
 
         {assessment && assessment.missingPhaseWarnings.length > 0 && (
-          <section className="mb-4 rounded-2xl border border-orange-900/60 bg-orange-950/20 p-5">
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-orange-400">
+          <section className="mb-4 rounded-2xl border border-caution/60 bg-caution/10 p-5">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-caution">
               Missing-phase warnings
             </h2>
-            <ul className="list-disc space-y-1 pl-5 text-sm text-orange-200">
+            <ul className="list-disc space-y-1 pl-5 text-sm text-caution">
               {assessment.missingPhaseWarnings.map((m: string, i: number) => (
                 <li key={i}>{m}</li>
               ))}
@@ -470,7 +470,7 @@ export default async function CockpitOverview() {
               <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-3">
                 Today&apos;s picks — operator surface
                 {demoActive && (
-                  <span className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-yellow-300">
+                  <span className="ml-2 rounded bg-caution/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-caution">
                     sample
                   </span>
                 )}
@@ -683,9 +683,9 @@ function QuickStat({
     accent === "cyan"
       ? "text-accent-400"
       : accent === "amber"
-        ? "text-amber-300"
+        ? "text-caution"
         : accent === "red"
-          ? "text-rose-300"
+          ? "text-alert"
           : "text-ion-white";
   return (
     <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4 transition-colors hover:border-titanium/70">
@@ -737,15 +737,15 @@ function AttentionFirstHero({
 
   const urgencyTone =
     lead.urgency === "CRITICAL"
-      ? "border-red-900/70 bg-red-950/20 shadow-glow-plasma"
+      ? "border-alert/70 bg-alert/20 shadow-glow-plasma"
       : lead.urgency === "HIGH"
-        ? "border-yellow-900/60 bg-yellow-950/10"
+        ? "border-caution/60 bg-caution/10"
         : "border-accent-900/40 bg-carbon/80";
   const urgencyPill =
     lead.urgency === "CRITICAL"
-      ? "bg-red-950/50 text-red-300 border-red-900/60"
+      ? "bg-alert/50 text-alert border-alert/60"
       : lead.urgency === "HIGH"
-        ? "bg-yellow-950/50 text-yellow-300 border-yellow-900/50"
+        ? "bg-caution/50 text-caution border-caution/50"
         : "bg-obsidian/70 text-ion-2 border-titanium/40";
   const runnerUp = items[1];
 
@@ -759,8 +759,8 @@ function AttentionFirstHero({
       <div className="mb-3 flex flex-wrap items-center gap-2">
         {lead.urgency === "CRITICAL" && (
           <span className="relative h-2 w-2 flex-shrink-0">
-            <span className="absolute inset-0 animate-live-pulse rounded-full bg-red-400" />
-            <span className="absolute inset-0 rounded-full bg-red-400" />
+            <span className="absolute inset-0 animate-live-pulse rounded-full bg-alert" />
+            <span className="absolute inset-0 rounded-full bg-alert" />
           </span>
         )}
         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ion-3">
@@ -848,9 +848,9 @@ function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] 
   const topUrgency = decisions[0]?.urgency ?? "NORMAL";
   const shellClass =
     topUrgency === "CRITICAL"
-      ? "border-red-900/70 bg-red-950/20 shadow-glow-plasma"
+      ? "border-alert/70 bg-alert/20 shadow-glow-plasma"
       : topUrgency === "HIGH"
-        ? "border-yellow-900/60 bg-yellow-950/10"
+        ? "border-caution/60 bg-caution/10"
         : "border-titanium/50 bg-carbon/80";
 
   return (
@@ -861,14 +861,14 @@ function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] 
       <div className="mb-4 flex items-center gap-3">
         {topUrgency === "CRITICAL" && (
           <div className="relative h-2 w-2 flex-shrink-0">
-            <div className="absolute inset-0 animate-live-pulse rounded-full bg-red-400" />
-            <div className="absolute inset-0 rounded-full bg-red-400" />
+            <div className="absolute inset-0 animate-live-pulse rounded-full bg-alert" />
+            <div className="absolute inset-0 rounded-full bg-alert" />
           </div>
         )}
         <h2
           className={[
             "text-xs font-bold uppercase tracking-widest",
-            topUrgency === "CRITICAL" ? "text-red-300" : "text-ion-2",
+            topUrgency === "CRITICAL" ? "text-alert" : "text-ion-2",
           ].join(" ")}
         >
           Decision Queue — {decisions.length} item{decisions.length === 1 ? "" : "s"} need your
@@ -882,9 +882,9 @@ function DecisionQueueZone({ decisions }: { decisions: readonly OwnerDecision[] 
               className={[
                 "mt-0.5 flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest",
                 d.urgency === "CRITICAL"
-                  ? "bg-red-950/50 text-red-300"
+                  ? "bg-alert/50 text-alert"
                   : d.urgency === "HIGH"
-                    ? "bg-yellow-950/50 text-yellow-300"
+                    ? "bg-caution/50 text-caution"
                     : "bg-titanium/60 text-ion-2",
               ].join(" ")}
             >
@@ -928,7 +928,7 @@ function PicksDeskZone({
             "rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
             picks.isPublicGateOpen
               ? "border-accent-800/50 bg-accent-950/30 text-accent-400"
-              : "border-yellow-900/40 bg-yellow-950/20 text-yellow-300",
+              : "border-caution/40 bg-caution/20 text-caution",
           ].join(" ")}
         >
           {picks.isPublicGateOpen ? "Gate Open" : "Gate Closed"}
@@ -959,13 +959,13 @@ function PicksDeskZone({
       </div>
 
       {picks.blockedReason && (
-        <p className="mb-3 text-[11px] text-yellow-300">Blocked: {picks.blockedReason}</p>
+        <p className="mb-3 text-[11px] text-caution">Blocked: {picks.blockedReason}</p>
       )}
 
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-[9px] text-ion-3">
         <span>Bootstrap excluded: {picks.bootstrapExcluded}</span>
         <span>Total in system: {picks.totalInSystem}</span>
-        {demoActive && <span className="text-yellow-400">DEMO_PICKS_ENABLED active</span>}
+        {demoActive && <span className="text-caution">DEMO_PICKS_ENABLED active</span>}
       </div>
 
       {slateBreakdown.length > 0 && (
@@ -1021,7 +1021,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
             "flex-shrink-0 rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest",
             performance.displaySafe
               ? "border-accent-800/50 bg-accent-950/30 text-accent-400"
-              : "border-yellow-900/40 bg-yellow-950/20 text-yellow-300",
+              : "border-caution/40 bg-caution/20 text-caution",
           ].join(" ")}
         >
           {performance.displaySafe ? "Display-Ready" : "Gated"}
@@ -1062,7 +1062,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
           <p
             className={[
               "mt-1 text-2xl font-bold leading-none",
-              performance.isGateOpen ? "text-accent-500" : "text-yellow-300",
+              performance.isGateOpen ? "text-accent-500" : "text-caution",
             ].join(" ")}
           >
             {performance.isGateOpen ? "ON" : "OFF"}
@@ -1075,7 +1075,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
         <p className="text-xs text-ion-2">
           Public performance gated.
           {performance.remainingToThreshold > 0 && (
-            <span className="text-yellow-300">
+            <span className="text-caution">
               {" "}
               {performance.remainingToThreshold} more canonical picks needed.
             </span>
@@ -1093,7 +1093,7 @@ function PerformanceTargetZone({ performance }: { performance: PerformanceSummar
         <span>Bootstrap: excluded</span>
         <span>Pending: excluded</span>
         {performance.smallSampleWarning && (
-          <span className="text-yellow-400">Small-sample warning</span>
+          <span className="text-caution">Small-sample warning</span>
         )}
       </div>
     </section>
@@ -1129,8 +1129,8 @@ function DepartmentsZone({ departments }: { departments: readonly DepartmentSumm
 function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
   const dotColor: Record<JarvisHealth, string> = {
     GREEN: "bg-accent-500",
-    AMBER: "bg-yellow-300",
-    RED: "bg-rose-400",
+    AMBER: "bg-caution",
+    RED: "bg-alert",
     UNKNOWN: "bg-ion-3/30",
   };
 
@@ -1152,7 +1152,7 @@ function DepartmentReportRow({ dept }: { dept: DepartmentSummary }) {
         {dept.oneLiner}
       </span>
       {dept.actionRequired && (
-        <span className="flex-shrink-0 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">
+        <span className="flex-shrink-0 rounded bg-caution/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
           Action
         </span>
       )}
@@ -1339,11 +1339,11 @@ function MemoryProtocolZone({ memory }: { memory: MemoryStatus }) {
 
 function LaunchStatusBadge({ status }: { status: JarvisLaunchStatus }) {
   const styles: Record<JarvisLaunchStatus, string> = {
-    LAUNCH_READY: "bg-green-900/40 text-green-300",
-    LAUNCH_READY_PENDING_EXTERNAL_CONFIG: "bg-yellow-900/40 text-yellow-300",
-    NOT_READY_DATA: "bg-orange-900/40 text-orange-300",
-    NOT_READY_VALIDATION: "bg-red-900/40 text-red-300",
-    NOT_READY_SAFETY: "bg-red-900/40 text-red-300",
+    LAUNCH_READY: "bg-verify/40 text-verify",
+    LAUNCH_READY_PENDING_EXTERNAL_CONFIG: "bg-caution/40 text-caution",
+    NOT_READY_DATA: "bg-caution/20 text-caution",
+    NOT_READY_VALIDATION: "bg-alert/40 text-alert",
+    NOT_READY_SAFETY: "bg-alert/40 text-alert",
     UNKNOWN: "bg-obsidian/70 text-ion-3",
   };
   return (
@@ -1360,9 +1360,9 @@ function LaunchStatusBadge({ status }: { status: JarvisLaunchStatus }) {
 
 function HealthTile({ label, health }: { label: string; health: JarvisHealth }) {
   const styles: Record<JarvisHealth, string> = {
-    GREEN: "border-green-900 bg-green-950/30 text-green-300",
-    AMBER: "border-yellow-900 bg-yellow-950/30 text-yellow-300",
-    RED: "border-red-900 bg-red-950/30 text-red-300",
+    GREEN: "border-verify bg-verify/30 text-verify",
+    AMBER: "border-caution bg-caution/30 text-caution",
+    RED: "border-alert bg-alert/30 text-alert",
     UNKNOWN: "border-titanium/40 bg-eclipse/40 text-ion-2",
   };
   return (

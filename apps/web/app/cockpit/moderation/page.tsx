@@ -89,9 +89,9 @@ async function loadAppeals(): Promise<AppealRow[] | null> {
 function reportStatusClass(status: ModerationReportStatus): string {
   switch (status) {
     case "ESCALATED":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "UNDER_REVIEW":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "OPEN":
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
@@ -101,17 +101,17 @@ function reportStatusClass(status: ModerationReportStatus): string {
 function appealStatusClass(status: ModerationAppealStatus): string {
   switch (status) {
     case "UNDER_REVIEW":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "PENDING":
     default:
-      return "border-blue-500/40 bg-blue-500/10 text-blue-300";
+      return "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan";
   }
 }
 
 function slaClass(deadline: Date): string {
   const hoursLeft = (deadline.getTime() - Date.now()) / 3_600_000;
-  if (hoursLeft < 24) return "text-rose-400";
-  if (hoursLeft < 72) return "text-amber-400";
+  if (hoursLeft < 24) return "text-alert";
+  if (hoursLeft < 72) return "text-caution";
   return "text-ion-2";
 }
 
@@ -142,7 +142,7 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
         {dbUnavailable && (
           <p
             data-testid="moderation-db-unavailable"
-            className="rounded-md border border-amber-700/40 bg-amber-900/20 px-3 py-2 text-xs text-amber-300"
+            className="rounded-md border border-caution/40 bg-caution/20 px-3 py-2 text-xs text-caution"
           >
             Database unavailable. Showing structure only — no live data.
           </p>
@@ -286,12 +286,12 @@ export default async function CockpitModerationPage(): Promise<JSX.Element> {
               </div>
               <div className="flex items-center gap-2">
                 {entry.appealable && (
-                  <span className="rounded bg-blue-900/30 px-1.5 py-0.5 text-[10px] font-semibold text-blue-300">
+                  <span className="rounded bg-orbital-cyan/30 px-1.5 py-0.5 text-[10px] font-semibold text-orbital-cyan">
                     appealable
                   </span>
                 )}
                 {entry.straightToBan && (
-                  <span className="rounded bg-rose-900/30 px-1.5 py-0.5 text-[10px] font-semibold text-rose-300">
+                  <span className="rounded bg-alert/20 px-1.5 py-0.5 text-[10px] font-semibold text-alert">
                     straight-to-ban
                   </span>
                 )}
