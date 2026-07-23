@@ -15,7 +15,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { CipherChapterView } from "@/lib/cipher/cipher";
-import { BRAND_COLORS } from "@/lib/brand";
 
 type Reward = { kind: "code" | "claim"; value: string };
 type Props = { view: CipherChapterView; state: "live" | "sealed"; boundaryISO: string };
@@ -86,18 +85,18 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full blur-3xl"
-        style={{ background: `${BRAND_COLORS.orbitalCyan}1f` }}
+        style={{ background: "rgba(0, 229, 255, 0.12)" }}
       />
 
       {/* Status + countdown */}
       <div className="relative flex flex-wrap items-center justify-between gap-4">
-        <p className="eyebrow flex items-center gap-2" style={{ color: live ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.softUltraviolet }}>
+        <p className={`eyebrow flex items-center gap-2 ${live ? "text-orbital-cyan" : "text-ultraviolet"}`}>
           <span className={live ? "live-dot" : ""} />
           {live ? `Chapter ${view.week} · Live` : "Sealed"}
         </p>
         {cd && (
-          <p className="font-mono text-sm tabular-nums text-ink-300">
-            <span className="text-ink-500">{live ? "seals in " : "opens in "}</span>
+          <p className="font-mono text-sm tabular-nums text-ion-1">
+            <span className="text-ion-3">{live ? "seals in " : "opens in "}</span>
             {cd.d > 0 && `${cd.d}d `}
             {pad(cd.h)}:{pad(cd.m)}:{pad(cd.s)}
           </p>
@@ -105,10 +104,10 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
       </div>
 
       {/* Codename + brief */}
-      <h2 className="relative mt-5 font-display text-2xl text-white sm:text-3xl">
+      <h2 className="relative mt-5 font-display text-2xl text-ion-white sm:text-3xl">
         “{view.codename}”
       </h2>
-      <p className="relative mt-3 max-w-2xl text-sm leading-relaxed text-ink-300">{view.brief}</p>
+      <p className="relative mt-3 max-w-2xl text-sm leading-relaxed text-ion-1">{view.brief}</p>
 
       {/* Shard rail — where to look (no tokens) */}
       {view.clues.length > 0 && (
@@ -121,10 +120,10 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
                   className="inline-block h-2 w-2 rounded-full"
                   style={{ backgroundColor: c.color, boxShadow: `0 0 10px ${c.color}` }}
                 />
-                <span className="font-mono text-xs uppercase tracking-widest text-ink-500">Shard {c.id}</span>
+                <span className="font-mono text-xs uppercase tracking-widest text-ion-3">Shard {c.id}</span>
               </div>
-              <p className="mt-2 text-sm font-semibold text-white">{c.label}</p>
-              <p className="mt-1 text-xs leading-relaxed text-ink-400">{c.where}</p>
+              <p className="mt-2 text-sm font-semibold text-ion-white">{c.label}</p>
+              <p className="mt-1 text-xs leading-relaxed text-ion-2">{c.where}</p>
             </div>
           ))}
         </div>
@@ -132,7 +131,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
 
       {/* Answer entry */}
       <form onSubmit={submit} className="relative mt-7">
-        <label htmlFor="cipher-answer" className="block text-xs uppercase tracking-widest text-ink-500">
+        <label htmlFor="cipher-answer" className="block text-xs uppercase tracking-widest text-ion-3">
           Assemble the shards in order · {view.answerLength} characters
         </label>
         <div className="mt-2 flex flex-col gap-3 sm:flex-row">
@@ -145,8 +144,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
             autoComplete="off"
             spellCheck={false}
             placeholder={live ? "shard01shard02shard03…" : "sealed until Mon 11:59am ET"}
-            className="flex-1 rounded-xl border bg-carbon/30 px-4 py-3 font-mono text-sm text-ion-white outline-none transition-colors placeholder:text-ink-500 focus:border-orbital-cyan/60 disabled:opacity-50"
-            style={{ borderColor: BRAND_COLORS.steelGray }}
+            className="flex-1 rounded-xl border border-titanium bg-carbon/30 px-4 py-3 font-mono text-sm text-ion-white outline-none transition-colors placeholder:text-ion-3 focus:border-orbital-cyan/60 disabled:opacity-50"
           />
           <button
             type="submit"
@@ -161,15 +159,12 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
       {/* Result */}
       <div aria-live="polite" className="relative mt-4 min-h-[1.5rem]">
         {result?.kind === "win" && (
-          <div
-            className="rounded-xl border p-4"
-            style={{ borderColor: `${BRAND_COLORS.orbitalCyan}66`, background: `${BRAND_COLORS.orbitalCyan}10` }}
-          >
-            <p className="text-sm font-semibold text-white">◬ Solved. {result.message}</p>
-            <p className="mt-2 font-mono text-lg tracking-wide" style={{ color: BRAND_COLORS.orbitalCyan }}>
+          <div className="rounded-xl border border-orbital-cyan/40 bg-orbital-cyan/5 p-4">
+            <p className="text-sm font-semibold text-ion-white">◬ Solved. {result.message}</p>
+            <p className="mt-2 font-mono text-lg tracking-wide text-orbital-cyan">
               {result.reward.value}
             </p>
-            <p className="mt-1 text-xs text-ink-400">
+            <p className="mt-1 text-xs text-ion-2">
               {result.reward.kind === "code"
                 ? "Redeem at checkout for one week of Elite."
                 : "Present this reference to support to claim your free Elite week."}
@@ -177,11 +172,11 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
           </div>
         )}
         {result?.kind === "miss" && (
-          <p className="text-sm" style={{ color: BRAND_COLORS.ionMagenta }}>
+          <p className="text-sm text-plasma">
             {result.message}
           </p>
         )}
-        {result?.kind === "error" && <p className="text-sm text-ink-400">{result.message}</p>}
+        {result?.kind === "error" && <p className="text-sm text-ion-2">{result.message}</p>}
       </div>
     </div>
   );

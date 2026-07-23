@@ -5,7 +5,6 @@ import { Reveal } from "@/components/motion/reveal";
 import { CipherTerminal } from "@/components/cipher/cipher-terminal";
 import { getCipherStatus, toChapterView } from "@/lib/cipher/cipher";
 import { Atmosphere } from "@/components/ui/atmosphere";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +38,7 @@ export default function CipherPage() {
   const view = toChapterView(status.chapter);
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
 
@@ -50,19 +49,20 @@ export default function CipherPage() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
             style={{
-              background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.softUltraviolet}22, transparent 70%), radial-gradient(40% 60% at 75% 10%, ${BRAND_COLORS.orbitalCyan}14, transparent 70%)`,
+              background:
+                "radial-gradient(60% 80% at 50% 0%, rgba(123, 97, 255, 0.13), transparent 70%), radial-gradient(40% 60% at 75% 10%, rgba(0, 229, 255, 0.08), transparent 70%)",
             }}
           />
           <div className="mx-auto max-w-5xl text-center">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span className="live-dot" />
                 A weekly hunt inside the glass box
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1
-                className="mt-5 font-display text-balance text-white"
+                className="mt-5 font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.02em" }}
               >
                 The Glass Box{" "}
@@ -70,7 +70,8 @@ export default function CipherPage() {
                   className="gse-editorial"
                   style={{
                     fontSize: "1.1em",
-                    backgroundImage: `linear-gradient(115deg, ${BRAND_COLORS.orbitalCyan}, ${BRAND_COLORS.softUltraviolet} 50%, ${BRAND_COLORS.ionMagenta})`,
+                    backgroundImage:
+                      "linear-gradient(115deg, #00E5FF, #7B61FF 50%, #FF38C7)",
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     color: "transparent",
@@ -81,7 +82,7 @@ export default function CipherPage() {
               </h1>
             </Reveal>
             <Reveal delay={170}>
-              <p className="mx-auto mt-5 max-w-2xl text-lg text-ink-300">
+              <p className="mx-auto mt-5 max-w-2xl text-lg text-ion-1">
                 Every week the engine hides a secret in plain sight. Read deeper than
                 everyone else, assemble the key, and a week of Elite is yours. No luck,
                 just attention.
@@ -95,19 +96,15 @@ export default function CipherPage() {
           <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             {/* Transmission log */}
             <Reveal>
-              <div
-                className="surface-card h-full p-6 font-mono text-sm"
-                style={{ borderColor: `${BRAND_COLORS.steelGray}` }}
-              >
-                <p className="mb-4 text-xs uppercase tracking-widest text-ink-500">
+              <div className="surface-card h-full border-titanium p-6 font-mono text-sm">
+                <p className="mb-4 text-xs uppercase tracking-widest text-ion-3">
                   {"// incoming transmission"}
                 </p>
                 <div className="space-y-3">
                   {view.transmission.map((line, i) => (
                     <p
                       key={i}
-                      className="leading-relaxed"
-                      style={{ color: i === 0 ? BRAND_COLORS.orbitalCyan : "var(--ion-1)" }}
+                      className={`leading-relaxed ${i === 0 ? "text-orbital-cyan" : "text-ion-1"}`}
                     >
                       {line}
                     </p>
@@ -127,7 +124,7 @@ export default function CipherPage() {
         <section className="px-4 pb-24 sm:px-6 lg:px-8" aria-labelledby="rules-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <h2 id="rules-heading" className="font-display text-2xl text-white sm:text-3xl">
+              <h2 id="rules-heading" className="font-display text-2xl text-ion-white sm:text-3xl">
                 How the hunt works
               </h2>
             </Reveal>
@@ -137,19 +134,19 @@ export default function CipherPage() {
                   <div className="surface-card h-full p-6">
                     <span
                       aria-hidden="true"
-                      className="font-display text-3xl tabular-nums"
-                      style={{ color: BRAND_COLORS.softUltraviolet, textShadow: `0 0 22px ${BRAND_COLORS.softUltraviolet}55` }}
+                      className="font-display text-3xl tabular-nums text-ultraviolet"
+                      style={{ textShadow: "0 0 22px rgba(123, 97, 255, 0.33)" }}
                     >
                       {r.n}
                     </span>
-                    <h3 className="mt-3 text-lg font-semibold text-white">{r.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-300">{r.body}</p>
+                    <h3 className="mt-3 text-lg font-semibold text-ion-white">{r.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-ion-1">{r.body}</p>
                   </div>
                 </Reveal>
               ))}
             </div>
             <Reveal delay={120}>
-              <p className="mt-8 text-xs leading-relaxed text-ink-500">
+              <p className="mt-8 text-xs leading-relaxed text-ion-3">
                 Rewards are issued as single-use codes or claim references and fulfilled by our
                 team, never automatically charged or granted. One reward per visitor per chapter.
                 This is a skill puzzle, not a game of chance; no purchase is required to play.

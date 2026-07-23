@@ -14,7 +14,7 @@ import { SignalCourtroom } from "@/components/courtroom/signal-courtroom";
 import { DecisionAutopsy } from "@/components/courtroom/decision-autopsy";
 import { AgentWarRoom } from "@/components/war-room/agent-war-room";
 import { ILLUSTRATIVE_BRIEF } from "@/lib/courtroom/courtroom";
-import { BRAND_COLORS, CLOSING_LINE } from "@/lib/brand";
+import { CLOSING_LINE } from "@/lib/brand";
 
 const TICKER_PHRASES = [
   "Math you can read",
@@ -44,6 +44,16 @@ export const metadata: Metadata = {
  * cyan/ultraviolet signal palette on obsidian (well above WCAG AA).
  */
 
+/**
+ * Step accents — canonical token hexes (styles/design-tokens.css). Kept as
+ * literals (not var() refs) because ReasoningShowcase derives hex+alpha
+ * washes from them, and the SVG motif needs attribute-safe color values.
+ */
+const ACCENT_CYAN = "#00E5FF"; // --orbital-cyan
+const ACCENT_UV = "#7B61FF"; // --ultraviolet
+const ACCENT_MAGENTA = "#FF38C7"; // --plasma
+const ION_WHITE = "#F5F7FF"; // --ion-white
+
 const CHAIN: ReadonlyArray<{
   readonly step: string;
   readonly title: string;
@@ -54,37 +64,37 @@ const CHAIN: ReadonlyArray<{
     step: "01",
     title: "Independent referees",
     body: "Several estimates score each game without looking at the sportsbook's price: a sharp exchange, a structured model, the wider market. Different lenses, judged on their own.",
-    accent: BRAND_COLORS.orbitalCyan,
+    accent: ACCENT_CYAN,
   },
   {
     step: "02",
     title: "Consensus & divergence",
     body: "We measure where the referees agree and where they pull apart. Agreement reads as confidence; a shared disagreement with the price is where an edge can live.",
-    accent: BRAND_COLORS.softUltraviolet,
+    accent: ACCENT_UV,
   },
   {
     step: "03",
     title: "Calibrated edge",
     body: "A signal surfaces only when independent estimates diverge from the price and agree on the direction. With nothing independent to say, the honest default is silence.",
-    accent: BRAND_COLORS.orbitalCyan,
+    accent: ACCENT_CYAN,
   },
   {
     step: "04",
     title: "Graded against the close",
     body: "Every signal carries an expected closing-line value and is graded against where the market actually settles, because beating the close is the claim worth making.",
-    accent: BRAND_COLORS.ionMagenta,
+    accent: ACCENT_MAGENTA,
   },
   {
     step: "05",
     title: "It audits itself",
     body: "The model watches its own calibration over time and raises a flag when accuracy drifts, so the system notices it is slipping before you do.",
-    accent: BRAND_COLORS.softUltraviolet,
+    accent: ACCENT_UV,
   },
   {
     step: "06",
     title: "A record that can't be rewritten",
     body: "Each published signal is committed cryptographically before the event. The history is tamper-evident: nothing gets quietly edited after the fact.",
-    accent: BRAND_COLORS.orbitalCyan,
+    accent: ACCENT_CYAN,
   },
 ];
 
@@ -92,19 +102,19 @@ function ConsensusField() {
   // Decorative "referees converging on consensus" motif — the precise companion
   // to the ambient galaxy. Purely visual.
   const dots = [
-    { cx: 70, cy: 60, fill: BRAND_COLORS.orbitalCyan },
-    { cx: 330, cy: 70, fill: BRAND_COLORS.softUltraviolet },
-    { cx: 60, cy: 250, fill: BRAND_COLORS.ionMagenta },
-    { cx: 340, cy: 240, fill: BRAND_COLORS.orbitalCyan },
-    { cx: 200, cy: 40, fill: BRAND_COLORS.softUltraviolet },
-    { cx: 200, cy: 270, fill: BRAND_COLORS.orbitalCyan },
+    { cx: 70, cy: 60, fill: ACCENT_CYAN },
+    { cx: 330, cy: 70, fill: ACCENT_UV },
+    { cx: 60, cy: 250, fill: ACCENT_MAGENTA },
+    { cx: 340, cy: 240, fill: ACCENT_CYAN },
+    { cx: 200, cy: 40, fill: ACCENT_UV },
+    { cx: 200, cy: 270, fill: ACCENT_CYAN },
   ];
   return (
     <svg viewBox="0 0 400 320" aria-hidden="true" role="presentation" className="h-full w-full">
       <defs>
         <radialGradient id="core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor={BRAND_COLORS.orbitalCyan} stopOpacity="0.9" />
-          <stop offset="100%" stopColor={BRAND_COLORS.orbitalCyan} stopOpacity="0" />
+          <stop offset="0%" stopColor={ACCENT_CYAN} stopOpacity="0.9" />
+          <stop offset="100%" stopColor={ACCENT_CYAN} stopOpacity="0" />
         </radialGradient>
         <filter id="cf-glow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="3.2" result="b" />
@@ -131,7 +141,7 @@ function ConsensusField() {
         {dots.map((d, i) => (
           <circle key={`d${i}`} cx={d.cx} cy={d.cy} r="6.5" fill={d.fill} />
         ))}
-        <circle cx="200" cy="155" r="11" fill={BRAND_COLORS.ionWhite} />
+        <circle cx="200" cy="155" r="11" fill={ION_WHITE} />
       </g>
     </svg>
   );
@@ -139,7 +149,7 @@ function ConsensusField() {
 
 export default function IntelligencePage() {
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
 
@@ -155,29 +165,33 @@ export default function IntelligencePage() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-3/5"
             style={{
-              background: `linear-gradient(180deg, transparent 0%, ${BRAND_COLORS.obsidianBlack}cc 65%, ${BRAND_COLORS.obsidianBlack} 100%)`,
+              background:
+                "linear-gradient(180deg, transparent 0%, rgba(5, 7, 11, 0.8) 65%, rgba(5, 7, 11, 1) 100%)",
             }}
           />
           <div className="pointer-events-none relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col justify-end px-4 pb-20 pt-32 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span
                   aria-hidden="true"
                   className="inline-block h-1.5 w-1.5 rounded-full"
-                  style={{ backgroundColor: BRAND_COLORS.orbitalCyan, boxShadow: `0 0 12px ${BRAND_COLORS.orbitalCyan}` }}
+                  style={{
+                    backgroundColor: "var(--orbital-cyan)",
+                    boxShadow: "0 0 12px var(--orbital-cyan)",
+                  }}
                 />
                 Inside the glass box
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1
-                className="mt-5 max-w-4xl font-display text-balance text-white"
+                className="mt-5 max-w-4xl font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.75rem, 7.2vw, 5.75rem)", lineHeight: 1.02, letterSpacing: "-0.02em" }}
               >
                 See the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>reasoning</span>,{" "}
                 <span
                   style={{
-                    backgroundImage: `linear-gradient(115deg, ${BRAND_COLORS.orbitalCyan}, ${BRAND_COLORS.softUltraviolet} 48%, ${BRAND_COLORS.ionMagenta})`,
+                    backgroundImage: `linear-gradient(115deg, ${ACCENT_CYAN}, ${ACCENT_UV} 48%, ${ACCENT_MAGENTA})`,
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     color: "transparent",
@@ -188,7 +202,7 @@ export default function IntelligencePage() {
               </h1>
             </Reveal>
             <Reveal delay={180}>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-300">
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-ion-1">
                 Most products hand you a pick and ask for trust. We show the work
                 behind every one: the confidence score, the factors that drove it,
                 and how the market has moved. Each signal is graded and recorded, so
@@ -216,17 +230,17 @@ export default function IntelligencePage() {
           <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2">
             <div>
               <Reveal>
-                <p className="eyebrow" style={{ color: BRAND_COLORS.softUltraviolet }}>
+                <p className="eyebrow text-ultraviolet">
                   Many reads, one signal
                 </p>
               </Reveal>
               <Reveal delay={90}>
-                <h2 id="converge-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+                <h2 id="converge-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
                   Edge lives in the disagreement.
                 </h2>
               </Reveal>
               <Reveal delay={170}>
-                <p className="mt-5 text-ink-300">
+                <p className="mt-5 text-ion-1">
                   Independent referees each price the game on their own. When they
                   converge, that&apos;s confidence. When they agree the market is
                   wrong in the same direction, that&apos;s the signal worth
@@ -246,7 +260,7 @@ export default function IntelligencePage() {
         <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="chain-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <h2 id="chain-heading" className="font-display text-3xl text-white sm:text-4xl">
+              <h2 id="chain-heading" className="font-display text-3xl text-ion-white sm:text-4xl">
                 From many independent reads to one auditable signal.
               </h2>
             </Reveal>
@@ -262,17 +276,17 @@ export default function IntelligencePage() {
         <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="courtroom-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.ionMagenta }}>
+              <p className="eyebrow text-plasma">
                 A signal is a case, not a badge
               </p>
             </Reveal>
             <Reveal delay={90}>
-              <h2 id="courtroom-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+              <h2 id="courtroom-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
                 Every signal is prosecuted before it&apos;s published.
               </h2>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-ink-300">
+              <p className="mt-5 max-w-2xl text-ion-1">
                 No lonely confidence number. The engine argues the case against itself:
                 evidence, counter-evidence, and the falsifier that would break it. Then it
                 returns a verdict, including the honest verdict of <em>no-bet</em>.
@@ -288,17 +302,17 @@ export default function IntelligencePage() {
         <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="warroom-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow text-orbital-cyan">
                 Not one engine. A council
               </p>
             </Reveal>
             <Reveal delay={90}>
-              <h2 id="warroom-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+              <h2 id="warroom-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
                 Watch the verdict change, and see which agent moved it.
               </h2>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-ink-300">
+              <p className="mt-5 max-w-2xl text-ion-1">
                 Behind every read is a council of specialist agents, each with one job and an
                 escalation threshold. When the recommendation changes, you can trace exactly
                 which agent escalated and why. No opaque black box.
@@ -314,17 +328,17 @@ export default function IntelligencePage() {
         <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="autopsy-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.softUltraviolet }}>
+              <p className="eyebrow text-ultraviolet">
                 After the whistle
               </p>
             </Reveal>
             <Reveal delay={90}>
-              <h2 id="autopsy-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+              <h2 id="autopsy-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
                 We grade the thinking, not the scoreboard.
               </h2>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-ink-300">
+              <p className="mt-5 max-w-2xl text-ion-1">
                 A win is not proof and a loss is not failure. Every settled signal is
                 graded on the square it actually lands in, so a lucky win gets flagged and
                 a correct read that lost gets respected.
@@ -339,20 +353,14 @@ export default function IntelligencePage() {
         {/* Closing band */}
         <section className="px-4 pb-24 pt-12 sm:px-6 lg:px-8">
           <Reveal>
-            <div
-              className="mx-auto max-w-5xl rounded-2xl p-10 text-center"
-              style={{
-                border: `1px solid ${BRAND_COLORS.steelGray}`,
-                background: `linear-gradient(180deg, ${BRAND_COLORS.steelGray}66, transparent)`,
-              }}
-            >
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+            <div className="mx-auto max-w-5xl rounded-2xl border border-titanium bg-gradient-to-b from-titanium/40 to-transparent p-10 text-center">
+              <p className="eyebrow text-orbital-cyan">
                 Transparency is the product
               </p>
-              <p className="mx-auto mt-4 max-w-2xl font-display text-2xl text-white sm:text-3xl">
+              <p className="mx-auto mt-4 max-w-2xl font-display text-2xl text-ion-white sm:text-3xl">
                 {CLOSING_LINE}
               </p>
-              <p className="mx-auto mt-4 max-w-xl text-sm text-ink-300">
+              <p className="mx-auto mt-4 max-w-xl text-sm text-ion-1">
                 Numbers about our track record stay hidden until there&apos;s enough
                 settled, calibrated history to publish them honestly. Until then,
                 this is the part we can show you in full: the method.

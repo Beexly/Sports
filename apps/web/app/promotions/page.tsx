@@ -53,10 +53,10 @@ export default async function PromotionsPage({
       <main id="main-content" className="flex-1">
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="mb-8 max-w-3xl">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-brand-400">
+            <p className="eyebrow mb-2 text-plasma">
               Sportsbook Promotions
             </p>
-            <h1 className="text-3xl font-bold text-white sm:text-4xl">
+            <h1 className="font-display text-3xl font-bold text-ion-white sm:text-4xl">
               Vetted sportsbook promotions.
             </h1>
             <p className="mt-3 text-sm text-ion-2">
@@ -85,12 +85,12 @@ export default async function PromotionsPage({
                 defaultValue={state ?? ""}
                 maxLength={2}
                 placeholder="e.g. NJ"
-                className="rounded-md border border-titanium bg-obsidian px-3 py-2 text-sm text-ion-white placeholder-ion-3 focus:border-brand-500 focus:outline-none"
+                className="rounded-md border border-titanium bg-obsidian px-3 py-2 text-sm text-ion-white placeholder-ion-3 focus:border-plasma focus:outline-none"
               />
             </label>
             <button
               type="submit"
-              className="rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
+              className="rounded-md bg-plasma px-4 py-2 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
             >
               Apply
             </button>
@@ -143,14 +143,14 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
       className="flex h-full flex-col gap-3 rounded-xl border border-titanium bg-carbon/40 p-5"
     >
       <header className="flex items-center justify-between">
-        <span className="rounded bg-brand-900/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-brand-300">
+        <span className="rounded bg-plasma/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-plasma-glow">
           {promo.offerCategory.replaceAll("_", " ")}
         </span>
         <span className="text-[10px] uppercase tracking-widest text-ion-3">
           {promo.sportsbookKey}
         </span>
       </header>
-      <h2 className="text-base font-semibold text-white">{promo.headline}</h2>
+      <h2 className="text-base font-semibold text-ion-white">{promo.headline}</h2>
       <p className="text-sm text-ion-2">{promo.offerSummary}</p>
 
       <dl className="grid grid-cols-2 gap-2 text-[11px] text-ion-3">
@@ -183,7 +183,7 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
           href={promo.termsUrl}
           target="_blank"
           rel="nofollow noopener noreferrer"
-          className="text-xs text-brand-400 underline-offset-2 hover:underline"
+          className="text-xs text-plasma-glow underline-offset-2 hover:underline"
         >
           Read operator terms
         </a>
@@ -192,7 +192,7 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
             href={`/go/${promo.slug}`}
             target="_blank"
             rel="nofollow sponsored noopener noreferrer"
-            className="inline-flex w-full items-center justify-center rounded-md bg-brand-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-500"
+            className="inline-flex w-full items-center justify-center rounded-md bg-plasma px-3 py-2 text-xs font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
             wrapperClassName="w-full"
           >
             Visit operator
@@ -221,7 +221,7 @@ function PromotionsEmptyState({ state }: { state: string | null }) {
       data-testid="promotions-empty"
       className="rounded-xl border border-titanium bg-carbon/40 p-8 text-center"
     >
-      <h2 className="text-base font-semibold text-white">
+      <h2 className="text-base font-semibold text-ion-white">
         No promotions available right now
       </h2>
       <p className="mt-2 text-sm text-ion-2">

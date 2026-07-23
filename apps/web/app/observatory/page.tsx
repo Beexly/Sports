@@ -17,7 +17,6 @@ import { ScoringReliabilityPanel } from "@/components/observatory/scoring-reliab
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { getSlateTwin } from "@/lib/slate-twin/get-slate-twin";
 import { BRAND_NAME, SURFACES } from "@/lib/brand";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 
@@ -42,17 +41,17 @@ const PREVIEW: ReadonlyArray<{ readonly title: string; readonly body: string; re
   {
     title: "Line movement",
     body: "How each market drifts from open to close: the path of the price, not just the snapshot, so a late move doesn't slip past you.",
-    accent: BRAND_COLORS.orbitalCyan,
+    accent: "var(--orbital-cyan)",
   },
   {
     title: "Sharp / public split",
     body: "Where money and tickets disagree. When the line moves against the crowd, that divergence is a signal worth reading.",
-    accent: BRAND_COLORS.softUltraviolet,
+    accent: "var(--ultraviolet)",
   },
   {
     title: "Market depth",
     body: "How many books have a market and how tightly they agree: a transparency signal you can weigh for yourself.",
-    accent: BRAND_COLORS.ionMagenta,
+    accent: "var(--plasma)",
   },
 ];
 
@@ -61,7 +60,7 @@ export default async function ObservatoryPage() {
   const live = slate.live;
   const plate = getPlate("observatory-market-field");
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
       <SignalRoomAtmosphere mode="ambient" />
 
@@ -83,22 +82,23 @@ export default async function ObservatoryPage() {
             aria-hidden="true"
             className="absolute inset-0 -z-10"
             style={{
-              background: `linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}cc 0%, ${BRAND_COLORS.obsidianBlack}33 40%, ${BRAND_COLORS.obsidianBlack}55 72%, ${BRAND_COLORS.obsidianBlack} 100%)`,
+              background:
+                "linear-gradient(180deg, rgba(5, 7, 11, 0.8) 0%, rgba(5, 7, 11, 0.2) 40%, rgba(5, 7, 11, 0.33) 72%, rgba(5, 7, 11, 1) 100%)",
             }}
           />
           <div className="mx-auto flex min-h-[78vh] max-w-6xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow text-orbital-cyan">
                 {SURFACES.observatory.label}
               </p>
             </Reveal>
             <Reveal delay={90}>
-              <h1 className="mt-4 max-w-3xl font-display text-display-xl text-balance text-white">
+              <h1 className="mt-4 max-w-3xl font-display text-display-xl text-balance text-ion-white">
                 The market, visualized the way the model reads it.
               </h1>
             </Reveal>
             <Reveal delay={180}>
-              <p className="mt-6 max-w-xl text-lg text-ink-300">
+              <p className="mt-6 max-w-xl text-lg text-ion-1">
                 {SURFACES.observatory.blurb} When the readiness gate opens, the Edge
                 Map streams line movement, sharp/public splits, and market depth
                 across every active matchup: the same view the engine reads from.
@@ -121,27 +121,27 @@ export default async function ObservatoryPage() {
         <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="twin-heading">
           <div className="mx-auto max-w-6xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: live ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.softUltraviolet }}>
+              <p className={`eyebrow ${live ? "text-orbital-cyan" : "text-ultraviolet"}`}>
                 {live ? "The slate as a universe · live" : "The slate as a universe · interactive preview"}
               </p>
             </Reveal>
             <Reveal delay={90}>
-              <h2 id="twin-heading" className="mt-3 font-display text-3xl text-white sm:text-4xl">
+              <h2 id="twin-heading" className="mt-3 font-display text-3xl text-ion-white sm:text-4xl">
                 Don&apos;t take the pick. Enter the model.
               </h2>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-ink-300">
+              <p className="mt-5 max-w-2xl text-ion-1">
                 Every game is a star system. Brightness is signal density, the halo is
                 volatility, the orbit wobble is contradiction, and the ring tracks
                 confidence as you scrub the slate&apos;s timeline. Click a system to open
                 its read.{" "}
                 {live ? (
-                  <>This is today&apos;s <strong className="text-ink-200">live slate</strong>: real
+                  <>This is today&apos;s <strong className="text-ion">live slate</strong>: real
                   games and the metrics the engine produces; encodings without a wired data
                   source stay dark rather than guess.</>
                 ) : (
-                  <>This preview runs on <strong className="text-ink-200">illustrative data</strong>.
+                  <>This preview runs on <strong className="text-ion">illustrative data</strong>.
                   When the readiness gate opens, it streams the live slate.</>
                 )}
               </p>
@@ -155,8 +155,8 @@ export default async function ObservatoryPage() {
                   { k: "Ring", v: "our confidence in the read, firming up toward kickoff." },
                 ].map(({ k, v }) => (
                   <div key={k} className="flex gap-2">
-                    <dt className="shrink-0 font-semibold text-ink-200">{k}:</dt>
-                    <dd className="text-ink-300">{v}</dd>
+                    <dt className="shrink-0 font-semibold text-ion">{k}:</dt>
+                    <dd className="text-ion-1">{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -195,7 +195,7 @@ export default async function ObservatoryPage() {
         <section className="px-4 py-16 sm:px-6 lg:px-8" aria-labelledby="preview-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <h2 id="preview-heading" className="font-display text-3xl text-white sm:text-4xl">
+              <h2 id="preview-heading" className="font-display text-3xl text-ion-white sm:text-4xl">
                 What the Edge Map shows when it opens.
               </h2>
             </Reveal>
@@ -203,8 +203,8 @@ export default async function ObservatoryPage() {
               {PREVIEW.map((p) => (
                 <div key={p.title} className="surface-card p-6">
                   <span aria-hidden="true" className="block h-1 w-10 rounded-full" style={{ backgroundColor: p.accent }} />
-                  <h3 className="mt-4 text-lg font-semibold text-white">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-300">{p.body}</p>
+                  <h3 className="mt-4 text-lg font-semibold text-ion-white">{p.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ion-1">{p.body}</p>
                 </div>
               ))}
             </Stagger>
@@ -215,10 +215,10 @@ export default async function ObservatoryPage() {
         <section className="px-4 pb-24 pt-8 sm:px-6 lg:px-8">
           <Reveal>
             <div className="surface-card mx-auto flex max-w-3xl flex-col gap-3 p-8">
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow text-orbital-cyan">
                 Status · Pre-launch
               </p>
-              <p className="text-base leading-relaxed text-ink-300">
+              <p className="text-base leading-relaxed text-ion-1">
                 The Edge Map stays dark until {BRAND_NAME} has enough settled history
                 to publish a calibrated live read. We would rather show you nothing
                 than show you a number we can&apos;t yet stand behind. In the

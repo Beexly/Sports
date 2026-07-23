@@ -7,7 +7,6 @@ import { Atmosphere } from "@/components/ui/atmosphere";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { ReaderDoorway } from "@/components/house/reader-doorway";
 import { WEEKLY_RITUAL } from "@/lib/house/weekly-ritual";
-import { BRAND_COLORS } from "@/lib/brand";
 import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 
@@ -26,6 +25,14 @@ export const metadata: Metadata = {
  * that already exists and runs on real data. No fake rooms, no fake counts:
  * the live community rooms are explicitly staged until we can keep them safe.
  */
+
+/**
+ * Door accents — canonical token hexes (styles/design-tokens.css). Kept as
+ * literals (not var() refs) because they feed hex+alpha template styles below.
+ */
+const ACCENT_CYAN = "#00E5FF"; // --orbital-cyan
+const ACCENT_UV = "#7B61FF"; // --ultraviolet
+const ACCENT_MAGENTA = "#FF38C7"; // --plasma
 
 interface RoomDoor {
   readonly name: string;
@@ -49,7 +56,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     whose: "For the reader who wants the number",
     promise:
       "The live decision surface: published rows, gated rows, and the discipline of No-Bet. Bring the number, not the ego.",
-    accent: BRAND_COLORS.orbitalCyan,
+    accent: ACCENT_CYAN,
     live: "board",
   },
   {
@@ -58,7 +65,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     whose: "For the one who wants to see the whole board",
     promise:
       "The slate as a living market map: where the pressure is, where the gravity bends, where the edges open.",
-    accent: BRAND_COLORS.softUltraviolet,
+    accent: ACCENT_UV,
     live: "observatory",
   },
   {
@@ -67,7 +74,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     whose: "For the fan who wants to see the game deeper",
     promise:
       "Pressure, coverage, pace, protection: learn to watch like an analyst. Graded on decision quality, not bravado.",
-    accent: BRAND_COLORS.softUltraviolet,
+    accent: ACCENT_UV,
     live: "academy",
   },
   {
@@ -76,7 +83,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     whose: "For anyone learning the league, for themselves or someone they love",
     promise:
       "Start/sit, waivers, and trades in plain language. Ask the basic question. Nobody gets cooked in this room.",
-    accent: BRAND_COLORS.ionMagenta,
+    accent: ACCENT_MAGENTA,
   },
   {
     name: "The Receipts",
@@ -84,7 +91,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     whose: "For the skeptic who's been burned before",
     promise:
       "Calibration before claims, losses dissected in public. Every number on this site has to earn its place, and this is where it does.",
-    accent: BRAND_COLORS.softUltraviolet,
+    accent: ACCENT_UV,
     live: "receipts",
   },
   {
@@ -93,7 +100,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     whose: "For the ten-minute Sunday prep",
     promise:
       "Scores, stories, what changed: the casual surface. Long week? This is the room with the comfortable chair.",
-    accent: BRAND_COLORS.orbitalCyan,
+    accent: ACCENT_CYAN,
   },
 ];
 
@@ -142,10 +149,7 @@ export default async function NflHousePage() {
   };
 
   return (
-    <div
-      className="flex min-h-screen flex-col"
-      style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}
-    >
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
 
@@ -157,22 +161,20 @@ export default async function NflHousePage() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem]"
             style={{
-              background: `radial-gradient(55% 75% at 50% 0%, ${BRAND_COLORS.softUltraviolet}1f, transparent 70%), radial-gradient(35% 55% at 78% 12%, ${BRAND_COLORS.ionMagenta}12, transparent 70%)`,
+              background:
+                "radial-gradient(55% 75% at 50% 0%, rgba(123, 97, 255, 0.12), transparent 70%), radial-gradient(35% 55% at 78% 12%, rgba(255, 56, 199, 0.07), transparent 70%)",
             }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p
-                className="eyebrow inline-flex items-center gap-2"
-                style={{ color: BRAND_COLORS.orbitalCyan }}
-              >
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span className="live-dot" />
                 Galaxy NFL House
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1
-                className="mt-5 font-display text-balance text-white"
+                className="mt-5 font-display text-balance text-ion-white"
                 style={{
                   fontSize: "clamp(2.5rem, 7vw, 5rem)",
                   lineHeight: 1.0,
@@ -181,8 +183,8 @@ export default async function NflHousePage() {
               >
                 Football is better when you have a{" "}
                 <span
-                  className="gse-editorial"
-                  style={{ fontSize: "1.1em", color: BRAND_COLORS.softUltraviolet }}
+                  className="gse-editorial text-ultraviolet"
+                  style={{ fontSize: "1.1em" }}
                 >
                   room
                 </span>
@@ -198,10 +200,7 @@ export default async function NflHousePage() {
               </p>
             </Reveal>
             <Reveal delay={240}>
-              <p
-                className="mt-6 text-sm font-semibold uppercase tracking-[0.18em]"
-                style={{ color: BRAND_COLORS.orbitalCyan }}
-              >
+              <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
                 Understand the game · Read the market · Find your people
               </p>
             </Reveal>
@@ -217,7 +216,7 @@ export default async function NflHousePage() {
             <Reveal>
               <h2
                 id="house-doors-heading"
-                className="font-display text-2xl text-white"
+                className="font-display text-2xl text-ion-white"
               >
                 Pick your door
               </h2>
@@ -288,12 +287,12 @@ export default async function NflHousePage() {
         >
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow text-orbital-cyan">
                 Same data, different doorway
               </p>
               <h2
                 id="house-voice-heading"
-                className="mt-3 font-display text-2xl text-white"
+                className="mt-3 font-display text-2xl text-ion-white"
               >
                 How should Galaxy speak to you?
               </h2>
@@ -318,12 +317,12 @@ export default async function NflHousePage() {
         >
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.ionMagenta }}>
+              <p className="eyebrow text-plasma">
                 The rhythm
               </p>
               <h2
                 id="house-week-heading"
-                className="mt-3 font-display text-2xl text-white"
+                className="mt-3 font-display text-2xl text-ion-white"
               >
                 The week has a shape. The desk works it.
               </h2>
@@ -338,10 +337,7 @@ export default async function NflHousePage() {
                   key={`${slot.day}-${i}`}
                   className="rounded-xl border border-mineral/70 bg-carbon/60 p-4"
                 >
-                  <p
-                    className="font-numerals text-xs font-semibold uppercase tracking-[0.18em]"
-                    style={{ color: BRAND_COLORS.orbitalCyan }}
-                  >
+                  <p className="font-numerals text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
                     {slot.day}
                   </p>
                   <p className="mt-2 text-sm leading-snug text-ion-1">{slot.beat}</p>
@@ -359,7 +355,7 @@ export default async function NflHousePage() {
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[3fr_2fr]">
             <Reveal>
               <div className="h-full rounded-2xl border border-mineral bg-eclipse/50 p-7">
-                <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                <p className="eyebrow text-orbital-cyan">
                   House rules
                 </p>
                 <ul className="mt-5 space-y-3">
@@ -368,10 +364,7 @@ export default async function NflHousePage() {
                       key={rule}
                       className="flex gap-3 text-sm leading-relaxed text-ion-1"
                     >
-                      <span
-                        aria-hidden="true"
-                        style={{ color: BRAND_COLORS.orbitalCyan }}
-                      >
+                      <span aria-hidden="true" className="text-orbital-cyan">
                         ◆
                       </span>
                       {rule}
@@ -388,7 +381,7 @@ export default async function NflHousePage() {
             </Reveal>
             <Reveal delay={120}>
               <div className="flex h-full flex-col rounded-2xl border border-mineral bg-carbon/60 p-7">
-                <p className="eyebrow" style={{ color: BRAND_COLORS.ionMagenta }}>
+                <p className="eyebrow text-plasma">
                   The Sunday Couch
                 </p>
                 <h3 className="mt-3 font-display text-xl text-ion-white">

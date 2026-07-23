@@ -209,7 +209,7 @@ export default async function SealedEnginePage() {
                       </p>
                       <HashMaterialize
                         hash={story.seals.latest.contentHash}
-                        className="mt-3 rounded bg-black/40 p-4 text-[13px]"
+                        className="mt-3 rounded bg-obsidian/60 p-4 text-[13px]"
                       />
                       <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
                         <Link
