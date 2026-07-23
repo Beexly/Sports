@@ -73,6 +73,7 @@ export default async function Page() {
             action: String(r.recommended_action ?? "")
           }))}
           maxRows={25}
+          caption="ROI-ranked source activation pipeline"
         />
       </div>
       <div>
@@ -86,6 +87,7 @@ export default async function Page() {
             next_action: String(g.next_action ?? "")
           }))}
           maxRows={50}
+          caption="King gap map — what separates the current score from 90+"
         />
       </div>
       <div>
@@ -104,6 +106,7 @@ export default async function Page() {
             next_improvement: String(p.next_improvement ?? "")
           }))}
           maxRows={50}
+          caption="Merge readiness by page"
         />
       </div>
     </Shell>

@@ -35,7 +35,7 @@ export default async function AdminPostsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-ion-white">Blog Posts</h1>
+            <h1 className="text-2xl font-bold text-ion-white">Blog Posts</h1>
             <p className="text-ion-2 mt-1">{posts.length} posts</p>
           </div>
           <a href="/admin" className="text-ion-2 hover:text-ion-white text-sm transition-colors">
@@ -44,7 +44,7 @@ export default async function AdminPostsPage() {
         </div>
 
         <div className="bg-carbon border border-titanium rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" aria-label="Blog posts">
             <thead>
               <tr className="border-b border-titanium text-ion-2 text-xs uppercase">
                 <th className="text-left px-4 py-3">Title</th>
@@ -89,7 +89,7 @@ export default async function AdminPostsPage() {
                       href={`/blog/${post.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-brand-400 hover:text-brand-300 text-xs transition-colors"
+                      className="text-plasma hover:text-plasma-glow text-xs transition-colors"
                     >
                       View →
                     </a>

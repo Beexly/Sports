@@ -201,7 +201,7 @@ export default async function AdminClvPage() {
             generated (the mint is wired into pick creation).
           </p>
         ) : (
-          <table className="w-full text-left text-ion-1">
+          <table className="w-full text-left text-ion-1" aria-label="Pre-result proof receipts">
             <thead className="text-ion-3">
               <tr>
                 <th className="py-1 pr-2 font-normal">Selection</th>
@@ -244,7 +244,7 @@ export default async function AdminClvPage() {
             deploy + migration).
           </p>
         ) : (
-          <table className="w-full text-left text-ion-1">
+          <table className="w-full text-left text-ion-1" aria-label="Recently graded picks">
             <thead className="text-ion-3">
               <tr>
                 <th className="py-1 pr-2">Selection</th>
@@ -353,7 +353,7 @@ function SegmentTable({
       {segments.length === 0 ? (
         <p className="text-ion-3">No graded picks yet.</p>
       ) : (
-        <table className="w-full text-left text-ion-1">
+        <table className="w-full text-left text-ion-1" aria-label={`CLV segments ${title}`}>
           <thead className="text-ion-3">
             <tr>
               <th className="py-1 pr-2 font-normal">Segment</th>

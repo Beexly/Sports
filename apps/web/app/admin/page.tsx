@@ -33,7 +33,7 @@ export default async function AdminPage() {
   return (
     <div className="min-h-screen bg-obsidian p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-ion-white mb-2">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold text-ion-white mb-2">Admin Dashboard</h1>
         <p className="text-ion-2 mb-8">Platform overview and controls</p>
 
         {/* Stats Grid */}
@@ -79,7 +79,7 @@ export default async function AdminPage() {
           <div className="flex flex-wrap gap-3">
             <a
               href="/admin/dashboard"
-              className="px-4 py-2 bg-brand-600 text-ion-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
+              className="px-4 py-2 bg-plasma text-plasma-ink rounded-lg hover:bg-plasma-glow transition-colors text-sm font-medium"
             >
               ⚡ Operator Dashboard
             </a>
@@ -123,7 +123,7 @@ function TriggerRefreshButton() {
     >
       <button
         type="submit"
-        className="px-4 py-2 bg-brand-600 text-ion-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
+        className="px-4 py-2 bg-plasma text-plasma-ink rounded-lg hover:bg-plasma-glow transition-colors text-sm font-medium"
       >
         Trigger Data Refresh
       </button>

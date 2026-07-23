@@ -20,6 +20,7 @@ export default async function Page(){
           note: String(r.note ?? ""),
         }))}
         maxRows={50}
+        caption="Integrity run history"
       />
     </Shell>
   );

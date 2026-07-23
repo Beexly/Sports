@@ -32,7 +32,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[✓]` audited, alread
 | 18 | Game room + today | /room/[gameId], /today, /brief | [x] | room: finished earlier cyan cleanup, dead hover no-ops fixed, heading-level a11y fix; today + brief: BRAND_COLORS inline styles → tokens, plasma CTA idiom |
 | 19 | Cockpit A | /cockpit, /cockpit/command-center, /cockpit/agents, /cockpit/tasks, /cockpit/history | [x] | legacy brand-* aliases → plasma; found + fixed a palette-cohesion CI blind spot (ring-offset-gray-950 slipped past the regex, now closed sitewide); tasks queue reordered urgent-first w/ tone-driven badges; dense table gains aria-label |
 | 20 | Cockpit B | remaining /cockpit/* (~22 routes) | [x] | all 27 files audited; legacy brand-*/accent-*/black aliases fixed on 5; 17 tables gain aria-label; film-room heading size aligned to doctrine; most files already clean. studio-workspace.tsx/studio-props.tsx not opened (out of listed scope) |
-| 21 | Admin + statking | /admin/*, /admin/statking/* | [ ] | lowest priority |
+| 21 | Admin + statking | /admin/*, /admin/statking/* | [x] | all 6 core admin files fixed (brand-* aliases, H1 sizing, table aria-labels); 10/25 statking routes spot-checked (shared _components.tsx already a11y-clean, added descriptive DataTable captions). Remaining 15 statking routes + index for a future cycle |
 | 22 | Shared chrome | Nav, MobileNav, Footer, shared UI components | [ ] | |
 | 23 | Higgsfield motion plates | video plates for verticals + fantasy; catalogue job IDs | [ ] | stills done 2026-07-23 (plan doc §3) |
 | 24 | Final visual-QA sweep | cross-page consistency re-check, ledger close-out | [ ] | |
@@ -62,3 +62,4 @@ Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
 - 2026-07-23 12:45 — Cycles 17+18 (legal/misc/game room) done: 7 files, 80 targeted + 55 tangential tests green. (Session switched Fable 5 → Sonnet 5 mid-loop after hitting a usage limit; loop continues unaffected.)
 - 2026-07-23 12:48 — Cycle 19 (cockpit A) done: 5 files, 333 targeted + 213 tangential tests green. Extended palette-cohesion's STALE regex to cover ring-offset-*/focus-visible:ring-offset-* (closes the gap cycle 19 found).
 - 2026-07-23 12:58 — Cycle 20 (cockpit B) done: 10 files edited (27 audited), 333 targeted + 122 tangential tests green.
+- 2026-07-23 13:07 — Cycle 21 (admin + statking) done: 6 core + 10 statking routes, 66 targeted + 44 tangential tests green.

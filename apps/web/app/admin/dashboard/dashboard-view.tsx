@@ -22,9 +22,9 @@ export function DashboardView() {
     <div className="flex min-h-screen flex-col bg-obsidian p-8 text-ion-1">
       <div className="mx-auto w-full max-w-3xl">
         <header className="mb-6">
-          <h1 className="text-2xl font-bold text-white">Admin dashboard</h1>
+          <h1 className="text-2xl font-bold text-ion-white">Admin dashboard</h1>
           <p className="mt-1 text-sm text-ion-2">
-            The richer operational view is at <Link href="/cockpit" className="text-brand-400 hover:text-brand-300">/cockpit</Link>.
+            The richer operational view is at <Link href="/cockpit" className="text-plasma hover:text-plasma-glow">/cockpit</Link>.
             This page is a quick landing into the operator surface.
           </p>
         </header>
@@ -35,7 +35,7 @@ export function DashboardView() {
               href={href}
               className="rounded-2xl border border-titanium bg-carbon/60 p-4 transition-colors hover:border-titanium hover:bg-carbon"
             >
-              <p className="font-semibold text-white">{label}</p>
+              <p className="font-semibold text-ion-white">{label}</p>
               <p className="mt-1 text-xs text-ion-3">{hint}</p>
             </Link>
           ))}

@@ -24,6 +24,7 @@ export default async function Page(){
             proven: String(r.what_is_proven ?? ""),
           }))}
           maxRows={50}
+          caption="Backtest runs"
         />
       )}
     </Shell>

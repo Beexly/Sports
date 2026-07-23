@@ -50,6 +50,7 @@ export default async function Page() {
           next_improvement: String(p.next_improvement ?? "")
         }))}
         maxRows={50}
+        caption="All page readiness scores, sorted lowest first"
       />
     </Shell>
   );

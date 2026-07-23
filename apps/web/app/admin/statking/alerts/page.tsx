@@ -22,7 +22,7 @@ export default async function Page(){
       <Cards items={[{label:"Players",value:players.length},{label:"Rising",value:risers.length},{label:"Volatile",value:players.filter(p=>p.volatility_score>=60).length},{label:"Status flags",value:players.filter(p=>p.status!=="Active").length}]}/>
       <p className="text-ion-1">Alert candidates the public Alerts surface draws from. Delivery channels (email/push) are owner-gated.</p>
       <SectionHeader title="Alert Candidates" />
-      <DataTable rows={rows} maxRows={50} />
+      <DataTable rows={rows} maxRows={50} caption="Alert candidates" />
     </Shell>
   );
 }

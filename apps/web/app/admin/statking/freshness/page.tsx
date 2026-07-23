@@ -16,7 +16,7 @@ export default async function Page(){
       <StatusRibbon status="fixture" label="Admin view — fixture snapshot" />
       <Cards items={[{label:"Sources sampled",value:rows.length},{label:"Needs review",value:rows.filter(r=>r.status.includes("review")).length},{label:"SLA",value:"modeled"},{label:"Next",value:"ingest timestamps"}]}/>
       <SectionHeader title="Source Freshness" />
-      <DataTable rows={rows} maxRows={50} />
+      <DataTable rows={rows} maxRows={50} caption="Source freshness" />
     </Shell>
   );
 }

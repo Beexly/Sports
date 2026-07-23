@@ -42,6 +42,7 @@ export default async function Page() {
             count: Number(count ?? 0)
           }))}
           maxRows={10}
+          caption="Reality check — audit status counts"
         />
       </div>
       <div>
@@ -54,6 +55,7 @@ export default async function Page() {
             next_improvement: String(p.next_improvement ?? "")
           }))}
           maxRows={50}
+          caption="Page readiness scores"
         />
       </div>
     </Shell>

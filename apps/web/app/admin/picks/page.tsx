@@ -30,7 +30,7 @@ export default async function AdminPicksPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-ion-white">Picks Management</h1>
+            <h1 className="text-2xl font-bold text-ion-white">Picks Management</h1>
             <p className="text-ion-2 mt-1">{picks.length} picks (last 100)</p>
           </div>
           <a href="/admin" className="text-ion-2 hover:text-ion-white text-sm transition-colors">
@@ -39,7 +39,7 @@ export default async function AdminPicksPage() {
         </div>
 
         <div className="bg-carbon border border-titanium rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" aria-label="Picks (last 100)">
             <thead>
               <tr className="border-b border-titanium text-ion-2 text-xs uppercase">
                 <th className="text-left px-4 py-3">Game</th>
