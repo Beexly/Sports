@@ -21,18 +21,18 @@ export default async function TrackPage() {
   const viewer = await getViewerEntitlements();
   if (!viewer.canUseClvLedger) {
     return (
-      <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <div className="flex min-h-screen flex-col bg-obsidian">
         <Atmosphere />
         <Nav />
         <main id="main-content" className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 sm:px-6">
           <div className="text-center">
-            <p className="eyebrow justify-center" style={{ color: BRAND_COLORS.softUltraviolet }}>
+            <p className="eyebrow justify-center text-ultraviolet">
               CLV Tracker
             </p>
-            <h1 className="mt-4 max-w-3xl font-display text-balance text-white" style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)", lineHeight: 1 }}>
+            <h1 className="mt-4 max-w-3xl font-display text-balance text-ion-white" style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)", lineHeight: 1 }}>
               Track the number, not the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>noise</span>.
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-ink-300">
+            <p className="mx-auto mt-4 max-w-xl text-ion-1">
               Closing Line Value is the strongest public proof of edge there is.
             </p>
           </div>
@@ -48,7 +48,7 @@ export default async function TrackPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
       <main id="main-content" className="flex-1">
@@ -56,23 +56,23 @@ export default async function TrackPage() {
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80" style={{ background: `radial-gradient(55% 80% at 50% 0%, ${BRAND_COLORS.softUltraviolet}16, transparent 70%)` }} />
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.softUltraviolet }}><span className="live-dot" /> CLV Tracker</p>
+              <p className="eyebrow inline-flex items-center gap-2 text-ultraviolet"><span className="live-dot" /> CLV Tracker</p>
             </Reveal>
             <Reveal delay={90}>
-              <h1 className="mt-5 max-w-3xl font-display text-balance text-white" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}>
+              <h1 className="mt-5 max-w-3xl font-display text-balance text-ion-white" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}>
                 Track the number, not the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>noise</span>.
               </h1>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
+              <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 Your record is mostly variance over any human-sized sample. Closing Line Value isn't. Beating the
                 close consistently is the strongest public proof you have an edge. Log your bets, settle them with the
                 closing price, and watch your real scoreboard. It lives in your browser; nothing leaves your device.
               </p>
             </Reveal>
             <Reveal delay={220}>
-              <p className="mt-5 max-w-2xl rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-ink-300">
-                <span className="font-semibold text-white">New to CLV?</span> {glossaryEntry("clv")?.plain}{" "}
+              <p className="mt-5 max-w-2xl rounded-xl border border-mineral bg-eclipse/40 p-4 text-sm text-ion-1">
+                <span className="font-semibold text-ion-white">New to CLV?</span> {glossaryEntry("clv")?.plain}{" "}
                 {glossaryEntry("clv")?.more}
               </p>
             </Reveal>
@@ -86,8 +86,8 @@ export default async function TrackPage() {
               <p className="mt-8 text-xs leading-relaxed text-ion-2">
                 A personal record keeper: no books, no money, no advice. CLV is computed from the closing odds you
                 enter for each exact selection. See how we hold ourselves to the same metric on our public{" "}
-                <a href="/clv" style={{ color: BRAND_COLORS.softUltraviolet }}>CLV report</a>, or learn the why in the{" "}
-                <a href="/fantasy/academy" style={{ color: BRAND_COLORS.softUltraviolet }}>Academy&apos;s Market track</a>.
+                <a href="/clv" className="font-semibold text-ultraviolet hover:text-ion-white">CLV report</a>, or learn the why in the{" "}
+                <a href="/fantasy/academy" className="font-semibold text-ultraviolet hover:text-ion-white">Academy&apos;s Market track</a>.
               </p>
             </Reveal>
           </div>

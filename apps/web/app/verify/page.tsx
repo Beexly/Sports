@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { VerifyConsole } from "@/components/trust-ledger/verify-console";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
   title: "Verify a Pick · Tamper-Evident Proof of Record",
@@ -24,13 +25,16 @@ export default function VerifyPage({
     ? raw!.toLowerCase()
     : "";
   return (
-    <div className="flex min-h-screen flex-col bg-obsidian text-ion-white">
+    <div className="relative isolate flex min-h-screen flex-col bg-obsidian text-ion-white">
+      {/* Same atmosphere as /proof and /calibration — the trust surfaces read
+          as one room. */}
+      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
       <Nav />
       <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6">
-        <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">
           Proof of record
         </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">
+        <h1 className="mt-3 text-3xl font-black tracking-tight text-ion-white sm:text-4xl">
           Verify any pick yourself.
         </h1>
         <p className="mt-3 text-sm leading-6 text-ion-1">
@@ -40,7 +44,8 @@ export default function VerifyPage({
           hash. The receipt is never rewritten. Paste a hash below and the
           server re-computes the hash from the stored record, live. If
           anything had been edited after the fact, the hashes would not
-          match, and this page would say so in red. A pick without a receipt
+          match, and this page would say so, plainly and in public. A pick
+          without a receipt
           carries no verified claim — we don&apos;t grade what we didn&apos;t seal.
         </p>
         <p className="mt-2 text-xs leading-5 text-ion-2">

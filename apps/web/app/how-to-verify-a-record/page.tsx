@@ -88,10 +88,10 @@ export default function HowToVerifyARecordPage() {
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">The buyer&apos;s checklist</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">
               How to verify a sports picks record before you pay.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg text-ink-300">
+            <p className="mt-6 max-w-2xl text-lg text-ion-1">
               Most records in this industry cannot be checked, only believed.
               That is by design. Here are the five questions that separate a
               checkable record from a marketing story, no matter whose record
@@ -101,19 +101,19 @@ export default function HowToVerifyARecordPage() {
         </section>
 
         {/* THE CHECKLIST */}
-        <section className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral/60 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <ol className="flex flex-col gap-6">
               {CHECKLIST.map((item) => (
                 <li key={item.title} className="surface-card flex gap-4 p-6">
-                  <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent-700 font-mono text-sm font-bold text-accent-300">
+                  <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-orbital-cyan/40 font-mono text-sm font-bold text-orbital-cyan">
                     {item.number}
                   </span>
                   <div>
-                    <h2 className="font-display text-xl font-semibold text-white">
+                    <h2 className="font-display text-xl font-semibold text-ion-white">
                       {item.title}
                     </h2>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                    <p className="mt-2 text-sm leading-relaxed text-ion-1">
                       {item.body}
                     </p>
                   </div>
@@ -126,14 +126,14 @@ export default function HowToVerifyARecordPage() {
         {/* RUN IT ON US — the unfakeable close */}
         <section
           data-testid="run-it-on-us"
-          className="border-t border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8"
+          className="border-t border-mineral/60 px-4 py-20 sm:px-6 lg:px-8"
         >
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Now run it on us</p>
-            <h2 className="mt-3 font-display text-display-lg text-balance text-white">
+            <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
               Every check above works on {BRAND_NAME}, live, right now.
             </h2>
-            <p className="mt-5 text-base text-ink-300">
+            <p className="mt-5 text-base text-ion-1">
               We built the platform so this checklist could be run against us
               by a stranger with no account. Picks publish with tamper-evident
               receipts frozen before kickoff. The settled ledger keeps every
@@ -156,16 +156,16 @@ export default function HowToVerifyARecordPage() {
                     href={l.href}
                     className="surface-card flex min-h-11 flex-col gap-0.5 p-4 transition-colors hover:border-orbital-cyan/50 sm:flex-row sm:items-center sm:justify-between"
                   >
-                    <span className="text-sm font-semibold text-white">{l.label} →</span>
-                    <span className="font-mono text-[11px] uppercase tracking-wider text-ink-300">{l.note}</span>
+                    <span className="text-sm font-semibold text-ion-white">{l.label} →</span>
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-ion-1">{l.note}</span>
                   </Link>
                 </li>
               ))}
             </ul>
-            <p className="mt-8 text-sm text-ink-300">
+            <p className="mt-8 text-sm text-ion-1">
               If the checklist convinces you, the board publishes two free
               picks every day, and{" "}
-              <Link href="/pricing" className="font-semibold text-orbital-cyan hover:text-white">
+              <Link href="/pricing" className="font-semibold text-orbital-cyan hover:text-ion-white">
                 Pro opens the rest
               </Link>
               . If it does not, take the checklist anyway. It works on
@@ -176,7 +176,7 @@ export default function HowToVerifyARecordPage() {
 
         <section className="px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <RiskDisclosure variant="compact" className="text-ink-300" />
+            <RiskDisclosure variant="compact" className="text-ion-1" />
           </div>
         </section>
       </main>

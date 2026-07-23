@@ -69,7 +69,7 @@ function ProofCard({
         aria-hidden
         className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-orbital-cyan transition-transform duration-500 ease-out group-hover:scale-x-100"
       />
-      <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-ion-2">
+      <p className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
         <span aria-hidden className={`h-1 w-1 rounded-full ${accent ? "bg-orbital-cyan" : "bg-soft-ultraviolet"}`} />
         {eyebrow}
       </p>
@@ -96,7 +96,7 @@ export default async function CalibrationProofRoomPage() {
 
       <main id="main-content" className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
         <header className="gw-nebula-deep -mx-4 rounded-ds-lg border-b border-mineral px-4 pb-10 pt-6 sm:-mx-6 sm:px-6">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-orbital-cyan">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">
             The Proof Room · Galaxy Calibration
           </p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
@@ -128,7 +128,7 @@ export default async function CalibrationProofRoomPage() {
           publicMessage={report.publicMessage}
         />
 
-        <section className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
+        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <ProofCard
             eyebrow="Live telemetry"
             title="The Sealed Engine"
@@ -192,7 +192,7 @@ export default async function CalibrationProofRoomPage() {
         </section>
 
         <section className="rounded-2xl border border-mineral bg-eclipse/30 p-6">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="mb-3 font-mono text-xs uppercase tracking-[0.16em] text-ion-2">
             Read the metrics in plain terms
           </h2>
           <p className="max-w-2xl text-sm leading-6 text-ion-1">

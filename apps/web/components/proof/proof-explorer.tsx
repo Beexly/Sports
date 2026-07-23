@@ -139,10 +139,13 @@ export function ProofExplorer({
               <div className="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
                 <Stat label="Observed" value={pct(active.observedWinRate)} tone="text-orbital-cyan" />
                 <Stat label="Expected" value={pct(active.expectedWinRate)} tone="text-ultraviolet" />
+                {/* Sign glyph carries the direction alongside the color —
+                    verify above expectation, caution below (plasma is CTA
+                    territory, never a shortfall signal). */}
                 <Stat
                   label="Delta"
                   value={`${active.delta >= 0 ? "+" : ""}${Math.round(active.delta * 100)}%`}
-                  tone={active.delta >= 0 ? "text-verify" : "text-plasma"}
+                  tone={active.delta >= 0 ? "text-verify" : "text-caution"}
                 />
               </div>
             ) : active && active.sampleSize > 0 ? (
@@ -170,9 +173,9 @@ export function ProofExplorer({
 
 function Stat({ label, value, tone = "text-ion-white" }: { label: string; value: React.ReactNode; tone?: string }) {
   return (
-    <div className="bg-obsidian px-3 py-3 text-center">
+    <div className="bg-carbon px-3 py-3 text-center">
       <p className={`font-numerals text-lg font-bold tabular-nums ${tone}`}>{value}</p>
-      <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-ion-2">{label}</p>
+      <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</p>
     </div>
   );
 }
