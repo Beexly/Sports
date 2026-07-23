@@ -12,7 +12,6 @@ import Link from "next/link";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
 import { DraftAssistant } from "@/components/fantasy/draft-assistant";
-import { BRAND_COLORS } from "@/lib/brand";
 import type { Player } from "@/lib/fantasy/players";
 
 type Tab = "dfs" | "startsit" | "draft";
@@ -41,8 +40,8 @@ export function OptimizerWorkspace({
   return (
     <div className="space-y-5">
       <div className="surface-card flex flex-wrap items-center gap-3 p-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">Contest</span>
-        <div className="flex flex-wrap rounded-full p-0.5" style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${BRAND_COLORS.steelGray}` }}>
+        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">Contest</span>
+        <div className="flex flex-wrap rounded-full border border-mineral bg-carbon/60 p-0.5">
           {TABS.map((t) => {
             const on = t.key === tab;
             return (
@@ -51,15 +50,16 @@ export function OptimizerWorkspace({
                 type="button"
                 onClick={() => setTab(t.key)}
                 aria-pressed={on}
-                className="rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
-                style={{ color: on ? BRAND_COLORS.obsidianBlack : "var(--ion-2,#c8d2dd)", background: on ? BRAND_COLORS.orbitalCyan : "transparent" }}
+                className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  on ? "bg-orbital-cyan text-ion-blue-ink" : "text-ion-1 hover:text-ion-white"
+                }`}
               >
                 {t.label}
               </button>
             );
           })}
         </div>
-        <p className="text-sm text-ink-400">{active.blurb}</p>
+        <p className="text-sm text-ion-1">{active.blurb}</p>
       </div>
 
       {tab === "dfs" && <DfsOptimizer />}
@@ -67,11 +67,11 @@ export function OptimizerWorkspace({
       {tab === "draft" && (
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs text-ink-400">
+            <p className="text-xs leading-5 text-ion-1">
               Live draft board: tiers, value over replacement, positional scarcity, run alerts, and your
               own ADP overlay. {pool ? "Live graded pool: real players." : "Illustrative pool until a licensed projections feed is connected."}
             </p>
-            <Link href="/fantasy/draft" className="text-xs font-medium" style={{ color: BRAND_COLORS.orbitalCyan }}>Open full page →</Link>
+            <Link href="/fantasy/draft" className="text-xs font-medium text-orbital-cyan hover:text-ion-white">Open full page →</Link>
           </div>
           <DraftAssistant pool={pool} canUseFantasyFull={canUseFantasyFull} />
         </div>

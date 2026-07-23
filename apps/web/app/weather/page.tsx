@@ -77,6 +77,7 @@ export default async function WeatherPage(): Promise<JSX.Element> {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[640px] text-left text-sm">
+                <caption className="sr-only">Current conditions at outdoor NFL venues, sorted windiest first</caption>
                 <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                   <tr>
                     <th scope="col" className="px-4 py-3">Team</th>
@@ -103,7 +104,7 @@ export default async function WeatherPage(): Promise<JSX.Element> {
                 </tbody>
               </table>
             </div>
-            <p className="px-5 py-3 font-mono text-[10px] leading-5 text-ion-2">
+            <p className="px-5 py-3 font-mono text-xs leading-5 text-ion-2">
               Weather data from the US National Weather Service (api.weather.gov), public domain.
             </p>
           </section>
