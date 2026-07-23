@@ -3496,10 +3496,22 @@ model FormalIncident {
   abstractState Json
   eventIds      Json // the witnessEventId(s) this incident is gated on
   srqcVersion   Int? // soft int reference to SrqcVersion.version — NOT a hard FK
-  status        String   @default("open") // "open" | "acknowledged" | "closed"
+  status        String   @default("open") // "open" | "acknowledged" | "closed" — OPS-QUEUE state (is anyone still looking at this), NOT a correctness judgment
   createdAt     DateTime @default(now())
+  // W6 — human review label, orthogonal to `status`. `status` answers "is
+  // anyone still looking at this"; `reviewOutcome` answers "was the
+  // abstract-state violation this row witnessed a real problem or a
+  // projection/modeling artifact" — the correctness label the ablation
+  // counters (ablation-counters.ts) aggregate over. Deliberately separate
+  // columns: conflating them (e.g. treating "closed" as false-positive)
+  // would silently mislabel every incident closed for reasons other than
+  // "not real" (fixed-and-resolved, stale, duplicate-of-another-incident).
+  reviewOutcome String? // null (unreviewed) | "true_positive" | "false_positive"
+  reviewedAt    DateTime?
+  reviewedBy    String? // operator identifier (email or admin user id), free text
 
   @@index([status, createdAt])
+  @@index([reviewOutcome])
   @@map("formal_incident")
 }
 
