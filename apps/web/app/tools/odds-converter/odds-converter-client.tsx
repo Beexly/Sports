@@ -9,9 +9,9 @@ import {
 } from "@/lib/tools/betting-math";
 import { FormulaPlaque } from "@/components/tools/formula-plaque";
 import { OddsFormatToggle } from "@/components/tools/odds-format-toggle";
+import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 
-const INPUT_CLASS =
-  "w-full rounded-lg border border-mineral bg-carbon/60 px-3 py-2 text-lg font-semibold text-white outline-none focus:border-orbital-cyan";
+const INPUT_CLASS = `w-full rounded-lg border border-mineral bg-eclipse/60 px-3 py-2 text-lg font-semibold text-ion transition-colors placeholder:text-ion-3 hover:border-mineral-hi focus:border-orbital-cyan ${NUMERIC_TEXT_CLASS}`;
 
 function fmtPct(p: number): string {
   return `${(p * 100).toFixed(2)}%`;
@@ -45,7 +45,7 @@ export function OddsConverterClient(): JSX.Element {
   return (
     <div className="surface-card p-6 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <span className="text-xs font-semibold uppercase tracking-widest text-ion-1">Enter a price</span>
+        <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">Enter a price</span>
         <OddsFormatToggle format={format} onChange={handleFormatChange} />
       </div>
 
@@ -59,21 +59,21 @@ export function OddsConverterClient(): JSX.Element {
         placeholder={format === "american" ? "-110" : "1.91"}
       />
 
-      <div className="mt-8 border-t border-mineral pt-6">
+      <div className="mt-8 border-t border-mineral pt-6" aria-live="polite">
         {decimal !== null && american !== null && impliedProbability !== null ? (
           <>
             <div data-testid="odds-converter-result" className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-lg border border-mineral bg-carbon/40 px-4 py-3">
-                <span className="text-xs text-ink-300">American</span>
-                <p className="font-display text-2xl text-white">{fmtAmerican(american)}</p>
+                <span className="font-mono text-xs uppercase tracking-[0.14em] text-ion-2">American</span>
+                <p className={`mt-1 text-2xl font-bold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{fmtAmerican(american)}</p>
               </div>
               <div className="rounded-lg border border-mineral bg-carbon/40 px-4 py-3">
-                <span className="text-xs text-ink-300">Decimal</span>
-                <p className="font-display text-2xl text-white">{decimal.toFixed(4)}</p>
+                <span className="font-mono text-xs uppercase tracking-[0.14em] text-ion-2">Decimal</span>
+                <p className={`mt-1 text-2xl font-bold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{decimal.toFixed(4)}</p>
               </div>
               <div className="rounded-lg border border-mineral bg-carbon/40 px-4 py-3">
-                <span className="text-xs text-ink-300">Implied probability</span>
-                <p className="font-display text-2xl text-white">{fmtPct(impliedProbability)}</p>
+                <span className="font-mono text-xs uppercase tracking-[0.14em] text-ion-2">Implied probability</span>
+                <p className={`mt-1 text-2xl font-bold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{fmtPct(impliedProbability)}</p>
               </div>
             </div>
 
@@ -85,7 +85,7 @@ export function OddsConverterClient(): JSX.Element {
             />
           </>
         ) : (
-          <p className="text-sm text-ink-300">
+          <p className="text-sm text-ion-1">
             Enter a valid price — American odds need magnitude 100 or more
             (e.g. -110, +150); decimal odds need to be greater than 1 (e.g. 1.91).
           </p>

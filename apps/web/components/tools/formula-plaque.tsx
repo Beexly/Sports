@@ -14,10 +14,10 @@ export interface FormulaPlaqueProps {
 export function FormulaPlaque({ formula, label = "The math", className = "" }: FormulaPlaqueProps): JSX.Element {
   return (
     <div className={`rounded-lg border border-mineral bg-carbon/60 px-4 py-3 ${className}`}>
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-1">{label}</p>
+      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2">{label}</p>
       <p
         data-testid="formula-plaque"
-        className="mt-1.5 whitespace-pre-wrap break-words font-mono text-sm leading-6 text-orbital-cyan"
+        className="mt-1.5 whitespace-pre-wrap break-words font-mono text-sm leading-6 tabular-nums text-orbital-cyan"
       >
         {formula}
       </p>

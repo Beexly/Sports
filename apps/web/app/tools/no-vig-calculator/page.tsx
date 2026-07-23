@@ -6,7 +6,6 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { Reveal } from "@/components/motion/reveal";
 import { FormulaPlaque } from "@/components/tools/formula-plaque";
 import { NoVigCalculatorClient } from "./no-vig-calculator-client";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "No-Vig Calculator: Fair Odds & Hold Percentage",
@@ -17,13 +16,13 @@ export const metadata: Metadata = {
 
 export default function NoVigCalculatorPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-x-hidden" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-obsidian">
       <Nav />
       <main id="main-content" className="flex-1">
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-orbital-cyan">
                 <Link href="/tools" className="hover:underline">
                   Free calculators
                 </Link>{" "}
@@ -31,10 +30,10 @@ export default function NoVigCalculatorPage(): JSX.Element {
               </p>
             </Reveal>
             <Reveal delay={80}>
-              <h1 className="mt-4 font-display text-display-lg text-balance text-white">No-vig calculator</h1>
+              <h1 className="mt-4 font-display text-display-lg text-balance tracking-tight text-ion-white">No-vig calculator</h1>
             </Reveal>
             <Reveal delay={150}>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-ink-300">
+              <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">
                 A bookmaker's quoted prices always add up to more than 100%
                 implied probability — that extra margin is the vig. This
                 strips it back out, proportionally, to estimate the market's
@@ -55,8 +54,8 @@ export default function NoVigCalculatorPage(): JSX.Element {
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <h2 className="font-display text-2xl text-white sm:text-3xl">How it&apos;s computed</h2>
-              <p className="mt-3 text-sm leading-6 text-ink-300">
+              <h2 className="font-display text-2xl tracking-tight text-ion-white sm:text-3xl">How it&apos;s computed</h2>
+              <p className="mt-3 text-sm leading-6 text-ion-1">
                 Each price implies a raw probability (1 / decimal odds).
                 Summed across every outcome, that total is the market&apos;s
                 "overround." The proportional method divides every raw
@@ -68,7 +67,7 @@ export default function NoVigCalculatorPage(): JSX.Element {
                 label="Proportional de-vig"
                 formula={"implied_i = 1 / odds_i\nfair_i = implied_i / Σ(implied_j)"}
               />
-              <p className="mt-4 text-sm leading-6 text-ink-300">
+              <p className="mt-4 text-sm leading-6 text-ion-1">
                 This is the same proportional convention the pick engine
                 itself uses as its house default for de-vigging a market —
                 see{" "}

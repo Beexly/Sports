@@ -10,9 +10,9 @@ import {
 import { FormulaPlaque } from "@/components/tools/formula-plaque";
 import { HonestyNote } from "@/components/tools/honesty-note";
 import { OddsFormatToggle } from "@/components/tools/odds-format-toggle";
+import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 
-const INPUT_CLASS =
-  "w-full rounded-lg border border-mineral bg-carbon/60 px-3 py-2 text-sm text-white outline-none focus:border-orbital-cyan";
+const INPUT_CLASS = `w-full rounded-lg border border-mineral bg-eclipse/60 px-3 py-2 text-sm text-ion transition-colors placeholder:text-ion-3 hover:border-mineral-hi focus:border-orbital-cyan ${NUMERIC_TEXT_CLASS}`;
 
 const MAX_LEGS = 8;
 const MIN_LEGS = 2;
@@ -54,7 +54,7 @@ export function ParlayCalculatorClient(): JSX.Element {
   return (
     <div className="surface-card p-6 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <span className="text-xs font-semibold uppercase tracking-widest text-ion-1">Parlay legs</span>
+        <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">Parlay legs</span>
         <OddsFormatToggle format={oddsFormat} onChange={setOddsFormat} />
       </div>
 
@@ -77,7 +77,7 @@ export function ParlayCalculatorClient(): JSX.Element {
               <button
                 type="button"
                 onClick={() => removeLeg(index)}
-                className="rounded-lg border border-mineral px-3 py-2 text-xs text-ink-300 hover:text-white"
+                className="rounded-lg border border-mineral px-3 py-2 text-xs text-ion-1 transition-colors hover:border-mineral-hi hover:text-ion-white"
                 aria-label={`Remove leg ${index + 1}`}
               >
                 Remove
@@ -93,24 +93,24 @@ export function ParlayCalculatorClient(): JSX.Element {
         </button>
       ) : null}
 
-      <div className="mt-8 border-t border-mineral pt-6">
+      <div className="mt-8 border-t border-mineral pt-6" aria-live="polite">
         {result ? (
           <>
-            <p className="text-xs font-semibold uppercase tracking-widest text-ion-1">Combined parlay price</p>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">Combined parlay price</p>
             <div data-testid="parlay-result" className="mt-3 grid gap-3 sm:grid-cols-3">
               <div className="rounded-lg border border-mineral bg-carbon/40 px-4 py-3">
-                <span className="text-xs text-ink-300">Decimal</span>
-                <p className="font-display text-2xl text-white">{result.combinedDecimal.toFixed(3)}</p>
+                <span className="font-mono text-xs uppercase tracking-[0.14em] text-ion-2">Decimal</span>
+                <p className={`mt-1 text-2xl font-bold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{result.combinedDecimal.toFixed(3)}</p>
               </div>
               <div className="rounded-lg border border-mineral bg-carbon/40 px-4 py-3">
-                <span className="text-xs text-ink-300">American</span>
-                <p className="font-display text-2xl text-white">
+                <span className="font-mono text-xs uppercase tracking-[0.14em] text-ion-2">American</span>
+                <p className={`mt-1 text-2xl font-bold text-ion-white ${NUMERIC_TEXT_CLASS}`}>
                   {result.combinedAmerican !== null ? fmtAmerican(result.combinedAmerican) : "—"}
                 </p>
               </div>
               <div className="rounded-lg border border-mineral bg-carbon/40 px-4 py-3">
-                <span className="text-xs text-ink-300">Implied probability</span>
-                <p className="font-display text-2xl text-white">{fmtPct(result.impliedProbability)}</p>
+                <span className="font-mono text-xs uppercase tracking-[0.14em] text-ion-2">Implied probability</span>
+                <p className={`mt-1 text-2xl font-bold text-ion-white ${NUMERIC_TEXT_CLASS}`}>{fmtPct(result.impliedProbability)}</p>
               </div>
             </div>
 
@@ -118,7 +118,7 @@ export function ParlayCalculatorClient(): JSX.Element {
             <HonestyNote className="mt-4">{PARLAY_CORRELATION_CAVEAT}</HonestyNote>
           </>
         ) : (
-          <p className="text-sm text-ink-300">Enter a valid price for at least 2 legs to see the combined parlay price.</p>
+          <p className="text-sm text-ion-1">Enter a valid price for at least 2 legs to see the combined parlay price.</p>
         )}
       </div>
     </div>

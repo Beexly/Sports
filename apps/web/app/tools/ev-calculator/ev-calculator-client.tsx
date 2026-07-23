@@ -9,9 +9,9 @@ import {
 } from "@/lib/tools/betting-math";
 import { FormulaPlaque } from "@/components/tools/formula-plaque";
 import { OddsFormatToggle } from "@/components/tools/odds-format-toggle";
+import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 
-const INPUT_CLASS =
-  "w-full rounded-lg border border-mineral bg-carbon/60 px-3 py-2 text-sm text-white outline-none focus:border-orbital-cyan";
+const INPUT_CLASS = `w-full rounded-lg border border-mineral bg-eclipse/60 px-3 py-2 text-sm text-ion transition-colors placeholder:text-ion-3 hover:border-mineral-hi focus:border-orbital-cyan ${NUMERIC_TEXT_CLASS}`;
 
 function fmtPct(p: number): string {
   return `${(p * 100).toFixed(1)}%`;
@@ -52,7 +52,7 @@ export function EvCalculatorClient(): JSX.Element {
     <div className="surface-card p-6 sm:p-8">
       <div className="grid gap-6 sm:grid-cols-2">
         <label className="block">
-          <span className="text-xs font-semibold uppercase tracking-widest text-ion-1">Your win probability</span>
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">Your win probability</span>
           <div className="mt-2 flex items-center gap-2">
             <input
               type="number"
@@ -65,12 +65,12 @@ export function EvCalculatorClient(): JSX.Element {
               max={100}
               step="0.1"
             />
-            <span className="text-sm text-ink-300">%</span>
+            <span className="text-sm text-ion-1">%</span>
           </div>
         </label>
 
         <div>
-          <span className="text-xs font-semibold uppercase tracking-widest text-ion-1">Price offered</span>
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">Price offered</span>
           <div className="mt-2 flex items-center gap-2">
             <input
               type="text"
@@ -86,20 +86,20 @@ export function EvCalculatorClient(): JSX.Element {
         </div>
       </div>
 
-      <div className="mt-8 border-t border-mineral pt-6">
+      <div className="mt-8 border-t border-mineral pt-6" aria-live="polite">
         {valid ? (
           <>
-            <p className="text-xs font-semibold uppercase tracking-widest text-ion-1">Expected value</p>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">Expected value</p>
             <p
               data-testid="ev-result"
-              className="mt-2 font-display text-3xl sm:text-4xl"
-              style={{ color: ev! >= 0 ? "#00E5FF" : "#FF38C7" }}
+              className={`mt-2 text-4xl font-bold sm:text-5xl ${NUMERIC_TEXT_CLASS} ${ev! >= 0 ? "text-verify" : "text-alert"}`}
             >
-              {fmtUsd(ev!)} <span className="text-base font-normal text-ink-300">per $1 staked</span>
+              {fmtUsd(ev!)} <span className="font-sans text-base font-normal text-ion-1">per $1 staked</span>
             </p>
-            <p className="mt-1 text-sm text-ink-300">
-              {fmtUsd(ev! * 100)} per $100 staked. Breakeven probability at this price is{" "}
-              {breakeven !== null ? fmtPct(breakeven) : "—"}.
+            <p className="mt-2 text-sm text-ion-1">
+              <span className={NUMERIC_TEXT_CLASS}>{fmtUsd(ev! * 100)}</span> per $100 staked. Breakeven
+              probability at this price is{" "}
+              <span className={NUMERIC_TEXT_CLASS}>{breakeven !== null ? fmtPct(breakeven) : "—"}</span>.
             </p>
 
             <FormulaPlaque
@@ -108,7 +108,7 @@ export function EvCalculatorClient(): JSX.Element {
             />
           </>
         ) : (
-          <p className="text-sm text-ink-300">Enter a win probability (0-100) and a valid price to see the expected value.</p>
+          <p className="text-sm text-ion-1">Enter a win probability (0-100) and a valid price to see the expected value.</p>
         )}
       </div>
     </div>
