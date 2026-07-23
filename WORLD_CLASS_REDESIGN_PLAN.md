@@ -136,18 +136,23 @@ can pick one up without re-deriving context — read this file + the relevant
    CDN, so they could not be downloaded here. To finish from any machine with
    normal egress:
 
-   | Manifest id (already wired) | Page | Higgsfield job id |
-   |---|---|---|
-   | `nflverse-gridiron` | /nflverse | `895d7eaf-6e5d-4b2b-927d-4f5eb2edbe12` |
-   | `nhl-icefield` | /nhl | `d2e23623-25a2-476c-9f61-38035b4b9d24` |
-   | `mlb-diamond` | /mlb | `b57c8530-eb7f-4274-995a-6a0e5e8346a0` |
-   | `fantasy-constellation` | /fantasy | `f6ad9d93-95e9-4d21-8bcc-d9282de709ba` |
+   | Manifest id (already wired) | Page | Higgsfield still job id | Higgsfield motion job id |
+   |---|---|---|---|
+   | `nflverse-gridiron` | /nflverse | `895d7eaf-6e5d-4b2b-927d-4f5eb2edbe12` | attempted, timed out client-side before the daily video quota hit — check the Higgsfield library for whether it finished server-side; if not, regenerate (image-to-video, `kling3_0_turbo`, `start_image` = the still job id above) once quota resets |
+   | `nhl-icefield` | /nhl | `d2e23623-25a2-476c-9f61-38035b4b9d24` | same as above — attempted, unconfirmed |
+   | `mlb-diamond` | /mlb | `b57c8530-eb7f-4274-995a-6a0e5e8346a0` | not generated — hit `grace_daily_limit_reached` on this one |
+   | `fantasy-constellation` | /fantasy | `f6ad9d93-95e9-4d21-8bcc-d9282de709ba` | **done** — `33cf956e-eb5e-44c6-982b-903471038fed` (5s, 720p, kling3_0_turbo, subtle ambient drift, silent loop) |
 
-   Steps: download each PNG from the Higgsfield library → convert
+   Steps: download each still PNG (and the one completed motion MP4) from the
+   Higgsfield library → convert the still
    (`npx sharp-cli -i in.png -o out.webp --format webp --quality 72`) →
-   commit as `apps/web/public/immersive/<manifest-id>.webp` → add
-   `still: "/immersive/<manifest-id>.webp"` to that id's entry in
-   `apps/web/lib/visual-production/asset-manifest.ts`. Nothing else to touch.
+   commit as `apps/web/public/immersive/<manifest-id>.webp` (and
+   `<manifest-id>.mp4` for the fantasy one, already generated) → add
+   `still: "/immersive/<manifest-id>.webp"` (+ `motion: "/immersive/<manifest-id>.mp4"`
+   for fantasy) to that id's entry in `apps/web/lib/visual-production/asset-manifest.ts`.
+   Nothing else to touch. Session 4 hit Higgsfield's free-tier daily video-
+   generation cap after 1 clip — regenerate the other 3 motion plates once
+   the quota resets (same prompts/start-image pattern, documented above).
 
 4. **Asset refresh via Higgsfield** (now free, all models/tools) — this is
    genuinely additive, not a rebuild:

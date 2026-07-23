@@ -34,7 +34,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[✓]` audited, alread
 | 20 | Cockpit B | remaining /cockpit/* (~22 routes) | [x] | all 27 files audited; legacy brand-*/accent-*/black aliases fixed on 5; 17 tables gain aria-label; film-room heading size aligned to doctrine; most files already clean. studio-workspace.tsx/studio-props.tsx not opened (out of listed scope) |
 | 21 | Admin + statking | /admin/*, /admin/statking/* | [x] | all 6 core admin files fixed (brand-* aliases, H1 sizing, table aria-labels); 10/25 statking routes spot-checked (shared _components.tsx already a11y-clean, added descriptive DataTable captions). Remaining 15 statking routes + index for a future cycle |
 | 22 | Shared chrome | Nav, MobileNav, Footer, shared UI components | [x] | mobile-nav gets a real focus trap + click-outside dismiss + 44px touch targets (highest-leverage a11y fix in the whole loop — inherited by every mobile visitor); signature-grid rgb literals → canonical orbital-cyan; footer new-tab hint. Error boundaries audited, NOT merged (test-pinned patterns + root boundary must stay chrome-free by design) |
-| 23 | Higgsfield motion plates | video plates for verticals + fantasy; catalogue job IDs | [ ] | stills done 2026-07-23 (plan doc §3) |
+| 23 | Higgsfield motion plates | video plates for verticals + fantasy; catalogue job IDs | [x] | stills done earlier; 1/4 motion plates generated (fantasy-constellation, job 33cf956e) before hitting Higgsfield's daily video quota (grace_daily_limit_reached). Remaining 3 job IDs + retry plan in WORLD_CLASS_REDESIGN_PLAN.md §3 for whenever quota resets |
 | 24 | Final visual-QA sweep | cross-page consistency re-check, ledger close-out | [ ] | |
 
 Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
@@ -64,3 +64,4 @@ Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
 - 2026-07-23 12:58 — Cycle 20 (cockpit B) done: 10 files edited (27 audited), 333 targeted + 122 tangential tests green.
 - 2026-07-23 13:07 — Cycle 21 (admin + statking) done: 6 core + 10 statking routes, 66 targeted + 44 tangential tests green.
 - 2026-07-23 13:15 — Cycle 22 (shared chrome) done: 5 files, full suite (9,394 tests) green.
+- 2026-07-23 13:20 — Cycle 23 (Higgsfield motion plates): 1/4 generated (fantasy-constellation) before hitting the daily video-generation quota; documented for later completion.
