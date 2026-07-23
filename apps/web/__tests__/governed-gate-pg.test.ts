@@ -89,37 +89,52 @@ suite("createGovernedSrqcGate against real Postgres", () => {
   }
 
   it("REFUSEs under SRQC_ENFORCE=1 for a real two-pending-attempt window (ai_attempt events)", async () => {
-    const prevEnforce = process.env.SRQC_ENFORCE;
-    process.env.SRQC_ENFORCE = "1";
-    try {
-      const invocationId = randomUUID();
-      const att1 = randomUUID();
-      const att2 = randomUUID();
+    // Inject the env instead of mutating global process.env — a global
+    // mutation would race against any other test file reading/resetting
+    // SRQC_ENFORCE concurrently under a parallel test runner.
+    const invocationId = randomUUID();
+    const att1 = randomUUID();
+    const att2 = randomUUID();
 
-      // Two attempts started, neither terminal => GE2 (two concurrently
-      // pending). Both events are source:"ai_attempt", NOT "ai_invocation".
-      await insertEvent(`${att1}:ATTEMPT_STARTED`, "ai_attempt", att1, "ATTEMPT_STARTED", {
-        invocationId,
-        attemptId: att1,
-      });
-      await insertEvent(`${att2}:ATTEMPT_STARTED`, "ai_attempt", att2, "ATTEMPT_STARTED", {
-        invocationId,
-        attemptId: att2,
-      });
+    // Two attempts started, neither terminal => GE2 (two concurrently
+    // pending). Both events are source:"ai_attempt", NOT "ai_invocation".
+    await insertEvent(`${att1}:ATTEMPT_STARTED`, "ai_attempt", att1, "ATTEMPT_STARTED", {
+      invocationId,
+      attemptId: att1,
+    });
+    await insertEvent(`${att2}:ATTEMPT_STARTED`, "ai_attempt", att2, "ATTEMPT_STARTED", {
+      invocationId,
+      attemptId: att2,
+    });
 
-      const gate = createGovernedSrqcGate({ sql });
-      const result = await gate({ tool: "ai.invoke", args: {}, ctx: { agentId: "agent-1" } });
+    const gate = createGovernedSrqcGate({ sql, env: { SRQC_ENFORCE: "1" } });
+    const result = await gate({ tool: "ai.invoke", args: {}, ctx: { agentId: "agent-1" } });
 
-      expect(result.decision).toBe("REFUSE");
-      expect(result.reasons.some((r) => r.includes("GE2"))).toBe(true);
-    } finally {
-      if (prevEnforce === undefined) delete process.env.SRQC_ENFORCE;
-      else process.env.SRQC_ENFORCE = prevEnforce;
-    }
+    expect(result.decision).toBe("REFUSE");
+    expect(result.reasons.some((r) => r.includes("GE2"))).toBe(true);
+  });
+
+  it("SHADOW (no SRQC_ENFORCE) never REFUSEs, even for the same GE2 window", async () => {
+    const invocationId = randomUUID();
+    const att1 = randomUUID();
+    const att2 = randomUUID();
+    await insertEvent(`${att1}:ATTEMPT_STARTED`, "ai_attempt", att1, "ATTEMPT_STARTED", {
+      invocationId,
+      attemptId: att1,
+    });
+    await insertEvent(`${att2}:ATTEMPT_STARTED`, "ai_attempt", att2, "ATTEMPT_STARTED", {
+      invocationId,
+      attemptId: att2,
+    });
+
+    const gate = createGovernedSrqcGate({ sql, env: {} });
+    const result = await gate({ tool: "ai.invoke", args: {}, ctx: { agentId: "agent-1" } });
+
+    expect(result.decision).toBe("ADMIT");
   });
 
   it("non-gated tools ADMIT without touching the ledger", async () => {
-    const gate = createGovernedSrqcGate({ sql });
+    const gate = createGovernedSrqcGate({ sql, env: { SRQC_ENFORCE: "1" } });
     const result = await gate({ tool: "tool.read", args: {}, ctx: { agentId: "agent-1" } });
     expect(result).toEqual({ decision: "ADMIT", reasons: [] });
   });

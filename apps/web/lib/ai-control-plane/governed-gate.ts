@@ -19,7 +19,13 @@
  */
 
 import type { GateOutput } from "@sports/governed";
-import { admitUnderSRQC, resolveSrqcModeFromEnv, type SrqcMode, type ProjectableEvent } from "./srqc-projection";
+import {
+  admitUnderSRQC,
+  resolveSrqcModeFromEnv,
+  type SrqcMode,
+  type SrqcEnvLike,
+  type ProjectableEvent,
+} from "./srqc-projection";
 import { readRecentEvents, prismaSqlClient, type ControlSqlClient, type ControlEventRow } from "./internal";
 
 // Same row -> ProjectableEvent adapter formal-receipt-job.ts uses (kept
@@ -59,6 +65,15 @@ export type GovernedGateDeps = {
   now?: () => Date;
   /** How far back to read the ledger window. Defaults to 5 minutes. */
   windowMs?: number;
+  /**
+   * Env-like source `resolveSrqcModeFromEnv` reads `SRQC_ENFORCE` from.
+   * Defaults to `process.env`. Overriding this is for TESTS ONLY — it lets
+   * a test assert ENFORCE behavior via an injected object instead of
+   * mutating the real `process.env`, which is unsafe under a parallel test
+   * runner (a global env mutation races against any other test file that
+   * reads or resets the same variable concurrently).
+   */
+  env?: SrqcEnvLike;
 };
 
 /**
@@ -100,7 +115,7 @@ export function createGovernedSrqcGate(deps: GovernedGateDeps) {
       untilExclusive,
     });
 
-    const mode: SrqcMode = resolveSrqcModeFromEnv();
+    const mode: SrqcMode = resolveSrqcModeFromEnv(deps.env);
     const result = admitUnderSRQC(events.map(toProjectable), mode);
 
     if (result.decision === "REFUSE") {
