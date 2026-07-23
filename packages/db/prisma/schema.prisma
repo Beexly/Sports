@@ -3591,3 +3591,32 @@ model IndInvProposal {
   @@index([activeVersionAtMint])
   @@map("ind_inv_proposal")
 }
+
+// ============================================================
+// A++ GOVERNED RECEIPTS + KEYRING (packages/governed)
+//
+// Durable persistence for signed GovernedReceipt objects emitted by
+// `createGoverned()` (packages/governed/src/governed.ts). `raw` holds the
+// full SignedGovernedReceipt JSON (receipt + ed25519 signature) exactly as
+// produced — it contains no secrets by construction (no private key
+// material, no raw tool args, only `argsDigest`). The scalar columns
+// (decision, kid, at, agentId, tool, argsDigest, reasons) are denormalized
+// out of `raw` purely for query/filter convenience; `raw` remains the
+// source of truth for what was actually signed.
+model AgentReceipt {
+  id         String   @id @default(cuid())
+  raw        Json
+  decision   String // "ADMIT" | "REFUSE"
+  kid        String
+  at         DateTime
+  agentId    String
+  tool       String
+  argsDigest String
+  reasons    Json
+  receiptId  String   @unique
+  createdAt  DateTime @default(now())
+
+  @@index([agentId, at])
+  @@index([tool, at])
+  @@map("agent_receipt")
+}
