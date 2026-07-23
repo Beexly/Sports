@@ -9,6 +9,7 @@ import { Footer } from "@/components/ui/footer";
 import { FollowButton } from "@/components/watchlist/follow-button";
 import { listWatchlistEntries } from "@/lib/watchlist/db";
 import { followLimitForTier, isOverFollowLimit } from "@/lib/watchlist/eligibility";
+import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import type { WatchlistEntry } from "@/lib/watchlist/types";
 
 export const metadata: Metadata = {
@@ -30,10 +31,10 @@ export default async function WatchlistPage() {
       <main id="main-content" className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
           <div className="mb-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-orbital-cyan">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
               Follow what you care about
             </p>
-            <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-ion-white sm:text-5xl">
+            <h1 className="mt-3 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
               Watchlist
             </h1>
             <p className="mt-5 text-lg text-ion-1">
@@ -66,7 +67,7 @@ function SignInRequired() {
       </p>
       <Link
         href="/auth/signin"
-        className="mt-5 inline-flex items-center rounded-full bg-orbital-cyan px-5 py-2.5 text-sm font-semibold text-obsidian hover:bg-orbital-cyan-glow"
+        className="mt-5 inline-flex items-center rounded-full bg-plasma px-5 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
       >
         Sign in
       </Link>
@@ -103,11 +104,14 @@ async function SignedInWatchlist({ userId }: { userId: string }) {
 
       <section className="mb-8 rounded-2xl border border-mineral bg-eclipse/60 p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
             Your watchlist
           </h2>
           {followLimit !== null && (
-            <span className="font-mono text-[11px] tabular-nums text-ion-3">
+            <span
+              className={`text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}
+              aria-label={`Following ${followedCount} of ${followLimit} allowed`}
+            >
               {followedCount} / {followLimit}
             </span>
           )}
@@ -132,7 +136,7 @@ async function SignedInWatchlist({ userId }: { userId: string }) {
 
       {suggestions.length > 0 && (
         <section className="rounded-2xl border border-mineral bg-eclipse/40 p-6">
-          <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
             Suggested teams
           </h2>
           <ul className="flex flex-wrap gap-3" data-testid="watchlist-suggestions">
@@ -156,10 +160,10 @@ async function SignedInWatchlist({ userId }: { userId: string }) {
 
 function WatchlistRow({ entry, displayName }: { entry: WatchlistEntry; displayName: string }) {
   return (
-    <li className="flex items-center justify-between gap-4 rounded-xl border border-titanium bg-carbon px-4 py-3">
+    <li className="flex items-center justify-between gap-4 rounded-xl border border-mineral bg-titanium/40 px-4 py-3">
       <div>
         <p className="text-sm font-semibold text-ion-white">{displayName}</p>
-        <p className="text-[11px] uppercase tracking-wide text-ion-3">
+        <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
           {entry.entityType === "TEAM" ? "Team" : "Player"}
         </p>
       </div>
@@ -201,12 +205,12 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
     <section className="mb-8 rounded-2xl border border-ultraviolet/30 bg-ultraviolet/[0.06] p-6">
       <h2 className="text-sm font-semibold text-ion-white">Graded alerts</h2>
       {canGetAlerts ? (
-        <p className="mt-1.5 text-sm text-ion-1">
-          As an Elite member you&apos;ll get alerts for what you follow — but only once a pick is
-          GRADED (win, loss, push, or void). We never alert on an ungraded tip.
+        <p className="mt-1.5 text-sm leading-relaxed text-ion-1">
+          As an Elite member you&apos;ll get alerts for what you follow — but only once a pick
+          is graded (win, loss, push, or void). We never alert on an ungraded tip.
         </p>
       ) : (
-        <p className="mt-1.5 text-sm text-ion-1">
+        <p className="mt-1.5 text-sm leading-relaxed text-ion-1">
           Elite members get real-time email &amp; push alerts when a followed team&apos;s or
           player&apos;s pick grades — never before it&apos;s settled.{" "}
           <Link href="/pricing" className="text-ultraviolet-glow underline-offset-4 hover:underline">
@@ -220,19 +224,39 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
 
 function EmptyState() {
   return (
-    <p data-testid="watchlist-empty" className="text-sm leading-relaxed text-ion-2">
-      You&apos;re not following anything yet. Pick a suggested team below to get started.
-    </p>
+    <div
+      data-testid="watchlist-empty"
+      className="rounded-xl border border-dashed border-mineral px-6 py-8 text-center"
+    >
+      <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ion-2">
+        Nothing followed yet
+      </p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-ion-1">
+        Follow a team or player and it lives here — one place to keep track of
+        what you care about across the board.
+      </p>
+      <p className="mt-1.5 text-xs text-ion-2">Start with a suggested team below.</p>
+    </div>
   );
 }
 
 function DegradedState({ reason }: { reason: string }) {
+  // Honest-state split: "not activated" is a setup state, not a failure —
+  // only the connection problem reads in caution. Copy carries the meaning;
+  // color is never the sole encoding.
   const activating = reason === "table_missing";
+  if (activating) {
+    return (
+      <p data-testid="watchlist-degraded" className="text-sm leading-relaxed text-ion-1">
+        Watchlist is not activated yet. Nothing is wrong — this surface switches
+        on with the next platform update.
+      </p>
+    );
+  }
   return (
     <p data-testid="watchlist-degraded" className="text-sm leading-relaxed text-caution">
-      {activating
-        ? "Watchlist is not activated yet."
-        : "Watchlist is temporarily unavailable. This is a connection problem, not a lost list — refresh in a moment."}
+      Watchlist is temporarily unavailable. This is a connection problem, not a
+      lost list — refresh in a moment.
     </p>
   );
 }
