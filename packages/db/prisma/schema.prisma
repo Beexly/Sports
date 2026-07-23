@@ -3548,3 +3548,154 @@ model CtiCandidate {
   @@index([status, createdAt])
   @@map("cti_candidate")
 }
+
+// ============================================================
+// LSRQC KERNEL v1 (closed on-policy self-refinement loop; on top of the
+// CTI-candidate miner + the versioned SrqcVersion envelope, same branch by
+// owner authorization.)
+//
+// An IndInvProposal is a HINDSIGHT SKILL minted ON-POLICY from one or more
+// open CtiCandidate rows: a proposed STRENGTHENING of the currently-active
+// inductive-invariant certificate (SrqcVersion) that would additionally
+// forbid the abstract (before, action) pair whose successor a CtiCandidate
+// showed is proof-forbidden. A proposal is minted only against a live
+// baseline (`activeVersionAtMint` records which one), never in a vacuum —
+// it is a strengthening of the CURRENT certificate.
+//
+// POSTURE (do not let this drift): PROPOSAL / RANKING INPUT ONLY. Minting a
+// proposal changes NO control-plane decision and NEVER activates a version.
+// The ONLY path that flips an SrqcVersion to active is the explicit
+// human/script accept flow (acceptProposalAndActivate → activateSrqcVersion).
+// `admitUnderSRQC` (srqc-projection.ts) remains always-ADMIT in SHADOW (its
+// default); no ENFORCE path is reachable from production. Idempotency is via
+// a UNIQUE (sourceWindowHash, activeVersionAtMint) index + INSERT ... ON
+// CONFLICT DO NOTHING, so re-running the emitter mints no duplicate proposal.
+model IndInvProposal {
+  id                    String   @id @default(cuid())
+  ctiCandidateIds       String[] // cti_candidate.id values this proposal was minted from
+  predicateKeys         String[] // executable keys, e.g. ["GE2_FORBIDDEN","REJECTED_IMPLIES_BOUND","STRENGTHEN_GENERIC"]
+  proposedPredicateText String
+  skillKind             String // "workflow" | "failure_avoidance" | "strengthen"
+  sourceWindowHash      String
+  activeVersionAtMint   Int
+  strength              Float    @default(0) // Σ max(0, per-window delta) — RANKING signal only
+  support               Int      @default(0) // # windows with delta>0 (Prop2 multi-window guard)
+  variance              Float    @default(0) // population variance of per-window deltas
+  status                String   @default("open") // open|accepted|rejected
+  acceptedSrqcVersion   Int?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@unique([sourceWindowHash, activeVersionAtMint])
+  @@index([status])
+  @@index([activeVersionAtMint])
+  @@map("ind_inv_proposal")
+}
+
+// ============================================================
+// A++ GOVERNED RECEIPTS + KEYRING (packages/governed)
+//
+// Durable persistence for signed GovernedReceipt objects emitted by
+// `createGoverned()` (packages/governed/src/governed.ts). `raw` holds the
+// full SignedGovernedReceipt JSON (receipt + ed25519 signature) exactly as
+// produced — it contains no secrets by construction (no private key
+// material, no raw tool args, only `argsDigest`). The scalar columns
+// (decision, kid, at, agentId, tool, argsDigest, reasons) are denormalized
+// out of `raw` purely for query/filter convenience; `raw` remains the
+// source of truth for what was actually signed.
+model AgentReceipt {
+  id         String   @id @default(cuid())
+  raw        Json
+  decision   String // "ADMIT" | "REFUSE"
+  kid        String
+  at         DateTime
+  agentId    String
+  tool       String
+  argsDigest String
+  reasons    Json
+  receiptId  String   @unique
+  createdAt  DateTime @default(now())
+
+  @@index([agentId, at])
+  @@index([tool, at])
+  @@map("agent_receipt")
+}
+
+// ============================================================
+// COMMERCIAL OPERATING LAYER — Cash OS (R1)
+// (Additive, business-instrumentation only — unrelated to the SRQC/formal
+// work above. See apps/web/lib/growth/cash-os.ts.)
+// ============================================================
+
+// One append-only row per revenue-relevant event (subscription lifecycle,
+// affiliate payout, or a paid pilot invoice). This is the source of truth
+// for MRR and the other CashSnapshot figures — never derived from
+// Subscription state alone, so historical MRR trend stays intact even as
+// subscriptions change tier/cancel.
+model RevenueEvent {
+  id          String   @id @default(cuid())
+  at          DateTime @default(now())
+  kind        String // sub_start | sub_renew | sub_cancel | affiliate_cpa | affiliate_revshare | pilot_invoice
+  amountCents Int
+  currency    String   @default("usd")
+  userId      String?
+  meta        Json?
+
+  @@index([at, kind])
+  @@map("revenue_event")
+}
+
+// Daily, per-surface activation counter for a user (board / optimizer /
+// tracker / receipt). Upserted by recordActivation — one row per
+// (userId, day, surface), incrementing count on repeat visits the same day.
+model ProductActivation {
+  id      String   @id @default(cuid())
+  userId  String
+  day     DateTime // date truncated UTC (midnight)
+  surface String // board | optimizer | tracker | receipt
+  count   Int      @default(1)
+
+  @@unique([userId, day, surface])
+  @@map("product_activation")
+}
+
+// ─── Compliance Control Monitor (CCM) + ISMS alignment kit ──────────────────
+// Additive, independent of SRQC/admitUnderSRQC and of packages/governed.
+// These tables back @sports/compliance's continuous control checks: each run
+// persists evidence objects (ComplianceEvidence), the aggregated pass/fail
+// outcome (ComplianceCheckRun), and — one per failing control — an
+// exception to track to closure (ComplianceException). Internal alignment
+// tooling only; see docs/compliance/README.md for the non-claims disclaimer.
+model ComplianceEvidence {
+  id          String   @id @default(cuid())
+  controlId   String
+  source      String
+  collectedAt DateTime @default(now())
+  contentHash String
+  uri         String?
+  meta        Json?
+
+  @@index([controlId, collectedAt])
+  @@map("compliance_evidence")
+}
+
+model ComplianceCheckRun {
+  id      String   @id @default(cuid())
+  at      DateTime @default(now())
+  ok      Boolean
+  results Json
+
+  @@map("compliance_check_run")
+}
+
+model ComplianceException {
+  id        String    @id @default(cuid())
+  controlId String
+  detail    String
+  status    String    @default("open")
+  createdAt DateTime  @default(now())
+  closedAt  DateTime?
+
+  @@index([status, controlId])
+  @@map("compliance_exception")
+}
