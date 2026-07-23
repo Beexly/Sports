@@ -111,7 +111,7 @@ function MobileSection({ section, onNavigate }: { section: Section; onNavigate: 
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls={panelId}
-        className="mobile-nav-heading flex w-full items-center justify-between"
+        className="mobile-nav-heading flex min-h-11 w-full items-center justify-between"
       >
         <span>{section.heading}</span>
         <ChevronDown
@@ -134,25 +134,69 @@ function MobileSection({ section, onNavigate }: { section: Section; onNavigate: 
   );
 }
 
+// Focusable elements considered part of the trap — links and enabled buttons.
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled])';
+
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
-  // Escape closes the menu and returns focus to the trigger (WCAG 2.1.1/2.4.3).
+  // On open: move focus into the panel (WCAG 2.4.3) so keyboard/AT users land
+  // directly on the menu instead of past it.
   useEffect(() => {
     if (!open) return;
+    const first = panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+    first?.focus();
+  }, [open]);
+
+  // Escape closes the menu and returns focus to the trigger (WCAG 2.1.1/2.4.3).
+  // Tab/Shift+Tab is trapped inside the panel while it's open so keyboard
+  // focus never silently leaks into the page behind the flyout.
+  // Clicking outside the panel/trigger also dismisses it.
+  useEffect(() => {
+    if (!open) return;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpen(false);
         triggerRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusables = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+      if (focusables.length === 0) return;
+      const first = focusables[0]!;
+      const last = focusables[focusables.length - 1]!;
+      const active = document.activeElement;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
       }
     };
+
+    const onPointerDown = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node | null)) {
+        setOpen(false);
+      }
+    };
+
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onPointerDown);
+    };
   }, [open]);
 
   return (
-    <div className="mobile-nav">
+    <div className="mobile-nav" ref={containerRef}>
       <button
         ref={triggerRef}
         type="button"
@@ -165,7 +209,7 @@ export function MobileNav() {
         {open ? <X size={18} strokeWidth={1.8} /> : <Menu size={18} strokeWidth={1.8} />}
       </button>
       {open && (
-        <div id="mobile-nav-panel" className="mobile-nav-panel">
+        <div id="mobile-nav-panel" className="mobile-nav-panel" ref={panelRef}>
           {SECTIONS.map((section) => (
             <MobileSection key={section.heading} section={section} onNavigate={() => setOpen(false)} />
           ))}
