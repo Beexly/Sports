@@ -88,6 +88,29 @@ suite("createGovernedSrqcGate against real Postgres", () => {
     );
   }
 
+  // The gate's `untilExclusive`/`sinceInclusive` come from the APPLICATION
+  // clock (`now()`), while `insertEvent`'s `createdAt` comes from the
+  // DATABASE server's clock (SQL `now()`). If those two clocks aren't
+  // perfectly synced (plausible for a Postgres service container vs. the
+  // test runner under CI), a just-inserted row's DB-clock `createdAt`
+  // could fall outside an app-clock-derived window by the skew amount.
+  // BUFFER_MS pads BOTH sides of the window symmetrically around the real
+  // "now" so the window still safely contains real (near-zero-offset)
+  // insert timestamps regardless of which direction the clocks drift —
+  // unlike a naive one-sided future shift, this does not need `windowMs`
+  // widened separately (see queryWindow() below, which derives it).
+  const BUFFER_MS = 2 * 60 * 1000;
+  const BASE_WINDOW_MS = 5 * 60 * 1000;
+
+  function bufferedGateDeps(sql: ControlSqlClient, env: Record<string, string>) {
+    return {
+      sql,
+      env,
+      now: () => new Date(Date.now() + BUFFER_MS),
+      windowMs: BASE_WINDOW_MS + 2 * BUFFER_MS,
+    };
+  }
+
   it("REFUSEs under SRQC_ENFORCE=1 for a real two-pending-attempt window (ai_attempt events)", async () => {
     // Inject the env instead of mutating global process.env — a global
     // mutation would race against any other test file reading/resetting
@@ -107,8 +130,16 @@ suite("createGovernedSrqcGate against real Postgres", () => {
       attemptId: att2,
     });
 
-    const gate = createGovernedSrqcGate({ sql, env: { SRQC_ENFORCE: "1" } });
+    const gate = createGovernedSrqcGate(bufferedGateDeps(sql, { SRQC_ENFORCE: "1" }));
     const result = await gate({ tool: "ai.invoke", args: {}, ctx: { agentId: "agent-1" } });
+
+    // eslint-disable-next-line no-console -- diagnostic for this specific
+    // test's CI history of clock-sensitive flakiness; safe to remove once
+    // it has proven stable across several CI runs.
+    console.log(
+      "governed-gate-pg REFUSE-case diagnostic:",
+      JSON.stringify({ decision: result.decision, reasons: result.reasons }),
+    );
 
     expect(result.decision).toBe("REFUSE");
     expect(result.reasons.some((r) => r.includes("GE2"))).toBe(true);
@@ -127,7 +158,7 @@ suite("createGovernedSrqcGate against real Postgres", () => {
       attemptId: att2,
     });
 
-    const gate = createGovernedSrqcGate({ sql, env: {} });
+    const gate = createGovernedSrqcGate(bufferedGateDeps(sql, {}));
     const result = await gate({ tool: "ai.invoke", args: {}, ctx: { agentId: "agent-1" } });
 
     expect(result.decision).toBe("ADMIT");
