@@ -90,7 +90,7 @@ export default async function BlogPage() {
                           </span>
                         )}
                         {post.isFeatured && (
-                          <span className="px-2 py-0.5 rounded-full text-xs bg-yellow-400/10 text-yellow-400">
+                          <span className="px-2 py-0.5 rounded-full text-xs bg-caution/10 text-caution">
                             Featured
                           </span>
                         )}

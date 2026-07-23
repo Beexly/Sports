@@ -150,7 +150,7 @@ export function SubscribeButton({
       {error && (
         <p
           role="alert"
-          className="rounded-lg border border-red-800/60 bg-red-950/40 px-3 py-2 text-xs text-red-300"
+          className="rounded-lg border border-alert/60 bg-alert/10 px-3 py-2 text-xs text-alert"
         >
           {error}
         </p>

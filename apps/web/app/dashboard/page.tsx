@@ -238,13 +238,13 @@ export default async function DashboardPage({
           {searchParams?.upgraded === "true" && (
             <div
               data-testid="upgrade-success-banner"
-              className="mb-6 rounded-xl border border-emerald-700/50 bg-emerald-950/30 p-5"
+              className="mb-6 rounded-xl border border-verify/50 bg-verify/10 p-5"
             >
-              <p className="text-sm font-semibold text-emerald-300">
+              <p className="text-sm font-semibold text-verify">
                 You&apos;re in — at the {phaseName} rate, locked for the life of your
                 subscription.
               </p>
-              <p className="mt-1 text-xs text-emerald-300/80">
+              <p className="mt-1 text-xs text-ion-1">
                 Confidence scores, the full factor trail, and line movement are now live on
                 every pick.
                 {entitlements.tier === "ELITE"
@@ -253,7 +253,7 @@ export default async function DashboardPage({
               </p>
               <Link
                 href="/picks"
-                className="mt-3 inline-flex rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-emerald-500"
+                className="mt-3 inline-flex rounded-lg bg-verify px-4 py-2 text-xs font-semibold text-carbon transition-colors hover:bg-verify/80"
               >
                 See today&apos;s board →
               </Link>

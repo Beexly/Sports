@@ -142,8 +142,8 @@ export function WaitlistForm(): JSX.Element {
 
   if (status === "done") {
     return (
-      <div role="status" className="rounded-lg border border-emerald-700/40 bg-emerald-950/30 p-6">
-        <p className="text-emerald-200">{WAITLIST_COPY.thankYou}</p>
+      <div role="status" className="rounded-lg border border-verify/40 bg-verify/10 p-6">
+        <p className="text-verify">{WAITLIST_COPY.thankYou}</p>
       </div>
     );
   }
@@ -156,7 +156,7 @@ export function WaitlistForm(): JSX.Element {
           tabIndex={-1}
           role="alert"
           aria-live="assertive"
-          className="rounded-md border border-red-700/40 bg-red-950/20 p-3 text-sm text-red-300 outline-none"
+          className="rounded-md border border-alert/40 bg-alert/10 p-3 text-sm text-alert outline-none"
         >
           <p className="font-medium">Please fix the following:</p>
           <ul className="mt-1 list-disc pl-5">
@@ -186,7 +186,7 @@ export function WaitlistForm(): JSX.Element {
           {...ariaFor("fullName")}
         />
         {errors.fullName && (
-          <p id={errorId("fullName")} className="mt-1 text-sm text-red-400">
+          <p id={errorId("fullName")} className="mt-1 text-sm text-alert">
             {errors.fullName}
           </p>
         )}
@@ -210,7 +210,7 @@ export function WaitlistForm(): JSX.Element {
           {...ariaFor("email")}
         />
         {errors.email && (
-          <p id={errorId("email")} className="mt-1 text-sm text-red-400">
+          <p id={errorId("email")} className="mt-1 text-sm text-alert">
             {errors.email}
           </p>
         )}
@@ -239,7 +239,7 @@ export function WaitlistForm(): JSX.Element {
           ))}
         </select>
         {errors.role && (
-          <p id={errorId("role")} className="mt-1 text-sm text-red-400">
+          <p id={errorId("role")} className="mt-1 text-sm text-alert">
             {errors.role}
           </p>
         )}
@@ -260,7 +260,7 @@ export function WaitlistForm(): JSX.Element {
           ))}
         </div>
         {errors.sportInterests && (
-          <p id={errorId("sportInterests")} className="mt-1 text-sm text-red-400">
+          <p id={errorId("sportInterests")} className="mt-1 text-sm text-alert">
             {errors.sportInterests}
           </p>
         )}
@@ -320,13 +320,13 @@ export function WaitlistForm(): JSX.Element {
         <span>{WAITLIST_COPY.consentLabel}</span>
       </label>
       {errors.consent && (
-        <p id={errorId("consent")} className="text-sm text-red-400">
+        <p id={errorId("consent")} className="text-sm text-alert">
           {errors.consent}
         </p>
       )}
 
       {errors._form && (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-sm text-alert">
           {errors._form}
         </p>
       )}

@@ -159,10 +159,10 @@ export default async function JournalEntryPage({
 
           <article className="mt-8">
             <header className="border-b border-titanium pb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-yellow-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-caution">
                 Week {entry.isoWeek}, {entry.isoYear} - {entry.modelVersion}
               </p>
-              <h1 className="mt-4 text-4xl font-bold leading-tight text-white">{entry.title}</h1>
+              <h1 className="mt-4 text-4xl font-bold leading-tight text-ion-white">{entry.title}</h1>
               <div className="mt-5 flex flex-wrap gap-3 text-sm text-ion-3">
                 <span>{formatDate(new Date(entry.publishedAt))}</span>
                 <span>{entry.readTimeMinutes} min read</span>

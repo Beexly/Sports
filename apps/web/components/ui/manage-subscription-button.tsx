@@ -65,7 +65,7 @@ export function ManageSubscriptionButton() {
         )}
       </button>
       {error && (
-        <p role="alert" className="text-xs text-red-400">{error}</p>
+        <p role="alert" className="text-xs text-alert">{error}</p>
       )}
     </div>
   );

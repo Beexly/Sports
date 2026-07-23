@@ -236,9 +236,9 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
         <div className="mx-auto max-w-5xl">
 
           {demoActive && (
-            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-xl border border-yellow-900 bg-yellow-950/30 p-3 text-xs">
-              <span className="mt-0.5 rounded-md bg-yellow-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300">Sample data</span>
-              <p className="flex-1 text-yellow-200/90 leading-relaxed">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
+            <div data-testid="sample-data-banner-picks" role="status" aria-live="polite" className="mb-4 flex items-start gap-3 rounded-xl border border-caution/50 bg-caution/10 p-3 text-xs">
+              <span className="mt-0.5 rounded-md bg-caution/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">Sample data</span>
+              <p className="flex-1 text-ion-1 leading-relaxed">These picks are deterministic samples shown while live ingestion is being wired up. They never settle, they never count toward a verified record, and no win-rate claim is published from them.</p>
             </div>
           )}
           {/* Header */}
@@ -551,8 +551,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* PRO conversion teaser for elite features */}
           {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
-            <div className="mt-8 rounded-xl border border-purple-800/30 bg-purple-950/10 p-4 text-center">
-              <p className="text-xs text-purple-400">
+            <div className="mt-8 rounded-xl border border-ultraviolet/30 bg-ultraviolet/10 p-4 text-center">
+              <p className="text-xs text-ultraviolet">
                 Want real-time email and push alerts on every signal?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
                   {`Upgrade to Elite · $${phase.elite.monthly}/mo`}
@@ -699,11 +699,11 @@ function PaywallBanner({
   return (
     <div
       data-testid="paywall-banner"
-      className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-yellow-800/50 bg-yellow-950/30 p-5 sm:flex-row sm:items-center"
+      className="mb-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-caution/50 bg-caution/10 p-5 sm:flex-row sm:items-center"
     >
       <div>
-        <p className="text-sm font-semibold text-yellow-300">{headline}</p>
-        <p className="mt-0.5 text-xs text-yellow-300/80">
+        <p className="text-sm font-semibold text-caution">{headline}</p>
+        <p className="mt-0.5 text-xs text-ion-1">
           Pro and Elite add confidence scores, the full factor trail, line movement, and the tools.
         </p>
       </div>

@@ -174,10 +174,13 @@ const config: Config = {
           950:  "#070A11",
           1000: "#05070B",
         },
+        // Repointed to canonical --conf-* hexes (design-tokens.css) — was
+        // drifted (#FF3BC7 vs canonical plasma #FF38C7) and unused; kept as
+        // a legacy 3-tier alias so it can't silently diverge again.
         confidence: {
-          high: "#FF3BC7",     // ion magenta — elite
-          mid:  "#7B61FF",     // ultraviolet — strong
-          low:  "#98A3B5",     // ion-1 — lean
+          high: "#FF38C7",     // = --conf-elite (plasma)
+          mid:  "#7B61FF",     // = --conf-solid (ultraviolet)
+          low:  "#AEB7D2",     // = --conf-lean (ion-1)
         },
         risk: {
           low:  "#5FD9A3",
