@@ -173,6 +173,25 @@ enforces):
 - Both are explicitly "detection only" in their own doc comments and
   neither calls `admitUnderSRQC` with `mode: "ENFORCE"`
 
+**F6 "model↔code conformance" cross-reference**: the Wave 1 board's F6 item
+(`checkTraceConformance` — "run a projected ledger window against the
+abstract model's invariants and write a FormalIncident row on a GE2
+violation") is **already fully implemented**, end-to-end and already
+tested, by `runFormalReceiptPass` above — there is no code gap, only a
+naming difference from the board's hypothetical function name. The pure
+invariant-check layer is `projectWindow` (+ the `isViolation` predicate),
+independently unit-tested with zero DB dependency in
+`ai-control-plane-srqc-projection.test.ts`. The effectful write-on-violation
+layer is `runFormalReceiptPass` itself, already covered end-to-end against
+real Postgres in `formal-receipt-cron.test.ts` (the exact "dual
+`ATTEMPT_STARTED` → GE2 → detected" scenario) and
+`ai-control-plane-formal-incident-pg.test.ts` (the same scenario, asserting
+the resulting `formal_incident` row's columns). No `checkTraceConformance`
+extraction was made — it would be a pure rename of `runFormalReceiptPass`
+with zero functional or testability change, since both layers this item
+asks for are already separately named, separately exported, and separately
+tested.
+
 **Enforcement posture:**
 - SHADOW is the only reachable default anywhere on `main`. `admitUnderSRQC`
   defaults its `mode` parameter to `"SHADOW"`, which always returns `ADMIT`
