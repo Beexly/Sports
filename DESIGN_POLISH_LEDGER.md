@@ -22,7 +22,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[✓]` audited, alread
 | 8 | Players suite | /players + /players/* (9 routes) | [x] | sub-routes are redirect shims; real surface /players polished: negative Form Δ off plasma → alert; STAT_PLACEHOLDER; DataTable gains sr-only caption prop → all 17 Player Lab tables named; lens rail → semantic nav. Flagged: error-boundary family (app/error, players/error, stats/error) for a single future pass |
 | 9 | Stats suite A | /stats/players, /stats/teams, /stats/compare, /stats/comps, /stats/depth, /stats/player/[id] | [x] | table cell-padding defect fixed; compare-page winner-badged-as-warning semantic bug fixed; honest empty states added; sr-only captions; copy-paste empty-state bug on player profile. Flagged: [id] canonical points at list page (SEO, future cycle) |
 | 10 | Stats suite B | /stats/scheme, /stats/scouting, /stats/trenches, /stats/injuries, /stats/watchlist, /stats/alerts, /stats/ask, /stats/expert-board, /stats/proof | [x] | honest fixture-vs-live ribbon fixes; alert-tone-for-magnitude misuse fixed; ask page gets ribbon + rebuilt form; empty states everywhere; scheme+alerts are redirects. Flagged: title-case SectionHeader idiom for a doctrine decision |
-| 11 | Stats sources + media | /stats/sources, /stats/source-graph, /stats/source-suggest, /stats/media/* (6 routes) | [ ] | |
+| 11 | Stats sources + media | /stats/sources, /stats/source-graph, /stats/source-suggest, /stats/media/* (6 routes) | [x] | semantic-tone fixes on charts; honest empty states for zero-snapshot cards; form focus/placeholder tokens; sr-only captions; aria-current tabs; rights/attribution copy kept verbatim; 4 media platform routes are redirects |
 | 12 | Fantasy core | /fantasy, /fantasy/draft, /fantasy/lineup, /fantasy/waivers, /fantasy/trade | [ ] | plate wired 2026-07-23 |
 | 13 | Fantasy extended | /fantasy/bestball, /dfs, /props, /contests, /autopilot, /studio, /academy, /scheme, /league-twin, /gm-ledger, /baseline, /connect | [ ] | |
 | 14 | Marketing story | /about, /how-we-make-money, /vs/tout-services, /faq, /press, /partners, /media-kit, /contact | [ ] | |
@@ -53,3 +53,4 @@ Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
 - 2026-07-23 06:25 — Cycle 8 (players suite) done: 5 files, 35 targeted tests green.
 - 2026-07-23 06:35 — Cycle 9 (stats suite A) done: 7 files, 50 targeted + 24 tangential tests green.
 - 2026-07-23 06:45 — Cycle 10 (stats suite B) done: 7 files, 50 targeted + 33 tangential tests green.
+- 2026-07-23 06:55 — Cycle 11 (stats sources + media) done: 6 files, 94 targeted + 33 tangential tests green.
