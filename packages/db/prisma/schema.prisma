@@ -3513,3 +3513,38 @@ model SrqcVersion {
 
   @@map("srqc_version")
 }
+
+// ============================================================
+// CTI-CANDIDATE MINER (M6 — online CTI-candidate miner, detection-only,
+// self-refinement input; on top of Track A + Track B + the versioned
+// envelope, same branch by owner authorization.)
+//
+// A CtiCandidate is a proof-relevant abstract state that sits EXACTLY ONE
+// modeled abstract step away from a state the Formal Foundry's inductive
+// invariant forbids (pendingCountClass GE2, or a rejected fingerprint with no
+// bound id — see isIndInvViolation in cti-miner.ts). The miner projects real
+// ledger windows via srqc-projection.ts's pure projectWindow, then for each
+// projected, NON-violating state s applies the pure abstract-successor
+// relation (mirroring AbstractClaimExposure.tla's Next) and records any
+// one-step successor that DOES violate. `before` is s, `action` is the modeled
+// abstract action, `after` is the forbidden successor.
+//
+// POSTURE (do not let this drift): DETECTION / MINING ONLY. These rows are
+// candidate counterexamples surfaced for a HUMAN or LLM to consider during
+// weakest-precondition strengthening of the formal spec — they are NOT
+// consumed by any control-plane decision, and the miner NEVER edits any .tla
+// file or enforces anything. `admitUnderSRQC` (srqc-projection.ts) remains
+// always-ADMIT. Dedup is via a deterministic id (hash of before+action+after)
+// inserted `ON CONFLICT (id) DO NOTHING`, so re-running the miner over the
+// same or overlapping windows never writes a duplicate.
+model CtiCandidate {
+  id        String   @id @default(cuid())
+  before    Json // the projected abstract state one step from a forbidden state
+  action    String // the modeled abstract action taken (StartPending | ...)
+  after     Json // the forbidden successor state (isIndInvViolation === true)
+  status    String   @default("open") // "open" | "reviewed" | "dismissed"
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+  @@map("cti_candidate")
+}
