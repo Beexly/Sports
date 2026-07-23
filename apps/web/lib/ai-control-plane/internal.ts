@@ -111,6 +111,54 @@ export {
   type CtiCandidateRow,
   type CtiMinerSummary,
 } from "./cti-miner";
+// LSRQC KERNEL v1 (closed on-policy self-refinement loop; on top of the
+// CTI-candidate miner + the versioned SrqcVersion envelope). The pure admission
+// core stays PURE (SHADOW always-ADMIT default; ENFORCE — lab-only — REFUSEs on
+// violation); the ON-POLICY proposal emitter, the ranking-only skill-augmented
+// CTI check, the logged version-stamped admit wrapper, the human/script accept
+// flow, and the DP health publisher are all detection/ranking-only and NEVER
+// activate a version or gate a control-plane decision (see each module).
+export {
+  admitUnderSRQCWithVersion,
+  admitUnderSRQCLogged,
+  resolveSrqcModeFromEnv,
+  type SrqcMode,
+  type SrqcAdmissionResult,
+  type SrqcAdmissionDecision,
+} from "./srqc-projection";
+export {
+  BASE_INDS,
+  violationCount,
+  delta,
+  multiWindowStats,
+  rankByStrength,
+  softGate,
+  type IndInvPred,
+  type WindowStats,
+} from "./violation-delta";
+export {
+  emitProposalsFromOpenCtis,
+  rescoreOpenProposals,
+  predicateKeysForCti,
+  predsFromKeys,
+  skillKindFromCti,
+  type SkillKind,
+} from "./ctiToProposals";
+export {
+  evaluateWindowWithSkills,
+  runSkillAugmentedCti,
+  type ForbiddenPair,
+  type SkillAugmentedEvaluation,
+} from "./skillAugmentedCti";
+export {
+  acceptProposalAndActivate,
+  type AcceptProposalInput,
+} from "./accept-proposal";
+export {
+  publishSrqcHealthDp,
+  type SrqcHealthRaw,
+  type UniformRng,
+} from "./metrics/dpPublish";
 export {
   ObservabilitySink,
   claimRecoveryBatch,
