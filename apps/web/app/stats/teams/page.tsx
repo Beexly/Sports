@@ -39,7 +39,7 @@ export default function Page() {
               label="Top Fantasy Environment"
               value={topFantasy.team_id}
               sublabel={`Environment: ${Number(topFantasy.fantasy_environment ?? 0)}`}
-              tone="amber"
+              tone="cyan"
             />
           )}
         </div>
@@ -50,10 +50,10 @@ export default function Page() {
             <p className="text-ion-white font-semibold mb-3">{team.team_id}</p>
             <BarChart items={[
               { label: "Offensive env", value: Number(team.offensive_environment ?? 0), max: 100, tone: "cyan" },
-              { label: "Defensive env", value: Number(team.defensive_environment ?? 0), max: 100, tone: "amber" },
+              { label: "Defensive env", value: Number(team.defensive_environment ?? 0), max: 100, tone: "neutral" },
               { label: "Fantasy env", value: Number(team.fantasy_environment ?? 0), max: 100, tone: "cyan" }
             ]} />
-            <p className="mt-3 text-xs text-ion-2">Confidence: {String(team.data_confidence ?? 0)}%</p>
+            <p className="mt-3 text-xs text-ion-2 tabular-nums">Confidence: {String(team.data_confidence ?? 0)}%</p>
           </div>
         ))}
       </div>
@@ -69,6 +69,7 @@ export default function Page() {
             confidence: String(t.data_confidence ?? 0) + "%"
           }))}
           maxRows={32}
+          caption="Offensive, defensive, and fantasy environment scores with pace proxy and data confidence per team"
         />
       </div>
     </Shell>

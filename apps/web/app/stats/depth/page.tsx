@@ -34,10 +34,11 @@ export default function Page() {
               team: String(d.team ?? ""),
               position: String(d.position ?? ""),
               player: names.get(d.player_id) ?? String(d.player_id),
-              role: String(d.role ?? ""),
-              lineage: Array.isArray(d.source_lineage) ? d.source_lineage.join("; ") : String(d.source_lineage ?? "")
+              role: String(d.role ?? "") || "—",
+              lineage: (Array.isArray(d.source_lineage) ? d.source_lineage.join("; ") : String(d.source_lineage ?? "")) || "—"
             }))}
           maxRows={100}
+          caption="Depth chart spots by team and position with StatKing role and source lineage"
         />
       </div>
     </Shell>
