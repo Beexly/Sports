@@ -232,7 +232,7 @@ function Avatar({ accent, initial }: { accent: string; initial: string }) {
       style={{ width: 64, height: 64, background: `radial-gradient(circle at 35% 30%, ${accent}, ${BRAND_COLORS.softUltraviolet} 70%, ${BRAND_COLORS.obsidianBlack})`, boxShadow: `0 0 18px ${accent}55` }}
       aria-hidden
     >
-      <span className="font-display font-bold text-white" style={{ fontSize: 26 }}>{initial}</span>
+      <span className="font-display font-bold text-ion-white" style={{ fontSize: 26 }}>{initial}</span>
     </div>
   );
 }

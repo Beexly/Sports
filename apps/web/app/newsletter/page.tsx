@@ -21,11 +21,11 @@ export default function NewsletterPage() {
     <div className="flex min-h-screen flex-col">
       <Nav />
       <main id="main-content" className="flex-1">
-        <section className="border-b border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral/40 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <p className="eyebrow">Newsletter</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">The conversion spine for evidence-first sports intelligence.</h1>
-            <p className="mt-5 max-w-3xl text-lg text-ink-300">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">The conversion spine for evidence-first sports intelligence.</h1>
+            <p className="mt-5 max-w-3xl text-lg text-ion-1">
               The newsletter will carry the GSE Board Meeting, market lessons, loss autopsies, and build notes in an owned-audience
               format. No email provider is wired here yet, so this page uses a transparent waitlist state.
             </p>
@@ -42,8 +42,8 @@ export default function NewsletterPage() {
             <div className="mt-8 grid gap-4 md:grid-cols-2">
               {LEAD_MAGNETS.map((magnet) => (
                 <article key={magnet} className="surface-card p-6">
-                  <h2 className="font-display text-2xl text-white">{magnet}</h2>
-                  <p className="mt-3 text-sm leading-7 text-ink-300">
+                  <h2 className="font-display text-2xl text-ion-white">{magnet}</h2>
+                  <p className="mt-3 text-sm leading-7 text-ion-1">
                     Draft-only concept. Final download requires source review, claim scan, and operator approval before publication.
                   </p>
                 </article>

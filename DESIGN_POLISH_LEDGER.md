@@ -26,7 +26,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[✓]` audited, alread
 | 12 | Fantasy core | /fantasy, /fantasy/draft, /fantasy/lineup, /fantasy/waivers, /fantasy/trade | [x] | FantasyShell off BRAND_COLORS w/ semantic accent prop (hex fallback for stragglers); invisible honesty-note contrast fixed (ink-500→ion-2); draft/lineup/waiver/trade boards: plasma-as-negative fixes, emoji removed, FAAB ladder aligned to confidence ladder, tabular numerals. Remaining: bestball-board + other shell consumers (cycle 13) |
 | 13 | Fantasy extended | /fantasy/bestball, /dfs, /props, /contests, /autopilot, /studio, /academy, /scheme, /league-twin, /gm-ledger, /baseline, /connect | [x] | all 12 pages on semantic shell accents, BRAND_COLORS dropped; bestball/dfs/props/dk-import/sleeper-connect boards fully tokenized w/ plasma-as-negative fixes. Remaining debt (self-contained, future cycle): gm-ledger-view, gm-academy, gm-autopilot, league-twin-galaxy, scheme-intel, studio-host/brief components |
 | 14 | Marketing story | /about, /how-we-make-money, /vs/tout-services, /faq, /press, /partners, /media-kit, /contact | [x] | how-we-make-money off BRAND_COLORS/inline styles; ink-500 sub-AA meta fixed across group; press card-border bleed fixed; numerals off display font; copy meaning untouched (525 guard tests) |
-| 15 | Content surfaces | /blog, /journal, /the-beat, /podcast, /newsletter, /gsn, /airwave, /changelog, /case-studies/* | [ ] | |
+| 15 | Content surfaces | /blog, /journal, /the-beat, /podcast, /newsletter, /gsn, /airwave, /changelog, /case-studies/* | [x] | all pages BRAND_COLORS-free; blog paywall card + featured/sport chips re-toned (caution→plasma/UV); journal UV eyebrows; time elements + reading measures; ink-500 contrast failures fixed; empty states bordered. Remaining: dynamic hex tone-maps inside the-beat/galaxy-broadcast/pundit-ledger/transmission components |
 | 16 | Narrative worlds | /house, /academy, /engine, /fable, /human, /deck, /observatory, /intelligence, /cipher, /vault, /content-lab, /integrations, /promotions | [ ] | |
 | 17 | Legal + misc | /terms, /privacy, /responsible-play, /preview/[sport]/[slug] | [ ] | |
 | 18 | Game room + today | /room/[gameId], /today, /brief | [ ] | |
@@ -57,3 +57,4 @@ Pre-verified at bar (session 1 audit): `/` homepage, `/board`, `/pricing`,
 - 2026-07-23 07:05 — Cycle 12 (fantasy core) done: 13 files, 185 targeted + 1,509 guard tests green.
 - 2026-07-23 07:15 — Cycle 13 (fantasy extended) done: 17 files, 197 targeted + 80 tangential tests green.
 - 2026-07-23 07:28 — Cycle 14 (marketing story) done: 8 files, 525 tests green.
+- 2026-07-23 07:40 — Cycle 15 (content surfaces) done: 15 files, 307 targeted + 151 tangential tests green.

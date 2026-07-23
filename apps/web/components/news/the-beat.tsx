@@ -72,7 +72,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
       )}
       {/* tier legend / filter */}
       <div className="surface-card flex flex-wrap items-center gap-3 p-4">
-        <span className="text-[10px] uppercase tracking-[0.18em] text-ink-600">Source tier</span>
+        <span className="text-[10px] uppercase tracking-[0.18em] text-ion-3">Source tier</span>
         <button type="button" onClick={() => setTierFilter("All")}
           aria-pressed={tierFilter === "All"}
           className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider"
@@ -90,7 +90,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
           );
         })}
         <select value={team} onChange={(e) => setTeam(e.target.value)}
-          className="ml-auto rounded-md border bg-transparent px-2 py-1 text-xs text-ink-200"
+          className="ml-auto rounded-md border bg-transparent px-2 py-1 text-xs text-ion-1"
           style={{ borderColor: BRAND_COLORS.steelGray }} aria-label="Filter by team">
           {teams.map((t) => <option key={t} value={t} style={{ color: "#000" }}>{t === "All" ? "All teams" : t}</option>)}
         </select>
@@ -105,33 +105,33 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
             <article key={r.item.id} className="surface-card grid grid-cols-[auto_1fr] gap-3 p-4">
               {/* urgency dial */}
               <div className="flex w-14 flex-col items-center justify-center border-r pr-3" style={{ borderColor: `${BRAND_COLORS.steelGray}90` }}>
-                <span className="font-display text-2xl leading-none" style={{ color: r.urgency >= 55 ? BRAND_COLORS.orbitalCyan : r.urgency >= 25 ? BRAND_COLORS.ionWhite : "#7b8794" }}>{r.urgency}</span>
-                <span className="mt-0.5 text-[8px] uppercase tracking-wider text-ink-600">urgency</span>
+                <span className="font-display text-2xl leading-none" style={{ color: r.urgency >= 55 ? BRAND_COLORS.orbitalCyan : r.urgency >= 25 ? BRAND_COLORS.ionWhite : "var(--ion-3)" }}>{r.urgency}</span>
+                <span className="mt-0.5 text-[8px] uppercase tracking-wider text-ion-3">urgency</span>
               </div>
 
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ color: hex, background: `${hex}1c` }}>{r.item.tier}</span>
-                  <span className="text-xs font-medium text-ink-300">{r.item.source}</span>
-                  <span className="text-[11px] text-ink-600">· {r.item.team}{r.item.player ? ` · ${r.item.player}` : ""}</span>
+                  <span className="text-xs font-medium text-ion-1">{r.item.source}</span>
+                  <span className="text-[11px] text-ion-3">· {r.item.team}{r.item.player ? ` · ${r.item.player}` : ""}</span>
                   {r.corroboration.confirmed && (
                     <span className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.orbitalCyan}1f`, color: BRAND_COLORS.orbitalCyan }} title={r.corroboration.sourceNames.join(" + ")}>
                       ✓ Confirmed · {r.corroboration.sources} sources
                     </span>
                   )}
-                  <span className="ml-auto text-[10px] text-ink-600">{ago(r.item.minutesAgo)}</span>
+                  <span className="ml-auto text-[10px] text-ion-3">{ago(r.item.minutesAgo)}</span>
                 </div>
 
-                <p className="mt-1.5 text-sm font-medium text-white">{r.item.headline}</p>
+                <p className="mt-1.5 text-sm font-medium text-ion-white">{r.item.headline}</p>
 
                 <div
                   className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]"
                   title="These are the impact engine's read of the report (source tier, signal magnitude, freshness), not measured line or projection movement."
                 >
                   <span className="rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.06)", color: "#c8d2dd" }}>{signalLabel(r.item.signal)}</span>
-                  <span className="text-ink-500">{isLive ? "Est. fantasy" : "Fantasy"} <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
-                  <span className="text-ink-500">{isLive ? "Est. market" : "Market"} <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
-                  <span className="text-ink-500">Reliability <strong className="text-white">{Math.round(r.reliability * 100)}%</strong></span>
+                  <span className="text-ion-2">{isLive ? "Est. fantasy" : "Fantasy"} <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
+                  <span className="text-ion-2">{isLive ? "Est. market" : "Market"} <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
+                  <span className="text-ion-2">Reliability <strong className="text-ion-white">{Math.round(r.reliability * 100)}%</strong></span>
                 </div>
 
                 <p className="mt-2 text-[12px] leading-relaxed" style={{ color: "#aeb8c4" }}>
@@ -141,7 +141,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
             </article>
           );
         })}
-        {shown.length === 0 && <div className="surface-card p-6 text-sm text-ink-400">No items match this filter.</div>}
+        {shown.length === 0 && <div className="surface-card p-6 text-sm text-ion-2">No items match this filter.</div>}
       </div>
     </div>
   );

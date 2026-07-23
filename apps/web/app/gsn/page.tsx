@@ -6,7 +6,6 @@ import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { GSNTransmission } from "@/components/gsn/transmission";
 import { SAMPLE_TRANSMISSION } from "@/lib/gsn/transmission";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "GSN · Galaxy Sports Network",
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function GSNPage() {
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
 
@@ -28,19 +27,20 @@ export default function GSNPage() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
             style={{
-              background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.orbitalCyan}16, transparent 70%), radial-gradient(40% 60% at 74% 8%, ${BRAND_COLORS.softUltraviolet}12, transparent 70%)`,
+              background:
+                "radial-gradient(60% 80% at 50% 0%, rgba(0, 229, 255, 0.09), transparent 70%), radial-gradient(40% 60% at 74% 8%, rgba(123, 97, 255, 0.07), transparent 70%)",
             }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span className="live-dot" />
                 Galaxy Sports Network
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1
-                className="mt-5 font-display text-balance text-white"
+                className="mt-5 font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}
               >
                 GSN: the{" "}
@@ -48,7 +48,7 @@ export default function GSNPage() {
               </h1>
             </Reveal>
             <Reveal delay={170}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
+              <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 Every day the engine reads the whole board and files an intelligence briefing:
                 the mirages the crowd is walking into, the roster shocks re-pricing the slate, the
                 coaching edges the market underweights, and last night&apos;s autopsies. Content
@@ -70,14 +70,11 @@ export default function GSNPage() {
         {/* Note */}
         <section className="px-4 pb-24 pt-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div
-              className="mx-auto max-w-3xl rounded-2xl p-8 text-center"
-              style={{ border: `1px solid ${BRAND_COLORS.steelGray}`, background: `linear-gradient(180deg, ${BRAND_COLORS.steelGray}55, transparent)` }}
-            >
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+            <div className="mx-auto max-w-3xl rounded-2xl border border-titanium bg-gradient-to-b from-titanium/35 to-transparent p-8 text-center">
+              <p className="eyebrow text-orbital-cyan">
                 Connected to the engine
               </p>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ink-300">
+              <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ion-1">
                 The sample above shows the format. Live daily transmissions are generated from the
                 real slate once it&apos;s wired behind the readiness gate. Every segment will link
                 straight into the live object it describes, so the story and the data are the same
