@@ -76,6 +76,21 @@ export {
   type DrainSummary,
 } from "./recovery-drainer";
 
+// Track B — formal-receipt detection cron entry point (exactly-once runtime
+// handoff, 2026-07-22). Detection-only: it never calls `admitUnderSRQC` for
+// an admission decision, writes nothing to `ai_invocations`/`ai_attempts`,
+// and grants no authority — it only reads the ledger and writes exactly-once
+// bookkeeping to the existing `processed_event` table plus a structured log
+// line on a detected violation. Exporting it does not widen the sealed
+// executor boundary, same argument as the recovery drainer above.
+export {
+  runFormalReceiptPassProduction,
+  FORMAL_RECEIPT_SINK,
+  FORMAL_RECEIPT_VIOLATION_SINK,
+  type FormalReceiptSummary,
+  type FormalReceiptViolation,
+} from "./formal-receipt-job";
+
 // Validation helpers that are safe to expose (pure, no env/dispatch access).
 export {
   validateInvocationRequest,

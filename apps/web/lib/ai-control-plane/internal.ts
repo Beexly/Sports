@@ -78,6 +78,21 @@ export {
   type MarkProcessedResult,
   type ClaimForProcessingResult,
 } from "./event-ledger";
+// Versioned envelope (exactly-once runtime handoff 2026-07-22, on top of
+// Track A + Track B): durable FormalIncident row-store writers + the
+// human-activated SrqcVersion register. Incident writes reuse Track B's
+// existing processed_event exactly-once gate (see formal-incident.ts and
+// formal-receipt-job.ts) — detection-only, no ENFORCE path.
+export {
+  recordFormalIncident,
+  getActiveSrqcVersion,
+  recordSrqcVersionCandidate,
+  activateSrqcVersion,
+  type FormalIncidentKind,
+  type RecordFormalIncidentInput,
+  type ActiveSrqcVersion,
+  type RecordSrqcVersionCandidateInput,
+} from "./formal-incident";
 export {
   ObservabilitySink,
   claimRecoveryBatch,
