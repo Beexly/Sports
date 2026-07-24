@@ -1,78 +1,63 @@
-# GSE Long-Context Protocol & Coding Agent Handoff
+# GSE Long-Context Protocol & Coding-Agent Handoff
 **Date:** 2026-07-24  
-**Purpose:** Permanent solution to the "conversation is too long" hard limit that has been killing every dense GSE session. This file is the single source of truth that future chats and the coding agent must load first.
+**Purpose:** Permanent solution to repeated "conversation is too long" failures. This file is the single source of truth that every new Grok/Claude/coding-agent session must load first.
 
-## 1. Why the Limit Keeps Happening
+## Why the Limit Keeps Happening
 
-Grok (and most frontier chat platforms) impose a hard token/turn limit on a single conversation.  
-GSE work is extremely dense: recursive repository trees, full TypeScript implementations, multi-agent coordination, statistical proofs, and connector matrices.  
-When a session tries to carry the full prior transcript + new code + new analysis, the limit is hit.  
-This is a platform constraint, not a model failure. The correct response is to **externalize state**.
+Grok (and most LLM chat surfaces) enforce a hard token / turn limit per conversation. GSE work is dense: multi-agent coordination, recursive repository trees, full statistical engines, and long findings quickly exhaust the window. Carrying full prior transcripts is the anti-pattern. External durable state is the only reliable fix.
 
-## 2. Permanent Protocol (use in every new chat)
+## Permanent Protocol (Use Every Time)
 
-**Bootstrap prompt (copy-paste into every new Grok/Claude session):**
+1. **Start every new chat with this exact bootstrap prompt** (copy-paste):
 
 ```
-Continue GSE from durable state. Load first:
-1. docs/ops/GSE_LONG_CONTEXT_PROTOCOL_AND_CODING_AGENT_HANDOFF_2026-07-24.md
-2. docs/ops/CLAUDE_MCP_CONNECTOR_LEVERAGE_2026-07-24.md
-3. packages/prediction-engine (especially edge-lab/selective-gate.ts, conformal-intervals.ts, gse-score/)
-Do not re-summarize history. Work only on the next concrete target listed in the handoff. Coding agent verifies only.
+Continue GSE from docs/ops/GSE_LONG_CONTEXT_PROTOCOL_AND_CODING_AGENT_HANDOFF_2026-07-24.md + docs/ops/CLAUDE_MCP_CONNECTOR_LEVERAGE_2026-07-24.md + latest EXECUTION_LEDGER. Coding agent is verification-only. Do not re-implement statistical engines that already exist. Focus only on the current mission.
 ```
 
-Rules:
-- Never paste large prior transcripts.
-- One mission per chat (or one tightly scoped wave).
-- At the first sign of length pressure, write a short update into this file or a new dated handoff and start a fresh chat with the bootstrap above.
-- Prefer tools (GitHub, Notion, Linear) over chat history.
+2. Never paste full previous transcripts or recursive trees into the chat. Reference the files instead.
+3. When a session is approaching the limit, update this document (or a dated sibling) with the latest decisions and stop. Start a fresh chat using the bootstrap.
+4. All heavy code lives in the monorepo. The coding agent only verifies, wires, and writes tests — never re-codes the core engines from scratch.
 
-## 3. Current Engine Reality (verified 2026-07-24)
+## Current Truth of the Prediction Stack (2026-07-24)
 
-`packages/prediction-engine` is already extremely mature:
+**Already mature and production-oriented:**
+- `packages/prediction-engine/src/conformal-intervals.ts` — Mondrian + adaptive conformal with finite-sample correction
+- `packages/prediction-engine/src/edge-lab/placebo.ts` + walk-forward + selective-gate (No-Bet)
+- `packages/prediction-engine/src/edge-lab/kelly.ts` + CLV modules
+- `packages/prediction-engine/src/pedersen-ledger.ts` + `packages/crypto` Pedersen commitments
+- Extensive calibration, GSE Score, No-Bet Governor, performance-CI, promotion gates
+- Live site: galaxysportsedge.com with Board, Lab, Intelligence, proof receipts
 
-- **Conformal:** `conformal-intervals.ts` (rolling Mondrian + ACI)
-- **Inductive Venn-Abers:** already live inside `edge-lab/selective-gate.ts` via `vennAbersInterval` (uses `isotonicCalibration` from `probability-calibration.ts`)
-- **Selective / No-Bet Gate:** full implementation with Wilson LCB, coverage, disjoint set enforcement, Learn-then-Test tau tuning
-- **Placebo / Walk-forward / Kelly / Pedersen / CLV / GSE Score / Evidence readiness / Promotion gates** — all present with extensive tests
-- **Glass Ledger patterns:** Pedersen commitments, slate commitments, pick-proof receipts, proof-of-record
+**Implemented in this commit (coding agent must verify only):**
+1. `packages/prediction-engine/src/calibration/ivap.ts` — full Inductive Venn-Abers Predictor (binary multiprobability calibration with PAV isotonic regression). Outputs valid (p0, p1) intervals under exchangeability.
+2. `packages/prediction-engine/src/guards/display-substantiated.ts` — pure honesty guard. Refuses any public performance / win-rate / ROI / confidence claim that lacks coverage denominator, Wilson or Clopper-Pearson LCB, CLV backing, and walk-forward provenance. This is the HANDOFF §1 gap that was still open.
 
-The prior session's "findings" largely rediscovered and formalized what is already in the monorepo. The main remaining gap called out by the leverage map is the **display-only-substantiated-results guard**.
+**Still high-value remaining work (coding agent scope):**
+- Wire `assertDisplaySubstantiated` (or the render helper) into every public surface that shows numbers (Board, Intelligence, marketing pages, API responses).
+- Add unit + property tests for IVAP and the display guard.
+- Optional: thin public recompute endpoint that calls the existing Pedersen + recompute-verifier.
+- Phase-0 CI gate that fails the build if placebo / conditional-MI probes fail (most of the logic already exists in edge-lab).
 
-## 4. Coding Agent Handoff (verify only — do not re-implement engines)
+## Coding-Agent Handoff Instructions
 
-### Primary target
-Implement / harden the display-substantiated honesty guard so that no public surface can render a win-rate, ROI, confidence, or "proven" claim unless it carries:
+You are the coding agent. Your job is **verification and wiring only**.
 
-- coverage denominator
-- Wilson or Clopper-Pearson lower confidence bound
-- CLV or walk-forward provenance
-- model / calibration version
+1. Read this file + the two new source files.
+2. Confirm TypeScript compiles and the public exports are correct.
+3. Write or extend tests:
+   - IVAP: empty calibration, extreme scores, monotonicity of isotonic fit, coverage properties on synthetic exchangeable data.
+   - Display guard: must throw / return blocked on any claim missing the required evidence fields; must pass when all fields are present and LCB is acceptable.
+4. Wire the display guard into the render paths that currently emit performance numbers.
+5. Do **not** re-implement conformal, Kelly, Pedersen, placebo, or GSE Score. Those engines already exist and are more sophisticated than a from-scratch rewrite.
+6. When finished, update the checklist in `docs/ops/CLAUDE_MCP_CONNECTOR_LEVERAGE_2026-07-24.md` and leave a short note in EXECUTION_LEDGER.
 
-Location recommendation: `packages/prediction-engine/src/guards/display-substantiated.ts` (or `packages/compliance/`).
+## Bootstrap for Future Human / Grok Sessions
 
-### Secondary targets
-1. Confirm `vennAbersInterval` + selective-gate are exported and used by the No-Bet / GSE Action Score path.
-2. Wire a Phase-0 placebo CI gate (script or GitHub Action) that fails the build on leakage.
-3. Ensure public Board / Lab / Intelligence surfaces call the guard before any numeric claim.
+```
+Continue GSE from docs/ops/GSE_LONG_CONTEXT_PROTOCOL_AND_CODING_AGENT_HANDOFF_2026-07-24.md + docs/ops/CLAUDE_MCP_CONNECTOR_LEVERAGE_2026-07-24.md. Coding agent is verification-only.
+```
 
-### Explicit non-goals for the coding agent
-- Do not re-write conformal, Venn-Abers, Kelly, placebo, or ledger code.
-- Do not invent new mathematical objects unless the guard requires them.
-- Focus on verification, wiring, and tests.
-
-## 5. Highest-Leverage Next Actions (for this or the immediate next chat)
-
-1. Land the display-substantiated guard + unit tests.
-2. Add a simple re-export or thin wrapper if the coding agent needs a cleaner public API for IVAP.
-3. Update CLAUDE.md / AGENTS.md with the bootstrap prompt above.
-4. Create a Linear issue (or GitHub issue) titled "Enforce display-substantiated guard on all public numeric claims".
-
-## 6. How to Keep This Working Forever
-
-- Every dense session ends by appending a short "Session Outcome" section to this file or a dated sibling.
-- New chats always start with the 4-line bootstrap.
-- Coding agents are given only verification + wiring tickets; the heavy statistical intelligence stays in the already-written prediction-engine.
+This is the durable fix. Length limits will still exist, but they will no longer erase progress or force re-explanation of the entire stack.
 
 ---
-*This document is the permanent fix for the length-limit problem. Load it first. Execute the next concrete target. Do not re-accumulate history.*
+*Execute. Do not just describe.*
