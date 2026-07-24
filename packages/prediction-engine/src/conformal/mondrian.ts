@@ -30,6 +30,14 @@ export interface QuantileLookupResult {
 
 function finiteSampleQuantile(values: readonly number[], probability: number): number {
   if (values.length === 0) return 0;
+  // A non-finite probability must be rejected BEFORE it reaches the index
+  // arithmetic. NaN propagates through Math.ceil and survives both Math.max
+  // and Math.min (every comparison against NaN is false), so `index` becomes
+  // NaN, `sorted[NaN]` is `undefined`, and this function returns `undefined`
+  // through a signature that promises `number` — the non-obvious failure the
+  // rest of this module's guards exist to prevent. Finite-but-out-of-range
+  // probabilities are fine: the clamp below already handles them.
+  if (!Number.isFinite(probability)) return 0;
   const sorted = [...values].sort((a, b) => a - b);
   // Split-conformal (n+1) correction for honesty on small samples
   const rank = Math.ceil((sorted.length + 1) * probability);
