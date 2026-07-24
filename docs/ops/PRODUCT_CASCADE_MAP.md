@@ -112,12 +112,25 @@ What keeps a subscriber:
    `multiprobSource` / `taxonomyCategory`, but the Pedersen/ledger-chain
    encoding does not yet record them. Until it does, the honesty metadata is
    in-memory only and not recomputable from the ledger.
-2. **No-Bet not yet rendered.** No live card currently displays the
-   over-wide-interval refusal to a user. This is the highest-value remaining
-   last-mile step: the entitlement exists, the data exists, the UI does not.
-3. **Checkout copy not yet rewritten** to the section-5 ordering.
-4. **Glass Ledger sealed-vault copy** does not yet name the recompute verifier
+2. **Glass Ledger sealed-vault copy** does not yet name the recompute verifier
    path for a reader who wants to check the method before subscribing.
+3. **The selective gate is not wired to the live board.** `/board`'s passes
+   come from the `gate_decisions` table; `applySelectiveGate`'s
+   width/`maxWidthForFire` No-Bet runs in the edge-lab research path only. So
+   the *width-based* refusal reason has no production producer yet. The Board's
+   No-Bet surface is built on the refusals that ARE real (gate decisions), and
+   the width reason slots into the same structure when the gate goes live —
+   deliberately not faked in the meantime.
+
+## Closed since this document was written
+
+- **No-Bet reasoning is rendered.** `/board` shows every pass and its
+  human-readable reason to everyone, and the auditable trail (reason code,
+  confidence at refusal, model version, evidence count) to `canSeeNoBetDetail`
+  holders. Withheld server-side, fail-closed by default.
+- **Checkout copy reordered** to the section-5 ordering. `PRO_FEATURES` and the
+  Pro description now lead with No-Bet reasoning, multiprob intervals, Glass
+  Ledger and recompute; pick volume is demoted below them.
 
 ## NON-CLAIMS
 
