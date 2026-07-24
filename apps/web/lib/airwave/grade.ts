@@ -21,6 +21,25 @@ import type {
   PunditScorecard,
 } from "./types";
 
+/**
+ * Minimum DECIDED calls (hits + misses) before a hit rate may be published as
+ * a headline percentage.
+ *
+ * Mirrors `MIN_HIT_RATE_SAMPLE` in lib/intelligence/hit-rate-display.ts, which
+ * exists for the same reason: at n=3 a single lucky call prints "67%", and a
+ * thin sample dressed as a rate is itself the fabrication however real each
+ * underlying call is.
+ *
+ * This matters more here than on an internal surface. Today /airwave renders
+ * only the fictional DEMO_PUNDITS (see demo-ledger.ts's doctrine note), so no
+ * living person is described by these numbers. But the same component renders
+ * REAL pundits once the founder gate and legal checklist clear — and a
+ * small-n rate attached to a named living person is a reputational claim, not
+ * merely a weak statistic. The floor is therefore enforced here in the pure
+ * scoring layer, before any real data can reach a display.
+ */
+export const MIN_DECIDED_FOR_PUBLISHED_RATE = 25;
+
 /** How much "stake" each confidence band puts on a checkable call. */
 const CONFIDENCE_WEIGHT: Record<ConfidenceBand, number> = {
   EMPHATIC: 1.5,
@@ -96,7 +115,12 @@ export function scorecardFor(pundit: Pundit, allClaims: readonly PunditClaim[]):
   const graded = t.hits + t.misses + t.pushes + t.unfalsifiable;
   const decided = t.hits + t.misses;
   const falsifiableRate = graded === 0 ? 0 : (t.hits + t.misses + t.pushes) / graded;
-  const hitRate = decided === 0 ? null : t.hits / decided;
+  // The rate is only PUBLISHED once the decided-call sample clears the floor.
+  // Below it `hitRate` is null, exactly as it is at zero decided calls, so the
+  // display's existing null branch renders the honest counts instead of a
+  // percentage a single call could swing by double digits.
+  const rateIsPublishable = decided >= MIN_DECIDED_FOR_PUBLISHED_RATE;
+  const hitRate = rateIsPublishable ? t.hits / decided : null;
   // Wilson 95% band on the decided-call hit rate — computed here (pure, server)
   // so the display can never show a small-n rate without its uncertainty.
   const hitRateBandPct =

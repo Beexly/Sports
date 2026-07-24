@@ -146,8 +146,11 @@ export function PunditLedger({
           <span>
             Decided calls:{" "}
             <strong className="text-ion-1">
+              {/* Sub-floor samples arrive here as hitRate === null (grade.ts).
+                  Show the real counts rather than a percentage or a bare dash —
+                  the count is the honest fact; the rate would not be. */}
               {selected.hitRate === null
-                ? "—"
+                ? `${selected.hits} of ${selected.hits + selected.misses} — too few to rate`
                 : `${selected.hits} of ${selected.hits + selected.misses} hit (${Math.round(selected.hitRate * 100)}%)`}
             </strong>
             {selected.hitRateBandPct && (

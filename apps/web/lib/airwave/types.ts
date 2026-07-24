@@ -121,12 +121,21 @@ export type PunditScorecard = {
   readonly pending: number;
   /** Share of graded claims that were actually checkable. 0..1. */
   readonly falsifiableRate: number;
-  /** Hits / (hits + misses). 0..1. `null` when no decided calls yet. */
+  /**
+   * Hits / (hits + misses). 0..1.
+   *
+   * `null` when the rate is NOT publishable — either no decided calls yet, or
+   * the decided-call count is below `MIN_DECIDED_FOR_PUBLISHED_RATE` (see
+   * grade.ts). A sub-floor rate is deliberately never exposed, so consumers
+   * cannot accidentally render it; the null branch must show the honest
+   * decided/total counts instead of a percentage.
+   */
   readonly hitRate: number | null;
   /**
    * Wilson 95% band on the hit rate over DECIDED calls, as percentages 0..100.
-   * `null` when no decided calls. The band travels with the rate so a small-n
-   * hit rate never reads as settled skill.
+   * `null` whenever `hitRate` is null (same publishability rule). The band
+   * travels with the rate so a published hit rate never reads as settled skill
+   * without its uncertainty.
    */
   readonly hitRateBandPct: { readonly low: number; readonly high: number } | null;
   /**
