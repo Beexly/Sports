@@ -7,6 +7,7 @@ import { db } from "@sports/db";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { FollowButton } from "@/components/watchlist/follow-button";
+import { PushAlertOptIn } from "@/components/push/push-alert-opt-in";
 import { listWatchlistEntries } from "@/lib/watchlist/db";
 import { followLimitForTier, isOverFollowLimit } from "@/lib/watchlist/eligibility";
 import type { WatchlistEntry } from "@/lib/watchlist/types";
@@ -201,10 +202,15 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
     <section className="mb-8 rounded-2xl border border-ultraviolet/30 bg-ultraviolet/[0.06] p-6">
       <h2 className="text-sm font-semibold text-ion-white">Graded alerts</h2>
       {canGetAlerts ? (
-        <p className="mt-1.5 text-sm text-ion-1">
-          As an Elite member you&apos;ll get alerts for what you follow — but only once a pick is
-          GRADED (win, loss, push, or void). We never alert on an ungraded tip.
-        </p>
+        <>
+          <p className="mt-1.5 text-sm text-ion-1">
+            As an Elite member you&apos;ll get alerts for what you follow — but only once a pick is
+            GRADED (win, loss, push, or void). We never alert on an ungraded tip.
+          </p>
+          <div className="mt-4">
+            <PushAlertOptIn />
+          </div>
+        </>
       ) : (
         <p className="mt-1.5 text-sm text-ion-1">
           Elite members get real-time email &amp; push alerts when a followed team&apos;s or

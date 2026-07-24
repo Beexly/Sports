@@ -1687,3 +1687,71 @@ This ledger is append-only. It records each slice shipped on the GSE Intelligenc
   claim, no production-readiness claim, no model promotion, no betting use, no probability or expected-value
   claim, no production interval-calibration claim, no raw odds/tracking export, no package/dependency change,
   no live AWS/cloud/service action, and no prediction gate flip.
+
+## 2026-07-24 - (claude) - IVAP + display-substantiated guard: verify, test, wire
+
+- WHAT: Coding-agent verification+wiring pass per `docs/ops/GSE_LONG_CONTEXT_PROTOCOL_AND_CODING_AGENT_HANDOFF_2026-07-24.md`.
+  Confirmed `packages/prediction-engine/src/calibration/ivap.ts` (Inductive Venn-Abers, PAV isotonic) and
+  `packages/prediction-engine/src/guards/display-substantiated.ts` (the honesty guard) compile and export
+  correctly; re-exported both from the package barrel. Found and fixed a real validation bug: a `NaN`
+  `boundLevel` silently passed `collectFailures` (both `NaN < 0.8` and `NaN > 1` are `false`) — added an
+  explicit `Number.isFinite` check. Added 37 unit tests across the two modules (empty calibration, extreme
+  scores, monotonicity, synthetic-exchangeable coverage, width-vs-sample-size; missing/invalid-field
+  blocking, rate/LCB consistency, `wilsonLowerBound` reference value). Ran a 4-agent gap audit across
+  Board/Intelligence, Lab, Marketing/proof-receipt, and API/CLV/ROI surfaces before wiring anything, to avoid
+  duplicating the mature guards already in place (`evaluatePublicPerformancePolicy`, `lib/ledger/display-guard.ts`,
+  `lib/intelligence/hit-rate-display.ts`, `lib/performance/public-clv-policy.ts`/`public-roi-policy.ts`,
+  `lib/claims/public-claim-compiler.ts`). Found and fixed 3 confirmed live gaps where a rendered page was
+  already correctly gated but its raw public JSON API export was not: `/api/calibration` (bucket
+  `observedWinRate`/`delta` below the publish floor), `/api/intelligence/predictiveness` (per-split
+  `buyLowHitRate`/`sellHighHitRate` below `MIN_HIT_RATE_SAMPLE`), and `/api/intelligence/clv-calibration`
+  (`beatCloseRate`/`meanClv` plus a directional `note` below the same floor). Each fix redacts only at the
+  public-serialization boundary, reusing the codebase's own existing sample-floor constants — never inside
+  the shared "compute" functions, which internal consumers (proposals engine, `predictiveness.test.ts`'s
+  designed-data assertions, `clv-calibration.test.ts`'s exact n=1/n=3 assertions) rely on for the raw value.
+  Also mounted `PushAlertOptIn` (built/tested but previously unmounted) into the watchlist page's Elite
+  `AlertsBanner` — the natural follow-loop surface — with no change to its gating states or the server-side
+  `WATCHLIST_ALERTS_ENABLED` kill switch. Investigated (read-only) the "previously flagged binary-corrupted"
+  `packages/prediction-engine/src/edge-lab/asof-store.ts`: confirmed it is one intentional literal NUL byte
+  used as a `Map` key separator, not corruption; left unchanged. Took a read-only inventory of the 19 open
+  draft-PR disposition backlog; took no merge/close action per the non-goal.
+- FILES: `packages/prediction-engine/src/guards/display-substantiated.ts`,
+  `packages/prediction-engine/src/guards/__tests__/display-substantiated.test.ts`,
+  `packages/prediction-engine/src/calibration/__tests__/ivap.test.ts`, `packages/prediction-engine/src/index.ts`,
+  `apps/web/app/api/calibration/route.ts`, `apps/web/__tests__/calibration-public-api-redaction.test.ts`,
+  `apps/web/app/api/intelligence/predictiveness/route.ts`,
+  `apps/web/lib/intelligence/predictiveness-public-redaction.test.ts`,
+  `apps/web/app/api/intelligence/clv-calibration/route.ts`,
+  `apps/web/lib/intelligence/clv-calibration-public-redaction.test.ts`, `apps/web/app/watchlist/page.tsx`,
+  `docs/ops/CLAUDE_MCP_CONNECTOR_LEVERAGE_2026-07-24.md`, and this execution ledger.
+- GATE: new/focused tests passed (37 IVAP+guard tests; 4 calibration-redaction tests; 7 predictiveness-redaction
+  tests; 7 CLV-calibration-redaction tests). Full `prediction-engine` Vitest passed (153 files, 1535 tests).
+  Full `apps/web` Vitest passed (682 files, 9565 tests, 12 files intentionally skipped). Root typecheck passed
+  across all 13 workspaces. Root lint (`apps/web` eslint, `--max-warnings=0`) passed. Root `guardrails` passed
+  all 19 checks, including `guard:performance-claims`. `git diff --check` passed.
+- FLAG: no runtime feature flag changed; no model-version bump; no live AWS/cloud/service action; no new
+  package/dependency added (only a `package-lock.json` metadata refresh from `npm install`); no merge/close
+  action on the open draft-PR backlog; no change to `asof-store.ts`, `evaluatePublicPerformancePolicy`,
+  `ledger/display-guard.ts`, or any other existing/mature engine or gate.
+- DECISIONS: Did not force the three API-boundary fixes through the new guard's full `DisplayClaim`/
+  `SubstantiationEvidence` contract (`provenanceId`, `walkForwardProtocol`) — none of the three data shapes
+  carry genuine walk-forward provenance metadata in that exact form, and synthesizing it just to satisfy the
+  contract would itself be a small dishonesty. Reused the codebase's own already-established, already-tested
+  sample-floor constants (`MIN_PUBLISH_BUCKET_SAMPLE`, `MIN_HIT_RATE_SAMPLE`) at the serialization boundary
+  instead — same principle as `display-substantiated.ts`, applied with the tool already fit for each shape.
+  Left `evaluatePublicPerformancePolicy`, `ledger/display-guard.ts`, and `hit-rate-display.ts` untouched —
+  each is already mature, heavily tested, and correctly wired into its rendered surface.
+- NEXT: two latent (not-yet-live) gaps for whoever wires them up: `lib/performance/clv-anchor.ts`'s
+  `rollupAnchorClv()` and `lib/tracker/clv.ts`'s `publicClvArtifact()` compute ungated aggregate CLV numbers
+  but are called only from their own test files today — harden before connecting either to a live route/page.
+  Lower-priority: `lib/calibration/elo-backtest.ts`/`market-backtest.ts` (public, unrendered, no sample floor)
+  and `app/api/performance/route.ts` (has a floor but no Wilson LCB; a pinned test already special-cases its
+  intentional duplication of `public-performance-policy.ts`, so any change there needs a deliberate call, not
+  a unilateral one). Fantasy Engine 10x (Task #13, standing mandate) and the 19-PR draft-disposition backlog
+  were not attempted this session — both are separate bodies of work needing their own founder-directed pass.
+- BLOCKED-ON-HUMAN: the draft-PR disposition backlog (#204, #203, #202, #201, #190, #180, #154, #153, #151,
+  #150, #146, #130, #129, #127, #125, #112 draft; #124, #123, #121, #52 ready) needs founder-directed,
+  one-at-a-time evaluation against current `main` — explicitly not a bulk-merge/close action for this agent.
+  Fantasy Engine Late-Swap slice specifically needs a frozen contract before any port (the stranded source
+  branch has inverted lock/scratch semantics vs. the landed lineage and references a `LateSwapResult` type
+  that doesn't exist on it) — a founder/architecture decision, not a mechanical port.

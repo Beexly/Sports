@@ -216,6 +216,32 @@ export type {
   ReliabilityBin,
 } from "./probability-calibration.js";
 
+// Inductive Venn-Abers Predictor (IVAP) — distribution-free multiprobability
+// calibration (PAV isotonic regression) for binary outcomes. Distinct from
+// the Mondrian-stratified `vennAbersInterval` in ./edge-lab/selective-gate.js
+// (the No-Bet gate's own calibration path) — this is the general-purpose
+// primitive; do not merge the two.
+export { InductiveVennAbers, fitIvap, ivapPredict } from "./calibration/ivap.js";
+export type { IvapCalibrationPoint, IvapPrediction } from "./calibration/ivap.js";
+
+// Display-Substantiated Honesty Guard — the pure enforcement point for the
+// "no public performance claim without coverage n + LCB + provenance +
+// walk-forward protocol" rule. Server/data paths should call
+// `assertDisplaySubstantiated` (throws); pure render paths may prefer the
+// soft `isDisplaySubstantiated` / `displayIfSubstantiated` helpers.
+export {
+  isDisplaySubstantiated,
+  assertDisplaySubstantiated,
+  displayIfSubstantiated,
+  wilsonLowerBound,
+  UnsubstantiatedClaimError,
+} from "./guards/display-substantiated.js";
+export type {
+  ConfidenceBoundMethod,
+  SubstantiationEvidence,
+  DisplayClaim,
+} from "./guards/display-substantiated.js";
+
 // R&D — parametric calibration maps (Platt, Beta) + cross-validated selection
 // across calibrator families (the honest fix for "isotonic by fiat"). Composes
 // the isotonic/ECE toolkit above; equal-mass ECE for robust small-fold scoring.

@@ -76,7 +76,7 @@ function collectFailures(claim: DisplayClaim): string[] {
   if (!Number.isFinite(e.lowerConfidenceBound)) {
     reasons.push("lowerConfidenceBound must be a finite number");
   }
-  if (e.boundLevel < MIN_BOUND_LEVEL || e.boundLevel > 1) {
+  if (!Number.isFinite(e.boundLevel) || e.boundLevel < MIN_BOUND_LEVEL || e.boundLevel > 1) {
     reasons.push(`boundLevel must be in [${MIN_BOUND_LEVEL}, 1] (got ${e.boundLevel})`);
   }
   if (!e.boundMethod) {
