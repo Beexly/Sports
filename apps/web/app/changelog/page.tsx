@@ -35,10 +35,10 @@ const TYPE_LABEL: Record<Entry["type"], string> = {
 
 const TYPE_COLOR: Record<Entry["type"], string> = {
   launch: "text-plasma-glow border-plasma-glow",
-  ship: "text-accent-300 border-accent-700",
+  ship: "text-ion-blue-glow border-ion-blue/40",
   gate: "text-ultraviolet border-ultraviolet/40",
   calibration: "text-ultraviolet border-ultraviolet/40",
-  voice: "text-ink-200 border-ink-700",
+  voice: "text-ion-1 border-mineral",
 };
 
 const ENTRIES: ReadonlyArray<Entry> = [
@@ -100,10 +100,10 @@ export default function ChangelogPage() {
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Changelog</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">
               What changed, when, and why.
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-ink-300">
+            <p className="mt-5 max-w-2xl text-lg text-ion-1">
               Every model version, every gate flip, every calibration update
               logged publicly. {BRAND_NAME} runs on transparency, which means
               the velocity of the product has to be transparent too.
@@ -111,15 +111,18 @@ export default function ChangelogPage() {
           </div>
         </section>
 
-        <section className="border-t border-ink-800/60 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral/40 px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <ol className="flex flex-col gap-12">
               {grouped.map(([date, entries]) => (
                 <li key={date} className="grid gap-6 md:grid-cols-[140px_1fr]">
                   <div className="md:sticky md:top-24 md:self-start">
-                    <p className="font-mono text-xs uppercase tracking-widest text-ink-500">
+                    <time
+                      dateTime={date}
+                      className="font-mono text-xs uppercase tracking-widest text-ion-2"
+                    >
                       {formatDate(date)}
-                    </p>
+                    </time>
                   </div>
 
                   <div className="flex flex-col gap-6">
@@ -135,10 +138,10 @@ export default function ChangelogPage() {
                             {TYPE_LABEL[entry.type]}
                           </span>
                         </div>
-                        <h2 className="font-display text-xl font-semibold text-white">
+                        <h2 className="font-display text-xl font-semibold text-ion-white">
                           {entry.title}
                         </h2>
-                        <p className="text-sm leading-relaxed text-ink-300">
+                        <p className="text-sm leading-relaxed text-ion-1">
                           {entry.body}
                         </p>
                       </article>
@@ -148,11 +151,11 @@ export default function ChangelogPage() {
               ))}
             </ol>
 
-            <p className="mt-12 border-t border-ink-800/60 pt-6 text-center text-xs text-ink-500">
+            <p className="mt-12 border-t border-mineral/40 pt-6 text-center text-xs text-ion-2">
               Updates ship weekly.{" "}
               <Link
                 href="/auth/signin"
-                className="text-accent-300 underline-offset-4 hover:underline"
+                className="text-orbital-cyan underline-offset-4 hover:underline"
               >
                 Create a free account
               </Link>{" "}

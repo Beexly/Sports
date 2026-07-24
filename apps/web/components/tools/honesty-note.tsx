@@ -14,8 +14,8 @@ export interface HonestyNoteProps {
 
 export function HonestyNote({ children, className = "" }: HonestyNoteProps): JSX.Element {
   return (
-    <p data-testid="honesty-note" className={`text-xs leading-5 text-ink-300 ${className}`}>
-      <span className="font-semibold text-white">Honest note: </span>
+    <p data-testid="honesty-note" className={`text-xs leading-5 text-ion-1 ${className}`}>
+      <span className="font-semibold text-ion-white">Honest note: </span>
       {children}
     </p>
   );

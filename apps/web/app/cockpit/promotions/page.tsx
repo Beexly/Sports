@@ -43,7 +43,7 @@ export default async function CockpitPromotionsPage() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <p className="text-xs font-semibold uppercase tracking-widest text-brand-400">
+        <p className="text-xs font-semibold uppercase tracking-widest text-plasma">
           Bobby · Promotions queue
         </p>
         <h1 className="text-2xl font-bold text-ion-white">Sportsbook promotions</h1>
@@ -73,7 +73,7 @@ export default async function CockpitPromotionsPage() {
           </p>
         </div>
       ) : (
-        <table className="w-full text-left text-xs">
+        <table aria-label="Sportsbook promotions — status, compliance, and publish gate per row" className="w-full text-left text-xs">
           <thead className="border-b border-titanium/40 text-[10px] uppercase tracking-widest text-ion-3">
             <tr>
               <th scope="col" className="py-2 pr-3">Operator</th>
@@ -99,7 +99,7 @@ export default async function CockpitPromotionsPage() {
                   <td className="py-2 pr-3">
                     <Link
                       href={`/cockpit/promotions/${p.slug}`}
-                      className="text-brand-400 hover:underline"
+                      className="text-plasma hover:underline"
                     >
                       {p.headline}
                     </Link>
@@ -111,9 +111,9 @@ export default async function CockpitPromotionsPage() {
                   </td>
                   <td className="py-2 pr-3">
                     {verdict.publishable ? (
-                      <span className="text-green-400">YES</span>
+                      <span className="text-verify">YES</span>
                     ) : (
-                      <span className="text-yellow-400">NO</span>
+                      <span className="text-caution">NO</span>
                     )}
                   </td>
                   <td className="py-2 pr-3 text-ion-3">

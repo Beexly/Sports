@@ -22,8 +22,8 @@ import {
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 const STAGE_TONE: Record<StageStatus, string> = {
-  YES: "border-green-900 bg-green-950/40 text-green-300",
-  PARTIAL: "border-amber-900 bg-amber-950/40 text-amber-300",
+  YES: "border-verify bg-verify/40 text-verify",
+  PARTIAL: "border-caution bg-caution/40 text-caution",
   NO: "border-titanium bg-carbon/60 text-ion-3",
 };
 
@@ -50,7 +50,7 @@ function SystemRow({ s }: { s: SystemEntry }) {
           <StageBadge label="Proven" status={s.provenStatus} />
           <StageBadge label="Public-safe" status={s.publicSafeStatus} />
           {!publicSafeOk && (
-            <span className="rounded-md border border-red-900 bg-red-950/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-300">
+            <span className="rounded-md border border-alert bg-alert/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-alert">
               rule violation
             </span>
           )}
@@ -58,7 +58,7 @@ function SystemRow({ s }: { s: SystemEntry }) {
       </div>
 
       {s.ownerGate && (
-        <p className="mt-2 text-[11px] text-amber-300/90">
+        <p className="mt-2 text-[11px] text-caution/90">
           <span className="font-semibold uppercase tracking-wider">Owner gate:</span> {s.ownerGate}
         </p>
       )}
@@ -88,9 +88,9 @@ function LifecycleRollupTile({ systems }: { systems: readonly SystemEntry[] }) {
   const STAGE_TONE: Record<LifecycleStage, string> = {
     Draft: "border-titanium bg-carbon/60 text-ion-2",
     Verified: "border-ultraviolet/30 bg-obsidian/50 text-ion-1",
-    Priced: "border-amber-900 bg-amber-950/30 text-amber-300",
-    Published: "border-orbital-cyan/40 bg-accent-950/20 text-accent-400",
-    Proven: "border-green-900 bg-green-950/40 text-green-300",
+    Priced: "border-caution bg-caution/30 text-caution",
+    Published: "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan",
+    Proven: "border-verify bg-verify/40 text-verify",
   };
 
   return (
@@ -154,8 +154,8 @@ export default function CockpitIntegrityPage() {
       <div
         className={`rounded-lg border px-4 py-2 text-xs ${
           violations.length === 0
-            ? "border-green-900 bg-green-950/30 text-green-200"
-            : "border-red-900 bg-red-950/30 text-red-200"
+            ? "border-verify bg-verify/30 text-verify"
+            : "border-alert bg-alert/30 text-alert"
         }`}
       >
         {violations.length === 0

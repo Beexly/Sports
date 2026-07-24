@@ -12,7 +12,7 @@ export default function Page({ searchParams }: { searchParams?: { status?: strin
   const filtered = status === "all" ? sources : sources.filter(s => String(s.legal_gate_status ?? "").includes(status));
 
   return (
-    <Shell title="Source Universe">
+    <Shell title="Source Universe" eyebrow="Data origin">
       <StatusRibbon status="fixture" label="Source registry updated regularly" />
       <InsightCard
         eyebrow="Data Rights System"
@@ -27,7 +27,7 @@ export default function Page({ searchParams }: { searchParams?: { status?: strin
         { label: "Next actions", value: sources.filter(s => s.next_action).length }
       ]} />
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Filter by legal gate status</p>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Filter by legal gate status</p>
         <FilterBar
           options={[
             { label: "All", value: "all" },
@@ -40,8 +40,11 @@ export default function Page({ searchParams }: { searchParams?: { status?: strin
           paramName="status"
         />
       </div>
-      <div>
-        <SectionHeader title="Source Registry" />
+      <div className="space-y-4">
+        <SectionHeader title="Source registry" />
+        <p className="text-xs text-ion-2 tabular-nums">
+          Showing {Math.min(filtered.length, 100)} of {sources.length} tracked sources{status !== "all" ? ` (filter: ${status})` : ""}.
+        </p>
         <DataTable
           rows={filtered.slice(0, 100).map(s => {
             const gate = String(s.legal_gate_status ?? "");
@@ -62,6 +65,7 @@ export default function Page({ searchParams }: { searchParams?: { status?: strin
             };
           })}
           maxRows={100}
+          caption="Tracked data sources with source mode, legal gate status, rights clarity, next action, and priority score"
         />
       </div>
     </Shell>

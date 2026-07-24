@@ -9,6 +9,7 @@
 import type { Metadata } from "next";
 import { WaitlistForm } from "@/components/gsn/waitlist-form";
 import { WAITLIST_COPY, BACKTEST_TRANSPARENCY } from "@/lib/gse/waitlist-copy";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
   title: "Founding Decision-Process Lane · GSE",
@@ -18,24 +19,33 @@ export const metadata: Metadata = {
 
 export default function WaitlistPage(): JSX.Element {
   return (
-    <main id="main-content" className="mx-auto max-w-2xl px-4 py-12">
-      <p className="text-sm uppercase tracking-wide text-white/60">{WAITLIST_COPY.eyebrow}</p>
-      <h1 className="mt-2 text-3xl font-semibold">{WAITLIST_COPY.headline}</h1>
-      <p className="mt-2 text-lg text-white/80">{WAITLIST_COPY.subhead}</p>
+    <div className="relative isolate min-h-screen overflow-hidden bg-obsidian text-ion-white">
+      {/* Atmosphere — calm deep-space plate, decorative only */}
+      <GeneratedPlate assetId="intro-galaxy" className="-z-10 opacity-20" />
 
-      <div className="mt-6 space-y-3 text-white/80">
-        {WAITLIST_COPY.body.map((line) => (
-          <p key={line}>{line}</p>
-        ))}
-      </div>
+      <main id="main-content" className="mx-auto w-full max-w-2xl px-4 py-16 sm:px-6">
+        <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+          {WAITLIST_COPY.eyebrow}
+        </p>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight text-ion-white sm:text-4xl">
+          {WAITLIST_COPY.headline}
+        </h1>
+        <p className="mt-3 text-lg leading-relaxed text-ion">{WAITLIST_COPY.subhead}</p>
 
-      <aside className="mt-6 rounded-lg border border-white/15 bg-white/5 p-4 text-sm text-white/75">
-        {BACKTEST_TRANSPARENCY}
-      </aside>
+        <div className="mt-6 space-y-3 text-sm leading-6 text-ion-1 sm:text-base sm:leading-7">
+          {WAITLIST_COPY.body.map((line) => (
+            <p key={line}>{line}</p>
+          ))}
+        </div>
 
-      <section className="mt-8">
-        <WaitlistForm />
-      </section>
-    </main>
+        <aside className="surface-card mt-8 p-5 text-sm leading-6 text-ion-1">
+          {BACKTEST_TRANSPARENCY}
+        </aside>
+
+        <section className="mt-10 border-t border-mineral pt-8">
+          <WaitlistForm />
+        </section>
+      </main>
+    </div>
   );
 }

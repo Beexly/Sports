@@ -76,6 +76,10 @@ const config: Config = {
         "plasma-on-light":       "#B0118C", // 5.98:1 on paper — text accent
         "orbital-cyan-on-light": "#06748A", // 5.11:1 on paper — text accent
         "ultraviolet-on-light":  "#5B43C9", // 6.40:1 on paper — text accent
+        // Semantic-on-light — verify/alert/caution darkened for AA on paper.
+        "verify-on-light":       "#0B6B46", // 6.17:1 on paper — text accent
+        "alert-on-light":        "#C0122F", // 5.87:1 on paper — text accent
+        "caution-on-light":      "#9A4D00", // 5.76:1 on paper — text accent
 
         // ── PRIMARY SIGNAL — ion magenta ──────────────────
         plasma: {
@@ -174,10 +178,13 @@ const config: Config = {
           950:  "#070A11",
           1000: "#05070B",
         },
+        // Repointed to canonical --conf-* hexes (design-tokens.css) — was
+        // drifted (#FF3BC7 vs canonical plasma #FF38C7) and unused; kept as
+        // a legacy 3-tier alias so it can't silently diverge again.
         confidence: {
-          high: "#FF3BC7",     // ion magenta — elite
-          mid:  "#7B61FF",     // ultraviolet — strong
-          low:  "#98A3B5",     // ion-1 — lean
+          high: "#FF38C7",     // = --conf-elite (plasma)
+          mid:  "#7B61FF",     // = --conf-solid (ultraviolet)
+          low:  "#AEB7D2",     // = --conf-lean (ion-1)
         },
         risk: {
           low:  "#5FD9A3",

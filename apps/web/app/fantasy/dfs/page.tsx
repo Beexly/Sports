@@ -3,7 +3,6 @@ import Link from "next/link";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "DFS Suite: Salary Board + Optimizer · Galaxy Fantasy",
@@ -30,7 +29,7 @@ export default async function DfsSuitePage() {
   return (
     <FantasyShell
       eyebrow="DFS Suite · Salary Board + Optimizer"
-      accent={BRAND_COLORS.orbitalCyan}
+      accent="cyan"
       title={<>Solve the slate. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
       intro="Salaries and the optimizer live in one room because they're one decision. The board shows what the field costs; the optimizer turns it into cash, GPP, or leverage lineups: QB stacking, locks and fades, unique portfolios with real exposure control. Every lineup ships with its salary, stack, field-ownership, and a leverage score."
       note="Illustrative classic-format sample pool drives the optimizer until a licensed salary feed is connected. Salary-cap optimization, stacking, exposure, and leverage are computed live in your browser."
@@ -41,7 +40,7 @@ export default async function DfsSuitePage() {
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="font-display text-xl font-semibold text-ion-white">Salary board</h2>
           {live ? (
-            <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: BRAND_COLORS.orbitalCyan }}>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-orbital-cyan">
               DraftKings · {dfs!.date} · {dfs!.rows.length} salaries
             </span>
           ) : (

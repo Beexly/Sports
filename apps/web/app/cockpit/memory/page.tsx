@@ -167,9 +167,9 @@ function toMemoryRow(r: {
 // ── Styling helpers ───────────────────────────────────────────────────────────
 
 function confidenceClass(c: number): string {
-  if (c >= 80) return "text-green-400";
-  if (c >= 50) return "text-amber-400";
-  return "text-rose-400";
+  if (c >= 80) return "text-verify";
+  if (c >= 50) return "text-caution";
+  return "text-alert";
 }
 
 function sensitivityClass(s: string): string {
@@ -178,7 +178,7 @@ function sensitivityClass(s: string): string {
     case "legal":
     case "hr":
     case "spend":
-      return "bg-rose-900/30 text-rose-300";
+      return "bg-alert/20 text-alert";
     default:
       return "bg-obsidian/70 text-ion-2";
   }
@@ -187,13 +187,13 @@ function sensitivityClass(s: string): string {
 function stateClass(state: string): string {
   switch (state) {
     case "confirmed":
-      return "border-green-500/40 bg-green-500/10 text-green-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "candidate":
-      return "border-blue-500/40 bg-blue-500/10 text-blue-300";
+      return "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan";
     case "conflicted":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "stale":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
@@ -269,7 +269,7 @@ function MemoryCard({
             <input type="hidden" name="id" value={row.id} />
             <button
               type="submit"
-              className="rounded-md border border-green-700/40 bg-green-900/20 px-3 py-1 text-[11px] font-semibold text-green-300 hover:bg-green-900/40"
+              className="rounded-md border border-verify/40 bg-verify/20 px-3 py-1 text-[11px] font-semibold text-verify hover:bg-verify/40"
             >
               Confirm
             </button>
@@ -278,7 +278,7 @@ function MemoryCard({
             <input type="hidden" name="id" value={row.id} />
             <button
               type="submit"
-              className="rounded-md border border-rose-700/40 bg-rose-900/20 px-3 py-1 text-[11px] font-semibold text-rose-300 hover:bg-rose-900/40"
+              className="rounded-md border border-alert/40 bg-alert/10 px-3 py-1 text-[11px] font-semibold text-alert hover:bg-alert/20"
             >
               Reject
             </button>
@@ -321,7 +321,7 @@ export default async function CockpitMemoryPage(): Promise<JSX.Element> {
         {dbUnavailable && (
           <p
             data-testid="memory-db-unavailable"
-            className="rounded-md border border-amber-700/40 bg-amber-900/20 px-3 py-2 text-xs text-amber-300"
+            className="rounded-md border border-caution/40 bg-caution/20 px-3 py-2 text-xs text-caution"
           >
             Memory store unavailable. Showing structure only — no live data.
           </p>

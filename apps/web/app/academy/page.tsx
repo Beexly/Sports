@@ -21,7 +21,6 @@ import {
 import { HoloTilt } from "@/components/motion/holo-tilt";
 import { ShootingStars } from "@/components/motion/shooting-stars";
 import { SignalRule } from "@/components/motion/signal-rule";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "The Academy: Tracks, Live Fire, and Beat the Close",
@@ -30,21 +29,21 @@ export const metadata: Metadata = {
   alternates: { canonical: "/academy" },
 };
 
-const cyan = BRAND_COLORS.orbitalCyan;
-const uv = BRAND_COLORS.softUltraviolet;
-const mag = BRAND_COLORS.ionMagenta;
-
-/** The wings of the Academy — every door on this floor is real. */
+/**
+ * Wing accents — canonical token hexes (styles/design-tokens.css). Kept as
+ * literals (not var() refs) because they feed hex+alpha template styles below.
+ * Film Room wears the muted --ion-3 while the wing is in production.
+ */
 const WINGS = [
-  { id: "courses", label: "Course Floor", desc: "Interactive lessons + graded quizzes", hex: cyan },
-  { id: "live-fire", label: "Live Fire", desc: "Decide blind, graded on process", hex: mag },
-  { id: "beat-the-close", label: "Beat the Close", desc: "The line-trading arcade", hex: uv },
-  { id: "film-room", label: "Film Room", desc: "Filmed lessons, in production", hex: "#8b93a8" },
+  { id: "courses", label: "Course Floor", desc: "Interactive lessons + graded quizzes", hex: "#00E5FF" }, // --orbital-cyan
+  { id: "live-fire", label: "Live Fire", desc: "Decide blind, graded on process", hex: "#FF38C7" }, // --plasma
+  { id: "beat-the-close", label: "Beat the Close", desc: "The line-trading arcade", hex: "#7B61FF" }, // --ultraviolet
+  { id: "film-room", label: "Film Room", desc: "Filmed lessons, in production", hex: "#8B97AB" }, // --ion-3
 ] as const;
 
 export default function AcademyPage() {
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
 
@@ -56,18 +55,21 @@ export default function AcademyPage() {
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: `radial-gradient(60% 80% at 50% 0%, ${uv}18, transparent 70%), radial-gradient(40% 60% at 72% 8%, ${cyan}12, transparent 70%)` }}
+            style={{
+              background:
+                "radial-gradient(60% 80% at 50% 0%, rgba(123, 97, 255, 0.09), transparent 70%), radial-gradient(40% 60% at 72% 8%, rgba(0, 229, 255, 0.07), transparent 70%)",
+            }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: cyan }}>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span className="live-dot" />
                 The Academy
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1
-                className="mt-5 font-display text-balance text-white"
+                className="mt-5 font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.02em" }}
               >
                 Train on the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>process</span>, not the luck.
@@ -116,8 +118,8 @@ export default function AcademyPage() {
         <section id="courses" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: cyan }}>course floor</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-white">
+              <p className="eyebrow text-orbital-cyan">course floor</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
                 Lessons that quiz back.
               </h2>
               <AcademyCourseSectionBody />
@@ -150,8 +152,8 @@ export default function AcademyPage() {
         <section id="live-fire" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: mag }}>live fire</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-white">
+              <p className="eyebrow text-plasma">live fire</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
                 Decide blind. Get graded on the decision.
               </h2>
               <AcademyLiveFireBody />
@@ -170,8 +172,8 @@ export default function AcademyPage() {
         <section id="beat-the-close" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: uv }}>the arcade</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-white">
+              <p className="eyebrow text-ultraviolet">the arcade</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
                 Beat the Close.
               </h2>
               <AcademyBeatTheCloseBody />
@@ -189,7 +191,7 @@ export default function AcademyPage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow text-ion-2">film room</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-white">
+              <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
                 The filmed curriculum, in production.
               </h2>
               <p className="mt-3 max-w-2xl text-ion-1">

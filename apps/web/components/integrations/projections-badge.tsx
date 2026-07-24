@@ -8,7 +8,6 @@
 
 import Link from "next/link";
 import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
-import { BRAND_COLORS } from "@/lib/brand";
 
 /** Relative "refreshed Xm/Xh/Xd ago" from an ISO timestamp. Null when absent/invalid. */
 function freshnessLabel(fetchedAt?: string): string | null {
@@ -25,21 +24,25 @@ function freshnessLabel(fetchedAt?: string): string | null {
 export function ProjectionsBadge() {
   const meta = getLiveProjectionsMeta();
   const live = meta.live;
-  const hex = live ? BRAND_COLORS.orbitalCyan : "#E0A800";
   const fresh = live ? freshnessLabel(meta.fetchedAt) : null;
+  // Live = orbital cyan (data signal). Not live = caution (incomplete data) —
+  // semantic tokens only; never plasma for a degraded/absent state.
+  const tone = live
+    ? { box: "border-orbital-cyan/25 bg-orbital-cyan/5", dot: "bg-orbital-cyan", text: "text-orbital-cyan" }
+    : { box: "border-caution/25 bg-caution/5", dot: "bg-caution", text: "text-caution" };
   return (
-    <div className="inline-flex flex-wrap items-center gap-2 rounded-full border px-3 py-1.5 text-[11px]" style={{ borderColor: `${hex}44`, background: `${hex}0c` }}>
-      <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: hex }} />
-      <span style={{ color: hex }}>{live ? "Projections: live" : "Projections: illustrative"}</span>
+    <div className={`inline-flex flex-wrap items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] ${tone.box}`}>
+      <span aria-hidden="true" className={`inline-block h-1.5 w-1.5 rounded-full ${tone.dot}`} />
+      <span className={tone.text}>{live ? "Projections: live" : "Projections: illustrative"}</span>
       {live ? (
-        <span className="text-ink-500">
+        <span className="text-ion-2">
           {fresh ? `· ${fresh}` : ""}
           {meta.attribution ? ` · ${meta.attribution}` : " · licensed source wired"}
         </span>
       ) : (
-        <span className="text-ink-500">· a licensed source is founder-gated</span>
+        <span className="text-ion-2">· a licensed source is founder-gated</span>
       )}
-      <Link href="/integrations" className="underline" style={{ color: BRAND_COLORS.softUltraviolet }}>Data status →</Link>
+      <Link href="/integrations" className="text-ultraviolet underline underline-offset-2 hover:text-ultraviolet-glow">Data status →</Link>
     </div>
   );
 }

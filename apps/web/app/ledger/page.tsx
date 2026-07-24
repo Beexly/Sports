@@ -7,12 +7,14 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { ProofOfRecord } from "@/components/trust-ledger/proof-of-record";
 import { buildProofDemo } from "@/lib/trust-ledger/proof-demo";
 import { Reveal } from "@/components/motion/reveal";
-import { BRAND_COLORS } from "@/lib/brand";
 
-const RESULT_HEX: Record<string, string> = {
-  WIN: BRAND_COLORS.orbitalCyan,
-  LOSS: BRAND_COLORS.ionMagenta,
-  PUSH: BRAND_COLORS.softUltraviolet,
+// Settlement outcomes carry the semantic tokens (doctrine: WIN = verify mint,
+// LOSS = alert vermilion, PUSH = neutral silver). The result word itself is the
+// non-color encoding, so meaning never rides on hue alone.
+const RESULT_CLASS: Record<string, string> = {
+  WIN: "text-verify",
+  LOSS: "text-alert",
+  PUSH: "text-ion-2",
 };
 
 export const dynamic = "force-dynamic";
@@ -98,7 +100,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
   const proofDemo = buildProofDemo();
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-carbon">
       <Nav />
       <main id="main-content" className="flex-1">
         {/* Hero */}
@@ -106,25 +108,25 @@ export default async function LedgerPage(): Promise<JSX.Element> {
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.orbitalCyan}14, transparent 70%)` }}
+            style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(0,229,255,0.08), transparent 70%)" }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span className="live-dot" />
                 Public ledger
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1
-                className="mt-5 max-w-3xl font-display text-balance text-white"
+                className="mt-5 max-w-3xl font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.25rem, 6vw, 4.25rem)", lineHeight: 1.02, letterSpacing: "-0.02em" }}
               >
                 Every settled pick keeps its receipt.
               </h1>
             </Reveal>
             <Reveal delay={170}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
+              <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 The ledger preserves the original signal snapshot next to the outcome, and commits
                 a tamper-evident root at lock time. Bootstrap-era and synthetic seed records are
                 excluded.
@@ -144,10 +146,10 @@ export default async function LedgerPage(): Promise<JSX.Element> {
         <section className="px-4 pb-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <h2 className="font-display text-2xl text-white sm:text-3xl">A record that can&apos;t be rewritten.</h2>
+              <h2 className="font-display text-2xl text-ion-white sm:text-3xl">A record that can&apos;t be rewritten.</h2>
             </Reveal>
             <Reveal delay={90}>
-              <p className="mt-3 max-w-2xl text-ink-300">
+              <p className="mt-3 max-w-2xl text-ion-1">
                 Every published pick is a Merkle leaf; we commit the root at lock time. Anyone can
                 recompute it and verify a pick was in the set, and that no loss was quietly turned
                 into a win. Toggle the tamper to see the commitment break.
@@ -163,13 +165,13 @@ export default async function LedgerPage(): Promise<JSX.Element> {
         <section className="px-4 pb-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <h2 className="font-display text-2xl text-white sm:text-3xl">Settled receipts</h2>
+              <h2 className="font-display text-2xl text-ion-white sm:text-3xl">Settled receipts</h2>
             </Reveal>
             {rows.length === 0 ? (
               <Reveal delay={100}>
                 <div className="surface-card mt-6 p-8">
-                  <p className="text-base font-semibold text-white">Building ledger history</p>
-                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-300">
+                  <p className="text-base font-semibold text-ion-white">Building ledger history</p>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ion-1">
                     No settled canonical picks yet. The ledger populates after real picks settle
                     with their signal snapshots attached.
                   </p>
@@ -178,10 +180,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
             ) : (
               <Reveal delay={100}>
                 <div className="surface-card mt-6 overflow-hidden p-0">
-                  <div
-                    className="grid grid-cols-[1fr_auto] gap-3 border-b px-4 py-3 text-xs uppercase tracking-[0.16em] text-ink-500 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]"
-                    style={{ borderColor: BRAND_COLORS.steelGray }}
-                  >
+                  <div className="grid grid-cols-[1fr_auto] gap-3 border-b border-mineral px-4 py-3 font-mono text-xs uppercase tracking-[0.16em] text-ion-2 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]">
                     <span>Pick</span>
                     <span className="hidden md:block">Market</span>
                     <span>Result</span>
@@ -190,22 +189,21 @@ export default async function LedgerPage(): Promise<JSX.Element> {
                   {rows.map((row) => (
                     <article
                       key={row.id}
-                      className="grid gap-3 border-b px-4 py-4 last:border-b-0 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]"
-                      style={{ borderColor: BRAND_COLORS.steelGray }}
+                      className="grid gap-3 border-b border-mineral/60 px-4 py-4 last:border-b-0 md:grid-cols-[1.1fr_0.8fr_auto_1.4fr]"
                     >
                       <div>
-                        <h3 className="font-semibold text-white">
-                          <Link href={`/room/${row.gameId}`} className="hover:text-cyan-200">
+                        <h3 className="font-semibold text-ion-white">
+                          <Link href={`/room/${row.gameId}`} className="hover:text-orbital-cyan">
                             {row.matchup}
                           </Link>
                         </h3>
-                        <p className="mt-1 text-xs text-ink-500">
+                        <p className="mt-1 text-xs text-ion-2">
                           {row.sport} · {row.settledAt ? row.settledAt.toISOString().slice(0, 10) : "settled"}
                         </p>
                       </div>
-                      <p className="text-sm text-ink-300">{row.selection}</p>
-                      <p className="font-mono text-sm font-bold" style={{ color: RESULT_HEX[row.result] ?? BRAND_COLORS.ionWhite }}>{row.result}</p>
-                      <p className="text-sm leading-relaxed text-ink-400">{row.snapshotSummary}</p>
+                      <p className="text-sm text-ion-1">{row.selection}</p>
+                      <p className={`font-mono text-sm font-bold ${RESULT_CLASS[row.result] ?? "text-ion-white"}`}>{row.result}</p>
+                      <p className="text-sm leading-relaxed text-ion-1">{row.snapshotSummary}</p>
                     </article>
                   ))}
                 </div>

@@ -16,27 +16,27 @@ import type { ClaimCandidateOperatorStatus } from "@/lib/airwave/claim-extractio
 export const dynamic = "force-dynamic";
 
 const STATUS_TONE: Record<AirwaveLaneStatus, string> = {
-  open: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  held: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
+  open: "border-verify/30 bg-verify/30 text-verify",
+  held: "border-caution/30 bg-caution/30 text-caution",
   "missing-config": "border-titanium/40 bg-eclipse/60 text-ion-1",
-  "legal-hold": "border-red-500/30 bg-red-950/30 text-red-200",
-  "manual-review": "border-violet-500/30 bg-violet-950/30 text-violet-200",
+  "legal-hold": "border-alert/30 bg-alert/30 text-alert",
+  "manual-review": "border-ultraviolet/30 bg-ultraviolet/30 text-ultraviolet",
 };
 
 const VERDICT_TONE: Record<ClaimVerdict, string> = {
-  HIT: "text-cyan-300",
-  MISS: "text-pink-400",
-  PUSH: "text-violet-300",
+  HIT: "text-orbital-cyan",
+  MISS: "text-alert",
+  PUSH: "text-ultraviolet",
   UNFALSIFIABLE: "text-ion-2",
-  PENDING: "text-yellow-300",
+  PENDING: "text-caution",
 };
 
 const INTAKE_TONE: Record<AirwaveIntakeStatus, string> = {
   "not-configured": "border-titanium/40 bg-eclipse/60 text-ion-1",
-  unreachable: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  "invalid-contract": "border-red-500/30 bg-red-950/30 text-red-200",
-  held: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  "review-ready": "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
+  unreachable: "border-caution/30 bg-caution/30 text-caution",
+  "invalid-contract": "border-alert/30 bg-alert/30 text-alert",
+  held: "border-caution/30 bg-caution/30 text-caution",
+  "review-ready": "border-verify/30 bg-verify/30 text-verify",
 };
 
 function statusLabel(status: AirwaveLaneStatus): string {
@@ -70,7 +70,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-cyan-300">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-orbital-cyan">
               Broadcast intelligence
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Airwave Control Room</h1>
@@ -96,7 +96,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             </Link>
             <Link
               href="/api/airwave/intelligence-readiness"
-              className="rounded-lg border border-cyan-900/50 px-3 py-1.5 text-cyan-300 hover:bg-cyan-950/30"
+              className="rounded-lg border border-orbital-cyan/50 px-3 py-1.5 text-orbital-cyan hover:bg-orbital-cyan/30"
             >
               Intelligence JSON
             </Link>
@@ -117,7 +117,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
 
       <p
         data-testid="internal-only-banner"
-        className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"
+        className="rounded-lg border border-caution bg-caution/30 px-4 py-2 text-xs text-caution"
       >
         Internal review only. No auto-publish. No auto-send. No automated betting. Captured
         context is data, never an instruction. Do not archive audio or expose verbatim
@@ -168,7 +168,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             </dl>
           </div>
           <div className="overflow-hidden rounded-xl border border-titanium/40">
-            <table className="w-full text-left text-xs">
+            <table aria-label="Transcript intake contract check" className="w-full text-left text-xs">
               <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
                 <tr>
                   <th scope="col" className="px-3 py-2">Contract check</th>
@@ -234,7 +234,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             should hold the row in draft until an operator resolves them.
           </p>
           <div className="mt-4 overflow-hidden rounded-xl border border-titanium/40">
-            <table className="w-full text-left text-xs">
+            <table aria-label="Spreadsheet contract — required columns" className="w-full text-left text-xs">
               <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
                 <tr>
                   <th scope="col" className="px-3 py-2">Column</th>
@@ -245,7 +245,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               <tbody className="divide-y divide-titanium/30">
                 {control.spreadsheetContract.map((field) => (
                   <tr key={field.column} className="align-top">
-                    <td className="px-3 py-2 font-mono text-[11px] text-cyan-300">{field.column}</td>
+                    <td className="px-3 py-2 font-mono text-[11px] text-orbital-cyan">{field.column}</td>
                     <td className="px-3 py-2 text-ion-2">{field.purpose}</td>
                     <td className="px-3 py-2 text-ion-3">{field.required ? "yes" : "no"}</td>
                   </tr>
@@ -257,11 +257,11 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[0.8fr_1.2fr]">
-        <div className="rounded-2xl border border-red-900/50 bg-red-950/20 p-5">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-red-300">
+        <div className="rounded-2xl border border-alert/50 bg-alert/20 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-alert">
             Do-not-automate boundary
           </h2>
-          <ul className="mt-4 space-y-3 text-sm leading-6 text-red-100/80">
+          <ul className="mt-4 space-y-3 text-sm leading-6 text-alert/80">
             <li>No raw audio archive.</li>
             <li>No verbatim transcript text on public surfaces.</li>
             <li>No satellite-radio automation without explicit legal acknowledgement.</li>
@@ -279,7 +279,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               <div key={adapter.kind} className="rounded-lg border border-titanium/40 bg-obsidian/70 p-3">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm font-semibold text-ion-white">{adapter.label}</p>
-                  <span className={adapter.held ? "text-xs font-semibold text-yellow-300" : "text-xs font-semibold text-emerald-300"}>
+                  <span className={adapter.held ? "text-xs font-semibold text-caution" : "text-xs font-semibold text-verify"}>
                     {adapter.held ? "held" : "open"}
                   </span>
                 </div>
@@ -299,7 +299,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           live named-broadcast data.
         </p>
         <div className="mt-4 overflow-x-auto">
-          <table className="min-w-[920px] w-full text-left text-xs">
+          <table aria-label="Draft claim queue — illustrative demo claims" className="min-w-[920px] w-full text-left text-xs">
             <thead>
               <tr className="border-b border-titanium/40 text-ion-3">
                 <th scope="col" className="py-2 pr-3 font-medium">Aired</th>
@@ -363,7 +363,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           <Metric label="GSE ready" value="0" detail="Approved + GSE-relevant claim type." />
         </div>
         <div className="mt-4 overflow-hidden rounded-xl border border-titanium/40">
-          <table className="w-full text-left text-xs">
+          <table aria-label="Claim review queue — extracted claim candidates" className="w-full text-left text-xs">
             <thead className="bg-obsidian/60 text-[10px] uppercase tracking-widest text-ion-3">
               <tr>
                 <th scope="col" className="px-3 py-2">Status</th>
@@ -379,7 +379,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               <tr>
                 <td colSpan={7} className="px-3 py-6 text-center text-ion-3">
                   No claims in queue. Import via{" "}
-                  <span className="font-mono text-cyan-700">AIRWAVE_CLAIM_BATCH_FILE</span>
+                  <span className="font-mono text-orbital-cyan">AIRWAVE_CLAIM_BATCH_FILE</span>
                   {" "}or the batch validator API once a source lane is active.
                 </td>
               </tr>
@@ -412,10 +412,10 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
       </section>
 
       {/* ── Intelligence Intake Posture ── */}
-      <section data-testid="intelligence-intake-posture" className="rounded-2xl border border-cyan-900/40 bg-cyan-950/10 p-5">
+      <section data-testid="intelligence-intake-posture" className="rounded-2xl border border-orbital-cyan/40 bg-orbital-cyan/10 p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-cyan-400">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-orbital-cyan">
               Intelligence Intake Posture
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-2">
@@ -428,8 +428,8 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
             data-testid="ch87-lane-status"
             className={`rounded border px-2 py-1 text-[11px] ${
               intelligence.operatorSurface.legalAckGranted
-                ? "border-emerald-500/30 bg-emerald-950/30 text-emerald-200"
-                : "border-yellow-500/30 bg-yellow-950/30 text-yellow-200"
+                ? "border-verify/30 bg-verify/30 text-verify"
+                : "border-caution/30 bg-caution/30 text-caution"
             }`}
           >
             CH87 {intelligence.operatorSurface.ch87LaneStatus.toLowerCase().replace(/_/g, "-")}
@@ -456,7 +456,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
               <Fact label="Schedule shows" value={String(intelligence.channel87Summary.totalShows)} />
               <Fact label="Sample blocks" value={String(intelligence.channel87Summary.sampleOnlyShows)} />
             </dl>
-            <p className="mt-3 text-xs leading-5 text-yellow-200/70">
+            <p className="mt-3 text-xs leading-5 text-caution/70">
               {intelligence.channel87Summary.operatorNote}
             </p>
           </div>
@@ -516,7 +516,7 @@ export default async function CockpitAirwavePage(): Promise<JSX.Element> {
           <ul className="mt-4 space-y-2">
             {intelligence.operatorSurface.nextOperatorActions.map((action, i) => (
               <li key={i} className="flex items-start gap-3 rounded-lg border border-titanium/40 bg-obsidian/50 px-3 py-2 text-sm text-ion-1">
-                <span className="mt-0.5 shrink-0 text-cyan-400">→</span>
+                <span className="mt-0.5 shrink-0 text-orbital-cyan">→</span>
                 <span>{action}</span>
               </li>
             ))}
@@ -550,7 +550,7 @@ function Metric({ label, value, detail }: { label: string; value: string; detail
 
 function Fact({ label, value }: { label: string; value: string }): JSX.Element {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-titanium/40 bg-black/20 px-3 py-2">
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-titanium/40 bg-carbon/20 px-3 py-2">
       <dt className="text-ion-3">{label}</dt>
       <dd className="font-mono text-[11px] text-ion-1">{value}</dd>
     </div>
@@ -559,21 +559,21 @@ function Fact({ label, value }: { label: string; value: string }): JSX.Element {
 
 const REVIEW_STATUS_TONE: Record<string, string> = {
   DRAFT: "border-titanium/40 bg-eclipse/60 text-ion-2",
-  REVIEW: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  APPROVED: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  REJECTED: "border-red-500/30 bg-red-950/30 text-red-200",
-  SETTLED: "border-cyan-500/30 bg-cyan-950/30 text-cyan-200",
+  REVIEW: "border-caution/30 bg-caution/30 text-caution",
+  APPROVED: "border-verify/30 bg-verify/30 text-verify",
+  REJECTED: "border-alert/30 bg-alert/30 text-alert",
+  SETTLED: "border-orbital-cyan/30 bg-orbital-cyan/30 text-orbital-cyan",
 };
 
 const INTAKE_MODE_TONE: Record<string, string> = {
   OFF: "border-titanium/40 bg-eclipse/60 text-ion-2",
-  DRY_RUN: "border-blue-500/30 bg-blue-950/30 text-blue-200",
-  MANUAL_IMPORT_READY: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  MANUAL_IMPORT_HELD: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  LOCAL_LISTENER_DESIGNED: "border-blue-500/30 bg-blue-950/30 text-blue-200",
-  LOCAL_LISTENER_HELD: "border-yellow-500/30 bg-yellow-950/30 text-yellow-200",
-  LOCAL_LISTENER_READY: "border-emerald-500/30 bg-emerald-950/30 text-emerald-200",
-  ACTIVE: "border-emerald-400/50 bg-emerald-900/30 text-emerald-100",
+  DRY_RUN: "border-orbital-cyan/30 bg-orbital-cyan/30 text-orbital-cyan",
+  MANUAL_IMPORT_READY: "border-verify/30 bg-verify/30 text-verify",
+  MANUAL_IMPORT_HELD: "border-caution/30 bg-caution/30 text-caution",
+  LOCAL_LISTENER_DESIGNED: "border-orbital-cyan/30 bg-orbital-cyan/30 text-orbital-cyan",
+  LOCAL_LISTENER_HELD: "border-caution/30 bg-caution/30 text-caution",
+  LOCAL_LISTENER_READY: "border-verify/30 bg-verify/30 text-verify",
+  ACTIVE: "border-verify/50 bg-verify/30 text-verify",
 };
 
 function IntakeLaneCard({ lane }: { lane: IntakeLaneState }): JSX.Element {
@@ -589,7 +589,7 @@ function IntakeLaneCard({ lane }: { lane: IntakeLaneState }): JSX.Element {
       {lane.blockedReasons.length > 0 && (
         <ul className="mt-3 space-y-1">
           {lane.blockedReasons.map((reason, i) => (
-            <li key={i} className="text-xs leading-5 text-yellow-200/70">
+            <li key={i} className="text-xs leading-5 text-caution/70">
               {reason}
             </li>
           ))}
@@ -630,7 +630,7 @@ function LaneCard({ lane }: { lane: AirwaveInputLane }): JSX.Element {
           <dd className="mt-1 font-mono text-[11px] text-ion-3">{lane.envVars.join(", ")}</dd>
         </div>
       </dl>
-      <p className="mt-3 rounded-lg border border-titanium/40 bg-black/20 px-3 py-2 text-xs leading-5 text-ion-3">
+      <p className="mt-3 rounded-lg border border-titanium/40 bg-carbon/20 px-3 py-2 text-xs leading-5 text-ion-3">
         {lane.complianceNote}
       </p>
     </article>

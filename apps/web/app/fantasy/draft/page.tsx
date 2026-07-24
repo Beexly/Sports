@@ -6,7 +6,6 @@ import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { FANTASY_DATA_ATTRIBUTION, FANTASY_VALUE_BASIS_NOTE } from "@/lib/fantasy/attribution";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Draft Assistant · Galaxy Fantasy",
@@ -28,7 +27,7 @@ export default async function DraftPage() {
   return (
     <FantasyShell
       eyebrow="Draft Assistant"
-      accent={BRAND_COLORS.softUltraviolet}
+      accent="ultraviolet"
       title={<>Draft the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>value</span>, not the name.</>}
       intro="Mark players off the board and the engine recommends your next pick, and tells you exactly why: your biggest need, the tier about to break, the value over replacement, and the bye-week stack you're about to create."
       note={pool

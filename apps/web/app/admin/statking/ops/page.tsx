@@ -20,6 +20,7 @@ export default async function Page(){
           remaining_risk: String(r.remaining_risk ?? ""),
         }))}
         maxRows={50}
+        caption="Integrity gate commands"
       />
     </Shell>
   );

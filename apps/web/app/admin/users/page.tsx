@@ -29,14 +29,14 @@ export default async function AdminUsersPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Users</h1>
+            <h1 className="text-2xl font-bold text-ion-white">Users</h1>
             <p className="text-ion-2 mt-1">{users.length} users (last 100)</p>
           </div>
-          <a href="/admin" className="text-ion-2 hover:text-white text-sm">← Back to Admin</a>
+          <a href="/admin" className="text-ion-2 hover:text-ion-white text-sm">← Back to Admin</a>
         </div>
 
         <div className="bg-carbon border border-titanium rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" aria-label="Users (last 100)">
             <thead>
               <tr className="border-b border-titanium text-ion-2 text-xs uppercase">
                 <th className="text-left px-4 py-3">User</th>
@@ -50,13 +50,13 @@ export default async function AdminUsersPage() {
               {users.map((user) => (
                 <tr key={user.id} className="border-b border-titanium/50 hover:bg-titanium/30">
                   <td className="px-4 py-3">
-                    <div className="text-white">{user.name ?? "—"}</div>
+                    <div className="text-ion-white">{user.name ?? "—"}</div>
                     <div className="text-xs text-ion-3">{user.email}</div>
                   </td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded text-xs ${
                       user.role === "ADMIN"
-                        ? "bg-red-500/10 text-red-400"
+                        ? "bg-alert/10 text-alert"
                         : "bg-titanium text-ion-2"
                     }`}>
                       {user.role}
@@ -64,8 +64,8 @@ export default async function AdminUsersPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                      user.subscription?.tier === "ELITE" ? "bg-yellow-400/10 text-yellow-400" :
-                      user.subscription?.tier === "PRO" ? "bg-blue-500/10 text-blue-400" :
+                      user.subscription?.tier === "ELITE" ? "bg-caution/10 text-caution" :
+                      user.subscription?.tier === "PRO" ? "bg-orbital-cyan/10 text-orbital-cyan" :
                       "bg-titanium text-ion-2"
                     }`}>
                       {user.subscription?.tier ?? "FREE"}

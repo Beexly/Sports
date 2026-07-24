@@ -37,7 +37,7 @@ describe("/cockpit/history — accessibility invariants", () => {
     // each emitting one Link per option; we just check the class string
     // is in the file.
     expect(src).toMatch(/focus-visible:ring-2/);
-    expect(src).toMatch(/focus-visible:ring-brand-500/);
+    expect(src).toMatch(/focus-visible:ring-plasma/);
   });
 
   it("data-testid history-export-csv exists for the download button", () => {

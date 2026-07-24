@@ -23,7 +23,7 @@ export default async function CockpitNovaPage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-caution">
               NOVA
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Founder OS Overview</h1>
@@ -76,7 +76,7 @@ export default async function CockpitNovaPage(): Promise<JSX.Element> {
           </p>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-titanium/30 text-sm">
+          <table aria-label="Founder OS lanes — open, owner-action, and agent-handled counts" className="min-w-full divide-y divide-titanium/30 text-sm">
             <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
               <tr>
                 <th scope="col" className="px-4 py-3">Lane</th>

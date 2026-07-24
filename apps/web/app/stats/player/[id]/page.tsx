@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shell, Cards, DataTable, Badge, ScoreRing, BarChart, StatusRibbon, InsightCard } from "../../_components";
+import { Shell, Cards, DataTable, Badge, ScoreRing, BarChart, StatusRibbon, InsightCard, SectionHeader } from "../../_components";
 import { getPlayer, loadWeeklyStats, loadComps, loadArchetypes } from "@/lib/statking/product";
 export const metadata = {
   title: "Player Profile: StatKing Metrics & Lineage",
@@ -8,7 +8,16 @@ export const metadata = {
 };
 export default function Page({ params }: { params: { id: string } }) {
   const p = getPlayer(params.id);
-  if (!p) return <Shell title="Player not found"><p>No player snapshot exists.</p></Shell>;
+  if (!p) {
+    return (
+      <Shell title="Player not found" eyebrow="No snapshot">
+        <div className="border border-mineral bg-eclipse/40 px-4 py-6">
+          <p className="text-sm text-ion-1">No player snapshot exists for this ID. It may have been retired from the current sync, or the ID may be mistyped.</p>
+          <Link href="/stats/players" className="mt-3 inline-block text-sm text-orbital-cyan hover:text-ion-white transition-colors">← Back to the player database</Link>
+        </div>
+      </Shell>
+    );
+  }
   const weeks = loadWeeklyStats().filter(w => w.player_id === p.player_id);
   const comps = loadComps().find(c => c.player_id === p.player_id)?.comparisons ?? [];
   const arch = loadArchetypes().find(a => a.player_id === p.player_id);
@@ -27,13 +36,13 @@ export default function Page({ params }: { params: { id: string } }) {
       ]} />
       <div className="grid gap-4 md:grid-cols-2">
         <div className="border border-mineral bg-eclipse p-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Galaxy Player Index</p>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Galaxy Player Index</p>
           <div className="flex justify-center">
             <ScoreRing score={gpiClamped} label="GPI" size={120} />
           </div>
         </div>
         <div className="border border-mineral bg-eclipse p-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Efficiency & Usage Scores</p>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Efficiency & Usage Scores</p>
           <BarChart items={[
             { label: "Usage", value: Number(p.usage_score ?? 0), max: 100, tone: "cyan" },
             { label: "Efficiency", value: Number(p.efficiency_score ?? 0), max: 100, tone: "amber" }
@@ -43,8 +52,14 @@ export default function Page({ params }: { params: { id: string } }) {
       <section className="grid gap-4 md:grid-cols-2">
         <div className="border border-mineral bg-eclipse p-4">
           <h2 className="text-lg font-semibold text-ion-white mb-3">Archetype</h2>
-          <p className="text-ion-1">{arch?.archetype}</p>
-          <p className="mt-2 text-sm text-ion-1">{arch?.explanation}</p>
+          {arch ? (
+            <>
+              <p className="text-ion-1">{arch.archetype}</p>
+              <p className="mt-2 text-sm text-ion-1">{arch.explanation}</p>
+            </>
+          ) : (
+            <p className="text-sm text-ion-1">No archetype assigned in this snapshot.</p>
+          )}
         </div>
         <InsightCard
           eyebrow="Source & Data"
@@ -57,10 +72,12 @@ export default function Page({ params }: { params: { id: string } }) {
           tone={hasMissingData ? "warn" : "good"}
         >
           {hasMissingData && (
-            <div className="space-y-2 mt-2">
-              {p.missing_data.map(m => (
-                <Badge key={String(m)} tone="warn">{String(m ?? "")}</Badge>
-              ))}
+            <div className="mt-2">
+              <div className="flex flex-wrap gap-2">
+                {p.missing_data.map(m => (
+                  <Badge key={String(m)} tone="warn">{String(m ?? "")}</Badge>
+                ))}
+              </div>
               <p className="text-sm text-ion-1 mt-2">Sources: {Array.isArray(p.source_lineage) && p.source_lineage.length > 0 ? p.source_lineage.join(", ") : "—"}</p>
             </div>
           )}
@@ -69,8 +86,8 @@ export default function Page({ params }: { params: { id: string } }) {
           )}
         </InsightCard>
       </section>
+      <SectionHeader eyebrow="Last 8 weeks" title="Weekly Trend" />
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Weekly Trend</h2>
         {weeks.length === 0 ? (
           <p className="text-sm text-ion-1 py-4 border border-mineral bg-eclipse/40 px-4">No weekly data in fixture snapshot. This will populate when live ingestion is active.</p>
         ) : (
@@ -83,21 +100,23 @@ export default function Page({ params }: { params: { id: string } }) {
               yards: Number(w.yards ?? 0),
             }))}
             maxRows={8}
+            caption={`Weekly touches, targets, PPR fantasy points, and yards for ${p.name}`}
           />
         )}
       </div>
+      <SectionHeader eyebrow="Statistical comps" title="Similar Players" action={{ label: "All comps", href: "/stats/comps" }} />
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Similar Players</h2>
         {comps.length === 0 ? (
-          <p className="text-sm text-ion-1 py-4 border border-mineral bg-eclipse/40 px-4">No weekly data in fixture snapshot. This will populate when live ingestion is active.</p>
+          <p className="text-sm text-ion-1 py-4 border border-mineral bg-eclipse/40 px-4">No comparable players in fixture snapshot. Comps populate with each player snapshot sync.</p>
         ) : (
           <DataTable
             rows={comps.map((c: Record<string, unknown>) => ({
               player: String(c.name ?? ""),
               similarity: Number(c.similarity_score ?? 0),
-              shared: Array.isArray(c.shared_features) ? (c.shared_features as unknown[]).join(", ") : ""
+              shared: Array.isArray(c.shared_features) ? (c.shared_features as unknown[]).join(", ") : "—"
             }))}
             maxRows={10}
+            caption={`Closest statistical comparables for ${p.name} with similarity score and shared features`}
           />
         )}
       </div>

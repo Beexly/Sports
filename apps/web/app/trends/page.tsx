@@ -60,7 +60,8 @@ export default async function TrendsPage(): Promise<JSX.Element> {
         <Nav />
         <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
           <section>
-            <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Trend Lab</p>
+            <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
               Find the edges before they become consensus.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
@@ -96,7 +97,8 @@ export default async function TrendsPage(): Promise<JSX.Element> {
       <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
           <div>
-            <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">Trend Lab</p>
+            <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
               Find the edges before they become consensus.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
@@ -180,6 +182,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
 
           <div className="overflow-x-auto border border-mineral">
             <table className="w-full min-w-[860px] text-left text-sm">
+              <caption className="sr-only">nflverse datasets feeding the first trend plan: status, row counts, scope, and what each unlocks</caption>
               <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                 <tr>
                   <th scope="col" className="px-4 py-3">Dataset</th>
@@ -249,6 +252,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
 
           <div className="overflow-x-auto border border-mineral">
             <table className="w-full min-w-[760px] text-left text-sm">
+              <caption className="sr-only">QB-age cohorts versus the field: sample size, means, lift, p-value, and significance gate</caption>
               <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                 <tr>
                   <th scope="col" className="px-4 py-3">Cohort</th>
@@ -324,6 +328,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
 
           <div className="overflow-x-auto border border-mineral">
             <table className="w-full min-w-[760px] text-left text-sm">
+              <caption className="sr-only">Birthday and milestone usage checks versus each player&apos;s baseline: sample sizes, deltas, p-values, and gate outcome</caption>
               <thead className="border-b border-mineral bg-eclipse font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                 <tr>
                   <th scope="col" className="px-4 py-3">Check</th>
@@ -375,6 +380,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
             {workbench.topTrends.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[760px] text-left text-sm">
+                  <caption className="sr-only">Published trends that cleared the observation and significance gates</caption>
                   <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                     <tr>
                       <th scope="col" className="px-4 py-3">Cohort</th>

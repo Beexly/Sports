@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BiasMirror } from "@/components/bias-mirror/bias-mirror";
-import { BRAND_NAME, HELPLINE, BRAND_COLORS } from "@/lib/brand";
+import { BRAND_NAME, HELPLINE } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Responsible play",
@@ -41,13 +41,13 @@ export default function ResponsiblePlayPage() {
 
       <main id="main-content" className="flex-1">
         {/* Hero — also the #variance target for the footer "Variance guide" link. */}
-        <section id="variance" className="border-b border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+        <section id="variance" className="border-b border-mineral/40 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Responsible play</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">
               Sports betting carries real risk.
             </h1>
-            <p className="mt-5 text-lg text-ink-300">
+            <p className="mt-5 text-lg text-ion-1">
               {BRAND_NAME} is an informational service. Outcomes are never
               certain. No model eliminates variance. Wager only what you
               can afford to lose, and stop immediately if it stops feeling
@@ -61,16 +61,16 @@ export default function ResponsiblePlayPage() {
           <div className="mx-auto max-w-3xl">
             <div className="surface-lifted flex flex-col gap-3 p-6 sm:p-8">
               <p className="eyebrow">If you need help right now</p>
-              <p className="font-display text-2xl font-semibold text-white">
+              <h2 className="font-display text-2xl font-semibold text-ion-white">
                 {HELPLINE.name}
-              </p>
+              </h2>
               <a
                 href={HELPLINE.href}
-                className="font-display text-3xl font-bold text-accent-300 underline-offset-4 hover:underline"
+                className="font-display text-3xl font-bold text-orbital-cyan underline-offset-4 hover:underline"
               >
                 {HELPLINE.number}
               </a>
-              <p className="text-sm text-ink-300">
+              <p className="text-sm text-ion-1">
                 24/7. Free. Confidential. Available in English and Spanish.
                 Text and chat options as well.
               </p>
@@ -81,9 +81,9 @@ export default function ResponsiblePlayPage() {
         {/* The Bias Mirror — responsible play as a living, protective layer */}
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
-            <p className="eyebrow" style={{ color: BRAND_COLORS.softUltraviolet }}>The Bias Mirror</p>
-            <h2 className="mt-3 font-display text-display-lg text-white">A private check on how you decide.</h2>
-            <p className="mt-4 max-w-2xl text-ink-300">
+            <p className="eyebrow text-ultraviolet">The Bias Mirror</p>
+            <h2 className="mt-3 font-display text-display-lg text-ion-white">A private check on how you decide.</h2>
+            <p className="mt-4 max-w-2xl text-ion-1">
               Most products exploit bias. This one reflects it back, privately. Rate a few honest
               tendencies and the Mirror surfaces the patterns worth watching, your real strengths,
               and calm, protective moves. It&apos;s computed on your device from your own answers.
@@ -98,10 +98,10 @@ export default function ResponsiblePlayPage() {
         {/* Warning signs */}
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <h2 className="font-display text-display-lg text-white">
+            <h2 className="font-display text-display-lg text-ion-white">
               Warning signs to take seriously
             </h2>
-            <ul className="mt-6 flex flex-col gap-3 text-sm text-ink-300">
+            <ul className="mt-6 flex flex-col gap-3 text-sm text-ion-1">
               {[
                 "Wagering more than you planned to, or chasing losses.",
                 "Borrowing money or lying about how much has been wagered.",
@@ -112,11 +112,11 @@ export default function ResponsiblePlayPage() {
               ].map((line) => (
                 <li
                   key={line}
-                  className="flex items-start gap-3 rounded-xl border border-ink-800 bg-ink-900/50 px-4 py-3"
+                  className="flex items-start gap-3 rounded-xl border border-mineral/50 bg-carbon/50 px-4 py-3"
                 >
                   <span
                     aria-hidden
-                    className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-risk-high"
+                    className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-alert"
                   />
                   <span>{line}</span>
                 </li>
@@ -128,10 +128,10 @@ export default function ResponsiblePlayPage() {
         {/* Resources */}
         <section className="px-4 pb-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
-            <h2 className="font-display text-display-lg text-white">
+            <h2 className="font-display text-display-lg text-ion-white">
               Resources and self-exclusion
             </h2>
-            <p className="mt-3 text-ink-300">
+            <p className="mt-3 text-ion-1">
               External programs and organizations you can reach out to. None
               of them are affiliated with {BRAND_NAME}; I list them as the
               standard starting points for anyone who wants to slow down or
@@ -144,15 +144,15 @@ export default function ResponsiblePlayPage() {
                   href={res.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="surface-card group flex flex-col gap-2 p-5 transition-colors hover:border-accent-700"
+                  className="surface-card group flex flex-col gap-2 p-5 transition-colors hover:border-mineral-hi"
                 >
-                  <p className="text-sm font-semibold text-white group-hover:text-accent-200">
+                  <p className="text-sm font-semibold text-ion-white group-hover:text-orbital-cyan">
                     {res.name}
-                    <span aria-hidden className="ml-1.5 text-ink-500">
+                    <span aria-hidden className="ml-1.5 text-ion-2">
                       ↗
                     </span>
                   </p>
-                  <p className="text-xs leading-relaxed text-ink-400">
+                  <p className="text-xs leading-relaxed text-ion-1">
                     {res.body}
                   </p>
                 </a>

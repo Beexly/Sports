@@ -126,7 +126,7 @@ export function JournalNewForm(): JSX.Element {
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-yellow-400"
+          className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-caution"
         />
       </label>
 
@@ -137,7 +137,7 @@ export function JournalNewForm(): JSX.Element {
             value={isoWeek}
             inputMode="numeric"
             onChange={(event) => setIsoWeek(event.target.value)}
-            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-yellow-400"
+            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-caution"
           />
         </label>
         <label className="grid gap-2 text-sm">
@@ -146,7 +146,7 @@ export function JournalNewForm(): JSX.Element {
             value={isoYear}
             inputMode="numeric"
             onChange={(event) => setIsoYear(event.target.value)}
-            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-yellow-400"
+            className="min-h-11 rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 text-sm text-ion-white outline-none focus:border-caution"
           />
         </label>
       </div>
@@ -157,7 +157,7 @@ export function JournalNewForm(): JSX.Element {
           value={bodyMarkdown}
           onChange={(event) => setBodyMarkdown(event.target.value)}
           rows={12}
-          className="min-h-[260px] rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 font-mono text-sm text-ion-white outline-none focus:border-yellow-400"
+          className="min-h-[260px] rounded-lg border border-titanium/40 bg-obsidian/60 px-3 py-2 font-mono text-sm text-ion-white outline-none focus:border-caution"
           placeholder="Leave blank to create the standard weekly Journal draft outline."
         />
       </label>
@@ -168,12 +168,12 @@ export function JournalNewForm(): JSX.Element {
           checked={draftWithClaude}
           onChange={(event) => setDraftWithClaude(event.target.checked)}
           disabled={bodyMarkdown.trim().length > 0}
-          className="h-4 w-4 rounded border-titanium/40 bg-black"
+          className="h-4 w-4 rounded border-titanium/40 bg-carbon"
         />
         Generate the first draft from weekly evidence
       </label>
 
-      <section className="rounded-lg border border-titanium/40 bg-black/30 p-3">
+      <section className="rounded-lg border border-titanium/40 bg-carbon/30 p-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-ion-3">
@@ -262,14 +262,14 @@ export function JournalNewForm(): JSX.Element {
         ) : null}
 
         {evidenceError ? (
-          <p className="mt-3 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+          <p className="mt-3 rounded-lg border border-alert/40 bg-alert/10 px-3 py-2 text-xs text-alert">
             {evidenceError}
           </p>
         ) : null}
       </section>
 
       {error ? (
-        <p className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
+        <p className="rounded-lg border border-alert/40 bg-alert/10 px-3 py-2 text-sm text-alert">
           {error}
         </p>
       ) : null}
@@ -278,7 +278,7 @@ export function JournalNewForm(): JSX.Element {
         type="button"
         onClick={createDraft}
         disabled={isSubmitting}
-        className="min-h-11 rounded-lg border border-yellow-400/60 bg-yellow-400 px-4 py-2 text-sm font-semibold text-eclipse transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-60"
+        className="min-h-11 rounded-lg border border-caution/60 bg-caution px-4 py-2 text-sm font-semibold text-eclipse transition hover:bg-caution disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? "Creating draft..." : "Create draft"}
       </button>

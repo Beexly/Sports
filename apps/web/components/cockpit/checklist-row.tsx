@@ -23,7 +23,7 @@ export function ChecklistRow({
       <span
         className={[
           "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-          ok ? "bg-green-700 text-green-100" : "bg-titanium/40 text-ion-1",
+          ok ? "bg-verify text-carbon" : "bg-titanium/40 text-ion-1",
         ].join(" ")}
         aria-hidden="true"
       >

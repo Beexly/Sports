@@ -119,7 +119,7 @@ export default async function CockpitCalibrationPage() {
       <h1 className="text-2xl font-bold text-ion-white">Calibration</h1>
       <p
         data-testid="internal-only-banner"
-        className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"
+        className="rounded-lg border border-caution bg-caution/30 px-4 py-2 text-xs text-caution"
       >
         Internal calibration only. No auto-publish. No auto-send. No automated betting.
       </p>
@@ -172,7 +172,7 @@ export default async function CockpitCalibrationPage() {
           </p>
         ) : (
           <>
-          <table className="w-full text-left">
+          <table aria-label="Confidence band vs realized win rate" className="w-full text-left">
             <thead>
               <tr className="text-[10px] uppercase tracking-widest text-ion-3">
                 <th scope="col" className="py-1 pr-4 font-medium">Confidence band</th>
@@ -223,7 +223,7 @@ export default async function CockpitCalibrationPage() {
                   >
                     {b.winRate === null ? null : (
                       <span
-                        className={`absolute inset-y-0 left-0 rounded-sm ${withinBand ? "bg-orbital-cyan/70" : "bg-amber-500/70"}`}
+                        className={`absolute inset-y-0 left-0 rounded-sm ${withinBand ? "bg-orbital-cyan/70" : "bg-caution/70"}`}
                         style={{ width: `${Math.min(100, Math.max(0, b.winRate))}%` }}
                       />
                     )}

@@ -13,7 +13,6 @@ import {
   readAirwaveControlPlane,
   readAirwaveIntakeReadiness,
 } from "@/lib/airwave";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +38,7 @@ export default async function AirwavePage() {
   ]);
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
 
@@ -49,25 +48,25 @@ export default async function AirwavePage() {
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.ionMagenta}14, transparent 70%), radial-gradient(40% 60% at 72% 8%, ${BRAND_COLORS.orbitalCyan}12, transparent 70%)` }}
+            style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(255, 56, 199, 0.08), transparent 70%), radial-gradient(40% 60% at 72% 8%, rgba(0, 229, 255, 0.07), transparent 70%)" }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span className="live-dot" />
                 The Airwave Ledger
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1
-                className="mt-5 font-display text-balance text-white"
+                className="mt-5 font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.02em" }}
               >
                 The takes go <span className="gse-editorial" style={{ fontSize: "1.08em" }}>on the record</span>.
               </h1>
             </Reveal>
             <Reveal delay={170}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
+              <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 Sports television and radio run on confidence with no receipt. The Airwave Ledger
                 gives the take a receipt: a paraphrased claim, the moment it aired, the outcome,
                 and a running accountability index. Being loud is not the same as being right, and
@@ -83,9 +82,9 @@ export default async function AirwavePage() {
             {STEPS.map((s) => (
               <Reveal key={s.n} delay={80}>
                 <div className="surface-card h-full p-5">
-                  <span className="font-display text-2xl tabular-nums" style={{ color: BRAND_COLORS.ionMagenta }}>{s.n}</span>
-                  <h2 className="mt-2 text-base font-semibold text-white">{s.t}</h2>
-                  <p className="mt-1.5 text-sm leading-relaxed text-ink-300">{s.b}</p>
+                  <span className="font-display text-2xl tabular-nums text-plasma">{s.n}</span>
+                  <h2 className="mt-2 text-base font-semibold text-ion-white">{s.t}</h2>
+                  <p className="mt-1.5 text-sm leading-relaxed text-ion-1">{s.b}</p>
                 </div>
               </Reveal>
             ))}
@@ -98,8 +97,8 @@ export default async function AirwavePage() {
             <div className="surface-card p-5 sm:p-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Ingestion status</h2>
-                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-300">
+                  <h2 className="text-lg font-semibold text-ion-white">Ingestion status</h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ion-1">
                     The board below is illustrative until the control plane has real reviewed
                     transcript rows. Today this page exposes the gate state honestly instead of
                     pretending the media engine is already running.
@@ -119,17 +118,17 @@ export default async function AirwavePage() {
                 <StatusMetric label="Manual review" value={String(control.summary.manualReview)} />
                 <StatusMetric label="Review rows" value={String(intake.rows.reviewReady)} />
               </div>
-              <div className="mt-5 rounded-xl border px-4 py-3" style={{ borderColor: BRAND_COLORS.steelGray, background: "rgba(7, 10, 20, 0.55)" }}>
+              <div className="mt-5 rounded-xl border border-titanium bg-void/60 px-4 py-3">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-white">Transcript intake proof</p>
-                    <p className="mt-1 text-xs leading-relaxed text-ink-400">
+                    <p className="text-sm font-semibold text-ion-white">Transcript intake proof</p>
+                    <p className="mt-1 text-xs leading-relaxed text-ion-2">
                       Status: {intake.source.status}. Rows: {formatCount(intake.rows.total)}. This
                       validator reads only a configured local CSV/TSV and exposes counts, not
                       transcript text or file paths.
                     </p>
                   </div>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-ink-500">
+                  <span className="font-mono text-xs uppercase tracking-wider text-ion-2">
                     writes rows: {String(intake.gates.canWriteRows)}
                   </span>
                 </div>
@@ -138,16 +137,15 @@ export default async function AirwavePage() {
                 {control.lanes.map((lane) => (
                   <div
                     key={lane.key}
-                    className="rounded-xl border px-3 py-2"
-                    style={{ borderColor: BRAND_COLORS.steelGray, background: "rgba(7, 10, 20, 0.55)" }}
+                    className="rounded-xl border border-titanium bg-void/60 px-3 py-2"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-semibold text-white">{lane.name}</p>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-ink-500">
+                      <p className="text-sm font-semibold text-ion-white">{lane.name}</p>
+                      <span className="font-mono text-xs uppercase tracking-wider text-ion-2">
                         {lane.status}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs leading-relaxed text-ink-400">{lane.operatorAction}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-ion-2">{lane.operatorAction}</p>
                   </div>
                 ))}
               </div>
@@ -166,16 +164,16 @@ export default async function AirwavePage() {
         <section className="px-4 pb-24 pt-2 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
               <div className="surface-card p-5">
-                <p className="text-xs uppercase tracking-[0.16em] text-ink-500">How to read this</p>
-                <p className="mt-2 text-sm leading-relaxed text-ink-300">
-                  The board above is <strong className="text-ink-100">illustrative</strong>. The
+                <p className="font-mono text-xs uppercase tracking-[0.16em] text-ion-2">How to read this</p>
+                <p className="mt-2 text-sm leading-relaxed text-ion-1">
+                  The board above is <strong className="text-ion">illustrative</strong>. The
                   personas are fictional and the matchups are generic, so nothing here is a claim
                   about a living person. The method is the real thing: a take is paraphrased,
                   timestamped, and graded against what actually happened. Live capture of named
                   shows, and any public scorecard tied to a real person, are held behind a founder
                   gate and a legal review: never on by default, and never an audio archive.
                 </p>
-                <p className="mt-3 text-sm leading-relaxed text-ink-400">
+                <p className="mt-3 text-sm leading-relaxed text-ion-2">
                   The accountability index rewards making checkable calls and landing them. Emphatic
                   calls carry more weight than hedges, and un-checkable hot takes can never earn
                   credit, so volume without conviction trends toward zero, by design.
@@ -197,9 +195,9 @@ export default async function AirwavePage() {
 
 function StatusMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border p-3" style={{ borderColor: BRAND_COLORS.steelGray }}>
-      <p className="text-[10px] uppercase tracking-wider text-ink-500">{label}</p>
-      <p className="mt-1 font-display text-2xl text-white">{value}</p>
+    <div className="rounded-lg border border-titanium p-3">
+      <p className="font-mono text-xs uppercase tracking-wider text-ion-2">{label}</p>
+      <p className="mt-1 font-display text-2xl text-ion-white">{value}</p>
     </div>
   );
 }

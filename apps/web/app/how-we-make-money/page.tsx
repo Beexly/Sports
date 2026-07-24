@@ -4,7 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { Reveal, Stagger } from "@/components/motion/reveal";
-import { BRAND_COLORS, BRAND_NAME } from "@/lib/brand";
+import { BRAND_NAME } from "@/lib/brand";
 
 /**
  * /how-we-make-money — the trust layer required before any affiliate
@@ -79,28 +79,30 @@ const DISCLOSURE_POINTS = [
   },
 ] as const;
 
-const ACCENTS = [BRAND_COLORS.orbitalCyan, BRAND_COLORS.softUltraviolet, BRAND_COLORS.ionMagenta];
+// Section accents as design-token classes, in doctrine order: orbital-cyan
+// (data), ultraviolet (model depth), plasma (emphasis). No raw hex — the
+// palette-cohesion guard and the token file stay the single source of truth.
+const ACCENT_BAR = ["bg-orbital-cyan", "bg-ultraviolet", "bg-plasma"] as const;
+const ACCENT_TEXT = ["text-orbital-cyan", "text-ultraviolet", "text-plasma"] as const;
 
 export default function HowWeMakeMoneyPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-x-hidden" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col">
       <Nav />
       <main id="main-content" className="flex-1">
         {/* Hero */}
         <section className="px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
-                How we make money
-              </p>
+              <p className="eyebrow">How we make money</p>
             </Reveal>
             <Reveal delay={90}>
-              <h1 className="mt-4 font-display text-display-xl text-balance text-white">
+              <h1 className="mt-4 font-display text-display-xl text-balance text-ion-white">
                 Subscriptions come first. Partner links are additive and labeled.
               </h1>
             </Reveal>
             <Reveal delay={180}>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-300">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
                 {BRAND_NAME} runs on subscriptions. Some pages may also carry
                 links to licensed sportsbook operators that pay a commission
                 when they lead to a signup. This page explains both, plainly,
@@ -114,22 +116,25 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
-                Where the money comes from
-              </p>
-              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">Two sources. One of them is primary.</h2>
+              <p className="eyebrow">Where the money comes from</p>
+              <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
+                Two sources. One of them is primary.
+              </h2>
             </Reveal>
             <Stagger className="mt-8 grid gap-5 md:grid-cols-2" step={100}>
               {REVENUE_SOURCES.map((item, index) => (
                 <article key={item.title} className="surface-card p-6">
-                  <span aria-hidden="true" className="block h-1 w-10 rounded-full" style={{ backgroundColor: ACCENTS[index] }} />
-                  <h3 className="mt-4 text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-ink-300">{item.body}</p>
+                  <span
+                    aria-hidden="true"
+                    className={`block h-1 w-10 rounded-full ${ACCENT_BAR[index] ?? "bg-orbital-cyan"}`}
+                  />
+                  <h3 className="mt-4 text-lg font-semibold text-ion-white">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-ion-1">{item.body}</p>
                 </article>
               ))}
             </Stagger>
             <Reveal delay={120}>
-              <p className="mx-auto mt-6 max-w-3xl text-sm leading-6 text-ink-300">
+              <p className="mx-auto mt-6 max-w-3xl text-sm leading-6 text-ion-1">
                 We don&apos;t currently have any live partner links. The operator
                 registry that has to approve one before it can appear
                 publicly has zero approved partners today. This page describes
@@ -144,13 +149,11 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.softUltraviolet }}>
-                Structural separation
-              </p>
-              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+              <p className="eyebrow">Structural separation</p>
+              <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
                 Commissions never influence picks.
               </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-1">
                 A disclosed conflict of interest is still a conflict of
                 interest. The honest answer isn&apos;t a claim that the
                 conflict doesn&apos;t exist; it&apos;s keeping it from ever
@@ -160,11 +163,14 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
             <Stagger className="mt-8 grid gap-5 md:grid-cols-3" step={100}>
               {SEPARATION_POINTS.map((item, index) => (
                 <article key={item.title} className="surface-card p-6">
-                  <span aria-hidden="true" className="font-display text-2xl tabular-nums" style={{ color: ACCENTS[index] }}>
+                  <span
+                    aria-hidden="true"
+                    className={`font-mono text-2xl font-semibold tabular-nums ${ACCENT_TEXT[index] ?? "text-orbital-cyan"}`}
+                  >
                     0{index + 1}
                   </span>
-                  <h3 className="mt-3 text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-ink-300">{item.body}</p>
+                  <h3 className="mt-3 text-lg font-semibold text-ion-white">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-ion-1">{item.body}</p>
                 </article>
               ))}
             </Stagger>
@@ -175,16 +181,16 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.ionMagenta }}>
-                Disclosure
-              </p>
-              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">Every partner link is labeled.</h2>
+              <p className="eyebrow">Disclosure</p>
+              <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
+                Every partner link is labeled.
+              </h2>
             </Reveal>
             <Stagger className="mt-8 grid gap-5 md:grid-cols-3" step={100}>
               {DISCLOSURE_POINTS.map((item) => (
                 <article key={item.title} className="surface-card p-6">
-                  <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-ink-300">{item.body}</p>
+                  <h3 className="text-lg font-semibold text-ion-white">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-ion-1">{item.body}</p>
                 </article>
               ))}
             </Stagger>
@@ -195,13 +201,11 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
-                The record doesn&apos;t move for this
-              </p>
-              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+              <p className="eyebrow">The record doesn&apos;t move for this</p>
+              <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
                 Track record, published either way.
               </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-1">
                 The calibration report, closing-line value, and loss autopsies
                 publish on the same gate and the same schedule whether or not
                 any partner relationship exists. Nothing about a commission
@@ -230,8 +234,10 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
         <section className="px-4 pb-24 pt-8 sm:px-6 lg:px-8">
           <Reveal>
             <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
-              <h2 className="font-display text-3xl text-white sm:text-4xl">Questions about a specific link or offer?</h2>
-              <p className="text-sm leading-6 text-ink-300">
+              <h2 className="font-display text-display-lg text-balance text-ion-white">
+                Questions about a specific link or offer?
+              </h2>
+              <p className="text-sm leading-6 text-ion-1">
                 See something on the site you think should carry a disclosure
                 label and doesn&apos;t, or want to know how a specific page
                 makes money, reach out and we&apos;ll answer directly.

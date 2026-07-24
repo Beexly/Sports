@@ -59,7 +59,7 @@ export default async function AdminRunwayPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Runway</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Runway</h1>
         <Link
           href="/admin"
           className="w-fit rounded-lg border border-titanium px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60"
@@ -70,7 +70,7 @@ export default async function AdminRunwayPage() {
 
       <p
         data-testid="internal-only-banner"
-        className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"
+        className="rounded-lg border border-caution/60 bg-caution/10 px-4 py-2 text-xs text-caution"
       >
         Internal only, display-only. Numbers come from RUNWAY_* env vars, set
         manually by the owner — this page never writes, transfers, or moves
@@ -111,7 +111,7 @@ function StatCard({
   tone?: "good" | "bad";
 }) {
   const accent =
-    tone === "good" ? "text-green-400" : tone === "bad" ? "text-red-400" : "text-white";
+    tone === "good" ? "text-verify" : tone === "bad" ? "text-alert" : "text-ion-white";
   return (
     <div className="rounded-2xl border border-titanium bg-carbon/40 p-4">
       <span className={`block text-2xl font-bold ${accent}`}>{value}</span>

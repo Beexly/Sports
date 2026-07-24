@@ -11,6 +11,7 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { reconcileUserEntitlement } from "@/lib/billing/reconcile-entitlements";
 import { BRAND_NAME } from "@/lib/brand";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
+import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
@@ -46,14 +47,14 @@ export default async function DashboardPage({
   if (!session?.user?.id) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-obsidian text-ion-1">
-        <div className="rounded-2xl border border-titanium bg-carbon/60 p-8 text-center">
-          <h1 className="text-2xl font-bold text-white">Sign in required</h1>
-          <p className="mt-2 text-sm text-ion-2">
+        <div className="rounded-2xl border border-mineral bg-carbon/60 p-8 text-center">
+          <h1 className="text-2xl font-black tracking-tight text-ion-white">Sign in required</h1>
+          <p className="mt-2 text-sm text-ion-1">
             The customer dashboard requires an authenticated session.
           </p>
           <Link
             href="/auth/signin?callbackUrl=/dashboard"
-            className="mt-4 inline-block rounded-xl bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-500"
+            className="mt-5 inline-block rounded-xl bg-plasma px-5 py-2 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
           >
             Continue to sign in
           </Link>
@@ -188,42 +189,45 @@ export default async function DashboardPage({
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
-      <header className="border-b border-titanium bg-obsidian/80 backdrop-blur-sm">
+      <header className="border-b border-mineral/60 bg-obsidian/80 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="text-sm font-semibold text-white">
+          <Link href="/" className="text-sm font-semibold text-ion-white">
             {BRAND_NAME}
           </Link>
           <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-xs text-ion-2">
-            <Link href="/picks" className="inline-flex min-h-11 items-center py-2 hover:text-white">Picks</Link>
-            <Link href="/performance" className="inline-flex min-h-11 items-center py-2 hover:text-white">Performance</Link>
-            <Link href="/pricing" className="inline-flex min-h-11 items-center py-2 hover:text-white">Pricing</Link>
-            <span className="hidden text-ion-3 sm:inline">|</span>
-            <span className="max-w-[45vw] truncate text-ion-3">{user.email}</span>
+            <Link href="/picks" className="inline-flex min-h-11 items-center py-2 hover:text-ion-white">Picks</Link>
+            <Link href="/performance" className="inline-flex min-h-11 items-center py-2 hover:text-ion-white">Performance</Link>
+            <Link href="/pricing" className="inline-flex min-h-11 items-center py-2 hover:text-ion-white">Pricing</Link>
+            <span aria-hidden="true" className="hidden text-mineral-hi sm:inline">|</span>
+            <span className="max-w-[45vw] truncate text-ion-2">{user.email}</span>
           </nav>
         </div>
       </header>
 
       <main id="main-content" className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold text-white">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+                Member dashboard
+              </p>
+              <h1 className="mt-2 text-2xl font-black tracking-tight text-ion-white">
                 {user.name ? `Welcome back, ${user.name.split(" ")[0]}` : "Dashboard"}
               </h1>
-              <p className="text-sm text-ion-2">{user.email}</p>
+              <p className="mt-1 text-sm text-ion-2">{user.email}</p>
             </div>
             <div className="flex items-center gap-2">
               {demoActive && (
                 <span
                   data-testid="dashboard-sample-mode"
                   aria-label="Sample mode: picks are deterministic samples, not live data"
-                  className="rounded-md bg-caution/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution"
+                  className="rounded-md bg-caution/15 px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-caution"
                   title="Stub mode + demo samples: picks shown are deterministic samples, not live model output."
                 >
                   Sample mode
                 </span>
               )}
-              <span className="rounded-full bg-titanium px-3 py-1 text-sm font-semibold text-ion-1">
+              <span className="rounded-full bg-titanium px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ion-1">
                 {user.role === "ADMIN" ? "Admin" : "Member"}
               </span>
             </div>
@@ -238,13 +242,16 @@ export default async function DashboardPage({
           {searchParams?.upgraded === "true" && (
             <div
               data-testid="upgrade-success-banner"
-              className="mb-6 rounded-xl border border-emerald-700/50 bg-emerald-950/30 p-5"
+              className="mb-6 rounded-xl border border-verify/50 bg-verify/10 p-5"
             >
-              <p className="text-sm font-semibold text-emerald-300">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-verify">
+                Subscription active
+              </p>
+              <p className="mt-2 text-sm font-semibold text-ion-white">
                 You&apos;re in — at the {phaseName} rate, locked for the life of your
                 subscription.
               </p>
-              <p className="mt-1 text-xs text-emerald-300/80">
+              <p className="mt-1 text-xs leading-relaxed text-ion-1">
                 Confidence scores, the full factor trail, and line movement are now live on
                 every pick.
                 {entitlements.tier === "ELITE"
@@ -253,7 +260,7 @@ export default async function DashboardPage({
               </p>
               <Link
                 href="/picks"
-                className="mt-3 inline-flex rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-emerald-500"
+                className="mt-3 inline-flex rounded-lg bg-verify px-4 py-2 text-xs font-semibold text-obsidian transition-colors hover:bg-verify/80"
               >
                 See today&apos;s board →
               </Link>
@@ -279,39 +286,39 @@ export default async function DashboardPage({
           {!performanceVisible && (
             <p
               data-testid="dashboard-performance-collecting"
-              className="mb-6 rounded-lg border border-titanium bg-carbon/40 px-4 py-3 text-xs text-ion-2"
+              className="mb-6 rounded-lg border border-mineral bg-carbon/40 px-4 py-3 text-xs leading-relaxed text-ion-2"
             >
               {performancePolicy.publicMessage}
             </p>
           )}
           {performanceVisible && (
-            <p className="mb-6 text-[11px] text-ion-3">
+            <p className="mb-6 text-xs text-ion-2">
               Only fully-settled verified picks are counted. Pushes are
               reported separately. Pending and early-period picks are
               excluded.
             </p>
           )}
 
-          {/* Today's picks list */}
-          <section className="mb-6 rounded-2xl border border-titanium bg-carbon/60 p-6">
+          {/* Today's picks list — the focal region: what matters now. */}
+          <section className="mb-6 rounded-2xl border border-mineral-hi bg-carbon/80 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-3">
+              <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
                 Today's picks
               </h2>
               <Link
                 href="/picks"
-                className="text-xs text-brand-400 hover:text-brand-300"
+                className="font-mono text-[11px] uppercase tracking-[0.14em] text-orbital-cyan transition-colors hover:text-orbital-cyan-glow"
               >
                 View all →
               </Link>
             </div>
             {todayPicks.length === 0 ? (
-              <p className="py-6 text-center text-sm text-ion-3">
-                No picks generated yet today. Check back after the ingestion
-                worker runs.
+              <p className="py-6 text-center text-sm text-ion-2">
+                No picks published yet today. The board fills in as games clear
+                the model — check back closer to game time.
               </p>
             ) : (
-              <ul className="divide-y divide-titanium">
+              <ul className="divide-y divide-mineral/60">
                 {todayPicks.map((p) => (
                   <PickRow key={p.id} pick={p} showConfidence={entitlements.canSeeConfidence} />
                 ))}
@@ -320,9 +327,9 @@ export default async function DashboardPage({
           </section>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <section className="rounded-2xl border border-titanium bg-carbon/60 p-6">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ion-3">
-                Quick Links
+            <section className="rounded-2xl border border-mineral bg-carbon/60 p-6">
+              <h2 className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
+                Quick links
               </h2>
               <nav className="flex flex-col gap-1">
                 {[
@@ -334,21 +341,21 @@ export default async function DashboardPage({
                   <Link
                     key={href}
                     href={href}
-                    className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-ion-2 hover:bg-titanium hover:text-white"
+                    className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-ion-1 transition-colors hover:bg-titanium hover:text-ion-white"
                   >
                     {label}
-                    <span className="text-ion-3">{`→`}</span>
+                    <span aria-hidden="true" className="text-ion-2">{`→`}</span>
                   </Link>
                 ))}
               </nav>
             </section>
 
-            <section className="rounded-2xl border border-titanium bg-carbon/60 p-6">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ion-3">
+            <section className="rounded-2xl border border-mineral bg-carbon/60 p-6">
+              <h2 className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
                 Where we are
               </h2>
-              <p className="text-sm text-ion-1">{performancePolicy.publicMessage}</p>
-              <p className="mt-3 text-[11px] text-ion-3">
+              <p className="text-sm leading-relaxed text-ion-1">{performancePolicy.publicMessage}</p>
+              <p className="mt-3 text-xs leading-relaxed text-ion-2">
                 Pick generation, ingestion, and settlement are running.
                 Your verified record will populate as canonical picks
                 settle. We do not publish a win rate until we have a
@@ -356,7 +363,7 @@ export default async function DashboardPage({
               </p>
               <p
                 data-testid="dashboard-last-sync"
-                className="mt-3 text-[10px] uppercase tracking-widest text-ion-3"
+                className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2"
               >
                 As of {format(new Date(), "MMM d, yyyy · h:mm a")}
               </p>
@@ -380,7 +387,7 @@ function SampleDataBanner() {
       aria-live="polite"
       className="mb-4 flex items-start gap-3 rounded-xl border border-caution/40 bg-caution/10 p-3 text-xs"
     >
-      <span className="mt-0.5 rounded-md bg-caution/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
+      <span className="mt-0.5 rounded-md bg-caution/15 px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-caution">
         Sample data
       </span>
       <p className="flex-1 text-caution/90 leading-relaxed">
@@ -392,29 +399,44 @@ function SampleDataBanner() {
   );
 }
 
+/**
+ * Confidence ladder (DESIGN.md): 80–100 plasma · 65–79 orbital cyan ·
+ * 50–64 ultraviolet · <50 silver. Presentation-only mapping — the number
+ * itself is always rendered beside the bar (color is never the sole encoding).
+ */
+function confidenceBarClass(confidence: number): string {
+  if (confidence >= 80) return "bg-plasma/70";
+  if (confidence >= 65) return "bg-orbital-cyan/70";
+  if (confidence >= 50) return "bg-ultraviolet/70";
+  return "bg-ion-1/50";
+}
+
 function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: boolean }) {
   const homeAway = `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`;
   return (
     <li className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-white">
+        <p className="truncate text-sm font-medium text-ion-white">
           <span
             data-testid="dashboard-sport-pill"
-            className="mr-2 rounded bg-titanium px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-ion-2"
+            className="mr-2 rounded bg-titanium px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-2"
           >
             {pick.game.sport.name}
           </span>
           {pick.selection}
           {pick.isFeatured && (
-            <span className="ml-2 rounded bg-brand-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-brand-300">
+            <span className="ml-2 rounded bg-plasma/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-plasma-glow">
               Featured
             </span>
           )}
         </p>
-        <p className="truncate text-xs text-ion-3">
-          {homeAway} · {pick.game.sport.name}
+        <p className="truncate text-xs text-ion-2">
+          {homeAway} ·{" "}
+          <span className={NUMERIC_TEXT_CLASS}>
+            {format(pick.game.commenceTime, "h:mm a")}
+          </span>
         </p>
-        <p className="truncate text-[11px] text-ion-3">
+        <p className="truncate text-xs text-ion-2">
           {pick.reasoningShort}
         </p>
         {showConfidence && (
@@ -424,7 +446,7 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
             className="mt-1 h-1 w-full overflow-hidden rounded-full bg-titanium"
           >
             <div
-              className="h-full bg-brand-500/60"
+              className={`h-full ${confidenceBarClass(pick.confidence)}`}
               style={{ width: `${Math.max(0, Math.min(100, pick.confidence))}%` }}
             />
           </div>
@@ -433,13 +455,13 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
       <div className="flex shrink-0 flex-col items-end gap-1 text-right">
         <GradeBadge grade={pick.pickGrade} />
         {showConfidence ? (
-          <span className="text-xs text-ion-2">
+          <span className={`text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
             {pick.confidence}% conf
           </span>
         ) : (
           <Link
             href="/pricing"
-            className="text-[10px] font-semibold uppercase tracking-widest text-brand-400 hover:text-brand-300"
+            className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ultraviolet-glow underline-offset-4 hover:underline"
           >
             Conf · Pro
           </Link>
@@ -448,12 +470,12 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
           <span
             data-testid="edge-score"
             aria-label={`Edge score ${pick.edgeScore.toFixed(1)}`}
-            className="rounded bg-verify/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-verify"
+            className={`rounded bg-verify/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-verify ${NUMERIC_TEXT_CLASS}`}
           >
             +{pick.edgeScore.toFixed(1)} edge
           </span>
         )}
-        <span className="text-[10px] uppercase tracking-widest text-ion-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
           {pick.riskLevel}
         </span>
       </div>
@@ -491,10 +513,10 @@ function StatCard({
   subtext?: string | null;
 }) {
   return (
-    <div className="rounded-xl border border-titanium bg-carbon/60 p-4">
-      <p className="text-xs text-ion-3">{label}</p>
-      <p className={`mt-1 text-2xl font-bold ${highlight ? "text-orbital-cyan" : "text-white"}`}>{value}</p>
-      {subtext && <p className="mt-0.5 text-[10px] text-ion-3">{subtext}</p>}
+    <div className="rounded-xl border border-mineral bg-carbon/60 p-4">
+      <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ion-2">{label}</p>
+      <p className={`mt-1.5 text-2xl font-bold ${NUMERIC_TEXT_CLASS} ${highlight ? "text-orbital-cyan" : "text-ion-white"}`}>{value}</p>
+      {subtext && <p className={`mt-1 text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}>{subtext}</p>}
     </div>
   );
 }

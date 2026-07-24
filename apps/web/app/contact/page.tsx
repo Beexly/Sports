@@ -36,10 +36,10 @@ export default function ContactPage() {
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">Get in touch</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">
               I answer real people, not bots.
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-ink-300">
+            <p className="mt-5 max-w-xl text-lg text-ion-1">
               I aim to reply within one business day. Faster on weekday
               afternoons, slower around major slates.
             </p>
@@ -49,13 +49,13 @@ export default function ContactPage() {
                 <a
                   key={box.title}
                   href={`mailto:${box.email}`}
-                  className="surface-card group flex flex-col gap-2 p-6 transition-colors hover:border-accent-700"
+                  className="surface-card group flex flex-col gap-2 p-6 transition-colors hover:border-mineral-hi"
                 >
                   <p className="eyebrow">{box.title}</p>
-                  <p className="text-sm leading-relaxed text-ink-300">
+                  <p className="text-sm leading-relaxed text-ion-1">
                     {box.description}
                   </p>
-                  <p className="mt-2 font-mono text-sm text-accent-300 group-hover:underline">
+                  <p className="mt-2 font-mono text-sm text-orbital-cyan group-hover:underline">
                     {box.email}
                   </p>
                 </a>

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function TodayPage() {
   const cards = buildBriefing();
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
       <main id="main-content" className="flex-1">
@@ -28,10 +28,10 @@ export default function TodayPage() {
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80" style={{ background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.orbitalCyan}18, transparent 70%), radial-gradient(40% 60% at 76% 6%, ${BRAND_COLORS.ionMagenta}10, transparent 70%)` }} />
           <div className="mx-auto max-w-6xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.orbitalCyan }}><span className="live-dot" /> Mission Control</p>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan"><span className="live-dot" /> Mission Control</p>
             </Reveal>
             <Reveal delay={90}>
-              <h1 className="mt-5 max-w-3xl font-display text-balance text-white" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}>
+              <h1 className="mt-5 max-w-3xl font-display text-balance text-ion-white" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}>
                 What matters <span className="gse-editorial" style={{ fontSize: "1.08em" }}>now</span>.
               </h1>
             </Reveal>

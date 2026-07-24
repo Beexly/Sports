@@ -135,6 +135,39 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
     gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 22% 78%, rgba(255,56,199,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
     still: "/immersive/players-constellation.webp",
   },
+
+  // Sport-vertical plates — gradient-wired ahead of the committed stills
+  // (Higgsfield renders exist in the owner's library; see
+  // WORLD_CLASS_REDESIGN_PLAN.md "Committing the sport-vertical plates").
+  // Field telemetry: cyan yard lines, one magenta route arc.
+  "nflverse-gridiron": {
+    gradient:
+      `radial-gradient(65% 55% at 50% 108%, rgba(0,229,255,0.10), transparent 65%), ` +
+      `radial-gradient(35% 40% at 74% 70%, rgba(255,56,199,0.07), transparent 60%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #070810 55%, #0a0b12 100%)`,
+  },
+  // Black ice under a cyan/ultraviolet aurora.
+  "nhl-icefield": {
+    gradient:
+      `radial-gradient(70% 45% at 50% 112%, rgba(0,229,255,0.11), transparent 68%), ` +
+      `radial-gradient(45% 40% at 28% 78%, rgba(123,97,255,0.09), transparent 62%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #070810 55%, #090a11 100%)`,
+  },
+  // Diamond geometry etched in cyan, one magenta flight trace.
+  "mlb-diamond": {
+    gradient:
+      `radial-gradient(55% 50% at 50% 105%, rgba(0,229,255,0.10), transparent 62%), ` +
+      `radial-gradient(30% 35% at 68% 62%, rgba(255,56,199,0.06), transparent 58%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #070810 58%, #0a0b12 100%)`,
+  },
+  // Draft board as star chart: ultraviolet web, plasma-marked nodes.
+  "fantasy-constellation": {
+    gradient:
+      `radial-gradient(60% 55% at 62% 88%, rgba(123,97,255,0.11), transparent 64%), ` +
+      `radial-gradient(40% 45% at 22% 70%, rgba(0,229,255,0.08), transparent 60%), ` +
+      `radial-gradient(18% 22% at 78% 55%, rgba(255,56,199,0.07), transparent 55%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #070810 55%, #0a0b12 100%)`,
+  },
 };
 
 export function getPlate(id: string): PlateManifest | undefined {

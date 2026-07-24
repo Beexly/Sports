@@ -16,18 +16,18 @@ import type { PublicPerformancePolicy } from "@/lib/performance/public-performan
 function launchStatusStyle(status: JarvisLaunchStatus): { label: string; tone: string } {
   switch (status) {
     case "LAUNCH_READY":
-      return { label: "LAUNCH READY", tone: "bg-green-900/50 text-green-300 ring-green-700/40" };
+      return { label: "LAUNCH READY", tone: "bg-verify/50 text-verify ring-verify/40" };
     case "LAUNCH_READY_PENDING_EXTERNAL_CONFIG":
       return {
         label: "LAUNCH READY · pending external config",
-        tone: "bg-yellow-900/40 text-yellow-300 ring-yellow-700/40",
+        tone: "bg-caution/40 text-caution ring-caution/40",
       };
     case "NOT_READY_DATA":
-      return { label: "NOT READY · data", tone: "bg-red-900/40 text-red-300 ring-red-700/40" };
+      return { label: "NOT READY · data", tone: "bg-alert/40 text-alert ring-alert/40" };
     case "NOT_READY_VALIDATION":
-      return { label: "NOT READY · validation", tone: "bg-orange-900/40 text-orange-300 ring-orange-700/40" };
+      return { label: "NOT READY · validation", tone: "bg-caution/40 text-caution ring-caution/40" };
     case "NOT_READY_SAFETY":
-      return { label: "NOT READY · safety", tone: "bg-red-900/60 text-red-200 ring-red-700/40" };
+      return { label: "NOT READY · safety", tone: "bg-alert/60 text-alert ring-alert/40" };
     case "UNKNOWN":
     default:
       return { label: "UNKNOWN", tone: "bg-obsidian/70 text-ion-1 ring-titanium/40" };
@@ -37,11 +37,11 @@ function launchStatusStyle(status: JarvisLaunchStatus): { label: string; tone: s
 function healthTone(h: JarvisHealth): string {
   switch (h) {
     case "GREEN":
-      return "text-green-400";
+      return "text-verify";
     case "AMBER":
-      return "text-yellow-300";
+      return "text-caution";
     case "RED":
-      return "text-red-400";
+      return "text-alert";
     case "UNKNOWN":
     default:
       return "text-ion-3";
@@ -125,8 +125,8 @@ export function JarvisAssessmentPanel({
 
       {assessment.safetyWarnings.length > 0 && (
         <div className="mt-5">
-          <h3 className="text-[10px] font-semibold uppercase tracking-widest text-red-400">Safety warnings</h3>
-          <ul className="mt-2 space-y-1 text-[11px] text-red-300">
+          <h3 className="text-[10px] font-semibold uppercase tracking-widest text-alert">Safety warnings</h3>
+          <ul className="mt-2 space-y-1 text-[11px] text-alert">
             {assessment.safetyWarnings.map((w) => (
               <li key={w}>• {w}</li>
             ))}

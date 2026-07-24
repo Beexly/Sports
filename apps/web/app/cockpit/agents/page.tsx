@@ -84,7 +84,7 @@ export default async function CockpitAgentsPage() {
                 {agent.safeActions.map((s) => (
                   <li key={s}>{s}</li>
                 ))}
-                <li className="text-yellow-500">External actions: {agent.externalActions}</li>
+                <li className="text-caution">External actions: {agent.externalActions}</li>
               </ul>
             </details>
           </article>

@@ -22,7 +22,7 @@ export default async function Page() {
   const hasFixtureRuns = b.runs.some((r: Record<string, unknown>) => String(r.status ?? "").includes("fixture"));
 
   return (
-    <Shell title="Proof & Backtests">
+    <Shell title="Proof & Backtests" eyebrow="Validation layer">
       <StatusRibbon status="fixture" label="Backtest proof updated every cycle" />
       <Cards items={[
         { label: "Runs", value: b.runs.length },
@@ -58,6 +58,7 @@ export default async function Page() {
               </p>
             )}
             <DataTable
+              caption="Backtest archive: run ID, type, status, mean absolute error, calibration, and what each run proves"
               rows={b.runs.map((r: Record<string, unknown>) => ({
                 run_id: String(r.run_id ?? ""),
                 type: String(r.type ?? ""),

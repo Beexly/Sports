@@ -5,7 +5,6 @@ import { Nav } from "@/components/ui/nav";
 import { Reveal } from "@/components/motion/reveal";
 import { InteractiveGalaxyLazy } from "@/components/hero/interactive-galaxy-lazy";
 import { HumanPerformancePanel } from "@/components/human/human-performance-panel";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Human Performance: Confidence, Not Claims",
@@ -24,7 +23,7 @@ const RULES: readonly string[] = [
 
 export default function HumanPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
       <main id="main-content" className="flex-1">
         {/* Cinematic hero — house pattern (galaxy backdrop + scrim + staggered reveal) */}
@@ -36,22 +35,23 @@ export default function HumanPage(): JSX.Element {
             aria-hidden="true"
             className="absolute inset-0 -z-10"
             style={{
-              background: `linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}cc 0%, ${BRAND_COLORS.obsidianBlack}33 42%, ${BRAND_COLORS.obsidianBlack}66 74%, ${BRAND_COLORS.obsidianBlack} 100%)`,
+              background:
+                "linear-gradient(180deg, rgba(5, 7, 11, 0.8) 0%, rgba(5, 7, 11, 0.2) 42%, rgba(5, 7, 11, 0.4) 74%, rgba(5, 7, 11, 1) 100%)",
             }}
           />
           <div className="mx-auto flex min-h-[72vh] max-w-6xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow text-orbital-cyan">
                 Human Performance · Black Label
               </p>
             </Reveal>
             <Reveal delay={90}>
-              <h1 className="mt-4 max-w-3xl font-display text-display-xl text-balance text-white">
+              <h1 className="mt-4 max-w-3xl font-display text-display-xl text-balance text-ion-white">
                 Confidence, not claims.
               </h1>
             </Reveal>
             <Reveal delay={180}>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-300">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
                 This layer makes the edge <em>more honest about uncertainty</em>, not more confident. It reads
                 the venue&apos;s surface and roof, the game-day weather, and the official injury designation,
                 and turns them into a band that can only widen, plus a clear verdict: play, watchlist, or

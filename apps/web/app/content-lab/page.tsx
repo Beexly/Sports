@@ -14,11 +14,11 @@ export default function ContentLabPage() {
     <div className="flex min-h-screen flex-col">
       <Nav />
       <main id="main-content" className="flex-1">
-        <section className="border-b border-ink-800/60 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="border-b border-mineral/60 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <p className="eyebrow">Content lab</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">The content system behind GSE and GSN.</h1>
-            <p className="mt-5 max-w-3xl text-lg text-ink-300">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">The content system behind GSE and GSN.</h1>
+            <p className="mt-5 max-w-3xl text-lg text-ion-1">
               Each pillar teaches a repeatable evidence lesson, connects back to repo-backed trust surfaces, and routes attention to
               newsletter, partner, or product demand without unsupported public claims.
             </p>
@@ -30,12 +30,12 @@ export default function ContentLabPage() {
             {CONTENT_PILLARS.map((pillar) => (
               <article key={pillar.id} className="surface-card p-6">
                 <p className="eyebrow">{pillar.name}</p>
-                <h2 className="mt-3 font-display text-2xl text-white">{pillar.coreIdea}</h2>
-                <p className="mt-3 text-sm leading-7 text-ink-300">{pillar.description}</p>
-                <div className="mt-5 grid gap-3 text-sm text-ink-300">
-                  <p><span className="text-ink-100">What it teaches:</span> {pillar.audience}</p>
-                  <p><span className="text-ink-100">Why it matters:</span> {pillar.repoTieIn}</p>
-                  <p><span className="text-ink-100">Sample episodes:</span> {pillar.exampleHooks.slice(0, 2).join(" / ")}</p>
+                <h2 className="mt-3 font-display text-2xl text-ion-white">{pillar.coreIdea}</h2>
+                <p className="mt-3 text-sm leading-7 text-ion-1">{pillar.description}</p>
+                <div className="mt-5 grid gap-3 text-sm text-ion-1">
+                  <p><span className="text-ion">What it teaches:</span> {pillar.audience}</p>
+                  <p><span className="text-ion">Why it matters:</span> {pillar.repoTieIn}</p>
+                  <p><span className="text-ion">Sample episodes:</span> {pillar.exampleHooks.slice(0, 2).join(" / ")}</p>
                 </div>
               </article>
             ))}

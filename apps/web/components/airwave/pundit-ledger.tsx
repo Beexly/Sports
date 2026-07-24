@@ -61,7 +61,7 @@ function Record({ card }: { card: PunditScorecard }) {
     card.unfalsifiable ? `${card.unfalsifiable} hot-take${card.unfalsifiable === 1 ? "" : "s"}` : null,
     card.pending ? `${card.pending} pending` : null,
   ].filter(Boolean);
-  return <span className="font-mono text-[11px] text-ink-400">{parts.join(" · ")}</span>;
+  return <span className="font-mono text-[11px] text-ion-2">{parts.join(" · ")}</span>;
 }
 
 export function PunditLedger({
@@ -84,7 +84,7 @@ export function PunditLedger({
     <div className="grid gap-5 lg:grid-cols-[minmax(0,360px)_1fr]">
       {/* Leaderboard */}
       <div>
-        <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ink-500">
+        <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ion-2">
           Accountability board · {scorecards.length} on the record
         </p>
         <ul className="flex flex-col gap-2" role="tablist" aria-label="Pundit accountability board">
@@ -103,14 +103,14 @@ export function PunditLedger({
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-white">{card.name}</p>
-                      <p className="truncate text-[11px] text-ink-500">{card.show} · {card.network}</p>
+                      <p className="truncate text-sm font-semibold text-ion-white">{card.name}</p>
+                      <p className="truncate text-[11px] text-ion-2">{card.show} · {card.network}</p>
                     </div>
                     <div className="text-right">
                       <p className="font-display text-2xl tabular-nums leading-none" style={{ color: hex }}>
                         {card.accountabilityIndex}
                       </p>
-                      <p className="text-[9px] uppercase tracking-wider text-ink-500">index</p>
+                      <p className="text-[9px] uppercase tracking-wider text-ion-2">index</p>
                     </div>
                   </div>
                   <div className="mt-2.5 h-1 w-full overflow-hidden rounded-full" style={{ background: BRAND_COLORS.steelGray }}>
@@ -128,33 +128,33 @@ export function PunditLedger({
       <div className="surface-card p-5 sm:p-6" role="tabpanel" aria-label={`${selected.name} record`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h3 className="text-lg font-semibold text-white">{selected.name}</h3>
-            <p className="text-xs text-ink-500">{selected.show} · {selected.network}</p>
+            <h3 className="text-lg font-semibold text-ion-white">{selected.name}</h3>
+            <p className="text-xs text-ion-2">{selected.show} · {selected.network}</p>
           </div>
           <div className="text-right">
             <p className="font-display text-3xl tabular-nums leading-none" style={{ color: indexHex(selected.accountabilityIndex) }}>
-              {selected.accountabilityIndex}<span className="text-base text-ink-500"> / 100</span>
+              {selected.accountabilityIndex}<span className="text-base text-ion-2"> / 100</span>
             </p>
-            <p className="text-[10px] uppercase tracking-wider text-ink-500">accountability index</p>
+            <p className="text-[10px] uppercase tracking-wider text-ion-2">accountability index</p>
           </div>
         </div>
 
-        <p className="mt-3 text-sm leading-relaxed text-ink-300">{selected.calibrationNote}</p>
+        <p className="mt-3 text-sm leading-relaxed text-ion-1">{selected.calibrationNote}</p>
 
-        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t pt-3 text-[11px] text-ink-400" style={{ borderColor: BRAND_COLORS.steelGray }}>
-          <span>Checkable rate: <strong className="text-ink-200">{Math.round(selected.falsifiableRate * 100)}%</strong></span>
+        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t pt-3 text-[11px] text-ion-2" style={{ borderColor: BRAND_COLORS.steelGray }}>
+          <span>Checkable rate: <strong className="text-ion-1">{Math.round(selected.falsifiableRate * 100)}%</strong></span>
           <span>
             Decided calls:{" "}
-            <strong className="text-ink-200">
+            <strong className="text-ion-1">
               {selected.hitRate === null
                 ? "—"
                 : `${selected.hits} of ${selected.hits + selected.misses} hit (${Math.round(selected.hitRate * 100)}%)`}
             </strong>
             {selected.hitRateBandPct && (
-              <span className="text-ink-500"> · 95% band {selected.hitRateBandPct.low}–{selected.hitRateBandPct.high}%</span>
+              <span className="text-ion-2"> · 95% band {selected.hitRateBandPct.low}–{selected.hitRateBandPct.high}%</span>
             )}
           </span>
-          <span>Claims logged: <strong className="text-ink-200">{selected.total}</strong></span>
+          <span>Claims logged: <strong className="text-ion-1">{selected.total}</strong></span>
         </div>
 
         <ul className="mt-4 flex flex-col gap-2.5">
@@ -167,13 +167,13 @@ export function PunditLedger({
                     <span className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider" style={{ background: `${hex}1f`, color: hex }}>
                       {VERDICT_LABEL[c.verdict]}
                     </span>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-ink-500">{c.sport} · {c.subject}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-ion-2">{c.sport} · {c.subject}</span>
                   </span>
-                  <span className="font-mono text-[10px] text-ink-500">{airedLabel(c.airedAt)}</span>
+                  <span className="font-mono text-[10px] text-ion-2">{airedLabel(c.airedAt)}</span>
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-ink-100">{c.assertion}</p>
-                <p className="mt-1.5 text-xs text-ink-400">
-                  <span className="text-ink-500">Outcome: </span>{c.outcomeNote}
+                <p className="mt-2 text-sm leading-relaxed text-ion">{c.assertion}</p>
+                <p className="mt-1.5 text-xs text-ion-2">
+                  <span className="text-ion-2">Outcome: </span>{c.outcomeNote}
                 </p>
               </li>
             );

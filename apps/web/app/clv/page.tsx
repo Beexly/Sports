@@ -9,6 +9,7 @@ import {
   loadPublicClvPolicy,
   type PublicClvPolicy,
 } from "@/lib/performance/public-clv-policy";
+import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { glossaryEntry } from "@/lib/glossary";
 
 export const metadata: Metadata = {
@@ -46,10 +47,10 @@ export default async function ClvPage() {
         <div className="mx-auto max-w-3xl">
           {/* Hero */}
           <div className="mb-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-orbital-cyan">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-orbital-cyan">
               The benchmark nobody publishes
             </p>
-            <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-ion-white sm:text-5xl">
+            <h1 className="mt-3 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
               Closing Line Value
             </h1>
             <p className="mt-5 text-lg text-ion-1">{clv?.plain}</p>
@@ -58,7 +59,7 @@ export default async function ClvPage() {
 
           {/* Why CLV is the honest benchmark */}
           <section className="mb-10 rounded-2xl border border-mineral bg-eclipse/60 p-6">
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-ion-2">
+            <h2 className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
               Why this is the number that matters
             </h2>
             <div className="space-y-4 text-sm leading-relaxed text-ion-1">
@@ -179,7 +180,7 @@ function ClvGatedState({
     >
       <div className="mb-4 flex items-center gap-2">
         <span className="h-2 w-2 rounded-full bg-caution animate-live-pulse" />
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
+        <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
           CLV report: accruing
         </h2>
       </div>
@@ -187,7 +188,7 @@ function ClvGatedState({
       <div className="mt-5">
         <div className="mb-1.5 flex items-center justify-between text-xs text-ion-2">
           <span>Graded against the close</span>
-          <span className="font-mono tabular-nums text-ion-1">
+          <span className={`text-ion-1 ${NUMERIC_TEXT_CLASS}`}>
             {graded} / {minGraded}
           </span>
         </div>
@@ -198,9 +199,9 @@ function ClvGatedState({
           />
         </div>
       </div>
-      <p className="mt-4 text-xs text-ion-3">
+      <p className="mt-4 text-xs text-ion-2">
         No beat-close rate is shown until the sample is large enough to be honest.
-        It's the same discipline as the public win rate.
+        It&apos;s the same discipline as the public win rate.
       </p>
     </section>
   );
@@ -211,12 +212,12 @@ function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
     <section data-testid="clv-scoreboard">
       <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
         <div className="border-b border-mineral px-6 py-4">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+          <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
             Beat the close
           </h2>
         </div>
         <div className="px-6 py-8 text-center">
-          <p className="text-5xl sm:text-6xl font-extrabold tabular-nums text-orbital-cyan">
+          <p className={`text-5xl font-extrabold text-orbital-cyan sm:text-6xl ${NUMERIC_TEXT_CLASS}`}>
             {policy.beatCloseRatePct}%
           </p>
           <p className="mt-2 text-sm text-ion-2">
@@ -224,13 +225,13 @@ function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
           </p>
           {policy.beatCloseCiLowPct != null && (
             <div className="mt-4 flex flex-col items-center gap-2">
-              <p className="font-mono text-xs tabular-nums text-ion-3">
-                95% confidence interval: {policy.beatCloseCiLowPct}%-{policy.beatCloseCiHighPct}%
+              <p className={`text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+                95% confidence interval: {policy.beatCloseCiLowPct}%&ndash;{policy.beatCloseCiHighPct}%
               </p>
               <span
                 className={
                   policy.clearsBreakEven
-                    ? "rounded-full border border-orbital-cyan/50 bg-orbital-cyan/10 px-3 py-1 text-xs font-semibold text-orbital-cyan"
+                    ? "rounded-full border border-verify/40 bg-verify/10 px-3 py-1 text-xs font-semibold text-verify"
                     : "rounded-full border border-mineral bg-eclipse/60 px-3 py-1 text-xs font-semibold text-ion-2"
                 }
               >
@@ -242,31 +243,33 @@ function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
           )}
         </div>
         <div className="grid grid-cols-3 divide-x divide-mineral/60 border-t border-mineral">
-          <VerdictStat label="Beat" value={policy.beatCloseCount} accent="text-orbital-cyan" />
-          <VerdictStat label="Matched" value={policy.matchedCloseCount} accent="text-ion-2" />
-          <VerdictStat label="Lost" value={policy.lostToCloseCount} accent="text-alert" />
+          <VerdictStat label="Beat" glyph="+" value={policy.beatCloseCount} accent="text-verify" />
+          <VerdictStat label="Matched" glyph="=" value={policy.matchedCloseCount} accent="text-ion-2" />
+          <VerdictStat label="Lost" glyph={"\u2212"} value={policy.lostToCloseCount} accent="text-alert" />
         </div>
       </div>
-      <p className="mt-4 text-xs text-ion-3">{policy.publicMessage}</p>
+      <p className="mt-4 text-xs text-ion-2">{policy.publicMessage}</p>
     </section>
   );
 }
 
 function VerdictStat({
   label,
+  glyph,
   value,
   accent,
 }: {
   label: string;
+  glyph: string;
   value: number;
   accent: string;
 }) {
   return (
     <div className="flex flex-col items-center gap-1 px-4 py-5 text-center">
-      <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
-        {label}
+      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2">
+        <span aria-hidden="true">{glyph}</span> {label}
       </p>
-      <p className={["text-2xl font-extrabold tabular-nums", accent].join(" ")}>
+      <p className={["text-2xl font-extrabold", NUMERIC_TEXT_CLASS, accent].join(" ")}>
         {value}
       </p>
     </div>

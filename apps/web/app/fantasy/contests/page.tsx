@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_COLORS } from "@/lib/brand";
 
 /**
  * /fantasy/contests — THE CONTEST BAY, sealed.
@@ -22,9 +21,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/fantasy/contests" },
 };
 
-const cyan = BRAND_COLORS.orbitalCyan;
-const uv = BRAND_COLORS.softUltraviolet;
-const white = BRAND_COLORS.ionWhite;
+// Design tokens (styles/design-tokens.css) — never raw hexes on this surface.
+const cyan = "var(--orbital-cyan)";
+const uv = "var(--ultraviolet)";
+const white = "var(--ion-white)";
+/** Token at an alpha stop, srgb — replaces the old hex+alpha concatenation. */
+const mix = (token: string, pct: number) => `color-mix(in srgb, ${token} ${pct}%, transparent)`;
 
 /** Deterministic sparks drifting around the bay door (golden-angle spray). */
 const SPARKS: readonly { left: number; top: number; size: number; delay: number; hue: string }[] =
@@ -38,7 +40,7 @@ const SPARKS: readonly { left: number; top: number; size: number; delay: number;
 
 export default function ContestBaySealedPage() {
   return (
-    <div className="flex min-h-screen flex-col" style={{ background: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
 
       <main id="main-content" className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-28 text-center">
@@ -50,7 +52,7 @@ export default function ContestBaySealedPage() {
           className="gse-cine-anim pointer-events-none absolute -left-1/4 top-[-20%] h-[70vh] w-[70vw] rounded-full"
           style={{
             animation: "gse-nebula-drift 16s ease-in-out infinite alternate",
-            background: `radial-gradient(closest-side, ${uv}26, transparent 72%)`,
+            background: `radial-gradient(closest-side, ${mix(uv, 15)}, transparent 72%)`,
           }}
         />
         <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -76,13 +78,13 @@ export default function ContestBaySealedPage() {
         <div className="relative z-10 flex flex-col items-center">
           <div
             className="relative flex h-44 w-44 items-center justify-center rounded-full"
-            style={{ border: `1px solid ${uv}40`, boxShadow: `0 0 60px ${uv}22, inset 0 0 40px ${uv}14` }}
+            style={{ border: `1px solid ${mix(uv, 25)}`, boxShadow: `0 0 60px ${mix(uv, 13)}, inset 0 0 40px ${mix(uv, 8)}` }}
           >
             <div
               aria-hidden
               className="gse-cine-anim absolute inset-3 rounded-full"
               style={{
-                border: `1px dashed ${cyan}45`,
+                border: `1px dashed ${mix(cyan, 27)}`,
                 animation: "gw-rotate 26s linear infinite",
               }}
             />
@@ -90,7 +92,7 @@ export default function ContestBaySealedPage() {
               aria-hidden
               className="gse-cine-anim absolute inset-3 rounded-full"
               style={{
-                background: `conic-gradient(from 0deg, transparent 0 70%, ${cyan}30 82%, transparent 94%)`,
+                background: `conic-gradient(from 0deg, transparent 0 70%, ${mix(cyan, 19)} 82%, transparent 94%)`,
                 animation: "gw-rotate 13s linear infinite reverse",
               }}
             />
@@ -99,11 +101,11 @@ export default function ContestBaySealedPage() {
             </span>
           </div>
 
-          <p className="eyebrow mt-10 justify-center" style={{ color: cyan }}>
+          <p className="eyebrow mt-10 justify-center text-orbital-cyan">
             contest bay · sector sealed
           </p>
           <h1
-            className="mt-4 max-w-2xl font-display text-balance text-white"
+            className="mt-4 max-w-2xl font-display text-balance text-ion-white"
             style={{ fontSize: "clamp(2rem, 5.5vw, 3.5rem)", lineHeight: 1.05 }}
           >
             Something competitive is being{" "}
@@ -112,7 +114,7 @@ export default function ContestBaySealedPage() {
             </span>{" "}
             behind this door.
           </h1>
-          <p className="mt-5 max-w-xl text-balance text-ink-300">
+          <p className="mt-5 max-w-xl text-balance text-ion-1">
             The Contest Bay is under construction. The brief stays classified until launch.
             When this door opens, it opens with receipts.
           </p>
@@ -123,13 +125,13 @@ export default function ContestBaySealedPage() {
             </Link>
             <Link
               href="/fantasy"
-              className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline"
+              className="text-ion-1 underline-offset-4 transition-colors hover:text-ion-white hover:underline"
             >
               Fantasy Galaxy
             </Link>
             <Link
               href="/academy"
-              className="text-ink-300 underline-offset-4 transition-colors hover:text-white hover:underline"
+              className="text-ion-1 underline-offset-4 transition-colors hover:text-ion-white hover:underline"
             >
               Train in the Academy
             </Link>

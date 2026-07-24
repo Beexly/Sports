@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_COLORS } from "@/lib/brand";
 import {
   FANTASY_BASELINE_MODULES,
   FANTASY_BASELINE_SOURCES,
@@ -27,7 +26,7 @@ const STATUS_LABEL: Record<FantasyBaselineStatus, string> = {
 
 const STATUS_TONE: Record<FantasyBaselineStatus, string> = {
   "live-proof": "border-verify/30 bg-verify/10 text-verify",
-  "csv-import-ready": "border-ion-blue/30 bg-ion-blue/10 text-ion-blue",
+  "csv-import-ready": "border-orbital-cyan/30 bg-orbital-cyan/10 text-orbital-cyan",
   "gated-data": "border-caution/30 bg-caution/10 text-caution",
   "content-ready": "border-ultraviolet/30 bg-ultraviolet/10 text-ultraviolet",
   "manual-community": "border-titanium bg-carbon/70 text-ion-1",
@@ -37,7 +36,7 @@ export default function FantasyBaselinePage(): JSX.Element {
   const summary = fantasyBaselineSummary();
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Nav />
       <main id="main-content" className="flex-1">
         <section className="border-b border-mineral px-4 py-16 sm:px-6 lg:px-8">
@@ -47,10 +46,10 @@ export default function FantasyBaselinePage(): JSX.Element {
             </p>
             <div className="mt-4 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
               <div>
-                <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-white sm:text-6xl">
+                <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
                   LineStar plus Elite Sports is the floor.
                 </h1>
-                <p className="mt-5 max-w-3xl text-base leading-7 text-ink-300">
+                <p className="mt-5 max-w-3xl text-base leading-7 text-ion-1">
                   This map treats the DFS optimizer, projections, ownership, value plays, props,
                   rankings, news, odds, content, and community loop as baseline requirements. Galaxy
                   marks what is live, what can run from user-provided CSVs, and what remains gated
@@ -84,8 +83,8 @@ export default function FantasyBaselinePage(): JSX.Element {
                 href={source.url}
                 className="border border-mineral bg-eclipse p-4 transition-colors hover:border-orbital-cyan/60"
               >
-                <p className="font-semibold text-white">{source.name}</p>
-                <p className="mt-2 text-sm leading-6 text-ink-300">{source.scope}</p>
+                <p className="font-semibold text-ion-white">{source.name}</p>
+                <p className="mt-2 text-sm leading-6 text-ion-1">{source.scope}</p>
               </a>
             ))}
           </div>
@@ -100,8 +99,8 @@ export default function FantasyBaselinePage(): JSX.Element {
                   className="grid gap-4 border-b border-mineral bg-eclipse px-4 py-4 last:border-b-0 lg:grid-cols-[0.28fr_0.2fr_0.24fr_1fr]"
                 >
                   <div>
-                    <p className="font-semibold text-white">{module.module}</p>
-                    <p className="mt-1 text-[11px] uppercase tracking-[0.14em] text-ink-500">
+                    <p className="font-semibold text-ion-white">{module.module}</p>
+                    <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2">
                       {module.competitorBaseline.join(" + ")}
                     </p>
                   </div>
@@ -111,19 +110,19 @@ export default function FantasyBaselinePage(): JSX.Element {
                     </span>
                     <p className="mt-2 font-mono text-[10px] text-orbital-cyan">{module.gseSurface}</p>
                   </div>
-                  <p className="text-sm leading-6 text-ink-300">{module.userValue}</p>
+                  <p className="text-sm leading-6 text-ion-1">{module.userValue}</p>
                   <div className="grid gap-3 md:grid-cols-2">
                     <div>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                         Required data
                       </p>
-                      <p className="mt-1 text-sm leading-6 text-ink-300">{module.dataRequired}</p>
+                      <p className="mt-1 text-sm leading-6 text-ion-1">{module.dataRequired}</p>
                     </div>
                     <div>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                         Current truth
                       </p>
-                      <p className="mt-1 text-sm leading-6 text-ink-300">{module.currentTruth}</p>
+                      <p className="mt-1 text-sm leading-6 text-ion-1">{module.currentTruth}</p>
                     </div>
                   </div>
                 </article>
@@ -141,7 +140,7 @@ function Metric({ label, value }: { label: string; value: string }): JSX.Element
   return (
     <div className="border border-mineral bg-eclipse p-3">
       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">{label}</p>
-      <p className="mt-1 font-numerals text-2xl font-semibold text-white">{value}</p>
+      <p className="mt-1 font-numerals text-2xl font-semibold tabular-nums text-ion-white">{value}</p>
     </div>
   );
 }

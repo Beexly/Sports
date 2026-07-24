@@ -129,7 +129,7 @@ export default async function AdminClvPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Closing-Line Value</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Closing-Line Value</h1>
         <Link
           href="/admin"
           className="w-fit rounded-lg border border-titanium px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60"
@@ -140,7 +140,7 @@ export default async function AdminClvPage() {
 
       <p
         data-testid="internal-only-banner"
-        className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"
+        className="rounded-lg border border-caution bg-caution/30 px-4 py-2 text-xs text-caution"
       >
         Internal only. CLV is the leading indicator of edge — beating the close
         predicts profitability before results settle. Not publicly surfaced until
@@ -164,7 +164,7 @@ export default async function AdminClvPage() {
         <ul className="grid grid-cols-3 gap-2 text-ion-1">
           {verdictCounts.map(({ verdict, count }) => (
             <li key={verdict} className="rounded-lg border border-titanium px-3 py-2">
-              <span className="block text-lg font-semibold text-white">{count}</span>
+              <span className="block text-lg font-semibold text-ion-white">{count}</span>
               <span className="text-ion-3">{verdict.replace(/_/g, " ").toLowerCase()}</span>
             </li>
           ))}
@@ -201,7 +201,7 @@ export default async function AdminClvPage() {
             generated (the mint is wired into pick creation).
           </p>
         ) : (
-          <table className="w-full text-left text-ion-1">
+          <table className="w-full text-left text-ion-1" aria-label="Pre-result proof receipts">
             <thead className="text-ion-3">
               <tr>
                 <th className="py-1 pr-2 font-normal">Selection</th>
@@ -222,7 +222,7 @@ export default async function AdminClvPage() {
                     <td className="py-1 pr-2 text-ion-3">{r.confidence}</td>
                     <td className="py-1 pr-2 text-ion-3">{r.entryOdds > 0 ? `+${r.entryOdds}` : r.entryOdds}</td>
                     <td className="py-1 pr-2 text-ion-3">{r.modelVersion}</td>
-                    <td className={`py-1 pr-2 ${intact ? "text-green-400" : "text-red-400"}`}>
+                    <td className={`py-1 pr-2 ${intact ? "text-verify" : "text-alert"}`}>
                       {intact ? "VERIFIED" : "TAMPERED"}
                     </td>
                   </tr>
@@ -244,7 +244,7 @@ export default async function AdminClvPage() {
             deploy + migration).
           </p>
         ) : (
-          <table className="w-full text-left text-ion-1">
+          <table className="w-full text-left text-ion-1" aria-label="Recently graded picks">
             <thead className="text-ion-3">
               <tr>
                 <th className="py-1 pr-2">Selection</th>
@@ -262,7 +262,7 @@ export default async function AdminClvPage() {
                   <tr key={p.id} className="border-t border-titanium/60">
                     <td className="py-1 pr-2">{p.selection}</td>
                     <td className="py-1 pr-2 text-ion-3">{p.pickType}</td>
-                    <td className={`py-1 pr-2 ${v > 0 ? "text-green-400" : v < 0 ? "text-red-400" : "text-ion-2"}`}>{display}</td>
+                    <td className={`py-1 pr-2 ${v > 0 ? "text-verify" : v < 0 ? "text-alert" : "text-ion-2"}`}>{display}</td>
                     <td className="py-1 pr-2 text-ion-2">{p.clvVerdict?.replace(/_/g, " ").toLowerCase()}</td>
                     <td className="py-1 pr-2 text-ion-3">{p.result}</td>
                   </tr>
@@ -281,11 +281,11 @@ function CoverageCard({ coverage }: { coverage: ClvCoverage }) {
   // coverage rate is BAD and renders hot (red/amber), healthy renders green.
   const tone =
     coverage.health === "HEALTHY"
-      ? { accent: "text-green-400", chip: "border-green-900 bg-green-950/30 text-green-200" }
+      ? { accent: "text-verify", chip: "border-verify bg-verify/30 text-verify" }
       : coverage.health === "DEGRADED"
-      ? { accent: "text-amber-400", chip: "border-amber-900 bg-amber-950/30 text-amber-200" }
+      ? { accent: "text-caution", chip: "border-caution bg-caution/30 text-caution" }
       : coverage.health === "CRITICAL"
-      ? { accent: "text-red-400", chip: "border-red-900 bg-red-950/30 text-red-200" }
+      ? { accent: "text-alert", chip: "border-alert bg-alert/30 text-alert" }
       : { accent: "text-ion-1", chip: "border-titanium bg-carbon/40 text-ion-2" };
 
   return (
@@ -320,7 +320,7 @@ function CoverageCard({ coverage }: { coverage: ClvCoverage }) {
       <div className="mt-2 grid grid-cols-3 gap-2 text-xs text-ion-2">
         <span>Settled: {coverage.settledEligible}</span>
         <span>Graded: {coverage.graded}</span>
-        <span className={coverage.uncovered > 0 ? "text-red-400" : "text-ion-2"}>
+        <span className={coverage.uncovered > 0 ? "text-alert" : "text-ion-2"}>
           Uncovered: {coverage.uncovered}
         </span>
       </div>
@@ -353,7 +353,7 @@ function SegmentTable({
       {segments.length === 0 ? (
         <p className="text-ion-3">No graded picks yet.</p>
       ) : (
-        <table className="w-full text-left text-ion-1">
+        <table className="w-full text-left text-ion-1" aria-label={`CLV segments ${title}`}>
           <thead className="text-ion-3">
             <tr>
               <th className="py-1 pr-2 font-normal">Segment</th>
@@ -368,7 +368,7 @@ function SegmentTable({
                 <td className="py-1 pr-2 text-ion-2">{s.key}</td>
                 <td className="py-1 pr-2 text-ion-3">{s.n}</td>
                 <td
-                  className={`py-1 pr-2 ${s.beatCloseRatePct >= 50 ? "text-green-400" : "text-ion-1"}`}
+                  className={`py-1 pr-2 ${s.beatCloseRatePct >= 50 ? "text-verify" : "text-ion-1"}`}
                 >
                   {s.beatCloseRatePct}%
                 </td>
@@ -392,11 +392,11 @@ function SettlementHealthCard({ settlement }: { settlement: SettlementHealth }) 
   // Risk-flipped palette: overdue-to-settle picks are BAD, so a backlog renders hot.
   const tone =
     settlement.health === "HEALTHY"
-      ? { accent: "text-green-400", chip: "border-green-900 bg-green-950/30 text-green-200" }
+      ? { accent: "text-verify", chip: "border-verify bg-verify/30 text-verify" }
       : settlement.health === "DEGRADED"
-      ? { accent: "text-amber-400", chip: "border-amber-900 bg-amber-950/30 text-amber-200" }
+      ? { accent: "text-caution", chip: "border-caution bg-caution/30 text-caution" }
       : settlement.health === "CRITICAL"
-      ? { accent: "text-red-400", chip: "border-red-900 bg-red-950/30 text-red-200" }
+      ? { accent: "text-alert", chip: "border-alert bg-alert/30 text-alert" }
       : { accent: "text-ion-1", chip: "border-titanium bg-carbon/40 text-ion-2" };
 
   return (
@@ -465,7 +465,7 @@ function ClvCard({
     <section className="rounded-2xl border border-titanium bg-carbon/40 p-4">
       <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">{title}</h2>
       <div className="flex items-baseline gap-2">
-        <span className={`text-3xl font-bold ${beat >= 0.5 ? "text-green-400" : "text-ion-1"}`}>
+        <span className={`text-3xl font-bold ${beat >= 0.5 ? "text-verify" : "text-ion-1"}`}>
           {summary.sampleSize === 0 ? "—" : pct(beat)}
         </span>
         <span className="text-xs text-ion-3">beat the close</span>
@@ -476,7 +476,7 @@ function ClvCard({
           <span
             className={
               beatsBreakEven
-                ? "rounded border border-green-900 bg-green-950/30 px-1.5 py-0.5 text-green-300"
+                ? "rounded border border-verify bg-verify/30 px-1.5 py-0.5 text-verify"
                 : "rounded border border-titanium bg-carbon/40 px-1.5 py-0.5 text-ion-3"
             }
           >

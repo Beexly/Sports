@@ -35,16 +35,16 @@ export default async function AdminPostsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Blog Posts</h1>
+            <h1 className="text-2xl font-bold text-ion-white">Blog Posts</h1>
             <p className="text-ion-2 mt-1">{posts.length} posts</p>
           </div>
-          <a href="/admin" className="text-ion-2 hover:text-white text-sm transition-colors">
+          <a href="/admin" className="text-ion-2 hover:text-ion-white text-sm transition-colors">
             ← Back to Admin
           </a>
         </div>
 
         <div className="bg-carbon border border-titanium rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" aria-label="Blog posts">
             <thead>
               <tr className="border-b border-titanium text-ion-2 text-xs uppercase">
                 <th className="text-left px-4 py-3">Title</th>
@@ -59,16 +59,16 @@ export default async function AdminPostsPage() {
               {posts.map((post) => (
                 <tr key={post.id} className="border-b border-titanium/50 hover:bg-titanium/30">
                   <td className="px-4 py-3">
-                    <div className="text-white font-medium line-clamp-1 max-w-xs">{post.title}</div>
+                    <div className="text-ion-white font-medium line-clamp-1 max-w-xs">{post.title}</div>
                     <div className="text-xs text-ion-3">/blog/{post.slug}</div>
                   </td>
                   <td className="px-4 py-3 text-ion-2">{post.sport ?? "—"}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                       post.status === "PUBLISHED"
-                        ? "bg-green-500/10 text-green-400"
+                        ? "bg-verify/10 text-verify"
                         : post.status === "DRAFT"
-                        ? "bg-yellow-500/10 text-yellow-400"
+                        ? "bg-caution/10 text-caution"
                         : "bg-titanium text-ion-2"
                     }`}>
                       {post.status}
@@ -76,7 +76,7 @@ export default async function AdminPostsPage() {
                   </td>
                   <td className="px-4 py-3 text-ion-2">
                     {post.isFeatured ? (
-                      <span className="text-yellow-400">★</span>
+                      <span className="text-caution">★</span>
                     ) : (
                       "—"
                     )}
@@ -89,7 +89,7 @@ export default async function AdminPostsPage() {
                       href={`/blog/${post.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-brand-400 hover:text-brand-300 text-xs transition-colors"
+                      className="text-plasma hover:text-plasma-glow text-xs transition-colors"
                     >
                       View →
                     </a>

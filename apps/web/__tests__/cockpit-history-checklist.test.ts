@@ -52,6 +52,6 @@ describe("/cockpit/history publish-readiness checklist", () => {
     );
     expect(primitive).toMatch(/export\s+function\s+ChecklistRow/);
     expect(primitive).toMatch(/aria-hidden="true"/);
-    expect(primitive).toMatch(/ok\s*\?\s*"bg-green-700/);
+    expect(primitive).toMatch(/ok\s*\?\s*"bg-verify/);
   });
 });

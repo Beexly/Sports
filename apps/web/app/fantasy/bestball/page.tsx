@@ -6,7 +6,6 @@ import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
 import { FANTASY_DATA_ATTRIBUTION, FANTASY_VALUE_BASIS_NOTE } from "@/lib/fantasy/attribution";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Best Ball · Galaxy Fantasy",
@@ -30,7 +29,7 @@ export default async function BestBallPage() {
   return (
     <FantasyShell
       eyebrow="Best Ball"
-      accent={BRAND_COLORS.orbitalCyan}
+      accent="cyan"
       title={<>Draft for the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>spike</span>, build the stack.</>}
       intro="Best ball is won at the draft: no waivers, no start/sit: the optimal lineup is banked for you every week. So the engine grades what actually matters (weekly ceiling, QB-to-catcher correlation, and bye structure) and tells you what your roster needs next, and why."
       note={pool

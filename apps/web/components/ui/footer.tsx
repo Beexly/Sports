@@ -107,6 +107,7 @@ export function Footer() {
             {SOCIAL_LINKS.map(({ href, label }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer">
                 {label}
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
             ))}
           </div>

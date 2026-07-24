@@ -6,11 +6,11 @@ export const dynamic = "force-dynamic";
 function statusClass(status: string): string {
   switch (status) {
     case "PUBLISHED":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "RETRACTED":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "REVIEW_PENDING":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
   }
@@ -115,7 +115,7 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
     <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-caution">
             Model Journal
           </p>
           <h1 className="mt-1 text-2xl font-bold text-ion-white">Operator Workspace</h1>
@@ -127,7 +127,7 @@ export default async function CockpitJournalPage(): Promise<JSX.Element> {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/cockpit/journal/new"
-            className="min-h-11 rounded-lg border border-yellow-400/60 bg-yellow-400 px-4 py-2 text-sm font-semibold text-eclipse hover:bg-yellow-300"
+            className="min-h-11 rounded-lg border border-caution/60 bg-caution px-4 py-2 text-sm font-semibold text-eclipse hover:bg-caution/80"
           >
             Create draft
           </Link>

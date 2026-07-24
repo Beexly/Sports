@@ -135,7 +135,8 @@ export default function DeckPage(): JSX.Element {
                       <span
                         className="h-1.5 w-1.5 rounded-full"
                         style={{
-                          background: sys.status === "live" ? "#00E5FF" : "#FFB454",
+                          background:
+                            sys.status === "live" ? "var(--orbital-cyan)" : "var(--caution)",
                           boxShadow:
                             sys.status === "live"
                               ? "0 0 8px 2px rgba(0,229,255,0.5)"
@@ -151,10 +152,10 @@ export default function DeckPage(): JSX.Element {
                           width: `${sys.health * 100}%`,
                           background:
                             sys.health > 0.9
-                              ? "#00E5FF"
+                              ? "var(--orbital-cyan)"
                               : sys.health > 0.75
-                                ? "#7B61FF"
-                                : "#FF38C7",
+                                ? "var(--ultraviolet)"
+                                : "var(--plasma)",
                           boxShadow: `0 0 8px ${sys.health > 0.9 ? "rgba(0,229,255,0.4)" : sys.health > 0.75 ? "rgba(123,97,255,0.4)" : "rgba(255,56,199,0.4)"}`,
                         }}
                       />
@@ -249,10 +250,10 @@ export default function DeckPage(): JSX.Element {
                     style={{
                       background:
                         agent.state === "alert"
-                          ? "#FF38C7"
+                          ? "var(--plasma)"
                           : agent.state === "idle"
-                            ? "#7B61FF"
-                            : "#00E5FF",
+                            ? "var(--ultraviolet)"
+                            : "var(--orbital-cyan)",
                       boxShadow:
                         agent.state === "alert"
                           ? "0 0 8px 2px rgba(255,56,199,0.5)"

@@ -65,7 +65,7 @@ export function ListenerLogForm() {
               value={values[key] ?? ""}
               onChange={(e) => setValues((v) => ({ ...v, [key]: e.target.value }))}
               placeholder={ph}
-              className="rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-2 text-sm text-ion-white placeholder:text-ion-3 focus:border-cyan-700 focus:outline-none"
+              className="rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-2 text-sm text-ion-white placeholder:text-ion-3 focus:border-orbital-cyan focus:outline-none"
             />
           </label>
         ))}
@@ -83,7 +83,7 @@ export function ListenerLogForm() {
             "Likes the rookie TE as a value pick at his current ADP.\n\n" +
             "Paste a transcript and it'll be rejected — this lane is your words only."
           }
-          className="rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-2 text-sm leading-6 text-ion-white placeholder:text-ion-3 focus:border-cyan-700 focus:outline-none"
+          className="rounded-lg border border-titanium/40 bg-eclipse/50 px-3 py-2 text-sm leading-6 text-ion-white placeholder:text-ion-3 focus:border-orbital-cyan focus:outline-none"
         />
       </label>
       <p className="text-[11px] leading-relaxed text-ion-3">
@@ -96,14 +96,14 @@ export function ListenerLogForm() {
         <button
           type="submit"
           disabled={state === "busy" || lines.length === 0 || !(values["pundit"] ?? "").trim()}
-          className="w-fit rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-ion-white hover:bg-cyan-500 disabled:opacity-50"
+          className="w-fit rounded-lg bg-orbital-cyan px-4 py-2 text-sm font-semibold text-ion-white hover:bg-orbital-cyan disabled:opacity-50"
         >
           {state === "busy"
             ? "Filing…"
             : `File ${lines.length || ""} take${lines.length === 1 ? "" : "s"} for review`}
         </button>
         {msg && (
-          <span className={`text-xs ${state === "ok" ? "text-cyan-300" : "text-red-400"}`}>{msg}</span>
+          <span className={`text-xs ${state === "ok" ? "text-orbital-cyan" : "text-alert"}`}>{msg}</span>
         )}
       </div>
     </form>

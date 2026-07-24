@@ -35,7 +35,7 @@ export default function GlobalError({
     <div className="relative flex min-h-screen items-center justify-center bg-obsidian p-6 text-ion-1">
       {/* Background mark — still breathing */}
       <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <LogoMarkInline size={400} pulse className="opacity-[0.04]" />
+        <LogoMarkInline size={400} pulse className="opacity-[0.06]" />
       </div>
 
       <div className="relative z-10 max-w-xl rounded-2xl border border-alert/30 bg-alert/10 p-8 text-center">

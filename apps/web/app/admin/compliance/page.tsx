@@ -32,7 +32,7 @@ export default async function CompliancePage() {
     <div className="min-h-screen bg-obsidian p-8">
       <div className="max-w-5xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Compliance Control Monitor</h1>
+          <h1 className="text-3xl font-bold text-ion-white mb-2">Compliance Control Monitor</h1>
           <p className="text-ion-2 text-sm max-w-3xl">
             Internal alignment tooling only. This page does not represent a SOC 2 report or
             an ISO 27001 certificate — see docs/compliance/README.md for the full disclaimer.
@@ -40,12 +40,12 @@ export default async function CompliancePage() {
         </div>
 
         <div className="bg-carbon border border-titanium rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Last CCM run</h2>
+          <h2 className="text-xl font-semibold text-ion-white mb-4">Last CCM run</h2>
           {lastRun ? (
             <div className="flex items-center gap-3">
-              <div className={`w-3 h-3 rounded-full ${lastRun.ok ? "bg-green-500" : "bg-red-500"}`} />
+              <div className={`w-3 h-3 rounded-full ${lastRun.ok ? "bg-verify" : "bg-alert"}`} />
               <span className="text-ion-1">
-                <strong className="text-white">{lastRun.ok ? "OK" : "FAILING"}</strong>
+                <strong className="text-ion-white">{lastRun.ok ? "OK" : "FAILING"}</strong>
               </span>
               <span className="text-ion-3 text-sm">{lastRun.at.toLocaleString()}</span>
             </div>
@@ -55,7 +55,7 @@ export default async function CompliancePage() {
         </div>
 
         <div className="bg-carbon border border-titanium rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Controls (last run status)</h2>
+          <h2 className="text-xl font-semibold text-ion-white mb-4">Controls (last run status)</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <thead>
@@ -73,15 +73,15 @@ export default async function CompliancePage() {
                   const detail = checks.map((c) => c.detail).join("; ") || "No result in last run";
                   return (
                     <tr key={control.id} className="border-b border-titanium/40">
-                      <td className="py-2 pr-4 text-white font-mono text-xs">{control.id}</td>
+                      <td className="py-2 pr-4 text-ion-white font-mono text-xs">{control.id}</td>
                       <td className="py-2 pr-4 text-ion-1">{control.title}</td>
                       <td className="py-2 pr-4">
                         {ok === null ? (
                           <span className="text-ion-3">unknown</span>
                         ) : ok ? (
-                          <span className="text-green-400">pass</span>
+                          <span className="text-verify">pass</span>
                         ) : (
-                          <span className="text-red-400">fail</span>
+                          <span className="text-alert">fail</span>
                         )}
                       </td>
                       <td className="py-2 pr-4 text-ion-2">{detail}</td>
@@ -94,14 +94,14 @@ export default async function CompliancePage() {
         </div>
 
         <div className="bg-carbon border border-titanium rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Open exceptions</h2>
+          <h2 className="text-xl font-semibold text-ion-white mb-4">Open exceptions</h2>
           {openExceptions.length === 0 ? (
             <p className="text-ion-2">No open exceptions.</p>
           ) : (
             <ul className="space-y-2">
               {openExceptions.map((exception) => (
                 <li key={exception.id} className="text-sm text-ion-1">
-                  <span className="font-mono text-xs text-white">{exception.controlId}</span>
+                  <span className="font-mono text-xs text-ion-white">{exception.controlId}</span>
                   {" — "}
                   {exception.detail}
                   <span className="text-ion-3 text-xs ml-2">{exception.createdAt.toLocaleString()}</span>

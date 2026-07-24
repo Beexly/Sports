@@ -13,7 +13,6 @@ import { useEffect, useMemo, useState } from "react";
 import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, leverage, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
-import { BRAND_COLORS } from "@/lib/brand";
 
 const MODES: { key: Mode; label: string; blurb: string }[] = [
   { key: "cash", label: "Cash", blurb: "Maximise projection: the safest median." },
@@ -58,16 +57,11 @@ export function DfsOptimizer() {
 
   return (
     <div className="space-y-6">
-      {/* sample-mode banner — fictional names must never read as real players */}
+      {/* sample-mode banner — fictional names must never read as real players.
+          Caution tone (semantic): a data-honesty warning, never plasma. */}
       {!imported && (
-        <div
-          className="flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3"
-          style={{ borderColor: `${BRAND_COLORS.ionMagenta}55`, background: `${BRAND_COLORS.ionMagenta}0d` }}
-        >
-          <span
-            className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em]"
-            style={{ background: BRAND_COLORS.ionMagenta, color: BRAND_COLORS.obsidianBlack }}
-          >
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-caution/30 bg-caution/5 px-4 py-3">
+          <span className="rounded-full bg-caution px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
             sample slate
           </span>
           <p className="text-xs text-ion-1">
@@ -80,13 +74,13 @@ export function DfsOptimizer() {
 
       {/* controls */}
       <div className="surface-card flex flex-wrap items-center gap-4 p-4">
-        <div className="flex rounded-full p-0.5" style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${BRAND_COLORS.steelGray}` }}>
+        <div className="flex rounded-full border border-mineral p-0.5" style={{ background: "rgba(255,255,255,0.05)" }}>
           {MODES.map((m) => {
             const active = mode === m.key;
             return (
               <button key={m.key} type="button" onClick={() => setMode(m.key)} title={m.blurb} aria-pressed={active}
-                className="rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
-                style={{ color: active ? BRAND_COLORS.obsidianBlack : "var(--ion-1)", background: active ? BRAND_COLORS.orbitalCyan : "transparent" }}>
+                className="rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none"
+                style={{ color: active ? "var(--obsidian)" : "var(--ion-1)", background: active ? "var(--orbital-cyan)" : "transparent" }}>
                 {m.label}
               </button>
             );
@@ -107,7 +101,7 @@ export function DfsOptimizer() {
       </div>
       <p className="-mt-3 text-xs text-ion-2">
         {MODES.find((m) => m.key === mode)!.blurb} · Cap ${SALARY_CAP.toLocaleString()}
-        {imported && <span style={{ color: BRAND_COLORS.orbitalCyan }}> · imported DK slate ({slate.length} players)</span>}
+        {imported && <span className="text-orbital-cyan"> · imported DK slate ({slate.length} players)</span>}
       </p>
 
       <DkImportPanel onImport={onImport} onReset={onReset} imported={imported} />
@@ -120,18 +114,19 @@ export function DfsOptimizer() {
             const left = SALARY_CAP - m.salary;
             return (
               <div key={idx} className="surface-card overflow-hidden p-0">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2.5" style={{ borderColor: BRAND_COLORS.steelGray }}>
-                  <p className="text-xs uppercase tracking-[0.16em] text-ion-2">Lineup {idx + 1}{m.stacked > 0 && <span style={{ color: BRAND_COLORS.softUltraviolet }}> · {m.stackTeam} stack ×{m.stacked}</span>}</p>
-                  <div className="flex items-center gap-4 font-mono text-[11px]">
-                    <span className="text-ion-1">${m.salary.toLocaleString()} <span className={left < 0 ? "text-plasma" : "text-ion-2"}>(${left.toLocaleString()} left)</span></span>
-                    <span style={{ color: BRAND_COLORS.orbitalCyan }}>{m.proj} proj</span>
-                    <span style={{ color: BRAND_COLORS.softUltraviolet }}>{m.ceiling} ceil</span>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-mineral px-4 py-2.5">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Lineup {idx + 1}{m.stacked > 0 && <span className="text-ultraviolet"> · {m.stackTeam} stack ×{m.stacked}</span>}</p>
+                  <div className="flex items-center gap-4 font-mono text-[11px] tabular-nums">
+                    {/* over the cap is a broken lineup — alert, never plasma */}
+                    <span className="text-ion-1">${m.salary.toLocaleString()} <span className={left < 0 ? "text-alert" : "text-ion-2"}>(${left.toLocaleString()} left)</span></span>
+                    <span className="text-orbital-cyan">{m.proj} proj</span>
+                    <span className="text-ultraviolet">{m.ceiling} ceil</span>
                   </div>
                 </div>
                 {/* live salary-cap meter */}
                 <div className="px-4 pb-2 pt-2">
                   <div className="h-1.5 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
-                    <div className="h-full rounded-full" style={{ width: `${Math.min(100, (m.salary / SALARY_CAP) * 100)}%`, background: left < 0 ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan }} />
+                    <div className="h-full rounded-full" style={{ width: `${Math.min(100, (m.salary / SALARY_CAP) * 100)}%`, background: left < 0 ? "var(--alert)" : "var(--orbital-cyan)" }} />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -139,11 +134,11 @@ export function DfsOptimizer() {
                     const c = DFS_POS_HEX[p.pos];
                     const inStack = m.stackTeam && p.team === m.stackTeam && p.pos !== "DST";
                     return (
-                      <div key={p.id + j} className="flex items-center gap-2 border-b border-r px-3 py-2" style={{ borderColor: `${BRAND_COLORS.steelGray}80` }}>
+                      <div key={p.id + j} className="flex items-center gap-2 border-b border-r border-mineral/50 px-3 py-2">
                         <span className="w-8 shrink-0 font-mono text-[9px] font-bold" style={{ color: c }}>{DFS_SLOTS[j]}</span>
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-xs font-semibold text-ion-white">{p.name}{inStack && <span title="stack" style={{ color: BRAND_COLORS.softUltraviolet }}> ◆</span>}</p>
-                          <p className="font-mono text-[9px] text-ion-2">${p.salary} · {Math.round(p.own * 100)}%own</p>
+                          <p className="truncate text-xs font-semibold text-ion-white">{p.name}{inStack && <span title="stack" className="text-ultraviolet"> ◆</span>}</p>
+                          <p className="font-mono text-[9px] tabular-nums text-ion-2">${p.salary} · {Math.round(p.own * 100)}%own</p>
                         </div>
                       </div>
                     );
@@ -151,7 +146,8 @@ export function DfsOptimizer() {
                 </div>
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-1 px-4 py-2.5 text-[11px] text-ion-1">
                   <span>Total ownership <strong className="text-ion-white">{m.totalOwn}%</strong></span>
-                  <span>Leverage <strong style={{ color: BRAND_COLORS.ionMagenta }}>{m.leverageScore}</strong></span>
+                  {/* leverage is the upside read — plasma celebrates, it never warns */}
+                  <span>Leverage <strong className="text-plasma">{m.leverageScore}</strong></span>
                   <span>Floor-ceiling <strong className="text-ion-white">{m.floor}-{m.ceiling}</strong></span>
                 </div>
               </div>
@@ -164,7 +160,7 @@ export function DfsOptimizer() {
         <div className="space-y-4">
           {result && result.exposure.length > 0 && (
             <div className="surface-card p-5">
-              <p className="mb-3 text-xs uppercase tracking-[0.16em] text-ion-2">Exposure across {result.lineups.length} lineups</p>
+              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Exposure across {result.lineups.length} lineups</p>
               <div className="max-h-[40vh] space-y-1.5 overflow-y-auto">
                 {result.exposure.map((e) => (
                   <div key={e.id} className="flex items-center gap-2">
@@ -172,7 +168,7 @@ export function DfsOptimizer() {
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
                       <div className="h-full rounded-full" style={{ width: `${e.pct}%`, background: DFS_POS_HEX[e.pos] }} />
                     </div>
-                    <span className="w-9 text-right font-mono text-[10px] text-ion-2">{e.pct}%</span>
+                    <span className="w-9 text-right font-mono text-[10px] tabular-nums text-ion-2">{e.pct}%</span>
                   </div>
                 ))}
               </div>
@@ -181,11 +177,12 @@ export function DfsOptimizer() {
 
           <div className="surface-card p-5">
             <div className="mb-2 flex items-center justify-between">
-              <p className="text-xs uppercase tracking-[0.16em] text-ion-2">Slate ({pool.length})</p>
-              <p className="font-mono text-[10px] text-ion-2">
-                <span style={{ color: BRAND_COLORS.orbitalCyan }}>★ {locks.size} pinned</span>
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Slate ({pool.length})</p>
+              <p className="font-mono text-[10px] tabular-nums text-ion-2">
+                <span className="text-orbital-cyan">★ {locks.size} pinned</span>
                 {" · "}
-                <span style={{ color: BRAND_COLORS.ionMagenta }}>✕ {excludes.size} faded</span>
+                {/* fading a player is an exclusion — alert tone, not plasma */}
+                <span className="text-alert">✕ {excludes.size} faded</span>
               </p>
             </div>
             <div className="max-h-[60vh] space-y-0.5 overflow-y-auto">
@@ -193,13 +190,13 @@ export function DfsOptimizer() {
                 const c = DFS_POS_HEX[p.pos];
                 const locked = locks.has(p.id); const fade = excludes.has(p.id);
                 return (
-                  <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1.5" style={{ opacity: fade ? 0.4 : 1, background: locked ? `${BRAND_COLORS.orbitalCyan}12` : "transparent" }}>
+                  <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1.5" style={{ opacity: fade ? 0.4 : 1, background: locked ? "color-mix(in srgb, var(--orbital-cyan) 7%, transparent)" : "transparent" }}>
                     <span className="rounded px-1.5 py-0.5 font-mono text-[10px] font-bold" style={{ color: c, background: `${c}18` }}>{p.pos}</span>
                     <span className="flex-1 truncate text-sm text-ion-white">{p.name}</span>
-                    <span className="font-mono text-[11px] text-ion-2">${p.salary}</span>
-                    <span className="w-8 text-right font-mono text-[11px]" style={{ color: BRAND_COLORS.ionMagenta }}>{leverage(p).toFixed(1)}</span>
-                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" aria-label={`Pin ${p.name}`} aria-pressed={locked} className="px-1 text-sm" style={{ color: locked ? BRAND_COLORS.orbitalCyan : "var(--ion-3)" }}>★</button>
-                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" aria-label={`Fade ${p.name}`} aria-pressed={fade} className="px-1 text-sm" style={{ color: fade ? BRAND_COLORS.ionMagenta : "var(--ion-3)" }}>✕</button>
+                    <span className="font-mono text-[11px] tabular-nums text-ion-2">${p.salary}</span>
+                    <span className="w-8 text-right font-mono text-[11px] tabular-nums text-plasma">{leverage(p).toFixed(1)}</span>
+                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" aria-label={`Pin ${p.name}`} aria-pressed={locked} className="px-1 text-sm" style={{ color: locked ? "var(--orbital-cyan)" : "var(--ion-3)" }}>★</button>
+                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" aria-label={`Fade ${p.name}`} aria-pressed={fade} className="px-1 text-sm" style={{ color: fade ? "var(--alert)" : "var(--ion-3)" }}>✕</button>
                   </div>
                 );
               })}

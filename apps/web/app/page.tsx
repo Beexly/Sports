@@ -100,7 +100,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           />
           <div className="mx-auto max-w-5xl px-4 py-24 text-center sm:px-6 sm:py-32 lg:px-8">
             <Reveal>
-              <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-mineral/80 bg-eclipse/40 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.28em] text-ion-2 backdrop-blur-sm">
+              <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-mineral/80 bg-eclipse/40 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2 backdrop-blur-sm">
                 <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-orbital-cyan" style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }} />
                 Sports decision intelligence
               </p>

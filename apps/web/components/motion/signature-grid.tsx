@@ -78,7 +78,7 @@ export function SignatureGrid({
         />
 
         {/* Three concentric "radar" rings as the focal motif */}
-        <g mask="url(#sg-mask)" stroke="rgba(34,211,238,0.5)" fill="none">
+        <g mask="url(#sg-mask)" stroke="rgba(0,229,255,0.5)" fill="none">
           <circle cx="500" cy="500" r="120" strokeWidth="0.8" />
           <circle cx="500" cy="500" r="240" strokeWidth="0.5" />
           <circle cx="500" cy="500" r="360" strokeWidth="0.3" />
@@ -88,7 +88,7 @@ export function SignatureGrid({
         </g>
 
         {/* A few accent dots on the rings to feel like data points */}
-        <g mask="url(#sg-mask)" fill="rgba(34,211,238,0.9)">
+        <g mask="url(#sg-mask)" fill="rgba(0,229,255,0.9)">
           <circle cx="620" cy="500" r="2.5" />
           <circle cx="430" cy="580" r="2" />
           <circle cx="500" cy="380" r="1.6" />
@@ -105,7 +105,7 @@ export function SignatureGrid({
  */
 export function AmbientGlow({
   className = "",
-  color = "rgba(34,211,238,0.16)",
+  color = "rgba(0,229,255,0.16)",
 }: {
   className?: string;
   color?: string;
@@ -125,7 +125,7 @@ export function AmbientGlow({
       <div
         className="absolute right-[5%] top-[35%] h-[35vh] w-[35vh] rounded-full blur-3xl"
         style={{
-          background: "rgba(8,145,178,0.10)",
+          background: "rgba(0,168,191,0.10)",
           animation:
             "ambient-drift 28s ease-in-out infinite alternate-reverse",
         }}

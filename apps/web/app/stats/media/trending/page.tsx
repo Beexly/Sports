@@ -1,4 +1,4 @@
-import { Shell, Cards, Badge, DataTable, BarChart, StatusRibbon } from "../../_components";
+import { Shell, Cards, Badge, DataTable, BarChart, StatusRibbon, SectionHeader } from "../../_components";
 import { loadMediaItems } from "@/lib/statking/product";
 export const metadata = {
   title: "Trending: What's Moving in NFL Media",
@@ -26,28 +26,32 @@ export default function Page() {
         { label: "Platforms", value: new Set(items.map(i => i.platform)).size },
         { label: "Rights", value: "metadata-only" }
       ]} />
-      <p className="text-ion-1">
+      <p className="max-w-3xl text-ion-1">
         The players and teams gaining media attention right now, ranked by source trust.
       </p>
       <div className="space-y-3">
         <Badge tone="warn">Metadata only: headlines and mentions, not full content.</Badge>
       </div>
       <div className="border border-mineral bg-eclipse p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Most Mentioned Players</p>
-        <BarChart items={
-          [...mentions.entries()]
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 5)
-            .map(([player, count]) => ({
-              label: String(player),
-              value: count,
-              max: Math.max(...[...mentions.values()]),
-              tone: "cyan"
-            }))
-        } />
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Most mentioned players</p>
+        {mentions.size ? (
+          <BarChart items={
+            [...mentions.entries()]
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5)
+              .map(([player, count]) => ({
+                label: String(player),
+                value: count,
+                max: Math.max(...[...mentions.values()]),
+                tone: "cyan"
+              }))
+          } />
+        ) : (
+          <p className="text-sm text-ion-1">No player mentions detected in this snapshot.</p>
+        )}
       </div>
-      <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">Top 20 Trending Items</h2>
+      <div className="space-y-4">
+        <SectionHeader title="Top 20 trending items" />
         <DataTable
           rows={trending.map(i => ({
             platform: String(i.platform ?? ""),
@@ -58,6 +62,7 @@ export default function Page() {
             trust: Number(i.source_trust ?? 0)
           }))}
           maxRows={20}
+          caption="Top 20 trending media items with platform, source, title, detected players, topics, and source trust"
         />
       </div>
     </Shell>

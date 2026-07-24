@@ -11,7 +11,6 @@
 import { useRef, useState } from "react";
 import { parseDkCsv, validateSlate } from "@/lib/fantasy/dk-import";
 import type { DfsPlayer } from "@/lib/fantasy/dfs-slate";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export function DkImportPanel({ onImport, onReset, imported }: { onImport: (players: DfsPlayer[]) => void; onReset: () => void; imported: boolean }) {
   const [open, setOpen] = useState(false);
@@ -43,22 +42,22 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
   return (
     <div className="surface-card p-4">
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={() => setOpen((o) => !o)} className="text-sm font-semibold" style={{ color: BRAND_COLORS.orbitalCyan }}>
+        <button type="button" onClick={() => setOpen((o) => !o)} className="text-sm font-semibold text-orbital-cyan">
           {open ? "▾" : "▸"} Import a DraftKings slate (CSV)
         </button>
         {imported && (
-          <button type="button" onClick={() => { onReset(); setStatus(null); setText(""); }} className="text-xs text-ink-500 underline">
+          <button type="button" onClick={() => { onReset(); setStatus(null); setText(""); }} className="text-xs text-ion-2 underline hover:text-ion-white">
             reset to sample slate
           </button>
         )}
-        <span className="ml-auto text-[10px] text-ink-600">DK draft page → Export to CSV</span>
+        <span className="ml-auto font-mono text-[10px] text-ion-2">DK draft page → Export to CSV</span>
       </div>
 
       {open && (
         <div className="mt-4 space-y-3">
           <div className="flex flex-wrap items-center gap-3">
-            <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFile} aria-label="Upload DraftKings CSV" className="text-xs text-ink-300 file:mr-3 file:rounded file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-xs file:text-white" />
-            <span className="text-[11px] text-ink-600">or paste below</span>
+            <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFile} aria-label="Upload DraftKings CSV" className="text-xs text-ion-1 file:mr-3 file:rounded file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-xs file:text-ion-white" />
+            <span className="text-[11px] text-ion-2">or paste below</span>
           </div>
           <textarea
             value={text}
@@ -66,22 +65,22 @@ export function DkImportPanel({ onImport, onReset, imported }: { onImport: (play
             aria-label="Paste DraftKings CSV"
             rows={4}
             placeholder="Position,Name + ID,Name,ID,Roster Position,Salary,Game Info,TeamAbbrev,AvgPointsPerGame&#10;QB,..."
-            className="w-full rounded-md border bg-transparent p-2 font-mono text-[11px] text-ink-200"
-            style={{ borderColor: BRAND_COLORS.steelGray }}
+            className="w-full rounded-md border border-mineral bg-transparent p-2 font-mono text-[11px] text-ion-1"
           />
           <button type="button" onClick={() => load(text)} disabled={!text.trim()} className="btn btn-primary btn-sm disabled:opacity-40">Load slate</button>
 
+          {/* verify = confirmed import, alert = failed parse — semantic status, never plasma */}
           {status && (
-            <div className="rounded-md border p-3 text-xs" style={{ borderColor: status.ok ? `${BRAND_COLORS.orbitalCyan}55` : `${BRAND_COLORS.ionMagenta}55` }}>
-              <p style={{ color: status.ok ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{status.msg}</p>
+            <div className={`rounded-md border p-3 text-xs ${status.ok ? "border-verify/30" : "border-alert/30"}`}>
+              <p className={status.ok ? "text-verify" : "text-alert"}>{status.msg}</p>
               {status.warnings.length > 0 && (
-                <ul className="mt-2 space-y-0.5 text-ink-500">
+                <ul className="mt-2 space-y-0.5 text-ion-2">
                   {status.warnings.map((w, i) => <li key={i}>• {w}</li>)}
                 </ul>
               )}
             </div>
           )}
-          <p className="text-[10px] leading-relaxed text-ink-600">
+          <p className="text-[10px] leading-relaxed text-ion-2">
             No login, no scraping. This reads only the CSV you provide. The export carries real players, positions,
             salaries, teams, and DK&apos;s average points; projections, floor/ceiling, and ownership are modeled here and
             replaced when a licensed projection source is wired behind the founder gate.

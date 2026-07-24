@@ -9,25 +9,39 @@
  * suggestions explain what to cut and why; a singles comparison shows the
  * payout illusion. Risk education on illustrative data — transparent math.
  *
- * Accessible: leg toggles are real aria-pressed buttons; the vitals are plain
- * text; no motion dependency.
+ * Accessible: leg toggles are real aria-pressed buttons with the global focus
+ * ring; the computed vitals live in an aria-live region; no motion dependency.
+ *
+ * Color doctrine: verdicts escalate cyan → ultraviolet → caution → alert.
+ * Plasma is never used as a negative; risk load reads as caution, structural
+ * cost as caution, and outright negative EV as alert (always paired with a
+ * sign or a word, never color alone).
  */
 
 import { useMemo, useState } from "react";
 import {
-  SAMPLE_LEGS, GROUP_LABELS, computeVitals, decimalToAmerican, VERDICT_HEX,
+  SAMPLE_LEGS, GROUP_LABELS, computeVitals, decimalToAmerican, type ParlayVerdict,
 } from "@/lib/parlay/parlay";
-import { BRAND_COLORS } from "@/lib/brand";
+import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 
 const product = (xs: number[]) => xs.reduce((a, b) => a * b, 1);
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 
-function Gene({ label, value, color }: { label: string; value: number; color: string }) {
+/** Verdict tone map — presentation only; the verdict itself comes from the lib. */
+const VERDICT_TONE: Record<ParlayVerdict, { text: string; badge: string; glow: string }> = {
+  Empty: { text: "text-ion-2", badge: "border-mineral text-ion-1", glow: "bg-transparent" },
+  Balanced: { text: "text-orbital-cyan", badge: "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan", glow: "bg-orbital-cyan/10" },
+  Stretched: { text: "text-ultraviolet", badge: "border-ultraviolet/40 bg-ultraviolet/10 text-ultraviolet", glow: "bg-ultraviolet/10" },
+  Brittle: { text: "text-caution", badge: "border-caution/40 bg-caution/10 text-caution", glow: "bg-caution/10" },
+  Mutated: { text: "text-alert", badge: "border-alert/40 bg-alert/10 text-alert", glow: "bg-alert/10" },
+};
+
+function Gene({ label, value, barClass }: { label: string; value: number; barClass: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="w-24 shrink-0 text-[10px] uppercase tracking-wider text-ink-500">{label}</span>
-      <div className="h-1 flex-1 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
-        <div className="h-full rounded-full" style={{ width: pct(value), background: color }} />
+      <span className="w-24 shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-ion-2">{label}</span>
+      <div className="h-1 flex-1 overflow-hidden rounded-full bg-mineral/40">
+        <div className={`h-full rounded-full ${barClass}`} style={{ width: pct(value) }} />
       </div>
     </div>
   );
@@ -38,7 +52,7 @@ export function ParlayGenome() {
 
   const activeLegs = useMemo(() => SAMPLE_LEGS.filter((l) => active.has(l.id)), [active]);
   const vitals = useMemo(() => computeVitals(activeLegs), [activeLegs]);
-  const verdictColor = VERDICT_HEX[vitals.verdict];
+  const tone = VERDICT_TONE[vitals.verdict];
 
   // legs that are part of an active correlated group
   const correlatedIds = useMemo(() => {
@@ -72,8 +86,14 @@ export function ParlayGenome() {
       {/* ── Legs (the genome) ── */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <p className="text-xs uppercase tracking-[0.16em] text-ink-500">The ticket · {vitals.count}/{SAMPLE_LEGS.length} legs</p>
-          <button type="button" onClick={reset} className="text-[11px] uppercase tracking-wider text-ink-400 transition-colors hover:text-white focus-visible:outline-none">
+          <p className={`font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+            The ticket · {vitals.count}/{SAMPLE_LEGS.length} legs
+          </p>
+          <button
+            type="button"
+            onClick={reset}
+            className="font-mono text-[11px] uppercase tracking-[0.12em] text-ion-1 transition-colors hover:text-ion-white"
+          >
             Reset ticket
           </button>
         </div>
@@ -87,33 +107,34 @@ export function ParlayGenome() {
                 type="button"
                 onClick={() => toggle(l.id)}
                 aria-pressed={on}
-                className="surface-card block w-full p-4 text-left transition-all focus-visible:outline-none"
-                style={{ opacity: on ? 1 : 0.45, boxShadow: on ? `inset 0 0 0 1px ${BRAND_COLORS.steelGray}` : "none" }}
+                className={`surface-card block w-full p-4 text-left transition-all ${on ? "" : "opacity-45"}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-ink-500">{l.market}</span>
+                      <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-ion-2">{l.market}</span>
                       {corr && (
-                        <span className="rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider" style={{ color: BRAND_COLORS.ionMagenta, background: `${BRAND_COLORS.ionMagenta}14`, border: `1px solid ${BRAND_COLORS.ionMagenta}44` }}>
-                          ⛓ {GROUP_LABELS[l.group!] ?? l.group}
+                        <span className="rounded-full border border-caution/40 bg-caution/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-caution">
+                          {GROUP_LABELS[l.group!] ?? l.group}
                         </span>
                       )}
                     </div>
-                    <p className="mt-1 text-sm font-semibold text-white">{l.label}</p>
+                    <p className="mt-1 text-sm font-semibold text-ion-white">{l.label}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-mono text-sm" style={{ color: on ? BRAND_COLORS.orbitalCyan : "var(--ion-3,#6b7785)" }}>{decimalToAmerican(l.priceDecimal)}</p>
-                    <p className="font-mono text-[10px] text-ink-500">{pct(l.winProb)} fair</p>
+                    <p className={`font-mono text-sm tabular-nums ${on ? "text-orbital-cyan" : "text-ion-3"}`}>
+                      {decimalToAmerican(l.priceDecimal)}
+                    </p>
+                    <p className="font-mono text-xs tabular-nums text-ion-2">{pct(l.winProb)} fair</p>
                   </div>
                 </div>
                 <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
-                  <Gene label="Volatility" value={l.volatility} color={BRAND_COLORS.softUltraviolet} />
-                  <Gene label="Public exp." value={l.publicExposure} color={BRAND_COLORS.ionMagenta} />
-                  <Gene label="Injury dep." value={l.injuryDependency} color={BRAND_COLORS.ionMagenta} />
-                  <Gene label="Line value" value={l.lineValue} color={BRAND_COLORS.orbitalCyan} />
+                  <Gene label="Volatility" value={l.volatility} barClass="bg-ultraviolet" />
+                  <Gene label="Public exp." value={l.publicExposure} barClass="bg-caution" />
+                  <Gene label="Injury dep." value={l.injuryDependency} barClass="bg-caution" />
+                  <Gene label="Line value" value={l.lineValue} barClass="bg-orbital-cyan" />
                 </div>
-                <p className="mt-2 text-[10px] uppercase tracking-wider" style={{ color: on ? BRAND_COLORS.orbitalCyan : "var(--ion-3,#6b7785)" }}>
+                <p className={`mt-2 font-mono text-[10px] uppercase tracking-[0.12em] ${on ? "text-orbital-cyan" : "text-ion-2"}`}>
                   {on ? "In ticket · tap to remove" : "Removed · tap to add"}
                 </p>
               </button>
@@ -124,43 +145,43 @@ export function ParlayGenome() {
 
       {/* ── Vitals (the surgeon) ── */}
       <div className="space-y-4">
-        <div className="surface-card relative overflow-hidden p-6">
-          <div aria-hidden className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full blur-3xl" style={{ background: `${verdictColor}1f` }} />
+        <div aria-live="polite" className="surface-card relative overflow-hidden p-6">
+          <div aria-hidden className={`pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full blur-3xl ${tone.glow}`} />
           <div className="relative flex items-center justify-between">
-            <p className="text-xs uppercase tracking-[0.16em] text-ink-500">Ticket vitals</p>
-            <span className="rounded-full px-3 py-1 text-sm font-bold" style={{ color: verdictColor, background: `${verdictColor}14`, border: `1px solid ${verdictColor}55` }}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">Ticket vitals</p>
+            <span className={`rounded-full border px-3 py-1 text-sm font-bold ${tone.badge}`}>
               {vitals.verdict}
             </span>
           </div>
 
           <div className="relative mt-5 grid grid-cols-2 gap-x-5 gap-y-4">
-            <Vital label="Survivability" value={pct(vitals.survivability)} sub="chance all legs hit" color={BRAND_COLORS.orbitalCyan} />
-            <Vital label="Expected value" value={`${(vitals.ev * 100).toFixed(1)}%`} sub="per $1 staked" color={evPositive ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta} />
-            <Vital label="Headline payout" value={`${vitals.payoutDecimal ? vitals.payoutDecimal.toFixed(2) : "0"}×`} sub={`${decimalToAmerican(vitals.payoutDecimal)} American`} color={BRAND_COLORS.ionWhite} />
-            <Vital label="Fair payout" value={`${vitals.fairPayoutDecimal ? vitals.fairPayoutDecimal.toFixed(2) : "0"}×`} sub="zero-vig break-even" color={BRAND_COLORS.softUltraviolet} />
-            <Vital label="House edge" value={pct(vitals.houseEdge)} sub="compounded across legs" color={BRAND_COLORS.ionMagenta} />
-            <Vital label="Dependency Coefficient" value={vitals.count ? vitals.dependencyCoefficient.toFixed(2) : "—"} sub={vitals.correlated.length ? `${vitals.correlated.length} same-game tie${vitals.correlated.length > 1 ? "s" : ""}: structural, not statistical` : "every leg independent"} color={vitals.correlated.length ? BRAND_COLORS.ionMagenta : BRAND_COLORS.orbitalCyan} />
+            <Vital label="Survivability" value={pct(vitals.survivability)} sub="chance all legs hit" toneClass="text-orbital-cyan" />
+            <Vital label="Expected value" value={`${(vitals.ev * 100).toFixed(1)}%`} sub="per $1 staked" toneClass={evPositive ? "text-orbital-cyan" : "text-alert"} />
+            <Vital label="Headline payout" value={`${vitals.payoutDecimal ? vitals.payoutDecimal.toFixed(2) : "0"}×`} sub={`${decimalToAmerican(vitals.payoutDecimal)} American`} toneClass="text-ion-white" />
+            <Vital label="Fair payout" value={`${vitals.fairPayoutDecimal ? vitals.fairPayoutDecimal.toFixed(2) : "0"}×`} sub="zero-vig break-even" toneClass="text-ultraviolet" />
+            <Vital label="House edge" value={pct(vitals.houseEdge)} sub="compounded across legs" toneClass="text-caution" />
+            <Vital label="Dependency Coefficient" value={vitals.count ? vitals.dependencyCoefficient.toFixed(2) : "—"} sub={vitals.correlated.length ? `${vitals.correlated.length} same-game tie${vitals.correlated.length > 1 ? "s" : ""}: structural, not statistical` : "every leg independent"} toneClass={vitals.correlated.length ? "text-caution" : "text-orbital-cyan"} />
           </div>
         </div>
 
         {/* surgery suggestions */}
         <div className="surface-card p-5">
-          <p className="mb-2 text-xs uppercase tracking-[0.16em] text-ink-500">Surgeon&apos;s notes</p>
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">Surgeon&apos;s notes</p>
           <ul className="space-y-2.5">
             {vitals.suggestions.map((s, i) => (
-              <li key={i} className="flex gap-2 text-sm leading-relaxed text-ink-300">
-                <span aria-hidden style={{ color: verdictColor }}>↳</span>
+              <li key={i} className="flex gap-2 text-sm leading-relaxed text-ion-1">
+                <span aria-hidden className={tone.text}>↳</span>
                 <span>{s}</span>
               </li>
             ))}
           </ul>
           {single && vitals.count > 1 && (
-            <div className="mt-4 rounded-lg p-3" style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${BRAND_COLORS.steelGray}` }}>
-              <p className="text-[11px] uppercase tracking-wider text-ink-500">If you played these as singles instead</p>
-              <p className="mt-1.5 text-sm leading-relaxed text-ink-300">
-                Average expected value <strong className="text-white">{(single.avgEv * 100).toFixed(1)}%</strong> per leg, and a{" "}
-                <strong className="text-white">{pct(single.someReturn)}</strong> chance at least one returns, versus a{" "}
-                <strong style={{ color: BRAND_COLORS.ionMagenta }}>{pct(1 - vitals.survivability)}</strong> chance the parlay returns nothing.
+            <div className="mt-4 rounded-lg border border-mineral bg-carbon/60 p-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ion-2">If you played these as singles instead</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-ion-1">
+                Average expected value <strong className={`${NUMERIC_TEXT_CLASS} text-ion-white`}>{(single.avgEv * 100).toFixed(1)}%</strong> per leg, and a{" "}
+                <strong className={`${NUMERIC_TEXT_CLASS} text-ion-white`}>{pct(single.someReturn)}</strong> chance at least one returns, versus a{" "}
+                <strong className={`${NUMERIC_TEXT_CLASS} text-alert`}>{pct(1 - vitals.survivability)}</strong> chance the parlay returns nothing.
                 The multiplied payout is the multiplied risk.
               </p>
             </div>
@@ -171,12 +192,12 @@ export function ParlayGenome() {
   );
 }
 
-function Vital({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
+function Vital({ label, value, sub, toneClass }: { label: string; value: string; sub: string; toneClass: string }) {
   return (
     <div>
-      <p className="text-[11px] uppercase tracking-wider text-ink-500">{label}</p>
-      <p className="mt-0.5 font-display text-2xl" style={{ color }}>{value}</p>
-      <p className="text-[10px] text-ink-500">{sub}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ion-2">{label}</p>
+      <p className={`mt-0.5 ${NUMERIC_TEXT_CLASS} text-2xl font-semibold ${toneClass}`}>{value}</p>
+      <p className="text-xs text-ion-2">{sub}</p>
     </div>
   );
 }

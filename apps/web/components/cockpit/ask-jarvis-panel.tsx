@@ -36,9 +36,9 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
       <div className="flex items-center justify-between border-b border-titanium/40 px-5 py-3">
         <div className="flex items-center gap-3">
           <div className="flex gap-1.5">
-            <div className="h-2.5 w-2.5 rounded-full bg-red-700/50" />
-            <div className="h-2.5 w-2.5 rounded-full bg-yellow-700/50" />
-            <div className="h-2.5 w-2.5 rounded-full bg-green-700/50" />
+            <div className="h-2.5 w-2.5 rounded-full bg-alert/50" />
+            <div className="h-2.5 w-2.5 rounded-full bg-caution/50" />
+            <div className="h-2.5 w-2.5 rounded-full bg-verify/50" />
           </div>
           <span className="font-mono text-[10px] text-ion-3">
             <span className="text-accent-500">jarvis</span>
@@ -148,7 +148,7 @@ export function AskJarvisPanel({ summary }: { summary: OwnerSummary }) {
                       answer.confidence === "HIGH"
                         ? "text-accent-500"
                         : answer.confidence === "MEDIUM"
-                          ? "text-yellow-300"
+                          ? "text-caution"
                           : "text-ion-2"
                     }
                   >

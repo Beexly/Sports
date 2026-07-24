@@ -176,16 +176,16 @@ export default function FaqPage() {
         <section className="px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <p className="eyebrow">FAQ</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">
               The questions that come up most.
             </h1>
-            <p className="mt-5 max-w-2xl text-lg text-ink-300">
+            <p className="mt-5 max-w-2xl text-lg text-ion-1">
               Plain answers about how {BRAND_NAME} works, what&apos;s gated,
               what&apos;s open, and how this is different from the rest of the
               category. If your question isn&apos;t here, write to{" "}
               <a
                 href="mailto:hq@galaxysportsedge.com"
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+                className="font-mono text-orbital-cyan underline-offset-4 hover:underline"
               >
                 hq@galaxysportsedge.com
               </a>{" "}
@@ -197,28 +197,28 @@ export default function FaqPage() {
         {GROUPS.map((group) => (
           <section
             key={group.heading}
-            className="border-t border-ink-800/60 px-4 py-16 sm:px-6 lg:px-8"
+            className="border-t border-mineral/40 px-4 py-16 sm:px-6 lg:px-8"
           >
             <div className="mx-auto max-w-3xl">
-              <h2 className="font-display text-display-lg text-balance text-white">
+              <h2 className="font-display text-display-lg text-balance text-ion-white">
                 {group.heading}
               </h2>
-              <div className="mt-8 divide-y divide-ink-800/60 rounded-2xl border border-ink-800 bg-ink-950/40">
+              <div className="mt-8 divide-y divide-mineral/40 rounded-2xl border border-mineral/60 bg-eclipse/40">
                 {group.items.map((item) => (
                   <details
                     key={item.q}
                     className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
                   >
-                    <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ink-100">
+                    <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ion">
                       <span>{item.q}</span>
                       <span
                         aria-hidden="true"
-                        className="text-ink-500 transition-transform group-open:rotate-45"
+                        className="text-ion-2 transition-transform group-open:rotate-45"
                       >
                         +
                       </span>
                     </summary>
-                    <p className="mt-3 text-sm leading-relaxed text-ink-300">
+                    <p className="mt-3 text-sm leading-relaxed text-ion-1">
                       {item.a}
                     </p>
                   </details>
@@ -229,16 +229,16 @@ export default function FaqPage() {
         ))}
 
         {/* CTA */}
-        <section className="border-t border-ink-800/60 bg-ink-1000/80 px-4 py-22 sm:px-6 lg:px-8">
+        <section className="border-t border-mineral/40 bg-obsidian/80 px-4 py-22 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-            <h2 className="font-display text-display-lg text-white">
+            <h2 className="font-display text-display-lg text-ion-white">
               Still have a question?
             </h2>
-            <p className="text-ink-300">
+            <p className="text-ion-1">
               Reach out at{" "}
               <a
                 href="mailto:hq@galaxysportsedge.com"
-                className="font-mono text-accent-300 underline-offset-4 hover:underline"
+                className="font-mono text-orbital-cyan underline-offset-4 hover:underline"
               >
                 hq@galaxysportsedge.com
               </a>

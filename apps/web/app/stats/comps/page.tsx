@@ -25,6 +25,9 @@ export default function Page() {
         Each player's closest statistical neighbor, scored on shared usage and production features: a fast way to frame an unknown by a known.
       </p>
       <SectionHeader eyebrow="By statistical similarity" title="Top Player Comparisons" />
+      {withComp.length === 0 && (
+        <p className="border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1">No comps in this snapshot yet. They populate with each player snapshot sync.</p>
+      )}
       <div className="grid gap-4 md:grid-cols-2">
         {withComp.slice(0, 6).map(c => {
           const comp = c.comparisons[0];
@@ -34,19 +37,19 @@ export default function Page() {
           return (
             <div key={c.player_id} className="border border-mineral bg-eclipse p-4">
               <Link href={"/stats/player/" + c.player_id}>
-                <p className="text-ion-white font-semibold mb-2">{names.get(c.player_id) ?? c.player_id}</p>
+                <p className="text-ion-white font-semibold mb-2 hover:text-orbital-cyan transition-colors">{names.get(c.player_id) ?? c.player_id}</p>
               </Link>
-              <p className="text-sm text-ion-1 mb-3">Closest comp: {comp?.name}</p>
+              <p className="text-sm text-ion-1 mb-3">Closest comp: {comp?.name ?? "—"}</p>
               <BarChart items={[
                 { label: "Similarity", value: Number(comp?.similarity_score ?? 0), max: 100, tone: "cyan" }
               ]} />
-              <p className="mt-2 text-xs text-ion-2">Features: {sharedFeatures}</p>
+              <p className="mt-2 text-xs text-ion-2">Features: {sharedFeatures || "—"}</p>
             </div>
           );
         })}
       </div>
+      <SectionHeader eyebrow={withComp.slice(0, 40).length + " players"} title="All Player Comps" />
       <div>
-        <h2 className="text-2xl font-semibold text-ion-white mb-4">All Player Comps</h2>
         <DataTable
           rows={withComp.slice(0, 40).map(c => {
             const t = c.comparisons[0];
@@ -54,10 +57,13 @@ export default function Page() {
               player: names.get(c.player_id) ?? String(c.player_id),
               closest_comp: String(t?.name ?? ""),
               similarity: Number(t?.similarity_score ?? 0),
-              shared_features: String(t?.shared_features ?? "")
+              shared_features: Array.isArray(t?.shared_features)
+                ? (t.shared_features as unknown[]).map(String).join(", ")
+                : String(t?.shared_features ?? "")
             };
           })}
           maxRows={40}
+          caption="Closest statistical comparable and similarity score per player"
         />
       </div>
     </Shell>

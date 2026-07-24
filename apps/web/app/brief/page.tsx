@@ -40,8 +40,8 @@ export default async function BriefStub() {
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-obsidian">
       <GeneratedPlate assetId="brief-horizon" className="-z-10 opacity-25" />
-      <main id="main-content" className="mx-auto max-w-3xl px-4 py-12">
-        <h1 className="text-2xl font-bold text-white">Daily brief</h1>
+      <main id="main-content" className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+        <h1 className="text-2xl font-bold text-ion-white">Daily brief</h1>
         <p className="mt-2 text-sm text-ion-2">
           The daily brief composer is being rebuilt. Verified picks will
           appear here after launch-night verification is complete.
@@ -60,16 +60,16 @@ export default async function BriefStub() {
               published today
               {demoActive && (
                 <span
-                  className="ml-2 rounded bg-yellow-900/40 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-yellow-300"
+                  className="ml-2 rounded bg-caution/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution"
                   title="Sample data"
                 >
                   sample
                 </span>
               )}
             </p>
-            <p className="mt-1 text-[11px] text-ion-3">
+            <p className="mt-1 text-xs text-ion-3">
               See the full slate at{" "}
-              <Link href="/picks" className="text-brand-400 hover:text-brand-300">
+              <Link href="/picks" className="text-orbital-cyan transition-colors hover:text-ion-white">
                 /picks
               </Link>
               .
@@ -90,7 +90,7 @@ export default async function BriefStub() {
           {BRIEF_RESPONSIBLE_GAMING_NOTE} For problem-gambling help in the US,
           call <strong>1-800-GAMBLER</strong>.
         </p>
-        <Link href="/" className="mt-4 inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white">
+        <Link href="/" className="mt-4 inline-block rounded-lg bg-plasma px-4 py-2 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow">
           ← Home
         </Link>
       </main>

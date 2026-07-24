@@ -51,27 +51,27 @@ function MarkdownBody({ markdown }: { readonly markdown: string }): JSX.Element 
       {blocks.map((block, index) => {
         if (block.startsWith("###")) {
           return (
-            <h3 key={`${block}-${index}`} className="pt-3 text-xl font-semibold text-white">
+            <h3 key={`${block}-${index}`} className="pt-3 text-xl font-semibold text-ion-white">
               {block.replace(/^#+\s*/, "")}
             </h3>
           );
         }
         if (block.startsWith("##")) {
           return (
-            <h2 key={`${block}-${index}`} className="pt-5 text-2xl font-semibold text-white">
+            <h2 key={`${block}-${index}`} className="pt-5 text-2xl font-semibold text-ion-white">
               {block.replace(/^#+\s*/, "")}
             </h2>
           );
         }
         if (block.startsWith("#")) {
           return (
-            <h2 key={`${block}-${index}`} className="text-2xl font-semibold text-white">
+            <h2 key={`${block}-${index}`} className="text-2xl font-semibold text-ion-white">
               {block.replace(/^#+\s*/, "")}
             </h2>
           );
         }
         return (
-          <p key={`${block}-${index}`} className="whitespace-pre-wrap text-base leading-8 text-ion-1">
+          <p key={`${block}-${index}`} className="whitespace-pre-wrap text-base leading-8 text-ion">
             {block}
           </p>
         );
@@ -82,18 +82,18 @@ function MarkdownBody({ markdown }: { readonly markdown: string }): JSX.Element 
 
 function ReferenceLinks({ entry }: { readonly entry: PublicJournalEntry }): JSX.Element {
   return (
-    <section className="rounded-lg border border-titanium bg-carbon/50 p-5">
-      <h2 className="text-sm font-semibold text-white">References</h2>
+    <section className="rounded-lg border border-mineral bg-carbon/50 p-5">
+      <h2 className="text-sm font-semibold text-ion-white">References</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
-          <p className="text-[10px] uppercase tracking-wide text-ion-3">Picks discussed</p>
+          <p className="font-mono text-xs uppercase tracking-wide text-ion-2">Picks discussed</p>
           {entry.referencedPickIds.length === 0 ? (
-            <p className="mt-2 text-sm text-ion-3">No pick references attached.</p>
+            <p className="mt-2 text-sm text-ion-2">No pick references attached.</p>
           ) : (
             <ul className="mt-2 space-y-2 text-sm">
               {entry.referencedPickIds.map((pickId) => (
                 <li key={pickId}>
-                  <Link href={`/ledger#${pickId}`} className="text-ion-1 hover:text-white">
+                  <Link href={`/ledger#${pickId}`} className="font-mono text-ion-1 transition-colors hover:text-ion-white">
                     {pickId}
                   </Link>
                 </li>
@@ -102,14 +102,14 @@ function ReferenceLinks({ entry }: { readonly entry: PublicJournalEntry }): JSX.
           )}
         </div>
         <div>
-          <p className="text-[10px] uppercase tracking-wide text-ion-3">Autopsies cited</p>
+          <p className="font-mono text-xs uppercase tracking-wide text-ion-2">Autopsies cited</p>
           {entry.referencedAutopsyIds.length === 0 ? (
-            <p className="mt-2 text-sm text-ion-3">No autopsy references attached.</p>
+            <p className="mt-2 text-sm text-ion-2">No autopsy references attached.</p>
           ) : (
             <ul className="mt-2 space-y-2 text-sm">
               {entry.referencedAutopsyIds.map((autopsyId) => (
                 <li key={autopsyId}>
-                  <Link href={`/performance/losses/${autopsyId}`} className="text-ion-1 hover:text-white">
+                  <Link href={`/performance/losses/${autopsyId}`} className="font-mono text-ion-1 transition-colors hover:text-ion-white">
                     {autopsyId}
                   </Link>
                 </li>
@@ -152,21 +152,21 @@ export default async function JournalEntryPage({
       />
       <Nav />
       <main id="main-content" className="min-h-screen bg-obsidian">
-        <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-          <Link href="/journal" className="text-sm text-ion-3 transition-colors hover:text-ion-1">
+        <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+          <Link href="/journal" className="text-sm text-ion-2 transition-colors hover:text-ion-white">
             Back to Model Journal
           </Link>
 
           <article className="mt-8">
-            <header className="border-b border-titanium pb-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-yellow-300">
-                Week {entry.isoWeek}, {entry.isoYear} - {entry.modelVersion}
+            <header className="border-b border-mineral/60 pb-8">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-ultraviolet">
+                Week {entry.isoWeek}, {entry.isoYear} · {entry.modelVersion}
               </p>
-              <h1 className="mt-4 text-4xl font-bold leading-tight text-white">{entry.title}</h1>
-              <div className="mt-5 flex flex-wrap gap-3 text-sm text-ion-3">
-                <span>{formatDate(new Date(entry.publishedAt))}</span>
+              <h1 className="mt-4 text-4xl font-bold leading-tight text-balance text-ion-white">{entry.title}</h1>
+              <div className="mt-5 flex flex-wrap gap-3 font-mono text-xs text-ion-2">
+                <time dateTime={entry.publishedAt}>{formatDate(new Date(entry.publishedAt))}</time>
                 <span>{entry.readTimeMinutes} min read</span>
-                <Link href="/journal/rss.xml" className="hover:text-ion-1">
+                <Link href="/journal/rss.xml" className="transition-colors hover:text-ion-white">
                   RSS
                 </Link>
               </div>
@@ -179,9 +179,9 @@ export default async function JournalEntryPage({
 
           <div className="mt-12 grid gap-6">
             <ReferenceLinks entry={entry} />
-            <section className="rounded-lg border border-titanium bg-carbon/50 p-5">
-              <h2 className="text-sm font-semibold text-white">Weekly digest</h2>
-              <p className="mt-2 text-sm leading-6 text-ion-2">
+            <section className="rounded-lg border border-mineral bg-carbon/50 p-5">
+              <h2 className="text-sm font-semibold text-ion-white">Weekly digest</h2>
+              <p className="mt-2 text-sm leading-6 text-ion-1">
                 Elite members receive the full Journal by email after publication. Free readers can follow the public archive here or use the RSS feed.
               </p>
             </section>

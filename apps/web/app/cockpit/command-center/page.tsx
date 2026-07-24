@@ -25,16 +25,16 @@ import type {
 export const dynamic = "force-dynamic";
 
 const URGENCY_STYLES: Record<AttentionUrgency, string> = {
-  CRITICAL: "bg-red-950/50 text-red-300 border-red-900/60",
-  HIGH: "bg-yellow-950/50 text-yellow-300 border-yellow-900/50",
+  CRITICAL: "bg-alert/50 text-alert border-alert/60",
+  HIGH: "bg-caution/50 text-caution border-caution/50",
   NORMAL: "bg-obsidian/70 text-ion-2 border-titanium/40",
   LOW: "bg-obsidian/50 text-ion-3 border-titanium/30",
 };
 
 const DATA_MODE_STYLES: Record<DataMode, string> = {
   live: "border-accent-800/50 bg-accent-950/30 text-accent-400",
-  labeled_fallback: "border-yellow-900/50 bg-yellow-950/20 text-yellow-300",
-  unavailable: "border-red-900/60 bg-red-950/20 text-red-300",
+  labeled_fallback: "border-caution/50 bg-caution/20 text-caution",
+  unavailable: "border-alert/60 bg-alert/20 text-alert",
 };
 
 export default async function CommandCenterPage() {
@@ -42,7 +42,7 @@ export default async function CommandCenterPage() {
 
   const shell =
     feed.overallColor === "RED"
-      ? "border-red-900/60 shadow-glow-plasma"
+      ? "border-alert/60 shadow-glow-plasma"
       : feed.overallColor === "GREEN"
         ? "border-accent-900/40"
         : "border-titanium/60";
@@ -100,10 +100,10 @@ export default async function CommandCenterPage() {
       <HealthStrip feed={feed} />
 
       {!feed.success && feed.error && (
-        <section className="rounded-xl border border-red-900 bg-red-950/30 p-4 text-sm text-red-300">
+        <section className="rounded-xl border border-alert bg-alert/30 p-4 text-sm text-alert">
           <p className="font-semibold">Synthesis unavailable.</p>
-          <p className="mt-1 text-red-400/80">{feed.error}</p>
-          <p className="mt-2 text-xs text-red-400/60">
+          <p className="mt-1 text-alert/80">{feed.error}</p>
+          <p className="mt-2 text-xs text-alert/60">
             The surface still renders. Check the DB connection and worker logs.
           </p>
         </section>
@@ -166,7 +166,7 @@ export default async function CommandCenterPage() {
 
       <p data-testid="command-center-generated-at" className="text-[10px] uppercase tracking-widest text-ion-3">
         Generated {new Date(feed.generatedAt).toLocaleString()} · Jarvis {feed.jarvisVersion} ·{" "}
-        <Link href="/cockpit/command-center" prefetch={false} className="text-brand-400 hover:text-brand-300">
+        <Link href="/cockpit/command-center" prefetch={false} className="text-plasma hover:text-plasma-glow">
           refresh
         </Link>
       </p>
@@ -197,9 +197,9 @@ function CountCell({
 }) {
   const valueClass =
     accent === "red" && value > 0
-      ? "text-rose-300"
+      ? "text-alert"
       : accent === "amber" && value > 0
-        ? "text-amber-300"
+        ? "text-caution"
         : "text-ion-white";
   return (
     <div className="rounded-2xl border border-titanium/40 bg-obsidian/40 p-4">
@@ -216,8 +216,8 @@ type HealthTone = "good" | "warn" | "bad" | "neutral";
 
 const HEALTH_TONE_STYLES: Record<HealthTone, string> = {
   good: "border-accent-800/50 bg-accent-950/20 text-accent-400",
-  warn: "border-yellow-900/50 bg-yellow-950/20 text-yellow-300",
-  bad: "border-red-900/60 bg-red-950/20 text-red-300",
+  warn: "border-caution/50 bg-caution/20 text-caution",
+  bad: "border-alert/60 bg-alert/20 text-alert",
   neutral: "border-titanium/40 bg-obsidian/50 text-ion-2",
 };
 
@@ -316,9 +316,9 @@ function NarrativeBlock({
 }) {
   const titleClass =
     tone === "red"
-      ? "text-rose-300"
+      ? "text-alert"
       : tone === "amber"
-        ? "text-amber-300"
+        ? "text-caution"
         : tone === "dim"
           ? "text-ion-3"
           : "text-ion-2";
@@ -402,7 +402,7 @@ function LaneCard({ lane }: { lane: CommandCenterLane }) {
         {lane.itemCount}
       </p>
       {lane.fallbackReason && (
-        <p className="mt-1 text-[10px] leading-snug text-yellow-300/80">{lane.fallbackReason}</p>
+        <p className="mt-1 text-[10px] leading-snug text-caution/80">{lane.fallbackReason}</p>
       )}
     </div>
   );

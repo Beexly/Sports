@@ -200,13 +200,13 @@ function SealedCommitmentCard({ commitment }: { commitment: SealedCommitment }):
   return (
     <article data-testid="sealed-commitment" className="surface-card p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-orbital-cyan">
+        <p className="font-mono text-xs uppercase tracking-[0.16em] text-orbital-cyan">
           Sealed slate · {commitment.slateKey}
         </p>
-        <p className="text-[11px] text-ion-3">Committed {committedUtc}</p>
+        <p className="text-xs text-ion-2">Committed {committedUtc}</p>
       </div>
 
-      <p className="mt-4 text-[10px] font-semibold uppercase tracking-widest text-ion-2">
+      <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-ion-2">
         Published root
       </p>
       <HashMaterialize
@@ -381,7 +381,7 @@ export default async function SealedEnginePage(): Promise<JSX.Element> {
                 <SealedCommitmentCard key={c.slateKey} commitment={c} />
               ))}
             </div>
-            <p className={`mt-4 text-[11px] text-ion-3`}>
+            <p className="mt-4 text-xs text-ion-2">
               As of {new Date(view.generatedAt).toUTCString()}
             </p>
           </section>

@@ -19,8 +19,8 @@ const LANE_LABEL: Readonly<Record<FounderWorkLane, string>> = {
 
 const AUTHORITY_STYLES: Readonly<Record<FounderWorkAuthority, string>> = {
   AGENT_INTERNAL: "border-titanium/40 bg-eclipse/50 text-ion-2",
-  AGENT_THEN_OWNER: "border-yellow-500/30 bg-yellow-950/40 text-yellow-200",
-  OWNER_ONLY: "border-red-500/30 bg-red-950/40 text-red-200",
+  AGENT_THEN_OWNER: "border-caution/30 bg-caution/40 text-caution",
+  OWNER_ONLY: "border-alert/30 bg-alert/40 text-alert",
 };
 
 const AUTHORITY_LABEL: Readonly<Record<FounderWorkAuthority, string>> = {
@@ -42,7 +42,7 @@ export default async function CockpitFounderQueuePage(): Promise<JSX.Element> {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-yellow-300">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-caution">
               NOVA · Founder OS
             </p>
             <h1 className="mt-1 text-2xl font-bold text-ion-white">Owner Decision Queue</h1>
@@ -69,7 +69,7 @@ export default async function CockpitFounderQueuePage(): Promise<JSX.Element> {
       ) : (
         <div className="overflow-hidden rounded-lg border border-titanium/40 bg-obsidian/60">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-titanium/30 text-sm">
+            <table aria-label="Owner decision queue — priority, lane, state, and authority per work item" className="min-w-full divide-y divide-titanium/30 text-sm">
               <thead className="bg-eclipse/50 text-left text-[11px] uppercase tracking-wider text-ion-3">
                 <tr>
                   <th scope="col" className="px-4 py-3">Priority</th>

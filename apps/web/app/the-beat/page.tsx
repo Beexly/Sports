@@ -9,7 +9,6 @@ import { GalaxyBroadcast } from "@/components/news/galaxy-broadcast";
 import { buildBroadcast } from "@/lib/fantasy/host";
 import { WIRE_DISCLAIMER, WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
 import { fetchLiveWire } from "@/lib/news/rss";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "The Beat · Galaxy Broadcast & Reliability-Tiered Newsroom",
@@ -27,7 +26,7 @@ export default async function TheBeatPage() {
   const liveWire = await fetchLiveWire().catch(() => null);
 
   return (
-    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
       <Nav />
 
@@ -44,24 +43,24 @@ export default async function TheBeatPage() {
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: `radial-gradient(55% 80% at 50% 0%, ${BRAND_COLORS.orbitalCyan}16, transparent 70%)` }}
+            style={{ background: "radial-gradient(55% 80% at 50% 0%, rgba(0, 229, 255, 0.09), transparent 70%)" }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 <span className="live-dot" /> The Beat · On air
               </p>
             </Reveal>
             <Reveal delay={90}>
               <h1
-                className="mt-5 max-w-3xl font-display text-balance text-white"
+                className="mt-5 max-w-3xl font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}
               >
                 Breaking news, <span className="gse-editorial" style={{ fontSize: "1.08em" }}>scored</span>.
               </h1>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-5 max-w-2xl text-lg text-ink-300">
+              <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 Sports media is a market too. Noisy, and now accountable. Nova brings you the week&apos;s
                 top signals on location; below, the Signal Ledger scores every report the instant it lands.
               </p>
@@ -79,14 +78,14 @@ export default async function TheBeatPage() {
         <section className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             {/* The transmission flows down into the ledger */}
-            <div aria-hidden className="mx-auto h-10 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${BRAND_COLORS.orbitalCyan}66)` }} />
+            <div aria-hidden className="mx-auto h-10 w-px" style={{ background: "linear-gradient(to bottom, transparent, rgba(0, 229, 255, 0.4))" }} />
             <Reveal>
               <div className="flex flex-col gap-2 pt-2">
-                <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>The Signal Ledger</p>
-                <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">
+                <p className="eyebrow text-orbital-cyan">The Signal Ledger</p>
+                <h2 className="font-display text-2xl font-semibold text-ion-white sm:text-3xl">
                   Every report, weighed the instant it lands.
                 </h2>
-                <p className="max-w-2xl text-sm leading-6 text-ink-300">
+                <p className="max-w-2xl text-sm leading-6 text-ion-1">
                   The instant a report lands we weigh the source by tier, map it to the players and lines it
                   moves, decay it by freshness, and tell you the move. Before it&apos;s priced in.
                 </p>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Shell, Cards, StatusRibbon, HeroStat, InsightCard, SectionHeader } from "../_components";
 import { loadArchetypes, loadPlayers } from "@/lib/statking/product";
 export const metadata = {
@@ -13,7 +14,7 @@ export default function Page() {
 
   return (
     <Shell title="Watchlist" eyebrow="Highest-signal players">
-      <StatusRibbon status="active" label="Watch list updated with each sync" />
+      <StatusRibbon status="fixture" label="Fixture snapshot: recomputed each sync cycle, not a live feed" />
       <Cards items={[
         { label: "Archetyped players", value: arch.length },
         { label: "On watch", value: watch.length },
@@ -26,6 +27,11 @@ export default function Page() {
         body="Sorted by Hidden Value Score: players with strong underlying metrics (usage, efficiency, archetype fit) before the broader market reprices them. Saving a personal watchlist is an owner-gated account feature. This view always shows the system's top hidden-value picks."
         tone="neutral"
       />
+      {watch.length === 0 && (
+        <p className="border border-mineral bg-eclipse/40 px-4 py-6 text-center text-sm text-ion-1">
+          No players in the current snapshot. The watch list populates once the player sync runs.
+        </p>
+      )}
       <div className="grid gap-4 md:grid-cols-2">
         {watch.slice(0, 2).map(p => {
           const a = archMap.get(p.player_id);
@@ -48,7 +54,7 @@ export default function Page() {
         {watch.slice(0, 20).map(p => {
           const a = archMap.get(p.player_id);
           return (
-            <a
+            <Link
               key={p.player_id}
               href={"/stats/player/" + p.player_id}
               className="flex items-center justify-between border border-mineral bg-eclipse p-3 hover:border-orbital-cyan transition-colors"
@@ -58,10 +64,10 @@ export default function Page() {
                 <p className="text-xs text-ion-2">{String(p.team ?? "")} · {String(p.position ?? "")}</p>
               </div>
               <div className="text-right">
-                <p className="text-orbital-cyan font-mono text-sm">{Number(p.hidden_value_score ?? 0)}</p>
+                <p className="font-mono text-sm tabular-nums text-orbital-cyan">{Number(p.hidden_value_score ?? 0)}</p>
                 <p className="text-xs text-ion-2">{String(a?.archetype ?? "—")}</p>
               </div>
-            </a>
+            </Link>
           );
         })}
       </div>

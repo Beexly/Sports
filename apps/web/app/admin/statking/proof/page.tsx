@@ -31,6 +31,7 @@ export default async function Page() {
           noise_level: String(m.noise_level ?? ""),
         }))}
         maxRows={50}
+        caption="Metric reliability records"
       />
     </Shell>
   );

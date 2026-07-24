@@ -48,10 +48,13 @@ export const metadata: Metadata = {
 
 // ── Result badge ──────────────────────────────────────────────────────────────
 
+// Settlement colors follow the doctrine's Settlement Badge spec: WIN is
+// verify mint, LOSS is alert vermilion — never orbital-cyan, which signals
+// data liveness, not outcomes. PUSH/VOID stay neutral.
 function resultClass(result: ProofPickRow["result"]): string {
   switch (result) {
     case "WIN":
-      return "text-orbital-cyan";
+      return "text-verify";
     case "LOSS":
       return "text-alert";
     case "PUSH":
@@ -79,7 +82,8 @@ function clvLabel(verdict: string | null): string {
 
 function clvClass(verdict: string | null): string {
   if (!verdict) return "text-ion-3";
-  if (verdict === "BEAT_CLOSE") return "text-orbital-cyan";
+  // Positive confirm uses the verify token (semantic), not the data accent.
+  if (verdict === "BEAT_CLOSE") return "text-verify";
   if (verdict === "MATCHED_CLOSE") return "text-ion-2";
   return "text-caution";
 }
@@ -126,7 +130,7 @@ export default async function ProofOfRecordPage() {
 
           {/* ── Header ── */}
           <header className="border-b border-mineral pb-10">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-orbital-cyan">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">
               Proof of Record
             </p>
             <h1 className="mt-4 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
@@ -150,7 +154,7 @@ export default async function ProofOfRecordPage() {
             data-testid="proof-how-it-works"
             className="mt-10 rounded-2xl border border-mineral bg-eclipse/50 p-6"
           >
-            <h2 className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-ion-2">
+            <h2 className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">
               How the commitment works
             </h2>
             <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
@@ -191,10 +195,10 @@ export default async function ProofOfRecordPage() {
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-2">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">
                     Committed Merkle root
                   </p>
-                  <p className="mt-1 text-[11px] text-ion-3">
+                  <p className="mt-1 text-xs text-ion-2">
                     Over{" "}
                     <span className={NUMERIC_TEXT_CLASS}>
                       {formatCount(board.totalSettled)}
@@ -220,7 +224,7 @@ export default async function ProofOfRecordPage() {
           {!ledgerUnreachable && (
             <p
               data-testid="proof-freshness-stamp"
-              className={`mt-4 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}
+              className={`mt-4 text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}
             >
               Board generated {new Date(board.generatedAt).toUTCString()}
               {hasLedger && (
@@ -263,7 +267,7 @@ export default async function ProofOfRecordPage() {
                 outcome, win or loss, appears here with its hash and trail.
                 Nothing is hidden once it settles.
               </p>
-              <p className="mt-4 text-[11px] text-ion-3">
+              <p className="mt-4 text-xs text-ion-2">
                 Bootstrap-era picks are excluded by design. They do not get to
                 inflate the ledger.
               </p>
@@ -282,17 +286,17 @@ export default async function ProofOfRecordPage() {
               <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-mineral px-6 py-4">
                   <div>
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-ion-2">
+                    <h2 className="font-mono text-xs uppercase tracking-[0.16em] text-ion-2">
                       Settled pick ledger
                     </h2>
-                    <p className="mt-1 text-[11px] text-ion-2">
+                    <p className="mt-1 text-xs text-ion-2">
                       Every outcome included: wins, losses, pushes, voids. None
                       quietly removed. Each row carries its Merkle leaf index and
                       the hashed committed payload.
                     </p>
                   </div>
                   <span
-                    className={`text-[11px] uppercase tracking-widest text-ion-2 ${NUMERIC_TEXT_CLASS}`}
+                    className={`font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2 ${NUMERIC_TEXT_CLASS}`}
                   >
                     {formatCount(board.picks.length)} of{" "}
                     {formatCount(board.totalSettled)} shown
@@ -306,7 +310,7 @@ export default async function ProofOfRecordPage() {
                 </ul>
 
                 <div className="border-t border-mineral px-6 py-3">
-                  <p className="text-[11px] leading-relaxed text-ion-2">
+                  <p className="text-xs leading-relaxed text-ion-2">
                     Leaf index is the pick&apos;s position in the committed set
                     (settled-at descending, id ascending as tiebreaker). The
                     committed payload is the SHA-256 hash of id + pick type +
@@ -322,7 +326,7 @@ export default async function ProofOfRecordPage() {
 
           {/* ── The guarantee in plain language ── */}
           <section className="mt-10 border-t border-mineral pt-8">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ion-2">
+            <h2 className="mb-3 font-mono text-xs uppercase tracking-[0.16em] text-ion-2">
               The no-after-the-fact-editing guarantee
             </h2>
             <ul className="flex flex-col gap-2 text-sm leading-6 text-ion-1">
@@ -352,7 +356,7 @@ export default async function ProofOfRecordPage() {
               data-testid="proof-funnel-close"
               className="mt-10 rounded-2xl border border-plasma/30 bg-plasma/[0.06] px-6 py-8"
             >
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-plasma">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-plasma">
                 The same receipts run the live board
               </p>
               <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white">
@@ -413,7 +417,7 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
       <div>
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm font-semibold text-ion-white">{matchup}</span>
-          <span className="text-[10px] uppercase tracking-wider text-ion-2">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
             {row.sport}
           </span>
           <span
@@ -423,7 +427,7 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
           </span>
         </div>
 
-        <p className={`mt-1 text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+        <p className={`mt-1 text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
           {row.pickType} · {row.selection} · line {row.line > 0 ? "+" : ""}
           {row.line} · conf{" "}
           <span className="text-ion-1">{row.confidence}</span> ·{" "}
@@ -435,14 +439,14 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
           </abbr>
         </p>
 
-        <p className={`mt-1 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}>
+        <p className={`mt-1 text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
           Generated {new Date(row.generatedAt).toUTCString()} · Settled{" "}
           {dateStr}
         </p>
 
         {/* CLV verdict */}
-        <p className="mt-1 text-[11px]">
-          <span className="text-ion-3">CLV: </span>
+        <p className="mt-1 text-xs">
+          <span className="text-ion-2">CLV: </span>
           <span className={`${clvClass(row.clvVerdict)} ${NUMERIC_TEXT_CLASS}`}>
             {clvLabel(row.clvVerdict)}
             {row.clvValue !== null && row.clvVerdict
@@ -453,7 +457,7 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
 
         {/* Consensus read where available */}
         {row.consensusAtSettle !== null && (
-          <p className={`mt-1 text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
+          <p className={`mt-1 text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
             Market consensus at settle ·{" "}
             {formatCount(row.consensusAtSettle.bookCount)} books ·{" "}
             Home {formatRatioAsPercent(row.consensusAtSettle.fairHomeProb)} ·
@@ -463,7 +467,7 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
                 · model vs market{" "}
                 <span
                   className={
-                    row.modelVsMarketPp >= 0 ? "text-orbital-cyan" : "text-caution"
+                    row.modelVsMarketPp >= 0 ? "text-verify" : "text-caution"
                   }
                 >
                   {row.modelVsMarketPp > 0 ? "+" : ""}
@@ -481,7 +485,7 @@ function PickLedgerRow({ row }: { row: ProofPickRow }) {
           Routing a leaf hash to the verifier would produce a false
           "no receipt matches" — so only receipt-carrying rows link out. */}
       <div className="flex flex-col items-end gap-1 text-right">
-        <p className={`text-[10px] font-semibold uppercase tracking-widest text-ion-3`}>
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
           Leaf {formatCount(row.leafIndex)}
         </p>
         <code

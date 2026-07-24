@@ -261,7 +261,7 @@ export function JournalEntryEditor({
               type="button"
               onClick={retractEntry}
               disabled={isRetracting || retractionReason.trim().length < 12}
-              className="rounded-lg border border-rose-500/50 px-3 py-2 text-xs font-semibold text-rose-200 hover:bg-rose-950/30 disabled:text-ion-3"
+              className="rounded-lg border border-alert/50 px-3 py-2 text-xs font-semibold text-alert hover:bg-alert/10 disabled:text-ion-3"
             >
               {isRetracting ? "Retracting..." : "Retract entry"}
             </button>
@@ -270,22 +270,22 @@ export function JournalEntryEditor({
       </div>
 
       {saveMessage ? (
-        <p className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
+        <p className="rounded-lg border border-verify/30 bg-verify/10 px-3 py-2 text-xs text-verify">
           {saveMessage}
         </p>
       ) : null}
       {saveError ? (
-        <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+        <p className="rounded-lg border border-alert/30 bg-alert/10 px-3 py-2 text-xs text-alert">
           {saveError}
         </p>
       ) : null}
       {scanResult ? (
-        <section className="rounded-lg border border-titanium/40 bg-black/30 p-3 text-xs">
+        <section className="rounded-lg border border-titanium/40 bg-carbon/30 p-3 text-xs">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="font-semibold text-ion-1">
               Compliance: {scanResult.status.toUpperCase()}
             </p>
-            <p className={scanResult.publishAllowed ? "text-emerald-300" : "text-rose-300"}>
+            <p className={scanResult.publishAllowed ? "text-verify" : "text-alert"}>
               {scanResult.publishAllowed ? "Publish gate can proceed." : "Publish gate blocked."}
             </p>
           </div>
@@ -304,39 +304,39 @@ export function JournalEntryEditor({
         </section>
       ) : null}
       {scanError ? (
-        <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+        <p className="rounded-lg border border-alert/30 bg-alert/10 px-3 py-2 text-xs text-alert">
           {scanError}
         </p>
       ) : null}
       {submitMessage ? (
-        <p className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
+        <p className="rounded-lg border border-verify/30 bg-verify/10 px-3 py-2 text-xs text-verify">
           {submitMessage}
         </p>
       ) : null}
       {submitError ? (
-        <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+        <p className="rounded-lg border border-alert/30 bg-alert/10 px-3 py-2 text-xs text-alert">
           {submitError}
         </p>
       ) : null}
       {status === "PUBLISHED" ? (
-        <section className="rounded-lg border border-rose-500/30 bg-rose-950/10 p-3">
-          <label className="block text-xs font-semibold text-rose-100">
+        <section className="rounded-lg border border-alert/30 bg-alert/10 p-3">
+          <label className="block text-xs font-semibold text-alert">
             Retraction reason
             <textarea
               value={retractionReason}
               onChange={(event) => setRetractionReason(event.target.value)}
               rows={3}
-              className="mt-2 w-full rounded-lg border border-rose-500/30 bg-black/40 p-3 text-xs leading-5 text-ion-white outline-none focus:border-rose-400"
+              className="mt-2 w-full rounded-lg border border-alert/30 bg-carbon/40 p-3 text-xs leading-5 text-ion-white outline-none focus:border-alert"
               placeholder="Required before retracting a published Journal entry."
             />
           </label>
           {retractMessage ? (
-            <p className="mt-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
+            <p className="mt-2 rounded-lg border border-verify/30 bg-verify/10 px-3 py-2 text-xs text-verify">
               {retractMessage}
             </p>
           ) : null}
           {retractError ? (
-            <p className="mt-2 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+            <p className="mt-2 rounded-lg border border-alert/30 bg-alert/10 px-3 py-2 text-xs text-alert">
               {retractError}
             </p>
           ) : null}
@@ -349,7 +349,7 @@ export function JournalEntryEditor({
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           readOnly={!isBodyEditable}
-          className="mt-2 w-full rounded-lg border border-titanium/40 bg-black/40 p-3 text-sm text-ion-white outline-none focus:border-yellow-500/60"
+          className="mt-2 w-full rounded-lg border border-titanium/40 bg-carbon/40 p-3 text-sm text-ion-white outline-none focus:border-caution/60"
         />
       </label>
 
@@ -358,10 +358,10 @@ export function JournalEntryEditor({
         readOnly={!isBodyEditable}
         value={bodyMarkdown}
         onChange={(event) => setBodyMarkdown(event.target.value)}
-        className="min-h-[460px] w-full resize-y rounded-lg border border-titanium/40 bg-black/40 p-3 font-mono text-xs leading-5 text-ion-1 outline-none focus:border-yellow-500/60"
+        className="min-h-[460px] w-full resize-y rounded-lg border border-titanium/40 bg-carbon/40 p-3 font-mono text-xs leading-5 text-ion-1 outline-none focus:border-caution/60"
       />
 
-      <section className="rounded-lg border border-titanium/40 bg-black/30 p-4">
+      <section className="rounded-lg border border-titanium/40 bg-carbon/30 p-4">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="text-sm font-semibold text-ion-white">Preview</h2>
           <span className="text-[10px] uppercase tracking-wide text-ion-3">First sections</span>

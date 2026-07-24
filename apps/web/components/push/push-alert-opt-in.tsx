@@ -65,7 +65,7 @@ export function PushAlertOptIn(): JSX.Element | null {
         {status === "subscribing" ? "Enabling…" : "Enable push alerts"}
       </button>
       {status === "error" && error ? (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-sm text-alert">
           Couldn&apos;t enable push alerts: {error}
         </p>
       ) : null}

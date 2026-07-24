@@ -58,7 +58,7 @@ export default async function AdminCashPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Cash OS</h1>
+        <h1 className="text-2xl font-bold text-ion-white">Cash OS</h1>
         <Link
           href="/admin"
           className="w-fit rounded-lg border border-titanium px-3 py-2 text-xs text-ion-1 hover:bg-carbon/60"
@@ -69,7 +69,7 @@ export default async function AdminCashPage() {
 
       <p
         data-testid="internal-only-banner"
-        className="rounded-lg border border-yellow-900 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-200"
+        className="rounded-lg border border-caution/60 bg-caution/10 px-4 py-2 text-xs text-caution"
       >
         Internal only. Revenue tracking for the Independence Gates (see
         docs/ops/INDEPENDENCE_GATES.md) — not customer-facing.
@@ -78,7 +78,7 @@ export default async function AdminCashPage() {
       {loadError && (
         <p
           data-testid="cash-os-error"
-          className="rounded-lg border border-red-900 bg-red-950/30 px-4 py-2 text-xs text-red-200"
+          className="rounded-lg border border-alert/60 bg-alert/10 px-4 py-2 text-xs text-alert"
         >
           Could not load CashSnapshot: {loadError}
         </p>
@@ -97,8 +97,8 @@ export default async function AdminCashPage() {
               <span
                 className={`shrink-0 rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${
                   green
-                    ? "border-green-900 bg-green-950/30 text-green-200"
-                    : "border-amber-900 bg-amber-950/30 text-amber-200"
+                    ? "border-verify bg-verify/30 text-verify"
+                    : "border-caution bg-caution/30 text-caution"
                 }`}
               >
                 {green ? "green" : "not yet"}
@@ -140,7 +140,7 @@ function StatCard({
   tone?: "good" | "bad";
 }) {
   const accent =
-    tone === "good" ? "text-green-400" : tone === "bad" ? "text-red-400" : "text-white";
+    tone === "good" ? "text-verify" : tone === "bad" ? "text-alert" : "text-ion-white";
   return (
     <div className="rounded-2xl border border-titanium bg-carbon/40 p-4">
       <span className={`block text-2xl font-bold ${accent}`}>{value}</span>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
+import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { loadLahmanMlbTeams, type MlbTeamRow } from "@/lib/lahman/mlb-teams";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +31,8 @@ export default async function MlbPage(): Promise<JSX.Element> {
   const mlb = await loadLahmanMlbTeams();
 
   return (
-    <div className="min-h-screen bg-carbon text-ion">
+    <div className="relative isolate min-h-screen bg-carbon text-ion">
+      <GeneratedPlate assetId="mlb-diamond" className="-z-10 opacity-20" />
       <Nav />
       <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-8 border-b border-mineral pb-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
@@ -82,7 +84,11 @@ export default async function MlbPage(): Promise<JSX.Element> {
               <h2 className="mt-2 text-2xl font-semibold text-ion-white">Who outscored their opponents</h2>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] text-left text-sm">
+              <table className="w-full min-w-[760px] text-left text-sm tabular-nums">
+                <caption className="sr-only">
+                  MLB team-season table sorted by run differential: wins, losses, runs scored and allowed, actual and
+                  Pythagorean win percentage, and luck
+                </caption>
                 <thead className="border-b border-mineral bg-carbon/70 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                   <tr>
                     <th scope="col" className="px-4 py-3">#</th>
@@ -117,7 +123,7 @@ export default async function MlbPage(): Promise<JSX.Element> {
                 </tbody>
               </table>
             </div>
-            <p className="px-5 py-3 font-mono text-[10px] leading-5 text-ion-2">
+            <p className="border-t border-mineral px-5 py-3 font-mono text-xs leading-5 text-ion-2">
               Luck = actual win% minus Pythagorean win% (positive = won more than the run differential predicts).
             </p>
           </section>

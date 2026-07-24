@@ -24,16 +24,16 @@ export default async function AdminPage() {
   ]);
 
   const cards = [
-    { label: "Total Users", value: totalUsers, color: "bg-blue-500" },
-    { label: "Active Paid Subscriptions", value: activeSubscriptions, color: "bg-green-500" },
-    { label: "Today's Picks", value: todayPicks, color: "bg-purple-500" },
-    { label: "Published Posts", value: publishedPosts, color: "bg-yellow-500" },
+    { label: "Total Users", value: totalUsers, color: "bg-orbital-cyan" },
+    { label: "Active Paid Subscriptions", value: activeSubscriptions, color: "bg-verify" },
+    { label: "Today's Picks", value: todayPicks, color: "bg-ultraviolet" },
+    { label: "Published Posts", value: publishedPosts, color: "bg-caution" },
   ];
 
   return (
     <div className="min-h-screen bg-obsidian p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold text-ion-white mb-2">Admin Dashboard</h1>
         <p className="text-ion-2 mb-8">Platform overview and controls</p>
 
         {/* Stats Grid */}
@@ -41,7 +41,7 @@ export default async function AdminPage() {
           {cards.map((card) => (
             <div key={card.label} className="bg-carbon border border-titanium rounded-xl p-6">
               <div className={`w-10 h-10 ${card.color} rounded-lg mb-3 opacity-80`} />
-              <p className="text-3xl font-bold text-white">{card.value.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-ion-white">{card.value.toLocaleString()}</p>
               <p className="text-ion-2 text-sm mt-1">{card.label}</p>
             </div>
           ))}
@@ -49,23 +49,23 @@ export default async function AdminPage() {
 
         {/* System Status */}
         <div className="bg-carbon border border-titanium rounded-xl p-6 mb-8">
-          <h2 className="text-xl font-semibold text-white mb-4">System Status</h2>
+          <h2 className="text-xl font-semibold text-ion-white mb-4">System Status</h2>
           {lastIngestionRun ? (
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <div className={`w-3 h-3 rounded-full ${
-                  lastIngestionRun.status === "SUCCESS" ? "bg-green-500" :
-                  lastIngestionRun.status === "RUNNING" ? "bg-yellow-500" : "bg-red-500"
+                  lastIngestionRun.status === "SUCCESS" ? "bg-verify" :
+                  lastIngestionRun.status === "RUNNING" ? "bg-caution" : "bg-alert"
                 }`} />
                 <span className="text-ion-1">
-                  Last ingestion: <strong className="text-white">{lastIngestionRun.status}</strong>
+                  Last ingestion: <strong className="text-ion-white">{lastIngestionRun.status}</strong>
                 </span>
                 <span className="text-ion-3 text-sm">
                   {lastIngestionRun.startedAt.toLocaleString()}
                 </span>
               </div>
               {lastIngestionRun.errorMessage && (
-                <p className="text-red-400 text-sm ml-6">{lastIngestionRun.errorMessage}</p>
+                <p className="text-alert text-sm ml-6">{lastIngestionRun.errorMessage}</p>
               )}
             </div>
           ) : (
@@ -75,30 +75,30 @@ export default async function AdminPage() {
 
         {/* Quick Actions */}
         <div className="bg-carbon border border-titanium rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
+          <h2 className="text-xl font-semibold text-ion-white mb-4">Quick Actions</h2>
           <div className="flex flex-wrap gap-3">
             <a
               href="/admin/dashboard"
-              className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
+              className="px-4 py-2 bg-plasma text-plasma-ink rounded-lg hover:bg-plasma-glow transition-colors text-sm font-medium"
             >
               ⚡ Operator Dashboard
             </a>
             <TriggerRefreshButton />
             <a
               href="/admin/picks"
-              className="px-4 py-2 bg-titanium text-white rounded-lg hover:bg-titanium transition-colors text-sm"
+              className="px-4 py-2 bg-titanium text-ion-white rounded-lg hover:bg-titanium transition-colors text-sm"
             >
               Manage Picks
             </a>
             <a
               href="/admin/posts"
-              className="px-4 py-2 bg-titanium text-white rounded-lg hover:bg-titanium transition-colors text-sm"
+              className="px-4 py-2 bg-titanium text-ion-white rounded-lg hover:bg-titanium transition-colors text-sm"
             >
               Manage Posts
             </a>
             <a
               href="/admin/users"
-              className="px-4 py-2 bg-titanium text-white rounded-lg hover:bg-titanium transition-colors text-sm"
+              className="px-4 py-2 bg-titanium text-ion-white rounded-lg hover:bg-titanium transition-colors text-sm"
             >
               Manage Users
             </a>
@@ -123,7 +123,7 @@ function TriggerRefreshButton() {
     >
       <button
         type="submit"
-        className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
+        className="px-4 py-2 bg-plasma text-plasma-ink rounded-lg hover:bg-plasma-glow transition-colors text-sm font-medium"
       >
         Trigger Data Refresh
       </button>

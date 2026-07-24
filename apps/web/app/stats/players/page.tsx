@@ -25,7 +25,7 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
         { label: "Avg confidence", value: Math.round(all.reduce((a, p) => a + p.data_confidence, 0) / all.length) + "%" }
       ]} />
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Filter by position</p>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Filter by position</p>
         <FilterBar
           options={[
             { label: "All", value: "All" },
@@ -47,7 +47,7 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
               value={p.name}
               delta={`GPI: ${p.galaxy_player_index}`}
               sublabel={`${p.team} · ${p.position}`}
-              tone={i === 0 ? "cyan" : i === 1 ? "amber" : "cyan"}
+              tone="cyan"
             />
           ))}
         </div>
@@ -63,7 +63,10 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
         </div>
       </dl>
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Sorted by Galaxy Index · top {filtered.slice(0, 50).length} players</p>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Sorted by Galaxy Index · top {filtered.slice(0, 50).length} players</p>
+        {filtered.length === 0 && (
+          <p className="border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1">No players at this position in the current snapshot.</p>
+        )}
         <div className="grid gap-2">
           {filtered.slice(0, 50).map(p => {
             const gpiPct = Math.min(100, Math.max(0, (Number(p.galaxy_player_index ?? 0) / 100) * 100));
@@ -87,7 +90,7 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
                     </div>
                     <span className="text-xs font-mono text-ion-white tabular-nums w-8 text-right">{p.galaxy_player_index}</span>
                   </div>
-                  <span className="text-xs text-ion-1 tabular-nums">{p.data_confidence}% conf</span>
+                  <span className="text-xs text-ion-1 tabular-nums">{p.data_confidence}% confidence</span>
                 </div>
               </Link>
             );

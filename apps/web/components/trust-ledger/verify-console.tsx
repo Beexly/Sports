@@ -160,7 +160,7 @@ function RecomputePanel({
   if (!pickId || !payload || !contentHash) return null;
   const preimage = `leaf:${pickId}:${payload}`;
   return (
-    <details className="mt-6 border-t border-white/10 pt-4">
+    <details className="mt-6 border-t border-mineral pt-4">
       <summary className="cursor-pointer text-xs font-semibold uppercase tracking-wider text-ion-2 hover:text-ion-white">
         Recompute it yourself
       </summary>
@@ -173,7 +173,7 @@ function RecomputePanel({
         <p className="text-[11px] font-semibold uppercase tracking-wider text-ion-2">
           SHA-256 input (hash this exact string)
         </p>
-        <pre className="mt-1 max-h-48 overflow-auto rounded bg-black/40 p-3 font-mono text-[11px] leading-relaxed text-ion-white">
+        <pre className="mt-1 max-h-48 overflow-auto rounded bg-obsidian/70 p-3 font-mono text-[11px] leading-relaxed text-ion-white">
           {preimage}
         </pre>
       </div>
@@ -181,7 +181,7 @@ function RecomputePanel({
         <p className="text-[11px] font-semibold uppercase tracking-wider text-ion-2">
           Receipt hash (SHA-256)
         </p>
-        <code className="mt-1 block break-all rounded bg-black/40 p-3 font-mono text-[11px] text-ion-white">
+        <code className="mt-1 block break-all rounded bg-obsidian/70 p-3 font-mono text-[11px] text-ion-white">
           {contentHash}
         </code>
       </div>
@@ -197,7 +197,7 @@ function RecomputePanel({
  */
 function VerifiedNextSteps() {
   return (
-    <p className="mt-4 border-t border-white/10 pt-3 text-xs leading-5 text-ion-2">
+    <p className="mt-4 border-t border-mineral pt-3 text-xs leading-5 text-ion-2">
       The live board publishes with this same pre-kickoff seal.{" "}
       <Link href="/picks" className="font-semibold text-orbital-cyan hover:text-ion-white">
         See today&apos;s board
@@ -264,7 +264,7 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
             onChange={(e) => setHash(e.target.value)}
             placeholder="Paste a 64-character receipt hash"
             spellCheck={false}
-            className="min-h-[44px] w-full rounded-lg border border-titanium bg-carbon px-4 font-mono text-sm text-ion-white placeholder:text-ion-2 focus:border-orbital-cyan focus:outline-none focus:ring-2 focus:ring-orbital-cyan/25"
+            className="min-h-[44px] w-full rounded-lg border border-mineral bg-carbon px-4 font-mono text-sm text-ion-white placeholder:text-ion-2 focus:border-orbital-cyan focus:outline-none focus:ring-2 focus:ring-orbital-cyan/25"
           />
         </label>
         <button
@@ -282,9 +282,9 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
           role="status"
           className={`rounded-xl border p-5 ${
             !res.found
-              ? "border-titanium bg-carbon"
+              ? "border-mineral bg-carbon"
               : res.verified
-                ? "border-orbital-cyan/40 bg-orbital-cyan/5"
+                ? "border-verify/40 bg-verify/[0.06]"
                 : "border-alert/60 bg-alert/10"
           }`}
         >
@@ -315,7 +315,7 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
             </div>
           ) : res.sealed ? (
             <div>
-              <p className="font-mono text-xs font-bold uppercase tracking-widest text-orbital-cyan">
+              <p className="font-mono text-xs font-bold uppercase tracking-widest text-verify">
                 Verified · sealed until kickoff
               </p>
               <dl className="mt-3 grid gap-2 text-sm">
@@ -333,7 +333,7 @@ export function VerifyConsole({ initialHash = "" }: { initialHash?: string }) {
             </div>
           ) : (
             <div>
-              <p className="font-mono text-xs font-bold uppercase tracking-widest text-orbital-cyan">
+              <p className="font-mono text-xs font-bold uppercase tracking-widest text-verify">
                 Verified · commitment intact
               </p>
               <dl className="mt-3 grid gap-2 text-sm">

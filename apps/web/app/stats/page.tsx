@@ -55,7 +55,7 @@ export default async function Page() {
         </div>
         <div className="flex-1 min-w-0 space-y-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-ion-2">Overall rating</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2">Overall rating</p>
             <p className="mt-1 text-2xl font-bold text-ion-white">
               {overallMeasured ? `King Standard: ${king.overall.score} / 100` : "King Standard: not yet measured"}
             </p>
@@ -84,7 +84,7 @@ export default async function Page() {
                       )}
                     </span>
                   </div>
-                  <p className="pl-[9.75rem] text-[11px] leading-snug text-ion-2">
+                  <p className="pl-[9.75rem] text-xs leading-snug text-ion-2">
                     {measured ? dimension.basis : dimension.reason}
                   </p>
                 </div>
@@ -124,7 +124,7 @@ export default async function Page() {
         tone="warn"
       />
 
-      <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full rankings →", href: "/stats/players" }} />
+      <SectionHeader eyebrow="Top players by" title="Galaxy Player Index" action={{ label: "Full rankings", href: "/stats/players" }} />
       <p className="-mt-3 mb-4 max-w-2xl text-sm text-ion-2">{glossaryEntry("gpi")?.plain}</p>
       <BarChart items={top5.map(p => ({ label: p.name, value: p.galaxy_player_index, max: maxGpi }))} />
 

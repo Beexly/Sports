@@ -6,7 +6,6 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { Reveal } from "@/components/motion/reveal";
 import { FormulaPlaque } from "@/components/tools/formula-plaque";
 import { OddsConverterClient } from "./odds-converter-client";
-import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Odds Converter: American, Decimal & Implied Probability",
@@ -17,13 +16,13 @@ export const metadata: Metadata = {
 
 export default function OddsConverterPage(): JSX.Element {
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-x-hidden" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-obsidian">
       <Nav />
       <main id="main-content" className="flex-1">
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-orbital-cyan">
                 <Link href="/tools" className="hover:underline">
                   Free calculators
                 </Link>{" "}
@@ -31,10 +30,10 @@ export default function OddsConverterPage(): JSX.Element {
               </p>
             </Reveal>
             <Reveal delay={80}>
-              <h1 className="mt-4 font-display text-display-lg text-balance text-white">Odds converter</h1>
+              <h1 className="mt-4 font-display text-display-lg text-balance tracking-tight text-ion-white">Odds converter</h1>
             </Reveal>
             <Reveal delay={150}>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-ink-300">
+              <p className="mt-4 max-w-2xl text-base leading-7 text-ion-1">
                 American and decimal odds describe the same price two
                 different ways. Type a value in either notation and see both
                 forms plus the implied win probability, all at once.
@@ -54,7 +53,7 @@ export default function OddsConverterPage(): JSX.Element {
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <h2 className="font-display text-2xl text-white sm:text-3xl">The three formulas</h2>
+              <h2 className="font-display text-2xl tracking-tight text-ion-white sm:text-3xl">The three formulas</h2>
               <FormulaPlaque
                 className="mt-4"
                 label="American -> decimal"
@@ -66,7 +65,7 @@ export default function OddsConverterPage(): JSX.Element {
                 formula={"A = (decimal − 1) × 100   (decimal ≥ 2.0)\nA = −100 / (decimal − 1)  (decimal < 2.0)"}
               />
               <FormulaPlaque className="mt-4" label="Decimal -> implied probability" formula={"implied probability = 1 / decimal"} />
-              <p className="mt-4 text-sm leading-6 text-ink-300">
+              <p className="mt-4 text-sm leading-6 text-ion-1">
                 +100 and −100 both describe the same fair coin-flip price
                 (decimal 2.0) quoted from either side; converting decimal 2.0
                 back to American always returns +100, the standard

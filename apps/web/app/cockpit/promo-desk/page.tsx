@@ -11,14 +11,14 @@ export const dynamic = "force-dynamic";
 function classBadge(operatorClass: OperatorClass): string {
   switch (operatorClass) {
     case "APPROVED_PARTNER":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "KNOWN_NOT_PARTNERED":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "DEMO":
-      return "border-sky-500/40 bg-sky-500/10 text-sky-300";
+      return "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan";
     case "BLOCKED":
     default:
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
   }
 }
 
@@ -51,7 +51,7 @@ export default function PromoDeskPage(): JSX.Element {
       </section>
 
       {summary.publishablePartners === 0 && (
-        <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
+        <div className="rounded-lg border border-caution/30 bg-caution/5 p-4 text-sm text-caution">
           <strong>No publishable partners.</strong> Public promotions remain in the empty state until an APPROVED_PARTNER row is added by code review.
         </div>
       )}
@@ -98,7 +98,7 @@ function OperatorRow({ entry }: { entry: OperatorRegistryEntry }): JSX.Element {
         <span>reviewed: <strong className="text-ion-1">{entry.reviewedAt}</strong></span>
       </div>
       {entry.blockedReason && (
-        <p className="rounded border border-rose-500/30 bg-rose-500/5 p-2 text-[11px] text-rose-200">
+        <p className="rounded border border-alert/30 bg-alert/5 p-2 text-[11px] text-alert">
           Blocked: {entry.blockedReason}
         </p>
       )}

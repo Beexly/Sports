@@ -19,11 +19,14 @@ export default function PrivacyPage() {
         <section className="px-4 py-20 sm:px-6 lg:px-8">
           <article className="mx-auto max-w-3xl">
             <p className="eyebrow">Legal</p>
-            <h1 className="mt-3 font-display text-display-xl text-white">
+            <h1 className="mt-3 font-display text-display-xl text-ion-white">
               Privacy Policy
             </h1>
-            <p className="mt-2 text-sm text-ink-500">
-              Last updated: {formatLegalDate(PRIVACY_LAST_UPDATED)}
+            <p className="mt-2 text-sm text-ion-2">
+              Last updated:{" "}
+              <time dateTime={PRIVACY_LAST_UPDATED}>
+                {formatLegalDate(PRIVACY_LAST_UPDATED)}
+              </time>
             </p>
 
             <Heading>1. What we collect</Heading>
@@ -70,7 +73,7 @@ export default function PrivacyPage() {
               personal data we hold about you. Email {" "}
               <a
                 href={`mailto:${LEGAL_EMAIL}`}
-                className="text-accent-300 underline-offset-4 hover:underline"
+                className="text-orbital-cyan underline-offset-4 transition-colors hover:text-ion-white hover:underline"
               >
                 {LEGAL_EMAIL}
               </a>{" "}
@@ -103,7 +106,7 @@ export default function PrivacyPage() {
               Email{" "}
               <a
                 href={`mailto:${LEGAL_EMAIL}`}
-                className="text-accent-300 underline-offset-4 hover:underline"
+                className="text-orbital-cyan underline-offset-4 transition-colors hover:text-ion-white hover:underline"
               >
                 {LEGAL_EMAIL}
               </a>{" "}
@@ -120,7 +123,7 @@ export default function PrivacyPage() {
 
 function Heading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mt-10 font-display text-2xl font-semibold text-white">
+    <h2 className="mt-10 font-display text-2xl font-semibold text-ion-white">
       {children}
     </h2>
   );
@@ -128,6 +131,6 @@ function Heading({ children }: { children: React.ReactNode }) {
 
 function Para({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mt-3 text-sm leading-relaxed text-ink-300">{children}</p>
+    <p className="mt-3 text-sm leading-relaxed text-ion-1">{children}</p>
   );
 }

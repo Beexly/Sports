@@ -39,11 +39,11 @@ async function loadRows(): Promise<CockpitLossRow[]> {
 function statusClass(status: string): string {
   switch (status) {
     case "PUBLISHED":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+      return "border-verify/40 bg-verify/10 text-verify";
     case "PEER_REVIEW":
-      return "border-amber-500/40 bg-amber-500/10 text-amber-300";
+      return "border-caution/40 bg-caution/10 text-caution";
     case "RETRACTED":
-      return "border-rose-500/40 bg-rose-500/10 text-rose-300";
+      return "border-alert/40 bg-alert/10 text-alert";
     case "DRAFT":
     default:
       return "border-titanium/50 bg-obsidian/40 text-ion-1";
