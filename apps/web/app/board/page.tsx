@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { auth } from "@/lib/auth";
+import { getUserEntitlements } from "@/lib/entitlements";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -32,9 +34,18 @@ function timeLabel(value: string): string {
 }
 
 export default async function BoardPage(): Promise<JSX.Element> {
+  // Entitlement resolves BEFORE the query so the refusal trail is withheld
+  // server-side rather than fetched and then hidden — a logged-out visitor's
+  // payload never contains it at all. The refusal ITSELF is unconditional and
+  // rendered for everyone; see PassListItem.
+  const session = await auth();
+  const canSeeNoBetDetail = session?.user?.id
+    ? (await getUserEntitlements(session.user.id)).canSeeNoBetDetail
+    : false;
+
   const [stateResult, passesResult, calibrationResult] = await Promise.all([
     loadBoardState(),
-    loadBoardPasses(),
+    loadBoardPasses(new Date(), { includeNoBetDetail: canSeeNoBetDetail }),
     loadPublicCalibrationReport(),
   ]);
 
@@ -244,14 +255,42 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
 
 function PassListItem({ row }: { row: PassListRow }): JSX.Element {
   return (
-    <div className="grid gap-2 px-4 py-3 sm:grid-cols-[1fr_auto_1.4fr]">
-      <span>
-        <Link href={`/room/${row.gameId}`} className="font-semibold text-white hover:text-ion-white">
-          {row.matchup}
-        </Link>
-      </span>
-      <span className="font-mono text-xs text-orbital-cyan">{row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}</span>
-      <span className="text-sm text-ion-2 sm:text-right">{row.reason}</span>
+    <div className="px-4 py-3">
+      <div className="grid gap-2 sm:grid-cols-[1fr_auto_1.4fr]">
+        <span>
+          <Link href={`/room/${row.gameId}`} className="font-semibold text-white hover:text-ion-white">
+            {row.matchup}
+          </Link>
+        </span>
+        <span className="font-mono text-xs text-orbital-cyan">{row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}</span>
+        {/* The refusal and its plain-language reason are UNCONDITIONAL — no
+            entitlement check wraps this. Declining to bet is the credibility
+            claim; gating it would sell volume instead of judgement. */}
+        <span className="text-sm text-ion-2 sm:text-right">{row.reason}</span>
+      </div>
+
+      {row.detail && (
+        <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1 border-l-2 border-orbital-cyan/40 pl-3 font-mono text-[11px] text-ion-3">
+          <div className="flex gap-1.5">
+            <dt className="text-ion-2">code</dt>
+            <dd className="text-ion-1">{row.detail.reasonCode}</dd>
+          </div>
+          {row.detail.confidence !== null && (
+            <div className="flex gap-1.5">
+              <dt className="text-ion-2">confidence at refusal</dt>
+              <dd className="text-ion-1">{row.detail.confidence}</dd>
+            </div>
+          )}
+          <div className="flex gap-1.5">
+            <dt className="text-ion-2">model</dt>
+            <dd className="text-ion-1">{row.detail.modelVersion}</dd>
+          </div>
+          <div className="flex gap-1.5">
+            <dt className="text-ion-2">evidence refs</dt>
+            <dd className="text-ion-1">{row.detail.evidenceRefCount}</dd>
+          </div>
+        </dl>
+      )}
     </div>
   );
 }

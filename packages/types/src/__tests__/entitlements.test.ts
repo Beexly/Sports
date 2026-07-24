@@ -117,3 +117,49 @@ describe("RISK_LEVEL_LABELS", () => {
     }
   });
 });
+
+describe("honesty entitlements — the paid offer is honesty, not volume", () => {
+  const HONESTY_KEYS = [
+    "canSeeMultiprob",
+    "canSeeNoBetDetail",
+    "canSeeGlassLedger",
+    "canSeeRecompute",
+  ] as const;
+
+  it("FREE gets no honesty detail surfaces", () => {
+    const e = getEntitlements("FREE");
+    for (const k of HONESTY_KEYS) expect(e[k]).toBe(false);
+  });
+
+  it("PRO and ELITE get every honesty detail surface", () => {
+    for (const tier of ["PRO", "ELITE"] as const) {
+      const e = getEntitlements(tier);
+      for (const k of HONESTY_KEYS) expect(e[k]).toBe(true);
+    }
+  });
+
+  it("FANTASY does NOT get them — it is a separate product line, not the betting decision process", () => {
+    const e = getEntitlements("FANTASY");
+    for (const k of HONESTY_KEYS) expect(e[k]).toBe(false);
+    // Sanity: FANTASY still gets its own suite, so this is a scoping choice
+    // rather than the tier being broadly downgraded.
+    expect(e.canUseFantasyFull).toBe(true);
+  });
+
+  it("the Edge Index stays public on every tier — the free trust signal is never gated", () => {
+    for (const tier of ["FREE", "FANTASY", "PRO", "ELITE"] as const) {
+      expect(getEntitlements(tier).canSeeEdgeScore).toBe(true);
+    }
+  });
+
+  it("honesty gates track the betting line exactly, never drifting from it", () => {
+    // If someone later moves canSeeConfidence to a different tier boundary,
+    // this fails and forces a deliberate decision rather than silent drift
+    // between "you can see the number" and "you can see how sure we are".
+    for (const tier of ["FREE", "FANTASY", "PRO", "ELITE"] as const) {
+      const e = getEntitlements(tier);
+      expect(e.canSeeMultiprob).toBe(e.canSeeConfidence);
+      expect(e.canSeeNoBetDetail).toBe(e.canSeeConfidence);
+    }
+  });
+});

@@ -223,6 +223,65 @@ export default function IntegrityPage() {
           </div>
         </section>
 
+        {/* Two different integrity stories — deliberately not conflated */}
+        <section className="rounded-2xl border border-mineral bg-eclipse/30 p-6">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-ion-2">
+            Two different things called &quot;integrity&quot;
+          </h2>
+          <p className="text-sm leading-6 text-ion-1">
+            This page is about one of them. Keeping them separate matters —
+            they share a value but not a subject, and merging them would let a
+            strong claim about one imply an unearned claim about the other.
+          </p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border border-orbital-cyan/30 bg-carbon/40 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-orbital-cyan">
+                This page
+              </p>
+              <p className="mt-2 text-sm font-semibold text-ion-white">
+                Agent control-plane governance
+              </p>
+              <p className="mt-2 text-sm leading-6 text-ion-1">
+                How our own AI agents are governed when they call tools:
+                admission bookkeeping, the SHADOW-by-default posture, and
+                signed receipts anyone can verify against a published key.
+                Subject: <em>our software&apos;s behavior</em>.
+              </p>
+            </div>
+            <div className="rounded-xl border border-mineral bg-carbon/40 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-ion-2">
+                Elsewhere
+              </p>
+              <p className="mt-2 text-sm font-semibold text-ion-white">
+                Whether a published number is substantiated
+              </p>
+              <p className="mt-2 text-sm leading-6 text-ion-1">
+                Whether a rate, edge, or record we display is backed by
+                coverage, a lower bound, CLV, and walk-forward provenance — and
+                is withheld when it is not. Subject:{" "}
+                <em>the claims we make about picks</em>.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3 text-sm">
+                <Link href="/glass-ledger" className="underline hover:text-orbital-cyan">
+                  Glass Ledger
+                </Link>
+                <Link href="/accountability" className="underline hover:text-orbital-cyan">
+                  Accountability
+                </Link>
+                <Link href="/proof" className="underline hover:text-orbital-cyan">
+                  Proof of record
+                </Link>
+              </div>
+            </div>
+          </div>
+          <p className="mt-4 text-sm text-ion-2">
+            A signed receipt proves an agent decision happened as recorded. It
+            says nothing about whether a betting claim is statistically
+            supported — that is the Glass Ledger&apos;s job, and it stays sealed
+            until the evidence clears its own bar.
+          </p>
+        </section>
+
         {/* NON-CLAIMS */}
         <section className="border-t border-mineral pt-8">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ion-2">

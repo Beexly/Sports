@@ -2,6 +2,35 @@ import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 
+/**
+ * The auditable trail behind a refusal. Every field here is REAL data already
+ * persisted on `gate_decisions` — none of it is derived, estimated, or
+ * generated for display.
+ *
+ * This is the PAID layer of the No-Bet surface. The refusal itself and its
+ * human-readable reason stay free on every tier: that a pick was declined IS
+ * the product's credibility claim, and gating it would turn the pitch into
+ * "more picks". What converts is wanting the machine-readable code, the model
+ * version that made the call, and the evidence behind it.
+ *
+ * Withheld SERVER-SIDE (see `includeNoBetDetail`), never merely hidden in the
+ * markup — an unentitled response must not carry the payload at all.
+ */
+export interface NoBetDetail {
+  /** Machine-readable refusal code — which gate tripped. */
+  reasonCode: string;
+  /** Model confidence at refusal time. A diagnostic, NOT a performance claim. */
+  confidence: number | null;
+  /** Which model version declined it — makes a refusal reproducible. */
+  modelVersion: string;
+  /**
+   * How many evidence references were attached. A COUNT, deliberately not the
+   * raw `evidenceRefs` JSON: that column is free-form and could carry
+   * arbitrary internal payload to a browser.
+   */
+  evidenceRefCount: number;
+}
+
 export interface PassListRow {
   id: string;
   gameId: string;
@@ -10,6 +39,25 @@ export interface PassListRow {
   edgeIndex: number | null;
   reason: string;
   evaluatedAt: string;
+  /** Present ONLY when the caller passed `includeNoBetDetail`. */
+  detail?: NoBetDetail;
+}
+
+export interface LoadBoardPassesOptions {
+  /**
+   * Include the auditable refusal trail. The caller establishes entitlement
+   * (`Entitlements.canSeeNoBetDetail`); this module deliberately does not read
+   * the session itself, so the access decision lives at the page/route
+   * boundary rather than being duplicated here where it could drift.
+   */
+  includeNoBetDetail?: boolean;
+}
+
+/** Count evidence refs without letting the raw JSON escape to a client. */
+function countEvidenceRefs(refs: unknown): number {
+  if (Array.isArray(refs)) return refs.length;
+  if (refs !== null && typeof refs === "object") return Object.keys(refs).length;
+  return 0;
 }
 
 export interface BoardPassesPayload {
@@ -31,7 +79,11 @@ function passReason(bookmakerCoverageMax: number, dataQualityScore: number): str
   return "No pick cleared the publish threshold.";
 }
 
-export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayload> {
+export async function loadBoardPasses(
+  now = new Date(),
+  options: LoadBoardPassesOptions = {},
+): Promise<BoardPassesPayload> {
+  const includeDetail = options.includeNoBetDetail === true;
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
   // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
@@ -87,6 +139,19 @@ export async function loadBoardPasses(now = new Date()): Promise<BoardPassesPayl
             edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
             reason: decision.reason,
             evaluatedAt: decision.evaluatedAt.toISOString(),
+            // Server-side redaction: an unentitled caller's payload never
+            // contains `detail` at all, so there is nothing to leak in the
+            // markup, the RSC flight data, or the JSON route.
+            ...(includeDetail
+              ? {
+                  detail: {
+                    reasonCode: decision.reasonCode,
+                    confidence: decision.confidence,
+                    modelVersion: decision.modelVersion,
+                    evidenceRefCount: countEvidenceRefs(decision.evidenceRefs),
+                  },
+                }
+              : {}),
           })),
         },
         meta: { isSampleData: false },

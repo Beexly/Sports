@@ -19,6 +19,13 @@
  */
 
 import { isotonicCalibration, type CalibrationSample } from "../probability-calibration.js";
+import { ivapPredict, type IvapCalibrationPoint } from "../calibration/ivap.js";
+import { cvapPredict } from "../calibration/cvap.js";
+import {
+  assignMondrianCategory,
+  type SportsGameContext,
+  type TaxonomyCategory,
+} from "../conformal/sports-taxonomy.js";
 import { learnThenTest, type LttCandidate } from "./phase4-research.js";
 import { regularizedIncompleteBeta, wilsonLowerBound } from "./stats.js";
 
@@ -27,6 +34,61 @@ export interface VennAbersInterval {
   readonly p1: number;
   readonly lower: number;
   readonly upper: number;
+}
+
+/**
+ * Which multiprobability estimator produces the calibrated interval the gate
+ * fires on.
+ *
+ * "legacy-isotonic" is the DEFAULT and is exactly the behavior this file has
+ * always had (`vennAbersInterval` above) — callers that pass no options get a
+ * bit-for-bit unchanged decision path. The other two are opt-in.
+ */
+export type MultiprobSource = "legacy-isotonic" | "ivap" | "cvap";
+
+export interface MultiprobGateOptions {
+  /** Estimator for the calibrated interval. Default "legacy-isotonic". */
+  readonly source?: MultiprobSource;
+  /** Folds for source "cvap". Default 5. Ignored otherwise. */
+  readonly cvapFolds?: number;
+  /**
+   * First-class No-Bet: refuse to fire when the calibrated interval is wider
+   * than this, however good the lower bound looks. An interval this wide means
+   * the calibration set does not actually pin the probability down, and a
+   * point estimate drawn from it would be a confident-sounding guess.
+   * Undefined (default) disables the check.
+   */
+  readonly maxWidthForFire?: number;
+  /** Optional game context; when supplied every decision carries its Mondrian category. */
+  readonly taxonomyCtx?: SportsGameContext;
+}
+
+/** Why a row that cleared τ was still not fired. */
+export type NoBetReason = "interval_too_wide";
+
+/**
+ * Compute the calibrated interval under the selected estimator.
+ *
+ * Every branch returns the SAME `VennAbersInterval` shape with `lower`/`upper`
+ * ordered, so the gate's firing rule is identical regardless of source — only
+ * the estimate changes, never the decision semantics.
+ */
+function intervalFromSource(
+  cal: readonly CalibrationSample[],
+  score: number,
+  options: MultiprobGateOptions,
+): VennAbersInterval {
+  const source = options.source ?? "legacy-isotonic";
+  if (source === "legacy-isotonic") return vennAbersInterval(cal, score);
+
+  const points: IvapCalibrationPoint[] = cal.map((c) => ({ score: c.p, label: c.y }));
+  const pred =
+    source === "cvap"
+      ? cvapPredict(points, score, { folds: options.cvapFolds })
+      : ivapPredict(points, score);
+  const lower = Math.min(pred.p0, pred.p1);
+  const upper = Math.max(pred.p0, pred.p1);
+  return { p0: pred.p0, p1: pred.p1, lower, upper };
 }
 
 /**
@@ -113,6 +175,16 @@ export interface FiredDecision {
   readonly q: number;
   readonly y: 0 | 1;
   readonly obtainableDecimalPrice?: number;
+  /**
+   * Width of the calibrated interval (upper − lower) — how much the
+   * calibration set actually pins this probability down. Always populated, so
+   * the ledger records the honesty of every fired decision, not just its edge.
+   */
+  readonly width: number;
+  /** Which multiprobability estimator produced `interval`. */
+  readonly multiprobSource: MultiprobSource;
+  /** Mondrian taxonomy category, when a game context was supplied. */
+  readonly taxonomyCategory?: TaxonomyCategory;
 }
 
 /**
@@ -159,6 +231,15 @@ export interface SelectiveGateReport {
     readonly wilsonLcb: number | null;
   }[];
   readonly decisions: readonly FiredDecision[];
+  /** Which estimator produced the intervals in this report. */
+  readonly multiprobSource: MultiprobSource;
+  /**
+   * Rows that cleared τ but were vetoed for having too wide a calibrated
+   * interval. Reported rather than silently dropped: a large number here means
+   * the gate is firing far less than τ alone suggests, and an operator reading
+   * only `coverage` would not otherwise see why.
+   */
+  readonly widthNoBets: number;
 }
 
 /** Minimum per-stratum calibration rows before the gate will fire in it. */
@@ -173,6 +254,7 @@ export function applySelectiveGate(
   calibrationRows: readonly GateDecisionRow[],
   evalRows: readonly GateDecisionRow[],
   tau: number,
+  options: MultiprobGateOptions = {},
 ): SelectiveGateReport {
   assertDisjointRowSets([
     { name: "calibration", rows: calibrationRows },
@@ -185,6 +267,13 @@ export function applySelectiveGate(
     calByStratum.set(row.stratum, list);
   }
 
+  const source = options.source ?? "legacy-isotonic";
+  const widthCap = options.maxWidthForFire;
+  const taxonomyCategory = options.taxonomyCtx
+    ? assignMondrianCategory(options.taxonomyCtx)
+    : undefined;
+  let widthNoBets = 0;
+
   const decisions: FiredDecision[] = [];
   const perStratumAgg = new Map<string, { eligible: number; wins: number; fired: number }>();
   for (const row of evalRows) {
@@ -194,12 +283,27 @@ export function applySelectiveGate(
 
     const cal = calByStratum.get(row.stratum);
     if (!cal || cal.length < MIN_STRATUM_CALIBRATION) continue; // silent stratum: never fires
-    const interval = vennAbersInterval(cal, row.score);
+    const interval = intervalFromSource(cal, row.score, options);
+    const width = interval.upper - interval.lower;
     // Edge attribution ALWAYS uses devigged q, never obtainableDecimalPrice
     // (FIX 4: q stays the attribution baseline; the real price only changes
     // the realized-result breakeven bar computed downstream).
     const lcbEdge = interval.lower - row.q;
+
     if (lcbEdge > tau) {
+      // Second first-class No-Bet signal. Clearing τ is necessary but no
+      // longer sufficient: an interval wider than the caller's tolerance means
+      // the calibration set does not pin this probability down, so firing on
+      // its lower end would be reading precision into noise.
+      //
+      // Deliberately checked INSIDE the τ branch: widthNoBets must count only
+      // rows the gate would otherwise have fired. Vetoing before the τ test
+      // would also sweep up rows that were never going to fire, inflating the
+      // count and making the width cap look far more active than it is.
+      if (widthCap !== undefined && width > widthCap) {
+        widthNoBets += 1;
+        continue;
+      }
       decisions.push({
         rowId: row.rowId,
         stratum: row.stratum,
@@ -208,6 +312,9 @@ export function applySelectiveGate(
         q: row.q,
         y: row.y,
         obtainableDecimalPrice: row.obtainableDecimalPrice,
+        width,
+        multiprobSource: source,
+        taxonomyCategory,
       });
       agg.fired += 1;
       if (row.y === 1) agg.wins += 1;
@@ -232,6 +339,8 @@ export function applySelectiveGate(
       wilsonLcb: agg.fired > 0 ? wilsonLowerBound(agg.wins, agg.fired) : null,
     })),
     decisions,
+    multiprobSource: source,
+    widthNoBets,
   };
 }
 
