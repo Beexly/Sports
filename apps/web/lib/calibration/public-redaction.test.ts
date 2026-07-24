@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { redactUnpublishableBuckets } from "@/app/api/calibration/route";
-import { computeCalibration, type CalibrationPickInput } from "@/lib/calibration/compute";
+import { redactUnpublishableBuckets } from "./public-redaction";
+import { computeCalibration, type CalibrationPickInput } from "./compute";
 
 /**
  * The public `/api/calibration` JSON export must not leak a bucket's

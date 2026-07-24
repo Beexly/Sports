@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   redactThinClvRollup,
   redactUnpublishedClvBacktest,
-} from "@/app/api/intelligence/clv-calibration/route";
+} from "./clv-calibration-public-redaction";
 import type { ClvBacktest, ClvRollup } from "./clv-calibration";
 import { MIN_HIT_RATE_SAMPLE } from "./hit-rate-display";
 

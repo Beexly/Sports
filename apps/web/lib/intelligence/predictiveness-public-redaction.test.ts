@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   redactThinHitRates,
   redactUnpublishedPredictiveness,
-} from "@/app/api/intelligence/predictiveness/route";
+} from "./predictiveness-public-redaction";
 import type { PredictivenessProof, PredictivenessSplit } from "./predictiveness";
 import { MIN_HIT_RATE_SAMPLE } from "./hit-rate-display";
 
