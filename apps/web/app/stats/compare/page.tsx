@@ -29,20 +29,19 @@ export default function Page({ searchParams }: { searchParams?: { a?: string; b?
       <StatusRibbon status="fixture" label="Comparison snapshot updated every sync cycle" />
 
       {(!c.aResolved || !c.bResolved) && (
-        <div className="border border-amber-900 bg-amber-950/40 p-4">
-          <p className="text-sm font-semibold text-amber-300">
-            {unresolvedLabel(c)} — showing a stand-in instead
-          </p>
-          <p className="mt-1 text-sm leading-6 text-amber-200/90">
-            The comparison below is real, but it is not the one you asked for.
-            Rather than quietly swapping in a different player and presenting
-            that as your request, we are telling you. Pick an ID from the{" "}
-            <Link href="/stats/players" className="underline hover:text-amber-100">
-              Players page
-            </Link>{" "}
-            to compare who you meant.
-          </p>
-        </div>
+        <InsightCard
+          tone="warn"
+          eyebrow="Not the comparison you asked for"
+          headline={`${unresolvedLabel(c)} — showing a stand-in instead`}
+          body="The comparison below is real, but it is not the one you requested. Rather than quietly swapping in a different player and presenting that as your request, we are telling you."
+        >
+          <Link
+            href="/stats/players"
+            className="text-sm text-orbital-cyan underline hover:text-ion-white"
+          >
+            Find the right player ID →
+          </Link>
+        </InsightCard>
       )}
 
       <form method="get" className="border border-mineral bg-eclipse p-4 space-y-3">
