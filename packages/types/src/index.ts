@@ -128,6 +128,22 @@ export interface Entitlements {
   // ── Fantasy suite gates — FANTASY tier ($49/yr) + PRO/ELITE; FREE = depth-limited trial ──
   canUseFantasyDraftSuite: boolean; // draft + best-ball kit
   canUseFantasyFull: boolean;       // the full fantasy suite
+  // ── Honesty surfaces (the differentiator, deliberately split free/paid) ──
+  //
+  // The split is chosen so FREE keeps the part that BUILDS trust and pays for
+  // the part that USES it. Everyone — logged out included — can see THAT we
+  // refused a bet; that refusal is the product's whole credibility claim, and
+  // hiding it would be self-defeating. What unlocks is the quantitative detail
+  // behind the refusal: how wide the calibrated interval was, which estimator
+  // produced it, and the recomputable ledger record.
+  //
+  // Deliberately NOT gated: the existence of a No-Bet, and `canSeeEdgeScore`
+  // above. Gating those would turn the pitch into "more picks" — the exact
+  // positioning this product exists to reject.
+  canSeeMultiprob: boolean;      // PRO+ — interval bounds + width on a decision
+  canSeeNoBetDetail: boolean;    // PRO+ — WHY a No-Bet fired, not just that it did
+  canSeeGlassLedger: boolean;    // PRO+ — the recomputable per-decision ledger
+  canSeeRecompute: boolean;      // PRO+ — verifier naming + recompute instructions
 }
 
 export function getEntitlements(tier: SubscriptionTier): Entitlements {
@@ -159,6 +175,14 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
     // trial is depth-limited at the page/API level, never a flag flip.
     canUseFantasyDraftSuite: isPaid,
     canUseFantasyFull: isPaid,
+    // Honesty surfaces track the betting line (PRO/ELITE), not the fantasy
+    // line: they describe the betting decision process, so FANTASY — a
+    // separate product — does not get them, exactly as it does not get
+    // canSeeConfidence or canUseTrendLab.
+    canSeeMultiprob: isPro,
+    canSeeNoBetDetail: isPro,
+    canSeeGlassLedger: isPro,
+    canSeeRecompute: isPro,
   };
 }
 
