@@ -825,6 +825,55 @@ export {
   type LimitationFlag,
 } from "./model-limitations.js";
 
+// Distribution-free calibration: the Venn-Abers family and the shared isotonic
+// core they all sit on. Every module below is pure (verified: no node builtins),
+// so barrel-exporting them cannot drag a server-only dependency into the client
+// bundle — see the promotion-gate note at the end of this file for the hazard
+// that check exists to avoid.
+export { pavIsotonic, pavBinary, type PavBlock } from "./calibration/pav.js";
+export {
+  InductiveVennAbers,
+  fitIvap,
+  ivapPredict,
+  type IvapCalibrationPoint,
+  type IvapPrediction,
+} from "./calibration/ivap.js";
+export {
+  CrossVennAbers,
+  fitCvap,
+  cvapPredict,
+  type CvapOptions,
+  type CvapAggregationMode,
+  type CvapPrediction,
+} from "./calibration/cvap.js";
+export {
+  neumaierSum,
+  logSpaceGeometricMeanAggregation,
+  arithmeticMeanAggregation,
+  toFull,
+  multiprobToPoint,
+  type Multiprobability,
+  type FullMultiprobability,
+  type PointConversionMode,
+} from "./calibration/aggregation.js";
+
+// Display-substantiation guard — the pure enforcement point that sits in front
+// of any PUBLIC performance number (win rate / ROI / CLV / edge / confidence).
+// `wilsonLowerBound` is re-exported under a qualified name because this barrel
+// already exports `wilsonInterval` from model-limitations.js and the two are
+// different shapes (bound vs interval); the unqualified name would read as if
+// they were a matched pair.
+export {
+  assertDisplaySubstantiated,
+  isDisplaySubstantiated,
+  displayIfSubstantiated,
+  wilsonLowerBound as substantiationWilsonLowerBound,
+  UnsubstantiatedClaimError,
+  type SubstantiationEvidence,
+  type DisplayClaim,
+  type ConfidenceBoundMethod,
+} from "./guards/display-substantiated.js";
+
 export {
   noVigFromAmericanPrices,
   consensusNoVig,
