@@ -102,3 +102,34 @@ export function toFull(mp: Multiprobability): FullMultiprobability {
     width: mp.p1 - mp.p0,
   };
 }
+
+export type PointConversionMode = "midpoint" | "lower" | "upper" | "minimax";
+
+/**
+ * Convert a multiprobability interval to a single point estimate.
+ * - midpoint: (p0 + p1) / 2  (convenience, no validity claim)
+ * - lower: p0 (conservative for positive edge claims)
+ * - upper: p1
+ * - minimax: chooses the endpoint that minimises the worst-case absolute loss
+ *   relative to a 0-1 outcome (equivalent to the midpoint of the interval
+ *   under 0-1 loss for binary, but kept explicit for clarity).
+ */
+export function multiprobToPoint(
+  mp: Multiprobability,
+  mode: PointConversionMode = "midpoint",
+): number {
+  const lo = Math.min(mp.p0, mp.p1);
+  const hi = Math.max(mp.p0, mp.p1);
+  switch (mode) {
+    case "lower":
+      return lo;
+    case "upper":
+      return hi;
+    case "minimax":
+      // For absolute loss the minimax point is the midpoint of [lo, hi]
+      return (lo + hi) / 2;
+    case "midpoint":
+    default:
+      return (lo + hi) / 2;
+  }
+}
