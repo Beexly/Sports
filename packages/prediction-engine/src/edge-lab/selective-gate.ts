@@ -240,10 +240,30 @@ export interface SelectiveGateReport {
    * only `coverage` would not otherwise see why.
    */
   readonly widthNoBets: number;
+  /**
+   * WHICH rows the width cap vetoed, not merely how many.
+   *
+   * The count alone cannot be attributed to a row. A consumer holding only
+   * `widthNoBets > 0` and wanting to explain a specific refusal has no honest
+   * choice but to guess, and the plausible guess — "the cap is active, so this
+   * row must be a width veto" — mislabels every lower-bound failure in every
+   * stratum as a width veto. That is a confident, wrong, public reason.
+   *
+   * Ordered as encountered, and always a subset of the candidate rows.
+   */
+  readonly widthVetoedRowIds: readonly string[];
 }
 
-/** Minimum per-stratum calibration rows before the gate will fire in it. */
-const MIN_STRATUM_CALIBRATION = 100;
+/**
+ * Minimum per-stratum calibration rows before the gate will fire in it.
+ *
+ * Exported so a consumer can distinguish "we evaluated this stratum and
+ * declined" from "we never had enough settled history to evaluate it at all".
+ * Those are very different things to tell a user, and a consumer that cannot
+ * tell them apart ends up reporting a confident refusal where the truth is an
+ * absence of evidence.
+ */
+export const MIN_STRATUM_CALIBRATION = 100;
 
 /**
  * Apply the gate: calibrate each eval row's score with Venn–Abers against
@@ -273,6 +293,7 @@ export function applySelectiveGate(
     ? assignMondrianCategory(options.taxonomyCtx)
     : undefined;
   let widthNoBets = 0;
+  const widthVetoedRowIds: string[] = [];
 
   const decisions: FiredDecision[] = [];
   const perStratumAgg = new Map<string, { eligible: number; wins: number; fired: number }>();
@@ -302,6 +323,7 @@ export function applySelectiveGate(
       // count and making the width cap look far more active than it is.
       if (widthCap !== undefined && width > widthCap) {
         widthNoBets += 1;
+        widthVetoedRowIds.push(row.rowId);
         continue;
       }
       decisions.push({
@@ -341,6 +363,7 @@ export function applySelectiveGate(
     decisions,
     multiprobSource: source,
     widthNoBets,
+    widthVetoedRowIds,
   };
 }
 

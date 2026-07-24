@@ -114,13 +114,53 @@ What keeps a subscriber:
    in-memory only and not recomputable from the ledger.
 2. **Glass Ledger sealed-vault copy** does not yet name the recompute verifier
    path for a reader who wants to check the method before subscribing.
-3. **The selective gate is not wired to the live board.** `/board`'s passes
-   come from the `gate_decisions` table; `applySelectiveGate`'s
-   width/`maxWidthForFire` No-Bet runs in the edge-lab research path only. So
-   the *width-based* refusal reason has no production producer yet. The Board's
-   No-Bet surface is built on the refusals that ARE real (gate decisions), and
-   the width reason slots into the same structure when the gate goes live —
-   deliberately not faked in the meantime.
+3. **The selective gate now HAS a production consumer — UI wiring is the
+   remaining half.** `apps/web/lib/board/gate-consumer.ts` (#209) is the first
+   non-research caller of `applySelectiveGate`. It builds real rows from
+   production data (`Pick.confidence` → score; `Pick.result` → y with
+   PUSH/VOID/PENDING excluded rather than coerced, since a push is not a loss;
+   genuinely de-vigged `q` from both sides of the `Odds` table) and returns
+   five distinct reason codes: `FIRE`, `NO_BET_LCB`, `NO_BET_WIDTH`,
+   `INSUFFICIENT_CALIBRATION`, `NOT_EVALUATED_MISSING_INPUTS`.
+
+   The load-bearing property is that the last two are **not refusals**.
+   Reporting "we declined" when the truth is "we never had enough settled
+   history to look" would claim a considered judgement the product never made.
+   Both directions are tested, including that missing-input rows cannot make
+   the board masquerade as a calibration problem.
+
+   A page now calls it: `/board/gate` runs the real consumer at request time
+   and prints what it returned, including the outcome mix. The inputs are
+   illustrative and labelled as such on the page itself — real gate, labelled
+   inputs, never the reverse.
+
+   **Two preconditions before the live slate may be wired in.** Both were
+   raised in review of the consumer and are real; neither is fixable inside
+   the mapper today, because `RawPickRow` does not carry the fields that
+   would decide them, and inventing plausible values is the failure this
+   whole module refuses.
+
+   - **Learning-eligibility.** The canonical calibration paths admit a
+     settled pick only when it is not a bootstrap pick and its signal
+     snapshot is marked eligible for learning. `buildCalibrationRows` admits
+     every WIN/LOSS row, so history explicitly marked ineligible could count
+     toward the 100-row floor and let the gate fire on it. The live query
+     must carry those flags and filter on them before this is wired.
+   - **Model-version strata.** `${sport}|${pickType}` pools settled history
+     across major engine versions, whose score semantics differ by policy.
+     Once history spans a major upgrade, the stratum key must include the
+     model version or calibration will compare incomparable scores.
+
+   Neither affects the illustrative page, which supplies its own rows.
+
+   Still open: **the live slate is not wired in.** `/board`'s passes continue
+   to come from the `gate_decisions` table — a different, also-real set of
+   refusals. Closing the gap needs a Pick × Odds join whose behaviour cannot
+   be verified in this environment; shipping it unverified beneath a public
+   honesty surface is the failure mode the surface exists to reject. Expect
+   `INSUFFICIENT_CALIBRATION` to dominate once wired, since a stratum needs
+   100 settled picks before the gate will fire in it. That is the honest
+   state of a pre-launch product, not a defect to engineer around.
 
 4. **Ledger multiprob persistence is BLOCKED — on a missing writer, not on
    commitment risk.** Investigated directly rather than assumed; the blocker is

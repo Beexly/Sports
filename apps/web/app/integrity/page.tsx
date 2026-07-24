@@ -262,6 +262,9 @@ export default function IntegrityPage() {
                 <em>the claims we make about picks</em>.
               </p>
               <div className="mt-3 flex flex-wrap gap-3 text-sm">
+                <Link href="/board/gate" className="underline hover:text-orbital-cyan">
+                  How the gate decides
+                </Link>
                 <Link href="/glass-ledger" className="underline hover:text-orbital-cyan">
                   Glass Ledger
                 </Link>

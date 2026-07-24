@@ -50,6 +50,9 @@ const ROUTES: ReadonlyArray<{
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
   // Daily intelligence surfaces
   { path: "/board", priority: 0.8, changeFrequency: "daily" },
+  // The selective gate, run in public. Listed because a page whose purpose is
+  // to be checked by strangers has to be reachable by one.
+  { path: "/board/gate", priority: 0.7, changeFrequency: "daily" },
   // NOTE: /brief is intentionally omitted — it is robots-disallowed + noindex
   // (internal surface). A sitemap must never advertise a blocked URL.
   { path: "/today", priority: 0.7, changeFrequency: "daily" },
