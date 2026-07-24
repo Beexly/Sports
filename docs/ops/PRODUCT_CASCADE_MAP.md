@@ -129,11 +129,19 @@ What keeps a subscriber:
    Both directions are tested, including that missing-input rows cannot make
    the board masquerade as a calibration problem.
 
-   Still open: **no page calls the consumer yet.** `/board`'s passes continue
+   A page now calls it: `/board/gate` runs the real consumer at request time
+   and prints what it returned, including the outcome mix. The inputs are
+   illustrative and labelled as such on the page itself — real gate, labelled
+   inputs, never the reverse.
+
+   Still open: **the live slate is not wired in.** `/board`'s passes continue
    to come from the `gate_decisions` table — a different, also-real set of
-   refusals. Expect `INSUFFICIENT_CALIBRATION` to dominate once wired, since a
-   stratum needs 100 settled picks before the gate will fire in it. That is the
-   honest state of a pre-launch product, not a defect to engineer around.
+   refusals. Closing the gap needs a Pick × Odds join whose behaviour cannot
+   be verified in this environment; shipping it unverified beneath a public
+   honesty surface is the failure mode the surface exists to reject. Expect
+   `INSUFFICIENT_CALIBRATION` to dominate once wired, since a stratum needs
+   100 settled picks before the gate will fire in it. That is the honest
+   state of a pre-launch product, not a defect to engineer around.
 
 4. **Ledger multiprob persistence is BLOCKED — on a missing writer, not on
    commitment risk.** Investigated directly rather than assumed; the blocker is

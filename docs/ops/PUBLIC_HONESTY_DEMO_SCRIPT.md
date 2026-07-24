@@ -1,7 +1,7 @@
 # Public Honesty Demo Script
 
 What a stranger can actually see, today, on this codebase — and what they
-cannot yet. Written against the branch chain `main` → #206 → #208 → #209.
+cannot yet. #206 and #208 have since merged; only #209 remains open.
 
 The point of this document is that it distinguishes **shipped** from
 **pending**. A demo script that quietly demos unmerged work is the same
@@ -12,14 +12,25 @@ tagged with what it requires.
 
 ## What is on `main` right now
 
-Merged: **#207** (`317c2764`).
+Merged: **#207** (`317c2764`) → **#206** (`bb248c9a`) → **#208** (`96ae7024`).
 
 - `/airwave` withholds a pundit hit rate below 25 decided calls. Type a
   pundit with two decided calls and no rate appears — the counts do, the
   percentage does not.
+- `/board` gives every reader a plain-language reason for a pass, and the
+  auditable trail (reason code, confidence at refusal, model version,
+  evidence count) to `canSeeNoBetDetail` holders. The detail is withheld
+  server-side — an unentitled response never contains it.
+- `/pricing` leads Pro with No-Bet reasoning, multiprob intervals, Glass
+  Ledger access, and recompute. Volume is demoted below all of them.
+- `/integrity` separates the two things called "integrity": how our agents
+  are governed, and whether a displayed number is substantiated.
+- `/stats/compare` names the player it could not find rather than silently
+  substituting a different one.
 - The `pavIsotonic` weight test is correct, so `main` is green.
 
-That is genuinely all. The honesty *engine* work is real but sits in open PRs.
+The remaining honesty *engine* work — a production consumer of the gate —
+sits in #209.
 
 ---
 
@@ -48,38 +59,48 @@ Follow `docs/devrel/DEMO_SCRIPT.md`: force a REFUSE, open the receipt, fetch
 the public key, verify the signature. Then tamper with one character and
 watch verification fail.
 
+**4. The refusal is explained, and the explanation is entitled.** (~30s)
+
+Open `/board`. Passes carry a plain-language reason for every reader. Sign
+in as a `canSeeNoBetDetail` holder and the auditable trail appears: reason
+code, confidence at refusal, model version, evidence count. Then show the
+unentitled response body — the detail is not hidden by CSS, it is never
+serialised.
+
+**5. Two different things called "integrity".** (~20s)
+
+On `/integrity`, show the section separating *how our agents are governed*
+from *whether a number on screen is substantiated*. Most products conflate
+these; the distinction is why our substantiation guards can be strict
+without touching the governance claim.
+
+**6. It tells you when it could not find what you asked for.** (~20s)
+
+`/stats/compare?a=p999`. The page names the ID it could not resolve and
+states that the comparison shown is not the one requested. It previously
+rendered a confident side-by-side of someone else with no notice.
+
 ---
 
-## Demo — REQUIRES #206 MERGED
+## Requires #209 merged
 
-Do **not** show these until #206 is on `main`. They do not exist otherwise.
+- **The gate can be asked, from product code, and answers honestly** —
+  `/board/gate` runs `applySelectiveGate` at request time and prints what it
+  returned. Five reason codes are reachable: `FIRE`, `NO_BET_LCB`,
+  `NO_BET_WIDTH`, `INSUFFICIENT_CALIBRATION`,
+  `NOT_EVALUATED_MISSING_INPUTS`.
 
-- **Board No-Bet reasoning.** `/board` lists passes with a plain-language
-  reason for everyone, and the auditable trail (reason code, confidence at
-  refusal, model version, evidence count) for `canSeeNoBetDetail` holders.
-  Withheld server-side — an unentitled response never contains it.
-- **Honesty-first pricing.** `/pricing` leads Pro with No-Bet reasoning,
-  multiprob intervals, Glass Ledger access, recompute. Volume is demoted.
-- **The two-integrities cross-link** on `/integrity`, separating agent
-  governance from claim substantiation.
+  Say the caveat out loud, because the page does: **the decision logic is
+  production code; the input rows are illustrative and are not today's
+  slate.** Real gate, labelled inputs. The reverse — real-looking inputs and
+  a hand-written decision — is the thing that page must never be.
 
-## Requires #208 merged
-
-- **`/stats/compare` tells you when it substituted a player.** Enter a
-  nonsense ID like `p999`; the page names what it could not find and states
-  that the comparison shown is not the one requested. Before this, it
-  rendered a confident side-by-side of someone else with no notice.
-
-## Requires #209 merged (and #206 beneath it)
-
-- **The gate can be asked, from product code, and answers honestly.** The
-  five reason codes are reachable: `FIRE`, `NO_BET_LCB`, `NO_BET_WIDTH`,
-  `INSUFFICIENT_CALIBRATION`, `NOT_EVALUATED_MISSING_INPUTS`.
-
-  The most likely honest answer today is `INSUFFICIENT_CALIBRATION`, because
-  a stratum needs 100 settled picks before the gate will fire in it. **That
-  is the demo, not a failure of it:** the product declining to bet because it
-  cannot yet justify betting is the claim, working.
+  The demo is the *three kinds of no*. "No bet" is a judgement made against
+  settled history. "Not judged" means the stratum has under 100 settled
+  picks, so the model was never asked. "Not evaluated" means an input was
+  missing. Collapsing them would let us claim a considered judgement where
+  the truth is an absence of evidence — and for a product this young, the
+  second is often the honest answer.
 
 ---
 
@@ -94,7 +115,10 @@ its gaps invites the audience to assume more than is true.
   number is gated behind `renderableMetricOrNull` /
   `assertDisplaySubstantiated`, and nothing currently clears those bars.
 - **The gate does not yet drive `/board`'s published picks.** #209 adds the
-  consumer and its contract; UI wiring is not built.
+  consumer, its contract, and a page that runs it — but on illustrative
+  rows. Feeding the live slate in needs a Pick × Odds join whose behaviour
+  is not verified yet, and shipping an unverified join underneath a page
+  about honesty would be the exact failure that page argues against.
 - **Nothing is persisted to the ledger.** `FiredDecision` has no production
   writer — see `PRODUCT_CASCADE_MAP.md`.
 - **No certification.** Not SOC 2, ISO 27001, or EU AI Act certified. The
@@ -104,14 +128,18 @@ its gaps invites the audience to assume more than is true.
 
 ## The 90-second version
 
-1. `/integrity` — here is what we govern, and here is the list of things we
-   refuse to claim. (25s)
+1. `/integrity` — here is what we govern, here is the list of things we
+   refuse to claim, and here is why "integrity" means two separate things.
+   (25s)
 2. Fetch `/.well-known/receipt-keys.json`, verify a receipt, tamper with it,
-   watch it fail. (40s)
-3. `/airwave` — here is a rate we are withholding because the sample is too
-   small to publish honestly. (25s)
+   watch it fail. (35s)
+3. `/airwave` — a rate we are withholding because the sample is too small to
+   publish honestly. Then `/board` — a refusal explained, with the auditable
+   trail entitled and withheld server-side. (30s)
 
-Every one of those runs on `main` today.
+Every one of those runs on `main` today. Once #209 lands, `/board/gate`
+replaces step 3's second half: the gate deciding live, with three distinct
+kinds of no.
 
 ## NON-CLAIMS
 
