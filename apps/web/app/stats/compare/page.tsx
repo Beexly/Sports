@@ -1,5 +1,15 @@
+import Link from "next/link";
 import { Shell, Cards, Badge, BarChart, StatusRibbon, InsightCard } from "../_components";
 import { comparePlayers } from "@/lib/statking/product";
+
+/** Name the slots that fell back, so the notice is specific rather than vague. */
+function unresolvedLabel(c: ReturnType<typeof comparePlayers>): string {
+  const missing: string[] = [];
+  if (!c.aResolved) missing.push(`Player A "${c.requestedAId}"`);
+  if (!c.bResolved) missing.push(`Player B "${c.requestedBId}"`);
+  return `${missing.join(" and ")} ${missing.length > 1 ? "were" : "was"} not found`;
+}
+
 export const metadata = {
   title: "Player Compare: Side-by-Side NFL Metrics",
   description: "Compare any two players across usage, efficiency, role, volatility, and fantasy value.",
@@ -17,6 +27,24 @@ export default function Page({ searchParams }: { searchParams?: { a?: string; b?
   return (
     <Shell title="Player Compare">
       <StatusRibbon status="fixture" label="Comparison snapshot updated every sync cycle" />
+
+      {(!c.aResolved || !c.bResolved) && (
+        <div className="border border-amber-900 bg-amber-950/40 p-4">
+          <p className="text-sm font-semibold text-amber-300">
+            {unresolvedLabel(c)} — showing a stand-in instead
+          </p>
+          <p className="mt-1 text-sm leading-6 text-amber-200/90">
+            The comparison below is real, but it is not the one you asked for.
+            Rather than quietly swapping in a different player and presenting
+            that as your request, we are telling you. Pick an ID from the{" "}
+            <Link href="/stats/players" className="underline hover:text-amber-100">
+              Players page
+            </Link>{" "}
+            to compare who you meant.
+          </p>
+        </div>
+      )}
+
       <form method="get" className="border border-mineral bg-eclipse p-4 space-y-3">
         <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
           <input name="a" aria-label="Player A ID" defaultValue={searchParams?.a ?? "p001"} placeholder="Player A ID (e.g. p001)" className="border border-mineral bg-carbon p-2 text-ion-white placeholder:text-ion-3 text-sm rounded focus:border-orbital-cyan focus:outline-none" />
@@ -29,7 +57,22 @@ export default function Page({ searchParams }: { searchParams?: { a?: string; b?
         { label: "Player A", value: c.a.name, note: c.a.position + " · " + c.a.team },
         { label: "Player B", value: c.b.name, note: c.b.position + " · " + c.b.team },
         { label: "Scoring", value: searchParams?.scoring ?? "PPR" },
-        { label: "Confidence gap", value: Math.abs(c.a.data_confidence - c.b.data_confidence) + " pts" }
+        {
+          // A bare "12 pts" told the reader nothing: not which player is better
+          // evidenced, not whether higher is better, not whether 12 is a lot.
+          // Naming the direction makes it a fact instead of a decoration.
+          label: "Better-evidenced",
+          value:
+            c.a.data_confidence === c.b.data_confidence
+              ? "Even"
+              : c.a.data_confidence > c.b.data_confidence
+                ? c.a.name
+                : c.b.name,
+          note:
+            c.a.data_confidence === c.b.data_confidence
+              ? "Same data-confidence score"
+              : `by ${Math.abs(c.a.data_confidence - c.b.data_confidence)} pts of data confidence`,
+        },
       ]} />
       <div className="grid gap-4 md:grid-cols-2">
         {c.categories.map(x => {

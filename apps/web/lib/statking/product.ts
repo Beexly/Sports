@@ -75,9 +75,24 @@ export function loadArchetypes() { return readJson<{rows:Array<{player_id:string
 export function getPlayer(id: string): StatKingPlayer | undefined { return loadPlayers().find((p) => p.player_id === id); }
 export function rankPlayers(sort: keyof StatKingPlayer = "galaxy_player_index"): StatKingPlayer[] { return [...loadPlayers()].sort((a,b) => Number(b[sort]) - Number(a[sort])); }
 export function comparePlayers(aId: string, bId: string) {
-  const a = getPlayer(aId) ?? loadPlayers()[0]!; const b = getPlayer(bId) ?? loadPlayers()[1]!;
+  const requestedA = getPlayer(aId); const requestedB = getPlayer(bId);
+  const a = requestedA ?? loadPlayers()[0]!; const b = requestedB ?? loadPlayers()[1]!;
   const categories = ["galaxy_player_index","usage_score","efficiency_score","fantasy_edge","volatility_score","data_confidence"] as const;
-  return { a, b, categories: categories.map((key) => ({ key, a: a[key], b: b[key], winner: key === "volatility_score" ? (a[key] < b[key] ? a.name : b.name) : (a[key] >= b[key] ? a.name : b.name) })) };
+  // Resolution behaviour is deliberately UNCHANGED (DO_NOT_BREAK: player ID
+  // resolution + product loader contracts). What is new is purely REPORTING:
+  // a caller can now tell whether it got the player it asked for or a
+  // stand-in. Without it the compare page silently renders a confident
+  // side-by-side of two players the user never requested — answering a
+  // different question than the one asked, on the one surface whose entire
+  // value is a trustworthy comparison.
+  return {
+    a, b,
+    aResolved: requestedA !== undefined,
+    bResolved: requestedB !== undefined,
+    requestedAId: aId,
+    requestedBId: bId,
+    categories: categories.map((key) => ({ key, a: a[key], b: b[key], winner: key === "volatility_score" ? (a[key] < b[key] ? a.name : b.name) : (a[key] >= b[key] ? a.name : b.name) })),
+  };
 }
 export function askStatKing(query: string) {
   const q = query.toLowerCase(); const players = loadPlayers();
