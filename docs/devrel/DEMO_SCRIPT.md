@@ -93,9 +93,44 @@ Anyone — not just this deployment — can independently re-derive the signed
 payload and check it against the published public key. No shared secret
 required.
 
-## 4. Close (1:20–1:30)
+## 4. Point at the public surfaces (1:20–1:30)
 
 "That's the whole loop: gated call → admit/refuse decision → signed
 receipt → publicly verifiable, without trusting us. SHADOW is the default
 everywhere else in production — this ENFORCE demo only ran because we set
 `SRQC_ENFORCE=1` in this lab shell."
+
+Two places to point at on screen to close:
+
+- `/integrity` — the public front door: what the control plane governs,
+  the SHADOW-default posture, and a link to the live
+  `/.well-known/receipt-keys.json` keyring used in step 3 above.
+- `docs/formal/SRQC_STATUS.md` — the full record: real TLC receipts (§3),
+  whether any certificate is currently active (§10 — as of this writing,
+  no), and a seven-step "attack checklist" (§11) for anyone who wants to
+  verify all of this without trusting the document.
+
+## 5. Troubleshooting
+
+- **`ECONNREFUSED` on steps 2–3.** `npm run dev --workspace=apps/web`
+  (step 0) isn't running, or hasn't finished starting yet — wait for the
+  "Ready" log line and retry.
+- **Step 1 prints `decision: ADMIT` instead of `REFUSE`.** The script
+  hard-codes `ctx.mode: "ENFORCE"` — if it ever admits, either the
+  synthetic window's two `ATTEMPT_STARTED` events stopped landing on the
+  same invocation id (check `scripts/demo/force-governed-refuse.mjs`
+  wasn't edited), or `admitUnderSRQC`'s violation predicate regressed.
+  Either way, treat an ADMIT here as a real bug to file, not a flaky
+  re-run.
+- **`curl .../api/receipts/[id]` 404s in step 2.** The demo script's
+  in-process receipt store is separate from the running dev server's — you
+  must fetch a receipt id that a real request against the running app
+  actually persisted (e.g. via `governed-gate.ts`-wired traffic), not
+  step 1's own printed `receiptId` directly. See the note at the end of
+  step 1.
+- **Step 3's `POST /api/receipts/verify` returns `{ "ok": false }`.** Confirm
+  `receipt.json` is the exact, unmodified JSON body from step 2 — even
+  reformatting whitespace inside a string field or reordering keys by hand
+  should not break it (the canonical payload is order-independent, see
+  `docs/formal/OPEN_GOVERNED_RECEIPT.md` §3), but pasting in a
+  hand-edited or truncated receipt will.
