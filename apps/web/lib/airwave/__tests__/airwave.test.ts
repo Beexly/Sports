@@ -13,11 +13,88 @@ import {
   ALL_ADAPTERS,
   YOUTUBE_ADAPTER,
   SATELLITE_RADIO_ADAPTER,
+  MIN_DECIDED_FOR_PUBLISHED_RATE,
   type AirwaveEnv,
+  type PunditClaim,
 } from "../index";
 import { DEMO_PUNDITS, DEMO_CLAIMS } from "../demo-ledger";
 
 const punditById = (id: string) => DEMO_PUNDITS.find((p) => p.id === id)!;
+
+describe("airwave hit-rate publication floor", () => {
+  /** Build n decided claims (hits + misses) for a synthetic pundit. */
+  const decidedClaims = (hits: number, misses: number): PunditClaim[] =>
+    Array.from({ length: hits + misses }, (_, i) => ({
+      id: `c_synth_${i}`,
+      punditId: "p_synth",
+      airedAt: "2025-11-09T10:00:00-06:00",
+      sport: "NFL",
+      subject: `Synthetic call ${i}`,
+      claimType: "GAME_PICK",
+      direction: "BACKS",
+      assertion: `Synthetic checkable call ${i}.`,
+      confidence: "LEAN",
+      falsifiable: true,
+      verdict: i < hits ? "HIT" : "MISS",
+      outcomeNote: "Synthetic outcome.",
+      sourceClipRef: `seg/synth/${i}`,
+    })) as PunditClaim[];
+
+  const synthPundit = {
+    id: "p_synth",
+    name: "Synthetic Persona",
+    show: "Test Show",
+    network: "Test Network",
+    sourceKind: "podcast",
+  } as (typeof DEMO_PUNDITS)[number];
+
+  it("withholds the rate strictly below the floor, even for a perfect record", () => {
+    const justUnder = MIN_DECIDED_FOR_PUBLISHED_RATE - 1;
+    const card = scorecardFor(synthPundit, decidedClaims(justUnder, 0));
+
+    expect(card.hits).toBe(justUnder);
+    expect(card.hitRate).toBeNull();
+    expect(card.hitRateBandPct).toBeNull();
+  });
+
+  it("publishes the rate and its Wilson band exactly at the floor", () => {
+    const card = scorecardFor(
+      synthPundit,
+      decidedClaims(MIN_DECIDED_FOR_PUBLISHED_RATE, 0),
+    );
+
+    expect(card.hitRate).toBe(1);
+    expect(card.hitRateBandPct).not.toBeNull();
+    expect(card.hitRateBandPct!.low).toBeLessThan(100);
+  });
+
+  it("publishes a mixed record above the floor with a band that brackets the point estimate", () => {
+    const card = scorecardFor(synthPundit, decidedClaims(20, 20));
+
+    expect(card.hitRate).toBeCloseTo(0.5, 6);
+    expect(card.hitRateBandPct).not.toBeNull();
+    expect(card.hitRateBandPct!.low).toBeLessThan(50);
+    expect(card.hitRateBandPct!.high).toBeGreaterThan(50);
+  });
+
+  it("keeps the rate null at zero decided calls, as before", () => {
+    const card = scorecardFor(synthPundit, []);
+
+    expect(card.hitRate).toBeNull();
+    expect(card.hitRateBandPct).toBeNull();
+  });
+
+  it("never exposes a sub-floor rate for any demo pundit — the live public surface today", () => {
+    for (const pundit of DEMO_PUNDITS) {
+      const card = scorecardFor(pundit, DEMO_CLAIMS);
+      const decided = card.hits + card.misses;
+      if (decided < MIN_DECIDED_FOR_PUBLISHED_RATE) {
+        expect(card.hitRate).toBeNull();
+        expect(card.hitRateBandPct).toBeNull();
+      }
+    }
+  });
+});
 
 describe("airwave scoring", () => {
   it("rewards checkable, correct calls (Nyla Brooks)", () => {
@@ -27,7 +104,9 @@ describe("airwave scoring", () => {
     expect(card.pushes).toBe(1);
     expect(card.unfalsifiable).toBe(0);
     expect(card.falsifiableRate).toBe(1);
-    expect(card.hitRate).toBe(1);
+    // 2 decided calls is far below MIN_DECIDED_FOR_PUBLISHED_RATE, so the rate
+    // is withheld — a 2-for-2 record must not publish as "100%".
+    expect(card.hitRate).toBeNull();
     expect(card.accountabilityIndex).toBe(90);
   });
 
@@ -37,7 +116,8 @@ describe("airwave scoring", () => {
     expect(card.misses).toBe(1);
     expect(card.pushes).toBe(1);
     expect(card.accountabilityIndex).toBe(73);
-    expect(card.hitRate).toBeCloseTo(2 / 3, 5);
+    // 3 decided calls — still below the publication floor, so no "67%".
+    expect(card.hitRate).toBeNull();
   });
 
   it("penalises a confident-but-wrong record (Brick Tannen)", () => {
