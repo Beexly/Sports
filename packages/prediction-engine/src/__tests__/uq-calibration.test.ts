@@ -47,10 +47,26 @@ describe("pavIsotonic", () => {
   });
 
   it("respects weights", () => {
-    // Heavy weight on the high value should pull the average up
-    const fitted = pavIsotonic([0, 1], [1, 9]);
+    // Heavy weight on the high value should pull the pooled average up.
+    //
+    // The input must VIOLATE monotonicity for anything to pool: PAV fits a
+    // non-decreasing sequence, so an already-sorted input like [0, 1] is
+    // returned untouched and no weighted average is ever computed. [1, 0] is
+    // the violation, and with weights [9, 1] the pooled block is
+    // (1*9 + 0*1) / 10 = 0.9 — the heavy high value dominating, which is the
+    // property this test is actually asserting.
+    const fitted = pavIsotonic([1, 0], [9, 1]);
     expect(fitted[0]).toBeCloseTo(0.9);
     expect(fitted[1]).toBeCloseTo(0.9);
+  });
+
+  it("leaves an already-monotone sequence untouched regardless of weights", () => {
+    // The companion to the case above, and the reason the original input
+    // could not work: no violation means no pooling, so lopsided weights
+    // change nothing.
+    const fitted = pavIsotonic([0, 1], [1, 9]);
+    expect(fitted[0]).toBeCloseTo(0);
+    expect(fitted[1]).toBeCloseTo(1);
   });
 
   it("pavBinary works on 0/1 labels", () => {
