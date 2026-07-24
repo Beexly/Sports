@@ -134,26 +134,54 @@ What keeps a subscriber:
    illustrative and labelled as such on the page itself — real gate, labelled
    inputs, never the reverse.
 
-   **Two preconditions before the live slate may be wired in.** Both were
-   raised in review of the consumer and are real; neither is fixable inside
-   the mapper today, because `RawPickRow` does not carry the fields that
-   would decide them, and inventing plausible values is the failure this
-   whole module refuses.
+   **Both preconditions are now IMPLEMENTED in the mapper and loader.**
 
-   - **Learning-eligibility.** The canonical calibration paths admit a
-     settled pick only when it is not a bootstrap pick and its signal
-     snapshot is marked eligible for learning. `buildCalibrationRows` admits
-     every WIN/LOSS row, so history explicitly marked ineligible could count
-     toward the 100-row floor and let the gate fire on it. The live query
-     must carry those flags and filter on them before this is wired.
-   - **Model-version strata.** `${sport}|${pickType}` pools settled history
-     across major engine versions, whose score semantics differ by policy.
-     Once history spans a major upgrade, the stratum key must include the
-     model version or calibration will compare incomparable scores.
+   An earlier revision of this document said they could not be fixed because
+   `RawPickRow` lacked the deciding fields. That was wrong about the cause.
+   `Pick.isBootstrap`, `Pick.modelVersion`, and
+   `PickSignalSnapshot.eligibleForLearning` all already exist in the schema —
+   the gap was that the mapper neither carried nor enforced them. Inventing
+   those values remains forbidden; *reading* them is required.
 
-   Neither affects the illustrative page, which supplies its own rows.
+   - **Learning-eligibility — fails closed.** `isLearningAdmissible` admits a
+     settled pick only on two affirmative facts: `isBootstrap === false` and
+     `eligibleForLearning === true`. `undefined` — a pick with no signal
+     snapshot — is inadmissible, because unproven is not the same as eligible.
+     `buildCalibrationRows(rows, PRODUCTION_CALIBRATION_OPTS)` enforces it and
+     reports each exclusion by name. The asymmetry is deliberate: wrongly
+     excluding an eligible pick costs a row and makes the gate fire less;
+     wrongly including an ineligible one lets history the product has already
+     disowned set the bar it then claims to have cleared.
+   - **Model-version strata.** `stratumOf` returns
+     `${sport}|${pickType}|${modelVersion}` when a version is present and the
+     two-part key when it is not, so versions cannot pool and existing callers
+     are unchanged.
 
-   Still open: **the live slate is not wired in.** `/board`'s passes continue
+   Strictness is opt-in, so the illustrative page — which supplies rows with no
+   provenance to read — is unaffected.
+
+   **A third defect the join itself would have introduced.** `Odds` stores
+   moneyline prices in `homePrice`/`awayPrice` but spread prices in
+   `homeSpreadPrice`/`awaySpreadPrice`. De-vigging a SPREAD pick against the
+   moneyline pair yields the fair probability of an outright win rather than a
+   win against the handicap — on a heavy favourite the two diverge enormously,
+   and nothing downstream could detect it. `pricesForPickType` selects the pair
+   belonging to the pick's own market, and never carries a three-way draw price
+   onto a two-way handicap.
+
+   Still open, and deliberately so: **the public flip.** `fetchGateSlate`
+   returns null unless `LIVE_BOARD_GATE_SLATE=1` and a real database is
+   configured — both checked inside the loader so a caller cannot reach
+   production data by forgetting a guard. The query shape is typed and unit
+   tested but has **not been exercised against production rows**; a join is
+   only really proven by running it against real data. That is the staging
+   step, and the flag stays off until counts there look right — expect
+   `INSUFFICIENT_CALIBRATION` to dominate, since a stratum now needs 100
+   settled, learning-eligible, same-model-version rows before the gate will
+   fire in it. That is the honest state of a young product, not a defect to
+   engineer around.
+
+   Still open: **the live slate is not wired into the page.** `/board`'s passes continue
    to come from the `gate_decisions` table — a different, also-real set of
    refusals. Closing the gap needs a Pick × Odds join whose behaviour cannot
    be verified in this environment; shipping it unverified beneath a public
