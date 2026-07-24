@@ -122,6 +122,33 @@ What keeps a subscriber:
    the width reason slots into the same structure when the gate goes live —
    deliberately not faked in the meantime.
 
+4. **Ledger multiprob persistence is BLOCKED — on a missing writer, not on
+   commitment risk.** Investigated directly rather than assumed; the blocker is
+   not what it was expected to be.
+
+   - `FiredDecision` has exactly one consumer in the entire repo:
+     `scripts/edge-lab/phase1-acceptance.ts`, a research script.
+   - `appendPick` / `appendSettlement` have **zero** production callers.
+     Nothing anywhere constructs a `PickEntryInput`.
+   - The domains do not align. `LedgerPickEntry` describes a *published pick*
+     (`pickId`, `book`, `priceDecimal`, `kickoffAt`); `FiredDecision` describes
+     a *backtest row* (`rowId`, `stratum`, `lcbEdge`, `y`). No bridge exists,
+     and constructing one means inventing pick identity, a book, and a price
+     for a row that has none.
+
+   So there is no path to persist multiprob *through*. Doing this work now
+   would require building a `FiredDecision`→ledger bridge AND a production
+   ledger writer — far outside "narrow and contract-safe", and precisely the
+   isolated-engine building this map exists to discourage.
+
+   **Recorded so it need not be re-derived:** when a writer does exist, additive
+   optional fields ARE hash-safe. `canonicalJson` sorts *present* keys, so an
+   entry lacking a new optional field serializes byte-identically and every old
+   receipt still verifies. The one trap: `canonicalJson` throws on `undefined`,
+   so such a field must be **omitted from the object entirely**, never assigned
+   `undefined`. Prerequisite for unblocking: a production consumer of
+   `applySelectiveGate` that emits published picks.
+
 ## Closed since this document was written
 
 - **No-Bet reasoning is rendered.** `/board` shows every pass and its
