@@ -242,8 +242,16 @@ export interface SelectiveGateReport {
   readonly widthNoBets: number;
 }
 
-/** Minimum per-stratum calibration rows before the gate will fire in it. */
-const MIN_STRATUM_CALIBRATION = 100;
+/**
+ * Minimum per-stratum calibration rows before the gate will fire in it.
+ *
+ * Exported so a consumer can distinguish "we evaluated this stratum and
+ * declined" from "we never had enough settled history to evaluate it at all".
+ * Those are very different things to tell a user, and a consumer that cannot
+ * tell them apart ends up reporting a confident refusal where the truth is an
+ * absence of evidence.
+ */
+export const MIN_STRATUM_CALIBRATION = 100;
 
 /**
  * Apply the gate: calibrate each eval row's score with Venn–Abers against
