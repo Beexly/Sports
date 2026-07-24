@@ -88,6 +88,11 @@ export interface GateOutcome {
 
 export interface BoardGateEvaluation {
   readonly outcomes: readonly GateOutcome[];
+  /**
+   * The gate's own report, with every REALIZED-OUTCOME statistic forced to
+   * null. See `blindRealizedStats` — for live candidates the outcome has not
+   * happened yet, so any realized rate computed from them is fabricated.
+   */
   readonly report: SelectiveGateReport;
   /** Strata that could not be evaluated at all, with their settled-row counts. */
   readonly uncalibratedStrata: readonly { stratum: string; calibrationRows: number }[];
@@ -105,6 +110,33 @@ const REASONS: Record<GateOutcomeCode, string> = {
   NOT_EVALUATED_MISSING_INPUTS:
     "Not evaluated — a required input was missing, so this was never put to the model. This is not a judgement about the game.",
 };
+
+/**
+ * Strip realized-outcome statistics from a report over LIVE candidates.
+ *
+ * `GateDecisionRow.y` is required by the gate's row type but is unknowable for
+ * a pick that has not settled, so `buildCandidateRows` sets it to an inert 0.
+ * The gate cannot know that: it computes `realizedRate` and `wilsonLcb` over
+ * fired rows from `y`, so a board where three candidates fired would report a
+ * realized rate of 0 — a 0% win rate that reads as measured and is in fact
+ * three games that have not been played.
+ *
+ * That is the single most dangerous number this module could emit, on a
+ * product whose claim is that it does not publish numbers it cannot support.
+ * `null` is the truthful value: not zero, not withheld — unknown.
+ */
+function blindRealizedStats(report: SelectiveGateReport): SelectiveGateReport {
+  return {
+    ...report,
+    realizedRate: null,
+    wilsonLcb: null,
+    perStratum: report.perStratum.map((s) => ({
+      ...s,
+      realizedRate: null,
+      wilsonLcb: null,
+    })),
+  };
+}
 
 /**
  * Pure core: given calibration and candidate rows, run the real gate and
@@ -131,6 +163,7 @@ export function evaluateBoardGate(
   for (const d of report.decisions) firedById.set(d.rowId, d);
 
   const widthCap = options.maxWidthForFire;
+  const widthVetoed = new Set(report.widthVetoedRowIds);
 
   const outcomes: GateOutcome[] = candidateRows.map((row) => {
     const fired = firedById.get(row.rowId);
@@ -159,10 +192,16 @@ export function evaluateBoardGate(
       };
     }
 
-    // Evaluated. If a width cap is in force and this row's interval exceeds it,
-    // the width veto is why it did not fire; otherwise the lower bound is.
-    // `widthNoBets > 0` on the report confirms the veto is active at all.
-    if (widthCap !== undefined && report.widthNoBets > 0) {
+    // Evaluated. Attribute the refusal to THIS row's own veto, not to the
+    // report's aggregate counter.
+    //
+    // The earlier version asked `report.widthNoBets > 0`, which is a global
+    // count across every stratum. One width veto anywhere therefore relabelled
+    // every lower-bound failure everywhere as a width veto — a confident public
+    // reason that was simply wrong, and exactly the class of mistake this
+    // module exists to prevent. The gate now reports which rows it vetoed, so
+    // the question can be asked of the row instead of guessed from a total.
+    if (widthCap !== undefined && widthVetoed.has(row.rowId)) {
       return {
         rowId: row.rowId,
         stratum: row.stratum,
@@ -197,7 +236,7 @@ export function evaluateBoardGate(
     .filter((s) => s.calibrationRows < MIN_STRATUM_CALIBRATION)
     .sort((a, b) => a.stratum.localeCompare(b.stratum));
 
-  return { outcomes, report, uncalibratedStrata, tau };
+  return { outcomes, report: blindRealizedStats(report), uncalibratedStrata, tau };
 }
 
 /**

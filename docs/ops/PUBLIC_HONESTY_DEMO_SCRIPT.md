@@ -80,12 +80,9 @@ without touching the governance claim.
 states that the comparison shown is not the one requested. It previously
 rendered a confident side-by-side of someone else with no notice.
 
----
+**7. The gate, run in public, in front of the reader.** (~40s)
 
-## Requires #209 merged
-
-- **The gate can be asked, from product code, and answers honestly** —
-  `/board/gate` runs `applySelectiveGate` at request time and prints what it
+- `/board/gate` runs `applySelectiveGate` at request time and prints what it
   returned. Five reason codes are reachable: `FIRE`, `NO_BET_LCB`,
   `NO_BET_WIDTH`, `INSUFFICIENT_CALIBRATION`,
   `NOT_EVALUATED_MISSING_INPUTS`.
@@ -114,11 +111,14 @@ its gaps invites the audience to assume more than is true.
 - **No live win rate, ROI, or CLV figure exists.** Every public performance
   number is gated behind `renderableMetricOrNull` /
   `assertDisplaySubstantiated`, and nothing currently clears those bars.
-- **The gate does not yet drive `/board`'s published picks.** #209 adds the
-  consumer, its contract, and a page that runs it — but on illustrative
+- **The gate does not yet drive `/board`'s published picks.** The consumer,
+  its contract, and a page that runs it all exist — but on illustrative
   rows. Feeding the live slate in needs a Pick × Odds join whose behaviour
   is not verified yet, and shipping an unverified join underneath a page
-  about honesty would be the exact failure that page argues against.
+  about honesty would be the exact failure that page argues against. Two
+  further preconditions are recorded in `PRODUCT_CASCADE_MAP.md`: excluding
+  learning-ineligible history, and separating calibration strata across
+  major model versions.
 - **Nothing is persisted to the ledger.** `FiredDecision` has no production
   writer — see `PRODUCT_CASCADE_MAP.md`.
 - **No certification.** Not SOC 2, ISO 27001, or EU AI Act certified. The
@@ -137,9 +137,8 @@ its gaps invites the audience to assume more than is true.
    publish honestly. Then `/board` — a refusal explained, with the auditable
    trail entitled and withheld server-side. (30s)
 
-Every one of those runs on `main` today. Once #209 lands, `/board/gate`
-replaces step 3's second half: the gate deciding live, with three distinct
-kinds of no.
+Every one of those runs on `main` today. If you have 20 seconds more, add
+`/board/gate`: the gate deciding live, with three distinct kinds of no.
 
 ## NON-CLAIMS
 

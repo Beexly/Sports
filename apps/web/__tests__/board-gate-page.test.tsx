@@ -70,7 +70,14 @@ describe("/board/gate", () => {
     // would fail on the disclaimer itself — punishing the page for being
     // explicit about what it refuses to claim. So assert the disclaimer is
     // present rather than banning the words.
-    expect(text).toContain("No win rate, ROI, or edge is asserted");
+    expect(text).toContain("No win rate, ROI, or performance result is asserted");
+
+    // The page DOES print a lower-bound edge on fired rows — that number is
+    // evidence the gate really ran. It must therefore be labelled as arithmetic
+    // on illustrative inputs, or it reads as a measured edge and contradicts
+    // the non-claim directly above it.
+    expect(text).toContain("not a measured edge in any real market");
+    expect(text).toContain("on illustrative inputs");
 
     // These have no honest use on this surface in any context.
     expect(text.toLowerCase()).not.toContain("proven");
@@ -95,6 +102,15 @@ describe("/board/gate", () => {
     expect(text).toContain("What this page does not claim");
     expect(text).toContain("Nothing here is persisted to the ledger");
     expect(text).toContain("not today's published picks");
+  });
+
+  it("does not claim the gate already governs the published board", () => {
+    // It runs the real gate, but nothing on /board is decided by it yet.
+    // Claiming otherwise would overstate where this is wired — on the one page
+    // that cannot afford to.
+    const { container } = render(<GatePage />);
+    const text = container.textContent ?? "";
+    expect(text).toContain("does not yet decide the published board");
   });
 
   it("distinguishes itself from the agent-governance claim", () => {

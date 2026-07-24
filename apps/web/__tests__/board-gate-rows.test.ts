@@ -106,6 +106,23 @@ describe("buildCalibrationRows — q is a real devig, and absent inputs are repo
     expect(excluded[0]!.missing.join(" ")).toContain("matched neither team");
   });
 
+  it("excludes three-way markets — a home/away devig omits the draw", () => {
+    // Soccer and similar carry a draw price. Normalizing home+away alone
+    // divides by less than the book's full probability mass, inflating q on
+    // both sides — and an inflated q shifts the edge in the direction that
+    // makes the gate fire.
+    const { rows, excluded } = buildCalibrationRows([
+      { ...base, sportName: "soccer", pickType: "MONEYLINE", drawPrice: 240 },
+    ]);
+    expect(rows).toHaveLength(0);
+    expect(excluded[0]!.missing.join(" ")).toContain("three-way market");
+  });
+
+  it("treats an absent or null draw price as an ordinary two-way market", () => {
+    expect(buildCalibrationRows([base]).rows).toHaveLength(1);
+    expect(buildCalibrationRows([{ ...base, drawPrice: null }]).rows).toHaveLength(1);
+  });
+
   it("excludes TOTAL markets — they are not a home/away devig", () => {
     const { rows, excluded } = buildCalibrationRows([
       { ...base, pickType: "TOTAL", selection: "OVER 48.5" },

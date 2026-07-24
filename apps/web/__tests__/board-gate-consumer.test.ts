@@ -143,11 +143,86 @@ describe("board gate consumer — width veto surfaces as its own reason", () => 
     expect(codes(evaluation)).toContain("NO_BET_WIDTH");
   });
 
+  it("attributes the veto to the rows actually vetoed — not to every refusal", () => {
+    // REGRESSION. The first version asked `report.widthNoBets > 0`, a global
+    // counter, so a single width veto anywhere relabelled every lower-bound
+    // failure as a width veto. The earlier test could not catch it: a cap of 0
+    // vetoes every tau-clearing row, so the buggy and correct answers agreed.
+    //
+    // The discriminating fact is that both refusal kinds must coexist, and the
+    // width count must match the gate's own tally exactly.
+    const evaluation = evaluateBoardGate(
+      calRows(400, "nfl|MONEYLINE"),
+      candidates(60, "nfl|MONEYLINE"),
+      0,
+      { source: "ivap", maxWidthForFire: 0 },
+    );
+
+    const widthRows = evaluation.outcomes.filter((o) => o.code === "NO_BET_WIDTH");
+    const lcbRows = evaluation.outcomes.filter((o) => o.code === "NO_BET_LCB");
+
+    expect(widthRows.length).toBe(evaluation.report.widthNoBets);
+    // Rows that never cleared tau are still lower-bound refusals.
+    expect(lcbRows.length).toBeGreaterThan(0);
+  });
+
+  it("a veto in one stratum does not relabel refusals in another", () => {
+    // The cross-stratum form of the same bug: a global counter has no stratum,
+    // so nfl's veto would explain nba's refusal.
+    const evaluation = evaluateBoardGate(
+      [...calRows(400, "nfl|MONEYLINE"), ...calRows(400, "nba|SPREAD", 7)],
+      [...candidates(40, "nfl|MONEYLINE"), ...candidates(40, "nba|SPREAD", 9)],
+      0,
+      { source: "ivap", maxWidthForFire: 0 },
+    );
+
+    const vetoed = new Set(evaluation.report.widthVetoedRowIds);
+    for (const o of evaluation.outcomes) {
+      if (o.code === "NO_BET_WIDTH") expect(vetoed.has(o.rowId)).toBe(true);
+      if (o.code === "NO_BET_LCB") expect(vetoed.has(o.rowId)).toBe(false);
+    }
+  });
+
   it("without a width cap, no outcome is ever attributed to width", () => {
     const evaluation = evaluateBoardGate(calRows(400, "nfl|MONEYLINE"), candidates(60, "nfl|MONEYLINE"), 0);
 
     expect(evaluation.report.widthNoBets).toBe(0);
     expect(codes(evaluation)).not.toContain("NO_BET_WIDTH");
+  });
+});
+
+describe("board gate consumer — never reports an outcome that has not happened", () => {
+  it("blinds realized statistics, because a live candidate's y is a placeholder", () => {
+    // `buildCandidateRows` sets y=0 inertly for pending picks. The gate cannot
+    // know that and computes realizedRate/wilsonLcb from y over fired rows, so
+    // a board with fired candidates would otherwise report a 0% realized rate:
+    // a measured-looking loss record for games that have not been played. On
+    // this product that is the single most dangerous number we could emit.
+    const evaluation = evaluateBoardGate(
+      calRows(400, "nfl|MONEYLINE"),
+      candidates(40, "nfl|MONEYLINE"),
+      0,
+    );
+
+    expect(evaluation.report.fired).toBeGreaterThan(0);
+    expect(evaluation.report.realizedRate).toBeNull();
+    expect(evaluation.report.wilsonLcb).toBeNull();
+    for (const s of evaluation.report.perStratum) {
+      expect(s.realizedRate).toBeNull();
+      expect(s.wilsonLcb).toBeNull();
+    }
+  });
+
+  it("still reports the counts, which ARE known", () => {
+    // Blinding is about unknown outcomes, not about withholding everything —
+    // how many fired is a fact.
+    const evaluation = evaluateBoardGate(
+      calRows(400, "nfl|MONEYLINE"),
+      candidates(40, "nfl|MONEYLINE"),
+      0,
+    );
+    expect(evaluation.report.eligible).toBe(40);
+    expect(evaluation.report.decisions.length).toBe(evaluation.report.fired);
   });
 });
 

@@ -52,6 +52,15 @@ export interface RawPickRow {
   /** Two-sided prices for this game's market, when captured. */
   readonly homePrice: number | null;
   readonly awayPrice: number | null;
+  /**
+   * Draw price, for three-way markets (soccer and similar).
+   *
+   * Present means the market is NOT two-way, and `removeVig(home, away)` would
+   * normalize over a pair that does not sum to the book's full probability
+   * mass — inflating `q` for both sides. Such rows are excluded rather than
+   * devigged against the wrong denominator.
+   */
+  readonly drawPrice?: number | null;
 }
 
 export interface BuiltRows {
@@ -116,6 +125,14 @@ function toGateRow(
 
   if (p.homePrice === null || p.awayPrice === null) {
     missing.push("q (no two-sided odds captured for this market)");
+  }
+
+  // A captured draw price means a three-way market. Normalizing home/away
+  // alone would divide by less than the book's full probability mass and
+  // overstate q on both sides, which shifts the edge in the direction that
+  // makes the gate fire. Excluded, not approximated.
+  if (p.drawPrice !== null && p.drawPrice !== undefined) {
+    missing.push("q (three-way market; home/away devig omits the draw)");
   }
 
   const side = resolvePickSide(p.selection, p.homeTeamName, p.awayTeamName);

@@ -240,6 +240,18 @@ export interface SelectiveGateReport {
    * only `coverage` would not otherwise see why.
    */
   readonly widthNoBets: number;
+  /**
+   * WHICH rows the width cap vetoed, not merely how many.
+   *
+   * The count alone cannot be attributed to a row. A consumer holding only
+   * `widthNoBets > 0` and wanting to explain a specific refusal has no honest
+   * choice but to guess, and the plausible guess — "the cap is active, so this
+   * row must be a width veto" — mislabels every lower-bound failure in every
+   * stratum as a width veto. That is a confident, wrong, public reason.
+   *
+   * Ordered as encountered, and always a subset of the candidate rows.
+   */
+  readonly widthVetoedRowIds: readonly string[];
 }
 
 /**
@@ -281,6 +293,7 @@ export function applySelectiveGate(
     ? assignMondrianCategory(options.taxonomyCtx)
     : undefined;
   let widthNoBets = 0;
+  const widthVetoedRowIds: string[] = [];
 
   const decisions: FiredDecision[] = [];
   const perStratumAgg = new Map<string, { eligible: number; wins: number; fired: number }>();
@@ -310,6 +323,7 @@ export function applySelectiveGate(
       // count and making the width cap look far more active than it is.
       if (widthCap !== undefined && width > widthCap) {
         widthNoBets += 1;
+        widthVetoedRowIds.push(row.rowId);
         continue;
       }
       decisions.push({
@@ -349,6 +363,7 @@ export function applySelectiveGate(
     decisions,
     multiprobSource: source,
     widthNoBets,
+    widthVetoedRowIds,
   };
 }
 

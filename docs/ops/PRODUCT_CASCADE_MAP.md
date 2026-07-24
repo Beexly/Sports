@@ -134,6 +134,25 @@ What keeps a subscriber:
    illustrative and labelled as such on the page itself — real gate, labelled
    inputs, never the reverse.
 
+   **Two preconditions before the live slate may be wired in.** Both were
+   raised in review of the consumer and are real; neither is fixable inside
+   the mapper today, because `RawPickRow` does not carry the fields that
+   would decide them, and inventing plausible values is the failure this
+   whole module refuses.
+
+   - **Learning-eligibility.** The canonical calibration paths admit a
+     settled pick only when it is not a bootstrap pick and its signal
+     snapshot is marked eligible for learning. `buildCalibrationRows` admits
+     every WIN/LOSS row, so history explicitly marked ineligible could count
+     toward the 100-row floor and let the gate fire on it. The live query
+     must carry those flags and filter on them before this is wired.
+   - **Model-version strata.** `${sport}|${pickType}` pools settled history
+     across major engine versions, whose score semantics differ by policy.
+     Once history spans a major upgrade, the stratum key must include the
+     model version or calibration will compare incomparable scores.
+
+   Neither affects the illustrative page, which supplies its own rows.
+
    Still open: **the live slate is not wired in.** `/board`'s passes continue
    to come from the `gate_decisions` table — a different, also-real set of
    refusals. Closing the gap needs a Pick × Odds join whose behaviour cannot

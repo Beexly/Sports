@@ -122,6 +122,7 @@ function OutcomeRow({ o }: { o: GateOutcome }): JSX.Element {
         <p className="mt-2 font-mono text-[11px] text-ion-3">
           lower-bound edge {o.lcbEdge.toFixed(4)}
           {o.width !== undefined ? ` · interval width ${o.width.toFixed(4)}` : ""}
+          {" · on illustrative inputs"}
         </p>
       )}
     </div>
@@ -167,9 +168,11 @@ export default function GatePage(): JSX.Element {
             Most of the time, the honest answer is no.
           </h1>
           <p className="mt-4 text-base leading-7 text-ion-1">
-            Everything below was decided by the same code that governs the
-            product&apos;s betting decisions, run when you loaded this page. The
-            reasons are the gate&apos;s own — not copy written to sound careful.
+            Everything below was decided by the product&apos;s real selective-gate
+            code, run when you loaded this page. The reasons are the gate&apos;s
+            own — not copy written to sound careful. It does not yet decide the
+            published board; those refusals still come from a separate stored
+            path, and saying otherwise would overstate where this is wired.
           </p>
         </header>
 
@@ -247,7 +250,8 @@ export default function GatePage(): JSX.Element {
           </h2>
           <ul className="flex flex-col gap-2 text-sm leading-6 text-ion-1">
             {[
-              "No win rate, ROI, or edge is asserted anywhere on this page.",
+              "No win rate, ROI, or performance result is asserted anywhere on this page.",
+              "The lower-bound edge printed on a fired row is computed from the illustrative rows above. It is arithmetic on made-up inputs, not a measured edge in any real market.",
               "The rows are illustrative inputs, not today's published picks.",
               "A fired decision here is a demonstration of the rule, not a recommendation.",
               "Nothing here is persisted to the ledger — no receipt is created by loading this page.",
