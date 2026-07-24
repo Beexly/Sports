@@ -3,8 +3,9 @@
 This document is the one place that says, plainly, what has actually been
 proved, what has actually been built, and what is still open, for the
 Self-Refining Quotient Certificate (SRQC) effort in the AI/agent control
-plane. It is written against `main` as of commit `1c3308b1` (merge of #194,
-which also folds in #186, #187, #188, #191, #192, #193 — see §5 and §9).
+plane. It is written against `main` as of commit `15594ad7`, which folds in
+everything through #200 — see §5 and §9 for the full receipts chain
+(#186, #187, #188, #191–#195, and the Wave 1 Foundation stack #196–#200).
 Every SHA, receipt number, and grep result below was re-checked against the
 files in this tree while writing this document, not copied from an earlier
 handoff. Where something could not be verified, that is stated instead of
@@ -234,12 +235,25 @@ tested.
 | SOC 2 CCM + ISO 27001 alignment kit, `@sports/compliance` (#192, squash) | `1596bb82` |
 | R3 + R5 — moat/gravity-packet scoring, platform usage meter (#193, squash) | `0285338e` |
 | EU AI Act evidence pack + ENFORCE ramp safety rails (#194, squash) | `1c3308b1` |
+| Wave 0 — wire real receipts into CCM, refresh this document + DEMO_SCRIPT (#195, squash) | `766ed74b` |
+| Wave 1 Foundation — extract `classifyPendingCount` into `quotient-map.ts` (#196, squash) | `3c277f5f` |
+| Wave 1 Foundation — W1 shadow metrics, continuous operating evidence (#197, squash) | `b71a19cf` |
+| Wave 1 Foundation — W5 `budget_alpha_witness`, second alpha consumer (#198, squash) | `31ee99ae` |
+| Wave 1 Foundation — W6 ablation counters (TP/FP over `FormalIncident`) (#199, squash) | `bf992779` |
+| Wave 1 Foundation — F6 cross-reference (doc-only, no code gap) (#200, squash) | `d624920a` |
 
-Note: #191–#194 are commercial/compliance/governance-evidence work, not
+Note: #191–#195 are commercial/compliance/governance-evidence work, not
 formal-methods artifacts — they land in this table for SHA traceability
 only; none of them touch `formal/`, `srqc-projection.ts`, or
 `admitUnderSRQC`. `@sports/compliance` (#192) monitors receipts, it does
 not gate them (see its own NON-CLAIMS in `docs/compliance/README.md`).
+#196–#200 (Wave 1 Foundation) do touch `srqc-projection.ts` (exporting
+`isViolation` and extracting `classifyPendingCount`) and add two new
+read-only consumers of the same projection (shadow metrics, the ablation
+counters CLI) plus a second independent `processed_event` sink
+(`budget_alpha_witness`) — none of them change `admitUnderSRQC`'s
+SHADOW-default behavior or touch ENFORCE; see each PR's own NON-CLAIMS and
+the static import-graph test in `ai-control-plane-ablation-counters-import-graph.test.ts`.
 
 Formal receipt files (all under `formal/`):
 - `formal/abstract/AbstractClaimExposure.tlc-receipt.txt`
@@ -442,6 +456,27 @@ pass (file existence, a real TLC re-run, a real replay-script run — see
   is a pure predicate — confirmed still unconsumed by any production
   route/worker/cron as of #194's own PR description). None of the four
   touch `formal/`, `srqc-projection.ts`, or `admitUnderSRQC`.
+- **#196–#200 — Wave 1 Foundation, five small PRs, each independently
+  green and merged in order.** `quotient-map.ts` extracts
+  `classifyPendingCount` out of `projectWindow` with its own unit tests
+  (#196); W1 adds `SrqcShadowMetric` + `recordShadowWindow`, writing one
+  row every `runFormalReceiptPass` call (violation or not) so the
+  projection's operating behavior is visible even when nothing trips
+  (#197); W5 adds `budget_alpha_witness`, a second independent
+  `processed_event` sink over the same `isViolation` predicate, proving
+  the projection generalizes to more than one consumer (#198); W6 adds
+  `reviewOutcome`/`reviewedAt`/`reviewedBy` to `FormalIncident` plus
+  `computeAblationCounters` and `scripts/srqc-ablation-report.ts` for a
+  read-only TP/FP precision readout (#199); F6 closes by documentation —
+  `runFormalReceiptPass` already was the "check a projected window against
+  the invariants, write an incident on violation" function the board item
+  asked for, so no `checkTraceConformance` extraction was made (#200, see
+  §4). None of the five touch `admitUnderSRQC`'s mode handling or move
+  ENFORCE reachability; confirmed by the static import-graph test added in
+  #199 (`ai-control-plane-ablation-counters-import-graph.test.ts`), which
+  fails CI if any control-plane consumer's import lines ever name
+  `admitUnderSRQC`, `resolveSrqcModeFromEnv`, `enforce-gate`,
+  `invocation-pipeline`, `./dispatch`, or `./executor`.
 
 **Nothing else is currently open against the SRQC pipeline.** Checked
 `gh`-equivalent open-PR listing for this repo in this pass: the only open
@@ -449,3 +484,87 @@ PR with a formal-adjacent title is #180 (`feat(formal-foundry): ...
 IC3/Apalache package`), which is a separate `formal-foundry` package, not
 this document's SRQC pipeline — not further investigated here since it is
 out of this document's scope.
+
+---
+
+## 10. Active certificate
+
+There is currently **no active `SrqcVersion`** on `main`. Checked directly,
+not assumed:
+
+- `packages/db/prisma/seed.ts` contains no `srqc_version` insert.
+- No migration under `packages/db/prisma/migrations/` inserts a row into
+  `srqc_version` — the table is created empty and stays that way until a
+  human runs the activation script.
+- `scripts/activate-srqc-version.mjs` is the **only** path that can ever
+  set a version's `status` to `"active"`. Its own header states, in caps,
+  that activation "IS A HUMAN DECISION" and that "there is intentionally
+  NO CI job, cron route, or automated caller wired to this script anywhere
+  in the repo, and none should be added." No such caller was found.
+
+Practically: every `FormalIncident` row written so far has `srqcVersion:
+null`, because `recordSrqcVersionCandidate`/`activateSrqcVersion` have
+never been invoked against any real database backing `main`. If and when
+an operator does run the activation script, this section is the place
+that fact gets recorded — with the real version number, `indInvHash`, and
+`activatedAt`, not a placeholder. Until then, "no active certificate" is
+the honest, checked answer, not an omission.
+
+---
+
+## 11. Attack checklist for outsiders
+
+A skeptical reader does not have to take any of the above on faith. Every
+step below is runnable by anyone with this repo checked out and (for the
+DB-backed ones) a disposable Postgres instance — none require write access
+to the real deployment, a shared secret, or trusting this document.
+
+1. **Try to force a real GE2 and watch it get caught, not hidden.**
+   `scripts/srqc-replay.ts` is a pure, offline, no-database projection
+   replay. Write a JSON events file with two `ATTEMPT_STARTED` events on
+   the same invocation and no resolving event (§8 describes the exact
+   synthetic window used to produce its documented run) and pipe it in:
+   `npx tsx scripts/srqc-replay.ts your-window.json`. It must report
+   `pendingCountClass: "GE2"`, `violationCount: 1`, and exit code `1`. If
+   it ever reports `violationCount: 0` for a genuine double-pending
+   window, the projection is broken — file it as a real bug, not a
+   documentation issue.
+2. **Confirm SHADOW still ADMITs through a real violation.** Run
+   `ai-control-plane-shadow-metrics-pg.test.ts` (real Postgres, §8) — it
+   asserts a GE2 window both records the correct `ge2Count` **and** that
+   `admitUnderSRQC` called against the same window with no explicit `mode`
+   still returns `ADMIT`. A skeptic doesn't have to trust the SHADOW claim
+   in §4 — this test fails loudly if it's ever false.
+3. **Confirm ENFORCE is unreachable from production, don't take §4's word
+   for it.** Re-run the grep yourself:
+   `grep -rn "evaluateSrqcAdmissionForLab" apps/web --include="*.ts" | grep -v __tests__`
+   — the only hits should be the function's own declaration and doc
+   comments inside `srqc-projection.ts`. Any route/cron/worker match would
+   mean §4 is wrong.
+4. **Force a real REFUSE and verify the signature independently.**
+   `docs/devrel/DEMO_SCRIPT.md` walks this end to end: run
+   `scripts/demo/force-governed-refuse.mjs`, open the resulting receipt at
+   `GET /api/receipts/[id]`, fetch the public keyring at
+   `GET /.well-known/receipt-keys.json`, and verify the signature yourself
+   — either via `POST /api/receipts/verify` or by re-deriving the
+   canonical payload with `packages/governed`'s own
+   `verifyReceiptEd25519` and checking it against the published
+   `publicKeyPem`. No shared secret is required for this step; that is
+   the point of publishing the keyring.
+5. **Tamper with a receipt and confirm verification actually fails.**
+   Take any receipt payload from step 4, flip one character in `reasons`
+   or `argsDigest`, and re-verify. It must fail. If it doesn't, the
+   signature scheme is not doing what §5/§9's #188 entry claims.
+6. **Check the TLC receipts are real, not asserted.** Re-run any one line
+   from §8's TLC block yourself against `formal/README.md`'s pinned
+   toolchain version and diff the state/depth counts against the table in
+   §3. A mismatch means the receipt file is stale or fabricated — an
+   outsider does not need this document's word that TLC actually ran.
+7. **Ask whether anything here is quietly claiming more than it proved.**
+   Cross-check every bullet in §6 against the code paths it names. In
+   particular: search for any caller of `evaluateSrqcAdmissionForLab`
+   outside a `mode: "ENFORCE"`-gated lab context (step 3 above), and
+   search `packages/compliance` / `docs/compliance/` for language that
+   claims certification rather than internal alignment mapping — the
+   NON-CLAIMS in `docs/compliance/README.md` should already rule this out,
+   but check it directly rather than trusting the summary.
