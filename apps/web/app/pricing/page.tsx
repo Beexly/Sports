@@ -59,6 +59,15 @@ const FREE_FEATURES = [
 ] as const;
 
 const PRO_FEATURES = [
+  // Honesty leads, deliberately. The product's claim is that it refuses to
+  // guess; what a subscription unlocks is the REASONING behind each refusal,
+  // not a larger pile of picks. Seeing THAT we passed on a game stays free for
+  // everyone (see the honesty-surface block in Entitlements) — paying is how
+  // you see why, and check it yourself.
+  { label: "No-Bet reasoning: the code, model version, and evidence behind every pass we make", included: true },
+  { label: "Multiprobability intervals: the honest range, not a confident-sounding single number", included: true },
+  { label: "Glass Ledger access: every published number with its coverage, bound, and provenance", included: true },
+  { label: "Recompute any claim yourself — the verifier is named, not hand-waved", included: true },
   { label: "The Academy + public record", included: true },
   { label: "The full board unlocked: every signal, every day, all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
@@ -130,7 +139,7 @@ const PLANS: PlanView[] = [
     annual: phase.pro.annual,
     annualSavingsPct: annualSavingsPct(phase.pro),
     annualMonthly: annualMonthlyEquivalent(phase.pro),
-    description: "The full intelligence layer: every signal, the confidence rating, the factor trail, the Trend Lab, the Parlay MRI.",
+    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself — plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
     badge: "Recommended",
     cta: "Subscribe to Pro",
     features: [...PRO_FEATURES],
