@@ -220,6 +220,34 @@ describe("the production join — five defects review found, pinned", () => {
     expect(row.inputProblems!.join(" ")).toContain("matching handicap");
   });
 
+  it("refuses a candidate whose game has already started", () => {
+    // Settlement lags, so PENDING outlives kickoff. Enforced in the normalizer
+    // as well as the SQL where-clause: the query filter is an optimization, this
+    // is the guarantee, because a caller using partitionGateSlate directly would
+    // otherwise get no protection — and it makes the drop measurable.
+    const row = normalizeGateSlatePick(
+      pick({
+        result: "PENDING",
+        game: { ...pick().game!, commenceTime: new Date("2026-07-24T00:00:00Z") },
+      }),
+      { liveCandidate: true, now: NOW },
+    )!;
+    expect(row.inputProblems!.join(" ")).toContain("placeable window");
+  });
+
+  it("does not apply the kickoff rule to settled history", () => {
+    // Every settled pick's game has started. Applying it there would exclude
+    // all of calibration.
+    const row = normalizeGateSlatePick(
+      pick({
+        result: "WIN",
+        game: { ...pick().game!, commenceTime: new Date("2026-07-24T00:00:00Z") },
+      }),
+      { now: NOW },
+    )!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
   it("accepts a fresh candidate whose handicap still matches", () => {
     const row = normalizeGateSlatePick(pick({ result: "PENDING" }), {
       liveCandidate: true,

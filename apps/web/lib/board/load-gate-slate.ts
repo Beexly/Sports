@@ -252,6 +252,22 @@ export function normalizeGateSlatePick(
   const prices = pricesForPickType(pick.pickType, odds);
   const inputProblems: string[] = [];
 
+  if (options.liveCandidate) {
+    // Post-kickoff. Settlement lags, so PENDING outlives the game; a candidate
+    // whose game has started is not a placeable wager, and FIRE on it would be
+    // a recommendation nobody could act on presented as a live one.
+    //
+    // Enforced HERE as well as in the candidate query's where-clause. The SQL
+    // filter is an optimization; this is the guarantee, because a caller using
+    // `partitionGateSlate` directly would otherwise get no protection at all —
+    // and it makes the exclusion measurable rather than invisible.
+    const commenceTime = pick.game?.commenceTime;
+    const now = options.now ?? new Date();
+    if (commenceTime && commenceTime.getTime() <= now.getTime()) {
+      inputProblems.push("placeable window (this game has already started)");
+    }
+  }
+
   if (options.liveCandidate && odds) {
     // Stale odds. Retained rows do not expire on their own, so without this a
     // pick could fire against a line from hours or days ago — contradicting the

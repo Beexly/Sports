@@ -39,6 +39,7 @@
     "nova:cycle:dry": "node scripts/nova/run-cycle.mjs --dry-run",
     "nova:cycle": "node scripts/nova/run-cycle.mjs",
     "guard:trust": "node scripts/guardrails/trust-gate.mjs",
+    "gate:phase-c": "tsx scripts/edge-lab/gate-slate-phase-c-counts.ts",
     "guard:model-freeze": "node scripts/guardrails/model-freeze.mjs",
     "guard:draft-only": "node scripts/guardrails/draft-only.mjs",
     "guard:claude-api": "node scripts/guardrails/claude-api-usage.mjs",
