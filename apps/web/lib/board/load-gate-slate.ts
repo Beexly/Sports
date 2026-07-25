@@ -53,21 +53,41 @@ export function isLiveGateSlateEnabled(
  * schema, so it may come back null — which the admissibility rule treats as
  * "unproven", never as "eligible".
  */
+/**
+ * How many recent odds rows to pull per game.
+ *
+ * `Odds` is append-only, with one row per (game, bookmaker, market) per
+ * ingestion cycle — so a single game accumulates books × 3 markets × cycles.
+ * Taking one row would return an arbitrary market (rows from the same cycle
+ * even share `fetchedAt`), so we pull a window and pick the market we need.
+ */
+const ODDS_WINDOW = 120;
+
 export const GATE_SLATE_INCLUDE = {
   game: {
     select: {
       sport: { select: { name: true } },
-      homeTeam: { select: { name: true } },
-      awayTeam: { select: { name: true } },
+      // The DENORMALIZED name columns, not the `homeTeam`/`awayTeam` relations.
+      // `Game.homeTeamId`/`awayTeamId` are optional and the production ingestion
+      // path (process-sport.ts) never assigns them — it writes only
+      // homeTeamName/awayTeamName, which the schema marks "denormalized for
+      // speed". Selecting the relations would return null for every ingested
+      // game and classify the entire live slate as undescribable.
+      homeTeamName: true,
+      awayTeamName: true,
+      commenceTime: true,
+      status: true,
       odds: {
         orderBy: { fetchedAt: "desc" },
-        take: 1,
+        take: ODDS_WINDOW,
         select: {
           market: true,
           // Selected, not merely ordered on: which snapshot a `q` came from is
           // part of whether the number can be trusted, and a staleness question
           // that cannot be asked later is a claim nobody can check.
           fetchedAt: true,
+          // The quoted handicap, so it can be checked against the pick's line.
+          spread: true,
           homePrice: true,
           awayPrice: true,
           drawPrice: true,
@@ -80,15 +100,53 @@ export const GATE_SLATE_INCLUDE = {
   signalSnapshot: { select: { eligibleForLearning: true } },
 } as const;
 
+/** Which `OddsMarket` prices a pick type. */
+const MARKET_FOR_PICK_TYPE: Record<string, string> = {
+  SPREAD: "SPREADS",
+  MONEYLINE: "H2H",
+  TOTAL: "TOTALS",
+};
+
+/**
+ * How old a candidate's odds may be before it is refused as stale.
+ *
+ * `STALE_DATA` is already a first-class No-Bet factor in the engine, so firing
+ * against a line from yesterday would contradict a rule the product already
+ * enforces elsewhere. Six hours is deliberately generous — the point is to
+ * refuse the pathological case (ingestion stopped, rows retained forever),
+ * not to second-guess a normal refresh cadence.
+ */
+export const MAX_CANDIDATE_ODDS_AGE_MS = 6 * 60 * 60 * 1000;
+
 /** The subset of an odds row the normalizer reads. */
 export interface GateSlateOdds {
   readonly market: string;
   readonly fetchedAt?: Date;
+  /** Home-perspective handicap (negative = home favored), per clv-capture. */
+  readonly spread?: number | null;
   readonly homePrice: number | null;
   readonly awayPrice: number | null;
   readonly drawPrice: number | null;
   readonly homeSpreadPrice: number | null;
   readonly awaySpreadPrice: number | null;
+}
+
+/**
+ * The latest odds row for the market this pick actually trades in.
+ *
+ * Rows arrive newest-first, so the first market match is the freshest. Choosing
+ * by `fetchedAt` alone would hand a SPREAD pick an H2H row whose spread prices
+ * are null — silently excluding a perfectly good pick for want of a field that
+ * was never on that row. `clv-capture.ts` filters odds by market for the same
+ * reason.
+ */
+export function selectOddsForPick(
+  pickType: string,
+  rows: readonly GateSlateOdds[],
+): GateSlateOdds | undefined {
+  const market = MARKET_FOR_PICK_TYPE[pickType];
+  if (!market) return undefined;
+  return rows.find((r) => r.market === market);
 }
 
 /** The shape `fetchGateSlate` returns, per pick — structural, not Prisma-typed. */
@@ -98,15 +156,31 @@ export interface GateSlatePick {
   readonly confidence: number;
   readonly pickType: string;
   readonly result: string;
+  /** Home-perspective handicap the pick was published at. */
+  readonly line: number;
   readonly isBootstrap: boolean;
   readonly modelVersion: string | null;
   readonly signalSnapshot: { readonly eligibleForLearning: boolean } | null;
   readonly game: {
     readonly sport: { readonly name: string } | null;
-    readonly homeTeam: { readonly name: string } | null;
-    readonly awayTeam: { readonly name: string } | null;
+    readonly homeTeamName: string | null;
+    readonly awayTeamName: string | null;
+    readonly commenceTime?: Date | null;
+    readonly status?: string | null;
     readonly odds: readonly GateSlateOdds[];
   } | null;
+}
+
+export interface NormalizeOptions {
+  /**
+   * Enforce the freshness budget and the handicap match. Applied to CANDIDATES
+   * only: for settled calibration rows the game is over, so "stale" is
+   * meaningless and the historical price is exactly what we want.
+   */
+  readonly liveCandidate?: boolean;
+  /** Injected so tests are deterministic and never depend on wall-clock. */
+  readonly now?: Date;
+  readonly maxOddsAgeMs?: number;
 }
 
 const PICK_TYPES = new Set(["SPREAD", "MONEYLINE", "TOTAL"]);
@@ -164,16 +238,50 @@ export function pricesForPickType(
  * so counting them as refusals would invent judgements. The count of dropped
  * rows is returned by `partitionGateSlate` so the omission stays visible.
  */
-export function normalizeGateSlatePick(pick: GateSlatePick): RawPickRow | null {
+export function normalizeGateSlatePick(
+  pick: GateSlatePick,
+  options: NormalizeOptions = {},
+): RawPickRow | null {
   const sportName = pick.game?.sport?.name;
-  const homeTeamName = pick.game?.homeTeam?.name;
-  const awayTeamName = pick.game?.awayTeam?.name;
+  const homeTeamName = pick.game?.homeTeamName;
+  const awayTeamName = pick.game?.awayTeamName;
   if (!sportName || !homeTeamName || !awayTeamName) return null;
   if (!PICK_TYPES.has(pick.pickType) || !RESULTS.has(pick.result)) return null;
 
-  const prices = pricesForPickType(pick.pickType, pick.game?.odds[0]);
+  const odds = selectOddsForPick(pick.pickType, pick.game?.odds ?? []);
+  const prices = pricesForPickType(pick.pickType, odds);
+  const inputProblems: string[] = [];
+
+  if (options.liveCandidate && odds) {
+    // Stale odds. Retained rows do not expire on their own, so without this a
+    // pick could fire against a line from hours or days ago — contradicting the
+    // STALE_DATA refusal the engine already applies elsewhere.
+    const fetchedAt = odds.fetchedAt;
+    const maxAge = options.maxOddsAgeMs ?? MAX_CANDIDATE_ODDS_AGE_MS;
+    const now = options.now ?? new Date();
+    if (!fetchedAt) {
+      inputProblems.push("odds freshness (no fetch timestamp on the quote)");
+    } else if (now.getTime() - fetchedAt.getTime() > maxAge) {
+      inputProblems.push("fresh odds (the latest quote for this market is stale)");
+    }
+
+    // The handicap must be the one the pick was taken at. Both `Pick.line` and
+    // `Odds.spread` are home-perspective, so this compares like with like.
+    // Without it, a home -3.5 pick can be priced off a -6.5 quote after line
+    // movement and receive a materially wrong edge.
+    if (pick.pickType === "SPREAD") {
+      if (odds.spread === null || odds.spread === undefined) {
+        inputProblems.push("quoted handicap (spread absent from the quote)");
+      } else if (odds.spread !== pick.line) {
+        inputProblems.push(
+          `matching handicap (pick taken at ${pick.line}, market now quotes ${odds.spread})`,
+        );
+      }
+    }
+  }
 
   return {
+    ...(inputProblems.length > 0 ? { inputProblems } : {}),
     id: pick.id,
     selection: pick.selection,
     confidence: pick.confidence,
@@ -210,12 +318,18 @@ export interface GateSlatePartition {
  */
 export function partitionGateSlate(
   picks: readonly GateSlatePick[],
+  options: NormalizeOptions = {},
 ): GateSlatePartition {
   const rows: RawPickRow[] = [];
   let undescribable = 0;
 
   for (const p of picks) {
-    const row = normalizeGateSlatePick(p);
+    // Freshness and handicap-match apply to live candidates only. A settled
+    // pick's game is over, so its historical quote is exactly the right one.
+    const row = normalizeGateSlatePick(p, {
+      ...options,
+      liveCandidate: p.result === "PENDING",
+    });
     if (row === null) undescribable += 1;
     else rows.push(row);
   }
@@ -255,9 +369,10 @@ export async function fetchGateSlate(
 ): Promise<GateSlatePartition | null> {
   if (!isLiveGateSlateEnabled() || isStubMode()) return null;
 
+  const now = new Date();
   const settledLimit = options.settledLimit ?? 5000;
   const candidateLimit = options.candidateLimit ?? 200;
-  const sportFilter =
+  const sportFilter: { game?: { sport: { name: { in: string[] } } } } =
     options.sportKeys && options.sportKeys.length > 0
       ? { game: { sport: { name: { in: [...options.sportKeys] } } } }
       : {};
@@ -283,15 +398,31 @@ export async function fetchGateSlate(
       include: GATE_SLATE_INCLUDE,
     }),
     db.pick.findMany({
-      where: { ...sportFilter, isPublished: true, result: "PENDING" },
+      where: {
+        ...sportFilter,
+        isPublished: true,
+        result: "PENDING",
+        // Only games that have not started. Settlement can lag, so PENDING
+        // outlives kickoff; without this the gate could return FIRE for a wager
+        // that is no longer obtainable — a recommendation nobody could act on,
+        // presented as a live one.
+        game: {
+          ...(sportFilter.game ?? {}),
+          status: "SCHEDULED",
+          commenceTime: { gt: now },
+        },
+      },
       orderBy: { generatedAt: "desc" },
       take: candidateLimit,
       include: GATE_SLATE_INCLUDE,
     }),
   ]);
 
-  return partitionGateSlate([
-    ...(settled as unknown as GateSlatePick[]),
-    ...(pending as unknown as GateSlatePick[]),
-  ]);
+  return partitionGateSlate(
+    [
+      ...(settled as unknown as GateSlatePick[]),
+      ...(pending as unknown as GateSlatePick[]),
+    ],
+    { now },
+  );
 }

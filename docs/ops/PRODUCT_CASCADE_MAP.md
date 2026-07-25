@@ -170,6 +170,45 @@ What keeps a subscriber:
    Strictness is opt-in, so the illustrative page — which supplies rows with no
    provenance to read — is unaffected.
 
+   **Five further join defects, found in review and fixed.** Worth recording
+   in full, because every one of them would have produced a confident wrong
+   answer rather than an error, and none was reachable by unit-testing the
+   mapper in isolation — they are all facts about how production actually
+   stores its rows.
+
+   - **Team names are denormalized.** `Game.homeTeamId`/`awayTeamId` are
+     optional and `process-sport.ts` never assigns them; ingestion writes only
+     `homeTeamName`/`awayTeamName`. Selecting the `homeTeam`/`awayTeam`
+     relations returned null for every ingested game, which classified the
+     entire live slate as undescribable. Flipping the flag would have rendered
+     an empty board.
+   - **Odds rows are per market.** `Odds` is append-only with one row per
+     (game, bookmaker, market); only `H2H` rows carry `homePrice`/`awayPrice`
+     and only `SPREADS` rows carry the spread pair. Taking one row by
+     `fetchedAt` returned an arbitrary market — same-cycle rows even share the
+     timestamp — so most picks were excluded for want of a field that was
+     never on the row they got. `selectOddsForPick` filters by the pick's own
+     market first, matching what `clv-capture.ts` already does.
+   - **Stale quotes.** Retained rows never expire, so a candidate could have
+     fired against a line hours or days old. `STALE_DATA` is already a
+     first-class No-Bet factor in the engine, so ignoring it here would have
+     contradicted a rule the product enforces elsewhere. Candidates now carry
+     a freshness budget.
+   - **Line movement.** `Odds.spread` and `Pick.line` are both
+     home-perspective, and they diverge after the line moves. A home -3.5 pick
+     priced off a -6.5 quote receives a materially wrong edge. The handicap
+     must match or the row is refused.
+   - **Started games.** Settlement lags, so `PENDING` outlives kickoff. The
+     candidate query now requires `status: SCHEDULED` and a future
+     `commenceTime`, or the gate could have returned FIRE for a wager nobody
+     could still place.
+
+   Freshness and handicap checks apply to CANDIDATES only: a settled pick's
+   game is over, so its historical quote is exactly the one calibration wants.
+   All five surface as **named** exclusions via `RawPickRow.inputProblems`
+   rather than as a fabricated missing price, because "stale quote" and "no
+   odds captured" are different facts.
+
    **A third defect the join itself would have introduced.** `Odds` stores
    moneyline prices in `homePrice`/`awayPrice` but spread prices in
    `homeSpreadPrice`/`awaySpreadPrice`. De-vigging a SPREAD pick against the

@@ -80,6 +80,17 @@ export interface RawPickRow {
   readonly eligibleForLearning?: boolean;
   /** `Pick.modelVersion` — the engine version that produced `confidence`. */
   readonly modelVersion?: string | null;
+
+  /**
+   * Named input problems the CALLER detected, merged into this row's `missing`.
+   *
+   * Some disqualifications can only be judged where the data was loaded — stale
+   * odds, a quoted handicap that no longer matches the pick's line. Forcing
+   * those to arrive as a null price would report them as "no odds captured",
+   * which is a different and less honest reason than the truth. The caller names
+   * the real problem; the mapper reports it verbatim.
+   */
+  readonly inputProblems?: readonly string[];
 }
 
 export interface BuiltRows {
@@ -238,6 +249,10 @@ function toGateRow(
 ): { row: GateDecisionRow } | { excluded: ExcludedCandidate } {
   const stratum = stratumOf(p);
   const missing: string[] = [];
+
+  if (p.inputProblems && p.inputProblems.length > 0) {
+    missing.push(...p.inputProblems);
+  }
 
   if (p.homePrice === null || p.awayPrice === null) {
     missing.push("q (no two-sided odds captured for this market)");

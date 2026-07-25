@@ -5,6 +5,7 @@ import {
   normalizeGateSlatePick,
   partitionGateSlate,
   pricesForPickType,
+  selectOddsForPick,
   type GateSlateOdds,
   type GateSlatePick,
 } from "@/lib/board/load-gate-slate";
@@ -28,10 +29,26 @@ import {
  *     declared untrustworthy into the bar it claims to have cleared.
  */
 
-const ODDS: GateSlateOdds = {
+const NOW = new Date("2026-07-25T00:00:00Z");
+const FRESH = new Date("2026-07-24T23:00:00Z");
+
+const H2H: GateSlateOdds = {
   market: "H2H",
+  fetchedAt: FRESH,
+  spread: null,
   homePrice: -400,
   awayPrice: 320,
+  drawPrice: null,
+  homeSpreadPrice: null,
+  awaySpreadPrice: null,
+};
+
+const SPREADS: GateSlateOdds = {
+  market: "SPREADS",
+  fetchedAt: FRESH,
+  spread: -3.5,
+  homePrice: null,
+  awayPrice: null,
   drawPrice: null,
   homeSpreadPrice: -110,
   awaySpreadPrice: -108,
@@ -44,14 +61,17 @@ function pick(over: Partial<GateSlatePick> = {}): GateSlatePick {
     confidence: 72,
     pickType: "SPREAD",
     result: "WIN",
+    line: -3.5,
     isBootstrap: false,
     modelVersion: "v5.1.0",
     signalSnapshot: { eligibleForLearning: true },
     game: {
       sport: { name: "nfl" },
-      homeTeam: { name: "Chiefs" },
-      awayTeam: { name: "Raiders" },
-      odds: [ODDS],
+      homeTeamName: "Chiefs",
+      awayTeamName: "Raiders",
+      commenceTime: new Date("2026-07-26T00:00:00Z"),
+      status: "SCHEDULED",
+      odds: [H2H, SPREADS],
     },
     ...over,
   };
@@ -76,17 +96,14 @@ describe("isLiveGateSlateEnabled — off unless explicitly on", () => {
 });
 
 describe("pricesForPickType — the right market's prices, or none", () => {
-  it("a SPREAD pick uses the SPREAD prices, not the moneyline pair", () => {
-    const p = pricesForPickType("SPREAD", ODDS);
+  it("a SPREAD pick uses the SPREAD prices", () => {
+    const p = pricesForPickType("SPREAD", SPREADS);
     expect(p.homePrice).toBe(-110);
     expect(p.awayPrice).toBe(-108);
-    // -400 is the outright price. Using it here would claim an ~80% fair
-    // probability for a bet that is close to a coin flip.
-    expect(p.homePrice).not.toBe(ODDS.homePrice);
   });
 
   it("a MONEYLINE pick uses the moneyline pair and carries the draw", () => {
-    const p = pricesForPickType("MONEYLINE", { ...ODDS, drawPrice: 240 });
+    const p = pricesForPickType("MONEYLINE", { ...H2H, drawPrice: 240 });
     expect(p.homePrice).toBe(-400);
     expect(p.awayPrice).toBe(320);
     expect(p.drawPrice).toBe(240);
@@ -94,11 +111,11 @@ describe("pricesForPickType — the right market's prices, or none", () => {
 
   it("never carries a draw price onto a handicap market", () => {
     // A three-way H2H draw price says nothing about a two-way spread.
-    expect(pricesForPickType("SPREAD", { ...ODDS, drawPrice: 240 }).drawPrice).toBeNull();
+    expect(pricesForPickType("SPREAD", { ...SPREADS, drawPrice: 240 }).drawPrice).toBeNull();
   });
 
   it("TOTAL yields no home/away pair at all", () => {
-    const p = pricesForPickType("TOTAL", ODDS);
+    const p = pricesForPickType("TOTAL", H2H);
     expect(p).toEqual({ homePrice: null, awayPrice: null, drawPrice: null });
   });
 
@@ -131,12 +148,12 @@ describe("normalizeGateSlatePick — carries provenance, never invents it", () =
   it("returns null when the sport or a team cannot be named", () => {
     expect(
       normalizeGateSlatePick(
-        pick({ game: { sport: null, homeTeam: { name: "A" }, awayTeam: { name: "B" }, odds: [] } }),
+        pick({ game: { sport: null, homeTeamName: "A", awayTeamName: "B", odds: [] } }),
       ),
     ).toBeNull();
     expect(
       normalizeGateSlatePick(
-        pick({ game: { sport: { name: "nfl" }, homeTeam: null, awayTeam: { name: "B" }, odds: [] } }),
+        pick({ game: { sport: { name: "nfl" }, homeTeamName: null, awayTeamName: "B", odds: [] } }),
       ),
     ).toBeNull();
   });
@@ -144,6 +161,129 @@ describe("normalizeGateSlatePick — carries provenance, never invents it", () =
   it("returns null for an unrecognised pickType or result rather than coercing", () => {
     expect(normalizeGateSlatePick(pick({ pickType: "PLAYER_PROP" }))).toBeNull();
     expect(normalizeGateSlatePick(pick({ result: "CANCELLED" }))).toBeNull();
+  });
+});
+
+describe("the production join — five defects review found, pinned", () => {
+  it("reads the DENORMALIZED team names, not the optional relations", () => {
+    // process-sport.ts writes homeTeamName/awayTeamName and never assigns
+    // homeTeamId/awayTeamId, so the homeTeam/awayTeam relations are null for
+    // every ingested game. Selecting them made the entire live slate
+    // undescribable — an enabled flag would have rendered an empty board.
+    const row = normalizeGateSlatePick(pick())!;
+    expect(row.homeTeamName).toBe("Chiefs");
+    expect(row.awayTeamName).toBe("Raiders");
+  });
+
+  it("picks the odds row for the pick's OWN market, not the newest of any market", () => {
+    // One Odds row per (game, bookmaker, market), and same-cycle rows share
+    // fetchedAt — so take-the-newest returns an arbitrary market. A SPREAD pick
+    // handed an H2H row sees null spread prices and is excluded for want of a
+    // field that was never on that row.
+    expect(selectOddsForPick("SPREAD", [H2H, SPREADS])!.market).toBe("SPREADS");
+    expect(selectOddsForPick("SPREAD", [SPREADS, H2H])!.market).toBe("SPREADS");
+    expect(selectOddsForPick("MONEYLINE", [SPREADS, H2H])!.market).toBe("H2H");
+    expect(selectOddsForPick("SPREAD", [H2H])).toBeUndefined();
+  });
+
+  it("prefers the freshest row WITHIN the matched market", () => {
+    const older: GateSlateOdds = {
+      ...SPREADS,
+      homeSpreadPrice: -200,
+      fetchedAt: new Date("2026-07-20T00:00:00Z"),
+    };
+    // Rows arrive newest-first, so the first market match is the freshest.
+    expect(selectOddsForPick("SPREAD", [SPREADS, older])!.homeSpreadPrice).toBe(-110);
+  });
+
+  it("refuses a candidate whose latest quote is stale", () => {
+    // STALE_DATA is already a first-class No-Bet factor in the engine. Retained
+    // rows never expire on their own, so without this a pick could fire against
+    // a line from days ago.
+    const stale = { ...SPREADS, fetchedAt: new Date("2026-07-01T00:00:00Z") };
+    const row = normalizeGateSlatePick(
+      pick({ result: "PENDING", game: { ...pick().game!, odds: [stale] } }),
+      { liveCandidate: true, now: NOW },
+    )!;
+    expect(row.inputProblems!.join(" ")).toContain("stale");
+  });
+
+  it("refuses a spread candidate whose quoted handicap moved off the pick's line", () => {
+    // Pick.line and Odds.spread are both home-perspective, so this compares
+    // like with like. A -3.5 pick priced off a -6.5 quote gets a materially
+    // wrong edge and nothing downstream could tell.
+    const moved = { ...SPREADS, spread: -6.5 };
+    const row = normalizeGateSlatePick(
+      pick({ result: "PENDING", line: -3.5, game: { ...pick().game!, odds: [moved] } }),
+      { liveCandidate: true, now: NOW },
+    )!;
+    expect(row.inputProblems!.join(" ")).toContain("matching handicap");
+  });
+
+  it("accepts a fresh candidate whose handicap still matches", () => {
+    const row = normalizeGateSlatePick(pick({ result: "PENDING" }), {
+      liveCandidate: true,
+      now: NOW,
+    })!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
+  it("does NOT apply freshness or handicap checks to settled calibration rows", () => {
+    // A settled pick's game is over, so its historical quote is exactly the one
+    // we want; calling it "stale" would discard real history.
+    const ancient = {
+      ...SPREADS,
+      fetchedAt: new Date("2020-01-01T00:00:00Z"),
+      spread: -9.5,
+    };
+    const row = normalizeGateSlatePick(
+      pick({ result: "WIN", game: { ...pick().game!, odds: [ancient] } }),
+      { now: NOW },
+    )!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
+  it("surfaces an input problem as a NAMED exclusion, not a fake missing price", () => {
+    const stale = { ...SPREADS, fetchedAt: new Date("2026-07-01T00:00:00Z") };
+    const part = partitionGateSlate(
+      [pick({ id: "p1", result: "PENDING", game: { ...pick().game!, odds: [stale] } })],
+      { now: NOW },
+    );
+    expect(part.candidates.rows).toHaveLength(0);
+    expect(part.candidates.excluded[0]!.missing.join(" ")).toContain("stale");
+  });
+
+  it("partition applies the live checks only to PENDING rows", () => {
+    const stale = { ...SPREADS, fetchedAt: new Date("2026-07-01T00:00:00Z") };
+    const part = partitionGateSlate(
+      [
+        pick({ id: "settled", result: "WIN", game: { ...pick().game!, odds: [stale] } }),
+        pick({ id: "pending", result: "PENDING", game: { ...pick().game!, odds: [stale] } }),
+      ],
+      { now: NOW },
+    );
+    expect(part.calibration.rows.map((r) => r.rowId)).toEqual(["settled"]);
+    expect(part.candidates.rows).toHaveLength(0);
+  });
+});
+
+describe("GATE_SLATE_INCLUDE — candidate query shape", () => {
+  it("selects the denormalized names and both game gating fields", () => {
+    const g = GATE_SLATE_INCLUDE.game.select;
+    expect(g.homeTeamName).toBe(true);
+    expect(g.awayTeamName).toBe(true);
+    // Needed to exclude games that already kicked off; settlement lags, so
+    // PENDING outlives kickoff and a FIRE there is unobtainable.
+    expect(g.commenceTime).toBe(true);
+    expect(g.status).toBe(true);
+  });
+
+  it("selects the quoted spread so the handicap can be compared", () => {
+    expect(GATE_SLATE_INCLUDE.game.select.odds.select.spread).toBe(true);
+  });
+
+  it("pulls a WINDOW of odds rows, not a single one", () => {
+    expect(GATE_SLATE_INCLUDE.game.select.odds.take).toBeGreaterThan(1);
   });
 });
 
@@ -297,8 +437,9 @@ describe("GATE_SLATE_INCLUDE", () => {
     expect(GATE_SLATE_INCLUDE.signalSnapshot.select.eligibleForLearning).toBe(true);
   });
 
-  it("takes only the most recent odds row", () => {
-    expect(GATE_SLATE_INCLUDE.game.select.odds.take).toBe(1);
+  it("orders odds newest-first, so the first market match is the freshest", () => {
+    // This test previously asserted `take: 1`, which was the defect itself —
+    // one row across all markets. The window plus a market filter replaced it.
     expect(GATE_SLATE_INCLUDE.game.select.odds.orderBy).toEqual({ fetchedAt: "desc" });
   });
 
