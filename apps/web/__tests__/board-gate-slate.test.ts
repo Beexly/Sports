@@ -452,22 +452,47 @@ describe("strict calibration — fails closed on provenance", () => {
 });
 
 describe("partitionGateSlate", () => {
+  // `{ now: NOW }` is REQUIRED on any case containing a PENDING pick, not
+  // optional tidiness. Omitting it falls back to `new Date()`, and the fixture's
+  // quote is stamped FRESH (2026-07-24T23:00Z) — so once real wall-clock time
+  // passed that plus the six-hour freshness budget, the candidate began being
+  // excluded as stale and these two assertions started failing on an untouched
+  // main. `NormalizeOptions.now` exists precisely to prevent this; these call
+  // sites simply had not used it. A test that silently depends on the calendar
+  // fails for a reason unrelated to the behaviour it names.
   it("routes settled to strict calibration and pending to candidates", () => {
-    const part = partitionGateSlate([
-      pick({ id: "s1", result: "WIN" }),
-      pick({ id: "s2", result: "LOSS" }),
-      pick({ id: "p1", result: "PENDING" }),
-    ]);
+    const part = partitionGateSlate(
+      [
+        pick({ id: "s1", result: "WIN" }),
+        pick({ id: "s2", result: "LOSS" }),
+        pick({ id: "p1", result: "PENDING" }),
+      ],
+      { now: NOW },
+    );
     expect(part.calibration.rows.map((r) => r.rowId)).toEqual(["s1", "s2"]);
     expect(part.candidates.rows.map((r) => r.rowId)).toEqual(["p1"]);
   });
 
   it("does not require provenance of a PENDING candidate", () => {
     // Nothing is learned from a candidate — it is the thing being judged.
-    const part = partitionGateSlate([
-      pick({ id: "p1", result: "PENDING", isBootstrap: true, signalSnapshot: null }),
-    ]);
+    const part = partitionGateSlate(
+      [pick({ id: "p1", result: "PENDING", isBootstrap: true, signalSnapshot: null })],
+      { now: NOW },
+    );
     expect(part.candidates.rows.map((r) => r.rowId)).toEqual(["p1"]);
+  });
+
+  it("keeps a stale-quote candidate out of the rows — the rule that bit the two above", () => {
+    // The behaviour those two tests were accidentally exercising, now asserted
+    // deliberately and with an injected clock, so it is pinned rather than
+    // incidental. A candidate priced off a quote older than the freshness budget
+    // is excluded by name, not silently dropped.
+    const late = new Date(NOW.getTime() + 7 * 60 * 60 * 1000);
+    const part = partitionGateSlate([pick({ id: "p1", result: "PENDING" })], { now: late });
+
+    expect(part.candidates.rows).toHaveLength(0);
+    expect(part.candidates.excluded.map((e) => e.rowId)).toEqual(["p1"]);
+    expect(part.candidates.excluded[0]?.missing.join(" ")).toContain("fresh odds");
   });
 
   it("counts undescribable rows instead of silently dropping them", () => {

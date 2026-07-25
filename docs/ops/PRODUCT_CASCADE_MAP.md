@@ -252,7 +252,45 @@ What keeps a subscriber:
    fire in it. That is the honest state of a young product, not a defect to
    engineer around.
 
-   Still open: **the live slate is not wired into the page.** `/board`'s passes continue
+   **Phase D is now code-complete, and the flip is still not recommended.**
+   `/board/gate` is mode-aware: `resolveGateSlate`
+   (`apps/web/lib/board/gate-page-mode.ts`) decides the mode and builds the rows
+   in one call, so a "live" label cannot appear over illustrative rows — there is
+   no code path that computes the two separately. Every claim on the page that
+   depends on which inputs were used is keyed off that single `mode` value,
+   including the per-row edge annotation and two of the non-claims.
+
+   It fails closed in four distinct ways, each tested, and each *states its
+   reason on the page* rather than degrading silently:
+
+   | Condition | Mode | What the reader is told |
+   |---|---|---|
+   | Flag off | illustrative | nothing — this is the intended default, and explaining a failure that did not occur trains readers to ignore the notice when it means something |
+   | Live read throws | illustrative | "could not be read on this request" — never the underlying error, which can carry a host, database name, or role |
+   | Loader returns null | illustrative | "no live slate is available in this environment" |
+   | Live read found no candidates | illustrative | "had no upcoming games to judge" |
+   | Live read found candidates | **live** | the rows are today's slate |
+
+   The fourth row is the one worth arguing about. It keys on candidates
+   *existing*, not on any of them firing: a live slate that evaluated eight games
+   and refused all eight is true, publishable, and the product's central claim,
+   so it renders as live. Only "there was nothing to judge" falls back — because
+   a live empty board asserts "we considered today's games and declined them
+   all" when the truth is that there was nothing to consider.
+
+   **The flag remains off, and is now off by construction rather than by
+   convention.** `apps/web/__tests__/board-gate-flag-policy.test.ts` fails the
+   build if `LIVE_BOARD_GATE_SLATE` is assigned an enabling value in any
+   deployable config (`.env*`, YAML, JSON, Dockerfile, shell). Source and
+   markdown are excluded *by file type*, which is where the reader and this
+   document legitimately quote `=1`. Before Phase D the flag was inert; from now
+   on a single committed config line would publish an unverified join on the
+   product's honesty page, and it would pass review because it would look like
+   configuration rather than a decision. The flip is a founder action taken in a
+   deploy environment, after real staging counts exist.
+
+   Still open: **the live slate is not wired into the published board.**
+   `/board`'s passes continue
    to come from the `gate_decisions` table — a different, also-real set of
    refusals. Closing the gap needs a Pick × Odds join whose behaviour cannot
    be verified in this environment; shipping it unverified beneath a public
@@ -260,6 +298,14 @@ What keeps a subscriber:
    `INSUFFICIENT_CALIBRATION` to dominate once wired, since a stratum needs
    100 settled picks before the gate will fire in it. That is the honest
    state of a pre-launch product, not a defect to engineer around.
+
+   **Phase C counts do not exist yet.** No staging or read-only-replica
+   `DATABASE_URL` is reachable from the agent environment: it is absent from the
+   process env, there is no committed `.env` (only `.example` files), the Vercel
+   MCP surface exposes no environment-variable values, and the Cloudflare
+   Hyperdrive config list is empty. `npm run gate:phase-c` therefore cannot be
+   run, and no counts are recorded here rather than estimated. This is the single
+   remaining blocker on recommending the flip.
 
 4. **Ledger multiprob persistence is BLOCKED — on a missing writer, not on
    commitment risk.** Investigated directly rather than assumed; the blocker is

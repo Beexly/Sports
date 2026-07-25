@@ -21,6 +21,10 @@ import {
   EMOTIONAL_VALUE,
 } from "@/lib/pricing/value-architecture";
 import { getFeature } from "@/lib/pricing/feature-gates";
+import {
+  honestyContrastStrip,
+  WHY_PAY_FOR_HONESTY_LEAD,
+} from "@/lib/competitive/honesty-contrast";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -528,6 +532,52 @@ export default function PricingPage() {
                 </p>
               </div>
             </div>
+          </section>
+
+          {/*
+            Why pay for honesty.
+
+            Sits immediately after "Built to protect you from hype", where a
+            reader is closest to asking what the money is actually for. The lead
+            line deliberately does not promise results — see the module
+            docstring. Four of the seven structural failure modes, projected
+            from the same source list the /integrity page renders in full, so
+            the two surfaces cannot drift into different wording.
+          */}
+          <section className="mt-20" aria-labelledby="why-pay-honesty-heading">
+            <h2
+              id="why-pay-honesty-heading"
+              className="text-center text-2xl font-bold text-white"
+            >
+              Why pay for honesty
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
+              {WHY_PAY_FOR_HONESTY_LEAD}
+            </p>
+            <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-2">
+              {honestyContrastStrip().map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-2xl border border-titanium bg-carbon/40 p-6"
+                >
+                  <h3 className="text-sm font-semibold text-white">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-300">{item.weDo}</p>
+                  <Link
+                    href={item.verifyHref}
+                    className="mt-3 inline-block text-sm underline hover:text-orbital-cyan"
+                  >
+                    Check it
+                  </Link>
+                </div>
+              ))}
+            </div>
+            <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-ink-300">
+              The full set of seven, with the mechanism behind each one, is on{" "}
+              <Link href="/integrity" className="underline hover:text-orbital-cyan">
+                our integrity page
+              </Link>
+              .
+            </p>
           </section>
 
           {/* FAQ */}

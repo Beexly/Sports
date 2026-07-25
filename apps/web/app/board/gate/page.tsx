@@ -6,13 +6,17 @@
  * reading source. This page runs the REAL gate (`evaluateBoardGate` ->
  * `applySelectiveGate`) at request time and prints what it actually returned.
  *
- * WHAT IS AND IS NOT REAL, stated plainly and repeated on the page itself:
- *   - The DECISION LOGIC is production code. Nothing here is mocked, stubbed,
- *     or hand-written to produce a pleasing answer.
- *   - The INPUT ROWS are illustrative, not today's slate. Wiring live picks
- *     needs a Pick x Odds join whose behaviour cannot be verified in this
- *     environment, and shipping an unverified join on a public honesty surface
- *     is precisely the failure mode this page argues against.
+ * TWO MODES, ALWAYS LABELLED. The decision logic is production code in both.
+ * What differs is the INPUT:
+ *   illustrative — a seeded demonstration set. The default, and what ships until
+ *                  the join is proven against real staging rows.
+ *   live         — today's published slate, read from the database. Requires
+ *                  `LIVE_BOARD_GATE_SLATE=1` explicitly.
+ *
+ * The mode and the rows are computed together by `resolveGateSlate`, so the page
+ * cannot label illustrative rows as live even by mistake — there is no code path
+ * that derives them separately. Every claim on the page that depends on which
+ * inputs were used is driven off that one `mode` value.
  *
  * So: real gate, labelled inputs. The alternative — real-looking inputs and a
  * faked decision — is the one thing this page must never be.
@@ -24,7 +28,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
 import { evaluateBoardGate, type GateOutcome, type GateOutcomeCode } from "@/lib/board/gate-consumer";
-import { buildCalibrationRows, buildCandidateRows, type RawPickRow } from "@/lib/board/gate-rows";
+import { resolveGateSlate, type GateMode } from "@/lib/board/gate-page-mode";
 
 export const metadata: Metadata = {
   title: `How the gate decides · ${BRAND_NAME}`,
@@ -33,71 +37,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/board/gate" },
 };
 
-// Runs the gate per request; never statically frozen.
+// Runs the gate per request; never statically frozen. Required in live mode —
+// caching this page would publish a stale slate as the current one — and kept in
+// illustrative mode so the two modes cannot differ in freshness behaviour.
 export const dynamic = "force-dynamic";
-
-/** Deterministic, seeded — the same illustration every load, no hidden RNG. */
-function seeded(seed: number): () => number {
-  let a = seed;
-  return () => {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/**
- * Illustrative rows. Two strata by design:
- *   nfl|SPREAD    — well past the calibration floor, so the gate genuinely
- *                   evaluates and genuinely declines some rows
- *   nba|MONEYLINE — deliberately thin, to show the state a pre-launch product
- *                   is actually in most of the time
- * Plus one row with no captured odds, which must NOT read as a refusal.
- */
-function illustrativePicks(): { settled: RawPickRow[]; pending: RawPickRow[] } {
-  const rand = seeded(20260724);
-  const mk = (
-    i: number,
-    sport: string,
-    pickType: RawPickRow["pickType"],
-    result: RawPickRow["result"],
-  ): RawPickRow => {
-    const conf = 45 + Math.floor(rand() * 45);
-    return {
-      id: `${sport}-${pickType}-${result}-${i}`,
-      selection: `Home Team ${i} -2.5`,
-      confidence: conf,
-      pickType,
-      result,
-      sportName: sport,
-      homeTeamName: `Home Team ${i}`,
-      awayTeamName: `Away Team ${i}`,
-      homePrice: -110,
-      awayPrice: -110,
-    };
-  };
-
-  const settled: RawPickRow[] = [];
-  for (let i = 0; i < 260; i++) {
-    settled.push(mk(i, "nfl", "SPREAD", rand() < 0.52 ? "WIN" : "LOSS"));
-  }
-  // Under the floor on purpose.
-  for (let i = 0; i < 18; i++) {
-    settled.push(mk(i, "nba", "MONEYLINE", rand() < 0.5 ? "WIN" : "LOSS"));
-  }
-  // Excluded from calibration entirely — a push is not a loss.
-  settled.push({ ...mk(900, "nfl", "SPREAD", "PUSH") });
-
-  const pending: RawPickRow[] = [];
-  for (let i = 0; i < 6; i++) pending.push(mk(500 + i, "nfl", "SPREAD", "PENDING"));
-  for (let i = 0; i < 2; i++) pending.push(mk(600 + i, "nba", "MONEYLINE", "PENDING"));
-  // No captured two-sided odds — must surface as "not evaluated", not a refusal.
-  pending.push({ ...mk(700, "nfl", "SPREAD", "PENDING"), homePrice: null, awayPrice: null });
-
-  return { settled, pending };
-}
 
 const TONE: Record<GateOutcomeCode, { label: string; cls: string }> = {
   FIRE: { label: "Fire", cls: "border-orbital-cyan text-orbital-cyan" },
@@ -107,7 +50,7 @@ const TONE: Record<GateOutcomeCode, { label: string; cls: string }> = {
   NOT_EVALUATED_MISSING_INPUTS: { label: "Not evaluated", cls: "border-mineral text-ion-2" },
 };
 
-function OutcomeRow({ o }: { o: GateOutcome }): JSX.Element {
+function OutcomeRow({ o, mode }: { o: GateOutcome; mode: GateMode }): JSX.Element {
   const tone = TONE[o.code];
   return (
     <div className="border border-mineral bg-eclipse/40 p-4">
@@ -122,18 +65,84 @@ function OutcomeRow({ o }: { o: GateOutcome }): JSX.Element {
         <p className="mt-2 font-mono text-[11px] text-ion-3">
           lower-bound edge {o.lcbEdge.toFixed(4)}
           {o.width !== undefined ? ` · interval width ${o.width.toFixed(4)}` : ""}
-          {" · on illustrative inputs"}
+          {/*
+            The provenance of the number, attached to the number itself. On the
+            illustrative set this is arithmetic on invented prices; saying so
+            here rather than only in a footnote means the qualifier cannot be
+            separated from the figure by a screenshot.
+          */}
+          {mode === "illustrative"
+            ? " · on illustrative inputs"
+            : " · from today's captured prices"}
         </p>
       )}
     </div>
   );
 }
 
-export default function GatePage(): JSX.Element {
-  const { settled, pending } = illustrativePicks();
+/** Copy that depends on which inputs were used, in one place, keyed off mode. */
+function inputClaim(mode: GateMode): { badge: string; body: JSX.Element } {
+  if (mode === "live") {
+    return {
+      badge: "Live slate",
+      body: (
+        <>
+          <strong className="text-ion-white">The decision logic is production code</strong>{" "}
+          and{" "}
+          <strong className="text-ion-white">
+            the input rows are today&apos;s published slate
+          </strong>
+          , read from the database when you loaded this page. Prices are the
+          captured quotes for each pick&apos;s own market, de-vigged from both
+          sides. Calibration comes only from settled picks whose provenance
+          proves they were eligible to learn from — a pick without that proof is
+          excluded rather than assumed good.
+        </>
+      ),
+    };
+  }
+  return {
+    badge: "Illustrative inputs",
+    body: (
+      <>
+        <strong className="text-ion-white">The decision logic is production code.</strong>{" "}
+        Nothing here is mocked or written to produce a pleasing answer.{" "}
+        <strong className="text-ion-white">The input rows are illustrative</strong> — they
+        are not today&apos;s slate. Feeding live picks in requires a data join
+        whose behaviour we have not yet verified against real rows, and shipping
+        an unverified join on a page about honesty would be the exact failure
+        this page argues against. Real gate, labelled inputs — never the reverse.
+      </>
+    ),
+  };
+}
 
-  const calibration = buildCalibrationRows(settled);
-  const candidates = buildCandidateRows(pending);
+/** The non-claims. Some hold in both modes; two are mode-specific. */
+function nonClaims(mode: GateMode): string[] {
+  const shared = [
+    "No win rate, ROI, or performance result is asserted anywhere on this page.",
+    "A fired decision here is a demonstration of the rule, not a recommendation.",
+    "Nothing here is persisted to the ledger — no receipt is created by loading this page.",
+  ];
+  if (mode === "live") {
+    return [
+      ...shared,
+      "The lower-bound edge printed on a fired row is computed from settled history in that category. It is a lower bound under our own method, not a guarantee and not an independently audited figure.",
+      "These rows are the current slate as of this request. A line can move the moment after you read it, so the price shown is the one we evaluated, not the one you would get.",
+    ];
+  }
+  return [
+    ...shared,
+    "The lower-bound edge printed on a fired row is computed from the illustrative rows above. It is arithmetic on made-up inputs, not a measured edge in any real market.",
+    "The rows are illustrative inputs, not today's published picks.",
+  ];
+}
+
+export default async function GatePage(): Promise<JSX.Element> {
+  // One call decides both the mode and the rows. See gate-page-mode.ts for why
+  // they are not resolved separately.
+  const source = await resolveGateSlate();
+  const { mode } = source;
 
   // The real consumer, the real gate.
   //
@@ -144,17 +153,19 @@ export default function GatePage(): JSX.Element {
   // themselves rather than take the outcomes on trust.
   const TAU = 0;
   const evaluation = evaluateBoardGate(
-    calibration.rows,
-    candidates.rows,
+    source.calibration.rows,
+    source.candidates.rows,
     TAU,
     {},
-    candidates.excluded,
+    source.candidates.excluded,
   );
 
   const counts = evaluation.outcomes.reduce<Record<string, number>>((acc, o) => {
     acc[o.code] = (acc[o.code] ?? 0) + 1;
     return acc;
   }, {});
+
+  const claim = inputClaim(mode);
 
   return (
     <div className="relative isolate min-h-screen bg-carbon text-ion">
@@ -177,22 +188,45 @@ export default function GatePage(): JSX.Element {
         </header>
 
         <section className="border border-caution/50 bg-eclipse/40 p-5">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-caution">
-            What is real on this page
-          </p>
-          <p className="mt-2 text-sm leading-6 text-ion-1">
-            <strong className="text-ion-white">The decision logic is production code.</strong>{" "}
-            Nothing here is mocked or written to produce a pleasing answer.{" "}
-            <strong className="text-ion-white">The input rows are illustrative</strong> — they
-            are not today&apos;s slate. Feeding live picks in requires a data join
-            whose behaviour we cannot verify yet, and shipping an unverified join
-            on a page about honesty would be the exact failure this page argues
-            against. Real gate, labelled inputs — never the reverse.
-          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-caution">
+              What is real on this page
+            </p>
+            {/*
+              The mode label. Deliberately not a subtle stylistic difference: a
+              reader who takes nothing else from this page should still be able
+              to tell at a glance whether the rows are real.
+            */}
+            <span
+              data-testid="gate-mode-badge"
+              className={`rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${
+                mode === "live"
+                  ? "border-orbital-cyan text-orbital-cyan"
+                  : "border-mineral text-ion-2"
+              }`}
+            >
+              {claim.badge}
+            </span>
+          </div>
+          <p className="mt-2 text-sm leading-6 text-ion-1">{claim.body}</p>
           <p className="mt-3 font-mono text-[11px] text-ion-3">
             edge threshold τ = {TAU} · fire when the calibrated lower bound
             clears the de-vigged price at all, with no added margin
           </p>
+          {source.degradedReason && (
+            // Shown, not swallowed. A page that quietly degrades from live to
+            // illustrative and says nothing has told the reader a falsehood by
+            // omission — they came here to check a claim about honesty.
+            <p className="mt-3 text-sm leading-6 text-caution">{source.degradedReason}</p>
+          )}
+          {source.undescribable > 0 && (
+            <p className="mt-3 text-sm leading-6 text-ion-2">
+              {source.undescribable} row{source.undescribable === 1 ? "" : "s"} in
+              the slate could not be described completely enough to judge, so
+              they are not shown above or counted below. They are reported here
+              rather than dropped silently.
+            </p>
+          )}
         </section>
 
         <section>
@@ -210,7 +244,7 @@ export default function GatePage(): JSX.Element {
           </div>
           <div className="flex flex-col gap-3">
             {evaluation.outcomes.map((o) => (
-              <OutcomeRow key={o.rowId} o={o} />
+              <OutcomeRow key={o.rowId} o={o} mode={mode} />
             ))}
           </div>
         </section>
@@ -249,13 +283,7 @@ export default function GatePage(): JSX.Element {
             What this page does not claim
           </h2>
           <ul className="flex flex-col gap-2 text-sm leading-6 text-ion-1">
-            {[
-              "No win rate, ROI, or performance result is asserted anywhere on this page.",
-              "The lower-bound edge printed on a fired row is computed from the illustrative rows above. It is arithmetic on made-up inputs, not a measured edge in any real market.",
-              "The rows are illustrative inputs, not today's published picks.",
-              "A fired decision here is a demonstration of the rule, not a recommendation.",
-              "Nothing here is persisted to the ledger — no receipt is created by loading this page.",
-            ].map((line) => (
+            {nonClaims(mode).map((line) => (
               <li key={line} className="flex items-start gap-3">
                 <span aria-hidden className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-ion-3" />
                 <span>{line}</span>

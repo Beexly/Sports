@@ -47,6 +47,7 @@
  */
 
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -442,6 +443,32 @@ export default async function LedgerPage(): Promise<JSX.Element> {
             Nothing on this page is real yet, and we would rather ship it empty than ship it
             fabricated. No sample rows, no placeholder numbers, no premature performance
             teasers — just this design, until there is a real, substantiated record to show.
+          </p>
+
+          {/*
+            The sealed state's one outward action.
+
+            A page that says "you will be able to check this" and offers no way
+            to learn how leaves the reader with nothing to do but trust it —
+            which is the posture this whole surface exists to reject. The
+            method does not depend on there being rows yet, so it can be
+            published now even though the record cannot.
+
+            Wording note: the unpublished state must not contain the substring
+            "proven" (pinned by a banned-language regression test), which is why
+            this reads "check" rather than any cognate of that word.
+          */}
+          <p className="mt-6 text-sm leading-6 text-ion-1">
+            The method does not depend on the rows existing yet, so it is
+            published already:{" "}
+            <Link
+              href="/how-to-verify-a-record"
+              className="underline hover:text-orbital-cyan"
+            >
+              how to check a prediction record
+            </Link>{" "}
+            — including the checks that catch a record edited after the fact.
+            Read it now and hold this page to it later.
           </p>
 
           <RiskDisclosure variant="compact" className="mt-10 text-center" />
