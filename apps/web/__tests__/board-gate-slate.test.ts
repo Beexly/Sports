@@ -220,6 +220,65 @@ describe("the production join — five defects review found, pinned", () => {
     expect(row.inputProblems!.join(" ")).toContain("matching handicap");
   });
 
+  it("refuses a candidate whose game has already started", () => {
+    // Settlement lags, so PENDING outlives kickoff. Enforced in the normalizer
+    // as well as the SQL where-clause: the query filter is an optimization, this
+    // is the guarantee, because a caller using partitionGateSlate directly would
+    // otherwise get no protection — and it makes the drop measurable.
+    const row = normalizeGateSlatePick(
+      pick({
+        result: "PENDING",
+        game: { ...pick().game!, commenceTime: new Date("2026-07-24T00:00:00Z") },
+      }),
+      { liveCandidate: true, now: NOW },
+    )!;
+    expect(row.inputProblems!.join(" ")).toContain("placeable window");
+  });
+
+  it("refuses a POSTPONED or CANCELED game even with a future kickoff", () => {
+    // The time check alone is not enough: a postponed game keeps a future
+    // commenceTime, and it is not a placeable wager either. The candidate query
+    // filters status in SQL; the normalizer must not apply a weaker rule.
+    for (const status of ["POSTPONED", "CANCELED", "LIVE", "FINAL"]) {
+      const row = normalizeGateSlatePick(
+        pick({ result: "PENDING", game: { ...pick().game!, status } }),
+        { liveCandidate: true, now: NOW },
+      )!;
+      expect(row.inputProblems!.join(" ")).toContain(`status is ${status}`);
+    }
+  });
+
+  it("accepts a SCHEDULED game without a status complaint", () => {
+    const row = normalizeGateSlatePick(pick({ result: "PENDING" }), {
+      liveCandidate: true,
+      now: NOW,
+    })!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
+  it("does not apply the status rule to settled history", () => {
+    // Every settled pick's game is FINAL. Applying it there would exclude all
+    // of calibration.
+    const row = normalizeGateSlatePick(
+      pick({ result: "WIN", game: { ...pick().game!, status: "FINAL" } }),
+      { now: NOW },
+    )!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
+  it("does not apply the kickoff rule to settled history", () => {
+    // Every settled pick's game has started. Applying it there would exclude
+    // all of calibration.
+    const row = normalizeGateSlatePick(
+      pick({
+        result: "WIN",
+        game: { ...pick().game!, commenceTime: new Date("2026-07-24T00:00:00Z") },
+      }),
+      { now: NOW },
+    )!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
   it("accepts a fresh candidate whose handicap still matches", () => {
     const row = normalizeGateSlatePick(pick({ result: "PENDING" }), {
       liveCandidate: true,

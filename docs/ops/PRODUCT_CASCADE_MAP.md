@@ -218,6 +218,28 @@ What keeps a subscriber:
    belonging to the pick's own market, and never carries a three-way draw price
    onto a two-way handicap.
 
+   **Phase C — measuring what actually clears the bar.**
+   `npm run gate:phase-c` (`scripts/edge-lab/gate-slate-phase-c-counts.ts`)
+   reports five numbers under production-strict filters: raw settled WIN/LOSS,
+   admitted calibration, raw pending, evaluable pending, and strata at or above
+   `MIN_STRATUM_CALIBRATION` — plus a named breakdown of every exclusion reason
+   and the top strata by admitted size.
+
+   It imports the same `GATE_SLATE_INCLUDE` and the same `partitionGateSlate`
+   normalizer the product uses, so a divergence between what it measures and
+   what the page would render is impossible by construction. A second query
+   shape would make the counts a claim about the script rather than the product.
+
+   With no database it **exits non-zero and refuses to print**. An empty
+   database yields five zeros, and zeros presented as counts are worse than no
+   counts: they read as a measurement of a young product rather than the
+   absence of one.
+
+   The script has been exercised end-to-end against a real Postgres with a
+   fixture covering all six join defects, which confirmed the SQL and the
+   reason channel work — but a synthetic fixture is **not** evidence about
+   production volume. Real counts still require staging.
+
    Still open, and deliberately so: **the public flip.** `fetchGateSlate`
    returns null unless `LIVE_BOARD_GATE_SLATE=1` and a real database is
    configured — both checked inside the loader so a caller cannot reach

@@ -252,6 +252,36 @@ export function normalizeGateSlatePick(
   const prices = pricesForPickType(pick.pickType, odds);
   const inputProblems: string[] = [];
 
+  if (options.liveCandidate) {
+    // Post-kickoff. Settlement lags, so PENDING outlives the game; a candidate
+    // whose game has started is not a placeable wager, and FIRE on it would be
+    // a recommendation nobody could act on presented as a live one.
+    //
+    // Enforced HERE as well as in the candidate query's where-clause. The SQL
+    // filter is an optimization; this is the guarantee, because a caller using
+    // `partitionGateSlate` directly would otherwise get no protection at all —
+    // and it makes the exclusion measurable rather than invisible.
+    const commenceTime = pick.game?.commenceTime;
+    const now = options.now ?? new Date();
+    if (commenceTime && commenceTime.getTime() <= now.getTime()) {
+      inputProblems.push("placeable window (this game has already started)");
+    }
+
+    // Status, checked separately from kickoff time. A POSTPONED or CANCELED
+    // game can still carry a FUTURE commenceTime, so the time check alone lets
+    // it through — and a postponed game is not a placeable wager either. The
+    // candidate query filters `status: SCHEDULED` in SQL; this is the guarantee,
+    // for the same reason the kickoff rule lives here: a caller using
+    // `partitionGateSlate` directly must not silently get a weaker rule than
+    // the product's own query applies.
+    const status = pick.game?.status;
+    if (status && status !== "SCHEDULED") {
+      inputProblems.push(
+        `placeable window (game status is ${status}, not scheduled)`,
+      );
+    }
+  }
+
   if (options.liveCandidate && odds) {
     // Stale odds. Retained rows do not expire on their own, so without this a
     // pick could fire against a line from hours or days ago — contradicting the
