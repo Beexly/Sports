@@ -213,6 +213,37 @@ describe("strict calibration — fails closed on provenance", () => {
     expect(rows).toHaveLength(0);
   });
 
+  it("excludes a row whose model version is the empty string", () => {
+    // Pick.modelVersion is a required column, so it is always PRESENT — but it
+    // can be "". stratumOf treats empty as absent and falls back to the
+    // two-part key, so without requireModelVersion a batch of blank-version
+    // rows would pool into one stratum and calibrate across incomparable score
+    // semantics, invisibly. This is the guard for that.
+    const { rows, excluded } = buildCalibrationRows(
+      [settled({ modelVersion: "" })],
+      PRODUCTION_CALIBRATION_OPTS,
+    );
+    expect(rows).toHaveLength(0);
+    expect(excluded[0]!.missing.join(" ")).toContain("no model version");
+  });
+
+  it("reports BOTH provenance failures when a row fails on both counts", () => {
+    const { excluded } = buildCalibrationRows(
+      [settled({ isBootstrap: true, modelVersion: "" })],
+      PRODUCTION_CALIBRATION_OPTS,
+    );
+    expect(excluded[0]!.missing.length).toBeGreaterThan(1);
+  });
+
+  it("requireModelVersion alone does not imply the eligibility check", () => {
+    // The two strictness dials are independent, so a caller can reason about
+    // each one rather than inheriting a bundle.
+    const { rows } = buildCalibrationRows([settled({ signalSnapshot: null })], {
+      requireModelVersion: true,
+    });
+    expect(rows).toHaveLength(1);
+  });
+
   it("WITHOUT the strict option, provenance is not required", () => {
     // The illustrative page supplies rows that have no provenance to read.
     // Strictness is opt-in so that surface keeps working unchanged.
@@ -269,5 +300,11 @@ describe("GATE_SLATE_INCLUDE", () => {
   it("takes only the most recent odds row", () => {
     expect(GATE_SLATE_INCLUDE.game.select.odds.take).toBe(1);
     expect(GATE_SLATE_INCLUDE.game.select.odds.orderBy).toEqual({ fetchedAt: "desc" });
+  });
+
+  it("selects fetchedAt, not merely orders by it", () => {
+    // Which snapshot a q came from is part of whether it can be trusted. A
+    // staleness question that cannot be asked later is a claim nobody can check.
+    expect(GATE_SLATE_INCLUDE.game.select.odds.select.fetchedAt).toBe(true);
   });
 });

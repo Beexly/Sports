@@ -94,11 +94,24 @@ export interface CalibrationOptions {
    * page, which supplies rows that have no provenance to read.
    */
   readonly requireLearningEligible?: boolean;
+  /**
+   * Require a non-empty model version, so the stratum key genuinely separates
+   * engine versions.
+   *
+   * `Pick.modelVersion` is a required column, so it is always *present* — but it
+   * can be the empty string, and `stratumOf` treats empty as absent and falls
+   * back to the two-part key. Without this option a batch of blank-version rows
+   * would pool into one stratum and calibrate across incomparable score
+   * semantics, which is the very thing versioned strata exist to prevent, and
+   * it would be invisible in the output.
+   */
+  readonly requireModelVersion?: boolean;
 }
 
 /** Production history is always read strictly. There is no second setting. */
 export const PRODUCTION_CALIBRATION_OPTS: CalibrationOptions = {
   requireLearningEligible: true,
+  requireModelVersion: true,
 };
 
 /**
@@ -176,12 +189,17 @@ export function buildCalibrationRows(
   for (const p of picks) {
     if (p.result !== "WIN" && p.result !== "LOSS") continue; // not a calibration signal
 
+    const blocked: string[] = [];
     if (options.requireLearningEligible && !isLearningAdmissible(p)) {
-      excluded.push({
-        rowId: p.id,
-        stratum: stratumOf(p),
-        missing: learningExclusionReasons(p),
-      });
+      blocked.push(...learningExclusionReasons(p));
+    }
+    if (options.requireModelVersion && !p.modelVersion) {
+      blocked.push(
+        "provenance (no model version; stratum could not separate engine versions)",
+      );
+    }
+    if (blocked.length > 0) {
+      excluded.push({ rowId: p.id, stratum: stratumOf(p), missing: blocked });
       continue;
     }
 

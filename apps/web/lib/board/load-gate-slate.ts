@@ -64,6 +64,10 @@ export const GATE_SLATE_INCLUDE = {
         take: 1,
         select: {
           market: true,
+          // Selected, not merely ordered on: which snapshot a `q` came from is
+          // part of whether the number can be trusted, and a staleness question
+          // that cannot be asked later is a claim nobody can check.
+          fetchedAt: true,
           homePrice: true,
           awayPrice: true,
           drawPrice: true,
@@ -79,6 +83,7 @@ export const GATE_SLATE_INCLUDE = {
 /** The subset of an odds row the normalizer reads. */
 export interface GateSlateOdds {
   readonly market: string;
+  readonly fetchedAt?: Date;
   readonly homePrice: number | null;
   readonly awayPrice: number | null;
   readonly drawPrice: number | null;
@@ -239,12 +244,23 @@ export function partitionGateSlate(
  * that is the staging step, and the flag stays off until it passes.
  */
 export async function fetchGateSlate(
-  options: { readonly candidateLimit?: number; readonly settledLimit?: number } = {},
+  options: {
+    /** Restrict to these sports by name. Omit for every sport. */
+    readonly sportKeys?: readonly string[];
+    /** Only settled history at or after this instant. Omit for all of it. */
+    readonly settledSince?: Date;
+    readonly candidateLimit?: number;
+    readonly settledLimit?: number;
+  } = {},
 ): Promise<GateSlatePartition | null> {
   if (!isLiveGateSlateEnabled() || isStubMode()) return null;
 
   const settledLimit = options.settledLimit ?? 5000;
   const candidateLimit = options.candidateLimit ?? 200;
+  const sportFilter =
+    options.sportKeys && options.sportKeys.length > 0
+      ? { game: { sport: { name: { in: [...options.sportKeys] } } } }
+      : {};
 
   // Two queries rather than one, because the ordering that matters differs:
   // calibration wants the most recent SETTLED history, candidates want the
@@ -252,6 +268,8 @@ export async function fetchGateSlate(
   const [settled, pending] = await Promise.all([
     db.pick.findMany({
       where: {
+        ...sportFilter,
+        ...(options.settledSince ? { settledAt: { gte: options.settledSince } } : {}),
         isPublished: true,
         result: { in: ["WIN", "LOSS"] },
         // Pre-filtered in SQL as well as in the mapper. The mapper is the
@@ -265,7 +283,7 @@ export async function fetchGateSlate(
       include: GATE_SLATE_INCLUDE,
     }),
     db.pick.findMany({
-      where: { isPublished: true, result: "PENDING" },
+      where: { ...sportFilter, isPublished: true, result: "PENDING" },
       orderBy: { generatedAt: "desc" },
       take: candidateLimit,
       include: GATE_SLATE_INCLUDE,

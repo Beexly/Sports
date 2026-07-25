@@ -157,6 +157,16 @@ What keeps a subscriber:
      two-part key when it is not, so versions cannot pool and existing callers
      are unchanged.
 
+     A subtlety worth recording, because it defeats the guarantee silently:
+     `Pick.modelVersion` is a required column, so it is always *present* — but
+     it can be the empty string, and an empty version falls back to the
+     two-part key. A batch of blank-version rows would therefore pool into one
+     stratum and calibrate across incomparable score semantics with nothing in
+     the output to show it. `requireModelVersion` (set in
+     `PRODUCTION_CALIBRATION_OPTS`) rejects those rows outright. The two
+     strictness dials are independent, so a caller reasons about each rather
+     than inheriting a bundle.
+
    Strictness is opt-in, so the illustrative page — which supplies rows with no
    provenance to read — is unaffected.
 
