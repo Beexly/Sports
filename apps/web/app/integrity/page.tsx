@@ -23,6 +23,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
+import { HONESTY_CONTRAST } from "@/lib/competitive/honesty-contrast";
 
 const REPO_BLOB = "https://github.com/Beexly/Sports/blob/main";
 
@@ -282,6 +283,73 @@ export default function IntegrityPage() {
             says nothing about whether a betting claim is statistically
             supported — that is the Glass Ledger&apos;s job, and it stays sealed
             until the evidence clears its own bar.
+          </p>
+        </section>
+
+        {/*
+          Seven structural failure modes.
+
+          Placed directly after the two-integrities section because it belongs
+          to the SECOND one — whether a published number is substantiated — and
+          reading it as a claim about the agent control plane would be the same
+          category error that section exists to prevent.
+
+          No company is named anywhere in the source list, deliberately. See the
+          module docstring: naming one would trade a checkable structural claim
+          for an unfalsifiable accusation.
+        */}
+        <section className="border-t border-mineral pt-8">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-ion-2">
+            Seven ways a prediction record misleads
+          </h2>
+          <p className="max-w-3xl text-sm leading-6 text-ion-1">
+            Every one of these is available to anyone publishing predictions,
+            ourselves included, and most of them happen without anyone deciding
+            to mislead — which is why each needs a structural guard rather than
+            good intentions. We name no companies: these are mechanisms, and the
+            useful question is not who does them but where each one is blocked.
+            Each row links to somewhere you can check ours.
+          </p>
+          <ol className="mt-6 flex flex-col gap-4">
+            {HONESTY_CONTRAST.map((item, i) => (
+              <li
+                key={item.id}
+                className="rounded-2xl border border-mineral bg-eclipse/30 p-5"
+              >
+                <div className="flex items-baseline gap-3">
+                  <span aria-hidden className="font-mono text-xs text-ion-3">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="text-base font-bold text-ion-white">{item.title}</h3>
+                </div>
+                <p className="mt-3 text-sm leading-6 text-ion-2">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-caution">
+                    How it goes wrong
+                  </span>
+                  <br />
+                  {item.failureMode}
+                </p>
+                <p className="mt-3 text-sm leading-6 text-ion-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-orbital-cyan">
+                    What we do instead
+                  </span>
+                  <br />
+                  {item.weDo}
+                </p>
+                <Link
+                  href={item.verifyHref}
+                  className="mt-3 inline-block text-sm underline hover:text-orbital-cyan"
+                >
+                  {item.verifyLabel}
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-5 max-w-3xl text-sm text-ion-2">
+            None of the above is a statement about how well the predictions
+            perform. It is a statement about what the reporting makes checkable,
+            which is the only one of the two we can substantiate before there is
+            a settled record.
           </p>
         </section>
 

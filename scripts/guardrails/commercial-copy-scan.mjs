@@ -23,6 +23,12 @@ const SCAN_TARGETS = [
   "apps/web/app/promotions",
   "apps/web/lib/media-revenue",
   "apps/web/lib/revenue",
+  // Reusable comparative copy. `honesty-contrast.ts` is rendered verbatim onto
+  // /integrity and /pricing, so it is customer-facing text that happens to live
+  // in lib — exactly the case this guard's docstring describes. Scanning the
+  // page files alone would miss it: the pages render those strings, they do not
+  // contain them.
+  "apps/web/lib/competitive",
 ];
 // FULL PUBLIC-SURFACE SWEEP (adversarial finding O-2.1): the deep-scan
 // targets above covered 7 of ~60 public app dirs — tout copy on the
