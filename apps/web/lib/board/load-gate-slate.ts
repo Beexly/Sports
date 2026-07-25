@@ -266,6 +266,20 @@ export function normalizeGateSlatePick(
     if (commenceTime && commenceTime.getTime() <= now.getTime()) {
       inputProblems.push("placeable window (this game has already started)");
     }
+
+    // Status, checked separately from kickoff time. A POSTPONED or CANCELED
+    // game can still carry a FUTURE commenceTime, so the time check alone lets
+    // it through — and a postponed game is not a placeable wager either. The
+    // candidate query filters `status: SCHEDULED` in SQL; this is the guarantee,
+    // for the same reason the kickoff rule lives here: a caller using
+    // `partitionGateSlate` directly must not silently get a weaker rule than
+    // the product's own query applies.
+    const status = pick.game?.status;
+    if (status && status !== "SCHEDULED") {
+      inputProblems.push(
+        `placeable window (game status is ${status}, not scheduled)`,
+      );
+    }
   }
 
   if (options.liveCandidate && odds) {

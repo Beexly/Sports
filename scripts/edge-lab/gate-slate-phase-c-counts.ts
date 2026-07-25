@@ -97,25 +97,53 @@ async function main(): Promise<void> {
   for (const row of part.calibration.rows) {
     byStratum.set(row.stratum, (byStratum.get(row.stratum) ?? 0) + 1);
   }
-  const strataAtFloor = [...byStratum.values()].filter(
-    (n) => n >= MIN_STRATUM_CALIBRATION,
+  const atFloor = [...byStratum.entries()].filter(
+    ([, n]) => n >= MIN_STRATUM_CALIBRATION,
+  );
+  const strataAtFloor = atFloor.length;
+
+  // Strata at the floor that a CURRENT candidate actually belongs to.
+  //
+  // The bare count is misleading on its own: 100 historical nfl|SPREAD|v1 rows
+  // with only nba|MONEYLINE|v2 on today's board reports one stratum at the
+  // floor, which reads as "the gate can evaluate" — while every row on the
+  // board still returns INSUFFICIENT_CALIBRATION. The intersection is the
+  // number that answers the question anyone is actually asking.
+  const candidateStrata = new Set(part.candidates.rows.map((r) => r.stratum));
+  const strataAtFloorWithCandidates = atFloor.filter(([s]) =>
+    candidateStrata.has(s),
   ).length;
+
+  // Either cap being hit truncates the READ, which means every count derived
+  // from it — admitted calibration, evaluable candidates, strata at floor — is
+  // a lower bound rather than a total. Saying "no stratum clears the floor"
+  // from a truncated read would be exactly the kind of confident wrong answer
+  // this script exists to avoid.
+  const truncated =
+    settledRaw.length === SETTLED_LIMIT || pendingRaw.length === PENDING_LIMIT;
+  const q = truncated ? ">=" : "  ";
 
   console.log(bar());
   console.log("PHASE C — gate slate under production-strict filters");
   console.log(`measured at ${now.toISOString()}`);
   console.log(`calibration floor: ${MIN_STRATUM_CALIBRATION} rows per stratum`);
   console.log(bar());
-  console.log(`(1) settled_raw_win_loss          ${settledRaw.length}`);
-  console.log(`(2) settled_calibration_admitted  ${part.calibration.rows.length}`);
-  console.log(`(3) pending_candidates_raw        ${pendingRaw.length}`);
-  console.log(`(4) pending_candidates_evaluable  ${part.candidates.rows.length}`);
-  console.log(`(5) strata_at_or_above_floor      ${strataAtFloor}`);
+  console.log(`(1) settled_raw_win_loss          ${q} ${settledRaw.length}`);
+  console.log(`(2) settled_calibration_admitted  ${q} ${part.calibration.rows.length}`);
+  console.log(`(3) pending_candidates_raw        ${q} ${pendingRaw.length}`);
+  console.log(`(4) pending_candidates_evaluable  ${q} ${part.candidates.rows.length}`);
+  console.log(`(5) strata_at_or_above_floor      ${q} ${strataAtFloor}`);
+  console.log(`(5b) ...of those, with a current candidate: ${strataAtFloorWithCandidates}`);
   console.log(bar());
 
-  if (settledRaw.length === SETTLED_LIMIT || pendingRaw.length === PENDING_LIMIT) {
+  if (truncated) {
     console.log(
-      "NOTE: a read limit was reached, so (1)/(3) are truncated, not totals.",
+      [
+        "PARTIAL READ: a read limit was reached, so EVERY count above is a lower",
+        "bound, not a total — (2), (4) and (5) are derived from the capped arrays",
+        "just as (1) and (3) are. Raise SETTLED_LIMIT / PENDING_LIMIT or paginate",
+        "before treating any of these as a measurement.",
+      ].join("\n"),
     );
     console.log(bar());
   }
@@ -148,22 +176,39 @@ async function main(): Promise<void> {
   }
   console.log(bar());
 
-  if (strataAtFloor === 0) {
+  // The reading is deliberately withheld on a truncated read. A definitive
+  // "no stratum clears the floor" from a partial scan could be flatly wrong,
+  // and a confident wrong conclusion is worse than no conclusion.
+  if (truncated) {
     console.log(
       [
-        "READING: no stratum clears the floor, so the gate would return",
-        "INSUFFICIENT_CALIBRATION for everything. That is the honest state of a",
-        "young product, not a defect — and it is a reason NOT to flip",
-        "LIVE_BOARD_GATE_SLATE yet, since a live board that declines every row",
-        "for want of history says less to a reader than the labelled",
-        "illustrative page does.",
+        "READING WITHHELD: the read was truncated, so neither conclusion is",
+        "supportable from these numbers. Re-run with higher limits.",
       ].join("\n"),
+    );
+  } else if (strataAtFloorWithCandidates === 0) {
+    console.log(
+      [
+        "READING: no stratum with a current candidate clears the floor, so every",
+        "row on today's board would return INSUFFICIENT_CALIBRATION. That is the",
+        "honest state of a young product, not a defect — and it is a reason NOT",
+        "to flip LIVE_BOARD_GATE_SLATE yet, since a live board that declines",
+        "every row for want of history says less to a reader than the labelled",
+        "illustrative page does.",
+        strataAtFloor > 0
+          ? `NOTE: ${strataAtFloor} stratum/strata DO clear the floor, but no current` +
+            " candidate belongs to them, so that history cannot help today's board."
+          : "",
+      ]
+        .filter(Boolean)
+        .join("\n"),
     );
   } else {
     console.log(
-      `READING: ${strataAtFloor} stratum/strata clear the floor, so the gate can` +
-        " genuinely evaluate there. Everything else returns" +
-        " INSUFFICIENT_CALIBRATION, which is the truthful answer.",
+      `READING: ${strataAtFloorWithCandidates} stratum/strata with a current` +
+        " candidate clear the floor, so the gate can genuinely evaluate there." +
+        " Everything else returns INSUFFICIENT_CALIBRATION, which is the" +
+        " truthful answer.",
     );
   }
   console.log(bar());

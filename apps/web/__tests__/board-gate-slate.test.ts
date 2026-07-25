@@ -235,6 +235,37 @@ describe("the production join — five defects review found, pinned", () => {
     expect(row.inputProblems!.join(" ")).toContain("placeable window");
   });
 
+  it("refuses a POSTPONED or CANCELED game even with a future kickoff", () => {
+    // The time check alone is not enough: a postponed game keeps a future
+    // commenceTime, and it is not a placeable wager either. The candidate query
+    // filters status in SQL; the normalizer must not apply a weaker rule.
+    for (const status of ["POSTPONED", "CANCELED", "LIVE", "FINAL"]) {
+      const row = normalizeGateSlatePick(
+        pick({ result: "PENDING", game: { ...pick().game!, status } }),
+        { liveCandidate: true, now: NOW },
+      )!;
+      expect(row.inputProblems!.join(" ")).toContain(`status is ${status}`);
+    }
+  });
+
+  it("accepts a SCHEDULED game without a status complaint", () => {
+    const row = normalizeGateSlatePick(pick({ result: "PENDING" }), {
+      liveCandidate: true,
+      now: NOW,
+    })!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
+  it("does not apply the status rule to settled history", () => {
+    // Every settled pick's game is FINAL. Applying it there would exclude all
+    // of calibration.
+    const row = normalizeGateSlatePick(
+      pick({ result: "WIN", game: { ...pick().game!, status: "FINAL" } }),
+      { now: NOW },
+    )!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
   it("does not apply the kickoff rule to settled history", () => {
     // Every settled pick's game has started. Applying it there would exclude
     // all of calibration.
