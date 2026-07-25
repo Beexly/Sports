@@ -134,26 +134,103 @@ What keeps a subscriber:
    illustrative and labelled as such on the page itself — real gate, labelled
    inputs, never the reverse.
 
-   **Two preconditions before the live slate may be wired in.** Both were
-   raised in review of the consumer and are real; neither is fixable inside
-   the mapper today, because `RawPickRow` does not carry the fields that
-   would decide them, and inventing plausible values is the failure this
-   whole module refuses.
+   **Both preconditions are now IMPLEMENTED in the mapper and loader.**
 
-   - **Learning-eligibility.** The canonical calibration paths admit a
-     settled pick only when it is not a bootstrap pick and its signal
-     snapshot is marked eligible for learning. `buildCalibrationRows` admits
-     every WIN/LOSS row, so history explicitly marked ineligible could count
-     toward the 100-row floor and let the gate fire on it. The live query
-     must carry those flags and filter on them before this is wired.
-   - **Model-version strata.** `${sport}|${pickType}` pools settled history
-     across major engine versions, whose score semantics differ by policy.
-     Once history spans a major upgrade, the stratum key must include the
-     model version or calibration will compare incomparable scores.
+   An earlier revision of this document said they could not be fixed because
+   `RawPickRow` lacked the deciding fields. That was wrong about the cause.
+   `Pick.isBootstrap`, `Pick.modelVersion`, and
+   `PickSignalSnapshot.eligibleForLearning` all already exist in the schema —
+   the gap was that the mapper neither carried nor enforced them. Inventing
+   those values remains forbidden; *reading* them is required.
 
-   Neither affects the illustrative page, which supplies its own rows.
+   - **Learning-eligibility — fails closed.** `isLearningAdmissible` admits a
+     settled pick only on two affirmative facts: `isBootstrap === false` and
+     `eligibleForLearning === true`. `undefined` — a pick with no signal
+     snapshot — is inadmissible, because unproven is not the same as eligible.
+     `buildCalibrationRows(rows, PRODUCTION_CALIBRATION_OPTS)` enforces it and
+     reports each exclusion by name. The asymmetry is deliberate: wrongly
+     excluding an eligible pick costs a row and makes the gate fire less;
+     wrongly including an ineligible one lets history the product has already
+     disowned set the bar it then claims to have cleared.
+   - **Model-version strata.** `stratumOf` returns
+     `${sport}|${pickType}|${modelVersion}` when a version is present and the
+     two-part key when it is not, so versions cannot pool and existing callers
+     are unchanged.
 
-   Still open: **the live slate is not wired in.** `/board`'s passes continue
+     A subtlety worth recording, because it defeats the guarantee silently:
+     `Pick.modelVersion` is a required column, so it is always *present* — but
+     it can be the empty string, and an empty version falls back to the
+     two-part key. A batch of blank-version rows would therefore pool into one
+     stratum and calibrate across incomparable score semantics with nothing in
+     the output to show it. `requireModelVersion` (set in
+     `PRODUCTION_CALIBRATION_OPTS`) rejects those rows outright. The two
+     strictness dials are independent, so a caller reasons about each rather
+     than inheriting a bundle.
+
+   Strictness is opt-in, so the illustrative page — which supplies rows with no
+   provenance to read — is unaffected.
+
+   **Five further join defects, found in review and fixed.** Worth recording
+   in full, because every one of them would have produced a confident wrong
+   answer rather than an error, and none was reachable by unit-testing the
+   mapper in isolation — they are all facts about how production actually
+   stores its rows.
+
+   - **Team names are denormalized.** `Game.homeTeamId`/`awayTeamId` are
+     optional and `process-sport.ts` never assigns them; ingestion writes only
+     `homeTeamName`/`awayTeamName`. Selecting the `homeTeam`/`awayTeam`
+     relations returned null for every ingested game, which classified the
+     entire live slate as undescribable. Flipping the flag would have rendered
+     an empty board.
+   - **Odds rows are per market.** `Odds` is append-only with one row per
+     (game, bookmaker, market); only `H2H` rows carry `homePrice`/`awayPrice`
+     and only `SPREADS` rows carry the spread pair. Taking one row by
+     `fetchedAt` returned an arbitrary market — same-cycle rows even share the
+     timestamp — so most picks were excluded for want of a field that was
+     never on the row they got. `selectOddsForPick` filters by the pick's own
+     market first, matching what `clv-capture.ts` already does.
+   - **Stale quotes.** Retained rows never expire, so a candidate could have
+     fired against a line hours or days old. `STALE_DATA` is already a
+     first-class No-Bet factor in the engine, so ignoring it here would have
+     contradicted a rule the product enforces elsewhere. Candidates now carry
+     a freshness budget.
+   - **Line movement.** `Odds.spread` and `Pick.line` are both
+     home-perspective, and they diverge after the line moves. A home -3.5 pick
+     priced off a -6.5 quote receives a materially wrong edge. The handicap
+     must match or the row is refused.
+   - **Started games.** Settlement lags, so `PENDING` outlives kickoff. The
+     candidate query now requires `status: SCHEDULED` and a future
+     `commenceTime`, or the gate could have returned FIRE for a wager nobody
+     could still place.
+
+   Freshness and handicap checks apply to CANDIDATES only: a settled pick's
+   game is over, so its historical quote is exactly the one calibration wants.
+   All five surface as **named** exclusions via `RawPickRow.inputProblems`
+   rather than as a fabricated missing price, because "stale quote" and "no
+   odds captured" are different facts.
+
+   **A third defect the join itself would have introduced.** `Odds` stores
+   moneyline prices in `homePrice`/`awayPrice` but spread prices in
+   `homeSpreadPrice`/`awaySpreadPrice`. De-vigging a SPREAD pick against the
+   moneyline pair yields the fair probability of an outright win rather than a
+   win against the handicap — on a heavy favourite the two diverge enormously,
+   and nothing downstream could detect it. `pricesForPickType` selects the pair
+   belonging to the pick's own market, and never carries a three-way draw price
+   onto a two-way handicap.
+
+   Still open, and deliberately so: **the public flip.** `fetchGateSlate`
+   returns null unless `LIVE_BOARD_GATE_SLATE=1` and a real database is
+   configured — both checked inside the loader so a caller cannot reach
+   production data by forgetting a guard. The query shape is typed and unit
+   tested but has **not been exercised against production rows**; a join is
+   only really proven by running it against real data. That is the staging
+   step, and the flag stays off until counts there look right — expect
+   `INSUFFICIENT_CALIBRATION` to dominate, since a stratum now needs 100
+   settled, learning-eligible, same-model-version rows before the gate will
+   fire in it. That is the honest state of a young product, not a defect to
+   engineer around.
+
+   Still open: **the live slate is not wired into the page.** `/board`'s passes continue
    to come from the `gate_decisions` table — a different, also-real set of
    refusals. Closing the gap needs a Pick × Odds join whose behaviour cannot
    be verified in this environment; shipping it unverified beneath a public
