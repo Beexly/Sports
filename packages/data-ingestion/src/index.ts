@@ -78,6 +78,22 @@ export {
   type FailoverReason,
 } from "./odds-failover.js";
 export {
+  OfflineStatsProvider,
+  RegistryStatsProvider,
+  createStatsProviders,
+  mergeStatsFeatures,
+  isCertifiableStatsProvider,
+  type DataPlaneRole,
+  type StatsProviderId,
+  type StatsProviderCapabilities,
+  type StatsProviderHealth,
+  type StatsFeature,
+  type StatsFetchQuery,
+  type StatsProviderResult,
+  type StatsProvider,
+  type CreateStatsProvidersOptions,
+} from "./stats-provider.js";
+export {
   OfflineOddsProvider,
   TheOddsApiOddsProvider,
   createOddsQuoteProvider,
