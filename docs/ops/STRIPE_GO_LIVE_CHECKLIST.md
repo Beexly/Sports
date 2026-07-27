@@ -46,6 +46,28 @@ In the Stripe dashboard → Developers → Webhooks → add endpoint:
   - `invoice.payment_action_required`
 - Copy the endpoint's **Signing secret** → `STRIPE_WEBHOOK_SECRET` (step 2).
 
+### 3a. What the two failure status codes mean in the Stripe dashboard
+
+The handler (`apps/web/app/api/webhooks/stripe/route.ts`) returns exactly two non-2xx codes, and
+they mean different things when you see them under Developers → Webhooks → this endpoint →
+**Recent deliveries**:
+
+- **400** — missing or invalid `stripe-signature`. This almost always means
+  `STRIPE_WEBHOOK_SECRET` in production doesn't match the signing secret shown on THIS specific
+  endpoint (each endpoint has its own secret; pasting the wrong one, or one from staging, produces
+  a persistent 400 on every delivery). A single stray 400 from an automated scanner hitting the
+  URL is normal and not a signal — a *sustained run* of 400s on real Stripe deliveries means the
+  secret is wrong.
+- **503** — the durable database was unreachable when the event arrived, so nothing was written.
+  This is deliberate fail-closed behavior, not a bug: acking with 200 while unable to persist would
+  silently lose the entitlement forever, so the handler refuses instead. Stripe automatically
+  retries a 503 with backoff (its own default retry schedule), which IS the recovery path — no
+  manual replay needed for an isolated 503 during a brief DB blip. A *sustained run* of 503s means
+  the production database is actually down and needs attention, not a webhook problem.
+
+If Recent Deliveries shows anything other than occasional retried 503s, that is the signal to
+investigate — not the presence of a 503 by itself.
+
 ## 4. Grandfathering rule (do this the day you advance a pricing phase)
 
 When you move `PRICING_PHASE` to PROVEN/etc., Stripe Prices are immutable — you **create a new
