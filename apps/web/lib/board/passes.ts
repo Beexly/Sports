@@ -1,6 +1,7 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { unevaluatedPassReason } from "./pass-reason";
 
 /**
  * The auditable trail behind a refusal. Every field here is REAL data already
@@ -73,34 +74,9 @@ function todayBounds(): { start: Date; end: Date } {
   return { start, end };
 }
 
-/**
- * The reason a game appears on the Pass List when NO gate decision exists for it.
- *
- * These rows come from the `picks: { none: ... }` fallback below: the game is
- * here because no published pick EXISTS for it, not because anything evaluated
- * it and declined. That distinction is the whole product.
- *
- * The first two branches name a real input deficiency readable off the game row,
- * so they are honest as stated. The third cannot be: with adequate market depth
- * and adequate evidence health, an absent pick means nothing reached the model —
- * the generator may not have run, may have errored, or may not cover this sport.
- *
- * It previously read "No pick cleared the publish threshold", which asserts the
- * opposite — that a judgement was made and the pick fell short. That is exactly
- * the collapse /board/gate teaches against and /integrity claims we prevent
- * (structural failure mode "letting a call vanish instead of resolving it"): a
- * considered refusal and a silent disappearance are different facts, and only
- * one of them says anything about the game.
- *
- * The wording deliberately reuses the gate page's own vocabulary — "not
- * evaluated" — so the same distinction is named in the same words on both
- * surfaces rather than being re-taught in a second dialect.
- */
-function passReason(bookmakerCoverageMax: number, dataQualityScore: number): string {
-  if (bookmakerCoverageMax < 3) return "Market depth below publish threshold.";
-  if (dataQualityScore < 70) return "Evidence health below publish threshold.";
-  return "Not evaluated: no pick was generated for this game today.";
-}
+// The reason for a no-published-pick row lives in ./pass-reason.ts, shared with
+// loadBoardState — /board renders both lanes at once and they can describe the
+// same game, so deriving the wording twice let them disagree in public.
 
 export async function loadBoardPasses(
   now = new Date(),
@@ -197,7 +173,7 @@ export async function loadBoardPasses(
       matchup: `${game.awayTeamName} @ ${game.homeTeamName}`,
       sport: game.sport.name,
       edgeIndex: toEdgeIndex(game.currentEdgeIndex),
-      reason: passReason(game.bookmakerCoverageMax, game.dataQualityScore),
+      reason: unevaluatedPassReason(game.bookmakerCoverageMax, game.dataQualityScore),
       evaluatedAt: game.updatedAt.toISOString(),
     }));
 

@@ -43,6 +43,11 @@ vi.mock("@/lib/data-reliability/public-freshness-gate", () => ({
 }));
 
 import { loadBoardPasses } from "@/lib/board/passes";
+import {
+  MIN_BOOKMAKER_COVERAGE,
+  MIN_DATA_QUALITY_SCORE,
+  unevaluatedPassReason,
+} from "@/lib/board/pass-reason";
 
 const NOW = new Date("2026-07-25T18:00:00.000Z");
 
@@ -122,6 +127,57 @@ describe("Pass List fallback — an absence is never reported as a judgement", (
 
     const result = await loadBoardPasses(NOW);
     expect(result.data.passes[0]?.reason).toBe("Evidence health below publish threshold.");
+  });
+});
+
+describe("both /board lanes tell ONE story about a game", () => {
+  /**
+   * The Pass List and Gated Today can render the same game on the same request.
+   * They used to derive this wording independently and had already drifted:
+   * passes.ts checked market depth AND evidence health, state.ts checked only
+   * depth. A game with healthy books and poor evidence health therefore got two
+   * different public reasons at once.
+   *
+   * Both now call `unevaluatedPassReason`, so the guarantee is structural. These
+   * tests pin the shared function's contract directly — the thing a future edit
+   * to either lane would have to go through.
+   */
+  it("names evidence health when depth is fine but evidence is thin", () => {
+    // The exact case the two lanes disagreed on.
+    expect(unevaluatedPassReason(8, MIN_DATA_QUALITY_SCORE - 1)).toBe(
+      "Evidence health below publish threshold.",
+    );
+  });
+
+  it("prefers the depth reason when BOTH deficiencies are present", () => {
+    // Deterministic precedence: without a fixed order, the same game could be
+    // described differently by two callers reading the same row.
+    expect(unevaluatedPassReason(MIN_BOOKMAKER_COVERAGE - 1, MIN_DATA_QUALITY_SCORE - 1)).toBe(
+      "Market depth below publish threshold.",
+    );
+  });
+
+  it("falls through to 'not evaluated' only when both inputs are healthy", () => {
+    expect(unevaluatedPassReason(MIN_BOOKMAKER_COVERAGE, MIN_DATA_QUALITY_SCORE)).toBe(
+      "Not evaluated: no pick was generated for this game today.",
+    );
+  });
+
+  it("never asserts a judgement in ANY branch", () => {
+    // Every reachable output, swept. A future branch that reintroduces
+    // threshold-clearing language fails here regardless of which lane added it.
+    for (const [depth, quality] of [
+      [0, 0],
+      [1, 100],
+      [8, 10],
+      [8, 100],
+      [MIN_BOOKMAKER_COVERAGE, MIN_DATA_QUALITY_SCORE],
+    ] as const) {
+      const reason = unevaluatedPassReason(depth, quality).toLowerCase();
+      for (const claim of JUDGEMENT_CLAIMS) {
+        expect(reason, `(${depth}, ${quality}) must not assert "${claim}"`).not.toContain(claim);
+      }
+    }
   });
 });
 
