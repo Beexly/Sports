@@ -8,10 +8,11 @@
  * `processSport()`) so the two execution paths can never drift.
  *
  * Schedule is declared in `vercel.json` at the repo root:
- *   "0 10 * * *"  → once daily at 10:00 UTC
- * NOTE: the long-running worker mirror still loops every 30 minutes
- * (`REFRESH_INTERVAL_MS`); the deployed Vercel cadence is daily. Keep
- * this comment in sync with `vercel.json` if the cadence changes.
+ *   "*/30 * * * *"  → every 30 minutes
+ * This cadence is required so candidate odds stay inside the board gate's
+ * MAX_CANDIDATE_ODDS_AGE_MS (6 hours) in `load-gate-slate.ts`. Do NOT widen
+ * the 6h gate to hide a slow cron; keep this comment in sync with vercel.json.
+ * The optional long-running worker still uses REFRESH_INTERVAL_MS = 30m.
  *
  * Authentication: Vercel invokes the route with
  *   Authorization: Bearer <CRON_SECRET>
