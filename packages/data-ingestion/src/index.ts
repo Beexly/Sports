@@ -94,6 +94,18 @@ export {
   type CreateStatsProvidersOptions,
 } from "./stats-provider.js";
 export {
+  OfflineOddsProvider,
+  TheOddsApiOddsProvider,
+  createOddsQuoteProvider,
+  isCertifiableOddsProvider,
+  type OddsProviderId,
+  type OddsProviderCapabilities,
+  type OddsProviderHealth,
+  type OddsQuoteProvider,
+  type TheOddsApiOddsProviderOptions,
+  type CreateOddsQuoteProviderOptions,
+} from "./odds-provider-adapter.js";
+export {
   fetchWithFailover,
   withMirrors,
   nflverseMirror,
