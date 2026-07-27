@@ -7,6 +7,7 @@ import {
   type BoardSuppressionReason,
 } from "@/lib/board/health";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { unevaluatedPassReason } from "./pass-reason";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -299,10 +300,16 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     status: "GATED_TODAY",
     edgeIndex: toEdgeIndex(game.currentEdgeIndex),
     confidence: null,
-    gateReason:
-      game.bookmakerCoverageMax < 3
-        ? "Market depth below publish threshold."
-        : "No pick cleared the publish threshold.",
+    // Shared with the Pass List (./pass-reason.ts). `gatedToday` here is the
+    // FALLBACK query — games matching `picks: { none: ... }` — so a row exists
+    // because no published pick does, not because the model evaluated the game
+    // and declined. This lane and the Pass List can describe the same game on
+    // one page, so they must not derive the wording separately; they previously
+    // did, and had already drifted on evidence health.
+    //
+    // The primary path above (real `gateDecision` rows) is untouched: those
+    // carry `decision.reason`, which IS a genuine judgement.
+    gateReason: unevaluatedPassReason(game.bookmakerCoverageMax, game.dataQualityScore),
     updatedAt: game.updatedAt.toISOString(),
   }));
 

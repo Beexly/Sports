@@ -1,6 +1,7 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { unevaluatedPassReason } from "./pass-reason";
 
 /**
  * The auditable trail behind a refusal. Every field here is REAL data already
@@ -73,11 +74,9 @@ function todayBounds(): { start: Date; end: Date } {
   return { start, end };
 }
 
-function passReason(bookmakerCoverageMax: number, dataQualityScore: number): string {
-  if (bookmakerCoverageMax < 3) return "Market depth below publish threshold.";
-  if (dataQualityScore < 70) return "Evidence health below publish threshold.";
-  return "No pick cleared the publish threshold.";
-}
+// The reason for a no-published-pick row lives in ./pass-reason.ts, shared with
+// loadBoardState — /board renders both lanes at once and they can describe the
+// same game, so deriving the wording twice let them disagree in public.
 
 export async function loadBoardPasses(
   now = new Date(),
@@ -174,7 +173,7 @@ export async function loadBoardPasses(
       matchup: `${game.awayTeamName} @ ${game.homeTeamName}`,
       sport: game.sport.name,
       edgeIndex: toEdgeIndex(game.currentEdgeIndex),
-      reason: passReason(game.bookmakerCoverageMax, game.dataQualityScore),
+      reason: unevaluatedPassReason(game.bookmakerCoverageMax, game.dataQualityScore),
       evaluatedAt: game.updatedAt.toISOString(),
     }));
 
