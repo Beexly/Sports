@@ -6,6 +6,7 @@ import {
   partitionGateSlate,
   pricesForPickType,
   selectOddsForPick,
+  consensusSpreadForGame,
   type GateSlateOdds,
   type GateSlatePick,
 } from "@/lib/board/load-gate-slate";
@@ -218,6 +219,106 @@ describe("the production join — five defects review found, pinned", () => {
       { liveCandidate: true, now: NOW },
     )!;
     expect(row.inputProblems!.join(" ")).toContain("matching handicap");
+  });
+
+  describe("handicap check compares CONSENSUS to CONSENSUS, not consensus to a spot quote", () => {
+    // `Pick.line` is written at generation time as the mean spread across
+    // MIN_BOOKMAKERS+ books (scoring.ts). `selectOddsForPick` returns exactly
+    // ONE row — whichever bookmaker's SPREADS row happened to match first.
+    // Comparing the average to one book's raw quote mismatches almost every
+    // time even with ZERO real line movement, because sportsbook spreads are
+    // quantized to 0.5/1.0 increments and an average of several rarely is.
+    // These tests pin the fix: the comparison must reconstruct the SAME
+    // statistic pick.line was computed as (the latest batch, averaged) —
+    // exactly the shape clv-capture.ts's deriveClosingSnapshotFromOdds already
+    // uses for CLV grading — not loosen the check with a wide tolerance.
+
+    const bookA = { ...SPREADS, spread: -3, homeSpreadPrice: -105, awaySpreadPrice: -115 };
+    const bookB = { ...SPREADS, spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -108 };
+    const bookC = { ...SPREADS, spread: -4, homeSpreadPrice: -115, awaySpreadPrice: -105 };
+    // Mean of (-3, -3.5, -4) === -3.5 exactly, by construction of this fixture.
+    const CLEAN_AVERAGE_LINE = -3.5;
+
+    it("does NOT refuse when the average of the current books matches the pick's line", () => {
+      // This is the exact regression this fix addresses: comparing pick.line
+      // (-3.5, the average) against ONE arbitrary book's spot quote (-3 or -4)
+      // would have failed here even though the market has not moved at all —
+      // the three books quoting -3/-3.5/-4 are the SAME three books the pick
+      // was originally priced from.
+      const row = normalizeGateSlatePick(
+        pick({
+          result: "PENDING",
+          line: CLEAN_AVERAGE_LINE,
+          game: { ...pick().game!, odds: [bookA, bookB, bookC] },
+        }),
+        { liveCandidate: true, now: NOW },
+      )!;
+      expect(row.inputProblems).toBeUndefined();
+    });
+
+    it("STILL refuses when the consensus has genuinely moved", () => {
+      // The fix must not become a rubber stamp: real movement is still caught.
+      const movedA = { ...bookA, spread: -6 };
+      const movedB = { ...bookB, spread: -6.5 };
+      const movedC = { ...bookC, spread: -7 };
+      const row = normalizeGateSlatePick(
+        pick({
+          result: "PENDING",
+          line: CLEAN_AVERAGE_LINE,
+          game: { ...pick().game!, odds: [movedA, movedB, movedC] },
+        }),
+        { liveCandidate: true, now: NOW },
+      )!;
+      expect(row.inputProblems!.join(" ")).toContain("matching handicap");
+    });
+
+    it("averages only the LATEST batch, not stale rows mixed into the window", () => {
+      // ODDS_WINDOW pulls rows across ingestion cycles, not just one snapshot.
+      // An older, superseded quote in the array must not dilute the average.
+      const stale = { ...bookA, spread: -1, fetchedAt: new Date("2020-01-01T00:00:00Z") };
+      const row = normalizeGateSlatePick(
+        pick({
+          result: "PENDING",
+          line: CLEAN_AVERAGE_LINE,
+          game: { ...pick().game!, odds: [bookA, bookB, bookC, stale] },
+        }),
+        { liveCandidate: true, now: NOW },
+      )!;
+      expect(row.inputProblems).toBeUndefined();
+    });
+
+    it("consensusSpreadForGame averages exactly the freshest SPREADS batch", () => {
+      expect(consensusSpreadForGame([bookA, bookB, bookC])).toBe(-3.5);
+    });
+
+    it("consensusSpreadForGame excludes H2H rows from the average", () => {
+      // A three-way H2H row can carry a spread field of null; if it were not
+      // filtered by market it would either pollute the average or crash.
+      expect(consensusSpreadForGame([bookA, H2H])).toBe(-3);
+    });
+
+    it("consensusSpreadForGame returns null with no SPREADS rows at all", () => {
+      expect(consensusSpreadForGame([H2H])).toBeNull();
+      expect(consensusSpreadForGame([])).toBeNull();
+    });
+
+    it("tolerates floating-point noise from the average without a wide epsilon", () => {
+      // (-3 + -3.4 + -3.6) / 3 = -3.3333... — not representable exactly in
+      // binary floating point. The comparison must still accept a pick whose
+      // line was stored as that same repeating computation, without the
+      // epsilon being wide enough to also accept genuine movement.
+      const noisy = [
+        { ...bookA, spread: -3 },
+        { ...bookB, spread: -3.4 },
+        { ...bookC, spread: -3.6 },
+      ];
+      const line = (-3 + -3.4 + -3.6) / 3;
+      const row = normalizeGateSlatePick(
+        pick({ result: "PENDING", line, game: { ...pick().game!, odds: noisy } }),
+        { liveCandidate: true, now: NOW },
+      )!;
+      expect(row.inputProblems).toBeUndefined();
+    });
   });
 
   it("refuses a candidate whose game has already started", () => {

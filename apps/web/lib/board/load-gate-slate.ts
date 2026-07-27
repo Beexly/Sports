@@ -149,6 +149,41 @@ export function selectOddsForPick(
   return rows.find((r) => r.market === market);
 }
 
+/**
+ * Absorbs IEEE-754 division noise from averaging spreads, nothing more.
+ *
+ * Deliberately tiny. A wider tolerance would let a genuinely-moved line slip
+ * through undetected, which is the exact correctness risk this whole check
+ * exists to catch — the fix here is comparing the RIGHT statistic (consensus
+ * vs. consensus), not comparing loosely.
+ */
+const HANDICAP_MATCH_EPSILON = 1e-6;
+
+/**
+ * Reconstruct the cross-book consensus spread for a game, from its freshest
+ * ingestion batch — the same statistic `Pick.line` was computed as at
+ * generation time, so it can be compared to `Pick.line` like with like.
+ *
+ * "Batch" mirrors `clv-capture.ts`'s `deriveClosingSnapshotFromOdds`: all
+ * `SPREADS` rows sharing the single latest `fetchedAt` timestamp among the
+ * rows given (one ingestion cycle, potentially several bookmakers), averaged.
+ * Returns null when no SPREADS row with a spread is present at all — the
+ * caller reports that as a missing quote rather than treating it as zero
+ * movement.
+ */
+export function consensusSpreadForGame(rows: readonly GateSlateOdds[]): number | null {
+  const spreadRows = rows.filter(
+    (r): r is GateSlateOdds & { fetchedAt: Date; spread: number } =>
+      r.market === "SPREADS" && r.fetchedAt !== undefined && r.spread !== null && r.spread !== undefined,
+  );
+  if (spreadRows.length === 0) return null;
+
+  const latestTs = Math.max(...spreadRows.map((r) => r.fetchedAt.getTime()));
+  const batch = spreadRows.filter((r) => r.fetchedAt.getTime() === latestTs);
+
+  return batch.reduce((sum, r) => sum + r.spread, 0) / batch.length;
+}
+
 /** The shape `fetchGateSlate` returns, per pick — structural, not Prisma-typed. */
 export interface GateSlatePick {
   readonly id: string;
@@ -296,16 +331,40 @@ export function normalizeGateSlatePick(
     }
 
     // The handicap must be the one the pick was taken at. Both `Pick.line` and
-    // `Odds.spread` are home-perspective, so this compares like with like.
-    // Without it, a home -3.5 pick can be priced off a -6.5 quote after line
-    // movement and receive a materially wrong edge.
+    // the reconstructed consensus spread are home-perspective, so this compares
+    // like with like. Without it, a home -3.5 pick can be priced off a -6.5
+    // quote after line movement and receive a materially wrong edge.
+    //
+    // Compared against the BATCH CONSENSUS, not `odds.spread` (one row from
+    // `selectOddsForPick`) — deliberately. `Pick.line` is written at generation
+    // time as the mean spread across >= MIN_BOOKMAKERS books
+    // (scoring.ts:384,561), never one book's quote. `odds` is a single row:
+    // whichever bookmaker's SPREADS row `.find()` matched first in the
+    // freshness-ordered window. Comparing a multi-book average against a
+    // one-book spot price with strict equality mismatches almost every time
+    // even with ZERO real market movement — sportsbook spreads are quantized to
+    // 0.5/1.0 increments, an average of several rarely is — which would inflate
+    // "matching handicap" refusals with a false signal indistinguishable from
+    // genuine movement. `consensusSpreadForGame` reconstructs the same
+    // statistic the same way `clv-capture.ts`'s `deriveClosingSnapshotFromOdds`
+    // already does for CLV grading ("the close = the single latest batch,
+    // averaged"), rather than inventing a second shape for the same idea.
     if (pick.pickType === "SPREAD") {
       if (odds.spread === null || odds.spread === undefined) {
         inputProblems.push("quoted handicap (spread absent from the quote)");
-      } else if (odds.spread !== pick.line) {
-        inputProblems.push(
-          `matching handicap (pick taken at ${pick.line}, market now quotes ${odds.spread})`,
-        );
+      } else {
+        const consensus = consensusSpreadForGame(pick.game?.odds ?? []);
+        if (consensus === null) {
+          // Unreachable in practice — `odds.spread` non-null implies at least
+          // one SPREADS row with a spread exists, which is exactly what
+          // `consensusSpreadForGame` requires. Excluded rather than trusted,
+          // per this module's rule of never guessing past a contradiction.
+          inputProblems.push("quoted handicap (spread absent from the quote)");
+        } else if (Math.abs(consensus - pick.line) > HANDICAP_MATCH_EPSILON) {
+          inputProblems.push(
+            `matching handicap (pick taken at ${pick.line}, market now quotes ${consensus})`,
+          );
+        }
       }
     }
   }

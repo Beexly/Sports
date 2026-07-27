@@ -333,17 +333,83 @@ What keeps a subscriber:
 
    **Code leverage toward (5b) ≥ 1 — the only thing worth building next here,
    and it is a data-evaluability problem, not a flag flip:**
-   1. Reduce **fresh odds** exclusions (283, effectively all pending rows) —
-      ingestion cadence vs. `MAX_CANDIDATE_ODDS_AGE_MS` (6h) vs. actual book
-      refresh rate.
-   2. Reduce **q** gaps (719) — both-sided prices for moneyline picks, correct
-      spread-price pair selection via `pricesForPickType`.
-   3. Grow `MLB|SPREAD|v5.1.0` pending candidates specifically, or bring a
-      second stratum to the 100-row floor.
-   4. Re-run `npm run gate:phase-c` once `DATABASE_URL` is available in the
-      working environment; flip only if (5b) ≥ 1 **and** the founder confirms
-      the change directly in the production deploy environment — never via a
-      committed config value.
+   Investigated all five, read-only against source (no `DATABASE_URL` in this
+   environment), each verified independently rather than taken on report:
+
+   1. **Fresh odds (283/283 — literally every pending row).** `selectOddsForPick`
+      correctly returns the freshest row per market; no sort/window bug found.
+      The *scheduled* ingestion cadence (`workers/data-refresh` 30-minute
+      self-scheduling loop; `.github/workflows/external-cron.yml` hitting
+      `/api/cron/refresh-odds` every 30 minutes independently) is a 12x margin
+      inside the 6-hour freshness budget — a 100% failure rate is inconsistent
+      with either scheduler running normally. **Real ops issue, not a code
+      bug**: most likely candidates are the GitHub Actions schedule disabled
+      (GitHub auto-disables cron on inactive repos), `THE_ODDS_API_KEY`
+      invalid/exhausted, or the 283 pending picks belonging to sports
+      `getInSeasonSports()` currently excludes. **Founder-only** — verifying
+      which requires operational access this session does not have.
+
+   2. **q (719 row-reason pairs).** Verified NOT a market-name mismatch: the
+      `MARKET_FOR_PICK_TYPE` mapping (`SPREAD`→`SPREADS`, `MONEYLINE`→`H2H`,
+      `TOTAL`→`TOTALS`) matches the Prisma `OddsMarket` enum and the actual
+      ingestion writer (`DataNormalizer.normalizeOdds`) exactly. All three
+      sub-reasons collapsed under this one prefix by the script's own
+      `reason.split(" (")[0]` grouping are **expected design**: missing prices
+      come from `sanitizeAmericanPrice` correctly dropping malformed upstream
+      data or odds simply not yet ingested for that market this cycle; the
+      three-way-market exclusion is correct given MLS carries a real
+      `drawPrice`; the TOTAL exclusion is correct because this gate has no
+      over/under devig path (by design — TOTAL is ~1/3 of the pick mix per
+      seed rotation, so this is a large and expected bucket, not an edge case).
+      **No code change.**
+
+   3. **Provenance (254/888, ~29%).** Traced to two deliberate fail-closed
+      gates, not a settlement-write bug: `OUTCOME_LEARNING_ENABLED` (via
+      `config.outcomeLearningEnabled`) defaults off and is read live at
+      settlement time rather than backfilled — so a real structural
+      chicken-and-egg gap exists where the first N canonical picks needed to
+      justify enabling the flag can never retroactively become
+      learning-eligible themselves once it is turned on. Both `isBootstrap`
+      and `eligibleForLearning` are written unconditionally on settlement
+      success with retry-and-durable-failure-record on write failure — no
+      silent-drop path found. **Expected fail-closed design; no code change**,
+      but the chicken-and-egg framing above is worth a founder read before any
+      future decision to flip `OUTCOME_LEARNING_ENABLED`.
+
+   4. **Placeable window (139).** Verified the Phase C script and
+      `fetchGateSlate`'s production SQL apply IDENTICAL semantics — same
+      `now`, complementary `gt`/`<=` operators, and `Game.status` is a
+      non-nullable enum defaulting to `SCHEDULED` so the theoretical
+      falsy-status gap is unreachable. The 139 count is exactly what the
+      script's own docstring says it measures: rows the SQL filter normally
+      hides, made visible on purpose. **Measurement and product agree; no
+      code change.**
+
+   5. **Matching handicap (107) — CONFIRMED CODE BUG, FIXED.** `Pick.line` is
+      written at generation time as the mean spread across `MIN_BOOKMAKERS`+
+      books (`scoring.ts` `avgSpread`/`line: avgSpread`); `selectOddsForPick`
+      returned a single row — whichever bookmaker's `SPREADS` row matched
+      first. Comparing a multi-book average against one book's spot quote with
+      strict equality mismatches almost every time even with **zero** real
+      line movement, since sportsbook spreads are quantized to 0.5/1.0
+      increments and an average of several rarely is. Fixed by adding
+      `consensusSpreadForGame` (`apps/web/lib/board/load-gate-slate.ts`),
+      which reconstructs the same statistic the same way
+      `clv-capture.ts`'s `deriveClosingSnapshotFromOdds` already does for CLV
+      grading ("the close = the single latest batch, averaged") — reusing an
+      existing correct pattern rather than inventing a second one, and
+      comparing with only a `1e-9`-scale epsilon to absorb floating-point
+      averaging noise, never to loosen the real correctness check. Genuine
+      line movement is still caught; only the false mismatch from comparing
+      two different statistics is removed.
+
+   None of the above are, individually or together, expected to move (5b) from
+   0 to ≥ 1 on their own — #5 removes a source of *false* exclusions, but the
+   dominant blockers (#1 fresh odds, #3 provenance-gate timing) are real data
+   and ops conditions outside this session's reach, not defects. Re-run
+   `npm run gate:phase-c` once `DATABASE_URL` is available; flip only if
+   (5b) ≥ 1 **and** the founder confirms the change directly in the production
+   deploy environment — never via a committed config value.
 
 4. **Ledger multiprob persistence is BLOCKED — on a missing writer, not on
    commitment risk.** Investigated directly rather than assumed; the blocker is
