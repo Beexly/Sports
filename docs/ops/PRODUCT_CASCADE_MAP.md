@@ -299,13 +299,51 @@ What keeps a subscriber:
    100 settled picks before the gate will fire in it. That is the honest
    state of a pre-launch product, not a defect to engineer around.
 
-   **Phase C counts do not exist yet.** No staging or read-only-replica
-   `DATABASE_URL` is reachable from the agent environment: it is absent from the
-   process env, there is no committed `.env` (only `.example` files), the Vercel
-   MCP surface exposes no environment-variable values, and the Cloudflare
-   Hyperdrive config list is empty. `npm run gate:phase-c` therefore cannot be
-   run, and no counts are recorded here rather than estimated. This is the single
-   remaining blocker on recommending the flip.
+   **Phase C is measured. Real counts, not estimates, as of 2026-07-27T16:18:25Z**
+   against the Neon pooled connection (`ep-summer-moon-apv5ccys-pooler`), main
+   baseline `49010d8a`, floor `MIN_STRATUM_CALIBRATION = 100`:
+
+   | # | Metric | Value |
+   |---|--------|------:|
+   | (1) | settled_raw_win_loss | 888 |
+   | (2) | settled_calibration_admitted | 359 |
+   | (3) | pending_candidates_raw | 283 |
+   | (4) | pending_candidates_evaluable | **0** |
+   | (5) | strata_at_or_above_floor | 1 |
+   | **(5b)** | floor strata with a current candidate | **0** |
+
+   Only stratum at/above floor: `MLB|SPREAD|v5.1.0` (180 admitted). Next
+   largest, all below floor: `MLB|MONEYLINE|v5.1.0` (74), `MLB|SPREAD|v5.0.0`
+   (57), `MLB|MONEYLINE|v5.0.0` (28), `MLS|SPREAD|v5.1.0` (20).
+
+   Exclusion reason pairs across the 283 raw pending candidates: **q 719** ·
+   **fresh odds 283** · **provenance 254** · **placeable window 139** ·
+   **matching handicap 107** · **undescribable 0**. (Reasons are not mutually
+   exclusive — a single row can carry more than one `inputProblems` entry, so
+   these do not sum to 283.)
+
+   **Binding decision: do NOT set `LIVE_BOARD_GATE_SLATE=1`.** (5b) = 0 means
+   every row in the one stratum that clears the calibration floor has zero
+   *currently evaluable* candidates — every live row would render
+   `INSUFFICIENT_CALIBRATION` or `NOT_EVALUATED_MISSING_INPUTS`. A live board in
+   that state is strictly worse reading than the labelled illustrative one:
+   it would look like the product tried and found nothing, when the truth is
+   that pending data quality, not the gate, is the limiter. Illustrative
+   `/board/gate` remains the honest public state.
+
+   **Code leverage toward (5b) ≥ 1 — the only thing worth building next here,
+   and it is a data-evaluability problem, not a flag flip:**
+   1. Reduce **fresh odds** exclusions (283, effectively all pending rows) —
+      ingestion cadence vs. `MAX_CANDIDATE_ODDS_AGE_MS` (6h) vs. actual book
+      refresh rate.
+   2. Reduce **q** gaps (719) — both-sided prices for moneyline picks, correct
+      spread-price pair selection via `pricesForPickType`.
+   3. Grow `MLB|SPREAD|v5.1.0` pending candidates specifically, or bring a
+      second stratum to the 100-row floor.
+   4. Re-run `npm run gate:phase-c` once `DATABASE_URL` is available in the
+      working environment; flip only if (5b) ≥ 1 **and** the founder confirms
+      the change directly in the production deploy environment — never via a
+      committed config value.
 
 4. **Ledger multiprob persistence is BLOCKED — on a missing writer, not on
    commitment risk.** Investigated directly rather than assumed; the blocker is
