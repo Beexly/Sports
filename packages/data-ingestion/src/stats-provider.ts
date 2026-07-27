@@ -325,9 +325,24 @@ export function mergeStatsFeatures(
   return out;
 }
 
-/** True only for quote-plane certifiers — always false for StatsProvider. */
-export function isCertifiableStatsProvider(provider: StatsProvider): boolean {
-  return provider.capabilities.certifiableForLiveGate === true;
+/**
+ * Always `false` for any `StatsProvider` — not a runtime check, a fact of the
+ * type.
+ *
+ * `StatsProviderCapabilities.certifiableForLiveGate` is typed as the literal
+ * `false`, not `boolean` (see the interface above), so no `StatsProvider`
+ * object can be constructed anywhere in this codebase with `true` in that
+ * field — TypeScript rejects the object literal at the construction site.
+ * That is a stronger guarantee than any comparison this function could make,
+ * which is why `provider.capabilities.certifiableForLiveGate === true`
+ * doesn't compile: the compiler can already prove it's impossible.
+ *
+ * Kept as a named function anyway, so a caller has one thing to call instead
+ * of reaching into `.capabilities.certifiableForLiveGate` directly — the
+ * compiler is the guarantee, this is just a readable name for it.
+ */
+export function isCertifiableStatsProvider(_provider: StatsProvider): false {
+  return false;
 }
 
 // silence unused helper if TEAM_RATES path unused
