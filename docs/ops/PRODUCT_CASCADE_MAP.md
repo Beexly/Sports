@@ -299,13 +299,141 @@ What keeps a subscriber:
    100 settled picks before the gate will fire in it. That is the honest
    state of a pre-launch product, not a defect to engineer around.
 
-   **Phase C counts do not exist yet.** No staging or read-only-replica
-   `DATABASE_URL` is reachable from the agent environment: it is absent from the
-   process env, there is no committed `.env` (only `.example` files), the Vercel
-   MCP surface exposes no environment-variable values, and the Cloudflare
-   Hyperdrive config list is empty. `npm run gate:phase-c` therefore cannot be
-   run, and no counts are recorded here rather than estimated. This is the single
-   remaining blocker on recommending the flip.
+   **Phase C is measured. Real counts, not estimates, as of 2026-07-27T16:18:25Z**
+   against the Neon pooled connection (`ep-summer-moon-apv5ccys-pooler`), main
+   baseline `49010d8a`, floor `MIN_STRATUM_CALIBRATION = 100`:
+
+   | # | Metric | Value |
+   |---|--------|------:|
+   | (1) | settled_raw_win_loss | 888 |
+   | (2) | settled_calibration_admitted | 359 |
+   | (3) | pending_candidates_raw | 283 |
+   | (4) | pending_candidates_evaluable | **0** |
+   | (5) | strata_at_or_above_floor | 1 |
+   | **(5b)** | floor strata with a current candidate | **0** |
+
+   Only stratum at/above floor: `MLB|SPREAD|v5.1.0` (180 admitted). Next
+   largest, all below floor: `MLB|MONEYLINE|v5.1.0` (74), `MLB|SPREAD|v5.0.0`
+   (57), `MLB|MONEYLINE|v5.0.0` (28), `MLS|SPREAD|v5.1.0` (20).
+
+   Exclusion reason pairs across the 283 raw pending candidates: **q 719** ·
+   **fresh odds 283** · **provenance 254** · **placeable window 139** ·
+   **matching handicap 107** · **undescribable 0**. (Reasons are not mutually
+   exclusive — a single row can carry more than one `inputProblems` entry, so
+   these do not sum to 283.)
+
+   **Binding decision: do NOT set `LIVE_BOARD_GATE_SLATE=1`.** (5b) = 0 means
+   every row in the one stratum that clears the calibration floor has zero
+   *currently evaluable* candidates — every live row would render
+   `INSUFFICIENT_CALIBRATION` or `NOT_EVALUATED_MISSING_INPUTS`. A live board in
+   that state is strictly worse reading than the labelled illustrative one:
+   it would look like the product tried and found nothing, when the truth is
+   that pending data quality, not the gate, is the limiter. Illustrative
+   `/board/gate` remains the honest public state.
+
+   **Code leverage toward (5b) ≥ 1 — the only thing worth building next here,
+   and it is a data-evaluability problem, not a flag flip:**
+   Investigated all five, read-only against source (no `DATABASE_URL` in this
+   environment), each verified independently rather than taken on report:
+
+   1. **Fresh odds (283/283 — literally every pending row).** `selectOddsForPick`
+      correctly returns the freshest row per market; no sort/window bug found.
+      The *scheduled* ingestion cadence (`workers/data-refresh` 30-minute
+      self-scheduling loop; `.github/workflows/external-cron.yml` hitting
+      `/api/cron/refresh-odds` every 30 minutes independently) is a 12x margin
+      inside the 6-hour freshness budget — a 100% failure rate is inconsistent
+      with either scheduler running normally. **Real ops issue, not a code
+      bug**: most likely candidates are the GitHub Actions schedule disabled
+      (GitHub auto-disables cron on inactive repos), `THE_ODDS_API_KEY`
+      invalid/exhausted, or the 283 pending picks belonging to sports
+      `getInSeasonSports()` currently excludes. **Founder-only** — verifying
+      which requires operational access this session does not have.
+
+   2. **q (719 row-reason pairs).** Verified NOT a market-name mismatch: the
+      `MARKET_FOR_PICK_TYPE` mapping (`SPREAD`→`SPREADS`, `MONEYLINE`→`H2H`,
+      `TOTAL`→`TOTALS`) matches the Prisma `OddsMarket` enum and the actual
+      ingestion writer (`DataNormalizer.normalizeOdds`) exactly. All three
+      sub-reasons collapsed under this one prefix by the script's own
+      `reason.split(" (")[0]` grouping are **expected design**: missing prices
+      come from `sanitizeAmericanPrice` correctly dropping malformed upstream
+      data or odds simply not yet ingested for that market this cycle; the
+      three-way-market exclusion is correct given MLS carries a real
+      `drawPrice`; the TOTAL exclusion is correct because this gate has no
+      over/under devig path (by design — TOTAL is ~1/3 of the pick mix per
+      seed rotation, so this is a large and expected bucket, not an edge case).
+      **No code change.**
+
+   3. **Provenance (254/888, ~29%).** Traced to two deliberate fail-closed
+      gates, not a settlement-write bug: `OUTCOME_LEARNING_ENABLED` (via
+      `config.outcomeLearningEnabled`) defaults off and is read live at
+      settlement time rather than backfilled — so a real structural
+      chicken-and-egg gap exists where the first N canonical picks needed to
+      justify enabling the flag can never retroactively become
+      learning-eligible themselves once it is turned on. Both `isBootstrap`
+      and `eligibleForLearning` are written unconditionally on settlement
+      success with retry-and-durable-failure-record on write failure — no
+      silent-drop path found. **Expected fail-closed design; no code change**,
+      but the chicken-and-egg framing above is worth a founder read before any
+      future decision to flip `OUTCOME_LEARNING_ENABLED`.
+
+   4. **Placeable window (139).** Verified the Phase C script and
+      `fetchGateSlate`'s production SQL apply IDENTICAL semantics — same
+      `now`, complementary `gt`/`<=` operators, and `Game.status` is a
+      non-nullable enum defaulting to `SCHEDULED` so the theoretical
+      falsy-status gap is unreachable. The 139 count is exactly what the
+      script's own docstring says it measures: rows the SQL filter normally
+      hides, made visible on purpose. **Measurement and product agree; no
+      code change.**
+
+   5. **Matching handicap (107) — CONFIRMED CODE BUG, FIXED, then a real review
+      caught two more bugs in the first fix.** `Pick.line` is written at
+      generation time as the mean spread across `MIN_BOOKMAKERS`+ books
+      (`scoring.ts` `avgSpread`/`line: avgSpread`); `selectOddsForPick`
+      returned a single row — whichever bookmaker's `SPREADS` row matched
+      first. Comparing a multi-book average against one book's spot quote with
+      strict equality mismatches almost every time even with **zero** real
+      line movement, since sportsbook spreads are quantized to 0.5/1.0
+      increments and an average of several rarely is not. First fix added
+      `consensusSpreadForGame`, reconstructing that statistic the same way
+      `clv-capture.ts`'s `deriveClosingSnapshotFromOdds` already does for CLV
+      grading — but automated review on the resulting PR found two further,
+      real defects in it, both verified independently before acting:
+
+      - **Wrong comparison target.** `Pick.line` is not immutable — it is
+        REWRITTEN on every refresh cycle while a pick is PENDING
+        (`process-sport.ts`'s own comment: "Fields refreshed on every cycle
+        ... Pick.line itself IS mutated each cycle"). The true immutable
+        snapshot is `clvLockLine`, captured once at publish. The first fix
+        compared consensus-now against the wrong, moving target. Now uses
+        `selectGradingLine` — the same helper `settlement.ts` already uses to
+        *grade* these picks — which resolves `clvLockLine ?? line`, falling
+        back only for legacy rows with no lock.
+      - **Decoupled pricing.** Averaging only the SPREAD while `q` still
+        devigged off whichever single book `selectOddsForPick` matched could
+        admit a row whose handicap validated against the consensus (e.g.
+        -3.5) while its actual price corresponded to a DIFFERENT book's
+        different spread (e.g. -3) — pricing one bet's probability while
+        evaluating a different bet the check confirmed. Fixed by averaging the
+        SAME batch's home/away spread prices alongside the spread
+        (`averageAmericanPrices`, in probability space — American odds are
+        discontinuous across ±100, the same hazard `clv-capture.ts` already
+        documents for moneyline averaging) and overriding `q`'s price source
+        with that coupled consensus once the handicap validates.
+
+      Compared with only a `1e-6`-scale epsilon throughout, to absorb
+      floating-point averaging noise, never to loosen the real correctness
+      check. Genuine line movement is still caught by test; only the false
+      mismatch from comparing two different statistics, and the false
+      admission from pricing off a different handicap than the one validated,
+      are removed.
+
+   None of the above are, individually or together, expected to move (5b) from
+   0 to ≥ 1 on their own — #5 removes a source of *false* exclusions, but the
+   dominant blockers (#1 fresh odds, #3 provenance-gate timing) are real data
+   and ops conditions outside this session's reach, not defects. Re-run
+   `npm run gate:phase-c` once `DATABASE_URL` is available; flip only if
+   (5b) ≥ 1 **and** the founder confirms the change directly in the production
+   deploy environment — never via a committed config value.
 
 4. **Ledger multiprob persistence is BLOCKED — on a missing writer, not on
    commitment risk.** Investigated directly rather than assumed; the blocker is

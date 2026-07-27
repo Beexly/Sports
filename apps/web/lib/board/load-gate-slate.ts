@@ -20,6 +20,7 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import { averageAmericanPrices, selectGradingLine } from "@sports/prediction-engine";
 import {
   buildCalibrationRows,
   buildCandidateRows,
@@ -149,6 +150,75 @@ export function selectOddsForPick(
   return rows.find((r) => r.market === market);
 }
 
+/**
+ * Absorbs IEEE-754 division noise from averaging spreads, nothing more.
+ *
+ * Deliberately tiny. A wider tolerance would let a genuinely-moved line slip
+ * through undetected, which is the exact correctness risk this whole check
+ * exists to catch — the fix here is comparing the RIGHT statistic (consensus
+ * vs. consensus), not comparing loosely.
+ */
+const HANDICAP_MATCH_EPSILON = 1e-6;
+
+/** The consensus spread AND the prices quoted alongside it — see `consensusSpreadForGame`. */
+export interface SpreadConsensus {
+  readonly spread: number;
+  readonly homePrice: number | null;
+  readonly awayPrice: number | null;
+}
+
+/**
+ * Reconstruct the cross-book consensus for a game's SPREAD market, from its
+ * freshest ingestion batch — the same statistic `clvLockLine` (or legacy
+ * `line`) was computed as at generation time, so a candidate's current market
+ * state can be compared to the locked state like with like.
+ *
+ * Averages the PRICES from the SAME batch alongside the spread, deliberately.
+ * Averaging only the spread and then devigging `q` from some OTHER single
+ * row's prices (whichever `selectOddsForPick` happened to match) would price
+ * a bet at one book's specific handicap while validating a different,
+ * averaged handicap — internally inconsistent, and worse than not averaging
+ * at all: it would admit a row whose probability corresponds to a spread the
+ * check never actually confirmed. Spread and price must come from the same
+ * computation, or the validation says nothing about what `q` was priced at.
+ *
+ * Prices are averaged in PROBABILITY SPACE via `averageAmericanPrices`, never
+ * as raw American numbers — American odds are discontinuous across ±100
+ * (`avg(-102, +105) = +2` is not a price), the exact hazard `clv-capture.ts`
+ * already documents for moneyline averaging. Spread prices sit close to even
+ * (~-110) but are still American odds and can cross that boundary.
+ *
+ * "Batch" mirrors `clv-capture.ts`'s `deriveClosingSnapshotFromOdds`: all
+ * `SPREADS` rows sharing the single latest `fetchedAt` timestamp among the
+ * rows given (one ingestion cycle, potentially several bookmakers). Returns
+ * null when no SPREADS row with a spread is present at all — the caller
+ * reports that as a missing quote rather than treating it as zero movement.
+ */
+export function consensusSpreadForGame(rows: readonly GateSlateOdds[]): SpreadConsensus | null {
+  const spreadRows = rows.filter(
+    (r): r is GateSlateOdds & { fetchedAt: Date; spread: number } =>
+      r.market === "SPREADS" && r.fetchedAt !== undefined && r.spread !== null && r.spread !== undefined,
+  );
+  if (spreadRows.length === 0) return null;
+
+  const latestTs = Math.max(...spreadRows.map((r) => r.fetchedAt.getTime()));
+  const batch = spreadRows.filter((r) => r.fetchedAt.getTime() === latestTs);
+
+  const spread = batch.reduce((sum, r) => sum + r.spread, 0) / batch.length;
+  const homePrices = batch
+    .map((r) => r.homeSpreadPrice)
+    .filter((p): p is number => p !== null && p !== undefined);
+  const awayPrices = batch
+    .map((r) => r.awaySpreadPrice)
+    .filter((p): p is number => p !== null && p !== undefined);
+
+  return {
+    spread,
+    homePrice: averageAmericanPrices(homePrices),
+    awayPrice: averageAmericanPrices(awayPrices),
+  };
+}
+
 /** The shape `fetchGateSlate` returns, per pick — structural, not Prisma-typed. */
 export interface GateSlatePick {
   readonly id: string;
@@ -156,8 +226,23 @@ export interface GateSlatePick {
   readonly confidence: number;
   readonly pickType: string;
   readonly result: string;
-  /** Home-perspective handicap the pick was published at. */
+  /**
+   * Home-perspective handicap, MUTATED on every refresh cycle while the pick
+   * is PENDING (`process-sport.ts`'s `pickUpdateData.line` — "Fields refreshed
+   * on every cycle"). This is NOT the line the pick was published at; that is
+   * `clvLockLine`. Kept as the founder-gated fallback for legacy rows that
+   * predate `clvLockLine`, via `selectGradingLine` — never read directly for a
+   * "what did we publish" question on a live candidate.
+   */
   readonly line: number;
+  /**
+   * The immutable price/line snapshot captured ONCE at creation — `null` for
+   * MONEYLINE picks (which lock via `clvLockPrice` instead) and for legacy
+   * rows written before this field existed. The line a candidate's current
+   * market state must be compared against; `line` above drifts and must not
+   * be used for that comparison.
+   */
+  readonly clvLockLine: number | null;
   readonly isBootstrap: boolean;
   readonly modelVersion: string | null;
   readonly signalSnapshot: { readonly eligibleForLearning: boolean } | null;
@@ -249,7 +334,11 @@ export function normalizeGateSlatePick(
   if (!PICK_TYPES.has(pick.pickType) || !RESULTS.has(pick.result)) return null;
 
   const odds = selectOddsForPick(pick.pickType, pick.game?.odds ?? []);
-  const prices = pricesForPickType(pick.pickType, odds);
+  // `let`, not `const`: the SPREAD-candidate branch below OVERRIDES this with
+  // the consensus-batch prices once the handicap validates, so `q` stays
+  // coupled to the same computation that confirmed the handicap — never a
+  // decoupled single-book quote at a different spread. See that branch.
+  let prices = pricesForPickType(pick.pickType, odds);
   const inputProblems: string[] = [];
 
   if (options.liveCandidate) {
@@ -295,17 +384,63 @@ export function normalizeGateSlatePick(
       inputProblems.push("fresh odds (the latest quote for this market is stale)");
     }
 
-    // The handicap must be the one the pick was taken at. Both `Pick.line` and
-    // `Odds.spread` are home-perspective, so this compares like with like.
-    // Without it, a home -3.5 pick can be priced off a -6.5 quote after line
-    // movement and receive a materially wrong edge.
+    // The handicap must be the one the pick was ACTUALLY taken at, and `q`
+    // must be priced coherently with whatever spread that comparison confirms.
+    // Two distinct hazards, both real, both fixed here together because
+    // fixing only one leaves the other:
+    //
+    // HAZARD 1 — comparing against the wrong, MUTABLE target. `Pick.line` is
+    // rewritten on every refresh cycle while a pick is PENDING
+    // (`process-sport.ts`: "Fields refreshed on every cycle" —
+    // `pickUpdateData.line: pick.line`). The immutable snapshot captured once
+    // at publish is `clvLockLine`. Comparing against `line` compares "the
+    // market now" against "the market now" (or very close to it, from the
+    // last refresh) and can silently pass through real movement.
+    // `selectGradingLine` — the same helper `settlement.ts` uses to GRADE
+    // these picks — resolves this: `clvLockLine ?? line`, falling back only
+    // for legacy rows with no lock.
+    //
+    // HAZARD 2 — comparing a MULTI-BOOK AVERAGE against a ONE-BOOK SPOT quote.
+    // `clvLockLine` was captured as the mean spread across >= MIN_BOOKMAKERS
+    // books (scoring.ts: `avgSpread`, `line: avgSpread`). `selectOddsForPick`
+    // returns a SINGLE row — whichever bookmaker's SPREADS row `.find()`
+    // matched first. Comparing an average to one book's spot price mismatches
+    // almost every time even with ZERO real movement, since sportsbook spreads
+    // are quantized to 0.5/1.0 increments and an average of several rarely is.
+    // `consensusSpreadForGame` reconstructs the SAME statistic the lock line
+    // was computed as — the same batch-average shape `clv-capture.ts`'s
+    // `deriveClosingSnapshotFromOdds` already uses for CLV grading — rather
+    // than inventing a second shape for the same idea.
+    //
+    // COUPLING — once the handicap validates, `prices` is OVERRIDDEN with
+    // that SAME consensus batch's prices, replacing the single-row prices
+    // `pricesForPickType` extracted above. Without this, `q` would still be
+    // devigged from whichever single book `selectOddsForPick` happened to
+    // match — which can quote a DIFFERENT spread than the one just validated
+    // — pricing a "-3 spread" bet's probability while evaluating it as the
+    // "-3.5" bet the check confirmed. Spread and price must come from the
+    // same computation, or the validation says nothing about what `q` prices.
     if (pick.pickType === "SPREAD") {
       if (odds.spread === null || odds.spread === undefined) {
         inputProblems.push("quoted handicap (spread absent from the quote)");
-      } else if (odds.spread !== pick.line) {
-        inputProblems.push(
-          `matching handicap (pick taken at ${pick.line}, market now quotes ${odds.spread})`,
-        );
+      } else {
+        const consensus = consensusSpreadForGame(pick.game?.odds ?? []);
+        if (consensus === null) {
+          // Unreachable in practice — `odds.spread` non-null implies at least
+          // one SPREADS row with a spread exists, which is exactly what
+          // `consensusSpreadForGame` requires. Excluded rather than trusted,
+          // per this module's rule of never guessing past a contradiction.
+          inputProblems.push("quoted handicap (spread absent from the quote)");
+        } else {
+          const lockedLine = selectGradingLine(pick);
+          if (Math.abs(consensus.spread - lockedLine) > HANDICAP_MATCH_EPSILON) {
+            inputProblems.push(
+              `matching handicap (pick taken at ${lockedLine}, market now quotes ${consensus.spread})`,
+            );
+          } else {
+            prices = { homePrice: consensus.homePrice, awayPrice: consensus.awayPrice, drawPrice: null };
+          }
+        }
       }
     }
   }
