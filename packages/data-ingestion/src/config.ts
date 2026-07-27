@@ -129,8 +129,18 @@ export const FRESHNESS_THRESHOLD_MS =
 // staying well under the cron's maxDuration so remaining sports still process.
 export const ODDS_API_TIMEOUT_MS = 15 * 1000; // 15 seconds
 
-// The Odds API base URL
-export const ODDS_API_BASE_URL = "https://api.the-odds-api.com/v4";
+/**
+ * The Odds API base URL.
+ *
+ * Default: production The Odds API.
+ * Staging chaos: point at Toxiproxy listen URL, e.g.
+ *   ODDS_API_BASE_URL=http://127.0.0.1:8475/odds-api/v4
+ * (see docker/chaos/README.md). Never invent quotes when upstream fails.
+ */
+export const ODDS_API_BASE_URL = (
+  process.env["ODDS_API_BASE_URL"]?.replace(/\/$/, "") ||
+  "https://api.the-odds-api.com/v4"
+);
 
 // Region preference for odds format
 export const ODDS_REGION = "us";
