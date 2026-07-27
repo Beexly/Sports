@@ -73,10 +73,33 @@ function todayBounds(): { start: Date; end: Date } {
   return { start, end };
 }
 
+/**
+ * The reason a game appears on the Pass List when NO gate decision exists for it.
+ *
+ * These rows come from the `picks: { none: ... }` fallback below: the game is
+ * here because no published pick EXISTS for it, not because anything evaluated
+ * it and declined. That distinction is the whole product.
+ *
+ * The first two branches name a real input deficiency readable off the game row,
+ * so they are honest as stated. The third cannot be: with adequate market depth
+ * and adequate evidence health, an absent pick means nothing reached the model —
+ * the generator may not have run, may have errored, or may not cover this sport.
+ *
+ * It previously read "No pick cleared the publish threshold", which asserts the
+ * opposite — that a judgement was made and the pick fell short. That is exactly
+ * the collapse /board/gate teaches against and /integrity claims we prevent
+ * (structural failure mode "letting a call vanish instead of resolving it"): a
+ * considered refusal and a silent disappearance are different facts, and only
+ * one of them says anything about the game.
+ *
+ * The wording deliberately reuses the gate page's own vocabulary — "not
+ * evaluated" — so the same distinction is named in the same words on both
+ * surfaces rather than being re-taught in a second dialect.
+ */
 function passReason(bookmakerCoverageMax: number, dataQualityScore: number): string {
   if (bookmakerCoverageMax < 3) return "Market depth below publish threshold.";
   if (dataQualityScore < 70) return "Evidence health below publish threshold.";
-  return "No pick cleared the publish threshold.";
+  return "Not evaluated: no pick was generated for this game today.";
 }
 
 export async function loadBoardPasses(

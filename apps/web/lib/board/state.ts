@@ -299,10 +299,20 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     status: "GATED_TODAY",
     edgeIndex: toEdgeIndex(game.currentEdgeIndex),
     confidence: null,
+    // Same distinction as `passReason` in ./passes.ts, for the same reason.
+    // `gatedToday` here is the FALLBACK query — games matching
+    // `picks: { none: ... }` — so a row exists because no published pick does,
+    // not because the model evaluated the game and declined. Low market depth is
+    // a real, observable input deficiency and is named as such; anything else is
+    // an absence, and calling an absence a failure to clear the threshold would
+    // manufacture a judgement that was never made.
+    //
+    // The primary path above (real `gateDecision` rows) is untouched: those
+    // carry `decision.reason`, which IS a genuine judgement.
     gateReason:
       game.bookmakerCoverageMax < 3
         ? "Market depth below publish threshold."
-        : "No pick cleared the publish threshold.",
+        : "Not evaluated: no pick was generated for this game today.",
     updatedAt: game.updatedAt.toISOString(),
   }));
 
