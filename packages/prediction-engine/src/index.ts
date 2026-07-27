@@ -4,6 +4,7 @@ export {
   scoreGames,
   americanToImpliedProbability,
   removeVig,
+  averageAmericanPrices,
   clamp,
   toEdgeIndex,
 } from "./scoring.js";

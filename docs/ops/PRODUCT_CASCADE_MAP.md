@@ -385,23 +385,47 @@ What keeps a subscriber:
       hides, made visible on purpose. **Measurement and product agree; no
       code change.**
 
-   5. **Matching handicap (107) — CONFIRMED CODE BUG, FIXED.** `Pick.line` is
-      written at generation time as the mean spread across `MIN_BOOKMAKERS`+
-      books (`scoring.ts` `avgSpread`/`line: avgSpread`); `selectOddsForPick`
+   5. **Matching handicap (107) — CONFIRMED CODE BUG, FIXED, then a real review
+      caught two more bugs in the first fix.** `Pick.line` is written at
+      generation time as the mean spread across `MIN_BOOKMAKERS`+ books
+      (`scoring.ts` `avgSpread`/`line: avgSpread`); `selectOddsForPick`
       returned a single row — whichever bookmaker's `SPREADS` row matched
       first. Comparing a multi-book average against one book's spot quote with
       strict equality mismatches almost every time even with **zero** real
       line movement, since sportsbook spreads are quantized to 0.5/1.0
-      increments and an average of several rarely is. Fixed by adding
-      `consensusSpreadForGame` (`apps/web/lib/board/load-gate-slate.ts`),
-      which reconstructs the same statistic the same way
+      increments and an average of several rarely is not. First fix added
+      `consensusSpreadForGame`, reconstructing that statistic the same way
       `clv-capture.ts`'s `deriveClosingSnapshotFromOdds` already does for CLV
-      grading ("the close = the single latest batch, averaged") — reusing an
-      existing correct pattern rather than inventing a second one, and
-      comparing with only a `1e-9`-scale epsilon to absorb floating-point
-      averaging noise, never to loosen the real correctness check. Genuine
-      line movement is still caught; only the false mismatch from comparing
-      two different statistics is removed.
+      grading — but automated review on the resulting PR found two further,
+      real defects in it, both verified independently before acting:
+
+      - **Wrong comparison target.** `Pick.line` is not immutable — it is
+        REWRITTEN on every refresh cycle while a pick is PENDING
+        (`process-sport.ts`'s own comment: "Fields refreshed on every cycle
+        ... Pick.line itself IS mutated each cycle"). The true immutable
+        snapshot is `clvLockLine`, captured once at publish. The first fix
+        compared consensus-now against the wrong, moving target. Now uses
+        `selectGradingLine` — the same helper `settlement.ts` already uses to
+        *grade* these picks — which resolves `clvLockLine ?? line`, falling
+        back only for legacy rows with no lock.
+      - **Decoupled pricing.** Averaging only the SPREAD while `q` still
+        devigged off whichever single book `selectOddsForPick` matched could
+        admit a row whose handicap validated against the consensus (e.g.
+        -3.5) while its actual price corresponded to a DIFFERENT book's
+        different spread (e.g. -3) — pricing one bet's probability while
+        evaluating a different bet the check confirmed. Fixed by averaging the
+        SAME batch's home/away spread prices alongside the spread
+        (`averageAmericanPrices`, in probability space — American odds are
+        discontinuous across ±100, the same hazard `clv-capture.ts` already
+        documents for moneyline averaging) and overriding `q`'s price source
+        with that coupled consensus once the handicap validates.
+
+      Compared with only a `1e-6`-scale epsilon throughout, to absorb
+      floating-point averaging noise, never to loosen the real correctness
+      check. Genuine line movement is still caught by test; only the false
+      mismatch from comparing two different statistics, and the false
+      admission from pricing off a different handicap than the one validated,
+      are removed.
 
    None of the above are, individually or together, expected to move (5b) from
    0 to ≥ 1 on their own — #5 removes a source of *false* exclusions, but the

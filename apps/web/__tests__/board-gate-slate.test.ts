@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { averageAmericanPrices } from "@sports/prediction-engine";
 import {
   GATE_SLATE_INCLUDE,
   isLiveGateSlateEnabled,
@@ -63,6 +64,12 @@ function pick(over: Partial<GateSlatePick> = {}): GateSlatePick {
     pickType: "SPREAD",
     result: "WIN",
     line: -3.5,
+    // The immutable snapshot. Defaults to matching `line`, exactly like a
+    // freshly-published pick would — `line` only drifts from this on later
+    // refresh cycles, which is precisely the hazard `selectGradingLine`
+    // guards against. Tests that need to exercise drift or the legacy
+    // (`clvLockLine: null`) fallback override this explicitly.
+    clvLockLine: -3.5,
     isBootstrap: false,
     modelVersion: "v5.1.0",
     signalSnapshot: { eligibleForLearning: true },
@@ -209,29 +216,56 @@ describe("the production join — five defects review found, pinned", () => {
     expect(row.inputProblems!.join(" ")).toContain("stale");
   });
 
-  it("refuses a spread candidate whose quoted handicap moved off the pick's line", () => {
-    // Pick.line and Odds.spread are both home-perspective, so this compares
-    // like with like. A -3.5 pick priced off a -6.5 quote gets a materially
-    // wrong edge and nothing downstream could tell.
+  it("refuses a spread candidate whose quoted handicap moved off the LOCKED line", () => {
+    // clvLockLine and the reconstructed consensus are both home-perspective,
+    // so this compares like with like. A -3.5 lock priced off a -6.5 quote
+    // gets a materially wrong edge and nothing downstream could tell.
     const moved = { ...SPREADS, spread: -6.5 };
     const row = normalizeGateSlatePick(
-      pick({ result: "PENDING", line: -3.5, game: { ...pick().game!, odds: [moved] } }),
+      pick({ result: "PENDING", clvLockLine: -3.5, game: { ...pick().game!, odds: [moved] } }),
       { liveCandidate: true, now: NOW },
     )!;
     expect(row.inputProblems!.join(" ")).toContain("matching handicap");
   });
 
-  describe("handicap check compares CONSENSUS to CONSENSUS, not consensus to a spot quote", () => {
-    // `Pick.line` is written at generation time as the mean spread across
+  it("falls back to `line` for a legacy row with no lock snapshot", () => {
+    // `clvLockLine` postdates older picks. `selectGradingLine` — the SAME
+    // helper settlement.ts uses to GRADE these picks — resolves `null` to
+    // `line`, so this call site must exercise that fallback identically
+    // rather than silently excluding every pre-lock pick.
+    const row = normalizeGateSlatePick(
+      pick({ result: "PENDING", clvLockLine: null, line: -3.5 }),
+      { liveCandidate: true, now: NOW },
+    )!;
+    expect(row.inputProblems).toBeUndefined();
+  });
+
+  describe("handicap check compares CONSENSUS to CONSENSUS, and prices STAY COUPLED to it", () => {
+    // Two hazards, both real, both fixed together — fixing only one leaves
+    // the other:
+    //
+    // HAZARD 1 — the WRONG target. `Pick.line` is rewritten on every refresh
+    // cycle while a pick is PENDING (process-sport.ts's pickUpdateData).
+    // `clvLockLine` is the immutable snapshot captured once at publish, and
+    // is what these checks must compare against — never `line`.
+    //
+    // HAZARD 2 — the WRONG statistic. `clvLockLine` is the mean spread across
     // MIN_BOOKMAKERS+ books (scoring.ts). `selectOddsForPick` returns exactly
     // ONE row — whichever bookmaker's SPREADS row happened to match first.
     // Comparing the average to one book's raw quote mismatches almost every
     // time even with ZERO real line movement, because sportsbook spreads are
     // quantized to 0.5/1.0 increments and an average of several rarely is.
-    // These tests pin the fix: the comparison must reconstruct the SAME
-    // statistic pick.line was computed as (the latest batch, averaged) —
-    // exactly the shape clv-capture.ts's deriveClosingSnapshotFromOdds already
-    // uses for CLV grading — not loosen the check with a wide tolerance.
+    // `consensusSpreadForGame` reconstructs the SAME statistic the lock line
+    // was computed as (the latest batch, averaged) — exactly the shape
+    // clv-capture.ts's deriveClosingSnapshotFromOdds already uses for CLV
+    // grading — not a loosened tolerance.
+    //
+    // COUPLING — once the handicap validates, the PRICE used to devig `q`
+    // must come from that SAME consensus batch, never a single book's price
+    // that might correspond to a DIFFERENT spread than the one just
+    // validated. Averaging the spread while pricing off an arbitrary single
+    // row would admit a row whose q was priced for a handicap the check never
+    // actually confirmed.
 
     const bookA = { ...SPREADS, spread: -3, homeSpreadPrice: -105, awaySpreadPrice: -115 };
     const bookB = { ...SPREADS, spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -108 };
@@ -239,21 +273,43 @@ describe("the production join — five defects review found, pinned", () => {
     // Mean of (-3, -3.5, -4) === -3.5 exactly, by construction of this fixture.
     const CLEAN_AVERAGE_LINE = -3.5;
 
-    it("does NOT refuse when the average of the current books matches the pick's line", () => {
-      // This is the exact regression this fix addresses: comparing pick.line
-      // (-3.5, the average) against ONE arbitrary book's spot quote (-3 or -4)
-      // would have failed here even though the market has not moved at all —
-      // the three books quoting -3/-3.5/-4 are the SAME three books the pick
-      // was originally priced from.
+    it("does NOT refuse when the average of the current books matches the LOCKED line", () => {
+      // This is the exact regression this fix addresses: comparing the lock
+      // line (-3.5, the average) against ONE arbitrary book's spot quote (-3
+      // or -4) would have failed here even though the market has not moved at
+      // all — the three books quoting -3/-3.5/-4 are the SAME three books the
+      // pick was originally priced from.
       const row = normalizeGateSlatePick(
         pick({
           result: "PENDING",
-          line: CLEAN_AVERAGE_LINE,
+          clvLockLine: CLEAN_AVERAGE_LINE,
           game: { ...pick().game!, odds: [bookA, bookB, bookC] },
         }),
         { liveCandidate: true, now: NOW },
       )!;
       expect(row.inputProblems).toBeUndefined();
+    });
+
+    it("prices q from the CONSENSUS batch, not the single row selectOddsForPick happened to match", () => {
+      // bookA is listed FIRST, so `.find()` (selectOddsForPick) would grab
+      // bookA's -105/-115 prices if `prices` were left unoverridden — a
+      // -3 book's prices, even though the validated, published line is -3.5.
+      // The fix must override with the SAME consensus average
+      // consensusSpreadForGame itself returns, not bookA's raw prices.
+      const row = normalizeGateSlatePick(
+        pick({
+          result: "PENDING",
+          clvLockLine: CLEAN_AVERAGE_LINE,
+          game: { ...pick().game!, odds: [bookA, bookB, bookC] },
+        }),
+        { liveCandidate: true, now: NOW },
+      )!;
+      const consensus = consensusSpreadForGame([bookA, bookB, bookC])!;
+      expect(row.homePrice).toBe(consensus.homePrice);
+      expect(row.awayPrice).toBe(consensus.awayPrice);
+      // Not bookA's raw prices — the specific failure mode being guarded against.
+      expect(row.homePrice).not.toBe(bookA.homeSpreadPrice);
+      expect(row.awayPrice).not.toBe(bookA.awaySpreadPrice);
     });
 
     it("STILL refuses when the consensus has genuinely moved", () => {
@@ -264,7 +320,7 @@ describe("the production join — five defects review found, pinned", () => {
       const row = normalizeGateSlatePick(
         pick({
           result: "PENDING",
-          line: CLEAN_AVERAGE_LINE,
+          clvLockLine: CLEAN_AVERAGE_LINE,
           game: { ...pick().game!, odds: [movedA, movedB, movedC] },
         }),
         { liveCandidate: true, now: NOW },
@@ -279,7 +335,7 @@ describe("the production join — five defects review found, pinned", () => {
       const row = normalizeGateSlatePick(
         pick({
           result: "PENDING",
-          line: CLEAN_AVERAGE_LINE,
+          clvLockLine: CLEAN_AVERAGE_LINE,
           game: { ...pick().game!, odds: [bookA, bookB, bookC, stale] },
         }),
         { liveCandidate: true, now: NOW },
@@ -288,13 +344,24 @@ describe("the production join — five defects review found, pinned", () => {
     });
 
     it("consensusSpreadForGame averages exactly the freshest SPREADS batch", () => {
-      expect(consensusSpreadForGame([bookA, bookB, bookC])).toBe(-3.5);
+      expect(consensusSpreadForGame([bookA, bookB, bookC])!.spread).toBe(-3.5);
+    });
+
+    it("consensusSpreadForGame averages prices in PROBABILITY space via averageAmericanPrices", () => {
+      // Not a naive American-odds mean — that would be wrong the same way
+      // clv-capture.ts documents for moneyline averaging (discontinuous
+      // across ±100). Assert equality against the SAME helper, not a
+      // hardcoded number, so this stays correct if the helper's rounding
+      // convention ever changes.
+      const consensus = consensusSpreadForGame([bookA, bookB, bookC])!;
+      expect(consensus.homePrice).toBe(averageAmericanPrices([-105, -110, -115]));
+      expect(consensus.awayPrice).toBe(averageAmericanPrices([-115, -108, -105]));
     });
 
     it("consensusSpreadForGame excludes H2H rows from the average", () => {
       // A three-way H2H row can carry a spread field of null; if it were not
       // filtered by market it would either pollute the average or crash.
-      expect(consensusSpreadForGame([bookA, H2H])).toBe(-3);
+      expect(consensusSpreadForGame([bookA, H2H])!.spread).toBe(-3);
     });
 
     it("consensusSpreadForGame returns null with no SPREADS rows at all", () => {
@@ -305,16 +372,16 @@ describe("the production join — five defects review found, pinned", () => {
     it("tolerates floating-point noise from the average without a wide epsilon", () => {
       // (-3 + -3.4 + -3.6) / 3 = -3.3333... — not representable exactly in
       // binary floating point. The comparison must still accept a pick whose
-      // line was stored as that same repeating computation, without the
+      // lock line was stored as that same repeating computation, without the
       // epsilon being wide enough to also accept genuine movement.
       const noisy = [
         { ...bookA, spread: -3 },
         { ...bookB, spread: -3.4 },
         { ...bookC, spread: -3.6 },
       ];
-      const line = (-3 + -3.4 + -3.6) / 3;
+      const clvLockLine = (-3 + -3.4 + -3.6) / 3;
       const row = normalizeGateSlatePick(
-        pick({ result: "PENDING", line, game: { ...pick().game!, odds: noisy } }),
+        pick({ result: "PENDING", clvLockLine, game: { ...pick().game!, odds: noisy } }),
         { liveCandidate: true, now: NOW },
       )!;
       expect(row.inputProblems).toBeUndefined();
