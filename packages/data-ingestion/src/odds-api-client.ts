@@ -12,6 +12,10 @@ import {
   type SupportedSportKey,
 } from "./config.js";
 import { noStoreFetch } from "./no-store-fetch.js";
+import {
+  getOddsPaymentCircuitBreaker,
+  type OddsPaymentCircuitBreaker,
+} from "./odds-api-circuit-breaker.js";
 
 export class OddsApiError extends Error {
   constructor(
@@ -103,13 +107,19 @@ function computeRetryDelayMs(
 export class OddsApiClient {
   private readonly apiKey: string;
   private readonly retryOptions: ResolvedRetryOptions;
+  private readonly circuitBreaker: OddsPaymentCircuitBreaker;
 
-  constructor(apiKey: string, retryOptions?: OddsApiRetryOptions) {
+  constructor(
+    apiKey: string,
+    retryOptions?: OddsApiRetryOptions,
+    circuitBreaker?: OddsPaymentCircuitBreaker,
+  ) {
     if (!apiKey) {
       throw new Error("THE_ODDS_API_KEY is required");
     }
     this.apiKey = apiKey;
     this.retryOptions = resolveRetryOptions(retryOptions);
+    this.circuitBreaker = circuitBreaker ?? getOddsPaymentCircuitBreaker();
   }
 
   private async fetch<T>(
@@ -120,6 +130,15 @@ export class OddsApiClient {
     url.searchParams.set("apiKey", this.apiKey);
     for (const [key, value] of Object.entries(params)) {
       url.searchParams.set(key, value);
+    }
+
+    // Payment circuit: fail closed on prior 402 without burning more upstream calls.
+    const circuit = this.circuitBreaker.tryAcquire();
+    if (!circuit.allowed) {
+      throw new OddsApiError(
+        circuit.reason ?? "Odds API payment circuit open — refusing to call upstream",
+        402,
+      );
     }
 
     let response: Response | null = null;
@@ -168,6 +187,11 @@ export class OddsApiClient {
 
     if (!response.ok) {
       const body = await response.text();
+      if (response.status === 402 || response.status === 401) {
+        this.circuitBreaker.recordPaymentRequired(
+          response.status === 402 ? body : `HTTP 401: ${body}`,
+        );
+      }
       throw new OddsApiError(
         `The Odds API error: ${response.status} — ${body}`,
         response.status,
@@ -175,6 +199,7 @@ export class OddsApiClient {
       );
     }
 
+    this.circuitBreaker.recordSuccess();
     const data = (await response.json()) as T;
     return { data, remainingRequests, usedRequests };
   }
