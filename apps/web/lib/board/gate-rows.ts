@@ -198,7 +198,24 @@ export function buildCalibrationRows(
   const excluded: ExcludedCandidate[] = [];
 
   for (const p of picks) {
-    if (p.result !== "WIN" && p.result !== "LOSS") continue; // not a calibration signal
+    // PUSH / VOID / PENDING are not a calibration signal — a push is not a
+    // loss and coercing it would bias the set. But they were dropped SILENTLY,
+    // which contradicts this module's own no-silent-drops contract: a caller
+    // comparing input length to rows + excluded found rows missing with no
+    // reason attached. Both callers pre-filter in SQL today so the count is
+    // zero in practice, which is precisely why recording it costs nothing and
+    // stops a future caller from being quietly misled.
+    if (p.result !== "WIN" && p.result !== "LOSS") {
+      excluded.push({
+        rowId: p.id,
+        stratum: stratumOf(p),
+        missing: [
+          `settled learning label (result=${p.result}; only WIN/LOSS carry one — ` +
+            "a push is not a loss and is never coerced into one)",
+        ],
+      });
+      continue;
+    }
 
     const blocked: string[] = [];
     if (options.requireLearningEligible && !isLearningAdmissible(p)) {
@@ -235,7 +252,18 @@ export function buildCandidateRows(picks: readonly RawPickRow[]): BuiltRows {
   const excluded: ExcludedCandidate[] = [];
 
   for (const p of picks) {
-    if (p.result !== "PENDING") continue;
+    // Same contract as buildCalibrationRows: a settled pick is not a candidate,
+    // but say so rather than vanishing it.
+    if (p.result !== "PENDING") {
+      excluded.push({
+        rowId: p.id,
+        stratum: stratumOf(p),
+        missing: [
+          `live candidacy (result=${p.result}; only PENDING picks are still placeable)`,
+        ],
+      });
+      continue;
+    }
     const built = toGateRow(p, 0);
     if ("row" in built) rows.push(built.row);
     else excluded.push(built.excluded);

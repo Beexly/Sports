@@ -265,7 +265,33 @@ export interface NormalizeOptions {
   readonly liveCandidate?: boolean;
   /** Injected so tests are deterministic and never depend on wall-clock. */
   readonly now?: Date;
+  /**
+   * Per-call candidate-odds age budget. May only ever TIGHTEN the window.
+   *
+   * Binding law: MAX_CANDIDATE_ODDS_AGE_MS (6h) must not be widened. That
+   * constant is guarded by review and by every doc in docs/ops, but this
+   * option was the one seam around it — an ungated per-call override that
+   * could pass 24h and admit day-old quotes without touching the protected
+   * line at all. Zero callers use it that way today, which is exactly when a
+   * seam is cheapest to close.
+   *
+   * Values larger than the constant are CLAMPED DOWN to it rather than
+   * rejected: the legitimate use is tightening in tests, so a throw would turn
+   * a caller mistake into an outage while a clamp keeps the honest ceiling.
+   * See resolveMaxOddsAgeMs.
+   */
   readonly maxOddsAgeMs?: number;
+}
+
+/**
+ * The effective candidate-odds age budget: never wider than the protected
+ * constant, whatever a caller asks for. Non-finite or non-positive input falls
+ * back to the constant rather than disabling the check.
+ */
+export function resolveMaxOddsAgeMs(requested?: number): number {
+  if (requested === undefined) return MAX_CANDIDATE_ODDS_AGE_MS;
+  if (!Number.isFinite(requested) || requested <= 0) return MAX_CANDIDATE_ODDS_AGE_MS;
+  return Math.min(requested, MAX_CANDIDATE_ODDS_AGE_MS);
 }
 
 const PICK_TYPES = new Set(["SPREAD", "MONEYLINE", "TOTAL"]);
@@ -376,7 +402,7 @@ export function normalizeGateSlatePick(
     // pick could fire against a line from hours or days ago — contradicting the
     // STALE_DATA refusal the engine already applies elsewhere.
     const fetchedAt = odds.fetchedAt;
-    const maxAge = options.maxOddsAgeMs ?? MAX_CANDIDATE_ODDS_AGE_MS;
+    const maxAge = resolveMaxOddsAgeMs(options.maxOddsAgeMs);
     const now = options.now ?? new Date();
     if (!fetchedAt) {
       inputProblems.push("odds freshness (no fetch timestamp on the quote)");
