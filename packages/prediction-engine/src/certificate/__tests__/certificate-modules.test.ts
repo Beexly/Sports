@@ -5,6 +5,7 @@ import {
   mapExclusionToReasons,
   canonicalizeForHash,
   withContentHash,
+  DECISION_CERTIFICATE_SCHEMA,
 } from "../decision-certificate.js";
 import { certificateFromGateCandidate } from "../gate-certificate-bridge.js";
 import {
@@ -21,6 +22,10 @@ import { kellyFromLowerEndpoint } from "../kelly-lower-endpoint.js";
 import { MIN_STRATUM_CALIBRATION } from "../../edge-lab/selective-gate.js";
 
 describe("DecisionCertificate", () => {
+  it("exports stable schema id", () => {
+    expect(DECISION_CERTIFICATE_SCHEMA).toBe("gse.decision.certificate/v1");
+  });
+
   it("rejects NO_BET without reasons", () => {
     const r = parseDecisionCertificate({
       schemaVersion: "1",
@@ -76,6 +81,50 @@ describe("DecisionCertificate", () => {
     expect(canonicalizeForHash(a)).not.toEqual(canonicalizeForHash(b as typeof a));
     const hashed = await withContentHash(a);
     expect(hashed.contentHash).toBeTruthy();
+  });
+
+  it("golden contentHash for fixed STALE_ODDS fixture is locked", async () => {
+    // Fixed payload so the hash is reproducible across machines and CI.
+    // Do not change certifiedAt / eventId / summary without updating the golden.
+    const c = {
+      schemaVersion: "1" as const,
+      kind: "NO_BET" as const,
+      stratumKey: "MLB|SPREAD|v5.1.0",
+      modelVersion: "v5.1.0",
+      eventId: "golden-evt-1",
+      market: "SPREAD",
+      certifiedAt: "2026-07-27T12:00:00.000Z",
+      noBetReasons: ["STALE_ODDS"] as const,
+      summary: "Market quotes older than the 6-hour freshness budget",
+    };
+    const hashed = await withContentHash(c);
+    expect(hashed.contentHash).toBe(
+      "eb88a7166b7d2d54d45fc24866175eb69755b86eac2dbb828468f67b5fe860d1",
+    );
+  });
+
+  it("every known selective-gate exclusion phrase maps to a non-GATE_OTHER reason", () => {
+    const known = [
+      "fresh odds (6h)",
+      "stale odds",
+      "q",
+      "de-vig",
+      "devig",
+      "matching handicap",
+      "line moved",
+      "not placeable",
+      "kickoff",
+      "provenance",
+      "circuit open",
+      "provider offline",
+      "sample floor",
+      "width",
+      "lcb",
+    ];
+    for (const phrase of known) {
+      const r = mapExclusionToReasons([phrase]);
+      expect(r.some((x) => x !== "GATE_OTHER")).toBe(true);
+    }
   });
 });
 
@@ -171,10 +220,6 @@ describe("kelly internal", () => {
  */
 describe("certificate regressions", () => {
   it("accepts an interval endpoint of exactly 0 or 1 — the real gate emits them", () => {
-    // vennAbersInterval over a 120-row calibration set returns lower:0 at a low
-    // score and upper:1 at a high one (verified against the live function).
-    // A strict (0,1) validator rejected certificates the gate genuinely
-    // produced, so they could not be re-parsed or re-verified.
     const certain = parseDecisionCertificate({
       schemaVersion: "1",
       kind: "FIRE",
@@ -206,8 +251,6 @@ describe("certificate regressions", () => {
   });
 
   it("reliabilityDiagram does not crash on a non-positive bin count", () => {
-    // bins <= 0 drove i negative (i = bins - 1), and edges[-1] is undefined —
-    // a real runtime TypeError, not merely a type-checker complaint.
     expect(() => reliabilityDiagram([{ p: 0.5, y: 1 }], 0)).not.toThrow();
     expect(() => reliabilityDiagram([{ p: 0.5, y: 1 }], -3)).not.toThrow();
     expect(reliabilityDiagram([{ p: 0.5, y: 1 }], 0)).toEqual([]);
@@ -227,8 +270,6 @@ describe("certificate regressions", () => {
   });
 
   it("the abstention sample floor IS the gate's floor, not a second copy of it", () => {
-    // A re-declared literal silently diverges the first time the gate retunes
-    // its floor, while still reporting the same INSUFFICIENT_SAMPLE code.
     expect(DEFAULT_ABSTENTION.minStratumN).toBe(MIN_STRATUM_CALIBRATION);
   });
 });
