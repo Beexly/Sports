@@ -50,17 +50,40 @@ const SETTLED_RESULTS = ["WIN", "LOSS", "PUSH", "VOID"] as const;
  * 404 and 503.
  */
 export async function planSlateOpeningFromDb(slateKey: string): Promise<SlateOpeningPlan> {
-  const slate = await db.slateCommitment.findUnique({
-    where: { slateKey },
-    // The ONE permitted opener select in the codebase. See this module's header.
-    select: {
-      slateKey: true,
-      count: true,
-      pedersenAggregateHex: true,
-      pedersenAggregateValue: true,
-      pedersenBlindingSum: true,
-    },
-  });
+  // ONE SNAPSHOT for both reads. These two queries used to run as independent
+  // statements, which left a documented race: a pick un-settling (an operator
+  // reverting a result to PENDING) between the pending count and the opener
+  // read could pass a stale zero to the planner and disclose a slate that was
+  // no longer settled. Narrow while the route is founder-gated, but the honest
+  // fix is structural, not probabilistic: a REPEATABLE READ transaction pins
+  // both statements to a single database snapshot, so the count and the opener
+  // the planner sees are facts about the SAME instant. (Postgres default READ
+  // COMMITTED takes a fresh snapshot per statement, so a batch $transaction
+  // alone would not be enough.)
+  const [slate, pendingPickCount] = await db.$transaction(
+    [
+      db.slateCommitment.findUnique({
+        where: { slateKey },
+        // The ONE permitted opener select in the codebase. See this module's header.
+        select: {
+          slateKey: true,
+          count: true,
+          pedersenAggregateHex: true,
+          pedersenAggregateValue: true,
+          pedersenBlindingSum: true,
+        },
+      }),
+      // Pending count over EXACTLY the covered set — keyed off the slateKey
+      // stamp the freeze transaction wrote, not off dates or pick filters.
+      db.pickProofReceipt.count({
+        where: {
+          slateKey,
+          pick: { result: { notIn: [...SETTLED_RESULTS] } },
+        },
+      }),
+    ],
+    { isolationLevel: "RepeatableRead" },
+  );
 
   if (slate === null) {
     return {
@@ -69,15 +92,6 @@ export async function planSlateOpeningFromDb(slateKey: string): Promise<SlateOpe
       detail: `no commitment is recorded for slate ${slateKey}`,
     };
   }
-
-  // Pending count over EXACTLY the covered set — keyed off the slateKey stamp
-  // the freeze transaction wrote, not off dates or pick filters.
-  const pendingPickCount = await db.pickProofReceipt.count({
-    where: {
-      slateKey,
-      pick: { result: { notIn: [...SETTLED_RESULTS] } },
-    },
-  });
 
   return planSlateOpening({
     slateKey: slate.slateKey,
