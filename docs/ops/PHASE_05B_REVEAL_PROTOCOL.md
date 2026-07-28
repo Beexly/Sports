@@ -1,11 +1,12 @@
 # Phase 0.5b — Slate Commitment Opening Protocol
 
-**Status:** implemented on `feat/slate-opening-0.5b` · **Gate:** `SLATE_OPENING_REVEAL_ENABLED` (unset in git, founder-only flip)
+**Status:** merged to `main` (#235) · **live, dark** behind the gate — `SLATE_OPENING_REVEAL_ENABLED` (unset in git, founder-only flip)
 **Companion:** `docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md` (where this phase sits in the ladder)
 
 This document is the protocol spec for the OPEN side of the slate Pedersen
 commitment. It describes what is actually built, in the order a reviewer should
-read it. Nothing here is aspirational; every file named exists on the branch.
+read it. Nothing here is aspirational; every file named exists in the tree on
+`main`.
 
 ## Why an open side exists
 

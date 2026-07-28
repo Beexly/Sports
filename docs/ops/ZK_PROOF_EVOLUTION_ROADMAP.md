@@ -72,7 +72,7 @@ present. Old receipts without newer layers stay verifiable forever.
 
   | Field | Value |
   |---|---|
-  | Status | **IN PR** — planner + designated reader + gated route |
+  | Status | **MERGED (#235)** — planner + designated reader + gated route all live on `main`, **dark** behind the gate |
   | Gate | `SLATE_OPENING_REVEAL_ENABLED`, **unset in git**; founder flips it |
   | Decision | `planSlateOpening` (`@sports/crypto`) — pure, DB-free, **REFUSE by default** |
   | Opener reads | exactly one module: `packages/ingestion-pipeline/src/slate-opening-reader.ts` (rule C) |
