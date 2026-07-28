@@ -68,12 +68,34 @@ present. Old receipts without newer layers stay verifiable forever.
   backfilled onto a frozen slate), and fails open — an unencodable slate mints nothing
   rather than blocking the Merkle path. `/api/verify/slate` publishes
   `pedersenAggregateHex` only. Public copy says "commitment", never "ZK".
-  **Still open:** the OPEN side. Nothing yet reveals `(value, blindingSum)` after a slate
-  settles, so today the aggregate is a commitment no one has been shown how to check.
-  A commitment that is never opened proves nothing to a customer — closing this is what
-  turns Phase 0.5 from plumbing into evidence. The opener columns are fenced out of
-  `apps/` by `pedersen-opener-boundary.mjs`; the reveal route must be a deliberate,
-  post-settlement, server-side surface added against that fence, not around it.
+- **Phase 0.5b — opening the commitment** (the OPEN side)
+
+  | Field | Value |
+  |---|---|
+  | Status | **IN PR** — planner + designated reader + gated route |
+  | Gate | `SLATE_OPENING_REVEAL_ENABLED`, **unset in git**; founder flips it |
+  | Decision | `planSlateOpening` (`@sports/crypto`) — pure, DB-free, **REFUSE by default** |
+  | Opener reads | exactly one module: `packages/ingestion-pipeline/src/slate-opening-reader.ts` (rule C) |
+  | Public language | "commitment", "opening", "binding" — never ZK, never post-quantum |
+
+  Why it matters: a commitment nobody can open proves nothing to a customer. Phase 0.5
+  fixed the total in advance; 0.5b is what lets anyone check that the number opened
+  afterwards is the number sealed beforehand. That turns the layer from plumbing into
+  evidence.
+
+  The planner refuses unless **all three** hold: the slate is fully settled (no covered
+  pick still pending), an opener exists, and that opener verifiably reproduces the
+  published hex. Settlement is checked *before* the opener is parsed, so no code path
+  that touches the secret runs while the slate is live. A mostly-settled slate is not
+  partly openable — the aggregate is one number over the whole population.
+
+  The third refusal is the least obvious: if the stored opener does not reproduce the
+  stored hex, the opening is **withheld**, because publishing an opener that fails in the
+  customer's hands would read exactly like a forged commitment. The Merkle root stays
+  authoritative in every refusal.
+
+  An opening proves the aggregate was fixed before kickoff and unedited since. It is a
+  binding check on the record, **not** a claim that the picks were good or profitable.
 - **Phase 1 (4–6 wks eng):** `packages/zk` Rust crate — Halo2 base circuit (per-pick
   readiness + contribution) + recursive aggregator; fixed-point arithmetic (scale 1e6)
   for the 52.4% boundary; pushes excluded exactly as `settlement.ts` grades them.

@@ -142,8 +142,10 @@ async function main() {
       "  ZK / post-quantum language requires a LIVE, externally audited proof system.",
     );
     console.error(
-      "  Current stack is Merkle (live) + Pedersen commitments (live, sealed side). Neither is a ZK",
-      "  proof system and neither is post-quantum. See docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md.",
+      "  Current stack is Merkle (live) + Pedersen commitments (live, sealed side).",
+    );
+    console.error(
+      "  Neither is a ZK proof system and neither is post-quantum. See docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md.",
     );
     process.exit(1);
   }

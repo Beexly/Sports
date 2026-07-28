@@ -35,8 +35,13 @@
  *      all-columns reads, anywhere — including server-only code, because
  *      today's server-only helper is tomorrow's route import.
  *   B. No read may select an opener column inside `apps/` — the only tree that
- *      hosts public HTTP surfaces. Opening a settled slate is a deliberate
- *      server-side act and belongs in `packages/`, behind its own review.
+ *      hosts public HTTP surfaces.
+ *   C. No read may select an opener column ANYWHERE outside the single
+ *      allowlisted reader (`OPENER_READ_ALLOWLIST`). Rule B alone was not
+ *      enough: a server-only helper under `packages/` that quietly selects the
+ *      blinding is one import away from a route, and Phase 0.5b needs opening
+ *      to be possible without making it ambient. One reviewed chokepoint that
+ *      refuses by default is the shape — same as the `openHoldout` seal in edge-lab.
  *
  * Writes (`create`, `update`, `upsert`, `delete`) are untouched: minting the
  * commitment necessarily writes all three columns.
@@ -65,8 +70,32 @@ export const OPENER_FIELDS = ["pedersenAggregateValue", "pedersenBlindingSum"];
 /** Read methods whose result shape `select` controls. */
 const READ_METHODS = ["findUnique", "findUniqueOrThrow", "findFirst", "findFirstOrThrow", "findMany"];
 
+/**
+ * Aggregation read forms (rule E). `aggregate`/`groupBy` have no `select`, but
+ * `_min`/`_max` on a string column RETURN that column — so
+ * `slateCommitment.aggregate({ where: {...}, _max: { pedersenBlindingSum: true } })`
+ * extracts the blinding of a single filtered row without ever writing the word
+ * "select". These forms are scanned for opener fields like any other read.
+ */
+const AGGREGATE_METHODS = ["aggregate", "groupBy", "count"];
+const ALL_READ_METHODS = [...READ_METHODS, ...AGGREGATE_METHODS];
+
 /** Tree that hosts public HTTP surfaces; opener selects are refused here (rule B). */
 const PUBLIC_TREE_PREFIX = "apps/";
+
+/**
+ * THE one module permitted to select opener columns (rule C).
+ *
+ * Phase 0.5b needs SOME module to read the opener — otherwise a commitment can
+ * never be opened and the layer stays decorative. The safe shape is not "allow
+ * it in server code generally" but "allow it in exactly one reviewed file",
+ * which is the pattern `sealed-holdout-open-scan.mjs` already uses to confine
+ * the `openHoldout` seal to edge-lab. Widening this list is a deliberate act;
+ * it must never grow to a directory.
+ */
+const OPENER_READ_ALLOWLIST = new Set([
+  "packages/ingestion-pipeline/src/slate-opening-reader.ts",
+]);
 
 /**
  * This file necessarily NAMES the opener columns and the query shapes it
@@ -76,7 +105,36 @@ const PUBLIC_TREE_PREFIX = "apps/";
 const SELF_PATHS = new Set(["scripts/guardrails/pedersen-opener-boundary.mjs"]);
 const SELF_PREFIXES = ["scripts/guardrails/fixtures/"];
 
-const CALL_RE = new RegExp(`\\bslateCommitment\\s*\\.\\s*(${READ_METHODS.join("|")})\\s*\\(`, "g");
+/**
+ * Both models that can reach the opener are scanned (rule D). The receipt model
+ * carries `slate SlateCommitment?` — so
+ * `pickProofReceipt.findMany({ include: { slate: true } })` returns the FULL
+ * related commitment row, opener included, without the string "slateCommitment"
+ * appearing anywhere in the call. Relation traversal was the hole the original
+ * guard missed: rules A–C only fired on direct `slateCommitment.<read>(` calls.
+ */
+const CALL_RE = new RegExp(
+  `\\b(slateCommitment|pickProofReceipt)\\s*\\.\\s*(${ALL_READ_METHODS.join("|")})\\s*\\(`,
+  "g",
+);
+
+/**
+ * Extract the `{ ... }` block that follows a `slate:` key inside a receipt
+ * read's argument body, or null if the value is not an object literal.
+ * `startIndex` points at the `{`.
+ */
+function extractBraceBlock(source, startIndex) {
+  let depth = 0;
+  for (let i = startIndex; i < source.length; i++) {
+    const ch = source[i];
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth === 0) return source.slice(startIndex, i + 1);
+    }
+  }
+  return null;
+}
 
 function rel(root, filePath) {
   return relative(root, filePath).split(sep).join("/");
@@ -193,12 +251,14 @@ export async function collectPedersenOpenerViolations(root = DEFAULT_ROOT) {
       } catch {
         continue;
       }
-      if (!text.includes("slateCommitment")) continue;
+      if (!text.includes("slateCommitment") && !text.includes("pickProofReceipt")) continue;
 
       CALL_RE.lastIndex = 0;
       let match;
       while ((match = CALL_RE.exec(text)) !== null) {
-        const method = match[1];
+        const model = match[1];
+        const method = match[2];
+        const call = `${model}.${method}(`;
         const openParen = text.indexOf("(", match.index);
         const args = openParen === -1 ? null : extractCallArgs(text, openParen);
         const line = lineOf(text, match.index);
@@ -209,41 +269,102 @@ export async function collectPedersenOpenerViolations(root = DEFAULT_ROOT) {
             line,
             rule: "unparseable",
             message:
-              `${relPath}:${line} slateCommitment.${method}( could not be parsed to its closing ` +
-              `parenthesis; the guard cannot confirm an explicit select.`,
+              `${relPath}:${line} ${call} could not be parsed to its closing ` +
+              `parenthesis; the guard cannot confirm what it returns.`,
           });
           continue;
         }
 
         const body = stripComments(args);
 
-        // Rule A — an implicit read returns every column, opener included.
-        if (!/\bselect\s*:/.test(body)) {
+        // Rule A — an implicit find* on the commitment model returns every
+        // column, opener included. Applies only to slateCommitment (a receipt
+        // read without `slate:` never touches the commitment) and only to the
+        // find* forms (aggregate/groupBy have no `select`).
+        if (
+          model === "slateCommitment" &&
+          READ_METHODS.includes(method) &&
+          !/\bselect\s*:/.test(body)
+        ) {
           hits.push({
             file: relPath,
             line,
             rule: "implicit-select",
             message:
-              `${relPath}:${line} slateCommitment.${method}( has no explicit \`select\`. Prisma returns ` +
+              `${relPath}:${line} ${call} has no explicit \`select\`. Prisma returns ` +
               `ALL columns, which includes the opener (${OPENER_FIELDS.join(", ")}). Name the fields you need.`,
           });
           continue;
         }
 
-        // Rule B — never select the opener anywhere under the public tree.
-        if (relPath.startsWith(PUBLIC_TREE_PREFIX)) {
-          for (const field of OPENER_FIELDS) {
-            if (new RegExp(`\\b${field}\\b`).test(body)) {
+        // Rule D — relation traversal from the receipt side. `slate: true`
+        // (bare, or inside `include`) returns the FULL commitment row, opener
+        // included, with the word "slateCommitment" never appearing in the
+        // call. A traversal must use a nested `{ select: ... }` that names its
+        // columns; the opener-field scan below then applies to those names.
+        if (model === "pickProofReceipt" && !OPENER_READ_ALLOWLIST.has(relPath)) {
+          const slateKeyRe = /\bslate\s*:/g;
+          let sm;
+          while ((sm = slateKeyRe.exec(body)) !== null) {
+            const after = body.slice(sm.index + sm[0].length).replace(/^\s+/, "");
+            if (after.startsWith("true")) {
               hits.push({
                 file: relPath,
                 line,
-                rule: "opener-in-public-tree",
+                rule: "relation-wholesale",
                 message:
-                  `${relPath}:${line} slateCommitment.${method}( selects \`${field}\` inside ${PUBLIC_TREE_PREFIX} — ` +
-                  `that column opens the commitment. Publishing it before the slate settles voids the seal.`,
+                  `${relPath}:${line} ${call} traverses \`slate: true\` — that returns the FULL ` +
+                  `related commitment row, opener included, without ever naming slateCommitment. ` +
+                  `Use a nested select that names the public columns (root, count, committedAt, ` +
+                  `pedersenAggregateHex).`,
               });
+            } else if (after.startsWith("{")) {
+              const braceAt = body.indexOf("{", sm.index + sm[0].length);
+              const sub = braceAt === -1 ? null : extractBraceBlock(body, braceAt);
+              if (sub === null || !/\bselect\s*:/.test(sub)) {
+                hits.push({
+                  file: relPath,
+                  line,
+                  rule: "relation-wholesale",
+                  message:
+                    `${relPath}:${line} ${call} traverses \`slate: { ... }\` without a nested ` +
+                    `\`select\` — Prisma returns all commitment columns, opener included. ` +
+                    `Name the public columns explicitly.`,
+                });
+              }
             }
+            // `slate: false` and other scalar values return nothing — fine.
           }
+        }
+
+        // Rules B, C, E — who may name the opener columns at all, in ANY read
+        // form. Rule C confines opener reads to a single allowlisted module
+        // anywhere in the tree (a server-only helper that quietly selects the
+        // blinding is one import away from a route); rule B is the public-tree
+        // special case; rule E is the same scan applied to aggregate/groupBy
+        // bodies, where `_max: { pedersenBlindingSum: true }` extracts the
+        // blinding of a filtered row without the word "select".
+        const selectedOpenerFields = OPENER_FIELDS.filter((f) =>
+          new RegExp(`\\b${f}\\b`).test(body),
+        );
+        if (selectedOpenerFields.length > 0 && !OPENER_READ_ALLOWLIST.has(relPath)) {
+          const where = relPath.startsWith(PUBLIC_TREE_PREFIX)
+            ? `inside ${PUBLIC_TREE_PREFIX} (a public-surface tree)`
+            : "outside the designated opener-read module";
+          hits.push({
+            file: relPath,
+            line,
+            rule: relPath.startsWith(PUBLIC_TREE_PREFIX)
+              ? "opener-in-public-tree"
+              : "opener-outside-allowlist",
+            message:
+              `${relPath}:${line} ${call} names ${selectedOpenerFields
+                .map((f) => `\`${f}\``)
+                .join(" + ")} ${where}. Those columns OPEN the commitment; disclosing them ` +
+              `before a slate settles voids the seal. The one permitted reader is ` +
+              `${[...OPENER_READ_ALLOWLIST].join(", ")} — route through it (it refuses by default) ` +
+              `rather than adding a second read.`,
+          });
         }
       }
     }
@@ -257,7 +378,8 @@ async function main() {
 
   if (hits.length === 0) {
     console.log(
-      "[pedersen-opener-boundary] OK - every slateCommitment read names its columns; no opener reachable from apps/.",
+      "[pedersen-opener-boundary] OK - every slateCommitment read names its columns; the opener is " +
+        "selected only by the designated refuse-by-default reader.",
     );
     return;
   }
