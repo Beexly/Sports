@@ -170,3 +170,47 @@ describe("OddsApiClient#getOdds region/bookmaker override (Pinnacle EU leg)", ()
     expect(calledUrl.searchParams.get("bookmakers")).toBe("pinnacle");
   });
 });
+
+/**
+ * The status a refusal throws is what downstream classifies on:
+ * odds-provider-adapter treats 401/402/403 as `paymentOrAuth`. So the status
+ * must distinguish "upstream says unpaid" from "we are locally busy" and from
+ * "an operator switched us off".
+ */
+describe("circuit refusals carry an honest status, not a blanket 402", () => {
+  it("a payment-driven open still throws 402 — that one IS a payment fact", async () => {
+    const breaker = getOddsPaymentCircuitBreaker();
+    breaker.recordPaymentRequired("402 from upstream");
+
+    await expect(client.getSports()).rejects.toMatchObject({ status: 402 });
+  });
+
+  it("an operator kill switch throws 503, NOT 402 — nothing about payment is known", async () => {
+    process.env["ODDS_API_CIRCUIT_FORCE_OPEN"] = "1";
+    try {
+      await expect(client.getSports()).rejects.toMatchObject({ status: 503 });
+      // Must not be misclassified downstream as an auth/payment failure.
+      await expect(client.getSports()).rejects.not.toMatchObject({ status: 402 });
+    } finally {
+      delete process.env["ODDS_API_CIRCUIT_FORCE_OPEN"];
+    }
+  });
+
+  it("a closed circuit does not consume or release a probe slot", async () => {
+    // Regression for the unowned release: an ordinary closed-circuit request
+    // used to run releaseProbe() in its finally, which could clear a slot held
+    // by a genuine in-flight probe and admit a second one.
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { "x-requests-remaining": "100", "x-requests-used": "1" },
+      }),
+    );
+    const breaker = getOddsPaymentCircuitBreaker();
+    const releaseSpy = vi.spyOn(breaker, "releaseProbe");
+
+    await client.getSports();
+
+    expect(releaseSpy).not.toHaveBeenCalled();
+  });
+});
