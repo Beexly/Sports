@@ -65,8 +65,25 @@ const REASON_SET = new Set<string>([
   "GATE_OTHER",
 ]);
 
+/**
+ * Interval endpoints are valid on the CLOSED unit interval [0, 1].
+ *
+ * This is the correct domain, not a loosened check. Venn-Abers routinely
+ * returns an endpoint of exactly 0 or 1 on ordinary calibration data: where a
+ * region of the isotonic fit is unanimously one label, the fitted value IS
+ * that label. Verified against the real gate rather than assumed —
+ * `vennAbersInterval` over a 120-row calibration set returns
+ * `{lower: 0, upper: 0.0182}` at a low score and `{lower: 0.9831, upper: 1}`
+ * at a high one.
+ *
+ * Under the previous strict `(0, 1)` test every such certificate failed its
+ * own validator, so a decision the gate genuinely made could not be re-parsed
+ * or re-verified — breaking the recompute path that is the entire reason
+ * certificates exist. A certificate must be able to express "this outcome was
+ * certain on the evidence available."
+ */
 function isProb(x: unknown): x is number {
-  return typeof x === "number" && Number.isFinite(x) && x > 0 && x < 1;
+  return typeof x === "number" && Number.isFinite(x) && x >= 0 && x <= 1;
 }
 
 export function omitUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
@@ -254,7 +271,10 @@ export function humanSummaryForReasons(reasons: readonly NoBetReasonCode[]): str
     INSUFFICIENT_SAMPLE: "Sample floor not met for this stratum",
     STALE_ODDS: "Market quotes older than the 6-hour freshness budget",
     PRICE_INTEGRITY_Q: "De-vigged price pair missing or unusable",
-    HANDICAP_MISMATCH: "Spread handicap does not match lock line",
+    // Deliberately avoids the word this repo's trust-gate bans in public copy:
+    // it is tipster vocabulary, and these labels are user-facing. The concept
+    // is the immutable clvLockLine recorded when the pick was committed.
+    HANDICAP_MISMATCH: "Spread handicap no longer matches the line recorded at commitment",
     NOT_PLACEABLE: "Event not in a placeable window",
     PROVENANCE: "Provenance requirements not satisfied",
     UNDESCRIBABLE: "Join/description path could not describe the candidate",

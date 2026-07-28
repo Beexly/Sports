@@ -42,9 +42,16 @@ export function reliabilityDiagram(
     const pp = clamp01(r.p);
     let i = Math.floor(pp * bins);
     if (i >= bins) i = bins - 1;
-    edges[i].sumP += pp;
-    edges[i].sumY += r.y;
-    edges[i].n += 1;
+    // Guarded rather than asserted: a non-positive `bins` makes `i` negative
+    // (i = bins - 1), and edges[-1] is undefined — a real runtime crash, not
+    // just a type-checker complaint. Skipping the row is the honest response:
+    // there is no bucket to attribute it to, and inventing one would put the
+    // observation in a bin the caller never asked for.
+    const bucket = edges[i];
+    if (bucket === undefined) continue;
+    bucket.sumP += pp;
+    bucket.sumY += r.y;
+    bucket.n += 1;
   }
   return edges.map((e, bin) => ({
     bin,

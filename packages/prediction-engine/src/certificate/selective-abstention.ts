@@ -5,6 +5,7 @@
  */
 
 import type { NoBetReasonCode } from "./decision-certificate.js";
+import { MIN_STRATUM_CALIBRATION } from "../edge-lab/selective-gate.js";
 
 export interface Interval {
   lo: number;
@@ -20,7 +21,16 @@ export interface AbstentionConfig {
 export const DEFAULT_ABSTENTION: AbstentionConfig = {
   maxWidth: 0.12,
   minLcb: 0.52,
-  minStratumN: 100,
+  /**
+   * IMPORTED from selective-gate.ts, not re-declared as a literal 100.
+   *
+   * The gate is the sample-floor authority. A second hardcoded copy of the
+   * floor silently diverges the first time the gate's own floor is retuned,
+   * and these helpers would then abstain on a different rule than the one
+   * production actually enforces — while still reporting the same
+   * INSUFFICIENT_SAMPLE reason code, which is the misleading part.
+   */
+  minStratumN: MIN_STRATUM_CALIBRATION,
 };
 
 export function chowStyleShouldAbstain(
