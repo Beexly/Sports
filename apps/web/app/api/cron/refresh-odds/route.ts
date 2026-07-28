@@ -40,6 +40,7 @@ import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import { refreshOdds } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
+import { monitorOddsFetchedAt } from "@/lib/data-reliability/monitor-odds-fetchedat";
 
 export const dynamic = "force-dynamic";
 // Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
@@ -95,6 +96,23 @@ export async function GET(request: Request) {
     await pingHealthcheck(pingUrl, "fail");
   }
 
+  // DATA-PLANE freshness, reported separately from the JOB result above.
+  //
+  // The two answer different questions and must not be collapsed: `result.ok`
+  // says the refresh RAN, `oddsFreshness` says whether the stored quotes are
+  // actually recent. A run can succeed while writing nothing usable (provider
+  // offline, circuit open, empty slate), and that combination is precisely the
+  // silent failure this reports.
+  //
+  // Scope is global_max — an ops SLA signal, NOT gate clearance for any
+  // candidate. `classifyGlobalMaxFetchedAt` says so in its own summary text so
+  // a reader of this payload cannot mistake the two.
+  //
+  // Env-gated and non-throwing: a no-op until HC_ODDS_FETCHEDAT_PING_URL is
+  // set, and it never fails the cron it is watching.
+  const fetchedAtPingUrl = process.env["HC_ODDS_FETCHEDAT_PING_URL"];
+  const oddsFetchedAt = await monitorOddsFetchedAt(fetchedAtPingUrl);
+
   return NextResponse.json({
     ok: result.ok,
     elapsedMs: result.elapsedMs,
@@ -104,5 +122,12 @@ export async function GET(request: Request) {
     bootstrapMode: gates.isBootstrapMode,
     results: result.results,
     freeze: result.freeze,
+    oddsFreshness: {
+      scope: oddsFetchedAt.freshness.scope,
+      status: oddsFetchedAt.freshness.status,
+      ageMinutes: oddsFetchedAt.freshness.ageMinutes,
+      summary: oddsFetchedAt.freshness.summary,
+      pinged: oddsFetchedAt.pinged,
+    },
   });
 }
