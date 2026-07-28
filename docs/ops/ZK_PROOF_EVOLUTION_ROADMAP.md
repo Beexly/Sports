@@ -9,7 +9,7 @@
 | Layer | File(s) | Status |
 |---|---|---|
 | SHA-256 Merkle receipts | `packages/prediction-engine/src/pick-proof-receipt.ts`, `proof-of-record.ts` | **LIVE** — minted per pick pre-kickoff (`process-sport.ts`), publicly verifiable at `/verify` (re-hash + recompute-it-yourself panel) |
-| Pedersen commitments (secp256k1, @noble, constant-time) | `packages/crypto/src/pedersen-ledger.ts` (+ tests) | **BUILT, DARK** — additive homomorphic aggregates; not wired to any public surface |
+| Pedersen commitments (secp256k1, @noble, constant-time) | `packages/crypto/src/pedersen-ledger.ts` (+ tests) | **LIVE, SEALED SIDE ONLY** — minted per frozen slate by `freeze-slate-commitments.ts`; the public hex is served by `/api/verify/slate`. The OPENER (`pedersenAggregateValue`, `pedersenBlindingSum`) stays server-side, fenced in CI by `scripts/guardrails/pedersen-opener-boundary.mjs` |
 | Pedersen reference (finite-field, pure BigInt) | `packages/prediction-engine/src/pedersen-ledger.ts` | R&D only — non-constant-time by design, never production |
 | Halo2 recursive aggregate proof | — | **ROADMAP** (Phase 1) |
 | STARK-family post-quantum proof | — | **ROADMAP** (Phase 2, optionality) |
@@ -52,10 +52,18 @@ present. Old receipts without newer layers stay verifiable forever.
 
 - **Phase 0 (done):** Merkle receipts live; public verifier shows payload + hash so
   skeptics recompute offline; overclaim fence in CI.
-- **Phase 0.5 (cheap, next):** wire the EXISTING dark Pedersen layer into the sealed
-  slate commitment (`freeze-slate-commitments.ts`) — an aggregate commitment published
-  pre-kickoff, opened post-slate. Uses code + tests that already exist; public copy says
-  "commitment", never "ZK".
+- **Phase 0.5 (DONE — commit side):** the Pedersen layer is wired into the sealed slate
+  commitment. `freeze-slate-commitments.ts` mints an aggregate over the slate's published
+  edge scores inside the SAME atomic transaction as the Merkle root (write-once, never
+  backfilled onto a frozen slate), and fails open — an unencodable slate mints nothing
+  rather than blocking the Merkle path. `/api/verify/slate` publishes
+  `pedersenAggregateHex` only. Public copy says "commitment", never "ZK".
+  **Still open:** the OPEN side. Nothing yet reveals `(value, blindingSum)` after a slate
+  settles, so today the aggregate is a commitment no one has been shown how to check.
+  A commitment that is never opened proves nothing to a customer — closing this is what
+  turns Phase 0.5 from plumbing into evidence. The opener columns are fenced out of
+  `apps/` by `pedersen-opener-boundary.mjs`; the reveal route must be a deliberate,
+  post-settlement, server-side surface added against that fence, not around it.
 - **Phase 1 (4–6 wks eng):** `packages/zk` Rust crate — Halo2 base circuit (per-pick
   readiness + contribution) + recursive aggregator; fixed-point arithmetic (scale 1e6)
   for the 52.4% boundary; pushes excluded exactly as `settlement.ts` grades them.
