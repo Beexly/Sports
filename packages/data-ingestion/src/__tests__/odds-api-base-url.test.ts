@@ -79,4 +79,54 @@ describe("ODDS_API_BASE_URL", () => {
     process.env["VERCEL_ENV"] = "development";
     await expect(loadBaseUrl()).resolves.toBe(PROD_URL);
   });
+
+  /**
+   * Regression: the production refusal was defeated by a declared-but-BLANK
+   * environment variable. `??` falls through only on null/undefined, so
+   * VERCEL_ENV="" short-circuited the chain and NODE_ENV was never consulted.
+   * Found by an adversarial audit of the guard, then reproduced before fixing.
+   */
+  it("REFUSES the override when VERCEL_ENV is declared but EMPTY and NODE_ENV=production", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    process.env["ODDS_API_BASE_URL"] = CHAOS_URL;
+    process.env["VERCEL_ENV"] = "";
+    process.env["NODE_ENV"] = "production";
+
+    await expect(loadBaseUrl()).resolves.toBe(PROD_URL);
+  });
+
+  it("REFUSES the override when VERCEL_ENV is whitespace-only and NODE_ENV=production", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    process.env["ODDS_API_BASE_URL"] = CHAOS_URL;
+    process.env["VERCEL_ENV"] = "   ";
+    process.env["NODE_ENV"] = "production";
+
+    await expect(loadBaseUrl()).resolves.toBe(PROD_URL);
+  });
+
+  it("a blank VERCEL_ENV does not wrongly force production when NODE_ENV is a dev class", async () => {
+    // The fix must not overshoot: falling through to NODE_ENV has to respect a
+    // genuinely non-production NODE_ENV, or the chaos stack stops working.
+    process.env["ODDS_API_BASE_URL"] = CHAOS_URL;
+    process.env["VERCEL_ENV"] = "";
+    process.env["NODE_ENV"] = "development";
+
+    await expect(loadBaseUrl()).resolves.toBe(CHAOS_URL);
+  });
+
+  it("VERCEL_ENV=preview still wins over NODE_ENV=production (first non-empty signal)", async () => {
+    process.env["ODDS_API_BASE_URL"] = CHAOS_URL;
+    process.env["VERCEL_ENV"] = "preview";
+    process.env["NODE_ENV"] = "production";
+
+    await expect(loadBaseUrl()).resolves.toBe(CHAOS_URL);
+  });
+
+  it("case and padding are normalised on the production signal", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    process.env["ODDS_API_BASE_URL"] = CHAOS_URL;
+    process.env["VERCEL_ENV"] = "  PRODUCTION  ";
+
+    await expect(loadBaseUrl()).resolves.toBe(PROD_URL);
+  });
 });

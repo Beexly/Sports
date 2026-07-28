@@ -157,9 +157,23 @@ function resolveOddsApiBaseUrl(): string {
   const override = process.env["ODDS_API_BASE_URL"]?.trim().replace(/\/$/, "");
   if (!override) return THE_ODDS_API_PRODUCTION_BASE_URL;
 
-  const isProduction =
-    (process.env["VERCEL_ENV"] ?? process.env["NODE_ENV"] ?? "").trim().toLowerCase() ===
-    "production";
+  // Resolve the environment by FIRST NON-EMPTY value, not with `??`.
+  //
+  // `??` falls through only on null/undefined, so a declared-but-BLANK
+  // VERCEL_ENV="" short-circuited the chain to "", NODE_ENV was never
+  // consulted, and the production refusal below silently did not fire — the
+  // exact failure this guard exists to prevent. Reachable in any non-Vercel
+  // production runtime that declares the variable without a value, which is a
+  // common container/CI shape. Reproduced before fixing: VERCEL_ENV="" with
+  // NODE_ENV=production honored the override, while unset VERCEL_ENV refused
+  // it. Whitespace-only behaved the same way.
+  //
+  // Fail-closed direction: any environment signal that trims to "production"
+  // refuses the override.
+  const envClass = [process.env["VERCEL_ENV"], process.env["NODE_ENV"]]
+    .map((v) => v?.trim().toLowerCase())
+    .find((v) => v !== undefined && v.length > 0);
+  const isProduction = envClass === "production";
 
   if (isProduction) {
     console.warn(
