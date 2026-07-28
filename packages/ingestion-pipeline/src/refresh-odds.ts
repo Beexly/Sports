@@ -89,18 +89,33 @@ export interface RefreshOddsOptions {
 /**
  * Runs one full odds-refresh cycle.
  *
- * @throws {Error} if `THE_ODDS_API_KEY` is not configured.
+ * Soft-fails (ok:false) if `THE_ODDS_API_KEY` is missing or ODDS_PROVIDER=offline
+ * rather than inventing quotes.
  * @throws {UnsupportedSportError} if `opts.sport` matches no supported sport.
  */
 export async function refreshOdds(
   opts: RefreshOddsOptions = {},
 ): Promise<RefreshOddsResult> {
-  const apiKey = process.env["THE_ODDS_API_KEY"];
-  if (!apiKey) {
-    throw new Error("THE_ODDS_API_KEY not configured");
+  const apiKey = process.env["THE_ODDS_API_KEY"]?.trim() ?? "";
+  const startedAt = Date.now();
+
+  // Soft-fail when the paid odds provider is offline (missing key / unpaid).
+  // Do not invent quotes; callers (cron) get ok:false with an explicit error
+  // instead of an uncaught throw. Gate integrity stays refusal-native.
+  if (!apiKey || process.env["ODDS_PROVIDER"]?.trim().toLowerCase() === "offline") {
+    const reason = !apiKey
+      ? "THE_ODDS_API_KEY missing — odds provider offline; refusing to invent quotes"
+      : "ODDS_PROVIDER=offline — refusing to invent quotes";
+    return {
+      ok: false,
+      elapsedMs: Date.now() - startedAt,
+      okCount: 0,
+      totalCount: 0,
+      results: [{ sport: "_", ok: false, error: reason }],
+      freeze: [],
+    };
   }
 
-  const startedAt = Date.now();
   const gates = getReadinessGates();
   const requestedSport = opts.sport ?? null;
 

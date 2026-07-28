@@ -14,6 +14,8 @@
  * Coding agent: verify, add tests, wire; do not rewrite the core algorithm.
  */
 
+import { pavIsotonic } from "./pav.js";
+
 export interface IvapCalibrationPoint {
   readonly score: number;
   readonly label: 0 | 1;
@@ -28,48 +30,6 @@ export interface IvapPrediction {
   readonly pMid: number;
   /** Width of the multiprobability interval */
   readonly width: number;
-}
-
-/**
- * Pool Adjacent Violators — isotonic regression under non-decreasing constraint.
- * Returns the fitted values in the same order as the input (already sorted by score).
- */
-function pavIsotonic(ys: readonly number[]): number[] {
-  const n = ys.length;
-  if (n === 0) return [];
-  // Work with weighted blocks: [value, weight, start, end]
-  const blocks: { value: number; weight: number; start: number; end: number }[] = ys.map(
-    (y, i) => ({ value: y, weight: 1, start: i, end: i }),
-  );
-
-  let i = 0;
-  while (i < blocks.length - 1) {
-    if (blocks[i]!.value <= blocks[i + 1]!.value) {
-      i += 1;
-      continue;
-    }
-    // Merge violators
-    const left = blocks[i]!;
-    const right = blocks[i + 1]!;
-    const totalWeight = left.weight + right.weight;
-    const mergedValue = (left.value * left.weight + right.value * right.weight) / totalWeight;
-    blocks.splice(i, 2, {
-      value: mergedValue,
-      weight: totalWeight,
-      start: left.start,
-      end: right.end,
-    });
-    // Backtrack if the merge created a new violation with the previous block
-    if (i > 0) i -= 1;
-  }
-
-  const fitted = new Array<number>(n);
-  for (const block of blocks) {
-    for (let j = block.start; j <= block.end; j++) {
-      fitted[j] = block.value;
-    }
-  }
-  return fitted;
 }
 
 function clamp01(x: number): number {
