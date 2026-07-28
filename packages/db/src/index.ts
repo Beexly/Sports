@@ -264,3 +264,20 @@ export type {
 } from "./durable-write-guard.js";
 
 export * from "@prisma/client";
+
+// Neon connection-pool health probe. APPENDED as an export-only block —
+// deliberately NOT the full index rewrite proposed in the superseded PR #222,
+// which deleted the demo-picks stub, the sample-picks handling and
+// makeModelStub from this file (266 lines -> 229). Those are the Prisma stub
+// client this package falls back to when DATABASE_URL is absent; removing them
+// is a functional regression, not a refactor.
+export {
+  probeNeonPool,
+  getNeonPoolCounters,
+  classifyLatency,
+  resetNeonPoolCountersForTests,
+  type NeonPoolProbeStatus,
+  type NeonPoolProbeResult,
+  type NeonPoolMonitorCounters,
+  type ProbeOptions,
+} from "./neon-pool-monitor.js";
