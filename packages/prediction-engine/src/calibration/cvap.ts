@@ -94,9 +94,34 @@ export function cvapPredict(
     };
   }
 
-  const requestedFolds = options.folds ?? Math.min(5, n);
-  const K = Math.max(2, Math.min(requestedFolds, n));
   const aggregation: CvapAggregationMode = options.aggregation ?? "geometric";
+
+  // Cross-validation is undefined below two points. The old clamp
+  // (max(2, min(folds, n))) re-raised K above n for n = 1, violating the
+  // option's own contract ("<= calibration size") — and worse, the fold
+  // containing the lone point then had an EMPTY training complement, which the
+  // old fallback silently replaced with the FULL calibration set: leave-one-out
+  // became leave-nothing-out, reported as two clean folds. Found by fuzz
+  // (counterexample: calibration=[{score:0,label:0}], folds=2). The honest
+  // degradation is a single inductive fit, reported as exactly that. Production
+  // is unaffected: the gate's MIN_STRATUM_CALIBRATION=100 floor keeps real
+  // callers far above this branch.
+  if (n < 2) {
+    const pred = new InductiveVennAbers(calibration).predict(testScore);
+    const only: Multiprobability = { p0: pred.p0, p1: pred.p1 };
+    return {
+      ...toFull(only),
+      foldPredictions: [only],
+      aggregation,
+      foldsUsed: 1,
+    };
+  }
+
+  const requestedFolds = options.folds ?? Math.min(5, n);
+  // min AFTER max: K can never exceed n, so together with assignFolds'
+  // every-fold-nonempty guarantee (n >= k), no fold's training complement can
+  // be empty for K >= 2.
+  const K = Math.min(Math.max(2, requestedFolds), n);
   const seed = options.seed ?? 0xC0FFEE;
 
   const foldIds = assignFolds(n, K, seed);
@@ -110,9 +135,11 @@ export function cvapPredict(
         train.push(calibration[i]!);
       }
     }
-    // If a fold ends up empty of training points (pathological), fall back to full set
-    const trainSet = train.length > 0 ? train : [...calibration];
-    const ivap = new InductiveVennAbers(trainSet);
+    // Unreachable under the K <= n clamp + every-fold-nonempty guarantee, but
+    // if it ever fires the honest answer is stated ignorance (empty-set IVAP
+    // -> 0.5/0.5), NEVER a silent full-set fit — that would turn "leave this
+    // fold out" into "leave nothing out" and mislabel it as a clean fold.
+    const ivap = new InductiveVennAbers(train);
     const pred = ivap.predict(testScore);
     foldPredictions.push({ p0: pred.p0, p1: pred.p1 });
   }
