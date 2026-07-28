@@ -456,12 +456,36 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     );
 
     expect(otherErrors).toEqual([]);
-    expect(completed).toBe(60);
-    expect(budgetBlocked).toBe(40);
+
+    // BOUNDS, NOT AN EXACT COUNT — and the bound is the stronger assertion.
+    //
+    // `completed === 60` was timing-dependent and flaked (observed 62 in CI,
+    // green on re-run, no code change). It was never a cap breach: each plan
+    // HOLDS $0.10 worst-case but SETTLES only $0.05 on first-route success, and
+    // that settlement RELEASES the unused $0.05 back as headroom which a later
+    // invocation can claim. So the admitted count depends on how many
+    // settlements land before the last hold is attempted — pure scheduling,
+    // which the budget system never promised anything about.
+    //
+    //   floor  60 = cap / worst-case hold  (6.00 / 0.10) — always fits, so the
+    //                                       guard can never admit fewer
+    //   ceil  120 = cap / actual settle    (6.00 / 0.05) — the most the cap can
+    //                                       fund even if every hold released
+    //                                       before the next was attempted
+    //
+    // What the system DOES owe us is that spend never exceeds the cap, and that
+    // is now asserted directly below rather than inferred from a count.
+    const MIN_ADMITTED = 60; // cap / worst-case hold
+    const MAX_ADMITTED = 120; // cap / actual settled cost
+    expect(completed).toBeGreaterThanOrEqual(MIN_ADMITTED);
+    expect(completed).toBeLessThanOrEqual(MAX_ADMITTED);
+    expect(completed + budgetBlocked).toBe(100); // every invocation accounted for
 
     const w = await windowRow(resolvedId);
-    // 60 successes × $0.05 provisional actual; all holds resolved.
-    expect(usdToMicros(w.provisionalUsd)).toBe(usdToMicros("3.00"));
+    // Provisional equals exactly what was admitted x the real settled cost, and
+    // never exceeds the cap. THIS is the honesty claim the test exists to make.
+    expect(usdToMicros(w.provisionalUsd)).toBe(usdToMicros((completed * 0.05).toFixed(6)));
+    expect(usdToMicros(w.provisionalUsd)).toBeLessThanOrEqual(usdToMicros("6.00"));
     expect(usdToMicros(w.reservedUsd)).toBe(0n);
     expect(w.invariant).toBe(true);
 
@@ -500,16 +524,39 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     );
 
     expect(otherErrors2).toEqual([]);
-    // The consumed $3.00 is gone: only $3.00 remains, funding 30 of 100 — the
-    // second wave admits FEWER than the first (30 < 60), never re-admitting
-    // the settled amount.
-    expect(completed2).toBe(30);
-    expect(budgetBlocked2).toBe(70);
-    expect(completed2).toBeLessThan(completed);
+
+    // Bounds again, derived from what wave 1 ACTUALLY consumed rather than from
+    // an assumed 60 — the permanent-consume property is what matters here, and
+    // it is provable without pinning a scheduler-dependent count.
+    // Integer cents, not floats: `3.0 / 0.1` is 29.999999999999996 in IEEE-754,
+    // so a float floor would silently compute 29 where 30 is correct. It would
+    // only loosen a lower bound rather than break the test, but a budget test
+    // computing its own bound wrongly is not the place to leave that.
+    const CAP_CENTS = 600;
+    const SETTLE_CENTS = 5;
+    const WORST_CASE_HOLD_CENTS = 10;
+    const remainingCents = CAP_CENTS - completed * SETTLE_CENTS;
+    // Floor: however the scheduler interleaves, at least this many worst-case
+    // holds fit in the remaining balance.
+    expect(completed2).toBeGreaterThanOrEqual(
+      Math.floor(remainingCents / WORST_CASE_HOLD_CENTS),
+    );
+    expect(completed2 + budgetBlocked2).toBe(100);
+
+    // THE PERMANENT-CONSUME PROOF, stated as the invariant instead of as a
+    // count: settled spend never returns to the spendable balance, so the two
+    // waves TOGETHER can never exceed what the cap could fund from scratch. If
+    // settlement wrongly restored headroom, this is the assertion that breaks —
+    // and unlike `completed2 === 30` it cannot be tripped by scheduling.
+    expect(completed + completed2).toBeLessThanOrEqual(MAX_ADMITTED);
 
     const w2 = await windowRow(resolvedId);
-    // Cumulative settled: 90 successes × $0.05 = $4.50 provisional, never > cap.
-    expect(usdToMicros(w2.provisionalUsd)).toBe(usdToMicros("4.50"));
+    // Cumulative provisional is exactly the admitted count x the settled cost,
+    // and still under the cap.
+    expect(usdToMicros(w2.provisionalUsd)).toBe(
+      usdToMicros(((completed + completed2) * 0.05).toFixed(6)),
+    );
+    expect(usdToMicros(w2.provisionalUsd)).toBeLessThanOrEqual(usdToMicros("6.00"));
     expect(usdToMicros(w2.reservedUsd)).toBe(0n);
     expect(w2.invariant).toBe(true);
     // No leaked holds survive the second wave either.

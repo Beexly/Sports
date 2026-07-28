@@ -88,13 +88,22 @@ kind that survives a green suite:
 2. Wire `certificateFromGateCandidate` at a real post-gate call site. Pure
    transform today with no production consumer.
 3. Optional: property-based fuzz (fast-check) on PAV/CVAP for random sequences.
-4. **Known flaky test, unrelated to the UQ stack**:
-   `apps/web/__tests__/ai-control-plane-budget-pg.test.ts > "100 concurrent
-   end-to-end invocations stay within the cap"` asserts `completed === 60`
-   exactly. Each invocation holds $0.10 worst-case but settles $0.05 on
-   first-route success, *releasing* headroom that can admit more — so the count
-   is timing-dependent and only equals 60 if every hold is taken before any
-   settlement. Observed 62 on one CI run, green on re-run. **Not a cap breach**
-   (62 × $0.05 = $3.10, well under the $6.00 cap); the exact-equality assertion
-   is the defect, not the budget system. It will intermittently red unrelated
-   PRs until the assertion is changed to a bound.
+4. ~~Known flaky test~~ — **FIXED**. `apps/web/__tests__/ai-control-plane-budget-pg.test.ts >
+   "100 concurrent end-to-end invocations stay within the cap"` asserted
+   `completed === 60` exactly. Each invocation holds $0.10 worst-case but
+   settles $0.05 on first-route success, *releasing* headroom a later
+   invocation can claim — so the count was timing-dependent and equalled 60
+   only if every hold landed before any settlement. Observed 62 on one CI run,
+   green on re-run. It was never a cap breach (62 × $0.05 = $3.10 against a
+   $6.00 cap); the exact-equality assertion was the defect.
+
+   Replaced with bounds that are the *stronger* claim: `completed` between
+   `cap / worst-case hold` (60) and `cap / actual settle` (120), every
+   invocation accounted for, and — the part that actually matters —
+   `provisionalUsd` asserted to equal `admitted × settled cost` and to never
+   exceed the cap. The permanent-consume proof across both waves is now
+   `completed + completed2 <= 120` (settled spend never returns to the
+   spendable balance), which cannot be tripped by scheduling the way
+   `completed2 === 30` could. Bounds validated against a simulation of both
+   scheduling extremes; the wave-2 floor is computed in integer cents because
+   `3.0 / 0.1` is `29.999999999999996` in IEEE-754.
