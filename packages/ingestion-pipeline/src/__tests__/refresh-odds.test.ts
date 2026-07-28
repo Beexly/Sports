@@ -10,7 +10,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  *   - iterates exactly one sport when given an explicit key
  *   - aggregates per-sport results into the documented envelope
  *   - a single sport throwing does NOT abort the remaining sports
- *   - throws on a missing API key / an unsupported explicit sport
+ *   - SOFT-FAILS (ok:false, never a throw) on a missing API key or
+ *     ODDS_PROVIDER=offline — refuses to invent quotes rather than crash the
+ *     caller; throws only on an unsupported explicit sport
  *
  * Mocks follow the existing process-sport.test.ts / settle-sport.test.ts
  * pattern: hoisted vi.fn()s wired through vi.mock for processSport, the sport
@@ -225,10 +227,64 @@ describe("refreshOdds", () => {
     warn.mockRestore();
   });
 
-  it("throws when THE_ODDS_API_KEY is not configured", async () => {
-    delete process.env["THE_ODDS_API_KEY"];
-    await expect(refreshOdds()).rejects.toThrow("THE_ODDS_API_KEY not configured");
-    expect(mocks.processSport).not.toHaveBeenCalled();
+  describe("soft-fails instead of inventing quotes when the paid provider is unavailable", () => {
+    // Neither branch may throw: a cron caller that doesn't catch would crash
+    // the whole invocation over a billing/config problem, and — the actual
+    // risk this guards — nothing here may substitute a fabricated quote to
+    // keep the loop looking healthy. `ok:false` with a named reason is the
+    // only honest response to "there is no real price to report."
+    afterEach(() => {
+      delete process.env["ODDS_PROVIDER"];
+    });
+
+    it("soft-fails with a named reason when THE_ODDS_API_KEY is not configured", async () => {
+      delete process.env["THE_ODDS_API_KEY"];
+
+      const result = await refreshOdds();
+
+      expect(result).toEqual({
+        ok: false,
+        elapsedMs: expect.any(Number),
+        okCount: 0,
+        totalCount: 0,
+        results: [
+          {
+            sport: "_",
+            ok: false,
+            error: "THE_ODDS_API_KEY missing — odds provider offline; refusing to invent quotes",
+          },
+        ],
+        freeze: [],
+      });
+      // Never reaches the per-sport loop at all — there is nothing to fetch
+      // odds FOR without a key, so no sport should appear to have been tried.
+      expect(mocks.processSport).not.toHaveBeenCalled();
+      expect(mocks.getInSeasonSports).not.toHaveBeenCalled();
+    });
+
+    it("soft-fails with a named reason when ODDS_PROVIDER=offline, even with a valid key present", async () => {
+      // The explicit operator override takes priority over having a key at
+      // all — this is the founder's documented way to force offline mode
+      // (e.g. while the subscription is unpaid) without having to also unset
+      // the key.
+      process.env["ODDS_PROVIDER"] = "offline";
+
+      const result = await refreshOdds();
+
+      expect(result.ok).toBe(false);
+      expect(result.results).toEqual([
+        { sport: "_", ok: false, error: "ODDS_PROVIDER=offline — refusing to invent quotes" },
+      ]);
+      expect(mocks.processSport).not.toHaveBeenCalled();
+    });
+
+    it("is case-insensitive and trims ODDS_PROVIDER, so 'Offline'/' offline ' also soft-fail", async () => {
+      process.env["ODDS_PROVIDER"] = " Offline ";
+
+      const result = await refreshOdds();
+
+      expect(result.ok).toBe(false);
+    });
   });
 
   it("throws UnsupportedSportError for an unknown explicit sport", async () => {
