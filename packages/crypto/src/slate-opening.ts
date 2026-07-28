@@ -165,6 +165,32 @@ export function planSlateOpening(input: SlateOpeningInput): SlateOpeningPlan {
     );
   }
 
+  // (2b) Mint-contract bound on the value. THIS IS A REAL CHECK, not a sanity
+  // assert. Pedersen binding is only mod n: the commitment commit(v, r) is
+  // reproduced by EVERY v + k·CURVE_ORDER, because the scalar multiply reduces
+  // mod n. So without an upper bound, a corrupted opener column holding
+  // `v + n` — a 78-digit number claiming an absurd total edge — passes the
+  // self-check below and gets disclosed as a cryptographically confirmed total.
+  // That is exactly the "corrupted opener" case the self_check_failed rationale
+  // promises to withhold, slipping through the one gap where the check is blind.
+  //
+  // The mint side encodes each pick's edge as encodeFixedPoint(e, 0, 100), i.e.
+  // a value in [0, 100 * SCALE], and sums over the covered picks. So the only
+  // legitimate value is in [0, coveredPickCount * 100 * SCALE], which is < 2^60
+  // for any real slate and far below n (~2^256). Anything above that band did
+  // not come from the mint path — including every v + k·n alias — and is
+  // withheld. (Found by adversarial review; verified: v + n REVEALed before
+  // this bound, refused after.)
+  const SCALE = 1_000_000n;
+  const MAX_EDGE = 100n;
+  const maxLegitimateValue = BigInt(coveredPickCount) * MAX_EDGE * SCALE;
+  if (value < 0n || value > maxLegitimateValue) {
+    return refuse(
+      "malformed_opener",
+      `slate ${slateKey}: opener value ${aggregateValue} is outside the mint-contract range [0, ${maxLegitimateValue}] for ${coveredPickCount} covered pick(s). A value this size cannot have come from the encoder; withholding rather than disclosing an alias that would still verify mod n.`,
+    );
+  }
+
   // (3) Self-check. Recompute the commitment and compare POINTS (openCommitment
   // decodes both sides, so a non-canonical but equivalent hex still opens).
   if (!openCommitment(aggregateHex, value, blinding)) {

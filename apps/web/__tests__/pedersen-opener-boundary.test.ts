@@ -66,6 +66,18 @@ beforeAll(() => {
     join(FIXTURES, "violation-opener-outside-allowlist.ts"),
     join(fixtureRoot, "packages", "svc", "violation-opener-outside-allowlist.ts"),
   );
+  copyFileSync(
+    join(FIXTURES, "violation-relation-traversal.ts"),
+    join(fixtureRoot, "packages", "svc", "violation-relation-traversal.ts"),
+  );
+  copyFileSync(
+    join(FIXTURES, "violation-aggregate-extract.ts"),
+    join(fixtureRoot, "apps", "web", "violation-aggregate-extract.ts"),
+  );
+  copyFileSync(
+    join(FIXTURES, "clean-relation-select.ts"),
+    join(fixtureRoot, "packages", "svc", "clean-relation-select.ts"),
+  );
 });
 
 afterAll(() => {
@@ -136,10 +148,48 @@ describe("pedersen opener boundary guard", () => {
   );
 
   it(
-    "reports exactly the three seeded violations — no over-firing",
+    "flags relation traversal from the receipt side (rule D) — the hole the review found",
+    () => {
+      // The words "slateCommitment" never appear in the call, yet
+      // `include: { slate: true }` returns the full commitment row, opener
+      // included. Both wholesale shapes must fire: `slate: true` and a nested
+      // object with no `select`.
+      const r = runGuard(["--root", fixtureRoot]);
+      expect(r.status).toBe(1);
+      expect(r.stderr).toMatch(/violation-relation-traversal\.ts/);
+      const wholesale = r.stderr.match(/relation-wholesale/g) ?? [];
+      expect(wholesale.length).toBeGreaterThanOrEqual(2);
+    },
+    GUARD_TEST_TIMEOUT_MS,
+  );
+
+  it(
+    "flags opener extraction through aggregate _max (rule E) — no `select` needed",
     () => {
       const r = runGuard(["--root", fixtureRoot]);
-      expect(r.stderr).toMatch(/FAIL - 3 violation\(s\)/);
+      expect(r.status).toBe(1);
+      expect(r.stderr).toMatch(/violation-aggregate-extract\.ts/);
+      expect(r.stderr).toMatch(/aggregate\(/);
+      expect(r.stderr).toMatch(/pedersenBlindingSum/);
+    },
+    GUARD_TEST_TIMEOUT_MS,
+  );
+
+  it(
+    "does NOT flag a traversal whose nested select names only public columns",
+    () => {
+      const r = runGuard(["--root", fixtureRoot]);
+      expect(r.stderr).not.toMatch(/clean-relation-select\.ts/);
+    },
+    GUARD_TEST_TIMEOUT_MS,
+  );
+
+  it(
+    "reports exactly the six seeded violations — no over-firing",
+    () => {
+      // 3 original + slate:true + slate:{no-select} + aggregate extract.
+      const r = runGuard(["--root", fixtureRoot]);
+      expect(r.stderr).toMatch(/FAIL - 6 violation\(s\)/);
     },
     GUARD_TEST_TIMEOUT_MS,
   );

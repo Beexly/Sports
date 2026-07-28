@@ -122,8 +122,12 @@ describe("REFUSAL 2 — a slate with no opener is history, not an error", () => 
 });
 
 describe("REFUSAL 3 — an opener that does not open is withheld", () => {
-  it("refuses when the stored value does not reproduce the hex", () => {
-    const plan = planSlateOpening(input({ aggregateValue: "999999999" }));
+  it("refuses when a wrong but IN-BAND value does not reproduce the hex", () => {
+    // In-band (below the covered-count ceiling) so it clears the mint-contract
+    // bound and genuinely exercises the self-check, not the value bound.
+    const s = realSlate([12.5, 40, 7.25]);
+    const wrongInBand = (BigInt(s.aggregateValue) + 1n).toString();
+    const plan = planSlateOpening(input({ aggregateValue: wrongInBand }));
     expect(plan.action).toBe("REFUSE");
     if (plan.action !== "REFUSE") return;
     expect(plan.reason).toBe("self_check_failed");
@@ -155,6 +159,42 @@ describe("REFUSAL 3 — an opener that does not open is withheld", () => {
     expect(plan.action).toBe("REFUSE");
     if (plan.action !== "REFUSE") return;
     expect(plan.reason).toBe("self_check_failed");
+  });
+});
+
+describe("the mint-contract value bound closes the mod-n alias (adversarial review)", () => {
+  // Pedersen binding is only mod n: commit(v, r) is reproduced by every
+  // v + k·CURVE_ORDER. Without an upper bound, a corrupted opener holding v + n
+  // passes the self-check and gets disclosed. The bound refuses it.
+  it("refuses value = v + CURVE_ORDER even though it reproduces the hex mod n", () => {
+    const s = realSlate([12.5, 40, 7.25]);
+    const alias = (BigInt(s.aggregateValue) + CURVE_ORDER).toString();
+    const plan = planSlateOpening(input({ aggregateValue: alias }));
+    expect(plan.action).toBe("REFUSE");
+    if (plan.action !== "REFUSE") return;
+    expect(plan.reason).toBe("malformed_opener");
+    expect(plan.detail).toMatch(/mint-contract range/i);
+  });
+
+  it("refuses value = v + 2·CURVE_ORDER as well", () => {
+    const s = realSlate([12.5, 40, 7.25]);
+    const alias = (BigInt(s.aggregateValue) + 2n * CURVE_ORDER).toString();
+    const plan = planSlateOpening(input({ aggregateValue: alias }));
+    expect(plan.action).toBe("REFUSE");
+  });
+
+  it("refuses a value one past the covered-count ceiling", () => {
+    // 3 picks * 100 * 1e6 = 3e8 is the max legitimate sum; one over is refused.
+    const plan = planSlateOpening(
+      input({ aggregateValue: (3n * 100n * 1_000_000n + 1n).toString() }),
+    );
+    expect(plan.action).toBe("REFUSE");
+    if (plan.action !== "REFUSE") return;
+    expect(plan.reason).toBe("malformed_opener");
+  });
+
+  it("still reveals a legitimate in-band value — the bound does not break the happy path", () => {
+    expect(planSlateOpening(input()).action).toBe("REVEAL");
   });
 });
 
