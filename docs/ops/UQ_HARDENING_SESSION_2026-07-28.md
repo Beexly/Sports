@@ -154,29 +154,23 @@ Fabricating statistical formulas for a product whose entire thesis is "never
 invent numbers" is the wrong failure mode to pick under uncertainty here.
 Still blocked on founder input; still flagged, not silently dropped.
 
-## 6. Per-category coverage/width diagnostics — primitive exists, wiring does not
+## 6. Per-category coverage/width diagnostics — CLOSED in follow-up
 
-The handoff's item 5 ("walk-forward diagnostics for per-category coverage
-and interval width") has its aggregation primitive already: `sports-taxonomy.ts`'s
-`summarizeCategoryDiagnostics` takes `{category, covered, width, residual}`
-rows and returns per-category sample size, coverage, mean width, and mean
-residual — tested this session (`sports-taxonomy.test.ts`).
+Originally: primitive existed (`summarizeCategoryDiagnostics`), no production
+call site. **Closed in the A++ follow-up commit** without reshaping
+`selective-gate.ts`:
 
-What does **not** exist is a batch call site that runs it over real
-walk-forward output. `applySelectiveGate` currently accepts at most one
-`taxonomyCtx` per call and stamps every decision in that call with the same
-category — correct for its actual call site (one game context per gate
-invocation) but not shaped for "replay a season and get one taxonomy
-category per row." Building that batch wiring means either changing
-`GateDecisionRow` to carry a per-row context (a `selective-gate.ts` API
-change) or building a separate walk-forward harness that calls
-`assignMondrianCategory` per row itself and feeds `summarizeCategoryDiagnostics`
-directly. Both are real, scoped follow-ups; neither was done this session,
-to avoid touching `selective-gate.ts`'s public shape without a specific
-need driving the change (the standing "do not rewrite pav.ts/ivap.ts" caution
-generalizes here to "do not reshape the gate's API on spec").
+- New module: `edge-lab/walk-forward-taxonomy.ts`
+  - `runWalkForwardTaxonomy(rows, options)` assigns Mondrian category per row,
+    aggregates coverage / width / residual, and emits underpowered /
+    under-coverage / wide-interval alerts.
+  - `contextFromLevel1Category` recovers a minimal context from a level-1
+    stamp without inventing restDays or optional tags.
+- Tests: `edge-lab/__tests__/walk-forward-taxonomy.test.ts`
+- Design choice: separate harness (not a gate API change) so one-game
+  consumers stay simple and season-scale replay gets per-row taxonomy.
 
-## 7. Session verification summary
+## 7. Session verification summary (original)
 
 - `packages/prediction-engine`: `tsc --noEmit` clean; full vitest suite 165
   files / 1797 tests passing at HEAD, of which 11 files (1790 lines) are new
@@ -188,13 +182,35 @@ generalizes here to "do not reshape the gate's API on spec").
 - Branch: `feat/uq-honesty-stack-hardening`, five commits, each independently
   buildable and green.
 
-## 8. Next one action
+## 8. Next one action (original)
 
 Land `feat/uq-honesty-stack-hardening` as a PR against `main`, run the full
 CI gate (tsc/lint/vitest/guardrails/flag-policy), and merge once green — the
 same standing-authority pattern used for #215/#216/#217 this session
 (bug-fixes and pure test/tooling additions on top of already-designed,
-already-integrated modules, not a flag flip). After that: pick up §6
-(walk-forward per-category diagnostics wiring) as the next real gap, or wait
-for founder input on the missing math/certificate artifact pack (§5) before
-touching that track.
+already-integrated modules, not a flag flip).
+
+## 9. A++ follow-up (same branch, additional commit)
+
+Shipped on `feat/uq-honesty-stack-hardening` after CI was already green on the
+original PR body:
+
+1. **Walk-forward taxonomy harness** (§6 closed) — see above.
+2. **Council ↔ Gate alignment tests** —
+   `edge-lab/__tests__/council-gate-alignment.test.ts`
+   - Width veto: guardian hard-veto tracks gate `maxWidthForFire` doctrine.
+   - Sample floor: thin calibration → gate silent stratum AND council `no_bet`.
+   - Placebo: failed → council `no_bet`; undefined → "untested" flag (not pass).
+   - Lower-endpoint edge: calibration analyst `lcbEdge` matches gate definition
+     (`interval.lower − q`).
+   - Doctrine: council ledger hint remains diagnostic-only; shared
+     `MIN_STRATUM_CALIBRATION` constant.
+3. **Module index** — `docs/ops/UQ_MODULE_INDEX.md` (one-page ownership map
+   for the next agent).
+
+Remaining optional polish (not blockers):
+
+- Wire an existing historical-replay harness to feed rows into
+  `runWalkForwardTaxonomy` (integration, not new primitives).
+- Property-based fuzz (fast-check) on PAV/CVAP random sequences.
+- Founder input still required for certificate/math modules (§5).
