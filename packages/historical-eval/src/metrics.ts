@@ -1,3 +1,8 @@
+/**
+ * Historical metrics — proper scores + risk-coverage.
+ * Coverage helpers must not invent honesty (no auto-hit on straddling intervals).
+ */
+
 import type { HistDecisionRecord } from "./types.js";
 
 export function brierScore(p: number, y: 0 | 1): number {
@@ -31,25 +36,65 @@ export function meanBrier(
   return xs.reduce((a, b) => a + b, 0) / xs.length;
 }
 
-export function empiricalIntervalCoverage(
+export type DirectionalBucket = "pred1" | "pred0" | "straddle" | "invalid";
+
+/**
+ * Directional classification at 0.5 — straddles are EXCLUDED from accuracy,
+ * not counted as hits (fabricated coverage is forbidden).
+ */
+export function directionalBucket(lo: number, hi: number): DirectionalBucket {
+  if (!(Number.isFinite(lo) && Number.isFinite(hi)) || lo > hi) return "invalid";
+  if (lo > 0.5) return "pred1";
+  if (hi < 0.5) return "pred0";
+  return "straddle";
+}
+
+export interface DirectionalAccuracy {
+  /** Accuracy among non-straddle, valid intervals only */
+  accuracy: number | null;
+  nScored: number;
+  nStraddle: number;
+  nInvalid: number;
+  nTotal: number;
+}
+
+export function directionalAccuracyAt50(
   rows: readonly SettledDecision[],
-): number | null {
-  let n = 0;
-  let hit = 0;
+): DirectionalAccuracy {
+  let correct = 0;
+  let nScored = 0;
+  let nStraddle = 0;
+  let nInvalid = 0;
   for (const r of rows) {
     const iv = r.record.interval;
     if (!iv) continue;
-    n += 1;
-    const y = r.label;
-    if (iv.lo > 0.5) {
-      if (y === 1) hit += 1;
-    } else if (iv.hi < 0.5) {
-      if (y === 0) hit += 1;
-    } else {
-      hit += 1;
+    const b = directionalBucket(iv.lo, iv.hi);
+    if (b === "straddle") {
+      nStraddle += 1;
+      continue;
     }
+    if (b === "invalid") {
+      nInvalid += 1;
+      continue;
+    }
+    nScored += 1;
+    if (b === "pred1" && r.label === 1) correct += 1;
+    if (b === "pred0" && r.label === 0) correct += 1;
   }
-  return n ? hit / n : null;
+  return {
+    accuracy: nScored ? correct / nScored : null,
+    nScored,
+    nStraddle,
+    nInvalid,
+    nTotal: rows.length,
+  };
+}
+
+/** @deprecated Removed — use directionalAccuracyAt50 (straddles excluded). */
+export function empiricalIntervalCoverage(
+  _rows: readonly SettledDecision[],
+): null {
+  return null;
 }
 
 export interface RiskCoveragePoint {
