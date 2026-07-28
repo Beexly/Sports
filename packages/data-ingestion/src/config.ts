@@ -129,18 +129,51 @@ export const FRESHNESS_THRESHOLD_MS =
 // staying well under the cron's maxDuration so remaining sports still process.
 export const ODDS_API_TIMEOUT_MS = 15 * 1000; // 15 seconds
 
+export const THE_ODDS_API_PRODUCTION_BASE_URL = "https://api.the-odds-api.com/v4";
+
 /**
  * The Odds API base URL.
  *
  * Default: production The Odds API.
- * Staging chaos: point at Toxiproxy listen URL, e.g.
+ * Staging chaos: point at the Toxiproxy listen URL, e.g.
  *   ODDS_API_BASE_URL=http://127.0.0.1:8475/odds-api/v4
  * (see docker/chaos/README.md). Never invent quotes when upstream fails.
+ *
+ * THE OVERRIDE IS REFUSED IN PRODUCTION — enforced here, not left to
+ * convention. This variable decides where every sportsbook quote in the system
+ * comes from, and whatever it returns is written as a real, certifiable price.
+ * A single mis-set env var in the production project would therefore fabricate
+ * the entire quote plane while every downstream freshness, de-vig and gate
+ * check kept reporting healthy, because each of them would be operating on
+ * data that looks structurally perfect. That is precisely the "no invented
+ * quotes" line this codebase refuses to cross, and it is the one failure mode
+ * the chaos stack itself exists to prove we handle honestly.
+ *
+ * Falling back to the real upstream (rather than throwing) is the fail-safe
+ * direction: a chaos variable left set in production degrades to correct
+ * behavior instead of taking the ingestion path down.
  */
-export const ODDS_API_BASE_URL = (
-  process.env["ODDS_API_BASE_URL"]?.replace(/\/$/, "") ||
-  "https://api.the-odds-api.com/v4"
-);
+function resolveOddsApiBaseUrl(): string {
+  const override = process.env["ODDS_API_BASE_URL"]?.trim().replace(/\/$/, "");
+  if (!override) return THE_ODDS_API_PRODUCTION_BASE_URL;
+
+  const isProduction =
+    (process.env["VERCEL_ENV"] ?? process.env["NODE_ENV"] ?? "").trim().toLowerCase() ===
+    "production";
+
+  if (isProduction) {
+    console.warn(
+      "[data-ingestion] ODDS_API_BASE_URL override IGNORED in production — " +
+        "quotes must come from the real upstream. Using " +
+        `${THE_ODDS_API_PRODUCTION_BASE_URL}. Unset the variable to silence this.`,
+    );
+    return THE_ODDS_API_PRODUCTION_BASE_URL;
+  }
+
+  return override;
+}
+
+export const ODDS_API_BASE_URL = resolveOddsApiBaseUrl();
 
 // Region preference for odds format
 export const ODDS_REGION = "us";
