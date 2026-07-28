@@ -1,37 +1,11 @@
 /**
  * Vercel cron — refresh odds on the schedule declared in `vercel.json`.
  *
- * Mirrors `workers/data-refresh/src/index.ts` but runs on Vercel's
- * scheduled-function infrastructure so the operator doesn't have to
- * deploy a long-running worker box. Shares the underlying logic via
- * `@sports/ingestion-pipeline`'s `refreshOdds()` (which itself calls
- * `processSport()`) so the two execution paths can never drift.
+ * Schedule: every 30 minutes (see vercel.json). Required so candidate odds stay
+ * inside MAX_CANDIDATE_ODDS_AGE_MS (6h). Do NOT widen the 6h gate to hide a slow cron.
  *
- * Schedule is declared in `vercel.json` at the repo root: every 30 minutes
- * (the "every-30th-minute" cron pattern — written in prose here, not as the
- * literal cron string, because a literal star-slash sequence inside a block
- * comment terminates the comment early and breaks the build; that exact
- * mistake shipped once already, so it isn't getting a second chance).
- * This cadence is required so candidate odds stay inside the board gate's
- * MAX_CANDIDATE_ODDS_AGE_MS (6 hours) in `load-gate-slate.ts`. Do NOT widen
- * the 6h gate to hide a slow cron; keep this comment in sync with vercel.json.
- * The optional long-running worker still uses REFRESH_INTERVAL_MS = 30m.
- *
- * Authentication: Vercel invokes the route with
- *   Authorization: Bearer <CRON_SECRET>
- * so a public POST without the right token returns 401. This is the
- * documented Vercel cron pattern.
- *
- * Behavior is governed by readiness gates exactly the same way the
- * long-running worker is. If `CANONICAL_HISTORY_ENABLED=false`, writes
- * are still marked `isBootstrap=true` — nothing here changes the gate
- * semantics; it only changes where the loop runs.
- *
- * The per-cycle loop itself lives in `refreshOdds()` so the cron route,
- * the admin trigger, and the worker all run identical logic. This route
- * owns ONLY the HTTP concerns: auth, the env/sport pre-checks (and their
- * exact status codes), the equivalent JSON envelope, and an optional
- * env-gated dead-man's-switch ping.
+ * Auth: Authorization Bearer CRON_SECRET.
+ * Health: optional HC_REFRESH_PING_URL (job) + HC_ODDS_FETCHEDAT_PING_URL (data plane).
  */
 
 import { NextResponse } from "next/server";
@@ -40,14 +14,11 @@ import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import { refreshOdds } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
+import { monitorOddsFetchedAt } from "@/lib/data-reliability/monitor-odds-fetchedat";
 
 export const dynamic = "force-dynamic";
-// Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
-// opt route-handler fetches out of Next's Data Cache — cached upstream odds
-// froze the whole pipeline on 2026-07-10. This segment config forces every
-// fetch in this route to no-store even if a future fetch forgets the option.
 export const fetchCache = "force-no-store";
-export const maxDuration = 300; // Vercel hobby/pro cron caps at 5 min
+export const maxDuration = 300;
 
 export async function GET(request: Request) {
   const denied = cronAuthError(request);
@@ -57,16 +28,13 @@ export async function GET(request: Request) {
   if (!apiKey) {
     return NextResponse.json(
       { error: "THE_ODDS_API_KEY not configured" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
   const gates = getReadinessGates();
   const requestedSport = new URL(request.url).searchParams.get("sport");
 
-  // Pre-validate an explicitly requested sport here so the 400 body stays
-  // byte-for-byte what callers depend on (refreshOdds throws an equivalent
-  // UnsupportedSportError, but we never reach it for the validated case).
   if (
     requestedSport &&
     !SUPPORTED_SPORTS.some((sport) => sport.key === requestedSport)
@@ -77,16 +45,17 @@ export async function GET(request: Request) {
         sport: requestedSport,
         supportedSports: SUPPORTED_SPORTS.map((sport) => sport.key),
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
-  // Dead-man's-switch monitor (env-gated; complete no-op until HC_REFRESH_PING_URL
-  // is set, so wiring it in ships no behavior change). Never throws.
   const pingUrl = process.env["HC_REFRESH_PING_URL"];
+  const fetchedAtPingUrl = process.env["HC_ODDS_FETCHEDAT_PING_URL"];
+
+  await pingHealthcheck(pingUrl, "start");
 
   const result = await refreshOdds(
-    requestedSport ? { sport: requestedSport } : {}
+    requestedSport ? { sport: requestedSport } : {},
   );
 
   if (result.ok) {
@@ -94,6 +63,8 @@ export async function GET(request: Request) {
   } else {
     await pingHealthcheck(pingUrl, "fail");
   }
+
+  const fetchedAtMonitor = await monitorOddsFetchedAt(fetchedAtPingUrl);
 
   return NextResponse.json({
     ok: result.ok,
@@ -104,5 +75,13 @@ export async function GET(request: Request) {
     bootstrapMode: gates.isBootstrapMode,
     results: result.results,
     freeze: result.freeze,
+    fetchedAt: {
+      status: fetchedAtMonitor.freshness.status,
+      ageMinutes: fetchedAtMonitor.freshness.ageMinutes,
+      maxFetchedAt:
+        fetchedAtMonitor.freshness.maxFetchedAt?.toISOString() ?? null,
+      summary: fetchedAtMonitor.freshness.summary,
+      pinged: fetchedAtMonitor.pinged,
+    },
   });
 }
