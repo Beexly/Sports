@@ -135,9 +135,27 @@ export class OddsApiClient {
     // Payment circuit: fail closed on prior 402 without burning more upstream calls.
     const circuit = this.circuitBreaker.tryAcquire();
     if (!circuit.allowed) {
+      // The status must say what actually happened. Every refusal used to be
+      // thrown as 402, and odds-provider-adapter classifies 401/402/403 as
+      // `paymentOrAuth` — so a purely LOCAL concurrency refusal (one half-open
+      // probe already out) was reported as "provider payment failure". That
+      // tells an operator their card failed when upstream has said nothing at
+      // all, and it is the kind of confident-but-wrong diagnosis this product
+      // exists to not make.
+      //
+      // 402 is reserved for the case upstream really did drive: the circuit
+      // opened on a genuine 402/401. A probe-concurrency refusal is 429 (a
+      // local rate/concurrency limit), and an operator's own kill switch is
+      // 503 (we are deliberately unavailable, not unpaid).
+      const status =
+        circuit.cause === "probe_in_flight"
+          ? 429
+          : circuit.cause === "operator_forced_open"
+            ? 503
+            : 402;
       throw new OddsApiError(
         circuit.reason ?? "Odds API payment circuit open — refusing to call upstream",
-        402,
+        status,
       );
     }
 
@@ -146,12 +164,17 @@ export class OddsApiClient {
     // timeout, a network error, a 500, a JSON parse failure — must hand the
     // slot back, or the circuit wedges half-open forever and refuses every
     // later call for the life of the process, even once payment is restored.
-    // `releaseProbe()` is a no-op after a normal success/402 path, so calling
-    // it unconditionally in `finally` is safe.
+    //
+    // Released ONLY by the acquirer. This `finally` previously ran for every
+    // request that got past tryAcquire, including closed-circuit ones that
+    // never held a probe — so an ordinary concurrent request could clear a
+    // slot belonging to a real in-flight probe and let a second probe through,
+    // defeating the one-probe-at-a-time rule the half-open state exists to
+    // enforce. `acquiredProbe` makes ownership explicit rather than inferred.
     try {
       return await this.fetchWithinCircuit<T>(url);
     } finally {
-      this.circuitBreaker.releaseProbe();
+      if (circuit.acquiredProbe) this.circuitBreaker.releaseProbe();
     }
   }
 

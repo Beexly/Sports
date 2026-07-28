@@ -24,10 +24,41 @@ export interface OddsCircuitBreakerConfig {
   readonly now?: () => number;
 }
 
+/**
+ * WHY a call was refused — stated, not left to be inferred from a status code.
+ *
+ * These are different facts about the world and must not be conflated:
+ *   "payment_circuit_open" — upstream really did return 402/401; the key is
+ *                            unpaid or unauthorized.
+ *   "probe_in_flight"      — purely LOCAL concurrency. One half-open probe is
+ *                            already out; upstream has said nothing at all.
+ *   "operator_forced_open" — a human set ODDS_API_CIRCUIT_FORCE_OPEN.
+ *
+ * Previously every refusal was thrown as an OddsApiError with status 402, and
+ * `odds-provider-adapter.ts` classifies 401/402/403 as `paymentOrAuth`. So a
+ * concurrency refusal — and an operator's own kill switch — were both reported
+ * as "provider payment failure", telling an operator their card had failed when
+ * nothing of the sort had happened. In a product whose thesis is that it never
+ * overclaims, a confident wrong diagnosis is the failure mode, not a cosmetic
+ * one.
+ */
+export type CircuitRefusalCause =
+  | "payment_circuit_open"
+  | "probe_in_flight"
+  | "operator_forced_open";
+
 export interface CircuitAcquireResult {
   readonly allowed: boolean;
   readonly state: OddsCircuitState;
   readonly reason?: string;
+  /** Present exactly when `allowed` is false. See CircuitRefusalCause. */
+  readonly cause?: CircuitRefusalCause;
+  /**
+   * True when THIS caller took the exclusive half-open probe slot, and is
+   * therefore the only one entitled to release it. Callers must not release a
+   * slot they did not acquire.
+   */
+  readonly acquiredProbe?: boolean;
   readonly opensAt?: number;
   readonly remainingOpenMs?: number;
 }
@@ -98,6 +129,7 @@ export class OddsPaymentCircuitBreaker {
       return {
         allowed: false,
         state: "open",
+        cause: "operator_forced_open",
         reason:
           "ODDS_API_CIRCUIT_FORCE_OPEN=1 — refusing Odds API calls (founder hard-stop)",
       };
@@ -106,7 +138,7 @@ export class OddsPaymentCircuitBreaker {
     const state = this.getState();
 
     if (state === "closed") {
-      return { allowed: true, state };
+      return { allowed: true, state, acquiredProbe: false };
     }
 
     if (state === "open") {
@@ -115,6 +147,7 @@ export class OddsPaymentCircuitBreaker {
       return {
         allowed: false,
         state,
+        cause: "payment_circuit_open",
         opensAt,
         remainingOpenMs,
         reason: `Odds API payment circuit open after HTTP 402 — retry in ~${Math.ceil(remainingOpenMs / 60000)}m (no invented quotes)`,
@@ -126,12 +159,14 @@ export class OddsPaymentCircuitBreaker {
       return {
         allowed: false,
         state,
+        cause: "probe_in_flight",
         reason:
-          "Odds API payment circuit half-open — probe already in flight (no concurrent calls)",
+          "Odds API payment circuit half-open — probe already in flight (local " +
+          "concurrency limit; upstream has NOT reported a payment or auth failure)",
       };
     }
     this.halfOpenProbeInFlight = true;
-    return { allowed: true, state: "half_open" };
+    return { allowed: true, state: "half_open", acquiredProbe: true };
   }
 
   /** Call after a successful upstream response (2xx). */
