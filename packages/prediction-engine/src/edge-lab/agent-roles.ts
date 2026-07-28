@@ -30,6 +30,21 @@ export interface EdgeLabContext {
   readonly multiprob?: { p0: number; p1: number; width: number };
   readonly conformalWidth?: number;
   readonly taxonomyCategory?: string;
+  /**
+   * Number of calibration rows backing `multiprob` for this stratum, when
+   * known. Lets the Risk/Honesty Guardian distinguish "we evaluated this and
+   * the interval is wide" from "we never had enough settled history to
+   * evaluate it at all" — the same distinction selective-gate.ts's
+   * MIN_STRATUM_CALIBRATION draws for the production gate.
+   */
+  readonly calibrationSampleSize?: number;
+  /**
+   * Result of a placebo (label-shuffle) check on the signal driving this
+   * candidate, when one has been run upstream. Undefined means "no placebo
+   * check was run for this context" — NOT "it passed" — and every reference
+   * agent in this module treats it that way.
+   */
+  readonly placeboSurvived?: boolean;
 }
 
 export interface AgentOpinion {

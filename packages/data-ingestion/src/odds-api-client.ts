@@ -12,6 +12,10 @@ import {
   type SupportedSportKey,
 } from "./config.js";
 import { noStoreFetch } from "./no-store-fetch.js";
+import {
+  getOddsPaymentCircuitBreaker,
+  type OddsPaymentCircuitBreaker,
+} from "./odds-api-circuit-breaker.js";
 
 export class OddsApiError extends Error {
   constructor(
@@ -103,13 +107,19 @@ function computeRetryDelayMs(
 export class OddsApiClient {
   private readonly apiKey: string;
   private readonly retryOptions: ResolvedRetryOptions;
+  private readonly circuitBreaker: OddsPaymentCircuitBreaker;
 
-  constructor(apiKey: string, retryOptions?: OddsApiRetryOptions) {
+  constructor(
+    apiKey: string,
+    retryOptions?: OddsApiRetryOptions,
+    circuitBreaker?: OddsPaymentCircuitBreaker,
+  ) {
     if (!apiKey) {
       throw new Error("THE_ODDS_API_KEY is required");
     }
     this.apiKey = apiKey;
     this.retryOptions = resolveRetryOptions(retryOptions);
+    this.circuitBreaker = circuitBreaker ?? getOddsPaymentCircuitBreaker();
   }
 
   private async fetch<T>(
@@ -121,6 +131,32 @@ export class OddsApiClient {
     for (const [key, value] of Object.entries(params)) {
       url.searchParams.set(key, value);
     }
+
+    // Payment circuit: fail closed on prior 402 without burning more upstream calls.
+    const circuit = this.circuitBreaker.tryAcquire();
+    if (!circuit.allowed) {
+      throw new OddsApiError(
+        circuit.reason ?? "Odds API payment circuit open — refusing to call upstream",
+        402,
+      );
+    }
+
+    // A half-open probe holds an exclusive slot that ONLY recordSuccess /
+    // recordPaymentRequired release. Every other exit from this method — a
+    // timeout, a network error, a 500, a JSON parse failure — must hand the
+    // slot back, or the circuit wedges half-open forever and refuses every
+    // later call for the life of the process, even once payment is restored.
+    // `releaseProbe()` is a no-op after a normal success/402 path, so calling
+    // it unconditionally in `finally` is safe.
+    try {
+      return await this.fetchWithinCircuit<T>(url);
+    } finally {
+      this.circuitBreaker.releaseProbe();
+    }
+  }
+
+  /** The actual request path. Circuit acquisition/release is the caller's job. */
+  private async fetchWithinCircuit<T>(url: URL): Promise<OddsApiFetchResult<T>> {
 
     let response: Response | null = null;
 
@@ -168,6 +204,11 @@ export class OddsApiClient {
 
     if (!response.ok) {
       const body = await response.text();
+      if (response.status === 402 || response.status === 401) {
+        this.circuitBreaker.recordPaymentRequired(
+          response.status === 402 ? body : `HTTP 401: ${body}`,
+        );
+      }
       throw new OddsApiError(
         `The Odds API error: ${response.status} — ${body}`,
         response.status,
@@ -175,6 +216,7 @@ export class OddsApiClient {
       );
     }
 
+    this.circuitBreaker.recordSuccess();
     const data = (await response.json()) as T;
     return { data, remainingRequests, usedRequests };
   }
