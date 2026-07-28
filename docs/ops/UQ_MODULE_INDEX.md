@@ -85,9 +85,13 @@ kind that survives a green suite:
 
 1. Feed real walk-forward / historical-replay rows into `runWalkForwardTaxonomy`
    from an existing replay harness (wiring only — the harness is ready).
-2. Wire `certificateFromGateCandidate` at a real post-gate call site. Pure
-   transform today with no production consumer.
-3. Optional: property-based fuzz (fast-check) on PAV/CVAP for random sequences.
+2. `certificateFromGateCandidate` wired at a real post-gate call site —
+   `apps/web/lib/board/gate-certificates.ts`, an attach-only consumer of
+   `evaluateBoardGate`. **In review** on
+   `feat/ws2-ws3-calibration-fuzz-certificate-wire`; not yet merged to `main`.
+3. Property-based fuzz (fast-check) over PAV/IVAP/CVAP/aggregation. **In
+   review** on the same branch — found and fixed a real CVAP degenerate-path
+   contract bug on its second random input; not yet merged to `main`.
 4. ~~Known flaky test~~ — **FIXED**. `apps/web/__tests__/ai-control-plane-budget-pg.test.ts >
    "100 concurrent end-to-end invocations stay within the cap"` asserted
    `completed === 60` exactly. Each invocation holds $0.10 worst-case but
