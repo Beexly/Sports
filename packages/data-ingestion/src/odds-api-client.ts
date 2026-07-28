@@ -141,6 +141,23 @@ export class OddsApiClient {
       );
     }
 
+    // A half-open probe holds an exclusive slot that ONLY recordSuccess /
+    // recordPaymentRequired release. Every other exit from this method — a
+    // timeout, a network error, a 500, a JSON parse failure — must hand the
+    // slot back, or the circuit wedges half-open forever and refuses every
+    // later call for the life of the process, even once payment is restored.
+    // `releaseProbe()` is a no-op after a normal success/402 path, so calling
+    // it unconditionally in `finally` is safe.
+    try {
+      return await this.fetchWithinCircuit<T>(url);
+    } finally {
+      this.circuitBreaker.releaseProbe();
+    }
+  }
+
+  /** The actual request path. Circuit acquisition/release is the caller's job. */
+  private async fetchWithinCircuit<T>(url: URL): Promise<OddsApiFetchResult<T>> {
+
     let response: Response | null = null;
 
     for (let attempt = 0; attempt <= this.retryOptions.maxRetries; attempt++) {

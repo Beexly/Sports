@@ -1,10 +1,24 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { OddsApiClient, OddsApiError } from "../odds-api-client.js";
+import { getOddsPaymentCircuitBreaker } from "../odds-api-circuit-breaker.js";
 
 const client = new OddsApiClient("test-key");
 
+beforeEach(() => {
+  // The payment circuit breaker is a PROCESS-LOCAL SINGLETON — deliberately so
+  // in production, where a warm serverless instance should remember the key is
+  // unpaid rather than re-learning it every invocation. Inside one test file
+  // sharing a module registry, that same persistence leaks between cases: the
+  // 401 "bad key" test below opens the circuit (the client treats 401 as a hard
+  // auth stop alongside 402), and every later test then fails with "circuit
+  // open" instead of exercising its own path. Reset per test so each case
+  // starts closed and asserts what it actually intends to.
+  getOddsPaymentCircuitBreaker().reset();
+});
+
 afterEach(() => {
   vi.restoreAllMocks();
+  getOddsPaymentCircuitBreaker().reset();
 });
 
 describe("OddsApiClient upstream resilience", () => {

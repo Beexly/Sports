@@ -158,6 +158,31 @@ export class OddsPaymentCircuitBreaker {
     }
   }
 
+  /**
+   * Release a half-open probe slot WITHOUT recording a payment failure.
+   *
+   * Must be called when a probe ends for any reason other than a clean 2xx or
+   * a 402/401 — a transient 500, a timeout, a network error, a JSON parse
+   * failure. Without it the circuit wedges PERMANENTLY: `tryAcquire()` sets
+   * `halfOpenProbeInFlight`, and only `recordSuccess`/`recordPaymentRequired`
+   * cleared it, so a probe that threw on a transient error left the flag set
+   * forever. `getState()` stays `half_open` (openedAt never moves once the
+   * open window has elapsed), so every later call hit the "probe already in
+   * flight" branch and was refused — for the life of the process, even after
+   * payment was restored. Verified against the breaker before fixing.
+   *
+   * Deliberately does NOT count as a payment failure and does NOT re-arm the
+   * open window: upstream never said "payment required", so re-opening for
+   * another full 6 hours would punish a network blip with a self-inflicted
+   * outage. The circuit stays half-open and the next call may probe again.
+   *
+   * Safe to call unconditionally (e.g. from a `finally`) — a no-op when no
+   * probe is in flight.
+   */
+  releaseProbe(): void {
+    this.halfOpenProbeInFlight = false;
+  }
+
   /** Test / admin helper — forces closed. */
   reset(): void {
     this.consecutiveFailures = 0;
