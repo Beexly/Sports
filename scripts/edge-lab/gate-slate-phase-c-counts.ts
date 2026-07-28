@@ -11,9 +11,30 @@
  *
  * WHAT IT REFUSES TO DO. It does not reimplement the join. It imports the same
  * `GATE_SLATE_INCLUDE` and the same `partitionGateSlate` normalizer that
- * production uses, so a divergence between what this measures and what the page
- * would render is impossible by construction. A second query shape here would
- * make the counts a claim about this script rather than about the product.
+ * production uses, so no row is CLASSIFIED differently here than on the page.
+ * A second query shape here would make the counts a claim about this script
+ * rather than about the product.
+ *
+ * WHERE THAT SHARING STOPS — read this before acting on (5b). The normalizer is
+ * shared; the READ WINDOW is not. An earlier version of this comment claimed
+ * divergence was "impossible by construction". That was an overclaim:
+ *
+ *   this script                 production (`loadGateSlate`)
+ *   SETTLED_LIMIT  = 50_000     settledLimit   = 5_000   (load-gate-slate.ts:538)
+ *   PENDING_LIMIT  =  5_000     candidateLimit =   200   (load-gate-slate.ts:539)
+ *   no sport filter             caller-scoped
+ *
+ * The pending window here is 25x wider than the board's, and neither window
+ * dominates the other, so counts can differ in both directions. The consequence
+ * that matters: (5b) can be satisfied by a candidate the board would never
+ * load, so a non-zero (5b) is NOT by itself proof that the rendered page would
+ * have anything to show. The truncation warning below guards only against THIS
+ * script's caps, never against production's tighter ones.
+ *
+ * The wider window is deliberate — this script measures the whole history, not
+ * the newest page — but it makes (5b) a measurement of the DATA, not a
+ * prediction of the RENDER. Confirm against the real page before flipping
+ * anything on the strength of it.
  *
  * It also does not invent numbers. With no database it exits non-zero and says
  * so. An empty database would print zeros, and zeros presented as counts are
@@ -134,6 +155,21 @@ async function main(): Promise<void> {
   console.log(`(4) pending_candidates_evaluable  ${q} ${part.candidates.rows.length}`);
   console.log(`(5) strata_at_or_above_floor      ${q} ${strataAtFloor}`);
   console.log(`(5b) ...of those, with a current candidate: ${strataAtFloorWithCandidates}`);
+  console.log(bar());
+
+  // Stated at the point of decision, not only in the file header: (5b) is the
+  // number the LIVE_BOARD go/no-go is read off, and it is measured over a
+  // deliberately WIDER window than the board itself loads. An operator seeing
+  // (5b) >= 1 must not read it as "the page would render something".
+  console.log(
+    [
+      `SCOPE: measured over up to ${SETTLED_LIMIT.toLocaleString()} settled /`,
+      `${PENDING_LIMIT.toLocaleString()} pending rows with no sport filter.`,
+      "Production `loadGateSlate` reads 5,000 settled / 200 candidates and is",
+      "caller-scoped, so (5b) is a claim about the DATA, not a prediction of the",
+      "RENDER. Confirm against the real page before flipping anything.",
+    ].join(" "),
+  );
   console.log(bar());
 
   if (truncated) {
