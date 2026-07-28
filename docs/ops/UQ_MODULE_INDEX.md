@@ -47,14 +47,54 @@ test locations. Companion docs:
 5. Prefer pure functions and explicit data structures over hidden mutable state.
 6. Absence of evidence ≠ evidence of failure (thin strata stay silent; undefined placebo is untested).
 
+## Certificate / math pack — UNBLOCKED and landed (#220, 2026-07-28)
+
+Previously listed as blocked ("artifact pack never found; do not fabricate
+statistical formulas"). The founder supplied the bodies via PR #220, so it was
+reviewed and merged rather than invented. Now on main under
+`packages/prediction-engine/src/certificate/`:
+
+| Module | Boundary |
+|--------|----------|
+| `decision-certificate.ts` | Schema v1, parse validation, canonical-JSON SHA-256 hash, reason codes |
+| `gate-certificate-bridge.ts` | **Post-gate only** — consumes gate output, never replaces it |
+| `stratum-coverage.ts` | Sample floors / coverage |
+| `selective-abstention.ts` | **Helpers only** — thresholds must not fork the gate |
+| `proper-scoring.ts` | Offline reliability (Brier / log-loss / reliability diagram) |
+| `kelly-lower-endpoint.ts` | **INTERNAL only** — never a public "recommended stake" |
+| Tests | `certificate/__tests__/certificate-modules.test.ts` |
+
+Three defects were found and fixed in review — recorded because each is the
+kind that survives a green suite:
+1. `proper-scoring.ts` did not compile under `noUncheckedIndexedAccess`, which
+   was masking a real crash: a non-positive bin count drove the index negative.
+2. `parseDecisionCertificate` rejected interval endpoints of exactly 0 or 1 —
+   values the real gate emits whenever an isotonic region is unanimous. Those
+   certificates failed their own validator and could not be re-verified,
+   defeating the recompute path certificates exist to provide.
+3. The abstention sample floor re-declared `100` instead of importing
+   `MIN_STRATUM_CALIBRATION` — a silent fork of the gate's authority.
+
 ## Explicitly blocked (do not invent)
 
-- **Ledger multiprob persistence** — `PRODUCT_CASCADE_MAP.md` §4: no production consumer of `FiredDecision`; domain mismatch with `LedgerPickEntry`.
-- **Certificate / math pack** (`decision-certificate.ts`, etc.) — referenced artifact pack never found; do not fabricate statistical formulas.
+- **Ledger multiprob persistence** — `PRODUCT_CASCADE_MAP.md` §4: no production
+  consumer of `FiredDecision`; domain mismatch with `LedgerPickEntry`. Unchanged
+  by #220 — the certificate bridge is a pure transform with no writer.
 
 ## Next high-leverage items
 
-1. Merge `feat/uq-honesty-stack-hardening` once CI green (already was at last check).
-2. Feed real walk-forward / historical-replay rows into `runWalkForwardTaxonomy` from an existing replay harness (wiring only — harness is ready).
+1. Feed real walk-forward / historical-replay rows into `runWalkForwardTaxonomy`
+   from an existing replay harness (wiring only — the harness is ready).
+2. Wire `certificateFromGateCandidate` at a real post-gate call site. Pure
+   transform today with no production consumer.
 3. Optional: property-based fuzz (fast-check) on PAV/CVAP for random sequences.
-4. Founder input required before any certificate/math module work.
+4. **Known flaky test, unrelated to the UQ stack**:
+   `apps/web/__tests__/ai-control-plane-budget-pg.test.ts > "100 concurrent
+   end-to-end invocations stay within the cap"` asserts `completed === 60`
+   exactly. Each invocation holds $0.10 worst-case but settles $0.05 on
+   first-route success, *releasing* headroom that can admit more — so the count
+   is timing-dependent and only equals 60 if every hold is taken before any
+   settlement. Observed 62 on one CI run, green on re-run. **Not a cap breach**
+   (62 × $0.05 = $3.10, well under the $6.00 cap); the exact-equality assertion
+   is the defect, not the budget system. It will intermittently red unrelated
+   PRs until the assertion is changed to a bound.
