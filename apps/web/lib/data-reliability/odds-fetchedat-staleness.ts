@@ -6,9 +6,26 @@
  * Does NOT widen 6h. Does NOT enable LIVE_BOARD.
  */
 
+import { MAX_CANDIDATE_ODDS_AGE_MS } from "../board/load-gate-slate.js";
+
 export const FETCHEDAT_WARN_AFTER_MINUTES = 120;
 export const FETCHEDAT_STALE_AFTER_MINUTES = 240;
-export const FETCHEDAT_GATE_BUDGET_MINUTES = 360;
+
+/**
+ * DERIVED from the gate's own MAX_CANDIDATE_ODDS_AGE_MS, not re-declared as a
+ * literal 360.
+ *
+ * The 6h candidate-odds budget is a protected constant: widening it is the
+ * documented way this product would start publishing decisions on quotes it
+ * cannot stand behind. A second hardcoded copy is how that widening happens by
+ * accident — someone retunes the real gate, this monitor keeps classifying
+ * against the old number, and the ops surface then reports "within gate
+ * budget" for candidates the gate itself is rejecting. The monitor would be
+ * confidently wrong in the one direction that matters.
+ *
+ * Deriving it means the two can never disagree.
+ */
+export const FETCHEDAT_GATE_BUDGET_MINUTES = MAX_CANDIDATE_ODDS_AGE_MS / 60_000;
 
 export type GlobalFetchedAtStatus =
   | "ok"
