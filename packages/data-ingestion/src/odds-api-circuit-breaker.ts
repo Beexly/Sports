@@ -100,7 +100,21 @@ export class OddsPaymentCircuitBreaker {
     this.now = config.now ?? (() => Date.now());
   }
 
-  /** Current state after applying time-based open → half_open transition. */
+  /**
+   * Current state after applying the time-based open → half_open transition.
+   *
+   * NOTE — `half_open` is ABSORBING, by design. `openedAt` only ever moves on a
+   * fresh `recordPaymentRequired`, and only `recordSuccess` clears it. So once
+   * the open window has elapsed the breaker stays half-open indefinitely, and a
+   * probe that ends in a transient error (a 500, a timeout) leaves it there:
+   * every subsequent call gets its own probe, one at a time, forever.
+   *
+   * That degradation is deliberate and in the safe direction — it means
+   * "serialized, still trying" rather than either hammering a dead key or
+   * refusing a recovered one. Documented because the behavior is not obvious
+   * from the state names: a reader reasonably expects half_open to resolve back
+   * to open or closed, and here it does so only on a definitive upstream answer.
+   */
   getState(): OddsCircuitState {
     if (envForceOpen()) return "open";
     if (this.openedAt === null) return "closed";
