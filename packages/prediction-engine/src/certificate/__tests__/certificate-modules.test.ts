@@ -6,6 +6,7 @@ import {
   canonicalizeForHash,
   withContentHash,
   DECISION_CERTIFICATE_SCHEMA,
+  type NoBetReasonCode,
 } from "../decision-certificate.js";
 import { certificateFromGateCandidate } from "../gate-certificate-bridge.js";
 import {
@@ -94,7 +95,7 @@ describe("DecisionCertificate", () => {
       eventId: "golden-evt-1",
       market: "SPREAD",
       certifiedAt: "2026-07-27T12:00:00.000Z",
-      noBetReasons: ["STALE_ODDS"] as const,
+      noBetReasons: ["STALE_ODDS"] as NoBetReasonCode[],
       summary: "Market quotes older than the 6-hour freshness budget",
     };
     const hashed = await withContentHash(c);
