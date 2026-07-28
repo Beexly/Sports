@@ -1,10 +1,12 @@
 # UQ Honesty Stack — Module Index
 
-**Last updated**: 2026-07-28 (post walk-forward harness + Council↔Gate alignment)
+**Last updated**: 2026-07-28 (dual-signal + vision transfer)
 
 One-page map so the next agent does not rediscover ownership, invariants, or
 test locations. Companion docs:
 
+- `docs/ops/CODING_AGENT_BOOTSTRAP.md` — paste into new agent sessions
+- `docs/ops/VISION_EXPANSION_AND_AGENT_TRANSFER_2026-07-28.md` — next layer + vision
 - `docs/ops/UQ_HANDOFF_2026-07-24.md` — original design handoff
 - `docs/ops/UQ_HARDENING_SESSION_2026-07-28.md` — verification + dedup + council
 
@@ -36,6 +38,7 @@ test locations. Companion docs:
 | Agent role contracts | `edge-lab/agent-roles.ts` | typed roles + context | (via council tests) |
 | Sequential Edge Lab Council | `edge-lab/edge-lab-council.ts` | guardian hard veto; placebo undefined≠passed; diagnostic-only ledger | `edge-lab/__tests__/edge-lab-council.test.ts` |
 | Walk-forward taxonomy harness | `edge-lab/walk-forward-taxonomy.ts` | per-row Mondrian; underpowered/under-coverage/wide alerts; no invented fields | `edge-lab/__tests__/walk-forward-taxonomy.test.ts` |
+| Mondrian dual-signal | `edge-lab/mondrian-dual-signal.ts` | width × residual quantile; unknown≠zero; soft vs hard no-bet | `edge-lab/__tests__/mondrian-dual-signal.test.ts` |
 | Council↔Gate alignment | — | shared width / sample-floor / lower-endpoint / placebo doctrine | `edge-lab/__tests__/council-gate-alignment.test.ts` |
 
 ## Design principles (do not violate)
@@ -54,7 +57,10 @@ test locations. Companion docs:
 
 ## Next high-leverage items
 
-1. Merge `feat/uq-honesty-stack-hardening` once CI green (already was at last check).
-2. Feed real walk-forward / historical-replay rows into `runWalkForwardTaxonomy` from an existing replay harness (wiring only — harness is ready).
-3. Optional: property-based fuzz (fast-check) on PAV/CVAP for random sequences.
-4. Founder input required before any certificate/math module work.
+See `VISION_EXPANSION_AND_AGENT_TRANSFER_2026-07-28.md` §3 in full. Short list:
+
+1. Merge PR #225 when CI green.
+2. Taxonomy health monitor (rolling) on top of walk-forward harness.
+3. MondrianIvapPool sketch (per-category multiprob).
+4. Wire real replay rows into `runWalkForwardTaxonomy`.
+5. Founder input required before certificate/math module work.
