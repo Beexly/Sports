@@ -8,6 +8,9 @@
  * Does NOT enable LIVE_BOARD. Does NOT invent ROI. Does NOT bypass selective-gate.
  */
 
+/** External schema identifier. Prefer this over the internal schemaVersion string. */
+export const DECISION_CERTIFICATE_SCHEMA = "gse.decision.certificate/v1" as const;
+
 export type DecisionKind = "FIRE" | "NO_BET";
 
 export type NoBetReasonCode =
@@ -162,20 +165,9 @@ export function parseDecisionCertificate(input: unknown): {
     }
   }
   if (c.kind === "FIRE") {
-    // A FIRE certificate MUST carry the interval it fired on.
-    //
-    // Without this the parser accepted a FIRE with no interval at all — a
-    // certificate asserting "we bet this" while carrying none of the evidence
-    // that justified betting. That is precisely the un-recomputable claim this
-    // whole object exists to make impossible, and it validated cleanly.
     if (c.interval === undefined) {
       errors.push("FIRE requires interval");
     }
-    // Any PRESENT noBetReasons on a FIRE is a contradiction, whatever its type.
-    // The previous check was guarded by `Array.isArray`, so a non-array —
-    // `noBetReasons: "STALE_ODDS"`, the shape a hand-built or
-    // JSON-round-tripped payload most easily produces — slipped through
-    // silently. A FIRE carrying a refusal reason is malformed either way.
     if (c.noBetReasons !== undefined) {
       const empty = Array.isArray(c.noBetReasons) && c.noBetReasons.length === 0;
       if (!empty) errors.push("FIRE cannot carry noBetReasons");
@@ -184,7 +176,7 @@ export function parseDecisionCertificate(input: unknown): {
   if (c.interval !== undefined) {
     const iv = c.interval as Record<string, unknown>;
     if (!isProb(iv.lo) || !isProb(iv.hi) || typeof iv.method !== "string") {
-      errors.push("interval must have lo,hi in (0,1) and method string");
+      errors.push("interval must have lo,hi in [0,1] and method string");
     } else if ((iv.lo as number) > (iv.hi as number)) {
       errors.push("interval.lo must be <= interval.hi");
     }
@@ -288,9 +280,6 @@ export function humanSummaryForReasons(reasons: readonly NoBetReasonCode[]): str
     INSUFFICIENT_SAMPLE: "Sample floor not met for this stratum",
     STALE_ODDS: "Market quotes older than the 6-hour freshness budget",
     PRICE_INTEGRITY_Q: "De-vigged price pair missing or unusable",
-    // Deliberately avoids the word this repo's trust-gate bans in public copy:
-    // it is tipster vocabulary, and these labels are user-facing. The concept
-    // is the immutable clvLockLine recorded when the pick was committed.
     HANDICAP_MISMATCH: "Spread handicap no longer matches the line recorded at commitment",
     NOT_PLACEABLE: "Event not in a placeable window",
     PROVENANCE: "Provenance requirements not satisfied",
