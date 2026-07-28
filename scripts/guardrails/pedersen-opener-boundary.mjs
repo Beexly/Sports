@@ -35,8 +35,13 @@
  *      all-columns reads, anywhere — including server-only code, because
  *      today's server-only helper is tomorrow's route import.
  *   B. No read may select an opener column inside `apps/` — the only tree that
- *      hosts public HTTP surfaces. Opening a settled slate is a deliberate
- *      server-side act and belongs in `packages/`, behind its own review.
+ *      hosts public HTTP surfaces.
+ *   C. No read may select an opener column ANYWHERE outside the single
+ *      allowlisted reader (`OPENER_READ_ALLOWLIST`). Rule B alone was not
+ *      enough: a server-only helper under `packages/` that quietly selects the
+ *      blinding is one import away from a route, and Phase 0.5b needs opening
+ *      to be possible without making it ambient. One reviewed chokepoint that
+ *      refuses by default is the shape — same as the `openHoldout` seal in edge-lab.
  *
  * Writes (`create`, `update`, `upsert`, `delete`) are untouched: minting the
  * commitment necessarily writes all three columns.
@@ -67,6 +72,20 @@ const READ_METHODS = ["findUnique", "findUniqueOrThrow", "findFirst", "findFirst
 
 /** Tree that hosts public HTTP surfaces; opener selects are refused here (rule B). */
 const PUBLIC_TREE_PREFIX = "apps/";
+
+/**
+ * THE one module permitted to select opener columns (rule C).
+ *
+ * Phase 0.5b needs SOME module to read the opener — otherwise a commitment can
+ * never be opened and the layer stays decorative. The safe shape is not "allow
+ * it in server code generally" but "allow it in exactly one reviewed file",
+ * which is the pattern `sealed-holdout-open-scan.mjs` already uses to confine
+ * the `openHoldout` seal to edge-lab. Widening this list is a deliberate act;
+ * it must never grow to a directory.
+ */
+const OPENER_READ_ALLOWLIST = new Set([
+  "packages/ingestion-pipeline/src/slate-opening-reader.ts",
+]);
 
 /**
  * This file necessarily NAMES the opener columns and the query shapes it
@@ -230,20 +249,33 @@ export async function collectPedersenOpenerViolations(root = DEFAULT_ROOT) {
           continue;
         }
 
-        // Rule B — never select the opener anywhere under the public tree.
-        if (relPath.startsWith(PUBLIC_TREE_PREFIX)) {
-          for (const field of OPENER_FIELDS) {
-            if (new RegExp(`\\b${field}\\b`).test(body)) {
-              hits.push({
-                file: relPath,
-                line,
-                rule: "opener-in-public-tree",
-                message:
-                  `${relPath}:${line} slateCommitment.${method}( selects \`${field}\` inside ${PUBLIC_TREE_PREFIX} — ` +
-                  `that column opens the commitment. Publishing it before the slate settles voids the seal.`,
-              });
-            }
-          }
+        // Rules B and C — who may select the opener at all.
+        //
+        // Rule C is the tighter one and is checked first: opener reads are
+        // confined to a single allowlisted module ANYWHERE in the tree, not
+        // merely kept out of apps/. A server-only helper that quietly selects
+        // the blinding is one import away from a route.
+        const selectedOpenerFields = OPENER_FIELDS.filter((f) =>
+          new RegExp(`\\b${f}\\b`).test(body),
+        );
+        if (selectedOpenerFields.length > 0 && !OPENER_READ_ALLOWLIST.has(relPath)) {
+          const where = relPath.startsWith(PUBLIC_TREE_PREFIX)
+            ? `inside ${PUBLIC_TREE_PREFIX} (a public-surface tree)`
+            : "outside the designated opener-read module";
+          hits.push({
+            file: relPath,
+            line,
+            rule: relPath.startsWith(PUBLIC_TREE_PREFIX)
+              ? "opener-in-public-tree"
+              : "opener-outside-allowlist",
+            message:
+              `${relPath}:${line} slateCommitment.${method}( selects ${selectedOpenerFields
+                .map((f) => `\`${f}\``)
+                .join(" + ")} ${where}. Those columns OPEN the commitment; disclosing them ` +
+              `before a slate settles voids the seal. The one permitted reader is ` +
+              `${[...OPENER_READ_ALLOWLIST].join(", ")} — route through it (it refuses by default) ` +
+              `rather than adding a second select.`,
+          });
         }
       }
     }
@@ -257,7 +289,8 @@ async function main() {
 
   if (hits.length === 0) {
     console.log(
-      "[pedersen-opener-boundary] OK - every slateCommitment read names its columns; no opener reachable from apps/.",
+      "[pedersen-opener-boundary] OK - every slateCommitment read names its columns; the opener is " +
+        "selected only by the designated refuse-by-default reader.",
     );
     return;
   }

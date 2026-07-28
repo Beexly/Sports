@@ -62,6 +62,10 @@ beforeAll(() => {
     join(FIXTURES, "violation-implicit-select.ts"),
     join(fixtureRoot, "packages", "svc", "violation-implicit-select.ts"),
   );
+  copyFileSync(
+    join(FIXTURES, "violation-opener-outside-allowlist.ts"),
+    join(fixtureRoot, "packages", "svc", "violation-opener-outside-allowlist.ts"),
+  );
 });
 
 afterAll(() => {
@@ -117,10 +121,25 @@ describe("pedersen opener boundary guard", () => {
   );
 
   it(
-    "reports exactly the two seeded violations — no over-firing",
+    "flags a SECOND opener reader outside the allowlist, even though it is not under apps/",
+    () => {
+      // The subtle case: explicit select (rule A ok), not a public tree (rule B
+      // ok) — but a second module reading the opener is one import away from a
+      // route. Opener reads belong to the single refuse-by-default module.
+      const r = runGuard(["--root", fixtureRoot]);
+      expect(r.status).toBe(1);
+      expect(r.stderr).toMatch(/violation-opener-outside-allowlist\.ts/);
+      expect(r.stderr).toMatch(/opener-outside-allowlist/);
+      expect(r.stderr).toMatch(/slate-opening-reader\.ts/);
+    },
+    GUARD_TEST_TIMEOUT_MS,
+  );
+
+  it(
+    "reports exactly the three seeded violations — no over-firing",
     () => {
       const r = runGuard(["--root", fixtureRoot]);
-      expect(r.stderr).toMatch(/FAIL - 2 violation\(s\)/);
+      expect(r.stderr).toMatch(/FAIL - 3 violation\(s\)/);
     },
     GUARD_TEST_TIMEOUT_MS,
   );
