@@ -3,9 +3,19 @@
  * No-ZK-overclaim guardrail.
  *
  * The proof stack today is: SHA-256 Merkle receipts (live) + Pedersen
- * homomorphic commitments (built, dark/unwired). A true zero-knowledge layer
- * (Halo2 recursive) and a post-quantum layer (STARK family) are ROADMAP items
- * (docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md) — designed, not live, not audited.
+ * homomorphic commitments (Phase 0.5 — sealed side live: minted per frozen
+ * slate, public hex on /api/verify/slate, opener held server-side). A true
+ * zero-knowledge layer (Halo2 recursive) and a post-quantum layer (STARK
+ * family) are ROADMAP items (docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md) —
+ * designed, not live, not audited.
+ *
+ * Pedersen going live changes NOTHING about what may be claimed, which is
+ * precisely why this header is kept current: a layer moving from dark to live
+ * is the moment someone reaches for a stronger word. It is a commitment, not a
+ * proof system — perfectly hiding, computationally binding under DLOG, and DLOG
+ * falls to Shor, so it is NOT post-quantum. Neither is Halo2/IPA recursion,
+ * which is also discrete-log based; only the STARK phase would be. The public
+ * word for this layer is "commitment", always.
  *
  * This guard blocks any CUSTOMER-FACING surface from claiming "zero-knowledge",
  * "ZK proof", "post-quantum", or "quantum-resistant" until the corresponding
@@ -132,7 +142,8 @@ async function main() {
       "  ZK / post-quantum language requires a LIVE, externally audited proof system.",
     );
     console.error(
-      "  Current stack is Merkle (live) + Pedersen (dark). See docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md.",
+      "  Current stack is Merkle (live) + Pedersen commitments (live, sealed side). Neither is a ZK",
+      "  proof system and neither is post-quantum. See docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md.",
     );
     process.exit(1);
   }

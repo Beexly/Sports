@@ -52,7 +52,17 @@ present. Old receipts without newer layers stay verifiable forever.
 
 - **Phase 0 (done):** Merkle receipts live; public verifier shows payload + hash so
   skeptics recompute offline; overclaim fence in CI.
-- **Phase 0.5 (DONE — commit side):** the Pedersen layer is wired into the sealed slate
+- **Phase 0.5 — `pedersenAggregate` on the sealed commitment envelope**
+
+  | Field | Value |
+  |---|---|
+  | Status | **SHIPPED (dark)** @ `6669359` (commit side only) |
+  | Public language | **"commitment" only** — never "ZK", never "post-quantum" |
+  | Guardrails | `no-zk-overclaim.mjs` (language) + `pedersen-opener-boundary.mjs` (+ fixtures) |
+  | Not PQ | DLOG Pedersen. **Merkle remains the root of trust.** |
+  | Next PQ-class work | **STARK phase only.** Halo2/IPA is discrete-log based and must never be labelled post-quantum. |
+
+  Detail: the Pedersen layer is wired into the sealed slate
   commitment. `freeze-slate-commitments.ts` mints an aggregate over the slate's published
   edge scores inside the SAME atomic transaction as the Merkle root (write-once, never
   backfilled onto a frozen slate), and fails open — an unencodable slate mints nothing
