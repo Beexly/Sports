@@ -159,18 +159,28 @@ variable.
 - `apps/web/__tests__/pedersen-opener-boundary.test.ts` — 6 tests: repo clean,
   rules A/B/C fire on fixtures, no over-firing, comment-mention not flagged.
 
-## Known limits (stated, not papered over)
+## Former limits — both now CLOSED (previously "known limits")
 
-- The reader's two queries were built without a `DATABASE_URL` in the
-  development environment: the planner they feed is exhaustively tested, but the
-  end-to-end query path (opener select + pending count against a real settled
-  slate) should be confirmed against real data **before** the gate is ever
-  flipped. The one thing to confirm: the pending count reaches zero exactly when
-  the slate's covered picks all carry terminal results.
-- The pending-count query and the disclosure are two reads, not one
-  transaction. A pick un-settling in the window between them (e.g. an operator
-  reverting a result to PENDING) could in principle race a reveal. The gate
-  being founder-controlled and openings being post-settlement makes this a
-  narrow operational window rather than an attacker-controlled one, but it is a
-  window; if reveal ever becomes automatic, wrap the two reads in a
-  transaction.
+- ~~Query path unproven without a database~~ — **PROVEN.**
+  `src/__tests__/slate-opening-reader.integration.test.ts` runs the reader
+  against a real Postgres 16 with the real schema pushed, gated on
+  `SLATE_OPENING_PG_URL` (skips cleanly when absent). Six properties hold,
+  including the load-bearing one: an unrelated pending pick on the SAME game
+  (different pickType, no slateKey stamp) does NOT block a settled slate, while
+  one pending COVERED pick does. The covered-set test was proven to
+  discriminate fail-first: with the reader deliberately patched to count
+  pending picks game-wide (the wider-set bug), exactly that test fails.
+  Two schema facts the real database enforced that unit tests could not see:
+  one pick per (game, pickType), and `pickProofReceipt.slateKey` is a real FK —
+  a receipt cannot be stamped before its commitment row exists, the same
+  ordering the freeze transaction uses.
+- ~~Two reads, not one transaction (TOCTOU)~~ — **CLOSED.** The commitment
+  read and the pending count now run inside one `db.$transaction` at
+  `RepeatableRead`, pinning both to a single database snapshot. (Postgres
+  default READ COMMITTED takes a fresh snapshot per statement, so a batch
+  transaction alone would not have been enough.) A pick un-settling mid-read
+  can no longer race a reveal; the count and the opener the planner sees are
+  facts about the same instant.
+
+Pre-gate-flip checklist is therefore reduced to the founder decision itself:
+the technical preconditions are proven in CI-runnable form.
