@@ -161,8 +161,25 @@ export function parseDecisionCertificate(input: unknown): {
       }
     }
   }
-  if (c.kind === "FIRE" && Array.isArray(c.noBetReasons) && c.noBetReasons.length > 0) {
-    errors.push("FIRE cannot carry noBetReasons");
+  if (c.kind === "FIRE") {
+    // A FIRE certificate MUST carry the interval it fired on.
+    //
+    // Without this the parser accepted a FIRE with no interval at all — a
+    // certificate asserting "we bet this" while carrying none of the evidence
+    // that justified betting. That is precisely the un-recomputable claim this
+    // whole object exists to make impossible, and it validated cleanly.
+    if (c.interval === undefined) {
+      errors.push("FIRE requires interval");
+    }
+    // Any PRESENT noBetReasons on a FIRE is a contradiction, whatever its type.
+    // The previous check was guarded by `Array.isArray`, so a non-array —
+    // `noBetReasons: "STALE_ODDS"`, the shape a hand-built or
+    // JSON-round-tripped payload most easily produces — slipped through
+    // silently. A FIRE carrying a refusal reason is malformed either way.
+    if (c.noBetReasons !== undefined) {
+      const empty = Array.isArray(c.noBetReasons) && c.noBetReasons.length === 0;
+      if (!empty) errors.push("FIRE cannot carry noBetReasons");
+    }
   }
   if (c.interval !== undefined) {
     const iv = c.interval as Record<string, unknown>;

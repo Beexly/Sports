@@ -390,6 +390,20 @@ export interface CoverageEdgeCurveOptions {
    * silently falling back to devigged q for any of them. Default false.
    */
   readonly strictObtainable?: boolean;
+  /**
+   * Gate options used for EVERY tau on the curve — the estimator
+   * (`source`), the fold count, and the first-class width veto.
+   *
+   * These must match whatever production runs, and they were previously
+   * dropped: the curve called `applySelectiveGate(cal, eval, tau)` with no
+   * options, so τ was always tuned against "legacy-isotonic" with NO width
+   * cap even when the deployed gate runs "ivap"/"cvap" WITH one. The tuned
+   * operating point then described a gate that was never shipped, and the
+   * direction of the error is the bad one for tuning: a curve computed
+   * without the width veto sees MORE fired rows at each τ than production
+   * will, so the accepted τ is optimistic about coverage.
+   */
+  readonly gate?: MultiprobGateOptions;
 }
 
 /** The published coverage-vs-edge curve (§2 P1). */
@@ -400,7 +414,7 @@ export function coverageEdgeCurve(
   opts: CoverageEdgeCurveOptions = {},
 ): CoverageEdgePoint[] {
   return taus.map((tau) => {
-    const r = applySelectiveGate(calibrationRows, evalRows, tau);
+    const r = applySelectiveGate(calibrationRows, evalRows, tau, opts.gate ?? {});
     if (opts.strictObtainable) assertObtainablePrices(r.decisions);
     const meanBreakeven =
       r.fired > 0 ? r.decisions.reduce((a, d) => a + rowBreakeven(d), 0) / r.fired : null;
@@ -428,6 +442,30 @@ export interface TuneTauOptions {
   readonly delta?: number;
   /** Forwarded to coverageEdgeCurve — see CoverageEdgeCurveOptions. */
   readonly strictObtainable?: boolean;
+  /**
+   * Gate options τ is tuned against. Forwarded to coverageEdgeCurve so the
+   * tuned operating point describes the gate that will actually run. Tune with
+   * the same `source` and `maxWidthForFire` production deploys.
+   */
+  readonly gate?: MultiprobGateOptions;
+  /**
+   * Rows this τ will later be EVALUATED on, supplied here only so the tuner can
+   * refuse up front when they overlap the tuning fold.
+   *
+   * This closes the one gap in this file's disjointness story. `tuneTau`
+   * asserted calibration-vs-tuning and `applySelectiveGate` asserts
+   * calibration-vs-eval, but NOTHING checked tuning-vs-eval — so
+   * `tuneTau(cal, X)` followed by `applySelectiveGate(cal, X, tau)` threw
+   * nothing, which is exactly "tuning the risk-coverage curve on the eval set",
+   * the failure this module's own header calls the #1 self-deception risk. It
+   * was correct in practice only because the single production caller happens
+   * to slice disjoint chronological thirds — correct by caller discipline, not
+   * by construction.
+   *
+   * Optional for backward compatibility; pass it whenever the eval fold is
+   * known at tuning time, which is the normal case.
+   */
+  readonly evalRows?: readonly GateDecisionRow[];
 }
 
 /**
@@ -472,15 +510,20 @@ export function tuneTau(
   tuningRows: readonly GateDecisionRow[],
   opts: TuneTauOptions = {},
 ): TauSelection {
+  // All THREE pairs when the eval fold is supplied. calibration-vs-tuning
+  // alone left tuning-vs-eval unchecked, which is the multiplicity failure
+  // this file's header names as the #1 self-deception risk.
   assertDisjointRowSets([
     { name: "calibration", rows: calibrationRows },
     { name: "tuning", rows: tuningRows },
+    ...(opts.evalRows ? [{ name: "eval", rows: opts.evalRows }] : []),
   ]);
   const taus = opts.taus ?? [0, 0.005, 0.01, 0.015, 0.02, 0.03, 0.04, 0.05];
   const minFired = opts.minFired ?? 50;
   const delta = opts.delta ?? 0.05;
   const curve = coverageEdgeCurve(calibrationRows, tuningRows, taus, {
     strictObtainable: opts.strictObtainable,
+    ...(opts.gate ? { gate: opts.gate } : {}),
   });
 
   // Candidates the grid can even speak to: enough fired plays for the exact
