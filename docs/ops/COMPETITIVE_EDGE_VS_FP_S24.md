@@ -49,3 +49,15 @@
 2. Refusal-Native product UX (empty board under LIVE_BOARD off = success)
 3. Measurement law baked into API status codes (422 refuse, closed means)
 4. Own derived formula density with attribution — not rented projections
+
+## 2026 odds-API market (research notes)
+
+| Vendor | Model | GSE implication |
+|--------|-------|-----------------|
+| OddsJam | Consumer +EV + affiliate deep-links + book API | Permanent counter: no sportsbook CPA funnel |
+| The Odds API | Credit REST, ~$30/20k, free 500 | Optional sharpness only — never spine |
+| SharpAPI / OddsBlaze / TheRundown | Free tiers + EV tooling | Free plane is table stakes; we differentiate on honesty law |
+| Unabated / Sportradar | Pro/enterprise pricing | We do not compete on rented line density |
+| Polymarket Gamma | Public, no auth | Our free hot q-plane source |
+
+**Differentiation that survives copy:** pre-kickoff Glass Ledger start date, refuse-default product UX, publicFire≠multiprob, closed performance until four-field substantiation, first-party derived catalog with SPDX export classifier.
