@@ -31,7 +31,7 @@ checkable before any founder flips a flag.
 | WS2 | Property fuzz over PAV/IVAP/CVAP/aggregation; found+fixed a real CVAP contract bug | fable | **DONE** (this PR) |
 | WS3 | `certifyBoardGateEvaluation` — attach-only post-gate certificate consumer | fable | **DONE** (this PR) |
 | WS4 | Public `/verify/slate/opening` explainer page, dark by default | sonnet | queued |
-| WS5 | Wire walk-forward taxonomy harness to real replay rows (context-only) | sonnet | queued |
+| WS5 | Wire walk-forward taxonomy harness to real replay rows (context-only) | sonnet | **DONE** (this PR) |
 | WS7 | Doc hygiene: stale Phase 0.5b status strings → merged-and-dark | sonnet | queued |
 | WS6 | HEOS metric follow-through + REPLAY_ONLY firewall tests | sonnet | **blocked** — depends on HEOS landing (WS8) |
 | WS1 | HEOS leakage/honesty fixes (the 10-fix program) | founder-gated | **blocked** — binding law: no agent touches the #226 branch without an explicit founder yes. (A plan synthesizer marked this unblocked; the ring leader overrode it — the law is three handoffs deep and unambiguous.) |
@@ -59,3 +59,42 @@ no invented ROI/win-rates · Pedersen/Halo2 never "ZK"/"post-quantum" · opener
 allowlist stays one file · no ledger writer / FiredDecision persistence
 (PRODUCT_CASCADE_MAP §4) · HEOS replay ≠ public tips · founder blockers never
 worked around.
+
+## WS5 finding: walk-forward taxonomy harness wired to real context, not real coverage/width (sonnet)
+
+Investigated every in-repo candidate source for the walk-forward taxonomy
+harness (`packages/prediction-engine/src/edge-lab/walk-forward-taxonomy.ts`):
+`nflverse-source.ts`, `nflverse-ngs.ts`, `historical-replay.ts`, and the
+selective-gate/PAV/IVAP/CVAP calibration stack. Conclusion, honestly:
+
+- **Real settled outcomes + real pre-outcome game context DO exist in-repo**:
+  `historical-replay.ts` turns a real nflverse `schedules` row (games.csv,
+  CC-BY-4.0) into a genuinely settled pick via the FROZEN `scoreGame` model
+  and the real final score, under its own no-lookahead discipline. That is
+  enough to honestly populate `WalkForwardTaxonomyRow.context`
+  (home/away, spread- or moneyline-implied favorite, side-specific rest
+  days) for real games.
+- **Real, calibrated `covered`/`width`/`residual` do NOT exist in-repo yet.**
+  Those fields describe a PAV/IVAP/CVAP/selective-gate calibrated-interval
+  output (`selective-gate.ts`'s `FiredDecision.width`), which requires at
+  least `MIN_STRATUM_CALIBRATION` (100) real settled rows per Mondrian
+  stratum before the gate will even compute an interval — no in-repo
+  fixture or dataset supplies that at volume. The real replay source that
+  would (HEOS) is founder-gated behind PR #226 (WS1/WS8, blocked).
+
+Per the hard rule (never fabricate a missing data source), the wiring landed
+is **context-only**: a new adapter,
+`packages/prediction-engine/src/edge-lab/walk-forward-taxonomy-source.ts`,
+converts real nflverse-shaped `RawScheduleRow[]` into real
+`WalkForwardTaxonomyRow[]` with a genuine `context` and `covered`/`width`/
+`residual` left unset (the harness's own contract already never invents
+those when absent). A fixture-driven test
+(`walk-forward-taxonomy-source.test.ts`) exercises this real path, plus a
+separately-namespaced, clearly-labelled `syntheticReplayRows` fixture
+(`rowId` prefixed `synthetic:`) that exercises the harness's full
+underpowered/under_coverage/wide_intervals alerting surface — fabricated for
+test coverage only, never presented as measured. Real coverage/width wiring
+is next in line once HEOS lands and is founder-approved (WS6).
+
+`walk-forward-taxonomy.ts` / `selective-gate.ts` / `pav.ts` / `ivap.ts` /
+`cvap.ts` / `mondrian.ts` were not modified.
