@@ -1010,13 +1010,14 @@ export type {
 //   import { evaluatePromotion } from "@sports/prediction-engine/src/promotion/index.js"
 // See docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md.
 
-// Honesty surface — No-Bet gate, Phase 0 placebo, Glass Ledger receipts
+// Honesty surface — product No-Bet codes, Phase 0 placebo, Glass Ledger receipts
+// (namespaced Product* to avoid colliding with gse-score NoBetDecision)
 export {
-  evaluateNoBet,
-  NO_BET_COPY,
-  type NoBetCode,
-  type NoBetEvidence,
-  type NoBetDecision,
+  evaluateProductNoBet,
+  PRODUCT_NO_BET_COPY,
+  type ProductNoBetCode,
+  type ProductNoBetEvidence,
+  type ProductNoBetResult,
 } from "./honesty/no-bet-gate.js";
 export {
   runShuffledTimePlacebo,

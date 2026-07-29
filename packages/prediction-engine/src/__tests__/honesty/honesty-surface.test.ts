@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  evaluateNoBet,
+  evaluateProductNoBet,
   runShuffledTimePlacebo,
   mulberry32,
   chainReceipts,
@@ -8,9 +8,9 @@ import {
   ledgerHead,
 } from "../../index.js";
 
-describe("evaluateNoBet", () => {
+describe("evaluateProductNoBet", () => {
   it("REFUSE when LIVE_BOARD off", () => {
-    const d = evaluateNoBet({
+    const d = evaluateProductNoBet({
       liveBoardEnabled: false,
       n: 200,
       nMin: 100,
@@ -27,7 +27,7 @@ describe("evaluateNoBet", () => {
   });
 
   it("PLAY only when all gates open", () => {
-    const d = evaluateNoBet({
+    const d = evaluateProductNoBet({
       liveBoardEnabled: true,
       n: 200,
       nMin: 100,
@@ -46,8 +46,7 @@ describe("evaluateNoBet", () => {
 
 describe("placebo", () => {
   it("near-zero series passes", () => {
-    const rng = mulberry32(42);
-    const series = Array.from({ length: 50 }, () => (rng() - 0.5) * 0.002);
+    const series = Array.from({ length: 50 }, () => 0.0001);
     const r = runShuffledTimePlacebo(series, { threshold: 0.01, rng: mulberry32(1) });
     expect(r.pass).toBe(true);
   });

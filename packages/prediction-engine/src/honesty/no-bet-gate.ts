@@ -1,10 +1,10 @@
 /**
- * No-Bet Gate — product surface of refuse-default.
- * Aligns with galaxysportsedge.com "The No-Bet Gate".
+ * Product No-Bet Gate — refuse-default surface codes for board UI / logging.
+ * Complements computeNoBetStrength (GSE score engine) without colliding names.
  * Fire on calibrated edge e = pLo - q, never confidence.
  */
 
-export type NoBetCode =
+export type ProductNoBetCode =
   | "LIVE_BOARD_OFF"
   | "FRESHNESS_FAILED"
   | "PRICE_BELOW_THRESHOLD"
@@ -16,7 +16,7 @@ export type NoBetCode =
   | "MISSING_INPUT"
   | "RIGHTS_HOLD";
 
-export interface NoBetEvidence {
+export interface ProductNoBetEvidence {
   readonly oddsAgeMs: number;
   readonly maxOddsAgeMs: number;
   readonly n: number;
@@ -31,16 +31,16 @@ export interface NoBetEvidence {
   readonly rightsHold?: boolean;
 }
 
-export interface NoBetDecision {
+export interface ProductNoBetResult {
   readonly action: "PLAY" | "NO_BET";
-  readonly codes: readonly NoBetCode[];
+  readonly codes: readonly ProductNoBetCode[];
   readonly modelVersion: string;
   readonly edge: number;
   readonly summary: string;
   readonly logged: true;
 }
 
-export const NO_BET_COPY: Record<NoBetCode, string> = {
+export const PRODUCT_NO_BET_COPY: Record<ProductNoBetCode, string> = {
   LIVE_BOARD_OFF: "Live board flag is off — founder-gated.",
   FRESHNESS_FAILED: "Quote freshness failed the age clamp.",
   PRICE_BELOW_THRESHOLD: "Price does not clear the edge threshold.",
@@ -53,11 +53,11 @@ export const NO_BET_COPY: Record<NoBetCode, string> = {
   RIGHTS_HOLD: "Source rights hold — cannot publish.",
 };
 
-export function evaluateNoBet(
-  e: NoBetEvidence,
+export function evaluateProductNoBet(
+  e: ProductNoBetEvidence,
   modelVersion = "gse-gate-1.0.0",
-): NoBetDecision {
-  const codes: NoBetCode[] = [];
+): ProductNoBetResult {
+  const codes: ProductNoBetCode[] = [];
 
   if (!e.liveBoardEnabled) codes.push("LIVE_BOARD_OFF");
   if (e.rightsHold) codes.push("RIGHTS_HOLD");
