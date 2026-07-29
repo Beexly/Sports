@@ -5,7 +5,9 @@
   "ignoreCommand": "cd ../.. && node scripts/vercel-skip-build.mjs",
   "framework": "nextjs",
   "outputDirectory": ".next",
-  "regions": ["iad1"],
+  "regions": [
+    "iad1"
+  ],
   "crons": [
     {
       "path": "/api/cron/refresh-odds",
@@ -32,6 +34,10 @@
       "schedule": "0 9 * * *"
     },
     {
+      "path": "/api/cron/hydrate-cold-plane",
+      "schedule": "30 9 * * *"
+    },
+    {
       "path": "/api/cron/drain-ai-telemetry-recovery",
       "schedule": "30 * * * *"
     },
@@ -52,10 +58,22 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=(), payment=(self \"https://js.stripe.com\")"
@@ -65,7 +83,10 @@
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
       ]
     }
   ]

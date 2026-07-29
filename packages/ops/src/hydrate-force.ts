@@ -16,7 +16,7 @@ export const HYDRATE_FORCE_STEPS: readonly HydrateStep[] = [
   {
     order: 1,
     id: "pgs_write_through",
-    action: "PlayerGameStat → memory write_through (feeds p cold plane)",
+    action: "PlayerGameStat → memory write_through via /api/cron/hydrate-cold-plane (feeds p cold plane)",
     plane: "cold_p",
     oddsApiRequired: false,
     liveBoardRequired: false,
@@ -34,11 +34,11 @@ export const HYDRATE_FORCE_STEPS: readonly HydrateStep[] = [
   {
     order: 3,
     id: "stripe_tier_values",
-    action: "Session Stripe tier on /values (not only ?tier=)",
+    action: "Session Stripe tier on /values (not only ?tier=) — wired resolveStatsBillingTier",
     plane: "entitlement",
     oddsApiRequired: false,
     liveBoardRequired: false,
-    status: "FOUNDER_WIRE",
+    status: "CODE_READY",
   },
   {
     order: 4,

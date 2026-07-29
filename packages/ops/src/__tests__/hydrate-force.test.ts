@@ -22,3 +22,9 @@ describe("hydrate force order", () => {
     expect(r.oddsStillOptional).toBe(true);
   });
 });
+
+  it("stripe_tier_values CODE_READY after session-tier wire", () => {
+    const s = HYDRATE_FORCE_STEPS.find((x) => x.id === "stripe_tier_values");
+    expect(s?.status).toBe("CODE_READY");
+  });
+
