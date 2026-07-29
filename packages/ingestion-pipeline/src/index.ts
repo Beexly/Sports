@@ -76,3 +76,12 @@ export type { DispersionPickType, BookOddsRow } from "./book-dispersion.js";
 export { freezeSlateCommitments, mintSlatePedersenAggregate } from "./freeze-slate-commitments.js";
 export type { SlateFreezeResult } from "./freeze-slate-commitments.js";
 export { planSlateOpeningFromDb } from "./slate-opening-reader.js";
+export {
+  planSlateOpeningFromSql,
+  createMemoryTryOpenPort,
+} from "./open-via-sql.js";
+export type {
+  TryOpenSlateRow,
+  TryOpenSlatePort,
+} from "./open-via-sql.js";
+
