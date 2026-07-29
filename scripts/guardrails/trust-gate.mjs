@@ -145,6 +145,9 @@ const LOCK_SAFE_CONTEXT =
 const WHITELIST_PREFIXES = [
   "apps/web/lib/compliance-scanner/",
   "apps/web/lib/studio/templates/",
+  // AI Council DESTROY package: contains banned phrases as attack corpus +
+  // detection regexes (same rationale as trust-claims / content-safety).
+  "packages/ai-council/",
 ];
 
 const WHITELIST_DIRS = new Set([
