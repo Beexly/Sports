@@ -42,6 +42,7 @@ import ProofPage from "@/app/proof/page";
 import { db } from "@sports/db";
 import { MethodologySection, type TrustLedgerMetrics } from "@/components/ui/methodology-section";
 import { buildBoardHealth, type BoardSuppressionReason } from "@/lib/board/health";
+import { classifyBoardState } from "@/lib/board/classify-board-state";
 import type { BoardStatePayload } from "@/lib/board/state";
 
 // ── element-tree helpers ─────────────────────────────────────────────────────
@@ -170,6 +171,13 @@ function boardState(opts: {
       degradations: health.degradations,
       health: health.badge,
       isSampleData: false,
+      boardClass: classifyBoardState({
+        liveBoardOn: false,
+        bootstrap: false,
+        rowCount: rows.scoringNow + rows.publishedToday + rows.gatedTodayRows,
+        dataError: opts.dataError ?? null,
+        suppressedReason: opts.suppressedReason ?? null,
+      }),
       ...(opts.dataError ? { dataError: opts.dataError } : {}),
       ...(opts.suppressedReason ? { suppressedDemoData: true } : {}),
       traceId: health.traceId,

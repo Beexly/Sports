@@ -1062,3 +1062,12 @@ export type {
   TrialsRegistry,
   BhResult,
 } from "./edge-lab/trials-registry.js";
+
+// Unified prefire — run BEFORE selective FIRE (cheap topology refuse)
+export {
+  evaluateUnifiedPrefire,
+  composePrefireWithSelective,
+  type UnifiedPrefireInput,
+  type UnifiedPrefireDecision,
+  type PrefireRefuseReason,
+} from "./edge-lab/unified-prefire.js";

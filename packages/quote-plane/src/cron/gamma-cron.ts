@@ -1,10 +1,10 @@
 /**
- * Live Gamma cron runner — P2.
- * Free, no Odds API key. Rate-limited + TTL-cached.
- * Intended for /api/cron/refresh-gamma with CRON_SECRET.
+ * Live Gamma cron runner — free path, no Odds API key.
+ * Rate-limited + TTL-cached. Route: /api/cron/gamma with dual CRON_SECRET.
  *
  * Auth: timing-safe via authorizeCronSecret (packet util twin of monorepo
- * apps/web/lib/cron/authorize.ts). Do NOT reintroduce string ===.
+ * apps/web/lib/cron/authorize.ts). Dual-secret: primary + previous.
+ * Do NOT reintroduce string ===.
  */
 
 import { authorizeCronSecret } from "@sports/util";
@@ -31,11 +31,14 @@ export const DEFAULT_GAMMA_CRON: GammaCronConfig = {
 export interface GammaCronAuth {
   readonly providedSecret: string | null | undefined;
   readonly expectedSecret: string | null | undefined;
+  /** Optional CRON_SECRET_PREVIOUS for rotation */
+  readonly previousSecret?: string | null | undefined;
 }
 
 export function authorizeCron(auth: GammaCronAuth): {
   ok: boolean;
   code: string;
+  matched: "primary" | "previous" | null;
 } {
   return authorizeCronSecret(auth);
 }
@@ -51,6 +54,7 @@ export interface GammaCronRunResult {
   readonly archived: number;
   readonly errors: string[];
   readonly oddsApiRequired: false;
+  readonly authMatched?: "primary" | "previous" | null;
 }
 
 export class GammaCronRunner {
@@ -94,6 +98,7 @@ export class GammaCronRunner {
         archived: 0,
         errors: [auth.code],
         oddsApiRequired: false,
+        authMatched: null,
       };
       this.lastRun = refused;
       return refused;
@@ -145,6 +150,7 @@ export class GammaCronRunner {
       archived,
       errors,
       oddsApiRequired: false,
+      authMatched: auth.matched,
     };
     this.lastRun = result;
     return result;
@@ -155,6 +161,7 @@ export class GammaCronRunner {
 export function handleGammaCronRequest(input: {
   authorizationHeader: string | null;
   cronSecretEnv: string | null | undefined;
+  cronSecretPreviousEnv?: string | null | undefined;
   runner: GammaCronRunner;
   now?: Date;
 }): Promise<GammaCronRunResult> {
@@ -164,6 +171,7 @@ export function handleGammaCronRequest(input: {
     auth: {
       providedSecret: provided,
       expectedSecret: input.cronSecretEnv,
+      previousSecret: input.cronSecretPreviousEnv,
     },
     now: input.now,
   });

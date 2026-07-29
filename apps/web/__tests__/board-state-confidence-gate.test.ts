@@ -67,6 +67,12 @@ function payload(rows: BoardStateRow[]): BoardStatePayload {
       },
       isSampleData: false,
       traceId: "board-20260611T15000-test0001",
+      boardClass: {
+        state: "HAS_ROWS",
+        publicMessage: "Board has active rows.",
+        refusePublicFire: false,
+        honestEmpty: false,
+      },
     },
   };
 }
