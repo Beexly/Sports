@@ -89,6 +89,46 @@ export function buildStatsOpenApi() {
           responses: { "200": { description: "Coverage" } },
         },
       },
+      "/truth/fire": {
+        get: {
+          summary: "Fire-authority demo scenarios (LIVE_BOARD default off)",
+          operationId: "getFireAuthorityDemos",
+          responses: { "200": { description: "Scenarios" } },
+        },
+        post: {
+          summary: "Evaluate fire-authority composition",
+          operationId: "postFireAuthority",
+          responses: {
+            "200": { description: "Authorized FIRE" },
+            "422": { description: "Refused (hold)" },
+          },
+        },
+      },
+      "/partners/compliance": {
+        get: {
+          summary: "Partner/affiliate doctrine — sportsbook affiliates blocked",
+          operationId: "getPartnerCompliance",
+          responses: { "200": { description: "Doctrine + assessments" } },
+        },
+      },
+      "/phase-c/status": {
+        get: {
+          summary: "Phase C (5b) status — UNVERIFIED until measured",
+          operationId: "getPhaseCStatus",
+          responses: { "200": { description: "Baseline + report" } },
+        },
+      },
+      "/rights/classify-export": {
+        post: {
+          summary: "Classify bulk export path (RESULT vs DERIVATIVE_DB vs BLOCKED)",
+          operationId: "classifyExportPath",
+          responses: {
+            "200": { description: "Classification" },
+            "403": { description: "Blocked" },
+            "422": { description: "SPDX required" },
+          },
+        },
+      },
     },
     components: {
       securitySchemes: {
