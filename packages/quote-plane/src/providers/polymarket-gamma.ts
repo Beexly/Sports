@@ -18,7 +18,7 @@ export interface GammaMarket {
   readonly id?: string;
   readonly question?: string;
   readonly slug?: string;
-  readonly outcomePrices?: string | string[]; // often JSON string of [yes, no]
+  readonly outcomePrices?: string | string[] | number[]; // often JSON string of [yes, no]
   readonly outcomes?: string | string[];
   readonly endDate?: string;
   readonly closed?: boolean;
