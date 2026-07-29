@@ -20,6 +20,7 @@ export async function GET(
       metricId: decodeURIComponent(metricId),
       entityId: sp.get("entityId") ?? "",
       asOf: sp.get("asOf") ?? "",
+      tier: sp.get("tier") ?? "FREE",
     },
     demoValueProvider,
   );

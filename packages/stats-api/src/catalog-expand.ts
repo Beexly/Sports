@@ -398,6 +398,7 @@ export function expandAll(): MetricDef[] {
     ...expandOpticalResearch(),
     ...expandPredictionMarkets(),
     ...expandMmaResearch(),
+    ...expandWnba(),
   ];
 }
 
@@ -577,6 +578,24 @@ export function expandMmaResearch(): MetricDef[] {
       id,
       ["ext.ufc_stats"],
       env("rights_hold", "dark", "unknown_review until counsel"),
+    ),
+  );
+}
+
+export function expandWnba(): MetricDef[] {
+  const m = ["pts","reb","ast","stl","blk","tov","fg_pct","three_pct","ft_pct","min","plus_minus","usg","ts_pct","pie"];
+  return m.map((id) =>
+    row(
+      `wnba.box.${id}`,
+      `WNBA ${id.replace(/_/g, " ")}`,
+      "MULTI",
+      "box",
+      "CATALOG",
+      "mixed",
+      `WNBA ${id} via wehoop / free-legal path.`,
+      id,
+      ["ext.wehoop"],
+      env("cc_by_4", "public_api"),
     ),
   );
 }

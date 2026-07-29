@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * GET /api/gse/v1/metrics — list rights-tagged metrics.
- * Query: sport, family, status, q, limit, offset
+ * Query: sport, family, status, q, tier (FREE|FANTASY|PRO|ELITE), limit, offset
  *
  * `publicOnly` is DELIBERATELY NOT read from the query string.
  *
@@ -25,6 +25,7 @@ export const dynamic = "force-dynamic";
  * Pinned true here. When API keys and Pro/Elite tiers land, an AUTHENTICATED
  * route may open the wider view to entitled callers — a deliberate, reviewed
  * unlock on an authenticated path, never a query parameter on an anonymous one.
+ * `tier` still filters within the public-eligible set only.
  */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const sp = req.nextUrl.searchParams;
@@ -34,6 +35,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     status: sp.get("status") ?? undefined,
     publicOnly: true,
     q: sp.get("q") ?? undefined,
+    tier: sp.get("tier") ?? "FREE",
   });
   if (!result.ok) {
     return NextResponse.json(
@@ -49,6 +51,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       metrics: page,
       page: { limit, offset, total: result.data.metrics.length, returned: page.length },
       meta: result.data.meta,
+      entitlement: result.data.entitlement,
     },
     { headers: { "X-GSE-API": "stats.v1" } },
   );

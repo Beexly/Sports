@@ -5,11 +5,13 @@
 
 import { getMetricById } from "./catalog.js";
 import type { MetricDef } from "./catalog-types.js";
+import { metricVisibleToTier, parseBillingTier } from "./entitlements.js";
 
 export interface MetricValueRequest {
   readonly metricId: string;
   readonly entityId: string;
   readonly asOf: string;
+  readonly tier?: string;
 }
 
 export interface MetricValue {
@@ -69,6 +71,15 @@ export async function handleGetMetricValue(
       status: 403,
       code: "not_public",
       error: `Metric ${req.metricId} is ${metric.status}/${metric.rights.surface}`,
+    };
+  }
+  const tier = parseBillingTier(req.tier);
+  if (!metricVisibleToTier(metric, tier)) {
+    return {
+      ok: false,
+      status: 403,
+      code: "tier_insufficient",
+      error: `Metric ${req.metricId} requires ${metric.rights.surface}; tier ${tier} insufficient`,
     };
   }
 

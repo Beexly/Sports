@@ -13,6 +13,12 @@ import {
   type MetricDef,
 } from "./catalog.js";
 import {
+  filterMetricsForTier,
+  parseBillingTier,
+  entitlementSummary,
+  type BillingTier,
+} from "./entitlements.js";
+import {
   externalSourceStats,
   listExternalSources,
   type ExternalSource,
@@ -39,6 +45,7 @@ export function handleListMetrics(query: {
   status?: string;
   publicOnly?: boolean;
   q?: string;
+  tier?: string;
 }): ApiResult<{ metrics: MetricDef[]; meta: ReturnType<typeof catalogStats> }> {
   const sport = query.sport as SportCode | undefined;
   const family = query.family as MetricFamily | undefined;
@@ -65,17 +72,22 @@ export function handleListMetrics(query: {
     );
   }
 
+  const tier = parseBillingTier(query.tier);
+  // When publicOnly=false (internal), still apply tier surface for non-dark
+  metrics = filterMetricsForTier(metrics, tier);
+
   return {
     ok: true,
     status: 200,
     data: {
       metrics,
       meta: catalogStats(),
+      entitlement: entitlementSummary(tier),
     },
   };
 }
 
-export function handleGetMetric(metricId: string): ApiResult<{ metric: MetricDef }> {
+export function handleGetMetric(metricId: string, tierRaw?: string): ApiResult<{ metric: MetricDef }> {
   if (!metricId?.trim()) {
     return refuse(400, "missing_id", "metricId required");
   }
@@ -90,7 +102,24 @@ export function handleGetMetric(metricId: string): ApiResult<{ metric: MetricDef
       `Metric ${metricId} is ${metric.status} / surface ${metric.rights.surface} — refuse-default`,
     );
   }
+  const tier = parseBillingTier(tierRaw);
+  if (!filterMetricsForTier([metric], tier).length) {
+    return refuse(
+      403,
+      "tier_insufficient",
+      `Metric ${metricId} requires surface ${metric.rights.surface}; tier ${tier} insufficient`,
+    );
+  }
   return { ok: true, status: 200, data: { metric } };
+}
+
+export function handleEntitlements(tierRaw?: string) {
+  const tier = parseBillingTier(tierRaw);
+  return {
+    ok: true as const,
+    status: 200 as const,
+    data: entitlementSummary(tier),
+  };
 }
 
 export function handleCatalogSummary(): ApiResult<{

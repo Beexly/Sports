@@ -43,7 +43,7 @@ describe("handlers refuse-default", () => {
   });
 
   it("returns edge index when public/pro eligible", () => {
-    const r = handleGetMetric("gse.edge_index");
+    const r = handleGetMetric("gse.edge_index", "PRO");
     expect(r.ok).toBe(true);
   });
 
@@ -70,7 +70,7 @@ describe("handlers refuse-default", () => {
 describe("PIT values", () => {
   it("refuses missing asOf", async () => {
     const r = await handleGetMetricValue({
-      metricId: "gse.edge_index",
+      metricId: "gse.edge_index", // pro_api
       entityId: "game_1",
       asOf: "not-a-date",
     });
@@ -80,9 +80,10 @@ describe("PIT values", () => {
 
   it("returns 501 without provider (definition-first honesty)", async () => {
     const r = await handleGetMetricValue({
-      metricId: "gse.edge_index",
+      metricId: "gse.edge_index", // pro_api
       entityId: "game_1",
       asOf: "2025-11-01T18:00:00.000Z",
+      tier: "PRO",
     });
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.status).toBe(501);
@@ -94,9 +95,10 @@ describe("PIT values", () => {
     });
     const r = await handleGetMetricValue(
       {
-        metricId: "gse.edge_index",
+        metricId: "gse.edge_index", // pro_api
         entityId: "game_1",
         asOf: "2025-11-01T18:00:00.000Z",
+        tier: "PRO",
       },
       provider,
     );

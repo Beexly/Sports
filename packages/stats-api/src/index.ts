@@ -24,3 +24,5 @@ export {
   createNflverseMemoryProvider,
   type NflverseRow,
 } from "./providers/nflverse-memory.js";
+
+export * from "./entitlements.js";

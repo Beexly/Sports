@@ -34,6 +34,63 @@ export interface ExternalSource {
 }
 
 export const EXTERNAL_SOURCES: readonly ExternalSource[] = [
+
+  {
+    id: "ext.retrosheet",
+    name: "Retrosheet",
+    kind: "open_data",
+    url: "https://www.retrosheet.org/",
+    rights: "api_tos",
+    sports: ["MLB"],
+    leverage: "Historical play-by-play free; attribution required",
+    gseMetricPrefixes: ["mlb.hist."],
+    status: "CATALOG",
+  },
+  {
+    id: "ext.lahman",
+    name: "Lahman Baseball Database",
+    kind: "open_data",
+    url: "https://sabr.org/lahman-database/",
+    rights: "cc_by_4",
+    sports: ["MLB"],
+    leverage: "Season aggregates historical",
+    gseMetricPrefixes: ["mlb.hist."],
+    status: "CATALOG",
+  },
+  {
+    id: "ext.basketball_reference_hold",
+    name: "Basketball-Reference",
+    kind: "open_data",
+    url: "https://www.basketball-reference.com/",
+    rights: "unknown_review",
+    sports: ["NBA"],
+    leverage: "Do not scrape — ToS; use free NBA APIs instead",
+    gseMetricPrefixes: [],
+    status: "BLOCKED",
+  },
+  {
+    id: "ext.sportsdataverse",
+    name: "sportsdataverse",
+    kind: "engine",
+    url: "https://github.com/sportsdataverse",
+    rights: "cc_by_4",
+    sports: ["NCAAF", "NCAAB", "NFL", "NBA"],
+    leverage: "R/Python sports data packages; rights per package",
+    gseMetricPrefixes: ["ncaaf.", "ncaab."],
+    status: "RESEARCH",
+  },
+  {
+    id: "ext.wehoop",
+    name: "wehoop (WNBA)",
+    kind: "open_data",
+    url: "https://github.com/sportsdataverse/wehoop",
+    rights: "cc_by_4",
+    sports: ["WNBA"],
+    leverage: "WNBA stats package path",
+    gseMetricPrefixes: ["wnba."],
+    status: "CATALOG",
+  },
+
   // ── Open data ──────────────────────────────────────────
   {
     id: "ext.nflverse",
