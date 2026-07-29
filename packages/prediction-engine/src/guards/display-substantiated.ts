@@ -88,6 +88,11 @@ function collectFailures(claim: DisplayClaim): string[] {
   if (!e.walkForwardProtocol || e.walkForwardProtocol.trim().length === 0) {
     reasons.push("walkForwardProtocol is required");
   }
+  // Market-relative claims must carry CLV (or explicit null-with-notes for N/A metrics only).
+  const needsClv = ["win_rate", "roi", "ats", "clv", "selective_rate"].includes(claim.claimType);
+  if (needsClv && (e.clvOrMarketRelative === undefined)) {
+    reasons.push("clvOrMarketRelative is required for " + claim.claimType);
+  }
   // Soft but important: if a rate is claimed, the LCB should not exceed the point estimate
   // by a large margin (numerical tolerance only).
   if (typeof e.rate === "number" && Number.isFinite(e.rate)) {

@@ -1009,3 +1009,28 @@ export type {
 // trial harness) imports the submodule path directly:
 //   import { evaluatePromotion } from "@sports/prediction-engine/src/promotion/index.js"
 // See docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md.
+
+// Honesty surface — No-Bet gate, Phase 0 placebo, Glass Ledger receipts
+export {
+  evaluateNoBet,
+  NO_BET_COPY,
+  type NoBetCode,
+  type NoBetEvidence,
+  type NoBetDecision,
+} from "./honesty/no-bet-gate.js";
+export {
+  runShuffledTimePlacebo,
+  shuffleInPlace,
+  mulberry32,
+  type PlaceboReport,
+  type PlaceboTrial,
+} from "./honesty/placebo-leak.js";
+export {
+  fingerprintPayload,
+  buildReceipt,
+  chainReceipts,
+  recomputeChain,
+  ledgerHead,
+  type PickReceipt,
+  type LedgerHead,
+} from "./honesty/glass-receipts.js";
