@@ -11,6 +11,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const plane = sp.get("plane") ?? undefined;
   const publicOnly = sp.get("publicOnly") !== "false";
   const result = handleOwnCatalog({ plane, publicOnly });
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error, code: result.code },
+      { status: result.status },
+    );
+  }
   return NextResponse.json(result.data, {
     headers: { "X-GSE-API": "stats.v1.own", "X-GSE-ODDS-API": "not-required" },
   });

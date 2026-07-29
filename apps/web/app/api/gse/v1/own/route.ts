@@ -9,6 +9,12 @@ export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<NextResponse> {
   const result = handleOwnSnapshot();
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error, code: result.code },
+      { status: result.status },
+    );
+  }
   return NextResponse.json(result.data, {
     headers: {
       "X-GSE-API": "stats.v1.own",
