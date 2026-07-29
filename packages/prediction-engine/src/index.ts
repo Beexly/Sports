@@ -1035,3 +1035,13 @@ export {
   type PickReceipt,
   type LedgerHead,
 } from "./honesty/glass-receipts.js";
+
+// Fire authority — dual-asOf + cal + LIVE_BOARD + selective composition (pure)
+export {
+  evaluateFireAuthority,
+  topologyScore,
+  FIRE_DEMO_SCENARIOS,
+  type FireAuthorityInput,
+  type FireAuthorityDecision,
+  type FireRefuseReason,
+} from "./edge-lab/fire-authority.js";

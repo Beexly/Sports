@@ -46,3 +46,11 @@ export type {
   WriteThroughPolicy,
   CronDeltaTick,
 } from "./hydration/write-through.js";
+
+export {
+  restDays,
+  rollingMean,
+  successRateRoll,
+  selfClvFromArchive,
+  type FormulaResult,
+} from "./formulas/derived.js";

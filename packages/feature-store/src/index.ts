@@ -21,3 +21,19 @@ export {
   exportForFeast,
   type FeastOfflineRow,
 } from "./feast-export.js";
+
+export {
+  assessServingPath,
+  planMaterialize,
+  selectOnlineBackend,
+  defaultGseMaterializePlan,
+  FEAST_FORBIDDEN_VIEWS,
+  FEAST_COMPETITIVE_STRENGTH,
+  type ServeMode,
+  type OnlineBackend,
+  type MaterializeKind,
+  type ServingPath,
+  type ServingAssessment,
+  type MaterializePlanInput,
+  type MaterializePlan,
+} from "./feast-arch.js";
