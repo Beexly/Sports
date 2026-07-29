@@ -10,3 +10,5 @@ export * from "./handlers.js";
 export * from "./values.js";
 export { buildStatsOpenApi } from "./openapi.js";
 export { expandAll } from "./catalog-expand.js";
+
+export * from "./providers/registry.js";
