@@ -1,5 +1,12 @@
 import type { FeatureRecord, FeatureWrite, PITQuery } from "./types.js";
 import { asEntityId, asFeatureId } from "./types.js";
+import {
+  parseAsOfMs,
+  selectLatestAsOf,
+  validateFeatureWrite,
+  validatePitQuery,
+  type PitClock,
+} from "./pit-validate.js";
 
 export interface FeatureStore {
   put(write: FeatureWrite): FeatureRecord;
@@ -21,18 +28,31 @@ function key(featureId: string, entityId: string, asOf: string): string {
 
 export class InMemoryFeatureStore implements FeatureStore {
   private readonly rows = new Map<string, FeatureRecord>();
+  private readonly clock: PitClock | undefined;
+
+  constructor(opts?: { clock?: PitClock }) {
+    this.clock = opts?.clock;
+  }
 
   put(write: FeatureWrite): FeatureRecord {
-    if (!write.pitCorrect) {
-      throw new Error("refuse write: pitCorrect must be true for store admission");
-    }
-    if (write.sourceRights === "rights_hold" && write.publicApiEligible) {
-      throw new Error("refuse write: rights_hold cannot be public_api_eligible");
+    const v = validateFeatureWrite(
+      {
+        featureId: String(write.featureId),
+        entityId: String(write.entityId),
+        asOf: write.asOf,
+        pitCorrect: write.pitCorrect,
+        publicApiEligible: write.publicApiEligible,
+        sourceRights: write.sourceRights,
+      },
+      { clock: this.clock },
+    );
+    if (!v.ok) {
+      throw new Error(`refuse write: ${v.code} — ${v.error}`);
     }
     const rec: FeatureRecord = {
       featureId: asFeatureId(String(write.featureId)),
       entityId: asEntityId(String(write.entityId)),
-      asOf: write.asOf,
+      asOf: v.asOfIso, // normalized ISO
       value: write.value,
       sourceRights: write.sourceRights,
       pitCorrect: true,
@@ -46,20 +66,26 @@ export class InMemoryFeatureStore implements FeatureStore {
   }
 
   getAsOf(q: PITQuery): FeatureRecord | null {
-    const t = Date.parse(q.asOf);
-    if (!Number.isFinite(t)) return null;
-    let best: FeatureRecord | null = null;
-    let bestT = -Infinity;
-    for (const r of this.rows.values()) {
-      if (r.featureId !== q.featureId || r.entityId !== q.entityId) continue;
-      const rt = Date.parse(r.asOf);
-      if (!Number.isFinite(rt) || rt > t) continue;
-      if (rt >= bestT) {
-        bestT = rt;
-        best = r;
-      }
+    const v = validatePitQuery(
+      {
+        featureId: String(q.featureId),
+        entityId: String(q.entityId),
+        asOf: q.asOf,
+      },
+      { clock: this.clock, allowFuture: true },
+    );
+    // allowFuture on read of historical sims; still require valid parse
+    // Re-parse strictly: invalid asOf → null
+    const parsed = parseAsOfMs(q.asOf);
+    if (!parsed.ok) return null;
+    if (!v.ok && v.code !== "asof_future") {
+      // feature/entity missing shouldn't happen if branded types; still null
+      if (v.code === "feature_missing" || v.code === "entity_missing") return null;
     }
-    return best;
+    const candidates = [...this.rows.values()].filter(
+      (r) => r.featureId === q.featureId && r.entityId === q.entityId,
+    );
+    return selectLatestAsOf(candidates, parsed.asOfIso);
   }
 
   getPublic(q: PITQuery): FeatureRecord | null {

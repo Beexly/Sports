@@ -13,6 +13,12 @@ import {
   type MetricDef,
 } from "./catalog.js";
 import {
+  filterMetricsForTier,
+  parseBillingTier,
+  entitlementSummary,
+  type BillingTier,
+} from "./entitlements.js";
+import {
   externalSourceStats,
   listExternalSources,
   type ExternalSource,
@@ -39,7 +45,8 @@ export function handleListMetrics(query: {
   status?: string;
   publicOnly?: boolean;
   q?: string;
-}): ApiResult<{ metrics: MetricDef[]; meta: ReturnType<typeof catalogStats> }> {
+  tier?: string;
+}): ApiResult<{ metrics: MetricDef[]; meta: ReturnType<typeof catalogStats>; entitlement: ReturnType<typeof entitlementSummary> }> {
   const sport = query.sport as SportCode | undefined;
   const family = query.family as MetricFamily | undefined;
   const status = query.status as MetricStatus | undefined;
@@ -65,17 +72,22 @@ export function handleListMetrics(query: {
     );
   }
 
+  const tier = parseBillingTier(query.tier);
+  // When publicOnly=false (internal), still apply tier surface for non-dark
+  metrics = filterMetricsForTier(metrics, tier);
+
   return {
     ok: true,
     status: 200,
     data: {
       metrics,
       meta: catalogStats(),
+      entitlement: entitlementSummary(tier),
     },
   };
 }
 
-export function handleGetMetric(metricId: string): ApiResult<{ metric: MetricDef }> {
+export function handleGetMetric(metricId: string, tierRaw?: string): ApiResult<{ metric: MetricDef }> {
   if (!metricId?.trim()) {
     return refuse(400, "missing_id", "metricId required");
   }
@@ -90,7 +102,24 @@ export function handleGetMetric(metricId: string): ApiResult<{ metric: MetricDef
       `Metric ${metricId} is ${metric.status} / surface ${metric.rights.surface} — refuse-default`,
     );
   }
+  const tier = parseBillingTier(tierRaw);
+  if (!filterMetricsForTier([metric], tier).length) {
+    return refuse(
+      403,
+      "tier_insufficient",
+      `Metric ${metricId} requires surface ${metric.rights.surface}; tier ${tier} insufficient`,
+    );
+  }
   return { ok: true, status: 200, data: { metric } };
+}
+
+export function handleEntitlements(tierRaw?: string) {
+  const tier = parseBillingTier(tierRaw);
+  return {
+    ok: true as const,
+    status: 200 as const,
+    data: entitlementSummary(tier),
+  };
 }
 
 export function handleCatalogSummary(): ApiResult<{
@@ -188,3 +217,89 @@ export {
   type ValueResult,
   type ValueProvider,
 } from "./values.js";
+
+import { planHydration, cadenceSummary, HYDRATION_STRATEGIES } from "./hydration/index.js";
+
+export function handleHydrationPlan(body: {
+  metricIds?: string[];
+  entityIds?: string[];
+  asOf?: string;
+}): ApiResult<{
+  plan: ReturnType<typeof planHydration>;
+  cadence: ReturnType<typeof cadenceSummary>;
+  strategies: typeof HYDRATION_STRATEGIES;
+}> {
+  const metricIds = body.metricIds ?? [];
+  const entityIds = body.entityIds ?? [];
+  const asOf = body.asOf ?? new Date().toISOString();
+  if (!metricIds.length) {
+    return refuse(400, "missing_metrics", "metricIds required");
+  }
+  if (!Number.isFinite(Date.parse(asOf))) {
+    return refuse(400, "bad_asof", "asOf must be ISO datetime");
+  }
+  return {
+    ok: true,
+    status: 200,
+    data: {
+      plan: planHydration({ metricIds, entityIds, asOf }),
+      cadence: cadenceSummary(),
+      strategies: HYDRATION_STRATEGIES,
+    },
+  };
+}
+
+export function handleHydrationStrategies() {
+  return {
+    ok: true as const,
+    status: 200 as const,
+    data: {
+      strategies: HYDRATION_STRATEGIES,
+      cadence: cadenceSummary(),
+      law: [
+        "PIT asOf is the read contract",
+        "stale → refuse values, never fabricate",
+        "SSE is projection not source of truth",
+        "LIVE_BOARD founder-gated for stream fanout",
+      ],
+    },
+  };
+}
+
+
+import {
+  computeDualAsOfEdge,
+  describeRealtimeTopology,
+  scoreTopologyHealth,
+  type DualAsOfEdgeInput,
+  type TopologyHealthInput,
+} from "./hydration/realtime-truth.js";
+
+export function handleRealtimeTruthCatalog() {
+  return {
+    ok: true as const,
+    status: 200 as const,
+    data: describeRealtimeTopology(),
+  };
+}
+
+export function handleDualAsOfEdge(body: DualAsOfEdgeInput) {
+  const result = computeDualAsOfEdge(body);
+  if (!result.ok) {
+    return {
+      ok: false as const,
+      status: 422 as const,
+      code: result.code,
+      error: result.error,
+    };
+  }
+  return { ok: true as const, status: 200 as const, data: result };
+}
+
+export function handleTopologyHealth(body: TopologyHealthInput) {
+  return {
+    ok: true as const,
+    status: 200 as const,
+    data: scoreTopologyHealth(body),
+  };
+}

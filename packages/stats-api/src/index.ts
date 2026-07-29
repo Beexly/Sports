@@ -12,3 +12,37 @@ export { buildStatsOpenApi } from "./openapi.js";
 export { expandAll } from "./catalog-expand.js";
 export * from "./providers/registry.js";
 export * from "./sources/external-registry.js";
+
+export {
+  createOpenMeteoProvider,
+  liveOpenMeteoClient,
+  parseLatLon,
+  type OpenMeteoClient,
+} from "./providers/open-meteo.js";
+export {
+  NflverseMemoryStore,
+  createNflverseMemoryProvider,
+  type NflverseRow,
+} from "./providers/nflverse-memory.js";
+
+export * from "./entitlements.js";
+
+export * from "./hydration/index.js";
+
+export * from "./pit-validate.js";
+export {
+  expandPrismaPlayerGameStat,
+  writeThroughPlayerGameStats,
+  applyPutsToStore,
+  hydratePlayerGameStatsToMemory,
+  summarizeCronDelta,
+  DEFAULT_WRITE_THROUGH,
+} from "./hydration/write-through.js";
+export type {
+  PlayerGameStatRow,
+  PrismaPlayerGameStat,
+  MemoryPut,
+  WriteThroughResult,
+  WriteThroughPolicy,
+  CronDeltaTick,
+} from "./hydration/write-through.js";

@@ -1,21 +1,27 @@
 /**
- * Composite value provider for GSE Stats API.
- * Routes by metric prefix; demo fallback is explicit — not a performance claim.
+ * Production-path composite provider for GSE Stats API.
+ * - weather: Open-Meteo live (server)
+ * - nfl: memory store hydrated by workers (empty until ingest)
+ * - demo: deterministic fallback (explicit non-claim)
  */
 
 import {
   buildDefaultRouting,
   createCompositeProvider,
+  createOpenMeteoProvider,
+  liveOpenMeteoClient,
+  createNflverseMemoryProvider,
+  NflverseMemoryStore,
+  hydratePlayerGameStatsToMemory,
+  type PrismaPlayerGameStat,
   type ValueProvider,
 } from "@sports/stats-api";
 
 const SEED: Record<string, number> = {
   "nfl.box.pass_yds|demo_player": 287,
   "nfl.adv.epa|demo_player": 0.12,
-  "nfl.ngs.separation|demo_player": 2.8,
   "gse.edge_index|demo_game": 0.041,
   "gse.clv_vs_pinnacle|demo_game": 0.018,
-  "ctx.weather.temp_f|demo_game": 42,
   "mkt.consensus.spread.novig|demo_game": 0.52,
 };
 
@@ -34,9 +40,23 @@ const demo: ValueProvider = (metric, entityId) => {
   return null;
 };
 
-/** Prefer specific providers when wired; demo last. */
+/** Process-local nflverse memory — workers will put rows here / Redis later. */
+export const nflverseMemory = new NflverseMemoryStore();
+
+const weather = createOpenMeteoProvider(liveOpenMeteoClient());
+const nfl = createNflverseMemoryProvider(nflverseMemory);
+
 export const demoValueProvider: ValueProvider = createCompositeProvider(
   buildDefaultRouting({
+    weather,
+    nflverse: nfl,
     demo,
   }),
 );
+
+/** Inject Prisma PlayerGameStat rows into process-local cold memory. */
+export function hydrateLocalNflverseMemory(
+  rows: readonly PrismaPlayerGameStat[],
+) {
+  return hydratePlayerGameStatsToMemory(nflverseMemory, rows);
+}
