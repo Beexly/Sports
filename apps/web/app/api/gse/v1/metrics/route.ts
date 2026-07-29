@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * GET /api/gse/v1/metrics — list rights-tagged metrics.
- * Query: sport, family, status, publicOnly (default true), limit, offset
+ * Query: sport, family, status, publicOnly, q, limit, offset
  */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const sp = req.nextUrl.searchParams;
@@ -14,6 +14,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     family: sp.get("family") ?? undefined,
     status: sp.get("status") ?? undefined,
     publicOnly: sp.get("publicOnly") === "false" ? false : true,
+    q: sp.get("q") ?? undefined,
   });
   if (!result.ok) {
     return NextResponse.json(
