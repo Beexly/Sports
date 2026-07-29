@@ -71,6 +71,17 @@ export function buildStatsOpenApi() {
           },
         },
       },
+      "/external": {
+        get: {
+          summary: "External free/HF/open source registry",
+          operationId: "listExternalSources",
+          parameters: [
+            { name: "kind", in: "query", schema: { type: "string" } },
+            { name: "status", in: "query", schema: { type: "string" } },
+          ],
+          responses: { "200": { description: "External sources" } },
+        },
+      },
       "/source-matrix": {
         get: {
           summary: "Source coverage matrix",

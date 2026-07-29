@@ -7,11 +7,16 @@ import {
   catalogStats,
   getMetricById,
   listMetrics,
-  type MetricDef,
   type MetricFamily,
   type MetricStatus,
   type SportCode,
+  type MetricDef,
 } from "./catalog.js";
+import {
+  externalSourceStats,
+  listExternalSources,
+  type ExternalSource,
+} from "./sources/external-registry.js";
 
 export type ApiError = {
   ok: false;
@@ -38,7 +43,6 @@ export function handleListMetrics(query: {
   const sport = query.sport as SportCode | undefined;
   const family = query.family as MetricFamily | undefined;
   const status = query.status as MetricStatus | undefined;
-  // Default publicOnly=true on public surface — aggressive density, honest access
   const publicOnly = query.publicOnly !== false;
 
   if (sport && !["NFL", "NCAAF", "NBA", "NCAAB", "MLB", "NHL", "MULTI", "SOCCER"].includes(sport)) {
@@ -79,7 +83,6 @@ export function handleGetMetric(metricId: string): ApiResult<{ metric: MetricDef
   if (!metric) {
     return refuse(404, "not_found", `No metric ${metricId}`);
   }
-  // Dark/blocked: admit existence only on internal; public path collapses
   if (!metric.publicApi) {
     return refuse(
       403,
@@ -95,6 +98,7 @@ export function handleCatalogSummary(): ApiResult<{
   version: string;
   claim: string;
   stats: ReturnType<typeof catalogStats>;
+  external: ReturnType<typeof externalSourceStats>;
   law: string[];
 }> {
   return {
@@ -104,14 +108,16 @@ export function handleCatalogSummary(): ApiResult<{
       product: "Galaxy Sports Edge Stats API",
       version: "gse.stats.v1",
       claim:
-        "Densest rights-tagged sports metrics registry — no fabricated performance numbers.",
+        "Densest rights-tagged sports metrics registry — no fabricated performance numbers. External free sources mapped.",
       stats: catalogStats(),
+      external: externalSourceStats(),
       law: [
         "refuse-default",
         "PIT asOf required for values",
         "four-field substantiation for performance claims",
         "LIVE_BOARD founder-gated",
         "Pedersen ≠ ZK/PQ",
+        "external research sources ≠ commercial rights",
       ],
     },
   };
@@ -126,6 +132,7 @@ export function handleCoverageMatrix(): ApiResult<{
   }>;
   metricCount: number;
   publicMetricCount: number;
+  externalCount: number;
 }> {
   const stats = catalogStats();
   return {
@@ -138,6 +145,9 @@ export function handleCoverageMatrix(): ApiResult<{
         { id: "mlb.statcast", tier: "CATALOG", rights: "free_legal", sports: ["MLB"] },
         { id: "nba.stats", tier: "CATALOG", rights: "free_legal", sports: ["NBA"] },
         { id: "nhl.moneypuck", tier: "CATALOG", rights: "free_legal", sports: ["NHL"] },
+        { id: "f1.openf1", tier: "CATALOG", rights: "api_tos", sports: ["F1"] },
+        { id: "openfootball", tier: "CATALOG", rights: "CC0", sports: ["SOCCER"] },
+        { id: "hf.sportsmot", tier: "BLOCKED", rights: "research_only", sports: ["MULTI"] },
         { id: "optical.scorebug", tier: "CATALOG", rights: "optical_derived", sports: ["MULTI"] },
         { id: "optical.formation", tier: "BLOCKED", rights: "PARKED", sports: ["NFL"] },
         {
@@ -146,11 +156,27 @@ export function handleCoverageMatrix(): ApiResult<{
           rights: "CC-BY-SA hold",
           sports: ["NFL"],
         },
-        { id: "college.cfbd", tier: "CATALOG", rights: "pending", sports: ["NCAAF", "NCAAB"] },
+        { id: "college.cfbd", tier: "CATALOG", rights: "api_tos", sports: ["NCAAF", "NCAAB"] },
       ],
       metricCount: stats.total,
       publicMetricCount: stats.publicApi,
+      externalCount: externalSourceStats().total,
     },
+  };
+}
+
+export function handleExternalSources(query?: {
+  kind?: string;
+  status?: string;
+}): ApiResult<{ sources: ExternalSource[]; meta: ReturnType<typeof externalSourceStats> }> {
+  const sources = listExternalSources({
+    kind: query?.kind as never,
+    status: query?.status as never,
+  });
+  return {
+    ok: true,
+    status: 200,
+    data: { sources, meta: externalSourceStats() },
   };
 }
 
