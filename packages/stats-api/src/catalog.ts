@@ -12,52 +12,15 @@
  *  - BLOCKED: rights or legal hold
  */
 
-export type { MetricDef, MetricFamily, MetricStatus, SportCode } from "./catalog-types.js";
 import { expandAll } from "./catalog-expand.js";
+import type { MetricDef, MetricFamily, MetricStatus, SportCode } from "./catalog-types.js";
+export type { MetricDef, MetricFamily, MetricStatus, SportCode } from "./catalog-types.js";
 import type { PublicSurface, RightsClass, RightsEnvelope } from "./rights.js";
 import { isPublicApiEligible } from "./rights.js";
 
-export type MetricStatus = "ACTIVE" | "CATALOG" | "DARK" | "BLOCKED";
-export type MetricFamily =
-  | "box"
-  | "advanced"
-  | "tracking"
-  | "market"
-  | "optical"
-  | "proprietary"
-  | "context"
-  | "calibration"
-  | "portfolio"
-  | "fantasy"
-  | "meta";
-
-export type SportCode =
-  | "NFL"
-  | "NCAAF"
-  | "NBA"
-  | "NCAAB"
-  | "MLB"
-  | "NHL"
-  | "MULTI"
-  | "SOCCER";
-
-export interface MetricDef {
-  readonly id: string;
-  readonly name: string;
-  readonly sport: SportCode;
-  readonly family: MetricFamily;
-  readonly status: MetricStatus;
-  readonly unit: string;
-  readonly description: string;
-  readonly formulaClass: string;
-  readonly sourceIds: readonly string[];
-  readonly rights: RightsEnvelope;
-  readonly asOfRequired: boolean;
-  readonly pitRequired: boolean;
-  readonly publicApi: boolean;
-}
 
 function env(
+
   rights: RightsClass,
   surface: PublicSurface,
   notes = "",
