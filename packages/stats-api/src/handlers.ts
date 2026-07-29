@@ -217,3 +217,51 @@ export {
   type ValueResult,
   type ValueProvider,
 } from "./values.js";
+
+import { planHydration, cadenceSummary, HYDRATION_STRATEGIES } from "./hydration/index.js";
+
+export function handleHydrationPlan(body: {
+  metricIds?: string[];
+  entityIds?: string[];
+  asOf?: string;
+}): ApiResult<{
+  plan: ReturnType<typeof planHydration>;
+  cadence: ReturnType<typeof cadenceSummary>;
+  strategies: typeof HYDRATION_STRATEGIES;
+}> {
+  const metricIds = body.metricIds ?? [];
+  const entityIds = body.entityIds ?? [];
+  const asOf = body.asOf ?? new Date().toISOString();
+  if (!metricIds.length) {
+    return refuse(400, "missing_metrics", "metricIds required");
+  }
+  if (!Number.isFinite(Date.parse(asOf))) {
+    return refuse(400, "bad_asof", "asOf must be ISO datetime");
+  }
+  return {
+    ok: true,
+    status: 200,
+    data: {
+      plan: planHydration({ metricIds, entityIds, asOf }),
+      cadence: cadenceSummary(),
+      strategies: HYDRATION_STRATEGIES,
+    },
+  };
+}
+
+export function handleHydrationStrategies() {
+  return {
+    ok: true as const,
+    status: 200 as const,
+    data: {
+      strategies: HYDRATION_STRATEGIES,
+      cadence: cadenceSummary(),
+      law: [
+        "PIT asOf is the read contract",
+        "stale → refuse values, never fabricate",
+        "SSE is projection not source of truth",
+        "LIVE_BOARD founder-gated for stream fanout",
+      ],
+    },
+  };
+}
