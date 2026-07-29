@@ -13,6 +13,8 @@ const nextConfig = {
     "@sports/data-ingestion",
     "@sports/ingestion-pipeline",
     "@sports/epistemic-twin",
+    "@sports/quote-plane",
+    "@sports/util",
   ],
   experimental: {
     serverComponentsExternalPackages: ["@prisma/client"],
