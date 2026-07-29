@@ -86,3 +86,10 @@ export {
   summarizeGammaTicks,
   type GammaCronDeltaResult,
 } from "./hydration/gamma-cron-delta.js";
+
+export {
+  classifyExport,
+  requireSpdx,
+  type ExportClass,
+  type ExportClassification,
+} from "./rights-export.js";
