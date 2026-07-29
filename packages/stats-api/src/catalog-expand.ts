@@ -391,5 +391,79 @@ export function expandAll(): MetricDef[] {
     ...expandContextFree(),
     ...expandGseProprietary(),
     ...expandDfs(),
+    ...expandNhlDense(),
+    ...expandNcaaDense(),
   ];
+}
+
+export function expandNhlDense(): MetricDef[] {
+  const skater = [
+    "toi","shifts","hits","blocks","giveaways","takeaways","faceoff_pct",
+    "pp_toi","pk_toi","ixg","ixg60","primary_assists","secondary_assists",
+    "high_danger_shots","medium_danger_shots","corsi_for","corsi_against",
+    "fenwick_for","fenwick_against","oz_starts","dz_starts",
+  ];
+  const out: MetricDef[] = [];
+  for (const s of skater) {
+    out.push(
+      row(
+        `nhl.skater.${s}`,
+        `NHL skater ${s.replace(/_/g, " ")}`,
+        "NHL",
+        "advanced",
+        "CATALOG",
+        "mixed",
+        `NHL skater ${s} — MoneyPuck free-legal path.`,
+        s,
+        ["nhl.moneypuck"],
+        env("free_legal_gov", "public_api"),
+      ),
+    );
+  }
+  const goalie = ["sv","sa","gsaa","hdsv","mdsV","ldsv","rebounds","freeze","qs"];
+  for (const g of goalie) {
+    out.push(
+      row(
+        `nhl.goalie.${g}`,
+        `NHL goalie ${g}`,
+        "NHL",
+        "advanced",
+        "CATALOG",
+        "mixed",
+        `NHL goalie ${g}.`,
+        g,
+        ["nhl.moneypuck"],
+        env("free_legal_gov", "public_api"),
+      ),
+    );
+  }
+  return out;
+}
+
+export function expandNcaaDense(): MetricDef[] {
+  const out: MetricDef[] = [];
+  for (const sport of ["NCAAF", "NCAAB"] as const) {
+    const metrics = [
+      "off_eff","def_eff","tempo","em","adj_em","sos","luck","seed",
+      "fg_pct","three_pct","ft_pct","reb_rate","to_rate","ft_rate",
+      "score","margin","home_adv","rest_days","travel",
+    ];
+    for (const m of metrics) {
+      out.push(
+        row(
+          `${sport.toLowerCase()}.team.${m}`,
+          `${sport} team ${m.replace(/_/g, " ")}`,
+          sport,
+          "advanced",
+          "CATALOG",
+          "mixed",
+          `${sport} ${m} — free-first ESPN/henrygd path pending full rights stamp.`,
+          m,
+          ["college.free_first"],
+          env("free_legal_gov", "pro_api"),
+        ),
+      );
+    }
+  }
+  return out;
 }
