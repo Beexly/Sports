@@ -28,3 +28,5 @@ export {
 export * from "./entitlements.js";
 
 export * from "./hydration/index.js";
+
+export * from "./pit-validate.js";

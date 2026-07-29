@@ -6,6 +6,11 @@
 import { getMetricById } from "./catalog.js";
 import type { MetricDef } from "./catalog-types.js";
 import { metricVisibleToTier, parseBillingTier } from "./entitlements.js";
+import {
+  pitCodeToHttp,
+  validateValueRequest,
+  type PitClock,
+} from "./pit-validate.js";
 
 export interface MetricValueRequest {
   readonly metricId: string;
@@ -31,14 +36,8 @@ export interface MetricValue {
 
 export type ValueResult =
   | { ok: true; status: 200; data: MetricValue }
-  | { ok: false; status: 400 | 403 | 404 | 501; code: string; error: string };
+  | { ok: false; status: 400 | 403 | 404 | 422 | 501; code: string; error: string };
 
-/**
- * Resolve a metric value at asOf.
- * Production wires FeatureStore / DB; this default is CODE_READY stub:
- * - validates metric + rights + asOf
- * - returns 501 until a ValueProvider is injected
- */
 export type ValueProvider = (
   metric: MetricDef,
   entityId: string,
@@ -48,16 +47,22 @@ export type ValueProvider = (
 export async function handleGetMetricValue(
   req: MetricValueRequest,
   provider?: ValueProvider,
+  opts?: { clock?: PitClock; allowFutureAsOf?: boolean },
 ): Promise<ValueResult> {
-  if (!req.metricId?.trim() || !req.entityId?.trim()) {
-    return { ok: false, status: 400, code: "missing_ids", error: "metricId and entityId required" };
-  }
-  if (!req.asOf || !Number.isFinite(Date.parse(req.asOf))) {
+  const pit = validateValueRequest(
+    {
+      metricId: req.metricId,
+      entityId: req.entityId,
+      asOf: req.asOf,
+    },
+    { clock: opts?.clock, allowFuture: opts?.allowFutureAsOf },
+  );
+  if (!pit.ok) {
     return {
       ok: false,
-      status: 400,
-      code: "asof_required",
-      error: "Valid ISO asOf required (PIT correctness)",
+      status: pitCodeToHttp(pit.code),
+      code: pit.code,
+      error: pit.error,
     };
   }
 
@@ -93,11 +98,10 @@ export async function handleGetMetricValue(
     };
   }
 
-  const value = await provider(metric, req.entityId, req.asOf);
-  const attribution =
-    metric.rights.attributionRequired
-      ? `Source: ${metric.sourceIds.join(", ")} (${metric.rights.rights})`
-      : null;
+  const value = await provider(metric, req.entityId, pit.asOfIso);
+  const attribution = metric.rights.attributionRequired
+    ? `Source: ${metric.sourceIds.join(", ")} (${metric.rights.rights})`
+    : null;
 
   return {
     ok: true,
@@ -105,7 +109,7 @@ export async function handleGetMetricValue(
     data: {
       metricId: metric.id,
       entityId: req.entityId,
-      asOf: req.asOf,
+      asOf: pit.asOfIso,
       value,
       unit: metric.unit,
       provenance: {
@@ -119,7 +123,6 @@ export async function handleGetMetricValue(
   };
 }
 
-/** In-memory demo provider for tests / dark demos. */
 export function createMemoryValueProvider(
   seed: Record<string, number | string | boolean | null>,
 ): ValueProvider {

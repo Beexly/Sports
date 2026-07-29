@@ -1,10 +1,11 @@
 /**
  * nflverse-backed value provider — in-memory map filled by ingestion workers.
  * Production: hydrate from PlayerGameStat / PBP aggregates.
- * This is the lawful bridge: stats-api never scrapes; it only serves admitted rows.
+ * PIT: only returns rows with asOf <= query (selectLatestAsOf).
  */
 
 import type { ValueProvider } from "../values.js";
+import { parseAsOfMs, selectLatestAsOf } from "../pit-validate.js";
 
 export type NflverseRow = {
   metricId: string;
@@ -17,24 +18,27 @@ export class NflverseMemoryStore {
   private rows = new Map<string, NflverseRow>();
 
   put(row: NflverseRow): void {
-    this.rows.set(`${row.metricId}\0${row.entityId}\0${row.asOf}`, row);
+    const parsed = parseAsOfMs(row.asOf);
+    if (!parsed.ok) {
+      throw new Error(`refuse put: ${parsed.code} — ${parsed.error}`);
+    }
+    if (!row.metricId?.trim() || !row.entityId?.trim()) {
+      throw new Error("refuse put: metricId and entityId required");
+    }
+    const normalized: NflverseRow = {
+      ...row,
+      asOf: parsed.asOfIso,
+    };
+    this.rows.set(`${normalized.metricId}\0${normalized.entityId}\0${normalized.asOf}`, normalized);
   }
 
   getAsOf(metricId: string, entityId: string, asOf: string): NflverseRow | null {
-    const t = Date.parse(asOf);
-    if (!Number.isFinite(t)) return null;
-    let best: NflverseRow | null = null;
-    let bestT = -Infinity;
-    for (const r of this.rows.values()) {
-      if (r.metricId !== metricId || r.entityId !== entityId) continue;
-      const rt = Date.parse(r.asOf);
-      if (!Number.isFinite(rt) || rt > t) continue;
-      if (rt >= bestT) {
-        bestT = rt;
-        best = r;
-      }
-    }
-    return best;
+    const q = parseAsOfMs(asOf);
+    if (!q.ok) return null;
+    const candidates = [...this.rows.values()].filter(
+      (r) => r.metricId === metricId && r.entityId === entityId,
+    );
+    return selectLatestAsOf(candidates, q.asOfIso);
   }
 
   size(): number {

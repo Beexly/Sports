@@ -1,3 +1,4 @@
+export * from "./pit-validate.js";
 export * from "./types.js";
 export { InMemoryFeatureStore, type FeatureStore } from "./store.js";
 export {
