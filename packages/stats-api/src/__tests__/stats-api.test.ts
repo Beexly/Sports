@@ -68,14 +68,26 @@ describe("handlers refuse-default", () => {
 });
 
 describe("PIT values", () => {
-  it("refuses missing asOf", async () => {
+  it("refuses invalid asOf", async () => {
     const r = await handleGetMetricValue({
       metricId: "gse.edge_index", // pro_api
       entityId: "game_1",
       asOf: "not-a-date",
+      tier: "PRO",
     });
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.code).toBe("asof_required");
+    if (!r.ok) expect(r.code).toBe("asof_invalid");
+  });
+
+  it("refuses missing asOf", async () => {
+    const r = await handleGetMetricValue({
+      metricId: "gse.edge_index",
+      entityId: "game_1",
+      asOf: "",
+      tier: "PRO",
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.code).toBe("asof_missing");
   });
 
   it("returns 501 without provider (definition-first honesty)", async () => {
