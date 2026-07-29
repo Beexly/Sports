@@ -12,6 +12,8 @@ import {
   liveOpenMeteoClient,
   createNflverseMemoryProvider,
   NflverseMemoryStore,
+  hydratePlayerGameStatsToMemory,
+  type PrismaPlayerGameStat,
   type ValueProvider,
 } from "@sports/stats-api";
 
@@ -51,3 +53,10 @@ export const demoValueProvider: ValueProvider = createCompositeProvider(
     demo,
   }),
 );
+
+/** Inject Prisma PlayerGameStat rows into process-local cold memory. */
+export function hydrateLocalNflverseMemory(
+  rows: readonly PrismaPlayerGameStat[],
+) {
+  return hydratePlayerGameStatsToMemory(nflverseMemory, rows);
+}

@@ -385,8 +385,9 @@ export function scoreTopologyHealth(input: TopologyHealthInput): TopologyHealth 
       blockers.push(`${spec.plane}: empty`);
     }
     s -= Math.min(40, st.errorRate * 100);
-    planeScores[spec.plane] = Math.max(0, Math.min(100, s));
-    acc += planeScores[spec.plane] * w;
+    const planeScore = Math.max(0, Math.min(100, s));
+    planeScores[spec.plane] = planeScore;
+    acc += planeScore * w;
   }
 
   const score = weightSum > 0 ? Math.round(acc / weightSum) : 0;

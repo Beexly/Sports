@@ -130,9 +130,14 @@ describe("the public set stays genuinely public", () => {
   });
 
   it("a public metric is actually retrievable — the fence is not a wall", () => {
-    const sample = PUBLIC[0];
+    // FREE-surface public metrics are readable without a paid tier.
+    // pro_api/elite_api remain publicApi=true but tier-gated (definition + value).
+    const freeList = handleListMetrics({ publicOnly: true, tier: "FREE" });
+    expect(freeList.ok).toBe(true);
+    if (!freeList.ok) return;
+    const sample = freeList.data.metrics[0];
     expect(sample).toBeDefined();
-    const r = handleGetMetric(sample!.id);
+    const r = handleGetMetric(sample!.id, "FREE");
     expect(r.ok, `public metric ${sample!.id} was refused`).toBe(true);
   });
 });

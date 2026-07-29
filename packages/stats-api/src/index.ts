@@ -30,3 +30,19 @@ export * from "./entitlements.js";
 export * from "./hydration/index.js";
 
 export * from "./pit-validate.js";
+export {
+  expandPrismaPlayerGameStat,
+  writeThroughPlayerGameStats,
+  applyPutsToStore,
+  hydratePlayerGameStatsToMemory,
+  summarizeCronDelta,
+  DEFAULT_WRITE_THROUGH,
+} from "./hydration/write-through.js";
+export type {
+  PlayerGameStatRow,
+  PrismaPlayerGameStat,
+  MemoryPut,
+  WriteThroughResult,
+  WriteThroughPolicy,
+  CronDeltaTick,
+} from "./hydration/write-through.js";
