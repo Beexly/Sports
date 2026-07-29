@@ -198,3 +198,7 @@ export function publishableContinuousClv(
     modelVersion,
   };
 }
+
+
+/** Alias used by handoff / CLV call sites — refuse if methods diverge. */
+export const sameMethodOrRefuse = assertMethodContinuity;

@@ -56,3 +56,4 @@ export {
 } from "./formulas/derived.js";
 
 export * from "./own/index.js";
+export * from "./rights-export.js";

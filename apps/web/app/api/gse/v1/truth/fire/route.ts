@@ -20,18 +20,19 @@ export const dynamic = "force-dynamic";
 export async function GET(): Promise<NextResponse> {
   // Dark explainer — scenarios only, no live fire
   const demos = FIRE_DEMO_SCENARIOS.map((s) => {
+    const input = s.input as FireAuthorityInput;
     const prefire = evaluateUnifiedPrefire({
-      dualAsOfOk: s.input.dualAsOfOk,
-      dualAsOfCode: s.input.dualAsOfCode,
-      calibrationReady: s.input.calibrationReady,
-      quoteFresh: s.input.quoteFresh,
-      liveBoardOn: s.input.liveBoardOn,
+      dualAsOfOk: input.dualAsOfOk,
+      dualAsOfCode: input.dualAsOfCode,
+      calibrationReady: input.calibrationReady,
+      quoteFresh: input.quoteFresh,
+      liveBoardOn: input.liveBoardOn,
     });
     return {
       id: s.id,
       label: s.label,
       prefire,
-      result: evaluateFireAuthority(s.input),
+      result: evaluateFireAuthority(input),
     };
   });
   return NextResponse.json(

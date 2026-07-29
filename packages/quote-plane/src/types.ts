@@ -34,6 +34,9 @@ export interface QuoteLine {
   readonly overround?: number;
   readonly confidence?: number; // source quality 0-1
   readonly notes?: string;
+  /** Fair-prob method — required for continuous CLV */
+  readonly methodTag?: string;
+  readonly modelVersion?: string;
 }
 
 export interface QuoteFetchRequest {
@@ -62,6 +65,9 @@ export interface AggregatedQuote {
   readonly quoteAsOf: string; // newest contributing
   readonly sources: readonly QuoteLine[];
   readonly method: "median" | "single" | "model_fallback";
+  /** Propagated fair method for CLV continuity */
+  readonly methodTag?: string;
+  readonly modelVersion?: string;
   readonly independence: {
     readonly oddsApiRequired: false;
     readonly booksUsed: number;

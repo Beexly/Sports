@@ -42,6 +42,11 @@ import {
   type MultiprobGateOptions,
   type SelectiveGateReport,
 } from "@sports/prediction-engine/src/edge-lab/selective-gate.js";
+import {
+  evaluateUnifiedPrefire,
+  type UnifiedPrefireDecision,
+  type UnifiedPrefireInput,
+} from "@sports/prediction-engine/src/edge-lab/unified-prefire.js";
 
 /**
  * Why a candidate did or did not fire. These are the only four answers, and
@@ -84,6 +89,11 @@ export interface GateOutcome {
   readonly width?: number;
   /** Which estimator produced the interval. Paid detail. */
   readonly multiprobSource?: FiredDecision["multiprobSource"];
+  /**
+   * Public product fire. Requires multiprob FIRE AND prefire proceed
+   * (LIVE_BOARD + dual-asOf + cal + quote). Default production: false.
+   */
+  readonly publicFire: boolean;
 }
 
 export interface BoardGateEvaluation {
@@ -97,6 +107,12 @@ export interface BoardGateEvaluation {
   /** Strata that could not be evaluated at all, with their settled-row counts. */
   readonly uncalibratedStrata: readonly { stratum: string; calibrationRows: number }[];
   readonly tau: number;
+  /**
+   * Prefire run BEFORE selective is interpreted for public fire.
+   * Selective multiprob still runs (certificates); publicFire stays false
+   * while prefire holds (production LIVE_BOARD off).
+   */
+  readonly prefire: UnifiedPrefireDecision;
 }
 
 const REASONS: Record<GateOutcomeCode, string> = {
@@ -144,6 +160,14 @@ function blindRealizedStats(report: SelectiveGateReport): SelectiveGateReport {
  * testable without a database, which is where the honesty-critical branches
  * live.
  */
+/** Production default prefire — LIVE_BOARD off, other gates optimistic for multiprob research. */
+export const DEFAULT_BOARD_PREFIRE: UnifiedPrefireInput = {
+  dualAsOfOk: true,
+  calibrationReady: true,
+  quoteFresh: true,
+  liveBoardOn: false,
+};
+
 export function evaluateBoardGate(
   calibrationRows: readonly GateDecisionRow[],
   candidateRows: readonly GateDecisionRow[],
@@ -151,7 +175,14 @@ export function evaluateBoardGate(
   options: MultiprobGateOptions = {},
   /** Candidates that could not be built into gate rows. Reported, never dropped. */
   excluded: readonly ExcludedCandidate[] = [],
+  /**
+   * Prefire topology before public FIRE claim. Selective multiprob still runs
+   * for certificates; publicFire requires prefire.proceedToSelective.
+   */
+  prefireInput: UnifiedPrefireInput = DEFAULT_BOARD_PREFIRE,
 ): BoardGateEvaluation {
+  // Prefire first — records chain even when selective still runs for multiprob.
+  const prefire = evaluateUnifiedPrefire(prefireInput);
   const report = applySelectiveGate(calibrationRows, candidateRows, tau, options);
 
   const calCountByStratum = new Map<string, number>();
@@ -172,10 +203,13 @@ export function evaluateBoardGate(
         rowId: row.rowId,
         stratum: row.stratum,
         code: "FIRE",
-        reason: REASONS.FIRE,
+        reason: prefire.proceedToSelective
+          ? REASONS.FIRE
+          : `${REASONS.FIRE} Public fire held (prefire: ${"reason" in prefire ? prefire.reason : "held"}).`,
         lcbEdge: fired.lcbEdge,
         width: fired.width,
         multiprobSource: fired.multiprobSource,
+        publicFire: prefire.proceedToSelective,
       };
     }
 
@@ -189,6 +223,7 @@ export function evaluateBoardGate(
         stratum: row.stratum,
         code: "INSUFFICIENT_CALIBRATION",
         reason: REASONS.INSUFFICIENT_CALIBRATION,
+        publicFire: false,
       };
     }
 
@@ -207,6 +242,7 @@ export function evaluateBoardGate(
         stratum: row.stratum,
         code: "NO_BET_WIDTH",
         reason: REASONS.NO_BET_WIDTH,
+        publicFire: false,
       };
     }
 
@@ -215,6 +251,7 @@ export function evaluateBoardGate(
       stratum: row.stratum,
       code: "NO_BET_LCB",
       reason: REASONS.NO_BET_LCB,
+      publicFire: false,
     };
   });
 
@@ -227,6 +264,7 @@ export function evaluateBoardGate(
       stratum: ex.stratum,
       code: "NOT_EVALUATED_MISSING_INPUTS",
       reason: `${REASONS.NOT_EVALUATED_MISSING_INPUTS} Missing: ${ex.missing.join(", ")}.`,
+      publicFire: false,
     });
   }
 
@@ -236,7 +274,7 @@ export function evaluateBoardGate(
     .filter((s) => s.calibrationRows < MIN_STRATUM_CALIBRATION)
     .sort((a, b) => a.stratum.localeCompare(b.stratum));
 
-  return { outcomes, report: blindRealizedStats(report), uncalibratedStrata, tau };
+  return { outcomes, report: blindRealizedStats(report), uncalibratedStrata, tau, prefire };
 }
 
 /**
