@@ -25,7 +25,7 @@ export const HYDRATE_FORCE_STEPS: readonly HydrateStep[] = [
   {
     order: 2,
     id: "gamma_cron_delta",
-    action: "refresh-gamma → cron_delta (feeds q hot plane; Odds API optional)",
+    action: "refresh-gamma → /api/cron/gamma-cron-delta (free hot q-plane; Odds API not required)",
     plane: "hot_q",
     oddsApiRequired: false,
     liveBoardRequired: false,

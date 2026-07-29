@@ -399,6 +399,7 @@ export function expandAll(): MetricDef[] {
     ...expandPredictionMarkets(),
     ...expandMmaResearch(),
     ...expandWnba(),
+    ...expandOwnDerivedFormulas(),
   ];
 }
 
@@ -596,6 +597,55 @@ export function expandWnba(): MetricDef[] {
       id,
       ["ext.wehoop"],
       env("cc_by_4", "public_api"),
+    ),
+  );
+}
+
+/** First-party derived formulas — density without accuracy claims. */
+export function expandOwnDerivedFormulas(): MetricDef[] {
+  const rights = env(
+    "cc_by_4",
+    "public_api",
+    "Derived on cleared nflverse/own bases. Not a win-rate claim.",
+  );
+  const defs: Array<[string, string, string, string]> = [
+    [
+      "own.derived.rest_days",
+      "Rest days (as-of)",
+      "days",
+      "Days since last game at asOf; refuse inverted windows",
+    ],
+    [
+      "own.derived.roll_mean",
+      "Rolling mean (windowed)",
+      "unitless",
+      "Rolling mean with min-n refuse-default",
+    ],
+    [
+      "own.derived.success_rate",
+      "Success rate (windowed)",
+      "rate",
+      "Successes/attempts with n floor; not a win rate",
+    ],
+    [
+      "own.derived.self_clv_bps",
+      "Self-CLV (bps, owned archive)",
+      "bps",
+      "ln(close/open)*10000 on first-party closing archive only",
+    ],
+  ];
+  return defs.map(([id, name, unit, description]) =>
+    row(
+      id,
+      name,
+      "NFL",
+      "proprietary",
+      "ACTIVE",
+      unit,
+      description,
+      "pure_formula",
+      ["nflverse", "own_close_archive"],
+      rights,
     ),
   );
 }

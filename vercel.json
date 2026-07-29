@@ -52,6 +52,10 @@
     {
       "path": "/api/cron/run-formal-receipt",
       "schedule": "45 9 * * *"
+    },
+    {
+      "path": "/api/cron/gamma-cron-delta",
+      "schedule": "*/30 * * * *"
     }
   ],
   "headers": [

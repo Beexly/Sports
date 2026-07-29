@@ -71,3 +71,18 @@ export {
   type ClosingArchiveEntry,
   type ClosingArchive,
 } from "./archive/closing-archive.js";
+
+export {
+  impliedToDecimal,
+  parseGammaMarketsPayload,
+  fetchGammaMarkets,
+  type GammaMarketQuote,
+  type GammaFetchResult,
+  type GammaHttp,
+} from "./providers/gamma-markets.js";
+
+export {
+  runGammaCronDelta,
+  summarizeGammaTicks,
+  type GammaCronDeltaResult,
+} from "./hydration/gamma-cron-delta.js";
