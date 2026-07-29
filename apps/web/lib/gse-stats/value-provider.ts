@@ -1,13 +1,15 @@
 /**
- * Seeded value provider for GSE Stats API — demo / dark path only.
- * Production replaces with FeatureStore + nflverse loaders.
- * Never invents win-rates; only returns seeded feature-like values.
+ * Composite value provider for GSE Stats API.
+ * Routes by metric prefix; demo fallback is explicit — not a performance claim.
  */
 
-import type { ValueProvider } from "@sports/stats-api";
+import {
+  buildDefaultRouting,
+  createCompositeProvider,
+  type ValueProvider,
+} from "@sports/stats-api";
 
 const SEED: Record<string, number> = {
-  // entity-agnostic demo seeds (metric|entity loose key used by memory provider pattern)
   "nfl.box.pass_yds|demo_player": 287,
   "nfl.adv.epa|demo_player": 0.12,
   "nfl.ngs.separation|demo_player": 2.8,
@@ -17,10 +19,9 @@ const SEED: Record<string, number> = {
   "mkt.consensus.spread.novig|demo_game": 0.52,
 };
 
-export const demoValueProvider: ValueProvider = (metric, entityId) => {
+const demo: ValueProvider = (metric, entityId) => {
   const loose = `${metric.id}|${entityId}`;
   if (loose in SEED) return SEED[loose]!;
-  // Deterministic hash-ish stub for ACTIVE public metrics only — still not a performance claim
   if (metric.status === "ACTIVE" && metric.publicApi && metric.family !== "calibration") {
     let h = 0;
     const s = `${metric.id}:${entityId}`;
@@ -32,3 +33,10 @@ export const demoValueProvider: ValueProvider = (metric, entityId) => {
   }
   return null;
 };
+
+/** Prefer specific providers when wired; demo last. */
+export const demoValueProvider: ValueProvider = createCompositeProvider(
+  buildDefaultRouting({
+    demo,
+  }),
+);

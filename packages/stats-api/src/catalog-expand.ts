@@ -393,6 +393,11 @@ export function expandAll(): MetricDef[] {
     ...expandDfs(),
     ...expandNhlDense(),
     ...expandNcaaDense(),
+    ...expandF1(),
+    ...expandTennisOptical(),
+    ...expandOpticalResearch(),
+    ...expandPredictionMarkets(),
+    ...expandMmaResearch(),
   ];
 }
 
@@ -466,4 +471,112 @@ export function expandNcaaDense(): MetricDef[] {
     }
   }
   return out;
+}
+
+export function expandF1(): MetricDef[] {
+  const metrics = [
+    "lap_time","sector1","sector2","sector3","speed_trap","tyre","stint",
+    "pit_duration","position","gap_leader","interval","drs","throttle","brake",
+    "n_gear","rpm","speed","x","y","z","track_status","rainfall","air_temp",
+  ];
+  return metrics.map((m) =>
+    row(
+      `f1.telem.${m}`,
+      `F1 ${m.replace(/_/g, " ")}`,
+      "MULTI",
+      "tracking",
+      "CATALOG",
+      "mixed",
+      `F1 telemetry ${m} via OpenF1 / Jolpica free API path.`,
+      m,
+      ["f1.openf1", "f1.jolpica"],
+      env("free_legal_gov", "public_api"),
+    ),
+  );
+}
+
+export function expandTennisOptical(): MetricDef[] {
+  const out: MetricDef[] = [];
+  for (const m of ["ball_detect_conf","player_track_id","rally_length","serve_speed_est","court_homography_rmse"]) {
+    out.push(
+      row(
+        `opt.tennis.${m}`,
+        `Tennis optical ${m.replace(/_/g, " ")}`,
+        "MULTI",
+        "optical",
+        "DARK",
+        "mixed",
+        `Research optical tennis metric — HF CourtSide / Roboflow. Research rights until commercial review.`,
+        m,
+        ["ext.hf_courtside", "opt.research"],
+        env("optical_derived", "dark", "HF research model path"),
+      ),
+    );
+  }
+  return out;
+}
+
+export function expandOpticalResearch(): MetricDef[] {
+  const rows: Array<[string, string]> = [
+    ["opt.track.hota", "HOTA tracking score"],
+    ["opt.track.mota", "MOTA tracking score"],
+    ["opt.track.idf1", "IDF1 identity F1"],
+    ["opt.detect.map50", "Detection mAP@50"],
+    ["opt.scorebug.ocr_cer", "Scorebug OCR character error rate"],
+    ["opt.scorebug.field_acc", "Scorebug field accuracy"],
+    ["opt.jersey.ocr_acc", "Jersey number OCR accuracy"],
+    ["opt.pitch.keypoint_rmse", "Pitch keypoint RMSE"],
+    ["opt.soccer.action_spot_map", "SoccerNet action spotting mAP"],
+    ["opt.sportsmot.eval", "SportsMOT benchmark eval"],
+  ];
+  return rows.map(([id, name]) =>
+    row(
+      id,
+      name,
+      "MULTI",
+      "optical",
+      "DARK",
+      "score",
+      `${name} — CV research eval metric (HF SportsMOT / SoccerNet / Roboflow). Not public until rights+ship.`,
+      id.split(".").pop()!,
+      ["ext.hf_sportsmot", "ext.soccernet", "ext.roboflow_sports"],
+      env("optical_derived", "dark", "research-only datasets"),
+    ),
+  );
+}
+
+export function expandPredictionMarkets(): MetricDef[] {
+  const events = ["spread","total","ml","player_prop","futures"];
+  return events.map((e) =>
+    row(
+      `mkt.pred.kalshi.${e}`,
+      `Kalshi ${e} mid`,
+      "MULTI",
+      "market",
+      "CATALOG",
+      "prob",
+      `Prediction-market mid for ${e} — corroboration only, not primary price.`,
+      e,
+      ["ext.kalshi"],
+      env("free_legal_gov", "elite_api"),
+    ),
+  );
+}
+
+export function expandMmaResearch(): MetricDef[] {
+  const m = ["sig_strikes","td_avg","sub_avg","ctrl_time","ko_pct","dec_pct","reach","stance"];
+  return m.map((id) =>
+    row(
+      `mma.stats.${id}`,
+      `MMA ${id.replace(/_/g, " ")}`,
+      "MULTI",
+      "box",
+      "CATALOG",
+      "mixed",
+      `MMA ${id} — rights review before scrape (ufcstats).`,
+      id,
+      ["ext.ufc_stats"],
+      env("rights_hold", "dark", "unknown_review until counsel"),
+    ),
+  );
 }
