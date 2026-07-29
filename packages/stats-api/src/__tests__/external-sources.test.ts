@@ -11,8 +11,8 @@ describe("external source registry", () => {
   it("maps HF + free APIs + engines outside Sports", () => {
     const s = externalSourceStats();
     expect(s.total).toBeGreaterThanOrEqual(20);
-    expect(s.byKind.cv_dataset + s.byKind.cv_model).toBeGreaterThanOrEqual(4);
-    expect(s.byKind.free_api).toBeGreaterThanOrEqual(5);
+    expect((s.byKind.cv_dataset ?? 0) + (s.byKind.cv_model ?? 0)).toBeGreaterThanOrEqual(4);
+    expect(s.byKind.free_api ?? 0).toBeGreaterThanOrEqual(5);
     expect(s.wireNext.length).toBeGreaterThan(0);
   });
 
