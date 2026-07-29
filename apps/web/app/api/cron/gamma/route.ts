@@ -7,6 +7,9 @@
  * Law: oddsApiRequired=false · refuse-default · LIVE_BOARD independent
  *
  * Schedule: vercel.json every 30 minutes (ADD — keep existing 11 crons)
+ *
+ * Durability: set CLOSING_ARCHIVE_PATH for file-backed archive across cold starts.
+ * Unset path = process-local only (honest single-isolate).
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
@@ -15,13 +18,16 @@ import {
   createPolymarketGammaProvider,
   GammaCronRunner,
   DEFAULT_GAMMA_CRON,
+  hydrateClosingArchive,
+  persistClosingArchive,
 } from "@sports/quote-plane";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-/** Process-local archive + runner (honest single-isolate). */
+/** Process-local archive + runner; hydrate from disk when path configured. */
 const archive = new ClosingArchive();
+const hydrateBoot = hydrateClosingArchive(archive);
 const gamma = createPolymarketGammaProvider();
 const runner = new GammaCronRunner(gamma, archive, {
   ...DEFAULT_GAMMA_CRON,
@@ -42,6 +48,8 @@ export async function GET(request: Request): Promise<NextResponse> {
       },
     });
 
+    const persist = persistClosingArchive(archive);
+
     const status =
       result.code === "cron_secret_unset"
         ? 500
@@ -57,7 +65,11 @@ export async function GET(request: Request): Promise<NextResponse> {
         ...result,
         oddsApiRequired: false as const,
         archiveSize: archive.size(),
-        note: "Free Gamma path. Odds API not required. Process-local cache/archive.",
+        durable: {
+          boot: hydrateBoot,
+          persist,
+        },
+        note: "Free Gamma path. Odds API not required. CLOSING_ARCHIVE_PATH enables file durability.",
       },
       {
         status,
