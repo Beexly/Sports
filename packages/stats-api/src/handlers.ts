@@ -33,6 +33,7 @@ export function handleListMetrics(query: {
   family?: string;
   status?: string;
   publicOnly?: boolean;
+  q?: string;
 }): ApiResult<{ metrics: MetricDef[]; meta: ReturnType<typeof catalogStats> }> {
   const sport = query.sport as SportCode | undefined;
   const family = query.family as MetricFamily | undefined;
@@ -44,12 +45,21 @@ export function handleListMetrics(query: {
     return refuse(400, "invalid_sport", `Unknown sport: ${sport}`);
   }
 
-  const metrics = listMetrics({
+  let metrics = listMetrics({
     sport,
     family,
     status,
     publicApiOnly: publicOnly,
   });
+  if (query.q?.trim()) {
+    const q = query.q.trim().toLowerCase();
+    metrics = metrics.filter(
+      (m) =>
+        m.id.toLowerCase().includes(q) ||
+        m.name.toLowerCase().includes(q) ||
+        m.description.toLowerCase().includes(q),
+    );
+  }
 
   return {
     ok: true,
