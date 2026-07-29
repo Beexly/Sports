@@ -6,7 +6,7 @@
  *
  * Law: oddsApiRequired=false · refuse-default · LIVE_BOARD independent
  *
- * Schedule: vercel.json */30 * * * * (ADD — keep existing 11 crons)
+ * Schedule: vercel.json every 30 minutes (ADD — keep existing 11 crons)
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
