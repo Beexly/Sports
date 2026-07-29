@@ -46,7 +46,7 @@ export function handleListMetrics(query: {
   publicOnly?: boolean;
   q?: string;
   tier?: string;
-}): ApiResult<{ metrics: MetricDef[]; meta: ReturnType<typeof catalogStats> }> {
+}): ApiResult<{ metrics: MetricDef[]; meta: ReturnType<typeof catalogStats>; entitlement: ReturnType<typeof entitlementSummary> }> {
   const sport = query.sport as SportCode | undefined;
   const family = query.family as MetricFamily | undefined;
   const status = query.status as MetricStatus | undefined;
