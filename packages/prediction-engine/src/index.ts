@@ -1045,3 +1045,20 @@ export {
   type FireAuthorityDecision,
   type FireRefuseReason,
 } from "./edge-lab/fire-authority.js";
+
+// Multiple-testing honesty — BH-FDR + append-only trials registry (Phase-3 gate)
+export {
+  TRIALS_GENESIS_HASH,
+  createTrialsRegistry,
+  verifyTrialEntries,
+  benjaminiHochberg,
+  TrialsRegistryError,
+} from "./edge-lab/trials-registry.js";
+export type {
+  TrialKind,
+  TrialOutcome,
+  TrialInput,
+  TrialEntry,
+  TrialsRegistry,
+  BhResult,
+} from "./edge-lab/trials-registry.js";
