@@ -61,3 +61,10 @@
 | Polymarket Gamma | Public, no auth | Our free hot q-plane source |
 
 **Differentiation that survives copy:** pre-kickoff Glass Ledger start date, refuse-default product UX, publicFire≠multiprob, closed performance until four-field substantiation, first-party derived catalog with SPDX export classifier.
+
+
+## Domination wedge (from competitive-intel capstone)
+
+Own the **measurement standard** (Glass Ledger + open recompute), not the affiliate game.
+Empty flank: no incumbent publishes independently-verifiable audited CLV of its *own* number.
+Ship rails now; trophy only if CLV clears later. Affiliate CPA is a declining model under AI-search + litigation.

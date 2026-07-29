@@ -142,7 +142,17 @@ export function buildStatsOpenApi() {
           },
         },
       },
-      "/honesty/glass": {
+            "/honesty/no-bet": {
+        post: {
+          summary: "Product No-Bet codes composed with fire authority",
+          operationId: "postNoBetCompose",
+          responses: {
+            "200": { description: "publicFire true" },
+            "422": { description: "Held / no-bet" },
+          },
+        },
+      },
+"/honesty/glass": {
         get: {
           summary: "Glass ledger demo receipts (winRate closed until floor)",
           operationId: "getGlassReceiptsDemo",
