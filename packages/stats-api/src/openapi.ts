@@ -54,10 +54,10 @@ export function buildStatsOpenApi() {
           },
         },
       },
-      "/coverage": {
+      "/source-matrix": {
         get: {
           summary: "Source coverage matrix",
-          operationId: "getCoverage",
+          operationId: "getSourceMatrix",
           responses: { "200": { description: "Coverage" } },
         },
       },

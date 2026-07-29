@@ -10,7 +10,7 @@
 | GET | `/catalog` | Density stats + law strip |
 | GET | `/metrics` | List metrics (`sport`, `family`, `status`, `publicOnly`) |
 | GET | `/metrics/{id}` | Metric definition (403 if dark/blocked) |
-| GET | `/coverage` | Source coverage matrix |
+| GET | `/source-matrix` | Source coverage matrix |
 | GET | `/openapi` | OpenAPI 3.1 document |
 
 ## Law (compile-time)
