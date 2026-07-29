@@ -59,6 +59,36 @@ export const HYDRATE_FORCE_STEPS: readonly HydrateStep[] = [
     liveBoardRequired: false,
     status: "CODE_READY",
   },
+  {
+    order: 6,
+    id: "own_feed_api",
+    action:
+      "Own feed /api/gse/v1/own — first-party dominance plane (oddsApiRequired=false)",
+    plane: "cold_p",
+    oddsApiRequired: false,
+    liveBoardRequired: false,
+    status: "CODE_READY",
+  },
+  {
+    order: 7,
+    id: "officials_contracts_consumed",
+    action:
+      "Officials + contracts CATALOG→CONSUMED via hydrateContextToMemory (CC-BY-4.0)",
+    plane: "cold_p",
+    oddsApiRequired: false,
+    liveBoardRequired: false,
+    status: "CODE_READY",
+  },
+  {
+    order: 8,
+    id: "honesty_self_clv",
+    action:
+      "Honesty glass + placebo APIs + self-CLV cohort (mean closed until n≥50)",
+    plane: "gate",
+    oddsApiRequired: false,
+    liveBoardRequired: false,
+    status: "CODE_READY",
+  },
 ] as const;
 
 export function nextHydrateAction(

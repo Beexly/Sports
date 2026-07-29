@@ -1,0 +1,409 @@
+/**
+ * First-party metric catalog — GSE-owned formulas we can ship without Odds API.
+ * Densest *owned* honesty contracts, not rented book lines.
+ */
+
+import type { OwnMetricContract } from "./types.js";
+
+function fp(
+  partial: Omit<OwnMetricContract, "ownership" | "licenseSpdx" | "attributionRequired"> & {
+    ownership?: OwnMetricContract["ownership"];
+    licenseSpdx?: string;
+    attributionRequired?: boolean;
+    attributionText?: string;
+  },
+): OwnMetricContract {
+  const ownership = partial.ownership ?? "first_party";
+  return {
+    ownership,
+    licenseSpdx: partial.licenseSpdx ?? "LicenseRef-GSE-Internal",
+    attributionRequired: partial.attributionRequired ?? false,
+    attributionText: partial.attributionText,
+    ...partial,
+  };
+}
+
+/** Core dominate set — expand aggressively with pure formulas. */
+export const OWN_METRICS: readonly OwnMetricContract[] = [
+  fp({
+    id: "own.model.p",
+    name: "Model Probability p",
+    plane: "model",
+    unit: "prob",
+    description: "GSE calibrated probability at decision time.",
+    formulaId: "model.predict_calibrated",
+    dependsOn: ["model.weights", "features.asof"],
+    publicApiEligible: false,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.model.p_lo",
+    name: "Model Lower Credal pLo",
+    plane: "model",
+    unit: "prob",
+    description: "Lower bound of multiprob / LCB used by selective gate.",
+    formulaId: "model.credal_lower",
+    dependsOn: ["own.model.p", "model.width"],
+    publicApiEligible: false,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.model.width",
+    name: "Credal Width",
+    plane: "model",
+    unit: "prob",
+    description: "pHi − pLo at decision.",
+    formulaId: "model.width",
+    dependsOn: ["model.credal"],
+    publicApiEligible: false,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.edge.dual_asof",
+    name: "Dual-asOf Edge",
+    plane: "model",
+    unit: "prob",
+    description: "p − q under six-gate dual-asOf law; refuse if clocks fail.",
+    formulaId: "truth.dual_asof_edge",
+    dependsOn: ["own.model.p", "own.quote.q"],
+    publicApiEligible: false,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.gate.decision",
+    name: "Selective Gate Decision Code",
+    plane: "decision",
+    unit: "enum",
+    description: "FIRE|PASS|ABSTAIN with refuse reason.",
+    formulaId: "gate.selective",
+    dependsOn: ["own.edge.dual_asof", "own.cal.ready"],
+    publicApiEligible: false,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.nobet.codes",
+    name: "No-Bet Gate Codes",
+    plane: "decision",
+    unit: "set",
+    description: "Product-facing refuse codes logged per opportunity.",
+    formulaId: "gate.nobet",
+    dependsOn: ["own.gate.decision"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.truth.topology_score",
+    name: "Truth Topology Score",
+    plane: "decision",
+    unit: "score",
+    description: "readyForEdgeFire composition across dual-asOf + cal + freshness.",
+    formulaId: "truth.topology_health",
+    dependsOn: ["own.edge.dual_asof", "own.cal.ready"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.fire.public_authority",
+    name: "Public Fire Authority",
+    plane: "decision",
+    unit: "bool",
+    description:
+      "publicFire = multiprob FIRE ∧ evaluateFireAuthority. LIVE_BOARD default off.",
+    formulaId: "fire.public_authority",
+    dependsOn: ["own.gate.decision", "own.truth.topology_score"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.cal.ece",
+    name: "Cohort ECE",
+    plane: "calibration",
+    unit: "rate",
+    description: "Equal-frequency ECE on dual-asOf settled cohort.",
+    formulaId: "cal.equal_freq_ece",
+    dependsOn: ["decision.settled", "own.model.p"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.cal.mce",
+    name: "Cohort MCE",
+    plane: "calibration",
+    unit: "rate",
+    description: "Max calibration error across equal-freq bins.",
+    formulaId: "cal.equal_freq_mce",
+    dependsOn: ["own.cal.ece"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.cal.brier",
+    name: "Cohort Brier",
+    plane: "calibration",
+    unit: "score",
+    description: "Brier score on certificate cohort.",
+    formulaId: "cal.brier",
+    dependsOn: ["decision.settled", "own.model.p"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.cal.ready",
+    name: "readyForEdgeFire",
+    plane: "calibration",
+    unit: "bool",
+    description: "Certificate present, fresh, ECE pass, n≥nMin.",
+    formulaId: "cal.ready_for_edge_fire",
+    dependsOn: ["own.cal.ece"],
+    publicApiEligible: false,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.quote.q",
+    name: "Independent Quote q",
+    plane: "archive",
+    unit: "prob",
+    description:
+      "Fair probability from multi-source plane (PM / model / optional books). oddsApiRequired=false.",
+    formulaId: "quote.aggregate_median",
+    dependsOn: ["quote.providers"],
+    publicApiEligible: false,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.quote.gamma_cron_health",
+    name: "Gamma Cron Health",
+    plane: "archive",
+    unit: "json",
+    description: "Last Gamma tick, archived count, oddsApiUsed=false.",
+    formulaId: "quote.gamma_cron_health",
+    dependsOn: ["quote.providers"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.clv.self_archive",
+    name: "Self-Archive CLV",
+    plane: "archive",
+    unit: "bps",
+    description: "Close vs open from lines we stored ourselves — free forever.",
+    formulaId: "archive.clv",
+    dependsOn: ["own.quote.q", "archive.close"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.clv.cohort_mean",
+    name: "Cohort Mean CLV",
+    plane: "archive",
+    unit: "bps",
+    description: "Mean CLV publishable only when n≥50 — refuse-default otherwise.",
+    formulaId: "archive.clv_cohort_mean",
+    dependsOn: ["own.clv.self_archive"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.stat.rest_days",
+    name: "Rest Days",
+    plane: "derived_stats",
+    unit: "days",
+    ownership: "derived_cleared",
+    licenseSpdx: "CC-BY-4.0",
+    attributionRequired: true,
+    attributionText: "Derived from nflverse schedules (CC-BY-4.0)",
+    description: "Days since last game — our formula on cleared schedule data.",
+    formulaId: "stat.rest_days",
+    dependsOn: ["nflverse.schedules"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.stat.epa_roll",
+    name: "EPA Rolling",
+    plane: "derived_stats",
+    unit: "epa",
+    ownership: "derived_cleared",
+    licenseSpdx: "CC-BY-4.0",
+    attributionRequired: true,
+    attributionText: "Derived from nflverse PBP (CC-BY-4.0)",
+    description: "Owned rolling EPA window on cleared PBP.",
+    formulaId: "stat.epa_roll",
+    dependsOn: ["nflverse.pbp"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.stat.success_rate_roll",
+    name: "Success Rate Rolling",
+    plane: "derived_stats",
+    unit: "rate",
+    ownership: "derived_cleared",
+    licenseSpdx: "CC-BY-4.0",
+    attributionRequired: true,
+    description: "Owned success-rate rolling formula.",
+    formulaId: "stat.success_rate_roll",
+    dependsOn: ["nflverse.pbp"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.stat.cpoe_roll",
+    name: "CPOE Rolling",
+    plane: "derived_stats",
+    unit: "rate",
+    ownership: "derived_cleared",
+    licenseSpdx: "CC-BY-4.0",
+    attributionRequired: true,
+    description: "Completion % over expected rolling mean; min-n refuse.",
+    formulaId: "stat.cpoe_roll",
+    dependsOn: ["nflverse.pbp"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.stat.yards_per_play",
+    name: "Yards Per Play Rolling",
+    plane: "derived_stats",
+    unit: "ypp",
+    ownership: "derived_cleared",
+    licenseSpdx: "CC-BY-4.0",
+    attributionRequired: true,
+    description: "Owned YPP on cleared box/PBP bases.",
+    formulaId: "stat.yards_per_play",
+    dependsOn: ["nflverse.pbp"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.ctx.contract_apy",
+    name: "Contract APY (consumed)",
+    plane: "context",
+    unit: "usd",
+    ownership: "derived_cleared",
+    licenseSpdx: "CC-BY-4.0",
+    attributionRequired: true,
+    attributionText: "nflverse historical_contracts / OverTheCap via CC-BY-4.0",
+    description: "Player contract APY from nflverse contracts — CATALOG→CONSUMED.",
+    formulaId: "ctx.contract_apy",
+    dependsOn: ["nflverse.contracts"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.ctx.referee_crew",
+    name: "Referee Crew (consumed)",
+    plane: "context",
+    unit: "id",
+    ownership: "derived_cleared",
+    licenseSpdx: "CC-BY-4.0",
+    attributionRequired: true,
+    attributionText: "nflverse officials (CC-BY-4.0)",
+    description: "Officiating crew key per game — CATALOG→CONSUMED.",
+    formulaId: "ctx.referee_crew",
+    dependsOn: ["nflverse.officials"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.opt.scorebug_acc",
+    name: "Scorebug OCR Accuracy",
+    plane: "optical",
+    unit: "rate",
+    description: "Frame-level accuracy vs ground truth harness. Parked until founder path.",
+    formulaId: "opt.scorebug_acc",
+    dependsOn: ["opt.frames"],
+    publicApiEligible: true,
+    status: "CATALOG",
+  }),
+  fp({
+    id: "own.ctx.weather_wx",
+    name: "Weather Context",
+    plane: "context",
+    unit: "json",
+    ownership: "attributed_third",
+    licenseSpdx: "CC0-1.0",
+    attributionRequired: true,
+    attributionText: "Open-Meteo / NOAA",
+    description: "Attributed weather context — not our IP.",
+    formulaId: "ctx.weather",
+    dependsOn: ["open_meteo"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.kpi.refusal_rate",
+    name: "Refusal Rate",
+    plane: "decision",
+    unit: "rate",
+    description: "Share of opportunities refused — honesty KPI.",
+    formulaId: "kpi.refusal_rate",
+    dependsOn: ["own.nobet.codes"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.kpi.fire_rate",
+    name: "Fire Rate",
+    plane: "decision",
+    unit: "rate",
+    description: "Gate fire share (LIVE_BOARD still off → public fire ~0).",
+    formulaId: "kpi.fire_rate",
+    dependsOn: ["own.gate.decision"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.kpi.self_reliance",
+    name: "Feed Self-Reliance Score",
+    plane: "decision",
+    unit: "score",
+    description: "% of catalog we own or derive without Odds API spine.",
+    formulaId: "kpi.self_reliance",
+    dependsOn: ["own.catalog"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
+    id: "own.kpi.substantiation_coverage",
+    name: "Substantiation Coverage",
+    plane: "decision",
+    unit: "rate",
+    description: "Four-field honesty coverage on public claims.",
+    formulaId: "kpi.substantiation",
+    dependsOn: ["own.claims"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+];
+
+export function getOwnMetric(id: string): OwnMetricContract | undefined {
+  return OWN_METRICS.find((m) => m.id === id);
+}
+
+export function listOwnMetrics(filter?: {
+  plane?: OwnMetricContract["plane"];
+  publicOnly?: boolean;
+}): OwnMetricContract[] {
+  let rows = [...OWN_METRICS];
+  if (filter?.plane) rows = rows.filter((m) => m.plane === filter.plane);
+  if (filter?.publicOnly) {
+    rows = rows.filter(
+      (m) => m.publicApiEligible && m.status !== "DARK" && m.status !== "BLOCKED",
+    );
+  }
+  return rows;
+}
+
+export function ownCatalogStats() {
+  const total = OWN_METRICS.length;
+  const firstParty = OWN_METRICS.filter((m) => m.ownership === "first_party").length;
+  const derived = OWN_METRICS.filter((m) => m.ownership === "derived_cleared").length;
+  const third = OWN_METRICS.filter((m) => m.ownership === "attributed_third").length;
+  const blocked = OWN_METRICS.filter((m) => m.ownership === "blocked").length;
+  const publicEligible = OWN_METRICS.filter(
+    (m) => m.publicApiEligible && m.status !== "DARK" && m.status !== "BLOCKED",
+  ).length;
+  const active = OWN_METRICS.filter((m) => m.status === "ACTIVE").length;
+  return { total, firstParty, derived, third, blocked, publicEligible, active };
+}

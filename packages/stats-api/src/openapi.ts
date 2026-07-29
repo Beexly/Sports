@@ -118,6 +118,51 @@ export function buildStatsOpenApi() {
           responses: { "200": { description: "Baseline + report" } },
         },
       },
+      "/own": {
+        get: {
+          summary: "Own-feed dominance snapshot (oddsApiRequired=false)",
+          operationId: "getOwnFeedSnapshot",
+          responses: { "200": { description: "Dominance + law" } },
+        },
+      },
+      "/own/catalog": {
+        get: {
+          summary: "First-party own metric contracts",
+          operationId: "listOwnMetrics",
+          responses: { "200": { description: "Own catalog" } },
+        },
+      },
+      "/own/values": {
+        post: {
+          summary: "PIT own-feed value (asOf required)",
+          operationId: "postOwnValue",
+          responses: {
+            "200": { description: "Value" },
+            "422": { description: "Refuse-default" },
+          },
+        },
+      },
+      "/honesty/glass": {
+        get: {
+          summary: "Glass ledger demo receipts (winRate closed until floor)",
+          operationId: "getGlassReceiptsDemo",
+          responses: { "200": { description: "Chain + head" } },
+        },
+      },
+      "/honesty/placebo": {
+        post: {
+          summary: "Phase 0 shuffled-time placebo harness",
+          operationId: "postPlaceboCheck",
+          responses: { "200": { description: "Placebo report" } },
+        },
+      },
+      "/truth/self-clv": {
+        get: {
+          summary: "Self-CLV cohort report from owned archive (mean closed n<50)",
+          operationId: "getSelfClvReport",
+          responses: { "200": { description: "Cohort report" } },
+        },
+      },
       "/rights/classify-export": {
         post: {
           summary: "Classify bulk export path (RESULT vs DERIVATIVE_DB vs BLOCKED)",

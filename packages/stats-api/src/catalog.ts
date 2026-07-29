@@ -238,33 +238,36 @@ function nflverseFamily(): MetricDef[] {
     );
   }
 
-  // Role / context
-  const ctx = [
-    ["snap_share", "Snap Share", "rate", "snap_counts"],
-    ["route_participation", "Route Participation", "rate", "pbp_participation"],
-    ["depth_rank", "Depth Chart Rank", "rank", "depth_charts"],
-    ["injury_status", "Injury Status", "enum", "injuries"],
-    ["contract_apy", "Contract APY", "usd", "contracts"],
-    ["referee_crew", "Referee Crew", "id", "officials"],
-  ] as const;
-  for (const [id, name, unit, src] of ctx) {
-    const blocked = src === "pbp_participation";
+  // Role / context — officials + contracts promoted CATALOG→CONSUMED (ACTIVE)
+  const ctx: ReadonlyArray<readonly [string, string, string, string, "ACTIVE" | "CATALOG" | "BLOCKED"]> = [
+    ["snap_share", "Snap Share", "rate", "snap_counts", "ACTIVE"],
+    ["route_participation", "Route Participation", "rate", "pbp_participation", "BLOCKED"],
+    ["depth_rank", "Depth Chart Rank", "rank", "depth_charts", "CATALOG"],
+    ["injury_status", "Injury Status", "enum", "injuries", "ACTIVE"],
+    ["contract_apy", "Contract APY", "usd", "contracts", "ACTIVE"],
+    ["referee_crew", "Referee Crew", "id", "officials", "ACTIVE"],
+    ["referee_crew_hash", "Referee Crew Hash", "hash", "officials", "ACTIVE"],
+  ];
+  for (const [id, name, unit, src, status] of ctx) {
+    const blocked = status === "BLOCKED" || src === "pbp_participation";
     out.push(
       m({
         id: `nfl.ctx.${id}`,
         name,
         sport: "NFL",
         family: "context",
-        status: blocked ? "BLOCKED" : "CATALOG",
+        status: blocked ? "BLOCKED" : status,
         unit,
         description: blocked
           ? "Rights-hold CC-BY-SA — not ingested."
-          : `Context signal ${name} from nflverse ${src}.`,
+          : src === "contracts" || src === "officials"
+            ? `CONSUMED: ${name} from nflverse ${src} (CC-BY-4.0). Wired via hydrateContextToMemory.`
+            : `Context signal ${name} from nflverse ${src}.`,
         formulaClass: id,
         sourceIds: [`nflverse.${src}`],
         rights: blocked
           ? env("excluded_sharealike", "dark", "Share-alike hold")
-          : env("cc_by_4", "pro_api"),
+          : env("cc_by_4", "pro_api", "Attribute nflverse"),
       }),
     );
   }

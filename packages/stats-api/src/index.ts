@@ -52,6 +52,10 @@ export {
   rollingMean,
   successRateRoll,
   selfClvFromArchive,
+  rollingSum,
+  cpoeRoll,
+  yardsPerPlay,
+  shareOfTeam,
   type FormulaResult,
 } from "./formulas/derived.js";
 
@@ -93,3 +97,24 @@ export {
   type ExportClass,
   type ExportClassification,
 } from "./rights-export.js";
+
+export * from "./own/index.js";
+
+export {
+  hydrateContextToMemory,
+  expandContractRows,
+  expandOfficialRows,
+  parseSimpleCsv,
+  NFLVERSE_CONTEXT_LICENSE,
+  NFLVERSE_CONTEXT_ATTRIBUTION,
+  type ContractRowIn,
+  type OfficialRowIn,
+  type ContextHydrateResult,
+} from "./providers/nflverse-context.js";
+
+export {
+  reportSelfClvFromArchive,
+  buildDemoSelfClvReport,
+  type SelfClvRow,
+  type SelfClvCohortReport,
+} from "./archive/self-clv-report.js";

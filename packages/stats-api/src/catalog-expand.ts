@@ -622,10 +622,34 @@ export function expandOwnDerivedFormulas(): MetricDef[] {
       "Rolling mean with min-n refuse-default",
     ],
     [
+      "own.derived.roll_sum",
+      "Rolling sum (windowed)",
+      "unitless",
+      "Rolling sum with min-n refuse-default",
+    ],
+    [
       "own.derived.success_rate",
       "Success rate (windowed)",
       "rate",
       "Successes/attempts with n floor; not a win rate",
+    ],
+    [
+      "own.derived.cpoe_roll",
+      "CPOE rolling",
+      "rate",
+      "Completion over expected residual roll; min-n refuse",
+    ],
+    [
+      "own.derived.ypp",
+      "Yards per play rolling",
+      "ypp",
+      "Yards/plays with play floor; not a win rate",
+    ],
+    [
+      "own.derived.share_of_team",
+      "Share of team",
+      "rate",
+      "Player/team share on cleared aggregates",
     ],
     [
       "own.derived.self_clv_bps",
