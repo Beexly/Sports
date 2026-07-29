@@ -54,6 +54,23 @@ export function buildStatsOpenApi() {
           },
         },
       },
+      "/values/{metricId}": {
+        get: {
+          summary: "PIT metric value",
+          operationId: "getMetricValue",
+          parameters: [
+            { name: "metricId", in: "path", required: true, schema: { type: "string" } },
+            { name: "entityId", in: "query", required: true, schema: { type: "string" } },
+            { name: "asOf", in: "query", required: true, schema: { type: "string", format: "date-time" } },
+          ],
+          responses: {
+            "200": { description: "Value" },
+            "400": { description: "Missing asOf/ids" },
+            "403": { description: "Not public" },
+            "501": { description: "Provider not wired" },
+          },
+        },
+      },
       "/source-matrix": {
         get: {
           summary: "Source coverage matrix",

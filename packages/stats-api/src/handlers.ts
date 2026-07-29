@@ -143,3 +143,12 @@ export function handleCoverageMatrix(): ApiResult<{
     },
   };
 }
+
+export {
+  handleGetMetricValue,
+  createMemoryValueProvider,
+  type MetricValueRequest,
+  type MetricValue,
+  type ValueResult,
+  type ValueProvider,
+} from "./values.js";

@@ -12,6 +12,8 @@
  *  - BLOCKED: rights or legal hold
  */
 
+export type { MetricDef, MetricFamily, MetricStatus, SportCode } from "./catalog-types.js";
+import { expandAll } from "./catalog-expand.js";
 import type { PublicSurface, RightsClass, RightsEnvelope } from "./rights.js";
 import { isPublicApiEligible } from "./rights.js";
 
@@ -608,7 +610,15 @@ export function getMetricCatalog(): readonly MetricDef[] {
     ...opticalFamily(),
     ...calibrationFamily(),
     ...collegeFamily(),
+    ...expandAll(),
   ];
+  // Dedupe by id (first wins)
+  const seen = new Set<string>();
+  _cache = _cache.filter((m) => {
+    if (seen.has(m.id)) return false;
+    seen.add(m.id);
+    return true;
+  });
   return _cache;
 }
 

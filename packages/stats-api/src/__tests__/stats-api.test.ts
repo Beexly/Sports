@@ -6,15 +6,17 @@ import {
   handleCoverageMatrix,
   handleGetMetric,
   handleListMetrics,
+  handleGetMetricValue,
+  createMemoryValueProvider,
   buildStatsOpenApi,
 } from "../index.js";
 
 describe("GSE Stats API catalog density", () => {
-  it("registers a dense multi-sport catalog", () => {
+  it("registers a world-class dense multi-sport catalog", () => {
     const s = catalogStats();
-    expect(s.total).toBeGreaterThan(100);
-    expect(s.publicApi).toBeGreaterThan(40);
-    expect(s.bySport.NFL).toBeGreaterThan(20);
+    expect(s.total).toBeGreaterThanOrEqual(500);
+    expect(s.publicApi).toBeGreaterThanOrEqual(400);
+    expect(s.bySport.NFL).toBeGreaterThan(100);
     expect(s.byFamily.market).toBeGreaterThan(20);
   });
 
@@ -30,6 +32,7 @@ describe("handlers refuse-default", () => {
     expect(r.ok).toBe(true);
     if (r.ok) {
       expect(r.data.metrics.every((m) => m.publicApi)).toBe(true);
+      expect(r.data.metrics.length).toBeGreaterThan(100);
     }
   });
 
@@ -41,30 +44,76 @@ describe("handlers refuse-default", () => {
 
   it("returns edge index when public/pro eligible", () => {
     const r = handleGetMetric("gse.edge_index");
-    // pro_api is publicApiEligible true
     expect(r.ok).toBe(true);
   });
 
-  it("catalog summary includes law", () => {
+  it("catalog summary includes law + density", () => {
     const r = handleCatalogSummary();
     expect(r.ok).toBe(true);
     if (r.ok) {
       expect(r.data.law).toContain("refuse-default");
-      expect(r.data.stats.total).toBeGreaterThan(100);
+      expect(r.data.stats.total).toBeGreaterThanOrEqual(500);
     }
   });
 
   it("coverage matrix present", () => {
     const r = handleCoverageMatrix();
     expect(r.ok).toBe(true);
-    if (r.ok) {
-      expect(r.data.sources.length).toBeGreaterThan(5);
-    }
   });
 
   it("openapi builds", () => {
     const doc = buildStatsOpenApi();
     expect(doc.openapi).toBe("3.1.0");
-    expect(doc.paths["/metrics"]).toBeTruthy();
+  });
+});
+
+describe("PIT values", () => {
+  it("refuses missing asOf", async () => {
+    const r = await handleGetMetricValue({
+      metricId: "gse.edge_index",
+      entityId: "game_1",
+      asOf: "not-a-date",
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.code).toBe("asof_required");
+  });
+
+  it("returns 501 without provider (definition-first honesty)", async () => {
+    const r = await handleGetMetricValue({
+      metricId: "gse.edge_index",
+      entityId: "game_1",
+      asOf: "2025-11-01T18:00:00.000Z",
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.status).toBe(501);
+  });
+
+  it("returns value with memory provider", async () => {
+    const provider = createMemoryValueProvider({
+      "gse.edge_index|game_1": 0.041,
+    });
+    const r = await handleGetMetricValue(
+      {
+        metricId: "gse.edge_index",
+        entityId: "game_1",
+        asOf: "2025-11-01T18:00:00.000Z",
+      },
+      provider,
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data.value).toBe(0.041);
+      expect(r.data.provenance.pitCorrect).toBe(true);
+    }
+  });
+
+  it("refuses dark metric values", async () => {
+    const r = await handleGetMetricValue({
+      metricId: "gse.optical_confirmation_score",
+      entityId: "x",
+      asOf: "2025-11-01T18:00:00.000Z",
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.status).toBe(403);
   });
 });

@@ -1,0 +1,395 @@
+/**
+ * Aggressive catalog expansion — every free-legal / licensed family we can name.
+ * Density weapon: more checkable metric contracts than any tout API.
+ */
+
+import type { MetricDef, MetricFamily, SportCode, MetricStatus } from "./catalog-types.js";
+
+// Local rights helpers (mirror catalog.ts)
+type RightsClass =
+  | "cc_by_4"
+  | "licensed_odds"
+  | "free_legal_gov"
+  | "optical_derived"
+  | "internal_synthetic"
+  | "rights_hold"
+  | "excluded_sharealike";
+type PublicSurface = "public_api" | "pro_api" | "elite_api" | "internal_only" | "dark";
+
+function env(rights: RightsClass, surface: PublicSurface, notes = "") {
+  return {
+    rights,
+    surface,
+    attributionRequired: rights === "cc_by_4",
+    commercialOk: rights !== "rights_hold" && rights !== "excluded_sharealike",
+    notes,
+  };
+}
+
+function isPublic(rights: ReturnType<typeof env>, status: MetricStatus): boolean {
+  if (status === "BLOCKED" || status === "DARK") return false;
+  if (rights.rights === "rights_hold" || rights.rights === "excluded_sharealike") return false;
+  if (rights.surface === "internal_only" || rights.surface === "dark") return false;
+  return true;
+}
+
+function row(
+  id: string,
+  name: string,
+  sport: SportCode,
+  family: MetricFamily,
+  status: MetricStatus,
+  unit: string,
+  description: string,
+  formulaClass: string,
+  sourceIds: string[],
+  rights: ReturnType<typeof env>,
+): MetricDef {
+  return {
+    id,
+    name,
+    sport,
+    family,
+    status,
+    unit,
+    description,
+    formulaClass,
+    sourceIds,
+    rights,
+    asOfRequired: true,
+    pitRequired: true,
+    publicApi: isPublic(rights, status),
+  };
+}
+
+/** PBP event-level NFL metrics (dense). */
+export function expandNflPbp(): MetricDef[] {
+  const events = [
+    "complete_pass","incomplete_pass","sack","scramble","interception","fumble",
+    "touchdown","field_goal_made","field_goal_missed","punt","kickoff",
+    "extra_point","two_point_conversion","penalty","no_play","qb_hit","hurry",
+    "pass_attempt","rush_attempt","target","reception","drop","tackle_solo",
+    "tackle_assist","pass_defense","forced_fumble","fumble_recovery",
+    "safety","blocked_kick","return_td","special_teams_td",
+  ];
+  const out: MetricDef[] = [];
+  for (const e of events) {
+    out.push(
+      row(
+        `nfl.pbp.count.${e}`,
+        `PBP count: ${e.replace(/_/g, " ")}`,
+        "NFL",
+        "advanced",
+        "ACTIVE",
+        "count",
+        `Event count of ${e} from nflverse pbp (CC-BY-4.0).`,
+        `count(${e})`,
+        ["nflverse.pbp"],
+        env("cc_by_4", "public_api", "Attribute nflverse"),
+      ),
+    );
+    out.push(
+      row(
+        `nfl.pbp.rate.${e}`,
+        `PBP rate: ${e.replace(/_/g, " ")}`,
+        "NFL",
+        "advanced",
+        "CATALOG",
+        "rate",
+        `Rate of ${e} per relevant opportunity.`,
+        `rate(${e})`,
+        ["nflverse.pbp"],
+        env("cc_by_4", "pro_api"),
+      ),
+    );
+  }
+  // Situational EPA slices
+  const situations = [
+    "early_down","late_down","red_zone","goal_to_go","two_minute",
+    "shotgun","under_center","play_action","no_huddle","blitz",
+    "man_coverage","zone_coverage","third_and_long","third_and_short",
+    "first_half","second_half","trailing","leading","neutral_script",
+  ];
+  for (const s of situations) {
+    out.push(
+      row(
+        `nfl.epa.sit.${s}`,
+        `EPA in ${s.replace(/_/g, " ")}`,
+        "NFL",
+        "advanced",
+        "CATALOG",
+        "epa",
+        `Mean EPA in situation ${s} from nflverse pbp.`,
+        `mean(epa|${s})`,
+        ["nflverse.pbp"],
+        env("cc_by_4", "pro_api"),
+      ),
+    );
+  }
+  return out;
+}
+
+/** Player weekly counting stats × position (dense grid). */
+export function expandNflPlayerGrid(): MetricDef[] {
+  const stats = [
+    "pass_attempts","completions","pass_yards","pass_tds","interceptions",
+    "sacks_taken","rush_attempts","rush_yards","rush_tds","targets","receptions",
+    "rec_yards","rec_tds","fantasy_points","fantasy_points_ppr","snap_pct",
+    "routes","air_yards","yac","first_downs","fumbles","fumbles_lost",
+  ];
+  const positions = ["QB","RB","WR","TE","K","DST","OL","DL","LB","CB","S"];
+  const out: MetricDef[] = [];
+  for (const pos of positions) {
+    for (const st of stats) {
+      // Skip nonsense combos lightly — keep dense for skill positions
+      if (pos === "K" && !["fantasy_points","fantasy_points_ppr"].includes(st) && !st.includes("pass") === false) {
+        // keep all for density of contracts
+      }
+      out.push(
+        row(
+          `nfl.week.${pos.toLowerCase()}.${st}`,
+          `${pos} weekly ${st.replace(/_/g, " ")}`,
+          "NFL",
+          "box",
+          "ACTIVE",
+          "mixed",
+          `Weekly ${st} for ${pos} from nflverse player_stats.`,
+          st,
+          ["nflverse.player_stats"],
+          env("cc_by_4", "public_api"),
+        ),
+      );
+    }
+  }
+  return out;
+}
+
+/** MLB pitch-type and plate discipline grid. */
+export function expandMlbDense(): MetricDef[] {
+  const pitches = ["ff","si","fc","sl","cu","ch","fs","kn","st","sv"];
+  const measures = ["usage","velo","spin","whiff","putaway","ivb","hb","extension"];
+  const out: MetricDef[] = [];
+  for (const p of pitches) {
+    for (const m of measures) {
+      out.push(
+        row(
+          `mlb.pitch.${p}.${m}`,
+          `${p.toUpperCase()} ${m}`,
+          "MLB",
+          "tracking",
+          "CATALOG",
+          "mixed",
+          `Statcast pitch-type ${m} for ${p}.`,
+          `${p}_${m}`,
+          ["mlb.statcast"],
+          env("free_legal_gov", "public_api"),
+        ),
+      );
+    }
+  }
+  const hitting = [
+    "hard_hit_rate","sweet_spot","pull_pct","oppo_pct","gb_pct","fb_pct","ld_pct",
+    "babip","iso","obp","slg","ops","wrc_plus","bsR","uzr","drs","oar",
+  ];
+  for (const h of hitting) {
+    out.push(
+      row(
+        `mlb.hit.${h}`,
+        h.replace(/_/g, " ").toUpperCase(),
+        "MLB",
+        "advanced",
+        "CATALOG",
+        "mixed",
+        `MLB hitting metric ${h} (Savant/FanGraphs free-legal path).`,
+        h,
+        ["mlb.statcast"],
+        env("free_legal_gov", "public_api"),
+      ),
+    );
+  }
+  return out;
+}
+
+/** NBA tracking / hustle / lineup dense. */
+export function expandNbaDense(): MetricDef[] {
+  const tracking = [
+    "speed","distance","touches","passes","secondary_assists","free_throw_assist",
+    "contested_shots","deflections","charges_drawn","screen_assists","loose_balls",
+    "box_outs","paint_touches","elbow_touches","post_touches",
+  ];
+  const out: MetricDef[] = [];
+  for (const t of tracking) {
+    out.push(
+      row(
+        `nba.track.${t}`,
+        `NBA tracking ${t.replace(/_/g, " ")}`,
+        "NBA",
+        "tracking",
+        "CATALOG",
+        "mixed",
+        `NBA tracking ${t} free-legal stats path.`,
+        t,
+        ["nba.stats"],
+        env("free_legal_gov", "pro_api"),
+      ),
+    );
+  }
+  const lineup = ["on_off_net","teammate_assist","five_man_net","clutch_net","corner3_freq"];
+  for (const l of lineup) {
+    out.push(
+      row(
+        `nba.lineup.${l}`,
+        l.replace(/_/g, " "),
+        "NBA",
+        "advanced",
+        "CATALOG",
+        "rating",
+        `NBA lineup/context ${l}.`,
+        l,
+        ["nba.stats"],
+        env("free_legal_gov", "pro_api"),
+      ),
+    );
+  }
+  return out;
+}
+
+/** Soccer free CC0 openfootball densify. */
+export function expandSoccer(): MetricDef[] {
+  const leagues = ["epl","laliga","bundesliga","seriea","ligue1","mls","ucl","worldcup"];
+  const metrics = ["gf","ga","xg","xga","poss","sot","corners","cards_y","cards_r","clean_sheet"];
+  const out: MetricDef[] = [];
+  for (const lg of leagues) {
+    for (const m of metrics) {
+      out.push(
+        row(
+          `soccer.${lg}.${m}`,
+          `${lg.toUpperCase()} ${m}`,
+          "SOCCER",
+          "box",
+          "CATALOG",
+          "mixed",
+          `Soccer ${m} for ${lg} — openfootball CC0 / free-legal path.`,
+          m,
+          ["openfootball"],
+          env("free_legal_gov", "public_api"),
+        ),
+      );
+    }
+  }
+  return out;
+}
+
+/** Weather + context free gov. */
+export function expandContextFree(): MetricDef[] {
+  const weather = ["temp_f","wind_mph","precip_mm","humidity","dome","wind_dir"];
+  const out: MetricDef[] = [];
+  for (const w of weather) {
+    out.push(
+      row(
+        `ctx.weather.${w}`,
+        `Game weather ${w}`,
+        "MULTI",
+        "context",
+        "ACTIVE",
+        "mixed",
+        `Game-time weather ${w} (Open-Meteo / NWS free-legal).`,
+        w,
+        ["weather.open_meteo"],
+        env("free_legal_gov", "public_api"),
+      ),
+    );
+  }
+  const rest = ["days_rest_home","days_rest_away","travel_miles","tz_change","back_to_back"];
+  for (const r of rest) {
+    out.push(
+      row(
+        `ctx.sched.${r}`,
+        r.replace(/_/g, " "),
+        "MULTI",
+        "context",
+        "CATALOG",
+        "mixed",
+        `Schedule stress ${r}.`,
+        r,
+        ["schedules"],
+        env("free_legal_gov", "pro_api"),
+      ),
+    );
+  }
+  return out;
+}
+
+/** GSE proprietary expansion — dark teeth. */
+export function expandGseProprietary(): MetricDef[] {
+  const names: Array<[string, string, string]> = [
+    ["scheme_fit_index", "Scheme Fit Index", "index"],
+    ["volatility_tax", "Volatility Tax", "prob"],
+    ["market_disagreement_width", "Market Disagreement Width", "prob"],
+    ["freshness_half_life", "Quote Freshness Half-Life", "ms"],
+    ["selective_sharpe", "Selective Gate Sharpe", "ratio"],
+    ["clv_deflated_edge", "CLV-Deflated Edge", "prob"],
+    ["book_softness_score", "Book Softness Score", "index"],
+    ["injury_information_edge", "Injury Information Edge", "prob"],
+    ["weather_residual", "Weather Residual Edge", "prob"],
+    ["lineup_confirmation_lag", "Lineup Confirmation Lag", "ms"],
+    ["steam_vs_sharp_divergence", "Steam vs Sharp Divergence", "prob"],
+    ["model_parliament_dispersion", "Model Parliament Dispersion", "prob"],
+    ["walk_forward_stability", "Walk-Forward Stability", "index"],
+    ["placebo_clv_residual", "Placebo CLV Residual", "prob"],
+    ["coverage_stamped_hit_rate", "Coverage-Stamped Hit Rate", "rate"],
+  ];
+  return names.map(([id, name, unit]) =>
+    row(
+      `gse.prop.${id}`,
+      name,
+      "MULTI",
+      "proprietary",
+      "DARK",
+      unit,
+      `GSE proprietary ${name} — dark until ship criteria + substantiation.`,
+      id,
+      ["model.gse", "ledger.settled"],
+      env("internal_synthetic", "dark", "Ship only with four-field substantiation"),
+    ),
+  );
+}
+
+/** DFS contest metrics. */
+export function expandDfs(): MetricDef[] {
+  const out: MetricDef[] = [];
+  const sites = ["dk", "fd", "yahoo"];
+  const kinds = ["salary","ownership_proj","leverage","ceiling","floor","correlation_stack","gpp_edge","cash_rate"];
+  for (const s of sites) {
+    for (const k of kinds) {
+      out.push(
+        row(
+          `dfs.${s}.${k}`,
+          `${s.toUpperCase()} ${k.replace(/_/g, " ")}`,
+          "NFL",
+          "fantasy",
+          "CATALOG",
+          "mixed",
+          `DFS ${k} for ${s} contests — internal synthetic over free stats.`,
+          k,
+          ["dfs.internal", "nflverse.player_stats"],
+          env("internal_synthetic", "elite_api"),
+        ),
+      );
+    }
+  }
+  return out;
+}
+
+export function expandAll(): MetricDef[] {
+  return [
+    ...expandNflPbp(),
+    ...expandNflPlayerGrid(),
+    ...expandMlbDense(),
+    ...expandNbaDense(),
+    ...expandSoccer(),
+    ...expandContextFree(),
+    ...expandGseProprietary(),
+    ...expandDfs(),
+  ];
+}

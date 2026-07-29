@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * GET /api/gse/v1/metrics — list rights-tagged metrics.
- * Query: sport, family, status, publicOnly (default true)
+ * Query: sport, family, status, publicOnly (default true), limit, offset
  */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const sp = req.nextUrl.searchParams;
@@ -21,7 +21,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       { status: result.status },
     );
   }
-  return NextResponse.json(result.data, {
-    headers: { "X-GSE-API": "stats.v1" },
-  });
+  const limit = Math.min(Number(sp.get("limit") ?? 100) || 100, 500);
+  const offset = Math.max(Number(sp.get("offset") ?? 0) || 0, 0);
+  const page = result.data.metrics.slice(offset, offset + limit);
+  return NextResponse.json(
+    {
+      metrics: page,
+      page: { limit, offset, total: result.data.metrics.length, returned: page.length },
+      meta: result.data.meta,
+    },
+    { headers: { "X-GSE-API": "stats.v1" } },
+  );
 }
