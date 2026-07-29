@@ -53,12 +53,15 @@ export function resolveSessionTier(
   if (session.stripeTier) {
     return { tier: session.stripeTier, source: "session.stripeTier", spoofBlocked: false };
   }
-  if (session.stripePriceId && PRICE_TO_TIER[session.stripePriceId]) {
-    return {
-      tier: PRICE_TO_TIER[session.stripePriceId],
-      source: "session.stripePriceId",
-      spoofBlocked: false,
-    };
+  if (session.stripePriceId) {
+    const mapped = PRICE_TO_TIER[session.stripePriceId];
+    if (mapped) {
+      return {
+        tier: mapped,
+        source: "session.stripePriceId",
+        spoofBlocked: false,
+      };
+    }
   }
   const q = normalizeTier(session.queryTier ?? undefined);
   if (q) {
