@@ -12,3 +12,15 @@ export { buildStatsOpenApi } from "./openapi.js";
 export { expandAll } from "./catalog-expand.js";
 export * from "./providers/registry.js";
 export * from "./sources/external-registry.js";
+
+export {
+  createOpenMeteoProvider,
+  liveOpenMeteoClient,
+  parseLatLon,
+  type OpenMeteoClient,
+} from "./providers/open-meteo.js";
+export {
+  NflverseMemoryStore,
+  createNflverseMemoryProvider,
+  type NflverseRow,
+} from "./providers/nflverse-memory.js";
