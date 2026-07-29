@@ -53,7 +53,7 @@ export const HYDRATE_FORCE_STEPS: readonly HydrateStep[] = [
     order: 5,
     id: "gate_ready",
     action:
-      "Selective gate ← readyForEdgeFire + dual-asOf before any fire",
+      "Selective gate ← evaluateFireAuthority (publicFire) + dual-asOf before public fire",
     plane: "gate",
     oddsApiRequired: false,
     liveBoardRequired: false,

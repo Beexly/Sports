@@ -121,35 +121,46 @@ describe("scoreTopologyHealth", () => {
     expect(h.planeScores.optical).toBe(100); // dark is correct
   });
 
-  it("ready when markets + box healthy", () => {
-    const h = scoreTopologyHealth({
+  it("topology ready when markets + box healthy, but readyForEdgeFire needs LIVE_BOARD", () => {
+    const planes = {
+      markets: {
+        lastAsOf: "2025-11-01T17:50:00.000Z",
+        rowsAvailable: 50,
+        errorRate: 0,
+      },
+      box_advanced: {
+        lastAsOf: "2025-11-01T12:00:00.000Z",
+        rowsAvailable: 200,
+        errorRate: 0.01,
+      },
+      edge_gate: {
+        lastAsOf: "2025-11-01T17:00:00.000Z",
+        rowsAvailable: 10,
+        errorRate: 0,
+      },
+      weather: {
+        lastAsOf: "2025-11-01T17:30:00.000Z",
+        rowsAvailable: 1,
+        errorRate: 0,
+      },
+    };
+    const off = scoreTopologyHealth({
       now: "2025-11-01T18:00:00.000Z",
       liveBoardEnabled: false,
-      planes: {
-        markets: {
-          lastAsOf: "2025-11-01T17:50:00.000Z",
-          rowsAvailable: 50,
-          errorRate: 0,
-        },
-        box_advanced: {
-          lastAsOf: "2025-11-01T12:00:00.000Z",
-          rowsAvailable: 200,
-          errorRate: 0.01,
-        },
-        edge_gate: {
-          lastAsOf: "2025-11-01T17:00:00.000Z",
-          rowsAvailable: 10,
-          errorRate: 0,
-        },
-        weather: {
-          lastAsOf: "2025-11-01T17:30:00.000Z",
-          rowsAvailable: 1,
-          errorRate: 0,
-        },
-      },
+      planes,
     });
-    expect(h.readyForEdgeFire).toBe(true);
-    expect(h.score).toBeGreaterThan(50);
+    expect(off.topologyReady).toBe(true);
+    expect(off.readyForEdgeFire).toBe(false);
+    expect(off.blockers).toContain("live_board_off");
+    expect(off.score).toBeGreaterThan(50);
+
+    const on = scoreTopologyHealth({
+      now: "2025-11-01T18:00:00.000Z",
+      liveBoardEnabled: true,
+      planes,
+    });
+    expect(on.topologyReady).toBe(true);
+    expect(on.readyForEdgeFire).toBe(true);
   });
 });
 

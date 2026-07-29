@@ -308,3 +308,48 @@ describe("board gate consumer — excluded candidates are reported, never droppe
     expect(isFullyUncalibrated(evaluation)).toBe(true);
   });
 });
+
+describe("fire-authority composition on board gate", () => {
+  it("multiprob FIRE is held (publicFire=false) when LIVE_BOARD off — production default", () => {
+    const evaluation = evaluateBoardGate(
+      calRows(400, "nfl|MONEYLINE"),
+      candidates(60, "nfl|MONEYLINE"),
+      0,
+    );
+    const multiprobFires = evaluation.outcomes.filter((o) => o.code === "FIRE");
+    expect(multiprobFires.length).toBeGreaterThan(0);
+    expect(multiprobFires.every((o) => o.publicFire === false)).toBe(true);
+    expect(evaluation.fireAuthority.liveBoardOn).toBe(false);
+    expect(evaluation.fireAuthority.held).toBe(multiprobFires.length);
+    expect(evaluation.fireAuthority.authorized).toBe(0);
+  });
+
+  it("publicFire true only when LIVE_BOARD on and topology inputs ok", () => {
+    const evaluation = evaluateBoardGate(
+      calRows(400, "nfl|MONEYLINE"),
+      candidates(60, "nfl|MONEYLINE"),
+      0,
+      {},
+      [],
+      { liveBoardOn: true, dualAsOfOk: true, quoteFresh: true, calibrationReady: true },
+    );
+    const multiprobFires = evaluation.outcomes.filter((o) => o.code === "FIRE");
+    expect(multiprobFires.length).toBeGreaterThan(0);
+    expect(multiprobFires.every((o) => o.publicFire === true)).toBe(true);
+    expect(evaluation.fireAuthority.authorized).toBe(multiprobFires.length);
+  });
+
+  it("dual-asOf fail holds publicFire even if LIVE_BOARD on", () => {
+    const evaluation = evaluateBoardGate(
+      calRows(400, "nfl|MONEYLINE"),
+      candidates(60, "nfl|MONEYLINE"),
+      0,
+      {},
+      [],
+      { liveBoardOn: true, dualAsOfOk: false, dualAsOfCode: "quote_stale" },
+    );
+    const multiprobFires = evaluation.outcomes.filter((o) => o.code === "FIRE");
+    expect(multiprobFires.every((o) => o.publicFire === false)).toBe(true);
+    expect(multiprobFires[0]?.authorityHoldReason).toBe("dual_asof_fail");
+  });
+});

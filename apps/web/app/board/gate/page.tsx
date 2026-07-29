@@ -152,18 +152,26 @@ export default async function GatePage(): Promise<JSX.Element> {
   // threshold is disclosed on the page so a reader can judge the bar for
   // themselves rather than take the outcomes on trust.
   const TAU = 0;
+  // Fire-authority composition: LIVE_BOARD product fire defaults OFF.
+  // Multiprob FIRE can still appear as multiprob classification; publicFire
+  // stays false until a founder-gated LIVE_BOARD flip is wired here explicitly.
   const evaluation = evaluateBoardGate(
     source.calibration.rows,
     source.candidates.rows,
     TAU,
     {},
     source.candidates.excluded,
+    { liveBoardOn: false },
   );
 
   const counts = evaluation.outcomes.reduce<Record<string, number>>((acc, o) => {
     acc[o.code] = (acc[o.code] ?? 0) + 1;
     return acc;
   }, {});
+  const publicFires = evaluation.outcomes.filter((o) => o.publicFire).length;
+  const multiprobFires = evaluation.outcomes.filter((o) => o.code === "FIRE").length;
+  counts["PUBLIC_FIRE"] = publicFires;
+  counts["MULTIPROB_FIRE_HELD"] = multiprobFires - publicFires;
 
   const claim = inputClaim(mode);
 

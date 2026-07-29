@@ -332,6 +332,12 @@ export interface TopologyHealth {
   readonly score: number; // 0..100
   readonly planeScores: Record<string, number>;
   readonly blockers: string[];
+  /** Markets + box planes healthy enough to *consider* fire — not authorization. */
+  readonly topologyReady: boolean;
+  /**
+   * Product-ready for edge fire. Requires topologyReady AND liveBoardEnabled.
+   * LIVE_BOARD off ⇒ always false (founder gate).
+   */
   readonly readyForEdgeFire: boolean;
 }
 
@@ -391,12 +397,17 @@ export function scoreTopologyHealth(input: TopologyHealthInput): TopologyHealth 
   }
 
   const score = weightSum > 0 ? Math.round(acc / weightSum) : 0;
-  const readyForEdgeFire =
+  const topologyReady =
     (planeScores.markets ?? 0) >= 60 &&
     (planeScores.box_advanced ?? 0) >= 50 &&
     !blockers.some((b) => b.startsWith("markets:") || b.startsWith("box_advanced:"));
+  // Law: never readyForEdgeFire while LIVE_BOARD off — topology alone is not fire authority.
+  const readyForEdgeFire = topologyReady && input.liveBoardEnabled;
+  if (topologyReady && !input.liveBoardEnabled) {
+    blockers.push("live_board_off");
+  }
 
-  return { score, planeScores, blockers, readyForEdgeFire };
+  return { score, planeScores, blockers, topologyReady, readyForEdgeFire };
 }
 
 // ── Improved topology description (for API) ───────────────────────────────
@@ -422,9 +433,9 @@ export function describeRealtimeTopology() {
       "optional SSE fanout when LIVE_BOARD on",
     ],
     nextForce: [
-      "PlayerGameStat → NflverseMemoryStore write_through cron",
+      "PlayerGameStat → NflverseMemoryStore write_through cron (landed)",
       "refresh-odds → cron_delta runner",
-      "session tier → value reads (not ?tier= only)",
+      "session tier → value reads (landed)",
       "Redis online store when multi-instance",
     ],
     consistencyBudgetMs: DEFAULT_CONSISTENCY_BUDGET_MS,

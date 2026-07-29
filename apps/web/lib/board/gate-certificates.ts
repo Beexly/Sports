@@ -89,6 +89,7 @@ export async function certifyBoardGateEvaluation(
       market,
       stratumKey: outcome.stratum,
       modelVersion,
+      // Product fire requires publicFire (fire-authority). Multiprob FIRE alone is not public.
       admitted: outcome.code === "FIRE",
       fired: outcome.code === "FIRE",
       ...(fired

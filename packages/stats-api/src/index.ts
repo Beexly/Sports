@@ -54,3 +54,20 @@ export {
   selfClvFromArchive,
   type FormulaResult,
 } from "./formulas/derived.js";
+
+export {
+  MemoryOnlineStore,
+  onlineKey,
+  assertNotPublicApiPath,
+  ONLINE_PIPELINE_GUIDANCE,
+  type OnlineRow,
+  type OnlineStore,
+} from "./online/redis-store.js";
+
+export {
+  makeMemoryClosingArchive,
+  selfClvFromClosingArchive,
+  type QuoteTouch,
+  type ClosingArchiveEntry,
+  type ClosingArchive,
+} from "./archive/closing-archive.js";

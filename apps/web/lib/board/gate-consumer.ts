@@ -42,6 +42,10 @@ import {
   type MultiprobGateOptions,
   type SelectiveGateReport,
 } from "@sports/prediction-engine/src/edge-lab/selective-gate.js";
+import {
+  evaluateFireAuthority,
+  type FireAuthorityDecision,
+} from "@sports/prediction-engine/src/edge-lab/fire-authority.js";
 
 /**
  * Why a candidate did or did not fire. These are the only four answers, and
@@ -84,6 +88,14 @@ export interface GateOutcome {
   readonly width?: number;
   /** Which estimator produced the interval. Paid detail. */
   readonly multiprobSource?: FiredDecision["multiprobSource"];
+  /**
+   * Product authorization. true only when multiprob code is FIRE AND
+   * evaluateFireAuthority allows (LIVE_BOARD + dual-asOf + cal + quote).
+   * Multiprob FIRE with publicFire=false is the production default.
+   */
+  readonly publicFire: boolean;
+  /** Fire-authority refuse reason when multiprob FIRE was held. */
+  readonly authorityHoldReason?: string;
 }
 
 export interface BoardGateEvaluation {
@@ -97,6 +109,34 @@ export interface BoardGateEvaluation {
   /** Strata that could not be evaluated at all, with their settled-row counts. */
   readonly uncalibratedStrata: readonly { stratum: string; calibrationRows: number }[];
   readonly tau: number;
+  /**
+   * Fire-authority composition applied after multiprob.
+   * LIVE_BOARD defaults false — multiprob FIRE is held, never public-published.
+   */
+  readonly fireAuthority: {
+    readonly liveBoardOn: boolean;
+    readonly dualAsOfOk: boolean;
+    readonly calibrationReady: boolean;
+    readonly quoteFresh: boolean;
+    /** How many multiprob FIREs were held by fire-authority. */
+    readonly held: number;
+    /** How many multiprob FIREs survived authority (requires liveBoardOn). */
+    readonly authorized: number;
+  };
+}
+
+/** Optional product topology inputs for fire-authority composition. */
+export interface FireAuthorityBoardOpts {
+  /** Production default false. Founder-only flip. */
+  readonly liveBoardOn?: boolean;
+  /** Dual-asOf six-gate already passed. Default true for multiprob-only boards. */
+  readonly dualAsOfOk?: boolean;
+  readonly dualAsOfCode?: string;
+  readonly dualAsOfEdge?: number;
+  /** Certificate / cohort ready. Default true when cal rows ≥ min. */
+  readonly calibrationReady?: boolean;
+  /** Quote plane within dynamic freshness. Default true when odds built. */
+  readonly quoteFresh?: boolean;
 }
 
 const REASONS: Record<GateOutcomeCode, string> = {
@@ -151,6 +191,7 @@ export function evaluateBoardGate(
   options: MultiprobGateOptions = {},
   /** Candidates that could not be built into gate rows. Reported, never dropped. */
   excluded: readonly ExcludedCandidate[] = [],
+  authority: FireAuthorityBoardOpts = {},
 ): BoardGateEvaluation {
   const report = applySelectiveGate(calibrationRows, candidateRows, tau, options);
 
@@ -165,17 +206,50 @@ export function evaluateBoardGate(
   const widthCap = options.maxWidthForFire;
   const widthVetoed = new Set(report.widthVetoedRowIds);
 
+  // Product defaults: LIVE_BOARD hard off. Multiprob FIRE is held, not published.
+  const liveBoardOn = authority.liveBoardOn === true;
+  const dualAsOfOk = authority.dualAsOfOk !== false;
+  const quoteFresh = authority.quoteFresh !== false;
+  // Calibration readiness: explicit override, else any stratum that met min.
+  const anyStratumCalibrated = [...calCountByStratum.values()].some(
+    (n) => n >= MIN_STRATUM_CALIBRATION,
+  );
+  const calibrationReady =
+    authority.calibrationReady !== undefined
+      ? authority.calibrationReady
+      : anyStratumCalibrated;
+
+  let held = 0;
+  let authorized = 0;
+
   const outcomes: GateOutcome[] = candidateRows.map((row) => {
     const fired = firedById.get(row.rowId);
     if (fired) {
+      const auth: FireAuthorityDecision = evaluateFireAuthority({
+        dualAsOfOk,
+        dualAsOfEdge: authority.dualAsOfEdge ?? fired.lcbEdge,
+        dualAsOfCode: authority.dualAsOfCode,
+        calibrationReady,
+        liveBoardOn,
+        quoteFresh,
+        selectiveWouldFire: true,
+        edge: fired.lcbEdge,
+      });
+      if (auth.fire) {
+        authorized += 1;
+      } else {
+        held += 1;
+      }
       return {
         rowId: row.rowId,
         stratum: row.stratum,
-        code: "FIRE",
+        code: "FIRE" as const,
         reason: REASONS.FIRE,
         lcbEdge: fired.lcbEdge,
         width: fired.width,
         multiprobSource: fired.multiprobSource,
+        publicFire: auth.fire,
+        authorityHoldReason: auth.fire ? undefined : auth.reason,
       };
     }
 
@@ -189,6 +263,7 @@ export function evaluateBoardGate(
         stratum: row.stratum,
         code: "INSUFFICIENT_CALIBRATION",
         reason: REASONS.INSUFFICIENT_CALIBRATION,
+        publicFire: false,
       };
     }
 
@@ -207,6 +282,7 @@ export function evaluateBoardGate(
         stratum: row.stratum,
         code: "NO_BET_WIDTH",
         reason: REASONS.NO_BET_WIDTH,
+        publicFire: false,
       };
     }
 
@@ -215,6 +291,7 @@ export function evaluateBoardGate(
       stratum: row.stratum,
       code: "NO_BET_LCB",
       reason: REASONS.NO_BET_LCB,
+      publicFire: false,
     };
   });
 
@@ -227,6 +304,7 @@ export function evaluateBoardGate(
       stratum: ex.stratum,
       code: "NOT_EVALUATED_MISSING_INPUTS",
       reason: `${REASONS.NOT_EVALUATED_MISSING_INPUTS} Missing: ${ex.missing.join(", ")}.`,
+      publicFire: false,
     });
   }
 
@@ -236,7 +314,20 @@ export function evaluateBoardGate(
     .filter((s) => s.calibrationRows < MIN_STRATUM_CALIBRATION)
     .sort((a, b) => a.stratum.localeCompare(b.stratum));
 
-  return { outcomes, report: blindRealizedStats(report), uncalibratedStrata, tau };
+  return {
+    outcomes,
+    report: blindRealizedStats(report),
+    uncalibratedStrata,
+    tau,
+    fireAuthority: {
+      liveBoardOn,
+      dualAsOfOk,
+      calibrationReady,
+      quoteFresh,
+      held,
+      authorized,
+    },
+  };
 }
 
 /**
