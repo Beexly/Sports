@@ -265,3 +265,41 @@ export function handleHydrationStrategies() {
     },
   };
 }
+
+
+import {
+  computeDualAsOfEdge,
+  describeRealtimeTopology,
+  scoreTopologyHealth,
+  type DualAsOfEdgeInput,
+  type TopologyHealthInput,
+} from "./hydration/realtime-truth.js";
+
+export function handleRealtimeTruthCatalog() {
+  return {
+    ok: true as const,
+    status: 200 as const,
+    data: describeRealtimeTopology(),
+  };
+}
+
+export function handleDualAsOfEdge(body: DualAsOfEdgeInput) {
+  const result = computeDualAsOfEdge(body);
+  if (!result.ok) {
+    return {
+      ok: false as const,
+      status: 422 as const,
+      code: result.code,
+      error: result.error,
+    };
+  }
+  return { ok: true as const, status: 200 as const, data: result };
+}
+
+export function handleTopologyHealth(body: TopologyHealthInput) {
+  return {
+    ok: true as const,
+    status: 200 as const,
+    data: scoreTopologyHealth(body),
+  };
+}
