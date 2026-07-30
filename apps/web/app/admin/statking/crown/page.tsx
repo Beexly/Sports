@@ -20,7 +20,7 @@ export default async function Page() {
     <Shell title="King of Stats Crown">
       <StatusRibbon status="fixture" label="Crown view — snapshot data, not live" />
       <Cards items={[
-        { label: "King Standard", value: "61/100", note: "Autonomous foundation, not finished" },
+        { label: "King Standard", value: "61/100", note: "Agent-assisted foundation, not finished" },
         { label: "Sources", value: s.source_count },
         { label: "Active metrics", value: m.active_calculated_count },
         { label: "Rights records", value: rights.rights_count },
@@ -73,7 +73,7 @@ export default async function Page() {
             action: String(r.recommended_action ?? "")
           }))}
           maxRows={25}
-          caption="ROI-ranked source activation pipeline"
+          caption="Priority-ranked source activation pipeline"
         />
       </div>
       <div>

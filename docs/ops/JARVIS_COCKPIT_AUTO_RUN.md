@@ -72,7 +72,7 @@ Agents should advance **without** LIVE_BOARD:
 4. Stale-ingestion alerts → decision queue (data-reliability nextAction).  
 5. Cockpit surfaces still DESIGNED: Tasks, Moderation, Film Room — implement as **draft queues**, not public publish.  
 6. Memory surface NOT_WIRED → candidate writes only (protocol).  
-7. LiteLLM budgets when free keys exist; until then Groq/internal path if set.  
+7. ai-control-plane budgets when free keys exist; Groq/Gemini/xAI internal path if set. LiteLLM proxy is optional and not required.  
 8. Regenerate `GSE_RUNTIME_INVENTORY.json` after registry changes.  
 
 **Forbidden auto-upgrades:** ACTIVE status, public picks, affiliate publish, LIVE_BOARD.

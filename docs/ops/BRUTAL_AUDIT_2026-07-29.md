@@ -1,3 +1,5 @@
+> **Remediation status (MAIN):** free settle + jarvis snapshot + CANONICAL + archive + registry honesty + brand copy + satellite demotion + prove-neon. Remaining founder-only: Production Neon dual URLs + CRON_SECRET smoke.
+
 # BRUTAL AUDIT — GSE entire codebase (2026-07-29)
 
 **Standard:** world-class production OS, not agent theater.  

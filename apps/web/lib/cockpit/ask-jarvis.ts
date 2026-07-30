@@ -566,7 +566,7 @@ function answerWhatCanRun(summary: OwnerSummary): JarvisAnswer {
           "(settlement, calibration review, AI Ops spot-checks)."
         : `${canExecute.length} capabilities can execute autonomously; the rest answer or recommend only.`,
     supportingState: [
-      `Autonomous execution: ${canExecute.length} capabilities`,
+      `Can-execute (within draft gates): ${canExecute.length} capabilities`,
       `Can answer from live data: ${canAnswer.length} capabilities`,
       `Human-triggered (MANUAL): ${manual.map((c) => c.name).join(", ") || "none"}`,
       `Live decision queue: ${summary.decisions.length} item(s) awaiting the owner`,

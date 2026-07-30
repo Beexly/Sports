@@ -119,7 +119,7 @@ export default async function Page() {
 
       <InsightCard
         eyebrow={`King Standard · ${king.overall.basis}`}
-        headline="Autonomous foundation, not yet finished King of Stats"
+        headline="Agent-assisted foundation — King of Stats not finished"
         body="Every score above is computed from real state at request time, not asserted. A dimension without a live signal to compute from (yet) renders as 'not measured' instead of a number — never a placeholder guess. 90+ requires live feeds, licenses, and a settled-pick archive that clears the platform's own readiness floor."
         tone="warn"
       />

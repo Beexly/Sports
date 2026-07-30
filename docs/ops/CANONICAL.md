@@ -1,46 +1,41 @@
 # CANONICAL — single ops truth
 
-**If anything conflicts with this page + the code SoT paths below, discard the other document.**
+**If anything conflicts with this page + the code paths below, discard the other document.**
 
 ## Code SoT (always wins)
 
 | Layer | Path |
 |-------|------|
-| Operator OS | `apps/web/app/cockpit/*` Production `/cockpit` |
-| JARVIS | `apps/web/lib/jarvis/*` + `apps/web/lib/cockpit/jarvis*.ts` |
+| Operator OS | Production `/cockpit` · `apps/web/app/cockpit/*` |
+| JARVIS | `apps/web/lib/jarvis/*` · `apps/web/lib/cockpit/jarvis*.ts` |
 | Integrity | `apps/web/lib/platform/integrity-ledger.ts` |
-| Free data | `apps/web/lib/data-sources/*` + `docs/FREE_FIRST_DATA.md` |
-| AI dispatch | `apps/web/lib/ai-control-plane/*` (not a separate LiteLLM product until deployed) |
-| Agents | `lib/cockpit/agents.ts` · `lib/agents/*` · `lib/jarvis/agent-council.ts` — **externalActions: NONE** |
+| Free data + settle | `apps/web/lib/data-sources/*` · `docs/FREE_FIRST_DATA.md` |
+| AI dispatch | `apps/web/lib/ai-control-plane/*` (LiteLLM optional, not required) |
+| Agents | draft-only · `externalActions: NONE` · no public auto-publish |
 | Law | LIVE_BOARD off · oddsApiRequired=false · refuse-default · CPA blocked |
 
-## Thin ops docs (keep)
+## Thin ops docs (live root only)
 
-| Doc | Role |
-|-----|------|
-| `CANONICAL.md` | This file |
-| `CURRENT_STATE.md` | Runtime snapshot |
-| `OPEN_LEDGER.md` | Class A/B/C |
-| `CRON_MATRIX.md` | Crons |
-| `SMOKE.md` | Post-deploy smoke |
-| `CREDENTIALS_CHECKLIST.md` | Secrets |
-| `FOUNDER_ONLY_CHECKLIST.md` | Human checkboxes |
-| `CLAUDE_COWORK_PROMPT_P0.md` | Human-only walk-through |
-| `JARVIS_COCKPIT_AUTO_RUN.md` | AI-first run law |
-| `BRUTAL_AUDIT_2026-07-29.md` | Honesty audit |
-| `GSE_RUNTIME_INVENTORY.json` | Machine inventory |
+`CURRENT_STATE` · `OPEN_LEDGER` · `CRON_MATRIX` · `SMOKE` · `CREDENTIALS_CHECKLIST` · `FOUNDER_ONLY_CHECKLIST` · `FOUNDER_HANDOFF_MESSAGE` · `CLAUDE_COWORK_PROMPT_P0` · `JARVIS_COCKPIT_AUTO_RUN` · `BRUTAL_AUDIT_2026-07-29` · `FREE_FIRST_DATA` (under docs/) · runbooks that still gate go-live (`GO_LIVE_RUNBOOK`, `GATE_OPENING_RUNBOOK`, `STRIPE_GO_LIVE_CHECKLIST`, `PHASE_05B_REVEAL_PROTOCOL`, `INDEPENDENCE_GATES`, etc.)
 
-## Archive (non-canonical)
+## Archive
 
-`docs/ops/archive/**` — historical leverage lists, multi-master plans, CODEX/GROK mega-prompts.  
-Read for archaeology only. **Never treat as operator SoT.**
+`docs/ops/archive/**` — leverage lists, mega-prompts, dated audits. Archaeology only.
 
-## Explicit non-SoT
+`handoff/**` — session museum. See `handoff/00-READ-CANONICAL.md`.
 
-- Any Vite “Command Deck” / app-builder preview = **satellite map only**
-- Credit/leverage atlases = runway research, not product law
-- “Agents run the company autonomously” = **false**; seats are draft-only
+## Explicit lies to refuse
 
-## World-class rule
+- Vite/app-builder decks as operator OS  
+- “Agents run the company autonomously” for external actions  
+- LiteLLM as deployed product before proxy exists  
+- Public ROI / guaranteed wins  
+- Neon PROVEN without `scripts/ops/prove-neon.mjs` green  
 
-One operator OS. One integrity ledger. One free-first data doctrine. Archive the museum.
+## Founder human budget (max)
+
+1. Neon dual URLs (gse-postgres)  
+2. CRON_SECRET + redeploy  
+3. Smoke + optional free AI keys  
+
+Then: watch Production `/cockpit` only.

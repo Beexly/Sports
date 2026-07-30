@@ -47,7 +47,7 @@ This is the **single source of truth** for product law, runtime state, ops unloc
 | Pass | 4 complete → master-plan world-class polish |
 | class_A | **0** (re-run `gse-verify` after new code) |
 | SHIPPED | Dual CRON_SECRET auth · cron nodejs + force-dynamic · free Gamma path · honest board · prefire gate · own-feed PIT refuse · methodTag CLV · trust-gate / AI Council CI · CRON_MATRIX + smokes |
-| CODE_READY | Hydration stubs · Phase C harness (unverified) · multi-provider keys via control-plane (optional LiteLLM proxy (not deployed) not required) · durable receipts (needs Neon) |
+| CODE_READY | Hydration stubs · Phase C harness (unverified) · multi-provider keys via control-plane (no LiteLLM required) · durable receipts (needs Neon) |
 | PARKED | Overlay optical CV · Poly1305/CF Access/SPIFFE digression |
 
 **Verify alias:**
@@ -76,7 +76,7 @@ Do before credit theater. Production `sports-web`:
 
 **Same session — free AI keys (need free usage badly):**
 
-| Key | Source | ai-control-plane (optional LiteLLM later) role |
+| Key | Source | ai-control-plane role |
 |-----|--------|--------------|
 | `GEMINI_API_KEY` | Google AI Studio | gse-volume |
 | `GROQ_API_KEY` | console.groq.com | gse-volume fallback |
@@ -103,7 +103,7 @@ Do before credit theater. Production `sports-web`:
             │
             ├── /api/cron/*  (CRON_SECRET · force-dynamic · Node)
             │
-            └── optional LiteLLM proxy (not deployed)
+            └── optional LiteLLM later (not deployed)
                   ├── gse-volume: Gemini Flash-Lite → Groq → OpenRouter
                   ├── gse-reason: xAI Grok → Anthropic → fallback
                   ├── virtual keys + max_budget → control-plane ledger
@@ -136,10 +136,10 @@ Optional side plane:
 
 | Program | Offering (verify live) | Notes |
 |---------|------------------------|-------|
-| Microsoft Founders Hub | ~$1k Azure **without investor code** → entity verify → higher path (~$150k) | Optional Foundry via ai-control-plane (optional LiteLLM later); not SoT |
+| Microsoft Founders Hub | ~$1k Azure **without investor code** → entity verify → higher path (~$150k) | Optional Foundry via ai-control-plane; not SoT |
 | Neon for Startups | Self-funded credits | Cut DB bill |
 | Cloudflare for Startups | Bootstrapped ~$5–10k; partner much higher | R2 zero-egress · Workers · Zero Trust |
-| AWS Activate Founders | ~$1k–$5k self-funded | Secondary / Bedrock via ai-control-plane (optional LiteLLM later) |
+| AWS Activate Founders | ~$1k–$5k self-funded | Secondary / Bedrock via ai-control-plane |
 | Anthropic for Startups | Claude credits + rate limits | gse-reason |
 | Sentry for Startups | ~$5k/12mo if eligible | Error/perf |
 | PostHog free | Product + AI events | Funnel + agent telemetry |
@@ -189,7 +189,7 @@ Clerk · Auth0 free · Doppler · Inngest (~50k events) · Upstash free · Helic
 
 | Concern | Decision |
 |---------|----------|
-| Proxy | ai-control-plane (optional LiteLLM later); Admin UI = spend SoT |
+| Proxy | ai-control-plane; Admin UI = spend SoT |
 | Volume | Gemini Flash-Lite, Groq |
 | Reason | xAI Grok, Anthropic Claude |
 | Failover | OpenRouter / Together |
@@ -198,7 +198,7 @@ Clerk · Auth0 free · Doppler · Inngest (~50k events) · Upstash free · Helic
 | Caching | Prompt cache keys on SHADOW/tool loops |
 | Effort | Low reasoning on SHADOW/tool loops |
 | RAG | Neon pgvector first; xAI Collections prototype optional |
-| Cloud AI | Azure Foundry / Vertex / Bedrock **only via ai-control-plane (optional LiteLLM later)** |
+| Cloud AI | Azure Foundry / Vertex / Bedrock **only via ai-control-plane** |
 | Free-tier risk | Google free may train on data — paid for secrets |
 | Cost routing | User-facing quality on Claude/Grok; internal classify/normalize on Groq/Haiku |
 
@@ -239,7 +239,7 @@ Registry: `packages/stats-api/src/sources/external-registry.ts` · `EXTERNAL_LEV
 - Public ROI / “best stats” marketing  
 - Second primary DB replacing Neon  
 - DePIN as receipt SoT  
-- Direct Azure/Bedrock SDKs (ai-control-plane (optional LiteLLM later) only)  
+- Direct Azure/Bedrock SDKs (ai-control-plane only)  
 - Academic supercomputer as product dependency  
 - Parallel production on Hetzner while Vercel+Neon works  
 - GitHub Startups full claim without funding+partner  
@@ -278,7 +278,7 @@ Registry: `packages/stats-api/src/sources/external-registry.ts` · `EXTERNAL_LEV
 | Window | Focus | Success metric |
 |--------|-------|----------------|
 | Sitting 1 (45–90 min) | Neon URLs + CRON_SECRET + redeploy + smoke | 401/200 green |
-| Sitting 2 (30–60 min) | Gemini + Groq + xAI keys into Vercel | Keys present; one ai-control-plane (optional LiteLLM later) or internal call works |
+| Sitting 2 (30–60 min) | Gemini + Groq + xAI keys into Vercel | Keys present; one ai-control-plane or internal call works |
 | Sitting 3 (60 min) | Microsoft + Neon + CF + AWS applications | Apps submitted |
 | Sitting 4 (30 min) | PostHog + Langfuse + Sentry + Resend + Clarity/CF | Free telemetry live |
 | Later | Oracle VPS · Stripe · partner GitHub | Workers cheap · billing live |

@@ -17,11 +17,11 @@
 
 | Secret | Source | Use |
 |--------|--------|-----|
-| `GEMINI_API_KEY` | Google AI Studio | LiteLLM gse-volume |
+| `GEMINI_API_KEY` | Google AI Studio | ai-control-plane volume (optional) |
 | `GROQ_API_KEY` / `INTERNAL_LLM_API_KEY` | Groq console | Volume / internal LLM |
 | `INTERNAL_LLM_BASE_URL` | e.g. `https://api.groq.com/openai/v1` | Internal tier |
 | `INTERNAL_LLM_MODEL` | e.g. `llama-3.3-70b-versatile` | Internal tier |
-| `XAI_API_KEY` | console.x.ai | LiteLLM gse-reason |
+| `XAI_API_KEY` | console.x.ai | ai-control-plane reason (optional) |
 | `ANTHROPIC_API_KEY` | Anthropic Console | Quality reason path |
 
 **xAI data-share credits:** optional ~$150/mo (US); **do not enable** for governed/private prompts unless founder explicitly accepts training risk.

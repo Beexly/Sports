@@ -29,7 +29,7 @@ import {
   type PendingPick,
 } from "./free-settlement";
 
-const ODDS_KEY_TO_FREE: Record<string, Sport> = {
+export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
   americanfootball_ncaaf: "ncaaf",
   basketball_nba: "nba",
