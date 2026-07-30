@@ -12,7 +12,7 @@ export function Shell({ title, eyebrow, children }: { title: string; eyebrow?: s
       <Nav />
       <main id="main-content" className="flex-1 px-6 py-10 text-ion">
         <div className="mx-auto max-w-7xl">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-orbital-cyan">{eyebrow ?? "StatKing"}</p>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-orbital-cyan">{eyebrow ?? "Galaxy Stats"}</p>
           <h1 className="mt-2 text-4xl font-bold text-ion-white">{title}</h1>
           <div className="mt-8 space-y-8">{children}</div>
         </div>

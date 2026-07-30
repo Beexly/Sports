@@ -13,9 +13,9 @@ Updated: 2026-07-30.
 - [x] Gamma smoke: **401** bad Bearer, **200** good Bearer; `/api/health` db ok
 - [ ] Formal `npm run prove:neon` local run (runtime already proves db; run the script anyway to close it)
 
-## P0 — Push decision (new)
+## P0 — Push decision
 
-- [ ] Push the verified 7-file build-fix patch. main HEAD `4b4ae1e` does NOT build; prod is pinned to `1dbcca9`. Do not deploy from HEAD until pushed.
+- [x] Free-spine build-fix on main (`a3d015b` → HEAD `3dfbc726`). Stale "HEAD does not build" note retired 2026-07-30 APEX boot.
 
 ## P0 — Free AI keys
 

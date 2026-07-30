@@ -1,8 +1,8 @@
 import { Shell, Cards, DataTable, BarChart, StatusRibbon, SectionHeader } from "../_components";
 import { loadSources, loadSourceTargets } from "@/lib/statking/product";
 export const metadata = {
-  title: "Source Graph: Where StatKing Data Comes From",
-  description: "The candidate source graph and lineage behind StatKing intelligence.",
+  title: "Source Graph: Where Galaxy Stats Data Comes From",
+  description: "The candidate source graph and lineage behind Galaxy Stats intelligence.",
   alternates: { canonical: "/stats/source-graph" },
 };
 export default function Page() {
@@ -19,7 +19,7 @@ export default function Page() {
         { label: "License targets", value: t.top_50_requires_license.length }
       ]} />
       <p className="max-w-3xl text-ion-1">
-        The candidate source graph and lineage behind StatKing intelligence. Prioritized by activation difficulty and impact.
+        The candidate source graph and lineage behind Galaxy Stats intelligence. Prioritized by activation difficulty and impact.
       </p>
       <div className="border border-mineral bg-eclipse p-4">
         {/* "Highest moat" is a strategic attribute, not a warning — neutral tone.

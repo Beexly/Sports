@@ -2,7 +2,7 @@ import { Shell, Cards, DataTable, StatusRibbon, InsightCard, SectionHeader } fro
 import { loadDepthChart, playerNameMap } from "@/lib/statking/product";
 export const metadata = {
   title: "Depth Charts: Role & Opportunity by Team",
-  description: "Team depth charts mapped to StatKing role and opportunity signals.",
+  description: "Team depth charts mapped to Galaxy Stats role and opportunity signals.",
   alternates: { canonical: "/stats/depth" },
 };
 export default function Page() {
@@ -38,7 +38,7 @@ export default function Page() {
               lineage: (Array.isArray(d.source_lineage) ? d.source_lineage.join("; ") : String(d.source_lineage ?? "")) || "—"
             }))}
           maxRows={100}
-          caption="Depth chart spots by team and position with StatKing role and source lineage"
+          caption="Depth chart spots by team and position with Galaxy Stats role and source lineage"
         />
       </div>
     </Shell>

@@ -6,7 +6,7 @@ import { KING_DIMENSION_LABELS, KING_DIMENSION_ORDER, isMeasured } from "@/lib/s
 import { glossaryEntry } from "@/lib/glossary";
 
 export const metadata = {
-  title: "Galaxy StatKing: NFL Player & Team Intelligence",
+  title: "Galaxy Stats: NFL Player & Team Intelligence",
   description: "A rights-gated NFL stat intelligence system: players, teams, media signal, sources, and the proof behind every metric.",
   alternates: { canonical: "/stats" },
 };
@@ -41,7 +41,7 @@ export default async function Page() {
   const overallMeasured = king.overall.score !== null;
 
   return (
-    <Shell title="Galaxy StatKing" eyebrow="NFL intelligence">
+    <Shell title="Galaxy Stats" eyebrow="NFL intelligence">
       <StatusRibbon status="fixture" label="Snapshot data: fixture-backed, not a live feed" />
 
       <div className="border border-mineral bg-eclipse p-6 flex flex-col sm:flex-row items-start gap-8">
