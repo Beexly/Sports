@@ -65,9 +65,15 @@ describe("Agent task router", () => {
   });
 
   it("does not allow not-wired agents to receive executable tasks", () => {
-    const task = listSeedAgentTasks().find((seedTask) => seedTask.id === "clv-tracking-foundation");
+    const task = listSeedAgentTasks().find((seedTask) => seedTask.id === "memory-candidate-system");
     expect(task).toBeDefined();
     expect(routeAgentTask(task!).reason).toBe("NOT_WIRED_CANNOT_EXECUTE");
+  });
+
+  it("draft-only delta can draft CLV prove work but cannot execute external", () => {
+    const task = listSeedAgentTasks().find((seedTask) => seedTask.id === "clv-tracking-foundation");
+    expect(task).toBeDefined();
+    expect(routeAgentTask(task!).reason).toBe("DRAFT_ONLY_CANNOT_EXECUTE");
   });
 
   it("dedupes repeated tasks by updating instead of spamming", () => {

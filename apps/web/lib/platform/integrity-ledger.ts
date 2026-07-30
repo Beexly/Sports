@@ -494,6 +494,21 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     failureMode: "team+date match can miss externalId games; DISPUTED holds; unpaid Odds is not a defect",
     nextAction: "Smoke settle-picks without THE_ODDS_API_KEY on Production Neon; compare sample grades to paid path when available.",
   },
+  {
+    id: "free-first-data",
+    name: "Free-first data plane (ESPN/henrygd/Meteo/Gamma)",
+    category: "data-sources",
+    builtStatus: "YES", wiredStatus: "YES", provenStatus: "PARTIAL", publicSafeStatus: "PARTIAL",
+    ownerGate: "facts-only free adapters; commercial display rights separate; public performance still gated",
+    evidenceRefs: [
+      "apps/web/lib/data-sources/free-first-ingest.ts",
+      "docs/FREE_FIRST_DATA.md",
+      "npm run free:doctor",
+    ],
+    lastVerifiedAt: null,
+    failureMode: "rate limits / seasonal empty boards look like outages without free:doctor",
+    nextAction: "Persist free scores into DB on Production Neon; keep paid Odds optional enrichment only.",
+  },
 
 ];
 

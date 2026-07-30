@@ -74,7 +74,7 @@ describe("workflow event runtime and queues", () => {
   it("pauses unsafe queue work truthfully when Redis or approvals are missing", () => {
     const draftTask = listSeedAgentTasks().find((task) => task.id === "content-review-before-newsletter")!;
     const ownerTask = listSeedAgentTasks().find((task) => task.id === "public-picks-gate")!;
-    const notWiredTask = listSeedAgentTasks().find((task) => task.id === "clv-tracking-foundation")!;
+    const notWiredTask = listSeedAgentTasks().find((task) => task.id === "memory-candidate-system")!;
     expect(enqueueSafeAgentTask(draftTask, false).state).toBe("PAUSED_OWNER_APPROVAL");
     expect(enqueueSafeAgentTask(ownerTask, true).state).toBe("BLOCKED");
     expect(enqueueSafeAgentTask(notWiredTask, true).state).toBe("BLOCKED");

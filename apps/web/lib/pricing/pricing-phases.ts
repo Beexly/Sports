@@ -120,7 +120,7 @@ export const PRICING_PHASES: readonly PricingPhase[] = [
     name: "Authority",
     order: 3,
     trigger:
-      "Multi-season verified positive ROI and category authority: pricing power earned, not claimed.",
+      "Multi-season verified positive units record and category authority: pricing power earned under public gates, not claimed early.",
     triggerMetrics: {
       minCanonicalSettledPicks: 2000,
       requiresPublishedCalibration: true,
