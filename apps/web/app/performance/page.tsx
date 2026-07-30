@@ -126,8 +126,16 @@ export default async function PerformancePage() {
   // Gate closed: bootstrap state only. No DB query, no track-record claim.
   if (!gates.canExposePerformanceStats) {
     const demoActive = isStubMode() && isDemoPicksEnabled();
+    const startOfDay = new Date();
+    startOfDay.setUTCHours(0, 0, 0, 0);
     const todayPickCount = await db.pick
-      .count({ where: { isPublished: true, result: "PENDING" } })
+      .count({
+        where: {
+          isPublished: true,
+          result: "PENDING",
+          generatedAt: { gte: startOfDay },
+        },
+      })
       .catch(() => 0);
 
     return (

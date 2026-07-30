@@ -44,10 +44,12 @@ export async function fetchNhlWebScores(
     out.push({
       sourceId: "espn-public-api",
       sport: "nhl",
-      externalId: String(g.id),
-      date: (g.startTimeUTC ?? date).slice(0, 10),
+      gameId: String(g.id),
+      startTime: g.startTimeUTC ?? date,
       state,
       completed,
+      statusDetail: g.gameState ?? "",
+      venue: null,
       home: {
         team: homeName,
         abbreviation: g.homeTeam?.abbrev ?? homeName.slice(0, 3).toUpperCase(),

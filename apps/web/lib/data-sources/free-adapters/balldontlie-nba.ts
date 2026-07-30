@@ -56,10 +56,12 @@ export async function fetchBalldontlieScores(
     out.push({
       sourceId: "espn-public-api",
       sport: "nba",
-      externalId: String(g.id),
-      date: (g.date ?? date).slice(0, 10),
+      gameId: String(g.id),
+      startTime: g.date ?? date,
       state,
       completed,
+      statusDetail: g.status ?? "",
+      venue: null,
       home: {
         team: homeName,
         abbreviation: g.home_team?.abbreviation ?? homeName.slice(0, 3).toUpperCase(),

@@ -42,10 +42,12 @@ function henryToNormalized(sport: Sport, games: readonly NcaaGame[]): Normalized
   return games.map((g) => ({
     sourceId: "espn-public-api" as const, // shape-compatible; attribution on ncaa
     sport,
-    externalId: g.gameId,
-    date: g.date,
+    gameId: g.gameId,
+    startTime: g.date,
     state: g.state === "post" ? "post" : g.state === "in" ? "in" : g.state === "pre" ? "pre" : "unknown",
     completed: g.completed,
+    statusDetail: "",
+    venue: null,
     home: { team: g.home.team, abbreviation: g.home.abbr, score: g.home.score },
     away: { team: g.away.team, abbreviation: g.away.abbr, score: g.away.score },
     attribution: g.attribution,

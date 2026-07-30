@@ -1,20 +1,32 @@
 # CURRENT_STATE
 
-**MAIN:** AI-first cockpit prime + free-spine-health cron  
-**SoT:** `CANONICAL.md` + Production `/cockpit`  
-**class_A:** 0  
+Updated: 2026-07-30
+
+**MAIN:** AI-first cockpit prime + free-spine-health cron
+**SoT:** `CANONICAL.md` + Production `/cockpit`
+**class_A:** 0
+
+## Production truth
+- Green on commit `1dbcca9`. Redeployed 2x today after env fix.
+- main HEAD `4b4ae1e` does NOT build. Verified 7-file fix patch delivered, NOT pushed. Do not redeploy from HEAD until pushed.
+- Env fixed: `DATABASE_URL` + `DIRECT_URL` = gse-postgres (current password). `CRON_SECRET` rotated. `GEMINI_API_KEY` set.
+- Smoke green: gamma 401 bad Bearer / 200 good Bearer. `/api/health` db check ok.
+- Health "degraded" = stale ingestion only. Paid Odds API key deactivated ~Jul 25. Free-spine patch is the strategic fix.
+- DB real: 837 games · 1622 picks · ~1.18M odds rows. Empty: odds_line_snapshots, teams, leagues, historical_games.
+- Repo is PUBLIC (Beexly/Sports). No secrets in repo, ever.
 
 ## Law
 LIVE_BOARD=off · oddsApiRequired=false · refuse-default · CPA blocked · externalActions NONE
+Enforced 2026-07-30: `PERFORMANCE_STATS_ENABLED` and `PUBLIC_PICKS_ENABLED` found true in Production (violation), flipped false.
 
 ## AI runs (you watch)
-- 14 Vercel crons incl. free-spine-health, jarvis-snapshot, free settle, gamma  
-- Command Center attention + multi-source cues in Jarvis  
-- Draft tasks from jarvis-snapshot  
-- Cockpit operating map 28 surfaces · Agent OS draft-primed  
+- 14 Vercel crons incl. free-spine-health, jarvis-snapshot, free settle, gamma
+- Command Center attention + multi-source cues in Jarvis
+- Draft tasks from jarvis-snapshot
+- Cockpit operating map 28 surfaces · Agent OS draft-primed
 
-## Founder-only
-Neon dual URLs · CRON_SECRET · redeploy · smoke · optional free AI keys  
+## Founder-only remaining
+Formal `prove:neon` local run · optional free AI keys (Groq/xAI) · push build-fix patch decision
 
 ## Explicit YES only
-LIVE_BOARD · PUBLISH_LEDGER · public picks · Phase C · #226  
+LIVE_BOARD · PUBLISH_LEDGER · public picks · Phase C · #226

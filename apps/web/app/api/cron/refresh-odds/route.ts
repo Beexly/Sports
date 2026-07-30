@@ -55,12 +55,20 @@ export async function GET(request: Request) {
   const denied = cronAuthError(request);
   if (denied) return denied;
 
-  const apiKey = process.env["THE_ODDS_API_KEY"];
+  const apiKey = process.env["THE_ODDS_API_KEY"]?.trim();
   if (!apiKey) {
-    return NextResponse.json(
-      { error: "THE_ODDS_API_KEY not configured" },
-      { status: 500 }
-    );
+    // Free mode: no paid Odds API key configured. Skip cleanly instead of
+    // erroring. Writes NOTHING (no ingestionRun, no odds) — invents no data —
+    // and returns 200 so the external-cron scheduler stays green while odds
+    // ingestion is intentionally off. Mirrors the no-key free-path handling in
+    // settle-picks/gamma. When THE_ODDS_API_KEY IS present, every line below
+    // runs exactly as before.
+    return NextResponse.json({
+      ok: true,
+      skipped: "no-odds-key",
+      refreshed: false,
+      reason: "THE_ODDS_API_KEY not configured — odds ingestion off (free mode)",
+    });
   }
 
   const gates = getReadinessGates();

@@ -17,8 +17,16 @@ name: External Cron (Galaxy Sports Edge)
 
 on:
   schedule:
-    # Every 30 minutes — refresh odds across all supported sports.
-    - cron: "*/30 * * * *"
+    # PRIVATE-REPO MINUTES ECONOMY (2026-07-30): the repo went private, so
+    # Actions minutes are no longer unlimited — GitHub Free includes 2,000
+    # min/month for private repos and bills each job at a 1-minute minimum.
+    # The former 30-minute refresh-odds schedule alone cost ~48 jobs/day
+    # (~1,460 min/month) to hit an endpoint that, in free mode (no
+    # THE_ODDS_API_KEY), intentionally skips. It is REMOVED while odds
+    # ingestion is off. To re-enable when a paid odds key returns, restore:
+    #   - cron: "*/30 * * * *"
+    # (the refresh-odds job below still matches that schedule string, and
+    # stays runnable on demand via workflow_dispatch either way).
     # Hourly on the :15 — settle picks whose games have completed.
     - cron: "15 * * * *"
   workflow_dispatch:

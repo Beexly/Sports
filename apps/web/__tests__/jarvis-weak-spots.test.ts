@@ -195,7 +195,7 @@ describe("weak spot: neon dual URL config", () => {
       GOOGLE_CLIENT_SECRET: "x",
       STRIPE_SECRET_KEY: "x",
       STRIPE_WEBHOOK_SECRET: "x",
-    } as NodeJS.ProcessEnv);
+    } as unknown as NodeJS.ProcessEnv);
     expect(m).toContain("DIRECT_URL");
   });
 
@@ -208,7 +208,7 @@ describe("weak spot: neon dual URL config", () => {
       GOOGLE_CLIENT_SECRET: "x",
       STRIPE_SECRET_KEY: "x",
       STRIPE_WEBHOOK_SECRET: "x",
-    } as NodeJS.ProcessEnv);
+    } as unknown as NodeJS.ProcessEnv);
     expect(m).not.toContain("DIRECT_URL");
     expect(m).not.toContain("DATABASE_URL");
   });

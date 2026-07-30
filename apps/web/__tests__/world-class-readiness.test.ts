@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildWorldClassReadiness } from "@/lib/platform/world-class-readiness";
 import { scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
-import { redundancyGaps, clearedSources } from "@/lib/data-sources/source-router";
+import { clearedSources } from "@/lib/data-sources/source-router";
 
 describe("world-class multi-source bar", () => {
   it("NBA/MLB/NHL/NCAA score chains are dual+", () => {

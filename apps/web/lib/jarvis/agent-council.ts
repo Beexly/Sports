@@ -773,7 +773,7 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     displayName: "Market Analyst",
     role: "Market / Line Intelligence Analyst",
     status: "DRAFT_ONLY",
-    wiringState: "partial",
+    wiringState: "not_connected",
     department: "Sports Intelligence",
     reportsTo: ["SCOUT"],
     escalatesTo: ["SCOUT", "JARVIS"],

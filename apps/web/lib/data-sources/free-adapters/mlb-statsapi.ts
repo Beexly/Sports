@@ -65,10 +65,12 @@ export async function fetchMlbScheduleScores(
       out.push({
         sourceId: "espn-public-api",
         sport: "mlb",
-        externalId: String(g.gamePk),
-        date: (g.gameDate ?? date).slice(0, 10),
+        gameId: String(g.gamePk),
+        startTime: g.gameDate ?? date,
         state,
         completed,
+        statusDetail: g.status?.abstractGameState ?? "",
+        venue: null,
         home: {
           team: home.team.name,
           abbreviation: home.team.abbreviation ?? home.team.name.slice(0, 3).toUpperCase(),

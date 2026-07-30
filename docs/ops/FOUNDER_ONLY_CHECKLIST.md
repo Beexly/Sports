@@ -1,23 +1,34 @@
 # FOUNDER_ONLY_CHECKLIST
 
 No soft language. Check only when done in **Production**.
+Updated: 2026-07-30.
 
-## P0 — Runtime honesty (do first)
+## P0 — Runtime honesty (done 2026-07-30)
 
-- [ ] `DATABASE_URL` = gse-postgres **pooled** (`POSTGRES_PRISMA_URL`)
-- [ ] `DIRECT_URL` = gse-postgres **unpooled** (`DATABASE_URL_UNPOOLED` / `POSTGRES_URL_NON_POOLING`)
-- [ ] No `storage_*` / sports-db aliases mixed into those two vars
-- [ ] `CRON_SECRET` present on Vercel Production (re-verify; rotate if ever exposed)
-- [ ] Production **redeployed** after env change
-- [ ] `gamma-cron-smoke.sh` (or curl): **401** bad Bearer, **200** good Bearer
+- [x] `DATABASE_URL` = gse-postgres **pooled**
+- [x] `DIRECT_URL` = gse-postgres **unpooled**
+- [x] No `storage_*` / sports-db aliases mixed into those two vars
+- [x] `CRON_SECRET` on Vercel Production — **rotated** 2026-07-30
+- [x] Production **redeployed** after env change (2x, green on `1dbcca9`)
+- [x] Gamma smoke: **401** bad Bearer, **200** good Bearer; `/api/health` db ok
+- [ ] Formal `npm run prove:neon` local run (runtime already proves db; run the script anyway to close it)
 
-## P0 — Free AI keys (same week)
+## P0 — Push decision (new)
 
-- [ ] `GEMINI_API_KEY` (Google AI Studio)
-- [ ] `GROQ_API_KEY` (console.groq.com) — rotate if ever leaked in git history
-- [ ] `XAI_API_KEY` (console.x.ai)
+- [ ] Push the verified 7-file build-fix patch. main HEAD `4b4ae1e` does NOT build; prod is pinned to `1dbcca9`. Do not deploy from HEAD until pushed.
+
+## P0 — Free AI keys
+
+- [x] `GEMINI_API_KEY` (set in Production 2026-07-30)
+- [ ] `GROQ_API_KEY` — rotate if ever leaked in git history (repo is PUBLIC)
+- [ ] `XAI_API_KEY`
 - [ ] `ANTHROPIC_API_KEY` (when available)
 - [ ] Optional internal: `INTERNAL_LLM_BASE_URL` / `INTERNAL_LLM_MODEL` / `INTERNAL_LLM_API_KEY`
+
+## Known state (context, not tasks)
+
+- Ingestion stale since ~Jul 25: paid Odds API key deactivated. Health "degraded" for this reason only. Fix is the free-spine patch, not a new paid key.
+- 2026-07-30 law enforcement: `PERFORMANCE_STATS_ENABLED` and `PUBLIC_PICKS_ENABLED` were live true; flipped false. Do not re-enable without explicit YES.
 
 ## P1 — Credits & free SaaS (applications)
 
@@ -53,13 +64,9 @@ No soft language. Check only when done in **Production**.
 - [ ] Explicit YES: **LIVE_BOARD** on
 - [ ] Explicit YES: **PUBLISH_LEDGER** on
 - [ ] Explicit YES: **SLATE_OPENING_REVEAL** / reveal on
+- [ ] Explicit YES: public picks (`PUBLIC_PICKS_ENABLED`) / performance stats (`PERFORMANCE_STATS_ENABLED`) back on
 - [ ] Explicit YES: merge / land **#226 HEOS**
 - [ ] **Phase C (5b)** remeasure after real path (not silent flip)
-
-## Optional enrichment (never free-path required)
-
-- [ ] `THE_ODDS_API_KEY` for `/api/cron/refresh-odds` enrichment only
-- [ ] `CLOSING_ARCHIVE_PATH` if durable archive path needed
 
 ## Forbidden until YES + measurement
 

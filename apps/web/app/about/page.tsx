@@ -6,7 +6,7 @@ import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `${BRAND_NAME}: ${BRAND_TAGLINE}. The story, the model, the operating principles.`,
+  description: `${BRAND_NAME}: ${BRAND_TAGLINE.replace(/\.$/, "")}. The story, the model, the operating principles.`,
   alternates: { canonical: "/about" },
 };
 
