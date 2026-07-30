@@ -9,7 +9,7 @@
 | Operator OS | Production `/cockpit` · `apps/web/app/cockpit/*` |
 | JARVIS | `apps/web/lib/jarvis/*` · `apps/web/lib/cockpit/jarvis*.ts` |
 | Integrity | `apps/web/lib/platform/integrity-ledger.ts` |
-| Free data + settle | `apps/web/lib/data-sources/*` · `docs/FREE_FIRST_DATA.md` |
+| Free data + settle | `apps/web/lib/data-sources/*` · multi-source · `free-spine-health` cron |
 | AI dispatch | `apps/web/lib/ai-control-plane/*` (LiteLLM optional, not required) |
 | Agents | draft-only · `externalActions: NONE` · no public auto-publish |
 | Law | LIVE_BOARD off · oddsApiRequired=false · refuse-default · CPA blocked |

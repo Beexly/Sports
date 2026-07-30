@@ -10,18 +10,16 @@ import { buildWorldClassReadiness } from "@/lib/platform/world-class-readiness";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   const session = await auth();
-  const email = session?.user?.email?.toLowerCase();
-  const admins = (process.env["ADMIN_EMAILS"] ?? "")
-    .split(",")
-    .map((s) => s.trim().toLowerCase())
-    .filter(Boolean);
-  const fake = process.env["DEV_FAKE_ADMIN"] === "true" && process.env["NODE_ENV"] !== "production";
-  if (!fake && (!email || (admins.length > 0 && !admins.includes(email)))) {
-    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return NextResponse.json(
+      { ok: false, error: "Admin role required for cockpit endpoints" },
+      { status: 403 },
+    );
   }
 
+  
   const readiness = buildWorldClassReadiness();
   return NextResponse.json({ ok: true, oddsApiRequired: false as const, readiness });
 }

@@ -34,3 +34,5 @@
 **Counts:** 18 routes · 13 scheduled (incl. jarvis-snapshot) · free settle path · **0 unauth** · **0 edge runtime**
 
 Smoke: `scripts/ops/gamma-cron-smoke.sh` (401 then 200).
+
+| /api/cron/free-spine-health | 0 10 * * * | CRON_SECRET | 401/200 | Multi-source free spine probe |

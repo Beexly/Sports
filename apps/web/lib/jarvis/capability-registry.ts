@@ -435,14 +435,14 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "memory-knowledge-base",
     name: "Memory / Knowledge Base",
     category: "AI_INFRASTRUCTURE",
-    status: "NOT_WIRED",
+    status: "DESIGNED",
     mission:
       "Persist operational decisions, analysis outcomes, and operator context across sessions. " +
       "Prevent re-deriving known facts. Enable Jarvis to remember what changed and why.",
     currentTruth:
-      "No persistent memory system exists. No vector store. No conversation history. " +
-      "No cross-session recall. Architecture docs exist as markdown. " +
-      "Jarvis context is rebuilt fresh from OwnerSummary on every cockpit load.",
+      "Process-local jarvis-history buffer + jarvis-snapshot cron exist. " +
+      "Prisma JarvisMemoryEvent / OwnerDecision models exist. " +
+      "No durable cross-instance vector memory yet — Neon prove required for durable recall.",
     inputs: ["Operator decisions", "Jarvis session outputs", "Analysis artifacts"],
     outputs: ["Persistent context", "Cross-session recall", "Knowledge graph nodes"],
     allowedActions: [
@@ -456,12 +456,12 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Store PII without explicit consent layer",
     ],
     ownerMode: "NOT_WIRED",
-    proofSource: null,
+    proofSource: "/cockpit/jarvis + jarvis-snapshot cron",
     riskLevel: "LOW",
-    nextAction: "Wire mem0 or Postgres-based episodic memory to capture owner decisions.",
+    nextAction: "After Neon prove: persist snapshot history + owner decisions to JarvisMemoryEvent.",
     requiresHumanApproval: false,
-    canAnswer: false,
-    canRecommend: false,
+    canAnswer: true,
+    canRecommend: true,
     canExecute: false,
   },
 
@@ -491,7 +491,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     ownerMode: "NOT_WIRED",
     proofSource: null,
     riskLevel: "MEDIUM",
-    nextAction: "Wire Claude MCP SDK. Register The Odds API as first approved tool.",
+    nextAction: "Keep blocked until owner YES. Prefer free Gamma/Kalshi tools first; Odds optional.",
     requiresHumanApproval: true,
     canAnswer: false,
     canRecommend: false,
@@ -502,14 +502,14 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "agent-orchestration",
     name: "Agent Orchestration",
     category: "AI_INFRASTRUCTURE",
-    status: "DESIGNED",
+    status: "DRAFT_ONLY",
     mission:
       "Coordinate multi-agent workflows: route work, manage handoffs, resolve conflicts, " +
       "and ensure each agent operates within its lane. Prevent agents from doing work outside their scope.",
     currentTruth:
-      "Agent registry defines 6 agents (JARVIS, SARAH, TAL, SCOUT, AVA, BOBBY). " +
-      "Each has defined responsibilities and safe action lists. " +
-      "No orchestration runtime exists. Agents are roles, not running processes.",
+      "Agent OS registry + council + cockpit operating map + materializeJarvisDraftTasks live. " +
+      "jarvis-snapshot surfaces draft tasks. externalActions NONE. " +
+      "No autonomous external execution — draft queue is the runtime.",
     inputs: ["Agent task queue", "Agent capability registry", "Handoff protocols"],
     outputs: ["Routed work items", "Agent status reports", "Handoff artifacts"],
     allowedActions: [
@@ -526,10 +526,10 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     proofSource: "/cockpit/agents",
     riskLevel: "MEDIUM",
     nextAction:
-      "Implement BullMQ-based orchestration layer: task routing from Jarvis to agent queues.",
+      "Keep draft task materialization on jarvis-snapshot; enqueue to cockpit tasks when Neon proven.",
     requiresHumanApproval: true,
-    canAnswer: false,
-    canRecommend: false,
+    canAnswer: true,
+    canRecommend: true,
     canExecute: false,
   },
 

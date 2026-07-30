@@ -28,14 +28,14 @@ export interface CockpitOperatingSurface {
 
 export const COCKPIT_OPERATING_MAP: readonly CockpitOperatingSurface[] = [
   surface("Overview", "/cockpit", "jarvis", ["tal", "audit"], "daily-intelligence-brief", "Jarvis launch assessment", ["owner-approval", "public-claims"], "HIGH", "DRAFT_ONLY", "owner-facing"),
-  surface("History", "/cockpit/history", "ledger", ["audit"], "settlement", "Pick forensic ledger", ["manual-settlement"], "HIGH", "MANUAL", "internal"),
+  surface("History", "/cockpit/history", "ledger", ["audit"], "settlement", "Pick forensic ledger", ["manual-settlement"], "HIGH", "DRAFT_ONLY", "internal"),
   surface("Agents", "/cockpit/agents", "jarvis", ["tal"], "claude-handoff", "Agent council status", ["truthful-status"], "MEDIUM", "DRAFT_ONLY", "internal"),
-  surface("Tasks", "/cockpit/tasks", "chain", ["jarvis"], "daily-intelligence-brief", "Queue by status", ["owner-approval"], "HIGH", "DESIGNED", "owner-facing"),
+  surface("Tasks", "/cockpit/tasks", "chain", ["jarvis"], "daily-intelligence-brief", "Queue by status", ["owner-approval"], "HIGH", "DRAFT_ONLY", "owner-facing"),
   surface("Review", "/cockpit/review", "sarah", ["gauge"], "support-trust", "Needs-review + blocked", ["human-review"], "HIGH", "DRAFT_ONLY", "owner-facing"),
   surface("Media", "/cockpit/media", "ava", ["sarah", "quill", "gauge"], "content", "Draft content workflow", ["draft-only", "owner-approval"], "HIGH", "DRAFT_ONLY", "public-adjacent"),
   surface("Promotions", "/cockpit/promotions", "bobby", ["flare", "gauge"], "revenue", "Sportsbook offers", ["affiliate-disclosure", "owner-approval"], "CRITICAL", "DRAFT_ONLY", "public-adjacent"),
   surface("Promo Desk", "/cockpit/promo-desk", "bobby", ["flare"], "revenue", "Operator registry", ["affiliate-disclosure", "owner-approval"], "HIGH", "DRAFT_ONLY", "public-adjacent"),
-  surface("Market Twin", "/cockpit/market-twin", "delta", ["scout", "tal"], "market-intelligence", "Upcoming board posture", ["source-rights", "no-sharp-claims"], "HIGH", "DESIGNED", "internal"),
+  surface("Market Twin", "/cockpit/market-twin", "delta", ["scout", "tal"], "market-intelligence", "Upcoming board posture", ["source-rights", "no-sharp-claims"], "HIGH", "DRAFT_ONLY", "internal"),
   surface("Losses", "/cockpit/losses", "audit", ["ledger"], "calibration", "Autopsy queue", ["manual-review"], "HIGH", "MANUAL", "internal"),
   surface("Studio", "/cockpit/studio", "ava", ["gauge"], "film-room", "Creator asset workspace", ["spend-gate", "owner-approval"], "HIGH", "DRAFT_ONLY", "public-adjacent"),
   surface("Journal", "/cockpit/journal", "audit", ["prism"], "calibration", "Weekly model essay", ["claim-review"], "HIGH", "DRAFT_ONLY", "public-adjacent"),
@@ -48,9 +48,13 @@ export const COCKPIT_OPERATING_MAP: readonly CockpitOperatingSurface[] = [
   surface("Sources", "/cockpit/sources", "tal", ["relay"], "source-intelligence", "Source intelligence", ["source-rights"], "CRITICAL", "DRAFT_ONLY", "internal"),
   surface("Airwave", "/cockpit/airwave", "scout", ["gauge"], "airwave-claim", "Pundit claim review", ["manual-entry", "proof-required"], "HIGH", "MANUAL", "internal"),
   surface("Listener Log", "/cockpit/listener-log", "scout", ["gauge"], "airwave-claim", "Manual broadcast claim entry", ["manual-entry"], "MEDIUM", "MANUAL", "internal"),
-  surface("Moderation", "/cockpit/moderation", "pulse", ["sarah"], "support-trust", "Community room queue", ["human-review"], "HIGH", "DESIGNED", "internal"),
+  surface("Moderation", "/cockpit/moderation", "pulse", ["sarah"], "support-trust", "Community room queue", ["human-review"], "HIGH", "DRAFT_ONLY", "internal"),
   surface("Memory", "/cockpit/memory", "archive", ["jarvis"], "memory", "Memory review queue", ["owner-approval"], "HIGH", "NOT_WIRED", "future"),
-  surface("Film Room", "/cockpit/film-room", "ava", ["gauge"], "film-room", "Visual production", ["spend-gate", "owner-approval"], "HIGH", "DESIGNED", "public-adjacent"),
+  surface("Film Room", "/cockpit/film-room", "ava", ["gauge"], "film-room", "Visual production", ["spend-gate", "owner-approval"], "HIGH", "DRAFT_ONLY", "public-adjacent"),
+  surface("Command Center", "/cockpit/command-center", "jarvis", ["tal", "sarah"], "daily-intelligence-brief", "Owner attention feed", ["owner-approval"], "HIGH", "DRAFT_ONLY", "owner-facing"),
+  surface("Integrity", "/cockpit/integrity", "jarvis", ["audit", "gauge"], "daily-intelligence-brief", "Built/Wired/Proven ledger", ["truthful-status"], "CRITICAL", "DRAFT_ONLY", "internal"),
+  surface("NOVA", "/cockpit/nova", "jarvis", ["tal", "mint"], "daily-intelligence-brief", "Opportunity shadow cycle", ["no-public-claims"], "MEDIUM", "DRAFT_ONLY", "internal"),
+  surface("Jarvis", "/cockpit/jarvis", "jarvis", ["tal"], "daily-intelligence-brief", "Launch assessment deep view", ["owner-approval"], "HIGH", "DRAFT_ONLY", "owner-facing"),
 ] as const;
 
 function surface(pageName: string, route: string, owningAgent: string, supportingAgents: readonly string[], primaryWorkflow: string, outputArtifact: string, reviewGates: readonly string[], riskLevel: CockpitOperatingSurface["riskLevel"], currentStatus: CockpitOperatingSurface["currentStatus"], audience: CockpitOperatingSurface["audience"]): CockpitOperatingSurface {

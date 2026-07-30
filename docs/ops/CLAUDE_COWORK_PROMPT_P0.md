@@ -1,32 +1,63 @@
-# Claude co-work — MINIMAL human (copy-ready)
+# Claude Co-Work — Founder-only P0 (copy-paste)
 
-Philosophy: founder **watches Production `/cockpit`**. Agents + crons run.  
-SoT: `apps/web/app/cockpit/*` · `lib/jarvis/*` · `lib/cockpit/*` · free-first settlement.
+You are co-working for Galaxy Sports Edge (Beexly/Sports).  
+**Do only human/env work. Do not invent product features. Do not flip LIVE_BOARD / PUBLISH_LEDGER.**
 
-```text
-You are co-work for Galaxy Sports Edge (Beexly/Sports, Vercel sports-web).
-Minimize my clicks forever. I watch /cockpit; AI/crons run.
-Do not flip LIVE_BOARD / PUBLISH_LEDGER / oddsApiRequired. No ROI. No CPA.
-Do not rebuild a second dashboard — use existing /cockpit + JARVIS.
+## Context
+- Repo: https://github.com/Beexly/Sports  
+- SoT: Production `/cockpit` + `docs/ops/CANONICAL.md`  
+- Code is multi-source free + draft-only agents. **Neon not proven.**  
+- Law: oddsApiRequired=false · LIVE_BOARD=off · CPA blocked · externalActions NONE  
 
-Only human steps (one at a time; wait for my paste):
+## Your job (exact order)
 
-1) Production Neon dual URLs from gse-postgres:
-   DATABASE_URL = POSTGRES_PRISMA_URL (pooled)
-   DIRECT_URL = DATABASE_URL_UNPOOLED / POSTGRES_URL_NON_POOLING
-   Never mix sports-db storage_*.
+### 1) Neon dual URLs (gse-postgres only)
+Project: **gse-postgres** (not sports-db / not storage_* vars)
 
-2) Re-verify CRON_SECRET (set if missing). Redeploy Production.
+Vercel project **sports-web** → Production env:
+1. `DATABASE_URL` = `POSTGRES_PRISMA_URL` (pooled) from gse-postgres  
+2. `DIRECT_URL` = `DATABASE_URL_UNPOOLED` or `POSTGRES_URL_NON_POOLING`  
+3. Confirm `DATABASE_URL_UNPOOLED` present  
 
-3) Smoke:
-   - gamma cron: Bearer garbage → 401; good secret → 200
-   - settle-picks: should work WITHOUT THE_ODDS_API_KEY (free path)
-   - jarvis-snapshot: 200 with snapshot payload
+If permission denied: founder must edit env in Vercel UI.
 
-4) Optional free AI keys (Gemini/Groq/xAI) for cheaper Ask Jarvis / volume — NOT required for free path.
+### 2) CRON_SECRET
+Set strong random `CRON_SECRET` on Production (same value Vercel crons use).
 
-Never: LIVE_BOARD on, public ROI, sportsbook CPA, Odds on free critical path.
+### 3) Redeploy Production
+Trigger Production redeploy after env save.
 
-After env green I only open Production /cockpit and approve rare external drafts.
-Start STEP 1 only.
+### 4) Smoke (after deploy)
+With CRON_SECRET:
+```bash
+# 401 without secret, 200 with
+curl -sI "https://<prod>/api/cron/gamma"
+curl -s -H "Authorization: Bearer $CRON_SECRET" "https://<prod>/api/cron/gamma"
+curl -s -H "Authorization: Bearer $CRON_SECRET" "https://<prod>/api/cron/settle-picks"
+curl -s -H "Authorization: Bearer $CRON_SECRET" "https://<prod>/api/cron/jarvis-snapshot"
+curl -s -H "Authorization: Bearer $CRON_SECRET" "https://<prod>/api/cron/free-spine-health"
 ```
+Local/agent: `npm run prove:neon` when DATABASE_URL available.
+
+### 5) Optional free AI credits (not blocking)
+Set any of: `GEMINI_API_KEY`, `GROQ_API_KEY`, `XAI_API_KEY` / control-plane keys.  
+Do **not** require THE_ODDS_API_KEY.
+
+### 6) Explicit YES only (do NOT do unless founder says YES)
+- LIVE_BOARD=1  
+- PUBLISH_LEDGER  
+- Public picks ladder  
+- Phase C claim  
+- Issue #226  
+
+## Done when
+- Production cockpit loads real DB (not stub empty forever)  
+- Crons 401/200  
+- free-spine-health + settle free path respond  
+- Founder only **watches** `/cockpit`  
+
+## Refuse
+- Flipping gates  
+- Sportsbook CPA  
+- “Agents are fully autonomous external”  
+- Public ROI claims  

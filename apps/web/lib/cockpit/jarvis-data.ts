@@ -17,6 +17,8 @@ import {
   type PublicPerformancePolicy,
 } from "@/lib/performance/public-performance-policy";
 import {
+import { redundancyGaps } from "@/lib/data-sources/source-router";
+import { scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
   synthesizeJarvis,
   type JarvisAssessment,
   type JarvisLayerStatuses,
@@ -248,6 +250,32 @@ export async function loadJarvisAssessment(): Promise<{
   }
 
   const recommendedNextActions = [...synth.recommendedNextActions];
+  // Multi-source / free spine health (pure, no network) — AI-first operator cues.
+  try {
+    const gaps = redundancyGaps(2).filter((g) =>
+      ["scores", "results", "odds", "player_stats"].includes(g.need),
+    );
+    if (gaps.length > 0) {
+      recommendedNextActions.unshift(
+        `Multi-source gaps (${gaps.length}): clear dual free paths for ${gaps
+          .slice(0, 3)
+          .map((g) => `${g.need}/${g.sport}`)
+          .join(", ")}.`,
+      );
+    } else {
+      recommendedNextActions.push(
+        "Free multi-source critical coverage dual+ green — run free settle + gamma after Neon prove.",
+      );
+    }
+    const singleScore = (["nfl", "mls"] as const).filter((s) => scoreSourceChain(s).length < 2);
+    if (singleScore.length) {
+      recommendedNextActions.push(
+        `Live scoreboard single-adapter sports: ${singleScore.join(", ")} — dual free path preferred when legal free source exists.`,
+      );
+    }
+  } catch {
+    /* never block assessment */
+  }
   if (demoSamplesActive) {
     recommendedNextActions.unshift(
       "Unset DEMO_PICKS_ENABLED to switch /picks and /dashboard from sample data to live model output once ingestion is wired up."

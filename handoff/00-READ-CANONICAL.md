@@ -1,5 +1,9 @@
-# Non-canonical handoff museum
+# STOP — not SoT
 
-**Operator SoT:** `docs/ops/CANONICAL.md` + Production `/cockpit`.
+Session handoffs here are **museum**.
 
-Files under `handoff/` are session archaeology. Do not treat as current law.
+**Operator truth:** Production `/cockpit`  
+**Doc truth:** [`docs/ops/CANONICAL.md`](../docs/ops/CANONICAL.md)  
+**State:** [`docs/ops/CURRENT_STATE.md`](../docs/ops/CURRENT_STATE.md)
+
+Do not invent parallel plans from dated handoffs.
