@@ -42,6 +42,7 @@ import { cronAuthError } from "@/lib/cron/authorize";
 import { runFormalReceiptPassProduction } from "@/lib/ai-control-plane";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const fetchCache = "force-no-store";
 export const maxDuration = 60;
 

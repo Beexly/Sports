@@ -24,6 +24,7 @@ import {
 } from "@sports/quote-plane";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /** Process-local archive + runner; hydrate from disk when path configured. */

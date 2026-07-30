@@ -16,6 +16,7 @@ import {
 } from "@sports/prediction-engine";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function GET(): Promise<NextResponse> {
   // Dark explainer — scenarios only, no live fire

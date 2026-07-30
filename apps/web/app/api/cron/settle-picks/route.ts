@@ -40,6 +40,7 @@ import {
 } from "@/lib/settlement-outbox/worker";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 // Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
 // opt route-handler fetches out of Next's Data Cache — cached upstream scores
 // stalled settlement on 2026-07-10 (207 pending picks). Force no-store here

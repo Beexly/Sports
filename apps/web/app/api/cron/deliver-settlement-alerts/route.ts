@@ -32,6 +32,7 @@ import {
 } from "@/lib/settlement-outbox/worker";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const fetchCache = "force-no-store";
 export const maxDuration = 300;
 

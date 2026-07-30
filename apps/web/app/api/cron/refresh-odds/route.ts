@@ -43,6 +43,7 @@ import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
 import { monitorOddsFetchedAt } from "@/lib/data-reliability/monitor-odds-fetchedat";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 // Belt-and-braces with noStoreFetch (data-ingestion): force-dynamic does NOT
 // opt route-handler fetches out of Next's Data Cache — cached upstream odds
 // froze the whole pipeline on 2026-07-10. This segment config forces every

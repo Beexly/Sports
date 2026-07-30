@@ -17,6 +17,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 10;
 
 export async function GET(request: Request) {
