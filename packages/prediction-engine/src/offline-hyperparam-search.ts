@@ -4,11 +4,12 @@
  * Historical-replay ONLY. Never writes to live config, never flips gates,
  * never auto-promotes a winner into production.
  *
- * Two modes:
+ * Modes:
  *  1. gridSearchShadow — exhaustive discrete grid (default, auditable)
- *  2. ucbSelectNext — one step of GP-UCB-style selection among unevaluated
- *     configs when evaluations are expensive (uses empirical mean/var of
- *     already-scored neighbors as a crude surrogate — not a full GP)
+ *  2. ucbSelectNext — UCB1 among partially evaluated configs
+ *  3. infoGainSelectNext — discrete MES-style: prefer configs that most
+ *     reduce uncertainty about the best objective value (max-value entropy
+ *     philosophy without a continuous GP)
  *
  * Objective should be a scalar where HIGHER is better (e.g. -meanWinkler,
  * meanLogScore, or a composite of coverage-near-target + negative width).
@@ -122,7 +123,6 @@ export function ucbSelectNext(
   for (const c of candidates) {
     const h = byId.get(c.id);
     if (!h || h.nEval <= 0) {
-      // Force exploration of never-tried configs
       return c;
     }
     const bonus = Math.sqrt((2 * Math.log(Math.max(totalN, 1))) / h.nEval);
@@ -133,4 +133,96 @@ export function ucbSelectNext(
     }
   }
   return bestCfg;
+}
+
+/**
+ * Discrete MES-style selection: prefer the unevaluated (or under-evaluated)
+ * config that most reduces uncertainty about the *best objective value*.
+ *
+ * Continuous MES (Wang & Jegelka) targets H[y*] under a GP. Here the search
+ * space is a finite grid of shadow UQ configs, so we approximate:
+ *
+ *  - Maintain empirical distribution of observed objectives.
+ *  - For each candidate, estimate how much observing it would shrink entropy
+ *    of the running max (or of a discrete histogram over objective bins).
+ *  - Prefer never-tried configs; among tried, prefer high residual uncertainty
+ *    relative to the current best (value-of-information about y*).
+ *
+ * This is NOT a GP-MES implementation. It is the max-value entropy *philosophy*
+ * on a discrete auditable grid. Still shadow-only; never auto-promotes.
+ */
+export function infoGainSelectNext(
+  candidates: readonly ShadowHyperparamConfig[],
+  history: readonly EvaluatedConfig[],
+): {
+  readonly next: ShadowHyperparamConfig | null;
+  readonly rationale: string;
+  readonly priced: false;
+  readonly status: "shadow";
+} {
+  if (candidates.length === 0) {
+    return {
+      next: null,
+      rationale: "empty candidate set",
+      priced: false,
+      status: "shadow",
+    };
+  }
+
+  const byId = new Map<string, EvaluatedConfig>();
+  for (const h of history) byId.set(h.id, h);
+
+  // Force explore never-tried first (maximum info about unknown arms)
+  for (const c of candidates) {
+    const h = byId.get(c.id);
+    if (!h || h.nEval <= 0) {
+      return {
+        next: c,
+        rationale: `unevaluated config ${c.id} — max info about unknown arm`,
+        priced: false,
+        status: "shadow",
+      };
+    }
+  }
+
+  // All evaluated at least once: rank by "uncertainty about beating y*"
+  const objectives = history.map((h) => h.objective).filter(Number.isFinite);
+  const yStar =
+    objectives.length > 0 ? Math.max(...objectives) : Number.NEGATIVE_INFINITY;
+
+  // Sample variance of objectives as crude entropy proxy for p(y*)
+  const mean =
+    objectives.length > 0
+      ? objectives.reduce((a, b) => a + b, 0) / objectives.length
+      : 0;
+  const variance =
+    objectives.length > 1
+      ? objectives.reduce((s, v) => s + (v - mean) ** 2, 0) / (objectives.length - 1)
+      : 1;
+
+  let bestCfg: ShadowHyperparamConfig | null = null;
+  let bestGain = Number.NEGATIVE_INFINITY;
+  let bestWhy = "";
+
+  for (const c of candidates) {
+    const h = byId.get(c.id)!;
+    // Distance below y* weighted by 1/sqrt(n) — more value learning about
+    // whether this arm can redefine the max when under-sampled or near-best
+    const gap = yStar - h.objective; // >= 0 if h is not the unique best
+    const uncertainty = Math.sqrt(variance / Math.max(h.nEval, 1));
+    // Info proxy: high if under-sampled near the frontier; low if clearly dominated
+    const gain = uncertainty / (1 + Math.max(0, gap));
+    if (gain > bestGain) {
+      bestGain = gain;
+      bestCfg = c;
+      bestWhy = `cfg ${c.id}: gain=${gain.toFixed(4)} gap=${gap.toFixed(4)} n=${h.nEval}`;
+    }
+  }
+
+  return {
+    next: bestCfg,
+    rationale: bestWhy || "no gain computed",
+    priced: false,
+    status: "shadow",
+  };
 }
