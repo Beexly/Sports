@@ -8,6 +8,7 @@ import { cronAuthError } from "@/lib/cron/authorize";
 import { ALL_SPORTS, freeCoverageMatrix, redundancyGaps } from "@/lib/data-sources/source-router";
 import { fetchScoresMultiSource, scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
 import { buildWorldClassReadiness } from "@/lib/platform/world-class-readiness";
+import { writeFreeSpineCache } from "@/lib/data-sources/free-spine-cache";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -57,6 +58,25 @@ export async function GET(request: Request): Promise<NextResponse> {
   );
   const readiness = buildWorldClassReadiness();
 
+  const freeCovered = matrix.filter((r) => r.freeCovers).length;
+  const requireSpend = matrix.filter((r) => r.mustSpend).length;
+  const sportsWithGames = live.filter((s) => s.games > 0).length;
+
+  writeFreeSpineCache({
+    probedAt: new Date().toISOString(),
+    sportsProbed: live.length,
+    sportsWithGames,
+    criticalGaps: gaps.length,
+    requireSpend,
+    freeCovered,
+    live: live.map((s) => ({
+      sport: s.sport,
+      used: s.used,
+      games: s.games,
+      failover: s.failover,
+    })),
+  });
+
   return NextResponse.json({
     ok: true,
     path: "free-spine-health",
@@ -64,11 +84,11 @@ export async function GET(request: Request): Promise<NextResponse> {
     elapsedMs: Date.now() - started,
     live,
     summary: {
-      freeCovered: matrix.filter((r) => r.freeCovers).length,
-      requireSpend: matrix.filter((r) => r.mustSpend).length,
+      freeCovered,
+      requireSpend,
       criticalGaps: gaps.length,
       sportsProbed: live.length,
-      sportsWithGames: live.filter((s) => s.games > 0).length,
+      sportsWithGames,
     },
     gaps: gaps.slice(0, 20),
     readinessLanes: readiness.lanes.map((l) => ({

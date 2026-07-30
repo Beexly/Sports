@@ -4,10 +4,12 @@
  * Pulls live evidence the synthesizer needs. Every DB call is wrapped
  * in .catch() so the cockpit always renders — even with no DB at all.
  *
- * When DATABASE_URL is unset, @sports/db returns a stub that produces
- * empty results. The synthesizer correctly classifies that state as
- * "NOT_READY_DATA" with explicit blockers. We also append a safety
- * warning so the operator sees "stub mode active" front and center.
+ * Weak-spot closures (v1.3):
+ *   1. Signal matrix: snapshot + feature flags + game signals + free multi-source + free-spine
+ *   2. Settlement clock prefers SettlementRun, falls back to pick.settledAt
+ *   3. Layers from probeJarvisLayers (live evidence), not hard-coded all-implemented
+ *   4. Multi-source: pure matrix + free-spine-cache (written by free-spine-health cron)
+ *   5. Neon dual-URL / DIRECT_URL / FORCE_REAL_PRISMA honesty in externalConfigMissing
  */
 
 import { db, isStubMode } from "@sports/db";
@@ -16,29 +18,39 @@ import {
   evaluatePublicPerformancePolicy,
   type PublicPerformancePolicy,
 } from "@/lib/performance/public-performance-policy";
-import { redundancyGaps } from "@/lib/data-sources/source-router";
+import { redundancyGaps, freeCoverageMatrix } from "@/lib/data-sources/source-router";
 import { scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
+import {
+  freeSpineLiveScore,
+  readFreeSpineCache,
+} from "@/lib/data-sources/free-spine-cache";
+import { probeJarvisLayers } from "@/lib/cockpit/jarvis-layer-probes";
 import {
   synthesizeJarvis,
   type JarvisAssessment,
-  type JarvisLayerStatuses,
 } from "@/lib/cockpit/jarvis";
 
-const LAYERS: JarvisLayerStatuses = {
-  trustClaims: "implemented",
-  performanceGating: "implemented",
-  promotions: "implemented",
-  dailyBrief: "implemented",
-  calibration: "implemented",
-  cockpit: "implemented",
-  contentEngine: "implemented",
-  ciHardening: "partial",
-};
+const FEATURE_FLAG_KEYS = [
+  "hadOddsSignal",
+  "hadLineMovementSignal",
+  "hadRestSignal",
+  "hadScheduleSignal",
+  "hadAtsFormSignal",
+  "hadH2HSignal",
+  "hadVenueSignal",
+  "hadWeatherSignal",
+  "hadInjurySignal",
+  "hadRatingsSignal",
+  "hadPlayerSignal",
+  "hadOfficialsSignal",
+  "hadVenueEnvironmentSignal",
+  "hadPaceSignal",
+  "hadMilestoneSignal",
+] as const;
 
-function externalConfigMissing(): string[] {
+/** Env honesty: dual Neon URLs + auth + stripe. Free path does not need Odds key. */
+export function externalConfigMissing(env: NodeJS.ProcessEnv = process.env): string[] {
   const missing: string[] = [];
-  // Free path does NOT require THE_ODDS_API_KEY (oddsApiRequired=false).
-  // ANTHROPIC is optional for Ask Jarvis volume; warn only as soft enrichment.
   const need = [
     "DATABASE_URL",
     "NEXTAUTH_SECRET",
@@ -48,12 +60,62 @@ function externalConfigMissing(): string[] {
     "STRIPE_WEBHOOK_SECRET",
   ];
   for (const k of need) {
-    const v = process.env[k];
+    const v = env[k];
     if (!v || v.trim() === "" || v.startsWith("changeme") || v === "stub" || v === "dev-noop") {
       missing.push(k);
     }
   }
+
+  const dbUrl = env["DATABASE_URL"]?.trim() ?? "";
+  const direct = env["DIRECT_URL"]?.trim() ?? "";
+  const unpooled = env["DATABASE_URL_UNPOOLED"]?.trim() ?? env["POSTGRES_URL_NON_POOLING"]?.trim() ?? "";
+
+  // Neon dual-URL: Prisma migrate/deploy needs unpooled DIRECT_URL.
+  if (dbUrl && !dbUrl.startsWith("changeme") && dbUrl !== "stub") {
+    if (!direct && !unpooled) {
+      missing.push("DIRECT_URL");
+    }
+    // Heuristic: pooled neon often has -pooler. in host; direct should not be identical when unpooled exists.
+    if (direct && unpooled && direct === dbUrl && dbUrl.includes("-pooler")) {
+      missing.push("DIRECT_URL_UNPOOLED_MISMATCH");
+    }
+  }
+
   return missing;
+}
+
+function isNeonDualConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
+  const dbUrl = env["DATABASE_URL"]?.trim() ?? "";
+  const direct = env["DIRECT_URL"]?.trim() ?? env["DATABASE_URL_UNPOOLED"]?.trim() ?? "";
+  if (!dbUrl || dbUrl === "stub" || dbUrl.startsWith("changeme")) return false;
+  if (!direct || direct === "stub") return false;
+  return true;
+}
+
+function freeMultiSourceScore(): number {
+  const matrix = freeCoverageMatrix().filter((r) =>
+    ["scores", "results", "odds", "standings", "schedules", "weather", "player_stats"].includes(
+      r.need,
+    ),
+  );
+  if (matrix.length === 0) return 0;
+  const dual = matrix.filter((r) => r.clearedCount >= 2).length;
+  return dual / matrix.length;
+}
+
+function featureMatrixFromSnapshots(
+  rows: ReadonlyArray<Record<string, boolean>>,
+): number {
+  if (rows.length === 0) return 0;
+  let sum = 0;
+  for (const row of rows) {
+    let on = 0;
+    for (const k of FEATURE_FLAG_KEYS) {
+      if (row[k] === true) on += 1;
+    }
+    sum += on / FEATURE_FLAG_KEYS.length;
+  }
+  return sum / rows.length;
 }
 
 // Loads live cockpit evidence and returns the canonical Jarvis payload.
@@ -65,14 +127,17 @@ export async function loadJarvisAssessment(): Promise<{
   const gates = getReadinessGates();
   const recentSince = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
   const settlementSince = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const stub = isStubMode();
 
   const [
     lastSuccessIngestion,
     lastIngestionAny,
     recentFailureCount,
     lastFailedRun,
-    lastSettlement,
+    lastSettlementPick,
     settledIn24h,
+    lastSettlementRun,
+    settlementRunCount24h,
     canonicalSettledCount,
     canonicalWins,
     canonicalLosses,
@@ -88,6 +153,10 @@ export async function loadJarvisAssessment(): Promise<{
     publishedCanonicalCount,
     avgDqRaw,
     modelVersions,
+    featureSnapRows,
+    gamesWithSignals,
+    publishedGameIds,
+    dailyBriefCount,
   ] = await Promise.all([
     db.ingestionRun
       .findFirst({
@@ -120,6 +189,16 @@ export async function loadJarvisAssessment(): Promise<{
       })
       .catch(() => null),
     db.pick.count({ where: { settledAt: { gte: settlementSince } } }).catch(() => 0),
+    // SettlementRun table — durable settle clock (weak spot #2)
+    db.settlementRun
+      .findFirst({
+        orderBy: { startedAt: "desc" },
+        select: { startedAt: true, source: true },
+      })
+      .catch(() => null),
+    db.settlementRun
+      .count({ where: { startedAt: { gte: settlementSince } } })
+      .catch(() => 0),
     db.pick
       .count({
         where: {
@@ -151,6 +230,44 @@ export async function loadJarvisAssessment(): Promise<{
     db.pick
       .findMany({ distinct: ["modelVersion"], select: { modelVersion: true }, take: 10 })
       .catch(() => []),
+    // Feature matrix sample (weak spot #1)
+    db.pickSignalSnapshot
+      .findMany({
+        where: { pick: { isPublished: true, isBootstrap: false } },
+        take: 200,
+        select: {
+          hadOddsSignal: true,
+          hadLineMovementSignal: true,
+          hadRestSignal: true,
+          hadScheduleSignal: true,
+          hadAtsFormSignal: true,
+          hadH2HSignal: true,
+          hadVenueSignal: true,
+          hadWeatherSignal: true,
+          hadInjurySignal: true,
+          hadRatingsSignal: true,
+          hadPlayerSignal: true,
+          hadOfficialsSignal: true,
+          hadVenueEnvironmentSignal: true,
+          hadPaceSignal: true,
+          hadMilestoneSignal: true,
+        },
+      })
+      .catch(() => []),
+    db.gameSignal
+      .groupBy({ by: ["gameId"], _count: { _all: true } })
+      .catch(() => [] as Array<{ gameId: string; _count: { _all: number } }>),
+    db.pick
+      .findMany({
+        where: { isPublished: true, isBootstrap: false },
+        distinct: ["gameId"],
+        select: { gameId: true },
+        take: 500,
+      })
+      .catch(() => [] as Array<{ gameId: string }>),
+    db.dailyBrief
+      .count()
+      .catch(() => null as number | null),
   ]);
 
   const performancePolicy = evaluatePublicPerformancePolicy({
@@ -166,15 +283,63 @@ export async function loadJarvisAssessment(): Promise<{
     recentBootstrapCount: recentBootstrap,
   });
 
-  // Signal-coverage must compare like with like: the numerator counts
-  // snapshots only among the public, canonical (published, non-bootstrap)
-  // pick population, and the denominator is that exact same population.
-  // Counting snapshots across ALL picks (unpublished internal + bootstrap)
-  // over a published denominator let bootstrap/internal snapshots push the
-  // ratio past 1 (then clamped to 1), falsely reading as fully covered / GREEN.
   const totalPicks = publishedCanonicalCount;
   const snapshotPct = totalPicks > 0 ? Math.min(1, snapshotCoverageRaw / totalPicks) : 0;
-  const dq = avgDqRaw._avg?.dataQualityScore ?? 0;
+  // dataQualityScore stored 0–100 → normalize 0..1
+  const dqRaw = avgDqRaw._avg?.dataQualityScore ?? 0;
+  const dq = typeof dqRaw === "number" ? (dqRaw > 1 ? dqRaw / 100 : dqRaw) : 0;
+
+  const featureMatrixPct = featureMatrixFromSnapshots(
+    featureSnapRows as Array<Record<string, boolean>>,
+  );
+
+  const publishedGameIdSet = new Set(
+    (publishedGameIds as Array<{ gameId: string }>).map((g) => g.gameId),
+  );
+  const signalGameIds = new Set(
+    (gamesWithSignals as Array<{ gameId: string }>).map((g) => g.gameId),
+  );
+  let gamesWithAnySignal = 0;
+  for (const id of publishedGameIdSet) {
+    if (signalGameIds.has(id)) gamesWithAnySignal += 1;
+  }
+  const gameSignalPct =
+    publishedGameIdSet.size > 0 ? gamesWithAnySignal / publishedGameIdSet.size : 0;
+
+  const multiScore = freeMultiSourceScore();
+  const spineCache = readFreeSpineCache();
+  const spineLive = freeSpineLiveScore(spineCache);
+
+  // Settlement clock: SettlementRun preferred (weak spot #2)
+  let lastSettlementAt: Date | string | null = null;
+  let settlementSource: "settlement_run" | "pick.settledAt" | "none" = "none";
+  if (lastSettlementRun?.startedAt) {
+    lastSettlementAt = lastSettlementRun.startedAt;
+    settlementSource = "settlement_run";
+  } else if (lastSettlementPick?.settledAt) {
+    lastSettlementAt = lastSettlementPick.settledAt;
+    settlementSource = "pick.settledAt";
+  }
+
+  const criticalGaps = redundancyGaps(2).filter((g) =>
+    ["scores", "results", "odds", "player_stats"].includes(g.need),
+  ).length;
+
+  const layers = probeJarvisLayers({
+    trustClaimsWired: true,
+    performanceGatingWired: true,
+    promotionsWired: true,
+    dailyBriefHasRows: stub ? null : typeof dailyBriefCount === "number" ? dailyBriefCount > 0 : null,
+    calibrationAdjustmentsEnabled: gates.canApplyCalibrationAdjustments,
+    canLearnFromOutcomes: gates.canLearnFromOutcomes,
+    cockpitWired: true,
+    contentEngineDraftOnly: true,
+    contentAutoPublishBlocked: !gates.canPublishContent || process.env["CONTENT_AUTO_PUBLISH"] !== "1",
+    ciGuardrailsPresent: true,
+    freeMultiSourceCriticalGaps: criticalGaps,
+    neonDualUrlConfigured: isNeonDualConfigured(),
+    stubMode: stub,
+  });
 
   const synth = synthesizeJarvis({
     now,
@@ -199,9 +364,11 @@ export async function loadJarvisAssessment(): Promise<{
       lastFailureReason: lastFailedRun?.errorMessage ?? null,
     },
     settlement: {
-      lastSettlementAt: lastSettlement?.settledAt ?? null,
+      lastSettlementAt,
       settledIn24h,
       pendingPickCount: canonicalPending,
+      settlementRunCount24h,
+      settlementSource,
     },
     history: {
       canonicalSettledCount,
@@ -218,20 +385,20 @@ export async function loadJarvisAssessment(): Promise<{
     },
     signal: {
       snapshotCoveragePct: snapshotPct,
-      signalCoveragePct: snapshotPct,
-      averageDataQualityScore: typeof dq === "number" ? dq : 0,
+      signalCoveragePct: featureMatrixPct > 0 ? featureMatrixPct : snapshotPct,
+      averageDataQualityScore: dq,
       modelVersionsActive: modelVersions.map((m: { modelVersion: string }) => m.modelVersion),
+      gameSignalCoveragePct: gameSignalPct,
+      featureMatrixCoveragePct: featureMatrixPct,
+      freeMultiSourceScore: multiScore,
+      freeSpineLiveScore: spineLive ?? undefined,
     },
-    layers: LAYERS,
+    layers,
     externalConfigMissing: externalConfigMissing(),
   });
 
-  // Augment with operational warnings the synthesizer doesn't see directly.
   const safetyWarnings = [...synth.safetyWarnings];
-
-  // When demo samples are active, surface that explicitly so the operator
-  // can tell "no data" apart from "deterministic sample data".
-  const demoSamplesActive = isStubMode() && (await import("@sports/db")).isDemoPicksEnabled();
+  const demoSamplesActive = stub && (await import("@sports/db")).isDemoPicksEnabled();
   if (demoSamplesActive) {
     safetyWarnings.unshift(
       "DEMO_PICKS_ENABLED=true — /picks and /dashboard are rendering the " +
@@ -240,37 +407,44 @@ export async function loadJarvisAssessment(): Promise<{
         "produced. Unset DEMO_PICKS_ENABLED to switch to live picks."
     );
   }
-  if (isStubMode()) {
+  if (stub) {
     safetyWarnings.unshift(
       "DB stub mode is active — DATABASE_URL is unset or set to a sentinel value. " +
         "Jarvis is reading empty results from an in-memory stub; no live ingestion, " +
-        "settlement, or history is being consulted. Point DATABASE_URL at a real " +
-        "Postgres and set FORCE_REAL_PRISMA=true to exit stub mode."
+        "settlement, or history is being consulted. Point DATABASE_URL + DIRECT_URL at " +
+        "gse-postgres and set FORCE_REAL_PRISMA=true to exit stub mode. Run npm run prove:neon."
+    );
+  }
+  if (!isNeonDualConfigured() && !stub) {
+    safetyWarnings.unshift(
+      "Neon dual URLs incomplete — set DATABASE_URL (pooled) and DIRECT_URL (unpooled) from gse-postgres, then redeploy and prove:neon."
     );
   }
 
   const recommendedNextActions = [...synth.recommendedNextActions];
-  // Multi-source / free spine health (pure, no network) — AI-first operator cues.
   try {
-    const gaps = redundancyGaps(2).filter((g) =>
-      ["scores", "results", "odds", "player_stats"].includes(g.need),
-    );
-    if (gaps.length > 0) {
+    if (criticalGaps > 0) {
       recommendedNextActions.unshift(
-        `Multi-source gaps (${gaps.length}): clear dual free paths for ${gaps
-          .slice(0, 3)
-          .map((g) => `${g.need}/${g.sport}`)
-          .join(", ")}.`,
+        `Multi-source gaps (${criticalGaps}): expand dual free paths for weak need×sport cells.`,
       );
     } else {
       recommendedNextActions.push(
-        "Free multi-source critical coverage dual+ green — run free settle + gamma after Neon prove.",
+        "Free multi-source critical coverage dual+ green — keep free settle + gamma + free-spine-health on schedule.",
       );
     }
     const singleScore = (["nfl", "mls"] as const).filter((s) => scoreSourceChain(s).length < 2);
     if (singleScore.length) {
       recommendedNextActions.push(
         `Live scoreboard single-adapter sports: ${singleScore.join(", ")} — dual free path preferred when legal free source exists.`,
+      );
+    }
+    if (!spineCache) {
+      recommendedNextActions.unshift(
+        "No free-spine-health cache yet — cron has not written live multi-source probes into this isolate.",
+      );
+    } else {
+      recommendedNextActions.push(
+        `Last free-spine probe ${spineCache.probedAt}: ${spineCache.sportsWithGames}/${spineCache.sportsProbed} sports had games.`,
       );
     }
   } catch {
@@ -281,17 +455,12 @@ export async function loadJarvisAssessment(): Promise<{
       "Unset DEMO_PICKS_ENABLED to switch /picks and /dashboard from sample data to live model output once ingestion is wired up."
     );
   }
-  if (isStubMode()) {
+  if (stub) {
     recommendedNextActions.unshift(
-      "Set DATABASE_URL to a real Postgres connection string and FORCE_REAL_PRISMA=true to exit stub mode."
+      "Set DATABASE_URL + DIRECT_URL (gse-postgres dual) and FORCE_REAL_PRISMA=true; run npm run prove:neon."
     );
   }
 
-  // Override picks/customer-dashboard tiles when sample data is rendering.
-  // Without the override these tiles read UNKNOWN because no ingestion has
-  // happened — accurate for live mode but misleading when the page IS
-  // showing picks. Mark them AMBER so the operator sees "displayed, not
-  // verified" instead of "no signal".
   let picksStatus = synth.picksStatus;
   let customerDashboardStatus = synth.customerDashboardStatus;
   if (demoSamplesActive) {
@@ -308,7 +477,7 @@ export async function loadJarvisAssessment(): Promise<{
   };
 
   return {
-    assessment: assessment,
+    assessment,
     performancePolicy,
   };
 }

@@ -77,9 +77,17 @@ export interface JarvisIngestionInput {
 }
 
 export interface JarvisSettlementInput {
+  /**
+   * Primary settlement clock: prefer SettlementRun.startedAt when present;
+   * loaders may fall back to last pick.settledAt.
+   */
   readonly lastSettlementAt: Date | string | null;
   readonly settledIn24h: number;
   readonly pendingPickCount: number;
+  /** Distinct SettlementRun rows in last 24h (0 if table empty / stub). */
+  readonly settlementRunCount24h?: number;
+  /** How lastSettlementAt was derived. */
+  readonly settlementSource?: "settlement_run" | "pick.settledAt" | "none";
 }
 
 export interface JarvisHistoryInput {
@@ -96,11 +104,30 @@ export interface JarvisHistoryInput {
   readonly canonicalExcludedFromPublic: number;
 }
 
+/**
+ * Signal coverage is a multi-metric matrix (not snapshot-only).
+ * classifySignal takes the min of all defined 0..1 metrics.
+ */
 export interface JarvisSignalInput {
+  /** Fraction of published-canonical picks with a PickSignalSnapshot row. */
   readonly snapshotCoveragePct: number; // 0..1
+  /**
+   * Composite feature-matrix coverage: mean fraction of boolean signal flags
+   * true across PickSignalSnapshot rows (odds, weather, rest, …).
+   * When unknown, loaders may set equal to snapshotCoveragePct for back-compat.
+   */
   readonly signalCoveragePct: number; // 0..1
+  /** Average dataQualityScore normalized to 0..1 when source is 0..100. */
   readonly averageDataQualityScore: number; // 0..1
   readonly modelVersionsActive: readonly string[];
+  /** Games with ≥1 GameSignal / games referenced by published picks. */
+  readonly gameSignalCoveragePct?: number; // 0..1
+  /** Explicit feature matrix mean (same scale); preferred over signalCoveragePct when set. */
+  readonly featureMatrixCoveragePct?: number; // 0..1
+  /** Free multi-source dual coverage score (critical need×sport). */
+  readonly freeMultiSourceScore?: number; // 0..1
+  /** Last free-spine live probe score (sports with games / probed). */
+  readonly freeSpineLiveScore?: number; // 0..1
 }
 
 export interface JarvisLayerStatuses {
@@ -123,20 +150,10 @@ export interface JarvisInput {
   readonly history: JarvisHistoryInput;
   readonly signal: JarvisSignalInput;
   readonly layers: JarvisLayerStatuses;
-  /** Optional: list of explicitly named external config items not yet set. */
   readonly externalConfigMissing?: readonly string[];
 }
 
-// ─── Output shape ────────────────────────────────────────────────────────
-
-/**
- * Bump JARVIS_VERSION whenever the synthesizer's logic changes in a way
- * that would alter past assessments — i.e. a meaningful rule change, a
- * new sectional status, or a status-classification threshold update.
- * Stamped onto every assessment so cockpit screenshots and saved reports
- * are auditable against the version that produced them.
- */
-export const JARVIS_VERSION = "v1.2";
+export const JARVIS_VERSION = "v1.3";
 
 export interface JarvisAssessment {
   /** ISO timestamp the assessment was synthesized. */
@@ -181,21 +198,13 @@ export interface JarvisAssessment {
 
 const HOUR = 60 * 60 * 1000;
 
-function toDate(value: Date | string | null): Date | null {
+function toDate(value: Date | string | null | undefined): Date | null {
   if (value === null || value === undefined) return null;
   if (value instanceof Date) return value;
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-// The seven gates of the bootstrap PROGRESSION LADDER — the flags an operator
-// flips in order during a normal rollout. `canApplyCalibrationAdjustments` is
-// deliberately NOT one of them: it is a post-launch, audit-gated MODEL_VERSION
-// lever (docs/path-to-70.md §7), not a rollout step. Folding it into this count
-// would either make a fully-launched-but-pre-calibration platform read "7/8"
-// forever (misleadingly incomplete) or tempt an operator to flip it just to
-// reach "8/8" — the exact unaudited activation the freeze guards against.
-// Its state is surfaced separately as a safety signal (see calibration check below).
 function gateLabels(gates: JarvisReadinessGates): string[] {
   const closed: string[] = [];
   if (!gates.canPersistCanonicalHistory) closed.push("canPersistCanonicalHistory");
@@ -214,8 +223,6 @@ function classifyIngestion(
 ): JarvisHealth {
   const last = toDate(ingestion.lastSuccessAt);
   if (!last) return "UNKNOWN";
-  // Use the shared Refresh SLA so Jarvis, /api/health, and the stale-data
-  // detector all agree on what "stale ingestion" means (was 6h/24h here).
   const ageMinutes = (now.getTime() - last.getTime()) / (60 * 1000);
   if (ageMinutes > REFRESH_STALE_AFTER_MINUTES) return "RED";
   if (ageMinutes > REFRESH_WARN_AFTER_MINUTES) return "AMBER";
@@ -229,10 +236,17 @@ function classifySettlement(
 ): JarvisHealth {
   const last = toDate(settlement.lastSettlementAt);
   if (!last) {
-    // No settlements yet at all — fine if there are no pending picks either.
     return settlement.pendingPickCount === 0 ? "UNKNOWN" : "AMBER";
   }
   const ageHours = (now.getTime() - last.getTime()) / HOUR;
+  // Prefer settlement-run freshness when we know runs are the source.
+  if (settlement.settlementSource === "settlement_run") {
+    if (ageHours > 36) return "RED";
+    if (ageHours > 12) return "AMBER";
+    if ((settlement.settlementRunCount24h ?? 0) === 0 && settlement.pendingPickCount > 0)
+      return "AMBER";
+    return "GREEN";
+  }
   if (ageHours > 36) return "RED";
   if (ageHours > 12) return "AMBER";
   return "GREEN";
@@ -249,19 +263,31 @@ function classifyCanonicalHistory(
   return "GREEN";
 }
 
+/** Collect all defined 0..1 metrics for multi-dimensional signal health. */
+export function signalMetricVector(signal: JarvisSignalInput): number[] {
+  const vals: number[] = [
+    signal.snapshotCoveragePct,
+    signal.featureMatrixCoveragePct ?? signal.signalCoveragePct,
+    signal.averageDataQualityScore,
+  ];
+  if (typeof signal.gameSignalCoveragePct === "number") {
+    vals.push(signal.gameSignalCoveragePct);
+  }
+  if (typeof signal.freeMultiSourceScore === "number") {
+    vals.push(signal.freeMultiSourceScore);
+  }
+  if (typeof signal.freeSpineLiveScore === "number") {
+    vals.push(signal.freeSpineLiveScore);
+  }
+  return vals.filter((v) => Number.isFinite(v));
+}
+
 function classifySignal(signal: JarvisSignalInput): JarvisHealth {
-  if (
-    signal.snapshotCoveragePct === 0 &&
-    signal.signalCoveragePct === 0 &&
-    signal.averageDataQualityScore === 0
-  ) {
+  const vals = signalMetricVector(signal);
+  if (vals.length === 0 || vals.every((v) => v === 0)) {
     return "UNKNOWN";
   }
-  const min = Math.min(
-    signal.snapshotCoveragePct,
-    signal.signalCoveragePct,
-    signal.averageDataQualityScore
-  );
+  const min = Math.min(...vals);
   if (min >= 0.85) return "GREEN";
   if (min >= 0.6) return "AMBER";
   return "RED";
@@ -287,7 +313,6 @@ function classifyPerformance(
 function classifyCustomerDashboard(
   policy: PublicPerformancePolicy
 ): JarvisHealth {
-  // Dashboard is healthy as long as the policy is computed and honoured.
   return policy.canExposePerformanceStats ? "GREEN" : "AMBER";
 }
 
@@ -315,7 +340,6 @@ function classifyBootstrap(
   if (gates.isBootstrapMode) {
     return history.bootstrapSettledCount > 0 ? "AMBER" : "UNKNOWN";
   }
-  // canonical mode — bootstrap should be a steady residual.
   return "GREEN";
 }
 
@@ -400,11 +424,6 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
       `Ingestion has ${input.ingestion.recentFailureCount} recent failures — investigate the data adapter before public claims.${reasonSuffix}`
     );
   }
-  // Calibration activation is an audited MODEL_VERSION step, not a rollout flag.
-  // If it is ON while its preconditions are unmet, confidence is being presented
-  // as a calibrated win-probability without the evidence to back it — a trust risk
-  // exactly like exposing ungated stats. Surface it as a safety warning so flipping
-  // the gate is never invisible in the operator readiness signal.
   if (input.gates.canApplyCalibrationAdjustments) {
     if (!input.gates.canLearnFromOutcomes) {
       safety.push(
@@ -415,6 +434,15 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
         `Calibration adjustments are ON but only ${input.history.canonicalSettledCount}/${input.gates.minSettledPicksForLearning} canonical picks have settled — below the calibration floor. Verify the held-out validation behind the MODEL_VERSION bump (docs/path-to-70.md §7).`
       );
     }
+  }
+  if (
+    input.settlement.settlementSource === "pick.settledAt" &&
+    (input.settlement.settlementRunCount24h ?? 0) === 0 &&
+    input.settlement.pendingPickCount > 0
+  ) {
+    safety.push(
+      "Settlement clock is falling back to pick.settledAt — no SettlementRun rows in 24h. Prefer free settle / settle-picks cron so durable runs exist."
+    );
   }
 
   const missingPhase: string[] = [];
@@ -440,7 +468,6 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
   const actions: string[] = [];
   if (!input.gates.canExposePerformanceStats) {
     if (input.history.canonicalSettledCount >= input.gates.minSettledPicksForLearning) {
-      // Floor already met: stop telling the owner to "hold" — the data is in.
       actions.push(
         `PERFORMANCE_STATS_ENABLED is data-ready: ${input.history.canonicalSettledCount} canonical picks have settled (floor ${input.gates.minSettledPicksForLearning}). Set PERFORMANCE_STATS_ENABLED=true and redeploy to publish the record and win rate.`
       );
@@ -460,6 +487,14 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
       `Settle ${input.settlement.pendingPickCount} pending picks (settlement worker has not run within tolerance).`
     );
   }
+  if (
+    input.settlement.settlementSource === "pick.settledAt" ||
+    input.settlement.settlementSource === "none"
+  ) {
+    actions.push(
+      "Ensure settle-picks cron writes SettlementRun rows (free path OK) so Jarvis uses durable settlement runs."
+    );
+  }
   if (input.gates.isBootstrapMode) {
     actions.push(
       "Once data quality is stable, flip CANONICAL_HISTORY_ENABLED=true to start producing canonical picks."
@@ -468,9 +503,12 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
   for (const name of externalConfig) {
     actions.push(`Configure missing external dependency: ${name}.`);
   }
+  if (input.signal.freeSpineLiveScore === 0) {
+    actions.push(
+      "Run /api/cron/free-spine-health (CRON_SECRET) so Jarvis can score live multi-source probes."
+    );
+  }
   if (actions.length === 0) {
-    // Steady-state recommendations when nothing is blocking. The order
-    // mirrors the daily operator checklist in docs/launch-runbook.md §7.
     actions.push(
       "Run the daily operator checklist: verify ingestion + settlement are GREEN, " +
         "skim /cockpit/history for unexpected eligibility drift, and confirm no new safety warnings."
@@ -505,7 +543,6 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
     launchStatus = "LAUNCH_READY_PENDING_EXTERNAL_CONFIG";
   }
   if (overall === "LAUNCH_READY_PENDING_EXTERNAL_CONFIG" && externalConfig.length === 0 && missingPhase.length === 0 && safety.length === 0) {
-    // Amber with no specific blocker reduces to launch-ready-pending-config.
     launchStatus = "LAUNCH_READY_PENDING_EXTERNAL_CONFIG";
   }
 
@@ -553,9 +590,6 @@ function oneSentence(
   input: JarvisInput,
   safetyCount: number
 ): string {
-  // Concrete pick activity summary the operator can scan in one glance.
-  // We reference settled canonical, pending, and the bootstrap-excluded
-  // count so the sentence shows what Jarvis sees vs what's held back.
   const activity =
     `${input.history.canonicalSettledCount} canonical settled, ` +
     `${input.history.canonicalPendingCount} pending, ` +
