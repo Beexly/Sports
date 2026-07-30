@@ -98,6 +98,19 @@ export function aggregateLines(
       Date.parse(a.quoteAsOf) >= Date.parse(b.quoteAsOf) ? a : b,
     );
 
+    // Propagate method continuity tags only when every source agrees.
+    // Mixed-method pools leave tags unset → CLV sameMethodOrRefuse holds.
+    const tags = new Set(
+      pool.map((p) => p.methodTag).filter((x): x is string => Boolean(x?.trim())),
+    );
+    const versions = new Set(
+      pool
+        .map((p) => p.modelVersion)
+        .filter((x): x is string => Boolean(x?.trim())),
+    );
+    const methodTag = tags.size === 1 ? [...tags][0] : undefined;
+    const modelVersion = versions.size === 1 ? [...versions][0] : undefined;
+
     out.push({
       eventId: pool[0]!.eventId,
       sport: pool[0]!.sport,
@@ -107,6 +120,8 @@ export function aggregateLines(
       quoteAsOf: newest.quoteAsOf,
       sources: pool,
       method,
+      methodTag,
+      modelVersion,
       independence: {
         oddsApiRequired: false,
         booksUsed: pool.filter((p) => p.sourceKind === "sportsbook_aggregator")

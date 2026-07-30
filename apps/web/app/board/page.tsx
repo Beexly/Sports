@@ -119,6 +119,23 @@ export default async function BoardPage(): Promise<JSX.Element> {
           </div>
         )}
 
+        {/* Honest-empty classifier — LIVE_BOARD off is not a quiet winning day */}
+        {stateResult.meta.boardClass.honestEmpty &&
+          !dbUnreachable &&
+          !suppression && (
+            <div
+              data-testid="board-class-banner"
+              className="flex flex-col gap-2 border border-orbital-cyan/30 bg-orbital-cyan/[0.06] px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center"
+            >
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orbital-cyan">
+                {stateResult.meta.boardClass.state.replaceAll("_", " ")}
+              </span>
+              <span className="break-words sm:ml-3">
+                {stateResult.meta.boardClass.publicMessage}
+              </span>
+            </div>
+          )}
+
         <section className="border-b border-titanium pb-8">
           <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">Today&apos;s Board</p>
           <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
@@ -164,9 +181,33 @@ export default async function BoardPage(): Promise<JSX.Element> {
         </section>
 
         <section className="grid gap-4 lg:grid-cols-3">
-          <BoardLane title="Scoring Now" rows={state.scoringNow} empty="No games are currently scoring." />
-          <BoardLane title="Published Today" rows={state.publishedToday} empty="No picks have cleared today." />
-          <BoardLane title="Gated Today" rows={state.gatedTodayRows} empty="No passed games logged yet." />
+          <BoardLane
+            title="Scoring Now"
+            rows={state.scoringNow}
+            empty={
+              stateResult.meta.boardClass.honestEmpty
+                ? "Held — empty is refuse-default, not a scoring drought claim."
+                : "No games are currently scoring."
+            }
+          />
+          <BoardLane
+            title="Published Today"
+            rows={state.publishedToday}
+            empty={
+              stateResult.meta.boardClass.refusePublicFire
+                ? "No public fires — LIVE_BOARD / gate held by law."
+                : "No picks have cleared today."
+            }
+          />
+          <BoardLane
+            title="Gated Today"
+            rows={state.gatedTodayRows}
+            empty={
+              stateResult.meta.boardClass.honestEmpty
+                ? "No gated rows while the board is honestly empty."
+                : "No passed games logged yet."
+            }
+          />
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">

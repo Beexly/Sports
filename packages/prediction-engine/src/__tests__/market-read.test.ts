@@ -7,6 +7,14 @@ import {
 } from "../market-read.js";
 
 describe("noVigFromAmericanPrices", () => {
+
+  it("tags Shin method for CLV continuity (never silent multiplicative swap)", () => {
+    const read = noVigFromAmericanPrices([-110, -110]);
+    expect(read).not.toBeNull();
+    expect(read!.methodTag).toBe("shin_devig_v1");
+    expect(read!.modelVersion).toBe("market-read.shin.v1");
+  });
+
   it("a balanced -110/-110 line de-vigs to 50/50 with ~4.76% hold", () => {
     const read = noVigFromAmericanPrices([-110, -110]);
     expect(read).not.toBeNull();

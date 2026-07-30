@@ -51,6 +51,8 @@ export function createModelPriorProvider(
           confidence: 0.55,
           notes:
             "Model prior as q — no book dependency. Edge interpretation changes (model vs self).",
+          methodTag: "model_prior_v1",
+          modelVersion: "quote.model_prior.v1",
         }));
     },
   };

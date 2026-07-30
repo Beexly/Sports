@@ -71,3 +71,9 @@
 ## Forbidden
 
 Fake ROI · sportsbook CPA · Pedersen=ZK/PQ · Odds API on free critical path · flip gates without YES
+
+
+### Frontier A++ audit delta (2026-07-30)
+
+See `docs/ops/audit/FRONTIER_AUDIT_20260730T001645Z.md`.
+Fixed: boardClass UI, methodTag stamps, Shin method tag, dual-auth tests, AI Council CI.
