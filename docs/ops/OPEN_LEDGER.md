@@ -1,8 +1,9 @@
 # OPEN_LEDGER — GSE drain status
 
-**Updated:** 2026-07-30 · frontier A++ re-audit  
-**MAIN baseline:** post-#251 (`548480a` lineage) · #254 closes residual A  
-**Law:** oddsApiRequired=false · LIVE_BOARD off · refuse-default
+**Updated:** 2026-07-30 · **IDLE** after #254  
+**MAIN:** `8d0b34e` (`fix(frontier): A++ audit… (#254)`)  
+**Law:** oddsApiRequired=false · LIVE_BOARD off · refuse-default · measurement > narrative  
+**score_self:** **A++** (evidence: audits below + CI green on merge)
 
 ## Classification key
 
@@ -21,30 +22,31 @@
 | A3 | Board classifyBoardState / honest empty | **DONE** #251+#254 |
 | A4 | Own-feed values refuse path | **DONE** #251 |
 | A5 | evaluateUnifiedPrefire before public FIRE | **DONE** #251 |
-| A6 | sameMethodOrRefuse / method tag on receipts | **DONE** #251+#254 (density) |
+| A6 | sameMethodOrRefuse / method tag density + continuous CLV | **DONE** #251+#254 |
 | A7 | CREDENTIALS_CHECKLIST + smoke scripts | **DONE** #251 |
 | A8 | rights SPDX export + durable archive/council/BH | **DONE** #250+#251 |
 | A9 | CI smoke scripts | **DONE** #251 |
 | A10 | Routes refuse-default | **DONE** #251 |
-| A11 | CI Postgres health (`pg_isready -U sports`) | **DONE** #254 |
-| A12 | timingSafeHashEqual strict hex/length | **DONE** #254 |
+| A11 | CI Postgres health (`pg_isready -U sports`) | **DONE** #254 (closed draft #153) |
+| A12 | timingSafeHashEqual strict hex/length | **DONE** #254 (closed draft #154) |
 | A13 | AI Council DESTROY in CI + vitest package root | **DONE** #254 |
 | A14 | methodTag all providers + archive continuous CLV | **DONE** #254 |
 
-**class_A_remaining = 0** after #254 merges
+**class_A_remaining = 0** · agent **IDLE**
 
-### Non-A residuals (correctly not agent-actionable)
+### Non-A residuals (not agent-actionable)
 
 | Hit | Class | Why |
 |-----|-------|-----|
-| LIVE_BOARD / PUBLISH_LEDGER / SLATE_OPENING_REVEAL | C | Founder gate |
+| LIVE_BOARD / PUBLISH_LEDGER / SLATE_OPENING_REVEAL | C | Founder gate — all **off** |
 | canPublishPicks: false hardcodes | C | Correct refuse-default |
-| CODE_READY hydration stubs / optical CV | C | Catalog honesty / CV PARKED |
+| CODE_READY hydration stubs / optical CV | C | Catalog honesty / CV **PARKED** |
 | Phase C remeasure CODE_READY | C | Founder + paid Odds |
-| TODO(governed-receipts) | C | Blocked on ledger writer cascade |
-| Jarvis not-wired seats | C | Capability registry honesty, not ship debt |
+| TODO(governed-receipts) | C | Ledger writer cascade |
+| Jarvis not-wired seats | C | Registry honesty |
 | #226 HEOS | C | Founder YES |
-| Draft #247 frontier | C/dup | Overlaps #251 publicFire; rebase only if unique |
+| Open #247 frontier publicFire | C/dup | Overlaps #251 publicFire |
+| Open #248 own-feed / self-CLV | C/dup | Overlaps #251+#254 density |
 
 ## Class B — founder env/secrets
 
@@ -74,7 +76,7 @@
 
 Fake ROI · sportsbook CPA · Pedersen=ZK/PQ · Odds API on free critical path · flip gates without YES
 
-### Frontier A++ audit delta (2026-07-30)
+## Frontier A++ audits (committed)
 
-- `docs/ops/audit/FRONTIER_AUDIT_20260730T001645Z.md` — boardClass, tags, council CI  
+- `docs/ops/audit/FRONTIER_AUDIT_20260730T001645Z.md` — boardClass, initial tags, council CI  
 - `docs/ops/audit/FRONTIER_AUDIT_20260730T002800Z.md` — aggregate all-tagged, archive continuous CLV, provider density  
