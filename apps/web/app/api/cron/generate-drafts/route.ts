@@ -40,6 +40,7 @@ import { contentDraftToCreateData } from "@/lib/content-engine/persist-draft";
 import type { ContentSourceRecord } from "@/lib/content-engine/types";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 60;
 
 type DraftOutcome = { slug: string; created: boolean; skipped?: boolean; reason?: string };

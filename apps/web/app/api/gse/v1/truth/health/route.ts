@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleTopologyHealth } from "@sports/stats-api";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /** POST /api/gse/v1/truth/health — score topology readiness for edge fire */
 export async function POST(req: NextRequest): Promise<NextResponse> {

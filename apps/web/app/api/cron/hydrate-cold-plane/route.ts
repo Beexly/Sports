@@ -27,6 +27,7 @@ import {
 import { db } from "@sports/db";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 300;
 
 /** Module-scoped store for this serverless isolate (honest single-process). */

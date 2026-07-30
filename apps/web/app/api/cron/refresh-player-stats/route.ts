@@ -21,6 +21,7 @@ import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 300; // Vercel cron caps at 5 min
 
 export async function GET(request: Request): Promise<NextResponse> {

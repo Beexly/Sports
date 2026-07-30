@@ -13,6 +13,7 @@ import { backfillPlayerData, DATASET_MIN_SEASON } from "@/lib/ingestion/backfill
 import { currentNflSeason } from "@/lib/ingestion/player-stats";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 300; // Vercel cron caps at 5 min
 
 const MAX_SEASONS_PER_CALL = 4; // bound wall-time under the cron cap

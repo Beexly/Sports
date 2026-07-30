@@ -8,6 +8,7 @@ import { cronAuthError } from "@/lib/cron/authorize";
 import { ingestHistoricalGames } from "@/lib/ingestion/historical-games";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 300; // Vercel cron caps at 5 min
 
 export async function GET(request: Request): Promise<NextResponse> {

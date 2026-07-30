@@ -26,6 +26,7 @@ import { cronAuthError } from "@/lib/cron/authorize";
 import { reconcileEntitlements } from "@/lib/billing/reconcile-entitlements";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const fetchCache = "force-no-store";
 export const maxDuration = 300; // Vercel hobby/pro cron caps at 5 min
 

@@ -34,6 +34,7 @@ import {
 } from "@/lib/community/durable-rate-limiter";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function GET(request: Request) {
   const denied = cronAuthError(request);

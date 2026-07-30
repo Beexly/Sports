@@ -38,6 +38,7 @@ import {
 import { planPlayerStatsRun } from "@/lib/ingestion/player-stats-backfill";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 300; // Vercel cron caps at 5 min
 
 export async function GET(request: Request): Promise<NextResponse> {

@@ -12,6 +12,7 @@ import { ingestTeamEfficiency } from "@/lib/ingestion/team-efficiency";
 import { currentNflSeason } from "@/lib/ingestion/player-stats";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const maxDuration = 300; // Vercel cron caps at 5 min
 
 const MIN_SEASON = 1999; // nflfastR play-by-play / EPA goes back to 1999

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleDualAsOfEdge } from "@sports/stats-api";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /**
  * POST /api/gse/v1/truth/edge
