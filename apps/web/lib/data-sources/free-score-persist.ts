@@ -9,7 +9,7 @@
 
 import { db } from "@sports/db";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
-import { fetchScoresFreeFirst } from "./free-first-ingest";
+import { fetchScoresMultiSource } from "./multi-source-scores";
 import {
   fetchHenrygdScoreboard,
   HENRYGD_PATHS,
@@ -110,8 +110,8 @@ export async function persistFreeScores(options?: {
     }
 
     try {
-      const espnOut = await fetchScoresFreeFirst(freeSport);
-      const espn: readonly NormalizedGame[] = espnOut.data ?? [];
+      const multi = await fetchScoresMultiSource(freeSport);
+      const espn: readonly NormalizedGame[] = multi.games;
       const henry = await loadHenry(freeSport);
       const finals = buildTrustedFinals(espn, henry).filter((f) => f.confirmation !== "DISPUTED");
 

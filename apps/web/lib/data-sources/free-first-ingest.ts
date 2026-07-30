@@ -18,7 +18,18 @@ import { fetchEspnScoreboard, type NormalizedGame, type FetchOptions as EspnOpts
 import { fetchWeather, weatherAtKickoff, type WeatherResult, type HourlyWeather, type FetchOptions as MeteoOpts } from "./free-adapters/open-meteo";
 
 /** Source ids we have a working free fetcher for (drives free-first selection). */
-export const SOURCES_WITH_FREE_ADAPTER: ReadonlySet<string> = new Set(["espn-public-api", "open-meteo"]);
+export const SOURCES_WITH_FREE_ADAPTER: ReadonlySet<string> = new Set([
+  "espn-public-api",
+  "open-meteo",
+  "henrygd-ncaa",
+  "polymarket-gamma",
+  "kalshi-public",
+  "mlb-statsapi",
+  "nhl-web-api",
+  "balldontlie-nba",
+  "espn-boxscore",
+  "nflverse",
+]);
 
 export type FreeFirstOutcome<T> = {
   readonly need: StatNeed;
@@ -37,14 +48,26 @@ export type FreeFirstOutcome<T> = {
  * Pick the cheapest free, cleared source that we ALSO have an adapter for.
  * Returns undefined when none — the caller consults `plan.mustSpend`.
  */
+/** Live scoreboard adapters (not deep-stats-only sources like nflverse). */
+const SCOREBOARD_ADAPTERS: ReadonlySet<string> = new Set([
+  "espn-public-api",
+  "henrygd-ncaa",
+  "mlb-statsapi",
+  "nhl-web-api",
+  "balldontlie-nba",
+]);
+
 function freeAdapterSourceId(need: StatNeed, sport: Sport): string | null {
+  const fromPlan = planIngestion(need, sport);
+  const ordered = [fromPlan.primary, ...fromPlan.fallbacks].filter(Boolean);
+  // For scores/results, prefer live scoreboard adapters over deep-stats free spines.
+  if (need === "scores" || need === "results") {
+    const board = ordered.find((s) => s && SCOREBOARD_ADAPTERS.has(s.id));
+    if (board) return board.id;
+  }
   const best = bestFreeClearedSource(need, sport);
   if (best && SOURCES_WITH_FREE_ADAPTER.has(best.id)) return best.id;
-  // Fall back to any free cleared source we have an adapter for.
-  const fromPlan = planIngestion(need, sport);
-  const candidate = [fromPlan.primary, ...fromPlan.fallbacks].find(
-    (s) => s && SOURCES_WITH_FREE_ADAPTER.has(s.id),
-  );
+  const candidate = ordered.find((s) => s && SOURCES_WITH_FREE_ADAPTER.has(s.id));
   return candidate?.id ?? null;
 }
 
@@ -56,12 +79,20 @@ export async function fetchScoresFreeFirst(
   const plan = planIngestion("scores", sport);
   const sourceId = freeAdapterSourceId("scores", sport);
 
-  if (sourceId === "espn-public-api") {
+  // Live scoreboard path: ESPN is the universal free adapter.
+  // Multi-source failover lives in multi-source-scores.ts (used by free settle/persist).
+  if (
+    sourceId === "espn-public-api" ||
+    sourceId === "henrygd-ncaa" ||
+    sourceId === "mlb-statsapi" ||
+    sourceId === "nhl-web-api" ||
+    sourceId === "balldontlie-nba"
+  ) {
     const games = await fetchEspnScoreboard(sport, opts);
     return {
       need: "scores",
       sport,
-      usedSourceId: sourceId,
+      usedSourceId: "espn-public-api",
       usedFree: true,
       mustSpend: false,
       plan,

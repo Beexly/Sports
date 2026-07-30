@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import {
   freeCoverageMatrix,
   planIngestion,
+  redundancyGaps,
   ALL_SPORTS,
   type StatNeed,
 } from "@/lib/data-sources/source-router";

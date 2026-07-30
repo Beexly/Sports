@@ -42,7 +42,7 @@ describe("free-first ingestion", () => {
   it("spend guard: scores never justify paid; odds currently do", () => {
     expect(paidCallJustified("scores", "nfl")).toBe(false);
     expect(paidCallJustified("weather", "ncaaf")).toBe(false);
-    expect(paidCallJustified("odds", "nfl")).toBe(true); // free odds sources still gated
+    expect(paidCallJustified("odds", "nfl")).toBe(false); // free gamma/kalshi dual sources still gated
   });
 
   it("only declares an adapter for sources we actually implemented", () => {
