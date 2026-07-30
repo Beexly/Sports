@@ -58,3 +58,5 @@
 - Sportsbook CPA  
 - Pedersen = ZK/PQ  
 - Odds API on free critical path  
+
+CI re-sync: 2026-07-30T00:02:44Z
