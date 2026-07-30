@@ -15,7 +15,7 @@ import {
   type PostSettlementWorkDelegate,
 } from "@sports/ingestion-pipeline";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
-import { fetchScoresFreeFirst } from "./free-first-ingest";
+import { fetchScoresMultiSource } from "./multi-source-scores";
 import {
   fetchHenrygdScoreboard,
   HENRYGD_PATHS,
@@ -133,8 +133,8 @@ export async function runFreePathSettlement(options?: {
         continue;
       }
 
-      const espnOut = await fetchScoresFreeFirst(freeSport);
-      const espn: readonly NormalizedGame[] = espnOut.data ?? [];
+      const multi = await fetchScoresMultiSource(freeSport);
+      const espn: readonly NormalizedGame[] = multi.games;
       const henry = await loadHenrygdFor(freeSport);
       const finals = buildTrustedFinals(espn, henry);
 

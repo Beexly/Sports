@@ -38,8 +38,10 @@ describe("Agent OS registry", () => {
     expect(assertAgentCanReceiveExecutableTask("delta")).toBe(false);
     expect(getAgent("ava")?.allowedActions).toContain("DRAFT");
     expect(getAgent("ava")?.forbiddenActions).toContain("PUBLISH");
-    expect(getAgent("ledger")?.status).toBe("MANUAL");
-    expect(getAgent("ledger")?.cadence).toBe("human-triggered");
+    expect(getAgent("ledger")?.status).toBe("DRAFT_ONLY");
+    expect(getAgent("ledger")?.allowedActions).toContain("DRAFT");
+    expect(getAgent("audit")?.status).toBe("MANUAL");
+    expect(getAgent("audit")?.cadence).toBe("human-triggered");
   });
 
   it("keeps scoring, browser, voice, and tool governance blocked behind approvals", () => {

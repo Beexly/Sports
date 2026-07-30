@@ -506,8 +506,8 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
       "npm run free:doctor",
     ],
     lastVerifiedAt: null,
-    failureMode: "rate limits / seasonal empty boards look like outages without free:doctor",
-    nextAction: "Persist free scores into DB on Production Neon; keep paid Odds optional enrichment only.",
+    failureMode: "rate limits / seasonal empty boards; multi-source failover reduces single-host outages",
+    nextAction: "Prove multi-source free scores + free settle on Production Neon; keep paid Odds optional only.",
   },
 
 ];
