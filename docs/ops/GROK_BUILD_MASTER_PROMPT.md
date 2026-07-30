@@ -41,7 +41,8 @@ rg -n "cronAuthError|GammaCronRunner|ClosingArchive|createTrialsRegistry|ai-coun
 P0  Keep MAIN green; lockfile on every new workspace
 P1  Durable archive blob/Redis when multi-instance proven (file path first)
 P1  Land/fix open frontier PRs #248 own-feed (palette tokens) · #247 rebase after #249
-P1  Board / own-api honest-empty + design tokens (ion/titanium/…)
+P1  Board classifyBoardState / own-feed refuse / prefire publicFire (shipped #251)
+P1  Board / own-api design tokens (ion/titanium/…)
 P2  Wire createTrialsRegistry into any new Phase-3 feature admit path
 P2  Port remaining packet: overlay · sse · context-plane · competitive (anti-dupe vs #248)
 P2  CREDITS_STACK activation is founder/ops — code stays path-ready
@@ -52,7 +53,7 @@ IDLE Phase C (5b) · LIVE_BOARD · #226 YES · public claims
 
 ## 3. Identity law
 
-Vercel cron → CRON_SECRET + cronAuthError. SPIFFE/NATS/Kafka = not serverless. Odds API = enrichment only.
+Vercel cron → CRON_SECRET (+ optional CRON_SECRET_PREVIOUS dual) + cronAuthError. SPIFFE/NATS/Kafka = not serverless. Odds API = enrichment only.
 
 ---
 

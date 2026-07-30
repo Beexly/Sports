@@ -11,3 +11,4 @@ export * from "./archive/closing-archive";
 export * from "./clv/compute";
 export * from "./cron/gamma-cron";
 export * from "./archive/durable-store";
+export * from "./clv/method-continuity";

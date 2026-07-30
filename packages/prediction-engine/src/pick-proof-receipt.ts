@@ -51,6 +51,12 @@ export interface PickProofInput {
    */
   readonly modelProb?: number | null;
   readonly modelVersion: string;
+  /**
+   * Method that produced marketFairProb (e.g. multiplicative_devig_v1).
+   * Required for continuous self-CLV; optional for legacy receipts.
+   * Absent commits as "none" — never invents a method.
+   */
+  readonly marketFairMethodTag?: string | null;
   /** ISO timestamp the pick + odds snapshot were frozen at (must be before kickoff). */
   readonly asOf: string;
 }
@@ -104,6 +110,10 @@ function committedFields(i: PickProofInput): Readonly<Record<string, string | nu
     // NOT claim a calibrated probability, distinct from any future real value.
     modelProb: i.modelProb == null ? "none" : round(i.modelProb, 6),
     modelVersion: i.modelVersion,
+    marketFairMethodTag:
+      i.marketFairMethodTag == null || !String(i.marketFairMethodTag).trim()
+        ? "none"
+        : String(i.marketFairMethodTag).trim(),
     asOf: i.asOf,
   };
 }

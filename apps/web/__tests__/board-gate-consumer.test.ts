@@ -308,3 +308,41 @@ describe("board gate consumer — excluded candidates are reported, never droppe
     expect(isFullyUncalibrated(evaluation)).toBe(true);
   });
 });
+
+
+describe("board gate consumer — prefire before public fire", () => {
+  it("multiprob FIRE does not imply publicFire while LIVE_BOARD off (default prefire)", () => {
+    const evaluation = evaluateBoardGate(
+      calRows(400, "nfl|MONEYLINE"),
+      candidates(60, "nfl|MONEYLINE"),
+      0,
+    );
+    const fired = evaluation.outcomes.filter((o) => o.code === "FIRE");
+    expect(fired.length).toBeGreaterThan(0);
+    expect(evaluation.prefire.proceedToSelective).toBe(false);
+    if (!evaluation.prefire.proceedToSelective) {
+      expect(evaluation.prefire.reason).toBe("live_board_off");
+    }
+    expect(fired.every((o) => o.publicFire === false)).toBe(true);
+  });
+
+  it("publicFire true only when prefire proceeds and multiprob fires", () => {
+    const evaluation = evaluateBoardGate(
+      calRows(400, "nfl|MONEYLINE"),
+      candidates(60, "nfl|MONEYLINE"),
+      0,
+      {},
+      [],
+      {
+        dualAsOfOk: true,
+        calibrationReady: true,
+        quoteFresh: true,
+        liveBoardOn: true,
+      },
+    );
+    expect(evaluation.prefire.proceedToSelective).toBe(true);
+    const fired = evaluation.outcomes.filter((o) => o.code === "FIRE");
+    expect(fired.length).toBeGreaterThan(0);
+    expect(fired.every((o) => o.publicFire === true)).toBe(true);
+  });
+});

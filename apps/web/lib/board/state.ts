@@ -8,6 +8,10 @@ import {
 } from "@/lib/board/health";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 import { unevaluatedPassReason } from "./pass-reason";
+import {
+  classifyBoardState,
+  type ClassifiedBoardState,
+} from "./classify-board-state";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -46,6 +50,8 @@ export interface BoardStatePayload {
     traceId: string;
     degradations: readonly BoardDegradation[];
     health: BoardHealthBadgeState;
+    /** Honest-empty classifier — refuse-default public fire claim */
+    boardClass: ClassifiedBoardState;
   };
 }
 
@@ -92,24 +98,39 @@ function buildBoardMeta({
   now,
   rows,
   suppressedReason,
+  liveBoardOn = false,
+  bootstrap = false,
 }: {
   dataError?: "DB_UNREACHABLE";
   modelVersion: string;
   now: Date;
   rows: Pick<BoardStateData, "scoringNow" | "publishedToday" | "gatedTodayRows">;
   suppressedReason?: BoardSuppressionReason;
+  /** Production default false — founder gate */
+  liveBoardOn?: boolean;
+  bootstrap?: boolean;
 }): BoardStatePayload["meta"] {
+  const counts = rowCounts(rows);
   const health = buildBoardHealth({
     dataError,
     modelVersion,
     now,
-    rowCounts: rowCounts(rows),
+    rowCounts: counts,
     suppressedReason,
+  });
+  const rowCount = counts.scoringNow + counts.publishedToday + counts.gatedTodayRows;
+  const boardClass = classifyBoardState({
+    liveBoardOn,
+    bootstrap,
+    rowCount,
+    dataError: dataError ?? null,
+    suppressedReason: suppressedReason ?? null,
   });
   return {
     degradations: health.degradations,
     health: health.badge,
     isSampleData: false,
+    boardClass,
     ...(dataError ? { dataError } : {}),
     ...(suppressedReason ? { suppressedDemoData: true } : {}),
     traceId: health.traceId,
@@ -152,6 +173,8 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         now,
         rows: emptyRows,
         suppressedReason: demoActive ? "DEMO_DATA" : "STALE_DATA",
+        liveBoardOn: false,
+        bootstrap: gates.isBootstrapMode,
       }),
     };
   }
@@ -229,7 +252,9 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
           modelVersion,
           now,
           rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
-        }),
+        liveBoardOn: false,
+        bootstrap: gates.isBootstrapMode,
+      }),
       };
     }
 
@@ -331,6 +356,8 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         modelVersion,
         now,
         rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
+        liveBoardOn: false,
+        bootstrap: gates.isBootstrapMode,
       }),
     };
   } catch {
@@ -357,6 +384,8 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         modelVersion: MODEL_VERSION,
         now,
         rows: emptyRows,
+        liveBoardOn: false,
+        bootstrap: gates.isBootstrapMode,
       }),
     };
   }

@@ -2,16 +2,17 @@
  * Vercel cron — Polymarket Gamma free quote plane.
  *
  * No THE_ODDS_API_KEY. Parallel to refresh-odds (enrichment only).
- * Auth: Bearer CRON_SECRET via shared cronAuthError (timing-safe).
+ * Auth: Bearer CRON_SECRET via shared cronAuthError (timing-safe, dual-secret).
  *
  * Law: oddsApiRequired=false · refuse-default · LIVE_BOARD independent
  *
- * Schedule: vercel.json every 30 minutes (ADD — keep existing 11 crons)
+ * Schedule: vercel.json every 30 minutes (ADD — keep existing crons)
  *
  * Durability: set CLOSING_ARCHIVE_PATH for file-backed archive across cold starts.
  * Unset path = process-local only (honest single-isolate).
  */
 import { NextResponse } from "next/server";
+import { extractBearerSecret } from "@sports/util";
 import { cronAuthError } from "@/lib/cron/authorize";
 import {
   ClosingArchive,
@@ -36,15 +37,17 @@ const runner = new GammaCronRunner(gamma, archive, {
 });
 
 export async function GET(request: Request): Promise<NextResponse> {
+  // HTTP SoT — dual CRON_SECRET + CRON_SECRET_PREVIOUS
   const denied = cronAuthError(request);
   if (denied) return denied;
 
-  const secret = process.env["CRON_SECRET"];
+  const provided = extractBearerSecret(request.headers.get("authorization"));
   try {
     const result = await runner.run({
       auth: {
-        providedSecret: secret,
-        expectedSecret: secret,
+        providedSecret: provided,
+        expectedSecret: process.env["CRON_SECRET"],
+        previousSecret: process.env["CRON_SECRET_PREVIOUS"],
       },
     });
 
@@ -69,7 +72,7 @@ export async function GET(request: Request): Promise<NextResponse> {
           boot: hydrateBoot,
           persist,
         },
-        note: "Free Gamma path. Odds API not required. CLOSING_ARCHIVE_PATH enables file durability.",
+        note: "Free Gamma path. Odds API not required. Dual-secret auth. CLOSING_ARCHIVE_PATH enables file durability.",
       },
       {
         status,
