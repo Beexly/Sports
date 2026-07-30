@@ -16,9 +16,9 @@ import {
   evaluatePublicPerformancePolicy,
   type PublicPerformancePolicy,
 } from "@/lib/performance/public-performance-policy";
-import {
 import { redundancyGaps } from "@/lib/data-sources/source-router";
 import { scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
+import {
   synthesizeJarvis,
   type JarvisAssessment,
   type JarvisLayerStatuses,
