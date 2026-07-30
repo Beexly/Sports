@@ -1,9 +1,9 @@
 # OPEN_LEDGER — GSE drain status
 
-**Updated:** 2026-07-30 · **IDLE** after Pass 3 residual kill + harden  
-**MAIN tip (pre-merge this PR):** pass-3 branch · feature baseline `8d0b34e` / docs `f49bc8d`  
+**Updated:** 2026-07-30 · **Pass 4 IDLE**  
+**MAIN:** `1e007c3` (`fix(pass3): cron nodejs harden + CRON_MATRIX + honest picks copy (#256)`)  
 **Law:** oddsApiRequired=false · LIVE_BOARD off · refuse-default · measurement > narrative  
-**score_self:** **A++** · pass=3 · residuals_A=0 · harden=done
+**class_A_remaining = 0**
 
 ## Classification key
 
@@ -15,58 +15,55 @@
 
 ## Class A
 
-| ID | Item | Status |
-|----|------|--------|
-| A1–A14 | Serial + frontier A++ (#251–#254) | **DONE** |
-| A15 | Cron `runtime=nodejs` all 18 routes + truth | **DONE** pass-3 |
-| A16 | `docs/ops/CRON_MATRIX.md` route×auth×vercel | **DONE** pass-3 |
+**Empty.** All agent-finishable items shipped through #251–#256.
 
-**class_A_remaining = 0** · agent **IDLE** after this PR merges
+| Wave | Status |
+|------|--------|
+| Serial dual-secret, board honesty, own refuse, prefire, method CLV (#251) | DONE |
+| Frontier A++ audit + methodTag density + continuous CLV + AI Council CI (#254) | DONE |
+| IDLE stamp (#255) | DONE |
+| Cron nodejs harden + CRON_MATRIX + picks copy honesty (#256) | DONE |
 
-### Non-A residuals (not agent-actionable)
+## Class B — founder env/secrets (exact)
 
-| Hit | Class | Why |
-|-----|-------|-----|
-| LIVE_BOARD / PUBLISH_LEDGER / SLATE_OPENING_REVEAL | C | Founder gate — all **off** |
-| canPublishPicks: false hardcodes | C | Correct refuse-default |
-| CODE_READY hydration stubs / optical CV | C | Catalog honesty / CV **PARKED** |
-| Phase C remeasure CODE_READY | C | Founder + paid Odds |
-| TODO(governed-receipts) / CCM deploy-IdP TODOs | C | External writers |
-| Jarvis not-wired seats / podcast coming soon | C | Registry / marketing honesty |
-| #226 HEOS | C | Founder YES |
-| Open #247 / #248 | C/dup | Overlaps shipped MAIN |
+| Env | Where to set |
+|-----|----------------|
+| `CRON_SECRET` | Vercel → Project → Settings → Environment Variables → **Production** |
+| `CRON_SECRET_PREVIOUS` | Same (rotation only) |
+| `DATABASE_URL` | Neon dashboard → connection string → Vercel Production |
+| `DIRECT_URL` | Neon direct URL → Vercel Production |
+| Upstash Redis URL/token | Upstash console → Vercel Production (if multi-instance) |
+| Stripe live keys + webhook secret | Stripe Dashboard → Vercel Production |
+| `THE_ODDS_API_KEY` | Optional; Vercel Production; **enrichment only** |
+| `CLOSING_ARCHIVE_PATH` | Optional durable path |
 
-## Class B — founder env/secrets
-
-| Env | Where |
-|-----|-------|
-| `CRON_SECRET` (+ optional `CRON_SECRET_PREVIOUS`) | Vercel Production |
-| `DATABASE_URL` / `DIRECT_URL` | Neon + Vercel |
-| Upstash Redis (optional) | Upstash + Vercel |
-| Stripe live keys | Stripe + Vercel |
-| `THE_ODDS_API_KEY` | Optional enrichment only |
-| `CLOSING_ARCHIVE_PATH` | Optional durable archive |
+See also: `docs/ops/FOUNDER_ONLY_CHECKLIST.md`, `docs/ops/CREDENTIALS_CHECKLIST.md`, `docs/ops/SMOKE.md`
 
 ## Class C — parked / founder YES only
 
-| Item | Status |
-|------|--------|
-| LIVE_BOARD | **off** |
-| PUBLISH_LEDGER | **off** |
-| SLATE_OPENING_REVEAL_ENABLED | **off** |
-| canPublishPicks | **false** |
-| #226 HEOS | founder YES |
-| Phase C (5b) | founder + paid Odds |
-| Overlay CV | **PARKED** |
-| Poly1305 / CF Access / SPIFFE | closed digression |
+| Item | Status | Reason |
+|------|--------|--------|
+| LIVE_BOARD | **off** | Founder YES only |
+| PUBLISH_LEDGER | **off** | Founder YES only |
+| SLATE_OPENING_REVEAL | **off** | Founder YES only |
+| canPublishPicks | **false** | refuse-default |
+| #226 HEOS | open PR | Founder YES to merge science |
+| Phase C (5b) | **UNVERIFIED** | Founder + real path measure |
+| Overlay / optical CV | **PARKED** | Catalog dark; not ship path |
+| Poly1305 / CF Access / SPIFFE | closed digression | Out of product critical path |
+| Open #247 / #248 | C/dup | Overlaps MAIN #251+#254 |
 
 ## Forbidden
 
 Fake ROI · sportsbook CPA · Pedersen=ZK/PQ · Odds API on free critical path · flip gates without YES
 
-## Pass artifacts
+## Canonical docs (Pass 4)
 
-- `docs/ops/CRON_MATRIX.md` — cron route × auth × vercel schedule
-- `docs/ops/audit/FRONTIER_AUDIT_IDLE_8d0b34e.md` — A++ evidence
-- `docs/ops/CREDENTIALS_CHECKLIST.md` — founder env
-- Smokes: `scripts/ops/gamma-cron-smoke.sh`, `scripts/ops/credentials-smoke.mjs`
+| File | Role |
+|------|------|
+| `docs/ops/CURRENT_STATE.md` | Product truth snapshot |
+| `docs/ops/OPEN_LEDGER.md` | This ledger |
+| `docs/ops/FOUNDER_ONLY_CHECKLIST.md` | Checkbox-only founder work |
+| `docs/ops/FOUNDER_HANDOFF_MESSAGE.md` | 3-minute founder message |
+| `docs/ops/CRON_MATRIX.md` | Cron route matrix |
+| `docs/ops/SMOKE.md` | Exact smoke commands |
