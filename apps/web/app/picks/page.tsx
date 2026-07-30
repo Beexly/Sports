@@ -402,7 +402,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
                   ? "The board is paused while fresh odds land."
-                  : "Public picks stay gated until the live board is founder-enabled."}
+                  : "Public picks are still gated. LIVE_BOARD stays off until founder enable."}
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
