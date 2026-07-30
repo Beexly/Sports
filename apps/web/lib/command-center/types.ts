@@ -43,7 +43,8 @@ export type AttentionSource =
   | "external_config"
   | "missing_phase"
   | "recommended_action"
-  | "advisory";
+  | "advisory"
+  | "ingestion_health";
 
 /**
  * The five principled factors behind every attention score. Each is 0..1.
@@ -167,4 +168,7 @@ export interface AttentionSourceInput {
     readonly actionDescription: string | null;
     readonly drilldownHref: string | null;
   }>;
+  /** Jarvis ingestionStatus — drives stale/unknown attention without extra I/O. */
+  readonly ingestionStatus?: JarvisHealth;
+  readonly lastIngestionAt?: string | null;
 }

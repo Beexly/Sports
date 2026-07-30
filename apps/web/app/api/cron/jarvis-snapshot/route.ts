@@ -13,6 +13,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import { sharedJarvisHistory } from "@/lib/cockpit/jarvis-history";
+import { materializeJarvisDraftTasks } from "@/lib/cockpit/jarvis-draft-tasks";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -25,11 +26,14 @@ export async function GET(request: Request) {
   try {
     const { assessment } = await loadJarvisAssessment();
     const snap = sharedJarvisHistory().push(assessment);
+    const draftTasks = materializeJarvisDraftTasks(assessment);
     return NextResponse.json({
       ok: true,
       path: "jarvis-snapshot",
       oddsApiRequired: false as const,
       bufferSize: sharedJarvisHistory().size(),
+      draftTaskCount: draftTasks.length,
+      draftTasks: draftTasks.slice(0, 12),
       snapshot: {
         assessedAt: snap.assessedAt,
         launchStatus: snap.launchStatus,

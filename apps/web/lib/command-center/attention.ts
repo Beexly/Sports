@@ -248,7 +248,28 @@ export function collectAttentionSignals(
     });
   }
 
-  // 7. Advisory warnings — informational; explicitly low so they never crowd
+  // 7. Ingestion health — stale/unknown free or paid data path.
+  if (input.ingestionStatus === "RED" || input.ingestionStatus === "AMBER") {
+    const stale = input.ingestionStatus === "RED";
+    signals.push({
+      id: `ingestion-${input.ingestionStatus.toLowerCase()}`,
+      title: stale ? "Ingestion unhealthy" : "Ingestion aging",
+      detail:
+        input.lastIngestionAt
+          ? `Last success ${input.lastIngestionAt} — status ${input.ingestionStatus}. Free path (ESPN/Gamma) may still work; check /cockpit/sources.`
+          : `Ingestion status ${input.ingestionStatus} with no recent success timestamp.`,
+      source: "ingestion_health",
+      decisionType: "DEPARTMENT",
+      factors: stale
+        ? { costOfDelay: 0.75, severity: 0.7, reversibility: 0.6, ownerEffort: 0.4, sourceConfidence: 0.9 }
+        : { costOfDelay: 0.55, severity: 0.5, reversibility: 0.7, ownerEffort: 0.35, sourceConfidence: 0.85 },
+      urgencyFloor: stale ? "HIGH" : "NORMAL",
+      recommendedAction: "Open /cockpit/sources and verify free:doctor + gamma cron. Do not flip LIVE_BOARD.",
+      link: "/cockpit/sources",
+    });
+  }
+
+  // 8. Advisory warnings — informational; explicitly low so they never crowd
   //    out real decisions.
   for (const w of input.advisoryWarnings) {
     signals.push({

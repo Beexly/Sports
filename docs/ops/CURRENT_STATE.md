@@ -1,18 +1,20 @@
 # CURRENT_STATE
 
-**MAIN tip:** after this commit · **SoT:** `CANONICAL.md` + Production `/cockpit`  
-**class_A:** 0 agent residuals for prior kill · free settle + jarvis snapshot on MAIN  
+**MAIN:** post free-score-persist + root museum archive  
+**SoT:** `CANONICAL.md` + Production `/cockpit`  
+**class_A:** 0  
 
 ## Law
-LIVE_BOARD=off · oddsApiRequired=false · refuse-default · CPA blocked · Phase C UNVERIFIED
+LIVE_BOARD=off · oddsApiRequired=false · refuse-default · CPA blocked
 
-## Shipped
-- Free settle path (no Odds key) · jarvis-snapshot scheduled · registry honesty · brand copy pass  
-- Docs landfill: multi-masters archived · CANONICAL SoT  
-- prove-neon.mjs · integrity free-settlement entry  
+## Shipped this purge
+- Free score **persist** into Game rows (no Odds key) on settle-picks free path  
+- Jarvis draft tasks materializer on jarvis-snapshot cron  
+- Command Center **ingestion health** attention signals  
+- Root MD/scripts museum → `docs/ops/archive/root-museum` + `root-scripts`  
 
 ## Founder-only
-Neon dual URLs · CRON_SECRET re-verify · redeploy · smoke · optional AI keys  
+Neon dual URLs · CRON_SECRET · redeploy · prove:neon · smoke  
 
 ## Watch
-Production `/cockpit` only. Draft approvals rare.
+Production `/cockpit` only.

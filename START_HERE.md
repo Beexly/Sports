@@ -1,3 +1,5 @@
+> **Ops SoT:** [`docs/ops/CANONICAL.md`](docs/ops/CANONICAL.md) · Production `/cockpit`. Root handoffs archived under `docs/ops/archive/`.
+
 # START HERE — launch control
 
 > One page. Everything else is reference. **Status: the site is LIVE** at

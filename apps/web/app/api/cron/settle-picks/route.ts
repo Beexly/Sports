@@ -25,6 +25,7 @@ import {
   type OutboxDrainSummary,
 } from "@/lib/settlement-outbox/worker";
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
+import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -42,6 +43,7 @@ export async function GET(request: Request) {
 
   // ── Free path: no paid Odds key required ─────────────────────────────────
   if (!apiKey) {
+    const freeScores = await persistFreeScores({ sportKey: requestedSport });
     const free = await runFreePathSettlement({ sportKey: requestedSport });
     let alertDrain: OutboxDrainSummary | null = null;
     try {
@@ -61,6 +63,7 @@ export async function GET(request: Request) {
       picksHeld: free.picksHeld,
       bootstrapMode: gates.isBootstrapMode,
       free,
+      freeScores,
       alertDrain,
       requestedSport: requestedSport ?? null,
     });

@@ -130,6 +130,7 @@ export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
     externalConfigWarnings: assessment.externalConfigWarnings,
     missingPhaseWarnings: assessment.missingPhaseWarnings,
     recommendedNextActions: assessment.recommendedNextActions,
+    ingestionStatus: assessment.ingestionStatus,
     // The Owner Summary's `decisions` and `advisoryWarnings` are re-derived views
     // of the SAME assessment arrays above (decisions = safety ∪ config ∪ first-3
     // recommended; advisories = missingPhase). Feeding both would double-count
