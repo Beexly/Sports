@@ -53,6 +53,27 @@ function groupKey(l: QuoteLine): string {
   return `${l.eventId}|${l.market}|${l.selection}`;
 }
 
+/**
+ * Propagate methodTag/modelVersion only when EVERY line in the pool carries a
+ * non-empty tag/version AND they all agree. Partial tags must not mint a
+ * false continuity claim (mixed tagged+untagged → leave unset → refuse CLV).
+ */
+export function uniformMethodTags(
+  pool: readonly QuoteLine[],
+): { methodTag?: string; modelVersion?: string } {
+  if (!pool.length) return {};
+  const allTagged = pool.every(
+    (p) => Boolean(p.methodTag?.trim()) && Boolean(p.modelVersion?.trim()),
+  );
+  if (!allTagged) return {};
+  const tags = new Set(pool.map((p) => p.methodTag!.trim()));
+  const versions = new Set(pool.map((p) => p.modelVersion!.trim()));
+  return {
+    methodTag: tags.size === 1 ? [...tags][0] : undefined,
+    modelVersion: versions.size === 1 ? [...versions][0] : undefined,
+  };
+}
+
 export function aggregateLines(
   lines: readonly QuoteLine[],
   opts: AggregateOptions = {},
@@ -98,18 +119,7 @@ export function aggregateLines(
       Date.parse(a.quoteAsOf) >= Date.parse(b.quoteAsOf) ? a : b,
     );
 
-    // Propagate method continuity tags only when every source agrees.
-    // Mixed-method pools leave tags unset → CLV sameMethodOrRefuse holds.
-    const tags = new Set(
-      pool.map((p) => p.methodTag).filter((x): x is string => Boolean(x?.trim())),
-    );
-    const versions = new Set(
-      pool
-        .map((p) => p.modelVersion)
-        .filter((x): x is string => Boolean(x?.trim())),
-    );
-    const methodTag = tags.size === 1 ? [...tags][0] : undefined;
-    const modelVersion = versions.size === 1 ? [...versions][0] : undefined;
+    const { methodTag, modelVersion } = uniformMethodTags(pool);
 
     out.push({
       eventId: pool[0]!.eventId,

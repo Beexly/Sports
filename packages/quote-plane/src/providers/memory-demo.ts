@@ -62,6 +62,8 @@ export function createMemoryDemoProvider(
             overround,
             confidence: 0.4,
             notes: "Offline demo — not a real book",
+            methodTag: "two_way_devig_v1",
+            modelVersion: "quote.demo.v1",
           },
           {
             eventId: e.eventId,
@@ -77,6 +79,8 @@ export function createMemoryDemoProvider(
             bookId: "demo",
             overround,
             confidence: 0.4,
+            methodTag: "two_way_devig_v1",
+            modelVersion: "quote.demo.v1",
           },
         );
       }

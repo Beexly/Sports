@@ -131,6 +131,8 @@ export function createKalshiTradeProvider(
             bookId: "kalshi",
             confidence: 0.75,
             notes: `bid=${m.bid} ask=${m.ask} fee_aware`,
+            methodTag: "prediction_market_raw_v1",
+            modelVersion: "quote.kalshi.v1",
           },
         ];
       }
@@ -155,6 +157,8 @@ export function createKalshiTradeProvider(
           bookId: "kalshi",
           confidence: 0.75,
           notes: `bid=${m.bid} ask=${m.ask}`,
+          methodTag: "prediction_market_raw_v1",
+          modelVersion: "quote.kalshi.v1",
         },
       ];
     },

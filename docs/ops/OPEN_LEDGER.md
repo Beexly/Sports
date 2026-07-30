@@ -1,7 +1,7 @@
 # OPEN_LEDGER — GSE drain status
 
-**Updated:** 2026-07-30 · agent serial drain  
-**MAIN baseline:** post-#251 (`3ed6a3c`) · this PR closes residual A (CI + hash)  
+**Updated:** 2026-07-30 · frontier A++ re-audit  
+**MAIN baseline:** post-#251 (`548480a` lineage) · #254 closes residual A  
 **Law:** oddsApiRequired=false · LIVE_BOARD off · refuse-default
 
 ## Classification key
@@ -18,18 +18,20 @@
 |----|------|--------|
 | A1 | Dual-secret util + cronAuthError | **DONE** #251 |
 | A2 | /api/cron/gamma + vercel + oddsApiRequired:false | **DONE** #249+#251 |
-| A3 | Board classifyBoardState / honest empty | **DONE** #251 |
+| A3 | Board classifyBoardState / honest empty | **DONE** #251+#254 |
 | A4 | Own-feed values refuse path | **DONE** #251 |
 | A5 | evaluateUnifiedPrefire before public FIRE | **DONE** #251 |
-| A6 | sameMethodOrRefuse / method tag on receipts | **DONE** #251 |
+| A6 | sameMethodOrRefuse / method tag on receipts | **DONE** #251+#254 (density) |
 | A7 | CREDENTIALS_CHECKLIST + smoke scripts | **DONE** #251 |
 | A8 | rights SPDX export + durable archive/council/BH | **DONE** #250+#251 |
 | A9 | CI smoke scripts | **DONE** #251 |
 | A10 | Routes refuse-default | **DONE** #251 |
-| A11 | CI Postgres health (`pg_isready -U sports`) | **DONE** this PR (supersedes draft #153) |
-| A12 | timingSafeHashEqual strict hex/length | **DONE** this PR (supersedes draft #154) |
+| A11 | CI Postgres health (`pg_isready -U sports`) | **DONE** #254 |
+| A12 | timingSafeHashEqual strict hex/length | **DONE** #254 |
+| A13 | AI Council DESTROY in CI + vitest package root | **DONE** #254 |
+| A14 | methodTag all providers + archive continuous CLV | **DONE** #254 |
 
-**class_A_remaining = 0** after this PR merges
+**class_A_remaining = 0** after #254 merges
 
 ### Non-A residuals (correctly not agent-actionable)
 
@@ -72,8 +74,7 @@
 
 Fake ROI · sportsbook CPA · Pedersen=ZK/PQ · Odds API on free critical path · flip gates without YES
 
-
 ### Frontier A++ audit delta (2026-07-30)
 
-See `docs/ops/audit/FRONTIER_AUDIT_20260730T001645Z.md`.
-Fixed: boardClass UI, methodTag stamps, Shin method tag, dual-auth tests, AI Council CI.
+- `docs/ops/audit/FRONTIER_AUDIT_20260730T001645Z.md` — boardClass, tags, council CI  
+- `docs/ops/audit/FRONTIER_AUDIT_20260730T002800Z.md` — aggregate all-tagged, archive continuous CLV, provider density  

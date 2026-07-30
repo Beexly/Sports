@@ -55,6 +55,8 @@ export function oddsApiEventsToLines(
               bookId: book.key,
               overround,
               confidence: 0.85,
+              methodTag: "two_way_devig_v1",
+              modelVersion: "quote.odds_api.v1",
             },
             {
               eventId: ev.id,
@@ -70,10 +72,13 @@ export function oddsApiEventsToLines(
               bookId: book.key,
               overround,
               confidence: 0.85,
+              methodTag: "two_way_devig_v1",
+              modelVersion: "quote.odds_api.v1",
             },
           );
         } catch {
-          // single outcome fallback
+          // single outcome fallback — no methodTag (raw implied ≠ de-vig)
+          // Continuous CLV must refuse rather than pretend continuity.
           out.push({
             eventId: ev.id,
             sport: ev.sport_key,
