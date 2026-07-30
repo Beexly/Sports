@@ -82,6 +82,9 @@ export function gammaMarketToLines(
     bookId: "polymarket",
     confidence: 0.7,
     notes: m.question,
+    // Continuous CLV law: method must match open vs close
+    methodTag: "prediction_market_raw_v1",
+    modelVersion: "quote.gamma.v1",
   }));
 }
 

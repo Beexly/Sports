@@ -20,6 +20,12 @@ export interface MarketRead {
   /** Shin's estimated insider share z — favourite–longshot correction strength. */
   readonly insiderShareZ: number;
   readonly outcomeCount: number;
+  /**
+   * Fair method tag for CLV continuity / sameMethodOrRefuse.
+   * Shin is versioned — never silent swap with multiplicative without refuse.
+   */
+  readonly methodTag: "shin_devig_v1";
+  readonly modelVersion: "market-read.shin.v1";
 }
 
 /**
@@ -51,6 +57,8 @@ export function noVigFromAmericanPrices(prices: readonly number[]): MarketRead |
     bookHoldPct: round2(Math.max(0, (shin.booksum - 1) * 100)),
     insiderShareZ: shin.z,
     outcomeCount: valid.length,
+    methodTag: "shin_devig_v1",
+    modelVersion: "market-read.shin.v1",
   };
 }
 

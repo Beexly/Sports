@@ -2,9 +2,16 @@
  * Self-owned closing archive — P3.
  * Persist every quote we see → free CLV forever.
  * No paid Odds API required for history.
+ *
+ * methodTag/modelVersion ride with each row so open→close continuous CLV
+ * can call sameMethodOrRefuse (missing tags → refuse continuous path).
  */
 
 import type { QuoteLine, QuoteSourceKind } from "../types";
+import {
+  computeContinuousClv,
+  type ContinuousClvResult,
+} from "../clv/method-continuity";
 
 export interface ArchivedQuote {
   readonly archiveId: string;
@@ -20,6 +27,9 @@ export interface ArchivedQuote {
   readonly bookId?: string;
   readonly phase: "open" | "live" | "closing" | "settled";
   readonly kickoffIso?: string;
+  /** Fair-method stamp for continuous CLV (optional on legacy rows) */
+  readonly methodTag?: string;
+  readonly modelVersion?: string;
 }
 
 export interface ClvObservation {
@@ -32,6 +42,11 @@ export interface ClvObservation {
   readonly clv: number; // open - close for favorite path; signed beat of close
   readonly sourceKindOpen: QuoteSourceKind;
   readonly sourceKindClose: QuoteSourceKind;
+  readonly methodTag?: string;
+  readonly modelVersion?: string;
+  /** true only when open/close tags match via sameMethodOrRefuse */
+  readonly continuous: boolean;
+  readonly continuityCode?: string;
 }
 
 /** Durable snapshot for multi-instance / revive — JSON-serializable. */
@@ -93,6 +108,8 @@ export class ClosingArchive {
         bookId: l.bookId,
         phase,
         kickoffIso: opts.kickoffIso,
+        methodTag: l.methodTag?.trim() || undefined,
+        modelVersion: l.modelVersion?.trim() || undefined,
       });
       n++;
     }
@@ -135,8 +152,8 @@ export class ClosingArchive {
   }
 
   /**
-   * CLV = openQ - closeQ for the selection (positive = closed lower = beat market).
-   * For probability space: buying at open vs close.
+   * Raw CLV arithmetic openQ - closeQ (research / internal).
+   * Prefer computeContinuousClvObservation for honesty-gated self-CLV.
    */
   computeClv(
     eventId: string,
@@ -149,6 +166,7 @@ export class ClosingArchive {
     if (open.archiveId === close.archiveId && this.list({ eventId, selection }).length < 2) {
       return null; // need two distinct observations
     }
+    const cont = this.continuousResult(open, close);
     return {
       eventId,
       selection,
@@ -159,7 +177,78 @@ export class ClosingArchive {
       clv: open.q - close.q,
       sourceKindOpen: open.sourceKind,
       sourceKindClose: close.sourceKind,
+      methodTag: cont.ok ? cont.methodTag : undefined,
+      modelVersion: cont.ok ? cont.modelVersion : undefined,
+      continuous: cont.ok,
+      continuityCode: cont.ok ? undefined : cont.code,
     };
+  }
+
+  /**
+   * Honesty-gated self-CLV: sameMethodOrRefuse on open/close tags.
+   * Missing tags → refuse (ok:false missing_method_tag).
+   */
+  computeContinuousClvObservation(
+    eventId: string,
+    selection: string,
+    kickoffIso?: string,
+    side: "long" | "short" = "long",
+  ): ContinuousClvResult | { ok: false; code: "insufficient_history"; error: string } {
+    const open = this.openLine(eventId, selection);
+    const close = this.closeLine(eventId, selection, kickoffIso);
+    if (!open || !close) {
+      return {
+        ok: false,
+        code: "insufficient_history",
+        error: "need open and close archive rows",
+      };
+    }
+    if (
+      open.archiveId === close.archiveId &&
+      this.list({ eventId, selection }).length < 2
+    ) {
+      return {
+        ok: false,
+        code: "insufficient_history",
+        error: "need two distinct observations",
+      };
+    }
+    return computeContinuousClv({
+      open: {
+        q: open.q,
+        methodTag: open.methodTag ?? "",
+        modelVersion: open.modelVersion ?? "",
+        asOf: open.quoteAsOf,
+        sourceId: open.sourceId,
+      },
+      close: {
+        q: close.q,
+        methodTag: close.methodTag ?? "",
+        modelVersion: close.modelVersion ?? "",
+        asOf: close.quoteAsOf,
+        sourceId: close.sourceId,
+      },
+      side,
+    });
+  }
+
+  private continuousResult(
+    open: ArchivedQuote,
+    close: ArchivedQuote,
+  ): ContinuousClvResult {
+    return computeContinuousClv({
+      open: {
+        q: open.q,
+        methodTag: open.methodTag ?? "",
+        modelVersion: open.modelVersion ?? "",
+      },
+      close: {
+        q: close.q,
+        methodTag: close.methodTag ?? "",
+        modelVersion: close.modelVersion ?? "",
+      },
+      side: "long",
+    });
   }
 
   /** Export durable snapshot — wire to Prisma/blob in monorepo multi-instance. */
@@ -241,6 +330,8 @@ export class ClosingArchive {
           bookId: r.bookId,
           confidence: 0.85,
           notes: `archived phase=${r.phase}`,
+          methodTag: r.methodTag,
+          modelVersion: r.modelVersion,
         }));
       },
     };
@@ -250,14 +341,17 @@ export class ClosingArchive {
     const rows = [...this.byKey.values()];
     const byPhase: Record<string, number> = {};
     const byKind: Record<string, number> = {};
+    let tagged = 0;
     for (const r of rows) {
       byPhase[r.phase] = (byPhase[r.phase] ?? 0) + 1;
       byKind[r.sourceKind] = (byKind[r.sourceKind] ?? 0) + 1;
+      if (r.methodTag?.trim() && r.modelVersion?.trim()) tagged++;
     }
     return {
       total: rows.length,
       byPhase,
       byKind,
+      tagged,
       uniqueEvents: new Set(rows.map((r) => r.eventId)).size,
       oddsApiRequired: false as const,
     };
@@ -280,7 +374,7 @@ function inferPhase(
   return "settled";
 }
 
-/** Seed demo archive for UI / tests */
+/** Seed demo archive for UI / tests — stamps PM method tags for continuous CLV. */
 export function seedDemoClosingArchive(
   archive: ClosingArchive,
   now = new Date(),
@@ -302,6 +396,8 @@ export function seedDemoClosingArchive(
       rights: "public_market" as const,
       bookId: "polymarket",
       confidence: 0.7,
+      methodTag: "prediction_market_raw_v1",
+      modelVersion: "quote.gamma.v1",
     }));
 
   archive.ingestLines(

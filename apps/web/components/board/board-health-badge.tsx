@@ -32,6 +32,12 @@ export function BoardHealthBadge({ meta }: { readonly meta: BoardStatePayload["m
       </div>
       <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-ion-2">
         <span className="font-mono uppercase tracking-[0.16em]">Trace {shortTrace(meta.traceId)}</span>
+        <span className="font-mono uppercase tracking-[0.12em]" data-testid="board-class-label">
+          {meta.boardClass.state}
+        </span>
+        {meta.boardClass.refusePublicFire && (
+          <span className="text-ion-3">public fire held</span>
+        )}
         {primaryDegradation && <span>{primaryDegradation.message}</span>}
       </div>
     </div>
