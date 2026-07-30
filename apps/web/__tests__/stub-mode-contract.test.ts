@@ -47,13 +47,23 @@ describe("@sports/db stub-mode contract", () => {
 
   it("Jarvis loader prepends the stub-mode warning (so it appears first in the list)", () => {
     const src = read("apps/web/lib/cockpit/jarvis-data.ts");
-    // Pattern: `if (isStubMode()) { safetyWarnings.unshift(...)` — the
-    // .unshift form puts the warning at the front so the operator sees
-    // "stub mode active" before everything else.
+    // The INVARIANT is prepend-not-append: the operator must see "stub mode
+    // active" before everything else. Assert that behavior rather than one
+    // spelling of it — the loader legitimately hoists `const stub = isStubMode()`
+    // once at the top and branches on the variable hundreds of lines later, which
+    // a proximity regex against `isStubMode()` cannot see through.
+    expect(src).toMatch(/isStubMode\(\)/);
     expect(
-      /isStubMode\(\)[\s\S]{0,200}safetyWarnings\.unshift\(/.test(src),
+      /if\s*\(\s*stub\s*\)\s*\{[\s\S]{0,80}safetyWarnings\.unshift\(/.test(src) ||
+        /isStubMode\(\)[\s\S]{0,200}safetyWarnings\.unshift\(/.test(src),
       "stub-mode warning should be prepended via .unshift so it surfaces first"
     ).toBe(true);
+    // The real regression to catch: switching any safety warning to .push would
+    // bury it below pre-existing warnings. There must be no append path at all.
+    expect(
+      /safetyWarnings\.push\(/.test(src),
+      "safety warnings must never be appended with .push — that buries them"
+    ).toBe(false);
   });
 
   it("the stub-mode warning text mentions DATABASE_URL so the operator knows what to fix", () => {

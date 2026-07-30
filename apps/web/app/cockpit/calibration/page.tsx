@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { db } from "@sports/db";
-import { getReadinessGates, buildCalibrator, DEFAULT_MIN_CALIBRATION_SAMPLE } from "@sports/prediction-engine";
+import {
+  getReadinessGates,
+  buildCalibrator,
+  DEFAULT_MIN_CALIBRATION_SAMPLE,
+  convictionTier,
+  CONVICTION_MIN_PROBABILITY,
+  CONVICTION_MIN_CLV_BEAT_RATE,
+  CONVICTION_MIN_CLV_SAMPLE,
+} from "@sports/prediction-engine";
 
 /**
  * Cockpit calibration — live data binding, rebuilt. Preserves the
@@ -48,8 +56,16 @@ export default async function CockpitCalibrationPage() {
   const gates = getReadinessGates();
 
   // Defensive counts — page renders zeros in stub mode / DB outage.
-  const [gamesTotal, gamesCompleted, picksTotal, picksResolved, settledRows, eligibleRows, clvAgg] =
-    await Promise.all([
+  const [
+    gamesTotal,
+    gamesCompleted,
+    picksTotal,
+    picksResolved,
+    settledRows,
+    eligibleRows,
+    clvAgg,
+    clvBeatCount,
+  ] = await Promise.all([
       db.game.count().catch(() => 0),
       db.game.count({ where: { status: "FINAL" } }).catch(() => 0),
       db.pick.count().catch(() => 0),
@@ -84,6 +100,10 @@ export default async function CockpitCalibrationPage() {
           _count: { clvValue: true },
         })
         .catch(() => null),
+      // Graded picks that actually BEAT the close. The conviction bar is a beat-RATE,
+      // which is not the same statistic as the average CLV value shown below — a
+      // positive average can hide a sub-50% beat rate. Counted separately on purpose.
+      db.pick.count({ where: { clvValue: { gt: 0 } } }).catch(() => 0),
     ]);
   const picksPending = picksTotal - picksResolved;
 
@@ -113,6 +133,65 @@ export default async function CockpitCalibrationPage() {
     100,
     Math.round((calibrator.sampleSize / sampleFloor) * 100),
   );
+
+  // ─── Conviction tier — DRY RUN (display-only) ────────────────────────────────
+  // Runs the real `convictionTier()` selector over real observed aggregates so the
+  // blocking requirement is visible instead of described. Nothing here scores,
+  // publishes, or writes: the result is rendered and discarded.
+  //
+  // WIRING HAZARD (why the `calibrated` flag is checked, not just the range):
+  // `calibrator.apply()` returns the RAW confidence as a 0–1 probability with
+  // `calibrated: false` whenever the calibrator is inactive. That value is inside
+  // [0,1], so convictionTier()'s out-of-range guard would NOT reject it, and an
+  // uncalibrated heuristic score could earn CONVICTION. Any future wiring MUST gate
+  // on `calibrated === true` and pass an explicit non-probability otherwise.
+  const clvGraded = clvAgg?._count.clvValue ?? 0;
+  const clvBeatRate = clvGraded > 0 ? clvBeatCount / clvGraded : null;
+
+  // Best-case probe: the strongest confidence we actually carry. If even this fails
+  // the bar, nothing on the slate qualifies.
+  const settledConfidences = (settledRows as SettledRow[]).map((r) => r.confidence);
+  const topConfidence = settledConfidences.length > 0 ? Math.max(...settledConfidences) : 0;
+  const appliedProbe = calibrator.apply(topConfidence);
+  const convictionProbe = convictionTier({
+    calibratedProbability: appliedProbe.calibrated ? appliedProbe.probability : Number.NaN,
+    // The edge engine is not evaluated on this surface; PASS is the conservative default.
+    edgeDecision: "PASS",
+    clvBeatCloseRate: clvBeatRate,
+    clvSampleSize: clvGraded,
+  });
+
+  const convictionBars = [
+    {
+      bar: "Calibrated win probability",
+      requirement: `≥ ${(CONVICTION_MIN_PROBABILITY * 100).toFixed(0)}% and ≥ the pick's price break-even`,
+      current: appliedProbe.calibrated
+        ? `${(appliedProbe.probability * 100).toFixed(1)}% (calibrated)`
+        : `not calibrated — ${calibrator.inactiveReason || "awaiting eligible sample"}`,
+      met: appliedProbe.calibrated && appliedProbe.probability >= CONVICTION_MIN_PROBABILITY,
+    },
+    {
+      bar: "Independent edge decision",
+      requirement: "SPEAK (Poisson + Kalshi agree)",
+      current: "not evaluated on this surface — treated as PASS (conservative)",
+      met: false,
+    },
+    {
+      bar: "Closing-line-value beat-rate",
+      requirement: `≥ ${(CONVICTION_MIN_CLV_BEAT_RATE * 100).toFixed(0)}% of graded picks beat the close`,
+      current:
+        clvBeatRate === null
+          ? "no graded CLV yet"
+          : `${(clvBeatRate * 100).toFixed(1)}% (${clvBeatCount} of ${clvGraded})`,
+      met: clvBeatRate !== null && clvBeatRate >= CONVICTION_MIN_CLV_BEAT_RATE,
+    },
+    {
+      bar: "Closing-line-value sample",
+      requirement: `≥ ${CONVICTION_MIN_CLV_SAMPLE} graded picks`,
+      current: `${clvGraded} graded`,
+      met: clvGraded >= CONVICTION_MIN_CLV_SAMPLE,
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-4">
@@ -286,6 +365,66 @@ export default async function CockpitCalibrationPage() {
           65% <em>and</em> at or above the pick&apos;s price-specific break-even (a −200 favorite needs
           ~66.7%), an independent SPEAK edge, and a closing-line-value beat-rate of at least 50% over a
           minimum of 20 graded picks.
+        </p>
+      </section>
+
+      <section
+        data-testid="conviction-dry-run"
+        className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs"
+      >
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          Conviction tier — dry run
+        </h2>
+        <p className="mb-3 text-[11px] leading-relaxed text-ion-2">
+          The conviction selector, run over today&apos;s real numbers so the blocker is{" "}
+          <strong className="text-ion-1">visible, not described</strong>. This is display-only: it
+          scores nothing, publishes nothing, and writes nothing. A pick reaches CONVICTION only when
+          all four bars below are met at once.
+        </p>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-[11px]">
+            <thead>
+              <tr className="text-ion-3">
+                <th className="py-1 pr-3 font-medium">Bar</th>
+                <th className="py-1 pr-3 font-medium">Requirement</th>
+                <th className="py-1 pr-3 font-medium">Today</th>
+                <th className="py-1 font-medium">Met</th>
+              </tr>
+            </thead>
+            <tbody>
+              {convictionBars.map((b) => (
+                <tr key={b.bar} className="border-t border-titanium/20 align-top">
+                  <td className="py-1.5 pr-3 text-ion-1">{b.bar}</td>
+                  <td className="py-1.5 pr-3 text-ion-2">{b.requirement}</td>
+                  <td className="py-1.5 pr-3 font-mono text-ion-2">{b.current}</td>
+                  <td className="py-1.5 font-mono text-ion-1">{b.met ? "yes" : "no"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mt-3 text-[11px] text-ion-1">
+          Best-case probe (strongest settled confidence{" "}
+          <span className="font-mono">{topConfidence}</span>) →{" "}
+          <span className="font-mono font-semibold text-ion-white">{convictionProbe.tier}</span>
+        </p>
+        {convictionProbe.reasons.length > 0 && (
+          <ul className="mt-1 space-y-0.5 text-[10px] text-ion-3">
+            {convictionProbe.reasons.map((r) => (
+              <li key={r}>— {r}</li>
+            ))}
+          </ul>
+        )}
+
+        <p className="mt-3 text-[10px] leading-relaxed text-caution">
+          Wiring note: <span className="font-mono">calibrator.apply()</span> returns the raw
+          confidence as a 0–1 value with <span className="font-mono">calibrated: false</span> while
+          the calibrator is inactive. That value is inside [0,1], so the selector&apos;s
+          out-of-range guard does not reject it. Any future wiring must gate on the{" "}
+          <span className="font-mono">calibrated</span> flag — as this dry run does — or an
+          uncalibrated heuristic score could reach CONVICTION.
         </p>
       </section>
 

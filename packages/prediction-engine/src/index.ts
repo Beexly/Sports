@@ -98,6 +98,7 @@ export {
   BREAK_EVEN_PROBABILITY,
   CONVICTION_MIN_PROBABILITY,
   CONVICTION_MIN_CLV_BEAT_RATE,
+  CONVICTION_MIN_CLV_SAMPLE,
 } from "./conviction-tier.js";
 export type {
   ConvictionTier,

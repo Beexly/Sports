@@ -24,8 +24,13 @@ describe("loadJarvisAssessment return shape", () => {
   });
 
   it("returns those exact keys at the bottom of the function", () => {
-    // The function ends with `return { assessment: synth, performancePolicy };`
-    expect(LOADER).toMatch(/return\s*\{[\s\S]*assessment\s*:[\s\S]*performancePolicy[\s\S]*\}/);
+    // The function ends with `return { assessment, performancePolicy };`. Accept
+    // BOTH object shorthand and the explicit `assessment: <expr>` form — the loader
+    // now builds a named `const assessment: JarvisAssessment` first and returns it
+    // shorthand, which is the same contract, spelled more clearly.
+    expect(LOADER).toMatch(
+      /return\s*\{[\s\S]*\bassessment\b[\s\S]*\bperformancePolicy\b[\s\S]*\}/,
+    );
   });
 
   it("every consumer destructures the same keys", () => {
