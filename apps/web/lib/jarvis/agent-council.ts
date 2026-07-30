@@ -772,8 +772,8 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
     name: "DELTA",
     displayName: "Market Analyst",
     role: "Market / Line Intelligence Analyst",
-    status: "NOT_WIRED",
-    wiringState: "not_connected",
+    status: "DRAFT_ONLY",
+    wiringState: "partial",
     department: "Sports Intelligence",
     reportsTo: ["SCOUT"],
     escalatesTo: ["SCOUT", "JARVIS"],
@@ -783,21 +783,23 @@ export const AGENT_COUNCIL: readonly AgentSeat[] = [
       "Track line movement, closing line value, and market consensus to sharpen prediction " +
       "quality and inform operator strategy.",
     currentTruth:
-      "Seat is designed only. Odds ingestion exists, but no CLV tracking, line-movement " +
-      "alerts, or market intelligence layer is built.",
+      "quote-plane methodTag + continuous CLV archive exist. Free Gamma path live. " +
+      "No public CLV leaderboard until Neon-proven. Line-movement alerts not ACTIVE.",
     ownsCapabilities: ["market-line-intelligence"],
     safeActions: [
-      "Surface raw line data already ingested",
+      "Surface free Gamma quotes and methodTag archive status",
+      "Draft internal CLV prove tasks",
     ],
     forbiddenActions: [
-      "Claim CLV is tracked without instrumentation",
-      "Surface market signals before the layer is built",
+      "Claim production public CLV leaderboards without Neon proof",
+      "Mix methodTags in continuous CLV",
+      "Require paid Odds on free critical path",
     ],
-    allowedInputs: ["ingested odds snapshots"],
-    allowedOutputs: ["line movement annotations (when wired)"],
+    allowedInputs: ["Gamma free quotes", "optional Odds snapshots", "closing archive rows"],
+    allowedOutputs: ["internal CLV grades", "draft market tasks"],
     prohibitedActions: [
-      "Claim CLV tracking without instrumentation",
-      "Generate market signals before capability is built",
+      "Publish public CLV claims without gates",
+      "Autonomous external market alerts",
     ],
     externalActions: "NONE",
     externalActionsAllowed: false,

@@ -75,12 +75,12 @@ describe("council trust rules", () => {
     }
   });
 
-  it("registered cockpit agents are DRAFT_ONLY; unregistered seats are MANUAL or NOT_WIRED", () => {
+  it("registered cockpit agents are DRAFT_ONLY; unregistered seats may be MANUAL, NOT_WIRED, or DRAFT_ONLY (partial wire)", () => {
     for (const m of AGENT_COUNCIL) {
       if (m.isRegisteredCockpitAgent) {
         expect(m.status, `${m.id} registered seat`).toBe("DRAFT_ONLY");
       } else {
-        expect(["MANUAL", "NOT_WIRED"]).toContain(m.status);
+        expect(["MANUAL", "NOT_WIRED", "DRAFT_ONLY"]).toContain(m.status);
       }
     }
   });
@@ -163,11 +163,11 @@ describe("spec §12 acceptance criteria", () => {
     expect(AGENT_COUNCIL.length).toBe(23);
   });
 
-  it("AC2-3: exact status counts 6 draft_only / 3 manual / 14 not_wired", () => {
+  it("AC2-3: exact status counts 7 draft_only / 3 manual / 13 not_wired (DELTA partial wire)", () => {
     const counts = getCouncilSeatCounts();
-    expect(counts.draftOnly).toBe(6);
+    expect(counts.draftOnly).toBe(7);
     expect(counts.manual).toBe(3);
-    expect(counts.notWired).toBe(14);
+    expect(counts.notWired).toBe(13);
   });
 
   it("AC5-9: every seat has department, reportsTo, escalatesTo, authorityTier, externalActionsAllowed=false", () => {
