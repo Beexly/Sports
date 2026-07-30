@@ -74,10 +74,15 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Score, rank, and route sports picks from structured odds data through a " +
       "prediction engine. Publish picks internally; gate public exposure until trust is earned.",
     currentTruth:
-      "Prediction engine runs. Picks are scored and published internally. " +
-      "Public gate (PUBLIC_PICKS_ENABLED) is owner-controlled. " +
-      "No real-time market intelligence or CLV tracking beyond raw ingestion.",
-    inputs: ["The Odds API odds data", "Prediction engine confidence scores", "Public gate flag"],
+      "Prediction engine runs. Picks can be scored and stored. Public gates (PUBLIC_PICKS_ENABLED / LIVE_BOARD) " +
+      "default off. Free Gamma quote path exists (oddsApiRequired=false). Paid Odds enrichment optional. " +
+      "methodTag + continuous CLV archive live in quote-plane; production proof still depends on Neon + cron.",
+    inputs: [
+      "Polymarket Gamma (free)",
+      "The Odds API (optional enrichment)",
+      "Prediction engine scores",
+      "Public gate flags",
+    ],
     outputs: ["Scored picks with confidence and tier", "Today's pick count", "Settlement ledger"],
     allowedActions: [
       "Score picks from ingested odds data",
@@ -104,31 +109,43 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "market-line-intelligence",
     name: "Market / Line Intelligence",
     category: "INTELLIGENCE_CORE",
-    status: "DESIGNED",
+    status: "DRAFT_ONLY",
     mission:
       "Track line movement, closing line value (CLV), market consensus, and sharp money signals " +
       "to augment prediction quality and inform operator strategy.",
     currentTruth:
-      "The Odds API is wired for data ingestion. Raw odds/lines flow into the prediction engine. " +
-      "No CLV tracking, no line movement alerts, no market intelligence layer beyond ingestion.",
-    inputs: ["The Odds API real-time data", "Historical odds snapshots", "Sharp money indicators"],
-    outputs: ["CLV signals", "Line movement alerts", "Market consensus scores"],
+      "quote-plane: methodTag on quotes, continuous CLV archive (open→close same method), sameMethodOrRefuse. " +
+      "Gamma free provider + optional Odds enrichment. Line-movement alerts and sharp-money narrative still " +
+      "not productized as ACTIVE automation. Do not claim public CLV leaderboards without PROVEN production runs.",
+    inputs: [
+      "Gamma free quotes",
+      "Optional Odds API snapshots",
+      "Closing archive rows with methodTag",
+    ],
+    outputs: [
+      "Continuous CLV grades when method tags match",
+      "Archive rows for open/close",
+      "Internal cockpit CLV surfaces",
+    ],
     allowedActions: [
-      "Ingest odds data via The Odds API",
-      "Surface raw line data in cockpit",
+      "Ingest free Gamma quotes",
+      "Archive open/close with methodTag",
+      "Refuse continuous CLV when methods diverge",
+      "Surface internal CLV in cockpit",
     ],
     forbiddenActions: [
-      "Claim CLV is tracked without instrumentation",
-      "Surface market intelligence before it is built",
+      "Claim production CLV leaderboards without Neon-proven archive",
+      "Mix methodTags in continuous CLV",
+      "Require paid Odds on free critical path",
     ],
-    ownerMode: "NOT_WIRED",
-    proofSource: null,
+    ownerMode: "DRAFT_AWAITS_APPROVAL",
+    proofSource: "packages/quote-plane/src/archive/closing-archive.ts",
     riskLevel: "MEDIUM",
     nextAction:
-      "Build CLV tracking layer: capture opening line, closing line, and actual result per pick.",
+      "Run Production gamma cron + free settlement; verify archive rows and cockpit CLV against live DB.",
     requiresHumanApproval: true,
-    canAnswer: false,
-    canRecommend: false,
+    canAnswer: true,
+    canRecommend: true,
     canExecute: false,
   },
 
@@ -141,10 +158,15 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Monitor, validate, and refresh sports data ingestion. Alert on stale data, " +
       "failed API calls, and schema drift. Keep the prediction engine fed with fresh truth.",
     currentTruth:
-      "BullMQ + Redis workers run for data refresh. The Odds API data flows into picks. " +
-      "TAL agent reports ingestion status to Jarvis assessment. " +
-      "Stale data detection is timestamp-based. No auto-re-trigger on failure.",
-    inputs: ["The Odds API responses", "Ingestion timestamps", "Worker run logs"],
+      "Free-first adapters (ESPN, henrygd, Open-Meteo, nflverse) + free:doctor. " +
+      "Vercel crons (gamma, hydrate, settle free-path, ingest). Optional BullMQ/Oracle workers. " +
+      "TAL reports status into Jarvis. Stale auto-retrigger still limited.",
+    inputs: [
+      "Free adapter responses",
+      "Cron run timestamps",
+      "Optional Odds enrichment",
+      "Worker logs",
+    ],
     outputs: ["Ingestion health status (GREEN/AMBER/RED)", "Last-sync timestamp", "Failure count"],
     allowedActions: [
       "Monitor ingestion health",
@@ -156,9 +178,9 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "Claim ingestion is healthy without a fresh timestamp",
     ],
     ownerMode: "DRAFT_AWAITS_APPROVAL",
-    proofSource: "/admin/dashboard",
+    proofSource: "/cockpit/sources",
     riskLevel: "HIGH",
-    nextAction: "Wire auto-alerting on stale ingestion (>4h) to cockpit decision queue.",
+    nextAction: "Wire stale ingestion (>4h) into /cockpit/command-center attention queue automatically.",
     requiresHumanApproval: true,
     canAnswer: true,
     canRecommend: true,
@@ -171,13 +193,14 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     id: "settlement-results",
     name: "Settlement & Results",
     category: "PLATFORM_OPERATIONS",
-    status: "MANUAL",
+    status: "DRAFT_ONLY",
     mission:
       "Settle picks against actual game outcomes. Track wins, losses, pushes, and voids. " +
       "Feed accurate results into calibration and performance tracking.",
     currentTruth:
-      "Settlement logic exists in the prediction engine. Settlement worker can be triggered manually. " +
-      "No automated settlement runner. No external score data integration for auto-settlement.",
+      "settle-picks cron: paid Odds path when THE_ODDS_API_KEY set; free path (ESPN+henrygd trusted finals) " +
+      "when key missing — oddsApiRequired=false. DISPUTED holds. Transactional outbox + post-settlement work. " +
+      "Production proof still needs Neon + CRON_SECRET smoke.",
     inputs: ["Game results (manual entry)", "Canonical pick ledger", "Settlement worker trigger"],
     outputs: ["Settled picks", "Win/loss/push record", "Pending settlement count"],
     allowedActions: [
@@ -192,7 +215,7 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     ownerMode: "MANUAL_OPERATOR",
     proofSource: "/cockpit/history",
     riskLevel: "HIGH",
-    nextAction: "Wire external score data source (ESPN/The Odds API results) for auto-settlement.",
+    nextAction: "Prove free settlement on Production Neon; keep paid Odds as optional enrichment only.",
     requiresHumanApproval: true,
     canAnswer: true,
     canRecommend: false,

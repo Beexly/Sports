@@ -26,7 +26,7 @@ export default async function Page() {
         { label: "Rights records", value: rights.rights_count },
         { label: "Stub systems", value: a.summary.stub_only ?? 0 },
         { label: "Readiness avg", value: avg },
-        { label: "ROI targets", value: (roi.top_25_activate_now ?? []).length },
+        { label: "Priority targets", value: (roi.top_25_activate_now ?? []).length },
         { label: "King gaps", value: gaps.gaps.length }
       ]} />
       <div className="flex justify-center">
@@ -63,7 +63,7 @@ export default async function Page() {
         </div>
       </div>
       <div>
-        <SectionHeader eyebrow="ROI-ranked source pipeline" title="Activate These Next" />
+        <SectionHeader eyebrow="Priority-ranked source pipeline" title="Activate These Next" />
         <DataTable
           rows={(roi.top_25_activate_now ?? []).map((r: Record<string, unknown>) => ({
             source: String(r.source_name ?? ""),
@@ -95,7 +95,7 @@ export default async function Page() {
         <InsightCard
           eyebrow="Merge Readiness"
           headline="Ship as foundation — do not market as finished"
-          body="These readiness scores are honest self-assessments from the autonomous build. Scores below 50 need UX work or live data before they're user-ready. Scores 50–70 are usable foundation. 70+ are shippable."
+          body="These readiness scores are honest self-assessments from the agent-assisted build. Scores below 50 need UX work or live data before they're user-ready. Scores 50–70 are usable foundation. 70+ are shippable. No agent is autonomous for external actions."
           tone="warn"
         />
         <DataTable

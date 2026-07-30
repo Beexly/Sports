@@ -1,32 +1,53 @@
 /**
  * Vercel cron — Jarvis observatory snapshot.
  *
- * Placeholder. The Jarvis ring buffer is currently populated by the
- * cockpit on each operator visit (`sharedJarvisHistory()` + the trend
- * page). A scheduled snapshot writer is a nice-to-have for filling
- * the buffer without operator visits but requires its own helper —
- * see `apps/web/lib/cockpit/jarvis-history.ts` for the API surface.
+ * Loads a live Jarvis assessment and pushes it into the process-local
+ * ring buffer so /cockpit/jarvis/trend has data without an operator visit.
+ * Multi-instance deploys still process-local — durable history is a later
+ * Neon-backed upgrade; this removes the pure no-op.
  *
- * This cron returns a no-op acknowledgement so the Vercel scheduler
- * doesn't fail. Implement the actual snapshot capture once the
- * settlement cron above is fully ported and the operator has visible
- * usage signals on the trend buffer.
+ * Auth: Bearer CRON_SECRET. Schedule: vercel.json (hourly).
  */
 
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
+import { sharedJarvisHistory } from "@/lib/cockpit/jarvis-history";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const maxDuration = 10;
+export const maxDuration = 30;
 
 export async function GET(request: Request) {
   const denied = cronAuthError(request);
   if (denied) return denied;
 
-  return NextResponse.json({
-    ok: true,
-    note: "Jarvis snapshot cron is a stub. The ring buffer is filled by " +
-      "operator visits today; scheduled snapshots are a follow-up.",
-  });
+  try {
+    const { assessment } = await loadJarvisAssessment();
+    const snap = sharedJarvisHistory().push(assessment);
+    return NextResponse.json({
+      ok: true,
+      path: "jarvis-snapshot",
+      oddsApiRequired: false as const,
+      bufferSize: sharedJarvisHistory().size(),
+      snapshot: {
+        assessedAt: snap.assessedAt,
+        launchStatus: snap.launchStatus,
+        publicSurfaceStatus: snap.publicSurfaceStatus,
+        ingestionStatus: snap.ingestionStatus,
+        settlementStatus: snap.settlementStatus,
+        safetyWarningCount: snap.safetyWarningCount,
+        recommendedActionCount: snap.recommendedActionCount,
+      },
+    });
+  } catch (err) {
+    return NextResponse.json(
+      {
+        ok: false,
+        path: "jarvis-snapshot",
+        error: err instanceof Error ? err.message : String(err),
+      },
+      { status: 500 },
+    );
+  }
 }

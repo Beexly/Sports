@@ -13,7 +13,7 @@ import { glossaryEntry } from "@/lib/glossary";
 export const metadata: Metadata = {
   title: "CLV Tracker: Your Glass-Box Bet Ledger",
   description:
-    "Log your bets, settle them with the closing line, and track the metric that actually predicts edge: Closing Line Value, plus ROI and calibration. Stored locally; nothing leaves your device.",
+    "Log your bets, settle them with the closing line, and track the metric that actually predicts edge: Closing Line Value (CLV), plus calibration. Personal ledger only — no public performance claims. Stored locally; nothing leaves your device.",
   alternates: { canonical: "/track" },
 };
 
@@ -39,7 +39,7 @@ export default async function TrackPage() {
           <TierGatePanel
             need="ELITE"
             surface="The CLV Ledger + Staking Toolkit"
-            blurb="The glass-box bet ledger, closing-line settlement, ROI and calibration readouts, and the Kelly-aware staking calculator: the professional toolkit, reserved for Elite members."
+            blurb="The glass-box bet ledger, closing-line settlement, calibration readouts, and the Kelly-aware staking calculator: a personal toolkit, reserved for Elite members. Not a public ROI claim."
           />
         </main>
         <Footer />

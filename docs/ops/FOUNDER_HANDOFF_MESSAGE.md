@@ -1,51 +1,20 @@
 # Founder handoff (3 minutes)
 
-**Product:** Galaxy Sports Edge · **MAIN:** `1e007c3` · **Agent status:** IDLE · **class_A:** 0
+## What works without flag flips
+- Production code: cockpit, JARVIS, free-first data, free settle (no Odds key), gamma cron, refuse-default law
+- You watch **`/cockpit`**. Agents draft only. Crons need CRON_SECRET.
 
-## What works now (no flag flips)
+## One sitting (credentials)
+1. Neon dual URLs (gse-postgres → DATABASE_URL + DIRECT_URL)
+2. CRON_SECRET re-verify + redeploy
+3. Smoke gamma 401/200, settle free path, jarvis-snapshot
+4. Optional: free AI keys
 
-- Free **Gamma** quote cron path (`oddsApiRequired=false`) and dual-secret cron auth on every `/api/cron/*` route
-- **Board** and **picks** empty states that do **not** pretend LIVE_BOARD is on
-- **Prefire → selective FIRE** path; public fire cannot soft-pass
-- **Own-feed** point-in-time refuse (no future leak)
-- **CLV honesty:** method tags + refuse when methods diverge; archive continuous CLV
-- **CI guards:** trust-gate, AI Council DESTROY, brand safety, secret scan
-- Cron matrix + smoke scripts ready for Production HOST
+## Explicit YES only later
+LIVE_BOARD · PUBLISH_LEDGER · public picks ladder · Phase C claim · #226
 
-You do **not** need code from the agent to use the above in a correctly configured deploy.
+## Not built / parked on purpose
+Overlay CV · autonomous external agents · sportsbook CPA
 
-## Credentials in one sitting (batch order)
-
-1. Neon: create DB → set `DATABASE_URL` + `DIRECT_URL` on Vercel Production  
-2. Vercel: set `CRON_SECRET` (and optional `CRON_SECRET_PREVIOUS` only if rotating)  
-3. Run `scripts/ops/gamma-cron-smoke.sh` against Production HOST → **401 then 200**  
-4. Stripe live keys + webhook (billing)  
-5. Upstash Redis **only if** you need multi-instance online store  
-6. Optional: `THE_ODDS_API_KEY` for enrichment cron — never mark free path as requiring it  
-
-Checklist: `docs/ops/FOUNDER_ONLY_CHECKLIST.md` · smoke: `docs/ops/SMOKE.md`
-
-## Explicit YES required (defaults stay OFF)
-
-- LIVE_BOARD on  
-- PUBLISH_LEDGER / slate reveal on  
-- Merge/land **#226 HEOS**  
-- Treat **Phase C (5b)** as measured (only after real Odds/gamma path + remeasure)
-
-## Intentionally NOT built / not claimed
-
-- Overlay **optical CV** — **PARKED**  
-- Poly1305 / CF Access / SPIFFE digression — closed  
-- Public ROI / “guaranteed edge” — blocked  
-- Sportsbook CPA — permanently blocked  
-- Free path that depends on paid Odds API — forbidden by law  
-
-## Exact next human action #1 (most leverage)
-
-**Set Production `CRON_SECRET` + Neon `DATABASE_URL`/`DIRECT_URL` on Vercel, deploy, then run `./scripts/ops/gamma-cron-smoke.sh` against the Production HOST until you see 401 (bad token) and 200 (good token).**
-
-That single loop turns “code ready” into “ops alive” without flipping LIVE_BOARD or inventing performance claims.
-
----
-
-Canonical state: `docs/ops/CURRENT_STATE.md` · ledger: `docs/ops/OPEN_LEDGER.md`
+## Next human action #1
+Set Production Neon dual URLs + CRON_SECRET → redeploy → open `/cockpit`.

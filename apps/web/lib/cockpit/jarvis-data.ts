@@ -35,6 +35,8 @@ const LAYERS: JarvisLayerStatuses = {
 
 function externalConfigMissing(): string[] {
   const missing: string[] = [];
+  // Free path does NOT require THE_ODDS_API_KEY (oddsApiRequired=false).
+  // ANTHROPIC is optional for Ask Jarvis volume; warn only as soft enrichment.
   const need = [
     "DATABASE_URL",
     "NEXTAUTH_SECRET",
@@ -42,8 +44,6 @@ function externalConfigMissing(): string[] {
     "GOOGLE_CLIENT_SECRET",
     "STRIPE_SECRET_KEY",
     "STRIPE_WEBHOOK_SECRET",
-    "THE_ODDS_API_KEY",
-    "ANTHROPIC_API_KEY",
   ];
   for (const k of need) {
     const v = process.env[k];

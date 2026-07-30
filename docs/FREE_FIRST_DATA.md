@@ -72,11 +72,15 @@ HENRYGD_NCAA_BASE_URL=http://localhost:3000
 
 Without the override the adapter uses henrygd's public demo (5 req/sec/IP cap).
 
-## Next step (deliberate, not yet wired)
+## Free settlement path (wired)
 
-`settleSport()` in `@sports/ingestion-pipeline` still fetches scores from the paid Odds API
-and matches by `externalId`. Routing it through `buildTrustedFinals` + `settlePendingPicks`
-would remove that paid score fetch and add cross-source confirmation — but it changes
-settlement's matching semantics (externalId → team+date), a money-critical change that should
-be validated against a live DB before shipping. The pure primitives are built and tested; the
-integration is intentionally held for a DB-backed review.
+When `THE_ODDS_API_KEY` is **missing**, `/api/cron/settle-picks` runs
+`runFreePathSettlement()` (`lib/data-sources/free-settlement-runner.ts`):
+
+- ESPN free scores (+ henrygd for NCAA)
+- `buildTrustedFinals` + `settlePendingPicks` (DISPUTED holds)
+- Transactional pick settle + outbox + post-settlement work
+- `oddsApiRequired: false` in the response
+
+When the Odds key **is** set, the paid `settleSport()` path still runs (externalId match).
+Validate free-path grades on a live Neon DB before treating public track record as PROVEN.

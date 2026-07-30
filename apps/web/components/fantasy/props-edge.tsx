@@ -86,7 +86,7 @@ export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
               </div>
               <p className="mt-3 text-center text-xs">
                 <span className="rounded-full px-3 py-1 font-semibold uppercase tracking-wider" style={{ background: ev.verdict === "+EV" ? "color-mix(in srgb, var(--verify) 12%, transparent)" : ev.verdict === "thin" ? "rgba(255,255,255,0.07)" : "color-mix(in srgb, var(--alert) 12%, transparent)", color: ev.verdict === "+EV" ? "var(--verify)" : ev.verdict === "thin" ? "var(--ion-white)" : "var(--alert)" }}>
-                  {ev.verdict === "+EV" ? "Positive expected value" : ev.verdict === "thin" ? "Thin: near break-even" : "Negative EV: the book wins this one"}
+                  {ev.verdict === "+EV" ? "Model-favored (illustrative, not a guarantee)" : ev.verdict === "thin" ? "Thin edge (near break-even)" : "Model-unfavored (illustrative)"}
                 </span>
               </p>
               <p className="mt-3 text-[10px] leading-relaxed text-ion-2">

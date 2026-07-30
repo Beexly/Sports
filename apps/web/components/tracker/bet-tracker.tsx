@@ -4,7 +4,7 @@
  * BetTracker — your CLV ledger, persisted locally.
  *
  * Log the bets you make, settle them with the closing price, and watch the
- * metric that actually predicts edge: CLV. ROI and calibration come along for
+ * metric that actually predicts edge: CLV. Personal return % and calibration come along for
  * free. Stored in your browser; nothing leaves the device.
  *
  * Presentation: pure design tokens. Settlement outcomes use the semantic pair
@@ -77,7 +77,7 @@ export function BetTracker() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" aria-live="polite" aria-label="Portfolio summary">
         <Metric label="Record" value={p.record} />
         <Metric label="Units" value={`${p.profit >= 0 ? "+" : ""}${p.profit}`} tone={signTone(p.profit)} />
-        <Metric label="ROI" value={`${p.roi >= 0 ? "+" : ""}${p.roi}%`} tone={signTone(p.roi)} />
+        <Metric label="Personal return" value={`${p.roi >= 0 ? "+" : ""}${p.roi}%`} tone={signTone(p.roi)} />
         <Metric label="Avg CLV" value={`${p.avgClv >= 0 ? "+" : ""}${p.avgClv}`} tone={signTone(p.avgClv)} />
         <Metric label="Beat close" value={`${p.clvWinRate}%`} tone="text-ultraviolet-glow" />
         <Metric label="Brier" value={`${p.brier}`} />

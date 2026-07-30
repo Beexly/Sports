@@ -77,7 +77,7 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     evidenceRefs: ["packages/db/prisma/schema.prisma", "_logs/REALITY.md"],
     lastVerifiedAt: null,
     failureMode: "silent data corruption (settlement bug / stale odds / name mismatch) poisons calibration.",
-    nextAction: "cross-source score reconciliation + stale-unsettled alerts + data-confidence before public display.",
+    nextAction: "Founder: set Production DATABASE_URL+DIRECT_URL from gse-postgres; run scripts/ops/prove-neon.mjs; then free settle + gamma smoke. Cross-source score reconciliation after rows exist.",
   },
 
   // ── workers ──
@@ -479,6 +479,22 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     failureMode: "a shared card whose copy isn't claim-safe.",
     nextAction: "wire the per-route OG image render; the shared unit is a receipt, not a brag.",
   },
+  {
+    id: "free-settlement-path",
+    name: "Free settlement path (ESPN+henrygd when Odds key absent)",
+    category: "data-sources",
+    builtStatus: "YES", wiredStatus: "YES", provenStatus: "PARTIAL", publicSafeStatus: "NO",
+    ownerGate: "public track record still gated; free path settles internally only after Neon proof",
+    evidenceRefs: [
+      "apps/web/lib/data-sources/free-settlement-runner.ts",
+      "apps/web/app/api/cron/settle-picks/route.ts",
+      "docs/FREE_FIRST_DATA.md",
+    ],
+    lastVerifiedAt: null,
+    failureMode: "team+date match can miss externalId games; DISPUTED holds; unpaid Odds is not a defect",
+    nextAction: "Smoke settle-picks without THE_ODDS_API_KEY on Production Neon; compare sample grades to paid path when available.",
+  },
+
 ];
 
 // ───────────────────────── auditors ─────────────────────────

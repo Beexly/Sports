@@ -1,7 +1,6 @@
 # OPEN_LEDGER — GSE drain status
 
-**Updated:** 2026-07-30 · **Pass 4 IDLE**  
-**MAIN:** `1e007c3` (`fix(pass3): cron nodejs harden + CRON_MATRIX + honest picks copy (#256)`)  
+**Updated:** 2026-07-29 · master-plan consolidation  
 **Law:** oddsApiRequired=false · LIVE_BOARD off · refuse-default · measurement > narrative  
 **class_A_remaining = 0**
 
@@ -15,55 +14,48 @@
 
 ## Class A
 
-**Empty.** All agent-finishable items shipped through #251–#256.
+**Empty.** Residual kill + Pass 4 handoff complete. Master plan docs consolidated.
 
-| Wave | Status |
+## Class B — founder env/secrets
+
+| Env / action | Where |
+|--------------|-------|
+| `DATABASE_URL` | Vercel Production ← gse-postgres pooled |
+| `DIRECT_URL` | Vercel Production ← gse-postgres unpooled |
+| `CRON_SECRET` | Vercel Production |
+| Redeploy + gamma smoke | 401 then 200 |
+| `GEMINI_API_KEY` / `GROQ_API_KEY` / `XAI_API_KEY` | Vercel |
+| `ANTHROPIC_API_KEY` | Vercel (quality path) |
+| Stripe live + webhook | When billing live |
+| Upstash | Multi-instance only |
+| `THE_ODDS_API_KEY` | Optional enrichment only |
+| Credit applications | Microsoft / Neon / CF / AWS / Anthropic / Sentry |
+
+See: `CREDENTIALS_CHECKLIST.md` · `CLAUDE_COWORK_PROMPT_P0.md`
+
+## Class C — founder YES only
+
+| Item | Status |
 |------|--------|
-| Serial dual-secret, board honesty, own refuse, prefire, method CLV (#251) | DONE |
-| Frontier A++ audit + methodTag density + continuous CLV + AI Council CI (#254) | DONE |
-| IDLE stamp (#255) | DONE |
-| Cron nodejs harden + CRON_MATRIX + picks copy honesty (#256) | DONE |
-
-## Class B — founder env/secrets (exact)
-
-| Env | Where to set |
-|-----|----------------|
-| `CRON_SECRET` | Vercel → Project → Settings → Environment Variables → **Production** |
-| `CRON_SECRET_PREVIOUS` | Same (rotation only) |
-| `DATABASE_URL` | Neon dashboard → connection string → Vercel Production |
-| `DIRECT_URL` | Neon direct URL → Vercel Production |
-| Upstash Redis URL/token | Upstash console → Vercel Production (if multi-instance) |
-| Stripe live keys + webhook secret | Stripe Dashboard → Vercel Production |
-| `THE_ODDS_API_KEY` | Optional; Vercel Production; **enrichment only** |
-| `CLOSING_ARCHIVE_PATH` | Optional durable path |
-
-See also: `docs/ops/FOUNDER_ONLY_CHECKLIST.md`, `docs/ops/CREDENTIALS_CHECKLIST.md`, `docs/ops/SMOKE.md`
-
-## Class C — parked / founder YES only
-
-| Item | Status | Reason |
-|------|--------|--------|
-| LIVE_BOARD | **off** | Founder YES only |
-| PUBLISH_LEDGER | **off** | Founder YES only |
-| SLATE_OPENING_REVEAL | **off** | Founder YES only |
-| canPublishPicks | **false** | refuse-default |
-| #226 HEOS | open PR | Founder YES to merge science |
-| Phase C (5b) | **UNVERIFIED** | Founder + real path measure |
-| Overlay / optical CV | **PARKED** | Catalog dark; not ship path |
-| Poly1305 / CF Access / SPIFFE | closed digression | Out of product critical path |
-| Open #247 / #248 | C/dup | Overlaps MAIN #251+#254 |
+| LIVE_BOARD | **off** |
+| PUBLISH_LEDGER | **off** |
+| SLATE_OPENING_REVEAL | **off** |
+| #226 HEOS | needs YES |
+| Phase C (5b) | **UNVERIFIED** |
+| Overlay optical CV | **PARKED** |
+| GitHub for Startups full offer | needs funding + partner |
 
 ## Forbidden
 
-Fake ROI · sportsbook CPA · Pedersen=ZK/PQ · Odds API on free critical path · flip gates without YES
+Fake ROI · sportsbook CPA · Odds API on free critical path · flip gates without YES
 
-## Canonical docs (Pass 4)
+## Canonical docs
 
 | File | Role |
 |------|------|
-| `docs/ops/CURRENT_STATE.md` | Product truth snapshot |
-| `docs/ops/OPEN_LEDGER.md` | This ledger |
-| `docs/ops/FOUNDER_ONLY_CHECKLIST.md` | Checkbox-only founder work |
-| `docs/ops/FOUNDER_HANDOFF_MESSAGE.md` | 3-minute founder message |
-| `docs/ops/CRON_MATRIX.md` | Cron route matrix |
-| `docs/ops/SMOKE.md` | Exact smoke commands |
+| `MASTER_PLAN.md` | Full plan |
+| `MASTER_PLAN_LEVERAGE.md` | Leverage atlas |
+| `CURRENT_STATE.md` | Runtime truth |
+| `OPEN_LEDGER.md` | This ledger |
+| `FOUNDER_HANDOFF_MESSAGE.md` | 3-minute handoff |
+| `CLAUDE_COWORK_PROMPT_P0.md` | Human co-work prompt |

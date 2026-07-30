@@ -171,7 +171,7 @@ function grade(round: Round, action: "TAKE" | "PASS", locked: number | null): Ro
     const points = totalMove <= -0.5 ? 2 : totalMove >= 0.5 ? 0 : 1;
     const read =
       points === 2
-        ? "Correct restraint. The number only got worse, and passing was the +EV move."
+        ? "Correct restraint. The number only got worse, and passing was the disciplined move."
         : points === 0
           ? "The market came TO you and you let it pass. Entries that improve are gifts."
           : "Flat market. A pass costs nothing here.";

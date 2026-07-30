@@ -22,15 +22,15 @@
 | `/api/cron/generate-drafts` | cronAuthError | scheduled | `0 11 * * *` | bad/missing Bearer | authorized GET |
 | `/api/cron/hydrate-cold-plane` | cronAuthError | scheduled | `30 9 * * *` | bad/missing Bearer | authorized GET |
 | `/api/cron/ingest-player-stats` | cronAuthError | scheduled | `0 9 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/jarvis-snapshot` | cronAuthError | manual-only | — | bad/missing Bearer | authorized GET |
+| `/api/cron/jarvis-snapshot` | cronAuthError | scheduled | `15 * * * *` | bad/missing Bearer | authorized GET · fills Jarvis ring buffer |
 | `/api/cron/prune-rate-limits` | cronAuthError | scheduled | `30 6 * * *` | bad/missing Bearer | authorized GET |
 | `/api/cron/reconcile-entitlements` | cronAuthError | scheduled | `0 8 * * *` | bad/missing Bearer | authorized GET |
 | `/api/cron/refresh-odds` | cronAuthError | scheduled | `*/30 * * * *` | bad/missing Bearer | authorized GET · Odds optional |
 | `/api/cron/refresh-player-stats` | cronAuthError | manual-only | — | bad/missing Bearer | authorized GET |
 | `/api/cron/repair-checkout-attempts` | cronAuthError | scheduled | `30 8 * * *` | bad/missing Bearer | authorized GET |
 | `/api/cron/run-formal-receipt` | cronAuthError | scheduled | `45 9 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/settle-picks` | cronAuthError | scheduled | `0 7 * * *` | bad/missing Bearer | authorized GET |
+| `/api/cron/settle-picks` | cronAuthError | scheduled | `0 7 * * *` | bad/missing Bearer | authorized GET · free path if no Odds key · paid if key set |
 
-**Counts:** 18 routes · 12 scheduled · 6 manual-only · **0 unauth** · **0 edge runtime**
+**Counts:** 18 routes · 13 scheduled (incl. jarvis-snapshot) · free settle path · **0 unauth** · **0 edge runtime**
 
 Smoke: `scripts/ops/gamma-cron-smoke.sh` (401 then 200).
