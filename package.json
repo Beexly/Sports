@@ -60,7 +60,7 @@
     "guard:pedersen-opener-boundary": "node scripts/guardrails/pedersen-opener-boundary.mjs",
     "guard:actor-minting": "node scripts/guardrails/actor-minting-boundary.mjs",
     "guard:ai-control-plane-sealing": "node scripts/guardrails/ai-control-plane-sealing.mjs",
-    "guard:ai-council": "npx vitest run --config packages/ai-council/vitest.config.ts",
+    "guard:ai-council": "npm run test --workspace=@sports/ai-council",
     "guard:nflverse-currency": "tsx scripts/check-nflverse-currency.ts",
     "fable:evidence": "tsx scripts/fable-evidence.ts all",
     "fable:claims": "tsx scripts/fable-evidence.ts claims",

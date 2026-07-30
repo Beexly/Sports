@@ -1,7 +1,7 @@
 /**
  * Dual CRON_SECRET / CRON_SECRET_PREVIOUS via shared cronAuthError.
  */
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { cronAuthError, authorizeCronRequest } from "@/lib/cron/authorize";
 
 describe("cronAuthError dual-secret", () => {
