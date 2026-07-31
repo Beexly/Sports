@@ -18,7 +18,7 @@
 | `/api/cron/backtest-calibration` | cronAuthError | manual-only | — | bad/missing Bearer | authorized GET |
 | `/api/cron/deliver-settlement-alerts` | cronAuthError | scheduled | `30 7 * * *` | bad/missing Bearer | authorized GET |
 | `/api/cron/drain-ai-telemetry-recovery` | cronAuthError | scheduled | `30 * * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/gamma` | cronAuthError | scheduled | `*/30 * * * *` | bad/missing Bearer | authorized GET/POST · oddsApiRequired=false |
+| `/api/cron/gamma` | cronAuthError | **PAUSED (B-0)** | _unscheduled_ | bad/missing Bearer | authorized GET/POST · oddsApiRequired=false |
 | `/api/cron/generate-drafts` | cronAuthError | scheduled | `0 11 * * *` | bad/missing Bearer | authorized GET |
 | `/api/cron/hydrate-cold-plane` | cronAuthError | scheduled | `30 9 * * *` | bad/missing Bearer | authorized GET |
 | `/api/cron/ingest-player-stats` | cronAuthError | scheduled | `0 9 * * *` | bad/missing Bearer | authorized GET |
@@ -34,5 +34,7 @@
 **Counts:** 18 routes · 13 scheduled (incl. jarvis-snapshot) · free settle path · **0 unauth** · **0 edge runtime**
 
 Smoke: `scripts/ops/gamma-cron-smoke.sh` (401 then 200).
+
+> **gamma is intentionally unscheduled.** Removed from `vercel.json` in `3dfbc726` (B-0): the Polymarket Gamma API is not present in `source-rights-registry.ts`, and clearance-engine law requires `checkClearance()` to pass before any extraction job. Route code is left intact on purpose. Re-enable requires a counsel-approved registry entry permitting storage + commercial_display (or the narrower intents actually used) ÔÇö not just re-adding the cron. Restore string is recorded verbatim in the `3dfbc726` commit body.
 
 | /api/cron/free-spine-health | 0 10 * * * | CRON_SECRET | 401/200 | Multi-source free spine probe |
