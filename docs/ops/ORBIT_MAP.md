@@ -27,3 +27,15 @@
 - Hold-out / paradox: `timeHoldoutSplit`, `selectedSliceEce`
 - Offline pipeline: `npm run calibration:offline`
 - Portfolio Kelly: `edge-lab/kelly.ts`
+
+
+## Session 2 master extract
+
+Full row-level integrity: [`SESSION_2_EXTRACT.md`](./SESSION_2_EXTRACT.md)
+
+| Command | Covers |
+|---------|--------|
+| `npm run dspy:gse` | Examples + gse_metric + GEPA config laws |
+| `npm run calibration:offline` | Shin → hold-out → CIR → paradox → Kelly deflator |
+| `npm run session2:extract` | All of the above + agent-eval |
+| `npm run agent:eval` | Fixture predicates including wave5 |

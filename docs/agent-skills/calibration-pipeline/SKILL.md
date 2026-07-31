@@ -38,3 +38,10 @@ npm run export:settled-picks
 npm run calibration:offline
 npm run agent:eval
 ```
+
+## CIR → Kelly bridge
+- `sizeAfterCalibration` in `calibration-kelly-bridge.ts`
+- Fit CIR on train → calibrate size rows → portfolio/fractional Kelly × CLV deflator
+- Export: package barrel `@sports/prediction-engine`
+- Portfolio: `portfolioKellyStakes` (also exported from barrel — Session 2)
+

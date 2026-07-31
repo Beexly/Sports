@@ -1,79 +1,90 @@
 #!/usr/bin/env node
 /**
- * Offline DSPy/GEPA readiness dry-run for GSE skill metrics.
- * No network. Exit 0 if goldens + skill seeds encode invariants.
- * Live GEPA requires Python dspy + API keys (see README).
+ * Offline DSPy/GEPA readiness for GSE skills (Session 2).
+ *
+ * 1. Promote goldens → Examples (train/val)
+ * 2. Score with gse_metric → Prediction(score, feedback)
+ * 3. Assert gepa_config laws (reflection temp 1.0, task temp 0, auto=light)
+ *
+ * Source goldens: data/goldens.json (promote → examples).
+ * free path / ABSENT gate encoded in settlement skills.
+ * No network. Exit 0 if all examples score 1.
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
+import { evaluateExamples } from "./gse_metric.mjs";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
-const goldens = JSON.parse(
-  readFileSync(join(dirname(fileURLToPath(import.meta.url)), "data/goldens.json"), "utf8"),
-);
+const here = dirname(fileURLToPath(import.meta.url));
+const root = join(here, "../..");
 
-function skillBlob(domain) {
-  const paths =
-    domain === "coding"
-      ? [
-          "docs/agent-skills/coding-agent/SKILL.md",
-          "docs/agent-skills/polymarket-hold/SKILL.md",
-        ]
-      : [
-          "docs/agent-skills/settlement-free-path/SKILL.md",
-          "docs/agent-skills/stripe-webhook/SKILL.md",
-          "docs/agent-skills/checkout-attempt/SKILL.md",
-        ];
+// promote
+const promote = spawnSync(process.execPath, [join(here, "promote.mjs")], {
+  encoding: "utf8",
+});
+if (promote.status !== 0) {
+  console.error(promote.stderr || promote.stdout);
+  process.exit(1);
+}
+
+const config = JSON.parse(readFileSync(join(here, "gepa_config.json"), "utf8"));
+const examplesDoc = JSON.parse(readFileSync(join(here, "data/examples.json"), "utf8"));
+
+// Config integrity (Session 2 GEPA laws)
+const configFails = [];
+if (config.reflection_lm?.temperature !== 1.0) {
+  configFails.push("reflection_lm.temperature must be 1.0");
+}
+if (config.task_lm?.temperature !== 0) {
+  configFails.push("task_lm.temperature must be 0");
+}
+if (config.auto !== "light") {
+  configFails.push('auto must be "light"');
+}
+if (config.metric?.name !== "gse_metric") {
+  configFails.push("metric.name must be gse_metric");
+}
+if (!String(config.metric?.return_shape ?? "").includes("Prediction")) {
+  configFails.push("metric must return Prediction(score, feedback)");
+}
+
+function loadSkills(paths) {
   return paths
     .filter((p) => existsSync(join(root, p)))
     .map((p) => readFileSync(join(root, p), "utf8"))
-    .join("\n")
-    .toLowerCase();
+    .join("\n");
 }
 
-function scoreSkill(domain, skill) {
-  const fails = [];
-  if (domain === "settlement" || domain === "coding") {
-    if (!skill.includes("absent") || !skill.includes("the_odds_api_key") && !skill.includes("free")) {
-      // coding may only have polymarket; settlement must have free path
-      if (domain === "settlement" && !(skill.includes("absent") && skill.includes("free"))) {
-        fails.push("missing free-path ABSENT gate");
-      }
-    }
-  }
-  if (domain === "settlement") {
-    if (!skill.includes("idempoten") && !skill.includes("stripe")) {
-      fails.push("missing stripe/idempotency guidance");
-    }
-  }
-  if (domain === "coding" || skill.includes("polymarket") === false) {
-    if (domain === "coding" && !skill.includes("polymarket") && !skill.includes("compliance")) {
-      fails.push("missing Polymarket compliance hold");
-    }
-  }
-  return { score: fails.length ? 0 : 1, feedback: fails.join("; ") || "all invariants held" };
-}
+const skillByDomain = {
+  settlement: loadSkills([
+    "docs/agent-skills/settlement-free-path/SKILL.md",
+    "docs/agent-skills/stripe-webhook/SKILL.md",
+    "docs/agent-skills/checkout-attempt/SKILL.md",
+  ]),
+  coding: loadSkills([
+    "docs/agent-skills/coding-agent/SKILL.md",
+    "docs/agent-skills/polymarket-hold/SKILL.md",
+  ]),
+  calibration: loadSkills(["docs/agent-skills/calibration-pipeline/SKILL.md"]),
+};
 
-const settlement = skillBlob("settlement");
-const coding = skillBlob("coding");
-let failed = 0;
-const rows = [];
-for (const g of goldens) {
-  const skill = g.domain === "coding" ? coding : settlement;
-  const r = scoreSkill(g.domain, skill);
-  // negative goldens still pass if skill forbids the bad path
-  const ok = r.score === 1;
-  if (!ok) failed++;
-  rows.push({ id: g.id, domain: g.domain, ok, feedback: r.feedback });
-}
+// Expand examples with calibration domain goldens if present in goldens but not examples
+const result = evaluateExamples(examplesDoc.examples, skillByDomain);
 
-const train = goldens.filter((g) =>
-  !["free-path-present-deactivated", "free-path-violation", "coding-tool-correct"].includes(g.id),
-);
-const val = goldens.filter((g) =>
-  ["free-path-present-deactivated", "free-path-violation", "coding-tool-correct"].includes(g.id),
-);
+const out = {
+  optimizer: config.optimizer,
+  auto: config.auto,
+  reflection_temp: config.reflection_lm.temperature,
+  task_temp: config.task_lm.temperature,
+  metric: config.metric.name,
+  train: examplesDoc.train_count,
+  val: examplesDoc.val_count,
+  config_ok: configFails.length === 0,
+  config_fails: configFails,
+  ...result,
+};
 
-console.log(JSON.stringify({ total: rows.length, passed: rows.length - failed, failed, train: train.length, val: val.length, rows }, null, 2));
+console.log(JSON.stringify(out, null, 2));
+const failed = result.failed + configFails.length;
 process.exit(failed ? 1 : 0);

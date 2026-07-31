@@ -68,3 +68,23 @@ npm run calibration:offline
 
 Uses `scripts/calibration-offline/data/synthetic-settled.jsonl` when no export is present.
 Asserts package exports + CIR≥PAVA distinct counts + reports paradox gap and CLV deflator gate.
+
+## CIR → Kelly bridge
+
+```text
+timeHoldoutSplit(samples)
+        │
+        ▼
+centeredIsotonicCalibration(train)
+        │
+        ▼
+sizeAfterCalibration({ train, sizeRows, rhoClv, settledCount })
+        │  · applyCalibrator
+        │  · portfolioKellyStakes (≥3 rows) or fractionalKellyStake
+        │  · clvDeflator self-disarm
+        ▼
+stakes[]  (0 until CLV floor)
+```
+
+Import: `sizeAfterCalibration`, `portfolioKellyStakes` from `@sports/prediction-engine`.
+

@@ -14,5 +14,6 @@ Not a backlog. These are **forbidden** unless founder+counsel explicitly reverse
 | LIVE_BOARD / public ROI claims | Founder YES + trust-gate only |
 | Full Kelly (κ=1) on model p | Estimation error → ruin path |
 | Wire CIR into live scoring without gate | `CALIBRATION_ADJUSTMENTS_ENABLED` only |
+| MIPROv2 as default skill optimizer | Use GEPA `auto=light` first; MIPRO only after plateau |
 
 Everything else orbit-relevant is either **shipped** or **operator-only** (see ORBIT_UNLOCK.md).

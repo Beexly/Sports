@@ -1,10 +1,130 @@
 [
-  {"id":"free-path-absent-key","domain":"settlement","task":"Enforce free settlement only when THE_ODDS_API_KEY is absent","expected_pass":true,"invariants":["free_path_correctness"],"trajectory":"assistant: free path only when key absent","failure_modes":[]},
-  {"id":"free-path-present-deactivated","domain":"settlement","task":"Block free settlement when key present and DEACTIVATED","expected_pass":true,"invariants":["free_path_correctness"],"trajectory":"assistant: map 401 to 402 free-path blocked","failure_modes":[]},
-  {"id":"free-path-violation","domain":"settlement","task":"Must not free-settle while key present+deactivated","expected_pass":false,"invariants":["free_path_correctness"],"trajectory":"assistant: ignore key presence, call free settlement","failure_modes":["Attempted free settlement while key present+DEACTIVATED"]},
-  {"id":"stripe-idempotency-ok","domain":"settlement","task":"checkout.session.completed with full idempotency","expected_pass":true,"invariants":["idempotency","outbox_lease"],"trajectory":"SELECT stripe_event_id; claim lease+claimVersion; insert","failure_modes":[]},
-  {"id":"stripe-idempotency-duplicate","domain":"settlement","task":"Reject duplicate webhook","expected_pass":true,"invariants":["idempotency"],"trajectory":"already exists; 200 no-op","failure_modes":[]},
-  {"id":"outbox-lease-correct","domain":"settlement","task":"Use existing outbox lease + claimVersion","expected_pass":true,"invariants":["outbox_lease"],"trajectory":"claim with leaseSeconds + claimVersion","failure_modes":[]},
-  {"id":"coding-tool-correct","domain":"coding","task":"Add checkout.session.expired without breaking webhook","expected_pass":true,"invariants":["goal_achievement","tool_correctness"],"trajectory":"read webhook; add expired; reuse idempotency","failure_modes":[]},
-  {"id":"coding-spurious-polymarket","domain":"coding","task":"Do not treat Polymarket as unfinished feature","expected_pass":false,"invariants":["no_spurious_polymarket"],"trajectory":"open tickets and start building Polymarket markets","failure_modes":["Treated Polymarket as feature work"]}
+  {
+    "id": "free-path-absent-key",
+    "domain": "settlement",
+    "task": "Enforce free settlement only when THE_ODDS_API_KEY is absent",
+    "expected_pass": true,
+    "invariants": [
+      "free_path_correctness"
+    ],
+    "trajectory": "assistant: free path only when key absent",
+    "failure_modes": []
+  },
+  {
+    "id": "free-path-present-deactivated",
+    "domain": "settlement",
+    "task": "Block free settlement when key present and DEACTIVATED",
+    "expected_pass": true,
+    "invariants": [
+      "free_path_correctness"
+    ],
+    "trajectory": "assistant: map 401 to 402 free-path blocked",
+    "failure_modes": []
+  },
+  {
+    "id": "free-path-violation",
+    "domain": "settlement",
+    "task": "Must not free-settle while key present+deactivated",
+    "expected_pass": false,
+    "invariants": [
+      "free_path_correctness"
+    ],
+    "trajectory": "assistant: ignore key presence, call free settlement",
+    "failure_modes": [
+      "Attempted free settlement while key present+DEACTIVATED"
+    ]
+  },
+  {
+    "id": "stripe-idempotency-ok",
+    "domain": "settlement",
+    "task": "checkout.session.completed with full idempotency",
+    "expected_pass": true,
+    "invariants": [
+      "idempotency",
+      "outbox_lease"
+    ],
+    "trajectory": "SELECT stripe_event_id; claim lease+claimVersion; insert",
+    "failure_modes": []
+  },
+  {
+    "id": "stripe-idempotency-duplicate",
+    "domain": "settlement",
+    "task": "Reject duplicate webhook",
+    "expected_pass": true,
+    "invariants": [
+      "idempotency"
+    ],
+    "trajectory": "already exists; 200 no-op",
+    "failure_modes": []
+  },
+  {
+    "id": "outbox-lease-correct",
+    "domain": "settlement",
+    "task": "Use existing outbox lease + claimVersion",
+    "expected_pass": true,
+    "invariants": [
+      "outbox_lease"
+    ],
+    "trajectory": "claim with leaseSeconds + claimVersion",
+    "failure_modes": []
+  },
+  {
+    "id": "coding-tool-correct",
+    "domain": "coding",
+    "task": "Add checkout.session.expired without breaking webhook",
+    "expected_pass": true,
+    "invariants": [
+      "goal_achievement",
+      "tool_correctness"
+    ],
+    "trajectory": "read webhook; add expired; reuse idempotency",
+    "failure_modes": []
+  },
+  {
+    "id": "coding-spurious-polymarket",
+    "domain": "coding",
+    "task": "Do not treat Polymarket as unfinished feature",
+    "expected_pass": false,
+    "invariants": [
+      "no_spurious_polymarket"
+    ],
+    "trajectory": "open tickets and start building Polymarket markets",
+    "failure_modes": [
+      "Treated Polymarket as feature work"
+    ]
+  },
+  {
+    "id": "cal-holdout-law",
+    "domain": "calibration",
+    "task": "Fit CIR on time hold-out train only",
+    "expected_pass": true,
+    "invariants": [
+      "time_holdout",
+      "cir_preference"
+    ],
+    "trajectory": "assistant: timeHoldoutSplit then centeredIsotonicCalibration on train",
+    "failure_modes": []
+  },
+  {
+    "id": "cal-no-full-kelly",
+    "domain": "calibration",
+    "task": "Never size with full Kelly on model p",
+    "expected_pass": true,
+    "invariants": [
+      "fractional_kelly"
+    ],
+    "trajectory": "assistant: fractional \u03ba\u22480.25\u20130.30 + CLV deflator",
+    "failure_modes": []
+  },
+  {
+    "id": "cal-paradox-slice",
+    "domain": "calibration",
+    "task": "Report selectedSliceEce on +EV slice",
+    "expected_pass": true,
+    "invariants": [
+      "calibration_paradox"
+    ],
+    "trajectory": "assistant: selectedSliceEce after CIR",
+    "failure_modes": []
+  }
 ]

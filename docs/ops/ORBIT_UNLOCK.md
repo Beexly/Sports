@@ -76,3 +76,8 @@ See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Statu
 | Coding skill | `docs/agent-skills/coding-agent/SKILL.md` |
 | Polymarket hold skill | `docs/agent-skills/polymarket-hold/SKILL.md` |
 
+| Session 2 extract | `docs/ops/SESSION_2_EXTRACT.md` |
+| gse_metric / GEPA config | `scripts/dspy-gse/` |
+| CIR→Kelly bridge | `sizeAfterCalibration` |
+| Portfolio Kelly barrel | `portfolioKellyStakes` export |
+
