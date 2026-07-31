@@ -11,7 +11,19 @@ import {
 } from "@/lib/data-sources/source-router";
 import { COST_TIER_RANK } from "@/lib/data-sources/cost-policy";
 
-describe("source-router: free-first orchestration", () => {
+/** Sources intentionally uncleared until registry grant (compliance / terms). */
+const UNCLEARED_IDS = new Set([
+  "polymarket-gamma",
+  "kalshi-public",
+  "mlb-statsapi",
+  "mlb-statsapi-cleared",
+  "balldontlie-nba",
+  "fpl-official",
+  "nhl-web-api",
+  "henrygd-ncaa",
+]);
+
+describe("source-router: free-first orchestration + clearance honesty", () => {
   it("orders every route free-first (cost rank non-decreasing)", () => {
     for (const sport of ALL_SPORTS) {
       for (const need of ["scores", "odds", "team_stats", "standings"] as const) {
@@ -29,12 +41,14 @@ describe("source-router: free-first orchestration", () => {
     expect(plan.primary?.id).toBe("nflverse");
   });
 
-  it("NCAAF scores have dual free cleared sources (ESPN + henrygd)", () => {
+  it("NCAAF router-cleared scores are ESPN; henrygd stays uncleared (adapter-only)", () => {
     const cleared = clearedSources("scores", "ncaaf");
     const ids = cleared.map((s) => s.id);
-    expect(ids).toEqual(expect.arrayContaining(["espn-public-api", "henrygd-ncaa"]));
-    expect(cleared.length).toBeGreaterThanOrEqual(2);
-    expect(cleared.every((s) => s.cleared)).toBe(true);
+    expect(ids).toContain("espn-public-api");
+    expect(ids).not.toContain("henrygd-ncaa");
+    const henrygd = PLATFORM_SOURCES.find((s) => s.id === "henrygd-ncaa");
+    expect(henrygd?.cleared).toBe(false);
+    // Free-settlement may still call henrygd directly; router auto-select does not.
   });
 
   it("weather is covered free by Open-Meteo for every sport", () => {
@@ -44,30 +58,39 @@ describe("source-router: free-first orchestration", () => {
     }
   });
 
-  it("odds free path covers without paid Odds (gamma/kalshi dual)", () => {
-    const plan = planIngestion("odds", "nfl");
-    expect(plan.mustSpend).toBe(false);
-    expect(plan.freeCovers).toBe(true);
-    const freeOdds = clearedSources("odds", "nfl").filter((s) =>
+  it("odds free candidates (gamma/kalshi) are uncleared — compliance hold", () => {
+    for (const id of ["polymarket-gamma", "kalshi-public"] as const) {
+      expect(PLATFORM_SOURCES.find((s) => s.id === id)?.cleared).toBe(false);
+    }
+    const freeClearedOdds = clearedSources("odds", "nfl").filter((s) =>
       s.tier.startsWith("free"),
     );
-    expect(freeOdds.length).toBeGreaterThanOrEqual(2);
+    expect(freeClearedOdds.length).toBe(0);
+    // Licensed Odds API remains the only cleared odds source until registry grants free odds.
+    const plan = planIngestion("odds", "nfl");
+    expect(plan.primary?.id).toBe("the-odds-api");
+    expect(plan.mustSpend).toBe(true);
+    expect(plan.freeCovers).toBe(false);
+    expect(plan.unlockToGoFree.map((s) => s.id)).toEqual(
+      expect.arrayContaining(["polymarket-gamma", "kalshi-public"]),
+    );
   });
 
-  it("requiresPaidEscalation is false whenever a free cleared source exists", () => {
+  it("requiresPaidEscalation is false when free cleared scores exist", () => {
     expect(requiresPaidEscalation("scores", "nfl")).toBe(false);
     expect(requiresPaidEscalation("standings", "mlb")).toBe(false);
-    expect(requiresPaidEscalation("odds", "nfl")).toBe(false);
+    // Odds currently require spend (only licensed cleared) — honest until free odds registry.
+    expect(requiresPaidEscalation("odds", "nfl")).toBe(true);
   });
 
-  it("freeCoverageMatrix reports free coverage and dual odds", () => {
+  it("freeCoverageMatrix reports free scores; odds spend until free registry grant", () => {
     const matrix = freeCoverageMatrix();
     expect(matrix.length).toBeGreaterThan(0);
     const nflScores = matrix.find((r) => r.need === "scores" && r.sport === "nfl");
     expect(nflScores?.freeCovers).toBe(true);
     const nflOdds = matrix.find((r) => r.need === "odds" && r.sport === "nfl");
-    expect(nflOdds?.mustSpend).toBe(false);
-    expect(nflOdds?.clearedCount).toBeGreaterThanOrEqual(2);
+    expect(nflOdds?.mustSpend).toBe(true);
+    expect(nflOdds?.clearedCount).toBe(1); // the-odds-api only
   });
 
   it("every cleared source has a registry id (traceable to rights posture)", () => {
@@ -76,9 +99,27 @@ describe("source-router: free-first orchestration", () => {
     }
   });
 
-  it("world-class: major sports scores have dual+ cleared sources", () => {
-    for (const sport of ["nfl", "nba", "mlb", "nhl", "ncaaf", "ncaab"] as const) {
-      expect(clearedSources("scores", sport).length).toBeGreaterThanOrEqual(2);
+  it("unregistered / compliance-hold sources are uncleared", () => {
+    for (const id of UNCLEARED_IDS) {
+      const row = PLATFORM_SOURCES.find((s) => s.id === id);
+      expect(row, id).toBeDefined();
+      expect(row!.cleared, id).toBe(false);
+    }
+  });
+
+  it("registry-backed free spines remain cleared", () => {
+    for (const id of ["nflverse", "espn-public-api", "open-meteo", "the-odds-api"] as const) {
+      expect(PLATFORM_SOURCES.find((s) => s.id === id)?.cleared, id).toBe(true);
+    }
+  });
+
+  it("NFL scores still dual-cleared (nflverse + espn); other majors may be single until registry", () => {
+    expect(clearedSources("scores", "nfl").length).toBeGreaterThanOrEqual(2);
+    // Single free cleared (ESPN) is honest for nba/mlb/nhl/ncaa until dual registry rows exist.
+    for (const sport of ["nba", "mlb", "nhl", "ncaaf", "ncaab"] as const) {
+      expect(clearedSources("scores", sport).some((s) => s.id === "espn-public-api")).toBe(
+        true,
+      );
     }
   });
 });
