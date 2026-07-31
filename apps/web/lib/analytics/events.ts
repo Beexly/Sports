@@ -1,14 +1,15 @@
 /**
  * Analytics event plan.
  *
- * A typed registry of the pricing/conversion funnel events we care about, plus a
- * provider-agnostic `track()` that is a NO-OP until an analytics provider is
- * wired (owner decision). This exists so the funnel is instrumented consistently
- * and the event contract is documented and type-checked now, without committing
- * to a vendor or leaking PII.
+ * Typed registry of pricing/conversion funnel events + provider-agnostic
+ * `track()`. Microsoft Clarity receives custom events when the SDK is
+ * initialized in the root layout (OP-004: master flag + project id). Without
+ * Clarity loaded, `track()` remains a pure no-op return of the payload.
  *
- * Pure module — no network, no PII collected here. Fully unit-testable.
+ * Never collect PII here. Callers pass only non-identifying funnel context.
  */
+
+import { dispatchClarityEvent, upgradeClaritySession } from "./clarity-dispatch";
 
 export type AnalyticsEvent =
   | "pricing_page_view"
@@ -31,7 +32,7 @@ export type AnalyticsEvent =
   | "operator_waitlist_join"
   | "cancellation_start"
   | "cancellation_reason_submit"
-  // GSE founding-waitlist funnel (PR2, no-claim lane). NO-OP like the rest.
+  // GSE founding-waitlist funnel (PR2, no-claim lane).
   | "waitlist_viewed"
   | "waitlist_started"
   | "waitlist_submitted"
@@ -82,16 +83,18 @@ export interface AnalyticsContext {
 }
 
 /**
- * Record an event. NO-OP until a provider is wired (owner decision). Never
- * collects PII; callers pass only non-identifying funnel context. Returns the
- * normalized payload so callers/tests can assert what would be sent.
+ * Record an event. Bridges to Microsoft Clarity when the SDK queue exists.
+ * Never collects PII; callers pass only non-identifying funnel context.
+ * Returns the normalized payload so callers/tests can assert what would be sent.
  */
 export function track(
   event: AnalyticsEvent,
   context: AnalyticsContext = {},
 ): { event: AnalyticsEvent; context: AnalyticsContext } {
-  // When a provider is wired, dispatch here (e.g. window.analytics?.track(...)).
-  // Intentionally inert for now — no network, no identity.
+  dispatchClarityEvent(event, context);
+  if (event === "checkout_start" || event === "checkout_complete") {
+    upgradeClaritySession(event);
+  }
   return { event, context };
 }
 

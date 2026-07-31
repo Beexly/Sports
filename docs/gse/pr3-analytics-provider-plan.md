@@ -1,10 +1,11 @@
 # GSE PR3 — Analytics Provider Plan
 
-**Status:** PLAN ONLY. No provider integration. The registry stays a NO-OP.
+**Status:** Clarity npm bridge landed (gated off by default). Other providers still owner-gated.
+**Ops:** `docs/ops/MICROSOFT_CLARITY.md`
 **Source of truth:** `apps/web/lib/analytics/events.ts` (`track()` is inert).
 
-> No provider is wired, no key is added, no network call is introduced by this doc.
-> Wiring a real provider is owner-gated and requires a privacy decision first.
+> Clarity loads only when founder enables env flags. No project id = no network.
+> `identify()` with PII remains forbidden. Cookie consent is not auto-granted.
 
 ## 1. Current state (PR2)
 

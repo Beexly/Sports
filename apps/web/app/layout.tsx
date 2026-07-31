@@ -230,7 +230,10 @@ export default function RootLayout({
         <PageExplainerAuto />
         <SentryClientInit />
 
-        {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
+        {/* ── Free analytics (prod-only; gated per provider — OP-004) ─────────
+            Cloudflare Web Analytics is cookieless. Microsoft Clarity may
+            set first-party cookies depending on project settings; do not
+            auto-consentV2 here. Enable only with privacy posture agreed. */}
         {/* Each provider gates on its OWN identifier, not just the master flag
             (OP-004): a missing token must fail that provider silently, never
             emit a malformed request (e.g. a Clarity tag literally named
@@ -252,13 +255,9 @@ export default function RootLayout({
           process.env["NEXT_PUBLIC_ANALYTICS_ENABLED"],
           process.env["NEXT_PUBLIC_CLARITY_PROJECT_ID"],
         ) && (
-          <Script id="ms-clarity" strategy="afterInteractive">
-            {`(function(c,l,a,r,i,t,y){
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window,document,"clarity","script","${process.env["NEXT_PUBLIC_CLARITY_PROJECT_ID"]}");`}
-          </Script>
+          <MicrosoftClarity
+            projectId={process.env["NEXT_PUBLIC_CLARITY_PROJECT_ID"] as string}
+          />
         )}
       </body>
     </html>
