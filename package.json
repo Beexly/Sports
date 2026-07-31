@@ -122,7 +122,8 @@
     "e2e:pricing-smoke": "node scripts/e2e/pricing-smoke.mjs",
     "export:settled-picks": "node scripts/export-settled-picks-for-calibration.mjs",
     "dspy:gse": "node scripts/dspy-gse/run.mjs",
-    "orbit:map": "node scripts/dspy-gse/run.mjs && node scripts/agent-eval/run.mjs"
+    "orbit:map": "node scripts/dspy-gse/run.mjs && node scripts/calibration-offline/run.mjs && node scripts/agent-eval/run.mjs",
+    "calibration:offline": "node scripts/calibration-offline/run.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",

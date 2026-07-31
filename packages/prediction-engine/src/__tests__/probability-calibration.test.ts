@@ -1,4 +1,3 @@
-import { describe, it, expect } from "vitest";
 import {
   isotonicCalibration,
   centeredIsotonicCalibration,
@@ -6,8 +5,11 @@ import {
   brierDecomposition,
   expectedCalibrationError,
   reliabilityCurve,
+  timeHoldoutSplit,
+  selectedSliceEce,
   type CalibrationSample,
 } from "../probability-calibration.js";
+
 
 describe("brierDecomposition", () => {
   it("splits a coin-flip forecast into pure uncertainty", () => {
@@ -222,5 +224,54 @@ describe("centeredIsotonicCalibration (CIR)", () => {
     // With two well-separated centers at 0 and 1, midpoint should be interior
     expect(mid).toBeGreaterThan(0);
     expect(mid).toBeLessThan(1);
+  });
+});
+
+describe("timeHoldoutSplit", () => {
+  it("orders by time and never shuffles", () => {
+    const samples = [
+      { p: 0.6, y: 1 as const, t: 300 },
+      { p: 0.4, y: 0 as const, t: 100 },
+      { p: 0.5, y: 1 as const, t: 200 },
+      { p: 0.7, y: 0 as const, t: 400 },
+    ];
+    const { train, test, trainFraction } = timeHoldoutSplit(samples, 0.5);
+    expect(trainFraction).toBe(0.5);
+    expect(train.map((s) => s.t)).toEqual([100, 200]);
+    expect(test.map((s) => s.t)).toEqual([300, 400]);
+  });
+
+  it("returns empty splits for empty input", () => {
+    const s = timeHoldoutSplit([], 0.7);
+    expect(s.train).toEqual([]);
+    expect(s.test).toEqual([]);
+  });
+});
+
+describe("selectedSliceEce (calibration paradox)", () => {
+  it("flags worse ECE on overconfident selected slice", () => {
+    // Full set: mix of well-calibrated low-p and overconfident high-p selected
+    const samples: CalibrationSample[] = [
+      ...Array.from({ length: 40 }, (): CalibrationSample => ({ p: 0.3, y: 0 })),
+      ...Array.from({ length: 10 }, (): CalibrationSample => ({ p: 0.3, y: 1 })),
+      // selected +EV band: model says 0.75 but only ~40% hit
+      ...Array.from({ length: 12 }, (): CalibrationSample => ({ p: 0.75, y: 0 })),
+      ...Array.from({ length: 8 }, (): CalibrationSample => ({ p: 0.75, y: 1 })),
+    ];
+    const selected = [
+      ...Array.from({ length: 50 }, () => false),
+      ...Array.from({ length: 20 }, () => true),
+    ];
+    const r = selectedSliceEce({ samples, selected, bins: 10 });
+    expect(r.selectedCount).toBe(20);
+    expect(r.unselectedCount).toBe(50);
+    expect(r.selectedEce).toBeGreaterThan(r.fullEce - 1e-9);
+    expect(r.paradoxGap).toBeGreaterThanOrEqual(0);
+  });
+
+  it("throws on length mismatch", () => {
+    expect(() =>
+      selectedSliceEce({ samples: [{ p: 0.5, y: 1 }], selected: [] }),
+    ).toThrow(/length/);
   });
 });

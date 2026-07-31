@@ -56,9 +56,11 @@ See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Statu
 ## 6. Calibration R&D (after export has volume)
 
 1. `npm run export:settled-picks` (needs real DATABASE_URL)
-2. Fit `centeredIsotonicCalibration` on time hold-out only
-3. Gate any stake display on CLV sample floor (edge-lab CLV deflator)
-4. See [`CALIBRATION_PIPELINE.md`](./CALIBRATION_PIPELINE.md)
+2. Fit `centeredIsotonicCalibration` via `timeHoldoutSplit` (train only)
+3. Report `selectedSliceEce` on the +EV slice (calibration paradox)
+4. Gate any stake display on CLV sample floor (edge-lab CLV deflator)
+5. Offline dry-run: `npm run calibration:offline`
+6. See [`CALIBRATION_PIPELINE.md`](./CALIBRATION_PIPELINE.md)
 
 ## Code index (wave 3)
 
@@ -67,6 +69,9 @@ See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Statu
 | Orbit map | `docs/ops/ORBIT_MAP.md` |
 | Next 50 repos | `docs/ops/ORBIT_NEXT_50.md` |
 | CIR calibrator | `centeredIsotonicCalibration` in prediction-engine |
+| Time hold-out / paradox | `timeHoldoutSplit`, `selectedSliceEce` |
+| Offline calibration | `scripts/calibration-offline/` · `npm run calibration:offline` |
+| Calibration skill | `docs/agent-skills/calibration-pipeline/SKILL.md` |
 | DSPy skill offline | `scripts/dspy-gse/` |
 | Coding skill | `docs/agent-skills/coding-agent/SKILL.md` |
 | Polymarket hold skill | `docs/agent-skills/polymarket-hold/SKILL.md` |

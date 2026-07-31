@@ -15,7 +15,7 @@ Shin de-vig on close prices     packages/prediction-engine/src/shin-devig.ts
 CLV report (fill vs fair close) packages/.../clv-capture.ts · clv.ts
         │
         ▼
-Hold-out split (time-ordered)   NEVER fit calibrator on train
+Hold-out split (time-ordered)   timeHoldoutSplit — NEVER fit on test
         │
         ▼
 CenteredIsotonic (CIR)          probability-calibration.ts
@@ -24,7 +24,7 @@ CenteredIsotonic (CIR)          probability-calibration.ts
         │
         ▼
 ECE / Brier / reliability       same module
-  · also check **selected (+EV) slice** (calibration paradox)
+  · selectedSliceEce on **selected (+EV) slice** (calibration paradox)
         │
         ▼
 Fractional / portfolio Kelly    kelly.ts · edge-lab/kelly.ts
@@ -40,6 +40,9 @@ Fractional / portfolio Kelly    kelly.ts · edge-lab/kelly.ts
 | Shin | `shinDevig` in `packages/prediction-engine/src/shin-devig.ts` |
 | PAVA | `isotonicCalibration` |
 | **CIR** | `centeredIsotonicCalibration` + `countDistinctPredictions` |
+| Time hold-out | `timeHoldoutSplit` |
+| Selected-slice ECE | `selectedSliceEce` |
+| Offline dry-run | `npm run calibration:offline` |
 | ECE/Brier | `expectedCalibrationError`, `brierDecomposition`, `reliabilityCurve` |
 | Single Kelly | `packages/prediction-engine/src/kelly.ts` (κ=0.25, unit caps) |
 | Portfolio Kelly | `packages/prediction-engine/src/edge-lab/kelly.ts` (`portfolioKellyStakes`) |
@@ -56,3 +59,12 @@ Fractional / portfolio Kelly    kelly.ts · edge-lab/kelly.ts
 ## Offline skill/prompt compile (optional)
 
 `scripts/dspy-gse/` — GEPA-ready Examples + metric for agent skills (not live product).
+
+## Offline calibration dry-run (no DB)
+
+```bash
+npm run calibration:offline
+```
+
+Uses `scripts/calibration-offline/data/synthetic-settled.jsonl` when no export is present.
+Asserts package exports + CIR≥PAVA distinct counts + reports paradox gap and CLV deflator gate.

@@ -431,3 +431,96 @@ export function reliabilityCurve(samples: readonly CalibrationSample[], bins = 1
   }
   return out;
 }
+
+// ============================================================
+// Time hold-out split (never fit calibrator on the evaluation window)
+// ============================================================
+
+export interface TimestampedCalibrationSample extends CalibrationSample {
+  /** Unix ms or any monotone time key — larger = later. */
+  readonly t: number;
+}
+
+export interface TimeHoldoutSplit<T extends TimestampedCalibrationSample = TimestampedCalibrationSample> {
+  readonly train: readonly T[];
+  readonly test: readonly T[];
+  readonly trainFraction: number;
+}
+
+/**
+ * Time-ordered hold-out: sort by `t` ascending, first `trainFraction` → train,
+ * remainder → test. Never random-shuffle for calibration (look-ahead leak).
+ * `trainFraction` clamped to (0.05, 0.95); empty input → empty splits.
+ */
+export function timeHoldoutSplit<T extends TimestampedCalibrationSample>(
+  samples: readonly T[],
+  trainFraction = 0.7,
+): TimeHoldoutSplit<T> {
+  const frac = Math.min(0.95, Math.max(0.05, trainFraction));
+  if (samples.length === 0) {
+    return { train: [], test: [], trainFraction: frac };
+  }
+  const sorted = [...samples].sort((a, b) => a.t - b.t || a.p - b.p);
+  const cut = Math.max(1, Math.min(sorted.length - 1, Math.floor(sorted.length * frac)));
+  // If n===1, put sole sample in train so fit can run; test empty (caller checks).
+  if (sorted.length === 1) {
+    return { train: sorted, test: [], trainFraction: frac };
+  }
+  return {
+    train: sorted.slice(0, cut),
+    test: sorted.slice(cut),
+    trainFraction: frac,
+  };
+}
+
+// ============================================================
+// Calibration paradox — ECE on the +EV / selected stake slice
+// ============================================================
+
+export interface SelectedSliceEceArgs {
+  readonly samples: readonly CalibrationSample[];
+  /** True when the row would have been staked / shown as +EV. */
+  readonly selected: readonly boolean[];
+  readonly bins?: number;
+}
+
+export interface SelectedSliceEceResult {
+  readonly fullEce: number;
+  readonly selectedEce: number;
+  readonly unselectedEce: number;
+  readonly selectedCount: number;
+  readonly unselectedCount: number;
+  /** selectedEce - fullEce; >0 means selected book looks worse-calibrated (paradox). */
+  readonly paradoxGap: number;
+}
+
+/**
+ * Compute ECE on the full set vs the selected (+EV) subset.
+ * Well-known calibration paradox: models can look calibrated overall while
+ * the stake-selected slice is overconfident. Gate sizing reports on both.
+ */
+export function selectedSliceEce(args: SelectedSliceEceArgs): SelectedSliceEceResult {
+  const { samples, selected, bins = 10 } = args;
+  if (samples.length !== selected.length) {
+    throw new RangeError(
+      `samples and selected must match length (got ${samples.length} vs ${selected.length})`,
+    );
+  }
+  const sel: CalibrationSample[] = [];
+  const unsel: CalibrationSample[] = [];
+  for (let i = 0; i < samples.length; i++) {
+    if (selected[i]) sel.push(samples[i]!);
+    else unsel.push(samples[i]!);
+  }
+  const fullEce = expectedCalibrationError(samples, bins);
+  const selectedEce = expectedCalibrationError(sel, bins);
+  const unselectedEce = expectedCalibrationError(unsel, bins);
+  return {
+    fullEce,
+    selectedEce,
+    unselectedEce,
+    selectedCount: sel.length,
+    unselectedCount: unsel.length,
+    paradoxGap: round(selectedEce - fullEce),
+  };
+}

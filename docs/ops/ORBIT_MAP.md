@@ -1,4 +1,4 @@
-# Orbit map — what actually moves the needle (wave 1–3)
+# Orbit map — what actually moves the needle (wave 1–4)
 
 | Layer | High leverage (in-repo or operator) | Hard non-goal |
 |-------|-------------------------------------|---------------|
@@ -8,7 +8,7 @@
 | **Agent ops** | OPERATOR.md / ORBIT_UNLOCK; flags only for LIVE_BOARD | New locking systems |
 | **Agent evaluation** | agent-eval fixtures; promptfoo; CIR distinct-count diagnostic | Academic multi-agent tourism |
 | **Inference cost** | model-router PRIMARY/CHEAP env; existing router | Custom gateway rewrite |
-| **Own models / labels** | export:settled-picks → Shin → CIR → CLV → portfolio Kelly | Foundation pretrain |
+| **Own models / labels** | export:settled-picks → timeHoldoutSplit → CIR → selectedSliceEce → CLV → portfolio Kelly; `calibration:offline` | Foundation pretrain |
 | **Distribution** | free embed, honest copy guards | Gamma re-enable without counsel |
 
 ## Already world-class (do not rewrite)
@@ -24,4 +24,6 @@
 - Eval: `npm run agent:eval` (16 predicates, $0)
 - Export: `npm run export:settled-picks`
 - CIR: `centeredIsotonicCalibration` in `@sports/prediction-engine`
+- Hold-out / paradox: `timeHoldoutSplit`, `selectedSliceEce`
+- Offline pipeline: `npm run calibration:offline`
 - Portfolio Kelly: `edge-lab/kelly.ts`

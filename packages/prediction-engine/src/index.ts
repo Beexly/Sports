@@ -212,12 +212,18 @@ export {
   brierDecomposition,
   expectedCalibrationError,
   reliabilityCurve,
+  timeHoldoutSplit,
+  selectedSliceEce,
 } from "./probability-calibration.js";
 export type {
   CalibrationSample,
   IsotonicModel,
   BrierDecomposition,
   ReliabilityBin,
+  TimestampedCalibrationSample,
+  TimeHoldoutSplit,
+  SelectedSliceEceArgs,
+  SelectedSliceEceResult,
 } from "./probability-calibration.js";
 
 // R&D — parametric calibration maps (Platt, Beta) + cross-validated selection
