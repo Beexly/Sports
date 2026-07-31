@@ -108,8 +108,14 @@ All new paths assert `priced:false` and `status:"shadow"`.
 
 ---
 
-## Residual risk
+## Residual risks → leverage (closed)
 
-1. Market-pull EIG uses `expectedMarketP` (often unknown pre-pull) — default 0.5 is a **max-entropy prior**, not a forecast claim.  
-2. Holdout coverage tests use synthetic data — not a production calibration certificate.  
-3. Heuristic VoI and entropy EIG can disagree; when both present, inspect both ranked lists before spending credits.
+See **`docs/gse/LEVERAGE_FROM_UQ_RESIDUALS_2026-07-31.md`**.
+
+| # | Residual | Leverage |
+|---|----------|----------|
+| R1 | Unknown pre-pull market | Labeled `MarketBelief`; no silent 50% forecast; discovery-phase ranking |
+| R2 | Synthetic ≠ certificate | `issueCalibrationCertificate` ladder; publicClaim strings; geometry_only hard cap |
+| R3 | Heuristic vs EIG disagree | `compareVoIRankings` → inspectRequired before credit spend |
+
+Anti-metrics: fake 50% markets, tier inflation, dropping a ranker to force agreement.

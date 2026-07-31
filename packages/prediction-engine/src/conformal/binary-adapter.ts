@@ -305,3 +305,138 @@ export function evaluateBinaryCoverage(
     status: "shadow",
   };
 }
+
+// ── Leverage R2: Calibration certificate ladder (null-over-lie) ───────────
+//
+// Synthetic unit tests prove *geometry*, not *production calibration*.
+// This ladder turns that fence into a product asset: we never call a
+// synthetic green a launch certificate. Each rung is explicit; only
+// `production_eligible` can ever feed a founder MODEL_VERSION discussion.
+
+export type CalibrationCertificateTier =
+  | "geometry_only" // unit / synthetic — proves math, not markets
+  | "historical_replay" // real settled picks, offline holdout
+  | "production_eligible"; // founder-gated; still not auto-priced
+
+export interface CalibrationCertificateGate {
+  readonly minHoldoutN: number;
+  readonly minEmpiricalCoverage: number;
+  readonly maxMeanWidth: number;
+  /** Data source label — must not be "synthetic" for historical_replay+ */
+  readonly dataSource: string;
+  readonly isSynthetic: boolean;
+}
+
+export interface CalibrationCertificate {
+  readonly tier: CalibrationCertificateTier;
+  readonly eligible: boolean;
+  readonly reasons: readonly string[];
+  readonly report: BinaryCoverageReport | null;
+  readonly gate: CalibrationCertificateGate;
+  /** Marketing-safe one-liner: what we claim vs what we refuse to claim */
+  readonly publicClaim: string;
+  readonly priced: false;
+  readonly status: "shadow";
+}
+
+const DEFAULT_PROD_GATE: CalibrationCertificateGate = {
+  minHoldoutN: 100,
+  minEmpiricalCoverage: 0.75,
+  maxMeanWidth: 0.95,
+  dataSource: "unspecified",
+  isSynthetic: true,
+};
+
+/**
+ * Issue a certificate for a coverage report.
+ * Synthetic data can never rise above geometry_only (leverage: honesty bar).
+ */
+export function issueCalibrationCertificate(
+  report: BinaryCoverageReport | null,
+  gate: Partial<CalibrationCertificateGate> = {},
+): CalibrationCertificate {
+  const g: CalibrationCertificateGate = { ...DEFAULT_PROD_GATE, ...gate };
+  const reasons: string[] = [];
+
+  if (g.isSynthetic || g.dataSource === "synthetic") {
+    reasons.push("data is synthetic — geometry proof only, not market calibration");
+    return {
+      tier: "geometry_only",
+      eligible: false,
+      reasons,
+      report,
+      gate: { ...g, isSynthetic: true },
+      publicClaim:
+        "Interval math is unit-tested. We do not certify production coverage from synthetic data.",
+      priced: false,
+      status: "shadow",
+    };
+  }
+
+  if (!report || report.n === 0) {
+    reasons.push("no holdout report");
+    return {
+      tier: "historical_replay",
+      eligible: false,
+      reasons,
+      report,
+      gate: g,
+      publicClaim:
+        "No holdout certificate yet. Prefer null over a green checkmark.",
+      priced: false,
+      status: "shadow",
+    };
+  }
+
+  if (report.n < g.minHoldoutN) {
+    reasons.push(`holdout n=${report.n} < minHoldoutN=${g.minHoldoutN}`);
+  }
+  if (!(report.empiricalCoverage >= g.minEmpiricalCoverage)) {
+    reasons.push(
+      `empiricalCoverage=${report.empiricalCoverage.toFixed(3)} < min=${g.minEmpiricalCoverage}`,
+    );
+  }
+  if (!(report.meanWidth <= g.maxMeanWidth)) {
+    reasons.push(`meanWidth=${report.meanWidth.toFixed(3)} > max=${g.maxMeanWidth}`);
+  }
+  if (report.coverageGap < -0.05) {
+    reasons.push(`undercovering coverageGap=${report.coverageGap.toFixed(3)}`);
+  }
+
+  const eligible = reasons.length === 0;
+  if (eligible) {
+    return {
+      tier: "production_eligible",
+      eligible: true,
+      reasons: ["passed historical_replay gates — founder MODEL_VERSION still required to price"],
+      report,
+      gate: g,
+      publicClaim:
+        "Historical holdout met coverage/width gates. Not live-priced until founder MODEL_VERSION.",
+      priced: false,
+      status: "shadow",
+    };
+  }
+
+  return {
+    tier: "historical_replay",
+    eligible: false,
+    reasons,
+    report,
+    gate: g,
+    publicClaim:
+      "Historical replay ran; certificate not met. We publish the gaps, not a fake green.",
+    priced: false,
+    status: "shadow",
+  };
+}
+
+/** Convenience: always geometry_only for test/synthetic samples. */
+export function geometryOnlyCertificate(
+  report: BinaryCoverageReport | null,
+): CalibrationCertificate {
+  return issueCalibrationCertificate(report, {
+    isSynthetic: true,
+    dataSource: "synthetic",
+  });
+}

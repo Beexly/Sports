@@ -12,6 +12,11 @@
  *
  * This is NOT a claim of optimal experimental design optimality — it is a
  * transparent ranking function so credit burn is intentional, not FIFO.
+ *
+ * Leverage R1: when modelP is set without expectedMarketP, we do NOT invent a
+ * 50% market forecast. Entropy blend is skipped unless expectedMarketP is a
+ * finite point — unknown market is a feature (forces discovery pulls / labeled prior).
+ * Leverage R3: use compareVoIRankings() from expected-info-gain.ts before spend.
  */
 
 export interface OddsPullCandidate {
@@ -68,9 +73,16 @@ export function scoreOddsPullCandidate(c: OddsPullCandidate): number {
 
   const raw = urgency * (0.5 + 0.5 * sparsity) * boost;
 
-  // Optional entropy/EIG blend when modelP is supplied (see expected-info-gain.ts)
+  // Optional entropy/EIG blend — ONLY with an explicit market point (R1 leverage).
+  // Missing expectedMarketP ⇒ skip blend (not a silent 50% forecast). That gap
+  // is itself signal: pull is a *discovery* credit, ranked by heuristic alone.
   let eigBoost = 1;
-  if (typeof c.modelP === "number" && Number.isFinite(c.modelP)) {
+  if (
+    typeof c.modelP === "number" &&
+    Number.isFinite(c.modelP) &&
+    typeof c.expectedMarketP === "number" &&
+    Number.isFinite(c.expectedMarketP)
+  ) {
     const eps = 1e-12;
     const clamp01 = (x: number) => Math.min(1 - eps, Math.max(eps, x));
     const binaryH = (x: number) => {
@@ -80,11 +92,7 @@ export function scoreOddsPullCandidate(c: OddsPullCandidate): number {
       return -z * Math.log(z) - (1 - z) * Math.log(1 - z);
     };
     const p = Math.min(1, Math.max(0, c.modelP));
-    const mRaw =
-      typeof c.expectedMarketP === "number" && Number.isFinite(c.expectedMarketP)
-        ? c.expectedMarketP
-        : 0.5;
-    const m = Math.min(1, Math.max(0, mRaw));
+    const m = Math.min(1, Math.max(0, c.expectedMarketP));
     const sharpness = Math.max(0, binaryH(p) - binaryH(m));
     const pp = clamp01(p);
     const mm = clamp01(m);
@@ -136,4 +144,14 @@ export function rankOddsPullsForBudget(
     priced: false,
     status: "shadow",
   };
+}
+
+
+/**
+ * Leverage R3: project ranked pulls to {id,score} for compareVoIRankings.
+ */
+export function toRankedIdScores(
+  ranked: readonly { readonly id: string; readonly voiScore: number }[],
+): readonly { readonly id: string; readonly score: number }[] {
+  return ranked.map((r) => ({ id: r.id, score: r.voiScore }));
 }
