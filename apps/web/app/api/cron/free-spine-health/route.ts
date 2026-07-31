@@ -2,6 +2,9 @@
  * Free multi-source spine health — AI-first, no Odds key.
  * Probes free score chains + freeCoverage matrix without inventing data.
  * Auth: CRON_SECRET. Schedule: daily with player-stats window.
+ *
+ * Also records an honest IngestionRun SUCCESS when the probe completes so
+ * /api/health recovers under free mode (no paid THE_ODDS_API_KEY required).
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
@@ -9,6 +12,7 @@ import { ALL_SPORTS, freeCoverageMatrix, redundancyGaps } from "@/lib/data-sourc
 import { fetchScoresMultiSource, scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
 import { buildWorldClassReadiness } from "@/lib/platform/world-class-readiness";
 import { writeFreeSpineCache } from "@/lib/data-sources/free-spine-cache";
+import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -61,6 +65,8 @@ export async function GET(request: Request): Promise<NextResponse> {
   const freeCovered = matrix.filter((r) => r.freeCovers).length;
   const requireSpend = matrix.filter((r) => r.mustSpend).length;
   const sportsWithGames = live.filter((s) => s.games > 0).length;
+  const hardFailures = live.filter((s) => s.used === null && s.errors.length > 0).length;
+  const probeFailed = live.length > 0 && sportsWithGames === 0 && hardFailures === live.length;
 
   writeFreeSpineCache({
     probedAt: new Date().toISOString(),
@@ -75,6 +81,17 @@ export async function GET(request: Request): Promise<NextResponse> {
       games: s.games,
       failover: s.failover,
     })),
+  });
+
+  // Durable evidence for /api/health — free mode must not leave lastSuccess frozen.
+  const ingestionRun = await recordFreeIngestionRun({
+    sport: "free-spine",
+    gamesUpserted: sportsWithGames,
+    oddsInserted: 0,
+    failed: probeFailed,
+    errorMessage: probeFailed
+      ? `free-spine probe: all ${live.length} sports failed to return games`
+      : null,
   });
 
   return NextResponse.json({
@@ -97,5 +114,6 @@ export async function GET(request: Request): Promise<NextResponse> {
       summary: l.summary,
     })),
     agentPrime: readiness.agentPrime,
+    ingestionRun,
   });
 }

@@ -5,6 +5,9 @@
  * Used so free path can move resultFetched without THE_ODDS_API_KEY.
  *
  * Law: oddsApiRequired=false · refuse-default · no score overwrite with null.
+ *
+ * Also records an honest IngestionRun SUCCESS when the persist cycle completes
+ * so /api/health recovers under free mode.
  */
 
 import { db } from "@sports/db";
@@ -19,6 +22,7 @@ import type { NormalizedGame } from "./free-adapters/espn-scores";
 import type { Sport } from "./source-router";
 import { buildTrustedFinals, type TrustedFinal } from "./free-settlement";
 import { normalizeTeamToken } from "./score-verification";
+import { recordFreeIngestionRun } from "./free-ingestion-run";
 
 const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
@@ -46,6 +50,7 @@ export type FreeScorePersistResult = {
   elapsedMs: number;
   sports: FreeScorePersistSportResult[];
   gamesUpdated: number;
+  ingestionRunId?: string | null;
 };
 
 function teamsMatch(a: string, b: string): boolean {
@@ -192,11 +197,28 @@ export async function persistFreeScores(options?: {
     }
   }
 
+  const anyOk = out.some((s) => s.ok);
+  const allFailed = out.length > 0 && out.every((s) => !s.ok);
+  const ingestionRun = await recordFreeIngestionRun({
+    sport: options?.sportKey ?? "free-scores",
+    gamesUpserted: gamesUpdated,
+    oddsInserted: 0,
+    failed: allFailed,
+    errorMessage: allFailed
+      ? out
+          .map((s) => s.error)
+          .filter(Boolean)
+          .slice(0, 3)
+          .join("; ") || "free-score-persist: all sports failed"
+      : null,
+  });
+
   return {
     path: "free-score-persist",
     oddsApiRequired: false,
     elapsedMs: Date.now() - started,
     sports: out,
     gamesUpdated,
+    ingestionRunId: anyOk || allFailed ? ingestionRun?.id ?? null : null,
   };
 }
