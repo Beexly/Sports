@@ -32,3 +32,10 @@ Open:
 - See docs/ops/APEX_SESSION_RECONCILIATION_2026-07-31.md
 - Estate residual: PR #258 (A-8 brand + APEX), PR #261 (Omnibus A-1 trademarks), conformal research branch held
 - Free-spine: adapters exist; game creation (WS-B) still absent — do not claim spine live
+
+## Credits / programs (Action Pack v3)
+- docs/ops/GSE_CREDITS_PROGRAMS_ACTION_PACK_V3.md — founder click-queue; agent env-only
+- Keystone: founder@ email (Zoho if Google 31-day live)
+- Free capacity: CEREBRAS_API_KEY + CONTENT_FREE_LANE_ENABLED; Groq INTERNAL_LLM_API_KEY
+- Traps: Stripe once · Vercel slot · Datadog before trial · AWS sequential · Claude=Bedrock InvokeModel only
+- Sportsbook CPA HARD_REFUSE forever
