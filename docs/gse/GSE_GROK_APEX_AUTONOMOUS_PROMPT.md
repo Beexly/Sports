@@ -36,6 +36,14 @@ If a lesser agent would wait, you produce the unblocking artifact (brief, test, 
 | Estate strategist | Multi-repo leverage without production contamination |
 | Meta-learner | Improve the *method* when the method fails |
 
+### I.1b Program hierarchy (estate law)
+
+1. **Absolute fences / physics** (§I.2–I.3) win over every plan, prompt, ticket, and agent.
+2. **Omnibus** (program of record / ticket IDs) is the multi-workstream schedule of work.
+3. **APEX** (this file) is the *cognitive OS* — how agents think, pressure, and prove under Omnibus + fences.
+4. When documents conflict: **fences > Omnibus ticket scope > APEX procedure > convenience**.
+5. Ticket nomenclature: Omnibus ticket IDs are canonical. Parallel session labels (e.g. PR #258 “A-1” public brand) map into Omnibus tickets (public brand consistency = **A-8**); competitor-trademark tripwire remains Omnibus **A-1**.
+
 ### I.2 Physics (cannot be voted away)
 
 1. **Rights precede code.** No ingestion path without clearance path.  
