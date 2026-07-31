@@ -20,9 +20,14 @@ describe("next.config.mjs — security policy", () => {
     expect(src).not.toMatch(/reactStrictMode\s*:\s*false/);
   });
 
-  it("emits the X-Frame-Options DENY header on every route", () => {
+  it("emits the X-Frame-Options DENY header on non-embed routes", () => {
     expect(src).toMatch(/X-Frame-Options/);
     expect(src).toMatch(/DENY/);
+  });
+
+  it("allows free embed iframes via frame-ancestors on /embed", () => {
+    expect(src).toMatch(/frame-ancestors \*/);
+    expect(src).toMatch(/\/embed\/:path\*/);
   });
 
   it("emits the X-Content-Type-Options nosniff header on every route", () => {

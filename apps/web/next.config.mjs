@@ -54,6 +54,24 @@ const nextConfig = {
   },
   async headers() {
     return [
+      // Free embed widgets (DEC-017) — iframe distribution. Middleware also
+      // strips X-Frame-Options for /embed/* because Next merges matching sources.
+      {
+        source: "/embed/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: "frame-ancestors *" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
       {
         source: "/(.*)",
         headers: [

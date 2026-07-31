@@ -81,3 +81,7 @@ See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Statu
 | CIR→Kelly bridge | `sizeAfterCalibration` |
 | Portfolio Kelly barrel | `portfolioKellyStakes` export |
 
+| Free Edge Index embed | `/embed/edge-index/[gameId]` · `/edge-index` |
+| Full session extract | `docs/ops/FULL_SESSION_EXTRACT.md` |
+| Integrity harness | `npm run orbit:integrity` |
+

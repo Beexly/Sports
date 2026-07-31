@@ -102,3 +102,8 @@ import {
   shinDevig,
 } from "@sports/prediction-engine";
 ```
+
+## Superset
+
+All waves including free embed distribution: [`FULL_SESSION_EXTRACT.md`](./FULL_SESSION_EXTRACT.md).
+

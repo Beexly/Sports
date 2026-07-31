@@ -3,7 +3,7 @@
 | Layer | High leverage (in-repo or operator) | Hard non-goal |
 |-------|-------------------------------------|---------------|
 | **Money out** | Blank `THE_ODDS_API_KEY` for free path; AI Gateway/LiteLLM tags; Flash default | GPU self-host |
-| **Money in** | Stripe `checkout.session.expired`; free embed `/embed/edge-index` first | Rebuild CheckoutAttempt |
+| **Money in** | Stripe `checkout.session.expired`; free embed `/embed/edge-index/[gameId]` **SHIPPED** wave6 | Rebuild CheckoutAttempt |
 | **Coding velocity** | `docs/agent-skills/*` SKILL.md; `npm run agent:eval`; GEPA offline on skills | Multica/agent OS vendors |
 | **Agent ops** | OPERATOR.md / ORBIT_UNLOCK; flags only for LIVE_BOARD | New locking systems |
 | **Agent evaluation** | agent-eval fixtures; promptfoo; CIR distinct-count diagnostic | Academic multi-agent tourism |
@@ -39,3 +39,9 @@ Full row-level integrity: [`SESSION_2_EXTRACT.md`](./SESSION_2_EXTRACT.md)
 | `npm run calibration:offline` | Shin → hold-out → CIR → paradox → Kelly deflator |
 | `npm run session2:extract` | All of the above + agent-eval |
 | `npm run agent:eval` | Fixture predicates including wave5 |
+
+
+## Full session
+
+Master integrity table: [`FULL_SESSION_EXTRACT.md`](./FULL_SESSION_EXTRACT.md)  
+Harness: `npm run orbit:integrity` · `npm run orbit:integrity:full`

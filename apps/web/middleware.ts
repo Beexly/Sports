@@ -30,6 +30,17 @@ const AUTH_COOKIE_NAMES = [
 export function middleware(req: NextRequest): NextResponse {
   const { pathname } = req.nextUrl;
 
+  // ── Free embed widgets: allow cross-origin iframe distribution ───────────
+  // Global next.config sets X-Frame-Options: DENY. Embeds must be iframeable
+  // (DEC-017 free Edge Index). Middleware overrides response headers for /embed/*.
+  if (pathname === "/embed" || pathname.startsWith("/embed/")) {
+    const res = NextResponse.next();
+    res.headers.delete("X-Frame-Options");
+    res.headers.set("Content-Security-Policy", "frame-ancestors *");
+    res.headers.set("X-Content-Type-Options", "nosniff");
+    return res;
+  }
+
   // ── Waitlist Basic Auth gate ──────────────────────────────────────────────
   // Protects /waitlist and /waitlist/* only.
   // Active only when GSE_WAITLIST_GATE_ENABLED=true.
