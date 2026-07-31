@@ -8,7 +8,9 @@ App Builder sandbox work has been **fully exported** to estate git. Nothing of s
 
 | Artifact | Location | SHA / ref |
 |----------|----------|-----------|
-| Full sandbox source | [Beexly/gse-grok-build-sandbox](https://github.com/Beexly/gse-grok-build-sandbox) | `7d95ff6` main |
+| Full sandbox source | [Beexly/gse-grok-build-sandbox](https://github.com/Beexly/gse-grok-build-sandbox) | live `main` (pin at last check: see SESSION_ACCOUNTING there) |
+| Session ledger | same repo · `SESSION_ACCOUNTING.md` | multi-turn map + residual |
+| File reconciliation | same repo · `RECONCILIATION.md` | path + hash audits |
 | This pointer | `docs/ops/GROK_BUILD_SANDBOX_EXPORT_2026-07-30.md` | this commit |
 
 ## Isolation (physics)
@@ -28,13 +30,13 @@ App Builder sandbox work has been **fully exported** to estate git. Nothing of s
 | Brief | `apps/web/app/brief` |
 | Cockpit + conviction dry-run | `apps/web/app/cockpit` (+ calibration) |
 | Free-spine | crons + free adapters on main |
-| APEX + A-1 tripwire + dual-scheduler | **PR #258** (`apex/iron-queue-boot-2026-07-30`) — open, not merged |
+| APEX + A-1 tripwire + dual-scheduler | **PR #258** (`apex/iron-queue-boot-2026-07-30`) — open until founder merge |
 
 ## Sandbox export contents (summary)
 
 - TanStack Start app: routes `/`, `/board`, `/stats`, `/fantasy`, `/brief`, `/cockpit`
 - `src/lib/gse/data.ts` — mock law, metrics, free-spine labels, founder queue
-- UI shell + tokens
+- UI shell + tokens + QA screenshots
 - Template auth/db scaffolding (App Builder preset) for runnable export
 
 ## Next non-duplicate work (Sports only)
@@ -46,15 +48,8 @@ App Builder sandbox work has been **fully exported** to estate git. Nothing of s
 
 ## Cleared
 
-Sandbox outstanding = **none** for this export cycle. Preview may still run ephemerally; git estate holds the source.
+Sandbox outstanding = **none**. Preview may still run ephemerally; git estate holds the source.
 
-## Full file reconciliation
+## Pass-4 note
 
-See `RECONCILIATION.md` in gse-grok-build-sandbox @ 7d95ff6 for complete inventory including screenshots and platform AGENTS seed.
-
-
-## Session accounting
-
-Full multi-turn deliverable map (including chat-only residual): `SESSION_ACCOUNTING.md` in gse-grok-build-sandbox @ 7d95ff6.
-
-Third-pass machine residual: **0** workspace-only files; **60/60** content-hash match.
+`OPEN_LEDGER.md` is intentionally **not** modified by this PR (avoids conflict with PR #258 which also edits that file). Ledger updates for APEX boot remain on #258. Sandbox quarantine is recorded here + in `gse-grok-build-sandbox`.
