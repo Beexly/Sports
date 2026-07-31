@@ -80,3 +80,7 @@ Updated: 2026-07-30.
 - Walk-through: `CLAUDE_COWORK_PROMPT_P0.md`
 - Full plan: `MASTER_PLAN.md`
 - Smoke: `SMOKE.md`
+
+## Credits programs
+
+See `docs/ops/GSE_CREDITS_PROGRAMS_ACTION_PACK_V3.md` (keystone email, claim order, agent handshake).
