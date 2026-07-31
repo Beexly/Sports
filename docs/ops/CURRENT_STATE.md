@@ -20,7 +20,7 @@ LIVE_BOARD=off · oddsApiRequired=false · refuse-default · CPA blocked · exte
 Enforced 2026-07-30: `PERFORMANCE_STATS_ENABLED` and `PUBLIC_PICKS_ENABLED` found true in Production (violation), flipped false.
 
 ## AI runs (you watch)
-- 14 Vercel crons incl. free-spine-health, jarvis-snapshot, free settle, gamma
+- 13 Vercel crons incl. free-spine-health, jarvis-snapshot, free settle. **gamma is NOT scheduled** ÔÇö paused in `3dfbc726` (B-0) pending a counsel-approved source-rights entry for Polymarket Gamma
 - Command Center attention + multi-source cues in Jarvis
 - Draft tasks from jarvis-snapshot
 - Cockpit operating map 28 surfaces · Agent OS draft-primed
