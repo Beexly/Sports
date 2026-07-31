@@ -34,3 +34,10 @@ LIVE_BOARD · PUBLISH_LEDGER · public picks · Phase C · #226
 ## Orbit unlock
 
 See `docs/ops/ORBIT_UNLOCK.md` · `docs/agent-skills/` · `npm run agent:eval`.
+
+## Orbit wave 3
+- [ORBIT_MAP.md](./ORBIT_MAP.md)
+- [CALIBRATION_PIPELINE.md](./CALIBRATION_PIPELINE.md)
+- [ORBIT_NEXT_50.md](./ORBIT_NEXT_50.md)
+- CIR: `centeredIsotonicCalibration`
+- `npm run dspy:gse` · `npm run orbit:map`

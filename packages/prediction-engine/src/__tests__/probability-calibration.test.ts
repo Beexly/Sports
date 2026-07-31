@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
   isotonicCalibration,
+  centeredIsotonicCalibration,
+  countDistinctPredictions,
   brierDecomposition,
   expectedCalibrationError,
   reliabilityCurve,
@@ -164,5 +166,61 @@ describe("reliabilityCurve", () => {
     const bin = reliabilityCurve(samples, 10)[3]!; // [0.3, 0.4)
     expect(bin.meanForecast).toBeCloseTo(0.3, 4);
     expect(bin.observedRate).toBeCloseTo(0.3, 4);
+  });
+});
+
+describe("centeredIsotonicCalibration (CIR)", () => {
+  it("returns identity-ish passthrough on empty input", () => {
+    const m = centeredIsotonicCalibration([]);
+    expect(m.points).toHaveLength(0);
+    expect(m.predict(0.42)).toBeCloseTo(0.42, 4);
+  });
+
+  it("is monotone non-decreasing", () => {
+    const m = centeredIsotonicCalibration([
+      { p: 0.1, y: 0 },
+      { p: 0.2, y: 1 },
+      { p: 0.3, y: 0 },
+      { p: 0.4, y: 1 },
+      { p: 0.5, y: 1 },
+      { p: 0.7, y: 1 },
+      { p: 0.9, y: 1 },
+    ]);
+    const grid = [0.05, 0.15, 0.25, 0.35, 0.45, 0.6, 0.8, 0.95];
+    for (let i = 1; i < grid.length; i++) {
+      expect(m.predict(grid[i]!)).toBeGreaterThanOrEqual(m.predict(grid[i - 1]!) - 1e-9);
+    }
+  });
+
+  it("preserves more distinct predictions than step PAVA on a dense overconfident set", () => {
+    const samples: CalibrationSample[] = [];
+    for (let i = 0; i < 200; i++) {
+      const p = 0.1 + (0.8 * i) / 199;
+      // overconfident: high p still only ~p-0.15 true rate
+      const y = (Math.sin(i * 12.9898) * 0.5 + 0.5) < Math.max(0.05, p - 0.15) ? 1 : 0;
+      samples.push({ p, y: y as 0 | 1 });
+    }
+    const pava = isotonicCalibration(samples);
+    const cir = centeredIsotonicCalibration(samples);
+    const dPava = countDistinctPredictions(pava);
+    const dCir = countDistinctPredictions(cir);
+    // CIR must keep more ranking resolution than step PAVA on this dense set
+    expect(dCir).toBeGreaterThanOrEqual(dPava);
+    // Both should still be reasonably calibrated (ECE finite)
+    const calSamples = samples.map((s) => ({ p: cir.predict(s.p), y: s.y }));
+    expect(expectedCalibrationError(calSamples)).toBeLessThan(0.35);
+  });
+
+  it("interpolates between centers (not a pure step at midpoints)", () => {
+    const m = centeredIsotonicCalibration([
+      { p: 0.2, y: 0 },
+      { p: 0.2, y: 0 },
+      { p: 0.8, y: 1 },
+      { p: 0.8, y: 1 },
+    ]);
+    const mid = m.predict(0.5);
+    // With two well-separated centers at 0 and 1, midpoint should be interior
+    expect(mid).toBeGreaterThan(0);
+    expect(mid).toBeLessThan(1);
   });
 });

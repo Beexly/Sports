@@ -207,6 +207,8 @@ export type {
 // calibration that turns the confidence score into a calibrated win probability.
 export {
   isotonicCalibration,
+  centeredIsotonicCalibration,
+  countDistinctPredictions,
   brierDecomposition,
   expectedCalibrationError,
   reliabilityCurve,

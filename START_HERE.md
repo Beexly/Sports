@@ -80,3 +80,8 @@ controlled passes (not rushed into a fresh-recovered prod). The 30/60/90 order i
 - `npm run e2e:pricing-smoke` — public pricing + checkout route probe
 - `npm run export:settled-picks` — JSONL settled picks (DATABASE_URL, read-only)
 
+### Orbit leverage (2026-07-31 wave 3)
+- Map: [`docs/ops/ORBIT_MAP.md`](docs/ops/ORBIT_MAP.md)
+- Calibration: [`docs/ops/CALIBRATION_PIPELINE.md`](docs/ops/CALIBRATION_PIPELINE.md)
+- Eval: `npm run agent:eval` · `npm run dspy:gse` · `npm run orbit:map`
+- CIR: `centeredIsotonicCalibration` (R&D, not live)

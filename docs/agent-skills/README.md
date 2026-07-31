@@ -17,3 +17,19 @@ Short, agent-loadable runbooks for high-leverage GSE surfaces. Each skill is a `
 - Do not re-enable Polymarket/gamma without counsel-approved registry entry.
 
 See also: `docs/ops/ORBIT_UNLOCK.md`, `docs/ops/CREDITS.md`.
+
+## Skills
+
+| Skill | Path |
+|-------|------|
+| settlement-free-path | `settlement-free-path/SKILL.md` |
+| stripe-webhook | `stripe-webhook/SKILL.md` |
+| checkout-attempt | `checkout-attempt/SKILL.md` |
+| clearance / clearance-registry | `clearance*/SKILL.md` |
+| deploy-readiness | `deploy-readiness/SKILL.md` |
+| coding-agent | `coding-agent/SKILL.md` |
+| polymarket-hold | `polymarket-hold/SKILL.md` |
+
+Format: [agentskills](https://github.com/agentskills/agentskills) YAML frontmatter (`name`, `description`) + markdown body.
+Offline prompt optimize: `scripts/dspy-gse/` (GEPA-ready; dry-run without dspy).
+

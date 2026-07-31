@@ -52,3 +52,22 @@ See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Statu
 | Skills | `docs/agent-skills/` |
 | Agent eval | `npm run agent:eval` |
 | Pricing smoke | `npm run e2e:pricing-smoke` |
+
+## 6. Calibration R&D (after export has volume)
+
+1. `npm run export:settled-picks` (needs real DATABASE_URL)
+2. Fit `centeredIsotonicCalibration` on time hold-out only
+3. Gate any stake display on CLV sample floor (edge-lab CLV deflator)
+4. See [`CALIBRATION_PIPELINE.md`](./CALIBRATION_PIPELINE.md)
+
+## Code index (wave 3)
+
+| Surface | Path |
+|---------|------|
+| Orbit map | `docs/ops/ORBIT_MAP.md` |
+| Next 50 repos | `docs/ops/ORBIT_NEXT_50.md` |
+| CIR calibrator | `centeredIsotonicCalibration` in prediction-engine |
+| DSPy skill offline | `scripts/dspy-gse/` |
+| Coding skill | `docs/agent-skills/coding-agent/SKILL.md` |
+| Polymarket hold skill | `docs/agent-skills/polymarket-hold/SKILL.md` |
+
