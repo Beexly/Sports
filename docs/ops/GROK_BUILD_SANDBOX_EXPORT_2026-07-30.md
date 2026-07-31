@@ -8,7 +8,7 @@ App Builder sandbox work has been **fully exported** to estate git. Nothing of s
 
 | Artifact | Location | SHA / ref |
 |----------|----------|-----------|
-| Full sandbox source | [Beexly/gse-grok-build-sandbox](https://github.com/Beexly/gse-grok-build-sandbox) | `4f4f445` main |
+| Full sandbox source | [Beexly/gse-grok-build-sandbox](https://github.com/Beexly/gse-grok-build-sandbox) | `70f3d55` main |
 | This pointer | `docs/ops/GROK_BUILD_SANDBOX_EXPORT_2026-07-30.md` | this commit |
 
 ## Isolation (physics)
@@ -50,4 +50,4 @@ Sandbox outstanding = **none** for this export cycle. Preview may still run ephe
 
 ## Full file reconciliation
 
-See `RECONCILIATION.md` in gse-grok-build-sandbox @ 4f4f445 for complete inventory including screenshots and platform AGENTS seed.
+See `RECONCILIATION.md` in gse-grok-build-sandbox @ 70f3d55 for complete inventory including screenshots and platform AGENTS seed.
