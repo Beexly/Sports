@@ -27,3 +27,8 @@ Open:
 
 ## SoT
 `docs/ops/CANONICAL.md` + Production `/cockpit`
+
+## APEX recon (2026-07-31)
+- See docs/ops/APEX_SESSION_RECONCILIATION_2026-07-31.md
+- Estate residual: PR #258 (A-8 brand + APEX), PR #261 (Omnibus A-1 trademarks), conformal research branch held
+- Free-spine: adapters exist; game creation (WS-B) still absent — do not claim spine live
