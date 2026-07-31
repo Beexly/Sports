@@ -1,0 +1,54 @@
+# ORBIT UNLOCK — founder click checklist (2026-07-31)
+
+Code is ready. These steps require human portals / secrets. Agents do not invent values.
+
+## 1. Free settlement path (money recovery)
+
+1. Vercel → Project → Settings → Environment Variables → **Production**
+2. **Delete** `THE_ODDS_API_KEY` (blank/absent). Present + deactivated does **not** free-path.
+3. Redeploy Production (or wait for env-only sync + next cron).
+4. Smoke:
+   ```bash
+   curl -sS -H "Authorization: Bearer $CRON_SECRET" \
+     "https://www.galaxysportsedge.com/api/cron/settle-picks" | jq '{ok,path,picksSettled,picksHeld}'
+   ```
+   Expect `"path":"free"`. Cadence: every 3h (`vercel.json` → `0 */3 * * *`, #278).
+
+## 2. Stripe Dashboard
+
+- Endpoint URL: `https://www.galaxysportsedge.com/api/webhooks/stripe` (**www**, not apex)
+- Events must include: `checkout.session.completed`, **`checkout.session.expired`**, subscription + invoice events (see `STRIPE_GO_LIVE_CHECKLIST.md`)
+- `STRIPE_WEBHOOK_SECRET` must match **this** endpoint signing secret (`whsec_…` / endpoint id `we_…`)
+- Sustained **400** = wrong secret. Sustained **503** = DB down (retries are intentional)
+
+## 3. Paid entitlement path smoke
+
+1. Browser network tab → Subscribe to Pro (test or live carefully)
+2. If checkout returns **409**, run:
+   ```bash
+   curl -sS -H "Authorization: Bearer $CRON_SECRET" \
+     "https://www.galaxysportsedge.com/api/cron/reconcile-entitlements"
+   ```
+3. Confirm webhook Recent Deliveries = 2xx after secret match
+
+## 4. Credits claim (founder portals)
+
+See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Status column is for you to fill.
+
+## 5. Explicit non-actions (law)
+
+- Do not re-enable `/api/cron/gamma` without counsel registry grant
+- Do not flip LIVE_BOARD / PUBLISH_LEDGER without founder YES
+- Do not rewrite webhook/outbox/CheckoutAttempt
+
+## Code already shipped
+
+| Surface | Path |
+|---------|------|
+| Free settle | `apps/web/app/api/cron/settle-picks/route.ts` |
+| Expired session | `apps/web/app/api/webhooks/stripe/route.ts` |
+| CheckoutAttempt stamp | `apps/web/lib/stripe.ts` |
+| Clearance honesty | `apps/web/lib/data-sources/source-router.ts` |
+| Skills | `docs/agent-skills/` |
+| Agent eval | `npm run agent:eval` |
+| Pricing smoke | `npm run e2e:pricing-smoke` |

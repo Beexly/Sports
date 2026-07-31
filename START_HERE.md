@@ -68,3 +68,15 @@ controlled passes (not rushed into a fresh-recovered prod). The 30/60/90 order i
 - Reference: `LAUNCH_LEDGER.md`, `docs/strategy/*.md`, `docs/architecture/ADVANCED_SYSTEMS_SPINE_2026-06-22.md`, `AFFILIATE_GO_LIVE.md`.
 - Live ops surface: `/cockpit/integrity` (the honest system-state ledger).
 - Superseded (ignore): `AGENT_HANDOFF.md`, `handoff/OVERNIGHT_SUMMARY_2026-06-22.md`.
+
+
+## Orbit unlock (process capital)
+
+- [`docs/ops/ORBIT_UNLOCK.md`](docs/ops/ORBIT_UNLOCK.md) — founder click checklist (free settle, Stripe, credits)
+- [`docs/ops/OPERATOR.md`](docs/ops/OPERATOR.md) — production actions agents cannot perform
+- [`docs/ops/CREDITS.md`](docs/ops/CREDITS.md) — credit claim tracker
+- [`docs/agent-skills/`](docs/agent-skills/) — agent SKILL packs
+- `npm run agent:eval` — thin deterministic harness
+- `npm run e2e:pricing-smoke` — public pricing + checkout route probe
+- `npm run export:settled-picks` — JSONL settled picks (DATABASE_URL, read-only)
+

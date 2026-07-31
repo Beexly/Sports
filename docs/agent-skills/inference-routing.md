@@ -11,3 +11,10 @@ Env flags already exist for free lane / internal LLM / bedrock / vertex — see 
 
 **Do not:** self-host DeepSeek/DeepSpeed clusters.  
 **Optional:** point coding-agent DX at cheap OpenAI-compatible endpoints outside this monorepo.
+
+## Env overrides (optional)
+
+- `MODEL_PRIMARY` / `CLAUDE_MODEL_PRIMARY` — sonnet-tier id
+- `MODEL_CHEAP` / `CLAUDE_MODEL_CHEAP` — haiku-tier id
+
+Unset = default MODELS catalog.

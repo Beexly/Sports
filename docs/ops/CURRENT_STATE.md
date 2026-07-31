@@ -30,3 +30,7 @@ Formal `prove:neon` local run · optional free AI keys (Groq/xAI) · push build-
 
 ## Explicit YES only
 LIVE_BOARD · PUBLISH_LEDGER · public picks · Phase C · #226
+
+## Orbit unlock
+
+See `docs/ops/ORBIT_UNLOCK.md` · `docs/agent-skills/` · `npm run agent:eval`.

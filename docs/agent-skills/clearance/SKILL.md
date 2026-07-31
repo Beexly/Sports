@@ -23,3 +23,5 @@ polymarket-gamma, kalshi-public, mlb-statsapi, nhl-web-api, balldontlie-nba, fpl
 - Do not set cleared:true without registry row or written grant
 - Do not re-enable gamma cron without counsel
 - Do not confuse adapter dual-path with router cleared dual-path
+
+Also see [clearance-registry](../clearance-registry/SKILL.md) (canonical name).
