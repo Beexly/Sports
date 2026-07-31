@@ -10,6 +10,10 @@
   ],
   "crons": [
     {
+      "path": "/api/cron/refresh-player-stats",
+      "schedule": "0,30 * * * *"
+    },
+    {
       "path": "/api/cron/refresh-odds",
       "schedule": "*/30 * * * *"
     },
