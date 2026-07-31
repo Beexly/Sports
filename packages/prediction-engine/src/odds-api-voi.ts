@@ -27,6 +27,13 @@ export interface OddsPullCandidate {
   readonly taxonomySampleSize?: number;
   /** Optional manual priority boost (e.g. 1.5 for NFL). */
   readonly priorityBoost?: number;
+  /**
+   * Optional model win-prob for entropy/EIG blend (see expected-info-gain.ts).
+   * When set with expectedMarketP, score blends heuristic VoI with eigOfMarketPull.
+   */
+  readonly modelP?: number;
+  /** Optional expected market implied prob after pull (defaults to 0.5 if modelP set). */
+  readonly expectedMarketP?: number;
 }
 
 export interface RankedOddsPull extends OddsPullCandidate {
@@ -60,7 +67,33 @@ export function scoreOddsPullCandidate(c: OddsPullCandidate): number {
       : 1);
 
   const raw = urgency * (0.5 + 0.5 * sparsity) * boost;
-  return raw / c.creditCost;
+
+  // Optional entropy/EIG blend when modelP is supplied (see expected-info-gain.ts)
+  let eigBoost = 1;
+  if (typeof c.modelP === "number" && Number.isFinite(c.modelP)) {
+    const eps = 1e-12;
+    const clamp01 = (x: number) => Math.min(1 - eps, Math.max(eps, x));
+    const binaryH = (x: number) => {
+      if (!Number.isFinite(x)) return Number.NaN;
+      const z = Math.min(1, Math.max(0, x));
+      if (z <= 0 || z >= 1) return 0;
+      return -z * Math.log(z) - (1 - z) * Math.log(1 - z);
+    };
+    const p = Math.min(1, Math.max(0, c.modelP));
+    const mRaw =
+      typeof c.expectedMarketP === "number" && Number.isFinite(c.expectedMarketP)
+        ? c.expectedMarketP
+        : 0.5;
+    const m = Math.min(1, Math.max(0, mRaw));
+    const sharpness = Math.max(0, binaryH(p) - binaryH(m));
+    const pp = clamp01(p);
+    const mm = clamp01(m);
+    const kl_m_p = mm * Math.log(mm / pp) + (1 - mm) * Math.log((1 - mm) / (1 - pp));
+    const eig = sharpness + 0.25 * kl_m_p;
+    eigBoost = 1 + Math.max(0, eig);
+  }
+
+  return (raw * eigBoost) / c.creditCost;
 }
 
 /**

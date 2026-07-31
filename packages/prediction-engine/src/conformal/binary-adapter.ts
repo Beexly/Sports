@@ -170,3 +170,138 @@ export function adaptiveBinaryConformal(
     };
   });
 }
+
+// ── Probability-scale intervals + holdout diagnostics (still shadow) ──
+
+/**
+ * Symmetric interval on the probability axis around p, half-width = residual quantile.
+ * Clamped to [0,1]. Large width that hits both rails is an abstention cue, not a price.
+ */
+export interface BinaryProbabilityInterval {
+  readonly p: number;
+  readonly lo: number;
+  readonly hi: number;
+  readonly residualQuantile: number;
+  readonly width: number;
+  readonly clampedLo: boolean;
+  readonly clampedHi: boolean;
+  /** True when interval is the full [0,1] (maximally uninformative). */
+  readonly uninformative: boolean;
+  readonly priced: false;
+  readonly status: "shadow";
+}
+
+export function buildBinaryProbabilityInterval(
+  p: number,
+  residualQuantile: number,
+): BinaryProbabilityInterval {
+  const pSafe = Number.isFinite(p) ? Math.max(0, Math.min(1, p)) : 0.5;
+  const q = Number.isFinite(residualQuantile)
+    ? Math.max(0, Math.min(1, residualQuantile))
+    : 1;
+  const rawLo = pSafe - q;
+  const rawHi = pSafe + q;
+  const lo = Math.max(0, rawLo);
+  const hi = Math.min(1, rawHi);
+  const clampedLo = rawLo < 0;
+  const clampedHi = rawHi > 1;
+  return {
+    p: pSafe,
+    lo,
+    hi,
+    residualQuantile: q,
+    width: hi - lo,
+    clampedLo,
+    clampedHi,
+    uninformative: lo <= 0 && hi >= 1,
+    priced: false,
+    status: "shadow",
+  };
+}
+
+/** Convenience: taxonomy lookup → probability interval for a new p. */
+export function binaryIntervalForPick(
+  fit: BinaryConformalFit,
+  p: number,
+  ctx: SportsGameContext,
+  targetCoverage = 0.8,
+): BinaryProbabilityInterval & {
+  readonly lookup: BinaryConformalLookup;
+} {
+  const lookup = binaryConformalLookup(fit, ctx, targetCoverage);
+  const interval = buildBinaryProbabilityInterval(p, lookup.quantile);
+  return { ...interval, lookup };
+}
+
+export interface BinaryCoverageReport {
+  readonly n: number;
+  readonly covered: number;
+  readonly empiricalCoverage: number;
+  readonly targetCoverage: number;
+  readonly meanWidth: number;
+  readonly meanWinkler: number;
+  /** empirical − target; negative ⇒ undercovering (dangerous if ever priced). */
+  readonly coverageGap: number;
+  readonly priced: false;
+  readonly status: "shadow";
+}
+
+/**
+ * Holdout coverage of |p−y| ≤ residual quantile (split-conformal style check).
+ * Also reports mean Winkler score on the derived probability intervals.
+ * Diagnostic only — never a launch gate flip.
+ */
+export function evaluateBinaryCoverage(
+  fit: BinaryConformalFit,
+  holdout: readonly BinaryPickSample[],
+  targetCoverage = 0.8,
+): BinaryCoverageReport {
+  if (holdout.length === 0) {
+    return {
+      n: 0,
+      covered: 0,
+      empiricalCoverage: Number.NaN,
+      targetCoverage,
+      meanWidth: Number.NaN,
+      meanWinkler: Number.NaN,
+      coverageGap: Number.NaN,
+      priced: false,
+      status: "shadow",
+    };
+  }
+
+  const alpha = 1 - targetCoverage;
+  let covered = 0;
+  let widthSum = 0;
+  let winklerSum = 0;
+
+  for (const s of holdout) {
+    const lookup = binaryConformalLookup(fit, s.ctx, targetCoverage);
+    const residual = nonconformityBinary(s.p, s.y);
+    if (residual <= lookup.quantile) covered += 1;
+
+    const interval = buildBinaryProbabilityInterval(s.p, lookup.quantile);
+    widthSum += interval.width;
+
+    // Winkler on probability scale with realized y ∈ {0,1}
+    const width = interval.hi - interval.lo;
+    let penalty = 0;
+    if (s.y < interval.lo) penalty = (2 / alpha) * (interval.lo - s.y);
+    else if (s.y > interval.hi) penalty = (2 / alpha) * (s.y - interval.hi);
+    winklerSum += width + penalty;
+  }
+
+  const n = holdout.length;
+  const empiricalCoverage = covered / n;
+  return {
+    n,
+    covered,
+    empiricalCoverage,
+    targetCoverage,
+    meanWidth: widthSum / n,
+    meanWinkler: winklerSum / n,
+    coverageGap: empiricalCoverage - targetCoverage,
+    priced: false,
+    status: "shadow",
+  };
+}

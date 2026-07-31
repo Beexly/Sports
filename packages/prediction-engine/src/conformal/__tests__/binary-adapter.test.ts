@@ -11,6 +11,9 @@ import {
   fitBinaryMondrian,
   binaryConformalLookup,
   adaptiveBinaryConformal,
+  buildBinaryProbabilityInterval,
+  evaluateBinaryCoverage,
+  binaryIntervalForPick,
 } from "../binary-adapter.js";
 import {
   assignMondrianCategory,
@@ -171,5 +174,67 @@ describe("brierDecomposition Murphy diagnostic", () => {
     const reconstructed = d.reliability - d.resolution + d.uncertainty;
     expect(Math.abs(d.brier - reconstructed)).toBeLessThan(1e-3);
     expect(d.sampleSize).toBe(200);
+  });
+});
+
+
+// ── Interval geometry + holdout coverage ─────────────────────────
+
+describe("binary probability intervals (shadow deepen)", () => {
+  it("buildBinaryProbabilityInterval clamps to [0,1] and marks rails", () => {
+    // Protects: probability intervals never leave [0,1]; rail clamp is explicit
+    const mid = buildBinaryProbabilityInterval(0.55, 0.1);
+    expect(mid.lo).toBeCloseTo(0.45);
+    expect(mid.hi).toBeCloseTo(0.65);
+    expect(mid.clampedLo).toBe(false);
+    expect(mid.uninformative).toBe(false);
+    assertShadow(mid);
+
+    const edge = buildBinaryProbabilityInterval(0.05, 0.2);
+    expect(edge.lo).toBe(0);
+    expect(edge.clampedLo).toBe(true);
+    expect(edge.width).toBeLessThan(0.4);
+
+    const wide = buildBinaryProbabilityInterval(0.5, 1);
+    expect(wide.uninformative).toBe(true);
+  });
+
+  it("binaryIntervalForPick couples Mondrian lookup to interval geometry", () => {
+    const samples: TestBinaryPick[] = Array.from({ length: 24 }, (_, i) => ({
+      sampleId: `s${i}`,
+      p: 0.58,
+      y: (i % 3 === 0 ? 0 : 1) as 0 | 1,
+      ctx: i % 2 === 0 ? ctxHomeFav : ctxAwayDog,
+    }));
+    const fit = fitBinaryMondrian(samples, { minSamples: 4 });
+    const row = binaryIntervalForPick(fit, 0.58, ctxHomeFav, 0.8);
+    assertShadow(row);
+    assertShadow(row.lookup);
+    expect(row.residualQuantile).toBe(row.lookup.quantile);
+    expect(row.width).toBeGreaterThanOrEqual(0);
+  });
+
+  it("evaluateBinaryCoverage stays shadow and reports finite diagnostics", () => {
+    // Protects: holdout coverage is diagnostic only (priced stays false)
+    const train: TestBinaryPick[] = Array.from({ length: 30 }, (_, i) => ({
+      sampleId: `t${i}`,
+      p: 0.6,
+      y: (i % 5 === 0 ? 0 : 1) as 0 | 1,
+      ctx: i % 2 === 0 ? ctxHomeFav : ctxAwayDog,
+    }));
+    const hold: TestBinaryPick[] = Array.from({ length: 20 }, (_, i) => ({
+      sampleId: `h${i}`,
+      p: 0.6,
+      y: (i % 4 === 0 ? 0 : 1) as 0 | 1,
+      ctx: i % 2 === 0 ? ctxHomeFav : ctxAwayDog,
+    }));
+    const fit = fitBinaryMondrian(train, { minSamples: 5 });
+    const report = evaluateBinaryCoverage(fit, hold, 0.8);
+    assertShadow(report);
+    expect(report.n).toBe(20);
+    expect(report.empiricalCoverage).toBeGreaterThanOrEqual(0);
+    expect(report.empiricalCoverage).toBeLessThanOrEqual(1);
+    expect(Number.isFinite(report.meanWinkler)).toBe(true);
+    expect(Number.isFinite(report.meanWidth)).toBe(true);
   });
 });
