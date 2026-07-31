@@ -85,3 +85,13 @@ See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Statu
 | Full session extract | `docs/ops/FULL_SESSION_EXTRACT.md` |
 | Integrity harness | `npm run orbit:integrity` |
 
+## 7. Max leverage smoke (no invented secrets)
+
+```bash
+npm run orbit:unlock-smoke
+# With production secret you hold:
+# CRON_SECRET=… npm run orbit:unlock-smoke -- --prod
+```
+
+See [`MAX_LEVERAGE.md`](./MAX_LEVERAGE.md).
+

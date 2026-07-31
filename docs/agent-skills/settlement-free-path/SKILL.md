@@ -37,3 +37,8 @@ curl -sS -H "Authorization: Bearer $CRON_SECRET" \
 - Do not set oddsApiRequired=true on free path
 - Do not schedule `/api/cron/gamma` without registry grant
 - Do not rebuild settlement-outbox claim/lease
+
+## Path selector (pure)
+`apps/web/lib/settlement/path-select.ts` — `selectSettlementPath` used by settle-picks.
+Smoke: `npm run orbit:unlock-smoke`
+

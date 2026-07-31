@@ -7,7 +7,7 @@
       "id": "free-when-key-absent",
       "type": "file_contains",
       "path": "apps/web/app/api/cron/settle-picks/route.ts",
-      "mustInclude": ["if (!apiKey)", "path: \"free\"", "runFreePathSettlement"]
+      "mustInclude": ["selectSettlementPath", "settlementPath === \"free\"", "path: \"free\"", "runFreePathSettlement"]
     },
     {
       "id": "paid-when-key-present",
@@ -20,6 +20,12 @@
       "type": "file_contains",
       "path": "vercel.json",
       "mustInclude": ["/api/cron/settle-picks", "0 */3 * * *"]
+    },
+    {
+      "id": "path-select-module",
+      "type": "file_contains",
+      "path": "apps/web/lib/settlement/path-select.ts",
+      "mustInclude": ["selectSettlementPath", "odds-api", "free"]
     }
   ]
 }

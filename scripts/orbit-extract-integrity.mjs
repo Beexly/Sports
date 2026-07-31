@@ -42,6 +42,10 @@ const REQUIRED_PATHS = [
   "docs/agent-skills/inference-routing/SKILL.md",
   "docs/agent-skills/settlement-free-path/SKILL.md",
   "docs/agent-skills/polymarket-hold/SKILL.md",
+  "apps/web/lib/settlement/path-select.ts",
+  "scripts/ops/orbit-unlock-smoke.mjs",
+  "docs/ops/MAX_LEVERAGE.md",
+  "docs/agent-skills/max-leverage/SKILL.md",
 ];
 
 const EXPORTS = [

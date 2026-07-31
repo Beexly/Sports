@@ -1,0 +1,53 @@
+{
+  "id": "orbit-wave7-max-leverage",
+  "predicates": [
+    {
+      "id": "max-leverage-doc",
+      "type": "file_contains",
+      "path": "docs/ops/MAX_LEVERAGE.md",
+      "mustInclude": ["THE_ODDS_API_KEY", "path\":\"free\"", "health-alert", "embed/edge-index"]
+    },
+    {
+      "id": "path-select-module",
+      "type": "file_contains",
+      "path": "apps/web/lib/settlement/path-select.ts",
+      "mustInclude": ["selectSettlementPath", "odds-api", "free"]
+    },
+    {
+      "id": "settle-uses-path-select",
+      "type": "file_contains",
+      "path": "apps/web/app/api/cron/settle-picks/route.ts",
+      "mustInclude": ["selectSettlementPath", "settlementPath"]
+    },
+    {
+      "id": "unlock-smoke-script",
+      "type": "file_contains",
+      "path": "scripts/ops/orbit-unlock-smoke.mjs",
+      "mustInclude": ["health-alert", "refresh-player-stats", "frame-ancestors"]
+    },
+    {
+      "id": "cron-health-alert-scheduled",
+      "type": "file_contains",
+      "path": "vercel.json",
+      "mustInclude": ["/api/cron/health-alert", "*/15 * * * *"]
+    },
+    {
+      "id": "cron-refresh-player-stats-scheduled",
+      "type": "file_contains",
+      "path": "vercel.json",
+      "mustInclude": ["/api/cron/refresh-player-stats", "0,30 * * * *"]
+    },
+    {
+      "id": "vercel-embed-frame-ancestors",
+      "type": "file_contains",
+      "path": "vercel.json",
+      "mustInclude": ["frame-ancestors *", "/embed/"]
+    },
+    {
+      "id": "max-leverage-skill",
+      "type": "file_contains",
+      "path": "docs/agent-skills/max-leverage/SKILL.md",
+      "mustInclude": ["name: max-leverage", "ABSENT"]
+    }
+  ]
+}

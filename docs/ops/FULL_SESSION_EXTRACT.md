@@ -102,3 +102,16 @@ import {
   MODEL_VERSION,
 } from "@sports/prediction-engine";
 ```
+
+## Wave 7 — Max leverage (no soft deferrals)
+
+| Finding | Path | Status |
+|---------|------|--------|
+| health-alert cron every 15m | vercel.json | SHIPPED |
+| refresh-player-stats every 30m | vercel.json | SHIPPED |
+| Production embed CSP frame-ancestors | vercel.json headers | SHIPPED |
+| selectSettlementPath pure law | lib/settlement/path-select.ts | SHIPPED |
+| settle-picks uses path-select | settle-picks/route.ts | SHIPPED |
+| orbit-unlock-smoke | scripts/ops/orbit-unlock-smoke.mjs | SHIPPED |
+| MAX_LEVERAGE founder page | docs/ops/MAX_LEVERAGE.md | SHIPPED |
+| max-leverage skill | docs/agent-skills/max-leverage | SHIPPED |
