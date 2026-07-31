@@ -116,7 +116,10 @@
     "statking:autonomous": "python3 scripts/statking_autonomous_build.py",
     "statking:activation-roi": "python3 scripts/statking_activation_roi.py",
     "statking:proof": "python3 scripts/statking_build_proof_report.py",
-    "prove:neon": "node scripts/ops/prove-neon.mjs"
+    "prove:neon": "node scripts/ops/prove-neon.mjs",
+    "agent:eval": "node scripts/agent-eval/run.mjs",
+    "test:agent-eval": "node scripts/agent-eval/run.mjs",
+    "e2e:pricing-smoke": "node scripts/e2e/pricing-smoke.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
