@@ -17,6 +17,19 @@ export function isFreePath(oddsApiKey: string | null | undefined): boolean {
   return selectSettlementPath(oddsApiKey) === "free";
 }
 
+/**
+ * Type guard for the paid path. Keeps the law in this module while giving
+ * callers the narrowing that a bare `if (!apiKey)` check used to provide —
+ * comparing `selectSettlementPath(apiKey) === "free"` is correct at runtime
+ * but tells TypeScript nothing about `apiKey`, so downstream paid-path calls
+ * still saw `string | undefined`.
+ */
+export function hasOddsApiKey(
+  oddsApiKey: string | null | undefined,
+): oddsApiKey is string {
+  return selectSettlementPath(oddsApiKey) === "odds-api";
+}
+
 /** Operator-facing diagnosis without inventing secrets. */
 export function diagnoseOddsKeyPresence(
   oddsApiKey: string | null | undefined,

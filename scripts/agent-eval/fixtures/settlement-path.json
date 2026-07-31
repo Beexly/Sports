@@ -7,7 +7,7 @@
       "id": "free-when-key-absent",
       "type": "file_contains",
       "path": "apps/web/app/api/cron/settle-picks/route.ts",
-      "mustInclude": ["selectSettlementPath", "settlementPath === \"free\"", "path: \"free\"", "runFreePathSettlement"]
+      "mustInclude": ["@/lib/settlement/path-select", "hasOddsApiKey", "path: \"free\"", "runFreePathSettlement"]
     },
     {
       "id": "paid-when-key-present",

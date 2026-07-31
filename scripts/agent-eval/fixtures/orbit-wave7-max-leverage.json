@@ -17,7 +17,7 @@
       "id": "settle-uses-path-select",
       "type": "file_contains",
       "path": "apps/web/app/api/cron/settle-picks/route.ts",
-      "mustInclude": ["selectSettlementPath", "settlementPath"]
+      "mustInclude": ["@/lib/settlement/path-select", "hasOddsApiKey"]
     },
     {
       "id": "unlock-smoke-script",

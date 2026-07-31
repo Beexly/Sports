@@ -57,7 +57,7 @@ describe("model router", () => {
     const over = resolveModelCatalog({
       MODEL_PRIMARY: "claude-sonnet-custom",
       MODEL_CHEAP: "claude-haiku-custom",
-    } as NodeJS.ProcessEnv);
+    });
     expect(over.sonnet).toBe("claude-sonnet-custom");
     expect(over.haiku).toBe("claude-haiku-custom");
     expect(over.opus).toBe(MODELS.opus);
