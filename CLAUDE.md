@@ -205,3 +205,8 @@ Each cycle must:
 7. Self-audit remaining gaps
 
 A task is NOT complete until: tests pass, types pass, build succeeds.
+
+## Agent skills (process capital)
+
+See `docs/agent-skills/README.md` and `docs/ops/OPERATOR.md`.
+Run `npm run agent:eval` for thin harness.

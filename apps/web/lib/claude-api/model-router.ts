@@ -3,16 +3,12 @@
  * handles each Claude API "surface".
  *
  * 2026 lineup (cost ascending): Haiku (cheap, fast, structured) < Sonnet
- * (default reasoning) < Opus (deep reasoning). Prior to this module every call
- * site hardcoded `claude-sonnet-4-6`, so cheap surfaces overpaid and hard ones
- * were under-powered, with no central policy.
+ * (default reasoning) < Opus (deep reasoning).
  *
- * SAFETY: every surface currently routes to SONNET — byte-for-byte the same model
- * the call sites already used, so introducing the router changes no behavior. The
- * `recommended` note on each surface documents where it SHOULD land once output
- * quality has been validated per-surface; flipping a surface is then a one-line,
- * deliberate change here (not a scattered edit), and the cost ledger
- * (ClaudeApiCallRecord) measures the result.
+ * Env overrides (optional — default behavior unchanged when unset):
+ *   MODEL_PRIMARY  — model id used for sonnet-tier (and default quality) surfaces
+ *   MODEL_CHEAP    — model id used for haiku-tier surfaces
+ * Optional aliases: CLAUDE_MODEL_PRIMARY / CLAUDE_MODEL_CHEAP
  */
 
 export const MODELS = {
@@ -32,26 +28,18 @@ export type ClaudeSurface =
   | "brief";
 
 /**
- * ACTIVE routing — all Sonnet today (zero behavior change). The comment on each
- * line is the recommended target tier once validated, so the intended policy is
- * captured in one place and can be enabled deliberately.
+ * ACTIVE routing. Haiku flips validated for calibration-insight + brief.
  */
 const SURFACE_TIER: Record<ClaudeSurface, ModelTier> = {
-  studio: "sonnet", // recommended: sonnet (brand-voice creative — quality-sensitive)
-  journal: "sonnet", // recommended: sonnet (public accountability writing)
-  "calibration-insight": "haiku", // flipped 2026-06-15: short structured stat read, 66.7% saving
-  "model-court": "sonnet", // recommended: opus (adversarial deep reasoning)
-  content: "sonnet", // recommended: sonnet (editorial drafts)
-  brief: "haiku", // flipped 2026-06-15: templated daily summary, 66.7% saving
+  studio: "sonnet",
+  journal: "sonnet",
+  "calibration-insight": "haiku",
+  "model-court": "sonnet",
+  content: "sonnet",
+  brief: "haiku",
 };
 
-/**
- * RECOMMENDED routing — the validated target tier per surface (the intent captured in
- * the SURFACE_TIER comments, made machine-readable). ACTIVE routing stays all-Sonnet
- * until each flip is validated; this map drives the cost-savings analysis in
- * `model-economics.ts` so the deliberate flip is data-informed. Editing this map does
- * NOT change runtime behavior — only `SURFACE_TIER` (ACTIVE) does.
- */
+/** Recommended targets for cost analysis only — does not change runtime. */
 export const SURFACE_RECOMMENDED: Record<ClaudeSurface, ModelTier> = {
   studio: "sonnet",
   journal: "sonnet",
@@ -61,13 +49,40 @@ export const SURFACE_RECOMMENDED: Record<ClaudeSurface, ModelTier> = {
   brief: "haiku",
 };
 
-/** Resolve the model id for a surface. Unknown surfaces fall back to Sonnet. */
-export function pickModelForSurface(surface: ClaudeSurface): string {
-  const tier = SURFACE_TIER[surface] ?? "sonnet";
-  return MODELS[tier];
+function envModel(key: string): string | undefined {
+  const v = process.env[key]?.trim();
+  return v && v.length > 0 ? v : undefined;
 }
 
-/** The currently-active tier for a surface (Sonnet today). */
+/**
+ * Resolved catalog: defaults from MODELS, optional env overrides for primary/cheap.
+ * Unset env → byte-identical to MODELS.
+ */
+export function resolveModelCatalog(
+  env: NodeJS.ProcessEnv = process.env,
+): Record<ModelTier, string> {
+  const primary =
+    env["MODEL_PRIMARY"]?.trim() ||
+    env["CLAUDE_MODEL_PRIMARY"]?.trim() ||
+    MODELS.sonnet;
+  const cheap =
+    env["MODEL_CHEAP"]?.trim() ||
+    env["CLAUDE_MODEL_CHEAP"]?.trim() ||
+    MODELS.haiku;
+  return {
+    haiku: cheap || MODELS.haiku,
+    sonnet: primary || MODELS.sonnet,
+    opus: MODELS.opus,
+  };
+}
+
+/** Resolve the model id for a surface. Unknown surfaces fall back to Sonnet/primary. */
+export function pickModelForSurface(surface: ClaudeSurface): string {
+  const tier = SURFACE_TIER[surface] ?? "sonnet";
+  return resolveModelCatalog()[tier];
+}
+
+/** The currently-active tier for a surface. */
 export function activeTierForSurface(surface: ClaudeSurface): ModelTier {
   return SURFACE_TIER[surface] ?? "sonnet";
 }

@@ -68,6 +68,9 @@ export type PlatformSource = {
  * sources are cleared + high quality; unofficial public endpoints are cleared but
  * medium quality (facts only); owner-review candidates are gated until they clear.
  * No fabricated coverage — gated sources still require terms + live schema verification.
+ *
+ * cleared MUST match source-rights-registry (or equivalent written grant). Router entries
+ * without a registry row stay cleared:false even if an adapter exists.
  */
 export const PLATFORM_SOURCES: readonly PlatformSource[] = [
   // ── Cleared + free (use these first) ────────────────────────────────────────
@@ -118,62 +121,61 @@ export const PLATFORM_SOURCES: readonly PlatformSource[] = [
     note: "Licensed + wired (THE_ODDS_API_KEY). Free tier 500 credits/mo, in-season gated. Primary cleared ODDS source; free odds candidates are still gated.",
   },
 
-
-  // ── Cleared free multi-source redundancy (world-class dual path) ──────────
+  // ── Present as free candidates but NOT registry-cleared (do not auto-select) ─
   {
     id: "polymarket-gamma",
     name: "Polymarket Gamma (public)",
     tier: "free_unlimited",
-    cleared: true,
+    cleared: false,
     quality: "medium",
     sports: ["nfl", "ncaaf", "nba", "ncaab", "mlb", "nhl", "mls"],
     needs: ["odds"],
     registrySourceId: "polymarket-gamma",
-    note: "FREE public prediction-market quotes. Primary free odds spine (oddsApiRequired=false). Cron: /api/cron/gamma.",
+    note: "COMPLIANCE HOLD. Cron removed (3dfbc726). Re-enable only with counsel-approved registry entry permitting storage + commercial_display.",
   },
   {
     id: "kalshi-public",
     name: "Kalshi public trade API",
     tier: "free_unlimited",
-    cleared: true,
+    cleared: false,
     quality: "medium",
     sports: ["nfl", "ncaaf", "nba", "ncaab", "mlb", "nhl", "mls"],
     needs: ["odds", "schedules"],
     registrySourceId: "kalshi-public",
-    note: "FREE public market read path (packages/data-ingestion kalshi-client + quote-plane). Second free odds/schedule cross-check.",
+    note: "Aspirational only until registry entry + terms clearance. Do not auto-select.",
   },
   {
     id: "mlb-statsapi",
     name: "MLB Stats API (statsapi.mlb.com)",
     tier: "free_unlimited",
-    cleared: true,
+    cleared: false,
     quality: "high",
     sports: ["mlb"],
     needs: ["scores", "results", "schedules", "standings", "player_stats", "team_stats"],
     registrySourceId: "mlb-statsapi",
-    note: "Official public MLB stats endpoints — free facts spine for baseball; dual with ESPN for scores.",
+    note: "High-quality free MLB facts candidate — gated until registry row exists. ESPN remains cleared dual path.",
   },
   {
     id: "balldontlie-nba",
     name: "BALLDONTLIE NBA",
     tier: "free_quota",
-    cleared: true,
+    cleared: false,
     quality: "medium",
     sports: ["nba"],
     needs: ["scores", "results", "player_stats", "team_stats", "standings"],
     registrySourceId: "balldontlie-nba",
-    note: "Free NBA API (rate-limited). Dual path with ESPN for NBA scores/stats.",
+    note: "Free NBA candidate — gated until registry clearance. ESPN covers NBA scores today.",
   },
   {
     id: "fpl-official",
     name: "Fantasy Premier League official API",
     tier: "free_unlimited",
-    cleared: true,
+    cleared: false,
     quality: "medium",
     sports: ["mls"],
     needs: ["player_stats", "team_stats", "schedules"],
     registrySourceId: "fpl-official",
-    note: "Free official FPL JSON (adapter free-adapters/fpl.ts). Soccer player/fixture dual path; MLS coverage partial.",
+    note: "Free FPL JSON candidate — gated until registry clearance. MLS coverage partial.",
   },
   {
     id: "open-meteo-secondary",
@@ -212,23 +214,23 @@ export const PLATFORM_SOURCES: readonly PlatformSource[] = [
     id: "nhl-web-api",
     name: "NHL public web API",
     tier: "free_unlimited",
-    cleared: true,
+    cleared: false,
     quality: "high",
     sports: ["nhl"],
     needs: ["scores", "results", "schedules", "standings"],
     registrySourceId: "nhl-web-api",
-    note: "FREE official-ish NHL public scoreboard (api-web.nhle.com). Dual with ESPN for NHL scores.",
+    note: "NHL public scoreboard candidate — gated until registry row. ESPN remains cleared for NHL scores.",
   },
   {
     id: "mlb-statsapi-cleared",
     name: "MLB Stats API dual path",
     tier: "free_unlimited",
-    cleared: true,
+    cleared: false,
     quality: "high",
     sports: ["mlb"],
     needs: ["scores", "results", "schedules", "standings"],
     registrySourceId: "mlb-statsapi",
-    note: "Alias clarity for dual MLB scores path (mlb-statsapi adapter).",
+    note: "Alias for mlb-statsapi — same clearance requirement as primary id.",
   },
 
   // ── Gated free candidates (free, but not yet cleared) ────────────────────────
@@ -236,12 +238,12 @@ export const PLATFORM_SOURCES: readonly PlatformSource[] = [
     id: "henrygd-ncaa",
     name: "henrygd NCAA API",
     tier: "free_unlimited",
-    cleared: true,
+    cleared: false,
     quality: "medium",
     sports: ["ncaaf", "ncaab"],
     needs: ["scores", "results", "standings", "rankings", "schedules", "play_by_play", "team_stats", "player_stats"],
     registrySourceId: "henrygd-ncaa",
-    note: "FREE cleared for facts-only NCAA. Adapter + free-settlement consensus live. Self-host to drop public demo rate cap.",
+    note: "Adapter + free-settlement path may call directly; router stays uncleared until registry entry. Self-host to drop public demo rate cap.",
   },
   {
     id: "cfbd",

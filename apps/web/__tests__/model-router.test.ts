@@ -1,5 +1,10 @@
-import { describe, it, expect } from "vitest";
-import { MODELS, ALL_SURFACES, pickModelForSurface } from "@/lib/claude-api/model-router";
+import { describe, it, expect, afterEach } from "vitest";
+import {
+  MODELS,
+  ALL_SURFACES,
+  pickModelForSurface,
+  resolveModelCatalog,
+} from "@/lib/claude-api/model-router";
 import { callClaudeMessages } from "@/lib/claude-api/messages";
 
 function capturingFetch(captured: { body?: string }): typeof fetch {
@@ -16,6 +21,15 @@ function capturingFetch(captured: { body?: string }): typeof fetch {
 }
 
 describe("model router", () => {
+  const saved = { ...process.env };
+
+  afterEach(() => {
+    for (const k of ["MODEL_PRIMARY", "MODEL_CHEAP", "CLAUDE_MODEL_PRIMARY", "CLAUDE_MODEL_CHEAP"]) {
+      if (saved[k] === undefined) delete process.env[k];
+      else process.env[k] = saved[k];
+    }
+  });
+
   it("exposes the 2026 tier ids", () => {
     expect(MODELS.haiku).toBe("claude-haiku-4-5-20251001");
     expect(MODELS.sonnet).toBe("claude-sonnet-4-6");
@@ -23,12 +37,30 @@ describe("model router", () => {
   });
 
   it("routes surfaces to the validated tier (Haiku flips active for calibration-insight + brief)", () => {
+    delete process.env.MODEL_PRIMARY;
+    delete process.env.MODEL_CHEAP;
+    delete process.env.CLAUDE_MODEL_PRIMARY;
+    delete process.env.CLAUDE_MODEL_CHEAP;
     expect(ALL_SURFACES.length).toBeGreaterThan(0);
     const HAIKU_SURFACES = new Set(["calibration-insight", "brief"]);
     for (const surface of ALL_SURFACES) {
       const expected = HAIKU_SURFACES.has(surface) ? MODELS.haiku : MODELS.sonnet;
       expect(pickModelForSurface(surface)).toBe(expected);
     }
+  });
+
+  it("env MODEL_PRIMARY / MODEL_CHEAP override catalog only when set", () => {
+    const base = resolveModelCatalog({});
+    expect(base.sonnet).toBe(MODELS.sonnet);
+    expect(base.haiku).toBe(MODELS.haiku);
+
+    const over = resolveModelCatalog({
+      MODEL_PRIMARY: "claude-sonnet-custom",
+      MODEL_CHEAP: "claude-haiku-custom",
+    } as NodeJS.ProcessEnv);
+    expect(over.sonnet).toBe("claude-sonnet-custom");
+    expect(over.haiku).toBe("claude-haiku-custom");
+    expect(over.opus).toBe(MODELS.opus);
   });
 });
 
