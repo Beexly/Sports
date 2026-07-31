@@ -5,96 +5,37 @@
   "ignoreCommand": "cd ../.. && node scripts/vercel-skip-build.mjs",
   "framework": "nextjs",
   "outputDirectory": ".next",
-  "regions": [
-    "iad1"
-  ],
+  "regions": ["iad1"],
   "crons": [
-    {
-      "path": "/api/cron/refresh-odds",
-      "schedule": "*/30 * * * *"
-    },
-    {
-      "path": "/api/cron/settle-picks",
-      "schedule": "0 7 * * *"
-    },
-    {
-      "path": "/api/cron/deliver-settlement-alerts",
-      "schedule": "30 7 * * *"
-    },
-    {
-      "path": "/api/cron/generate-drafts",
-      "schedule": "0 11 * * *"
-    },
-    {
-      "path": "/api/cron/reconcile-entitlements",
-      "schedule": "0 8 * * *"
-    },
-    {
-      "path": "/api/cron/ingest-player-stats",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/hydrate-cold-plane",
-      "schedule": "30 9 * * *"
-    },
-    {
-      "path": "/api/cron/drain-ai-telemetry-recovery",
-      "schedule": "30 * * * *"
-    },
-    {
-      "path": "/api/cron/prune-rate-limits",
-      "schedule": "30 6 * * *"
-    },
-    {
-      "path": "/api/cron/repair-checkout-attempts",
-      "schedule": "30 8 * * *"
-    },
-    {
-      "path": "/api/cron/run-formal-receipt",
-      "schedule": "45 9 * * *"
-    },
-    {
-      "path": "/api/cron/jarvis-snapshot",
-      "schedule": "15 * * * *"
-    },
-    {
-      "path": "/api/cron/free-spine-health",
-      "schedule": "0 10 * * *"
-    }
+    {"path": "/api/cron/refresh-odds", "schedule": "*/30 * * * *"},
+    {"path": "/api/cron/settle-picks", "schedule": "0 */3 * * *"},
+    {"path": "/api/cron/deliver-settlement-alerts", "schedule": "15 */3 * * *"},
+    {"path": "/api/cron/generate-drafts", "schedule": "0 11 * * *"},
+    {"path": "/api/cron/reconcile-entitlements", "schedule": "0 8 * * *"},
+    {"path": "/api/cron/ingest-player-stats", "schedule": "0 9 * * *"},
+    {"path": "/api/cron/hydrate-cold-plane", "schedule": "30 9 * * *"},
+    {"path": "/api/cron/drain-ai-telemetry-recovery", "schedule": "30 * * * *"},
+    {"path": "/api/cron/prune-rate-limits", "schedule": "30 6 * * *"},
+    {"path": "/api/cron/repair-checkout-attempts", "schedule": "30 8 * * *"},
+    {"path": "/api/cron/run-formal-receipt", "schedule": "45 9 * * *"},
+    {"path": "/api/cron/jarvis-snapshot", "schedule": "15 * * * *"},
+    {"path": "/api/cron/free-spine-health", "schedule": "0 10 * * *"}
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "Strict-Transport-Security",
-          "value": "max-age=63072000; includeSubDomains; preload"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=(), payment=(self \"https://js.stripe.com\")"
-        }
+        {"key": "X-Content-Type-Options", "value": "nosniff"},
+        {"key": "X-Frame-Options", "value": "DENY"},
+        {"key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload"},
+        {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
+        {"key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(self \"https://js.stripe.com\")"}
       ]
     },
     {
       "source": "/api/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        }
+        {"key": "Cache-Control", "value": "no-store, max-age=0"}
       ]
     }
   ]
