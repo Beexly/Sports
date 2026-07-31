@@ -25,6 +25,9 @@ import {
   shouldRenderCloudflareAnalytics,
   shouldRenderMicrosoftClarity,
 } from "@/lib/analytics/provider-gating";
+import { PostHogInit } from "@/components/analytics/PostHogInit";
+import { PostHogIdentify } from "@/components/analytics/PostHogIdentify";
+import { auth } from "@/lib/auth";
 
 // Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3):
 // geometric, futuristic, uppercase for impact. Loaded ONCE (weights 500-900);
@@ -186,11 +189,12 @@ const websiteJsonLd = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
   const fontVariables = [
     displayFont.variable,
     bodyFont.variable,
@@ -229,6 +233,10 @@ export default function RootLayout({
         <SentientShell />
         <PageExplainerAuto />
         <SentryClientInit />
+        <PostHogInit />
+        {session?.user?.id && (
+          <PostHogIdentify userId={session.user.id} name={session.user.name} />
+        )}
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
         {/* Each provider gates on its OWN identifier, not just the master flag

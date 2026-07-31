@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { getPostHogClient } from "@/lib/posthog-server";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { auth } from "@/lib/auth";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
@@ -386,6 +387,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         `[INCIDENT][checkout] failed to bind session ${checkoutSession.id} to attempt ` +
           `${attempt.id} — repair job will reconcile: ${message}`,
       );
+    }
+
+    const ph = getPostHogClient();
+    if (ph) {
+      ph.capture({
+        distinctId: session.user.id,
+        event: "checkout_initiated",
+        properties: { tier, interval, priceId },
+      });
+      await ph.flush();
     }
 
     return NextResponse.json({ url: checkoutSession.url });

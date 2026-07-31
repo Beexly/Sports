@@ -82,16 +82,22 @@ export interface AnalyticsContext {
 }
 
 /**
- * Record an event. NO-OP until a provider is wired (owner decision). Never
- * collects PII; callers pass only non-identifying funnel context. Returns the
- * normalized payload so callers/tests can assert what would be sent.
+ * Record an event. Dispatches to PostHog when running in a browser with the
+ * SDK initialised. Never collects PII; callers pass only non-identifying funnel
+ * context. Returns the normalised payload so callers/tests can assert what was sent.
  */
 export function track(
   event: AnalyticsEvent,
   context: AnalyticsContext = {},
 ): { event: AnalyticsEvent; context: AnalyticsContext } {
-  // When a provider is wired, dispatch here (e.g. window.analytics?.track(...)).
-  // Intentionally inert for now — no network, no identity.
+  if (typeof window !== "undefined") {
+    // posthog-js sets window.posthog after init; capture through the global so
+    // this module remains SSR-safe (no static import of posthog-js).
+    const ph = (window as unknown as Record<string, unknown>).posthog;
+    if (ph && typeof (ph as { capture?: unknown }).capture === "function") {
+      (ph as { capture: (e: string, p: AnalyticsContext) => void }).capture(event, context);
+    }
+  }
   return { event, context };
 }
 

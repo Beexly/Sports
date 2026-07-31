@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { createPortalSession } from "@/lib/stripe";
 import { db } from "@sports/db";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 export async function POST(_req: NextRequest): Promise<NextResponse> {
   const session = await auth();
@@ -39,6 +40,11 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
       subscription.stripeCustomerId,
       `${appUrl}/dashboard`
     );
+    const ph = getPostHogClient();
+    if (ph) {
+      ph.capture({ distinctId: session.user.id, event: "billing_portal_opened" });
+      await ph.flush();
+    }
     return NextResponse.json({ url: portalSession.url });
   } catch (err) {
     // Log detail server-side; return a generic message to the client.

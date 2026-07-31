@@ -3,6 +3,7 @@
 import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import posthog from "posthog-js";
 
 /**
  * Subscribe button — isolates the Stripe checkout side-effect so the
@@ -76,6 +77,7 @@ export function SubscribeButton({
   async function handleClick() {
     setError(null);
     setLoading(true);
+    posthog.capture("upgrade_cta_click", { tier, interval });
     try {
       const intentKey = `${tier}:${interval}`;
       if (!intentRef.current || intentRef.current.key !== intentKey) {
@@ -102,6 +104,7 @@ export function SubscribeButton({
         return;
       }
 
+      posthog.capture("checkout_start", { tier, interval });
       window.location.href = data.url;
     } catch {
       setError(

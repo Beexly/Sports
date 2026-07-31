@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { tierForPriceId } from "@/lib/billing/price-ids";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
@@ -120,6 +121,21 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       // Dashboard checkout) is a warn, never a webhook failure — the
       // subscription sync above is the entitlement-critical path.
       await reconcileCheckoutAttempt(session);
+      const userId = session.metadata?.["userId"];
+      if (userId) {
+        const ph = getPostHogClient();
+        if (ph) {
+          ph.capture({
+            distinctId: userId,
+            event: "subscription_activated",
+            properties: {
+              stripe_session_id: session.id,
+              subscription_id: typeof session.subscription === "string" ? session.subscription : session.subscription?.id,
+            },
+          });
+          await ph.flush();
+        }
+      }
       break;
     }
 
@@ -163,6 +179,18 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
           pastDueSince: null,
         },
       });
+      const canceledUserId = subscription.metadata?.["userId"];
+      if (canceledUserId) {
+        const ph = getPostHogClient();
+        if (ph) {
+          ph.capture({
+            distinctId: canceledUserId,
+            event: "subscription_canceled",
+            properties: { subscription_id: subscription.id },
+          });
+          await ph.flush();
+        }
+      }
       break;
     }
 
@@ -218,6 +246,20 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
             data: { status: "PAST_DUE" },
           }),
         ]);
+        const subRow = await db.subscription
+          .findUnique({ where: { stripeSubscriptionId: subId }, select: { userId: true } })
+          .catch(() => null);
+        if (subRow?.userId) {
+          const ph = getPostHogClient();
+          if (ph) {
+            ph.capture({
+              distinctId: subRow.userId,
+              event: "subscription_payment_failed",
+              properties: { subscription_id: subId },
+            });
+            await ph.flush();
+          }
+        }
       }
       break;
     }
