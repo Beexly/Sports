@@ -35,3 +35,7 @@ Open:
 ## SoT
 
 `docs/ops/CANONICAL.md` + Production `/cockpit`
+
+## Sandbox export (2026-07-30)
+- Grok Build honesty-surface demo fully exported to Beexly/gse-grok-build-sandbox — see docs/ops/GROK_BUILD_SANDBOX_EXPORT_2026-07-30.md (PR #259) and that repo SESSION_ACCOUNTING.md
+- Experimental quarantine: never wire to sports-web
